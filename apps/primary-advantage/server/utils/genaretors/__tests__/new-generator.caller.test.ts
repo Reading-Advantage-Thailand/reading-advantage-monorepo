@@ -41,7 +41,7 @@ vi.mock("@reading-advantage/db", () => ({
   multipleChoiceQuestions: Symbol("mcq"),
 }));
 
-vi.mock("@reading-advantage/ai", () => ({
+vi.mock("@reading-advantage/ai/internal-sdk", () => ({
   generateObject: vi.fn().mockResolvedValue({
     object: { passage: "A short passage.", title: "T" },
   }),
