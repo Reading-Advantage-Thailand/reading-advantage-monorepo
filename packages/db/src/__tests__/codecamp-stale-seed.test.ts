@@ -1,5 +1,9 @@
 import { describe, it, expect } from "vitest";
-import { findStaleModuleSlugs } from "../seed/codecamp-seed.js";
+import {
+  findStaleModuleSlugs,
+  selectLessonsToInsert,
+  type ExistingLessonSnapshot,
+} from "../seed/codecamp-seed.js";
 import {
   getPhaseACurriculumData,
   getPhaseBCurriculumData,
@@ -69,20 +73,16 @@ describe("findStaleModuleSlugs", () => {
 
 // -----------------------------------------------------------------------------
 // Wave 2 Phase 1 — seed idempotency/key drift.
-// The codecamp seed script skips existing lesson *types* for existing modules,
-// which assumes lesson types are unique within a module. The canonical
+// The codecamp seed script used to skip existing lesson *types* for existing
+// modules, which assumed lesson types are unique within a module. The canonical
 // curriculum data intentionally contains many modules with multiple theory
-// lessons, so the seed's type-keyed logic silently drops canonical lessons on
-// re-seed. The contract under test is the SEED'S behavior, not the curriculum
-// structure: re-seeding an existing module must insert every still-missing
-// canonical lesson, not just "one per type".
+// lessons, so the seed's type-keyed logic silently dropped canonical lessons
+// on re-seed. The contract under test is the SEED'S behavior, not the
+// curriculum structure: re-seeding an existing module must insert every
+// still-missing canonical lesson, not just "one per type". The seed now keys
+// on (moduleId, order) via the `selectLessonsToInsert` helper exported from
+// `packages/db/src/seed/codecamp-seed.ts`.
 // -----------------------------------------------------------------------------
-
-interface ExistingLessonSnapshot {
-  type: CurriculumLesson["type"];
-  order: number;
-  title: string;
-}
 
 describe("Wave 2 — codecamp seed idempotency for existing modules", () => {
   it("re-seeding an existing module inserts every canonical lesson, not one-per-type", () => {
@@ -107,25 +107,12 @@ describe("Wave 2 — codecamp seed idempotency for existing modules", () => {
       "At least one module must have multiple lessons of the same type for this test to be meaningful",
     ).toBeGreaterThan(0);
 
-    // TODO(Jr-Green): Replace this local mirror with an import of the real
-    // `selectLessonsToInsert(existingLessons, canonicalLessons)` pure helper
-    // that `packages/db/src/seed/codecamp-seed.ts` will export. The helper must
-    // key on (moduleId, order) or a unique lesson slug, not on `type`, so
-    // re-seeding a module with multiple same-type lessons inserts every missing
-    // lesson instead of stopping at the first type match. Once the helper is
-    // exported, delete this local function and import the production one.
-    function selectLessonsToInsert(
-      existingLessons: ExistingLessonSnapshot[],
-      canonicalLessons: CurriculumLesson[],
-    ): CurriculumLesson[] {
-      const existingTypes = new Set(existingLessons.map((l) => l.type));
-      return canonicalLessons.filter((lesson) => !existingTypes.has(lesson.type));
-    }
-
     // Simulate a re-seed where only the first lesson of each type is already
-    // present in the DB. The seed's current type-keyed logic will skip every
+    // present in the DB. The seed's previous type-keyed logic would skip every
     // remaining same-type sibling, even though those canonical lessons are
-    // missing from the DB and should be inserted.
+    // missing from the DB and should be inserted. The production helper now
+    // keys on `order`, so each canonical lesson not already present by order
+    // is selected for insertion.
     let wronglySkippedLessonCount = 0;
     const wronglySkippedByModule: Array<{
       moduleSlug: string;

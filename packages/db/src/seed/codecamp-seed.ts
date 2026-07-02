@@ -21,7 +21,7 @@ import {
   codecampQuizQuestions,
   codecampExerciseRepos,
 } from "../schema/codecamp.js";
-import { getPhaseACurriculumData, getPhaseBCurriculumData, getPhaseCCurriculumData, getPhaseDCurriculumData, MODULE_REPO_MAP } from "./codecamp-curriculum-data.js";
+import { getPhaseACurriculumData, getPhaseBCurriculumData, getPhaseCCurriculumData, getPhaseDCurriculumData, type CurriculumLesson, MODULE_REPO_MAP } from "./codecamp-curriculum-data.js";
 
 const seedConnectionString =
   process.env.DIRECT_DATABASE_URL ?? process.env.DATABASE_URL;
@@ -47,6 +47,45 @@ const db = drizzle(seedClient, { schema });
  */
 export function findStaleModuleSlugs(canonicalSlugs: Set<string>, dbSlugs: string[]): string[] {
   return dbSlugs.filter((slug) => !canonicalSlugs.has(slug));
+}
+
+/**
+ * Snapshot shape for an already-present codecamp lesson. Mirrors the
+ * minimal subset of columns the seed selects when probing for existing
+ * rows so the helper can be unit-tested without a DB connection.
+ */
+export interface ExistingLessonSnapshot {
+  type: CurriculumLesson["type"];
+  order: number;
+  title: string;
+}
+
+/**
+ * Pure helper that decides which canonical lessons still need to be inserted
+ * when re-seeding a module that already has lessons in the DB.
+ *
+ * The previous implementation keyed dedup on `type`, which is *not* unique
+ * within a module — canonical modules frequently contain multiple theory
+ * (or exercise/quiz) lessons. Keying on `type` therefore caused all-but-one
+ * of any same-type siblings to be silently skipped on re-seed, breaking
+ * the idempotency/completeness contract. We key on `order` instead: a
+ * canonical lesson's `(moduleId, order)` pair is stable and unique within
+ * a module, so re-seeding correctly skips lessons that already exist and
+ * inserts the rest without disturbing student progress on existing rows.
+ *
+ * Exported for unit testing; production code in this file uses it inside
+ * the seed transaction.
+ *
+ * @param existingLessons Snapshots of lessons already present in the DB.
+ * @param canonicalLessons The full canonical lesson list for a module.
+ * @returns The canonical lessons not yet present in the DB (by `order`).
+ */
+export function selectLessonsToInsert(
+  existingLessons: ExistingLessonSnapshot[],
+  canonicalLessons: CurriculumLesson[],
+): CurriculumLesson[] {
+  const existingOrders = new Set(existingLessons.map((l) => l.order));
+  return canonicalLessons.filter((lesson) => !existingOrders.has(lesson.order));
 }
 
 /**
@@ -105,20 +144,22 @@ async function seed() {
         console.log(`  ✏️  Module "${mod.slug}" already exists, updated metadata.`);
         updatedModules++;
 
-        // For existing modules, insert only missing lesson types to avoid
-        // disrupting student progress on existing lessons.
+        // For existing modules, insert only lessons that aren't already present
+        // (keyed on `order`, not `type`, because canonical modules contain
+        // multiple same-type lessons and `type` is not unique within a module).
+        // Existing lesson rows are preserved so we don't disrupt student progress.
         const existingLessons = await tx
-          .select({ type: codecampLessons.type })
+          .select({
+            type: codecampLessons.type,
+            order: codecampLessons.order,
+            title: codecampLessons.title,
+          })
           .from(codecampLessons)
           .where(eq(codecampLessons.moduleId, insertedModule.id));
 
-        const existingTypes = new Set(existingLessons.map((l) => l.type));
+        const lessonsToInsert = selectLessonsToInsert(existingLessons, mod.lessons);
 
-        for (const lesson of mod.lessons) {
-          if (existingTypes.has(lesson.type)) {
-            continue;
-          }
-
+        for (const lesson of lessonsToInsert) {
           const [insertedLesson] = await tx
             .insert(codecampLessons)
             .values({
