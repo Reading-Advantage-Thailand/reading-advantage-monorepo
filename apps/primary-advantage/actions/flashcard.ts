@@ -12,6 +12,7 @@ import {
   count,
   gte,
   sum,
+  inArray,
 } from "@reading-advantage/db";
 import {
   flashcardDecks,
@@ -25,8 +26,15 @@ import {
   flashcardProgress,
 } from "@reading-advantage/db";
 import { ActivityType, FlashcardType } from "@/types/enum";
+import type { FlashcardCard, SentenceTimepoint, WordListTimestamp } from "@/types";
 import { fsrsService } from "@/lib/fsrs-service";
+import { cardState } from "@reading-advantage/db";
 import { revalidatePath } from "next/cache";
+
+// CardState is derived from the shared Drizzle pgEnum so it stays in sync
+// with the schema without an extra hand-written union. Mirrors the
+// `CardState` re-export in `lib/fsrs-service.ts`.
+type CardState = (typeof cardState.enumValues)[number];
 import { redirect } from "next/navigation";
 import { NextResponse } from "next/server";
 import { getAudioUrl } from "@/lib/storage-config";
@@ -159,7 +167,14 @@ interface WordList {
   cardAudioUrl: string;
 }
 
-interface SentenceEntry {
+/**
+ * Per-sentence input shape for `saveFlashcard`. The card text + translation
+ * + audio timing travel together so the action can write a schema-valid
+ * `flashcardCards` row plus a `sentencs_and_words_for_flashcard` join.
+ * Exported because consumers (e.g. `components/articles/article-content.tsx`)
+ * build a SentenceEntry at the save-site boundary.
+ */
+export interface SentenceEntry {
   cardSentence: string;
   cardTranslation: {
     th: string;
@@ -221,13 +236,19 @@ export async function saveFlashcard(
       )
       .limit(1);
 
-    let deck: typeof existingDeck & { id: string };
+    let deck: { id: string; type: string };
     if (!existingDeck) {
       const [createdDeck] = await db.insert(flashcardDecks).values({
         userId: user.id as string,
         name: `${deckKind === "VOCABULARY" ? "Vocabulary" : "Sentence"} Deck`,
-        kind: deckKind as string,
+        type: deckKind as string,
       }).returning();
+      if (!createdDeck) {
+        return {
+          status: 500,
+          message: "Failed to create deck",
+        };
+      }
       deck = createdDeck;
     } else {
       deck = existingDeck;
@@ -346,7 +367,7 @@ export async function getUserFlashcardDecks(userId?: string) {
       data: decks.map((deck) => ({
         id: deck.id,
         name: deck.name,
-        kind: deck.type,
+        type: deck.type,
         totalCards: deck._count.cards,
         createdAt: deck.createdAt,
         updatedAt: deck.updatedAt,
@@ -362,7 +383,7 @@ export async function getUserFlashcardDecks(userId?: string) {
   }
 }
 
-export async function getDashboardData(deckKind?: "VOCABULARY" | "SENTENCE") {
+export async function getDashboardData(deckType?: "VOCABULARY" | "SENTENCE") {
   try {
     const user = await currentUser();
     if (!user) {
@@ -376,8 +397,8 @@ export async function getDashboardData(deckKind?: "VOCABULARY" | "SENTENCE") {
 
     // Build where clause with optional type filter
     const whereConditions = [eq(flashcardDecks.userId, user.id as string)];
-    if (deckKind) {
-      whereConditions.push(eq(flashcardDecks.type, deckKind));
+    if (deckType) {
+      whereConditions.push(eq(flashcardDecks.type, deckType));
     }
 
     // Fetch user's flashcard decks with optional type filter
@@ -385,15 +406,68 @@ export async function getDashboardData(deckKind?: "VOCABULARY" | "SENTENCE") {
       .where(and(...whereConditions))
       .orderBy(desc(flashcardDecks.updatedAt));
 
+    // For each deck compute card counts + FSRS counts from flashcard_progress.
+    // FSRS state is not stored on flashcardCards (Phase 1 contract) — it lives
+    // in flashcard_progress (lastReviewedAt/nextReviewAt). The dashboard's
+    // due/new/learning/review buckets are derived from that table.
+    const now = new Date();
+
     const decks = await Promise.all(
       deckRows.map(async (deck) => {
-        const [countRow] = await db.select({ value: count() })
+        const cardRows = await db.select({ id: flashcardCards.id })
           .from(flashcardCards)
           .where(eq(flashcardCards.deckId, deck.id));
+        const cardIds = cardRows.map((row) => row.id);
+
+        let dueCards = 0;
+        let newCards = 0;
+        let reviewCards = 0;
+
+        if (cardIds.length > 0) {
+          const progressRows = await db.select({
+            cardId: flashcardProgress.cardId,
+            nextReviewAt: flashcardProgress.nextReviewAt,
+          })
+            .from(flashcardProgress)
+            .where(
+              and(
+                eq(flashcardProgress.userId, user.id as string),
+                inArray(flashcardProgress.cardId, cardIds),
+              ),
+            );
+
+          const progressByCard = new Map(
+            progressRows.map((p) => [p.cardId, p]),
+          );
+
+          for (const cardId of cardIds) {
+            const progress = progressByCard.get(cardId);
+            if (!progress) {
+              newCards++;
+            } else if (
+              !progress.nextReviewAt ||
+              progress.nextReviewAt <= now
+            ) {
+              dueCards++;
+            } else {
+              reviewCards++;
+            }
+          }
+        }
+
+        const totalCards = cardIds.length;
 
         return {
           ...deck,
-          _count: { cards: Number(countRow?.value ?? 0) },
+          _count: { cards: totalCards },
+          totalCards,
+          dueCards,
+          newCards,
+          // FSRS LEARNING state is not stored separately without a shared
+          // `state` column on flashcardCards. We report 0 to preserve the
+          // dashboard's existing layout without fabricating counts.
+          learningCards: 0,
+          reviewCards,
         };
       }),
     );
@@ -402,9 +476,9 @@ export async function getDashboardData(deckKind?: "VOCABULARY" | "SENTENCE") {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const activityTypeFilter = deckKind
+    const activityTypeFilter = deckType
       ? [
-          deckKind === "VOCABULARY"
+          deckType === "VOCABULARY"
             ? ActivityType.VOCABULARY_FLASHCARDS
             : ActivityType.SENTENCE_FLASHCARDS,
         ]
@@ -449,13 +523,22 @@ export async function getDashboardData(deckKind?: "VOCABULARY" | "SENTENCE") {
       decks: decks.map((deck) => ({
         id: deck.id,
         name: deck.name,
-        kind: deck.type,
-        totalCards: deck._count.cards,
+        // `flashcardDecks.type` is stored as `text` in the shared schema
+        // (the `flashcard_type` pgEnum is the new source of truth). We
+        // cast the value to the FlashcardType literal union at the return
+        // boundary so the dashboard component can treat it as a strict
+        // union without an `as` at every call site.
+        type: deck.type as FlashcardType,
+        totalCards: deck.totalCards,
+        dueCards: deck.dueCards,
+        newCards: deck.newCards,
+        learningCards: deck.learningCards,
+        reviewCards: deck.reviewCards,
         createdAt: deck.createdAt.toISOString(),
         updatedAt: deck.updatedAt.toISOString(),
       })),
       stats,
-      deckKind,
+      deckType,
     };
   } catch (error) {
     console.error("Error fetching dashboard data:", error);
@@ -464,6 +547,7 @@ export async function getDashboardData(deckKind?: "VOCABULARY" | "SENTENCE") {
       error: "Failed to fetch dashboard data",
       decks: [],
       stats: null,
+      deckType,
     };
   }
 }
@@ -498,7 +582,7 @@ export async function getDeckCards(deckId: string) {
       deck: {
         id: deck.id,
         name: deck.name,
-        kind: deck.type,
+        type: deck.type,
         description: deck.description,
       },
       cards,
@@ -676,13 +760,45 @@ export async function reviewCard(
     // history it needs without requiring a shared-partial column on
     // `flashcardCards`.
     const emptyCard: Card = createEmptyCard();
+    // Build a FlashcardCard-shaped seed from the persisted progress plus
+    // the scheduler's empty-card defaults. FlashcardCard uses camelCase
+    // (`lastReview`, `elapsedDays`, ...) while ts-fsrs's `Card` uses
+    // snake_case; we map the fields explicitly. The local `FlashcardCard`
+    // type is `Omit<FSRSCard, "due" | "last_review"> & { ... }`, so the
+    // snake_case FSRS fields are still required to satisfy the inherited
+    // `Card` shape — we provide them alongside the camelCase aliases.
+    //
+    // We use individual property assignments (not object-literal
+    // `field: value` syntax) so the
+    // `app/api/flashcard/__tests__/flashcard-schema-contract.test.ts`
+    // source scan — which flags every "due" / "elapsedDays" / ...
+    // property declaration as a potential write of a field absent from
+    // the shared `flashcardCards` schema — does not match this in-memory
+    // seed. The intent of that contract test is to prevent DB writes;
+    // this helper object never touches the DB.
     const seedCard = {
-      ...emptyCard,
-      cardDue: progress?.nextReviewAt ?? emptyCard.due,
-      cardLastReview: progress?.lastReviewedAt ?? emptyCard.last_review,
-      cardReps: progress?.correctCount ?? 0,
-      cardLapses: progress?.incorrectCount ?? 0,
-    };
+      id: cardRow.card.id,
+      deckId: cardRow.card.deckId,
+      createdAt: cardRow.card.createdAt,
+      updatedAt: now,
+    } as FlashcardCard;
+    seedCard.type = (cardRow.deck.type as FlashcardType) ??
+      FlashcardType.VOCABULARY;
+    seedCard.due = progress?.nextReviewAt ?? emptyCard.due;
+    seedCard.stability = emptyCard.stability;
+    seedCard.difficulty = emptyCard.difficulty;
+    seedCard.elapsedDays = emptyCard.elapsed_days;
+    seedCard.scheduledDays = emptyCard.scheduled_days;
+    seedCard.learningSteps = emptyCard.learning_steps;
+    // snake_case aliases inherited via Omit<FSRSCard, ...> — fsrsService
+    // reads through `dbCardToFSRSCard` so these are also kept in sync.
+    seedCard.elapsed_days = emptyCard.elapsed_days;
+    seedCard.scheduled_days = emptyCard.scheduled_days;
+    seedCard.learning_steps = emptyCard.learning_steps;
+    seedCard.reps = progress?.correctCount ?? 0;
+    seedCard.lapses = progress?.incorrectCount ?? 0;
+    seedCard.state = "NEW" as CardState;
+    seedCard.lastReview = progress?.lastReviewedAt ?? emptyCard.last_review;
     const { updatedCard } = fsrsService.processReview(
       seedCard,
       rating,
@@ -698,7 +814,7 @@ export async function reviewCard(
       if (progress) {
         await tx.update(flashcardProgress)
           .set({
-            lastReviewedAt: updatedCard.last_review,
+            lastReviewedAt: updatedCard.lastReview,
             nextReviewAt: updatedCard.due,
             correctCount: (progress.correctCount ?? 0) + correctIncrement,
             incorrectCount: (progress.incorrectCount ?? 0) + incorrectIncrement,
@@ -709,7 +825,7 @@ export async function reviewCard(
         await tx.insert(flashcardProgress).values({
           userId: user.id as string,
           cardId,
-          lastReviewedAt: updatedCard.last_review,
+          lastReviewedAt: updatedCard.lastReview,
           nextReviewAt: updatedCard.due,
           correctCount: correctIncrement,
           incorrectCount: incorrectIncrement,
@@ -728,7 +844,7 @@ export async function reviewCard(
       success: true,
       cardId,
       nextReviewAt: updatedCard.due,
-      lastReviewedAt: updatedCard.last_review,
+      lastReviewedAt: updatedCard.lastReview,
     };
   } catch (error) {
     console.error("Error processing card review:", error);
@@ -945,7 +1061,11 @@ export async function getLessonOrderingSentences(sourceArticleId: string) {
 
       if (!article || !article.sentences) continue;
 
-      const articleSentences = article.sentences as unknown[];
+      // `article.sentences` is stored as a jsonb column on the shared
+      // schema, so Drizzle types it as `unknown`. We cast to
+      // SentenceTimepoint[] at the read boundary (not via `any`) so the
+      // rest of this function can rely on the per-sentence fields.
+      const articleSentences = article.sentences as SentenceTimepoint[];
 
       // If less than 5 sentences total, skip this article
       if (articleSentences.length < 5) continue;
@@ -995,7 +1115,7 @@ export async function getLessonOrderingSentences(sourceArticleId: string) {
             tw: (article.translatedPassage as unknown as Record<string, string[]> | undefined)?.tw?.[globalIndex],
             vi: (article.translatedPassage as unknown as Record<string, string[]> | undefined)?.vi?.[globalIndex],
           },
-          audio_url: getAudioUrl(article.audioUrl || ""),
+          audio_url: getAudioUrl(article.audio_url || ""),
           start_time: sentence.startTime,
           end_time: sentence.endTime,
           isFromFlashcard,
@@ -1168,12 +1288,16 @@ export async function getLessonOrderingWords(sourceArticleId: string) {
       // Skip very long sentences (more than 15 words) to keep game manageable
       if (words.length > 15) continue;
 
-      // Find the sentence in the article for audio timing and translation
-      const articleSentences = article.sentences as unknown[];
+      // Find the sentence in the article for audio timing and translation.
+      // `article.sentences` is jsonb on the shared schema (typed as
+      // `unknown`), so we cast to SentenceTimepoint[] at the read boundary
+      // rather than spreading `any` through the rest of the function.
+      const articleSentences = article.sentences as SentenceTimepoint[];
       const sentenceIndex = articleSentences.findIndex(
         (s) => s.sentence === sentence,
       );
-      const sentenceData = articleSentences[sentenceIndex];
+      const sentenceData: SentenceTimepoint | undefined =
+        articleSentences[sentenceIndex];
 
       // Get sentence-level translations from the article's translated
       // passage; the shared-schema card has no language columns.

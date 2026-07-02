@@ -337,17 +337,21 @@ export default function ArticleContent({ article }: Props) {
     if (currentSentenceIndex !== -1) {
       const sentence = article.sentences?.[currentSentenceIndex];
       if (sentence) {
-        const sentences = {
-          sentence: sentence.sentence,
-          startTime: sentence.startTime,
-          endTime: sentence.endTime,
-          translation: {
+        // Build a `SentenceEntry` that matches the contract exported by
+        // `actions/flashcard.ts` (cardSentence/cardTranslation/... rather
+        // than the raw `sentence`/`translation` keys used by the article
+        // shape). This is what `saveFlashcard` expects at the boundary.
+        const sentences: import("@/actions/flashcard").SentenceEntry = {
+          cardSentence: sentence.sentence,
+          cardStartTime: sentence.startTime,
+          cardEndTime: sentence.endTime,
+          cardTranslation: {
             th: article.translatedPassage?.th?.[currentSentenceIndex] as string,
             cn: article.translatedPassage?.cn?.[currentSentenceIndex] as string,
             tw: article.translatedPassage?.tw?.[currentSentenceIndex] as string,
             vi: article.translatedPassage?.vi?.[currentSentenceIndex] as string,
           },
-          audioUrl: article.audioUrl as string,
+          cardAudioUrl: article.audioUrl as string,
         };
 
         if (sentences) {

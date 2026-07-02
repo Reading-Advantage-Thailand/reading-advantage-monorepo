@@ -296,10 +296,14 @@ export default function LessonSentenceOrderWord({
         },
       );
       setIsPlaying(false);
-      update({
-        user: {
-          ...session?.user,
-        },
+      // `update` and `session` are the typed-local refresh stubs declared
+      // in the useSession() destructure above. The auth-client contract
+      // does not currently provide them, so we guard with `?.` to keep
+      // the M1 no-op behavior and avoid TS2722. We pass
+      // `session?.user ?? null` (instead of spreading, which would type
+      // as a partial AuthUser and fail TS2322).
+      update?.({
+        user: session?.user ?? null,
       });
     }
   }, [currentIndex, activeSentences.length]);
