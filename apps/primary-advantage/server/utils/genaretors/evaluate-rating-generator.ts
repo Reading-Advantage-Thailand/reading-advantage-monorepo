@@ -1,7 +1,7 @@
 import path from "path";
 import { z } from "zod";
 import fs from "fs";
-import { generateObject } from "@reading-advantage/ai";
+import { generateObject } from "@reading-advantage/ai/internal-sdk";
 import { google, googleModel } from "@/utils/google";
 import {
   ArticleBaseCefrLevel,

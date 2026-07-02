@@ -1,4 +1,4 @@
-import { generateObject } from "@reading-advantage/ai";
+import { generateObject } from "@reading-advantage/ai/internal-sdk";
 import { google, googleModelLite } from "@/utils/google";
 import { db } from '@reading-advantage/db';
 import { eq } from "drizzle-orm";

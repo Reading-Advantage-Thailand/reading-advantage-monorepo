@@ -1,4 +1,4 @@
-import { generateObject } from "@reading-advantage/ai";
+import { generateObject } from "@reading-advantage/ai/internal-sdk";
 import { google, googleModel } from "@/utils/google";
 import { z } from "zod";
 

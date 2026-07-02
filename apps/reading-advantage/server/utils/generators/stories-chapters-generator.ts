@@ -1,5 +1,5 @@
 import { ArticleBaseCefrLevel, ArticleType } from "../../models/enum";
-import { generateObject } from "@reading-advantage/ai";
+import { generateObject } from "@reading-advantage/ai/internal-sdk";
 import { openai, openaiModel4o } from "@/utils/openai";
 import { z } from "zod";
 import { getCEFRRequirements } from "../CEFR-requirements";

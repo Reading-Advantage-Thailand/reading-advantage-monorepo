@@ -63,7 +63,7 @@ describe("Wave 2 Phase 2 — storage adapter contract", () => {
     const driver: StorageClient = new S3StorageDriver(testConfig);
     const methods = ["put", "getUrl", "getSignedUrl", "delete", "exists"] as const;
 
-    const missing = methods.filter((m) => typeof (driver as Record<string, unknown>)[m] !== "function");
+    const missing = methods.filter((m) => typeof (driver as unknown as Record<string, unknown>)[m] !== "function");
 
     expect(
       missing,

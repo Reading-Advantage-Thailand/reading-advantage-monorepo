@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { ExtendedNextRequest } from "./auth-controller";
 import { z } from "zod";
-import { streamText } from "@reading-advantage/ai";
+import { streamText } from "@reading-advantage/ai/internal-sdk";
 import { openai, openaiModel5 } from "@/utils/openai";
 import { promptLevelTestChat } from "@/data/prompt-level-test-chat";
 

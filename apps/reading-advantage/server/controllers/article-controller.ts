@@ -3,7 +3,7 @@ import { ExtendedNextRequest } from "./auth-controller";
 import { z } from "zod";
 import { splitTextIntoSentences } from "@/lib/utils";
 import { Translate } from "@google-cloud/translate/build/src/v2";
-import { generateObject } from "@reading-advantage/ai";
+import { generateObject } from "@reading-advantage/ai/internal-sdk";
 import { openai, openaiModel } from "@/utils/openai";
 import {
   db,

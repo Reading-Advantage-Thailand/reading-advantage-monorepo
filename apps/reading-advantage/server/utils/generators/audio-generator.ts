@@ -9,7 +9,7 @@ import base64 from "base64-js";
 import fs from "fs";
 import { execSync } from "child_process";
 import uploadToBucket from "@/utils/uploadToBucket";
-import { generateObject } from "@reading-advantage/ai";
+import { generateObject } from "@reading-advantage/ai/internal-sdk";
 import { openai, openaiModel } from "@/utils/openai";
 import { google, googleModelAudio } from "@/utils/google";
 import z from "zod";

@@ -7,6 +7,10 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./internal-sdk": {
+      "types": "./dist/internal-sdk.d.ts",
+      "import": "./dist/internal-sdk.js"
     }
   },
   "files": [

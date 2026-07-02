@@ -1,4 +1,4 @@
-import { experimental_generateImage as generateImages } from "@reading-advantage/ai";
+import { experimental_generateImage as generateImages } from "@reading-advantage/ai/internal-sdk";
 import uploadToBucket from "@/utils/uploadToBucket";
 import fs from "fs";
 import { IMAGE_URL } from "../../constants";
