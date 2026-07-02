@@ -1,133 +1,139 @@
 {
-  "audit_id": "wave1_high_risk_product_failures_20260628-phase3",
-  "track_id": "wave1_high_risk_product_failures_20260628",
-  "review_role": "B",
-  "review_domain": "security / tenancy / auth / validation / data handling",
-  "phase": "Phase 3: CodeCamp Runtime Reliability",
-  "executed_at": "2026-07-02",
-  "baseline_sha": "7ff3a8f83a872b9f48604e1f3b4114ff8f495853",
-  "head_sha": "e28e9ea5",
-  "status": "COMPLETE",
-  "gate_result": {
-    "command": "CI=true pnpm --filter @reading-advantage/domain exec vitest run src/__tests__/codecamp-tenantdb-runtime.test.ts src/__tests__/codecamp-webhook-idempotency-domain.test.ts && CI=true pnpm --filter @reading-advantage/webhooks exec vitest run src/__tests__/github-webhook-idempotency.test.ts src/__tests__/github-webhook-ack-latency.test.ts && CI=true pnpm --filter codecamp-advantage exec vitest run app/api/chat/__tests__/streaming-protocol.test.ts",
+  "role": "review-b-security",
+  "status": "complete",
+  "track": "wave1_high_risk_product_failures_20260628",
+  "phase": "Phase 4: Sales Security, Privacy, and Contract Hardening",
+  "baseline_sha": "5014c5051a2dd5be161c541257343bb9a13eedb9",
+  "head_sha": "ba483a4e",
+  "tests_verified": {
+    "command": "CI=true pnpm --filter @reading-advantage/api exec vitest run src/__tests__/sales-auth-context.test.ts src/__tests__/sales-router-audio-contract.test.ts && CI=true pnpm --filter @reading-advantage/domain exec vitest run src/__tests__/sales-authorization-idors.test.ts src/__tests__/sales-audio-validation-privacy.test.ts src/__tests__/sales-contract-nullability.test.ts && CI=true pnpm --filter sales-advantage exec vitest run app/api/roleplay-attempts/__tests__/audio-upload-boundary.test.ts",
     "exit_code": 0,
-    "test_suites": "5 passed, 5 total",
-    "tests": "7 passed, 7 total"
+    "suites_passed": 6,
+    "suites_total": 6,
+    "tests_passed": 26,
+    "tests_total": 26
   },
-  "findings_summary": {
-    "critical": 0,
-    "high": 1,
-    "medium": 0,
-    "low": 2,
-    "total": 3
+  "full_suite_verified": {
+    "command": "CI=true pnpm --filter @reading-advantage/domain exec vitest run && CI=true pnpm --filter @reading-advantage/api exec vitest run && CI=true pnpm --filter sales-advantage exec vitest run",
+    "exit_code": 0,
+    "domain_tests": "367 passed, 5 skipped",
+    "api_tests": "223 passed",
+    "sales_advantage_tests": "21 passed"
+  },
+  "type_check_verified": {
+    "command": "CI=true pnpm turbo run check-types --filter=@reading-advantage/domain --filter=@reading-advantage/api --filter=sales-advantage",
+    "exit_code": 1,
+    "note": "domain and api type-check pass. sales-advantage fails with 2 pre-existing TS2742 errors in lib/trpc.ts:4 (from scaffold commit 025f8fc9), not in any file touched by this phase."
+  },
+  "lint_verified": {
+    "command": "CI=true pnpm turbo run lint --filter=@reading-advantage/domain --filter=@reading-advantage/api --filter=sales-advantage",
+    "exit_code": 0,
+    "note": "0 errors; warnings are pre-existing unused-var warnings in untouched files."
   },
   "findings": [
     {
-      "id": "W1-P3-RB-001",
-      "severity": "High",
-      "status": "FIXED",
-      "scope": "in-scope",
-      "title": "Webhook delivery-id cache could be poisoned via invalid timestamp",
-      "category": "webhook security / idempotency",
-      "evidence": "In packages/webhooks/src/github.ts the handler adds the x-github-delivery value to processedDeliveryIds synchronously at the top of the route (before any await). If the x-github-delivery-timestamp / x-hub-timestamp header is non-numeric, the handler returns 401 at the 'Invalid timestamp' branch without deleting the in-flight marker. An attacker who knows or can predict a future GitHub delivery UUID can therefore suppress that legitimate delivery for the lifetime of the process.",
-      "fix": "Added processedDeliveryIds.delete(deliveryId) on the invalid-timestamp validation-rejection path, consistent with the missing-signature, invalid-signature, invalid-JSON, non-pull_request-event, and unsupported-action paths.",
-      "test_evidence": "Extended packages/webhooks/src/__tests__/github-webhook-idempotency.test.ts with 'does not let an invalid-timestamp request poison the delivery id cache', which sends a signed request with timestamp 'not-a-number', asserts 401, then sends a valid signed request with the same delivery id and asserts 200 with createPrReview called exactly once.",
-      "commits": ["5d1ec165"]
+      "id": "F1",
+      "severity": "critical",
+      "category": "authorization",
+      "title": "saveAttemptEvaluation SALES_ADMIN override allowed cross-tenant writes",
+      "description": "The IDOR guard predicate was `attempt.userId === user.id || user.role === \"SALES_ADMIN\"`. The ownership check used the real attempt row's userId (good), but the admin branch allowed any SALES_ADMIN to mutate any attempt, including attempts owned by reps in a different school/tenant. Because salesRoleplayAttempts is REFERENTIAL (no schoolId), the admin branch needed an explicit users.schoolId scoping check. The existing Red test only exercised the not-found path (mock returned no rows), so the cross-tenant admin hole had no adversarial coverage.",
+      "evidence": "packages/domain/src/sales/mutations.ts:159 before fix: `if (existing.userId !== user.id && user.role !== \"SALES_ADMIN\")`. No tenant lookup for the admin branch. Plan comment claimed 'SALES_ADMIN whose tenant scoping is satisfied' but implementation did not satisfy it.",
+      "fix_status": "fixed_in_commit_ba483a4e",
+      "fix_detail": "Added a tenant-scoped users.schoolId lookup for the admin override path. The query runs through the tenant-scoped db (FLAT auto-injection) plus an explicit `owner.schoolId === tenant.schoolId` defense-in-depth check. Cross-tenant admin updates now throw SalesAuthError before any UPDATE. Also fixed the downstream markTheoryLessonComplete call to use the attempt owner's user context instead of the admin's context, so a passing evaluation updates the rep's progress, not the admin's.",
+      "tests_added": [
+        "saveAttemptEvaluation rejects updating an attempt owned by another user (real ownership path)",
+        "saveAttemptEvaluation allows same-tenant SALES_ADMIN to update a rep's attempt",
+        "saveAttemptEvaluation rejects cross-tenant SALES_ADMIN update"
+      ]
     },
     {
-      "id": "W1-P3-RB-002",
-      "severity": "Low",
-      "status": "DEFERRED",
-      "scope": "out-of-scope / pre-existing design accepted in Phase 3",
-      "title": "Process-local processedDeliveryIds Set grows unbounded for valid deliveries",
-      "category": "resource exhaustion / observability",
-      "evidence": "Valid delivery IDs are never removed from the in-memory Set in packages/webhooks/src/github.ts or packages/domain/src/codecamp/pr-reviews.ts. In a long-running production process under high webhook volume this is a slow memory leak, although each entry is small (a UUID string).",
-      "fix": "Not fixed in Phase 3 to stay within the representative-slice scope. Wave 4's webhook retry/DLQ track should move durable dedup fully to Postgres and bound or TTL the in-memory window.",
-      "test_evidence": "N/A — pre-existing/accepted design, no new tests added.",
-      "commits": [],
-      "deferred_to": "wave4_app_security_correctness_backlog_20260628"
+      "id": "F2",
+      "severity": "high",
+      "category": "authorization",
+      "title": "saveAttemptEvaluation IDOR test exercised not-found path, not ownership path",
+      "description": "The original Red/Green test for IDOR configured the mock with no SELECT results, so the rejection came from the 'attempt not found' branch rather than the ownership-check branch. This left the real ownership predicate untested and masked the cross-tenant admin issue.",
+      "evidence": "packages/domain/src/__tests__/sales-authorization-idors.test.ts:63 original: `const db = createMockDb({ updateReturning: [otherAttempt] });` — selectResults defaults to [], so existing attempt is undefined.",
+      "fix_status": "fixed_in_commit_ba483a4e",
+      "fix_detail": "Updated the IDOR test to return the cross-owner attempt from SELECT so the rejection happens at the ownership predicate. Added same-tenant admin success and cross-tenant admin failure tests to cover the admin override branch."
     },
     {
-      "id": "W1-P3-RB-003",
-      "severity": "Low",
-      "status": "DEFERRED",
-      "scope": "out-of-scope / accepted Phase 3 behavior",
-      "title": "500 processing failures suppress same-process GitHub retries",
-      "category": "reliability",
-      "evidence": "The outer catch in packages/webhooks/src/github.ts returns 500 without deleting processedDeliveryIds, so a GitHub retry hitting the same process is suppressed until restart. This matches the Phase 3 design intent of treating a delivery that passed validation as a duplicate even if mid-flight processing fails, and the inner runReview catch already persists a 'Review failed' status.",
-      "fix": "Not changed in Phase 3. Wave 4's Postgres-backed retry/DLQ track is the planned durable solution for processing failures.",
-      "test_evidence": "N/A — accepted design, no new tests added.",
-      "commits": [],
-      "deferred_to": "wave4_app_security_correctness_backlog_20260628"
+      "id": "F3",
+      "severity": "informational",
+      "category": "tenant_isolation",
+      "title": "getCohortOverview relies on in-memory filter for REFERENTIAL salesProgress",
+      "description": "getCohortOverview fetches all salesProgress rows through the unscoped db and filters in memory against allowedRepIds derived from a tenant-scoped users query. The users query is FLAT and auto-scoped by TenantDB; the in-memory filter is defense-in-depth. In production this is sound because the users query returns only reps in the admin's tenant. The defensive filter is not masking a bug; it makes the output provably tenant-scoped even when TenantDB is bypassed in tests.",
+      "evidence": "packages/domain/src/sales/queries.ts:323-342. Null-tenant short-circuit at line 316 returns [].",
+      "fix_status": "no_action_required",
+      "fix_detail": "Verified sound. No code change."
+    },
+    {
+      "id": "F4",
+      "severity": "informational",
+      "category": "privacy",
+      "title": "Route-level consent/retention rejection tests were missing",
+      "description": "The audio-upload route validates size, MIME, duration, consent, and retention before arrayBuffer/storage/AI calls. Domain tests covered consent/retention rejection, but the route tests only covered size/MIME/duration, leaving the multipart form-data parsing of consent/retention without direct boundary coverage.",
+      "evidence": "apps/sales-advantage/app/api/roleplay-attempts/__tests__/audio-upload-boundary.test.ts originally had 3 tests; consent/retention were not explicitly tested at the route boundary.",
+      "fix_status": "fixed_in_commit_ba483a4e",
+      "fix_detail": "Added two route tests that verify missing/declined consent (null, 'false', '0', '') and invalid retentionDays (null, '', '0', '366', 'abc') each return 400 with the correct field and reach storage/AI/submit zero times. Verified the route parses only the exact string 'true' as consent and only a valid integer in [1,365] as retention."
+    },
+    {
+      "id": "F5",
+      "severity": "informational",
+      "category": "privacy",
+      "title": "No raw PII/audio reaches provider without consent",
+      "description": "Both the route and domain enforce explicit affirmative consent (z.literal(true) at the domain; exact 'true' string parsing at the route) and bounded retention metadata before any storage.put or AI evaluate call. Rejected media reaches the provider 0 times.",
+      "evidence": "packages/domain/src/sales/mutations.ts:235-259 validates before evaluate. apps/sales-advantage/app/api/roleplay-attempts/route.ts:68-134 validates before arrayBuffer/storage/AI.",
+      "fix_status": "no_action_required"
+    },
+    {
+      "id": "F6",
+      "severity": "informational",
+      "category": "contracts",
+      "title": "audioStorageKey nullability and wire contracts verified",
+      "description": "Domain input/output schemas, types output schema, and Drizzle column all accept null audioStorageKey. The types package exports both roleplayAttemptInputSchema and roleplayAudioInputSchema for cross-app parity.",
+      "evidence": "packages/domain/src/__tests__/sales-contract-nullability.test.ts passes 6/6. packages/api/src/__tests__/sales-router-audio-contract.test.ts passes 3/3.",
+      "fix_status": "no_action_required"
     }
   ],
-  "anti_pattern_checks": {
-    "A2_consent_blind_publish": {
-      "triggered": false,
-      "detail": "Phase 3 did not touch any draft→published publish gate, user-generated content approval flow, or named-subject publishing surface. No consent/anonymization gate was required."
+  "security_review": {
+    "idor_guard_saveAttemptEvaluation": {
+      "verdict": "sound_after_fix",
+      "detail": "Ownership check compares existing.userId from the SELECT result against user.id (not request input). Admin override is now tenant-scoped via users.schoolId. UPDATE is never invoked when ownership/tenant check fails."
     },
-    "A6_registry_overstatement": {
-      "triggered": false,
-      "detail": "measure/tracks.md and plan.md Phase 3 claims (TenantScopeError fixed, webhook idempotency/ack-latency tests green, streaming protocol test green) match the actual targeted gate result (5 suites / 7 tests pass). No security state is claimed resolved beyond the adversarial tests that pass."
+    "cross_tenant_cohort_read": {
+      "verdict": "sound",
+      "detail": "Cohort overview scopes reps via FLAT users table (TenantDB auto-scope) plus explicit in-memory filter. Null tenant short-circuits to []."
+    },
+    "audio_validation_order": {
+      "verdict": "sound",
+      "route": "size/MIME/duration/consent/retention validated before audioFile.arrayBuffer(), getStorageClient, getAIClient, getRoleplayEvaluationContext, and submitRoleplayAttempt.",
+      "domain": "roleplayAudioInputSchema + explicit byte/duration checks run before createRoleplayAttempt, storage, or evaluate."
+    },
+    "consent_retention_gate": {
+      "verdict": "sound",
+      "detail": "Consent must be the literal boolean true (domain) or exact string 'true' (route). retentionDays required and bounded [1,365]. No provider/storage calls on rejection."
+    },
+    "provider_adapter_boundary": {
+      "verdict": "sound",
+      "detail": "No new raw-SDK bypass. Storage and AI are accessed only through getStorageClient and getAIClient adapters."
     }
   },
-  "verified_controls": [
-    {
-      "control": "TenantDB unscoped() safety for REFERENTIAL codecamp tables",
-      "state": "PASS",
-      "files": [
-        "packages/domain/src/codecamp/pr-reviews.ts",
-        "packages/domain/src/codecamp/exercises.ts",
-        "packages/domain/src/__tests__/codecamp-tenantdb-runtime.test.ts"
-      ],
-      "notes": "Every unscoped query is scoped by an owner/resource key: userId, reviewId FK chain, prUrl, repoUrl, moduleId, exerciseId, or deliveryId. No unscoped REFERENTIAL query reads without a scoping predicate."
+  "anti_pattern_audit": {
+    "A2_consent_blind_publish_gate": {
+      "status": "pass",
+      "detail": "Audio publish/evaluation gate requires explicit affirmative consent and retention metadata. Tests verify rejection when consent or retention is missing/invalid."
     },
-    {
-      "control": "GitHub webhook HMAC verification",
-      "state": "PASS",
-      "files": [
-        "packages/webhooks/src/github-client.ts"
-      ],
-      "notes": "verifyWebhookSignature uses crypto.timingSafeEqual for constant-time comparison, requires GITHUB_WEBHOOK_SECRET, and enforces a timestamp-replay window."
+    "A3_labeled_counts": {
+      "status": "pass",
+      "detail": "All count assertions use labeled variables: provider call count on rejected media, update call count, cross-tenant row count."
     },
-    {
-      "control": "Webhook delivery-id idempotency",
-      "state": "PASS",
-      "files": [
-        "packages/webhooks/src/github.ts",
-        "packages/domain/src/codecamp/pr-reviews.ts",
-        "packages/webhooks/src/__tests__/github-webhook-idempotency.test.ts",
-        "packages/domain/src/__tests__/codecamp-webhook-idempotency-domain.test.ts"
-      ],
-      "notes": "Two-layer dedup: synchronous in-process Set at route entry plus durable SELECT-before-INSERT in logWebhookEvent. All validation-rejection paths now release the in-memory marker."
-    },
-    {
-      "control": "Non-blocking ACK before LLM review",
-      "state": "PASS",
-      "files": [
-        "packages/webhooks/src/github.ts",
-        "packages/webhooks/src/__tests__/github-webhook-ack-latency.test.ts"
-      ],
-      "notes": "HTTP 200 ACK is returned before the background review promise resolves; failures are persisted via updatePrReview inside runReview's catch."
-    },
-    {
-      "control": "GitHub user → intern privilege mapping",
-      "state": "PASS",
-      "files": [
-        "packages/webhooks/src/github.ts"
-      ],
-      "notes": "Matched GitHub login is mapped to a user context with hardcoded INTERN role and the matched user's id; no privilege escalation path exists."
-    },
-    {
-      "control": "Chat route authentication and SSE framing",
-      "state": "PASS",
-      "files": [
-        "apps/codecamp-advantage/app/api/chat/route.ts",
-        "apps/codecamp-advantage/app/api/chat/__tests__/streaming-protocol.test.ts"
-      ],
-      "notes": "Route calls requireAuth and returns 401 on auth failure. Error responses are generic; stack traces are logged server-side only. Response is reframed with text/event-stream Content-Type for client compatibility."
+    "A6_registry_overstatement": {
+      "status": "pass",
+      "detail": "Plan claims 22/22 targeted tests pass and full suite passes. Verified: targeted gate exits 0 with 26/26 tests, full domain/api/sales-advantage suites pass. No 'resolved' marketing copy for unproven security states."
     }
+  },
+  "commits": [
+    "ba483a4e fix(sales): wave1 p4 review-b security (track_id: wave1_high_risk_product_failures_20260628)"
   ],
-  "commits": ["5d1ec165", "1d131df2", "e28e9ea5"],
-  "handoff": "Phase 3 Green security review is complete. The Green implementation was at f83da8f5; Review B found one High-severity blocking issue (invalid-timestamp delivery-id cache poisoning), fixed it in 5d1ec165, and updated the audit result in 1d131df2. Two Low findings are accepted pre-existing design limitations deferred to Wave 4's Postgres retry/DLQ track. The targeted Phase 3 gate exits 0 with 7 tests across 5 suites. Remaining CodeCamp Medium+ security/correctness items (MT-8..11/13/14) continue to be owned by Wave 4 per the coverage matrix."
+  "handoff": "All blocking security findings resolved. The SALES_ADMIN cross-tenant write hole in saveAttemptEvaluation has been closed with a tenant-scoped users lookup and new adversarial tests. Route-level consent/retention boundary coverage has been added. Full package test suites pass; lint is clean; check-types passes for domain/api (sales-advantage has pre-existing TS2742 unrelated to this work). No deferred Wave 4 security blockers remain for the Phase 4 slice."
 }
