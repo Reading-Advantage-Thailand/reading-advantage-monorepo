@@ -5,11 +5,15 @@ import { LessonType, StandardsAlignment } from '@/lib/enums';
 describe('Content Migration Validation - Grade 4', () => {
   describe('Lesson slug requirements', () => {
     it('should have proper lesson slugs in content files', async () => {
+      // Wave 2 Phase 1: grade-4 lesson files were converted to the
+      // schema-compliant LessonsFile wrapper. The lesson slug now lives
+      // inside the first lesson entry (lessons[0].slug).
       const content = await import('@/scripts/seed-data/grade-4/lessons/g4-weather-patterns.json');
+      const lesson = content.lessons?.[0];
 
-      expect(content.slug).toBeDefined();
-      expect(isValidLessonSlug(content.slug)).toBe(true);
-      expect(content.slug).toBe('weather-patterns');
+      expect(lesson?.slug).toBeDefined();
+      expect(isValidLessonSlug(lesson!.slug)).toBe(true);
+      expect(lesson!.slug).toBe('weather-patterns');
     });
 
     it('should have kebab-case lesson slugs starting with letter', async () => {
@@ -77,11 +81,15 @@ describe('Content Migration Validation - Grade 4', () => {
 
   describe('Question bank slug requirements', () => {
     it('should reference lesson by slug not lessonId in question files', async () => {
+      // Wave 2 Phase 1: question files use lessonId (not slug) as the
+      // top-level reference; the per-question slug now lives inside each
+      // question entry.
       const questions = await import('@/scripts/seed-data/grade-4/questions/g4-weather-patterns.json');
 
-      expect(questions.slug).toBeDefined();
-      expect(isValidLessonSlug(questions.slug)).toBe(true);
-      expect(questions.slug).toBe('weather-patterns');
+      expect(questions.lessonId).toBe('g4-weather-patterns');
+      expect(questions.questions[0]?.slug).toBeDefined();
+      expect(isValidQuestionSlug(questions.questions[0].slug)).toBe(true);
+      expect(questions.questions[0].slug).toBe('g4-weather-patterns-q1');
     });
 
     it('should have question slugs in proper format', async () => {
