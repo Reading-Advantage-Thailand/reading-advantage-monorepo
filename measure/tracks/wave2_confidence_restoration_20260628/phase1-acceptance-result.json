@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "status": "fail",
+  "summary": "Wave 2 Phase 1 targeted migration/seed governance tests pass, and the Phase 1 implementation aligns with the current-phase seed/deploy-gate tasks. Acceptance is rejected because the required closeout test gate exits 1 with an unlisted science-advantage migration-global-setup failure; this is Phase-1-relevant migration-runner evidence and is not one of the supplied known non-blocking failures. The check-types closeout gate also exits 1 from known pre-existing sales/codecamp/science failures.",
+  "blocking_findings": [
+    "Closeout test gate failed: `CI=true pnpm turbo run test --filter=@reading-advantage/db --filter=science-advantage --filter=codecamp-advantage --filter=sales-advantage` exited 1. The first failing package was science-advantage globalSetup before tests ran: `pnpm --filter @reading-advantage/db migrate` against `postgresql://postgres:postgres@localhost:5432/science_advantage_test` exited 1, so Vitest reported `No test files found` and `Drizzle migrate exited with status 1`. A fresh probe DB using `drizzle-kit migrate` also exited 1 with only `undefined` after `applying migrations...`; this is not included in the orchestrator-supplied known pre-existing list and is directly related to migration governance proof. Larger remediation is needed before Phase 1 can be accepted."
+  ],
+  "nonblocking_findings": [
+    "Targeted Phase 1 Red-now-Green command passed: db governance/seed tests 6 files / 98 tests, science grade-4 seed tests 2 files / 21 tests, and sales seed contract 1 file / 3 tests all exited 0.",
+    "packages/db aggregate test within the closeout run passed: 34 passed files, 2 skipped files, 641 passed tests, 6 skipped tests; ledger-doctor.test.ts and stale-ledger.test.ts skipped without PG_TEST_URL as allowed by strategy.",
+    "The closeout check-types command exited 1 from known pre-existing failures: sales-advantage `lib/trpc.ts` TS2742 (2 errors, owner: sales scaffold/type hygiene), codecamp-advantage `app/api/chat/route.ts` TS2307 for `@reading-advantage/ai` (owner: Wave 2 Phase 2 AI barrel/provider work), and science-advantage OpenTelemetry/Sentry/audit-debt/test typing errors including `instrumentation.ts`, `lib/instrumentation.node.ts`, Zod mock tests, and Sentry config tests (owner: science observability/audit-debt).",
+    "codecamp-advantage test package alone exits 1 with pre-existing prod-smoke/live-network and artifact-track failures (40 failed / 961 passed / 64 skipped in the observed run). This matches the Phase 3 test-signal/prod-smoke debt class and was not introduced by Phase 1 seed/migration changes.",
+    "Plan truthfulness check passed for current Phase 1 claims: the plan records the corrected CodeCamp Red layer honestly (wrong duplicate-type assertion replaced by seed idempotency) and does not claim the Phase 1 closeout aggregate gates are green.",
+    "Marker hygiene for Phase 1 is acceptable: all five Phase 1 tasks are marked `[x]`; no `[ ]`, `[~]`, or `[b] deferred:<owner>` remains in the current phase. Future phases remain pending and are not claimed complete.",
+    "A1 supervisor check passed by source review: `measure/automation-supervisor.py` uses task regex `[~xb]`, has `is_task_structurally_blocked`, recognizes status `b`, and recognizes structured `deferred:<owner>` rather than free-text deferred substrings.",
+    "A3/A4 checks passed for new Phase 1 tests: seed/migration assertions use labeled counts (`Missing sentinel count`, `Required migration behind count`, `Invalid grade-4 seed item count`, `Orphan lesson count`, `Draft-visible lesson count`, `Wrongly-skipped canonical lesson count`) and fixture-count guards prevent vacuous seed-suite passes.",
+    "A6/A7 checks found no Wave 2 registry overstatement or over-broad banned-term filters in the searched scopes. A9 is clean for changed Phase 1 tests; pre-existing CodeCamp prod-smoke archive/path debt remains out of current-phase scope and is part of the known prod-smoke/test-signal debt class."
+  ],
+  "evidence": [
+    "measure/index.md",
+    "measure/tracks.md",
+    "measure/anti-patterns.md",
+    "measure/tracks/wave2_confidence_restoration_20260628/spec.md",
+    "measure/tracks/wave2_confidence_restoration_20260628/plan.md",
+    "measure/tracks/wave2_confidence_restoration_20260628/test-strategy.md",
+    "measure/tracks/wave2_confidence_restoration_20260628/review-a-correctness-result.json",
+    "measure/tracks/wave2_confidence_restoration_20260628/review-b-security-result.json",
+    "measure/tracks/wave2_confidence_restoration_20260628/review-c-ux-api-result.json",
+    "measure/automation-supervisor.py",
+    "packages/db/src/__tests__/wave2-migration-seed-governance.test.ts",
+    "packages/db/src/__tests__/codecamp-stale-seed.test.ts",
+    "packages/db/src/__tests__/deploy-gate-contract.test.ts",
+    "packages/db/scripts/migration-ledger-doctor.ts",
+    "packages/db/src/seed/codecamp-seed.ts",
+    "apps/science-advantage/tests/wave2-grade4-seed-contract.test.ts",
+    "apps/science-advantage/scripts/seed/seed-lessons.ts",
+    "apps/science-advantage/scripts/seed/seed-questions.ts",
+    "apps/sales-advantage/scripts/__tests__/wave2-sales-curriculum-seed-contract.test.ts",
+    "apps/sales-advantage/scripts/sales-curriculum-seed.ts",
+    "git diff --name-status f753de606c889320dbf3e86f8f5fc42a53e7d8db..HEAD"
+  ],
+  "commands": [
+    "git rev-parse --abbrev-ref HEAD && git rev-parse HEAD && git status --short => branch docs/measure-wave4-6-medium-coverage, HEAD a5eda6dc4b575dbedff439243618aa768e473ae9; unrelated forbidden/untracked paths observed but not touched",
+    "git diff --name-status f753de606c889320dbf3e86f8f5fc42a53e7d8db..HEAD => Phase 1 app/db/test/plan/review changes listed; no migration setup files such as drizzle.config.ts or _journal.json changed since baseline",
+    "CI=true pnpm --filter @reading-advantage/db exec vitest run src/__tests__/journal-integrity.test.ts src/__tests__/snapshot-drift.test.ts src/__tests__/deploy-gate-contract.test.ts src/__tests__/drizzle045-migration-format.test.ts src/__tests__/codecamp-stale-seed.test.ts src/__tests__/wave2-migration-seed-governance.test.ts && CI=true pnpm --filter science-advantage exec vitest run --config vitest.unit.config.ts tests/lib/seed-validation.test.ts tests/wave2-grade4-seed-contract.test.ts && CI=true pnpm --filter sales-advantage exec vitest run scripts/__tests__/wave2-sales-curriculum-seed-contract.test.ts => exit 0 (db 6 files/98 tests; science 2 files/21 tests; sales 1 file/3 tests)",
+    "CI=true pnpm turbo run test --filter=@reading-advantage/db --filter=science-advantage --filter=codecamp-advantage --filter=sales-advantage => exit 1; db passed 34/2-skip files and 641/6-skip tests; science-advantage globalSetup failed because db migrate exited 1 against science_advantage_test; turbo stopped with science-advantage#test failed",
+    "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/science_advantage_test CI=true pnpm --filter @reading-advantage/db migrate => exit 1 after `applying migrations...`; no detailed error beyond pnpm recursive failure",
+    "DIRECT_DATABASE_URL=postgresql://postgres:postgres@localhost:5432/wave2_drizzle_probe CI=true pnpm --filter @reading-advantage/db exec drizzle-kit migrate => exit 1 after `applying migrations...undefined` on a fresh probe DB",
+    "PGPASSWORD=postgres dropdb/createdb wave2_acceptance_migrate_probe and apply packages/db/drizzle/*.sql via psql in lexical order => exit 0; manual SQL files themselves apply on fresh DB",
+    "CI=true pnpm turbo run check-types --filter=@reading-advantage/db --filter=science-advantage --filter=codecamp-advantage --filter=sales-advantage => exit 1; sales TS2742, codecamp @reading-advantage/ai TS2307, science OpenTelemetry/Sentry/audit-debt errors",
+    "CI=true pnpm turbo run test --filter=sales-advantage => exit 0; 4 files / 24 tests passed",
+    "CI=true pnpm turbo run check-types --filter=science-advantage => exit 1; OpenTelemetry/Sentry/Zod/audit-debt type errors observed",
+    "CI=true pnpm turbo run check-types --filter=codecamp-advantage => exit 1; app/api/chat/route.ts cannot find @reading-advantage/ai",
+    "CI=true pnpm turbo run test --filter=codecamp-advantage => exit 1; observed 11 failed files / 40 failed tests / 961 passed / 64 skipped from prod-smoke/live-network and artifact-track failures",
+    "CI=true pnpm --filter @reading-advantage/db doctor -- --check => exit 2 with `DIRECT_DATABASE_URL is not set`, which is the strategy-allowed missing-credential behavior and not live deploy proof",
+    "Static anti-pattern searches: no `PASS=N FAIL=0` or `all checks pass` claims in the Wave 2 plan; no matching registry overstatement in measure/tracks.md; no over-broad banned-term `rg -v` filters found under tests/*.sh"
+  ],
+  "changed_files": [
+    "measure/tracks/wave2_confidence_restoration_20260628/phase1-acceptance-result.json"
+  ],
+  "test_strategy_violations": [
+    "Phase 1 closeout test gate did not pass and the science-advantage migration-global-setup failure is not in the supplied known pre-existing failure list. Because Phase 1 is migration governance, this cannot be accepted as a harmless unrelated aggregate failure without owner/remediation evidence."
+  ],
+  "live_contract_violations": [
+    "Fresh-DB live/tooling proof for the Drizzle migrator is not green: `drizzle-kit migrate` exits 1 on a fresh probe DB while manual psql application of the migration SQL files succeeds. The Phase 1 targeted artifact/unit tests pass, but the closeout migration runner evidence is not sufficient for acceptance."
+  ],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "retry_implementation",
+  "confidence": "high"
+}
