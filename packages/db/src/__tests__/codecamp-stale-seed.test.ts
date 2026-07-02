@@ -5,6 +5,7 @@ import {
   getPhaseBCurriculumData,
   getPhaseCCurriculumData,
   getPhaseDCurriculumData,
+  type CurriculumLesson,
 } from "../seed/codecamp-curriculum-data.js";
 
 describe("findStaleModuleSlugs", () => {
@@ -67,15 +68,24 @@ describe("findStaleModuleSlugs", () => {
 });
 
 // -----------------------------------------------------------------------------
-// Wave 2 Phase 1 — duplicate/key drift before any destructive backfill path.
+// Wave 2 Phase 1 — seed idempotency/key drift.
 // The codecamp seed script skips existing lesson *types* for existing modules,
 // which assumes lesson types are unique within a module. The canonical
-// curriculum data contains many modules with multiple theory lessons, so the
-// current seed contract is ambiguous and drift-prone.
+// curriculum data intentionally contains many modules with multiple theory
+// lessons, so the seed's type-keyed logic silently drops canonical lessons on
+// re-seed. The contract under test is the SEED'S behavior, not the curriculum
+// structure: re-seeding an existing module must insert every still-missing
+// canonical lesson, not just "one per type".
 // -----------------------------------------------------------------------------
 
-describe("Wave 2 — codecamp curriculum duplicate lesson type counts", () => {
-  it("has no duplicate lesson types within a module", () => {
+interface ExistingLessonSnapshot {
+  type: CurriculumLesson["type"];
+  order: number;
+  title: string;
+}
+
+describe("Wave 2 — codecamp seed idempotency for existing modules", () => {
+  it("re-seeding an existing module inserts every canonical lesson, not one-per-type", () => {
     const phases = [
       getPhaseACurriculumData(),
       getPhaseBCurriculumData(),
@@ -88,30 +98,91 @@ describe("Wave 2 — codecamp curriculum duplicate lesson type counts", () => {
       "Fixture module count must be > 0",
     ).toBeGreaterThan(0);
 
-    const duplicates: Array<{ moduleSlug: string; type: string; count: number }> = [];
+    const modulesWithDuplicates = modules.filter((mod) => {
+      const typeSet = new Set(mod.lessons.map((l) => l.type));
+      return typeSet.size < mod.lessons.length;
+    });
+    expect(
+      modulesWithDuplicates.length,
+      "At least one module must have multiple lessons of the same type for this test to be meaningful",
+    ).toBeGreaterThan(0);
+
+    // TODO(Jr-Green): Replace this local mirror with an import of the real
+    // `selectLessonsToInsert(existingLessons, canonicalLessons)` pure helper
+    // that `packages/db/src/seed/codecamp-seed.ts` will export. The helper must
+    // key on (moduleId, order) or a unique lesson slug, not on `type`, so
+    // re-seeding a module with multiple same-type lessons inserts every missing
+    // lesson instead of stopping at the first type match. Once the helper is
+    // exported, delete this local function and import the production one.
+    function selectLessonsToInsert(
+      existingLessons: ExistingLessonSnapshot[],
+      canonicalLessons: CurriculumLesson[],
+    ): CurriculumLesson[] {
+      const existingTypes = new Set(existingLessons.map((l) => l.type));
+      return canonicalLessons.filter((lesson) => !existingTypes.has(lesson.type));
+    }
+
+    // Simulate a re-seed where only the first lesson of each type is already
+    // present in the DB. The seed's current type-keyed logic will skip every
+    // remaining same-type sibling, even though those canonical lessons are
+    // missing from the DB and should be inserted.
+    let wronglySkippedLessonCount = 0;
+    const wronglySkippedByModule: Array<{
+      moduleSlug: string;
+      type: CurriculumLesson["type"];
+      count: number;
+    }> = [];
+
     for (const mod of modules) {
       expect(
         mod.lessons.length,
         `Module ${mod.slug} must have at least one lesson`,
       ).toBeGreaterThan(0);
-      const typeCounts: Record<string, number> = {};
+
+      const firstByType = new Map<CurriculumLesson["type"], CurriculumLesson>();
       for (const lesson of mod.lessons) {
-        typeCounts[lesson.type] = (typeCounts[lesson.type] ?? 0) + 1;
+        if (!firstByType.has(lesson.type)) {
+          firstByType.set(lesson.type, lesson);
+        }
       }
-      for (const [type, count] of Object.entries(typeCounts)) {
-        if (count > 1) {
-          duplicates.push({ moduleSlug: mod.slug, type, count });
+
+      const existingLessons: ExistingLessonSnapshot[] = Array.from(
+        firstByType.values(),
+      ).map((lesson) => ({
+        type: lesson.type,
+        order: lesson.order,
+        title: lesson.title,
+      }));
+
+      const lessonsToInsert = selectLessonsToInsert(
+        existingLessons,
+        mod.lessons,
+      );
+
+      // A canonical lesson is wrongly skipped when it is not selected for
+      // insertion and it is not one of the already-present first-per-type
+      // lessons.
+      const existingOrders = new Set(existingLessons.map((l) => l.order));
+      const skipped = mod.lessons.filter(
+        (lesson) =>
+          !lessonsToInsert.includes(lesson) && !existingOrders.has(lesson.order),
+      );
+
+      if (skipped.length > 0) {
+        const typeCounts = new Map<CurriculumLesson["type"], number>();
+        for (const lesson of skipped) {
+          typeCounts.set(lesson.type, (typeCounts.get(lesson.type) ?? 0) + 1);
+        }
+        for (const [type, count] of typeCounts) {
+          wronglySkippedByModule.push({ moduleSlug: mod.slug, type, count });
+          wronglySkippedLessonCount += count;
         }
       }
     }
 
-    const totalDuplicateInstances = duplicates.reduce(
-      (sum, d) => sum + d.count,
-      0,
-    );
     expect(
-      duplicates,
-      `Duplicate lesson type count: ${totalDuplicateInstances}`,
-    ).toEqual([]);
+      wronglySkippedLessonCount,
+      `Wrongly-skipped canonical lesson count: ${wronglySkippedLessonCount}`,
+    ).toBe(0);
   });
 });
