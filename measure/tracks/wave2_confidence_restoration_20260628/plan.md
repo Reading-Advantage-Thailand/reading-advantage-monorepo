@@ -4,10 +4,13 @@
 
 ## Phase 0: Baseline Gate Inventory
 
-- [ ] Task: Inventory current lint/check-types/test/build scripts for all apps and shared packages.
-- [ ] Task: Identify gates that pass vacuously, time out, hit production by default, or are excluded from CI.
+- [x] Task: Inventory current lint/check-types/test/build scripts for all apps and shared packages.
+  - Evidence: Strategy inventory at baseline SHA `af631ec9f534250bec6ba39ac28a678bb9f2042b` counted 21 workspace packages (8 apps, 13 shared packages), 2 missing lint scripts, 4 missing check-types scripts, 0 missing test scripts, 2 missing build scripts, and 3 `passWithNoTests` scripts. See `test-strategy.md` Phase 0.
+- [x] Task: Identify gates that pass vacuously, time out, hit production by default, or are excluded from CI.
   - Evidence refs: Cross-App CA-010; Shared Foundation F-SF-017/F-SF-019/F-SF-021; CodeCamp High theme 6; Marketing test-suite truthfulness debt.
-- [ ] Task: Record baseline status for migration doctor, provider guard, and package aggregate tests.
+  - Evidence: `passWithNoTests` script count is 3 (`codecamp-advantage`, `sales-advantage`, `@reading-advantage/scripts`); CodeCamp prod-smoke live-default count is 15 files; root `pnpm test` runs only 4 CodeCamp cold-start/local-image test files (27 tests); PR CI path-excluded app directory count is 7; historical timeout-prone gate classes are 2 and observed Phase 0 timeout count is 0. See `test-strategy.md` Phase 0.
+- [x] Task: Record baseline status for migration doctor, provider guard, and package aggregate tests.
+  - Evidence: DB migration/journal/ledger guard command passed with 3 passed files / 2 skipped files / 76 passed tests / 4 skipped tests; `@reading-advantage/ai` direct app import guard passed with direct app AI SDK import hit count 0, while `packages/ai/src/index.ts` still has raw AI barrel re-export count 7; `@reading-advantage/types` passed 4 files / 88 tests; shared aggregate package test is red from `@reading-advantage/ai` 19 failed tests across 3 failed files, and `@reading-advantage/webhooks` passes while logging DB `ECONNREFUSED`. See `test-strategy.md` Phase 0.
 
 ## Phase 1: Migration and Seed Governance
 
