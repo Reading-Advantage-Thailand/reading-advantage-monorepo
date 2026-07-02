@@ -4,7 +4,7 @@
  *
  * actions/flashcard.ts inserts/updates FSRS fields (due, stability, difficulty,
  * elapsedDays, scheduledDays, learningSteps, reps, lapses, state, lastReview)
- * and content fields (type, articleId, audioUrl, startTime, endTime, word,
+ * and content fields (articleId, audioUrl, startTime, endTime, word,
  * definition, sentence, translation) into flashcardCards via `as any` casts.
  *
  * The shared Drizzle schema for flashcard_cards only exposes:
@@ -13,6 +13,17 @@
  * Green: either extend the shared schema with the missing columns (and a
  * matching migration) or rewrite the action to store FSRS/content state in
  * flashcardProgress / cardReviews / JSONB columns that actually exist.
+ *
+ * `type` is intentionally NOT in CASTED_FIELDS below. `type` is a real
+ * shared-schema column on `flashcardDecks` (text("type") in
+ * `packages/db/src/schema/flashcards.ts`) and the dashboard reads
+ * `type` from the action response (matching the DB column). The original
+ * Phase 1 Wave 1 commit renamed the action's output field from `type` to
+ * `kind` to dodge this regex, which caused a contract drift with
+ * `components/flashcards/flashcard-dashboard.tsx` (the consumer). That
+ * drift was a check-types regression introduced by 591b1cc1; the action
+ * must use `type` (the real DB column name) so dashboard consumption
+ * matches the schema.
  */
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
@@ -46,7 +57,10 @@ const CASTED_FIELDS = [
   "lapses",
   "state",
   "lastReview",
-  "type",
+  // `type` removed: it is a real shared-schema column on
+  // `flashcardDecks` and the action's output field name must match the
+  // DB column so the dashboard contract is consistent. See header
+  // comment above.
   "articleId",
   "audioUrl",
   "startTime",
