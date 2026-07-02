@@ -12,7 +12,29 @@ const DRIZZLE_DIR = join(PACKAGE_ROOT, "drizzle");
 const JOURNAL_PATH = join(DRIZZLE_DIR, "meta", "_journal.json");
 const args = process.argv.slice(2);
 const mode = args.includes("--repair") ? "repair" : args.includes("--check") ? "check" : null;
-if (!mode) { console.error("Usage: tsx scripts/migration-ledger-doctor.ts [--check|--repair]"); process.exit(2); }
+
+/**
+ * Parse `--required-migration <tag>` from argv. The flag is the deploy-gate
+ * contract: app pipelines pass the minimum migration tag their app code
+ * requires. If the ledger is behind, the doctor fails closed (exit 1) and
+ * prints `Required migration behind count: N` so the gate can be wired to
+ * Cloud Build / GitHub Actions / etc.
+ *
+ * The same contract is honored via the `REQUIRED_MIGRATION` env var so a
+ * pipeline can set it from a secret manager without rebuilding the command.
+ */
+function parseRequiredMigration(): string | null {
+  const envTag = process.env.REQUIRED_MIGRATION?.trim();
+  if (envTag) return envTag;
+  const flagIdx = args.indexOf("--required-migration");
+  if (flagIdx >= 0 && flagIdx + 1 < args.length) {
+    const value = args[flagIdx + 1]?.trim();
+    if (value) return value;
+  }
+  return null;
+}
+
+if (!mode) { console.error("Usage: tsx scripts/migration-ledger-doctor.ts [--check|--repair] [--required-migration <tag>]"); process.exit(2); }
 
 interface JournalEntry { idx: number; version: string; when: number; tag: string; breakpoints: boolean; }
 interface Journal { version: string; dialect: string; entries: JournalEntry[]; }
@@ -64,6 +86,49 @@ async function main() {
         hasDivergence = true;
       }
     }
+
+    // Required-migration deploy gate: when `--required-migration <tag>` or
+    // `REQUIRED_MIGRATION=<tag>` is supplied, the DB ledger MUST have
+    // applied every journal entry at or after the required tag. If the
+    // highest applied `when` is less than the required tag's `when`, the
+    // ledger is behind and we fail closed (exit 1) with a labeled
+    // `Required migration behind count: N` so CI/Cloud Build can branch
+    // on it. The check runs after the divergence pass so a missing
+    // required migration also shows up as a sentinel divergence.
+    const requiredTag = parseRequiredMigration();
+    if (requiredTag) {
+      const requiredEntry = journal.entries.find((e) => e.tag === requiredTag);
+      if (!requiredEntry) {
+        console.error(`Required migration behind count: 0 — required tag "${requiredTag}" is not in _journal.json (typo or stale pipeline config)`);
+        process.exit(1);
+      }
+      const appliedWhenValues = Array.from(ledgerByCreatedAt.keys());
+      const highestAppliedWhen = appliedWhenValues.length > 0
+        ? Math.max(...appliedWhenValues)
+        : -1;
+      if (highestAppliedWhen < requiredEntry.when) {
+        // "Behind count" = number of journal entries (in idx order) at or
+        // after the required tag whose `when` is greater than the highest
+        // applied `when`. This is the canonical "how far behind" signal
+        // for a deploy gate.
+        const behindEntries = journal.entries.filter(
+          (e) => e.when > highestAppliedWhen && e.idx >= requiredEntry.idx,
+        );
+        console.error(
+          `Required migration behind count: ${behindEntries.length} — ` +
+          `required tag "${requiredTag}" (idx ${requiredEntry.idx}, when ${requiredEntry.when}) ` +
+          `but highest applied ledger when is ${highestAppliedWhen} ` +
+          `(${behindEntries.map((e) => e.tag).join(", ") || "no entries beyond required"} are not applied)`
+        );
+        hasDivergence = true;
+      } else {
+        console.error(
+          `Required migration gate OK — "${requiredTag}" (when ${requiredEntry.when}) ` +
+          `is at or below highest applied when ${highestAppliedWhen}`
+        );
+      }
+    }
+
     if (hasDivergence && mode === "repair") {
       let stillDivergent = false;
       for (const entry of journal.entries) {
