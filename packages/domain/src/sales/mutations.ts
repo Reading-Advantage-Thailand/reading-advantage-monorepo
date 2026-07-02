@@ -8,6 +8,7 @@ import {
   salesChatMessages,
   salesRubrics,
   salesQuizQuestions,
+  users,
 } from "@reading-advantage/db/schema";
 import { assertCan } from "@reading-advantage/auth";
 import type { DB } from "@reading-advantage/db";
@@ -128,11 +129,10 @@ export async function createRoleplayAttempt(
  * the parent lesson complete.
  *
  * Phase 4 IDOR guard: the attempt is SELECTed BEFORE any UPDATE so a caller
- * cannot mutate an attempt owned by another user (or outside the admin's
- * permitted scope). Attempt ownership is `user.id === attempt.userId`, or
- * a `SALES_ADMIN` whose tenant scoping is satisfied. A failed check
- * throws `SalesAuthError` (FORBIDDEN envelope at the API layer) and
- * `db.update` is never invoked.
+ * cannot mutate an attempt owned by another user. Attempt ownership is
+ * `user.id === attempt.userId`, or a `SALES_ADMIN` whose tenant scoping is
+ * satisfied by a users.schoolId lookup. A failed check throws `SalesAuthError`
+ * (FORBIDDEN envelope at the API layer) and `db.update` is never invoked.
  * @param ctx - The domain context
  * @param input - The attempt id + evaluation result
  * @returns The updated attempt row
@@ -156,8 +156,36 @@ export async function saveAttemptEvaluation(
   if (!existing) {
     throw new SalesAuthError("attempt not found");
   }
-  if (existing.userId !== user.id && user.role !== "SALES_ADMIN") {
-    throw new SalesAuthError();
+  let ownerUser: SalesDomainContext["user"] | undefined;
+  if (existing.userId !== user.id) {
+    if (user.role !== "SALES_ADMIN") {
+      throw new SalesAuthError();
+    }
+    // Tenant-scoped admin override: verify the attempt owner belongs to the
+    // admin's tenant before mutating the row. The users table is FLAT, so
+    // querying through the tenant-scoped db auto-injects eq(users.schoolId,
+    // tenant.schoolId); an explicit second check defends against a bypass.
+    if (!tenant.schoolId) {
+      throw new SalesAuthError("attempt not found");
+    }
+    const [owner] = await db
+      .select({
+        id: users.id,
+        username: users.username,
+        name: users.name,
+        role: users.role,
+        schoolId: users.schoolId,
+        xp: users.xp,
+        level: users.level,
+        cefrLevel: users.cefrLevel,
+      })
+      .from(users)
+      .where(eq(users.id, existing.userId))
+      .limit(1);
+    if (!owner || owner.schoolId !== tenant.schoolId) {
+      throw new SalesAuthError("attempt not found");
+    }
+    ownerUser = owner as unknown as SalesDomainContext["user"];
   }
   const [updated] = await rawDb
     .update(salesRoleplayAttempts)
@@ -183,8 +211,9 @@ export async function saveAttemptEvaluation(
         .where(eq(salesRoleplayScenarios.id, attempt.scenarioId))
         .limit(1);
       if (scenario) {
+        const progressUser = ownerUser ?? user;
         await markTheoryLessonComplete(
-          { db: rawDb as unknown as SalesDomainContext["db"], user, tenant },
+          { db: rawDb as unknown as SalesDomainContext["db"], user: progressUser, tenant },
           { lessonId: scenario.lessonId },
         );
       }

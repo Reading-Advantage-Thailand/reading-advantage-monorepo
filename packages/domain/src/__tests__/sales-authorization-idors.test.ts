@@ -27,11 +27,32 @@ const salesAdminA = {
   role: "SALES_ADMIN" as const,
 };
 
-const tenantA = { schoolId: "school-a" };
+const salesAdminB = {
+  ...salesRepA,
+  id: "admin-b",
+  username: "adminb",
+  name: "Admin B",
+  schoolId: "school-b",
+  role: "SALES_ADMIN" as const,
+};
 
-function wrapDb(db: ReturnType<typeof createMockDb>) {
-  return createTenantDB(db as unknown as DB, tenantA);
+const tenantA = { schoolId: "school-a" };
+const tenantB = { schoolId: "school-b" };
+
+function wrapDb(db: ReturnType<typeof createMockDb>, tenant = tenantA) {
+  return createTenantDB(db as unknown as DB, tenant);
 }
+
+const ownerRecordRepA = {
+  id: "rep-a",
+  username: "repa",
+  name: "Rep A",
+  role: "SALES_REP",
+  schoolId: "school-a",
+  xp: 0,
+  level: 1,
+  cefrLevel: "A1",
+};
 
 const baseEvaluation = {
   overallScore: 75,
@@ -60,7 +81,10 @@ describe("Sales authorization / IDOR hardening", () => {
       attemptNumber: 1,
       createdAt: new Date(),
     };
-    const db = createMockDb({ updateReturning: [otherAttempt] });
+    const db = createMockDb({
+      selectResults: [otherAttempt],
+      updateReturning: [otherAttempt],
+    });
 
     let threw = false;
     try {
@@ -78,11 +102,91 @@ describe("Sales authorization / IDOR hardening", () => {
 
     expect(
       threw,
-      "saveAttemptEvaluation must reject IDOR: attempt userId is rep-b but caller is rep-a",
+      "saveAttemptEvaluation must reject IDOR when attempt row exists and userId differs",
     ).toBe(true);
     expect(
       (db.update as ReturnType<typeof vi.fn>).mock.calls.length,
       "update call count must be 0 when ownership check fails before write",
+    ).toBe(0);
+  });
+
+  it("saveAttemptEvaluation allows same-tenant SALES_ADMIN to update a rep's attempt", async () => {
+    const repAttempt = {
+      id: "attempt-rep-a",
+      scenarioId: "scenario-1",
+      userId: "rep-a",
+      audioStorageKey: null,
+      durationMs: 5000,
+      transcriptExcerpt: null,
+      llmScoreJson: null,
+      overallScore: null,
+      passed: null,
+      llmFeedback: null,
+      attemptNumber: 1,
+      createdAt: new Date(),
+    };
+    const db = createMockDb({
+      selectSequence: [[repAttempt], [ownerRecordRepA]],
+      updateReturning: [repAttempt],
+    });
+
+    const result = await saveAttemptEvaluation(
+      { db: wrapDb(db), user: salesAdminA, tenant: tenantA },
+      {
+        attemptId: "attempt-rep-a",
+        evaluation: baseEvaluation,
+        rubricId: "rubric-1",
+      },
+    );
+
+    expect(result.id, "same-tenant admin update must succeed").toBe("attempt-rep-a");
+    expect(
+      (db.update as ReturnType<typeof vi.fn>).mock.calls.length,
+      "update call count must be 1 for authorized admin update",
+    ).toBe(1);
+  });
+
+  it("saveAttemptEvaluation rejects cross-tenant SALES_ADMIN update", async () => {
+    const repAttempt = {
+      id: "attempt-rep-a",
+      scenarioId: "scenario-1",
+      userId: "rep-a",
+      audioStorageKey: null,
+      durationMs: 5000,
+      transcriptExcerpt: null,
+      llmScoreJson: null,
+      overallScore: null,
+      passed: null,
+      llmFeedback: null,
+      attemptNumber: 1,
+      createdAt: new Date(),
+    };
+    const db = createMockDb({
+      selectSequence: [[repAttempt], []],
+      updateReturning: [repAttempt],
+    });
+
+    let threw = false;
+    try {
+      await saveAttemptEvaluation(
+        { db: wrapDb(db, tenantB), user: salesAdminB, tenant: tenantB },
+        {
+          attemptId: "attempt-rep-a",
+          evaluation: baseEvaluation,
+          rubricId: "rubric-1",
+        },
+      );
+    } catch {
+      threw = true;
+    }
+
+    expect(
+      threw,
+      "cross-tenant admin must not be allowed to mutate another tenant's attempt",
+    ).toBe(true);
+    expect(
+      (db.update as ReturnType<typeof vi.fn>).mock.calls.length,
+      "update call count must be 0 for cross-tenant admin rejection",
     ).toBe(0);
   });
 

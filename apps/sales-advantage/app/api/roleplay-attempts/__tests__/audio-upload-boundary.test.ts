@@ -92,6 +92,18 @@ function makeForm(audio: File, durationMs: string) {
   return form;
 }
 
+function makeFormWithPrivacy(
+  audio: File,
+  durationMs: string,
+  consentGiven: string | null,
+  retentionDays: string | null,
+) {
+  const form = makeForm(audio, durationMs);
+  if (consentGiven !== null) form.set("consentGiven", consentGiven);
+  if (retentionDays !== null) form.set("retentionDays", retentionDays);
+  return form;
+}
+
 function baseScenario() {
   return {
     id: "scenario-123",
@@ -216,6 +228,66 @@ describe("POST /api/roleplay-attempts audio upload boundary", () => {
     expect(
       mockGetRoleplayEvaluationContext,
       "getRoleplayEvaluationContext call count on rejected upload",
+    ).toHaveBeenCalledTimes(0);
+  });
+
+  it("rejects missing/declined consent with structured 400 before storage/provider", async () => {
+    const storagePut = vi.fn().mockResolvedValue({ key: "ok" });
+    mockGetStorageClient.mockReturnValue({ put: storagePut });
+
+    const audio = new File([Buffer.from("audio")], "recording.webm", {
+      type: "audio/webm",
+    });
+
+    for (const consentValue of [null, "false", "0", ""]) {
+      const response = await POST(
+        makeRequest(makeFormWithPrivacy(audio, "1000", consentValue, "30")),
+      );
+
+      expect(response.status, `consent='${consentValue}' must be rejected with 400`).toBe(400);
+      const body = await response.json();
+      expect(body.field, `consent='${consentValue}' must fail at consentGiven field`).toBe("consentGiven");
+    }
+
+    expect(storagePut, "storage.put call count on rejected consent").toHaveBeenCalledTimes(0);
+    expect(mockGetAIClient, "getAIClient call count on rejected consent").toHaveBeenCalledTimes(0);
+    expect(
+      mockSubmitRoleplayAttempt,
+      "submitRoleplayAttempt call count on rejected consent",
+    ).toHaveBeenCalledTimes(0);
+    expect(
+      mockGetRoleplayEvaluationContext,
+      "getRoleplayEvaluationContext call count on rejected consent",
+    ).toHaveBeenCalledTimes(0);
+  });
+
+  it("rejects invalid retentionDays with structured 400 before storage/provider", async () => {
+    const storagePut = vi.fn().mockResolvedValue({ key: "ok" });
+    mockGetStorageClient.mockReturnValue({ put: storagePut });
+
+    const audio = new File([Buffer.from("audio")], "recording.webm", {
+      type: "audio/webm",
+    });
+
+    for (const retentionValue of [null, "", "0", "366", "abc"]) {
+      const response = await POST(
+        makeRequest(makeFormWithPrivacy(audio, "1000", "true", retentionValue)),
+      );
+
+      expect(response.status, `retention='${retentionValue}' must be rejected with 400`).toBe(400);
+      const body = await response.json();
+      expect(body.field, `retention='${retentionValue}' must fail at retentionDays field`).toBe("retentionDays");
+    }
+
+    expect(storagePut, "storage.put call count on rejected retention").toHaveBeenCalledTimes(0);
+    expect(mockGetAIClient, "getAIClient call count on rejected retention").toHaveBeenCalledTimes(0);
+    expect(
+      mockSubmitRoleplayAttempt,
+      "submitRoleplayAttempt call count on rejected retention",
+    ).toHaveBeenCalledTimes(0);
+    expect(
+      mockGetRoleplayEvaluationContext,
+      "getRoleplayEvaluationContext call count on rejected retention",
     ).toHaveBeenCalledTimes(0);
   });
 });
