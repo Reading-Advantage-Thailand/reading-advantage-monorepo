@@ -1,0 +1,99 @@
+{
+  "track_id": "wave1_high_risk_product_failures_20260628",
+  "phase": "Phase 4: Sales Security, Privacy, and Contract Hardening",
+  "review_role": "review-c-ux-api",
+  "status": "complete",
+  "findings": [
+    {
+      "id": "RC-P4-001",
+      "title": "BLOCKING: Frontend did not send consentGiven/retentionDays — FIXED",
+      "severity": "critical",
+      "status": "fixed",
+      "description": "The Phase 4 audio boundary gate requires consentGiven=true and retentionDays in the multipart form (route.ts lines 107-134), but roleplay-recorder.tsx submit() only appended scenarioId, audio, and durationMs. Every real user submission failed 400 'explicit consent is required'. The consent gate (z.literal(true)) meant no submission could ever pass because the UI never collected consent. Fixed by adding a consent checkbox with explicit affirmation, wiring consentGiven='true' and retentionDays='30' to FormData, and disabling the submit button until consent is checked. Also added i18n strings (en, th) for the consent label/text.",
+      "evidence": {
+        "route_gate": "apps/sales-advantage/app/api/roleplay-attempts/route.ts:107-134",
+        "frontend_before": "apps/sales-advantage/components/roleplay-recorder.tsx:68-93 (no consentGiven/retentionDays)",
+        "frontend_after": "apps/sales-advantage/components/roleplay-recorder.tsx:70-80 (consentGiven='true', retentionDays='30')",
+        "consent_ui": "apps/sales-advantage/components/roleplay-recorder.tsx:143-150 (Checkbox component)",
+        "i18n_en": "apps/sales-advantage/messages/en.json (consentLabel, consentText)",
+        "i18n_th": "apps/sales-advantage/messages/th.json (consentLabel, consentText)",
+        "test_pass": "CI=true pnpm --filter sales-advantage exec vitest run app/api/roleplay-attempts/__tests__/ — 9/9 tests pass"
+      },
+      "action_required": false
+    },
+    {
+      "id": "RC-P4-002",
+      "title": "Roleplay upload API error responses are structured and consistent",
+      "severity": "info",
+      "status": "verified",
+      "description": "All 400 responses from the audio boundary gate use the {error, field, message} envelope. Error codes use 'INVALID_AUDIO' prefix. The 500 catch-all returns {error, message} — message may contain error.message which could leak internals (pre-existing, not introduced by Phase 4). No internal stack traces, file paths, or provider details are exposed in the structured 400s.",
+      "evidence": {
+        "route": "apps/sales-advantage/app/api/roleplay-attempts/route.ts:50-134",
+        "test": "apps/sales-advantage/app/api/roleplay-attempts/__tests__/audio-upload-boundary.test.ts (all 5 boundary tests verify body.error is defined)"
+      },
+      "action_required": false
+    },
+    {
+      "id": "RC-P4-003",
+      "title": "audioStorageKey nullability aligns across contract layers",
+      "severity": "info",
+      "status": "verified",
+      "description": "roleplayAttemptOutputSchema (types and domain) declares audioStorageKey as z.string().nullable(). The route passes null when storage.put rejects (FR-4). The domain createRoleplayAttempt conditionally spreads the key (only if truthy). The tRPC attemptHistory query returns the nullable field without truncation. Both domain and types schemas accept null in safeParse.",
+      "evidence": {
+        "types_schema": "packages/types/src/contracts/sales.ts:90 (nullable)",
+        "domain_schema": "packages/domain/src/sales/schema.ts:143 (nullable)",
+        "route_fr4": "apps/sales-advantage/app/api/roleplay-attempts/route.ts:205 (audioUploadSucceeded ? storageKey : null)",
+        "domain_create": "packages/domain/src/sales/mutations.ts:119 (conditional spread)",
+        "test": "packages/api/src/__tests__/sales-router-audio-contract.test.ts (3/3 pass, null accepted)"
+      },
+      "action_required": false
+    },
+    {
+      "id": "RC-P4-004",
+      "title": "Consent UX now gates submit with explicit affirmative action",
+      "severity": "info",
+      "status": "verified",
+      "description": "After the fix, the roleplay-recorder component shows a Checkbox labeled with consent text ('I consent to my audio being recorded, evaluated by AI, and stored for up to 30 days for coaching purposes'). The submit button is disabled until consentGiven=true. The form appends consentGiven='true' only when the checkbox is checked. Retention is fixed at 30 days (within the 1-365 contract range). The consent state resets on retry.",
+      "evidence": {
+        "checkbox": "apps/sales-advantage/components/roleplay-recorder.tsx:143-150",
+        "disabled_gate": "apps/sales-advantage/components/roleplay-recorder.tsx:155 (disabled={!consentGiven})",
+        "submit_guard": "apps/sales-advantage/components/roleplay-recorder.tsx:71 (if (!audioBlob || !consentGiven) return)",
+        "retention_fixed": "apps/sales-advantage/components/roleplay-recorder.tsx:80 (retentionDays='30')"
+      },
+      "action_required": false
+    }
+  ],
+  "test_verification": {
+    "sales_route_audio_boundary": {
+      "command": "CI=true pnpm --filter sales-advantage exec vitest run app/api/roleplay-attempts/__tests__/audio-upload-boundary.test.ts",
+      "result": "exit 0, 5/5 tests passed"
+    },
+    "sales_route_fr4": {
+      "command": "CI=true pnpm --filter sales-advantage exec vitest run app/api/roleplay-attempts/__tests__/route.test.ts",
+      "result": "exit 0, 4/4 tests passed"
+    },
+    "sales_api_auth_context": {
+      "command": "CI=true pnpm --filter @reading-advantage/api exec vitest run src/__tests__/sales-auth-context.test.ts",
+      "result": "exit 0, 4/4 tests passed"
+    },
+    "sales_api_audio_contract": {
+      "command": "CI=true pnpm --filter @reading-advantage/api exec vitest run src/__tests__/sales-router-audio-contract.test.ts",
+      "result": "exit 0, 3/3 tests passed"
+    }
+  },
+  "commits": [
+    "01a2aecc fix(sales): wave1 p4 review-c ux-api (track_id: wave1_high_risk_product_failures_20260628)"
+  ],
+  "deferred_findings": [
+    {
+      "title": "500 catch-all may leak error.message to client",
+      "severity": "low",
+      "description": "route.ts catch block returns {error: 'Evaluation failed', message: error.message}. Pre-existing pattern, not introduced by Phase 4. The error.message could contain provider internals. Owner: sales-advantage team."
+    },
+    {
+      "title": "retentionDays is hardcoded to 30 in UI",
+      "severity": "low",
+      "description": "The consent UI hardcodes retentionDays=30. A user-facing selector for retention duration could be added later, but 30 days is within the [1,365] contract range and is a reasonable default. Owner: sales-advantage team, Wave 4+."
+    }
+  ]
+}

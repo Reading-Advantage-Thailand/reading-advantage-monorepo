@@ -46,8 +46,6 @@ Two parallel programs are in flight; priority order when picking the next track:
 
 > Detailed implementation tracks spawned from `monorepo_review_roadmap_20260626`. Each track includes evidence references back to the line-review artifacts and should be executed in wave order unless a dependency note explicitly allows parallel work.
 
-- [ ] **Track: Wave 1 — Stop Active High-Risk Product Failures** *Link: [./tracks/wave1_high_risk_product_failures_20260628/](./tracks/wave1_high_risk_product_failures_20260628/)*
-  Fix the highest-risk runtime/product blockers in Primary, Reading, CodeCamp, and Sales. Evidence: Primary M1-M8/M11; Reading C/PB tracks; CodeCamp CR-1/CR-2 and webhook/streaming findings; Sales C1-C13.
 - [ ] **Track: Wave 2 — Restore Deployment/Test/Provider Confidence** *Link: [./tracks/wave2_confidence_restoration_20260628/](./tracks/wave2_confidence_restoration_20260628/)*
   Restore migration, seed, provider-adapter, observability, and test-gate confidence. Evidence: MR-H01, MR-H02, MR-H03; CA-005..CA-007/CA-010/CA-011; test-strategy roadmap.
 - [ ] **Track: Wave 3 — Product-Facing Truth and Reusable Surfaces** *Link: [./tracks/wave3_product_alignment_20260628/](./tracks/wave3_product_alignment_20260628/)*
@@ -111,6 +109,9 @@ Two parallel programs are in flight; priority order when picking the next track:
 
 - [x] **Track: Wave 0 — Shared Safety Foundations** *Link: [./archive/wave0_shared_safety_foundations_20260628/](./archive/wave0_shared_safety_foundations_20260628/)*
   Archived 2026-07-01 after final acceptance pass. Tenant registry/fail-closed TenantDB, shared auth/roles/rate limiter, contracts/types tests, API/domain boundary enforcement, and typed error mapping all verified. 33 plan tasks complete; 16 implementation commits including db test sync, audioStorageKey nullable fix, auth env guard, and postgres rate limiter. Evidence: MR-C01, MR-C02, MR-C04, MR-C05; CA-001..CA-004/CA-009; M-SF-1..M-SF-5.
+
+- [x] **Track: Wave 1 — Stop Active High-Risk Product Failures** *Link: [./archive/wave1_high_risk_product_failures_20260628/](./archive/wave1_high_risk_product_failures_20260628/)*
+  Archived 2026-07-02. High-risk slices fixed across Primary (completion/session/flashcard/dashboard), Reading (classroom auth/audit/XP idempotency/AI contracts), CodeCamp (TenantDB/webhook idempotency/ACK latency/streaming protocol), and Sales (IDOR/audio validation/consent/nullability contracts). Medium+ remainder explicitly owned by Waves 4 and 6 per medium-plus-coverage-matrix.md; aggregate type-check/tests red only from pre-existing non-Wave-1 failures.
 
 - [x] **Track: Scaffold monorepo and migrate first app**
   *Link: [./archive/monorepo-scaffold_20260429/](./archive/monorepo-scaffold_20260429/)*
