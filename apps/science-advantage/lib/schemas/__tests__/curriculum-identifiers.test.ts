@@ -755,17 +755,22 @@ describe('Seed Data Validation', () => {
     });
 
     it('should have structuredContent with blocks for Grade 4 lessons', async () => {
+      // Wave 2 Phase 1: grade-4 lesson files were converted from the bare
+      // LessonContent shape (`{ version: 1, blocks: [...] }`) to the
+      // schema-compliant LessonsFile wrapper. The structuredContent
+      // (version + blocks) now lives inside the first lesson entry.
       const lessonsDir = path.join(process.cwd(), 'scripts', 'seed-data', 'grade-4', 'lessons');
       const files = fs.readdirSync(lessonsDir).filter(f => f.endsWith('.json'));
 
       for (const file of files) {
         const filePath = path.join(lessonsDir, file);
         const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-
-        expect(data).toHaveProperty('version', 1);
-        expect(data).toHaveProperty('blocks');
-        expect(Array.isArray(data.blocks)).toBe(true);
-        expect(data.blocks.length).toBeGreaterThan(0);
+        const lesson = data.lessons?.[0];
+        const sc = lesson?.structuredContent;
+        expect(sc, `${file} must carry lessons[0].structuredContent`).toBeDefined();
+        expect(sc).toHaveProperty('version', 1);
+        expect(Array.isArray(sc.blocks)).toBe(true);
+        expect(sc.blocks.length).toBeGreaterThan(0);
       }
     });
 
@@ -785,14 +790,16 @@ describe('Seed Data Validation', () => {
     });
 
     it('should have bilingual vocabulary terms in Grade 4 structuredContent', async () => {
+      // Wave 2 Phase 1: blocks now live inside the first lesson's
+      // structuredContent field, not at the top level.
       const lessonsDir = path.join(process.cwd(), 'scripts', 'seed-data', 'grade-4', 'lessons');
       const files = fs.readdirSync(lessonsDir).filter(f => f.endsWith('.json'));
 
       for (const file of files) {
         const filePath = path.join(lessonsDir, file);
         const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-
-        const vocabBlocks = data.blocks.filter((b: any) => b.type === 'vocabulary');
+        const blocks = data.lessons?.[0]?.structuredContent?.blocks ?? [];
+        const vocabBlocks = blocks.filter((b: any) => b.type === 'vocabulary');
         for (const block of vocabBlocks) {
           if (block.terms && block.terms.length > 0) {
             for (const term of block.terms) {
