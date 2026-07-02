@@ -1,12 +1,12 @@
 {
   "role": "review-c-ux-api",
   "track": "wave2_confidence_restoration_20260628",
-  "phase": "Phase 3: Test Signal Restoration",
-  "baseline": "2257d26389563e2af8f02b40c926a2bba851955e",
-  "head": "d8a0d533",
-  "timestamp": "2026-07-03T18:15:00+08:00",
+  "phase": "Phase 4: Reusable Harnesses",
+  "baseline": "ac8d7ff6fbf94154a7a1ce8e76697ce5c0cf0b78",
+  "head": "6d5afb10",
+  "timestamp": "2026-07-03T22:30:00+08:00",
   "ux_applicability": "not_applicable",
-  "ux_applicability_justification": "This phase is entirely test-infrastructure work: (1) prod-smoke opt-in gating with live-smoke-guard.ts helper, (2) marketing test docblock/env pragma fixes, (3) package.json test-script flag changes (removing --passWithNoTests), (4) wave2 guard/inventory test files, and (5) types regression guard. The 31 changed files are: 26 test files (*.test.ts, *.test.tsx), 1 test helper (live-smoke-guard.ts), 2 test fixtures (live-default.fixture.ts, opt-in-gated.fixture.ts), 1 test data file (report-summary.json), 3 package.json files (test scripts only), and 1 measure plan.md. Zero production/app source files were modified: no route handlers, no page components, no layout components, no domain functions, no API contracts, no tRPC routers, no form or page flow changes. The package.json changes are limited to the 'test' script key — no 'build', 'start', or other production scripts were touched. Removing --passWithNoTests does not affect build/start behavior; it only changes test runner behavior when zero test files match the glob. The prod-smoke opt-in gating converts live-default test files to opt-in-only behind RUN_LIVE_SMOKE=true; this is a test-infra concern, not a UX/API contract change.",
+  "ux_applicability_justification": "The diff ac8d7ff6..6d5afb10 contains 14 changed files, all in three categories: (1) five test-utility helpers in packages/*/src/testing/ and apps/www-reading-advantage/src/testing/ — none exported in any package.json exports map, all pure data/scanner functions with no transport-layer or UI types; (2) five consumer test files (*.test.ts); (3) four measure artifacts (plan.md, review docs, result JSON). Zero production route handlers, page components, domain functions, tRPC routers, API contracts, or form/page flows were modified. The api-contract-kit helper in packages/api/src/testing/ is confirmed as a test-only utility: it is not in the package exports map, it only wraps canonical Zod envelope schemas from @reading-advantage/types for assertion purposes, and it does not define or modify any real router/route contract. All five helper packages (api, domain, ai, db, www-reading-advantage) have testing/ excluded from their exports map or are Next.js apps without exports maps.",
   "status": "complete",
   "contract_surfaces_reviewed": {
     "app_route_handlers": {
@@ -22,38 +22,46 @@
     "api_contracts": {
       "count": 0,
       "changed": false,
-      "detail": "No contract/schema/zod files in the diff; no tRPC router modifications"
+      "detail": "No contract/schema/zod files in the diff; no tRPC router modifications; api-contract-kit.ts is a test-only assertion helper, not a contract definition"
     },
     "domain_functions": {
       "count": 0,
       "changed": false,
       "detail": "No domain/service/action/query/mutation files in the diff"
     },
-    "package_json_changes": {
-      "files_changed": 3,
-      "change_scope": "test scripts only",
-      "detail": "apps/codecamp-advantage/package.json: 'vitest run --passWithNoTests' → 'vitest run'; apps/sales-advantage/package.json: same change; packages/reading-advantage-scripts/package.json: 'jest --passWithNoTests' script removed entirely (empty scripts object)"
+    "test_infrastructure": {
+      "helpers_added": 5,
+      "consumer_tests_added": 5,
+      "detail": "tenant-isolation-harness.ts (domain), api-contract-kit.ts (api), provider-guard-utility.ts (ai), migration-doctor-helper.ts (db), product-claim-helper.ts (www)"
     }
   },
   "diff_analysis": {
-    "total_files_changed": 31,
+    "total_files_changed": 14,
     "breakdown": {
-      "test_files": 26,
-      "test_helpers": 1,
-      "test_fixtures": 2,
-      "test_data": 1,
-      "package_json_scripts_only": 3,
-      "measure_plan": 1
+      "test_utility_helpers": 5,
+      "test_consumer_files": 5,
+      "measure_artifacts": 4
     },
     "non_test_production_files_changed": 0,
     "unexpected_changes": []
   },
+  "api_contract_kit_nuance": {
+    "path": "packages/api/src/testing/api-contract-kit.ts",
+    "is_test_utility": true,
+    "in_package_exports": false,
+    "modifies_real_routers": false,
+    "detail": "Pure Zod-schema wrapper over canonical envelope shapes from @reading-advantage/types. Consumed only by wave2-api-contract-kit.test.ts. No new or modified API contracts."
+  },
+  "helper_isolation_verification": {
+    "packages/api/testing/": { "in_exports_map": false, "production_impact": "none" },
+    "packages/domain/testing/": { "in_exports_map": false, "production_impact": "none" },
+    "packages/ai/testing/": { "in_exports_map": false, "production_impact": "none" },
+    "packages/db/testing/": { "in_exports_map": false, "production_impact": "none" },
+    "apps/www-reading-advantage/src/testing/": { "in_exports_map": "N/A (Next.js app)", "production_impact": "none" }
+  },
   "gate_results": {},
   "findings": [],
-  "nonblocking_observations": [
-    "6 describe block names in marketing tests still contain 'RED' (e.g., '(task 2, RED, phase-6-jsonb-schema)'). These are task identifiers from original test design, not docblock markers. The wave2-test-truthfulness guard correctly targets 'RED at HEAD' docblock patterns. All 50 affected tests pass. Noted in review-a as non-blocking.",
-    "packages/reading-advantage-scripts/package.json now has an empty scripts object. This is acceptable — the package had 0 tests; the jest --passWithNoTests was a vacuous-pass surface."
-  ],
+  "nonblocking_observations": [],
   "commits": [],
-  "handoff": "Phase 3 Review-C complete. No blocking findings. UX/API applicability: NOT APPLICABLE — this is test-infra-only work. The diff touches only *.test.ts/tsx files, test helpers/fixtures/data, package.json test scripts, and the measure plan. No production/app source, route handlers, page components, API contracts, domain functions, or UI flows were modified. Removing --passWithNoTests and gating prod-smoke behind RUN_LIVE_SMOKE=true do not affect runtime or build behavior — they only affect test runner behavior. All 31 changed files are confirmed as test infrastructure. Handing off to orchestrator for phase closeout."
+  "handoff": "Phase 4 Review-C complete. No blocking findings. UX/API applicability: NOT APPLICABLE — this is test-infrastructure-only work. The diff touches only test-utility helpers in packages/*/src/testing/, their consumer test files, and measure artifacts. No production/app source, route handlers, page components, API contracts, domain functions, or UI flows were modified. The api-contract-kit helper is confirmed as test-only (not in package exports map, wraps existing Zod schemas, does not define or modify any real router). All five helper packages verified to exclude testing/ from their exports maps. Handing off to orchestrator for phase closeout."
 }
