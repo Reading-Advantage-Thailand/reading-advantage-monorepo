@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-vi.mock("@reading-advantage/ai", () => ({
+vi.mock("@reading-advantage/ai/internal-sdk", () => ({
   createOpenAI: vi.fn(() => (model: string) => model),
   streamText: vi.fn(),
 }));
@@ -36,7 +36,7 @@ vi.mock("@reading-advantage/db", async () => {
 });
 
 import { POST } from "../route.js";
-import { streamText } from "@reading-advantage/ai";
+import { streamText } from "@reading-advantage/ai/internal-sdk";
 import { requireAuth } from "@reading-advantage/auth";
 import { getAuthToken } from "@reading-advantage/api/context";
 import { getChatContext } from "@reading-advantage/domain/codecamp";

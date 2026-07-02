@@ -3,10 +3,11 @@ import path from "path";
 
 export default defineConfig({
   resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "."),
-      "@reading-advantage/ai": path.resolve(__dirname, "../../packages/ai/src/index.ts"),
-    },
+    alias: [
+      { find: "@reading-advantage/ai/internal-sdk", replacement: path.resolve(__dirname, "../../packages/ai/src/internal-sdk.ts") },
+      { find: "@reading-advantage/ai", replacement: path.resolve(__dirname, "../../packages/ai/src/index.ts") },
+      { find: "@", replacement: path.resolve(__dirname, ".") },
+    ],
   },
   test: {
     globals: true,
