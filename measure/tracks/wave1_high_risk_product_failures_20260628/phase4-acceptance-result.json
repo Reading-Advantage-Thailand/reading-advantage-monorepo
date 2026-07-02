@@ -1,0 +1,107 @@
+{
+  "schema_version": "1.0",
+  "status": "pass",
+  "summary": "Phase 4 is accepted. The targeted Sales/API/domain/app gate exits 0 with 30/30 tests passing after acceptance tightened the media-rejection tests to prove MIME/size/duration failures independently of consent/retention failures. The scoped aggregate test and lint closeout gates exit 0. The scoped check-types gate exits 1 only for the verified pre-existing sales-advantage lib/trpc.ts TS2742 errors introduced by scaffold commit 025f8fc9 and unchanged in the Phase 4 diff. Sales roleplay ownership/tenant checks, audio validation before provider/storage, consent/retention UX, and audioStorageKey nullability contracts align with spec and test strategy.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    {
+      "id": "NB-P4-001",
+      "severity": "nonblocking",
+      "category": "pre_existing_typecheck",
+      "title": "sales-advantage check-types still fails on scaffold TS2742 in lib/trpc.ts",
+      "evidence": "CI=true pnpm turbo run check-types --filter=sales-advantage --filter=@reading-advantage/domain --filter=@reading-advantage/api exits 1. Domain and API type-check pass; sales-advantage fails only with two TS2742 diagnostics at apps/sales-advantage/lib/trpc.ts:4. git diff --name-only 5014c5051a2dd5be161c541257343bb9a13eedb9..HEAD has no apps/sales-advantage/lib/trpc.ts entry, baseline 5014c505 already contains export const trpc = createTRPCReact<AppRouter>();, and git log --follow identifies scaffold commit 025f8fc9 as the introducer.",
+      "owner": "sales-advantage scaffold/golive track"
+    }
+  ],
+  "evidence": {
+    "branch": "docs/measure-wave4-6-medium-coverage",
+    "baseline_sha": "5014c5051a2dd5be161c541257343bb9a13eedb9",
+    "head_sha_before_acceptance_commit": "01a2aecc",
+    "phase_commits_reviewed": [
+      "b6d1d9f8 test(sales): wave1 p4 red tests (track_id: wave1_high_risk_product_failures_20260628)",
+      "d83db701 fix(sales): wave1 p4 authz/audio/privacy/contracts green (track_id: wave1_high_risk_product_failures_20260628)",
+      "ba483a4e fix(sales): wave1 p4 review-b security (track_id: wave1_high_risk_product_failures_20260628)",
+      "a60ffebc chore(measure): wave1 p4 review-b result (track_id: wave1_high_risk_product_failures_20260628)",
+      "01a2aecc fix(sales): wave1 p4 review-c ux-api (track_id: wave1_high_risk_product_failures_20260628)"
+    ],
+    "spec_alignment": {
+      "sales_roles_authenticated": "PASS: sales-auth-context.test.ts verifies SALES_REP and SALES_ADMIN produce non-null auth context, and admin procedures reject SALES_REP.",
+      "ownership_and_tenant_idor": "PASS: saveAttemptEvaluation selects the existing attempt before update; rep wrong-owner update throws before db.update; same-tenant SALES_ADMIN can update; cross-tenant SALES_ADMIN is rejected before db.update. getCohortOverview filters cohort rows to tenant-scoped rep IDs.",
+      "audio_validation_before_provider": "PASS: route validates MIME, size, duration, consent, and retention before arrayBuffer/storage/AI/context/domain calls. Domain validates roleplayAudioInputSchema and explicit byte/duration caps before DB insert/provider evaluate. Targeted tests assert provider/storage/context call counts remain 0 on rejected inputs.",
+      "privacy_consent_retention": "PASS: roleplay route requires consentGiven='true' and retentionDays in [1,365]; RoleplayRecorder now displays an explicit consent checkbox, disables submit until checked, appends consentGiven='true' and retentionDays='30', and resets consent on retry.",
+      "audio_storage_key_nullability": "PASS: domain/types output schemas accept null audioStorageKey, roleplayAttemptInputSchema is exported from @reading-advantage/types, Drizzle column is nullable, and route persists null when storage.put fails."
+    },
+    "plan_truthfulness": {
+      "result": "PASS",
+      "details": "Corrected stale Phase 4 plan evidence from 22/22 to the observed 30/30 targeted tests including Review B route/IDOR additions and Review C route tests. Plan now records exact rerun results and the pre-existing TS2742 check-types exception without claiming aggregate type-check green. Phase 5 legacy [ ] markers were converted to [~] for marker vocabulary hygiene."
+    },
+    "anti_patterns": {
+      "A1_substring_as_signal": "PASS: measure/automation-supervisor.py uses regex [~xb], has is_task_structurally_blocked(), recognizes status b and deferred:<owner>; no legacy [ ~x] regex matched.",
+      "A2_consent_gate_real": "PASS: consent/retention are checked at route and domain; Review C fixed real UI wiring so user submissions can include consent and the gate is not vacuous.",
+      "A3_labeled_counts": "PASS: Count assertions use labeled numeric values/call counts (cross-tenant row count, provider/storage/update call counts); no rg -q '[0-9]+' pattern found in tests/*.sh.",
+      "A4_no_vacuous_pass": "PASS: IDOR test now returns the wrong-owner row through SELECT and asserts update call count 0; acceptance tightened MIME/size/duration tests to pass consent/retention so they prove the intended rejection branch; Phase 4 has 8 [x] tasks, not zero completed tasks.",
+      "A5_plan_truthfulness": "PASS: stale 22/22 plan claim was corrected to 30/30 and matches the rerun targeted gate; check-types failure is described as exit 1 with pre-existing owner.",
+      "A6_registry_overstatement": "PASS: measure/tracks.md does not claim Wave 1/Sales Phase 4 resolved; no unsupported resolved/all-tests-pass registry claim found for this phase.",
+      "A7_over_broad_filter": "PASS: no banned-term broad rg -v filters found in tests/*.sh; Phase 4 tests assert structured values directly."
+    },
+    "marker_hygiene": "PASS: Phase 4 task markers are 8 [x] and 2 [b] deferred:wave4; no [ ] or dangling [~] in Phase 4. Phase 5 pending tasks use [~] rather than deprecated [ ]."
+  },
+  "commands": [
+    {
+      "cmd": "git branch --show-current && git status --short && git log --oneline -10",
+      "exit_code": 0,
+      "result": "branch docs/measure-wave4-6-medium-coverage; only allowed/untracked files observed before acceptance edits; HEAD initially 01a2aecc"
+    },
+    {
+      "cmd": "git diff --name-only 5014c5051a2dd5be161c541257343bb9a13eedb9..HEAD",
+      "exit_code": 0,
+      "result": "Phase diff inspected; sales source/tests/contracts/plan/review artifacts changed; apps/sales-advantage/lib/trpc.ts absent."
+    },
+    {
+      "cmd": "CI=true pnpm --filter @reading-advantage/api exec vitest run src/__tests__/sales-auth-context.test.ts src/__tests__/sales-router-audio-contract.test.ts && CI=true pnpm --filter @reading-advantage/domain exec vitest run src/__tests__/sales-authorization-idors.test.ts src/__tests__/sales-audio-validation-privacy.test.ts src/__tests__/sales-contract-nullability.test.ts && CI=true pnpm --filter sales-advantage exec vitest run app/api/roleplay-attempts/__tests__/audio-upload-boundary.test.ts app/api/roleplay-attempts/__tests__/route.test.ts",
+      "exit_code": 0,
+      "result": "api 2 files/7 tests passed; domain 3 files/14 tests passed; sales-advantage route 2 files/9 tests passed; total targeted 30/30 passed."
+    },
+    {
+      "cmd": "CI=true pnpm turbo run test --filter=sales-advantage --filter=@reading-advantage/domain --filter=@reading-advantage/api",
+      "exit_code": 0,
+      "result": "domain 37 files with 367 passed/5 skipped; api 30 files with 223 passed; sales-advantage 3 files with 21 passed."
+    },
+    {
+      "cmd": "CI=true pnpm turbo run check-types --filter=sales-advantage --filter=@reading-advantage/domain --filter=@reading-advantage/api",
+      "exit_code": 1,
+      "result": "domain/api and dependencies passed; sales-advantage failed only with two pre-existing TS2742 errors in apps/sales-advantage/lib/trpc.ts:4."
+    },
+    {
+      "cmd": "CI=true pnpm turbo run lint --filter=sales-advantage --filter=@reading-advantage/domain --filter=@reading-advantage/api",
+      "exit_code": 0,
+      "result": "0 errors; warnings only (domain 10, api 5, sales-advantage 12)."
+    },
+    {
+      "cmd": "git show 5014c5051a2dd5be161c541257343bb9a13eedb9:apps/sales-advantage/lib/trpc.ts",
+      "exit_code": 0,
+      "result": "Baseline already contains createTRPCReact<AppRouter>() export that triggers TS2742."
+    },
+    {
+      "cmd": "git log --oneline --follow -- apps/sales-advantage/lib/trpc.ts",
+      "exit_code": 0,
+      "result": "025f8fc9 introduced apps/sales-advantage/lib/trpc.ts; no Phase 4 commit touched it."
+    },
+    {
+      "cmd": "bash measure/doctor.sh",
+      "exit_code": 0,
+      "result": "PASS: anti-pattern catalog exists with A1-A11; review planning tracks use only [~]/[x]/[b] markers."
+    }
+  ],
+  "changed_files": [
+    "measure/tracks/wave1_high_risk_product_failures_20260628/plan.md",
+    "packages/domain/src/__tests__/sales-audio-validation-privacy.test.ts",
+    "measure/tracks/wave1_high_risk_product_failures_20260628/phase4-acceptance-result.json"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "None for Phase 4. Proceed to Phase 5 Integrated Acceptance. Track the pre-existing sales-advantage lib/trpc.ts TS2742 under the sales go-live/scaffold owner if Phase 5 requires full type-check green without known exceptions.",
+  "confidence": "high"
+}

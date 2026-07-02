@@ -103,6 +103,8 @@ describe("Sales audio validation and privacy gates", () => {
           audioStorageKey: null,
           durationMs: 1000,
           audio: invalidAudio,
+          consentGiven: true,
+          retentionDays: 30,
           evaluate,
         },
       );
@@ -139,6 +141,8 @@ describe("Sales audio validation and privacy gates", () => {
           audioStorageKey: null,
           durationMs: 1000,
           audio: oversizedAudio,
+          consentGiven: true,
+          retentionDays: 30,
           evaluate,
         },
       );
@@ -171,6 +175,8 @@ describe("Sales audio validation and privacy gates", () => {
           audioStorageKey: null,
           durationMs: MAX_AUDIO_DURATION_MS + 1,
           audio: validAudio,
+          consentGiven: true,
+          retentionDays: 30,
           evaluate,
         },
       );
