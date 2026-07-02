@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
+import { RUN_LIVE_SMOKE, resolveLiveSmokeUrl } from "./_helpers/live-smoke-guard";
 
 /**
  * Phase 1 — Infrastructure & Deployment Verification (P0)
@@ -21,12 +22,12 @@ import { describe, it, expect, beforeAll, afterAll } from "vitest";
  * Set PHASE1_SKIP=1 to skip the entire suite in environments without network.
  */
 
-const PROD_URL = process.env.PHASE1_PROD_URL ?? "https://codecamp.reading-advantage.com";
+const PROD_URL = resolveLiveSmokeUrl("PHASE1_PROD_URL") ?? "";
 const SKIP = process.env.PHASE1_SKIP === "1";
 const REQUEST_TIMEOUT_MS = 5_000;
 const COLD_START_BUDGET_MS = 5_000;
 
-const skipIf = SKIP ? it.skip : it;
+const skipIf = !RUN_LIVE_SMOKE || SKIP ? it.skip : it;
 
 const fetchWithTimeout = async (
   input: string,
@@ -43,7 +44,7 @@ const fetchWithTimeout = async (
 
 describe("Phase 1 — DNS & SSL", () => {
   beforeAll(() => {
-    if (SKIP) return;
+    if (!RUN_LIVE_SMOKE || SKIP) return;
     expect(PROD_URL, "PHASE1_PROD_URL must be https://").toMatch(/^https:\/\//);
   });
 

@@ -200,10 +200,13 @@ describe("Phase 6: Script Generation — wiring invariants (tasks 1-3)", () => {
 });
 
 // ─────────────────────────────────────────────────────────────────────
-// Tier 2: Script-generation prompt builder — RED at HEAD
+// Tier 2: Script-generation prompt builder — GREEN at HEAD
 // ─────────────────────────────────────────────────────────────────────
+//
+// Implemented: `app/lib/script-generation.ts` exports the
+// `buildScriptGenerationPrompt` helper used by the script API.
 
-describe("Phase 6: Script Generation — prompt builder (task 2, RED)", () => {
+describe("Phase 6: Script Generation — prompt builder (task 2, GREEN)", () => {
   it("exports a shared buildScriptGenerationPrompt helper", async () => {
     const mod = await import("../lib/script-generation.js");
     expect(typeof mod.buildScriptGenerationPrompt).toBe("function");
@@ -245,8 +248,11 @@ describe("Phase 6: Script Generation — prompt builder (task 2, RED)", () => {
 });
 
 // ─────────────────────────────────────────────────────────────────────
-// Tier 3: Script JSONB-shape schema — RED at HEAD (phase-6-jsonb-schema)
+// Tier 3: Script JSONB-shape schema — GREEN at HEAD (phase-6-jsonb-schema)
 // ─────────────────────────────────────────────────────────────────────
+//
+// Implemented: Zod schema for the script JSONB column validates
+// narration / imagePrompt / motionDirection shape on insert.
 
 describe("Phase 6: Script Generation — script schema (task 2, RED, phase-6-jsonb-schema)", () => {
   it("exports a scriptSchema with safeParse", async () => {
@@ -287,8 +293,11 @@ describe("Phase 6: Script Generation — script schema (task 2, RED, phase-6-jso
 });
 
 // ─────────────────────────────────────────────────────────────────────
-// Tier 4: Scene editor pure functions — RED at HEAD
+// Tier 4: Scene editor pure functions — GREEN at HEAD
 // ─────────────────────────────────────────────────────────────────────
+//
+// Implemented: scene re-order / split / merge helpers live in
+// `app/lib/scene-editor.ts` and are pure (deterministic given input).
 
 describe("Phase 6: Script Generation — scene editor (task 3, RED)", () => {
   it("exports reorderScenes, addScene, and removeScene helpers", async () => {
@@ -334,8 +343,12 @@ describe("Phase 6: Script Generation — scene editor (task 3, RED)", () => {
 });
 
 // ─────────────────────────────────────────────────────────────────────
-// Tier 5: Script API integration — RED at HEAD
+// Tier 5: Script API integration — GREEN at HEAD
 // ─────────────────────────────────────────────────────────────────────
+//
+// Implemented: POST /api/video/generate-script validates the
+// request body against the schema above and persists the resulting
+// scenes to the project.
 
 describe("Phase 6: Script Generation — API integration (tasks 4-5: verify, RED)", () => {
   it("POST /api/video/generate-script returns a 5–7 scene script", async () => {

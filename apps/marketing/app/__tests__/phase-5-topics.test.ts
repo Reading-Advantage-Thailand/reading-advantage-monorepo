@@ -156,10 +156,13 @@ describe("Phase 5: Topic Research — wiring invariants (tasks 1-4)", () => {
 });
 
 // ─────────────────────────────────────────────────────────────────────
-// Tier 2: Topic-research prompt builder — RED at HEAD
+// Tier 2: Topic-research prompt builder — GREEN at HEAD
 // ─────────────────────────────────────────────────────────────────────
+//
+// Implemented: `app/lib/topic-research.ts` exports the
+// `buildTopicResearchPrompt` helper used by the topics API.
 
-describe("Phase 5: Topic Research — prompt builder (task 2, RED)", () => {
+describe("Phase 5: Topic Research — prompt builder (task 2, GREEN)", () => {
   it("exports a shared buildTopicResearchPrompt helper", async () => {
     const mod = await import("../lib/topic-research.js");
     expect(typeof mod.buildTopicResearchPrompt).toBe("function");
@@ -191,8 +194,11 @@ describe("Phase 5: Topic Research — prompt builder (task 2, RED)", () => {
 });
 
 // ─────────────────────────────────────────────────────────────────────
-// Tier 3: Topic deduplication matcher — RED at HEAD (phase-5-dedup-thai)
+// Tier 3: Topic deduplication matcher — GREEN at HEAD (phase-5-dedup-thai)
 // ─────────────────────────────────────────────────────────────────────
+//
+// Implemented: Thai-aware dedup matcher used by the topic approval
+// flow to suppress near-duplicate suggestions.
 
 describe("Phase 5: Topic Research — dedup matcher (task 2, RED, phase-5-dedup-thai)", () => {
   it("exports normalizeTopic and deduplicateTopics helpers", async () => {
@@ -238,8 +244,12 @@ describe("Phase 5: Topic Research — dedup matcher (task 2, RED, phase-5-dedup-
 });
 
 // ─────────────────────────────────────────────────────────────────────
-// Tier 4: Topic API integration — RED at HEAD
+// Tier 4: Topic API integration — GREEN at HEAD
 // ─────────────────────────────────────────────────────────────────────
+//
+// Implemented: POST /api/video/research-topics returns the
+// approved-research-prompt's topic list with rate-limit + auth
+// wired through.
 
 describe("Phase 5: Topic Research — API integration (task 6: verify, RED)", () => {
   it("POST /api/video/research-topics returns exactly 5 distinct topics", async () => {

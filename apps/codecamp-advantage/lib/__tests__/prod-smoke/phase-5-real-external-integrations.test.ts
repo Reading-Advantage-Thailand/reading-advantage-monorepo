@@ -2,6 +2,7 @@ import { describe, it, expect, beforeAll } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { createHmac } from "node:crypto";
+import { RUN_LIVE_SMOKE, resolveLiveSmokeUrl } from "./_helpers/live-smoke-guard";
 
 /**
  * Phase 5 — Real External Integrations (P0)
@@ -59,7 +60,7 @@ import { createHmac } from "node:crypto";
  * against prod, consistent with the strategy.
  */
 
-const PROD_URL = process.env.PHASE5_PROD_URL ?? "https://codecamp.reading-advantage.com";
+const PROD_URL = resolveLiveSmokeUrl("PHASE5_PROD_URL") ?? "";
 const SKIP = process.env.PHASE5_SKIP === "1";
 const HAS_INTERN_CREDS =
   typeof process.env.PHASE5_TEST_INTERN_USERNAME === "string" &&
@@ -83,7 +84,7 @@ const HAS_WEBHOOK_SECRET =
   process.env.PHASE5_TEST_GITHUB_WEBHOOK_SECRET.length > 0;
 const REQUEST_TIMEOUT_MS = 30_000;
 
-const testIf = (skipCondition: boolean) => (skipCondition ? it.skip : it);
+const testIf = (skipCondition: boolean) => (!RUN_LIVE_SMOKE || skipCondition ? it.skip : it);
 const skipIf = testIf(SKIP);
 const skipIfNoInternCreds = testIf(SKIP || !HAS_INTERN_CREDS);
 const skipIfNoAdminCreds = testIf(SKIP || !HAS_ADMIN_CREDS);
@@ -255,7 +256,7 @@ function readSeedExerciseRepoUrls(): Record<string, string> {
 
 describe("Phase 5 — OpenRouter AI Tutor (Live)", () => {
   beforeAll(() => {
-    if (SKIP) return;
+    if (!RUN_LIVE_SMOKE || SKIP) return;
     expect(PROD_URL, "PHASE5_PROD_URL must be https://").toMatch(/^https:\/\//);
   });
 
@@ -515,7 +516,7 @@ describe("Phase 5 — OpenRouter AI Tutor (Live)", () => {
 
 describe("Phase 5 — GitHub App Webhook (Live)", () => {
   beforeAll(() => {
-    if (SKIP) return;
+    if (!RUN_LIVE_SMOKE || SKIP) return;
     expect(PROD_URL, "PHASE5_PROD_URL must be https://").toMatch(/^https:\/\//);
   });
 
@@ -710,7 +711,7 @@ describe("Phase 5 — GitHub App Webhook (Live)", () => {
 
 describe("Phase 5 — GitHub PR Review End-to-End", () => {
   beforeAll(() => {
-    if (SKIP) return;
+    if (!RUN_LIVE_SMOKE || SKIP) return;
     expect(PROD_URL, "PHASE5_PROD_URL must be https://").toMatch(/^https:\/\//);
   });
 

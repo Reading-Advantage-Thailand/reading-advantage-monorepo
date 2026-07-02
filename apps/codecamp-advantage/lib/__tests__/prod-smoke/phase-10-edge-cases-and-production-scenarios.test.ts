@@ -6,6 +6,7 @@ import {
   parseCloudBuildSteps,
   hasMinInstances,
 } from "../_helpers/cloudbuild-parser.js";
+import { RUN_LIVE_SMOKE, resolveLiveSmokeUrl } from "./_helpers/live-smoke-guard";
 
 /**
  * Phase 10 — Edge Cases & Production-Specific Scenarios (P2)
@@ -89,8 +90,7 @@ import {
 
 // ─── Constants ──────────────────────────────────────────────
 
-const PROD_URL =
-  process.env.PHASE10_PROD_URL ?? "https://codecamp.reading-advantage.com";
+const PROD_URL = resolveLiveSmokeUrl("PHASE10_PROD_URL") ?? "";
 const SKIP = process.env.PHASE10_SKIP === "1";
 
 const HAS_INTERN_CREDS =
@@ -160,7 +160,7 @@ const CODECAMP_TYPES_SOURCE = resolve(
 
 // ─── Test gating helpers ───────────────────────────────────
 
-const testIf = (skipCondition: boolean) => (skipCondition ? it.skip : it);
+const testIf = (skipCondition: boolean) => (!RUN_LIVE_SMOKE || skipCondition ? it.skip : it);
 const skipIf = testIf(SKIP);
 const skipIfNoInternCreds = testIf(SKIP || !HAS_INTERN_CREDS);
 const skipIfNoAdminCreds = testIf(SKIP || !HAS_ADMIN_CREDS);
@@ -296,7 +296,7 @@ function readSourceOrThrow(path: string, label: string): string {
 
 describe("Phase 10 — Concurrent users (production)", () => {
   beforeAll(() => {
-    if (SKIP) return;
+    if (!RUN_LIVE_SMOKE || SKIP) return;
     expect(PROD_URL, "PHASE10_PROD_URL must be https://").toMatch(/^https:\/\//);
   });
 
@@ -468,7 +468,7 @@ describe("Phase 10 — Concurrent users (production)", () => {
 
 describe("Phase 10 — Long-running sessions (production)", () => {
   beforeAll(() => {
-    if (SKIP) return;
+    if (!RUN_LIVE_SMOKE || SKIP) return;
     expect(PROD_URL, "PHASE10_PROD_URL must be https://").toMatch(/^https:\/\//);
   });
 
@@ -577,7 +577,7 @@ describe("Phase 10 — Long-running sessions (production)", () => {
 
 describe("Phase 10 — Data volume (production)", () => {
   beforeAll(() => {
-    if (SKIP) return;
+    if (!RUN_LIVE_SMOKE || SKIP) return;
     expect(PROD_URL, "PHASE10_PROD_URL must be https://").toMatch(/^https:\/\//);
   });
 
@@ -720,7 +720,7 @@ describe("Phase 10 — Data volume (production)", () => {
 
 describe("Phase 10 — Deployment during use (production)", () => {
   beforeAll(() => {
-    if (SKIP) return;
+    if (!RUN_LIVE_SMOKE || SKIP) return;
     expect(PROD_URL, "PHASE10_PROD_URL must be https://").toMatch(/^https:\/\//);
   });
 

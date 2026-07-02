@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start --port 3005",
     "lint": "eslint .",
-    "test": "vitest run --passWithNoTests",
+    "test": "vitest run",
     "test:watch": "vitest",
     "check-types": "tsc --noEmit",
     "seed:curriculum": "tsx scripts/sales-curriculum-seed.ts"

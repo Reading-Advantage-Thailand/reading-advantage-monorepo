@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { RUN_LIVE_SMOKE, resolveLiveSmokeUrl } from "./_helpers/live-smoke-guard";
 
 /**
  * Phase 2 — Production Database & Configuration (P0)
@@ -30,7 +31,7 @@ import { resolve } from "node:path";
  * real test creds never land in the repo (per test-strategy.md §2).
  */
 
-const PROD_URL = process.env.PHASE2_PROD_URL ?? "https://codecamp.reading-advantage.com";
+const PROD_URL = resolveLiveSmokeUrl("PHASE2_PROD_URL") ?? "";
 const SKIP = process.env.PHASE2_SKIP === "1";
 const HAS_TEST_CREDS =
   typeof process.env.PHASE2_TEST_INTERN_USERNAME === "string" &&
@@ -40,7 +41,7 @@ const HAS_TEST_CREDS =
 const REQUEST_TIMEOUT_MS = 5_000;
 const DASHBOARD_BUDGET_MS = 500;
 
-const skipIf = SKIP ? it.skip : it;
+const skipIf = !RUN_LIVE_SMOKE || SKIP ? it.skip : it;
 const skipIfNoCreds = HAS_TEST_CREDS ? it : it.skip;
 
 // P0 secrets per plan.md §Phase 2 — these are the five the prod

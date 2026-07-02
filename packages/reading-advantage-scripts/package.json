@@ -2,9 +2,7 @@
   "name": "@reading-advantage/scripts",
   "version": "0.1.0",
   "private": true,
-  "scripts": {
-    "test": "jest --passWithNoTests"
-  },
+  "scripts": {},
   "dependencies": {
     "@ai-sdk/google-vertex": "catalog:",
     "@ai-sdk/openai": "catalog:",

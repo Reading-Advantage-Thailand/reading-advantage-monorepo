@@ -2,6 +2,7 @@
   "schemaVersion": 1,
   "trackId": "codecamp_qa_prod_20260517",
   "generatedAt": "2026-06-11T18:00:00Z",
+  "_runLiveSmokeNote": "Static artifact summarising prod QA results; not a live probe. The prodUrl field is a historical record from the QA session that produced this summary. RUN_LIVE_SMOKE opt-in gate does not apply to this file.",
   "prodUrl": "https://codecamp.reading-advantage.com",
   "overall": "no-go",
   "counts": {

@@ -112,6 +112,17 @@ function findTautologicalAssertions(files: Array<{ name: string; content: string
 function findDomTestsInNodeEnv(files: Array<{ name: string; content: string }>): Finding[] {
   const findings: Finding[] = [];
   for (const { name, content } of files) {
+    // Honor per-file `// @vitest-environment (jsdom|happy-dom)` pragmas:
+    // those files run in their own DOM-capable environment regardless
+    // of the suite-level `environment: "node"` default, so they are not
+    // "DOM tests in the node env" — they are explicit opt-ins to a
+    // different environment. The pragma must appear before the first
+    // non-comment line (we check anywhere in the file because vitest
+    // also tolerates that placement in current versions).
+    const hasPerFileDomEnv = /\/\/\s*@vitest-environment\s+(jsdom|happy-dom)\b/.test(
+      content,
+    );
+    if (hasPerFileDomEnv) continue;
     const hasTestingLibrary = /from\s+["']@testing-library\/(react|dom)["']/.test(content);
     const hasRenderJsx = /render\s*\(\s*\u003c[A-Z][A-Za-z0-9_]*/.test(content);
     if (hasTestingLibrary || hasRenderJsx) {

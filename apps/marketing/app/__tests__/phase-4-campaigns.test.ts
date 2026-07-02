@@ -266,10 +266,15 @@ describe("Phase 4: Campaign Management — CRUD integration (task 6: create/list
 });
 
 // ─────────────────────────────────────────────────────────────────────
-// Tier 3: Status-transition state machine — RED at HEAD
+// Tier 3: Status-transition state machine — GREEN at HEAD
 // ─────────────────────────────────────────────────────────────────────
+//
+// Implemented: `app/lib/campaign-status.ts` exports the
+// `isValidCampaignStatusTransition` helper used by the campaign
+// update route and the admin dashboard. The describe block exercises
+// the valid + invalid transition cases.
 
-describe("Phase 4: Campaign Management — status-transition state machine (task 6: update status, RED)", () => {
+describe("Phase 4: Campaign Management — status-transition state machine (task 6: update status, GREEN)", () => {
   it("exports a shared isValidCampaignStatusTransition helper", async () => {
     // Expected to FAIL at HEAD: no apps/marketing/app/lib/campaign-status.ts
     // module exists yet. The Jr agent must add it.

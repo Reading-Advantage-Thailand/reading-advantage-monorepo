@@ -66,7 +66,9 @@ import { readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-// Deterministic 32-byte key for the test suite (NOT a real secret).
+// Deterministic 32-byte key used as a fallback when ENCRYPTION_KEY is
+// not supplied to the test runner. Override via the environment
+// variable to point at a real key for production runs.
 process.env.ENCRYPTION_KEY ??=
   "a1b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef123456";
 

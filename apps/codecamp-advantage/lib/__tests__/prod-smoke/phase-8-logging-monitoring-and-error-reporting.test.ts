@@ -2,6 +2,7 @@ import { describe, it, expect, afterAll } from "vitest";
 import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
 import { resolve, dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { RUN_LIVE_SMOKE, resolveLiveSmokeUrl } from "./_helpers/live-smoke-guard";
 
 /**
  * Phase 8 — Logging, Monitoring & Error Reporting (P1)
@@ -54,7 +55,7 @@ import { fileURLToPath } from "node:url";
  * black-box HTTP probes against prod, consistent with the strategy.
  */
 
-const PROD_URL = process.env.PHASE8_PROD_URL ?? "https://codecamp.reading-advantage.com";
+const PROD_URL = resolveLiveSmokeUrl("PHASE8_PROD_URL") ?? "";
 const SKIP = process.env.PHASE8_SKIP === "1";
 
 const REQUEST_TIMEOUT_MS = 5_000;
@@ -79,7 +80,7 @@ const TRPC_ROUTER_DIR = resolve(MONOREPO_ROOT, "packages/api/src/routers");
 const TRPC_CONTEXT_TS = resolve(MONOREPO_ROOT, "packages/api/src/context.ts");
 
 // ─── Conditional test helpers ───────────────────────────────
-const testIf = (skipCondition: boolean) => (skipCondition ? it.skip : it);
+const testIf = (skipCondition: boolean) => (!RUN_LIVE_SMOKE || skipCondition ? it.skip : it);
 const skipIf = testIf(SKIP);
 
 // ─── HTTP helper ─────────────────────────────────────────────
