@@ -61,12 +61,12 @@ Do not start Phase 2 until the security gate is green.
 
 ## Phase 1: Production curriculum seed + human approval
 
-- [ ] Task: Dry-run the seed with `AI_PROVIDER=mock` against a local DB; confirm rows land as `reviewStatus: 'draft'` and the script is idempotent
-- [ ] Task: Run `pnpm --filter sales-advantage seed:curriculum` with `AI_PROVIDER=openrouter` (real generation)
+- [~] Task: Dry-run the seed with `AI_PROVIDER=mock` against a local DB; confirm rows land as `reviewStatus: 'draft'` and the script is idempotent
+- [~] Task: Run `pnpm --filter sales-advantage seed:curriculum` with `AI_PROVIDER=openrouter` (real generation)
   - [ ] 6 modules / ~26 lessons / ~17 scenarios+rubrics / quiz questions inserted as `draft`
-- [ ] Task: Human review — spot-check 2–3 scenarios for rubric quality and source traceability (`sourceRef` back to `advantage-pr/09-sales-enablement/`); verify honest-claims/banned-phrase governance survived generation
-- [ ] Task: Approve the launch cohort — flip `reviewStatus` to `approved` via the admin curriculum page (or a reviewed SQL statement); confirm draft content stays invisible to reps
-- [ ] Task: Measure — User Manual Verification 'Production curriculum'
+- [~] Task: Human review — spot-check 2–3 scenarios for rubric quality and source traceability (`sourceRef` back to `advantage-pr/09-sales-enablement/`); verify honest-claims/banned-phrase governance survived generation
+- [~] Task: Approve the launch cohort — flip `reviewStatus` to `approved` via the admin curriculum page (or a reviewed SQL statement); confirm draft content stays invisible to reps
+- [~] Task: Measure — User Manual Verification 'Production curriculum'
 
 ---
 
@@ -83,38 +83,38 @@ Do not start Phase 2 until the security gate is green.
   - [x] Service name: `sales-advantage`, region `asia-southeast1`, Cloud SQL instance `reading-advantage:asia-southeast1:cloud-sql`
   - [x] `--set-secrets` for `DATABASE_URL`, `AUTH_SECRET`, `AI_PROVIDER`, `OPENROUTER_API_KEY`, `GOOGLE_AI_API_KEY`, `OPENAI_API_KEY`, `SALES_AUDIO_EVAL_MODEL`, `SALES_AUDIO_EVAL_FALLBACK_STT_MODEL`, `SALES_AUDIO_EVAL_FALLBACK_EVAL_MODEL`, `SALES_CHAT_MODEL`, `STORAGE_ENDPOINT`, `STORAGE_REGION`, `STORAGE_BUCKET`, `STORAGE_ACCESS_KEY`, `STORAGE_SECRET_KEY`, `STORAGE_PUBLIC_BASE_URL`
   - [x] `--allow-unauthenticated` (login page needs to be public, same as codecamp)
-- [ ] Task: Provision Cloud SQL — create the `sales_advantage` database — [b] deferred:human-gated
-- [ ] Task: Provision Secret Manager entries — [b] deferred:human-gated
+- [~] Task: Provision Cloud SQL — create the `sales_advantage` database — [b] deferred:human-gated
+- [~] Task: Provision Secret Manager entries — [b] deferred:human-gated
 - [x] Task: Complete `apps/sales-advantage/.env.example` — full runtime surface with comments
   - [x] All env vars documented: DB, auth, AI provider (openrouter/google/openai/mock), eval model overrides, chat model, storage (S3-compatible), Next.js
   - [x] Key name correction: storage adapter reads `STORAGE_ACCESS_KEY` / `STORAGE_SECRET_KEY` (not `_ACCESS_KEY_ID` / `_SECRET_ACCESS_KEY`)
 - [x] Task: Write `apps/sales-advantage/scripts/sales-smoke.sh` — post-deploy smoke (GET / → 200, GET /api/auth/session → 200, POST /api/trpc → 401 unauth)
   - [x] Authenticated smoke deferred:human-gated
-- [ ] Task: Local production build smoke — `docker build -f apps/sales-advantage/Dockerfile .` succeeds — [b] skipped (Docker not available in this environment)
-- [ ] Task: Measure — User Manual Verification 'Deploy infrastructure' — [b] deferred:human-gated
+- [~] Task: Local production build smoke — `docker build -f apps/sales-advantage/Dockerfile .` succeeds — [b] skipped (Docker not available in this environment)
+- [~] Task: Measure — User Manual Verification 'Deploy infrastructure' — [b] deferred:human-gated
 
 ---
 
 ## Phase 3: Deploy + end-to-end QA
 
-- [ ] Task: `gcloud builds submit --config apps/sales-advantage/cloudbuild.yaml` to the `reading-advantage` project; confirm migrate + doctor + deploy steps pass
-- [ ] Task: Run `sales-smoke.sh` against the live Cloud Run URL
-- [ ] Task: End-to-end QA pass (from `sales_advantage_mvp_20260622/plan.md` Phase 8)
+- [~] Task: `gcloud builds submit --config apps/sales-advantage/cloudbuild.yaml` to the `reading-advantage` project; confirm migrate + doctor + deploy steps pass
+- [~] Task: Run `sales-smoke.sh` against the live Cloud Run URL
+- [~] Task: End-to-end QA pass (from `sales_advantage_mvp_20260622/plan.md` Phase 8)
   - [ ] Auth: admin login → create rep → rep login
   - [ ] Dashboard modules + progress; theory lesson mark-complete
   - [ ] Roleplay: record → submit → evaluation displays; retry → best-attempt logic
   - [ ] Quiz: submit → 70% threshold; Chat: Thai streaming response
   - [ ] Admin: cohort overview, per-rep detail, curriculum approval
   - [ ] i18n toggle EN↔TH; rate-limit: 11th submission/hour → 429
-- [ ] Task: Verify audio storage is private (signed URL only) and no orphaned keys on failure
-- [ ] Task: Measure — User Manual Verification 'Deploy + QA'
+- [~] Task: Verify audio storage is private (signed URL only) and no orphaned keys on failure
+- [~] Task: Measure — User Manual Verification 'Deploy + QA'
 
 ---
 
 ## Phase 4: Closeout
 
-- [ ] Task: Update `measure/deployment-status.md` — sales-advantage now deployed (service, project, deploy source)
-- [ ] Task: Update `measure/tech-debt.md` — go-live shortcuts (audio retention policy, no auto CI/CD trigger, free-tier eval-model reliability + fallback monitoring)
-- [ ] Task: Update `measure/lessons-learned.md` if any reusable lesson emerged
-- [ ] Task: Archive this track and the reconciled `sales_advantage_mvp_20260622`; update `measure/tracks.md` rows to `[x]`
-- [ ] Task: Measure — User Manual Verification 'Closeout'
+- [~] Task: Update `measure/deployment-status.md` — sales-advantage now deployed (service, project, deploy source)
+- [~] Task: Update `measure/tech-debt.md` — go-live shortcuts (audio retention policy, no auto CI/CD trigger, free-tier eval-model reliability + fallback monitoring)
+- [~] Task: Update `measure/lessons-learned.md` if any reusable lesson emerged
+- [~] Task: Archive this track and the reconciled `sales_advantage_mvp_20260622`; update `measure/tracks.md` rows to `[x]`
+- [~] Task: Measure — User Manual Verification 'Closeout'

@@ -16,28 +16,25 @@ track_dir_resolve() {
 }
 
 status=0
-track_ids=(
-  monorepo_feature_review_masterplan_20260626
-  shared_foundation_review_20260626
-  reading_advantage_full_review_20260626
-  primary_advantage_full_review_20260626
-  science_advantage_review_20260626
-  codecamp_advantage_review_20260626
-  sales_advantage_review_20260626
-  marketing_app_review_20260626
-  advantage_games_review_20260626
-  www_reading_advantage_review_20260626
-  cross_app_workflows_review_20260626
-  monorepo_review_roadmap_20260626
-)
-for tid in "${track_ids[@]}"; do
-  dir="$(track_dir_resolve "$tid")"
-  plan="$dir/plan.md"
-  if [ ! -f "$plan" ]; then
-    printf 'FAIL: expected plan file missing: %s\n' "$plan" >&2
-    status=1
-    continue
-  fi
+
+# A8 guard: NO plan.md under measure/tracks/ (active) may use the deprecated
+# `[ ]` (space) marker. The supervisor regex `^- \[([~xb])\]` intentionally
+# ignores `[ ]`, so a stale `[ ]` task is invisible to the supervisor (silently
+# dropped from the incomplete-task count) while a separate status checker may
+# still count it as incomplete — an ambiguity that inflates status reports.
+# This guard must cover EVERY active track, not just review tracks, or product
+# tracks regress silently. Archived plans (measure/archive/) are frozen
+# historical snapshots and are intentionally excluded.
+shopt -s nullglob
+plans=( measure/tracks/*/plan.md )
+shopt -u nullglob
+
+if [ "${#plans[@]}" -eq 0 ]; then
+  printf 'FAIL: no plan.md files found under measure/tracks\n' >&2
+  exit 1
+fi
+
+for plan in "${plans[@]}"; do
   if grep -n '^- \[ \] ' "$plan" >/tmp/orchestrator-marker-hits.$$; then
     printf 'FAIL: deprecated [ ] markers in %s; use [~], [x], or [b] deferred:<owner>\n' "$plan" >&2
     cat /tmp/orchestrator-marker-hits.$$ >&2
@@ -50,4 +47,4 @@ if [ "$status" -ne 0 ]; then
   exit "$status"
 fi
 
-printf 'PASS: review planning tracks use only [~]/[x]/[b] task markers\n'
+printf 'PASS: all active track plans use only [~]/[x]/[b] task markers (%d plans checked)\n' "${#plans[@]}"

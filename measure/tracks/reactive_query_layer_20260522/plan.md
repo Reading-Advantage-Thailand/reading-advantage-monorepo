@@ -7,7 +7,7 @@
 
 ## Phase 0: Expand This Track (do this first, when unblocked)
 
-- [ ] Task: Confirm prerequisites are complete (Prisma→Drizzle migration; connection pooling)
-- [ ] Task: Ratify the reactivity approach (table-level `LISTEN/NOTIFY` / sync engine / WAL streaming — see `spec.md`)
-- [ ] Task: Decide transport (WebSocket vs SSE) and scope (app-wide vs targeted surfaces)
-- [ ] Task: Rewrite this `plan.md` with real phases and tasks; promote `spec.md` from STUB to a full specification
+- [~] Task: Confirm prerequisites are complete (Prisma→Drizzle migration; connection pooling)
+- [~] Task: Ratify the reactivity approach (table-level `LISTEN/NOTIFY` / sync engine / WAL streaming — see `spec.md`)
+- [~] Task: Decide transport (WebSocket vs SSE) and scope (app-wide vs targeted surfaces)
+- [~] Task: Rewrite this `plan.md` with real phases and tasks; promote `spec.md` from STUB to a full specification

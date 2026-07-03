@@ -74,18 +74,18 @@ Do not start Phase 2 until this is green — the app currently leaks decrypted A
 
 ## Phase 3: Deploy + manual QA
 
-- [ ] Task: `gcloud builds submit --config apps/marketing/cloudbuild.yaml`; confirm migrate + doctor + deploy steps pass
-- [ ] Task: Run the smoke script against the live Cloud Run URL; confirm `GET /api/health/db` green
-- [ ] Task: Manual end-to-end QA (Phikul) — login → create campaign → research topics → dedup → generate Thai script (5–7 scenes) → edit scenes → persist project → reload; record the result
-- [ ] Task: Confirm no route exposes decrypted secrets in production (re-check `GET /api/settings` against the live service)
-- [ ] Task: Measure — User Manual Verification 'Deploy + QA'
+- [~] Task: `gcloud builds submit --config apps/marketing/cloudbuild.yaml`; confirm migrate + doctor + deploy steps pass
+- [~] Task: Run the smoke script against the live Cloud Run URL; confirm `GET /api/health/db` green
+- [~] Task: Manual end-to-end QA (Phikul) — login → create campaign → research topics → dedup → generate Thai script (5–7 scenes) → edit scenes → persist project → reload; record the result
+- [~] Task: Confirm no route exposes decrypted secrets in production (re-check `GET /api/settings` against the live service)
+- [~] Task: Measure — User Manual Verification 'Deploy + QA'
 
 ---
 
 ## Phase 4: Closeout
 
-- [ ] Task: Update `measure/deployment-status.md` — marketing now deployed (service, project, deploy source)
-- [ ] Task: Update `measure/tech-debt.md` — any go-live shortcuts (vinext container strategy, no auto CI/CD trigger, i18n/hardcoded-English UI carried to Wave 5)
-- [ ] Task: Update `measure/lessons-learned.md` if a reusable lesson emerged (esp. deploying a vinext app to Cloud Run)
-- [ ] Task: Archive this track; update `measure/tracks.md` row to `[x]`
-- [ ] Task: Measure — User Manual Verification 'Closeout'
+- [~] Task: Update `measure/deployment-status.md` — marketing now deployed (service, project, deploy source)
+- [~] Task: Update `measure/tech-debt.md` — any go-live shortcuts (vinext container strategy, no auto CI/CD trigger, i18n/hardcoded-English UI carried to Wave 5)
+- [~] Task: Update `measure/lessons-learned.md` if a reusable lesson emerged (esp. deploying a vinext app to Cloud Run)
+- [~] Task: Archive this track; update `measure/tracks.md` row to `[x]`
+- [~] Task: Measure — User Manual Verification 'Closeout'

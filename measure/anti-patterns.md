@@ -17,17 +17,19 @@
 
 | ID | Anti-pattern | Guard |
 |----|--------------|-------|
-| A1 | Substring-as-structured-signal in supervisor | `tests/mir_p1.sh` / orchestrator audit |
-| A2 | Consent-blind publish gate | `tests/cs_p4.sh` / orchestrator audit |
-| A3 | Digit-only as a "labeled count" | `tests/mir_p1.sh` / orchestrator audit |
-| A4 | Vacuous-pass on nothing-done | `tests/mir_p1.sh` / orchestrator audit |
-| A5 | False-claim text vs test reality | `tests/mir_p1.sh` / orchestrator audit |
-| A6 | Registry-note overstatement | `tests/mir_p1.sh` / orchestrator audit |
-| A7 | Over-broad filter swallowing real hits | `tests/mir_p1.sh` / orchestrator audit |
-| A8 | `[ ]` marker ambiguity | `tests/orchestrator_marker_vocabulary.sh` / orchestrator audit |
-| A9 | Pre-existing test references archived track paths | `tests/orchestrator_marker_vocabulary.sh` / orchestrator audit |
-| A10 | Generated-facts drift after structural change | orchestrator audit |
+| A1 | Substring-as-structured-signal in supervisor | `tests/orchestrator_supervisor_invariants.sh` / orchestrator audit |
+| A2 | Consent-blind publish gate | none (catalog ref `tests/cs_p4.sh` dangling — see A12) |
+| A3 | Digit-only as a "labeled count" | none (catalog ref `tests/mir_p1.sh` dangling — see A12) |
+| A4 | Vacuous-pass on nothing-done | none (catalog ref `tests/mir_p1.sh` dangling — see A12) |
+| A5 | False-claim text vs test reality | orchestrator audit (no static guard yet) |
+| A6 | Registry-note overstatement | orchestrator audit (no static guard yet) |
+| A7 | Over-broad filter swallowing real hits | none (catalog ref `tests/mir_p1.sh` dangling — see A12) |
+| A8 | `[ ]` marker ambiguity | `tests/orchestrator_marker_vocabulary.sh` (all active tracks) / orchestrator audit |
+| A9 | Pre-existing test references archived track paths | `track_dir_resolve()` helper + orchestrator audit |
+| A10 | Generated-facts drift after structural change | orchestrator audit (no pre-commit hook; `measure/generate.sh` missing) |
 | A11 | Executed review track left fully blocked | `tests/orchestrator_review_execution_truthfulness.sh` |
+| A12 | Dangling catalog guard-references (unguarded anti-patterns) | `tests/orchestrator_catalog.sh` (catalog-exists only) / orchestrator audit |
+| A13 | Stale track dir left in `measure/tracks/` after archive move | orchestrator audit (no static guard yet) |
 
 ---
 
@@ -296,6 +298,72 @@ Do not use `[b] deferred:review-execution` as a permanent placeholder after exec
 begins.
 
 **Guard:** `tests/orchestrator_review_execution_truthfulness.sh`.
+
+---
+
+## A12 — Dangling catalog guard-references (unguarded anti-patterns)
+
+**Class:** catalog / guard drift
+**Caught:** 2026-07-03 orchestrator audit
+
+**Detection:**
+```bash
+# Every "Guard: tests/<name>.sh" reference in this catalog must point at a file
+# that actually exists. The starter catalog referenced track-specific guards
+# (tests/mir_p1.sh, tests/cs_p4.sh, tests/mr_p*.sh) that were never created in
+# this repo, so A1-A7 were silently unguarded.
+for ref in $(grep -oE 'tests/[a-z_0-9]+\.sh' measure/anti-patterns.md | sort -u); do
+  [ -f "$ref" ] || echo "DANGLING guard reference: $ref"
+done
+```
+
+**Symptoms:** The catalog's per-entry `Guard:` line names a test file that does
+not exist in the repo. Readers (and the orchestrator) believe A1-A7 are guarded
+when they are not. A regression of A1 (substring-as-signal) or A3 (digit-only
+count) would not be caught by any test, only by a manual orchestrator audit.
+
+**Fix:** Either (a) create the referenced guard test, or (b) update the
+`Guard:` line to `none (... — see A12)` and rely on the orchestrator audit.
+This repo chose (b) for A2-A7 (low-frequency in current tracks) and (a) for A1
+and A8 via `tests/orchestrator_supervisor_invariants.sh` and the expanded
+`tests/orchestrator_marker_vocabulary.sh`.
+
+**Guard:** `tests/orchestrator_catalog.sh` enforces that every A-entry exists;
+the dangling-reference sweep itself is run by the orchestrator audit (no static
+guard yet).
+
+---
+
+## A13 — Stale track directory left in `measure/tracks/` after archive move
+
+**Class:** closeout / registry drift
+**Caught:** 2026-07-03 orchestrator audit of `agents_md_audit_science_advantage_20260603`
+
+**Detection:**
+```bash
+# A track that tracks.md marks archived (link under ./archive/) must NOT also
+# have a directory under measure/tracks/. A stale leftover means the active
+# track list is inconsistent with the registry.
+for d in measure/tracks/*/; do
+  tid=$(basename "$d")
+  if grep -q "\./archive/${tid}/" measure/tracks.md && [ ! -f "${d}plan.md" ]; then
+    echo "STALE: $tid is archived in tracks.md but a dir remains in measure/tracks/ (no plan.md)"
+  fi
+done
+```
+
+**Symptoms:** `tracks.md` marks a track `[x]` archived with a `./archive/<id>/`
+link, and `measure/archive/<id>/` holds the complete archived track, BUT a
+leftover `measure/tracks/<id>/` directory still exists (often with only stray
+fixtures and no `plan.md`/`metadata.json`). The active-track enumeration and the
+registry disagree. Because the leftover has no `plan.md`, the marker-vocabulary
+guard skips it silently, so the drift is invisible.
+
+**Fix:** `measure-closeout` must remove the `measure/tracks/<id>/` directory
+once the archive move is complete and verified (archive copy has `plan.md`,
+`metadata.json`, and all artifacts). Do not leave stray fixtures behind.
+
+**Guard:** Orchestrator audit (no static guard yet).
 
 ---
 

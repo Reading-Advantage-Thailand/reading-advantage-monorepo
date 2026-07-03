@@ -44,7 +44,7 @@ The three model choices are overridable via `SALES_AUDIO_EVAL_MODEL`, `SALES_AUD
   - [x] `CI=true pnpm turbo run lint --filter=@reading-advantage/ai`
   - [x] `CI=true pnpm turbo run check-types --filter=@reading-advantage/ai`
 - [x] Task: Update `measure/tech-stack.md` — note the new `generateObjectFromMedia` method on `AIClient`, OpenRouter primary (`nemotron-omni:free`) + `gemini-2.5-flash-lite` fallback
-- [ ] Task: Measure — User Manual Verification 'Extend AIClient with generateObjectFromMedia'
+- [b] Task: Measure — User Manual Verification 'Extend AIClient with generateObjectFromMedia' — deferred:track-owner
 
 ---
 
@@ -78,7 +78,7 @@ Add the 8 sales_* tables and register them REFERENTIAL in the tenant registry (m
 - [x] Task: Run `packages/db` tests + check-types
   - [x] `CI=true pnpm turbo run test --filter=@reading-advantage/db`
   - [x] `CI=true pnpm turbo run check-types --filter=@reading-advantage/db`
-- [ ] Task: Measure — User Manual Verification 'Schema & Migration'
+- [b] Task: Measure — User Manual Verification 'Schema & Migration' — deferred:track-owner
 
 ---
 
@@ -158,7 +158,7 @@ Build the domain layer Contract-First. Every exported function ships with a unit
   - [x] `CI=true pnpm turbo run check-types --filter=@reading-advantage/domain`
   - [x] Coverage >80% on `packages/domain/src/sales/**`
 - [x] Task: Update `packages/auth/src/roles.ts` — add `SALES_REP` and `SALES_ADMIN` to the `Role` union and role definitions
-- [ ] Task: Measure — User Manual Verification 'Domain Module'
+- [b] Task: Measure — User Manual Verification 'Domain Module' — deferred:track-owner
 
 ---
 
@@ -278,8 +278,8 @@ LLM-generate the draft curriculum from `advantage-pr/09-sales-enablement/`, land
 - [x] Task: Run the seed script against a local DB with `AI_PROVIDER=mock`
   - [ ] Confirm rows land — [b] deferred:human-gated (requires running the seed)
   - [ ] Confirm `reviewStatus` is `draft` — [b] deferred:human-gated
-- [ ] Task: Run the seed script with `AI_PROVIDER=openrouter` (real generation via OpenRouter) — [b] deferred:human-gated
-- [ ] Task: Manual review — admin flips `reviewStatus` to `approved` — [b] deferred:human-gated
+- [b] Task: Run the seed script with `AI_PROVIDER=openrouter` (real generation via OpenRouter) — [b] deferred:human-gated — deferred:track-owner
+- [b] Task: Manual review — admin flips `reviewStatus` to `approved` — [b] deferred:human-gated — deferred:track-owner
 - [x] Task: Measure — User Manual Verification 'Curriculum Generation Seed Script' — [b] deferred:human-gated
 
 > **Verification SHAs:** `025f8fc9` (initial seed script), `e52b9346` (wave2 p1 seed orphan-lesson fix — slug-based upsert), `b0cf6376` (wave2 p1 red tests)
