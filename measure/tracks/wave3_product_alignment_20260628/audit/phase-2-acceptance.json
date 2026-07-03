@@ -1,0 +1,327 @@
+{
+  "schema_version": 1,
+  "role": "measure-phase-acceptance",
+  "track": "wave3_product_alignment_20260628",
+  "phase": "Phase 2: Marketing App Public Workflow Security",
+  "status": "pass",
+  "baseline_sha": "1f2d1795",
+  "head_sha": "3d123fc6",
+  "red_commit": "81d104e2",
+  "green_commits": [
+    "4a6bb1d8",
+    "4e552658",
+    "cc120ede",
+    "2a65554b",
+    "2cab576d",
+    "595fefd9",
+    "289bc349"
+  ],
+  "acceptance_timestamp": "2026-07-03T19:10:00+07:00",
+  "summary": "Phase 2 (Marketing App Public Workflow Security) PASSES acceptance. All four scoped gates were re-run by the acceptance role and exit 0: marketing test suite 202/202, lint 0 errors, check-types clean, build green. All 6 Phase 2 plan tasks are complete with commit evidence. The two remaining [~] tasks (Red test authoring for auth + Zod) are flipped to [x] at commit 81d104e2. Anti-pattern scan is clean for this phase (no A5 false-claim text, no A6 registry overstatement, A3/A4/A7 defenses verified in-test, A1/A2/A8/A9/A10/A11 N/A or plan-hygiene). Reviews A, B, and C all report pass. No blocking findings.",
+
+  "commands": {
+    "RED_TEST_COMMAND": {
+      "command": "pnpm --filter marketing test",
+      "exit_code": 0,
+      "result": "202 passed (202), 16 test files passed (16), 0 failed",
+      "run_by_acceptance": true
+    },
+    "PROJECT_LINT": {
+      "command": "pnpm --filter marketing lint",
+      "exit_code": 0,
+      "result": "0 errors, 18 warnings (all pre-existing @typescript-eslint/no-unused-vars, unrelated to Phase 2 security changes)",
+      "run_by_acceptance": true
+    },
+    "PROJECT_CHECKS": {
+      "command": "pnpm --filter marketing check-types",
+      "exit_code": 0,
+      "result": "tsc --noEmit clean, 0 errors",
+      "run_by_acceptance": true
+    },
+    "PROJECT_TESTS": {
+      "command": "pnpm --filter marketing test",
+      "exit_code": 0,
+      "result": "202 passed (202), 16 test files, 0 failed",
+      "run_by_acceptance": true
+    },
+    "PROJECT_BUILD": {
+      "command": "pnpm --filter marketing build",
+      "exit_code": 0,
+      "result": "vinext build 'Build complete' (exit 0). Run voluntarily by acceptance to verify the tracks.md build-'resolved' A6 claim; nominally out-of-scope per phase plan but confirmed green.",
+      "run_by_acceptance": true,
+      "scope_note": "Build was declared out-of-scope for the Phase 2 gate by the phase plan/test-strategy (deferred to marketing_golive Phase 0). Acceptance ran it anyway to rule out A6 registry overstatement; it is green, so the deferral is moot and the tracks.md claim is truthful."
+    }
+  },
+
+  "phase_tasks": [
+    {
+      "n": 1,
+      "task": "Write Red tests proving settings/video/campaign API routes reject unauthenticated users",
+      "plan_marker_before": "[~]",
+      "plan_marker_after": "[x]",
+      "commit": "81d104e2",
+      "evidence_files": [
+        "apps/marketing/app/__tests__/phase-w3-settings-auth.test.ts",
+        "apps/marketing/app/__tests__/phase-w3-video-auth.test.ts",
+        "apps/marketing/app/__tests__/phase-w3-campaigns-auth.test.ts"
+      ],
+      "verified": true,
+      "verification": "5 phase-w3-*.test.ts files committed at 81d104e2 (Red). At that commit the routes were unguarded (guards added later at 4a6bb1d8), so the 401 assertions genuinely failed (true Red). All now green at HEAD."
+    },
+    {
+      "n": 2,
+      "task": "Add auth/role guards and tenant/global policy documentation for marketing routes",
+      "plan_marker_before": "[x]",
+      "plan_marker_after": "[x]",
+      "commit": "4a6bb1d8",
+      "evidence_files": [
+        "apps/marketing/app/lib/auth.ts",
+        "apps/marketing/app/api/settings/route.ts",
+        "apps/marketing/app/api/campaigns/route.ts",
+        "apps/marketing/app/api/campaigns/[id]/route.ts",
+        "apps/marketing/app/api/video/generate-script/route.ts",
+        "apps/marketing/app/api/video/research-topics/route.ts",
+        "apps/marketing/app/api/video/save-topics/route.ts",
+        "apps/marketing/app/api/video/projects/route.ts",
+        "apps/marketing/app/api/settings/test-connection/route.ts"
+      ],
+      "verified": true,
+      "verification": "requireMarketingSession() (delegating to real requireAuth from @reading-advantage/auth) is the first statement in all 8 guarded route handlers and returns 401 before any DB/AI side effect. Global-internal (non-schoolId) policy documented in lib/auth.ts JSDoc + every route's JSDoc; asserted structurally by phase-w3-campaigns-auth.test.ts ('global-internal', 'authenticated staff', 'not scoped by schoolId')."
+    },
+    {
+      "n": 3,
+      "task": "Write Red tests for Zod validation on settings, campaigns, topics, and script generation inputs",
+      "plan_marker_before": "[~]",
+      "plan_marker_after": "[x]",
+      "commit": "81d104e2",
+      "evidence_files": [
+        "apps/marketing/app/__tests__/phase-w3-input-validation.test.ts"
+      ],
+      "verified": true,
+      "verification": "phase-w3-input-validation.test.ts (14 tests) committed at 81d104e2. Covers schema-level rejection + route-level 400 with side-effect absence for settings POST, campaigns POST/PATCH, save-topics, research-topics, generate-script. Critical generate-script test asserts a prompt-injection payload (topic as object) is rejected with 400 BEFORE buildScriptGenerationPrompt and createAIClient are reached, and a 60KB oversized topic is rejected."
+    },
+    {
+      "n": 4,
+      "task": "Route AI calls through shared AI adapter",
+      "plan_marker_before": "[x]",
+      "plan_marker_after": "[x]",
+      "commit": "4a6bb1d8",
+      "evidence_files": [
+        "apps/marketing/app/api/video/generate-script/route.ts",
+        "apps/marketing/app/api/video/research-topics/route.ts",
+        "apps/marketing/app/api/settings/test-connection/route.ts",
+        "apps/marketing/app/__tests__/phase-w3-ai-adapter.test.ts"
+      ],
+      "verified": true,
+      "verification": "generate-script/research-topics import createAIClient from @/lib/ai (re-export of @reading-advantage/ai); test-connection imports from @reading-advantage/ai directly. Static guard (phase-w3-ai-adapter.test.ts) scans all app/api/*.ts for @ai-sdk/*, @google/generative-ai, openai, @anthropic-ai/sdk imports and asserts count === 0 via a labeled integer ('Direct SDK import count: 0'). Behavioral tests confirm createAIClient is invoked with the stored API key."
+    },
+    {
+      "n": 5,
+      "task": "Prevent API key/token leakage in any unauthenticated response",
+      "plan_marker_before": "[x]",
+      "plan_marker_after": "[x]",
+      "commit": "4a6bb1d8",
+      "evidence_files": [
+        "apps/marketing/app/api/settings/route.ts",
+        "apps/marketing/app/lib/redact.ts",
+        "apps/marketing/app/__tests__/phase-w3-settings-auth.test.ts",
+        "apps/marketing/app/__tests__/phase-w3-ai-adapter.test.ts"
+      ],
+      "verified": true,
+      "verification": "GET /api/settings masks secret-shaped keys (apiKey/secret/token) as '••••' and never imports decrypt(), so plaintext never enters any response. AI route error handlers call redactSecrets() to scrub the API key from thrown error messages. Tests assert the exact seeded secret literal (plaintext AND ciphertext) does not appear in the unauthenticated 401 body (A7-compliant exact-literal match), and that decrypt/db.select/createAIClient are not invoked on the 401 path (A4-compliant side-effect proof)."
+    },
+    {
+      "n": 6,
+      "task": "Run marketing targeted tests/build/lint/type",
+      "plan_marker_before": "[x]",
+      "plan_marker_after": "[x]",
+      "commit": "4a6bb1d8, 4e552658, cc120ede, 3d123fc6",
+      "verified": true,
+      "verification": "Acceptance re-ran all gates at HEAD 3d123fc6: test 202/202, lint 0 errors, check-types 0 errors, build exit 0. Build was nominally deferred to marketing_golive Phase 0 per the phase plan but is in fact green at acceptance, so the task text 'tests/build/lint/type' is fully truthful (no A5)."
+    }
+  ],
+
+  "anti_pattern_scan": {
+    "A1_substring_as_signal": {
+      "applicable": false,
+      "details": "Orchestrator-internal (supervisor regex). Not exercised by Phase 2 product tests. No supervisor edits made in this product track."
+    },
+    "A3_digit_only_count": {
+      "applicable": true,
+      "status": "pass",
+      "details": "phase-w3-ai-adapter.test.ts emits a labeled integer 'Direct SDK import count: N' (console.log) and asserts expect(directSdkImportCount).toBe(0). Not a bare rg/[0-9]+ match. Compliant."
+    },
+    "A4_vacuous_pass": {
+      "applicable": true,
+      "status": "pass",
+      "details": "Every 401 test (groups 2A/2B/2C) has a paired authenticated positive control asserting status 200 AND validateSession called with the known token. A blanket-401 regression would fail the positive controls. Side-effect absence (decrypt/db.*/createAIClient not called) is asserted on every 401 path, so a route that 401s AFTER leaking still fails. The campaigns policy test asserts presence of the documented policy text, not a non-existent schoolId column. No vacuous-pass."
+    },
+    "A5_false_claim_text": {
+      "applicable": true,
+      "status": "pass",
+      "details": "rg of plan.md for 'PASS=N...FAIL=0' / 'all checks pass' / 'all tests pass' returns no hits in Phase 2 task text. Plan task 6 'Run marketing targeted tests/build/lint/type' is marked [x]; acceptance verified build is green (exit 0) in addition to test/lint/check-types, so the 'build' wording is truthful. No false-claim text."
+    },
+    "A6_registry_overstatement": {
+      "applicable": true,
+      "status": "pass",
+      "details": "measure/tracks.md does NOT claim the Wave 3 marketing security vulnerabilities (decrypted-API-key leak, unauthenticated /api/video/*) are 'resolved'. The only 'resolved' hit near marketing is the vinext/vite build blocker (tracks.md line 80), owned by marketing_golive. Acceptance ran `pnpm --filter marketing build` and it exits 0 ('Build complete'), so that build-'resolved' claim matches reality. All cited Phase 2 adversarial tests (phase-w3-*) are green. No overstatement."
+    },
+    "A7_over_broad_filter": {
+      "applicable": true,
+      "status": "pass",
+      "details": "Body-leak scans match the exact seeded secret literals ('sk-w3-settings-secret-12345' plaintext AND its encrypt() ciphertext), not bare English words like 'secret'/'token'. Compliant."
+    },
+    "A8_marker_ambiguity": {
+      "applicable": false,
+      "details": "Plan-marker hygiene handled by plan-update role. Phase 2 tasks use [~]/[x] only; no [ ] (space) markers introduced."
+    },
+    "A9_archived_track_paths": {
+      "applicable": true,
+      "status": "pass",
+      "details": "New phase-w3-*.test.ts files reference measure/tracks/wave3_product_alignment_20260628/... only in docblock provenance comments; no runtime dependency on a track path. Tests exercise apps/marketing source. Path-independent."
+    },
+    "A10_generated_facts_drift": {
+      "applicable": false,
+      "details": "N/A to marketing product tests (no measure/generated/ regeneration in scope)."
+    },
+    "A11_review_execution_blocked": {
+      "applicable": false,
+      "details": "Review track truthfulness class; Phase 2 is an implementation phase, not a review-execution track. N/A."
+    }
+  },
+
+  "review_results": {
+    "review_a": {
+      "status": "pass",
+      "head_sha": "11c81905",
+      "location": "measure/tracks/wave3_product_alignment_20260628/review-a-result.json (working tree, untracked)",
+      "tests": "202/202",
+      "notes": "9 correctness criteria pass; flagged 2 [~] tasks as documentation hygiene (now fixed by this acceptance)."
+    },
+    "review_b": {
+      "status": "pass",
+      "head_sha": "289bc349",
+      "location": "measure/tracks/wave3_product_alignment_20260628/review-b-result.json (committed at 3d123fc6)",
+      "tests": "202/202",
+      "notes": "Closed the test-connection auth gap, hardened schemas with .strict(), genericized 500 error messages. 11-item security checklist all pass."
+    },
+    "review_c": {
+      "status": "pass",
+      "head_sha": "3d123fc6",
+      "location": "measure/audit-reports/wave3-phase2-ux-api-review/result.json (working tree, untracked)",
+      "tests": "200-202/202 (notes 2 intermittently flaky tests; acceptance re-run got 202/202)",
+      "notes": "UX/API review. Fixed test-connection auth, settings-page mount fetch, frontend 401->/login redirects, 401 body shape. Note: review-c records RC-004 'Changed 401 body to {message:Unauthorized}' but the committed auth.ts returns {message:'Authentication required'}; tests assert status 401 not the exact message, so this is cosmetic drift, not a correctness blocker."
+    }
+  },
+
+  "red_to_green_proof": {
+    "red_commit": "81d104e2",
+    "red_nature": "At 81d104e2 the 5 phase-w3-*.test.ts files were added but the marketing routes had NO requireMarketingSession guards and NO Zod schemas (guards/schemas added at 4a6bb1d8). Therefore the 401/validation assertions genuinely failed at the Red commit — a true Red, not an import-error or unrelated crash.",
+    "green_commit": "4a6bb1d8",
+    "green_nature": "Added requireMarketingSession() to all 8 route handlers, 5 Zod schemas in app/lib/*-schema.ts, redact.ts, secret masking in settings GET, and the auth-mock helper + vitest fileParallelism:false. Suite went green.",
+    "verification": "Acceptance confirmed guards present in all routes at HEAD and the full suite green (202/202)."
+  },
+
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    {
+      "id": "NB1",
+      "title": "Intermittent mock-isolation flakiness on 2 tests",
+      "description": "Review-C reports phase-1-boot-adversarial (db.execute mock timeout) and phase-w3-video-auth research-topics positive control (AI client mock not applied to @/lib/ai re-export) pass on ~50% of runs. Acceptance's single full-suite run got 202/202 (both passed). vitest.config.ts already sets fileParallelism:false to mitigate; residual flakiness is a test-infrastructure issue, not a security-contract regression.",
+      "recommendation": "Track in a Wave 6 test-backfill task; consider a shared dbMock singleton (already applied to phase-1-boot-adversarial per Review-B) extended to phase-w3-video-auth."
+    },
+    {
+      "id": "NB2",
+      "title": "18 pre-existing lint warnings (0 errors)",
+      "description": "All are @typescript-eslint/no-unused-vars ('error' catch bindings, existsSync, etc.) in pre-existing files. Review-B commit 289bc349 removed some unused catch bindings but 18 remain. Non-blocking; lint exits 0.",
+      "recommendation": "Optional cleanup in a future chore; not a Phase 2 security concern."
+    },
+    {
+      "id": "NB3",
+      "title": "Review-A and Review-C result artifacts are untracked",
+      "description": "review-a-result.json (track dir) and measure/audit-reports/wave3-phase2-ux-api-review/result.json (review-c) are present in the working tree but not committed. review-b-result.json is committed at 3d123fc6. Acceptance criterion ('results in audit/ or in the working tree') is satisfied, but for durable evidence these should be committed.",
+      "recommendation": "Commit the review artifacts in a follow-up docs commit, or accept working-tree presence."
+    },
+    {
+      "id": "NB4",
+      "title": "Review-C 401-body message drift",
+      "description": "Review-C RC-004 records the 401 body changed to {message:'Unauthorized'}, but committed app/lib/auth.ts returns {message:'Authentication required'}. Tests assert status 401 (not the message body), so no test or contract breaks. Cosmetic record drift only.",
+      "recommendation": "No action required; noted for record accuracy."
+    },
+    {
+      "id": "NB5",
+      "title": "[NEEDS-PO] role floor for marketing routes remains open",
+      "description": "Per test-strategy §9, the exact role floor (any authenticated staff vs ADMIN-equivalent) and whether GET /api/settings should mask secrets for authed callers are [NEEDS-PO]. The masking hardening was implemented regardless (GET masks secrets). The role floor is not yet tightened. Red tests assert the authentication boundary (401 without session), which holds under either PO decision.",
+      "recommendation": "Resolve role floor with product owner; add role-floor tests once confirmed. Does not block Phase 2 acceptance."
+    }
+  ],
+
+  "changed_files_since_baseline": {
+    "baseline_sha": "1f2d1795",
+    "head_sha": "3d123fc6",
+    "marketing_files_changed": 33,
+    "new_test_files": [
+      "apps/marketing/app/__tests__/phase-w3-settings-auth.test.ts",
+      "apps/marketing/app/__tests__/phase-w3-video-auth.test.ts",
+      "apps/marketing/app/__tests__/phase-w3-campaigns-auth.test.ts",
+      "apps/marketing/app/__tests__/phase-w3-input-validation.test.ts",
+      "apps/marketing/app/__tests__/phase-w3-ai-adapter.test.ts",
+      "apps/marketing/app/__tests__/helpers/auth-mock.ts"
+    ],
+    "new_lib_files": [
+      "apps/marketing/app/lib/auth.ts",
+      "apps/marketing/app/lib/redact.ts",
+      "apps/marketing/app/lib/settings-schema.ts",
+      "apps/marketing/app/lib/campaign-schema.ts",
+      "apps/marketing/app/lib/topic-schema.ts",
+      "apps/marketing/app/lib/script-request-schema.ts"
+    ],
+    "modified_routes": [
+      "apps/marketing/app/api/settings/route.ts",
+      "apps/marketing/app/api/settings/test-connection/route.ts",
+      "apps/marketing/app/api/campaigns/route.ts",
+      "apps/marketing/app/api/campaigns/[id]/route.ts",
+      "apps/marketing/app/api/video/generate-script/route.ts",
+      "apps/marketing/app/api/video/research-topics/route.ts",
+      "apps/marketing/app/api/video/save-topics/route.ts",
+      "apps/marketing/app/api/video/projects/route.ts"
+    ],
+    "modified_frontend": [
+      "apps/marketing/app/settings/page.tsx",
+      "apps/marketing/app/campaigns/page.tsx",
+      "apps/marketing/app/campaigns/[id]/video/page.tsx"
+    ],
+    "modified_existing_tests": [
+      "apps/marketing/app/__tests__/phase-1-boot-adversarial.test.ts",
+      "apps/marketing/app/__tests__/phase-3-settings.test.ts",
+      "apps/marketing/app/__tests__/phase-3-settings-adversarial.test.ts",
+      "apps/marketing/app/__tests__/phase-4-campaigns.test.ts",
+      "apps/marketing/app/__tests__/phase-5-topics.test.ts",
+      "apps/marketing/app/__tests__/phase-6-script.test.ts",
+      "apps/marketing/app/__tests__/phase-7-video-page.test.tsx",
+      "apps/marketing/app/__tests__/phase-8-projects.test.ts",
+      "apps/marketing/app/__tests__/phase-8-projects-live.test.ts"
+    ],
+    "config": ["apps/marketing/vitest.config.ts"]
+  },
+
+  "aggregate_suite_note": "Per test-strategy §8, the monorepo aggregate suite (pnpm turbo run test) is red at baseline from pre-existing owner-labeled failures outside Wave 3. Phase 2 does not attempt to green it; the gate is scoped to the marketing filter (pnpm --filter marketing test), which is fully green (202/202). No marketing-filter reds were silently absorbed into a 'green' claim.",
+
+  "deferrals": [
+    "Build gate: declared out-of-scope per phase plan (deferred to marketing_golive Phase 0). Acceptance ran it voluntarily and it is green (exit 0), so the deferral is moot and the tracks.md build-'resolved' claim is truthful.",
+    "Role floor for marketing routes ([NEEDS-PO]) and per-row schoolId/ownerId scoping: deferred per test-strategy §3/§9; marketing tables are REFERENTIAL with no schoolId column, so authentication + documented global-internal policy is the honest, defensible control for this cycle.",
+    "Phases 0/1 and 3-6 of this track remain deferred (out of this cycle's scope)."
+  ],
+
+  "plan_marker_updates": {
+    "file": "measure/tracks/wave3_product_alignment_20260628/plan.md",
+    "changes": [
+      "Task 1 (Red tests for auth): [~] -> [x], commit 81d104e2",
+      "Task 3 (Red tests for Zod): [~] -> [x], commit 81d104e2",
+      "Task 6 (run gates): appended build-verification note + 3d123fc6"
+    ],
+    "scope_guard": "Only Phase 2 task markers were modified. Phase 0/1/3/4/5/6 task markers were NOT touched."
+  },
+
+  "handoff": "Phase 2 PASSES acceptance. All scoped gates green (re-run by acceptance): test 202/202, lint 0 errors, check-types 0 errors, build exit 0. All 6 Phase 2 tasks complete with commit evidence; the two stale [~] markers are flipped to [x]. Anti-pattern scan clean (A3/A4/A5/A6/A7/A9 verified pass; A1/A2/A8/A10/A11 N/A). Reviews A/B/C all pass. No blocking findings. Phase 2 is complete; the track proceeds to its next scheduled phase (Phases 3-5 games work, deferred this cycle)."
+}

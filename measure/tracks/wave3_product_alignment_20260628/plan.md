@@ -23,14 +23,15 @@
 
 ## Phase 2: Marketing App Public Workflow Security
 
-- [~] Task: Write Red tests proving settings/video/campaign API routes reject unauthenticated users.
+- [x] Task: Write Red tests proving settings/video/campaign API routes reject unauthenticated users. — `81d104e2`
   - Evidence refs: Marketing LR-marketing-app-003-001/003/005, LR-004-002; Product Risk Register Marketing public API exposure.
 - [x] Task: Add auth/role guards and tenant/global policy documentation for marketing routes. — `4a6bb1d8`
-- [~] Task: Write Red tests for Zod validation on settings, campaigns, topics, and script generation inputs.
+- [x] Task: Write Red tests for Zod validation on settings, campaigns, topics, and script generation inputs. — `81d104e2`
   - Evidence refs: Marketing LR-004-001, LR-marketing-app-003-004/006; MR-H06.
 - [x] Task: Route AI calls through the shared AI adapter path approved by Wave 2. — `4a6bb1d8`
 - [x] Task: Prevent API key/token leakage in any unauthenticated response. — `4a6bb1d8`
-- [x] Task: Run marketing targeted tests/build/lint/type. — `4a6bb1d8`, `4e552658`, `cc120ede`
+- [x] Task: Run marketing targeted tests/build/lint/type. — `4a6bb1d8`, `4e552658`, `cc120ede`, `3d123fc6`
+  - Acceptance re-ran all gates at HEAD: test 202/202, lint 0 errors, check-types 0 errors, build exit 0 (vinext build green; build was nominally deferred to marketing_golive Phase 0 but is in fact green, so the task wording is truthful).
 
 ## Phase 3: Advantage Games Completion and Scoring Contract
 

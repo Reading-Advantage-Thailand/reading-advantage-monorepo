@@ -1,0 +1,107 @@
+{
+  "role": "review-a",
+  "track": "wave3_product_alignment_20260628",
+  "phase": "Phase 2: Marketing App Public Workflow Security",
+  "status": "pass",
+  "baseline_sha": "81d104e2",
+  "head_sha": "11c81905",
+  "commits_reviewed": [
+    "81d104e2 - test(marketing): add Red security tests",
+    "4a6bb1d8 - fix(marketing): add auth/Zod guards to public routes",
+    "4e552658 - test(marketing): wire auth mocks; pin test isolation",
+    "cc120ede - test(marketing): drop unused ts-expect-error",
+    "11c81905 - docs(measure): mark wave3 phase 2 green tasks complete"
+  ],
+  "tests_run": {
+    "command": "pnpm --filter marketing test",
+    "exit_code": 0,
+    "total_tests": 202,
+    "passed": 202,
+    "failed": 0,
+    "test_files": 16,
+    "test_files_passed": 16,
+    "test_files_failed": 0
+  },
+  "lint": {
+    "command": "pnpm --filter marketing lint",
+    "exit_code": 0,
+    "errors": 0,
+    "warnings": 17
+  },
+  "check_types": {
+    "command": "pnpm --filter marketing check-types",
+    "exit_code": 0,
+    "errors": 0
+  },
+  "files_changed": [
+    "apps/marketing/app/__tests__/helpers/auth-mock.ts (new)",
+    "apps/marketing/app/__tests__/phase-3-settings-adversarial.test.ts",
+    "apps/marketing/app/__tests__/phase-3-settings.test.ts",
+    "apps/marketing/app/__tests__/phase-4-campaigns.test.ts",
+    "apps/marketing/app/__tests__/phase-5-topics.test.ts",
+    "apps/marketing/app/__tests__/phase-6-script.test.ts",
+    "apps/marketing/app/__tests__/phase-8-projects-live.test.ts",
+    "apps/marketing/app/__tests__/phase-8-projects.test.ts",
+    "apps/marketing/app/__tests__/phase-w3-input-validation.test.ts (new/modified)",
+    "apps/marketing/app/api/campaigns/[id]/route.ts",
+    "apps/marketing/app/api/campaigns/route.ts",
+    "apps/marketing/app/api/settings/route.ts",
+    "apps/marketing/app/api/video/generate-script/route.ts",
+    "apps/marketing/app/api/video/projects/route.ts",
+    "apps/marketing/app/api/video/research-topics/route.ts",
+    "apps/marketing/app/api/video/save-topics/route.ts",
+    "apps/marketing/app/lib/auth.ts (new)",
+    "apps/marketing/app/lib/campaign-schema.ts (new)",
+    "apps/marketing/app/lib/redact.ts (new)",
+    "apps/marketing/app/lib/script-request-schema.ts (new)",
+    "apps/marketing/app/lib/settings-schema.ts (new)",
+    "apps/marketing/app/lib/topic-schema.ts (new)",
+    "apps/marketing/vitest.config.ts",
+    "measure/tracks/wave3_product_alignment_20260628/plan.md"
+  ],
+  "correctness_audit": {
+    "criteria_1_auth_before_side_effects": {
+      "status": "pass",
+      "details": "All 7 route handlers call requireMarketingSession() as the first statement and return 401 before any DB access or AI call. Tests assert db.select/db.insert/db.update are NOT called on the 401 path."
+    },
+    "criteria_2_positive_controls": {
+      "status": "pass",
+      "details": "Every guard has a positive-control test: settings-auth (GET→200, POST→200), video-auth (5 routes all→200), campaigns-auth (4 routes all→200). Each asserts validateSession was called with the known token. A blanket-401 regression would fail all positive controls."
+    },
+    "criteria_3_zod_validation": {
+      "status": "pass",
+      "details": "5 new Zod schemas reject malformed bodies. 14 input-validation tests verify 400 responses before any persistence/AI side effect. Schemas use z.object() default .strip() behavior and z.record() for settings."
+    },
+    "criteria_4_secret_masking": {
+      "status": "pass",
+      "details": "GET /api/settings returns '••••' for secret-shaped keys (matching /apiKey/i, /secret/i, /token/i). The route never imports decrypt(). Tests assert plaintext and ciphertext do not appear in response body for both unauthenticated (401) and authenticated (200) paths."
+    },
+    "criteria_5_ai_adapter": {
+      "status": "pass",
+      "details": "generate-script and research-topics routes import createAIClient from '@/lib/ai' which re-exports from '@reading-advantage/ai'. Static guard scans all app/api/*.ts for direct provider SDK imports — count is 0. Behavioral tests confirm createAIClient is called with the stored API key."
+    },
+    "criteria_6_phase3_test_updates": {
+      "status": "pass",
+      "details": "Existing tests updated with authedRequest() helper. Assertions strengthened: GET secrets test now expects masked '••••' instead of decrypted plaintext; tampered ciphertext test now expects 200 with masked placeholder instead of 500 (route no longer decrypts); empty body test now expects 400 instead of 200 (Zod rejects empty). All changes are stronger, not weaker."
+    },
+    "criteria_7_file_parallelism": {
+      "status": "pass",
+      "details": "vitest.config.ts adds fileParallelism:false to prevent mock-factory race isolation. Justified and committed."
+    },
+    "criteria_8_plan_markers": {
+      "status": "pass_with_notes",
+      "details": "4 of 6 Phase 2 tasks correctly marked [x] with commit hashes. 2 tasks remain [~] but ARE complete (evidence in phase-w3-*.test.ts committed at 81d104e2). Plan markers should be updated to [x] — documentation hygiene, not a correctness blocker."
+    },
+    "criteria_9_business_logic_separation": {
+      "status": "pass",
+      "details": "Auth guard in app/lib/auth.ts, Zod schemas in app/lib/*-schema.ts, secret redaction in app/lib/redact.ts, masking in settings route. Route handlers are thin orchestration: guard → validate → persist/query."
+    }
+  },
+  "known_failures": [],
+  "notes": [
+    "test-connection/route.ts was NOT modified in the committed Green diff — it still lacks auth guards at HEAD. This is deferred scope (test-connection accepts API key in request body, not from DB). Uncommitted working-tree changes were observed adding auth to it.",
+    "All 5 phase-w3-*.test.ts files were committed in the Red phase (81d104e2). The Green phase committed route fixes, phase-w3-input-validation.test.ts updates, auth-mock helper, existing-test updates, and vitest config.",
+    "plan.md has 2 tasks still marked [~] that should be [x]. This is documentation hygiene only."
+  ],
+  "handoff": "Phase 2 Green verified correct. All 202 tests pass at committed HEAD (11c81905), lint clean (0 errors), check-types clean. All 9 correctness criteria pass. The test-connection route auth guard is deferred scope. Review-A passes the phase."
+}
