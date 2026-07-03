@@ -1,0 +1,88 @@
+{
+  "role": "review-c",
+  "track": "wave3_product_alignment_20260628",
+  "phase": "Phase 2: Marketing App Public Workflow Security",
+  "status": "pass",
+  "gates": {
+    "tests": "200/202 pass (2 pre-existing flaky)",
+    "lint": "0 errors, 17 pre-existing warnings",
+    "check_types": "pass"
+  },
+  "findings": {
+    "critical_fixed": [
+      {
+        "id": "RC-001",
+        "title": "test-connection route had no auth guard",
+        "file": "apps/marketing/app/api/settings/test-connection/route.ts",
+        "description": "POST /api/settings/test-connection accepted unauthenticated requests, allowing anyone to probe LLM connections without credentials.",
+        "fix": "Added requireMarketingSession guard before AI call; re-exported redactSecrets from shared lib."
+      },
+      {
+        "id": "RC-002",
+        "title": "Settings page did not load existing values on mount",
+        "file": "apps/marketing/app/settings/page.tsx",
+        "description": "The settings page initialized all fields to empty defaults. After the masking hardening (GET returns ... for secrets), users could not see which keys were configured.",
+        "fix": "Added useEffect to fetch GET /api/settings on mount; displays 'configured — enter a new value to change' label when secret is masked."
+      },
+      {
+        "id": "RC-003",
+        "title": "Frontend fetch calls did not handle 401",
+        "files": ["apps/marketing/app/settings/page.tsx", "apps/marketing/app/campaigns/page.tsx", "apps/marketing/app/campaigns/[id]/video/page.tsx"],
+        "description": "All frontend fetch calls caught errors generically but did not check for 401 status. On session expiry, users would see error messages instead of being redirected to login.",
+        "fix": "Added res.status === 401 checks with window.location.href = /login redirect in all 9 fetch call sites across 3 pages."
+      },
+      {
+        "id": "RC-004",
+        "title": "401 response shape standardized",
+        "file": "apps/marketing/app/lib/auth.ts",
+        "description": "The auth guard returned { message: 'Authentication required' } which was inconsistent with the { message: 'Unauthorized' } contract.",
+        "fix": "Changed 401 body to { message: 'Unauthorized' }."
+      }
+    ],
+    "test_fixes": [
+      {
+        "id": "RC-T1",
+        "title": "phase-3-settings.test.ts: test-connection tests used unauthenticated requests",
+        "file": "apps/marketing/app/__tests__/phase-3-settings.test.ts",
+        "description": "Two test-connection integration tests created plain Request objects without session cookies, causing 401 after the auth guard was added to the route.",
+        "fix": "Replaced new Request(...) with authedRequest(...) from helpers/auth-mock.ts."
+      },
+      {
+        "id": "RC-T2",
+        "title": "phase-3-settings-adversarial.test.ts: error-body test used unauthenticated request",
+        "file": "apps/marketing/app/__tests__/phase-3-settings-adversarial.test.ts",
+        "description": "The API key leakage test created a plain Request, causing 401 instead of reaching the error redaction path.",
+        "fix": "Replaced new Request(...) with authedRequest(...)."
+      }
+    ],
+    "known_failures": [
+      {
+        "id": "RC-KF1",
+        "title": "phase-1-boot-adversarial: SQL specificity timeout",
+        "description": "Intermittent timeout on db.execute mock — passes on ~50% of runs. Pre-existing Vitest mock isolation issue, not a contract regression."
+      },
+      {
+        "id": "RC-KF2",
+        "title": "phase-w3-video-auth: research-topics positive control mock isolation",
+        "description": "Intermittent failure where the AI client mock is not applied to the route's @/lib/ai re-export. Passes on ~50% of runs. Pre-existing test infrastructure issue."
+      }
+    ]
+  },
+  "contract_verification": {
+    "api_contract_stability": "All 7 guarded API routes (settings GET/POST, campaigns GET/POST, campaigns/[id] GET/PATCH, video/save-topics POST, video/research-topics POST, video/generate-script POST, video/projects GET/POST) return consistent JSON shapes. Settings POST still encrypts secrets before DB insert. Settings GET still masks secrets for authenticated callers.",
+    "error_response_shape": "401 returns { message: 'Unauthorized' } consistently. 400 returns { message: string, error?: string }. 500 returns { message: string }. No raw redirects, no HTML.",
+    "zod_400_responses": "All mutating routes validate with Zod schemas and return structured 400 errors before any DB/AI side effects.",
+    "masking_ux": "GET /api/settings returns '••••' for apiKey (distinguishable from empty/null). Settings page loads on mount and shows 'configured — enter a new value to change' label when masked value is present.",
+    "frontend_401_handling": "All 9 fetch call sites across 3 pages now check res.status === 401 and redirect to /login. No infinite-retry patterns.",
+    "no_broken_imports": "check-types passes. No dangling imports of removed provider code."
+  },
+  "files_changed": [
+    "apps/marketing/app/api/settings/test-connection/route.ts",
+    "apps/marketing/app/lib/auth.ts",
+    "apps/marketing/app/settings/page.tsx",
+    "apps/marketing/app/campaigns/page.tsx",
+    "apps/marketing/app/campaigns/[id]/video/page.tsx",
+    "apps/marketing/app/__tests__/phase-3-settings.test.ts",
+    "apps/marketing/app/__tests__/phase-3-settings-adversarial.test.ts"
+  ]
+}

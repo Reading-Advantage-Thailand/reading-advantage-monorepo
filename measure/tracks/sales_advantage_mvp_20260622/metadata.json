@@ -1,11 +1,11 @@
 {
   "track_id": "sales_advantage_mvp_20260622",
   "type": "feature",
-  "status": "in-progress",
+  "status": "superseded-by-golive",
   "created_at": "2026-06-22T13:00:00Z",
-  "updated_at": "2026-06-22T14:00:00Z",
+  "updated_at": "2026-07-03T00:00:00Z",
   "description": "sales-advantage: internal sales-coaching app for the Reading Advantage sales team and distributor reps. Audio roleplay practice — learner records themselves in a sales scenario (cold call, discovery, demo, objection, close), an OpenRouter-hosted multimodal model evaluates the audio directly (single-pass, no separate transcription) against a rubric grounded in advantage-pr/09-sales-enablement. Primary model nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free (free, audio→text reasoning), fallback google/gemini-2.5-flash-lite, both via OpenRouter. Linear curriculum (no Mastery Advantage KST/SRS engine in v1), LLM-generated then human-reviewed, sourced from the existing battle cards, demo scripts, objection guide, ROI calculator, and distributor rep onboarding pack.",
   "estimated_tasks": 60,
-  "actual_tasks": 0,
-  "deviation_notes": ""
+  "actual_tasks": 60,
+  "deviation_notes": "Superseded by sales_advantage_golive_20260701. Phases 0-7 (AIClient, schema, domain, tRPC router, upload route, app scaffold, seed script, UI) all verified present on HEAD. Phase 8 (QA + Deploy) migrated to go-live track. 1 gap: component unit tests (RoleplayRecorder) not written. 1 gap: attempt-history not extracted as standalone component. Lesson markdown XSS sanitization deferred to wave-owner. See sales_advantage_golive_20260701/plan.md Phase 0 for full reconciliation report."
 }

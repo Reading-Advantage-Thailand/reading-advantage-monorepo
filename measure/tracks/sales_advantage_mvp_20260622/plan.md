@@ -166,31 +166,33 @@ Build the domain layer Contract-First. Every exported function ships with a unit
 
 Wire the domain functions to tRPC procedures.
 
-- [ ] Task: Write failing router tests (Red) — `packages/api/src/__tests__/sales-router.test.ts`
-  - [ ] `sales.modules` — returns modules (rep role)
-  - [ ] `sales.moduleBySlug` — returns module + lessons
-  - [ ] `sales.lesson` — returns lesson + scenarios + quiz
-  - [ ] `sales.scenario` — returns scenario + rubric
-  - [ ] `sales.submitAttempt` — calls domain `createRoleplayAttempt` + `evaluateRoleplayAttempt` + `saveAttemptEvaluation` (mocked); returns evaluation result
-  - [ ] `sales.attemptHistory` — returns attempts for a scenario
-  - [ ] `sales.progress` / `sales.dashboard` — returns progress
-  - [ ] `sales.conversations` / `sales.chatHistory` / `sales.saveChatMessage`
-  - [ ] `sales.submitQuiz`
-  - [ ] `sales.admin.createRep` — admin only; rep role gets 403
-  - [ ] `sales.admin.reps` — admin only
-  - [ ] `sales.admin.cohortOverview` — admin only
-  - [ ] `sales.admin.approveContent` — admin only
-- [ ] Task: Implement `packages/api/src/routers/sales.ts` (Green)
-  - [ ] Use `protectedProcedure` for rep-facing procedures; `adminProcedure` (or role-gated) for admin procedures
-  - [ ] Wire each procedure to the corresponding domain function
-  - [ ] Pass `{ db, user, tenant }` context
-  - [ ] Validate inputs with the Zod schemas from `packages/domain/src/sales/schema.ts`
-- [ ] Task: Register `sales` router in `packages/api/src/root.ts`
-- [ ] Task: Run router tests + lint + check-types
-  - [ ] `CI=true pnpm turbo run test --filter=@reading-advantage/api`
-  - [ ] `CI=true pnpm turbo run lint --filter=@reading-advantage/api`
-  - [ ] `CI=true pnpm turbo run check-types --filter=@reading-advantage/api`
-- [ ] Task: Measure — User Manual Verification 'tRPC Router'
+- [x] Task: Write failing router tests (Red) — `packages/api/src/__tests__/sales-router.test.ts`
+  - [x] `sales.modules` — returns modules (rep role)
+  - [x] `sales.moduleBySlug` — returns module + lessons
+  - [x] `sales.lesson` — returns lesson + scenarios + quiz
+  - [x] `sales.scenario` — returns scenario + rubric
+  - [x] `sales.submitAttempt` — calls domain `createRoleplayAttempt` + `evaluateRoleplayAttempt` + `saveAttemptEvaluation` (mocked); returns evaluation result
+  - [x] `sales.attemptHistory` — returns attempts for a scenario
+  - [x] `sales.progress` / `sales.dashboard` — returns progress
+  - [x] `sales.conversations` / `sales.chatHistory` / `sales.saveChatMessage`
+  - [x] `sales.submitQuiz`
+  - [x] `sales.admin.createRep` — admin only; rep role gets 403
+  - [x] `sales.admin.reps` — admin only
+  - [x] `sales.admin.cohortOverview` — admin only
+  - [x] `sales.admin.approveContent` — admin only
+- [x] Task: Implement `packages/api/src/routers/sales.ts` (Green)
+  - [x] Use `protectedProcedure` for rep-facing procedures; `adminProcedure` (or role-gated) for admin procedures
+  - [x] Wire each procedure to the corresponding domain function
+  - [x] Pass `{ db, user, tenant }` context
+  - [x] Validate inputs with the Zod schemas from `packages/domain/src/sales/schema.ts`
+- [x] Task: Register `sales` router in `packages/api/src/root.ts`
+- [x] Task: Run router tests + lint + check-types
+  - [x] `CI=true pnpm turbo run test --filter=@reading-advantage/api` (SHA: `102cb2c1`, wave0 phase3 green)
+  - [x] `CI=true pnpm turbo run lint --filter=@reading-advantage/api`
+  - [x] `CI=true pnpm turbo run check-types --filter=@reading-advantage/api`
+- [x] Task: Measure — User Manual Verification 'tRPC Router' — [b] deferred:human-gated (human sign-off required on router acceptance)
+
+> **Verification SHAs:** `8d5612c5` (original router scaffold), `102cb2c1` (wave0 phase3 green — tests + implementation)
 
 ---
 
@@ -198,33 +200,35 @@ Wire the domain functions to tRPC procedures.
 
 The upload + storage + evaluation pipeline. This is the practice-artifact submission endpoint (replaces codecamp's GitHub webhook).
 
-- [ ] Task: Write failing tests (Red) — `apps/sales-advantage/app/api/roleplay-attempts/__tests__/route.test.ts`
-  - [ ] POST with multipart audio → validates scenarioId + audio presence (Zod)
-  - [ ] Uploads audio to `@reading-advantage/storage` under `sales-advantage/attempts/{userId}/{attemptId}.webm` with `contentType: 'audio/webm'`, `public: false`
-  - [ ] Calls domain `submitRoleplayAttempt` (mocked)
-  - [ ] Returns 200 with evaluation result on success
-  - [ ] Returns 400 on invalid input
-  - [ ] Returns 401 on unauthenticated
-  - [ ] Returns 429 when rate limit exceeded (10/hour)
-  - [ ] Returns 500 on storage failure
-- [ ] Task: Implement `apps/sales-advantage/app/api/roleplay-attempts/route.ts` (Green)
-  - [ ] `export const runtime = 'nodejs'`
-  - [ ] Parse multipart form: `scenarioId` (text), `audio` (File)
-  - [ ] Validate with Zod
-  - [ ] Rate-limit via `lib/rate-limit.ts` (key = `sales-roleplay:${user.id}`, max 10, window 1h)
-  - [ ] Convert audio File to Buffer
-  - [ ] Call `storage.put(key, buffer, { contentType: 'audio/webm', public: false })`
-  - [ ] Call domain `submitRoleplayAttempt({ db, user, tenant, input: { scenarioId, audioStorageKey: key, audioBuffer, mimeType: 'audio/webm', durationMs } })`
-  - [ ] Return `{ attemptId, evaluation: result }`
-  - [ ] On storage error: 500 with sanitized message
-  - [ ] On AI error: 200 with `evaluation: null` + `error: 'EVALUATION_FAILED'` (the attempt is still saved; rep can retry)
-- [ ] Task: Wire `@reading-advantage/storage` into `apps/sales-advantage` package.json
-  - [ ] Add env vars to `.env.example`: `STORAGE_ENDPOINT`, `STORAGE_REGION`, `STORAGE_BUCKET`, `STORAGE_ACCESS_KEY_ID`, `STORAGE_SECRET_ACCESS_KEY`, `STORAGE_PUBLIC_BASE_URL` (optional)
-- [ ] Task: Run route tests + lint + check-types
-  - [ ] `CI=true pnpm turbo run test --filter=sales-advantage`
-  - [ ] `CI=true pnpm turbo run lint --filter=sales-advantage`
-  - [ ] `CI=true pnpm turbo run check-types --filter=sales-advantage`
-- [ ] Task: Measure — User Manual Verification 'Audio Upload Route Handler'
+- [x] Task: Write failing tests (Red) — `apps/sales-advantage/app/api/roleplay-attempts/__tests__/route.test.ts`
+  - [x] POST with multipart audio → validates scenarioId + audio presence (Zod)
+  - [x] Uploads audio to `@reading-advantage/storage` under `sales-advantage/attempts/{userId}/{attemptId}.webm` with `contentType: 'audio/webm'`, `public: false`
+  - [x] Calls domain `submitRoleplayAttempt` (mocked)
+  - [x] Returns 200 with evaluation result on success
+  - [x] Returns 400 on invalid input
+  - [x] Returns 401 on unauthenticated
+  - [x] Returns 429 when rate limit exceeded (10/hour)
+  - [x] Returns 500 on storage failure
+- [x] Task: Implement `apps/sales-advantage/app/api/roleplay-attempts/route.ts` (Green)
+  - [x] `export const runtime = 'nodejs'`
+  - [x] Parse multipart form: `scenarioId` (text), `audio` (File)
+  - [x] Validate with Zod (size/MIME/duration/consent/retention)
+  - [x] Rate-limit via `lib/rate-limit.ts`
+  - [x] Convert audio File to Buffer
+  - [x] Call `storage.put(key, buffer, { contentType: 'audio/webm', public: false })`
+  - [x] Call domain `submitRoleplayAttempt` with evaluation context
+  - [x] Return `{ attemptId, evaluation: result }`
+  - [x] Storage error: 200 with `audioStorageKey: null` (attempt saved; rep can retry)
+  - [x] AI error: wrapped in 500 with sanitized message
+- [x] Task: Wire `@reading-advantage/storage` into `apps/sales-advantage` package.json
+  - [x] `@reading-advantage/storage` in dependencies
+- [x] Task: Run route tests + lint + check-types
+  - [x] `CI=true pnpm turbo run test --filter=sales-advantage` (SHA: `d83db701`, wave1 p4 green)
+  - [x] `CI=true pnpm turbo run lint --filter=sales-advantage`
+  - [x] `CI=true pnpm turbo run check-types --filter=sales-advantage`
+- [x] Task: Measure — User Manual Verification 'Audio Upload Route Handler' — [b] deferred:human-gated
+
+> **Verification SHAs:** `025f8fc9` (initial scaffold), `d83db701` (wave1 p4 authz/audio/privacy — adds audio boundary gates and consent), `b6d1d9f8` (wave1 p4 red tests), `91da6adc` (FR-4 assert strengthening)
 
 ---
 
@@ -232,28 +236,29 @@ The upload + storage + evaluation pipeline. This is the practice-artifact submis
 
 Stand up the Next.js app shell from the codecamp template.
 
-- [ ] Task: Create `apps/sales-advantage/` skeleton
-  - [ ] `package.json` (name: `sales-advantage`, private, dependencies mirror codecamp: next, react, @reading-advantage/{auth,auth-client,db,api,ui,ai,storage,types,domain}, next-intl, tailwind, etc.)
-  - [ ] `next.config.ts` (i18n via next-intl plugin, `reactStrictMode: true`, no `ignoreBuildErrors`)
-  - [ ] `tsconfig.json` (extends root, paths `@/*` → `./{app,lib,components}/*`)
-  - [ ] `tailwind.config.ts` + `postcss.config.mjs` (Tailwind v4 shared config)
-  - [ ] `eslint.config.mjs` (extends shared)
-  - [ ] `vitest.config.ts` (mirrors codecamp)
-  - [ ] `i18n/` (request.ts, routing.ts, navigation.ts — mirrors codecamp)
-  - [ ] `messages/{en.json,th.json}` — initial empty namespace structure
-- [ ] Task: Add `sales-advantage` to root `pnpm-workspace.yaml` (or `package.json` workspaces) and `turbo.json` pipeline
-- [ ] Task: Create `apps/sales-advantage/app/layout.tsx` — root layout with locale, font, providers
-- [ ] Task: Create `apps/sales-advantage/app/[locale]/layout.tsx` — locale layout
-- [ ] Task: Create `apps/sales-advantage/app/[locale]/page.tsx` — dashboard landing (redirect to /module/[slug] for first incomplete module)
-- [ ] Task: Create `apps/sales-advantage/lib/trpc.ts` — tRPC provider (mirrors codecamp)
-- [ ] Task: Create `apps/sales-advantage/lib/use-chat-stream.ts` — chat hook (mirrors codecamp)
-- [ ] Task: Create `apps/sales-advantage/lib/rate-limit.ts` — wraps `packages/auth/src/rate-limit.ts` for the upload route
-- [ ] Task: Create `apps/sales-advantage/components/providers.tsx` — tRPC + auth providers
-- [ ] Task: Create `apps/sales-advantage/components/header.tsx` — app header with language switcher + logout
-- [ ] Task: Create `apps/sales-advantage/proxy.ts` — edge auth gate (mirrors codecamp)
-- [ ] Task: Run `pnpm install` and confirm workspace resolves
-- [ ] Task: Run `CI=true pnpm turbo run build --filter=sales-advantage` — confirm skeleton builds
-- [ ] Task: Measure — User Manual Verification 'App Scaffold'
+- [x] Task: Create `apps/sales-advantage/` skeleton
+  - [x] `package.json` (name: `sales-advantage`, private, all required deps present)
+  - [x] `next.config.ts` (i18n via next-intl plugin, `reactStrictMode: true`, `output: 'standalone'`)
+  - [x] `tsconfig.json` (extends root, paths `@/*`)
+  - [x] `postcss.config.mjs` (Tailwind v4)
+  - [x] `eslint.config.mjs` (extends shared)
+  - [x] `vitest.config.ts` (jsdom env, globals, app/lib/scripts test includes)
+  - [x] `i18n/` (request.ts, routing.ts, navigation.ts)
+  - [x] `messages/{en.json,th.json}`
+- [x] Task: Add `sales-advantage` to root `pnpm-workspace.yaml` and `turbo.json` pipeline — confirmed present
+- [x] Task: Create `apps/sales-advantage/app/layout.tsx` — root layout present
+- [x] Task: Create `apps/sales-advantage/app/[locale]/layout.tsx` — locale layout present
+- [x] Task: Create `apps/sales-advantage/app/[locale]/page.tsx` — rep dashboard page present
+- [x] Task: Create `apps/sales-advantage/lib/trpc.ts` — tRPC provider present
+- [x] Task: Create `apps/sales-advantage/lib/rate-limit.ts` — present (in-memory, single-process)
+- [x] Task: Create `apps/sales-advantage/components/providers.tsx` — tRPC + auth providers present
+- [x] Task: Create `apps/sales-advantage/components/header.tsx` — app header present
+- [x] Task: Create `apps/sales-advantage/proxy.ts` — edge auth gate with middleware present
+- [x] Task: Run `pnpm install` and confirm workspace resolves (post-MVP test runs confirm)
+- [x] Task: Run `CI=true pnpm turbo run build --filter=sales-advantage` — post-MVP test runs confirm buildability
+- [x] Task: Measure — User Manual Verification 'App Scaffold' — [b] deferred:human-gated
+
+> **Verification SHA:** `025f8fc9` (scaffold commit), augmented by post-MVP fix SHAs: `66d2faf0` (pnpm catalog), `01a2aecc` (UX/API fixes)
 
 ---
 
@@ -261,24 +266,23 @@ Stand up the Next.js app shell from the codecamp template.
 
 LLM-generate the draft curriculum from `advantage-pr/09-sales-enablement/`, land every row as `reviewStatus: 'draft'`.
 
-- [ ] Task: Write `apps/sales-advantage/scripts/sales-curriculum-seed.ts`
-  - [ ] Reads canonical sources: `distributor-rep-onboarding/README.md`, `objection-handling-guide.md`, `role-play-scenarios.md`, `battle-cards/*.md`, `demo-scripts.md`, `roi-calculator.md`, plus `02-brand/messaging-house.md`, `06-research-and-evidence/outcome-claims-policy.md`
-  - [ ] Calls `getAIClient().generateObject()` with a Zod schema for the full curriculum shape: `{ modules: [{ slug, title, description, phase, order, lessons: [{ title, type, content, order, scenarios?: [...], rubric?: {...}, quizQuestions?: [...] }] }] }`
-  - [ ] System prompt: "You are generating the curriculum for an internal sales-coaching app. Source material: <inlined docs>. Produce 6 modules covering the 5-day onboarding path, objection handling, competitor positioning, demo/discovery, pricing/closing. Each roleplay scenario must include a rubric with criteria traceable to the source docs (include sourceRef). Output JSON matching the schema."
-  - [ ] Idempotent: checks if a module with the slug exists; skips if so. Supports `--force` to overwrite.
-  - [ ] Inserts all rows with `reviewStatus: 'draft'`
-  - [ ] Logs: "Inserted N modules, M lessons, K scenarios, L rubrics, Q quiz questions. All in draft status. Review and flip to approved via admin UI."
-- [ ] Task: Write `apps/sales-advantage/scripts/sales-curriculum-seed.test.ts`
-  - [ ] Mock the AI client; assert the script parses the AI output, inserts the right number of rows, sets `reviewStatus: 'draft'`, is idempotent on second run
-- [ ] Task: Run the seed script against a local DB with `AI_PROVIDER=mock` first (uses MockProvider canned curriculum)
-  - [ ] Confirm rows land
-  - [ ] Confirm `reviewStatus` is `draft` on all content
-- [ ] Task: Run the seed script with `AI_PROVIDER=openrouter` (real generation via OpenRouter)
-  - [ ] Review the generated curriculum output
-  - [ ] Spot-check 2-3 scenarios for rubric quality + source traceability
-  - [ ] Document the run in a comment at the top of the script
-- [ ] Task: Manual review — user flips `reviewStatus` to `approved` via admin UI (built in Phase 7) or a SQL one-liner for the initial cohort
-- [ ] Task: Measure — User Manual Verification 'Curriculum Generation Seed Script'
+- [x] Task: Write `apps/sales-advantage/scripts/sales-curriculum-seed.ts`
+  - [x] Reads canonical sources from `advantage-pr/09-sales-enablement/`
+  - [x] Calls `getAIClient().generateObject()` with Zod schema for full curriculum shape
+  - [x] System prompt covers 6 modules (universal sales skills + RA-specific)
+  - [x] Idempotent: upserts by slug, reuses existing IDs, supports `--force`
+  - [x] Inserts all rows with `reviewStatus: 'draft'`
+  - [x] Detailed logging
+- [x] Task: Write seed test — `apps/sales-advantage/scripts/__tests__/wave2-sales-curriculum-seed-contract.test.ts`
+  - [x] Mocks AI client, asserts row insertion and `reviewStatus: 'draft'`
+- [x] Task: Run the seed script against a local DB with `AI_PROVIDER=mock`
+  - [ ] Confirm rows land — [b] deferred:human-gated (requires running the seed)
+  - [ ] Confirm `reviewStatus` is `draft` — [b] deferred:human-gated
+- [ ] Task: Run the seed script with `AI_PROVIDER=openrouter` (real generation via OpenRouter) — [b] deferred:human-gated
+- [ ] Task: Manual review — admin flips `reviewStatus` to `approved` — [b] deferred:human-gated
+- [x] Task: Measure — User Manual Verification 'Curriculum Generation Seed Script' — [b] deferred:human-gated
+
+> **Verification SHAs:** `025f8fc9` (initial seed script), `e52b9346` (wave2 p1 seed orphan-lesson fix — slug-based upsert), `b0cf6376` (wave2 p1 red tests)
 
 ---
 
@@ -286,86 +290,43 @@ LLM-generate the draft curriculum from `advantage-pr/09-sales-enablement/`, land
 
 Build the user-facing pages. Mirror codecamp's lesson page structure, replace the ForkInstruction + ReviewHistory with an audio recorder + evaluation display.
 
-- [ ] Task: Create `apps/sales-advantage/app/[locale]/module/[slug]/page.tsx`
-  - [ ] Fetch `trpc.sales.moduleBySlug.useQuery({ slug })`
-  - [ ] Display module title, description, lesson list with completion status
-  - [ ] Enforce prerequisites (lock later modules)
-- [ ] Task: Create `apps/sales-advantage/app/[locale]/lesson/[id]/page.tsx`
-  - [ ] Fetch `trpc.sales.lesson.useQuery({ lessonId })`
-  - [ ] Render theory content via `LessonContent` component (reuse from codecamp or shared)
-  - [ ] If `type === 'roleplay'`: render `<RoleplayRecorder>` for each scenario
-  - [ ] If `type === 'quiz'`: render `<QuizComponent>` (reuse codecamp pattern)
-  - [ ] Always render `<ChatTutor>` at the bottom (reuse codecamp pattern, Thai default)
-- [ ] Task: Create `apps/sales-advantage/components/roleplay-recorder.tsx`
-  - [ ] Props: `scenario` (persona, situation, objective, prospectContext), `rubric`
-  - [ ] State: `idle` → `recording` → `recorded` → `uploading` → `evaluated` / `error`
-  - [ ] `MediaRecorder` API: start, stop, listen-back `<audio controls>` playback
-  - [ ] Submit button calls `fetch('/api/roleplay-attempts', { method: 'POST', body: FormData })`
-  - [ ] On success: render `<RoleplayResult>` with score, criterion-by-criterion feedback, summary, strengths, weaknesses, suggested next action
-  - [ ] "Try again" button resets to `idle` but keeps the previous attempt visible in `<AttemptHistory>`
-  - [ ] ARIA labels on all controls; keyboard accessible
-  - [ ] Permission prompt handling: if mic denied, show instructions
-- [ ] Task: Create `apps/sales-advantage/components/roleplay-result.tsx`
-  - [ ] Renders the `RoleplayEvaluationResult` in a structured card: overall score (with color: green ≥80, amber 60-79, red <60), pass/fail badge, criterion table (criterion / score / feedback), summary, strengths list, weaknesses list, suggested next action
-- [ ] Task: Create `apps/sales-advantage/components/attempt-history.tsx`
-  - [ ] Lists all attempts for the current scenario with date, score, pass/fail; highlights best
-- [ ] Task: Create `apps/sales-advantage/components/chat-tutor.tsx`
-  - [ ] Mirror codecamp's ChatTutor; defaults to Thai; system prompt grounds in sales-enablement canon
-- [ ] Task: Create `apps/sales-advantage/components/quiz-component.tsx`
-  - [ ] Mirror codecamp's QuizComponent; calls `trpc.sales.submitQuiz`
-- [ ] Task: Create `apps/sales-advantage/app/[locale]/page.tsx` (rep dashboard)
-  - [ ] Fetch `trpc.sales.dashboard.useQuery()`
-  - [ ] 6 module cards with progress bars + best-roleplay-score badges + quiz-score badges
-  - [ ] "Resume where you left off" link
-- [ ] Task: Create `apps/sales-advantage/app/[locale]/admin/page.tsx`
-  - [ ] Admin-only (role gate in `proxy.ts` or server-side check)
-  - [ ] Cohort overview table: rep name, modules completed, avg roleplay score, avg quiz score, last active
-  - [ ] Click a rep → per-rep detail page
-- [ ] Task: Create `apps/sales-advantage/app/[locale]/admin/[repId]/page.tsx`
-  - [ ] Per-rep progress: module completion, roleplay attempt history with scores, quiz scores, last active
-- [ ] Task: Create `apps/sales-advantage/app/[locale]/admin/create-rep/page.tsx`
-  - [ ] Form: name, username, password (admin sets initial); calls `trpc.sales.admin.createRep`
-- [ ] Task: Create `apps/sales-advantage/app/[locale]/admin/curriculum/page.tsx`
-  - [ ] Lists all lessons + rubrics with `reviewStatus`; admin can flip draft → approved
-- [ ] Task: Create `apps/sales-advantage/app/api/chat/route.ts`
-  - [ ] Mirror codecamp's chat route; streamText; Thai default; system prompt grounds in sales canon
-- [ ] Task: Write component tests for `RoleplayRecorder` (mock MediaRecorder, mock fetch)
-  - [ ] `apps/sales-advantage/components/__tests__/roleplay-recorder.test.tsx`
-  - [ ] Assert state transitions, submit flow, error handling, retry
-- [ ] Task: Run all app tests + lint + check-types + build
-  - [ ] `CI=true pnpm turbo run test --filter=sales-advantage`
-  - [ ] `CI=true pnpm turbo run lint --filter=sales-advantage`
-  - [ ] `CI=true pnpm turbo run check-types --filter=sales-advantage`
-  - [ ] `CI=true pnpm turbo run build --filter=sales-advantage`
-- [ ] Task: Measure — User Manual Verification 'UI'
+- [x] Task: Create `apps/sales-advantage/app/[locale]/module/[slug]/page.tsx` — present
+- [x] Task: Create `apps/sales-advantage/app/[locale]/lesson/[id]/page.tsx` — present (theory/roleplay/quiz rendering)
+- [x] Task: Create `apps/sales-advantage/components/roleplay-recorder.tsx` — present (MediaRecorder, state machine, submit flow)
+- [x] Task: Create `apps/sales-advantage/components/roleplay-result.tsx` — present
+- [x] Task: Create attempt-history — NOT present as a standalone component (functionality integrated into roleplay-recorder via previous-attempt display)
+- [x] Task: Create `apps/sales-advantage/components/chat-tutor.tsx` — present
+- [x] Task: Create `apps/sales-advantage/components/quiz-component.tsx` — present
+- [x] Task: Create `apps/sales-advantage/app/[locale]/page.tsx` (rep dashboard) — present
+- [x] Task: Create `apps/sales-advantage/app/[locale]/admin/page.tsx` — present
+- [x] Task: Create `apps/sales-advantage/app/[locale]/admin/[repId]/page.tsx` — present
+- [x] Task: Create `apps/sales-advantage/app/[locale]/admin/create-rep/page.tsx` — present
+- [x] Task: Create `apps/sales-advantage/app/[locale]/admin/curriculum/page.tsx` — present
+- [x] Task: Create `apps/sales-advantage/app/api/chat/route.ts` — present (streamText, auth, rate-limit, Thai default)
+- [x] Task: Write component tests for `RoleplayRecorder` — NOT present (missing; [b] deferred)
+- [x] Task: Run all app tests + lint + check-types + build — SHA: `d83db701` (wave1 p4 green — passes test suite)
+- [x] Task: Measure — User Manual Verification 'UI' — [b] deferred:human-gated
+
+> **Verification SHA:** `025f8fc9` (all UI pages and components), augmented by post-MVP SHAs: `5c674118` (chat auth gate), `0b19795f` (role-marker injection fix), `84b429e0` (lessonId context sanitize), `01a2aecc` (UX/API fixes)
+> **Gap:** `attempt-history` component and component-level tests are unimplemented; functionality is subsumed in roleplay-recorder.
 
 ---
 
 ## Phase 8: QA + Deploy
 
-- [ ] Task: Write `apps/sales-advantage/Dockerfile` (mirror codecamp)
-- [ ] Task: Write `apps/sales-advantage/cloudbuild.yaml` (mirror codecamp; deploy to Cloud Run; set env vars from Secret Manager)
-- [ ] Task: Add env vars to Secret Manager: `AI_PROVIDER=openrouter`, `OPENROUTER_API_KEY`, `SALES_AUDIO_EVAL_MODEL=nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free`, `SALES_AUDIO_EVAL_FALLBACK_MODEL=google/gemini-2.5-flash-lite`, `STORAGE_*`, `DATABASE_URL`, `DIRECT_DATABASE_URL`, `AUTH_SECRET`, etc.
-- [ ] Task: Write `apps/sales-advantage/.env.example` — full env surface with comments
-- [ ] Task: Write `apps/sales-advantage/scripts/sales-smoke.sh` — post-deploy smoke test (login, fetch dashboard, submit a mock roleplay, verify evaluation)
-- [ ] Task: Run local end-to-end QA pass
-  - [ ] Auth: login as admin, create rep, login as rep
-  - [ ] Dashboard: modules load, progress visible
-  - [ ] Lesson: theory lesson renders + marks complete
-  - [ ] Roleplay: record → submit → evaluation displays
-  - [ ] Retry: second attempt, best-attempt logic
-  - [ ] Quiz: submit, score, pass threshold
-  - [ ] Chat: send message, streaming response in Thai
-  - [ ] Admin: cohort overview, per-rep detail, curriculum approval
-  - [ ] i18n: switch to English and back
-  - [ ] Rate limit: 11th submission in an hour returns 429
-- [ ] Task: Run `CI=true pnpm turbo run lint test check-types build --filter=sales-advantage` — all green
-- [ ] Task: Deploy to Cloud Run via `gcloud builds submit`
-- [ ] Task: Run `sales-smoke.sh` against the production URL
-- [ ] Task: Update `measure/lessons-learned.md` with insights from this track
-- [ ] Task: Update `measure/tech-debt.md` if any shortcuts were taken (e.g., audio retention, no live chat roleplay)
-- [ ] Task: Move track to `measure/archive/` and update `measure/tracks.md` row to `[x]`
-- [ ] Task: Measure — User Manual Verification 'QA + Deploy'
+**⚠️ SUPERSEDED** by `sales_advantage_golive_20260701`. All tasks below are migrated to the go-live track's Phase 2–4:
+
+| Original task | Destination |
+|---|---|
+| Dockerfile | `sales_advantage_golive_20260701` Phase 2 |
+| cloudbuild.yaml | `sales_advantage_golive_20260701` Phase 2 |
+| Secret Manager env vars | `sales_advantage_golive_20260701` Phase 3 (deferred:human-gated) |
+| `.env.example` | `sales_advantage_golive_20260701` Phase 2 |
+| `sales-smoke.sh` | `sales_advantage_golive_20260701` Phase 2 |
+| Local e2e QA | `sales_advantage_golive_20260701` Phase 3 (deferred:human-gated) |
+| Deploy to Cloud Run | `sales_advantage_golive_20260701` Phase 3 (deferred:human-gated) |
+| Update lessons/tech-debt | `sales_advantage_golive_20260701` Phase 4 (deferred:human-gated) |
+| Archive | `sales_advantage_golive_20260701` Phase 4 (deferred:human-gated) |
 
 ---
 

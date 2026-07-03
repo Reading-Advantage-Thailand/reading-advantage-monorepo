@@ -1,0 +1,11 @@
+{
+  "track_id": "sales_advantage_golive_20260701",
+  "type": "feature",
+  "status": "in-progress",
+  "created_at": "2026-07-01T00:00:00Z",
+  "updated_at": "2026-07-03T00:00:00Z",
+  "description": "Take sales-advantage from code-complete to a deployed MVP. The feature surface (domain, tRPC router, audio-upload route, rep/admin UI, chat, quiz, curriculum seed script) already exists on HEAD per the 2026-06-26 line review; sales_advantage_mvp_20260622 Phases 3-7 are implemented (its checkboxes are stale). This track owns the remaining Phase-8 go-live work: hard-gate on Wave 1 sales security remediation, seed + human-approve real curriculum, add Docker/cloudbuild, provision the cloud sales_advantage database, deploy to Cloud Run, and run end-to-end QA.",
+  "estimated_tasks": 24,
+  "actual_tasks": null,
+  "deviation_notes": "Successor to the deploy remainder of sales_advantage_mvp_20260622 (Phase 8). Created because the MVP track predates the 2026-06-26 security review and does not gate go-live on Wave 1. Phase 0 reconciliation complete: Wave 1 security mostly at HEAD (1 deferred: lesson XSS sanitization). Wave 2 seed-safe and adapter-boundary confirmed. Phase 2 artifacts (Dockerfile, cloudbuild.yaml, .env.example, smoke script) written. Human-gated tasks: cloud provisioning, deploy, seed run, QA, closeout."
+}

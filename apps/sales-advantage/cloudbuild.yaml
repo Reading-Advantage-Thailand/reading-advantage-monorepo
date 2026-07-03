@@ -1,0 +1,75 @@
+steps:
+  - name: "gcr.io/cloud-builders/docker"
+    id: "build-image"
+    args:
+      - "build"
+      - "-f"
+      - "apps/sales-advantage/Dockerfile"
+      - "-t"
+      - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/sales-advantage/sales-advantage:$BUILD_ID"
+      - "."
+
+  - name: "gcr.io/cloud-builders/docker"
+    id: "push-image"
+    args:
+      - "push"
+      - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/sales-advantage/sales-advantage:$BUILD_ID"
+
+  - name: "node:20-slim"
+    id: "migrate-db"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - "corepack enable && pnpm install --frozen-lockfile && export DATABASE_URL=\"$$DIRECT_DATABASE_URL\" && pnpm --filter @reading-advantage/db migrate"
+    secretEnv:
+      - "DIRECT_DATABASE_URL"
+
+  - name: "node:20-slim"
+    id: "doctor-check"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - "corepack enable && pnpm install --frozen-lockfile && export DATABASE_URL=\"$$DIRECT_DATABASE_URL\" && pnpm --filter @reading-advantage/db doctor --check"
+    secretEnv:
+      - "DIRECT_DATABASE_URL"
+
+  - name: "gcr.io/cloud-builders/gcloud"
+    id: "deploy-cloudrun"
+    args:
+      - "run"
+      - "deploy"
+      - "sales-advantage"
+      - "--image=asia-southeast1-docker.pkg.dev/$PROJECT_ID/sales-advantage/sales-advantage:$BUILD_ID"
+      - "--region=asia-southeast1"
+      - "--platform=managed"
+      - "--allow-unauthenticated"
+      - "--service-account=sales-cloud-run@$PROJECT_ID.iam.gserviceaccount.com"
+      - "--add-cloudsql-instances=reading-advantage:asia-southeast1:cloud-sql"
+      - "--set-env-vars=NODE_ENV=production,NEXT_PUBLIC_API_URL=https://sales-advantage.reading-advantage.com"
+      - "--min-instances=1"
+      - "--max-instances=100"
+      - "--concurrency=80"
+      - "--set-secrets=DATABASE_URL=DATABASE_URL:latest,AUTH_SECRET=AUTH_SECRET:latest,AI_PROVIDER=AI_PROVIDER:latest,OPENROUTER_API_KEY=OPENROUTER_API_KEY:latest,GOOGLE_AI_API_KEY=GOOGLE_AI_API_KEY:latest,OPENAI_API_KEY=OPENAI_API_KEY:latest,SALES_AUDIO_EVAL_MODEL=SALES_AUDIO_EVAL_MODEL:latest,SALES_AUDIO_EVAL_FALLBACK_STT_MODEL=SALES_AUDIO_EVAL_FALLBACK_STT_MODEL:latest,SALES_AUDIO_EVAL_FALLBACK_EVAL_MODEL=SALES_AUDIO_EVAL_FALLBACK_EVAL_MODEL:latest,SALES_CHAT_MODEL=SALES_CHAT_MODEL:latest,STORAGE_ENDPOINT=STORAGE_ENDPOINT:latest,STORAGE_REGION=STORAGE_REGION:latest,STORAGE_BUCKET=STORAGE_BUCKET:latest,STORAGE_ACCESS_KEY=STORAGE_ACCESS_KEY:latest,STORAGE_SECRET_KEY=STORAGE_SECRET_KEY:latest,STORAGE_PUBLIC_BASE_URL=STORAGE_PUBLIC_BASE_URL:latest"
+
+  - name: "gcr.io/cloud-builders/gcloud"
+    id: "allow-public-invoker"
+    args:
+      - "run"
+      - "services"
+      - "add-iam-policy-binding"
+      - "sales-advantage"
+      - "--region=asia-southeast1"
+      - "--member=allUsers"
+      - "--role=roles/run.invoker"
+
+images:
+  - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/sales-advantage/sales-advantage:$BUILD_ID"
+
+availableSecrets:
+  secretManager:
+    - versionName: "projects/$PROJECT_ID/secrets/DIRECT_DATABASE_URL/versions/latest"
+      env: "DIRECT_DATABASE_URL"
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: E2_HIGHCPU_8
