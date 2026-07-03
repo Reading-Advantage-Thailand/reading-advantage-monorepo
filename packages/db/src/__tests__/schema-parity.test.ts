@@ -582,3 +582,51 @@ describe("auditEvents — Track 4 Audit Log Infrastructure", () => {
     expect(c).toContain("createdAt");
   });
 });
+
+// ─── Login Attempts (Track 10: Postgres-Backed Rate Limiter v2) ───────────────
+
+import { getTableConfig } from "drizzle-orm/pg-core";
+
+function loginAttemptsCols(table: unknown): string[] {
+  // Drizzle pgTable objects carry a non-column `enableRLS` flag in this
+  // version; exclude it from the parity check.
+  return Object.keys(table as Record<string, unknown>).filter(
+    (k) => !k.startsWith("_") && k !== "enableRLS",
+  );
+}
+
+describe("loginAttempts — Track 10 Rate Limiter v2", () => {
+  it("is exported from schema", () => {
+    expect(schema.loginAttempts).toBeDefined();
+  });
+
+  it("has the exact column set required by FR-1", () => {
+    const c = loginAttemptsCols(schema.loginAttempts);
+    const expected = [
+      "id",
+      "identifier",
+      "kind",
+      "failedCount",
+      "windowStart",
+      "lastAttemptAt",
+    ];
+    expect(c).toEqual(expect.arrayContaining(expected));
+    expect(c).toHaveLength(expected.length);
+  });
+
+  it("has the identifier+kind unique index for upserts", () => {
+    const config = getTableConfig(schema.loginAttempts);
+    const indexNames = config.indexes.map(
+      (idx) => (idx as unknown as { config: { name: string } }).config.name,
+    );
+    expect(indexNames).toContain("login_attempts_identifier_kind_idx");
+  });
+
+  it("has the window_start index for cleanup", () => {
+    const config = getTableConfig(schema.loginAttempts);
+    const indexNames = config.indexes.map(
+      (idx) => (idx as unknown as { config: { name: string } }).config.name,
+    );
+    expect(indexNames).toContain("login_attempts_window_start_idx");
+  });
+});
