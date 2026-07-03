@@ -43,6 +43,10 @@ export default function CampaignsPage() {
   const fetchCampaigns = async () => {
     try {
       const res = await fetch("/api/campaigns");
+      if (res.status === 401) {
+        window.location.href = "/login";
+        return;
+      }
       const data = await res.json();
       setCampaigns(data);
     } catch {
@@ -52,11 +56,15 @@ export default function CampaignsPage() {
 
   const handleCreate = async () => {
     try {
-      await fetch("/api/campaigns", {
+      const res = await fetch("/api/campaigns", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newCampaign),
       });
+      if (res.status === 401) {
+        window.location.href = "/login";
+        return;
+      }
       setShowCreate(false);
       setNewCampaign({ type: "video", app: "reading-advantage", name: "" });
       fetchCampaigns();

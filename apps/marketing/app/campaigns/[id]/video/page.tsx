@@ -55,6 +55,10 @@ export default function VideoProductionPage() {
   const fetchCampaign = async (id: string) => {
     try {
       const res = await fetch(`/api/campaigns/${id}`);
+      if (res.status === 401) {
+        window.location.href = "/login";
+        return;
+      }
       const data = await res.json();
       setCampaign(data);
       setSelectedApp(data.app);
@@ -72,6 +76,7 @@ export default function VideoProductionPage() {
         body: JSON.stringify({ app: selectedApp }),
       });
       const data = await res.json();
+      if (res.status === 401) { window.location.href = "/login"; return; }
       setTopics(
         data.topics.map((text: string, i: number) => ({
           id: `topic-${i}`,
@@ -139,6 +144,10 @@ export default function VideoProductionPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ app: selectedApp, topic: topic.text }),
       });
+      if (res.status === 401) {
+        window.location.href = "/login";
+        return;
+      }
       const data = await res.json();
       if (Array.isArray(data.script)) {
         setScript(data.script);
@@ -184,6 +193,10 @@ export default function VideoProductionPage() {
           script,
         }),
       });
+      if (res.status === 401) {
+        window.location.href = "/login";
+        return;
+      }
       const data = await res.json();
       if (data?.id) {
         setSavedProjectId(data.id);
