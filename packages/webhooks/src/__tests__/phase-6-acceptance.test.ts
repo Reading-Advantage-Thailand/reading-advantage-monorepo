@@ -162,6 +162,13 @@ vi.mock("@reading-advantage/domain/codecamp", async () => {
     createPrReview: vi.fn(),
     getExerciseRepoByUrl: vi.fn(),
     logWebhookEvent: vi.fn(),
+    reviewExercise: vi.fn().mockImplementation(async (args: { prDiff?: string; generateReview?: (system: string, prompt: string) => Promise<unknown> }) => {
+      if (args.generateReview) {
+        const prompt = `Please review the following code diff:\n\n\`\`\`diff\n${args.prDiff ?? ""}\n\`\`\``;
+        return args.generateReview("system prompt", prompt);
+      }
+      return UNIFIED_REVIEW_FIXTURE;
+    }),
   };
 });
 
@@ -252,12 +259,29 @@ vi.mock("../github-client", () => ({
   MAX_TIMESTAMP_SKEW_SECONDS: 300,
 }));
 
+const mockEnqueueReviewJob = vi.hoisted(() => vi.fn().mockResolvedValue({
+  id: "job-phase6",
+  status: "pending",
+  attempts: 0,
+}));
+
+vi.mock("../review-worker.js", () => ({
+  enqueueReviewJob: mockEnqueueReviewJob,
+  claimDueJobs: vi.fn().mockResolvedValue([]),
+  processJob: vi.fn().mockResolvedValue(undefined),
+  settleJob: vi.fn().mockReturnValue({ status: "pending" }),
+  reclaimStuckJobs: vi.fn().mockResolvedValue([]),
+  createReviewWorker: vi.fn(() => ({ run: vi.fn(), start: vi.fn(), stop: vi.fn() })),
+  normalizePrKey: vi.fn().mockReturnValue({ owner: "org", repo: "repo", pullNumber: 1 }),
+}));
+
 import {
   getPrReviewByPrUrl,
   updatePrReview,
   createPrReview,
   getExerciseRepoByUrl,
   logWebhookEvent,
+  reviewExercise,
 } from "@reading-advantage/domain/codecamp";
 import { getUserByGithubUsername } from "@reading-advantage/domain/users";
 
@@ -382,62 +406,41 @@ it("exercises the full webhook→domain→LLM→persist flow with the Mock provi
     expect(persisted.reviewStatus).toBe("approved");
   });
 
-  it("preserves the fire-and-forget posture on AIClient rejection: 200 + status reviewed + 'Review failed' summary", async () => {
-    // Mirrors the production failure mode the spec calls out (2026-06-08
-    // incident: upstream model returns 404 / times out). The webhook must
-    // NOT bubble the error to GitHub — the test strategy mandates: webhook
-    // responds 200, review row gets status "reviewed" + "Review failed"
-    // summary. The reliability track owns improving the posture; this test
-    // pins the current contract.
-    mockHolder.setThrowOnGenerateObject(new Error("[MockFixture] model timed out"));
+  it("webhook enqueues a review job and returns 200 without awaiting the review", async () => {
+    // New contract for the reliability track: the webhook ACKs after enqueue.
+    // The worker (not the handler) owns the review lifecycle.
+    mockHolder.setResponse(UNIFIED_REVIEW_FIXTURE);
 
     const req = createRequest(synchronizePayload());
     const res = await githubApp.fetch(req);
 
-    expect(res.status).toBe(200);
+    expect(res.status, "webhook must ACK 200").toBe(200);
 
-    await waitForBackgroundReviews();
-
-    const updateCalls = vi.mocked(updatePrReview).mock.calls;
-    expect(updateCalls.length).toBeGreaterThanOrEqual(2);
-    const failureCall = updateCalls[updateCalls.length - 1]!;
-    const input = (failureCall[0] as { input: { reviewStatus: string; llmReviewSummary: string } }).input;
-    expect(input.reviewStatus).toBe("reviewed");
-    expect(input.llmReviewSummary).toMatch(/Review failed/i);
-
-    // And the response body should NOT include the model error — GitHub
-    // sees a successful 200 acknowledgment.
-    const body = await res.json();
-    expect(body.error).toBeUndefined();
+    const enqueueCalls = mockEnqueueReviewJob.mock.calls.length;
+    expect(enqueueCalls, `enqueueReviewJob call count: ${enqueueCalls}`).toBe(1);
   });
 
-it("preserves the fire-and-forget posture on AIClient rejection: 200 + status reviewed + 'Review failed' summary", async () => {
-    // Mirrors the production failure mode the spec calls out (2026-06-08
-    // incident: upstream model returns 404 / times out). The webhook must
-    // NOT bubble the error to GitHub — the test strategy mandates: webhook
-    // responds 200, review row gets status "reviewed" + "Review failed"
-    // summary. The reliability track owns improving the posture; this test
-    // pins the current contract.
+  it("webhook does not run reviewExercise inline on AIClient rejection", async () => {
+    // The old fire-and-forget contract stamped reviewStatus: reviewed on failure.
+    // The new contract leaves the review row pending and lets the worker retry.
     mockHolder.setThrowOnGenerateObject(new Error("[MockFixture] model timed out"));
 
     const req = createRequest(synchronizePayload());
     const res = await githubApp.fetch(req);
 
-    expect(res.status).toBe(200);
+    expect(res.status, "webhook must ACK 200 even when review will fail").toBe(200);
 
-    await waitForBackgroundReviews();
+    const enqueueCalls = mockEnqueueReviewJob.mock.calls.length;
+    expect(enqueueCalls, `enqueueReviewJob call count: ${enqueueCalls}`).toBe(1);
 
-    const updateCalls = vi.mocked(updatePrReview).mock.calls;
-    expect(updateCalls.length).toBeGreaterThanOrEqual(2);
-    const failureCall = updateCalls[updateCalls.length - 1]!;
-    const input = (failureCall[0] as { input: { reviewStatus: string; llmReviewSummary: string } }).input;
-    expect(input.reviewStatus).toBe("reviewed");
-    expect(input.llmReviewSummary).toMatch(/Review failed/i);
+    const reviewCalls = vi.mocked(reviewExercise).mock.calls.length;
+    expect(reviewCalls, `reviewExercise inline call count: ${reviewCalls}`).toBe(0);
 
-    // And the response body should NOT include the model error — GitHub
-    // sees a successful 200 acknowledgment.
-    const body = await res.json();
-    expect(body.error).toBeUndefined();
+    const reviewedCalls = vi.mocked(updatePrReview).mock.calls.filter((call) => {
+      const input = (call[0] as { input?: { reviewStatus?: string } }).input;
+      return input?.reviewStatus === "reviewed";
+    });
+    expect(reviewedCalls.length, `updatePrReview(reviewStatus: reviewed) call count: ${reviewedCalls.length}`).toBe(0);
   });
 
   // ─── Task 2: preflight is credential-gated (live gate owned by Green) ───
