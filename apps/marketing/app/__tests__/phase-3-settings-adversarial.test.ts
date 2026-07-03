@@ -301,7 +301,7 @@ describe("Phase 3 Adversarial: encryption-at-rest hardening", () => {
 
       const { POST } = await import("@/api/settings/test-connection/route");
       const response = await POST(
-        new Request("http://localhost/api/settings/test-connection", {
+        authedRequest("http://localhost/api/settings/test-connection", {
           method: "POST",
           headers: { "content-type": "application/json" },
           body: JSON.stringify({

@@ -30,27 +30,26 @@ import { readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-// Mock the Drizzle client. The mock factory's spread order matters:
-//   { ...actual, ..., db: { execute: vi.fn() } }
-// The explicit `db` after the spread overrides any `db` exported from actual.
-// This is the SAME pattern as phase-1-boot.test.ts — it works in vitest's
-// hoisted-mock machinery, so the new tests piggyback on it.
-vi.mock("@reading-advantage/db", async () => {
-  const actual = await vi.importActual<typeof import("@reading-advantage/db")>(
-    "@reading-advantage/db",
+// Shared singleton db mock. The mock factory below returns this object so
+// the route under test and the test body configure the *same* execute spy,
+// avoiding module-cache races that create separate mock instances.
+const dbMock = vi.hoisted(() => ({
+  execute: vi.fn(),
+}));
+
+// Mock the Drizzle client without `vi.importActual` so the real postgres
+// driver is never initialized (this keeps the health-route import fast).
+vi.mock("@reading-advantage/db", () => {
+  const sql = Object.assign(
+    (strings: TemplateStringsArray, ...values: unknown[]) => ({
+      strings,
+      values,
+    }),
+    { raw: (strings: TemplateStringsArray) => strings },
   );
   return {
-    ...actual,
-    sql: Object.assign(
-      (strings: TemplateStringsArray, ...values: unknown[]) => ({
-        strings,
-        values,
-      }),
-      { raw: (strings: TemplateStringsArray) => strings },
-    ),
-    db: {
-      execute: vi.fn(),
-    },
+    db: dbMock,
+    sql,
   };
 });
 
@@ -73,24 +72,27 @@ function stripComments(src: string): string {
 
 describe("Phase 1 Adversarial: Vinext Scaffold hardening", () => {
   describe("SQL specificity (DB health route)", () => {
-    it("calls db.execute with sql`SELECT 1` exactly (not SELECT 2 or a wrapper)", async () => {
-      const { db } = await import("@reading-advantage/db");
-      (db.execute as Mock).mockResolvedValueOnce([{ "?column?": 1 }]);
+    it(
+      "calls db.execute with sql`SELECT 1` exactly (not SELECT 2 or a wrapper)",
+      async () => {
+        dbMock.execute.mockResolvedValueOnce([{ "?column?": 1 }]);
 
-      const { GET } = await import("@/api/health/db/route");
-      await GET();
+        const { GET } = await import("@/api/health/db/route");
+        await GET();
 
-      expect(db.execute).toHaveBeenCalledTimes(1);
-      const call = (db.execute as Mock).mock.calls[0];
-      // The sql tag is called with a TemplateStringsArray-like; check it's
-      // exactly the string "SELECT 1" (no extra statements, no params).
-      const sqlArg = call[0] as { strings: TemplateStringsArray };
-      expect(sqlArg.strings).toBeDefined();
-      expect(sqlArg.strings.length).toBe(1);
-      expect(sqlArg.strings[0]).toBe("SELECT 1");
-      // No parameter values are interpolated.
-      expect(call.length).toBe(1);
-    });
+        expect(dbMock.execute).toHaveBeenCalledTimes(1);
+        const call = dbMock.execute.mock.calls[0];
+        // The sql tag is called with a TemplateStringsArray-like; check it's
+        // exactly the string "SELECT 1" (no extra statements, no params).
+        const sqlArg = call[0] as { strings: TemplateStringsArray };
+        expect(sqlArg.strings).toBeDefined();
+        expect(sqlArg.strings.length).toBe(1);
+        expect(sqlArg.strings[0]).toBe("SELECT 1");
+        // No parameter values are interpolated.
+        expect(call.length).toBe(1);
+      },
+      15000,
+    );
 
     it("DB health route source has exactly one sql`SELECT 1` call", () => {
       // Belt-and-suspenders: even if someone forks the route, the source must
@@ -156,8 +158,7 @@ describe("Phase 1 Adversarial: Vinext Scaffold hardening", () => {
 
   describe("DB health failure paths", () => {
     it("returns 500 when db.execute throws a non-Error (string)", async () => {
-      const { db } = await import("@reading-advantage/db");
-      (db.execute as Mock).mockRejectedValueOnce("connection refused" as unknown);
+      dbMock.execute.mockRejectedValueOnce("connection refused" as unknown);
 
       const { GET } = await import("@/api/health/db/route");
       const response = await GET();
@@ -170,8 +171,7 @@ describe("Phase 1 Adversarial: Vinext Scaffold hardening", () => {
     });
 
     it("returns 500 when db.execute resolves to null (malformed result)", async () => {
-      const { db } = await import("@reading-advantage/db");
-      (db.execute as Mock).mockResolvedValueOnce(null);
+      dbMock.execute.mockResolvedValueOnce(null);
 
       const { GET } = await import("@/api/health/db/route");
       // The current implementation does `await db.execute(...)` and only

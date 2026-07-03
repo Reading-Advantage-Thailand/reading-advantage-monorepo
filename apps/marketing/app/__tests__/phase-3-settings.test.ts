@@ -418,7 +418,7 @@ describe("Phase 3: Settings Page — POST /api/settings/test-connection (task 4 
     __fakeAIClient.generateText.mockResolvedValueOnce("เชื่อมต่อสำเร็จ");
 
     const { POST } = await import("@/api/settings/test-connection/route");
-    const request = new Request(
+    const request = authedRequest(
       "http://localhost/api/settings/test-connection",
       {
         method: "POST",
@@ -454,7 +454,7 @@ describe("Phase 3: Settings Page — POST /api/settings/test-connection (task 4 
     );
 
     const { POST } = await import("@/api/settings/test-connection/route");
-    const request = new Request(
+    const request = authedRequest(
       "http://localhost/api/settings/test-connection",
       {
         method: "POST",

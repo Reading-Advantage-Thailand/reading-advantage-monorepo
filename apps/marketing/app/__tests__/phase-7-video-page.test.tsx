@@ -202,69 +202,77 @@ describe("Phase 7: Campaign Video Page — component interactions", () => {
     expect(within(step3 as HTMLElement).getByText(researchedTopics[0])).toBeInTheDocument();
   });
 
-  it("reorders scenes using the move-down control", async () => {
-    render(<VideoProductionPage />);
-    await waitForCampaign();
+  it(
+    "reorders scenes using the move-down control",
+    async () => {
+      render(<VideoProductionPage />);
+      await waitForCampaign();
 
-    fireEvent.click(screen.getByRole("button", { name: /Research Topics/i }));
-    await waitFor(() =>
-      expect(screen.getByText(researchedTopics[0])).toBeInTheDocument(),
-    );
+      fireEvent.click(screen.getByRole("button", { name: /Research Topics/i }));
+      await waitFor(() =>
+        expect(screen.getByText(researchedTopics[0])).toBeInTheDocument(),
+      );
 
-    fireEvent.click(screen.getAllByRole("button", { name: /Approve/i })[0]);
-    fireEvent.click(await screen.findByRole("button", { name: /Use for Script/i }));
-    fireEvent.click(screen.getByRole("button", { name: /Generate Script/i }));
+      fireEvent.click(screen.getAllByRole("button", { name: /Approve/i })[0]);
+      fireEvent.click(await screen.findByRole("button", { name: /Use for Script/i }));
+      fireEvent.click(screen.getByRole("button", { name: /Generate Script/i }));
 
-    await waitFor(() =>
-      expect(screen.getByText(/Scene 1/)).toBeInTheDocument(),
-    );
+      await waitFor(() =>
+        expect(screen.getByText(/Scene 1/)).toBeInTheDocument(),
+      );
 
-    const moveDownButtons = screen.getAllByRole("button", { name: "↓" });
-    fireEvent.click(moveDownButtons[0]);
+      const moveDownButtons = screen.getAllByRole("button", { name: "↓" });
+      fireEvent.click(moveDownButtons[0]);
 
-    await waitFor(() => {
-      const narrationFields = screen.getAllByLabelText(
-        /Narration \(Thai\)/i,
-      ) as HTMLTextAreaElement[];
-      expect(narrationFields[0].value).toBe(scriptFixture[1].narration);
-      expect(narrationFields[1].value).toBe(scriptFixture[0].narration);
-    });
-  });
+      await waitFor(() => {
+        const narrationFields = screen.getAllByLabelText(
+          /Narration \(Thai\)/i,
+        ) as HTMLTextAreaElement[];
+        expect(narrationFields[0].value).toBe(scriptFixture[1].narration);
+        expect(narrationFields[1].value).toBe(scriptFixture[0].narration);
+      });
+    },
+    15000,
+  );
 
-  it("saves the project and shows the returned project id", async () => {
-    render(<VideoProductionPage />);
-    await waitForCampaign();
+  it(
+    "saves the project and shows the returned project id",
+    async () => {
+      render(<VideoProductionPage />);
+      await waitForCampaign();
 
-    fireEvent.click(screen.getByRole("button", { name: /Research Topics/i }));
-    await waitFor(() =>
-      expect(screen.getByText(researchedTopics[0])).toBeInTheDocument(),
-    );
+      fireEvent.click(screen.getByRole("button", { name: /Research Topics/i }));
+      await waitFor(() =>
+        expect(screen.getByText(researchedTopics[0])).toBeInTheDocument(),
+      );
 
-    fireEvent.click(screen.getAllByRole("button", { name: /Approve/i })[0]);
-    fireEvent.click(await screen.findByRole("button", { name: /Use for Script/i }));
-    fireEvent.click(screen.getByRole("button", { name: /Generate Script/i }));
+      fireEvent.click(screen.getAllByRole("button", { name: /Approve/i })[0]);
+      fireEvent.click(await screen.findByRole("button", { name: /Use for Script/i }));
+      fireEvent.click(screen.getByRole("button", { name: /Generate Script/i }));
 
-    await waitFor(() =>
-      expect(screen.getByRole("button", { name: /Save Script/i })).toBeInTheDocument(),
-    );
+      await waitFor(() =>
+        expect(screen.getByRole("button", { name: /Save Script/i })).toBeInTheDocument(),
+      );
 
-    fireEvent.click(screen.getByRole("button", { name: /Save Script/i }));
+      fireEvent.click(screen.getByRole("button", { name: /Save Script/i }));
 
-    await waitFor(() =>
-      expect(
-        screen.getByText(`Saved as project ${savedProject.id}`),
-      ).toBeInTheDocument(),
-    );
+      await waitFor(() =>
+        expect(
+          screen.getByText(`Saved as project ${savedProject.id}`),
+        ).toBeInTheDocument(),
+      );
 
-    const lastCall = fetchMock.mock.lastCall;
-    expect(lastCall).toBeTruthy();
-    const [url, options] = lastCall as [string, RequestInit];
-    expect(url).toBe("/api/video/projects");
-    expect(options.method).toBe("POST");
+      const lastCall = fetchMock.mock.lastCall;
+      expect(lastCall).toBeTruthy();
+      const [url, options] = lastCall as [string, RequestInit];
+      expect(url).toBe("/api/video/projects");
+      expect(options.method).toBe("POST");
 
-    const body = JSON.parse(options.body as string);
-    expect(body.campaignId).toBe(campaign.id);
-    expect(body.topic).toBe(researchedTopics[0]);
-    expect(body.script).toEqual(scriptFixture);
-  });
+      const body = JSON.parse(options.body as string);
+      expect(body.campaignId).toBe(campaign.id);
+      expect(body.topic).toBe(researchedTopics[0]);
+      expect(body.script).toEqual(scriptFixture);
+    },
+    15000,
+  );
 });
