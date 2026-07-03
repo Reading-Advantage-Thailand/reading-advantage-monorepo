@@ -4,11 +4,13 @@ import githubApp from "../github.js";
 
 const WEBHOOK_SECRET = "test-secret";
 
-const mockEnqueueReviewJob = vi.fn().mockResolvedValue({
-  id: "job-1",
-  status: "pending",
-  attempts: 0,
-});
+const { mockEnqueueReviewJob } = vi.hoisted(() => ({
+  mockEnqueueReviewJob: vi.fn().mockResolvedValue({
+    id: "job-1",
+    status: "pending",
+    attempts: 0,
+  }),
+}));
 
 vi.mock("../review-worker.js", () => ({
   enqueueReviewJob: mockEnqueueReviewJob,

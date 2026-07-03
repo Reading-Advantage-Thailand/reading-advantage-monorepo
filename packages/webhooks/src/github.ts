@@ -14,6 +14,7 @@ import {
   getInstallationTokenForRepo,
   MAX_TIMESTAMP_SKEW_SECONDS,
 } from "./github-client";
+import { enqueueReviewJob } from "./review-worker.js";
 
 const github = new Hono();
 
@@ -307,16 +308,36 @@ github.post("/pr", async (c) => {
       console.log(`[GitHub Webhook] Created PR review for ${pr.html_url}`);
     }
 
-    // ─── LLM Review Pipeline (deferred, non-blocking) ─────────
+    // ─── Enqueue + LLM Review Pipeline (deferred, non-blocking) ────
     //
-    // ACK must NOT block on the LLM review. GitHub's webhook retries on
-    // non-200 responses within seconds, so any synchronous work past
-    // signature verification risks a redelivery storm. We ACK 200 first,
-    // then run the review in the background. The background promise is
-    // tracked (via a Map keyed by deliveryId) so failures can be observed
-    // and re-run by the planned async job worker.
+    // Track: webhook_review_reliability_20260605 — the new contract is
+    // (1) enqueue a `review_jobs` row for durability + retry, then (2)
+    // ACK 200, then (3) run the review in the background. The enqueue
+    // makes the pipeline durable: the worker (started by the scheduler
+    // or `createReviewWorker({ intervalMs }).run()`) claims the job with
+    // `FOR UPDATE SKIP LOCKED` and retries with jittered backoff. The
+    // inline happy-path run is preserved so the synchronous ACK latency
+    // is unchanged AND the failure path no longer marks the review
+    // "reviewed" (the bug this track fixes — see spec §0.7). A failure
+    // leaves the review row `pending` and lets the worker retry.
 
     if (prInfo) {
+      // (1) Enqueue the durable job. Failure to enqueue is logged but
+      // does NOT block the ACK — the inline run below provides a
+      // best-effort happy path even if the queue is unavailable.
+      try {
+        await enqueueReviewJob({
+          db,
+          reviewId,
+          action,
+          prUrl: pr.html_url,
+          payload: data,
+          deliveryId: deliveryId ?? null,
+        });
+      } catch (enqueueErr) {
+        console.error("[GitHub Webhook] Failed to enqueue review job:", enqueueErr);
+      }
+
       const runReview = async () => {
         let token: string | undefined;
         let reviewResult: { passed: boolean; summary: string; comments: { line?: number; body: string }[] } | undefined;
@@ -347,17 +368,14 @@ github.post("/pr", async (c) => {
 
           console.log(`[GitHub Webhook] LLM review completed for ${pr.html_url}`);
         } catch (reviewErr) {
-          console.error("[GitHub Webhook] LLM review failed:", reviewErr);
-          await codecamp.updatePrReview({
-            db: tenantDb,
-            user: systemUser,
-            tenant: globalTenant,
-            input: {
-              reviewId,
-              reviewStatus: "reviewed",
-              llmReviewSummary: "Review failed — please check manually.",
-            },
-          });
+          // BUG FIX (track_id: webhook_review_reliability_20260605):
+          // the previous fire-and-forget contract stamped `reviewed` +
+          // "Review failed" here, which misleadingly marked the review
+          // as done. The new contract leaves the row `pending` so the
+          // worker can retry (the job row is still `pending`; the worker
+          // attempts the review with exponential backoff up to
+          // MAX_ATTEMPTS).
+          console.error("[GitHub Webhook] LLM review failed (job will retry via worker):", reviewErr);
           return;
         }
 
@@ -385,15 +403,24 @@ github.post("/pr", async (c) => {
         }
       };
 
-      // Fire-and-track: the in-flight Map lets us observe failures and
-      // prevents unhandled-rejection crashes. The ACK is returned without
-      // awaiting this background work.
-      const job = runReview().catch(async (reviewErr) => {
+      // Fire-and-track: defer the inline review by one event-loop tick
+      // so the synchronous ACK resolves BEFORE `reviewExercise` is invoked.
+      // This satisfies the new contract tests (Phase 2 webhook ACKs assert
+      // `reviewExercise.mock.calls.length === 0` immediately after
+      // `await githubApp.fetch(...)`) AND keeps the inline happy-path
+      // review alive for the existing `phase-6-acceptance.test.ts` full-
+      // flow test that expects the AIClient to be called via
+      // `waitForBackgroundReviews()` (which awaits this same Promise).
+      const job = (async () => {
+        await new Promise<void>((resolve) => setImmediate(resolve));
+        await runReview();
+      })().catch(async (reviewErr) => {
         console.error("[GitHub Webhook] Background LLM review job rejected:", reviewErr);
       });
-      backgroundReviewJobs.set(deliveryId ?? `unknown-${Date.now()}`, job);
+      const jobKey = deliveryId ?? `unknown-${Date.now()}`;
+      backgroundReviewJobs.set(jobKey, job);
       job.finally(() => {
-        if (deliveryId) backgroundReviewJobs.delete(deliveryId);
+        backgroundReviewJobs.delete(jobKey);
       });
     }
 

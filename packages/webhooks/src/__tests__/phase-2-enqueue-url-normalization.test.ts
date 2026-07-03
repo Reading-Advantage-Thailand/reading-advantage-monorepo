@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { enqueueReviewJob, normalizePrKey } from "../review-worker.js";
+import { enqueueReviewJob, normalizePrKey, __resetReviewWorkerState } from "../review-worker.js";
 
-const mockDb = {
+const mockDb = vi.hoisted(() => ({
   insert: vi.fn().mockReturnValue({
     values: vi.fn().mockReturnValue({
       onConflictDoUpdate: vi.fn().mockReturnValue({
@@ -14,10 +14,10 @@ const mockDb = {
       where: vi.fn().mockResolvedValue([]),
     }),
   })),
-};
+}));
 
 vi.mock("@reading-advantage/db", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@reading-advantage/db")>("@reading-advantage/db");
+  const actual = await importOriginal<typeof import("@reading-advantage/db")>();
   return {
     ...actual,
     db: mockDb,
@@ -27,6 +27,7 @@ vi.mock("@reading-advantage/db", async (importOriginal) => {
 describe("Phase 2 — PR URL normalization for idempotency", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    __resetReviewWorkerState();
   });
 
   it("normalizePrKey strips trailing slash and .git suffix and lowercases owner/repo", async () => {

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { enqueueReviewJob } from "../review-worker.js";
+import { enqueueReviewJob, __resetReviewWorkerState } from "../review-worker.js";
 
-const mockDb = {
+const mockDb = vi.hoisted(() => ({
   insert: vi.fn().mockReturnValue({
     values: vi.fn().mockReturnValue({
       onConflictDoUpdate: vi.fn().mockReturnValue({
@@ -34,10 +34,10 @@ const mockDb = {
       }),
     }),
   }),
-};
+}));
 
 vi.mock("@reading-advantage/db", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@reading-advantage/db")>("@reading-advantage/db");
+  const actual = await importOriginal<typeof import("@reading-advantage/db")>();
   return {
     ...actual,
     db: mockDb,
@@ -53,6 +53,10 @@ const basePayload = {
 describe("Phase 2 — enqueueReviewJob is idempotent", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // Reset the worker's in-process dedup cache so each test starts from
+    // an empty cache (the cache otherwise persists across tests and breaks
+    // the duplicate-delivery assertion).
+    __resetReviewWorkerState();
   });
 
   it("enqueues exactly one pending job", async () => {
