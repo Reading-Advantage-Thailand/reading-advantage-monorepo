@@ -23,11 +23,13 @@ const campaignStatusValues = campaignStatusEnum.enumValues;
  * `status` defaults to `draft` at the DB layer and is omitted from the
  * create payload.
  */
-export const createCampaignSchema = z.object({
-  type: z.enum(campaignTypeValues as [string, ...string[]]),
-  app: z.enum(appEnumValues as [string, ...string[]]),
-  name: z.string().min(1).max(255),
-});
+export const createCampaignSchema = z
+  .object({
+    type: z.enum(campaignTypeValues as [string, ...string[]]),
+    app: z.enum(appEnumValues as [string, ...string[]]),
+    name: z.string().min(1).max(255),
+  })
+  .strict();
 
 export type CreateCampaignBody = z.infer<typeof createCampaignSchema>;
 
@@ -36,8 +38,10 @@ export type CreateCampaignBody = z.infer<typeof createCampaignSchema>;
  * updatable through the API; this keeps the surface area honest and the
  * state-machine in `lib/campaign-status.ts` authoritative.
  */
-export const updateCampaignSchema = z.object({
-  status: z.enum(campaignStatusValues as [string, ...string[]]),
-});
+export const updateCampaignSchema = z
+  .object({
+    status: z.enum(campaignStatusValues as [string, ...string[]]),
+  })
+  .strict();
 
 export type UpdateCampaignBody = z.infer<typeof updateCampaignSchema>;

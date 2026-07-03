@@ -1,6 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+/** Placeholder for masked secret values returned by GET /api/settings. */
+const MASKED_SECRET = "\u2022\u2022\u2022\u2022";
 
 export default function SettingsPage() {
   const [provider, setProvider] = useState("google");
@@ -9,6 +12,36 @@ export default function SettingsPage() {
   const [mmxPath, setMmxPath] = useState("");
   const [testing, setTesting] = useState(false);
   const [testResult, setTestResult] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  /**
+   * Load existing settings on mount. Secret keys (llm.apiKey) are returned
+   * as a masked placeholder by the API so the page can show "configured"
+   * without leaking plaintext. Non-secret keys are returned as-is.
+   */
+  useEffect(() => {
+    async function loadSettings() {
+      try {
+        const res = await fetch("/api/settings");
+        if (res.status === 401) {
+          window.location.href = "/login";
+          return;
+        }
+        if (res.ok) {
+          const data: Record<string, string> = await res.json();
+          if (data["llm.provider"]) setProvider(data["llm.provider"]);
+          if (data["llm.model"]) setModelName(data["llm.model"]);
+          if (data["llm.apiKey"]) setApiKey(data["llm.apiKey"]);
+          if (data["tools.mmxPath"]) setMmxPath(data["tools.mmxPath"]);
+        }
+      } catch {
+        // Settings load is best-effort; form stays at defaults on failure.
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadSettings();
+  }, []);
 
   const handleTestConnection = async () => {
     setTesting(true);
@@ -19,6 +52,10 @@ export default function SettingsPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ provider, modelName, apiKey }),
       });
+      if (res.status === 401) {
+        window.location.href = "/login";
+        return;
+      }
       const data = await res.json();
       if (res.ok) {
         setTestResult("Connection successful!");
@@ -34,7 +71,7 @@ export default function SettingsPage() {
 
   const handleSave = async () => {
     try {
-      await fetch("/api/settings", {
+      const res = await fetch("/api/settings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -44,11 +81,34 @@ export default function SettingsPage() {
           "tools.mmxPath": mmxPath,
         }),
       });
-      alert("Settings saved!");
+      if (res.status === 401) {
+        window.location.href = "/login";
+        return;
+      }
+      if (res.ok) {
+        alert("Settings saved!");
+      } else {
+        const data = await res.json();
+        alert(`Failed to save settings: ${data.message}`);
+      }
     } catch {
       alert("Failed to save settings");
     }
   };
+
+  if (loading) {
+    return (
+      <div style={{ padding: "24px", textAlign: "center" }}>
+        <p>Loading settings...</p>
+      </div>
+    );
+  }
+
+  /**
+   * When the API returns a masked placeholder for a secret key, the input
+   * shows the placeholder and the user must provide a new value to update.
+   */
+  const isApiKeyMasked = apiKey === MASKED_SECRET;
 
   return (
     <div>
@@ -106,13 +166,17 @@ export default function SettingsPage() {
 
         <div style={{ marginBottom: "16px" }}>
           <label style={{ display: "block", marginBottom: "4px", fontWeight: "500" }}>
-            API Key
+            API Key {isApiKeyMasked && (
+              <span style={{ fontSize: "12px", color: "#666", fontWeight: "normal" }}>
+                (configured \u2014 enter a new value to change)
+              </span>
+            )}
           </label>
           <input
             type="password"
             value={apiKey}
             onChange={(e) => setApiKey(e.target.value)}
-            placeholder="Enter API key"
+            placeholder={isApiKeyMasked ? MASKED_SECRET : "Enter API key"}
             style={{
               width: "100%",
               padding: "8px",

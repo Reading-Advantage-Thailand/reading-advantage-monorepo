@@ -14,15 +14,19 @@ const appEnumValues = appEnum.enumValues;
 
 const appField = z.enum(appEnumValues as [string, ...string[]]);
 
-export const saveTopicsSchema = z.object({
-  app: appField,
-  topics: z.array(z.string().min(1)).min(1),
-});
+export const saveTopicsSchema = z
+  .object({
+    app: appField,
+    topics: z.array(z.string().min(1)).min(1),
+  })
+  .strict();
 
 export type SaveTopicsBody = z.infer<typeof saveTopicsSchema>;
 
-export const researchTopicsSchema = z.object({
-  app: appField,
-});
+export const researchTopicsSchema = z
+  .object({
+    app: appField,
+  })
+  .strict();
 
 export type ResearchTopicsBody = z.infer<typeof researchTopicsSchema>;

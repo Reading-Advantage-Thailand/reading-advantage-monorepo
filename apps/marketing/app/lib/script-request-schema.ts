@@ -18,9 +18,11 @@ const MAX_TOPIC_LENGTH = 50_000;
 
 const appField = z.enum(appEnumValues as [string, ...string[]]);
 
-export const generateScriptSchema = z.object({
-  app: appField,
-  topic: z.string().min(1).max(MAX_TOPIC_LENGTH),
-});
+export const generateScriptSchema = z
+  .object({
+    app: appField,
+    topic: z.string().min(1).max(MAX_TOPIC_LENGTH),
+  })
+  .strict();
 
 export type GenerateScriptBody = z.infer<typeof generateScriptSchema>;

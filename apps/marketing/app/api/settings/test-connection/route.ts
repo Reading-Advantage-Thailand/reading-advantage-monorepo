@@ -1,33 +1,33 @@
+/**
+ * `/api/settings/test-connection` — test an LLM connection by sending a
+ * lightweight prompt.
+ *
+ * **Auth policy:** authentication required. Unauthenticated callers receive
+ * 401 before any AI call. The guard short-circuits before the provider SDK
+ * so no credentials are used for anonymous callers.
+ *
+ * **Secret leakage defense:** the AI SDK sometimes echoes the supplied API
+ * key back in the thrown error. The route redacts any caller-supplied
+ * secret values before returning the message to the client.
+ *
+ * @see apps/marketing/app/lib/auth.ts
+ */
 import { NextResponse } from "next/server";
 import { createAIClient } from "@reading-advantage/ai";
+import { requireMarketingSession } from "@/lib/auth";
+import { redactSecrets } from "@/lib/redact";
 
 /**
- * Replace occurrences of any caller-supplied secret in `message` with a
- * `[REDACTED]` marker. Some AI SDKs (notably the Google Generative AI
- * client) echo the supplied API key back inside the error message they
- * throw, e.g.:
+ * POST /api/settings/test-connection — validate an LLM connection.
  *
- *   "GoogleGenerativeAIError: Invalid API key: sk-... provided"
- *
- * Returning that string verbatim would leak the secret in HTTP responses
- * and any downstream access logs / error trackers. We scrub known secrets
- * before returning. We deliberately avoid logging the raw message: the
- * upstream SDK's error message may itself contain the secret, so logging
- * it server-side is also a leak.
+ * Guard contract: 401 without a valid session, before any AI call.
  */
-function redactSecrets(
-  message: string,
-  secrets: ReadonlyArray<string | undefined>,
-): string {
-  let sanitized = message;
-  for (const secret of secrets) {
-    if (typeof secret !== "string" || secret.length === 0) continue;
-    sanitized = sanitized.split(secret).join("[REDACTED]");
-  }
-  return sanitized;
-}
-
 export async function POST(request: Request) {
+  const guard = await requireMarketingSession(request);
+  if (!guard.ok) {
+    return guard.response;
+  }
+
   let apiKey: string | undefined;
   try {
     const body = (await request.json()) as {
