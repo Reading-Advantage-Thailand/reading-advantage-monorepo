@@ -25,12 +25,12 @@
 
 - [~] Task: Write Red tests proving settings/video/campaign API routes reject unauthenticated users.
   - Evidence refs: Marketing LR-marketing-app-003-001/003/005, LR-004-002; Product Risk Register Marketing public API exposure.
-- [ ] Task: Add auth/role guards and tenant/global policy documentation for marketing routes.
+- [x] Task: Add auth/role guards and tenant/global policy documentation for marketing routes. — `4a6bb1d8`
 - [~] Task: Write Red tests for Zod validation on settings, campaigns, topics, and script generation inputs.
   - Evidence refs: Marketing LR-004-001, LR-marketing-app-003-004/006; MR-H06.
-- [~] Task: Route AI calls through the shared AI adapter path approved by Wave 2.
-- [~] Task: Prevent API key/token leakage in any unauthenticated response.
-- [~] Task: Run marketing targeted tests/build/lint/type.
+- [x] Task: Route AI calls through the shared AI adapter path approved by Wave 2. — `4a6bb1d8`
+- [x] Task: Prevent API key/token leakage in any unauthenticated response. — `4a6bb1d8`
+- [x] Task: Run marketing targeted tests/build/lint/type. — `4a6bb1d8`, `4e552658`, `cc120ede`
 
 ## Phase 3: Advantage Games Completion and Scoring Contract
 
