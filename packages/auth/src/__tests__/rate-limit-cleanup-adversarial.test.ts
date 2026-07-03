@@ -156,12 +156,19 @@ describe("rate-limit cleanup — adversarial boundary probes", () => {
     });
 
     try {
-      // Re-import the module so the mock takes effect.
-      const fresh = await import("../rate-limit-cleanup.js?lock-miss");
+      // Reset the module registry so the doMock factory takes effect on
+      // the re-import. (A plain `await import()` without reset returns the
+      // cached unmocked module; the prior `?lock-miss` query-suffix hack
+      // for cache-busting broke `tsc` — see TS2307 on the query string.)
+      vi.resetModules();
+      const fresh = await import("../rate-limit-cleanup.js");
       const result = await fresh.runCleanupWithLock();
       expect(result).toEqual({ deleted: 0 });
     } finally {
       vi.doUnmock("@reading-advantage/db");
+      // Restore the registry so subsequent tests' top-level imports
+      // resolve against the real module again.
+      vi.resetModules();
     }
   });
 
