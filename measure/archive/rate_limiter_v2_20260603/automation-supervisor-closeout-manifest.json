@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "role": "measure-closeout",
+  "track_id": "rate_limiter_v2_20260603",
+  "completed_at": "2026-07-03T23:35:00+08:00",
+  "baseline_sha": "1daadf0b",
+  "head_sha": "12ee1d947d1bf970e3ee86072e7dc7762808108c",
+  "commits": [
+    "776f8b21 docs(measure): rate-limiter v2 test strategy + plan fix",
+    "f269c007 test(auth): red-phase rate-limiter tests",
+    "abfd4505 feat(auth): postgres rate-limit cleanup job + captcha trigger",
+    "aeb3cb7c docs(measure): mark rate-limiter v2 green with SHA",
+    "3e48f386 fix(auth): rate-limiter review fixes",
+    "0d426d85 docs(measure): reconcile rate-limiter plan markers",
+    "0516c427 test(auth): adversarial rate-limiter probes",
+    "45a01266 docs(measure): adversarial-testing result for rate-limiter v2",
+    "ee3b409e fix(auth): rate-limit cleanup adversarial test tsc/build break",
+    "12ee1d94 docs(measure): rate-limiter v2 final acceptance + phase 8 close"
+  ],
+  "commit_count": 10,
+  "files_added_modified": 26,
+  "production_files_added_modified": [
+    "packages/api/src/routes/auth/client-ip.ts",
+    "packages/api/src/routes/auth/login.ts",
+    "packages/auth/README.md",
+    "packages/auth/src/index.ts",
+    "packages/auth/src/rate-limit-cleanup.ts",
+    "packages/auth/src/rate-limit-store.ts",
+    "packages/auth/src/rate-limit.ts"
+  ],
+  "test_files_added_modified": 13,
+  "test_files": [
+    "apps/science-advantage/src/__tests__/rate-limit-login.integration.test.ts",
+    "packages/api/src/routes/auth/__tests__/client-ip-adversarial.test.ts",
+    "packages/api/src/routes/auth/__tests__/client-ip.test.ts",
+    "packages/auth/src/__tests__/rate-limit-adversarial.test.ts",
+    "packages/auth/src/__tests__/rate-limit-captcha.test.ts",
+    "packages/auth/src/__tests__/rate-limit-cleanup-adversarial.test.ts",
+    "packages/auth/src/__tests__/rate-limit-cleanup.test.ts",
+    "packages/auth/src/__tests__/rate-limit-fastpath-adversarial.test.ts",
+    "packages/auth/src/__tests__/rate-limit-readme.test.ts",
+    "packages/auth/src/__tests__/rate-limit-store.test.ts",
+    "packages/db/src/__tests__/schema-parity.test.ts"
+  ],
+  "total_tests": 207,
+  "auth_unit_tests": 89,
+  "api_client_ip_tests": 28,
+  "db_schema_parity_tests": 90,
+  "plan_tasks_total": 39,
+  "plan_tasks_completed": 36,
+  "plan_tasks_deferred": 3,
+  "deferred_items": [
+    {
+      "phase": 5,
+      "task": "Write failing integration tests (DB-backed 429/reset/captcha/login)",
+      "owner": "infra",
+      "reason": "Blocked by INFRA-2 — drizzle-kit migrate global-setup failure against science_advantage_test prevents running rate-limit-login.integration.test.ts on real Postgres."
+    },
+    {
+      "phase": 7,
+      "task": "6-app login integration smoke test",
+      "owner": "infra",
+      "reason": "Blocked by IR-1/INFRA-2; other apps lack a shared rate-limit integration harness."
+    },
+    {
+      "phase": 9,
+      "task": "Mark F-403/F-407 Resolved in tech-debt.md",
+      "owner": "infra",
+      "reason": "A6 defense: 'resolved' requires the live-DB adversarial test to pass (INFRA-2). Unit + adversarial suites are green but the DB-backed integration proof is pending."
+    }
+  ],
+  "artifacts_preserved": [
+    "measure/archive/rate_limiter_v2_20260603/spec.md",
+    "measure/archive/rate_limiter_v2_20260603/plan.md",
+    "measure/archive/rate_limiter_v2_20260603/metadata.json",
+    "measure/archive/rate_limiter_v2_20260603/test-strategy.md",
+    "measure/archive/rate_limiter_v2_20260603/adversarial-testing-result.json",
+    "measure/archive/rate_limiter_v2_20260603/phase-acceptance-result.json",
+    "measure/archive/rate_limiter_v2_20260603/final-acceptance-result.json",
+    "measure/archive/rate_limiter_v2_20260603/review-a-correctness-result.json",
+    "measure/archive/rate_limiter_v2_20260603/review-b-security-result.json",
+    "measure/archive/rate_limiter_v2_20260603/review-c-ux-api-result.json",
+    "measure/archive/rate_limiter_v2_20260603/automation-supervisor-closeout-manifest.json"
+  ],
+  "closeout_verification": {
+    "a6_registry_overstatement": "clear — track entry in tracks.md does not claim 'resolved' for INFRA-2-gated items; describes deferred status honestly",
+    "a9_archived_path_references": "clear — no test files reference measure/tracks/rate_limiter_v2_20260603 path (rg exit 1 on tests/*.sh and packages/*.ts)",
+    "a13_stale_dir": "clear — measure/tracks/rate_limiter_v2_20260603/ removed after archive; only measure/archive/rate_limiter_v2_20260603/ remains",
+    "a5_false_claim_text": "clear — plan.md contains no 'PASS=N, FAIL=0' or 'all checks pass' text",
+    "a8_space_marker": "clear — no legacy [ ] markers in closed plan; all tasks use [x], [b] deferred:infra, or [b] deferred:infra"
+  },
+  "notes": [
+    "The adversarial-testing commit 0516c427 introduced a synthetic ?lock-miss query-suffix that broke tsc/build (TS2307). Final-acceptance caught and fixed it (ee3b409e). Lesson recorded in lessons-learned.md.",
+    "Lessons-learned entry added: security-architecture section with rate-limiter architecture decisions.",
+    "Follow-up track placeholder added: Captcha Verification Integration (captcha_verification_20260703).",
+    "F-403/F-407 NOT marked Resolved in tech-debt.md per A6 guard — integration tests are deferred:infra."
+  ]
+}

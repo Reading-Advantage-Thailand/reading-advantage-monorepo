@@ -1,11 +1,12 @@
 {
   "track_id": "rate_limiter_v2_20260603",
   "type": "chore",
-  "status": "new",
+  "status": "done",
   "created_at": "2026-06-03T00:00:00Z",
-  "updated_at": "2026-06-03T00:00:00Z",
+  "updated_at": "2026-07-03T00:00:00Z",
+  "completed": "2026-07-03",
   "description": "Add login_attempts table to packages/db/src/schema/auth.ts. Replace in-memory Map in packages/auth/src/rate-limit.ts:9 with SELECT FOR UPDATE upsert. Add per-IP rate limit (30/15min) alongside per-username (5/15min). Add periodic cleanup job. Keep in-memory Map as dev-only fast-path. Resolves F-403, F-407. 1 week. Medium.",
   "estimated_tasks": 11,
-  "actual_tasks": null,
-  "deviation_notes": ""
+  "actual_tasks": 39,
+  "deviation_notes": "39 total tasks (36 completed, 3 deferred:infra for DB-backed integration tests pending INFRA-2)"
 }
