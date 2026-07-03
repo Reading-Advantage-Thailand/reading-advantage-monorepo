@@ -1,4 +1,4 @@
-import { pgTable, uuid, text, timestamp, integer, jsonb, pgEnum, unique } from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, timestamp, integer, jsonb, pgEnum, unique, index } from "drizzle-orm/pg-core";
 import { users } from "./users.js";
 
 // ─── Enums ────────────────────────────────────────────────
@@ -6,6 +6,26 @@ import { users } from "./users.js";
 export const lessonTypeEnum = pgEnum("codecamp_lesson_type", ["theory", "exercise", "quiz"]);
 export const progressStatusEnum = pgEnum("codecamp_progress_status", ["not_started", "in_progress", "completed"]);
 export const codecampReviewStatusEnum = pgEnum("codecamp_review_status", ["pending", "reviewed", "needs_changes", "approved"]);
+
+/**
+ * Status of a `review_jobs` queue row.
+ *
+ *   - `pending`   — waiting to be claimed by a worker
+ *   - `claimed`   — currently being processed by a worker (held by `claimed_by`)
+ *   - `succeeded` — terminal success state
+ *   - `failed`    — transient retry state (the next attempt will re-enter `pending`)
+ *   - `dead`      — terminal exhaustion state (max attempts exceeded); DLQ row
+ *
+ * `failed` is intentionally distinct from `dead`: `failed` means "the next
+ * worker tick should retry"; `dead` means "give up, this needs an admin".
+ */
+export const codecampReviewJobStatusEnum = pgEnum("codecamp_review_job_status", [
+  "pending",
+  "claimed",
+  "succeeded",
+  "failed",
+  "dead",
+]);
 
 // ─── Curriculum ───────────────────────────────────────────
 
@@ -162,3 +182,59 @@ export const codecampWebhookEvents = pgTable("codecamp_webhook_events", {
   payloadJson: jsonb("payload_json"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
+
+// ─── Review Jobs (Postgres-backed retry queue + DLQ) ─────
+
+/**
+ * Durable queue of PR review jobs. The webhook handler enqueues a row here
+ * (idempotently on the PR key) and returns 2xx immediately. A background
+ * worker (`packages/webhooks/src/review-worker.ts`) claims due rows with
+ * `FOR UPDATE SKIP LOCKED`, runs the LLM review, and settles the row
+ * (succeeded / pending-with-backoff / dead).
+ *
+ * Tenancy: `review_jobs` is REFERENTIAL — codecamp is single-tenant global
+ * (`globalTenant = { schoolId: null }`) and this table has no `schoolId`
+ * column. Query via `tenantDb.unscoped("reason")`.
+ *
+ * Idempotency: the unique index on `(pr_owner, pr_repo, pr_pull_number)`
+ * ensures a redelivered webhook does not double-enqueue. The
+ * `delivery_id` column carries the GitHub `x-github-delivery` header value
+ * for traceability (not part of the unique key — a duplicate delivery for
+ * the same PR is intentionally collapsed to one job row).
+ */
+export const reviewJobs = pgTable(
+  "review_jobs",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    prOwner: text("pr_owner").notNull(),
+    prRepo: text("pr_repo").notNull(),
+    prPullNumber: integer("pr_pull_number").notNull(),
+    /** Full webhook payload for re-running the review after worker restart. */
+    payloadJson: jsonb("payload_json"),
+    /** Optional GitHub `x-github-delivery` for traceability (not part of unique key). */
+    deliveryId: text("delivery_id"),
+    /** PrUrl from the webhook (denormalized for human inspection). */
+    prUrl: text("pr_url").notNull(),
+    status: codecampReviewJobStatusEnum("status").notNull().default("pending"),
+    attempts: integer("attempts").notNull().default(0),
+    maxAttempts: integer("max_attempts").notNull().default(5),
+    /** Earliest time the worker may claim this row (set on retry with jittered exponential backoff). */
+    nextAttemptAt: timestamp("next_attempt_at").notNull().defaultNow(),
+    /** Last error message from the worker; null until first failure. */
+    lastError: text("last_error"),
+    /** When the worker claimed this row. Used by `reclaimStuckJobs` to detect abandoned claims. */
+    claimedAt: timestamp("claimed_at"),
+    /** Stable worker id (e.g. `host:pid:startTime`) for observability. */
+    claimedBy: text("claimed_by"),
+    /** FK to `codecamp_pr_reviews.id`. Nullable: the review row may not exist yet at enqueue time. */
+    reviewId: uuid("review_id").references(() => codecampPrReviews.id, { onDelete: "set null" }),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  },
+  (table) => [
+    // Idempotency: a redelivered webhook for the same PR head collapses to one row.
+    unique("review_jobs_pr_key_unique").on(table.prOwner, table.prRepo, table.prPullNumber),
+    // Claim query: `WHERE status = 'pending' AND next_attempt_at <= now() ORDER BY next_attempt_at`.
+    index("review_jobs_claim_idx").on(table.status, table.nextAttemptAt),
+  ],
+);

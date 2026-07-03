@@ -147,6 +147,7 @@ import {
   codecampExerciseRepos,
   codecampPrReviews,
   codecampWebhookEvents,
+  reviewJobs,
   articles,
   lessons,
   assignments,
@@ -213,6 +214,10 @@ register(codecampChatMessages, "REFERENTIAL");
 register(codecampExerciseRepos, "REFERENTIAL");
 register(codecampPrReviews, "REFERENTIAL");
 register(codecampWebhookEvents, "REFERENTIAL");
+// review_jobs queue (track_id: webhook_review_reliability_20260605) — codecamp
+// is single-tenant/global; review_jobs has no `schoolId`. Accessed via
+// `tenantDb.unscoped("review_jobs has no schoolId; codecamp is global")`.
+register(reviewJobs, "REFERENTIAL");
 register(articles, "REFERENTIAL");
 register(lessons, "REFERENTIAL");
 register(assignments, "REFERENTIAL");

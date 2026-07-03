@@ -176,6 +176,13 @@
       "when": 1782627369208,
       "tag": "0024_futuristic_vulture",
       "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1782700000000,
+      "tag": "0025_review_jobs",
+      "breakpoints": true
     }
   ]
 }
