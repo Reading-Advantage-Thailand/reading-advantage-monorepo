@@ -44,12 +44,22 @@ export {
   getIpRateLimitConfig,
   DEFAULT_RATE_LIMIT_CONFIG,
   DEFAULT_IP_RATE_LIMIT_CONFIG,
+  CAPTCHA_THRESHOLD,
   type RateLimitConfig,
+  type RateLimitCheckResult,
   type RateLimitStore,
   type RateLimitStoreEntry,
   _testkit,
 } from "./rate-limit.js";
 export { createPostgresRateLimitStore } from "./rate-limit-store.js";
+
+// Rate Limit Cleanup
+export {
+  cleanupOldAttempts,
+  createRateLimitCleanupJob,
+  runCleanupWithLock,
+  RATE_LIMIT_CLEANUP_LOCK_KEY,
+} from "./rate-limit-cleanup.js";
 
 // Server Guards (framework-agnostic)
 export {

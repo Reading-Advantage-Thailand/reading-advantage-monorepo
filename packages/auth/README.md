@@ -74,3 +74,98 @@ Each user is limited to a maximum of **10 active sessions**. When an 11th
 session is created, the oldest session (by `createdAt`) is evicted
 automatically. This prevents unbounded session accumulation for accounts
 that log in from many devices without explicitly logging out.
+
+## Rate Limiting
+
+The login endpoint applies two independent rate-limit buckets so that a
+single attacker cannot bypass the limit by spreading attempts across
+identifiers. Both buckets are backed by Postgres in production so the
+limits apply consistently across replicas.
+
+| Bucket | Window | Max attempts | Purpose |
+|--------|--------|--------------|---------|
+| Per-username | 15 min | 5 | Per-username rate limit — blocks brute-force on a single account |
+| Per-IP (client IP address) | 15 min | 30 | Per-IP rate limit — blocks brute-force from a single network |
+
+A bucket is considered "triggered" once it accumulates `5` (or `30`)
+failures. Failed-attempt counters reset automatically on a successful
+login via `resetLimit(username, ip)`.
+
+### Production Default (Postgres)
+
+The Postgres-backed `login_attempts` table is the production default.
+Rate-limit state is durable across process restarts and shared between
+all server replicas — a user blocked on one instance cannot retry on
+another. Configure the auth package once at startup with:
+
+```ts
+import { configurePostgresRateLimiter } from "@reading-advantage/auth";
+import { db } from "@reading-advantage/db";
+
+configurePostgresRateLimiter(db);
+```
+
+### Dev-only In-Memory Fast-Path
+
+For local development you can opt into a process-local `Map` instead of
+Postgres. The fast-path is **dual-gated** to prevent accidental
+production use: BOTH `NODE_ENV=development` AND
+`RATE_LIMIT_INMEMORY_FASTPATH=true` must be set on the same line below
+(`RATE_LIMIT_INMEMORY_FASTPATH=true only active in development`).
+
+```bash
+# .env.local — opt into the in-memory dev fast-path (NODE_ENV=development required)
+RATE_LIMIT_INMEMORY_FASTPATH=true   # only active in development; ignored in production
+```
+
+Never set `RATE_LIMIT_INMEMORY_FASTPATH=true` in production. The flag
+exists to speed up local iteration only; in production a process-local
+rate-limit state would let attackers bypass the limit by retrying across
+instances.
+
+### Captcha Trigger
+
+Once either bucket accumulates **3** failed attempts within the active
+window, the rate-limit check signals `captchaRequired: true`. The login
+route surfaces this in the response so the UI can prompt the user to
+complete a captcha before retrying. Successful login (`resetLimit`)
+clears the captcha counter alongside the rate-limit counter.
+
+Captcha **verification** (e.g., reCAPTCHA / hCaptcha / Turnstile) is a
+follow-up track. This package only emits the trigger flag — the caller
+decides how to enforce it.
+
+### API Reference
+
+```ts
+import {
+  checkRateLimit,
+  recordFailure,
+  resetLimit,
+  cleanupOldAttempts,
+  createRateLimitCleanupJob,
+} from "@reading-advantage/auth";
+
+// Check before attempting authentication.
+const { allowed, retriesAfter, captchaRequired } = await checkRateLimit(
+  username,
+  clientIp,
+);
+if (!allowed) {
+  // 429 with Retry-After
+}
+
+// Record a failed attempt (both buckets increment).
+await recordFailure(username, clientIp);
+
+// Clear on successful login.
+await resetLimit(username, clientIp);
+
+// Periodic cleanup of stale rows (>24h old).
+const job = createRateLimitCleanupJob({ intervalMs: 60 * 60 * 1000 });
+job.start();
+```
+
+`cleanupOldAttempts(conn, now?)` returns `{ deleted: number }` and
+deletes `login_attempts` rows whose `window_start` is older than 24
+hours in batches of 1000.

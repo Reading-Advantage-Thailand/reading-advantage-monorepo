@@ -55,6 +55,31 @@ export interface RateLimitConfig {
 }
 
 /**
+ * Result shape returned by the rate-limit check function.
+ *
+ * `captchaRequired` is set to `true` once the bucket has accumulated at least
+ * `CAPTCHA_THRESHOLD` failures within the active window. This is a flag
+ * only — actual captcha verification is the responsibility of the caller
+ * (a separate "Captcha Verification" track).
+ *
+ * @property allowed - True when both username and IP buckets are below the
+ *   configured maximum.
+ * @property retriesAfter - Seconds until the active window expires, only
+ *   set when `allowed` is false.
+ * @property captchaRequired - True when the bucket has reached the captcha
+ *   trigger threshold. Independent of `allowed` — the bucket may still be
+ *   `allowed: true` while requiring captcha.
+ */
+export interface RateLimitCheckResult {
+  allowed: boolean;
+  retriesAfter?: number;
+  captchaRequired?: boolean;
+}
+
+/** Number of failed attempts that flip the captcha-required flag. */
+export const CAPTCHA_THRESHOLD = 3;
+
+/**
  * Default per-username rate-limit configuration. Provided for dev/test
  * wiring; production deployments should override via
  * `configureRateLimiter({ config })`.
@@ -209,7 +234,7 @@ async function checkIdentifier(
   identifier: string,
   kind: "username" | "ip",
   config: RateLimitConfig,
-): Promise<{ allowed: boolean; retriesAfter?: number }> {
+): Promise<RateLimitCheckResult> {
   const store = configuredStore;
   const key = buildKey(identifier, kind);
   const entry = await store.get(key);
@@ -226,14 +251,17 @@ async function checkIdentifier(
     return { allowed: true };
   }
 
+  const captchaRequired = entry.failedCount >= CAPTCHA_THRESHOLD;
+
   if (entry.failedCount >= config.maxAttempts) {
     return {
       allowed: false,
       retriesAfter: Math.ceil((config.windowMs - elapsed) / 1000),
+      captchaRequired,
     };
   }
 
-  return { allowed: true };
+  return { allowed: true, captchaRequired };
 }
 
 async function recordIdentifierFailure(
@@ -271,16 +299,29 @@ async function resetIdentifier(
  * Checks whether the given (username, ip) buckets are currently allowed
  * to attempt login. Both the per-username and per-IP buckets must allow
  * the attempt.
+ *
+ * `captchaRequired` is sourced from the **username bucket** when neither
+ * bucket is blocked: the username is the user-facing identifier, so a
+ * different username attempting from a flagged IP does not inherit that
+ * IP's failure count. (The IP bucket independently tracks its own
+ * captcha-required state — see `recordFailure` / the store — and the
+ * login route combines the signals when surfacing the response.)
+ *
+ * When one bucket blocks the attempt, that bucket's `captchaRequired`
+ * flag wins.
+ *
  * @param username - Account username/identifier.
  * @param ip - Optional client IP address for per-IP limiting.
  * @returns `allowed: true` when both buckets are below their configured
  *   maximum, otherwise `allowed: false` with `retriesAfter` (seconds
- *   until the current window expires).
+ *   until the current window expires). `captchaRequired` reflects the
+ *   captcha trigger state of the decisive bucket (the username bucket
+ *   when neither blocks).
  */
 export async function checkRateLimit(
   username: string,
   ip?: string,
-): Promise<{ allowed: boolean; retriesAfter?: number }> {
+): Promise<RateLimitCheckResult> {
   const usernameCheck = await checkIdentifier(
     username,
     "username",
@@ -295,9 +336,17 @@ export async function checkRateLimit(
     if (!ipCheck.allowed) {
       return ipCheck;
     }
+    // Neither bucket blocks — surface the username bucket's captcha state.
+    return {
+      allowed: true,
+      captchaRequired: usernameCheck.captchaRequired,
+    };
   }
 
-  return { allowed: true };
+  return {
+    allowed: true,
+    captchaRequired: usernameCheck.captchaRequired,
+  };
 }
 
 /**

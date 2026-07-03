@@ -71,7 +71,10 @@ export async function handleLogin(request: NextRequest) {
     );
     if (!rateCheck.allowed) {
       return NextResponse.json(
-        { message: `Too many attempts. Try again in ${rateCheck.retriesAfter} seconds.` },
+        {
+          message: `Too many attempts. Try again in ${rateCheck.retriesAfter} seconds.`,
+          ...(rateCheck.captchaRequired ? { captchaRequired: true } : {}),
+        },
         { status: 429 }
       );
     }
@@ -100,7 +103,10 @@ export async function handleLogin(request: NextRequest) {
       await verifyPassword(password, DUMMY_HASH);
       await recordFailure(lowerUsername, ...(clientIp ? [clientIp] : []));
       return NextResponse.json(
-        { message: "Invalid username or password" },
+        {
+          message: "Invalid username or password",
+          ...(rateCheck.captchaRequired ? { captchaRequired: true } : {}),
+        },
         { status: 401 }
       );
     }
@@ -133,7 +139,10 @@ export async function handleLogin(request: NextRequest) {
       await verifyPassword(password, DUMMY_HASH);
       await recordFailure(lowerUsername, ...(clientIp ? [clientIp] : []));
       return NextResponse.json(
-        { message: "Invalid username or password" },
+        {
+          message: "Invalid username or password",
+          ...(rateCheck.captchaRequired ? { captchaRequired: true } : {}),
+        },
         { status: 401 }
       );
     }
@@ -146,7 +155,10 @@ export async function handleLogin(request: NextRequest) {
       console.error("Login verify error:", verifyErr instanceof Error ? verifyErr.message : "Unknown");
       await recordFailure(lowerUsername, ...(clientIp ? [clientIp] : []));
       return NextResponse.json(
-        { message: "Invalid username or password" },
+        {
+          message: "Invalid username or password",
+          ...(rateCheck.captchaRequired ? { captchaRequired: true } : {}),
+        },
         { status: 401 }
       );
     }
@@ -163,7 +175,10 @@ export async function handleLogin(request: NextRequest) {
       });
       await recordFailure(lowerUsername, ...(clientIp ? [clientIp] : []));
       return NextResponse.json(
-        { message: "Invalid username or password" },
+        {
+          message: "Invalid username or password",
+          ...(rateCheck.captchaRequired ? { captchaRequired: true } : {}),
+        },
         { status: 401 }
       );
     }
