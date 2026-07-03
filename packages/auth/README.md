@@ -135,24 +135,55 @@ Captcha **verification** (e.g., reCAPTCHA / hCaptcha / Turnstile) is a
 follow-up track. This package only emits the trigger flag — the caller
 decides how to enforce it.
 
+### Client IP / Proxy Trust
+
+The login route extracts the client IP from `X-Forwarded-For` and
+`X-Real-IP` for per-IP rate limiting. By default it uses the leftmost
+XFF entry for backward compatibility, which is safe only when the app
+sits directly on the internet or a single trusted proxy always replaces
+the header.
+
+For deployments behind multiple reverse proxies, set
+`TRUST_PROXY_COUNT` to the number of proxies between the internet and
+the application. The rightmost N XFF entries are then treated as trusted
+proxies and skipped, so an attacker cannot prepend arbitrary IPs to
+bypass the per-IP limit or poison another client's bucket.
+
+| Env var | Default | Description |
+|---------|---------|-------------|
+| `TRUST_PROXY_COUNT` | unset | Number of trusted reverse proxies. Unset = legacy leftmost-XFF behavior. |
+
+Example for a Cloudflare → Vercel chain (two proxies):
+
+```bash
+TRUST_PROXY_COUNT=2
+```
+
 ### API Reference
 
 ```ts
 import {
   checkRateLimit,
+  checkRateLimitByIp,
   recordFailure,
   resetLimit,
   cleanupOldAttempts,
   createRateLimitCleanupJob,
 } from "@reading-advantage/auth";
 
-// Check before attempting authentication.
+// Check before attempting authentication (both username + IP buckets).
 const { allowed, retriesAfter, captchaRequired } = await checkRateLimit(
   username,
   clientIp,
 );
 if (!allowed) {
-  // 429 with Retry-After
+  // Return 429 with Retry-After header set to `retriesAfter` (seconds).
+}
+
+// Check only the IP bucket (e.g., IP-level middleware).
+const ipCheck = await checkRateLimitByIp(clientIp);
+if (!ipCheck.allowed) {
+  // Block the IP before looking up a username.
 }
 
 // Record a failed attempt (both buckets increment).

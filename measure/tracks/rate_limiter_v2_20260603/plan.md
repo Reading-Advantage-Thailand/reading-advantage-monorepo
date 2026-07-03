@@ -97,7 +97,7 @@
 
 ## Phase 6: Update `packages/auth` Exports
 
-- [x] Task: Re-export `checkRateLimitByIp`, `RateLimitConfig`, `RateLimitResult` from `packages/auth/src/index.ts`. *(partially shipped — `RateLimitConfig`, `RateLimitStore`, `DEFAULT_IP_RATE_LIMIT_CONFIG` are exported; `checkRateLimitByIp` is NOT, because the shipped API folds IP into `checkRateLimit(username, ip?)`. Resolve CR-1: either add the wrapper export or retire the spec name.)*
+- [x] Task: Re-export `checkRateLimitByIp`, `RateLimitConfig`, `RateLimitCheckResult` from `packages/auth/src/index.ts`. *(Green @ review — `checkRateLimitByIp` wrapper added (delegates to `checkIdentifier` with `kind: 'ip'`), `RateLimitConfig`, `RateLimitCheckResult`, `DEFAULT_IP_RATE_LIMIT_CONFIG` all exported. CR-1 resolved: IP-only check is now available via `checkRateLimitByIp(ip, config?)`.)*
 - [~] Task: Update `packages/auth/README.md` with the new API + the dev fast-path flag. *(Green 2026-07-03 @ `abfd4505` — README documents the dev fast-path dual gate, per-IP limits, Postgres-as-default, captcha trigger, and API reference; doc test 5/5 green)*
 - [x] Task: Update `packages/auth/src/rate-limit.ts` JSDoc to mark the in-memory `Map` as "dev-only fast-path; production uses Postgres-backed store." *(shipped — `rate-limit.ts:79-86`)*
 

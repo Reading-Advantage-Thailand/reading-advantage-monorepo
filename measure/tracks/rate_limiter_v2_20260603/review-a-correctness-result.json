@@ -1,0 +1,86 @@
+{
+  "role": "measure-review-a-correctness",
+  "track": "rate_limiter_v2_20260603",
+  "phase": "Phase 4: Cleanup Job, Phase 5: Captcha trigger + login wiring, Phase 6: Exports + README",
+  "baseline": "aeb3cb7c6bd7e34d075775938a6ea1c67c375e9a",
+  "red_phase_baseline": "f269c0071ce972755aefe11fcc9bb0e5c4251989",
+  "status": "PASS",
+  "timestamp": "2026-07-03T22:05:00+08:00",
+  "test_results": {
+    "command": "pnpm --filter @reading-advantage/auth exec vitest run src/__tests__/rate-limit-cleanup.test.ts src/__tests__/rate-limit-captcha.test.ts src/__tests__/rate-limit-readme.test.ts src/__tests__/rate-limit.test.ts src/__tests__/rate-limit-store.test.ts src/__tests__/wave0-phase2-rate-limit-architecture.test.ts",
+    "exit_code": 0,
+    "tests_passed": 39,
+    "tests_failed": 0,
+    "files_passed": 6
+  },
+  "typecheck": {
+    "command": "pnpm --filter @reading-advantage/auth exec tsc --noEmit",
+    "exit_code": 0,
+    "errors": 0
+  },
+  "findings": [
+    {
+      "id": "F-C01",
+      "severity": "low",
+      "category": "documentation",
+      "file": "packages/auth/src/rate-limit-cleanup.ts",
+      "line": 29,
+      "title": "RATE_LIMIT_CLEANUP_LOCK_KEY derivation comment is inaccurate",
+      "description": "The comment claims the key is 'Derived from the ASCII bytes of rate-limit-cleanup' (18 chars), but the actual hex value 0x726174656c696d63 spells 'ratelimc' (8 bytes), which is not a correct packing of 'rate-limit-cleanup'. First 8 bytes of 'rate-limit-cleanup' would be 0x726174652d6c696d ('rate-lim'). The value is functionally correct (unique, non-colliding — verified by test) but the derivation narrative is wrong. Matches pre-existing pattern in AUDIT_RETENTION_LOCK_KEY comment.",
+      "fix_required": false,
+      "fix_applied": false
+    }
+  ],
+  "coverage_summary": {
+    "cleanup_job": {
+      "batch_loop_termination": "verified — 4-batch test (1000+1000+500+0) = 2500 deleted",
+      "exact_count_assertions": "verified — deleted:100, deleted:2500, deleted:0 (A3 defense)",
+      "idempotency": "verified — second run returns deleted:0",
+      "lock_key_non_collision": "verified — RATE_LIMIT_CLEANUP_LOCK_KEY !== AUDIT_RETENTION_LOCK_KEY",
+      "start_stop_idempotency": "verified — start no-op if running, stop no-op if stopped, stop-never-started safe",
+      "advisory_lock_pattern": "verified — same lock-cleanup-release on session connection as audit-retention-job.ts",
+      "timezone_handling": "verified — toISOString() UTC vs timestamp-with-timezone column is correct"
+    },
+    "captcha_trigger": {
+      "threshold": "verified — CAPTCHA_THRESHOLD=3, fires when failedCount >= 3",
+      "below_threshold": "verified — 2 failures: captchaRequired absent/false",
+      "at_threshold": "verified — 3 failures: captchaRequired=true (unit test)",
+      "timing_in_login": "verified — checkRateLimit runs before recordFailure; 4th attempt (count=3 at check) shows captcha",
+      "reset_on_success": "verified — resetLimit clears captcha state",
+      "ip_independence": "verified — alice's captcha doesn't affect bob from same IP"
+    },
+    "login_wiring": {
+      "captcha_in_401": "verified — rateCheck.captchaRequired surfaced in all 401 response paths",
+      "captcha_in_429": "verified — rateCheck.captchaRequired surfaced in 429 response path",
+      "rate_check_before_record": "verified — rateCheck captures state before recordFailure",
+      "ip_extraction": "verified — x-forwarded-for split + x-real-ip fallback (pre-existing)"
+    },
+    "exports_and_docs": {
+      "new_exports": "verified — CAPTCHA_THRESHOLD, RateLimitCheckResult, cleanupOldAttempts, createRateLimitCleanupJob, runCleanupWithLock, RATE_LIMIT_CLEANUP_LOCK_KEY all exported",
+      "readme_fast_path": "verified — RATE_LIMIT_INMEMORY_FASTPATH documented with dual-gate explanation",
+      "readme_per_ip": "verified — per-IP rate limiting documented",
+      "readme_postgres_default": "verified — Postgres production default documented",
+      "readme_captcha": "verified — captcha trigger threshold documented",
+      "jsdoc": "verified — all exported functions have JSDoc per AGENTS.md"
+    }
+  },
+  "anti_pattern_audit": {
+    "A4_vacuous_pass": "CLEAR — no vacuous 'markers consistent' checks; all tests assert specific values (deleted:100, captchaRequired:true)",
+    "A5_false_claim": "CLEAR — plan claims match actual test results (39/39 pass, 6/6 files green)",
+    "A7_over_broad_filter": "CLEAR — no over-broad exclusion filters in tests; README test uses specific regex patterns"
+  },
+  "remaining_issues": [
+    {
+      "id": "IR-1",
+      "description": "Integration test (rate-limit-login.integration.test.ts) cannot run locally due to pre-existing drizzle-kit migrate failure against science_advantage_test. Not this track's responsibility.",
+      "owner": "infra",
+      "deferred_to": "Track 11 CI work"
+    },
+    {
+      "id": "IR-2",
+      "description": "createRateLimitCleanupJob defaults stopped=true (unlike createAuditRetentionJob which defaults stopped=false). Documented by test but worth noting for operator awareness. stop() before start() is a safe no-op.",
+      "owner": "n/a — design choice, not a bug"
+    }
+  ],
+  "graph_caller_check": "skipped — build-graph not available"
+}

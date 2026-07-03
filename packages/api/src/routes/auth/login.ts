@@ -17,6 +17,7 @@ import {
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { enrichAuthUser } from "./enrich.js";
+import { getClientIp } from "./client-ip.js";
 
 // Production rate limiting uses Postgres-backed durable state. The in-memory
 // fast-path is dev-only and opt-in via RATE_LIMIT_INMEMORY_FASTPATH=true.
@@ -59,10 +60,10 @@ export async function handleLogin(request: NextRequest) {
     const { username, password } = parsed.data;
     const lowerUsername = username.toLowerCase();
 
-    // Extract client IP once for rate limiting (per-username AND per-IP)
-    const clientIp = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
-      ?? request.headers.get("x-real-ip")
-      ?? undefined;
+    // Extract client IP once for rate limiting (per-username AND per-IP).
+    // getClientIp respects TRUST_PROXY_COUNT so XFF cannot be spoofed from
+    // the left when the request passes through known reverse proxies.
+    const clientIp = getClientIp(request);
 
     // Rate limit check
     const rateCheck = await checkRateLimit(
@@ -70,12 +71,16 @@ export async function handleLogin(request: NextRequest) {
       ...(clientIp ? [clientIp] : []),
     );
     if (!rateCheck.allowed) {
+      const retryAfter = rateCheck.retriesAfter ?? 60;
       return NextResponse.json(
         {
-          message: `Too many attempts. Try again in ${rateCheck.retriesAfter} seconds.`,
+          message: `Too many attempts. Try again in ${retryAfter} seconds.`,
           ...(rateCheck.captchaRequired ? { captchaRequired: true } : {}),
         },
-        { status: 429 }
+        {
+          status: 429,
+          headers: { "Retry-After": String(retryAfter) },
+        }
       );
     }
 
@@ -165,7 +170,7 @@ export async function handleLogin(request: NextRequest) {
 
     if (!valid) {
       // FR-9: emit auth:login_failed audit event
-      const ip = request.headers.get("x-forwarded-for") ?? request.headers.get("x-real-ip") ?? null;
+      const ip = clientIp ?? null;
       const ua = request.headers.get("user-agent") ?? null;
       recordAuditEvent(
         { actorUserId: user.id, actorRole: user.role, ipAddress: ip, userAgent: ua },
@@ -194,12 +199,12 @@ export async function handleLogin(request: NextRequest) {
     // Success — create session
     await resetLimit(lowerUsername, ...(clientIp ? [clientIp] : []));
     const session = await createSession(db, user.id, {
-      ipAddress: request.headers.get("x-forwarded-for") ?? request.headers.get("x-real-ip") ?? undefined,
+      ipAddress: clientIp,
       userAgent: request.headers.get("user-agent") ?? undefined,
     });
 
     // FR-9: emit auth:login audit event
-    const auditIp = request.headers.get("x-forwarded-for") ?? request.headers.get("x-real-ip") ?? null;
+    const auditIp = clientIp ?? null;
     const auditUa = request.headers.get("user-agent") ?? null;
     recordAuditEvent(
       { actorUserId: user.id, actorRole: user.role, ipAddress: auditIp, userAgent: auditUa },

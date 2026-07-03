@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-b-security",
+  "track": "rate_limiter_v2_20260603",
+  "phase": "Phase 4: Cleanup Job, Phase 5: Captcha trigger + login wiring, Phase 6: Exports + README",
+  "baseline": "aeb3cb7c6bd7e34d075775938a6ea1c67c375e9a",
+  "status": "pass_with_fixes",
+  "summary": "Security review identified and fixed two high/critical issues: (1) X-Forwarded-For was trusted blindly from the left, allowing IP spoofing and per-IP rate-limit bypass / bucket poisoning. Added a proxy-aware getClientIp helper gated by TRUST_PROXY_COUNT. (2) recordFailure used a non-atomic get/set cycle that could under-count concurrent failures, allowing more attempts than configured. Added an atomic increment method to RateLimitStore and implemented it for both Postgres and in-memory stores. Also documented TRUST_PROXY_COUNT in packages/auth/README.md and added adversarial unit tests. All rate-limit and auth-route tests pass; type-check and package builds are clean. The pre-existing science-advantage build failure (packages/utils child_process in client bundle) and the pre-existing auth full-suite failure (tech-debt.md >50 lines, IR-1) are out of scope.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    {
+      "id": "SEC-1",
+      "severity": "high",
+      "category": "input-validation/spoofing",
+      "description": "Client IP extraction trusted the leftmost X-Forwarded-For entry without validating the proxy chain. An attacker could prepend arbitrary IPs to bypass per-IP rate limiting or poison another user's bucket.",
+      "file": "packages/api/src/routes/auth/login.ts",
+      "status": "fixed",
+      "fix": "Added packages/api/src/routes/auth/client-ip.ts with getClientIp(request). When TRUST_PROXY_COUNT is set, it skips the rightmost N trusted proxies and uses the entry immediately to their left. Falls back to X-Real-IP. Legacy leftmost behavior is preserved when the env var is unset for backward compatibility. Updated login.ts to use getClientIp for rate limiting, audit, and session IP. Added unit tests for spoofing mitigation."
+    },
+    {
+      "id": "SEC-2",
+      "severity": "high",
+      "category": "race-condition/rate-limit-bypass",
+      "description": "recordFailure read the current bucket with SELECT FOR UPDATE, then wrote it back with a separate upsert. Without a transaction the FOR UPDATE lock was released between statements, so concurrent failures for the same key could under-count, allowing more than maxAttempts within a window.",
+      "file": "packages/auth/src/rate-limit-store.ts",
+      "status": "fixed",
+      "fix": "Added an optional RateLimitStore.increment(key, now, windowMs) method that performs an atomic INSERT ... ON CONFLICT DO UPDATE with a CASE expression that resets the counter when the window expired. Implemented increment for both the Postgres store (single raw SQL statement) and the in-memory store (synchronous read-modify-write in async body). Updated recordIdentifierFailure to use increment when available, with a documented non-atomic fallback for backward compatibility. Added store tests proving the atomic upsert is issued and behaves correctly."
+    },
+    {
+      "id": "SEC-3",
+      "severity": "medium",
+      "category": "availability",
+      "description": "The cleanup job advisory lock is held for the entire multi-batch run. While LIMIT 1000 prevents long-lived row locks, a very large stale backlog could keep the advisory lock held for an extended period, causing other replicas to no-op until it finishes.",
+      "file": "packages/auth/src/rate-limit-cleanup.ts",
+      "status": "accepted",
+      "mitigation": "Batching limits per-statement work. The lock is released in a finally block even on error. For typical login-attempt volume this is acceptable; backlog size is bounded by the 24-hour retention window."
+    },
+    {
+      "id": "SEC-4",
+      "severity": "low",
+      "category": "defense-in-depth",
+      "description": "reset-password.ts still extracts X-Forwarded-For directly without the new trusted-proxy logic. This is out of scope for the rate-limiter track but should be aligned in a follow-up.",
+      "file": "packages/api/src/routes/auth/reset-password.ts",
+      "status": "deferred",
+      "owner": "follow-up track"
+    }
+  ],
+  "verified_requirements": {
+    "select_for_update_pattern": "Used in store.get; correctly locks the row during the SELECT. The previous race was in the cross-operation get/set cycle, which is now replaced by atomic increment for writes.",
+    "xff_spoofing": "Mitigated by TRUST_PROXY_COUNT-aware getClientIp. Default (unset) preserves legacy behavior; production must set the env var.",
+    "cleanup_dos": "LIMIT 1000 batching prevents long row locks; advisory lock released in finally; errors swallowed only in scheduled tick, not on explicit run().",
+    "captcha_trigger": "captchaRequired is a flag only (documented). It is derived from the username bucket and cannot be forced for an unrelated username because buckets are independent. It does not leak account existence because failures are recorded for both valid and invalid usernames and the timing fix uses DUMMY_HASH for unknown usernames.",
+    "username_enumeration": "All 401 responses use identical 'Invalid username or password' and verifyPassword is called with DUMMY_HASH for unknown usernames, keeping timing similar. captchaRequired reveals recent failure count for an identifier, not existence.",
+    "rate_limit_binding": "Per-username and per-IP buckets are independent. Changing username or IP alone does not reset the other bucket.",
+    "constant_time": "Password verification uses argon2.verify / bcrypt.compare (constant-time). Session tokens are looked up by SHA-256 hash, which is acceptable for high-entropy tokens. No new comparisons introduced.",
+    "error_handling": "Login catch returns generic 500 without stack traces. DB errors return 503. Audit event fire-and-forget uses .catch and does not leak errors or leave requests hanging.",
+    "env_var_fastpath": "RATE_LIMIT_INMEMORY_FASTPATH is honored only when NODE_ENV === 'development' AND the flag is 'true'. Correct."
+  },
+  "test_results": [
+    {
+      "command": "pnpm --filter @reading-advantage/auth exec vitest run src/__tests__/rate-limit",
+      "exit_code": 0,
+      "tests_passed": 37,
+      "tests_failed": 0
+    },
+    {
+      "command": "pnpm --filter @reading-advantage/api exec vitest run src/routes/auth/__tests__/client-ip.test.ts src/__tests__/auth-routes.test.ts src/__tests__/auth-audit.test.ts",
+      "exit_code": 0,
+      "tests_passed": 32,
+      "tests_failed": 0
+    },
+    {
+      "command": "pnpm --filter @reading-advantage/auth exec vitest run --exclude src/__tests__/phase-7-closeout.test.ts",
+      "exit_code": 0,
+      "tests_passed": 225,
+      "tests_failed": 0
+    },
+    {
+      "command": "pnpm --filter @reading-advantage/api exec vitest run",
+      "exit_code": 0,
+      "tests_passed": 244,
+      "tests_failed": 0
+    }
+  ],
+  "typecheck": {
+    "command": "pnpm turbo run check-types --filter=@reading-advantage/auth --filter=@reading-advantage/api --filter=@reading-advantage/db",
+    "exit_code": 0,
+    "errors": 0
+  },
+  "build": {
+    "command": "pnpm turbo run build --filter=@reading-advantage/auth --filter=@reading-advantage/api --filter=@reading-advantage/db",
+    "exit_code": 0,
+    "errors": 0
+  },
+  "lint": {
+    "command": "pnpm turbo run lint --filter=@reading-advantage/auth --filter=@reading-advantage/api",
+    "exit_code": 0,
+    "errors": 0,
+    "notes": "Warnings only, none in changed production code."
+  },
+  "changed_files": [
+    "packages/api/src/routes/auth/login.ts",
+    "packages/api/src/routes/auth/client-ip.ts",
+    "packages/api/src/routes/auth/__tests__/client-ip.test.ts",
+    "packages/auth/src/rate-limit.ts",
+    "packages/auth/src/rate-limit-store.ts",
+    "packages/auth/src/__tests__/rate-limit-store.test.ts",
+    "packages/auth/README.md"
+  ],
+  "out_of_scope_failures": [
+    {
+      "id": "IR-1",
+      "description": "pnpm --filter @reading-advantage/auth exec vitest run fails on phase-7-closeout.test.ts because tech-debt.md exceeds 50 lines. This belongs to track audit_log_retention_dsar_20260605, not rate_limiter_v2.",
+      "owner": "audit_log_retention_dsar_20260605"
+    },
+    {
+      "id": "INFRA-1",
+      "description": "science-advantage build fails with packages/utils child_process imported into client bundle. Unrelated to rate-limiter changes.",
+      "owner": "infra / utils package"
+    },
+    {
+      "id": "INFRA-2",
+      "description": "science-advantage integration tests cannot run because drizzle-kit migrate fails against science_advantage_test (pre-existing). Rate-limiter integration test is authored but gated on this infra issue.",
+      "owner": "infra / CI"
+    }
+  ],
+  "anti_pattern_audit": {
+    "A2_consent_blind_publish_gate": "N/A — this track does not publish artifacts.",
+    "A6_registry_overstatement": "CLEAR — measure/tracks.md lists the track as pending; plan.md Phase 9 explicitly defers marking F-403/F-407 'Resolved' until integration tests pass. No premature 'resolved' claims."
+  },
+  "notes_for_final_acceptance": [
+    "Set TRUST_PROXY_COUNT in production deployments to the number of reverse proxies between the internet and the app (e.g., 1 for Vercel alone, 2 for Cloudflare → Vercel). Without it, XFF spoofing remains possible.",
+    "The atomic increment fix is backwards-compatible: stores that do not implement increment fall back to the original get/set cycle. All current implementations (Postgres, in-memory) implement it.",
+    "Integration test rate-limit-login.integration.test.ts is authored but blocked by drizzle-kit migrate infra; once that is restored it should be run to fully satisfy Phase 5 AC.",
+    "reset-password.ts should adopt getClientIp in a follow-up for IP-extraction consistency."
+  ],
+  "confidence": "high",
+  "timestamp": "2026-07-03T22:20:00+08:00"
+}

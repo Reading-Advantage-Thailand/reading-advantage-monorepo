@@ -6,7 +6,7 @@
  * consistent across server replicas.
  */
 
-import { and, eq } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import { loginAttempts } from "@reading-advantage/db/schema";
 import type * as schema from "@reading-advantage/db/schema";
@@ -111,6 +111,30 @@ export function createPostgresRateLimitStore(
       await db
         .delete(loginAttempts)
         .where(and(eq(loginAttempts.identifier, identifier), eq(loginAttempts.kind, kind)));
+    },
+
+    async increment(key, now, windowMs) {
+      const { identifier, kind } = parseKey(key);
+      const windowStart = new Date(now);
+      const lastAttemptAt = new Date(now);
+      const cutoff = new Date(now - windowMs);
+
+      // Single atomic statement: insert on first failure, otherwise
+      // increment unless the window has expired (then reset to 1).
+      await db.execute(sql`
+        INSERT INTO login_attempts (identifier, kind, failed_count, window_start, last_attempt_at)
+        VALUES (${identifier}, ${kind}, 1, ${windowStart}, ${lastAttemptAt})
+        ON CONFLICT (identifier, kind) DO UPDATE SET
+          failed_count = CASE
+            WHEN login_attempts.window_start < ${cutoff} THEN 1
+            ELSE login_attempts.failed_count + 1
+          END,
+          window_start = CASE
+            WHEN login_attempts.window_start < ${cutoff} THEN ${windowStart}
+            ELSE login_attempts.window_start
+          END,
+          last_attempt_at = ${lastAttemptAt}
+      `);
     },
   };
 }

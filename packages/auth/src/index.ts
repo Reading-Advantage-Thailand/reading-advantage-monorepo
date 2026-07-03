@@ -35,6 +35,7 @@ export {
 // Rate Limiting
 export {
   checkRateLimit,
+  checkRateLimitByIp,
   recordFailure,
   resetLimit,
   configureRateLimiter,

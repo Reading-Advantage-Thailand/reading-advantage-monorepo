@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "UX/API review found 3 issues (all fixed): (1) 429 response missing Retry-After HTTP header per plan Phase 5 AC #4 — fixed by adding headers to NextResponse; (2) checkRateLimitByIp never created despite spec FR-4 and plan Phase 6 claiming [x] — added thin wrapper + export; (3) Phase 6 Task 1 [x] marker was untruthful (A5) — updated marker text to reflect actual delivery. All 34 rate-limit tests pass. tsc --noEmit clean.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    {
+      "id": "UX-1",
+      "severity": "medium",
+      "description": "Login 429 response did not include Retry-After HTTP header. Plan Phase 5 specified it. The value was embedded in the message body only.",
+      "file": "packages/api/src/routes/auth/login.ts",
+      "status": "fixed"
+    },
+    {
+      "id": "UX-2",
+      "severity": "medium",
+      "description": "checkRateLimitByIp (spec FR-4, plan Phase 6) was never created. The spec required a per-IP-only check function. The shipped API folds IP into checkRateLimit(username, ip?) but no IP-only wrapper existed.",
+      "file": "packages/auth/src/rate-limit.ts",
+      "status": "fixed"
+    },
+    {
+      "id": "UX-3",
+      "severity": "low",
+      "description": "Plan Phase 6 Task 1 marked [x] but the parenthetical admitted checkRateLimitByIp was NOT exported. A5 false-claim.",
+      "file": "measure/tracks/rate_limiter_v2_20260603/plan.md",
+      "status": "fixed"
+    }
+  ],
+  "evidence": [
+    "pnpm --filter @reading-advantage/auth exec vitest run src/__tests__/rate-limit-readme.test.ts → 5/5 pass",
+    "pnpm --filter @reading-advantage/auth exec vitest run src/__tests__/rate-limit*.test.ts → 34/34 pass",
+    "pnpm --filter @reading-advantage/auth exec tsc --noEmit → clean",
+    "grep Retry-After packages/api/src/routes/auth/login.ts → confirms header set",
+    "grep checkRateLimitByIp packages/auth/src/index.ts → confirms export",
+    "Error message audit: all 401 responses use identical 'Invalid username or password' — no username enumeration"
+  ],
+  "commands": [
+    "pnpm --filter @reading-advantage/auth exec vitest run src/__tests__/rate-limit-readme.test.ts",
+    "pnpm --filter @reading-advantage/auth exec tsc --noEmit"
+  ],
+  "changed_files": [
+    "packages/api/src/routes/auth/login.ts",
+    "packages/auth/src/rate-limit.ts",
+    "packages/auth/src/index.ts",
+    "packages/auth/README.md",
+    "measure/tracks/rate_limiter_v2_20260603/plan.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "ux_applicability": "applicable",
+  "webbridge_status": "not_run",
+  "webbridge_evidence": {
+    "screenshots": [],
+    "accessibility_snapshots": [],
+    "interactions": []
+  }
+}

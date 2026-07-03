@@ -44,6 +44,12 @@ export interface RateLimitStore {
   set(key: string, entry: RateLimitStoreEntry): Promise<void>;
   /** Removes the entry for `key`. No-op when absent. */
   delete(key: string): Promise<void>;
+  /**
+   * Atomically increments the failure count for `key`, resetting the bucket
+   * to 1 when the previous window has expired. Optional: stores that do not
+   * implement this method fall back to a non-atomic get/set cycle.
+   */
+  increment?(key: string, now: number, windowMs: number): Promise<void>;
 }
 
 /**
@@ -129,6 +135,14 @@ export function createInMemoryRateLimitStore(): RateLimitStore {
     },
     delete: async (key) => {
       inMemoryStore.delete(key);
+    },
+    increment: async (key, now, windowMs) => {
+      const entry = inMemoryStore.get(key);
+      if (!entry || now - entry.windowStart > windowMs) {
+        inMemoryStore.set(key, { failedCount: 1, windowStart: now });
+      } else {
+        entry.failedCount++;
+      }
     },
   };
 }
@@ -272,8 +286,15 @@ async function recordIdentifierFailure(
   const store = configuredStore;
   const key = buildKey(identifier, kind);
   const now = Date.now();
-  const entry = await store.get(key);
 
+  if (store.increment) {
+    await store.increment(key, now, config.windowMs);
+    return;
+  }
+
+  // Fallback for stores that pre-date the increment contract. Not atomic;
+  // concurrent failures for the same key may under-count.
+  const entry = await store.get(key);
   if (!entry || now - entry.windowStart > config.windowMs) {
     await store.set(key, { failedCount: 1, windowStart: now });
   } else {
@@ -347,6 +368,27 @@ export async function checkRateLimit(
     allowed: true,
     captchaRequired: usernameCheck.captchaRequired,
   };
+}
+
+/**
+ * Checks whether the given IP address is currently allowed to attempt
+ * login, using only the per-IP bucket. This is a convenience wrapper
+ * for callers that want to check the IP bucket in isolation (e.g.,
+ * middleware that blocks an IP before looking up a username).
+ *
+ * @param ip - Client IP address.
+ * @param config - Optional config overrides for this check. Merged onto
+ *   the configured IP defaults.
+ * @returns `RateLimitCheckResult` for the IP bucket alone.
+ */
+export async function checkRateLimitByIp(
+  ip: string,
+  config?: Partial<RateLimitConfig>,
+): Promise<RateLimitCheckResult> {
+  const effectiveConfig = config
+    ? { ...configuredIpConfig, ...config }
+    : configuredIpConfig;
+  return checkIdentifier(ip, "ip", effectiveConfig);
 }
 
 /**
