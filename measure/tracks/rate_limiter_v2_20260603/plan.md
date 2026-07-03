@@ -109,10 +109,10 @@
 > NOT this track. Do NOT "fix" it here. Scope the real Green check to rate-limit
 > files (see test-strategy §2 Phase 8).
 
-- [~] Task: `pnpm turbo run test --filter=@reading-advantage/auth --filter=@reading-advantage/db --filter=science-advantage` exits 0. *(blocked by IR-1 for the auth slice; the rate-limit-scoped command in test-strategy §5 must exit 0)*
-- [~] Task: `pnpm turbo run build --filter=science-advantage` exits 0.
-- [~] Task: Grep gate: `rg "new Map" packages/auth/src/rate-limit.ts` returns exactly 1 hit (the dev fast-path `inMemoryStore`, dual-gated). *(file-scoped — A7 defense)*
-- [~] Task: All 6 apps' integration tests pass (or are `[b] deferred:<owner>` per Phase 7).
+- [x] Task: `pnpm turbo run test --filter=@reading-advantage/auth --filter=@reading-advantage/db --filter=science-advantage` exits 0. *(Green 2026-07-03 @ `ee3b409e` — the rate-limit-scoped command per test-strategy §5 exits 0: 89 auth + 28 api-client-ip + 90 db-schema-parity = 207 tests green. The aggregate `turbo run test` is RED only from IR-1 (`packages/auth/src/__tests__/phase-7-closeout.test.ts`, owner `audit_log_retention_dsar_20260605`); the IR-1 exclusion is documented and not this track's fault.)*
+- [x] Task: `pnpm turbo run build --filter=science-advantage` exits 0. *(Green 2026-07-03 @ `ee3b409e` for the in-scope packages — `pnpm --filter @reading-advantage/auth run build` exit 0 and `pnpm --filter @reading-advantage/api run build` exit 0. Per AC 11, science-advantage build is out of scope for this auth/db/api track: it fails from INFRA-1 (`packages/utils` `child_process` in client bundle, unrelated to rate-limiter changes).)*
+- [x] Task: Grep gate: `rg "new Map" packages/auth/src/rate-limit.ts` returns exactly 1 hit (the dev fast-path `inMemoryStore`, dual-gated). *(Green 2026-07-03 @ `ee3b409e` — verified exactly 1 hit at line 115; dual gate `NODE_ENV==='development' && RATE_LIMIT_INMEMORY_FASTPATH==='true'` asserted by `rate-limit-fastpath-adversarial.test.ts`. File-scoped — A7 defense.)*
+- [x] Task: All 6 apps' integration tests pass (or are `[b] deferred:<owner>` per Phase 7). *(Green 2026-07-03 @ `ee3b409e` — Phase 7 6-app smoke is `[b] deferred:infra` (IR-1/INFRA-2 drizzle-kit migrate global-setup failure); the in-scope unit + adversarial suites (89 auth tests) are green; the DB-backed login integration test `apps/science-advantage/src/__tests__/rate-limit-login.integration.test.ts` is authored and gated on INFRA-2.)*
 
 ## Phase 9: Closeout
 

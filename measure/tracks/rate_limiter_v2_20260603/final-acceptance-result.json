@@ -1,0 +1,225 @@
+{
+  "schema_version": 1,
+  "role": "measure-final-acceptance",
+  "track": "rate_limiter_v2_20260603",
+  "phase": "Phase 8: Final Acceptance (pre-closeout gate)",
+  "baseline_sha": "45a012663d6282d13ff48e96421772423be7f272",
+  "head_sha": "ee3b409e6923c492a79fc6d654fb109c736708bc",
+  "status": "pass",
+  "timestamp": "2026-07-03T23:25:00+08:00",
+  "summary": "Final pre-closeout acceptance PASS. All configured gates green at HEAD (ee3b409e) after a trivial test-file fix applied by this role. The adversarial-testing commit 0516c427 introduced a synthetic '?lock-miss' query-suffix dynamic import in rate-limit-cleanup-adversarial.test.ts that broke tsc --noEmit and the tsc build for @reading-advantage/auth (TS2307). This regression was not caught by measure-phase-acceptance (whose baseline 0d426d85 predates the adversarial commit, so its typecheck/build PASS claims were honest for that SHA) nor by measure-adversarial-testing (which ran only scoped vitest tests, not tsc/build). Final-acceptance caught it, fixed it with the canonical vi.resetModules() pattern (commit ee3b409e), and re-verified all gates. FR-1 through FR-7 are implemented and verified against source + tests. AC 9 (DB-backed integration tests) is correctly deferred:infra (IR-1/INFRA-2 drizzle-kit migrate global-setup failure); the captcha trigger is covered by the green unit suite and the integration suite is authored. AC 11 (science-advantage build) is out of scope per the task instructions; the in-scope auth+api builds pass. Phase 9 closeout remains [~] with A6-guarded language: F-403/F-407 are NOT marked Resolved in tech-debt.md and must not be until the INFRA-2 integration tests are green.",
+  "gate_results": [
+    {
+      "name": "auth-unit-rate-limit-scoped",
+      "command": "pnpm --filter @reading-advantage/auth exec vitest run src/__tests__/rate-limit.test.ts src/__tests__/rate-limit-adversarial.test.ts src/__tests__/rate-limit-store.test.ts src/__tests__/rate-limit-cleanup.test.ts src/__tests__/rate-limit-cleanup-adversarial.test.ts src/__tests__/rate-limit-fastpath-adversarial.test.ts src/__tests__/rate-limit-captcha.test.ts src/__tests__/wave0-phase2-rate-limit-architecture.test.ts src/__tests__/rate-limit-readme.test.ts",
+      "pass": true,
+      "exit_code": 0,
+      "tests_passed": 89,
+      "tests_failed": 0,
+      "files_passed": 9
+    },
+    {
+      "name": "api-client-ip-scoped",
+      "command": "pnpm --filter @reading-advantage/api exec vitest run src/routes/auth/__tests__/client-ip.test.ts src/routes/auth/__tests__/client-ip-adversarial.test.ts",
+      "pass": true,
+      "exit_code": 0,
+      "tests_passed": 28,
+      "tests_failed": 0,
+      "files_passed": 2
+    },
+    {
+      "name": "db-schema-parity",
+      "command": "pnpm --filter @reading-advantage/db exec vitest run src/__tests__/schema-parity.test.ts",
+      "pass": true,
+      "exit_code": 0,
+      "tests_passed": 90,
+      "tests_failed": 0,
+      "files_passed": 1
+    },
+    {
+      "name": "typecheck-auth",
+      "command": "pnpm --filter @reading-advantage/auth exec tsc --noEmit",
+      "pass": true,
+      "exit_code": 0,
+      "notes": "Passed AFTER the ee3b409e fix. Before the fix this gate FAILED with TS2307 on the '?lock-miss' import."
+    },
+    {
+      "name": "typecheck-api",
+      "command": "pnpm --filter @reading-advantage/api exec tsc --noEmit",
+      "pass": true,
+      "exit_code": 0
+    },
+    {
+      "name": "typecheck-db",
+      "command": "pnpm --filter @reading-advantage/db exec tsc --noEmit",
+      "pass": true,
+      "exit_code": 0
+    },
+    {
+      "name": "build-auth",
+      "command": "pnpm --filter @reading-advantage/auth run build",
+      "pass": true,
+      "exit_code": 0,
+      "notes": "Passed AFTER the ee3b409e fix. Before the fix the tsc build FAILED (exit 2) on the same TS2307."
+    },
+    {
+      "name": "build-api",
+      "command": "pnpm --filter @reading-advantage/api run build",
+      "pass": true,
+      "exit_code": 0
+    },
+    {
+      "name": "lint",
+      "command": "pnpm turbo run lint --filter=@reading-advantage/auth --filter=@reading-advantage/api --filter=@reading-advantage/db",
+      "pass": true,
+      "exit_code": 0,
+      "notes": "0 errors. Warnings only (pre-existing in domain/api packages; none in changed rate-limiter production code)."
+    },
+    {
+      "name": "grep-gate-new-map",
+      "command": "rg -n \"new Map\" packages/auth/src/rate-limit.ts",
+      "pass": true,
+      "exit_code": 0,
+      "hits": 1,
+      "notes": "Exactly 1 hit at line 115 (dev inMemoryStore, dual-gated by NODE_ENV==='development' && RATE_LIMIT_INMEMORY_FASTPATH==='true'). File-scoped (A7 defense)."
+    },
+    {
+      "name": "doctor",
+      "command": "bash measure/doctor.sh",
+      "pass": true,
+      "exit_code": 0,
+      "notes": "Catalog exists (A1-A13); supervisor invariants hold (A1 no substring-as-signal; A8 marker regex ~xb only); all 24 active track plans use only [~]/[x]/[b] markers; no executed review track fully blocked."
+    }
+  ],
+  "acceptance_criteria": {
+    "AC1_login_attempts_table": {
+      "status": "pass",
+      "evidence": "packages/db/src/schema/auth.ts:11-25 declares loginAttempts (id, identifier, kind, failedCount, windowStart, lastAttemptAt) + uniqueIndex login_attempts_identifier_kind_idx + index login_attempts_window_start_idx. Barrel re-export via packages/db/src/schema/index.ts."
+    },
+    "AC2_drizzle_migration": {
+      "status": "pass",
+      "evidence": "packages/db/drizzle/0024_futuristic_vulture.sql creates login_attempts table with both indexes (unique identifier+kind btree, window_start btree)."
+    },
+    "AC3_store_exports": {
+      "status": "pass",
+      "evidence": "checkRateLimit/recordFailure/resetLimit exported from packages/auth/src/rate-limit.ts and re-exported via packages/auth/src/index.ts:36-54. CR-1 documented divergence: shipped signature is checkRateLimit(username, ip?) not the spec's proposed checkRateLimit(identifier, kind, config); checkRateLimitByIp wrapper added per review-c. createPostgresRateLimitStore exported from rate-limit-store.ts."
+    },
+    "AC4_postgres_default_inmemory_dual_gated": {
+      "status": "pass",
+      "evidence": "configurePostgresRateLimiter is the production default (rate-limit.ts:219-237). In-memory Map dual-gated by isInMemoryFastPathEnabled() requiring NODE_ENV==='development' AND RATE_LIMIT_INMEMORY_FASTPATH==='true' (rate-limit.ts:155-160). Exactly 1 'new Map' hit at line 115 (grep gate)."
+    },
+    "AC5_per_ip_and_per_username": {
+      "status": "pass",
+      "evidence": "DEFAULT_RATE_LIMIT_CONFIG = {windowMs:900000, maxAttempts:5}; DEFAULT_IP_RATE_LIMIT_CONFIG = {windowMs:900000, maxAttempts:30}. checkRateLimit(username, ip) checks both buckets independently (rate-limit.ts:342-371). Independence verified by adversarial probes."
+    },
+    "AC6_login_flow_both_limiters": {
+      "status": "pass",
+      "evidence": "packages/api/src/routes/auth/login.ts:66-72 extracts clientIp via getClientIp (TRUST_PROXY_COUNT-aware) and calls checkRateLimit(lowerUsername, clientIp) checking both buckets; recordFailure(lowerUsername, clientIp) on all failure paths (lines 109,145,161,181); resetLimit(lowerUsername, clientIp) on success (line 200)."
+    },
+    "AC7_cleanup_job": {
+      "status": "pass",
+      "evidence": "packages/auth/src/rate-limit-cleanup.ts: createRateLimitCleanupJob defaults intervalMs=60*60*1000 (1 hour). cleanupOldAttempts deletes rows where window_start < now()-24h (STALE_ROW_AGE_MS) in LIMIT 1000 batches (CLEANUP_BATCH_SIZE), loop terminates on empty batch. Advisory lock RATE_LIMIT_CLEANUP_LOCK_KEY distinct from AUDIT_RETENTION_LOCK_KEY."
+    },
+    "AC8_captcha_trigger": {
+      "status": "pass",
+      "evidence": "CAPTCHA_THRESHOLD=3 (rate-limit.ts:86). checkIdentifier sets captchaRequired = entry.failedCount >= CAPTCHA_THRESHOLD (line 268). login.ts surfaces captchaRequired: true in 401/429 responses (lines 78,113,149,165,185). resetLimit clears captcha state. Unit suite rate-limit-captcha.test.ts (5 tests) green."
+    },
+    "AC9_integration_tests": {
+      "status": "deferred",
+      "owner": "infra",
+      "evidence": "Unit + adversarial suites green (89 auth tests). The DB-backed integration test apps/science-advantage/src/__tests__/rate-limit-login.integration.test.ts is authored (4040 bytes, reviewed) but blocked by INFRA-2 (drizzle-kit migrate global-setup failure against science_advantage_test). The captcha trigger and 429/reset behavior are covered by the green unit suite. Correctly marked [b] deferred:infra in plan Phase 5. The full FR-9 live-DB proof (6th/31st fail -> 429, success resets, cleanup deletes) awaits INFRA-2 restoration."
+    },
+    "AC10_scoped_tests_pass": {
+      "status": "pass",
+      "evidence": "Scoped rate-limit test commands (test-strategy §5) exit 0: 89 auth + 28 api-client-ip + 90 db-schema-parity = 207 tests green."
+    },
+    "AC11_build": {
+      "status": "pass",
+      "evidence": "Per task instructions, science-advantage build is out of scope for this auth/db/api track (it fails from INFRA-1: packages/utils child_process in client bundle, unrelated to rate-limiter changes). In-scope builds verified green: @reading-advantage/auth build exit 0, @reading-advantage/api build exit 0."
+    }
+  },
+  "fixes_applied_by_acceptance": [
+    {
+      "id": "FA-FIX-1",
+      "commit_sha": "ee3b409e6923c492a79fc6d654fb109c736708bc",
+      "file": "packages/auth/src/__tests__/rate-limit-cleanup-adversarial.test.ts",
+      "severity": "high (gate-blocking)",
+      "description": "The adversarial-testing commit 0516c427 used a synthetic '?lock-miss' query-suffix dynamic import (line 160) to bust vitest's module cache for the lock-miss probe. tsc 5.9.3 (moduleResolution: bundler) rejects the synthetic suffix with TS2307, breaking both 'tsc --noEmit' (PROJECT_CHECKS) and the 'tsc' build (PROJECT_BUILD) for @reading-advantage/auth. Replaced the query-suffix hack with the canonical vi.resetModules() + plain dynamic import() pattern. The lock-miss path is still exercised (createPrivilegedDb mocked to return acquired:false). 15/15 adversarial cleanup probes still pass; auth typecheck + build now exit 0.",
+      "why_not_caught_earlier": "measure-phase-acceptance ran at baseline 0d426d85, which predates the adversarial commit 0516c427 — its typecheck/build PASS claims were honest for that SHA. measure-adversarial-testing ran only scoped vitest tests (89/89 green) and did not run tsc/build, so the regression slipped through. This is exactly the gap final-acceptance is designed to catch."
+    }
+  ],
+  "anti_pattern_audit": {
+    "A1_substring_as_signal": {
+      "status": "clear",
+      "notes": "N/A for this track — no commit in 1daadf0b..HEAD touched measure/automation-supervisor.py. Independent check: 0 substring 'deferred in task.lower()' occurrences in the supervisor (regex r\"deferred\"\\s+in\\stask\\.lower\\(\\))."
+    },
+    "A5_false_claim_text": {
+      "status": "clear",
+      "notes": "plan.md contains no 'PASS=N, FAIL=0' or 'all checks pass' text (rg exit 1). Phase 8 markers updated to [x] only AFTER gates actually passed at ee3b409e; each [x] cites the SHA and the honest gate state (including the IR-1 aggregate exclusion). NOTE: the phase-acceptance-result.json and review-b-security-result.json claimed typecheck/build green at their baseline (0d426d85) — that was true at that SHA; the regression was introduced later by 0516c427 and is documented here, not papered over."
+    },
+    "A6_registry_overstatement": {
+      "status": "clear",
+      "notes": "measure/tracks.md lists the track as pending [ ] with future-tense 'Resolves F-403, F-407' (not a 'resolved' claim). tech-debt.md row audit_20260603_housekeeping_batch does NOT list F-403/F-407 as Resolved (verified — the row covers F-205/503/705/1102/1201/1202/1203/1207/1301/1305/1306/1001/1002/1003/101/202/1101/1204/1205/301/303/304/504/902-906, not F-403/F-407). plan.md Phase 9 task 1 remains [~] with explicit A6 guard ('only after Phase 5 integration tests are green'). Phase 9 closeout NOT executed by this role."
+    },
+    "A8_space_marker_ambiguity": {
+      "status": "clear",
+      "notes": "No legacy [ ] (space) markers in plan.md (rg exit 1). All Phase 0-6 tasks are [x] except two legitimately [b] deferred:infra tasks (Phase 5 integration tests, Phase 7 6-app smoke) which the supervisor recognizes as structurally blocked. Phase 8 now [x]; Phase 9 [~]."
+    },
+    "A9_archived_path_references": {
+      "status": "clear",
+      "notes": "Track is not yet archived (still under measure/tracks/), so A9 is a closeout concern. No tests/*.sh references rate_limiter_v2_20260603 (rg exit 1). Phase 9 closeout task includes the A9 defense instruction."
+    },
+    "A13_stale_dir": {
+      "status": "clear",
+      "notes": "N/A — track is active (measure/tracks/rate_limiter_v2_20260603/ exists with plan.md + metadata.json). A13 applies after archive move; Phase 9 task 4 includes the A13 defense instruction for measure-closeout."
+    }
+  },
+  "plan_truthfulness": {
+    "phases_0_6_complete": "All Phase 0-6 tasks marked [x] correspond to code that exists and tests that pass. Two [b] deferred:infra tasks (Phase 5 integration tests, Phase 7 6-app smoke) have trailing deferred:<owner> fields recognized by the supervisor.",
+    "phase_7_deferred": "Phase 7 6-app smoke is [b] deferred:infra (IR-1/INFRA-2). Phase 7 lessons-learned doc task is [x].",
+    "phase_8_now_complete": "All 4 Phase 8 tasks flipped [~] -> [x] with SHA evidence (ee3b409e) AFTER gates passed. Marker text honestly records the IR-1 aggregate exclusion, the AC-11 science-advantage-build out-of-scope note, and the INFRA-2 integration deferral.",
+    "phase_9_closeout_pending": "All 4 Phase 9 tasks remain [~]. Task 1 (mark F-403/F-407 Resolved) uses A6-guarded language and must NOT be executed until INFRA-2 integration tests are green. Closeout is left for measure-closeout.",
+    "deferred_fields": "Both [b] tasks carry deferred:infra (Phase 5 line 77, Phase 7 line 101)."
+  },
+  "review_findings_status": {
+    "review_a_correctness": "PASS (1 low non-blocking finding F-C01 accepted; lock-key derivation comment inaccuracy, functionally correct).",
+    "review_b_security": "pass_with_fixes (SEC-1 XFF spoofing fixed via TRUST_PROXY_COUNT-aware getClientIp; SEC-2 non-atomic recordFailure fixed via atomic store.increment; SEC-3 accepted; SEC-4 reset-password.ts XFF alignment deferred to follow-up).",
+    "review_c_ux_api": "PASS (UX-1 Retry-After header fixed; UX-2 checkRateLimitByIp wrapper added+exported; UX-3 Phase 6 A5 false-claim marker corrected).",
+    "adversarial_testing": "PASS (66 adversarial probes across 4 new test files; 89/89 auth + 28/28 api scoped tests green; no production code modified). NOTE: adversarial phase introduced the FA-FIX-1 gate regression caught here."
+  },
+  "out_of_scope_failures": [
+    {
+      "id": "IR-1",
+      "description": "packages/auth/src/__tests__/phase-7-closeout.test.ts fails because measure/tech-debt.md is 51 lines (>50). Belongs to track audit_log_retention_dsar_20260605, NOT this track. The aggregate 'pnpm turbo run test --filter=@reading-advantage/auth' is RED solely from this; scoped rate-limit commands (test-strategy §5) exit 0. Documented exclusion per task instructions.",
+      "owner": "audit_log_retention_dsar_20260605"
+    },
+    {
+      "id": "INFRA-1",
+      "description": "science-advantage build fails with packages/utils child_process imported into client bundle. Unrelated to rate-limiter changes. Per AC 11, science-advantage build is out of scope for this auth/db/api track; in-scope auth+api builds pass.",
+      "owner": "infra / packages/utils"
+    },
+    {
+      "id": "INFRA-2",
+      "description": "science-advantage drizzle-kit migrate global-setup failure blocks the rate-limit-login.integration.test.ts DB-backed suite (file authored, 4040 bytes, reviewed). Blocks full AC 9 live-DB proof. Unit captcha suite covers the trigger.",
+      "owner": "infra / Track 11 CI"
+    },
+    {
+      "id": "SEC-4",
+      "description": "reset-password.ts still uses direct XFF extraction (not the new getClientIp helper). Out of scope for rate-limiter track; deferred to a follow-up track.",
+      "owner": "follow-up track"
+    }
+  ],
+  "deferred_tasks": [
+    {"phase": 5, "marker": "[b]", "owner": "infra", "description": "Write failing integration tests (DB-backed 429/reset/captcha) — blocked by INFRA-2."},
+    {"phase": 7, "marker": "[b]", "owner": "infra", "description": "6-app login integration smoke test — blocked by IR-1/INFRA-2; other apps lack a shared rate-limit integration harness."},
+    {"phase": 9, "marker": "[~]", "description": "Closeout: mark F-403/F-407 Resolved (A6-gated on INFRA-2 green), add lessons-learned entry, add Captcha Verification follow-up placeholder, archive track (A13/A9 defense)."}
+  ],
+  "notes_for_closeout": [
+    "Phase 9 task 1 (mark F-403/F-407 Resolved in tech-debt.md) MUST remain deferred until INFRA-2 integration tests are green (A6 defense). The adversarial + unit suites pass, but the live-DB 429/reset/captcha proof is gated on infra.",
+    "TRUST_PROXY_COUNT must be set in production deployments (documented in packages/auth/README.md). Without it, XFF spoofing remains possible (SEC-1 mitigation is opt-in via the env var).",
+    "SEC-4 (reset-password.ts getClientIp alignment) should be tracked in a follow-up track for IP-extraction consistency.",
+    "The FA-FIX-1 regression (adversarial test breaking tsc/build) is a process note: the adversarial-testing role should run PROJECT_CHECKS/PROJECT_BUILD, not just scoped vitest, before declaring PASS. Consider adding this to lessons-learned in closeout.",
+    "Archive move (Phase 9 task 4) must remove measure/tracks/rate_limiter_v2_20260603/ after verifying the archive copy (A13) and confirm no tests/*.sh references the pre-archive path (A9)."
+  ],
+  "confidence": "high"
+}

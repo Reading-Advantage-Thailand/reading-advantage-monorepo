@@ -1,0 +1,183 @@
+{
+  "schema_version": 1,
+  "role": "measure-phase-acceptance",
+  "track": "rate_limiter_v2_20260603",
+  "phase": "Phases 0-6 (Schema, Store, Refactor, Cleanup, Login wiring, Captcha, Exports/README)",
+  "baseline_sha": "0d426d8515fdd1c1ee762566784c1bd4925a93d8",
+  "head_sha": "0d426d8515fdd1c1ee762566784c1bd4925a93d8",
+  "status": "pass",
+  "timestamp": "2026-07-03T22:42:00+08:00",
+  "summary": "Phases 0-6 of the Postgres-Backed Rate Limiter v2 track are complete and meet all spec/test-strategy acceptance criteria. FR-1 through FR-7 are verified against implementation, tests, and commits. All scoped gates (unit tests, client-ip tests, schema parity, typecheck, build, lint, grep gate) are green. No `any` types in new production code. All three review passes (a/b/c) are PASS or pass_with_fixes with blocking findings resolved; deferred items (SEC-4 reset-password.ts XFF alignment, IR-1/INFRA-2 integration tests) are out of scope with named owners. Anti-patterns A1, A3, A4, A5, A6, A7, A8 all verified clear.",
+  "spec_verification": {
+    "FR-1_login_attempts_table": {
+      "status": "pass",
+      "evidence": "packages/db/src/schema/auth.ts:11-25 declares loginAttempts with columns id, identifier, kind, failedCount, windowStart, lastAttemptAt + uniqueIndex login_attempts_identifier_kind_idx + index login_attempts_window_start_idx. Barrel re-export via packages/db/src/schema/index.ts:2 (export * from ./auth.js)."
+    },
+    "FR-2_drizzle_migration": {
+      "status": "pass",
+      "evidence": "packages/db/drizzle/0024_futuristic_vulture.sql creates login_attempts table with both indexes (unique identifier+kind btree, window_start btree)."
+    },
+    "FR-3_rate_limit_store": {
+      "status": "pass",
+      "evidence": "packages/auth/src/rate-limit-store.ts createPostgresRateLimitStore implements get/set/delete/increment using SELECT ... FOR UPDATE (.for('update')) + onConflictDoUpdate. Note CR-1: shipped API is createPostgresRateLimitStore(db, config) returning a RateLimitStore; the checkRateLimit/recordFailure/resetLimit functions are exported from rate-limit.ts (documented contract divergence from spec's proposed signatures)."
+    },
+    "FR-4_rate_limit_refactor": {
+      "status": "pass",
+      "evidence": "packages/auth/src/rate-limit.ts: configurePostgresRateLimiter is the production default (line 219-237). In-memory Map dual-gated behind isInMemoryFastPathEnabled() requiring NODE_ENV==='development' AND RATE_LIMIT_INMEMORY_FASTPATH==='true' (line 155-160). checkRateLimitByIp exported (line 384-392, added by review-c fix). Grep gate: exactly 1 'new Map' hit at line 115 (the dev inMemoryStore)."
+    },
+    "FR-5_cleanup_job": {
+      "status": "pass",
+      "evidence": "packages/auth/src/rate-limit-cleanup.ts: cleanupOldAttempts deletes rows with window_start < now()-24h in LIMIT 1000 batches (CLEANUP_BATCH_SIZE=1000), loop terminates on empty batch. RATE_LIMIT_CLEANUP_LOCK_KEY (0x7261_7465_6c69_6d63n) distinct from AUDIT_RETENTION_LOCK_KEY (verified by test). createRateLimitCleanupJob factory with idempotent start/stop, defaults intervalMs=1h."
+    },
+    "FR-6_login_wiring": {
+      "status": "pass",
+      "evidence": "packages/api/src/routes/auth/login.ts: getClientIp (TRUST_PROXY_COUNT-aware, packages/api/src/routes/auth/client-ip.ts) extracts IP; checkRateLimit(lowerUsername, clientIp) checks both buckets; 429 response includes Retry-After header (line 82) + captchaRequired (line 78); recordFailure uses atomic store.increment; resetLimit on success (line 200). captchaRequired surfaced in all 401/429 response paths."
+    },
+    "FR-7_captcha_trigger": {
+      "status": "pass",
+      "evidence": "packages/auth/src/rate-limit.ts: CAPTCHA_THRESHOLD=3 (line 86); checkIdentifier sets captchaRequired = entry.failedCount >= CAPTCHA_THRESHOLD (line 268). Captcha test verifies at-threshold (toBe true), below-threshold (not.toBe true), and IP-independence refutations."
+    }
+  },
+  "gate_results": [
+    {
+      "name": "auth-unit-rate-limit",
+      "command": "pnpm --filter @reading-advantage/auth exec vitest run src/__tests__/rate-limit-cleanup.test.ts src/__tests__/rate-limit-captcha.test.ts src/__tests__/rate-limit-readme.test.ts src/__tests__/rate-limit.test.ts src/__tests__/rate-limit-store.test.ts src/__tests__/wave0-phase2-rate-limit-architecture.test.ts",
+      "pass": true,
+      "exit_code": 0,
+      "tests_passed": 42,
+      "tests_failed": 0,
+      "files_passed": 6
+    },
+    {
+      "name": "api-client-ip",
+      "command": "pnpm --filter @reading-advantage/api exec vitest run src/routes/auth/__tests__/client-ip.test.ts",
+      "pass": true,
+      "exit_code": 0,
+      "tests_passed": 9,
+      "tests_failed": 0,
+      "files_passed": 1
+    },
+    {
+      "name": "db-schema-parity",
+      "command": "pnpm --filter @reading-advantage/db exec vitest run src/__tests__/schema-parity.test.ts",
+      "pass": true,
+      "exit_code": 0,
+      "tests_passed": 90,
+      "tests_failed": 0,
+      "files_passed": 1
+    },
+    {
+      "name": "typecheck-auth",
+      "command": "pnpm --filter @reading-advantage/auth exec tsc --noEmit",
+      "pass": true,
+      "exit_code": 0
+    },
+    {
+      "name": "typecheck-api",
+      "command": "pnpm --filter @reading-advantage/api exec tsc --noEmit",
+      "pass": true,
+      "exit_code": 0
+    },
+    {
+      "name": "typecheck-db",
+      "command": "pnpm --filter @reading-advantage/db exec tsc --noEmit",
+      "pass": true,
+      "exit_code": 0
+    },
+    {
+      "name": "build-auth",
+      "command": "pnpm --filter @reading-advantage/auth run build",
+      "pass": true,
+      "exit_code": 0
+    },
+    {
+      "name": "build-api",
+      "command": "pnpm --filter @reading-advantage/api run build",
+      "pass": true,
+      "exit_code": 0
+    },
+    {
+      "name": "lint",
+      "command": "pnpm turbo run lint --filter=@reading-advantage/auth --filter=@reading-advantage/api --filter=@reading-advantage/db",
+      "pass": true,
+      "exit_code": 0,
+      "notes": "0 errors. Warnings only (pre-existing, none in changed production code)."
+    },
+    {
+      "name": "grep-gate-new-map",
+      "command": "rg \"new Map\" packages/auth/src/rate-limit.ts",
+      "pass": true,
+      "exit_code": 0,
+      "hits": 1,
+      "notes": "Exactly 1 hit at line 115 (dev inMemoryStore, dual-gated). File-scoped (A7 defense)."
+    },
+    {
+      "name": "no-any-in-new-code",
+      "command": "rg -n \": any\\b|<any>|as any\\b\" packages/auth/src/rate-limit.ts packages/auth/src/rate-limit-store.ts packages/auth/src/rate-limit-cleanup.ts packages/api/src/routes/auth/client-ip.ts packages/api/src/routes/auth/login.ts",
+      "pass": true,
+      "exit_code": 1,
+      "notes": "Zero matches (rg exit 1 = no matches). No any types in new production code."
+    }
+  ],
+  "anti_pattern_audit": {
+    "A1_substring_as_signal": "CLEAR — measure/automation-supervisor.py task regex is r\"^- \\[([~xb])\\] (.+)\" (matches [~xb], not legacy [ ~x]); is_task_structurally_blocked helper (line 634) recognizes status=='b' and trailing deferred:<owner> via regex \\bdeferred:[\\w.-]+; does NOT use substring 'deferred' in task.lower().",
+    "A3_digit_only_count": "CLEAR — rate-limit-cleanup.test.ts uses labeled integer assertions (toEqual({deleted:100}), toEqual({deleted:2500}), toEqual({deleted:0}), toHaveBeenCalledTimes(2/4)); schema-parity.test.ts asserts exact labeled column set (id, identifier, kind, failedCount, windowStart, lastAttemptAt) via arrayContaining + toHaveLength, not digit/substring.",
+    "A4_vacuous_pass": "CLEAR — rate-limit-captcha.test.ts has below-threshold refutation (captchaRequired not.toBe true at <3 failures) and at-threshold assertion (toBe true at >=3); rate-limit-cleanup.test.ts refutes 'cleanup nukes fresh rows' via deleted:0 when no stale rows + idempotent second-run deleted:0. Plan Phases 0-6 have >=1 [x] task each (not vacuous all-[~]).",
+    "A5_false_claim_text": "CLEAR — plan claims match reality: schema-parity 90/90 (verified 90 pass), rate-limit.test.ts 8/8 (verified 8 pass), cleanup 12/12 (verified 12 pass), captcha 5/5 (verified 5 pass), readme 5/5 (verified 5 pass). No 'PASS=N, FAIL=0' or 'all checks pass' text in plan while IR-1 is red. review-c fixed the prior A5 false-claim marker on Phase 6 Task 1 (checkRateLimitByIp).",
+    "A6_registry_overstatement": "CLEAR — measure/tracks.md lists rate_limiter_v2 as pending [ ] with future-tense 'Resolves F-403, F-407' (not a 'resolved' claim). plan.md Phase 9 explicitly defers marking F-403/F-407 'Resolved' until Phase 5 integration tests are green. No premature 'resolved' claims.",
+    "A7_over_broad_filter": "CLEAR — grep gate is file-scoped (rg \"new Map\" packages/auth/src/rate-limit.ts), not a bare repo-wide keyword sweep. Test files named by exact path, not keyword filter.",
+    "A8_space_marker_ambiguity": "CLEAR — no legacy [ ] (space) markers in plan.md. All Phase 0-6 tasks are [x] except two legitimately [b] blocked tasks (Phase 5 integration tests deferred:infra, Phase 7 6-app smoke deferred:infra) which the supervisor recognizes as structurally blocked."
+  },
+  "review_findings_status": {
+    "review_a_correctness": {
+      "result": "PASS",
+      "blocking_findings": [],
+      "nonblocking_findings": [
+        {"id": "F-C01", "severity": "low", "status": "accepted (fix_required=false)", "description": "RATE_LIMIT_CLEANUP_LOCK_KEY derivation comment inaccuracy — functionally correct (unique, non-colliding, verified by test)."}
+      ]
+    },
+    "review_b_security": {
+      "result": "pass_with_fixes",
+      "blocking_findings": [],
+      "fixed_findings": [
+        {"id": "SEC-1", "severity": "high", "status": "fixed", "description": "XFF spoofing — added TRUST_PROXY_COUNT-aware getClientIp (packages/api/src/routes/auth/client-ip.ts)."},
+        {"id": "SEC-2", "severity": "high", "status": "fixed", "description": "Non-atomic recordFailure — added atomic RateLimitStore.increment for Postgres (single INSERT...ON CONFLICT DO UPDATE with CASE) and in-memory stores."}
+      ],
+      "accepted_findings": [{"id": "SEC-3", "severity": "medium", "status": "accepted", "description": "Cleanup advisory lock held for full multi-batch run — bounded by 24h retention window."}],
+      "deferred_findings": [{"id": "SEC-4", "severity": "low", "status": "deferred", "owner": "follow-up track", "description": "reset-password.ts still uses direct XFF extraction (out of scope for rate-limiter track)."}]
+    },
+    "review_c_ux_api": {
+      "result": "pass",
+      "blocking_findings": [],
+      "fixed_findings": [
+        {"id": "UX-1", "severity": "medium", "status": "fixed", "description": "429 response now includes Retry-After HTTP header."},
+        {"id": "UX-2", "severity": "medium", "status": "fixed", "description": "checkRateLimitByIp wrapper added + exported."},
+        {"id": "UX-3", "severity": "low", "status": "fixed", "description": "Phase 6 Task 1 [x] marker A5 false-claim corrected."}
+      ]
+    }
+  },
+  "plan_marker_audit": {
+    "phases_0_6_completion": "All Phase 0-6 tasks marked [x] except two legitimately [b] deferred:infra tasks (Phase 5 integration tests, Phase 7 6-app smoke) — both real external gates (IR-1 drizzle-kit migrate global-setup failure) recognized by supervisor as structurally blocked.",
+    "no_space_markers": true,
+    "no_stale_red": "Phase 8/9 tasks remain [~] (final acceptance + closeout) — not stale intentional-red."
+  },
+  "out_of_scope_failures": [
+    {
+      "id": "IR-1",
+      "description": "packages/auth/src/__tests__/phase-7-closeout.test.ts fails (tech-debt.md >50 lines). Belongs to track audit_log_retention_dsar_20260605, NOT this track. Not included in scoped test runs.",
+      "owner": "audit_log_retention_dsar_20260605"
+    },
+    {
+      "id": "INFRA-2",
+      "description": "science-advantage drizzle-kit migrate global-setup failure blocks the rate-limit-login.integration.test.ts integration suite (file authored, 4040 bytes, reviewed). Unit captcha suite covers the trigger; integration suite will run once infra is restored.",
+      "owner": "infra / Track 11 CI"
+    }
+  ],
+  "fixes_applied_by_acceptance": [],
+  "notes_for_closeout": [
+    "Phase 9 closeout must NOT mark F-403/F-407 'Resolved' in tech-debt.md until the IR-1/INFRA-2 integration tests are green (A6 defense).",
+    "SEC-4 (reset-password.ts getClientIp alignment) should be tracked in a follow-up.",
+    "TRUST_PROXY_COUNT must be set in production deployments (documented in README)."
+  ],
+  "confidence": "high"
+}
