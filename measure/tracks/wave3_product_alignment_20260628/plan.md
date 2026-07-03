@@ -23,14 +23,14 @@
 
 ## Phase 2: Marketing App Public Workflow Security
 
-- [ ] Task: Write Red tests proving settings/video/campaign API routes reject unauthenticated users.
+- [~] Task: Write Red tests proving settings/video/campaign API routes reject unauthenticated users.
   - Evidence refs: Marketing LR-marketing-app-003-001/003/005, LR-004-002; Product Risk Register Marketing public API exposure.
 - [ ] Task: Add auth/role guards and tenant/global policy documentation for marketing routes.
-- [ ] Task: Write Red tests for Zod validation on settings, campaigns, topics, and script generation inputs.
+- [~] Task: Write Red tests for Zod validation on settings, campaigns, topics, and script generation inputs.
   - Evidence refs: Marketing LR-004-001, LR-marketing-app-003-004/006; MR-H06.
-- [ ] Task: Route AI calls through the shared AI adapter path approved by Wave 2.
-- [ ] Task: Prevent API key/token leakage in any unauthenticated response.
-- [ ] Task: Run marketing targeted tests/build/lint/type.
+- [~] Task: Route AI calls through the shared AI adapter path approved by Wave 2.
+- [~] Task: Prevent API key/token leakage in any unauthenticated response.
+- [~] Task: Run marketing targeted tests/build/lint/type.
 
 ## Phase 3: Advantage Games Completion and Scoring Contract
 
