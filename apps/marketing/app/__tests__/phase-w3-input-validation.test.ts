@@ -195,7 +195,6 @@ const validScriptJson = JSON.stringify([
 
 describe("Phase 2D: Zod schemas exist and reject malformed input", () => {
   it("settingsPostSchema rejects non-object bodies", async () => {
-    // @ts-expect-error Schema module added by Green phase.
     const mod = (await import("../lib/settings-schema.js")) as Record<
       string,
       unknown
@@ -209,7 +208,6 @@ describe("Phase 2D: Zod schemas exist and reject malformed input", () => {
   });
 
   it("createCampaignSchema rejects invalid type/app/name", async () => {
-    // @ts-expect-error Schema module added by Green phase.
     const mod = (await import("../lib/campaign-schema.js")) as Record<
       string,
       unknown
@@ -236,7 +234,6 @@ describe("Phase 2D: Zod schemas exist and reject malformed input", () => {
   });
 
   it("updateCampaignSchema rejects invalid status", async () => {
-    // @ts-expect-error Schema module added by Green phase.
     const mod = (await import("../lib/campaign-schema.js")) as Record<
       string,
       unknown
@@ -250,7 +247,6 @@ describe("Phase 2D: Zod schemas exist and reject malformed input", () => {
   });
 
   it("saveTopicsSchema rejects non-array topics or invalid app", async () => {
-    // @ts-expect-error Schema module added by Green phase.
     const mod = (await import("../lib/topic-schema.js")) as Record<
       string,
       unknown
@@ -272,7 +268,6 @@ describe("Phase 2D: Zod schemas exist and reject malformed input", () => {
   });
 
   it("researchTopicsSchema rejects missing or invalid app", async () => {
-    // @ts-expect-error Schema module added by Green phase.
     const mod = (await import("../lib/topic-schema.js")) as Record<
       string,
       unknown
@@ -288,7 +283,6 @@ describe("Phase 2D: Zod schemas exist and reject malformed input", () => {
   });
 
   it("generateScriptSchema rejects missing or non-string app/topic", async () => {
-    // @ts-expect-error Schema module added by Green phase.
     const mod = (await import("../lib/script-request-schema.js")) as Record<
       string,
       unknown
