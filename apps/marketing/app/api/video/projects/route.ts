@@ -45,7 +45,7 @@ export async function GET(request: Request) {
       .where(eq(videoProjects.campaignId, campaignId));
 
     return NextResponse.json(projects);
-  } catch (_error) {
+  } catch {
     return NextResponse.json(
       { message: "Failed to list video projects" },
       { status: 500 },
@@ -116,7 +116,7 @@ export async function POST(request: Request) {
       .returning();
 
     return NextResponse.json(project);
-  } catch (_error) {
+  } catch {
     return NextResponse.json(
       { message: "Failed to save video project" },
       { status: 500 },
