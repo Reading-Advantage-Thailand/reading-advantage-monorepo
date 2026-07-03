@@ -1,0 +1,119 @@
+{
+  "role": "review-b",
+  "track": "wave3_product_alignment_20260628",
+  "phase": "Phase 2: Marketing App Public Workflow Security",
+  "status": "pass",
+  "baseline_sha": "81d104e2",
+  "head_sha": "289bc349",
+  "commits_reviewed": [
+    "11c81905 - docs(measure): mark wave3 phase 2 green tasks complete",
+    "2a65554b - fix(marketing): close V1/V4/V5 security gaps in Phase 2",
+    "2cab576d - fix(marketing): redirect to login on 401 in workflow UI",
+    "595fefd9 - test(marketing): stabilize suite for Phase 2 gates",
+    "289bc349 - chore(marketing): remove unused catch bindings"
+  ],
+  "tests_run": {
+    "command": "pnpm --filter marketing test",
+    "exit_code": 0,
+    "total_tests": 202,
+    "passed": 202,
+    "failed": 0,
+    "test_files": 16,
+    "test_files_passed": 16,
+    "test_files_failed": 0
+  },
+  "lint": {
+    "command": "pnpm --filter marketing lint",
+    "exit_code": 0,
+    "errors": 0,
+    "warnings": 18
+  },
+  "check_types": {
+    "command": "pnpm --filter marketing check-types",
+    "exit_code": 0,
+    "errors": 0
+  },
+  "files_changed": [
+    "apps/marketing/app/api/settings/test-connection/route.ts",
+    "apps/marketing/app/api/video/projects/route.ts",
+    "apps/marketing/app/lib/campaign-schema.ts",
+    "apps/marketing/app/lib/topic-schema.ts",
+    "apps/marketing/app/lib/script-request-schema.ts",
+    "apps/marketing/app/campaigns/[id]/video/page.tsx",
+    "apps/marketing/app/campaigns/page.tsx",
+    "apps/marketing/app/settings/page.tsx",
+    "apps/marketing/app/__tests__/phase-1-boot-adversarial.test.ts",
+    "apps/marketing/app/__tests__/phase-3-settings.test.ts",
+    "apps/marketing/app/__tests__/phase-3-settings-adversarial.test.ts",
+    "apps/marketing/app/__tests__/phase-7-video-page.test.tsx"
+  ],
+  "security_checklist": {
+    "authentication_bypass": {
+      "status": "pass",
+      "details": "All 8 protected route handlers (settings, campaigns, video/*, test-connection) call requireMarketingSession() as the first statement and return 401 before any DB read/write or AI call. No catch block or error path exposes sensitive data."
+    },
+    "session_validation": {
+      "status": "pass",
+      "details": "requireMarketingSession delegates to requireAuth from @reading-advantage/auth, which drives getSession -> validateSession. The session_token cookie is read and validated before downstream logic."
+    },
+    "secret_leakage": {
+      "status": "pass",
+      "details": "GET /api/settings masks secret-shaped keys (apiKey/secret/token) as '••••' and never decrypts. AI route error handlers redact apiKey. test-connection now requires auth so unauthenticated callers cannot probe keys."
+    },
+    "zod_validation": {
+      "status": "pass",
+      "details": "Campaign, topic, and script-request schemas now use .strict() to reject unknown fields. generateScript bounds topic to 50KB. Settings uses z.record(z.string(), z.string()). All mutating routes validate before side effects."
+    },
+    "sql_orm_injection": {
+      "status": "pass",
+      "details": "All DB access uses parameterized Drizzle queries. No raw string interpolation of user input."
+    },
+    "prompt_injection": {
+      "status": "pass",
+      "details": "generate-script validates app/topic with strict Zod before buildScriptGenerationPrompt. Topic is length-bounded and placed in a delimited slot; unknown fields are rejected by .strict()."
+    },
+    "tenant_owner_scoping": {
+      "status": "pass",
+      "details": "Marketing tables are REFERENTIAL with no schoolId/ownerId. Routes document the honest global-internal policy and gate on auth + role floor. No fabricated fake schoolId scope."
+    },
+    "ai_adapter": {
+      "status": "pass",
+      "details": "generate-script, research-topics, and test-connection route through createAIClient from @reading-advantage/ai. No per-request provider SDK instantiation; API key is injected at adapter construction time."
+    },
+    "error_messages": {
+      "status": "pass",
+      "details": "500 responses use generic messages. video/projects no longer echoes error.message. No stack traces or provider responses containing API keys are returned."
+    },
+    "csrf": {
+      "status": "pass",
+      "details": "All state-mutating POST/PATCH routes require a valid session via session_token cookie before processing."
+    },
+    "logging": {
+      "status": "pass",
+      "details": "No console.log of raw secrets or decrypted values. Health route logs generic error message only."
+    }
+  },
+  "a2_consent_blind_publish_gate": {
+    "status": "not_applicable",
+    "details": "Phase 2 has no draft-to-published transition for named subjects. Campaign status transitions are internal workflow only and do not expose named individuals."
+  },
+  "a6_registry_overstatement": {
+    "status": "pass",
+    "details": "tracks.md does not claim the marketing security vulnerabilities are resolved beyond the adversarial tests. All Phase 2 security tests (phase-w3-*) are green."
+  },
+  "fixes_applied": [
+    "Added auth guard to POST /api/settings/test-connection (was unauthenticated and accepted an apiKey in the request body).",
+    "Added .strict() to campaign, topic, and script-request Zod schemas to reject unknown fields.",
+    "Changed video/projects 500 catch handlers to return generic messages instead of echoing error.message.",
+    "Updated test-connection tests to use authedRequest.",
+    "Stabilized phase-1-boot-adversarial with a shared dbMock singleton and removed vi.importActual to avoid slow postgres driver init.",
+    "Increased timeouts on phase-7-video-page slow interaction tests."
+  ],
+  "known_failures": [],
+  "notes": [
+    "The uncommitted working-tree auth guard on test-connection has now been committed.",
+    "18 lint warnings remain; all are pre-existing and unrelated to Phase 2 security changes.",
+    "All 202 marketing tests pass consistently across multiple full-suite runs."
+  ],
+  "handoff": "Phase 2 Green passes security audit. All gates green: pnpm --filter marketing test (202/202), lint (0 errors), check-types. Review-B closes the remaining test-connection auth gap and hardens schemas/error handling."
+}
