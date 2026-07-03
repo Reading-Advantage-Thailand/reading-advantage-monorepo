@@ -87,6 +87,10 @@ vi.mock("@reading-advantage/ai", async () => {
   };
 });
 
+// Auth mock: marketing routes now require authentication (Phase 2 of
+// wave3_product_alignment_20260628).
+import { authedRequest } from "./helpers/auth-mock";
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const APP_ROOT = resolve(__dirname, "..", "..");
@@ -271,7 +275,7 @@ describe("Phase 5: Topic Research — API integration (task 6: verify, RED)", ()
 
     const { POST } = await import("@/api/video/research-topics/route");
     const response = await POST(
-      new Request("http://localhost/api/video/research-topics", {
+      authedRequest("http://localhost/api/video/research-topics", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ app: "reading-advantage" }),
@@ -302,7 +306,7 @@ describe("Phase 5: Topic Research — API integration (task 6: verify, RED)", ()
 
     const { POST } = await import("@/api/video/research-topics/route");
     const response = await POST(
-      new Request("http://localhost/api/video/research-topics", {
+      authedRequest("http://localhost/api/video/research-topics", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ app: "reading-advantage" }),
@@ -327,7 +331,7 @@ describe("Phase 5: Topic Research — API integration (task 6: verify, RED)", ()
 
     const { POST } = await import("@/api/video/save-topics/route");
     const response = await POST(
-      new Request("http://localhost/api/video/save-topics", {
+      authedRequest("http://localhost/api/video/save-topics", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
@@ -356,7 +360,7 @@ describe("Phase 5: Topic Research — API integration (task 6: verify, RED)", ()
 
     const { POST } = await import("@/api/video/save-topics/route");
     const response = await POST(
-      new Request("http://localhost/api/video/save-topics", {
+      authedRequest("http://localhost/api/video/save-topics", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
@@ -384,7 +388,7 @@ describe("Phase 5: Topic Research — API integration (task 6: verify, RED)", ()
 
     const { POST } = await import("@/api/video/save-topics/route");
     const response = await POST(
-      new Request("http://localhost/api/video/save-topics", {
+      authedRequest("http://localhost/api/video/save-topics", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({

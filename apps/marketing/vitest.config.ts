@@ -21,6 +21,15 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "node",
+    // `fileParallelism: false` runs each test file in a single worker
+    // sequentially. This isolates `vi.mock(...)` factories across files so
+    // a mock from one file cannot leak into another. Without this, the
+    // marketing suite shows intermittent failures in
+    // phase-1-boot-adversarial.test.ts because the `@reading-advantage/db`
+    // mock factory (`vi.importActual(...)` + `db: { execute: vi.fn() }`)
+    // races with parallel test files that mock the same module with a
+    // different shape.
+    fileParallelism: false,
     include: [
       "app/**/*.{test,spec}.{ts,tsx}",
       "app/**/__tests__/**/*.{test,spec}.{ts,tsx}",

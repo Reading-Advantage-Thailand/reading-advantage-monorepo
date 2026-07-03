@@ -49,6 +49,10 @@ vi.mock("@reading-advantage/db", async () => {
   };
 });
 
+// Auth mock: marketing routes now require authentication (Phase 2 of
+// wave3_product_alignment_20260628).
+import { authedRequest } from "./helpers/auth-mock";
+
 interface Scene {
   narration: string;
   imagePrompt: string;
@@ -147,7 +151,7 @@ describe("Phase 8: Project Persistence — GET list", () => {
       GET: (request: Request) => Promise<Response>;
     };
     const response = await GET(
-      new Request(
+      authedRequest(
         `http://localhost/api/video/projects?campaignId=${campaignId}`,
       ),
     );
@@ -181,7 +185,7 @@ describe("Phase 8: Project Persistence — POST create", () => {
 
     const { POST } = await import("@/api/video/projects/route");
     const response = await POST(
-      new Request("http://localhost/api/video/projects", {
+      authedRequest("http://localhost/api/video/projects", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
@@ -212,7 +216,7 @@ describe("Phase 8: Project Persistence — POST create", () => {
 
     const { POST } = await import("@/api/video/projects/route");
     const response = await POST(
-      new Request("http://localhost/api/video/projects", {
+      authedRequest("http://localhost/api/video/projects", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({

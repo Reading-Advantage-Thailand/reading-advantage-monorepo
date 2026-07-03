@@ -58,6 +58,10 @@ vi.mock("next/server", () => ({
   },
 }));
 
+// Auth mock: marketing routes now require authentication (Phase 2 of
+// wave3_product_alignment_20260628).
+import { authedRequest } from "./helpers/auth-mock";
+
 import { GET, POST } from "@/api/video/projects/route";
 
 const TEST_CAMPAIGN_ID = "00000000-0000-0000-0000-000000000001";
@@ -125,7 +129,7 @@ describe("Phase 8: Project Persistence — live CRUD (PGlite)", () => {
     await seedCampaigns();
 
     const response = await POST(
-      new Request("http://localhost/api/video/projects", {
+      authedRequest("http://localhost/api/video/projects", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
@@ -164,7 +168,7 @@ describe("Phase 8: Project Persistence — live CRUD (PGlite)", () => {
     await seedCampaigns();
 
     await POST(
-      new Request("http://localhost/api/video/projects", {
+      authedRequest("http://localhost/api/video/projects", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
@@ -176,7 +180,7 @@ describe("Phase 8: Project Persistence — live CRUD (PGlite)", () => {
     );
 
     await POST(
-      new Request("http://localhost/api/video/projects", {
+      authedRequest("http://localhost/api/video/projects", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
@@ -188,7 +192,7 @@ describe("Phase 8: Project Persistence — live CRUD (PGlite)", () => {
     );
 
     await POST(
-      new Request("http://localhost/api/video/projects", {
+      authedRequest("http://localhost/api/video/projects", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
@@ -200,7 +204,7 @@ describe("Phase 8: Project Persistence — live CRUD (PGlite)", () => {
     );
 
     const response = await GET(
-      new Request(
+      authedRequest(
         `http://localhost/api/video/projects?campaignId=${TEST_CAMPAIGN_ID}`,
       ),
     );
@@ -220,7 +224,7 @@ describe("Phase 8: Project Persistence — live CRUD (PGlite)", () => {
 
   it("returns 400 when campaignId query param is missing on GET", async () => {
     const response = await GET(
-      new Request("http://localhost/api/video/projects"),
+      authedRequest("http://localhost/api/video/projects"),
     );
     expect(response.status).toBe(400);
     const body = (await response.json()) as { message?: string };

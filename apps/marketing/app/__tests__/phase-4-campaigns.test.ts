@@ -68,6 +68,10 @@ vi.mock("@reading-advantage/db", async () => {
   };
 });
 
+// Auth mock: marketing routes now require authentication (Phase 2 of
+// wave3_product_alignment_20260628).
+import { authedRequest } from "./helpers/auth-mock";
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const APP_ROOT = resolve(__dirname, "..", "..");
@@ -163,7 +167,9 @@ describe("Phase 4: Campaign Management — CRUD integration (task 6: create/list
     (db.select as Mock).mockImplementation(selectMock);
 
     const { GET } = await import("@/api/campaigns/route");
-    const response = await GET();
+    const response = await GET(
+      authedRequest("http://localhost/api/campaigns"),
+    );
     expect(response.status).toBe(200);
     const body = (await response.json()) as typeof mockCampaign[];
     expect(body).toHaveLength(1);
@@ -184,7 +190,7 @@ describe("Phase 4: Campaign Management — CRUD integration (task 6: create/list
 
     const { POST } = await import("@/api/campaigns/route");
     const response = await POST(
-      new Request("http://localhost/api/campaigns", {
+      authedRequest("http://localhost/api/campaigns", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify(input),
@@ -210,7 +216,7 @@ describe("Phase 4: Campaign Management — CRUD integration (task 6: create/list
 
     const { GET } = await import("@/api/campaigns/[id]/route");
     const response = await GET(
-      new Request(`http://localhost/api/campaigns/${mockCampaign.id}`),
+      authedRequest(`http://localhost/api/campaigns/${mockCampaign.id}`),
       { params: { id: mockCampaign.id } },
     );
     expect(response.status).toBe(200);
@@ -225,7 +231,7 @@ describe("Phase 4: Campaign Management — CRUD integration (task 6: create/list
 
     const { GET } = await import("@/api/campaigns/[id]/route");
     const response = await GET(
-      new Request(`http://localhost/api/campaigns/${mockCampaign.id}`),
+      authedRequest(`http://localhost/api/campaigns/${mockCampaign.id}`),
       { params: { id: mockCampaign.id } },
     );
     expect(response.status).toBe(404);
@@ -242,7 +248,7 @@ describe("Phase 4: Campaign Management — CRUD integration (task 6: create/list
 
     const { PATCH } = await import("@/api/campaigns/[id]/route");
     const response = await PATCH(
-      new Request(`http://localhost/api/campaigns/${mockCampaign.id}`, {
+      authedRequest(`http://localhost/api/campaigns/${mockCampaign.id}`, {
         method: "PATCH",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ status: "in-progress" }),
@@ -338,7 +344,7 @@ describe("Phase 4: Campaign Management — status-transition state machine (task
 
     const { PATCH } = await import("@/api/campaigns/[id]/route");
     const response = await PATCH(
-      new Request(`http://localhost/api/campaigns/${mockCampaign.id}`, {
+      authedRequest(`http://localhost/api/campaigns/${mockCampaign.id}`, {
         method: "PATCH",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ status: "complete" }),
@@ -366,7 +372,7 @@ describe("Phase 4: Campaign Management — status-transition state machine (task
 
     const { PATCH } = await import("@/api/campaigns/[id]/route");
     const response = await PATCH(
-      new Request(`http://localhost/api/campaigns/${mockCampaign.id}`, {
+      authedRequest(`http://localhost/api/campaigns/${mockCampaign.id}`, {
         method: "PATCH",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ status: "in-progress" }),

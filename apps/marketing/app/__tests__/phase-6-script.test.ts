@@ -93,6 +93,10 @@ vi.mock("@reading-advantage/ai", async () => {
   };
 });
 
+// Auth mock: marketing routes now require authentication (Phase 2 of
+// wave3_product_alignment_20260628).
+import { authedRequest } from "./helpers/auth-mock";
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const APP_ROOT = resolve(__dirname, "..", "..");
@@ -365,7 +369,7 @@ describe("Phase 6: Script Generation — API integration (tasks 4-5: verify, RED
 
     const { POST } = await import("@/api/video/generate-script/route");
     const response = await POST(
-      new Request("http://localhost/api/video/generate-script", {
+      authedRequest("http://localhost/api/video/generate-script", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ app: "reading-advantage", topic: "การอ่านนิทาน" }),
@@ -396,7 +400,7 @@ describe("Phase 6: Script Generation — API integration (tasks 4-5: verify, RED
 
     const { POST } = await import("@/api/video/generate-script/route");
     const response = await POST(
-      new Request("http://localhost/api/video/generate-script", {
+      authedRequest("http://localhost/api/video/generate-script", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ app: "reading-advantage", topic: "การอ่านนิทาน" }),
@@ -420,7 +424,7 @@ describe("Phase 6: Script Generation — API integration (tasks 4-5: verify, RED
 
     const { POST } = await import("@/api/video/projects/route");
     const response = await POST(
-      new Request("http://localhost/api/video/projects", {
+      authedRequest("http://localhost/api/video/projects", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
@@ -449,7 +453,7 @@ describe("Phase 6: Script Generation — API integration (tasks 4-5: verify, RED
 
     const { POST } = await import("@/api/video/projects/route");
     const response = await POST(
-      new Request("http://localhost/api/video/projects", {
+      authedRequest("http://localhost/api/video/projects", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({

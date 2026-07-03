@@ -108,6 +108,10 @@ vi.mock("@reading-advantage/ai", async () => {
   };
 });
 
+// Auth mock: marketing routes now require authentication (Phase 2 of
+// wave3_product_alignment_20260628).
+import { authedRequest } from "./helpers/auth-mock";
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const APP_ROOT = resolve(__dirname, "..", "..");
@@ -210,7 +214,7 @@ describe("Phase 3 Adversarial: encryption-at-rest hardening", () => {
 
       const { POST } = await import("@/api/settings/route");
       const plaintextApiKey = "sk-roundtrip-secret-98765";
-      const request = new Request("http://localhost/api/settings", {
+      const request = authedRequest("http://localhost/api/settings", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ "llm.apiKey": plaintextApiKey }),
@@ -249,14 +253,14 @@ describe("Phase 3 Adversarial: encryption-at-rest hardening", () => {
       const { POST } = await import("@/api/settings/route");
 
       await POST(
-        new Request("http://localhost/api/settings", {
+        authedRequest("http://localhost/api/settings", {
           method: "POST",
           headers: { "content-type": "application/json" },
           body: JSON.stringify({ "llm.apiKey": "sk-first-key-aaa" }),
         }),
       );
       await POST(
-        new Request("http://localhost/api/settings", {
+        authedRequest("http://localhost/api/settings", {
           method: "POST",
           headers: { "content-type": "application/json" },
           body: JSON.stringify({ "llm.apiKey": "sk-second-key-bbb" }),
@@ -323,7 +327,15 @@ describe("Phase 3 Adversarial: encryption-at-rest hardening", () => {
   // 6. GET /api/settings failure isolation
   // ─────────────────────────────────────────────────────────────────
   describe("GET /api/settings failure isolation", () => {
-    it("returns 500 (not 200 with partial data) when one secret row has tampered ciphertext", async () => {
+    it("returns 200 with a masked placeholder when a secret row has tampered ciphertext (no decrypt attempted)", async () => {
+      // NOTE (wave3 p2 hardening): the original Phase 3 contract decrypted
+      // secret values on GET so the settings UI could prefill the password
+      // input. Phase 2A masking (§4 Group 2A of the Phase 2 test strategy)
+      // says secret keys should be MASKED for authed callers. With masking,
+      // the route never invokes `decrypt`, so a tampered ciphertext row is
+      // simply rendered as a masked `••••` placeholder. This test pins
+      // that behavior so a future regression that re-introduces client-side
+      // decrypt is caught.
       const { db } = await import("@reading-advantage/db");
       const selectFromMock = vi.fn().mockResolvedValue([
         { key: "llm.provider", value: "google" },
@@ -332,14 +344,14 @@ describe("Phase 3 Adversarial: encryption-at-rest hardening", () => {
       (db.select as Mock).mockImplementation(() => ({ from: selectFromMock }));
 
       const { GET } = await import("@/api/settings/route");
-      const response = await GET();
-      // The route catches decryption errors in the outer try/catch and
-      // returns 500. If a future refactor returns 200 with a partial
-      // map, this test fails.
-      expect(response.status).toBe(500);
-      const body = (await response.json()) as { message: string };
-      // Must use a generic message — no leaking of "tampered:not:hex".
-      expect(body.message).toBe("Failed to load settings");
+      const response = await GET(
+        authedRequest("http://localhost/api/settings"),
+      );
+      expect(response.status).toBe(200);
+      const body = (await response.json()) as Record<string, string>;
+      // Secret key is masked regardless of ciphertext integrity.
+      expect(body["llm.apiKey"]).toBe("••••");
+      // No part of the tampered ciphertext leaks into the response body.
       expect(JSON.stringify(body)).not.toContain("tampered");
     });
   });
@@ -378,23 +390,26 @@ describe("Phase 3 Adversarial: encryption-at-rest hardening", () => {
   // 8. Empty POST body handling
   // ─────────────────────────────────────────────────────────────────
   describe("POST /api/settings input edge cases", () => {
-    it("empty JSON body returns 200 without calling db.insert (idempotent no-op)", async () => {
+    it("empty JSON body returns 400 (Zod validation requires at least one entry)", async () => {
+      // NOTE (wave3 p2 hardening): the original Phase 3 contract accepted
+      // an empty JSON body as an idempotent no-op. Phase 2D
+      // (`measure/tracks/wave3_product_alignment_20260628/test-strategy.md`
+      // §4 Group 2D) requires a Zod schema that rejects empty bodies so a
+      // missing or malformed payload is caught before any DB write. The
+      // route now returns 400 with a structured validation error.
       const { db } = await import("@reading-advantage/db");
       const { insertMock } = makeInsertChainMock();
       (db.insert as Mock).mockImplementation(insertMock);
 
       const { POST } = await import("@/api/settings/route");
-      const request = new Request("http://localhost/api/settings", {
+      const request = authedRequest("http://localhost/api/settings", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({}),
       });
       const response = await POST(request);
-      // The current implementation iterates over an empty object — no
-      // inserts are performed, and the route returns 200 with success.
-      // This test pins the no-op behavior so a future refactor that
-      // inserts a default row is caught.
-      expect(response.status).toBe(200);
+      expect(response.status).toBe(400);
+      // Validation rejects the body before any DB write is attempted.
       expect(insertMock).not.toHaveBeenCalled();
     });
   });
@@ -413,21 +428,25 @@ describe("Phase 3 Adversarial: encryption-at-rest hardening", () => {
         .replace(/^\s*\/\/.*$/gm, "");
     }
 
-    it("route.ts imports encrypt/decrypt via a REAL import statement (not a comment)", () => {
+    it("route.ts imports encrypt via a REAL import statement (not a comment)", () => {
       // Defends against the same kind of substring-regex bypass that
       // phase-1-boot-adversarial.test.ts already protects against for
       // app/lib/*.ts. The existing `phase-3-settings.test.ts` checks
       // behavior only — it never inspects the route source for
       // encryption wiring. A comment like `// import { encrypt } from
       // "@/lib/encryption"` would not actually wire encryption.
+      //
+      // NOTE (wave3 p2 hardening): the route no longer imports `decrypt`
+      // because Phase 2A mandates masking secret values for authenticated
+      // callers instead of decrypting them on GET. `decrypt` is still
+      // exported by the encryption module for any future re-introduction
+      // (e.g. an admin override) and is exercised by the encryption
+      // module's own round-trip tests.
       const code = stripComments(
         readText("app/api/settings/route.ts"),
       );
       expect(code).toMatch(
         /import\s*\{[^}]*\bencrypt\b[^}]*\}\s*from\s+["']@\/lib\/encryption["']/,
-      );
-      expect(code).toMatch(
-        /import\s*\{[^}]*\bdecrypt\b[^}]*\}\s*from\s+["']@\/lib\/encryption["']/,
       );
     });
 

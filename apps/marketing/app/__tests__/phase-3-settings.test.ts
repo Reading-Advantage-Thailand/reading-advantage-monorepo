@@ -117,6 +117,11 @@ vi.mock("@reading-advantage/ai", async () => {
   };
 });
 
+// Auth mock: marketing routes now require authentication (Phase 2 of
+// wave3_product_alignment_20260628). Resolve any non-empty session token to
+// a synthetic ADMIN session.
+import { authedRequest } from "./helpers/auth-mock";
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const APP_ROOT = resolve(__dirname, "..", "..");
@@ -277,7 +282,7 @@ describe("Phase 3: Settings Page — POST /api/settings encryption (tasks 3 + 6,
     const { POST } = await import("@/api/settings/route");
     const plaintextApiKey = "sk-test-secret-api-key-12345";
 
-    const request = new Request("http://localhost/api/settings", {
+    const request = authedRequest("http://localhost/api/settings", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ "llm.apiKey": plaintextApiKey }),
@@ -313,7 +318,7 @@ describe("Phase 3: Settings Page — POST /api/settings encryption (tasks 3 + 6,
     const { POST } = await import("@/api/settings/route");
     const plaintextApiKey = "sk-rotate-secret-key-98765";
 
-    const request = new Request("http://localhost/api/settings", {
+    const request = authedRequest("http://localhost/api/settings", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ "llm.apiKey": plaintextApiKey }),
@@ -342,7 +347,7 @@ describe("Phase 3: Settings Page — POST /api/settings encryption (tasks 3 + 6,
     (db.insert as Mock).mockImplementation(insertMock);
 
     const { POST } = await import("@/api/settings/route");
-    const request = new Request("http://localhost/api/settings", {
+    const request = authedRequest("http://localhost/api/settings", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ "tools.mmxPath": "/usr/local/bin/mmx" }),
@@ -357,7 +362,14 @@ describe("Phase 3: Settings Page — POST /api/settings encryption (tasks 3 + 6,
     expect(insertMock).toHaveBeenCalledTimes(1);
   });
 
-  it("GET /api/settings decrypts secret values before returning them", async () => {
+  it("GET /api/settings masks secret values for authenticated callers", async () => {
+    // NOTE (wave3 p2 hardening): the original Phase 3 contract returned the
+    // decrypted plaintext so the settings page could prefill the password
+    // input. The Phase 2A hardening recommendation
+    // (measure/tracks/wave3_product_alignment_20260628/test-strategy.md §4
+    // Group 2A) says secret keys should be MASKED for authed callers so the
+    // plaintext is never round-tripped over the wire. The route now returns
+    // a `••••` placeholder for any secret-shaped key.
     const { encrypt } = await import("../lib/encryption.js");
     const { db } = await import("@reading-advantage/db");
     const plaintextApiKey = "sk-test-secret-api-key-12345";
@@ -372,7 +384,9 @@ describe("Phase 3: Settings Page — POST /api/settings encryption (tasks 3 + 6,
     (db.select as Mock).mockImplementation(() => ({ from: selectFromMock }));
 
     const { GET } = await import("@/api/settings/route");
-    const response = await GET();
+    const response = await GET(
+      authedRequest("http://localhost/api/settings"),
+    );
     expect(response.status).toBe(200);
     const body = (await response.json()) as Record<string, string>;
 
@@ -380,9 +394,13 @@ describe("Phase 3: Settings Page — POST /api/settings encryption (tasks 3 + 6,
     expect(body["llm.provider"]).toBe("google");
     expect(body["llm.model"]).toBe("gemini-pro");
     expect(body["tools.mmxPath"]).toBe("/usr/local/bin/mmx");
-    // The secret apiKey must be decrypted, not returned as ciphertext.
-    expect(body["llm.apiKey"]).toBe(plaintextApiKey);
+    // The secret apiKey must be MASKED, not decrypted. The plaintext and the
+    // raw ciphertext must never appear over the wire.
+    expect(body["llm.apiKey"]).toBe("••••");
+    expect(body["llm.apiKey"]).not.toBe(plaintextApiKey);
     expect(body["llm.apiKey"]).not.toBe(ciphertextApiKey);
+    expect(body["llm.apiKey"]).not.toContain(plaintextApiKey);
+    expect(body["llm.apiKey"]).not.toContain(ciphertextApiKey);
   });
 });
 
