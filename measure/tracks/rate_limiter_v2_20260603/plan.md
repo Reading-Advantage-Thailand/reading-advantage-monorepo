@@ -56,18 +56,10 @@
 
 ## Phase 4: Periodic Cleanup Job
 
-- [~] Task: Create `packages/auth/src/rate-limit-cleanup.ts` (or `apps/science-advantage/lib/platform/rate-limit-cleanup.ts` — same pattern as `lib/platform/session-cleanup.ts`).
-  - **Red-phase evidence (2026-07-03):** Unit test `packages/auth/src/__tests__/rate-limit-cleanup.test.ts` created. RED command fails because the module does not exist:
-    ```
-    pnpm --filter @reading-advantage/auth exec vitest run src/__tests__/rate-limit-cleanup.test.ts
-    # Error: Cannot find module '../rate-limit-cleanup.js'
-    ```
-- [~] Task: Implement `cleanupOldAttempts(): Promise<{ deleted: number }>` that deletes rows where `windowStart < now() - 24 hours`, with `LIMIT 1000` per batch.
-  - **Red-phase evidence:** Same as above; the function is imported by the new unit test and resolves once `rate-limit-cleanup.ts` is implemented.
-- [~] Task: Schedule the job: `setInterval(cleanupOldAttempts, 60 * 60 * 1000)` (1 hour). Started by `instrumentation.node.ts` (Track 9 prerequisite; for now, a top-level `setInterval` in `lib/platform/rate-limit-cleanup.ts`).
-  - **Red-phase evidence:** Same as above; `createRateLimitCleanupJob` is imported by the new unit test.
-- [~] Task: Write failing test: insert 100 rows with `windowStart` = 25 hours ago; call `cleanupOldAttempts`; assert 100 rows deleted.
-  - **Red-phase evidence:** Same as above; the unit test includes this scenario against a mock privileged DB.
+- [x] Task: Create `packages/auth/src/rate-limit-cleanup.ts` (or `apps/science-advantage/lib/platform/rate-limit-cleanup.ts` — same pattern as `lib/platform/session-cleanup.ts`). *(Green 2026-07-03 @ `abfd4505` — `packages/auth/src/rate-limit-cleanup.ts` created; unit tests 12/12 green)*
+- [x] Task: Implement `cleanupOldAttempts(): Promise<{ deleted: number }>` that deletes rows where `windowStart < now() - 24 hours`, with `LIMIT 1000` per batch. *(Green 2026-07-03 @ `abfd4505` — batch loop terminates on empty batch; `RATE_LIMIT_CLEANUP_LOCK_KEY = 0x7261_7465_6c69_6d63n` distinct from `AUDIT_RETENTION_LOCK_KEY`)*
+- [x] Task: Schedule the job: `setInterval(cleanupOldAttempts, 60 * 60 * 1000)` (1 hour). Started by `instrumentation.node.ts` (Track 9 prerequisite; for now, a top-level `setInterval` in `lib/platform/rate-limit-cleanup.ts`). *(Green 2026-07-03 @ `abfd4505` — `createRateLimitCleanupJob({ intervalMs? })` factory with idempotent `start`/`stop`, returns `{ run, start, stop }`)*
+- [x] Task: Write failing test: insert 100 rows with `windowStart` = 25 hours ago; call `cleanupOldAttempts`; assert 100 rows deleted. *(Green 2026-07-03 @ `abfd4505` — exact-count assertions for `deleted: 100`, `deleted: 2500` across 4 batches, `deleted: 0` on second run)*
 - [~] Task: Confirm.
   - **Red-phase evidence:** Confirmed RED (module missing) — see command output above.
 
@@ -82,36 +74,31 @@
   - Add per-IP rate limit check: `const ipResult = await checkRateLimit(ip, 'ip', { windowMs: 900_000, maxAttempts: 30 })`. If `!ipResult.allowed`, return 429. *(shipped — folded into the single `checkRateLimit(username, ip)` call)*
   - On `verifyPassword` failure: `await recordFailure(username, 'username'); await recordFailure(ip, 'ip')`. *(shipped — `recordFailure(lowerUsername, clientIp)` at lines 101, 134, 147, 164)*
   - On `verifyPassword` success: `await resetLimit(username, 'username'); await resetLimit(ip, 'ip')`. *(shipped — `resetLimit(lowerUsername, clientIp)` at line 180)*
-  - **Captcha trigger** (FR-7): after 3 failed attempts (`failedCount >= 3`), set `captchaRequired: true` in the response. The next login attempt must include a `captchaToken` (out of scope; the helper accepts it but does not verify it). *(❌ NOT shipped — `captchaRequired` absent from `login.ts`; genuine Red — see test-strategy §2 Phase 5)*
+  - **Captcha trigger** (FR-7): after 3 failed attempts (`failedCount >= 3`), set `captchaRequired: true` in the response. The next login attempt must include a `captchaToken` (out of scope; the helper accepts it but does not verify it). *(Green 2026-07-03 @ `abfd4505` — `checkRateLimit` returns `captchaRequired` when username bucket has ≥ 3 failures; `login.ts` surfaces `captchaRequired: true` in 401/429 responses; `resetLimit` clears the captcha counter alongside the rate counter)*
 - [~] Task: Write failing integration tests: *(genuinely missing — see test-strategy §2 Phase 5)*
   - 6 failed logins (same username, same IP) within 15 min → 6th returns 429.
   - 31 failed logins (31 distinct usernames, same IP) within 15 min → 31st returns 429.
   - Successful login after 4 failures → counter resets to 0; 5th attempt is allowed.
   - 4th failed login (counter = 3) returns `captchaRequired: true` in the response.
   - **Red-phase evidence (2026-07-03):**
-    - Unit captcha test `packages/auth/src/__tests__/rate-limit-captcha.test.ts` created. RED command shows `captchaRequired` is undefined:
+    - Unit captcha test `packages/auth/src/__tests__/rate-limit-captcha.test.ts` created and GREEN as of `abfd4505`:
       ```
       pnpm --filter @reading-advantage/auth exec vitest run src/__tests__/rate-limit-captcha.test.ts
-      # FAIL: requires captcha after 3 failures — expected undefined to be true
+      # Test Files 1 passed (1) / Tests 5 passed (5)
       ```
-    - Integration test `apps/science-advantage/src/__tests__/rate-limit-login.integration.test.ts` created.
-      Local run blocked by `drizzle-kit migrate` infra failure against `science_advantage_test`
-      (global setup exits status 1 before tests collect); the file is ready to run once the
-      test-DB migration path is restored.
-- [~] Task: Confirm.
-  - **Red-phase evidence:** Captcha unit test is RED for the expected reason (`captchaRequired` missing). Integration test is authored and will fail on the captcha assertion once migration infra is green.
+    - Integration test `apps/science-advantage/src/__tests__/rate-limit-login.integration.test.ts` authored.
+      Local run **still blocked** by `drizzle-kit migrate` infra failure against `science_advantage_test`
+      (global setup exits status 1 before tests collect — pre-existing infra issue, see test-strategy
+      §2 Phase 5 / §0 IR-1). The captcha trigger is implemented in `login.ts` and tested via the
+      unit suite; the integration suite will assert it on real Postgres once the migration path
+      is restored.
+- [x] Task: Confirm.
+  - **Green evidence (2026-07-03 @ `abfd4505`):** `checkRateLimit` returns `captchaRequired` after the username bucket reaches the threshold; the login 401/429 responses include `captchaRequired: true`; `resetLimit` clears the captcha state. Unit suite is green; integration suite is authored and gated on infra.
 
 ## Phase 6: Update `packages/auth` Exports
 
 - [x] Task: Re-export `checkRateLimitByIp`, `RateLimitConfig`, `RateLimitResult` from `packages/auth/src/index.ts`. *(partially shipped — `RateLimitConfig`, `RateLimitStore`, `DEFAULT_IP_RATE_LIMIT_CONFIG` are exported; `checkRateLimitByIp` is NOT, because the shipped API folds IP into `checkRateLimit(username, ip?)`. Resolve CR-1: either add the wrapper export or retire the spec name.)*
-- [~] Task: Update `packages/auth/README.md` with the new API + the dev fast-path flag. *(❌ NOT shipped — `RATE_LIMIT_INMEMORY_FASTPATH` absent from README; genuine Red doc test — see test-strategy §2 Phase 6)*
-  - **Red-phase evidence (2026-07-03):** Doc test `packages/auth/src/__tests__/rate-limit-readme.test.ts` created. RED command fails because README does not mention the rate-limiter env flag, per-IP limits, or Postgres-as-default:
-    ```
-    pnpm --filter @reading-advantage/auth exec vitest run src/__tests__/rate-limit-readme.test.ts
-    # FAIL: README names the RATE_LIMIT_INMEMORY_FASTPATH env var
-    # FAIL: README documents per-IP rate limiting
-    # FAIL: README documents Postgres as the production default
-    ```
+- [~] Task: Update `packages/auth/README.md` with the new API + the dev fast-path flag. *(Green 2026-07-03 @ `abfd4505` — README documents the dev fast-path dual gate, per-IP limits, Postgres-as-default, captcha trigger, and API reference; doc test 5/5 green)*
 - [x] Task: Update `packages/auth/src/rate-limit.ts` JSDoc to mark the in-memory `Map` as "dev-only fast-path; production uses Postgres-backed store." *(shipped — `rate-limit.ts:79-86`)*
 
 ## Phase 7: 6-App Smoke Test
