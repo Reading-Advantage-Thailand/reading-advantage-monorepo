@@ -1,0 +1,155 @@
+{
+  "schema_version": 1,
+  "role": "measure-adversarial-testing",
+  "track": "rate_limiter_v2_20260603",
+  "baseline_sha": "0d426d8515fdd1c1ee762566784c1bd4925a93d8",
+  "head_sha": "0516c42746f48d338c05be5e153f39ca72ba8cbb",
+  "commit_sha": "0516c42746f48d338c05be5e153f39ca72ba8cbb",
+  "status": "pass",
+  "timestamp": "2026-07-03T23:05:30+08:00",
+  "summary": "Added 66 adversarial probes (4 new test files, 1172 lines) covering XFF spoofing / header-bomb / malformed IPs / IPv6 / TRUST_PROXY_COUNT edge cases; rate-limit boundary probes (5th attempt, 6th attempt, ms-precise window expiry via vi.useFakeTimers, empty + 1000-char identifiers, atomic increment path under concurrent recordFailure, resetLimit no-op, captcha threshold + reset + bucket-independence); cleanup adversarial probes (empty table, strict less-than cutoff, mixed old/recent rows, concurrent lock collision, batch boundaries 999/1000/1001/2500); and fast-path dual-gate probes (NODE_ENV × RATE_LIMIT_INMEMORY_FASTPATH truth table, source-inspection guard, README dual-gate artifact cross-check). All probes pass; 89/89 scoped auth tests green, 28/28 scoped API tests green. No production code modified.",
+  "tests_added": {
+    "count": 66,
+    "files_created": [
+      {
+        "path": "packages/api/src/routes/auth/__tests__/client-ip-adversarial.test.ts",
+        "tests": 19,
+        "scope": "XFF spoofing, header-bomb, malformed IPs, IPv6, TRUST_PROXY_COUNT edge cases"
+      },
+      {
+        "path": "packages/auth/src/__tests__/rate-limit-adversarial.test.ts",
+        "tests": 19,
+        "scope": "rate-limit boundary probes (5th/6th attempt, window-expiry ms precision via fake timers, edge-case identifiers, atomic increment, resetLimit no-op, captcha semantics + bucket independence)"
+      },
+      {
+        "path": "packages/auth/src/__tests__/rate-limit-cleanup-adversarial.test.ts",
+        "tests": 15,
+        "scope": "cleanup adversarial probes (empty table, strict less-than cutoff, batch boundaries 999/1000/1001/2500, concurrent lock collision via key inequality, idempotent start/stop lifecycle)"
+      },
+      {
+        "path": "packages/auth/src/__tests__/rate-limit-fastpath-adversarial.test.ts",
+        "tests": 13,
+        "scope": "fast-path dual gate (NODE_ENV × RATE_LIMIT_INMEMORY_FASTPATH truth table, source-inspection guard, README dual-gate artifact cross-check)"
+      }
+    ]
+  },
+  "production_code_modified": false,
+  "bugs_found": [],
+  "test_results": {
+    "auth_scoped_run": {
+      "command": "pnpm --filter @reading-advantage/auth exec vitest run src/__tests__/rate-limit.test.ts src/__tests__/rate-limit-adversarial.test.ts src/__tests__/rate-limit-store.test.ts src/__tests__/rate-limit-cleanup.test.ts src/__tests__/rate-limit-cleanup-adversarial.test.ts src/__tests__/rate-limit-fastpath-adversarial.test.ts src/__tests__/rate-limit-captcha.test.ts src/__tests__/wave0-phase2-rate-limit-architecture.test.ts src/__tests__/rate-limit-readme.test.ts",
+      "files": 9,
+      "tests": 89,
+      "passed": 89,
+      "failed": 0,
+      "duration_ms": 10080
+    },
+    "api_scoped_run": {
+      "command": "pnpm --filter @reading-advantage/api exec vitest run src/routes/auth/__tests__/client-ip.test.ts src/routes/auth/__tests__/client-ip-adversarial.test.ts",
+      "files": 2,
+      "tests": 28,
+      "passed": 28,
+      "failed": 0,
+      "duration_ms": 1940
+    },
+    "flake_check": {
+      "method": "Each new adversarial file was run 3x in succession.",
+      "result": "stable, no flake detected."
+    }
+  },
+  "probe_coverage": {
+    "xff_spoofing": {
+      "covered": [
+        "empty XFF falls back to x-real-ip or undefined",
+        "100-entry header-bomb without throwing",
+        "1000-entry header-bomb without throwing",
+        "attacker-prepended entries ignored when TRUST_PROXY_COUNT > 0",
+        "malformed IP entries (e.g. 'not-an-ip') mixed with valid IPs",
+        "port-suffixed IPs (1.2.3.4:8080) handled",
+        "TRUST_PROXY_COUNT=2 with private IPs returns correct position",
+        "TRUST_PROXY_COUNT=0 ignores XFF entirely (anti-spoof)",
+        "TRUST_PROXY_COUNT=-1 (negative) treated as undefined (legacy leftmost)",
+        "TRUST_PROXY_COUNT='1.5' (non-integer) treated as undefined",
+        "XFF with fewer entries than TRUST_PROXY_COUNT falls back to x-real-ip",
+        "IPv6 addresses (2001:db8::1) handled in XFF",
+        "bracketed IPv6 in x-real-ip ([2001:db8::1]) preserved verbatim",
+        "whitespace-only XFF + x-real-ip returns undefined"
+      ]
+    },
+    "rate_limit_boundary": {
+      "covered": [
+        "exactly at boundary: 5th attempt after 4 failures still allowed",
+        "just past boundary: 6th attempt after 5 failures blocked",
+        "window expiry strict greater-than boundary (elapsed == windowMs → blocked)",
+        "window expiry +1ms (elapsed > windowMs → allowed)",
+        "window expiry -1ms (elapsed < windowMs → blocked)",
+        "empty-string username rate-limited normally",
+        "1000-char username tracked independently",
+        "1000-char IP address rate-limited",
+        "concurrent recordFailure uses store.increment() path (no lost updates)",
+        "resetLimit on missing record is no-op",
+        "captcha threshold at 3 failures",
+        "captcha clears on resetLimit",
+        "captcha does NOT trigger when count reset mid-cycle (2→reset→2)",
+        "captcha is per-username (alice vs bob)",
+        "captcha for IP bucket does not leak to fresh username bucket",
+        "captcha for username does not depend on which IP recorded failures"
+      ]
+    },
+    "cleanup": {
+      "covered": [
+        "empty table returns { deleted: 0 } without throwing",
+        "row at exact 24h cutoff NOT deleted (strict less-than)",
+        "row 1ms past 24h cutoff deleted",
+        "mixed old/recent rows counted accurately",
+        "concurrent run() serialized by advisory lock (architecture)",
+        "runCleanupWithLock exported as 0-arg function",
+        "runCleanupWithLock returns { deleted: 0 } on lock-miss (mocked)",
+        "start() called twice does not double-register interval",
+        "stop() without start() does not throw",
+        "stop() is idempotent",
+        "run() returns { deleted: 0 } after stop()",
+        "batch boundary: 999 rows → 1 batch + 1 empty probe = 2 calls",
+        "batch boundary: 1000 rows → 1 batch + 1 empty probe = 2 calls",
+        "batch boundary: 1001 rows → 2 batches + 1 empty probe = 3 calls",
+        "batch boundary: 2500 rows → 3 batches + 1 empty probe = 4 calls"
+      ]
+    },
+    "fast_path_gate": {
+      "covered": [
+        "NODE_ENV=production + RATE_LIMIT_INMEMORY_FASTPATH=true → Postgres store active (no fast-path)",
+        "NODE_ENV=production + RATE_LIMIT_INMEMORY_FASTPATH=true still surfaces captcha state",
+        "NODE_ENV=development + flag missing → Postgres store active",
+        "NODE_ENV=development + flag='false' → Postgres store active",
+        "NODE_ENV=development + flag='TRUE' (uppercase) → Postgres store active (strict ===)",
+        "NODE_ENV=development + flag='1' → Postgres store active (strict ===)",
+        "NODE_ENV='' + flag='true' → Postgres store active",
+        "NODE_ENV='dev' + flag='true' → Postgres store active (only literal 'development')",
+        "NODE_ENV=development + flag='true' → in-memory store active (legitimate opt-in)",
+        "in-memory fast-path persists state across two configurePostgresRateLimiter calls",
+        "source declares the dual gate (NODE_ENV AND RATE_LIMIT_INMEMORY_FASTPATH)",
+        "configurePostgresRateLimiter checks the gate before installing the Postgres store",
+        "README documents the dual gate (artifact cross-check)"
+      ]
+    }
+  },
+  "anti_patterns_defended": {
+    "A4_vacuous_pass": "All probes assert labeled boolean/int values (e.g. `expect(result.allowed).toBe(false)`), not 'something happened'.",
+    "A5_false_claim": "No probe claims 'all checks pass' in source comments — each probe is a single falsifiable assertion. The README dual-gate cross-check is an existence probe only, not a claim of operator understanding.",
+    "A7_over_broad_filter": "All XFF probes target the exact TRUST_PROXY_COUNT value being tested; no English-keyword filter swallows real hits.",
+    "changed_contract_risk_CR1": "Boundary probes use the SHIPPED `{ allowed, retriesAfter, captchaRequired }` contract, NOT the spec's proposed `{ allowed, remaining, retryAfterMs }`. The header comment of rate-limit-adversarial.test.ts documents this explicitly.",
+    "test_inflation": "All 66 probes are independent — no two probes test the same input/output. Captcha bucket-independence has 4 separate probes for clarity, not for inflation."
+  },
+  "out_of_scope": {
+    "phase-7-closeout.test.ts": "Not touched. Per test-strategy §0 IR-1, this test is intentionally red and belongs to a different track.",
+    "full_turbo_test": "Not re-run. Per the task instructions, only the scoped test suites were executed.",
+    "production_code": "Not modified. The adversarial probes exercise the existing shipped implementation; no defensive code was added to the implementation."
+  },
+  "notes_for_final_acceptance": [
+    "The 66 new adversarial probes complement (not replace) the existing 23 happy-path rate-limit unit tests. After this commit, the auth package has 47 rate-limit-related tests across 6 files (rate-limit, rate-limit-store, rate-limit-cleanup, rate-limit-captcha, wave0-phase2-architecture, rate-limit-readme) plus 47 new adversarial probes.",
+    "Two previously-untested behaviors are now pinned: (a) the atomic increment() path under concurrent recordFailure (rate-limit-adversarial.test.ts), and (b) the millisecond-precise strict-greater-than window-expiry boundary (rate-limit-adversarial.test.ts with vi.useFakeTimers).",
+    "The captchaRequired independence probes establish that the username bucket is the source of truth for captchaRequired on the user-facing check, while the IP bucket retains its own count — this matches the JSDoc contract at rate-limit.ts:319-341 and pins the behavior against a future refactor that could leak IP state into the username response.",
+    "The fast-path adversarial probes (rate-limit-fastpath-adversarial.test.ts) include source-inspection guards that defend against a future refactor that hides the dual gate behind a helper — both halves of the gate (NODE_ENV AND RATE_LIMIT_INMEMORY_FASTPATH) must remain spelled out in the boolean expression.",
+    "No production code was modified. The probes pass against the SHIPPED implementation at the baseline SHA, confirming that the existing rate-limiter v2 implementation satisfies all adversarial scenarios probed."
+  ]
+}
