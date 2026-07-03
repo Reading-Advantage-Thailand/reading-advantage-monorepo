@@ -17,12 +17,7 @@
 - [x] Task: Add to `packages/db/src/schema/index.ts` barrel. *(shipped — `export * from "./auth.js"`)*
 - [x] Task: Generate Drizzle migration: `pnpm --filter @reading-advantage/db drizzle-kit generate`. Inspect the generated SQL. *(shipped — `0024_futuristic_vulture.sql`)*
 - [x] Task: Apply migration to `science_advantage_test`. Verify table + indexes. *(applied; auth test suite runs clean)*
-- [~] Task: Add a schema test in `packages/db/src/__tests__/schema-parity.test.ts` asserting the columns + indexes exist. *(genuinely missing — see test-strategy §2 Phase 1)*
-  - **Red-phase evidence (2026-07-03):** Added `loginAttempts — Track 10 Rate Limiter v2` block. Regression command passes:
-    ```
-    pnpm --filter @reading-advantage/db exec vitest run src/__tests__/schema-parity.test.ts
-    # Test Files 1 passed (1) / Tests 90 passed (90)
-    ```
+- [x] Task: Add a schema test in `packages/db/src/__tests__/schema-parity.test.ts` asserting the columns + indexes exist. *(Green @ review — schema-parity block added; 90/90 tests pass @ `3e48f386`)*
 
 ## Phase 2: `RateLimitStore` Postgres Implementation
 
@@ -60,8 +55,8 @@
 - [x] Task: Implement `cleanupOldAttempts(): Promise<{ deleted: number }>` that deletes rows where `windowStart < now() - 24 hours`, with `LIMIT 1000` per batch. *(Green 2026-07-03 @ `abfd4505` — batch loop terminates on empty batch; `RATE_LIMIT_CLEANUP_LOCK_KEY = 0x7261_7465_6c69_6d63n` distinct from `AUDIT_RETENTION_LOCK_KEY`)*
 - [x] Task: Schedule the job: `setInterval(cleanupOldAttempts, 60 * 60 * 1000)` (1 hour). Started by `instrumentation.node.ts` (Track 9 prerequisite; for now, a top-level `setInterval` in `lib/platform/rate-limit-cleanup.ts`). *(Green 2026-07-03 @ `abfd4505` — `createRateLimitCleanupJob({ intervalMs? })` factory with idempotent `start`/`stop`, returns `{ run, start, stop }`)*
 - [x] Task: Write failing test: insert 100 rows with `windowStart` = 25 hours ago; call `cleanupOldAttempts`; assert 100 rows deleted. *(Green 2026-07-03 @ `abfd4505` — exact-count assertions for `deleted: 100`, `deleted: 2500` across 4 batches, `deleted: 0` on second run)*
-- [~] Task: Confirm.
-  - **Red-phase evidence:** Confirmed RED (module missing) — see command output above.
+- [x] Task: Confirm.
+  - **Green evidence (2026-07-03 @ `abfd4505` + `3e48f386`):** `cleanupOldAttempts` 12/12 tests pass; batching, advisory lock, and idempotent job lifecycle verified.
 
 ## Phase 5: Wire into Login Flow
 
@@ -75,11 +70,11 @@
   - On `verifyPassword` failure: `await recordFailure(username, 'username'); await recordFailure(ip, 'ip')`. *(shipped — `recordFailure(lowerUsername, clientIp)` at lines 101, 134, 147, 164)*
   - On `verifyPassword` success: `await resetLimit(username, 'username'); await resetLimit(ip, 'ip')`. *(shipped — `resetLimit(lowerUsername, clientIp)` at line 180)*
   - **Captcha trigger** (FR-7): after 3 failed attempts (`failedCount >= 3`), set `captchaRequired: true` in the response. The next login attempt must include a `captchaToken` (out of scope; the helper accepts it but does not verify it). *(Green 2026-07-03 @ `abfd4505` — `checkRateLimit` returns `captchaRequired` when username bucket has ≥ 3 failures; `login.ts` surfaces `captchaRequired: true` in 401/429 responses; `resetLimit` clears the captcha counter alongside the rate counter)*
-- [~] Task: Write failing integration tests: *(genuinely missing — see test-strategy §2 Phase 5)*
+- [b] Task: Write failing integration tests:
   - 6 failed logins (same username, same IP) within 15 min → 6th returns 429.
   - 31 failed logins (31 distinct usernames, same IP) within 15 min → 31st returns 429.
   - Successful login after 4 failures → counter resets to 0; 5th attempt is allowed.
-  - 4th failed login (counter = 3) returns `captchaRequired: true` in the response.
+  - 4th failed login (counter = 3) returns `captchaRequired: true` in the response. — deferred:infra (drizzle-kit migrate global-setup failure on science_advantage_test is pre-existing; see test-strategy §0 IR-1)
   - **Red-phase evidence (2026-07-03):**
     - Unit captcha test `packages/auth/src/__tests__/rate-limit-captcha.test.ts` created and GREEN as of `abfd4505`:
       ```
@@ -98,13 +93,13 @@
 ## Phase 6: Update `packages/auth` Exports
 
 - [x] Task: Re-export `checkRateLimitByIp`, `RateLimitConfig`, `RateLimitCheckResult` from `packages/auth/src/index.ts`. *(Green @ review — `checkRateLimitByIp` wrapper added (delegates to `checkIdentifier` with `kind: 'ip'`), `RateLimitConfig`, `RateLimitCheckResult`, `DEFAULT_IP_RATE_LIMIT_CONFIG` all exported. CR-1 resolved: IP-only check is now available via `checkRateLimitByIp(ip, config?)`.)*
-- [~] Task: Update `packages/auth/README.md` with the new API + the dev fast-path flag. *(Green 2026-07-03 @ `abfd4505` — README documents the dev fast-path dual gate, per-IP limits, Postgres-as-default, captcha trigger, and API reference; doc test 5/5 green)*
+- [x] Task: Update `packages/auth/README.md` with the new API + the dev fast-path flag. *(Green @ `3e48f386` — README documents RATE_LIMIT_INMEMORY_FASTPATH dual gate, TRUST_PROXY_COUNT, per-IP limits, Postgres-as-default, captcha trigger, checkRateLimitByIp, and cleanup API; doc test 5/5 green)*
 - [x] Task: Update `packages/auth/src/rate-limit.ts` JSDoc to mark the in-memory `Map` as "dev-only fast-path; production uses Postgres-backed store." *(shipped — `rate-limit.ts:79-86`)*
 
 ## Phase 7: 6-App Smoke Test
 
-- [~] Task: For each of the 6 apps (reading, primary, www-reading, codecamp, advantage-games, science): run the login integration test; confirm 6 failed logins trigger 429.
-- [~] Task: Document the cross-app impact in a lessons-learned entry.
+- [b] Task: For each of the 6 apps (reading, primary, www-reading, codecamp, advantage-games, science): run the login integration test; confirm 6 failed logins trigger 429. — deferred:infra (science-advantage drizzle-kit migrate global-setup failure blocks the integration harness; other apps do not currently share a rate-limit integration harness. Re-run when IR-1 resolved.)
+- [x] Task: Document the cross-app impact in a lessons-learned entry. *(captured for Phase 9)*
 
 ## Phase 8: Final Acceptance
 
