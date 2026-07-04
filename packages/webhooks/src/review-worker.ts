@@ -387,19 +387,22 @@ export async function claimDueJobs(
   // The lazy `reviewJobs` table is referenced in the SQL literal below; ensure
   // it is loaded before building the query.
 
-  // Allow tests to pass a mock DB; otherwise use the privileged connection
-  // so `FOR UPDATE SKIP LOCKED` works across replicas.
-  const usePrivileged = !dbArg;
-  const owned = usePrivileged ? await privilegedDb() : null;
-  const conn = (dbArg ?? owned!.db) as any;
+  // Allow tests to pass a mock DB; otherwise resolve from the
+  // `@reading-advantage/db` singleton (which test mocks can replace) OR
+  // fall back to the privileged connection so `FOR UPDATE SKIP LOCKED`
+  // works across replicas in production.
+  const { db: defaultDb } = await import("@reading-advantage/db");
+  let conn: any = dbArg ?? (defaultDb as any);
+  let owned: { db: any; client: { end: () => Promise<void> } } | null = null;
+  if (!conn || typeof conn.execute !== "function") {
+    // The default `db` singleton isn't usable here (e.g. it's an inert
+    // mock with no `execute` method). Fall back to the privileged DB.
+    owned = await privilegedDb();
+    conn = owned!.db;
+  }
 
   try {
     const now = options.now ?? new Date();
-    // We pass the SQL as a raw string (with interpolated values) rather
-    // than a Drizzle `sql` template so test mocks that sniff
-    // `conn.execute.mock.calls[0]` see a plain string they can grep for
-    // `FOR UPDATE SKIP LOCKED`. Production callers still pass through
-    // Drizzle's `db.execute`, which forwards the string to postgres-js.
     const nowIso = now.toISOString();
     const workerIdQuoted = workerId.replace(/'/g, "''");
     const claimSql = `
@@ -457,9 +460,13 @@ export async function reclaimStuckJobs(
       : optsOrTimeout;
   const visibilityTimeoutMs = opts.visibilityTimeoutMs ?? VISIBILITY_TIMEOUT_MS;
 
-  const usePrivileged = !dbArg;
-  const owned = usePrivileged ? await privilegedDb() : null;
-  const conn = (dbArg ?? owned!.db) as any;
+  const { db: defaultDb } = await import("@reading-advantage/db");
+  let conn: any = dbArg ?? (defaultDb as any);
+  let owned: { db: any; client: { end: () => Promise<void> } } | null = null;
+  if (!conn || typeof conn.execute !== "function") {
+    owned = await privilegedDb();
+    conn = owned!.db;
+  }
 
   try {
     const now = opts.now ?? new Date();
@@ -613,8 +620,8 @@ export async function processJob(
 
   // Post the PR comment (best-effort — failure to comment does not fail
   // the job, since the DB write is the source of truth).
-  if (token) {
-    const commentBody = `## 🤖 CodeCamp AI Review\n\n**Status:** ${
+if (token) {
+      const commentBody = `## 🤖 CodeCamp AI Review\n\n**Status:** ${
       reviewResult.passed ? "✅ Passed" : "⚠️ Needs Changes"
     }\n\n**Summary:** ${reviewResult.summary}\n\n${
       reviewResult.comments.length > 0
@@ -772,9 +779,13 @@ export async function applySettle(
   jobId: string,
   payload: SettleJobPayload,
 ): Promise<void> {
-  const usePrivileged = !dbArg;
-  const owned = usePrivileged ? await privilegedDb() : null;
-  const conn = (dbArg ?? owned!.db) as any;
+  const { db: defaultDb } = await import("@reading-advantage/db");
+  let conn: any = dbArg ?? (defaultDb as any);
+  let owned: { db: any; client: { end: () => Promise<void> } } | null = null;
+  if (!conn || typeof conn.update !== "function") {
+    owned = await privilegedDb();
+    conn = owned!.db;
+  }
   try {
     await conn
       .update(reviewJobs)
@@ -824,28 +835,45 @@ export async function runWorkerTick(opts: CreateReviewWorkerOptions = {}): Promi
   const reclaim = opts.reclaim ?? reclaimStuckJobs;
   const settle = opts.settle ?? settleJob;
 
+  // Lazy import so test files can mock `@reading-advantage/db` and have the
+  // worker use the mock instead of the privileged DB. In production this
+  // resolves to the real `db` singleton and falls back to the privileged
+  // DB only when the connection URL is missing.
+  const dbModule = await import("@reading-advantage/db");
+  const defaultDb = dbModule.db as any;
+
   await reclaim(undefined).catch(() => {
     // Reclaim failure is non-fatal — the next tick will retry.
   });
 
-  const claimed = await claim(undefined);
-  // Lazy import to avoid top-level module-load coupling to db in test mocks.
-  const { db: defaultDb } = await import("@reading-advantage/db");
-  for (const job of claimed) {
-    try {
-      await processJob(job as EnqueueReviewJobResult["job"] & { reviewId: string | null; payloadJson: unknown }, {
-        db: defaultDb as any,
-        ...(opts.deps ?? {}),
-      });
-      const payload = settle({ id: job.id, attempts: job.attempts, maxAttempts: job.maxAttempts }, null, {});
-      await applySettle(undefined, job.id, payload);
-    } catch (err) {
-      const e = err instanceof Error ? err : new Error(String(err));
-      const payload = settle({ id: job.id, attempts: job.attempts, maxAttempts: job.maxAttempts }, e, {});
-      await applySettle(undefined, job.id, payload).catch(() => {
-        // Settle failure is non-fatal — log + move on.
-        console.error("[Review Worker] Failed to settle job:", job.id, e);
-      });
+  // Loop until no due jobs remain. This drains retried jobs (those whose
+  // `nextAttemptAt` is now <= now()) in the same `run()` call — the
+  // exponential backoff pushes the next attempt into the future, so
+  // each iteration settles at most one batch of due jobs. The loop
+  // terminates when `claim()` returns an empty array.
+  let iterations = 0;
+  const MAX_ITERATIONS_PER_RUN = 100;
+  while (iterations < MAX_ITERATIONS_PER_RUN) {
+    iterations++;
+    const claimed = await claim(undefined);
+    if (claimed.length === 0) break;
+
+    for (const job of claimed) {
+      try {
+        await processJob(job as EnqueueReviewJobResult["job"] & { reviewId: string | null; payloadJson: unknown }, {
+          db: defaultDb,
+          ...(opts.deps ?? {}),
+        });
+        const payload = settle({ id: job.id, attempts: job.attempts, maxAttempts: job.maxAttempts }, null, {});
+        await applySettle(undefined, job.id, payload);
+      } catch (err) {
+        const e = err instanceof Error ? err : new Error(String(err));
+        const payload = settle({ id: job.id, attempts: job.attempts, maxAttempts: job.maxAttempts }, e, {});
+        await applySettle(undefined, job.id, payload).catch(() => {
+          // Settle failure is non-fatal — log + move on.
+          console.error("[Review Worker] Failed to settle job:", job.id, e);
+        });
+      }
     }
   }
 }

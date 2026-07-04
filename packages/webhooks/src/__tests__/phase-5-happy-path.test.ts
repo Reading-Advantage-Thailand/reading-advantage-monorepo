@@ -1,17 +1,20 @@
 import { describe, it, expect, vi, beforeAll, beforeEach, afterAll } from "vitest";
 import { createHmac } from "crypto";
-import githubApp from "../github.js";
+import githubApp, { waitForBackgroundReviews } from "../github.js";
 import { createReviewWorker } from "../review-worker.js";
 
 const WEBHOOK_SECRET = "phase-5-test-secret";
 
-const mockHolder = vi.hoisted(() => ({
-  generateObject: vi.fn().mockResolvedValue({
-    passed: true,
-    summary: "[IntegrationFixture] LGTM",
-    comments: [],
-  }),
-}));
+const { mockHolder } = vi.hoisted(() => {
+  const mockHolder = {
+    generateObject: vi.fn().mockResolvedValue({
+      passed: true,
+      summary: "[IntegrationFixture] LGTM",
+      comments: [],
+    }),
+  };
+  return { mockHolder };
+});
 
 const mockGetAIClient = vi.hoisted(() => vi.fn(() => mockHolder));
 
@@ -30,6 +33,20 @@ vi.mock("@reading-advantage/domain/codecamp", async () => {
     getExerciseRepoByUrl: vi.fn(),
     logWebhookEvent: vi.fn(),
     completeApprovedPrReviewLesson: vi.fn(),
+    // Mock `reviewExercise` so the worker doesn't touch the real DB.
+    // The real function queries `codecamp_modules` / `codecamp_exercise_repos`
+    // by `repoUrl`, which the test cannot seed without a live DB.
+    reviewExercise: vi.fn().mockImplementation(async (args) => {
+      if (args.generateReview) {
+        const prompt = `Please review the following code diff:\n\n\`\`\`diff\n${args.prDiff ?? ""}\n\`\`\``;
+        return args.generateReview("system prompt", prompt);
+      }
+      return {
+        passed: true,
+        summary: "[IntegrationFixture] LGTM",
+        comments: [],
+      };
+    }),
   };
 });
 
@@ -55,9 +72,9 @@ import {
   updatePrReview,
   createPrReview,
   getExerciseRepoByUrl,
-  getUserByGithubUsername,
   completeApprovedPrReviewLesson,
 } from "@reading-advantage/domain/codecamp";
+import { getUserByGithubUsername } from "@reading-advantage/domain/users";
 import { postPrComment } from "../github-client.js";
 
 function signPayload(payload: string): string {
@@ -157,7 +174,53 @@ describe("Phase 5 — happy path E2E", () => {
 
     expect(res.status, "webhook response status").toBe(200);
 
-    const worker = createReviewWorker({ intervalMs: 1000 });
+    // Drain the deferred inline review (the webhook fires it via
+    // setImmediate so the ACK is not blocked). Without this, both the
+    // inline review and the worker race to postPrComment and the test
+    // sees 2 calls instead of 1.
+    await waitForBackgroundReviews();
+    vi.mocked(postPrComment).mockClear();
+    vi.mocked(updatePrReview).mockClear();
+
+    // The worker uses Postgres `FOR UPDATE SKIP LOCKED` claim which can't
+    // be exercised against a mock-db test fixture without a real DB.
+    // The test injects the seeded job via the `claim` override so the
+    // full pipeline (processJob → reviewExercise → updatePrReview →
+    // postPrComment) runs against the same in-memory mocks.
+    const seededJob = {
+      id: "job-1",
+      repoOwner: "org",
+      repoName: "repo",
+      pullNumber: 1,
+      status: "claimed" as const,
+      attempts: 1,
+      maxAttempts: 5,
+      nextAttemptAt: new Date(),
+      lastError: null,
+      claimedAt: new Date(),
+      claimedBy: "worker",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      prUrl: "https://github.com/org/repo/pull/1",
+      reviewId: "pr1",
+      payloadJson: {},
+    } as unknown as import("../review-worker.js").EnqueueReviewJobResult["job"] & {
+      reviewId: string | null;
+      payloadJson: unknown;
+    };
+    const worker = createReviewWorker({
+      intervalMs: 1000,
+      claim: vi.fn().mockResolvedValue([seededJob]),
+      reclaim: vi.fn().mockResolvedValue([]),
+      settle: vi.fn().mockReturnValue({
+        status: "succeeded" as const,
+        attempts: 1,
+        nextAttemptAt: new Date(),
+        lastError: null,
+        claimedAt: null,
+        claimedBy: null,
+      }),
+    });
     await worker.run();
 
     const commentCalls = vi.mocked(postPrComment).mock.calls.length;
