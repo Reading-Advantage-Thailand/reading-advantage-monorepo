@@ -210,6 +210,10 @@ export interface ReviewJob {
   lastError: string | null;
   claimedAt: Date | null;
   claimedBy: string | null;
+  /** FK to `codecamp_pr_reviews.id`. Nullable: the review row may not exist yet. */
+  reviewId: string | null;
+  /** Full webhook payload for re-running the review after worker restart. */
+  payloadJson: unknown;
   createdAt: Date;
   updatedAt: Date;
   prUrl: string;
@@ -265,11 +269,13 @@ export async function enqueueReviewJob(
       lastError: null,
       claimedAt: null,
       claimedBy: null,
+      reviewId: input.reviewId ?? null,
+      payloadJson: input.payload ?? null,
       createdAt: new Date(),
       updatedAt: new Date(),
       prUrl: input.prUrl,
       enqueued: false,
-    } as any;
+    } as ReviewJob;
   }
 
   // Durable path: upsert via the unique index. The `onConflictDoUpdate`
@@ -325,11 +331,13 @@ export async function enqueueReviewJob(
     lastError: row?.lastError ?? null,
     claimedAt: row?.claimedAt ?? null,
     claimedBy: row?.claimedBy ?? null,
+    reviewId: row?.reviewId ?? null,
+    payloadJson: row?.payloadJson ?? null,
     createdAt: row?.createdAt,
     updatedAt: row?.updatedAt,
     prUrl: row?.prUrl,
     enqueued: true,
-  } as any;
+  } as ReviewJob;
 }
 
 // ─── Worker identity ──────────────────────────────────────────
@@ -345,6 +353,52 @@ export const WORKER_ID = (() => {
   const startedAt = Date.now();
   return `${host}:${pid}:${startedAt}`;
 })();
+
+// ─── Input validation helpers ─────────────────────────────────
+
+/**
+ * Validates that `value` is a positive integer. Strings that parse to a
+ * positive integer are accepted; all other values throw.
+ *
+ * @param value - The value to validate.
+ * @param name - Parameter name for error messages.
+ * @returns A positive integer.
+ * @throws When `value` is not a positive integer.
+ */
+function validatePositiveInteger(value: unknown, name: string): number {
+  let parsed: number;
+  if (typeof value === "number") {
+    parsed = value;
+  } else if (typeof value === "string") {
+    parsed = parseInt(value, 10);
+  } else {
+    throw new Error(`${name} must be a positive integer`);
+  }
+  if (!Number.isFinite(parsed) || parsed <= 0 || Math.floor(parsed) !== parsed) {
+    throw new Error(`${name} must be a positive integer`);
+  }
+  return parsed;
+}
+
+const SAFE_WORKER_ID_PATTERN = /^[a-zA-Z0-9_:.-]{1,256}$/;
+
+/**
+ * Validates that `value` is a safe worker identifier. Falls back to
+ * `fallback` when value is missing. The allowed character set is
+ * intentionally restrictive to keep the value safe inside SQL parameters.
+ *
+ * @param value - The worker id to validate.
+ * @param fallback - The fallback worker id (must already be safe).
+ * @returns A safe worker id string.
+ * @throws When the resolved id contains disallowed characters.
+ */
+function validateWorkerId(value: unknown, fallback: string): string {
+  const id = typeof value === "string" && value.length > 0 ? value : fallback;
+  if (!SAFE_WORKER_ID_PATTERN.test(id)) {
+    throw new Error(`workerId contains unsafe characters`);
+  }
+  return id;
+}
 
 // ─── Claim ────────────────────────────────────────────────────
 
@@ -388,40 +442,35 @@ export async function claimDueJobs(
   opts: ClaimDueJobsOptions | number = {},
 ): Promise<ReviewJob[]> {
   const options: ClaimDueJobsOptions = typeof opts === "number" ? { batchSize: opts } : opts;
-  const batchSize = options.batchSize ?? CLAIM_BATCH_SIZE;
-  const workerId = options.workerId ?? WORKER_ID;
-  // The lazy `reviewJobs` table is referenced in the SQL literal below; ensure
-  // it is loaded before building the query.
+  const batchSize = validatePositiveInteger(options.batchSize ?? CLAIM_BATCH_SIZE, "batchSize");
+  const workerId = validateWorkerId(options.workerId, WORKER_ID);
 
-  // Allow tests to pass a mock DB; otherwise resolve from the
-  // `@reading-advantage/db` singleton (which test mocks can replace) OR
-  // fall back to the privileged connection so `FOR UPDATE SKIP LOCKED`
-  // works across replicas in production.
-  const { db: defaultDb } = await import("@reading-advantage/db");
-  let conn: any = dbArg ?? (defaultDb as any);
+  // Allow tests to pass a mock DB; otherwise always use the privileged
+  // (direct) connection so `FOR UPDATE SKIP LOCKED` row locks work across
+  // replicas. The pooled `db` singleton may be behind a transaction-mode
+  // pooler that breaks session-scoped locks.
+  let conn: any = dbArg;
   let owned: { db: any; client: { end: () => Promise<void> } } | null = null;
   if (!conn || typeof conn.execute !== "function") {
-    // The default `db` singleton isn't usable here (e.g. it's an inert
-    // mock with no `execute` method). Fall back to the privileged DB.
     owned = await privilegedDb();
     conn = owned!.db;
   }
 
   try {
     const now = options.now ?? new Date();
-    const nowIso = now.toISOString();
-    const workerIdQuoted = workerId.replace(/'/g, "''");
-    const claimSql = `
+    // Parameterized query: all variable values are sent as query parameters,
+    // eliminating SQL injection risk on batchSize, workerId, and timestamps.
+    const claimSql = sql`
       WITH claimed AS (
         UPDATE review_jobs
         SET status = 'claimed',
-            claimed_at = '${nowIso}'::timestamptz,
-            claimed_by = '${workerIdQuoted}',
-            updated_at = '${nowIso}'::timestamptz
+            claimed_at = ${now}::timestamptz,
+            claimed_by = ${workerId},
+            updated_at = ${now}::timestamptz
         WHERE id IN (
           SELECT id FROM review_jobs
           WHERE status = 'pending'
-            AND next_attempt_at <= '${nowIso}'::timestamptz
+            AND next_attempt_at <= ${now}::timestamptz
           ORDER BY next_attempt_at
           FOR UPDATE SKIP LOCKED
           LIMIT ${batchSize}
@@ -464,10 +513,15 @@ export async function reclaimStuckJobs(
     typeof optsOrTimeout === "number"
       ? { visibilityTimeoutMs: optsOrTimeout }
       : optsOrTimeout;
-  const visibilityTimeoutMs = opts.visibilityTimeoutMs ?? VISIBILITY_TIMEOUT_MS;
+  const visibilityTimeoutMs = validatePositiveInteger(
+    opts.visibilityTimeoutMs ?? VISIBILITY_TIMEOUT_MS,
+    "visibilityTimeoutMs",
+  );
 
-  const { db: defaultDb } = await import("@reading-advantage/db");
-  let conn: any = dbArg ?? (defaultDb as any);
+  // Allow tests to pass a mock DB; otherwise always use the privileged
+  // (direct) connection for the same lock/session-scoping reason as
+  // `claimDueJobs`.
+  let conn: any = dbArg;
   let owned: { db: any; client: { end: () => Promise<void> } } | null = null;
   if (!conn || typeof conn.execute !== "function") {
     owned = await privilegedDb();
@@ -477,20 +531,17 @@ export async function reclaimStuckJobs(
   try {
     const now = opts.now ?? new Date();
     const cutoff = new Date(now.getTime() - visibilityTimeoutMs);
-    // Raw string SQL (see `claimDueJobs` for rationale). Test mocks sniff
-    // `conn.execute.mock.calls[0]` for the `status = 'pending'` /
-    // `status = 'claimed'` substrings.
-    const nowIso = now.toISOString();
-    const cutoffIso = cutoff.toISOString();
-    const reclaimSql = `
+    // Parameterized query: timestamps are sent as query parameters, not
+    // interpolated, so a malformed `now` value cannot inject SQL.
+    const reclaimSql = sql`
       UPDATE review_jobs
       SET status = 'pending',
           claimed_at = NULL,
           claimed_by = NULL,
-          updated_at = '${nowIso}'::timestamptz
+          updated_at = ${now}::timestamptz
       WHERE status = 'claimed'
         AND claimed_at IS NOT NULL
-        AND claimed_at < '${cutoffIso}'::timestamptz
+        AND claimed_at < ${cutoff}::timestamptz
       RETURNING id
     `;
     const result = await conn.execute(reclaimSql);
@@ -546,10 +597,7 @@ export interface ProcessJobDeps {
  * @param deps - Dependency overrides for testing.
  */
 export async function processJob(
-  job: ReviewJob & {
-    reviewId: string | null;
-    payloadJson: unknown;
-  },
+  job: ReviewJob,
   deps: ProcessJobDeps,
 ): Promise<void> {
   const {
@@ -776,6 +824,11 @@ export function settleJob(
  * Applies a `settleJob` payload to the database. Separated from
  * `settleJob` so the latter stays a pure function for testing.
  *
+ * The update is a compare-and-swap on `status = 'claimed'`: if the job
+ * was already settled by another worker (or reclaimed and is being
+ * processed elsewhere), the update is a no-op and we do not overwrite a
+ * terminal state.
+ *
  * @param dbArg - DB connection (or privileged singleton if omitted).
  * @param jobId - The job id to settle.
  * @param payload - The output of `settleJob`.
@@ -804,7 +857,7 @@ export async function applySettle(
         claimedBy: payload.claimedBy,
         updatedAt: new Date(),
       })
-      .where(eq(reviewJobs.id, jobId));
+      .where(and(eq(reviewJobs.id, jobId), eq(reviewJobs.status, "claimed")));
   } finally {
     if (owned) await owned.client.end();
   }
@@ -866,7 +919,7 @@ export async function runWorkerTick(opts: CreateReviewWorkerOptions = {}): Promi
 
     for (const job of claimed) {
       try {
-        await processJob(job as ReviewJob & { reviewId: string | null; payloadJson: unknown }, {
+        await processJob(job, {
           db: defaultDb,
           ...(opts.deps ?? {}),
         });
@@ -954,6 +1007,8 @@ function normalizeJobRow(row: Record<string, unknown>): ReviewJob {
     createdAt: new Date(get<string | Date>("created_at", "createdAt")),
     updatedAt: new Date(get<string | Date>("updated_at", "updatedAt")),
     prUrl: get<string>("pr_url", "prUrl"),
+    reviewId: (get<string | null>("review_id", "reviewId") ?? null) as string | null,
+    payloadJson: get<unknown>("payload_json", "payloadJson") ?? null,
     enqueued: false, // worker doesn't enqueue
   };
 }
