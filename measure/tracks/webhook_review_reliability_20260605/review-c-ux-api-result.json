@@ -1,0 +1,112 @@
+{
+  "track_id": "webhook_review_reliability_20260605",
+  "role": "measure-review-c-ux-api",
+  "baseline_sha": "59c4a4c37d3356cf09bf68c331f13f25bc872895",
+  "timestamp": "2026-07-04T12:00:00Z",
+  "status": "pass_with_notes",
+  "summary": "UX/API contract review of the webhook→LLM review reliability track. All 10 review dimensions pass with minor low-severity findings. No blockers found. The implementation is well-structured with proper backward compatibility, typed errors, and plan truthfulness.",
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "low",
+      "category": "export_surface",
+      "description": "packages/webhooks/package.json exports map only includes '.' and './github'. The review-worker module (enqueueReviewJob, createReviewWorker, etc.) is not exposed as a subpath export. External consumers must import via direct file path '@reading-advantage/webhooks/src/review-worker.ts' instead of '@reading-advantage/webhooks/review-worker'.",
+      "impact": "Low — the worker functions are primarily used internally by github.ts and the api package uses domain functions directly. No external consumer currently needs the worker API.",
+      "fix_applied": false,
+      "recommendation": "Consider adding './review-worker' to the exports map if the worker API should be a public package surface. For now, the internal usage pattern is acceptable."
+    },
+    {
+      "id": "F2",
+      "severity": "low",
+      "category": "env_docs",
+      "description": "The .env.example for codecamp-advantage did not document the REVIEW_WORKER_* environment variables (REVIEW_WORKER_ENABLED, REVIEW_WORKER_MAX_ATTEMPTS, REVIEW_WORKER_BACKOFF_BASE_MS, REVIEW_WORKER_VISIBILITY_TIMEOUT_MS, REVIEW_WORKER_BATCH_SIZE, REVIEW_WORKER_MAX_JITTER_MS).",
+      "impact": "Developers deploying the worker won't know which env vars are available for tuning without reading the source code.",
+      "fix_applied": true,
+      "recommendation": "Add REVIEW_WORKER_* vars to apps/codecamp-advantage/.env.example with comments explaining defaults and usage."
+    },
+    {
+      "id": "F3",
+      "severity": "low",
+      "category": "type_naming",
+      "description": "The ReviewJob type exists in two places with different shapes: @reading-advantage/types (Zod-inferred, includes payloadJson/deliveryId/reviewId) and @reading-advantage/webhooks/review-worker (manual interface, includes 'enqueued' flag but not payloadJson/deliveryId/reviewId).",
+      "impact": "Potential confusion for consumers who import from the wrong source. Not a functional bug — the types version is the full DB schema, the webhooks version is a runtime-specific shape.",
+      "fix_applied": false,
+      "recommendation": "Consider renaming the webhooks ReviewJob to ReviewJobResult or similar to avoid the naming collision. The types ReviewJob is the canonical DB row shape."
+    },
+    {
+      "id": "F4",
+      "severity": "info",
+      "category": "backward_compat",
+      "description": "waitForBackgroundReviews is still exported from github.ts and used in phase-6-acceptance.test.ts. The export is preserved for backward compatibility and test utilities.",
+      "impact": "None — this is correct behavior. The function allows tests and graceful shutdown handlers to drain in-flight background reviews.",
+      "fix_applied": false,
+      "recommendation": "No action needed. The export is documented and serves a legitimate purpose."
+    },
+    {
+      "id": "F5",
+      "severity": "info",
+      "category": "jsdoc",
+      "description": "All new exported functions in review-worker.ts have JSDoc comments: enqueueReviewJob, normalizePrKey, claimDueJobs, reclaimStuckJobs, processJob, settleJob, applySettle, createReviewWorker, runWorkerTick, __resetReviewWorkerState. All exported interfaces and constants also have JSDoc.",
+      "impact": "None — meets AGENTS.md documentation standards.",
+      "fix_applied": false,
+      "recommendation": "No action needed."
+    },
+    {
+      "id": "F6",
+      "severity": "info",
+      "category": "admin_api",
+      "description": "Admin API contract is well-structured: listDeadReviewJobs (adminProcedure, paginated with limit/offset, defaults to status='dead'), requeueReviewJob (adminProcedure, UUID input). Both use Zod validation and mapDomainError for typed error responses. Naming follows existing patterns (webhookEvents adminProcedure).",
+      "impact": "None — the contract is RESTful, typed, and consistent with existing patterns.",
+      "fix_applied": false,
+      "recommendation": "No action needed."
+    },
+    {
+      "id": "F7",
+      "severity": "info",
+      "category": "ack_latency",
+      "description": "Webhook handler enqueues the review job via enqueueReviewJob(), then returns 200 immediately. The inline review is deferred by setImmediate() so the ACK resolves before reviewExercise is invoked. Tests verify reviewExercise.mock.calls.length === 0 immediately after the fetch.",
+      "impact": "None — the webhook ACK latency is minimal and does not block on LLM calls.",
+      "fix_applied": false,
+      "recommendation": "No action needed."
+    },
+    {
+      "id": "F8",
+      "severity": "info",
+      "category": "error_messages",
+      "description": "Error messages are clear and not misleading: 'Invalid signature', 'Invalid payload', 'Invalid timestamp', 'Review job not found' (requeueReviewJob), 'normalizePrKey: not a GitHub PR URL'. The mapDomainError function properly maps domain errors to tRPC error codes.",
+      "impact": "None — user-facing error messages are clear and actionable.",
+      "fix_applied": false,
+      "recommendation": "No action needed."
+    },
+    {
+      "id": "F9",
+      "severity": "info",
+      "category": "plan_truthfulness",
+      "description": "Phase 0-5 are marked [x] with accurate green evidence. Phase 6 has [~] for the codecamp-advantage build gate (pre-existing IRs, correctly noted). Phase 7 [~] tasks are correctly marked for closeout role. The red/green evidence sections document actual test results with command outputs.",
+      "impact": "None — the plan accurately represents completed work.",
+      "fix_applied": false,
+      "recommendation": "No action needed."
+    },
+    {
+      "id": "F10",
+      "severity": "info",
+      "category": "contract_parity",
+      "description": "The webhook response shape { received: true, action, prUrl } is preserved. The idempotent delivery response { received: true, idempotent: true, deliveryId } is also preserved. Non-handled events return { received: true, ignored: ... } with 200.",
+      "impact": "None — backward compatibility is maintained.",
+      "fix_applied": false,
+      "recommendation": "No action needed."
+    }
+  ],
+  "tests_run": {
+    "test": "pnpm turbo run test --filter=@reading-advantage/webhooks --filter=@reading-advantage/types --filter=@reading-advantage/domain --filter=@reading-advantage/api",
+    "result": "10/10 tasks successful, 0 failures",
+    "check_types": "pnpm turbo run check-types --filter=@reading-advantage/webhooks --filter=@reading-advantage/types --filter=@reading-advantage/domain --filter=@reading-advantage/api",
+    "check_types_result": "8/8 tasks successful, 0 failures (cached)"
+  },
+  "fixes_applied": [
+    {
+      "file": "apps/codecamp-advantage/.env.example",
+      "description": "Added REVIEW_WORKER_* environment variables with documentation of defaults and usage"
+    }
+  ]
+}
