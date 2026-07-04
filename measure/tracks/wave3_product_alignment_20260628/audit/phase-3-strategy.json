@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "role": "measure-strategy",
+  "track": "wave3_product_alignment_20260628",
+  "phase": "Phase 3: Advantage Games Completion and Scoring Contract",
+  "status": "pass",
+  "summary": "Phase 3 strategy frozen. Seven product/technical decisions recorded in phase-3-decisions.md: shared contract lives in new packages/domain/src/games/ module; GameCompletionInputSchema with 10 fields + .strict() rejecting xp/dragonCount/bossPower; calculateGameXP pure function with Math.min(10, ...) cap; fire-once guard via idempotencyKey UUID and SELECT-before-INSERT on xpLogs; haunted-library as representative migrated game; vitest + jest gate commands; standalone route remains mock but validates via real schema. Test strategy section 0.C updated with five test groups 3A..3E and anti-pattern defenses. Plan.md Phase 3 strategy task marked [x]. Tier 2 items deferred to Phase 4/5+.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "Phase 3 does not add DB unique constraint or schoolId column; those are Phase 4 scope.",
+    "Phase 3 does not extend activity_type pgEnum; uses literal GAME_COMPLETION string until Phase 4.",
+    "Phase 3 migrates only haunted-library; remaining 25 games are Phase 5+ per game-readiness-matrix.md."
+  ],
+  "evidence": [
+    "phase-3-decisions.md created with 7 frozen decisions (3.1..3.7)",
+    "test-strategy.md section 0.C updated with Phase 3 test groups 3A..3E and gate commands",
+    "plan.md Phase 3 strategy task marked [x] with commit c7e37706",
+    "Source evidence inspected: advantage-games_20260626/findings.md §A1/§A2/§D, game-readiness-matrix.md haunted-library row, completeRoute.ts force-static mock, packages/db/src/schema/analytics.ts xpLogs REFERENTIAL, packages/domain/src/progress/mutations.ts recordActivity (left untouched)"
+  ],
+  "commands": [
+    "git diff HEAD~1 --stat confirms 3 files changed: phase-3-decisions.md, plan.md, test-strategy.md"
+  ],
+  "changed_files": [
+    "measure/tracks/wave3_product_alignment_20260628/phase-3-decisions.md",
+    "measure/tracks/wave3_product_alignment_20260628/plan.md",
+    "measure/tracks/wave3_product_alignment_20260628/test-strategy.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}
