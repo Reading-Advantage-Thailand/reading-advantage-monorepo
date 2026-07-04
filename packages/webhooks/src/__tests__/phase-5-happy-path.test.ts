@@ -204,7 +204,7 @@ describe("Phase 5 — happy path E2E", () => {
       prUrl: "https://github.com/org/repo/pull/1",
       reviewId: "pr1",
       payloadJson: {},
-    } as unknown as import("../review-worker.js").EnqueueReviewJobResult["job"] & {
+    } as unknown as import("../review-worker.js").ReviewJob & {
       reviewId: string | null;
       payloadJson: unknown;
     };

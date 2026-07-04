@@ -1,6 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { processJob, settleJob } from "../review-worker.js";
 
+interface SettleJobInput {
+  id: string;
+  attempts: number;
+  maxAttempts: number;
+  status?: string;
+}
+
 const mockUpdate = vi.fn().mockResolvedValue([]);
 const mockDb = {
   update: vi.fn().mockReturnValue({
@@ -71,7 +78,7 @@ describe("Phase 3 — success settle", () => {
       payloadJson: {},
     };
 
-    await processJob(job as unknown as import("@reading-advantage/db").DB, {
+    await processJob(job as unknown as Parameters<typeof processJob>[0], {
       db: mockDb as unknown as import("@reading-advantage/db").DB,
     });
 
@@ -87,7 +94,7 @@ describe("Phase 3 — success settle", () => {
 
   it("settleJob returns succeeded payload for a passing result", () => {
     const settled = settleJob(
-      { id: "job-1", attempts: 0, maxAttempts: 5 } as unknown as import("@reading-advantage/db").DB,
+      { id: "job-1", attempts: 0, maxAttempts: 5 } as unknown as SettleJobInput,
       null,
       { baseDelayMs: 1000, maxJitterMs: 100 },
     );

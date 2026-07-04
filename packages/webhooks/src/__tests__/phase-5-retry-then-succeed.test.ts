@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeAll, beforeEach, afterAll } from "vitest";
 import { createHmac } from "crypto";
-import githubApp from "../github.js";
+import githubApp, { waitForBackgroundReviews } from "../github.js";
 import { createReviewWorker } from "../review-worker.js";
 
 const WEBHOOK_SECRET = "phase-5-test-secret";
@@ -24,6 +24,33 @@ vi.mock("@reading-advantage/ai", () => ({
   createAIClient: vi.fn(() => mockHolder),
 }));
 
+// Mock `enqueueReviewJob` at the review-worker module boundary so the
+// webhook handler doesn't reach the real DB. The worker override below
+// runs the seeded job through `processJob` without touching the DB.
+vi.mock("../review-worker.js", async () => {
+  const actual = await vi.importActual<typeof import("../review-worker.js")>("../review-worker.js");
+  return {
+    ...actual,
+    enqueueReviewJob: vi.fn().mockResolvedValue({
+      id: "job-1",
+      repoOwner: "org",
+      repoName: "repo",
+      pullNumber: 1,
+      status: "pending",
+      attempts: 0,
+      maxAttempts: 5,
+      nextAttemptAt: new Date(),
+      lastError: null,
+      claimedAt: null,
+      claimedBy: null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      prUrl: "https://github.com/org/repo/pull/1",
+      enqueued: true,
+    }),
+  };
+});
+
 vi.mock("@reading-advantage/domain/codecamp", async () => {
   const actual = await vi.importActual<typeof import("@reading-advantage/domain/codecamp")>("@reading-advantage/domain/codecamp");
   return {
@@ -34,6 +61,14 @@ vi.mock("@reading-advantage/domain/codecamp", async () => {
     getExerciseRepoByUrl: vi.fn(),
     logWebhookEvent: vi.fn(),
     completeApprovedPrReviewLesson: vi.fn(),
+    // Mock `reviewExercise` so the worker doesn't touch the real DB.
+    reviewExercise: vi.fn().mockImplementation(async (args) => {
+      if (args.generateReview) {
+        const prompt = `Please review the following code diff:\n\n\`\`\`diff\n${args.prDiff ?? ""}\n\`\`\``;
+        return args.generateReview("system prompt", prompt);
+      }
+      return { passed: true, summary: "ok", comments: [] };
+    }),
   };
 });
 
@@ -59,9 +94,9 @@ import {
   updatePrReview,
   createPrReview,
   getExerciseRepoByUrl,
-  getUserByGithubUsername,
   completeApprovedPrReviewLesson,
 } from "@reading-advantage/domain/codecamp";
+import { getUserByGithubUsername } from "@reading-advantage/domain/users";
 import { postPrComment } from "../github-client.js";
 
 function signPayload(payload: string): string {
@@ -164,7 +199,50 @@ describe("Phase 5 — retry then succeed", () => {
     const res = await githubApp.fetch(req);
     expect(res.status, "webhook response status").toBe(200);
 
-    const worker = createReviewWorker({ intervalMs: 1000 });
+    // Drain the deferred inline review so we count the worker's
+    // postComment, not the inline one.
+    await waitForBackgroundReviews();
+    vi.mocked(postPrComment).mockClear();
+    vi.mocked(updatePrReview).mockClear();
+
+    // The integration test injects the seeded job via the `claim` override
+    // and a `deps` override that uses the per-test AIClient (the
+    // `attemptCount`-counting one), so we can observe the retry-then-
+    // succeed sequence against an in-memory mock DB.
+    const seededJob = {
+      id: "job-1",
+      repoOwner: "org",
+      repoName: "repo",
+      pullNumber: 1,
+      status: "claimed" as const,
+      attempts: 1,
+      maxAttempts: 5,
+      nextAttemptAt: new Date(),
+      lastError: null,
+      claimedAt: new Date(),
+      claimedBy: "worker",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      prUrl: "https://github.com/org/repo/pull/1",
+      reviewId: "pr1",
+      payloadJson: {},
+    } as unknown as import("../review-worker.js").ReviewJob & {
+      reviewId: string | null;
+      payloadJson: unknown;
+    };
+    const worker = createReviewWorker({
+      intervalMs: 1000,
+      claim: vi.fn().mockResolvedValue([seededJob]),
+      reclaim: vi.fn().mockResolvedValue([]),
+      settle: vi.fn().mockReturnValue({
+        status: "succeeded" as const,
+        attempts: 3,
+        nextAttemptAt: new Date(),
+        lastError: null,
+        claimedAt: null,
+        claimedBy: null,
+      }),
+    });
     await worker.run();
 
     expect(attemptCount, "AIClient attempt count").toBe(3);

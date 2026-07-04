@@ -51,8 +51,8 @@ import {
   updatePrReview,
   createPrReview,
   getExerciseRepoByUrl,
-  getUserByGithubUsername,
 } from "@reading-advantage/domain/codecamp";
+import { getUserByGithubUsername } from "@reading-advantage/domain/users";
 import { postPrComment } from "../github-client.js";
 
 function signPayload(payload: string): string {

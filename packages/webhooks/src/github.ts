@@ -14,7 +14,7 @@ import {
   getInstallationTokenForRepo,
   MAX_TIMESTAMP_SKEW_SECONDS,
 } from "./github-client";
-import { enqueueReviewJob } from "./review-worker.js";
+import { enqueueReviewJob } from "./review-worker";
 
 const github = new Hono();
 

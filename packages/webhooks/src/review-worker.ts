@@ -198,7 +198,7 @@ export interface EnqueueReviewJobInput {
  * `enqueued` flag that is `true` when this call inserted the row and
  * `false` when it deduplicated against an existing row.
  */
-export interface EnqueueReviewJobResult {
+export interface ReviewJob {
   id: string;
   repoOwner: string;
   repoName: string;
@@ -216,6 +216,12 @@ export interface EnqueueReviewJobResult {
   /** Runtime-only: true if this call inserted the row, false if it deduped. */
   enqueued: boolean;
 }
+
+/**
+ * @deprecated Use `ReviewJob` (the result IS the job — we no longer wrap it).
+ * Kept as a back-compat alias for callers that haven't migrated yet.
+ */
+export type EnqueueReviewJobResult = ReviewJob;
 
 /**
  * Enqueues a `review_jobs` row for the given PR URL. Idempotent on the
@@ -380,7 +386,7 @@ export interface ClaimDueJobsOptions {
 export async function claimDueJobs(
   dbArg?: any,
   opts: ClaimDueJobsOptions | number = {},
-): Promise<EnqueueReviewJobResult["job"][]> {
+): Promise<ReviewJob[]> {
   const options: ClaimDueJobsOptions = typeof opts === "number" ? { batchSize: opts } : opts;
   const batchSize = options.batchSize ?? CLAIM_BATCH_SIZE;
   const workerId = options.workerId ?? WORKER_ID;
@@ -540,7 +546,7 @@ export interface ProcessJobDeps {
  * @param deps - Dependency overrides for testing.
  */
 export async function processJob(
-  job: EnqueueReviewJobResult["job"] & {
+  job: ReviewJob & {
     reviewId: string | null;
     payloadJson: unknown;
   },
@@ -556,9 +562,9 @@ export async function processJob(
   } = deps;
 
   const prInfo = { owner: job.repoOwner, repo: job.repoName, pullNumber: job.pullNumber };
-  const tokenFn = getToken ?? (await import("./github-client.js")).getInstallationTokenForRepo;
-  const fetchDiffFn = fetchDiff ?? (await import("./github-client.js")).fetchPrDiff;
-  const postCommentFn = postComment ?? (await import("./github-client.js")).postPrComment;
+  const tokenFn = getToken ?? (await import("./github-client")).getInstallationTokenForRepo;
+  const fetchDiffFn = fetchDiff ?? (await import("./github-client")).fetchPrDiff;
+  const postCommentFn = postComment ?? (await import("./github-client")).postPrComment;
 
   const token = await tokenFn();
   const diff = await fetchDiffFn(prInfo, token);
@@ -811,11 +817,11 @@ export interface CreateReviewWorkerOptions {
   deps?: Partial<ProcessJobDeps>;
   /** Override `claimDueJobs` for tests (e.g. a no-op). */
   claim?: (
-    db: any | undefined,
-    opts: ClaimDueJobsOptions | number,
-  ) => Promise<EnqueueReviewJobResult["job"][]>;
+    db?: any,
+    opts?: ClaimDueJobsOptions | number,
+  ) => Promise<ReviewJob[]>;
   /** Override `reclaimStuckJobs` for tests. */
-  reclaim?: (db: any | undefined, opts: ReclaimStuckJobsOptions | number) => Promise<string[]>;
+  reclaim?: (db?: any, opts?: ReclaimStuckJobsOptions | number) => Promise<string[]>;
   /** Override `settleJob` for tests. */
   settle?: (job: { id: string; attempts: number; maxAttempts: number }, err: Error | null, opts: SettleJobOptions) => SettleJobPayload;
 }
@@ -842,7 +848,7 @@ export async function runWorkerTick(opts: CreateReviewWorkerOptions = {}): Promi
   const dbModule = await import("@reading-advantage/db");
   const defaultDb = dbModule.db as any;
 
-  await reclaim(undefined).catch(() => {
+  await reclaim(undefined, undefined).catch(() => {
     // Reclaim failure is non-fatal — the next tick will retry.
   });
 
@@ -860,7 +866,7 @@ export async function runWorkerTick(opts: CreateReviewWorkerOptions = {}): Promi
 
     for (const job of claimed) {
       try {
-        await processJob(job as EnqueueReviewJobResult["job"] & { reviewId: string | null; payloadJson: unknown }, {
+        await processJob(job as ReviewJob & { reviewId: string | null; payloadJson: unknown }, {
           db: defaultDb,
           ...(opts.deps ?? {}),
         });
@@ -929,14 +935,14 @@ export function createReviewWorker(opts: CreateReviewWorkerOptions = {}): Review
  * canonical job shape. Tolerates Postgres row format quirks (snake_case
  * columns → camelCase properties, `Date` parsing).
  */
-function normalizeJobRow(row: Record<string, unknown>): EnqueueReviewJobResult["job"] {
+function normalizeJobRow(row: Record<string, unknown>): ReviewJob {
   const get = <T>(snake: string, camel: string): T => (row[camel] ?? row[snake]) as T;
   return {
     id: get<string>("id", "id"),
     repoOwner: get<string>("pr_owner", "prOwner"),
     repoName: get<string>("pr_repo", "prRepo"),
     pullNumber: get<number>("pr_pull_number", "prPullNumber"),
-    status: get<EnqueueReviewJobResult["job"]["status"]>("status", "status"),
+    status: get<ReviewJob["status"]>("status", "status"),
     attempts: get<number>("attempts", "attempts"),
     maxAttempts: get<number>("max_attempts", "maxAttempts"),
     nextAttemptAt: new Date(get<string | Date>("next_attempt_at", "nextAttemptAt")),
@@ -948,5 +954,6 @@ function normalizeJobRow(row: Record<string, unknown>): EnqueueReviewJobResult["
     createdAt: new Date(get<string | Date>("created_at", "createdAt")),
     updatedAt: new Date(get<string | Date>("updated_at", "updatedAt")),
     prUrl: get<string>("pr_url", "prUrl"),
+    enqueued: false, // worker doesn't enqueue
   };
 }

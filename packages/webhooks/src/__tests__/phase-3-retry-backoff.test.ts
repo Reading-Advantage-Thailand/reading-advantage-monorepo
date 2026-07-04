@@ -1,6 +1,13 @@
 import { describe, it, expect } from "vitest";
 import { settleJob } from "../review-worker.js";
 
+interface SettleJobInput {
+  id: string;
+  attempts: number;
+  maxAttempts: number;
+  status?: string;
+}
+
 describe("Phase 3 — retry backoff", () => {
   it("failure increments attempts and keeps status pending with exponential backoff", () => {
     const baseDelayMs = 1000;
@@ -9,7 +16,7 @@ describe("Phase 3 — retry backoff", () => {
       attempts: 1,
       maxAttempts: 5,
       status: "claimed",
-    } as unknown as import("@reading-advantage/db").DB;
+    } as unknown as SettleJobInput;
 
     const settled = settleJob(job, new Error("model timeout"), {
       baseDelayMs,
@@ -32,7 +39,7 @@ describe("Phase 3 — retry backoff", () => {
       id: "job-1",
       attempts: 2,
       maxAttempts: 5,
-    } as unknown as import("@reading-advantage/db").DB;
+    } as unknown as SettleJobInput;
 
     const settled = settleJob(job, new Error("model timeout"), {
       baseDelayMs,
