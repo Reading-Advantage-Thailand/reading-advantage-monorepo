@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Science Advantage - Reading Advantage Thailand",
     description:
-      "Transform K-12 science education with our comprehensive, NGSS-aligned platform launching in 2025.",
+      "Transform K-12 science education with our comprehensive, NGSS-aligned platform for interactive learning and adaptive curriculum.",
   },
 };
 

@@ -178,6 +178,41 @@ describe("1B — Stale launch dates", () => {
     ).toBe(0);
   });
 
+  it("has no stale launch dates in product page.tsx metadata", async () => {
+    const pageTsxFiles = [
+      "app/[locale]/(marketing)/products/reading-advantage/page.tsx",
+      "app/[locale]/(marketing)/products/primary-advantage/page.tsx",
+      "app/[locale]/(marketing)/products/science-advantage/page.tsx",
+      "app/[locale]/(marketing)/products/codecamp-advantage/page.tsx",
+      "app/[locale]/(marketing)/products/math-advantage/page.tsx",
+      "app/[locale]/(marketing)/products/stem-advantage/page.tsx",
+      "app/[locale]/(marketing)/products/storytime-advantage/page.tsx",
+      "app/[locale]/(marketing)/products/tutor-advantage/page.tsx",
+      "app/[locale]/(marketing)/products/zhongwen-advantage/page.tsx",
+    ];
+    const staleRe =
+      /(coming|launching|new for)\s+.*\b202[56]\b|starting\s+may\s+2026|coming\s+in\s+2026/gi;
+    let staleCount = 0;
+    const violations: string[] = [];
+    for (const relPath of pageTsxFiles) {
+      if (!(await fileExists(relPath))) continue;
+      const text = await readSrcFile(relPath);
+      const lines = text.split("\n");
+      lines.forEach((line, idx) => {
+        const hit = staleRe.test(line);
+        staleRe.lastIndex = 0;
+        if (hit) {
+          staleCount++;
+          violations.push(`${relPath}:${idx + 1}: ${line.trim()}`);
+        }
+      });
+    }
+    expect(
+      staleCount,
+      `Stale launch date count in page.tsx metadata: ${staleCount}. Violations:\n${violations.join("\n")}`,
+    ).toBe(0);
+  });
+
   it("positive control: product locale files still exist", async () => {
     const locales = await listProductLocaleFiles();
     expect(locales.length).toBeGreaterThan(0);

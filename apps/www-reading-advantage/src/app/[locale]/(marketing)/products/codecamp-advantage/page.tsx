@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "CodeCamp Advantage - Reading Advantage Thailand",
     description:
-      "Transform your development journey with our AI-powered learning platform launching in 2025.",
+      "Transform your development journey with our AI-powered learning platform with personalized instruction and project-based curriculum.",
   },
 };
 
