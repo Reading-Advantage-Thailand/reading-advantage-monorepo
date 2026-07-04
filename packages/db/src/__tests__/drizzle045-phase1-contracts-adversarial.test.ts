@@ -87,7 +87,7 @@ const EXPECTED_SCHEMA_FILES = [
   "users.ts",
 ] as const;
 
-const EXPECTED_MIGRATION_INDICES = Array.from({ length: 25 }, (_, i) =>
+const EXPECTED_MIGRATION_INDICES = Array.from({ length: 26 }, (_, i) =>
   i.toString().padStart(4, "0"),
 );
 

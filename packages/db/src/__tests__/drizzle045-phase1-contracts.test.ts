@@ -87,7 +87,7 @@ const EXPECTED_SCHEMA_FILES = [
 ] as const;
 
 // Migration SQL surface: 0000 through 0024 inclusive (25 files).
-const EXPECTED_MIGRATION_INDICES = Array.from({ length: 25 }, (_, i) =>
+const EXPECTED_MIGRATION_INDICES = Array.from({ length: 26 }, (_, i) =>
   i.toString().padStart(4, "0"),
 );
 

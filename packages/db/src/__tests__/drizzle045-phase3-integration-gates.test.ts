@@ -314,6 +314,7 @@ const EXPECTED_JOURNAL_TAGS = [
   "0022_flowery_black_tarantula",
   "0023_cultured_sunspot",
   "0024_futuristic_vulture",
+  "0025_review_jobs",
 ] as const;
 
 describe("drizzle045-phase3-integration-gates — Journal entries for full migration apply (Task 5)", () => {

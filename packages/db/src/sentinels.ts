@@ -39,4 +39,5 @@ export const sentinelProbes: Record<string, SentinelProbe> = {
   "0022_flowery_black_tarantula": { tag: "0022_flowery_black_tarantula", kind: "table", target: "article_activity_logs" },
   "0023_cultured_sunspot": { tag: "0023_cultured_sunspot", kind: "column", target: "sales_roleplay_attempts.audio_storage_key" },
   "0024_futuristic_vulture": { tag: "0024_futuristic_vulture", kind: "table", target: "login_attempts" },
+  "0025_review_jobs": { tag: "0025_review_jobs", kind: "table", target: "review_jobs" },
 };

@@ -112,6 +112,7 @@ const EXPECTED_MIGRATION_FILES = [
   "0022_flowery_black_tarantula.sql",
   "0023_cultured_sunspot.sql",
   "0024_futuristic_vulture.sql",
+  "0025_review_jobs.sql",
 ] as const;
 
 const EXPECTED_ROLE_VALUES = [

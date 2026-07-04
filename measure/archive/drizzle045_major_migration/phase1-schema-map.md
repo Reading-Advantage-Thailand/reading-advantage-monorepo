@@ -94,8 +94,9 @@ covers the full set.
 | 22 | 0022 | `0022_flowery_black_tarantula.sql` | current | Post-production ceiling | Reading/Primary legacy activity, flashcard, and subscription tables |
 | 23 | 0023 | `0023_cultured_sunspot.sql` | current | Post-production ceiling | Allows nullable Sales roleplay `audio_storage_key` |
 | 24 | 0024 | `0024_futuristic_vulture.sql` | current | Post-production ceiling | Durable login-attempt tracking for production rate limiter |
+| 25 | 0025 | `0025_review_jobs.sql` | current | Post-production ceiling | Postgres-backed PR review job queue for webhook reliability |
 
-**Total migration SQL bytes:** current live surface across 25 files.
+**Total migration SQL bytes:** current live surface across 26 files.
 
 ### 2.1 Re-stamp invariant
 
@@ -123,8 +124,8 @@ not break them.
 
 | File | Role |
 |------|------|
-| `_journal.json` | Migration journal (25 entries, see §3) |
-| `0000_snapshot.json` … `0024_snapshot.json` | Per-migration schema snapshots |
+| `_journal.json` | Migration journal (26 entries, see §3) |
+| `0000_snapshot.json` … `0025_snapshot.json` | Per-migration schema snapshots |
 | `README.md` | Drizzle-kit auto-generated readme |
 
 ---
@@ -176,7 +177,7 @@ asserts:
 1. `packages/db/src/schema/` contains every expected schema file
    (18 names, including `marketing.ts`, `auth.ts`, `primary.ts`, and `sales.ts`).
 2. `packages/db/drizzle/` contains every expected migration SQL file
-   (25 indices, 0000_ through 0024_).
+   (26 indices, 0000_ through 0025_).
 3. This artifact mentions every schema file name above (proving the
    artifact was generated against the live surface, not a snapshot).
 4. This artifact references every migration index (proving no
