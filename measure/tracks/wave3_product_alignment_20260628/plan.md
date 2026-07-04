@@ -29,11 +29,11 @@
   - Delivered: `apps/www-reading-advantage/src/lib/__tests__/phase-w3-claims.test.ts` covering groups 1A..1I with positive controls.
   - Red command: `pnpm --filter www-reading-advantage test phase-w3-claims` — 13/19 tests fail at baseline for the intended false/missing claims; lint and check-types clean.
   - Commit: `df22b0e1`
-- [ ] Task: Update website copy/locales to match approved product reality.
-- [ ] Task: Remove or label planned/nonexistent product pages.
-- [ ] Task: Replace placeholder case studies or clearly mark them as examples.
-- [ ] Task: Add metadata/SEO fixes for highest-risk public pages if part of claim correction.
-- [ ] Task: Run www app targeted tests/build/lint/type where available.
+- [~] Task: Update website copy/locales to match approved product reality.
+- [~] Task: Remove or label planned/nonexistent product pages.
+- [~] Task: Replace placeholder case studies or clearly mark them as examples.
+- [~] Task: Add metadata/SEO fixes for highest-risk public pages if part of claim correction.
+- [~] Task: Run www app targeted tests/build/lint/type where available.
 
 ## Phase 2: Marketing App Public Workflow Security
 
