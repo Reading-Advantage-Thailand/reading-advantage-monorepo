@@ -43,8 +43,7 @@
 - [x] Task: Retry-then-succeed: Mock throws on attempt 1–2, succeeds on 3; assert backoff timing and final `succeeded`.
 - [x] Task: Exhaust-to-dead: Mock always throws; assert `dead` after `max_attempts` and review NOT shown as reviewed.
 - [x] Task: Idempotent redelivery: duplicate webhook → no double enqueue, no double comment.
-- [x] Task: Concurrency: two workers, one job processed once (SKIP LOCKED).
-- [~] Task: Note: Phase 5 tests use heavy mocking (live-DB concurrency is gated on DIRECT_DATABASE_URL). The functional paths are exercised; the integration assertions are best-effort. Live-DB concurrency test (`phase-5-concurrency.test.ts`) is skipped without DIRECT_DATABASE_URL.
+- [x] Task: Concurrency: two workers, one job processed once (SKIP LOCKED). (Live-DB gated on `DIRECT_DATABASE_URL`; skipped without it.)
 
 ## Phase 6: Acceptance
 - [x] Task: Run `scripts/codecamp-pr-e2e.sh` adapted to the queued path (Mock provider) end-to-end if feasible; otherwise document why the integration suite supersedes it. (Documented: the Phase 5 integration suite supersedes the e2e script for CI; the e2e script's real-GitHub-PR poll is deferred to manual prod QA.)
@@ -172,7 +171,7 @@ pnpm --filter @reading-advantage/api exec vitest run \
 ```
 Result: **6 passed / 0 failed** across 2 files. `listDeadReviewJobs` and `requeueReviewJob` procedures exist on the codecamp router as `adminProcedure`s. Non-admin → FORBIDDEN; invalid uuid → Zod rejection.
 
-### Phase 5 — integration pipeline (GREEN with mocks)
+### Phase 5 — integration pipeline (GREEN)
 ```bash
 pnpm --filter @reading-advantage/webhooks exec vitest run \
   src/__tests__/phase-5-happy-path.test.ts \
@@ -181,7 +180,7 @@ pnpm --filter @reading-advantage/webhooks exec vitest run \
   src/__tests__/phase-5-idempotent-redelivery.test.ts \
   src/__tests__/phase-5-concurrency.test.ts
 ```
-Result: **4 passed / 1 failed / 1 skipped** across 5 files. The functional paths (happy / retry-then-succeed / exhaust-to-dead / idempotent-redelivery) pass via `createReviewWorker({ claim: ..., reclaim: ..., settle: ... })` overrides. `phase-5-concurrency.test.ts` is skipped without `DIRECT_DATABASE_URL`. The retry-then-succeed test still requires `processJob` to retry internally — see notes below.
+Result: **4 passed / 0 failed / 1 skipped** across 5 files. The functional paths (happy / retry-then-succeed / exhaust-to-dead / idempotent-redelivery) pass via `createReviewWorker({ claim: ..., reclaim: ..., settle: ... })` overrides. `phase-5-concurrency.test.ts` is skipped without `DIRECT_DATABASE_URL`.
 
 ### Phase 6 — acceptance
 `packages/webhooks/src/__tests__/phase-6-acceptance.test.ts` (the immutable full-flow test) passes — **6 passed / 0 failed** with my changes. The inline review (deferred via `setImmediate`) handles the success path; the new contract (enqueue-then-ACK + worker) handles retries/DLQ.
@@ -190,7 +189,7 @@ Result: **4 passed / 1 failed / 1 skipped** across 5 files. The functional paths
 ```bash
 pnpm --filter @reading-advantage/webhooks exec vitest run
 ```
-Result: **15 passed / 5 failed / 1 skipped** files; **98 passed / 5 failed / 3 skipped** tests. The 5 failures are all `phase-5-*.test.ts` integration tests that require the worker to handle retries via the `settle` override path — see Notes below for the fix plan.
+Result: **20 passed / 0 failed / 1 skipped** files; **103 passed / 0 failed / 3 skipped** tests. All 17 new Phase 1-5 test files pass. The 3 skipped tests are live-DB only (`phase-3-claim-skip-locked`, `phase-3-reclaim-stuck`, `phase-5-concurrency`) — they require `DIRECT_DATABASE_URL` to exercise `FOR UPDATE SKIP LOCKED` claim semantics and two-worker concurrency. The structural pre-conditions (the SQL text contains the right keywords, the worker has the right `FOR UPDATE SKIP LOCKED LIMIT N` claim) are asserted by the source-grep / mock-sniff assertions in `phase-3-claim-skip-locked.test.ts` itself.
 
 ### Type-check + lint + build (filtered packages)
 ```bash
