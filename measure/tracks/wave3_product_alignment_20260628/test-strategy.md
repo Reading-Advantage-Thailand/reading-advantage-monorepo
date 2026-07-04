@@ -2,14 +2,15 @@
 
 > **Track ID:** `wave3_product_alignment_20260628`
 > **Baseline SHA:** `8a47d2df999e35d9d47de9eb590ae29523c70bae`
-> **Active phases for this cycle:** Phase 0 (Product Decision Intake) and Phase 1
-> (Website Claims Correction). Phase 2 (Marketing App Public Workflow Security) is
-> **complete and accepted** — its strategy is preserved verbatim in §2–§10 for
-> provenance. Phases 3–5 are deferred (see §9 Deferrals).
+> **Active phases for this cycle:** Phase 3 (Advantage Games Completion and Scoring
+> Contract). Phases 0, 1, and 2 are **complete and accepted** — their strategies are
+> preserved verbatim below for provenance. Phases 4–5 remain deferred (see §9
+> Deferrals).
 >
 > This document specifies:
-> - §0.A — Phase 0 artifact tests (decisions/matrix truthfulness)
-> - §0.B — Phase 1 live-behavior tests (claims correction; new this cycle)
+> - §0.A — Phase 0 artifact tests (decisions/matrix truthfulness) — complete
+> - §0.B — Phase 1 live-behavior tests (claims correction) — complete
+> - §0.C — Phase 3 live-behavior tests (games completion/scoring contract) — **active**
 > - §2–§10 — Phase 2 strategy, preserved unchanged for provenance
 
 ---
@@ -270,6 +271,245 @@ the phase result `known_failures` — never silently absorbed into a "green" cla
   consent-gate claim.
 - **No route-handler or DB test in Phase 1.** The website has no backend workflow that
   produces these claims — they are static copy. Phase 1 does not mock DBs or AI clients.
+
+---
+
+## 0.C. Phase 3 — Advantage Games Completion and Scoring Contract (live-behavior tests)
+
+Phase 3 is the live-behavior phase that delivers the shared game-completion contract
+frozen in `phase-3-decisions.md`. It spans **two test runners** because the contract
+lives in `packages/domain` (vitest) while the route handler and game component live in
+`apps/advantage-games` (jest). The contract is the load-bearing artifact; the route
+handler is a thin validator+delegator; the game component is the migration proof.
+
+### What Phase 3 must defend against (anti-patterns)
+
+| Anti-pattern | Where it applies in Phase 3 | Defense |
+|---|---|---|
+| **A4** Vacuous-pass on nothing-done | Every schema-rejection test (3A); every fire-once test (3C) | **Positive control**: every rejection test pairs an invalid payload (rejected) with a valid payload (accepted). A schema that rejects everything fails the positive control. Every fire-once test pairs a first call (insert, `duplicate: false`) with a second call (dedup, `duplicate: true`, no insert). A function that always returns `duplicate: true` fails the first-call control. |
+| **A5** False-claim text vs test reality | `plan.md` Phase 3 task text | Do not write "contract enforced" / "XP server-side" / "fire-once" in `plan.md` unless `pnpm --filter @reading-advantage/domain test -- games` exits 0. The cited command is the source of truth. |
+| **A6** Registry-note overstatement | `measure/tracks.md` Wave 3 row; `product-risk-register.md` | Do **not** claim D-01/D-02/D-05 or CA-013 / MR-H05 is "resolved" until Phase 3 acceptance passes. The findings stay "open" in `product-risk-register.md` until Phase 5 pilot import green. |
+| **A3** Digit-only as labeled count | XP formula tests (3B) | Use labeled-integer assertions: `expect(result.xpEarned).toBe(7)` with a comment `// XP earned: 7 = min(10, 5 + 2)`; never `expect(result.xpEarned).toBeTruthy()` or `rg -q '[0-9]+'`. |
+| **A7** Over-broad filter swallowing hits | Schema-rejection tests (3A) | Match exact invalid keys (`xp`, `dragonCount`, `bossPower`), not bare English words like "score"/"bonus"/"power" (which appear legitimately in `metadata`). |
+| **A9** Pre-existing test references archived track paths | New `games.test.ts`, rewritten `completeRoute.test.ts`, extended `HauntedLibraryGame.test.tsx` | Tests reference `packages/domain/src/games/` and `apps/advantage-games/src/` only — never a `measure/tracks/<id>/` path. Provenance comments may cite `phase-3-decisions.md` but no runtime dependency. |
+| **A2** Consent-blind publish gate | N/A — no publish flow in Phase 3. | Consciously not applicable. |
+| **A1, A8, A10, A11, A12, A13** | Orchestrator-internal or closeout classes. | Consciously not applicable to Phase 3 product tests. |
+
+### Confirmed contract gaps to defend against (evidence-mapped, frozen in `phase-3-decisions.md`)
+
+| Group | Gap IDs | Evidence | Phase 3 Red asserts |
+|-------|---------|----------|---------------------|
+| 3A — Shared Zod contract | D-01, D-05, B25-002, B21-002, B21-037, B22-026 | `advantage-games_20260626/findings.md` §A1, §D | `GameCompletionInputSchema` exists in `packages/domain/src/games/schema.ts`; `.strict()` rejects `xp`, `dragonCount`, `bossPower`, `accuracy > 1`, invalid `gameType`, missing `idempotencyKey`. Positive control: valid payload parses. |
+| 3B — Server-side XP formula | D-02, B25-001, B20-039 | `findings.md` §A1, §A2; `completeRoute.ts:12` (`xpEarned = xp ?? ...`) | `calculateGameXP(input)` returns `Math.min(10, base + bonus)`; returns 0 for `totalAttempts === 0`; ignores any client `xp` (the input type has no `xp` field). The route handler's mock response uses `calculateGameXP`, never echoes client `xp`. |
+| 3C — Fire-once completion guard | B28-017, B30-002, B23-008, B24-008 | `findings.md` §A1, §A5 | `recordGameCompletion` first call inserts with `activityId = game:<gameType>:<idempotencyKey>`; second call with same key returns `duplicate: true, xpEarned: 0` with **no** `db.insert`. The `activityId` is stable across retries (not `Date.now()`). |
+| 3D — Representative game migration | D-01 (haunted-library), B21-235 | `game-readiness-matrix.md` haunted-library row | `HauntedLibraryGame.tsx#onComplete` sends `{ gameType: "haunted-library", difficulty, score, accuracy, correctAnswers, totalAttempts, duration, victory, idempotencyKey, clientTimestamp }` — no `xp` field. `idempotencyKey` is stable across the game session (generated once, stored in `useRef`). |
+| 3E — Route handler delegation | D-01, D-02, A5 (mock-only API) | `completeRoute.ts:6` (`force-static`) | `createCompleteRoute()` validates via `GameCompletionInputSchema`, calls `calculateGameXP`, returns `{ xpEarned, activityId, duplicate: false, status: 200 }`. The route does NOT call a real DB (standalone mock — Decision 3.7). |
+
+### Gate commands (Phase 3)
+
+- **RED_TEST_COMMAND:** `pnpm --filter @reading-advantage/domain test -- games`
+  (bounded vitest; Mid-Red may also run
+  `pnpm --filter vocabulary-games test -- --testPathPatterns=completeRoute` to prove
+  the rewritten jest test fails for the intended reason).
+- **GREEN_TEST_COMMAND:** `pnpm --filter @reading-advantage/domain test -- games`
+  (vitest green). Jr-Green also runs
+  `pnpm --filter vocabulary-games test -- --testPathPatterns=completeRoute` (jest green).
+- **PROJECT_LINT:** `pnpm --filter @reading-advantage/domain lint && pnpm --filter vocabulary-games lint`
+- **PROJECT_CHECKS:** `pnpm --filter @reading-advantage/domain check-types && pnpm --filter vocabulary-games check-types`
+
+### Phase 3 Red → Green → Closeout
+
+Phase 3 is decomposed into five test groups (3A..3E). All groups share the Green gate
+`pnpm --filter @reading-advantage/domain test -- games` (vitest, the new `games.test.ts`)
+plus `pnpm --filter vocabulary-games test -- --testPathPatterns=completeRoute` (jest,
+rewritten `completeRoute.test.ts`) and the closeout gate below.
+
+**Target files (new / rewritten):**
+- `packages/domain/src/games/schema.ts` (new) — `gameCompletionInputSchema`,
+  `gameCompletionResultSchema`, `gameTypeEnum`, `gameDifficultyEnum`.
+- `packages/domain/src/games/xp.ts` (new) — `calculateGameXP`.
+- `packages/domain/src/games/mutations.ts` (new) — `recordGameCompletion`.
+- `packages/domain/src/games/permissions.ts` (new) — `games:complete`, `games:read:own`.
+- `packages/domain/src/games/errors.ts` (new) — `DuplicateCompletionError`,
+  `InvalidGameCompletionError`.
+- `packages/domain/src/games/index.ts` (new) — barrel.
+- `packages/domain/src/__tests__/games.test.ts` (new) — groups 3A, 3B, 3C.
+- `apps/advantage-games/src/lib/games/api/completeRoute.ts` (rewritten) — delegate to
+  schema + `calculateGameXP`.
+- `apps/advantage-games/src/lib/games/api/types.ts` (rewritten) — replace
+  `CompleteRequest`/`CompleteResponse` with re-exports from
+  `@reading-advantage/domain/games` (or inline Zod types).
+- `apps/advantage-games/src/lib/games/api/completeRoute.test.ts` (rewritten) — group 3E.
+- `apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx`
+  (modified) — rebuild `onComplete` payload.
+- `apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.test.tsx`
+  (extended) — group 3D.
+
+**Red command (bounded):** `pnpm --filter @reading-advantage/domain test -- games`
+
+**Red assertions (one block per group, all asserting against HEAD `8900196e` source):**
+
+1. **3A shared Zod contract** — `GameCompletionInputSchema.parse({ ...valid payload })`
+   succeeds; `.parse({ ...valid, xp: 100 })` throws (unknown key); `.parse({ ...valid,
+   accuracy: 75 })` throws (`accuracy > 1`); `.parse({ ...valid, gameType: "fake-game" })`
+   throws (invalid enum); `.parse({ ...valid, idempotencyKey: "not-a-uuid" })` throws;
+   `.parse({ ...valid, dragonCount: 5 })` throws (unknown key — D-01 dead field).
+   **Positive control:** a fully-valid payload parses to a `GameCompletionInput` with
+   no `xp` field. **A4 defense:** the test asserts `!("xp" in parsed)` so a schema that
+   accidentally includes `xp` fails.
+2. **3B server-side XP formula** — `calculateGameXP({ correctAnswers: 10,
+   totalAttempts: 10, accuracy: 1, victory: true, duration: 30_000, ... })` returns
+   `Math.min(10, 10 + 2 + 1 + 1) = 10` (capped). `calculateGameXP({ correctAnswers: 5,
+   totalAttempts: 10, accuracy: 0.5, victory: false, duration: 90_000, ... })` returns
+   `Math.min(10, 5 + 0 + 0 + 0) = 5`. `calculateGameXP({ correctAnswers: 0,
+   totalAttempts: 0, ... })` returns `0`. **A3 defense:** each assertion has a labeled
+   comment `// XP earned: N = min(10, base + bonus)`. The test also asserts the input
+   type has no `xp` field (compile-time `keyof GameCompletionInput` excludes `"xp"`).
+3. **3C fire-once guard** — mock `TenantDB` with `select: vi.fn()` returning `[]` on
+   first call and `[{ activityId }]` on second call. First `recordGameCompletion` call:
+   `db.insert` called once, returns `{ duplicate: false, xpEarned: <calculated>,
+   activityId: "game:haunted-library:<uuid>" }`. Second call (same `idempotencyKey`):
+   `db.insert` **not** called, returns `{ duplicate: true, xpEarned: 0, activityId:
+   "game:haunted-library:<uuid>" }`. **A4 defense:** the test asserts `db.insert`
+   call count is exactly 1 across both calls (not 0, not 2). The `activityId` is
+   identical across both calls (stable, not `Date.now()`).
+4. **3D representative game migration** — render `HauntedLibraryGame` with mock
+   sentences, simulate game-over, capture `onComplete` payload. Assert payload has
+   `gameType === "haunted-library"`, `idempotencyKey` is a UUID, `duration` is a
+   non-negative integer, `victory` is a boolean, and **no `xp` key** is present.
+   Assert `idempotencyKey` is stable across re-renders (generated once per session,
+   not per `onComplete` call). **A4 defense:** the test asserts `onComplete` was
+   called exactly once for a single game-over (not zero, not twice — defends against
+   B30-002 boss-tick duplicate at the component level).
+5. **3E route handler delegation** — `createCompleteRoute().POST(validRequest)` returns
+   200 with `{ xpEarned: <calculated>, activityId, duplicate: false, status: 200 }`.
+   `POST({ ...valid, xp: 100 })` returns 400 (schema rejection). `POST({ ...valid,
+   accuracy: 75 })` returns 400. The route does **not** call `db.insert` (standalone
+   mock — Decision 3.7). **A4 defense:** the test asserts a valid payload returns 200
+   (positive control) and `db.insert` is not called (mock honesty).
+
+**Positive controls (A4 defense — non-vacuity):** every group includes a positive
+control. 3A: valid payload parses. 3B: known-input → known-XP. 3C: first call inserts.
+3D: `onComplete` fires once with valid shape. 3E: valid POST returns 200. A group that
+passes only because the schema rejects everything or the function no-ops fails its
+positive control.
+
+### Phase 3 Green gate
+
+- `pnpm --filter @reading-advantage/domain test -- games` exits **0** (vitest, the new
+  `games.test.ts` passes; no regression in the existing `packages/domain` suite — run
+  the whole filter at acceptance: `pnpm --filter @reading-advantage/domain test`).
+- `pnpm --filter vocabulary-games test -- --testPathPatterns=completeRoute` exits **0**
+  (jest, rewritten `completeRoute.test.ts` passes).
+- `pnpm --filter @reading-advantage/domain lint` exits 0.
+- `pnpm --filter vocabulary-games lint` exits 0.
+- `pnpm --filter @reading-advantage/domain check-types` exits 0.
+- `pnpm --filter vocabulary-games check-types` exits 0.
+
+### Phase 3 closeout gate
+
+- All Green-gate commands green.
+- Every gap in the table above (3A..3E) has at least one **red-at-baseline /
+  green-after-fix** test with a positive control.
+- `phase-3-decisions.md` exists and its Tier 1 decisions are reflected in the
+  implemented schema/formula/function. Tier 2 items (`[b] deferred:po` / `[b]
+  deferred:infra`) remain deferred in `plan.md` Phase 4 / Phase 5 — Phase 3 did not
+  invent the `activity_type` pgEnum extension, the `gameCompletions` table, or the
+  remaining 25 games' migration.
+- The `recordActivity` function in `packages/domain/src/progress/mutations.ts` is
+  **untouched** (D-06 host-mutation hardening is Phase 4 — Phase 3 did not scope-creep).
+- `measure/tracks.md` does NOT claim D-01/D-02/D-05 / CA-013 / MR-H05 is "resolved" —
+  the findings stay "open" until Phase 5 pilot import green (A6 defense).
+- The existing `packages/domain` suite (374 tests at baseline) has no regressions.
+- The existing `vocabulary-games` suite has no regressions in tests other than the
+  rewritten `completeRoute.test.ts` (which intentionally changes its assertions).
+
+### Phase 3 fixtures, mocks, and live-behavior proof
+
+- **Mock DB (vitest, `games.test.ts`):** follow the established
+  `packages/domain/src/__tests__/mock-db.ts` pattern (Wave 0 reusable harness). Mock
+  `TenantDB` with `select: vi.fn().mockReturnValue({ from: ... })` and
+  `insert: vi.fn().mockReturnValue({ values: ... })`. Mock `db.unscoped()` to return
+  the same mock (the function calls `db.unscoped("xpLogs is REFERENTIAL...")`).
+  Use these to assert side-effect **absence** on the duplicate path
+  (`expect(db.insert).not.toHaveBeenCalled()`).
+- **Auth/permission mock:** mock `assertCan` from `@reading-advantage/auth` to
+  throw `AuthError` for unauthorized users; the test asserts `recordGameCompletion`
+  throws before any DB call. Real `assertCan` is unit-tested elsewhere; Phase 3 tests
+  the *contract*, not the auth primitive.
+- **`xpLogs` schema mock:** `vi.mock("@reading-advantage/db/schema", () => ({
+  xpLogs: { userId: "userId", xpEarned: "xpEarned", activityId: "activityId",
+  activityType: "activityType" },
+}))` — matches the pattern in `progress.test.ts:6-15`.
+- **No live DB, no PGlite, no real Postgres** in Phase 3. The contract is proven at
+  the unit level with mock DB. Phase 4 may add a PGlite live-DB proof for the
+  tenant-safe persistence (mirroring the marketing `phase-8-projects-live.test.ts`
+  pattern); Phase 3 does not require it.
+- **HauntedLibraryGame test (jest):** use the existing
+  `HauntedLibraryGame.test.tsx` pattern — `render(<HauntedLibraryGame sentences={mockSentences} onComplete={jest.fn()} />)`.
+  Extend with a test that simulates game-over (mock `tickLibrary` to return
+  `phase: "victory"`) and captures the `onComplete` payload.
+- **Route handler test (jest):** use the existing `MockRequest` pattern in
+  `completeRoute.test.ts:5-15`. Rewrite the assertions: the test no longer asserts
+  `xp: 100` is echoed; it asserts `xp` is rejected and `xpEarned` is server-computed.
+
+### Phase 3 architecture guardrails and changed-contract risks
+
+- **Do not modify `recordActivity` or `updateLessonProgress`** in
+  `packages/domain/src/progress/mutations.ts`. Those are D-06 host-mutation hardening,
+  owned by Phase 4. Phase 3 creates the *new* `recordGameCompletion` function only.
+  A test should assert `recordActivity` source is unchanged (grep for the function
+  signature in `mutations.ts` and assert it matches the baseline).
+- **Do not add a `gameCompletions` table or migrate `xpLogs`/`gameRankings`** in
+  Phase 3. Schema migrations are Phase 4. Phase 3 uses the existing `xpLogs` table
+  (REFERENTIAL, no `schoolId`) with `activityId = game:<gameType>:<idempotencyKey>`.
+- **Do not add `schoolId` to anything in Phase 3.** Tenant-safe classification is
+  Phase 4.
+- **Do not extend the `activity_type` pgEnum** in Phase 3. Use the literal string
+  `"GAME_COMPLETION"` (the `xpLogs.activityType` column is `text`, not the pgEnum).
+  Phase 4 may migrate.
+- **Do not migrate any game other than `haunted-library`** in Phase 3. The remaining
+  25 games are Phase 5+ work, gated by per-game readiness.
+- **Do not remove the client-side `apps/advantage-games/src/lib/xp.ts`** — it remains
+  as a preview for unmigrated games. The server-side `calculateGameXP` is the source
+  of truth; the client-side `calculateXP` is a display preview only.
+- **Changed-contract risk:** the rewritten `completeRoute.test.ts` intentionally
+  changes its assertions (from "echoes `xp`" to "rejects `xp`"). This is a true
+  Red → Green, not a regression. The acceptance role must verify the rewritten test
+  fails at the Red commit (before the route handler is rewritten) and passes at the
+  Green commit (after the route handler delegates to the schema).
+- **Changed-contract risk:** `HauntedLibraryGame.tsx#onComplete` callback signature
+  changes (callers must update). The page that renders `HauntedLibraryGame` must be
+  updated to POST the new payload shape. Jr-Green must update
+  `apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/haunted-library/page.tsx`
+  (or wherever `onComplete` is wired) to match.
+
+### Phase 3 intentionally-red aggregate-suite handling
+
+The monorepo aggregate suite (`pnpm turbo run test`) is **red at baseline** from
+pre-existing, owner-labeled failures outside Wave 3 (see `measure/tracks.md:112-115`:
+"aggregate reds are pre-existing/owner-labeled"). Phase 3 does **not** attempt to green
+the aggregate suite. The Phase 3 gate is **scoped to the two filters**
+(`pnpm --filter @reading-advantage/domain test -- games` and
+`pnpm --filter vocabulary-games test -- --testPathPatterns=completeRoute`), which must
+be fully green. Any non-domain / non-vocabulary-games aggregate red observed during
+this phase is pre-existing and must be labeled as such in the phase result
+`known_failures` — never silently absorbed into a "green" claim (A5/A6).
+
+### Phase 3 artifact vs live-behavior distinction
+
+- **Live-behavior tests (load-bearing):** `games.test.ts` (vitest) calls the real
+  `GameCompletionInputSchema.parse`, the real `calculateGameXP`, and the real
+  `recordGameCompletion` with a mock `TenantDB`. These prove the contract logic.
+  `completeRoute.test.ts` (jest) calls the real route handler `POST` function with a
+  mock `Request`. `HauntedLibraryGame.test.tsx` (jest) renders the real component.
+- **Artifact/documentation tests:** `phase-3-decisions.md` is a frozen artifact, not a
+  live-behavior test. Its truthfulness is guarded by the Phase 0 artifact pattern
+  (re-verify cited literals exist at HEAD). Phase 3 does not add new artifact tests —
+  the decisions doc is the strategy's falsifiability anchor, not a test target.
+- **No PGlite / live-DB test in Phase 3.** The contract is proven at the unit level.
+  Phase 4 may add a PGlite live-DB proof for tenant-safe persistence; Phase 3 does not
+  require it (the standalone games app has no DB, and the host-app import is Phase 5+).
 
 ---
 
@@ -609,21 +849,32 @@ labeled as such in the phase result `known_failures` — never silently absorbed
 
 ## 9. Deferrals (explicit)
 
-- **Phase 0 — Product Decision Intake:** **DONE this cycle.** Decisions recorded in
+- **Phase 0 — Product Decision Intake:** **DONE.** Decisions recorded in
   `phase-0-decisions.md`; claims matrix frozen in `phase-0-claims-matrix.md`. Tier 1
   floors are `[x]`; Tier 2 PO-gated positive replacements remain `[b] deferred:po` with
   precise questions for the PO (see `phase-0-decisions.md` Decision 1B/2B/4B).
-- **Phase 1 — Website Claims Correction:** **scheduled this cycle** (strategy in §0.B).
-  Red tests assert the Tier 1 floor against `apps/www-reading-advantage` source at HEAD
-  `8a47d2df`. Tier 2 `[NEEDS-PO]` items are not invented by Phase 1.
-- **Phases 3–5 — Advantage Games** (completion/scoring contract, tenant-safe persistence
-  and leaderboards, embeddable runtime/i18n/shared package): deferred to a later cycle.
-  Test strategy for these will be authored when scheduled; the plan's D-01..D-11 evidence
-  refs and the import policy from `phase-0-decisions.md` Decision 3 are carried forward
-  as the gating items.
-- **Phase 6 — Product Acceptance:** deferred until Phases 1 and 3–5 are executed. The
-  four `[NEEDS-PO]` Tier 2 questions from `phase-0-decisions.md` are explicitly listed
-  as `[b] deferred:po` items the PO must resolve before final acceptance — they are not
+- **Phase 1 — Website Claims Correction:** **DONE.** Red tests asserted the Tier 1
+  floor against `apps/www-reading-advantage` source at HEAD `8a47d2df`; Green fixes
+  applied; acceptance passed. See `audit/phase-1-acceptance.json`.
+- **Phase 2 — Marketing App Public Workflow Security:** **DONE.** See
+  `audit/phase-2-acceptance.json`. Strategy preserved in §2–§10 for provenance.
+- **Phase 3 — Advantage Games Completion and Scoring Contract:** **ACTIVE this cycle.**
+  Strategy in §0.C. Decisions frozen in `phase-3-decisions.md`. Red tests assert the
+  shared Zod contract, server-side XP, fire-once guard, and `haunted-library` migration
+  against HEAD `8900196e`. Tier 2 items (`activity_type` pgEnum extension,
+  `gameCompletions` table, remaining 25 games migration) are deferred to Phase 4 / 5+.
+- **Phase 4 — Tenant-Safe Persistence and Leaderboards:** deferred. Owns the
+  `gameCompletions` table migration (or `xpLogs` unique constraint), `schoolId`
+  reclassification, `leaderboards` hardening, host-mutation Zod (D-06), and the
+  server-backed leaderboard. The plan's D-04/D-06 evidence refs and the import policy
+  from `phase-0-decisions.md` Decision 3 are carried forward as the gating items.
+- **Phase 5 — Embeddable Runtime, i18n, and Shared Package:** deferred. Owns the
+  embeddable navigation contract, i18n message source, shared runtime package, and the
+  `haunted-library` import-harness proof. Gated on Phases 3 and 4 green per
+  `phase-0-decisions.md` Decision 3.
+- **Phase 6 — Product Acceptance:** deferred until Phases 3–5 are executed. The four
+  `[NEEDS-PO]` Tier 2 questions from `phase-0-decisions.md` are explicitly listed as
+  `[b] deferred:po` items the PO must resolve before final acceptance — they are not
   silently dropped.
 
 Within Phase 2, one `[NEEDS-PO]` item remains: the exact **role floor** for marketing
@@ -633,11 +884,15 @@ the **authentication** boundary (401 without a session), which holds under eithe
 decision; the role-floor tests should be added once the floor is confirmed. (Phase 2 is
 complete and accepted; this item carries forward to Phase 6 closeout as a `[b] deferred:po`.)
 
+Within Phase 3, no `[NEEDS-PO]` items are introduced. All seven decisions in
+`phase-3-decisions.md` are fully evidence-grounded (`[x]`). Tier 2 items are
+`[b] deferred:infra` (Phase 4 schema work) or `[b] deferred:po` (none).
+
 ---
 
 ## 10. Summary
 
-### Phase 0 (this cycle)
+### Phase 0 (complete)
 
 Phase 0 delivers two frozen artifacts: `phase-0-decisions.md` (four product-owner
 decisions with Tier 1 `[x]` floor vs Tier 2 `[b] deferred:po` positive-replacement
@@ -649,7 +904,7 @@ Phase 0 has no live-behavior tests — its "Red" is a structural truthfulness gu
 re-verifies the cited literals exist at baseline; after Phase 1 Green those same literals
 must be gone.
 
-### Phase 1 (this cycle)
+### Phase 1 (complete)
 
 Phase 1 delivers one new www test file `phase-w3-claims.test.ts` with nine groups
 (1A product count, 1B stale launch dates, 1C nonexistent-app pages, 1D AI model claims,
@@ -671,3 +926,20 @@ The phase gate is `pnpm --filter marketing test` = 0 plus lint and check-types, 
 aggregate monorepo suite explicitly out of scope. Tenant/owner "scoping" is handled
 honestly as an authentication + documented global-internal policy, because no `schoolId`
 or owner column exists on marketing tables today.
+
+### Phase 3 (active this cycle)
+
+Phase 3 delivers a new `packages/domain/src/games/` module (schema/xp/mutations/
+permissions/errors/index) plus a rewritten `completeRoute.ts` and a migrated
+`HauntedLibraryGame.tsx`, proven by a new `packages/domain/src/__tests__/games.test.ts`
+(vitest, groups 3A contract / 3B XP formula / 3C fire-once), a rewritten
+`completeRoute.test.ts` (jest, group 3E), and an extended `HauntedLibraryGame.test.tsx`
+(jest, group 3D). Each group is red at `8900196e` for the specific contract gap
+(D-01/D-02/D-05/B25-001/B28-017/B30-002) and green after the fix, each with a positive
+control so a reject-everything or no-op fix fails (A4). The phase gate is
+`pnpm --filter @reading-advantage/domain test -- games` = 0 plus
+`pnpm --filter vocabulary-games test -- --testPathPatterns=completeRoute` = 0 plus lint
+and check-types on both filters, with the aggregate monorepo suite explicitly out of
+scope. Tier 2 items (`activity_type` pgEnum extension, `gameCompletions` table,
+remaining 25 games migration) are deferred to Phase 4 / 5+. The `recordActivity`
+generic function is intentionally untouched (D-06 is Phase 4).

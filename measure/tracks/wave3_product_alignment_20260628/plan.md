@@ -71,14 +71,37 @@
 
 ## Phase 3: Advantage Games Completion and Scoring Contract
 
+> **Strategy frozen:** `phase-3-decisions.md` and `test-strategy.md` §0.C (7 decisions,
+> 5 test groups 3A..3E). Strategy commit: this Phase 3 strategy authoring commit.
+> Implementation handoff: Mid-Red writes the Red tests; Jr-Green implements the
+> `packages/domain/src/games/` module, rewrites `completeRoute.ts`, and migrates
+> `haunted-library`. Tier 2 items (`activity_type` pgEnum, `gameCompletions` table,
+> remaining 25 games) are deferred to Phase 4 / 5+.
+
+- [x] Task: Author Phase 3 strategy and freeze contract decisions. — `phase-3-decisions.md` + `test-strategy.md` §0.C
+  - Decisions 3.1..3.7 frozen: shared contract lives in new `packages/domain/src/games/` module; `GameCompletionInputSchema` with 10 fields + `.strict()` rejecting `xp`/`dragonCount`/`bossPower`; `calculateGameXP` pure function (`Math.min(10, base + bonus)`); fire-once via `idempotencyKey` UUID + `SELECT-before-INSERT` on `xpLogs` (DB unique constraint deferred to Phase 4); `haunted-library` representative migration; vitest + jest gate commands; standalone route remains mock but validates via real schema.
+  - Evidence refs: `advantage-games_20260626/findings.md` §A1, §A2, §D (D-01/D-02/D-05); `game-readiness-matrix.md` haunted-library row; `phase-0-decisions.md` Decision 3 (pilot import gate); `packages/domain/src/progress/mutations.ts` (recordActivity — left untouched, D-06 is Phase 4); `apps/advantage-games/src/lib/games/api/completeRoute.ts` (force-static mock, trusts client xp); `packages/db/src/schema/analytics.ts` (xpLogs REFERENTIAL, no schoolId).
+  - Anti-pattern defense: A4 (positive controls in every group), A5 (no "contract enforced" claim until tests green), A6 (no "D-01 resolved" in tracks.md until Phase 5 pilot), A3 (labeled XP integers), A7 (exact-key schema rejection), A9 (no track-path runtime deps).
 - [~] Task: Write Red tests for a single shared game completion Zod contract.
   - Evidence refs: Advantage Games D-01; Cross-App CA-013; MR-H05.
+  - Red command: `pnpm --filter @reading-advantage/domain test -- games` (vitest). Mid-Red may also run `pnpm --filter vocabulary-games test -- --testPathPatterns=completeRoute` (jest) to prove the rewritten route test fails for the intended reason.
+  - Strategy: §0.C group 3A (schema rejection + positive control), 3B (XP formula labeled integers), 3C (fire-once first/second call pair), 3D (HauntedLibraryGame payload shape), 3E (route handler delegation).
 - [~] Task: Define canonical game/activity type enum, score, accuracy, attempts, duration, XP, and idempotency fields.
+  - Strategy: `phase-3-decisions.md` Decision 3.2 freezes the field list and canonical units (`accuracy` 0..1 fractional; `difficulty` enum with `medium` canonical; `gameType` enum from `gameCards.ts` 26 slugs; `idempotencyKey` UUID; `duration` ms; `victory` boolean; `score` informational; NO `xp` field — server-computed only).
+  - Implementation: `packages/domain/src/games/schema.ts` (Zod). Jr-Green.
 - [~] Task: Move XP calculation server-side; reject client-supplied unbounded XP.
   - Evidence refs: Advantage Games D-02/B25-001, duplicate completion B28-017/B30-002.
+  - Strategy: `phase-3-decisions.md` Decision 3.3 freezes `calculateGameXP` formula (`Math.min(10, correctAnswers + bonus)`). The `.strict()` schema reject is the primary D-02 defense. `recordActivity` (generic) is NOT modified (D-06 is Phase 4).
+  - Implementation: `packages/domain/src/games/xp.ts` + `mutations.ts`. Jr-Green.
 - [~] Task: Add fire-once completion guard to prevent duplicate awards.
+  - Evidence refs: B28-017, B30-002, B23-008, B24-008.
+  - Strategy: `phase-3-decisions.md` Decision 3.4 freezes `idempotencyKey` UUID + `SELECT-before-INSERT` on `xpLogs` with `activityId = game:<gameType>:<idempotencyKey>`. Phase 3 proves the *logic* with mock DB; Phase 4 adds the DB unique constraint for race-safety.
+  - Implementation: `packages/domain/src/games/mutations.ts#recordGameCompletion`. Jr-Green.
 - [~] Task: Migrate representative games to the shared contract.
+  - Strategy: `phase-3-decisions.md` Decision 3.5 freezes `haunted-library` as the representative game. `HauntedLibraryGame.tsx#onComplete` payload rebuilt (add `gameType`/`difficulty`/`duration`/`victory`/`idempotencyKey`/`clientTimestamp`/`score`; remove `xp`). The remaining 25 games are Phase 5+ work.
+  - Implementation: `HauntedLibraryGame.tsx` + page wiring. Jr-Green.
 - [~] Task: Run game completion unit tests.
+  - Green gate: `pnpm --filter @reading-advantage/domain test -- games` = 0 AND `pnpm --filter vocabulary-games test -- --testPathPatterns=completeRoute` = 0. Plus lint + check-types on both filters. Acceptance runs the full filters (`pnpm --filter @reading-advantage/domain test` and `pnpm --filter vocabulary-games test`) to verify no regression.
 
 ## Phase 4: Tenant-Safe Persistence and Leaderboards
 
