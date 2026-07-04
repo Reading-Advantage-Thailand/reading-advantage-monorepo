@@ -1,7 +1,6 @@
 import { createCompleteRoute } from './completeRoute'
-import type { CompleteRequest } from './types'
 
-// Mock NextRequest
+// Minimal Request mock — the route receives a plain JSON body.
 class MockRequest {
   private body: string
 
@@ -14,250 +13,96 @@ class MockRequest {
   }
 }
 
-describe('createCompleteRoute', () => {
-  describe('configuration', () => {
-    it('returns force-static dynamic config', () => {
-      const route = createCompleteRoute()
-      expect(route.dynamic).toBe('force-static')
-    })
+const validPayload = {
+  gameType: 'haunted-library',
+  difficulty: 'medium',
+  score: 42,
+  accuracy: 5 / 6,
+  correctAnswers: 5,
+  totalAttempts: 6,
+  duration: 12_345,
+  victory: true,
+  idempotencyKey: '11111111-1111-1111-1111-111111111111',
+  clientTimestamp: 1_700_000_000_000,
+}
 
-    it('exports POST handler function', () => {
-      const route = createCompleteRoute()
-      expect(typeof route.POST).toBe('function')
-    })
+describe('createCompleteRoute (Phase 3 contract delegation)', () => {
+  it('returns force-static dynamic config', () => {
+    const route = createCompleteRoute()
+    expect(route.dynamic).toBe('force-static')
   })
 
-  describe('POST handler - successful completion', () => {
-    it('returns success response with xp earned', async () => {
-      const route = createCompleteRoute()
-      const requestBody: CompleteRequest = {
-        xp: 100,
-        accuracy: 0.85,
-        correctAnswers: 17,
-        totalAttempts: 20,
-      }
-      const request = new MockRequest(requestBody) as unknown as Request
-      const response = await route.POST(request)
-      const data = await response.json()
+  it('returns 200 with server-computed xpEarned, stable activityId, duplicate: false', async () => {
+    const route = createCompleteRoute()
+    const response = await route.POST(
+      new MockRequest(validPayload) as unknown as Request,
+    )
 
-      expect(data).toMatchObject({
-        message: 'Game completed successfully',
-        xpEarned: 100,
-        status: 200,
-      })
-      expect(data.activityId).toBeDefined()
-      expect(typeof data.activityId).toBe('string')
+    expect(response.status).toBe(200)
+    const data = await response.json()
+
+    expect(data).toMatchObject({
+      xpEarned: expect.any(Number),
+      activityId: expect.any(String),
+      duplicate: false,
+      status: 200,
     })
-
-    it('generates unique activity IDs', async () => {
-      const route = createCompleteRoute()
-      const requestBody: CompleteRequest = {
-        xp: 50,
-        accuracy: 0.5,
-        correctAnswers: 5,
-        totalAttempts: 10,
-      }
-
-      const response1 = await route.POST(new MockRequest(requestBody) as unknown as Request)
-      const data1 = await response1.json()
-
-      // Wait a bit to ensure different timestamp
-      await new Promise(resolve => setTimeout(resolve, 2))
-
-      const response2 = await route.POST(new MockRequest(requestBody) as unknown as Request)
-      const data2 = await response2.json()
-
-      expect(data1.activityId).not.toBe(data2.activityId)
-    })
-
-    it('activityId contains mock-activity prefix', async () => {
-      const route = createCompleteRoute()
-      const requestBody: CompleteRequest = {
-        xp: 75,
-        accuracy: 0.75,
-        correctAnswers: 15,
-        totalAttempts: 20,
-      }
-      const request = new MockRequest(requestBody) as unknown as Request
-      const response = await route.POST(request)
-      const data = await response.json()
-
-      expect(data.activityId).toMatch(/^mock-activity-/)
-    })
+    expect(data.activityId).toBe(
+      `game:haunted-library:${validPayload.idempotencyKey}`,
+    )
+    expect(data.xpEarned).toBeGreaterThanOrEqual(0)
+    expect(data.xpEarned).toBeLessThanOrEqual(10)
   })
 
-  describe('POST handler - XP calculation', () => {
-    it('uses provided xp when given', async () => {
-      const route = createCompleteRoute()
-      const requestBody: CompleteRequest = {
-        xp: 250,
-        accuracy: 0.9,
-        correctAnswers: 18,
-        totalAttempts: 20,
-      }
-      const request = new MockRequest(requestBody) as unknown as Request
-      const response = await route.POST(request)
-      const data = await response.json()
+  it('rejects client-supplied xp with 400 (D-02)', async () => {
+    const route = createCompleteRoute()
+    const response = await route.POST(
+      new MockRequest({ ...validPayload, xp: 100 }) as unknown as Request,
+    )
 
-      expect(data.xpEarned).toBe(250)
-    })
-
-    it('calculates xp from correctAnswers and accuracy when xp not provided', async () => {
-      const route = createCompleteRoute()
-      const requestBody = {
-        accuracy: 0.8,
-        correctAnswers: 10,
-        totalAttempts: 12,
-      } as CompleteRequest
-      const request = new MockRequest(requestBody) as unknown as Request
-      const response = await route.POST(request)
-      const data = await response.json()
-
-      // xp = correctAnswers * accuracy = 10 * 0.8 = 8
-      expect(data.xpEarned).toBe(8)
-    })
-
-    it('calculates accuracy from totalAttempts when not provided', async () => {
-      const route = createCompleteRoute()
-      const requestBody = {
-        correctAnswers: 15,
-        totalAttempts: 20,
-      } as CompleteRequest
-      const request = new MockRequest(requestBody) as unknown as Request
-      const response = await route.POST(request)
-      const data = await response.json()
-
-      // accuracy = 15 / 20 = 0.75
-      // xp = 15 * 0.75 = 11.25 -> floor = 11
-      expect(data.xpEarned).toBe(11)
-    })
-
-    it('handles zero totalAttempts without division error', async () => {
-      const route = createCompleteRoute()
-      const requestBody = {
-        correctAnswers: 0,
-        totalAttempts: 0,
-        xp: 0,
-      } as CompleteRequest
-      const request = new MockRequest(requestBody) as unknown as Request
-      const response = await route.POST(request)
-      const data = await response.json()
-
-      expect(data.xpEarned).toBe(0)
-      expect(data.status).toBe(200)
-    })
-
-    it('handles zero xp correctly', async () => {
-      const route = createCompleteRoute()
-      const requestBody: CompleteRequest = {
-        xp: 0,
-        accuracy: 0,
-        correctAnswers: 0,
-        totalAttempts: 10,
-      }
-      const request = new MockRequest(requestBody) as unknown as Request
-      const response = await route.POST(request)
-      const data = await response.json()
-
-      expect(data.xpEarned).toBe(0)
-    })
+    expect(response.status).toBe(400)
   })
 
-  describe('POST handler - response format', () => {
-    it('returns all required fields', async () => {
-      const route = createCompleteRoute()
-      const requestBody: CompleteRequest = {
-        xp: 100,
-        accuracy: 0.85,
-        correctAnswers: 17,
-        totalAttempts: 20,
-      }
-      const request = new MockRequest(requestBody) as unknown as Request
-      const response = await route.POST(request)
-      const data = await response.json()
+  it('rejects accuracy > 1 with 400 (D-01 canonical unit)', async () => {
+    const route = createCompleteRoute()
+    const response = await route.POST(
+      new MockRequest({ ...validPayload, accuracy: 75 }) as unknown as Request,
+    )
 
-      expect(data).toHaveProperty('message')
-      expect(data).toHaveProperty('xpEarned')
-      expect(data).toHaveProperty('activityId')
-      expect(data).toHaveProperty('status')
-    })
-
-    it('includes difficulty in response when provided', async () => {
-      const route = createCompleteRoute()
-      const requestBody: CompleteRequest = {
-        xp: 150,
-        accuracy: 0.95,
-        correctAnswers: 19,
-        totalAttempts: 20,
-        difficulty: 'hard',
-      }
-      const request = new MockRequest(requestBody) as unknown as Request
-      const response = await route.POST(request)
-      const data = await response.json()
-
-      expect(data.status).toBe(200)
-    })
+    expect(response.status).toBe(400)
   })
 
-  describe('POST handler - edge cases', () => {
-    it('handles perfect score', async () => {
-      const route = createCompleteRoute()
-      const requestBody: CompleteRequest = {
-        xp: 500,
-        accuracy: 1.0,
-        correctAnswers: 100,
-        totalAttempts: 100,
-      }
-      const request = new MockRequest(requestBody) as unknown as Request
-      const response = await route.POST(request)
-      const data = await response.json()
+  it('rejects an invalid gameType with 400', async () => {
+    const route = createCompleteRoute()
+    const response = await route.POST(
+      new MockRequest({
+        ...validPayload,
+        gameType: 'fake-game',
+      }) as unknown as Request,
+    )
 
-      expect(data.xpEarned).toBe(500)
-      expect(data.status).toBe(200)
-    })
+    expect(response.status).toBe(400)
+  })
 
-    it('handles minimum valid request', async () => {
-      const route = createCompleteRoute()
-      const requestBody = {
-        correctAnswers: 5,
-        totalAttempts: 10,
-      }
-      const request = new MockRequest(requestBody) as unknown as Request
-      const response = await route.POST(request)
-      const data = await response.json()
+  it('rejects a malformed idempotencyKey with 400', async () => {
+    const route = createCompleteRoute()
+    const response = await route.POST(
+      new MockRequest({
+        ...validPayload,
+        idempotencyKey: 'not-a-uuid',
+      }) as unknown as Request,
+    )
 
-      expect(data.status).toBe(200)
-      expect(data.message).toBe('Game completed successfully')
-    })
+    expect(response.status).toBe(400)
+  })
 
-    it('handles large XP values', async () => {
-      const route = createCompleteRoute()
-      const requestBody: CompleteRequest = {
-        xp: 1000000,
-        accuracy: 1.0,
-        correctAnswers: 1000,
-        totalAttempts: 1000,
-      }
-      const request = new MockRequest(requestBody) as unknown as Request
-      const response = await route.POST(request)
-      const data = await response.json()
-
-      expect(data.xpEarned).toBe(1000000)
-    })
-
-    it('handles decimal accuracy values', async () => {
-      const route = createCompleteRoute()
-      const requestBody = {
-        correctAnswers: 7,
-        totalAttempts: 11,
-      }
-      const request = new MockRequest(requestBody) as unknown as Request
-      const response = await route.POST(request)
-      const data = await response.json()
-
-      // accuracy = 7 / 11 ≈ 0.636
-      // xp = floor(7 * 0.636) = floor(4.454) = 4
-      expect(data.xpEarned).toBe(4)
-    })
+  it('does not call a real DB insert (standalone mock route)', async () => {
+    const route = createCompleteRoute()
+    // A4: the route must not accept a db parameter or perform persistence.
+    // This test passes when the route is a pure mock validator.
+    const response = await route.POST(
+      new MockRequest(validPayload) as unknown as Request,
+    )
+    expect(response.status).toBe(200)
   })
 })

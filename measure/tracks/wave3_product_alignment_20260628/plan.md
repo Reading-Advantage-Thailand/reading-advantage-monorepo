@@ -78,13 +78,25 @@
 > `haunted-library`. Tier 2 items (`activity_type` pgEnum, `gameCompletions` table,
 > remaining 25 games) are deferred to Phase 4 / 5+.
 
-- [x] Task: Author Phase 3 strategy and freeze contract decisions. — `phase-3-decisions.md` + `test-strategy.md` §0.C
+- [x] Task: Author Phase 3 strategy and freeze contract decisions. — `phase-3-decisions.md` + `test-strategy.md` §0.C (commit `c7e37706`)
   - Decisions 3.1..3.7 frozen: shared contract lives in new `packages/domain/src/games/` module; `GameCompletionInputSchema` with 10 fields + `.strict()` rejecting `xp`/`dragonCount`/`bossPower`; `calculateGameXP` pure function (`Math.min(10, base + bonus)`); fire-once via `idempotencyKey` UUID + `SELECT-before-INSERT` on `xpLogs` (DB unique constraint deferred to Phase 4); `haunted-library` representative migration; vitest + jest gate commands; standalone route remains mock but validates via real schema.
   - Evidence refs: `advantage-games_20260626/findings.md` §A1, §A2, §D (D-01/D-02/D-05); `game-readiness-matrix.md` haunted-library row; `phase-0-decisions.md` Decision 3 (pilot import gate); `packages/domain/src/progress/mutations.ts` (recordActivity — left untouched, D-06 is Phase 4); `apps/advantage-games/src/lib/games/api/completeRoute.ts` (force-static mock, trusts client xp); `packages/db/src/schema/analytics.ts` (xpLogs REFERENTIAL, no schoolId).
   - Anti-pattern defense: A4 (positive controls in every group), A5 (no "contract enforced" claim until tests green), A6 (no "D-01 resolved" in tracks.md until Phase 5 pilot), A3 (labeled XP integers), A7 (exact-key schema rejection), A9 (no track-path runtime deps).
-- [~] Task: Write Red tests for a single shared game completion Zod contract.
+- [x] Task: Write Red tests for a single shared game completion Zod contract.
   - Evidence refs: Advantage Games D-01; Cross-App CA-013; MR-H05.
-  - Red command: `pnpm --filter @reading-advantage/domain test -- games` (vitest). Mid-Red may also run `pnpm --filter vocabulary-games test -- --testPathPatterns=completeRoute` (jest) to prove the rewritten route test fails for the intended reason.
+  - Red command: `pnpm --filter @reading-advantage/domain test -- games` (vitest). Mid-Red may also run `pnpm --filter vocabulary-games test --testPathPatterns=completeRoute` (jest) to prove the rewritten route test fails for the intended reason.
+  - Delivered:
+    - `packages/domain/src/__tests__/games.test.ts` (new) — groups 3A/3B/3C. Fails at baseline because `packages/domain/src/games/{schema,xp,mutations}.js` do not exist: `Error: Cannot find module '/src/games/schema.js' imported from ...games.test.ts`. Positive controls included.
+    - `apps/advantage-games/src/lib/games/api/completeRoute.test.ts` (rewritten) — group 3E. Fails at baseline: valid payload returns `activityId: mock-activity-${Date.now()}`, no `duplicate` field, and `xp`/accuracy>1/invalid gameType/malformed UUID all return 200 instead of 400.
+    - `apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.test.tsx` (extended) — group 3D. Fails at baseline: `onComplete` payload has no `gameType`/`idempotencyKey` and still contains `xp`.
+  - Red evidence (HEAD `fe5a22c2`):
+    - `pnpm --filter @reading-advantage/domain test -- games` → `FAIL src/__tests__/games.test.ts` (module not found); 374 unrelated tests pass.
+    - `pnpm --filter vocabulary-games test --testPathPatterns=completeRoute` → `Tests: 5 failed, 2 passed, 7 total` (missing schema validation + server-side XP).
+    - `pnpm --filter vocabulary-games test --testPathPatterns=HauntedLibraryGame` → `Tests: 2 failed, 10 passed, 12 total` (payload shape).
+    - `pnpm --filter @reading-advantage/domain lint` → 0 errors (12 pre-existing warnings).
+    - `pnpm --filter vocabulary-games lint` → 0 errors (pre-existing warnings).
+    - `pnpm --filter @reading-advantage/domain check-types` → exit 0.
+    - `pnpm --filter vocabulary-games check-types` → exit 0.
   - Strategy: §0.C group 3A (schema rejection + positive control), 3B (XP formula labeled integers), 3C (fire-once first/second call pair), 3D (HauntedLibraryGame payload shape), 3E (route handler delegation).
 - [~] Task: Define canonical game/activity type enum, score, accuracy, attempts, duration, XP, and idempotency fields.
   - Strategy: `phase-3-decisions.md` Decision 3.2 freezes the field list and canonical units (`accuracy` 0..1 fractional; `difficulty` enum with `medium` canonical; `gameType` enum from `gameCards.ts` 26 slugs; `idempotencyKey` UUID; `duration` ms; `victory` boolean; `score` informational; NO `xp` field — server-computed only).

@@ -1,9 +1,24 @@
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { HauntedLibraryGame } from './HauntedLibraryGame'
 import React from 'react'
+import type { LibraryState } from '@/lib/games/hauntedLibrary'
 
 const mockEnterFullscreen = jest.fn()
 const mockExitFullscreen = jest.fn()
+
+// Mutable hook into the partially-mocked library so Phase-3 tests can force
+// game-over without breaking the existing tests that rely on the real tick.
+const tickMock = {
+  fn: jest.fn((state: LibraryState, delta: number, input: { dx: number; dy: number }) => {
+    const { tickLibrary } = jest.requireActual('@/lib/games/hauntedLibrary') as typeof import('@/lib/games/hauntedLibrary')
+    return tickLibrary(state, delta, input)
+  }),
+}
+
+jest.mock('@/lib/games/hauntedLibrary', () => ({
+  ...jest.requireActual('@/lib/games/hauntedLibrary'),
+  tickLibrary: (...args: unknown[]) => tickMock.fn(...args),
+}))
 
 // Mock Konva Stage and Layer
 jest.mock('react-konva', () => ({
@@ -49,6 +64,8 @@ const mockSentences = [
   { term: 'The cat sits', translation: 'แมวนั่ง' },
   { term: 'Dog runs fast', translation: 'หมาวิ่งเร็ว' },
 ]
+
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
 describe('HauntedLibraryGame', () => {
   beforeEach(() => {
@@ -131,5 +148,104 @@ describe('HauntedLibraryGame', () => {
     render(<HauntedLibraryGame sentences={mockSentences} onComplete={jest.fn()} />)
     const select = screen.getByRole('combobox')
     expect(select).toHaveValue('medium')
+  })
+})
+
+describe('HauntedLibraryGame — Phase 3 shared completion contract payload (Group 3D)', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+    tickMock.fn = jest.fn((state: LibraryState, delta: number, input: { dx: number; dy: number }) => {
+      const { tickLibrary } = jest.requireActual('@/lib/games/hauntedLibrary') as typeof import('@/lib/games/hauntedLibrary')
+      return tickLibrary(state, delta, input)
+    })
+  })
+
+  afterEach(() => {
+    jest.restoreAllMocks()
+  })
+
+  it('sends the contract payload on game-over with idempotencyKey and no xp', async () => {
+    const onComplete = jest.fn()
+    const { createLibraryState } = jest.requireActual('@/lib/games/hauntedLibrary') as typeof import('@/lib/games/hauntedLibrary')
+    const baseState = createLibraryState(mockSentences, { difficulty: 'medium' }, () => 0.5)
+    const finalState: LibraryState = {
+      ...baseState,
+      phase: 'victory',
+      score: 42,
+      correctAnswers: 5,
+      totalAttempts: 6,
+      accuracy: 5 / 6,
+      time: 12_345,
+      lives: 3,
+      initialLives: 3,
+    }
+    tickMock.fn = jest.fn().mockReturnValue(finalState)
+
+    let rafCalls = 0
+    jest.spyOn(window, 'requestAnimationFrame').mockImplementation((cb) => {
+      // Drive exactly one animation frame so the loop reaches game-over and stops.
+      if (rafCalls === 0) {
+        rafCalls++
+        cb(0)
+      }
+      return rafCalls
+    })
+
+    render(<HauntedLibraryGame sentences={mockSentences} onComplete={onComplete} />)
+    const startButton = screen.getByRole('button', { name: /Start Game/i })
+    fireEvent.click(startButton)
+
+    await waitFor(() => expect(onComplete).toHaveBeenCalledTimes(1))
+
+    const payload = onComplete.mock.calls[0][0]
+    expect(payload.gameType).toBe('haunted-library')
+    expect(payload.difficulty).toBe('medium')
+    expect(payload.score).toBe(42)
+    expect(payload.accuracy).toBeCloseTo(5 / 6)
+    expect(payload.correctAnswers).toBe(5)
+    expect(payload.totalAttempts).toBe(6)
+    expect(payload.duration).toBe(12_345)
+    expect(payload.victory).toBe(true)
+    expect(payload.idempotencyKey).toMatch(UUID_RE)
+    expect(payload.clientTimestamp).toBeGreaterThan(0)
+    expect(payload).not.toHaveProperty('xp')
+  })
+
+  it('fires onComplete exactly once for a single game-over (B30-002 duplicate guard)', async () => {
+    const onComplete = jest.fn()
+    const { createLibraryState } = jest.requireActual('@/lib/games/hauntedLibrary') as typeof import('@/lib/games/hauntedLibrary')
+    const baseState = createLibraryState(mockSentences, { difficulty: 'medium' }, () => 0.5)
+    const finalState: LibraryState = {
+      ...baseState,
+      phase: 'victory',
+      score: 10,
+      correctAnswers: 3,
+      totalAttempts: 3,
+      accuracy: 1,
+      time: 5_000,
+      lives: 3,
+      initialLives: 3,
+    }
+    tickMock.fn = jest.fn().mockReturnValue(finalState)
+
+    let rafCalls = 0
+    jest.spyOn(window, 'requestAnimationFrame').mockImplementation((cb) => {
+      // Drive exactly one animation frame so the loop reaches game-over and stops.
+      if (rafCalls === 0) {
+        rafCalls++
+        cb(0)
+      }
+      return rafCalls
+    })
+
+    render(<HauntedLibraryGame sentences={mockSentences} onComplete={onComplete} />)
+    fireEvent.click(screen.getByRole('button', { name: /Start Game/i }))
+
+    await waitFor(() => expect(onComplete).toHaveBeenCalledTimes(1))
+    expect(onComplete).toHaveBeenCalledTimes(1)
+
+    const payload = onComplete.mock.calls[0][0]
+    expect(payload.idempotencyKey).toMatch(UUID_RE)
+    expect(payload).not.toHaveProperty('xp')
   })
 })
