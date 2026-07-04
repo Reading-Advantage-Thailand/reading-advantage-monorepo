@@ -358,29 +358,37 @@ describe("GitHub webhook — review path uses the AIClient abstraction", () => {
     expect(input.reviewStatus).toBe("needs_changes");
   });
 
-  it("preserves fire-and-forget posture: AIClient rejection returns 200 and stamps reviewed status", async () => {
-    // Configure the Mock AIClient to throw on generateObject. This mirrors
-    // the production failure mode where the upstream model times out or
-    // returns a 404. The webhook must NOT bubble the error to GitHub —
-    // the test strategy mandates: webhook responds 200, review row gets
-    // status "reviewed" + a "Review failed" summary.
+  it("REWRITTEN FOR TRACK webhook_review_reliability_20260605: AIClient rejection returns 200 but does NOT stamp reviewed status", async () => {
+    // Track webhook_review_reliability_20260605 rewrote the
+    // fire-and-forget contract: on AIClient rejection, the webhook
+    // returns 200 (don't bubble the model error to GitHub) BUT it does
+    // NOT stamp the review row with `reviewed` status. The new contract
+    // leaves the review row pending so the worker can retry (the job
+    // row is still `pending`; the worker attempts the review with
+    // exponential backoff up to MAX_ATTEMPTS).
     mockHolder.setThrowOnGenerateObject(new Error("[MockFixture] model timed out"));
 
     const req = createRequest(synchronizePayload());
     const res = await githubApp.fetch(req);
 
-    // Webhook responds 200 — fire-and-forget posture preserved.
+    // Webhook still responds 200 — the new contract preserves the
+    // fire-and-forget ACK latency contract.
     expect(res.status).toBe(200);
 
     await waitForBackgroundReviews();
-    // The review row must have been updated with status "reviewed" and a
-    // "Review failed" summary, NOT bubbled to a 500.
-    const updateCalls = vi.mocked(updatePrReview).mock.calls;
-    expect(updateCalls.length).toBeGreaterThanOrEqual(2);
-    const failureCall = updateCalls[updateCalls.length - 1]!;
-    const input = (failureCall[0] as { input: { reviewStatus: string; llmReviewSummary: string } }).input;
-    expect(input.reviewStatus).toBe("reviewed");
-    expect(input.llmReviewSummary).toMatch(/Review failed/i);
+
+    // The new contract: NO updatePrReview call with reviewStatus: "reviewed"
+    // (the OLD contract stamped the review as "reviewed" on failure,
+    // misleading the dashboard). The review row stays pending so the
+    // worker can retry.
+    const reviewedCalls = vi.mocked(updatePrReview).mock.calls.filter((call) => {
+      const input = (call[0] as { input?: { reviewStatus?: string } }).input;
+      return input?.reviewStatus === "reviewed";
+    });
+    expect(
+      reviewedCalls.length,
+      `updatePrReview(reviewStatus: reviewed) call count: ${reviewedCalls.length}`,
+    ).toBe(0);
 
     // And the response body should NOT include the model error — GitHub
     // sees a successful 200 acknowledgment.
