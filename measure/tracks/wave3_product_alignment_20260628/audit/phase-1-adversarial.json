@@ -3,9 +3,10 @@
   "role": "measure-adversarial-testing",
   "track": "wave3_product_alignment_20260628",
   "phase": "Phase 1: Website Claims Correction",
-  "status": "pass_with_fix",
+  "status": "pass",
   "baseline_sha": "af38f52a31394139071ea6208c5e7264ef4b4a34",
   "head_sha": "0aa410bf",
+  "audit_trail_note": "Initial adversarial probes at af38f52a found 1 blocking defect (case-sensitive banned-literal regexes in 1D, 1E, 1G groups). The defect was fixed in commit 0aa410bf during this audit session. The fix moved the finding from blocking_findings to nonblocking_findings as a 'fixed-during-audit' entry. Status 'pass' is appropriate because no outstanding blockers remain at HEAD 0aa410bf.",
   "adversarial_test_timestamp": "2026-07-04T19:35:00+07:00",
   "summary": "Phase 1 Website Claims Correction survives adversarial testing with one real bypass defect found and fixed. Initial state at af38f52a had case-sensitive banned-literal regexes in groups 1D, 1E, and 1G — a regression could have re-introduced banned model names (gpt-5, GPT-5), placeholder case studies (school a (coming soon)), or absolute claims (zero risk, aka 2019) in any case variant and bypassed the tests. Fixed in commit 0aa410bf by adding the /i flag to those four regexes. All 20/20 phase-w3-claims tests pass after the fix, lint clean, check-types clean, Wave 2 helper regression check 12/12 green, whole-www suite shows same 11 pre-existing .test.tsx load failures (next-intl/next/navigation resolution) — no new failures introduced. Three additional non-blocking findings (multi-space whitespace bypass in 1A, ASCII '3x' bypass in 1G, multi-line published-case-study helper limitation in 1H/Wave 2) and one coverage gap (banned literals in apps/www-reading-advantage/docs/pr/*.md and apps/www-reading-advantage/measure/*.{md,DESIGN.md,REFACTOR.md}) are documented as known limitations and do not block Phase 1.",
 
@@ -153,25 +154,24 @@
     }
   ],
 
-  "blocking_findings": [
+  "blocking_findings": [],
+
+  "nonblocking_findings": [
     {
       "id": "A-CASE-INSENSITIVE-1",
-      "title": "Case-sensitive banned-literal regexes allowed lowercase bypass of model-name, placeholder, and absolute-claim bans",
+      "title": "Case-sensitive banned-literal regexes (FIXED during audit)",
       "severity": "high",
       "category": "A5 (false-claim text vs test reality) / A7 (over-broad filter)",
-      "evidence": [
+      "audit_status": "fixed-during-audit",
+      "evidence_at_baseline": [
         "phase-w3-claims.test.ts:262 — /GPT-5|GPT-4|Google Gemini & GPT-5/g (no /i flag) — bypass: 'gpt-5', 'Gpt-5', 'google gemini & gpt-5'",
         "phase-w3-claims.test.ts:296 — /School A \\(Coming Soon\\)|School B \\(Coming Soon\\)|Real Results from Real Schools/g (no /i flag) — bypass: 'school a (coming soon)', 'real results from real schools'",
         "phase-w3-claims.test.ts:367-368 — /ZERO RISK/g and /Aka[ ,]+2019/g (no /i flag) — bypass: 'zero risk', 'aka 2019'"
       ],
       "fix_commit": "0aa410bf — fix(www): wave3 phase 1 ci banned literals (track_id: wave3_product_alignment_20260628)",
       "fix_details": "Added /i flag to four banned-literal regexes (1D literal scan, 1E literal scan, 1G ZERO RISK, 1G Aka 2019). Re-ran all probes: all four case-variant bypasses now caught. Phase-w3-claims 20/20, wave2-product-claim-helper 12/12, lint 0, check-types 0.",
-      "verified": true,
-      "status": "fixed"
-    }
-  ],
-
-  "nonblocking_findings": [
+      "verified_after_fix": true
+    },
     {
       "id": "NB-1",
       "title": "1A multi-space whitespace bypass",
