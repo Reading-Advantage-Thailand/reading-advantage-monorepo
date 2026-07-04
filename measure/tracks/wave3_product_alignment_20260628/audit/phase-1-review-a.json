@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Phase 1 Website Claims Correction passes Review-A after a blocking finding (stale 'launching in 2025' dates in Science Advantage and CodeCamp Advantage openGraph metadata, missed by the initial test which only scanned locale files) was identified and fixed in commit 940420a0. All 20 phase-w3-claims tests pass, lint and check-types are clean, and all Tier 1 banned literals are verified absent from the www source. Positive controls confirm truthful replacements exist in each group (1A–1I). The Wave 2 reusable helper shows no regression.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "NB-1: The '3x faster' claim (CC-25) used a Unicode multiplication sign (×) in source, making the regex /3×/g match the exact character. If the claim is ever re-added with a plain ASCII 'x', the test would not catch it. Low risk since the math page is now roadmap-labeled and the stat was removed.",
+    "NB-2: The b2b-solutions.ts 'New for SY2025' badge (CC-11 scope) was not covered by the phase-w3-claims test because b2b-solutions.ts is under locales/components/, not locales/pages/products/. Fixed in commit 80231438 but test coverage is absent for this specific file."
+  ],
+  "evidence": [
+    "phase-w3-claims test suite: pnpm --filter www-reading-advantage test phase-w3-claims => 20/20 passed (exit 0)",
+    "lint gate: pnpm --filter www-reading-advantage lint => clean (0 errors) (exit 0)",
+    "check-types gate: pnpm --filter www-reading-advantage check-types => clean (0 errors) (exit 0)",
+    "wave2-product-claim-helper regression: pnpm --filter www-reading-advantage test wave2-product-claim-helper => 12/12 passed (exit 0)",
+    "Resolved test-strategy gap TSV-1: original test group 1B scanned only product locale files for stale dates, missing openGraph.description metadata in page.tsx files for existing products (Science, CodeCamp). Fixed by extending phase-w3-claims.test.ts with a page.tsx metadata scan and updating the two descriptions (commit 940420a0).",
+    "No banned product-count literals (1A): rg 'nine products|all 9 products|one engine, nine' apps/www-reading-advantage/src/ => 0 hits — PASS",
+    "No GPT-5/GPT-4 model claims (1D): rg 'GPT-5|GPT-4|Google Gemini & GPT-5' apps/www-reading-advantage/src/ => 0 hits — PASS",
+    "No placeholder case-study tokens (1E): rg 'School A (Coming Soon)|School B (Coming Soon)|Real Results from Real Schools' apps/www-reading-advantage/src/ => 0 hits — PASS",
+    "No unverifiable stats (1G): rg '2,172+|ZERO RISK|Aka 2019' apps/www-reading-advantage/src/ => 0 hits — PASS",
+    "No stale launch dates (1B): rg -ni 'coming.*2025|launching.*2025|coming.*2026|starting may 2026|new for.*2025' apps/www-reading-advantage/src/locales/pages/products/ apps/www-reading-advantage/src/app/[locale]/(marketing)/products/ => 0 hits — PASS",
+    "Truthful count replacement (1A positive control): rg -i 'four products|one engine, four' apps/www-reading-advantage/src/locales/pages/home.ts => 3 hits — PASS",
+    "Provider-neutral AI copy (1D positive control): rg -i 'AI-powered writing feedback|AI-assisted learning|model adapter' apps/www-reading-advantage/src/locales/pages/products/primary-advantage.ts apps/www-reading-advantage/src/locales/pages/home.ts => 3 hits — PASS",
+    "Illustrative framing (1E positive control): rg -i 'illustrative examples|illustrative scenarios' apps/www-reading-advantage/src/locales/pages/case-studies.ts => 3 hits — PASS",
+    "Roadmap labels on nonexistent-app pages (1C): rg -i 'on our roadmap|planned' apps/www-reading-advantage/src/locales/pages/products/{math,stem,storytime,tutor,zhongwen}-advantage.ts => 17 hits across 5 pages — PASS"
+  ],
+  "commands": [
+    "pnpm --filter www-reading-advantage test phase-w3-claims",
+    "pnpm --filter www-reading-advantage lint",
+    "pnpm --filter www-reading-advantage check-types",
+    "pnpm --filter www-reading-advantage test wave2-product-claim-helper"
+  ],
+  "changed_files": [
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/science-advantage/page.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/codecamp-advantage/page.tsx",
+    "apps/www-reading-advantage/src/lib/__tests__/phase-w3-claims.test.ts",
+    "apps/www-reading-advantage/src/locales/components/products/b2b-solutions.ts"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}

@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Phase 1 Website Claims Correction passes security/anti-pattern review. All 20/20 phase-w3-claims tests pass, lint and check-types are clean, and no secrets, credentials, or auth bypasses were introduced in the locale/metadata changes. The A2 consent-blind-publish gate is exercised by the helper audit (missingConsentCount === 0 because all case studies are relabeled illustrative/placeholder). A latent key-mismatch in the test's consentIndex builder vs. the helper's claim-text lookup is noted as non-blocking. Plan truthfulness (A5) was corrected from 19/19 to 20/20 and the missing CodeCamp/Science metadata + b2b-solutions badge changes were documented. No registry overstatement (A6) or over-broad literal filters (A7) were found.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "A2 latent key mismatch: phase-w3-claims.test.ts buildConsentIndex() keys consent proof by filename-derived subject (e.g. 'school-a'), while product-claim-helper.audit() looks up consent by the full claim.text. For a future published-case-study claim, a consent file named by subject will fail closed (missingConsentCount > 0) because the keys do not match. This is not a bypass but a usability issue to resolve when real case studies are reintroduced.",
+    "A7 narrow regex: Group 1G's '3x faster' scanner uses only the Unicode multiplication sign (/3×/g). An ASCII variant ('3x faster', '3X faster') would not be caught. The claim is currently removed, so risk is low."
+  ],
+  "evidence": [
+    "phase-w3-claims gate: pnpm --filter www-reading-advantage test phase-w3-claims => 20/20 passed (exit 0)",
+    "lint gate: pnpm --filter www-reading-advantage lint => 0 errors (exit 0)",
+    "type-check gate: pnpm --filter www-reading-advantage check-types => 0 errors (exit 0)",
+    "Wave 2 helper regression: pnpm --filter www-reading-advantage test wave2-product-claim-helper => 12/12 passed (exit 0)",
+    "Whole-www suite baseline: pnpm --filter www-reading-advantage test => 1462 passed; 11 pre-existing .test.tsx files fail to load from next-intl/next/navigation resolution (unchanged from baseline)",
+    "A2 consent gate on case-studies.ts: helper.audit() returns publishedCaseStudyCount=0, missingConsentCount=0, placeholderCaseStudyCount=2 => no named school published without consent",
+    "A6 registry overstatement sweep: rg 'resolved|completely fixed|fully solved|all tests pass' measure/tracks.md measure/tracks/wave3_product_alignment_20260628/plan.md => 0 overstatement hits",
+    "A7 over-broad filter review: no bare English exclusion filters in phase-w3-claims.test.ts; banned-literal regexes use exact phrases",
+    "Secret/credential scan on changed source: rg secret-like keywords over git diff 81671de7 HEAD apps/www-reading-advantage/src/ => 0 hits (excluding 'Basic Tier')",
+    "Long-random-string scan on changed source: rg '[A-Za-z0-9_\\-]{32,}' over git diff => 0 potential key/token strings",
+    "A5 plan truthfulness fix: updated plan.md from 19/19 to 20/20 tests and documented CodeCamp/Science metadata + b2b-solutions badge changes (commit 75c96f33)",
+    "Resolved: Original test group 1B scanned only product locale files for stale dates, missing openGraph.description metadata in page.tsx files for existing products (Science, CodeCamp). Fixed by extending phase-w3-claims.test.ts with a page.tsx metadata scan and updating the two descriptions (commit 940420a0).",
+    "Resolved: Stale 'New for SY2025' badge in b2b-solutions.ts (CC-11 scope) was not covered by the initial phase-w3-claims test. Fixed by updating the badge to 'NOW AVAILABLE' (commit 80231438)."
+  ],
+  "commands": [
+    "pnpm --filter www-reading-advantage test phase-w3-claims",
+    "pnpm --filter www-reading-advantage lint",
+    "pnpm --filter www-reading-advantage check-types",
+    "pnpm --filter www-reading-advantage test wave2-product-claim-helper"
+  ],
+  "changed_files": [
+    "measure/tracks/wave3_product_alignment_20260628/plan.md",
+    "apps/www-reading-advantage/src/lib/__tests__/phase-w3-claims.test.ts",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/codecamp-advantage/page.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/science-advantage/page.tsx",
+    "apps/www-reading-advantage/src/locales/components/products/b2b-solutions.ts"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}
