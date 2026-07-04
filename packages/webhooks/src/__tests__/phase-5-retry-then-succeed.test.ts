@@ -24,6 +24,30 @@ vi.mock("@reading-advantage/ai", () => ({
   createAIClient: vi.fn(() => mockHolder),
 }));
 
+vi.mock("@reading-advantage/db", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@reading-advantage/db")>();
+  return {
+    ...actual,
+    db: {
+      insert: vi.fn().mockReturnValue({
+        values: vi.fn().mockReturnValue({
+          onConflictDoUpdate: vi.fn().mockReturnValue({
+            returning: vi.fn().mockResolvedValue([]),
+          }),
+        }),
+      }),
+      update: vi.fn().mockReturnValue({
+        set: vi.fn().mockReturnValue({
+          where: vi.fn().mockReturnValue({
+            returning: vi.fn().mockResolvedValue([]),
+          }),
+        }),
+      }),
+      execute: vi.fn().mockResolvedValue([]),
+    },
+  };
+});
+
 // Mock `enqueueReviewJob` at the review-worker module boundary so the
 // webhook handler doesn't reach the real DB. The worker override below
 // runs the seeded job through `processJob` without touching the DB.
@@ -204,6 +228,7 @@ describe("Phase 5 — retry then succeed", () => {
     await waitForBackgroundReviews();
     vi.mocked(postPrComment).mockClear();
     vi.mocked(updatePrReview).mockClear();
+    attemptCount = 0; // reset after the inline review consumed attempt 1
 
     // The integration test injects the seeded job via the `claim` override
     // and a `deps` override that uses the per-test AIClient (the
@@ -232,7 +257,11 @@ describe("Phase 5 — retry then succeed", () => {
     };
     const worker = createReviewWorker({
       intervalMs: 1000,
-      claim: vi.fn().mockResolvedValue([seededJob]),
+      claim: vi.fn()
+        .mockResolvedValueOnce([seededJob])
+        .mockResolvedValueOnce([seededJob])
+        .mockResolvedValueOnce([seededJob])
+        .mockResolvedValue([]),
       reclaim: vi.fn().mockResolvedValue([]),
       settle: vi.fn().mockReturnValue({
         status: "succeeded" as const,

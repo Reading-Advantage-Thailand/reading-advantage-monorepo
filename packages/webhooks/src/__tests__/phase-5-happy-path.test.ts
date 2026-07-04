@@ -210,7 +210,9 @@ describe("Phase 5 — happy path E2E", () => {
     };
     const worker = createReviewWorker({
       intervalMs: 1000,
-      claim: vi.fn().mockResolvedValue([seededJob]),
+      claim: vi.fn()
+        .mockResolvedValueOnce([seededJob])
+        .mockResolvedValue([]),
       reclaim: vi.fn().mockResolvedValue([]),
       settle: vi.fn().mockReturnValue({
         status: "succeeded" as const,

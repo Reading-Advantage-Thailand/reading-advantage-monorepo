@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeAll, beforeEach, afterAll } from "vitest";
 import { createHmac } from "crypto";
-import githubApp from "../github.js";
+import githubApp, { waitForBackgroundReviews } from "../github.js";
 import { createReviewWorker } from "../review-worker.js";
 
 const WEBHOOK_SECRET = "phase-5-test-secret";
@@ -20,6 +20,76 @@ vi.mock("@reading-advantage/ai", () => ({
   createAIClient: vi.fn(() => mockHolder),
 }));
 
+vi.mock("@reading-advantage/db", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@reading-advantage/db")>();
+
+  function createQueryBuilder(val: unknown) {
+    return {
+      limit: vi.fn().mockReturnThis(),
+      offset: vi.fn().mockReturnThis(),
+      orderBy: vi.fn().mockReturnThis(),
+      groupBy: vi.fn().mockReturnThis(),
+      then(
+        onFulfilled?: (value: unknown) => unknown,
+        onRejected?: (reason: unknown) => unknown,
+      ) {
+        return Promise.resolve(val).then(onFulfilled, onRejected);
+      },
+      execute() {
+        return Promise.resolve(val);
+      },
+    };
+  }
+
+  const localMockDb = {
+    insert: vi.fn().mockReturnValue({
+      values: vi.fn().mockReturnValue({
+        onConflictDoUpdate: vi.fn().mockReturnValue({
+          returning: vi.fn().mockResolvedValue([
+            {
+              id: "job-1",
+              prOwner: "org",
+              prRepo: "repo",
+              prPullNumber: 1,
+              prUrl: "https://github.com/org/repo/pull/1",
+              status: "pending",
+              attempts: 0,
+              maxAttempts: 5,
+              nextAttemptAt: new Date(),
+              lastError: null,
+              claimedAt: null,
+              claimedBy: null,
+              reviewId: null,
+              createdAt: new Date(),
+              updatedAt: new Date(),
+            },
+          ]),
+        }),
+        returning: vi.fn().mockResolvedValue([]),
+        onConflictDoNothing: vi.fn().mockResolvedValue([]),
+      }),
+    }),
+    select: vi.fn().mockImplementation(() => ({
+      from: vi.fn().mockReturnValue({
+        where: vi.fn().mockReturnValue(createQueryBuilder([])),
+      }),
+    })),
+    update: vi.fn().mockReturnValue({
+      set: vi.fn().mockReturnValue({
+        where: vi.fn().mockReturnValue({
+          returning: vi.fn().mockResolvedValue([]),
+        }),
+      }),
+    }),
+    execute: vi.fn().mockResolvedValue([]),
+  };
+
+  return {
+    ...actual,
+    db: localMockDb,
+  };
+});
+
 vi.mock("@reading-advantage/domain/codecamp", async () => {
   const actual = await vi.importActual<typeof import("@reading-advantage/domain/codecamp")>("@reading-advantage/domain/codecamp");
   return {
@@ -30,6 +100,13 @@ vi.mock("@reading-advantage/domain/codecamp", async () => {
     getExerciseRepoByUrl: vi.fn(),
     logWebhookEvent: vi.fn(),
     completeApprovedPrReviewLesson: vi.fn(),
+    reviewExercise: vi.fn().mockImplementation(async (args) => {
+      if (args.generateReview) {
+        const prompt = `Please review the following code diff:\n\n\`\`\`diff\n${args.prDiff ?? ""}\n\`\`\``;
+        return args.generateReview("system prompt", prompt);
+      }
+      return { passed: true, summary: "ok", comments: [] };
+    }),
   };
 });
 
@@ -166,7 +243,47 @@ describe("Phase 5 — idempotent redelivery", () => {
     expect(res1.status, "first webhook response status").toBe(200);
     expect(res2.status, "second webhook response status").toBe(200);
 
-    const worker = createReviewWorker({ intervalMs: 1000 });
+    // Drain the deferred inline reviews so we don't double-count.
+    await waitForBackgroundReviews();
+    vi.mocked(postPrComment).mockClear();
+    vi.mocked(updatePrReview).mockClear();
+
+    const seededJob = {
+      id: "job-1",
+      repoOwner: "org",
+      repoName: "repo",
+      pullNumber: 1,
+      status: "claimed" as const,
+      attempts: 1,
+      maxAttempts: 5,
+      nextAttemptAt: new Date(),
+      lastError: null,
+      claimedAt: new Date(),
+      claimedBy: "worker",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      prUrl: "https://github.com/org/repo/pull/1",
+      reviewId: "pr1",
+      payloadJson: {},
+    } as unknown as import("../review-worker.js").ReviewJob & {
+      reviewId: string | null;
+      payloadJson: unknown;
+    };
+    const worker = createReviewWorker({
+      intervalMs: 1000,
+      claim: vi.fn()
+        .mockResolvedValueOnce([seededJob])
+        .mockResolvedValue([]),
+      reclaim: vi.fn().mockResolvedValue([]),
+      settle: vi.fn().mockReturnValue({
+        status: "succeeded" as const,
+        attempts: 1,
+        nextAttemptAt: new Date(),
+        lastError: null,
+        claimedAt: null,
+        claimedBy: null,
+      }),
+    });
     await worker.run();
 
     const commentCalls = vi.mocked(postPrComment).mock.calls.length;

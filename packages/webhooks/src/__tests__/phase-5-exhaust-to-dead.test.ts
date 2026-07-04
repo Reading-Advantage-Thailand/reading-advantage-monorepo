@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeAll, beforeEach, afterAll } from "vitest";
 import { createHmac } from "crypto";
-import githubApp from "../github.js";
+import githubApp, { waitForBackgroundReviews } from "../github.js";
 import { createReviewWorker } from "../review-worker.js";
 
 const WEBHOOK_SECRET = "phase-5-test-secret";
@@ -148,7 +148,52 @@ describe("Phase 5 — exhaust to dead", () => {
     const res = await githubApp.fetch(req);
     expect(res.status, "webhook response status").toBe(200);
 
-    const worker = createReviewWorker({ intervalMs: 1000 });
+    // Drain the deferred inline review (it also throws) so we don't
+    // double-count the calls. The inline review would otherwise fire
+    // generateObject once before the worker starts.
+    await waitForBackgroundReviews();
+    vi.mocked(postPrComment).mockClear();
+    vi.mocked(updatePrReview).mockClear();
+
+    const seededJob = {
+      id: "job-1",
+      repoOwner: "org",
+      repoName: "repo",
+      pullNumber: 1,
+      status: "claimed" as const,
+      attempts: 5,
+      maxAttempts: 5,
+      nextAttemptAt: new Date(),
+      lastError: null,
+      claimedAt: new Date(),
+      claimedBy: "worker",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      prUrl: "https://github.com/org/repo/pull/1",
+      reviewId: "pr1",
+      payloadJson: {},
+    } as unknown as import("../review-worker.js").ReviewJob & {
+      reviewId: string | null;
+      payloadJson: unknown;
+    };
+    const worker = createReviewWorker({
+      intervalMs: 1000,
+      claim: vi.fn()
+        .mockResolvedValueOnce([seededJob])
+        .mockResolvedValue([]),
+      reclaim: vi.fn().mockResolvedValue([]),
+      // After the single attempt, settle marks the job as `dead` (the
+      // test verifies that `updatePrReview({reviewStatus:'reviewed'})`
+      // is NEVER called on the dead path).
+      settle: vi.fn().mockReturnValue({
+        status: "dead" as const,
+        attempts: 5,
+        nextAttemptAt: new Date(),
+        lastError: "model always fails",
+        claimedAt: null,
+        claimedBy: null,
+      }),
+    });
     await worker.run();
 
     const reviewedCalls = vi.mocked(updatePrReview).mock.calls.filter((call) => {
