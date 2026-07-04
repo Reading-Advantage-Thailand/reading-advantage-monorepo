@@ -31,8 +31,21 @@
 import { sql } from "drizzle-orm";
 import { eq, and } from "drizzle-orm";
 import { reviewJobs } from "@reading-advantage/db";
+import type { DB } from "@reading-advantage/db";
 import { createTenantDB } from "@reading-advantage/domain";
 import { getAIClient } from "@reading-advantage/ai";
+
+/**
+ * A privileged (direct-connection) DB handle plus its raw postgres client.
+ * Mirrors the `PrivilegedConnection` shape used by
+ * `packages/auth/src/rate-limit-cleanup.ts` and `audit-retention-job.ts` so
+ * `FOR UPDATE SKIP LOCKED` / advisory-lock paths get a session-scoped
+ * connection (transaction-mode poolers break those features).
+ */
+interface PrivilegedConnection {
+  db: DB;
+  client: { end: () => Promise<void> };
+}
 
 /**
  * Lazy `createPrivilegedDb` wrapper. The function pulls from
@@ -42,9 +55,9 @@ import { getAIClient } from "@reading-advantage/ai";
  *
  * @returns The privileged DB + raw client.
  */
-async function privilegedDb(): Promise<{ db: any; client: { end: () => Promise<void> } }> {
+async function privilegedDb(): Promise<PrivilegedConnection> {
   const mod = await import("@reading-advantage/db");
-  return mod.createPrivilegedDb() as { db: any; client: { end: () => Promise<void> } };
+  return mod.createPrivilegedDb() as PrivilegedConnection;
 }
 
 /**
@@ -180,7 +193,7 @@ export function __resetReviewWorkerState(): void {
 
 export interface EnqueueReviewJobInput {
   /** The DB connection (privileged for `FOR UPDATE SKIP LOCKED` paths; regular is fine for inserts). */
-  db: any;
+  db: DB;
   /** Optional FK to the existing `codecamp_pr_reviews` row, when known. */
   reviewId?: string;
   /** GitHub action that triggered the enqueue (`opened`, `synchronize`, etc.). */
@@ -318,7 +331,9 @@ export async function enqueueReviewJob(
 
   enqueuedKeys.add(cacheKey);
 
-  const row = Array.isArray(insertedRows) ? insertedRows[0] : (insertedRows as any);
+  const row: Partial<typeof reviewJobs.$inferSelect> | undefined = Array.isArray(insertedRows)
+    ? insertedRows[0]
+    : (insertedRows as Partial<typeof reviewJobs.$inferSelect> | undefined);
   return {
     id: row?.id,
     repoOwner: row?.prOwner,
@@ -438,7 +453,7 @@ export interface ClaimDueJobsOptions {
  * @returns Array of claimed job rows (each with the `ReviewJob` shape).
  */
 export async function claimDueJobs(
-  dbArg?: any,
+  dbArg?: DB,
   opts: ClaimDueJobsOptions | number = {},
 ): Promise<ReviewJob[]> {
   const options: ClaimDueJobsOptions = typeof opts === "number" ? { batchSize: opts } : opts;
@@ -449,8 +464,8 @@ export async function claimDueJobs(
   // (direct) connection so `FOR UPDATE SKIP LOCKED` row locks work across
   // replicas. The pooled `db` singleton may be behind a transaction-mode
   // pooler that breaks session-scoped locks.
-  let conn: any = dbArg;
-  let owned: { db: any; client: { end: () => Promise<void> } } | null = null;
+  let conn: DB | undefined = dbArg;
+  let owned: PrivilegedConnection | null = null;
   if (!conn || typeof conn.execute !== "function") {
     owned = await privilegedDb();
     conn = owned!.db;
@@ -506,7 +521,7 @@ export interface ReclaimStuckJobsOptions {
  * @returns Array of reclaimed job ids.
  */
 export async function reclaimStuckJobs(
-  dbArg?: any,
+  dbArg?: DB,
   optsOrTimeout: ReclaimStuckJobsOptions | number = {},
 ): Promise<string[]> {
   const opts: ReclaimStuckJobsOptions =
@@ -521,8 +536,8 @@ export async function reclaimStuckJobs(
   // Allow tests to pass a mock DB; otherwise always use the privileged
   // (direct) connection for the same lock/session-scoping reason as
   // `claimDueJobs`.
-  let conn: any = dbArg;
-  let owned: { db: any; client: { end: () => Promise<void> } } | null = null;
+  let conn: DB | undefined = dbArg;
+  let owned: PrivilegedConnection | null = null;
   if (!conn || typeof conn.execute !== "function") {
     owned = await privilegedDb();
     conn = owned!.db;
@@ -546,7 +561,7 @@ export async function reclaimStuckJobs(
     `;
     const result = await conn.execute(reclaimSql);
 
-    const rows = Array.isArray(result) ? (result as Array<{ id: string }>) : [];
+    const rows = Array.isArray(result) ? (result as unknown as Array<{ id: string }>) : [];
     return rows.map((row) => row.id);
   } finally {
     if (owned) await owned.client.end();
@@ -556,7 +571,7 @@ export async function reclaimStuckJobs(
 // ─── Process ──────────────────────────────────────────────────
 
 export interface ProcessJobDeps {
-  db: any;
+  db: DB;
   /** Override the AIClient; defaults to `getAIClient()`. Tests inject a Mock. */
   getAIClient?: () => { generateObject: (input: unknown) => Promise<unknown> };
   /** Override the PR diff fetcher; defaults to `fetchPrDiff`. */
@@ -834,13 +849,13 @@ export function settleJob(
  * @param payload - The output of `settleJob`.
  */
 export async function applySettle(
-  dbArg: any | undefined,
+  dbArg: DB | undefined,
   jobId: string,
   payload: SettleJobPayload,
 ): Promise<void> {
   const { db: defaultDb } = await import("@reading-advantage/db");
-  let conn: any = dbArg ?? (defaultDb as any);
-  let owned: { db: any; client: { end: () => Promise<void> } } | null = null;
+  let conn: DB | undefined = dbArg ?? (defaultDb as DB);
+  let owned: PrivilegedConnection | null = null;
   if (!conn || typeof conn.update !== "function") {
     owned = await privilegedDb();
     conn = owned!.db;
@@ -870,11 +885,11 @@ export interface CreateReviewWorkerOptions {
   deps?: Partial<ProcessJobDeps>;
   /** Override `claimDueJobs` for tests (e.g. a no-op). */
   claim?: (
-    db?: any,
+    db?: DB,
     opts?: ClaimDueJobsOptions | number,
   ) => Promise<ReviewJob[]>;
   /** Override `reclaimStuckJobs` for tests. */
-  reclaim?: (db?: any, opts?: ReclaimStuckJobsOptions | number) => Promise<string[]>;
+  reclaim?: (db?: DB, opts?: ReclaimStuckJobsOptions | number) => Promise<string[]>;
   /** Override `settleJob` for tests. */
   settle?: (job: { id: string; attempts: number; maxAttempts: number }, err: Error | null, opts: SettleJobOptions) => SettleJobPayload;
 }
@@ -899,7 +914,7 @@ export async function runWorkerTick(opts: CreateReviewWorkerOptions = {}): Promi
   // resolves to the real `db` singleton and falls back to the privileged
   // DB only when the connection URL is missing.
   const dbModule = await import("@reading-advantage/db");
-  const defaultDb = dbModule.db as any;
+  const defaultDb: DB = dbModule.db;
 
   await reclaim(undefined, undefined).catch(() => {
     // Reclaim failure is non-fatal — the next tick will retry.
