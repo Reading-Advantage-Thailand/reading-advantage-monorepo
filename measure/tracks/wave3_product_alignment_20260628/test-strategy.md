@@ -1,14 +1,284 @@
 # Test Strategy: Wave 3 — Product-Facing Truth and Reusable Surfaces
 
 > **Track ID:** `wave3_product_alignment_20260628`
-> **Baseline SHA:** `1f2d17957a7ea0b58d79ca88e29219f73f1a1557`
-> **Active phase for this cycle:** Phase 2 — Marketing App Public Workflow Security **only**.
-> Phases 0/1 and 3–5 are deferred (see §9 Deferrals). This document specifies the
-> Phase 2 test approach in full; other phases are stubs to be expanded when scheduled.
+> **Baseline SHA:** `8a47d2df999e35d9d47de9eb590ae29523c70bae`
+> **Active phases for this cycle:** Phase 0 (Product Decision Intake) and Phase 1
+> (Website Claims Correction). Phase 2 (Marketing App Public Workflow Security) is
+> **complete and accepted** — its strategy is preserved verbatim in §2–§10 for
+> provenance. Phases 3–5 are deferred (see §9 Deferrals).
+>
+> This document specifies:
+> - §0.A — Phase 0 artifact tests (decisions/matrix truthfulness)
+> - §0.B — Phase 1 live-behavior tests (claims correction; new this cycle)
+> - §2–§10 — Phase 2 strategy, preserved unchanged for provenance
 
 ---
 
-## 1. Scope of this cycle
+## 0.A. Phase 0 — Product Decision Intake (artifact tests)
+
+Phase 0 is a **decisions** phase, not a live-behavior phase. It produces two frozen
+artifacts:
+
+- `phase-0-decisions.md` — four product-owner decisions with Tier 1 (automatable floor)
+  vs Tier 2 (`[b] deferred:po`) split.
+- `phase-0-claims-matrix.md` — 30 frozen claim rows (CC-01..CC-30) with HEAD-confirmed
+  file:line evidence and Phase 1 dispositions.
+
+### What Phase 0 must defend against (anti-patterns)
+
+| Anti-pattern | Where it applies in Phase 0 | Defense |
+|---|---|---|
+| **A5** False-claim text vs test reality | `phase-0-decisions.md` and `phase-0-claims-matrix.md` cite file:line evidence | Every claim row in the matrix must cite a file:line that exists at the baseline SHA `8a47d2df`. A guard test re-verifies the cited literals exist in the cited files; if a cited literal is absent, the matrix is drifting and the test fails. |
+| **A6** Registry-note overstatement | `plan.md` Phase 0 task markers | Do not mark Tier 2 `[b] deferred:po` items as `[x]`. The plan marker must match the decision tier. The marker-vocabulary check (`tests/orchestrator_marker_vocabulary.sh`) and the audit role enforce this. |
+| **A2** Consent-blind publish gate | Decision 4 (efficacy stats / case studies) | The Tier 1 floor for case studies is "remove or relabel as illustrative" UNLESS a `consent-<subject>.{md,pdf}` artifact exists. Phase 0 records this as a frozen rule; Phase 1 enforces it via `wave2-product-claim-helper.ts`. |
+| **A9** Pre-existing test references archived track paths | Phase 0 artifacts cite `measure/audit-reports/...` paths (not `measure/tracks/...`) | All evidence references point at `measure/audit-reports/` (stable, never archived) rather than `measure/tracks/<id>/` (movable on closeout). The audit role checks this. |
+| **A11** Executed review track left fully blocked | Phase 0 is a decisions phase, not a review-execution track | N/A — but the test records this consciously. Phase 0 tasks that are Tier 1 are marked `[x]`; Tier 2 are `[b] deferred:po` with a precise PO question. No `[~]` remains. |
+
+### Phase 0 Red command (artifact truthfulness)
+
+There is no live-behavior Red for Phase 0 — it produces artifacts, not code. The Phase 0
+"Red" is a **structural** check that the artifacts exist and are internally consistent
+with the baseline source. This is run as a single bash guard before Phase 1 begins:
+
+```bash
+# phase-0 artifact truthfulness guard (run from repo root)
+test -f measure/tracks/wave3_product_alignment_20260628/phase-0-decisions.md || exit 1
+test -f measure/tracks/wave3_product_alignment_20260628/phase-0-claims-matrix.md || exit 1
+# Re-verify cited literals still exist at HEAD (A5 defense — matrix is not drifting)
+rg -q 'One engine, nine products' apps/www-reading-advantage/src/locales/pages/home.ts
+rg -q 'GPT-5' apps/www-reading-advantage/src/locales/pages/products/primary-advantage.ts
+rg -q 'School A \(Coming Soon\)' apps/www-reading-advantage/src/locales/pages/case-studies.ts
+rg -q 'ZERO RISK' apps/www-reading-advantage/src/locales/pages/managed-service.ts
+rg -q '2,172\+' 'apps/www-reading-advantage/src/app/[locale]/(marketing)/(home)/page.tsx'
+# Plan marker truthfulness (A6 defense — Tier 2 not overclaimed as [x])
+grep -cE '^- \[x\] Task: Present product-owner' measure/tracks/wave3_product_alignment_20260628/plan.md | grep -q '^1$'
+grep -cE 'deferred:po' measure/tracks/wave3_product_alignment_20260628/phase-0-decisions.md | grep -qv '^0$'
+```
+
+The first five `rg -q` calls **must succeed** (literals present at baseline) — this proves
+the matrix describes real violations, not invented ones (A5 defense). After Phase 1 Green,
+those same `rg -q` calls **must fail** (literals removed) — that is the Phase 1 live-behavior
+Red→Green proof (see §0.B).
+
+### Phase 0 Green gate
+
+Phase 0 is Green when:
+
+- `phase-0-decisions.md` and `phase-0-claims-matrix.md` exist in the track directory.
+- The Phase 0 artifact truthfulness guard above exits 0 (all cited literals present at
+  baseline; plan markers truthful).
+- `plan.md` Phase 0 has three `[x]` tasks (one per plan row) with no `[~]` remaining.
+  Tier 2 items are recorded as `[b] deferred:po` *inside* the task body, not as separate
+  incomplete tasks.
+
+### Phase 0 closeout gate
+
+- All three Phase 0 plan rows are `[x]`.
+- The four `[NEEDS-PO]` Tier 2 questions in `phase-0-decisions.md` are explicitly listed
+  in `plan.md` Phase 6 (Product Acceptance and Closeout) as `[b] deferred:po` items the
+  PO must resolve before final acceptance — they are not silently dropped.
+- The Advantage Games import policy (Decision 3) is referenced from `plan.md` Phases 3,
+  4, 5 so the pilot-import gate is visible at each phase boundary.
+
+### Artifact vs live-behavior distinction (Phase 0)
+
+Phase 0 produces **artifact/documentation tests only**. There is no call to a route
+handler, no DB mock, no AI client. The "test" is a bash guard that reads files and
+re-verifies cited literals. This is legitimate for a decisions phase but must not be the
+*only* evidence for any behavioral claim downstream — Phase 1's live-behavior tests are
+the load-bearing proof that the claims are actually corrected in source.
+
+---
+
+## 0.B. Phase 1 — Website Claims Correction (live-behavior tests)
+
+Phase 1 is the live-behavior phase that enforces the Tier 1 floor from `phase-0-decisions.md`
+against `apps/www-reading-advantage` source. The app's test runner is `vitest run` (see
+`apps/www-reading-advantage/package.json` `"test": "vitest run"`). Existing tests live in
+`apps/www-reading-advantage/src/**/*.test.ts(x)` and `apps/www-reading-advantage/scripts/__tests__/`.
+The Wave 2 reusable harness `apps/www-reading-advantage/src/testing/product-claim-helper.ts`
+and its consumer test `src/lib/wave2-product-claim-helper.test.ts` are the foundation —
+Phase 1 extends them, does not duplicate them.
+
+### Confirmed claims to defend against (evidence-mapped, frozen in `phase-0-claims-matrix.md`)
+
+| Group | Claim IDs | Evidence | Phase 1 Red asserts |
+|-------|-----------|----------|---------------------|
+| 1A — Product count | CC-01, CC-02, CC-03 | LRF-001/029/034; CA-008 | No "nine products" / "all 9 products" / "one engine, nine products" literal in `apps/www-reading-advantage/src/` |
+| 1B — Stale launch dates | CC-04..CC-12 | LRF-002/003/006 | No "Coming in 2025" / "Launching in 2025" / "Coming in 2026" / "New for SY2025" / "Starting May 2026" past-due dateline on any product page (the 18-month threshold from `product-claim-helper.ts` enforces this deterministically) |
+| 1C — Nonexistent-app pages | CC-13..CC-17 | CA-008 | Each of Math/STEM/Storytime/Tutor/Zhongwen product page either carries a "roadmap"/"planned" marker with no launch date, OR is removed from the products index (Phase 1 implements the default: keep with roadmap label) |
+| 1D — AI model claims | CC-18, CC-19 | LRF-013 | No "GPT-5" / "GPT-4" / "Google Gemini & GPT-5 AI" literal in `apps/www-reading-advantage/src/locales/` or `src/app/` |
+| 1E — Placeholder case studies | CC-20, CC-21 | LRF-012 | No "School A (Coming Soon)" / "School B (Coming Soon)" / "Real Results" heading; relabeled "Illustrative examples" or removed |
+| 1F — Duplicated efficacy stats | CC-22 | LRF-014 | Primary Advantage locale no longer contains a verbatim copy of Reading Advantage's efficacy stats block |
+| 1G — Unverifiable stats & absolute claims | CC-23..CC-28 | LRF-015/017/019/031 | No "2,172+", "95%" (math), "3x faster", "ZERO RISK", "Aka 2019", "+50% grammar", "2x vocab" literal without a paired citation/consent artifact |
+| 1H — Partner/school consent | CC-29 | LRF-012; A2 | `wave2-product-claim-helper.ts` `audit()` returns `missingConsentCount === 0` for any `published-case-study` claim harvested from the case-studies page |
+| 1I — Stale timestamps | CC-30 | LRF-017 | No "Last updated Oct 2023" / "Oct 2024" stale timestamp on comparison/pricing tables (or replaced with current date) |
+
+### Gate commands (www app)
+
+- **RED_TEST_COMMAND / GREEN_TEST_COMMAND:** `pnpm --filter www-reading-advantage test`
+  (bounded Red runs may filter: `pnpm --filter www-reading-advantage test phase-w3-claims`)
+- **PROJECT_LINT:** `pnpm --filter www-reading-advantage lint`
+- **PROJECT_CHECKS:** `pnpm --filter www-reading-advantage check-types`
+
+### Phase 1 Red → Green → Closeout
+
+Phase 1 is decomposed into nine test groups (1A..1I), one per claim cluster. Each group
+is a bounded Red target. All groups share the Green gate `pnpm --filter www-reading-advantage test`
+(whole www suite green, including the pre-existing Wave 2 tests) and the closeout gate below.
+
+**Target file (new):** `apps/www-reading-advantage/src/lib/__tests__/phase-w3-claims.test.ts`
+(single file, grouped `describe` blocks — mirrors the established `wave2-product-claim-helper.test.ts`
+pattern).
+
+**Red command:** `pnpm --filter www-reading-advantage test phase-w3-claims`
+
+**Red assertions (one block per group, all asserting against HEAD `8a47d2df` source):**
+
+1. **1A product count** — `rg -n 'nine products|all 9 products|one engine, nine' apps/www-reading-advantage/src/`
+   returns **0 hits**. Today it returns ≥3 (CC-01/02/03). Red at baseline; Green after
+   the count is corrected.
+2. **1B stale launch dates** — for each product-page locale file in
+   `src/locales/pages/products/`, assert no line matches
+   `/(Coming|Launching|New for) .* 2025/` or `/Starting May 2026/` or `/Coming in 2026/`.
+   Use the `product-claim-helper.ts` `STALE_DATE_THRESHOLD_MS` (18 months) detector so
+   the threshold is deterministic and not a bare-digit match (A3).
+3. **1C nonexistent-app pages** — for each of Math/STEM/Storytime/Tutor/Zhongwen page
+   files, assert either (a) the page contains a `roadmap`/`planned` marker AND no
+   concrete launch date, or (b) the page is removed (file absent). Default Phase 1
+   implementation: keep with roadmap label.
+4. **1D AI model claims** — `rg -n 'GPT-5|GPT-4|Google Gemini & GPT-5' apps/www-reading-advantage/src/`
+   returns **0 hits**. Today it returns 9 (CC-18/19). Red at baseline; Green after
+   provider-neutral copy is substituted.
+5. **1E placeholder case studies** — `rg -n 'School A \(Coming Soon\)|School B \(Coming Soon\)|Real Results' apps/www-reading-advantage/src/locales/pages/case-studies.ts`
+   returns **0 hits**. The `wave2-product-claim-helper.ts` `audit()` on harvested
+   case-study claims returns `placeholderCaseStudyCount === 0`.
+6. **1F duplicated efficacy stats** — diff the Primary Advantage locale efficacy block
+   against the Reading Advantage locale efficacy block; assert they are not identical.
+   (If both are removed per Tier 1, the diff is trivially non-identical — both empty.)
+7. **1G unverifiable stats** — `rg -n '2,172\+|ZERO RISK|Aka 2019|\+50% grammar|2x vocab' apps/www-reading-advantage/src/`
+   returns **0 hits**. For "95%" and "3x faster" on the Math page, assert the Math page
+   is either removed or relabeled as roadmap (per 1C) so the stats are not presented as
+   live product performance.
+8. **1H partner/school consent** — harvest every `published-case-study`-classified claim
+   from `src/locales/pages/case-studies.ts` (using the helper's `classify()`), then call
+   `audit(claims, consentIndex)` where `consentIndex` is built from any
+   `consent-<subject>.{md,pdf}` artifacts in `apps/www-reading-advantage/`. Assert
+   `missingConsentCount === 0`. Today, with no consent artifacts and "School A/B (Coming
+   Soon)" placeholders, this passes vacuously (the placeholders are
+   `placeholder-case-study`, not `published-case-study`); after Phase 1 Green, if any
+   real case study is added, it must come with consent. **A4 defense:** the test must
+   also assert `claimCount >= 1` so a fully-removed case-studies page does not pass
+   vacuously.
+9. **1I stale timestamps** — `rg -n 'Last updated.*Oct 202[34]' apps/www-reading-advantage/src/`
+   returns **0 hits**, OR every "Last updated" line uses a date within the
+   `STALE_DATE_THRESHOLD_MS` window.
+
+**Positive controls (A4 defense — non-vacuity):** each group includes a positive
+control asserting a truthful replacement exists. For 1A, assert a truthful count
+string ("four products" or equivalent) is present. For 1D, assert provider-neutral
+copy ("AI-powered" or equivalent) is present where GPT-5 was removed. For 1E, assert
+the case-studies page still exists with relabeled "Illustrative examples" or
+methodology disclaimer content (so the test does not pass by deleting the page
+entirely). A group that passes only because the source was deleted fails its positive
+control.
+
+### Phase 1 Green gate
+
+- `pnpm --filter www-reading-advantage test` exits **0** — the whole www suite,
+  including the new `phase-w3-claims.test.ts` AND the pre-existing Wave 2 tests
+  (`wave2-product-claim-helper.test.ts`, `blog.test.ts`, `blog-posts-validation.test.ts`,
+  etc.). No regression in the baseline www tests.
+- `pnpm --filter www-reading-advantage lint` exits 0.
+- `pnpm --filter www-reading-advantage check-types` exits 0.
+
+### Phase 1 closeout gate
+
+- All Green-gate commands green.
+- Every `[FIX-MUST]` row in `phase-0-claims-matrix.md` (CC-01..CC-30 except the
+  `[OUT-OF-SCOPE]` rows) has at least one **red-at-baseline / green-after-fix** test
+  with a positive control.
+- The Phase 0 artifact truthfulness guard's "literal present" `rg -q` calls now **fail**
+  (literals removed) — this is the live-behavior proof that the matrix described real
+  violations and they were corrected.
+- Tier 2 `[b] deferred:po` items remain deferred in `plan.md` Phase 6 — Phase 1 did not
+  invent approved stats, model names, or roadmap dates.
+- `wave2-product-claim-helper.test.ts` still passes (no regression in the Wave 2
+  reusable harness).
+
+### Phase 1 fixtures, mocks, and live-behavior proof
+
+- **No DB mock, no AI mock, no route-handler call.** Phase 1 tests are **source-text
+  audits** — they read `apps/www-reading-advantage/src/locales/` and
+  `apps/www-reading-advantage/src/app/` files and assert on their content. This is the
+  honest tier for claims correction: a public marketing claim is a *source-text* fact,
+  not a runtime behavior.
+- **`product-claim-helper.ts` is real, not mocked.** The Wave 2 helper is the
+  classification engine; Phase 1 tests call `createProductClaimHelper()` and feed it
+  harvested claim lines. The helper itself is unit-tested by `wave2-product-claim-helper.test.ts`;
+  Phase 1 tests are consumer/integration tests over the real helper.
+- **Harvesting fixtures:** a small fixture in the test file maps each claim cluster to
+  the source files it audits (e.g. `{ page: "home", files: ["src/locales/pages/home.ts",
+  "src/app/[locale]/(marketing)/(home)/page.tsx"] }`). The test reads each file and
+  runs the helper's `classify()` + `audit()` on harvested lines. This keeps the test
+  path-independent (A9) — it references `apps/www-reading-advantage/src/`, not a
+  measure track path.
+- **Consent artifact fixture:** for group 1H, the test looks for
+  `apps/www-reading-advantage/consent-*.{md,pdf}` files at runtime. If none exist,
+  every `published-case-study` claim must have been removed/relabeled (so
+  `publishedCaseStudyCount === 0` and `missingConsentCount === 0`). If the PO later
+  adds a consent artifact, the test automatically picks it up — no test rewrite needed.
+
+### Phase 1 anti-pattern coverage (falsifiability per group)
+
+| Anti-pattern | Where it applies in Phase 1 | Defense |
+|---|---|---|
+| **A4** Vacuous-pass on nothing-done | Every group (1A..1I) | **Positive control** in each group: a truthful replacement must exist (count string, neutral copy, relabeled section). A group that passes only by deleting source fails its positive control. Group 1H also asserts `claimCount >= 1`. |
+| **A5** False-claim text vs test reality | `plan.md` Phase 1 task text | Do not write "claims corrected" / "all claims pass" in `plan.md` unless `pnpm --filter www-reading-advantage test` exits 0. The cited command is the source of truth. |
+| **A6** Registry-note overstatement | `measure/tracks.md` Wave 3 row | Do **not** claim the website claims mismatch (CA-008) is "resolved" in any registry note until groups 1A..1I are green. The CA-008 finding stays "open" in `product-risk-register.md` until Phase 1 closeout. |
+| **A3** Digit-only as labeled count | Group 1A product count; group 1H consent count | Use the `product-claim-helper.ts` labeled-integer report (`appExistenceCount`, `staleLaunchDateCount`, `placeholderCaseStudyCount`, `publishedCaseStudyCount`, `missingConsentCount`). Never `rg -q '[0-9]+'` or a bare-digit match. |
+| **A7** Over-broad filter swallowing hits | Groups 1A/1D/1E/1G literal scans | Match the **exact banned literals** ("GPT-5", "nine products", "School A (Coming Soon)", "ZERO RISK", "2,172+"), not bare English words like "school"/"AI"/"risk" (which appear legitimately in disclaimers and component names). |
+| **A2** Consent-blind publish gate | Group 1H partner/school consent | `wave2-product-claim-helper.ts` `audit()` returns `missingConsentCount` for any `published-case-study` without paired consent + anonymization. Strict boolean check (`hasConsent === true && anonymized === true`); truthy-string consent does not bypass (already tested in `wave2-product-claim-helper.test.ts`). |
+| **A9** Pre-existing test references archived track paths | New `phase-w3-claims.test.ts` | The test references `apps/www-reading-advantage/src/...` only — never a `measure/tracks/<id>/` path. Provenance comments may cite `phase-0-claims-matrix.md` but no runtime dependency on a track path. If the track later archives, tests must not break. |
+| **A10** Generated-facts drift | N/A — Phase 1 does not regenerate `measure/generated/`. | Consciously not applicable. |
+| **A11** Executed review track left fully blocked | N/A — Phase 1 is an implementation phase. | Consciously not applicable. |
+
+A1, A8, A12, A13 are orchestrator-internal or catalog/closeout classes not exercised by
+Phase 1 product tests. They are recorded here as consciously-not-applicable rather than
+silently skipped.
+
+### Phase 1 intentionally-red aggregate-suite handling
+
+The monorepo aggregate suite (`pnpm turbo run test`) is **red at baseline** from
+pre-existing, owner-labeled failures outside Wave 3 (see `measure/tracks.md:112-115`:
+"aggregate reds are pre-existing/owner-labeled"). Phase 1 does **not** attempt to green
+the aggregate suite. The Phase 1 gate is **scoped to the www filter**
+(`pnpm --filter www-reading-advantage test`), which must be fully green. Any non-www
+aggregate red observed during this phase is pre-existing and must be labeled as such in
+the phase result `known_failures` — never silently absorbed into a "green" claim (A5/A6).
+
+### Phase 1 artifact vs live-behavior distinction
+
+- **Source-text audit tests** (groups 1A..1I) read `apps/www-reading-advantage/src/`
+  files and assert on their content. These are **legitimate live-behavior tests** for a
+  public marketing claim, because the claim *is* the source text — there is no runtime
+  behavior that could rescue a false claim. They are not "documentation tests" in the
+  Phase 2 sense (which read JSDoc/policy text); they read the actual public copy.
+- **Helper-classification tests** (group 1H via `product-claim-helper.ts`) are
+  behavioral tests over the real helper — they call `classify()` + `audit()` and assert
+  on the labeled-integer report. These are the load-bearing tests for the A2
+  consent-gate claim.
+- **No route-handler or DB test in Phase 1.** The website has no backend workflow that
+  produces these claims — they are static copy. Phase 1 does not mock DBs or AI clients.
+
+---
+
+## 1. Scope of this cycle (Phase 2 — preserved for provenance)
+
+> The section below is the original Phase 2 strategy, preserved unchanged. Phase 2 is
+> **complete and accepted** (see `audit/phase-2-acceptance.json`). It is retained as
+> provenance for the Phase 2 anti-pattern coverage and as a reference pattern for the
+> Phase 1 strategy above.
 
 We are executing **Phase 2: Marketing App Public Workflow Security** only. The app under
 test is `apps/marketing` — a **vinext** app whose test runner is `vitest run`. Tests live
@@ -339,27 +609,59 @@ labeled as such in the phase result `known_failures` — never silently absorbed
 
 ## 9. Deferrals (explicit)
 
-- **Phase 0 — Product Decision Intake:** deferred. Requires product-owner decisions
-  (visible product pages, approved AI/model claims, games import policy, approved efficacy
-  stats). No tests authored this cycle.
-- **Phase 1 — Website Claims Correction:** deferred. Depends on Phase 0 decisions
-  (`[NEEDS-PO]`). The `www-reading-advantage` claim tests (LRF-001/002/012/013/014) are
-  out of scope for this cycle.
+- **Phase 0 — Product Decision Intake:** **DONE this cycle.** Decisions recorded in
+  `phase-0-decisions.md`; claims matrix frozen in `phase-0-claims-matrix.md`. Tier 1
+  floors are `[x]`; Tier 2 PO-gated positive replacements remain `[b] deferred:po` with
+  precise questions for the PO (see `phase-0-decisions.md` Decision 1B/2B/4B).
+- **Phase 1 — Website Claims Correction:** **scheduled this cycle** (strategy in §0.B).
+  Red tests assert the Tier 1 floor against `apps/www-reading-advantage` source at HEAD
+  `8a47d2df`. Tier 2 `[NEEDS-PO]` items are not invented by Phase 1.
 - **Phases 3–5 — Advantage Games** (completion/scoring contract, tenant-safe persistence
   and leaderboards, embeddable runtime/i18n/shared package): deferred to a later cycle.
   Test strategy for these will be authored when scheduled; the plan's D-01..D-11 evidence
-  refs are carried forward untouched.
-- **Phase 6 — Product Acceptance:** deferred until Phases 0/1 and 3–5 are executed.
+  refs and the import policy from `phase-0-decisions.md` Decision 3 are carried forward
+  as the gating items.
+- **Phase 6 — Product Acceptance:** deferred until Phases 1 and 3–5 are executed. The
+  four `[NEEDS-PO]` Tier 2 questions from `phase-0-decisions.md` are explicitly listed
+  as `[b] deferred:po` items the PO must resolve before final acceptance — they are not
+  silently dropped.
 
 Within Phase 2, one `[NEEDS-PO]` item remains: the exact **role floor** for marketing
 routes (any authenticated staff user vs. an `ADMIN`-equivalent floor) and whether
 `GET /api/settings` should mask secrets for authenticated callers. The Red tests assert
 the **authentication** boundary (401 without a session), which holds under either PO
-decision; the role-floor tests should be added once the floor is confirmed.
+decision; the role-floor tests should be added once the floor is confirmed. (Phase 2 is
+complete and accepted; this item carries forward to Phase 6 closeout as a `[b] deferred:po`.)
 
 ---
 
 ## 10. Summary
+
+### Phase 0 (this cycle)
+
+Phase 0 delivers two frozen artifacts: `phase-0-decisions.md` (four product-owner
+decisions with Tier 1 `[x]` floor vs Tier 2 `[b] deferred:po` positive-replacement
+split) and `phase-0-claims-matrix.md` (30 claim rows CC-01..CC-30 with HEAD-confirmed
+file:line evidence at `8a47d2df` and Phase 1 dispositions). The Advantage Games import
+policy is fully evidence-grounded (`[x]`): standalone-only now, conditional pilot import
+of `haunted-library` after Phases 3–5 green, full import deferred to a successor track.
+Phase 0 has no live-behavior tests — its "Red" is a structural truthfulness guard that
+re-verifies the cited literals exist at baseline; after Phase 1 Green those same literals
+must be gone.
+
+### Phase 1 (this cycle)
+
+Phase 1 delivers one new www test file `phase-w3-claims.test.ts` with nine groups
+(1A product count, 1B stale launch dates, 1C nonexistent-app pages, 1D AI model claims,
+1E placeholder case studies, 1F duplicated efficacy stats, 1G unverifiable stats,
+1H partner/school consent, 1I stale timestamps), each red at `8a47d2df` for the specific
+banned literal/claim class and green after the Tier 1 floor is enforced, each with a
+positive control so a deletion-only fix fails (A4). The phase gate is
+`pnpm --filter www-reading-advantage test` = 0 plus lint and check-types, with the
+aggregate monorepo suite explicitly out of scope. Tier 2 `[NEEDS-PO]` items remain
+deferred — Phase 1 does not invent approved stats, model names, or roadmap dates.
+
+### Phase 2 (complete and accepted — preserved for provenance)
 
 Phase 2 delivers five new marketing test files (2A settings leak, 2B video auth, 2C
 campaigns auth+policy, 2D Zod validation, 2E AI adapter), each red at
