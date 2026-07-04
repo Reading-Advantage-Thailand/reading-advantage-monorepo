@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "status": "fail",
+  "summary": "Phase 3 Red tests committed and run at HEAD fe5a22c2. All three target suites fail for the intended reasons: the shared `packages/domain/src/games/` module is absent, the standalone complete route still trusts client `xp`/`accuracy`/invalid game types, and the representative `HauntedLibraryGame` component still emits the old `onComplete` payload with `xp` and without `idempotencyKey`. Existing tests in the touched files continue to pass.",
+  "blocking_findings": [
+    "Missing shared contract: `packages/domain/src/games/{schema,xp,mutations}.js` do not exist, causing `packages/domain/src/__tests__/games.test.ts` to fail at module resolution (`Cannot find module '/src/games/schema.js'`).",
+    "Route handler D-02/D-01 gap: `apps/advantage-games/src/lib/games/api/completeRoute.ts` echoes client `xp`, accepts `accuracy: 75`, accepts invalid `gameType`, accepts malformed `idempotencyKey`, and returns `mock-activity-${Date.now()}` with no `duplicate` field. Five of seven rewritten route tests fail.",
+    "Representative game gap: `HauntedLibraryGame.tsx#onComplete` still sends `{xp, accuracy, correctAnswers, totalAttempts}` and omits `gameType`, `idempotencyKey`, `duration`, `victory`, `score`, `difficulty`, and `clientTimestamp`. Two of twelve component tests fail."
+  ],
+  "nonblocking_findings": [],
+  "evidence": [
+    "Commit 3157f91a adds `packages/domain/src/__tests__/games.test.ts`, rewrites `apps/advantage-games/src/lib/games/api/completeRoute.test.ts`, extends `apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.test.tsx`, and updates `measure/tracks/wave3_product_alignment_20260628/plan.md`.",
+    "Domain suite: 374 unrelated tests pass; only the new `games.test.ts` suite fails (module not found).",
+    "Route suite: 2/7 tests pass (`force-static` config and standalone-no-db honesty); 5/7 fail on missing schema validation and server-side XP.",
+    "Component suite: 10/12 tests pass (existing behavior preserved); 2/12 fail on the new contract payload shape."
+  ],
+  "commands": [
+    {
+      "command": "pnpm --filter @reading-advantage/domain test -- games",
+      "result": "fail",
+      "details": "FAIL src/__tests__/games.test.ts — Cannot find module '/src/games/schema.js'. 374 other tests pass."
+    },
+    {
+      "command": "pnpm --filter vocabulary-games test --testPathPatterns=completeRoute",
+      "result": "fail",
+      "details": "Tests: 5 failed, 2 passed, 7 total. Failures: missing duplicate field, xp not rejected, accuracy>1 not rejected, invalid gameType accepted, malformed idempotencyKey accepted."
+    },
+    {
+      "command": "pnpm --filter vocabulary-games test --testPathPatterns=HauntedLibraryGame",
+      "result": "fail",
+      "details": "Tests: 2 failed, 10 passed, 12 total. Failures: onComplete payload missing gameType/idempotencyKey and still contains xp."
+    },
+    {
+      "command": "pnpm --filter @reading-advantage/domain lint",
+      "result": "pass",
+      "details": "0 errors (12 pre-existing warnings unrelated to new tests)."
+    },
+    {
+      "command": "pnpm --filter vocabulary-games lint",
+      "result": "pass",
+      "details": "0 errors (pre-existing warnings unrelated to new tests)."
+    },
+    {
+      "command": "pnpm --filter @reading-advantage/domain check-types",
+      "result": "pass"
+    },
+    {
+      "command": "pnpm --filter vocabulary-games check-types",
+      "result": "pass"
+    }
+  ],
+  "changed_files": [
+    "packages/domain/src/__tests__/games.test.ts",
+    "apps/advantage-games/src/lib/games/api/completeRoute.test.ts",
+    "apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.test.tsx",
+    "measure/tracks/wave3_product_alignment_20260628/plan.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "retry_implementation",
+  "confidence": "high"
+}
