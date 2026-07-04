@@ -4,279 +4,44 @@
   "track": "wave3_product_alignment_20260628",
   "phase": "Phase 1: Website Claims Correction",
   "status": "pass",
-  "baseline_sha": "af38f52a31394139071ea6208c5e7264ef4b4a34",
-  "head_sha": "0aa410bf",
-  "audit_trail_note": "Initial adversarial probes at af38f52a found 1 blocking defect (case-sensitive banned-literal regexes in 1D, 1E, 1G groups). The defect was fixed in commit 0aa410bf during this audit session. The fix moved the finding from blocking_findings to nonblocking_findings as a 'fixed-during-audit' entry. Status 'pass' is appropriate because no outstanding blockers remain at HEAD 0aa410bf.",
-  "adversarial_test_timestamp": "2026-07-04T19:35:00+07:00",
-  "summary": "Phase 1 Website Claims Correction survives adversarial testing with one real bypass defect found and fixed. Initial state at af38f52a had case-sensitive banned-literal regexes in groups 1D, 1E, and 1G — a regression could have re-introduced banned model names (gpt-5, GPT-5), placeholder case studies (school a (coming soon)), or absolute claims (zero risk, aka 2019) in any case variant and bypassed the tests. Fixed in commit 0aa410bf by adding the /i flag to those four regexes. All 20/20 phase-w3-claims tests pass after the fix, lint clean, check-types clean, Wave 2 helper regression check 12/12 green, whole-www suite shows same 11 pre-existing .test.tsx load failures (next-intl/next/navigation resolution) — no new failures introduced. Three additional non-blocking findings (multi-space whitespace bypass in 1A, ASCII '3x' bypass in 1G, multi-line published-case-study helper limitation in 1H/Wave 2) and one coverage gap (banned literals in apps/www-reading-advantage/docs/pr/*.md and apps/www-reading-advantage/measure/*.{md,DESIGN.md,REFACTOR.md}) are documented as known limitations and do not block Phase 1.",
-
-  "adversarial_probes_executed": [
-    {
-      "probe": "1A banned product-count literal reintroduced",
-      "method": "Edited mastery-advantage.ts to set title to 'One engine. Nine products today...'",
-      "expected": "1A 'has no nine products / all 9 products / one engine, nine' test FAILS",
-      "actual": "Test FAILED as expected (1A group), all other tests still passed (19/20)",
-      "verdict": "PASS — 1A group is non-vacuous and catches reintroduction"
-    },
-    {
-      "probe": "1A uppercase variant 'NINE PRODUCTS'",
-      "method": "Edited home.ts title to 'One engine. NINE PRODUCTS today...'",
-      "expected": "1A test FAILS (case-insensitive /gi flag)",
-      "actual": "Test FAILED as expected",
-      "verdict": "PASS — case-insensitive regex catches uppercase variant"
-    },
-    {
-      "probe": "1A multi-space bypass 'nine  products' (double space)",
-      "method": "Edited home.ts title to 'One engine. Nine  products today...'",
-      "expected": "1A test FAILS",
-      "actual": "Test PASSED (bypass — regex /nine products/ matches literal single-space only)",
-      "verdict": "FAIL — NB1 multi-space whitespace bypass; non-blocking because the formatting is unusual and a deliberate adversarial reintroduction; documented as non-blocking finding"
-    },
-    {
-      "probe": "1A multi-space bypass 'all  9 products'",
-      "method": "Edited home.ts title to 'One engine. All  9 products today.'",
-      "expected": "1A test FAILS",
-      "actual": "Test PASSED (bypass)",
-      "verdict": "FAIL — NB1 same multi-space bypass; non-blocking"
-    },
-    {
-      "probe": "1D AI model claim reintroduction 'GPT-5'",
-      "method": "Edited primary-advantage.ts to add 'Powered by GPT-5'",
-      "expected": "1D test FAILS",
-      "actual": "Test FAILED as expected",
-      "verdict": "PASS — 1D group catches reintroduction"
-    },
-    {
-      "probe": "1D lowercase bypass 'gpt-5'",
-      "method": "Edited primary-advantage.ts to add 'Powered by gpt-5'",
-      "expected": "1D test FAILS",
-      "actual_before_fix": "Test PASSED (bypass — regex /GPT-5|.../g was case-sensitive)",
-      "actual_after_fix": "Test FAILED as expected after commit 0aa410bf added /gi flag",
-      "verdict": "FAIL→FIXED — A5-class case-sensitivity bypass; fixed in commit 0aa410bf"
-    },
-    {
-      "probe": "1E placeholder case studies 'School A (Coming Soon)'",
-      "method": "Edited case-studies.ts to set school: 'School A (Coming Soon)'",
-      "expected": "Both 1E literal scan AND 1E helper audit FAIL",
-      "actual": "Both tests FAILED as expected",
-      "verdict": "PASS — 1E group double-defense (literal scan + helper classify) catches reintroduction"
-    },
-    {
-      "probe": "1E lowercase bypass 'school a (coming soon)'",
-      "method": "Edited case-studies.ts to set school: 'school a (coming soon)'",
-      "expected_before_fix": "1E literal scan PASSES (case-sensitive bypass); helper audit FAILS (case-insensitive)",
-      "expected_after_fix": "Both tests FAIL",
-      "actual_before_fix": "1E literal scan PASSED (bypass), helper audit FAILED (caught it)",
-      "actual_after_fix": "Both tests FAILED after commit 0aa410bf",
-      "verdict": "FAIL→FIXED — A5-class case-sensitivity bypass in 1E literal scan; fixed in commit 0aa410bf. Helper audit already caught it (case-insensitive classification), so the bypass was a belt-and-suspenders failure rather than a full silent pass."
-    },
-    {
-      "probe": "1E uppercase 'Real Results From Real Schools' lowercase 'real results from real schools'",
-      "method": "Edited case-studies.ts badge to 'REAL RESULTS FROM REAL SCHOOLS'",
-      "expected_before_fix": "1E literal scan PASSES (case-sensitive bypass)",
-      "expected_after_fix": "1E test FAILS",
-      "actual_before_fix": "Test PASSED (bypass — /Real Results from Real Schools/g was case-sensitive)",
-      "actual_after_fix": "Test FAILED as expected after commit 0aa410bf",
-      "verdict": "FAIL→FIXED — A5-class case-sensitivity bypass; fixed"
-    },
-    {
-      "probe": "1G 'ZERO RISK' reintroduced",
-      "method": "Edited managed-service.ts badge to 'ZERO RISK ONBOARDING'",
-      "expected": "Both 1G whole-source ban AND 1G positive control FAIL",
-      "actual": "Both tests FAILED as expected",
-      "verdict": "PASS — 1G catches reintroduction"
-    },
-    {
-      "probe": "1G lowercase bypass 'zero risk'",
-      "method": "Edited managed-service.ts badge to 'zero risk ONBOARDING'",
-      "expected_before_fix": "1G whole-source ban PASSES (bypass)",
-      "expected_after_fix": "1G test FAILS",
-      "actual_before_fix": "Test PASSED (bypass — /ZERO RISK/g was case-sensitive)",
-      "actual_after_fix": "Test FAILED as expected after commit 0aa410bf",
-      "verdict": "FAIL→FIXED — A5-class case-sensitivity bypass; fixed"
-    },
-    {
-      "probe": "1G lowercase bypass 'aka 2019'",
-      "method": "Edited home.ts to add '(aka 2019)' to research methodology line",
-      "expected_before_fix": "1G whole-source ban PASSES (bypass)",
-      "expected_after_fix": "1G test FAILS",
-      "actual_before_fix": "Test PASSED (bypass — /Aka[ ,]+2019/g was case-sensitive)",
-      "actual_after_fix": "Test FAILED as expected after commit 0aa410bf",
-      "verdict": "FAIL→FIXED — A5-class case-sensitivity bypass; fixed"
-    },
-    {
-      "probe": "1B stale launch dates 'Coming in 2025' in locale",
-      "method": "Edited stem-advantage.ts comingSoon to 'Coming in 2025'",
-      "expected": "Both 1B locale scan AND 1C nonexistent-app roadmap check FAIL",
-      "actual": "Both tests FAILED as expected",
-      "verdict": "PASS — 1B and 1C groups cross-validate stale launch dates"
-    },
-    {
-      "probe": "1B stale launch dates 'launching in 2025' in page.tsx metadata",
-      "method": "Edited codecamp-advantage page.tsx metadata.description to include 'Launching in 2025'",
-      "expected": "1B page.tsx metadata scan FAILS",
-      "actual": "Test FAILED as expected",
-      "verdict": "PASS — page.tsx metadata scan (added in commit 940420a0 review fix) catches it"
-    },
-    {
-      "probe": "1G scoped bans '95%' / '24/7' / '3×' in math-advantage.ts",
-      "method": "Edited math-advantage.ts to add '3x faster than traditional math instruction' (ASCII variant)",
-      "expected": "1G test FAILS",
-      "actual": "Test PASSED (bypass — /3×/g matches only Unicode multiplication sign U+00D7)",
-      "verdict": "FAIL — known limitation NB1 in acceptance JSON; non-blocking because the '3x faster' claim is currently removed and Math page is roadmap-labeled; low risk"
-    },
-    {
-      "probe": "1H consent gate bypass via structured case study (school + outcome on separate lines)",
-      "method": "Modified case-studies.ts to add school: 'Saraburi Wittaya School' on one line and outcome: 'Reading scores improved 25% across the cohort' on next line",
-      "expected_before_fix": "1H passes (helper.audit() treats each line independently)",
-      "expected_after_fix": "Out of Phase 1 scope (Wave 2 helper limitation)",
-      "actual": "1H passed because the Wave 2 helper's published-case-study classification requires BOTH school-hint AND outcome-token on the SAME line; structured TypeScript objects naturally put them on separate lines",
-      "verdict": "FAIL — NB3 A2 multi-line bypass; this is a Wave 2 helper limitation (helper.classify() is single-line), not introduced by Phase 1. Current state has 0 published case studies so the bypass is theoretical. Documented as non-blocking for Phase 6 closeout when Tier 2 [NEEDS-PO] real case studies are reintroduced."
-    }
-  ],
-
-  "coverage_gaps": [
-    {
-      "id": "CG-1",
-      "title": "Banned literals present in apps/www-reading-advantage/docs/pr/*.md and apps/www-reading-advantage/measure/{DESIGN,REFACTOR}.md",
-      "scope": "Out of Phase 1 scope per test-strategy §0.B (which scopes to apps/www-reading-advantage/src/)",
-      "evidence": [
-        "apps/www-reading-advantage/todo.md:175 — '- GPT-5 Writing Feedback'",
-        "apps/www-reading-advantage/measure/DESIGN.md:230 — 'Never advertise the model vendor. \"Powered by Google Gemini & GPT-5'",
-        "apps/www-reading-advantage/measure/DESIGN.md:258 — \"Don't name the model vendor ('Gemini / GPT-5') in marketing copy\"",
-        "apps/www-reading-advantage/docs/pr/job-posting-lead-generation.md:112 — 'AI (Google Gemini และ GPT-5)'",
-        "apps/www-reading-advantage/docs/pr/AGENTS.md:131,136,142,236 — multiple GPT-5/Gemini references",
-        "apps/www-reading-advantage/docs/pr/managed-service-one-pager.md:32 — 'Powered by **Google Gemini & GPT-5**'",
-        "apps/www-reading-advantage/measure/REFACTOR.md:160 — 'Google Gemini & GPT-5 AI'"
-      ],
-      "verdict": "Out of Phase 1 scope (docs/PR files, internal design docs). Phase 1 strictly targets the website source (apps/www-reading-advantage/src/) per phase-0-decisions.md and test-strategy.md §0.B. The PR docs are arguably public-facing but are explicitly outside the Wave 3 claims-correction scope (Wave 5 / cross-track work). Recommend a follow-up track for marketing/PR consistency.",
-      "blocking": false
-    }
-  ],
-
+  "summary": "Phase 1 Website Claims Correction survives adversarial testing. One case-sensitive banned-literal bypass (1D, 1E, 1G groups) was found and fixed in commit 0aa410bf by adding /i flags. All gate commands pass: phase-w3-claims 20/20, wave2-product-claim-helper 12/12, lint clean, check-types clean. Six non-blocking findings documented (multi-space bypass, ASCII 3x bypass, Wave 2 helper multi-line bypass, docs/pr coverage gap, b2b-solutions scope gap, Tier 2 PO deferrals). Whole-www suite shows the same 11 pre-existing .test.tsx load failures as baseline; no new failures introduced.",
   "blocking_findings": [],
-
   "nonblocking_findings": [
-    {
-      "id": "A-CASE-INSENSITIVE-1",
-      "title": "Case-sensitive banned-literal regexes (FIXED during audit)",
-      "severity": "high",
-      "category": "A5 (false-claim text vs test reality) / A7 (over-broad filter)",
-      "audit_status": "fixed-during-audit",
-      "evidence_at_baseline": [
-        "phase-w3-claims.test.ts:262 — /GPT-5|GPT-4|Google Gemini & GPT-5/g (no /i flag) — bypass: 'gpt-5', 'Gpt-5', 'google gemini & gpt-5'",
-        "phase-w3-claims.test.ts:296 — /School A \\(Coming Soon\\)|School B \\(Coming Soon\\)|Real Results from Real Schools/g (no /i flag) — bypass: 'school a (coming soon)', 'real results from real schools'",
-        "phase-w3-claims.test.ts:367-368 — /ZERO RISK/g and /Aka[ ,]+2019/g (no /i flag) — bypass: 'zero risk', 'aka 2019'"
-      ],
-      "fix_commit": "0aa410bf — fix(www): wave3 phase 1 ci banned literals (track_id: wave3_product_alignment_20260628)",
-      "fix_details": "Added /i flag to four banned-literal regexes (1D literal scan, 1E literal scan, 1G ZERO RISK, 1G Aka 2019). Re-ran all probes: all four case-variant bypasses now caught. Phase-w3-claims 20/20, wave2-product-claim-helper 12/12, lint 0, check-types 0.",
-      "verified_after_fix": true
-    },
-    {
-      "id": "NB-1",
-      "title": "1A multi-space whitespace bypass",
-      "description": "Group 1A's 'nine products' / 'all 9 products' / 'one engine, nine' regex matches literal single-space only. A regression writing 'nine  products' (double space) or 'all  9 products' bypasses the test. Verified: edited home.ts title to 'One engine. Nine  products today' and to 'One engine. All  9 products today' — both passed the 1A test.",
-      "category": "A7 over-broad filter / adjacent bypass",
-      "severity": "low",
-      "recommendation": "Optional: normalize whitespace before matching, or use /nine\\s+products/ to allow flexible whitespace. Does not block Phase 1 — bypass requires deliberate double-space formatting unusual in normal copy."
-    },
-    {
-      "id": "NB-2",
-      "title": "1G ASCII '3x' / '3X' variant bypass",
-      "description": "Group 1G's scoped '3×' regex (CC-25) matches only the Unicode multiplication sign (U+00D7). ASCII variants '3x faster' / '3X faster' / '3 X' are not caught. Verified: edited math-advantage.ts to add '3x faster than traditional math instruction' — passed the 1G test.",
-      "category": "A7 over-broad filter",
-      "severity": "low",
-      "recommendation": "Optional: extend regex to /3[x×X]\\s*/g to cover ASCII variants. Already known limitation NB1 in phase-1-acceptance.json. Low risk — the '3x faster' claim is currently removed (Math page is roadmap-labeled per CC-13)."
-    },
-    {
-      "id": "NB-3",
-      "title": "Wave 2 helper multi-line published-case-study bypass",
-      "description": "The Wave 2 product-claim-helper.ts classify() function processes claims on a per-line basis. Published-case-study detection requires BOTH a school-name hint AND an outcome token on the SAME line. A future real case study that uses the natural TypeScript object structure (school name on one line, outcome metric on the next) would NOT be detected as published-case-study and would bypass the A2 consent gate. Verified: modified case-studies.ts to add school: 'Saraburi Wittaya School' on one line and outcome: 'Reading scores improved 25% across the cohort' on the next — 1H test passes (helper.audit() returns publishedCaseStudyCount=0, missingConsentCount=0).",
-      "category": "A2 consent-blind publish gate (helper limitation)",
-      "severity": "medium",
-      "recommendation": "Wave 2 helper improvement — change classify() to operate on multi-line claim blocks (paragraph context) rather than single lines. Or change the Phase 1 1H test to feed the helper multi-line claim blocks (e.g. 5-line windows around school: fields) so it can detect published case studies in structured format. Resolution deferred to Phase 6 closeout when Tier 2 [NEEDS-PO] real case studies are reintroduced. Currently 0 published case studies, so the bypass is theoretical."
-    },
-    {
-      "id": "NB-4",
-      "title": "Coverage gap — banned literals in apps/www-reading-advantage/docs/pr/*.md, measure/DESIGN.md, measure/REFACTOR.md, todo.md",
-      "description": "Phase 1 source scan is scoped to apps/www-reading-advantage/src/. Banned literals (GPT-5, Google Gemini & GPT-5) exist in: apps/www-reading-advantage/docs/pr/job-posting-lead-generation.md:112, apps/www-reading-advantage/docs/pr/AGENTS.md:131/136/142/236, apps/www-reading-advantage/docs/pr/managed-service-one-pager.md:32, apps/www-reading-advantage/measure/DESIGN.md:230/258, apps/www-reading-advantage/measure/REFACTOR.md:160, apps/www-reading-advantage/todo.md:175. These are PR materials and internal design docs (not the website source). Per phase-0-decisions.md and test-strategy.md §0.B they are explicitly out of Phase 1 scope, but they are arguably public-facing marketing/PR materials that should be aligned with the website claims.",
-      "category": "Scope boundary",
-      "severity": "low",
-      "recommendation": "Open a follow-up track (Wave 5 / cross-track) to align marketing/PR materials with the corrected website claims. Or extend Phase 1 source scan to include apps/www-reading-advantage/docs/ in a future phase. Not blocking — Phase 1 explicitly targets the website source."
-    },
-    {
-      "id": "NB-5",
-      "title": "b2b-solutions.ts scope coverage (carryover from acceptance NB2)",
-      "description": "1B test scans locales/pages/products/ and page.tsx files for stale launch dates, but does not scan locales/components/products/b2b-solutions.ts. The 'New for SY2025' badge was fixed in commit 80231438 (badge → 'NOW AVAILABLE'), but no specific regression test guards b2b-solutions.ts. The whole-source bans (1A/1D/1G) scan b2b-solutions.ts via collectSourceFiles() but 'New for SY2025' is not in their banned-literal lists.",
-      "category": "A7 scope coverage",
-      "severity": "low",
-      "recommendation": "Optional: extend 1B scan to locales/components/products/*.ts. Already known limitation NB2 in phase-1-acceptance.json. Not blocking — the fix is in place and verified."
-    },
-    {
-      "id": "NB-6",
-      "title": "Tier 2 [NEEDS-PO] items remain deferred",
-      "description": "Per Phase 0 decisions, Tier 2 items (Decision 1B per-page keep/hide/delete + roadmap dates; Decision 2B specific approved AI provider/model; Decision 4B approved efficacy stats + consent artifacts) remain [b] deferred:po in plan.md Phase 6. Phase 1 enforced only the Tier 1 automatable floor — neutral/illustrative copy was substituted where Tier 2 positive replacements are pending.",
-      "category": "Plan state",
-      "severity": "low",
-      "recommendation": "Resolve with product owner before Phase 6 final acceptance. Already known limitation NB5 in phase-1-acceptance.json."
-    }
+    "A-CASE-INSENSITIVE-1: Case-sensitive banned-literal regexes in groups 1D/1E/1G were bypassed by lowercase variants (gpt-5, school a (coming soon), zero risk, aka 2019). Fixed during audit in commit 0aa410bf by adding /i flags; re-verified all bypass variants now fail.",
+    "NB-1: 1A multi-space whitespace bypass — 'nine  products' or 'all  9 products' (double space) bypasses the literal single-space regex. Non-blocking; unusual formatting.",
+    "NB-2: 1G ASCII '3x' / '3X' variant bypass — the scoped '3×' regex matches only Unicode U+00D7. Non-blocking; the claim is currently removed and Math page is roadmap-labeled.",
+    "NB-3: Wave 2 product-claim-helper classify() is single-line, so a published case study with school name and outcome on separate lines bypasses the A2 consent gate. Non-blocking because 0 published case studies currently exist; defer to Phase 6 when Tier 2 real case studies are reintroduced.",
+    "NB-4: Coverage gap — banned literals remain in apps/www-reading-advantage/docs/pr/*.md and apps/www-reading-advantage/measure/{DESIGN,REFACTOR}.md and todo.md. Out of Phase 1 scope per test-strategy section 0.B (source-scoped to apps/www-reading-advantage/src/).",
+    "NB-5: b2b-solutions.ts scope coverage — 1B stale-date scan does not explicitly cover locales/components/products/b2b-solutions.ts; whole-source bans do scan it. The 'New for SY2025' badge was already fixed in commit 80231438.",
+    "NB-6: Tier 2 [NEEDS-PO] items remain deferred per phase-0-decisions.md and plan.md Phase 6."
   ],
-
   "evidence": [
-    "Gate (post-fix): pnpm --filter www-reading-advantage test phase-w3-claims => 20/20 passed (exit 0) at HEAD 0aa410bf",
-    "Gate (post-fix): pnpm --filter www-reading-advantage test wave2-product-claim-helper => 12/12 passed (exit 0)",
-    "Gate (post-fix): pnpm --filter www-reading-advantage lint => 0 errors (exit 0)",
-    "Gate (post-fix): pnpm --filter www-reading-advantage check-types => 0 errors (exit 0)",
-    "Whole-www suite: pnpm --filter www-reading-advantage test => 1462 passed; 11 pre-existing .test.tsx files fail to load from next-intl/next/navigation resolution (unchanged from baseline af38f52a, verified by re-running at HEAD af38f52a before the fix commit). No new failures introduced.",
-    "Adversarial probe results: 16 probes executed (1A×3, 1D×2, 1E×3, 1G×3, 1B×2, 1H×1, plus re-verification after fix). 4 probes failed initially (1A multi-space ×2, 1D/1E/1G case-sensitivity ×4 → combined into one fix); 12 probes passed as expected. After commit 0aa410bf fix, all 4 failure categories now pass adversarial tests.",
-    "Fix commit: 0aa410bf — fix(www): wave3 phase 1 ci banned literals (track_id: wave3_product_alignment_20260628) — adds /gi flag to four banned-literal regexes in 1D, 1E, and 1G groups.",
-    "Files changed since af38f52a: 1 (apps/www-reading-advantage/src/lib/__tests__/phase-w3-claims.test.ts — 8 insertions, 4 deletions)",
-    "Whole-source banned-literal sweep at HEAD 0aa410bf: rg 'GPT-5|GPT-4|Google Gemini & GPT-5|nine products|all 9 products|one engine, nine|School A \\(Coming Soon\\)|School B \\(Coming Soon\\)|Real Results from Real Schools|2,172+|ZERO RISK|Aka 2019' apps/www-reading-advantage/src/ => 0 hits in source files (only in test files, which are excluded from source scans)",
-    "Whole-source stale-date sweep at HEAD 0aa410bf: rg 'Coming in 2025|Launching in 2025|Coming in 2026|Starting May 2026|New for SY2025' apps/www-reading-advantage/src/ => 0 hits in source files",
-    "Tier 2 [NEEDS-PO] deferral preserved: rg '\\[b\\] deferred:po' measure/tracks/wave3_product_alignment_20260628/phase-0-decisions.md => multiple hits confirming Tier 2 items remain deferred"
+    "Gate: pnpm --filter www-reading-advantage test phase-w3-claims => 20/20 passed (exit 0) at HEAD 0aa410bf",
+    "Gate: pnpm --filter www-reading-advantage test wave2-product-claim-helper => 12/12 passed (exit 0)",
+    "Gate: pnpm --filter www-reading-advantage lint => 0 errors (exit 0)",
+    "Gate: pnpm --filter www-reading-advantage check-types => 0 errors (exit 0)",
+    "Whole-www suite: pnpm --filter www-reading-advantage test => 1462 passed; 11 pre-existing .test.tsx load failures from next-intl/next/navigation resolution, unchanged from baseline af38f52a; no new failures introduced by fix commit 0aa410bf",
+    "Adversarial probes: 16 probes executed across 1A, 1B, 1D, 1E, 1G, 1H. Four case-sensitivity bypasses found and fixed; one multi-space bypass and one ASCII 3x bypass documented as non-blocking; one Wave 2 helper multi-line bypass documented as non-blocking.",
+    "Fix commit: 0aa410bf — fix(www): wave3 phase 1 ci banned literals (track_id: wave3_product_alignment_20260628)",
+    "Source sweep at HEAD 0aa410bf: rg for banned literals in apps/www-reading-advantage/src/ returns 0 hits outside test files",
+    "Source sweep at HEAD 0aa410bf: rg for stale launch dates in apps/www-reading-advantage/src/ returns 0 hits",
+    "Tier 2 [NEEDS-PO] deferrals preserved in phase-0-decisions.md and plan.md"
   ],
-
   "commands": [
-    {
-      "command": "pnpm --filter www-reading-advantage test phase-w3-claims",
-      "exit_code": 0,
-      "result": "20 passed (20), 1 test file passed (1), 0 failed",
-      "run_after_fix": true
-    },
-    {
-      "command": "pnpm --filter www-reading-advantage test wave2-product-claim-helper",
-      "exit_code": 0,
-      "result": "12 passed (12), 1 test file passed (1), 0 failed — Wave 2 helper regression check"
-    },
-    {
-      "command": "pnpm --filter www-reading-advantage lint",
-      "exit_code": 0,
-      "result": "eslint . clean, 0 errors, 0 warnings"
-    },
-    {
-      "command": "pnpm --filter www-reading-advantage check-types",
-      "exit_code": 0,
-      "result": "tsc --noEmit clean, 0 errors"
-    },
-    {
-      "command": "pnpm --filter www-reading-advantage test",
-      "exit_code": 1,
-      "result": "1462 passed, 11 pre-existing .test.tsx failures (next-intl/next/navigation resolution) — unchanged from baseline af38f52a",
-      "scope_note": "Whole-www suite baseline comparison: same 11 failures as pre-adversarial-fix HEAD. No new failures introduced by adversarial fix commit 0aa410bf."
-    }
+    "pnpm --filter www-reading-advantage test phase-w3-claims => 20/20 passed (exit 0)",
+    "pnpm --filter www-reading-advantage test wave2-product-claim-helper => 12/12 passed (exit 0)",
+    "pnpm --filter www-reading-advantage lint => 0 errors (exit 0)",
+    "pnpm --filter www-reading-advantage check-types => 0 errors (exit 0)",
+    "pnpm --filter www-reading-advantage test => 1462 passed, 11 pre-existing .test.tsx load failures (exit 1; unchanged from baseline)"
   ],
-
   "changed_files": [
-    "apps/www-reading-advantage/src/lib/__tests__/phase-w3-claims.test.ts (adversarial fix: /gi flag on 4 banned-literal regexes in 1D, 1E, 1G groups)"
+    "apps/www-reading-advantage/src/lib/__tests__/phase-w3-claims.test.ts",
+    "measure/tracks/wave3_product_alignment_20260628/audit/phase-1-adversarial.json"
   ],
-
   "test_strategy_violations": [],
   "live_contract_violations": [],
   "prod_wiring_violations": [],
   "route_parity_violations": [],
-
   "retry_recommendation": "none",
-  "confidence": "high",
-
-  "handoff": "Phase 1 passes adversarial testing after the case-insensitive fix (commit 0aa410bf). One A5/A7-class bypass defect (case-sensitive banned literals in 1D, 1E, 1G groups) was found and fixed; verified that all four bypass variants (gpt-5, school a (coming soon), zero risk, aka 2019) are now caught. Three non-blocking findings (NB-1 multi-space bypass in 1A, NB-2 ASCII '3x' bypass in 1G, NB-3 Wave 2 helper multi-line published-case-study bypass in 1H) and one coverage gap (NB-4 docs/pr/*.md / measure/* banned literals out of scope) are documented as known limitations. Phase 1 may proceed to Phase 6 closeout per acceptance. Whole-www suite shows same 11 pre-existing .test.tsx load failures (next-intl/next/navigation resolution) as at baseline — no new failures introduced by adversarial work."
+  "confidence": "high"
 }
