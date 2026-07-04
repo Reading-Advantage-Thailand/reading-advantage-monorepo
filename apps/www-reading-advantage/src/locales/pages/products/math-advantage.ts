@@ -1,9 +1,9 @@
 export const en = {
     hero: {
         title: "Math Advantage",
-        subtitle: "Revolutionary AI-Enhanced Math Tutoring",
-        description: "Experience personalized math tutoring that combines proven teaching methods with advanced AI technology, adapting to your learning pace and style. Designed for grades 7-12.",
-        comingSoon: "Coming in 2026",
+        subtitle: "On Our Roadmap · Planned",
+        description: "Math Advantage is on our product roadmap. We are designing a personalized math tutoring experience that will combine proven teaching methods with our internal model adapter, planned for grades 7-12.",
+        comingSoon: "On Our Roadmap",
     },
     heroAlt: "Interactive digital math learning environment",
     logoAlt: "Math Advantage Logo",
@@ -54,7 +54,7 @@ export const en = {
             },
             {
                 icon: "⏰",
-                title: "24/7 Availability",
+                title: "On-Demand Availability",
                 description: "Learn whenever you want, wherever you are.",
             },
             {
@@ -71,7 +71,7 @@ export const en = {
     },
     cta: {
         heading: "Ready to Transform Your Math Journey?",
-        description: "Join our waitlist to be the first to experience Math Advantage in 2026.",
+        description: "Math Advantage is on our roadmap. Join our waitlist to be notified when we have news to share.",
         button: "Join Waitlist",
         contactUs: "Contact Us",
     },
@@ -93,9 +93,9 @@ export const en = {
 export const th = {
     hero: {
         title: "แมธแอดแวนเทจ",
-        subtitle: "การสอนคณิตศาสตร์ที่ปฏิวัติด้วย AI",
-        description: "สัมผัสการสอนคณิตศาสตร์เฉพาะบุคคลด้วย AI ที่ก้าวหน้า พร้อมการปรับตัวตามจังหวะและสไตล์การเรียนรู้ของคุณ ออกแบบมาสำหรับชั้นมัธยมศึกษาป.1-ป.6",
-        comingSoon: "เปิดตัวในปี 2026",
+        subtitle: "อยู่ในแผนงานของเรา · กำลังวางแผน",
+        description: "แมธแอดแวนเทจอยู่ในแผนงานผลิตภัณฑ์ของเรา เรากำลังออกแบบประสบการณ์การสอนคณิตศาสตร์เฉพาะบุคคลที่จะผสมผสานวิธีการสอนที่ได้รับการพิสูจน์แล้วกับอะแดปเตอร์โมเดลภายในของเรา มีแผนสำหรับชั้นมัธยมศึกษาป.1-ป.6",
+        comingSoon: "อยู่ในแผนงาน",
     },
     heroAlt: "สภาพแวดล้อมการเรียนรู้คณิตศาสตร์ดิจิทัลแบบโต้ตอบ",
     logoAlt: "โลโก้ Math Advantage",
@@ -146,7 +146,7 @@ export const th = {
             },
             {
                 icon: "⏰",
-                title: "พร้อมใช้งานตลอด 24/7",
+                title: "พร้อมให้บริการตามต้องการ",
                 description: "เรียนได้ทุกที่ทุกเวลา",
             },
             {
@@ -163,7 +163,7 @@ export const th = {
     },
     cta: {
         heading: "พร้อมเปลี่ยนเส้นทางการเรียนคณิตศาสตร์ของคุณแล้วหรือยัง?",
-        description: "เข้าร่วมรายชื่อรอเพื่อเป็นคนแรกที่ได้สัมผัสแมธแอดแวนเทจในปี 2026",
+        description: "แมธแอดแวนเทจอยู่ในแผนงานของเรา เข้าร่วมรายชื่อรอเพื่อรับแจ้งเมื่อเรามีข่าวสารมาแบ่งปัน",
         button: "เข้าร่วมรายชื่อรอ",
         contactUs: "ติดต่อเรา",
     },
@@ -185,9 +185,9 @@ export const th = {
 export const zh = {
     hero: {
         title: "数学优势",
-        subtitle: "革命性的 AI 增强数学辅导",
-        description: "体验个性化的数学辅导，结合先进的 AI 技术，适应您的学习节奏和风格。专为7-12年级设计。",
-        comingSoon: "2026年推出",
+        subtitle: "我们路线图中 · 规划中",
+        description: "数学优势在我们的产品路线图中。我们正在设计个性化的数学辅导体验，将成熟的教学方法与我们内部模型适配器相结合，规划面向7-12年级。",
+        comingSoon: "路线图中",
     },
     heroAlt: "交互式数字数学学习环境",
     logoAlt: "Math Advantage 标志",
@@ -238,7 +238,7 @@ export const zh = {
             },
             {
                 icon: "⏰",
-                title: "24/7可用性",
+                title: "按需可用",
                 description: "随时随地学习",
             },
             {
@@ -255,7 +255,7 @@ export const zh = {
     },
     cta: {
         heading: "准备好改变您的数学旅程了吗？",
-        description: "加入我们的候补名单，成为首批体验2026年推出的数学优势的人",
+        description: "数学优势在我们的路线图中。加入候补名单，以便在我们有消息分享时获得通知。",
         button: "加入候补名单",
         contactUs: "联系我们",
     },

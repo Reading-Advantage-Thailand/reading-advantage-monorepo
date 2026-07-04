@@ -4,7 +4,7 @@ export const en = {
         description: "Compare Reading Advantage with other leading reading programs",
     },
     table: {
-        lastUpdated: "Last updated: October 2024",
+        lastUpdated: "Last updated: July 2026",
         title: "Feature",
         basicTier: "Basic Tier",
         aiEnhancedTier: "AI Enhanced Tier",
@@ -176,7 +176,7 @@ export const th = {
         description: "เปรียบเทียบ Reading Advantage กับโปรแกรมการอ่านชั้นนำอื่น ๆ",
     },
     table: {
-        lastUpdated: "อัปเดตล่าสุด: ตุลาคม 2024",
+        lastUpdated: "อัปเดตล่าสุด: กรกฎาคม 2026",
         title: "ฟีเจอร์",
         basicTier: "ระดับพื้นฐาน",
         aiEnhancedTier: "ระดับ AI พิเศษ",
@@ -348,7 +348,7 @@ export const zh = {
         description: "比较 Reading Advantage 与其他领先的阅读项目",
     },
     table: {
-        lastUpdated: "最后更新时间：2024年10月",
+        lastUpdated: "最后更新时间：2026年7月",
         title: "功能",
         basicTier: "基础版",
         aiEnhancedTier: "AI 增强版",

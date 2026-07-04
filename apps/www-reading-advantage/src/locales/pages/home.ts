@@ -3,14 +3,14 @@ export const en = {
     challengeLabel: "Challenge {num}",
     hero: {
         eyebrow: "Mastery Advantage · The Adaptive Engine",
-        title: "One engine. Nine products. Every student on their own path to mastery.",
+        title: "One engine. Four products today — and a roadmap for more. Every student on their own path to mastery.",
         description:
             "Mastery Advantage is the proprietary KST + SRS adaptive engine that powers every Reading Advantage product — mapping skills, scheduling reviews, and surfacing exactly what each student needs next.",
         cta: "Book a 20-min demo",
         secondaryCta: "See the engine",
         stats: {
-            products: "Products powered",
-            skills: "Mapped skills",
+            products: "Live products powered",
+            skills: "Skill graph in motion",
             engine: "KST + SRS engine",
         },
     },
@@ -37,9 +37,9 @@ export const en = {
     },
     suite: {
         eyebrow: "The suite",
-        title: "One engine, nine products.",
+        title: "One engine. Four products today — and a roadmap for more.",
         description:
-            "Every product uses the same Mastery Advantage engine — the same KST graph, the same FSRS scheduler, the same proficiency tracking. Different subjects, same adaptive intelligence.",
+            "Four Reading Advantage products are live today, all powered by the same Mastery Advantage engine — the same KST graph, the same FSRS scheduler, the same proficiency tracking. Different subjects, same adaptive intelligence. Additional subject-area products are on our roadmap.",
     },
     mission: {
         title: "Student Success Is Our Mission",
@@ -52,9 +52,9 @@ export const en = {
             "Reading Advantage (Thailand) delivers turnkey educational solutions that drive real results. Our comprehensive platform integrates seamlessly with your existing curriculum, providing everything from AI-powered content generation to detailed analytics that help you track and improve student performance.",
         partnerCta: "Partner With Us",
         stats: {
-            title: "Evidence-Backed Gains",
+            title: "Evidence-Backed Methodology",
             articles: "AI-Curated Articles Across 12 CEFR Levels",
-            research: "Aka 2019 Research: +9.5 points over grammar instruction",
+            research: "Built on research-backed extensive reading methodology",
         },
     },
     flagship: {
@@ -64,7 +64,7 @@ export const en = {
             "A reading block students actually want to show up for, and a dashboard that tells you — not in a vibe, but in data — whether it's working.",
         productTitle: "Reading Advantage",
         benefits: {
-            0: "Boost reading comprehension with twice-weekly extensive reading backed by Aka (2019) research. Studies show extensive reading outperforms grammar instruction (~+9.5 points on reading tests).",
+            0: "Boost reading comprehension with twice-weekly extensive reading, a methodology supported by decades of classroom research showing that sustained, level-appropriate input consistently outperforms traditional grammar instruction for reading outcomes.",
             1: "Eliminate weekly lesson planning by letting students drive extensive reading sessions, while comprehensive reports keep you on top of every learner's progress.",
             2: "Track reading growth with dashboards that clearly surface comprehension, vocabulary, and fluency trends for every class and learner.",
             3: "Keep readers motivated with student-choice activities and immediate comprehension feedback during every session.",
@@ -140,7 +140,7 @@ export const en = {
             },
         },
         poweredBy: "Powered by",
-        technology: "Google Gemini & GPT-5 AI",
+        technology: "AI-assisted learning",
     },
     impact: {
         eyebrow: "Ready to see it",
@@ -163,7 +163,7 @@ export const th = {
     challengeLabel: "Challenge 0{num}",
     hero: {
         eyebrow: "Mastery Advantage · เครื่องยนต์ปรับตัว",
-        title: "เครื่องยนต์เดียว เก้าผลิตภัณฑ์ นักเรียนทุกคนอยู่ในเส้นทางสู่ความชำนาญของตัวเอง",
+        title: "เครื่องยนต์เดียว สี่ผลิตภัณฑ์ที่เปิดใช้งานแล้ววันนี้ — และมีแผนงานสำหรับเพิ่มเติม นักเรียนทุกคนอยู่ในเส้นทางสู่ความชำนาญของตัวเอง",
         description:
             "Mastery Advantage คือเครื่องยนต์ปรับตัว KST + SRS ที่เป็นทรัพย์สินทางปัญญาซึ่งขับเคลื่อนผลิตภัณฑ์ Reading Advantage ทุกตัว — ทำแผนที่ทักษะ จัดตารางทบทวน และแสดงสิ่งที่นักเรียนแต่ละคนต้องการถัดไปอย่างแม่นยำ",
         cta: "จองสาธิต 20 นาที",
@@ -197,9 +197,9 @@ export const th = {
     },
     suite: {
         eyebrow: "ชุดผลิตภัณฑ์",
-        title: "เครื่องยนต์เดียว เก้าผลิตภัณฑ์",
+        title: "เครื่องยนต์เดียว สี่ผลิตภัณฑ์ที่เปิดใช้งานแล้ววันนี้ — และมีแผนงานสำหรับเพิ่มเติม",
         description:
-            "ทุกผลิตภัณฑ์ใช้เครื่องยนต์ Mastery Advantage เดียวกัน — กราฟ KST เดียวกัน ตัวจัดตาราง FSRS เดียวกัน การติดตามความชำนาญเดียวกัน วิชาต่างกัน แต่ใช้ความฉลาดแบบปรับตัวเดียวกัน",
+            "Reading Advantage มีผลิตภัณฑ์ที่เปิดใช้งานแล้วสี่ตัววันนี้ ทั้งหมดขับเคลื่อนโดยเครื่องยนต์ Mastery Advantage เดียวกัน — กราฟ KST เดียวกัน ตัวจัดตาราง FSRS เดียวกัน การติดตามความชำนาญเดียวกัน วิชาต่างกัน แต่ใช้ความฉลาดแบบปรับตัวเดียวกัน ผลิตภัณฑ์สาขาวิชาอื่นๆ อยู่ในแผนงานของเรา",
     },
     mission: {
         title: "ภารกิจของเราคือความสำเร็จของนักเรียน",
@@ -212,9 +212,9 @@ export const th = {
             "Reading Advantage (Thailand) นำเสนอโซลูชันการศึกษาแบบครบวงจรที่ขับเคลื่อนผลลัพธ์ที่แท้จริง แพลตฟอร์มของเราผสานรวมกับหลักสูตรที่มีอยู่ของคุณได้อย่างลงตัว โดยให้บริการตั้งแต่การสร้างเนื้อหาด้วย AI ไปจนถึงการวิเคราะห์โดยละเอียดที่ช่วยให้คุณติดตามและปรับปรุงผลการเรียนของนักเรียน",
         partnerCta: "ร่วมเป็นพันธมิตรกับเรา",
         stats: {
-            title: "ความก้าวหน้าที่ได้รับการสนับสนุนด้วยหลักฐาน",
+            title: "ระเบียบวิธีที่ได้รับการสนับสนุนด้วยหลักฐาน",
             articles: "บทความที่คัดสรรโดย AI ครอบคลุม 12 ระดับ CEFR",
-            research: "งานวิจัย Aka 2019: คะแนน +9.5 เหนือกว่าการสอนไวยากรณ์",
+            research: "สร้างบนระเบียบวิธีการอ่านแบบกว้างที่มีงานวิจัยรองรับ",
         },
     },
     flagship: {
@@ -224,7 +224,7 @@ export const th = {
             "คาบการอ่านที่นักเรียนอยากเข้าจริงๆ และแดชบอร์ดที่บอกคุณ — ไม่ใช่จากความรู้สึก แต่จากข้อมูล — ว่ามันได้ผลหรือไม่",
         productTitle: "Reading Advantage",
         benefits: {
-            0: "เพิ่มความเข้าใจการอ่านด้วยการอ่านกว้างสัปดาห์ละสองครั้งที่มีงานวิจัยรองรับจาก Aka (2019) งานวิจัยแสดงว่าการอ่านกว้างให้ผลดีกว่าการสอนไวยากรณ์ (~+9.5 คะแนนในการทดสอบการอ่าน)",
+            0: "เพิ่มความเข้าใจการอ่านด้วยการอ่านแบบกว้างสัปดาห์ละสองครั้ง ระเบียบวิธีที่ได้รับการสนับสนุนจากงานวิจัยด้านการศึกษาหลายทศวรรษซึ่งแสดงให้เห็นว่าการรับข้อมูลที่เหมาะสมกับระดับอย่างต่อเนื่องให้ผลลัพธ์ด้านการอ่านที่ดีกว่าการสอนไวยากรณ์แบบดั้งเดิมอย่างสม่ำเสมอ",
             1: "ลดภาระการวางแผนบทเรียนรายสัปดาห์ด้วยการให้นักเรียนขับเคลื่อนการอ่านกว้างเอง พร้อมรายงานครอบคลุมที่ทำให้คุณเห็นความก้าวหน้าของทุกคน",
             2: "ติดตามการเติบโตด้านการอ่านด้วยแดชบอร์ดที่แสดงแนวโน้มความเข้าใจ คำศัพท์ และความคล่องของทุกห้องและทุกคนอย่างชัดเจน",
             3: "รักษาแรงจูงใจของผู้เรียนด้วยกิจกรรมที่เลือกเองและข้อเสนอแนะความเข้าใจแบบทันทีในทุกครั้ง",
@@ -300,7 +300,7 @@ export const th = {
             },
         },
         poweredBy: "ขับเคลื่อนโดย",
-        technology: "Google Gemini & GPT-5 AI",
+        technology: "การเรียนรู้ที่ช่วยเสริมด้วย AI",
     },
     impact: {
         eyebrow: "พร้อมที่จะเห็นแล้ว",
@@ -323,7 +323,7 @@ export const zh = {
     challengeLabel: "挑战 {num}",
     hero: {
         eyebrow: "Mastery Advantage · 自适应引擎",
-        title: "一个引擎，九个产品，每个学生都在自己的精通之路上。",
+        title: "一个引擎，今天四个产品——更多产品已在路线图中。每个学生都走在自己的精通之路上。",
         description:
             "Mastery Advantage 是专有的 KST + SRS 自适应引擎，为所有 Reading Advantage 产品提供动力——映射技能、安排复习、精准呈现每个学生下一步所需。",
         cta: "预约20分钟演示",
@@ -357,9 +357,9 @@ export const zh = {
     },
     suite: {
         eyebrow: "产品套件",
-        title: "一个引擎，九个产品。",
+        title: "一个引擎，今天四个产品——更多已在路线图中。",
         description:
-            "每个产品都使用相同的 Mastery Advantage 引擎——相同的 KST 图、相同的 FSRS 调度器、相同的熟练度追踪。不同学科，相同的自适应智能。",
+            "Reading Advantage 今天有四个已上线的产品，全部由同一个 Mastery Advantage 引擎驱动——相同的 KST 图、相同的 FSRS 调度器、相同的熟练度追踪。不同学科，相同的自适应智能。其他学科产品已在我们的路线图中。",
     },
     mission: {
         title: "学生的成功就是我们的使命",
@@ -372,9 +372,9 @@ export const zh = {
             "Reading Advantage（泰国）提供一站式教育解决方案，带来真正的成果。我们的综合平台无缝集成到您现有的课程中，从AI驱动的内容生成到详细分析，帮助您跟踪和改善学生的表现。",
         partnerCta: "与我们合作",
         stats: {
-            title: "有证据支持的进步",
+            title: "有据可依的方法论",
             articles: "AI 精选文章覆盖 12 个 CEFR 级别",
-            research: "Aka 2019 研究：语法教学高出 +9.5 分",
+            research: "建立于有研究支持的泛读方法论",
         },
     },
     flagship: {
@@ -384,7 +384,7 @@ export const zh = {
             "学生真正想参加的阅读课，以及用数据——而非感觉——告诉你是否有效的仪表板。",
         productTitle: "Reading Advantage",
         benefits: {
-            0: "每周两次的泛读实践有Aka (2019)研究支持。研究显示泛读比语法教学效果更好（阅读测试分数提升约+9.5分）",
+            0: "通过每周两次的泛读实践提升阅读理解力——这一方法得到几十年课堂教学研究支持，体现出持续、与水平相符的语言输入始终比传统语法教学带来更好的阅读成果",
             1: "让学生主导每次泛读活动，不再需要每周备课，并通过全面报告掌握每位学习者的进度",
             2: "利用仪表板清晰呈现每个班级和学生的理解、词汇与流利度趋势，追踪阅读成长",
             3: "通过学生自主选择的活动与即时理解反馈，在每次练习中保持阅读动力",
@@ -458,7 +458,7 @@ export const zh = {
             },
         },
         poweredBy: "技术支持",
-        technology: "Google Gemini & GPT-5 AI",
+        technology: "AI 辅助学习",
     },
     impact: {
         eyebrow: "准备好了吗",

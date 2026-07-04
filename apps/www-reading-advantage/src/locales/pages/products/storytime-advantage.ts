@@ -1,13 +1,13 @@
 export const en = {
     metadata: {
-        title: "Storytime Advantage - Complete Early Literacy Curriculum | Reading Advantage Thailand",
-        description: "Launching in 2025: A comprehensive K-3 early literacy curriculum combining digital innovation with hands-on learning. Join the waitlist for early access.",
+        title: "Storytime Advantage - On Our Roadmap | Reading Advantage Thailand",
+        description: "Storytime Advantage is on the Reading Advantage product roadmap — planned K-3 early literacy curriculum combining digital innovation with hands-on learning. No launch date confirmed.",
     },
     hero: {
         title: "The Future of Early Literacy Education",
         subtitle: "Complete K-3 Literacy Curriculum",
-        description: "A complete K-3 literacy curriculum that perfectly balances digital innovation with hands-on learning",
-        comingSoon: "Coming in 2025",
+        description: "Storytime Advantage is a complete K-3 literacy curriculum planned for our roadmap — designed to balance digital innovation with hands-on learning.",
+        comingSoon: "On Our Roadmap",
     },
     heroAlt: "Digital storytelling experience",
     classroomAlt: "Storytime Advantage Classroom",
@@ -76,7 +76,7 @@ export const en = {
         questions: [
             {
                 question: "When will Storytime Advantage launch?",
-                answer: "Our platform is scheduled to launch in early 2025. Join our waitlist for early access opportunities.",
+                answer: "Storytime Advantage is on our product roadmap. Join our waitlist and we will notify you when we have news to share.",
             },
             {
                 question: "What are the technical requirements?",
@@ -86,7 +86,7 @@ export const en = {
     },
     cta: {
         heading: "Be the First to Experience Storytime Advantage",
-        description: "Join our waitlist for early access and exclusive updates",
+        description: "Storytime Advantage is on our roadmap. Join our waitlist and we will share updates as development progresses.",
         buttons: {
             joinWaitlist: "Join Waitlist",
             learnMore: "Learn More",
@@ -108,14 +108,14 @@ export const en = {
 
 export const th = {
     metadata: {
-        title: "Storytime Advantage - หลักสูตรการรู้หนังสือขั้นต้นแบบสมบูรณ์ | Reading Advantage Thailand",
-        description: "เปิดตัวในปี 2025: หลักสูตรการรู้หนังสือ K-3 ที่ครอบคลุม ผสมผสานนวัตกรรมดิจิทัลกับการเรียนรู้เชิงปฏิบัติอย่างลงตัว เข้าร่วมรายชื่อรอเพื่อเข้าถึงล่วงหน้า",
+        title: "Storytime Advantage - อยู่ในแผนงาน | Reading Advantage Thailand",
+        description: "Storytime Advantage อยู่ในแผนงานผลิตภัณฑ์ของ Reading Advantage — หลักสูตรการรู้หนังสือ K-3 ที่วางแผนไว้ซึ่งผสมผสานนวัตกรรมดิจิทัลกับการเรียนรู้เชิงปฏิบัติ ยังไม่ยืนยันวันเปิดตัว",
     },
     hero: {
         title: "อนาคตของการศึกษาการรู้หนังสือขั้นต้น",
         subtitle: "หลักสูตรการรู้หนังสือ K-3 แบบสมบูรณ์",
-        description: "หลักสูตรการรู้หนังสือ K-3 แบบสมบูรณ์ที่ผสมผสานนวัตกรรมดิจิทัลกับการเรียนรู้เชิงปฏิบัติได้อย่างสมบูรณ์แบบ",
-        comingSoon: "เปิดตัวในปี 2025",
+        description: "Storytime Advantage เป็นหลักสูตรการรู้หนังสือ K-3 แบบสมบูรณ์ที่วางแผนไว้ในแผนงานของเรา — ออกแบบมาเพื่อสมดุลระหว่างนวัตกรรมดิจิทัลกับการเรียนรู้เชิงปฏิบัติ",
+        comingSoon: "อยู่ในแผนงาน",
     },
     heroAlt: "ประสบการณ์การเล่าเรื่องดิจิทัล",
     classroomAlt: "ห้องเรียน Storytime Advantage",
@@ -184,7 +184,7 @@ export const th = {
         questions: [
             {
                 question: "Storytime Advantage จะเปิดตัวเมื่อใด?",
-                answer: "แพลตฟอร์มของเรามีกำหนดเปิดตัวในช่วงต้นปี 2025 เข้าร่วมรายชื่อรอเพื่อรับโอกาสเข้าถึงล่วงหน้า",
+                answer: "Storytime Advantage อยู่ในแผนงานผลิตภัณฑ์ของเรา เข้าร่วมรายชื่อรอและเราจะแจ้งให้คุณทราบเมื่อเรามีข่าวสารมาแบ่งปัน",
             },
             {
                 question: "ข้อกำหนดทางเทคนิคคืออะไร?",
@@ -194,7 +194,7 @@ export const th = {
     },
     cta: {
         heading: "เป็นคนแรกที่ได้สัมผัส Storytime Advantage",
-        description: "เข้าร่วมรายชื่อรอเพื่อเข้าถึงล่วงหน้าและรับการอัปเดตพิเศษ",
+        description: "Storytime Advantage อยู่ในแผนงานของเรา เข้าร่วมรายชื่อรอและเราจะแบ่งปันการอัปเดตเมื่อการพัฒนาก้าวหน้า",
         buttons: {
             joinWaitlist: "เข้าร่วมรายชื่อรอ",
             learnMore: "เรียนรู้เพิ่มเติม",
@@ -216,14 +216,14 @@ export const th = {
 
 export const zh = {
     metadata: {
-        title: "Storytime Advantage - 完整的早期识字课程 | 阅读优势泰国",
-        description: "2025 年推出：结合数字创新和实践学习的全面 K-3 早期识字课程。加入候补名单，抢先体验。",
+        title: "Storytime Advantage - 我们路线图中 | 阅读优势泰国",
+        description: "Storytime Advantage 在 Reading Advantage 产品路线图中 — 计划中的 K-3 早期识字课程，结合数字创新与实践学习。暂未确认发布日期。",
     },
     hero: {
         title: "早期识字教育的未来",
         subtitle: "完整的 K-3 识字课程",
-        description: "一套完整的 K-3 识字课程，完美结合数字创新和实践学习",
-        comingSoon: "2025 年推出",
+        description: "Storytime Advantage 是一套计划中的完整 K-3 识字课程——在我们的路线图中，旨在平衡数字创新与实践学习。",
+        comingSoon: "我们路线图中",
     },
     heroAlt: "数字故事叙述体验",
     classroomAlt: "Storytime Advantage 教室",
@@ -292,7 +292,7 @@ export const zh = {
         questions: [
             {
                 question: "Storytime Advantage 什么时候推出？",
-                answer: "我们的平台计划于 2025 年初推出。加入候补名单，抢先体验。",
+                answer: "Storytime Advantage 在我们的产品路线图中。加入候补名单，我们有消息时将通知您。",
             },
             {
                 question: "技术要求是什么？",
@@ -302,7 +302,7 @@ export const zh = {
     },
     cta: {
         heading: "成为首批体验 Storytime Advantage 的人",
-        description: "加入候补名单，抢先体验并获取独家更新",
+        description: "Storytime Advantage 在我们的路线图中。加入候补名单，随着开发进展我们将分享更新。",
         buttons: {
             joinWaitlist: "加入候补名单",
             learnMore: "了解更多",

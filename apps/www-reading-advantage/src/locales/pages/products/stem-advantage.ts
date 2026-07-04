@@ -1,13 +1,13 @@
 export const en = {
     metadata: {
-        title: "STEM Advantage - Reading Advantage Thailand",
-        description: "Transform your STEM curriculum with our innovative 75% coding + 25% STEM integration platform, designed for the modern classroom.",
+        title: "STEM Advantage - On Our Roadmap | Reading Advantage Thailand",
+        description: "STEM Advantage is on the Reading Advantage product roadmap — planned K-12 STEM learning experience (75% coding, 25% STEM integration). No launch date confirmed.",
     },
     hero: {
         title: "Comprehensive K-12 Coding Education",
         subtitle: "75% Coding + 25% STEM Integration",
-        description: "Transform your STEM curriculum with our innovative platform, designed for the modern classroom.",
-        comingSoon: "Coming in 2025",
+        description: "STEM Advantage is on our product roadmap — planned K-12 STEM learning experience for the modern classroom.",
+        comingSoon: "On Our Roadmap",
     },
     heroAlt: "Digital STEM workspace",
     codingAlt: "STEM Advantage students coding and building",
@@ -97,7 +97,7 @@ export const en = {
     },
     cta: {
         heading: "Get Started with STEM Advantage",
-        description: "Join our waitlist to be the first to experience STEM Advantage in 2025",
+        description: "STEM Advantage is on our roadmap. Join our waitlist to be notified when we have news to share.",
         buttons: {
             earlyAccess: "Request Early Access",
             partnerships: "School Partnerships",
@@ -119,14 +119,14 @@ export const en = {
 
 export const th = {
     metadata: {
-        title: "STEM Advantage - Reading Advantage Thailand",
-        description: "เปลี่ยนหลักสูตร STEM ของคุณด้วยแพลตฟอร์มการเรียนรู้ที่รวม 75% การเขียนโปรแกรมและ 25% STEM อย่างมีนวัตกรรมสำหรับห้องเรียนยุคใหม่",
+        title: "STEM Advantage - อยู่ในแผนงาน | Reading Advantage Thailand",
+        description: "STEM Advantage อยู่ในแผนงานผลิตภัณฑ์ของ Reading Advantage — ประสบการณ์การเรียนรู้ STEM K-12 ที่วางแผนไว้ (75% การเขียนโค้ด, 25% การบูรณาการ STEM) ยังไม่ยืนยันวันเปิดตัว",
     },
     hero: {
         title: "การศึกษาการเขียนโปรแกรม K-12 แบบครบวงจร",
         subtitle: "75% การเขียนโปรแกรม + 25% การบูรณาการ STEM",
-        description: "เปลี่ยนหลักสูตร STEM ของคุณด้วยแพลตฟอร์มการเรียนรู้ที่ออกแบบมาสำหรับห้องเรียนยุคใหม่",
-        comingSoon: "เปิดตัวในปี 2025",
+        description: "STEM Advantage อยู่ในแผนงานผลิตภัณฑ์ของเรา — ประสบการณ์การเรียนรู้ STEM K-12 ที่วางแผนไว้สำหรับห้องเรียนยุคใหม่",
+        comingSoon: "อยู่ในแผนงาน",
     },
     heroAlt: "พื้นที่ทำงาน STEM ดิจิทัล",
     codingAlt: "นักเรียน STEM Advantage เขียนโค้ดและสร้างสรรค์",
@@ -216,7 +216,7 @@ export const th = {
     },
     cta: {
         heading: "เริ่มต้นกับ STEM Advantage",
-        description: "เข้าร่วมรายชื่อรอเพื่อเป็นคนแรกที่ได้สัมผัส STEM Advantage ในปี 2025",
+        description: "STEM Advantage อยู่ในแผนงานของเรา เข้าร่วมรายชื่อรอเพื่อรับแจ้งเมื่อเรามีข่าวสารมาแบ่งปัน",
         buttons: {
             earlyAccess: "ขอการเข้าถึงล่วงหน้า",
             partnerships: "พันธมิตรกับโรงเรียน",
@@ -238,14 +238,14 @@ export const th = {
 
 export const zh = {
     metadata: {
-        title: "STEM Advantage - Reading Advantage Thailand",
-        description: "通过我们的创新平台，将 STEM 课程转变为 75% 编程 + 25% STEM 集成，专为现代课堂设计。",
+        title: "STEM Advantage - 我们路线图中 | Reading Advantage Thailand",
+        description: "STEM Advantage 在 Reading Advantage 产品路线图中 — 计划中的 K-12 STEM 学习体验（75% 编程 + 25% STEM 集成）。暂未确认发布日期。",
     },
     hero: {
         title: "全面的 K-12 编程教育",
         subtitle: "75% 编程 + 25% STEM 集成",
-        description: "通过我们的创新平台，将 STEM 课程转变为现代课堂的完美解决方案。",
-        comingSoon: "2025 年推出",
+        description: "STEM Advantage 在我们的产品路线图中 — 为现代课堂设计的计划中 K-12 STEM 学习体验。",
+        comingSoon: "我们路线图中",
     },
     heroAlt: "数字 STEM 工作区",
     codingAlt: "STEM Advantage 学生编码和构建",
@@ -335,7 +335,7 @@ export const zh = {
     },
     cta: {
         heading: "开始使用 STEM Advantage",
-        description: "加入我们的候补名单，成为首批体验 STEM Advantage 的人",
+        description: "STEM Advantage 在我们的路线图中。加入候补名单，以便在我们有消息分享时获得通知。",
         buttons: {
             earlyAccess: "申请提前访问",
             partnerships: "学校合作",

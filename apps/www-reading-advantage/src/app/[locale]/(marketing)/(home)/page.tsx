@@ -76,7 +76,7 @@ export default async function Home({
               <dl className="mt-16 grid grid-cols-3 gap-6 pt-8 border-t border-[#dad4c8] max-w-xl">
                 <div>
                   <dd className="text-3xl md:text-4xl font-semibold tracking-tight text-black">
-                    9
+                    4
                   </dd>
                   <dt className="text-xs uppercase tracking-wider text-[#9f9b93] mt-2">
                     {t("hero.stats.products")}
@@ -84,7 +84,7 @@ export default async function Home({
                 </div>
                 <div>
                   <dd className="text-3xl md:text-4xl font-semibold tracking-tight text-black">
-                    2,172+
+                    KST+SRS
                   </dd>
                   <dt className="text-xs uppercase tracking-wider text-[#9f9b93] mt-2">
                     {t("hero.stats.skills")}
@@ -172,7 +172,7 @@ export default async function Home({
       </section>
 
       {/* ─────────────────────────────────────────────────────────────
-          THE SUITE — all 9 products
+          THE SUITE — all live products today
          ───────────────────────────────────────────────────────────── */}
       <section id="products" className="py-24 md:py-32 border-t border-[#dad4c8]">
         <div className="container mx-auto px-4 max-w-6xl">

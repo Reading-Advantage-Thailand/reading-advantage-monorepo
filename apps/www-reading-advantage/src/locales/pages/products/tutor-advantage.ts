@@ -1,13 +1,13 @@
 export const en = {
     metadata: {
-        title: "Tutor Advantage - Reading Advantage Thailand",
-        description: "Revolutionary AI-powered English tutoring platform launching in Thailand in 2025. Combining advanced technology with personalized instruction.",
+        title: "Tutor Advantage - On Our Roadmap | Reading Advantage Thailand",
+        description: "Tutor Advantage is on the Reading Advantage product roadmap — planned AI-powered English tutoring experience. No launch date confirmed.",
     },
     hero: {
         title: "Revolutionary English Tutoring in Thailand",
         subtitle: "AI-Powered Learning Platform",
-        description: "Combining AI technology with personalized instruction for unprecedented learning outcomes",
-        comingSoon: "Coming in 2025",
+        description: "Tutor Advantage is on our product roadmap — combining AI assistance with personalized instruction for planned learning outcomes.",
+        comingSoon: "On Our Roadmap",
     },
     heroAlt: "AI-powered digital tutoring dashboard",
     logoAlt: "Tutor Advantage Logo",
@@ -91,14 +91,14 @@ export const en = {
 
 export const th = {
     metadata: {
-        title: "Tutor Advantage - Reading Advantage Thailand",
-        description: "แพลตฟอร์มการสอนภาษาอังกฤษที่ขับเคลื่อนด้วย AI เปิดตัวในประเทศไทยในปี 2025 ผสมผสานเทคโนโลยีล้ำสมัยกับการสอนเฉพาะบุคคล",
+        title: "Tutor Advantage - อยู่ในแผนงาน | Reading Advantage Thailand",
+        description: "Tutor Advantage อยู่ในแผนงานผลิตภัณฑ์ของ Reading Advantage — ประสบการณ์การสอนภาษาอังกฤษที่ขับเคลื่อนด้วย AI ที่วางแผนไว้ ยังไม่ยืนยันวันเปิดตัว",
     },
     hero: {
         title: "การสอนภาษาอังกฤษที่ปฏิวัติในประเทศไทย",
         subtitle: "แพลตฟอร์มการเรียนรู้ที่ขับเคลื่อนด้วย AI",
-        description: "ผสมผสานเทคโนโลยี AI เข้ากับการสอนเฉพาะบุคคลเพื่อผลลัพธ์การเรียนรู้ที่ไม่เคยมีมาก่อน",
-        comingSoon: "เปิดตัวในปี 2025",
+        description: "Tutor Advantage อยู่ในแผนงานผลิตภัณฑ์ของเรา — ผสมผสานการช่วยเหลือจาก AI เข้ากับการสอนเฉพาะบุคคลสำหรับผลลัพธ์การเรียนรู้ที่วางแผนไว้",
+        comingSoon: "อยู่ในแผนงาน",
     },
     heroAlt: "แดชบอร์ดการสอนพิเศษดิจิทัลที่ขับเคลื่อนด้วย AI",
     logoAlt: "โลโก้ Tutor Advantage",
@@ -182,14 +182,14 @@ export const th = {
 
 export const zh = {
     metadata: {
-        title: "Tutor Advantage - 阅读优势泰国",
-        description: "革命性的 AI 驱动英语辅导平台将于 2025 年在泰国推出。结合先进技术与个性化教学。",
+        title: "Tutor Advantage - 我们路线图中 | 阅读优势泰国",
+        description: "Tutor Advantage 在 Reading Advantage 产品路线图中 — 计划中的 AI 驱动英语辅导体验。暂未确认发布日期。",
     },
     hero: {
         title: "泰国革命性的英语辅导",
         subtitle: "AI 驱动的学习平台",
-        description: "结合 AI 技术与个性化教学，带来前所未有的学习成果",
-        comingSoon: "2025 年推出",
+        description: "Tutor Advantage 在我们的产品路线图中 — 结合 AI 辅助与个性化教学，计划中的学习成果。",
+        comingSoon: "我们路线图中",
     },
     heroAlt: "AI 驱动的数字辅导仪表板",
     logoAlt: "Tutor Advantage 标志",

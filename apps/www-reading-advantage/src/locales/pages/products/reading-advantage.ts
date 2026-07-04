@@ -2,11 +2,11 @@ export const en = {
     hero: {
         title: "AI-Powered Language Learning",
         subtitle: "Experience personalized extensive reading with advanced AI technology",
-        description: "Our AI-powered platform adapts to your learning journey, providing personalized content and interactive activities for optimal language acquisition. Starting May 2026, Reading Advantage will also offer a comprehensive Blended Learning model with teacher-led classes and student workbooks.",
+        description: "Our AI-powered platform adapts to your learning journey, providing personalized content and interactive activities for optimal language acquisition. Reading Advantage also offers a Blended Learning option with teacher-led classes and student workbooks.",
     },
     blendedLearning: {
         buttonLabel: "Blended Learning",
-        newBadge: "NEW IN MAY 2026",
+        newBadge: "NOW AVAILABLE",
         heading: "Blended Learning",
         studentWorkbooks: {
             title: "Student Workbooks",
@@ -78,10 +78,9 @@ export const en = {
     },
     resultsSection: {
         heading: "Evidence-Based Methodology",
-        title: "Research-Backed Success",
-        description: "Extensive reading instruction outperforms traditional grammar instruction. A controlled one-year study (Aka, 2019) demonstrated measurable gains in reading comprehension.",
+        title: "Research-Backed Methodology",
+        description: "Reading Advantage is built on decades of classroom research supporting extensive reading over traditional grammar instruction for reading outcomes. Specific efficacy gains vary by implementation fidelity and consistent classroom use.",
         stats: [
-            { value: "+9.5 pts", label: "Reading Score Gain (Aka, 2019)" },
             { value: "3000+", label: "Articles Available" },
             { value: "60+", label: "New Articles Daily" },
         ],
@@ -195,11 +194,11 @@ export const th = {
     hero: {
         title: "การเรียนรู้ภาษาที่ขับเคลื่อนด้วย AI",
         subtitle: "สัมผัสการอ่านแบบกว้างขวางที่ปรับแต่งเฉพาะบุคคลด้วยเทคโนโลยี AI ที่ล้ำสมัย",
-        description: "แพลตฟอร์มของเราปรับให้เข้ากับการเรียนรู้ของคุณโดยเฉพาะมอบเนื้อหาและกิจกรรมแบบอินเทอร์แอคทีฟเพื่อการพัฒนาทักษะภาษาอย่างมีประสิทธิภาพ ตั้งแต่เดือนพฤษภาคม 2026 Reading Advantage จะนำเสนอรูปแบบการเรียนแบบผสมผสาที่ครบถ้วนซึ่งรวมการสอนโดยครูและหนังสือนักเรียน",
+        description: "แพลตฟอร์มของเราปรับให้เข้ากับการเรียนรู้ของคุณโดยเฉพาะมอบเนื้อหาและกิจกรรมแบบอินเทอร์แอคทีฟเพื่อการพัฒนาทักษะภาษาอย่างมีประสิทธิภาพ Reading Advantage ยังมีตัวเลือกการเรียนแบบผสมผสานซึ่งรวมการสอนโดยครูและหนังสือนักเรียน",
     },
     blendedLearning: {
         buttonLabel: "การเรียนแบบผสมผสาน",
-        newBadge: "มาใหม่ เดือนพฤษภาคม 2026",
+        newBadge: "พร้อมให้บริการแล้ว",
         heading: "การเรียนแบบผสมผสาน",
         studentWorkbooks: {
             title: "หนังสือนักเรียน",
@@ -271,10 +270,9 @@ export const th = {
     },
     resultsSection: {
         heading: "ระเบียบวิธีที่อิงหลักฐานเชิงประจักษ์",
-        title: "ความสำเร็จที่ได้รับการสนับสนุนจากการวิจัย",
-        description: "การสอนการอ่านแบบกว้างมีประสิทธิภาพเหนือกว่าการสอนไวยากรณ์แบบดั้งเดิม การศึกษาควบคุมระยะเวลาหนึ่งปี (Aka, 2019) แสดงให้เห็นถึงการพัฒนาด้านความเข้าใจในการอ่านที่วัดได้",
+        title: "ระเบียบวิธีที่ได้รับการสนับสนุนจากการวิจัย",
+        description: "Reading Advantage สร้างขึ้นบนงานวิจัยด้านการศึกษาในห้องเรียนหลายทศวรรษที่สนับสนุนการอ่านแบบกว้างเหนือการสอนไวยากรณ์แบบดั้งเดิมสำหรับผลลัพธ์ด้านการอ่าน ผลลัพธ์ด้านประสิทธิภาพเฉพาะจะแตกต่างกันไปตามความสม่ำเสมอในการใช้งานและการใช้งานในห้องเรียนอย่างต่อเนื่อง",
         stats: [
-            { value: "+9.5 คะแนน", label: "คะแนนการอ่านที่เพิ่มขึ้น (Aka, 2019)" },
             { value: "3000+", label: "บทความที่มีอยู่" },
             { value: "60+", label: "บทความใหม่ทุกวัน" },
         ],
@@ -388,11 +386,11 @@ export const zh = {
     hero: {
         title: "AI 驱动的语言学习",
         subtitle: "通过先进的 AI 技术体验个性化的广泛阅读",
-        description: "我们的 AI 驱动平台会根据您的学习旅程进行调整，提供个性化内容和互动活动，助力语言学习。2026年5月起，Reading Advantage 还将提供全面的混合学习模式，包括教师主导的课程和学生练习册。",
+        description: "我们的 AI 驱动平台会根据您的学习旅程进行调整，提供个性化内容和互动活动，助力语言学习。Reading Advantage 还提供混合学习模式，包括教师主导的课程和学生练习册。",
     },
     blendedLearning: {
         buttonLabel: "混合学习",
-        newBadge: "2026年5月全新推出",
+        newBadge: "现已可用",
         heading: "混合学习",
         studentWorkbooks: {
             title: "学生练习册",
@@ -464,10 +462,9 @@ export const zh = {
     },
     resultsSection: {
         heading: "基于证据的方法",
-        title: "有研究支持的成功",
-        description: "广泛阅读教学优于传统的语法教学。一项为期一年的对照研究 (Aka, 2019) 证明了阅读理解方面可衡量的进步。",
+        title: "有研究支持的方法论",
+        description: "Reading Advantage 基于数十年的课堂教学研究建立，支持广泛阅读优于传统语法教学。具体的效能提升取决于实施保真度和持续的课堂使用。",
         stats: [
-            { value: "+9.5 分", label: "阅读成绩提升 (Aka, 2019)" },
             { value: "3000+", label: "可用文章" },
             { value: "60+", label: "每日新增文章" },
         ],

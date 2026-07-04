@@ -1,10 +1,10 @@
 export const en = {
   hero: {
     title: "The Future of Chinese Learning",
-    subtitle: "Revolutionary Chinese Learning Platform",
+    subtitle: "On Our Roadmap · Planned",
     description:
-      "Experience a revolutionary approach to mastering Chinese, combining HSK standards with adaptive learning technology",
-    badge: "Coming Soon",
+      "Zhongwen Advantage is on our product roadmap — planned to combine HSK standards with our adaptive learning engine.",
+    badge: "On Our Roadmap",
     ctaButton: "Join Waitlist",
     alt: "Digital Chinese language learning with cultural elements",
   },
@@ -69,10 +69,10 @@ export const en = {
 export const th = {
   hero: {
     title: "อนาคตของการเรียนภาษาจีน",
-    subtitle: "แพลตฟอร์มการเรียนรู้ภาษาจีนที่ปฏิวัติวงการ",
+    subtitle: "อยู่ในแผนงาน · กำลังวางแผน",
     description:
-      "สัมผัสแนวทางใหม่ในการเชี่ยวชาญภาษาจีน ผสมผสานมาตรฐาน HSK กับเทคโนโลยีการเรียนรู้แบบปรับตัวได้",
-    badge: "เร็วๆ นี้",
+      "Zhongwen Advantage อยู่ในแผนงานผลิตภัณฑ์ของเรา — วางแผนที่จะผสมผสานมาตรฐาน HSK กับเครื่องยนต์การเรียนรู้แบบปรับตัวของเรา",
+    badge: "อยู่ในแผนงาน",
     ctaButton: "ลงชื่อรอ",
     alt: "การเรียนรู้ภาษาจีนดิจิทัลพร้อมองค์ประกอบทางวัฒนธรรม",
   },
@@ -137,10 +137,10 @@ export const th = {
 export const zh = {
   hero: {
     title: "中文学习的未来",
-    subtitle: "革命性的中文学习平台",
+    subtitle: "我们路线图中 · 规划中",
     description:
-      "通过结合 HSK 标准与自适应学习技术，体验掌握中文的革命性方法",
-    badge: "即将推出",
+      "Zhongwen Advantage 在我们的产品路线图中 — 计划将 HSK 标准与我们的自适应学习引擎相结合。",
+    badge: "我们路线图中",
     ctaButton: "加入候补名单",
     alt: "数字化中文学习与文化元素",
   },

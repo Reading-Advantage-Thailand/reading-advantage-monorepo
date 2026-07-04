@@ -18,13 +18,13 @@ import { MarketingSvg } from "@/components/marketing/marketing-svg";
 import type { Locale } from "@/config/locale-config";
 
 export const metadata: Metadata = {
-  title: "STEM Advantage - Reading Advantage Thailand",
+  title: "STEM Advantage - On Our Roadmap | Reading Advantage Thailand",
   description:
-    "Transform your STEM curriculum with our innovative 75% coding + 25% STEM integration platform, designed for modern classroom.",
+    "STEM Advantage is on the Reading Advantage product roadmap — planned K-12 coding + STEM integration experience. No launch date confirmed.",
   openGraph: {
-    title: "STEM Advantage - Reading Advantage Thailand",
+    title: "STEM Advantage - On Our Roadmap | Reading Advantage Thailand",
     description:
-      "Comprehensive K-12 coding education platform launching in 2025.",
+      "STEM Advantage is on the Reading Advantage product roadmap — planned K-12 coding + STEM integration experience.",
   },
 };
 

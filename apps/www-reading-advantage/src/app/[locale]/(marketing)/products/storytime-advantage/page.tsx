@@ -19,13 +19,13 @@ import type { Locale } from "@/config/locale-config";
 
 export const metadata: Metadata = {
   title:
-    "Storytime Advantage - Complete Early Literacy Curriculum | Reading Advantage Thailand",
+    "Storytime Advantage - On Our Roadmap | Reading Advantage Thailand",
   description:
-    "Launching in 2025: A comprehensive K-3 early literacy curriculum combining digital innovation with hands-on learning. Join the waitlist for early access.",
+    "Storytime Advantage is on the Reading Advantage product roadmap — planned K-3 early literacy curriculum combining digital innovation with hands-on learning. No launch date confirmed.",
   openGraph: {
-    title: "Storytime Advantage - The Future of Early Literacy Education",
+    title: "Storytime Advantage - On Our Roadmap",
     description:
-      "Transform early literacy education with our comprehensive K-3 curriculum launching in 2025. Combining digital innovation with proven teaching methods.",
+      "Storytime Advantage is on the Reading Advantage product roadmap — planned K-3 early literacy curriculum combining digital innovation with hands-on learning.",
   },
 };
 

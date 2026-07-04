@@ -58,9 +58,9 @@ export const en = {
     },
     powersEveryProduct: {
         eyebrow: "Powers every product",
-        title: "One engine, nine products.",
+        title: "One engine. Four products today — and a roadmap for more.",
         description:
-            "The same Mastery Advantage engine powers every product — from Reading Advantage to CodeCamp Advantage. Different subjects, same adaptive intelligence.",
+            "The same Mastery Advantage engine powers every product — from Reading Advantage to CodeCamp Advantage. Four Reading Advantage products are live today; more subject-area products are on our roadmap.",
     },
     cta: {
         eyebrow: "See it in action",
@@ -131,9 +131,9 @@ export const th = {
     },
     powersEveryProduct: {
         eyebrow: "ขับเคลื่อนทุกผลิตภัณฑ์",
-        title: "เครื่องยนต์เดียว เก้าผลิตภัณฑ์",
+        title: "เครื่องยนต์เดียว สี่ผลิตภัณฑ์ที่เปิดใช้งานแล้ววันนี้ — และมีแผนงานสำหรับเพิ่มเติม",
         description:
-            "เครื่องยนต์ Mastery Advantage เดียวกันขับเคลื่อนทุกผลิตภัณฑ์ — ตั้งแต่ Reading Advantage ถึง CodeCamp Advantage วิชาต่างกัน แต่ใช้ความฉลาดแบบปรับตัวเดียวกัน",
+            "เครื่องยนต์ Mastery Advantage เดียวกันขับเคลื่อนทุกผลิตภัณฑ์ — ตั้งแต่ Reading Advantage ถึง CodeCamp Advantage Reading Advantage มีผลิตภัณฑ์ที่เปิดใช้งานแล้วสี่ตัววันนี้ และผลิตภัณฑ์สาขาวิชาอื่นๆ อยู่ในแผนงานของเรา",
     },
     cta: {
         eyebrow: "ดูการทำงานจริง",
@@ -204,9 +204,9 @@ export const zh = {
     },
     powersEveryProduct: {
         eyebrow: "驱动每个产品",
-        title: "一个引擎，九个产品。",
+        title: "一个引擎，今天四个产品——更多已在路线图中。",
         description:
-            "相同的 Mastery Advantage 引擎为每个产品提供动力——从 Reading Advantage 到 CodeCamp Advantage。不同学科，相同的自适应智能。",
+            "相同的 Mastery Advantage 引擎为每个产品提供动力——从 Reading Advantage 到 CodeCamp Advantage。今天已有四个 Reading Advantage 产品上线，更多学科产品已在我们的路线图中。",
     },
     cta: {
         eyebrow: "查看实际操作",

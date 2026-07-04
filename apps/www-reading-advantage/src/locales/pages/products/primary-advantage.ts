@@ -26,8 +26,8 @@ export const en = {
       {
         title: "AI-Powered Learning",
         items: [
-          "Personalized 1-on-1 tutoring with Google Gemini",
-          "Intelligent writing feedback with GPT-5",
+          "Personalized 1-on-1 tutoring via our internal model adapter",
+          "Intelligent writing feedback via our internal model adapter",
           "Adaptive learning paths based on student progress"
         ]
       }
@@ -70,7 +70,7 @@ export const en = {
       },
       {
         title: "Interactive AI Tutor",
-        description: "24/7 AI-powered tutoring assistance for reading comprehension and vocabulary."
+        description: "On-demand AI-powered tutoring assistance for reading comprehension and vocabulary."
       },
       {
         title: "Sentence Building Activities",
@@ -89,23 +89,19 @@ export const en = {
   aiTechnology: {
     heading: "Advanced AI Technology",
     gemini: {
-      title: "Google Gemini",
+      title: "Adaptive AI Tutoring",
       description: "Provides personalized 1-on-1 tutoring, adapting to each student's learning pace and style."
     },
     gpt5: {
-      title: "GPT-5 Writing Feedback",
+      title: "AI Writing Feedback",
       description: "Delivers intelligent, contextual feedback on writing assignments to improve skills."
     }
   },
   resultsSection: {
     heading: "Evidence-Based Methodology",
-    title: "Research-Backed Reading Gains",
-    description: "Extensive reading programs like Primary Advantage are proven to outperform traditional grammar instruction, delivering measurable improvements validated by peer-reviewed research (Aka, 2019).",
+    title: "Curriculum-Aligned Learning Gains",
+    description: "Extensive reading programs like Primary Advantage are designed around the CEFR-aligned curriculum and built for measurable classroom outcomes. Specific efficacy gains depend on implementation fidelity and consistent classroom use.",
     stats: [
-      {
-        value: "+9.5 pts",
-        label: "Reading Score Gain (Aka, 2019)"
-      },
       {
         value: "85%",
         label: "Weekly Active Usage"
@@ -166,8 +162,8 @@ export const th = {
       {
         title: "การเรียนรู้ที่ขับเคลื่อนด้วย AI",
         items: [
-          "การสอนพิเศษส่วนตัว 1 ต่อ 1 ด้วย Google Gemini",
-          "ข้อเสนอแนะการเขียนอัจฉริยะด้วย GPT-5",
+          "การสอนพิเศษส่วนตัว 1 ต่อ 1 ผ่านอะแดปเตอร์โมเดลภายในของเรา",
+          "ข้อเสนอแนะการเขียนอัจฉริยะผ่านอะแดปเตอร์โมเดลภายในของเรา",
           "เส้นทางการเรียนรู้ที่ปรับเปลี่ยนตามความก้าวหน้าของนักเรียน"
         ]
       }
@@ -210,7 +206,7 @@ export const th = {
       },
       {
         title: "ผู้สอน AI แบบโต้ตอบ",
-        description: "ความช่วยเหลือด้านการสอนพิเศษด้วย AI ตลอด 24/7 สำหรับการอ่านเข้าใจและคำศัพท์"
+        description: "ความช่วยเหลือด้านการสอนพิเศษด้วย AI ตามต้องการสำหรับการอ่านเข้าใจและคำศัพท์"
       },
       {
         title: "กิจกรรมสร้างประโยค",
@@ -229,23 +225,19 @@ export const th = {
   aiTechnology: {
     heading: "เทคโนโลยี AI ขั้นสูง",
     gemini: {
-      title: "Google Gemini",
+      title: "การสอนพิเศษด้วย AI แบบปรับตัว",
       description: "ให้การสอนพิเศษส่วนตัว 1 ต่อ 1 ปรับเปลี่ยนตามความเร็วและสไตล์การเรียนรู้ของนักเรียนแต่ละคน"
     },
     gpt5: {
-      title: "ข้อเสนอแนะการเขียน GPT-5",
+      title: "ข้อเสนอแนะการเขียนด้วย AI",
       description: "ส่งมอบข้อเสนอแนะที่ชาญฉลาดและเหมาะสมกับบริบทสำหรับงานเขียนเพื่อพัฒนาทักษะ"
     }
   },
   resultsSection: {
-    heading: "ระเบียบวิธีที่อิงหลักฐานเชิงประจักษ์",
-    title: "ผลการอ่านที่ได้รับการสนับสนุนจากการวิจัย",
-    description: "โปรแกรมการอ่านแบบกว้างเช่น Primary Advantage ได้รับการพิสูจน์แล้วว่ามีประสิทธิภาพเหนือกว่าการสอนไวยากรณ์แบบดั้งเดิม โดยมอบการปรับปรุงที่วัดได้ซึ่งผ่านการตรวจสอบโดยงานวิจัย (Aka, 2019)",
+    heading: "ระเบียบวิธีที่อิงหลักสูตร",
+    title: "ผลการเรียนรู้ที่สอดคล้องกับหลักสูตร",
+    description: "โปรแกรมการอ่านแบบกว้างเช่น Primary Advantage ถูกออกแบบให้สอดคล้องกับหลักสูตร CEFR และสร้างขึ้นเพื่อผลลัพธ์ในห้องเรียนที่วัดได้ ผลลัพธ์ด้านประสิทธิภาพเฉพาะขึ้นอยู่กับความสม่ำเสมอในการใช้งานและการใช้งานในห้องเรียนอย่างต่อเนื่อง",
     stats: [
-      {
-        value: "+9.5 คะแนน",
-        label: "คะแนนการอ่านที่เพิ่มขึ้น (Aka, 2019)"
-      },
       {
         value: "85%",
         label: "การใช้งานต่อสัปดาห์"
@@ -306,8 +298,8 @@ export const zh = {
       {
         title: "AI 驱动学习",
         items: [
-          "Google Gemini 个性化一对一辅导",
-          "GPT-5 智能写作反馈",
+          "通过我们的内部模型适配器提供个性化一对一辅导",
+          "通过我们的内部模型适配器提供智能写作反馈",
           "基于学生进度的自适应学习路径"
         ]
       }
@@ -350,7 +342,7 @@ export const zh = {
       },
       {
         title: "交互式 AI 导师",
-        description: "24/7 AI 驱动的辅导支持，帮助阅读理解和词汇学习。"
+        description: "按需 AI 驱动的辅导支持，帮助阅读理解和词汇学习。"
       },
       {
         title: "句子构建活动",
@@ -369,23 +361,19 @@ export const zh = {
   aiTechnology: {
     heading: "先进 AI 技术",
     gemini: {
-      title: "Google Gemini",
+      title: "自适应 AI 辅导",
       description: "提供个性化一对一辅导，适应每个学生的学习进度和风格。"
     },
     gpt5: {
-      title: "GPT-5 写作反馈",
+      title: "AI 写作反馈",
       description: "提供智能、情境化的写作作业反馈，提高技能。"
     }
   },
   resultsSection: {
-    heading: "基于证据的方法",
-    title: "有研究支持的阅读提升",
-    description: "像 Primary Advantage 这样的广泛阅读课程被证明优于传统的语法教学，提供了由同行评审研究验证的可衡量进步 (Aka, 2019)。",
+    heading: "基于课程的方法",
+    title: "与课程对齐的学习提升",
+    description: "像 Primary Advantage 这样的泛读程序围绕 CEFR 对齐课程设计，为可衡量的课堂成果而构建。具体的效能提升取决于实施保真度和持续的课堂使用。",
     stats: [
-      {
-        value: "+9.5 分",
-        label: "阅读成绩提升 (Aka, 2019)"
-      },
       {
         value: "85%",
         label: "每周活跃使用率"

@@ -345,7 +345,7 @@ export default async function PrimaryAdvantage({
           <FloatingPill value="AI" label="Powered" variant="sky" size="sm" />
         </div>
         <div className="absolute bottom-10 right-10 animate-bounce duration-[4000ms]">
-          <FloatingPill value="24/7" label={t("support")} variant="cyan" size="sm" />
+          <FloatingPill value="AI" label={t("support")} variant="cyan" size="sm" />
         </div>
         <div className="container mx-auto px-4 text-center relative z-10">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">

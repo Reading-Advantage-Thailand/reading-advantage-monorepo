@@ -21,13 +21,13 @@ import { MarketingSvg } from "@/components/marketing/marketing-svg";
 import type { Locale } from "@/config/locale-config";
 
 export const metadata: Metadata = {
-  title: "Tutor Advantage - Reading Advantage Thailand",
+  title: "Tutor Advantage - On Our Roadmap | Reading Advantage Thailand",
   description:
-    "Revolutionary AI-powered English tutoring platform launching in Thailand in 2025. Combining advanced technology with personalized instruction.",
+    "Tutor Advantage is on the Reading Advantage product roadmap — planned AI-powered English tutoring experience. No launch date confirmed.",
   openGraph: {
-    title: "Tutor Advantage - Reading Advantage Thailand",
+    title: "Tutor Advantage - On Our Roadmap | Reading Advantage Thailand",
     description:
-      "Revolutionary AI-powered English tutoring platform launching in Thailand in 2025",
+      "Tutor Advantage is on the Reading Advantage product roadmap — planned AI-powered English tutoring experience.",
   },
 };
 

@@ -8,7 +8,7 @@ export const en = {
         secondaryCta: "Get Notified",
     },
     overview: {
-        badge: "ZERO RISK",
+        badge: "LOW-RISK ONBOARDING",
         title: "Fully Outsourced English Department",
         heading: "Technology + Teachers",
         description: "We take complete responsibility for your English program. From curriculum planning to teaching delivery to progress tracking - Reading Advantage handles everything.",
@@ -30,7 +30,7 @@ export const en = {
             "Certified Reading Advantage teachers",
             "Progress tracking and reporting",
             "Regular quality assurance",
-            "Zero implementation risk",
+            "Low-risk implementation with structured onboarding",
         ],
     },
     benefits: {
@@ -73,7 +73,7 @@ export const th = {
         secondaryCta: "รับการแจ้งเตือน",
     },
     overview: {
-        badge: "ความเสี่ยงเป็นศูนย์",
+        badge: "ความเสี่ยงต่ำในการเริ่มต้น",
         title: "แผนกวานภาษาอังกฤษแบบจัดการภายนอกทั้งหมด",
         heading: "เทคโนโลยีและครู",
         description: "เรารับผิดชอบในทุกอย่างของโปรแกรมภาษาอังกฤษของคุณ ตั้งแต่การวางแผนจนถึงการส่งมอบผลและการติดตามความก้าวหน้า เราจัดการทุกอย่างให้",
@@ -95,7 +95,7 @@ export const th = {
             "ครู Reading Advantage ที่ได้รับการรับรอง",
             "การติดตามความก้าวหน้าและรายงาน",
             "การรับรองคุณภาพอย่างสม่ำเสมอ",
-            "ความเสี่ยงต่องการนำไปใช้งานเป็นศูนย์",
+            "การเริ่มต้นที่มีโครงสร้างและความเสี่ยงต่ำ",
         ],
     },
     benefits: {
@@ -160,7 +160,7 @@ export const zh = {
             "经过认证的阅读优势教师",
             "进度跟踪和报告",
             "定期质量保证",
-            "零实施风险",
+            "结构化、低风险的入门流程",
         ],
     },
     benefits: {

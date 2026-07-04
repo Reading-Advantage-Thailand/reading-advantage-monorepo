@@ -17,13 +17,13 @@ import { MarketingSvg } from "@/components/marketing/marketing-svg";
 import type { Locale } from "@/config/locale-config";
 
 export const metadata: Metadata = {
-  title: "Math Advantage - Reading Advantage Thailand",
+  title: "Math Advantage - On Our Roadmap | Reading Advantage Thailand",
   description:
-    "Revolutionary AI-enhanced math tutoring platform with personalized learning paths and advanced adaptive technology.",
+    "Math Advantage is on the Reading Advantage product roadmap. Planned adaptive tutoring experience for grades 7-12 — no launch date confirmed.",
   openGraph: {
-    title: "Math Advantage - Reading Advantage Thailand",
+    title: "Math Advantage - On Our Roadmap | Reading Advantage Thailand",
     description:
-      "Transform your math learning journey with our AI-enhanced tutoring platform launching in 2025.",
+      "Math Advantage is on the Reading Advantage product roadmap — planned adaptive tutoring experience for grades 7-12.",
   },
 };
 
@@ -271,7 +271,7 @@ export default async function MathAdvantage({
         </div>
       </OverlappingSection>
 
-      {/* Stats — Large central stat with floating pills */}
+      {/* Stats — Roadmap placeholder for future product readiness */}
       <section className="py-24 bg-gradient-to-br from-orange-50 to-amber-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
@@ -285,7 +285,7 @@ export default async function MathAdvantage({
           <div className="flex flex-col md:flex-row items-center justify-center gap-8 max-w-4xl mx-auto">
             <div data-testid="stat-pill" className="md:-translate-y-6">
               <FloatingPill
-                value="3×"
+                value="KST"
                 label={t("statsBenefits.fasterLearning")}
                 variant="orange"
                 size="md"
@@ -293,7 +293,7 @@ export default async function MathAdvantage({
             </div>
             <div className="z-10">
               <FloatingPill
-                value="95%"
+                value="AI"
                 label={t("statsBenefits.confidenceBoost")}
                 variant="amber"
                 size="lg"
@@ -301,13 +301,16 @@ export default async function MathAdvantage({
             </div>
             <div data-testid="stat-pill" className="md:translate-y-6">
               <FloatingPill
-                value="24/7"
+                value="SRS"
                 label={t("statsBenefits.aiSupport")}
                 variant="orange"
                 size="md"
               />
             </div>
           </div>
+          <p className="mt-12 text-center text-sm text-slate-600 max-w-2xl mx-auto">
+            Math Advantage is on our product roadmap. Specific efficacy stats will be published when the product is generally available and has verified evidence.
+          </p>
         </div>
       </section>
 
