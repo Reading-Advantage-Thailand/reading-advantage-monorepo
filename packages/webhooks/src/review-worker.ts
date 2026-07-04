@@ -146,7 +146,15 @@ export function normalizePrKey(prUrl: string): {
   repo: string;
   pullNumber: number;
 } {
-  const match = prUrl.match(/github\.com\/([^/]+)\/([^/]+)\/pull\/(\d+)/i);
+  // Anchored at start-of-string: require an http(s):// scheme followed by
+  // the github.com host (or www.github.com) so URLs like
+  // `ftp://github.com/...` or `https://github.corp.example.com/...` (which
+  // contain `github.com/` as a substring) are rejected. The trailing
+  // delimiter class `(?=$|/|\?|#)` ensures the captured PR number is the
+  // full segment — `pull/1.5` would otherwise match as `pull/1`.
+  const match = prUrl.match(
+    /^https?:\/\/(?:www\.)?github\.com\/([^/]+)\/([^/]+)\/pull\/(\d+)(?=$|[/?#])/i,
+  );
   if (!match) {
     throw new Error(`normalizePrKey: not a GitHub PR URL: ${prUrl}`);
   }
@@ -154,6 +162,12 @@ export function normalizePrKey(prUrl: string): {
   const rawRepo = match[2]!;
   const repo = rawRepo.replace(/\.git$/i, "").toLowerCase();
   const pullNumber = parseInt(match[3]!, 10);
+  if (pullNumber <= 0) {
+    // The regex captures `\d+` (>= 0); we additionally reject zero here so
+    // the idempotency key can never be `owner/repo#0` (no such thing on
+    // GitHub — pull numbers are positive integers).
+    throw new Error(`normalizePrKey: PR number must be positive: ${prUrl}`);
+  }
   return { owner, repo, pullNumber };
 }
 
@@ -795,17 +809,20 @@ export function settleJob(
     };
   }
 
-  // Failure path. `job.attempts` is the CURRENT attempt count (the worker
-  // incremented it before calling us, so the test in
-  // `phase-3-retry-backoff.test.ts` passes `attempts: 1` to mean "the first
-  // retry is now due"). The next-attempt count for retry is `+1`. On
-  // exhaustion we leave attempts at its current value (the test in
-  // `phase-3-exhaust-to-dead.test.ts` expects `attempts` to stay at
-  // `maxAttempts`).
+  // Failure path. `job.attempts` is the CURRENT (pre-increment) attempt
+  // count. The next-attempt count for retry is `+1`. We compare against
+  // `job.attempts + 1` so the exhaustion check honors the spec semantics
+  // "after `max_attempts` failed attempts, the job goes dead" — i.e.
+  // with `maxAttempts=1`, the very first failure transitions straight to
+  // dead (no retry).
+  //
+  // On exhaustion we leave attempts at its current value (the test in
+  // `phase-3-exhaust-to-dead.test.ts` passes `attempts: maxAttempts` and
+  // expects the dead row to retain that value).
   const nextAttempts = job.attempts + 1;
   const lastError = err.message;
 
-  if (job.attempts >= job.maxAttempts) {
+  if (job.attempts + 1 >= job.maxAttempts) {
     // Exhaustion: terminal dead-letter state. Review row stays pending.
     return {
       status: "dead",

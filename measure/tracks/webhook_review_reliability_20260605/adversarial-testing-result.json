@@ -1,0 +1,118 @@
+{
+  "track_id": "webhook_review_reliability_20260605",
+  "agent": "measure-adversarial-testing",
+  "baseline_sha": "1e846b65a754fb44e464a35e8c29f08664f07122",
+  "executed_at": "2026-07-04T12:53:00Z",
+  "status": "pass_with_bugfixes",
+  "files_created": [
+    {
+      "path": "packages/webhooks/src/__tests__/adversarial-normalize-pr-key.test.ts",
+      "tests": 28,
+      "purpose": "URL normalizer boundary conditions: trailing slashes, .git suffix, mixed case, invalid URLs, non-canonical schemes, pull-number boundaries."
+    },
+    {
+      "path": "packages/webhooks/src/__tests__/adversarial-enqueue.test.ts",
+      "tests": 15,
+      "purpose": "Enqueue idempotency: concurrent calls, claimed/succeeded/dead state transitions, input validation (missing prUrl/action/payload), DB error propagation, bulk enqueue."
+    },
+    {
+      "path": "packages/webhooks/src/__tests__/adversarial-backoff.test.ts",
+      "tests": 12,
+      "purpose": "Backoff/jitter: exponential doubling across attempts=0..N, jitter distribution over 1000 samples, non-determinism, exhaustion boundary (maxAttempts=1, maxAttempts=N)."
+    },
+    {
+      "path": "packages/webhooks/src/__tests__/adversarial-claim-cas.test.ts",
+      "tests": 22,
+      "purpose": "CAS safety on applySettle (status='claimed'), workerId validation (SQL injection guard, length cap), batchSize validation, claim SQL parameterization, reclaim SQL parameterization."
+    },
+    {
+      "path": "packages/webhooks/src/__tests__/adversarial-webhook-flow.test.ts",
+      "tests": 19,
+      "purpose": "Webhook payload robustness: huge payload, prototype pollution, invalid JSON, schema-invalid payloads (empty html_url, wrong types); signature/replay attacks; duplicate-delivery suppression."
+    },
+    {
+      "path": "packages/api/src/__tests__/adversarial-admin-jobs.test.ts",
+      "tests": 32,
+      "purpose": "Admin DLQ endpoint boundary/failure paths: Zod clamping/rejection (limit=0, limit=-1, limit=10000, fractional, offset=-1, status enum), role discrimination (STUDENT/TEACHER/INTERN/GUARDIAN), unauthenticated → UNAUTHORIZED, malformed UUID rejection, error-code discrimination (UNAUTHORIZED vs FORBIDDEN vs BAD_REQUEST)."
+    }
+  ],
+  "files_modified": [
+    {
+      "path": "packages/webhooks/src/review-worker.ts",
+      "reason": "Two real bugs found and fixed by adversarial probes.",
+      "bugfixes": [
+        {
+          "function": "normalizePrKey",
+          "issue": "Regex /github\\.com\\/.../ is unanchored, so URLs like 'ftp://github.com/org/repo/pull/1' or 'https://github.corp.example.com/org/repo/pull/1' could match (substring) or partially capture 'pull/1.5' as 'pull/1'. Zero PR number also accepted.",
+          "fix": "Anchored the regex with ^https?:\\/\\/(?:www\\.)?github\\.com\\/ and a trailing delimiter class (?=$|[/?#]); additionally reject pullNumber <= 0."
+        },
+        {
+          "function": "settleJob",
+          "issue": "Exhaustion check `if (job.attempts >= job.maxAttempts)` is off-by-one. With maxAttempts=1, the first failure schedules a retry instead of going to dead; spec semantics say 'after max_attempts failed attempts, the job goes dead'.",
+          "fix": "Changed comparison to `if (job.attempts + 1 >= job.maxAttempts)` so the post-increment count is what gets compared against the cap."
+        }
+      ]
+    }
+  ],
+  "test_counts": {
+    "adversarial_tests_added": 128,
+    "by_file": {
+      "packages/webhooks/src/__tests__/adversarial-normalize-pr-key.test.ts": 28,
+      "packages/webhooks/src/__tests__/adversarial-enqueue.test.ts": 15,
+      "packages/webhooks/src/__tests__/adversarial-backoff.test.ts": 12,
+      "packages/webhooks/src/__tests__/adversarial-claim-cas.test.ts": 22,
+      "packages/webhooks/src/__tests__/adversarial-webhook-flow.test.ts": 19,
+      "packages/api/src/__tests__/adversarial-admin-jobs.test.ts": 32
+    },
+    "pre_existing_test_count": 107,
+    "total_webhooks_tests_after": 203,
+    "total_admin_tests_after": 38
+  },
+  "bugs_found_and_fixed": 2,
+  "regressions_introduced": 0,
+  "anti_pattern_defenses_applied": {
+    "A3_labeled_integer_counts": "All integer assertions use labeled arguments to expect(...). No bare regex /\\d+/ matches.",
+    "A4_vacuous_pass": "Every test asserts a specific observable (thrown error, mock call count, returned value). No 'no exception' alone.",
+    "A7_over_broad_filter": "Assertions use exact equality, labeled integers, and explicit regex with /i case-insensitive flag where appropriate. No substring matches that could swallow regressions.",
+    "A5_false_claim": "All 'the source does X' claims are verified by source-grep tests (e.g., the applySettle CAS pattern test)."
+  },
+  "evidence": {
+    "adversarial_only_webhooks": {
+      "command": "pnpm --filter @reading-advantage/webhooks exec vitest run src/__tests__/adversarial-*.test.ts",
+      "result": "5 files passed / 0 failed; 96 tests passed / 0 failed"
+    },
+    "adversarial_only_api": {
+      "command": "pnpm --filter @reading-advantage/api exec vitest run src/__tests__/adversarial-admin-jobs.test.ts",
+      "result": "1 file passed / 0 failed; 32 tests passed / 0 failed"
+    },
+    "full_webhooks_suite": {
+      "command": "pnpm --filter @reading-advantage/webhooks exec vitest run",
+      "result": "25 files passed / 1 skipped (live-DB concurrency); 203 tests passed / 3 skipped"
+    },
+    "scoped_admin_suite": {
+      "command": "pnpm --filter @reading-advantage/api exec vitest run src/__tests__/phase-4-admin-list-dead-review-jobs.test.ts src/__tests__/phase-4-admin-requeue-review-job.test.ts src/__tests__/adversarial-admin-jobs.test.ts",
+      "result": "3 files passed / 0 failed; 38 tests passed / 0 failed"
+    },
+    "type_check": {
+      "command": "pnpm turbo run check-types --filter=@reading-advantage/webhooks --filter=@reading-advantage/db --filter=@reading-advantage/domain --filter=@reading-advantage/api",
+      "result": "8/8 tasks successful, 0 errors"
+    },
+    "build": {
+      "command": "pnpm turbo run build --filter=@reading-advantage/webhooks --filter=@reading-advantage/db --filter=@reading-advantage/domain --filter=@reading-advantage/api",
+      "result": "8/8 tasks successful, 0 errors"
+    },
+    "lint": {
+      "command": "pnpm turbo run lint --filter=@reading-advantage/webhooks --filter=@reading-advantage/api",
+      "result": "0 errors; pre-existing warnings only (5 unrelated to this track)"
+    }
+  },
+  "notes": [
+    "Adversarial probes intentionally covered boundary cases the happy-path tests miss: prototype pollution, SQL metacharacter injection via workerId, off-by-one in exhaustion comparison, unanchored regex substring matches.",
+    "Two real bugs were found and fixed: (1) normalizePrKey regex accepted non-HTTP schemes and fractional PR numbers; (2) settleJob exhaustion check was off-by-one for maxAttempts=1. Both fixes are minimal and preserve the existing happy-path contract (phase-3-retry-backoff, phase-3-exhaust-to-dead still pass).",
+    "The test for 'duplicate delivery does NOT cause a second comment' pins the contract from spec FR-2 (idempotent enqueue); the in-process `processedDeliveryIds` Set short-circuits before enqueueReviewJob is called.",
+    "The applySettle CAS pattern is verified via source-grep (not live SQL introspection) because Drizzle's `eq()` returns a SQL chunk whose toQuery() requires the full dialect context, which is fragile to mock. The source-grep assertion is the same style used by phase-3-claim-skip-locked.test.ts for the FOR UPDATE SKIP LOCKED check.",
+    "The adversarial-webhook-flow.test.ts uses the REAL verifyWebhookSignature from github-client.ts (not a mock) so the HMAC + replay-attack paths are exercised end-to-end.",
+    "All new tests are deterministic except the jitter randomness test (which deliberately asserts non-determinism with 10 trials).",
+    "Adversarial tests do not modify any existing test files."
+  ]
+}
