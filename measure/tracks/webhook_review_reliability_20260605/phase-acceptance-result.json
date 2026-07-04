@@ -1,0 +1,75 @@
+{
+  "reviewer": "measure-phase-acceptance",
+  "track_id": "webhook_review_reliability_20260605",
+  "baseline_sha": "80b4f2aab04d0352a837fabe067ec646f7aad596",
+  "final_sha": "b3c643bf387b2587fddff12563420715ad2f2e96",
+  "timestamp": "2026-07-04T12:25:00Z",
+  "status": "PASS_WITH_FIXES",
+  "summary": "Phases 0-5 of the webhook reliability track meet the spec + test-strategy criteria. All five FRs are implemented and verified against source, tests, and live gate runs. One trivial issue was fixed during acceptance: 17 'any' annotations for DB connections in review-worker.ts were replaced with the proper DB type + a PrivilegedConnection interface (matching the rate-limiter/audit-retention pattern that the reviews had cited as the codebase standard). All scoped gates exit 0. No anti-pattern violations (A5/A6/A8/A13 clear). The codecamp-advantage build remains blocked by pre-existing IRs (@reading-advantage/ai/internal-sdk + child_process) that are NOT introduced by this track; the filtered build excluding codecamp passes.",
+  "phases_verified": {
+    "phase_0": "PASS — dependency gate (codecamp_review_ai_consolidation archived; reviewExercise is the single seam). codecamp tables classified REFERENTIAL (no schoolId). All 4 tasks [x].",
+    "phase_1": "PASS — review_jobs table + codecampReviewJobStatusEnum (5 values) + unique idempotency index (pr_owner,pr_repo,pr_pull_number) + claim index (status,next_attempt_at). Migration 0025_review_jobs.sql + journal idx:25. tenant-coverage.test.ts passes (REFERENTIAL). 11 tests green.",
+    "phase_2": "PASS — enqueueReviewJob is idempotent (in-process Set + onConflictDoUpdate on unique index); webhook ACKs 200 immediately (inline review deferred via setImmediate); normalizePrKey lowercases owner/repo, strips .git/trailing slash. 9 tests green.",
+    "phase_3": "PASS — claimDueJobs uses FOR UPDATE SKIP LOCKED LIMIT N (parameterized Drizzle sql template); processJob calls reviewExercise seam; settleJob does success/pending-with-jittered-exp-backoff/dead; reclaimStuckJobs resets claimed rows older than visibility timeout; applySettle uses compare-and-swap on status='claimed'. Worker env-gated (REVIEW_WORKER_ENABLED=1 OR NODE_ENV=production). 8 tests pass / 2 skipped (live-DB).",
+    "phase_4": "PASS — listDeadReviewJobs + requeueReviewJob are adminProcedure (non-admin → FORBIDDEN); Zod-validated (reviewJobStatusEnum, limit[1,100], offset>=0, jobId uuid); requeue resets status=pending, attempts=0, nextAttemptAt=now, clears lastError/claimedAt/claimedBy. reviewJobSchema omits payload_json/deliveryId (no sensitive-data exposure). 6 tests green.",
+    "phase_5": "PASS — integration tests cover happy path (1 comment, 1 approved updatePrReview), retry-then-succeed (3 attempts, 1 comment), exhaust-to-dead (0 reviewed updatePrReview calls, 0 comments — bug fixed), idempotent redelivery (1 comment after duplicate delivery). Concurrency test is live-DB gated (skipped without DIRECT_DATABASE_URL). 4 pass / 1 skipped."
+  },
+  "fr_verification": {
+    "FR-1": {
+      "status": "PASS",
+      "evidence": "packages/db/src/schema/codecamp.ts: reviewJobs pgTable + codecampReviewJobStatusEnum(pending|claimed|succeeded|failed|dead) + unique('review_jobs_pr_key_unique').on(prOwner,prRepo,prPullNumber) + index('review_jobs_claim_idx').on(status,nextAttemptAt). Migration 0025_review_jobs.sql + _journal.json idx:25. tenant-registry.ts: register(reviewJobs,'REFERENTIAL'). Schema-parity test (4 tests) + migration test (7 tests) + tenant-coverage (9 tests) all green."
+    },
+    "FR-2": {
+      "status": "PASS",
+      "evidence": "packages/webhooks/src/github.ts:329 calls enqueueReviewJob (idempotent upsert on normalized PR key); returns c.json({received:true,...},200) promptly. Inline review deferred via setImmediate so ACK resolves first. normalizePrKey lowercases owner/repo, strips .git, strips trailing slash, parses pullNumber as int. 9 phase-2 tests green."
+    },
+    "FR-3": {
+      "status": "PASS",
+      "evidence": "claimDueJobs (review-worker.ts:455) issues parameterized 'UPDATE ... WHERE id IN (SELECT ... FOR UPDATE SKIP LOCKED LIMIT $batchSize) RETURNING *' via Drizzle sql template. processJob calls domain.reviewExercise via aiClientToGenerateReview(getAIClient(),reviewResultSchema). settleJob: success→succeeded; transient→pending with base*2^attempts+jitter; exhaustion→dead with last_error. reclaimStuckJobs resets claimed rows older than visibility timeout. applySettle compare-and-swap on status='claimed'. Uses createPrivilegedDb() (DIRECT_DATABASE_URL)."
+    },
+    "FR-4": {
+      "status": "PASS",
+      "evidence": "packages/api/src/routers/codecamp.ts: listDeadReviewJobs + requeueReviewJob are adminProcedure (non-admin→FORBIDDEN, verified by test). Zod-validated inputs (listDeadReviewJobsInputSchema, requeueReviewJobInputSchema) + outputs (reviewJobSchema). requeueReviewJob resets status=pending, attempts=0, nextAttemptAt=now, lastError/claimedAt/claimedBy=null. Dead jobs NOT shown as reviewed: worker never calls updatePrReview on failure/dead path (grep confirms no reviewStatus:'reviewed' on failure); review row stays pending; DLQ status='dead' is distinct. 6 phase-4 tests green."
+    },
+    "FR-5": {
+      "status": "PASS",
+      "evidence": "5 integration test files: phase-5-happy-path (1 comment, 1 approved), phase-5-retry-then-succeed (3 attempts, 1 comment), phase-5-exhaust-to-dead (0 reviewed calls, 0 comments), phase-5-idempotent-redelivery (1 comment after dup), phase-5-concurrency (live-DB gated, skipped). All use labeled-integer counts (A3) and fail-on-nothing guards (A4). 4 pass / 1 skipped."
+    }
+  },
+  "gates": {
+    "webhooks_vitest": "107 passed, 3 skipped, 0 failed (20 files passed, 1 skipped)",
+    "db_phase1_vitest": "11 passed, 0 failed (2 files)",
+    "domain_tenant_coverage_vitest": "9 passed, 0 failed (1 file) [run from @reading-advantage/domain; orchestrator command pathed it under db filter where the file is absent]",
+    "api_phase4_vitest": "6 passed, 0 failed (2 files)",
+    "domain_full_vitest": "374 passed, 5 skipped, 0 failed (37 files passed, 1 skipped)",
+    "check_types_build_filtered": "16/16 tasks successful (webhooks, db, domain, api, types + upstream deps)",
+    "lint_filtered": "0 errors across webhooks/db/domain/api. webhooks: 8 warnings (pre-existing unused-vars in 2 test files; 0 no-explicit-any warnings after fix).",
+    "codecamp_advantage_build": "FAILS on pre-existing IRs (@reading-advantage/ai/internal-sdk + child_process resolution). NOT introduced by this track. Filtered build excluding codecamp passes (16/16). Documented in plan Phase 6 [~]."
+  },
+  "quality_checks": {
+    "no_any_in_production_code": "PASS after fix — 17 'any' annotations in review-worker.ts replaced with DB type + PrivilegedConnection interface (commit b3c643bf). Lint no-explicit-any warnings dropped 26→0 on that file. domain/review-jobs.ts, api/codecamp.ts DLQ section, types/codecamp.ts review-job section all clean.",
+    "jsdoc_on_exported_functions": "PASS — all 10 exported functions in review-worker.ts have JSDoc (normalizePrKey, __resetReviewWorkerState, enqueueReviewJob, claimDueJobs, reclaimStuckJobs, processJob, settleJob, applySettle, runWorkerTick, createReviewWorker). Exported consts (CLAIM_BATCH_SIZE, etc.) have JSDoc. Note: several exported interfaces lack top-level JSDoc (LOW, accepted by review-a F3); field-level comments present.",
+    "no_reviewed_on_failure": "PASS — grep confirms NO call to updatePrReview with reviewStatus:'reviewed' on the failure/dead path. processJob uses 'approved'/'needs_changes' on success; on failure the review row stays pending. The original fire-and-forget bug (stamp 'reviewed' on LLM failure) is fixed in both github.ts inline path (returns early on error) and the worker.",
+    "sql_parameterized": "PASS — claimDueJobs and reclaimStuckJobs use Drizzle sql template parameters (${now}, ${workerId}, ${batchSize}, ${cutoff} are parameter bindings inside sql`...`, not string interpolation). review-b (F-SEC-001) fixed the prior raw-SQL injection; adversarial tests assert the query is not a plain string and unsafe workerId/non-positive batchSize are rejected. No ${...} interpolation of untrusted input into SQL text.",
+    "anti_pattern_A5_false_claim": "PASS — no 'PASS=N,FAIL=0' or 'all checks pass' text in plan.md. Plan evidence uses actual test counts verified to match live gate runs (107 passed/3 skipped webhooks; 11 passed db; 6 passed api).",
+    "anti_pattern_A6_registry_overstatement": "PASS — measure/tracks.md lists track as '- [ ]' (unchecked), NOT claimed resolved/archived. Correct since closeout pending.",
+    "anti_pattern_A8_marker_ambiguity": "PASS — no '[ ]' (space) markers in plan.md. Phases 0-5 use '[x]'; Phase 6-7 use '[~]' (correctly blocked/in-progress).",
+    "anti_pattern_A13_stale_track_dir": "PASS — track dir is in measure/tracks/ (active), not stale. Closeout (archive move) is Phase 7 work, not yet run."
+  },
+  "fixes_applied": [
+    {
+      "commit": "b3c643bf387b2587fddff12563420715ad2f2e96",
+      "file": "packages/webhooks/src/review-worker.ts",
+      "description": "Replaced 17 'any' annotations for DB connections with the proper DB type (imported from @reading-advantage/db) and a local PrivilegedConnection interface, matching the established pattern in packages/auth/src/rate-limit-cleanup.ts and audit-retention-job.ts. The prior reviews (review-a F2, review-b F-SEC-005) had accepted these as a 'codebase-wide pattern', but the cited comparison files actually use typed DB connections — so this was a genuine deviation. Tests already cast mocks via 'as unknown as DB', so no test changes were needed. Eliminates all 26 no-explicit-any lint warnings on review-worker.ts. Type-check, webhooks suite, and filtered build all green after the fix.",
+      "trivial": true
+    }
+  ],
+  "notes": [
+    "The orchestrator's gate command paths tenant-coverage.test.ts under the @reading-advantage/db filter, but the file lives in @reading-advantage/domain. When run from the db package, vitest simply finds 2 of the 3 named files (the phase-1 tests) and passes; tenant-coverage was verified separately from the domain package (9 tests pass). This is a path discrepancy in the orchestrator command, not an implementation issue.",
+    "Three live-DB integration tests are skipped without DIRECT_DATABASE_URL (phase-3-claim-skip-locked live block, phase-3-reclaim-stuck live block, phase-5-concurrency). This is the intended gating per test-strategy §0.4/§4.6. The structural pre-conditions (FOR UPDATE SKIP LOCKED in SQL text, parameterized query, worker claim shape) are asserted by the source-grep/mock-sniff assertions that DO run. The two-worker concurrency row-lock semantics require a real Postgres connection and are deferred to an environment with DIRECT_DATABASE_URL.",
+    "The worker (createReviewWorker) is exported and env-gated but not wired into a bootstrap/instrumentation file — consistent with the codebase pattern for createRateLimitCleanupJob and createAuditRetentionJob (also exported, env-gated, not auto-started in any app bootstrap). Production wiring is deferred per the same convention.",
+    "codecamp-advantage build fails on pre-existing IRs (@reading-advantage/ai/internal-sdk and child_process). These are NOT introduced by this track (present before the baseline). The filtered build excluding codecamp passes (16/16). The plan Phase 6 [~] marker is truthful per A5.",
+    "Phase 7 (closeout: tech-debt row flip, lessons-learned entry, tracks.md archive, git notes) is correctly marked [~] — it is the closeout role's work, not part of Phases 0-5 acceptance."
+  ],
+  "agent_signoff": "MEASURE_AGENT_RESULT"
+}
