@@ -9,7 +9,7 @@ export const en = {
     products: {
         primaryAdvantage: {
             title: "Primary Advantage",
-            badge: "New for SY2025",
+            badge: "NOW AVAILABLE",
             gradeRange: "Grades 3-6 literacy",
             features: {
                 0: "Build reading stamina with leveled fiction and informational texts tailored to grades 3-6",
