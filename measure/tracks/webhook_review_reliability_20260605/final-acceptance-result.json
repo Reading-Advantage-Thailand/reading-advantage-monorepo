@@ -1,0 +1,180 @@
+{
+  "reviewer": "measure-final-acceptance",
+  "track_id": "webhook_review_reliability_20260605",
+  "baseline_sha": "eb1bce67ada42f7910fccec3790457f9a3be64e5",
+  "final_sha": "eb1bce67ada42f7910fccec3790457f9a3be64e5",
+  "timestamp": "2026-07-04T13:05:00Z",
+  "status": "PASS",
+  "summary": "Final acceptance PASS for the webhook→LLM review reliability track. All 11 acceptance criteria verified against source, tests, and live gate runs. No non-deferred plan tasks remain (Phases 0–6 all [x] with SHA evidence; Phase 7 closeout correctly [~] for the closeout role). All anti-pattern audits clean (A1/A5/A6/A8/A9/A13). `measure/doctor.sh` exits 0. The 4 packages this track owns (webhooks/db/domain/api + types upstream) all green on lint/check-types/build/test. The `--filter=codecamp-advantage` leg of the filtered gate is the only non-green element and is owned by pre-existing Wave-2-era IRs (`@reading-advantage/ai/internal-sdk` + `child_process` resolution) explicitly carved out by test-strategy §0.10 and the orchestrator's final-acceptance instructions; it MUST NOT block this track. Phase 7 (tech-debt row flips, lessons-learned entry, tracks.md archive move, git notes) is correctly deferred to `measure-closeout`.",
+  "acceptance_criteria": {
+    "AC1_review_jobs_schema": {
+      "status": "PASS",
+      "evidence": "packages/db/src/schema/codecamp.ts: `reviewJobs` pgTable + `codecampReviewJobStatusEnum` (5 values: pending|claimed|succeeded|failed|dead) + `unique('review_jobs_pr_key_unique').on(prOwner, prRepo, prPullNumber)` + `index('review_jobs_claim_idx').on(status, nextAttemptAt)`. Migration 0025_review_jobs.sql contains CREATE TYPE, CREATE TABLE with all spec'd columns, CREATE UNIQUE INDEX, CREATE INDEX. _journal.json idx:25, tag:'0025_review_jobs', when:1782700000000, breakpoints:true. tenant-registry.ts: register(reviewJobs, 'REFERENTIAL'). Phase-1 schema test (4 tests) + migration test (7 tests) = 11 passed/0 failed."
+    },
+    "AC2_webhook_idempotent_2xx_no_inline": {
+      "status": "PASS",
+      "evidence": "packages/webhooks/src/github.ts:329 calls `enqueueReviewJob` (idempotent upsert on normalized PR key — in-process Set cache + onConflictDoUpdate on unique index). Returns `c.json({received:true, ...}, 200)` promptly. Inline review deferred via `setImmediate` so ACK resolves first. `normalizePrKey` lowercases owner/repo, strips `.git`, strips trailing slash, parses pullNumber as int. phase-2-enqueue-idempotent / phase-2-enqueue-url-normalization / phase-2-webhook-acks-after-enqueue tests = 9 passed/0 failed."
+    },
+    "AC3_worker_skip_locked_seam_settle": {
+      "status": "PASS",
+      "evidence": "packages/webhooks/src/review-worker.ts:451 — `claimDueJobs` issues parameterized Drizzle sql template containing 'FOR UPDATE SKIP LOCKED LIMIT $batchSize'. `processJob` calls domain `reviewExercise` via `aiClientToGenerateReview(getAIClient(), reviewResultSchema)` (the single seam). `settleJob`: success→succeeded (updatePrReview 'approved'/'needs_changes' → stamps reviewedAt); transient failure→pending with `base*2^attempts + jitter` (env REVIEW_WORKER_BACKOFF_BASE_MS); exhaustion→dead with last_error (review row stays pending). Uses createPrivilegedDb() (DIRECT_DATABASE_URL). phase-3 tests = 8 passed/2 skipped (live-DB)."
+    },
+    "AC4_stuck_claimed_reclaimable": {
+      "status": "PASS",
+      "evidence": "packages/webhooks/src/review-worker.ts: `reclaimStuckJobs(conn, visibilityTimeoutMs)` issues parameterized UPDATE resetting status='pending', claimed_at=null, claimed_by=null WHERE status='claimed' AND claimed_at < $cutoff. Default visibility timeout 5min (env REVIEW_WORKER_VISIBILITY_TIMEOUT_MS). phase-3-reclaim-stuck.test.ts = 3 passed/1 skipped (live-DB)."
+    },
+    "AC5_dead_admin_queryable_replayable_never_reviewed": {
+      "status": "PASS",
+      "evidence": "packages/api/src/routers/codecamp.ts: `listDeadReviewJobs` (adminProcedure.query, Zod-validated input+output) + `requeueReviewJob` (adminProcedure.mutation, uuid input). Non-admin → FORBIDDEN (verified by test). Requeue resets status=pending, attempts=0, nextAttemptAt=now, clears lastError/claimedAt/claimedBy. Production code (review-worker.ts:698, github.ts:224,364) NEVER calls updatePrReview with reviewStatus='reviewed' on any path — only 'approved'/'needs_changes'/'pending'. Grep of review-worker.ts+github.ts for 'reviewed' returns 0 production matches. phase-4-admin-list-dead + phase-4-admin-requeue + adversarial-admin-jobs = 38 passed/0 failed."
+    },
+    "AC6_integration_tests_5_paths": {
+      "status": "PASS",
+      "evidence": "5 phase-5 integration test files exist: phase-5-happy-path (1 comment, 1 approved updatePrReview), phase-5-retry-then-succeed (3 attempts, 1 comment), phase-5-exhaust-to-dead (0 reviewed calls, 0 comments — bug fixed), phase-5-idempotent-redelivery (1 comment after duplicate delivery), phase-5-concurrency (live-DB gated, skipped without DIRECT_DATABASE_URL). 4 pass / 1 skipped (concurrency). All use labeled-integer counts (A3) and fail-on-nothing guards (A4)."
+    },
+    "AC7_reviewedAt_terminal_stamping_preserved": {
+      "status": "PASS",
+      "evidence": "packages/domain/src/codecamp/pr-reviews.ts:95 `updatePrReview` conditionally stamps `reviewedAt: input.reviewStatus !== 'pending' ? new Date() : sql\`${codecampPrReviews.reviewedAt}\``. Worker only calls updatePrReview on the SUCCESS path with 'approved'/'needs_changes' (terminal) → stamps reviewedAt. On retry/dead paths, updatePrReview is NOT called at all → review row stays pending → reviewedAt preserved. Original fire-and-forget bug (stamp 'reviewed' on LLM failure) is fixed in both github.ts inline path (returns early on error) and the worker."
+    },
+    "AC8_no_new_infra_gates_green": {
+      "status": "PASS",
+      "evidence": "No Redis/BullMQ/Queue deps added to any package.json. Worker uses existing Postgres + Drizzle + createPrivilegedDb() pattern (mirrors rate-limit-cleanup + audit-retention-job). Lint: 8/8 tasks successful, 0 errors (webhooks 11 pre-existing warnings, api 5 pre-existing warnings — none from this track). Check-types: 8/8 tasks successful. Build: 8/8 tasks successful (webhooks/db/domain/api/types + upstream ai/integrations-github/auth). Tests: webhooks 203 passed/3 skipped, db phase-1 11 passed, domain 374 passed/5 skipped, api phase-4+adversarial 38 passed."
+    },
+    "AC9_codecamp_pr_e2e_unmodified_per_strategy": {
+      "status": "PASS",
+      "evidence": "scripts/codecamp-pr-e2e.sh is NOT modified (per test-strategy §9.7 — integration suite supersedes it for CI; real-GitHub-PR poll deferred to manual prod QA). Plan Phase 6 Task 1 documents this decision."
+    },
+    "AC10_tenant_classification": {
+      "status": "PASS",
+      "evidence": "packages/domain/src/tenant-registry.ts:220 `register(reviewJobs, 'REFERENTIAL')`. tenant-coverage.test.ts = 9 passed/0 failed. Codecamp is single-tenant/global (globalTenant.schoolId=null); review_jobs carries no schoolId; domain functions access via `tenantDb.unscoped('review_jobs has no schoolId; codecamp is global')` with auditable reason string."
+    },
+    "AC11_adversarial_coverage": {
+      "status": "PASS",
+      "evidence": "6 adversarial test files (128 tests) added by measure-adversarial-testing: adversarial-normalize-pr-key (28), adversarial-enqueue (15), adversarial-backoff (12), adversarial-claim-cas (22), adversarial-webhook-flow (19), adversarial-admin-jobs (32). 2 real bugs found and fixed: (1) normalizePrKey regex unanchored — fixed with ^https?:// anchor + trailing delimiter + pullNumber>0 guard; (2) settleJob exhaustion off-by-one — fixed with `attempts + 1 >= maxAttempts` comparison. 0 regressions introduced."
+    }
+  },
+  "gates": {
+    "PROJECT_TESTS_webhooks_vitest": {
+      "command": "pnpm --filter @reading-advantage/webhooks exec vitest run",
+      "result": "PASS — 25 files passed / 1 skipped (26); 203 tests passed / 3 skipped / 0 failed (206)"
+    },
+    "PROJECT_TESTS_db_phase1": {
+      "command": "pnpm --filter @reading-advantage/db exec vitest run src/__tests__/phase-1-review-jobs-schema.test.ts src/__tests__/phase-1-review-jobs-migration.test.ts src/__tests__/tenant-coverage.test.ts",
+      "result": "PASS (with path note) — phase-1 schema (4) + migration (7) = 11 passed/0 failed across 2 files. The 3rd path (tenant-coverage.test.ts) does NOT exist in @reading-advantage/db; it lives in @reading-advantage/domain. Orchestrator command path discrepancy, not an implementation issue. Verified separately from domain package (9 passed)."
+    },
+    "PROJECT_TESTS_domain_tenant_coverage": {
+      "command": "pnpm --filter @reading-advantage/domain exec vitest run src/__tests__/tenant-coverage.test.ts",
+      "result": "PASS — 9 passed / 0 failed (1 file)"
+    },
+    "PROJECT_TESTS_api_phase4_adversarial": {
+      "command": "pnpm --filter @reading-advantage/api exec vitest run src/__tests__/phase-4-admin-list-dead-review-jobs.test.ts src/__tests__/phase-4-admin-requeue-review-job.test.ts src/__tests__/adversarial-admin-jobs.test.ts",
+      "result": "PASS — 3 files passed / 0 failed; 38 tests passed / 0 failed"
+    },
+    "PROJECT_TESTS_domain_full": {
+      "command": "pnpm --filter @reading-advantage/domain exec vitest run",
+      "result": "PASS — 37 files passed / 1 skipped (38); 374 tests passed / 5 skipped / 0 failed (379)"
+    },
+    "PROJECT_LINT": {
+      "command": "pnpm turbo run lint --filter=@reading-advantage/webhooks --filter=@reading-advantage/db --filter=@reading-advantage/domain --filter=@reading-advantage/api --filter=@reading-advantage/types",
+      "result": "PASS — 8/8 tasks successful. 0 errors. Pre-existing warnings only (webhooks: 11 — 4 unused-vars in 2 dependency-track tests + 3 empty-block in adversarial-claim-cas + 4 unused-vars in phase-6-acceptance; api: 5 — pre-existing). 0 no-explicit-any warnings on review-worker.ts after the b3c643bf type-fix."
+    },
+    "PROJECT_CHECKS": {
+      "command": "pnpm turbo run check-types --filter=@reading-advantage/webhooks --filter=@reading-advantage/db --filter=@reading-advantage/domain --filter=@reading-advantage/api --filter=@reading-advantage/types",
+      "result": "PASS — 8/8 tasks successful, 0 errors"
+    },
+    "PROJECT_BUILD": {
+      "command": "pnpm turbo run build --filter=@reading-advantage/webhooks --filter=@reading-advantage/db --filter=@reading-advantage/domain --filter=@reading-advantage/api --filter=@reading-advantage/types",
+      "result": "PASS — 8/8 tasks successful, 0 errors"
+    },
+    "codecamp_advantage_pre_existing_IRs": {
+      "command": "pnpm --filter codecamp-advantage exec tsc --noEmit 2>&1 | head -20",
+      "result": "FAILS on pre-existing IRs (NOT introduced by this track): app/api/chat/route.ts(2,28) TS2307 Cannot find module '@reading-advantage/ai/internal-sdk' (x2). These are the Wave-2 barrel-quarantine deferral — codecamp-advantage still imports raw SDK symbols via the old barrel path. Per test-strategy §0.10 + orchestrator final-acceptance instructions: 'Do NOT block on it'. Owned by Wave 2 / codecamp-advantage migration follow-up, NOT this track.",
+      "blocking": false
+    },
+    "measure_doctor": {
+      "command": "bash measure/doctor.sh",
+      "result": "PASS — exit 0. A1 supervisor invariants hold; A8 marker regex ~xb only; all 23 active track plans use only [~]/[x]/[b]; no executed review track fully blocked."
+    }
+  },
+  "anti_pattern_audit": {
+    "A1_supervisor_substring_heuristic": {
+      "status": "PASS",
+      "evidence": "Track does NOT modify measure/automation-supervisor.py (git log shows zero commits to that file in the track's commit range). No substring heuristic reintroduced."
+    },
+    "A5_false_claim_text": {
+      "status": "PASS",
+      "evidence": "Grep of measure/tracks/webhook_review_reliability_20260605/plan.md for 'PASS=[0-9]+.*FAIL=0' / 'all checks pass' returns 0 hits. Plan evidence uses actual test counts verified to match live gate runs (webhooks 203 passed/3 skipped; db 11 passed; domain 374 passed/5 skipped; api 38 passed). Phase 6 Task 3 [x] marker honestly cites the codecamp-advantage carveout with named owner (Wave 2)."
+    },
+    "A6_registry_overstatement": {
+      "status": "PASS",
+      "evidence": "measure/tracks.md line 320 lists this track as '- [ ]' (unchecked) with './tracks/webhook_review_reliability_20260605/' link (NOT './archive/'). No 'resolved' / 'fully solved' / 'all checks pass' overstatement in the registry entry. Adversarial test state is accurately reflected (tests pass; codecamp-advantage carveout documented)."
+    },
+    "A8_marker_ambiguity": {
+      "status": "PASS",
+      "evidence": "Grep of plan.md for '^- \\[ \\] ' (space marker) returns 0 hits. Phases 0–6 use '[x]'; Phase 7 closeout uses '[~]' (correctly deferred to closeout role). doctor.sh confirms all 23 active plans use only [~]/[x]/[b]."
+    },
+    "A9_archived_track_path_in_tests": {
+      "status": "PASS",
+      "evidence": "Grep of tests/*.sh for 'measure/tracks/webhook_review_reliability_20260605/plan.md' returns 0 hits. No test references this track's path (archived or active)."
+    },
+    "A13_stale_track_dir": {
+      "status": "PASS",
+      "evidence": "Track dir correctly resides at measure/tracks/webhook_review_reliability_20260605/ (active — final-acceptance does NOT archive). measure/archive/webhook_review_reliability_20260605/ does NOT exist yet. The archive move is Phase 7 closeout work, correctly deferred. No stale leftover."
+    },
+    "no_reviewed_on_failure_path": {
+      "status": "PASS",
+      "evidence": "Grep of packages/webhooks/src/review-worker.ts + packages/webhooks/src/github.ts for reviewStatus matching 'reviewed' returns 0 production-code matches (only 'approved'/'needs_changes'/'pending' used). Test-file matches are assertion text ('NO updatePrReview call with reviewStatus: reviewed') or dependency-track fixtures. The original fire-and-forget bug (stamp 'reviewed' on LLM failure) is fixed in both the inline path (github.ts returns early on error) and the worker (settleJob never calls updatePrReview on retry/dead)."
+    }
+  },
+  "plan_truthfulness": {
+    "phase_0": "All 4 tasks [x] — dependency gate confirmed (codecamp_review_ai_consolidation archived; reviewExercise is single seam); codecamp REFERENTIAL classification recorded.",
+    "phase_1": "All 5 tasks [x] — schema test (4) + migration test (7) = 11 passed; SHA evidence 70c7c0df recorded.",
+    "phase_2": "All 4 tasks [x] — 9 phase-2 tests passed; SHA evidence 72792f99 recorded.",
+    "phase_3": "All 7 tasks [x] — 8 passed/2 skipped (live-DB); SHA evidence 72792f99 recorded.",
+    "phase_4": "All 4 tasks [x] — 6 passed; SHA evidence f192127d recorded.",
+    "phase_5": "All 5 tasks [x] — 4 passed/1 skipped (live-DB concurrency).",
+    "phase_6": "All 3 tasks [x] — Task 1 (codecamp-pr-e2e superseded by integration suite, documented); Task 2 (codecamp-advantage pre-existing IRs documented); Task 3 (filtered gates green for track-owned packages; codecamp-advantage leg deferred per Wave 2 ownership — SHA eb1bce67).",
+    "phase_7": "All 4 tasks [~] — correctly deferred to measure-closeout role (tech-debt row flips, lessons-learned entry, tracks.md archive move, git notes)."
+  },
+  "deferred_items": [
+    {
+      "item": "Phase 7 closeout (4 tasks)",
+      "owner": "measure-closeout",
+      "reason": "Per Measure workflow: closeout role flips tech-debt.md rows 2026-05-16 + 2026-05-15 to Resolved, adds the lessons-learned entry, moves track dir to measure/archive/, updates tracks.md, and adds git notes. Final-acceptance does NOT archive."
+    },
+    {
+      "item": "codecamp-advantage build IRs (@reading-advantage/ai/internal-sdk + child_process resolution)",
+      "owner": "Wave 2 / codecamp-advantage migration follow-up",
+      "reason": "Pre-existing Wave-2-era deferral — barrel quarantine moved raw SDK symbols to packages/ai/src/internal-sdk.ts; codecamp-advantage still imports via the old barrel path. NOT introduced by this track. Carved out by test-strategy §0.10 + orchestrator final-acceptance instructions."
+    },
+    {
+      "item": "3 live-DB integration tests skipped without DIRECT_DATABASE_URL (phase-3-claim-skip-locked live block, phase-3-reclaim-stuck live block, phase-5-concurrency)",
+      "owner": "operator with DIRECT_DATABASE_URL",
+      "reason": "Intended gating per test-strategy §0.4/§4.6 — FOR UPDATE SKIP LOCKED + two-worker concurrency row-lock semantics require a real Postgres connection. Structural pre-conditions (SQL text contains FOR UPDATE SKIP LOCKED; parameterized query; worker claim shape; CAS pattern) are asserted by source-grep/mock-sniff tests that DO run. Deferred to an environment with DIRECT_DATABASE_URL."
+    },
+    {
+      "item": "Worker (createReviewWorker) not wired into a bootstrap/instrumentation file",
+      "owner": "production-wiring follow-up",
+      "reason": "Consistent with the codebase pattern for createRateLimitCleanupJob and createAuditRetentionJob (also exported, env-gated, not auto-started in any app bootstrap). Production wiring deferred per the same convention."
+    },
+    {
+      "item": "scripts/codecamp-pr-e2e.sh NOT adapted to the queued path",
+      "owner": "manual prod QA",
+      "reason": "Per test-strategy §9.7: the Phase 5 integration suite supersedes the e2e script for CI. The e2e script's real-GitHub-PR poll is not CI-runnable and is deferred to manual prod QA."
+    }
+  ],
+  "fixes_applied_during_final_acceptance": [
+    {
+      "file": "measure/tracks/webhook_review_reliability_20260605/plan.md",
+      "description": "Updated Phase 6 Task 3 from [~] to [x] with SHA evidence (eb1bce67) and explicit codecamp-advantage carveout language. The track-owned packages (webhooks/db/domain/api + types) all exit 0; the codecamp-advantage leg is owned by pre-existing Wave 2 IRs and MUST NOT block per test-strategy §0.10 + orchestrator final-acceptance instructions."
+    }
+  ],
+  "closeout_readiness": {
+    "no_non_deferred_plan_tasks_remain": true,
+    "completed_tasks_include_commit_sha_evidence": true,
+    "plan_text_is_honest": true,
+    "doctor_sh_exits_0": true,
+    "configured_project_gates_pass": true,
+    "ready_for_closeout": true
+  },
+  "agent_signoff": "MEASURE_AGENT_RESULT"
+}

@@ -1,0 +1,137 @@
+{
+  "reviewer": "measure-review-b-security",
+  "track_id": "webhook_review_reliability_20260605",
+  "baseline_sha": "59c4a4c37d3356cf09bf68c331f13f25bc872895",
+  "final_sha": "80b4f2aab04d0352a837fabe067ec646f7aad596",
+  "timestamp": "2026-07-04T12:00:00Z",
+  "status": "PASS_WITH_FIXES",
+  "summary": "Security review of the Postgres-backed review queue, worker, and admin DLQ endpoints found one CRITICAL SQL-injection vector and one HIGH race-condition gap. Both were fixed, adversarial tests were added, and migration governance for the new 0025_review_jobs migration was completed. All test, type-check, build, and lint gates pass. No remaining blockers.",
+  "findings": [
+    {
+      "id": "F-SEC-001",
+      "severity": "CRITICAL",
+      "title": "SQL injection in claimDueJobs and reclaimStuckJobs",
+      "description": "Both functions built raw SQL strings by interpolating batchSize, workerId, and timestamp values directly into the query text. An attacker or compromised worker ID value could break out of the literal and execute arbitrary SQL. The LIMIT value was also interpolated, so a malicious batchSize could alter query structure.",
+      "location": "packages/webhooks/src/review-worker.ts:claimDueJobs (lines ~440-489) and reclaimStuckJobs (lines ~508-554)",
+      "fix_applied": true,
+      "fix_description": "Rewrote both queries using Drizzle sql template parameters so all variable values are sent as query parameters. Added validatePositiveInteger for batchSize/visibilityTimeoutMs and validateWorkerId (restrictive [a-zA-Z0-9_:.-]{1,256} pattern) for workerId as defense-in-depth. Added adversarial tests asserting the query is not a plain string and that unsafe workerId / invalid batchSize are rejected before execution.",
+      "fix_commits": ["54c93ebd"]
+    },
+    {
+      "id": "F-SEC-002",
+      "severity": "HIGH",
+      "title": "applySettle overwrites job status without compare-and-swap",
+      "description": "applySettle updated review_jobs by id alone. If a job was reclaimed by another worker (or admin-requeued) between claim and settle, the original worker could overwrite a terminal or pending state, causing lost retries or incorrect DLQ state.",
+      "location": "packages/webhooks/src/review-worker.ts:applySettle (lines ~836-864)",
+      "fix_applied": true,
+      "fix_description": "Changed the WHERE clause from eq(reviewJobs.id, jobId) to and(eq(reviewJobs.id, jobId), eq(reviewJobs.status, 'claimed')). A stale settle now becomes a safe no-op.",
+      "fix_commits": ["54c93ebd"]
+    },
+    {
+      "id": "F-SEC-003",
+      "severity": "LOW",
+      "title": "requeueReviewJob resets a job regardless of current status",
+      "description": "The admin requeue function updates any job row by id without checking its current status. In theory this could race with a worker that has just claimed the job. In practice this is an intentional admin override: the worker's subsequent applySettle CAS will no-op because the status is no longer 'claimed', so the admin replay wins. Acceptable residual risk.",
+      "location": "packages/domain/src/codecamp/review-jobs.ts:requeueReviewJob (lines ~130-179)",
+      "fix_applied": false,
+      "fix_description": "Not fixed — admin replay is intentionally authoritative. The applySettle CAS prevents the stale worker from overwriting the replay."
+    },
+    {
+      "id": "F-SEC-004",
+      "severity": "LOW",
+      "title": "payload_json stored without schema validation",
+      "description": "enqueueReviewJob casts input.payload to Record<string, unknown> | null and stores it as jsonb. While Postgres jsonb safely stores any JSON value, there is no validation that the payload matches the expected GitHub webhook shape. A malformed payload would fail later in processJob, which is handled by retry/DLQ.",
+      "location": "packages/webhooks/src/review-worker.ts:enqueueReviewJob (lines ~245-341)",
+      "fix_applied": false,
+      "fix_description": "Not fixed — payload validation is outside the scope of this security review (webhook ingress layer owns payload shape verification). The DLQ response schema (reviewJobSchema) intentionally excludes payload_json and delivery_id from admin output."
+    },
+    {
+      "id": "F-SEC-005",
+      "severity": "INFO",
+      "title": "Pervasive 'any' types for DB connections in review-worker.ts",
+      "description": "DB connection parameters are typed as any throughout the worker to preserve mock flexibility. This is consistent with codebase-wide patterns and does not introduce runtime vulnerabilities because all values are parameterized or Drizzle-built.",
+      "location": "packages/webhooks/src/review-worker.ts (multiple lines)",
+      "fix_applied": false,
+      "fix_description": "Not fixed — codebase-wide typing pattern, not a security blocker."
+    }
+  ],
+  "probe_results": {
+    "P1_sql_injection_claim": "PASS — claimDueJobs uses Drizzle sql template parameters; adversarial test asserts received query is not a plain string, workerId is not interpolated as a literal, and unsafe workerId / non-positive batchSize are rejected before execute()",
+    "P2_sql_injection_reclaim": "PASS — reclaimStuckJobs uses Drizzle sql template parameters; adversarial test asserts timestamps are not interpolated as literals",
+    "P3_settle_cas": "PASS — applySettle WHERE clause now includes eq(reviewJobs.status, 'claimed'); stale settles are no-ops",
+    "P4_admin_authz": "PASS — listDeadReviewJobs and requeueReviewJob are wrapped in adminProcedure in packages/api/src/routers/codecamp.ts and call assertCan(user, 'admin:dashboard', tenant) in the domain layer (double protection)",
+    "P5_input_validation": "PASS — listDeadReviewJobs and requeueReviewJob inputs use Zod schemas (reviewJobStatusEnum, limit clamped to [1,100], offset >= 0, jobId uuid); worker options validate positive integers and safe workerId pattern",
+    "P6_tenant_isolation": "PASS — reviewJobs is classified REFERENTIAL in packages/domain/src/tenant-registry.ts; domain functions access it via tenantDb.unscoped('review_jobs has no schoolId; codecamp is global') with an auditable reason string",
+    "P7_sensitive_data_exposure": "PASS — reviewJobSchema (packages/types/src/codecamp.ts) omits payload_json and delivery_id; admin DLQ endpoints do not return the full webhook payload",
+    "P8_worker_env_gate": "PASS — createReviewWorker.start() is no-op unless REVIEW_WORKER_ENABLED=1 or NODE_ENV=production",
+    "P9_migration_integrity": "PASS — 0025_review_jobs.sql has a matching 0025_snapshot.json; sentinel probe added; _journal.json is consistent; archived drizzle045 allowlists updated",
+    "P10_a2_consent_publish_gate": "N/A — this track has no draft→published transition for a named subject (school, person); A2 does not apply",
+    "P11_a6_registry_overstatement": "PASS — measure/tracks.md still lists this track as unchecked; no security state is claimed resolved before adversarial tests are green"
+  },
+  "tests": {
+    "webhooks": "107 passed, 3 skipped, 0 failed (21 test files: 20 passed, 1 skipped)",
+    "api": "269 passed, 0 failed (35 test files)",
+    "domain": "374 passed, 5 skipped, 0 failed (38 test files: 37 passed, 1 skipped)",
+    "db": "664 passed, 0 failed (37 test files)",
+    "check_types": "8/8 tasks successful",
+    "build": "8/8 tasks successful",
+    "lint": "0 errors, warnings only (pre-existing + new minor warnings)"
+  },
+  "fixes_applied": [
+    {
+      "file": "packages/webhooks/src/review-worker.ts",
+      "changes": [
+        "Replaced string-interpolated raw SQL in claimDueJobs with Drizzle sql template parameters",
+        "Replaced string-interpolated raw SQL in reclaimStuckJobs with Drizzle sql template parameters",
+        "Added validatePositiveInteger helper and applied it to batchSize / visibilityTimeoutMs",
+        "Added validateWorkerId helper with restrictive [a-zA-Z0-9_:.-]{1,256} pattern",
+        "Changed applySettle WHERE clause to compare-and-swap on status='claimed'",
+        "Updated applySettle to use privileged DB only when no usable dbArg is provided",
+        "Added reviewId and payloadJson fields to ReviewJob interface and normalized row mapping"
+      ]
+    },
+    {
+      "file": "packages/webhooks/src/__tests__/phase-3-claim-skip-locked.test.ts",
+      "changes": [
+        "Added parameterized-SQL assertion",
+        "Added unsafe-workerId rejection test",
+        "Added non-positive-batchSize rejection test"
+      ]
+    },
+    {
+      "file": "packages/webhooks/src/__tests__/phase-3-reclaim-stuck.test.ts",
+      "changes": [
+        "Added parameterized-SQL assertion for reclaim query"
+      ]
+    },
+    {
+      "file": "packages/db/drizzle/meta/0025_snapshot.json",
+      "changes": [
+        "Generated snapshot for migration 0025_review_jobs to satisfy drizzle-kit journal integrity"
+      ]
+    },
+    {
+      "file": "packages/db/src/sentinels.ts",
+      "changes": [
+        "Added sentinel probe for 0025_review_jobs target table review_jobs"
+      ]
+    },
+    {
+      "file": "measure/archive/drizzle045_major_migration/phase1-schema-map.md",
+      "changes": [
+        "Updated migration count (26 files, 0000-0025) and snapshot range to include 0025"
+      ]
+    },
+    {
+      "file": "packages/db/src/__tests__/drizzle045-*.test.ts",
+      "changes": [
+        "Updated migration allowlists to include 0025_review_jobs"
+      ]
+    }
+  ],
+  "fix_commits": [
+    "54c93ebd28e00a1858ce8316810ecb038f00bd6c",
+    "80b4f2aab04d0352a837fabe067ec646f7aad596"
+  ],
+  "agent_signoff": "MEASURE_AGENT_RESULT"
+}
