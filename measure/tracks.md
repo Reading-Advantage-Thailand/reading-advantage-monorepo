@@ -317,8 +317,8 @@ Two parallel programs are in flight; priority order when picking the next track:
 - [x] **Track: Consolidate Duplicate `generateReview` onto `packages/ai`** *Link: [./archive/codecamp_review_ai_consolidation_20260605/](./archive/codecamp_review_ai_consolidation_20260605/)*
   Collapse the two near-identical OpenRouter `generateReview` implementations onto the shared `AIClient` from `packages/ai` (committed `9c52c8a`); `reviewExercise` becomes the single seam. Adds an OpenRouter provider to `packages/ai` if absent. Resolves `tech-debt.md` 2026-05-15 "Duplicate `generateReview`". Depends on `ai_adapter_package_20260603`. **Do before the reliability track.**
 
-- [ ] **Track: Webhook → LLM Review Reliability (Postgres Retry + DLQ)** *Link: [./tracks/webhook_review_reliability_20260605/](./tracks/webhook_review_reliability_20260605/)*
-  Replace the fire-and-forget review path with a Postgres-backed `review_jobs` queue (`FOR UPDATE SKIP LOCKED` claim, bounded jittered-backoff retries, dead-letter state + admin replay) and add the missing webhook → LLM → comment → DB integration tests. **No Redis/BullMQ** — Postgres-backed to match `rate_limiter_v2` / `LISTEN-NOTIFY` direction. Resolves `tech-debt.md` 2026-05-16 (retry/DLQ) + 2026-05-15 (no integration tests). Depends on the consolidation track above.
+- [x] **Track: Webhook → LLM Review Reliability (Postgres Retry + DLQ)** *Link: [./archive/webhook_review_reliability_20260605/](./archive/webhook_review_reliability_20260605/)*
+  Replace the fire-and-forget review path with a Postgres-backed `review_jobs` queue (`FOR UPDATE SKIP LOCKED` claim, bounded jittered-backoff retries, dead-letter state + admin replay) and add the missing webhook → LLM → comment → DB integration tests. **No Redis/BullMQ** — Postgres-backed to match `rate_limiter_v2` / `LISTEN-NOTIFY` direction. Resolves `tech-debt.md` 2026-05-16 (retry/DLQ) + 2026-05-15 (no integration tests). Depends on the consolidation track above. *Archived 2026-07-04.*
 
 ---
 

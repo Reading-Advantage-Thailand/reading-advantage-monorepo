@@ -5,56 +5,56 @@
 > on `codecamp_review_ai_consolidation_20260605` (single review seam).
 
 ## Phase 0: Setup + Dependency Gate
-- [x] Task: Confirm `codecamp_review_ai_consolidation_20260605` has landed — `reviewExercise` is the single review seam taking an injected `AIClient`. If NOT, HALT and escalate (do not duplicate the wrapper).
-- [x] Task: `grep -rn` the current webhook review entrypoint + the fire-and-forget `.catch` site; record locations.
-- [x] Task: Read `lib/platform/session-cleanup.ts` (worker/scheduler + advisory-lock pattern) and the `connection_pooling` lessons (direct connection for `LISTEN/NOTIFY`/locks).
-- [x] Task: Identify whether codecamp tables are tenant-scoped (decide if `review_jobs` carries a tenant key). (Answer: REFERENTIAL — codecamp is single-tenant global.)
+- [x] Task: Confirm `codecamp_review_ai_consolidation_20260605` has landed — `reviewExercise` is the single review seam taking an injected `AIClient`. If NOT, HALT and escalate (do not duplicate the wrapper). (`1cf01b83`)
+- [x] Task: `grep -rn` the current webhook review entrypoint + the fire-and-forget `.catch` site; record locations. (`fc9d604c`)
+- [x] Task: Read `lib/platform/session-cleanup.ts` (worker/scheduler + advisory-lock pattern) and the `connection_pooling` lessons (direct connection for `LISTEN/NOTIFY`/locks). (`fc9d604c`)
+- [x] Task: Identify whether codecamp tables are tenant-scoped (decide if `review_jobs` carries a tenant key). (Answer: REFERENTIAL — codecamp is single-tenant global.) (`1cf01b83`)
 
 ## Phase 1: `review_jobs` Schema (Contract) — TDD
-- [x] Task: Write a schema/migration test (PgDialect render or migration-sql test) asserting the table, the `status` enum, the claim index (`status`, `next_attempt_at`), and the unique idempotency index on the PR key.
-- [x] Task: Add the `review_jobs` table to the schema package + barrel export.
-- [x] Task: Write the Drizzle migration (hand-write if no TTY; add journal entry).
-- [x] Task: Apply to `science_advantage_test` / codecamp test DB; verify it applies cleanly.
+- [x] Task: Write a schema/migration test (PgDialect render or migration-sql test) asserting the table, the `status` enum, the claim index (`status`, `next_attempt_at`), and the unique idempotency index on the PR key. (`fc9d604c`)
+- [x] Task: Add the `review_jobs` table to the schema package + barrel export. (`70c7c0df`)
+- [x] Task: Write the Drizzle migration (hand-write if no TTY; add journal entry). (`70c7c0df`)
+- [x] Task: Apply to `science_advantage_test` / codecamp test DB; verify it applies cleanly. (`70c7c0df`)
 - [x] Task: Verify — schema/migration tests green. (`70c7c0df`)
 
 ## Phase 2: Enqueue (Idempotent) — TDD
-- [x] Task: Write test: webhook enqueues exactly one `pending` job; a duplicate delivery for the same PR head does NOT create a second row; webhook returns 2xx promptly.
-- [x] Task: Write test: URL normalization preserved (trailing slash / `.git` still matches repo).
-- [x] Task: Implement `enqueueReviewJob` (idempotent upsert on PR key) and switch the webhook handler to enqueue instead of running inline.
+- [x] Task: Write test: webhook enqueues exactly one `pending` job; a duplicate delivery for the same PR head does NOT create a second row; webhook returns 2xx promptly. (`fc9d604c`)
+- [x] Task: Write test: URL normalization preserved (trailing slash / `.git` still matches repo). (`fc9d604c`)
+- [x] Task: Implement `enqueueReviewJob` (idempotent upsert on PR key) and switch the webhook handler to enqueue instead of running inline. (`aab7a995`)
 - [x] Task: Verify — `pnpm turbo run test --filter=@reading-advantage/webhooks` green. (`72792f99`)
 
 ## Phase 3: Worker Claim + Process + Settle — TDD
-- [x] Task: Write test: `claimDueJobs` uses `FOR UPDATE SKIP LOCKED LIMIT N`; two concurrent claims never return the same job.
-- [x] Task: Write test: success → `succeeded`, single PR comment, result persisted, `reviewedAt` stamped only on terminal.
-- [x] Task: Write test: failure → `attempts++`, `status='pending'`, `next_attempt_at` = jittered exponential backoff; after `max_attempts` → `dead` with `last_error`; review NOT marked reviewed.
-- [x] Task: Write test: a `claimed` job older than the visibility timeout is reclaimable.
-- [x] Task: Implement the worker: claim → `reviewExercise` (injected `AIClient` + stubbed GitHub client) → settle, with backoff + visibility-timeout reclaim. Use the direct connection for locks.
-- [x] Task: Register the worker in the scheduler (mirror cleanup-job); env-configurable backoff/timeout with safe defaults.
+- [x] Task: Write test: `claimDueJobs` uses `FOR UPDATE SKIP LOCKED LIMIT N`; two concurrent claims never return the same job. (`fc9d604c`)
+- [x] Task: Write test: success → `succeeded`, single PR comment, result persisted, `reviewedAt` stamped only on terminal. (`fc9d604c`)
+- [x] Task: Write test: failure → `attempts++`, `status='pending'`, `next_attempt_at` = jittered exponential backoff; after `max_attempts` → `dead` with `last_error`; review NOT marked reviewed. (`fc9d604c`)
+- [x] Task: Write test: a `claimed` job older than the visibility timeout is reclaimable. (`fc9d604c`)
+- [x] Task: Implement the worker: claim → `reviewExercise` (injected `AIClient` + stubbed GitHub client) → settle, with backoff + visibility-timeout reclaim. Use the direct connection for locks. (`72792f99`)
+- [x] Task: Register the worker in the scheduler (mirror cleanup-job); env-configurable backoff/timeout with safe defaults. (`72792f99`)
 - [x] Task: Verify — worker tests green. (`72792f99`)
 
 ## Phase 4: Dead-Letter Visibility + Replay — TDD
-- [x] Task: Write route test: `GET /api/admin/review-jobs?status=dead` is ADMIN-only, Zod-validated, returns dead jobs; non-admin → 403.
-- [x] Task: Write test: requeue endpoint resets a dead job to `pending`/`attempts=0`; the job then processes.
-- [x] Task: Implement the admin query + requeue endpoints.
+- [x] Task: Write route test: `GET /api/admin/review-jobs?status=dead` is ADMIN-only, Zod-validated, returns dead jobs; non-admin → 403. (`fc9d604c`)
+- [x] Task: Write test: requeue endpoint resets a dead job to `pending`/`attempts=0`; the job then processes. (`fc9d604c`)
+- [x] Task: Implement the admin query + requeue endpoints. (`f192127d`)
 - [x] Task: Verify — DLQ route tests green. (`f192127d`)
 
 ## Phase 5: Pipeline Integration Tests (the missing coverage)
-- [x] Task: Happy path E2E: webhook → enqueue → worker → review(Mock) → comment(stub) → DB; assert persisted result + exactly one comment.
-- [x] Task: Retry-then-succeed: Mock throws on attempt 1–2, succeeds on 3; assert backoff timing and final `succeeded`.
-- [x] Task: Exhaust-to-dead: Mock always throws; assert `dead` after `max_attempts` and review NOT shown as reviewed.
-- [x] Task: Idempotent redelivery: duplicate webhook → no double enqueue, no double comment.
-- [x] Task: Concurrency: two workers, one job processed once (SKIP LOCKED). (Live-DB gated on `DIRECT_DATABASE_URL`; skipped without it.)
+- [x] Task: Happy path E2E: webhook → enqueue → worker → review(Mock) → comment(stub) → DB; assert persisted result + exactly one comment. (`72792f99`)
+- [x] Task: Retry-then-succeed: Mock throws on attempt 1–2, succeeds on 3; assert backoff timing and final `succeeded`. (`72792f99`)
+- [x] Task: Exhaust-to-dead: Mock always throws; assert `dead` after `max_attempts` and review NOT shown as reviewed. (`72792f99`)
+- [x] Task: Idempotent redelivery: duplicate webhook → no double enqueue, no double comment. (`72792f99`)
+- [x] Task: Concurrency: two workers, one job processed once (SKIP LOCKED). (Live-DB gated on `DIRECT_DATABASE_URL`; skipped without it.) (`72792f99`)
 
 ## Phase 6: Acceptance
-- [x] Task: Run `scripts/codecamp-pr-e2e.sh` adapted to the queued path (Mock provider) end-to-end if feasible; otherwise document why the integration suite supersedes it. (Documented: the Phase 5 integration suite supersedes the e2e script for CI; the e2e script's real-GitHub-PR poll is deferred to manual prod QA.)
-- [x] Task: `pnpm turbo run build --filter=codecamp-advantage` (server-only/bundle check). (Pre-existing IRs prevent codecamp-advantage build success — `@reading-advantage/ai/internal-sdk` and `child_process` resolution. These are NOT introduced by this track. Webhooks + db + domain + api all build green.)
+- [x] Task: Run `scripts/codecamp-pr-e2e.sh` adapted to the queued path (Mock provider) end-to-end if feasible; otherwise document why the integration suite supersedes it. (Documented: the Phase 5 integration suite supersedes the e2e script for CI; the e2e script's real-GitHub-PR poll is deferred to manual prod QA.) (`59c4a4c3`)
+- [x] Task: `pnpm turbo run build --filter=codecamp-advantage` (server-only/bundle check). (Pre-existing IRs prevent codecamp-advantage build success — `@reading-advantage/ai/internal-sdk` and `child_process` resolution. These are NOT introduced by this track. Webhooks + db + domain + api all build green.) (`eb1bce67`)
 - [x] Task: All filtered gates: `pnpm turbo run {test,check-types,build} --filter=@reading-advantage/webhooks --filter=@reading-advantage/domain --filter=@reading-advantage/db --filter=codecamp-advantage` exit 0. (Final-acceptance SHA `eb1bce67`: webhooks 203 passed/3 skipped/0 failed; db phase-1 11 passed; domain 374 passed/5 skipped; api phase-4+adversarial 38 passed; lint 8/8 (0 errors, pre-existing warnings only); check-types 8/8; build 8/8. The `--filter=codecamp-advantage` leg is the ONLY non-green element and is owned by pre-existing IRs (`@reading-advantage/ai/internal-sdk` + `child_process` resolution — Wave 2 barrel-quarantine deferral, NOT introduced by this track). Per test-strategy §0.10 / orchestrator final-acceptance guidance, owner-labeled pre-existing IRs MUST NOT block this track. The 4 packages this track owns (webhooks/db/domain/api + types) all exit 0.)
 
 ## Phase 7: Closeout
-- [~] Task: Mark `measure/tech-debt.md` rows 2026-05-16 (retry/DLQ) and 2026-05-15 (no integration tests) **Resolved** with the resolving commit(s). (Done by closeout role.)
-- [~] Task: Add a lessons-learned entry: Postgres `FOR UPDATE SKIP LOCKED` job queue as the Redis-free reliability primitive; visibility-timeout reclaim; idempotent webhook enqueue. (Done by closeout role.)
-- [~] Task: Update `measure/tracks.md` (mark complete); move track dir to `measure/archive/`. (Done by closeout role.)
-- [~] Task: Commit with `git notes`. (Done by closeout role.)
+- [x] Task: Mark `measure/tech-debt.md` rows 2026-05-16 (retry/DLQ) and 2026-05-15 (no integration tests) **Resolved** with the resolving commit(s). (Done by closeout role. `21a34066`)
+- [x] Task: Add a lessons-learned entry: Postgres `FOR UPDATE SKIP LOCKED` job queue as the Redis-free reliability primitive; visibility-timeout reclaim; idempotent webhook enqueue. (Done by closeout role. `21a34066`)
+- [x] Task: Update `measure/tracks.md` (mark complete); move track dir to `measure/archive/`. (Done by closeout role. `21a34066`)
+- [x] Task: Commit with `git notes`. (Done by closeout role. `21a34066`)
 
 ---
 

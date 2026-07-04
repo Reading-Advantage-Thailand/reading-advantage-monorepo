@@ -1,0 +1,134 @@
+{
+  "manifest_type": "automation-supervisor-closeout-manifest",
+  "track_id": "webhook_review_reliability_20260605",
+  "completed_at": "2026-07-04",
+  "closeout_agent": "measure-closeout",
+  "baseline_sha": "f70628646697dd960acc383037d9f181fbb72391",
+  "final_acceptance_sha": "77a9122b25c6c7be6335e8a832fe4210750ea85e",
+  "closeout_sha": "21a34066",
+  "commits": [
+    {"sha": "1cf01b83", "message": "docs(measure): review reliability test strategy"},
+    {"sha": "fc9d604c", "message": "test(webhooks): red-phase review-job queue tests"},
+    {"sha": "70c7c0df", "message": "feat(db): review_jobs table for webhook reliability"},
+    {"sha": "72792f99", "message": "feat(webhooks): review queue + worker"},
+    {"sha": "f192127d", "message": "feat(api): admin DLQ endpoints for dead review jobs"},
+    {"sha": "aab7a995", "message": "refactor(webhooks): enqueue-then-ACK"},
+    {"sha": "4fff2b1a", "message": "fix(webhooks): drop .js extensions + worker retry"},
+    {"sha": "810207b6", "message": "test(webhooks): rewrite fire-and-forget test"},
+    {"sha": "631360e4", "message": "docs(measure): webhook reliability green evidence"},
+    {"sha": "da60f466", "message": "test(webhooks): make phase-5 mocks claim-aware"},
+    {"sha": "59c4a4c3", "message": "docs(measure): final green evidence"},
+    {"sha": "7a305d33", "message": "docs(webhooks): add worker env vars to .env.example"},
+    {"sha": "54c93ebd", "message": "fix(webhooks): secure review queue SQL + CAS settle"},
+    {"sha": "80b4f2aa", "message": "fix(db): 0025 snapshot, sentinel, allowlists"},
+    {"sha": "b3c643bf", "message": "fix(webhooks): type DB connections in review-worker"},
+    {"sha": "1e846b65", "message": "docs(measure): webhook reliability phase acceptance"},
+    {"sha": "eb1bce67", "message": "test(webhooks): adversarial probes for review queue"},
+    {"sha": "77a9122b", "message": "docs(measure): webhook reliability final acceptance"}
+  ],
+  "total_commits": 18,
+  "total_tests_added": 153,
+  "test_breakdown": {
+    "webhooks_new_tests": 121,
+    "webhooks_baseline": 82,
+    "webhooks_total_after": 203,
+    "admin_api_new_tests": 32,
+    "admin_api_baseline": 6,
+    "admin_api_total_after": 38,
+    "domain_new_tests": 0,
+    "domain_total_after": 374,
+    "db_phase1_new_tests": 11,
+    "adversarial_webhooks_tests": 96,
+    "adversarial_api_tests": 32,
+    "total_adversarial_tests": 128
+  },
+  "bugs_found_and_fixed": 2,
+  "bugfixes": [
+    "normalizePrKey regex unanchored — fixed with ^https?:// anchor + trailing delimiter + pullNumber>0 guard (commit 54c93ebd)",
+    "settleJob exhaustion off-by-one — changed to attempts + 1 >= maxAttempts (commit 54c93ebd)"
+  ],
+  "files_created": [
+    "packages/db/src/schema/codecamp.ts (reviewJobs table added)",
+    "packages/db/drizzle/0025_review_jobs.sql",
+    "packages/db/src/__tests__/phase-1-review-jobs-schema.test.ts",
+    "packages/db/src/__tests__/phase-1-review-jobs-migration.test.ts",
+    "packages/webhooks/src/review-worker.ts",
+    "packages/webhooks/src/__tests__/phase-2-enqueue-idempotent.test.ts",
+    "packages/webhooks/src/__tests__/phase-2-enqueue-url-normalization.test.ts",
+    "packages/webhooks/src/__tests__/phase-2-webhook-acks-after-enqueue.test.ts",
+    "packages/webhooks/src/__tests__/phase-3-claim-skip-locked.test.ts",
+    "packages/webhooks/src/__tests__/phase-3-success-settle.test.ts",
+    "packages/webhooks/src/__tests__/phase-3-retry-backoff.test.ts",
+    "packages/webhooks/src/__tests__/phase-3-exhaust-to-dead.test.ts",
+    "packages/webhooks/src/__tests__/phase-3-reclaim-stuck.test.ts",
+    "packages/api/src/__tests__/phase-4-admin-list-dead-review-jobs.test.ts",
+    "packages/api/src/__tests__/phase-4-admin-requeue-review-job.test.ts",
+    "packages/webhooks/src/__tests__/phase-5-happy-path.test.ts",
+    "packages/webhooks/src/__tests__/phase-5-retry-then-succeed.test.ts",
+    "packages/webhooks/src/__tests__/phase-5-exhaust-to-dead.test.ts",
+    "packages/webhooks/src/__tests__/phase-5-idempotent-redelivery.test.ts",
+    "packages/webhooks/src/__tests__/phase-5-concurrency.test.ts",
+    "packages/webhooks/src/__tests__/adversarial-normalize-pr-key.test.ts",
+    "packages/webhooks/src/__tests__/adversarial-enqueue.test.ts",
+    "packages/webhooks/src/__tests__/adversarial-backoff.test.ts",
+    "packages/webhooks/src/__tests__/adversarial-claim-cas.test.ts",
+    "packages/webhooks/src/__tests__/adversarial-webhook-flow.test.ts",
+    "packages/api/src/__tests__/adversarial-admin-jobs.test.ts"
+  ],
+  "files_modified": [
+    "packages/db/src/schema/codecamp.ts (reviewJobs table + enum)",
+    "packages/db/drizzle/meta/_journal.json (entry 25)",
+    "packages/domain/src/tenant-registry.ts (REFERENTIAL classification)",
+    "packages/webhooks/src/github.ts (enqueue-then-ACK)",
+    "packages/webhooks/src/__tests__/github-review.test.ts (rewritten fire-and-forget posture)",
+    "packages/webhooks/src/__tests__/phase-6-acceptance.test.ts (updated to new contract)",
+    "packages/api/src/routers/codecamp.ts (listDeadReviewJobs, requeueReviewJob)",
+    "packages/webhooks/.env.example (worker env vars)"
+  ],
+  "deferred_items": [
+    {
+      "item": "Phase 7 closeout (tech-debt flips, lessons entry, archive, git notes)",
+      "owner": "measure-closeout",
+      "reason": "Per Measure workflow: closeout role executes these bookkeeping tasks after final acceptance passes."
+    },
+    {
+      "item": "codecamp-advantage build IRs (@reading-advantage/ai/internal-sdk + child_process resolution)",
+      "owner": "Wave 2 / codecamp-advantage migration follow-up",
+      "reason": "Pre-existing Wave-2-era deferral — barrel quarantine moved raw SDK symbols to packages/ai/src/internal-sdk.ts; codecamp-advantage still imports via the old barrel path. NOT introduced by this track."
+    },
+    {
+      "item": "3 live-DB integration tests skipped without DIRECT_DATABASE_URL",
+      "owner": "operator with DIRECT_DATABASE_URL",
+      "reason": "FOR UPDATE SKIP LOCKED + two-worker concurrency row-lock semantics require a real Postgres connection. Structural pre-conditions are asserted by source-grep/mock-sniff tests."
+    },
+    {
+      "item": "Worker (createReviewWorker) not wired into a bootstrap/instrumentation file",
+      "owner": "production-wiring follow-up",
+      "reason": "Consistent with codebase pattern for createRateLimitCleanupJob and createAuditRetentionJob (exported, env-gated, not auto-started)."
+    },
+    {
+      "item": "scripts/codecamp-pr-e2e.sh NOT adapted to the queued path",
+      "owner": "manual prod QA",
+      "reason": "Per test-strategy §9.7: the Phase 5 integration suite supersedes the e2e script for CI. The e2e script's real-GitHub-PR poll is deferred to manual prod QA."
+    }
+  ],
+  "cleanup_performed": {
+    "tracks_dir_moved": true,
+    "archive_dir_verified": true,
+    "test_references_updated": null,
+    "bulky_artifacts_removed": []
+  },
+  "evidence_retained": [
+    "measure/archive/webhook_review_reliability_20260605/spec.md",
+    "measure/archive/webhook_review_reliability_20260605/plan.md",
+    "measure/archive/webhook_review_reliability_20260605/metadata.json",
+    "measure/archive/webhook_review_reliability_20260605/test-strategy.md",
+    "measure/archive/webhook_review_reliability_20260605/final-acceptance-result.json",
+    "measure/archive/webhook_review_reliability_20260605/phase-acceptance-result.json",
+    "measure/archive/webhook_review_reliability_20260605/adversarial-testing-result.json",
+    "measure/archive/webhook_review_reliability_20260605/review-a-correctness-result.json",
+    "measure/archive/webhook_review_reliability_20260605/review-b-security-result.json",
+    "measure/archive/webhook_review_reliability_20260605/review-c-ux-api-result.json",
+    "measure/archive/webhook_review_reliability_20260605/automation-supervisor-closeout-manifest.json"
+  ]
+}
