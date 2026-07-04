@@ -259,7 +259,9 @@ describe("1C — Nonexistent-app pages", () => {
 describe("1D — AI model claims", () => {
   it("has no 'GPT-5' / 'GPT-4' / 'Google Gemini & GPT-5' specific-model claims", async () => {
     const files = await collectSourceFiles();
-    const banned = /GPT-5|GPT-4|Google Gemini & GPT-5/g;
+    // Case-insensitive: a regression could write "gpt-5" / "Gpt-5" / "google gemini & gpt-5"
+    // and still be a banned model claim. Same applies to PRODUCT_NAME-style names.
+    const banned = /GPT-5|GPT-4|Google Gemini & GPT-5/gi;
     let hits = 0;
     const violations: string[] = [];
     for (const { path, text } of files) {
@@ -293,7 +295,9 @@ describe("1D — AI model claims", () => {
 describe("1E — Placeholder case studies", () => {
   it("case-studies locale has no placeholder-as-real tokens", async () => {
     const text = await readSrcFile("locales/pages/case-studies.ts");
-    const banned = /School A \(Coming Soon\)|School B \(Coming Soon\)|Real Results from Real Schools/g;
+    // Case-insensitive: a regression could write "school a (coming soon)" /
+    // "real results from real schools" and still be a banned placeholder token.
+    const banned = /School A \(Coming Soon\)|School B \(Coming Soon\)|Real Results from Real Schools/gi;
     const hits = countMatches(text, banned);
     expect(
       hits,
@@ -363,8 +367,8 @@ describe("1G — Unverifiable stats and absolute claims", () => {
     // Whole-source bans from the frozen claims matrix (CC-23, CC-26, CC-28).
     const wholeSourceBans = [
       { name: "2,172+", re: /2,172\+/g },
-      { name: "ZERO RISK", re: /ZERO RISK/g },
-      { name: "Aka 2019", re: /Aka[ ,]+2019/g },
+      { name: "ZERO RISK", re: /ZERO RISK/gi },
+      { name: "Aka 2019", re: /Aka[ ,]+2019/gi },
     ];
     // Scoped bans — these claims are only disallowed where the matrix places them.
     const mathFiles = files.filter(
