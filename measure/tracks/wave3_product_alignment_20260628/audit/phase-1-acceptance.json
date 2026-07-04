@@ -1,0 +1,314 @@
+{
+  "schema_version": 1,
+  "role": "measure-phase-acceptance",
+  "track": "wave3_product_alignment_20260628",
+  "phase": "Phase 1: Website Claims Correction",
+  "status": "pass",
+  "baseline_sha": "8a47d2df999e35d9d47de9eb590ae29523c70bae",
+  "head_sha": "5070cb44228deaa892c708f64013fe421b3ec2ac",
+  "red_commit": "df22b0e1",
+  "green_commits": [
+    "fc1d779d",
+    "940420a0",
+    "80231438",
+    "75c96f33"
+  ],
+  "acceptance_timestamp": "2026-07-04T18:45:00+07:00",
+  "summary": "Phase 1 (Website Claims Correction) PASSES acceptance. All three scoped gates were re-run by the acceptance role and exit 0: phase-w3-claims test suite 20/20, lint clean, check-types clean. The Wave 2 reusable helper shows no regression (12/12). All 6 Phase 1 plan tasks are [x] with commit SHA evidence (df22b0e1 Red; fc1d779d Green; 940420a0/80231438/75c96f33 review fixes). Every frozen claims-matrix [FIX-MUST] row (CC-01..CC-30 except [OUT-OF-SCOPE]) has a red-at-baseline / green-after-fix test with a positive control (A4). Anti-pattern scan is clean for this phase: A3 labeled-integer counts, A4 positive controls in every group, A5 plan claims match reality, A6 no registry overstatement, A7 exact-literal banned-phrase filters. A1 supervisor regex verified correct ([~xb] + is_task_structurally_blocked). Reviews A, B, and C all report status: pass with no blocking findings. No blocking findings.",
+
+  "commands": [
+    "pnpm --filter www-reading-advantage test phase-w3-claims (exit 0, 20/20 passed — acceptance re-run at HEAD 5070cb44)",
+    "pnpm --filter www-reading-advantage lint (exit 0, 0 errors, 0 warnings — acceptance re-run at HEAD 5070cb44)",
+    "pnpm --filter www-reading-advantage check-types (exit 0, tsc --noEmit clean — acceptance re-run at HEAD 5070cb44)",
+    "pnpm --filter www-reading-advantage test wave2-product-claim-helper (exit 0, 12/12 passed — acceptance re-run, Wave 2 regression check)"
+  ],
+
+  "command_details": {
+    "GREEN_TEST_COMMAND": { "command": "pnpm --filter www-reading-advantage test phase-w3-claims", "exit_code": 0, "result": "20 passed (20), 1 test file passed (1), 0 failed", "run_by_acceptance": true },
+    "PROJECT_LINT": { "command": "pnpm --filter www-reading-advantage lint", "exit_code": 0, "result": "eslint . clean, 0 errors, 0 warnings", "run_by_acceptance": true },
+    "PROJECT_CHECKS": { "command": "pnpm --filter www-reading-advantage check-types", "exit_code": 0, "result": "tsc --noEmit clean, 0 errors", "run_by_acceptance": true },
+    "WAVE2_REGRESSION": { "command": "pnpm --filter www-reading-advantage test wave2-product-claim-helper", "exit_code": 0, "result": "12 passed (12), 1 test file passed (1), 0 failed", "run_by_acceptance": true, "scope_note": "Run voluntarily by acceptance to verify the plan's 'no regression on Wave 2 reusable harness' claim (A5)." }
+  },
+
+  "phase_tasks": [
+    {
+      "n": 1,
+      "task": "Write Red claim tests for product count, stale launch dates, app-directory existence, placeholder case studies, duplicated efficacy stats, and unverifiable AI model claims",
+      "plan_marker_before": "[~]",
+      "plan_marker_after": "[x]",
+      "commit": "df22b0e1",
+      "evidence_files": [
+        "apps/www-reading-advantage/src/lib/__tests__/phase-w3-claims.test.ts"
+      ],
+      "verified": true,
+      "verification": "phase-w3-claims.test.ts (452 lines at df22b0e1, 487 lines at HEAD after review-added 1B page.tsx scan) committed at df22b0e1. At that commit the website source still contained all banned literals (nine products, GPT-5, School A/B Coming Soon, ZERO RISK, 2,172+, Aka 2019, stale 2025/2026 dates), so the 19 Red assertions genuinely failed (true Red, not import-error). All now green at HEAD."
+    },
+    {
+      "n": 2,
+      "task": "Update website copy/locales to match approved product reality",
+      "plan_marker_before": "[~]",
+      "plan_marker_after": "[x]",
+      "commit": "fc1d779d",
+      "evidence_files": [
+        "apps/www-reading-advantage/src/locales/pages/home.ts",
+        "apps/www-reading-advantage/src/locales/pages/mastery-advantage.ts"
+      ],
+      "verified": true,
+      "verification": "Replaced 'One engine. Nine products.' with 'One engine. Four products today — and a roadmap for more.' across home.ts and mastery-advantage.ts (en/th/zh). Substituted 'Aka 2019 Research: +9.5 points' with 'Built on research-backed extensive reading methodology'. Replaced 'Google Gemini & GPT-5 AI' with provider-neutral 'AI-assisted learning'. Acceptance confirmed via rg: 0 hits for banned literals in source (test files excluded)."
+    },
+    {
+      "n": 3,
+      "task": "Remove or label planned/nonexistent product pages",
+      "plan_marker_before": "[~]",
+      "plan_marker_after": "[x]",
+      "commit": "fc1d779d",
+      "evidence_files": [
+        "apps/www-reading-advantage/src/locales/pages/products/math-advantage.ts",
+        "apps/www-reading-advantage/src/locales/pages/products/stem-advantage.ts",
+        "apps/www-reading-advantage/src/locales/pages/products/storytime-advantage.ts",
+        "apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts",
+        "apps/www-reading-advantage/src/locales/pages/products/zhongwen-advantage.ts"
+      ],
+      "verified": true,
+      "verification": "Replaced 'Coming in 2025'/'Launching in 2025'/'Coming in 2026' with 'On Our Roadmap'/'On Our Roadmap · Planned' (en/th/zh) on STEM, Storytime, Tutor, Zhongwen, Math locale files. 1C test asserts each nonexistent-app page has a roadmap/planned marker AND no stale launch date. Positive control asserts pages are kept (not deleted)."
+    },
+    {
+      "n": 4,
+      "task": "Replace placeholder case studies or clearly mark them as examples",
+      "plan_marker_before": "[~]",
+      "plan_marker_after": "[x]",
+      "commit": "fc1d779d",
+      "evidence_files": [
+        "apps/www-reading-advantage/src/locales/pages/case-studies.ts"
+      ],
+      "verified": true,
+      "verification": "Removed 'Real Results from Real Schools' hero subtitle; replaced with 'Illustrative Scenarios' (en/th/zh). Replaced 'School A (Coming Soon)'/'School B (Coming Soon)' with 'Illustrative example — not a real school'. Hero badge changed from 'PROVEN RESULTS' to 'ILLUSTRATIVE EXAMPLES'. helper.audit() returns placeholderCaseStudyCount: 0, publishedCaseStudyCount: 0, missingConsentCount: 0. 1E test asserts 0 placeholder tokens AND positive control (illustrative framing present)."
+    },
+    {
+      "n": 5,
+      "task": "Add metadata/SEO fixes for highest-risk public pages if part of claim correction",
+      "plan_marker_before": "[~]",
+      "plan_marker_after": "[x]",
+      "commit": "fc1d779d",
+      "evidence_files": [
+        "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/math-advantage/page.tsx",
+        "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/stem-advantage/page.tsx",
+        "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/storytime-advantage/page.tsx",
+        "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx",
+        "apps/www-reading-advantage/src/locales/components/comparison-table.ts",
+        "apps/www-reading-advantage/src/locales/components/pricing-table.ts",
+        "apps/www-reading-advantage/src/locales/components/products/b2b-solutions.ts"
+      ],
+      "verified": true,
+      "verification": "Replaced stale metadata.description/openGraph.description on Math/STEM/Storytime/Tutor product pages with roadmap-only copy. Replaced stale 'launching in 2025' metadata on CodeCamp and Science product pages (commit 940420a0). Updated homepage evidence bar count 9 → 4; removed '2,172+'. Updated pricing/comparison table lastUpdated to 'July 2026'. Replaced 'New for SY2025' badge in b2b-solutions.ts with 'NOW AVAILABLE' (commit 80231438). Replaced 'NEW IN MAY 2026' Reading badge with 'NOW AVAILABLE'."
+    },
+    {
+      "n": 6,
+      "task": "Run www app targeted tests/build/lint/type where available",
+      "plan_marker_before": "[~]",
+      "plan_marker_after": "[x]",
+      "commit": "fc1d779d, 940420a0, 80231438, 75c96f33",
+      "verified": true,
+      "verification": "Acceptance re-ran all gates at HEAD 5070cb44: phase-w3-claims 20/20 (exit 0), lint 0 errors (exit 0), check-types 0 errors (exit 0), wave2-product-claim-helper 12/12 (exit 0). Plan text claims '20/20 tests passing' and 'exits 0' for each gate — all verified truthful (A5). The review-added 1B page.tsx metadata scan (commit 940420a0) brought the test count from 19 to 20; plan updated in commit 75c96f33 to reflect this."
+    }
+  ],
+
+  "anti_pattern_scan": {
+    "A1_substring_as_signal": {
+      "applicable": true,
+      "status": "pass",
+      "details": "Supervisor regex verified at measure/automation-supervisor.py:659 as r\"^(\\s*- \\[([~xb])\\] (.+))$\" — matches [~xb], NOT legacy [ ~x]. is_task_structurally_blocked() helper present at line 634, recognizes [b] (status=='b') and trailing deferred:<owner> (regex \\bdeferred:[\\w.-]+). Free-text 'deferred' no longer drops tasks from incomplete count. No supervisor edits made in this product track."
+    },
+    "A2_consent_blind_publish_gate": {
+      "applicable": true,
+      "status": "pass",
+      "details": "1H test calls helper.audit(claims, consentIndex) and asserts missingConsentCount === 0. With all case studies relabeled as illustrative/placeholder (publishedCaseStudyCount === 0), the consent gate is satisfied vacuously-correct (no published case studies to check). 1H positive control asserts claimCount >= 1 so a deleted page does not pass vacuously (A4 defense). Non-blocking: buildConsentIndex() keys by filename-derived subject while helper looks up by claim.text — fails closed (missingConsentCount > 0), not a bypass."
+    },
+    "A3_digit_only_count": {
+      "applicable": true,
+      "status": "pass",
+      "details": "All count assertions use labeled integers: 'Banned product-count literal count: ${hits}' (1A), 'Stale launch date count: ${staleCount}' (1B), 'Specific-model claim count: ${hits}' (1D), 'Placeholder-as-real token count: ${hits}' (1E), report.placeholderCaseStudyCount / report.missingConsentCount / report.claimCount (1E/1H), 'Stale timestamp count: ${staleCount}' (1I). No rg -q '[0-9]+' or bare-digit matches anywhere in the test file."
+    },
+    "A4_vacuous_pass": {
+      "applicable": true,
+      "status": "pass",
+      "details": "Every group 1A-1I has a positive control asserting a truthful replacement exists: 1A truthful count string, 1B locale files still exist, 1C pages kept (not deleted), 1D provider-neutral AI copy, 1E illustrative framing present + helper audit zero placeholders, 1F at least one resultsSection with stats, 1G managed-service risk qualifier, 1H claimCount >= 1, 1I last-updated line present. A deletion-only fix fails its positive control. Phase 1 has 6 [x] tasks (not 0), so the marker-consistency vacuous-pass scenario does not apply."
+    },
+    "A5_false_claim_text": {
+      "applicable": true,
+      "status": "pass",
+      "details": "Plan task 6 claims: 'phase-w3-claims exits 0 with 20/20 tests passing' — acceptance verified 20/20 exit 0. 'lint exits 0' — acceptance verified clean exit 0. 'check-types exits 0' — acceptance verified clean exit 0. 'wave2-product-claim-helper exits 0 with 12/12 tests passing' — acceptance verified 12/12 exit 0. All plan claims match test reality. No 'PASS=N, FAIL=0' or 'all checks pass' boilerplate."
+    },
+    "A6_registry_overstatement": {
+      "applicable": true,
+      "status": "pass",
+      "details": "measure/tracks.md Wave 3 entry (line 49) does NOT claim the website claims mismatch (CA-008) or any Phase 1 item is 'resolved'. The track is still marked [ ] (not done) in the registry. No 'resolved'/'completely fixed'/'fully solved' language appears near Wave 3 in tracks.md. The CA-008 finding stays open per test-strategy §0.B A6 defense. No overstatement."
+    },
+    "A7_over_broad_filter": {
+      "applicable": true,
+      "status": "pass",
+      "details": "Banned-literal regexes use exact phrases: 'nine products|all 9 products|one engine, nine' (1A), 'GPT-5|GPT-4|Google Gemini & GPT-5' (1D), 'School A (Coming Soon)|School B (Coming Soon)|Real Results from Real Schools' (1E), '2,172+|ZERO RISK|Aka 2019' (1G whole-source), '95%|3×|24/7' (1G scoped to math/primary files). No bare English word filters ('school', 'AI', 'risk') that would drop legitimate disclaimer hits. Test excludes __tests__ and *.test.* files from source scans to avoid self-reference (targeted exclusion, not over-broad). Non-blocking: 1G '3×' regex uses Unicode multiplication sign only; ASCII '3x' variant not caught (claim removed, low risk)."
+    },
+    "A8_marker_ambiguity": {
+      "applicable": false,
+      "details": "Phase 1 tasks use [x] only; no [ ] (space) or [~] markers remain in Phase 1. Phase 0 Tier 2 items are [b] deferred:po in Phase 6 (correct structured blocked marker)."
+    },
+    "A9_archived_track_paths": {
+      "applicable": true,
+      "status": "pass",
+      "details": "phase-w3-claims.test.ts references apps/www-reading-advantage/src/ only (via SRC_DIR = join(process.cwd(), 'src')). No runtime dependency on measure/tracks/ paths. Provenance comments cite phase-0-claims-matrix.md but no runtime import. Path-independent; will not break on archive move."
+    },
+    "A10_generated_facts_drift": {
+      "applicable": false,
+      "details": "N/A to www claims tests (no measure/generated/ regeneration in scope)."
+    },
+    "A11_review_execution_blocked": {
+      "applicable": false,
+      "details": "Review track truthfulness class; Phase 1 is an implementation phase, not a review-execution track. N/A."
+    }
+  },
+
+  "review_results": {
+    "review_a": {
+      "status": "pass",
+      "head_sha": "5070cb44",
+      "location": "measure/tracks/wave3_product_alignment_20260628/audit/phase-1-review-a.json",
+      "tests": "20/20",
+      "blocking_findings": 0,
+      "notes": "Correctness review. Found and fixed a blocking finding (stale 'launching in 2025' in Science/CodeCamp openGraph metadata, missed by initial 1B test which only scanned locale files). Fixed in commit 940420a0 by extending phase-w3-claims.test.ts with a page.tsx metadata scan. Also fixed b2b-solutions.ts 'New for SY2025' badge in commit 80231438. All Tier 1 banned literals verified absent. Positive controls confirm truthful replacements."
+    },
+    "review_b": {
+      "status": "pass",
+      "head_sha": "5070cb44",
+      "location": "measure/tracks/wave3_product_alignment_20260628/audit/phase-1-review-b.json",
+      "tests": "20/20",
+      "blocking_findings": 0,
+      "notes": "Security/anti-pattern review. No secrets, credentials, or auth bypasses introduced. A2 consent gate exercised (missingConsentCount === 0). A5 plan truthfulness corrected from 19/19 to 20/20 (commit 75c96f33). No A6 overstatement or A7 over-broad filters. Non-blocking: A2 latent key mismatch in buildConsentIndex() (fails closed); A7 narrow '3×' regex (Unicode only)."
+    },
+    "review_c": {
+      "status": "pass",
+      "head_sha": "5070cb44",
+      "location": "measure/tracks/wave3_product_alignment_20260628/audit/phase-1-review-c.json",
+      "tests": "20/20",
+      "blocking_findings": 0,
+      "notes": "UX/API review. All 20 claim tests green, lint 0, check-types 0, Wave 2 harness 12/12. Every frozen claims-matrix [FIX-MUST] row has red-at-baseline/green-after-fix test with positive controls. Cross-locale consistency verified for en/th/zh. Navigation links intact. SEO metadata updated to roadmap-only copy. Tier 2 [NEEDS-PO] items remain deferred."
+    }
+  },
+
+  "red_to_green_proof": {
+    "red_commit": "df22b0e1",
+    "red_nature": "At df22b0e1 the phase-w3-claims.test.ts file was added (452 lines, 19 test groups) but the website source still contained all banned literals: 'One engine, nine products' (home.ts:40, mastery-advantage.ts:61), 'all 9 products' (page.tsx:175), 'GPT-5' (primary-advantage.ts:30,96,170,236,310,376; home.ts:143,303,461), 'School A/B (Coming Soon)' (case-studies.ts:23,58), 'ZERO RISK' (managed-service.ts:11), '2,172+' (page.tsx:87), 'Aka 2019' (home.ts), stale 'Coming in 2025'/'Launching in 2025'/'Coming in 2026' across stem/tutor/storytime/math/zhongwen locale files. Therefore the banned-literal-absent assertions genuinely failed at the Red commit — a true Red, not an import-error or unrelated crash.",
+    "green_commit": "fc1d779d",
+    "green_nature": "Corrected all Tier 1 floor claims: replaced 'Nine products' with 'Four products today', substituted provider-neutral AI copy, relabeled case studies as 'Illustrative examples', replaced stale launch dates with 'On Our Roadmap', updated metadata descriptions, updated pricing/comparison table timestamps to July 2026, updated homepage evidence bar count 9→4. Suite went green (19/19).",
+    "review_fixes": [
+      "940420a0 — extended 1B test to scan page.tsx metadata (Science/CodeCamp stale 'launching in 2025' openGraph.description); fixed the two descriptions. Brought test count from 19 to 20.",
+      "80231438 — replaced 'New for SY2025' badge in b2b-solutions.ts with 'NOW AVAILABLE' (CC-11 scope, missed by initial 1B which scanned locales/pages/products/ only).",
+      "75c96f33 — updated plan.md Phase 1 task 6 from '19/19' to '20/20' and documented CodeCamp/Science metadata + b2b-solutions badge changes (A5 plan truthfulness)."
+    ],
+    "verification": "Acceptance confirmed all banned literals absent from source at HEAD 5070cb44 (rg returns 0 hits in apps/www-reading-advantage/src/ excluding test files) and the full phase-w3-claims suite green (20/20)."
+  },
+
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "NB1: 1G '3x faster' regex uses Unicode multiplication sign (U+00D7) only; ASCII '3x'/'3X' variant not caught. Claim removed, Math page roadmap-labeled, low risk. Noted by Review A (NB-1) and Review B (A7). Optional: extend regex to /3[x×]/gi in future test-backfill.",
+    "NB2: b2b-solutions.ts coverage gap — 1B test scans locales/pages/products/ and page.tsx files but not locales/components/products/b2b-solutions.ts. 'New for SY2025' badge (CC-11) fixed in commit 80231438 (→ 'NOW AVAILABLE') but no specific regression test. Noted by Review A (NB-2). Optional: extend 1B scan to locales/components/products/*.ts.",
+    "NB3: A2 latent key mismatch — buildConsentIndex() keys consent by filename-derived subject, helper.audit() looks up by claim.text. Fails closed (missingConsentCount > 0), not a bypass. Usability issue for future real case studies. Noted by Review B. Resolve when Tier 2 [NEEDS-PO] case studies reintroduced.",
+    "NB4: 11 pre-existing .test.tsx files fail to load (next-intl/next/navigation resolution) in whole-www suite. Unrelated to Wave 3, present at baseline 81671de7. Phase 1 gate scoped to phase-w3-claims (20/20 green) per test-strategy §0.B. Track in Wave 5 test-hygiene.",
+    "NB5: Tier 2 [NEEDS-PO] items remain [b] deferred:po in plan.md Phase 6 (Decision 1B per-page keep/hide + roadmap dates; Decision 2B AI provider/model; Decision 4B efficacy stats + consent artifacts). Phase 1 enforced Tier 1 automatable floor only. Resolve with PO before Phase 6 final acceptance."
+  ],
+
+  "nonblocking_finding_details": [
+    { "id": "NB1", "title": "1G '3x faster' regex uses Unicode multiplication sign only", "description": "Group 1G's scoped ban for '3×' (CC-25) matches only the Unicode multiplication sign (U+00D7). An ASCII variant ('3x faster', '3X faster') would not be caught. The claim is currently removed from the Math page (which is now roadmap-labeled per CC-13), so risk is low. Noted by Review A (NB-1) and Review B (A7 narrow regex).", "recommendation": "Optional: extend the regex to /3[x×]/gi in a future test-backfill. Does not block Phase 1 acceptance." },
+    { "id": "NB2", "title": "b2b-solutions.ts coverage gap in 1B stale-date scan", "description": "The 1B test scans locales/pages/products/ and app/[locale]/(marketing)/products/*/page.tsx for stale launch dates, but does not scan locales/components/products/b2b-solutions.ts. The 'New for SY2025' badge (CC-11) was fixed in commit 80231438 (badge → 'NOW AVAILABLE'), but no specific test guards b2b-solutions.ts against regression. The whole-source bans (1A/1D/1G) do scan b2b-solutions.ts via collectSourceFiles(), but 'New for SY2025' is not in their banned-literal lists. Noted by Review A (NB-2).", "recommendation": "Optional: extend the 1B page.tsx metadata scan sub-test to also scan locales/components/products/*.ts. Does not block Phase 1 acceptance — the fix is in place and verified." },
+    { "id": "NB3", "title": "A2 latent key mismatch in buildConsentIndex()", "description": "phase-w3-claims.test.ts buildConsentIndex() keys consent proof by filename-derived subject (e.g. 'school-a' from 'consent-school-a.md'), while product-claim-helper.audit() looks up consent by the full claim.text. For a future published-case-study claim, a consent file named by subject would fail to match (missingConsentCount > 0). This fails closed (not a bypass) but is a usability issue when real case studies are reintroduced. Noted by Review B.", "recommendation": "Resolve when Tier 2 [NEEDS-PO] real case studies are reintroduced (Phase 6 closeout). Does not block Phase 1 acceptance — current state has 0 published case studies, so the gate is satisfied vacuously-correct." },
+    { "id": "NB4", "title": "11 pre-existing .test.tsx files fail to load (next-intl/next/navigation resolution)", "description": "Whole-www `pnpm --filter www-reading-advantage test` has 11 pre-existing .test.tsx files that fail to load due to 'Cannot find module next/navigation' from next-intl. This is unrelated to Wave 3 (present at baseline 81671de7 before any Green edits, verified by git stash round-trip). The Phase 1 gate is scoped to phase-w3-claims (20/20 green) per test-strategy §0.B, not the whole-www suite.", "recommendation": "Track in a Wave 5 test-hygiene task. Does not block Phase 1 acceptance — pre-existing and owner-labeled." },
+    { "id": "NB5", "title": "Tier 2 [NEEDS-PO] items remain deferred", "description": "Per Phase 0 decisions, Tier 2 items (Decision 1B per-page keep/hide/delete + roadmap dates; Decision 2B specific approved AI provider/model; Decision 4B approved efficacy stats + consent artifacts) remain [b] deferred:po in plan.md Phase 6. Phase 1 did not invent approved stats, model names, or roadmap dates — only the Tier 1 automatable floor was enforced.", "recommendation": "Resolve with product owner before Phase 6 final acceptance. Does not block Phase 1 acceptance." }
+  ],
+
+  "evidence": [
+    "Gate (acceptance re-run): pnpm --filter www-reading-advantage test phase-w3-claims => 20/20 passed (exit 0) at HEAD 5070cb44",
+    "Gate (acceptance re-run): pnpm --filter www-reading-advantage lint => 0 errors, 0 warnings (exit 0) at HEAD 5070cb44",
+    "Gate (acceptance re-run): pnpm --filter www-reading-advantage check-types => tsc --noEmit clean (exit 0) at HEAD 5070cb44",
+    "Gate (acceptance re-run): pnpm --filter www-reading-advantage test wave2-product-claim-helper => 12/12 passed (exit 0) at HEAD 5070cb44",
+    "Banned-literal sweep: rg 'nine products|all 9 products|one engine, nine|GPT-5|GPT-4|Google Gemini & GPT-5|School A (Coming Soon)|School B (Coming Soon)|Real Results from Real Schools|2,172+|ZERO RISK|Aka 2019' apps/www-reading-advantage/src/ => 0 hits in source files (hits only in test files, which are excluded from source scans)",
+    "Stale-date sweep: rg 'New for SY2025|NOW AVAILABLE|launching in 2025|Coming in 2025|Coming in 2026|Starting May 2026' apps/www-reading-advantage/src/locales/ apps/www-reading-advantage/src/app/ => only 'NOW AVAILABLE' replacements present (b2b-solutions.ts:12, reading-advantage.ts:9); no stale dates remain",
+    "A1 supervisor: measure/automation-supervisor.py:659 regex r'^(\\s*- \\[([~xb])\\] (.+))$' matches [~xb]; is_task_structurally_blocked() at line 634 recognizes [b] and deferred:<owner>",
+    "A6 registry: measure/tracks.md Wave 3 entry (line 49) marked [ ] (not done); no 'resolved'/'completely fixed' language near Wave 3",
+    "Review A: measure/tracks/wave3_product_alignment_20260628/audit/phase-1-review-a.json status: pass, blocking_findings: []",
+    "Review B: measure/tracks/wave3_product_alignment_20260628/audit/phase-1-review-b.json status: pass, blocking_findings: []",
+    "Review C: measure/tracks/wave3_product_alignment_20260628/audit/phase-1-review-c.json status: pass, blocking_findings: []",
+    "Phase 1 plan tasks: all 6 tasks [x] with SHA evidence (df22b0e1, fc1d779d, 940420a0, 80231438, 75c96f33); no [~] or non-deferred [ ] in Phase 1"
+  ],
+
+  "changed_files": [
+    "measure/tracks/wave3_product_alignment_20260628/audit/phase-1-acceptance.json"
+  ],
+
+  "changed_files_since_baseline": {
+    "baseline_sha": "8a47d2df999e35d9d47de9eb590ae29523c70bae",
+    "head_sha": "5070cb44228deaa892c708f64013fe421b3ec2ac",
+    "www_files_changed": 24,
+    "new_test_files": [
+      "apps/www-reading-advantage/src/lib/__tests__/phase-w3-claims.test.ts"
+    ],
+    "modified_locale_files": [
+      "apps/www-reading-advantage/src/locales/pages/home.ts",
+      "apps/www-reading-advantage/src/locales/pages/case-studies.ts",
+      "apps/www-reading-advantage/src/locales/pages/managed-service.ts",
+      "apps/www-reading-advantage/src/locales/pages/mastery-advantage.ts",
+      "apps/www-reading-advantage/src/locales/pages/products/math-advantage.ts",
+      "apps/www-reading-advantage/src/locales/pages/products/primary-advantage.ts",
+      "apps/www-reading-advantage/src/locales/pages/products/reading-advantage.ts",
+      "apps/www-reading-advantage/src/locales/pages/products/stem-advantage.ts",
+      "apps/www-reading-advantage/src/locales/pages/products/storytime-advantage.ts",
+      "apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts",
+      "apps/www-reading-advantage/src/locales/pages/products/zhongwen-advantage.ts",
+      "apps/www-reading-advantage/src/locales/components/comparison-table.ts",
+      "apps/www-reading-advantage/src/locales/components/pricing-table.ts",
+      "apps/www-reading-advantage/src/locales/components/products/b2b-solutions.ts"
+    ],
+    "modified_page_tsx_files": [
+      "apps/www-reading-advantage/src/app/[locale]/(marketing)/(home)/page.tsx",
+      "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/codecamp-advantage/page.tsx",
+      "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/math-advantage/page.tsx",
+      "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/primary-advantage/page.tsx",
+      "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/science-advantage/page.tsx",
+      "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/stem-advantage/page.tsx",
+      "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/storytime-advantage/page.tsx",
+      "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx"
+    ],
+    "track_artifacts": [
+      "measure/tracks/wave3_product_alignment_20260628/plan.md",
+      "measure/tracks/wave3_product_alignment_20260628/audit/phase-1-review-a.json",
+      "measure/tracks/wave3_product_alignment_20260628/audit/phase-1-review-b.json",
+      "measure/tracks/wave3_product_alignment_20260628/audit/phase-1-review-c.json"
+    ]
+  },
+
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+
+  "aggregate_suite_note": "Per test-strategy §'Phase 1 intentionally-red aggregate-suite handling', the monorepo aggregate suite (pnpm turbo run test) is red at baseline from pre-existing owner-labeled failures outside Wave 3. Phase 1 does not attempt to green it; the gate is scoped to the www filter (pnpm --filter www-reading-advantage test phase-w3-claims), which is fully green (20/20). The 11 pre-existing .test.tsx load failures (next-intl/next/navigation) are pre-existing at baseline 81671de7 and labeled as known_failures. No www-filter reds were silently absorbed into a 'green' claim.",
+
+  "deferrals": [
+    "Tier 2 [NEEDS-PO] items (Decision 1B per-page keep/hide/delete + roadmap dates; Decision 2B specific AI provider/model; Decision 4B approved efficacy stats + consent artifacts) remain [b] deferred:po in plan.md Phase 6. Phase 1 enforced only the Tier 1 automatable floor.",
+    "Phases 3-5 (Advantage Games completion/scoring, tenant-safe persistence, embeddable runtime) remain deferred to a later cycle per test-strategy §9.",
+    "Phase 6 (Product Acceptance and Closeout) deferred until Phases 1 and 3-5 are executed.",
+    "Whole-www suite (pnpm --filter www-reading-advantage test) has 11 pre-existing .test.tsx load failures from next-intl; out of scope for Phase 1 per test-strategy §'intentionally-red aggregate-suite handling'."
+  ],
+
+  "plan_marker_updates": {
+    "file": "measure/tracks/wave3_product_alignment_20260628/plan.md",
+    "changes": [
+      "Task 6 commit SHA evidence expanded from 'fc1d779d' to 'fc1d779d, 940420a0, 80231438, 75c96f33' to include review-fix commits (plan truthfulness — A5)."
+    ],
+    "scope_guard": "Only Phase 1 task 6 commit SHA evidence was updated. Phase 0/2/3/4/5/6 task markers were NOT touched."
+  },
+
+  "retry_recommendation": "none",
+  "confidence": "high",
+
+  "handoff": "Phase 1 PASSES acceptance. All scoped gates green (re-run by acceptance): phase-w3-claims 20/20, lint 0 errors, check-types 0 errors, wave2-product-claim-helper 12/12. All 6 Phase 1 tasks complete with commit SHA evidence (df22b0e1 Red; fc1d779d Green; 940420a0/80231438/75c96f33 review fixes). Anti-pattern scan clean (A1 supervisor verified, A3/A4/A5/A6/A7 verified pass; A2 pass with non-blocking key-mismatch note; A8/A9 pass; A10/A11 N/A). Reviews A/B/C all pass with no blocking findings. No blocking findings; 5 non-blocking findings noted (Unicode '3×' regex, b2b-solutions.ts coverage gap, consent-index key mismatch, pre-existing .test.tsx load failures, Tier 2 [NEEDS-PO] deferrals). Phase 1 is complete; the track proceeds to its next scheduled phase (Phases 3-5 games work, deferred this cycle)."
+}

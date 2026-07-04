@@ -50,7 +50,7 @@
   - Replaced stale "New for SY2025" badge in `b2b-solutions.ts` with "NOW AVAILABLE" (en/th/zh).
   - Updated homepage `evidence bar` count `9` → `4` and removed `2,172+` specific stat; updated `THE SUITE — all 9 products` comment to `all live products today`.
   - Updated `pricing-table.ts` and `comparison-table.ts` `lastUpdated` from "October 2024" / "October 2023" to "July 2026" (en/th/zh) so the helper's 18-month stale-date detector passes.
-- [x] Task: Run www app targeted tests/build/lint/type where available. — `fc1d779d`
+- [x] Task: Run www app targeted tests/build/lint/type where available. — `fc1d779d`, `940420a0`, `80231438`, `75c96f33`
   - `pnpm --filter www-reading-advantage test phase-w3-claims` exits 0 with **20/20** tests passing (19 original groups plus a review-added 1B page.tsx metadata scan for CodeCamp/Science stale datelines).
   - `pnpm --filter www-reading-advantage lint` exits 0.
   - `pnpm --filter www-reading-advantage check-types` exits 0.
