@@ -296,6 +296,52 @@ export const webhookEventSchema = z.object({
 
 export type WebhookEvent = z.infer<typeof webhookEventSchema>;
 
+// ─── Review Job Types ────────────────────────────────────
+//
+// The `review_jobs` queue (track_id: webhook_review_reliability_20260605).
+// Admins use these via the tRPC `listDeadReviewJobs` / `requeueReviewJob`
+// procedures for DLQ inspection + manual replay.
+
+export const reviewJobStatusEnum = z.enum([
+  "pending",
+  "claimed",
+  "succeeded",
+  "failed",
+  "dead",
+]);
+
+export const reviewJobSchema = z.object({
+  id: z.string().uuid(),
+  prOwner: z.string(),
+  prRepo: z.string(),
+  prPullNumber: z.number().int(),
+  prUrl: z.string().url(),
+  status: reviewJobStatusEnum,
+  attempts: z.number().int(),
+  maxAttempts: z.number().int(),
+  nextAttemptAt: z.date(),
+  lastError: z.string().nullable(),
+  claimedAt: z.date().nullable(),
+  claimedBy: z.string().nullable(),
+  reviewId: z.string().uuid().nullable(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+});
+
+export type ReviewJob = z.infer<typeof reviewJobSchema>;
+
+export const listDeadReviewJobsInputSchema = z.object({
+  status: reviewJobStatusEnum.optional(),
+  limit: z.number().int().min(1).max(100).optional(),
+  offset: z.number().int().min(0).optional(),
+});
+export type ListDeadReviewJobsInput = z.infer<typeof listDeadReviewJobsInputSchema>;
+
+export const requeueReviewJobInputSchema = z.object({
+  jobId: z.string().uuid(),
+});
+export type RequeueReviewJobInput = z.infer<typeof requeueReviewJobInputSchema>;
+
 // ─── GitHub Webhook Types ─────────────────────────────────
 
 export const githubWebhookPayloadSchema = z.object({

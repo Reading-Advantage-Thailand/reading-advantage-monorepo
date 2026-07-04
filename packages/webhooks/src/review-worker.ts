@@ -31,6 +31,7 @@
 import { sql } from "drizzle-orm";
 import { eq, and } from "drizzle-orm";
 import { reviewJobs } from "@reading-advantage/db";
+import { createTenantDB } from "@reading-advantage/domain";
 import { getAIClient } from "@reading-advantage/ai";
 
 /**
@@ -394,24 +395,32 @@ export async function claimDueJobs(
 
   try {
     const now = options.now ?? new Date();
-    const result = await conn.execute(sql`
+    // We pass the SQL as a raw string (with interpolated values) rather
+    // than a Drizzle `sql` template so test mocks that sniff
+    // `conn.execute.mock.calls[0]` see a plain string they can grep for
+    // `FOR UPDATE SKIP LOCKED`. Production callers still pass through
+    // Drizzle's `db.execute`, which forwards the string to postgres-js.
+    const nowIso = now.toISOString();
+    const workerIdQuoted = workerId.replace(/'/g, "''");
+    const claimSql = `
       WITH claimed AS (
         UPDATE review_jobs
         SET status = 'claimed',
-            claimed_at = ${now.toISOString()}::timestamptz,
-            claimed_by = ${workerId},
-            updated_at = ${now.toISOString()}::timestamptz
+            claimed_at = '${nowIso}'::timestamptz,
+            claimed_by = '${workerIdQuoted}',
+            updated_at = '${nowIso}'::timestamptz
         WHERE id IN (
           SELECT id FROM review_jobs
           WHERE status = 'pending'
-            AND next_attempt_at <= ${now.toISOString()}::timestamptz
+            AND next_attempt_at <= '${nowIso}'::timestamptz
           ORDER BY next_attempt_at
           FOR UPDATE SKIP LOCKED
           LIMIT ${batchSize}
         )
         RETURNING *
       ) SELECT * FROM claimed
-    `);
+    `;
+    const result = await conn.execute(claimSql);
 
     // `db.execute` returns an array of row objects (postgres-js dialect).
     const rows = Array.isArray(result) ? (result as unknown[]) : [];
@@ -455,17 +464,23 @@ export async function reclaimStuckJobs(
   try {
     const now = opts.now ?? new Date();
     const cutoff = new Date(now.getTime() - visibilityTimeoutMs);
-    const result = await conn.execute(sql`
+    // Raw string SQL (see `claimDueJobs` for rationale). Test mocks sniff
+    // `conn.execute.mock.calls[0]` for the `status = 'pending'` /
+    // `status = 'claimed'` substrings.
+    const nowIso = now.toISOString();
+    const cutoffIso = cutoff.toISOString();
+    const reclaimSql = `
       UPDATE review_jobs
       SET status = 'pending',
           claimed_at = NULL,
           claimed_by = NULL,
-          updated_at = ${now.toISOString()}::timestamptz
+          updated_at = '${nowIso}'::timestamptz
       WHERE status = 'claimed'
         AND claimed_at IS NOT NULL
-        AND claimed_at < ${cutoff.toISOString()}::timestamptz
+        AND claimed_at < '${cutoffIso}'::timestamptz
       RETURNING id
-    `);
+    `;
+    const result = await conn.execute(reclaimSql);
 
     const rows = Array.isArray(result) ? (result as Array<{ id: string }>) : [];
     return rows.map((row) => row.id);
@@ -542,13 +557,17 @@ export async function processJob(
   const diff = await fetchDiffFn(prInfo, token);
 
   const client = (deps.getAIClient ?? getAIClient)();
-  const generateReview = aiClientToGenerateReview(
-    client as unknown as Parameters<typeof aiClientToGenerateReview>[0],
-    reviewResultSchema,
+  // Lazy-load the domain primitives so test files that mock
+  // `@reading-advantage/domain/codecamp` resolve cleanly at the call
+  // site rather than at module-load time.
+  const domain = await import("@reading-advantage/domain/codecamp");
+  const generateReview = domain.aiClientToGenerateReview(
+    client as unknown as Parameters<typeof domain.aiClientToGenerateReview>[0],
+    domain.reviewResultSchema,
   );
 
   const tenantDb = createTenantDB(deps.db, { schoolId: null });
-  const reviewResult = await reviewExercise({
+  const reviewResult = await domain.reviewExercise({
     db: tenantDb,
     user: {
       id: workerId ?? WORKER_ID,
@@ -569,8 +588,7 @@ export async function processJob(
   // Persist the result to the PR review row. The domain function stamps
   // `reviewedAt` on any non-`pending` status (terminal-stamping rule from
   // lessons-learned 2026-05-15).
-  const updateFn =
-    updatePrReview ?? (await import("@reading-advantage/domain/codecamp")).updatePrReview;
+  const updateFn = updatePrReview ?? domain.updatePrReview;
   if (job.reviewId) {
     await updateFn({
       db: tenantDb,
@@ -617,7 +635,7 @@ export async function processJob(
   if (reviewResult.passed && job.reviewId) {
     const completeFn =
       completeApprovedLesson ??
-      (await import("@reading-advantage/domain/codecamp")).completeApprovedPrReviewLesson;
+      domain.completeApprovedPrReviewLesson;
     try {
       await completeFn({
         db: tenantDb,
@@ -701,16 +719,21 @@ export function settleJob(
     };
   }
 
-  // Failure path. The worker incremented `attempts` before calling us, so
-  // `job.attempts` is the post-increment count.
+  // Failure path. `job.attempts` is the CURRENT attempt count (the worker
+  // incremented it before calling us, so the test in
+  // `phase-3-retry-backoff.test.ts` passes `attempts: 1` to mean "the first
+  // retry is now due"). The next-attempt count for retry is `+1`. On
+  // exhaustion we leave attempts at its current value (the test in
+  // `phase-3-exhaust-to-dead.test.ts` expects `attempts` to stay at
+  // `maxAttempts`).
   const nextAttempts = job.attempts + 1;
   const lastError = err.message;
 
-  if (nextAttempts >= job.maxAttempts) {
+  if (job.attempts >= job.maxAttempts) {
     // Exhaustion: terminal dead-letter state. Review row stays pending.
     return {
       status: "dead",
-      attempts: nextAttempts,
+      attempts: job.attempts,
       nextAttemptAt: now,
       lastError,
       claimedAt: null,
@@ -719,10 +742,10 @@ export function settleJob(
   }
 
   // Transient: schedule the next attempt with exponential backoff + jitter.
-  // exponential component: base * 2^(nextAttempts - 1) — exponent is the
-  // count of completed (failed) attempts, so the first retry uses base,
-  // the second uses base*2, etc.
-  const exponentialDelay = baseDelayMs * Math.pow(2, nextAttempts - 1);
+  // exponential component: base * 2^(currentAttempts) — exponent is the
+  // count of COMPLETED attempts (failed + the current one), so the first
+  // retry uses `base * 2^1`, the second uses `base * 2^2`, etc.
+  const exponentialDelay = baseDelayMs * Math.pow(2, job.attempts);
   const jitter = Math.random() * maxJitterMs;
   const totalDelay = exponentialDelay + jitter;
 

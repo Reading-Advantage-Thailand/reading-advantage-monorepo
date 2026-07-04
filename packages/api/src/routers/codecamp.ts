@@ -25,6 +25,9 @@ import {
   prReviewInputSchema,
   prReviewUpdateSchema,
   webhookEventSchema,
+  reviewJobSchema,
+  listDeadReviewJobsInputSchema,
+  requeueReviewJobInputSchema,
   moduleWithReposSchema,
   internAccountInputSchema,
   internAccountResponseSchema,
@@ -554,6 +557,42 @@ export const codecampRouter = router({
           user: ctx.auth.user,
           tenant: ctx.auth.tenant,
           input: { limit: input?.limit },
+        });
+      } catch (err) {
+        throw mapDomainError(err);
+      }
+    }),
+
+  // ─── Review Jobs (DLQ + requeue) ─────────────────────────────
+  // Track: webhook_review_reliability_20260605. Admins use these to
+  // inspect dead-lettered review jobs and manually replay them.
+
+  listDeadReviewJobs: adminProcedure
+    .input(listDeadReviewJobsInputSchema)
+    .output(z.array(reviewJobSchema))
+    .query(async ({ ctx, input }) => {
+      try {
+        return await codecamp.listDeadReviewJobs({
+          db: ctx.tenantDb,
+          user: ctx.auth.user,
+          tenant: ctx.auth.tenant,
+          input,
+        });
+      } catch (err) {
+        throw mapDomainError(err);
+      }
+    }),
+
+  requeueReviewJob: adminProcedure
+    .input(requeueReviewJobInputSchema)
+    .output(reviewJobSchema)
+    .mutation(async ({ ctx, input }) => {
+      try {
+        return await codecamp.requeueReviewJob({
+          db: ctx.tenantDb,
+          user: ctx.auth.user,
+          tenant: ctx.auth.tenant,
+          input,
         });
       } catch (err) {
         throw mapDomainError(err);

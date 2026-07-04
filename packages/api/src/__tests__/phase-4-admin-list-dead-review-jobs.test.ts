@@ -72,14 +72,19 @@ describe("Phase 4 — admin list dead review jobs", () => {
 
     vi.mocked(listDeadReviewJobs).mockResolvedValue([
       {
-        id: "job-1",
+        id: "00000000-0000-4000-8000-000000000001",
         prOwner: "org",
         prRepo: "repo",
         prPullNumber: 1,
+        prUrl: "https://github.com/org/repo/pull/1",
         status: "dead",
         attempts: 5,
         maxAttempts: 5,
+        nextAttemptAt: new Date(),
         lastError: "persistent failure",
+        claimedAt: null,
+        claimedBy: null,
+        reviewId: null,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -104,8 +109,7 @@ describe("Phase 4 — admin list dead review jobs", () => {
     const caller = createCaller({ user: adminUser, tenant: testTenant });
 
     await expect(
-      // @ts-expect-error invalid status on purpose
-      caller.codecamp.listDeadReviewJobs({ status: "not_a_status" })
+      caller.codecamp.listDeadReviewJobs({ status: "not_a_status" as unknown as "dead" })
     ).rejects.toBeDefined();
   });
 });

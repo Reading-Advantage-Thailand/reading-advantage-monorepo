@@ -9,6 +9,13 @@ const mockDb = {
       }),
     }),
   }),
+  select: vi.fn().mockReturnValue({
+    from: vi.fn().mockReturnValue({
+      where: vi.fn().mockReturnValue({
+        limit: vi.fn().mockResolvedValue([]),
+      }),
+    }),
+  }),
 };
 
 vi.mock("@reading-advantage/domain/codecamp", async () => {

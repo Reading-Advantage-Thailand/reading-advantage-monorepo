@@ -10,6 +10,16 @@ const mockDb = {
       }),
     }),
   }),
+  // Minimal stub for `db.unscoped("...").select().from(...)` lookups
+  // inside the real `reviewExercise` (codecamp module resolution). Tests
+  // that need richer query mocks should extend this base.
+  select: vi.fn().mockReturnValue({
+    from: vi.fn().mockReturnValue({
+      where: vi.fn().mockReturnValue({
+        limit: vi.fn().mockResolvedValue([]),
+      }),
+    }),
+  }),
 };
 
 vi.mock("@reading-advantage/domain/codecamp", async () => {

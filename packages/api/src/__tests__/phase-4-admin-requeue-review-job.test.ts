@@ -71,7 +71,11 @@ describe("Phase 4 — admin requeue dead review job", () => {
     const caller = createCaller({ user: adminUser, tenant: testTenant });
 
     vi.mocked(requeueReviewJob).mockResolvedValue({
-      id: "job-1",
+      id: "00000000-0000-4000-8000-000000000001",
+      prOwner: "org",
+      prRepo: "repo",
+      prPullNumber: 1,
+      prUrl: "https://github.com/org/repo/pull/1",
       status: "pending",
       attempts: 0,
       maxAttempts: 5,
@@ -79,10 +83,12 @@ describe("Phase 4 — admin requeue dead review job", () => {
       lastError: null,
       claimedAt: null,
       claimedBy: null,
+      reviewId: null,
+      createdAt: new Date(),
       updatedAt: new Date(),
     } as unknown as Awaited<ReturnType<typeof requeueReviewJob>>);
 
-    const result = await caller.codecamp.requeueReviewJob({ jobId: "job-1" });
+    const result = await caller.codecamp.requeueReviewJob({ jobId: "00000000-0000-4000-8000-000000000001" });
 
     expect(result.status, "requeued job status").toBe("pending");
     expect(result.attempts, "requeued job attempts").toBe(0);
@@ -92,7 +98,9 @@ describe("Phase 4 — admin requeue dead review job", () => {
     const studentUser = { id: "u1", role: "STUDENT", schoolId: null };
     const caller = createCaller({ user: studentUser, tenant: testTenant });
 
-    await expect(caller.codecamp.requeueReviewJob({ jobId: "job-1" })).rejects.toMatchObject({
+    await expect(
+      caller.codecamp.requeueReviewJob({ jobId: "00000000-0000-4000-8000-000000000001" })
+    ).rejects.toMatchObject({
       code: "FORBIDDEN",
     });
   });
@@ -102,8 +110,7 @@ describe("Phase 4 — admin requeue dead review job", () => {
     const caller = createCaller({ user: adminUser, tenant: testTenant });
 
     await expect(
-      // @ts-expect-error invalid jobId on purpose
-      caller.codecamp.requeueReviewJob({ jobId: "not-a-uuid" })
+      caller.codecamp.requeueReviewJob({ jobId: "not-a-uuid" as unknown as string })
     ).rejects.toBeDefined();
   });
 });

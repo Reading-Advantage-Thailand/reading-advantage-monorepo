@@ -26,6 +26,12 @@ export {
   type CodecampWebhookEventOutcome,
 } from "./pr-reviews.js";
 
+export {
+  listDeadReviewJobs, requeueReviewJob,
+  type ListReviewJobsInput, type RequeueReviewJobInput,
+  type ReviewJobRow,
+} from "./review-jobs.js";
+
 export { createInternAccount, updateInternGithubUsername, listInterns, getInternProgress } from "./intern-accounts.js";
 
 export { CODECAMP_PERMISSIONS } from "./permissions.js";
