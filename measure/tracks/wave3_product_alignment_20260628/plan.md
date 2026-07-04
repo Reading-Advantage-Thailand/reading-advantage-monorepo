@@ -24,9 +24,12 @@
 
 ## Phase 1: Website Claims Correction
 
-- [~] Task: Write Red claim tests for product count, stale launch dates, app-directory existence, placeholder case studies, duplicated efficacy stats, and unverifiable AI model claims.
+- [x] Task: Write Red claim tests for product count, stale launch dates, app-directory existence, placeholder case studies, duplicated efficacy stats, and unverifiable AI model claims.
   - Evidence refs: Website LRF-001/LRF-002/LRF-012/LRF-013/LRF-014; Cross-App CA-008; MR-H06.
-- [~] Task: Update website copy/locales to match approved product reality.
+  - Delivered: `apps/www-reading-advantage/src/lib/__tests__/phase-w3-claims.test.ts` covering groups 1A..1I with positive controls.
+  - Red command: `pnpm --filter www-reading-advantage test phase-w3-claims` — 13/19 tests fail at baseline for the intended false/missing claims; lint and check-types clean.
+  - Commit: `e6534f4b`
+- [ ] Task: Update website copy/locales to match approved product reality.
 - [~] Task: Remove or label planned/nonexistent product pages.
 - [~] Task: Replace placeholder case studies or clearly mark them as examples.
 - [~] Task: Add metadata/SEO fixes for highest-risk public pages if part of claim correction.
