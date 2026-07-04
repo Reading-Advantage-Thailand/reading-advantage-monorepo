@@ -45,15 +45,17 @@
   - Verified `helper.audit(...)` on the resulting `case-studies.ts` returns `placeholderCaseStudyCount: 0`, `publishedCaseStudyCount: 0`, `missingConsentCount: 0`.
 - [x] Task: Add metadata/SEO fixes for highest-risk public pages if part of claim correction. — `fc1d779d`
   - Replaced metadata titles and `description` / `openGraph.description` on Math, STEM, Storytime, Tutor product pages (en/th/zh where present) to drop "launching in 2025" / "Coming in 2025" datelines and adopt roadmap-only copy.
-  - Replaced metadata label "Starting May 2026 …" on Reading Advantage locale (en/th/zh) — `blendedLearning.newBadge` changed from "NEW IN MAY 2026" / "มาใหม่ เดือนพฤษภาคม 2026" / "2026年5月全新推出" to "NOW AVAILABLE" / "พร้อมให้บริการแล้ว" / "现已可用"; hero.description drops "Starting May 2026" date.
+  - Replaced stale "launching in 2025" `metadata.description` / `openGraph.description` on CodeCamp and Science product pages with live-product descriptions.
+  - Replaced metadata label "Starting May 2026 …" on Reading Advantage locale (en/th/zh) — `blendedLearning.newBadge` changed from "NEW IN MAY 2026" / "มาใหม่ เดือนพฤษภาคม 2026" / "2026年5月全新推出" to "NOW AVAILABLE" / "พร้อมให้บริการแล้ว" / "现已可用`; hero.description drops "Starting May 2026" date.
+  - Replaced stale "New for SY2025" badge in `b2b-solutions.ts` with "NOW AVAILABLE" (en/th/zh).
   - Updated homepage `evidence bar` count `9` → `4` and removed `2,172+` specific stat; updated `THE SUITE — all 9 products` comment to `all live products today`.
   - Updated `pricing-table.ts` and `comparison-table.ts` `lastUpdated` from "October 2024" / "October 2023" to "July 2026" (en/th/zh) so the helper's 18-month stale-date detector passes.
 - [x] Task: Run www app targeted tests/build/lint/type where available. — `fc1d779d`
-  - `pnpm --filter www-reading-advantage test phase-w3-claims` exits 0 with **19/19** tests passing.
+  - `pnpm --filter www-reading-advantage test phase-w3-claims` exits 0 with **20/20** tests passing (19 original groups plus a review-added 1B page.tsx metadata scan for CodeCamp/Science stale datelines).
   - `pnpm --filter www-reading-advantage lint` exits 0.
   - `pnpm --filter www-reading-advantage check-types` exits 0.
   - `pnpm --filter www-reading-advantage test wave2-product-claim-helper` exits 0 with 12/12 tests passing (no regression on Wave 2 reusable harness).
-  - Whole-www `pnpm --filter www-reading-advantage test`: 1461 tests passing across 6 healthy files; 11 pre-existing `.test.tsx` files fail to load due to a `Cannot find module 'next/navigation'` resolution error from `next-intl` (unrelated to Wave 3, present at baseline `81671de7` before any Green edits — verified by `git stash` round-trip). Recorded as `known_failures` for Phase 2 closeout per test-strategy §"Phase 1 intentionally-red aggregate-suite handling".
+  - Whole-www `pnpm --filter www-reading-advantage test`: 1462 tests passing across 6 healthy files; 11 pre-existing `.test.tsx` files fail to load due to a `Cannot find module 'next/navigation'` resolution error from `next-intl` (unrelated to Wave 3, present at baseline `81671de7` before any Green edits — verified by `git stash` round-trip). Recorded as `known_failures` for Phase 2 closeout per test-strategy §"Phase 1 intentionally-red aggregate-suite handling".
 
 ## Phase 2: Marketing App Public Workflow Security
 
