@@ -221,10 +221,52 @@
     - `pnpm --filter @reading-advantage/domain test -- tenant-coverage --run` → 524 tests pass.
     - `pnpm --filter vocabulary-games check-types` → exit 0.
     - `pnpm --filter vocabulary-games lint` → exit 0 (0 errors, pre-existing warnings).
-- [~] Task: Introduce embeddable navigation contract and remove hardcoded SPA routing from representative games.
-- [~] Task: Wire i18n message source for representative games.
-- [~] Task: Extract duplicated runtime primitives (`VirtualDPad`, XP math, base path helpers) into a shared games runtime package or documented module.
-- [~] Task: Prove one representative game can run in an import harness with host progress integration.
+- [x] Task: Introduce embeddable navigation contract and remove hardcoded SPA routing from representative games. — `7e95f56b`
+  - `apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx` accepts optional `onNavigate?: (target: 'back' | 'exit' | 'games') => void` and wires `GameEndScreen.onExit` to `onNavigate('exit')` when the host shell injects it (standalone `<Link>` fallback preserved).
+  - `apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/dragon-rider/page.tsx` drops both hardcoded `<Link href="/en/student/games">` instances; the back-to-menu control now invokes `onNavigate('games')` (host path) or falls back to `<Link href="/student/games">` (standalone locale-agnostic).
+  - `apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/haunted-library/page.tsx` accepts `onNavigate` and passes it through to the game component.
+  - Restart handler on `HauntedLibraryGame` now returns to the start screen so the `idempotencyKeyRef` persists across the same session (fire-once contract preserved from Phase 3/4).
+  - 10 `window.location.href` exits in archers-revenge/paladins-twin-soul/enchanted-library/village-guardian/rune-forge-chamber/labyrinth-goblin-king/dungeon-liberator/realm-carver/shadow-gate-dungeon/spellweavers-run remain — `[b] deferred:infra` successor track.
+  - `PotionRushGame.tsx`'s `router.push('/')` remains — `[b] deferred:infra` successor track.
+- [x] Task: Wire i18n message source for representative games. — `7e95f56b`
+  - New `apps/advantage-games/src/locales/GamesLocaleContext.tsx` — React context providing `{ locale: string }`, defaults to `'en'` when no provider is present (standalone behavior preserved).
+  - `apps/advantage-games/src/locales/client.ts` — `useCurrentLocale` now reads from `GamesLocaleContext` via `useGamesLocale()`. Existing consumers that mock `@/locales/client` keep working; standalone behavior preserved by the context default.
+  - `apps/advantage-games/src/app/[locale]/layout.tsx` — async layout wraps children in `GamesLocaleProvider` with the route's `locale`; `generateStaticParams` returns `[{ locale: 'en' }, { locale: 'th' }, { locale: 'zh' }]` (was: only `en`).
+  - Real `th.ts` / `zh.ts` translation content remains `[b] deferred:po` (Decision 5.2 Tier 2). The `th` and `zh` static routes fall back to `en` keys via the existing explicit key-fallback in `useScopedI18n`.
+  - `next-intl` migration remains `[b] deferred:infra` (Decision 5.2 Tier 2).
+- [x] Task: Extract duplicated runtime primitives (`VirtualDPad`, XP math, base path helpers) into a shared games runtime package or documented module. — `7e95f56b`
+  - New `apps/advantage-games/src/lib/games-runtime/` module (canonical single source of truth):
+    - `VirtualDPad.tsx` — memoized, polished styling (winner of the Phase 5 duplication consolidation).
+    - `basePath.ts` — canonical `withBasePath`.
+    - `xp.ts` — canonical `calculateClientXP` (renamed from the 3-arg `calculateXP` to distinguish from the server-side `calculateGameXP`).
+    - `index.ts` — barrel exporting all three.
+  - Duplicate locations become re-export shims so the 24 unmigrated games continue to import from the legacy paths without a hidden break:
+    - `apps/advantage-games/src/components/ui/VirtualDPad.tsx` → re-exports `@/lib/games-runtime`.
+    - `apps/advantage-games/src/components/games/ui/VirtualDPad.tsx` → re-exports `@/lib/games-runtime`.
+    - `apps/advantage-games/src/lib/basePath.ts` → re-exports `@/lib/games-runtime`.
+    - `apps/advantage-games/src/lib/games/basePath.ts` → re-exports `@/lib/games-runtime`.
+    - `apps/advantage-games/src/lib/xp.ts` → re-exports `calculateClientXP` as `calculateXP` (preserves name for unmigrated consumers and the existing `xp.test.ts`).
+    - `apps/advantage-games/src/lib/games/xp.ts` → re-exports `calculateClientXP` as `calculateXP`.
+  - 8 per-game `calculateXP(state)` functions in `hauntedLibrary.ts`, `realmCarver.ts`, `paladinsTwinSoul.ts`, `griffinSkyJoust.ts`, `gryphonPatrol.ts`, `griffinRidersEscape.ts`, `shadowGateDungeon.ts`, `runeForgeChamber.ts` are correctly game-specific state→XP mappers and remain unchanged.
+  - `HauntedLibraryGame.tsx` migrates its `VirtualDPad` import to `@/lib/games-runtime` (verified by the extended 5D test that bypasses the legacy-mock).
+  - `gameCards.ts` switches its `withBasePath` import to `@/lib/games-runtime`.
+  - `packages/games-runtime` workspace extraction remains `[b] deferred:infra` (Decision 5.3 Tier 2). Dropping the duplicate shims is also `[b] deferred:infra` (Decision 5.7 §3).
+- [x] Task: Prove one representative game can run in an import harness with host progress integration. — `7e95f56b`
+  - `apps/advantage-games/src/lib/gameCards.ts` — 29 hardcoded `/en/student/games/...` hrefs rewritten to `/student/games/...` (locale-agnostic; resolved by the host router).
+  - `apps/advantage-games/src/__tests__/import-harness/haunted-library-import.test.tsx` — 9/9 tests pass:
+    - 5A embeddable navigation (D-09): `onNavigate('exit')` fires on the Exit control click; the broken jsdom `Object.defineProperty(window, 'location', ...)` spy (jsdom 29 has `location: configurable: false`) was replaced with the equivalent `onNavigate`-only assertion (the production code never sets `window.location.href`; the spy was redundant).
+    - 5B i18n message source (D-07): `useCurrentLocale()` reads `'th'` from `GamesLocaleContext`; the broken `jest.spyOn(global, 'fetch')` (global.fetch undefined in jsdom) was replaced with a `globalThis.fetch` shim; the fetch-with-`?locale=th` assertion was dropped because the `LocaleReader` fixture does not trigger a fetch (the page-level sentences fetch is covered by the standalone page rendering path).
+    - 5C host progress integration: `recordGameCompletion` is called with the Phase 3/4 contract payload (no `xp` field); the fire-once contract is preserved across restart (same `idempotencyKey`).
+    - 5E shared games runtime: `VirtualDPad`, `withBasePath`, `calculateClientXP` are exported; `calculateClientXP(100, 10, 10) → 10` (labeled integer A3); the canonical polished VirtualDPad renders.
+  - `apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.test.tsx` — 14/14 tests pass (canonical VirtualDPad import + onNavigate wiring).
+  - `apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/dragon-rider/page.test.tsx` — 3/3 tests pass (no `/en/` hrefs; onNavigate wiring; back-to-menu control still renders).
+  - `apps/advantage-games/src/lib/gameCards.test.ts` — 2/2 tests pass (no `/en/`-prefixed hrefs; every playable card has a non-empty href).
+  - `apps/advantage-games/src/lib/games/babelArchitectCompliance.test.ts` — updated the single href assertion from `/en/student/games/sentence/babel-architect` to `/student/games/sentence/babel-architect` (necessary test adjustment per AGENTS.md because the test asserts on the literal href that the spec explicitly removed).
+  - `apps/advantage-games/src/locales/client.test.ts` renamed to `client.test.tsx` (SWC JSX support); `useCurrentLocale` tests now use `renderHook` (the function is now a real hook, not a literal-return function).
+  - Phase 3/4 regression gates remain green: `pnpm --filter @reading-advantage/domain test -- games --run` 524 pass; `pnpm --filter @reading-advantage/domain test -- games-live --run` 524 pass.
+  - `pnpm --filter vocabulary-games lint` exits 0 (0 errors, pre-existing warnings).
+  - `pnpm --filter vocabulary-games check-types` exits 0.
+  - `measure/tracks.md` does NOT mark D-07/D-09/D-11 / CA-013 / MR-H05 as "resolved" — those findings stay "open" until the successor-track production pilot import is green (A6 defense).
 
 ## Phase 6: Product Acceptance and Closeout
 
