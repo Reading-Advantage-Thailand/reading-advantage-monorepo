@@ -9,7 +9,8 @@
   "nonblocking_findings": [
     "NB-P4-001: RankingDialog.tsx expects a difficulty-keyed Record (data?.[diff]) but rankingRoute.ts returns a flat array per leaderboardResponseSchema. With empty mock data this is invisible; must be resolved in Phase 5+ when real data flows.",
     "NB-P4-002: DIFFICULTY_KEYS is exported from rankingRoute.ts but RankingDialog.tsx hardcodes its own difficulties array. Phase 5+ should import DIFFICULTY_KEYS to stay in sync.",
-    "NB-P4-003: 65 legacy 'normal' difficulty references remain across other games; Phase 5+ scope per Decision 4.3."
+    "NB-P4-003: 65 legacy 'normal' difficulty references remain across other games; Phase 5+ scope per Decision 4.3.",
+    "NB-P4-004 (live-contract gap): RankingDialog flat-array vs keyed-object mismatch — route returns flat array per leaderboardResponseSchema, dialog expects difficulty-keyed Record. Non-blocking for Phase 4 (empty mock), blocking for Phase 5+."
   ],
   "evidence": [
     "packages/domain/src/games/schema.ts defines leaderboardEntrySchema + leaderboardResponseSchema with schoolScoped: z.literal(true).",
@@ -32,9 +33,7 @@
     "apps/advantage-games/src/components/games/game/RankingDialog.tsx"
   ],
   "test_strategy_violations": [],
-  "live_contract_violations": [
-    "LCV-P4-001: RankingDialog flat-array vs keyed-object mismatch — route returns flat array per leaderboardResponseSchema, dialog expects difficulty-keyed Record. Non-blocking for Phase 4 (empty mock), blocking for Phase 5+."
-  ],
+  "live_contract_violations": [],
   "prod_wiring_violations": [],
   "route_parity_violations": [],
   "ux_applicability": "applicable",
