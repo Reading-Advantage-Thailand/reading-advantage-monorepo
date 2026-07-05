@@ -3,6 +3,12 @@ import { HauntedLibraryGame } from './HauntedLibraryGame'
 import React from 'react'
 import type { LibraryState } from '@/lib/games/hauntedLibrary'
 
+// Phase 5: mock the legacy VirtualDPad path. The component must import from
+// @/lib/games-runtime instead for this mock to be ignored.
+jest.mock('@/components/ui/VirtualDPad', () => ({
+  VirtualDPad: () => <div data-testid="legacy-dpad">Legacy DPad</div>,
+}))
+
 const mockEnterFullscreen = jest.fn()
 const mockExitFullscreen = jest.fn()
 
@@ -247,5 +253,70 @@ describe('HauntedLibraryGame — Phase 3 shared completion contract payload (Gro
     const payload = onComplete.mock.calls[0][0]
     expect(payload.idempotencyKey).toMatch(UUID_RE)
     expect(payload).not.toHaveProperty('xp')
+  })
+})
+
+describe('HauntedLibraryGame — Phase 5 embeddable runtime + onNavigate (Group 5D)', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
+
+  it('imports VirtualDPad from the canonical @/lib/games-runtime module (D-11)', async () => {
+    render(<HauntedLibraryGame sentences={mockSentences} onComplete={jest.fn()} />)
+    fireEvent.click(screen.getByRole('button', { name: /Start Game/i }))
+
+    await waitFor(() => expect(screen.getByTestId('konva-stage')).toBeInTheDocument())
+
+    // If the component still imports from the legacy @/components/ui/VirtualDPad
+    // path, the mocked legacy-dpad would render. In Green it imports from
+    // @/lib/games-runtime, so the legacy mock is bypassed.
+    expect(screen.queryByTestId('legacy-dpad')).not.toBeInTheDocument()
+
+    // Positive control: the canonical polished implementation uses this base.
+    expect(document.querySelector('.bg-slate-900\\/70')).toBeInTheDocument()
+  })
+
+  it('wires onNavigate prop to the Exit control (D-09)', async () => {
+    const onNavigate = jest.fn()
+    const { createLibraryState } = jest.requireActual('@/lib/games/hauntedLibrary') as typeof import('@/lib/games/hauntedLibrary')
+    const baseState = createLibraryState(mockSentences, { difficulty: 'medium' }, () => 0.5)
+    const finalState: LibraryState = {
+      ...baseState,
+      phase: 'victory',
+      score: 10,
+      correctAnswers: 3,
+      totalAttempts: 3,
+      accuracy: 1,
+      time: 5_000,
+      lives: 3,
+      initialLives: 3,
+    }
+    tickMock.fn = jest.fn().mockReturnValue(finalState)
+
+    let rafCalls = 0
+    jest.spyOn(window, 'requestAnimationFrame').mockImplementation((cb) => {
+      if (rafCalls === 0) {
+        rafCalls++
+        cb(0)
+      }
+      return rafCalls
+    })
+
+    render(
+      <HauntedLibraryGame
+        sentences={mockSentences}
+        onComplete={jest.fn()}
+        {...({ onNavigate } as any)}
+      />,
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: /Start Game/i }))
+    await waitFor(() => expect(screen.getByRole('button', { name: /Exit/i })).toBeInTheDocument())
+
+    fireEvent.click(screen.getByRole('button', { name: /Exit/i }))
+
+    // onNavigate call count: 1 (Exit control)
+    expect(onNavigate).toHaveBeenCalledTimes(1)
+    expect(onNavigate).toHaveBeenCalledWith('exit')
   })
 })

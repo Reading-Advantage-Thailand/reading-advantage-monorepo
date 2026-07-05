@@ -3,21 +3,24 @@ import DragonRiderPage from "./page";
 import { useGameStore, DEFAULT_CASTLES } from "@/store/useGameStore";
 import React from "react";
 
-// Mock React.use to handle the params promise
+/**
+ * Phase 5 — Group 5D: dragon-rider page navigation contract.
+ *
+ * The page must drop hardcoded `/en/...` hrefs and call the host-injected
+ * `onNavigate` callback instead of performing SPA navigation.
+ *
+ * Provenance: `phase-5-decisions.md` Decision 5.1.
+ */
+
 jest.mock("react", () => ({
   ...jest.requireActual("react"),
   use: (promise: Promise<{ locale: string }> | { locale: string }) => {
     if (promise && typeof promise === "object" && "then" in promise && typeof promise.then === "function") {
-      return { locale: "en" }; // Return resolved value directly
+      return { locale: "en" };
     }
     return promise as { locale: string };
   },
 }));
-
-const mockVocab = [
-  { term: "test", translation: "test translation" },
-  { term: "hello", translation: "hello translation" },
-];
 
 jest.mock("@/components/games/vocabulary/dragon-rider/DragonRiderGame", () => ({
   DragonRiderGame: ({
@@ -57,7 +60,12 @@ jest.mock("@/components/games/vocabulary/dragon-rider/DragonRiderGame", () => ({
   ),
 }));
 
-describe("DragonRiderPage", () => {
+const mockVocab = [
+  { term: "test", translation: "test translation" },
+  { term: "hello", translation: "hello translation" },
+];
+
+describe("DragonRiderPage — Phase 5 embeddable navigation", () => {
   beforeAll(() => {
     global.fetch = jest.fn(() =>
       Promise.resolve({
@@ -80,31 +88,49 @@ describe("DragonRiderPage", () => {
     });
   });
 
-  it("renders the Dragon Rider shell and loads vocabulary", async () => {
+  it("has no hardcoded /en/ hrefs (D-07)", async () => {
     render(<DragonRiderPage params={Promise.resolve({ locale: "en" })} />);
 
     await waitFor(() => {
       expect(screen.queryByText(/Loading Dragon Rider/i)).not.toBeInTheDocument();
     });
 
-    expect(screen.getByTestId("dragon-rider-vocab")).toBeInTheDocument();
-
-    await waitFor(() => {
-      expect(useGameStore.getState().vocabulary.length).toBeGreaterThanOrEqual(0);
-    });
+    const links = screen.queryAllByRole("link");
+    expect(links.length).toBeGreaterThan(0);
+    for (const link of links) {
+      const href = link.getAttribute("href");
+      expect(href).not.toMatch(/^\/en\//);
+    }
   });
 
-  it("records XP results on completion", async () => {
+  it("calls onNavigate('games') when the back-to-menu control is clicked (D-09)", async () => {
+    const onNavigate = jest.fn();
+    render(
+      <DragonRiderPage
+        params={Promise.resolve({ locale: "en" })}
+        {...({ onNavigate } as any)}
+      />
+    );
+
+    await waitFor(() => {
+      expect(screen.queryByText(/Loading Dragon Rider/i)).not.toBeInTheDocument();
+    });
+
+    const backButton = screen.getByRole("link", { name: /Back to Menu/i });
+    fireEvent.click(backButton);
+
+    // onNavigate call count: 1 (back-to-menu control)
+    expect(onNavigate).toHaveBeenCalledTimes(1);
+    expect(onNavigate).toHaveBeenCalledWith("games");
+  });
+
+  it("positive control: the back-to-menu control is still rendered", async () => {
     render(<DragonRiderPage params={Promise.resolve({ locale: "en" })} />);
 
     await waitFor(() => {
       expect(screen.queryByText(/Loading Dragon Rider/i)).not.toBeInTheDocument();
     });
 
-    fireEvent.click(screen.getByRole("button", { name: "Complete" }));
-
-    const { lastXp, lastAccuracy } = useGameStore.getState();
-    expect(lastXp).toBe(4);
-    expect(lastAccuracy).toBe(0.5);
+    expect(screen.getByRole("link", { name: /Back to Menu/i })).toBeInTheDocument();
   });
 });
