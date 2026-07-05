@@ -2,16 +2,16 @@
 
 > **Track ID:** `wave3_product_alignment_20260628`
 > **Baseline SHA:** `8a47d2df999e35d9d47de9eb590ae29523c70bae`
-> **Active phases for this cycle:** Phase 4 (Tenant-Safe Persistence and
-> Leaderboards). Phases 0, 1, 2, and 3 are **complete and accepted** — their
-> strategies are preserved verbatim below for provenance. Phase 5 remains deferred
-> (see §9 Deferrals).
+> **Active phases for this cycle:** Phase 5 (Embeddable Runtime, i18n, and Shared
+> Package). Phases 0, 1, 2, 3, and 4 are **complete and accepted** — their
+> strategies are preserved verbatim below for provenance.
 >
 > This document specifies:
 > - §0.A — Phase 0 artifact tests (decisions/matrix truthfulness) — complete
 > - §0.B — Phase 1 live-behavior tests (claims correction) — complete
 > - §0.C — Phase 3 live-behavior tests (games completion/scoring contract) — complete
-> - §0.D — Phase 4 live-behavior tests (tenant-safe persistence + leaderboards) — **active**
+> - §0.D — Phase 4 live-behavior tests (tenant-safe persistence + leaderboards) — complete
+> - §0.E — Phase 5 live-behavior tests (embeddable runtime + i18n + shared package) — **active**
 > - §1–§10 — Phase 2 strategy, preserved unchanged for provenance
 
 ---
@@ -845,6 +845,373 @@ this phase is pre-existing and must be labeled as such in the phase result
 
 ---
 
+## 0.E. Phase 5 — Embeddable Runtime, i18n, and Shared Package (live-behavior tests)
+
+Phase 5 is the live-behavior phase that delivers the embeddable runtime contract
+frozen in `phase-5-decisions.md`. It spans **two test surfaces**: a jest
+import-harness suite (`apps/advantage-games/src/__tests__/import-harness/haunted-library-import.test.tsx`,
+new — the load-bearing proof for spec §Acceptance "test harness before any
+product import"), and a jest component/page suite (extended
+`HauntedLibraryGame.test.tsx` + rewritten `dragon-rider` page test). The
+import-harness suite is the load-bearing proof for the embeddable-navigation,
+i18n, and host-progress-integration claims — those properties cannot be proven
+by the Phase 3 component test (which renders in isolation without a host shell)
+or the Phase 4 PGlite test (which proves DB persistence, not host wiring).
+
+### What Phase 5 must defend against (anti-patterns)
+
+| Anti-pattern | Where it applies in Phase 5 | Defense |
+|---|---|---|
+| **A4** Vacuous-pass on nothing-done | Every import-harness assertion (5A/5B/5C/5E); every component assertion (5D) | **Positive + negative control pairing**: every embeddable-navigation test pairs a "no `window.location` mutation" (negative) with "`onNavigate` called" (positive). A harness that passes only because nothing renders fails the positive control. Every i18n test pairs a `th`-locale render (positive control — the locale flows) with an `en`-locale catalog-reachable assertion (positive control — the catalog is not empty). Every host-progress test pairs a first-call insert (positive) with a second-call `duplicate: true` (fire-once positive control). A function that always returns `duplicate: true` fails the first-call control. |
+| **A5** False-claim text vs test reality | `plan.md` Phase 5 task text | Do not write "embeddable navigation" / "i18n wired" / "import-ready" / "harness passes" in `plan.md` unless `pnpm --filter vocabulary-games test --testPathPatterns=import-harness` exits 0. The cited command is the source of truth. |
+| **A6** Registry-note overstatement | `measure/tracks.md` Wave 3 row; `product-risk-register.md` | Do **not** claim D-07/D-09/D-11 or CA-013 / MR-H05 is "resolved" until Phase 5 acceptance passes AND the successor-track production pilot import is green. Phase 5 closes the **harness** gate, not the production-import gate. The findings stay "open" in `product-risk-register.md` until the successor track. |
+| **A3** Digit-only as labeled count | Shared-runtime canonical-source count (5E); `calculateClientXP` integer assertions (5E); `onNavigate` call-count assertions (5A) | Use labeled-integer assertions: `expect(calculateClientXP(100, 10, 10)).toBe(10)` with a comment `// Client XP preview: 10 = floor(10 * 1.0)`; emit `Canonical VirtualDPad source count: 1` and parse the integer; `expect(onNavigateSpy).toHaveBeenCalledTimes(1)` with a comment `// onNavigate call count: 1 (exit control)`. Never `rg -q '[0-9]+'` or a bare-digit match. |
+| **A7** Over-broad filter swallowing hits | `window.location.href` exit scans (5A); duplicate-file scans (5E) | Match exact exit literals (`window.location.href = "/student/games"`, `window.location.href = "/"`), not bare words like "location"/"navigation"/"href" (which appear legitimately in the `onNavigate` contract and `useRouter` imports). When scanning for duplicate `VirtualDPad` sources, match exact file paths (`components/ui/VirtualDPad.tsx`, `components/games/ui/VirtualDPad.tsx`), not bare "VirtualDPad" (which appears in every consumer import). |
+| **A9** Pre-existing test references archived track paths | New `import-harness` test, extended `HauntedLibraryGame.test.tsx`, rewritten `dragon-rider` page test | Tests reference `apps/advantage-games/src/` and `@reading-advantage/domain/games` only — never a `measure/tracks/<id>/` path. Provenance comments may cite `phase-5-decisions.md` but no runtime dependency on a track path. If the track later archives, tests must not break. |
+| **A2** Consent-blind publish gate | N/A — no publish flow in Phase 5. | Consciously not applicable. |
+| **A10** Generated-facts drift | N/A — Phase 5 does not regenerate `measure/generated/` and does not run a live DB. | Consciously not applicable. |
+| **A11** Executed review track left fully blocked | Phase 5 deferred items (24 games, workspace extraction, real translations, production pilot) | Every Tier 2 deferral is recorded with a precise `[b] deferred:<owner>` marker in `phase-5-decisions.md` Decision 5.7 and a conscious non-test comment in the import-harness test. The deferred items are not silently skipped. |
+| **A1, A8, A12, A13** | Orchestrator-internal, plan-marker, catalog, or closeout classes. | Consciously not applicable to Phase 5 product tests. |
+
+### Confirmed gaps to defend against (evidence-mapped, frozen in `phase-5-decisions.md`)
+
+| Group | Gap IDs | Evidence | Phase 5 Red asserts |
+|-------|---------|----------|---------------------|
+| 5A — Embeddable navigation (D-09) | D-09, B27-010, B29-004, B31-001, B21-039 | `findings.md` §D D-09; 10 `window.location.href` exits + `PotionRushGame.tsx:350` `router.push("/")` | Import-harness: render `HauntedLibraryGame` inside `HostShell` with `onNavigate` spy; simulate game-over + exit click; assert `window.location.href` setter is NOT called (spy) AND `onNavigate` is called with the expected target. **Positive control:** render without `HostShell` (standalone); assert the `<Link>` fallback is present (standalone path not broken). |
+| 5B — i18n message source (D-07) | D-07, B22-001, B36-001, B36-002, B42-242 | `findings.md` §A4, §D D-07; `client.ts:39-41` (hardcoded `'en'`); `layout.tsx:3-5` (single-locale static params) | Import-harness: render with `locale="th"`; assert the page's `fetch` call includes `?locale=th` (mock-fetch spy) AND `useCurrentLocale()` returns `"th"` (context assertion). **Positive control:** render with `locale="en"`; assert `useScopedI18n('pages.student.gamesPage')('loading')` returns the `en.ts` literal (catalog reachable, not empty). |
+| 5C — Host progress integration | spec §Acceptance; Phase 3 D-01/D-02; Phase 4 Decision 4.5 | `phase-3-decisions.md` Decision 3.4; `phase-4-decisions.md` Decision 4.5 | Import-harness: simulate game-over; assert the `onComplete` payload (Phase 3 shape, no `xp` field) reaches the mocked `recordGameCompletion` from `@reading-advantage/domain/games`; assert the mock is called exactly once with `gameType: "haunted-library"` + `idempotencyKey` UUID. **Positive control (fire-once):** a second game-over with the same `idempotencyKey` calls `recordGameCompletion` and the mock returns `duplicate: true, xpEarned: 0` (Phase 3/4 fire-once contract preserved in the host path). |
+| 5D — Representative-game component + page migration (D-09 + D-07) | D-07, D-09, B36-001/002 | `game-readiness-matrix.md` haunted-library row; `dragon-rider/page.tsx:99,113` | Extended `HauntedLibraryGame.test.tsx`: assert the component still renders with the canonical `VirtualDPad` from `@/lib/games-runtime` (not the duplicate `@/components/games/ui/VirtualDPad`). Rewritten `dragon-rider` page test: assert `<Link href="/en/student/games">` is gone (no `/en/` prefix) and the page calls `onNavigate` (or falls back to `<Link href="/student/games">`) — the page renders without the hardcoded locale. **Positive control:** the page still renders the back-to-menu control (deletion-only fix fails). |
+| 5E — Shared games runtime module (D-11) | D-11, B00-014, B00-015, B29-001, B33-011 | `findings.md` §A6, §D D-11; duplicate `VirtualDPad`/`basePath`/`xp` files | Static guard + behavioral: assert `apps/advantage-games/src/lib/games-runtime/index.ts` exports `VirtualDPad`, `withBasePath`, `calculateClientXP`. Labeled-integer count: `Canonical VirtualDPad source count: 1` (parsed from the re-export — A3 defense). Behavioral: `calculateClientXP(100, 10, 10)` returns `10` (labeled `// Client XP preview: 10 = floor(10 * 1.0)`). **A4 positive control:** the canonical `VirtualDPad` renders (memoized identity); **A4 negative control:** the duplicate `components/games/ui/VirtualDPad.tsx` is a re-export, not a divergent implementation (import-identity assertion). |
+
+### Gate commands (Phase 5)
+
+- **RED_TEST_COMMAND:** `pnpm --filter vocabulary-games test --testPathPatterns=import-harness`
+  (jest, bounded to the new harness file). Mid-Red may also run
+  `pnpm --filter vocabulary-games test --testPathPatterns=HauntedLibraryGame` to
+  prove the extended component test fails for the intended reason (`onNavigate`
+  assertion + locale-context assertion + canonical-runtime import).
+- **GREEN_TEST_COMMAND:**
+  `pnpm --filter vocabulary-games test --testPathPatterns=import-harness`
+  AND `pnpm --filter vocabulary-games test --testPathPatterns=HauntedLibraryGame`
+  (jest green). Jr-Green also runs
+  `pnpm --filter vocabulary-games test --testPathPatterns=DragonRider` (the
+  navigation-fix representative page test).
+- **PROJECT_LINT:** `pnpm --filter vocabulary-games lint`
+- **PROJECT_CHECKS:** `pnpm --filter vocabulary-games check-types`
+- **REGRESSION_GATES (no Phase 5 Red, run at acceptance):**
+  `pnpm --filter @reading-advantage/domain test -- games` AND
+  `pnpm --filter @reading-advantage/domain test -- games-live` AND
+  `pnpm --filter @reading-advantage/domain test -- tenant-coverage` must remain
+  green — Phase 5 does NOT modify `packages/domain` or `packages/db`, so the
+  Phase 3/4 gates are regression checks only. A regression indicates Phase 5
+  accidentally touched a frozen layer.
+
+### Phase 5 Red → Green → Closeout
+
+Phase 5 is decomposed into five test groups (5A..5E). All groups share the Green
+gate `pnpm --filter vocabulary-games test --testPathPatterns=import-harness`
+(jest, the new harness file) plus
+`pnpm --filter vocabulary-games test --testPathPatterns=HauntedLibraryGame`
+(extended component test) plus
+`pnpm --filter vocabulary-games test --testPathPatterns=DragonRider` (rewritten
+page test) plus the closeout gate below.
+
+**Target files (new / rewritten / extended):**
+
+- `apps/advantage-games/src/lib/games-runtime/index.ts` (new) — barrel exporting
+  `VirtualDPad`, `withBasePath`, `calculateClientXP`.
+- `apps/advantage-games/src/lib/games-runtime/VirtualDPad.tsx` (new) — canonical
+  memoized implementation (moved from `components/ui/VirtualDPad.tsx`).
+- `apps/advantage-games/src/lib/games-runtime/basePath.ts` (new) — canonical
+  `withBasePath`.
+- `apps/advantage-games/src/lib/games-runtime/xp.ts` (new) — canonical
+  `calculateClientXP` (renamed from `calculateXP` to distinguish from server-side
+  `calculateGameXP`).
+- `apps/advantage-games/src/components/ui/VirtualDPad.tsx` (rewritten) — re-export
+  of `@/lib/games-runtime/VirtualDPad`.
+- `apps/advantage-games/src/components/games/ui/VirtualDPad.tsx` (rewritten) —
+  re-export of `@/lib/games-runtime/VirtualDPad`.
+- `apps/advantage-games/src/lib/basePath.ts` (rewritten) — re-export.
+- `apps/advantage-games/src/lib/games/basePath.ts` (rewritten) — re-export.
+- `apps/advantage-games/src/lib/xp.ts` (rewritten) — re-export of
+  `calculateClientXP` (preserving the `calculateXP` name for unmigrated
+  consumers).
+- `apps/advantage-games/src/lib/games/xp.ts` (rewritten) — re-export.
+- `apps/advantage-games/src/locales/client.ts` (rewritten) — `useCurrentLocale`
+  reads from `GamesLocaleContext`; `useScopedI18n` catalog is locale-aware
+  (`en.ts` for `en`; key-fallback for `th`/`zh`).
+- `apps/advantage-games/src/locales/GamesLocaleContext.tsx` (new) — React context
+  providing `locale: string` (defaults to `'en'`).
+- `apps/advantage-games/src/app/[locale]/layout.tsx` (rewritten) —
+  `generateStaticParams` returns `[{locale:'en'},{locale:'th'},{locale:'zh'}]`.
+- `apps/advantage-games/src/lib/gameCards.ts` (rewritten) — 28
+  `/en/student/games/...` hrefs → `/student/games/...` (locale-agnostic).
+- `apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/dragon-rider/page.tsx`
+  (rewritten) — drop `/en/` prefix; wire `onNavigate` (or `<Link href="/student/games">`
+  fallback).
+- `apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/haunted-library/page.tsx`
+  (extended) — wire `onNavigate` callback for the exit control; wrap in
+  `GamesLocaleContext.Provider` (or accept the host-provided context).
+- `apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx`
+  (extended) — accept optional `onNavigate` prop; the exit control calls
+  `onNavigate("exit")` when provided, falls back to the existing `<Link>` when
+  absent.
+- `apps/advantage-games/src/__tests__/import-harness/haunted-library-import.test.tsx`
+  (new) — groups 5A, 5B, 5C, 5E (the load-bearing harness proof).
+- `apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.test.tsx`
+  (extended) — group 5D (canonical-runtime import assertion).
+- `apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/dragon-rider/page.test.tsx`
+  (rewritten) — group 5D (no `/en/` href; `onNavigate` wiring).
+
+**Red command (bounded):** `pnpm --filter vocabulary-games test --testPathPatterns=import-harness`
+
+**Red assertions (one block per group, all asserting against HEAD `c915e7fd` source):**
+
+1. **5A embeddable navigation** — `import-harness.test.tsx`: render
+   `HauntedLibraryGame` inside `HostShell` with `onNavigate` spy. Simulate
+   game-over (mock `tickLibrary` to return `phase: "victory"`, matching the
+   Phase 3 test pattern). Assert `window.location.href` setter is NOT called
+   (spy on `Object.defineProperty(window, 'location', ...)`) AND `onNavigate`
+   is called with `"exit"` when the user clicks the exit control.
+   **A4 positive control:** render without `HostShell` (standalone); assert the
+   `<Link>` fallback is present in the rendered output (the standalone path is
+   not broken). **A7:** match the exact `window.location.href` setter, not bare
+   "location". **A3:** `expect(onNavigateSpy).toHaveBeenCalledTimes(1)` with
+   labeled comment `// onNavigate call count: 1 (exit control)`.
+2. **5B i18n message source** — `import-harness.test.tsx`: render with
+   `locale="th"` via `GamesLocaleContext.Provider`. Assert the page's `fetch`
+   call (mock `global.fetch`) includes `?locale=th` AND `useCurrentLocale()`
+   returns `"th"`. **A4 positive control:** render with `locale="en"`; assert
+   `useScopedI18n('pages.student.gamesPage')('loading')` returns the `en.ts`
+   literal `"Searching the Restricted Section..."` (or whatever the en.ts tree
+   holds) — the catalog is reachable, not empty. **A7:** match the exact
+   `?locale=th` query string, not bare "locale".
+3. **5C host progress integration** — `import-harness.test.tsx`: mock
+   `recordGameCompletion` from `@reading-advantage/domain/games`. Simulate
+   game-over. Assert the mock is called exactly once with
+   `{ gameType: "haunted-library", idempotencyKey: <UUID>, ... }` (Phase 3
+   shape, no `xp` field). Assert the mock returns
+   `{ duplicate: false, xpEarned: <calculated>, activityId: "game:haunted-library:<uuid>" }`.
+   **A4 positive control (fire-once):** simulate a second game-over with the same
+   `idempotencyKey`; assert the mock is called again AND returns
+   `{ duplicate: true, xpEarned: 0 }`. **A3:** labeled
+   `// recordGameCompletion call count: 1 (first game-over)` and
+   `// recordGameCompletion call count: 2 (second game-over, duplicate: true)`.
+4. **5D representative-game component + page migration** — extended
+   `HauntedLibraryGame.test.tsx`: assert the component imports `VirtualDPad`
+   from `@/lib/games-runtime` (mock the canonical module and assert the spy is
+   rendered). Rewritten `dragon-rider` page test: assert no `<Link href="/en/...">`
+   exists in the rendered output (query for `href` containing `/en/`); assert
+   the back-to-menu control is still rendered (positive control — deletion-only
+   fix fails). **A7:** match the exact `/en/` prefix in the href, not bare "en".
+5. **5E shared games runtime module** — `import-harness.test.tsx` (or a
+   dedicated `games-runtime.test.ts`): assert
+   `@/lib/games-runtime/index.ts` exports `VirtualDPad`, `withBasePath`,
+   `calculateClientXP`. Labeled-integer count: emit
+   `Canonical VirtualDPad source count: 1` (parsed from a grep of the
+   `games-runtime/index.ts` re-export — the count is `1` because there is one
+   canonical source; the duplicate files are re-exports, not sources).
+   Behavioral: `calculateClientXP(100, 10, 10)` returns `10` (labeled
+   `// Client XP preview: 10 = floor(10 * 1.0)`); `calculateClientXP(0, 0, 0)`
+   returns `0` (edge case). **A4 positive control:** the canonical `VirtualDPad`
+   renders (memoized identity via `React.memo` displayName check); **A4 negative
+   control:** the duplicate `components/games/ui/VirtualDPad.tsx` is a re-export
+   (import the duplicate path and assert `===` identity with the canonical
+   export).
+
+**Positive controls (A4 defense — non-vacuity):** every group includes a
+positive control. 5A: standalone `<Link>` fallback renders. 5B: `en` catalog
+reachable. 5C: first-call insert + second-call `duplicate: true`. 5D:
+back-to-menu control still renders. 5E: canonical `VirtualDPad` renders +
+duplicate is a re-export. A group that passes only because nothing renders or
+the schema rejects everything fails its positive control.
+
+### Phase 5 Green gate
+
+- `pnpm --filter vocabulary-games test --testPathPatterns=import-harness` exits
+  **0** (jest, the new harness file passes — the load-bearing
+  embeddable-navigation + i18n + host-progress + shared-runtime proofs).
+- `pnpm --filter vocabulary-games test --testPathPatterns=HauntedLibraryGame`
+  exits **0** (extended component test passes — canonical-runtime import).
+- `pnpm --filter vocabulary-games test --testPathPatterns=DragonRider` exits
+  **0** (rewritten page test passes — no `/en/` href + `onNavigate` wiring).
+- `pnpm --filter vocabulary-games lint` exits 0.
+- `pnpm --filter vocabulary-games check-types` exits 0.
+- **Regression gates (no Phase 5 Red, must stay green):**
+  `pnpm --filter @reading-advantage/domain test -- games` exits 0 (Phase 3
+  contract intact); `pnpm --filter @reading-advantage/domain test -- games-live`
+  exits 0 (Phase 4 persistence intact); `pnpm --filter @reading-advantage/domain
+  test -- tenant-coverage` exits 0 (no schema change).
+
+### Phase 5 closeout gate
+
+- All Green-gate commands green.
+- Every gap in the table above (5A..5E) has at least one **red-at-baseline /
+  green-after-fix** test with a positive control.
+- `phase-5-decisions.md` exists and its Tier 1 decisions are reflected in the
+  implemented harness/runtime/locale wiring. Tier 2 items
+  (`[b] deferred:infra` / `[b] deferred:po`) remain deferred in `plan.md`
+  Phase 6 / successor track — Phase 5 did not invent the 24-game migration, the
+  `packages/games-runtime` workspace extraction, the duplicate-file drop, the
+  next-intl migration, real th/zh translations, or the production pilot import.
+- The Phase 3 `recordGameCompletion` contract + Phase 4 race-safe persistence
+  are **untouched** (regression gates green) — Phase 5 did not scope-creep into
+  the frozen contract/persistence layers.
+- `measure/tracks.md` does NOT claim D-07/D-09/D-11 / CA-013 / MR-H05 is
+  "resolved" — the findings stay "open" until the successor-track production
+  pilot import is green (A6 defense). Phase 5 closes the **harness** gate, not
+  the production-import gate.
+- The existing `vocabulary-games` suite has no regressions in tests other than
+  the rewritten `dragon-rider` page test (which intentionally changes its
+  assertions from `/en/`-prefixed to locale-agnostic) and the extended
+  `HauntedLibraryGame.test.tsx` (which adds the canonical-runtime assertion).
+
+### Phase 5 fixtures, mocks, and live-behavior proof
+
+- **`HostShell` mock component (the load-bearing fixture):** a minimal React
+  component that provides `GamesLocaleContext.Provider` value, an `onNavigate`
+  callback prop, and renders `children`. The harness wraps
+  `HauntedLibraryGame`'s page (or the component directly, depending on the
+  assertion scope) inside `HostShell`. This is the honest tier for an
+  import-harness proof: the contract is proven at the wiring level; the live-DB
+  proof (Phase 4 `games-live.test.ts`) and the route-level proof (Phase 3
+  `completeRoute.test.ts`) already cover the lower tiers.
+- **Mock `recordGameCompletion`:** `jest.mock("@reading-advantage/domain/games",
+  () => ({ recordGameCompletion: jest.fn(...) }))` — the host's progress
+  integration point. The mock returns `{ duplicate: false, xpEarned: <n>,
+  activityId: "game:haunted-library:<uuid>" }` on first call and
+  `{ duplicate: true, xpEarned: 0, activityId: "game:haunted-library:<uuid>" }`
+  on second call with the same `idempotencyKey` (mirroring the Phase 3/4
+  fire-once contract).
+- **Mock `global.fetch`:** `jest.spyOn(global, "fetch")` returning canned
+  sentences (`{ sentences: [{ term: "ghost", translation: "ผี" }] }`) and
+  capturing the `?locale=` query string for the 5B assertion.
+- **Mock `window.location.href` setter:** spy on the setter via
+  `Object.defineProperty(window, "location", { ... })` so the 5A assertion can
+  verify the setter is NOT called. **A7 defense:** the spy matches the exact
+  `href` setter, not bare "location" reads (which happen legitimately in
+  Next.js router internals).
+- **Mock `tickLibrary`:** follow the existing Phase 3
+  `HauntedLibraryGame.test.tsx:11-17` pattern — a mutable `tickMock.fn` that
+  defaults to the real `tickLibrary` and can be overridden to force
+  `phase: "victory"` for the game-over simulation.
+- **No real Postgres, no real AI, no real network.** The harness mocks
+  `recordGameCompletion`, `fetch`, and `window.location`. This matches the
+  Phase 3 standalone-route tier and the Phase 3 component-test tier; the
+  Phase 4 PGlite tier is not duplicated here (Phase 5 has no schema change).
+- **Konva mock:** reuse the existing Phase 3
+  `HauntedLibraryGame.test.tsx:24-32` `react-konva` mock (`Stage`/`Layer`/`Rect`/
+  `Text`/`Circle`/`Group` as `<div data-testid="konva-*">`).
+
+### Phase 5 architecture guardrails and changed-contract risks
+
+- **Do not modify `packages/domain/src/games/`** (Phase 3 contract). The
+  `recordGameCompletion` function, `GameCompletionInputSchema`,
+  `calculateGameXP`, and `getSchoolLeaderboard` are frozen. Phase 5 wires the
+  host shell to call them; it does not change their signatures. A regression
+  test (`pnpm --filter @reading-advantage/domain test -- games`) must remain
+  green.
+- **Do not modify `packages/db/src/schema/analytics.ts`** (Phase 4 persistence).
+  The `gameCompletions` table, `xpLogs` unique constraint, and
+  `leaderboards.schoolId` notNull are frozen. Phase 5 has no schema migration.
+- **Do not migrate the 8 per-game `calculateXP` functions** in
+  `hauntedLibrary.ts`, `realmCarver.ts`, etc. They are correctly game-specific
+  state→XP mappers, not runtime primitives. Only the two duplicate 3-arg
+  `xp.ts` files are consolidated into `calculateClientXP`. A test should
+  assert the per-game functions are unchanged (grep for `export function
+  calculateXP(state:` in the 8 game-logic files and assert the signatures
+  match baseline).
+- **Do not drop the duplicate `VirtualDPad`/`basePath`/`xp` files.** They
+  become re-export shims so unmigrated games don't break (24 games still import
+  from the old paths). Dropping the shims is the successor-track Tier 2 item.
+  A test should assert the re-exports have the same export names as the
+  originals (positive control — no consumer breaks).
+- **Do not extract `packages/games-runtime` workspace package.** Only 2 of 26
+  games migrate to the canonical module in Phase 5. Extracting prematurely
+  would leave 24 games importing from a workspace package they haven't
+  migrated to. The in-app canonical module is the honest single source of
+  truth for the harness proof.
+- **Do not migrate to `next-intl`/`next-international`.** The custom `client.ts`
+  is kept; only the locale source is made host-injectable via
+  `GamesLocaleContext`. Framework migration is `[b] deferred:infra`.
+- **Changed-contract risk:** `useCurrentLocale()` no longer returns the literal
+  `'en'`; it reads from `GamesLocaleContext`. Existing tests that mock
+  `@/locales/client` (e.g. `potion-rush/page.test.tsx:27`,
+  `rune-match/page.test.tsx:6`) must be updated to provide the context value
+  OR the `client.ts` fallback (`'en'` when no provider) must preserve the
+  standalone behavior. Phase 5 prefers the fallback approach so unmigrated
+  tests don't break — the context defaults to `'en'` when no provider wraps
+  the consumer.
+- **Changed-contract risk:** `gameCards.ts` hrefs change from
+  `/en/student/games/...` to `/student/games/...`. Any test that asserts on the
+  literal `/en/` href (e.g. `babelArchitectCompliance.test.ts:14` asserts
+  `'/en/student/games/sentence/babel-architect'`) must be updated. This is a
+  true Red → Green contract change, not a regression. The acceptance role
+  must verify the rewritten test fails at the Red commit (before the href
+  change) and passes at the Green commit (after the href change).
+- **Changed-contract risk:** `generateStaticParams` returns three locales
+  instead of one. The standalone export produces `/en/`, `/th/`, `/zh/` routes.
+  The `/th/` and `/zh/` routes fall back to `en.ts` keys (explicit key-fallback
+  in `useScopedI18n`). This is honest: the fallback is explicit, not silent.
+  A test should assert the fallback returns the key itself (not a crash, not
+  an empty string).
+- **Migration ordering risk:** the `gameCards.ts` href change must land in the
+  same commit as the `dragon-rider` page href change so the gallery link and
+  the page link are consistent. Splitting them across commits creates a
+  window where the gallery points to a locale-agnostic path but the page still
+  has `/en/` — a temporary inconsistency. Jr-Green must land both in one
+  commit.
+
+### Phase 5 intentionally-red aggregate-suite handling
+
+The monorepo aggregate suite (`pnpm turbo run test`) is **red at baseline** from
+pre-existing, owner-labeled failures outside Wave 3 (see `measure/tracks.md:112-115`:
+"aggregate reds are pre-existing/owner-labeled"). Phase 5 does **not** attempt
+to green the aggregate suite. The Phase 5 gate is **scoped to the three jest
+filters** (`pnpm --filter vocabulary-games test --testPathPatterns=import-harness`,
+`pnpm --filter vocabulary-games test --testPathPatterns=HauntedLibraryGame`,
+`pnpm --filter vocabulary-games test --testPathPatterns=DragonRider`), which
+must be fully green. The regression gates
+(`pnpm --filter @reading-advantage/domain test -- games`,
+`pnpm --filter @reading-advantage/domain test -- games-live`,
+`pnpm --filter @reading-advantage/domain test -- tenant-coverage`) must also be
+green but are NOT Phase 5 Red gates — they are regression checks proving Phase 5
+did not touch the frozen Phase 3/4 layers. Any non-vocabulary-games /
+non-domain aggregate red observed during this phase is pre-existing and must be
+labeled as such in the phase result `known_failures` — never silently absorbed
+into a "green" claim (A5/A6).
+
+### Phase 5 artifact vs live-behavior distinction
+
+- **Live-behavior tests (load-bearing):** `import-harness.test.tsx` (jest)
+  renders the real `HauntedLibraryGame` component (via dynamic import, matching
+  the page wiring) inside a real `HostShell` React component, with mocked
+  `recordGameCompletion`/`fetch`/`window.location`. This proves the embeddable
+  navigation (5A), i18n (5B), host progress integration (5C), and shared
+  runtime (5E) properties that the Phase 3 component test (no host shell)
+  and the Phase 4 PGlite test (no React component) cannot prove.
+- **Component test (extended):** `HauntedLibraryGame.test.tsx` (jest) renders
+  the real component and asserts on the canonical-runtime import (5D). This is
+  a behavioral test over the real component's import graph.
+- **Page test (rewritten):** `dragon-rider` page test (jest) renders the real
+  page and asserts on the locale-agnostic href + `onNavigate` wiring (5D). This
+  is a behavioral test over the real page component.
+- **Artifact/documentation tests:** `phase-5-decisions.md` is a frozen
+  artifact, not a live-behavior test. Its truthfulness is guarded by the Phase
+  0 artifact pattern (re-verify cited source literals exist at HEAD). Phase 5
+  does not add new artifact tests — the decisions doc is the strategy's
+  falsifiability anchor, not a test target. The `phase-5-decisions.md` file is
+  referenced in `import-harness.test.tsx` provenance comments only, with no
+  runtime dependency (A9).
+- **Static/behavioral hybrid (5E):** the canonical-source count assertion
+  emits a labeled integer `Canonical VirtualDPad source count: 1` and parses
+  it. This is a static guard (the count is derived from a grep of the
+  `games-runtime/index.ts` re-export), but the `calculateClientXP` and
+  `VirtualDPad`-render assertions are behavioral. Labeled as a hybrid:
+  static-count + behavioral-render.
+
+---
+
 ## 1. Scope of this cycle (Phase 2 — preserved for provenance)
 
 > The section below is the original Phase 2 strategy, preserved unchanged. Phase 2 is
@@ -1195,22 +1562,28 @@ labeled as such in the phase result `known_failures` — never silently absorbed
   shared Zod contract, server-side XP, fire-once guard, and `haunted-library` migration
   against HEAD `8900196e`. Tier 2 items (`activity_type` pgEnum extension,
   `gameCompletions` table, remaining 25 games migration) are deferred to Phase 4 / 5+.
-- **Phase 4 — Tenant-Safe Persistence and Leaderboards:** **ACTIVE this cycle.**
-  Strategy in §0.D. Decisions frozen in `phase-4-decisions.md`. Red tests assert
-  tenant isolation of `gameCompletions`, race-safe fire-once (unique constraint),
-  `leaderboards.schoolId` notNull, `gameRankings` deprecation, server-backed
-  `getSchoolLeaderboard`, and host-mutation Zod (D-06 Tier 1) against HEAD
-  `78f17dc3`. Tier 2 items (`lessonId` tenant-ownership check, `gameRankings` drop,
-  `xpLogs` schoolId, remaining 25 games migration, host-app wiring) are deferred to
-  Phase 5+ / a follow-up infra track.
-- **Phase 5 — Embeddable Runtime, i18n, and Shared Package:** deferred. Owns the
-  embeddable navigation contract, i18n message source, shared runtime package, and the
-  `haunted-library` import-harness proof. Gated on Phases 3 and 4 green per
-  `phase-0-decisions.md` Decision 3.
-- **Phase 6 — Product Acceptance:** deferred until Phases 3–5 are executed. The four
-  `[NEEDS-PO]` Tier 2 questions from `phase-0-decisions.md` are explicitly listed as
-  `[b] deferred:po` items the PO must resolve before final acceptance — they are not
-  silently dropped.
+- **Phase 4 — Tenant-Safe Persistence and Leaderboards:** **DONE.** Strategy
+  in §0.D. Decisions frozen in `phase-4-decisions.md`. Red tests asserted
+  tenant isolation of `gameCompletions`, race-safe fire-once (unique
+  constraint), `leaderboards.schoolId` notNull, `gameRankings` deprecation,
+  server-backed `getSchoolLeaderboard`, and host-mutation Zod (D-06 Tier 1)
+  against HEAD `78f17dc3`. Tier 2 items (`lessonId` tenant-ownership check,
+  `gameRankings` drop, `xpLogs` schoolId, remaining 25 games migration,
+  host-app wiring) are deferred to Phase 5+ / a follow-up infra track.
+- **Phase 5 — Embeddable Runtime, i18n, and Shared Package:** **ACTIVE this
+  cycle.** Strategy in §0.E. Decisions frozen in `phase-5-decisions.md`. Red
+  tests assert embeddable navigation via `onNavigate` (D-09), i18n message
+  source via `GamesLocaleContext` (D-07), shared games runtime module
+  (`VirtualDPad`/`withBasePath`/`calculateClientXP` — D-11), and the
+  `haunted-library` import-harness proof (host progress integration) against
+  HEAD `c915e7fd`. Tier 2 items (remaining 24 games migration,
+  `packages/games-runtime` workspace extraction, duplicate-file drop,
+  next-intl migration, real th/zh translations, production pilot import) are
+  deferred to the successor track.
+- **Phase 6 — Product Acceptance:** deferred until Phases 3–5 are executed. The
+  four `[NEEDS-PO]` Tier 2 questions from `phase-0-decisions.md` are
+  explicitly listed as `[b] deferred:po` items the PO must resolve before
+  final acceptance — they are not silently dropped.
 
 Within Phase 2, one `[NEEDS-PO]` item remains: the exact **role floor** for marketing
 routes (any authenticated staff user vs. an `ADMIN`-equivalent floor) and whether
@@ -1291,7 +1664,7 @@ scope. Tier 2 items (`activity_type` pgEnum extension, `gameCompletions` table,
 remaining 25 games migration) are deferred to Phase 4 / 5+. The `recordActivity`
 generic function is intentionally untouched (D-06 is Phase 4).
 
-### Phase 4 (active this cycle)
+### Phase 4 (complete)
 
 Phase 4 delivers a new `gameCompletions` FLAT table (schoolId notNull + unique
 constraint), an `xpLogs` unique constraint for race-safe fire-once, a
@@ -1314,3 +1687,36 @@ of scope. Tier 2 items (`lessonId` tenant-ownership check, `gameRankings` drop,
 `xpLogs` schoolId, remaining 25 games migration, host-app wiring) are deferred to
 Phase 5+ / a follow-up infra track. The Phase 3 fire-once Tier 2 item (race-safe
 unique constraint) is closed by Phase 4 Decision 4.5.
+
+### Phase 5 (active this cycle)
+
+Phase 5 delivers an embeddable navigation contract (host-injected `onNavigate`
+callback, removing `window.location.href` exits and hardcoded `/en/` hrefs from
+representative games), an i18n message source (`GamesLocaleContext` +
+`generateStaticParams` returns `['en','th','zh']` + `useScopedI18n` keeps the
+`en.ts` tree with explicit key-fallback), a shared games runtime module
+(`apps/advantage-games/src/lib/games-runtime/` exporting one canonical memoized
+`VirtualDPad`, one `withBasePath`, one `calculateClientXP`, with re-export shims
+preserving import paths for unmigrated games), and the `haunted-library`
+import-harness proof, proven by a new
+`apps/advantage-games/src/__tests__/import-harness/haunted-library-import.test.tsx`
+(jest, groups 5A embeddable navigation / 5B i18n / 5C host progress integration /
+5E shared runtime), an extended `HauntedLibraryGame.test.tsx` (jest, group 5D
+canonical-runtime import), and a rewritten `dragon-rider` page test (jest, group
+5D locale-agnostic href + `onNavigate` wiring). Each group is red at `c915e7fd`
+for the specific gap (D-07/B22-001/B36-001/B36-002, D-09/B27-010/B29-004/B31-001/
+B21-039, D-11/B00-014/-015/B29-001/B33-011) and green after the fix, each with a
+positive+negative control pairing so a harness-that-passes-because-nothing-renders
+or a deletion-only fix fails (A4). The phase gate is
+`pnpm --filter vocabulary-games test --testPathPatterns=import-harness` = 0 plus
+`pnpm --filter vocabulary-games test --testPathPatterns=HauntedLibraryGame` = 0
+plus `pnpm --filter vocabulary-games test --testPathPatterns=DragonRider` = 0
+plus lint and check-types, with the aggregate monorepo suite explicitly out of
+scope. Regression gates (`pnpm --filter @reading-advantage/domain test -- games`,
+`-- games-live`, `-- tenant-coverage`) prove Phase 5 did not touch the frozen
+Phase 3/4 layers. Tier 2 items (remaining 24 games migration,
+`packages/games-runtime` workspace extraction, duplicate-file drop, next-intl
+migration, real th/zh translations, production pilot import) are deferred to the
+successor track. Phase 5 closes the **harness** gate, not the production-import
+gate — `measure/tracks.md` does NOT claim D-07/D-09/D-11 / CA-013 / MR-H05 is
+"resolved" until the successor-track production pilot is green (A6 defense).
