@@ -151,13 +151,13 @@
     - `pnpm --filter @reading-advantage/domain check-types` → exit 0
     - `pnpm --filter vocabulary-games lint` → 0 errors
     - `pnpm --filter vocabulary-games check-types` → exit 0
-- [x] Task: Classify game leaderboard/progress tables in tenant registry or create tenant-safe schema/migration. — `<green-sha>`
+- [x] Task: Classify game leaderboard/progress tables in tenant registry or create tenant-safe schema/migration. — `bc792b68`
   - Implementation:
     - `packages/db/src/schema/analytics.ts` — new `gameCompletions` FLAT table (schoolId notNull + unique `(schoolId, userId, activityId)` + index `(schoolId, gameType, difficulty)`); `xpLogs` extended with unique `(userId, activityId)` (Decision 4.1 §1, §2). `gameRankings` retained REFERENTIAL with deprecation comment.
     - `packages/db/drizzle/0026_game_completions.sql` (new) — migration creates `game_completions` table + indexes, adds FK from `gameCompletions(school_id) → schools(id)` and `gameCompletions(user_id) → users(id)`, drops + re-creates `leaderboards_school_id_schools_id_fk` to allow `NOT NULL`, deletes pre-migration null-schoolId rows (operational choice `[b] deferred:infra`), sets `leaderboards.school_id` to `NOT NULL`, adds `xp_logs_user_activity_unique` index.
     - `packages/db/drizzle/meta/_journal.json` — adds `0026_game_completions` entry.
     - `packages/domain/src/tenant-registry.ts` — registers `gameCompletions` as FLAT; adds deprecation comment on `gameRankings` (still REFERENTIAL for tenant-coverage gate).
-- [x] Task: Replace localStorage-only leaderboard with server-backed persistence behind domain functions. — `<green-sha>`
+- [x] Task: Replace localStorage-only leaderboard with server-backed persistence behind domain functions. — `bc792b68`
   - Implementation:
     - `packages/domain/src/games/schema.ts` — new `leaderboardEntrySchema` + `leaderboardResponseSchema` (with `schoolScoped: z.literal(true)` honesty marker).
     - `packages/domain/src/games/queries.ts` — `getSchoolLeaderboard` (server-backed, reads from `gameCompletions` via TenantDB without `unscoped()`, aggregates `SUM(xpEarned)` / `MAX(score)` / `MAX(accuracy)` / `COUNT(*)` per user, ordered by `SUM(xpEarned) DESC`, capped at `min(input.limit ?? 50, 100)`). `getGameCompletions` migrated to read from `gameCompletions` (FLAT) instead of `xpLogs` (REFERENTIAL); no `unscoped()` escape hatch.
@@ -165,12 +165,12 @@
     - `packages/domain/src/games/index.ts` — exports `leaderboardEntrySchema`, `leaderboardResponseSchema`, `getSchoolLeaderboard`, `LeaderboardEntry`.
     - `apps/advantage-games/src/lib/games/api/rankingRoute.ts` — rewritten to validate the (still-mock) response via `leaderboardResponseSchema`; response is a flat array (matches schema); difficulty keys are `["easy","medium","hard","extreme"]` (B21-018 closure, no `normal`).
     - `apps/advantage-games/src/components/games/game/RankingDialog.tsx` — uses local `TabDifficulty` type with `medium` (not `normal`); default tab is `medium`.
-- [x] Task: Add host-progress mutation validation and ownership checks. — `<green-sha>`
+- [x] Task: Add host-progress mutation validation and ownership checks. — `bc792b68`
   - Implementation:
     - `packages/domain/src/progress/schemas.ts` (new) — `recordActivityInputSchema` (`.strict()`, `activityType: string.min(1).max(64)`, `xpEarned: z.number().int().min(0).max(100).optional()`, `metadata: z.string().max(4096).optional()`) and `updateLessonProgressInputSchema` (`.strict()`, `lessonId: z.string().uuid()`, `status: z.enum(["not_started","in_progress","completed"])`, `progress: z.number().min(0).max(100)`). Tier 2 `lessonId` tenant-ownership check remains `[b] deferred:infra` (Decision 4.4).
     - `packages/domain/src/progress/mutations.ts` — both `recordActivity` and `updateLessonProgress` now `.parse(input)` at function entry (auth still first via `assertCan`).
-- [x] Task: Run db/domain/game tests. — `<green-sha>`
-  - Green gate results at HEAD `<green-sha>`:
+- [x] Task: Run db/domain/game tests. — `bc792b68`
+  - Green gate results at HEAD `bc792b68`:
     - `pnpm --filter @reading-advantage/domain test -- games-live` → exit 0; 463 tests pass, 5 skipped (PGlite-only).
     - `pnpm --filter @reading-advantage/domain test -- games` → exit 0; 463 tests pass (Phase 3 contract + Phase 4 mock-DB tests).
     - `pnpm --filter @reading-advantage/domain test -- tenant-coverage` → exit 0; `gameCompletions` registered FLAT; `gameRankings` still REFERENTIAL.
