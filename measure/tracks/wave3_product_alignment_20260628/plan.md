@@ -270,10 +270,34 @@
 
 ## Phase 6: Product Acceptance and Closeout
 
-- [~] Task: Run website, marketing, games, db/domain targeted gates.
-- [~] Task: Update public claims matrix and game-readiness matrix with completed evidence.
-- [~] Task: Record remaining games as NOT-READY/AT-RISK until each is migrated.
-- [~] Task: Run Measure phase acceptance and archive the track.
+- [x] Task: Run website, marketing, games, db/domain targeted gates. — Phase 6 final-acceptance at HEAD `ab1de4d3` (closure-matrix commit `be6dfacf`)
+  - `pnpm --filter www-reading-advantage test phase-w3-claims` → 20/20 pass (exit 0).
+  - `pnpm --filter www-reading-advantage test wave2-product-claim-helper` → 12/12 pass (exit 0).
+  - `pnpm --filter www-reading-advantage lint` → 0 errors (exit 0).
+  - `pnpm --filter www-reading-advantage check-types` → tsc --noEmit clean (exit 0).
+  - `pnpm --filter marketing lint` → 0 errors, 18 pre-existing warnings (exit 0).
+  - `pnpm --filter marketing check-types` → tsc --noEmit clean (exit 0).
+  - `pnpm --filter marketing test phase-w3` → 44/44 pass across 5 files (exit 0).
+  - `pnpm --filter @reading-advantage/domain test -- games` → 524 pass / 5 skipped (exit 0).
+  - `pnpm --filter @reading-advantage/domain test -- games-live` → 524 pass / 5 skipped (exit 0).
+  - `pnpm --filter @reading-advantage/domain test -- tenant-coverage` → 41 files pass / 1 skipped (exit 0).
+  - `pnpm --filter @reading-advantage/domain lint` → 0 errors, 15 pre-existing warnings (exit 0).
+  - `pnpm --filter @reading-advantage/domain check-types` → tsc --noEmit clean (exit 0).
+  - `pnpm --filter @reading-advantage/db check-types` → tsc --noEmit clean (exit 0).
+  - `pnpm --filter vocabulary-games test --testPathPatterns=completeRoute` → 28 pass (exit 0).
+  - `pnpm --filter vocabulary-games test --testPathPatterns=rankingRoute` → 7 pass (exit 0).
+  - `pnpm --filter vocabulary-games test --testPathPatterns=import-harness` → 9 pass (exit 0).
+  - `pnpm --filter vocabulary-games lint` → 0 errors, 6561 pre-existing warnings (exit 0).
+  - `pnpm --filter vocabulary-games check-types` → tsc --noEmit clean (exit 0).
+- [x] Task: Update public claims matrix and game-readiness matrix with completed evidence. — `be6dfacf`
+  - `phase-0-claims-matrix.md` appended a "Phase 6 closure" section: every Tier 1 `[FIX-MUST]` row (CC-01..CC-30) marked RESOLVED with the verifying test group + commit; Tier 2 `[NEEDS-PO]` items (Decisions 1B/2B/4B + Phase 2 carryover) explicitly listed as still-open `[b] deferred:po`.
+  - The source-of-truth `game-readiness-matrix.md` lives in the immutable audit-report tree (`measure/audit-reports/advantage-games_20260626/`) and is NOT modified by this track. The Wave 3 closure overlay is recorded in the new track-level `phase-6-game-readiness-closure.md`.
+- [x] Task: Record remaining games as NOT-READY/AT-RISK until each is migrated. — `be6dfacf`
+  - `phase-6-game-readiness-closure.md` records: 1 game PILOT-IMPORT-READY (haunted-library, Phase 5 harness proven), 1 game NOT-READY navigation-fix sample (dragon-rider), 24 remaining implemented games NOT-READY/AT-RISK with per-game B-batch blockers and successor-track owner, 3 PLACEHOLDER catalog entries unchanged. `measure/tracks.md` does NOT mark MR-H05/CA-013/D-07/D-09/D-11 "resolved" (A6 defense — findings stay open until successor-track production pilot).
+- [x] Task: Run Measure phase acceptance and archive the track. — Phase 6 final-acceptance audit at `audit/phase-6-final-acceptance.json` (this commit); archive move is the closeout role's job, not final-acceptance (per orchestrator role contract).
+  - `bash measure/doctor.sh` → exit 0 (catalog A1-A13 present; supervisor invariants hold; all 22 active track plans use only `[~]`/`[x]`/`[b]` markers; no executed review track left fully blocked).
+  - Final-acceptance audit JSON written to `audit/phase-6-final-acceptance.json` with `status: pass`, empty `blocking_findings`, empty `*_violations` arrays.
+  - Track is NOT archived by this role (closeout role owns the `measure/tracks/` → `measure/archive/` move, the `tracks.md` active-section removal, the `metadata.json` status flip, and the closeout manifest).
 - [b] Task: Resolve Phase 0 Tier 2 `[NEEDS-PO]` questions before final acceptance — deferred:po
   - Decision 1B: per-page keep/hide/delete + specific roadmap dates for Math/STEM/Storytime/Tutor/Zhongwen.
   - Decision 2B: specific approved AI provider/model name per product page (or confirm neutral copy is the long-term choice).
