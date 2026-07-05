@@ -73,6 +73,7 @@ import {
   scienceQuestionStandards,
   schoolAdmins,
   leaderboards,
+  gameCompletions,
 } from "@reading-advantage/db";
 
 register(users, "FLAT");
@@ -100,6 +101,13 @@ register(scienceQuestionStandards, "FLAT");
 // Both have a `schoolId` column and are school-scoped.
 register(schoolAdmins, "FLAT");
 register(leaderboards, "FLAT");
+
+// wave3 Phase 4 — Tenant-safe game-completion record. FLAT (schoolId notNull);
+// TenantDB auto-injects eq(gameCompletions.schoolId, tenant.schoolId) on
+// every select/insert/update/delete. The unique constraint on
+// (schoolId, userId, activityId) is the primary fire-once guard for game
+// completions (Phase 4 Decision 4.1).
+register(gameCompletions, "FLAT");
 
 // ─── EXEMPT tables (intentionally global) ───────────────────
 
@@ -196,6 +204,11 @@ import {
 } from "@reading-advantage/db";
 
 register(xpLogs, "REFERENTIAL");
+// wave3 Phase 4 — `gameRankings` is deprecated (Decision 4.2 §4). New writes
+// go to `gameCompletions`; leaderboard reads come from `getSchoolLeaderboard`
+// over `gameCompletions`. Kept REGISTERED (REFERENTIAL) so the
+// tenant-coverage gate stays green; a future cleanup track may drop it once
+// all readers migrate.
 register(gameRankings, "REFERENTIAL");
 register(aiInsights, "REFERENTIAL");
 register(aiInsightCache, "REFERENTIAL");

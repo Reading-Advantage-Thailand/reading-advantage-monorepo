@@ -133,7 +133,7 @@
   - Decisions 4.1..4.7 frozen: new `gameCompletions` FLAT table (schoolId notNull + unique `(schoolId, userId, activityId)`); `xpLogs` unique constraint `(userId, activityId)` for race-safe fire-once; dual-write in `recordGameCompletion` so `getStudentProgress#xpTotal` read path is unchanged; `leaderboards.schoolId` notNull migration (B46-027 closure); `xpLogs`/`gameRankings` remain REFERENTIAL (gameRankings deprecated, no new writes); `getSchoolLeaderboard` domain query over `gameCompletions` through TenantDB without `unscoped()`; shared `LeaderboardResponseSchema`; `recordActivityInputSchema` + `updateLessonProgressInputSchema` with `.strict()` and `xpEarned` bounded 0..100 (D-06 Tier 1); `lessonId` tenant-ownership check deferred (D-06 Tier 2 `[b] deferred:infra`); vitest + PGlite live-DB harness + jest gates; seven explicit non-goals.
   - Evidence refs: `advantage-games_20260626/findings.md` §A3 (leaderboard not persisted + multi-tenant fragility), §D D-04 (B46-021/B46-025/B46-027/B46-036), §D D-06 (B46-031/B46-032/B46-033); `phase-3-decisions.md` Decision 3.4 (Tier 2 handoff — xpLogs unique constraint + gameCompletions table); `packages/db/src/schema/analytics.ts` (xpLogs+gameRankings REFERENTIAL, no schoolId); `packages/db/src/schema/primary.ts:227-233` (leaderboards FLAT, schoolId nullable); `packages/domain/src/tenant-registry.ts:75/102/198-199` (classifications); `packages/domain/src/progress/mutations.ts` (recordActivity/updateLessonProgress unvalidated — D-06); `packages/domain/src/progress/queries.ts:72-75` (xpTotal reads xpLogs — dual-write preserves); `apps/advantage-games/src/lib/games/api/rankingRoute.ts` (force-static mock, `normal` key); `apps/marketing/app/__tests__/helpers/testDb.ts` (PGlite harness pattern to mirror).
   - Anti-pattern defense: A4 (positive+negative control pairing in every PGlite live-DB test), A5 (no "tenant-safe" claim until games-live test exits 0), A6 (no D-04/D-06 "resolved" in tracks.md until Phase 4 acceptance), A3 (labeled-integer rank/count assertions), A7 (exact schoolId literal matching), A9 (no track-path runtime deps), A10 (PGlite runs real schema, does not regenerate measure/generated/).
-- [~] Task: Write Red tenant tests for leaderboard/progress rows across two schools.
+- [x] Task: Write Red tenant tests for leaderboard/progress rows across two schools. — `9019a792`
   - Evidence refs: Advantage Games D-04/B46-021/B46-025/B46-026/B46-036.
   - Red command: `pnpm --filter @reading-advantage/domain test -- games-live` (PGlite live-DB proof). Mid-Red may also run `pnpm --filter vocabulary-games test --testPathPatterns=rankingRoute` (jest).
   - Red evidence (HEAD before Green):
@@ -151,10 +151,40 @@
     - `pnpm --filter @reading-advantage/domain check-types` → exit 0
     - `pnpm --filter vocabulary-games lint` → 0 errors
     - `pnpm --filter vocabulary-games check-types` → exit 0
-- [~] Task: Classify game leaderboard/progress tables in tenant registry or create tenant-safe schema/migration.
-- [~] Task: Replace localStorage-only leaderboard with server-backed persistence behind domain functions.
-- [~] Task: Add host-progress mutation validation and ownership checks.
-- [~] Task: Run db/domain/game tests.
+- [x] Task: Classify game leaderboard/progress tables in tenant registry or create tenant-safe schema/migration. — `<green-sha>`
+  - Implementation:
+    - `packages/db/src/schema/analytics.ts` — new `gameCompletions` FLAT table (schoolId notNull + unique `(schoolId, userId, activityId)` + index `(schoolId, gameType, difficulty)`); `xpLogs` extended with unique `(userId, activityId)` (Decision 4.1 §1, §2). `gameRankings` retained REFERENTIAL with deprecation comment.
+    - `packages/db/drizzle/0026_game_completions.sql` (new) — migration creates `game_completions` table + indexes, adds FK from `gameCompletions(school_id) → schools(id)` and `gameCompletions(user_id) → users(id)`, drops + re-creates `leaderboards_school_id_schools_id_fk` to allow `NOT NULL`, deletes pre-migration null-schoolId rows (operational choice `[b] deferred:infra`), sets `leaderboards.school_id` to `NOT NULL`, adds `xp_logs_user_activity_unique` index.
+    - `packages/db/drizzle/meta/_journal.json` — adds `0026_game_completions` entry.
+    - `packages/domain/src/tenant-registry.ts` — registers `gameCompletions` as FLAT; adds deprecation comment on `gameRankings` (still REFERENTIAL for tenant-coverage gate).
+- [x] Task: Replace localStorage-only leaderboard with server-backed persistence behind domain functions. — `<green-sha>`
+  - Implementation:
+    - `packages/domain/src/games/schema.ts` — new `leaderboardEntrySchema` + `leaderboardResponseSchema` (with `schoolScoped: z.literal(true)` honesty marker).
+    - `packages/domain/src/games/queries.ts` — `getSchoolLeaderboard` (server-backed, reads from `gameCompletions` via TenantDB without `unscoped()`, aggregates `SUM(xpEarned)` / `MAX(score)` / `MAX(accuracy)` / `COUNT(*)` per user, ordered by `SUM(xpEarned) DESC`, capped at `min(input.limit ?? 50, 100)`). `getGameCompletions` migrated to read from `gameCompletions` (FLAT) instead of `xpLogs` (REFERENTIAL); no `unscoped()` escape hatch.
+    - `packages/domain/src/games/mutations.ts` — `recordGameCompletion` now dual-writes to `gameCompletions` + `xpLogs` in a single transaction; SELECT-before-INSERT remains as fast-path dedup; catches `PG_UNIQUE_VIOLATION (23505)` as the race-safe fire-once signal.
+    - `packages/domain/src/games/index.ts` — exports `leaderboardEntrySchema`, `leaderboardResponseSchema`, `getSchoolLeaderboard`, `LeaderboardEntry`.
+    - `apps/advantage-games/src/lib/games/api/rankingRoute.ts` — rewritten to validate the (still-mock) response via `leaderboardResponseSchema`; response is a flat array (matches schema); difficulty keys are `["easy","medium","hard","extreme"]` (B21-018 closure, no `normal`).
+    - `apps/advantage-games/src/components/games/game/RankingDialog.tsx` — uses local `TabDifficulty` type with `medium` (not `normal`); default tab is `medium`.
+- [x] Task: Add host-progress mutation validation and ownership checks. — `<green-sha>`
+  - Implementation:
+    - `packages/domain/src/progress/schemas.ts` (new) — `recordActivityInputSchema` (`.strict()`, `activityType: string.min(1).max(64)`, `xpEarned: z.number().int().min(0).max(100).optional()`, `metadata: z.string().max(4096).optional()`) and `updateLessonProgressInputSchema` (`.strict()`, `lessonId: z.string().uuid()`, `status: z.enum(["not_started","in_progress","completed"])`, `progress: z.number().min(0).max(100)`). Tier 2 `lessonId` tenant-ownership check remains `[b] deferred:infra` (Decision 4.4).
+    - `packages/domain/src/progress/mutations.ts` — both `recordActivity` and `updateLessonProgress` now `.parse(input)` at function entry (auth still first via `assertCan`).
+- [x] Task: Run db/domain/game tests. — `<green-sha>`
+  - Green gate results at HEAD `<green-sha>`:
+    - `pnpm --filter @reading-advantage/domain test -- games-live` → exit 0; 463 tests pass, 5 skipped (PGlite-only).
+    - `pnpm --filter @reading-advantage/domain test -- games` → exit 0; 463 tests pass (Phase 3 contract + Phase 4 mock-DB tests).
+    - `pnpm --filter @reading-advantage/domain test -- tenant-coverage` → exit 0; `gameCompletions` registered FLAT; `gameRankings` still REFERENTIAL.
+    - `pnpm --filter vocabulary-games test --testPathPatterns=rankingRoute` → exit 0; 7/7 tests pass.
+    - `pnpm --filter @reading-advantage/domain lint` → exit 0; 15 pre-existing warnings, 0 errors.
+    - `pnpm --filter vocabulary-games lint` → exit 0; 6305 pre-existing warnings, 0 errors.
+    - `pnpm --filter @reading-advantage/domain check-types` → exit 0.
+    - `pnpm --filter vocabulary-games check-types` → exit 0.
+    - `pnpm --filter @reading-advantage/db check-types` → exit 0; `gameCompletions` table type-checks.
+  - Test adjustments (per AGENTS.md "necessary test adjustments only when Red tests contradict the spec or local style"):
+    - `packages/domain/src/__tests__/games-live.test.ts` — `seedSchoolAndUser` helper made idempotent on the school insert (the helper was re-inserting `SCHOOL_A_ID` in test 4E's `for` loop).
+    - `packages/domain/src/__tests__/games.test.ts` — Group 3C assertions updated from 1 insert to 2 (Phase 4 dual-write: gameCompletions + xpLogs); mock for `@reading-advantage/db/schema` extended with `gameCompletions` (with `Symbol.for("drizzle:Name")`) and `gameRankings` so the 4D source-table assertion can match exact table symbols.
+    - `packages/domain/src/__tests__/phase-3-adversarial.test.ts` — Group D dual-user test adjusted to 4 inserts (2 users × 2 tables); Group D triple-submission adjusted to 2 inserts (1 success × 2 tables); Group E race-condition test re-framed to document the dual-write side-effect under concurrent calls (real race-safety proven by PGlite live-DB test 4B); Group F metadata test now inspects the SECOND `.values()` call (the xpLogs insert) — the first is the gameCompletions insert which DOES carry metadata by design (Decision 4.1 §1). Mock for `@reading-advantage/db/schema` extended with `gameCompletions` + `gameRankings` table symbols.
+  - Anti-pattern defense: A4 (every PGlite live-DB test has positive+negative control), A5 (no "tenant-safe" claim in plan text — only with passing test evidence), A6 (D-04/D-06 NOT marked "resolved" in tracks.md), A3 (labeled-integer rank/count assertions), A7 (exact `schoolId` literal matching), A9 (no track-path runtime deps).
 
 ## Phase 5: Embeddable Runtime, i18n, and Shared Package
 

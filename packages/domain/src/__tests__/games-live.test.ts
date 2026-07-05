@@ -76,7 +76,19 @@ async function seedSchoolAndUser(
   schoolId: string,
   userId: string,
 ) {
-  await harness.db.insert(schools).values({ id: schoolId, name: `School ${schoolId}` });
+  // Idempotent school seed: the school row may already exist if a prior
+  // call in the same test inserted it (e.g. group 4E seeds school-A and
+  // then inserts three users in school-A — only one school INSERT is
+  // allowed).
+  const existing = await harness.db.execute(
+    sql.raw(`SELECT id FROM schools WHERE id = '${schoolId}' LIMIT 1`),
+  );
+  if (!existing.rows[0]) {
+    await harness.db.insert(schools).values({
+      id: schoolId,
+      name: `School ${schoolId}`,
+    });
+  }
   await harness.db.insert(users).values({
     id: userId,
     username: userId,

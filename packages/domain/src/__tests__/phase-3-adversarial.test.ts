@@ -35,6 +35,27 @@ vi.mock("@reading-advantage/db/schema", () => ({
     activityId: "activity_id",
     activityType: "activity_type",
   },
+  gameCompletions: {
+    [Symbol.for("drizzle:Name")]: "game_completions",
+    schoolId: "school_id",
+    userId: "user_id",
+    gameType: "game_type",
+    difficulty: "difficulty",
+    score: "score",
+    accuracy: "accuracy",
+    correctAnswers: "correct_answers",
+    totalAttempts: "total_attempts",
+    duration: "duration",
+    victory: "victory",
+    xpEarned: "xp_earned",
+    activityId: "activity_id",
+    clientTimestamp: "client_timestamp",
+    metadata: "metadata",
+    createdAt: "created_at",
+  },
+  gameRankings: {
+    [Symbol.for("drizzle:Name")]: "game_rankings",
+  },
 }));
 
 const mockUser = {
@@ -475,7 +496,9 @@ describe("adversarial: fire-once guard correctness (Group D)", () => {
     expect(userA.duplicate).toBe(false);
     expect(userB.duplicate).toBe(false);
     expect(userA.activityId).toBe(userB.activityId); // same composite id
-    expect(db.insert).toHaveBeenCalledTimes(2); // both inserted
+    // Phase 4 dual-write: each successful completion inserts TWO rows
+    // (gameCompletions + xpLogs). 2 users × 2 tables = 4 total inserts.
+    expect(db.insert).toHaveBeenCalledTimes(4);
   });
 
   it("does NOT treat a prefix-matching activityId as a duplicate (substring attack)", async () => {
@@ -545,12 +568,15 @@ describe("adversarial: fire-once guard correctness (Group D)", () => {
       input,
     });
 
-    expect(db.insert).toHaveBeenCalledTimes(1);
+    expect(db.insert).toHaveBeenCalledTimes(2);
     expect(r1.duplicate).toBe(false);
     expect(r2.duplicate).toBe(true);
     expect(r3.duplicate).toBe(true);
     expect(r2.xpEarned).toBe(0);
     expect(r3.xpEarned).toBe(0);
+    // Phase 4 dual-write: only the first call inserts (2 rows: gameCompletions
+    // + xpLogs). Subsequent duplicate calls short-circuit on the SELECT
+    // dedup check and never reach the transaction.
   });
 
   it("returns xpEarned:0 (NOT silent re-award) on duplicate", async () => {
@@ -620,19 +646,19 @@ describe("adversarial: race condition (mock-level) (Group E)", () => {
     vi.mocked(assertCan).mockImplementation(() => {});
   });
 
-  it("documents the Phase 3 SELECT-before-INSERT race window (concurrent calls)", async () => {
-    // Phase 3's `recordGameCompletion` uses SELECT-before-INSERT (logged
-    // in mutations.ts JSDoc as Phase 4 work for race-safety). Verify that
-    // the mock DB can model the race: under concurrent calls, BOTH may
-    // observe "no existing row" and both may insert. This is a known
-    // Phase 3 limitation explicitly documented in the strategy.
+  it("documents the Phase 4 dual-write under concurrent calls (mock-level)", async () => {
+    // Phase 4 closed the Phase 3 race-safety gap (Decision 4.5) by:
+    //   - adding a unique constraint on gameCompletions(schoolId, userId, activityId)
+    //   - adding a unique constraint on xpLogs(userId, activityId)
+    //   - catching the unique-violation in recordGameCompletion and returning
+    //     { duplicate: true, xpEarned: 0 }
     //
-    // The mock's selectSequence cycles; this test simulates the race by
-    // calling both concurrently with select returning [] for both. The
-    // expected Phase 3 behavior is double-insert. Phase 4 will add a DB
-    // unique constraint to make this impossible.
+    // The mock DB cannot simulate a real Postgres unique-violation, so this
+    // test asserts the dual-write side-effect count under concurrent calls
+    // (the production race-safety is proven by the PGlite live-DB test
+    // `games-live.test.ts` group 4B).
     const db = createMockDb({
-      selectSequence: [[], []], // both observe no existing
+      selectSequence: [[], []], // both observe no existing — model the race window
     });
     const tenantDb = createTenantDB(db as unknown as DB, mockTenant);
     const input = makeValidInput();
@@ -653,16 +679,19 @@ describe("adversarial: race condition (mock-level) (Group E)", () => {
     ]);
 
     // Both calls return duplicate:false because the in-memory mock does not
-    // coordinate concurrent SELECTs. This is a documented Phase 3 limitation.
+    // raise a unique-violation. In production (PGlite), the second insert
+    // throws 23505 and is caught — see games-live.test.ts group 4B for the
+    // race-safety proof.
     expect(r1.duplicate).toBe(false);
     expect(r2.duplicate).toBe(false);
 
-    // Both calls inserted — this would be a double XP award in production
-    // without a DB unique constraint. The mock sees the double-insert.
-    expect(db.insert).toHaveBeenCalledTimes(2);
+    // Phase 4 dual-write: each successful completion inserts TWO rows
+    // (gameCompletions + xpLogs). 2 concurrent calls × 2 tables = 4 inserts.
+    expect(db.insert).toHaveBeenCalledTimes(4);
 
-    // This documents the known gap. Phase 4 must add a unique constraint
-    // and this test should be updated to assert exactly 1 effective insert.
+    // The Phase 4 unique-violation catch is exercised by the live-DB test —
+    // it asserts exactly one row in game_completions and exactly one
+    // {duplicate: true} response (games-live.test.ts group 4B).
   });
 });
 
@@ -706,22 +735,22 @@ describe("adversarial: client-supplied metadata smuggling (Group F)", () => {
       }),
     });
 
-    // The values() argument is the object passed to insert. We assert it
-    // does NOT carry the metadata fields.
-    const insertCalls = vi.mocked(db.insert).mock.results;
-    expect(insertCalls.length).toBeGreaterThanOrEqual(1);
-    // Build the inserted values by re-running the path on the mock.
-    const insertArg = (db.insert as unknown as { mock: { calls: unknown[] } })
-      .mock.calls[0]?.[0];
-    expect(insertArg).toBeDefined();
-    // Insert target was xpLogs (mocked as a plain object) — values() is the
-    // nested call; inspect the second-tier mock for the payload.
+    // The values() argument is the object passed to insert. We assert the
+    // xpLogs insert (the SECOND `.values()` call in the Phase 4 dual-write)
+    // does NOT carry the metadata fields. The FIRST `.values()` call
+    // (gameCompletions) DOES carry the full contract payload including
+    // metadata — that is by design (Decision 4.1 §1).
+    //
+    // The mock-db returns the SAME builder object for every `insert()` call,
+    // so `value.values` accumulates all `.values()` calls. The dual-write
+    // calls `.values()` twice: [0] = gameCompletions, [1] = xpLogs.
     const valuesSpy = (
       (db.insert as unknown as {
         mock: { results: { value: { values: { mock: { calls: unknown[] } } } }[] };
       }).mock.results[0].value.values
     );
-    expect(valuesSpy.mock.calls[0]?.[0]).toEqual({
+    expect(valuesSpy.mock.calls.length).toBeGreaterThanOrEqual(2);
+    expect(valuesSpy.mock.calls[1]?.[0]).toEqual({
       userId: "user-1",
       xpEarned: expect.any(Number) as unknown as number,
       activityId: `game:haunted-library:${idempotencyKey}`,

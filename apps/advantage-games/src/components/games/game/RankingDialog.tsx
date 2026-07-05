@@ -10,7 +10,16 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Trophy, Medal, Crown } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Difficulty } from "@/store/useGameStore";
+
+/**
+ * Phase 4 — Canonical difficulty keys. `medium` (not `normal`) is the
+ * canonical value per Decision 4.3 §2 / B21-018 closure. The store-side
+ * `Difficulty` type still includes `normal` (per-game Phase 5+ migration);
+ * the dialog uses a local canonical tab list so the UI matches the server
+ * contract (`leaderboardResponseSchema`) without rippling through
+ * `useGameStore`.
+ */
+type TabDifficulty = "easy" | "medium" | "hard" | "extreme";
 
 type RankingEntry = {
   userId: string;
@@ -60,9 +69,9 @@ export function RankingDialog({ open, onOpenChange }: RankingDialogProps) {
     );
   };
 
-  const difficulties: Difficulty[] = ["easy", "normal", "hard", "extreme"];
+  const difficulties: TabDifficulty[] = ["easy", "medium", "hard", "extreme"];
 
-  const DifficultyTab = ({ diff }: { diff: Difficulty }) => {
+  const DifficultyTab = ({ diff }: { diff: TabDifficulty }) => {
     const rankings = data?.[diff] || [];
 
     if (loading) {
@@ -145,7 +154,7 @@ export function RankingDialog({ open, onOpenChange }: RankingDialogProps) {
           </DialogTitle>
         </DialogHeader>
 
-        <Tabs defaultValue="normal" className="w-full">
+        <Tabs defaultValue="medium" className="w-full">
           <TabsList className="grid w-full grid-cols-4 bg-secondary">
             {difficulties.map((diff) => (
               <TabsTrigger

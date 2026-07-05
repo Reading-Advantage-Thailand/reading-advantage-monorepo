@@ -15,6 +15,8 @@ export {
   gameCompletionResultSchema,
   gameTypeEnum,
   gameDifficultyEnum,
+  leaderboardEntrySchema,
+  leaderboardResponseSchema,
 } from "./schema.js";
 
 // Inferred types
@@ -25,7 +27,12 @@ export { calculateGameXP } from "./xp.js";
 
 // Domain functions
 export { recordGameCompletion } from "./mutations.js";
-export { getGameCompletions, type GameCompletion } from "./queries.js";
+export {
+  getGameCompletions,
+  getSchoolLeaderboard,
+  type GameCompletion,
+  type LeaderboardEntry,
+} from "./queries.js";
 
 // Permissions
 export { GAMES_PERMISSIONS } from "./permissions.js";

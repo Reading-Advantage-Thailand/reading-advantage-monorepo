@@ -27,6 +27,27 @@ vi.mock("@reading-advantage/db/schema", () => ({
     activityId: "activity_id",
     activityType: "activity_type",
   },
+  gameCompletions: {
+    [Symbol.for("drizzle:Name")]: "game_completions",
+    schoolId: "school_id",
+    userId: "user_id",
+    gameType: "game_type",
+    difficulty: "difficulty",
+    score: "score",
+    accuracy: "accuracy",
+    correctAnswers: "correct_answers",
+    totalAttempts: "total_attempts",
+    duration: "duration",
+    victory: "victory",
+    xpEarned: "xp_earned",
+    activityId: "activity_id",
+    clientTimestamp: "client_timestamp",
+    metadata: "metadata",
+    createdAt: "created_at",
+  },
+  gameRankings: {
+    [Symbol.for("drizzle:Name")]: "game_rankings",
+  },
   userActivity: {
     userId: "user_id",
     activityType: "activity_type",
@@ -252,7 +273,11 @@ describe("recordGameCompletion (Group 3C)", () => {
       input,
     });
 
-    expect(db.insert).toHaveBeenCalledTimes(1);
+    // Phase 4 dual-write: the first call inserts TWO rows in a single
+    // transaction (gameCompletions + xpLogs). This preserves the
+    // getStudentProgress#xpTotal read path while adding the tenant-safe
+    // leaderboard record (Decision 4.1 §3).
+    expect(db.insert).toHaveBeenCalledTimes(2);
     expect(result.duplicate).toBe(false);
     expect(result.activityId).toBe(`game:haunted-library:${input.idempotencyKey}`);
     // XP earned: 7 = min(10, 5 + 1 + 1 + 0) for victory + accuracy=5/6 + duration < 60s
@@ -281,8 +306,11 @@ describe("recordGameCompletion (Group 3C)", () => {
       input,
     });
 
-    // A4: exactly one insert across both calls
-    expect(db.insert).toHaveBeenCalledTimes(1);
+    // Phase 4 dual-write: first call inserts 2 rows (gameCompletions + xpLogs).
+    // Second call short-circuits on the SELECT dedup check — NEITHER insert
+    // is reached (the transaction never starts).
+    // A4: exactly two inserts across both calls (the duplicate path is a no-op).
+    expect(db.insert).toHaveBeenCalledTimes(2);
     expect(first.duplicate).toBe(false);
     expect(second.duplicate).toBe(true);
     expect(second.xpEarned).toBe(0);

@@ -95,3 +95,35 @@ export const gameCompletionResultSchema = z.object({
   duplicate: z.boolean(),
   status: z.literal(200),
 });
+
+/**
+ * Phase 4 — Leaderboard entry shape, returned by `getSchoolLeaderboard` and
+ * used as the response unit for the shared `LeaderboardResponseSchema`.
+ *
+ * - `userId`: opaque ID (caller-rendered; no PII leakage).
+ * - `totalXp`: aggregated from `gameCompletions.xpEarned`.
+ * - `bestScore`: aggregated MAX over `gameCompletions.score`.
+ * - `bestAccuracy`: aggregated MAX over `gameCompletions.accuracy` (0..1).
+ * - `attempts`: COUNT(*) over `gameCompletions`.
+ */
+export const leaderboardEntrySchema = z.object({
+  userId: z.string(),
+  totalXp: z.number().int().min(0),
+  bestScore: z.number().int().min(0),
+  bestAccuracy: z.number().min(0).max(1),
+  attempts: z.number().int().min(0),
+});
+
+/**
+ * Phase 4 — Shared leaderboard response schema. Validates the standalone
+ * `apps/advantage-games/src/lib/games/api/rankingRoute.ts` mock response
+ * (and any future host-app route handler) to a single canonical shape.
+ *
+ * `schoolScoped: true` is an honest marker — this is NOT a global
+ * leaderboard. TenantDB injects `eq(gameCompletions.schoolId, tenant.schoolId)`
+ * on the read, so the response is per-school by construction.
+ */
+export const leaderboardResponseSchema = z.object({
+  rankings: z.array(leaderboardEntrySchema),
+  schoolScoped: z.literal(true),
+});
