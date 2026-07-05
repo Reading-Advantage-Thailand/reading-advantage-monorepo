@@ -1,4 +1,6 @@
+import { renderHook } from '@testing-library/react'
 import { useScopedI18n, useCurrentLocale, useI18n } from './client'
+import { GamesLocaleProvider } from './GamesLocaleContext'
 
 describe('locales/client', () => {
   describe('useScopedI18n', () => {
@@ -26,8 +28,18 @@ describe('locales/client', () => {
   })
 
   describe('useCurrentLocale', () => {
-    it('returns en', () => {
-      expect(useCurrentLocale()).toBe('en')
+    it('returns en when no provider is present (standalone fallback)', () => {
+      const { result } = renderHook(() => useCurrentLocale())
+      expect(result.current).toBe('en')
+    })
+
+    it('reads from GamesLocaleContext when provided (host shell)', () => {
+      const { result } = renderHook(() => useCurrentLocale(), {
+        wrapper: ({ children }) => (
+          <GamesLocaleProvider value={{ locale: 'th' }}>{children}</GamesLocaleProvider>
+        ),
+      })
+      expect(result.current).toBe('th')
     })
   })
 

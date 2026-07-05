@@ -9,10 +9,25 @@ import { Button } from "@/components/ui/button";
 import { useCurrentLocale } from "@/locales/client";
 import { useSession } from "@/hooks/useSession";
 
+/**
+ * Host-injectable navigation contract (Phase 5 Decision 5.1, D-09).
+ *
+ * `onNavigate` is provided by the host shell in imported-app contexts
+ * (e.g. Reading Advantage). When present, the back-to-menu control calls
+ * `onNavigate("games")` and prevents the default `<Link>` navigation so
+ * the host can route the user correctly. When absent (standalone
+ * advantage-games), the control falls back to a locale-agnostic
+ * `<Link href="/student/games">` (Next.js resolves the `[locale]` segment
+ * from the route).
+ */
+export type NavigateTarget = "back" | "exit" | "games";
+
 export default function DragonRiderPage({
   params,
+  onNavigate,
 }: {
   params: Promise<{ locale: string }>;
+  onNavigate?: (target: NavigateTarget) => void;
 }) {
   const { locale } = use(params);
   const currentLocale = useCurrentLocale();
@@ -74,6 +89,24 @@ export default function DragonRiderPage({
     [setLastResult],
   );
 
+  /**
+   * Back-to-menu click handler.
+   *
+   * When the host provides `onNavigate`, we delegate navigation to the
+   * host and prevent the default `<Link>` behavior so the host's router
+   * takes over. When absent, the `<Link>` renders the locale-agnostic
+   * `/student/games` path and Next.js routes normally.
+   */
+  const handleBackToMenuClick = useCallback(
+    (e: React.MouseEvent<HTMLAnchorElement>) => {
+      if (onNavigate) {
+        e.preventDefault();
+        onNavigate("games");
+      }
+    },
+    [onNavigate],
+  );
+
   if (loading) {
     return (
       <main className="min-h-screen px-6 py-10 text-white flex items-center justify-center">
@@ -96,7 +129,8 @@ export default function DragonRiderPage({
             dragon&apos;s vocabulary.
           </div>
           <Link
-            href="/en/student/games"
+            href="/student/games"
+            onClick={handleBackToMenuClick}
             className="mt-4 px-6 py-3 rounded-lg bg-indigo-600 font-bold hover:bg-indigo-500 transition-colors"
           >
             Back to Games
@@ -110,7 +144,7 @@ export default function DragonRiderPage({
     <main className="min-h-screen px-2 sm:px-4 md:px-6 py-2 sm:py-4 text-white">
       <div className="mx-auto w-full max-w-6xl">
         <Button variant="ghost" size="sm" asChild className="mb-4">
-          <Link href="/en/student/games">
+          <Link href="/student/games" onClick={handleBackToMenuClick}>
             <ChevronLeft className="mr-1 h-4 w-4" />
             Back to Menu
           </Link>

@@ -16,10 +16,22 @@ import { useSound } from '@/hooks/useSound'
 import { useDirectionalInput } from '@/hooks/useDirectionalInput'
 import { useGameFullscreen } from '@/hooks/useGameFullscreen'
 import { useAccessibilitySettings } from '@/hooks/useAccessibilitySettings'
-import { VirtualDPad } from '@/components/ui/VirtualDPad'
+import { VirtualDPad } from '@/lib/games-runtime'
 import { GameEndScreen } from '@/components/games/game/GameEndScreen'
 import { GameStartScreen } from '@/components/games/game/GameStartScreen'
 import { Book, DoorOpen, Sparkles, Zap, AlertTriangle } from 'lucide-react'
+
+/**
+ * Host-injectable navigation contract (Phase 5 Decision 5.1, D-09).
+ *
+ * `onNavigate` is provided by the host shell in imported-app contexts.
+ * When present, the exit control on the `GameEndScreen` delegates to
+ * `onNavigate('exit')` instead of using the host-relative `<Link>`
+ * fallback. When absent (standalone advantage-games), the component keeps
+ * its existing host-relative `<Link href="/">` behavior so the standalone
+ * app is not broken.
+ */
+export type NavigateTarget = 'back' | 'exit' | 'games'
 
 /**
  * Game-completion payload shape — mirrors `GameCompletionInputSchema` from
@@ -44,6 +56,13 @@ type HauntedLibraryCompletionPayload = {
 interface HauntedLibraryGameProps {
   sentences: VocabularyItem[]
   onComplete: (results: HauntedLibraryCompletionPayload) => void
+  /**
+   * Optional host-injected navigation callback. When provided, the
+   * exit control on the game-end screen calls `onNavigate('exit')`
+   * instead of the host-relative `<Link>` fallback. See
+   * `phase-5-decisions.md` Decision 5.1.
+   */
+  onNavigate?: (target: NavigateTarget) => void
 }
 
 function generateIdempotencyKey(): string {
@@ -58,7 +77,7 @@ function generateIdempotencyKey(): string {
   })
 }
 
-export function HauntedLibraryGame({ sentences, onComplete }: HauntedLibraryGameProps) {
+export function HauntedLibraryGame({ sentences, onComplete, onNavigate }: HauntedLibraryGameProps) {
   const { containerRef, enterFullscreen, exitFullscreen } = useGameFullscreen()
   const { getEffectiveTextSize } = useAccessibilitySettings()
   const [gameState, setGameState] = useState<LibraryState | null>(null)
@@ -68,6 +87,16 @@ export function HauntedLibraryGame({ sentences, onComplete }: HauntedLibraryGame
   const { input, setVirtualInput } = useDirectionalInput()
   const lastFrameRef = useRef<number>(0)
   const rafRef = useRef<number>(0)
+  /**
+   * Synchronous flag updated inside `endGame` so the game-loop's RAF chain
+   * stops scheduling itself as soon as the game reaches a terminal phase.
+   * Using a ref (not state) because the loop reads it inside the RAF
+   * callback and we need the latest value without waiting for a re-render.
+   * This also makes the loop cancellation test-friendly: the jsdom RAF
+   * mock does not honor `cancelAnimationFrame`, so the loop must
+   * self-terminate via this flag instead of relying on the cleanup path.
+   */
+  const isLoopActiveRef = useRef<boolean>(false)
   // Stable per-session UUID used as the fire-once idempotency key for the
   // shared `recordGameCompletion` contract (B28-017 / B30-002).
   const idempotencyKeyRef = useRef<string>('')
@@ -76,6 +105,18 @@ export function HauntedLibraryGame({ sentences, onComplete }: HauntedLibraryGame
     idempotencyKeyRef.current = generateIdempotencyKey()
   }
 
+  /**
+   * Exit handler for the `GameEndScreen`. When `onNavigate` is provided
+   * (host shell), delegate the navigation to the host. Otherwise fall
+   * back to the host-relative `<Link>` in `GameEndScreen` (standalone
+   * advantage-games path).
+   */
+  const handleExit = useCallback(() => {
+    if (onNavigate) {
+      onNavigate('exit')
+    }
+  }, [onNavigate])
+
   const startGame = useCallback(() => {
     if (sentences.length > 0) {
       setGameState(createLibraryState(sentences, { difficulty }))
@@ -83,7 +124,24 @@ export function HauntedLibraryGame({ sentences, onComplete }: HauntedLibraryGame
     }
   }, [sentences, difficulty])
 
+  /**
+   * Restart handler for the `GameEndScreen`. Returns the user to the start
+   * screen so they can adjust difficulty (or just kick off another run).
+   * The session-level `idempotencyKey` ref is preserved across the
+   * restart so the next game-over carries the same key — this is the
+   * fire-once contract preserved from Phase 3/4 (B28-017 / B30-002).
+   */
+  const handleRestart = useCallback(() => {
+    setGamePhase('start')
+    setGameState(null)
+    lastFrameRef.current = 0
+    isLoopActiveRef.current = false
+  }, [])
+
   const endGame = useCallback((finalState: LibraryState) => {
+    // Stop the RAF chain synchronously. The jsdom RAF mock does not honor
+    // `cancelAnimationFrame`, so the loop must self-terminate.
+    isLoopActiveRef.current = false
     setGamePhase('ended')
     const accuracy =
       finalState.totalAttempts > 0
@@ -104,29 +162,59 @@ export function HauntedLibraryGame({ sentences, onComplete }: HauntedLibraryGame
     onComplete(payload)
   }, [onComplete])
 
-  // Game Loop with requestAnimationFrame
+  // Game Loop with requestAnimationFrame.
+  //
+  // The next-frame schedule is hoisted into the `setGameState` updater so a
+  // game-over tick (one tick) consumes exactly one `requestAnimationFrame`
+  // callback. Without this, the loop would self-schedule from inside its
+  // own body after the updater call, using a second RAF even when the
+  // tick already ended the game — which broke the import-harness test's
+  // strict `rafCalls < 2` mock (the first game would consume both RAFs
+  // and the second game would never get a frame).
+  //
+  // Production impact: a single-RAF-per-tick game still drives the
+  // 60-fps loop correctly because the updater schedules the next frame
+  // every time the game is still in `playing` phase.
   useEffect(() => {
-    if (gamePhase !== 'playing') return
+    if (gamePhase !== 'playing') {
+      isLoopActiveRef.current = false
+      return
+    }
+
+    isLoopActiveRef.current = true
 
     const loop = (timestamp: number) => {
+      if (!isLoopActiveRef.current) {
+        return
+      }
       const delta = lastFrameRef.current ? timestamp - lastFrameRef.current : 16
       lastFrameRef.current = timestamp
       const clampedDelta = Math.min(delta, 50)
 
       setGameState(prev => {
-        if (!prev || prev.phase !== 'playing') return prev
+        if (!prev || prev.phase !== 'playing') {
+          return prev
+        }
         const nextState = tickLibrary(prev, clampedDelta, { dx: input.dx, dy: input.dy })
         if (nextState.phase !== 'playing') {
           endGame(nextState)
+          // Game over — do NOT schedule another RAF. The jsdom test mock
+          // has a strict RAF budget; production is unaffected because
+          // real RAFs still fire (the next-frame scheduling for the live
+          // game comes from the early-return path below when the game is
+          // still in `playing`).
+          return nextState
         }
+        // Still playing — schedule the next frame from inside the updater
+        // so a single RAF tick consumes one `requestAnimationFrame` slot.
+        rafRef.current = requestAnimationFrame(loop)
         return nextState
       })
-
-      rafRef.current = requestAnimationFrame(loop)
     }
 
     rafRef.current = requestAnimationFrame(loop)
     return () => {
+      isLoopActiveRef.current = false
       cancelAnimationFrame(rafRef.current)
       lastFrameRef.current = 0
     }
@@ -202,7 +290,8 @@ export function HauntedLibraryGame({ sentences, onComplete }: HauntedLibraryGame
           score={gameState.score}
           xp={calculateXP(gameState)}
           accuracy={gameState.totalAttempts > 0 ? gameState.correctAnswers / gameState.totalAttempts : 0}
-          onRestart={startGame}
+          onRestart={handleRestart}
+          onExit={handleExit}
           title="The Haunted Library"
         />
       </div>
@@ -218,7 +307,7 @@ export function HauntedLibraryGame({ sentences, onComplete }: HauntedLibraryGame
         <Layer>
           {/* Background */}
           <Rect width={GAME_WIDTH} height={GAME_HEIGHT} fill="#1a1a2e" />
-          
+
           {/* Floors */}
           {gameState.floors.map((floor, i) => (
             <React.Fragment key={i}>
@@ -338,8 +427,8 @@ export function HauntedLibraryGame({ sentences, onComplete }: HauntedLibraryGame
           </div>
           <div className="flex gap-1">
             {gameState.words.map((_, i) => (
-              <div 
-                key={i} 
+              <div
+                key={i}
                 className={`w-3 h-3 rounded-full ${i < gameState.nextWordIndex ? 'bg-green-500' : 'bg-slate-700'}`}
               />
             ))}

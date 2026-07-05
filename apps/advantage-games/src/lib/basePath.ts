@@ -1,8 +1,8 @@
-const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? ''
+/**
+ * Re-export shim — canonical `withBasePath` lives at `@/lib/games-runtime`.
+ *
+ * Preserved for the consumers that import from `@/lib/basePath`. Phase 5
+ * Decision 5.7 keeps the duplicate-file drop as `[b] deferred:infra`.
+ */
 
-export const withBasePath = (path: string) => {
-  if (!path.startsWith('/')) {
-    return `${basePath}/${path}`
-  }
-  return `${basePath}${path}`
-}
+export { withBasePath } from '@/lib/games-runtime'

@@ -25,7 +25,11 @@ type WarningStatus = {
   currentCount?: number
 }
 
-export default function HauntedLibraryPage() {
+export default function HauntedLibraryPage({
+  onNavigate,
+}: {
+  onNavigate?: (target: 'back' | 'exit' | 'games') => void
+} = {}) {
   const [sentences, setSentences] = useState<
     { term: string; translation: string }[]
   >([])
@@ -181,6 +185,7 @@ export default function HauntedLibraryPage() {
         <HauntedLibraryGame
           sentences={sentences}
           onComplete={handleComplete}
+          onNavigate={onNavigate}
         />
       </main>
     </div>

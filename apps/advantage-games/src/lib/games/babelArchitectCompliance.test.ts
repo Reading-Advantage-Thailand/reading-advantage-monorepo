@@ -11,7 +11,7 @@ describe('Babel Architect Compliance Audit', () => {
       expect(card).toBeDefined()
       expect(card!.title).toBe("Babel's Architect")
       expect(card!.status).toBe('playable')
-      expect(card!.href).toBe('/en/student/games/sentence/babel-architect')
+      expect(card!.href).toBe('/student/games/sentence/babel-architect')
     })
 
     it('should have a cover image', () => {

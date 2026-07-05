@@ -1,4 +1,4 @@
-import { withBasePath } from './basePath'
+import { withBasePath } from './games-runtime'
 
 export type GameCard = {
   id: string
@@ -15,7 +15,7 @@ export const gameCards: GameCard[] = [
     title: 'Castle Defense',
     description: 'Collect words to build towers and defend your castle!',
     cover: withBasePath('/games/cover/castle-defense-cover.png'),
-    href: '/en/student/games/sentence/castle-defense',
+    href: '/student/games/sentence/castle-defense',
     status: 'playable',
   },
   {
@@ -23,7 +23,7 @@ export const gameCards: GameCard[] = [
     title: 'Dragon Rider',
     description: 'Ride your dragon to protect your village',
     cover: withBasePath('/games/cover/cover-dragon-rider.png'),
-    href: '/en/student/games/vocabulary/dragon-rider',
+    href: '/student/games/vocabulary/dragon-rider',
     status: 'playable',
   },
   {
@@ -31,7 +31,7 @@ export const gameCards: GameCard[] = [
     title: 'Magic Defense',
     description: 'Defend your castles from falling words by typing their translations.',
     cover: withBasePath('/games/cover/magic-defense-cover.png'),
-    href: '/en/student/games/vocabulary/magic-defense',
+    href: '/student/games/vocabulary/magic-defense',
     status: 'playable',
   },
   {
@@ -39,7 +39,7 @@ export const gameCards: GameCard[] = [
     title: 'RPG Battle',
     description: 'Duel monsters by typing the correct translations.',
     cover: withBasePath('/games/cover/rpg-battle-cover.png'),
-    href: '/en/student/games/vocabulary/rpg-battle',
+    href: '/student/games/vocabulary/rpg-battle',
     status: 'playable',
   },
   {
@@ -47,7 +47,7 @@ export const gameCards: GameCard[] = [
     title: 'Dragon Flight',
     description: 'Choose the correct gate to grow your dragon flight.',
     cover: withBasePath('/games/cover/dragon-flight-cover.png'),
-    href: '/en/student/games/vocabulary/dragon-flight',
+    href: '/student/games/vocabulary/dragon-flight',
     status: 'playable',
   },
   {
@@ -55,7 +55,7 @@ export const gameCards: GameCard[] = [
     title: 'Wizard vs Zombie',
     description: 'Survive the horde by collecting vocabulary orbs.',
     cover: withBasePath('/games/cover/wizard-vs-zombie-cover.png'),
-    href: '/en/student/games/vocabulary/wizard-vs-zombie',
+    href: '/student/games/vocabulary/wizard-vs-zombie',
     status: 'playable',
   },
   {
@@ -63,7 +63,7 @@ export const gameCards: GameCard[] = [
     title: 'Enchanted Library',
     description: 'Collect magic books and dodge spirits to master new words.',
     cover: withBasePath('/games/cover/enchanted-library-cover.png'),
-    href: '/en/student/games/vocabulary/enchanted-library',
+    href: '/student/games/vocabulary/enchanted-library',
     status: 'playable',
   },
   {
@@ -71,7 +71,7 @@ export const gameCards: GameCard[] = [
     title: 'Rune Match',
     description: 'Match vocabulary runes to defeat monsters in this RPG puzzle battle.',
     cover: withBasePath('/games/cover/rune-match-cover.png'),
-    href: '/en/student/games/vocabulary/rune-match',
+    href: '/student/games/vocabulary/rune-match',
     status: 'playable',
   },
   {
@@ -79,7 +79,7 @@ export const gameCards: GameCard[] = [
     title: "Alchemist's Synthesis",
     description: 'Master the art of alchemy by matching and merging vocabulary to synthesize powerful spells!',
     cover: withBasePath('/games/cover/cover-alchemists-synthesis.png'),
-    href: '/en/student/games/vocabulary/alchemists-synthesis',
+    href: '/student/games/vocabulary/alchemists-synthesis',
     status: 'playable',
   },
   {
@@ -87,7 +87,7 @@ export const gameCards: GameCard[] = [
     title: 'Potion Rush',
     description: 'Manage a busy potion shop! Brew orders by collecting the correct ingredients from the conveyor belt.',
     cover: withBasePath('/games/cover/potion-rush-cover.png'),
-    href: '/en/student/games/sentence/potion-rush',
+    href: '/student/games/sentence/potion-rush',
     status: 'playable',
   },
   {
@@ -95,7 +95,7 @@ export const gameCards: GameCard[] = [
     title: 'Dungeon Liberator',
     description: 'Rescue prisoners by collecting them in the correct word order and escape the dungeon!',
     cover: withBasePath('/games/cover/dungeon-liberator.png'),
-    href: '/en/student/games/sentence/dungeon-liberator',
+    href: '/student/games/sentence/dungeon-liberator',
     status: 'playable',
   },
   {
@@ -103,7 +103,7 @@ export const gameCards: GameCard[] = [
     title: "Spellweaver's Run",
     description: 'Collect word orbs in the correct order to form sentences in this enchanted forest runner!',
     cover: withBasePath('/games/cover/cover-spellweavers-run.png'),
-    href: '/en/student/games/sentence/spellweavers-run',
+    href: '/student/games/sentence/spellweavers-run',
     status: 'playable',
   },
   {
@@ -111,7 +111,7 @@ export const gameCards: GameCard[] = [
     title: 'Shadow Gate Dungeon',
     description: 'Collect word crystals and escape the shadow creature in this dark dungeon survival game!',
     cover: withBasePath('/games/cover/cover-shadow-gate-dungeon.png'),
-    href: '/en/student/games/sentence/shadow-gate-dungeon',
+    href: '/student/games/sentence/shadow-gate-dungeon',
     status: 'playable',
   },
   {
@@ -119,7 +119,7 @@ export const gameCards: GameCard[] = [
     title: 'Rune Forge Chamber',
     description: 'Tap word circles in the correct order to forge magical runes before the forge cools!',
     cover: withBasePath('/games/cover/cover-rune-forge-chamber.png'),
-    href: '/en/student/games/sentence/rune-forge-chamber',
+    href: '/student/games/sentence/rune-forge-chamber',
     status: 'playable',
   },
   {
@@ -127,7 +127,7 @@ export const gameCards: GameCard[] = [
     title: 'Village Guardian',
     description: 'Defend the village! Rescue villagers in correct order and lead them to safety!',
     cover: withBasePath('/games/cover/cover-village-guardian.png'),
-    href: '/en/student/games/sentence/village-guardian',
+    href: '/student/games/sentence/village-guardian',
     status: 'playable',
   },
   {
@@ -135,7 +135,7 @@ export const gameCards: GameCard[] = [
     title: 'Labyrinth of the Goblin King',
     description: 'Navigate the maze! Collect word orbs in order and become a Paladin to defeat the goblins!',
     cover: withBasePath('/games/cover/cover-labyrinth-of-the-goblin-king.png'),
-    href: '/en/student/games/sentence/labyrinth-goblin-king',
+    href: '/student/games/sentence/labyrinth-goblin-king',
     status: 'playable',
   },
   {
@@ -143,7 +143,7 @@ export const gameCards: GameCard[] = [
     title: 'The Abyssal Well',
     description: 'Defend the rim! Rotate and fire at enemies climbing from the depths carrying word orbs in correct order!',
     cover: withBasePath('/games/cover/cover-the-abyssal-well.png'),
-    href: '/en/student/games/sentence/abyssal-well',
+    href: '/student/games/sentence/abyssal-well',
     status: 'playable',
   },
   {
@@ -151,7 +151,7 @@ export const gameCards: GameCard[] = [
     title: "Archer's Revenge",
     description: "Shoot enemies matching the target translation. Don't hit shielded enemies!",
     cover: withBasePath('/games/cover/cover-archers-revenge.png'),
-    href: '/en/student/games/vocabulary/archers-revenge',
+    href: '/student/games/vocabulary/archers-revenge',
     status: 'playable',
   },
   {
@@ -159,7 +159,7 @@ export const gameCards: GameCard[] = [
     title: 'Storm the Castle Tower',
     description: 'Scale the castle walls! Collect words in the correct order while dodging boiling oil and falling rocks!',
     cover: withBasePath('/games/cover/cover-storm-the-castle-tower.png'),
-    href: '/en/student/games/sentence/storm-castle-tower',
+    href: '/student/games/sentence/storm-castle-tower',
     status: 'playable',
   },
   {
@@ -167,7 +167,7 @@ export const gameCards: GameCard[] = [
     title: 'Griffin Sky-Joust',
     description: 'Take to the skies! Strike down enemy knights from above in the correct word order!',
     cover: withBasePath('/games/cover/cover-griffin-sky-joust.png'),
-    href: '/en/student/games/sentence/griffin-sky-joust',
+    href: '/student/games/sentence/griffin-sky-joust',
     status: 'playable',
   },
   {
@@ -175,7 +175,7 @@ export const gameCards: GameCard[] = [
     title: 'Realm Carver',
     description: 'Carve a path through the wild magic! Claim territory and capture words in the correct order!',
     cover: withBasePath('/games/cover/cover-realm-carver.png'),
-    href: '/en/student/games/sentence/realm-carver',
+    href: '/student/games/sentence/realm-carver',
     status: 'playable',
   },
   {
@@ -183,7 +183,7 @@ export const gameCards: GameCard[] = [
     title: "Paladin's Twin-Soul",
     description: 'Defend the realm and rescue your twin soul! Match the magic to double your power!',
     cover: withBasePath('/games/cover/cover-paladins-twin-soul.png'),
-    href: '/en/student/games/vocabulary/paladins-twin-soul',
+    href: '/student/games/vocabulary/paladins-twin-soul',
     status: 'playable',
   },
   {
@@ -191,7 +191,7 @@ export const gameCards: GameCard[] = [
     title: "Griffin Rider's Escape",
     description: 'Fly through the magical gates in the correct order to complete the sentence!',
     cover: withBasePath('/games/cover/cover-griffin-riders-escape.png'),
-    href: '/en/student/games/sentence/griffin-riders-escape',
+    href: '/student/games/sentence/griffin-riders-escape',
     status: 'playable',
   },
   {
@@ -199,7 +199,7 @@ export const gameCards: GameCard[] = [
     title: 'Astral Mage',
     description: 'Navigate the magical void and shoot word crystals in the correct order to complete sentences!',
     cover: withBasePath('/games/cover/cover-astral-mage.png'),
-    href: '/en/student/games/sentence/astral-mage',
+    href: '/student/games/sentence/astral-mage',
     status: 'coming-soon',
   },
   {
@@ -207,7 +207,7 @@ export const gameCards: GameCard[] = [
     title: 'Devourer Slime',
     description: 'Start small in a forest arena and eat words in the correct order to grow big enough to devour enemy knights!',
     cover: withBasePath('/games/cover/cover-devourer-slime.png'),
-    href: '/en/student/games/sentence/devourer-slime',
+    href: '/student/games/sentence/devourer-slime',
     status: 'playable',
   },
   {
@@ -215,7 +215,7 @@ export const gameCards: GameCard[] = [
     title: "Babel's Architect",
     description: 'Stack stone blocks in the correct sentence order to build the tallest legendary tower!',
     cover: withBasePath('/games/cover/cover-babel-architect.png'),
-    href: '/en/student/games/sentence/babel-architect',
+    href: '/student/games/sentence/babel-architect',
     status: 'playable',
   },
   {
@@ -223,7 +223,7 @@ export const gameCards: GameCard[] = [
     title: "The Sorcerer's Ziggurat",
     description: 'Jump through an isometric pyramid of cubes to complete ancient rituals in the correct sentence order!',
     cover: withBasePath('/games/cover/cover-sorcerers-ziggurat.png'),
-    href: '/en/student/games/sentence/sorcerer-ziggurat',
+    href: '/student/games/sentence/sorcerer-ziggurat',
     status: 'coming-soon',
   },
   {
@@ -231,7 +231,7 @@ export const gameCards: GameCard[] = [
     title: 'The Haunted Library',
     description: 'Navigate the multi-story library and open magical doors in the correct sentence order!',
     cover: withBasePath('/games/cover/cover-haunted-library.png'),
-    href: '/en/student/games/sentence/haunted-library',
+    href: '/student/games/sentence/haunted-library',
     status: 'playable',
   },
   {
@@ -239,7 +239,7 @@ export const gameCards: GameCard[] = [
     title: 'Gryphon Patrol',
     description: 'Hunt the sentences across the sky!',
     cover: withBasePath('/games/cover/cover-gryphon-patrol.png'),
-    href: '/en/student/games/sentence/gryphon-patrol',
+    href: '/student/games/sentence/gryphon-patrol',
     status: 'playable',
   },
 ]
