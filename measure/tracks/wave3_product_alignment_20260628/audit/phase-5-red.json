@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "status": "fail",
-  "summary": "Phase 5 Red tests committed and run at HEAD 26b36682. All new test suites fail at baseline for the intended reasons: the `@/locales/GamesLocaleContext` and `@/lib/games-runtime` modules do not exist, `HauntedLibraryGame` still imports VirtualDPad from the legacy path and does not wire `onNavigate`, the `dragon-rider` page still uses `/en/student/games` hrefs and ignores `onNavigate`, and `gameCards.ts` still carries 29 `/en/-prefixed` hrefs. Existing tests in the touched files and the Phase 3/4 regression gates remain green.",
+  "summary": "Phase 5 Red tests committed and run at HEAD 2e9bac5a. All new test suites fail at baseline for the intended reasons: the `@/locales/GamesLocaleContext` and `@/lib/games-runtime` modules do not exist, `HauntedLibraryGame` still imports VirtualDPad from the legacy path and does not wire `onNavigate`, the `dragon-rider` page still uses `/en/student/games` hrefs and ignores `onNavigate`, and `gameCards.ts` still carries 29 `/en/-prefixed` hrefs. Existing tests in the touched files and the Phase 3/4 regression gates remain green.",
   "blocking_findings": [
     "Missing locale context: `@/locales/GamesLocaleContext` does not exist, causing the import-harness suite to fail at module resolution (`Cannot find module '../../locales/GamesLocaleContext'`).",
     "Missing shared runtime: `@/lib/games-runtime` does not exist, causing the import-harness suite to fail at module resolution. The canonical `VirtualDPad`, `withBasePath`, and `calculateClientXP` must be exported from this module.",
@@ -11,7 +11,7 @@
   ],
   "nonblocking_findings": [],
   "evidence": [
-    "Commit 36d62c43 adds `apps/advantage-games/src/__tests__/import-harness/haunted-library-import.test.tsx`, extends `apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.test.tsx`, rewrites `apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/dragon-rider/page.test.tsx`, and adds `apps/advantage-games/src/lib/gameCards.test.ts`. Commit 26b36682 records the SHA evidence in `plan.md`.",
+    "Commit 36d62c43 adds the Red test files, commit 26b36682 records the SHA evidence in `plan.md`, commit 4ba9d5d6 writes this audit JSON, and commit 2e9bac5a adds the `games-live` regression note.",
     "Import-harness suite: fails to load because `@/locales/GamesLocaleContext` and `@/lib/games-runtime` are absent; 0 tests run, matching the expected Red state.",
     "HauntedLibraryGame suite: 12/14 existing+extended tests pass; 2 new Phase 5 tests fail (legacy VirtualDPad path still used; no Exit button wired to `onNavigate`).",
     "DragonRider page suite: 1/3 tests pass (back-to-menu control still renders); 2 new Phase 5 tests fail (`/en/` href present; `onNavigate` not called).",
