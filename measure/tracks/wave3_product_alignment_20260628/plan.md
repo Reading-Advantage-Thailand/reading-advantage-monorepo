@@ -217,6 +217,7 @@
     - `pnpm --filter vocabulary-games test --testPathPatterns=gameCards` → `Tests: 1 failed, 1 passed` (29 `/en/` hrefs).
   - Regression checks:
     - `pnpm --filter @reading-advantage/domain test -- games --run` → 524 tests pass.
+    - `pnpm --filter @reading-advantage/domain test -- games-live --run` → 524 tests pass (second run; first run had a transient PGlite timeout).
     - `pnpm --filter @reading-advantage/domain test -- tenant-coverage --run` → 524 tests pass.
     - `pnpm --filter vocabulary-games check-types` → exit 0.
     - `pnpm --filter vocabulary-games lint` → exit 0 (0 errors, pre-existing warnings).
