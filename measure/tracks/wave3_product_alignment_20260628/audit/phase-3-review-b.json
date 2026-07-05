@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-b-security",
+  "track": "wave3_product_alignment_20260628",
+  "phase": "Phase 3: Advantage Games Completion and Scoring Contract",
+  "status": "pass",
+  "baseline_sha": "76ba11e6",
+  "head_sha": "7fe131e6",
+  "red_commit": "3157f91a",
+  "red_audit_commit": "76ba11e6",
+  "green_commits": [
+    "895279ef",
+    "3fcbada5",
+    "7fe131e6"
+  ],
+  "audit_timestamp": "2026-07-05T09:45:00+08:00",
+  "summary": "Phase 3 Green PASSES security and data-handling review. The shared `packages/domain/src/games/` module rejects client-supplied XP via `.strict()`, computes XP server-side, asserts `games:complete` before any DB work, uses UUID-shaped `idempotencyKey` for SELECT-before-INSERT fire-once semantics, bounds `accuracy` to the canonical 0..1 unit, and avoids SQL injection and secret logging. The standalone `apps/advantage-games` route validates through the same schema and does not persist to a real database. Tenant scoping for `xpLogs` correctly uses `db.unscoped()` with a documented reason because the table is REFERENTIAL (no schoolId) and rows are scoped by authenticated `userId`. All targeted tests pass with 0 lint errors and 0 type-check errors.",
+
+  "blocking_findings": [],
+
+  "nonblocking_findings": [
+    {
+      "id": "phase-3-idempotency-key-reuse",
+      "summary": "`HauntedLibraryGame.tsx` initializes one `idempotencyKey` per component mount and reuses it across game restarts. A second completion in the same session would be treated as a duplicate and awarded 0 XP.",
+      "severity": "low",
+      "owner": "phase-5-migration",
+      "evidence": "`apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx` lines 71-77 and 101. The ref is only populated when `idempotencyKeyRef.current` is empty, which happens once per mount.",
+      "remediation": "Regenerate the idempotency key at the start of each new game (`startGame`) rather than once per mount, so each distinct completion gets a distinct fire-once key. This is a UX/correctness refinement, not a security vulnerability — the server still correctly deduplicates replays of the same key."
+    },
+    {
+      "id": "phase-3-plan-command-typo",
+      "summary": "`plan.md` documents the vocabulary-games Green gate as `pnpm --filter vocabulary-games test -- --testPathPatterns=...`, which includes an extra `--` and fails when run literally.",
+      "severity": "info",
+      "owner": "green-implementer",
+      "evidence": "`measure/tracks/wave3_product_alignment_20260628/plan.md` line 116. Running that exact command yields `Pattern: --testPathPatterns=completeRoute - 0 matches` and exit 1.",
+      "remediation": "Correct the documented command to `pnpm --filter vocabulary-games test --testPathPatterns=...` (omit the extra `--`). The actual gate passes with the corrected command."
+    },
+    {
+      "id": "phase-3-referential-table",
+      "summary": "`xpLogs` is classified REFERENTIAL in the tenant registry (no schoolId). `recordGameCompletion` and `getGameCompletions` use `db.unscoped()` and scope by authenticated `userId` only.",
+      "severity": "accepted-deferral",
+      "owner": "phase-4-tenant-persistence",
+      "evidence": "`packages/domain/src/tenant-registry.ts` line 198 classifies `xpLogs` as REFERENTIAL. `packages/domain/src/games/mutations.ts` lines 64-66 and `queries.ts` lines 59-61 call `db.unscoped()` with documented reasons. The strategy explicitly defers tenant-safe persistence to Phase 4.",
+      "remediation": "Phase 4 will add a `gameCompletions` table or extend `xpLogs` with `schoolId` and enforce tenant scoping. For Phase 3, scoping by authenticated `userId` is the accepted contract."
+    }
+  ],
+
+  "evidence": [
+    "`gameCompletionInputSchema` in `packages/domain/src/games/schema.ts` uses `.strict()` and rejects unknown keys including `xp`, `dragonCount`, and `bossPower` — verified by `packages/domain/src/__tests__/games.test.ts` tests 'rejects a client-supplied xp field (D-02)', 'rejects game-specific dead fields such as dragonCount (D-01)', and 'rejects bossPower dead field'.",
+    "`accuracy` is declared `z.number().min(0).max(1)` in `schema.ts` line 72, enforcing the canonical fractional unit. Tests reject `accuracy: 75` and the route returns 400 for the same input.",
+    "`idempotencyKey` is declared `z.string().uuid()` in `schema.ts` line 77. `recordGameCompletion` in `mutations.ts` lines 62 and 68-80 performs SELECT-before-INSERT on `game:<gameType>:<idempotencyKey>` and returns `{ duplicate: true, xpEarned: 0 }` without inserting on retry.",
+    "`recordGameCompletion` calls `assertCan(user, 'games:complete', tenant)` on line 56 before validating input or touching the database. The test 'throws before any DB call when the user lacks games:complete permission' confirms the gate is load-bearing.",
+    "`calculateGameXP` in `packages/domain/src/games/xp.ts` is a pure function that computes `Math.min(10, base + bonus)` from `correctAnswers`, computed accuracy, `victory`, and `duration`. No client XP is accepted.",
+    "`apps/advantage-games/src/lib/games/api/completeRoute.ts` only parses the body, computes XP, and returns a mock JSON response. It has no `db` parameter and performs no persistence — confirmed by the route test 'does not call a real DB insert (standalone mock route)'.",
+    "All Drizzle queries in `mutations.ts` and `queries.ts` use typed column references and `eq()`/`and()` builders; no raw SQL or string interpolation is present.",
+    "No secrets, tokens, or environment variables are logged in the new domain files or route. Error responses return structured Zod issues or a generic message without stack traces."
+  ],
+
+  "commands": [
+    {
+      "command": "pnpm --filter @reading-advantage/domain test -- games",
+      "result": "pass",
+      "details": "38 test files passed, 394 tests passed (20 in games.test.ts), 5 skipped, 0 failed at HEAD 7fe131e6."
+    },
+    {
+      "command": "pnpm --filter vocabulary-games test --testPathPatterns=completeRoute",
+      "result": "pass",
+      "details": "1 test suite passed, 7/7 tests passed, 0 failed at HEAD 7fe131e6."
+    },
+    {
+      "command": "pnpm --filter vocabulary-games test --testPathPatterns=HauntedLibraryGame",
+      "result": "pass",
+      "details": "1 test suite passed, 12/12 tests passed, 0 failed at HEAD 7fe131e6."
+    },
+    {
+      "command": "pnpm --filter @reading-advantage/domain lint",
+      "result": "pass",
+      "details": "0 errors, 12 pre-existing warnings (unrelated to games/ files) at HEAD 7fe131e6."
+    },
+    {
+      "command": "pnpm --filter vocabulary-games lint",
+      "result": "pass",
+      "details": "0 errors, 6261 pre-existing warnings (unrelated to Phase 3 changes) at HEAD 7fe131e6."
+    },
+    {
+      "command": "pnpm --filter @reading-advantage/domain check-types",
+      "result": "pass",
+      "details": "tsc --noEmit exit 0 at HEAD 7fe131e6."
+    },
+    {
+      "command": "pnpm --filter vocabulary-games check-types",
+      "result": "pass",
+      "details": "tsc --noEmit exit 0 at HEAD 7fe131e6."
+    }
+  ],
+
+  "changed_files": [
+    "packages/domain/src/games/schema.ts (new)",
+    "packages/domain/src/games/contracts.ts (new)",
+    "packages/domain/src/games/xp.ts (new)",
+    "packages/domain/src/games/mutations.ts (new)",
+    "packages/domain/src/games/queries.ts (new)",
+    "packages/domain/src/games/permissions.ts (new)",
+    "packages/domain/src/games/errors.ts (new)",
+    "packages/domain/src/games/index.ts (new)",
+    "apps/advantage-games/src/lib/games/api/completeRoute.ts (rewritten)",
+    "apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx (migrated to contract payload)",
+    "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/haunted-library/page.tsx (handler updated to new payload type)",
+    "apps/advantage-games/package.json (added @reading-advantage/domain dep)",
+    "apps/advantage-games/jest.config.ts (moduleNameMapper for domain/auth/db)",
+    "packages/auth/src/permissions.ts (added games:complete, games:read:own)",
+    "packages/domain/package.json (added ./games subpath export)",
+    "packages/domain/src/__tests__/games.test.ts (new contract tests)",
+    "apps/advantage-games/src/lib/games/api/completeRoute.test.ts (rewritten)",
+    "apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.test.tsx (extended)",
+    "pnpm-lock.yaml (workspace dep install)",
+    "measure/tracks/wave3_product_alignment_20260628/plan.md (Phase 3 task evidence updates)"
+  ],
+
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+
+  "anti_pattern_audit": {
+    "A1_substring_heuristic": "Not applicable to this phase (orchestrator-internal).",
+    "A2_consent_blind_publish": "Not applicable to Phase 3. No draft-to-published transition for named schools or persons; consent handling was addressed in Phase 1 website case-study work.",
+    "A3_digit_only_labeled": "No bare-digit assertions. XP tests include labeled comments showing the expected formula result.",
+    "A4_vacuous_pass": "Every rejection test has a positive control (valid payload parses). Fire-once test verifies first insert and second duplicate. Route tests verify valid payload returns 200 before invalid payloads return 400.",
+    "A5_false_claim_text": "Phase 3 plan text claims Green only for the commands that actually pass. No premature 'contract fully enforced across all 26 games' claim.",
+    "A6_registry_overstatement": "No Phase 3 security state is claimed 'resolved' in `measure/tracks.md` or `plan.md`. D-01/D-02/D-05 remain tied to Phase 5+ pilot import. This audit result does not overstate completion.",
+    "A7_over_broad_filter": "Schema rejection tests target exact keys (`xp`, `dragonCount`, `bossPower`) rather than bare English words.",
+    "A9_archived_track_paths": "No runtime dependency on `measure/tracks/<id>/` paths in the new code.",
+    "A10_generated_facts": "Not applicable to Phase 3.",
+    "A11_blocked_track": "Not applicable (not a review-execution track)."
+  },
+
+  "retry_recommendation": "none",
+  "confidence": "high",
+
+  "next_role_handoff": "Phase 3 Green security review is complete with no blocking findings. The implementation is acceptable for Phase 3. Recommended next steps for downstream roles or the orchestrator:\n- `measure-review-a-correctness` and `measure-review-c-ux-api` may proceed in parallel if scheduled.\n- The non-blocking finding `phase-3-idempotency-key-reuse` should be folded into the Phase 5+ representative-game migration so a fresh key is generated per game rather than per mount.\n- The non-blocking finding `phase-3-plan-command-typo` can be fixed in the next plan update commit.\n- Phase 4 remains responsible for tenant-safe persistence (`gameCompletions` table or `schoolId` on `xpLogs`) and Phase 5+ for migrating the remaining 25 games."
+}

@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Phase 3 Review C PASSES. The API response shape returned by completeRoute.ts and recordGameCompletion matches GameCompletionResultSchema (xpEarned: int≥0, activityId: string, duplicate: boolean, status: literal 200). The HauntedLibraryGame onComplete UX flow uses a stable per-session idempotencyKey (useRef + generateIdempotencyKey), omits the xp field, and the page.tsx POSTs the full 10-field contract payload. Error responses are consistent: 400 with structured {error, issues?, status} for schema violations and invalid JSON; 200 with {duplicate: true, xpEarned: 0} for fire-once duplicates. Contract types (GameCompletionInput, GameCompletionResult) are exported via packages/domain/src/games/index.ts and the ./games subpath export is wired in packages/domain/package.json. Host apps can import the schema, types, XP formula, domain functions, permissions, and error classes from @reading-advantage/domain/games. No blocking findings. Two nonblocking findings documented.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    {
+      "id": "review-c-page-type-drift",
+      "summary": "page.tsx handleComplete parameter type is spelled out inline (10 fields) rather than importing GameCompletionInput from @reading-advantage/domain/games. The component already defines its own HauntedLibraryCompletionPayload type that mirrors the schema. If the schema changes, both inline types must be updated manually.",
+      "severity": "low",
+      "owner": "phase-5-migration",
+      "evidence": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/haunted-library/page.tsx lines 74-85 spell out the full type. The component at HauntedLibraryGame.tsx lines 31-42 defines HauntedLibraryCompletionPayload separately. Neither imports GameCompletionInput from the domain package.",
+      "remediation": "Phase 5+ migration can replace the inline types with imports of GameCompletionInput from @reading-advantage/domain/games. Not a Phase 3 blocker — the types currently match the schema exactly."
+    },
+    {
+      "id": "review-c-client-xp-preview",
+      "summary": "GameEndScreen displays client-side calculateXP(gameState) rather than the server-computed xpEarned from the POST response. The page.tsx reads data.xpEarned and stores it via setLastResult, but the end screen renders before the async POST completes.",
+      "severity": "informational",
+      "owner": "design-decision",
+      "evidence": "HauntedLibraryGame.tsx line 203: xp={calculateXP(gameState)}. Decision 3.5/3.7: 'The end-screen may show XP: (pending) or the client-side preview until the server response arrives.' The server response is used for persistence (host apps) and the game store.",
+      "remediation": "This is documented behavior per Decision 3.5/3.7. No action needed. Phase 5+ host import may add a loading state or use the server response for the end screen display."
+    }
+  ],
+  "evidence": [
+    "API response shape verified: completeRoute.ts returns { xpEarned: number, activityId: string, duplicate: boolean, status: 200 } matching gameCompletionResultSchema. mutations.ts returns the same shape (with duplicate:true, xpEarned:0 on retry).",
+    "HauntedLibraryGame.tsx onComplete payload: HauntedLibraryCompletionPayload type has 10 fields matching GameCompletionInputSchema (no xp). idempotencyKey generated once per session via useRef (lines 73-77). Test asserts payload has no xp property.",
+    "page.tsx POST body sends all 10 required fields (gameType, difficulty, score, accuracy, correctAnswers, totalAttempts, duration, victory, idempotencyKey, clientTimestamp). Reads data.xpEarned from response for setLastResult.",
+    "Error responses: completeRoute.ts returns 400 with {error, issues?, status} for schema violations (line 43-49) and invalid JSON (line 34-37). mutations.ts returns {duplicate: true, xpEarned: 0, status: 200} for fire-once duplicates.",
+    "Contract exports: packages/domain/src/games/index.ts exports schema, types, calculateGameXP, recordGameCompletion, getGameCompletions, GAMES_PERMISSIONS, and error classes. packages/domain/package.json has ./games subpath export.",
+    "completeRoute.ts imports gameCompletionInputSchema and calculateGameXP from @reading-advantage/domain/games — contract delegation verified.",
+    "All 3 test suites pass: 394 domain tests (0 failed), 7 completeRoute tests (0 failed), 12 HauntedLibraryGame tests (0 failed). Lint clean on both filters. check-types clean on both filters."
+  ],
+  "commands": [
+    {
+      "command": "pnpm --filter @reading-advantage/domain test -- games",
+      "result": "pass",
+      "details": "38 test files passed (1 skipped); 394 tests passed (5 skipped); 0 failed."
+    },
+    {
+      "command": "pnpm --filter vocabulary-games test --testPathPatterns=completeRoute",
+      "result": "pass",
+      "details": "1 test suite passed; 7/7 tests passed; 0 failed."
+    },
+    {
+      "command": "pnpm --filter vocabulary-games test --testPathPatterns=HauntedLibraryGame",
+      "result": "pass",
+      "details": "1 test suite passed; 12/12 tests passed; 0 failed."
+    },
+    {
+      "command": "pnpm --filter @reading-advantage/domain check-types",
+      "result": "pass",
+      "details": "tsc --noEmit clean, exit 0."
+    },
+    {
+      "command": "pnpm --filter vocabulary-games check-types",
+      "result": "pass",
+      "details": "tsc --noEmit clean, exit 0."
+    }
+  ],
+  "changed_files": [
+    "packages/domain/src/games/schema.ts (new — GameCompletionInputSchema, GameCompletionResultSchema)",
+    "packages/domain/src/games/contracts.ts (new — GameCompletionInput, GameCompletionResult types)",
+    "packages/domain/src/games/xp.ts (new — calculateGameXP pure function)",
+    "packages/domain/src/games/mutations.ts (new — recordGameCompletion domain function)",
+    "packages/domain/src/games/queries.ts (new — getGameCompletions domain function)",
+    "packages/domain/src/games/permissions.ts (new — games:complete, games:read:own)",
+    "packages/domain/src/games/errors.ts (new — error classes)",
+    "packages/domain/src/games/index.ts (new — barrel exports)",
+    "apps/advantage-games/src/lib/games/api/completeRoute.ts (rewritten — validates via schema, returns mock with calculateGameXP)",
+    "apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx (migrated — HauntedLibraryCompletionPayload, stable idempotencyKey)",
+    "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/haunted-library/page.tsx (wired — POSTs contract payload, reads server xpEarned)"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "ux_applicability": "applicable",
+  "webbridge_status": "not_run",
+  "webbridge_evidence": {
+    "screenshots": [],
+    "accessibility_snapshots": [],
+    "interactions": []
+  },
+  "retry_recommendation": "none",
+  "confidence": "high"
+}

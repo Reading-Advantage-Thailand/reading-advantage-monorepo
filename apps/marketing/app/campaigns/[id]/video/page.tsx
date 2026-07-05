@@ -75,6 +75,10 @@ export default function VideoProductionPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ app: selectedApp }),
       });
+      if (res.status === 401) {
+        window.location.href = "/login";
+        return;
+      }
       const data = await res.json();
       if (res.status === 401) { window.location.href = "/login"; return; }
       setTopics(
@@ -119,7 +123,7 @@ export default function VideoProductionPage() {
   const handleSaveTopics = async () => {
     try {
       const approvedTopics = topics.filter((t) => t.approved);
-      await fetch("/api/video/save-topics", {
+      const res = await fetch("/api/video/save-topics", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -127,6 +131,10 @@ export default function VideoProductionPage() {
           topics: approvedTopics.map((t) => t.text),
         }),
       });
+      if (res.status === 401) {
+        window.location.href = "/login";
+        return;
+      }
       alert("Topics saved!");
     } catch {
       console.error("Failed to save topics");

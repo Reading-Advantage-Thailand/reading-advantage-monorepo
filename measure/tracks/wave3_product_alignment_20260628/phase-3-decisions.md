@@ -410,7 +410,7 @@ before migration.
   (vitest, bounded to the new `games.test.ts` file). Mid-Red may also run the jest
   bounded Red:
   ```bash
-  pnpm --filter vocabulary-games test -- --testPathPatterns=completeRoute
+  pnpm --filter vocabulary-games test --testPathPatterns=completeRoute
   ```
   to prove the rewritten `completeRoute.test.ts` fails for the intended reason
   (contract rejection of `xp`).
@@ -421,7 +421,7 @@ before migration.
   ```
   (vitest, the new `games.test.ts` passes). Jr-Green also runs:
   ```bash
-  pnpm --filter vocabulary-games test -- --testPathPatterns=completeRoute
+  pnpm --filter vocabulary-games test --testPathPatterns=completeRoute
   ```
   to prove the rewritten `completeRoute.test.ts` passes.
 

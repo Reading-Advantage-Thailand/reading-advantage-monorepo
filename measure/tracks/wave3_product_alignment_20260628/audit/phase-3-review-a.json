@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Phase 3 implementation is correct and architecturally sound. All 7 decisions from phase-3-decisions.md are faithfully implemented. The shared contract lives in packages/domain/src/games/ (not in route handlers). calculateGameXP matches Decision 3.3 formula exactly. recordGameCompletion implements fire-once logic with SELECT-before-INSERT on xpLogs. completeRoute.ts validates via GameCompletionInputSchema and returns mock response with server-computed XP. HauntedLibraryGame.tsx onComplete payload matches the contract (no xp field, has idempotencyKey UUID). All targeted tests pass (20 domain + 7 route + 12 component). Full domain suite: 394 passed, 5 skipped. Lint and check-types clean on both packages.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    {
+      "id": "NB-1",
+      "severity": "low",
+      "description": "The completeRoute.test.ts 'does not call a real DB insert' positive control (test 7) only asserts response.status === 200 — it does not verify absence of a db parameter or mock a db spy. The assertion is structurally true (the function signature has no db param) but the test itself is a weak proof of mock honesty.",
+      "file": "apps/advantage-games/src/lib/games/api/completeRoute.test.ts",
+      "line": "99-107",
+      "recommendation": "Consider adding a jest spy on any potential db import or asserting the function only uses schema + calculateGameXP. Low priority — the structural proof (no db in signature) is sufficient for Phase 3."
+    },
+    {
+      "id": "NB-2",
+      "severity": "low",
+      "description": "The generateIdempotencyKey fallback in HauntedLibraryGame.tsx uses Math.random() which is not cryptographically strong. In production browsers, crypto.randomUUID() is used. This fallback exists only for older test runtimes.",
+      "file": "apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx",
+      "line": "49-59",
+      "recommendation": "Acceptable for Phase 3 standalone scope. If host app import (Phase 5) requires crypto-strong keys in all environments, consider using the Web Crypto API polyfill or generating the key server-side."
+    }
+  ],
+  "evidence": [
+    {
+      "check": "Contract location in packages/domain/src/games/",
+      "result": "PASS",
+      "detail": "8 files in packages/domain/src/games/: schema.ts, contracts.ts, mutations.ts, queries.ts, permissions.ts, errors.ts, xp.ts, index.ts. Barrel exports all public API. Route handler imports from @reading-advantage/domain/games."
+    },
+    {
+      "check": "calculateGameXP matches Decision 3.3 formula",
+      "result": "PASS",
+      "detail": "Formula: if totalAttempts===0 return 0; base=correctAnswers; bonus=(accuracy===1?2:0)+(victory?1:0)+(duration<60000?1:0); return Math.min(10,base+bonus). Test 'caps XP at 10 for perfect session': correctAnswers=10, totalAttempts=10, accuracy=1, victory=true, duration=30000 → XP=10. Test 'base XP only': correctAnswers=5, totalAttempts=10, accuracy=0.5, victory=false, duration=90000 → XP=5. Test 'zero attempts': XP=0. Test 'victory bonus': correctAnswers=5, totalAttempts=10, accuracy=0.5, victory=true, duration=90000 → XP=6. Test 'speed bonus': correctAnswers=5, totalAttempts=5, accuracy=1, victory=false, duration=30000 → XP=8."
+    },
+    {
+      "check": "recordGameCompletion fire-once logic and permissions",
+      "result": "PASS",
+      "detail": "Function calls assertCan(user,'games:complete',tenant) first. Re-validates input via gameCompletionInputSchema.parse (strict defense). Computes XP via calculateGameXP. SELECTs xpLogs by (userId, activityId) where activityId=game:<gameType>:<idempotencyKey>. If exists: returns {duplicate:true, xpEarned:0}. If not: INSERTs and returns {duplicate:false, xpEarned}. db.insert called exactly 1 across first+second call pair. Uses db.unscoped('xpLogs is REFERENTIAL') correctly."
+    },
+    {
+      "check": "completeRoute.ts validates schema and returns mock response",
+      "result": "PASS",
+      "detail": "createCompleteRoute() POST: calls gameCompletionInputSchema.safeParse(body). On failure: returns 400 with Zod issues. On success: computes xpEarned via calculateGameXP, builds activityId=game:<gameType>:<idempotencyKey>, returns {xpEarned, activityId, duplicate:false, status:200}. No db call. Dynamic config is 'force-static'. 7/7 tests pass."
+    },
+    {
+      "check": "HauntedLibraryGame.tsx onComplete payload matches contract",
+      "result": "PASS",
+      "detail": "onComplete sends {gameType:'haunted-library', difficulty, score, accuracy, correctAnswers, totalAttempts, duration, victory, idempotencyKey, clientTimestamp}. No 'xp' field. idempotencyKey generated once via useRef (crypto.randomUUID with Math.random fallback). onComplete fires exactly once per game-over (B30-002 defense). Page.tsx handleComplete receives contract shape and POSTs to /api/v1/games/haunted-library/complete. 12/12 tests pass."
+    },
+    {
+      "check": "recordActivity untouched (D-06 Phase 4 guardrail)",
+      "result": "PASS",
+      "detail": "git diff 76ba11e6..HEAD -- packages/domain/src/progress/mutations.ts returns 0 lines changed."
+    },
+    {
+      "check": "No A6 registry overstatement",
+      "result": "PASS",
+      "detail": "grep for D-01/D-02/D-05/CA-013/MR-H05 'resolved' in measure/tracks.md returns 0 hits. Findings stay open until Phase 5 pilot import."
+    },
+    {
+      "check": "Full domain suite regression check",
+      "result": "PASS",
+      "detail": "vitest run in packages/domain: 394 passed, 5 skipped (integration tests needing DATABASE_URL), 0 failed. Baseline was 374 tests; 20 new games tests added."
+    },
+    {
+      "check": "Lint and type-check clean",
+      "result": "PASS",
+      "detail": "packages/domain: eslint src/games/ = 0 errors, tsc --noEmit = 0 errors. apps/advantage-games: eslint on changed files = 0 errors, tsc --noEmit = 0 errors."
+    },
+    {
+      "check": "Expected Phase 5+ regressions documented",
+      "result": "PASS",
+      "detail": "archers-revenge/complete/route.test.ts and shadow-gate-dungeon/complete/route.test.ts fail because they send legacy payloads without gameType/idempotencyKey. The plan explicitly documents these as expected Phase 5+ regressions (correct D-01/D-02 behavior). Other 7 failing suites are pre-existing (GameEndScreen, storm-castle-tower, alchemists-synthesis, babelArchitectCompliance, ws-server.room, page.test.tsx, griffinRidersEscape)."
+    }
+  ],
+  "commands": [
+    {
+      "command": "cd packages/domain && npx vitest run src/__tests__/games.test.ts",
+      "result": "PASS",
+      "detail": "20 tests passed (306ms)"
+    },
+    {
+      "command": "cd apps/advantage-games && npx jest src/lib/games/api/completeRoute.test.ts",
+      "result": "PASS",
+      "detail": "7 tests passed (5.53s)"
+    },
+    {
+      "command": "cd apps/advantage-games && npx jest src/components/games/sentence/haunted-library/HauntedLibraryGame.test.tsx",
+      "result": "PASS",
+      "detail": "12 tests passed (12.3s)"
+    },
+    {
+      "command": "cd packages/domain && npx vitest run",
+      "result": "PASS",
+      "detail": "394 passed, 5 skipped, 0 failed (49.13s)"
+    },
+    {
+      "command": "cd packages/domain && npx eslint src/games/",
+      "result": "PASS",
+      "detail": "0 errors"
+    },
+    {
+      "command": "cd packages/domain && npx tsc --noEmit",
+      "result": "PASS",
+      "detail": "0 errors"
+    },
+    {
+      "command": "cd apps/advantage-games && npx eslint src/lib/games/api/completeRoute.ts src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx",
+      "result": "PASS",
+      "detail": "0 errors"
+    },
+    {
+      "command": "cd apps/advantage-games && npx tsc --noEmit",
+      "result": "PASS",
+      "detail": "0 errors"
+    },
+    {
+      "command": "cd apps/advantage-games && npx jest",
+      "result": "EXPECTED_REGRESSIONS",
+      "detail": "1709 passed, 29 failed (2 expected Phase 5+ regressions in archers-revenge + shadow-gate-dungeon route tests; 27 failures in 7 pre-existing broken suites)"
+    }
+  ],
+  "changed_files": [
+    "packages/domain/src/games/schema.ts",
+    "packages/domain/src/games/contracts.ts",
+    "packages/domain/src/games/xp.ts",
+    "packages/domain/src/games/mutations.ts",
+    "packages/domain/src/games/queries.ts",
+    "packages/domain/src/games/permissions.ts",
+    "packages/domain/src/games/errors.ts",
+    "packages/domain/src/games/index.ts",
+    "packages/domain/src/__tests__/games.test.ts",
+    "apps/advantage-games/src/lib/games/api/completeRoute.ts",
+    "apps/advantage-games/src/lib/games/api/completeRoute.test.ts",
+    "apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx",
+    "apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.test.tsx",
+    "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/haunted-library/page.tsx"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}

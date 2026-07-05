@@ -309,11 +309,11 @@ handler is a thin validator+delegator; the game component is the migration proof
 
 - **RED_TEST_COMMAND:** `pnpm --filter @reading-advantage/domain test -- games`
   (bounded vitest; Mid-Red may also run
-  `pnpm --filter vocabulary-games test -- --testPathPatterns=completeRoute` to prove
+  `pnpm --filter vocabulary-games test --testPathPatterns=completeRoute` to prove
   the rewritten jest test fails for the intended reason).
 - **GREEN_TEST_COMMAND:** `pnpm --filter @reading-advantage/domain test -- games`
   (vitest green). Jr-Green also runs
-  `pnpm --filter vocabulary-games test -- --testPathPatterns=completeRoute` (jest green).
+  `pnpm --filter vocabulary-games test --testPathPatterns=completeRoute` (jest green).
 - **PROJECT_LINT:** `pnpm --filter @reading-advantage/domain lint && pnpm --filter vocabulary-games lint`
 - **PROJECT_CHECKS:** `pnpm --filter @reading-advantage/domain check-types && pnpm --filter vocabulary-games check-types`
 
@@ -321,7 +321,7 @@ handler is a thin validator+delegator; the game component is the migration proof
 
 Phase 3 is decomposed into five test groups (3A..3E). All groups share the Green gate
 `pnpm --filter @reading-advantage/domain test -- games` (vitest, the new `games.test.ts`)
-plus `pnpm --filter vocabulary-games test -- --testPathPatterns=completeRoute` (jest,
+plus `pnpm --filter vocabulary-games test --testPathPatterns=completeRoute` (jest,
 rewritten `completeRoute.test.ts`) and the closeout gate below.
 
 **Target files (new / rewritten):**
@@ -399,7 +399,7 @@ positive control.
 - `pnpm --filter @reading-advantage/domain test -- games` exits **0** (vitest, the new
   `games.test.ts` passes; no regression in the existing `packages/domain` suite — run
   the whole filter at acceptance: `pnpm --filter @reading-advantage/domain test`).
-- `pnpm --filter vocabulary-games test -- --testPathPatterns=completeRoute` exits **0**
+- `pnpm --filter vocabulary-games test --testPathPatterns=completeRoute` exits **0**
   (jest, rewritten `completeRoute.test.ts` passes).
 - `pnpm --filter @reading-advantage/domain lint` exits 0.
 - `pnpm --filter vocabulary-games lint` exits 0.
@@ -491,7 +491,7 @@ pre-existing, owner-labeled failures outside Wave 3 (see `measure/tracks.md:112-
 "aggregate reds are pre-existing/owner-labeled"). Phase 3 does **not** attempt to green
 the aggregate suite. The Phase 3 gate is **scoped to the two filters**
 (`pnpm --filter @reading-advantage/domain test -- games` and
-`pnpm --filter vocabulary-games test -- --testPathPatterns=completeRoute`), which must
+`pnpm --filter vocabulary-games test --testPathPatterns=completeRoute`), which must
 be fully green. Any non-domain / non-vocabulary-games aggregate red observed during
 this phase is pre-existing and must be labeled as such in the phase result
 `known_failures` — never silently absorbed into a "green" claim (A5/A6).
@@ -938,7 +938,7 @@ permissions/errors/index) plus a rewritten `completeRoute.ts` and a migrated
 (D-01/D-02/D-05/B25-001/B28-017/B30-002) and green after the fix, each with a positive
 control so a reject-everything or no-op fix fails (A4). The phase gate is
 `pnpm --filter @reading-advantage/domain test -- games` = 0 plus
-`pnpm --filter vocabulary-games test -- --testPathPatterns=completeRoute` = 0 plus lint
+`pnpm --filter vocabulary-games test --testPathPatterns=completeRoute` = 0 plus lint
 and check-types on both filters, with the aggregate monorepo suite explicitly out of
 scope. Tier 2 items (`activity_type` pgEnum extension, `gameCompletions` table,
 remaining 25 games migration) are deferred to Phase 4 / 5+. The `recordActivity`

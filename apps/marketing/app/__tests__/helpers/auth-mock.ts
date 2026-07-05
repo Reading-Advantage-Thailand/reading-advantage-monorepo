@@ -5,29 +5,28 @@
  * handlers without setting a session cookie. Now that the routes require
  * authentication (Phase 2A/2B/2C of wave3_product_alignment_20260628), the
  * tests need a working session seam that resolves a synthetic ADMIN user
- * for ANY token.
+ * for the known token only.
  *
  * This module installs a `vi.mock("@reading-advantage/auth", ...)` factory
  * at module-load time (the mock call is hoisted by Vitest) that keeps the
  * real `AuthError`, `SESSION_COOKIE_NAME`, and friends, but stubs
  * `validateSession`, `getSession`, and `requireAuth` so that:
- *   - any non-empty token resolves to a synthetic ADMIN session
- *   - an empty/missing token returns null / throws UNAUTHORIZED
+ *   - the known token (`KNOWN_TOKEN`) resolves to a synthetic ADMIN session
+ *   - an empty/missing/unknown token returns null / throws UNAUTHORIZED
  *
- * Test files `import { authedRequest } from "./helpers/auth-mock"` to
- * build requests with a `session_token=<any>` cookie. The mock is
+ * Test files `import { authedRequest, KNOWN_TOKEN } from "./helpers/auth-mock"`
+ * to build requests with a `session_token=<known>` cookie. The mock is
  * registered as a side-effect of importing this module — no separate
  * `applyAuthMock()` call needed.
  *
- * The mock intentionally resolves ANY non-empty token to the same
- * synthetic ADMIN session — these are unit-level behavior tests, not
- * auth-seam tests. The Phase 2 Red tests assert the auth boundary
- * separately with the stricter known-token pattern.
+ * Phase 2 Red tests assert the auth boundary with the same known-token
+ * pattern, so the mock is intentionally strict rather than permissive.
  */
 import { SESSION_COOKIE_NAME } from "@reading-advantage/auth";
 import { vi } from "vitest";
 
-const SYNTHETIC_TOKEN = "test-session-token";
+/** Known session token shared across all marketing route tests. */
+export const KNOWN_TOKEN = "w3-known-session-token";
 
 const SYNTHETIC_SESSION = {
   id: "00000000-0000-0000-0000-000000000001",
@@ -47,6 +46,8 @@ const SYNTHETIC_SESSION = {
 
 // Module-level vi.mock — Vitest hoists it to the top of every importing
 // test file, so the auth module is mocked before any other import resolves.
+// Only the known token resolves to a session; missing/unknown tokens resolve
+// to null, preserving the negative/positive control pairing for auth tests.
 vi.mock("@reading-advantage/auth", async () => {
   const actual =
     await vi.importActual<typeof import("@reading-advantage/auth")>(
@@ -54,7 +55,7 @@ vi.mock("@reading-advantage/auth", async () => {
     );
   const validateSession = vi.fn(
     async (_db: unknown, token: string): Promise<unknown | null> => {
-      if (typeof token === "string" && token.length > 0) {
+      if (token === KNOWN_TOKEN) {
         return SYNTHETIC_SESSION;
       }
       return null;
@@ -94,7 +95,7 @@ export function authedInit(init: RequestInit = {}): RequestInit {
     ...init,
     headers: {
       ...(init.headers ?? {}),
-      Cookie: `${SESSION_COOKIE_NAME}=${SYNTHETIC_TOKEN}`,
+      Cookie: `${SESSION_COOKIE_NAME}=${KNOWN_TOKEN}`,
     },
   };
 }
