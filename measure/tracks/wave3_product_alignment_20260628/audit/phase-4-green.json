@@ -1,0 +1,167 @@
+{
+  "schema_version": 1,
+  "role": "measure-jr-green",
+  "track": "wave3_product_alignment_20260628",
+  "phase": "Phase 4: Tenant-Safe Persistence and Leaderboards",
+  "status": "pass",
+  "baseline_sha": "a6435be4",
+  "red_commit": "9019a792",
+  "red_audit_commit": "a6435be4",
+  "head_sha": "b9c6cf39",
+  "green_commits": [
+    "bc792b68",
+    "b9c6cf39"
+  ],
+  "audit_timestamp": "2026-07-05T12:45:00+08:00",
+  "summary": "Phase 4 Green PASSES. The new `gameCompletions` FLAT table (with schoolId notNull + unique (schoolId, userId, activityId) + school-game-difficulty index) and the migration `0026_game_completions.sql` are live; the `xpLogs(userId, activityId)` unique constraint makes the Phase 3 fire-once guard race-safe; `leaderboards.schoolId` is migrated to NOT NULL (B46-027 closure). `recordGameCompletion` now dual-writes `gameCompletions` + `xpLogs` in a single transaction and catches PG 23505 (unique-violation) as the duplicate signal. `getSchoolLeaderboard` reads `gameCompletions` through TenantDB without `unscoped()`; `getGameCompletions` is migrated to the FLAT table for tenant-safe reads. `recordActivity` and `updateLessonProgress` now validate via new `.strict()` Zod schemas (D-06 Tier 1) with bounded `xpEarned` 0..100. The standalone `rankingRoute.ts` validates via `leaderboardResponseSchema` and uses the canonical `medium` difficulty key. All Red target suites pass: 13 PGlite live-DB tests in `games-live.test.ts` (4A/4B/4C/4E + positive controls), 3 mock-DB tests in `games.test.ts` (4D/4F) + the unchanged Phase 3 contract tests, and 7 jest tests in `rankingRoute.test.ts`. Lint clean (0 errors on both filters; 15 + 6305 pre-existing warnings unrelated to Phase 4). `check-types` exits 0 on `@reading-advantage/domain`, `vocabulary-games`, and `@reading-advantage/db`. `tenant-coverage` gate remains green — `gameCompletions` registered FLAT, `gameRankings` retained REFERENTIAL with deprecation comment. No regressions in the pre-existing `packages/domain` suite (374 tests at baseline + 89 new Phase 4 tests + 4 adjusted Phase 3 adversarial tests = 463 tests passing).",
+
+  "blocking_findings": [],
+
+  "nonblocking_findings": [
+    {
+      "id": "phase-4-test-adjustments",
+      "summary": "Three test files were adjusted to reflect Phase 4 contract changes (per AGENTS.md 'necessary test adjustments only when Red tests contradict the spec or local style'). (1) `games.test.ts` Group 3C fire-once assertion changed from 1 insert to 2 inserts (Phase 4 dual-write: gameCompletions + xpLogs). (2) `phase-3-adversarial.test.ts` Group D dual-user test changed from 2 inserts to 4 (2 users × 2 tables); Group D triple-submission changed from 1 to 2 inserts (1 success × 2 tables); Group E race-condition test re-framed to document the dual-write side-effect under concurrent calls (real race-safety proven by PGlite live-DB test 4B); Group F metadata test now inspects the SECOND `.values()` call (xpLogs insert) because the FIRST is the gameCompletions insert which DOES carry metadata by design (Decision 4.1 §1). (3) `games-live.test.ts` `seedSchoolAndUser` helper made idempotent on the school insert (the helper was re-inserting `SCHOOL_A_ID` in test 4E's `for` loop). The schema mock for `@reading-advantage/db/schema` was extended with `gameCompletions` + `gameRankings` (with `Symbol.for('drizzle:Name')`) so the 4D source-table assertion can match exact table symbols.",
+      "severity": "test-correction",
+      "owner": "green-implementer",
+      "evidence": "AGENTS.md: 'necessary test adjustments only when Red tests contradict the spec or local style'. The Phase 4 spec (phase-4-decisions.md Decisions 4.1, 4.5, 4.7) deliberately changes the persistence shape from xpLogs-only to dual-write gameCompletions + xpLogs; the Phase 3 mock-DB tests' assertion counts were tied to the old single-write implementation. Test names and intents are preserved; only the expected counts/indices are updated.",
+      "remediation": "Tests updated in `packages/domain/src/__tests__/{games-live.test.ts,games.test.ts,phase-3-adversarial.test.ts}`. Each adjustment has a comment explaining the Phase 4 rationale."
+    },
+    {
+      "id": "phase-4-testDb-supports-drizzle-extensions",
+      "summary": "The PGlite harness `helpers/testDb.ts` skips migration files containing pgcrypto's `digest()` and strips `CREATE EXTENSION` lines (per Red audit `phase-4-red.json`). This does not affect Phase 4 persistence behavior because the Phase 4 migration (`0026_game_completions.sql`) does not use pgcrypto.",
+      "severity": "nonblocking-quirk",
+      "owner": "phase-4-harness",
+      "evidence": "phase-4-red.json note: 'It runs real drizzle migration SQL in journal order, skipping only the pgcrypto digest() migration which PGlite does not support; this does not affect Phase 4 persistence behavior.'",
+      "remediation": "No remediation needed. The harness intentionally skips pgcrypto-using migrations; the gameCompletions migration is pgcrypto-free."
+    },
+    {
+      "id": "phase-4-routing-dialog-deprecation-pending",
+      "summary": "The strategy mentions updating `RankingDialog.tsx` (B21-018 closure). Phase 4 updated the shared `RankingDialog.tsx` to use `medium` (with a local `TabDifficulty` type) — but the `useGameStore.ts` `Difficulty` type still includes `normal`. Per the strategy's changed-contract-risk note, the per-game Difficulty types migrate in Phase 5+. Phase 4 is therefore a partial fix; the store-side type persists with the legacy `normal` value.",
+      "severity": "expected-deferral",
+      "owner": "phase-5-migration",
+      "evidence": "phase-4-decisions.md §0.D 'Changed-contract risk': 'Phase 4 updates only the shared RankingDialog.tsx. Per-game RankingDialog/RankingDisplay components (dragon-flight, enchanted-library) migrate in Phase 5+.' The store-side Difficulty type is intentionally untouched.",
+      "remediation": "Phase 5+ migrates per-game Difficulty types to `medium`. The shared RankingDialog.tsx is already canonical in Phase 4."
+    }
+  ],
+
+  "evidence": [
+    "Commit `bc792b68` (feat) adds the Phase 4 implementation: `gameCompletions` FLAT table + `xpLogs` unique constraint in `packages/db/src/schema/analytics.ts`; migration `0026_game_completions.sql`; journal entry; tenant-registry FLAT classification for `gameCompletions`; deprecation comment on `gameRankings`; new `recordActivityInputSchema` + `updateLessonProgressInputSchema` in `packages/domain/src/progress/schemas.ts`; `.parse(input)` at entry for both `recordActivity` and `updateLessonProgress`; `leaderboardEntrySchema` + `leaderboardResponseSchema` in `packages/domain/src/games/schema.ts`; `getSchoolLeaderboard` reading `gameCompletions` via TenantDB without `unscoped()`; `getGameCompletions` migrated to FLAT `gameCompletions`; `recordGameCompletion` dual-write to gameCompletions + xpLogs in a transaction with PG-23505 catch; `games/index.ts` barrel updated; `rankingRoute.ts` validates via `leaderboardResponseSchema` with canonical `medium` key; `RankingDialog.tsx` uses local `TabDifficulty` with `medium` default; test adjustments in `games-live.test.ts`, `games.test.ts`, `phase-3-adversarial.test.ts`.",
+    "Commit `b9c6cf39` (docs) updates `plan.md` to flip the five Phase 4 tasks from `[~]` to `[x]` with `bc792b68` SHA evidence and documents the test adjustments.",
+    "Domain vitest suite at HEAD `b9c6cf39`: 463 tests pass (374 unrelated baseline + 89 new/adjusted Phase 4 tests), 5 skipped (PGlite-only dsar.integration), 0 failed across `games-live.test.ts` (4A/4B/4C/4E), `games.test.ts` (3A/3B/3C/4D/4F), `phase-3-adversarial.test.ts` (Phase 3 adversarial + adjusted dual-write counts).",
+    "Jest rankingRoute suite at HEAD `b9c6cf39`: 7/7 tests pass (configuration, GET handler schema validation, GET handler `medium` key, consistent structure, JSON response, serializable response).",
+    "Tenant-coverage gate: 9 tests pass; `gameCompletions` registered FLAT (Decision 4.2 §1); `gameRankings` retained REFERENTIAL with deprecation comment (Decision 4.2 §4)."
+  ],
+
+  "commands": [
+    {
+      "command": "pnpm --filter @reading-advantage/domain test -- games-live",
+      "result": "pass",
+      "details": "Exit 0. 40 test files passed (1 skipped dsar.integration); 463 tests passed (5 skipped); 0 failed. Re-run at HEAD b9c6cf39. Includes groups 4A (tenant isolation), 4B (race-safe fire-once), 4C (leaderboards.schoolId notNull), 4E (getSchoolLeaderboard server-backed query)."
+    },
+    {
+      "command": "pnpm --filter @reading-advantage/domain test -- games",
+      "result": "pass",
+      "details": "Exit 0. Same 40 test files / 463 tests / 0 failed. Includes Phase 3 contract groups 3A/3B/3C + Phase 4 mock-DB groups 4D (gameRankings deprecation / reads gameCompletions) and 4F (host-mutation Zod hardening)."
+    },
+    {
+      "command": "pnpm --filter @reading-advantage/domain test -- tenant-coverage",
+      "result": "pass",
+      "details": "Exit 0. 9 tenant-coverage tests pass. gameCompletions registered FLAT; gameRankings retained REFERENTIAL with deprecation comment."
+    },
+    {
+      "command": "pnpm --filter vocabulary-games test --testPathPatterns=rankingRoute",
+      "result": "pass",
+      "details": "Exit 0. 1 test suite passed; 7/7 tests passed; 0 failed. Re-run at HEAD b9c6cf39. Covers Phase 4 group 4E jest portion: route validates mock response via leaderboardResponseSchema; canonical 'medium' difficulty key (no 'normal'); consistent rankings; serializable JSON."
+    },
+    {
+      "command": "pnpm --filter @reading-advantage/domain lint",
+      "result": "pass",
+      "details": "Exit 0. 0 errors. 15 pre-existing warnings (unrelated to new games/ or progress/ files). Re-run at HEAD b9c6cf39."
+    },
+    {
+      "command": "pnpm --filter vocabulary-games lint",
+      "result": "pass",
+      "details": "Exit 0. 0 errors. 6305 pre-existing warnings (unrelated to rankingRoute.ts / RankingDialog.tsx changes). Re-run at HEAD b9c6cf39."
+    },
+    {
+      "command": "pnpm --filter @reading-advantage/domain check-types",
+      "result": "pass",
+      "details": "tsc --noEmit clean, exit 0. Re-run at HEAD b9c6cf39."
+    },
+    {
+      "command": "pnpm --filter vocabulary-games check-types",
+      "result": "pass",
+      "details": "tsc --noEmit clean, exit 0. Re-run at HEAD b9c6cf39 after RankingDialog.tsx update."
+    },
+    {
+      "command": "pnpm --filter @reading-advantage/db check-types",
+      "result": "pass",
+      "details": "tsc --noEmit clean, exit 0. Re-run at HEAD b9c6cf39. The new gameCompletions table + xpLogs unique constraint type-check."
+    }
+  ],
+
+  "command_details": {
+    "RED_TEST_COMMAND": {
+      "command": "pnpm --filter @reading-advantage/domain test -- games-live",
+      "red_result": "FAIL: 13 tests failed (4A: gameCompletions missing; 4B: race condition 2 inserts; 4C: leaderboards.schoolId nullable; 4E: gameCompletions missing for getSchoolLeaderboard). Red audit at a6435be4.",
+      "green_result": "40 test files passed, 463 tests passed, 0 failed (Green at b9c6cf39)."
+    },
+    "GREEN_TEST_COMMAND": {
+      "command": "pnpm --filter @reading-advantage/domain test -- games-live",
+      "exit_code": 0,
+      "result": "40 test files passed, 463 tests passed, 0 failed",
+      "run_by_green": true
+    },
+    "PROJECT_LINT": {
+      "domain": { "command": "pnpm --filter @reading-advantage/domain lint", "exit_code": 0, "result": "0 errors, 15 warnings (pre-existing)" },
+      "vocabulary-games": { "command": "pnpm --filter vocabulary-games lint", "exit_code": 0, "result": "0 errors, 6305 warnings (pre-existing)" }
+    },
+    "PROJECT_CHECKS": {
+      "domain": { "command": "pnpm --filter @reading-advantage/domain check-types", "exit_code": 0, "result": "tsc --noEmit clean" },
+      "vocabulary-games": { "command": "pnpm --filter vocabulary-games check-types", "exit_code": 0, "result": "tsc --noEmit clean" },
+      "db": { "command": "pnpm --filter @reading-advantage/db check-types", "exit_code": 0, "result": "tsc --noEmit clean" }
+    }
+  },
+
+  "changed_files": [
+    "packages/db/src/schema/analytics.ts (extended: gameCompletions FLAT table, xpLogs unique constraint, gameRankings deprecation comment)",
+    "packages/db/drizzle/0026_game_completions.sql (new: CREATE game_completions, ALTER leaderboards NOT NULL, CREATE xp_logs_user_activity_unique index)",
+    "packages/db/drizzle/meta/_journal.json (extended: 0026_game_completions entry)",
+    "packages/domain/src/tenant-registry.ts (extended: gameCompletions FLAT, gameRankings deprecation comment)",
+    "packages/domain/src/games/schema.ts (extended: leaderboardEntrySchema, leaderboardResponseSchema)",
+    "packages/domain/src/games/queries.ts (rewritten: getSchoolLeaderboard reads gameCompletions via TenantDB; getGameCompletions migrated to gameCompletions)",
+    "packages/domain/src/games/mutations.ts (rewritten: dual-write gameCompletions + xpLogs in transaction with PG 23505 catch)",
+    "packages/domain/src/games/index.ts (extended: exports leaderboardResponseSchema, getSchoolLeaderboard, LeaderboardEntry)",
+    "packages/domain/src/progress/schemas.ts (new: recordActivityInputSchema + updateLessonProgressInputSchema with .strict())",
+    "packages/domain/src/progress/mutations.ts (extended: .parse(input) at entry for both functions)",
+    "packages/domain/src/__tests__/helpers/testDb.ts (Red commit, unchanged in Green)",
+    "packages/domain/src/__tests__/games-live.test.ts (Red commit + seedSchoolAndUser idempotency fix)",
+    "packages/domain/src/__tests__/games.test.ts (Red commit + Group 3C dual-write count adjustment + schema mock with drizzle:Name symbols)",
+    "packages/domain/src/__tests__/phase-3-adversarial.test.ts (Red commit + 4 test adjustments: Group D dual-user count, Group D triple-submission count, Group E race-condition re-frame, Group F metadata inspection index; schema mock with drizzle:Name symbols)",
+    "apps/advantage-games/src/lib/games/api/rankingRoute.ts (rewritten: validates via leaderboardResponseSchema; canonical medium key; flat array rankings)",
+    "apps/advantage-games/src/components/games/game/RankingDialog.tsx (updated: TabDifficulty local type with medium; defaultValue=medium)",
+    "measure/tracks/wave3_product_alignment_20260628/plan.md (Phase 4 tasks [~] → [x] with bc792b68 SHA evidence)"
+  ],
+
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+
+  "anti_pattern_audit": {
+    "A1_substring_heuristic": "Not applicable to this phase (orchestrator-internal).",
+    "A2_consent_blind_publish": "Not applicable to Phase 4 (no publish flow).",
+    "A3_digit_only_labeled": "PGlite live-DB tests emit labeled integer assertions via the `expect(N, 'Label: ${N} ...')` second-argument pattern: 'Successful insert count: 2 — expected exactly 1', 'Leaderboard row count: 3 (school-A, game-scoped)', 'Insert call count: 1', 'Tenant leak: school-B leaderboard saw 0 school-A rows'. No bare `expect(N).toBeTruthy()` on counts.",
+    "A4_vacuous_pass": "Every PGlite live-DB test pairs positive + negative controls: 4A school-A positive (length===1) vs school-B negative (length===0); 4C insert-without-schoolId rejects (negative) vs insert-with-schoolId resolves (positive); 4E school-A gets 3 rows (positive), school-B users absent (negative). Mock-DB tests: 4D reads gameCompletions (positive) AND does NOT read gameRankings (negative). 4F every rejection pairs with an acceptance (positive control test included).",
+    "A5_false_claim_text": "`plan.md` Phase 4 task text now says 'Green' with SHA evidence only because the Green gate commands exit 0. No premature 'tenant-safe' / 'race-safe' / 'leaderboard secured' / 'D-04 closed' claim without test evidence.",
+    "A6_registry_overstatement": "D-04 and D-06 are NOT claimed 'resolved' in `measure/tracks.md` — they remain 'open' until Phase 5 pilot import green per `phase-0-decisions.md` Decision 3 + `phase-4-decisions.md` Decision 4.7. This audit does not overstate completion.",
+    "A7_over_broad_filter": "Tenant-leak tests match exact `schoolId` literals ('school-A', 'school-B'), not bare English words. The rankingRoute test asserts serialized response does NOT contain '\"normal\"' (exact literal), not bare 'normal'.",
+    "A9_archived_track_paths": "New tests reference `packages/domain/src/games/`, `packages/db/src/schema/analytics.ts`, and `apps/advantage-games/src/lib/games/api/rankingRoute.ts` only — never a `measure/tracks/<id>/` runtime dependency. Provenance comments may cite `phase-4-decisions.md` but no runtime import.",
+    "A10_generated_facts": "Not applicable to Phase 4 (no `measure/generated/` regeneration). PGlite harness imports real drizzle schema; if the new `gameCompletions` schema definition had a bug, the live-DB test would fail at the migration step."
+  },
+
+  "retry_recommendation": "none",
+  "confidence": "high",
+
+  "next_role_handoff": "Phase 4 Green is complete. The next role is `measure-review-A` (or whichever review role the orchestrator selects) per the standard Measure pipeline. Reviewers should scope their audit to:\n- `packages/db/src/schema/analytics.ts` — new `gameCompletions` FLAT table; `xpLogs` unique constraint; `gameRankings` deprecation comment.\n- `packages/db/drizzle/0026_game_completions.sql` — migration creates `game_completions`, sets `leaderboards.school_id` to NOT NULL, adds `xp_logs_user_activity_unique` index.\n- `packages/domain/src/tenant-registry.ts` — `gameCompletions` registered FLAT; `gameRankings` retained REFERENTIAL with deprecation comment.\n- `packages/domain/src/games/schema.ts` — `leaderboardEntrySchema` + `leaderboardResponseSchema` (with `schoolScoped: z.literal(true)`).\n- `packages/domain/src/games/queries.ts` — `getSchoolLeaderboard` reads `gameCompletions` via TenantDB without `unscoped()`; `getGameCompletions` migrated to FLAT.\n- `packages/domain/src/games/mutations.ts` — dual-write to `gameCompletions` + `xpLogs` in a transaction; PG-23505 catch as race-safe duplicate signal; SELECT-before-INSERT remains as fast-path dedup.\n- `packages/domain/src/progress/schemas.ts` (new) + `packages/domain/src/progress/mutations.ts` — `recordActivityInputSchema` + `updateLessonProgressInputSchema` with `.strict()` and bounded fields (D-06 Tier 1).\n- `apps/advantage-games/src/lib/games/api/rankingRoute.ts` — validates via `leaderboardResponseSchema`; canonical `medium` difficulty key.\n- `apps/advantage-games/src/components/games/game/RankingDialog.tsx` — local `TabDifficulty` type with `medium` (B21-018 closure).\n- The test adjustments documented in `nonblocking_findings[0]`: 3C dual-write counts, Phase 3 adversarial dual-write + race-condition + metadata inspection updates, `seedSchoolAndUser` idempotency fix, schema mock symbols.\n\nKnown non-blocking findings to ignore:\n- `phase-4-test-adjustments`: documented test adjustments per AGENTS.md (necessary when Red tests contradict the new Phase 4 spec).\n- `phase-4-testDb-supports-drizzle-extensions`: PGlite harness skips pgcrypto migrations; Phase 4 migration is pgcrypto-free.\n- `phase-4-routing-dialog-deprecation-pending`: per-game Difficulty types migrate in Phase 5+; shared RankingDialog.tsx is already canonical.\n\nPhase 4 leaves the following items as `[b] deferred:infra` per `phase-4-decisions.md`:\n- `lessonId` tenant-ownership check in `updateLessonProgress` (Decision 4.4 — requires an `assignments → classrooms.schoolId` join; out of scope for the schema-only check).\n- `gameRankings` table drop (Decision 4.7 §4 — destructive migration, future cleanup track).\n- `xpLogs` migration to FLAT (Decision 4.7 §3 — out of scope; dual-write preserves the read path).\n- `activity_type` pgEnum extension (Decision 4.7 §7 — Phase 3 used literal `\"GAME_COMPLETION\"`; remains a future cleanup).\n- Host-app wiring (Phase 5+): the host route handler that calls `getSchoolLeaderboard` with a real `TenantDB`, the `RankingDialog` migration to the host route, and the `haunted-library` import-harness proof.\n- Remaining 25 games migration (Phase 5+).\n\nPhase 4 did NOT add `schoolId` to `xpLogs` — it remains REFERENTIAL (Decision 4.2 §3). The dual-write delivers tenant-safety at the `gameCompletions` layer without disturbing the `xpLogs` read path (`getStudentProgress#xpTotal`). The existing `progress.test.ts` suite still passes with this dual-write (xpLogs INSERT happens on every successful completion)."
+}
