@@ -6,10 +6,14 @@
 
 ## Phase 0: Baseline and Coverage Lock
 
-- [~] Task: Read `medium-plus-coverage-matrix.md` and confirm this wave's owned track IDs are still accurate.
-- [~] Task: Confirm Wave 0/Wave 2 primitives available (createTenantDB, assertCan, tenant-isolation test helper, provider guard); record which must be locally proven.
-- [~] Task: Record baseline pass/fail for the required verification commands per touched app.
-- [~] Task: Create a site-closure checklist for each owned migration track, enumerating affected same-class sites from the source review artifacts before implementation begins.
+- [x] Task: Read `medium-plus-coverage-matrix.md` and confirm this wave's owned track IDs are still accurate.
+  - Evidence: `baseline-results.md` §1 — owned track IDs in `spec.md` match the matrix exactly (Science ST-1/ST-2/ST-4/SP-3; Reading SEC-6..10/PB-4..8; CodeCamp MT-8..11/13/14; Sales T5/T8/T9; Primary M7/M9; www T9). No drift; no Medium+ track double-owned or unowned. Low-severity deferrals remain explicitly deferred.
+- [x] Task: Confirm Wave 0/Wave 2 primitives available (createTenantDB, assertCan, tenant-isolation test helper, provider guard); record which must be locally proven.
+  - Evidence: `baseline-results.md` §2 — all four primitives present at baseline SHA. `createTenantDB` at `packages/domain/src/db-contract.ts:332` (re-exported from `@reading-advantage/domain`); `assertCan` at `packages/auth/src/assert.ts:18`; tenant-isolation harness `buildTenantIsolationHarness()` at `packages/domain/src/testing/tenant-isolation-harness.ts`; provider guard `createProviderGuard()` at `packages/ai/src/testing/provider-guard-utility.ts`. All locally proven by existing green tests; none require re-proof in Wave 4. Science `lib/` can import `createTenantDB` (domain is a `workspace:*` dep). Primary does NOT depend on `@reading-advantage/domain` (acceptable — M7/M9 need no domain migration).
+- [x] Task: Record baseline pass/fail for the required verification commands per touched app.
+  - Evidence: `baseline-results.md` §3 — lint PASS (exit 0, 16/16 tasks, 2235 pre-existing warnings); check-types FAIL (exit 2, pre-existing `packages/api/src/routers/progress.ts:54` TS2322 blocks all 5 app check-types); test FAIL (exit 2, same `@reading-advantage/api#build` blocker; `@reading-advantage/domain` green standalone — 524 passed, 5 skipped). Reproduction recipe in §4. The pre-existing `progress.ts:54` defect overlaps PB-4 and MUST be fixed in Phase 4 for the Phase 9 aggregate to go green.
+- [x] Task: Create a site-closure checklist for each owned migration track, enumerating affected same-class sites from the source review artifacts before implementation begins.
+  - Evidence: 26 checklists under `site-closures/` (ST-1, ST-2, ST-4, SP-3, M-RA-SEC-6..10, M-RA-PB-4..8, MT-8..11/13/14, T5/T8/T9, M7/M9, www-T9). Each enumerates affected same-class sites with a status column (🔴 open / 🟢 fixed / ⚪ NA / 🟡 deferred:<follow-up>) and a closeout requirement. No track is accepted on representative-slice evidence alone (spec §"Closure Model"). Strategy + anti-pattern defenses (A1–A13) recorded in `test-strategy.md`.
 
 ## Phase 1: Science Security and Tenant Scoping
 
