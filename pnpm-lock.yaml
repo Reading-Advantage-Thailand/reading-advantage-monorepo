@@ -2199,6 +2199,9 @@ importers:
         specifier: 'catalog:'
         version: 3.25.76
     devDependencies:
+      '@electric-sql/pglite':
+        specifier: 'catalog:'
+        version: 0.5.3
       '@reading-advantage/config':
         specifier: workspace:*
         version: link:../config

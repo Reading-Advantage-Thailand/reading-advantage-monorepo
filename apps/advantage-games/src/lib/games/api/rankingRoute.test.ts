@@ -1,6 +1,6 @@
 import { createRankingRoute } from './rankingRoute'
 
-describe('createRankingRoute', () => {
+describe('createRankingRoute (Phase 4 schema validation)', () => {
   describe('configuration', () => {
     it('returns force-static dynamic config', () => {
       const route = createRankingRoute()
@@ -14,46 +14,41 @@ describe('createRankingRoute', () => {
   })
 
   describe('GET handler', () => {
-    it('returns rankings object', async () => {
+    it('returns a leaderboardResponseSchema-valid response', async () => {
+      const domainGames = await import('@reading-advantage/domain/games')
+      const schema = domainGames.leaderboardResponseSchema
+      if (!schema) {
+        throw new Error(
+          'leaderboardResponseSchema is not exported from @reading-advantage/domain/games',
+        )
+      }
+
       const route = createRankingRoute()
       const response = await route.GET()
       const data = await response.json()
 
-      expect(data).toHaveProperty('rankings')
+      expect(() => schema.parse(data)).not.toThrow()
+      expect(data).toHaveProperty('schoolScoped', true)
+      expect(Array.isArray(data.rankings)).toBe(true)
     })
 
-    it('returns all four difficulty levels', async () => {
+    it('does not include the legacy "normal" difficulty key (B21-018)', async () => {
       const route = createRankingRoute()
       const response = await route.GET()
       const data = await response.json()
+      const serialized = JSON.stringify(data)
 
-      expect(data.rankings).toHaveProperty('easy')
-      expect(data.rankings).toHaveProperty('normal')
-      expect(data.rankings).toHaveProperty('hard')
-      expect(data.rankings).toHaveProperty('extreme')
+      expect(serialized).not.toContain('"normal"')
     })
 
-    it('returns empty arrays for all difficulties', async () => {
-      const route = createRankingRoute()
-      const response = await route.GET()
-      const data = await response.json()
-
-      expect(data.rankings).toEqual({
-        easy: [],
-        normal: [],
-        hard: [],
-        extreme: [],
-      })
-    })
-
-    it('returns consistent empty rankings structure', async () => {
+    it('returns consistent rankings structure', async () => {
       const route = createRankingRoute()
       const response1 = await route.GET()
       const response2 = await route.GET()
       const data1 = await response1.json()
       const data2 = await response2.json()
 
-      expect(data1.rankings).toEqual(data2.rankings)
+      expect(data1).toEqual(data2)
     })
   })
 
@@ -71,62 +66,6 @@ describe('createRankingRoute', () => {
       const data = await response.json()
 
       expect(() => JSON.stringify(data)).not.toThrow()
-    })
-
-    it('has correct response shape', async () => {
-      const route = createRankingRoute()
-      const response = await route.GET()
-      const data = await response.json()
-
-      const keys = Object.keys(data.rankings)
-      expect(keys).toHaveLength(4)
-      expect(keys).toContain('easy')
-      expect(keys).toContain('normal')
-      expect(keys).toContain('hard')
-      expect(keys).toContain('extreme')
-    })
-  })
-
-  describe('mock behavior', () => {
-    it('returns empty rankings as mock behavior', async () => {
-      const route = createRankingRoute()
-      const response = await route.GET()
-      const data = await response.json()
-
-      // Mock route should return empty rankings since there's no real database
-      expect(data.rankings.easy).toHaveLength(0)
-      expect(data.rankings.normal).toHaveLength(0)
-      expect(data.rankings.hard).toHaveLength(0)
-      expect(data.rankings.extreme).toHaveLength(0)
-    })
-
-    it('does not include user data in mock response', async () => {
-      const route = createRankingRoute()
-      const response = await route.GET()
-      const data = await response.json()
-
-      // Ensure no user data is leaked in mock
-      const allRankings = [
-        ...data.rankings.easy,
-        ...data.rankings.normal,
-        ...data.rankings.hard,
-        ...data.rankings.extreme,
-      ]
-      expect(allRankings).toHaveLength(0)
-    })
-  })
-
-  describe('type safety', () => {
-    it('returns RankingsByDifficulty structure', async () => {
-      const route = createRankingRoute()
-      const response = await route.GET()
-      const data = await response.json()
-
-      // Verify each difficulty is an array
-      expect(Array.isArray(data.rankings.easy)).toBe(true)
-      expect(Array.isArray(data.rankings.normal)).toBe(true)
-      expect(Array.isArray(data.rankings.hard)).toBe(true)
-      expect(Array.isArray(data.rankings.extreme)).toBe(true)
     })
   })
 })

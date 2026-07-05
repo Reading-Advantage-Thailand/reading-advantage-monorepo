@@ -136,6 +136,21 @@
 - [~] Task: Write Red tenant tests for leaderboard/progress rows across two schools.
   - Evidence refs: Advantage Games D-04/B46-021/B46-025/B46-026/B46-036.
   - Red command: `pnpm --filter @reading-advantage/domain test -- games-live` (PGlite live-DB proof). Mid-Red may also run `pnpm --filter vocabulary-games test --testPathPatterns=rankingRoute` (jest).
+  - Red evidence (HEAD before Green):
+    - `pnpm --filter @reading-advantage/domain test -- games-live` → `Test Files 2 failed | 38 passed | 1 skipped` / `Tests 13 failed | 450 passed | 5 skipped` — failures:
+      - 4A: `gameCompletions table is not exported from @reading-advantage/db/schema — migration missing`
+      - 4B: `Successful insert count: 2 — expected exactly 1` (no DB unique constraint)
+      - 4C: `leaderboards.schoolId nullable — allowed an insert without schoolId`
+      - 4E: `gameCompletions table is not exported — getSchoolLeaderboard cannot run`
+      - 4D (mock-DB): `getSchoolLeaderboard is not exported from games/queries.js`
+      - 4F (mock-DB): `recordActivity`/`updateLessonProgress` accept invalid payloads (empty activityType, xpEarned 999, metadata too long, unknown keys, non-UUID lessonId, invalid status, progress outside 0..100)
+    - `pnpm --filter vocabulary-games test --testPathPatterns=rankingRoute` → `Tests: 2 failed, 5 passed, 7 total` — failures:
+      - `leaderboardResponseSchema is not exported from @reading-advantage/domain/games`
+      - response contains legacy `"normal"` difficulty key (`{"rankings":{"easy":[],"normal":[],"hard":[],"extreme":[]}}`)
+    - `pnpm --filter @reading-advantage/domain lint` → 0 errors
+    - `pnpm --filter @reading-advantage/domain check-types` → exit 0
+    - `pnpm --filter vocabulary-games lint` → 0 errors
+    - `pnpm --filter vocabulary-games check-types` → exit 0
 - [~] Task: Classify game leaderboard/progress tables in tenant registry or create tenant-safe schema/migration.
 - [~] Task: Replace localStorage-only leaderboard with server-backed persistence behind domain functions.
 - [~] Task: Add host-progress mutation validation and ownership checks.
