@@ -119,8 +119,23 @@
 
 ## Phase 4: Tenant-Safe Persistence and Leaderboards
 
+> **Strategy frozen:** `phase-4-decisions.md` and `test-strategy.md` §0.D (7 decisions,
+> 6 test groups 4A..4F). Strategy commit: this Phase 4 strategy authoring commit.
+> Implementation handoff: Mid-Red writes the Red tests (PGlite live-DB + mock-DB +
+> jest); Jr-Green implements the `gameCompletions` table migration, the `xpLogs`
+> unique constraint, the `leaderboards.schoolId` notNull migration, the
+> `getSchoolLeaderboard` domain query, the host-mutation Zod (D-06 Tier 1), and the
+> rewritten `rankingRoute.ts`. Tier 2 items (`lessonId` tenant-ownership check,
+> `gameRankings` drop, `xpLogs` schoolId, remaining 25 games migration, host-app
+> wiring) are deferred to Phase 5+ / a follow-up infra track.
+
+- [x] Task: Author Phase 4 strategy and freeze persistence/leaderboard decisions. — `phase-4-decisions.md` + `test-strategy.md` §0.D (this strategy authoring commit)
+  - Decisions 4.1..4.7 frozen: new `gameCompletions` FLAT table (schoolId notNull + unique `(schoolId, userId, activityId)`); `xpLogs` unique constraint `(userId, activityId)` for race-safe fire-once; dual-write in `recordGameCompletion` so `getStudentProgress#xpTotal` read path is unchanged; `leaderboards.schoolId` notNull migration (B46-027 closure); `xpLogs`/`gameRankings` remain REFERENTIAL (gameRankings deprecated, no new writes); `getSchoolLeaderboard` domain query over `gameCompletions` through TenantDB without `unscoped()`; shared `LeaderboardResponseSchema`; `recordActivityInputSchema` + `updateLessonProgressInputSchema` with `.strict()` and `xpEarned` bounded 0..100 (D-06 Tier 1); `lessonId` tenant-ownership check deferred (D-06 Tier 2 `[b] deferred:infra`); vitest + PGlite live-DB harness + jest gates; seven explicit non-goals.
+  - Evidence refs: `advantage-games_20260626/findings.md` §A3 (leaderboard not persisted + multi-tenant fragility), §D D-04 (B46-021/B46-025/B46-027/B46-036), §D D-06 (B46-031/B46-032/B46-033); `phase-3-decisions.md` Decision 3.4 (Tier 2 handoff — xpLogs unique constraint + gameCompletions table); `packages/db/src/schema/analytics.ts` (xpLogs+gameRankings REFERENTIAL, no schoolId); `packages/db/src/schema/primary.ts:227-233` (leaderboards FLAT, schoolId nullable); `packages/domain/src/tenant-registry.ts:75/102/198-199` (classifications); `packages/domain/src/progress/mutations.ts` (recordActivity/updateLessonProgress unvalidated — D-06); `packages/domain/src/progress/queries.ts:72-75` (xpTotal reads xpLogs — dual-write preserves); `apps/advantage-games/src/lib/games/api/rankingRoute.ts` (force-static mock, `normal` key); `apps/marketing/app/__tests__/helpers/testDb.ts` (PGlite harness pattern to mirror).
+  - Anti-pattern defense: A4 (positive+negative control pairing in every PGlite live-DB test), A5 (no "tenant-safe" claim until games-live test exits 0), A6 (no D-04/D-06 "resolved" in tracks.md until Phase 4 acceptance), A3 (labeled-integer rank/count assertions), A7 (exact schoolId literal matching), A9 (no track-path runtime deps), A10 (PGlite runs real schema, does not regenerate measure/generated/).
 - [~] Task: Write Red tenant tests for leaderboard/progress rows across two schools.
   - Evidence refs: Advantage Games D-04/B46-021/B46-025/B46-026/B46-036.
+  - Red command: `pnpm --filter @reading-advantage/domain test -- games-live` (PGlite live-DB proof). Mid-Red may also run `pnpm --filter vocabulary-games test --testPathPatterns=rankingRoute` (jest).
 - [~] Task: Classify game leaderboard/progress tables in tenant registry or create tenant-safe schema/migration.
 - [~] Task: Replace localStorage-only leaderboard with server-backed persistence behind domain functions.
 - [~] Task: Add host-progress mutation validation and ownership checks.

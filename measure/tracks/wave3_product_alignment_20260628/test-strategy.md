@@ -2,16 +2,17 @@
 
 > **Track ID:** `wave3_product_alignment_20260628`
 > **Baseline SHA:** `8a47d2df999e35d9d47de9eb590ae29523c70bae`
-> **Active phases for this cycle:** Phase 3 (Advantage Games Completion and Scoring
-> Contract). Phases 0, 1, and 2 are **complete and accepted** — their strategies are
-> preserved verbatim below for provenance. Phases 4–5 remain deferred (see §9
-> Deferrals).
+> **Active phases for this cycle:** Phase 4 (Tenant-Safe Persistence and
+> Leaderboards). Phases 0, 1, 2, and 3 are **complete and accepted** — their
+> strategies are preserved verbatim below for provenance. Phase 5 remains deferred
+> (see §9 Deferrals).
 >
 > This document specifies:
 > - §0.A — Phase 0 artifact tests (decisions/matrix truthfulness) — complete
 > - §0.B — Phase 1 live-behavior tests (claims correction) — complete
-> - §0.C — Phase 3 live-behavior tests (games completion/scoring contract) — **active**
-> - §2–§10 — Phase 2 strategy, preserved unchanged for provenance
+> - §0.C — Phase 3 live-behavior tests (games completion/scoring contract) — complete
+> - §0.D — Phase 4 live-behavior tests (tenant-safe persistence + leaderboards) — **active**
+> - §1–§10 — Phase 2 strategy, preserved unchanged for provenance
 
 ---
 
@@ -508,8 +509,339 @@ this phase is pre-existing and must be labeled as such in the phase result
   (re-verify cited literals exist at HEAD). Phase 3 does not add new artifact tests —
   the decisions doc is the strategy's falsifiability anchor, not a test target.
 - **No PGlite / live-DB test in Phase 3.** The contract is proven at the unit level.
-  Phase 4 may add a PGlite live-DB proof for tenant-safe persistence; Phase 3 does not
-  require it (the standalone games app has no DB, and the host-app import is Phase 5+).
+  Phase 4 may add a PGlite live-DB proof for tenant-safe persistence; Phase 3 does
+  not require it (the standalone games app has no DB, and the host-app import is Phase 5+).
+
+---
+
+## 0.D. Phase 4 — Tenant-Safe Persistence and Leaderboards (live-behavior tests)
+
+Phase 4 is the live-behavior phase that delivers the tenant-safe persistence layer
+frozen in `phase-4-decisions.md`. It spans **three test surfaces**: a vitest
+mock-DB suite (`packages/domain/src/__tests__/games.test.ts`, extended from Phase 3),
+a vitest **PGlite live-DB** suite (`packages/domain/src/__tests__/games-live.test.ts`,
+new — mirrors the marketing `phase-8-projects-live.test.ts` pattern), and a jest
+suite (`apps/advantage-games/src/lib/games/api/rankingRoute.test.ts`, rewritten).
+The PGlite live-DB suite is the load-bearing proof for the tenant-isolation and
+race-safety claims — those properties cannot be proven with a mock DB (Phase 3
+explicitly deferred them for exactly this reason).
+
+### What Phase 4 must defend against (anti-patterns)
+
+| Anti-pattern | Where it applies in Phase 4 | Defense |
+|---|---|---|
+| **A4** Vacuous-pass on nothing-done | Every PGlite live-DB test (4A/4B/4C/4E); every mock-DB test (4F) | **Positive + negative control pairing**: every tenant-isolation test pairs a school-A-row-visible-to-school-A assertion (positive) with a school-A-row-invisible-to-school-B assertion (negative). A query that returns empty for everyone fails the positive control. Every race-safety test asserts exactly one insert succeeds (not zero, not two). Every Zod-rejection test pairs an invalid input (rejected) with a valid input (accepted). |
+| **A5** False-claim text vs test reality | `plan.md` Phase 4 task text | Do not write "tenant-safe persistence" / "race-safe fire-once" / "leaderboard secured" / "D-04 closed" in `plan.md` unless `pnpm --filter @reading-advantage/domain test -- games-live` exits 0. The cited command is the source of truth. |
+| **A6** Registry-note overstatement | `measure/tracks.md` Wave 3 row; `product-risk-register.md` | Do **not** claim D-04/D-06 or CA-013 / MR-H05 is "resolved" until Phase 4 acceptance passes AND Phase 5 pilot import is green. The findings stay "open" in `product-risk-register.md` until Phase 5. |
+| **A3** Digit-only as labeled count | Leaderboard rank/count assertions (4A/4E); insert-call-count assertions (4B); XP-total assertions (4A) | Use labeled-integer assertions: `expect(rows.length).toBe(1)` with a comment `// Leaderboard row count: 1 (school-A, game-scoped)`; never `expect(rows).toBeTruthy()` or `rg -q '[0-9]+'`. Emit `"Insert call count: N"` / `"School-A XP total: N"` and parse the integer where a count is asserted via a log. |
+| **A7** Over-broad filter swallowing hits | Tenant-leak scans (4A/4E) | Match **exact `schoolId` literals** (`"school-A"`, `"school-B"`), not bare words like "school"/"user"/"student" (which appear legitimately in joins and column names). When scanning a leaderboard response body for a leaked name, match the exact seeded name literal (e.g. `student-school-A`), not bare "student". |
+| **A9** Pre-existing test references archived track paths | New `games-live.test.ts`, rewritten `rankingRoute.test.ts`, extended `games.test.ts` | Tests reference `packages/domain/src/games/`, `packages/db/src/schema/analytics.ts`, and `apps/advantage-games/src/` only — never a `measure/tracks/<id>/` path. Provenance comments may cite `phase-4-decisions.md` but no runtime dependency on a track path. If the track later archives, tests must not break. |
+| **A2** Consent-blind publish gate | N/A — no publish flow in Phase 4. | Consciously not applicable. |
+| **A10** Generated-facts drift | PGlite live-DB tests run the real drizzle schema | Consciously not applicable — Phase 4 does NOT regenerate `measure/generated/`. The PGlite harness imports the real schema from `@reading-advantage/db`, so a schema-definition bug fails the live-DB test, not just the type check. |
+| **A11** Executed review track left fully blocked | N/A — Phase 4 is an implementation phase. | Consciously not applicable. |
+| **A1, A8, A12, A13** | Orchestrator-internal, plan-marker, catalog, or closeout classes. | Consciously not applicable to Phase 4 product tests. |
+
+### Confirmed gaps to defend against (evidence-mapped, frozen in `phase-4-decisions.md`)
+
+| Group | Gap IDs | Evidence | Phase 4 Red asserts |
+|-------|---------|----------|---------------------|
+| 4A — Tenant isolation of `gameCompletions` | D-04, B46-021, B46-025 | `findings.md` §A3, §D D-04 | PGlite live-DB: insert a `gameCompletions` row for `school-A` user via `recordGameCompletion`; call `getSchoolLeaderboard` with a `school-B` tenant; assert the school-A row is **not** in the result. **Positive control:** call `getSchoolLeaderboard` with the `school-A` tenant; assert the row **is** in the result. **A4:** a query returning empty for both tenants fails the positive control. |
+| 4B — Race-safe fire-once (closes Phase 3 Decision 3.4 Tier 2) | B28-017, B30-002, B23-008, B24-008 | `findings.md` §A1, §A5; `phase-3-decisions.md` Decision 3.4 | PGlite live-DB: two concurrent `recordGameCompletion` calls with the same `idempotencyKey` (Promise.all); assert exactly one returns `duplicate: false` with `xpEarned > 0` and exactly one returns `duplicate: true` with `xpEarned: 0`; assert `COUNT(gameCompletions WHERE activityId = ...)` is exactly 1. **A4:** assert the insert count is exactly 1 (not 0, not 2). **A3:** labeled `// Insert call count: 1`. |
+| 4C — `leaderboards.schoolId` notNull (B46-027 closure) | B46-027 | `findings.md` §A3; `primary.ts:229` (nullable) | PGlite live-DB / schema test: after migration, `leaderboards.schoolId` is `notNull`; an INSERT without `schoolId` is rejected by the DB (NOT NULL constraint violation) AND by TenantDB's FLAT insert guard (M-SF-2). **Positive control:** an INSERT with `schoolId` succeeds. **A4:** a schema that allows null fails the rejection assertion. |
+| 4D — `gameRankings` deprecation honesty | D-04 (deprecation), A4 (non-vacuity) | `tenant-registry.ts:199`; `analytics.ts:22` | Static/behavioral test: `getSchoolLeaderboard` reads from `gameCompletions`, NOT `gameRankings`. Assert the query's `.from()` target is `gameCompletions` (via a spy on the mock DB or via inspecting the generated SQL in PGlite). **A4 defense:** assert `gameCompletions` is read (positive control) AND `gameRankings` is NOT read (negative control) — a query that reads neither fails the positive control. |
+| 4E — `getSchoolLeaderboard` server-backed query | D-04, B22-007, B23-004, B24-021 | `findings.md` §A3; `rankingRoute.ts` (force-static mock) | PGlite live-DB: seed `gameCompletions` rows for 3 users in `school-A` and 2 users in `school-B` (same `gameType`, same `difficulty`); call `getSchoolLeaderboard({ tenant: school-A, gameType, difficulty })`; assert exactly 3 rows returned, all with `schoolId === school-A` (auto-scoped by TenantDB). **A4:** assert `rows.length === 3` (positive control — not empty). **A7:** match exact `schoolId` literal `"school-A"`. **A3:** labeled `// Leaderboard row count: 3 (school-A, game-scoped)`. Also: a rewritten jest `rankingRoute.test.ts` asserts the standalone route validates its mock response via `leaderboardResponseSchema` and uses the canonical `medium` difficulty key (B21-018 closure — `normal` removed). |
+| 4F — Host-mutation Zod (D-06 Tier 1) | D-06, B46-031, B46-032, B46-033 | `findings.md` §D D-06; `progress/mutations.ts` (unvalidated) | Mock-DB vitest: `recordActivity({ activityType: "", xpEarned: 999, metadata: "x".repeat(5000) })` throws (Zod: empty `activityType`, `xpEarned > 100`, `metadata` too long); `recordActivity({ activityType: "LESSON_COMPLETE", xpEarned: 5 })` succeeds. `updateLessonProgress({ lessonId: "not-a-uuid", status: "fake", progress: 150 })` throws; `updateLessonProgress({ lessonId: uuid, status: "completed", progress: 100 })` succeeds. `.strict()` rejects unknown keys. **A4:** every rejection pairs with an acceptance. **Tier 2 deferred:** the `lessonId` tenant-ownership check is NOT tested in Phase 4 — it is `[b] deferred:infra` (Decision 4.4). A conscious non-test comment in `games.test.ts` records this deferral so it is not silently skipped. |
+
+### Gate commands (Phase 4)
+
+- **RED_TEST_COMMAND:** `pnpm --filter @reading-advantage/domain test -- games-live`
+  (vitest, bounded to the new PGlite live-DB file). Mid-Red may also run the bounded
+  jest Red: `pnpm --filter vocabulary-games test --testPathPatterns=rankingRoute` to
+  prove the rewritten `rankingRoute.test.ts` fails for the intended reason (shared
+  `LeaderboardResponseSchema` rejection of the legacy `normal` key / empty-rankings
+  shape).
+- **GREEN_TEST_COMMAND:** `pnpm --filter @reading-advantage/domain test -- games`
+  AND `pnpm --filter @reading-advantage/domain test -- games-live` (vitest, both the
+  Phase 3 contract tests AND the new PGlite live-DB tests pass). Jr-Green also runs
+  `pnpm --filter vocabulary-games test --testPathPatterns=rankingRoute` (jest green).
+- **PROJECT_LINT:** `pnpm --filter @reading-advantage/domain lint && pnpm --filter vocabulary-games lint`
+- **PROJECT_CHECKS:** `pnpm --filter @reading-advantage/domain check-types && pnpm --filter vocabulary-games check-types && pnpm --filter @reading-advantage/db check-types`
+  (the new `gameCompletions` table is in `packages/db`).
+- **TENANT_COVERAGE_GATE:** `pnpm --filter @reading-advantage/domain test -- tenant-coverage`
+  must remain green — the new `gameCompletions` table MUST be registered in
+  `tenant-registry.ts` (FR-6 build-failure guard). The `leaderboards.schoolId`
+  notNull migration must not break the FLAT classification.
+
+### Phase 4 Red → Green → Closeout
+
+Phase 4 is decomposed into six test groups (4A..4F). All groups share the Green gate
+`pnpm --filter @reading-advantage/domain test -- games-live` (vitest, the new
+`games-live.test.ts`) plus `pnpm --filter @reading-advantage/domain test -- games`
+(Phase 3 contract tests still pass — no regression) plus
+`pnpm --filter vocabulary-games test --testPathPatterns=rankingRoute` (jest,
+rewritten `rankingRoute.test.ts`) plus the tenant-coverage gate, and the closeout
+gate below.
+
+**Target files (new / rewritten / extended):**
+
+- `packages/db/src/schema/analytics.ts` (extended) — new `gameCompletions` table.
+- `packages/db/drizzle/0026_game_completions.sql` (new migration) — `game_completions`
+  table + `xp_logs_user_activity_unique` constraint +
+  `leaderboards.school_id NOT NULL` migration + `game_completions_school_game_difficulty_idx`.
+- `packages/domain/src/tenant-registry.ts` (extended) — register `gameCompletions`
+  as FLAT; deprecation comment on `gameRankings`.
+- `packages/domain/src/games/schema.ts` (extended) — `leaderboardEntrySchema`,
+  `leaderboardResponseSchema`.
+- `packages/domain/src/games/queries.ts` (extended) — `getSchoolLeaderboard`;
+  `getGameCompletions` migrated to read from `gameCompletions` (FLAT) instead of
+  `xpLogs` (REFERENTIAL).
+- `packages/domain/src/games/mutations.ts` (modified) — `recordGameCompletion`
+  dual-writes to `gameCompletions` + `xpLogs` in a transaction; catches
+  unique-violation as the duplicate signal.
+- `packages/domain/src/progress/schema.ts` (extended) —
+  `recordActivityInputSchema`, `updateLessonProgressInputSchema`.
+- `packages/domain/src/progress/mutations.ts` (modified) — both functions
+  `.parse(input)` at entry.
+- `packages/domain/src/__tests__/helpers/testDb.ts` (new) — PGlite live-DB harness
+  mirroring `apps/marketing/app/__tests__/helpers/testDb.ts`.
+- `packages/domain/src/__tests__/games-live.test.ts` (new) — groups 4A, 4B, 4C, 4E
+  (PGlite live-DB).
+- `packages/domain/src/__tests__/games.test.ts` (extended) — group 4F (mock-DB Zod
+  rejection) + group 4D (static `getSchoolLeaderboard` source-table assertion).
+- `apps/advantage-games/src/lib/games/api/rankingRoute.ts` (rewritten) — validates
+  mock response via `leaderboardResponseSchema`; canonical `medium` key.
+- `apps/advantage-games/src/lib/games/api/rankingRoute.test.ts` (rewritten) —
+  group 4E jest assertions.
+- `apps/advantage-games/src/components/games/game/RankingDialog.tsx` (modified) —
+  difficulty tabs `["easy", "medium", "hard", "extreme"]` (B21-018 closure).
+
+**Red command (bounded):** `pnpm --filter @reading-advantage/domain test -- games-live`
+
+**Red assertions (one block per group, all asserting against HEAD `78f17dc3` source):**
+
+1. **4A tenant isolation** — `games-live.test.ts`: PGlite live-DB. Create two
+   schools (`school-A`, `school-B`), two users (`user-A` in `school-A`, `user-B` in
+   `school-B`). Call `recordGameCompletion({ tenant: school-A, user: user-A, input:
+   { gameType: "haunted-library", ... } })`. Then call `getSchoolLeaderboard({
+   tenant: school-B, user: user-B, input: { gameType: "haunted-library" } })`.
+   Assert the result has `length === 0` (school-B cannot see school-A's completion).
+   **Positive control:** call `getSchoolLeaderboard({ tenant: school-A, ... })`;
+   assert `length === 1` and `rows[0].userId === "user-A"`. **A4:** a query
+   returning empty for both fails the positive control. **A7:** match exact
+   `schoolId` literals.
+2. **4B race-safe fire-once** — `games-live.test.ts`: PGlite live-DB. Call
+   `Promise.all([ recordGameCompletion({ ... idempotencyKey: K }), recordGameCompletion({ ...
+   idempotencyKey: K }) ])` with the same `idempotencyKey` `K`. Assert exactly one
+   result has `duplicate === false` and `xpEarned > 0`; exactly one has `duplicate
+   === true` and `xpEarned === 0`. Then `SELECT COUNT(*) FROM game_completions WHERE
+   activity_id = 'game:haunted-library:' || K` → assert `count === 1`. **A4:**
+   assert count is exactly 1 (not 0, not 2). **A3:** labeled `// Insert call count:
+   1`. **Note:** PGlite is single-threaded; true concurrency is simulated by issuing
+   both calls without awaiting the first. The unique constraint is the race-safety
+   guarantee being tested — if the constraint is missing, both inserts succeed and
+   the count is 2 (test fails).
+3. **4C leaderboards.schoolId notNull** — `games-live.test.ts` (or a schema test):
+   after migration, attempt `db.insert(leaderboards).values({ details: {...} })`
+   (no `schoolId`); assert the DB rejects with a NOT NULL constraint violation.
+   **Positive control:** `db.insert(leaderboards).values({ schoolId: school-A,
+   details: {...} })` succeeds. **A4:** a schema that allows null fails the
+   rejection assertion. Also assert TenantDB's FLAT insert guard rejects the insert
+   before it reaches the DB (M-SF-2 fail-closed) when `tenant.schoolId` is null.
+4. **4D gameRankings deprecation** — `games.test.ts` (mock-DB): spy on the mock
+   `TenantDB` select; call `getSchoolLeaderboard`; assert the `from()` target is
+   `gameCompletions` (not `gameRankings`). **A4 positive control:** assert
+   `gameCompletions` is read; **A4 negative control:** assert `gameRankings` is NOT
+   read. A query that reads neither fails the positive control.
+5. **4E getSchoolLeaderboard** — `games-live.test.ts`: PGlite live-DB. Seed 3
+   `gameCompletions` rows for `school-A` users (same `gameType`, same `difficulty`)
+   and 2 rows for `school-B` users. Call `getSchoolLeaderboard({ tenant: school-A,
+   gameType, difficulty })`. Assert `rows.length === 3` and every row's effective
+   `schoolId === "school-A"` (auto-scoped — the query does not include `schoolId` in
+   its WHERE; TenantDB injects it). **A4:** `rows.length === 3` (not empty).
+   **A3:** labeled `// Leaderboard row count: 3 (school-A, game-scoped)`. **A7:**
+   match exact `schoolId` literal. Also: rewritten `rankingRoute.test.ts` (jest)
+   asserts the standalone route returns a `leaderboardResponseSchema`-valid response
+   with the canonical `medium` difficulty key (no `normal`).
+6. **4F host-mutation Zod** — `games.test.ts` (mock-DB): `recordActivity` with
+   `{ activityType: "", xpEarned: 999, metadata: "x".repeat(5000) }` throws (Zod);
+   `recordActivity` with `{ activityType: "LESSON_COMPLETE", xpEarned: 5 }`
+   succeeds (positive control). `updateLessonProgress` with `{ lessonId:
+   "not-a-uuid", status: "fake", progress: 150 }` throws; with `{ lessonId: uuid,
+   status: "completed", progress: 100 }` succeeds. `.strict()` rejects `{ ...
+   valid, extraKey: 1 }`. **A4:** every rejection pairs with an acceptance.
+   **Tier 2 conscious non-test:** a comment in `games.test.ts` records that the
+   `lessonId` tenant-ownership check is `[b] deferred:infra` (Decision 4.4) and is
+   NOT tested here — it is not silently skipped.
+
+**Positive controls (A4 defense — non-vacuity):** every group includes a positive
+control. 4A: school-A row visible to school-A. 4B: exactly one insert succeeds. 4C:
+insert with `schoolId` succeeds. 4D: `gameCompletions` is read. 4E: leaderboard
+returns 3 rows. 4F: valid input accepted. A group that passes only because the
+query returns empty for everyone or the schema rejects everything fails its
+positive control.
+
+### Phase 4 Green gate
+
+- `pnpm --filter @reading-advantage/domain test -- games-live` exits **0** (vitest,
+  the new `games-live.test.ts` passes — the load-bearing tenant-isolation and
+  race-safety proofs).
+- `pnpm --filter @reading-advantage/domain test -- games` exits **0** (Phase 3
+  contract tests still pass — no regression; group 4D and 4F added).
+- `pnpm --filter @reading-advantage/domain test -- tenant-coverage` exits **0**
+  (the new `gameCompletions` table is registered FLAT; `leaderboards` FLAT
+  classification preserved).
+- `pnpm --filter vocabulary-games test --testPathPatterns=rankingRoute` exits **0**
+  (jest, rewritten `rankingRoute.test.ts` passes).
+- `pnpm --filter @reading-advantage/domain lint` exits 0.
+- `pnpm --filter vocabulary-games lint` exits 0.
+- `pnpm --filter @reading-advantage/domain check-types` exits 0.
+- `pnpm --filter vocabulary-games check-types` exits 0.
+- `pnpm --filter @reading-advantage/db check-types` exits 0 (the new
+  `gameCompletions` table type-checks).
+
+### Phase 4 closeout gate
+
+- All Green-gate commands green.
+- Every gap in the table above (4A..4F) has at least one **red-at-baseline /
+  green-after-fix** test with a positive control.
+- `phase-4-decisions.md` exists and its Tier 1 decisions are reflected in the
+  implemented schema/migration/queries. Tier 2 items (`[b] deferred:infra`) remain
+  deferred in `plan.md` Phase 6 — Phase 4 did not invent the `lessonId`
+  tenant-ownership check, the `gameRankings` drop, the `xpLogs` schoolId column,
+  or the host-app import wiring.
+- The Phase 3 `recordGameCompletion` fire-once logic is upgraded to be race-safe
+  (unique constraint + catch) — the Phase 3 Tier 2 item is closed.
+- `getStudentProgress#xpTotal` continues to aggregate game XP correctly (dual-write
+  to `xpLogs` preserves the read path) — a regression test asserts `xpTotal`
+  includes game XP after a `recordGameCompletion` call.
+- `measure/tracks.md` does NOT claim D-04/D-06 / CA-013 / MR-H05 is "resolved" —
+  the findings stay "open" until Phase 5 pilot import green (A6 defense).
+- The existing `packages/domain` suite (374+ tests at Phase 3 baseline) has no
+  regressions. The existing `vocabulary-games` suite has no regressions in tests
+  other than the rewritten `rankingRoute.test.ts` (which intentionally changes its
+  assertions).
+
+### Phase 4 fixtures, mocks, and live-behavior proof
+
+- **PGlite live-DB harness (the load-bearing proof):** new
+  `packages/domain/src/__tests__/helpers/testDb.ts` mirrors the marketing
+  `apps/marketing/app/__tests__/helpers/testDb.ts` pattern. It creates an in-process
+  PGlite Postgres, runs the real drizzle migrations (including the new
+  `0026_game_completions.sql`), and returns `{ db, tenantDb, teardown }`. The
+  harness is a devDependency; imported only from test helpers (header comment
+  matches the marketing `testDb.ts` convention). This is the **honest tier** for
+  tenant-isolation and race-safety claims — a mock DB cannot prove the unique
+  constraint or the TenantDB auto-scope proxy behavior.
+- **Mock DB (vitest, `games.test.ts` extended):** follow the established
+  `packages/domain/src/__tests__/mock-db.ts` pattern (Wave 0 reusable harness) for
+  group 4D (source-table assertion via spy) and group 4F (Zod rejection — no DB
+  side effect needed). Mock `TenantDB` with `select: vi.fn()` returning a chainable
+  builder; assert `from()` was called with `gameCompletions` (4D) and `insert` was
+  NOT called when Zod throws (4F).
+- **Auth/permission mock:** mock `assertCan` from `@reading-advantage/auth` to
+  throw `AuthError` for unauthorized users; the test asserts `getSchoolLeaderboard`
+  and `recordGameCompletion` throw before any DB call. Real `assertCan` is
+  unit-tested elsewhere; Phase 4 tests the *contract*, not the auth primitive.
+- **`gameCompletions` schema mock:** `vi.mock("@reading-advantage/db/schema", ...)`
+  extended to include `gameCompletions: { schoolId: "school_id", userId: "user_id",
+  gameType: "game_type", ... }` — matches the pattern in `games.test.ts:22-29`.
+- **PGlite school/user fixtures:** the live-DB test seeds two `schools` rows
+  (`school-A`, `school-B`), two `users` rows (`user-A` with `schoolId: school-A`,
+  `user-B` with `schoolId: school-B`). Each test creates a `TenantDB` bound to the
+  relevant tenant. The fixtures are deterministic (hardcoded UUIDs) so the
+  tenant-leak assertion matches exact literals (A7).
+- **No real Postgres, no Docker.** PGlite is in-process and requires no external
+  service. The Phase 4 gate runs in CI without a database container (matching the
+  marketing `phase-8-projects-live.test.ts` CI profile).
+- **`rankingRoute.test.ts` (jest):** use the existing `MockRequest` pattern. The
+  rewritten test asserts the route returns a `leaderboardResponseSchema`-valid
+  response (mock data, not a real DB call — the standalone app has no DB per Phase 3
+  Decision 3.7) and that the difficulty keys are `["easy", "medium", "hard",
+  "extreme"]` (no `normal`).
+
+### Phase 4 architecture guardrails and changed-contract risks
+
+- **Do not add `schoolId` to `xpLogs`.** `xpLogs` remains REFERENTIAL (Decision 4.2
+  §3). The dual-write to `gameCompletions` (FLAT) + `xpLogs` (REFERENTIAL) delivers
+  tenant-safety at the leaderboard layer without disturbing the `xpLogs` read path.
+  A test should assert `xpLogs` source is unchanged in classification (grep
+  `tenant-registry.ts` for `register(xpLogs, "REFERENTIAL")`).
+- **Do not drop `gameRankings`.** Destructive migration, out of scope (Decision 4.7
+  §4). `gameRankings` is deprecated (no new writes); a code comment marks it. A
+  future cleanup track may drop it. A test should assert `gameRankings` is still
+  registered (REFERENTIAL) — the tenant-coverage gate enforces this.
+- **Do not migrate `lessons` to add `schoolId`.** `lessons` is global content
+  (Decision 4.7 §6). The `lessonId` tenant-ownership check is Tier 2
+  `[b] deferred:infra` (Decision 4.4) — Phase 4 does not add it.
+- **Do not wire the host-app import.** Phase 5 owns the host route handler that
+  calls `getSchoolLeaderboard` and the `RankingDialog` migration to the host route.
+  Phase 4 delivers the domain query + shared schema; the standalone route remains
+  mock but validates via the real schema (matching Phase 3 Decision 3.7's honest
+  standalone/host split).
+- **Do not migrate any game other than `haunted-library`** (already migrated in
+  Phase 3). The remaining 25 games are Phase 5+ work, gated by per-game readiness.
+- **Changed-contract risk:** `getGameCompletions` (Phase 3 per-user read) is
+  migrated from `xpLogs` (REFERENTIAL, `unscoped()`) to `gameCompletions` (FLAT,
+  auto-scoped). This is a behavior change: a school-B tenant context can no longer
+  read a school-A user's game completions (previously possible because the query
+  used `unscoped()` and filtered by `userId` only). This is the intended
+  tenant-safety fix (D-04). The Phase 3 `games.test.ts` 3C fire-once test must be
+  updated to mock `gameCompletions` instead of `xpLogs` for the dedup SELECT — this
+  is a true Red → Green contract change, not a regression.
+- **Changed-contract risk:** `recordGameCompletion` now dual-writes in a
+  transaction. The Phase 3 mock-DB test (3C) asserted `db.insert` was called once
+  on `xpLogs`; the Phase 4 test must assert `db.insert` is called once on
+  `gameCompletions` AND once on `xpLogs` (two inserts, one transaction). The
+  duplicate path must assert NEITHER insert is called (the unique-violation catch
+  short-circuits before the second table's insert).
+- **Changed-contract risk:** `RankingDialog.tsx` difficulty tabs change from
+  `["easy", "normal", "hard", "extreme"]` to `["easy", "medium", "hard",
+  "extreme"]` (B21-018 closure — `normal` was never a valid `gameDifficultyEnum`
+  value per Phase 3 Decision 3.2). Any game component that hardcoded `normal` must
+  be updated; Phase 4 updates only the shared `RankingDialog.tsx`. Per-game
+  `RankingDialog`/`RankingDisplay` components (dragon-flight, enchanted-library)
+  migrate in Phase 5+.
+- **Migration ordering risk:** the `leaderboards.schoolId` notNull migration must
+  run AFTER any backfill of null rows (Decision 4.2 §2). The migration SQL must be
+  reviewed by the deploy engineer (Tier 2 `[b] deferred:infra` operational choice).
+  The Tier 1 *contract* (notNull after migration) is testable in PGlite regardless
+  of the operational backfill choice.
+
+### Phase 4 intentionally-red aggregate-suite handling
+
+The monorepo aggregate suite (`pnpm turbo run test`) is **red at baseline** from
+pre-existing, owner-labeled failures outside Wave 3 (see `measure/tracks.md:112-115`:
+"aggregate reds are pre-existing/owner-labeled"). Phase 4 does **not** attempt to
+green the aggregate suite. The Phase 4 gate is **scoped to the four filters**
+(`pnpm --filter @reading-advantage/domain test -- games-live`,
+`pnpm --filter @reading-advantage/domain test -- games`,
+`pnpm --filter @reading-advantage/domain test -- tenant-coverage`, and
+`pnpm --filter vocabulary-games test --testPathPatterns=rankingRoute`), which must
+be fully green. Any non-domain / non-vocabulary-games aggregate red observed during
+this phase is pre-existing and must be labeled as such in the phase result
+`known_failures` — never silently absorbed into a "green" claim (A5/A6).
+
+### Phase 4 artifact vs live-behavior distinction
+
+- **Live-behavior tests (load-bearing):** `games-live.test.ts` (vitest + PGlite)
+  calls the real `recordGameCompletion`, the real `getSchoolLeaderboard`, and the
+  real `TenantDB` proxy against an in-process Postgres. These prove the
+  tenant-isolation (4A/4E), race-safety (4B), and notNull (4C) properties that a
+  mock DB cannot prove. `games.test.ts` (vitest, mock-DB) calls the real Zod
+  schemas and the real `recordActivity`/`updateLessonProgress` for group 4F.
+  `rankingRoute.test.ts` (jest) calls the real route handler `GET` function.
+- **Artifact/documentation tests:** `phase-4-decisions.md` is a frozen artifact,
+  not a live-behavior test. Its truthfulness is guarded by the Phase 0 artifact
+  pattern (re-verify cited literals exist at HEAD). Phase 4 does not add new
+  artifact tests — the decisions doc is the strategy's falsifiability anchor, not a
+  test target. The `phase-4-decisions.md` file is referenced in `games.test.ts`
+  provenance comments only, with no runtime dependency (A9).
+- **Static/behavioral hybrid (4D):** the `gameRankings` deprecation test asserts
+  on the query's source table (via a spy on the mock DB's `from()` call). This is a
+  behavioral test over the real `getSchoolLeaderboard` function — it proves the
+  query reads from `gameCompletions`, not `gameRankings`. It is not a "documentation
+  test" (it does not read JSDoc or policy text); it inspects the actual query
+  behavior. Labeled as a behavioral test with a static-table-identity assertion.
 
 ---
 
@@ -858,16 +1190,19 @@ labeled as such in the phase result `known_failures` — never silently absorbed
   applied; acceptance passed. See `audit/phase-1-acceptance.json`.
 - **Phase 2 — Marketing App Public Workflow Security:** **DONE.** See
   `audit/phase-2-acceptance.json`. Strategy preserved in §2–§10 for provenance.
-- **Phase 3 — Advantage Games Completion and Scoring Contract:** **ACTIVE this cycle.**
-  Strategy in §0.C. Decisions frozen in `phase-3-decisions.md`. Red tests assert the
+- **Phase 3 — Advantage Games Completion and Scoring Contract:** **DONE.** Strategy
+  in §0.C. Decisions frozen in `phase-3-decisions.md`. Red tests asserted the
   shared Zod contract, server-side XP, fire-once guard, and `haunted-library` migration
   against HEAD `8900196e`. Tier 2 items (`activity_type` pgEnum extension,
   `gameCompletions` table, remaining 25 games migration) are deferred to Phase 4 / 5+.
-- **Phase 4 — Tenant-Safe Persistence and Leaderboards:** deferred. Owns the
-  `gameCompletions` table migration (or `xpLogs` unique constraint), `schoolId`
-  reclassification, `leaderboards` hardening, host-mutation Zod (D-06), and the
-  server-backed leaderboard. The plan's D-04/D-06 evidence refs and the import policy
-  from `phase-0-decisions.md` Decision 3 are carried forward as the gating items.
+- **Phase 4 — Tenant-Safe Persistence and Leaderboards:** **ACTIVE this cycle.**
+  Strategy in §0.D. Decisions frozen in `phase-4-decisions.md`. Red tests assert
+  tenant isolation of `gameCompletions`, race-safe fire-once (unique constraint),
+  `leaderboards.schoolId` notNull, `gameRankings` deprecation, server-backed
+  `getSchoolLeaderboard`, and host-mutation Zod (D-06 Tier 1) against HEAD
+  `78f17dc3`. Tier 2 items (`lessonId` tenant-ownership check, `gameRankings` drop,
+  `xpLogs` schoolId, remaining 25 games migration, host-app wiring) are deferred to
+  Phase 5+ / a follow-up infra track.
 - **Phase 5 — Embeddable Runtime, i18n, and Shared Package:** deferred. Owns the
   embeddable navigation contract, i18n message source, shared runtime package, and the
   `haunted-library` import-harness proof. Gated on Phases 3 and 4 green per
@@ -886,7 +1221,19 @@ complete and accepted; this item carries forward to Phase 6 closeout as a `[b] d
 
 Within Phase 3, no `[NEEDS-PO]` items are introduced. All seven decisions in
 `phase-3-decisions.md` are fully evidence-grounded (`[x]`). Tier 2 items are
-`[b] deferred:infra` (Phase 4 schema work) or `[b] deferred:po` (none).
+`[b] deferred:infra` (Phase 4 schema work) or `[b] deferred:po` (none). Phase 3 is
+complete and accepted; its Tier 2 items are closed by Phase 4 (`gameCompletions`
+table + `xpLogs` unique constraint) or carried forward (remaining 25 games
+migration → Phase 5+).
+
+Within Phase 4, no `[NEEDS-PO]` items are introduced. All seven decisions in
+`phase-4-decisions.md` are fully evidence-grounded (`[x]`). Tier 2 items are
+`[b] deferred:infra` (the `lessonId` tenant-ownership check, which requires an
+assignments-based ownership query — Decision 4.4) or `[b] deferred:po` (none).
+The `leaderboards.schoolId` notNull migration's operational backfill choice
+(backfill-and-notNull vs delete-null-rows) is `[b] deferred:infra` for the deploy
+engineer; the Tier 1 contract (notNull after migration + FLAT insert rejected
+without schoolId) is testable in PGlite regardless.
 
 ---
 
@@ -927,7 +1274,7 @@ aggregate monorepo suite explicitly out of scope. Tenant/owner "scoping" is hand
 honestly as an authentication + documented global-internal policy, because no `schoolId`
 or owner column exists on marketing tables today.
 
-### Phase 3 (active this cycle)
+### Phase 3 (complete)
 
 Phase 3 delivers a new `packages/domain/src/games/` module (schema/xp/mutations/
 permissions/errors/index) plus a rewritten `completeRoute.ts` and a migrated
@@ -943,3 +1290,27 @@ and check-types on both filters, with the aggregate monorepo suite explicitly ou
 scope. Tier 2 items (`activity_type` pgEnum extension, `gameCompletions` table,
 remaining 25 games migration) are deferred to Phase 4 / 5+. The `recordActivity`
 generic function is intentionally untouched (D-06 is Phase 4).
+
+### Phase 4 (active this cycle)
+
+Phase 4 delivers a new `gameCompletions` FLAT table (schoolId notNull + unique
+constraint), an `xpLogs` unique constraint for race-safe fire-once, a
+`leaderboards.schoolId` notNull migration, a `getSchoolLeaderboard` domain query, a
+shared `LeaderboardResponseSchema`, host-mutation Zod (D-06 Tier 1), and a rewritten
+`rankingRoute.ts`, proven by a new `packages/domain/src/__tests__/games-live.test.ts`
+(vitest + PGlite, groups 4A tenant isolation / 4B race-safety / 4C notNull / 4E
+leaderboard), an extended `games.test.ts` (vitest mock-DB, groups 4D gameRankings
+deprecation / 4F host-mutation Zod), and a rewritten `rankingRoute.test.ts` (jest,
+group 4E). Each group is red at `78f17dc3` for the specific gap
+(D-04/B46-021/B46-025/B46-027/B46-031/B28-017/B30-002) and green after the fix, each
+with a positive+negative control pairing so a query-that-returns-empty-for-everyone
+or a schema-that-rejects-everything fix fails (A4). The phase gate is
+`pnpm --filter @reading-advantage/domain test -- games-live` = 0 plus
+`pnpm --filter @reading-advantage/domain test -- games` = 0 plus
+`pnpm --filter @reading-advantage/domain test -- tenant-coverage` = 0 plus
+`pnpm --filter vocabulary-games test --testPathPatterns=rankingRoute` = 0 plus lint
+and check-types on three filters, with the aggregate monorepo suite explicitly out
+of scope. Tier 2 items (`lessonId` tenant-ownership check, `gameRankings` drop,
+`xpLogs` schoolId, remaining 25 games migration, host-app wiring) are deferred to
+Phase 5+ / a follow-up infra track. The Phase 3 fire-once Tier 2 item (race-safe
+unique constraint) is closed by Phase 4 Decision 4.5.

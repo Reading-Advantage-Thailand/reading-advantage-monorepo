@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "role": "measure-strategy",
+  "track": "wave3_product_alignment_20260628",
+  "phase": "Phase 4: Tenant-Safe Persistence and Leaderboards",
+  "status": "pass",
+  "summary": "Phase 4 strategy frozen. Seven product/technical decisions recorded in phase-4-decisions.md: (4.1) new gameCompletions FLAT table with schoolId notNull + unique constraint (schoolId, userId, activityId), plus xpLogs unique constraint (userId, activityId) for race-safe fire-once, plus dual-write in recordGameCompletion so getStudentProgress#xpTotal read path is unchanged; (4.2) tenant registry reclassification — gameCompletions FLAT (new), leaderboards.schoolId migrated to notNull (B46-027 closure), xpLogs remains REFERENTIAL (dual-write keeps it as XP ledger), gameRankings remains REFERENTIAL and deprecated (no new writes); (4.3) getSchoolLeaderboard domain query over gameCompletions through TenantDB without unscoped() (auto-scoped by schoolId), shared LeaderboardResponseSchema, standalone rankingRoute validates via schema + canonical medium difficulty key; (4.4) recordActivityInputSchema + updateLessonProgressInputSchema with .strict() and xpEarned bounded 0..100 (D-06 Tier 1), lessonId tenant-ownership check deferred to follow-up infra track (D-06 Tier 2); (4.5) recordGameCompletion catches unique-violation as duplicate signal, SELECT-before-INSERT remains as fast-path; (4.6) vitest + PGlite live-DB harness mirroring marketing phase-8-projects-live.test.ts pattern, jest for rewritten rankingRoute.test.ts, tenant-coverage gate must stay green; (4.7) seven explicit non-goals (no additional game migration, no host wiring, no xpLogs schoolId, no gameRankings drop, no lessonId ownership check, no lessons schoolId, no activity_type pgEnum extension). Test strategy section 0.D to be updated with six test groups 4A..4F and anti-pattern defenses. Plan.md Phase 4 strategy task marked [x]. Tier 2 items deferred to Phase 5+ / follow-up infra track.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "Phase 4 does not add schoolId to xpLogs; dual-write delivers tenant-safety at the gameCompletions layer instead (xpLogs read path unchanged).",
+    "Phase 4 does not drop gameRankings; it is deprecated (no new writes) and a future cleanup track may drop it.",
+    "Phase 4 does not add the lessonId tenant-ownership check (D-06 Tier 2); requires assignments-based ownership query, deferred to follow-up infra track.",
+    "Phase 4 does not migrate additional games beyond haunted-library (Phase 3 scope); remaining 25 games migrate in Phase 5+.",
+    "Phase 4 does not wire the host-app import (Phase 5); it delivers the domain query and shared schema only.",
+    "leaderboards.schoolId notNull migration operational choice (backfill-and-notNull vs delete-null-rows) is [b] deferred:infra for the deploy engineer; the Tier 1 contract (notNull after migration + FLAT insert rejected without schoolId) is testable regardless."
+  ],
+  "evidence": [
+    "phase-4-decisions.md created with 7 frozen decisions (4.1..4.7)",
+    "Source evidence inspected: packages/db/src/schema/analytics.ts (xpLogs REFERENTIAL no schoolId, gameRankings REFERENTIAL no schoolId, xpLogs.activityType is text not pgEnum), packages/db/src/schema/primary.ts:227-233 (leaderboards FLAT but schoolId nullable), packages/domain/src/tenant-registry.ts:75/102/131-132/198-199 (leaderboards FLAT, xpLogs+gameRankings REFERENTIAL), packages/domain/src/games/mutations.ts (Phase 3 recordGameCompletion writes xpLogs with SELECT-before-INSERT, racy), packages/domain/src/progress/mutations.ts (recordActivity + updateLessonProgress accept unvalidated input — D-06), packages/domain/src/progress/queries.ts:72-75 (getStudentProgress reads xpTotal from xpLogs — dual-write preserves this), packages/db/src/schema/content.ts:43-53 (lessons has no schoolId — lessonId ownership check is non-trivial), apps/advantage-games/src/lib/games/api/rankingRoute.ts (force-static mock returning EMPTY_RANKINGS with normal key), apps/advantage-games/src/components/games/game/RankingDialog.tsx (fetches mock route, difficulty tabs use normal not medium), apps/marketing/app/__tests__/helpers/testDb.ts (PGlite live-DB harness pattern to mirror), packages/domain/src/__tests__/tenant-coverage.test.ts:194-195 (xpLogs+gameRankings in REFERENTIAL_TABLE_NAMES list — B46-036 already resolved by registration)",
+    "Audit evidence inspected: advantage-games_20260626/findings.md §A3 (leaderboard not persisted + multi-tenant fragility), §D D-04 (leaderboard tables lack tenant key — B46-021/B46-025/B46-027/B46-036), §D D-06 (host mutations lack Zod + trust lessonId — B46-031/B46-032/B46-033)",
+    "Phase 3 handoff: phase-3-decisions.md Decision 3.4 explicitly recorded xpLogs unique constraint and gameCompletions table as Phase 4 Tier 2 items; Phase 3 proved fire-once logic with mock DB, Phase 4 makes it race-safe at DB level",
+    "Import policy gate: phase-0-decisions.md Decision 3 requires Phase 4 (D-04/D-06) green before haunted-library pilot import in Phase 5"
+  ],
+  "commands": [
+    "git diff HEAD --stat will confirm 4 files changed: phase-4-decisions.md (new), audit/phase-4-strategy.json (new), plan.md (Phase 4 strategy task [~] -> [x]), test-strategy.md (§0.D added)"
+  ],
+  "changed_files": [
+    "measure/tracks/wave3_product_alignment_20260628/phase-4-decisions.md",
+    "measure/tracks/wave3_product_alignment_20260628/audit/phase-4-strategy.json",
+    "measure/tracks/wave3_product_alignment_20260628/plan.md",
+    "measure/tracks/wave3_product_alignment_20260628/test-strategy.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}
