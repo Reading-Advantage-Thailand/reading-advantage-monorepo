@@ -59,14 +59,14 @@
 
 ## Phase 2: Marketing App Public Workflow Security
 
-- [x] Task: Write Red tests proving settings/video/campaign API routes reject unauthenticated users. — `81d104e2`
+- [x] Task: Write Red tests proving settings/video/campaign API routes reject unauthenticated users. — `660f6337` (master SHA; original branch SHA `81d104e2` SHA-drifted on rebase — same author/date/message, equivalent content)
   - Evidence refs: Marketing LR-marketing-app-003-001/003/005, LR-004-002; Product Risk Register Marketing public API exposure.
-- [x] Task: Add auth/role guards and tenant/global policy documentation for marketing routes. — `4a6bb1d8`
-- [x] Task: Write Red tests for Zod validation on settings, campaigns, topics, and script generation inputs. — `81d104e2`
+- [x] Task: Add auth/role guards and tenant/global policy documentation for marketing routes. — `7bcb2b03` (master SHA; original branch SHA `4a6bb1d8` SHA-drifted on rebase)
+- [x] Task: Write Red tests for Zod validation on settings, campaigns, topics, and script generation inputs. — `660f6337` (master SHA; original branch SHA `81d104e2` SHA-drifted on rebase)
   - Evidence refs: Marketing LR-004-001, LR-marketing-app-003-004/006; MR-H06.
-- [x] Task: Route AI calls through the shared AI adapter path approved by Wave 2. — `4a6bb1d8`
-- [x] Task: Prevent API key/token leakage in any unauthenticated response. — `4a6bb1d8`
-- [x] Task: Run marketing targeted tests/build/lint/type. — `4a6bb1d8`, `4e552658`, `cc120ede`, `3d123fc6`
+- [x] Task: Route AI calls through the shared AI adapter path approved by Wave 2. — `7bcb2b03` (master SHA; original branch SHA `4a6bb1d8` SHA-drifted on rebase)
+- [x] Task: Prevent API key/token leakage in any unauthenticated response. — `7bcb2b03` (master SHA; original branch SHA `4a6bb1d8` SHA-drifted on rebase)
+- [x] Task: Run marketing targeted tests/build/lint/type. — `7bcb2b03`, `7a783f01`, `6da80ad5`, `060225c0` (master SHAs; original branch SHAs `4a6bb1d8`, `4e552658`, `cc120ede`, `3d123fc6` SHA-drifted on rebase — same author/date/message, equivalent content; Phase 6 final-acceptance re-verified all four gates green at HEAD `ab1de4d3`)
   - Acceptance re-ran all gates at HEAD: test 202/202, lint 0 errors, check-types 0 errors, build exit 0 (vinext build green; build was nominally deferred to marketing_golive Phase 0 but is in fact green, so the task wording is truthful).
 
 ## Phase 3: Advantage Games Completion and Scoring Contract

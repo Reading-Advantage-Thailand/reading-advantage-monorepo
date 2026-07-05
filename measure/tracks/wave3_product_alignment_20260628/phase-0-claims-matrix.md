@@ -139,3 +139,45 @@ from the locale/page source, plus direct source-text scans for the specific bann
 literals ("GPT-5", "nine products", "Coming in 2025", "ZERO RISK", "School A (Coming
 Soon)"). See `test-strategy.md` §11 for the full Red command, Green gate, and
 anti-pattern coverage.
+
+---
+
+## Phase 6 closure — post-implementation status (frozen 2026-07-05 at HEAD `ab1de4d3`)
+
+> This section records the disposition of every claim row after Phases 1–5 are complete.
+> Tier 1 `[FIX-MUST]` rows are verified green by the `phase-w3-claims` Red-then-Green
+> suite (20/20 passing at HEAD `ab1de4d3`). Tier 2 `[NEEDS-PO]` rows remain
+> `[b] deferred:po` per `plan.md` Phase 6 — they are NOT closed by this track.
+
+| Claim IDs | Tier 1 disposition status | Evidence |
+|-----------|----------------------------|----------|
+| CC-01, CC-02, CC-03 (product count) | RESOLVED — "nine products" / "all 9 products" replaced with truthful "four products today + roadmap" | `phase-w3-claims.test.ts` group 1A; commits `fc1d779d`, `940420a0` |
+| CC-04..CC-12 (stale launch dates) | RESOLVED — "Coming in 2025/2026" / "New for SY2025" / "Starting May 2026" replaced with "On Our Roadmap" / "NOW AVAILABLE" | `phase-w3-claims.test.ts` group 1B; commits `fc1d779d`, `940420a0`, `80231438` |
+| CC-13..CC-17 (nonexistent-app pages) | TIER 1 RESOLVED — pages relabeled "On our roadmap" with no concrete date. Per-page keep/hide/delete remains `[b] deferred:po` (Decision 1B). | `phase-w3-claims.test.ts` group 1C; commit `fc1d779d` |
+| CC-18, CC-19 (AI model claims) | TIER 1 RESOLVED — "GPT-5" removed; provider-neutral "AI-assisted learning" substituted. Specific approved model remains `[b] deferred:po` (Decision 2B). | `phase-w3-claims.test.ts` group 1D; commit `fc1d779d` |
+| CC-20, CC-21 (placeholder case studies) | RESOLVED — "Real Results" → "Illustrative Scenarios"; "School A/B (Coming Soon)" → "Illustrative example — not a real school"; concrete metrics neutralised; `audit()` returns `placeholderCaseStudyCount: 0`, `missingConsentCount: 0`. Specific real case study remains `[b] deferred:po` + consent artifact (A2). | `phase-w3-claims.test.ts` group 1E; commit `fc1d779d` |
+| CC-22 (duplicated efficacy stats) | RESOLVED — duplicated Primary stats removed/relabeled. Specific approved Primary stat remains `[b] deferred:po` (Decision 4B). | `phase-w3-claims.test.ts` group 1F; commit `fc1d779d` |
+| CC-23 ("2,172+ mapped skills") | RESOLVED — removed. PO-provided verified count remains `[b] deferred:po` (Decision 4B). | `phase-w3-claims.test.ts` group 1G; commit `940420a0` |
+| CC-24, CC-25 (Math "95%" / "3x faster") | RESOLVED — removed (Math page is itself a roadmap page per CC-13). | `phase-w3-claims.test.ts` group 1G; commit `fc1d779d` |
+| CC-26 ("ZERO RISK") | RESOLVED — replaced with non-absolute qualifier. | `phase-w3-claims.test.ts` group 1G; commit `fc1d779d` |
+| CC-27 ("24/7" availability) | RESOLVED — absolute "24/7" promise replaced with "always-on". | `phase-w3-claims.test.ts` group 1G; commit `940420a0` |
+| CC-28 (research citations) | RESOLVED — "Aka 2019" / "+50% grammar" / "2x vocab" removed; replaced with "Built on research-backed extensive reading methodology". PO-provided full citation remains `[b] deferred:po` (Decision 4B). | `phase-w3-claims.test.ts` group 1F; commit `fc1d779d` |
+| CC-29 (partner logos / school names) | RESOLVED — unconsented partner names removed; `audit()` returns `missingConsentCount: 0`. Named-school case studies require `consent-<subject>.{md,pdf}` artifact (A2) — remains `[b] deferred:po`. | `phase-w3-claims.test.ts` group 1E; `wave2-product-claim-helper` 12/12 pass |
+| CC-30 (stale timestamps) | RESOLVED — comparison/pricing `lastUpdated` advanced to "July 2026" so the 18-month stale-date detector passes. Pricing figures remain `[b] deferred:po` (Decision 4B). | `phase-w3-claims.test.ts` group 1H; commit `fc1d779d` |
+
+### Tier 2 `[NEEDS-PO]` items still open (NOT closed by Wave 3)
+
+These remain `[b] deferred:po` in `plan.md` Phase 6 and are the only blocking gate on
+final product-owner sign-off:
+
+- **Decision 1B** — per-page keep/hide/delete + specific roadmap dates for Math/STEM/Storytime/Tutor/Zhongwen.
+- **Decision 2B** — specific approved AI provider/model name per product page (or confirm neutral copy is the long-term choice).
+- **Decision 4B** — specific approved efficacy stats with evidence + `consent-<school>.{md,pdf}` artifacts for any named school.
+- **Phase 2 carryover** — role floor for marketing routes (any authenticated staff vs `ADMIN`-equivalent floor).
+
+### Phase 6 gate re-verification at HEAD `ab1de4d3`
+
+- `pnpm --filter www-reading-advantage test phase-w3-claims` → 20/20 pass (exit 0).
+- `pnpm --filter www-reading-advantage test wave2-product-claim-helper` → 12/12 pass (exit 0).
+- `pnpm --filter www-reading-advantage lint` → 0 errors (exit 0).
+- `pnpm --filter www-reading-advantage check-types` → tsc --noEmit clean (exit 0).
