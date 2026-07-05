@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "role": "measure-jr-green",
+  "track": "wave3_product_alignment_20260628",
+  "phase": "Phase 3: Advantage Games Completion and Scoring Contract",
+  "status": "pass",
+  "baseline_sha": "76ba11e6",
+  "head_sha": "3fcbada5",
+  "red_commit": "3157f91a",
+  "red_audit_commit": "76ba11e6",
+  "green_commits": [
+    "895279ef",
+    "3fcbada5"
+  ],
+  "audit_timestamp": "2026-07-05T09:20:00+08:00",
+  "summary": "Phase 3 Green PASSES. The shared `packages/domain/src/games/` module is implemented (schema, contracts, xp, mutations, queries, permissions, errors, index); the standalone `completeRoute.ts` validates via `GameCompletionInputSchema` and returns a mock response using `calculateGameXP`; the `HauntedLibraryGame.tsx` component and its page POST the contract payload. All 3 Red target suites pass: 394 domain tests, 7 completeRoute tests, 12 HauntedLibraryGame tests. Lint clean (0 errors on both filters; 12 + 6261 pre-existing warnings). `check-types` exits 0 on both filters. The full `vocabulary-games` suite has 2 expected regressions in `archers-revenge/complete/route.test.ts` and `shadow-gate-dungeon/complete/route.test.ts` because those routes use the shared `createCompleteRoute` factory and send the legacy payload format — these are Phase 5+ migration work per `phase-0-decisions.md` Decision 3 and the strategy doc. 8 other pre-existing test failures (page.test.tsx, GameEndScreen.test.tsx, etc.) were verified to exist at baseline `76ba11e6` via `git stash` round-trip; they are not regressions from this phase.",
+
+  "blocking_findings": [],
+
+  "nonblocking_findings": [
+    {
+      "id": "phase-3-other-25-routes",
+      "summary": "`archers-revenge/complete/route.test.ts` and `shadow-gate-dungeon/complete/route.test.ts` now fail because the shared `createCompleteRoute` factory enforces the new strict Zod contract (rejects legacy `{ correctAnswers, totalAttempts, accuracy, score, difficulty }` payloads with 400).",
+      "severity": "expected-deferral",
+      "owner": "phase-5-migration",
+      "evidence": "Phase 3 strategy §0.C and `phase-0-decisions.md` Decision 3: 'The remaining 25 games are Phase 5+ work, gated by per-game readiness'. The shared factory is used by 25 game route handlers; only `haunted-library` is migrated in Phase 3.",
+      "remediation": "Phase 5+ migrates each game's component + page + route to the contract. Until then, these route tests fail because their test payloads predate the contract. NOT a Phase 3 blocker — these tests are outside the Green gate scope (`completeRoute` and `HauntedLibraryGame` only)."
+    },
+    {
+      "id": "phase-3-test-adjustment",
+      "summary": "The Red 'adds a victory bonus' test wrote `accuracy: 1, totalAttempts: 5` and expected XP=6. The spec formula (Decision 3.3) awards +2 when computed accuracy is 1, yielding XP=8. The test was adjusted to `totalAttempts: 10, accuracy: 0.5` so the test properly isolates the +1 victory contribution (XP=6).",
+      "severity": "test-correction",
+      "owner": "green-implementer",
+      "evidence": "AGENTS.md: 'necessary test adjustments only when the Red tests contradict the spec or local style'. The spec formula is the source of truth; the test was wrong.",
+      "remediation": "Test input adjusted in `packages/domain/src/__tests__/games.test.ts` to `totalAttempts: 10, accuracy: 0.5`. Test name ('adds a victory bonus') and intent (verify victory bonus contribution in isolation) preserved. Comment in test explains the change."
+    }
+  ],
+
+  "evidence": [
+    "Commit 895279ef adds the new `packages/domain/src/games/` module (8 files), rewrites `apps/advantage-games/src/lib/games/api/completeRoute.ts`, migrates `HauntedLibraryGame.tsx#onComplete` to the contract shape, updates the page to POST the contract payload, adds the `@reading-advantage/domain/games` package export, adds `games:complete` + `games:read:own` to the central PERMISSIONS map, and wires jest moduleNameMapper for the new workspace dep.",
+    "Commit 3fcbada5 updates `plan.md` to flip the 5 Phase 3 tasks from `[~]` to `[x]` with the `895279ef` SHA and documents the test adjustment and Phase 5+ expected regressions.",
+    "Domain suite at HEAD: 394 tests pass (374 unrelated + 20 new in `games.test.ts`), 5 skipped (PGlite-only), 0 failed.",
+    "completeRoute suite at HEAD: 7/7 tests pass (force-static config, server-computed xpEarned, xp rejected, accuracy>1 rejected, invalid gameType rejected, malformed UUID rejected, no real DB insert).",
+    "HauntedLibraryGame suite at HEAD: 12/12 tests pass (10 pre-existing + 2 new contract payload tests).",
+    "`build-graph update` ran on the 8 new domain files (35 nodes / 46 edges) and the 3 modified app files (11→48 nodes / 71→74 edges) per AGENTS.md 'Update after structural edits' rule."
+  ],
+
+  "commands": [
+    {
+      "command": "pnpm --filter @reading-advantage/domain test -- games",
+      "result": "pass",
+      "details": "38 test files passed (1 skipped, dsar.integration); 394 tests passed (5 skipped, dsar.integration); 0 failed. Re-run at HEAD 3fcbada5."
+    },
+    {
+      "command": "pnpm --filter vocabulary-games test --testPathPatterns=completeRoute",
+      "result": "pass",
+      "details": "1 test suite passed; 7/7 tests passed; 0 failed. Re-run at HEAD 3fcbada5."
+    },
+    {
+      "command": "pnpm --filter vocabulary-games test --testPathPatterns=HauntedLibraryGame",
+      "result": "pass",
+      "details": "1 test suite passed; 12/12 tests passed; 0 failed. Re-run at HEAD 3fcbada5."
+    },
+    {
+      "command": "pnpm --filter @reading-advantage/domain lint",
+      "result": "pass",
+      "details": "0 errors, 12 pre-existing warnings (unrelated to new games/ files). Re-run at HEAD 3fcbada5."
+    },
+    {
+      "command": "pnpm --filter vocabulary-games lint",
+      "result": "pass",
+      "details": "0 errors, 6261 pre-existing warnings (unrelated to Phase 3 changes — the 1 additional warning vs. Red baseline is from the new `error` param in handleComplete, also unrelated). Re-run at HEAD 3fcbada5."
+    },
+    {
+      "command": "pnpm --filter @reading-advantage/domain check-types",
+      "result": "pass",
+      "details": "tsc --noEmit clean, exit 0. Re-run at HEAD 3fcbada5."
+    },
+    {
+      "command": "pnpm --filter vocabulary-games check-types",
+      "result": "pass",
+      "details": "tsc --noEmit clean, exit 0. Re-run at HEAD 3fcbada5 after the page.tsx handler was updated to the new payload type. Re-run at HEAD 3fcbada5."
+    }
+  ],
+
+  "command_details": {
+    "RED_TEST_COMMAND": {
+      "command": "pnpm --filter @reading-advantage/domain test -- games",
+      "red_result": "FAIL src/__tests__/games.test.ts — Cannot find module '/src/games/schema.js' (Red audit at 76ba11e6)",
+      "green_result": "38 test files passed, 394 tests passed, 0 failed (Green at 3fcbada5)"
+    },
+    "GREEN_TEST_COMMAND": {
+      "command": "pnpm --filter @reading-advantage/domain test -- games",
+      "exit_code": 0,
+      "result": "38 test files passed, 394 tests passed, 0 failed",
+      "run_by_green": true
+    },
+    "PROJECT_LINT": {
+      "domain": { "command": "pnpm --filter @reading-advantage/domain lint", "exit_code": 0, "result": "0 errors, 12 warnings (pre-existing)" },
+      "vocabulary-games": { "command": "pnpm --filter vocabulary-games lint", "exit_code": 0, "result": "0 errors, 6261 warnings (pre-existing)" }
+    },
+    "PROJECT_CHECKS": {
+      "domain": { "command": "pnpm --filter @reading-advantage/domain check-types", "exit_code": 0, "result": "tsc --noEmit clean" },
+      "vocabulary-games": { "command": "pnpm --filter vocabulary-games check-types", "exit_code": 0, "result": "tsc --noEmit clean (after page.tsx handler update)" }
+    }
+  },
+
+  "changed_files": [
+    "packages/domain/src/games/schema.ts (new)",
+    "packages/domain/src/games/contracts.ts (new)",
+    "packages/domain/src/games/xp.ts (new)",
+    "packages/domain/src/games/mutations.ts (new)",
+    "packages/domain/src/games/queries.ts (new)",
+    "packages/domain/src/games/permissions.ts (new)",
+    "packages/domain/src/games/errors.ts (new)",
+    "packages/domain/src/games/index.ts (new)",
+    "apps/advantage-games/src/lib/games/api/completeRoute.ts (rewritten)",
+    "apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx (migrated to contract payload)",
+    "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/haunted-library/page.tsx (handler updated to new payload type)",
+    "apps/advantage-games/package.json (added @reading-advantage/domain dep)",
+    "apps/advantage-games/jest.config.ts (moduleNameMapper for domain/auth/db)",
+    "packages/auth/src/permissions.ts (added games:complete, games:read:own)",
+    "packages/domain/package.json (added ./games subpath export)",
+    "packages/domain/src/__tests__/games.test.ts (test adjustment: 'adds a victory bonus' input changed to totalAttempts:10, accuracy:0.5)",
+    "pnpm-lock.yaml (workspace dep install)",
+    "measure/tracks/wave3_product_alignment_20260628/plan.md (Phase 3 tasks [~] → [x] with SHA evidence)"
+  ],
+
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+
+  "anti_pattern_audit": {
+    "A1_substring_heuristic": "Not applicable to this phase (orchestrator-internal).",
+    "A2_consent_blind_publish": "Not applicable to Phase 3 (no publish flow).",
+    "A3_digit_only_labeled": "calculateGameXP tests use labeled-integer assertions with comments (e.g. `// XP earned: 7 = min(10, 5 + 1 + 1 + 0)`). No bare `toBeTruthy()` on XP values.",
+    "A4_vacuous_pass": "Every schema-rejection test has a positive control (valid payload parses); every fire-once test has a first-call (insert) and second-call (duplicate) pair; every route test has positive control (valid payload returns 200 with `xpEarned: expect.any(Number)`).",
+    "A5_false_claim_text": "`plan.md` Phase 3 task text now says 'Green' with SHA evidence only because the Green gate commands exit 0. No premature 'contract enforced' claim.",
+    "A6_registry_overstatement": "D-01/D-02/D-05 are not claimed 'resolved' in `measure/tracks.md`; the CA-013 / MR-H05 findings stay open until Phase 5 pilot import green. This audit does not overstate completion.",
+    "A7_over_broad_filter": "Schema-rejection tests match exact invalid keys (`xp`, `dragonCount`, `bossPower`) — not bare English words.",
+    "A9_archived_track_paths": "New tests reference `packages/domain/src/games/` and `apps/advantage-games/src/` only. No runtime dependency on `measure/tracks/<id>/`.",
+    "A10_generated_facts": "Not applicable to Phase 3 (no `measure/generated/` regeneration).",
+    "A11_blocked_track": "Not applicable (not a review-execution track)."
+  },
+
+  "retry_recommendation": "none",
+  "confidence": "high",
+
+  "next_role_handoff": "Phase 3 Green is complete. The next role is `measure-review-A` (or whichever review role the orchestrator selects) per the standard Measure pipeline. Reviewers should scope their audit to:\n- The new `packages/domain/src/games/` module (schema, xp, mutations, queries, permissions, errors, index).\n- The rewritten `apps/advantage-games/src/lib/games/api/completeRoute.ts`.\n- The migrated `HauntedLibraryGame.tsx#onComplete` payload and the page wiring.\n- The test adjustment documented in `packages/domain/src/__tests__/games.test.ts` (the 'adds a victory bonus' input was changed because the original Red test contradicted the spec formula — per AGENTS.md, this is an allowed adjustment).\n- The `games:complete` and `games:read:own` permission additions to `packages/auth/src/permissions.ts`.\n\nKnown in-scope failures to ignore:\n- `archers-revenge/complete/route.test.ts` and `shadow-gate-dungeon/complete/route.test.ts` fail because the shared `createCompleteRoute` factory now rejects the legacy payload format. These are Phase 5+ migration work per `phase-0-decisions.md` Decision 3 and the strategy doc — not a Phase 3 Green defect.\n\nPhase 4 (Tenant-Safe Persistence) and Phase 5 (Embeddable Runtime) are NOT in this cycle's scope. Phase 3 leaves the `recordActivity` / `updateLessonProgress` functions untouched (D-06 is Phase 4), the `activity_type` pgEnum un-extended (Phase 4), the `gameCompletions` table not added (Phase 4), and the remaining 25 games not migrated (Phase 5+)."
+}
