@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "status": "fail",
+  "summary": "Phase 4 Red tests committed and run at HEAD 9019a792. Target suites fail for the intended Phase 4 reasons: `gameCompletions` table is missing from the schema/migrations, `recordGameCompletion` has no DB-level race-safe fire-once constraint (concurrent idempotent inserts both succeed), `leaderboards.schoolId` is nullable, `getSchoolLeaderboard` and `leaderboardResponseSchema` are not exported, and the host progress mutations `recordActivity`/`updateLessonProgress` accept invalid payloads without Zod validation. Existing tests in the touched files continue to pass.",
+  "blocking_findings": [
+    "Missing tenant-safe persistence table: `gameCompletions` is not exported from `@reading-advantage/db/schema`, causing `packages/domain/src/__tests__/games-live.test.ts` 4A and 4E to fail with migration-missing errors.",
+    "Race-safe fire-once gap: `packages/domain/src/games/mutations.ts#recordGameCompletion` relies only on `SELECT-before-INSERT`; concurrent calls with the same `idempotencyKey` both succeed (`insert count: 2`). Phase 4 Red requires the `xpLogs` unique constraint `(userId, activityId)` (or equivalent `gameCompletions` unique constraint) to guarantee exactly one insert.",
+    "Leaderboards nullable tenant column: `packages/db/src/schema/primary.ts#leaderboards` has `schoolId` nullable, so 4C inserts without `schoolId` succeed; the notNull migration required by Decision 4.4 is missing.",
+    "Missing domain leaderboard query: `getSchoolLeaderboard` is not exported from `packages/domain/src/games/queries.js`, and `leaderboardResponseSchema` is not exported from `@reading-advantage/domain/games`. 4D/4E/4F tests fail at module resolution.",
+    "Host progress mutation validation gap (D-06 Tier 1): `packages/domain/src/progress/mutations.ts#recordActivity` and `#updateLessonProgress` accept empty `activityType`, `xpEarned: 999`, oversized metadata, unknown keys, non-UUID `lessonId`, invalid `status` enum, and `progress` outside 0..100. Phase 4 Red requires `.strict()` Zod schemas."
+  ],
+  "nonblocking_findings": [],
+  "evidence": [
+    "Commit 9019a792 adds `packages/domain/src/__tests__/games-live.test.ts`, `packages/domain/src/__tests__/helpers/testDb.ts`, extends `packages/domain/src/__tests__/games.test.ts`, rewrites `apps/advantage-games/src/lib/games/api/rankingRoute.test.ts`, adds `@electric-sql/pglite` to `packages/domain/package.json`, and updates `measure/tracks/wave3_product_alignment_20260628/plan.md`.",
+    "PGlite live-DB harness mirrors the marketing app helper pattern. It runs real drizzle migration SQL in journal order, skipping only the pgcrypto `digest()` migration which PGlite does not support; this does not affect Phase 4 persistence behavior.",
+    "Domain suite with `-- games-live`: 450 unrelated tests pass; 13 new Phase 4 Red tests fail for the intended missing-behavior reasons.",
+    "Jest route suite: 5/7 rankingRoute tests pass (existing config/structure); 2/7 fail on missing `leaderboardResponseSchema` and legacy `normal` difficulty key.",
+    "Lint and type-check gates are clean on both `@reading-advantage/domain` and `vocabulary-games`."
+  ],
+  "commands": [
+    {
+      "command": "pnpm --filter @reading-advantage/domain test -- games-live",
+      "result": "fail",
+      "details": "Test Files 2 failed | 38 passed | 1 skipped. Tests 13 failed | 450 passed | 5 skipped. Intended failures: gameCompletions table missing, leaderboards.schoolId nullable, recordGameCompletion race condition (2 inserts), getSchoolLeaderboard not exported, recordActivity/updateLessonProgress accept invalid inputs."
+    },
+    {
+      "command": "pnpm --filter vocabulary-games test --testPathPatterns=rankingRoute",
+      "result": "fail",
+      "details": "Tests: 2 failed, 5 passed, 7 total. Failures: leaderboardResponseSchema not exported from @reading-advantage/domain/games; response still contains legacy \"normal\" difficulty key."
+    },
+    {
+      "command": "pnpm --filter @reading-advantage/domain lint",
+      "result": "pass",
+      "details": "0 errors (12 pre-existing warnings unrelated to new tests)."
+    },
+    {
+      "command": "pnpm --filter @reading-advantage/domain check-types",
+      "result": "pass"
+    },
+    {
+      "command": "pnpm --filter vocabulary-games lint",
+      "result": "pass",
+      "details": "0 errors (pre-existing warnings unrelated to new tests)."
+    },
+    {
+      "command": "pnpm --filter vocabulary-games check-types",
+      "result": "pass"
+    }
+  ],
+  "changed_files": [
+    "packages/domain/src/__tests__/games-live.test.ts",
+    "packages/domain/src/__tests__/helpers/testDb.ts",
+    "packages/domain/src/__tests__/games.test.ts",
+    "apps/advantage-games/src/lib/games/api/rankingRoute.test.ts",
+    "packages/domain/package.json",
+    "pnpm-lock.yaml",
+    "measure/tracks/wave3_product_alignment_20260628/plan.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "retry_implementation",
+  "confidence": "high"
+}
