@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-c-ux-api",
+  "track": "wave3_product_alignment_20260628",
+  "phase": "Phase 5: Embeddable Runtime, i18n, and Shared Package",
+  "status": "pass",
+  "summary": "Phase 5 embeddable runtime, i18n, and shared package implementation is contract-complete. The import-harness test (9/9 pass) proves host embedding for haunted-library. onNavigate callback contract is clean and consistent across HauntedLibraryGame + page + dragon-rider page. GamesLocaleContext flows locale into useCurrentLocale correctly. Shared games-runtime module exports verified. No hardcoded /en/ hrefs remain in representative files. All regression gates green.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "C-01: dragon-rider/page.tsx handleComplete still uses legacy {xp, accuracy} completion payload. Expected — dragon-rider is a navigation-fix sample only, not a Phase 3/4 contract migration. Deferred to successor track.",
+    "C-02: 10 games retain window.location.href exits. Documented as [b] deferred:infra per Decision 5.1 Tier 2.",
+    "C-03: useScopedI18n in client.ts always reads from en.ts translations map; th/zh fall back to keys. Real translations deferred:po per Decision 5.2.",
+    "C-04: NavigateTarget type is duplicated in HauntedLibraryGame.tsx and dragon-rider/page.tsx. Minor duplication acceptable for harness proof; shared type extraction is successor-track concern.",
+    "C-05: Import-harness 5B locale proof asserts context-to-hook round-trip, not fetch-with-?locale=th. Documented in test comments."
+  ],
+  "evidence": [
+    "Import-harness test passes 9/9: 5A embeddable navigation, 5B i18n, 5C host progress, 5E shared runtime.",
+    "HauntedLibraryGame component tests pass 14/14: 10 original + 2 Phase 3 payload + 2 Phase 5 (canonical VirtualDPad import, onNavigate wiring).",
+    "dragon-rider page tests pass 3/3: no /en/ hrefs, onNavigate called, back-to-menu renders.",
+    "gameCards tests pass 2/2: no /en/-prefixed hrefs, every playable card has non-empty href.",
+    "Phase 3/4 regression: packages/domain games.test.ts 31/31 pass.",
+    "Type check clean: apps/advantage-games tsc --noEmit exit 0.",
+    "No window.location.href or router.push in representative components.",
+    "No hardcoded /en/student hrefs in representative files.",
+    "onNavigate contract consistent across haunted-library/page.tsx, HauntedLibraryGame.tsx, dragon-rider/page.tsx."
+  ],
+  "commands": [
+    "pnpm --filter vocabulary-games test --testPathPatterns=import-harness => 9/9 pass",
+    "pnpm --filter vocabulary-games test --testPathPatterns=HauntedLibraryGame => 14/14 pass",
+    "pnpm --filter vocabulary-games test --testPathPatterns=dragon-rider/page => 3/3 pass",
+    "pnpm --filter vocabulary-games test --testPathPatterns=gameCards => 2/2 pass",
+    "cd packages/domain && npx vitest run src/__tests__/games.test.ts => 31/31 pass",
+    "cd apps/advantage-games && npx tsc --noEmit => exit 0"
+  ],
+  "changed_files": [
+    "apps/advantage-games/src/__tests__/import-harness/haunted-library-import.test.tsx",
+    "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/haunted-library/page.tsx",
+    "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/dragon-rider/page.tsx",
+    "apps/advantage-games/src/app/[locale]/layout.tsx",
+    "apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx",
+    "apps/advantage-games/src/components/games/ui/VirtualDPad.tsx",
+    "apps/advantage-games/src/components/ui/VirtualDPad.tsx",
+    "apps/advantage-games/src/lib/basePath.ts",
+    "apps/advantage-games/src/lib/gameCards.ts",
+    "apps/advantage-games/src/lib/games-runtime/VirtualDPad.tsx",
+    "apps/advantage-games/src/lib/games-runtime/basePath.ts",
+    "apps/advantage-games/src/lib/games-runtime/index.ts",
+    "apps/advantage-games/src/lib/games-runtime/xp.ts",
+    "apps/advantage-games/src/lib/games/babelArchitectCompliance.test.ts",
+    "apps/advantage-games/src/lib/games/basePath.ts",
+    "apps/advantage-games/src/lib/games/xp.ts",
+    "apps/advantage-games/src/lib/xp.ts",
+    "apps/advantage-games/src/locales/GamesLocaleContext.tsx",
+    "apps/advantage-games/src/locales/client.test.tsx",
+    "apps/advantage-games/src/locales/client.ts"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "ux_applicability": "applicable",
+  "webbridge_status": "not_run",
+  "webbridge_evidence": {
+    "screenshots": [],
+    "accessibility_snapshots": [],
+    "interactions": []
+  },
+  "retry_recommendation": "none",
+  "confidence": "high"
+}
