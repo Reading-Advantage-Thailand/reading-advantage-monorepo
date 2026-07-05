@@ -82,7 +82,7 @@
   - Decisions 3.1..3.7 frozen: shared contract lives in new `packages/domain/src/games/` module; `GameCompletionInputSchema` with 10 fields + `.strict()` rejecting `xp`/`dragonCount`/`bossPower`; `calculateGameXP` pure function (`Math.min(10, base + bonus)`); fire-once via `idempotencyKey` UUID + `SELECT-before-INSERT` on `xpLogs` (DB unique constraint deferred to Phase 4); `haunted-library` representative migration; vitest + jest gate commands; standalone route remains mock but validates via real schema.
   - Evidence refs: `advantage-games_20260626/findings.md` §A1, §A2, §D (D-01/D-02/D-05); `game-readiness-matrix.md` haunted-library row; `phase-0-decisions.md` Decision 3 (pilot import gate); `packages/domain/src/progress/mutations.ts` (recordActivity — left untouched, D-06 is Phase 4); `apps/advantage-games/src/lib/games/api/completeRoute.ts` (force-static mock, trusts client xp); `packages/db/src/schema/analytics.ts` (xpLogs REFERENTIAL, no schoolId).
   - Anti-pattern defense: A4 (positive controls in every group), A5 (no "contract enforced" claim until tests green), A6 (no "D-01 resolved" in tracks.md until Phase 5 pilot), A3 (labeled XP integers), A7 (exact-key schema rejection), A9 (no track-path runtime deps).
-- [x] Task: Write Red tests for a single shared game completion Zod contract.
+- [x] Task: Write Red tests for a single shared game completion Zod contract. — Red commits `3157f91a`, `76ba11e6`
   - Evidence refs: Advantage Games D-01; Cross-App CA-013; MR-H05.
   - Red command: `pnpm --filter @reading-advantage/domain test -- games` (vitest). Mid-Red may also run `pnpm --filter vocabulary-games test --testPathPatterns=completeRoute` (jest) to prove the rewritten route test fails for the intended reason.
   - Delivered:
