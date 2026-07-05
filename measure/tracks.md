@@ -46,8 +46,6 @@ Two parallel programs are in flight; priority order when picking the next track:
 
 > Detailed implementation tracks spawned from `monorepo_review_roadmap_20260626`. Each track includes evidence references back to the line-review artifacts and should be executed in wave order unless a dependency note explicitly allows parallel work.
 
-- [ ] **Track: Wave 3 — Product-Facing Truth and Reusable Surfaces** *Link: [./tracks/wave3_product_alignment_20260628/](./tracks/wave3_product_alignment_20260628/)*
-  Align public claims, secure Marketing public workflows, and make Advantage Games import-ready. Evidence: MR-H05, MR-H06; CA-008/CA-013; Website LRF findings; Marketing Critical/High findings; Games D-01..D-11.
 - [ ] **Track: Wave 4 — App Security & Correctness Backlog (Medium+)** *Link: [./tracks/wave4_app_security_correctness_backlog_20260628/](./tracks/wave4_app_security_correctness_backlog_20260628/)*
   Close remaining Medium+ security/tenant/authz/correctness tracks not in Wave 1. Evidence: Science ST-1/ST-2/ST-4; Reading SEC-6..10 / PB-4..8; CodeCamp MT-8..11/13/14; Sales T5/T8/T9; Primary M7/M9; www T9.
 - [ ] **Track: Wave 5 — Public Surface Completion** *Link: [./tracks/wave5_public_surface_completion_20260628/](./tracks/wave5_public_surface_completion_20260628/)*
@@ -113,6 +111,9 @@ Two parallel programs are in flight; priority order when picking the next track:
 
 - [x] **Track: Wave 2 — Restore Deployment/Test/Provider Confidence** *Link: [./archive/wave2_confidence_restoration_20260628/](./archive/wave2_confidence_restoration_20260628/)*
   Archived 2026-07-03. Migration/seed governance gates, provider-adapter enforcement (barrel quarantine + guards), false-green test-signal cleanup, and 5 reusable test harnesses delivered; broad console.error sweep + full AIClient adoption deferred to Wave 6, www i18n to Wave 5. Aggregate reds are pre-existing/owner-labeled, not Wave 2.
+
+- [x] **Track: Wave 3 — Product-Facing Truth and Reusable Surfaces** *Link: [./archive/wave3_product_alignment_20260628/](./archive/wave3_product_alignment_20260628/)*
+  Archived 2026-07-05 after final acceptance. Tier 1 public-claims floor resolved (phase-w3-claims 20/20), Marketing public routes secured (phase-w3 44/44), shared games completion/leaderboard contract + tenant-safe persistence delivered (domain games 524 + games-live 524 + tenant-coverage exit 0), haunted-library proven pilot-import-ready (import-harness 9/9). Tier 2 [NEEDS-PO] questions remain deferred:po. 24 remaining games + dragon-rider navigation-fix sample NOT-READY/AT-RISK pending successor-track per-game migration. Findings MR-H05/CA-013/D-07/D-09/D-11 remain open.
 
 - [x] **Track: Scaffold monorepo and migrate first app**
   *Link: [./archive/monorepo-scaffold_20260429/](./archive/monorepo-scaffold_20260429/)*

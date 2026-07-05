@@ -1,0 +1,196 @@
+{
+  "manifest_version": 1,
+  "role": "measure-closeout",
+  "track": "wave3_product_alignment_20260628",
+  "closeout_timestamp": "2026-07-05T18:30:00+07:00",
+  "final_acceptance_sha": "be6dfacf",
+  "status": "done",
+  "summary": "Wave 3 (Product-Facing Truth and Reusable Surfaces) closed out. Tier 1 public-claims floor resolved (phase-w3-claims 20/20), Marketing public routes secured (phase-w3 44/44), shared games completion/leaderboard contract + tenant-safe persistence delivered (domain games 524 + games-live 524 + tenant-coverage exit 0), haunted-library proven pilot-import-ready (import-harness 9/9). Tier 2 [NEEDS-PO] questions remain deferred:po. 24 remaining games + dragon-rider navigation-fix sample NOT-READY/AT-RISK pending successor-track per-game migration.",
+  "task_summary": {
+    "total_tasks": 62,
+    "completed": 61,
+    "deferred_po": 1,
+    "deferred_infra": 0,
+    "non_deferred_remaining": 0
+  },
+  "phase_completion": {
+    "phase_0_product_decision_intake": {
+      "status": "done",
+      "tasks": 3,
+      "evidence": "phase-0-decisions.md, phase-0-claims-matrix.md (HEAD 8a47d2df)",
+      "notes": "Tier 2 [NEEDS-PO] questions (Decisions 1B/2B/4B + Phase 2 carryover) remain [b] deferred:po"
+    },
+    "phase_1_website_claims_correction": {
+      "status": "done",
+      "tasks": 6,
+      "sha_evidence": "df22b0e1, fc1d779d, 940420a0, 80231438, 75c96f33"
+    },
+    "phase_2_marketing_public_workflow_security": {
+      "status": "done",
+      "tasks": 6,
+      "sha_evidence": "660f6337, 7bcb2b03, 7a783f01, 6da80ad5, 060225c0 (master SHAs; original branch SHAs SHA-drifted on rebase, verified byte-identical)"
+    },
+    "phase_3_advantage_games_completion_scoring_contract": {
+      "status": "done",
+      "tasks": 7,
+      "sha_evidence": "c7e37706, 3157f91a, 76ba11e6, 895279ef"
+    },
+    "phase_4_tenant_safe_persistence_leaderboards": {
+      "status": "done",
+      "tasks": 7,
+      "sha_evidence": "8160b26a, 9019a792, bc792b68"
+    },
+    "phase_5_embeddable_runtime_i18n_shared_package": {
+      "status": "done",
+      "tasks": 6,
+      "sha_evidence": "66ee2e91, 36d62c43, 7e95f56b, 271308c1"
+    },
+    "phase_6_product_acceptance_and_closeout": {
+      "status": "done",
+      "tasks": 5,
+      "sha_evidence": "ab1de4d3 (gate re-run HEAD), be6dfacf (closure matrix commit + final acceptance)",
+      "notes": "1/5 tasks is [b] deferred:po (Tier 2 questions). 4/5 [x]. Final acceptance at audit/phase-6-final-acceptance.json: status=pass."
+    }
+  },
+  "gates_run": [
+    {"command": "pnpm --filter www-reading-advantage test phase-w3-claims", "result": "20/20 pass (exit 0)"},
+    {"command": "pnpm --filter www-reading-advantage test wave2-product-claim-helper", "result": "12/12 pass (exit 0)"},
+    {"command": "pnpm --filter www-reading-advantage lint", "result": "0 errors (exit 0)"},
+    {"command": "pnpm --filter www-reading-advantage check-types", "result": "tsc --noEmit clean (exit 0)"},
+    {"command": "pnpm --filter marketing lint", "result": "0 errors, 18 pre-existing warnings (exit 0)"},
+    {"command": "pnpm --filter marketing check-types", "result": "tsc --noEmit clean (exit 0)"},
+    {"command": "pnpm --filter marketing test phase-w3", "result": "44/44 pass (exit 0)"},
+    {"command": "pnpm --filter @reading-advantage/domain test -- games", "result": "524 pass, 5 skipped (exit 0)"},
+    {"command": "pnpm --filter @reading-advantage/domain test -- games-live", "result": "524 pass, 5 skipped (exit 0)"},
+    {"command": "pnpm --filter @reading-advantage/domain test -- tenant-coverage", "result": "41 files pass, 1 skipped (exit 0)"},
+    {"command": "pnpm --filter @reading-advantage/domain lint", "result": "0 errors, 15 pre-existing warnings (exit 0)"},
+    {"command": "pnpm --filter @reading-advantage/domain check-types", "result": "tsc --noEmit clean (exit 0)"},
+    {"command": "pnpm --filter @reading-advantage/db check-types", "result": "tsc --noEmit clean (exit 0)"},
+    {"command": "pnpm --filter vocabulary-games test --testPathPatterns=completeRoute", "result": "28 pass (exit 0)"},
+    {"command": "pnpm --filter vocabulary-games test --testPathPatterns=rankingRoute", "result": "7 pass (exit 0)"},
+    {"command": "pnpm --filter vocabulary-games test --testPathPatterns=import-harness", "result": "9 pass (exit 0)"},
+    {"command": "pnpm --filter vocabulary-games lint", "result": "0 errors, 6561 pre-existing warnings (exit 0)"},
+    {"command": "pnpm --filter vocabulary-games check-types", "result": "tsc --noEmit clean (exit 0)"},
+    {"command": "bash measure/doctor.sh", "result": "exit 0"}
+  ],
+  "audit_evidence_retained": [
+    "measure/archive/wave3_product_alignment_20260628/audit/phase-6-final-acceptance.json",
+    "measure/archive/wave3_product_alignment_20260628/audit/phase-1-acceptance.json",
+    "measure/archive/wave3_product_alignment_20260628/audit/phase-1-adversarial.json",
+    "measure/archive/wave3_product_alignment_20260628/audit/phase-2-acceptance.json",
+    "measure/archive/wave3_product_alignment_20260628/audit/phase-3-strategy.json",
+    "measure/archive/wave3_product_alignment_20260628/audit/phase-3-red.json",
+    "measure/archive/wave3_product_alignment_20260628/audit/phase-3-green.json",
+    "measure/archive/wave3_product_alignment_20260628/audit/phase-3-review-a.json",
+    "measure/archive/wave3_product_alignment_20260628/audit/phase-3-review-b.json",
+    "measure/archive/wave3_product_alignment_20260628/audit/phase-3-review-c.json",
+    "measure/archive/wave3_product_alignment_20260628/audit/phase-3-acceptance.json",
+    "measure/archive/wave3_product_alignment_20260628/audit/phase-3-adversarial.json",
+    "measure/archive/wave3_product_alignment_20260628/audit/phase-4-strategy.json",
+    "measure/archive/wave3_product_alignment_20260628/audit/phase-4-red.json",
+    "measure/archive/wave3_product_alignment_20260628/audit/phase-4-green.json",
+    "measure/archive/wave3_product_alignment_20260628/audit/phase-4-review-a.json",
+    "measure/archive/wave3_product_alignment_20260628/audit/phase-4-review-b.json",
+    "measure/archive/wave3_product_alignment_20260628/audit/phase-4-review-c.json",
+    "measure/archive/wave3_product_alignment_20260628/audit/phase-4-acceptance.json",
+    "measure/archive/wave3_product_alignment_20260628/audit/phase-4-adversarial.json",
+    "measure/archive/wave3_product_alignment_20260628/audit/phase-5-strategy.json",
+    "measure/archive/wave3_product_alignment_20260628/audit/phase-5-red.json",
+    "measure/archive/wave3_product_alignment_20260628/audit/phase-5-green.json",
+    "measure/archive/wave3_product_alignment_20260628/audit/phase-5-review-a.json",
+    "measure/archive/wave3_product_alignment_20260628/audit/phase-5-review-b.json",
+    "measure/archive/wave3_product_alignment_20260628/audit/phase-5-review-c.json",
+    "measure/archive/wave3_product_alignment_20260628/audit/phase-5-acceptance.json",
+    "measure/archive/wave3_product_alignment_20260628/audit/phase-5-adversarial.json"
+  ],
+  "anti_pattern_checks": {
+    "A1_marker_ambiguity": "pass — plan uses only [x], [b] markers; no legacy [ ] space; deferred:po correctly structured",
+    "A5_false_claim_text": "pass — no 'all checks pass'/'PASS=N FAIL=0'/'all tests pass' in plan text",
+    "A6_registry_overstatement": "pass — tracks.md Wave 3 row does NOT claim MR-H05/CA-013/D-07/D-09/D-11 resolved; closeout summary honest about deferrals",
+    "A9_archived_track_path_refs": "pass_with_notes — 2 comments in marketing test files reference measure/tracks/wave3_product_alignment_20260628/test-strategy.md (static comments, not runtime path deps). No test shell scripts reference the track path.",
+    "A11_executed_review_track_left_blocked": "pass — Wave 3 is a feature track, not a review track"
+  },
+  "a9_findings": [
+    {
+      "file": "apps/marketing/app/__tests__/phase-3-settings-adversarial.test.ts",
+      "line": 396,
+      "content": "// (`measure/tracks/wave3_product_alignment_20260628/test-strategy.md`",
+      "severity": "low",
+      "impact": "Static comment only. Test references spec not runtime path. No action required."
+    },
+    {
+      "file": "apps/marketing/app/__tests__/phase-3-settings.test.ts",
+      "line": 369,
+      "content": "// (measure/tracks/wave3_product_alignment_20260628/test-strategy.md §4",
+      "severity": "low",
+      "impact": "Static comment only. Test references spec not runtime path. No action required."
+    }
+  ],
+  "artifact_cleanup": {
+    "retained": [
+      "All audit JSON files (31 phase audits including final acceptance)",
+      "metadata.json",
+      "plan.md",
+      "spec.md",
+      "phase-0-decisions.md",
+      "phase-0-claims-matrix.md",
+      "phase-3-decisions.md",
+      "phase-4-decisions.md",
+      "phase-5-decisions.md",
+      "phase-6-game-readiness-closure.md",
+      "test-strategy.md",
+      "review-2026-07-04.md",
+      "review-2026-07-05.md",
+      "review-a-result.json",
+      "review-b-result.json",
+      "automation-supervisor-closeout-manifest.json"
+    ],
+    "deleted": [],
+    "notes": "No bulky run artifacts to delete. All evidence preserved for audit trail."
+  },
+  "deferred_items": [
+    {
+      "id": "Phase 0 Tier 2 Decision 1B",
+      "description": "Per-page keep/hide/delete + specific roadmap dates for Math/STEM/Storytime/Tutor/Zhongwen",
+      "owner": "po",
+      "status": "deferred",
+      "plan_reference": "plan.md line 13"
+    },
+    {
+      "id": "Phase 0 Tier 2 Decision 2B",
+      "description": "Specific approved AI provider/model name per product page (or confirm neutral copy is long-term choice)",
+      "owner": "po",
+      "status": "deferred",
+      "plan_reference": "plan.md line 14"
+    },
+    {
+      "id": "Phase 0 Tier 2 Decision 4B",
+      "description": "Specific approved efficacy stats with evidence + consent artifacts (and consent-<school>.{md,pdf} for any named school)",
+      "owner": "po",
+      "status": "deferred",
+      "plan_reference": "plan.md line 16"
+    },
+    {
+      "id": "Phase 2 carryover",
+      "description": "Role floor for marketing routes (any authenticated staff vs ADMIN-equivalent floor)",
+      "owner": "po",
+      "status": "deferred",
+      "plan_reference": "plan.md line 305"
+    },
+    {
+      "id": "Phase 3/4/5 successor-track games",
+      "description": "24 remaining implemented games + dragon-rider navigation-fix sample NOT-READY/AT-RISK pending per-game migration",
+      "owner": "infra",
+      "status": "deferred",
+      "plan_reference": "plan.md lines 228-229, 296"
+    }
+  ],
+  "archive_operations": {
+    "dir_moved_from": "measure/tracks/wave3_product_alignment_20260628",
+    "dir_moved_to": "measure/archive/wave3_product_alignment_20260628",
+    "tracks_md_active_row_removed": true,
+    "tracks_md_archived_row_added": true,
+    "metadata_status_flipped": "planned → done",
+    "completion_date": "2026-07-05"
+  }
+}
