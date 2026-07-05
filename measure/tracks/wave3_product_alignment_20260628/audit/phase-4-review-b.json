@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-b-security",
+  "track": "wave3_product_alignment_20260628",
+  "phase": "Phase 4: Tenant-Safe Persistence and Leaderboards",
+  "status": "pass",
+  "summary": "Phase 4 Green passes security and data-handling review. The new gameCompletions table is FLAT with schoolId NOT NULL and a unique constraint on (schoolId, userId, activityId); xpLogs keeps its REFERENTIAL classification and gains a unique (userId, activityId) constraint for race-safe fire-once. getSchoolLeaderboard and getGameCompletions read through TenantDB without unscoped(), so school-B cannot observe school-A rows. recordActivity/updateLessonProgress now validate inputs with .strict() schemas that bound xpEarned 0..100, progress 0..100, lessonId as UUID, and status as a closed enum. Dual-write in recordGameCompletion is wrapped in a transaction and catches PG unique-violation (23505) to return duplicate:true. All targeted tests pass with 0 lint errors and 0 type-check errors.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "NB-1: The PGlite test helper seedSchoolAndUser uses sql.raw with string-interpolated schoolId. The input is a hardcoded test constant, so this is not a runtime vulnerability, but future test helpers should use parameterized queries to keep the harness consistent with production patterns.",
+    "NB-2: The standalone apps/advantage-games rankingRoute.ts and completeRoute.ts remain force-static mocks without auth or tenant context. This is the intended Phase 4 boundary (host apps must call getSchoolLeaderboard/recordGameCompletion with a real TenantDB), but it means the standalone app still cannot be safely imported until Phase 5+ wiring is complete.",
+    "NB-3: updateLessonProgress validates lessonId as a UUID but does not yet verify tenant ownership of the lesson. plan.md correctly defers this Tier 2 check as [b] deferred:infra in Phase 6."
+  ],
+  "evidence": [
+    "gameCompletions is registered FLAT in tenant-registry.ts; xpLogs and gameRankings remain REFERENTIAL.",
+    "packages/db/drizzle/0026_game_completions.sql creates game_completions with school_id NOT NULL, FK to schools, unique index (school_id, user_id, activity_id), and index (school_id, game_type, difficulty); also tightens leaderboards.school_id to NOT NULL and adds xp_logs_user_activity_unique.",
+    "getSchoolLeaderboard selects from gameCompletions through TenantDB without unscoped(); live-DB tests 4A and 4E prove school-B sees zero school-A rows while school-A sees its own rows.",
+    "recordGameCompletion dual-writes gameCompletions and xpLogs inside db.transaction; a unique violation on either table rolls back and returns {duplicate: true, xpEarned: 0}. Live-DB test 4B proves exactly one insert under concurrent Promise.all completions.",
+    "recordActivityInputSchema uses .strict(), activityType min(1).max(64), xpEarned z.number().int().min(0).max(100).optional(), and metadata max(4096).",
+    "updateLessonProgressInputSchema uses .strict(), lessonId z.string().uuid(), status enum, and progress z.number().min(0).max(100).",
+    "All production queries use Drizzle typed builders (eq, and, desc, sql`SUM(...)`) with no raw user input concatenation; changed source files contain no secrets, tokens, or environment variables.",
+    "Anti-pattern A2 (consent-blind publish gate) is not triggered: Phase 4 introduces no draft-to-published status transition for named subjects.",
+    "Anti-pattern A6 (registry overstatement) is not triggered: measure/tracks.md does not claim D-04/D-06 are resolved; it only lists the active track."
+  ],
+  "commands": [
+    "pnpm --filter @reading-advantage/domain test -- games-live => 40 files passed, 463 tests passed, 5 skipped, 0 failed",
+    "pnpm --filter @reading-advantage/domain test -- games tenant-coverage => 40 files passed, 463 tests passed, 5 skipped, 0 failed",
+    "pnpm --filter vocabulary-games test --testPathPatterns=rankingRoute => 7/7 tests passed",
+    "pnpm --filter @reading-advantage/domain lint => 0 errors, 15 pre-existing warnings",
+    "pnpm --filter @reading-advantage/domain check-types => exit 0",
+    "pnpm --filter @reading-advantage/db check-types => exit 0",
+    "pnpm --filter vocabulary-games check-types => exit 0"
+  ],
+  "changed_files": [
+    "packages/db/src/schema/analytics.ts",
+    "packages/db/drizzle/0026_game_completions.sql",
+    "packages/db/drizzle/meta/_journal.json",
+    "packages/domain/src/games/schema.ts",
+    "packages/domain/src/games/mutations.ts",
+    "packages/domain/src/games/queries.ts",
+    "packages/domain/src/games/index.ts",
+    "packages/domain/src/progress/schemas.ts",
+    "packages/domain/src/progress/mutations.ts",
+    "packages/domain/src/tenant-registry.ts",
+    "apps/advantage-games/src/lib/games/api/rankingRoute.ts",
+    "apps/advantage-games/src/components/games/game/RankingDialog.tsx",
+    "packages/domain/src/__tests__/games-live.test.ts",
+    "packages/domain/src/__tests__/games.test.ts",
+    "packages/domain/src/__tests__/phase-3-adversarial.test.ts"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}

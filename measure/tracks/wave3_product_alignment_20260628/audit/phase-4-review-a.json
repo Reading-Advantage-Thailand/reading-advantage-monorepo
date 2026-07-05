@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-a-correctness",
+  "track": "wave3_product_alignment_20260628",
+  "phase": "Phase 4: Tenant-Safe Persistence and Leaderboards",
+  "status": "pass",
+  "summary": "Phase 4 tenant-safe persistence and leaderboards implementation is correct, race-safe, and architecturally sound. All gate commands pass. No blocking findings.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "NB-1: leaderboards.schoolId in Drizzle schema (packages/db/src/schema/primary.ts:229) is still nullable despite migration 0026 setting it to NOT NULL. TenantDB injects schoolId on FLAT inserts so this is not a runtime issue, but the TypeScript type should be aligned with the migration in a follow-up."
+  ],
+  "evidence": [
+    "gameCompletions table is FLAT with schoolId notNull, unique (schoolId, userId, activityId), FKs, and composite index.",
+    "xpLogs unique constraint (userId, activityId) added for race-safe fire-once.",
+    "Tenant registry classifies gameCompletions as FLAT and gameRankings as deprecated REFERENTIAL.",
+    "recordGameCompletion dual-writes gameCompletions + xpLogs in a transaction and catches PG_UNIQUE_VIOLATION (23505) as race-safe duplicate signal.",
+    "Race-safety live-DB test 4B: concurrent completions with same idempotencyKey produce exactly 1 success + 1 duplicate + 1 row.",
+    "Tenant isolation live-DB test 4A: school-A sees its completion, school-B sees 0 rows.",
+    "getSchoolLeaderboard reads from gameCompletions through TenantDB without unscoped(), aggregates, and caps at min(limit, 100).",
+    "getGameCompletions migrated from xpLogs to gameCompletions (FLAT).",
+    "Host-mutation Zod schemas enforce .strict() and bounds on recordActivity and updateLessonProgress.",
+    "Migration 0026 creates game_completions table, FKs, indexes, xpLogs unique constraint, and sets leaderboards.schoolId NOT NULL.",
+    "rankingRoute.ts validates response via leaderboardResponseSchema and uses canonical difficulty keys ['easy','medium','hard','extreme'].",
+    "RankingDialog.tsx uses 'medium' default tab and local TabDifficulty type.",
+    "Dual-write preserves xpTotal read path in getStudentProgress."
+  ],
+  "commands": [
+    "pnpm --filter @reading-advantage/domain test -- games => exit 0 (463 passed, 5 skipped)",
+    "pnpm --filter @reading-advantage/domain test -- games-live => exit 0 (463 passed, 5 skipped; games-live.test.ts 5/5 PGlite pass)",
+    "pnpm --filter @reading-advantage/domain test -- tenant-coverage => exit 0 (9 tests passed)",
+    "pnpm --filter vocabulary-games test --testPathPatterns=rankingRoute => exit 0 (7/7 pass)",
+    "pnpm --filter @reading-advantage/domain lint => exit 0 (0 errors, 15 pre-existing warnings)",
+    "pnpm --filter @reading-advantage/domain check-types => exit 0",
+    "pnpm --filter @reading-advantage/db check-types => exit 0",
+    "pnpm --filter vocabulary-games lint && pnpm --filter vocabulary-games check-types => exit 0"
+  ],
+  "changed_files": [
+    "packages/db/src/schema/analytics.ts",
+    "packages/db/drizzle/0026_game_completions.sql",
+    "packages/db/drizzle/meta/_journal.json",
+    "packages/domain/src/tenant-registry.ts",
+    "packages/domain/src/games/schema.ts",
+    "packages/domain/src/games/queries.ts",
+    "packages/domain/src/games/mutations.ts",
+    "packages/domain/src/games/index.ts",
+    "packages/domain/src/progress/schemas.ts",
+    "packages/domain/src/progress/mutations.ts",
+    "apps/advantage-games/src/lib/games/api/rankingRoute.ts",
+    "apps/advantage-games/src/components/games/game/RankingDialog.tsx",
+    "packages/domain/src/__tests__/games.test.ts",
+    "packages/domain/src/__tests__/games-live.test.ts",
+    "packages/domain/src/__tests__/phase-3-adversarial.test.ts"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}

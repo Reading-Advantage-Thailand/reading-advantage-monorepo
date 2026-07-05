@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-c-ux-api",
+  "track": "wave3_product_alignment_20260628",
+  "phase": "Phase 4: Tenant-Safe Persistence and Leaderboards",
+  "status": "pass",
+  "summary": "Phase 4 leaderboard schema, ranking route, and dialog difficulty keys are correctly implemented. The shared leaderboardResponseSchema has an honest schoolScoped: true marker, canonical difficulty keys (easy/medium/hard/extreme, no normal), and rankingRoute.ts validates against the schema. RankingDialog.tsx uses medium as the default tab. Non-blocking contract gap documented: dialog expects difficulty-keyed object but route returns flat array; must be resolved in Phase 5+.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "NB-P4-001: RankingDialog.tsx expects a difficulty-keyed Record (data?.[diff]) but rankingRoute.ts returns a flat array per leaderboardResponseSchema. With empty mock data this is invisible; must be resolved in Phase 5+ when real data flows.",
+    "NB-P4-002: DIFFICULTY_KEYS is exported from rankingRoute.ts but RankingDialog.tsx hardcodes its own difficulties array. Phase 5+ should import DIFFICULTY_KEYS to stay in sync.",
+    "NB-P4-003: 65 legacy 'normal' difficulty references remain across other games; Phase 5+ scope per Decision 4.3."
+  ],
+  "evidence": [
+    "packages/domain/src/games/schema.ts defines leaderboardEntrySchema + leaderboardResponseSchema with schoolScoped: z.literal(true).",
+    "gameDifficultyEnum uses medium not normal.",
+    "rankingRoute.ts validates response via leaderboardResponseSchema.parse() and uses DIFFICULTY_KEYS = ['easy','medium','hard','extreme'].",
+    "RankingDialog.tsx uses TabDifficulty type with medium and defaultValue='medium'.",
+    "rankingRoute.test.ts 7/7 pass including 'does not include legacy normal difficulty key' (B21-018).",
+    "pnpm --filter @reading-advantage/domain test -- games => 463 pass, 5 skip.",
+    "pnpm --filter @reading-advantage/domain lint => 0 errors.",
+    "pnpm --filter vocabulary-games lint => 0 errors."
+  ],
+  "commands": [
+    "pnpm --filter vocabulary-games test --testPathPatterns=rankingRoute => 7/7 pass",
+    "pnpm --filter @reading-advantage/domain test -- games => 463 pass, 5 skip",
+    "pnpm --filter @reading-advantage/domain lint => 0 errors"
+  ],
+  "changed_files": [
+    "packages/domain/src/games/schema.ts",
+    "apps/advantage-games/src/lib/games/api/rankingRoute.ts",
+    "apps/advantage-games/src/components/games/game/RankingDialog.tsx"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [
+    "LCV-P4-001: RankingDialog flat-array vs keyed-object mismatch — route returns flat array per leaderboardResponseSchema, dialog expects difficulty-keyed Record. Non-blocking for Phase 4 (empty mock), blocking for Phase 5+."
+  ],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "ux_applicability": "applicable",
+  "webbridge_status": "not_run",
+  "webbridge_evidence": {
+    "screenshots": [],
+    "accessibility_snapshots": [],
+    "interactions": []
+  },
+  "retry_recommendation": "none",
+  "confidence": "high"
+}
