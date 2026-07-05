@@ -17,6 +17,9 @@ const config: Config = {
     '^next/server$': '<rootDir>/src/__mocks__/next/server.ts',
     '^@reading-advantage/utils(/.*)?$': '<rootDir>/../../packages/utils/dist$1',
     '^@reading-advantage/ui(/.*)?$': '<rootDir>/../../packages/ui/dist$1',
+    '^@reading-advantage/domain(/.*)?$': '<rootDir>/../../packages/domain/dist$1',
+    '^@reading-advantage/auth(/.*)?$': '<rootDir>/../../packages/auth/dist$1',
+    '^@reading-advantage/db(/.*)?$': '<rootDir>/../../packages/db/dist$1',
   },
   transformIgnorePatterns: [
     'node_modules/(?!(konva|react-konva)/)'

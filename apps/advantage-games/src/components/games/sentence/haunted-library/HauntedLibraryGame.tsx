@@ -21,14 +21,41 @@ import { GameEndScreen } from '@/components/games/game/GameEndScreen'
 import { GameStartScreen } from '@/components/games/game/GameStartScreen'
 import { Book, DoorOpen, Sparkles, Zap, AlertTriangle } from 'lucide-react'
 
+/**
+ * Game-completion payload shape — mirrors `GameCompletionInputSchema` from
+ * `@reading-advantage/domain/games`. The XP field is intentionally absent:
+ * XP is server-computed (`calculateGameXP`). The idempotencyKey is generated
+ * once per session and held in a ref so React re-renders and the game-over
+ * path share the same key (B28-017 / B30-002 fire-once defense).
+ */
+type HauntedLibraryCompletionPayload = {
+  gameType: 'haunted-library'
+  difficulty: 'easy' | 'medium' | 'hard' | 'extreme'
+  score: number
+  accuracy: number
+  correctAnswers: number
+  totalAttempts: number
+  duration: number
+  victory: boolean
+  idempotencyKey: string
+  clientTimestamp: number
+}
+
 interface HauntedLibraryGameProps {
   sentences: VocabularyItem[]
-  onComplete: (results: { 
-    xp: number; 
-    accuracy: number;
-    correctAnswers: number;
-    totalAttempts: number;
-  }) => void
+  onComplete: (results: HauntedLibraryCompletionPayload) => void
+}
+
+function generateIdempotencyKey(): string {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID()
+  }
+  // Fallback for environments without crypto.randomUUID (e.g. older test runtimes).
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0
+    const v = c === 'x' ? r : (r & 0x3) | 0x8
+    return v.toString(16)
+  })
 }
 
 export function HauntedLibraryGame({ sentences, onComplete }: HauntedLibraryGameProps) {
@@ -41,6 +68,13 @@ export function HauntedLibraryGame({ sentences, onComplete }: HauntedLibraryGame
   const { input, setVirtualInput } = useDirectionalInput()
   const lastFrameRef = useRef<number>(0)
   const rafRef = useRef<number>(0)
+  // Stable per-session UUID used as the fire-once idempotency key for the
+  // shared `recordGameCompletion` contract (B28-017 / B30-002).
+  const idempotencyKeyRef = useRef<string>('')
+
+  if (!idempotencyKeyRef.current) {
+    idempotencyKeyRef.current = generateIdempotencyKey()
+  }
 
   const startGame = useCallback(() => {
     if (sentences.length > 0) {
@@ -51,12 +85,23 @@ export function HauntedLibraryGame({ sentences, onComplete }: HauntedLibraryGame
 
   const endGame = useCallback((finalState: LibraryState) => {
     setGamePhase('ended')
-    onComplete({ 
-      xp: calculateXP(finalState), 
-      accuracy: finalState.totalAttempts > 0 ? finalState.correctAnswers / finalState.totalAttempts : 0,
+    const accuracy =
+      finalState.totalAttempts > 0
+        ? finalState.correctAnswers / finalState.totalAttempts
+        : 0
+    const payload: HauntedLibraryCompletionPayload = {
+      gameType: 'haunted-library',
+      difficulty: finalState.difficulty,
+      score: finalState.score,
+      accuracy,
       correctAnswers: finalState.correctAnswers,
-      totalAttempts: finalState.totalAttempts
-    })
+      totalAttempts: finalState.totalAttempts,
+      duration: finalState.time,
+      victory: finalState.phase === 'victory',
+      idempotencyKey: idempotencyKeyRef.current,
+      clientTimestamp: Date.now(),
+    }
+    onComplete(payload)
   }, [onComplete])
 
   // Game Loop with requestAnimationFrame

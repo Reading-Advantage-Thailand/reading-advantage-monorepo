@@ -71,33 +71,57 @@ export default function HauntedLibraryPage() {
   }, [locale])
 
   const handleComplete = useCallback(
-    async (results: { 
-      xp: number; 
-      accuracy: number; 
-      correctAnswers: number; 
-      totalAttempts: number 
+    async (results: {
+      gameType: 'haunted-library'
+      difficulty: 'easy' | 'medium' | 'hard' | 'extreme'
+      score: number
+      accuracy: number
+      correctAnswers: number
+      totalAttempts: number
+      duration: number
+      victory: boolean
+      idempotencyKey: string
+      clientTimestamp: number
     }) => {
-      setLastResult(results.xp, results.accuracy)
-
       try {
-        await fetch('/api/v1/games/haunted-library/complete', {
+        const res = await fetch('/api/v1/games/haunted-library/complete', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            xpEarned: results.xp,
+            gameType: results.gameType,
+            difficulty: results.difficulty,
+            score: results.score,
             accuracy: results.accuracy,
             correctAnswers: results.correctAnswers,
             totalAttempts: results.totalAttempts,
-            userId: session?.user?.id,
+            duration: results.duration,
+            victory: results.victory,
+            idempotencyKey: results.idempotencyKey,
+            clientTimestamp: results.clientTimestamp,
           }),
         })
+
+        // Phase 3 standalone route returns mock response with server-computed
+        // xpEarned. We surface that XP in the game store (the host app's
+        // `recordGameCompletion` would persist it instead).
+        if (res.ok) {
+          const data = await res.json().catch(() => null)
+          if (data && typeof data.xpEarned === 'number') {
+            setLastResult(data.xpEarned, results.accuracy)
+            return
+          }
+        }
+        // Fallback: keep the store call so the UI does not hang if the route
+        // errors out — the page-level XP display is best-effort preview only.
+        setLastResult(0, results.accuracy)
       } catch (e) {
         console.error('Failed to submit game results', e)
+        setLastResult(0, results.accuracy)
       }
     },
-    [setLastResult, session],
+    [setLastResult],
   )
 
   if (isLoading) {

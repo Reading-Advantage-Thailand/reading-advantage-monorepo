@@ -148,6 +148,11 @@ export const PERMISSIONS = {
 
   // DSAR (Data Subject Access Request)
   "dsar:export": [ROLES.ADMIN, ROLES.SYSTEM],
+
+  // Games (Wave 3 / Advantage Games)
+  // Phase 3: only student-authored paths. Teacher/admin views are Phase 4+.
+  "games:complete": [ROLES.STUDENT, ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
+  "games:read:own": [ROLES.STUDENT, ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
 } as const satisfies Record<string, Role[]>;
 
 export type Permission = keyof typeof PERMISSIONS;

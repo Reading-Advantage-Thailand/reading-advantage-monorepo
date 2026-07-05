@@ -75,6 +75,10 @@
     "./audit/dsar": {
       "types": "./dist/audit/dsar.d.ts",
       "import": "./dist/audit/dsar.js"
+    },
+    "./games": {
+      "types": "./dist/games/index.d.ts",
+      "import": "./dist/games/index.js"
     }
   },
   "scripts": {

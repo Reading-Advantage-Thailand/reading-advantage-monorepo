@@ -98,22 +98,24 @@
     - `pnpm --filter @reading-advantage/domain check-types` → exit 0.
     - `pnpm --filter vocabulary-games check-types` → exit 0.
   - Strategy: §0.C group 3A (schema rejection + positive control), 3B (XP formula labeled integers), 3C (fire-once first/second call pair), 3D (HauntedLibraryGame payload shape), 3E (route handler delegation).
-- [~] Task: Define canonical game/activity type enum, score, accuracy, attempts, duration, XP, and idempotency fields.
+- [x] Task: Define canonical game/activity type enum, score, accuracy, attempts, duration, XP, and idempotency fields. — Phase 3 Green `XXXXXXXX` (pending commit)
   - Strategy: `phase-3-decisions.md` Decision 3.2 freezes the field list and canonical units (`accuracy` 0..1 fractional; `difficulty` enum with `medium` canonical; `gameType` enum from `gameCards.ts` 26 slugs; `idempotencyKey` UUID; `duration` ms; `victory` boolean; `score` informational; NO `xp` field — server-computed only).
   - Implementation: `packages/domain/src/games/schema.ts` (Zod). Jr-Green.
-- [~] Task: Move XP calculation server-side; reject client-supplied unbounded XP.
+- [x] Task: Move XP calculation server-side; reject client-supplied unbounded XP. — Phase 3 Green `XXXXXXXX` (pending commit)
   - Evidence refs: Advantage Games D-02/B25-001, duplicate completion B28-017/B30-002.
   - Strategy: `phase-3-decisions.md` Decision 3.3 freezes `calculateGameXP` formula (`Math.min(10, correctAnswers + bonus)`). The `.strict()` schema reject is the primary D-02 defense. `recordActivity` (generic) is NOT modified (D-06 is Phase 4).
   - Implementation: `packages/domain/src/games/xp.ts` + `mutations.ts`. Jr-Green.
-- [~] Task: Add fire-once completion guard to prevent duplicate awards.
+- [x] Task: Add fire-once completion guard to prevent duplicate awards. — Phase 3 Green `XXXXXXXX` (pending commit)
   - Evidence refs: B28-017, B30-002, B23-008, B24-008.
   - Strategy: `phase-3-decisions.md` Decision 3.4 freezes `idempotencyKey` UUID + `SELECT-before-INSERT` on `xpLogs` with `activityId = game:<gameType>:<idempotencyKey>`. Phase 3 proves the *logic* with mock DB; Phase 4 adds the DB unique constraint for race-safety.
   - Implementation: `packages/domain/src/games/mutations.ts#recordGameCompletion`. Jr-Green.
-- [~] Task: Migrate representative games to the shared contract.
+- [x] Task: Migrate representative games to the shared contract. — Phase 3 Green `XXXXXXXX` (pending commit)
   - Strategy: `phase-3-decisions.md` Decision 3.5 freezes `haunted-library` as the representative game. `HauntedLibraryGame.tsx#onComplete` payload rebuilt (add `gameType`/`difficulty`/`duration`/`victory`/`idempotencyKey`/`clientTimestamp`/`score`; remove `xp`). The remaining 25 games are Phase 5+ work.
   - Implementation: `HauntedLibraryGame.tsx` + page wiring. Jr-Green.
-- [~] Task: Run game completion unit tests.
+- [x] Task: Run game completion unit tests. — Phase 3 Green `XXXXXXXX` (pending commit)
   - Green gate: `pnpm --filter @reading-advantage/domain test -- games` = 0 AND `pnpm --filter vocabulary-games test -- --testPathPatterns=completeRoute` = 0. Plus lint + check-types on both filters. Acceptance runs the full filters (`pnpm --filter @reading-advantage/domain test` and `pnpm --filter vocabulary-games test`) to verify no regression.
+  - **Phase 3 test adjustment (test contradicts spec formula):** the Red "adds a victory bonus" test wrote `accuracy: 1, totalAttempts: 5` and expected XP=6, but the spec formula (Decision 3.3) awards +2 when computed accuracy is 1, yielding XP=8. Per AGENTS.md (test adjustments allowed when Red tests contradict the spec), the test input was changed to `totalAttempts: 10, accuracy: 0.5` so the test properly isolates the +1 victory bonus contribution (XP = 5+0+1+0 = 6). The test name and intent (verify victory bonus contribution) are preserved.
+  - **Phase 5+ expected regressions:** `apps/advantage-games/src/app/api/v1/games/{archers-revenge,shadow-gate-dungeon}/complete/route.test.ts` use the shared `createCompleteRoute` factory and send the legacy `{ correctAnswers, totalAttempts, accuracy, score, difficulty }` payload. The new strict Zod schema returns 400 for that payload (correct D-01/D-02 behavior). The other 25 games' route + component + page tests are not in Green scope — they migrate in Phase 5+ per `phase-0-decisions.md` Decision 3.
 
 ## Phase 4: Tenant-Safe Persistence and Leaderboards
 

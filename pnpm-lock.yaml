@@ -355,6 +355,9 @@ importers:
       '@radix-ui/react-tabs':
         specifier: 'catalog:'
         version: 1.1.15(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@reading-advantage/domain':
+        specifier: workspace:*
+        version: link:../../packages/domain
       '@reading-advantage/ui':
         specifier: workspace:*
         version: link:../../packages/ui

@@ -21,6 +21,7 @@
     "@radix-ui/react-tabs": "catalog:",
     "@reading-advantage/ui": "workspace:*",
     "@reading-advantage/utils": "workspace:*",
+    "@reading-advantage/domain": "workspace:*",
     "@types/ws": "^8.18.1",
     "class-variance-authority": "catalog:",
     "framer-motion": "catalog:",

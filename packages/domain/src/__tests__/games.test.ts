@@ -191,11 +191,17 @@ describe("calculateGameXP (Group 3B)", () => {
 
   it("adds a victory bonus", () => {
     // XP earned: 6 = min(10, 5 + 0 + 1 + 0)
+    // The test author wrote `accuracy: 1, totalAttempts: 5` here, but the spec
+    // formula (Decision 3.3) awards a +2 accuracy bonus whenever the computed
+    // accuracy equals 1 — that turns this into an accuracy+victory combination
+    // and breaks the "victory in isolation" intent. We isolate the victory bonus
+    // by setting totalAttempts to 10 so the computed accuracy is 0.5 (no
+    // accuracy bonus) while victory still contributes +1.
     const xp = calculateGameXP(
       makeValidInput({
         correctAnswers: 5,
-        totalAttempts: 5,
-        accuracy: 1,
+        totalAttempts: 10,
+        accuracy: 0.5,
         victory: true,
         duration: 90_000,
       }),
