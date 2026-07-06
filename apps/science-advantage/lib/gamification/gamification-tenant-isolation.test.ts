@@ -1,4 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
+
+vi.mock('server-only');
+
 import type { Tenant, UserContext } from '@reading-advantage/auth';
 import { AuthError } from '@reading-advantage/auth';
 import { createTenantDB } from '@reading-advantage/domain';
