@@ -50,14 +50,26 @@
 
 ## Phase 3: Reading Authorization, Validation, and Endpoint Hardening
 
-- [~] Task: Write Red tests for admin/SYSTEM license-scope escalation paths.
+- [x] Task: Write Red tests for admin/SYSTEM license-scope escalation paths. — `<P3_RED_SHA>`
   - Evidence refs: Reading M-RA-SEC-6.
+  - Red tests: `apps/reading-advantage/__tests__/controllers/admin-license-scope-red.test.ts` (2 checks). SYSTEM user with own `license_id="license-a"` requesting `?licenseId=license-b` is expected to be denied (403/401) or audited; currently returns 200. Own-license request still returns 200.
+- [x] Task: Write Red tests for Zod input validation, raw process.env guard, Firebase storage removal, metrics/health endpoint hardening, and controller-to-domain migration. — `<P3_RED_SHA>`
+  - Evidence refs: Reading M-RA-SEC-7/SEC-9/SEC-10/SEC-8.
+  - Red tests added:
+    - `__tests__/controllers/zod-validation-red.test.ts` — invalid query/body shapes return 400; currently 200.
+    - `__tests__/controllers/env-reads-guard-red.test.ts` — 32 raw `process.env` reads outside `lib/env.ts`/tests; expected 0.
+    - `__tests__/controllers/firebase-storage-removal-red.test.ts` — 2 `firebase-admin/storage` dynamic requires in `generator-controller.ts`; expected 0.
+    - `__tests__/controllers/metrics-endpoint-hardening-red.test.ts` — `/metrics/stream` returns 200 unauthenticated (expected 401); `/metrics/health` exposes `materialized_views`/`cache` and lacks public `status` summary; `/health/database` exposes `performance`/`slowQueries`/`indexUsage`/`tableStats`/`lockStats`/`recommendations`.
+    - `__tests__/controllers/domain-migration-red.test.ts` — `getSystemDashboard` calls `db.select` 18 times and does not call a domain `getSystemDashboardData` function.
 - [~] Task: Enforce license scope on reviewed admin/SYSTEM operations.
 - [~] Task: Add Zod input validation to reviewed routes; harden metrics/health endpoints; remove Firebase storage usages.
   - Evidence refs: Reading M-RA-SEC-7/SEC-9/SEC-10.
 - [~] Task: Migrate reviewed Reading controller business logic into `@reading-advantage/domain`.
   - Evidence refs: Reading M-RA-SEC-8.
 - [~] Task: Run Reading + domain targeted tests.
+  - Targeted Red command (strategy): `cd apps/reading-advantage && CI=true pnpm test -- server/controllers app/api/v1/metrics app/api/v1/admin` — does not match this repo's test layout (tests live in `__tests__/controllers/`, not under `server/controllers` or `app/api/v1/**`).
+  - Corrected Red command for this layout: `cd apps/reading-advantage && CI=true pnpm run test --testTimeout=10000 __tests__/controllers/admin-license-scope-red.test.ts __tests__/controllers/zod-validation-red.test.ts __tests__/controllers/env-reads-guard-red.test.ts __tests__/controllers/firebase-storage-removal-red.test.ts __tests__/controllers/metrics-endpoint-hardening-red.test.ts __tests__/controllers/domain-migration-red.test.ts` → exit 2; 12 failed, 3 passed (15 total). Failures cover SEC-6/7/9/10/8 as designed.
+  - `cd packages/api && pnpm check-types` → exit 2; pre-existing `src/routers/progress.ts:54` TS2322 status-union error (owned by PB-4 in Phase 4).
 
 ## Phase 4: Reading Product-Behavior Correctness and Learning-Loop Tests
 
