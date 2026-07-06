@@ -74,12 +74,32 @@
 
 ## Phase 4: Reading Product-Behavior Correctness and Learning-Loop Tests
 
-- [~] Task: Write Red tests for assignment status enum/lifecycle, reporting metrics correctness, activity target validation + license fallback, and typed request context for reports.
+- [x] Task: Write Red tests for assignment status enum/lifecycle, reporting metrics correctness, activity target validation + license fallback, and typed request context for reports. — `fbedacbf`
   - Evidence refs: Reading M-RA-PB-4/PB-5/PB-6/PB-7.
+  - Red tests added under `apps/reading-advantage/__tests__/`:
+    - `controllers/assignment-status-enum-red.test.ts` — asserts `AssignmentStatus` enum exported from `@reading-advantage/types`; rejects `COMPLETED -> IN_PROGRESS`; reproduces `packages/api/src/routers/progress.ts:54` TS2322 via `pnpm check-types` (exit 2, `progress.ts(54,` + TS2322).
+    - `controllers/reporting-metrics-red.test.ts` — asserts shared `QuestionScoringRubric` enum; verifies MCQ/open-ended accuracy reported separately and weighted overall accuracy.
+    - `controllers/activity-target-validation-red.test.ts` — asserts `postActivityLog` rejects missing `targetId` and no `details.articleId` fallback; missing license resolves to `LicenseType.BASIC`.
+    - `controllers/report-typed-context-red.test.ts` — source-scan asserts no `(req as any)` / `requireRole(...as any)` casts in report controllers.
+  - Red run: `cd apps/reading-advantage && CI=true pnpm run test -- __tests__/controllers/assignment-status-enum-red.test.ts __tests__/controllers/reporting-metrics-red.test.ts __tests__/controllers/activity-target-validation-red.test.ts __tests__/controllers/report-typed-context-red.test.ts` → 12 failed / 5 passed / 17 total; failures match expected missing behavior.
 - [~] Task: Implement the correctness fixes behind domain functions.
-- [~] Task: Build the product-level learning-loop test suite covering XP → level → assignment progression.
+- [x] Task: Build the product-level learning-loop test suite covering XP → level → assignment progression. — `fbedacbf`
   - Evidence refs: Reading M-RA-PB-8.
-- [~] Task: Run Reading targeted tests.
+  - Red tests added under `apps/reading-advantage/__tests__/learning-loop/`:
+    - `assignment-lifecycle-red.test.ts` — overdue NOT_STARTED assignments flagged `OVERDUE`; COMPLETED past-due assignments stay `COMPLETED`.
+    - `article-completion-red.test.ts` — answering required SAQ after 5 MCQs inserts an `ARTICLE_READ` activity.
+    - `fsrs-scheduling-red.test.ts` — asserts `@reading-advantage/domain` exports `scheduleFsrsReview` and hard rating yields earlier due date than easy rating.
+  - Red run: `cd apps/reading-advantage && CI=true pnpm run test -- __tests__/learning-loop/assignment-lifecycle-red.test.ts __tests__/learning-loop/article-completion-red.test.ts __tests__/learning-loop/fsrs-scheduling-red.test.ts` → all fail for expected reasons. Combined targeted Red run with PB-4/5/6/7 tests recorded 12 failed / 5 passed / 17 total.
+- [x] Task: Run Reading targeted tests. — `fbedacbf`
+  - Targeted Red command: `cd apps/reading-advantage && CI=true pnpm run test -- __tests__/controllers/assignment-status-enum-red.test.ts __tests__/controllers/reporting-metrics-red.test.ts __tests__/controllers/activity-target-validation-red.test.ts __tests__/controllers/report-typed-context-red.test.ts __tests__/learning-loop/assignment-lifecycle-red.test.ts __tests__/learning-loop/article-completion-red.test.ts __tests__/learning-loop/fsrs-scheduling-red.test.ts`.
+  - Result: **RED** — 7 test suites failed, 12 tests failed / 5 passed / 17 total. Key failure signatures:
+    - `AssignmentStatus` not exported from `@reading-advantage/types`.
+    - `packages/api check-types` exits 2 with `progress.ts(54,` TS2322 status-union mismatch.
+    - `postActivityLog` returns 200 for requests with no `targetId`.
+    - Missing license resolves to `ENTERPRISE` instead of `BASIC`.
+    - `(req as any)` casts present in `class-accuracy-controller.ts`.
+    - `scheduleFsrsReview` not exported from `@reading-advantage/domain`.
+    - Overdue assignments not flagged `OVERDUE`; article completion does not insert `ARTICLE_READ`.
 
 ## Phase 5: CodeCamp Reliability and Least-Privilege
 
