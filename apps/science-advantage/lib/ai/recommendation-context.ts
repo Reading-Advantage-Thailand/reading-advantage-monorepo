@@ -1,4 +1,4 @@
-import { and, asc, db, eq, inArray, max } from '@reading-advantage/db';
+import { and, asc, eq, inArray, max } from '@reading-advantage/db';
 import {
   scienceCurriculumUnits,
   scienceLessonCompletions,
@@ -9,6 +9,7 @@ import {
   scienceUnitLessons,
 } from '@reading-advantage/db/schema';
 import { createHash, randomUUID } from 'crypto';
+import type { DB } from '@reading-advantage/db';
 
 import { aiConfig } from '@/lib/config/ai';
 import type { LessonType, StandardsAlignment } from '@/lib/enums';
@@ -134,17 +135,18 @@ function summarizeAttempt(attempt: AttemptWithRelations) {
 }
 
 /**
- * @kind read
- * Assembles the mastery snapshot, candidate-lesson list, and attempt summary
- * used as input to the LLM-driven recommendation prompt.
+ * Phase 1 (SP-3) — refactored signature: callers must pass a tenant-scoped
+ * (or otherwise authorized) Drizzle DB. The raw `db` symbol is no longer
+ * imported here so the TenantDB-adoption guard stays green.
  *
- * Note: `prisma` is no longer a parameter (Track 3 migration). The function
- * uses the shared `db` import directly.
+ * The caller in `app/api/ai/recommendations/route.ts` obtains the DB from
+ * the `getRecommendation` domain function (which wraps `db` with
+ * `createTenantDB`).
  */
 export async function buildRecommendationContext(
-  params: { attempt: AttemptWithRelations }
+  params: { db: DB; attempt: AttemptWithRelations },
 ): Promise<RecommendationContext> {
-  const { attempt } = params;
+  const { db, attempt } = params;
   const traceId = `rec_${randomUUID()}`;
   const studentHash = hashStudentId(attempt.studentId);
 

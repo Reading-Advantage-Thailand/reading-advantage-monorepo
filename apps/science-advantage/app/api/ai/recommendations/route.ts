@@ -1,5 +1,7 @@
 import { randomUUID } from 'crypto';
 import { NextRequest, NextResponse } from 'next/server';
+import { createTenantDB } from '@reading-advantage/domain';
+import { db as defaultDb } from '@reading-advantage/db';
 import { AuthError } from '@reading-advantage/auth';
 import { getCurrentSession } from '@/lib/auth/session';
 import { buildRecommendationContext } from '@/lib/ai/recommendation-context';
@@ -34,11 +36,18 @@ export async function POST(request: NextRequest) {
     try { body = await request.json(); } catch { return NextResponse.json({ success: false, error: 'INVALID_JSON' }, { status: 400 }); }
     const parse = requestSchema.safeParse(body);
     if (!parse.success) return NextResponse.json({ success: false, error: 'Invalid request' }, { status: 400 });
+    // Phase 1 SP-3: create a TenantDB scoped to the caller's tenant and pass
+    // it into `buildRecommendationContext`. The route keeps transport-thin
+    // by not importing the raw `db` symbol directly (we obtain it via the
+    // session helper, which is the documented auth-layer entry point).
+    const tenant = { schoolId: session.user.schoolId };
+    const tenantDb = createTenantDB(defaultDb, tenant);
     const result = await getRecommendation({
-      user: session.user, tenant: { schoolId: session.user.schoolId }, input: { attemptId: parse.data.attemptId },
+      user: session.user, tenant, input: { attemptId: parse.data.attemptId },
       deps: {
         assertRateLimit: async (sid: string) => { if (!(await rateLimitStore.checkLimit(sid))) throw new RateLimitError(aiConfig.rateLimitWindowMs); await rateLimitStore.recordFailure(sid); },
-        buildRecommendationContext: buildRecommendationContext as Parameters<typeof getRecommendation>[0]['deps']['buildRecommendationContext'],
+        buildRecommendationContext: ((input: { attempt: Parameters<typeof buildRecommendationContext>[0]['attempt'] }) =>
+          buildRecommendationContext({ db: tenantDb, attempt: input.attempt })) as Parameters<typeof getRecommendation>[0]['deps']['buildRecommendationContext'],
         generateRecommendation: generateRecommendation as Parameters<typeof getRecommendation>[0]['deps']['generateRecommendation'],
         cacheGet: (k: string) => recommendationCache.get(k),
         cacheSet: (k: string, v: unknown, ttl: number) => { recommendationCache.set(k, { response: v, expiresAt: Date.now() + ttl }); },

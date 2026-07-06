@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
+import { createTenantDB } from '@reading-advantage/domain';
 import { db, and, eq, sql } from '@reading-advantage/db';
 import {
   achievements,
@@ -22,6 +23,17 @@ const TEST_PREFIX = 'badges-itest';
 const TEST_SCHOOL_ID = '00000000-0000-0000-0000-000000000099';
 const TEACHER_ID = `${TEST_PREFIX}-teacher`;
 const STUDENT_ID = `${TEST_PREFIX}-student`;
+
+const studentUser = {
+  id: STUDENT_ID,
+  username: STUDENT_ID,
+  name: 'Badges Student',
+  role: 'STUDENT' as const,
+  schoolId: TEST_SCHOOL_ID,
+  xp: 0,
+  level: 1,
+  cefrLevel: 'A1',
+};
 
 async function cleanupFixtures(): Promise<void> {
   // Junction tables, then completions/attempts/achievements (FKs cascade,
@@ -48,6 +60,7 @@ async function seedUsers(): Promise<void> {
       displayUsername: 'BadgesTeacher',
       email: `${TEACHER_ID}@example.com`,
       role: 'TEACHER',
+      schoolId: TEST_SCHOOL_ID,
     },
     {
       id: STUDENT_ID,
@@ -56,6 +69,7 @@ async function seedUsers(): Promise<void> {
       displayUsername: 'BadgesStudent',
       email: `${STUDENT_ID}@example.com`,
       role: 'STUDENT',
+      schoolId: TEST_SCHOOL_ID,
     },
   ]);
 }
@@ -160,6 +174,28 @@ async function setStreak(streak: number): Promise<void> {
     });
 }
 
+/**
+ * Phase 1 ST-1: helper that wraps `checkBadgeConditions` with the secured
+ * `{ db, user, tenant, input }` context. Mirrors how the quiz route wires
+ * the function into `submitAttempt`.
+ */
+async function checkBadges(
+  triggerEvent: 'lesson_completed' | 'quiz_completed',
+) {
+  const tenantDb = createTenantDB(db, { schoolId: TEST_SCHOOL_ID });
+  return checkBadgeConditions({
+    db: tenantDb,
+    user: studentUser,
+    tenant: { schoolId: TEST_SCHOOL_ID },
+    input: { userId: STUDENT_ID, triggerEvent },
+  });
+}
+
+async function evalAll() {
+  const tenantDb = createTenantDB(db, { schoolId: TEST_SCHOOL_ID });
+  return evaluateAllBadges(tenantDb, STUDENT_ID);
+}
+
 describe('badges (integration)', () => {
   beforeEach(async () => {
     await cleanupFixtures();
@@ -186,34 +222,22 @@ describe('badges (integration)', () => {
       const lessonId = await seedLesson({ slug: 'first-steps-lesson', order: 1 });
       await markLessonCompleted(lessonId);
 
-      const { newlyUnlocked } = await checkBadgeConditions(STUDENT_ID, {
-        type: 'lesson_completed',
-        studentId: STUDENT_ID,
-      });
+      const { newlyUnlocked } = await checkBadges('lesson_completed');
 
       expect(newlyUnlocked).toContain('FIRST_STEPS');
     });
 
     it('does not unlock with zero completed lessons', async () => {
-      const { newlyUnlocked } = await checkBadgeConditions(STUDENT_ID, {
-        type: 'lesson_completed',
-        studentId: STUDENT_ID,
-      });
+      const { newlyUnlocked } = await checkBadges('lesson_completed');
       expect(newlyUnlocked).not.toContain('FIRST_STEPS');
     });
 
     it('does not re-unlock if already awarded', async () => {
       const lessonId = await seedLesson({ slug: 'first-steps-dup', order: 1 });
       await markLessonCompleted(lessonId);
-      await checkBadgeConditions(STUDENT_ID, {
-        type: 'lesson_completed',
-        studentId: STUDENT_ID,
-      });
+      await checkBadges('lesson_completed');
 
-      const second = await checkBadgeConditions(STUDENT_ID, {
-        type: 'lesson_completed',
-        studentId: STUDENT_ID,
-      });
+      const second = await checkBadges('lesson_completed');
 
       expect(second.newlyUnlocked).not.toContain('FIRST_STEPS');
       const allAchievements = await db
@@ -234,10 +258,7 @@ describe('badges (integration)', () => {
       const lessonId = await seedLesson({ slug: 'perfect-lesson', order: 1 });
       await insertAttempt({ lessonId, score: 10, maxScore: 10, attemptNumber: 1 });
 
-      const { newlyUnlocked } = await checkBadgeConditions(STUDENT_ID, {
-        type: 'quiz_completed',
-        studentId: STUDENT_ID,
-      });
+      const { newlyUnlocked } = await checkBadges('quiz_completed');
 
       expect(newlyUnlocked).toContain('PERFECT_SCORE');
     });
@@ -246,10 +267,7 @@ describe('badges (integration)', () => {
       const lessonId = await seedLesson({ slug: 'perfect-partial', order: 1 });
       await insertAttempt({ lessonId, score: 9, maxScore: 10, attemptNumber: 1 });
 
-      const { newlyUnlocked } = await checkBadgeConditions(STUDENT_ID, {
-        type: 'quiz_completed',
-        studentId: STUDENT_ID,
-      });
+      const { newlyUnlocked } = await checkBadges('quiz_completed');
 
       expect(newlyUnlocked).not.toContain('PERFECT_SCORE');
     });
@@ -264,10 +282,7 @@ describe('badges (integration)', () => {
       });
       await markLessonCompleted(lessonId);
 
-      const { newlyUnlocked } = await checkBadgeConditions(STUDENT_ID, {
-        type: 'lesson_completed',
-        studentId: STUDENT_ID,
-      });
+      const { newlyUnlocked } = await checkBadges('lesson_completed');
 
       expect(newlyUnlocked).toContain('LAB_PARTNER');
     });
@@ -276,10 +291,7 @@ describe('badges (integration)', () => {
       const lessonId = await seedLesson({ slug: 'non-lab-lesson', order: 1 });
       await markLessonCompleted(lessonId);
 
-      const { newlyUnlocked } = await checkBadgeConditions(STUDENT_ID, {
-        type: 'lesson_completed',
-        studentId: STUDENT_ID,
-      });
+      const { newlyUnlocked } = await checkBadges('lesson_completed');
 
       expect(newlyUnlocked).not.toContain('LAB_PARTNER');
     });
@@ -296,10 +308,7 @@ describe('badges (integration)', () => {
       await markLessonCompleted(l1);
       await markLessonCompleted(l2);
 
-      const { newlyUnlocked } = await checkBadgeConditions(STUDENT_ID, {
-        type: 'lesson_completed',
-        studentId: STUDENT_ID,
-      });
+      const { newlyUnlocked } = await checkBadges('lesson_completed');
 
       expect(newlyUnlocked).toContain('UNIT_CHAMPION');
     });
@@ -313,10 +322,7 @@ describe('badges (integration)', () => {
       await attachLessonToUnit(unitId, l2);
       await markLessonCompleted(l1);
 
-      const { newlyUnlocked } = await checkBadgeConditions(STUDENT_ID, {
-        type: 'lesson_completed',
-        studentId: STUDENT_ID,
-      });
+      const { newlyUnlocked } = await checkBadges('lesson_completed');
 
       expect(newlyUnlocked).not.toContain('UNIT_CHAMPION');
     });
@@ -325,28 +331,19 @@ describe('badges (integration)', () => {
   describe('STREAK_WARRIOR / DEDICATED_LEARNER', () => {
     it('STREAK_WARRIOR unlocks at streak=7', async () => {
       await setStreak(7);
-      const { newlyUnlocked } = await checkBadgeConditions(STUDENT_ID, {
-        type: 'quiz_completed',
-        studentId: STUDENT_ID,
-      });
+      const { newlyUnlocked } = await checkBadges('quiz_completed');
       expect(newlyUnlocked).toContain('STREAK_WARRIOR');
     });
 
     it('STREAK_WARRIOR does not unlock at streak=6', async () => {
       await setStreak(6);
-      const { newlyUnlocked } = await checkBadgeConditions(STUDENT_ID, {
-        type: 'quiz_completed',
-        studentId: STUDENT_ID,
-      });
+      const { newlyUnlocked } = await checkBadges('quiz_completed');
       expect(newlyUnlocked).not.toContain('STREAK_WARRIOR');
     });
 
     it('DEDICATED_LEARNER unlocks at streak=30', async () => {
       await setStreak(30);
-      const { newlyUnlocked } = await checkBadgeConditions(STUDENT_ID, {
-        type: 'quiz_completed',
-        studentId: STUDENT_ID,
-      });
+      const { newlyUnlocked } = await checkBadges('quiz_completed');
       expect(newlyUnlocked).toContain('DEDICATED_LEARNER');
     });
   });
@@ -363,10 +360,7 @@ describe('badges (integration)', () => {
         });
       }
 
-      const { newlyUnlocked } = await checkBadgeConditions(STUDENT_ID, {
-        type: 'quiz_completed',
-        studentId: STUDENT_ID,
-      });
+      const { newlyUnlocked } = await checkBadges('quiz_completed');
       expect(newlyUnlocked).toContain('QUIZ_MASTER');
     });
 
@@ -375,10 +369,7 @@ describe('badges (integration)', () => {
         const lid = await seedLesson({ slug: `se-${i}`, order: i });
         await markLessonCompleted(lid);
       }
-      const { newlyUnlocked } = await checkBadgeConditions(STUDENT_ID, {
-        type: 'lesson_completed',
-        studentId: STUDENT_ID,
-      });
+      const { newlyUnlocked } = await checkBadges('lesson_completed');
       expect(newlyUnlocked).toContain('SCIENCE_EXPLORER');
     });
 
@@ -392,10 +383,7 @@ describe('badges (integration)', () => {
           attemptNumber: 1,
         });
       }
-      const { newlyUnlocked } = await checkBadgeConditions(STUDENT_ID, {
-        type: 'quiz_completed',
-        studentId: STUDENT_ID,
-      });
+      const { newlyUnlocked } = await checkBadges('quiz_completed');
       expect(newlyUnlocked).toContain('FAST_LEARNER');
     });
   });
@@ -404,7 +392,7 @@ describe('badges (integration)', () => {
     it('never unlocks (deferred, requires language preference tracking)', async () => {
       const lessonId = await seedLesson({ slug: 'bili-lesson', order: 1 });
       await markLessonCompleted(lessonId);
-      const all = await evaluateAllBadges(STUDENT_ID);
+      const all = await evalAll();
       expect(all).not.toContain('BILINGUAL_SCHOLAR');
     });
   });
@@ -421,10 +409,7 @@ describe('badges (integration)', () => {
       await insertAttempt({ lessonId, score: 10, maxScore: 10, attemptNumber: 1 });
       // adds PERFECT_SCORE too
 
-      const { newlyUnlocked, achievements: created } = await checkBadgeConditions(
-        STUDENT_ID,
-        { type: 'lesson_completed', studentId: STUDENT_ID }
-      );
+      const { newlyUnlocked, achievements: created } = await checkBadges('lesson_completed');
 
       expect(newlyUnlocked.sort()).toEqual(
         ['FIRST_STEPS', 'LAB_PARTNER', 'PERFECT_SCORE'].sort()
@@ -444,15 +429,9 @@ describe('badges (integration)', () => {
         order: 1,
       });
       await markLessonCompleted(lessonId);
-      await checkBadgeConditions(STUDENT_ID, {
-        type: 'lesson_completed',
-        studentId: STUDENT_ID,
-      });
+      await checkBadges('lesson_completed');
 
-      const second = await checkBadgeConditions(STUDENT_ID, {
-        type: 'lesson_completed',
-        studentId: STUDENT_ID,
-      });
+      const second = await checkBadges('lesson_completed');
 
       expect(second.newlyUnlocked).toHaveLength(0);
       expect(second.achievements).toHaveLength(0);
@@ -470,7 +449,7 @@ describe('badges (integration)', () => {
       await insertAttempt({ lessonId, score: 10, maxScore: 10, attemptNumber: 1 });
       await setStreak(7);
 
-      const list = await evaluateAllBadges(STUDENT_ID);
+      const list = await evalAll();
       expect(list).toEqual(
         expect.arrayContaining([
           'FIRST_STEPS',

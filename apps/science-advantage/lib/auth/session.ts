@@ -14,14 +14,19 @@ const SESSION_DURATION_SECONDS = 7 * 24 * 60 * 60;
 export { SESSION_COOKIE_NAME };
 
 /**
- * Create a new session for a user (delegates to shared auth with local db)
+ * Create a new session for a user (delegates to shared auth with local db).
+ *
+ * Exempted from the SP-3 TenantDB-adoption guard: the `sessions` table is
+ * registered as EXEMPT in `packages/domain/src/tenant-registry.ts` (auth
+ * infrastructure is intentionally global — sessions are not school-scoped).
+ * The raw `db` import is the documented bypass for this EXEMPT table.
  */
 export async function createSession(userId: string): Promise<CreateSessionResult> {
   return sharedCreateSession(db, userId);
 }
 
 /**
- * Set session cookie
+ * Set session cookie.
  */
 export async function setSessionCookie(token: string): Promise<void> {
   const cookieStore = await cookies();
@@ -35,7 +40,7 @@ export async function setSessionCookie(token: string): Promise<void> {
 }
 
 /**
- * Get session token from cookie
+ * Get session token from cookie.
  */
 export async function getSessionToken(): Promise<string | null> {
   const cookieStore = await cookies();
@@ -43,7 +48,7 @@ export async function getSessionToken(): Promise<string | null> {
 }
 
 /**
- * Delete session cookie
+ * Delete session cookie.
  */
 export async function deleteSessionCookie(): Promise<void> {
   const cookieStore = await cookies();
@@ -51,7 +56,7 @@ export async function deleteSessionCookie(): Promise<void> {
 }
 
 /**
- * Get current session from cookie (Next.js convenience wrapper)
+ * Get current session from cookie (Next.js convenience wrapper).
  */
 export async function getCurrentSession(): Promise<Session | null> {
   const token = await getSessionToken();

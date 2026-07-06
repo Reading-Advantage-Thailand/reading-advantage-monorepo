@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
+import { createTenantDB } from '@reading-advantage/domain';
 import { and, db, eq, inArray, sql } from '@reading-advantage/db';
 import {
   scienceAttempts,
@@ -185,6 +186,31 @@ async function seedScenario(args: {
   return { attemptId: attempt.id, standardIds };
 }
 
+/**
+ * Phase 1 ST-2: helper that wraps `processMasteryRun` with the secured
+ * `{ db, user, tenant, input }` context. Mirrors how the quiz route wires
+ * the function via `createTenantDB`.
+ */
+async function callProcessMasteryRun(args: { attemptId: string; studentId: string }) {
+  const tenantDb = createTenantDB(db, { schoolId: TEST_SCHOOL_ID });
+  const user = {
+    id: args.studentId,
+    username: args.studentId,
+    name: args.studentId,
+    role: 'STUDENT' as const,
+    schoolId: TEST_SCHOOL_ID,
+    xp: 0,
+    level: 1,
+    cefrLevel: 'A1',
+  };
+  return processMasteryRun({
+    db: tenantDb,
+    user,
+    tenant: { schoolId: TEST_SCHOOL_ID },
+    input: args,
+  });
+}
+
 describe('processMasteryRun (integration)', () => {
   beforeEach(async () => {
     await cleanup();
@@ -193,7 +219,7 @@ describe('processMasteryRun (integration)', () => {
   });
 
   it('returns FAILED with no-MasteryRun message when run missing', async () => {
-    const result = await processMasteryRun({
+    const result = await callProcessMasteryRun({
       attemptId: '00000000-0000-0000-0000-000000000000',
       studentId: STUDENT_ID,
     });
@@ -236,7 +262,7 @@ describe('processMasteryRun (integration)', () => {
       schoolId: TEST_SCHOOL_ID,
     });
 
-    const result = await processMasteryRun({
+    const result = await callProcessMasteryRun({
       attemptId: attempt.id,
       studentId: STUDENT_ID,
     });
@@ -261,7 +287,7 @@ describe('processMasteryRun (integration)', () => {
       ],
     });
 
-    const result = await processMasteryRun({
+    const result = await callProcessMasteryRun({
       attemptId,
       studentId: STUDENT_ID,
     });
@@ -294,7 +320,7 @@ describe('processMasteryRun (integration)', () => {
       questions: [{ correct: true, points: 1, standardCount: 1 }],
     });
 
-    await processMasteryRun({ attemptId, studentId: STUDENT_ID });
+    await callProcessMasteryRun({ attemptId, studentId: STUDENT_ID });
 
     const [run] = await db
       .select()
@@ -314,7 +340,7 @@ describe('processMasteryRun (integration)', () => {
       ],
     });
 
-    const result = await processMasteryRun({
+    const result = await callProcessMasteryRun({
       attemptId,
       studentId: STUDENT_ID,
     });

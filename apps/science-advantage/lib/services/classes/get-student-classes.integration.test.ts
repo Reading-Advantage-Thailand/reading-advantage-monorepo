@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { createTenantDB } from '@reading-advantage/domain';
 import { db, sql } from '@reading-advantage/db';
 import {
   scienceClasses,
@@ -59,6 +60,35 @@ async function seedClass(opts: {
   return c;
 }
 
+/**
+ * Phase 1 ST-2: helper that wraps `getStudentEnrolledClasses` with the
+ * secured `{ db, user, tenant, input }` context. Mirrors how the student
+ * route wires the function via `createTenantDB`.
+ */
+async function callGetStudentEnrolledClasses(
+  studentId: string,
+  actorId: string = studentId,
+  actorRole: 'STUDENT' | 'TEACHER' | 'ADMIN' | 'SYSTEM' = 'STUDENT',
+) {
+  const tenantDb = createTenantDB(db, { schoolId: TEST_SCHOOL_ID });
+  const user = {
+    id: actorId,
+    username: actorId,
+    name: actorId,
+    role: actorRole,
+    schoolId: TEST_SCHOOL_ID,
+    xp: 0,
+    level: 1,
+    cefrLevel: 'A1',
+  };
+  return getStudentEnrolledClasses({
+    db: tenantDb,
+    user,
+    tenant: { schoolId: TEST_SCHOOL_ID },
+    input: { studentId },
+  });
+}
+
 describe('getStudentEnrolledClasses - Integration', () => {
   beforeEach(async () => {
     await cleanupFixtures();
@@ -71,14 +101,12 @@ describe('getStudentEnrolledClasses - Integration', () => {
 
   it('returns an empty array when the student has no enrollments', async () => {
     const student = await seedUser(`${TEST_PREFIX}-empty-student`, 'STUDENT');
-    const result = await getStudentEnrolledClasses(student.id);
+    const result = await callGetStudentEnrolledClasses(student.id);
     expect(result).toEqual([]);
   });
 
   it('returns an empty array for a non-existent student id', async () => {
-    const result = await getStudentEnrolledClasses(
-      `${TEST_PREFIX}-does-not-exist`
-    );
+    const result = await callGetStudentEnrolledClasses(`${TEST_PREFIX}-does-not-exist`);
     expect(result).toEqual([]);
   });
 
@@ -103,7 +131,7 @@ describe('getStudentEnrolledClasses - Integration', () => {
           schoolId: TEST_SCHOOL_ID,
       });
 
-    const result = await getStudentEnrolledClasses(student.id);
+    const result = await callGetStudentEnrolledClasses(student.id);
     expect(result).toHaveLength(1);
     expect(result[0]).toEqual({
       id: cls.id,
@@ -125,6 +153,7 @@ describe('getStudentEnrolledClasses - Integration', () => {
         displayUsername: `${TEST_PREFIX}-teacher-nameless`,
         email: `${TEST_PREFIX}-teacher-nameless@example.com`,
         role: 'TEACHER',
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning();
     const student = await seedUser(`${TEST_PREFIX}-student-2`, 'STUDENT');
@@ -140,7 +169,7 @@ describe('getStudentEnrolledClasses - Integration', () => {
           schoolId: TEST_SCHOOL_ID,
       });
 
-    const result = await getStudentEnrolledClasses(student.id);
+    const result = await callGetStudentEnrolledClasses(student.id);
     expect(result).toHaveLength(1);
     expect(result[0].teacherName).toBe('Teacher');
   });
@@ -187,7 +216,7 @@ describe('getStudentEnrolledClasses - Integration', () => {
       },
     ]);
 
-    const result = await getStudentEnrolledClasses(student.id);
+    const result = await callGetStudentEnrolledClasses(student.id);
     expect(result.map((c) => c.name)).toEqual([
       'Newest Class',
       'Middle Class',
@@ -226,11 +255,11 @@ describe('getStudentEnrolledClasses - Integration', () => {
       },
     ]);
 
-    const resultA = await getStudentEnrolledClasses(studentA.id);
+    const resultA = await callGetStudentEnrolledClasses(studentA.id);
     expect(resultA).toHaveLength(1);
     expect(resultA[0].name).toBe('Class A');
 
-    const resultB = await getStudentEnrolledClasses(studentB.id);
+    const resultB = await callGetStudentEnrolledClasses(studentB.id);
     expect(resultB).toHaveLength(1);
     expect(resultB[0].name).toBe('Class B');
   });

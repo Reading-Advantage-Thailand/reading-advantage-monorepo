@@ -67,7 +67,36 @@ export async function POST(
     const result = await submitAttempt({
       user: session.user, tenant: { schoolId: session.user.schoolId },
       input: { attemptId: body.attemptId, responses: body.responses as Parameters<typeof submitAttempt>[0]['input']['responses'] },
-      deps: { gradeAnswer, calculateXpForQuiz, awardXp, updateStreakForProfile, checkBadgeConditions: checkBadgeConditions as Parameters<typeof submitAttempt>[0]['deps']['checkBadgeConditions'], processMasteryRun },
+      deps: {
+        gradeAnswer,
+        calculateXpForQuiz,
+        // Phase 1 ST-1: gamification/service functions accept
+        // `{ db, user, tenant, input }` and call `assertCan` + `createTenantDB`
+        // internally. The route is transport-thin and just forwards the
+        // secured context.
+        awardXp: (ctx) =>
+          awardXp({
+            db: ctx.db,
+            user: ctx.user,
+            tenant: ctx.tenant,
+            input: ctx.input,
+          }) as ReturnType<typeof awardXp>,
+        updateStreakForProfile: (ctx) =>
+          updateStreakForProfile({
+            db: ctx.db,
+            user: ctx.user,
+            tenant: ctx.tenant,
+            input: ctx.input,
+          }) as ReturnType<typeof updateStreakForProfile>,
+        checkBadgeConditions: ((ctx: Parameters<typeof checkBadgeConditions>[0]) =>
+          checkBadgeConditions(ctx)) as Parameters<
+          typeof submitAttempt
+        >[0]['deps']['checkBadgeConditions'],
+        processMasteryRun: ((ctx: Parameters<typeof processMasteryRun>[0]) =>
+          processMasteryRun(ctx)) as Parameters<
+          typeof submitAttempt
+        >[0]['deps']['processMasteryRun'],
+      },
     });
     return NextResponse.json(result.body, { status: result.status });
   } catch (error) {

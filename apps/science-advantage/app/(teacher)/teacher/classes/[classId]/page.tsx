@@ -1,5 +1,7 @@
 import { cache } from 'react';
 import { notFound, redirect } from 'next/navigation';
+import { createTenantDB } from '@reading-advantage/domain';
+import { db } from '@reading-advantage/db';
 
 import { hasRole, requireAuth } from '@/lib/auth/server';
 import { logger } from '@/lib/observability/logger';
@@ -13,13 +15,23 @@ import { ClassInterventionSummary } from '@/components/features/teacher/class-de
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { getStandardsAlignmentLabel } from '@/lib/utils/class-format';
 
-const getClassDetail = cache(async (classId: string) => getClassDetailWithCurriculum(classId));
+const getClassDetail = cache(async (classId: string, user: { id: string; schoolId: string | null }) => {
+  const tenant = { schoolId: user.schoolId };
+  const tenantDb = createTenantDB(db, tenant);
+  return getClassDetailWithCurriculum({
+    db: tenantDb,
+    user: user as unknown as Parameters<typeof getClassDetailWithCurriculum>[0]['user'],
+    tenant,
+    input: { classId },
+  });
+});
 
 type RouteParams = Promise<{ classId: string }>;
 
 export async function generateMetadata({ params }: { params: RouteParams }) {
+  const session = await requireAuth();
   const { classId } = await params;
-  const classDetail = await getClassDetail(classId);
+  const classDetail = await getClassDetail(classId, session.user);
 
   if (!classDetail) {
     return { title: 'Class Not Found' };
@@ -38,7 +50,7 @@ export default async function TeacherClassDetailPage({ params }: { params: Route
     return redirect(`/student/classes/${classId}`);
   }
 
-  const classDetail = await getClassDetail(classId);
+  const classDetail = await getClassDetail(classId, session.user);
 
   if (!classDetail) {
     return notFound();

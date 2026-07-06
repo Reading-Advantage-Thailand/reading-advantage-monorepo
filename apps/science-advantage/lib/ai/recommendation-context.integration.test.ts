@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { createTenantDB } from '@reading-advantage/domain';
 import { db, sql } from '@reading-advantage/db';
 import {
   scienceAttempts,
@@ -19,6 +20,15 @@ import {
 
 import { buildRecommendationContext } from './recommendation-context';
 import type { AttemptWithRelations } from './recommendation-context';
+
+/**
+ * Phase 1 SP-3: helper that wraps `buildRecommendationContext` with a
+ * tenant-scoped db (matches the new `buildRecommendationContext` signature).
+ */
+function callBuildRecommendationContext(attempt: AttemptWithRelations) {
+  const tenantDb = createTenantDB(db, { schoolId: TEST_SCHOOL_ID });
+  return buildRecommendationContext({ db: tenantDb, attempt });
+}
 
 const TEST_SCHOOL_ID = '00000000-0000-0000-0000-000000000099';
 
@@ -254,7 +264,7 @@ describe('buildRecommendationContext - Integration', () => {
   }
 
   it('builds context with mastery snapshot ordered by ascending mastery', async () => {
-    const result = await buildRecommendationContext({ attempt: buildAttempt() });
+    const result = await callBuildRecommendationContext(buildAttempt());
 
     expect(result.traceId).toMatch(/^rec_/);
     expect(result.studentId).toBe(studentId);
@@ -273,12 +283,12 @@ describe('buildRecommendationContext - Integration', () => {
   });
 
   it('exposes a non-zero masteryVersion = max(updatedAt).getTime()', async () => {
-    const result = await buildRecommendationContext({ attempt: buildAttempt() });
+    const result = await callBuildRecommendationContext(buildAttempt());
     expect(result.masteryVersion).toBeGreaterThan(0);
   });
 
   it('returns candidate lessons from the attempt unit ordered by order, with completed flag', async () => {
-    const result = await buildRecommendationContext({ attempt: buildAttempt() });
+    const result = await callBuildRecommendationContext(buildAttempt());
 
     expect(result.candidateLessons).toHaveLength(2);
     expect(result.candidateLessons.map((l) => l.title)).toEqual([
@@ -297,7 +307,7 @@ describe('buildRecommendationContext - Integration', () => {
   });
 
   it('summarizes the attempt score, question counts, and incorrect standards', async () => {
-    const result = await buildRecommendationContext({ attempt: buildAttempt() });
+    const result = await callBuildRecommendationContext(buildAttempt());
 
     expect(result.attemptSummary.attemptId).toBe('attempt-rec-1');
     expect(result.attemptSummary.lessonId).toBe(attemptedLessonId);
@@ -316,7 +326,7 @@ describe('buildRecommendationContext - Integration', () => {
         curriculumUnits: [],
       },
     });
-    const result = await buildRecommendationContext({ attempt: attemptNoUnits });
+    const result = await callBuildRecommendationContext(attemptNoUnits);
 
     expect(result.candidateLessons).toEqual([]);
     expect(result.curriculumTitle).toBeNull();
@@ -326,7 +336,7 @@ describe('buildRecommendationContext - Integration', () => {
 
   it('returns scorePercentage=null when maxScore is 0', async () => {
     const attempt = buildAttempt({ score: 0, maxScore: 0 });
-    const result = await buildRecommendationContext({ attempt });
+    const result = await callBuildRecommendationContext(attempt);
     expect(result.attemptSummary.scorePercentage).toBeNull();
   });
 });

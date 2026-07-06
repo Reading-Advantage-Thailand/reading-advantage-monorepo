@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
+import { createTenantDB } from '@reading-advantage/domain';
 import { db, eq, sql } from '@reading-advantage/db';
 import { gamificationProfiles, users,
   schools
@@ -22,6 +23,7 @@ async function seedProfile(initialXp: number, initialLevel: number) {
     displayUsername: 'XpTester',
     email: 'xp-itest@example.com',
     role: 'STUDENT',
+    schoolId: TEST_SCHOOL_ID,
   });
 
   const [profile] = await db
@@ -38,6 +40,17 @@ async function seedProfile(initialXp: number, initialLevel: number) {
   return profile;
 }
 
+const studentUser = {
+  id: TEST_USER_ID,
+  username: TEST_USERNAME,
+  name: 'XP Test User',
+  role: 'STUDENT' as const,
+  schoolId: TEST_SCHOOL_ID,
+  xp: 0,
+  level: 1,
+  cefrLevel: 'A1',
+};
+
 describe('awardXp (integration)', () => {
   beforeEach(async () => {
     await cleanupFixtures();
@@ -46,8 +59,14 @@ describe('awardXp (integration)', () => {
 
   it('adds the awarded amount to the profile xp and recomputes level', async () => {
     const profile = await seedProfile(50, 1);
+    const tenantDb = createTenantDB(db, { schoolId: TEST_SCHOOL_ID });
 
-    const result = await awardXp(profile.id, 75);
+    const result = await awardXp({
+      db: tenantDb,
+      user: studentUser,
+      tenant: { schoolId: TEST_SCHOOL_ID },
+      input: { profileId: profile.id, amount: 75 },
+    });
 
     expect(result.xp).toBe(125);
     expect(result.level).toBe(2);
@@ -65,8 +84,14 @@ describe('awardXp (integration)', () => {
 
   it('returns levelUp=false when level does not change', async () => {
     const profile = await seedProfile(100, 2);
+    const tenantDb = createTenantDB(db, { schoolId: TEST_SCHOOL_ID });
 
-    const result = await awardXp(profile.id, 50);
+    const result = await awardXp({
+      db: tenantDb,
+      user: studentUser,
+      tenant: { schoolId: TEST_SCHOOL_ID },
+      input: { profileId: profile.id, amount: 50 },
+    });
 
     expect(result.xp).toBe(150);
     expect(result.level).toBe(2);
@@ -74,8 +99,15 @@ describe('awardXp (integration)', () => {
   });
 
   it('throws when the profile does not exist', async () => {
+    const tenantDb = createTenantDB(db, { schoolId: TEST_SCHOOL_ID });
+
     await expect(
-      awardXp('00000000-0000-0000-0000-000000000000', 10)
+      awardXp({
+        db: tenantDb,
+        user: studentUser,
+        tenant: { schoolId: TEST_SCHOOL_ID },
+        input: { profileId: '00000000-0000-0000-0000-000000000000', amount: 10 },
+      }),
     ).rejects.toThrow(/GamificationProfile not found/);
   });
 });

@@ -122,13 +122,33 @@ export async function submitAttempt({
     attemptId: string;
     responses: Array<{ questionId: string; studentAnswer: unknown; timeSpentSeconds?: number; answeredAt?: string; order?: number }>;
   };
-  deps: {
+deps: {
     gradeAnswer: (questionType: string, studentAnswer: unknown, correctAnswer: unknown) => boolean;
     calculateXpForQuiz: (percentage: number, attemptNumber: number) => { baseXp: number; firstAttemptBonus: number; totalXp: number };
-    awardXp: (profileId: string, xp: number) => Promise<{ xp: number; level: number; levelName: string; levelUp: boolean }>;
-    updateStreakForProfile: (profileId: string, date: Date) => Promise<{ streak: number; milestoneBonus: number }>;
-    checkBadgeConditions: (userId: string, context: { type: string; score: number; attemptNumber: number; lessonId: string; studentId: string }) => Promise<{ newlyUnlocked: unknown[]; achievements: unknown[] }>;
-    processMasteryRun: (input: { attemptId: string; studentId: string }) => Promise<{ status: string; updatedCount: number }>;
+    awardXp: (ctx: {
+      db: import("@reading-advantage/db").DB;
+      user: import("@reading-advantage/auth").UserContext;
+      tenant: import("@reading-advantage/auth").Tenant;
+      input: { profileId: string; amount: number };
+    }) => Promise<{ xp: number; level: number; levelName: string; levelUp: boolean }>;
+    updateStreakForProfile: (ctx: {
+      db: import("@reading-advantage/db").DB;
+      user: import("@reading-advantage/auth").UserContext;
+      tenant: import("@reading-advantage/auth").Tenant;
+      input: { profileId: string; currentTime: Date };
+    }) => Promise<{ streak: number; milestoneBonus: number }>;
+    checkBadgeConditions: (ctx: {
+      db: import("@reading-advantage/db").DB;
+      user: import("@reading-advantage/auth").UserContext;
+      tenant: import("@reading-advantage/auth").Tenant;
+      input: { userId: string; triggerEvent: "lesson_completed" | "quiz_completed" };
+    }) => Promise<{ newlyUnlocked: unknown[]; achievements: unknown[] }>;
+    processMasteryRun: (ctx: {
+      db: import("@reading-advantage/db").DB;
+      user: import("@reading-advantage/auth").UserContext;
+      tenant: import("@reading-advantage/auth").Tenant;
+      input: { attemptId: string; studentId: string };
+    }) => Promise<{ status: string; updatedCount: number }>;
   };
 }): Promise<QuizHttpResponse> {
   assertCan(user, "quiz:submit", tenant);
@@ -155,7 +175,7 @@ export async function submitAttempt({
     const pointsEarned = isCorrect ? question.points : 0;
     totalScore += pointsEarned;
     questionResponsesToCreate.push({ attemptId, questionId: question.id, studentAnswer: response.studentAnswer, isCorrect, timeSpentSeconds: response.timeSpentSeconds || 0, answeredAt: response.answeredAt ? new Date(response.answeredAt) : new Date(), order: response.order, schoolId: tenant.schoolId! });
-    breakdown.push({ questionId: question.id, questionText: question.text, studentAnswer: response.studentAnswer, correctAnswer: question.correctAnswer, isCorrect, points: pointsEarned, timeSpentSeconds: response.timeSpentSeconds || 0 });
+    breakdown.push({ questionId: question.id, questionText: question.text, studentAnswer: response.studentAnswer, correctAnswer: question.correctAnswer, isCorrect, pointsEarned, timeSpentSeconds: response.timeSpentSeconds || 0 });
   }
 
   const percentage = (totalScore / attempt.maxScore) * 100;
@@ -187,17 +207,17 @@ export async function submitAttempt({
   });
 
   await tenantDb.insert(scienceMasteryRuns).values({ attemptId, studentId: user.id, schoolId: tenant.schoolId!, status: "PENDING", updatedCount: 0 });
-  const masteryResult = await deps.processMasteryRun({ attemptId, studentId: user.id });
+  const masteryResult = await deps.processMasteryRun({ db: tenantDb, user, tenant, input: { attemptId, studentId: user.id } });
 
   const { baseXp, firstAttemptBonus, totalXp } = deps.calculateXpForQuiz(percentage, attempt.attemptNumber);
   let [profile] = await tenantDb.select().from(gamificationProfiles).where(eq(gamificationProfiles.userId, user.id)).limit(1);
   if (!profile) {
     [profile] = await tenantDb.insert(gamificationProfiles).values({ userId: user.id, schoolId: tenant.schoolId!, xp: 0, level: 1, streak: 0 }).returning();
   }
-  const xpResult = await deps.awardXp(profile.id, totalXp);
-  const streakResult = await deps.updateStreakForProfile(profile.id, new Date());
+  const xpResult = await deps.awardXp({ db: tenantDb, user, tenant, input: { profileId: profile.id, amount: totalXp } });
+  const streakResult = await deps.updateStreakForProfile({ db: tenantDb, user, tenant, input: { profileId: profile.id, currentTime: new Date() } });
   const totalXpAwarded = totalXp + streakResult.milestoneBonus;
-  const badgeResult = await deps.checkBadgeConditions(user.id, { type: "quiz_completed", score: percentage, attemptNumber: attempt.attemptNumber, lessonId: attempt.lessonId, studentId: user.id });
+  const badgeResult = await deps.checkBadgeConditions({ db: tenantDb, user, tenant, input: { userId: user.id, triggerEvent: "quiz_completed" } });
 
   return {
     status: 200,

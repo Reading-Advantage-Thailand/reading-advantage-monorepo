@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { createTenantDB } from '@reading-advantage/domain';
 import { db, sql } from '@reading-advantage/db';
 import {
   scienceClasses,
@@ -195,12 +196,12 @@ describe('getClassDetailWithCurriculum - Integration', () => {
 
   it('returns null when the class does not exist', async () => {
     const missingId = '00000000-0000-0000-0000-000000000000';
-    const result = await getClassDetailWithCurriculum(missingId);
+    const result = await callGetClassDetail(missingId);
     expect(result).toBeNull();
   });
 
   it('returns class metadata plus student ids and student count', async () => {
-    const result = await getClassDetailWithCurriculum(classId);
+    const result = await callGetClassDetail(classId);
     expect(result).not.toBeNull();
     expect(result!.id).toBe(classId);
     expect(result!.name).toBe('Grade 4 Science');
@@ -216,7 +217,7 @@ describe('getClassDetailWithCurriculum - Integration', () => {
   });
 
   it('returns curriculum units in `order asc`, filtered by class framework + gradeLevel', async () => {
-    const result = await getClassDetailWithCurriculum(classId);
+    const result = await callGetClassDetail(classId);
     expect(result).not.toBeNull();
     expect(result!.curriculumUnits).toHaveLength(2);
     expect(result!.curriculumUnits.map((u) => u.title)).toEqual([
@@ -228,7 +229,7 @@ describe('getClassDetailWithCurriculum - Integration', () => {
   });
 
   it('returns lessons inside each unit in `order asc`', async () => {
-    const result = await getClassDetailWithCurriculum(classId);
+    const result = await callGetClassDetail(classId);
     expect(result).not.toBeNull();
 
     const unitOne = result!.curriculumUnits.find((u) => u.title === 'Unit One');
@@ -278,10 +279,39 @@ describe('getClassDetailWithCurriculum - Integration', () => {
       })
       .returning({ id: scienceClasses.id });
 
-    const result = await getClassDetailWithCurriculum(bareClassId);
+    const result = await callGetClassDetail(bareClassId);
     expect(result).not.toBeNull();
     expect(result!.students).toEqual([]);
     expect(result!.studentCount).toBe(0);
     expect(result!.curriculumUnits).toEqual([]);
   });
 });
+
+/**
+ * Phase 1 ST-2: helper that wraps `getClassDetailWithCurriculum` with the
+ * secured `{ db, user, tenant, input }` context. Mirrors how the teacher
+ * routes wire the function via `createTenantDB`.
+ */
+function makeUser(id: string, role: 'STUDENT' | 'TEACHER' | 'ADMIN' | 'SYSTEM', schoolId: string) {
+  return {
+    id,
+    username: id,
+    name: id,
+    role,
+    schoolId,
+    xp: 0,
+    level: 1,
+    cefrLevel: 'A1',
+  };
+}
+
+async function callGetClassDetail(classId: string) {
+  const tenantDb = createTenantDB(db, { schoolId: TEST_SCHOOL_ID });
+  const teacherUser = makeUser(teacherId, 'TEACHER', TEST_SCHOOL_ID);
+  return getClassDetailWithCurriculum({
+    db: tenantDb,
+    user: teacherUser,
+    tenant: { schoolId: TEST_SCHOOL_ID },
+    input: { classId },
+  });
+}

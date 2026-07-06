@@ -97,15 +97,19 @@ vi.mock('next/headers', () => ({
   })),
 }));
 
-vi.mock('@reading-advantage/auth', () => ({
-  AuthError: class extends Error {
-    public readonly code = 'UNAUTHORIZED';
-    constructor(message: string) {
-      super(message);
-      this.name = 'AuthError';
-    }
-  },
-}));
+vi.mock('@reading-advantage/auth', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@reading-advantage/auth')>();
+  return {
+    ...actual,
+    AuthError: class extends Error {
+      public readonly code = 'UNAUTHORIZED';
+      constructor(message: string) {
+        super(message);
+        this.name = 'AuthError';
+      }
+    },
+  };
+});
 
 vi.mock('@/lib/auth/session', () => ({
   getCurrentSession: vi.fn(async () => ({

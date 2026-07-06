@@ -1,4 +1,4 @@
-import { and, db, eq, inArray } from '@reading-advantage/db';
+import { and, eq, inArray } from '@reading-advantage/db';
 import {
   scienceAttempts,
   scienceLessonStandards,
@@ -8,6 +8,13 @@ import {
   scienceQuizQuestions,
   scienceStandardMastery,
 } from '@reading-advantage/db/schema';
+import {
+  assertCan,
+  AuthError,
+  type Tenant,
+  type UserContext,
+} from '@reading-advantage/auth';
+import type { DB } from '@reading-advantage/db';
 
 import { clampMasteryLevel, recordStandardMastery } from './standard-mastery';
 
@@ -21,6 +28,13 @@ export type MasteryRunResult = {
   status: 'COMPLETED' | 'FAILED';
   updatedCount: number;
   lastError: string | null;
+};
+
+type ProcessMasteryRunContext = {
+  db: DB;
+  user: UserContext;
+  tenant: Tenant;
+  input: MasteryRunContext;
 };
 
 /** Compute a recency weight for an attempt based on how recently it was taken. */
@@ -37,18 +51,43 @@ function difficultyWeight(points: number): number {
 }
 
 /**
- * Process a mastery run by reading the attempt data, evaluating each question's
- * standards, and calling recordStandardMastery() for each affected standard.
+ * Phase 1 (ST-2) secured contract:
+ *   processMasteryRun({ db, user, tenant, input: { attemptId, studentId } })
  *
- * Status transitions: PENDING → PROCESSING → COMPLETED | FAILED
+ * Routes reads/writes through the caller-provided TenantDB and enforces
+ * `assertCan(user, 'mastery:write:own' | 'student:read', tenant)` plus a
+ * resource-level schoolId match on the mastery run.
+ *
+ * Status transitions: PENDING → PROCESSING → COMPLETED | FAILED.
+ *
+ * @kind write
+ * @throws {AuthError} When the caller is not provided, lacks the relevant
+ *   permission, or the mastery run belongs to a different school.
  */
 export async function processMasteryRun(
-  ctx: MasteryRunContext,
-  client: typeof db = db
+  ctx: ProcessMasteryRunContext,
 ): Promise<MasteryRunResult> {
-  const { attemptId, studentId } = ctx;
+  if (!ctx.user) {
+    throw new AuthError('Authenticated user required', 'UNAUTHORIZED');
+  }
+  const { db, user, tenant, input } = ctx;
+  const { attemptId, studentId } = input;
 
-  const [masteryRun] = await client
+  // Students can only run mastery for their own attempts; teachers/admins
+  // may run for any student in their tenant.
+  if (user.role === 'STUDENT') {
+    assertCan(user, 'mastery:write:own', tenant);
+    if (studentId !== user.id) {
+      throw new AuthError(
+        'Students may only process their own mastery runs',
+        'FORBIDDEN',
+      );
+    }
+  } else {
+    assertCan(user, 'student:read', tenant);
+  }
+
+  const [masteryRun] = await db
     .select()
     .from(scienceMasteryRuns)
     .where(eq(scienceMasteryRuns.attemptId, attemptId))
@@ -63,14 +102,21 @@ export async function processMasteryRun(
     };
   }
 
+  if (masteryRun.schoolId !== user.schoolId) {
+    throw new AuthError(
+      `User ${user.id} cannot process mastery run ${attemptId} from school ${masteryRun.schoolId}`,
+      'FORBIDDEN',
+    );
+  }
+
   // Transition to PROCESSING.
-  await client
+  await db
     .update(scienceMasteryRuns)
     .set({ status: 'PROCESSING', updatedAt: new Date() })
     .where(eq(scienceMasteryRuns.attemptId, attemptId));
 
   try {
-    const [attempt] = await client
+    const [attempt] = await db
       .select({
         id: scienceAttempts.id,
         studentId: scienceAttempts.studentId,
@@ -92,7 +138,7 @@ export async function processMasteryRun(
     }
 
     // Question rows for this attempt's lesson.
-    const quizQuestionRows = await client
+    const quizQuestionRows = await db
       .select({
         id: scienceQuizQuestions.id,
         points: scienceQuizQuestions.points,
@@ -103,7 +149,7 @@ export async function processMasteryRun(
     // Each question's attached standards (via junction).
     const questionIds = quizQuestionRows.map((q) => q.id);
     const standardLinks = questionIds.length
-      ? await client
+      ? await db
           .select({
             questionId: scienceQuestionStandards.questionId,
             standardId: scienceQuestionStandards.standardId,
@@ -133,7 +179,7 @@ export async function processMasteryRun(
     }
 
     // Question responses for this attempt.
-    const responses = await client
+    const responses = await db
       .select({
         questionId: scienceQuestionResponses.questionId,
         isCorrect: scienceQuestionResponses.isCorrect,
@@ -151,7 +197,7 @@ export async function processMasteryRun(
 
     // Existing mastery for these standards.
     const existingMasteryRows = standardIds.size
-      ? await client
+      ? await db
           .select({
             standardId: scienceStandardMastery.standardId,
             masteryLevel: scienceStandardMastery.masteryLevel,
@@ -164,15 +210,19 @@ export async function processMasteryRun(
               eq(scienceStandardMastery.studentId, studentId),
               inArray(
                 scienceStandardMastery.standardId,
-                Array.from(standardIds)
-              )
-            )
+                Array.from(standardIds),
+              ),
+            ),
           )
       : [];
 
     const existingMasteryMap = new Map<
       string,
-      { masteryLevel: number; evidenceCount: number; lastAssessedAt: Date }
+      {
+        masteryLevel: number;
+        evidenceCount: number;
+        lastAssessedAt: Date;
+      }
     >();
     for (const row of existingMasteryRows) {
       existingMasteryMap.set(row.standardId, {
@@ -197,7 +247,7 @@ export async function processMasteryRun(
       responses.length > 0
         ? responses.reduce(
             (latest, r) => (r.answeredAt > latest ? r.answeredAt : latest),
-            responses[0].answeredAt
+            responses[0].answeredAt,
           )
         : new Date();
 
@@ -251,7 +301,7 @@ export async function processMasteryRun(
       const previousEvidence = existing?.evidenceCount ?? 0;
       const evidenceDelta = previousEvidence + accumulator.evidence;
 
-      await recordStandardMastery(client, {
+      await recordStandardMastery(db, {
         studentId,
         standardId,
         schoolId: masteryRun.schoolId,
@@ -263,7 +313,7 @@ export async function processMasteryRun(
       updatedCount += 1;
     }
 
-    await client
+    await db
       .update(scienceMasteryRuns)
       .set({
         status: 'COMPLETED',
@@ -282,7 +332,7 @@ export async function processMasteryRun(
     const errorMessage =
       error instanceof Error ? error.message : String(error);
 
-    await client
+    await db
       .update(scienceMasteryRuns)
       .set({
         status: 'FAILED',

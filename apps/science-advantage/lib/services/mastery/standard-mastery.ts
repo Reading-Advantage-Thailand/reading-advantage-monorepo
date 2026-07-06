@@ -1,5 +1,6 @@
-import { db, sql } from '@reading-advantage/db';
+import { sql } from '@reading-advantage/db';
 import { scienceStandardMastery } from '@reading-advantage/db/schema';
+import type { DB } from '@reading-advantage/db';
 
 export type StandardMasteryWriteInput = {
   studentId: string;
@@ -41,10 +42,17 @@ export type StandardMasteryRow = typeof scienceStandardMastery.$inferSelect;
  * Upsert a standard mastery row while ensuring atomic evidence increments and
  * clamped mastery. Uses ON CONFLICT to make the write atomic so concurrent
  * writers do not race between SELECT/INSERT.
+ *
+ * The caller is responsible for tenant scoping (typically by passing a
+ * TenantDB as `client`).
+ *
+ * @param client - Drizzle database client or tenant-scoped equivalent.
+ * @param input - Standard mastery fields including the target schoolId.
+ * @returns The persisted row.
  */
 export const recordStandardMastery = async (
-  client: typeof db,
-  input: StandardMasteryWriteInput
+  client: DB,
+  input: StandardMasteryWriteInput,
 ): Promise<StandardMasteryRow> => {
   const { studentId, standardId, schoolId, lastAssessedAt } = input;
   const masteryLevel = clampMasteryLevel(input.masteryLevel);

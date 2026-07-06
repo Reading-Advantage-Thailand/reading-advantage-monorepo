@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
+import { createTenantDB } from '@reading-advantage/domain';
 import { db, eq, sql } from '@reading-advantage/db';
 import { gamificationProfiles, users,
   schools
@@ -24,6 +25,7 @@ async function seedProfile(args: {
     displayUsername: 'StreakTester',
     email: 'streak-itest@example.com',
     role: 'STUDENT',
+    schoolId: TEST_SCHOOL_ID,
   });
 
   const [profile] = await db
@@ -41,6 +43,17 @@ async function seedProfile(args: {
   return profile;
 }
 
+const studentUser = {
+  id: TEST_USER_ID,
+  username: TEST_USER_ID,
+  name: 'Streak Test User',
+  role: 'STUDENT' as const,
+  schoolId: TEST_SCHOOL_ID,
+  xp: 0,
+  level: 1,
+  cefrLevel: 'A1',
+};
+
 describe('updateStreakForProfile (integration)', () => {
   beforeEach(async () => {
     await cleanupFixtures();
@@ -50,8 +63,14 @@ describe('updateStreakForProfile (integration)', () => {
   it('starts the streak at 1 when lastActiveAt is null', async () => {
     const profile = await seedProfile({ streak: 0, lastActiveAt: null });
     const now = new Date('2026-05-24T10:00:00Z');
+    const tenantDb = createTenantDB(db, { schoolId: TEST_SCHOOL_ID });
 
-    const result = await updateStreakForProfile(profile.id, now);
+    const result = await updateStreakForProfile({
+      db: tenantDb,
+      user: studentUser,
+      tenant: { schoolId: TEST_SCHOOL_ID },
+      input: { profileId: profile.id, currentTime: now },
+    });
 
     expect(result.streak).toBe(1);
     expect(result.milestoneBonus).toBe(0);
@@ -69,8 +88,14 @@ describe('updateStreakForProfile (integration)', () => {
     const yesterday = new Date('2026-05-23T10:00:00Z');
     const profile = await seedProfile({ streak: 6, lastActiveAt: yesterday });
     const now = new Date('2026-05-24T10:00:00Z');
+    const tenantDb = createTenantDB(db, { schoolId: TEST_SCHOOL_ID });
 
-    const result = await updateStreakForProfile(profile.id, now);
+    const result = await updateStreakForProfile({
+      db: tenantDb,
+      user: studentUser,
+      tenant: { schoolId: TEST_SCHOOL_ID },
+      input: { profileId: profile.id, currentTime: now },
+    });
 
     expect(result.streak).toBe(7);
     expect(result.milestoneBonus).toBe(50);
@@ -82,16 +107,29 @@ describe('updateStreakForProfile (integration)', () => {
       lastActiveAt: new Date('2026-05-20T10:00:00Z'),
     });
     const now = new Date('2026-05-24T10:00:00Z');
+    const tenantDb = createTenantDB(db, { schoolId: TEST_SCHOOL_ID });
 
-    const result = await updateStreakForProfile(profile.id, now);
+    const result = await updateStreakForProfile({
+      db: tenantDb,
+      user: studentUser,
+      tenant: { schoolId: TEST_SCHOOL_ID },
+      input: { profileId: profile.id, currentTime: now },
+    });
 
     expect(result.streak).toBe(1);
     expect(result.milestoneBonus).toBe(0);
   });
 
   it('throws when the profile does not exist', async () => {
+    const tenantDb = createTenantDB(db, { schoolId: TEST_SCHOOL_ID });
+
     await expect(
-      updateStreakForProfile('00000000-0000-0000-0000-000000000000', new Date())
+      updateStreakForProfile({
+        db: tenantDb,
+        user: studentUser,
+        tenant: { schoolId: TEST_SCHOOL_ID },
+        input: { profileId: '00000000-0000-0000-0000-000000000000', currentTime: new Date() },
+      }),
     ).rejects.toThrow(/GamificationProfile not found/);
   });
 });

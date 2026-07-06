@@ -4,6 +4,8 @@ import { randomUUID } from 'crypto';
 
 import { assertCan, AuthError } from '@reading-advantage/auth';
 import type { UserContext } from '@reading-advantage/auth';
+import { createTenantDB } from '@reading-advantage/domain';
+import { db } from '@reading-advantage/db';
 import { getCurrentSession } from '@/lib/auth/session';
 import { getStudentEnrolledClasses } from '@/lib/services/classes/get-student-classes';
 import { logger } from '@/lib/observability/logger';
@@ -32,7 +34,17 @@ export async function GET(_request?: NextRequest) {
 
       assertCan(session.user as unknown as UserContext, 'student:read:own');
 
-      const classes = await getStudentEnrolledClasses(session.user.id);
+      // Phase 1 ST-2: build a TenantDB scoped to the caller's tenant and
+      // pass it (plus the authenticated user/tenant) into the secured
+      // service signature.
+      const tenant = { schoolId: session.user.schoolId };
+      const tenantDb = createTenantDB(db, tenant);
+      const classes = await getStudentEnrolledClasses({
+        db: tenantDb,
+        user: session.user as unknown as UserContext,
+        tenant,
+        input: { studentId: session.user.id },
+      });
 
       return NextResponse.json(
         { classes },

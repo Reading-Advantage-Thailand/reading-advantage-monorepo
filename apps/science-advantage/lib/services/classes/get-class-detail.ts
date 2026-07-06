@@ -1,4 +1,4 @@
-import { and, asc, count, db, eq } from '@reading-advantage/db';
+import { and, asc, count, eq } from '@reading-advantage/db';
 import {
   scienceClasses,
   scienceClassStudents,
@@ -6,6 +6,13 @@ import {
   scienceLessons,
   scienceUnitLessons,
 } from '@reading-advantage/db/schema';
+import {
+  assertCan,
+  AuthError,
+  type Tenant,
+  type UserContext,
+} from '@reading-advantage/auth';
+import type { DB } from '@reading-advantage/db';
 
 import type { StandardsAlignment } from '@/lib/enums';
 
@@ -41,34 +48,60 @@ export type ClassDetailWithCurriculum = {
   curriculumUnits: CurriculumUnitSummary[];
 };
 
+type GetClassDetailContext = {
+  db: DB;
+  user: UserContext;
+  tenant: Tenant;
+  input: { classId: string };
+};
+
 /**
+ * Phase 1 (ST-2) secured contract:
+ *   getClassDetailWithCurriculum({ db, user, tenant, input: { classId } })
+ *
+ * Routes all reads through the caller-provided TenantDB and enforces
+ * `assertCan(user, 'class:read', tenant)` plus a resource-level schoolId
+ * match. Returns `null` when the class does not exist in the caller's tenant.
+ *
  * @kind read
- * Fetches a science class with its enrolled students and ordered curriculum
- * (units filtered to the class's framework + grade level; lessons ordered
- * within each unit).
+ * @throws {AuthError} When the caller is not provided, lacks `class:read`,
+ *   or the class's `schoolId` does not match the caller's `schoolId`.
  */
 export async function getClassDetailWithCurriculum(
-  classId: string
+  ctx: GetClassDetailContext,
 ): Promise<ClassDetailWithCurriculum | null> {
+  if (!ctx.user) {
+    throw new AuthError('Authenticated user required', 'UNAUTHORIZED');
+  }
+  const { db, user, tenant, input } = ctx;
+  assertCan(user, 'class:read', tenant);
+
   const [classRecord] = await db
     .select()
     .from(scienceClasses)
-    .where(eq(scienceClasses.id, classId))
+    .where(eq(scienceClasses.id, input.classId))
     .limit(1);
 
   if (!classRecord) {
     return null;
   }
 
+  if (classRecord.schoolId !== user.schoolId) {
+    throw new AuthError(
+      `User ${user.id} cannot read class ${input.classId} from school ${classRecord.schoolId}`,
+      'FORBIDDEN',
+    );
+  }
+
   const students = await db
     .select({ id: scienceClassStudents.studentId })
     .from(scienceClassStudents)
-    .where(eq(scienceClassStudents.classId, classId));
+    .where(eq(scienceClassStudents.classId, input.classId));
 
   const [{ value: studentCount }] = await db
     .select({ value: count() })
     .from(scienceClassStudents)
-    .where(eq(scienceClassStudents.classId, classId));
+    .where(eq(scienceClassStudents.classId, input.classId));
 
   const units = await db
     .select({
@@ -80,10 +113,10 @@ export async function getClassDetailWithCurriculum(
     .from(scienceCurriculumUnits)
     .where(
       and(
-        eq(scienceCurriculumUnits.classId, classId),
+        eq(scienceCurriculumUnits.classId, input.classId),
         eq(scienceCurriculumUnits.framework, classRecord.standardsAlignment),
-        eq(scienceCurriculumUnits.gradeLevel, classRecord.gradeLevel)
-      )
+        eq(scienceCurriculumUnits.gradeLevel, classRecord.gradeLevel),
+      ),
     )
     .orderBy(asc(scienceCurriculumUnits.order));
 
@@ -103,7 +136,7 @@ export async function getClassDetailWithCurriculum(
         .from(scienceUnitLessons)
         .innerJoin(
           scienceLessons,
-          eq(scienceLessons.id, scienceUnitLessons.lessonId)
+          eq(scienceLessons.id, scienceUnitLessons.lessonId),
         )
         .where(eq(scienceUnitLessons.unitId, unit.id))
         .orderBy(asc(scienceLessons.order));
@@ -115,7 +148,7 @@ export async function getClassDetailWithCurriculum(
         order: unit.order,
         lessons,
       };
-    })
+    }),
   );
 
   return {
