@@ -50,10 +50,10 @@
 
 ## Phase 3: Reading Authorization, Validation, and Endpoint Hardening
 
-- [x] Task: Write Red tests for admin/SYSTEM license-scope escalation paths. — `<P3_RED_SHA>`
+- [x] Task: Write Red tests for admin/SYSTEM license-scope escalation paths. — `2642f92c`
   - Evidence refs: Reading M-RA-SEC-6.
   - Red tests: `apps/reading-advantage/__tests__/controllers/admin-license-scope-red.test.ts` (2 checks). SYSTEM user with own `license_id="license-a"` requesting `?licenseId=license-b` is expected to be denied (403/401) or audited; currently returns 200. Own-license request still returns 200.
-- [x] Task: Write Red tests for Zod input validation, raw process.env guard, Firebase storage removal, metrics/health endpoint hardening, and controller-to-domain migration. — `<P3_RED_SHA>`
+- [x] Task: Write Red tests for Zod input validation, raw process.env guard, Firebase storage removal, metrics/health endpoint hardening, and controller-to-domain migration. — `2642f92c`
   - Evidence refs: Reading M-RA-SEC-7/SEC-9/SEC-10/SEC-8.
   - Red tests added:
     - `__tests__/controllers/zod-validation-red.test.ts` — invalid query/body shapes return 400; currently 200.
