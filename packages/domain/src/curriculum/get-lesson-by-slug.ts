@@ -9,6 +9,12 @@ import { createTenantDB } from "../db-contract.js";
 
 /**
  * Gets lesson content with its attached standards.
+ *
+ * ME-04: a lesson is only visible to an authenticated user when the lesson
+ * is part of at least one class curriculum the caller can reach. Admins and
+ * system users no longer receive "orphan" lessons that exist on the
+ * tenant but are not linked to any `scienceCurriculumUnits` row.
+ *
  * @param user - Authenticated user context
  * @param tenant - Tenant (school) context
  * @param input - Object containing the lessonSlug (may be slug or id)
@@ -25,9 +31,14 @@ export async function getLessonBySlug({ user, tenant, input }: { user: UserConte
 
   const classRows = await tenantDb.select({ classId: scienceClasses.id, teacherId: scienceClasses.teacherId }).from(scienceUnitLessons).innerJoin(scienceCurriculumUnits, eq(scienceCurriculumUnits.id, scienceUnitLessons.unitId)).innerJoin(scienceClasses, eq(scienceClasses.id, scienceCurriculumUnits.classId)).where(eq(scienceUnitLessons.lessonId, lesson.id));
 
+  // ME-04: every lesson must be reachable through at least one class
+  // curriculum. If the lesson exists but is not linked to any class,
+  // there is no legitimate access path for any caller — return FORBIDDEN.
+  if (classRows.length === 0) return "FORBIDDEN";
+
   const isAdmin = user.role === "ADMIN" || user.role === "SYSTEM";
   let hasAccess = isAdmin;
-  if (!hasAccess && classRows.length > 0) {
+  if (!hasAccess) {
     if (classRows.some((c) => c.teacherId === user.id)) { hasAccess = true; }
     else {
       const classIds = classRows.map((c) => c.classId);

@@ -13,6 +13,11 @@ import { recordRun, recordRunFailure, RateLimitError } from '@reading-advantage/
 /**
  * POST /api/ai/update-mastery
  * Processes a mastery run for a completed quiz attempt.
+ *
+ * ME-01: unhandled domain errors must surface as a typed 5xx (never as a
+ * 202 QUEUED). 202 QUEUED is reserved for the explicit "run is being
+ * processed" branch inside `recordRun()` itself, which returns a typed
+ * `MasteryHttpResponse` — not an exception.
  */
 export async function POST(request: NextRequest) {
   return runWithRequestContext({
@@ -40,6 +45,9 @@ export async function POST(request: NextRequest) {
     if (error instanceof ZodError) return NextResponse.json({ success: false, error: 'Validation failed', details: error.errors.map((i) => ({ path: i.path.join('.'), message: i.message })) }, { status: 400 });
     if (error instanceof AuthError) return NextResponse.json({ success: false, error: error.message }, { status: error.code === 'UNAUTHORIZED' ? 401 : 403 });
 
+    // ME-01: best-effort record the failure for the attempt so operators can
+    // see what happened. We still surface a typed 5xx — we never silently
+    // re-classify an unhandled exception as 202 QUEUED.
     try {
       const body = await requestClone.json();
       const attemptId = body?.attemptId;
@@ -51,7 +59,8 @@ export async function POST(request: NextRequest) {
       // Best-effort failure recording — don't mask the original error
     }
 
-    return NextResponse.json({ success: false, reason: 'QUEUED' }, { status: 202, headers: { 'retry-after': '30' } });
+    logger.error('update-mastery.route.unhandled.error', { error: error instanceof Error ? error.message : String(error) });
+    return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 });
   }
   });
 }

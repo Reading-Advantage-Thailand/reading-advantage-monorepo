@@ -9,9 +9,29 @@ import { studentIdParamSchema } from '@/lib/validations/params';
 import { z } from 'zod';
 import { logger } from '@/lib/observability/logger';
 
+/**
+ * Maximum page size accepted by `getStudentMasteryProfile`. Larger values
+ * supplied by clients are clamped to this ceiling so an unauthenticated or
+ * abusive caller cannot force a multi-thousand-row read.
+ */
+export const MASTERY_PROFILE_LIMIT_MAX = 100;
+
+/**
+ * CR-06: the `limit` query parameter must be a positive integer ≤
+ * {@link MASTERY_PROFILE_LIMIT_MAX}. We intentionally reject `.max(MAX)`
+ * in Zod (would return 400 for `?limit=300`) and instead clamp in the
+ * `.transform()` step so callers see a successful 200 with the clamped
+ * value, while non-numeric / negative / fractional values still produce a
+ * 400 from Zod's `.int()` + `>= 1` refinement.
+ */
 const masteryQuerySchema = z.object({
   strand: z.string().optional(),
-  limit: z.coerce.number().int().min(1).max(100).optional(),
+  limit: z.coerce
+    .number({ invalid_type_error: 'limit must be a number' })
+    .int('limit must be an integer')
+    .min(1, 'limit must be at least 1')
+    .transform((value) => Math.min(value, MASTERY_PROFILE_LIMIT_MAX))
+    .optional(),
   cursor: z.string().optional(),
   includeRecommendations: z
     .string()
