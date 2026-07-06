@@ -72,10 +72,19 @@ jest.mock("@/lib/session", () => ({
 import { updateAssignment } from "@/server/controllers/assignment-controller";
 
 function makeRequest(body: object): ExtendedNextRequest {
-  return new NextRequest("http://localhost:3000/api/v1/assignments", {
+  const req = new NextRequest("http://localhost:3000/api/v1/assignments", {
     method: "PATCH",
     body: JSON.stringify(body),
   }) as ExtendedNextRequest;
+  req.session = {
+    user: {
+      id: "teacher-1",
+      role: "TEACHER",
+      schoolId: "school-a",
+      license_id: "license-a",
+    },
+  } as any;
+  return req;
 }
 
 describe("PB-4 assignment status shared enum & lifecycle (Red)", () => {
@@ -111,6 +120,28 @@ describe("PB-4 assignment status shared enum & lifecycle (Red)", () => {
     expect(Object.keys(types.AssignmentStatus)).toEqual(
       expect.arrayContaining(["CREATED", "ASSIGNED", "IN_PROGRESS", "COMPLETED", "OVERDUE"])
     );
+  });
+
+  it("allows legal lifecycle transition NOT_STARTED -> IN_PROGRESS", async () => {
+    returningMock.mockResolvedValue([
+      {
+        id: "student-assignment-1",
+        assignmentId: "assignment-1",
+        studentId: "student-1",
+        status: "IN_PROGRESS",
+      },
+    ]);
+
+    const res = await updateAssignment(
+      makeRequest({
+        classroomId: "classroom-1",
+        articleId: "article-1",
+        studentId: "student-1",
+        updates: { status: "IN_PROGRESS" },
+      })
+    );
+
+    expect(res.status).toBe(200);
   });
 
   it("rejects illegal lifecycle transition COMPLETED -> IN_PROGRESS", async () => {
