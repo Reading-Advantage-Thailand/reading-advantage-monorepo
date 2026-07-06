@@ -17,14 +17,16 @@
 
 ## Phase 1: Science Security and Tenant Scoping
 
-- [~] Task: Write Red cross-tenant tests for `awardXp`/`updateStreakForProfile`/badge writes leaking across schools.
-  - Evidence refs: Science ST-1 (F-SA-B22-001/003/019/020/061/062, F-SA-B21-056/057); Monorepo MR-C01 Science symptom.
+- [x] Task: Write Red cross-tenant tests for `awardXp`/`updateStreakForProfile`/badge writes leaking across schools.
+  - Evidence: `apps/science-advantage/lib/gamification/gamification-tenant-isolation.test.ts` added; 7 tests assert same-tenant success + `assertCan` call, cross-tenant rejection, and schoolB row non-mutation (A4 both-directions). Red run: `cd apps/science-advantage && CI=true pnpm exec vitest run lib/gamification/gamification-tenant-isolation.test.ts` → 7 failed (function never calls `assertCan`/`createTenantDB`).
 - [~] Task: Route gamification writes through `createTenantDB` + `assertCan()`.
-- [~] Task: Write Red tests for `lib/services/**` (`get-class-detail`, `get-student-classes`, `mastery-worker`, `getClassDetailWithCurriculum`) missing user context/tenant scope.
-  - Evidence refs: Science ST-2 (F-SA-B24-036/037/044/045/051/056/057, F-SA-B02-003/020/023).
+- [x] Task: Write Red tests for `lib/services/**` (`get-class-detail`, `get-student-classes`, `mastery-worker`, `getClassDetailWithCurriculum`) missing user context/tenant scope.
+  - Evidence: `apps/science-advantage/lib/services/services-tenant-isolation.test.ts` added; 6 tests assert missing-user-context throw and foreign-tenant throw/empty for `getClassDetailWithCurriculum`, `getStudentEnrolledClasses`, and `processMasteryRun`. Red run: `cd apps/science-advantage && CI=true pnpm exec vitest run lib/services/services-tenant-isolation.test.ts` → 6 failed (services accept anonymous/foreign callers).
 - [~] Task: Add user context + `assertCan()` + `tenantDb` to those services.
-- [~] Task: Add a TenantDB-adoption guard (SP-3) failing raw `@reading-advantage/db` imports in Science app code.
-- [~] Task: Run Science + domain targeted tests.
+- [x] Task: Add a TenantDB-adoption guard (SP-3) failing raw `@reading-advantage/db` imports in Science app code.
+  - Evidence: `apps/science-advantage/lib/__tests__/tenant-db-adoption.test.ts` added; scans non-test `.ts` files under `{lib,app}` for raw `db` imports from `@reading-advantage/db` (A7 path exclusions, A12 guard exists). Red run: `cd apps/science-advantage && CI=true pnpm exec vitest run lib/__tests__/tenant-db-adoption.test.ts` → 1 failed with 11 violations (including `app/api/admin/dsar/export/route.ts`).
+- [x] Task: Run Science + domain targeted tests.
+  - Evidence: Combined targeted Red command `cd apps/science-advantage && CI=true pnpm exec vitest run lib/gamification/gamification-tenant-isolation.test.ts lib/services/services-tenant-isolation.test.ts lib/__tests__/tenant-db-adoption.test.ts --reporter=verbose` produced `Test Files 3 failed (3)` / `Tests 14 failed (14)`. Note: `pnpm test -- <filter>` dropped positional filters in this environment; `pnpm exec vitest run <paths>` was used to isolate the new Red tests.
 
 ## Phase 2: Science Route/Contract Correctness
 

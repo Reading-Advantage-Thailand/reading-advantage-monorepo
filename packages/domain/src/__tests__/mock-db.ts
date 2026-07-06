@@ -14,22 +14,9 @@ function createQueryBuilder(val: unknown) {
     offset: vi.fn().mockReturnThis(),
     orderBy: vi.fn().mockReturnThis(),
     groupBy: vi.fn().mockReturnThis(),
-    innerJoin: vi.fn().mockReturnValue({
-      where: vi.fn().mockReturnValue({
-        limit: vi.fn().mockReturnThis(),
-        offset: vi.fn().mockReturnThis(),
-        orderBy: vi.fn().mockReturnThis(),
-        groupBy: vi.fn().mockReturnThis(),
-      }),
-    }),
-    leftJoin: vi.fn().mockReturnValue({
-      where: vi.fn().mockReturnValue({
-        limit: vi.fn().mockReturnThis(),
-        offset: vi.fn().mockReturnThis(),
-        orderBy: vi.fn().mockReturnThis(),
-        groupBy: vi.fn().mockReturnThis(),
-      }),
-    }),
+    where: vi.fn().mockReturnThis(),
+    innerJoin: vi.fn().mockReturnThis(),
+    leftJoin: vi.fn().mockReturnThis(),
     then(
       onFulfilled?: (value: unknown) => unknown,
       onRejected?: (reason: unknown) => unknown
@@ -86,13 +73,8 @@ export function createMockDb(overrides: {
       return {
         from: vi.fn().mockReturnValue({
           where: vi.fn().mockReturnValue(createQueryBuilder(resolvedValue)),
-          innerJoin: vi.fn().mockReturnValue({
-            where: vi.fn().mockReturnValue(createQueryBuilder(resolvedValue)),
-          }),
-          leftJoin: vi.fn().mockReturnValue({
-            where: vi.fn().mockReturnValue(createQueryBuilder(resolvedValue)),
-            groupBy: vi.fn().mockReturnValue(createQueryBuilder(resolvedValue)),
-          }),
+          innerJoin: vi.fn().mockReturnValue(createQueryBuilder(resolvedValue)),
+          leftJoin: vi.fn().mockReturnValue(createQueryBuilder(resolvedValue)),
           // Support queries without .where() (e.g. .from(t).limit(n).offset(n))
           limit: vi.fn().mockReturnValue(createQueryBuilder(resolvedValue)),
           offset: vi.fn().mockReturnValue(createQueryBuilder(resolvedValue)),

@@ -1,4 +1,6 @@
 import type { SpawnSyncOptions, SpawnSyncReturns } from 'node:child_process';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 type SpawnLike = (
   command: string,
@@ -7,7 +9,7 @@ type SpawnLike = (
 ) => Pick<SpawnSyncReturns<Buffer>, 'status' | 'signal'>;
 
 /**
- * Runs `pnpm --filter @reading-advantage/db migrate` against a specific
+ * Runs `pnpm exec drizzle-kit push` in packages/db against a specific
  * database URL, inheriting stdio so migration output shows up in the
  * vitest console.
  *
@@ -22,14 +24,19 @@ export function runDrizzleMigrate(params: {
 }): void {
   const { spawn, databaseUrl } = params;
 
+  const __dirname = path.dirname(fileURLToPath(import.meta.url));
+  const dbPackageDir = path.resolve(__dirname, '../../../../packages/db');
+
   const result = spawn(
     'pnpm',
-    ['--filter', '@reading-advantage/db', 'migrate'],
+    ['exec', 'drizzle-kit', 'push', '--force'],
     {
+      cwd: dbPackageDir,
       stdio: 'inherit',
       env: {
         ...process.env,
         DATABASE_URL: databaseUrl,
+        DIRECT_DATABASE_URL: databaseUrl,
       },
     },
   );
