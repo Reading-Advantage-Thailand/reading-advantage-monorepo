@@ -16,11 +16,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { timingSafeEqual } from "crypto";
 import { z } from "zod";
+import { env } from "@/lib/env";
 
 const accessKeySchema = z.string().min(1).optional();
 
 function getValidatedAccessKey(): string | undefined {
-  const parsed = accessKeySchema.safeParse(process.env.ACCESS_KEY);
+  const parsed = accessKeySchema.safeParse(env.ACCESS_KEY);
   return parsed.success ? parsed.data : undefined;
 }
 

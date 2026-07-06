@@ -3,6 +3,7 @@ import CreateNewStudent from "@/components/teacher/create-new-student";
 import { getCurrentUser } from "@/lib/session";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
+import { env } from "@/lib/env";
 
 export default async function AddNewStudent({
   params,
@@ -18,14 +19,14 @@ export default async function AddNewStudent({
   const ClassesData = async () => {
     const requestHeaders = await headers();
     const resClass = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/classroom`,
+      `${env.NEXT_PUBLIC_BASE_URL}/api/v1/classroom`,
       { method: "GET", headers: requestHeaders }
     );
     if (!resClass.ok) throw new Error("Failed to fetch ClassesData list");
     const ClassroomData = await resClass.json();
 
     const resStudent = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/classroom/students`,
+      `${env.NEXT_PUBLIC_BASE_URL}/api/v1/classroom/students`,
       { method: "GET", headers: requestHeaders }
     );
     if (!resStudent.ok) throw new Error("Failed to fetch StudentData list");
@@ -56,7 +57,7 @@ export default async function AddNewStudent({
   const allStudentEmailData = async () => {
     const requestHeaders = await headers();
     const resStudent = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/classroom/all-students`,
+      `${env.NEXT_PUBLIC_BASE_URL}/api/v1/classroom/all-students`,
       { method: "GET", headers: requestHeaders }
     );
     if (!resStudent.ok) throw new Error("Failed to fetch ClassesData list");

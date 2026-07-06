@@ -1532,18 +1532,21 @@ export async function updateUserArticle(
 
 async function cleanupAudioFiles(articleId: string, userId?: string) {
   try {
-    // Firebase Storage cleanup — gracefully skipped if firebase-admin not installed
-    let getStorage: any;
+    // SECURITY (SEC-9): routed through the shared @reading-advantage/storage
+    // adapter instead of a dynamic `firebase-admin/storage` require. If the
+    // provider is not configured we log and skip — never fall back to a
+    // provider SDK directly.
+    let storage: import("@reading-advantage/storage").StorageClient;
     try {
-      getStorage = require("firebase-admin/storage").getStorage;
-    } catch {
-      console.warn("firebase-admin/storage not available, skipping audio cleanup");
+      const { getStorageClient } = await import("@reading-advantage/storage");
+      storage = getStorageClient();
+    } catch (storageError) {
+      console.warn(
+        "[reading] storage adapter not configured, skipping audio cleanup",
+        storageError,
+      );
       return;
     }
-    // ระบุ bucket name โดยตรง
-    const bucket = getStorage().bucket(
-      "artifacts.reading-advantage.appspot.com"
-    );
 
     // Audio file paths for articles
     const audioFiles = [
@@ -1553,19 +1556,14 @@ async function cleanupAudioFiles(articleId: string, userId?: string) {
 
     for (const filePath of audioFiles) {
       try {
-        const file = bucket.file(filePath);
-        const [exists] = await file.exists();
-        if (exists) {
-          await file.delete();
-          //console.log(`Deleted audio file: ${filePath}`);
+        if (await storage.exists(filePath)) {
+          await storage.delete(filePath);
         }
       } catch (fileError) {
-        // File might not exist, continue
-        //console.log(`Could not delete audio file: ${filePath}`);
+        // File might not exist or be transiently unavailable; continue.
+        console.warn(`[reading] could not delete audio file ${filePath}`, fileError);
       }
     }
-
-    //console.log("Audio files cleanup completed");
   } catch (storageError) {
     console.error("Error cleaning up audio files:", storageError);
   }
@@ -1573,18 +1571,19 @@ async function cleanupAudioFiles(articleId: string, userId?: string) {
 
 async function cleanupStorageFiles(articleId: string, userId?: string) {
   try {
-    // Firebase Storage cleanup — gracefully skipped if firebase-admin not installed
-    let getStorage: any;
+    // SECURITY (SEC-9): routed through the shared @reading-advantage/storage
+    // adapter. Provider-SDK fallbacks (Firebase, AWS) are no longer used.
+    let storage: import("@reading-advantage/storage").StorageClient;
     try {
-      getStorage = require("firebase-admin/storage").getStorage;
-    } catch {
-      console.warn("firebase-admin/storage not available, skipping storage cleanup");
+      const { getStorageClient } = await import("@reading-advantage/storage");
+      storage = getStorageClient();
+    } catch (storageError) {
+      console.warn(
+        "[reading] storage adapter not configured, skipping storage cleanup",
+        storageError,
+      );
       return;
     }
-    // ระบุ bucket name โดยตรง
-    const bucket = getStorage().bucket(
-      "artifacts.reading-advantage.appspot.com"
-    );
 
     // File paths for user-generated content and regular content
     const basePaths = [
@@ -1606,31 +1605,20 @@ async function cleanupStorageFiles(articleId: string, userId?: string) {
       for (const ext of fileExtensions) {
         try {
           const filePath = basePath + ext;
-          const file = bucket.file(filePath);
-          const [exists] = await file.exists();
-          if (exists) {
-            await file.delete();
-            //console.log(`Deleted file: ${filePath}`);
+          if (await storage.exists(filePath)) {
+            await storage.delete(filePath);
           }
         } catch (fileError) {
-          // File might not exist, continue
-          //console.log(`Could not delete file: ${basePath}${ext}`);
+          console.warn(
+            `[reading] could not delete file ${basePath}${ext}`,
+            fileError,
+          );
         }
       }
 
-      // Also try to delete directories
-      try {
-        const [files] = await bucket.getFiles({ prefix: `${basePath}/` });
-        if (files.length > 0) {
-          const deletePromises = files.map((file) => file.delete());
-          await Promise.all(deletePromises);
-          //console.log(
-          //  `Deleted ${files.length} files in directory: ${basePath}/`
-          //);
-        }
-      } catch (dirError) {
-        //console.log(`Could not delete directory: ${basePath}/`);
-      }
+      // Also try to delete sub-directory objects (prefix scan). The shared
+      // storage adapter does not expose `getFiles({ prefix })`, so this loop
+      // is a no-op until a `list(prefix)` capability is added.
     }
   } catch (storageError) {
     console.error("Error cleaning up storage files:", storageError);

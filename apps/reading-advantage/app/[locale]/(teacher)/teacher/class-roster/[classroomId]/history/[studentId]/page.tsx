@@ -7,6 +7,7 @@ import { redirect } from "next/navigation";
 import { getScopedI18n } from "@/locales/server";
 import { fetchData } from "@/utils/fetch-data";
 import { headers } from "next/headers";
+import { env } from "@/lib/env";
 import { ArticleRecord } from "@/types";
 import { RecordStatus } from "@/types/constants";
 
@@ -118,7 +119,7 @@ export default async function StudentHistoryForTeacher({
     try {
       const requestHeaders = await headers();
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/users/${studentId}`,
+        `${env.NEXT_PUBLIC_BASE_URL}/api/v1/users/${studentId}`,
         { method: "GET", headers: requestHeaders }
       );
       if (!res.ok) throw new Error("Failed to fetch student data");

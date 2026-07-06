@@ -1,12 +1,14 @@
 /**
  * Server-Sent Events (SSE) endpoint for real-time metrics updates
- * 
- * This endpoint streams metrics:update events to connected clients
- * for real-time cache invalidation and UI updates.
+ *
+ * SEC-10: gated by either a valid SYSTEM access-key header OR an
+ * ADMIN/SYSTEM authenticated session. Returns 401 when neither is present.
  */
 
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { getMetricsCacheStats } from '@/lib/cache/metrics';
+import { getCurrentUser } from '@/lib/session';
+import { env } from '@/lib/env';
 
 // Simple in-memory event emitter for metrics updates
 interface MetricsUpdatePayload {
@@ -53,18 +55,37 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 /**
- * SSE endpoint for metrics updates
- * 
- * Usage:
+ * SSE endpoint for metrics updates.
+ *
+ * Usage (authenticated caller or system access-key):
  * ```ts
- * const eventSource = new EventSource('/api/v1/metrics/stream');
- * eventSource.addEventListener('metrics:update', (event) => {
- *   const data = JSON.parse(event.data);
- *   console.log('Metrics updated:', data);
+ * const eventSource = new EventSource('/api/v1/metrics/stream', {
+ *   headers: { 'Access-Key': '<configured ACCESS_KEY>' }
  * });
  * ```
  */
 export async function GET(req: NextRequest) {
+  // SECURITY (SEC-10): gate the SSE stream. Either an authenticated user
+  // (ADMIN/SYSTEM) or a valid `Access-Key` header is required; otherwise 401.
+  const accessKey =
+    req.headers.get('Access-Key') ?? req.headers.get('access-key') ?? '';
+  const accessKeyValid = !!env.ACCESS_KEY && accessKey === env.ACCESS_KEY;
+
+  if (!accessKeyValid) {
+    const user = await getCurrentUser();
+    const role = user?.role;
+    if (role !== 'ADMIN' && role !== 'SYSTEM') {
+      return NextResponse.json(
+        {
+          error: 'Unauthorized',
+          message:
+            'A valid Access-Key header or ADMIN/SYSTEM session is required.',
+        },
+        { status: 401 }
+      );
+    }
+  }
+
   // Set up SSE headers
   const headers = new Headers({
     'Content-Type': 'text/event-stream',
@@ -114,7 +135,6 @@ export async function GET(req: NextRequest) {
         clearInterval(heartbeat);
         controller.close();
       });
-
     },
   });
 

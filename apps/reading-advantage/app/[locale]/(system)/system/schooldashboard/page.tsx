@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { Role } from "@/lib/enums";
 import UnauthorizedPage from "@/components/shared/unauthorized-page";
 import { headers } from "next/headers";
+import { env } from "@/lib/env";
 
 export default async function SchoolsDashboardPage() {
   const user = await getCurrentUser();
@@ -21,7 +22,7 @@ export default async function SchoolsDashboardPage() {
   const schoolListfetch = async () => {
     const requestHeaders = await headers();
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/licenses`,
+      `${env.NEXT_PUBLIC_BASE_URL}/api/v1/licenses`,
       { method: "GET", headers: requestHeaders }
     );
     if (!res.ok) throw new Error("Failed to fetch school list");
@@ -32,7 +33,7 @@ export default async function SchoolsDashboardPage() {
   const userRoleListfetch = async () => {
     const requestHeaders = await headers();
     const userRes = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/users`,
+      `${env.NEXT_PUBLIC_BASE_URL}/api/v1/users`,
       { method: "GET", headers: requestHeaders }
     );
     if (!userRes.ok) throw new Error("Failed to fetch user role list");
@@ -44,7 +45,7 @@ export default async function SchoolsDashboardPage() {
     try {
       const requestHeaders = await headers();
       const cefrRes = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/activity/all`,
+        `${env.NEXT_PUBLIC_BASE_URL}/api/v1/activity/all`,
         {
           method: "GET",
           headers: requestHeaders,

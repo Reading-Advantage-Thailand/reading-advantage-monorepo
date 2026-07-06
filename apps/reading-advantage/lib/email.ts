@@ -1,16 +1,17 @@
 import { Resend } from 'resend';
+import { env } from "@/lib/env";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+const baseUrl = env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
 // Lazy initialization of Resend client to avoid build-time errors
 let resend: Resend | null = null;
 const getResendClient = () => {
   if (!resend) {
-    const apiKey = process.env.RESEND_API_KEY;
+    const apiKey = env.RESEND_API_KEY;
     if (!apiKey) {
       console.warn('⚠️  RESEND_API_KEY is not set');
       // Return a mock during build time
-      if (process.env.NEXT_PHASE === 'phase-production-build') {
+      if (env.NEXT_PHASE === 'phase-production-build') {
         return null;
       }
       throw new Error('RESEND_API_KEY is required');
@@ -22,8 +23,8 @@ const getResendClient = () => {
 
 export async function sendPasswordResetEmail(email: string, token: string) {
   console.log("Preparing to send reset email to:", email, "with token:", token);
-  console.log("RESEND_API_KEY", process.env.RESEND_API_KEY);
-  console.log("RESEND_FROM", process.env.RESEND_FROM);
+  console.log("RESEND_API_KEY", env.RESEND_API_KEY);
+  console.log("RESEND_FROM", env.RESEND_FROM);
   
   const resendClient = getResendClient();
   if (!resendClient) {
@@ -34,7 +35,7 @@ export async function sendPasswordResetEmail(email: string, token: string) {
   try {
     const resetUrl = `${baseUrl}/auth/reset-password?token=${token}&email=${encodeURIComponent(email)}`;
     const result = await resendClient.emails.send({
-      from: process.env.RESEND_FROM || 'no-reply@reading-advantage.com',
+      from: env.RESEND_FROM || 'no-reply@reading-advantage.com',
       to: email,
       subject: "Reset your password",
       html: `...`,

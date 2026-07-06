@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { Role } from "@/lib/enums";
 import ReportsContent from "@/components/admin/reports-content";
+import { env } from "@/lib/env";
 
 export default async function AdminReportsPage() {
   const user = await getCurrentUser();
@@ -24,7 +25,7 @@ export default async function AdminReportsPage() {
     try {
       const requestHeaders = await headers();
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/classroom`,
+        `${env.NEXT_PUBLIC_BASE_URL}/api/v1/classroom`,
         { 
           method: "GET", 
           headers: requestHeaders,
@@ -51,7 +52,7 @@ export default async function AdminReportsPage() {
     try {
       const requestHeaders = await headers();
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/licenses`,
+        `${env.NEXT_PUBLIC_BASE_URL}/api/v1/licenses`,
         { method: "GET", headers: requestHeaders, cache: 'no-store' }
       );
       const fetchdata = await res.json();

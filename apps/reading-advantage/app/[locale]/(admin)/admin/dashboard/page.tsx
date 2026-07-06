@@ -9,6 +9,7 @@ import { Role } from "@/lib/enums";
 import { AdminOverviewResponse } from "@/types/dashboard";
 import { KPICardSkeleton } from "@/components/dashboard/kpi-card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { env } from "@/lib/env";
 
 // Loading skeleton for dashboard
 function DashboardSkeleton() {
@@ -57,7 +58,7 @@ export default async function AdminDashboardPage() {
     try {
       const [overviewResponse, licensesResponse] = await Promise.all([
         // Fetch overview data
-        fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/admin/overview`, {
+        fetch(`${env.NEXT_PUBLIC_BASE_URL}/api/v1/admin/overview`, {
           method: "GET",
           headers: requestHeaders,
           cache: "no-store",
@@ -65,7 +66,7 @@ export default async function AdminDashboardPage() {
         }),
         // Fetch all licenses if SYSTEM user
         user.role === Role.SYSTEM
-          ? fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/licenses`, {
+          ? fetch(`${env.NEXT_PUBLIC_BASE_URL}/api/v1/licenses`, {
               method: "GET",
               headers: requestHeaders,
               cache: "no-store",

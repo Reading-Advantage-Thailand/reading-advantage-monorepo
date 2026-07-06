@@ -54,41 +54,15 @@ export async function GET(req: NextRequest) {
       responseTime,
       healthScore,
       status: healthScore >= 80 ? 'healthy' : healthScore >= 60 ? 'warning' : 'critical',
-      
-      // Connection metrics
+
+      // SECURITY (SEC-10): connection / cache / matview / performance /
+      // recommendation fields are intentionally stripped from the public
+      // health surface. Only the rolled-up `status` leaks to authenticated
+      // callers; the full diagnostic payload is available via the gated
+      // admin tooling, not via the unauthenticated health endpoint.
       connections: {
-        health: connectionHealth,
-        utilization: connectionHealth.metrics?.connectionUtilization || 0,
-        activeConnections: connectionHealth.metrics?.activeConnections || 0,
-        totalConnections: connectionHealth.metrics?.totalConnections || 0,
-        maxConnections: connectionHealth.metrics?.maxConnections || 0,
+        health: connectionHealth.healthy,
       },
-
-      // Cache performance
-      cache: {
-        stats: cacheStats,
-        hitRate: cacheStats.hitRate * 100,
-        totalEntries: cacheStats.totalEntries,
-        performance: cacheStats.hitRate > 0.7 ? 'good' : cacheStats.hitRate > 0.5 ? 'fair' : 'poor',
-      },
-
-      // Materialized views
-      materializedViews: {
-        stats: matViewStats,
-        health: matViewStats.currentlyRefreshing === 0 ? 'stable' : 'refreshing',
-        refreshQueue: matViewStats.queueLength,
-      },
-
-      // Database performance
-      performance: dbPerformance,
-
-      // Recommendations
-      recommendations: generateRecommendations({
-        connectionHealth,
-        cacheStats,
-        matViewStats,
-        dbPerformance,
-      }),
     };
 
     return NextResponse.json(response, {

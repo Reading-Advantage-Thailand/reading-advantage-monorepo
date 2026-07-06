@@ -3,6 +3,7 @@ import { NextResponse, NextRequest } from "next/server";
 import { google } from "googleapis";
 import oauth2Client, { getAuthenticatedClient, SCOPE } from "@/utils/classroom";
 import { classroom_v1 } from "googleapis";
+import { env } from "@/lib/env";
 
 type Schema$Course = classroom_v1.Schema$Course;
 
@@ -18,7 +19,7 @@ export async function GET(req: NextRequest) {
       name: "last_url",
       value: lastUrl,
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: env.NODE_ENV === "production",
       path: "/",
       maxAge: 300, // 5 minutes expiration
     });

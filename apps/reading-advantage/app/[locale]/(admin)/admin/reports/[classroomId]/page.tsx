@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { Role } from "@/lib/enums";
 import { headers } from "next/headers";
 import { log } from "console";
+import { env } from "@/lib/env";
 
 export default async function AdminClassroomReportPage({
   params,
@@ -24,7 +25,7 @@ export default async function AdminClassroomReportPage({
   const getClassroomData = async () => {
     try {
       const baseUrl =
-        process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+        env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
       const requestHeaders = await headers();
       const res = await fetch(
         `${baseUrl}/api/v1/classroom/${classroomId}`,

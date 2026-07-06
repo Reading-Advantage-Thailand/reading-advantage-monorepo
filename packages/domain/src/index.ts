@@ -3,6 +3,7 @@ export * as articles from "./articles/index.js";
 export * as assignments from "./assignments/index.js";
 export * as classes from "./classes/index.js";
 export * as progress from "./progress/index.js";
+export * as reading from "./reading/index.js";
 export * as students from "./students/index.js";
 export * as reports from "./reports/index.js";
 export * as users from "./users/index.js";
@@ -23,3 +24,17 @@ export {
   TenantScopeError,
 } from "./db-contract.js";
 export { classifyTable, type TableClassification } from "./tenant-registry.js";
+
+// Reading-specific direct exports (used by reading-advantage controllers/tests)
+export {
+  getSystemDashboardData,
+  systemDashboardQuerySchema,
+  type SystemDashboardQuery,
+  type SystemDashboardData,
+  getSchoolSegmentsData,
+  resolveLicenseScope,
+  schoolSegmentsQuerySchema,
+  type SchoolSegmentsQuery,
+  type SchoolSegmentsData,
+  type LicenseScopeResult,
+} from "./reading/index.js";

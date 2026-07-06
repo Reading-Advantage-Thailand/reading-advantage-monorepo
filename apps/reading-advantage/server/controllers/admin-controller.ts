@@ -12,6 +12,15 @@ import {
   sql,
   isNotNull,
 } from "@reading-advantage/db";
+import { recordAuditEvent } from "@reading-advantage/auth";
+import {
+  createTenantDB,
+  getSchoolSegmentsData,
+  resolveLicenseScope,
+  schoolSegmentsQuerySchema,
+} from "@reading-advantage/domain";
+import { parseQuery } from "@/lib/validations";
+import { env } from "@/lib/env";
 import {
   users,
   schools,
@@ -815,199 +824,101 @@ export async function getSchoolSegments(req: NextRequest) {
       );
     }
 
-    const { searchParams } = new URL(req.url);
-    let licenseId: string | null = null;
-
-    if (user.role === "SYSTEM") {
-      licenseId = searchParams.get("licenseId");
-    } else if (user.role === "ADMIN") {
-      licenseId = user.license_id || null;
-
-      if (!licenseId) {
-        return NextResponse.json(
-          { code: "FORBIDDEN", message: "Admin user has no license assigned" },
-          { status: 403 }
-        );
-      }
-    } else {
+    if (user.role !== "SYSTEM" && user.role !== "ADMIN") {
       return NextResponse.json(
         { code: "FORBIDDEN", message: "Insufficient permissions" },
         { status: 403 }
       );
     }
 
-    let targetSchoolId: string | null = null;
-
-    if (licenseId) {
-      const [lr] = await db
-        .select({ schoolId: licenses.schoolId })
-        .from(licenses)
-        .where(eq(licenses.id, licenseId))
-        .limit(1);
-
-      if (lr?.schoolId) {
-        targetSchoolId = lr.schoolId;
-      }
+    if (user.role === "ADMIN" && !user.license_id) {
+      return NextResponse.json(
+        { code: "FORBIDDEN", message: "Admin user has no license assigned" },
+        { status: 403 }
+      );
     }
 
-    const schoolRows = targetSchoolId
-      ? await db
-          .select({ id: schools.id, name: schools.name })
-          .from(schools)
-          .where(eq(schools.id, targetSchoolId))
-      : await db.select({ id: schools.id, name: schools.name }).from(schools);
+    const parsedQuery = parseQuery(req, schoolSegmentsQuerySchema);
+    if (parsedQuery instanceof NextResponse) {
+      return parsedQuery;
+    }
+    const requestedLicenseId = parsedQuery.licenseId ?? null;
 
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    // SECURITY (SEC-6): SYSTEM cross-license reads require either an
+    // access-key header OR an audit event. Record-keeping, not a free pass.
+    const accessKey =
+      req.headers.get("Access-Key") ?? req.headers.get("access-key") ?? "";
+    const accessKeyValid =
+      !!env.ACCESS_KEY && accessKey === env.ACCESS_KEY;
 
-    const schoolIds = schoolRows.map((s) => s.id);
+    const scopeResult = await resolveLicenseScope({
+      user: {
+        id: user.id,
+        role: user.role,
+        schoolId: user.school_id ?? null,
+        license_id: user.license_id ?? null,
+      } as any,
+      tenant: { schoolId: user.school_id ?? null } as any,
+      requestedLicenseId,
+      accessKeyProvided: accessKeyValid,
+      recordAuditEvent: async ({ actorUserId, actorRole, licenseId }) => {
+        // SECURITY (A2): audit event carries licenseId + userId + role so
+        // post-hoc reviewers can correlate the override with the actor.
+        await recordAuditEvent(
+          {
+            actorUserId,
+            actorRole: actorRole as any,
+            ipAddress: null,
+            userAgent: null,
+            metadata: { licenseId },
+          } as any,
+          {
+            action: "admin.cross_license.read",
+            targetType: "license",
+            targetId: licenseId,
+          },
+        );
+      },
+    });
 
-    if (schoolIds.length === 0) {
-      const response: AdminSegmentsResponse = {
-        segments: [],
-        summary: { totalSchools: 0, averageActiveRate: 0, totalLicensesUsed: 0 },
-        cache: { cached: false, generatedAt: new Date().toISOString() },
-      };
-      return NextResponse.json(response, {
-        headers: {
-          "Cache-Control": "private, max-age=60, stale-while-revalidate=240",
-          "X-Response-Time": `${Date.now() - startTime}ms`,
+    if (!scopeResult.ok) {
+      return NextResponse.json(
+        {
+          code: "FORBIDDEN_CROSS_LICENSE",
+          message:
+            "SYSTEM users may only read cross-license data with an Access-Key header.",
         },
-      });
+        { status: 403 }
+      );
     }
 
-    // Get users per school
-    const schoolUserRows = await db
-      .select({
-        id: users.id,
-        role: users.role,
-        level: users.level,
-        xp: users.xp,
-        schoolId: users.schoolId,
-      })
-      .from(users)
-      .where(inArray(users.schoolId, schoolIds));
-
-    const allUserIds = schoolUserRows.map((u) => u.id);
-
-    // Recently active users
-    const recentActivityRows =
-      allUserIds.length > 0
-        ? await db
-            .selectDistinct({ userId: userActivity.userId })
-            .from(userActivity)
-            .where(
-              and(
-                inArray(userActivity.userId, allUserIds),
-                gte(userActivity.createdAt, thirtyDaysAgo)
-              )
-            )
-        : [];
-    const activeUserSet = new Set(recentActivityRows.map((r) => r.userId));
-
-    // Get licenses per school
-    const schoolLicenses = await db
-      .select({
-        id: licenses.id,
-        schoolId: licenses.schoolId,
-        maxUsers: licenses.maxUsers,
-      })
-      .from(licenses)
-      .where(inArray(licenses.schoolId, schoolIds));
-
-    const licenseIds = schoolLicenses.map((l) => l.id);
-    const licenseUserCountRows =
-      licenseIds.length > 0
-        ? await db
-            .select({
-              licenseId: licenseOnUsers.licenseId,
-              count: sql<number>`count(*)::int`,
-            })
-            .from(licenseOnUsers)
-            .where(inArray(licenseOnUsers.licenseId, licenseIds))
-            .groupBy(licenseOnUsers.licenseId)
-        : [];
-    const licenseUserCountMap = new Map(
-      licenseUserCountRows.map((r) => [r.licenseId, r.count])
-    );
-
-    // Build maps
-    const schoolUsersMap = new Map<string, typeof schoolUserRows>();
-    schoolUserRows.forEach((u) => {
-      if (!u.schoolId) return;
-      if (!schoolUsersMap.has(u.schoolId)) schoolUsersMap.set(u.schoolId, []);
-      schoolUsersMap.get(u.schoolId)!.push(u);
+    const tenantDb = createTenantDB(db, {
+      schoolId: user.school_id ?? null,
     });
 
-    const schoolLicensesMap = new Map<string, typeof schoolLicenses>();
-    schoolLicenses.forEach((l) => {
-      if (!l.schoolId) return;
-      if (!schoolLicensesMap.has(l.schoolId))
-        schoolLicensesMap.set(l.schoolId, []);
-      schoolLicensesMap.get(l.schoolId)!.push(l);
+    const data = await getSchoolSegmentsData({
+      db: tenantDb,
+      user: {
+        id: user.id,
+        role: user.role,
+        schoolId: user.school_id ?? null,
+        license_id: user.license_id ?? null,
+      } as any,
+      tenant: { schoolId: user.school_id ?? null } as any,
+      input: { resolvedLicenseId: scopeResult.licenseId },
     });
 
-    const segments: SchoolSegment[] = schoolRows.map((school) => {
-      const schoolUserList = schoolUsersMap.get(school.id) || [];
-      const students = schoolUserList.filter((u) => u.role === "STUDENT");
-      const teachers = schoolUserList.filter(
-        (u) => u.role === "TEACHER" || u.role === "ADMIN"
-      );
-
-      const activeUsers = schoolUserList.filter((u) =>
-        activeUserSet.has(u.id)
-      ).length;
-      const totalUsers = schoolUserList.length;
-      const activeRate =
-        totalUsers > 0 ? Math.round((activeUsers / totalUsers) * 100) : 0;
-
-      const avgLevel =
-        students.length > 0
-          ? students.reduce((sum, s) => sum + s.level, 0) / students.length
-          : 0;
-
-      const totalXp = students.reduce((sum, s) => sum + s.xp, 0);
-
-      const lics = schoolLicensesMap.get(school.id) || [];
-      const licensesUsed = lics.reduce(
-        (sum, l) => sum + (licenseUserCountMap.get(l.id) || 0),
-        0
-      );
-      const licensesTotal = lics.reduce(
-        (sum, l) => sum + (l.maxUsers || 0),
-        0
-      );
-
-      return {
-        schoolId: school.id,
-        schoolName: school.name,
-        studentCount: students.length,
-        teacherCount: teachers.length,
-        activeRate,
-        averageLevel: Math.round(avgLevel * 10) / 10,
-        totalXp,
-        licensesUsed,
-        licensesTotal,
-      };
-    });
-
-    const summary = {
-      totalSchools: segments.length,
-      averageActiveRate:
-        segments.length > 0
-          ? Math.round(
-              segments.reduce((sum, s) => sum + s.activeRate, 0) /
-                segments.length
-            )
-          : 0,
-      totalLicensesUsed: segments.reduce((sum, s) => sum + s.licensesUsed, 0),
-    };
-
-    const response: AdminSegmentsResponse = {
-      segments,
-      summary,
+    const response: AdminSegmentsResponse & { code?: string } = {
+      segments: data.segments as SchoolSegment[],
+      summary: data.summary,
       cache: { cached: false, generatedAt: new Date().toISOString() },
     };
+
+    if (scopeResult.audited) {
+      // SECURITY (SEC-6): every audited cross-license SYSTEM read is
+      // labelled in the response so audit-aware clients can detect it.
+      response.code = "CROSS_LICENSE_AUDITED";
+    }
 
     const duration = Date.now() - startTime;
 

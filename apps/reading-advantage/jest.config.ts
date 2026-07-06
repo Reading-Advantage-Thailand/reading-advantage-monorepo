@@ -19,6 +19,8 @@ const config: Config = {
     "^@reading-advantage/auth$": "<rootDir>/../../packages/auth/src/index.ts",
     "^@reading-advantage/db$": "<rootDir>/../../packages/db/src/index.ts",
     "^@reading-advantage/db/schema$": "<rootDir>/../../packages/db/src/schema/index.ts",
+    "^@reading-advantage/db/seed$": "<rootDir>/../../packages/db/src/seed/index.ts",
+    "^@reading-advantage/storage$": "<rootDir>/../../packages/storage/src/index.ts",
     "^@reading-advantage/api$": "<rootDir>/../../packages/api/src/index.ts",
     "^@reading-advantage/types$": "<rootDir>/../../packages/types/src/index.ts",
     "^@reading-advantage/domain$": "<rootDir>/../../packages/domain/src/index.ts",

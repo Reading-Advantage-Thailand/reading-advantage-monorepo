@@ -8,6 +8,7 @@ import {
 import base64 from "base64-js";
 import fs from "fs";
 import { execSync } from "child_process";
+import { env } from "@/lib/env";
 import uploadToBucket from "@/utils/uploadToBucket";
 import { generateObject } from "@reading-advantage/ai/internal-sdk";
 import { openai, openaiModel } from "@/utils/openai";
@@ -144,7 +145,7 @@ export async function generateAudio({
     for (let i = 0; i < chunks.length; i++) {
       const ssml = chunks[i];
       const response = await fetch(
-        `${BASE_TEXT_TO_SPEECH_URL}/v1beta1/text:synthesize?key=${process.env.GOOGLE_TEXT_TO_SPEECH_API_KEY}`,
+        `${BASE_TEXT_TO_SPEECH_URL}/v1beta1/text:synthesize?key=${env.GOOGLE_TEXT_TO_SPEECH_API_KEY}`,
         {
           method: "POST",
           headers: {

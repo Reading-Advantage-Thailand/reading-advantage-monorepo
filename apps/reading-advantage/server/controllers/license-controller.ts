@@ -5,6 +5,8 @@ import { db, eq, and, gte, lt, lte, inArray, isNotNull, ilike, sql } from "@read
 import { licenses, licenseOnUsers, users, xpLogs, userActivity } from "@reading-advantage/db/schema";
 import { LicenseType } from "@/lib/enums";
 import { randomUUID } from "crypto";
+import { z } from "zod";
+import { parseBody } from "@/lib/validations";
 
 interface RequestContext {
   params: Promise<{
@@ -18,14 +20,27 @@ export interface Context {
   }>;
 }
 
+const createLicenseKeySchema = z.object({
+  total_licenses: z.number().int().positive(),
+  subscription_level: z.string().min(1),
+  school_name: z.string().min(1),
+  admin_id: z.string().min(1).optional(),
+  expiration_date: z.union([z.number().int().positive(), z.string().min(1)]).optional(),
+});
+
 export const createLicenseKey = catchAsync(async (req: ExtendedNextRequest) => {
+  const parsedBody = await parseBody(req, createLicenseKeySchema);
+  if (parsedBody instanceof NextResponse) {
+    return parsedBody;
+  }
+
   const {
     total_licenses,
     subscription_level,
     school_name,
     admin_id,
     expiration_date,
-  } = await req.json();
+  } = parsedBody;
 
   const licenseTypeMap: { [key: string]: string } = {
     basic: LicenseType.BASIC,

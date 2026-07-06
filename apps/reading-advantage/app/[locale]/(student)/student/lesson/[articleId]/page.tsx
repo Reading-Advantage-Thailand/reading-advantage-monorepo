@@ -8,6 +8,7 @@ import CustomError from "./custom-error";
 import ChatBotFloatingChatButton from "@/components/chatbot-floating-button";
 import { Article } from "@/components/models/article-model";
 import { headers } from "next/headers";
+import { env } from "@/lib/env";
 
 export const metadata = {
   title: "Lesson",
@@ -38,7 +39,7 @@ export default async function LessonPage({
 
   const requestHeaders = await headers();
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/classroom/students/${user.id}`,
+    `${env.NEXT_PUBLIC_BASE_URL}/api/v1/classroom/students/${user.id}`,
     {
       method: "GET",
       headers: requestHeaders,

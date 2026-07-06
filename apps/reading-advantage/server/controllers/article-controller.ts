@@ -5,6 +5,7 @@ import { splitTextIntoSentences } from "@/lib/utils";
 import { Translate } from "@google-cloud/translate/build/src/v2";
 import { generateObject } from "@reading-advantage/ai/internal-sdk";
 import { openai, openaiModel } from "@/utils/openai";
+import { env } from "@/lib/env";
 import {
   db,
   eq,
@@ -753,8 +754,8 @@ async function translatePassageWithGoogle(
   targetLanguage: string,
 ): Promise<string[]> {
   const translate = new Translate({
-    projectId: process.env.GOOGLE_CLOUD_PROJECT_ID,
-    keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS,
+projectId: env.GOOGLE_CLOUD_PROJECT_ID,
+   keyFilename: env.GOOGLE_APPLICATION_CREDENTIALS,
   });
 
   const translatedSentences: string[] = [];

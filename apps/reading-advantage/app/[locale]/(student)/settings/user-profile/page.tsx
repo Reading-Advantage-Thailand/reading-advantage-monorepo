@@ -11,6 +11,7 @@ import Link from "next/link";
 import ChangeRole from "@/components/shared/change-role";
 import ResetDialog from "@/components/reset-xp-dialog";
 import { cookies } from "next/headers";
+import { env } from "@/lib/env";
 import GoogleClassroomButtonLink from "@/components/googleClassroomButtonLink";
 export default async function UserProfileSettingsPage() {
   const user = await getCurrentUser();
@@ -63,7 +64,7 @@ export default async function UserProfileSettingsPage() {
             expired={user.expired_date}
           />
         </div>
-        {process.env.NODE_ENV === "development" && (
+        {env.NODE_ENV === "development" && (
           <ChangeRole
             className="md:w-[38rem]"
             userId={user.id}

@@ -2,12 +2,13 @@ import { headers } from "next/headers";
 import { getCurrentUser } from "@/lib/session";
 import { redirect } from "next/navigation";
 import { Role } from "@/lib/enums";
+import { env } from "@/lib/env";
 
 async function fetchData(endpoint: string) {
   try {
     const headersList = await headers();
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/classroom/${endpoint}`,
+      `${env.NEXT_PUBLIC_BASE_URL}/api/v1/classroom/${endpoint}`,
       {
         method: "GET",
         headers: headersList,
@@ -137,7 +138,7 @@ export async function StudentsData({
     try {
       const headersList = await headers();
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/classroom/students`,
+        `${env.NEXT_PUBLIC_BASE_URL}/api/v1/classroom/students`,
         {
           method: "GET",
           headers: headersList,
@@ -156,7 +157,7 @@ export async function StudentsData({
     try {
       const headersList = await headers();
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/classroom/`,
+        `${env.NEXT_PUBLIC_BASE_URL}/api/v1/classroom/`,
         {
           method: "GET",
           headers: headersList,
@@ -320,7 +321,7 @@ export async function StudentsData({
     try {
       const headersList = await headers();
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/users/${userId}/activitylog`,
+        `${env.NEXT_PUBLIC_BASE_URL}/api/v1/users/${userId}/activitylog`,
         {
           method: "GET",
           headers: headersList,
@@ -435,7 +436,7 @@ export async function ClassesData() {
     try {
       const headersList = await headers();
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/classroom`,
+        `${env.NEXT_PUBLIC_BASE_URL}/api/v1/classroom`,
         {
           method: "GET",
           headers: headersList,
@@ -454,7 +455,7 @@ export async function ClassesData() {
     try {
       const headersList = await headers();
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/classroom/students`,
+        `${env.NEXT_PUBLIC_BASE_URL}/api/v1/classroom/students`,
         {
           method: "GET",
           headers: headersList,
@@ -473,7 +474,7 @@ export async function ClassesData() {
     try {
       const headersList = await headers();
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/classroom/teachers`,
+        `${env.NEXT_PUBLIC_BASE_URL}/api/v1/classroom/teachers`,
         {
           method: "GET",
           headers: headersList,

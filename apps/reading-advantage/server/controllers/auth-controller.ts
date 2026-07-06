@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser, type SessionUser } from "@/lib/session";
+import { env } from "@/lib/env";
 import { sendDiscordWebhook } from "../utils/send-discord-webhook";
 
 // Middleware to protect routes
@@ -68,7 +69,7 @@ export const restrictAccessKey = async (
 ) => {
   const { headers } = req;
   const accessKey = headers.get("Access-Key");
-  if (accessKey !== process.env.ACCESS_KEY) {
+  if (accessKey !== env.ACCESS_KEY) {
     const userAgent = req.headers.get("user-agent") || "";
     const url = req.url;
 

@@ -2,6 +2,7 @@
 import { headers } from "next/headers";
 import { getCurrentUser } from "@/lib/session";
 import { redirect } from "next/navigation";
+import { env } from "@/lib/env";
 
 type Passage = {
   searchTerm: string;
@@ -60,7 +61,7 @@ export const fetchMoreArticles = async (
     }).toString();
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/passage?${queryParams}`,
+      `${env.NEXT_PUBLIC_BASE_URL}/api/v1/passage?${queryParams}`,
       {
         method: "GET",
         headers: headersObject,

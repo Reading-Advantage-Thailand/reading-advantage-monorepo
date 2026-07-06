@@ -1109,6 +1109,9 @@ importers:
       '@reading-advantage/domain':
         specifier: workspace:*
         version: link:../../packages/domain
+      '@reading-advantage/storage':
+        specifier: workspace:*
+        version: link:../../packages/storage
       '@reading-advantage/types':
         specifier: workspace:*
         version: link:../../packages/types

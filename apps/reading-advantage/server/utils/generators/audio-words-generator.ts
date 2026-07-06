@@ -8,6 +8,7 @@ import fs from "fs";
 import uploadToBucket from "@/utils/uploadToBucket";
 import { db, eq } from "@reading-advantage/db";
 import { articles } from "@reading-advantage/db/schema";
+import { env } from "@/lib/env";
 
 export type WordListResponse = {
   vocabulary: string;
@@ -100,7 +101,7 @@ export async function generateAudioForWord({
     console.log(`📝 SSML content length: ${ssmlContent.length}`);
 
     const response = await fetch(
-      `${BASE_TEXT_TO_SPEECH_URL}/v1beta1/text:synthesize?key=${process.env.GOOGLE_TEXT_TO_SPEECH_API_KEY}`,
+      `${BASE_TEXT_TO_SPEECH_URL}/v1beta1/text:synthesize?key=${env.GOOGLE_TEXT_TO_SPEECH_API_KEY}`,
       {
         method: "POST",
         headers: {
@@ -208,7 +209,7 @@ export async function generateChapterAudioForWord({
       let allTimePoints: TimePoint[] = [];
 
       const response = await fetch(
-        `${BASE_TEXT_TO_SPEECH_URL}/v1beta1/text:synthesize?key=${process.env.GOOGLE_TEXT_TO_SPEECH_API_KEY}`,
+        `${BASE_TEXT_TO_SPEECH_URL}/v1beta1/text:synthesize?key=${env.GOOGLE_TEXT_TO_SPEECH_API_KEY}`,
         {
           method: "POST",
           headers: {

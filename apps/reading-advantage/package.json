@@ -66,6 +66,7 @@
     "@reading-advantage/auth-client": "workspace:*",
     "@reading-advantage/db": "workspace:*",
     "@reading-advantage/domain": "workspace:*",
+    "@reading-advantage/storage": "workspace:*",
     "@reading-advantage/types": "workspace:*",
     "@reading-advantage/ui": "workspace:*",
     "@reading-advantage/utils": "workspace:*",

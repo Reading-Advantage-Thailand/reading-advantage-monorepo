@@ -14,6 +14,7 @@ import { headers } from "next/headers";
 import { getCurrentUser } from "@/lib/session";
 import { redirect } from "next/navigation";
 import UnauthorizedPage from "@/components/shared/unauthorized-page";
+import { env } from "@/lib/env";
 
 export default async function AdminManagementPage() {
   const user = await getCurrentUser();
@@ -29,7 +30,7 @@ export default async function AdminManagementPage() {
   const getManegementData = async () => {
     const requestHeaders = await headers();
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/admin/dashboard`,
+      `${env.NEXT_PUBLIC_BASE_URL}/api/v1/admin/dashboard`,
       { method: "GET", headers: requestHeaders }
     );
     const fetchdata = await res.json();
@@ -40,7 +41,7 @@ export default async function AdminManagementPage() {
 
   // const schoolListfetch = async () => {
   //   const res = await fetch(
-  //     `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/licenses/${user.license_id}`,
+  //     `${env.NEXT_PUBLIC_BASE_URL}/api/v1/licenses/${user.license_id}`,
   //     { method: "GET", headers: headers() }
   //   );
   //   if (!res.ok) throw new Error("Failed to fetch school list");
@@ -50,7 +51,7 @@ export default async function AdminManagementPage() {
 
   // const userRoleListfetch = async () => {
   //   const userRes = await fetch(
-  //     `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/users`,
+  //     `${env.NEXT_PUBLIC_BASE_URL}/api/v1/users`,
   //     { method: "GET", headers: headers() }
   //   );
   //   if (!userRes.ok) throw new Error("Failed to fetch user role list");

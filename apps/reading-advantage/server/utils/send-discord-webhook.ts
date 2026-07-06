@@ -1,6 +1,8 @@
 
 // Send Discord webhook
 // Send a Discord webhook with the provided title, embeds, and URL
+import { env } from "@/lib/env";
+
 interface SendWebhookParams {
     title: string;
     embeds: Embeds[];
@@ -26,7 +28,7 @@ function formatDetails(details: Record<string, string>): string {
 export async function sendDiscordWebhook({
     title,
     embeds,
-    webhookUrl = process.env.DISCORD_WEBHOOK_URL || undefined,
+    webhookUrl = env.DISCORD_WEBHOOK_URL || undefined,
     userAgent = "test-user-agent",
     reqUrl,
     color = 0x0099ff,
@@ -54,7 +56,7 @@ export async function sendDiscordWebhook({
         body: JSON.stringify({
             embeds: [
                 {
-                    title: `${title} - ${process.env.NODE_ENV} mode`,
+                    title: `${title} - ${env.NODE_ENV} mode`,
                     description: `**triggered at:** <t:${Math.floor(
                         Date.now() / 1000
                     )}:R> \n**user-agent:** ${userAgent} \n**url:** ${reqUrl}`,

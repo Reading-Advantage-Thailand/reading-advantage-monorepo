@@ -1,6 +1,7 @@
 import { NextResponse, NextRequest } from "next/server";
 import { cookies } from "next/headers";
 import oauth2Client from "@/utils/classroom";
+import { env } from "@/lib/env";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -23,7 +24,7 @@ export async function GET(req: NextRequest) {
       name: "google_access_token",
       value: tokens.access_token || "",
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: env.NODE_ENV === "production",
       path: "/",
       maxAge: 3600,
     });
@@ -31,7 +32,7 @@ export async function GET(req: NextRequest) {
       name: "google_refresh_token",
       value: tokens.refresh_token || "",
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: env.NODE_ENV === "production",
       path: "/",
       maxAge: 30 * 24 * 60 * 60,
     });
@@ -39,7 +40,7 @@ export async function GET(req: NextRequest) {
     const lastUrl = cookieStore.get("last_url")?.value || "/teacher/my-classes";
 
     return NextResponse.redirect(
-      new URL(lastUrl, process.env.NEXT_PUBLIC_BASE_URL).toString()
+      new URL(lastUrl, env.NEXT_PUBLIC_BASE_URL).toString()
     );
   } catch (error) {
     return NextResponse.json({

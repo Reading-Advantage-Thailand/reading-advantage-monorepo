@@ -7,6 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { openai, openaiModel } from "@/utils/openai";
 import { google, googleModel } from "@/utils/google";
+import { env } from "@/lib/env";
 
 interface RequestContext {
   params: Promise<{
@@ -262,8 +263,8 @@ async function translatePassageWithGoogle(
   targetLanguage: string
 ): Promise<Record<string, string[]>> {
   const translate = new Translate({
-    projectId: process.env.GOOGLE_PROJECT_ID,
-    key: process.env.GOOGLE_TEXT_TO_SPEECH_API_KEY,
+    projectId: env.GOOGLE_PROJECT_ID,
+    key: env.GOOGLE_TEXT_TO_SPEECH_API_KEY,
   });
 
   const result: Record<string, string[]> = {

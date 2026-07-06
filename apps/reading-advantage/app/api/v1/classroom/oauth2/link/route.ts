@@ -1,6 +1,7 @@
 import oauth2Client, { SCOPE } from "@/utils/classroom";
 import { cookies } from "next/headers";
 import { NextResponse, NextRequest } from "next/server";
+import { env } from "@/lib/env";
 
 export const dynamic = 'force-dynamic';
 
@@ -14,7 +15,7 @@ export async function GET(req: NextRequest) {
       name: "last_url",
       value: lastUrl,
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: env.NODE_ENV === "production",
       path: "/",
       maxAge: 300, // 5 minutes expiration
     });

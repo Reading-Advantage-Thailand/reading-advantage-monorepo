@@ -1,6 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { env } from "@/lib/env";
 
 export default function Error({
   error,
@@ -20,7 +21,7 @@ export default function Error({
       <h2 className="text-2xl font-bold text-center text-red-600 dark:text-red-400">
         Something went wrong
       </h2>
-      {process.env.NODE_ENV === "development" && error.digest ? (
+      {env.NODE_ENV === "development" && error.digest ? (
         <p className="text-center text-red-500 dark:text-red-300">
           {error.message}
           <br />
