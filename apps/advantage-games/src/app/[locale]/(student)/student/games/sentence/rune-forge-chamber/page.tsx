@@ -40,6 +40,7 @@ export default function RuneForgeChamberPage() {
   const locale = useCurrentLocale();
   const { data: session } = useSession();
   const t = useScopedI18n("runeForgeChamber");
+  const tGamesPage = useScopedI18n("pages.student.gamesPage");
 
   // Session and i18n hooks are available for future use
   const userId = session?.user?.id;
@@ -130,7 +131,7 @@ export default function RuneForgeChamberPage() {
             className="inline-flex items-center text-sm uppercase tracking-[0.2em] text-white/60 transition hover:text-white"
           >
             <ChevronLeft className="mr-1 h-4 w-4" />
-            {"กลับไปหน้าเกม"}
+            {tGamesPage("backToGames")}
           </Link>
 
           <div className="flex items-center justify-center min-h-[70vh]">
@@ -186,7 +187,7 @@ export default function RuneForgeChamberPage() {
                     href="/student/games"
                     className="bg-slate-800 hover:bg-slate-700 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 border border-white/10"
                   >
-                    กลับไปหน้าเกม
+                    {tGamesPage("backToGames")}
                   </Link>
                 </div>
               </div>
@@ -202,7 +203,7 @@ export default function RuneForgeChamberPage() {
       <Button variant="ghost" size="sm" asChild className="mb-2 md:mb-4">
         <Link href="/student/games">
           <ChevronLeft className="mr-1 h-4 w-4" />
-          {"กลับไปหน้าเกม"}
+          {tGamesPage("backToGames")}
         </Link>
       </Button>
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 md:gap-8">
