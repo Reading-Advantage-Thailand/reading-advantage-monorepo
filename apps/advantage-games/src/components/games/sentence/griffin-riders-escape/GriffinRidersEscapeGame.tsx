@@ -43,7 +43,11 @@ export function GriffinRidersEscapeGame({ vocabulary, onComplete }: GameProps) {
   const { input } = useDirectionalInput()
   const lastInputDx = useRef(0)
 
-  // Measure stage dimensions
+  // Measure stage dimensions. The component renders `null` until
+  // `gameState` exists (see the `if (!gameState) return null` guard), so the
+  // container ref is unattached on first mount — `hasGameState` re-runs this
+  // effect once the container is actually in the DOM.
+  const hasGameState = gameState !== null
   useEffect(() => {
     const el = containerRef.current
     if (!el) return
@@ -56,7 +60,7 @@ export function GriffinRidersEscapeGame({ vocabulary, onComplete }: GameProps) {
     observer.observe(el)
     updateDimensions()
     return () => observer.disconnect()
-  }, [containerRef])
+  }, [containerRef, hasGameState])
 
   const resetGame = useCallback(() => {
     if (vocabulary.length > 0) {
@@ -103,6 +107,8 @@ export function GriffinRidersEscapeGame({ vocabulary, onComplete }: GameProps) {
       })
 
       setShake(s => Math.max(0, s - 1))
+
+      rafRef.current = requestAnimationFrame(loop)
     }
 
     rafRef.current = requestAnimationFrame(loop)

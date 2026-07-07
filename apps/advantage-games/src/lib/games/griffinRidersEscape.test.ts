@@ -22,7 +22,7 @@ describe('createGriffinRidersEscapeState', () => {
     const state = createGriffinRidersEscapeState(mockVocabulary)
     
     expect(state.status).toBe('playing')
-    expect(state.difficulty).toBe('medium')
+    expect(state.difficulty).toBe('normal')
     expect(state.lives).toBe(3)
     expect(state.score).toBe(0)
     expect(state.combo).toBe(0)
@@ -44,7 +44,7 @@ describe('createGriffinRidersEscapeState', () => {
 
   it('should default to medium difficulty', () => {
     const state = createGriffinRidersEscapeState(mockVocabulary)
-    expect(state.difficulty).toBe('medium')
+    expect(state.difficulty).toBe('normal')
   })
 
   it('should use deterministic rng when provided', () => {
