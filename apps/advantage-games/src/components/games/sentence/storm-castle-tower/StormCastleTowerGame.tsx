@@ -34,6 +34,14 @@ interface StormCastleTowerGameProps {
 
 export function StormCastleTowerGame({ vocabulary, onComplete }: StormCastleTowerGameProps) {
   const [gameState, setGameState] = useState<StormCastleTowerState | null>(null)
+
+  // Live mirror of `gameState` so the RAF loop can tick outside the React
+  // state updater. Updaters must stay pure — StrictMode double-invokes them,
+  // and the hazard bookkeeping below mutates `lastHazardRef`, so running it
+  // inside the updater made the discarded first invocation consume every
+  // hazard window (no oil hazard ever spawned).
+  const gameStateRef = useRef<StormCastleTowerState | null>(null)
+  gameStateRef.current = gameState
   const [gamePhase, setGamePhase] = useState<'start' | 'playing' | 'ended'>('start')
   const [results, setResults] = useState<StormCastleTowerGameResult | null>(null)
   const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty>('normal')
@@ -101,9 +109,8 @@ export function StormCastleTowerGame({ vocabulary, onComplete }: StormCastleTowe
       const delta = lastFrameRef.current ? timestamp - lastFrameRef.current : 16
       lastFrameRef.current = timestamp
       const clampedDelta = Math.min(delta, 50)
-      setGameState(prevState => {
-        if (!prevState || prevState.phase !== 'playing') return prevState
-
+      const prevState = gameStateRef.current
+      if (prevState && prevState.phase === 'playing') {
         let nextState = advanceStormCastleTowerTime(prevState, clampedDelta)
 
         if (nextState.gameTime - lastHazardRef.current > STORM_CASTLE_TOWER_CONFIG.hazards.oilInterval) {
@@ -111,8 +118,9 @@ export function StormCastleTowerGame({ vocabulary, onComplete }: StormCastleTowe
           lastHazardRef.current = nextState.gameTime
         }
 
-        return nextState
-      })
+        gameStateRef.current = nextState
+        setGameState(nextState)
+      }
       rafRef.current = requestAnimationFrame(loop)
     }
 
@@ -238,7 +246,7 @@ export function StormCastleTowerGame({ vocabulary, onComplete }: StormCastleTowe
                 className="bg-slate-800 border border-white/20 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-cyan-400"
               >
                 <option value="easy">Squire&apos;s Tower (4 words)</option>
-                <option value="medium">Knight&apos;s Keep (5 words)</option>
+                <option value="normal">Knight&apos;s Keep (5 words)</option>
                 <option value="hard">Lord&apos;s Citadel (6 words)</option>
               </select>
             </div>

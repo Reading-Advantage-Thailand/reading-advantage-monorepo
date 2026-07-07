@@ -113,10 +113,10 @@ describe('StormCastleTowerGame', () => {
     expect(selects[0]).toHaveValue('hard')
   })
 
-  it('uses medium difficulty by default', () => {
+  it('uses normal difficulty by default', () => {
     render(<StormCastleTowerGame vocabulary={mockVocabulary} onComplete={jest.fn()} />)
     const selects = screen.getAllByRole('combobox')
-    expect(selects[0]).toHaveValue('medium')
+    expect(selects[0]).toHaveValue('normal')
   })
 
   it('handles keyboard input during gameplay', async () => {
