@@ -3,7 +3,7 @@ import { withBasePath } from "@/lib/games/basePath";
 
 // Castle Configuration
 export const CASTLE_CONFIG = {
-  sheet: withBasePath("/games/vocabulary/magic-defense/castles_3x2_sheet.png"),
+  sheet: withBasePath("/games/magic-defense/castles_3x2_sheet.png"),
   columns: 2,
   rows: 3,
   sheetWidth: 1536,
@@ -22,7 +22,7 @@ export const CASTLE_CONFIG = {
 };
 
 export const GAME_CONSTANTS = {
-  backgroundImage: withBasePath("/games/vocabulary/magic-defense/background.png"),
+  backgroundImage: withBasePath("/games/magic-defense/background.png"),
   timer: 60,
   missileSpawnXRange: 25,
   missileSpawnXOffset: 37.5,

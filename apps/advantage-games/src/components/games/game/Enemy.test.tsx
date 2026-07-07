@@ -19,7 +19,7 @@ describe("Enemy", () => {
 
     expect(screen.getByText("Apple")).toBeInTheDocument();
     expect(screen.getByTestId("enemy-sprite")).toHaveStyle({
-      backgroundImage: `url(${withBasePath("/games/vocabulary/magic-defense/skeletons_3x3_pose_sheet.png")})`,
+      backgroundImage: `url(${withBasePath("/games/magic-defense/skeletons_3x3_pose_sheet.png")})`,
     });
   });
 });

@@ -4,7 +4,7 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import { withBasePath } from '@/lib/games/basePath'
 
-const ENEMY_SPRITE = withBasePath('/games/vocabulary/magic-defense/skeletons_3x3_pose_sheet.png')
+const ENEMY_SPRITE = withBasePath('/games/magic-defense/skeletons_3x3_pose_sheet.png')
 const ENEMY_SHEET_SIZE = 426
 const ENEMY_FRAME_SIZE = 142
 const ENEMY_BASE_SCALE = 0.5

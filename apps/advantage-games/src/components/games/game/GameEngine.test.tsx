@@ -34,7 +34,7 @@ describe("GameEngine", () => {
 
     const stage = screen.getByTestId("game-stage");
     expect(stage).toHaveStyle({
-      backgroundImage: `url(${withBasePath("/games/vocabulary/magic-defense/background.png")})`,
+      backgroundImage: `url(${withBasePath("/games/magic-defense/background.png")})`,
     });
   });
 
