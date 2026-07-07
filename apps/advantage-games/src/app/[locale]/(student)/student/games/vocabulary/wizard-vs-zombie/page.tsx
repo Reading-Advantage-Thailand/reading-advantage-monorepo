@@ -101,7 +101,7 @@ export default function WizardZombiePage() {
 
       <div
         className="w-full max-w-6xl mx-auto overflow-hidden rounded-xl border-2 border-slate-800 bg-slate-950 shadow-2xl backdrop-blur-sm relative"
-        style={{ height: "min(85svh, 100%)" }}
+        style={{ height: "85svh" }}
       >
         {/* Background Elements internal to the game card */}
         <div className="absolute inset-0 z-0 pointer-events-none">
