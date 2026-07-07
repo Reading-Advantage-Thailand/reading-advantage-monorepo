@@ -667,3 +667,12 @@ This file tracks all major tracks for the project. Each track has its own detail
 - [ ] **Track: Sentence Game Expansion v2** *Link: [./tracks/sentence_game_expansion_v2_20260425/](./tracks/sentence_game_expansion_v2_20260425/)*
 - [ ] **Track: Accessibility Layer** *Link: [./tracks/accessibility_layer_20260425/](./tracks/accessibility_layer_20260425/)*
 
+
+---
+
+- [x] **Track: Unpublished Games Fixes**
+*Link: [./measure/tracks/unpublished-games-fixes_20260707/](./measure/tracks/unpublished-games-fixes_20260707/)*
+*Description: Fix all issues from the 2026-07-07 unpublished-games review (4 game-breaking bugs, i18n gaps, layout defects, stale tests, ws-server roomCode).*
+*Priority: High*
+*Type: Bug*
+*Status: Complete*
