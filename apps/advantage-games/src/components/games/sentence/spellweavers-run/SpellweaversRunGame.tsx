@@ -325,6 +325,14 @@ export function SpellweaversRunGame({ vocabulary, onComplete }: SpellweaversRunG
                   />
                 ))}
 
+                {/* Orbs are clipped to the lane/collection region so they
+                    never overdraw the sentence scroll or HUD text. */}
+                <Group
+                  clipX={0}
+                  clipY={SPELLWEAVERS_RUN_CONFIG.scrollHeight + 40}
+                  clipWidth={GAME_WIDTH}
+                  clipHeight={GAME_HEIGHT - SPELLWEAVERS_RUN_CONFIG.scrollHeight - 40}
+                >
                 {gameState.orbs.filter(orb => !orb.collected).map(orb => {
                   const laneIndex = orb.lane === 'left' ? 0 : orb.lane === 'center' ? 1 : 2
                   const orbX = laneIndex * laneWidth + laneWidth / 2
@@ -352,6 +360,7 @@ export function SpellweaversRunGame({ vocabulary, onComplete }: SpellweaversRunG
                     </Group>
                   )
                 })}
+                </Group>
 
                 <Rect
                   x={0}
