@@ -21,16 +21,18 @@ describe('MainMenu', () => {
     })
 
     const playableGames = gameCards.filter((game) => game.status === 'playable')
-    const links = screen.getAllByRole('link', { name: /Play Now/i })
+    const links = screen.getAllByRole('link', { name: /Start Game/i })
     const hrefs = links.map((link) => link.getAttribute('href'))
     expect(links).toHaveLength(playableGames.length)
-    expect(hrefs).toEqual(expect.arrayContaining(playableGames.map((game) => game.href)))
+    expect(hrefs).toEqual(
+      expect.arrayContaining(playableGames.map((game) => `/en${game.href}`))
+    )
   })
 
-  it('includes a Play Now link for Enchanted Library', () => {
+  it('includes a Start Game link for Enchanted Library', () => {
     render(<MainMenu />)
 
-    const links = screen.getAllByRole('link', { name: /Play Now/i })
+    const links = screen.getAllByRole('link', { name: /Start Game/i })
     const hasEnchantedLibrary = links.some(
       (link) => link.getAttribute('href')?.includes('/enchanted-library')
     )

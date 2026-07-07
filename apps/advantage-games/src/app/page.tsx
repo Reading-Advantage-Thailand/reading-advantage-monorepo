@@ -50,7 +50,7 @@ export default function MainMenu() {
                 <CardContent className="px-6 pb-6 pt-4">
                   {isPlayable && game.href ? (
                     <Button asChild className="w-full" size="lg">
-                      <Link href={game.href}>Start Game</Link>
+                      <Link href={`/en${game.href}`}>Start Game</Link>
                     </Button>
                   ) : (
                     <Button disabled variant="secondary" className="w-full" size="lg">

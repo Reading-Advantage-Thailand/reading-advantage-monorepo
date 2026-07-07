@@ -21,12 +21,12 @@ describe("GameEndScreen", () => {
 
   it("renders defeat status correctly", () => {
     render(<GameEndScreen {...defaultProps} status="defeat" />);
-    expect(screen.getByText(/Defeated/i)).toBeInTheDocument();
+    expect(screen.getByText(/Failure/i)).toBeInTheDocument();
   });
 
   it("renders complete status correctly", () => {
     render(<GameEndScreen {...defaultProps} status="complete" />);
-    expect(screen.getByText(/Complete!/i)).toBeInTheDocument();
+    expect(screen.getByText(/Complete/i)).toBeInTheDocument();
   });
 
   it("displays score, accuracy, and XP", () => {
@@ -36,9 +36,9 @@ describe("GameEndScreen", () => {
     expect(screen.getByText(/50/)).toBeInTheDocument();
   });
 
-  it("calls onRestart when Play Again is clicked", () => {
+  it("calls onRestart when Restart is clicked", () => {
     render(<GameEndScreen {...defaultProps} />);
-    fireEvent.click(screen.getByRole("button", { name: /Play Again/i }));
+    fireEvent.click(screen.getByRole("button", { name: /Restart/i }));
     expect(defaultProps.onRestart).toHaveBeenCalledTimes(1);
   });
 
