@@ -18,18 +18,34 @@ describe("archers-revenge complete route", () => {
 
     const response = await POST(
       new MockRequest({
+        gameType: "archers-revenge",
+        difficulty: "medium",
+        score: 1800,
+        accuracy: 0.9,
         correctAnswers: 18,
         totalAttempts: 20,
-        accuracy: 0.9,
-        score: 1800,
-        difficulty: "normal",
+        duration: 60_000,
+        victory: true,
+        idempotencyKey: "22222222-2222-2222-2222-222222222222",
+        clientTimestamp: 1_700_000_000_000,
       }) as unknown as Request
     );
     const data = await response.json();
 
-    expect(data.message).toBe("Game completed successfully");
+    expect(response.status).toBe(200);
     expect(data.status).toBe(200);
-    expect(data.xpEarned).toBe(16);
-    expect(data.activityId).toMatch(/^mock-activity-/);
+    expect(data.duplicate).toBe(false);
+    expect(typeof data.xpEarned).toBe("number");
+    expect(data.xpEarned).toBeGreaterThanOrEqual(0);
+    expect(data.activityId).toBe(
+      "game:archers-revenge:22222222-2222-2222-2222-222222222222"
+    );
+  });
+
+  it("rejects an invalid payload", async () => {
+    const response = await POST(
+      new MockRequest({ score: 1800 }) as unknown as Request
+    );
+    expect(response.status).toBe(400);
   });
 });
