@@ -36,6 +36,14 @@ export function AbyssalWellGame({ sentences, onComplete }: AbyssalWellGameProps)
   const { containerRef, enterFullscreen, exitFullscreen } = useGameFullscreen()
   const { getEffectiveTextSize } = useAccessibilitySettings()
   const [gameState, setGameState] = useState<AbyssalWellState | null>(null)
+
+  // Live mirror of `gameState` so the RAF loop can tick outside the React
+  // state updater. Updaters must stay pure — StrictMode double-invokes them,
+  // and the spawn bookkeeping below mutates `lastSpawnRef`, so running it
+  // inside the updater made the discarded first invocation consume every
+  // spawn window (no enemy ever appeared).
+  const gameStateRef = useRef<AbyssalWellState | null>(null)
+  gameStateRef.current = gameState
   const [gamePhase, setGamePhase] = useState<'start' | 'playing' | 'ended'>('start')
   const [results, setResults] = useState<AbyssalWellGameResult | null>(null)
   const [selectedDifficulty, setSelectedDifficulty] = useState<AbyssalWellDifficulty>('medium')
@@ -101,9 +109,8 @@ export function AbyssalWellGame({ sentences, onComplete }: AbyssalWellGameProps)
       const delta = lastFrameRef.current ? timestamp - lastFrameRef.current : 16
       lastFrameRef.current = timestamp
       const clampedDelta = Math.min(delta, 50)
-      setGameState(prevState => {
-        if (!prevState || prevState.phase !== 'playing') return prevState
-
+      const prevState = gameStateRef.current
+      if (prevState && prevState.phase === 'playing') {
         let nextState = advanceAbyssalWellTime(prevState, clampedDelta)
 
         if (nextState.gameTime - lastSpawnRef.current > ABYSSAL_WELL_CONFIG.enemy.spawnInterval) {
@@ -111,8 +118,9 @@ export function AbyssalWellGame({ sentences, onComplete }: AbyssalWellGameProps)
           lastSpawnRef.current = nextState.gameTime
         }
 
-        return nextState
-      })
+        gameStateRef.current = nextState
+        setGameState(nextState)
+      }
       rafRef.current = requestAnimationFrame(loop)
     }
 
