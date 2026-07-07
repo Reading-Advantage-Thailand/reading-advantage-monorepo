@@ -47,13 +47,6 @@
 - [x] Task: Verify coverage ≥ 80% post-fix. **PASS — 80.52% overall**
 - [x] Task: Measure - User Manual Verification 'Phase 6'
 
-## Phase 6: Fixes & Regression Testing
-- [ ] Task: Fix any failing compliance items from Phases 2–5.
-- [ ] Task: Write tests for any new fix code.
-- [ ] Task: Run full test suite to confirm no regressions.
-- [ ] Task: Verify coverage ≥ 80% post-fix.
-- [ ] Task: Measure - User Manual Verification 'Phase 6'
-
 ## Phase 7: Compliance Report
 - [x] Task: Write final compliance report to `report.md`. **Done — 20/25 passing, 80.52% coverage**
 - [x] Task: Update track metadata.json status to completed.

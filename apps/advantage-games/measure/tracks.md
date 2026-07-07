@@ -437,12 +437,12 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-- [ ] **Track: Babel Architect Compliance Audit**
-*Link: [./measure/tracks/babel-architect-compliance-audit_20260426/](./measure/tracks/babel-architect-compliance-audit_20260426/)*
-*Description: Compliance audit for Babel Architect against the 25 shared game specifications.*
+- [x] **Track: Babel Architect Compliance Audit**
+*Link: [./measure/archive/babel-architect-compliance-audit_20260426/](./measure/archive/babel-architect-compliance-audit_20260426/)*
+*Description: Compliance audit for Babel Architect against the 25 shared game specifications. Audit complete; game implementation remains out of scope and is tracked separately.*
 *Priority: Medium*
 *Type: Chore*
-*Status: New*
+*Status: Complete*
 
 ---
 
@@ -554,12 +554,12 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-- [ ] **Track: Magic Defense Compliance Audit**
-*Link: [./measure/tracks/magic-defense-compliance-audit_20260426/](./measure/tracks/magic-defense-compliance-audit_20260426/)*
-*Description: Compliance audit for Magic Defense against the 25 shared game specifications.*
+- [x] **Track: Magic Defense Compliance Audit**
+*Link: [./measure/archive/magic-defense-compliance-audit_20260426/](./measure/archive/magic-defense-compliance-audit_20260426/)*
+*Description: Compliance audit for Magic Defense against the 25 shared game specifications. 20/25 passing, 80.52% coverage; Konva/rAF architectural conversion remains as future debt.*
 *Priority: Medium*
 *Type: Chore*
-*Status: New*
+*Status: Complete*
 
 ---
 
@@ -671,7 +671,7 @@ This file tracks all major tracks for the project. Each track has its own detail
 ---
 
 - [x] **Track: Unpublished Games Fixes**
-*Link: [./measure/tracks/unpublished-games-fixes_20260707/](./measure/tracks/unpublished-games-fixes_20260707/)*
+*Link: [./measure/archive/unpublished-games-fixes_20260707/](./measure/archive/unpublished-games-fixes_20260707/)*
 *Description: Fix all issues from the 2026-07-07 unpublished-games review (4 game-breaking bugs, i18n gaps, layout defects, stale tests, ws-server roomCode).*
 *Priority: High*
 *Type: Bug*
