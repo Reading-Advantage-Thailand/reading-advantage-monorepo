@@ -52,6 +52,8 @@ export interface LeaveMessage {
 export interface StateUpdateMessage {
   type: MessageType.STATE_UPDATE;
   payload: {
+    /** Present on the create_room acknowledgement so the host can share it. */
+    roomCode?: string;
     gameState: GameState;
     timestamp: number;
   };

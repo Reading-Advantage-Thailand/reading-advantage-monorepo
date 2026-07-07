@@ -143,6 +143,7 @@ function handleRoomMessage(
         serializeMessage({
           type: MessageType.STATE_UPDATE,
           payload: {
+            roomCode: room.code,
             gameState: {
               status: 'waiting',
               currentRound: 0,
