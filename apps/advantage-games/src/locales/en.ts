@@ -614,6 +614,16 @@ export default {
 
         // Game cards
         games: {
+          alchemistsSynthesis: {
+            title: "Alchemist's Synthesis",
+            description:
+              "Match vocabulary ingredients to brew powerful elixirs before time runs out.",
+          },
+          archersRevenge: {
+            title: "Archer's Revenge",
+            description:
+              "Defend the realm — shoot the enemy carrying the correct translation.",
+          },
           dragonFlight: {
             title: "Dragon Flight",
             description:
@@ -4164,5 +4174,21 @@ export default {
       consistentEngagement: "Steady {genre} reading over {timeframe}",
       recentInterest: "Growing interest in {genre} this month",
     },
+  },
+  games: {
+    alchemistsSynthesis: {
+      title: "Alchemist's Synthesis",
+      subtitle: "Match the ingredients",
+      round: "Round",
+      score: "Score",
+      instructions: {
+        match:
+          "Match the target word to the correct translation before the round ends.",
+        time: "Answer quickly — each round is timed and wrong picks cost points.",
+      },
+    },
+  },
+  runeForgeChamber: {
+    title: "Rune Forge Chamber",
   },
 } as const;

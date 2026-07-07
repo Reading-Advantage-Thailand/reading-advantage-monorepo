@@ -18,11 +18,6 @@ jest.mock("@/hooks/useSession", () => ({
   }),
 }));
 
-jest.mock("@/locales/client", () => ({
-  useScopedI18n: () => (key: string) => key,
-  useCurrentLocale: () => "en",
-}));
-
 jest.mock(
   "@/components/games/vocabulary/alchemists-synthesis/AlchemistsSynthesisGame",
   () => ({
@@ -53,7 +48,7 @@ describe("AlchemistsSynthesisPage", () => {
 
     render(<AlchemistsSynthesisPage />);
 
-    expect(screen.getByText("pages.student.gamesPage.games.alchemistsSynthesis.title")).toBeInTheDocument();
+    expect(screen.getByText("Alchemist's Synthesis")).toBeInTheDocument();
   });
 
   it("should fetch vocabulary on mount", async () => {
@@ -96,6 +91,6 @@ describe("AlchemistsSynthesisPage", () => {
 
     render(<AlchemistsSynthesisPage />);
 
-    expect(screen.getByText("pages.student.gamesPage.backToGames")).toBeInTheDocument();
+    expect(screen.getByText("Back to Games")).toBeInTheDocument();
   });
 });
