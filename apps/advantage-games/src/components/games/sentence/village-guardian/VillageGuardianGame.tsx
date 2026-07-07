@@ -342,14 +342,15 @@ export function VillageGuardianGame({ vocabulary, onComplete }: VillageGuardianG
                         opacity={isHiding ? 0.5 : 1}
                       />
                       <Text
-                        x={-VILLAGE_GUARDIAN_CONFIG.villagerSize / 2}
+                        x={-VILLAGE_GUARDIAN_CONFIG.villagerSize}
                         y={-VILLAGE_GUARDIAN_CONFIG.villagerSize / 2 - 18}
                         text={villager.word}
                         fontSize={getEffectiveTextSize(14)}
                         fill="white"
                         fontStyle="bold"
-                        width={VILLAGE_GUARDIAN_CONFIG.villagerSize}
+                        width={VILLAGE_GUARDIAN_CONFIG.villagerSize * 2}
                         align="center"
+                        wrap="none"
                       />
                     </Group>
                   )
@@ -366,13 +367,14 @@ export function VillageGuardianGame({ vocabulary, onComplete }: VillageGuardianG
                       strokeWidth={2}
                     />
                     <Text
-                      x={-VILLAGE_GUARDIAN_CONFIG.villagerSize / 2 + 2}
+                      x={-VILLAGE_GUARDIAN_CONFIG.villagerSize}
                       y={-6}
                         text={segment.word}
                         fontSize={getEffectiveTextSize(14)}
                         fill="white"
                         fontStyle="bold"
-                        width={VILLAGE_GUARDIAN_CONFIG.villagerSize - 4}
+                        width={VILLAGE_GUARDIAN_CONFIG.villagerSize * 2}
+                        wrap="none"
                         align="center"
                       />
                   </Group>

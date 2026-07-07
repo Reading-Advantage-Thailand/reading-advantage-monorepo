@@ -331,14 +331,15 @@ export function ShadowGateDungeonGame({ vocabulary, onComplete }: ShadowGateDung
                         strokeWidth={isTarget ? 4 : 2}
                       />
                       <Text
-                        x={-SHADOW_GATE_DUNGEON_CONFIG.crystalRadius}
+                        x={-SHADOW_GATE_DUNGEON_CONFIG.crystalRadius * 2}
                         y={-8}
                         text={crystal.word}
                         fontSize={getEffectiveTextSize(16)}
                         fill="white"
                         fontStyle="bold"
-                        width={SHADOW_GATE_DUNGEON_CONFIG.crystalRadius * 2}
+                        width={SHADOW_GATE_DUNGEON_CONFIG.crystalRadius * 4}
                         align="center"
+                        wrap="none"
                       />
                     </Group>
                   )

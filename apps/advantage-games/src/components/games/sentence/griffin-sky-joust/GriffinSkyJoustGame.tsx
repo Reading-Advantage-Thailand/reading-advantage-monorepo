@@ -387,14 +387,15 @@ export function GriffinSkyJoustGame({ vocabulary, onComplete }: GriffinSkyJoustG
                   shadowColor="#fbbf24"
                 />
                 <Text
-                  x={-enemy.radius}
+                  x={-enemy.radius * 2}
                   y={enemy.radius + 5}
                   text={enemy.word}
                   fontSize={getEffectiveTextSize(16)}
                   fill="white"
                   fontStyle="bold"
-                  width={enemy.radius * 2}
+                  width={enemy.radius * 4}
                   align="center"
+                  wrap="none"
                 />
                 <Text
                   x={-10}
