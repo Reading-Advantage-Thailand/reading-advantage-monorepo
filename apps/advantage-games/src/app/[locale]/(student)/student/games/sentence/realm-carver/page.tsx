@@ -44,7 +44,7 @@ export default function RealmCarverPage({
 
         if (res.ok && data.sentences && data.sentences.length > 0) {
           const sentence = data.sentences[0];
-          const words = sentence.text.split(" ").map((word: string) => ({
+          const words = sentence.term.split(" ").map((word: string) => ({
             term: word,
             translation: word,
           }));
