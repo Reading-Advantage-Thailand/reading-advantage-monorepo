@@ -81,6 +81,12 @@ export function HauntedLibraryGame({ sentences, onComplete, onNavigate }: Haunte
   const { containerRef, enterFullscreen, exitFullscreen } = useGameFullscreen()
   const { getEffectiveTextSize } = useAccessibilitySettings()
   const [gameState, setGameState] = useState<LibraryState | null>(null)
+
+  // Live mirror of `gameState` so the RAF loop can tick outside the React
+  // state updater — updaters must stay pure because React may invoke them
+  // more than once (StrictMode dev, interrupted renders).
+  const gameStateRef = useRef<LibraryState | null>(null)
+  gameStateRef.current = gameState
   const [gamePhase, setGamePhase] = useState<'start' | 'playing' | 'ended'>('start')
   const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard'>('medium')
   const { playSound } = useSound()
@@ -164,17 +170,15 @@ export function HauntedLibraryGame({ sentences, onComplete, onNavigate }: Haunte
 
   // Game Loop with requestAnimationFrame.
   //
-  // The next-frame schedule is hoisted into the `setGameState` updater so a
-  // game-over tick (one tick) consumes exactly one `requestAnimationFrame`
-  // callback. Without this, the loop would self-schedule from inside its
-  // own body after the updater call, using a second RAF even when the
-  // tick already ended the game — which broke the import-harness test's
-  // strict `rafCalls < 2` mock (the first game would consume both RAFs
-  // and the second game would never get a frame).
+  // The tick runs OUTSIDE `setGameState`: state updaters must be pure, and
+  // React can invoke an updater more than once (StrictMode dev, interrupted
+  // concurrent renders). An earlier version scheduled the next RAF from
+  // inside the updater and the duplicated invocations doubled the loop
+  // every frame — an exponential RAF storm that dropped the game to ~1 FPS.
   //
-  // Production impact: a single-RAF-per-tick game still drives the
-  // 60-fps loop correctly because the updater schedules the next frame
-  // every time the game is still in `playing` phase.
+  // RAF economy (import-harness `rafCalls < 2` contract): each tick consumes
+  // exactly one `requestAnimationFrame`, and a game-over tick schedules no
+  // follow-up frame, so a finished game never eats the next game's RAF slot.
   useEffect(() => {
     if (gamePhase !== 'playing') {
       isLoopActiveRef.current = false
@@ -191,25 +195,20 @@ export function HauntedLibraryGame({ sentences, onComplete, onNavigate }: Haunte
       lastFrameRef.current = timestamp
       const clampedDelta = Math.min(delta, 50)
 
-      setGameState(prev => {
-        if (!prev || prev.phase !== 'playing') {
-          return prev
-        }
-        const nextState = tickLibrary(prev, clampedDelta, { dx: input.dx, dy: input.dy })
-        if (nextState.phase !== 'playing') {
-          endGame(nextState)
-          // Game over — do NOT schedule another RAF. The jsdom test mock
-          // has a strict RAF budget; production is unaffected because
-          // real RAFs still fire (the next-frame scheduling for the live
-          // game comes from the early-return path below when the game is
-          // still in `playing`).
-          return nextState
-        }
-        // Still playing — schedule the next frame from inside the updater
-        // so a single RAF tick consumes one `requestAnimationFrame` slot.
-        rafRef.current = requestAnimationFrame(loop)
-        return nextState
-      })
+      const prev = gameStateRef.current
+      if (!prev || prev.phase !== 'playing') {
+        return
+      }
+      const nextState = tickLibrary(prev, clampedDelta, { dx: input.dx, dy: input.dy })
+      gameStateRef.current = nextState
+      setGameState(nextState)
+      if (nextState.phase !== 'playing') {
+        // Game over — `endGame` flips `isLoopActiveRef` off; do not
+        // schedule another frame.
+        endGame(nextState)
+        return
+      }
+      rafRef.current = requestAnimationFrame(loop)
     }
 
     rafRef.current = requestAnimationFrame(loop)
