@@ -148,7 +148,14 @@ const GryphonPatrolGame: React.FC<GryphonPatrolGameProps> = ({ vocabList, diffic
       )}
 
       {(gameState.status === 'playing' || gameState.status === 'won' || gameState.status === 'lost') && (
-        <Stage width={dimensions.width} height={dimensions.height} scaleX={scale} scaleY={scale}>
+        <Stage
+          width={dimensions.width}
+          height={dimensions.height}
+          scaleX={scale}
+          scaleY={scale}
+          x={(dimensions.width - 390 * scale) / 2}
+          y={(dimensions.height - 844 * scale) / 2}
+        >
           <Layer>
             {/* Parallax Background */}
             <Rect 
