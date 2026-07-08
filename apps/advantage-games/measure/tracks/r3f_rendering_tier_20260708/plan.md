@@ -16,14 +16,15 @@ _Story ref: spec.md#story-s1_
           `@react-three/postprocessing` to dependencies (catalog: where available)
     - [x] Add `@react-three/test-renderer`, `@types/three` to devDependencies
     - [x] Verify `pnpm install` and `pnpm build` pass
-- [~] Task: Write failing smoke test for R3F test harness (Red)
-    - [ ] Test: minimal scene renders under `@react-three/test-renderer` in Jest,
+- [x] Task: Write failing smoke test for R3F test harness (Red) (4961592)
+    - [x] Test: minimal scene renders under `@react-three/test-renderer` in Jest,
           scene-graph assertions (mesh present, position/props correct)
-    - [ ] Add any required Jest config/mocks (WebGL/canvas) to jest.config.ts / jest.setup.ts
-- [ ] Task: Implement R3F smoke component to pass tests (Green)
-    - [ ] Create `src/components/games/r3f/SmokeScene.tsx` (or equivalent) minimal component
-    - [ ] Confirm tests pass without a GPU; document harness pattern in a code comment
-- [ ] Task: Verify quality gates for Phase S1
+    - [x] Add any required Jest config/mocks (WebGL/canvas) to jest.config.ts / jest.setup.ts
+          (only IS_REACT_ACT_ENVIRONMENT needed; no transform changes)
+- [x] Task: Implement R3F smoke component to pass tests (Green) (fd2a4b2)
+    - [x] Create `src/components/games/r3f/SmokeScene.tsx` (or equivalent) minimal component
+    - [x] Confirm tests pass without a GPU; document harness pattern in a code comment
+- [~] Task: Verify quality gates for Phase S1
     - [ ] `pnpm lint`, `pnpm check-types`, `CI=true pnpm test` all pass
 - [ ] Task: Measure - User Manual Verification 'Phase S1: Adopt the R3F stack' (Protocol in workflow.md)
 
