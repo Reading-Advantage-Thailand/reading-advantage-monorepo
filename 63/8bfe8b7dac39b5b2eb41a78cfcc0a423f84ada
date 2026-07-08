@@ -1,0 +1,7 @@
+Task: Write failing render-layer tests for R3F Abyssal Well — Red phase (Phase S2, track r3f_rendering_tier_20260708)
+
+Summary: Three suites define the R3F rewrite contract. (1) wellProjection.test.ts: pure lane/depth → [x,y,z] tube mapping (rim at z=0, far end at -WELL.length, all lanes on the wall, wrapping). (2) AbyssalWellScene.test.tsx via @react-three/test-renderer: well tube with one radial segment per lane, player/enemies/projectiles at projected positions, target-vs-other enemy color difference, word labels (drei Text mocked — troika needs async font loading jsdom can't do). (3) AbyssalWellGame.test.tsx updated: Konva mocks replaced with fiber Canvas + scene mocks; new assertions for DOM HUD (translation, target word, lives) — moving HUD from canvas to DOM improves accessibility/testability. All 3 suites fail on missing modules (Red).
+
+Files: src/components/games/sentence/abyssal-well/{wellProjection.test.ts, AbyssalWellScene.test.tsx, AbyssalWellGame.test.tsx}
+
+Why: Contract-first definition of the R3F render layer before implementation.
