@@ -1,4 +1,4 @@
-# Track r3f-rendering-tier_20260708 Context
+# Track r3f_rendering_tier_20260708 Context
 
 - [Specification](./spec.md)
 - [Implementation Plan](./plan.md)

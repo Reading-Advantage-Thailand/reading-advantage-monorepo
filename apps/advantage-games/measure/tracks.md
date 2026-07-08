@@ -679,9 +679,9 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-- [ ] **Track: R3F 3D Rendering Tier**
-*Link: [./tracks/r3f-rendering-tier_20260708/](./tracks/r3f-rendering-tier_20260708/)*
+- [~] **Track: R3F 3D Rendering Tier**
+*Link: [./tracks/r3f_rendering_tier_20260708/](./tracks/r3f_rendering_tier_20260708/)*
 *Description: Add React Three Fiber as a 3D/2.5D rendering tier alongside React-Konva; rewrite The Abyssal Well in R3F as proof of concept and exemplar; add a Konva-vs-R3F stack-selection gate to the game creation workflow; brainstorm and seed R3F game candidates.*
 *Priority: High*
 *Type: Feature*
-*Status: New*
+*Status: In Progress*

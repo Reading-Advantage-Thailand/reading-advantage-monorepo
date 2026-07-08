@@ -1,11 +1,11 @@
 # Implementation Plan: R3F 3D Rendering Tier
 
-Track: r3f-rendering-tier_20260708
+Track: r3f_rendering_tier_20260708
 
 ## Phase S1: Adopt the R3F stack
 _Story ref: spec.md#story-s1_
 
-- [ ] Task: Define rendering-tier contract in tech-stack.md
+- [~] Task: Define rendering-tier contract in tech-stack.md
     - [ ] Add "Rendering Tiers" section: Konva = 2D default, R3F = 3D/2.5D option
     - [ ] Document pure-logic + thin-render-layer rule for R3F games
     - [ ] Document per-game `next/dynamic` loading requirement (no three.js on 2D routes)
