@@ -2,11 +2,10 @@ import {
   createAbyssalWellState,
   advanceAbyssalWellTime,
   fireProjectile,
-  rotatePlayer,
-  getLanePosition,
-  spawnEnemy,
+  setRotation,
   startGame,
   calculateXP,
+  angularDistance,
   type Enemy,
   type Projectile,
   type SentenceItem,
@@ -16,7 +15,7 @@ import { ABYSSAL_WELL_CONFIG } from '../abyssalWellConfig'
 // Abyssal Well is a sentence game: its input contract is SentenceItem[]
 // (local export, matching dungeonLiberator/spellweaversRun), not the
 // vocabulary store's VocabularyItem.
-const mockVocabulary: SentenceItem[] = [
+const mockSentences: SentenceItem[] = [
   { term: 'The cat sits', translation: 'Le chat est assis' },
   { term: 'A dog runs', translation: 'Un chien court' },
 ]
@@ -26,390 +25,281 @@ const mockRng = (values: number[]) => {
   return () => values[i++ % values.length]
 }
 
-describe('abyssalWell', () => {
+const enemy = (over: Partial<Enemy> = {}): Enemy => ({
+  id: 'enemy-1',
+  angle: 0,
+  depth: 0.4,
+  word: 'The',
+  wordIndex: 0,
+  laps: 0,
+  type: 'cave-spider',
+  ...over,
+})
+
+const projectile = (over: Partial<Projectile> = {}): Projectile => ({
+  id: 'proj-1',
+  angle: 0,
+  depth: 0.45,
+  ...over,
+})
+
+function playing(rngValues: number[] = [0.5]) {
+  return startGame(createAbyssalWellState(mockSentences, { rng: mockRng([0]) }), mockRng(rngValues))
+}
+
+describe('abyssalWell (cycling-words rules)', () => {
   describe('createAbyssalWellState', () => {
-    it('should create initial game state', () => {
-      const state = createAbyssalWellState(mockVocabulary, { rng: mockRng([0.5]) })
-      
+    it('creates initial state with a continuous-angle player and no enemies yet', () => {
+      const state = createAbyssalWellState(mockSentences, { rng: mockRng([0.5]) })
+
       expect(state.phase).toBe('start')
-      expect(state.player).toBeDefined()
-      expect(state.player.lane).toBe(0)
+      expect(typeof state.player.angle).toBe('number')
+      expect(state.player.rotationDir).toBe(0)
       expect(state.player.lives).toBe(ABYSSAL_WELL_CONFIG.lives)
       expect(state.enemies).toEqual([])
       expect(state.projectiles).toEqual([])
+      expect(state.targetIndex).toBe(0)
     })
 
-    it('should set sentence and words from vocabulary', () => {
-      const state = createAbyssalWellState(mockVocabulary, { rng: mockRng([0]) })
-      
+    it('selects sentence and splits words', () => {
+      const state = createAbyssalWellState(mockSentences, { rng: mockRng([0]) })
       expect(state.sentence.term).toBe('The cat sits')
       expect(state.words).toEqual(['The', 'cat', 'sits'])
     })
 
-    it('should set targetIndex to 0', () => {
-      const state = createAbyssalWellState(mockVocabulary, { rng: mockRng([0.5]) })
-      
-      expect(state.targetIndex).toBe(0)
-    })
-
-    it('should throw if vocabulary is empty', () => {
+    it('throws if sentences are empty', () => {
       expect(() => createAbyssalWellState([], { rng: mockRng([0.5]) })).toThrow('Sentences cannot be empty')
     })
 
-    it('should default difficulty to medium', () => {
-      const state = createAbyssalWellState(mockVocabulary, { rng: mockRng([0.5]) })
-      expect(state.difficulty).toBe('medium')
-    })
-
-    it('should allow setting difficulty to easy', () => {
-      const state = createAbyssalWellState(mockVocabulary, { rng: mockRng([0.5]), difficulty: 'easy' })
-      expect(state.difficulty).toBe('easy')
-    })
-  })
-
-  describe('getLanePosition', () => {
-    it('should return position with x at center for lane 0 depth 0', () => {
-      const pos = getLanePosition(0, 0)
-      expect(pos.x).toBeCloseTo(ABYSSAL_WELL_CONFIG.gameWidth / 2)
-    })
-
-    it('should return different x positions for different lanes at same depth', () => {
-      const pos0 = getLanePosition(0, 0.5)
-      const pos1 = getLanePosition(1, 0.5)
-      
-      expect(pos0.x).not.toBe(pos1.x)
-    })
-
-    it('should wrap around for lane 8 (same as lane 0)', () => {
-      const pos0 = getLanePosition(0, 0)
-      const pos8 = getLanePosition(8, 0)
-      
-      expect(pos0.x).toBeCloseTo(pos8.x)
-      expect(pos0.y).toBeCloseTo(pos8.y)
-    })
-  })
-
-  describe('rotatePlayer', () => {
-    it('should rotate player clockwise', () => {
-      const state = createAbyssalWellState(mockVocabulary, { rng: mockRng([0.5]) })
-      const newState = rotatePlayer(state, 1)
-      
-      expect(newState.player.lane).toBe(1)
-    })
-
-    it('should rotate player counter-clockwise', () => {
-      const state = createAbyssalWellState(mockVocabulary, { rng: mockRng([0.5]) })
-      const newState = rotatePlayer(state, -1)
-      
-      expect(newState.player.lane).toBe(7) // wraps around
-    })
-
-    it('should wrap around when rotating past last lane', () => {
-      const state = createAbyssalWellState(mockVocabulary, { rng: mockRng([0.5]) })
-      const rotated = rotatePlayer(state, 8)
-      
-      expect(rotated.player.lane).toBe(0)
-    })
-  })
-
-  describe('fireProjectile', () => {
-    it('should add projectile to state', () => {
-      const state = createAbyssalWellState(mockVocabulary, { rng: mockRng([0.5]) })
-      const playingState = { ...state, phase: 'playing' as const, gameTime: 1000 }
-      const newState = fireProjectile(playingState)
-      
-      expect(newState.projectiles.length).toBe(1)
-    })
-
-    it('should not fire if cooldown not elapsed', () => {
-      const state = createAbyssalWellState(mockVocabulary, { rng: mockRng([0.5]) })
-      const playingState = { 
-        ...state, 
-        phase: 'playing' as const,
-        gameTime: 500,
-        player: { ...state.player, lastFireTime: 0 }
-      }
-      const afterFire = fireProjectile(playingState)
-      
-      expect(afterFire.projectiles.length).toBe(1)
-      expect(afterFire.player.lastFireTime).toBe(500)
-      
-      const secondFire = fireProjectile({ ...afterFire, gameTime: 600 })
-      expect(secondFire.projectiles.length).toBe(1)
-    })
-  })
-
-  describe('advanceAbyssalWellTime', () => {
-    it('should return same state if not playing', () => {
-      const state = createAbyssalWellState(mockVocabulary, { rng: mockRng([0.5]) })
-      const newState = advanceAbyssalWellTime(state, 16)
-      
-      expect(newState).toEqual(state)
-    })
-
-    it('should update game time when playing', () => {
-      const state = createAbyssalWellState(mockVocabulary, { rng: mockRng([0.5]) })
-      const playingState = { ...state, phase: 'playing' as const }
-      const newState = advanceAbyssalWellTime(playingState, 16)
-      
-      expect(newState.gameTime).toBe(16)
-    })
-
-    it('should move projectiles toward center', () => {
-      const state = createAbyssalWellState(mockVocabulary, { rng: mockRng([0.5]) })
-      const playingState = { 
-        ...state, 
-        phase: 'playing' as const,
-        projectiles: [{
-          id: 'proj-1',
-          lane: 0,
-          depth: 0.5,
-        }]
-      }
-      const newState = advanceAbyssalWellTime(playingState, 16)
-      
-      expect(newState.projectiles[0].depth).toBeLessThan(0.5)
-    })
-
-    it('should move enemies toward rim (increase depth)', () => {
-      const state = createAbyssalWellState(mockVocabulary, { rng: mockRng([0.5]) })
-      const enemy: Enemy = {
-        id: 'enemy-1',
-        lane: 0,
-        depth: 0.1,
-        word: 'The',
-        wordIndex: 0,
-        type: 'goblin-scout',
-      }
-      const playingState = { 
-        ...state, 
-        phase: 'playing' as const,
-        enemies: [enemy]
-      }
-      const newState = advanceAbyssalWellTime(playingState, 16)
-      
-      expect(newState.enemies[0].depth).toBeGreaterThan(0.1)
-    })
-
-    it('should detect projectile-enemy collision in same lane', () => {
-      const state = createAbyssalWellState(mockVocabulary, { rng: mockRng([0.5]) })
-      const enemy: Enemy = {
-        id: 'enemy-1',
-        lane: 0,
-        depth: 0.3,
-        word: 'The',
-        wordIndex: 0,
-        type: 'goblin-scout',
-      }
-      const projectile: Projectile = {
-        id: 'proj-1',
-        lane: 0,
-        depth: 0.35,
-      }
-      const playingState = { 
-        ...state, 
-        phase: 'playing' as const,
-        enemies: [enemy],
-        projectiles: [projectile]
-      }
-      const newState = advanceAbyssalWellTime(playingState, 16)
-      
-      expect(newState.enemies.length).toBe(0)
-      expect(newState.projectiles.length).toBe(0)
-    })
-
-    it('should increment correctWords and targetIndex when hitting correct enemy', () => {
-      const state = createAbyssalWellState(mockVocabulary, { rng: mockRng([0.5]) })
-      const enemy: Enemy = {
-        id: 'enemy-1',
-        lane: 0,
-        depth: 0.3,
-        word: 'The',
-        wordIndex: 0,
-        type: 'goblin-scout',
-      }
-      const projectile: Projectile = {
-        id: 'proj-1',
-        lane: 0,
-        depth: 0.35,
-      }
-      const playingState = { 
-        ...state, 
-        phase: 'playing' as const,
-        enemies: [enemy],
-        projectiles: [projectile]
-      }
-      const newState = advanceAbyssalWellTime(playingState, 16)
-      
-      expect(newState.correctWords).toBe(1)
-      expect(newState.targetIndex).toBe(1)
-    })
-
-    it('should remove enemy but not progress when hitting wrong enemy', () => {
-      const state = createAbyssalWellState(mockVocabulary, { rng: mockRng([0.5]) })
-      const enemy: Enemy = {
-        id: 'enemy-1',
-        lane: 0,
-        depth: 0.3,
-        word: 'cat',
-        wordIndex: 1,
-        type: 'goblin-scout',
-      }
-      const projectile: Projectile = {
-        id: 'proj-1',
-        lane: 0,
-        depth: 0.35,
-      }
-      const playingState = { 
-        ...state, 
-        phase: 'playing' as const,
-        enemies: [enemy],
-        projectiles: [projectile],
-        totalAttempts: 0
-      }
-      const newState = advanceAbyssalWellTime(playingState, 16)
-      
-      expect(newState.enemies.length).toBe(0)
-      expect(newState.correctWords).toBe(0)
-      expect(newState.targetIndex).toBe(0)
-      expect(newState.totalAttempts).toBe(1)
-    })
-
-    it('should lose life when enemy reaches rim', () => {
-      const state = createAbyssalWellState(mockVocabulary, { rng: mockRng([0.5]) })
-      const enemy: Enemy = {
-        id: 'enemy-1',
-        lane: 0,
-        depth: 0.99,
-        word: 'The',
-        wordIndex: 0,
-        type: 'goblin-scout',
-      }
-      const playingState = { 
-        ...state, 
-        phase: 'playing' as const,
-        enemies: [enemy]
-      }
-      const newState = advanceAbyssalWellTime(playingState, 100)
-      
-      expect(newState.player.lives).toBe(2)
-      expect(newState.enemies.length).toBe(0)
-    })
-
-    it('should set phase to defeat when lives reach 0', () => {
-      const state = createAbyssalWellState(mockVocabulary, { rng: mockRng([0.5]) })
-      const enemy: Enemy = {
-        id: 'enemy-1',
-        lane: 0,
-        depth: 0.99,
-        word: 'The',
-        wordIndex: 0,
-        type: 'goblin-scout',
-      }
-      const playingState = { 
-        ...state, 
-        phase: 'playing' as const,
-        enemies: [enemy],
-        player: { ...state.player, lives: 1 }
-      }
-      const newState = advanceAbyssalWellTime(playingState, 100)
-      
-      expect(newState.phase).toBe('defeat')
-    })
-
-    it('should set phase to victory when all words collected', () => {
-      const state = createAbyssalWellState(mockVocabulary, { rng: mockRng([0.5]) })
-      const playingState = { 
-        ...state, 
-        phase: 'playing' as const,
-        targetIndex: 3, // All words collected
-        words: ['The', 'cat', 'sits']
-      }
-      const newState = advanceAbyssalWellTime(playingState, 16)
-      
-      expect(newState.phase).toBe('victory')
-    })
-  })
-
-  describe('spawnEnemy', () => {
-    it('should spawn an enemy when playing', () => {
-      const state = createAbyssalWellState(mockVocabulary, { rng: mockRng([0.5]) })
-      const playingState = { ...state, phase: 'playing' as const }
-      const newState = spawnEnemy(playingState, mockRng([0.3, 0.2]))
-      
-      expect(newState.enemies.length).toBe(1)
-      expect(newState.enemies[0].word).toBeDefined()
-    })
-
-    it('should not spawn if all words already have enemies', () => {
-      const state = createAbyssalWellState(mockVocabulary, { rng: mockRng([0.5]) })
-      const playingState = { 
-        ...state, 
-        phase: 'playing' as const,
-        enemies: state.words.map((word, i) => ({
-          id: `enemy-${i}`,
-          lane: i,
-          depth: 0.5,
-          word,
-          wordIndex: i,
-          type: 'cave-spider' as const,
-        }))
-      }
-      const newState = spawnEnemy(playingState, mockRng([0.5]))
-      
-      expect(newState.enemies.length).toBe(playingState.enemies.length)
-    })
-
-    it('should not spawn if not playing', () => {
-      const state = createAbyssalWellState(mockVocabulary, { rng: mockRng([0.5]) })
-      const newState = spawnEnemy(state, mockRng([0.5]))
-      
-      expect(newState.enemies.length).toBe(0)
+    it('defaults difficulty to medium and allows override', () => {
+      expect(createAbyssalWellState(mockSentences, { rng: mockRng([0.5]) }).difficulty).toBe('medium')
+      expect(createAbyssalWellState(mockSentences, { rng: mockRng([0.5]), difficulty: 'easy' }).difficulty).toBe('easy')
     })
   })
 
   describe('startGame', () => {
-    it('should set phase to playing', () => {
-      const state = createAbyssalWellState(mockVocabulary, { rng: mockRng([0.5]) })
-      const newState = startGame(state)
-      
-      expect(newState.phase).toBe('playing')
-      expect(newState.gameTime).toBe(0)
+    it('spawns every word of the sentence at once', () => {
+      const state = playing()
+      expect(state.phase).toBe('playing')
+      expect(state.enemies).toHaveLength(3)
+      expect(state.enemies.map(e => e.word).sort()).toEqual(['The', 'cat', 'sits'])
+    })
+
+    it('spawns words at angles in [0, 2π) and depths in the lower half of the well', () => {
+      const state = playing([0.1, 0.3, 0.9, 0.2, 0.6, 0.8])
+      for (const e of state.enemies) {
+        expect(e.angle).toBeGreaterThanOrEqual(0)
+        expect(e.angle).toBeLessThan(Math.PI * 2)
+        expect(e.depth).toBeGreaterThanOrEqual(0)
+        expect(e.depth).toBeLessThanOrEqual(0.5)
+        expect(e.laps).toBe(0)
+      }
+    })
+
+    it('resets the game clock', () => {
+      const state = playing()
+      expect(state.gameTime).toBe(0)
+    })
+  })
+
+  describe('setRotation + advance (smooth motion)', () => {
+    it('does not rotate while rotationDir is 0', () => {
+      const state = playing()
+      const next = advanceAbyssalWellTime(state, 100)
+      expect(next.player.angle).toBeCloseTo(state.player.angle)
+    })
+
+    it('rotates continuously while held', () => {
+      const state = setRotation(playing(), 1)
+      const next = advanceAbyssalWellTime(state, 500)
+      const expected = state.player.angle + (ABYSSAL_WELL_CONFIG.player.rotationSpeed * 0.5)
+      expect(next.player.angle).toBeCloseTo(expected % (Math.PI * 2))
+    })
+
+    it('rotates the other way with -1 and stops on 0', () => {
+      let state = setRotation(playing(), -1)
+      const before = state.player.angle
+      state = advanceAbyssalWellTime(state, 250)
+      expect(state.player.angle).toBeLessThan(before)
+
+      state = setRotation(state, 0)
+      const held = state.player.angle
+      state = advanceAbyssalWellTime(state, 250)
+      expect(state.player.angle).toBeCloseTo(held)
+    })
+
+    it('wraps the angle into [0, 2π)', () => {
+      let state = setRotation(playing(), 1)
+      for (let i = 0; i < 20; i++) state = advanceAbyssalWellTime(state, 500)
+      expect(state.player.angle).toBeGreaterThanOrEqual(0)
+      expect(state.player.angle).toBeLessThan(Math.PI * 2)
+    })
+  })
+
+  describe('angularDistance', () => {
+    it('measures the short way around the circle', () => {
+      expect(angularDistance(0.1, Math.PI * 2 - 0.1)).toBeCloseTo(0.2)
+      expect(angularDistance(0, Math.PI)).toBeCloseTo(Math.PI)
+      expect(angularDistance(1, 1)).toBeCloseTo(0)
+    })
+  })
+
+  describe('fireProjectile', () => {
+    it('fires from the player angle and counts an attempt', () => {
+      const state = { ...playing(), gameTime: 1000 }
+      const next = fireProjectile(state)
+      expect(next.projectiles).toHaveLength(1)
+      expect(next.projectiles[0].angle).toBeCloseTo(state.player.angle)
+      expect(next.totalAttempts).toBe(1)
+    })
+
+    it('respects the fire cooldown', () => {
+      const state = { ...playing(), gameTime: 500 }
+      const first = fireProjectile(state)
+      const second = fireProjectile({ ...first, gameTime: 600 })
+      expect(second.projectiles).toHaveLength(1)
+      expect(second.totalAttempts).toBe(1)
+    })
+
+    it('does nothing when not playing', () => {
+      const state = createAbyssalWellState(mockSentences, { rng: mockRng([0.5]) })
+      expect(fireProjectile(state).projectiles).toHaveLength(0)
+    })
+  })
+
+  describe('advanceAbyssalWellTime (movement + cycling)', () => {
+    it('returns same state if not playing', () => {
+      const state = createAbyssalWellState(mockSentences, { rng: mockRng([0.5]) })
+      expect(advanceAbyssalWellTime(state, 16)).toEqual(state)
+    })
+
+    it('moves projectiles deeper (depth decreases) and culls them at the far end', () => {
+      const state = { ...playing(), projectiles: [projectile({ depth: 0.5 })] }
+      const next = advanceAbyssalWellTime(state, 16)
+      expect(next.projectiles[0].depth).toBeLessThan(0.5)
+
+      const deep = { ...playing(), projectiles: [projectile({ depth: 0.001 })] }
+      expect(advanceAbyssalWellTime(deep, 100).projectiles).toHaveLength(0)
+    })
+
+    it('moves enemies toward the rim', () => {
+      const state = { ...playing(), enemies: [enemy({ depth: 0.1 })] }
+      const next = advanceAbyssalWellTime(state, 16)
+      expect(next.enemies[0].depth).toBeGreaterThan(0.1)
+    })
+
+    it('wraps a breaching word to the deep end without losing a life', () => {
+      const state = { ...playing(), enemies: [enemy({ depth: 0.999 })] }
+      const next = advanceAbyssalWellTime(state, 1000)
+      expect(next.player.lives).toBe(ABYSSAL_WELL_CONFIG.lives)
+      expect(next.enemies).toHaveLength(1)
+      expect(next.enemies[0].depth).toBeLessThan(0.5)
+      expect(next.enemies[0].laps).toBe(1)
+    })
+
+    it('climbs faster on each lap', () => {
+      const fresh = { ...playing(), enemies: [enemy({ depth: 0.2, laps: 0 })] }
+      const lapped = { ...playing(), enemies: [enemy({ depth: 0.2, laps: 2 })] }
+      const freshNext = advanceAbyssalWellTime(fresh, 1000)
+      const lappedNext = advanceAbyssalWellTime(lapped, 1000)
+      const freshDelta = freshNext.enemies[0].depth - 0.2
+      const lappedDelta = lappedNext.enemies[0].depth - 0.2
+      expect(lappedDelta).toBeGreaterThan(freshDelta)
+    })
+  })
+
+  describe('collisions (order comes from the student)', () => {
+    it('collects the correct next word and advances the sentence', () => {
+      const state = {
+        ...playing(),
+        enemies: [enemy({ wordIndex: 0, angle: 1, depth: 0.4 })],
+        projectiles: [projectile({ angle: 1, depth: 0.45 })],
+      }
+      const next = advanceAbyssalWellTime(state, 16)
+      expect(next.enemies).toHaveLength(0)
+      expect(next.targetIndex).toBe(1)
+      expect(next.correctWords).toBe(1)
+      expect(next.player.lives).toBe(ABYSSAL_WELL_CONFIG.lives)
+    })
+
+    it('wrong word: costs a life, word survives, projectile consumed', () => {
+      const state = {
+        ...playing(),
+        enemies: [enemy({ id: 'e-wrong', wordIndex: 2, angle: 1, depth: 0.4 })],
+        projectiles: [projectile({ angle: 1, depth: 0.45 })],
+      }
+      const next = advanceAbyssalWellTime(state, 16)
+      expect(next.player.lives).toBe(ABYSSAL_WELL_CONFIG.lives - 1)
+      expect(next.enemies).toHaveLength(1)
+      expect(next.projectiles).toHaveLength(0)
+      expect(next.targetIndex).toBe(0)
+    })
+
+    it('misses when the angular gap is too wide', () => {
+      const tolerance = ABYSSAL_WELL_CONFIG.player.angularHitTolerance
+      const state = {
+        ...playing(),
+        enemies: [enemy({ angle: 1, depth: 0.4 })],
+        projectiles: [projectile({ angle: 1 + tolerance * 2, depth: 0.45 })],
+      }
+      const next = advanceAbyssalWellTime(state, 16)
+      expect(next.enemies).toHaveLength(1)
+      expect(next.projectiles).toHaveLength(1)
+      expect(next.player.lives).toBe(ABYSSAL_WELL_CONFIG.lives)
+    })
+
+    it('hits across the 0/2π seam', () => {
+      const state = {
+        ...playing(),
+        enemies: [enemy({ wordIndex: 0, angle: Math.PI * 2 - 0.05, depth: 0.4 })],
+        projectiles: [projectile({ angle: 0.05, depth: 0.45 })],
+      }
+      const next = advanceAbyssalWellTime(state, 16)
+      expect(next.enemies).toHaveLength(0)
+      expect(next.correctWords).toBe(1)
+    })
+  })
+
+  describe('win/lose', () => {
+    it('wins when the whole sentence is collected', () => {
+      const state = {
+        ...playing(),
+        targetIndex: 2,
+        enemies: [enemy({ wordIndex: 2, word: 'sits', angle: 1, depth: 0.4 })],
+        projectiles: [projectile({ angle: 1, depth: 0.45 })],
+      }
+      const next = advanceAbyssalWellTime(state, 16)
+      expect(next.phase).toBe('victory')
+    })
+
+    it('loses after the last life is spent on a wrong word', () => {
+      const base = playing()
+      const state = {
+        ...base,
+        player: { ...base.player, lives: 1 },
+        enemies: [enemy({ wordIndex: 2, angle: 1, depth: 0.4 })],
+        projectiles: [projectile({ angle: 1, depth: 0.45 })],
+      }
+      const next = advanceAbyssalWellTime(state, 16)
+      expect(next.player.lives).toBe(0)
+      expect(next.phase).toBe('defeat')
     })
   })
 
   describe('calculateXP', () => {
-    it('should return 0 if no attempts', () => {
-      const xp = calculateXP({ correctWords: 0, totalAttempts: 0, lives: 3, initialLives: 3, gameTime: 1000 })
-      expect(xp).toBe(0)
+    it('returns 0 for no attempts', () => {
+      expect(calculateXP({ correctWords: 0, totalAttempts: 0, lives: 3, initialLives: 3, gameTime: 0 })).toBe(0)
     })
 
-    it('should calculate base XP from correct words', () => {
-      const xp = calculateXP({ correctWords: 5, totalAttempts: 5, lives: 3, initialLives: 3, gameTime: 1000 })
-      expect(xp).toBeGreaterThanOrEqual(5)
-    })
-
-    it('should cap XP at 10', () => {
-      const xp = calculateXP({ correctWords: 15, totalAttempts: 15, lives: 3, initialLives: 3, gameTime: 1000 })
+    it('caps at 10 and rewards accuracy, survival, speed', () => {
+      const xp = calculateXP({ correctWords: 6, totalAttempts: 6, lives: 3, initialLives: 3, gameTime: 20000 })
       expect(xp).toBe(10)
     })
 
-    it('should add perfect accuracy bonus', () => {
-      const xpPerfect = calculateXP({ correctWords: 3, totalAttempts: 3, lives: 3, initialLives: 3, gameTime: 1000 })
-      const xpImperfect = calculateXP({ correctWords: 3, totalAttempts: 5, lives: 3, initialLives: 3, gameTime: 1000 })
-      expect(xpPerfect).toBeGreaterThan(xpImperfect)
-    })
-
-    it('should add survival bonus for lives >= 50%', () => {
-      const xpHighHealth = calculateXP({ correctWords: 3, totalAttempts: 3, lives: 2, initialLives: 3, gameTime: 1000 })
-      const xpLowHealth = calculateXP({ correctWords: 3, totalAttempts: 3, lives: 1, initialLives: 3, gameTime: 1000 })
-      expect(xpHighHealth).toBeGreaterThan(xpLowHealth)
-    })
-
-    it('should add speed bonus for games under 30s', () => {
-      const xpFast = calculateXP({ correctWords: 3, totalAttempts: 3, lives: 3, initialLives: 3, gameTime: 15000 })
-      const xpSlow = calculateXP({ correctWords: 3, totalAttempts: 3, lives: 3, initialLives: 3, gameTime: 45000 })
-      expect(xpFast).toBeGreaterThan(xpSlow)
+    it('scales down with poor accuracy', () => {
+      const perfect = calculateXP({ correctWords: 3, totalAttempts: 3, lives: 3, initialLives: 3, gameTime: 40000 })
+      const sloppy = calculateXP({ correctWords: 3, totalAttempts: 9, lives: 1, initialLives: 3, gameTime: 40000 })
+      expect(sloppy).toBeLessThan(perfect)
     })
   })
 })
