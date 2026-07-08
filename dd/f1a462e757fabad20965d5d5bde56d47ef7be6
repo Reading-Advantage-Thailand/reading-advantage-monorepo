@@ -1,0 +1,9 @@
+Phase Checkpoint: Phase S1 'Adopt the R3F stack' (track r3f_rendering_tier_20260708)
+
+Verification Report:
+- Automated test command: CI=true pnpm test — 187 suites / 1811 tests passed.
+- Additional gates: tsc --noEmit clean; eslint 0 errors (109 pre-existing warnings, count unchanged from before the phase); full pnpm build passed.
+- Manual verification plan presented to user: start dev server, load an existing 2D game and confirm no regressions from dependency changes and the StartScreen icon-type fix; optionally run the R3F harness suite locally.
+- User confirmation: 'Yes. continue' (2026-07-08).
+
+Phase commits: 5308f37 (rendering tiers contract), 83eb17b (R3F dependencies), 4961592 (Red harness test), fd2a4b2 (Green SmokeScene), 1dd7800 (quality-gate fixes).
