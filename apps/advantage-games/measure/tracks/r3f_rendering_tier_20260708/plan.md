@@ -51,10 +51,11 @@ _Story ref: spec.md#story-s2_
     - [x] Load the game via `next/dynamic` (ssr: false) at the existing route
           (already in place at page level — verified)
     - [x] Delete the Konva render code from the game component
-- [~] Task: Compliance and coverage pass
-    - [ ] Run the 25-spec compliance checklist; fix any failures
-    - [ ] Coverage >80% across the game's files
-- [ ] Task: Mobile performance verification
+- [x] Task: Compliance and coverage pass (a2411be)
+    - [x] Run the 25-spec compliance checklist; fix any failures (25/25, 1 documented
+          deviation: R3F canvas per Rendering Tiers contract; report in track dir)
+    - [x] Coverage >80% across the game's files (94.57% stmts, 73 tests)
+- [~] Task: Mobile performance verification
     - [ ] DPR cap + low-poly/instanced geometry in place
     - [ ] Manual check at 390×844 portrait; stable frame rate on mid-range device/emulation
 - [ ] Task: Verify quality gates for Phase S2
