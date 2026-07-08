@@ -1,0 +1,19 @@
+Task: Phase 1 (Track Activation + Baseline) & Phase 2 (Phaser Stack Contract)
+
+Summary:
+- Confirmed archived audit baseline (report.md: 2/25 pass, game missing).
+- Confirmed catalog entry still 'coming-soon' (src/lib/gameCards.ts:218).
+- Activated track in measure/tracks.md (Planned -> In Progress).
+- Updated spec.md asset direction: low-poly/low-color placeholders replace Pixel Crawler dependency.
+- Added Phaser Tier 1B contract to measure/tech-stack.md (React shell + Phaser scene boundary, bundle isolation rule).
+- Added phaser ^3.86.0 (resolves 3.90.0) to pnpm catalog and advantage-games package.json.
+
+Files:
+- measure/tracks.md
+- measure/tracks/babel-architect-phaser-exemplar_20260708/spec.md
+- measure/tech-stack.md
+- apps/advantage-games/package.json
+- pnpm-workspace.yaml
+- pnpm-lock.yaml
+
+Why: Establish the Phaser exemplar track baseline and dependency before writing game logic.
