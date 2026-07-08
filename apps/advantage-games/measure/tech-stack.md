@@ -30,6 +30,12 @@ rendering tier at track creation time (see the "Rendering Stack" decision step i
     depth sorting, or lighting, and every effect becomes bespoke trigonometry. If a game
     needs depth, it is a Tier 2 game.
 
+### Tier 1B — Phaser 3 (2D engine exemplar)
+*   **Stack:** `phaser` loaded behind a React adapter with `next/dynamic` and `ssr: false`.
+*   **Use for:** Tilemaps, spritesheets, collision, 2D physics, camera scrolling, and heavier animation where React-Konva would push too much imperative game-engine work into React.
+*   **Rules:** Pure sentence/vocabulary logic remains in deterministic TypeScript modules under `src/lib/games/`. Phaser scenes receive serializable render state and emit typed player intents; they must not own learning rules, scoring, XP, or completion contracts. Non-Phaser routes must not import Phaser directly.
+*   **Visual baseline:** New Phaser games may ship first with low-poly/low-color in-repo placeholders and stable asset manifests, then replace those assets later with an approved pack.
+
 ### Tier 2 — React Three Fiber (3D / 2.5D)
 *   **Stack:** `three`, `@react-three/fiber`, `@react-three/drei`,
     `@react-three/postprocessing` (runtime); `@react-three/test-renderer`, `@types/three` (dev).

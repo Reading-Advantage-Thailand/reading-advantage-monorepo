@@ -446,12 +446,12 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-- [ ] **Track: Babel Architect Phaser Exemplar**
+- [~] **Track: Babel Architect Phaser Exemplar**
 *Link: [./measure/tracks/babel-architect-phaser-exemplar_20260708/](./measure/tracks/babel-architect-phaser-exemplar_20260708/)*
-*Description: Implement Babel's Architect as the Phaser 2D engine exemplar using Pixel Crawler-aligned RPG pixel art and existing sentence-game contracts. Supersedes the archived audit's implementation remediation.*
+*Description: Implement Babel's Architect as the Phaser 2D engine exemplar using low-poly/low-color placeholder art and existing sentence-game contracts. Supersedes the archived audit's implementation remediation.*
 *Priority: High*
 *Type: Feature*
-*Status: Planned*
+*Status: In Progress*
 
 ---
 

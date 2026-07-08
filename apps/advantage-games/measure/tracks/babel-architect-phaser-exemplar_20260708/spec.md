@@ -17,7 +17,7 @@ The game remains a sentence-order learning game. Players stack or place falling 
 1. Ship Babel's Architect as a playable sentence game in the existing student game catalog.
 2. Establish the Phaser integration pattern for future 2D games while preserving the app's existing React/Next shell.
 3. Validate that Phaser is a better fit than React-Konva for physics/tilemap/spritesheet-heavy 2D games.
-4. Keep the game visually aligned with the new 2D asset direction: Pixel Crawler-style fantasy pixel art.
+4. Ship the first playable version with a simple low-poly/low-color placeholder visual system, then replace placeholders later with an approved fantasy asset pack.
 
 ## Rendering Decision
 
@@ -59,10 +59,12 @@ Keep React responsible for:
 
 ## Asset Requirements
 
-- Primary 2D asset family: Pixel Crawler by Anokolisa.
+- Initial implementation uses in-repo low-poly/low-color placeholder art: simple stone blocks, tower silhouettes, backgrounds, particles, and UI accents with a constrained palette.
+- Placeholder art must be generated or authored directly in the repo and must not block the Phaser architecture, gameplay loop, or browser verification work.
+- Build against a stable asset manifest so preferred asset packs can replace placeholders without code changes.
+- Preferred future 2D asset family: Pixel Crawler by Anokolisa, or another approved pack selected in a separate asset-ingestion decision.
 - Do not commit paid/licensed source art unless licensing and repo policy are explicitly cleared.
-- If the asset pack is not available during implementation, build against an asset manifest and use temporary in-repo placeholders that can be replaced without code changes.
-- Preserve pixel-art rendering: integer scaling, crisp image rendering, no blurry interpolation.
+- Preserve crisp rendering: integer scaling where practical, no blurry interpolation, and readable word-block labels at the 390x844 viewport.
 
 ## Testing Requirements
 
@@ -81,7 +83,7 @@ Keep React responsible for:
 - [ ] Phaser scene renders the tower/blocks, handles player input, and bridges typed events to React.
 - [ ] API routes use shared route factories for sentences and completion.
 - [ ] Game works at the 390×844 portrait reference viewport.
-- [ ] Pixel art renders crisply.
+- [ ] Low-poly/low-color placeholder art renders crisply and can be replaced through the asset manifest.
 - [ ] Automated tests pass.
 - [ ] Manual browser verification confirms game start, correct/incorrect placement, end screen, XP, and route navigation.
 
@@ -92,3 +94,4 @@ Keep React responsible for:
 - Multiplayer.
 - Teacher dashboard changes.
 - Purchasing or committing commercial asset files without a separate asset-ingestion decision.
+- Final preferred asset-pack integration; this track should leave stable replacement paths, not require licensed art.
