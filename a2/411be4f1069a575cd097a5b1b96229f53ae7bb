@@ -1,0 +1,7 @@
+Task: Compliance and coverage pass (Phase S2, track r3f_rendering_tier_20260708)
+
+Summary: Re-audited the R3F Abyssal Well against the 25 shared game specs: 25/25 pass with one documented deviation (item 1 canvas tech — R3F per the Rendering Tiers contract, the sanctioned Tier 2 path). Coverage 94.57% statements across game files (logic 100%, scene 100%, projection 100%, component 86.8%), 73 tests. No any-types; eslint clean. Full report in the track's compliance-report.md.
+
+Files: measure/tracks/r3f_rendering_tier_20260708/compliance-report.md
+
+Why: Spec S2 acceptance criterion — the rewrite must meet the same platform bar as every other game.
