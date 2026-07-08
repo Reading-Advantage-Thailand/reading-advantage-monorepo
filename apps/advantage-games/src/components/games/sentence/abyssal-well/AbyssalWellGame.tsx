@@ -1,7 +1,8 @@
 'use client'
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Stage, Layer, Text, Group, Rect, Circle } from 'react-konva'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { Canvas } from '@react-three/fiber'
+import { Bloom, EffectComposer } from '@react-three/postprocessing'
 import {
   createAbyssalWellState,
   advanceAbyssalWellTime,
@@ -9,17 +10,17 @@ import {
   rotatePlayer,
   spawnEnemy,
   startGame,
-  getLanePosition,
   calculateXP,
   type AbyssalWellState,
+  type SentenceItem,
 } from '@/lib/games/abyssalWell'
 import { ABYSSAL_WELL_CONFIG } from '@/lib/games/abyssalWellConfig'
-import type { VocabularyItem } from '@/store/useGameStore'
 import type { CreatureType, AbyssalWellDifficulty } from '@/lib/games/abyssalWellConfig'
 import { useGameFullscreen } from '@/hooks/useGameFullscreen'
 import { useAccessibilitySettings } from '@/hooks/useAccessibilitySettings'
 import { GameEndScreen } from '@/components/games/game/GameEndScreen'
 import { GameStartScreen } from '@/components/games/game/GameStartScreen'
+import { AbyssalWellScene } from './AbyssalWellScene'
 import { Flame, BookOpen, AlertTriangle, Target } from 'lucide-react'
 
 export type AbyssalWellGameResult = {
@@ -28,7 +29,7 @@ export type AbyssalWellGameResult = {
 }
 
 interface AbyssalWellGameProps {
-  sentences: VocabularyItem[]
+  sentences: SentenceItem[]
   onComplete: (results: AbyssalWellGameResult) => void
 }
 
@@ -53,8 +54,6 @@ export function AbyssalWellGame({ sentences, onComplete }: AbyssalWellGameProps)
   const lastFrameRef = useRef<number>(0)
   const rafRef = useRef<number>(0)
 
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
-
   const resetGame = useCallback(() => {
     if (sentences.length > 0) {
       setGameState(createAbyssalWellState(sentences, {
@@ -72,35 +71,6 @@ export function AbyssalWellGame({ sentences, onComplete }: AbyssalWellGameProps)
       resetGame()
     }
   }, [sentences, gamePhase, resetGame])
-
-  useEffect(() => {
-    if (!containerRef.current) return
-
-    const updateDimensions = () => {
-      if (!containerRef.current) return
-      const { width, height } = containerRef.current.getBoundingClientRect()
-      if (width > 0 && height > 0) setDimensions({ width, height })
-    }
-
-    const observer = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        if (entry.contentRect.width > 0 && entry.contentRect.height > 0) {
-          setDimensions({ width: entry.contentRect.width, height: entry.contentRect.height })
-        }
-      }
-    })
-
-    observer.observe(containerRef.current)
-    const interval = setInterval(updateDimensions, 200)
-    const timeout = setTimeout(() => clearInterval(interval), 2000)
-    updateDimensions()
-
-    return () => {
-      observer.disconnect()
-      clearInterval(interval)
-      clearTimeout(timeout)
-    }
-  }, [containerRef])
 
   useEffect(() => {
     if (gamePhase !== 'playing') return
@@ -165,11 +135,6 @@ export function AbyssalWellGame({ sentences, onComplete }: AbyssalWellGameProps)
     }
   }, [gamePhase, results, onComplete])
 
-  const scale = useMemo(() => {
-    if (dimensions.width === 0 || dimensions.height === 0) return 1
-    return Math.min(dimensions.width / ABYSSAL_WELL_CONFIG.gameWidth, dimensions.height / ABYSSAL_WELL_CONFIG.gameHeight)
-  }, [dimensions])
-
   const handleRotate = useCallback((direction: number) => {
     if (gameState && gameState.phase === 'playing' && gamePhase === 'playing') {
       setGameState(prevState => {
@@ -209,12 +174,12 @@ export function AbyssalWellGame({ sentences, onComplete }: AbyssalWellGameProps)
 
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
     if (gamePhase !== 'playing' || !containerRef.current) return
-    
+
     const rect = containerRef.current.getBoundingClientRect()
     const touch = e.touches[0]
     const x = touch.clientX - rect.left
     const centerX = rect.width / 2
-    
+
     if (x < centerX - 50) {
       handleRotate(-1)
     } else if (x > centerX + 50) {
@@ -255,8 +220,9 @@ export function AbyssalWellGame({ sentences, onComplete }: AbyssalWellGameProps)
         >
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-2">
-              <span className="text-sm uppercase tracking-wider text-white/50">Well Depth:</span>
+              <label htmlFor="abyssal-difficulty" className="text-sm uppercase tracking-wider text-white/50">Well Depth:</label>
               <select
+                id="abyssal-difficulty"
                 value={selectedDifficulty}
                 onChange={(e) => setSelectedDifficulty(e.target.value as AbyssalWellDifficulty)}
                 className="bg-slate-800 border border-white/20 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-cyan-400"
@@ -267,8 +233,9 @@ export function AbyssalWellGame({ sentences, onComplete }: AbyssalWellGameProps)
               </select>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-sm uppercase tracking-wider text-white/50">Enemy Type:</span>
+              <label htmlFor="abyssal-creature" className="text-sm uppercase tracking-wider text-white/50">Enemy Type:</label>
               <select
+                id="abyssal-creature"
                 value={selectedCreature}
                 onChange={(e) => setSelectedCreature(e.target.value as CreatureType)}
                 className="bg-slate-800 border border-white/20 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-cyan-400"
@@ -309,6 +276,7 @@ export function AbyssalWellGame({ sentences, onComplete }: AbyssalWellGameProps)
   }
 
   const targetWord = gameState?.words[gameState.targetIndex] ?? ''
+  const textScale = getEffectiveTextSize(16) / 16
 
   return (
     <div
@@ -317,149 +285,46 @@ export function AbyssalWellGame({ sentences, onComplete }: AbyssalWellGameProps)
       onTouchStart={handleTouchStart}
     >
       {gameState && (
-        <Stage
-          width={ABYSSAL_WELL_CONFIG.gameWidth}
-          height={ABYSSAL_WELL_CONFIG.gameHeight}
-          scale={{ x: scale, y: scale }}
+        <Canvas
+          className="absolute inset-0"
+          camera={{ position: [0, 0, 3.2], fov: 75, near: 0.1, far: 60 }}
+          dpr={[1, 2]}
+          gl={{ antialias: false }}
         >
-          <Layer>
-            <Rect
-              x={0}
-              y={0}
-              width={ABYSSAL_WELL_CONFIG.gameWidth}
-              height={ABYSSAL_WELL_CONFIG.gameHeight}
-              fill="#0f172a"
-            />
-            
-            <Rect
-              x={0}
-              y={0}
-              width={ABYSSAL_WELL_CONFIG.gameWidth}
-              height={50}
-              fill="rgba(0,0,0,0.5)"
-            />
-            
-            <Text
-              x={10}
-              y={15}
-              text={gameState.sentence.translation}
-              fontSize={getEffectiveTextSize(16)}
-              fill="#94a3b8"
-              width={ABYSSAL_WELL_CONFIG.gameWidth - 20}
-              align="center"
-            />
-            
-            <Text
-              x={10}
-              y={70}
-              text={`Target: ${targetWord}`}
-              fontSize={getEffectiveTextSize(18)}
-              fill="#22d3ee"
-              width={ABYSSAL_WELL_CONFIG.gameWidth - 20}
-              align="center"
-            />
-            
-            <Group>
-              <Rect
-                x={10}
-                y={10}
-                width={80}
-                height={30}
-                fill="rgba(239,68,68,0.3)"
-                cornerRadius={5}
-              />
-              <Text
-                x={15}
-                y={17}
-                text={`❤️ ${gameState.player.lives}`}
-                fontSize={getEffectiveTextSize(16)}
-                fill="#f87171"
-              />
-            </Group>
-            
-            {Array.from({ length: ABYSSAL_WELL_CONFIG.wellDepth }).map((_, i) => {
-              const depth = (i + 1) / ABYSSAL_WELL_CONFIG.wellDepth
-              const radius = 20 + (1 - depth) * (ABYSSAL_WELL_CONFIG.rimRadius * 2 - 20)
-              const y = ABYSSAL_WELL_CONFIG.gameHeight - ABYSSAL_WELL_CONFIG.rimRadius - 50 - (1 - depth) * (ABYSSAL_WELL_CONFIG.gameHeight - 150)
-              
-              return (
-                <Circle
-                  key={`ring-${i}`}
-                  x={ABYSSAL_WELL_CONFIG.gameWidth / 2}
-                  y={y}
-                  radius={radius}
-                  stroke={`rgba(34, 211, 238, ${0.1 + depth * 0.2})`}
-                  strokeWidth={1}
-                />
-              )
-            })}
-            
-            {gameState.projectiles.map(proj => {
-              const pos = getLanePosition(proj.lane, proj.depth)
-              return (
-                <Circle
-                  key={proj.id}
-                  x={pos.x}
-                  y={pos.y}
-                  radius={6}
-                  fill="#22d3ee"
-                />
-              )
-            })}
-            
-            {gameState.enemies.map(enemy => {
-              const pos = getLanePosition(enemy.lane, enemy.depth)
-              const size = 12 + enemy.depth * 8
-              const isTarget = enemy.wordIndex === gameState.targetIndex
-              
-              return (
-                <Group key={enemy.id}>
-                  <Circle
-                    x={pos.x}
-                    y={pos.y}
-                    radius={size}
-                    fill={isTarget ? '#fbbf24' : '#7c3aed'}
-                    stroke={isTarget ? '#fde047' : '#a855f7'}
-                    strokeWidth={2}
-                  />
-                  <Text
-                    x={pos.x - 30}
-                    y={pos.y - 8}
-                    text={enemy.word}
-                    fontSize={getEffectiveTextSize(16)}
-                    fill="white"
-                    width={60}
-                    align="center"
-                  />
-                </Group>
-              )
-            })}
-            
-            {(() => {
-              const playerPos = getLanePosition(gameState.player.lane, 1)
-              return (
-                <Group>
-                  <Circle
-                    x={playerPos.x}
-                    y={playerPos.y}
-                    radius={15}
-                    fill="#06b6d4"
-                    stroke="#22d3ee"
-                    strokeWidth={3}
-                  />
-                  <Text
-                    x={playerPos.x - 10}
-                    y={playerPos.y - 6}
-                    text="🔥"
-                    fontSize={getEffectiveTextSize(18)}
-                  />
-                </Group>
-              )
-            })()}
-          </Layer>
-        </Stage>
+          <color attach="background" args={['#0f172a']} />
+          <AbyssalWellScene state={gameState} textScale={textScale} />
+          <EffectComposer>
+            <Bloom intensity={0.9} luminanceThreshold={0.2} luminanceSmoothing={0.6} mipmapBlur />
+          </EffectComposer>
+        </Canvas>
       )}
-      
+
+      {/* DOM HUD: kept out of the 3D scene for accessibility and text scaling */}
+      {gameState && (
+        <div className="pointer-events-none absolute inset-x-0 top-0 flex flex-col gap-1 p-3">
+          <div className="flex items-start justify-between gap-2">
+            <span
+              className="rounded-lg bg-red-500/20 px-2 py-1 font-bold text-red-300"
+              style={{ fontSize: getEffectiveTextSize(16) }}
+            >
+              ❤️ {gameState.player.lives}
+            </span>
+            <span
+              className="rounded-lg bg-cyan-500/10 px-2 py-1 font-semibold text-cyan-300"
+              style={{ fontSize: getEffectiveTextSize(18) }}
+            >
+              Target: {targetWord}
+            </span>
+          </div>
+          <p
+            className="text-center text-slate-300/90"
+            style={{ fontSize: getEffectiveTextSize(16) }}
+          >
+            {gameState.sentence.translation}
+          </p>
+        </div>
+      )}
+
       <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-4 text-sm text-white/50">
         <span>← → Rotate</span>
         <span>Space = Fire</span>

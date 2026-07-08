@@ -18,6 +18,12 @@ jest.mock("./AbyssalWellScene", () => ({
   AbyssalWellScene: () => null,
 }));
 
+// Post-processing needs a real WebGL context; never loadable in jsdom.
+jest.mock("@react-three/postprocessing", () => ({
+  EffectComposer: () => null,
+  Bloom: () => null,
+}));
+
 // Mock hooks
 jest.mock("@/hooks/useGameFullscreen", () => ({
   useGameFullscreen: () => ({
