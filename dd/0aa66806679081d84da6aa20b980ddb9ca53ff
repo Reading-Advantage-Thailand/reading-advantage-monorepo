@@ -1,0 +1,7 @@
+Task: Redesign logic contract — Red phase (Phase S5, track r3f_rendering_tier_20260708)
+
+Summary: Rewrote the logic suite for the cycling-words rules approved in S2 verification feedback: all words spawn at startGame (random angle in [0,2π), depth in lower half); breach wraps harmlessly with laps counter and per-lap speedup; correct-next hit collects and advances; wrong hit costs a life and the word survives; angular-proximity collision incl. the 0/2π seam; totalAttempts counts shots fired; hold-to-rotate via setRotation(-1|0|1) integrated over dt with angle wrapping; angularDistance helper. Suite fails to run (setRotation/angularDistance not exported; Enemy has no angle/laps) — Red.
+
+Files: src/lib/games/__tests__/abyssalWell.test.ts
+
+Why: Contract-first definition of Story S5 gameplay.
