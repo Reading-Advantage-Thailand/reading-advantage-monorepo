@@ -52,6 +52,35 @@ rendering tier at track creation time (see the "Rendering Stack" decision step i
     2 (`dpr={[1, 2]}`); low-poly/stylized geometry; `instancedMesh` for repeated objects;
     prefer `meshBasicMaterial`/few lights over full PBR lighting rigs.
 
+## Asset Families
+
+Added 2026-07-08. Use a small number of cohesive asset families instead of mixing
+unrelated free packs per game.
+
+### 2D RPG / Pixel-Art Games
+*   **Primary asset family:** Pixel Crawler by Anokolisa.
+*   **Use for:** 2D top-down RPG, dungeon, castle, library, cave, garden, forge, hideout,
+    cemetery, sewer, and similar fantasy vocabulary/sentence games.
+*   **Rendering fit:** React-Konva for existing 2D games; Phaser may be evaluated for
+    future tilemap/spritesheet-heavy 2D games.
+*   **Presentation rule:** Preserve the pixel-art look with integer scaling, crisp image
+    rendering, and no blurry interpolation. Do not mix Pixel Crawler assets with unrelated
+    painterly or high-resolution sprite packs inside the same game.
+
+### 3D / R3F Games
+*   **Primary asset family:** KayKit by Kay Lousberg.
+*   **Use for:** R3F / Three.js 3D and 2.5D games that need stylized fantasy characters,
+    dungeon props, skeleton enemies, RPG tools, modular environments, or character
+    animations.
+*   **Format preference:** Prefer KayKit packs that include `.gltf` / `.glb` assets. FBX or
+    OBJ assets may be used only when the track includes an explicit conversion/optimization
+    step.
+*   **Recommended packs:** KayKit Dungeon Remastered, Adventurers, Skeletons, Character
+    Animations, RPG Tools, and compatible medieval/nature packs.
+*   **Presentation rule:** Keep KayKit as the default 3D house style. Use Quaternius,
+    Poly Pizza, or Synty only for documented gaps, and verify that the added assets do not
+    clash visually or create licensing ambiguity.
+
 ## Development and Deployment
 *   **Package Manager:** npm or pnpm (to be determined by environment)
 *   **Linting:** ESLint

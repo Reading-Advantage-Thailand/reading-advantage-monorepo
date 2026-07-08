@@ -446,6 +446,15 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
+- [ ] **Track: Babel Architect Phaser Exemplar**
+*Link: [./measure/tracks/babel-architect-phaser-exemplar_20260708/](./measure/tracks/babel-architect-phaser-exemplar_20260708/)*
+*Description: Implement Babel's Architect as the Phaser 2D engine exemplar using Pixel Crawler-aligned RPG pixel art and existing sentence-game contracts. Supersedes the archived audit's implementation remediation.*
+*Priority: High*
+*Type: Feature*
+*Status: Planned*
+
+---
+
 - [ ] **Track: Sorcerer Ziggurat Compliance Audit**
 *Link: [./measure/tracks/sorcerer-ziggurat-compliance-audit_20260426/](./measure/tracks/sorcerer-ziggurat-compliance-audit_20260426/)*
 *Description: Compliance audit for Sorcerer Ziggurat against the 25 shared game specifications.*

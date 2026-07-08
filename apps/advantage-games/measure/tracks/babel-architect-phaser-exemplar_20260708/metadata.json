@@ -1,0 +1,12 @@
+{
+  "track_id": "babel-architect-phaser-exemplar_20260708",
+  "type": "feature",
+  "status": "planned",
+  "created_at": "2026-07-08T00:00:00Z",
+  "updated_at": "2026-07-08T00:00:00Z",
+  "description": "Implement Babel's Architect as the Phaser 2D engine exemplar using Pixel Crawler-aligned RPG pixel art and the existing sentence-game contracts.",
+  "priority": "high",
+  "estimated_tasks": 18,
+  "actual_tasks": null,
+  "deviation_notes": "Supersedes the archived Babel Architect compliance audit's implementation remediation. The audit remains archived because it is complete baseline evidence."
+}
