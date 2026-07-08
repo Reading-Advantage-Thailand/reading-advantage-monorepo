@@ -66,6 +66,29 @@ _Story ref: spec.md#story-s2_
           three in one async chunk, referenced only by abyssal-well pages en/zh/th)
 - [ ] Task: Measure - User Manual Verification 'Phase S2: Rewrite The Abyssal Well in R3F' (Protocol in workflow.md)
 
+## Phase S5: Pedagogically sound cycling gameplay with smooth motion
+_Story ref: spec.md#story-s5_
+_Added 2026-07-08 from Phase S2 user-verification feedback; executed before S2's manual
+verification task so the user verifies the corrected game once._
+
+- [ ] Task: Redesign logic contract — cycling words, mistake lives, continuous angle (Red)
+    - [ ] Rewrite abyssalWell logic tests: all words spawn at start (random angle/staggered
+          depth), breach wraps with per-lap speedup, wrong hit costs life + word survives,
+          correct hit collects in order, shots-fired accuracy, hold-to-rotate continuous
+          angle via setRotation + dt integration, angular-proximity collision
+- [ ] Task: Implement redesigned logic module (Green)
+    - [ ] Rework abyssalWell.ts state/advance/fire/rotation; update abyssalWellConfig
+          (rotationSpeed, angularHitTolerance, lapSpeedup; drop spawnInterval mechanics)
+- [ ] Task: Update render layer for new rules (Red then Green)
+    - [ ] wellProjection: angle-based positioning API; update tests
+    - [ ] Scene: single enemy color (no target highlight), angle positions; update tests
+    - [ ] Game: keydown/keyup + touch hold-to-rotate, built-sentence HUD (no Target
+          display), rewritten start-screen instructions; update tests
+- [ ] Task: Verify quality gates for Phase S5
+    - [ ] `pnpm lint`, `pnpm check-types`, `CI=true pnpm test` all pass; coverage >80%
+    - [ ] Browser smoke test of the new gameplay
+- [ ] Task: Measure - User Manual Verification 'Phase S5: Cycling gameplay' (Protocol in workflow.md)
+
 ## Phase S3: Stack-selection gate in the game creation workflow
 _Story ref: spec.md#story-s3_
 

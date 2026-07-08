@@ -3,18 +3,49 @@
   "type": "feature",
   "status": "new",
   "created_at": "2026-07-08T00:52:47Z",
-  "updated_at": "2026-07-08T00:52:47Z",
+  "updated_at": "2026-07-08T02:10:00Z",
   "description": "Add React Three Fiber (R3F) as a 3D/2.5D rendering tier alongside React-Konva, rewrite The Abyssal Well in R3F as proof of concept and exemplar, add a stack-selection decision gate to the game creation workflow, and brainstorm/seed R3F game candidates.",
-  "estimated_tasks": 23,
+  "estimated_tasks": 28,
   "actual_tasks": null,
-  "deviation_notes": "",
+  "deviation_notes": "Phase S2 user verification found the original game rules contradictory (breach damage + in-order shooting + highlighted target leaking the answer). Story S5 added: cycling words, mistake-based lives, continuous smooth rotation.",
   "sprint": {
     "goal": "Establish React Three Fiber as a production-ready 3D/2.5D rendering tier alongside React-Konva, proven by a fully compliant R3F rewrite of The Abyssal Well, with a documented stack-selection decision gate in the game creation workflow and a seeded pipeline of 3D game candidates.",
     "stories": [
-      { "id": "S1", "title": "Adopt the R3F stack", "size": "M", "priority": "Must", "status": "pending" },
-      { "id": "S2", "title": "Rewrite The Abyssal Well in R3F", "size": "L", "priority": "Must", "status": "pending" },
-      { "id": "S3", "title": "Stack-selection gate in the game creation workflow", "size": "S", "priority": "Must", "status": "pending" },
-      { "id": "S4", "title": "R3F game candidates brainstorm and seeded tracks", "size": "S", "priority": "Should", "status": "pending" }
+      {
+        "id": "S1",
+        "title": "Adopt the R3F stack",
+        "size": "M",
+        "priority": "Must",
+        "status": "pending"
+      },
+      {
+        "id": "S2",
+        "title": "Rewrite The Abyssal Well in R3F",
+        "size": "L",
+        "priority": "Must",
+        "status": "pending"
+      },
+      {
+        "id": "S3",
+        "title": "Stack-selection gate in the game creation workflow",
+        "size": "S",
+        "priority": "Must",
+        "status": "pending"
+      },
+      {
+        "id": "S4",
+        "title": "R3F game candidates brainstorm and seeded tracks",
+        "size": "S",
+        "priority": "Should",
+        "status": "pending"
+      },
+      {
+        "id": "S5",
+        "title": "Pedagogically sound cycling gameplay with smooth motion",
+        "size": "M",
+        "priority": "Must",
+        "status": "pending"
+      }
     ],
     "demo_notes": null,
     "retro_ref": null

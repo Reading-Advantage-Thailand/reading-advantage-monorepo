@@ -62,6 +62,35 @@ installed and documented in the tech stack
 **Estimate:** L
 **Priority:** Must
 
+### Story S5: Pedagogically sound cycling gameplay with smooth motion
+**As a** student practicing sentence construction
+**I want** to determine the word order myself from the translation, with smooth
+Tempest-like motion around the tunnel
+**So that** the game tests my reading comprehension instead of telling me the answer,
+and feels fluid to play
+
+_Added 2026-07-08 after Phase S2 user verification: the original rules (random spawn
+order + breach damage + highlighted target) were contradictory and leaked the answer._
+
+**Acceptance Criteria:**
+- Given a sentence, When the game starts, Then all its words spawn at once at random
+  angles and staggered depths, and no UI element indicates which word is next — the
+  student derives order from the translation alone.
+- Given a word reaches the rim, When it breaches, Then it wraps harmlessly to the deep
+  end and climbs again slightly faster each lap (no life loss on breach).
+- Given the player shoots a word, When it is the correct next word, Then it is collected
+  and the built-so-far sentence in the HUD grows; When it is a wrong word, Then a life is
+  lost (3 mistakes = defeat) and the word survives; When the shot hits nothing, Then only
+  accuracy/XP suffers.
+- Given input, When the player holds ←/→ (A/D) or the left/right touch zones, Then the
+  ship rotates smoothly and continuously around the rim (continuous angle, not lane
+  snapping), and hits are resolved by angular proximity.
+- Given the rewrite, Then logic stays in the pure deterministic module (injectable RNG),
+  coverage stays >80%, and the 25-spec compliance still passes.
+
+**Estimate:** M
+**Priority:** Must
+
 ### Story S3: Stack-selection gate in the game creation workflow
 **As a** developer starting a new game track
 **I want** the game creation workflow to force an explicit Konva-vs-R3F decision
