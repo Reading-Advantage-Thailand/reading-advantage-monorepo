@@ -1,0 +1,7 @@
+Task: Implement R3F smoke component to pass tests — Green phase (Phase S1, track r3f_rendering_tier_20260708)
+
+Summary: Added SmokeScene.tsx (minimal mesh + boxGeometry + meshBasicMaterial) making all 3 harness tests pass without a GPU. Key pattern documented in the component: R3F scene components render scene elements only, never <Canvas> — the Canvas lives in the game component so tests can mount scenes directly with @react-three/test-renderer. Set IS_REACT_ACT_ENVIRONMENT=true in jest.setup.ts to silence React act() errors from the test renderer. No transformIgnorePatterns changes were needed (fiber/test-renderer ship CJS builds). Remaining console noise is an upstream THREE.Clock deprecation warning from @react-three/fiber, not our code.
+
+Files: src/components/games/r3f/SmokeScene.tsx, jest.setup.ts
+
+Why: Proves the Tier 2 testing story required by the Rendering Tiers contract before any real game is built on it.
