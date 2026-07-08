@@ -39,29 +39,31 @@ Track: babel-architect-phaser-exemplar_20260708
 
 ## Phase 4: API and Route Shell
 
-- [ ] Task: Add API routes
-  - [ ] `src/app/api/v1/games/babel-architect/sentences/route.ts` using `createSentencesRoute`
-  - [ ] `src/app/api/v1/games/babel-architect/complete/route.ts` using `createCompleteRoute`
-- [ ] Task: Add route page and React shell
-  - [ ] Create `/[locale]/student/games/sentence/babel-architect/page.tsx`
-  - [ ] Wire locale/session hooks following existing sentence games
-  - [ ] Keep catalog status `coming-soon` until gameplay verification passes
+- [x] Task: Add API routes
+  - [x] `src/app/api/v1/games/babel-architect/sentences/route.ts` using `createSentencesRoute`
+  - [x] `src/app/api/v1/games/babel-architect/complete/route.ts` using `createCompleteRoute`
+- [x] Task: Add route page and React shell
+  - [x] Create `/[locale]/student/games/sentence/babel-architect/page.tsx`
+  - [x] Wire locale/session hooks following existing sentence games
+  - [x] Keep catalog status `coming-soon` until gameplay verification passes
 
 ## Phase 5: Phaser Adapter and Scene
 
-- [ ] Task: Write adapter lifecycle tests where practical
-  - [ ] Mount creates Phaser game instance
-  - [ ] Unmount destroys Phaser game instance
-  - [ ] Typed scene events reach React callback
-- [ ] Task: Implement Phaser mount component
-  - [ ] Create `src/components/games/sentence/babel-architect/BabelArchitectGame.tsx`
-  - [ ] Load Phaser client-side only
-  - [ ] Bridge logic state and player intents without putting learning rules in Phaser
-- [ ] Task: Implement Phaser scene
-  - [ ] Render tower, falling/placed blocks, target word, stability, progress, and feedback
-  - [ ] Support touch and keyboard input
-  - [ ] Fit 390×844 portrait viewport
-  - [ ] Preserve crisp low-color placeholder rendering and readable word labels
+- [x] Task: Write adapter lifecycle tests where practical
+  - [x] Mount creates Phaser game instance
+  - [x] Unmount destroys Phaser game instance
+  - [x] Typed scene events reach React callback
+- [x] Task: Implement Phaser mount component
+  - [x] Create `src/components/games/sentence/babel-architect/BabelArchitectGame.tsx`
+  - [x] Load Phaser client-side only
+  - [x] Bridge logic state and player intents without putting learning rules in Phaser
+- [x] Task: Implement Phaser scene
+  - [x] Render tower, falling/placed blocks, target word, stability, progress, and feedback
+  - [x] Support touch and keyboard input
+  - [x] Fit 390×844 portrait viewport
+  - [x] Preserve crisp low-color placeholder rendering and readable word labels
+
+[checkpoint: 43e3feb] (Phase 4 API) [checkpoint: 5622683] (Phase 5 adapter) [checkpoint: 12e0361] (Phase 4 page)
 
 ## Phase 6: Low-Color Placeholder Assets and Manifest
 
