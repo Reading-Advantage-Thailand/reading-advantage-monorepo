@@ -1,23 +1,9 @@
 import Phaser from "phaser";
 import type { BabelArchitectBlock, BabelArchitectState } from "@/lib/games/babelArchitect";
+import { BABEL_ARCHITECT_PALETTE } from "./assetManifest";
 
 /** Phaser scene key used by the adapter to start the babel architect scene. */
 export const BABEL_ARCHITECT_SCENE_KEY = "babel-architect";
-
-/** Constrained low-color palette for the placeholder visual system. */
-export const BABEL_ARCHITECT_PALETTE = {
-  background: 0x0b1020,
-  backgroundTop: 0x1a1f3a,
-  stone: 0x6b7280,
-  stoneHighlight: 0x9ca3af,
-  stable: 0x4ade80,
-  unstable: 0xef4444,
-  text: 0xf8fafc,
-  accent: 0xfbbf24,
-  stabilityHigh: 0x22d3ee,
-  stabilityLow: 0xef4444,
-  towerBase: 0x374151,
-} as const;
 
 /** Bridge between React-owned game state and the Phaser render scene. */
 export interface BabelArchitectBridge {
