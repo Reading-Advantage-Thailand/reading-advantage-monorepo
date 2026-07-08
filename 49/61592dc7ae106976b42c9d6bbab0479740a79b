@@ -1,0 +1,7 @@
+Task: Write failing smoke test for R3F test harness — Red phase (Phase S1, track r3f_rendering_tier_20260708)
+
+Summary: Added SmokeScene.test.tsx proving @react-three/test-renderer can mount an R3F scene under Jest/jsdom without a GPU: scene-graph findByType assertions, prop application (position, geometry), and update() re-render. Confirmed the suite fails (module '../SmokeScene' not found) — Red phase of TDD. No jest.config changes were needed for module resolution of the test renderer itself.
+
+Files: src/components/games/r3f/__tests__/SmokeScene.test.tsx
+
+Why: This is the reference testing pattern all Tier 2 (R3F) game render layers will follow.
