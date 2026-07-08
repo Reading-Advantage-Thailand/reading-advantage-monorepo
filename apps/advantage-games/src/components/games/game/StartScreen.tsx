@@ -32,7 +32,7 @@ export function StartScreen({
     id: Difficulty;
     label: string;
     color: string;
-    icon: React.ElementType;
+    icon: React.ComponentType<{ className?: string }>;
   }[] = [
     {
       id: "easy",

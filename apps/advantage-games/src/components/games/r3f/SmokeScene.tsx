@@ -10,6 +10,11 @@
  *   @react-three/test-renderer (no GPU needed).
  * - Props in, scene graph out: no game logic inside the render layer.
  */
+// Type-only import: loads @react-three/fiber's JSX.IntrinsicElements
+// augmentation so <mesh>/<boxGeometry>/... typecheck. Files that import
+// fiber hooks (useFrame etc.) get this implicitly.
+import type {} from '@react-three/fiber'
+
 type SmokeSceneProps = {
   position?: [number, number, number]
 }

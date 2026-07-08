@@ -16,6 +16,15 @@ export default [
     },
   },
   {
+    // R3F scene files (convention: *Scene.tsx) render three.js intrinsic
+    // elements whose props (position, args, attach, ...) are unknown to
+    // react/no-unknown-property.
+    files: ["src/components/games/**/*Scene.tsx"],
+    rules: {
+      "react/no-unknown-property": "off",
+    },
+  },
+  {
     files: [
       "**/*.test.{js,jsx,ts,tsx}",
       "**/__tests__/**/*.{js,jsx,ts,tsx}",
