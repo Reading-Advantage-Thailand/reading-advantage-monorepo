@@ -41,3 +41,15 @@
 ## Rune Forge Chamber Compliance Audit (2026-04-26)
 - Resolved: accessibility labels, test mocks, lint
 - Remaining: None
+
+---
+
+## Babel Architect Phaser Exemplar (2026-07-08)
+
+### Resolved
+- Full implementation: logic module, Phaser adapter/scene, React shell, API routes, page, tests, asset manifest, catalog playable (27 tests, 0 lint errors).
+
+### Remaining
+- Preferred asset-pack (Pixel Crawler by Anokolisa) ingestion not done; visuals are code-generated placeholders behind a stable manifest.
+- Browser/e2e smoke test deferred; Phaser requires a real DOM so manual verification is pending.
+- Keyboard input supports number keys 1-9 only; arrow-key navigation not wired.

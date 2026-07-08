@@ -28,3 +28,9 @@
   - High baseline compliance means audit is primarily verification
 
 **Previous audits (condensed):** Rune Forge Chamber, Spellweaver's Run, Village Guardian, Dungeon Liberator, Potion Rush, Rune Match, Castle Defense, Alchemists Synthesis, Wizard vs Zombie, RPG Battle, Magic Defense, Archer's Revenge, Griffin Sky-Joust, Realm Carver, Paladin's Twin-Soul, Dragon Rider, Storm Castle Tower, Abyssal Well, Labyrinth Goblin King, Gryphon Patrol, Griffin Riders Escape.
+
+## Track: Babel Architect Phaser Exemplar (2026-07-08)
+- Phaser mounts cleanly behind a thin adapter: React owns the RAF tick loop and pure logic; the scene reads a serializable bridge and emits placement intents. No learning rules leak into Phaser.
+- Phaser is testable in jsdom by mocking the `phaser` module and asserting the adapter lifecycle (mount, setState, intent forwarding, destroy); the real scene is browser-verified.
+- Keep HUD text (translation, stability, sentence counter) in the DOM overlay, not in the Phaser canvas, so screen readers and component tests can read it.
+- A code-generated low-color palette satisfies the placeholder-art requirement without binary asset files; a stable manifest maps each slot to a future Pixel Crawler replacement path.
