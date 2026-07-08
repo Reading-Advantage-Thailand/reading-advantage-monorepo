@@ -42,6 +42,14 @@ _Link: [./measure/archive/complete_site_redesign_20260412_archived/](./measure/a
 
 ---
 
+### [x] Track: Fix Link Localization & Align i18n Convention (Archived)
+
+**Status:** Archived 2026-07-07 — S1 (locale-detection middleware/proxy.ts) and S2 (replace `next/link` with `next-intl` `Link` + ESLint guard + Playwright spec) shipped and verified live. S3–S5 (i18n folder-layout cleanup, blog hardcoded-locale audit, tech-stack docs) deferred to a future track.
+
+_Link: [./measure/archive/link_localization_fix_20260525/](./measure/archive/link_localization_fix_20260525/)_
+
+---
+
 ## Upcoming Tracks (created 2026-04-08)
 
 ### [ ] Track: Reduce Excessive Client Component Boundaries
@@ -191,6 +199,3 @@ _Link: [./archive/video_pipeline_fix_20260429/](./archive/video_pipeline_fix_202
   *Link: [./tracks/pr_website_alignment_20260501/](./tracks/pr_website_alignment_20260501/)*
 
 ---
-
-- [x] **Track: Fix Link Localization & Align i18n Convention** (partial — S1+S2 done; S3-S5 deferred)
-  *Link: [./tracks/link_localization_fix_20260525/](./tracks/link_localization_fix_20260525/)*
