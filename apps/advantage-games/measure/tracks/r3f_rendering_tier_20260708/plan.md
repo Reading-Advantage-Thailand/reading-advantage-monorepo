@@ -60,7 +60,7 @@ _Story ref: spec.md#story-s2_
     - [x] Manual check at 390×844 portrait; stable frame rate on mid-range device/emulation
           (rendering verified in browser against prod export; live FPS blocked by tab
           occlusion suspending rAF — folded into phase manual verification)
-- [~] Task: Verify quality gates for Phase S2
+- [x] Task: Verify quality gates for Phase S2 (e759292)
     - [x] `pnpm lint`, `pnpm check-types`, `CI=true pnpm test` all pass (189 suites / 1824 tests)
     - [x] Confirm 2D game routes show no three.js in their client bundles (build output check:
           three in one async chunk, referenced only by abyssal-well pages en/zh/th)
