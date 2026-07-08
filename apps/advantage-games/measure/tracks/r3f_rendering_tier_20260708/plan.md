@@ -24,9 +24,11 @@ _Story ref: spec.md#story-s1_
 - [x] Task: Implement R3F smoke component to pass tests (Green) (fd2a4b2)
     - [x] Create `src/components/games/r3f/SmokeScene.tsx` (or equivalent) minimal component
     - [x] Confirm tests pass without a GPU; document harness pattern in a code comment
-- [~] Task: Verify quality gates for Phase S1
-    - [ ] `pnpm lint`, `pnpm check-types`, `CI=true pnpm test` all pass
-- [ ] Task: Measure - User Manual Verification 'Phase S1: Adopt the R3F stack' (Protocol in workflow.md)
+- [x] Task: Verify quality gates for Phase S1 (1dd7800)
+    - [x] `pnpm lint`, `pnpm check-types`, `CI=true pnpm test` all pass
+          (fixed StartScreen React.ElementType/JSX-augmentation clash; scoped
+          react/no-unknown-property off for *Scene.tsx R3F files)
+- [~] Task: Measure - User Manual Verification 'Phase S1: Adopt the R3F stack' (Protocol in workflow.md)
 
 ## Phase S2: Rewrite The Abyssal Well in R3F
 _Story ref: spec.md#story-s2_
