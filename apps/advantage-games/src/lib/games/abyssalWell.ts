@@ -7,25 +7,34 @@ export type SentenceItem = {
 
 export type GamePhase = 'start' | 'playing' | 'victory' | 'defeat'
 
+/**
+ * Cycling-words rules (Story S5, track r3f_rendering_tier_20260708):
+ * every word of the sentence circulates in the well; the student decides
+ * the order from the translation. Wrong hits cost lives; breaches wrap
+ * harmlessly (slightly faster each lap). Angles are continuous radians —
+ * motion is smooth, not lane-snapped.
+ */
 export type Player = {
-  lane: number
+  angle: number
+  rotationDir: -1 | 0 | 1
   lives: number
   lastFireTime: number
 }
 
 export type Enemy = {
   id: string
-  lane: number
-  depth: number // 0 = far end (spawn), 1 = rim (reached)
+  angle: number
+  depth: number // 0 = far end, 1 = rim
   word: string
   wordIndex: number
+  laps: number
   type: CreatureType
 }
 
 export type Projectile = {
   id: string
-  lane: number
-  depth: number // 0 = far end, 1 = rim (player position)
+  angle: number
+  depth: number // 1 = rim (player), shrinks toward 0
 }
 
 export type AbyssalWellState = {
@@ -49,6 +58,18 @@ export type AbyssalWellConfig = {
   creatureType?: CreatureType
 }
 
+const TWO_PI = Math.PI * 2
+
+function wrapAngle(angle: number): number {
+  return ((angle % TWO_PI) + TWO_PI) % TWO_PI
+}
+
+/** Shortest angular gap between two angles, in [0, π]. */
+export function angularDistance(a: number, b: number): number {
+  const diff = Math.abs(wrapAngle(a) - wrapAngle(b))
+  return Math.min(diff, TWO_PI - diff)
+}
+
 export function createAbyssalWellState(
   sentences: SentenceItem[],
   config: AbyssalWellConfig = {}
@@ -68,7 +89,8 @@ export function createAbyssalWellState(
   return {
     phase: 'start',
     player: {
-      lane: 0,
+      angle: Math.PI * 1.5, // bottom of the rim
+      rotationDir: 0,
       lives: ABYSSAL_WELL_CONFIG.lives,
       lastFireTime: 0,
     },
@@ -85,48 +107,54 @@ export function createAbyssalWellState(
   }
 }
 
-export function getLanePosition(lane: number, depth: number): { x: number; y: number } {
-  const normalizedLane = ((lane % ABYSSAL_WELL_CONFIG.lanes) + ABYSSAL_WELL_CONFIG.lanes) % ABYSSAL_WELL_CONFIG.lanes
-  const angle = (normalizedLane / ABYSSAL_WELL_CONFIG.lanes) * Math.PI * 2 - Math.PI / 2
-  
-  const centerX = ABYSSAL_WELL_CONFIG.gameWidth / 2
-  const rimY = ABYSSAL_WELL_CONFIG.gameHeight - ABYSSAL_WELL_CONFIG.rimRadius - 50
-  
-  const maxRadius = ABYSSAL_WELL_CONFIG.rimRadius * 2
-  const minRadius = 20
-  
-  const radius = minRadius + (1 - depth) * (maxRadius - minRadius)
-  
-  const x = centerX + Math.cos(angle) * radius
-  const y = rimY - (1 - depth) * (ABYSSAL_WELL_CONFIG.gameHeight - rimY - 50)
-  
-  return { x, y }
-}
+/**
+ * Starts play and spawns every word at once: random angles, depths scattered
+ * in the lower half of the well. Spawn placement carries no information about
+ * word order — the student derives order from the translation.
+ */
+export function startGame(
+  state: AbyssalWellState,
+  rng: () => number = Math.random
+): AbyssalWellState {
+  const enemies: Enemy[] = state.words.map((word, wordIndex) => ({
+    id: `enemy-${wordIndex}-${word}`,
+    angle: wrapAngle(rng() * TWO_PI),
+    depth: rng() * 0.5,
+    word,
+    wordIndex,
+    laps: 0,
+    type: state.creatureType,
+  }))
 
-export function rotatePlayer(state: AbyssalWellState, direction: number): AbyssalWellState {
-  const newLane = ((state.player.lane + direction) % ABYSSAL_WELL_CONFIG.lanes + ABYSSAL_WELL_CONFIG.lanes) % ABYSSAL_WELL_CONFIG.lanes
-  
   return {
     ...state,
-    player: {
-      ...state.player,
-      lane: newLane,
-    },
+    phase: 'playing',
+    gameTime: 0,
+    enemies,
+    projectiles: [],
+  }
+}
+
+/** Sets the held rotation direction (-1 = counter-clockwise, 1 = clockwise, 0 = stop). */
+export function setRotation(state: AbyssalWellState, dir: -1 | 0 | 1): AbyssalWellState {
+  return {
+    ...state,
+    player: { ...state.player, rotationDir: dir },
   }
 }
 
 export function fireProjectile(state: AbyssalWellState): AbyssalWellState {
   if (state.phase !== 'playing') return state
-  
+
   const now = state.gameTime
   if (now - state.player.lastFireTime < ABYSSAL_WELL_CONFIG.player.fireRate) {
     return state
   }
 
   const projectile: Projectile = {
-    id: `proj-${Date.now()}-${Math.random()}`,
-    lane: state.player.lane,
-    depth: 1, // starts at rim (player position)
+    id: `proj-${now}-${state.totalAttempts}`,
+    angle: state.player.angle,
+    depth: 1,
   }
 
   return {
@@ -136,6 +164,7 @@ export function fireProjectile(state: AbyssalWellState): AbyssalWellState {
       lastFireTime: now,
     },
     projectiles: [...state.projectiles, projectile],
+    totalAttempts: state.totalAttempts + 1,
   }
 }
 
@@ -150,13 +179,26 @@ export function advanceAbyssalWellTime(
     gameTime: state.gameTime + dt,
   }
 
+  nextState = rotatePlayer(nextState, dt)
   nextState = updateProjectiles(nextState, dt)
   nextState = updateEnemies(nextState, dt)
-  nextState = checkCollisions(nextState)
-  nextState = checkEnemyReachRim(nextState)
+  nextState = resolveHits(nextState)
   nextState = checkVictoryCondition(nextState)
 
   return nextState
+}
+
+function rotatePlayer(state: AbyssalWellState, dt: number): AbyssalWellState {
+  if (state.player.rotationDir === 0) return state
+
+  const delta = state.player.rotationDir * ABYSSAL_WELL_CONFIG.player.rotationSpeed * (dt / 1000)
+  return {
+    ...state,
+    player: {
+      ...state.player,
+      angle: wrapAngle(state.player.angle + delta),
+    },
+  }
 }
 
 function updateProjectiles(state: AbyssalWellState, dt: number): AbyssalWellState {
@@ -178,118 +220,74 @@ function updateEnemies(state: AbyssalWellState, dt: number): AbyssalWellState {
   const creatureSpeed = getCreatureSpeed(state.creatureType)
   const baseSpeed = creatureSpeed / ABYSSAL_WELL_CONFIG.gameHeight
 
-  const updatedEnemies = state.enemies.map(e => ({
-    ...e,
-    depth: e.depth + baseSpeed * speedFactor,
-  }))
+  const updatedEnemies = state.enemies.map(e => {
+    const lapMultiplier = 1 + e.laps * ABYSSAL_WELL_CONFIG.enemy.lapSpeedup
+    let depth = e.depth + baseSpeed * lapMultiplier * speedFactor
+    let laps = e.laps
+    if (depth >= 1) {
+      // Breach: wrap back to the deep end, harmlessly, a little faster.
+      depth -= 1
+      laps += 1
+    }
+    return { ...e, depth, laps }
+  })
 
   return { ...state, enemies: updatedEnemies }
 }
 
-function checkCollisions(state: AbyssalWellState): AbyssalWellState {
-  const { enemies, projectiles, targetIndex, correctWords, totalAttempts } = state
-  
-  let newEnemies = [...enemies]
-  let newProjectiles = [...projectiles]
-  let newTargetIndex = targetIndex
-  let newCorrectWords = correctWords
-  let newTotalAttempts = totalAttempts
+function resolveHits(state: AbyssalWellState): AbyssalWellState {
+  const tolerance = ABYSSAL_WELL_CONFIG.player.angularHitTolerance
 
-  for (let i = newProjectiles.length - 1; i >= 0; i--) {
-    const proj = newProjectiles[i]
-    
-    for (let j = newEnemies.length - 1; j >= 0; j--) {
-      const enemy = newEnemies[j]
-      
-      if (proj.lane === enemy.lane && Math.abs(proj.depth - enemy.depth) < 0.15) {
-        newTotalAttempts++
-        
-        if (enemy.wordIndex === newTargetIndex) {
-          newCorrectWords++
-          newTargetIndex++
-        }
-        
-        newEnemies = newEnemies.filter((_, idx) => idx !== j)
-        newProjectiles = newProjectiles.filter((_, idx) => idx !== i)
-        break
+  let enemies = [...state.enemies]
+  let projectiles = [...state.projectiles]
+  let { targetIndex, correctWords } = state
+  let lives = state.player.lives
+
+  for (let i = projectiles.length - 1; i >= 0; i--) {
+    const proj = projectiles[i]
+
+    for (let j = enemies.length - 1; j >= 0; j--) {
+      const enemy = enemies[j]
+      const hits =
+        angularDistance(proj.angle, enemy.angle) < tolerance &&
+        Math.abs(proj.depth - enemy.depth) < 0.15
+
+      if (!hits) continue
+
+      if (enemy.wordIndex === targetIndex) {
+        // Correct next word: collect it.
+        correctWords++
+        targetIndex++
+        enemies = enemies.filter((_, idx) => idx !== j)
+      } else {
+        // Wrong word: the mistake costs a life; the word survives.
+        lives--
       }
+      projectiles = projectiles.filter((_, idx) => idx !== i)
+      break
     }
   }
 
   return {
     ...state,
-    enemies: newEnemies,
-    projectiles: newProjectiles,
-    targetIndex: newTargetIndex,
-    correctWords: newCorrectWords,
-    totalAttempts: newTotalAttempts,
-  }
-}
-
-function checkEnemyReachRim(state: AbyssalWellState): AbyssalWellState {
-  const { enemies, player } = state
-  
-  const breachedEnemies = enemies.filter(e => e.depth >= 1)
-  
-  if (breachedEnemies.length === 0) return state
-
-  const newLives = player.lives - breachedEnemies.length
-  const newEnemies = enemies.filter(e => e.depth < 1)
-
-  return {
-    ...state,
+    enemies,
+    projectiles,
+    targetIndex,
+    correctWords,
     player: {
-      ...player,
-      lives: Math.max(0, newLives),
+      ...state.player,
+      lives: Math.max(0, lives),
     },
-    enemies: newEnemies,
-    phase: newLives <= 0 ? 'defeat' : state.phase,
+    phase: lives <= 0 ? 'defeat' : state.phase,
   }
 }
 
 function checkVictoryCondition(state: AbyssalWellState): AbyssalWellState {
+  if (state.phase !== 'playing') return state
   if (state.targetIndex >= state.words.length) {
     return { ...state, phase: 'victory' }
   }
   return state
-}
-
-export function spawnEnemy(
-  state: AbyssalWellState,
-  rng: () => number = Math.random
-): AbyssalWellState {
-  if (state.phase !== 'playing') return state
-  
-  const unassignedWords = state.words
-    .map((word, index) => ({ word, wordIndex: index }))
-    .filter(({ wordIndex }) => !state.enemies.some(e => e.wordIndex === wordIndex))
-  
-  if (unassignedWords.length === 0) return state
-  
-  const { word, wordIndex } = unassignedWords[Math.floor(rng() * unassignedWords.length)]
-  const lane = Math.floor(rng() * ABYSSAL_WELL_CONFIG.lanes)
-  
-  const enemy: Enemy = {
-    id: `enemy-${Date.now()}-${Math.random()}`,
-    lane,
-    depth: 0,
-    word,
-    wordIndex,
-    type: state.creatureType,
-  }
-  
-  return {
-    ...state,
-    enemies: [...state.enemies, enemy],
-  }
-}
-
-export function startGame(state: AbyssalWellState): AbyssalWellState {
-  return {
-    ...state,
-    phase: 'playing',
-    gameTime: 0,
-  }
 }
 
 export function calculateXP(params: {

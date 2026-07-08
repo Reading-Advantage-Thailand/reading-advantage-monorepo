@@ -18,13 +18,15 @@ export const ABYSSAL_WELL_CONFIG = {
     fireRate: 300,
     projectileSpeed: 400,
     radius: 18,
+    rotationSpeed: 2.4, // radians per second while rotation is held
+    angularHitTolerance: Math.PI / 8, // half a former lane width
   },
 
   enemy: {
     baseSpeed: 50,
-    spawnInterval: 2000,
     radius: 20,
     wordOrbRadius: 25,
+    lapSpeedup: 0.15, // climb-speed multiplier gained per completed lap
   },
 
   creatureSpeeds: {

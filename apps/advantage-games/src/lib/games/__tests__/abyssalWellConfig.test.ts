@@ -20,11 +20,13 @@ describe('abyssalWellConfig', () => {
     it('should have player config', () => {
       expect(ABYSSAL_WELL_CONFIG.player.fireRate).toBeGreaterThan(0)
       expect(ABYSSAL_WELL_CONFIG.player.projectileSpeed).toBeGreaterThan(0)
+      expect(ABYSSAL_WELL_CONFIG.player.rotationSpeed).toBeGreaterThan(0)
+      expect(ABYSSAL_WELL_CONFIG.player.angularHitTolerance).toBeGreaterThan(0)
     })
 
     it('should have enemy config', () => {
       expect(ABYSSAL_WELL_CONFIG.enemy.baseSpeed).toBeGreaterThan(0)
-      expect(ABYSSAL_WELL_CONFIG.enemy.spawnInterval).toBeGreaterThan(0)
+      expect(ABYSSAL_WELL_CONFIG.enemy.lapSpeedup).toBeGreaterThan(0)
     })
 
     it('should have 3 lives', () => {
