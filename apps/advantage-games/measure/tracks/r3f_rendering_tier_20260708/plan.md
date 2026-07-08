@@ -11,12 +11,12 @@ _Story ref: spec.md#story-s1_
     - [x] Document per-game `next/dynamic` loading requirement (no three.js on 2D routes)
     - [x] Document mobile perf budget (low-poly, DPR cap ≤2, instancing, portrait 390×844)
     - [x] Document `@react-three/rapier` as approved-but-deferred physics choice
-- [~] Task: Install R3F dependencies
-    - [ ] Add `three`, `@react-three/fiber`, `@react-three/drei`,
+- [x] Task: Install R3F dependencies (83eb17b)
+    - [x] Add `three`, `@react-three/fiber`, `@react-three/drei`,
           `@react-three/postprocessing` to dependencies (catalog: where available)
-    - [ ] Add `@react-three/test-renderer`, `@types/three` to devDependencies
-    - [ ] Verify `pnpm install` and `pnpm build` pass
-- [ ] Task: Write failing smoke test for R3F test harness (Red)
+    - [x] Add `@react-three/test-renderer`, `@types/three` to devDependencies
+    - [x] Verify `pnpm install` and `pnpm build` pass
+- [~] Task: Write failing smoke test for R3F test harness (Red)
     - [ ] Test: minimal scene renders under `@react-three/test-renderer` in Jest,
           scene-graph assertions (mesh present, position/props correct)
     - [ ] Add any required Jest config/mocks (WebGL/canvas) to jest.config.ts / jest.setup.ts
