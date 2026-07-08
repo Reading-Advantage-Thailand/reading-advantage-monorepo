@@ -1,0 +1,14 @@
+Task: Phase 5 — React Shell
+
+Summary:
+- BabelArchitectGame.tsx owns game state, RAF tick loop, start/end screens.
+- Mounts Phaser adapter client-side via useEffect; pushes state via bridge.
+- Difficulty selector (easy/normal/hard), fullscreen, accessibility hooks.
+- DOM HUD overlay shows translation, stability, sentence counter for screen readers.
+- 6 component tests (start, difficulty, play HUD, victory, restart).
+
+Files:
+- src/components/games/sentence/babel-architect/BabelArchitectGame.tsx
+- src/components/games/sentence/babel-architect/BabelArchitectGame.test.tsx
+
+Why: React must own the game loop and completion contract so Phaser stays a dumb renderer.
