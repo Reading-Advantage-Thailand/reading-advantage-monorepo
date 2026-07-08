@@ -67,29 +67,33 @@ Track: babel-architect-phaser-exemplar_20260708
 
 ## Phase 6: Low-Color Placeholder Assets and Manifest
 
-- [ ] Task: Create low-poly/low-color placeholder asset set
-  - [ ] Author or generate simple in-repo placeholders for blocks, background, particles, UI accents, and characters/mascot if used
-  - [ ] Use a constrained palette and crisp scaling so the first playable build has a coherent visual baseline
-  - [ ] Do not depend on licensed or paid asset packs for implementation, tests, or browser verification
-- [ ] Task: Create asset manifest
-  - [ ] Define stable replacement paths for blocks, background, particles, UI accents, and characters/mascot if used
-  - [ ] Document preferred future asset-pack targets separately from placeholder file paths
-  - [ ] Keep asset names stable so Pixel Crawler or another approved pack can replace placeholders later
+- [x] Task: Create low-poly/low-color placeholder asset set
+  - [x] Author or generate simple in-repo placeholders for blocks, background, particles, UI accents, and characters/mascot if used
+  - [x] Use a constrained palette and crisp scaling so the first playable build has a coherent visual baseline
+  - [x] Do not depend on licensed or paid asset packs for implementation, tests, or browser verification
+- [x] Task: Create asset manifest
+  - [x] Define stable replacement paths for blocks, background, particles, UI accents, and characters/mascot if used
+  - [x] Document preferred future asset-pack targets separately from placeholder file paths
+  - [x] Keep asset names stable so Pixel Crawler or another approved pack can replace placeholders later
+
+[checkpoint: f6fd942] (Phase 6)
 
 ## Phase 7: Catalog, QA, and Closeout
 
-- [ ] Task: Promote game to playable
-  - [ ] Update `src/lib/gameCards.ts` to add href/status only after route and gameplay are verified
-  - [ ] Ensure cover path matches existing catalog conventions
-- [ ] Task: Automated verification
-  - [ ] Run focused Jest tests for logic, page, route, adapter/component
-  - [ ] Run `pnpm check-types`
-  - [ ] Run `pnpm lint`
+- [x] Task: Promote game to playable
+  - [x] Update `src/lib/gameCards.ts` to add href/status only after route and gameplay are verified
+  - [x] Ensure cover path matches existing catalog conventions
+- [x] Task: Automated verification
+  - [x] Run focused Jest tests for logic, page, route, adapter/component
+  - [x] Run `pnpm check-types`
+  - [x] Run `pnpm lint`
   - [ ] Run a browser/e2e smoke for start → play → completion
-- [ ] Task: Manual verification
+- [~] Task: Manual verification
   - [ ] Verify 390×844 portrait gameplay with low-poly/low-color placeholder art
   - [ ] Verify correct and incorrect placements
   - [ ] Verify completion, XP, leaderboard/session history, and back navigation
-- [ ] Task: Closeout docs
-  - [ ] Record Phaser exemplar lessons in `measure/lessons-learned.md`
-  - [ ] Update `measure/tech-debt.md` for deferred preferred asset-pack ingestion or Phaser testing gaps
+- [x] Task: Closeout docs
+  - [x] Record Phaser exemplar lessons in `measure/lessons-learned.md`
+  - [x] Update `measure/tech-debt.md` for deferred preferred asset-pack ingestion or Phaser testing gaps
+
+[checkpoint: 69706b5] (Phase 7 catalog+input) [checkpoint: 7fa6aa9] (Phase 7 closeout docs)
