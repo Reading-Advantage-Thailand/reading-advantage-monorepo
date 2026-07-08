@@ -4,7 +4,7 @@
 - fullscreen, accessibility, text sizes, calculateXP, difficulty naming, API factories, i18n/session, hook deps, unused imports, component tests, assets.
 
 ## Remaining
-- VocabularyItem[] vs SentenceItem[] naming consistency (Griffin Riders Escape, Gryphon Patrol, Village Guardian).
+- VocabularyItem[] vs SentenceItem[] naming consistency (Griffin Riders Escape, Gryphon Patrol, Village Guardian). Abyssal Well resolved 2026-07-08 (track r3f_rendering_tier_20260708).
 
 ---
 

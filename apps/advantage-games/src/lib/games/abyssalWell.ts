@@ -1,5 +1,9 @@
-import type { VocabularyItem } from '@/store/useGameStore'
 import { ABYSSAL_WELL_CONFIG, getCreatureSpeed, type AbyssalWellDifficulty, type CreatureType } from './abyssalWellConfig'
+
+export type SentenceItem = {
+  term: string
+  translation: string
+}
 
 export type GamePhase = 'start' | 'playing' | 'victory' | 'defeat'
 
@@ -46,19 +50,19 @@ export type AbyssalWellConfig = {
 }
 
 export function createAbyssalWellState(
-  vocabulary: VocabularyItem[],
+  sentences: SentenceItem[],
   config: AbyssalWellConfig = {}
 ): AbyssalWellState {
-  if (vocabulary.length === 0) {
-    throw new Error('Vocabulary cannot be empty')
+  if (sentences.length === 0) {
+    throw new Error('Sentences cannot be empty')
   }
 
   const rng = config.rng ?? Math.random
   const difficulty = config.difficulty ?? 'medium'
   const creatureType = config.creatureType ?? 'cave-spider'
 
-  const sentenceIndex = Math.floor(rng() * vocabulary.length)
-  const sentence = vocabulary[sentenceIndex]
+  const sentenceIndex = Math.floor(rng() * sentences.length)
+  const sentence = sentences[sentenceIndex]
   const words = sentence.term.split(' ')
 
   return {

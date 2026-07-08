@@ -9,10 +9,14 @@ import {
   calculateXP,
   type Enemy,
   type Projectile,
+  type SentenceItem,
 } from '../abyssalWell'
 import { ABYSSAL_WELL_CONFIG } from '../abyssalWellConfig'
 
-const mockVocabulary = [
+// Abyssal Well is a sentence game: its input contract is SentenceItem[]
+// (local export, matching dungeonLiberator/spellweaversRun), not the
+// vocabulary store's VocabularyItem.
+const mockVocabulary: SentenceItem[] = [
   { term: 'The cat sits', translation: 'Le chat est assis' },
   { term: 'A dog runs', translation: 'Un chien court' },
 ]
@@ -49,7 +53,7 @@ describe('abyssalWell', () => {
     })
 
     it('should throw if vocabulary is empty', () => {
-      expect(() => createAbyssalWellState([], { rng: mockRng([0.5]) })).toThrow('Vocabulary cannot be empty')
+      expect(() => createAbyssalWellState([], { rng: mockRng([0.5]) })).toThrow('Sentences cannot be empty')
     })
 
     it('should default difficulty to medium', () => {
