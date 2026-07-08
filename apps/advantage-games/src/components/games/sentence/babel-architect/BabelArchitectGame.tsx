@@ -173,6 +173,27 @@ export function BabelArchitectGame({ sentences, onComplete }: BabelArchitectGame
     }
   }, [gamePhase, results, onComplete]);
 
+  useEffect(() => {
+    if (gamePhase !== "playing") return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key < "1" || event.key > "9") return;
+      const prev = gameStateRef.current;
+      if (!prev || prev.phase !== "playing") return;
+      const index = Number(event.key) - 1;
+      const block = prev.blocks[index];
+      if (block) {
+        event.preventDefault();
+        placeBlockRef.current(block.id);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [gamePhase]);
+
   if (gamePhase === "start") {
     return (
       <div

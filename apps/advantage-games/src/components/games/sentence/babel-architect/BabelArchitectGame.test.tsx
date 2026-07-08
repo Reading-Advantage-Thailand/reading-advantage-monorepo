@@ -144,4 +144,32 @@ describe("BabelArchitectGame", () => {
     expect(mockDestroy).toHaveBeenCalled();
     expect(screen.getByText(/Babel's Architect/i)).toBeInTheDocument();
   });
+
+  it("places blocks via number-key keyboard input during play", async () => {
+    const onComplete = jest.fn();
+    render(<BabelArchitectGame sentences={singleSentence} onComplete={onComplete} />);
+    fireEvent.click(screen.getByRole("button", { name: /Raise the Tower/i }));
+
+    await waitFor(() => {
+      expect(lastAdapterOnPlaceBlock()).toBeDefined();
+    });
+
+    await act(async () => {
+      fireEvent.keyDown(window, { key: "1" });
+      fireEvent.keyDown(window, { key: "2" });
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText(/Victory/i)).toBeInTheDocument();
+    });
+    expect(onComplete).toHaveBeenCalledWith(
+      expect.objectContaining({ victory: true, correctAnswers: 2 }),
+    );
+  });
+
+  it("ignores keyboard input when not playing", () => {
+    render(<BabelArchitectGame sentences={mockSentences} onComplete={jest.fn()} />);
+    fireEvent.keyDown(window, { key: "1" });
+    expect(screen.getByText(/Babel's Architect/i)).toBeInTheDocument();
+  });
 });
