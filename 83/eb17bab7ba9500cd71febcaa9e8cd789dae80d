@@ -1,0 +1,7 @@
+Task: Install R3F dependencies (Phase S1, track r3f_rendering_tier_20260708)
+
+Summary: Added three@0.185.1, @react-three/fiber@9.6.1, @react-three/drei@10.7.7, @react-three/postprocessing@3.0.4 as runtime deps and @react-three/test-renderer@9.1.0 + @types/three@0.185.0 as dev deps of vocabulary-games, all via the pnpm workspace catalog (entries inserted alphabetically in pnpm-workspace.yaml). Verified pnpm install and a full 'pnpm build' (Next.js production build) pass.
+
+Files: pnpm-workspace.yaml, pnpm-lock.yaml, apps/advantage-games/package.json
+
+Why: Tier 2 rendering stack per the Rendering Tiers contract in measure/tech-stack.md; rapier deliberately not installed (approved-but-deferred).
