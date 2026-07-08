@@ -38,19 +38,20 @@ _Story ref: spec.md#story-s2_
     - [x] Change `abyssalWell.ts` / `abyssalWellConfig.ts` from `VocabularyItem` to
           `SentenceItem`; all existing logic tests pass (Green)
     - [x] Mark the Abyssal Well line of the VocabularyItem/SentenceItem tech-debt item resolved
-- [~] Task: Write failing render-layer tests for R3F Abyssal Well (Red)
-    - [ ] Scene-graph tests via @react-three/test-renderer: tube geometry, lane positions,
+- [x] Task: Write failing render-layer tests for R3F Abyssal Well (Red) (638bfe8)
+    - [x] Scene-graph tests via @react-three/test-renderer: tube geometry, lane positions,
           enemy meshes track logic-state depth, projectile meshes, camera setup
-    - [ ] Component tests: start screen, HUD (lives/sentence/target word), game end screen,
+    - [x] Component tests: start screen, HUD (lives/sentence/target word), game end screen,
           fullscreen + accessibility hooks wired, i18n/session mocks
-- [ ] Task: Implement R3F render layer (Green)
-    - [ ] Create `AbyssalWellScene` (R3F Canvas: perspective camera into the well, lane
+- [x] Task: Implement R3F render layer (Green) (e7f124f)
+    - [x] Create `AbyssalWellScene` (R3F Canvas: perspective camera into the well, lane
           geometry, enemy/projectile meshes, drei Text for words, postprocessing bloom)
-    - [ ] Rewrite `AbyssalWellGame.tsx` to compose scene + existing start/end screens,
+    - [x] Rewrite `AbyssalWellGame.tsx` to compose scene + existing start/end screens,
           HUD, input handling (lane move + fire), rAF-driven tick of the pure logic module
-    - [ ] Load the game via `next/dynamic` (ssr: false) at the existing route
-    - [ ] Delete the Konva render code from the game component
-- [ ] Task: Compliance and coverage pass
+    - [x] Load the game via `next/dynamic` (ssr: false) at the existing route
+          (already in place at page level — verified)
+    - [x] Delete the Konva render code from the game component
+- [~] Task: Compliance and coverage pass
     - [ ] Run the 25-spec compliance checklist; fix any failures
     - [ ] Coverage >80% across the game's files
 - [ ] Task: Mobile performance verification
