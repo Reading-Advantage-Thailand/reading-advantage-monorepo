@@ -33,12 +33,12 @@ _Story ref: spec.md#story-s1_
 ## Phase S2: Rewrite The Abyssal Well in R3F
 _Story ref: spec.md#story-s2_
 
-- [ ] Task: Retype Abyssal Well logic contract to SentenceItem
-    - [ ] Write/adjust failing tests asserting `SentenceItem[]` input typing (Red)
-    - [ ] Change `abyssalWell.ts` / `abyssalWellConfig.ts` from `VocabularyItem` to
+- [x] Task: Retype Abyssal Well logic contract to SentenceItem (7d335dd)
+    - [x] Write/adjust failing tests asserting `SentenceItem[]` input typing (Red)
+    - [x] Change `abyssalWell.ts` / `abyssalWellConfig.ts` from `VocabularyItem` to
           `SentenceItem`; all existing logic tests pass (Green)
-    - [ ] Mark the Abyssal Well line of the VocabularyItem/SentenceItem tech-debt item resolved
-- [ ] Task: Write failing render-layer tests for R3F Abyssal Well (Red)
+    - [x] Mark the Abyssal Well line of the VocabularyItem/SentenceItem tech-debt item resolved
+- [~] Task: Write failing render-layer tests for R3F Abyssal Well (Red)
     - [ ] Scene-graph tests via @react-three/test-renderer: tube geometry, lane positions,
           enemy meshes track logic-state depth, projectile meshes, camera setup
     - [ ] Component tests: start screen, HUD (lives/sentence/target word), game end screen,
