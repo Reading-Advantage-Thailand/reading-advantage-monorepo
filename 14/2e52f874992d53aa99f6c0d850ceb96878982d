@@ -1,0 +1,7 @@
+Task: Implement redesigned logic module — Green phase (Phase S5, track r3f_rendering_tier_20260708)
+
+Summary: abyssalWell.ts reworked to the cycling-words rules. Player now has continuous angle + rotationDir; setRotation(-1|0|1) + per-frame integration at rotationSpeed 2.4 rad/s with wrap to [0,2π). startGame spawns every sentence word at once (random angle, depth in lower half; placement carries no order information). Enemies wrap at the rim (laps++, +15% speed per lap; no life loss). resolveHits uses angular proximity (tolerance π/8, seam-safe via angularDistance helper): correct next word collects and advances; wrong word costs a life and survives; projectile consumed either way; defeat at 0 lives, victory when sentence complete. totalAttempts now counts shots fired (missed shots ding accuracy). Removed: lane model, spawnEnemy/spawn timer, getLanePosition, breach damage. Config: +rotationSpeed, +angularHitTolerance, +lapSpeedup, -spawnInterval. 44/44 logic+config tests pass.
+
+Files: src/lib/games/abyssalWell.ts, src/lib/games/abyssalWellConfig.ts, src/lib/games/__tests__/abyssalWellConfig.test.ts
+
+Why: Story S5 — pedagogy first (student derives order; lives = comprehension mistakes) and no spawn-timing unfairness.
