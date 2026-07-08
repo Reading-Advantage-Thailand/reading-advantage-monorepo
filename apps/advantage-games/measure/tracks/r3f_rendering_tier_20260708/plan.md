@@ -2,7 +2,7 @@
 
 Track: r3f_rendering_tier_20260708
 
-## Phase S1: Adopt the R3F stack
+## Phase S1: Adopt the R3F stack [checkpoint: ddf1a46]
 _Story ref: spec.md#story-s1_
 
 - [x] Task: Define rendering-tier contract in tech-stack.md (5308f37)
@@ -28,7 +28,7 @@ _Story ref: spec.md#story-s1_
     - [x] `pnpm lint`, `pnpm check-types`, `CI=true pnpm test` all pass
           (fixed StartScreen React.ElementType/JSX-augmentation clash; scoped
           react/no-unknown-property off for *Scene.tsx R3F files)
-- [~] Task: Measure - User Manual Verification 'Phase S1: Adopt the R3F stack' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Phase S1: Adopt the R3F stack' (Protocol in workflow.md) (ddf1a46)
 
 ## Phase S2: Rewrite The Abyssal Well in R3F
 _Story ref: spec.md#story-s2_
