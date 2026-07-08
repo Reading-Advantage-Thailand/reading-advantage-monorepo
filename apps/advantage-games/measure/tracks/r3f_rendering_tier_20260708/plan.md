@@ -5,13 +5,13 @@ Track: r3f_rendering_tier_20260708
 ## Phase S1: Adopt the R3F stack
 _Story ref: spec.md#story-s1_
 
-- [~] Task: Define rendering-tier contract in tech-stack.md
-    - [ ] Add "Rendering Tiers" section: Konva = 2D default, R3F = 3D/2.5D option
-    - [ ] Document pure-logic + thin-render-layer rule for R3F games
-    - [ ] Document per-game `next/dynamic` loading requirement (no three.js on 2D routes)
-    - [ ] Document mobile perf budget (low-poly, DPR cap ≤2, instancing, portrait 390×844)
-    - [ ] Document `@react-three/rapier` as approved-but-deferred physics choice
-- [ ] Task: Install R3F dependencies
+- [x] Task: Define rendering-tier contract in tech-stack.md (5308f37)
+    - [x] Add "Rendering Tiers" section: Konva = 2D default, R3F = 3D/2.5D option
+    - [x] Document pure-logic + thin-render-layer rule for R3F games
+    - [x] Document per-game `next/dynamic` loading requirement (no three.js on 2D routes)
+    - [x] Document mobile perf budget (low-poly, DPR cap ≤2, instancing, portrait 390×844)
+    - [x] Document `@react-three/rapier` as approved-but-deferred physics choice
+- [~] Task: Install R3F dependencies
     - [ ] Add `three`, `@react-three/fiber`, `@react-three/drei`,
           `@react-three/postprocessing` to dependencies (catalog: where available)
     - [ ] Add `@react-three/test-renderer`, `@types/three` to devDependencies
