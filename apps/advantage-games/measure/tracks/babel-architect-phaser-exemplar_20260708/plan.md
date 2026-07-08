@@ -4,36 +4,38 @@ Track: babel-architect-phaser-exemplar_20260708
 
 ## Phase 1: Track Activation and Baseline
 
-- [ ] Task: Confirm archived audit baseline
-  - [ ] Read `measure/archive/babel-architect-compliance-audit_20260426/report.md`
-  - [ ] Confirm no current Babel Architect implementation files exist
-  - [ ] Confirm catalog entry is still `coming-soon` before implementation
-- [ ] Task: Update project routing docs
-  - [ ] Add active track entry to `measure/tracks.md`
-  - [ ] Ensure this active implementation track links back to the archived audit
+- [x] Task: Confirm archived audit baseline
+  - [x] Read `measure/archive/babel-architect-compliance-audit_20260426/report.md`
+  - [x] Confirm no current Babel Architect implementation files exist
+  - [x] Confirm catalog entry is still `coming-soon` before implementation
+- [x] Task: Update project routing docs
+  - [x] Add active track entry to `measure/tracks.md`
+  - [x] Ensure this active implementation track links back to the archived audit
 
 ## Phase 2: Phaser Stack Contract
 
-- [ ] Task: Define Phaser renderer contract
-  - [ ] Update `measure/tech-stack.md` with Phaser as a candidate Tier 1B / 2D engine for tilemap, physics, sprite, and camera-heavy games
-  - [ ] Document React shell + Phaser scene boundary
-  - [ ] Document bundle isolation rule: Phaser games loaded dynamically, non-Phaser routes must not import Phaser
-- [ ] Task: Add Phaser dependency
-  - [ ] Add `phaser` using the repo's package manager/catalog pattern
-  - [ ] Verify install/build constraints before coding against it
+- [x] Task: Define Phaser renderer contract
+  - [x] Update `measure/tech-stack.md` with Phaser as a candidate Tier 1B / 2D engine for tilemap, physics, sprite, and camera-heavy games
+  - [x] Document React shell + Phaser scene boundary
+  - [x] Document bundle isolation rule: Phaser games loaded dynamically, non-Phaser routes must not import Phaser
+- [x] Task: Add Phaser dependency
+  - [x] Add `phaser` using the repo's package manager/catalog pattern
+  - [x] Verify install/build constraints before coding against it
 
 ## Phase 3: Contract-First Game Logic
 
-- [ ] Task: Write failing logic tests (Red)
-  - [ ] Sentence splitting and block queue creation
-  - [ ] Correct placement advances progress
-  - [ ] Incorrect placement affects stability/errors
-  - [ ] Difficulty presets adjust timing/drop speed/error tolerance
-  - [ ] Completion summary calculates score, accuracy, and XP inputs
-- [ ] Task: Implement pure logic module (Green)
-  - [ ] Create `src/lib/games/babelArchitect.ts`
-  - [ ] Keep logic deterministic with injectable RNG/time where needed
-  - [ ] Add JSDoc for exported functions/types
+- [x] Task: Write failing logic tests (Red)
+  - [x] Sentence splitting and block queue creation
+  - [x] Correct placement advances progress
+  - [x] Incorrect placement affects stability/errors
+  - [x] Difficulty presets adjust timing/drop speed/error tolerance
+  - [x] Completion summary calculates score, accuracy, and XP inputs
+- [x] Task: Implement pure logic module (Green)
+  - [x] Create `src/lib/games/babelArchitect.ts`
+  - [x] Keep logic deterministic with injectable RNG/time where needed
+  - [x] Add JSDoc for exported functions/types
+
+[checkpoint: 7391da8] (Phase 1-2) [checkpoint: 53a2254] (Phase 3)
 
 ## Phase 4: API and Route Shell
 
@@ -59,14 +61,18 @@ Track: babel-architect-phaser-exemplar_20260708
   - [ ] Render tower, falling/placed blocks, target word, stability, progress, and feedback
   - [ ] Support touch and keyboard input
   - [ ] Fit 390×844 portrait viewport
-  - [ ] Preserve crisp pixel-art scaling
+  - [ ] Preserve crisp low-color placeholder rendering and readable word labels
 
-## Phase 6: Asset Manifest
+## Phase 6: Low-Color Placeholder Assets and Manifest
 
+- [ ] Task: Create low-poly/low-color placeholder asset set
+  - [ ] Author or generate simple in-repo placeholders for blocks, background, particles, UI accents, and characters/mascot if used
+  - [ ] Use a constrained palette and crisp scaling so the first playable build has a coherent visual baseline
+  - [ ] Do not depend on licensed or paid asset packs for implementation, tests, or browser verification
 - [ ] Task: Create asset manifest
-  - [ ] Define Pixel Crawler target paths for blocks, background, particles, UI accents, and characters/mascot if used
-  - [ ] Use temporary placeholders only if licensed Pixel Crawler files are not available
-  - [ ] Keep asset names stable so licensed assets can replace placeholders later
+  - [ ] Define stable replacement paths for blocks, background, particles, UI accents, and characters/mascot if used
+  - [ ] Document preferred future asset-pack targets separately from placeholder file paths
+  - [ ] Keep asset names stable so Pixel Crawler or another approved pack can replace placeholders later
 
 ## Phase 7: Catalog, QA, and Closeout
 
@@ -79,9 +85,9 @@ Track: babel-architect-phaser-exemplar_20260708
   - [ ] Run `pnpm lint`
   - [ ] Run a browser/e2e smoke for start → play → completion
 - [ ] Task: Manual verification
-  - [ ] Verify 390×844 portrait gameplay
+  - [ ] Verify 390×844 portrait gameplay with low-poly/low-color placeholder art
   - [ ] Verify correct and incorrect placements
   - [ ] Verify completion, XP, leaderboard/session history, and back navigation
 - [ ] Task: Closeout docs
   - [ ] Record Phaser exemplar lessons in `measure/lessons-learned.md`
-  - [ ] Update `measure/tech-debt.md` for any deferred asset ingestion or Phaser testing gaps
+  - [ ] Update `measure/tech-debt.md` for deferred preferred asset-pack ingestion or Phaser testing gaps
