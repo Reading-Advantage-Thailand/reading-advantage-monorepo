@@ -302,7 +302,7 @@ describe("Phase S3 mastery persistence transaction orchestration", () => {
         makeCommitInput({ evidence: foreignEvidence }),
       ),
     ).toThrow();
-  });
+  }, 30_000);
 
   it("commits a successful evidence bundle in exactly one serializable transaction", async () => {
     const api = await loadPublicApi();

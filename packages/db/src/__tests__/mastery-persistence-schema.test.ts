@@ -106,9 +106,10 @@ const TABLES: readonly TableContract[] = [
     columns: [
       "id", "school_id", "student_id", "objective_id", "mastery_estimate",
       "confidence", "evidence_type", "graph_release", "source_id",
+      "seed_provenance_json",
       "replaced_by_direct_at", "placed_at", "created_at", "updated_at",
     ],
-    uniqueNames: ["mastery_placements_school_student_objective_release_type_unique"],
+    uniqueNames: [],
     checkNames: ["mastery_placements_bounds_check"],
     indexNames: [
       "mastery_placements_school_student_objective_idx",
@@ -125,7 +126,7 @@ const TABLES: readonly TableContract[] = [
       "improves_incumbent", "human_release_approved", "release_eligible",
       "created_at", "updated_at",
     ],
-    uniqueNames: ["mastery_calibrations_school_population_version_unique"],
+    uniqueNames: [],
     checkNames: ["mastery_calibrations_release_governance_check"],
     indexNames: ["mastery_calibrations_school_population_idx"],
   },

@@ -74,6 +74,13 @@ import {
   schoolAdmins,
   leaderboards,
   gameCompletions,
+  masteryCards,
+  masteryReviews,
+  masteryEvidence,
+  masteryStates,
+  masteryPlacements,
+  masteryCalibrations,
+  masteryCommits,
 } from "@reading-advantage/db";
 
 register(users, "FLAT");
@@ -108,6 +115,15 @@ register(leaderboards, "FLAT");
 // (schoolId, userId, activityId) is the primary fire-once guard for game
 // completions (Phase 4 Decision 4.1).
 register(gameCompletions, "FLAT");
+
+// Mastery Engine Phase S3 — all persistence records carry schoolId directly.
+register(masteryCards, "FLAT");
+register(masteryReviews, "FLAT");
+register(masteryEvidence, "FLAT");
+register(masteryStates, "FLAT");
+register(masteryPlacements, "FLAT");
+register(masteryCalibrations, "FLAT");
+register(masteryCommits, "FLAT");
 
 // ─── EXEMPT tables (intentionally global) ───────────────────
 

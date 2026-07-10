@@ -40,4 +40,6 @@ export const sentinelProbes: Record<string, SentinelProbe> = {
   "0023_cultured_sunspot": { tag: "0023_cultured_sunspot", kind: "column", target: "sales_roleplay_attempts.audio_storage_key" },
   "0024_futuristic_vulture": { tag: "0024_futuristic_vulture", kind: "table", target: "login_attempts" },
   "0025_review_jobs": { tag: "0025_review_jobs", kind: "table", target: "review_jobs" },
+  "0026_game_completions": { tag: "0026_game_completions", kind: "table", target: "game_completions" },
+  "0027_mastery_persistence": { tag: "0027_mastery_persistence", kind: "table", target: "mastery_commits" },
 };

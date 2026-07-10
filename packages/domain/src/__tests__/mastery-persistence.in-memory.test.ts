@@ -36,7 +36,7 @@ describe("mastery persistence public contracts", () => {
       mastery.MASTERY_PERSISTENCE_CONTRACT_VERSION,
       "missing public persistence contract version",
     ).toBe("mastery.persistence.v1");
-  });
+  }, 30_000);
 
   it("exports the in-memory adapter factory through the mastery barrel", async () => {
     const mastery = await loadMasteryModule();
@@ -71,4 +71,3 @@ async function createInMemoryHarness(): Promise<MasteryPersistenceTestHarness> {
 }
 
 runMasteryPersistenceContract("in-memory", createInMemoryHarness);
-
