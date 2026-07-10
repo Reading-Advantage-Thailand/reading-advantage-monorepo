@@ -108,13 +108,19 @@ Red A owns new domain-only tests:
 - `mastery-persistence-public-api.test.ts`: compile composition, package exports,
   DB-free cold imports, and legacy compatibility.
 
-Red B owns new DB/PGlite tests:
+Red B owns new database-only tests and must not import the domain package:
 
-- `mastery-persistence-tenant-adversarial.test.ts`: bound authority, owner FKs,
-  immutable CAS, FK-safe transaction ordering, real duplicate race/replay,
-  rollback, and provider-failure mapping.
+- `mastery-persistence-tenant-adversarial.test.ts`: raw PostgreSQL/PGlite owner
+  FKs, card-review-evidence owner chains, same-school controls, and constraint
+  preflight behavior.
 - `mastery-persistence-migration-repro.test.ts`: frozen uniqueness, 0026/0027/0028
   snapshot chain, journal parity, preflight, and clean-generation contract.
+
+Red C owns a domain-side PGlite integration test:
+
+- `mastery-persistence-drizzle-adversarial.test.ts`: bound authority, immutable
+  CAS, FK-safe transaction ordering, real duplicate race/replay, rollback, and
+  provider-neutral retry/error mapping through the public Drizzle adapter.
 
 The Red commit may update shared fixtures only to express the approved command;
 it must not weaken any prior assertion. Each new test must fail for the audited
