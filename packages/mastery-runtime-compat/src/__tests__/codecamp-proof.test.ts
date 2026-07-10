@@ -10,6 +10,10 @@ type ProofModule = {
     replayStatus: "replayed";
     cardRevision: number;
     stateRevision: number;
+    persistedReviewRating: "again" | "hard" | "good" | "easy";
+    persistedReviewBeforeState: "new" | "learning" | "review" | "relearning";
+    persistedReviewAfterState: "new" | "learning" | "review" | "relearning";
+    persistedMastery: number;
     nextObjective: string;
     importedAppCode: false;
   }>;
@@ -53,10 +57,16 @@ describe("synthetic Codecamp mastery consumer proof", () => {
       replayStatus: "replayed",
       cardRevision: 1,
       stateRevision: 1,
+      persistedReviewRating: "good",
+      persistedReviewBeforeState: "new",
+      persistedMastery: 0.95,
       nextObjective: "codecamp.git.pull-request",
       importedAppCode: false,
     });
     expect(result.initialReadiness).toBeGreaterThanOrEqual(0);
     expect(result.initialReadiness).toBeLessThanOrEqual(1);
+    expect(result.persistedReviewAfterState).not.toBe(
+      result.persistedReviewBeforeState,
+    );
   });
 });

@@ -13,6 +13,7 @@ import {
   type MasteryProvenance,
 } from "@reading-advantage/domain/mastery/contracts";
 import { createInMemoryMasteryPersistence } from "@reading-advantage/domain/mastery/adapters/memory";
+import { commitMasteryEvidence } from "@reading-advantage/domain/mastery/service";
 
 import { runConsumerCompatibilityGate } from "./check-consumer.js";
 import { runtimeManifest } from "./index.js";
@@ -22,6 +23,12 @@ const SCHOOL_ID = "11111111-1111-4111-8111-111111111111";
 const STUDENT_ID = "student-codecamp-proof";
 const COMMIT_OBJECTIVE = "codecamp.git.commit";
 const PULL_REQUEST_OBJECTIVE = "codecamp.git.pull-request";
+const PERSISTENCE_RATINGS = {
+  Again: "again",
+  Hard: "hard",
+  Good: "good",
+  Easy: "easy",
+} as const;
 
 const GRAPH: KnowledgeSpace = {
   nodes: [
@@ -95,6 +102,14 @@ export interface SyntheticCodecampProofResult {
   cardRevision: number;
   /** Persisted objective-state revision after the reviewed submission. */
   stateRevision: number;
+  /** Rating written to the immutable review record. */
+  persistedReviewRating: "again" | "hard" | "good" | "easy";
+  /** SRS state recorded before the independent-practice review. */
+  persistedReviewBeforeState: "new" | "learning" | "review" | "relearning";
+  /** SRS state recorded after the independent-practice review. */
+  persistedReviewAfterState: "new" | "learning" | "review" | "relearning";
+  /** Mastery read back from persistence and used for the next projection. */
+  persistedMastery: number;
   /** Objective projected after the prerequisite mastery update. */
   nextObjective: string;
   /** Static boundary proof that no Codecamp application module was imported. */
@@ -156,6 +171,8 @@ function commandFor(
   idempotencyKey: string,
   suffix: "seed" | "review",
   mastery: number,
+  beforeState: SrsCardState["state"],
+  rating: CommitMasteryEvidenceInput["records"]["review"]["rating"],
 ): CommitMasteryEvidenceInput {
   const seed = suffix === "seed";
   const uuidStem = seed ? "3" : "4";
@@ -183,8 +200,8 @@ function commandFor(
         cardId: "22222222-2222-4222-8222-222222222222",
         studentId: STUDENT_ID,
         submissionId: `submission-${suffix}`,
-        rating: "good",
-        beforeState: seed ? "new" : card.state,
+        rating,
+        beforeState,
         afterState: card.state,
         evidenceReasons: [seed ? "fixture_seed" : "correct_independent_practice"],
         paramsVersion: PROVENANCE.paramsVersion,
@@ -330,8 +347,17 @@ export async function runSyntheticCodecampProof(): Promise<SyntheticCodecampProo
   });
 
   const persistence = createInMemoryMasteryPersistence();
-  await persistence.commitMasteryEvidence(
-    commandFor(originalCard, 0, "codecamp-proof-seed", "seed", 0),
+  await commitMasteryEvidence(
+    commandFor(
+      originalCard,
+      0,
+      "codecamp-proof-seed",
+      "seed",
+      0,
+      originalCard.state,
+      "good",
+    ),
+    { persistence },
   );
   const command = commandFor(
     reviewedCard,
@@ -339,17 +365,39 @@ export async function runSyntheticCodecampProof(): Promise<SyntheticCodecampProo
     "codecamp-proof-reviewed-submission",
     "review",
     0.95,
+    originalCard.state,
+    PERSISTENCE_RATINGS[rating.rating],
   );
-  const applied = await persistence.commitMasteryEvidence(command);
-  const replayed = await persistence.commitMasteryEvidence(command);
+  const applied = await commitMasteryEvidence(command, { persistence });
+  const replayed = await commitMasteryEvidence(command, { persistence });
+  if (applied.status !== "applied" || replayed.status !== "replayed") {
+    throw new Error("Synthetic persistence did not apply and replay deterministically.");
+  }
+
+  const snapshot = await persistence.readSnapshot({ schoolId: SCHOOL_ID });
+  const persistedState = snapshot.states.find(
+    (state) =>
+      state.studentId === STUDENT_ID &&
+      state.objectiveId === COMMIT_OBJECTIVE &&
+      state.revision === applied.stateRevision,
+  );
+  const persistedReview = snapshot.reviews.find(
+    (review) => review.submissionId === "submission-review",
+  );
+  if (!persistedState || persistedState.masteryState !== "mastered") {
+    throw new Error("Reviewed mastery state was not persisted as mastered.");
+  }
+  if (!persistedReview) {
+    throw new Error("Independent-practice review was not persisted.");
+  }
 
   const updatedState = new Map<string, KnowledgeStateEntry>([
     [
-      COMMIT_OBJECTIVE,
+      persistedState.objectiveId,
       {
-        nodeId: COMMIT_OBJECTIVE,
-        mastery: 0.95,
-        retention: 0.95,
+        nodeId: persistedState.objectiveId,
+        mastery: persistedState.mastery,
+        retention: persistedState.retention,
         isProficient: true,
         state: "mastered",
       },
@@ -378,10 +426,14 @@ export async function runSyntheticCodecampProof(): Promise<SyntheticCodecampProo
     graphValid: true,
     initialObjective,
     initialReadiness: commitReadiness.score,
-    commitStatus: applied.status as "applied",
-    replayStatus: replayed.status as "replayed",
+    commitStatus: applied.status,
+    replayStatus: replayed.status,
     cardRevision: applied.cardRevision,
     stateRevision: applied.stateRevision,
+    persistedReviewRating: persistedReview.rating,
+    persistedReviewBeforeState: persistedReview.beforeState,
+    persistedReviewAfterState: persistedReview.afterState,
+    persistedMastery: persistedState.mastery,
     nextObjective,
     importedAppCode: false,
   };
