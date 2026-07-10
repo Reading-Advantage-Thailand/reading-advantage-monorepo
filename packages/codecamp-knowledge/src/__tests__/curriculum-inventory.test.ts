@@ -73,4 +73,32 @@ describe("read-only Codecamp curriculum inventory", () => {
     expect(result.originBaseDigest).toBe(curriculumSourceProvenance.originBaseDigest);
     expect(result.snapshotDigest).toBe(curriculumSourceProvenance.snapshotDigest);
   });
+
+  it("reproduces from the artifact in a clean checkout while reporting source drift", () => {
+    const cleanCheckoutSource = execFileSync(
+      "git",
+      ["show", `HEAD:${curriculumSourceProvenance.sourcePath}`],
+      { cwd: join(packageRoot, "../..") },
+    );
+    const artifact = readFileSync(join(packageRoot, curriculumSourceProvenance.sourceArtifact));
+    const base = execFileSync(
+      "git",
+      ["show", `${curriculumSourceProvenance.originBaseRevision}:${curriculumSourceProvenance.sourcePath}`],
+      { cwd: join(packageRoot, "../..") },
+    );
+    expect(
+      verifyCurriculumSource(
+        cleanCheckoutSource,
+        artifact,
+        base,
+        curriculumSourceInventory,
+        curriculumSourceProvenance,
+      ),
+    ).toMatchObject({
+      valid: true,
+      currentSourceMatchesArtifact: false,
+      sourceDigest: curriculumSourceProvenance.originBaseDigest,
+      artifactDigest: curriculumSourceProvenance.sourceDigest,
+    });
+  });
 });

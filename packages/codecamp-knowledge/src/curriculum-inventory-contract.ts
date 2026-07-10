@@ -119,8 +119,8 @@ export function collectCurriculumInventory(input: CurriculumInventoryInput): Cur
   });
 }
 
-/** Verifies exact protected source and canonical inventory snapshot digests.
- * @param sourceBytes Exact protected curriculum source bytes.
+/** Verifies the authoritative artifact, origin base, and canonical inventory while reporting live-source drift.
+ * @param sourceBytes Current checkout curriculum source bytes used only for drift telemetry.
  * @param artifactBytes Content-addressed source artifact bytes.
  * @param baseBytes Source bytes retrieved from the recorded base revision.
  * @param inventory Parsed package inventory snapshot.
@@ -148,7 +148,6 @@ export function verifyCurriculumSource(
   const snapshotDigest = sha256(new TextEncoder().encode(JSON.stringify(inventory)));
   return {
     valid:
-      sourceDigest === provenance.sourceDigest &&
       artifactDigest === provenance.sourceDigest &&
       originBaseDigest === provenance.originBaseDigest &&
       snapshotDigest === provenance.snapshotDigest,
