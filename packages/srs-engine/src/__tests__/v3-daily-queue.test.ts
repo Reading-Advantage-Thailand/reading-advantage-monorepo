@@ -113,7 +113,11 @@ describe("kst-srs.v3 daily queue", () => {
     };
     const cards = [highRetentionButMoreOverdue, lowRetentionButLessOverdue];
 
-    const queue = buildDailyQueue(cards, policiesFor(cards), CONFIG, NOW);
+    // v3 selection ordering is inspected before the v3.2 presentation-only
+    // interleaver; default composition is covered by the v3.2 remediation test.
+    const queue = buildDailyQueue(cards, policiesFor(cards), CONFIG, NOW, {
+      composeSession: false,
+    });
 
     expect(queue.map((item) => item.card.cardId)).toEqual([
       "low-retention-less-overdue",

@@ -24,6 +24,7 @@ const packages = [
       "./types",
       "./schemas",
       "./validation",
+      "./placement",
       "./level-projection",
       "./progress-trend",
       "./adapters",
@@ -39,6 +40,11 @@ const packages = [
       "./misconception-loop",
       "./blueprints",
       "./planner/types",
+      "./planner/priority",
+      "./planner/unlock-value",
+      "./planner/recommended-next",
+      "./planner/domain-utility",
+      "./planner/review-load",
       "./projections",
     ],
   },
@@ -54,6 +60,11 @@ const packages = [
       "./queue",
       "./adapters",
       "./submission-adapter",
+      "./proficiency",
+      "./edge-calibration",
+      "./fsrs-calibration",
+      "./evaluation-harness",
+      "./session-composition",
     ],
   },
   {
@@ -238,10 +249,9 @@ describe("Mastery engine v2 mechanical import contract", () => {
     }
   });
 
-  it(
-    "builds every package export and loads each runtime target",
-    async () => {
-      for (const pkg of packages) {
+  it.each(packages)(
+    "builds $name and loads each declared runtime target",
+    async (pkg) => {
         execFileSync("pnpm", ["--filter", pkg.name, "build"], {
           cwd: repositoryRoot,
           stdio: "pipe",
@@ -281,9 +291,8 @@ describe("Mastery engine v2 mechanical import contract", () => {
 
           await import(pathToFileURL(runtimePath).href);
         }
-      }
     },
-    60_000,
+    120_000,
   );
 
   it.each(packages)(

@@ -274,6 +274,7 @@ describe("Phase S2 FSRS calibration and replay governance", () => {
       incumbentParamsVersion: "fsrs-params.codecamp.web.secondary.v1",
       candidateParamsVersion: "fsrs-params.codecamp.web.secondary.v2",
       incumbentHoldoutLogLoss: 10,
+      humanReleaseApproved: true,
     };
 
     const first = fitFsrsParameters(input);

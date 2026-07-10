@@ -18,6 +18,7 @@ import {
   type Card,
   type Grade,
 } from "ts-fsrs";
+import { z } from "zod";
 import type {
   ObjectivePriority,
   SrsCardId,
@@ -75,6 +76,22 @@ export const DEFAULT_SCHEDULER_CONFIG: SchedulerConfig = {
   enableIntervalFuzz: true,
 };
 
+const requestRetentionSchema = z.number().finite().gt(0).max(1);
+
+/**
+ * Validate a scheduler retention target at the public boundary.
+ * @param value Candidate retention probability.
+ * @returns The validated probability.
+ * @throws When the value is non-finite or outside `(0, 1]`.
+ */
+function validateRequestRetention(value: number): number {
+  const parsed = requestRetentionSchema.safeParse(value);
+  if (!parsed.success) {
+    throw new RangeError("requestRetention must be finite and in (0, 1]");
+  }
+  return parsed.data;
+}
+
 /**
  * Resolve the retention target for an objective priority without mutating configuration.
  * @param priority Objective priority being scheduled.
@@ -86,10 +103,11 @@ export function resolveRequestRetention(
   config: Partial<SchedulerConfig> = {},
 ): number {
   const explicit = config.requestRetentionByPriority?.[priority];
-  if (explicit !== undefined) return explicit;
+  if (explicit !== undefined) return validateRequestRetention(explicit);
   if (config.requestRetentionByPriority !== undefined && priority !== "triaged")
     return DEFAULT_REQUEST_RETENTION_BY_PRIORITY[priority];
-  if (config.requestRetention !== undefined) return config.requestRetention;
+  if (config.requestRetention !== undefined)
+    return validateRequestRetention(config.requestRetention);
   if (priority !== "triaged")
     return DEFAULT_REQUEST_RETENTION_BY_PRIORITY[priority];
   return DEFAULT_SCHEDULER_CONFIG.requestRetention;

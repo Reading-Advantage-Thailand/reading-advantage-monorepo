@@ -141,9 +141,12 @@ export function planRecommendedNext<Context>(
     request.input.nodes,
     request.input.edges,
   );
+  const eligibilityThreshold = prerequisiteDensity.prerequisiteSparse
+    ? policy.readyThreshold
+    : policy.nearThreshold;
   const utilityByNode: Record<string, EvaluatedDomainUtility> = {};
   const eligibleNodeIds = request.input.nodes
-    .filter((node) => (readinessByNode[node.id] ?? 0) >= policy.nearThreshold)
+    .filter((node) => (readinessByNode[node.id] ?? 0) >= eligibilityThreshold)
     .map((node) => node.id);
 
   for (const nodeId of eligibleNodeIds) {
@@ -199,7 +202,7 @@ export function planRecommendedNext<Context>(
         utility: utilityByNode[nodeId]?.utility ?? 0,
         weaknessFit: getWeaknessFit(nodeId, plannerInput),
       },
-      policy.nearThreshold,
+      policy.readyThreshold,
     );
     if (score !== null) scoreByNode.set(nodeId, score);
   }

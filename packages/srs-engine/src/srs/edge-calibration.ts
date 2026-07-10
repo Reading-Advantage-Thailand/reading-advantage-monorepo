@@ -40,6 +40,8 @@ export type AbilityStratifiedCalibrationInput = {
   prior: { alpha: number; beta: number };
   minBandEvidence?: number;
   maxMeanDivergence?: number;
+  /** Full pooled verdict computed with observation and informativeness gates. */
+  pooledStatus?: CalibrationStatus;
 };
 
 /** Posterior summary for one informative ability band. */
@@ -366,11 +368,12 @@ export function classifyAbilityStratifiedCalibration(
 
   return {
     status:
-      pooledMean > 0.5
+      input.pooledStatus ??
+      (pooledMean > 0.5
         ? "confirmed"
         : pooledMean < 0.5
           ? "refuted"
-          : "untested",
+          : "untested"),
     reason: null,
     bandPosteriors,
   };

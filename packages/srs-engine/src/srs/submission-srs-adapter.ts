@@ -171,7 +171,9 @@ export class SubmissionSrsAdapter {
       isCorrect: part.isCorrect,
       hintsUsed: part.hintsUsed,
       revealStepsSeen: part.revealStepsSeen,
+      totalRevealSteps: part.totalRevealSteps,
       misconceptionTags: part.misconceptionTags,
+      misconceptionSeverityByTag: part.misconceptionSeverityByTag,
     }));
 
     const ratingResult = mapPracticeToSrsRating({

@@ -114,6 +114,63 @@ describe('kst-srs.v3.2 integrated recommendation policy', () => {
     });
   });
 
+  it('uses readyThreshold in sparse mode while dense mode retains nearly-ready candidates', () => {
+    const readinessByNode = { 'high-utility-near': 0.79, 'ready-boundary': 0.8 };
+    const provider: DomainUtilityProvider<undefined> = {
+      providerKey: 'synthetic.threshold-counterexample',
+      version: 'threshold.v1',
+      getUtility(nodeId) {
+        const utility = nodeId === 'high-utility-near' ? 1 : 0;
+        return {
+          utility,
+          signals: [
+            {
+              source: 'threshold-counterexample',
+              sourceVersion: 'v1',
+              value: utility,
+              weight: 1,
+            },
+          ],
+        };
+      },
+    };
+    const sparseInput = plannerInput({
+      nodes: [node('high-utility-near'), node('ready-boundary')],
+      readinessByNode,
+    });
+    const denseInput = plannerInput({
+      nodes: [node('high-utility-near'), node('ready-boundary')],
+      edges: [
+        edge(
+          'near-ready-prerequisite',
+          'prerequisite_for',
+          'high-utility-near',
+          'ready-boundary',
+        ),
+      ],
+      readinessByNode,
+    });
+
+    const sparse = planRecommendedNext({
+      input: sparseInput,
+      utilityProvider: provider,
+      utilityContext: undefined,
+    });
+    const dense = planRecommendedNext({
+      input: denseInput,
+      utilityProvider: provider,
+      utilityContext: undefined,
+    });
+
+    expect(sparse.rankingMode).toBe('utility-led');
+    expect(sparse.recommendedNext).toEqual(['ready-boundary']);
+    expect(sparse.utilityByNode).not.toHaveProperty('high-utility-near');
+    expect(dense.rankingMode).toBe('composite');
+    expect(new Set(dense.recommendedNext)).toEqual(
+      new Set(['high-utility-near', 'ready-boundary']),
+    );
+  });
+
   it('suppresses new skills only above the exact 80 percent review-load boundary', () => {
     const input = plannerInput({
       nodes: [node('skill-a')],

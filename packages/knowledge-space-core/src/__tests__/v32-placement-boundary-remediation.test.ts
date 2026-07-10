@@ -184,7 +184,7 @@ describe("placement boundary remediation", () => {
     expect(calls).toEqual(["test.skill.a", "test.skill.a"]);
   });
 
-  it("uses group cap and unlock ordering and exposes the unchanged-frontier stop", async () => {
+  it("uses the group cap and unlock ordering", async () => {
     const graph: KnowledgeSpace = {
       nodes: [
         node("test.skill.root"),
@@ -249,18 +249,58 @@ describe("placement boundary remediation", () => {
       },
     );
     expect(calls.slice(2)).toEqual(["test.skill.high", "test.skill.high"]);
+  });
+
+  it("stalls after four unchanged frontier probes across complete decisions", async () => {
+    const graph: KnowledgeSpace = {
+      nodes: [
+        node("test.skill.root"),
+        node("test.skill.a"),
+        node("test.skill.b"),
+        node("test.skill.c"),
+      ],
+      edges: ["a", "b", "c"].map((suffix) => ({
+        id: `root-${suffix}`,
+        type: "prerequisite_for" as const,
+        sourceId: "test.skill.root",
+        targetId: `test.skill.${suffix}`,
+        weight: 1,
+        confidence: "high" as const,
+        reviewStatus: "approved" as const,
+      })),
+    };
+    const calls: Record<string, number> = {};
+    const rootOutcomes = ["pass", "fail", "pass"] as const;
 
     const stalled = await runPlacementTraversal(
-      chain(),
-      { domain: "test", probe: () => "partial", guessFloor: () => 0.25 },
+      graph,
       {
-        startNodeId: "test.skill.a",
-        unchangedFrontierProbeLimit: 2,
+        domain: "test",
+        probe(nodeId) {
+          const call = calls[nodeId] ?? 0;
+          calls[nodeId] = call + 1;
+          return nodeId === "test.skill.root"
+            ? (rootOutcomes[call] ?? "pass")
+            : "pass";
+        },
       },
+      { startNodeId: "test.skill.root" },
     );
+
     expect(stalled).toMatchObject({
+      probesPerformed: 7,
       reason: "frontier-stalled",
       converged: false,
     });
+    expect(calls).toEqual({
+      "test.skill.root": 3,
+      "test.skill.a": 2,
+      "test.skill.b": 2,
+    });
+    expect(stalled.results.map((result) => result.nodeId)).toEqual([
+      "test.skill.root",
+      "test.skill.a",
+      "test.skill.b",
+    ]);
   });
 });

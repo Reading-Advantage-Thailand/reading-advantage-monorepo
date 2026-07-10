@@ -199,6 +199,7 @@ export function runPlacementTraversal(
   let probesPerformed = 0;
   let budgetInterrupted = false;
   let frontierStalled = false;
+  let unchangedFrontierProbes = 0;
   const resolved = new Set<string>();
   const maxRepresentatives =
     parsedOptions.maxRepresentativesPerContentGroup ?? 3;
@@ -219,7 +220,10 @@ export function runPlacementTraversal(
     );
   };
 
-  function processDecision(nodeId: string, probeResult: ProbeResult): void {
+  function processDecision(
+    nodeId: string,
+    probeResult: ProbeResult,
+  ): boolean {
     const { estimate, confidence } = computeMastery(
       probeResult,
       adapter.highFidelityProbeInstrument === true,
@@ -254,10 +258,36 @@ export function runPlacementTraversal(
                 )
                 .indexOf(neighbor) < maxRepresentatives,
           );
+    const frontierBefore = new Set(queue.filter((neighbor) => !visited.has(neighbor)));
+    let frontierChanged = false;
     for (const neighbor of selectedNeighbors) {
       if (!visited.has(neighbor)) {
         queue.push(neighbor);
+        if (!frontierBefore.has(neighbor)) frontierChanged = true;
       }
+    }
+    return frontierChanged;
+  }
+
+  function completeDecision(
+    nodeId: string,
+    probeResult: ProbeResult,
+    decisionProbeCount: number,
+  ): void {
+    const frontierChanged = processDecision(nodeId, probeResult);
+    if (adapter.legacySingleProbe) return;
+    unchangedFrontierProbes = frontierChanged
+      ? 0
+      : unchangedFrontierProbes + decisionProbeCount;
+    const hasUnresolvedFrontier = queue.some(
+      (neighbor) => !visited.has(neighbor),
+    );
+    if (
+      hasUnresolvedFrontier &&
+      unchangedFrontierProbes >=
+        (parsedOptions.unchangedFrontierProbeLimit ?? 4)
+    ) {
+      frontierStalled = true;
     }
   }
 
@@ -275,7 +305,6 @@ export function runPlacementTraversal(
         : result === "partial"
           ? Math.max(0, (0.5 - guessFloor) / (1 - guessFloor))
           : 0;
-    let unchangedProbes = 0;
     const decide = (): ProbeResult | undefined => {
       if (adapter.legacySingleProbe && observations.length >= 1) {
         return observations[0];
@@ -302,11 +331,6 @@ export function runPlacementTraversal(
 
       const probeResult = adapter.probe(nodeId);
       probesPerformed++;
-      unchangedProbes++;
-      if (unchangedProbes >= (parsedOptions.unchangedFrontierProbeLimit ?? 4)) {
-        frontierStalled = true;
-        return undefined;
-      }
       if (probeResult == null) validateProbeResult(probeResult);
       if (typeof (probeResult as Promise<ProbeResult>).then === "function") {
         return (probeResult as Promise<ProbeResult>).then((value) => {
@@ -323,11 +347,16 @@ export function runPlacementTraversal(
   }
 
   function run(): PlacementEngineResult {
-    while (queue.length > 0 && probesPerformed < maxProbes) {
+    while (
+      queue.length > 0 &&
+      probesPerformed < maxProbes &&
+      !frontierStalled
+    ) {
       const nodeId = queue.shift()!;
       if (visited.has(nodeId)) continue;
       visited.add(nodeId);
 
+      const probesBeforeDecision = probesPerformed;
       const decision = resolveDecision(nodeId);
       if (
         decision &&
@@ -335,14 +364,24 @@ export function runPlacementTraversal(
       ) {
         return (decision as Promise<ProbeResult | undefined>).then(
           (resolved) => {
-            if (resolved !== undefined) processDecision(nodeId, resolved);
+            if (resolved !== undefined) {
+              completeDecision(
+                nodeId,
+                resolved,
+                probesPerformed - probesBeforeDecision,
+              );
+            }
             return run();
           },
         ) as unknown as PlacementEngineResult;
       }
-      if (decision !== undefined)
-        processDecision(nodeId, decision as ProbeResult);
-      else if (probesPerformed >= maxProbes) budgetInterrupted = true;
+      if (decision !== undefined) {
+        completeDecision(
+          nodeId,
+          decision as ProbeResult,
+          probesPerformed - probesBeforeDecision,
+        );
+      } else if (probesPerformed >= maxProbes) budgetInterrupted = true;
     }
 
     return finalizeResult(

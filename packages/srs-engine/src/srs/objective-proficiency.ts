@@ -15,6 +15,11 @@
  */
 
 import type { ObjectivePriority } from "./contract.js";
+import {
+  aggregateObjectiveRetention,
+  capEvidenceConfidence,
+  type ObjectiveRetentionCard,
+} from "./srs-proficiency.js";
 export type { ObjectivePriority, ObjectivePracticePolicy } from "./contract.js";
 
 /**
@@ -46,6 +51,8 @@ export type ObjectiveProficiencyInput = {
   minVariants?: number;
   minCoverageThreshold?: number;
   minRetentionThreshold?: number;
+  /** Reviewed SRS cards used to apply live minimum retention to the decision. */
+  liveRetentionCards?: ReadonlyArray<ObjectiveRetentionCard>;
 };
 
 /**
@@ -207,6 +214,7 @@ export function computeObjectiveProficiency(
     minVariants,
     minCoverageThreshold,
     minRetentionThreshold,
+    liveRetentionCards,
   } = input;
 
   const defaults = PROFICIENCY_THRESHOLD_DEFAULTS[priority];
@@ -243,6 +251,10 @@ export function computeObjectiveProficiency(
       (sum, evidence) => sum + evidence.retentionStrength,
       0,
     ) / evidenceCount;
+  const liveRetention = liveRetentionCards
+    ? aggregateObjectiveRetention(liveRetentionCards)
+    : null;
+  const decisionRetention = liveRetention ?? avgRetention;
   const avgCoverage =
     variantEvidences.reduce((sum, e) => sum + e.practiceCoverage, 0) /
     evidenceCount;
@@ -252,12 +264,22 @@ export function computeObjectiveProficiency(
   }));
   const fluencyConfidence = combineFluencyConfidences(fluencyConfidences);
 
-  const evidenceConfidence = resolveEvidenceConfidence(
+  const uncappedEvidenceConfidence = resolveEvidenceConfidence(
     evidenceCount,
-    avgRetention,
+    decisionRetention,
     avgCoverage,
     effectiveMinFamilies,
   );
+  const contributingAttemptCounts = variantEvidences
+    .map((evidence) => evidence.attemptCount)
+    .filter((count): count is number => count !== undefined);
+  const evidenceConfidence =
+    contributingAttemptCounts.length === 0
+      ? uncappedEvidenceConfidence
+      : capEvidenceConfidence(
+          uncappedEvidenceConfidence,
+          Math.min(...contributingAttemptCounts),
+        );
 
   if (evidenceCount < effectiveMinFamilies) {
     reasons.push("insufficient_problem_families");
@@ -265,7 +287,7 @@ export function computeObjectiveProficiency(
   if (avgCoverage < effectiveMinCoverage) {
     reasons.push("coverage_below_threshold");
   }
-  if (avgRetention < effectiveMinRetention) {
+  if (decisionRetention < effectiveMinRetention) {
     reasons.push("retention_below_threshold");
   }
 
@@ -273,12 +295,12 @@ export function computeObjectiveProficiency(
     priority !== "triaged" &&
     evidenceCount >= effectiveMinFamilies &&
     avgCoverage >= effectiveMinCoverage &&
-    avgRetention >= effectiveMinRetention;
+    decisionRetention >= effectiveMinRetention;
 
   return {
     objectiveId,
     priority,
-    retentionStrength: Math.round(avgRetention * 100) / 100,
+    retentionStrength: Math.round(decisionRetention * 100) / 100,
     practiceCoverage: Math.round(avgCoverage * 100) / 100,
     fluencyConfidence,
     evidenceConfidence,

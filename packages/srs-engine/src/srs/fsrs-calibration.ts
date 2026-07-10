@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { generatorParameters, type FSRSParameters } from "ts-fsrs";
 
 /** Maximum accepted replay corpus size at a single validation boundary. */
 export const MAX_FSRS_REPLAY_REVIEWS = 100_000;
@@ -31,10 +32,12 @@ export type FitFsrsParametersInput = {
   incumbentParamsVersion: string;
   candidateParamsVersion?: string;
   incumbentHoldoutLogLoss?: number;
+  /** Human governance decision required in addition to mechanical gates. */
+  humanReleaseApproved?: boolean;
 };
 
-/** Fitted calibration parameters for recall-probability projection. */
-export type FsrsFittedParameters = { logitScale: number; logitBias: number };
+/** Complete ts-fsrs parameter object emitted by population fitting. */
+export type FsrsFittedParameters = FSRSParameters;
 
 /** Versioned, release-gated artifact emitted by a deterministic population fit. */
 export type FsrsCalibrationArtifact = {
@@ -47,6 +50,8 @@ export type FsrsCalibrationArtifact = {
   trainingReviewCount: number;
   holdoutReviewCount: number;
   volumeGatePassed: boolean;
+  fitObjective: "holdout_log_loss";
+  humanReleaseApproved: boolean;
   logWindow: { from: string; to: string };
   fittedParameters: FsrsFittedParameters;
   fittedLogLoss: number;
@@ -100,7 +105,7 @@ function clampProbability(value: number): number {
 
 function calibrated(
   probability: number,
-  parameters: FsrsFittedParameters,
+  parameters: { logitScale: number; logitBias: number },
 ): number {
   const bounded = clampProbability(probability);
   const logit = Math.log(bounded / (1 - bounded));
@@ -111,7 +116,7 @@ function calibrated(
 
 function logLoss(
   reviews: FsrsCalibrationReview[],
-  parameters: FsrsFittedParameters,
+  parameters: { logitScale: number; logitBias: number },
 ): number {
   if (reviews.length === 0) return Number.POSITIVE_INFINITY;
   return (
@@ -182,7 +187,7 @@ export function fitFsrsParameters(
   const holdout = reviews.filter((_, index) => index % 5 === 0);
   const training = reviews.filter((_, index) => index % 5 !== 0);
   const fittingRows = training.length ? training : reviews;
-  let fittedParameters: FsrsFittedParameters = { logitScale: 1, logitBias: 0 };
+  let fittedCoefficients = { logitScale: 1, logitBias: 0 };
   let fittedLogLoss = Number.POSITIVE_INFINITY;
   for (const logitScale of SCALE_CANDIDATES) {
     for (const logitBias of BIAS_CANDIDATES) {
@@ -190,18 +195,29 @@ export function fitFsrsParameters(
       const candidateLoss = logLoss(fittingRows, candidate);
       if (candidateLoss < fittedLogLoss) {
         fittedLogLoss = candidateLoss;
-        fittedParameters = candidate;
+        fittedCoefficients = candidate;
       }
     }
   }
   const holdoutLogLoss = logLoss(
     holdout.length ? holdout : reviews,
-    fittedParameters,
+    fittedCoefficients,
   );
+  const baseParameters = generatorParameters();
+  const fittedParameters = generatorParameters({
+    ...baseParameters,
+    w: baseParameters.w.map((weight, index) => {
+      if (index === 0) return weight * fittedCoefficients.logitScale;
+      if (index === 1)
+        return Math.max(EPSILON, weight + fittedCoefficients.logitBias);
+      return weight;
+    }),
+  });
   const studentCount = new Set(reviews.map((review) => review.studentId)).size;
   const volumeGatePassed = reviews.length >= 10_000 && studentCount >= 100;
   const improvesIncumbent =
     incumbentLoss !== null && holdoutLogLoss < incumbentLoss;
+  const humanReleaseApproved = input.humanReleaseApproved === true;
   return {
     population,
     optimizerVersion,
@@ -212,12 +228,15 @@ export function fitFsrsParameters(
     trainingReviewCount: training.length,
     holdoutReviewCount: holdout.length,
     volumeGatePassed,
+    fitObjective: "holdout_log_loss",
+    humanReleaseApproved,
     logWindow: { from: reviews[0]!.reviewedAt, to: reviews.at(-1)!.reviewedAt },
     fittedParameters,
     fittedLogLoss,
     holdoutLogLoss,
     incumbentHoldoutLogLoss: incumbentLoss,
     improvesIncumbent,
-    releaseEligible: volumeGatePassed && improvesIncumbent,
+    releaseEligible:
+      volumeGatePassed && improvesIncumbent && humanReleaseApproved,
   };
 }

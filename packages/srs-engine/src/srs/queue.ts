@@ -154,7 +154,9 @@ export function buildDailyQueue(
     })
     .map(({ predictedRetention: _predictedRetention, ...item }) => item);
 
-  const remediationItems = options.remediationItems ?? [];
+  const remediationItems = (options.remediationItems ?? [])
+    .slice(0, Math.max(0, maxReviewsPerDay))
+    .map((item) => ({ ...item, kind: "remediation" as const }));
   const reviewCapacity = Math.max(
     0,
     maxReviewsPerDay - remediationItems.length,
@@ -197,7 +199,7 @@ export function buildDailyQueue(
     selectedReviews.map((item) => [item.card.cardId, item] as const),
   );
   const composedReviews =
-    options.composeSession === true
+    options.composeSession !== false
       ? interleaveReviewItems(
           selectedReviews.map((item) => ({
             cardId: item.card.cardId,
