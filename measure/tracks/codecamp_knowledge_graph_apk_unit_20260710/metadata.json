@@ -3,7 +3,7 @@
   "type": "feature",
   "status": "in-progress",
   "created_at": "2026-07-10T08:13:12Z",
-  "updated_at": "2026-07-10T17:20:00Z",
+  "updated_at": "2026-07-10T18:10:00Z",
   "description": "Author the Codecamp prerequisite graph, bind existing curriculum and PR activities to objective evidence, and add an Advantage Play Kit game-creation unit using tutorial-first gradual release.",
   "estimated_tasks": 16,
   "actual_tasks": null,
@@ -12,7 +12,7 @@
     "goal": "Give Codecamp a validated, practice-ready coding knowledge graph and prove it with an APK game-creation unit whose worked, guided, and independent activities emit graph-linked evidence.",
     "stories": [
       { "id": "S1", "title": "Author the coding knowledge graph", "size": "XL", "priority": "Must", "status": "done" },
-      { "id": "S2", "title": "Bind the existing curriculum", "size": "L", "priority": "Must", "status": "pending" },
+      { "id": "S2", "title": "Bind the existing curriculum", "size": "L", "priority": "Must", "status": "done" },
       { "id": "S3", "title": "Design the APK learning branch", "size": "L", "priority": "Must", "status": "pending" },
       { "id": "S4", "title": "Publish the game-creation unit", "size": "XL", "priority": "Must", "status": "pending" }
     ],

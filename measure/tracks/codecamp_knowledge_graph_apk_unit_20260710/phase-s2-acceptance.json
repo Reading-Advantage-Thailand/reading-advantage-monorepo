@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Phase S2 acceptance passes. All 209 protected-source curriculum activities are bound to the reviewed Codecamp graph with strict exposure and assessed-evidence semantics, exact source inventory coverage, content-addressed provenance, and fail-closed mastery projection.",
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "evidence": [
+    "The authoritative snapshot contains 19 published modules, 88 lessons, 85 questions, 16 guided exercises, 16 tutorial repositories, and 4 portfolio reviews.",
+    "The binding release contains 209 activities: 88 exposure-only lessons and 121 assessed question, exercise, pull-request, and portfolio activities.",
+    "Release validation joins the reviewed graph, exact source inventory, and separate content-addressed provenance manifest; it rejects source totals/module drift, unknown source activities, rubric applicability errors, incompatible resources, and incomplete evidence.",
+    "Mastery projection accepts only the runtime release object returned by successful validation, preventing schema-only or invalid bindings from emitting evidence.",
+    "The source artifact SHA-256 is e4d3fc7cc9927f91bfb7f2e14b33ed8deaf26569a37f0c9ac36294713a2dab31; the retrievable origin base digest is b25472150fe87e84ba84873e9d42f647999122c932f92ef6acb2771bd7a1607a at revision 08de1c28a154c2d0608c7b3515149b73dbe33152.",
+    "Independent re-audit passed at a81fcd10 with 76/76 tests, packed artifact/CLI verification, clean-checkout semantics, coverage, test-inclusive types, lint, build, source verification, and browser applicability review."
+  ],
+  "commands": [
+    "node ../../node_modules/vitest/vitest.mjs run --exclude src/__tests__/release-artifact.test.ts",
+    "node ../../node_modules/vitest/vitest.mjs run src/__tests__/release-artifact.test.ts",
+    "node ../../node_modules/vitest/vitest.mjs run --coverage --exclude src/__tests__/release-artifact.test.ts",
+    "node ../../node_modules/typescript/bin/tsc -p tsconfig.test.json --noEmit",
+    "node ../../node_modules/typescript/bin/tsc",
+    "node dist/cli.js bindings-validate",
+    "node dist/cli.js bindings-report",
+    "node dist/cli.js bindings-verify-source"
+  ],
+  "changed_files": [],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "proceed_to_phase_s3",
+  "confidence": "high"
+}

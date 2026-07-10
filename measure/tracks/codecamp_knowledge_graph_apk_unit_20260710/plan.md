@@ -40,18 +40,32 @@ _Graph context: the parent Code domain is currently planning-only; this repo has
 ## Phase S2: Bind the existing curriculum
 _Story ref: spec.md#story-s2_
 
-- [~] Task: Define curriculum-binding contracts
-  - [ ] Add strict objective, variant, mode, evidence-weight, misconception, rubric, and resource-reference schemas
-  - [ ] Define exposure-only versus assessed activity semantics
-- [~] Task: Write binding coverage tests
-  - [ ] Fail on missing objective IDs, invalid variants, retired graph versions, duplicate evidence, and assessment/exposure confusion
-  - [ ] Produce coverage reports by module, objective, activity mode, and evidence source
-- [~] Task: Map one vertical slice then the published curriculum
-  - [ ] Validate one existing module end to end before bulk binding
-  - [ ] Bind lessons, questions, exercises, repositories, and rubrics without changing mastery state yet
-- [~] Task: Verify and document Phase S2
-  - [ ] Run seed/build/coverage gates and manually review low-coverage or over-assessed objectives
-  - [ ] Task: Measure - User Manual Verification 'Phase S2: Bind the existing curriculum' (Protocol in workflow.md)
+- [x] Task: Define curriculum-binding contracts — `a462a29a`, `f5ad6f7a`
+  - [x] Add strict objective, variant, mode, evidence-weight, misconception, rubric, and resource-reference schemas — `a462a29a`, `f5ad6f7a`
+  - [x] Define exposure-only versus assessed activity semantics — `a462a29a`, `f5ad6f7a`
+- [x] Task: Write binding coverage tests — `f8911391`, `a81fcd10`
+  - [x] Fail on missing objective IDs, invalid variants, retired graph versions, duplicate evidence, and assessment/exposure confusion — `f8911391`, `f5ad6f7a`
+  - [x] Produce coverage reports by module, objective, activity mode, and evidence source — `2c50ee2d`
+- [x] Task: Map one vertical slice then the published curriculum — `2c50ee2d`, `f5ad6f7a`
+  - [x] Validate one existing module end to end before bulk binding — `2c50ee2d`
+  - [x] Bind lessons, questions, exercises, repositories, and rubrics without changing mastery state yet — `2c50ee2d`, `f5ad6f7a`
+- [x] Task: Verify and document Phase S2 — `a81fcd10`
+  - [x] Run seed/build/coverage gates and manually review low-coverage or over-assessed objectives — `a81fcd10`
+  - [x] Task: Measure - User Manual Verification 'Phase S2: Bind the existing curriculum' (Protocol in workflow.md) — `a81fcd10`
+
+  - Green evidence: the source-backed release contains 209 bindings across 19
+    modules: 88 exposure-only lessons and 121 assessed questions, guided
+    exercises, pull requests, and portfolios. All 76 tests plus coverage,
+    test-inclusive types, lint, build, packed artifact/CLI, report, and source
+    verification gates pass.
+  - Provenance evidence: the content-addressed source artifact has SHA-256
+    `e4d3fc7cc9927f91bfb7f2e14b33ed8deaf26569a37f0c9ac36294713a2dab31`;
+    clean-checkout verification uses origin revision
+    `08de1c28a154c2d0608c7b3515149b73dbe33152` and reports live-source drift
+    separately from artifact validity.
+  - Review evidence: independent re-audit passed at `a81fcd10`. Browser
+    acceptance is truthfully N/A because S2 changes no route, component, style,
+    or learner interaction.
 
 ## Phase S3: Design the APK learning branch
 _Story ref: spec.md#story-s3_
