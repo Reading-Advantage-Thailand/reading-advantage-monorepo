@@ -1,6 +1,7 @@
+import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { dirname, extname, join, relative, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { describe, expect, it } from "vitest";
 
 const repositoryRoot = resolve(
@@ -34,8 +35,6 @@ const packages = [
     sourceTree: "def1ea044552c026ee4a2bbb700068dab13e1bc5",
     exportKeys: [
       ".",
-      "./types",
-      "./schemas",
       "./misconception-loop",
       "./blueprints",
       "./planner/types",
@@ -87,7 +86,14 @@ const forbiddenImport =
 type PackageManifest = {
   name?: string;
   type?: string;
-  exports?: Record<string, unknown>;
+  exports?: Record<
+    string,
+    | string
+    | {
+        types?: string;
+        import?: string;
+      }
+  >;
   dependencies?: Record<string, string>;
 };
 
@@ -197,6 +203,54 @@ describe("Mastery engine v2 mechanical import contract", () => {
       );
     }
   });
+
+  it(
+    "builds every package export and loads each runtime target",
+    async () => {
+      for (const pkg of packages) {
+        execFileSync("pnpm", ["--filter", pkg.name, "build"], {
+          cwd: repositoryRoot,
+          stdio: "pipe",
+        });
+
+        const packageRoot = join(repositoryRoot, "packages", pkg.directory);
+        const manifest = readJson<PackageManifest>(
+          join(packageRoot, "package.json"),
+        );
+
+        for (const [exportKey, target] of Object.entries(
+          manifest.exports ?? {},
+        )) {
+          const runtimeTarget =
+            typeof target === "string" ? target : target.import;
+          const typesTarget =
+            typeof target === "string" ? undefined : target.types;
+
+          expect(
+            runtimeTarget,
+            `${pkg.name} ${exportKey} must define an import target`,
+          ).toBeTruthy();
+          if (!runtimeTarget) continue;
+
+          const runtimePath = join(packageRoot, runtimeTarget);
+          expect(
+            existsSync(runtimePath),
+            `${pkg.name} ${exportKey} runtime target is missing after build: ${runtimeTarget}`,
+          ).toBe(true);
+
+          if (typesTarget) {
+            expect(
+              existsSync(join(packageRoot, typesTarget)),
+              `${pkg.name} ${exportKey} types target is missing after build: ${typesTarget}`,
+            ).toBe(true);
+          }
+
+          await import(pathToFileURL(runtimePath).href);
+        }
+      }
+    },
+    60_000,
+  );
 
   it.each(packages)(
     "keeps $name production imports framework and provider neutral",

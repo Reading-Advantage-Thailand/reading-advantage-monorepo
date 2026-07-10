@@ -8,8 +8,6 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
-    "./types": { "types": "./dist/types.d.ts", "import": "./dist/types.js" },
-    "./schemas": { "types": "./dist/schemas.d.ts", "import": "./dist/schemas.js" },
     "./misconception-loop": { "types": "./dist/misconception-loop.d.ts", "import": "./dist/misconception-loop.js" },
     "./blueprints": { "types": "./dist/blueprints/index.d.ts", "import": "./dist/blueprints/index.js" },
     "./planner/types": { "types": "./dist/planner/types.d.ts", "import": "./dist/planner/types.js" },

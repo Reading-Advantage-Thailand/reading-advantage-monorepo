@@ -67,7 +67,7 @@
     "behaviorBearingDeviations": [],
     "normalizedFilesCompared": 183,
     "workspaceConfigurationFilesReviewed": 16,
-    "comparisonMethod": "Compare all 199 frozen files by identical relative path after normalizing the four approved package scopes, resolvable relative TypeScript specifiers to emitted .js paths, package manifests, TypeScript/ESLint/Vitest workspace configuration, and README package-name examples.",
+    "comparisonMethod": "Compare all 199 frozen files by identical relative path after normalizing the four approved package scopes, resolvable relative TypeScript specifiers to emitted .js paths, package manifests (including removal of two inherited export targets with no source or build artifact), TypeScript/ESLint/Vitest workspace configuration, and README package-name examples.",
     "unexplainedAddedFiles": [],
     "unexplainedRemovedFiles": [],
     "unexplainedChangedFiles": []
@@ -89,6 +89,12 @@
       "category": "deterministic package harness",
       "package": "all four packages",
       "change": "Package test scripts build emitted ESM before Vitest; dependent packages build their declared workspace prerequisites for direct filtered runs.",
+      "algorithmBehaviorChanged": false
+    },
+    {
+      "category": "inherited broken manifest correction",
+      "package": "@reading-advantage/knowledge-space-practice",
+      "change": "Removed the frozen source manifest's ./types and ./schemas subpaths because the source tree has no corresponding entrypoints and the emitted build produces no matching runtime or declaration targets. The package root, ./blueprints, and ./projections remain the supported aggregate contract surfaces.",
       "algorithmBehaviorChanged": false
     }
   ]
