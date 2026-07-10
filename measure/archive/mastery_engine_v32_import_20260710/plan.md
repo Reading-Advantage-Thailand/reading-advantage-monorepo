@@ -5,17 +5,17 @@ _Story ref: spec.md#story-s1_
 _Graph context: current graph has no engine-package nodes; existing `packages/domain/src/mastery/record-run.ts` is science-specific and is not an import target._
 
 - [x] Task: Freeze source provenance and package contracts — `6aef37a7`
-  - [ ] Record source commits, package manifests, exports, dependency boundaries, and baseline test commands
-  - [ ] Define neutral `@reading-advantage/*` names and compatibility aliases without changing behavior
+  - [x] Record source commits, package manifests, exports, dependency boundaries, and baseline test commands — `60397049`
+  - [x] Define neutral `@reading-advantage/*` names and compatibility aliases without changing behavior — `60397049`
 - [x] Task: Write import and boundary tests — `cda1b0bf`
-  - [ ] Add workspace-discovery, export, dependency, and forbidden-import tests
-  - [ ] Run the original v2 suites against the unmodified source baseline
+  - [x] Add workspace-discovery, export, dependency, and forbidden-import tests — `60397049`
+  - [x] Run the original v2 suites against the unmodified source baseline — `60397049`
 - [x] Task: Import and mechanically adapt the four packages — `6aef37a7`
-  - [ ] Copy source/tests through reviewable patches and update only scopes, imports, configs, and build outputs
-  - [ ] Prove source equivalence or document every mechanical deviation
+  - [x] Copy source/tests through reviewable patches and update only scopes, imports, configs, and build outputs — `60397049`
+  - [x] Prove source equivalence or document every mechanical deviation — `60397049`
 - [x] Task: Verify and document Phase S1 — `6aef37a7`
-  - [ ] Run package lint, check-types, tests, builds, coverage, graph update/audit, and package-boundary gates
-  - [ ] Task: Measure - User Manual Verification 'Phase S1: Import the proven v2 core' (Protocol in workflow.md)
+  - [x] Run package lint, check-types, tests, builds, coverage, graph update/audit, and package-boundary gates — `60397049`
+  - [x] Task: Measure - User Manual Verification 'Phase S1: Import the proven v2 core' (Protocol in workflow.md) — `60397049`
 
   - Green evidence: focused import/boundary/build-export contract `10/10`
     passed after `c23dc536` and `60397049`; it builds all four packages, loads
@@ -41,17 +41,17 @@ _Graph context: current graph has no engine-package nodes; existing `packages/do
 _Story ref: spec.md#story-s2_
 
 - [x] Task: Define v3.2 contracts and acceptance fixtures — `45e27bcf`
-  - [ ] Encode normative readiness, retention, placement, calibration, evidence, utility, queue, and session examples before implementation
-  - [ ] Add counterexamples for hard-gate compensation, mean retention, inflated evidence, synthetic prerequisites, and overdue ordering
+  - [x] Encode normative readiness, retention, placement, calibration, evidence, utility, queue, and session examples before implementation — `097545f1`
+  - [x] Add counterexamples for hard-gate compensation, mean retention, inflated evidence, synthetic prerequisites, and overdue ordering — `097545f1`
 - [x] Task: Write Red tests for v3, v3.1, and v3.2 deltas — `f9af2f18`
-  - [ ] Split tests by specification section and include deterministic clocks/config versions
-  - [ ] Confirm each test fails for the expected v2 behavior
+  - [x] Split tests by specification section and include deterministic clocks/config versions — `097545f1`
+  - [x] Confirm each test fails for the expected v2 behavior — `097545f1`
 - [x] Task: Implement migrations in normative order — `5835f886`
-  - [ ] Apply state/readiness/retention, queue, placement, calibration/evidence, utility, diversity, and session-composition changes
-  - [ ] Preserve public contracts where possible and version every unavoidable break
+  - [x] Apply state/readiness/retention, queue, placement, calibration/evidence, utility, diversity, and session-composition changes — `097545f1`
+  - [x] Preserve public contracts where possible and version every unavoidable break — `097545f1`
 - [x] Task: Verify and document Phase S2 — `5835f886`
-  - [ ] Run full suites, property/counterexample tests, coverage, graph update/audit, generated docs, and doctor
-  - [ ] Task: Measure - User Manual Verification 'Phase S2: Migrate correctness to v3.2' (Protocol in workflow.md)
+  - [x] Run full suites, property/counterexample tests, coverage, graph update/audit, generated docs, and doctor — `097545f1`
+  - [x] Task: Measure - User Manual Verification 'Phase S2: Migrate correctness to v3.2' (Protocol in workflow.md) — `097545f1`
 
   - Green evidence: the aggregate normative contract is green (`16` files,
     `54/54` assertions) after a Red baseline of `16` failing files,
@@ -80,17 +80,17 @@ _Story ref: spec.md#story-s2_
 _Story ref: spec.md#story-s3_
 
 - [x] Task: Freeze storage-port and database contracts — `17fa0cab`
-  - [ ] Define card, review-log, evidence, state, placement, calibration, config, provenance, and idempotency schemas
-  - [ ] Classify all new Drizzle tables in the tenant registry before migration generation
+  - [x] Define card, review-log, evidence, state, placement, calibration, config, provenance, and idempotency schemas — `52088fbe`
+  - [x] Classify all new Drizzle tables in the tenant registry before migration generation — `52088fbe`
 - [x] Task: Write adapter and transaction tests — `257c39fd`
-  - [ ] Run one contract suite against in-memory and PGlite/Drizzle adapters
-  - [ ] Add tenant isolation, duplicate submission, retry, rollback, concurrent update, and replay tests
+  - [x] Run one contract suite against in-memory and PGlite/Drizzle adapters — `52088fbe`
+  - [x] Add tenant isolation, duplicate submission, retry, rollback, concurrent update, and replay tests — `52088fbe`
 - [x] Task: Implement schema, migrations, and adapters — `08e942a2`
-  - [ ] Generate/review Drizzle migrations and implement transport-independent domain orchestration
-  - [ ] Keep all database/provider concerns outside core packages
+  - [x] Generate/review Drizzle migrations and implement transport-independent domain orchestration — `52088fbe`
+  - [x] Keep all database/provider concerns outside core packages — `52088fbe`
 - [x] Task: Verify and document Phase S3 — `08e942a2`
-  - [ ] Run migration doctor, adapter tests, affected package gates, graph update/audit, generated docs, and doctor
-  - [ ] Task: Measure - User Manual Verification 'Phase S3: Add portable persistence adapters' (Protocol in workflow.md)
+  - [x] Run migration doctor, adapter tests, affected package gates, graph update/audit, generated docs, and doctor — `52088fbe`
+  - [x] Task: Measure - User Manual Verification 'Phase S3: Add portable persistence adapters' (Protocol in workflow.md) — `52088fbe`
 
   - Green evidence: the shared persistence contract passes against both the
     in-memory and PGlite/Drizzle adapters, with transaction orchestration and
@@ -108,15 +108,15 @@ _Story ref: spec.md#story-s3_
     acceptance remains mandatory for Tracks 2–5.
 
 - [x] Task: Remediate failed Phase S3 independent reviews — `b951d696`, `4505666f`, `a7312a12`, `2ffd496a`, `61937c56`
-  - [ ] Unify the public orchestration and adapter contracts and prove the real
+  - [x] Unify the public orchestration and adapter contracts and prove the real — `52088fbe`
     Drizzle path with PGlite transaction, rollback, CAS, retry, and replay tests
-  - [ ] Bind persistence to an authenticated school and enforce student owner
+  - [x] Bind persistence to an authenticated school and enforce student owner — `52088fbe`
     identity plus immutable card/state natural keys at the database boundary
-  - [ ] Canonicalize request/result digests, align identifier contracts, and
+  - [x] Canonicalize request/result digests, align identifier contracts, and — `52088fbe`
     preserve provider-neutral infrastructure/retry error semantics
-  - [ ] Carry calibration release evidence and restore the frozen placement and
+  - [x] Carry calibration release evidence and restore the frozen placement and — `52088fbe`
     calibration uniqueness contracts across schema, migration, and tests
-  - [ ] Add reproducible 0026/0027 Drizzle snapshots, DB-free public imports,
+  - [x] Add reproducible 0026/0027 Drizzle snapshots, DB-free public imports, — `52088fbe`
     exact cross-adapter parity, complete graph coverage, and >80% branch coverage
 
   - Remediation Green evidence: the canonical domain/public slice passes `26/26`,
@@ -132,8 +132,8 @@ _Story ref: spec.md#story-s3_
     complete calibration governance evidence, reconstructed 0026/0027 snapshots,
     and a non-destructive 0028 tenant-hardening migration.
 - [x] Task: Re-run Phase S3 reviews and acceptance — `bc582c80`, `d6b8be6f`, `4565377b`, `636cc09c`
-  - [ ] Re-run correctness, security/boundary, and API/DX audit roles until all pass
-  - [ ] Run phase acceptance and adversarial gates; record browser review as not
+  - [x] Re-run correctness, security/boundary, and API/DX audit roles until all pass — `52088fbe`
+  - [x] Run phase acceptance and adversarial gates; record browser review as not — `52088fbe`
     applicable only because this phase exposes no user-facing route or component
 
   - Final acceptance: all three independent re-audits pass with no blocker;
@@ -145,17 +145,17 @@ _Story ref: spec.md#story-s3_
 _Story ref: spec.md#story-s4_
 
 - [x] Task: Define ownership and version policy — `f912b992`, `a710461a`
-  - [ ] Record authoritative spec, implementation, graph, fixture, release, and consumer responsibilities
-  - [ ] Define semantic-version and compatibility-matrix rules for engine/spec/graph versions
+  - [x] Record authoritative spec, implementation, graph, fixture, release, and consumer responsibilities — `0c29f9d7`
+  - [x] Define semantic-version and compatibility-matrix rules for engine/spec/graph versions — `0c29f9d7`
 - [x] Task: Write consumer compatibility gates — `f849efd2`, `3ba80ed2`, `5e0adfad`
-  - [ ] Add fixture packages proving app-neutral consumption and release reproducibility
-  - [ ] Add a synthetic Codecamp flow covering readiness, submission, SRS update, and projection
+  - [x] Add fixture packages proving app-neutral consumption and release reproducibility — `0c29f9d7`
+  - [x] Add a synthetic Codecamp flow covering readiness, submission, SRS update, and projection — `0c29f9d7`
 - [x] Task: Define reproducible consumer cutover to canonical packages — `cec5d556`
-  - [ ] Inventory and retire duplicate ra-math package sources under a linked external change plan
-  - [ ] Document upgrade/migration procedures for future Advantage apps
+  - [x] Inventory and retire duplicate ra-math package sources under a linked external change plan — `0c29f9d7`
+  - [x] Document upgrade/migration procedures for future Advantage apps — `0c29f9d7`
 - [x] Task: Close and verify the shared runtime — `f849efd2`
-  - [ ] Run root affected gates, package publication/dry-run checks, graph/generate/doctor, and cross-repo compatibility evidence
-  - [ ] Task: Measure - User Manual Verification 'Phase S4: Establish runtime governance' (Protocol in workflow.md)
+  - [x] Run root affected gates, package publication/dry-run checks, graph/generate/doctor, and cross-repo compatibility evidence — `0c29f9d7`
+  - [x] Task: Measure - User Manual Verification 'Phase S4: Establish runtime governance' (Protocol in workflow.md) — `0c29f9d7`
 
   - Green evidence: the strict manifest/evaluator suite passes `18/18`; the
     synthetic Codecamp and packed release suites pass `4/4`; the tooling package
@@ -173,8 +173,8 @@ _Story ref: spec.md#story-s4_
     inspected read-only and was not mutated by this track.
 
 - [x] Task: Re-run Phase S4 reviews and acceptance — `7b096f19`, `4adbc907`, `a710461a`
-  - [ ] Confirm correctness, security/boundary, and API/DX audits have no blocker
-  - [ ] Run phase/adversarial acceptance and prove browser review is not applicable
+  - [x] Confirm correctness, security/boundary, and API/DX audits have no blocker — `0c29f9d7`
+  - [x] Run phase/adversarial acceptance and prove browser review is not applicable — `0c29f9d7`
 
   - Final acceptance: all three reviews pass after correcting aspirational
     contract labels, persisted-state projection, and packed local-protocol

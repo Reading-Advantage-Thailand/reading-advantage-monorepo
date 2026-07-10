@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "role": "closeout",
+  "track_id": "mastery_engine_v32_import_20260710",
+  "closeout_date": "2026-07-10",
+  "final_acceptance": {
+    "status": "pass",
+    "evaluated_at": "2026-07-10",
+    "may_proceed_to_closeout": true,
+    "summary": "All four phases passed independent correctness, boundary, API/DX, phase-acceptance, and adversarial gates; user-facing browser review was correctly bounded as not applicable to this package-only track."
+  },
+  "plan_tasks": {
+    "total": 60,
+    "complete": 60,
+    "blocked": 0,
+    "deferred": 0
+  },
+  "phase_summary": {
+    "S1_import_v2_core": { "status": "complete", "acceptance": "phase-s1-acceptance.json" },
+    "S2_migrate_v32_correctness": { "status": "complete", "acceptance": "phase-s2-acceptance.json" },
+    "S3_portable_persistence": { "status": "complete", "acceptance": "phase-s3-acceptance.json" },
+    "S4_runtime_governance": { "status": "complete", "acceptance": "phase-s4-acceptance.json" }
+  },
+  "gates": [
+    { "name": "S1_IMPORT_CONTRACT", "status": "pass", "summary": "10/10 focused import, boundary, build, and export checks." },
+    { "name": "S2_NORMATIVE_V32", "status": "pass", "summary": "54/54 normative assertions plus public-boundary, planner, placement, and SRS suites." },
+    { "name": "S3_PERSISTENCE", "status": "pass", "summary": "119 effective adapter, schema, migration, tenant, retry, replay, and boundary assertions with branch coverage above 80%." },
+    { "name": "S4_RUNTIME_GOVERNANCE", "status": "pass", "summary": "22/22 strict manifest, packed consumer, release, and synthetic Codecamp proof assertions." },
+    { "name": "GRAPH", "status": "pass", "summary": "Structural edits indexed and the Codecamp proof entry point is queryable." },
+    { "name": "BROWSER", "status": "not_applicable", "summary": "Track owns shared packages and migrations only; no route, page, component, style, or browser surface changed." }
+  ],
+  "key_commits": [
+    "60397049 - S1 import acceptance",
+    "b7b8152f - S2 acceptance",
+    "52088fbe - S3 acceptance",
+    "0c29f9d7 - S4 acceptance"
+  ],
+  "deferred_items": [
+    {
+      "item": "Live PostgreSQL migration-ledger doctor",
+      "reason": "Neither DIRECT_DATABASE_URL nor DATABASE_URL is configured; offline journal, snapshot, migration, and PGlite contracts passed.",
+      "owner": "deployment environment"
+    },
+    {
+      "item": "ra-math duplicate-package deletion",
+      "reason": "The external repository is dirty and was intentionally inspected read-only; the pinned cutover and rollback plan is preserved.",
+      "owner": "ra-math cutover follow-up"
+    }
+  ],
+  "anti_pattern_audit": {
+    "A5_false_claim_text": "pass - claims are bounded to package, migration, and synthetic consumer evidence",
+    "A6_registry_overstatement": "pass - Codecamp production wiring remains in successor tracks",
+    "A9_archived_track_references": "pass - runtime consumers use package contracts rather than active-track paths",
+    "A13_stale_track_directory": "pass after archive move"
+  }
+}

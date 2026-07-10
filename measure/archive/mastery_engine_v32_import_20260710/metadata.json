@@ -1,0 +1,23 @@
+{
+  "track_id": "mastery_engine_v32_import_20260710",
+  "type": "feature",
+  "status": "done",
+  "created_at": "2026-07-10T08:13:12Z",
+  "updated_at": "2026-07-10T23:45:00+07:00",
+  "completed": "2026-07-10",
+  "description": "Import the four domain-neutral Mastery Advantage engine packages, migrate them from the implemented v2 baseline to the normative kst-srs.v3.2 contract, add portable persistence adapters, and make this monorepo the canonical shared runtime.",
+  "estimated_tasks": 16,
+  "actual_tasks": 16,
+  "deviation_notes": "S3 required a second Red/Green/review cycle to harden tenant identity, persistence parity, migration snapshots, and branch coverage. S4 added a dedicated runtime-compat package so packed-consumer and Codecamp proof gates remain reusable.",
+  "sprint": {
+    "goal": "Deliver a provider-neutral, app-neutral, v3.2-correct KST+SRS runtime that Codecamp can use as the first production vertical slice and every Advantage app can consume later.",
+    "stories": [
+      { "id": "S1", "title": "Import the proven v2 core", "size": "L", "priority": "Must", "status": "done" },
+      { "id": "S2", "title": "Migrate correctness to v3.2", "size": "XL", "priority": "Must", "status": "done" },
+      { "id": "S3", "title": "Add portable persistence adapters", "size": "L", "priority": "Must", "status": "done" },
+      { "id": "S4", "title": "Establish runtime governance", "size": "M", "priority": "Must", "status": "done" }
+    ],
+    "demo_notes": null,
+    "retro_ref": null
+  }
+}
