@@ -48,7 +48,7 @@ export type TutorialCheckExecutor = (
 ) => boolean;
 
 /** Verified tutorial result plus the server-produced per-check details. */
-export type VerifiedTutorialStepResult = {
+type VerifiedTutorialStepResult = {
   checkResults: Array<{ checkId: string; passed: boolean }>;
   verifiedResult: ServerVerifiedResult;
 };
