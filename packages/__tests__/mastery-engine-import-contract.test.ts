@@ -2,6 +2,7 @@ import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { dirname, extname, join, relative, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import * as ts from "typescript";
 import { describe, expect, it } from "vitest";
 
 const repositoryRoot = resolve(
@@ -95,6 +96,7 @@ type PackageManifest = {
       }
   >;
   dependencies?: Record<string, string>;
+  peerDependencies?: Record<string, string>;
 };
 
 type ProvenanceArtifact = {
@@ -134,12 +136,44 @@ function productionTypeScriptFiles(directory: string): string[] {
   });
 }
 
-function importSpecifiers(source: string): string[] {
+function importSpecifiers(source: string, fileName: string): string[] {
   const specifiers: string[] = [];
-  const pattern =
-    /(?:\b(?:import|export)\s+(?:[\s\S]*?\s+from\s+)?|\bimport\s*\(|\brequire\s*\()\s*["']([^"']+)["']/g;
-  for (const match of source.matchAll(pattern)) specifiers.push(match[1]);
+  const sourceFile = ts.createSourceFile(
+    fileName,
+    source,
+    ts.ScriptTarget.Latest,
+    true,
+    ts.ScriptKind.TS,
+  );
+
+  function visit(node: ts.Node): void {
+    if (
+      (ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) &&
+      node.moduleSpecifier &&
+      ts.isStringLiteral(node.moduleSpecifier)
+    ) {
+      specifiers.push(node.moduleSpecifier.text);
+    } else if (
+      ts.isCallExpression(node) &&
+      node.arguments.length > 0 &&
+      ts.isStringLiteral(node.arguments[0]) &&
+      (node.expression.kind === ts.SyntaxKind.ImportKeyword ||
+        (ts.isIdentifier(node.expression) && node.expression.text === "require"))
+    ) {
+      specifiers.push(node.arguments[0].text);
+    }
+
+    ts.forEachChild(node, visit);
+  }
+
+  visit(sourceFile);
   return specifiers;
+}
+
+function topLevelPackage(specifier: string): string {
+  return specifier.startsWith("@")
+    ? specifier.split("/").slice(0, 2).join("/")
+    : specifier.split("/")[0];
 }
 
 describe("Mastery engine v2 mechanical import contract", () => {
@@ -256,6 +290,13 @@ describe("Mastery engine v2 mechanical import contract", () => {
     "keeps $name production imports framework and provider neutral",
     (pkg) => {
       const packageRoot = join(repositoryRoot, "packages", pkg.directory);
+      const manifest = readJson<PackageManifest>(
+        join(packageRoot, "package.json"),
+      );
+      const declaredProductionDependencies = new Set([
+        ...Object.keys(manifest.dependencies ?? {}),
+        ...Object.keys(manifest.peerDependencies ?? {}),
+      ]);
       expect(
         existsSync(packageRoot),
         `Destination package is missing: packages/${pkg.directory}`,
@@ -265,7 +306,7 @@ describe("Mastery engine v2 mechanical import contract", () => {
         const source = readFileSync(path, "utf8");
         expect(source).not.toMatch(/\bprocess\.env\b|\bimport\.meta\.env\b/);
 
-        for (const specifier of importSpecifiers(source)) {
+        for (const specifier of importSpecifiers(source, path)) {
           expect(
             forbiddenImport.test(specifier),
             `${relative(repositoryRoot, path)} imports forbidden module ${specifier}`,
@@ -275,6 +316,12 @@ describe("Mastery engine v2 mechanical import contract", () => {
               extname(specifier),
               `${relative(repositoryRoot, path)} must use a .js ESM import for ${specifier}`,
             ).toBe(".js");
+          } else if (!specifier.startsWith("node:")) {
+            const dependency = topLevelPackage(specifier);
+            expect(
+              declaredProductionDependencies.has(dependency),
+              `${relative(repositoryRoot, path)} imports undeclared production dependency ${dependency}`,
+            ).toBe(true);
           }
         }
       }

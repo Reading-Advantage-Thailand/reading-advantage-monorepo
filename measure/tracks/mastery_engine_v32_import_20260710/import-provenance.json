@@ -96,6 +96,12 @@
       "package": "@reading-advantage/knowledge-space-practice",
       "change": "Removed the frozen source manifest's ./types and ./schemas subpaths because the source tree has no corresponding entrypoints and the emitted build produces no matching runtime or declaration targets. The package root, ./blueprints, and ./projections remain the supported aggregate contract surfaces.",
       "algorithmBehaviorChanged": false
+    },
+    {
+      "category": "inherited missing production dependency",
+      "package": "@reading-advantage/srs-engine",
+      "change": "Declared zod as a direct production dependency because the frozen production file src/srs/objective-policy.ts imports it; the frozen source manifest omitted that required declaration.",
+      "algorithmBehaviorChanged": false
     }
   ]
 }
