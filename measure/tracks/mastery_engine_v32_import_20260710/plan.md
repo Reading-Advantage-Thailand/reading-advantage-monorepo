@@ -79,18 +79,33 @@ _Story ref: spec.md#story-s2_
 ## Phase S3: Add portable persistence adapters
 _Story ref: spec.md#story-s3_
 
-- [~] Task: Freeze storage-port and database contracts
+- [x] Task: Freeze storage-port and database contracts — `17fa0cab`
   - [ ] Define card, review-log, evidence, state, placement, calibration, config, provenance, and idempotency schemas
   - [ ] Classify all new Drizzle tables in the tenant registry before migration generation
-- [~] Task: Write adapter and transaction tests
+- [x] Task: Write adapter and transaction tests — `257c39fd`
   - [ ] Run one contract suite against in-memory and PGlite/Drizzle adapters
   - [ ] Add tenant isolation, duplicate submission, retry, rollback, concurrent update, and replay tests
-- [~] Task: Implement schema, migrations, and adapters
+- [x] Task: Implement schema, migrations, and adapters — `08e942a2`
   - [ ] Generate/review Drizzle migrations and implement transport-independent domain orchestration
   - [ ] Keep all database/provider concerns outside core packages
-- [~] Task: Verify and document Phase S3
+- [x] Task: Verify and document Phase S3 — `08e942a2`
   - [ ] Run migration doctor, adapter tests, affected package gates, graph update/audit, generated docs, and doctor
   - [ ] Task: Measure - User Manual Verification 'Phase S3: Add portable persistence adapters' (Protocol in workflow.md)
+
+  - Green evidence: the shared persistence contract passes against both the
+    in-memory and PGlite/Drizzle adapters, with transaction orchestration and
+    schema coverage included (`4` files, `58/58` assertions). Tenant-registry
+    coverage passes (`28/28`), and schema, Drizzle, migration-journal, and
+    sentinel integrity pass together (`41/41`).
+  - The implementation adds seven school-scoped FLAT tables, Zod-validated
+    provider-neutral persistence ports, matching in-memory and Drizzle
+    adapters, and commit orchestration covering idempotency, atomic rollback,
+    concurrent updates, provenance, audit metadata, and the no-evidence rule.
+  - A live migration-ledger doctor could not connect because neither
+    `DIRECT_DATABASE_URL` nor `DATABASE_URL` is configured in this workspace;
+    the offline migration journal and sentinel contracts pass. Browser review
+    is not applicable to this package-only phase; user-facing browser
+    acceptance remains mandatory for Tracks 2–5.
 
 ## Phase S4: Establish runtime governance
 _Story ref: spec.md#story-s4_
