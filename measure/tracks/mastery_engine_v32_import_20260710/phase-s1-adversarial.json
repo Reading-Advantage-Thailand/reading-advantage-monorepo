@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Phase S1 survives all seven requested adversarial counterexamples: export-target, dependency, provider/environment, ESM-specifier, provenance inventory/tree, behavior-equivalence, and dependency-cycle mutations were detected while the accepted workspace remained unchanged.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "S1-ADVERSARIAL-001 [low]: Export, bare-dependency, forbidden-import/environment, and relative-ESM attacks are permanent focused-contract guards. Inventory/tree, normalized behavior-equivalence, and cycle attacks were verified through the requested static acceptance probe; promote that probe into a committed compatibility/governance test during Phase S4 so it runs automatically for every future extraction or release."
+  ],
+  "evidence": [
+    "Accepted baseline 60397049 passes the focused contract 10/10.",
+    "Missing export artifact attack: changing a conditional export to ./dist/does-not-exist.js is rejected by the runtime target existence/load guard.",
+    "Undeclared dependency attack: removing zod from an in-memory srs-engine manifest is rejected because objective-policy.ts imports zod and the inverse dependency guard requires dependencies or peerDependencies.",
+    "Forbidden provider/app/environment attack: a React import plus process.env access is rejected by the provider-neutral and environment-access guards.",
+    "Non-.js relative specifier attack: an extensionless relative re-export is rejected by the ESM specifier guard.",
+    "Source tree/file-count attack: the static provenance probe validated all four frozen tree IDs and 199 source/destination tracked paths, then detected in-memory sourceFileCount and sourceTree corruption.",
+    "Unexplained behavior-bearing deviation attack: the normalized comparison first proved 183/183 non-configuration files equal with zero differences, then detected an injected unapproved exported constant.",
+    "Dependency-cycle attack: the graph probe first proved the four-package production graph acyclic, then detected an injected practice-core to srs-engine edge completing the existing srs-engine to practice-core cycle.",
+    "The adversarial harness reported allDetected=true for seven attacks, currentInventoryOk=true, normalizedFilesCompared=183, normalizedDifferences=0, currentDependencyCycle=false, and no current srs-engine dependency violations.",
+    "Post-attack git status and diff checks show no changes to the four packages, focused contract, or provenance artifact."
+  ],
+  "commands": [
+    "TZ=UTC pnpm exec vitest run packages/__tests__/mastery-engine-import-contract.test.ts --maxWorkers=1 --reporter=dot (accepted baseline pass: 10/10)",
+    "In-memory Node/TypeScript-AST adversarial harness for seven counterexamples plus frozen git-tree/content comparison (pass: allDetected=true)",
+    "git status --short and git diff --check scoped to the focused contract, four packages, and provenance (pass: no adversarial mutations remain)"
+  ],
+  "changed_files": [
+    "measure/tracks/mastery_engine_v32_import_20260710/phase-s1-adversarial.json"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "ux_applicability": "not_applicable",
+  "webbridge_status": "not_run",
+  "webbridge_evidence": {
+    "screenshots": [],
+    "accessibility_snapshots": [],
+    "interactions": []
+  }
+}

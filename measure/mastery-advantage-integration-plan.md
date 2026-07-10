@@ -5,6 +5,15 @@
 > **Scope:** Porting the Mastery Advantage (MA) KST+SRS engine into `reading-advantage-monorepo`, starting with the Reading Advantage app
 > **Source spec:** `~/Desktop/mastery-advantage/SPECIFICATION.md` (`kst-srs.v2`)
 
+> **2026-07-10 sequencing update:** The engine-import, shared-package-governance,
+> specification-version, and first-production-app decisions in this document are
+> superseded by
+> [Codecamp Mastery Learning Platform Program](./codecamp-mastery-learning-platform-program.md).
+> The normative specification is now `kst-srs.v3.2`; Codecamp is the first production
+> proof. Reading-specific GSE, vocabulary, article, and migration analysis below remains
+> useful input for a later Reading integration track, but do not execute Workstream A or
+> the original Reading-first sequence from this snapshot.
+
 ## 1. Strategic context
 
 Mastery Advantage is a marketing-led push to make one adaptive KST+SRS engine the

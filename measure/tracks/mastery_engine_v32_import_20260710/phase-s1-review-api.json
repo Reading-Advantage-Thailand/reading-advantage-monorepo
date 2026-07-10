@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Phase S1 passes public API and package-DX review: all 30 declared package-specifier exports resolve and load, every declaration/runtime target exists after build, package metadata and scripts are consistent, and no app-private or legacy package-scope coupling remains.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "S1-API-001 [medium]: srs-engine and practice-core have no package-root README, so their standalone consumer guidance is weaker than knowledge-space-core and knowledge-space-practice. Add package-root usage/API documentation during the Phase S4 governance/documentation work rather than changing the mechanical S1 import.",
+    "S1-API-002 [low]: All four packages remain private at version 0.1.0. This is appropriate for the current workspace import, but publication/version compatibility remains intentionally deferred to Phase S4."
+  ],
+  "evidence": [
+    "Focused import/boundary/build-export contract passed 10/10 at baseline 60397049.",
+    "A consumer-style Node probe imported every export using its public @reading-advantage package specifier: 8 knowledge-space-core, 5 knowledge-space-practice, 7 srs-engine, and 10 practice-core exports (30 total).",
+    "Every manifest export has an existing built import target and declaration target, and the focused contract dynamically imports each runtime target.",
+    "All manifests consistently declare type=module, matching main/module ./dist/index.js, root types ./dist/index.d.ts, files=[dist], and build/check-types/lint/test scripts.",
+    "No @math-platform package names, app source paths, or app-private entrypoint coupling were found in the reviewed manifests and consumer documentation.",
+    "Knowledge-space-core and knowledge-space-practice retain package-root READMEs; practice-core retains generator-specific documentation but no package-root README; srs-engine has no package-root README.",
+    "Conditional exports preserve distinct runtime and declaration targets, and the dependency-boundary contract verifies production package imports are declared."
+  ],
+  "commands": [
+    "TZ=UTC pnpm exec vitest run packages/__tests__/mastery-engine-import-contract.test.ts --maxWorkers=1 --reporter=dot (pass: 10/10)",
+    "Consumer-style package-specifier dynamic import probe from each package workspace (pass: package_specifier_exports_loaded=30)",
+    "jq manifest shape checks for private/type/main/module/types/files/scripts across four packages (pass: 4/4)",
+    "rg legacy @math-platform and app-private path scan across package manifests and consumer READMEs (pass: no legacy scope or app-private coupling; one benign package-local generator README location line)",
+    "Package-root README inventory (knowledge-space-core present; knowledge-space-practice present; srs-engine missing; practice-core missing)"
+  ],
+  "changed_files": [
+    "measure/tracks/mastery_engine_v32_import_20260710/phase-s1-review-api.json"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}

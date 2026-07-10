@@ -19,6 +19,7 @@
 - [Tracks Directory](./tracks/)
 
 ## Plans
+- [Codecamp Mastery Learning Platform Program](./codecamp-mastery-learning-platform-program.md)
 - [Mastery Advantage Integration Plan](./mastery-advantage-integration-plan.md)
 - [Mastery Advantage Workbook Series Plan](./mastery-advantage-workbook-plan.md)
 

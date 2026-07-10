@@ -1,0 +1,22 @@
+{
+  "track_id": "codecamp_pr_mastery_evaluation_20260710",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-07-10T08:13:12Z",
+  "updated_at": "2026-07-10T08:13:12Z",
+  "description": "Move Codecamp PR review to explicit OpenRouter Grok Latest routing, produce structured graph-linked rubric evidence, preserve advisory semantics, and feed validated outcomes into Mastery KST+SRS.",
+  "estimated_tasks": 16,
+  "actual_tasks": null,
+  "deviation_notes": "",
+  "sprint": {
+    "goal": "Turn Codecamp's durable GitHub PR review loop into auditable, graph-linked independent-practice evidence without allowing model drift, invalid output, or one approval to manufacture permanent mastery.",
+    "stories": [
+      { "id": "S1", "title": "Route review models explicitly", "size": "M", "priority": "Must", "status": "pending" },
+      { "id": "S2", "title": "Produce objective-level review evidence", "size": "L", "priority": "Must", "status": "pending" },
+      { "id": "S3", "title": "Feed PR evidence into Mastery", "size": "L", "priority": "Must", "status": "pending" },
+      { "id": "S4", "title": "Calibrate and release safely", "size": "L", "priority": "Must", "status": "pending" }
+    ],
+    "demo_notes": null,
+    "retro_ref": null
+  }
+}

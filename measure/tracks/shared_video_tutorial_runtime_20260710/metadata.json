@@ -1,0 +1,23 @@
+{
+  "track_id": "shared_video_tutorial_runtime_20260710",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-07-10T08:13:12Z",
+  "updated_at": "2026-07-10T08:13:12Z",
+  "description": "Build a shared React/Next/Vinext activity system for interactive video, diagrams, timestamped formative questions, cloned tutorial repositories, deterministic step checks, and Mastery practice evidence.",
+  "estimated_tasks": 20,
+  "actual_tasks": null,
+  "deviation_notes": "",
+  "sprint": {
+    "goal": "Deliver reusable I Do and We Do activity infrastructure that turns video checkpoints, diagrams, tutorial steps, checks, hints, and replays into one accessible and scaffold-aware evidence stream.",
+    "stories": [
+      { "id": "S1", "title": "Freeze the activity contracts", "size": "L", "priority": "Must", "status": "pending" },
+      { "id": "S2", "title": "Build interactive video for React", "size": "XL", "priority": "Must", "status": "pending" },
+      { "id": "S3", "title": "Persist activity evidence", "size": "L", "priority": "Must", "status": "pending" },
+      { "id": "S4", "title": "Create the tutorial repository protocol", "size": "XL", "priority": "Must", "status": "pending" },
+      { "id": "S5", "title": "Prove the Codecamp vertical slice", "size": "L", "priority": "Must", "status": "pending" }
+    ],
+    "demo_notes": null,
+    "retro_ref": null
+  }
+}

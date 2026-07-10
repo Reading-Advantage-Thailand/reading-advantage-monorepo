@@ -1,0 +1,22 @@
+{
+  "track_id": "codecamp_intervention_tutor_20260710",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-07-10T08:13:12Z",
+  "updated_at": "2026-07-10T08:13:12Z",
+  "description": "Replace Codecamp's general chatbot with a targeted MiMo-V2.5 intervention coach grounded in the current activity, objective, attempt, test failure, misconception, scaffold history, and curated remediation resources.",
+  "estimated_tasks": 16,
+  "actual_tasks": null,
+  "deviation_notes": "",
+  "sprint": {
+    "goal": "Give students targeted, escalating help that points to trusted lesson, diagram, repository, and video-segment resources while recording scaffold usage as Mastery evidence context rather than invented correctness.",
+    "stories": [
+      { "id": "S1", "title": "Freeze the intervention contract", "size": "L", "priority": "Must", "status": "pending" },
+      { "id": "S2", "title": "Ground tutoring in activity state", "size": "L", "priority": "Must", "status": "pending" },
+      { "id": "S3", "title": "Escalate support safely", "size": "L", "priority": "Must", "status": "pending" },
+      { "id": "S4", "title": "Connect intervention to Mastery", "size": "L", "priority": "Must", "status": "pending" }
+    ],
+    "demo_notes": null,
+    "retro_ref": null
+  }
+}

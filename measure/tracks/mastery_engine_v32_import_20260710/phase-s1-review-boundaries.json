@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Phase S1 passes boundary review after remediation commit 60397049: production imports are provider/app/transport/tenant/environment neutral, every bare production import is declared by its owning package, dependency direction remains acyclic, and all built ESM export targets load.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "S1-BOUNDARY-002 [low]: pnpm-lock.yaml was already dirty and is outside this scoped reviewer commit. Final phase integration must confirm the root frozen lock records the srs-engine Zod declaration without overwriting unrelated lockfile work."
+  ],
+  "evidence": [
+    "The strengthened contract first failed exactly on packages/srs-engine/src/srs/objective-policy.ts importing undeclared zod.",
+    "After remediation commit 60397049, the focused import/boundary/build-export contract passed 10/10.",
+    "The production dependency guard uses the TypeScript AST to inspect static imports, re-exports, dynamic imports, and require calls without matching comments or template strings; scoped package names are normalized to @scope/name.",
+    "srs-engine build and check-types pass, and pnpm list shows zod as a direct production dependency.",
+    "Static scan covered 72 production TypeScript files and found no provider SDK, React, Next, Vinext, database, auth, storage, webhook, transport, process.env, import.meta.env, tenant, school, private-key, Google-key, or OpenAI-key coupling.",
+    "All production relative imports use emitted .js specifiers and the focused contract dynamically loads all 30 declared runtime exports after building.",
+    "Package direction is acyclic: knowledge-space-core depends only on zod; practice-core depends only on zod; knowledge-space-practice depends on core, practice-core, and zod; srs-engine depends on practice-core, ts-fsrs, and zod."
+  ],
+  "commands": [
+    "TZ=UTC pnpm exec vitest run packages/__tests__/mastery-engine-import-contract.test.ts --maxWorkers=1 --reporter=verbose before remediation (expected fail: srs-engine objective-policy.ts imports undeclared zod)",
+    "TZ=UTC pnpm exec vitest run packages/__tests__/mastery-engine-import-contract.test.ts --maxWorkers=1 --reporter=dot after remediation (pass: 10/10)",
+    "pnpm --filter @reading-advantage/srs-engine build (pass)",
+    "pnpm --filter @reading-advantage/srs-engine check-types (pass)",
+    "pnpm --filter @reading-advantage/srs-engine list --depth 0 (pass: zod listed under production dependencies)",
+    "jq -e '.dependencies.zod == \"^4.1.12\"' packages/srs-engine/package.json (pass)",
+    "env/tenant/secret static scan excluding tests (pass: zero matches)"
+  ],
+  "changed_files": [
+    "measure/tracks/mastery_engine_v32_import_20260710/phase-s1-review-boundaries.json"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}
