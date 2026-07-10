@@ -1,3 +1,3 @@
-import baseConfig from "@reading-advantage/config/eslint/base";
+import baseConfig from "@reading-advantage/config/eslint";
 
 export default [...baseConfig];
