@@ -77,7 +77,7 @@ catalog:
   nuqs: ^2.8.1
   openai: ^6.1.0
   pg: ^8.16.3
-  phaser: ^3.86.0
+  phaser: 4.2.1
   postcss: ^8.5.15
   postgres: ^3.4.5
   prettier: ^3.8.1
@@ -132,3 +132,4 @@ resolvePeersFromWorkspaceRoot: true
 
 minimumReleaseAgeExclude:
   - vinext@0.2.0
+  - phaser@4.2.1

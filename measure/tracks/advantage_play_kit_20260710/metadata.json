@@ -1,0 +1,67 @@
+{
+  "track_id": "advantage_play_kit_20260710",
+  "type": "feature",
+  "status": "in-progress",
+  "created_at": "2026-07-10T07:03:08Z",
+  "updated_at": "2026-07-10T08:45:33Z",
+  "description": "Build the Phaser 4 Advantage Play Kit (APK), keep advantage-games as its development and QC testbed, preserve the established game I/O contracts, support Primary and Secondary editions, prove package consumption across host apps, and establish the existing-game rebuild program.",
+  "estimated_tasks": 43,
+  "actual_tasks": null,
+  "deviation_notes": "Successor to archived Wave 3 game import-readiness work and the cancelled app-local Babel Architect Phaser and R3F rendering experiments. This track preserves the established vocabulary-array, sentence-array, and game-result ABI while intentionally preserving mechanic concepts rather than legacy renderer behavior or source compatibility.",
+  "sprint": {
+    "goal": "Establish the Phaser 4 Advantage Play Kit as the canonical game platform, with advantage-games as its live QC testbed, stable learning I/O contracts, dual Primary and Secondary editions, representative cartridges, and proven package consumption by host applications.",
+    "stories": [
+      {
+        "id": "S1",
+        "title": "Freeze the APK architecture",
+        "size": "M",
+        "priority": "Must",
+        "status": "completed"
+      },
+      {
+        "id": "S2",
+        "title": "Build the Phaser runtime",
+        "size": "XL",
+        "priority": "Must",
+        "status": "completed"
+      },
+      {
+        "id": "S3",
+        "title": "Support audience editions",
+        "size": "L",
+        "priority": "Must",
+        "status": "completed"
+      },
+      {
+        "id": "S4",
+        "title": "Operate the QC testbed",
+        "size": "L",
+        "priority": "Must",
+        "status": "completed"
+      },
+      {
+        "id": "S5",
+        "title": "Prove representative cartridges",
+        "size": "XL",
+        "priority": "Must",
+        "status": "in-progress"
+      },
+      {
+        "id": "S6",
+        "title": "Prove host consumption",
+        "size": "L",
+        "priority": "Must",
+        "status": "in-progress"
+      },
+      {
+        "id": "S7",
+        "title": "Plan catalog rebuild waves",
+        "size": "M",
+        "priority": "Should",
+        "status": "in-progress"
+      }
+    ],
+    "demo_notes": null,
+    "retro_ref": null
+  }
+}

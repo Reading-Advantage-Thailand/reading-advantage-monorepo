@@ -36,6 +36,19 @@
 | State Management | Zustand (games), React Query (others) | App-specific; not forced into shared layer |
 | Animation | Framer Motion | Used by primary-advantage and games; available in shared UI |
 
+### Advantage Play Kit
+
+Track `advantage_play_kit_20260710` establishes Phaser 4 as the canonical gameplay
+runtime for new and rebuilt language games. The shared boundary is split into:
+
+- `@reading-advantage/game-contracts` — browser-safe educational I/O and cartridge schemas.
+- `@reading-advantage/advantage-play-kit` — Phaser lifecycle, controls, editions, diagnostics, and React bridge.
+- `@reading-advantage/game-cartridges` — reusable game cartridges and Primary/Secondary editions.
+
+Reading and Primary consume workspace packages; they do not copy cartridge source or
+asset trees. Existing Konva/R3F implementations remain legacy references until their
+mechanics are rebuilt.
+
 ## Backend & Data
 
 | Technology | Usage |

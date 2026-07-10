@@ -1,0 +1,290 @@
+import type {
+  GameResults,
+  SentenceInput,
+  VocabularyInput,
+} from "@reading-advantage/game-contracts";
+
+import type { APKInputController } from "./input.js";
+
+/** Current browser runtime contract understood by the APK package. */
+export const APK_RUNTIME_API_VERSION = "1.0.0";
+
+/** Canonical learning content accepted by a cartridge launch. */
+export type GameInput = VocabularyInput | SentenceInput;
+
+/** Supported semantic asset loading operations. */
+export type SemanticAssetType =
+  | "procedural"
+  | "image"
+  | "spritesheet"
+  | "atlas"
+  | "audio"
+  | "font"
+  | "tilemap";
+
+/** Provenance attached to every edition asset. */
+export interface AssetProvenance {
+  /** Original source or generation workflow. */
+  source: string;
+  /** SPDX identifier or documented project license label. */
+  license: string;
+  /** Optional original creator or vendor. */
+  creator?: string;
+  /** Optional upstream source URL. */
+  sourceUrl?: string;
+}
+
+/** One semantic asset supplied by an audience edition. */
+export interface SemanticAsset {
+  /** Stable semantic key requested by cartridge source. */
+  key: string;
+  /** Phaser loader operation used for this asset. */
+  type: SemanticAssetType;
+  /** Local or host-resolved asset URL; procedural placeholders do not require one. */
+  url?: string;
+  /** Optional atlas, spritesheet, or loader metadata. */
+  config?: Readonly<Record<string, unknown>>;
+  /** Source and license evidence. */
+  provenance: AssetProvenance;
+  /** Versioned dimensions, format, frames, and optimization evidence. */
+  metadata: {
+    /** Edition-asset release version. */
+    version: string;
+    /** Encoded or procedural asset format. */
+    format: string;
+    /** Whether the asset passed the import optimization step. */
+    optimized: boolean;
+    /** Source pixel width when applicable. */
+    width?: number;
+    /** Source pixel height when applicable. */
+    height?: number;
+    /** Named atlas or animation frames when applicable. */
+    frames?: readonly string[];
+    /** Optimized transfer size when applicable. */
+    byteSize?: number;
+  };
+}
+
+/** Audience-safe tuning knobs that do not alter educational I/O. */
+export interface AudienceTuning {
+  /** Relative gameplay speed. */
+  speed: number;
+  /** Relative visual target scale. */
+  targetScale: number;
+  /** Relative collision-body generosity. */
+  collisionScale: number;
+  /** Audiovisual intensity from zero through one. */
+  intensity: number;
+  /** Optional cartridge-specific bounded values. */
+  custom?: Readonly<Record<string, number>>;
+}
+
+/** Complete visual and tuning edition selected by a host. */
+export interface RuntimeEdition {
+  /** Stable edition identifier. */
+  id: string;
+  /** Human-readable edition title. */
+  title: string;
+  /** APK runtime API version required by this edition. */
+  runtimeApiVersion: string;
+  /** Semantic asset table. */
+  assets: Readonly<Record<string, SemanticAsset>>;
+  /** Procedural fallback palette used before final art packs are imported. */
+  palette: {
+    /** World background color. */
+    background: number;
+    /** Player color. */
+    player: number;
+    /** Friendly feedback color. */
+    friendly: number;
+    /** Hostile feedback color. */
+    hostile: number;
+    /** Accent and particle color. */
+    accent: number;
+    /** Accessible foreground text color. */
+    text: string;
+  };
+  /** Audience-specific presentation and game-feel tuning. */
+  tuning: AudienceTuning;
+}
+
+/** Browser-safe cartridge metadata used by hosts and diagnostics. */
+export interface RuntimeCartridgeManifest {
+  /** Stable cartridge identifier. */
+  id: string;
+  /** Human-readable cartridge title. */
+  title: string;
+  /** Short catalog description of the mechanic. */
+  description: string;
+  /** Independently releasable cartridge version. */
+  version: string;
+  /** APK runtime API version required by the cartridge. */
+  runtimeApiVersion: string;
+  /** Educational input mode. */
+  inputMode: "vocabulary" | "sentence";
+  /** Semantic assets that every edition must provide. */
+  requiredAssetSlots: readonly string[];
+  /** Phaser capability families exercised by the cartridge. */
+  capabilities: readonly string[];
+}
+
+/** Diagnostic input accepted before the runtime assigns a timestamp. */
+export type APKDiagnosticInput = Omit<APKDiagnosticEvent, "timestamp"> & {
+  /** Optional deterministic timestamp supplied by tests or replay tooling. */
+  timestamp?: number;
+};
+
+/** Context supplied while a cartridge creates its Phaser configuration. */
+export interface CartridgeGameConfigContext {
+  /** Validated educational array. */
+  input: GameInput;
+  /** Validated audience edition. */
+  edition: RuntimeEdition;
+  /** Fire-once validated completion callback. */
+  complete: (result: unknown) => void;
+  /** Runtime diagnostics callback. */
+  diagnostic: (event: APKDiagnosticInput) => void;
+  /** Normalized live browser input. */
+  inputController: APKInputController;
+  /** Optional deterministic session seed. */
+  seed?: number;
+}
+
+/** Phaser-native cartridge entry point consumed by the runtime. */
+export interface RuntimeCartridge {
+  /** Cartridge metadata and compatibility requirements. */
+  manifest: RuntimeCartridgeManifest;
+  /**
+   * Creates a Phaser Game configuration for one mounted session.
+   * @param context Validated runtime services and cartridge inputs.
+   * @returns Phaser-compatible configuration consumed by the injected factory.
+   */
+  createGameConfig(context: CartridgeGameConfigContext): Readonly<Record<string, unknown>>;
+}
+
+/** Structured runtime event rendered by QC hosts and telemetry adapters. */
+export interface APKDiagnosticEvent {
+  /** Event severity. */
+  level: "debug" | "info" | "warning" | "error";
+  /** Stable event code. */
+  code: string;
+  /** Human-readable description. */
+  message: string;
+  /** Millisecond timestamp. */
+  timestamp: number;
+  /** Optional structured event context. */
+  details?: Readonly<Record<string, unknown>>;
+}
+
+/** Host callbacks available to the browser runtime. */
+export interface APKHostAdapter {
+  /** Receives exactly one validated display result per mounted session. */
+  complete(result: GameResults): void | Promise<void>;
+  /** Receives diagnostics without coupling cartridges to app telemetry. */
+  diagnostic?(event: APKDiagnosticEvent): void;
+  /** Optional host navigation boundary. */
+  navigate?(destination: string): void;
+}
+
+/** Runtime state exposed to QC tooling. */
+export type APKRuntimeStatus =
+  | "mounting"
+  | "running"
+  | "paused"
+  | "restarting"
+  | "completed"
+  | "error"
+  | "destroyed";
+
+/** Immutable runtime snapshot for operator diagnostics. */
+export interface APKRuntimeDiagnostics {
+  /** Current lifecycle state. */
+  status: APKRuntimeStatus;
+  /** Cartridge identifier. */
+  cartridgeId: string;
+  /** Edition identifier. */
+  editionId: string;
+  /** Number of successful recreation requests. */
+  restartCount: number;
+  /** Number of accepted results, constrained to zero or one. */
+  completionCount: number;
+  /** Current audio mute state. */
+  muted: boolean;
+  /** Last measured container width. */
+  width: number;
+  /** Last measured container height. */
+  height: number;
+  /** Most recent diagnostic event. */
+  lastEvent?: APKDiagnosticEvent;
+}
+
+/** Imperative game instance returned by an injected renderer factory. */
+export interface APKGameInstance {
+  /** Pauses live scenes or simulation. */
+  pause?(): void;
+  /** Resumes live scenes or simulation. */
+  resume?(): void;
+  /** Resizes the renderer to the host container. */
+  resize?(width: number, height: number): void;
+  /** Changes the renderer mute state. */
+  setMuted?(muted: boolean): void;
+  /** Permanently destroys this renderer instance. */
+  destroy(): void | Promise<void>;
+}
+
+/** Fully validated context passed to a renderer factory. */
+export interface GameFactoryContext {
+  /** DOM element that owns the game canvas. */
+  container: HTMLElement;
+  /** Cartridge definition for this launch. */
+  cartridge: RuntimeCartridge;
+  /** Strict educational input array. */
+  input: GameInput;
+  /** Validated audience edition. */
+  edition: RuntimeEdition;
+  /** Fire-once completion callback. */
+  complete: (result: unknown) => void;
+  /** Runtime diagnostic emitter. */
+  diagnostic: (event: APKDiagnosticInput) => void;
+  /** Normalized browser input controller. */
+  inputController: APKInputController;
+  /** Optional deterministic seed. */
+  seed?: number;
+}
+
+/** Injectable renderer construction boundary used by production and tests. */
+export type GameFactory = (
+  context: GameFactoryContext,
+) => APKGameInstance | Promise<APKGameInstance>;
+
+/** Options required to mount one cartridge session. */
+export interface MountCartridgeOptions {
+  /** DOM element that owns all game rendering. */
+  container: HTMLElement;
+  /** Cartridge definition to launch. */
+  cartridge: RuntimeCartridge;
+  /** Vocabulary or sentence array passed without wrapper drift. */
+  input: unknown;
+  /** Audience edition selected by the host. */
+  edition: RuntimeEdition;
+  /** Host-controlled result, navigation, and diagnostics callbacks. */
+  host: APKHostAdapter;
+  /** Optional deterministic seed. */
+  seed?: number;
+}
+
+/** Imperative lifecycle and diagnostics API returned to a host. */
+export interface APKGameHandle {
+  /** Pauses the session. */
+  pause(): void;
+  /** Resumes the session. */
+  resume(): void;
+  /** Recreates the session with the same validated launch options. */
+  restart(): Promise<void>;
+  /** Changes audio mute state. */
+  setMuted(muted: boolean): void;
+  /** Returns the latest immutable diagnostics snapshot. */
+  getDiagnostics(): APKRuntimeDiagnostics;
+  /** Permanently tears down the session and all browser listeners. */
+  destroy(): Promise<void>;
+}

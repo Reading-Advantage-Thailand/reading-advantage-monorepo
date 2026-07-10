@@ -39,4 +39,12 @@ describe('MainMenu', () => {
 
     expect(hasEnchantedLibrary).toBe(true)
   })
+
+  it('links to the isolated APK quality-control lab', () => {
+    render(<MainMenu />)
+
+    expect(
+      screen.getByRole('link', { name: /Open APK QC Lab/i })
+    ).toHaveAttribute('href', '/qc')
+  })
 })

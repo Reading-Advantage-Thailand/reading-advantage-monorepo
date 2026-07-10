@@ -13,6 +13,9 @@ const config: Config = {
   setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
   testEnvironment: "jsdom",
   moduleNameMapper: {
+    "^@reading-advantage/advantage-play-kit$": "<rootDir>/../../packages/advantage-play-kit/src/index.ts",
+    "^@reading-advantage/game-cartridges/(.*)$": "<rootDir>/../../packages/game-cartridges/src/$1.ts",
+    "^@reading-advantage/game-contracts$": "<rootDir>/../../packages/game-contracts/src/index.ts",
     "^@reading-advantage/utils$": "<rootDir>/../../packages/utils/src/index.ts",
     "^@reading-advantage/ui$": "<rootDir>/../../packages/ui/src/index.ts",
     "^@reading-advantage/auth-client$": "<rootDir>/../../packages/auth-client/src/index.ts",

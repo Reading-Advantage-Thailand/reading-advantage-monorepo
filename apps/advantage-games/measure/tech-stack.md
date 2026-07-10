@@ -18,6 +18,10 @@
 
 ## Rendering Tiers
 
+> **Superseded for new work by the Phaser 4 APK architecture below.** The tier
+> descriptions remain only as migration evidence for legacy games that have not yet
+> been rebuilt. Do not use them to scaffold a new cartridge.
+
 Added 2026-07-08 (track: r3f_rendering_tier_20260708). Every game commits to exactly one
 rendering tier at track creation time (see the "Rendering Stack" decision step in
 `.claude/skills/vocab-game-builder/SKILL.md`).
@@ -91,3 +95,23 @@ unrelated free packs per game.
 *   **Package Manager:** npm or pnpm (to be determined by environment)
 *   **Linting:** ESLint
 *   **Formatting:** Prettier
+
+## Phaser 4 Advantage Play Kit Target Architecture
+
+Added 2026-07-10 (track: `advantage_play_kit_20260710`).
+
+- **Engine:** Phaser 4 is the canonical runtime for all new and rebuilt games.
+- **Contracts:** `@reading-advantage/game-contracts` freezes vocabulary arrays,
+  sentence arrays, and the five-field `GameResults` output.
+- **Runtime:** `@reading-advantage/advantage-play-kit` owns Phaser lifecycle,
+  input, scaling, pause/resume, completion-once behavior, editions, diagnostics,
+  and the accessible React host bridge.
+- **Cartridges:** `@reading-advantage/game-cartridges` owns game definitions,
+  Phaser scenes, mechanic blueprints, and edition manifests.
+- **Editions:** Each cartridge supports Primary Chibi and Secondary Epic
+  presentation/tuning without source copies.
+- **QC host:** `apps/advantage-games` remains a static-export-compatible local
+  workshop. Its `/qc` surface is the product-owner gate before host adoption.
+- **Migration rule:** Preserve mechanic intent and the educational I/O ABI. Exact
+  renderer code, movement, scoring details, visuals, and legacy component APIs are
+  not compatibility requirements.

@@ -1,0 +1,23 @@
+{
+  "skill_name": "apk-game-builder",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Rebuild Dragon Flight as a Phaser 4 cartridge with Primary Chibi and Secondary Epic editions while keeping the vocabulary array and game result contracts.",
+      "expected_output": "A Measure-routed Phaser cartridge plan that preserves the stable educational ABI and uses edition manifests rather than copied game source.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Create a sentence-order defense game for advantage-games and make it easy to import into Reading and Primary.",
+      "expected_output": "A sentence-array APK cartridge design with Phaser-native gameplay, host adapters, dual editions, tests, and QC steps.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Fix a typo in an existing Konva game's description without changing gameplay.",
+      "expected_output": "The APK game-building workflow should not be invoked for a trivial legacy copy edit.",
+      "files": []
+    }
+  ]
+}
