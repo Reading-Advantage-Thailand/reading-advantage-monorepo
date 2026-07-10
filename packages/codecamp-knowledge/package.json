@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@reading-advantage/knowledge-space-core": "workspace:*",
-    "zod": "catalog:"
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@reading-advantage/config": "workspace:*",
