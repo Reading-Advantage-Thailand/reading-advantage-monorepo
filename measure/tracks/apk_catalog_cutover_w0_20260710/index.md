@@ -5,4 +5,6 @@ First production-facing cutover wave for the Phaser 4 Advantage Play Kit. This t
 - [Specification](./spec.md)
 - [Implementation plan](./plan.md)
 - [Test strategy](./test-strategy.md)
+- [Verification](./verification.md)
+- [Legacy deletion manifest](./legacy-deletion-manifest.md)
 - [Metadata](./metadata.json)
