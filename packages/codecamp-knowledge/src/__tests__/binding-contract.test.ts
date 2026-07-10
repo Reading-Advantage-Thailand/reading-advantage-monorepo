@@ -41,7 +41,7 @@ function release() {
     },
     inventory: {
       publishedModules: 1,
-      lessons: 1,
+      lessons: 0,
       questions: 1,
       exercises: 0,
       repositories: 0,
@@ -52,7 +52,7 @@ function release() {
         slug: "git-github",
         order: 2,
         status: "published",
-        lessonCount: 1,
+        lessonCount: 0,
         questionCount: 1,
         exerciseCount: 0,
         repositoryCount: 0,

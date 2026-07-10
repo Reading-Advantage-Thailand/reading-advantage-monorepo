@@ -43,3 +43,21 @@ export type {
 } from "./source-sync.js";
 export { defaultMasteryAdvantageRoot, runCodeGraphCli } from "./cli.js";
 export type { CodeGraphCliContext } from "./cli.js";
+
+export {
+  CurriculumActivityBindingSchema,
+  CurriculumActivitySourceSchema,
+  CurriculumBindingReleaseSchema,
+  CurriculumModuleSummarySchema,
+  buildBindingCoverageReport,
+  parseCurriculumBindingRelease,
+  projectMasteryEvidence,
+  validateCurriculumBindings,
+} from "./bindings.js";
+export type {
+  BindingCoverageReport,
+  BoundMasteryEvidence,
+  CurriculumBindingIssue,
+  CurriculumBindingRelease,
+  CurriculumBindingValidationResult,
+} from "./bindings.js";
