@@ -8,7 +8,9 @@ const evidenceDirectory = resolve(
 
 test("completes the interactive video, remediation, and persisted resume loop", async ({ page }, testInfo) => {
   const response = await page.goto("/en/activity-runtime-demo");
-  expect(response?.headers()["content-security-policy"]).toContain("frame-src https://www.youtube.com");
+  const contentSecurityPolicy = response?.headers()["content-security-policy"];
+  expect(contentSecurityPolicy).toContain("script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.youtube.com https://s.ytimg.com");
+  expect(contentSecurityPolicy).toContain("frame-src https://www.youtube.com");
   await expect(page.getByTitle("Git commit tutorial video")).toBeVisible();
   await expect(page.getByRole("button", { name: "Play" })).toBeVisible();
   await expect(page.locator('[data-slot="activity-alternative"]').getByRole("img", { name: "Working tree flows to staging area, then to repository" })).toBeVisible();

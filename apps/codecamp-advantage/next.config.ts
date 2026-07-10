@@ -59,11 +59,12 @@ const nextConfig: NextConfig = {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.youtube.com https://s.ytimg.com",
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: https://storage.googleapis.com",
               "font-src 'self'",
               "connect-src 'self' https://openrouter.ai",
+              "frame-src https://www.youtube.com",
               "frame-ancestors 'none'",
             ].join("; "),
           },
