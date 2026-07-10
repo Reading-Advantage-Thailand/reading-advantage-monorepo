@@ -297,7 +297,6 @@ describe("adversarial: route handler positive-control re-validation", () => {
       "rune-forge-chamber",
       "village-guardian",
       "labyrinth-goblin-king",
-      "abyssal-well",
       "archers-revenge",
       "storm-castle-tower",
       "griffin-sky-joust",
@@ -319,16 +318,24 @@ describe("adversarial: route handler positive-control re-validation", () => {
     }
   });
 
-  it("rejects the 3 placeholder game types (no implementation, cannot complete)", async () => {
-    // Decision 3.2 documented the placeholder enum exclusion.
-    const placeholders = ["astral-mage", "babel-architect", "sorcerer-ziggurat"];
+  it("accepts W1 game types after W2 persistence promotion", async () => {
     const route = createCompleteRoute();
-    for (const gameType of placeholders) {
+    for (const gameType of ["astral-mage", "sorcerer-ziggurat"]) {
       const response = await route.POST(
         new MockRequest({ ...validPayload, gameType }) as unknown as Request,
       );
-      expect(response.status).toBe(400);
+      expect(response.status).toBe(200);
     }
+  });
+
+  it("rejects the retired Babel Architect game type", async () => {
+    const response = await createCompleteRoute().POST(
+      new MockRequest({
+        ...validPayload,
+        gameType: "babel-architect",
+      }) as unknown as Request,
+    );
+    expect(response.status).toBe(400);
   });
 
   it("every difficulty is accepted", async () => {

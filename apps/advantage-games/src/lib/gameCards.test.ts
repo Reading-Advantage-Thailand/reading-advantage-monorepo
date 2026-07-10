@@ -20,22 +20,24 @@ describe('gameCards — locale-agnostic hrefs', () => {
     expect(withHref.length).toBe(playable.length)
   })
 
-  it('publishes the two W1 sentence cartridges through exact QC deep links', () => {
-    const w1Cards = gameCards.filter((card) =>
-      ['astral-mage', 'sorcerer-ziggurat'].includes(card.id)
+  it('publishes the exact five APK cartridges through production arcade routes', () => {
+    const apkIds = [
+      'dragon-flight',
+      'dungeon-liberator',
+      'magic-defense',
+      'astral-mage',
+      'sorcerer-ziggurat',
+    ]
+    const apkCards = gameCards.filter((card) =>
+      apkIds.includes(card.id)
     )
 
-    expect(w1Cards).toEqual([
-      expect.objectContaining({
-        id: 'astral-mage',
+    expect(apkCards).toHaveLength(5)
+    for (const card of apkCards) {
+      expect(card).toEqual(expect.objectContaining({
         status: 'playable',
-        href: '/qc?cartridge=astral-mage',
-      }),
-      expect.objectContaining({
-        id: 'sorcerer-ziggurat',
-        status: 'playable',
-        href: '/qc?cartridge=sorcerer-ziggurat',
-      }),
-    ])
+        href: `/student/arcade/${card.id}`,
+      }))
+    }
   })
 })

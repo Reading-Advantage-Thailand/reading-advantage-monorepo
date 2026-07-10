@@ -31,7 +31,7 @@ export const gameCards: GameCard[] = [
     title: 'Magic Defense',
     description: 'Defend your castles from falling words by typing their translations.',
     cover: withBasePath('/games/cover/magic-defense-cover.png'),
-    href: '/student/games/vocabulary/magic-defense',
+    href: '/student/arcade/magic-defense',
     status: 'playable',
   },
   {
@@ -47,7 +47,7 @@ export const gameCards: GameCard[] = [
     title: 'Dragon Flight',
     description: 'Choose the correct gate to grow your dragon flight.',
     cover: withBasePath('/games/cover/dragon-flight-cover.png'),
-    href: '/student/games/vocabulary/dragon-flight',
+    href: '/student/arcade/dragon-flight',
     status: 'playable',
   },
   {
@@ -95,7 +95,7 @@ export const gameCards: GameCard[] = [
     title: 'Dungeon Liberator',
     description: 'Rescue prisoners by collecting them in the correct word order and escape the dungeon!',
     cover: withBasePath('/games/cover/dungeon-liberator.png'),
-    href: '/student/games/sentence/dungeon-liberator',
+    href: '/student/arcade/dungeon-liberator',
     status: 'playable',
   },
   {
@@ -191,7 +191,7 @@ export const gameCards: GameCard[] = [
     title: 'Astral Mage',
     description: 'Navigate the magical void and shoot word crystals in the correct order to complete sentences!',
     cover: withBasePath('/games/cover/cover-astral-mage.png'),
-    href: '/qc?cartridge=astral-mage',
+    href: '/student/arcade/astral-mage',
     status: 'playable',
   },
   {
@@ -207,7 +207,7 @@ export const gameCards: GameCard[] = [
     title: "The Sorcerer's Ziggurat",
     description: 'Jump through an isometric pyramid of cubes to complete ancient rituals in the correct sentence order!',
     cover: withBasePath('/games/cover/cover-sorcerers-ziggurat.png'),
-    href: '/qc?cartridge=sorcerer-ziggurat',
+    href: '/student/arcade/sorcerer-ziggurat',
     status: 'playable',
   },
   {

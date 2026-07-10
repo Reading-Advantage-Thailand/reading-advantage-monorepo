@@ -52,14 +52,17 @@ describe('MainMenu', () => {
     ).toHaveAttribute('href', '/qc')
   })
 
-  it('does not locale-prefix W1 QC deep links', () => {
+  it('locale-prefixes the five production APK arcade links', () => {
     render(<MainMenu />)
 
     const startLinks = screen.getAllByRole('link', { name: /Start Game/i })
     expect(startLinks.map((link) => link.getAttribute('href'))).toEqual(
       expect.arrayContaining([
-        '/qc?cartridge=astral-mage',
-        '/qc?cartridge=sorcerer-ziggurat',
+        '/en/student/arcade/dragon-flight',
+        '/en/student/arcade/dungeon-liberator',
+        '/en/student/arcade/magic-defense',
+        '/en/student/arcade/astral-mage',
+        '/en/student/arcade/sorcerer-ziggurat',
       ])
     )
   })
