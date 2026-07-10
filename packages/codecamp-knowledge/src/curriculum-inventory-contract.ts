@@ -63,8 +63,11 @@ export const CurriculumSourceProvenanceSchema = z
   .object({
     schemaVersion: z.literal("codecamp-curriculum-source.v1"),
     sourcePath: z.literal("packages/db/src/seed/codecamp-curriculum-data.ts"),
-    sourceRevision: z.string().regex(/^[0-9a-f]{40}$/),
+    originBaseRevision: z.string().regex(/^[0-9a-f]{40}$/),
+    originBaseDigest: z.string().regex(/^[0-9a-f]{64}$/),
     sourceDigest: z.string().regex(/^[0-9a-f]{64}$/),
+    sourceArtifact: z.string().regex(/^source-snapshots\/[a-z0-9.-]+\.ts$/),
+    sourceDirty: z.literal(true),
     snapshotDigest: z.string().regex(/^[0-9a-f]{64}$/),
   })
   .strict();
@@ -118,21 +121,42 @@ export function collectCurriculumInventory(input: CurriculumInventoryInput): Cur
 
 /** Verifies exact protected source and canonical inventory snapshot digests.
  * @param sourceBytes Exact protected curriculum source bytes.
+ * @param artifactBytes Content-addressed source artifact bytes.
+ * @param baseBytes Source bytes retrieved from the recorded base revision.
  * @param inventory Parsed package inventory snapshot.
  * @param provenance Recorded source revision and digests.
  * @returns Fail-closed digest comparison with both calculated digests.
  */
 export function verifyCurriculumSource(
   sourceBytes: Uint8Array,
+  artifactBytes: Uint8Array,
+  baseBytes: Uint8Array,
   inventory: CurriculumSourceInventory,
   provenance: CurriculumSourceProvenance,
-): { valid: boolean; sourceRevision: string; sourceDigest: string; snapshotDigest: string } {
+): {
+  valid: boolean;
+  originBaseRevision: string;
+  originBaseDigest: string;
+  sourceDigest: string;
+  artifactDigest: string;
+  snapshotDigest: string;
+  currentSourceMatchesArtifact: boolean;
+} {
   const sourceDigest = sha256(sourceBytes);
+  const artifactDigest = sha256(artifactBytes);
+  const originBaseDigest = sha256(baseBytes);
   const snapshotDigest = sha256(new TextEncoder().encode(JSON.stringify(inventory)));
   return {
-    valid: sourceDigest === provenance.sourceDigest && snapshotDigest === provenance.snapshotDigest,
-    sourceRevision: provenance.sourceRevision,
+    valid:
+      sourceDigest === provenance.sourceDigest &&
+      artifactDigest === provenance.sourceDigest &&
+      originBaseDigest === provenance.originBaseDigest &&
+      snapshotDigest === provenance.snapshotDigest,
+    originBaseRevision: provenance.originBaseRevision,
+    originBaseDigest,
     sourceDigest,
+    artifactDigest,
     snapshotDigest,
+    currentSourceMatchesArtifact: sourceDigest === artifactDigest,
   };
 }

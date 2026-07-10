@@ -12,7 +12,7 @@
     },
     "./graph": "./dist/data/code-knowledge-space.json"
   },
-  "files": ["dist"],
+  "files": ["dist", "source-snapshots"],
   "scripts": {
     "build": "tsc && node scripts/copy-data.mjs",
     "check-types": "tsc --noEmit && tsc -p tsconfig.test.json",

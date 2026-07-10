@@ -1,7 +1,10 @@
 {
   "schemaVersion": "codecamp-curriculum-source.v1",
   "sourcePath": "packages/db/src/seed/codecamp-curriculum-data.ts",
-  "sourceRevision": "08de1c28a154c2d0608c7b3515149b73dbe33152",
+  "originBaseRevision": "08de1c28a154c2d0608c7b3515149b73dbe33152",
+  "originBaseDigest": "b25472150fe87e84ba84873e9d42f647999122c932f92ef6acb2771bd7a1607a",
   "sourceDigest": "e4d3fc7cc9927f91bfb7f2e14b33ed8deaf26569a37f0c9ac36294713a2dab31",
+  "sourceArtifact": "source-snapshots/codecamp-curriculum-e4d3fc7cc9927f91.ts",
+  "sourceDirty": true,
   "snapshotDigest": "a7defaff5d70a531ffb001c38870680c05e56bb7f425e7019ca050fa128dc4bf"
 }

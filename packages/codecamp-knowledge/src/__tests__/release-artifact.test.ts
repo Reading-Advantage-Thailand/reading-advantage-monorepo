@@ -19,8 +19,16 @@ let extractedPackage = "";
 
 describe("packed graph release artifact", () => {
   beforeAll(() => {
-    execFileSync("pnpm", ["build"], { cwd: packageRoot, stdio: "pipe" });
-    execFileSync("pnpm", ["pack", "--pack-destination", tempRoot], {
+    execFileSync(
+      "node",
+      [join(packageRoot, "../../node_modules/typescript/bin/tsc")],
+      { cwd: packageRoot, stdio: "pipe" },
+    );
+    execFileSync("node", [join(packageRoot, "scripts/copy-data.mjs")], {
+      cwd: packageRoot,
+      stdio: "pipe",
+    });
+    execFileSync("npm", ["pack", "--pack-destination", tempRoot], {
       cwd: packageRoot,
       stdio: "pipe",
     });
@@ -58,6 +66,14 @@ describe("packed graph release artifact", () => {
     ]) {
       expect(() => readFileSync(join(extractedPackage, "dist/data", file))).not.toThrow();
     }
+    expect(() =>
+      readFileSync(
+        join(
+          extractedPackage,
+          "source-snapshots/codecamp-curriculum-e4d3fc7cc9927f91.ts",
+        ),
+      ),
+    ).not.toThrow();
   });
 
   it.each([

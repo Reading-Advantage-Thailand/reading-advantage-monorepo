@@ -1,3 +1,4 @@
+import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -57,6 +58,7 @@ export function runCodeGraphCli(args: string[], context: CodeGraphCliContext): n
       curriculumBindings,
       codeKnowledgeGraph,
       curriculumSourceInventory,
+      curriculumSourceProvenance,
     );
     context.stdout(JSON.stringify(result, null, 2));
     return result.valid ? 0 : 1;
@@ -71,8 +73,21 @@ export function runCodeGraphCli(args: string[], context: CodeGraphCliContext): n
       const sourceBytes = readFileSync(
         resolve(repoRoot, curriculumSourceProvenance.sourcePath),
       );
+      const artifactBytes = readFileSync(
+        resolve(currentDirectory, "../", curriculumSourceProvenance.sourceArtifact),
+      );
+      const baseBytes = execFileSync(
+        "git",
+        [
+          "show",
+          `${curriculumSourceProvenance.originBaseRevision}:${curriculumSourceProvenance.sourcePath}`,
+        ],
+        { cwd: repoRoot },
+      );
       const result = verifyCurriculumSource(
         sourceBytes,
+        artifactBytes,
+        baseBytes,
         curriculumSourceInventory,
         curriculumSourceProvenance,
       );

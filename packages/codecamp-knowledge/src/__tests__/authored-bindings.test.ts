@@ -13,17 +13,19 @@ import { codeKnowledgeGraph } from "../data.js";
 
 describe("authored source-backed Codecamp curriculum bindings", () => {
   it("validates the complete protected-source snapshot rather than self-declared totals", () => {
-    expect(
-      validateCurriculumBindings(
-        curriculumBindings,
-        codeKnowledgeGraph,
-        curriculumSourceInventory,
-      ),
-    ).toEqual({ valid: true, issues: [] });
+    const validation = validateCurriculumBindings(
+      curriculumBindings,
+      codeKnowledgeGraph,
+      curriculumSourceInventory,
+      curriculumSourceProvenance,
+    );
+    expect(validation).toEqual({ valid: true, issues: [] });
     expect(curriculumBindings.inventory).toEqual(curriculumSourceInventory.totals);
     expect(curriculumBindings.provenance).toMatchObject({
-      sourceRevision: curriculumSourceProvenance.sourceRevision,
+      originBaseRevision: curriculumSourceProvenance.originBaseRevision,
+      originBaseDigest: curriculumSourceProvenance.originBaseDigest,
       sourceDigest: curriculumSourceProvenance.sourceDigest,
+      sourceArtifact: curriculumSourceProvenance.sourceArtifact,
       inventoryDigest: curriculumSourceProvenance.snapshotDigest,
     });
   });
@@ -80,7 +82,14 @@ describe("authored source-backed Codecamp curriculum bindings", () => {
   });
 
   it("projects no exposure and counts repeated quiz formats once per objective family", () => {
-    const evidence = projectMasteryEvidence(curriculumBindings);
+    const validation = validateCurriculumBindings(
+      curriculumBindings,
+      codeKnowledgeGraph,
+      curriculumSourceInventory,
+      curriculumSourceProvenance,
+    );
+    if (!validation.valid) throw new Error("Authored bindings must validate before projection.");
+    const evidence = projectMasteryEvidence(validation.release);
     expect(evidence).toHaveLength(121);
     expect(evidence.every((entry) => entry.evidenceWeight > 0)).toBe(true);
     expect(evidence.some((entry) => String(entry.evidenceSource) === "lesson-view")).toBe(false);

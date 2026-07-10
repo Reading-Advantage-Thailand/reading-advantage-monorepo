@@ -1,5 +1,8 @@
 import type { CodeKnowledgeGraph } from "./contracts.js";
-import type { CurriculumSourceInventory } from "./curriculum-inventory-contract.js";
+import type {
+  CurriculumSourceInventory,
+  CurriculumSourceProvenance,
+} from "./curriculum-inventory-contract.js";
 import { sha256 } from "./source-sync.js";
 import { z } from "zod";
 
@@ -73,8 +76,11 @@ export const CurriculumBindingReleaseSchema = z
     provenance: z
       .object({
         sourcePath: z.literal("packages/db/src/seed/codecamp-curriculum-data.ts"),
-        sourceRevision: z.string().regex(/^[0-9a-f]{40}$/),
+        originBaseRevision: z.string().regex(/^[0-9a-f]{40}$/),
+        originBaseDigest: z.string().regex(/^[0-9a-f]{64}$/),
         sourceDigest: z.string().regex(/^[0-9a-f]{64}$/),
+        sourceArtifact: z.string().regex(/^source-snapshots\/[a-z0-9.-]+\.ts$/),
+        sourceDirty: z.literal(true),
         inventoryDigest: z.string().regex(/^[0-9a-f]{64}$/),
         generatedAt: z.string().datetime({ offset: true }),
         reviewedBy: z.string().trim().min(1),
@@ -96,8 +102,16 @@ export const CurriculumBindingReleaseSchema = z
   })
   .strict();
 
-/** A validated Codecamp curriculum binding release. */
+/** A structurally parsed Codecamp curriculum binding release. */
 export type CurriculumBindingRelease = z.infer<typeof CurriculumBindingReleaseSchema>;
+
+declare const validatedReleaseBrand: unique symbol;
+const validatedReleases = new WeakSet<object>();
+
+/** A release that passed graph, provenance, source, rubric, and evidence validation. */
+export type ValidatedCurriculumBindingRelease = CurriculumBindingRelease & {
+  readonly [validatedReleaseBrand]: true;
+};
 
 /** One stable, actionable curriculum-binding problem. */
 export interface CurriculumBindingIssue {
@@ -110,12 +124,9 @@ export interface CurriculumBindingIssue {
 }
 
 /** Fail-closed validation result for a curriculum binding release. */
-export interface CurriculumBindingValidationResult {
-  /** Whether every contract, reference, and coverage gate passes. */
-  valid: boolean;
-  /** Deterministically ordered validation issues. */
-  issues: CurriculumBindingIssue[];
-}
+export type CurriculumBindingValidationResult =
+  | { valid: true; issues: []; release: ValidatedCurriculumBindingRelease }
+  | { valid: false; issues: CurriculumBindingIssue[]; release?: never };
 
 /** One mastery-safe assessed evidence projection. */
 export interface BoundMasteryEvidence {
@@ -196,12 +207,14 @@ const EXPECTED_EVIDENCE_SOURCE: Partial<
  * @param input Candidate curriculum binding release.
  * @param graph Current reviewed Codecamp graph release.
  * @param sourceInventory Protected source-backed activity inventory.
+ * @param sourceProvenance Content-addressed source provenance manifest.
  * @returns Fail-closed validation issues ordered by code and entity.
  */
 export function validateCurriculumBindings(
   input: unknown,
   graph: CodeKnowledgeGraph,
   sourceInventory: CurriculumSourceInventory,
+  sourceProvenance: CurriculumSourceProvenance,
 ): CurriculumBindingValidationResult {
   const parsed = CurriculumBindingReleaseSchema.safeParse(input);
   if (!parsed.success) {
@@ -224,6 +237,20 @@ export function validateCurriculumBindings(
       message: "Binding provenance does not match the protected source inventory snapshot.",
     });
   }
+  const provenanceMatches =
+    release.provenance.sourcePath === sourceProvenance.sourcePath &&
+    release.provenance.originBaseRevision === sourceProvenance.originBaseRevision &&
+    release.provenance.originBaseDigest === sourceProvenance.originBaseDigest &&
+    release.provenance.sourceDigest === sourceProvenance.sourceDigest &&
+    release.provenance.sourceArtifact === sourceProvenance.sourceArtifact &&
+    release.provenance.sourceDirty === sourceProvenance.sourceDirty &&
+    release.provenance.inventoryDigest === sourceProvenance.snapshotDigest;
+  if (!provenanceMatches) {
+    issues.push({
+      code: "SOURCE_PROVENANCE_MISMATCH",
+      message: "Binding release provenance does not match the verified source manifest.",
+    });
+  }
   if (release.graphVersion !== graph.version) {
     issues.push({
       code: "GRAPH_VERSION_MISMATCH",
@@ -233,12 +260,12 @@ export function validateCurriculumBindings(
   const graphNodes = new Map(graph.knowledgeSpace.nodes.map((node) => [node.id, node]));
   const seenActivities = new Set<string>();
   const seenEvidence = new Set<string>();
-  const knownRubrics = new Set<string>();
+  const knownRubrics = new Map<string, CurriculumBindingRelease["rubrics"][number]>();
   for (const rubric of release.rubrics) {
     if (knownRubrics.has(rubric.rubricId)) {
       issues.push({ code: "DUPLICATE_RUBRIC_ID", entityId: rubric.rubricId, message: "Rubric IDs must be unique." });
     }
-    knownRubrics.add(rubric.rubricId);
+    knownRubrics.set(rubric.rubricId, rubric);
     for (const objectiveId of rubric.objectiveIds) {
       if (!graphNodes.has(objectiveId)) {
         issues.push({ code: "UNKNOWN_OBJECTIVE", entityId: rubric.rubricId, message: `Rubric references unknown objective ${objectiveId}.` });
@@ -275,10 +302,21 @@ export function validateCurriculumBindings(
         issues.push({ code: "RESOURCE_KIND_MISMATCH", entityId: binding.activityId, message: "Lesson resources must be lesson, video, or diagram references." });
       }
     }
-    if (binding.activityKind === "repository" && binding.resourceRefs.some((resource) => !resource.startsWith("repo:"))) {
+    if (
+      (binding.activityKind === "question" || binding.activityKind === "exercise") &&
+      binding.resourceRefs.some((resource) =>
+        !resource.startsWith("lesson:") &&
+        !resource.startsWith("video:") &&
+        !resource.startsWith("diagram:") &&
+        !(binding.activityKind === "exercise" && resource.startsWith("repo:")),
+      )
+    ) {
+      issues.push({ code: "RESOURCE_KIND_MISMATCH", entityId: binding.activityId, message: `${binding.activityKind} resources use an incompatible resource kind.` });
+    }
+    if (binding.activityKind === "repository" && (binding.resourceRefs.length !== 1 || binding.resourceRefs.some((resource) => !resource.startsWith("repo:")))) {
       issues.push({ code: "RESOURCE_KIND_MISMATCH", entityId: binding.activityId, message: "Repository bindings require repo resources." });
     }
-    if (binding.activityKind === "portfolio" && binding.resourceRefs.some((resource) => !resource.startsWith("portfolio:"))) {
+    if (binding.activityKind === "portfolio" && (binding.resourceRefs.length !== 1 || binding.resourceRefs.some((resource) => !resource.startsWith("portfolio:")))) {
       issues.push({ code: "RESOURCE_KIND_MISMATCH", entityId: binding.activityId, message: "Portfolio bindings require portfolio resources." });
     }
     if (binding.evidenceMode === "exposure" && binding.evidenceWeight !== 0) {
@@ -313,8 +351,16 @@ export function validateCurriculumBindings(
       seenEvidence.add(key);
     }
     for (const rubricRef of binding.rubricRefs) {
-      if (!knownRubrics.has(rubricRef)) {
+      const rubric = knownRubrics.get(rubricRef);
+      if (rubric == null) {
         issues.push({ code: "DANGLING_RUBRIC", entityId: binding.activityId, message: `Unknown rubric ${rubricRef}.` });
+      } else {
+        if (!rubric.appliesToKinds.includes(binding.activityKind as "question" | "exercise" | "repository" | "portfolio")) {
+          issues.push({ code: "RUBRIC_KIND_MISMATCH", entityId: binding.activityId, message: `Rubric ${rubricRef} does not apply to ${binding.activityKind}.` });
+        }
+        if (binding.objectiveIds.some((objectiveId) => !rubric.objectiveIds.includes(objectiveId))) {
+          issues.push({ code: "RUBRIC_OBJECTIVE_MISMATCH", entityId: binding.activityId, message: `Rubric ${rubricRef} does not cover every bound objective.` });
+        }
       }
     }
   }
@@ -329,6 +375,21 @@ export function validateCurriculumBindings(
     release.inventory.portfolios === countedBindings(release, "portfolio");
   if (!inventoryMatches) {
     issues.push({ code: "INVENTORY_COVERAGE_MISMATCH", message: "Release totals do not match bound activity coverage." });
+  }
+  if (JSON.stringify(release.inventory) !== JSON.stringify(sourceInventory.totals)) {
+    issues.push({ code: "SOURCE_TOTALS_MISMATCH", message: "Release totals do not match the protected source inventory totals." });
+  }
+  const expectedModules = sourceInventory.modules.map((module) => ({
+    slug: module.slug,
+    order: module.order,
+    status: module.status,
+    lessonCount: module.lessonOrders.length,
+    questionCount: module.questionCoordinates.length,
+    exerciseCount: module.exerciseCoordinates.length,
+    repositoryCount: module.hasRepository ? 1 : 0,
+  }));
+  if (JSON.stringify(release.modules) !== JSON.stringify(expectedModules)) {
+    issues.push({ code: "SOURCE_MODULES_MISMATCH", message: "Release module summaries do not exactly match the protected source inventory." });
   }
   for (const module of publishedModules) {
     const moduleMatches =
@@ -373,14 +434,27 @@ export function validateCurriculumBindings(
     }
   }
   issues.sort((left, right) => `${left.code}:${left.entityId ?? ""}`.localeCompare(`${right.code}:${right.entityId ?? ""}`));
-  return { valid: issues.length === 0, issues };
+  if (issues.length > 0) return { valid: false, issues };
+  const result = { valid: true, issues: [] } as unknown as Extract<
+    CurriculumBindingValidationResult,
+    { valid: true }
+  >;
+  validatedReleases.add(release);
+  Object.defineProperty(result, "release", {
+    enumerable: false,
+    value: release as ValidatedCurriculumBindingRelease,
+  });
+  return result;
 }
 
 /** Projects assessed bindings while making exposure-only resources impossible to ingest.
  * @param release Validated curriculum binding release.
  * @returns One mastery-safe evidence descriptor per assessed objective binding.
  */
-export function projectMasteryEvidence(release: CurriculumBindingRelease): BoundMasteryEvidence[] {
+export function projectMasteryEvidence(release: ValidatedCurriculumBindingRelease): BoundMasteryEvidence[] {
+  if (!validatedReleases.has(release)) {
+    throw new Error("Mastery evidence projection requires a successfully validated binding release.");
+  }
   return release.bindings
     .filter((binding) => binding.evidenceMode === "assessed")
     .flatMap((binding) =>

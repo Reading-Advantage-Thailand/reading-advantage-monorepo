@@ -66,6 +66,7 @@ export type {
   CurriculumBindingIssue,
   CurriculumBindingRelease,
   CurriculumBindingValidationResult,
+  ValidatedCurriculumBindingRelease,
 } from "./bindings.js";
 
 export {

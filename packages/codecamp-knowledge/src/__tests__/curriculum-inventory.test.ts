@@ -1,3 +1,4 @@
+import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -63,9 +64,13 @@ describe("read-only Codecamp curriculum inventory", () => {
 
   it("verifies the exact protected source digest and package snapshot provenance", () => {
     const source = readFileSync(join(packageRoot, "../db/src/seed/codecamp-curriculum-data.ts"));
-    const result = verifyCurriculumSource(source, curriculumSourceInventory, curriculumSourceProvenance);
-    expect(result).toMatchObject({ valid: true, sourceRevision: curriculumSourceProvenance.sourceRevision });
+    const artifact = readFileSync(join(packageRoot, curriculumSourceProvenance.sourceArtifact));
+    const base = execFileSync("git", ["show", `${curriculumSourceProvenance.originBaseRevision}:${curriculumSourceProvenance.sourcePath}`], { cwd: join(packageRoot, "../..") });
+    const result = verifyCurriculumSource(source, artifact, base, curriculumSourceInventory, curriculumSourceProvenance);
+    expect(result).toMatchObject({ valid: true, originBaseRevision: curriculumSourceProvenance.originBaseRevision, currentSourceMatchesArtifact: true });
     expect(result.sourceDigest).toBe(curriculumSourceProvenance.sourceDigest);
+    expect(result.artifactDigest).toBe(curriculumSourceProvenance.sourceDigest);
+    expect(result.originBaseDigest).toBe(curriculumSourceProvenance.originBaseDigest);
     expect(result.snapshotDigest).toBe(curriculumSourceProvenance.snapshotDigest);
   });
 });

@@ -1,16 +1,7 @@
 import { execFileSync } from "node:child_process";
 import { readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
-
-import {
-  MODULE_REPO_MAP,
-  PORTFOLIO_PROJECTS,
-  getPhaseACurriculumData,
-  getPhaseBCurriculumData,
-  getPhaseCCurriculumData,
-  getPhaseDCurriculumData,
-} from "../../db/src/seed/codecamp-curriculum-data.ts";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 import {
   collectCurriculumInventory,
@@ -19,8 +10,20 @@ import { sha256 } from "../src/source-sync.ts";
 
 const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const repoRoot = resolve(packageRoot, "../..");
-const sourcePath = resolve(repoRoot, "packages/db/src/seed/codecamp-curriculum-data.ts");
+const sourceArtifact = "source-snapshots/codecamp-curriculum-e4d3fc7cc9927f91.ts";
+const sourceInputPath = process.env.CODECAMP_CURRICULUM_SOURCE == null
+  ? resolve(packageRoot, sourceArtifact)
+  : resolve(repoRoot, process.env.CODECAMP_CURRICULUM_SOURCE);
 const outputDirectory = resolve(packageRoot, "src/data");
+const curriculumData = await import(pathToFileURL(sourceInputPath).href);
+const {
+  MODULE_REPO_MAP,
+  PORTFOLIO_PROJECTS,
+  getPhaseACurriculumData,
+  getPhaseBCurriculumData,
+  getPhaseCCurriculumData,
+  getPhaseDCurriculumData,
+} = curriculumData;
 
 const phases = [
   getPhaseACurriculumData(),
@@ -34,12 +37,15 @@ const inventory = collectCurriculumInventory({
   repositoryModuleSlugs: Object.keys(MODULE_REPO_MAP),
   portfolioPhases: PORTFOLIO_PROJECTS.map((portfolio) => portfolio.phase),
 });
-const sourceBytes = readFileSync(sourcePath);
+const sourceBytes = readFileSync(sourceInputPath);
 const sourceDigest = sha256(sourceBytes);
-const sourceRevision = execFileSync("git", ["rev-parse", "HEAD"], {
-  cwd: repoRoot,
-  encoding: "utf8",
-}).trim();
+const originBaseRevision = "08de1c28a154c2d0608c7b3515149b73dbe33152";
+const originBaseBytes = execFileSync(
+  "git",
+  ["show", `${originBaseRevision}:packages/db/src/seed/codecamp-curriculum-data.ts`],
+  { cwd: repoRoot },
+);
+const originBaseDigest = sha256(originBaseBytes);
 const inventoryDigest = sha256(
   new TextEncoder().encode(JSON.stringify(inventory)),
 );
@@ -208,8 +214,11 @@ const release = {
   curriculumVersion: "19-modules.88-lessons.v1",
   provenance: {
     sourcePath: "packages/db/src/seed/codecamp-curriculum-data.ts",
-    sourceRevision,
+    originBaseRevision,
+    originBaseDigest,
     sourceDigest,
+    sourceArtifact,
+    sourceDirty: true,
     inventoryDigest,
     generatedAt: "2026-07-10T18:00:00.000Z",
     reviewedBy: "Codecamp curriculum owner",
@@ -222,8 +231,11 @@ const release = {
 const sourceProvenance = {
   schemaVersion: "codecamp-curriculum-source.v1",
   sourcePath: "packages/db/src/seed/codecamp-curriculum-data.ts",
-  sourceRevision,
+  originBaseRevision,
+  originBaseDigest,
   sourceDigest,
+  sourceArtifact,
+  sourceDirty: true,
   snapshotDigest: inventoryDigest,
 };
 
