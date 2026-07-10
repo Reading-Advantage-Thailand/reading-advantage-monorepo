@@ -224,4 +224,25 @@ describe("InteractiveActivityPlayer", () => {
     expect(screen.getAllByRole("link", { name: "Read the staging explanation" })).toHaveLength(2);
     expect(screen.getByText("tutorial/src/status.ts#getStatus")).toBeVisible();
   });
+
+  it("hydrates with a stable reduced-motion value and follows preference changes", async () => {
+    let notifyPreferenceChange: (() => void) | undefined;
+    const preference = {
+      matches: true,
+      addEventListener: vi.fn((_event: string, listener: () => void) => { notifyPreferenceChange = listener; }),
+      removeEventListener: vi.fn(),
+    };
+    vi.stubGlobal("matchMedia", vi.fn(() => preference));
+    const controller = createFakeMediaController();
+    const { unmount } = render(
+      <InteractiveActivityPlayer activity={activity} controller={controller} locale="en" onAssess={vi.fn()} />
+    );
+    await waitFor(() => expect(screen.getByRole("region", { name: "Create a commit" })).toHaveAttribute("data-reduced-motion", "true"));
+    preference.matches = false;
+    act(() => notifyPreferenceChange?.());
+    expect(screen.getByRole("region", { name: "Create a commit" })).toHaveAttribute("data-reduced-motion", "false");
+    unmount();
+    expect(preference.removeEventListener).toHaveBeenCalledWith("change", expect.any(Function));
+    vi.unstubAllGlobals();
+  });
 });

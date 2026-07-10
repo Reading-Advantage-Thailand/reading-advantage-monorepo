@@ -1,5 +1,5 @@
 import type { Activity } from "@reading-advantage/activity-runtime/core";
-import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { mergeWatchedRanges, resolveCheckpointPolicy, sampleCueCrossings, type MediaController, type MediaSnapshot } from "./controllers.js";
 
 /** Server assessment response used for immediate formative feedback. */
@@ -76,7 +76,16 @@ export function InteractiveActivityPlayer({ activity, controller, locale, onAsse
   const alternative = activity.accessibility.nonVideoAlternativeResourceId
     ? activity.resources.find((resource) => resource.resourceId === activity.accessibility.nonVideoAlternativeResourceId)
     : undefined;
-  const reducedMotion = useMemo(() => typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches, []);
+  const [reducedMotion, setReducedMotion] = useState(false);
+
+  useEffect(() => {
+    if (typeof matchMedia !== "function") return;
+    const preference = matchMedia("(prefers-reduced-motion: reduce)");
+    const updatePreference = (): void => setReducedMotion(preference.matches);
+    updatePreference();
+    preference.addEventListener?.("change", updatePreference);
+    return () => preference.removeEventListener?.("change", updatePreference);
+  }, []);
 
   useEffect(() => {
     positionChangeCallback.current = onPositionChange;
