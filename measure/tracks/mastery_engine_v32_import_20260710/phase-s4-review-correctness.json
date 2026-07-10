@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Phase S4 correctness audit passes after remediation in 3ba80ed2. The strict manifest and evaluator fail closed for unsupported consumers, versions, packages, graph and contract axes, migration head, provenance, and imports; the local release gate validates real packed artifacts; and the synthetic Codecamp proof now traverses the public domain service, reads the committed snapshot, verifies the actual review transition and mapped rating, replays idempotently, and projects from persisted mastery rather than reconstructing its input.",
+  "blocking_findings": [],
+  "resolved_findings": [
+    "High - The synthetic proof called the persistence adapter directly and constructed the next knowledge state from the same 0.95 input it had just written. That could remain green if public service validation or snapshot persistence were broken. Commit 3ba80ed2 routes seed, apply, and replay through @reading-advantage/domain/mastery/service, reads the school-scoped snapshot, requires the reviewed state to be persisted as mastered, and computes the next projection from the persisted mastery and retention values.",
+    "High - The immutable review record used the post-review card state for both beforeState and afterState and hardcoded the persisted rating to good. Commit 3ba80ed2 records the original card state as beforeState, the reviewed card state as afterState, maps the actual practice-core rating to the persistence contract, and extends the existing proof assertion to verify the persisted rating, transition, and mastery without increasing the test count."
+  ],
+  "nonblocking_findings": [
+    "The real pack and offline clean-consumer assertion is intentionally slow because it builds and packs four packages. The independent boundary audit captured the complete 22/22 pass after its release-protocol remediation; this correctness role independently reran the manifest and Codecamp slices as 20/20 and observed the separate release process complete.",
+    "Browser runtime verification is not applicable: Phase S4 changes package, CLI, fixture, manifest, and Markdown surfaces only and adds no route, component, style, or user interaction.",
+    "The repository contains extensive unrelated concurrent work. This audit modified and committed only the Codecamp proof, its existing test, and this audit artifact."
+  ],
+  "evidence": [
+    "RuntimeManifestSchema and all nested schemas are strict; the committed manifest contains unique authorities and owners, the exact four 0.1.0 engine packages and public exports, explicit Codecamp >=1.0.0 <2.0.0 support, kst-srs.v3.2 provenance, graph/practice/SRS/persistence axes, migration 0028, immutable fixtures, and full commit provenance.",
+    "evaluateRuntimeCompatibility parses unknown descriptors before evaluation and returns stable structured issues. Unknown release sets and consumers, package mismatches, unsupported spec/graph/contract versions, persistence schema or migration mismatches, fixture/source provenance mismatches, and undeclared package/export imports all make compatible false.",
+    "The synthetic proof imports only canonical public engine packages and the public DB-free mastery contracts, service, and memory adapter. It validates the two-skill graph, computes initial readiness, selects the commit prerequisite, maps an unassisted correct practice submission, reviews an SRS card with a fixed clock and fuzz disabled, and persists deterministic records.",
+    "Commit 3ba80ed2 closes the proof gap: all three writes go through commitMasteryEvidence, applied/replayed statuses are checked without casts, readSnapshot supplies the actual reviewed state and review log, the review transition is new to the scheduler-produced next state, and next readiness is computed from persisted values.",
+    "The release-artifact gate builds and dry-run packs all four packages, checks every declared package export target in both dry-run and real tar listings, rejects local-only dependency protocols, installs local tarballs offline in a clean consumer, imports all four public package names, and invokes the same descriptor gate without registry access.",
+    "Graph Caller Check passes: runSyntheticCodecampProof is a new additive export with no pre-existing callers; its result shape gained only additive evidence fields used by the updated proof test."
+  ],
+  "commands": [
+    "PASS - TZ=UTC ./node_modules/.bin/vitest run packages/mastery-runtime-compat/src/__tests__/runtime-manifest.test.ts packages/mastery-runtime-compat/src/__tests__/codecamp-proof.test.ts --maxWorkers=1 --testTimeout=30000 --reporter=dot: 2 files, 20/20 tests.",
+    "PASS - Independent boundary-role aggregate: the three Phase S4 files passed 22/22 after 5e0adfad, including the real offline packed consumer.",
+    "PASS - ./node_modules/.bin/tsc -p packages/mastery-runtime-compat/tsconfig.json --noEmit --pretty false: zero type errors.",
+    "PASS - ../../node_modules/.bin/eslint src/codecamp-proof.ts src/__tests__/codecamp-proof.test.ts from packages/mastery-runtime-compat: zero findings.",
+    "PASS - build-graph inspect/callers and update for runSyntheticCodecampProof: additive export with no external callers; graph updated after the structural edit.",
+    "PASS - git diff --check for the two correctness-remediation files."
+  ],
+  "changed_files": [
+    "packages/mastery-runtime-compat/src/codecamp-proof.ts",
+    "packages/mastery-runtime-compat/src/__tests__/codecamp-proof.test.ts",
+    "measure/tracks/mastery_engine_v32_import_20260710/phase-s4-review-correctness.json"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "proceed_to_phase_s4_acceptance",
+  "confidence": "high"
+}
