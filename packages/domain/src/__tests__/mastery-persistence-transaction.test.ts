@@ -93,6 +93,17 @@ describe("Phase S3 canonical mastery persistence orchestration", () => {
     expect(second).toEqual({ ...first, status: "replayed" });
   });
 
+  it("rejects an invalid commit at the service boundary before adapter execution", async () => {
+    const mastery = await import("../mastery/index.js");
+    const persistence = mastery.createInMemoryMasteryPersistence();
+    const before = await persistence.readSnapshot({ schoolId: SCHOOL_ID });
+
+    await expect(
+      mastery.commitMasteryEvidence({ schoolId: SCHOOL_ID }, { persistence }),
+    ).rejects.toMatchObject({ code: "VALIDATION_ERROR", retryable: false });
+    expect(await persistence.readSnapshot({ schoolId: SCHOOL_ID })).toEqual(before);
+  });
+
   it("rejects a changed payload under the same idempotency key without mutation", async () => {
     const mastery = await import("../mastery/index.js");
     const persistence = mastery.createInMemoryMasteryPersistence();
