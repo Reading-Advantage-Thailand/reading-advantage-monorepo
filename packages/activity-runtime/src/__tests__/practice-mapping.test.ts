@@ -1,7 +1,13 @@
 import { practiceSubmissionEnvelopeSchema } from "@reading-advantage/practice-core/contract";
 import { describe, expect, it } from "vitest";
-import { mapCheckpointAttemptToPractice, mapEngagementContext } from "../core.js";
+import {
+  checkpointPracticeInputSchema,
+  mapCheckpointAttemptToPractice,
+  mapEngagementContext,
+  mapTutorialStepResultToPractice
+} from "../core.js";
 import { activitySchema } from "../core.js";
+import { verifyCheckpointAnswer, verifyTutorialStepResult } from "../server.js";
 import { validActivity } from "./fixtures.js";
 
 describe("practice.v1 evidence mapping", () => {
@@ -12,7 +18,7 @@ describe("practice.v1 evidence mapping", () => {
       submissionId: "submission.1",
       attemptNumber: 2,
       answer: "stage",
-      isCorrect: true,
+      verifiedResult: verifyCheckpointAnswer(activity, "checkpoint.stage", "stage"),
       submittedAt: "2026-07-10T00:01:00Z",
       hintsUsed: 1,
       revealsUsed: 0,
@@ -23,6 +29,51 @@ describe("practice.v1 evidence mapping", () => {
     expect(practiceSubmissionEnvelopeSchema.parse(envelope)).toEqual(envelope);
     expect(envelope.parts[0]).toMatchObject({ partId: "ido.stage-prediction", isCorrect: true, hintsUsed: 1, revealStepsSeen: 0 });
     expect(envelope.analytics).toMatchObject({ objectiveId: "git.commit.create", variantKey: "git-commit.checkpoint.v1", submissionId: "submission.1", evidenceConfidence: 0.8, interventionLevel: 1 });
+    expect(envelope).toMatchObject({ attemptNumber: 2, timing: { wallClockMs: 24000, activeMs: 24000 } });
+  });
+
+  it("rejects a client isCorrect field at the strict evidence boundary", () => {
+    expect(checkpointPracticeInputSchema.safeParse({
+      checkpointId: "checkpoint.stage",
+      submissionId: "submission.client",
+      attemptNumber: 1,
+      answer: "stage",
+      isCorrect: true,
+      submittedAt: "2026-07-10T00:01:00Z",
+      hintsUsed: 0,
+      revealsUsed: 0,
+      interventionLevel: 0,
+      evidenceConfidence: 1,
+      timingMs: 1000
+    }).success).toBe(false);
+  });
+
+  it("maps a server-verified tutorial step with fading scaffold usage", () => {
+    const activity = activitySchema.parse(validActivity);
+    const envelope = mapTutorialStepResultToPractice(activity, {
+      stepId: "wedo.stage",
+      submissionId: "tutorial-submission.1",
+      attemptNumber: 1,
+      checkResults: [{ checkId: "check.staged", passed: true }],
+      verifiedResult: verifyTutorialStepResult(activity, "wedo.stage", [{ checkId: "check.staged", passed: true }]),
+      submittedAt: "2026-07-10T00:02:00Z",
+      hintsUsed: 1,
+      revealsUsed: 0,
+      interventionLevel: 1,
+      evidenceConfidence: 0.75,
+      timingMs: 30000
+    });
+    expect(practiceSubmissionEnvelopeSchema.parse(envelope)).toEqual(envelope);
+    expect(envelope.parts[0]).toMatchObject({ partId: "wedo.stage", isCorrect: true, hintsUsed: 1, revealStepsSeen: 0 });
+    expect(envelope.analytics).toMatchObject({
+      schemaVersion: "activity-evidence.v1",
+      objectiveId: "git.commit.create",
+      variantKey: "git-commit.tutorial.v1",
+      stepId: "wedo.stage",
+      submissionId: "tutorial-submission.1",
+      scaffoldLevel: 2,
+      evidenceConfidence: 0.75
+    });
   });
 
   it("keeps watch and resource-open activity contextual with no correctness field", () => {

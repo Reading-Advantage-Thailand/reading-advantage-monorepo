@@ -6,6 +6,11 @@ describe("activity authoring validator", () => {
   it.each([
     ["duplicate resource IDs", { resources: [...validActivity.resources, validActivity.resources[0]] }, "DUPLICATE_ID"],
     ["duplicate step IDs", { tutorialSteps: [...validActivity.tutorialSteps, validActivity.tutorialSteps[0]] }, "DUPLICATE_ID"],
+    ["duplicate checkpoint IDs", { checkpoints: [...validActivity.checkpoints, validActivity.checkpoints[0]] }, "DUPLICATE_ID"],
+    ["duplicate segment IDs", { resources: [{ ...validActivity.resources[0], segments: [...validActivity.resources[0].segments, validActivity.resources[0].segments[0]] }, ...validActivity.resources.slice(1)] }, "DUPLICATE_ID"],
+    ["duplicate check IDs", { tutorialSteps: [{ ...validActivity.tutorialSteps[0], checks: [...validActivity.tutorialSteps[0].checks, validActivity.tutorialSteps[0].checks[0]] }, validActivity.tutorialSteps[1]] }, "DUPLICATE_ID"],
+    ["duplicate hint IDs", { tutorialSteps: [{ ...validActivity.tutorialSteps[0], hints: [...validActivity.tutorialSteps[0].hints, validActivity.tutorialSteps[0].hints[0]] }, validActivity.tutorialSteps[1]] }, "DUPLICATE_ID"],
+    ["duplicate option IDs", { checkpoints: [{ ...validActivity.checkpoints[0], question: { ...validActivity.checkpoints[0].question, options: [...validActivity.checkpoints[0].question.options, validActivity.checkpoints[0].question.options[0]] } }] }, "DUPLICATE_ID"],
     ["dangling remediation", { checkpoints: [{ ...validActivity.checkpoints[0], remediation: [{ kind: "diagram", resourceId: "missing" }] }] }, "DANGLING_RESOURCE"],
     ["dangling trigger segment", { checkpoints: [{ ...validActivity.checkpoints[0], trigger: { resourceId: "video.commit-demo", segmentId: "missing" } }] }, "DANGLING_SEGMENT"],
     ["invalid segment time", { resources: [{ ...validActivity.resources[0], segments: [{ segmentId: "bad", label: { en: "Bad" }, startSeconds: 8, endSeconds: 2 }] }, ...validActivity.resources.slice(1)] }, "INVALID_TIME_RANGE"],
@@ -20,5 +25,18 @@ describe("activity authoring validator", () => {
     const result = validateActivity(validActivity);
     expect(result.ok).toBe(true);
     if (result.ok) expect(result.activity.tutorialSteps.map((step) => step.order)).toEqual([1, 2]);
+  });
+
+  it("allows hard-gated checkpoints only for approved hosted media", () => {
+    const hosted = {
+      ...validActivity,
+      resources: [
+        { ...validActivity.resources[0], provider: "hosted", videoId: undefined, assetId: "hosted.commit-demo" },
+        ...validActivity.resources.slice(1)
+      ],
+      checkpoints: [{ ...validActivity.checkpoints[0], gate: "answer_before_continue" }]
+    };
+    const result = validateActivity(hosted);
+    expect(result.ok).toBe(true);
   });
 });
