@@ -193,7 +193,6 @@ describe("validateCodeKnowledgeGraph", () => {
   it("rejects a standards node presented as a Codecamp objective", () => {
     const graph = representativeGraph();
     const standard = graph.knowledgeSpace.nodes.at(-1)!;
-    standard.id = "codecamp.foundation.standard.algorithms";
     standard.domain = "codecamp";
     expect(validateCodeKnowledgeGraph(graph).issues.map((issue) => issue.code)).toContain("STANDARD_NOT_PROJECTION");
   });
