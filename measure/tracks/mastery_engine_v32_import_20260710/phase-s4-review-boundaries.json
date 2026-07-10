@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Phase S4 security and boundary audit passes for 52088fbe through f849efd2 plus the release-boundary hardening in 5e0adfad. The tooling package parses manifests and consumer descriptors with strict Zod contracts, evaluates compatibility fail-closed with stable diagnostics, invokes build/pack/install tooling through fixed execFile argument arrays, performs no publication or registry access, installs the clean consumer offline from local tarballs, cleans temporary state in a finally block, and imports only canonical engine public packages plus provider-neutral mastery contracts/service/memory persistence. No application, transport, database adapter, provider SDK, or external-repository write is present.",
+  "blocking_findings": [],
+  "resolved_findings": [
+    "High - The packed-manifest check originally rejected only workspace: dependency values, so a future file:, link:, or portal: value could have passed despite being non-publishable. Commit 5e0adfad now rejects all four local-only protocols across dependencies, devDependencies, optionalDependencies, and peerDependencies, and forces all child package tooling to offline and ignore-scripts mode. The full 22-test gate passes after remediation."
+  ],
+  "nonblocking_findings": [
+    "Test performance - The real four-package build, dry-run pack, tarball inspection, offline install, and clean-consumer execution took 118.4 seconds in this shared busy worktree, close to the suite's 120-second per-test limit. This is not a contract or security failure, but CI should monitor duration and increase the fixture-only timeout if slower runners show flakiness."
+  ],
+  "evidence": [
+    "RuntimeManifestSchema, RuntimeReleaseSetSchema, RuntimePackageSchema, and ConsumerDescriptorSchema are strict Zod objects. Missing provenance and malformed descriptors become explicit incompatible results; unknown release sets, consumers, versions, graph/contracts, migration heads, fixtures, sources, packages, and exports fail closed.",
+    "The consumer CLI accepts only a descriptor file path, parses JSON, prints the structured result, and returns nonzero for incompatible or unreadable descriptors. Descriptor content is never interpolated into a command or module specifier.",
+    "release-artifact.ts uses child_process.execFile via promisify with argument arrays and no shell. Package directories, binaries, tar member names, fixture paths, and output destinations are repository-owned constants; basename constrains the pack-reported archive name.",
+    "Every child process receives CI, audit/fund disabled, ignore-scripts, and offline environment settings. npm pack is a dry run, pnpm pack writes local tarballs only, and pnpm install is explicitly offline with local tarball dependencies and overrides. No publish, registry login, credential, fetch, HTTP client, or network API exists.",
+    "Real packed package.json files are read directly from each tarball. Package name/version must match source metadata, every declared import/type/default export target must exist in both dry-run and real archive listings, and workspace/file/link/portal dependency protocols are rejected from all dependency sections.",
+    "The clean fixture installs all four local tarballs, imports each canonical package by public package name, and runs the same built descriptor gate. It does not resolve engine source paths or application modules.",
+    "Temporary release roots are created under os.tmpdir and recursively removed in a finally block on success or failure. The only repository writes are deterministic TypeScript dist builds for the five local packages; no command targets mastery-advantage or ra-math-advantage.",
+    "The synthetic proof imports @reading-advantage/knowledge-space-core, knowledge-space-practice, practice-core, srs-engine, and provider-neutral @reading-advantage/domain mastery subpaths. A focused source scan found no apps/, Next, React, route, Drizzle, PostgreSQL, provider SDK, registry, or external repository import.",
+    "The two-skill proof validates the graph, computes readiness, maps independent-practice evidence to an SRS rating, reviews a deterministic card, commits and replays via in-memory persistence, reads persisted state, and projects the next objective without application code or wall-clock/network input."
+  ],
+  "commands": [
+    "PASS - TZ=UTC ./node_modules/.bin/vitest run packages/mastery-runtime-compat/src/__tests__/runtime-manifest.test.ts packages/mastery-runtime-compat/src/__tests__/codecamp-proof.test.ts packages/mastery-runtime-compat/src/__tests__/release-artifact.test.ts --maxWorkers=1 --reporter=verbose: 3 files, 22/22 tests; the real packed-consumer test completed in 118385ms.",
+    "PASS - ./node_modules/.bin/eslint --config packages/mastery-runtime-compat/eslint.config.mjs packages/mastery-runtime-compat/src: zero findings.",
+    "PASS - ./node_modules/.bin/tsc -p packages/mastery-runtime-compat/tsconfig.json --noEmit: zero type errors.",
+    "PASS - git diff --check 52088fbe..f849efd2 -- packages/mastery-runtime-compat plus the 5e0adfad remediation: no whitespace errors.",
+    "PASS - focused source scan for command execution, network/publication terms, application paths, database/provider imports, temporary writes, and cleanup; all execution and write sites match the bounded local tooling design."
+  ],
+  "changed_files": [
+    "packages/mastery-runtime-compat/src/release-artifact.ts",
+    "measure/tracks/mastery_engine_v32_import_20260710/phase-s4-review-boundaries.json"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "external_write_violations": [],
+  "retry_recommendation": "proceed_to_phase_s4_acceptance",
+  "confidence": "high"
+}
