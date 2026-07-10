@@ -2266,8 +2266,8 @@ importers:
         specifier: workspace:*
         version: link:../knowledge-space-core
       zod:
-        specifier: 'catalog:'
-        version: 3.25.76
+        specifier: ^4.1.12
+        version: 4.4.3
     devDependencies:
       '@reading-advantage/config':
         specifier: workspace:*
