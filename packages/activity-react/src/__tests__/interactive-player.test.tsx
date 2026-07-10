@@ -58,6 +58,7 @@ describe("InteractiveActivityPlayer", () => {
     fireEvent.click(screen.getByRole("button", { name: "Show transcript" }));
     expect(screen.getByText("Stage files before committing.")).toBeVisible();
     expect(screen.getByRole("img", { name: "Working tree flows to staging" })).toBeInTheDocument();
+    expect(screen.getByText("Diagram: Working tree flows to staging")).toBeVisible();
   });
 
   it("pauses at a cue, shows feedback, and replays the trusted segment", async () => {
@@ -209,6 +210,9 @@ describe("InteractiveActivityPlayer", () => {
         onAssess={onAssess}
         onEngage={onEngage}
         renderMedia={({ video }) => <iframe title="Hosted tutorial media" data-resource-id={video.resourceId} />}
+        renderResource={({ resource, context }) => resource.kind === "diagram"
+          ? <div role="img" aria-label={`${context}: ${resource.alt.en}`}>Rendered diagram</div>
+          : undefined}
       />
     );
     expect(screen.getByTitle("Hosted tutorial media")).toHaveAttribute("data-resource-id", "video.hosted-unrelated");
@@ -220,7 +224,7 @@ describe("InteractiveActivityPlayer", () => {
     fireEvent.click(screen.getByRole("button", { name: "Check answer" }));
     await waitFor(() => expect(onEngage).toHaveBeenCalledWith({ checkpointId: "checkpoint.stage", answer: ["tracked", "selected"] }));
     expect(onAssess).not.toHaveBeenCalled();
-    expect(screen.getByRole("img", { name: "Working tree flows to staging" })).toBeVisible();
+    expect(screen.getByRole("img", { name: "remediation: Working tree flows to staging" })).toBeVisible();
     expect(screen.getAllByRole("link", { name: "Read the staging explanation" })).toHaveLength(2);
     expect(screen.getByText("tutorial/src/status.ts#getStatus")).toBeVisible();
   });

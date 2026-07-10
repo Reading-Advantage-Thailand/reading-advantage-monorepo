@@ -13,6 +13,7 @@ export type InteractiveActivityPlayerProps = {
   onAssess(input: { checkpointId: string; answer: unknown }): Promise<PlayerAssessment>;
   onEngage?(input: { checkpointId: string; answer: unknown }): void | Promise<void>;
   renderMedia?(input: { video: Extract<Activity["resources"][number], { kind: "video" }> }): ReactNode;
+  renderResource?(input: { resource: Activity["resources"][number]; context: "alternative" | "remediation" }): ReactNode;
   initialPositionSeconds?: number;
   onPositionChange?(seconds: number): void;
   onWatchedRangesChange?(ranges: Array<{ startSeconds: number; endSeconds: number }>): void;
@@ -25,7 +26,11 @@ function text(value: Record<string, string>, locale: string): string {
 function resourceContent(resource: Activity["resources"][number], locale: string): ReactNode {
   switch (resource.kind) {
     case "diagram":
-      return <div role="img" aria-label={text(resource.alt, locale)} data-asset-id={resource.assetId} />;
+      return (
+        <div role="img" aria-label={text(resource.alt, locale)} data-asset-id={resource.assetId}>
+          Diagram: {resource.caption ? text(resource.caption, locale) : text(resource.alt, locale)}
+        </div>
+      );
     case "transcript":
       return <p>{resource.text}</p>;
     case "lesson_section":
@@ -47,7 +52,7 @@ function resourceContent(resource: Activity["resources"][number], locale: string
  * @param props Activity content, controller, locale, and server assessment callback.
  * @returns Accessible React learning activity.
  */
-export function InteractiveActivityPlayer({ activity, controller, locale, onAssess, onEngage, renderMedia, initialPositionSeconds = 0, onPositionChange, onWatchedRangesChange }: InteractiveActivityPlayerProps) {
+export function InteractiveActivityPlayer({ activity, controller, locale, onAssess, onEngage, renderMedia, renderResource, initialPositionSeconds = 0, onPositionChange, onWatchedRangesChange }: InteractiveActivityPlayerProps) {
   const [snapshot, setSnapshot] = useState<MediaSnapshot>(() => controller.getSnapshot());
   const [activeCheckpointId, setActiveCheckpointId] = useState<string | null>(null);
   const [selectedOptionIds, setSelectedOptionIds] = useState<string[]>([]);
@@ -190,7 +195,11 @@ export function InteractiveActivityPlayer({ activity, controller, locale, onAsse
           {transcriptOpen ? <p>{transcript.text}</p> : null}
         </div>
       ) : null}
-      {alternative ? <div data-slot="activity-alternative">{resourceContent(alternative, locale)}</div> : null}
+      {alternative ? (
+        <div data-slot="activity-alternative">
+          {renderResource?.({ resource: alternative, context: "alternative" }) ?? resourceContent(alternative, locale)}
+        </div>
+      ) : null}
       {checkpoint ? (
         <form ref={checkpointForm} onSubmit={(event) => void submit(event)} data-slot="activity-checkpoint">
           <fieldset>
@@ -227,7 +236,11 @@ export function InteractiveActivityPlayer({ activity, controller, locale, onAsse
             {checkpoint.remediation.map((reference) => {
               if (reference.kind === "video_segment") return null;
               const resource = activity.resources.find((candidate) => candidate.resourceId === reference.resourceId);
-              return resource ? <div key={`${reference.kind}:${reference.resourceId}`}>{resourceContent(resource, locale)}</div> : null;
+              return resource ? (
+                <div key={`${reference.kind}:${reference.resourceId}`}>
+                  {renderResource?.({ resource, context: "remediation" }) ?? resourceContent(resource, locale)}
+                </div>
+              ) : null;
             })}
           </div>
           <button

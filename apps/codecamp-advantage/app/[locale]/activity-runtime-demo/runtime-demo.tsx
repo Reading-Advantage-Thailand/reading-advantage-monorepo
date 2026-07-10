@@ -1,8 +1,8 @@
 "use client";
 
-import { InteractiveActivityPlayer, type MediaController, type MediaSnapshot } from "@reading-advantage/activity-react";
+import { createYouTubeMediaController, InteractiveActivityPlayer, type MediaController, type MediaSnapshot, type YouTubePlayerPort } from "@reading-advantage/activity-react";
 import { activitySchema } from "@reading-advantage/activity-runtime/core";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 const demoActivity = activitySchema.parse({
   schemaVersion: "activity.v1",
@@ -47,15 +47,119 @@ const demoActivity = activitySchema.parse({
   tutorialSteps: []
 });
 
+type RefreshingMediaController = MediaController & { refresh(): void };
+
+interface YouTubePlayer extends YouTubePlayerPort {
+  getIframe(): HTMLIFrameElement;
+}
+
+interface YouTubeApi {
+  Player: new (element: HTMLElement, options: {
+    videoId: string;
+    playerVars: { enablejsapi: 1; origin: string };
+    events: { onReady(event: { target: YouTubePlayer }): void };
+  }) => YouTubePlayer;
+}
+
+declare global {
+  interface Window {
+    YT?: YouTubeApi;
+    onYouTubeIframeAPIReady?: () => void;
+  }
+}
+
+let youtubeApiPromise: Promise<YouTubeApi> | undefined;
+
+function loadYouTubeApi(): Promise<YouTubeApi> {
+  if (window.YT) return Promise.resolve(window.YT);
+  youtubeApiPromise ??= new Promise<YouTubeApi>((resolve, reject) => {
+    const previousReady = window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady = () => {
+      previousReady?.();
+      if (window.YT) resolve(window.YT);
+      else reject(new Error("YouTube IFrame API did not initialize"));
+    };
+    const existing = document.querySelector<HTMLScriptElement>('script[src="https://www.youtube.com/iframe_api"]');
+    if (existing) return;
+    const script = document.createElement("script");
+    script.src = "https://www.youtube.com/iframe_api";
+    script.addEventListener("error", () => {
+      youtubeApiPromise = undefined;
+      script.remove();
+      reject(new Error("YouTube IFrame API failed to load"));
+    }, { once: true });
+    document.body.append(script);
+  });
+  return youtubeApiPromise;
+}
+
+function YouTubeMediaHost({ videoId, onReady }: { videoId: string; onReady(controller: RefreshingMediaController): void }) {
+  const mount = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    let disposed = false;
+    let controller: RefreshingMediaController | undefined;
+    let refreshTimer: number | undefined;
+    void loadYouTubeApi().then((api) => {
+      if (disposed || !mount.current) return;
+      new api.Player(mount.current, {
+        videoId,
+        playerVars: { enablejsapi: 1, origin: window.location.origin },
+        events: {
+          onReady: ({ target }) => {
+            if (disposed) {
+              target.destroy();
+              return;
+            }
+            target.getIframe().title = "Git commit tutorial video";
+            controller = createYouTubeMediaController(target);
+            onReady(controller);
+            refreshTimer = window.setInterval(() => controller?.refresh(), 500);
+          },
+        },
+      });
+    });
+    return () => {
+      disposed = true;
+      if (refreshTimer !== undefined) window.clearInterval(refreshTimer);
+      controller?.destroy();
+    };
+  }, [onReady, videoId]);
+  return <div ref={mount} className="aspect-video w-full rounded-lg bg-slate-950" aria-label="Loading tutorial video" />;
+}
+
 class DemoController implements MediaController {
-  private snapshot: MediaSnapshot = { status: "ready", currentSeconds: 0, durationSeconds: 90, captionsEnabled: true };
+  private snapshot: MediaSnapshot = { status: "idle", currentSeconds: 0, durationSeconds: 0, captionsEnabled: false };
   private readonly listeners = new Set<(snapshot: MediaSnapshot) => void>();
+  private delegate: RefreshingMediaController | undefined;
+  private unsubscribeDelegate: (() => void) | undefined;
+  private pendingSeekSeconds: number | undefined;
   getSnapshot(): MediaSnapshot { return this.snapshot; }
   subscribe(listener: (snapshot: MediaSnapshot) => void): () => void { this.listeners.add(listener); return () => this.listeners.delete(listener); }
-  play(): void { this.publish({ ...this.snapshot, status: "playing" }); }
-  pause(): void { this.publish({ ...this.snapshot, status: "paused" }); }
-  seek(seconds: number): void { this.publish({ ...this.snapshot, currentSeconds: seconds }); }
-  destroy(): void { this.listeners.clear(); }
+  play(): void | Promise<void> { return this.delegate?.play(); }
+  pause(): void { this.delegate?.pause(); }
+  seek(seconds: number): void {
+    if (this.delegate) this.delegate.seek(seconds);
+    else this.pendingSeekSeconds = seconds;
+  }
+  attach(controller: RefreshingMediaController): void {
+    this.unsubscribeDelegate?.();
+    this.delegate?.destroy();
+    this.delegate = controller;
+    this.snapshot = controller.getSnapshot();
+    this.unsubscribeDelegate = controller.subscribe((snapshot) => this.publish(snapshot));
+    this.publish(this.snapshot);
+    if (this.pendingSeekSeconds !== undefined) {
+      controller.seek(this.pendingSeekSeconds);
+      this.pendingSeekSeconds = undefined;
+    }
+  }
+  destroy(): void {
+    this.unsubscribeDelegate?.();
+    this.delegate?.destroy();
+    this.delegate = undefined;
+    this.unsubscribeDelegate = undefined;
+    this.listeners.clear();
+  }
   private publish(snapshot: MediaSnapshot): void { this.snapshot = snapshot; this.listeners.forEach((listener) => listener(snapshot)); }
 }
 
@@ -65,6 +169,7 @@ class DemoController implements MediaController {
  */
 export function ActivityRuntimeDemo() {
   const controller = useMemo(() => new DemoController(), []);
+  const attachYouTubeController = useCallback((nextController: RefreshingMediaController) => controller.attach(nextController), [controller]);
   const [attempts, setAttempts] = useState(() => Number(globalThis.localStorage?.getItem("activity-runtime-demo-attempts") ?? 0));
   const [initialPosition] = useState(() => Number(globalThis.localStorage?.getItem("activity-runtime-demo-position") ?? 0));
   const [position, setPosition] = useState(initialPosition);
@@ -92,15 +197,25 @@ export function ActivityRuntimeDemo() {
           initialPositionSeconds={initialPosition}
           onPositionChange={savePosition}
           onWatchedRangesChange={saveWatchedRanges}
-          renderMedia={({ video }) => video.provider === "youtube" ? (
-            <iframe
-              className="aspect-video w-full rounded-lg border-0"
-              src={`https://www.youtube.com/embed/${video.videoId}`}
-              title="Git commit tutorial video"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-          ) : null}
+          renderMedia={({ video }) => video.provider === "youtube" && video.videoId
+            ? <YouTubeMediaHost videoId={video.videoId} onReady={attachYouTubeController} />
+            : null}
+          renderResource={({ resource }) => resource.kind === "diagram" ? (
+            <figure
+              role="img"
+              aria-label={resource.alt.en}
+              className="my-3 rounded-lg border border-blue-200 bg-blue-50 p-4"
+            >
+              <div aria-hidden="true" className="flex flex-wrap items-center justify-center gap-2 font-semibold text-blue-950">
+                <span className="rounded-md bg-white px-3 py-2 shadow-sm">Working tree</span>
+                <span>→ git add →</span>
+                <span className="rounded-md bg-white px-3 py-2 shadow-sm">Staging area</span>
+                <span>→ git commit →</span>
+                <span className="rounded-md bg-white px-3 py-2 shadow-sm">Repository</span>
+              </div>
+              <figcaption className="mt-2 text-center text-sm text-blue-800">Use the staging area to choose what the next commit records.</figcaption>
+            </figure>
+          ) : undefined}
           onAssess={async ({ answer }) => {
             const next = attempts + 1;
             globalThis.localStorage?.setItem("activity-runtime-demo-attempts", String(next));
