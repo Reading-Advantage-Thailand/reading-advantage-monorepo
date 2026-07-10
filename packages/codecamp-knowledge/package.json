@@ -1,0 +1,36 @@
+{
+  "name": "@reading-advantage/codecamp-knowledge",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./graph": "./dist/data/code-knowledge-space.json"
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc",
+    "check-types": "tsc --noEmit",
+    "lint": "eslint src/",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "graph:validate": "pnpm build && node dist/cli.js validate",
+    "graph:report": "pnpm build && node dist/cli.js report"
+  },
+  "dependencies": {
+    "@reading-advantage/knowledge-space-core": "workspace:*",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@reading-advantage/config": "workspace:*",
+    "@types/node": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "typescript": "5.9.3",
+    "vitest": "4.1.8"
+  }
+}
