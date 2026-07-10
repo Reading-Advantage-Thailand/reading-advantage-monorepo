@@ -26,7 +26,7 @@ _Blast radius: shared cartridge catalog/loaders, QC catalog, edition slots, and 
   - [x] Keep edition data outside gameplay source
 - [x] Task: Verify Astral package quality (c378c3cc)
   - [x] Run focused tests, coverage, lint, type-check, build, and architecture guard
-- [~] Task: Measure - User Manual Verification 'Phase S1: Build Astral Mage target action' (Protocol in workflow.md) — awaiting:product-owner
+- [x] Task: Measure - User Manual Verification 'Phase S1: Build Astral Mage target action' — approved 2026-07-10
 
 ## Phase S2: Build Ziggurat step traversal
 _Story ref: spec.md#story-s2_
@@ -42,7 +42,7 @@ _Story ref: spec.md#story-s2_
   - [x] Keep edition data outside gameplay source
 - [x] Task: Verify Ziggurat package quality (c378c3cc)
   - [x] Run focused tests, coverage, lint, type-check, build, and architecture guard
-- [~] Task: Measure - User Manual Verification 'Phase S2: Build Ziggurat step traversal' (Protocol in workflow.md) — awaiting:product-owner
+- [x] Task: Measure - User Manual Verification 'Phase S2: Build Ziggurat step traversal' — approved 2026-07-10
 
 ## Phase S3: Prove editions and hosts
 _Story ref: spec.md#story-s3_
@@ -59,7 +59,7 @@ _Story ref: spec.md#story-s3_
 - [x] Task: Run component and browser acceptance (c378c3cc)
   - [x] Complete representative keyboard/pointer and touch flows at desktop and 390x844
   - [x] Verify both editions, one canvas, clean relaunch, no overflow, diagnostics, and exact result identity
-- [~] Task: Measure - User Manual Verification 'Phase S3: Prove editions and hosts' (Protocol in workflow.md) — awaiting:product-owner
+- [x] Task: Measure - User Manual Verification 'Phase S3: Prove editions and hosts' — approved 2026-07-10
 
 ## Phase S4: Cut over unfinished catalog entries
 _Story ref: spec.md#story-s4_
@@ -76,4 +76,4 @@ _Story ref: spec.md#story-s4_
 - [x] Task: Run final W1 acceptance and update graph/evidence (c378c3cc)
   - [x] Run package, host, QC, browser, build, architecture, no-copy, and Measure gates
   - [x] Record exact retained/deleted/deferred surfaces and successor ownership
-- [~] Task: Measure - User Manual Verification 'Phase S4: Cut over unfinished catalog entries' (Protocol in workflow.md) — awaiting:product-owner
+- [x] Task: Measure - User Manual Verification 'Phase S4: Cut over unfinished catalog entries' — approved 2026-07-10

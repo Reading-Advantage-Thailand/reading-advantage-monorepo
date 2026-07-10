@@ -33,4 +33,4 @@
 
 ## Product-owner gate
 
-Automated and browser-agent acceptance is complete. Track archival remains gated on explicit product-owner confirmation after the QC steps in the handoff.
+The product owner replied “Approved. Continue” on 2026-07-10 after receiving the manual QC steps and automated evidence. All four product-owner gates are cleared; W1 may be archived and the production Arcade Host successor may begin.
