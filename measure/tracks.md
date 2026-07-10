@@ -57,6 +57,13 @@ Two parallel programs are in flight; priority order when picking the next track:
 
 ---
 
+## Advantage Play Kit Program (created 2026-07-10)
+
+- [~] **Track: APK Advantage Games Arcade Host W2** *Link: [./tracks/apk_advantage_games_arcade_host_w2_20260710/](./tracks/apk_advantage_games_arcade_host_w2_20260710/)*
+  Convert Advantage Games from a static/QC showcase into the authenticated production host for all five shared cartridges, with one generic student route, server-owned completion persistence, and a continuous arcade loop while preserving the stable educational ABI.
+
+---
+
 
 ---
 
