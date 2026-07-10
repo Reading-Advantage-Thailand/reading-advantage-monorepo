@@ -1,0 +1,42 @@
+{
+  "name": "@reading-advantage/activity-react",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
+    "./controllers": { "types": "./dist/controllers.d.ts", "import": "./dist/controllers.js" },
+    "./testing": { "types": "./dist/testing.d.ts", "import": "./dist/testing.js" }
+  },
+  "files": ["dist", "README.md"],
+  "scripts": {
+    "build": "node scripts/clean-dist.mjs && tsc",
+    "check-types": "pnpm build && tsc --noEmit -p tsconfig.test.json",
+    "lint": "eslint src/",
+    "test": "pnpm build && vitest run --maxWorkers=1",
+    "test:coverage": "pnpm build && vitest run --coverage --maxWorkers=1"
+  },
+  "dependencies": {
+    "@reading-advantage/activity-runtime": "workspace:*"
+  },
+  "devDependencies": {
+    "@reading-advantage/config": "workspace:*",
+    "@testing-library/jest-dom": "catalog:",
+    "@testing-library/react": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
+    "@vitest/coverage-v8": "catalog:",
+    "jsdom": "catalog:",
+    "react": "19.2.7",
+    "react-dom": "19.2.7",
+    "typescript": "5.9.3",
+    "vitest": "4.1.8"
+  },
+  "peerDependencies": {
+    "react": "19.2.7",
+    "react-dom": "19.2.7"
+  }
+}
