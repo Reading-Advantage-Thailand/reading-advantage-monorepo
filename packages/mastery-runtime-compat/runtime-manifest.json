@@ -1,0 +1,186 @@
+{
+  "schemaVersion": "mastery-runtime-compat.v1",
+  "authorities": [
+    {
+      "axis": "normative-spec",
+      "authority": "/home/daniel-bo/Desktop/mastery-advantage/SPECIFICATION.md",
+      "owner": "mastery-advantage"
+    },
+    {
+      "axis": "engine-packages",
+      "authority": "packages/{knowledge-space-core,knowledge-space-practice,practice-core,srs-engine}/package.json",
+      "owner": "reading-advantage-monorepo"
+    },
+    {
+      "axis": "persistence",
+      "authority": "@reading-advantage/domain/mastery/contracts and packages/db/drizzle",
+      "owner": "reading-advantage-monorepo"
+    },
+    {
+      "axis": "knowledge-graph",
+      "authority": "/home/daniel-bo/Desktop/mastery-advantage graph releases",
+      "owner": "mastery-advantage"
+    },
+    {
+      "axis": "practice-contract",
+      "authority": "@reading-advantage/practice-core public schemas",
+      "owner": "reading-advantage-monorepo"
+    },
+    {
+      "axis": "srs-contract",
+      "authority": "@reading-advantage/srs-engine public schemas",
+      "owner": "reading-advantage-monorepo"
+    },
+    {
+      "axis": "fixtures",
+      "authority": "versioned public engine acceptance fixtures",
+      "owner": "reading-advantage-monorepo"
+    }
+  ],
+  "ownership": [
+    {
+      "resource": "normative-spec",
+      "owner": "mastery-advantage/SPECIFICATION.md",
+      "authorityAxis": "normative-spec"
+    },
+    {
+      "resource": "knowledge-space-core",
+      "owner": "packages/knowledge-space-core",
+      "authorityAxis": "engine-packages"
+    },
+    {
+      "resource": "knowledge-space-practice",
+      "owner": "packages/knowledge-space-practice",
+      "authorityAxis": "engine-packages"
+    },
+    {
+      "resource": "practice-core",
+      "owner": "packages/practice-core",
+      "authorityAxis": "practice-contract"
+    },
+    {
+      "resource": "srs-engine",
+      "owner": "packages/srs-engine",
+      "authorityAxis": "srs-contract"
+    },
+    {
+      "resource": "mastery-persistence",
+      "owner": "packages/domain/src/mastery",
+      "authorityAxis": "persistence"
+    },
+    {
+      "resource": "mastery-migrations",
+      "owner": "packages/db/drizzle",
+      "authorityAxis": "persistence"
+    },
+    {
+      "resource": "knowledge-graph",
+      "owner": "mastery-advantage graph releases",
+      "authorityAxis": "knowledge-graph"
+    },
+    {
+      "resource": "acceptance-fixtures",
+      "owner": "engine package public fixtures",
+      "authorityAxis": "fixtures"
+    }
+  ],
+  "releaseSets": [
+    {
+      "id": "mastery-runtime-0.1.0-kst-srs-3.2",
+      "normativeVersion": "kst-srs.v3.2",
+      "packages": [
+        {
+          "name": "@reading-advantage/knowledge-space-core",
+          "version": "0.1.0",
+          "exports": [
+            ".",
+            "./types",
+            "./schemas",
+            "./validation",
+            "./placement",
+            "./level-projection",
+            "./progress-trend",
+            "./adapters",
+            "./fixtures"
+          ]
+        },
+        {
+          "name": "@reading-advantage/knowledge-space-practice",
+          "version": "0.1.0",
+          "exports": [
+            ".",
+            "./misconception-loop",
+            "./blueprints",
+            "./planner/types",
+            "./planner/priority",
+            "./planner/unlock-value",
+            "./planner/recommended-next",
+            "./planner/domain-utility",
+            "./planner/review-load",
+            "./projections"
+          ]
+        },
+        {
+          "name": "@reading-advantage/practice-core",
+          "version": "0.1.0",
+          "exports": [
+            ".",
+            "./contract",
+            "./submission-schema",
+            "./timing",
+            "./timing-baseline",
+            "./srs-rating",
+            "./problem-family",
+            "./practice-item",
+            "./error-analysis",
+            "./generator-qa"
+          ]
+        },
+        {
+          "name": "@reading-advantage/srs-engine",
+          "version": "0.1.0",
+          "exports": [
+            ".",
+            "./contract",
+            "./scheduler",
+            "./review-processor",
+            "./queue",
+            "./adapters",
+            "./submission-adapter",
+            "./proficiency",
+            "./edge-calibration",
+            "./fsrs-calibration",
+            "./evaluation-harness",
+            "./session-composition"
+          ]
+        }
+      ],
+      "graph": {
+        "release": "knowledge-space-codecamp-foundation-v1.0.0",
+        "schema": "knowledge-space.v3"
+      },
+      "contracts": {
+        "practice": "practice.v3",
+        "srs": "srs.v3",
+        "persistence": "mastery-persistence.v1"
+      },
+      "persistence": {
+        "schema": "mastery-persistence.v1",
+        "migrationHead": "0028_mastery_tenant_hardening"
+      },
+      "fixtures": {
+        "version": "mastery-fixtures.v3.2.0",
+        "sourceCommit": "34f9fb508c3e1751518aec335af3040c381d1d12"
+      },
+      "source": {
+        "commit": "34f9fb508c3e1751518aec335af3040c381d1d12"
+      },
+      "supportedConsumers": [
+        {
+          "name": "codecamp-advantage",
+          "range": ">=1.0.0 <2.0.0"
+        }
+      ]
+    }
+  ]
+}

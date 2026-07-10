@@ -306,7 +306,9 @@ describe("authoritative runtime manifest", () => {
     expect(release.contracts.srs).toBe("srs.v3");
     expect(release.contracts.persistence).toBe("mastery-persistence.v1");
     expect(release.persistence.schema).toBe("mastery-persistence.v1");
-    expect(release.persistence.migrationHead).toBe("0027_mastery_persistence");
+    expect(release.persistence.migrationHead).toBe(
+      "0028_mastery_tenant_hardening",
+    );
     expect(release.fixtures.version).toMatch(/^mastery-fixtures\.v3\.2\.\d+$/);
     expect(release.fixtures.sourceCommit).toMatch(/^[0-9a-f]{40}$/);
     expect(release.source.commit).toMatch(/^[0-9a-f]{40}$/);
