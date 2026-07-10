@@ -99,6 +99,13 @@ function validateGate(edge: KnowledgeSpaceEdge, issues: CodeGraphIssue[]): void 
       message: "Use a supports edge for a non-gating relationship.",
     });
   }
+  if (edge.type === "prerequisite_for" && gate === "none") {
+    issues.push({
+      code: "PREREQUISITE_GATE_UNDECLARED",
+      entityId: edge.id,
+      message: "Every prerequisite_for edge must declare hard gating or be rewritten as supports.",
+    });
+  }
 }
 
 /** Validates schema, topology, gating, lifecycle, review, and standards semantics.
@@ -167,6 +174,16 @@ export function validateCodeKnowledgeGraph(input: unknown): CodeGraphValidationR
           message: `Reviewed releases must include the ${cluster} instructional cluster.`,
         });
       }
+    }
+    const incompleteReviewers = Object.entries(graph.review)
+      .filter(([, reviewer]) => reviewer.status !== "approved" || reviewer.reviewedAt == null)
+      .map(([role]) => role)
+      .sort();
+    if (incompleteReviewers.length > 0) {
+      issues.push({
+        code: "REVIEW_INCOMPLETE",
+        message: `Reviewed releases require dated approval from: ${incompleteReviewers.join(", ")}.`,
+      });
     }
   }
 

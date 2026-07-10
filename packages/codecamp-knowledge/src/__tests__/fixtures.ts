@@ -71,7 +71,7 @@ export function representativeGraph() {
       authoredAt: "2026-07-10T00:00:00.000Z",
     },
     migration: {
-      previousVersion: null,
+      previousVersion: null as string | null,
       stableIds: true,
       impact: "Initial Codecamp graph release; no learner records migrated.",
     },

@@ -7,6 +7,7 @@ import {
   HARD_GATE_THRESHOLD,
   buildCodeGraphReport,
   buildPublishedKnowledgeSpace,
+  codeKnowledgeGraph,
   codeDomainAdapter,
   diffCodeKnowledgeGraphs,
   parseCodeKnowledgeGraph,
@@ -80,6 +81,14 @@ describe("validateCodeKnowledgeGraph", () => {
     expect(validateCodeKnowledgeGraph(graph).issues.map((issue) => issue.code)).toContain("SUPPORT_CANNOT_GATE");
   });
 
+  it("rejects a prerequisite edge with undeclared gating semantics", () => {
+    const graph = representativeGraph();
+    graph.knowledgeSpace.edges[3]!.metadata = { gate: "none" };
+    expect(validateCodeKnowledgeGraph(graph).issues.map((issue) => issue.code)).toContain(
+      "PREREQUISITE_GATE_UNDECLARED",
+    );
+  });
+
   it("rejects a standards projection placed in the Codecamp domain without creating a dangling edge", () => {
     const graph = representativeGraph();
     graph.knowledgeSpace.nodes.at(-1)!.domain = "codecamp";
@@ -100,8 +109,9 @@ describe("validateCodeKnowledgeGraph", () => {
 describe("adapter, publication, and deterministic reports", () => {
   it("validates strict metadata through the shared adapter contract", () => {
     expect(codeDomainAdapter.domain).toBe("codecamp");
-    expect(codeDomainAdapter.validateNodeMetadata(node("codecamp.foundation.skill.functions")).valid).toBe(true);
-    expect(codeDomainAdapter.validateNodeMetadata({ ...node("codecamp.foundation.skill.functions"), metadata: { cluster: "foundation" } }).valid).toBe(false);
+    const validNode = parseCodeKnowledgeGraph(representativeGraph()).knowledgeSpace.nodes[3]!;
+    expect(codeDomainAdapter.validateNodeMetadata(validNode).valid).toBe(true);
+    expect(codeDomainAdapter.validateNodeMetadata({ ...validNode, metadata: { cluster: "foundation" } }).valid).toBe(false);
   });
 
   it("builds a stable topology and governance report", () => {
@@ -137,16 +147,20 @@ describe("adapter, publication, and deterministic reports", () => {
   });
 
   it("publishes only active reviewed objectives and approved referentially intact edges", () => {
-    const input = representativeGraph();
-    input.knowledgeSpace.nodes.push(node("codecamp.foundation.skill.retired", "skill", { metadata: { cluster: "foundation", objectiveType: "application", priority: "could", lifecycle: "retired" } }));
-    input.knowledgeSpace.edges.push(
-      edge("codecamp.edge.contains-retired", "contains", "codecamp.foundation.group", "codecamp.foundation.skill.retired"),
-      edge("codecamp.edge.draft-support", "supports", "codecamp.foundation.concept.variables", "codecamp.foundation.skill.functions", { reviewStatus: "draft" }),
+    expect(() => buildPublishedKnowledgeSpace(parseCodeKnowledgeGraph(representativeGraph()))).toThrow(
+      /Only reviewed/,
     );
+    const input = structuredClone(codeKnowledgeGraph);
+    input.knowledgeSpace.nodes.find(
+      (entry) => entry.id === "codecamp.game-development.skill.assets",
+    )!.metadata.lifecycle = "retired";
+    input.knowledgeSpace.edges.find(
+      (entry) => entry.id === "codecamp.edge.assets-support-performance",
+    )!.reviewStatus = "draft";
     const published = buildPublishedKnowledgeSpace(parseCodeKnowledgeGraph(input));
     const ids = new Set(published.nodes.map((entry) => entry.id));
-    expect(ids).not.toContain("codecamp.foundation.skill.retired");
-    expect(published.edges.map((entry) => entry.id)).not.toContain("codecamp.edge.draft-support");
+    expect(ids).not.toContain("codecamp.game-development.skill.assets");
+    expect(published.edges.map((entry) => entry.id)).not.toContain("codecamp.edge.assets-support-performance");
     expect(published.edges.every((entry) => ids.has(entry.sourceId) && ids.has(entry.targetId))).toBe(true);
   });
 });
@@ -177,5 +191,27 @@ describe("release transition safety", () => {
     afterInput.releaseStatus = "reviewed";
     afterInput.review.curriculumOwner.status = "pending";
     expect(validateCodeGraphTransition(before, parseCodeKnowledgeGraph(afterInput)).issues.map((issue) => issue.code)).toContain("REVIEW_INCOMPLETE");
+  });
+
+  it("rejects reviewed-release approval drift even without a status transition", () => {
+    const input = structuredClone(codeKnowledgeGraph);
+    input.review.technicalMaintainer.status = "pending";
+    expect(validateCodeKnowledgeGraph(input).issues.map((issue) => issue.code)).toContain(
+      "REVIEW_INCOMPLETE",
+    );
+  });
+
+  it("rejects version downgrades and semantic reuse of a stable ID", () => {
+    const before = parseCodeKnowledgeGraph(representativeGraph());
+    const afterInput = representativeGraph();
+    afterInput.version = "0.9.0";
+    afterInput.migration.previousVersion = "1.0.0";
+    afterInput.knowledgeSpace.nodes[2]!.kind = "skill";
+    const codes = validateCodeGraphTransition(
+      before,
+      parseCodeKnowledgeGraph(afterInput),
+    ).issues.map((issue) => issue.code);
+    expect(codes).toContain("VERSION_NOT_MONOTONIC");
+    expect(codes).toContain("BREAKING_ID_REUSE");
   });
 });

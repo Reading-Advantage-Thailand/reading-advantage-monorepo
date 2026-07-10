@@ -1,12 +1,25 @@
 import type { KnowledgeSpace } from "@reading-advantage/knowledge-space-core";
 
 import type { CodeKnowledgeGraph } from "./contracts.js";
+import { validateCodeKnowledgeGraph } from "./validation.js";
 
 /** Produces the immutable runtime projection from one authored graph release.
  * @param graph Validated authored graph release.
  * @returns Active reviewed nodes plus approved edges whose endpoints remain published.
+ * @throws When the release is not reviewed or fails graph validation.
  */
 export function buildPublishedKnowledgeSpace(graph: CodeKnowledgeGraph): KnowledgeSpace {
+  if (graph.releaseStatus !== "reviewed") {
+    throw new Error("Only reviewed graph releases can be projected for runtime publication.");
+  }
+  const validation = validateCodeKnowledgeGraph(graph);
+  if (!validation.valid) {
+    throw new Error(
+      `Cannot publish an invalid Codecamp graph: ${validation.issues
+        .map((issue) => `${issue.code}:${issue.entityId ?? issue.path ?? "graph"}`)
+        .join(", ")}`,
+    );
+  }
   const nodes = graph.knowledgeSpace.nodes.filter(
     (node) => node.metadata.lifecycle === "active" && node.reviewStatus === "approved",
   );

@@ -27,6 +27,22 @@ export function validateCodeGraphTransition(
       message: "Any authored graph change requires a semantic version bump.",
     });
   }
+  const parseVersion = (version: string): [number, number, number] =>
+    version.split(".").map(Number) as [number, number, number];
+  const compareVersion = (left: string, right: string): number => {
+    const a = parseVersion(left);
+    const b = parseVersion(right);
+    for (let index = 0; index < a.length; index += 1) {
+      if (a[index] !== b[index]) return a[index]! - b[index]!;
+    }
+    return 0;
+  };
+  if (compareVersion(after.version, before.version) < 0) {
+    issues.push({
+      code: "VERSION_NOT_MONOTONIC",
+      message: `Graph versions cannot move backward from ${before.version} to ${after.version}.`,
+    });
+  }
   if (before.version !== after.version && after.migration.previousVersion !== before.version) {
     issues.push({
       code: "MIGRATION_BASE_MISMATCH",
@@ -39,6 +55,23 @@ export function validateCodeGraphTransition(
       .filter((node) => node.metadata.lifecycle === "active")
       .map((node) => node.id),
   );
+  const beforeNodes = new Map(before.knowledgeSpace.nodes.map((node) => [node.id, node]));
+  const afterNodes = new Map(after.knowledgeSpace.nodes.map((node) => [node.id, node]));
+  for (const [id, previous] of beforeNodes) {
+    const next = afterNodes.get(id);
+    if (
+      next != null &&
+      (previous.kind !== next.kind ||
+        previous.domain !== next.domain ||
+        previous.metadata.objectiveType !== next.metadata.objectiveType)
+    ) {
+      issues.push({
+        code: "BREAKING_ID_REUSE",
+        entityId: id,
+        message: "Stable IDs cannot be reused for a different kind, domain, or objective type.",
+      });
+    }
+  }
   for (const removedId of diff.removedNodeIds.filter((id) => activeBefore.has(id))) {
     issues.push({
       code: "ACTIVE_ID_REMOVED",
@@ -47,7 +80,7 @@ export function validateCodeGraphTransition(
     });
   }
 
-  if (before.releaseStatus !== "reviewed" && after.releaseStatus === "reviewed") {
+  if (after.releaseStatus === "reviewed") {
     const incomplete = Object.entries(after.review)
       .filter(([, reviewer]) => reviewer.status !== "approved" || reviewer.reviewedAt == null)
       .map(([role]) => role)

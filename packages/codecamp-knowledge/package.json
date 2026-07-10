@@ -15,7 +15,7 @@
   "files": ["dist"],
   "scripts": {
     "build": "tsc && node scripts/copy-data.mjs",
-    "check-types": "tsc --noEmit",
+    "check-types": "tsc --noEmit && tsc -p tsconfig.test.json",
     "lint": "eslint src/",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage --exclude src/__tests__/release-artifact.test.ts",
