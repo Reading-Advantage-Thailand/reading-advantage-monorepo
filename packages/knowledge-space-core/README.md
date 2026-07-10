@@ -83,3 +83,11 @@ Proprietary math maps, Pearson/GSE descriptors, standards catalogs, and curricul
 ## License
 
 Private — part of the Math Advantage monorepo.
+
+## Shared runtime release policy
+
+This package is now canonical in the Reading Advantage monorepo. Its exact
+version-to-`kst-srs.v3.2` mapping and supported graph major live in
+`packages/mastery-runtime-compat/runtime-manifest.json`. Add normative fixtures
+before behavior changes, use semver for public contracts, run the packed
+consumer gate before release, and never ship consumers with `*` or `latest`.

@@ -32,6 +32,14 @@ import { syntheticAlgebraicBlueprint } from '@reading-advantage/knowledge-space-
 // References synthetic math nodes from syntheticMathFixture.
 ```
 
+## Shared runtime release policy
+
+The authoritative compatibility mapping is
+`packages/mastery-runtime-compat/runtime-manifest.json`. Planner or projection
+contract changes require fixtures first and a semver/manifest update. Verify the
+packed artifact and synthetic Codecamp consumer before upgrading an app; use
+exact dependency versions rather than workspace wildcards in release artifacts.
+
 ### Graphing (coordinate-plane skill)
 
 ```typescript

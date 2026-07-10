@@ -22,3 +22,13 @@ weights; metrics; provenance; and an explicit approval decision.
 Handle `MasteryPersistenceError` by its stable `code` and `retryable` fields.
 Messages are provider-neutral and are not intended for provider-specific error
 inspection.
+
+## Runtime governance
+
+Before changing a contract, schema, graph major, or migration requirement, update
+`packages/mastery-runtime-compat/runtime-manifest.json` and its compatibility
+tests. Behavioral changes require normative fixtures first; migrations remain
+append-only and deploy before code. Consumers should run the compatibility gate
+with exact versions before adopting this API. See
+`packages/mastery-runtime-compat/README.md` for upgrade, release, and rollback
+commands.
