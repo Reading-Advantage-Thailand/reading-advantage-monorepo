@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "role": "closeout",
+  "track_id": "apk_catalog_cutover_w0_20260710",
+  "closeout_date": "2026-07-10",
+  "final_acceptance": {
+    "status": "pass",
+    "evaluated_at": "2026-07-10",
+    "may_proceed_to_closeout": true,
+    "summary": "All W0 automated gates passed and the product owner authorized cleanup and continuation. Public identities, dual editions, all-game host registries, stable educational ABI, and exact legacy dispositions are accepted."
+  },
+  "plan_tasks": {
+    "total": 16,
+    "complete": 16,
+    "blocked": 0,
+    "deferred": 0
+  },
+  "phase_summary": {
+    "S1_publish_product_identities": { "tasks": 4, "status": "complete" },
+    "S2_cut_over_qc_testbed": { "tasks": 4, "status": "complete" },
+    "S3_prove_production_hosts": { "tasks": 4, "status": "complete" },
+    "S4_lock_legacy_deletion_evidence": { "tasks": 4, "status": "complete" }
+  },
+  "gates": [
+    { "name": "CARTRIDGE_TESTS", "status": "pass", "summary": "26/26 tests; exact public IDs and retired-ID rejection." },
+    { "name": "CARTRIDGE_COVERAGE", "status": "pass", "summary": "97.26% statements and 99.21% lines." },
+    { "name": "HOST_SMOKES", "status": "pass", "summary": "Reading 4/4 and Primary 4/4 across all public IDs." },
+    { "name": "QC_COMPONENT", "status": "pass", "summary": "Focused Jest 1/1." },
+    { "name": "PLAYWRIGHT", "status": "pass", "summary": "Chromium 3/3 across all games and both editions." },
+    { "name": "ADVANTAGE_GAMES_BUILD", "status": "pass", "summary": "Type-check and production build green; /qc emitted." },
+    { "name": "ARCHITECTURE", "status": "pass", "summary": "APK package-boundary guard passed." },
+    { "name": "LEGACY_MANIFEST", "status": "pass", "summary": "55 exact paths: 22 retain, 3 deleted, 30 deferred." },
+    { "name": "MEASURE_DOCTOR", "status": "bounded_exception", "summary": "W0 is clean; only unrelated concurrent Codecamp and TypeScript 7 track markers fail." }
+  ],
+  "key_commits": [
+    "8b98aed0 - W0 public catalog implementation",
+    "01bf24f4 - automated Measure checkpoint",
+    "a8f28029 - product-owner approval"
+  ],
+  "baseline_sha": "8c1c0835",
+  "implementation_sha": "8b98aed0",
+  "acceptance_sha": "a8f28029",
+  "evidence_preserved": [
+    "final-acceptance-result.json",
+    "verification.md",
+    "product-owner-approval.md",
+    "legacy-deletion-manifest.json",
+    "legacy-deletion-manifest.md",
+    "test-strategy.md",
+    "plan.md and metadata.json"
+  ],
+  "artifact_cleanup_notes": "No W0-owned transient output is staged; unrelated concurrent test-result and application changes are preserved.",
+  "anti_pattern_audit": {
+    "A5_false_claim_text": "pass - bounded doctor exceptions and retained legacy surfaces are explicit",
+    "A6_registry_overstatement": "pass - W0 claims only the three product identities and host proofs it delivered",
+    "A9_archived_track_references": "pass - successor consumes public package contracts rather than active W0 paths"
+  },
+  "next_actions": [
+    "Execute apk_incomplete_sentence_action_20260710",
+    "Keep authenticated standalone Advantage Games arcade work in a separate track"
+  ]
+}

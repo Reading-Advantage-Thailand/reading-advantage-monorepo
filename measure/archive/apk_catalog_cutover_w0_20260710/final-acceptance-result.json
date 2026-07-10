@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "W0 passes final acceptance: public cartridge identities, dual editions, all-three host consumption proofs, stable educational contracts, browser-visible QC, and exact legacy dispositions are verified and product-owner approved.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "measure/doctor.sh still reports deprecated task markers in unrelated concurrent Codecamp and TypeScript 7 tracks.",
+    "The three W0 cartridges are proven through typed host registries; production student-route mounting remains owned by successor cutover tracks."
+  ],
+  "evidence": [
+    "8b98aed0 implements the public catalog cutover.",
+    "01bf24f4 records the automated Measure checkpoint.",
+    "a8f28029 records product-owner approval.",
+    "Cartridge tests 26/26 with 97.26% statement and 99.21% line coverage.",
+    "Reading host tests 4/4 and Primary host tests 4/4.",
+    "Advantage Games QC Jest 1/1 and Chromium Playwright 3/3.",
+    "Advantage Games type-check and production build pass with /qc emitted.",
+    "Legacy verifier accepts 55 exact paths: 22 retain, 3 deleted, 30 deferred."
+  ],
+  "commands": [
+    "pnpm --filter @reading-advantage/game-cartridges test:coverage",
+    "pnpm --filter @reading-advantage/game-contracts check:architecture",
+    "pnpm exec jest src/features/apk-qc/APKQCLab.test.tsx --runInBand",
+    "pnpm exec jest lib/games/apk-host-smoke.test.ts --runInBand",
+    "pnpm exec vitest run lib/games/apk-host-smoke.test.ts",
+    "pnpm exec playwright test tests/e2e/apk-qc.spec.ts --config playwright.config.ts",
+    "pnpm --filter vocabulary-games check-types",
+    "pnpm --filter vocabulary-games build",
+    "node measure/tracks/apk_catalog_cutover_w0_20260710/verify-legacy-deletion-manifest.mjs"
+  ],
+  "changed_files": [
+    "packages/game-cartridges/src/",
+    "apps/advantage-games/src/features/apk-qc/",
+    "apps/reading-advantage/lib/games/apk-host-smoke.ts",
+    "apps/primary-advantage/lib/games/apk-host-smoke.ts",
+    "measure/tracks/apk_catalog_cutover_w0_20260710/"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}

@@ -10,7 +10,7 @@
 - `CartridgeId` is derived from literal loader keys, so the catalog cutover has a bounded type blast radius while internal mechanic helpers can remain stable.
 - The foundation package-consumption proofs cover only one game per app; W0 must make them table-driven across all three games and the appropriate edition.
 
-## Phase S1: Publish product game identities [checkpoint: 8b98aed0]
+## Phase S1: Publish product game identities [checkpoint: 8b98aed0] [approval: a8f28029]
 _Story ref: spec.md#story-s1_
 _Blast radius: `CartridgeId` and `GameCartridgeDefinition` flow through the shared catalog, three manifests, QC host, Playwright test, and two host smoke modules._
 
@@ -23,9 +23,9 @@ _Blast radius: `CartridgeId` and `GameCartridgeDefinition` flow through the shar
   - [x] Retain internal mechanic helpers only where they remain useful implementation details (8b98aed0)
 - [x] Task: Verify the cartridge package (8b98aed0)
   - [x] Run lint, type-check, tests with coverage, build, and architecture scans (8b98aed0)
-- [b] Task: Measure - User Manual Verification 'Phase S1: Publish product game identities' (Protocol in workflow.md) — deferred:product-owner
+- [x] Task: Measure - User Manual Verification 'Phase S1: Publish product game identities' (Protocol in workflow.md) (a8f28029)
 
-## Phase S2: Cut over the QC testbed [checkpoint: 8b98aed0]
+## Phase S2: Cut over the QC testbed [checkpoint: 8b98aed0] [approval: a8f28029]
 _Story ref: spec.md#story-s2_
 
 - [x] Task: Add Red QC identity and route tests (8b98aed0)
@@ -37,9 +37,9 @@ _Story ref: spec.md#story-s2_
 - [x] Task: Run component and browser acceptance (8b98aed0)
   - [x] Cover desktop keyboard flow and 390x844 touch affordances (8b98aed0)
   - [x] Verify public-ID completion, no overflow, and no leaked canvas (8b98aed0)
-- [b] Task: Measure - User Manual Verification 'Phase S2: Cut over the QC testbed' (Protocol in workflow.md) — deferred:product-owner
+- [x] Task: Measure - User Manual Verification 'Phase S2: Cut over the QC testbed' (Protocol in workflow.md) (a8f28029)
 
-## Phase S3: Prove both production hosts [checkpoint: 8b98aed0]
+## Phase S3: Prove both production hosts [checkpoint: 8b98aed0] [approval: a8f28029]
 _Story ref: spec.md#story-s3_
 
 - [x] Task: Define table-driven host registry and trust-boundary contracts (8b98aed0)
@@ -51,9 +51,9 @@ _Story ref: spec.md#story-s3_
 - [x] Task: Implement all-game host smoke registries (8b98aed0)
   - [x] Support vocabulary and sentence fixtures through their stable array contracts (8b98aed0)
   - [x] Preserve literal dynamic loading and client-only Phaser isolation (8b98aed0)
-- [b] Task: Measure - User Manual Verification 'Phase S3: Prove both production hosts' (Protocol in workflow.md) — deferred:product-owner
+- [x] Task: Measure - User Manual Verification 'Phase S3: Prove both production hosts' (Protocol in workflow.md) (a8f28029)
 
-## Phase S4: Lock legacy deletion evidence [checkpoint: 8b98aed0]
+## Phase S4: Lock legacy deletion evidence [checkpoint: 8b98aed0] [approval: a8f28029] [final-verification: a8f28029]
 _Story ref: spec.md#story-s4_
 
 - [x] Task: Define the exact cutover/deletion manifest schema (8b98aed0)
@@ -65,4 +65,4 @@ _Story ref: spec.md#story-s4_
 - [x] Task: Run final acceptance and update generated knowledge (8b98aed0)
   - [x] Run all package, host, QC, browser, build, architecture, and Measure gates (8b98aed0)
   - [x] Update `graph.db` for changed structural files and record bounded deviations (8b98aed0)
-- [b] Task: Measure - User Manual Verification 'Phase S4: Lock legacy deletion evidence' (Protocol in workflow.md) — deferred:product-owner
+- [x] Task: Measure - User Manual Verification 'Phase S4: Lock legacy deletion evidence' (Protocol in workflow.md) (a8f28029)
