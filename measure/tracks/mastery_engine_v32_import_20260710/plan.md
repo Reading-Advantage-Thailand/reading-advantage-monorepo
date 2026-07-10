@@ -40,18 +40,41 @@ _Graph context: current graph has no engine-package nodes; existing `packages/do
 ## Phase S2: Migrate correctness to v3.2
 _Story ref: spec.md#story-s2_
 
-- [~] Task: Define v3.2 contracts and acceptance fixtures
+- [x] Task: Define v3.2 contracts and acceptance fixtures — `45e27bcf`
   - [ ] Encode normative readiness, retention, placement, calibration, evidence, utility, queue, and session examples before implementation
   - [ ] Add counterexamples for hard-gate compensation, mean retention, inflated evidence, synthetic prerequisites, and overdue ordering
-- [~] Task: Write Red tests for v3, v3.1, and v3.2 deltas
+- [x] Task: Write Red tests for v3, v3.1, and v3.2 deltas — `f9af2f18`
   - [ ] Split tests by specification section and include deterministic clocks/config versions
   - [ ] Confirm each test fails for the expected v2 behavior
-- [~] Task: Implement migrations in normative order
+- [x] Task: Implement migrations in normative order — `5835f886`
   - [ ] Apply state/readiness/retention, queue, placement, calibration/evidence, utility, diversity, and session-composition changes
   - [ ] Preserve public contracts where possible and version every unavoidable break
-- [~] Task: Verify and document Phase S2
+- [x] Task: Verify and document Phase S2 — `5835f886`
   - [ ] Run full suites, property/counterexample tests, coverage, graph update/audit, generated docs, and doctor
   - [ ] Task: Measure - User Manual Verification 'Phase S2: Migrate correctness to v3.2' (Protocol in workflow.md)
+
+  - Green evidence: the aggregate normative contract is green (`16` files,
+    `54/54` assertions) after a Red baseline of `16` failing files,
+    `41` expected failures, and `2` compatibility controls. Slice-level
+    check-types and builds passed for all four packages; lint passed with no
+    new errors and only the four inherited `srs-engine` warnings.
+  - Implemented corrections cover gated readiness, symmetric progress trend,
+    elapsed-time/minimum retention, placement seeding and two-probe walking,
+    Wilson/guess-floor evidence, staged rating, conditioned/stratified edge
+    calibration, retention-ordered backlog queues, priority retention,
+    deterministic replay evaluation, normalized/diverse utility-led planning,
+    review-load gating, and deterministic session composition.
+  - Review remediation: `3272e98c` made the contracts package-public, added
+    strict numeric/replay boundaries, connected placement, timing, evidence,
+    planner, queue, and release-governance paths, and reconciled superseded v2
+    suites. `e8d317b7` then closed the remaining frontier-stall, sample-cap,
+    reveal/severity ingestion, actual FSRS-parameter artifact, default bounded
+    composition, sparse ready-threshold, and export-snapshot gaps.
+    `097545f1` finally preserved capped remediation-only queues when no ordinary
+    review cards are due.
+  - Final focused evidence before re-audit: original normative suite `54/54`,
+    public/boundary remediation suite `53/53`, SRS `303/303`, planner
+    `421/421`, placement `133/133`, and import/export contract `13/13`.
 
 ## Phase S3: Add portable persistence adapters
 _Story ref: spec.md#story-s3_

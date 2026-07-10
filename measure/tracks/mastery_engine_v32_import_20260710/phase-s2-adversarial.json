@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Phase S2 survives the requested adversarial attacks at baseline 097545f1. Sixty-eight focused committed counterexamples pass across readiness, placement, SRS evidence/governance/queues, sparse planning, and package-contract boundaries; the probes are non-mutating, and no change remains in the four accepted engine packages.",
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "evidence": [
+    "Hard-gate compensation attack: v3-readiness-state proves an unmet hard prerequisite caps readiness even when other weighted prerequisites are strong, while the all-soft compatibility control remains bit-identical to v2.",
+    "Mean-versus-minimum retention attack: both the SRS remediation and owning-proficiency suites construct divergent reviewed variants and prove the objective decision consumes the minimum live retention rather than an average; unreviewed variants are excluded.",
+    "Small-sample cap bypass attack: the owning proficiency suite gives one variant only two attempts and proves its low confidence caps otherwise stronger aggregate evidence.",
+    "Reveal/severity loss attack: processReview receives every reveal step and maps the review to Again, while SubmissionSrsAdapter forwards severe misconception provenance into the rating mapper and review reasons.",
+    "Invalid replay, future-version, and non-finite input attacks: the SRS governance suite rejects malformed timestamps, empty provenance fields, future parameter major v999, and a 100001-row replay; public numeric-boundary cases reject NaN, Infinity, zero, negative, and above-one request-retention values.",
+    "FSRS governance bypass attack: calibration below 10000 reviews fails the volume gate, the accepted corpus deterministically splits 8000/2000, the candidate is compared with the incumbent, and release remains false without explicit humanReleaseApproved even when evaluation gates pass.",
+    "Placement boundary attacks: invalid start nodes and NaN budgets are rejected before provider invocation, a budget exhausted mid-node is non-converged, hard-parent ordering is enforced, and the traversal stalls only after four unchanged frontier probes accumulated across complete decisions.",
+    "Queue attacks: remediation-only input is retained when ordinary cards are absent, excess remediation truncates deterministically to maxReviewsPerDay, the combined queue never exceeds the cap, and ordinary reviews interleave by default after remediation.",
+    "Sparse threshold attack: a high-utility sparse candidate at readiness 0.79 is rejected against readyThreshold 0.80 while the boundary candidate is selected; injected utility records provider/version provenance and dense near-ready behavior remains compatible.",
+    "Package-contract attacks: the import contract verifies the exact approved export maps, builds every declaration/runtime target and loads each runtime export, and rejects any production import whose top-level package is undeclared or outside the provider-neutral allowlist.",
+    "The focused adversarial aggregate passes six files and 68/68 tests with one worker under UTC.",
+    "Post-probe checks find no 097545f1..HEAD drift, working-tree mutation, or diff-check failure in packages/knowledge-space-core, packages/knowledge-space-practice, packages/srs-engine, or packages/practice-core.",
+    "UX review is not applicable because these adversarial probes cover framework-neutral engine packages with no browser UI or route surface."
+  ],
+  "commands": [
+    "TZ=UTC pnpm exec vitest run packages/knowledge-space-core/src/__tests__/v3-readiness-state.test.ts packages/knowledge-space-core/src/__tests__/v32-placement-boundary-remediation.test.ts packages/srs-engine/src/__tests__/phase-s2-srs-remediation.test.ts packages/srs-engine/src/__tests__/phase-s2-srs-correctness-remediation.test.ts packages/knowledge-space-practice/src/__tests__/v32-planner-integration.test.ts packages/__tests__/mastery-engine-import-contract.test.ts --maxWorkers=1 --reporter=dot (pass: 6 files, 68/68 tests)",
+    "TZ=UTC pnpm exec vitest list <the six focused files> (pass: 68 enumerated adversarial cases)",
+    "git diff --name-only 097545f1..HEAD plus git diff --check and git status --short scoped to the four engine packages (pass: no post-baseline drift or probe mutation)"
+  ],
+  "changed_files": [
+    "measure/tracks/mastery_engine_v32_import_20260710/phase-s2-adversarial.json"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "ux_applicability": "not_applicable",
+  "webbridge_status": "not_run",
+  "webbridge_evidence": {
+    "screenshots": [],
+    "accessibility_snapshots": [],
+    "interactions": []
+  }
+}

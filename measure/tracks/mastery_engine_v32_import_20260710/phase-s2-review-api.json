@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Phase S2 passes final API/package review at baseline e8d317b7: all previously private core, planner, and SRS capabilities remain available through supported root or subpath imports, every manifest declaration/runtime target exists and loads, and the breaking SRS contract is identified as srs.contract.v2.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "S2-API-003 [medium]: Package READMEs still do not provide consumer examples or migration guidance for the v3.2 placement, utility/load planner, calibration/evaluation, and session-composition APIs. Runtime contracts and declarations are usable without those documents, so this remains Phase S4 governance/documentation work rather than a Phase S2 API blocker.",
+    "S2-API-005 [low]: Strict AGENTS.md JSDoc audits continue to find inherited public declaration documentation debt in production files touched by remediation. The e8d317b7 delta adds no public declarations, and all newly introduced Phase S2 integration APIs have JSDoc and are consumable; normalize the older declarations in Phase S4.",
+    "S2-API-006 [low]: The Phase S1 exact export-key snapshot is stale because remediation intentionally adds valid ./types, ./schemas, ./placement, planner, proficiency, calibration, evaluation, and session subpaths. All added targets now exist and load; update the historical exact-key assertion without removing the production exports."
+  ],
+  "evidence": [
+    "Baseline and review target both resolve to e8d317b75849a443166a289a8d9dbb86c3682950.",
+    "knowledge-space-core root exports buildKnowledgeStateSeed, placement seed types, and computeProgressTrend; ./placement resolves and loads.",
+    "knowledge-space-practice root exports priority, recommendation, integrated utility planner, normalized unlock, domain-utility, and review-load APIs; all five planner subpaths resolve and load.",
+    "srs-engine root exports objective-retention/corrected-evidence, ability-stratified calibration, FSRS calibration/evaluation, objective-retention resolution, and session-composition APIs; ./proficiency, ./edge-calibration, ./fsrs-calibration, ./evaluation-harness, and ./session-composition resolve and load.",
+    "SRS_CONTRACT_VERSION is srs.contract.v2 from both source inspection and a built package root probe.",
+    "Every types/import target declared by the four package export maps exists after build; runtime imports of all required roots and subpaths succeeded.",
+    "Focused compatibility, default, public-boundary, and invalid-input suites passed 7 core, 13 KSP, 31 SRS, and 2 practice-core assertions (53/53).",
+    "All four packages passed isolated TypeScript check-types and declaration builds.",
+    "The 3272e98c..e8d317b7 production delta changes internal eligibility/correctness logic but introduces no new exported declaration or package export key; existing public signatures and subpaths remain stable."
+  ],
+  "commands": [
+    "../../node_modules/.bin/tsc --noEmit in knowledge-space-core, knowledge-space-practice, practice-core, and srs-engine (pass)",
+    "../../node_modules/.bin/tsc in knowledge-space-core, knowledge-space-practice, practice-core, and srs-engine (pass)",
+    "Focused public/remediation Vitest suites across four packages (pass: 7 files, 53 tests)",
+    "Node package-specifier root/subpath probes for all prior API-001 symbols and SRS contract v2 (pass)",
+    "Manifest export target existence audit for all four packages (pass)",
+    "TypeScript AST JSDoc audit over the latest production delta (no new public declarations; inherited omissions remain nonblocking documentation debt)"
+  ],
+  "changed_files": [
+    "measure/tracks/mastery_engine_v32_import_20260710/phase-s2-review-api.json"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}
