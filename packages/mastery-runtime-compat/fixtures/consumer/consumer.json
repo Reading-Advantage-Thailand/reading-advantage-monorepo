@@ -1,0 +1,38 @@
+{
+  "name": "codecamp-advantage",
+  "version": "1.0.0",
+  "releaseSet": "mastery-runtime-0.1.0-kst-srs-3.2",
+  "normativeVersion": "kst-srs.v3.2",
+  "packages": {
+    "@reading-advantage/knowledge-space-core": "0.1.0",
+    "@reading-advantage/knowledge-space-practice": "0.1.0",
+    "@reading-advantage/practice-core": "0.1.0",
+    "@reading-advantage/srs-engine": "0.1.0"
+  },
+  "graph": {
+    "release": "knowledge-space-codecamp-foundation-v1.0.0",
+    "schema": "knowledge-space.v3"
+  },
+  "contracts": {
+    "practice": "practice.v3",
+    "srs": "srs.v3",
+    "persistence": "mastery-persistence.v1"
+  },
+  "persistence": {
+    "schema": "mastery-persistence.v1",
+    "migrationHead": "0028_mastery_tenant_hardening"
+  },
+  "fixtures": {
+    "version": "mastery-fixtures.v3.2.0",
+    "sourceCommit": "34f9fb508c3e1751518aec335af3040c381d1d12"
+  },
+  "source": {
+    "commit": "34f9fb508c3e1751518aec335af3040c381d1d12"
+  },
+  "imports": [
+    { "package": "@reading-advantage/knowledge-space-core", "export": "." },
+    { "package": "@reading-advantage/knowledge-space-practice", "export": "." },
+    { "package": "@reading-advantage/practice-core", "export": "." },
+    { "package": "@reading-advantage/srs-engine", "export": "." }
+  ]
+}

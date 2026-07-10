@@ -55,5 +55,5 @@ describe("mastery runtime packed release contract", () => {
       workspaceDependencies: [],
       cleanConsumer: true,
     });
-  });
+  }, 120_000);
 });

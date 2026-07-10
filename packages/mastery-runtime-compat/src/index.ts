@@ -443,3 +443,16 @@ export function evaluateConsumerCompatibility(
 ): CompatibilityResult {
   return evaluateRuntimeCompatibility(manifest, consumer);
 }
+
+export {
+  runConsumerCompatibilityGate,
+  runConsumerCompatibilityGateFromPath,
+} from "./check-consumer.js";
+export {
+  runSyntheticCodecampProof,
+  type SyntheticCodecampProofResult,
+} from "./codecamp-proof.js";
+export {
+  runReleaseArtifactCheck,
+  type ReleaseArtifactCheckResult,
+} from "./release-artifact.js";
