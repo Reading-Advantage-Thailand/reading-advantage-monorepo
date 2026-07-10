@@ -1,5 +1,11 @@
 # Implementation Plan: Codecamp PR Review as Mastery Evidence
 
+> **Browser acceptance:** Exercise the complete student and teacher PR flow in
+> the live app with the in-app browser: submission/status, structured feedback,
+> objective evidence, advisory approval semantics, retry/revision, mastery/SRS
+> update, and teacher audit view. Capture screenshots and interaction evidence;
+> API, worker, and unit tests alone do not close a phase.
+
 ## Phase S1: Route review models explicitly
 _Story ref: spec.md#story-s1_
 _Graph context: `reviewExercise` is reached through the API and durable worker; `getAIClient` currently selects a provider singleton while the OpenRouter adapter has a hidden global model default._

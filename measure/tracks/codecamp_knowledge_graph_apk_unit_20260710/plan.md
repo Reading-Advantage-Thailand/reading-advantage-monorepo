@@ -1,5 +1,11 @@
 # Implementation Plan: Codecamp Knowledge Graph and APK Game-Creation Unit
 
+> **Browser acceptance:** Every learner- or teacher-visible graph, lesson,
+> tutorial, game, PR, and mastery-state change must be exercised in the live
+> Codecamp app with the in-app browser. Capture DOM/interaction evidence and
+> screenshots at the student action, resulting feedback, persisted progress,
+> and teacher-visible state; automated tests alone do not close a phase.
+
 ## Phase S1: Author the coding knowledge graph
 _Story ref: spec.md#story-s1_
 _Graph context: the parent Code domain is currently planning-only; this repo has curriculum/module symbols but no Codecamp objective-graph runtime nodes._

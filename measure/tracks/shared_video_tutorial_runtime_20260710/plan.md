@@ -1,5 +1,12 @@
 # Implementation Plan: Shared Interactive Video and Tutorial Runtime
 
+> **Browser acceptance:** Exercise every user-facing runtime feature in the
+> live host app with the in-app browser. Evidence must cover video playback and
+> seeking, timestamp checkpoints, answer/remediation loops, diagram behavior,
+> tutorial-step verification, persistence after reload, keyboard/mobile flows,
+> and the resulting learner/teacher state; screenshots are required at key
+> state transitions.
+
 ## Phase S1: Freeze the activity contracts
 _Story ref: spec.md#story-s1_
 _Graph context: current `LessonContent` exposes only app-local `youtubeId`/`imagePath`; no shared interactive-video symbols or persistence path exist._

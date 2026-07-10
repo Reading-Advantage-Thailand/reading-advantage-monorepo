@@ -1,5 +1,11 @@
 # Implementation Plan: Codecamp Targeted Intervention Tutor
 
+> **Browser acceptance:** Use the in-app browser for each intervention level
+> and resource type. Verify the learner action, grounded follow-up questions,
+> hint escalation, exact video timestamp/repository pointer, resume behavior,
+> mastery evidence, mobile/keyboard accessibility, and teacher-visible outcome;
+> retain screenshots and interaction evidence for phase acceptance.
+
 ## Phase S1: Freeze the intervention contract
 _Story ref: spec.md#story-s1_
 _Graph context: current `getChatContext` has one known consumer and supplies only module/lesson title and description; the route prompt is general rather than activity-aware._
