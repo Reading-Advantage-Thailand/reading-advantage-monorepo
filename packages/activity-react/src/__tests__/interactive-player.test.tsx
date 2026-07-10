@@ -53,6 +53,8 @@ describe("InteractiveActivityPlayer", () => {
     render(<InteractiveActivityPlayer activity={activity} controller={controller} locale="en" onAssess={vi.fn()} />);
     expect(screen.getByRole("region", { name: "Create a commit" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Play" })).toHaveAttribute("data-slot", "activity-play-toggle");
+    fireEvent.change(screen.getByRole("slider", { name: "Seek tutorial video" }), { target: { value: "24" } });
+    expect(controller.seek).toHaveBeenCalledWith(24);
     fireEvent.click(screen.getByRole("button", { name: "Show transcript" }));
     expect(screen.getByText("Stage files before committing.")).toBeVisible();
     expect(screen.getByRole("img", { name: "Working tree flows to staging" })).toBeInTheDocument();
@@ -126,5 +128,100 @@ describe("InteractiveActivityPlayer", () => {
     expect(screen.getByRole("textbox", { name: "Answer" })).toBeVisible();
     fireEvent.click(screen.getByRole("button", { name: "Pause" }));
     expect(controller.pause).toHaveBeenCalled();
+  });
+
+  it("handles resume, focus, watched batches, provider errors, retry, and cleanup", () => {
+    const controller = createFakeMediaController();
+    const onPositionChange = vi.fn();
+    const onWatchedRangesChange = vi.fn();
+    const { unmount } = render(
+      <InteractiveActivityPlayer
+        activity={activity}
+        controller={controller}
+        locale="en"
+        initialPositionSeconds={7}
+        onPositionChange={onPositionChange}
+        onWatchedRangesChange={onWatchedRangesChange}
+        onAssess={async () => ({ isCorrect: true })}
+      />
+    );
+    expect(controller.seek).toHaveBeenCalledWith(7);
+    act(() => controller.emit({ status: "playing", currentSeconds: 10, durationSeconds: 90, captionsEnabled: true }));
+    act(() => controller.emit({ status: "playing", currentSeconds: 20, durationSeconds: 90, captionsEnabled: true }));
+    act(() => controller.emit({ status: "paused", currentSeconds: 20, durationSeconds: 90, captionsEnabled: true }));
+    expect(onPositionChange).toHaveBeenLastCalledWith(20);
+    expect(onWatchedRangesChange).toHaveBeenCalledWith([{ startSeconds: 10, endSeconds: 20 }]);
+    act(() => controller.emit({ status: "playing", currentSeconds: 36, durationSeconds: 90, captionsEnabled: true }));
+    expect(screen.getByLabelText("Stages changes")).toHaveFocus();
+    act(() => controller.emit({ status: "error", currentSeconds: 36, durationSeconds: 90, captionsEnabled: true, errorMessage: "Connection lost" }));
+    expect(screen.getByRole("alert")).toHaveTextContent("Connection lost");
+    fireEvent.click(screen.getByRole("button", { name: "Retry media" }));
+    expect(controller.play).toHaveBeenCalled();
+    expect(screen.getByRole("button", { name: "Retry media" })).toHaveAttribute("data-touch-target", "true");
+    unmount();
+    expect(controller.destroy).toHaveBeenCalledOnce();
+  });
+
+  it("mounts host media and keeps engagement, multi-select, and remediation contracts distinct", async () => {
+    const expanded = activitySchema.parse({
+      ...activity,
+      accessibility: { ...activity.accessibility, nonVideoAlternativeResourceId: "lesson.staging" },
+      resources: [
+        {
+          kind: "video",
+          resourceId: "video.hosted-unrelated",
+          provider: "hosted",
+          assetId: "hosted.unrelated",
+          captionsAvailable: true,
+          hardGateApproval: { approvalId: "approval.unrelated", approvedBy: "owner", approvedAt: "2026-07-10T00:00:00Z" },
+          segments: [{ segmentId: "segment.unrelated", label: { en: "Unrelated" }, startSeconds: 0, endSeconds: 5 }]
+        },
+        ...activity.resources,
+        { kind: "lesson_section", resourceId: "lesson.staging", sectionId: "staging", label: { en: "Read the staging explanation" } },
+        { kind: "repository_location", resourceId: "repo.status", repositoryId: "tutorial", filePath: "src/status.ts", symbol: "getStatus", label: { en: "Inspect the status helper" } }
+      ],
+      checkpoints: [{
+        ...activity.checkpoints[0],
+        question: {
+          kind: "multiple_choice",
+          prompt: { en: "Which items belong to staging?" },
+          options: [{ optionId: "tracked", label: { en: "Tracked change" } }, { optionId: "selected", label: { en: "Selected file" } }],
+          correctOptionIds: ["tracked", "selected"]
+        },
+        evidence: { behavior: "engagement", weight: 0 },
+        gate: "answer_before_continue",
+        remediation: [
+          { kind: "video_segment", resourceId: "video.demo", segmentId: "segment.stage" },
+          { kind: "diagram", resourceId: "diagram.flow" },
+          { kind: "lesson_section", resourceId: "lesson.staging" },
+          { kind: "repository_location", resourceId: "repo.status" }
+        ]
+      }]
+    });
+    const controller = createFakeMediaController();
+    const onAssess = vi.fn();
+    const onEngage = vi.fn();
+    render(
+      <InteractiveActivityPlayer
+        activity={expanded}
+        controller={controller}
+        locale="en"
+        onAssess={onAssess}
+        onEngage={onEngage}
+        renderMedia={({ video }) => <iframe title="Hosted tutorial media" data-resource-id={video.resourceId} />}
+      />
+    );
+    expect(screen.getByTitle("Hosted tutorial media")).toHaveAttribute("data-resource-id", "video.hosted-unrelated");
+    expect(screen.getAllByRole("link", { name: "Read the staging explanation" })[0]).toBeVisible();
+    act(() => controller.emit({ status: "playing", currentSeconds: 36, durationSeconds: 90, captionsEnabled: true }));
+    expect(screen.getByRole("button", { name: "Continue video" })).toBeEnabled();
+    fireEvent.click(screen.getByLabelText("Tracked change"));
+    fireEvent.click(screen.getByLabelText("Selected file"));
+    fireEvent.click(screen.getByRole("button", { name: "Check answer" }));
+    await waitFor(() => expect(onEngage).toHaveBeenCalledWith({ checkpointId: "checkpoint.stage", answer: ["tracked", "selected"] }));
+    expect(onAssess).not.toHaveBeenCalled();
+    expect(screen.getByRole("img", { name: "Working tree flows to staging" })).toBeVisible();
+    expect(screen.getAllByRole("link", { name: "Read the staging explanation" })).toHaveLength(2);
+    expect(screen.getByText("tutorial/src/status.ts#getStatus")).toBeVisible();
   });
 });

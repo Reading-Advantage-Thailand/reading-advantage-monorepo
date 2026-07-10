@@ -1,6 +1,6 @@
 import type { Activity } from "@reading-advantage/activity-runtime/core";
-import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
-import { resolveCheckpointPolicy, sampleCueCrossings, type MediaController, type MediaSnapshot } from "./controllers.js";
+import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { mergeWatchedRanges, resolveCheckpointPolicy, sampleCueCrossings, type MediaController, type MediaSnapshot } from "./controllers.js";
 
 /** Server assessment response used for immediate formative feedback. */
 export type PlayerAssessment = { isCorrect: boolean };
@@ -11,10 +11,35 @@ export type InteractiveActivityPlayerProps = {
   controller: MediaController;
   locale: string;
   onAssess(input: { checkpointId: string; answer: unknown }): Promise<PlayerAssessment>;
+  onEngage?(input: { checkpointId: string; answer: unknown }): void | Promise<void>;
+  renderMedia?(input: { video: Extract<Activity["resources"][number], { kind: "video" }> }): ReactNode;
+  initialPositionSeconds?: number;
+  onPositionChange?(seconds: number): void;
+  onWatchedRangesChange?(ranges: Array<{ startSeconds: number; endSeconds: number }>): void;
 };
 
 function text(value: Record<string, string>, locale: string): string {
   return value[locale] ?? value.en ?? Object.values(value)[0] ?? "";
+}
+
+function resourceContent(resource: Activity["resources"][number], locale: string): ReactNode {
+  switch (resource.kind) {
+    case "diagram":
+      return <div role="img" aria-label={text(resource.alt, locale)} data-asset-id={resource.assetId} />;
+    case "transcript":
+      return <p>{resource.text}</p>;
+    case "lesson_section":
+      return <a href={`#lesson-section-${resource.sectionId}`}>{text(resource.label, locale)}</a>;
+    case "repository_location":
+      return (
+        <div>
+          <span>{text(resource.label, locale)}</span>{" "}
+          <code>{resource.repositoryId}/{resource.filePath}{resource.symbol ? `#${resource.symbol}` : ""}</code>
+        </div>
+      );
+    case "video":
+      return null;
+  }
 }
 
 /**
@@ -22,16 +47,28 @@ function text(value: Record<string, string>, locale: string): string {
  * @param props Activity content, controller, locale, and server assessment callback.
  * @returns Accessible React learning activity.
  */
-export function InteractiveActivityPlayer({ activity, controller, locale, onAssess }: InteractiveActivityPlayerProps) {
+export function InteractiveActivityPlayer({ activity, controller, locale, onAssess, onEngage, renderMedia, initialPositionSeconds = 0, onPositionChange, onWatchedRangesChange }: InteractiveActivityPlayerProps) {
   const [snapshot, setSnapshot] = useState<MediaSnapshot>(() => controller.getSnapshot());
   const [activeCheckpointId, setActiveCheckpointId] = useState<string | null>(null);
-  const [selectedAnswer, setSelectedAnswer] = useState<string>("");
+  const [selectedOptionIds, setSelectedOptionIds] = useState<string[]>([]);
+  const [freeTextAnswer, setFreeTextAnswer] = useState("");
   const [assessment, setAssessment] = useState<PlayerAssessment | null>(null);
   const [transcriptOpen, setTranscriptOpen] = useState(false);
   const previousSeconds = useRef(snapshot.currentSeconds);
+  const previousStatus = useRef(snapshot.status);
   const triggered = useRef(new Set<string>());
+  const watchedRanges = useRef<Array<{ startSeconds: number; endSeconds: number }>>([]);
+  const initialPosition = useRef(initialPositionSeconds);
+  const positionChangeCallback = useRef(onPositionChange);
+  const watchedRangesChangeCallback = useRef(onWatchedRangesChange);
+  const checkpointForm = useRef<HTMLFormElement>(null);
+  const previousFocus = useRef<HTMLElement | null>(null);
   const video = activity.resources.find((resource) => resource.kind === "video");
   const checkpoint = activity.checkpoints.find((candidate) => candidate.checkpointId === activeCheckpointId);
+  const checkpointVideoCandidate = checkpoint
+    ? activity.resources.find((resource) => resource.resourceId === checkpoint.trigger.resourceId)
+    : undefined;
+  const checkpointVideo = checkpointVideoCandidate?.kind === "video" ? checkpointVideoCandidate : undefined;
   const transcriptCandidate = video?.transcriptResourceId
     ? activity.resources.find((resource) => resource.resourceId === video.transcriptResourceId && resource.kind === "transcript")
     : undefined;
@@ -41,7 +78,13 @@ export function InteractiveActivityPlayer({ activity, controller, locale, onAsse
     : undefined;
   const reducedMotion = useMemo(() => typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches, []);
 
-  useEffect(() => controller.subscribe((next) => {
+  useEffect(() => {
+    positionChangeCallback.current = onPositionChange;
+    watchedRangesChangeCallback.current = onWatchedRangesChange;
+  }, [onPositionChange, onWatchedRangesChange]);
+
+  useEffect(() => {
+    const unsubscribe = controller.subscribe((next) => {
     const cues = activity.checkpoints.flatMap((candidate) => {
       const source = activity.resources.find((resource) => resource.resourceId === candidate.trigger.resourceId);
       const segment = source?.kind === "video" ? source.segments.find((item) => item.segmentId === candidate.trigger.segmentId) : undefined;
@@ -51,19 +94,45 @@ export function InteractiveActivityPlayer({ activity, controller, locale, onAsse
     const cue = cues.find((candidate) => crossed.includes(candidate.seconds) && !triggered.current.has(candidate.checkpointId));
     if (cue) {
       triggered.current.add(cue.checkpointId);
+      previousFocus.current = document.activeElement as HTMLElement | null;
       controller.pause();
       setActiveCheckpointId(cue.checkpointId);
       setAssessment(null);
-      setSelectedAnswer("");
+      setSelectedOptionIds([]);
+      setFreeTextAnswer("");
     }
+    if (previousStatus.current === "playing" && next.currentSeconds > previousSeconds.current) {
+      watchedRanges.current = mergeWatchedRanges([...watchedRanges.current, { startSeconds: previousSeconds.current, endSeconds: next.currentSeconds }]);
+    }
+    if (next.status !== "playing" && watchedRanges.current.length > 0) watchedRangesChangeCallback.current?.(watchedRanges.current);
     previousSeconds.current = next.currentSeconds;
+    previousStatus.current = next.status;
+    positionChangeCallback.current?.(next.currentSeconds);
     setSnapshot(next);
-  }), [activity, controller]);
+    });
+    if (initialPosition.current > 0) controller.seek(initialPosition.current);
+    return () => { unsubscribe(); controller.destroy(); };
+  }, [activity, controller]);
+
+  useEffect(() => {
+    if (checkpoint) checkpointForm.current?.querySelector<HTMLElement>("input, button")?.focus();
+  }, [checkpoint]);
 
   const submit = async (event: FormEvent): Promise<void> => {
     event.preventDefault();
-    if (!checkpoint || !selectedAnswer) return;
-    setAssessment(await onAssess({ checkpointId: checkpoint.checkpointId, answer: selectedAnswer }));
+    if (!checkpoint) return;
+    const answer = checkpoint.question.kind === "multiple_choice"
+      ? selectedOptionIds
+      : checkpoint.question.kind === "single_choice"
+        ? selectedOptionIds[0]
+        : freeTextAnswer;
+    if ((Array.isArray(answer) && answer.length === 0) || !answer) return;
+    if (checkpoint.evidence.behavior === "engagement") {
+      await onEngage?.({ checkpointId: checkpoint.checkpointId, answer });
+      setAssessment({ isCorrect: true });
+      return;
+    }
+    setAssessment(await onAssess({ checkpointId: checkpoint.checkpointId, answer }));
   };
   const replay = (): void => {
     if (!checkpoint) return;
@@ -73,16 +142,34 @@ export function InteractiveActivityPlayer({ activity, controller, locale, onAsse
     controller.seek(segment.startSeconds);
     void controller.play();
   };
-  const policy = video && checkpoint
-    ? resolveCheckpointPolicy(video.provider, checkpoint.gate, Boolean(video.hardGateApproval))
+  const policy = checkpointVideo && checkpoint
+    ? resolveCheckpointPolicy(checkpointVideo.provider, checkpoint.gate, Boolean(checkpointVideo.hardGateApproval))
     : "pause_non_blocking";
 
   return (
     <section aria-label={text(activity.title, locale)} data-slot="interactive-activity-player" data-reduced-motion={reducedMotion}>
-      <div data-slot="activity-media-surface" aria-label="Tutorial media" />
-      <button data-slot="activity-play-toggle" type="button" onClick={() => snapshot.status === "playing" ? controller.pause() : void controller.play()}>
+      <div data-slot="activity-media-surface" aria-label="Tutorial media">
+        {video ? renderMedia?.({ video }) : null}
+      </div>
+      <button data-slot="activity-play-toggle" data-touch-target="true" type="button" onClick={() => snapshot.status === "playing" ? controller.pause() : void controller.play()}>
         {snapshot.status === "playing" ? "Pause" : "Play"}
       </button>
+      <label>
+        Seek tutorial video
+        <input
+          type="range"
+          min={0}
+          max={Math.max(1, snapshot.durationSeconds)}
+          value={Math.min(snapshot.currentSeconds, Math.max(1, snapshot.durationSeconds))}
+          onChange={(event) => controller.seek(Number(event.currentTarget.value))}
+        />
+      </label>
+      {snapshot.status === "error" ? (
+        <div role="alert">
+          <p>{snapshot.errorMessage ?? "Media could not be loaded."}</p>
+          <button data-touch-target="true" type="button" onClick={() => void controller.play()}>Retry media</button>
+        </div>
+      ) : null}
       <span role="status" aria-live="polite">
         {assessment && checkpoint ? text(assessment.isCorrect ? checkpoint.feedback.correct : checkpoint.feedback.incorrect, locale) : ""}
       </span>
@@ -94,33 +181,51 @@ export function InteractiveActivityPlayer({ activity, controller, locale, onAsse
           {transcriptOpen ? <p>{transcript.text}</p> : null}
         </div>
       ) : null}
-      {alternative?.kind === "diagram" ? <div role="img" aria-label={text(alternative.alt, locale)} data-asset-id={alternative.assetId} /> : null}
+      {alternative ? <div data-slot="activity-alternative">{resourceContent(alternative, locale)}</div> : null}
       {checkpoint ? (
-        <form onSubmit={(event) => void submit(event)} data-slot="activity-checkpoint">
+        <form ref={checkpointForm} onSubmit={(event) => void submit(event)} data-slot="activity-checkpoint">
           <fieldset>
             <legend>{text(checkpoint.question.prompt, locale)}</legend>
             {checkpoint.question.kind !== "free_text" ? checkpoint.question.options.map((option) => (
               <label key={option.optionId}>
-                <input type="radio" name={checkpoint.checkpointId} value={option.optionId} checked={selectedAnswer === option.optionId} onChange={() => setSelectedAnswer(option.optionId)} />
+                <input
+                  type={checkpoint.question.kind === "multiple_choice" ? "checkbox" : "radio"}
+                  name={checkpoint.checkpointId}
+                  value={option.optionId}
+                  checked={selectedOptionIds.includes(option.optionId)}
+                  onChange={() => setSelectedOptionIds((current) => checkpoint.question.kind === "multiple_choice"
+                    ? current.includes(option.optionId)
+                      ? current.filter((optionId) => optionId !== option.optionId)
+                      : [...current, option.optionId]
+                    : [option.optionId])}
+                />
                 {text(option.label, locale)}
               </label>
             )) : (
               <label>
                 Answer
-                <input type="text" value={selectedAnswer} onChange={(event) => setSelectedAnswer(event.currentTarget.value)} />
+                <input type="text" value={freeTextAnswer} onChange={(event) => setFreeTextAnswer(event.currentTarget.value)} />
               </label>
             )}
           </fieldset>
-          <button type="submit">Check answer</button>
+          <button data-touch-target="true" type="submit">Check answer</button>
           {checkpoint.remediation.some((resource) => resource.kind === "video_segment") ? (
-            <button type="button" onClick={replay}>
-              Replay {video?.segments.find((segment) => segment.segmentId === checkpoint.trigger.segmentId) ? text(video.segments.find((segment) => segment.segmentId === checkpoint.trigger.segmentId)!.label, locale) : "segment"}
+            <button data-touch-target="true" type="button" onClick={replay}>
+              Replay {checkpointVideo?.segments.find((segment) => segment.segmentId === checkpoint.trigger.segmentId) ? text(checkpointVideo.segments.find((segment) => segment.segmentId === checkpoint.trigger.segmentId)!.label, locale) : "segment"}
             </button>
           ) : null}
+          <div data-slot="activity-remediation-resources">
+            {checkpoint.remediation.map((reference) => {
+              if (reference.kind === "video_segment") return null;
+              const resource = activity.resources.find((candidate) => candidate.resourceId === reference.resourceId);
+              return resource ? <div key={`${reference.kind}:${reference.resourceId}`}>{resourceContent(resource, locale)}</div> : null;
+            })}
+          </div>
           <button
             type="button"
             disabled={policy === "answer_before_continue" && assessment?.isCorrect !== true}
-            onClick={() => { setActiveCheckpointId(null); void controller.play(); }}
+            data-touch-target="true"
+            onClick={() => { setActiveCheckpointId(null); void controller.play(); previousFocus.current?.focus(); }}
           >
             Continue video
           </button>
