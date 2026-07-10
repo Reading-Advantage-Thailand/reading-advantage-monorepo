@@ -1,0 +1,636 @@
+{
+  "schemaVersion": "codecamp-curriculum-inventory.v1",
+  "totals": {
+    "publishedModules": 19,
+    "lessons": 88,
+    "questions": 85,
+    "exercises": 16,
+    "repositories": 16,
+    "portfolios": 4
+  },
+  "modules": [
+    {
+      "slug": "dev-environment",
+      "order": 1,
+      "status": "published",
+      "lessonOrders": [
+        1,
+        2
+      ],
+      "questionCoordinates": [
+        "dev-environment:2:1",
+        "dev-environment:2:2",
+        "dev-environment:2:3",
+        "dev-environment:2:4",
+        "dev-environment:2:5"
+      ],
+      "exerciseCoordinates": [],
+      "hasRepository": false
+    },
+    {
+      "slug": "git-github",
+      "order": 2,
+      "status": "published",
+      "lessonOrders": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "questionCoordinates": [
+        "git-github:4:1",
+        "git-github:4:2",
+        "git-github:4:3",
+        "git-github:4:4",
+        "git-github:4:5"
+      ],
+      "exerciseCoordinates": [
+        "git-github:3:1"
+      ],
+      "hasRepository": true
+    },
+    {
+      "slug": "html-css",
+      "order": 3,
+      "status": "published",
+      "lessonOrders": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "questionCoordinates": [
+        "html-css:6:1",
+        "html-css:6:2",
+        "html-css:6:3",
+        "html-css:6:4",
+        "html-css:6:5"
+      ],
+      "exerciseCoordinates": [
+        "html-css:6:1"
+      ],
+      "hasRepository": true
+    },
+    {
+      "slug": "javascript",
+      "order": 4,
+      "status": "published",
+      "lessonOrders": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "questionCoordinates": [
+        "javascript:8:1",
+        "javascript:8:2",
+        "javascript:8:3",
+        "javascript:8:4",
+        "javascript:8:5"
+      ],
+      "exerciseCoordinates": [
+        "javascript:8:1"
+      ],
+      "hasRepository": true
+    },
+    {
+      "slug": "typescript",
+      "order": 5,
+      "status": "published",
+      "lessonOrders": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "questionCoordinates": [
+        "typescript:5:1",
+        "typescript:5:2",
+        "typescript:5:3",
+        "typescript:5:4",
+        "typescript:5:5"
+      ],
+      "exerciseCoordinates": [
+        "typescript:5:1"
+      ],
+      "hasRepository": true
+    },
+    {
+      "slug": "vitest",
+      "order": 6,
+      "status": "published",
+      "lessonOrders": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "questionCoordinates": [
+        "vitest:4:1",
+        "vitest:4:2",
+        "vitest:4:3",
+        "vitest:4:4",
+        "vitest:4:5"
+      ],
+      "exerciseCoordinates": [
+        "vitest:4:1"
+      ],
+      "hasRepository": true
+    },
+    {
+      "slug": "react",
+      "order": 7,
+      "status": "published",
+      "lessonOrders": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "questionCoordinates": [
+        "react:7:1",
+        "react:7:2",
+        "react:7:3",
+        "react:7:4",
+        "react:7:5"
+      ],
+      "exerciseCoordinates": [
+        "react:7:1"
+      ],
+      "hasRepository": true
+    },
+    {
+      "slug": "api-fundamentals",
+      "order": 8,
+      "status": "published",
+      "lessonOrders": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "questionCoordinates": [
+        "api-fundamentals:5:1",
+        "api-fundamentals:5:2",
+        "api-fundamentals:5:3",
+        "api-fundamentals:5:4",
+        "api-fundamentals:5:5"
+      ],
+      "exerciseCoordinates": [
+        "api-fundamentals:5:1"
+      ],
+      "hasRepository": true
+    },
+    {
+      "slug": "nextjs-basics",
+      "order": 9,
+      "status": "published",
+      "lessonOrders": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "questionCoordinates": [
+        "nextjs-basics:6:1",
+        "nextjs-basics:6:2",
+        "nextjs-basics:6:3",
+        "nextjs-basics:6:4",
+        "nextjs-basics:6:5"
+      ],
+      "exerciseCoordinates": [
+        "nextjs-basics:6:1"
+      ],
+      "hasRepository": true
+    },
+    {
+      "slug": "nextjs-advanced",
+      "order": 10,
+      "status": "published",
+      "lessonOrders": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "questionCoordinates": [
+        "nextjs-advanced:5:1",
+        "nextjs-advanced:5:2",
+        "nextjs-advanced:5:3",
+        "nextjs-advanced:5:4",
+        "nextjs-advanced:5:5"
+      ],
+      "exerciseCoordinates": [
+        "nextjs-advanced:5:1"
+      ],
+      "hasRepository": true
+    },
+    {
+      "slug": "databases-orms",
+      "order": 11,
+      "status": "published",
+      "lessonOrders": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "questionCoordinates": [
+        "databases-orms:5:1",
+        "databases-orms:5:2",
+        "databases-orms:5:3",
+        "databases-orms:5:4",
+        "databases-orms:5:5"
+      ],
+      "exerciseCoordinates": [
+        "databases-orms:5:1"
+      ],
+      "hasRepository": true
+    },
+    {
+      "slug": "trpc-server-actions",
+      "order": 12,
+      "status": "published",
+      "lessonOrders": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "questionCoordinates": [
+        "trpc-server-actions:5:1",
+        "trpc-server-actions:5:2",
+        "trpc-server-actions:5:3",
+        "trpc-server-actions:5:4",
+        "trpc-server-actions:5:5"
+      ],
+      "exerciseCoordinates": [
+        "trpc-server-actions:5:1"
+      ],
+      "hasRepository": true
+    },
+    {
+      "slug": "authentication",
+      "order": 13,
+      "status": "published",
+      "lessonOrders": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "questionCoordinates": [
+        "authentication:4:1",
+        "authentication:4:2",
+        "authentication:4:3",
+        "authentication:4:4",
+        "authentication:4:5"
+      ],
+      "exerciseCoordinates": [
+        "authentication:4:1"
+      ],
+      "hasRepository": true
+    },
+    {
+      "slug": "internationalization",
+      "order": 14,
+      "status": "published",
+      "lessonOrders": [
+        1,
+        2,
+        3
+      ],
+      "questionCoordinates": [
+        "internationalization:3:1",
+        "internationalization:3:2",
+        "internationalization:3:3",
+        "internationalization:3:4",
+        "internationalization:3:5"
+      ],
+      "exerciseCoordinates": [
+        "internationalization:3:1"
+      ],
+      "hasRepository": true
+    },
+    {
+      "slug": "ai-integration",
+      "order": 15,
+      "status": "published",
+      "lessonOrders": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "questionCoordinates": [
+        "ai-integration:5:1",
+        "ai-integration:5:2",
+        "ai-integration:5:3",
+        "ai-integration:5:4",
+        "ai-integration:5:5"
+      ],
+      "exerciseCoordinates": [
+        "ai-integration:5:1"
+      ],
+      "hasRepository": true
+    },
+    {
+      "slug": "measure-ai-development",
+      "order": 16,
+      "status": "published",
+      "lessonOrders": [
+        1,
+        2,
+        3
+      ],
+      "questionCoordinates": [],
+      "exerciseCoordinates": [],
+      "hasRepository": false
+    },
+    {
+      "slug": "monorepo-packages",
+      "order": 17,
+      "status": "published",
+      "lessonOrders": [
+        1,
+        2,
+        3
+      ],
+      "questionCoordinates": [
+        "monorepo-packages:3:1",
+        "monorepo-packages:3:2",
+        "monorepo-packages:3:3",
+        "monorepo-packages:3:4",
+        "monorepo-packages:3:5"
+      ],
+      "exerciseCoordinates": [
+        "monorepo-packages:3:1"
+      ],
+      "hasRepository": false
+    },
+    {
+      "slug": "cloud-docker",
+      "order": 18,
+      "status": "published",
+      "lessonOrders": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "questionCoordinates": [
+        "cloud-docker:4:1",
+        "cloud-docker:4:2",
+        "cloud-docker:4:3",
+        "cloud-docker:4:4",
+        "cloud-docker:4:5"
+      ],
+      "exerciseCoordinates": [
+        "cloud-docker:4:1"
+      ],
+      "hasRepository": true
+    },
+    {
+      "slug": "real-world-practice",
+      "order": 19,
+      "status": "published",
+      "lessonOrders": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "questionCoordinates": [],
+      "exerciseCoordinates": [],
+      "hasRepository": true
+    }
+  ],
+  "activityIds": [
+    "lesson:dev-environment:1",
+    "lesson:dev-environment:2",
+    "question:dev-environment:2:1",
+    "question:dev-environment:2:2",
+    "question:dev-environment:2:3",
+    "question:dev-environment:2:4",
+    "question:dev-environment:2:5",
+    "lesson:git-github:1",
+    "lesson:git-github:2",
+    "lesson:git-github:3",
+    "lesson:git-github:4",
+    "question:git-github:4:1",
+    "question:git-github:4:2",
+    "question:git-github:4:3",
+    "question:git-github:4:4",
+    "question:git-github:4:5",
+    "exercise:git-github:3:1",
+    "repo:git-github",
+    "lesson:html-css:1",
+    "lesson:html-css:2",
+    "lesson:html-css:3",
+    "lesson:html-css:4",
+    "lesson:html-css:5",
+    "lesson:html-css:6",
+    "question:html-css:6:1",
+    "question:html-css:6:2",
+    "question:html-css:6:3",
+    "question:html-css:6:4",
+    "question:html-css:6:5",
+    "exercise:html-css:6:1",
+    "repo:html-css",
+    "lesson:javascript:1",
+    "lesson:javascript:2",
+    "lesson:javascript:3",
+    "lesson:javascript:4",
+    "lesson:javascript:5",
+    "lesson:javascript:6",
+    "lesson:javascript:7",
+    "lesson:javascript:8",
+    "question:javascript:8:1",
+    "question:javascript:8:2",
+    "question:javascript:8:3",
+    "question:javascript:8:4",
+    "question:javascript:8:5",
+    "exercise:javascript:8:1",
+    "repo:javascript",
+    "lesson:typescript:1",
+    "lesson:typescript:2",
+    "lesson:typescript:3",
+    "lesson:typescript:4",
+    "lesson:typescript:5",
+    "question:typescript:5:1",
+    "question:typescript:5:2",
+    "question:typescript:5:3",
+    "question:typescript:5:4",
+    "question:typescript:5:5",
+    "exercise:typescript:5:1",
+    "repo:typescript",
+    "lesson:vitest:1",
+    "lesson:vitest:2",
+    "lesson:vitest:3",
+    "lesson:vitest:4",
+    "question:vitest:4:1",
+    "question:vitest:4:2",
+    "question:vitest:4:3",
+    "question:vitest:4:4",
+    "question:vitest:4:5",
+    "exercise:vitest:4:1",
+    "repo:vitest",
+    "lesson:react:1",
+    "lesson:react:2",
+    "lesson:react:3",
+    "lesson:react:4",
+    "lesson:react:5",
+    "lesson:react:6",
+    "lesson:react:7",
+    "question:react:7:1",
+    "question:react:7:2",
+    "question:react:7:3",
+    "question:react:7:4",
+    "question:react:7:5",
+    "exercise:react:7:1",
+    "repo:react",
+    "lesson:api-fundamentals:1",
+    "lesson:api-fundamentals:2",
+    "lesson:api-fundamentals:3",
+    "lesson:api-fundamentals:4",
+    "lesson:api-fundamentals:5",
+    "question:api-fundamentals:5:1",
+    "question:api-fundamentals:5:2",
+    "question:api-fundamentals:5:3",
+    "question:api-fundamentals:5:4",
+    "question:api-fundamentals:5:5",
+    "exercise:api-fundamentals:5:1",
+    "repo:api-fundamentals",
+    "lesson:nextjs-basics:1",
+    "lesson:nextjs-basics:2",
+    "lesson:nextjs-basics:3",
+    "lesson:nextjs-basics:4",
+    "lesson:nextjs-basics:5",
+    "lesson:nextjs-basics:6",
+    "question:nextjs-basics:6:1",
+    "question:nextjs-basics:6:2",
+    "question:nextjs-basics:6:3",
+    "question:nextjs-basics:6:4",
+    "question:nextjs-basics:6:5",
+    "exercise:nextjs-basics:6:1",
+    "repo:nextjs-basics",
+    "lesson:nextjs-advanced:1",
+    "lesson:nextjs-advanced:2",
+    "lesson:nextjs-advanced:3",
+    "lesson:nextjs-advanced:4",
+    "lesson:nextjs-advanced:5",
+    "question:nextjs-advanced:5:1",
+    "question:nextjs-advanced:5:2",
+    "question:nextjs-advanced:5:3",
+    "question:nextjs-advanced:5:4",
+    "question:nextjs-advanced:5:5",
+    "exercise:nextjs-advanced:5:1",
+    "repo:nextjs-advanced",
+    "lesson:databases-orms:1",
+    "lesson:databases-orms:2",
+    "lesson:databases-orms:3",
+    "lesson:databases-orms:4",
+    "lesson:databases-orms:5",
+    "question:databases-orms:5:1",
+    "question:databases-orms:5:2",
+    "question:databases-orms:5:3",
+    "question:databases-orms:5:4",
+    "question:databases-orms:5:5",
+    "exercise:databases-orms:5:1",
+    "repo:databases-orms",
+    "lesson:trpc-server-actions:1",
+    "lesson:trpc-server-actions:2",
+    "lesson:trpc-server-actions:3",
+    "lesson:trpc-server-actions:4",
+    "lesson:trpc-server-actions:5",
+    "question:trpc-server-actions:5:1",
+    "question:trpc-server-actions:5:2",
+    "question:trpc-server-actions:5:3",
+    "question:trpc-server-actions:5:4",
+    "question:trpc-server-actions:5:5",
+    "exercise:trpc-server-actions:5:1",
+    "repo:trpc-server-actions",
+    "lesson:authentication:1",
+    "lesson:authentication:2",
+    "lesson:authentication:3",
+    "lesson:authentication:4",
+    "question:authentication:4:1",
+    "question:authentication:4:2",
+    "question:authentication:4:3",
+    "question:authentication:4:4",
+    "question:authentication:4:5",
+    "exercise:authentication:4:1",
+    "repo:authentication",
+    "lesson:internationalization:1",
+    "lesson:internationalization:2",
+    "lesson:internationalization:3",
+    "question:internationalization:3:1",
+    "question:internationalization:3:2",
+    "question:internationalization:3:3",
+    "question:internationalization:3:4",
+    "question:internationalization:3:5",
+    "exercise:internationalization:3:1",
+    "repo:internationalization",
+    "lesson:ai-integration:1",
+    "lesson:ai-integration:2",
+    "lesson:ai-integration:3",
+    "lesson:ai-integration:4",
+    "lesson:ai-integration:5",
+    "question:ai-integration:5:1",
+    "question:ai-integration:5:2",
+    "question:ai-integration:5:3",
+    "question:ai-integration:5:4",
+    "question:ai-integration:5:5",
+    "exercise:ai-integration:5:1",
+    "repo:ai-integration",
+    "lesson:measure-ai-development:1",
+    "lesson:measure-ai-development:2",
+    "lesson:measure-ai-development:3",
+    "lesson:monorepo-packages:1",
+    "lesson:monorepo-packages:2",
+    "lesson:monorepo-packages:3",
+    "question:monorepo-packages:3:1",
+    "question:monorepo-packages:3:2",
+    "question:monorepo-packages:3:3",
+    "question:monorepo-packages:3:4",
+    "question:monorepo-packages:3:5",
+    "exercise:monorepo-packages:3:1",
+    "lesson:cloud-docker:1",
+    "lesson:cloud-docker:2",
+    "lesson:cloud-docker:3",
+    "lesson:cloud-docker:4",
+    "question:cloud-docker:4:1",
+    "question:cloud-docker:4:2",
+    "question:cloud-docker:4:3",
+    "question:cloud-docker:4:4",
+    "question:cloud-docker:4:5",
+    "exercise:cloud-docker:4:1",
+    "repo:cloud-docker",
+    "lesson:real-world-practice:1",
+    "lesson:real-world-practice:2",
+    "lesson:real-world-practice:3",
+    "lesson:real-world-practice:4",
+    "repo:real-world-practice",
+    "portfolio:phase-a",
+    "portfolio:phase-b",
+    "portfolio:phase-c",
+    "portfolio:phase-d"
+  ]
+}

@@ -20,9 +20,9 @@ describe("authored Codecamp graph release", () => {
     const report = buildCodeGraphReport(codeKnowledgeGraph);
     expect(report).toMatchObject({
       graphId: "codecamp.core",
-      version: "1.0.0",
-      nodes: 54,
-      edges: 139,
+      version: "1.1.0",
+      nodes: 57,
+      edges: 148,
       standardsProjections: 2,
       disconnectedObjectives: 0,
     });

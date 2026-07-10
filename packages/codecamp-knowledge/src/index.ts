@@ -41,7 +41,11 @@ export type {
   CodeGraphSourceProvenance,
   SourceSyncResult,
 } from "./source-sync.js";
-export { defaultMasteryAdvantageRoot, runCodeGraphCli } from "./cli.js";
+export {
+  defaultCodecampMonorepoRoot,
+  defaultMasteryAdvantageRoot,
+  runCodeGraphCli,
+} from "./cli.js";
 export type { CodeGraphCliContext } from "./cli.js";
 
 export {
@@ -49,7 +53,9 @@ export {
   CurriculumActivitySourceSchema,
   CurriculumBindingReleaseSchema,
   CurriculumModuleSummarySchema,
+  CurriculumRubricBindingSchema,
   buildBindingCoverageReport,
+  countIndependentEvidenceByObjective,
   parseCurriculumBindingRelease,
   projectMasteryEvidence,
   validateCurriculumBindings,
@@ -61,3 +67,22 @@ export type {
   CurriculumBindingRelease,
   CurriculumBindingValidationResult,
 } from "./bindings.js";
+
+export {
+  CurriculumSourceInventorySchema,
+  CurriculumSourceProvenanceSchema,
+  collectCurriculumInventory,
+  verifyCurriculumSource,
+} from "./curriculum-inventory-contract.js";
+export type {
+  CurriculumInventoryInput,
+  CurriculumSourceInventory,
+  CurriculumSourceProvenance,
+  InventoryLessonInput,
+  InventoryModuleInput,
+} from "./curriculum-inventory-contract.js";
+export {
+  curriculumSourceInventory,
+  curriculumSourceProvenance,
+} from "./curriculum-inventory.js";
+export { curriculumBindings } from "./binding-data.js";

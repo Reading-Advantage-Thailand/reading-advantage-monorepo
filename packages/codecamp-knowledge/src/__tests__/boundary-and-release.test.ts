@@ -34,5 +34,7 @@ describe("shared-core and provider-neutral boundaries", () => {
     expect(manifest.scripts["graph:validate"]).toContain("dist/cli.js validate");
     expect(manifest.scripts["graph:report"]).toContain("dist/cli.js report");
     expect(manifest.scripts["graph:verify-source"]).toContain("verify-source");
+    expect(manifest.scripts["bindings:validate"]).toContain("bindings-validate");
+    expect(manifest.scripts["bindings:verify-source"]).toContain("bindings-verify-source");
   });
 });

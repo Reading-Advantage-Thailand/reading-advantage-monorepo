@@ -6,9 +6,40 @@ import {
   parseCurriculumBindingRelease,
   projectMasteryEvidence,
   countIndependentEvidenceByObjective,
+  sha256,
   validateCurriculumBindings,
 } from "../index.js";
 import { codeKnowledgeGraph } from "../data.js";
+
+function representativeInventory() {
+  return {
+    schemaVersion: "codecamp-curriculum-inventory.v1" as const,
+    totals: {
+      publishedModules: 1,
+      lessons: 0,
+      questions: 1,
+      exercises: 0,
+      repositories: 0,
+      portfolios: 0,
+    },
+    modules: [
+      {
+        slug: "git-github",
+        order: 2,
+        status: "published" as const,
+        lessonOrders: [],
+        questionCoordinates: ["git-github:4:1"],
+        exerciseCoordinates: [],
+        hasRepository: false,
+      },
+    ],
+    activityIds: ["question:git-github:4:1"],
+  };
+}
+
+function inventoryDigest(): string {
+  return sha256(new TextEncoder().encode(JSON.stringify(representativeInventory())));
+}
 
 function binding(overrides: Record<string, unknown> = {}) {
   return {
@@ -37,6 +68,9 @@ function release() {
     curriculumVersion: "19-modules.88-lessons.v1",
     provenance: {
       sourcePath: "packages/db/src/seed/codecamp-curriculum-data.ts",
+      sourceRevision: "0123456789abcdef0123456789abcdef01234567",
+      sourceDigest: "a".repeat(64),
+      inventoryDigest: inventoryDigest(),
       generatedAt: "2026-07-10T17:30:00.000Z",
       reviewedBy: "Codecamp curriculum owner",
     },
@@ -57,6 +91,14 @@ function release() {
         questionCount: 1,
         exerciseCount: 0,
         repositoryCount: 0,
+      },
+    ],
+    rubrics: [
+      {
+        rubricId: "codecamp.quiz.v1",
+        objectiveIds: ["codecamp.workflow.skill.git-branches"],
+        appliesToKinds: ["question"],
+        scoringDimensions: ["conceptual accuracy"],
       },
     ],
     bindings: [binding()],
@@ -86,7 +128,7 @@ describe("CurriculumBindingReleaseSchema", () => {
 
 describe("validateCurriculumBindings", () => {
   it("passes a representative binding release", () => {
-    expect(validateCurriculumBindings(release(), codeKnowledgeGraph)).toEqual({ valid: true, issues: [] });
+    expect(validateCurriculumBindings(release(), codeKnowledgeGraph, representativeInventory())).toEqual({ valid: true, issues: [] });
   });
 
   it.each([
@@ -98,7 +140,7 @@ describe("validateCurriculumBindings", () => {
   ])("rejects %s", (code, mutate) => {
     const input = release();
     mutate(input);
-    expect(validateCurriculumBindings(input, codeKnowledgeGraph).issues.map((issue) => issue.code)).toContain(code);
+    expect(validateCurriculumBindings(input, codeKnowledgeGraph, representativeInventory()).issues.map((issue) => issue.code)).toContain(code);
   });
 
   it("rejects draft and retired objectives with actionable source coordinates", () => {
@@ -107,7 +149,7 @@ describe("validateCurriculumBindings", () => {
       graph.knowledgeSpace.nodes.find(
         (entry) => entry.id === "codecamp.workflow.skill.git-branches",
       )!.metadata.lifecycle = lifecycle;
-      const issue = validateCurriculumBindings(release(), graph).issues.find(
+      const issue = validateCurriculumBindings(release(), graph, representativeInventory()).issues.find(
         (entry) => entry.code === `${lifecycle.toUpperCase()}_OBJECTIVE`,
       );
       expect(issue?.entityId).toBe("codecamp.git-github.quiz.q1");
@@ -125,7 +167,7 @@ describe("validateCurriculumBindings", () => {
     for (const candidate of cases) {
       const input = release();
       input.bindings[0] = candidate;
-      expect(validateCurriculumBindings(input, codeKnowledgeGraph).issues.map((issue) => issue.code)).toContain(
+      expect(validateCurriculumBindings(input, codeKnowledgeGraph, representativeInventory()).issues.map((issue) => issue.code)).toContain(
         "SOURCE_COORDINATE_INVALID",
       );
     }
@@ -141,17 +183,26 @@ describe("validateCurriculumBindings", () => {
     for (const [code, candidate] of cases) {
       const input = release();
       input.bindings[0] = candidate;
-      expect(validateCurriculumBindings(input, codeKnowledgeGraph).issues.map((issue) => issue.code)).toContain(code);
+      expect(validateCurriculumBindings(input, codeKnowledgeGraph, representativeInventory()).issues.map((issue) => issue.code)).toContain(code);
     }
   });
 
   it("rejects out-of-range weights and activity/evidence-source mismatches", () => {
     const overweight = release();
     overweight.bindings[0]!.evidenceWeight = 1.01;
-    expect(validateCurriculumBindings(overweight, codeKnowledgeGraph).issues.map((issue) => issue.code)).toContain("BINDING_SCHEMA_INVALID");
+    expect(validateCurriculumBindings(overweight, codeKnowledgeGraph, representativeInventory()).issues.map((issue) => issue.code)).toContain("BINDING_SCHEMA_INVALID");
     const mismatch = release();
     mismatch.bindings[0]!.evidenceSource = "pull-request";
-    expect(validateCurriculumBindings(mismatch, codeKnowledgeGraph).issues.map((issue) => issue.code)).toContain("EVIDENCE_SOURCE_KIND_MISMATCH");
+    expect(validateCurriculumBindings(mismatch, codeKnowledgeGraph, representativeInventory()).issues.map((issue) => issue.code)).toContain("EVIDENCE_SOURCE_KIND_MISMATCH");
+  });
+
+  it("rejects dangling rubric references and unknown rubric objectives", () => {
+    const dangling = release();
+    dangling.bindings[0]!.rubricRefs = ["codecamp.missing.v1"];
+    expect(validateCurriculumBindings(dangling, codeKnowledgeGraph, representativeInventory()).issues.map((issue) => issue.code)).toContain("DANGLING_RUBRIC");
+    const unknown = release();
+    unknown.rubrics[0]!.objectiveIds = ["codecamp.missing.skill"];
+    expect(validateCurriculumBindings(unknown, codeKnowledgeGraph, representativeInventory()).issues.map((issue) => issue.code)).toContain("UNKNOWN_OBJECTIVE");
   });
 
   it("rejects exposure that can mutate mastery", () => {
@@ -169,7 +220,7 @@ describe("validateCurriculumBindings", () => {
       rubricRefs: [],
       resourceRefs: ["lesson:git-github:1"],
     });
-    expect(validateCurriculumBindings(input, codeKnowledgeGraph).issues.map((issue) => issue.code)).toContain("EXPOSURE_MUTATES_MASTERY");
+    expect(validateCurriculumBindings(input, codeKnowledgeGraph, representativeInventory()).issues.map((issue) => issue.code)).toContain("EXPOSURE_MUTATES_MASTERY");
   });
 
   it("rejects exposure carrying assessed-only variant, misconception, or rubric metadata", () => {
@@ -183,7 +234,7 @@ describe("validateCurriculumBindings", () => {
       evidenceSource: "lesson-view",
       resourceRefs: ["lesson:git-github:1"],
     });
-    expect(validateCurriculumBindings(input, codeKnowledgeGraph).issues.map((issue) => issue.code)).toContain(
+    expect(validateCurriculumBindings(input, codeKnowledgeGraph, representativeInventory()).issues.map((issue) => issue.code)).toContain(
       "EXPOSURE_METADATA_FORBIDDEN",
     );
   });
@@ -197,7 +248,7 @@ describe("validateCurriculumBindings", () => {
       misconceptionTags: [],
       rubricRefs: [],
     });
-    expect(validateCurriculumBindings(input, codeKnowledgeGraph).issues.map((issue) => issue.code)).toContain("ASSESSED_EVIDENCE_INCOMPLETE");
+    expect(validateCurriculumBindings(input, codeKnowledgeGraph, representativeInventory()).issues.map((issue) => issue.code)).toContain("ASSESSED_EVIDENCE_INCOMPLETE");
   });
 });
 
@@ -260,9 +311,22 @@ describe("binding projections and reports", () => {
       binding({ activityId: "codecamp.git-github.repository", activityKind: "repository", source: { moduleSlug: "git-github" }, evidenceSource: "pull-request", practiceMode: "independent", variantId: "git-repo", variantFamily: "git-independent", rubricRefs: ["codecamp.pr.v1"], resourceRefs: ["repo:git-github"] }),
       binding({ activityId: "codecamp.git-github.portfolio", activityKind: "portfolio", source: { moduleSlug: "git-github" }, evidenceSource: "portfolio-review", practiceMode: "independent", variantId: "git-portfolio", variantFamily: "git-portfolio", rubricRefs: ["codecamp.portfolio.v1"], resourceRefs: ["portfolio:phase-a"] }),
     ];
+    input.rubrics = ["exercise", "pr", "portfolio"].map((kind) => ({
+      rubricId: `codecamp.${kind}.v1`,
+      objectiveIds: ["codecamp.workflow.skill.git-branches"],
+      appliesToKinds: [kind === "exercise" ? "exercise" : kind === "pr" ? "repository" : "portfolio"] as Array<"exercise" | "repository" | "portfolio">,
+      scoringDimensions: ["quality"],
+    }));
     input.inventory = { publishedModules: 1, lessons: 0, questions: 0, exercises: 1, repositories: 1, portfolios: 1 };
     input.modules[0] = { ...input.modules[0]!, lessonCount: 0, questionCount: 0, exerciseCount: 1, repositoryCount: 1 };
-    expect(validateCurriculumBindings(input, codeKnowledgeGraph)).toEqual({ valid: true, issues: [] });
+    const sourceInventory = {
+      ...representativeInventory(),
+      totals: { publishedModules: 1, lessons: 0, questions: 0, exercises: 1, repositories: 1, portfolios: 1 },
+      modules: [{ slug: "git-github", order: 2, status: "published" as const, lessonOrders: [], questionCoordinates: [], exerciseCoordinates: ["git-github:4:1"], hasRepository: true }],
+      activityIds: ["exercise:git-github:4:1", "repo:git-github", "portfolio:phase-a"],
+    };
+    input.provenance.inventoryDigest = sha256(new TextEncoder().encode(JSON.stringify(sourceInventory)));
+    expect(validateCurriculumBindings(input, codeKnowledgeGraph, sourceInventory)).toEqual({ valid: true, issues: [] });
     expect(projectMasteryEvidence(parseCurriculumBindingRelease(input)).map((entry) => entry.evidenceSource)).toEqual([
       "exercise-check",
       "pull-request",

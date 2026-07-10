@@ -4,6 +4,13 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 import { codeKnowledgeGraph } from "./data.js";
 import { codeGraphSourceProvenance } from "./provenance.js";
+import { curriculumBindings } from "./binding-data.js";
+import { buildBindingCoverageReport, validateCurriculumBindings } from "./bindings.js";
+import {
+  curriculumSourceInventory,
+  curriculumSourceProvenance,
+} from "./curriculum-inventory.js";
+import { verifyCurriculumSource } from "./curriculum-inventory-contract.js";
 import { buildCodeGraphReport } from "./report.js";
 import { validateCodeKnowledgeGraph } from "./validation.js";
 import { verifySourceSnapshot } from "./source-sync.js";
@@ -26,6 +33,9 @@ export const defaultMasteryAdvantageRoot = resolve(
   "../../../../mastery-advantage",
 );
 
+/** Default monorepo root resolved from either the source or built package directory. */
+export const defaultCodecampMonorepoRoot = resolve(currentDirectory, "../../..");
+
 /** Executes one Codecamp graph validation/report/source command.
  * @param args Command arguments after the executable name.
  * @param context Output callbacks and optional source checkout root.
@@ -41,6 +51,38 @@ export function runCodeGraphCli(args: string[], context: CodeGraphCliContext): n
   if (command === "report") {
     context.stdout(JSON.stringify(buildCodeGraphReport(codeKnowledgeGraph), null, 2));
     return 0;
+  }
+  if (command === "bindings-validate") {
+    const result = validateCurriculumBindings(
+      curriculumBindings,
+      codeKnowledgeGraph,
+      curriculumSourceInventory,
+    );
+    context.stdout(JSON.stringify(result, null, 2));
+    return result.valid ? 0 : 1;
+  }
+  if (command === "bindings-report") {
+    context.stdout(JSON.stringify(buildBindingCoverageReport(curriculumBindings), null, 2));
+    return 0;
+  }
+  if (command === "bindings-verify-source") {
+    const repoRoot = process.env.CODECAMP_MONOREPO_ROOT ?? defaultCodecampMonorepoRoot;
+    try {
+      const sourceBytes = readFileSync(
+        resolve(repoRoot, curriculumSourceProvenance.sourcePath),
+      );
+      const result = verifyCurriculumSource(
+        sourceBytes,
+        curriculumSourceInventory,
+        curriculumSourceProvenance,
+      );
+      context.stdout(JSON.stringify(result, null, 2));
+      return result.valid ? 0 : 1;
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      context.stderr(`${message} Set CODECAMP_MONOREPO_ROOT to the source checkout.`);
+      return 1;
+    }
   }
   if (command === "verify-source") {
     const sourceRoot =
@@ -59,7 +101,9 @@ export function runCodeGraphCli(args: string[], context: CodeGraphCliContext): n
       return 1;
     }
   }
-  context.stderr("Usage: codecamp-knowledge <validate|report|verify-source>");
+  context.stderr(
+    "Usage: codecamp-knowledge <validate|report|verify-source|bindings-validate|bindings-report|bindings-verify-source>",
+  );
   return 2;
 }
 

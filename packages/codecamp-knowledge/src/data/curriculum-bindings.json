@@ -1,0 +1,5287 @@
+{
+  "schemaVersion": "codecamp-curriculum-bindings.v1",
+  "releaseId": "codecamp-curriculum-2026-07",
+  "graphVersion": "1.1.0",
+  "curriculumVersion": "19-modules.88-lessons.v1",
+  "provenance": {
+    "sourcePath": "packages/db/src/seed/codecamp-curriculum-data.ts",
+    "sourceRevision": "08de1c28a154c2d0608c7b3515149b73dbe33152",
+    "sourceDigest": "e4d3fc7cc9927f91bfb7f2e14b33ed8deaf26569a37f0c9ac36294713a2dab31",
+    "inventoryDigest": "a7defaff5d70a531ffb001c38870680c05e56bb7f425e7019ca050fa128dc4bf",
+    "generatedAt": "2026-07-10T18:00:00.000Z",
+    "reviewedBy": "Codecamp curriculum owner"
+  },
+  "inventory": {
+    "publishedModules": 19,
+    "lessons": 88,
+    "questions": 85,
+    "exercises": 16,
+    "repositories": 16,
+    "portfolios": 4
+  },
+  "modules": [
+    {
+      "slug": "dev-environment",
+      "order": 1,
+      "status": "published",
+      "lessonCount": 2,
+      "questionCount": 5,
+      "exerciseCount": 0,
+      "repositoryCount": 0
+    },
+    {
+      "slug": "git-github",
+      "order": 2,
+      "status": "published",
+      "lessonCount": 4,
+      "questionCount": 5,
+      "exerciseCount": 1,
+      "repositoryCount": 1
+    },
+    {
+      "slug": "html-css",
+      "order": 3,
+      "status": "published",
+      "lessonCount": 6,
+      "questionCount": 5,
+      "exerciseCount": 1,
+      "repositoryCount": 1
+    },
+    {
+      "slug": "javascript",
+      "order": 4,
+      "status": "published",
+      "lessonCount": 8,
+      "questionCount": 5,
+      "exerciseCount": 1,
+      "repositoryCount": 1
+    },
+    {
+      "slug": "typescript",
+      "order": 5,
+      "status": "published",
+      "lessonCount": 5,
+      "questionCount": 5,
+      "exerciseCount": 1,
+      "repositoryCount": 1
+    },
+    {
+      "slug": "vitest",
+      "order": 6,
+      "status": "published",
+      "lessonCount": 4,
+      "questionCount": 5,
+      "exerciseCount": 1,
+      "repositoryCount": 1
+    },
+    {
+      "slug": "react",
+      "order": 7,
+      "status": "published",
+      "lessonCount": 7,
+      "questionCount": 5,
+      "exerciseCount": 1,
+      "repositoryCount": 1
+    },
+    {
+      "slug": "api-fundamentals",
+      "order": 8,
+      "status": "published",
+      "lessonCount": 5,
+      "questionCount": 5,
+      "exerciseCount": 1,
+      "repositoryCount": 1
+    },
+    {
+      "slug": "nextjs-basics",
+      "order": 9,
+      "status": "published",
+      "lessonCount": 6,
+      "questionCount": 5,
+      "exerciseCount": 1,
+      "repositoryCount": 1
+    },
+    {
+      "slug": "nextjs-advanced",
+      "order": 10,
+      "status": "published",
+      "lessonCount": 5,
+      "questionCount": 5,
+      "exerciseCount": 1,
+      "repositoryCount": 1
+    },
+    {
+      "slug": "databases-orms",
+      "order": 11,
+      "status": "published",
+      "lessonCount": 5,
+      "questionCount": 5,
+      "exerciseCount": 1,
+      "repositoryCount": 1
+    },
+    {
+      "slug": "trpc-server-actions",
+      "order": 12,
+      "status": "published",
+      "lessonCount": 5,
+      "questionCount": 5,
+      "exerciseCount": 1,
+      "repositoryCount": 1
+    },
+    {
+      "slug": "authentication",
+      "order": 13,
+      "status": "published",
+      "lessonCount": 4,
+      "questionCount": 5,
+      "exerciseCount": 1,
+      "repositoryCount": 1
+    },
+    {
+      "slug": "internationalization",
+      "order": 14,
+      "status": "published",
+      "lessonCount": 3,
+      "questionCount": 5,
+      "exerciseCount": 1,
+      "repositoryCount": 1
+    },
+    {
+      "slug": "ai-integration",
+      "order": 15,
+      "status": "published",
+      "lessonCount": 5,
+      "questionCount": 5,
+      "exerciseCount": 1,
+      "repositoryCount": 1
+    },
+    {
+      "slug": "measure-ai-development",
+      "order": 16,
+      "status": "published",
+      "lessonCount": 3,
+      "questionCount": 0,
+      "exerciseCount": 0,
+      "repositoryCount": 0
+    },
+    {
+      "slug": "monorepo-packages",
+      "order": 17,
+      "status": "published",
+      "lessonCount": 3,
+      "questionCount": 5,
+      "exerciseCount": 1,
+      "repositoryCount": 0
+    },
+    {
+      "slug": "cloud-docker",
+      "order": 18,
+      "status": "published",
+      "lessonCount": 4,
+      "questionCount": 5,
+      "exerciseCount": 1,
+      "repositoryCount": 1
+    },
+    {
+      "slug": "real-world-practice",
+      "order": 19,
+      "status": "published",
+      "lessonCount": 4,
+      "questionCount": 0,
+      "exerciseCount": 0,
+      "repositoryCount": 1
+    }
+  ],
+  "rubrics": [
+    {
+      "rubricId": "codecamp.quiz.v1",
+      "objectiveIds": [
+        "codecamp.ai.skill.provider-adapter",
+        "codecamp.architecture.skill.backend-module",
+        "codecamp.architecture.skill.contract-first",
+        "codecamp.architecture.skill.shared-package",
+        "codecamp.backend.concept.http-api",
+        "codecamp.backend.skill.authorization",
+        "codecamp.data.skill.drizzle-queries",
+        "codecamp.deployment.skill.container-build",
+        "codecamp.foundation.skill.functions",
+        "codecamp.foundation.skill.typescript-contracts",
+        "codecamp.frontend.skill.internationalization",
+        "codecamp.frontend.skill.next-routing",
+        "codecamp.frontend.skill.react-components",
+        "codecamp.frontend.skill.semantic-html-css",
+        "codecamp.testing.skill.unit-tests",
+        "codecamp.workflow.skill.development-environment",
+        "codecamp.workflow.skill.git-branches",
+        "codecamp.workflow.skill.measure-development",
+        "codecamp.workflow.skill.pull-requests"
+      ],
+      "appliesToKinds": [
+        "question"
+      ],
+      "scoringDimensions": [
+        "conceptual accuracy",
+        "misconception diagnosis"
+      ]
+    },
+    {
+      "rubricId": "codecamp.exercise.v1",
+      "objectiveIds": [
+        "codecamp.ai.skill.provider-adapter",
+        "codecamp.architecture.skill.backend-module",
+        "codecamp.architecture.skill.contract-first",
+        "codecamp.architecture.skill.shared-package",
+        "codecamp.backend.concept.http-api",
+        "codecamp.backend.skill.authorization",
+        "codecamp.data.skill.drizzle-queries",
+        "codecamp.deployment.skill.container-build",
+        "codecamp.foundation.skill.functions",
+        "codecamp.foundation.skill.typescript-contracts",
+        "codecamp.frontend.skill.internationalization",
+        "codecamp.frontend.skill.next-routing",
+        "codecamp.frontend.skill.react-components",
+        "codecamp.frontend.skill.semantic-html-css",
+        "codecamp.testing.skill.unit-tests",
+        "codecamp.workflow.skill.development-environment",
+        "codecamp.workflow.skill.git-branches",
+        "codecamp.workflow.skill.measure-development",
+        "codecamp.workflow.skill.pull-requests"
+      ],
+      "appliesToKinds": [
+        "exercise"
+      ],
+      "scoringDimensions": [
+        "deterministic checks",
+        "guided implementation"
+      ]
+    },
+    {
+      "rubricId": "codecamp.pr.v1",
+      "objectiveIds": [
+        "codecamp.ai.skill.provider-adapter",
+        "codecamp.architecture.skill.backend-module",
+        "codecamp.architecture.skill.contract-first",
+        "codecamp.architecture.skill.shared-package",
+        "codecamp.backend.concept.http-api",
+        "codecamp.backend.skill.authorization",
+        "codecamp.data.skill.drizzle-queries",
+        "codecamp.deployment.skill.container-build",
+        "codecamp.foundation.skill.functions",
+        "codecamp.foundation.skill.typescript-contracts",
+        "codecamp.frontend.skill.internationalization",
+        "codecamp.frontend.skill.next-routing",
+        "codecamp.frontend.skill.react-components",
+        "codecamp.frontend.skill.semantic-html-css",
+        "codecamp.testing.skill.unit-tests",
+        "codecamp.workflow.skill.development-environment",
+        "codecamp.workflow.skill.git-branches",
+        "codecamp.workflow.skill.measure-development",
+        "codecamp.workflow.skill.pull-requests"
+      ],
+      "appliesToKinds": [
+        "repository"
+      ],
+      "scoringDimensions": [
+        "correctness",
+        "tests",
+        "code quality",
+        "professional workflow"
+      ]
+    },
+    {
+      "rubricId": "codecamp.portfolio.v1",
+      "objectiveIds": [
+        "codecamp.ai.skill.provider-adapter",
+        "codecamp.architecture.skill.backend-module",
+        "codecamp.architecture.skill.contract-first",
+        "codecamp.architecture.skill.shared-package",
+        "codecamp.backend.concept.http-api",
+        "codecamp.backend.skill.authorization",
+        "codecamp.data.skill.drizzle-queries",
+        "codecamp.deployment.skill.container-build",
+        "codecamp.foundation.skill.functions",
+        "codecamp.foundation.skill.typescript-contracts",
+        "codecamp.frontend.skill.internationalization",
+        "codecamp.frontend.skill.next-routing",
+        "codecamp.frontend.skill.react-components",
+        "codecamp.frontend.skill.semantic-html-css",
+        "codecamp.testing.skill.unit-tests",
+        "codecamp.workflow.skill.development-environment",
+        "codecamp.workflow.skill.git-branches",
+        "codecamp.workflow.skill.measure-development",
+        "codecamp.workflow.skill.pull-requests"
+      ],
+      "appliesToKinds": [
+        "portfolio"
+      ],
+      "scoringDimensions": [
+        "independent transfer",
+        "integration",
+        "reflection"
+      ]
+    }
+  ],
+  "bindings": [
+    {
+      "activityId": "codecamp.dev-environment.lesson.1",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "dev-environment",
+        "lessonOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.workflow.skill.development-environment"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:dev-environment:1"
+      ]
+    },
+    {
+      "activityId": "codecamp.dev-environment.lesson.2",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "dev-environment",
+        "lessonOrder": 2
+      },
+      "objectiveIds": [
+        "codecamp.workflow.skill.development-environment"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:dev-environment:2"
+      ]
+    },
+    {
+      "activityId": "codecamp.dev-environment.question.2.1",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "dev-environment",
+        "lessonOrder": 2,
+        "itemOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.workflow.skill.development-environment"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "dev-environment-quiz-2-1",
+      "variantFamily": "dev-environment-quiz",
+      "misconceptionTags": [
+        "dev-environment-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.dev-environment.question.2.2",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "dev-environment",
+        "lessonOrder": 2,
+        "itemOrder": 2
+      },
+      "objectiveIds": [
+        "codecamp.workflow.skill.development-environment"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "dev-environment-quiz-2-2",
+      "variantFamily": "dev-environment-quiz",
+      "misconceptionTags": [
+        "dev-environment-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.dev-environment.question.2.3",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "dev-environment",
+        "lessonOrder": 2,
+        "itemOrder": 3
+      },
+      "objectiveIds": [
+        "codecamp.workflow.skill.development-environment"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "dev-environment-quiz-2-3",
+      "variantFamily": "dev-environment-quiz",
+      "misconceptionTags": [
+        "dev-environment-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.dev-environment.question.2.4",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "dev-environment",
+        "lessonOrder": 2,
+        "itemOrder": 4
+      },
+      "objectiveIds": [
+        "codecamp.workflow.skill.development-environment"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "dev-environment-quiz-2-4",
+      "variantFamily": "dev-environment-quiz",
+      "misconceptionTags": [
+        "dev-environment-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.dev-environment.question.2.5",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "dev-environment",
+        "lessonOrder": 2,
+        "itemOrder": 5
+      },
+      "objectiveIds": [
+        "codecamp.workflow.skill.development-environment"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "dev-environment-quiz-2-5",
+      "variantFamily": "dev-environment-quiz",
+      "misconceptionTags": [
+        "dev-environment-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.git-github.lesson.1",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "git-github",
+        "lessonOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.workflow.skill.git-branches"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:git-github:1"
+      ]
+    },
+    {
+      "activityId": "codecamp.git-github.lesson.2",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "git-github",
+        "lessonOrder": 2
+      },
+      "objectiveIds": [
+        "codecamp.workflow.skill.git-branches"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:git-github:2"
+      ]
+    },
+    {
+      "activityId": "codecamp.git-github.lesson.3",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "git-github",
+        "lessonOrder": 3
+      },
+      "objectiveIds": [
+        "codecamp.workflow.skill.git-branches"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:git-github:3"
+      ]
+    },
+    {
+      "activityId": "codecamp.git-github.exercise.3.1",
+      "activityKind": "exercise",
+      "source": {
+        "moduleSlug": "git-github",
+        "lessonOrder": 3,
+        "itemOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.workflow.skill.git-branches"
+      ],
+      "practiceMode": "guided",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.55,
+      "evidenceSource": "exercise-check",
+      "variantId": "git-github-exercise-1",
+      "variantFamily": "git-github-guided-exercise",
+      "misconceptionTags": [
+        "git-github-implementation-gap"
+      ],
+      "rubricRefs": [
+        "codecamp.exercise.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.git-github.lesson.4",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "git-github",
+        "lessonOrder": 4
+      },
+      "objectiveIds": [
+        "codecamp.workflow.skill.git-branches"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:git-github:4"
+      ]
+    },
+    {
+      "activityId": "codecamp.git-github.question.4.1",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "git-github",
+        "lessonOrder": 4,
+        "itemOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.workflow.skill.git-branches"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "git-github-quiz-4-1",
+      "variantFamily": "git-github-quiz",
+      "misconceptionTags": [
+        "git-github-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.git-github.question.4.2",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "git-github",
+        "lessonOrder": 4,
+        "itemOrder": 2
+      },
+      "objectiveIds": [
+        "codecamp.workflow.skill.git-branches"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "git-github-quiz-4-2",
+      "variantFamily": "git-github-quiz",
+      "misconceptionTags": [
+        "git-github-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.git-github.question.4.3",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "git-github",
+        "lessonOrder": 4,
+        "itemOrder": 3
+      },
+      "objectiveIds": [
+        "codecamp.workflow.skill.git-branches"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "git-github-quiz-4-3",
+      "variantFamily": "git-github-quiz",
+      "misconceptionTags": [
+        "git-github-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.git-github.question.4.4",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "git-github",
+        "lessonOrder": 4,
+        "itemOrder": 4
+      },
+      "objectiveIds": [
+        "codecamp.workflow.skill.git-branches"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "git-github-quiz-4-4",
+      "variantFamily": "git-github-quiz",
+      "misconceptionTags": [
+        "git-github-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.git-github.question.4.5",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "git-github",
+        "lessonOrder": 4,
+        "itemOrder": 5
+      },
+      "objectiveIds": [
+        "codecamp.workflow.skill.git-branches"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "git-github-quiz-4-5",
+      "variantFamily": "git-github-quiz",
+      "misconceptionTags": [
+        "git-github-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.git-github.repository",
+      "activityKind": "repository",
+      "source": {
+        "moduleSlug": "git-github"
+      },
+      "objectiveIds": [
+        "codecamp.workflow.skill.git-branches"
+      ],
+      "practiceMode": "independent",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.75,
+      "evidenceSource": "pull-request",
+      "variantId": "git-github-repository",
+      "variantFamily": "git-github-independent-repository",
+      "misconceptionTags": [
+        "git-github-transfer-gap"
+      ],
+      "rubricRefs": [
+        "codecamp.pr.v1"
+      ],
+      "resourceRefs": [
+        "repo:git-github"
+      ]
+    },
+    {
+      "activityId": "codecamp.html-css.lesson.1",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "html-css",
+        "lessonOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.semantic-html-css"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:html-css:1"
+      ]
+    },
+    {
+      "activityId": "codecamp.html-css.lesson.2",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "html-css",
+        "lessonOrder": 2
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.semantic-html-css"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:html-css:2"
+      ]
+    },
+    {
+      "activityId": "codecamp.html-css.lesson.3",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "html-css",
+        "lessonOrder": 3
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.semantic-html-css"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:html-css:3"
+      ]
+    },
+    {
+      "activityId": "codecamp.html-css.lesson.4",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "html-css",
+        "lessonOrder": 4
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.semantic-html-css"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:html-css:4"
+      ]
+    },
+    {
+      "activityId": "codecamp.html-css.lesson.5",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "html-css",
+        "lessonOrder": 5
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.semantic-html-css"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:html-css:5"
+      ]
+    },
+    {
+      "activityId": "codecamp.html-css.lesson.6",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "html-css",
+        "lessonOrder": 6
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.semantic-html-css"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:html-css:6"
+      ]
+    },
+    {
+      "activityId": "codecamp.html-css.question.6.1",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "html-css",
+        "lessonOrder": 6,
+        "itemOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.semantic-html-css"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "html-css-quiz-6-1",
+      "variantFamily": "html-css-quiz",
+      "misconceptionTags": [
+        "html-css-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.html-css.question.6.2",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "html-css",
+        "lessonOrder": 6,
+        "itemOrder": 2
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.semantic-html-css"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "html-css-quiz-6-2",
+      "variantFamily": "html-css-quiz",
+      "misconceptionTags": [
+        "html-css-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.html-css.question.6.3",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "html-css",
+        "lessonOrder": 6,
+        "itemOrder": 3
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.semantic-html-css"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "html-css-quiz-6-3",
+      "variantFamily": "html-css-quiz",
+      "misconceptionTags": [
+        "html-css-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.html-css.question.6.4",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "html-css",
+        "lessonOrder": 6,
+        "itemOrder": 4
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.semantic-html-css"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "html-css-quiz-6-4",
+      "variantFamily": "html-css-quiz",
+      "misconceptionTags": [
+        "html-css-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.html-css.question.6.5",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "html-css",
+        "lessonOrder": 6,
+        "itemOrder": 5
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.semantic-html-css"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "html-css-quiz-6-5",
+      "variantFamily": "html-css-quiz",
+      "misconceptionTags": [
+        "html-css-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.html-css.exercise.6.1",
+      "activityKind": "exercise",
+      "source": {
+        "moduleSlug": "html-css",
+        "lessonOrder": 6,
+        "itemOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.semantic-html-css"
+      ],
+      "practiceMode": "guided",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.55,
+      "evidenceSource": "exercise-check",
+      "variantId": "html-css-exercise-1",
+      "variantFamily": "html-css-guided-exercise",
+      "misconceptionTags": [
+        "html-css-implementation-gap"
+      ],
+      "rubricRefs": [
+        "codecamp.exercise.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.html-css.repository",
+      "activityKind": "repository",
+      "source": {
+        "moduleSlug": "html-css"
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.semantic-html-css"
+      ],
+      "practiceMode": "independent",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.75,
+      "evidenceSource": "pull-request",
+      "variantId": "html-css-repository",
+      "variantFamily": "html-css-independent-repository",
+      "misconceptionTags": [
+        "html-css-transfer-gap"
+      ],
+      "rubricRefs": [
+        "codecamp.pr.v1"
+      ],
+      "resourceRefs": [
+        "repo:html-css"
+      ]
+    },
+    {
+      "activityId": "codecamp.javascript.lesson.1",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "javascript",
+        "lessonOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.foundation.skill.functions"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:javascript:1"
+      ]
+    },
+    {
+      "activityId": "codecamp.javascript.lesson.2",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "javascript",
+        "lessonOrder": 2
+      },
+      "objectiveIds": [
+        "codecamp.foundation.skill.functions"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:javascript:2"
+      ]
+    },
+    {
+      "activityId": "codecamp.javascript.lesson.3",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "javascript",
+        "lessonOrder": 3
+      },
+      "objectiveIds": [
+        "codecamp.foundation.skill.functions"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:javascript:3"
+      ]
+    },
+    {
+      "activityId": "codecamp.javascript.lesson.4",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "javascript",
+        "lessonOrder": 4
+      },
+      "objectiveIds": [
+        "codecamp.foundation.skill.functions"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:javascript:4"
+      ]
+    },
+    {
+      "activityId": "codecamp.javascript.lesson.5",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "javascript",
+        "lessonOrder": 5
+      },
+      "objectiveIds": [
+        "codecamp.foundation.skill.functions"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:javascript:5"
+      ]
+    },
+    {
+      "activityId": "codecamp.javascript.lesson.6",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "javascript",
+        "lessonOrder": 6
+      },
+      "objectiveIds": [
+        "codecamp.foundation.skill.functions"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:javascript:6"
+      ]
+    },
+    {
+      "activityId": "codecamp.javascript.lesson.7",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "javascript",
+        "lessonOrder": 7
+      },
+      "objectiveIds": [
+        "codecamp.foundation.skill.functions"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:javascript:7"
+      ]
+    },
+    {
+      "activityId": "codecamp.javascript.lesson.8",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "javascript",
+        "lessonOrder": 8
+      },
+      "objectiveIds": [
+        "codecamp.foundation.skill.functions"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:javascript:8"
+      ]
+    },
+    {
+      "activityId": "codecamp.javascript.question.8.1",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "javascript",
+        "lessonOrder": 8,
+        "itemOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.foundation.skill.functions"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "javascript-quiz-8-1",
+      "variantFamily": "javascript-quiz",
+      "misconceptionTags": [
+        "javascript-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.javascript.question.8.2",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "javascript",
+        "lessonOrder": 8,
+        "itemOrder": 2
+      },
+      "objectiveIds": [
+        "codecamp.foundation.skill.functions"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "javascript-quiz-8-2",
+      "variantFamily": "javascript-quiz",
+      "misconceptionTags": [
+        "javascript-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.javascript.question.8.3",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "javascript",
+        "lessonOrder": 8,
+        "itemOrder": 3
+      },
+      "objectiveIds": [
+        "codecamp.foundation.skill.functions"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "javascript-quiz-8-3",
+      "variantFamily": "javascript-quiz",
+      "misconceptionTags": [
+        "javascript-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.javascript.question.8.4",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "javascript",
+        "lessonOrder": 8,
+        "itemOrder": 4
+      },
+      "objectiveIds": [
+        "codecamp.foundation.skill.functions"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "javascript-quiz-8-4",
+      "variantFamily": "javascript-quiz",
+      "misconceptionTags": [
+        "javascript-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.javascript.question.8.5",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "javascript",
+        "lessonOrder": 8,
+        "itemOrder": 5
+      },
+      "objectiveIds": [
+        "codecamp.foundation.skill.functions"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "javascript-quiz-8-5",
+      "variantFamily": "javascript-quiz",
+      "misconceptionTags": [
+        "javascript-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.javascript.exercise.8.1",
+      "activityKind": "exercise",
+      "source": {
+        "moduleSlug": "javascript",
+        "lessonOrder": 8,
+        "itemOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.foundation.skill.functions"
+      ],
+      "practiceMode": "guided",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.55,
+      "evidenceSource": "exercise-check",
+      "variantId": "javascript-exercise-1",
+      "variantFamily": "javascript-guided-exercise",
+      "misconceptionTags": [
+        "javascript-implementation-gap"
+      ],
+      "rubricRefs": [
+        "codecamp.exercise.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.javascript.repository",
+      "activityKind": "repository",
+      "source": {
+        "moduleSlug": "javascript"
+      },
+      "objectiveIds": [
+        "codecamp.foundation.skill.functions"
+      ],
+      "practiceMode": "independent",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.75,
+      "evidenceSource": "pull-request",
+      "variantId": "javascript-repository",
+      "variantFamily": "javascript-independent-repository",
+      "misconceptionTags": [
+        "javascript-transfer-gap"
+      ],
+      "rubricRefs": [
+        "codecamp.pr.v1"
+      ],
+      "resourceRefs": [
+        "repo:javascript"
+      ]
+    },
+    {
+      "activityId": "codecamp.typescript.lesson.1",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "typescript",
+        "lessonOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.foundation.skill.typescript-contracts"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:typescript:1"
+      ]
+    },
+    {
+      "activityId": "codecamp.typescript.lesson.2",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "typescript",
+        "lessonOrder": 2
+      },
+      "objectiveIds": [
+        "codecamp.foundation.skill.typescript-contracts"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:typescript:2"
+      ]
+    },
+    {
+      "activityId": "codecamp.typescript.lesson.3",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "typescript",
+        "lessonOrder": 3
+      },
+      "objectiveIds": [
+        "codecamp.foundation.skill.typescript-contracts"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:typescript:3"
+      ]
+    },
+    {
+      "activityId": "codecamp.typescript.lesson.4",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "typescript",
+        "lessonOrder": 4
+      },
+      "objectiveIds": [
+        "codecamp.foundation.skill.typescript-contracts"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:typescript:4"
+      ]
+    },
+    {
+      "activityId": "codecamp.typescript.lesson.5",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "typescript",
+        "lessonOrder": 5
+      },
+      "objectiveIds": [
+        "codecamp.foundation.skill.typescript-contracts"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:typescript:5"
+      ]
+    },
+    {
+      "activityId": "codecamp.typescript.question.5.1",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "typescript",
+        "lessonOrder": 5,
+        "itemOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.foundation.skill.typescript-contracts"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "typescript-quiz-5-1",
+      "variantFamily": "typescript-quiz",
+      "misconceptionTags": [
+        "typescript-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.typescript.question.5.2",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "typescript",
+        "lessonOrder": 5,
+        "itemOrder": 2
+      },
+      "objectiveIds": [
+        "codecamp.foundation.skill.typescript-contracts"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "typescript-quiz-5-2",
+      "variantFamily": "typescript-quiz",
+      "misconceptionTags": [
+        "typescript-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.typescript.question.5.3",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "typescript",
+        "lessonOrder": 5,
+        "itemOrder": 3
+      },
+      "objectiveIds": [
+        "codecamp.foundation.skill.typescript-contracts"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "typescript-quiz-5-3",
+      "variantFamily": "typescript-quiz",
+      "misconceptionTags": [
+        "typescript-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.typescript.question.5.4",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "typescript",
+        "lessonOrder": 5,
+        "itemOrder": 4
+      },
+      "objectiveIds": [
+        "codecamp.foundation.skill.typescript-contracts"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "typescript-quiz-5-4",
+      "variantFamily": "typescript-quiz",
+      "misconceptionTags": [
+        "typescript-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.typescript.question.5.5",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "typescript",
+        "lessonOrder": 5,
+        "itemOrder": 5
+      },
+      "objectiveIds": [
+        "codecamp.foundation.skill.typescript-contracts"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "typescript-quiz-5-5",
+      "variantFamily": "typescript-quiz",
+      "misconceptionTags": [
+        "typescript-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.typescript.exercise.5.1",
+      "activityKind": "exercise",
+      "source": {
+        "moduleSlug": "typescript",
+        "lessonOrder": 5,
+        "itemOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.foundation.skill.typescript-contracts"
+      ],
+      "practiceMode": "guided",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.55,
+      "evidenceSource": "exercise-check",
+      "variantId": "typescript-exercise-1",
+      "variantFamily": "typescript-guided-exercise",
+      "misconceptionTags": [
+        "typescript-implementation-gap"
+      ],
+      "rubricRefs": [
+        "codecamp.exercise.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.typescript.repository",
+      "activityKind": "repository",
+      "source": {
+        "moduleSlug": "typescript"
+      },
+      "objectiveIds": [
+        "codecamp.foundation.skill.typescript-contracts"
+      ],
+      "practiceMode": "independent",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.75,
+      "evidenceSource": "pull-request",
+      "variantId": "typescript-repository",
+      "variantFamily": "typescript-independent-repository",
+      "misconceptionTags": [
+        "typescript-transfer-gap"
+      ],
+      "rubricRefs": [
+        "codecamp.pr.v1"
+      ],
+      "resourceRefs": [
+        "repo:typescript"
+      ]
+    },
+    {
+      "activityId": "codecamp.vitest.lesson.1",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "vitest",
+        "lessonOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.testing.skill.unit-tests"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:vitest:1"
+      ]
+    },
+    {
+      "activityId": "codecamp.vitest.lesson.2",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "vitest",
+        "lessonOrder": 2
+      },
+      "objectiveIds": [
+        "codecamp.testing.skill.unit-tests"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:vitest:2"
+      ]
+    },
+    {
+      "activityId": "codecamp.vitest.lesson.3",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "vitest",
+        "lessonOrder": 3
+      },
+      "objectiveIds": [
+        "codecamp.testing.skill.unit-tests"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:vitest:3"
+      ]
+    },
+    {
+      "activityId": "codecamp.vitest.lesson.4",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "vitest",
+        "lessonOrder": 4
+      },
+      "objectiveIds": [
+        "codecamp.testing.skill.unit-tests"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:vitest:4"
+      ]
+    },
+    {
+      "activityId": "codecamp.vitest.question.4.1",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "vitest",
+        "lessonOrder": 4,
+        "itemOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.testing.skill.unit-tests"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "vitest-quiz-4-1",
+      "variantFamily": "vitest-quiz",
+      "misconceptionTags": [
+        "vitest-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.vitest.question.4.2",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "vitest",
+        "lessonOrder": 4,
+        "itemOrder": 2
+      },
+      "objectiveIds": [
+        "codecamp.testing.skill.unit-tests"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "vitest-quiz-4-2",
+      "variantFamily": "vitest-quiz",
+      "misconceptionTags": [
+        "vitest-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.vitest.question.4.3",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "vitest",
+        "lessonOrder": 4,
+        "itemOrder": 3
+      },
+      "objectiveIds": [
+        "codecamp.testing.skill.unit-tests"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "vitest-quiz-4-3",
+      "variantFamily": "vitest-quiz",
+      "misconceptionTags": [
+        "vitest-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.vitest.question.4.4",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "vitest",
+        "lessonOrder": 4,
+        "itemOrder": 4
+      },
+      "objectiveIds": [
+        "codecamp.testing.skill.unit-tests"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "vitest-quiz-4-4",
+      "variantFamily": "vitest-quiz",
+      "misconceptionTags": [
+        "vitest-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.vitest.question.4.5",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "vitest",
+        "lessonOrder": 4,
+        "itemOrder": 5
+      },
+      "objectiveIds": [
+        "codecamp.testing.skill.unit-tests"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "vitest-quiz-4-5",
+      "variantFamily": "vitest-quiz",
+      "misconceptionTags": [
+        "vitest-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.vitest.exercise.4.1",
+      "activityKind": "exercise",
+      "source": {
+        "moduleSlug": "vitest",
+        "lessonOrder": 4,
+        "itemOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.testing.skill.unit-tests"
+      ],
+      "practiceMode": "guided",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.55,
+      "evidenceSource": "exercise-check",
+      "variantId": "vitest-exercise-1",
+      "variantFamily": "vitest-guided-exercise",
+      "misconceptionTags": [
+        "vitest-implementation-gap"
+      ],
+      "rubricRefs": [
+        "codecamp.exercise.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.vitest.repository",
+      "activityKind": "repository",
+      "source": {
+        "moduleSlug": "vitest"
+      },
+      "objectiveIds": [
+        "codecamp.testing.skill.unit-tests"
+      ],
+      "practiceMode": "independent",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.75,
+      "evidenceSource": "pull-request",
+      "variantId": "vitest-repository",
+      "variantFamily": "vitest-independent-repository",
+      "misconceptionTags": [
+        "vitest-transfer-gap"
+      ],
+      "rubricRefs": [
+        "codecamp.pr.v1"
+      ],
+      "resourceRefs": [
+        "repo:vitest"
+      ]
+    },
+    {
+      "activityId": "codecamp.react.lesson.1",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "react",
+        "lessonOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.react-components"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:react:1"
+      ]
+    },
+    {
+      "activityId": "codecamp.react.lesson.2",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "react",
+        "lessonOrder": 2
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.react-components"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:react:2"
+      ]
+    },
+    {
+      "activityId": "codecamp.react.lesson.3",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "react",
+        "lessonOrder": 3
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.react-components"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:react:3"
+      ]
+    },
+    {
+      "activityId": "codecamp.react.lesson.4",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "react",
+        "lessonOrder": 4
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.react-components"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:react:4"
+      ]
+    },
+    {
+      "activityId": "codecamp.react.lesson.5",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "react",
+        "lessonOrder": 5
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.react-components"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:react:5"
+      ]
+    },
+    {
+      "activityId": "codecamp.react.lesson.6",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "react",
+        "lessonOrder": 6
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.react-components"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:react:6"
+      ]
+    },
+    {
+      "activityId": "codecamp.react.lesson.7",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "react",
+        "lessonOrder": 7
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.react-components"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:react:7"
+      ]
+    },
+    {
+      "activityId": "codecamp.react.question.7.1",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "react",
+        "lessonOrder": 7,
+        "itemOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.react-components"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "react-quiz-7-1",
+      "variantFamily": "react-quiz",
+      "misconceptionTags": [
+        "react-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.react.question.7.2",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "react",
+        "lessonOrder": 7,
+        "itemOrder": 2
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.react-components"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "react-quiz-7-2",
+      "variantFamily": "react-quiz",
+      "misconceptionTags": [
+        "react-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.react.question.7.3",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "react",
+        "lessonOrder": 7,
+        "itemOrder": 3
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.react-components"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "react-quiz-7-3",
+      "variantFamily": "react-quiz",
+      "misconceptionTags": [
+        "react-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.react.question.7.4",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "react",
+        "lessonOrder": 7,
+        "itemOrder": 4
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.react-components"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "react-quiz-7-4",
+      "variantFamily": "react-quiz",
+      "misconceptionTags": [
+        "react-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.react.question.7.5",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "react",
+        "lessonOrder": 7,
+        "itemOrder": 5
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.react-components"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "react-quiz-7-5",
+      "variantFamily": "react-quiz",
+      "misconceptionTags": [
+        "react-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.react.exercise.7.1",
+      "activityKind": "exercise",
+      "source": {
+        "moduleSlug": "react",
+        "lessonOrder": 7,
+        "itemOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.react-components"
+      ],
+      "practiceMode": "guided",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.55,
+      "evidenceSource": "exercise-check",
+      "variantId": "react-exercise-1",
+      "variantFamily": "react-guided-exercise",
+      "misconceptionTags": [
+        "react-implementation-gap"
+      ],
+      "rubricRefs": [
+        "codecamp.exercise.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.react.repository",
+      "activityKind": "repository",
+      "source": {
+        "moduleSlug": "react"
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.react-components"
+      ],
+      "practiceMode": "independent",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.75,
+      "evidenceSource": "pull-request",
+      "variantId": "react-repository",
+      "variantFamily": "react-independent-repository",
+      "misconceptionTags": [
+        "react-transfer-gap"
+      ],
+      "rubricRefs": [
+        "codecamp.pr.v1"
+      ],
+      "resourceRefs": [
+        "repo:react"
+      ]
+    },
+    {
+      "activityId": "codecamp.api-fundamentals.lesson.1",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "api-fundamentals",
+        "lessonOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.backend.concept.http-api"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:api-fundamentals:1"
+      ]
+    },
+    {
+      "activityId": "codecamp.api-fundamentals.lesson.2",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "api-fundamentals",
+        "lessonOrder": 2
+      },
+      "objectiveIds": [
+        "codecamp.backend.concept.http-api"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:api-fundamentals:2"
+      ]
+    },
+    {
+      "activityId": "codecamp.api-fundamentals.lesson.3",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "api-fundamentals",
+        "lessonOrder": 3
+      },
+      "objectiveIds": [
+        "codecamp.backend.concept.http-api"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:api-fundamentals:3"
+      ]
+    },
+    {
+      "activityId": "codecamp.api-fundamentals.lesson.4",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "api-fundamentals",
+        "lessonOrder": 4
+      },
+      "objectiveIds": [
+        "codecamp.backend.concept.http-api"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:api-fundamentals:4"
+      ]
+    },
+    {
+      "activityId": "codecamp.api-fundamentals.lesson.5",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "api-fundamentals",
+        "lessonOrder": 5
+      },
+      "objectiveIds": [
+        "codecamp.backend.concept.http-api"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:api-fundamentals:5"
+      ]
+    },
+    {
+      "activityId": "codecamp.api-fundamentals.question.5.1",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "api-fundamentals",
+        "lessonOrder": 5,
+        "itemOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.backend.concept.http-api"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "api-fundamentals-quiz-5-1",
+      "variantFamily": "api-fundamentals-quiz",
+      "misconceptionTags": [
+        "api-fundamentals-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.api-fundamentals.question.5.2",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "api-fundamentals",
+        "lessonOrder": 5,
+        "itemOrder": 2
+      },
+      "objectiveIds": [
+        "codecamp.backend.concept.http-api"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "api-fundamentals-quiz-5-2",
+      "variantFamily": "api-fundamentals-quiz",
+      "misconceptionTags": [
+        "api-fundamentals-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.api-fundamentals.question.5.3",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "api-fundamentals",
+        "lessonOrder": 5,
+        "itemOrder": 3
+      },
+      "objectiveIds": [
+        "codecamp.backend.concept.http-api"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "api-fundamentals-quiz-5-3",
+      "variantFamily": "api-fundamentals-quiz",
+      "misconceptionTags": [
+        "api-fundamentals-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.api-fundamentals.question.5.4",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "api-fundamentals",
+        "lessonOrder": 5,
+        "itemOrder": 4
+      },
+      "objectiveIds": [
+        "codecamp.backend.concept.http-api"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "api-fundamentals-quiz-5-4",
+      "variantFamily": "api-fundamentals-quiz",
+      "misconceptionTags": [
+        "api-fundamentals-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.api-fundamentals.question.5.5",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "api-fundamentals",
+        "lessonOrder": 5,
+        "itemOrder": 5
+      },
+      "objectiveIds": [
+        "codecamp.backend.concept.http-api"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "api-fundamentals-quiz-5-5",
+      "variantFamily": "api-fundamentals-quiz",
+      "misconceptionTags": [
+        "api-fundamentals-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.api-fundamentals.exercise.5.1",
+      "activityKind": "exercise",
+      "source": {
+        "moduleSlug": "api-fundamentals",
+        "lessonOrder": 5,
+        "itemOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.backend.concept.http-api"
+      ],
+      "practiceMode": "guided",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.55,
+      "evidenceSource": "exercise-check",
+      "variantId": "api-fundamentals-exercise-1",
+      "variantFamily": "api-fundamentals-guided-exercise",
+      "misconceptionTags": [
+        "api-fundamentals-implementation-gap"
+      ],
+      "rubricRefs": [
+        "codecamp.exercise.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.api-fundamentals.repository",
+      "activityKind": "repository",
+      "source": {
+        "moduleSlug": "api-fundamentals"
+      },
+      "objectiveIds": [
+        "codecamp.backend.concept.http-api"
+      ],
+      "practiceMode": "independent",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.75,
+      "evidenceSource": "pull-request",
+      "variantId": "api-fundamentals-repository",
+      "variantFamily": "api-fundamentals-independent-repository",
+      "misconceptionTags": [
+        "api-fundamentals-transfer-gap"
+      ],
+      "rubricRefs": [
+        "codecamp.pr.v1"
+      ],
+      "resourceRefs": [
+        "repo:api-fundamentals"
+      ]
+    },
+    {
+      "activityId": "codecamp.nextjs-basics.lesson.1",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "nextjs-basics",
+        "lessonOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.next-routing"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:nextjs-basics:1"
+      ]
+    },
+    {
+      "activityId": "codecamp.nextjs-basics.lesson.2",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "nextjs-basics",
+        "lessonOrder": 2
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.next-routing"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:nextjs-basics:2"
+      ]
+    },
+    {
+      "activityId": "codecamp.nextjs-basics.lesson.3",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "nextjs-basics",
+        "lessonOrder": 3
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.next-routing"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:nextjs-basics:3"
+      ]
+    },
+    {
+      "activityId": "codecamp.nextjs-basics.lesson.4",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "nextjs-basics",
+        "lessonOrder": 4
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.next-routing"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:nextjs-basics:4"
+      ]
+    },
+    {
+      "activityId": "codecamp.nextjs-basics.lesson.5",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "nextjs-basics",
+        "lessonOrder": 5
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.next-routing"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:nextjs-basics:5"
+      ]
+    },
+    {
+      "activityId": "codecamp.nextjs-basics.lesson.6",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "nextjs-basics",
+        "lessonOrder": 6
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.next-routing"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:nextjs-basics:6"
+      ]
+    },
+    {
+      "activityId": "codecamp.nextjs-basics.question.6.1",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "nextjs-basics",
+        "lessonOrder": 6,
+        "itemOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.next-routing"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "nextjs-basics-quiz-6-1",
+      "variantFamily": "nextjs-basics-quiz",
+      "misconceptionTags": [
+        "nextjs-basics-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.nextjs-basics.question.6.2",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "nextjs-basics",
+        "lessonOrder": 6,
+        "itemOrder": 2
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.next-routing"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "nextjs-basics-quiz-6-2",
+      "variantFamily": "nextjs-basics-quiz",
+      "misconceptionTags": [
+        "nextjs-basics-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.nextjs-basics.question.6.3",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "nextjs-basics",
+        "lessonOrder": 6,
+        "itemOrder": 3
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.next-routing"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "nextjs-basics-quiz-6-3",
+      "variantFamily": "nextjs-basics-quiz",
+      "misconceptionTags": [
+        "nextjs-basics-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.nextjs-basics.question.6.4",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "nextjs-basics",
+        "lessonOrder": 6,
+        "itemOrder": 4
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.next-routing"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "nextjs-basics-quiz-6-4",
+      "variantFamily": "nextjs-basics-quiz",
+      "misconceptionTags": [
+        "nextjs-basics-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.nextjs-basics.question.6.5",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "nextjs-basics",
+        "lessonOrder": 6,
+        "itemOrder": 5
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.next-routing"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "nextjs-basics-quiz-6-5",
+      "variantFamily": "nextjs-basics-quiz",
+      "misconceptionTags": [
+        "nextjs-basics-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.nextjs-basics.exercise.6.1",
+      "activityKind": "exercise",
+      "source": {
+        "moduleSlug": "nextjs-basics",
+        "lessonOrder": 6,
+        "itemOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.next-routing"
+      ],
+      "practiceMode": "guided",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.55,
+      "evidenceSource": "exercise-check",
+      "variantId": "nextjs-basics-exercise-1",
+      "variantFamily": "nextjs-basics-guided-exercise",
+      "misconceptionTags": [
+        "nextjs-basics-implementation-gap"
+      ],
+      "rubricRefs": [
+        "codecamp.exercise.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.nextjs-basics.repository",
+      "activityKind": "repository",
+      "source": {
+        "moduleSlug": "nextjs-basics"
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.next-routing"
+      ],
+      "practiceMode": "independent",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.75,
+      "evidenceSource": "pull-request",
+      "variantId": "nextjs-basics-repository",
+      "variantFamily": "nextjs-basics-independent-repository",
+      "misconceptionTags": [
+        "nextjs-basics-transfer-gap"
+      ],
+      "rubricRefs": [
+        "codecamp.pr.v1"
+      ],
+      "resourceRefs": [
+        "repo:nextjs-basics"
+      ]
+    },
+    {
+      "activityId": "codecamp.nextjs-advanced.lesson.1",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "nextjs-advanced",
+        "lessonOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.architecture.skill.contract-first"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:nextjs-advanced:1"
+      ]
+    },
+    {
+      "activityId": "codecamp.nextjs-advanced.lesson.2",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "nextjs-advanced",
+        "lessonOrder": 2
+      },
+      "objectiveIds": [
+        "codecamp.architecture.skill.contract-first"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:nextjs-advanced:2"
+      ]
+    },
+    {
+      "activityId": "codecamp.nextjs-advanced.lesson.3",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "nextjs-advanced",
+        "lessonOrder": 3
+      },
+      "objectiveIds": [
+        "codecamp.architecture.skill.contract-first"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:nextjs-advanced:3"
+      ]
+    },
+    {
+      "activityId": "codecamp.nextjs-advanced.lesson.4",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "nextjs-advanced",
+        "lessonOrder": 4
+      },
+      "objectiveIds": [
+        "codecamp.architecture.skill.contract-first"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:nextjs-advanced:4"
+      ]
+    },
+    {
+      "activityId": "codecamp.nextjs-advanced.lesson.5",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "nextjs-advanced",
+        "lessonOrder": 5
+      },
+      "objectiveIds": [
+        "codecamp.architecture.skill.contract-first"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:nextjs-advanced:5"
+      ]
+    },
+    {
+      "activityId": "codecamp.nextjs-advanced.question.5.1",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "nextjs-advanced",
+        "lessonOrder": 5,
+        "itemOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.architecture.skill.contract-first"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "nextjs-advanced-quiz-5-1",
+      "variantFamily": "nextjs-advanced-quiz",
+      "misconceptionTags": [
+        "nextjs-advanced-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.nextjs-advanced.question.5.2",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "nextjs-advanced",
+        "lessonOrder": 5,
+        "itemOrder": 2
+      },
+      "objectiveIds": [
+        "codecamp.architecture.skill.contract-first"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "nextjs-advanced-quiz-5-2",
+      "variantFamily": "nextjs-advanced-quiz",
+      "misconceptionTags": [
+        "nextjs-advanced-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.nextjs-advanced.question.5.3",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "nextjs-advanced",
+        "lessonOrder": 5,
+        "itemOrder": 3
+      },
+      "objectiveIds": [
+        "codecamp.architecture.skill.contract-first"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "nextjs-advanced-quiz-5-3",
+      "variantFamily": "nextjs-advanced-quiz",
+      "misconceptionTags": [
+        "nextjs-advanced-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.nextjs-advanced.question.5.4",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "nextjs-advanced",
+        "lessonOrder": 5,
+        "itemOrder": 4
+      },
+      "objectiveIds": [
+        "codecamp.architecture.skill.contract-first"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "nextjs-advanced-quiz-5-4",
+      "variantFamily": "nextjs-advanced-quiz",
+      "misconceptionTags": [
+        "nextjs-advanced-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.nextjs-advanced.question.5.5",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "nextjs-advanced",
+        "lessonOrder": 5,
+        "itemOrder": 5
+      },
+      "objectiveIds": [
+        "codecamp.architecture.skill.contract-first"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "nextjs-advanced-quiz-5-5",
+      "variantFamily": "nextjs-advanced-quiz",
+      "misconceptionTags": [
+        "nextjs-advanced-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.nextjs-advanced.exercise.5.1",
+      "activityKind": "exercise",
+      "source": {
+        "moduleSlug": "nextjs-advanced",
+        "lessonOrder": 5,
+        "itemOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.architecture.skill.contract-first"
+      ],
+      "practiceMode": "guided",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.55,
+      "evidenceSource": "exercise-check",
+      "variantId": "nextjs-advanced-exercise-1",
+      "variantFamily": "nextjs-advanced-guided-exercise",
+      "misconceptionTags": [
+        "nextjs-advanced-implementation-gap"
+      ],
+      "rubricRefs": [
+        "codecamp.exercise.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.nextjs-advanced.repository",
+      "activityKind": "repository",
+      "source": {
+        "moduleSlug": "nextjs-advanced"
+      },
+      "objectiveIds": [
+        "codecamp.architecture.skill.contract-first"
+      ],
+      "practiceMode": "independent",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.75,
+      "evidenceSource": "pull-request",
+      "variantId": "nextjs-advanced-repository",
+      "variantFamily": "nextjs-advanced-independent-repository",
+      "misconceptionTags": [
+        "nextjs-advanced-transfer-gap"
+      ],
+      "rubricRefs": [
+        "codecamp.pr.v1"
+      ],
+      "resourceRefs": [
+        "repo:nextjs-advanced"
+      ]
+    },
+    {
+      "activityId": "codecamp.databases-orms.lesson.1",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "databases-orms",
+        "lessonOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.data.skill.drizzle-queries"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:databases-orms:1"
+      ]
+    },
+    {
+      "activityId": "codecamp.databases-orms.lesson.2",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "databases-orms",
+        "lessonOrder": 2
+      },
+      "objectiveIds": [
+        "codecamp.data.skill.drizzle-queries"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:databases-orms:2"
+      ]
+    },
+    {
+      "activityId": "codecamp.databases-orms.lesson.3",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "databases-orms",
+        "lessonOrder": 3
+      },
+      "objectiveIds": [
+        "codecamp.data.skill.drizzle-queries"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:databases-orms:3"
+      ]
+    },
+    {
+      "activityId": "codecamp.databases-orms.lesson.4",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "databases-orms",
+        "lessonOrder": 4
+      },
+      "objectiveIds": [
+        "codecamp.data.skill.drizzle-queries"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:databases-orms:4"
+      ]
+    },
+    {
+      "activityId": "codecamp.databases-orms.lesson.5",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "databases-orms",
+        "lessonOrder": 5
+      },
+      "objectiveIds": [
+        "codecamp.data.skill.drizzle-queries"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:databases-orms:5"
+      ]
+    },
+    {
+      "activityId": "codecamp.databases-orms.question.5.1",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "databases-orms",
+        "lessonOrder": 5,
+        "itemOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.data.skill.drizzle-queries"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "databases-orms-quiz-5-1",
+      "variantFamily": "databases-orms-quiz",
+      "misconceptionTags": [
+        "databases-orms-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.databases-orms.question.5.2",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "databases-orms",
+        "lessonOrder": 5,
+        "itemOrder": 2
+      },
+      "objectiveIds": [
+        "codecamp.data.skill.drizzle-queries"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "databases-orms-quiz-5-2",
+      "variantFamily": "databases-orms-quiz",
+      "misconceptionTags": [
+        "databases-orms-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.databases-orms.question.5.3",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "databases-orms",
+        "lessonOrder": 5,
+        "itemOrder": 3
+      },
+      "objectiveIds": [
+        "codecamp.data.skill.drizzle-queries"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "databases-orms-quiz-5-3",
+      "variantFamily": "databases-orms-quiz",
+      "misconceptionTags": [
+        "databases-orms-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.databases-orms.question.5.4",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "databases-orms",
+        "lessonOrder": 5,
+        "itemOrder": 4
+      },
+      "objectiveIds": [
+        "codecamp.data.skill.drizzle-queries"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "databases-orms-quiz-5-4",
+      "variantFamily": "databases-orms-quiz",
+      "misconceptionTags": [
+        "databases-orms-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.databases-orms.question.5.5",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "databases-orms",
+        "lessonOrder": 5,
+        "itemOrder": 5
+      },
+      "objectiveIds": [
+        "codecamp.data.skill.drizzle-queries"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "databases-orms-quiz-5-5",
+      "variantFamily": "databases-orms-quiz",
+      "misconceptionTags": [
+        "databases-orms-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.databases-orms.exercise.5.1",
+      "activityKind": "exercise",
+      "source": {
+        "moduleSlug": "databases-orms",
+        "lessonOrder": 5,
+        "itemOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.data.skill.drizzle-queries"
+      ],
+      "practiceMode": "guided",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.55,
+      "evidenceSource": "exercise-check",
+      "variantId": "databases-orms-exercise-1",
+      "variantFamily": "databases-orms-guided-exercise",
+      "misconceptionTags": [
+        "databases-orms-implementation-gap"
+      ],
+      "rubricRefs": [
+        "codecamp.exercise.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.databases-orms.repository",
+      "activityKind": "repository",
+      "source": {
+        "moduleSlug": "databases-orms"
+      },
+      "objectiveIds": [
+        "codecamp.data.skill.drizzle-queries"
+      ],
+      "practiceMode": "independent",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.75,
+      "evidenceSource": "pull-request",
+      "variantId": "databases-orms-repository",
+      "variantFamily": "databases-orms-independent-repository",
+      "misconceptionTags": [
+        "databases-orms-transfer-gap"
+      ],
+      "rubricRefs": [
+        "codecamp.pr.v1"
+      ],
+      "resourceRefs": [
+        "repo:databases-orms"
+      ]
+    },
+    {
+      "activityId": "codecamp.trpc-server-actions.lesson.1",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "trpc-server-actions",
+        "lessonOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.architecture.skill.backend-module"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:trpc-server-actions:1"
+      ]
+    },
+    {
+      "activityId": "codecamp.trpc-server-actions.lesson.2",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "trpc-server-actions",
+        "lessonOrder": 2
+      },
+      "objectiveIds": [
+        "codecamp.architecture.skill.backend-module"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:trpc-server-actions:2"
+      ]
+    },
+    {
+      "activityId": "codecamp.trpc-server-actions.lesson.3",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "trpc-server-actions",
+        "lessonOrder": 3
+      },
+      "objectiveIds": [
+        "codecamp.architecture.skill.backend-module"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:trpc-server-actions:3"
+      ]
+    },
+    {
+      "activityId": "codecamp.trpc-server-actions.lesson.4",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "trpc-server-actions",
+        "lessonOrder": 4
+      },
+      "objectiveIds": [
+        "codecamp.architecture.skill.backend-module"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:trpc-server-actions:4"
+      ]
+    },
+    {
+      "activityId": "codecamp.trpc-server-actions.lesson.5",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "trpc-server-actions",
+        "lessonOrder": 5
+      },
+      "objectiveIds": [
+        "codecamp.architecture.skill.backend-module"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:trpc-server-actions:5"
+      ]
+    },
+    {
+      "activityId": "codecamp.trpc-server-actions.question.5.1",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "trpc-server-actions",
+        "lessonOrder": 5,
+        "itemOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.architecture.skill.backend-module"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "trpc-server-actions-quiz-5-1",
+      "variantFamily": "trpc-server-actions-quiz",
+      "misconceptionTags": [
+        "trpc-server-actions-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.trpc-server-actions.question.5.2",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "trpc-server-actions",
+        "lessonOrder": 5,
+        "itemOrder": 2
+      },
+      "objectiveIds": [
+        "codecamp.architecture.skill.backend-module"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "trpc-server-actions-quiz-5-2",
+      "variantFamily": "trpc-server-actions-quiz",
+      "misconceptionTags": [
+        "trpc-server-actions-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.trpc-server-actions.question.5.3",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "trpc-server-actions",
+        "lessonOrder": 5,
+        "itemOrder": 3
+      },
+      "objectiveIds": [
+        "codecamp.architecture.skill.backend-module"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "trpc-server-actions-quiz-5-3",
+      "variantFamily": "trpc-server-actions-quiz",
+      "misconceptionTags": [
+        "trpc-server-actions-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.trpc-server-actions.question.5.4",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "trpc-server-actions",
+        "lessonOrder": 5,
+        "itemOrder": 4
+      },
+      "objectiveIds": [
+        "codecamp.architecture.skill.backend-module"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "trpc-server-actions-quiz-5-4",
+      "variantFamily": "trpc-server-actions-quiz",
+      "misconceptionTags": [
+        "trpc-server-actions-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.trpc-server-actions.question.5.5",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "trpc-server-actions",
+        "lessonOrder": 5,
+        "itemOrder": 5
+      },
+      "objectiveIds": [
+        "codecamp.architecture.skill.backend-module"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "trpc-server-actions-quiz-5-5",
+      "variantFamily": "trpc-server-actions-quiz",
+      "misconceptionTags": [
+        "trpc-server-actions-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.trpc-server-actions.exercise.5.1",
+      "activityKind": "exercise",
+      "source": {
+        "moduleSlug": "trpc-server-actions",
+        "lessonOrder": 5,
+        "itemOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.architecture.skill.backend-module"
+      ],
+      "practiceMode": "guided",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.55,
+      "evidenceSource": "exercise-check",
+      "variantId": "trpc-server-actions-exercise-1",
+      "variantFamily": "trpc-server-actions-guided-exercise",
+      "misconceptionTags": [
+        "trpc-server-actions-implementation-gap"
+      ],
+      "rubricRefs": [
+        "codecamp.exercise.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.trpc-server-actions.repository",
+      "activityKind": "repository",
+      "source": {
+        "moduleSlug": "trpc-server-actions"
+      },
+      "objectiveIds": [
+        "codecamp.architecture.skill.backend-module"
+      ],
+      "practiceMode": "independent",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.75,
+      "evidenceSource": "pull-request",
+      "variantId": "trpc-server-actions-repository",
+      "variantFamily": "trpc-server-actions-independent-repository",
+      "misconceptionTags": [
+        "trpc-server-actions-transfer-gap"
+      ],
+      "rubricRefs": [
+        "codecamp.pr.v1"
+      ],
+      "resourceRefs": [
+        "repo:trpc-server-actions"
+      ]
+    },
+    {
+      "activityId": "codecamp.authentication.lesson.1",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "authentication",
+        "lessonOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.backend.skill.authorization"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:authentication:1"
+      ]
+    },
+    {
+      "activityId": "codecamp.authentication.lesson.2",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "authentication",
+        "lessonOrder": 2
+      },
+      "objectiveIds": [
+        "codecamp.backend.skill.authorization"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:authentication:2"
+      ]
+    },
+    {
+      "activityId": "codecamp.authentication.lesson.3",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "authentication",
+        "lessonOrder": 3
+      },
+      "objectiveIds": [
+        "codecamp.backend.skill.authorization"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:authentication:3"
+      ]
+    },
+    {
+      "activityId": "codecamp.authentication.lesson.4",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "authentication",
+        "lessonOrder": 4
+      },
+      "objectiveIds": [
+        "codecamp.backend.skill.authorization"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:authentication:4"
+      ]
+    },
+    {
+      "activityId": "codecamp.authentication.question.4.1",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "authentication",
+        "lessonOrder": 4,
+        "itemOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.backend.skill.authorization"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "authentication-quiz-4-1",
+      "variantFamily": "authentication-quiz",
+      "misconceptionTags": [
+        "authentication-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.authentication.question.4.2",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "authentication",
+        "lessonOrder": 4,
+        "itemOrder": 2
+      },
+      "objectiveIds": [
+        "codecamp.backend.skill.authorization"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "authentication-quiz-4-2",
+      "variantFamily": "authentication-quiz",
+      "misconceptionTags": [
+        "authentication-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.authentication.question.4.3",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "authentication",
+        "lessonOrder": 4,
+        "itemOrder": 3
+      },
+      "objectiveIds": [
+        "codecamp.backend.skill.authorization"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "authentication-quiz-4-3",
+      "variantFamily": "authentication-quiz",
+      "misconceptionTags": [
+        "authentication-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.authentication.question.4.4",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "authentication",
+        "lessonOrder": 4,
+        "itemOrder": 4
+      },
+      "objectiveIds": [
+        "codecamp.backend.skill.authorization"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "authentication-quiz-4-4",
+      "variantFamily": "authentication-quiz",
+      "misconceptionTags": [
+        "authentication-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.authentication.question.4.5",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "authentication",
+        "lessonOrder": 4,
+        "itemOrder": 5
+      },
+      "objectiveIds": [
+        "codecamp.backend.skill.authorization"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "authentication-quiz-4-5",
+      "variantFamily": "authentication-quiz",
+      "misconceptionTags": [
+        "authentication-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.authentication.exercise.4.1",
+      "activityKind": "exercise",
+      "source": {
+        "moduleSlug": "authentication",
+        "lessonOrder": 4,
+        "itemOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.backend.skill.authorization"
+      ],
+      "practiceMode": "guided",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.55,
+      "evidenceSource": "exercise-check",
+      "variantId": "authentication-exercise-1",
+      "variantFamily": "authentication-guided-exercise",
+      "misconceptionTags": [
+        "authentication-implementation-gap"
+      ],
+      "rubricRefs": [
+        "codecamp.exercise.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.authentication.repository",
+      "activityKind": "repository",
+      "source": {
+        "moduleSlug": "authentication"
+      },
+      "objectiveIds": [
+        "codecamp.backend.skill.authorization"
+      ],
+      "practiceMode": "independent",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.75,
+      "evidenceSource": "pull-request",
+      "variantId": "authentication-repository",
+      "variantFamily": "authentication-independent-repository",
+      "misconceptionTags": [
+        "authentication-transfer-gap"
+      ],
+      "rubricRefs": [
+        "codecamp.pr.v1"
+      ],
+      "resourceRefs": [
+        "repo:authentication"
+      ]
+    },
+    {
+      "activityId": "codecamp.internationalization.lesson.1",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "internationalization",
+        "lessonOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.internationalization"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:internationalization:1"
+      ]
+    },
+    {
+      "activityId": "codecamp.internationalization.lesson.2",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "internationalization",
+        "lessonOrder": 2
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.internationalization"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:internationalization:2"
+      ]
+    },
+    {
+      "activityId": "codecamp.internationalization.lesson.3",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "internationalization",
+        "lessonOrder": 3
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.internationalization"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:internationalization:3"
+      ]
+    },
+    {
+      "activityId": "codecamp.internationalization.question.3.1",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "internationalization",
+        "lessonOrder": 3,
+        "itemOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.internationalization"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "internationalization-quiz-3-1",
+      "variantFamily": "internationalization-quiz",
+      "misconceptionTags": [
+        "internationalization-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.internationalization.question.3.2",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "internationalization",
+        "lessonOrder": 3,
+        "itemOrder": 2
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.internationalization"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "internationalization-quiz-3-2",
+      "variantFamily": "internationalization-quiz",
+      "misconceptionTags": [
+        "internationalization-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.internationalization.question.3.3",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "internationalization",
+        "lessonOrder": 3,
+        "itemOrder": 3
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.internationalization"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "internationalization-quiz-3-3",
+      "variantFamily": "internationalization-quiz",
+      "misconceptionTags": [
+        "internationalization-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.internationalization.question.3.4",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "internationalization",
+        "lessonOrder": 3,
+        "itemOrder": 4
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.internationalization"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "internationalization-quiz-3-4",
+      "variantFamily": "internationalization-quiz",
+      "misconceptionTags": [
+        "internationalization-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.internationalization.question.3.5",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "internationalization",
+        "lessonOrder": 3,
+        "itemOrder": 5
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.internationalization"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "internationalization-quiz-3-5",
+      "variantFamily": "internationalization-quiz",
+      "misconceptionTags": [
+        "internationalization-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.internationalization.exercise.3.1",
+      "activityKind": "exercise",
+      "source": {
+        "moduleSlug": "internationalization",
+        "lessonOrder": 3,
+        "itemOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.internationalization"
+      ],
+      "practiceMode": "guided",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.55,
+      "evidenceSource": "exercise-check",
+      "variantId": "internationalization-exercise-1",
+      "variantFamily": "internationalization-guided-exercise",
+      "misconceptionTags": [
+        "internationalization-implementation-gap"
+      ],
+      "rubricRefs": [
+        "codecamp.exercise.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.internationalization.repository",
+      "activityKind": "repository",
+      "source": {
+        "moduleSlug": "internationalization"
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.internationalization"
+      ],
+      "practiceMode": "independent",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.75,
+      "evidenceSource": "pull-request",
+      "variantId": "internationalization-repository",
+      "variantFamily": "internationalization-independent-repository",
+      "misconceptionTags": [
+        "internationalization-transfer-gap"
+      ],
+      "rubricRefs": [
+        "codecamp.pr.v1"
+      ],
+      "resourceRefs": [
+        "repo:internationalization"
+      ]
+    },
+    {
+      "activityId": "codecamp.ai-integration.lesson.1",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "ai-integration",
+        "lessonOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.ai.skill.provider-adapter"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:ai-integration:1"
+      ]
+    },
+    {
+      "activityId": "codecamp.ai-integration.lesson.2",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "ai-integration",
+        "lessonOrder": 2
+      },
+      "objectiveIds": [
+        "codecamp.ai.skill.provider-adapter"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:ai-integration:2"
+      ]
+    },
+    {
+      "activityId": "codecamp.ai-integration.lesson.3",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "ai-integration",
+        "lessonOrder": 3
+      },
+      "objectiveIds": [
+        "codecamp.ai.skill.provider-adapter"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:ai-integration:3"
+      ]
+    },
+    {
+      "activityId": "codecamp.ai-integration.lesson.4",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "ai-integration",
+        "lessonOrder": 4
+      },
+      "objectiveIds": [
+        "codecamp.ai.skill.provider-adapter"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:ai-integration:4"
+      ]
+    },
+    {
+      "activityId": "codecamp.ai-integration.lesson.5",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "ai-integration",
+        "lessonOrder": 5
+      },
+      "objectiveIds": [
+        "codecamp.ai.skill.provider-adapter"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:ai-integration:5"
+      ]
+    },
+    {
+      "activityId": "codecamp.ai-integration.question.5.1",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "ai-integration",
+        "lessonOrder": 5,
+        "itemOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.ai.skill.provider-adapter"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "ai-integration-quiz-5-1",
+      "variantFamily": "ai-integration-quiz",
+      "misconceptionTags": [
+        "ai-integration-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.ai-integration.question.5.2",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "ai-integration",
+        "lessonOrder": 5,
+        "itemOrder": 2
+      },
+      "objectiveIds": [
+        "codecamp.ai.skill.provider-adapter"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "ai-integration-quiz-5-2",
+      "variantFamily": "ai-integration-quiz",
+      "misconceptionTags": [
+        "ai-integration-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.ai-integration.question.5.3",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "ai-integration",
+        "lessonOrder": 5,
+        "itemOrder": 3
+      },
+      "objectiveIds": [
+        "codecamp.ai.skill.provider-adapter"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "ai-integration-quiz-5-3",
+      "variantFamily": "ai-integration-quiz",
+      "misconceptionTags": [
+        "ai-integration-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.ai-integration.question.5.4",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "ai-integration",
+        "lessonOrder": 5,
+        "itemOrder": 4
+      },
+      "objectiveIds": [
+        "codecamp.ai.skill.provider-adapter"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "ai-integration-quiz-5-4",
+      "variantFamily": "ai-integration-quiz",
+      "misconceptionTags": [
+        "ai-integration-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.ai-integration.question.5.5",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "ai-integration",
+        "lessonOrder": 5,
+        "itemOrder": 5
+      },
+      "objectiveIds": [
+        "codecamp.ai.skill.provider-adapter"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "ai-integration-quiz-5-5",
+      "variantFamily": "ai-integration-quiz",
+      "misconceptionTags": [
+        "ai-integration-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.ai-integration.exercise.5.1",
+      "activityKind": "exercise",
+      "source": {
+        "moduleSlug": "ai-integration",
+        "lessonOrder": 5,
+        "itemOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.ai.skill.provider-adapter"
+      ],
+      "practiceMode": "guided",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.55,
+      "evidenceSource": "exercise-check",
+      "variantId": "ai-integration-exercise-1",
+      "variantFamily": "ai-integration-guided-exercise",
+      "misconceptionTags": [
+        "ai-integration-implementation-gap"
+      ],
+      "rubricRefs": [
+        "codecamp.exercise.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.ai-integration.repository",
+      "activityKind": "repository",
+      "source": {
+        "moduleSlug": "ai-integration"
+      },
+      "objectiveIds": [
+        "codecamp.ai.skill.provider-adapter"
+      ],
+      "practiceMode": "independent",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.75,
+      "evidenceSource": "pull-request",
+      "variantId": "ai-integration-repository",
+      "variantFamily": "ai-integration-independent-repository",
+      "misconceptionTags": [
+        "ai-integration-transfer-gap"
+      ],
+      "rubricRefs": [
+        "codecamp.pr.v1"
+      ],
+      "resourceRefs": [
+        "repo:ai-integration"
+      ]
+    },
+    {
+      "activityId": "codecamp.measure-ai-development.lesson.1",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "measure-ai-development",
+        "lessonOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.workflow.skill.measure-development"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:measure-ai-development:1"
+      ]
+    },
+    {
+      "activityId": "codecamp.measure-ai-development.lesson.2",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "measure-ai-development",
+        "lessonOrder": 2
+      },
+      "objectiveIds": [
+        "codecamp.workflow.skill.measure-development"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:measure-ai-development:2"
+      ]
+    },
+    {
+      "activityId": "codecamp.measure-ai-development.lesson.3",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "measure-ai-development",
+        "lessonOrder": 3
+      },
+      "objectiveIds": [
+        "codecamp.workflow.skill.measure-development"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:measure-ai-development:3"
+      ]
+    },
+    {
+      "activityId": "codecamp.monorepo-packages.lesson.1",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "monorepo-packages",
+        "lessonOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.architecture.skill.shared-package"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:monorepo-packages:1"
+      ]
+    },
+    {
+      "activityId": "codecamp.monorepo-packages.lesson.2",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "monorepo-packages",
+        "lessonOrder": 2
+      },
+      "objectiveIds": [
+        "codecamp.architecture.skill.shared-package"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:monorepo-packages:2"
+      ]
+    },
+    {
+      "activityId": "codecamp.monorepo-packages.lesson.3",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "monorepo-packages",
+        "lessonOrder": 3
+      },
+      "objectiveIds": [
+        "codecamp.architecture.skill.shared-package"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:monorepo-packages:3"
+      ]
+    },
+    {
+      "activityId": "codecamp.monorepo-packages.question.3.1",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "monorepo-packages",
+        "lessonOrder": 3,
+        "itemOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.architecture.skill.shared-package"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "monorepo-packages-quiz-3-1",
+      "variantFamily": "monorepo-packages-quiz",
+      "misconceptionTags": [
+        "monorepo-packages-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.monorepo-packages.question.3.2",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "monorepo-packages",
+        "lessonOrder": 3,
+        "itemOrder": 2
+      },
+      "objectiveIds": [
+        "codecamp.architecture.skill.shared-package"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "monorepo-packages-quiz-3-2",
+      "variantFamily": "monorepo-packages-quiz",
+      "misconceptionTags": [
+        "monorepo-packages-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.monorepo-packages.question.3.3",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "monorepo-packages",
+        "lessonOrder": 3,
+        "itemOrder": 3
+      },
+      "objectiveIds": [
+        "codecamp.architecture.skill.shared-package"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "monorepo-packages-quiz-3-3",
+      "variantFamily": "monorepo-packages-quiz",
+      "misconceptionTags": [
+        "monorepo-packages-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.monorepo-packages.question.3.4",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "monorepo-packages",
+        "lessonOrder": 3,
+        "itemOrder": 4
+      },
+      "objectiveIds": [
+        "codecamp.architecture.skill.shared-package"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "monorepo-packages-quiz-3-4",
+      "variantFamily": "monorepo-packages-quiz",
+      "misconceptionTags": [
+        "monorepo-packages-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.monorepo-packages.question.3.5",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "monorepo-packages",
+        "lessonOrder": 3,
+        "itemOrder": 5
+      },
+      "objectiveIds": [
+        "codecamp.architecture.skill.shared-package"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "monorepo-packages-quiz-3-5",
+      "variantFamily": "monorepo-packages-quiz",
+      "misconceptionTags": [
+        "monorepo-packages-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.monorepo-packages.exercise.3.1",
+      "activityKind": "exercise",
+      "source": {
+        "moduleSlug": "monorepo-packages",
+        "lessonOrder": 3,
+        "itemOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.architecture.skill.shared-package"
+      ],
+      "practiceMode": "guided",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.55,
+      "evidenceSource": "exercise-check",
+      "variantId": "monorepo-packages-exercise-1",
+      "variantFamily": "monorepo-packages-guided-exercise",
+      "misconceptionTags": [
+        "monorepo-packages-implementation-gap"
+      ],
+      "rubricRefs": [
+        "codecamp.exercise.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.cloud-docker.lesson.1",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "cloud-docker",
+        "lessonOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.deployment.skill.container-build"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:cloud-docker:1"
+      ]
+    },
+    {
+      "activityId": "codecamp.cloud-docker.lesson.2",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "cloud-docker",
+        "lessonOrder": 2
+      },
+      "objectiveIds": [
+        "codecamp.deployment.skill.container-build"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:cloud-docker:2"
+      ]
+    },
+    {
+      "activityId": "codecamp.cloud-docker.lesson.3",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "cloud-docker",
+        "lessonOrder": 3
+      },
+      "objectiveIds": [
+        "codecamp.deployment.skill.container-build"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:cloud-docker:3"
+      ]
+    },
+    {
+      "activityId": "codecamp.cloud-docker.lesson.4",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "cloud-docker",
+        "lessonOrder": 4
+      },
+      "objectiveIds": [
+        "codecamp.deployment.skill.container-build"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:cloud-docker:4"
+      ]
+    },
+    {
+      "activityId": "codecamp.cloud-docker.question.4.1",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "cloud-docker",
+        "lessonOrder": 4,
+        "itemOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.deployment.skill.container-build"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "cloud-docker-quiz-4-1",
+      "variantFamily": "cloud-docker-quiz",
+      "misconceptionTags": [
+        "cloud-docker-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.cloud-docker.question.4.2",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "cloud-docker",
+        "lessonOrder": 4,
+        "itemOrder": 2
+      },
+      "objectiveIds": [
+        "codecamp.deployment.skill.container-build"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "cloud-docker-quiz-4-2",
+      "variantFamily": "cloud-docker-quiz",
+      "misconceptionTags": [
+        "cloud-docker-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.cloud-docker.question.4.3",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "cloud-docker",
+        "lessonOrder": 4,
+        "itemOrder": 3
+      },
+      "objectiveIds": [
+        "codecamp.deployment.skill.container-build"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "cloud-docker-quiz-4-3",
+      "variantFamily": "cloud-docker-quiz",
+      "misconceptionTags": [
+        "cloud-docker-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.cloud-docker.question.4.4",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "cloud-docker",
+        "lessonOrder": 4,
+        "itemOrder": 4
+      },
+      "objectiveIds": [
+        "codecamp.deployment.skill.container-build"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "cloud-docker-quiz-4-4",
+      "variantFamily": "cloud-docker-quiz",
+      "misconceptionTags": [
+        "cloud-docker-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.cloud-docker.question.4.5",
+      "activityKind": "question",
+      "source": {
+        "moduleSlug": "cloud-docker",
+        "lessonOrder": 4,
+        "itemOrder": 5
+      },
+      "objectiveIds": [
+        "codecamp.deployment.skill.container-build"
+      ],
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.3,
+      "evidenceSource": "quiz-response",
+      "variantId": "cloud-docker-quiz-4-5",
+      "variantFamily": "cloud-docker-quiz",
+      "misconceptionTags": [
+        "cloud-docker-concept-confusion"
+      ],
+      "rubricRefs": [
+        "codecamp.quiz.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.cloud-docker.exercise.4.1",
+      "activityKind": "exercise",
+      "source": {
+        "moduleSlug": "cloud-docker",
+        "lessonOrder": 4,
+        "itemOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.deployment.skill.container-build"
+      ],
+      "practiceMode": "guided",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.55,
+      "evidenceSource": "exercise-check",
+      "variantId": "cloud-docker-exercise-1",
+      "variantFamily": "cloud-docker-guided-exercise",
+      "misconceptionTags": [
+        "cloud-docker-implementation-gap"
+      ],
+      "rubricRefs": [
+        "codecamp.exercise.v1"
+      ],
+      "resourceRefs": []
+    },
+    {
+      "activityId": "codecamp.cloud-docker.repository",
+      "activityKind": "repository",
+      "source": {
+        "moduleSlug": "cloud-docker"
+      },
+      "objectiveIds": [
+        "codecamp.deployment.skill.container-build"
+      ],
+      "practiceMode": "independent",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.75,
+      "evidenceSource": "pull-request",
+      "variantId": "cloud-docker-repository",
+      "variantFamily": "cloud-docker-independent-repository",
+      "misconceptionTags": [
+        "cloud-docker-transfer-gap"
+      ],
+      "rubricRefs": [
+        "codecamp.pr.v1"
+      ],
+      "resourceRefs": [
+        "repo:cloud-docker"
+      ]
+    },
+    {
+      "activityId": "codecamp.real-world-practice.lesson.1",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "real-world-practice",
+        "lessonOrder": 1
+      },
+      "objectiveIds": [
+        "codecamp.workflow.skill.pull-requests"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:real-world-practice:1"
+      ]
+    },
+    {
+      "activityId": "codecamp.real-world-practice.lesson.2",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "real-world-practice",
+        "lessonOrder": 2
+      },
+      "objectiveIds": [
+        "codecamp.workflow.skill.pull-requests"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:real-world-practice:2"
+      ]
+    },
+    {
+      "activityId": "codecamp.real-world-practice.lesson.3",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "real-world-practice",
+        "lessonOrder": 3
+      },
+      "objectiveIds": [
+        "codecamp.workflow.skill.pull-requests"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:real-world-practice:3"
+      ]
+    },
+    {
+      "activityId": "codecamp.real-world-practice.lesson.4",
+      "activityKind": "lesson",
+      "source": {
+        "moduleSlug": "real-world-practice",
+        "lessonOrder": 4
+      },
+      "objectiveIds": [
+        "codecamp.workflow.skill.pull-requests"
+      ],
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "variantId": null,
+      "variantFamily": null,
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "resourceRefs": [
+        "lesson:real-world-practice:4"
+      ]
+    },
+    {
+      "activityId": "codecamp.real-world-practice.repository",
+      "activityKind": "repository",
+      "source": {
+        "moduleSlug": "real-world-practice"
+      },
+      "objectiveIds": [
+        "codecamp.workflow.skill.pull-requests"
+      ],
+      "practiceMode": "independent",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.75,
+      "evidenceSource": "pull-request",
+      "variantId": "real-world-practice-repository",
+      "variantFamily": "real-world-practice-independent-repository",
+      "misconceptionTags": [
+        "real-world-practice-transfer-gap"
+      ],
+      "rubricRefs": [
+        "codecamp.pr.v1"
+      ],
+      "resourceRefs": [
+        "repo:real-world-practice"
+      ]
+    },
+    {
+      "activityId": "codecamp.portfolio.phase-a",
+      "activityKind": "portfolio",
+      "source": {
+        "moduleSlug": "html-css"
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.semantic-html-css"
+      ],
+      "practiceMode": "independent",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.8,
+      "evidenceSource": "portfolio-review",
+      "variantId": "portfolio-phase-a",
+      "variantFamily": "portfolio-phase-a",
+      "misconceptionTags": [
+        "portfolio-transfer-gap"
+      ],
+      "rubricRefs": [
+        "codecamp.portfolio.v1"
+      ],
+      "resourceRefs": [
+        "portfolio:phase-a"
+      ]
+    },
+    {
+      "activityId": "codecamp.portfolio.phase-b",
+      "activityKind": "portfolio",
+      "source": {
+        "moduleSlug": "react"
+      },
+      "objectiveIds": [
+        "codecamp.frontend.skill.react-components"
+      ],
+      "practiceMode": "independent",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.8,
+      "evidenceSource": "portfolio-review",
+      "variantId": "portfolio-phase-b",
+      "variantFamily": "portfolio-phase-b",
+      "misconceptionTags": [
+        "portfolio-transfer-gap"
+      ],
+      "rubricRefs": [
+        "codecamp.portfolio.v1"
+      ],
+      "resourceRefs": [
+        "portfolio:phase-b"
+      ]
+    },
+    {
+      "activityId": "codecamp.portfolio.phase-c",
+      "activityKind": "portfolio",
+      "source": {
+        "moduleSlug": "authentication"
+      },
+      "objectiveIds": [
+        "codecamp.backend.skill.authorization"
+      ],
+      "practiceMode": "independent",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.8,
+      "evidenceSource": "portfolio-review",
+      "variantId": "portfolio-phase-c",
+      "variantFamily": "portfolio-phase-c",
+      "misconceptionTags": [
+        "portfolio-transfer-gap"
+      ],
+      "rubricRefs": [
+        "codecamp.portfolio.v1"
+      ],
+      "resourceRefs": [
+        "portfolio:phase-c"
+      ]
+    },
+    {
+      "activityId": "codecamp.portfolio.phase-d",
+      "activityKind": "portfolio",
+      "source": {
+        "moduleSlug": "cloud-docker"
+      },
+      "objectiveIds": [
+        "codecamp.deployment.skill.container-build"
+      ],
+      "practiceMode": "independent",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.8,
+      "evidenceSource": "portfolio-review",
+      "variantId": "portfolio-phase-d",
+      "variantFamily": "portfolio-phase-d",
+      "misconceptionTags": [
+        "portfolio-transfer-gap"
+      ],
+      "rubricRefs": [
+        "codecamp.portfolio.v1"
+      ],
+      "resourceRefs": [
+        "portfolio:phase-d"
+      ]
+    }
+  ]
+}

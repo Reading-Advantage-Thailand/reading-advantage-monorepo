@@ -29,6 +29,9 @@ describe("graph CLI", () => {
   it.each([
     ["validate", 0, '"valid": true'],
     ["report", 0, '"graphId": "codecamp.core"'],
+    ["bindings-validate", 0, '"valid": true'],
+    ["bindings-report", 0, '"totalBindings": 209'],
+    ["bindings-verify-source", 0, '"valid": true'],
   ])("returns deterministic output for %s", (command, exitCode, fragment) => {
     const stdout = vi.fn();
     expect(runCodeGraphCli([command], { stdout, stderr: vi.fn() })).toBe(exitCode);

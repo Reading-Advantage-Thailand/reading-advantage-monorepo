@@ -21,7 +21,11 @@
     "test:coverage": "vitest run --coverage --exclude src/__tests__/release-artifact.test.ts",
     "graph:validate": "pnpm build && node dist/cli.js validate",
     "graph:report": "pnpm build && node dist/cli.js report",
-    "graph:verify-source": "pnpm build && node dist/cli.js verify-source"
+    "graph:verify-source": "pnpm build && node dist/cli.js verify-source",
+    "bindings:validate": "pnpm build && node dist/cli.js bindings-validate",
+    "bindings:report": "pnpm build && node dist/cli.js bindings-report",
+    "bindings:verify-source": "pnpm build && node dist/cli.js bindings-verify-source",
+    "bindings:generate": "tsx scripts/generate-curriculum-bindings.ts"
   },
   "dependencies": {
     "@reading-advantage/knowledge-space-core": "workspace:*",
@@ -32,6 +36,7 @@
     "@types/node": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "typescript": "5.9.3",
+    "tsx": "catalog:",
     "vitest": "4.1.8"
   }
 }

@@ -6,6 +6,9 @@ const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const dataFiles = [
   "code-knowledge-space.json",
   "code-knowledge-space.provenance.json",
+  "curriculum-bindings.json",
+  "curriculum-source-inventory.json",
+  "curriculum-source-provenance.json",
 ];
 
 mkdirSync(resolve(packageRoot, "dist/data"), { recursive: true });

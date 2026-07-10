@@ -51,11 +51,20 @@ describe("packed graph release artifact", () => {
     };
     expect(manifest.exports["./graph"]).toBe("./dist/data/code-knowledge-space.json");
     expect(() => readFileSync(join(extractedPackage, "dist/data/code-knowledge-space.provenance.json"))).not.toThrow();
+    for (const file of [
+      "curriculum-bindings.json",
+      "curriculum-source-inventory.json",
+      "curriculum-source-provenance.json",
+    ]) {
+      expect(() => readFileSync(join(extractedPackage, "dist/data", file))).not.toThrow();
+    }
   });
 
   it.each([
     ["validate", '"valid": true'],
     ["report", '"graphId": "codecamp.core"'],
+    ["bindings-validate", '"valid": true'],
+    ["bindings-report", '"totalBindings": 209'],
   ])("runs the packed CLI %s command with stable output", (command, fragment) => {
     const output = execFileSync("node", [join(extractedPackage, "dist/cli.js"), command], {
       cwd: extractedPackage,
