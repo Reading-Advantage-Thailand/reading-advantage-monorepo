@@ -1,9 +1,11 @@
 import "@testing-library/jest-dom/vitest";
+import { StrictMode } from "react";
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { APKGameHost } from "./apk-game-host.js";
 import { createMockGameFactory } from "../testing/test-kit.js";
 import { createRuntimeCartridge, createRuntimeEdition, validResults } from "../testing/fixtures.js";
+import type { GameFactory } from "../runtime/types.js";
 
 describe("APKGameHost", () => {
   it("provides accessible status, canvas region, controls, and completion output", async () => {
@@ -55,5 +57,44 @@ describe("APKGameHost", () => {
       />,
     );
     await waitFor(() => expect(screen.getByRole("alert")).toHaveTextContent("WebGL unavailable"));
+  });
+
+  it("keeps one canvas when StrictMode remounts during async renderer startup", async () => {
+    const pending: Array<() => void> = [];
+    const destroy = vi.fn();
+    const factory: GameFactory = async ({ container }) => {
+      const canvas = document.createElement("canvas");
+      container.append(canvas);
+      await new Promise<void>((resolve) => pending.push(resolve));
+      return {
+        destroy: () => {
+          destroy();
+          canvas.remove();
+        },
+      };
+    };
+
+    render(
+      <StrictMode>
+        <APKGameHost
+          cartridge={createRuntimeCartridge()}
+          input={[{ term: "river", translation: "riviere" }]}
+          edition={createRuntimeEdition()}
+          factory={factory}
+        />
+      </StrictMode>,
+    );
+
+    await waitFor(() => expect(pending).toHaveLength(2));
+    expect(document.querySelectorAll("[data-apk-canvas-host] canvas")).toHaveLength(1);
+
+    await act(async () => {
+      for (const resolve of pending) resolve();
+      await Promise.resolve();
+    });
+
+    await screen.findByText("Game ready");
+    expect(document.querySelectorAll("[data-apk-canvas-host] canvas")).toHaveLength(1);
+    expect(destroy).toHaveBeenCalledTimes(1);
   });
 });

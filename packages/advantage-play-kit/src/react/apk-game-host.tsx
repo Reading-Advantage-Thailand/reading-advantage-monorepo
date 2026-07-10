@@ -72,6 +72,9 @@ export function APKGameHost({
   useEffect(() => {
     const surface = surfaceRef.current;
     if (!surface) return;
+    const mountPoint = document.createElement("div");
+    mountPoint.dataset.apkRuntimeMount = "true";
+    surface.replaceChildren(mountPoint);
     let cancelled = false;
     let mountedHandle: APKGameHandle | undefined;
     setStatus("loading");
@@ -80,7 +83,7 @@ export function APKGameHost({
 
     void mountCartridge(
       {
-        container: surface,
+        container: mountPoint,
         cartridge,
         input,
         edition,
@@ -115,6 +118,7 @@ export function APKGameHost({
     return () => {
       cancelled = true;
       handleRef.current = undefined;
+      mountPoint.remove();
       void mountedHandle?.destroy();
     };
   }, [cartridge, edition, factory, input, onComplete, onDiagnostic, onNavigate, seed]);

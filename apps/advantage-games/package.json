@@ -15,6 +15,9 @@
   },
   "dependencies": {
     "@reading-advantage/advantage-play-kit": "workspace:*",
+    "@reading-advantage/api": "workspace:*",
+    "@reading-advantage/auth": "workspace:*",
+    "@reading-advantage/db": "workspace:*",
     "@reading-advantage/game-cartridges": "workspace:*",
     "@reading-advantage/game-contracts": "workspace:*",
     "@radix-ui/react-avatar": "catalog:",
@@ -36,13 +39,13 @@
     "lucide-react": "catalog:",
     "nanoid": "catalog:",
     "next": "16.2.9",
-    "next-auth": "^4.24.11",
     "next-themes": "catalog:",
     "react": "19.2.7",
     "react-dom": "19.2.7",
     "react-konva": "catalog:",
     "three": "catalog:",
     "ws": "^8.20.0",
+    "zod": "catalog:",
     "zustand": "catalog:"
   },
   "devDependencies": {

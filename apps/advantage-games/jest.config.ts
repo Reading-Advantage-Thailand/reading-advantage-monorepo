@@ -21,6 +21,7 @@ const config: Config = {
     '^@reading-advantage/utils(/.*)?$': '<rootDir>/../../packages/utils/dist$1',
     '^@reading-advantage/ui(/.*)?$': '<rootDir>/../../packages/ui/dist$1',
     '^@reading-advantage/domain(/.*)?$': '<rootDir>/../../packages/domain/dist$1',
+    '^@reading-advantage/api/routes/auth$': '<rootDir>/../../packages/api/dist/routes/auth/index.js',
     '^@reading-advantage/auth(/.*)?$': '<rootDir>/../../packages/auth/dist$1',
     '^@reading-advantage/db(/.*)?$': '<rootDir>/../../packages/db/dist$1',
   },

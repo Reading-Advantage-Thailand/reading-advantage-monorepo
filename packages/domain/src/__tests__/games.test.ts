@@ -166,6 +166,16 @@ describe("gameTypeEnum / gameDifficultyEnum (Group 3A)", () => {
     expect(gameTypeEnum.options).toContain("haunted-library");
   });
 
+  it.each(["astral-mage", "sorcerer-ziggurat"] as const)(
+    "accepts the persisted W1 cartridge %s",
+    (gameType) => {
+      expect(gameTypeEnum.options).toContain(gameType);
+      expect(() =>
+        gameCompletionInputSchema.parse(makeValidInput({ gameType })),
+      ).not.toThrow();
+    },
+  );
+
   it("uses medium (not normal) as the canonical difficulty", () => {
     expect(gameDifficultyEnum.options).toContain("medium");
     expect(gameDifficultyEnum.options).not.toContain("normal");

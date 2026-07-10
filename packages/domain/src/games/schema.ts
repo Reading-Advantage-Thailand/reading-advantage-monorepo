@@ -3,9 +3,8 @@ import { z } from "zod";
 /**
  * Canonical game-type vocabulary frozen from `apps/advantage-games/src/lib/gameCards.ts`.
  *
- * The three `astral-mage` / `babel-architect` / `sorcerer-ziggurat` placeholders
- * are excluded because they have no implementation and cannot complete. Phase 5+
- * may add them when their game logic lands.
+ * APK game IDs enter this authoritative persistence vocabulary only after a
+ * real cartridge and server-owned completion path exist.
  */
 export const gameTypeEnum = z.enum([
   "castle-defense",
@@ -34,6 +33,8 @@ export const gameTypeEnum = z.enum([
   "devourer-slime",
   "haunted-library",
   "gryphon-patrol",
+  "astral-mage",
+  "sorcerer-ziggurat",
 ]);
 
 /**

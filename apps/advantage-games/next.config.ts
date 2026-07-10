@@ -1,4 +1,8 @@
 import type { NextConfig } from "next";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const appDirectory = path.dirname(fileURLToPath(import.meta.url));
 
 const isGithubActions = process.env.GITHUB_ACTIONS === "true";
 const repoName = process.env.GITHUB_REPOSITORY?.split("/")[1];
@@ -13,13 +17,16 @@ const inferredBasePath = isGithubActions && repoName ? `/${repoName}` : "";
 const basePath = normalizedEnvBasePath || inferredBasePath;
 
 const nextConfig: NextConfig = {
-  output: "export",
-  images: {
-    unoptimized: true,
-  },
+  output: "standalone",
+  outputFileTracingRoot: path.join(appDirectory, "../.."),
+  transpilePackages: [
+    "@reading-advantage/api",
+    "@reading-advantage/auth",
+    "@reading-advantage/db",
+  ],
+  serverExternalPackages: ["@node-rs/argon2"],
   basePath: basePath || undefined,
   assetPrefix: basePath || undefined,
-  trailingSlash: true,
   env: {
     NEXT_PUBLIC_BASE_PATH: basePath,
   },
