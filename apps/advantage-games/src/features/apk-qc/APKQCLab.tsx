@@ -56,6 +56,18 @@ const difficultySeeds: Record<Difficulty, number> = {
 };
 
 /**
+ * Parses a supported public cartridge ID from a QC query string.
+ * @param search URL search text beginning with an optional question mark.
+ * @returns The public cartridge ID, or undefined when the query is absent or unknown.
+ */
+export function parseQCCartridgeId(search: string): CartridgeId | undefined {
+  const candidate = new URLSearchParams(search).get("cartridge");
+  return candidate && candidate in cartridgeLoaders
+    ? (candidate as CartridgeId)
+    : undefined;
+}
+
+/**
  * Renders the local workshop for loading, testing, and inspecting APK cartridges.
  * @returns The accessible cartridge catalog, launch surface, and diagnostics panels.
  */
@@ -74,6 +86,13 @@ export function APKQCLab() {
   const [viewport, setViewport] = useState("—");
   const frame = useFrameDiagnostics(debug);
 
+  const selectCartridge = useCallback((nextCartridgeId: CartridgeId) => {
+    setCartridgeId(nextCartridgeId);
+    const url = new URL(window.location.href);
+    url.searchParams.set("cartridge", nextCartridgeId);
+    window.history.replaceState({}, "", `${url.pathname}${url.search}${url.hash}`);
+  }, []);
+
   const catalogEntry = cartridgeCatalog.find((entry) => entry.id === cartridgeId)!;
   const fixtures = useMemo(
     () => APK_QC_FIXTURES.filter((fixture) => fixture.inputMode === catalogEntry.inputMode),
@@ -81,6 +100,16 @@ export function APKQCLab() {
   );
   const fixture = fixtures.find((candidate) => candidate.id === fixtureId) ?? fixtures[0]!;
   const edition = resolveCartridgeEdition(editionId);
+
+  useEffect(() => {
+    const selectFromLocation = () => {
+      const selected = parseQCCartridgeId(window.location.search);
+      if (selected) setCartridgeId(selected);
+    };
+    selectFromLocation();
+    window.addEventListener("popstate", selectFromLocation);
+    return () => window.removeEventListener("popstate", selectFromLocation);
+  }, []);
 
   useEffect(() => {
     if (!fixtures.some((candidate) => candidate.id === fixtureId)) {
@@ -141,7 +170,7 @@ export function APKQCLab() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-[#071017] text-slate-100">
+    <main className="min-h-screen w-full max-w-full overflow-x-hidden bg-[#071017] text-slate-100">
       <header className="border-b border-cyan-300/20 bg-[#091923] px-4 py-4 md:px-8">
         <div className="mx-auto flex max-w-[1600px] flex-wrap items-center justify-between gap-4">
           <div>
@@ -166,7 +195,7 @@ export function APKQCLab() {
                 key={entry.id}
                 type="button"
                 aria-pressed={cartridgeId === entry.id}
-                onClick={() => setCartridgeId(entry.id)}
+                onClick={() => selectCartridge(entry.id)}
                 className="min-h-16 w-full border border-slate-700 p-3 text-left transition hover:border-cyan-400 aria-pressed:border-cyan-300 aria-pressed:bg-cyan-300/10"
               >
                 <span className="font-mono text-[10px] text-slate-500">CART-{String(index + 1).padStart(2, "0")}</span>
@@ -205,7 +234,7 @@ export function APKQCLab() {
               <legend className="text-xs font-medium uppercase tracking-wider text-slate-400">Audience edition</legend>
               <div className="mt-2 grid grid-cols-2 gap-1">
                 {[primaryChibiEdition, secondaryEpicEdition].map((candidate) => (
-                  <button key={candidate.id} type="button" aria-pressed={editionId === candidate.id} onClick={() => setEditionId(candidate.id)} className="min-h-11 border border-slate-600 px-2 text-xs hover:border-cyan-300 aria-pressed:border-cyan-300 aria-pressed:bg-cyan-300/10">
+                  <button key={candidate.id} type="button" aria-pressed={editionId === candidate.id} onClick={() => setEditionId(candidate.id)} className="min-h-11 min-w-0 whitespace-normal border border-slate-600 px-2 text-xs hover:border-cyan-300 aria-pressed:border-cyan-300 aria-pressed:bg-cyan-300/10">
                     {candidate.title}
                   </button>
                 ))}
@@ -226,7 +255,7 @@ export function APKQCLab() {
                 onComplete={recordResult}
                 onDiagnostic={recordDiagnostic}
                 instructions={<p className="sr-only">Use the game controls shown inside the play surface. Pause, mute, and restart remain available below the canvas.</p>}
-                className="flex h-full min-w-0 flex-col gap-2 [&_[data-apk-canvas-host]]:min-h-0 [&_[data-apk-canvas-host]]:w-full [&_[data-apk-canvas-host]]:flex-1 [&_[data-apk-canvas-host]]:overflow-hidden [&_[data-apk-canvas-host]_canvas]:mx-auto [&_[data-apk-canvas-host]_canvas]:!h-auto [&_[data-apk-canvas-host]_canvas]:!max-w-full [&_[data-apk-canvas-host]_canvas]:!w-full [&_[role=group]]:flex [&_[role=group]]:flex-wrap [&_[role=group]]:gap-2 [&_button]:min-h-11 [&_button]:border [&_button]:border-slate-600 [&_button]:px-3"
+                className="flex h-full min-w-0 max-w-full flex-col gap-2 overflow-hidden [&_[data-apk-canvas-host]]:min-h-0 [&_[data-apk-canvas-host]]:w-full [&_[data-apk-canvas-host]]:max-w-full [&_[data-apk-canvas-host]]:flex-1 [&_[data-apk-canvas-host]]:overflow-hidden [&_[data-apk-canvas-host]_canvas]:mx-auto [&_[data-apk-canvas-host]_canvas]:!h-auto [&_[data-apk-canvas-host]_canvas]:!max-w-full [&_[data-apk-canvas-host]_canvas]:!w-full [&_[role=group]]:flex [&_[role=group]]:max-w-full [&_[role=group]]:flex-wrap [&_[role=group]]:gap-2 [&_button]:min-h-11 [&_button]:min-w-0 [&_button]:border [&_button]:border-slate-600 [&_button]:px-3"
               />
             )}
           </div>

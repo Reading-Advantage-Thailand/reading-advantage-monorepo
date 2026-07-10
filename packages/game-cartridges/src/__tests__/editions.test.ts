@@ -8,6 +8,13 @@ import {
   secondaryEpicEdition,
 } from "../editions";
 
+const W1_SENTENCE_ACTION_ASSET_SLOTS = [
+  "projectile.magic",
+  "target.word-crystal",
+  "platform.rune-cube",
+  "indicator.offscreen",
+] as const;
+
 describe("cartridge editions", () => {
   it("provides Primary Chibi and Secondary Epic without forking game source", () => {
     expect(editionCatalog.map((edition) => edition.id)).toEqual([
@@ -27,6 +34,22 @@ describe("cartridge editions", () => {
         expect(asset.provenance.license).toBe(
           "LicenseRef-Reading-Advantage-Original",
         );
+      }
+    }
+  });
+
+  it("provides the sentence-action slots required by Astral Mage and Ziggurat", () => {
+    for (const edition of editionCatalog) {
+      expect(Object.keys(edition.assets)).toEqual(
+        expect.arrayContaining([...W1_SENTENCE_ACTION_ASSET_SLOTS]),
+      );
+      for (const slot of W1_SENTENCE_ACTION_ASSET_SLOTS) {
+        expect(edition.assets[slot]).toMatchObject({
+          key: slot,
+          provenance: {
+            license: "LicenseRef-Reading-Advantage-Original",
+          },
+        });
       }
     }
   });

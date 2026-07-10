@@ -33,10 +33,15 @@ export type CartridgeSemanticAsset = SemanticAsset;
 /** Public audience edition type shared with the APK runtime. */
 export type CartridgeEdition = RuntimeEdition;
 
-/** Manifest specialization for the three public APK cartridges. */
+/** Manifest specialization for the public APK cartridge catalog. */
 export type CartridgeManifest = RuntimeCartridgeManifest & {
   /** Stable product-facing cartridge identifier. */
-  id: "dragon-flight" | "dungeon-liberator" | "magic-defense";
+  id:
+    | "dragon-flight"
+    | "dungeon-liberator"
+    | "magic-defense"
+    | "astral-mage"
+    | "sorcerer-ziggurat";
   /** Educational input mode used by runtime validation. */
   inputMode: CartridgeContentMode;
   /** Phaser capability families demonstrated by this cartridge. */
@@ -84,7 +89,12 @@ export interface CartridgeCatalogEntry {
   /** Semantic input mode. */
   inputMode: CartridgeContentMode;
   /** Archetype used to plan catalog rebuild waves. */
-  mechanic: "gate-runner" | "sentence-order-collection" | "typing-defense";
+  mechanic:
+    | "gate-runner"
+    | "sentence-order-collection"
+    | "typing-defense"
+    | "target-action"
+    | "step-traversal";
   /** Edition IDs verified for this cartridge. */
   editions: readonly CartridgeEditionId[];
 }

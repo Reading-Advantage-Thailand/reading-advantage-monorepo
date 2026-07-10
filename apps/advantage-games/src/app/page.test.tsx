@@ -25,7 +25,11 @@ describe('MainMenu', () => {
     const hrefs = links.map((link) => link.getAttribute('href'))
     expect(links).toHaveLength(playableGames.length)
     expect(hrefs).toEqual(
-      expect.arrayContaining(playableGames.map((game) => `/en${game.href}`))
+      expect.arrayContaining(
+        playableGames.map((game) =>
+          game.href?.startsWith('/qc') ? game.href : `/en${game.href}`
+        )
+      )
     )
   })
 
@@ -46,5 +50,17 @@ describe('MainMenu', () => {
     expect(
       screen.getByRole('link', { name: /Open APK QC Lab/i })
     ).toHaveAttribute('href', '/qc')
+  })
+
+  it('does not locale-prefix W1 QC deep links', () => {
+    render(<MainMenu />)
+
+    const startLinks = screen.getAllByRole('link', { name: /Start Game/i })
+    expect(startLinks.map((link) => link.getAttribute('href'))).toEqual(
+      expect.arrayContaining([
+        '/qc?cartridge=astral-mage',
+        '/qc?cartridge=sorcerer-ziggurat',
+      ])
+    )
   })
 })

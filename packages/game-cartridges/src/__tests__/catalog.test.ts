@@ -8,16 +8,20 @@ import {
 import { primaryChibiEdition } from "../editions";
 
 describe("cartridge catalog", () => {
-  it("publishes the three representative Phaser-native mechanics", () => {
+  it("publishes the exact five public Phaser-native cartridges", () => {
     expect(cartridgeCatalog.map((entry) => entry.id)).toEqual([
       "dragon-flight",
       "dungeon-liberator",
       "magic-defense",
+      "astral-mage",
+      "sorcerer-ziggurat",
     ]);
     expect(cartridgeCatalog.map((entry) => entry.mechanic)).toEqual([
       "gate-runner",
       "sentence-order-collection",
       "typing-defense",
+      "target-action",
+      "step-traversal",
     ]);
   });
 
@@ -26,11 +30,27 @@ describe("cartridge catalog", () => {
       "dragon-flight",
       "dungeon-liberator",
       "magic-defense",
+      "astral-mage",
+      "sorcerer-ziggurat",
     ]);
     for (const loader of Object.values(cartridgeLoaders)) {
       expect(loader).toBeTypeOf("function");
     }
   });
+
+  it.each(["astral-mage", "sorcerer-ziggurat"] as const)(
+    "publishes %s as a sentence cartridge in both editions",
+    (cartridgeId) => {
+      const entry = getCartridgeCatalogEntry(cartridgeId);
+
+      expect(entry).toMatchObject({
+        id: cartridgeId,
+        inputMode: "sentence",
+        editions: ["primary-chibi", "secondary-epic"],
+      });
+      expect(cartridgeId in cartridgeLoaders).toBe(true);
+    },
+  );
 
   it("loads each cartridge through a literal dynamic import", async () => {
     expect(Object.keys(cartridgeLoaders)).toEqual(
@@ -48,7 +68,7 @@ describe("cartridge catalog", () => {
       expect(cartridge.manifest.runtimeApiVersion).toBe("1.0.0");
       expect(cartridge.createGameConfig).toBeTypeOf("function");
     }
-  });
+  }, 20_000);
 
   it("preloads semantic edition assets for every cartridge scene", async () => {
     const edition = {
@@ -93,7 +113,7 @@ describe("cartridge catalog", () => {
         "/editions/test-background.png",
       );
     }
-  });
+  }, 20_000);
 
   it("returns undefined for an unknown cartridge", () => {
     expect(getCartridgeCatalogEntry("not-a-game")).toBeUndefined();

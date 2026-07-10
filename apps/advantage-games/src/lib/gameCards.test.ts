@@ -19,4 +19,23 @@ describe('gameCards — locale-agnostic hrefs', () => {
     )
     expect(withHref.length).toBe(playable.length)
   })
+
+  it('publishes the two W1 sentence cartridges through exact QC deep links', () => {
+    const w1Cards = gameCards.filter((card) =>
+      ['astral-mage', 'sorcerer-ziggurat'].includes(card.id)
+    )
+
+    expect(w1Cards).toEqual([
+      expect.objectContaining({
+        id: 'astral-mage',
+        status: 'playable',
+        href: '/qc?cartridge=astral-mage',
+      }),
+      expect.objectContaining({
+        id: 'sorcerer-ziggurat',
+        status: 'playable',
+        href: '/qc?cartridge=sorcerer-ziggurat',
+      }),
+    ])
+  })
 })

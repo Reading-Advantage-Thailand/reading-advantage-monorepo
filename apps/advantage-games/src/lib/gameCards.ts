@@ -199,8 +199,8 @@ export const gameCards: GameCard[] = [
     title: 'Astral Mage',
     description: 'Navigate the magical void and shoot word crystals in the correct order to complete sentences!',
     cover: withBasePath('/games/cover/cover-astral-mage.png'),
-    href: '/student/games/sentence/astral-mage',
-    status: 'coming-soon',
+    href: '/qc?cartridge=astral-mage',
+    status: 'playable',
   },
   {
     id: 'devourer-slime',
@@ -223,8 +223,8 @@ export const gameCards: GameCard[] = [
     title: "The Sorcerer's Ziggurat",
     description: 'Jump through an isometric pyramid of cubes to complete ancient rituals in the correct sentence order!',
     cover: withBasePath('/games/cover/cover-sorcerers-ziggurat.png'),
-    href: '/student/games/sentence/sorcerer-ziggurat',
-    status: 'coming-soon',
+    href: '/qc?cartridge=sorcerer-ziggurat',
+    status: 'playable',
   },
   {
     id: 'haunted-library',

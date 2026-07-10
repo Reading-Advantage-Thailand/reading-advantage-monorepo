@@ -5,6 +5,16 @@ import {
 } from "./apk-host-smoke";
 
 describe("Reading Advantage APK package consumption", () => {
+  it("registers the exact five public APK cartridges", () => {
+    expect(readingAPKSmokeConfigs.map(({ cartridgeId }) => cartridgeId)).toEqual([
+      "dragon-flight",
+      "dungeon-liberator",
+      "magic-defense",
+      "astral-mage",
+      "sorcerer-ziggurat",
+    ]);
+  });
+
   it.each(readingAPKSmokeConfigs)(
     "loads public $cartridgeId with the Secondary Epic edition and $inputMode ABI",
     async ({ cartridgeId, edition, input, inputMode }) => {
@@ -26,6 +36,37 @@ describe("Reading Advantage APK package consumption", () => {
           (item) => Object.keys(item).sort().join(",") === "term,translation",
         ),
       ).toBe(true);
+    },
+  );
+
+  it.each(["astral-mage", "sorcerer-ziggurat"] as const)(
+    "loads public %s with the unchanged sentence-pair ABI",
+    async (cartridgeId) => {
+      const config = readingAPKSmokeConfigs.find(
+        (candidate) => String(candidate.cartridgeId) === cartridgeId,
+      );
+
+      expect(config).toBeDefined();
+      if (!config) return;
+      expect(config.edition.id).toBe("secondary-epic");
+      expect(config.inputMode).toBe("sentence");
+      expect(config.input.length).toBeGreaterThan(0);
+      expect(
+        config.input.every(
+          (item) =>
+            Object.keys(item).sort().join(",") === "term,translation" &&
+            item.term.trim().length > 0 &&
+            item.translation.trim().length > 0,
+        ),
+      ).toBe(true);
+
+      const cartridge = await loadReadingAPKSmokeCartridge(
+        cartridgeId as Parameters<typeof loadReadingAPKSmokeCartridge>[0],
+      );
+      expect(cartridge.manifest).toMatchObject({
+        id: cartridgeId,
+        inputMode: "sentence",
+      });
     },
   );
 

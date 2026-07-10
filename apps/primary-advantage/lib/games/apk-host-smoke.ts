@@ -22,7 +22,10 @@ type PrimaryVocabularySmokeConfig = {
 };
 
 type PrimarySentenceSmokeConfig = {
-  cartridgeId: Extract<CartridgeId, "dungeon-liberator">;
+  cartridgeId: Extract<
+    CartridgeId,
+    "dungeon-liberator" | "astral-mage" | "sorcerer-ziggurat"
+  >;
   edition: typeof primaryChibiEdition;
   inputMode: "sentence";
   input: SentenceInput;
@@ -68,6 +71,40 @@ export const primaryAPKSmokeConfigs = [
     input: normalizeVocabularyInput([
       { id: "primary-magic-1", term: "sun", translation: "sol" },
       { id: "primary-magic-2", term: "moon", translation: "luna" },
+    ]),
+  },
+  {
+    cartridgeId: "astral-mage",
+    edition: primaryChibiEdition,
+    inputMode: "sentence",
+    input: normalizeSentenceInput([
+      {
+        id: "primary-astral-1",
+        term: "The star shines over the moon.",
+        translation: "La estrella brilla sobre la luna.",
+      },
+      {
+        id: "primary-astral-2",
+        term: "The little mage finds the crystal.",
+        translation: "El pequeno mago encuentra el cristal.",
+      },
+    ]),
+  },
+  {
+    cartridgeId: "sorcerer-ziggurat",
+    edition: primaryChibiEdition,
+    inputMode: "sentence",
+    input: normalizeSentenceInput([
+      {
+        id: "primary-ziggurat-1",
+        term: "The hero jumps onto the blue cube.",
+        translation: "El heroe salta sobre el cubo azul.",
+      },
+      {
+        id: "primary-ziggurat-2",
+        term: "The bright rune opens the door.",
+        translation: "La runa brillante abre la puerta.",
+      },
     ]),
   },
 ] as const satisfies readonly PrimaryAPKSmokeConfig[];

@@ -6,6 +6,15 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { gameCards } from '@/lib/gameCards'
 
+/**
+ * Resolves a locale-agnostic game path into its public launch URL.
+ * @param href Catalog path for a playable game.
+ * @returns A root QC deep link or an English-prefixed legacy student route.
+ */
+export function resolveGameHref(href: string): string {
+  return href.startsWith('/qc') ? href : `/en${href}`
+}
+
 export default function MainMenu() {
   return (
     <main className="min-h-screen bg-background flex flex-col items-center justify-center p-8">
@@ -59,7 +68,7 @@ export default function MainMenu() {
                 <CardContent className="px-6 pb-6 pt-4">
                   {isPlayable && game.href ? (
                     <Button asChild className="w-full" size="lg">
-                      <Link href={`/en${game.href}`}>Start Game</Link>
+                      <Link href={resolveGameHref(game.href)}>Start Game</Link>
                     </Button>
                   ) : (
                     <Button disabled variant="secondary" className="w-full" size="lg">

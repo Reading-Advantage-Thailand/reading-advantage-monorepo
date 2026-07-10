@@ -15,6 +15,8 @@ jest.mock("@reading-advantage/game-cartridges/catalog", () => {
     ["dragon-flight", "Dragon Flight", "vocabulary", "gate-runner"],
     ["dungeon-liberator", "Dungeon Liberator", "sentence", "sentence-order-collection"],
     ["magic-defense", "Magic Defense", "vocabulary", "typing-defense"],
+    ["astral-mage", "Astral Mage", "sentence", "target-action"],
+    ["sorcerer-ziggurat", "The Sorcerer's Ziggurat", "sentence", "step-traversal"],
   ] as const;
   const cartridgeCatalog = entries.map(([id, title, inputMode, mechanic]) => ({ id, title, inputMode, mechanic }));
   const cartridgeLoaders = Object.fromEntries(entries.map(([id, title, inputMode]) => [id, async () => ({ manifest: { id, title, inputMode }, createGameConfig: jest.fn() })]));
@@ -40,6 +42,10 @@ jest.mock("@reading-advantage/game-contracts", () => ({
 }));
 
 describe("APKQCLab", () => {
+  afterEach(() => {
+    window.history.replaceState({}, "", "/qc");
+  });
+
   it("discovers cartridges, switches editions, and exposes QC-only result mapping", async () => {
     render(<APKQCLab />);
 
@@ -47,6 +53,8 @@ describe("APKQCLab", () => {
     expect(screen.getByRole("button", { name: /Dragon Flight/i })).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByRole("button", { name: /Dungeon Liberator/i })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Magic Defense/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Astral Mage/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /The Sorcerer's Ziggurat/i })).toBeInTheDocument();
     expect(screen.queryByText(/Sky Gate Sprint|Rune Trail|Arcane Bulwark/i)).not.toBeInTheDocument();
     expect(screen.getByText(/Nothing is authenticated or persisted/i)).toBeInTheDocument();
 
@@ -59,5 +67,47 @@ describe("APKQCLab", () => {
     expect(screen.getAllByText(/"xp": 40/)).toHaveLength(1);
     expect(screen.getByText(/"gameType": "dragon-flight"/)).toBeInTheDocument();
     expect(screen.getByText(/display XP is deliberately excluded/i)).toBeInTheDocument();
+  });
+
+  it.each([
+    ["Astral Mage", "astral-mage"],
+    ["The Sorcerer's Ziggurat", "sorcerer-ziggurat"],
+  ] as const)(
+    "discovers %s and emits its public cartridge identity",
+    async (title, cartridgeId) => {
+      render(<APKQCLab />);
+
+      fireEvent.click(
+        screen.getByRole("button", { name: new RegExp(title, "i") }),
+      );
+      expect(
+        screen.getByText(`${cartridgeId} · sentence`, { exact: true }),
+      ).toBeInTheDocument();
+
+      fireEvent.click(
+        await screen.findByRole("button", { name: "Complete mock session" }),
+      );
+      await waitFor(() =>
+        expect(
+          screen.getByText(new RegExp(`"gameType": "${cartridgeId}"`)),
+        ).toBeInTheDocument(),
+      );
+    },
+  );
+
+  it("selects a public cartridge from the QC deep-link query", async () => {
+    window.history.replaceState({}, "", "/qc?cartridge=astral-mage");
+
+    render(<APKQCLab />);
+
+    await waitFor(() =>
+      expect(screen.getByRole("button", { name: /Astral Mage/i })).toHaveAttribute(
+        "aria-pressed",
+        "true",
+      ),
+    );
+    expect(
+      screen.getByText("astral-mage · sentence", { exact: true }),
+    ).toBeInTheDocument();
   });
 });

@@ -29,6 +29,22 @@ export const cartridgeCatalog = [
     mechanic: "typing-defense",
     editions: ["primary-chibi", "secondary-epic"],
   },
+  {
+    id: "astral-mage",
+    title: "Astral Mage",
+    description: "Navigate the magical void and shoot word crystals in sentence order.",
+    inputMode: "sentence",
+    mechanic: "target-action",
+    editions: ["primary-chibi", "secondary-epic"],
+  },
+  {
+    id: "sorcerer-ziggurat",
+    title: "The Sorcerer's Ziggurat",
+    description: "Jump across adjacent rune cubes in the correct order to complete ancient rituals.",
+    inputMode: "sentence",
+    mechanic: "step-traversal",
+    editions: ["primary-chibi", "secondary-epic"],
+  },
 ] as const satisfies readonly CartridgeCatalogEntry[];
 
 /** Literal dynamic imports that keep unused Phaser cartridges out of host entry bundles. */
@@ -44,6 +60,14 @@ export const cartridgeLoaders = {
   "magic-defense": () =>
     import("./typing-defense").then(
       ({ magicDefenseCartridge }) => magicDefenseCartridge,
+    ),
+  "astral-mage": () =>
+    import("./cartridges/astral-mage").then(
+      ({ astralMageCartridge }) => astralMageCartridge,
+    ),
+  "sorcerer-ziggurat": () =>
+    import("./cartridges/sorcerer-ziggurat").then(
+      ({ sorcererZigguratCartridge }) => sorcererZigguratCartridge,
     ),
 } satisfies Record<
   (typeof cartridgeCatalog)[number]["id"],

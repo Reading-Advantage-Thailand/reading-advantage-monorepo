@@ -22,7 +22,10 @@ type ReadingVocabularySmokeConfig = {
 };
 
 type ReadingSentenceSmokeConfig = {
-  cartridgeId: Extract<CartridgeId, "dungeon-liberator">;
+  cartridgeId: Extract<
+    CartridgeId,
+    "dungeon-liberator" | "astral-mage" | "sorcerer-ziggurat"
+  >;
   edition: typeof secondaryEpicEdition;
   inputMode: "sentence";
   input: SentenceInput;
@@ -80,6 +83,40 @@ export const readingAPKSmokeConfigs = [
         translation: "able to recover",
       },
       { id: "reading-magic-2", term: "vigilant", translation: "watchful" },
+    ]),
+  },
+  {
+    cartridgeId: "astral-mage",
+    edition: secondaryEpicEdition,
+    inputMode: "sentence",
+    input: normalizeSentenceInput([
+      {
+        id: "reading-astral-1",
+        term: "The stars reveal a hidden path.",
+        translation: "Las estrellas revelan un camino oculto.",
+      },
+      {
+        id: "reading-astral-2",
+        term: "The mage crosses the silent void.",
+        translation: "El mago cruza el vacio silencioso.",
+      },
+    ]),
+  },
+  {
+    cartridgeId: "sorcerer-ziggurat",
+    edition: secondaryEpicEdition,
+    inputMode: "sentence",
+    input: normalizeSentenceInput([
+      {
+        id: "reading-ziggurat-1",
+        term: "Ancient runes awaken beneath each step.",
+        translation: "Runas antiguas despiertan bajo cada paso.",
+      },
+      {
+        id: "reading-ziggurat-2",
+        term: "The final ritual opens the summit.",
+        translation: "El ritual final abre la cumbre.",
+      },
     ]),
   },
 ] as const satisfies readonly ReadingAPKSmokeConfig[];

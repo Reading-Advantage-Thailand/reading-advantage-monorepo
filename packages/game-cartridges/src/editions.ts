@@ -6,7 +6,7 @@ import type {
   CartridgeSemanticAsset,
 } from "./internal/types";
 
-/** Semantic visual and audio slots shared by the representative cartridges. */
+/** Semantic visual and audio slots shared by the public cartridge catalog. */
 export const GAMEPLAY_ASSET_SLOTS = [
   "world.background",
   "player.hero",
@@ -16,6 +16,14 @@ export const GAMEPLAY_ASSET_SLOTS = [
   "feedback.correct",
   "feedback.incorrect",
   "ui.panel",
+  "projectile.magic",
+  "target.word-crystal",
+  "indicator.offscreen",
+  "portal.complete",
+  "terrain.ziggurat",
+  "platform.rune-cube",
+  "token.rune",
+  "effect.ritual",
 ] as const;
 
 function createProceduralAsset(
@@ -92,7 +100,7 @@ export const secondaryEpicEdition: CartridgeEdition = {
   },
 };
 
-/** Editions available to every representative cartridge. */
+/** Editions available to every public cartridge. */
 export const editionCatalog = [primaryChibiEdition, secondaryEpicEdition] as const;
 
 /**
