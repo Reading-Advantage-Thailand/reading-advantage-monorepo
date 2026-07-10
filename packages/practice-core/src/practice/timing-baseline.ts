@@ -65,6 +65,8 @@ export type PracticeTimingBaseline = {
   variantKey: string;
   sampleCount: number;
   medianActiveMs: number;
+  meanActiveMs?: number;
+  standardDeviationMs?: number;
   p25ActiveMs?: number;
   p75ActiveMs?: number;
   p90ActiveMs?: number;
@@ -155,11 +157,26 @@ export function computeTimingBaseline(
   const minSamplesMet = sampleCount >= minSamples;
 
   const medianActiveMs = computePercentile(activeMsValues, 0.5);
+  const meanActiveMs =
+    sampleCount > 0
+      ? activeMsValues.reduce((sum, value) => sum + value, 0) / sampleCount
+      : 0;
+  const standardDeviationMs =
+    sampleCount > 1
+      ? Math.sqrt(
+          activeMsValues.reduce(
+            (sum, value) => sum + Math.pow(value - meanActiveMs, 2),
+            0,
+          ) / sampleCount,
+        )
+      : 0;
 
   return {
     variantKey,
     sampleCount,
     medianActiveMs,
+    meanActiveMs,
+    standardDeviationMs,
     p25ActiveMs:
       sampleCount > 0 ? computePercentile(activeMsValues, 0.25) : undefined,
     p75ActiveMs:
@@ -214,6 +231,12 @@ export function deriveTimingFeatures(
 
   const timeRatio = timing.activeMs / baseline.medianActiveMs;
   const speedBand = resolveSpeedBand(timeRatio);
+  const zScore =
+    baseline.meanActiveMs !== undefined &&
+    baseline.standardDeviationMs !== undefined &&
+    baseline.standardDeviationMs > 0
+      ? (timing.activeMs - baseline.meanActiveMs) / baseline.standardDeviationMs
+      : undefined;
 
   if (speedBand !== "expected") {
     reasons.push(`timing_${speedBand}`);
@@ -224,6 +247,7 @@ export function deriveTimingFeatures(
     activeMs: timing.activeMs,
     baselineMedianActiveMs: baseline.medianActiveMs,
     timeRatio,
+    zScore,
     speedBand,
     confidence: timing.confidence,
     reasons,

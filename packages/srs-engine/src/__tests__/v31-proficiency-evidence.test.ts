@@ -39,9 +39,11 @@ function capped(
 }
 
 function attempts(correct: number, total: number): Attempt[] {
-  return Array.from({ length: total }, (_, positionsAgo) => ({
-    isCorrect: positionsAgo < correct,
-    positionsAgo,
+  // The specification's count-only worked examples do not define temporal
+  // ordering, so assign equal recency. Ordered histories are tested below.
+  return Array.from({ length: total }, (_, index) => ({
+    isCorrect: index < correct,
+    positionsAgo: 0,
   }));
 }
 

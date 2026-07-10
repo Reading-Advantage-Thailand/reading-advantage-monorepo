@@ -9,6 +9,7 @@ import type {
   ProbeAdapter,
   ProbeResult,
 } from "./placement.js";
+import { z } from "zod";
 
 // ---------------------------------------------------------------------------
 // Public types
@@ -17,15 +18,33 @@ import type {
 export interface PlacementEngineResult {
   results: PlacementResult[];
   probesPerformed: number;
-  reason: "converged" | "max-probes" | "empty-graph";
+  reason: "converged" | "max-probes" | "empty-graph" | "frontier-stalled";
   converged: boolean;
 }
 
-interface TraversalOptions {
+/** Validated options for the v3.1 adaptive frontier walk. */
+export interface TraversalOptions {
   startNodeId?: string;
   maxProbes?: number;
   hardGateThreshold?: number;
+  maxRepresentativesPerContentGroup?: number;
+  unchangedFrontierProbeLimit?: number;
+  unlockValueByNode?: Readonly<Record<string, number>>;
 }
+
+const traversalOptionsSchema = z.strictObject({
+  startNodeId: z.string().min(1).optional(),
+  maxProbes: z.number().finite().int().nonnegative().optional(),
+  hardGateThreshold: z.number().finite().min(0).max(1).optional(),
+  maxRepresentativesPerContentGroup: z
+    .number()
+    .finite()
+    .int()
+    .positive()
+    .optional(),
+  unchangedFrontierProbeLimit: z.number().finite().int().positive().optional(),
+  unlockValueByNode: z.record(z.string(), z.number().finite()).optional(),
+});
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -79,13 +98,16 @@ function validateProbeResult(value: unknown): asserts value is ProbeResult {
  * @param {ProbeResult} result - The probe outcome (pass, fail, or partial)
  * @returns {{ estimate: number; confidence: PlacementResult['confidence'] }} - Object with mastery estimate and confidence level
  */
-function computeMastery(result: ProbeResult): {
+function computeMastery(
+  result: ProbeResult,
+  highFidelity: boolean,
+): {
   estimate: number;
   confidence: PlacementResult["confidence"];
 } {
   switch (result) {
     case "pass":
-      return { estimate: 0.85, confidence: "medium" };
+      return { estimate: 0.85, confidence: highFidelity ? "high" : "medium" };
     case "fail":
       return { estimate: 0.15, confidence: "low" };
     case "partial":
@@ -108,10 +130,13 @@ function finalizeResult(
   queue: string[],
   visited: Set<string>,
   maxProbes: number,
+  budgetInterrupted: boolean,
+  frontierStalled: boolean,
 ): PlacementEngineResult {
   const hasUnvisitedInQueue = queue.some((n) => !visited.has(n));
-  const reason =
-    probesPerformed >= maxProbes && hasUnvisitedInQueue
+  const reason = frontierStalled
+    ? "frontier-stalled"
+    : probesPerformed >= maxProbes && (hasUnvisitedInQueue || budgetInterrupted)
       ? "max-probes"
       : "converged";
   return {
@@ -144,6 +169,7 @@ export function runPlacementTraversal(
   adapter: ProbeAdapter,
   options: TraversalOptions = {},
 ): PlacementEngineResult {
+  const parsedOptions = traversalOptionsSchema.parse(options);
   if (graph.nodes.length === 0) {
     return {
       results: [],
@@ -153,37 +179,82 @@ export function runPlacementTraversal(
     };
   }
 
-  const maxProbes = options.maxProbes ?? 24;
-  if (maxProbes <= 0) {
-    return {
-      results: [],
-      probesPerformed: 0,
-      reason: "max-probes",
-      converged: false,
-    };
+  const maxProbes = parsedOptions.maxProbes ?? 24;
+  const startNodeId = parsedOptions.startNodeId ?? graph.nodes[0]!.id;
+  if (!graph.nodes.some((node) => node.id === startNodeId)) {
+    throw new Error(`startNodeId is not present in the graph: ${startNodeId}`);
+  }
+  if (maxProbes === 0) {
+    return { results: [], probesPerformed: 0, reason: 'max-probes', converged: false };
   }
 
   const { downstream, upstream } = buildAdjacency(
     graph,
-    options.hardGateThreshold ?? 1,
+    adapter.legacySingleProbe ? 0 : (parsedOptions.hardGateThreshold ?? 1),
   );
-  const startNodeId = options.startNodeId ?? graph.nodes[0]!.id;
 
   const visited = new Set<string>();
   const queue: string[] = [startNodeId];
   const results: PlacementResult[] = [];
   let probesPerformed = 0;
+  let budgetInterrupted = false;
+  let frontierStalled = false;
+  const resolved = new Set<string>();
+  const maxRepresentatives =
+    parsedOptions.maxRepresentativesPerContentGroup ?? 3;
+
+  const groupFor = (nodeId: string): string => {
+    const parents = graph.edges
+      .filter((edge) => edge.type === "contains" && edge.targetId === nodeId)
+      .map((edge) => edge.sourceId)
+      .sort();
+    return (
+      parents.find((parentId) =>
+        graph.nodes.some(
+          (node) => node.id === parentId && node.kind === "content_group",
+        ),
+      ) ??
+      parents[0] ??
+      `ungrouped:${nodeId}`
+    );
+  };
 
   function processDecision(nodeId: string, probeResult: ProbeResult): void {
-    const { estimate, confidence } = computeMastery(probeResult);
+    const { estimate, confidence } = computeMastery(
+      probeResult,
+      adapter.highFidelityProbeInstrument === true,
+    );
     results.push({ nodeId, masteryEstimate: estimate, confidence });
+    resolved.add(nodeId);
 
     const neighbors =
       probeResult === "pass"
         ? (downstream.get(nodeId) ?? [])
         : (upstream.get(nodeId) ?? []);
 
-    for (const neighbor of neighbors) {
+    const selectedNeighbors = adapter.legacySingleProbe
+      ? [...neighbors]
+      : [...neighbors]
+          .filter((neighbor) =>
+            (upstream.get(neighbor) ?? []).every((parent) =>
+              resolved.has(parent),
+            ),
+          )
+          .sort(
+            (a, b) =>
+              (parsedOptions.unlockValueByNode?.[b] ?? 0) -
+                (parsedOptions.unlockValueByNode?.[a] ?? 0) ||
+              a.localeCompare(b),
+          )
+          .filter(
+            (neighbor, _index, all) =>
+              all
+                .filter(
+                  (candidate) => groupFor(candidate) === groupFor(neighbor),
+                )
+                .indexOf(neighbor) < maxRepresentatives,
+          );
+    for (const neighbor of selectedNeighbors) {
       if (!visited.has(neighbor)) {
         queue.push(neighbor);
       }
@@ -194,9 +265,21 @@ export function runPlacementTraversal(
     nodeId: string,
   ): ProbeResult | undefined | Promise<ProbeResult | undefined> {
     const observations: ProbeResult[] = [];
+    const guessFloor = adapter.guessFloor?.(nodeId) ?? 0;
+    if (!Number.isFinite(guessFloor) || guessFloor < 0 || guessFloor >= 1) {
+      throw new Error(`Invalid guess floor for ${nodeId}`);
+    }
     const score = (result: ProbeResult): number =>
-      result === "pass" ? 1 : result === "partial" ? 0.5 : 0;
+      result === "pass"
+        ? 1
+        : result === "partial"
+          ? Math.max(0, (0.5 - guessFloor) / (1 - guessFloor))
+          : 0;
+    let unchangedProbes = 0;
     const decide = (): ProbeResult | undefined => {
+      if (adapter.legacySingleProbe && observations.length >= 1) {
+        return observations[0];
+      }
       const total = observations.reduce(
         (sum, result) => sum + score(result),
         0,
@@ -219,6 +302,11 @@ export function runPlacementTraversal(
 
       const probeResult = adapter.probe(nodeId);
       probesPerformed++;
+      unchangedProbes++;
+      if (unchangedProbes >= (parsedOptions.unchangedFrontierProbeLimit ?? 4)) {
+        frontierStalled = true;
+        return undefined;
+      }
       if (probeResult == null) validateProbeResult(probeResult);
       if (typeof (probeResult as Promise<ProbeResult>).then === "function") {
         return (probeResult as Promise<ProbeResult>).then((value) => {
@@ -254,9 +342,18 @@ export function runPlacementTraversal(
       }
       if (decision !== undefined)
         processDecision(nodeId, decision as ProbeResult);
+      else if (probesPerformed >= maxProbes) budgetInterrupted = true;
     }
 
-    return finalizeResult(results, probesPerformed, queue, visited, maxProbes);
+    return finalizeResult(
+      results,
+      probesPerformed,
+      queue,
+      visited,
+      maxProbes,
+      budgetInterrupted,
+      frontierStalled,
+    );
   }
 
   try {

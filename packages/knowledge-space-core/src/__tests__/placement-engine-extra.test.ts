@@ -335,6 +335,7 @@ describe('runPlacementTraversal — async probe support', () => {
     const graph = buildLinearPlacementChain(3);
     const adapter: ProbeAdapter = {
       domain: 'math.test.extension',
+      legacySingleProbe: true,
       async probe(nodeId: string): Promise<ProbeResult> {
         // Yield to the event loop so the engine cannot accidentally
         // observe a synchronously-resolved value.
@@ -363,6 +364,7 @@ describe('runPlacementTraversal — async probe support', () => {
     const graph = buildLinearPlacementChain(3);
     const adapter: ProbeAdapter = {
       domain: 'math.test.extension',
+      legacySingleProbe: true,
       async probe(nodeId: string): Promise<ProbeResult> {
         await Promise.resolve();
         return nodeId === 'math.test.chain.n3' ? 'fail' : 'pass';
@@ -395,6 +397,7 @@ describe('runPlacementTraversal — probe error propagation', () => {
     const graph = buildLinearPlacementChain(2);
     const adapter: ProbeAdapter = {
       domain: 'math.test.extension',
+      legacySingleProbe: true,
       probe(nodeId: string): ProbeResult {
         if (nodeId === 'math.test.chain.n2') {
           throw new Error('probe backend unavailable');

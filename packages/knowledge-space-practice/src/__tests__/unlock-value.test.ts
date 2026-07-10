@@ -2,8 +2,8 @@
  * Phase 2 (Track 4 next-skill-planner_20260521) — Red direct unit
  * tests for the `unlockValue` scoring term.
  *
- * Per spec FR1 + kst-srs.v2 §7.2: `unlockValue(B)` = count of
- * skills reachable downstream from `B` via `prerequisite_for` edges.
+ * In v3.2, `unlockValue(B)` logarithmically normalizes the count of skills
+ * reachable downstream from `B` by the maximum reach in the graph.
  * The precomputation is an NFR (`unlockValue` precomputed once per
  * graph, not per request); the per-node accessor is the oracle used
  * to verify the bulk-precompute API.
@@ -63,13 +63,13 @@ describe('unlockValue — unknown node', () => {
 // ---------------------------------------------------------------------------
 
 describe('unlockValue — linear chain (chain.n1 -> ... -> chain.nN)', () => {
-  it('returns N-1 for the root of a chain of length N', () => {
+  it('normalizes chain reach against the maximum downstream reach', () => {
     const graph = makePlannerChain({ length: 5 });
     // chain.n1 -> chain.n2 -> chain.n3 -> chain.n4 -> chain.n5
-    expect(getUnlockValue('chain.n1', graph)).toBe(4);
-    expect(getUnlockValue('chain.n2', graph)).toBe(3);
-    expect(getUnlockValue('chain.n3', graph)).toBe(2);
-    expect(getUnlockValue('chain.n4', graph)).toBe(1);
+    expect(getUnlockValue('chain.n1', graph)).toBe(1);
+    expect(getUnlockValue('chain.n2', graph)).toBeCloseTo(Math.log(4) / Math.log(5), 10);
+    expect(getUnlockValue('chain.n3', graph)).toBeCloseTo(Math.log(3) / Math.log(5), 10);
+    expect(getUnlockValue('chain.n4', graph)).toBeCloseTo(Math.log(2) / Math.log(5), 10);
     expect(getUnlockValue('chain.n5', graph)).toBe(0);
   });
 
@@ -90,17 +90,17 @@ describe('unlockValue — linear chain (chain.n1 -> ... -> chain.nN)', () => {
 // ---------------------------------------------------------------------------
 
 describe('unlockValue — balanced tree', () => {
-  it('returns the total descendant count for the root of a depth-2, branching-2 tree', () => {
+  it('assigns one to the maximum-reach root of a depth-2 tree', () => {
     // tree.root -> { tree.n1.0.1, tree.n1.0.2 } (4 nodes total, 3 edges)
     // root has 2 descendants.
     const graph = makePlannerTree({ depth: 2, branching: 2 });
-    expect(getUnlockValue('tree.root', graph)).toBe(2);
+    expect(getUnlockValue('tree.root', graph)).toBe(1);
   });
 
-  it('returns the full subtree count for the root of a depth-3, branching-2 tree (7 descendants)', () => {
+  it('assigns one to the maximum-reach root of a depth-3 tree', () => {
     // depth=3, branching=2 -> 1 + 2 + 4 = 7 nodes; root has 6 descendants.
     const graph = makePlannerTree({ depth: 3, branching: 2 });
-    expect(getUnlockValue('tree.root', graph)).toBe(6);
+    expect(getUnlockValue('tree.root', graph)).toBe(1);
   });
 
   it('returns 0 for every leaf in a balanced tree', () => {
@@ -130,12 +130,12 @@ describe('unlockValue — empty graph', () => {
 describe('unlockValue — disconnected graph', () => {
   it('does not cross connected components (chain B is invisible from chain A)', () => {
     const graph = makePlannerDisconnected();
-    // chain A: a1 -> a2 -> a3 (a1 has 2 descendants)
-    expect(getUnlockValue('disc.a1', graph)).toBe(2);
-    expect(getUnlockValue('disc.a2', graph)).toBe(1);
+    // Normalization uses the maximum reach across both disconnected components.
+    expect(getUnlockValue('disc.a1', graph)).toBe(1);
+    expect(getUnlockValue('disc.a2', graph)).toBeCloseTo(Math.log(2) / Math.log(3), 10);
     expect(getUnlockValue('disc.a3', graph)).toBe(0);
     // chain B: b1 -> b2 (b1 has 1 descendant, no shared nodes with chain A)
-    expect(getUnlockValue('disc.b1', graph)).toBe(1);
+    expect(getUnlockValue('disc.b1', graph)).toBeCloseTo(Math.log(2) / Math.log(3), 10);
     expect(getUnlockValue('disc.b2', graph)).toBe(0);
   });
 });
@@ -184,11 +184,10 @@ describe('unlockValue — cycle safety', () => {
     const a = getUnlockValue('cyc.a', graph);
     const b = getUnlockValue('cyc.b', graph);
     const c = getUnlockValue('cyc.c', graph);
-    // All three are reachable from each other downstream — each has
-    // exactly 2 distinct downstream nodes.
-    expect(a).toBe(2);
-    expect(b).toBe(2);
-    expect(c).toBe(2);
+    // Equal maximum reach normalizes every node to one.
+    expect(a).toBe(1);
+    expect(b).toBe(1);
+    expect(c).toBe(1);
   });
 });
 

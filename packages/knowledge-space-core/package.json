@@ -7,16 +7,46 @@
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
-    "./types": { "types": "./dist/types.d.ts", "import": "./dist/types.js" },
-    "./schemas": { "types": "./dist/schemas.d.ts", "import": "./dist/schemas.js" },
-    "./validation": { "types": "./dist/validation.d.ts", "import": "./dist/validation.js" },
-    "./level-projection": { "types": "./dist/level-projection.d.ts", "import": "./dist/level-projection.js" },
-    "./progress-trend": { "types": "./dist/progress-trend.d.ts", "import": "./dist/progress-trend.js" },
-    "./adapters": { "types": "./dist/adapters.d.ts", "import": "./dist/adapters.js" },
-    "./fixtures": { "types": "./dist/fixtures.d.ts", "import": "./dist/fixtures.js" }
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./types": {
+      "types": "./dist/types.d.ts",
+      "import": "./dist/types.js"
+    },
+    "./schemas": {
+      "types": "./dist/schemas.d.ts",
+      "import": "./dist/schemas.js"
+    },
+    "./validation": {
+      "types": "./dist/validation.d.ts",
+      "import": "./dist/validation.js"
+    },
+    "./placement": {
+      "types": "./dist/placement.d.ts",
+      "import": "./dist/placement.js"
+    },
+    "./level-projection": {
+      "types": "./dist/level-projection.d.ts",
+      "import": "./dist/level-projection.js"
+    },
+    "./progress-trend": {
+      "types": "./dist/progress-trend.d.ts",
+      "import": "./dist/progress-trend.js"
+    },
+    "./adapters": {
+      "types": "./dist/adapters.d.ts",
+      "import": "./dist/adapters.js"
+    },
+    "./fixtures": {
+      "types": "./dist/fixtures.d.ts",
+      "import": "./dist/fixtures.js"
+    }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc",
     "check-types": "tsc --noEmit",

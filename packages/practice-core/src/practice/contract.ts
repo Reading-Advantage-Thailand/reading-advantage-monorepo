@@ -1,36 +1,38 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 /**
  * Canonical version identifier for the practice.v1 contract.
  */
-export const PRACTICE_CONTRACT_VERSION = 'practice.v1' as const;
+export const PRACTICE_CONTRACT_VERSION = "practice.v1" as const;
 
 /**
  * Valid modes for a practice activity.
  */
 export const PRACTICE_MODE_VALUES = [
-  'worked_example',
-  'guided_practice',
-  'independent_practice',
-  'assessment',
-  'teaching',
+  "worked_example",
+  "guided_practice",
+  "independent_practice",
+  "assessment",
+  "teaching",
 ] as const;
 
 /**
  * Valid statuses for a practice submission lifecycle.
  */
 export const PRACTICE_SUBMISSION_STATUS_VALUES = [
-  'draft',
-  'submitted',
-  'graded',
-  'returned',
+  "draft",
+  "submitted",
+  "graded",
+  "returned",
 ] as const;
 
 /** Zod schema for practice mode. */
 export const practiceModeSchema = z.enum(PRACTICE_MODE_VALUES);
 
 /** Zod schema for practice submission status. */
-export const practiceSubmissionStatusSchema = z.enum(PRACTICE_SUBMISSION_STATUS_VALUES);
+export const practiceSubmissionStatusSchema = z.enum(
+  PRACTICE_SUBMISSION_STATUS_VALUES,
+);
 
 const jsonRecordSchema = z.record(z.string(), z.unknown());
 
@@ -41,7 +43,11 @@ const jsonRecordSchema = z.record(z.string(), z.unknown());
  * where a validated database ID is required. The brand is erased at
  * runtime; it exists only for compile-time safety.
  */
-export const convexActivityIdSchema = z.string().trim().min(1).brand<'ConvexId'>();
+export const convexActivityIdSchema = z
+  .string()
+  .trim()
+  .min(1)
+  .brand<"ConvexId">();
 
 /**
  * Canonical activity ID type — a string validated to be a Convex document ID.
@@ -87,26 +93,29 @@ function normalizeSubmittedAt(value: string | Date): string {
  */
 export function normalizePracticeValue(value: unknown): string {
   if (Array.isArray(value)) {
-    return value.map((entry) => normalizePracticeValue(entry)).sort().join('|');
+    return value
+      .map((entry) => normalizePracticeValue(entry))
+      .sort()
+      .join("|");
   }
 
-  if (typeof value === 'string') {
+  if (typeof value === "string") {
     return value.trim().toLowerCase();
   }
 
-  if (typeof value === 'number' || typeof value === 'boolean') {
+  if (typeof value === "number" || typeof value === "boolean") {
     return String(value).trim().toLowerCase();
   }
 
   if (value == null) {
-    return '';
+    return "";
   }
 
   return JSON.stringify(value);
 }
 
 /** Zod schema for timing confidence levels. */
-export const practiceTimingConfidenceSchema = z.enum(['high', 'medium', 'low']);
+export const practiceTimingConfidenceSchema = z.enum(["high", "medium", "low"]);
 
 /**
  * Confidence level for aggregated timing data.
@@ -115,7 +124,9 @@ export const practiceTimingConfidenceSchema = z.enum(['high', 'medium', 'low']);
  * - **medium**: Minor focus losses or short visibility-hidden events.
  * - **low**: Major interruptions, very short sessions, or long idle periods.
  */
-export type PracticeTimingConfidence = z.infer<typeof practiceTimingConfidenceSchema>;
+export type PracticeTimingConfidence = z.infer<
+  typeof practiceTimingConfidenceSchema
+>;
 
 /** Zod schema for a practice timing summary. */
 export const practiceTimingSummarySchema = z
@@ -133,8 +144,8 @@ export const practiceTimingSummarySchema = z
     confidenceReasons: z.array(z.string()).optional(),
   })
   .refine((data) => data.activeMs <= data.wallClockMs, {
-    message: 'activeMs cannot exceed wallClockMs',
-    path: ['activeMs'],
+    message: "activeMs cannot exceed wallClockMs",
+    path: ["activeMs"],
   });
 
 /**
@@ -169,6 +180,10 @@ export const practiceSubmissionPartSchema = z.object({
   misconceptionTags: z.array(z.string()).optional(),
   hintsUsed: z.number().int().nonnegative().optional(),
   revealStepsSeen: z.number().int().nonnegative().optional(),
+  totalRevealSteps: z.number().int().nonnegative().optional(),
+  misconceptionSeverityByTag: z
+    .record(z.string(), z.enum(["minor", "severe"]))
+    .optional(),
   changedCount: z.number().int().nonnegative().optional(),
   firstInteractionAt: z.string().min(1).optional(),
   answeredAt: z.string().min(1).optional(),
@@ -191,7 +206,9 @@ export const practiceSubmissionPartSchema = z.object({
  * };
  * ```
  */
-export type PracticeSubmissionPart = z.infer<typeof practiceSubmissionPartSchema>;
+export type PracticeSubmissionPart = z.infer<
+  typeof practiceSubmissionPartSchema
+>;
 
 /** Zod schema for the canonical practice submission envelope. */
 export const practiceSubmissionEnvelopeSchema = z.object({
@@ -232,7 +249,9 @@ export const practiceSubmissionEnvelopeSchema = z.object({
  * };
  * ```
  */
-export type PracticeSubmissionEnvelope = z.infer<typeof practiceSubmissionEnvelopeSchema>;
+export type PracticeSubmissionEnvelope = z.infer<
+  typeof practiceSubmissionEnvelopeSchema
+>;
 
 /**
  * Alias for the submission envelope when used as a callback payload.
@@ -256,10 +275,11 @@ export function isPracticeSubmissionEnvelope(
   value: unknown,
 ): value is PracticeSubmissionEnvelope {
   return (
-    typeof value === 'object' &&
+    typeof value === "object" &&
     value !== null &&
-    'contractVersion' in value &&
-    (value as { contractVersion?: unknown }).contractVersion === PRACTICE_CONTRACT_VERSION
+    "contractVersion" in value &&
+    (value as { contractVersion?: unknown }).contractVersion ===
+      PRACTICE_CONTRACT_VERSION
   );
 }
 
@@ -287,7 +307,9 @@ const practiceSubmissionInputSchema = z.object({
  *
  * Used when parsing incoming data from forms, APIs, or external sources.
  */
-export type PracticeSubmissionInput = z.infer<typeof practiceSubmissionInputSchema>;
+export type PracticeSubmissionInput = z.infer<
+  typeof practiceSubmissionInputSchema
+>;
 
 /**
  * Build `PracticeSubmissionPart` objects from a plain answers record.
@@ -343,7 +365,7 @@ export function buildPracticeSubmissionEnvelope(input: {
     contractVersion: PRACTICE_CONTRACT_VERSION,
     activityId: input.activityId,
     mode: input.mode,
-    status: input.status ?? 'submitted',
+    status: input.status ?? "submitted",
     attemptNumber: input.attemptNumber ?? 1,
     submittedAt: normalizeSubmittedAt(input.submittedAt ?? new Date()),
     answers: input.answers,
@@ -387,7 +409,9 @@ export function normalizePracticeSubmissionInput(
 
   const activityId = parsed.activityId ?? defaults.activityId;
   if (!activityId) {
-    throw new Error('activityId is required to normalize a practice submission.');
+    throw new Error(
+      "activityId is required to normalize a practice submission.",
+    );
   }
 
   const answers = parsed.answers ?? parsed.responses ?? {};
@@ -397,8 +421,8 @@ export function normalizePracticeSubmissionInput(
   return practiceSubmissionEnvelopeSchema.parse({
     contractVersion: PRACTICE_CONTRACT_VERSION,
     activityId,
-    mode: parsed.mode ?? defaults.mode ?? 'assessment',
-    status: parsed.status ?? defaults.status ?? 'submitted',
+    mode: parsed.mode ?? defaults.mode ?? "assessment",
+    status: parsed.status ?? defaults.status ?? "submitted",
     attemptNumber: parsed.attemptNumber ?? defaults.attemptNumber ?? 1,
     submittedAt: normalizeSubmittedAt(submittedAt),
     answers,

@@ -120,27 +120,29 @@ describe('posteriorVariance (FR3, AC3)', () => {
 // ---------------------------------------------------------------------------
 
 describe('updatePosterior (FR3, AC3)', () => {
-  it('increments α on a consistent observation (profA, profB)', () => {
+  it('v3: increments α on a necessary-edge observation (!profA, !profB)', () => {
     const before = makeCalibration({ alpha: 5, beta: 2 });
-    const after = updatePosterior(before, makeObservation(true, true));
+    const after = updatePosterior(before, makeObservation(false, false));
     expect(after.alpha).toBe(6);
     expect(after.beta).toBe(2);
   });
 
-  it('increments β on a violation observation (profA, !profB)', () => {
+  it('v3: increments β on a violation observation (!profA, profB)', () => {
     const before = makeCalibration({ alpha: 5, beta: 2 });
-    const after = updatePosterior(before, makeObservation(true, false));
+    const after = updatePosterior(before, makeObservation(false, true));
     expect(after.alpha).toBe(5);
     expect(after.beta).toBe(3);
   });
 
-  it('does not change α or β on a !A observation (not a Bernoulli trial)', () => {
+  it('v3: does not let proficient-A rows inflate the necessity posterior', () => {
+    // v2 updated from the a/b rows. v3 conditions the posterior exclusively
+    // on the c/d rows because proficient-A observations test informativeness.
     const before = makeCalibration({ alpha: 5, beta: 2 });
-    expect(updatePosterior(before, makeObservation(false, true))).toMatchObject({
+    expect(updatePosterior(before, makeObservation(true, true))).toMatchObject({
       alpha: 5,
       beta: 2,
     });
-    expect(updatePosterior(before, makeObservation(false, false))).toMatchObject({
+    expect(updatePosterior(before, makeObservation(true, false))).toMatchObject({
       alpha: 5,
       beta: 2,
     });
@@ -167,11 +169,12 @@ describe('updatePosterior (FR3, AC3)', () => {
   });
 
   it('is order-independent across a shuffled stream (commutativity property)', () => {
-    // 20 consistent + 5 violations, shuffled — two orderings must yield
+    // 20 necessary-edge observations + 5 violations, shuffled — two
+    // orderings must yield
     // identical α, β in the decay-free regime.
     const stream: CalibrationObservation[] = [];
-    for (let i = 0; i < 20; i++) stream.push(makeObservation(true, true));
-    for (let i = 0; i < 5; i++) stream.push(makeObservation(true, false));
+    for (let i = 0; i < 20; i++) stream.push(makeObservation(false, false));
+    for (let i = 0; i < 5; i++) stream.push(makeObservation(false, true));
 
     const reverse = [...stream].reverse();
     const interleaved: CalibrationObservation[] = [];
@@ -212,8 +215,8 @@ describe('updatePosterior (FR3, AC3)', () => {
     let aInc = 0;
     let bInc = 0;
     for (const o of stream) {
-      if (o.a && o.b) aInc++;
-      else if (o.a && !o.b) bInc++;
+      if (!o.a && !o.b) aInc++;
+      else if (!o.a && o.b) bInc++;
     }
     expect(incremental.alpha).toBe(initial.alpha + aInc);
     expect(incremental.beta).toBe(initial.beta + bInc);

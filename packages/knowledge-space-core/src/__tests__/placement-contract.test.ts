@@ -93,18 +93,13 @@ describe('placementResultSchema', () => {
     }
   });
 
-  it('rejects a confidence value outside the placement allow-list', () => {
-    // Placement seeds are low/medium only; "high" must be rejected here
-    // even though ConfidenceLevel permits it.
+  it('accepts high confidence as a result shape for instrument-gated seeding', () => {
     const result = placementResultSchema.safeParse({
       nodeId: 'math.im3.skill.m1.l2.identify-roots',
       masteryEstimate: 0.5,
       confidence: 'high',
     });
-    expect(result.success).toBe(false);
-    if (!result.success) {
-      expect(result.error.issues.some((i) => i.path.includes('confidence'))).toBe(true);
-    }
+    expect(result.success).toBe(true);
   });
 
   it('rejects an unknown confidence string', () => {
@@ -175,13 +170,13 @@ describe('placementResultsSchema', () => {
     }
   });
 
-  it('rejects an array containing an invalid entry', () => {
+  it('accepts a batch containing a high-fidelity result shape', () => {
     const batch = [
       { nodeId: 'math.im3.skill.m1.l2.identify-roots', masteryEstimate: 0.8, confidence: 'medium' as const },
       { nodeId: 'math.im3.skill.m1.l2.solve-quadratic-by-factoring', masteryEstimate: 0.3, confidence: 'high' as const },
     ];
     const result = placementResultsSchema.safeParse(batch);
-    expect(result.success).toBe(false);
+    expect(result.success).toBe(true);
   });
 
   it('rejects a non-array input', () => {
@@ -252,13 +247,13 @@ describe('isPlacementResult', () => {
     expect(isPlacementResult(value)).toBe(false);
   });
 
-  it('returns false for an object with high confidence (placement must be low/medium)', () => {
+  it('returns true for a high-confidence result shape before instrument gating', () => {
     const value: unknown = {
       nodeId: 'math.im3.skill.m1.l2.identify-roots',
       masteryEstimate: 0.5,
       confidence: 'high',
     };
-    expect(isPlacementResult(value)).toBe(false);
+    expect(isPlacementResult(value)).toBe(true);
   });
 
   it('returns false for null', () => {

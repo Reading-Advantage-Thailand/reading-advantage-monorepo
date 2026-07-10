@@ -24,6 +24,7 @@ import type {
   SrsCardState,
   SrsRating,
 } from "./contract.js";
+import { balanceDueDate, fuzzIntervalDays } from "./session-composition.js";
 
 /** Normative request-retention defaults by objective priority. */
 export const DEFAULT_REQUEST_RETENTION_BY_PRIORITY: Readonly<
@@ -58,6 +59,10 @@ export type SchedulerConfig = {
    * Default: false
    */
   enableShortTermPreview: boolean;
+  /** Apply deterministic v3.2 interval fuzz after FSRS scheduling. */
+  enableIntervalFuzz?: boolean;
+  /** Projected UTC-day loads used to balance the fuzzed due date. */
+  projectedLoadByDate?: Readonly<Record<string, number>>;
 };
 
 /**
@@ -65,9 +70,9 @@ export type SchedulerConfig = {
  */
 export const DEFAULT_SCHEDULER_CONFIG: SchedulerConfig = {
   requestRetention: 0.9,
-  requestRetentionByPriority: DEFAULT_REQUEST_RETENTION_BY_PRIORITY,
   maximumInterval: 365,
   enableShortTermPreview: false,
+  enableIntervalFuzz: true,
 };
 
 /**
@@ -82,9 +87,12 @@ export function resolveRequestRetention(
 ): number {
   const explicit = config.requestRetentionByPriority?.[priority];
   if (explicit !== undefined) return explicit;
+  if (config.requestRetentionByPriority !== undefined && priority !== "triaged")
+    return DEFAULT_REQUEST_RETENTION_BY_PRIORITY[priority];
+  if (config.requestRetention !== undefined) return config.requestRetention;
   if (priority !== "triaged")
     return DEFAULT_REQUEST_RETENTION_BY_PRIORITY[priority];
-  return config.requestRetention ?? DEFAULT_SCHEDULER_CONFIG.requestRetention;
+  return DEFAULT_SCHEDULER_CONFIG.requestRetention;
 }
 
 /**
@@ -241,7 +249,7 @@ export function reviewCard(
   const currentTime = now ?? new Date().toISOString();
   const fullConfig = { ...DEFAULT_SCHEDULER_CONFIG, ...config };
   const requestRetention = objectivePriority
-    ? resolveRequestRetention(objectivePriority, fullConfig)
+    ? resolveRequestRetention(objectivePriority, config ?? {})
     : fullConfig.requestRetention;
 
   const params = generatorParameters({
@@ -255,7 +263,7 @@ export function reviewCard(
   const grade = mapSrsRatingToGrade(rating);
   const result = scheduler.next(fsrsCard, currentTime, grade);
 
-  return mapFsrsCardToSrsCardState(
+  const updated = mapFsrsCardToSrsCardState(
     result.card,
     {
       cardId: card.cardId,
@@ -265,6 +273,37 @@ export function reviewCard(
     },
     currentTime,
   );
+  if (!fullConfig.enableIntervalFuzz || updated.scheduledDays <= 0)
+    return updated;
+
+  const fuzzedDays = fuzzIntervalDays({
+    cardId: updated.cardId,
+    reps: updated.reps,
+    intervalDays: updated.scheduledDays,
+  });
+  const currentMs = new Date(currentTime).getTime();
+  const fuzzedDueDate = new Date(
+    currentMs + fuzzedDays * 86_400_000,
+  ).toISOString();
+  const dueDate =
+    Object.keys(fullConfig.projectedLoadByDate ?? {}).length === 0
+      ? fuzzedDueDate
+      : balanceDueDate({
+          baseDueDate: fuzzedDueDate,
+          minimumDueDate: new Date(
+            currentMs + updated.scheduledDays * 0.95 * 86_400_000,
+          ).toISOString(),
+          maximumDueDate: new Date(
+            currentMs + updated.scheduledDays * 1.05 * 86_400_000,
+          ).toISOString(),
+          maximumIntervalDays: fullConfig.maximumInterval,
+          projectedLoadByDate: fullConfig.projectedLoadByDate ?? {},
+        });
+  return {
+    ...updated,
+    dueDate,
+    scheduledDays: (new Date(dueDate).getTime() - currentMs) / 86_400_000,
+  };
 }
 
 /**

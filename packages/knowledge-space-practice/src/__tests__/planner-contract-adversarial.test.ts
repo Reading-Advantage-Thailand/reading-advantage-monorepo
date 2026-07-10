@@ -28,7 +28,7 @@ import {
 //     without internal path coupling.
 // ---------------------------------------------------------------------------
 
-type WeightKey = 'a' | 'b' | 'c' | 'd';
+type WeightKey = 'a' | 'b' | 'c' | 'd' | 'e';
 
 const REJECTED_PRIMITIVES: ReadonlyArray<readonly [string, unknown]> = [
   ['null', null],
@@ -63,8 +63,8 @@ describe('priorityWeightsSchema — adversarial matrix coverage', () => {
   describe.each(REJECTED_PRIMITIVES)(
     'rejects %s in any weight position',
     (_label, value) => {
-      it.each<WeightKey>(['a', 'b', 'c', 'd'])('position %s', (key) => {
-        const input: Record<string, unknown> = { a: 1, b: 1, c: 1, d: 1 };
+      it.each<WeightKey>(['a', 'b', 'c', 'd', 'e'])('position %s', (key) => {
+        const input: Record<string, unknown> = { a: 1, b: 1, c: 1, d: 1, e: 1 };
         input[key] = value;
         const result = priorityWeightsSchema.safeParse(input);
         expect(result.success).toBe(false);
@@ -75,8 +75,8 @@ describe('priorityWeightsSchema — adversarial matrix coverage', () => {
   describe.each(REJECTED_NUMERIC)(
     'rejects %s in every weight position',
     (_label, value) => {
-      it.each<WeightKey>(['a', 'b', 'c', 'd'])('position %s', (key) => {
-        const input: Record<string, unknown> = { a: 1, b: 1, c: 1, d: 1 };
+      it.each<WeightKey>(['a', 'b', 'c', 'd', 'e'])('position %s', (key) => {
+        const input: Record<string, unknown> = { a: 1, b: 1, c: 1, d: 1, e: 1 };
         input[key] = value;
         const result = priorityWeightsSchema.safeParse(input);
         expect(result.success).toBe(false);
@@ -87,8 +87,8 @@ describe('priorityWeightsSchema — adversarial matrix coverage', () => {
   describe.each(ACCEPTED_NUMERIC)(
     'accepts %s in every weight position',
     (_label, value) => {
-      it.each<WeightKey>(['a', 'b', 'c', 'd'])('position %s', (key) => {
-        const input: Record<string, unknown> = { a: 0, b: 0, c: 0, d: 0 };
+      it.each<WeightKey>(['a', 'b', 'c', 'd', 'e'])('position %s', (key) => {
+        const input: Record<string, unknown> = { a: 0, b: 0, c: 0, d: 0, e: 0 };
         input[key] = value;
         const result = priorityWeightsSchema.safeParse(input);
         expect(result.success).toBe(true);
@@ -106,8 +106,8 @@ describe('priorityWeightsSchema — missing-key failure paths', () => {
   });
 
   it('rejects payload missing each key in turn', () => {
-    const base: Record<WeightKey, number> = { a: 1, b: 1, c: 1, d: 1 };
-    for (const key of ['a', 'b', 'c', 'd'] as const) {
+    const base: Record<WeightKey, number> = { a: 1, b: 1, c: 1, d: 1, e: 1 };
+    for (const key of ['a', 'b', 'c', 'd', 'e'] as const) {
       const payload: Record<string, number> = { ...base };
       delete payload[key];
       expect(priorityWeightsSchema.safeParse(payload).success).toBe(false);
@@ -117,7 +117,7 @@ describe('priorityWeightsSchema — missing-key failure paths', () => {
 
 describe('priorityWeightsSchema — parsed-value preservation', () => {
   it('preserves exact numeric values including zero', () => {
-    const input = { a: 0, b: 0.5, c: 1, d: 1.5 };
+    const input = { a: 0, b: 0.5, c: 1, d: 1.5, e: 0.2 };
     const result = priorityWeightsSchema.safeParse(input);
     expect(result.success).toBe(true);
     if (result.success) {
@@ -135,6 +135,7 @@ describe('priorityWeightsSchema — parsed-value preservation', () => {
       b: Number.MIN_VALUE,
       c: 1e-300,
       d: 0,
+      e: 0.2,
     };
     const result = priorityWeightsSchema.safeParse(input);
     expect(result.success).toBe(true);
@@ -144,7 +145,7 @@ describe('priorityWeightsSchema — parsed-value preservation', () => {
   });
 
   it('round-trips weights through JSON.stringify -> JSON.parse', () => {
-    const input = { a: 0.25, b: 1.5, c: 2, d: 0 };
+    const input = { a: 0.25, b: 1.5, c: 2, d: 0, e: 0.2 };
     const json = JSON.stringify(input);
     const rehydrated = JSON.parse(json);
     const result = priorityWeightsSchema.safeParse(rehydrated);
@@ -157,7 +158,7 @@ describe('priorityWeightsSchema — parsed-value preservation', () => {
 
 describe('priorityWeightsSchema — parse() (non-safe) throws on invalid input', () => {
   it('throws ZodError on negative weight', () => {
-    expect(() => priorityWeightsSchema.parse({ a: -1, b: 1, c: 1, d: 1 })).toThrow();
+    expect(() => priorityWeightsSchema.parse({ a: -1, b: 1, c: 1, d: 1, e: 0 })).toThrow();
   });
 
   it('throws ZodError on missing key', () => {
@@ -166,13 +167,13 @@ describe('priorityWeightsSchema — parse() (non-safe) throws on invalid input',
 
   it('throws ZodError on extra unknown key', () => {
     expect(() =>
-      priorityWeightsSchema.parse({ a: 1, b: 1, c: 1, d: 1, e: 1 }),
+      priorityWeightsSchema.parse({ a: 1, b: 1, c: 1, d: 1, e: 1, f: 1 }),
     ).toThrow();
   });
 
   it('returns the parsed value (does not transform)', () => {
-    const out = priorityWeightsSchema.parse({ a: 0.7, b: 1, c: 1, d: 1 });
-    expect(out).toEqual({ a: 0.7, b: 1, c: 1, d: 1 });
+    const out = priorityWeightsSchema.parse({ a: 0.7, b: 1, c: 1, d: 1, e: 0.2 });
+    expect(out).toEqual({ a: 0.7, b: 1, c: 1, d: 1, e: 0.2 });
   });
 });
 
@@ -181,7 +182,7 @@ describe('priorityWeightsSchema — duplicated-key edge', () => {
   // The schema must not reject the resulting single-key payload silently.
   it('accepts duplicate-key payload (JS last-wins semantics)', () => {
     // @ts-expect-error duplicate-key probe
-    const payload = { a: 1, b: 1, c: 1, d: 1, a: 0.25 };
+    const payload = { a: 1, b: 1, c: 1, d: 1, e: 0.2, a: 0.25 };
     const result = priorityWeightsSchema.safeParse(payload);
     expect(result.success).toBe(true);
     if (result.success) {
@@ -418,11 +419,16 @@ describe('Planner contract — package public surface', () => {
     };
     const pkgUrl = new URL('../../package.json', import.meta.url);
     const raw = readFileSync(pkgUrl, 'utf-8');
-    const pkg = JSON.parse(raw) as { exports?: Record<string, string> };
+    const pkg = JSON.parse(raw) as {
+      exports?: Record<string, string | { types: string; import: string }>;
+    };
     const exports = pkg.exports ?? {};
     expect('./planner/types' in exports).toBe(true);
     if ('./planner/types' in exports) {
-      expect(exports['./planner/types']).toMatch(/planner[\\/]+types\.ts$/);
+      expect(exports['./planner/types']).toMatchObject({
+        types: './dist/planner/types.d.ts',
+        import: './dist/planner/types.js',
+      });
     }
   });
 });

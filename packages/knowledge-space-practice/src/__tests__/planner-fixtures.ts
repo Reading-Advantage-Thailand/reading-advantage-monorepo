@@ -288,12 +288,13 @@ export function makePlannerEmpty(opts: MakePlannerGraphOptions = {}): PlannerInp
 // ---------------------------------------------------------------------------
 
 /**
- * Baseline equal weights for the a/b/c/d composite priority. Frozen
- * to prevent accidental mutation across tests.
+ * Frozen five-term weights for v3.2 tests. Utility is disabled so older
+ * term-isolation fixtures remain useful while exercising the current schema.
  */
 export const defaultPriorityWeights = Object.freeze({
   a: 1,
   b: 1,
   c: 1,
   d: 1,
+  e: 0,
 });

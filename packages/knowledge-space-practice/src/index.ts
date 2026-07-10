@@ -89,6 +89,60 @@ export {
 // Planner — domain-neutral planner injection
 export { planRemediationInjection } from './planner/injection.js';
 export type { PlannedActivity, PlanRemediationInjectionInput } from './planner/injection.js';
+export { getPriority, computePriorities } from './planner/priority.js';
+export { computeUnlockValues, getUnlockValue } from './planner/unlock-value.js';
+export {
+  getRecommendedNext,
+  planRecommendedNext,
+  recommendationPolicySchema,
+} from './planner/recommended-next.js';
+export type {
+  RecommendationPolicy,
+  PlanRecommendedNextInput,
+  PlanRecommendedNextResult,
+} from './planner/recommended-next.js';
+export {
+  evaluateDomainUtility,
+  utilitySignalSchema,
+  domainUtilityProviderIdentitySchema,
+  domainUtilityValueSchema,
+} from './planner/domain-utility.js';
+export type {
+  UtilitySignal,
+  DomainUtilityValue,
+  DomainUtilityProvider,
+  EvaluatedDomainUtility,
+} from './planner/domain-utility.js';
+export {
+  computePrerequisiteDensity,
+  computeUtilityLedScore,
+  projectReviewLoad,
+  utilityLedTermsSchema,
+  reviewLoadInputSchema,
+} from './planner/review-load.js';
+export type {
+  DensityNode,
+  DensityEdge,
+  PrerequisiteDensityResult,
+  UtilityLedTerms,
+  ReviewLoadInput,
+  ReviewLoadProjection,
+} from './planner/review-load.js';
+export {
+  priorityWeightsSchema,
+  DEFAULT_PRIORITY_WEIGHTS,
+} from './planner/types.js';
+export type {
+  PriorityWeights,
+  PriorityWeightInput,
+  PriorityScoreTerms,
+  PriorityScore,
+  PlannerNodeView,
+  PlannerEdgeView,
+  PlannerMisconceptionLink,
+  PlannerInput,
+  PlannerOutput,
+} from './planner/types.js';
 
 export type {
   ProjectedActivity,

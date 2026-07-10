@@ -20,6 +20,12 @@ export type ProficiencyCardInput = {
   variantKey: string;
   lastReviewMs?: number;
   reviewDurationMs?: number;
+  /** Elapsed days used by the live FSRS retention curve. */
+  elapsedDays?: number;
+  /** Correctness history for v3.1 Wilson/recency evidence. */
+  attempts?: ProficiencyAttempt[];
+  /** Adapter-declared chance floor for the response format. */
+  guessFloor?: number;
 };
 
 export type TimingBaselines = Record<
@@ -188,10 +194,8 @@ export function computeCorrectedRetentionStrength(
     }
   }
 
-  // The ten-attempt normative worked examples are an equal-window estimate;
-  // longer histories activate the specified half-life-10 recency weighting.
   const weights = attempts.map((attempt) =>
-    attempts.length <= 10 ? 1 : Math.pow(0.5, attempt.positionsAgo / 10),
+    Math.pow(0.5, attempt.positionsAgo / 10),
   );
   const weightSum = weights.reduce((sum, weight) => sum + weight, 0);
   const weightedCorrect = attempts.reduce(
@@ -271,13 +275,36 @@ export function aggregateCardsToEvidence(
   const evidence: PracticeVariantEvidence[] = [];
 
   for (const [variantKey, familyCards] of byVariant) {
-    const retentions = familyCards.map((c) =>
-      stabilityToRetention(c.stability),
+    const attempts = familyCards.flatMap((card) => card.attempts ?? []);
+    const guessFloors = new Set(
+      familyCards
+        .filter((card) => card.attempts?.length)
+        .map((card) => card.guessFloor ?? 0),
     );
-    const retentionStrength =
-      retentions.length > 0
-        ? retentions.reduce((a, b) => a + b, 0) / retentions.length
-        : 0;
+    if (guessFloors.size > 1) {
+      throw new Error(`Variant ${variantKey} mixes incompatible guess floors`);
+    }
+    const hasElapsedEvidence = familyCards.some(
+      (card) => card.elapsedDays !== undefined,
+    );
+    const reviewedRetentions = familyCards
+      .filter((card) => card.reps > 0)
+      .map((card) =>
+        stabilityToRetention(card.stability, card.elapsedDays ?? 0),
+      );
+    const legacyRetentions = familyCards.map((card) =>
+      stabilityToRetention(card.stability),
+    );
+    const retentionStrength = attempts.length
+      ? computeCorrectedRetentionStrength(attempts, {
+          guessFloor: [...guessFloors][0] ?? 0,
+        })
+      : hasElapsedEvidence && reviewedRetentions.length
+        ? Math.min(...reviewedRetentions)
+        : legacyRetentions.length
+          ? legacyRetentions.reduce((sum, value) => sum + value, 0) /
+            legacyRetentions.length
+          : 0;
 
     const reviewedCards = familyCards.filter((c) => c.reps > 0);
     const practiceCoverage =
@@ -292,6 +319,7 @@ export function aggregateCardsToEvidence(
       fluencyConfidence: fluency.confidence,
       baselineSampleCount: fluency.baselineSampleCount,
       timingReliable: fluency.timingReliable,
+      attemptCount: attempts.length,
     });
   }
 

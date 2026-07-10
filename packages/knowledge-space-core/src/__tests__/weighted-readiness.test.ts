@@ -156,10 +156,10 @@ describe('computeWeightedReadiness — partial mastery (FR1)', () => {
     state.set('skill.b', makeEntry('skill.b', 0.4));
     state.set('skill.c', makeEntry('skill.c', 0));
 
-    // (0.8 + 0.4) / 2 = 0.6 → nearly_ready
+    // Both weight-1 prerequisites are hard gates; the weakest (0.4) blocks.
     const result = computeWeightedReadiness('skill.c', state, graph);
-    expect(result.score).toBeCloseTo(0.6, 5);
-    expect(result.state).toBe('nearly_ready');
+    expect(result.score).toBeCloseTo(0.4, 5);
+    expect(result.state).toBe('blocked');
   });
 
   it('computes weighted average with mixed edge weights', async () => {
@@ -179,10 +179,10 @@ describe('computeWeightedReadiness — partial mastery (FR1)', () => {
     state.set('skill.b', makeEntry('skill.b', 0.3));
     state.set('skill.c', makeEntry('skill.c', 0));
 
-    // (0.5*0.9 + 1.0*0.3) / (0.5+1.0) = (0.45+0.30)/1.5 = 0.75/1.5 = 0.5
+    // Hard gate 0.3 × soft component 0.9 = 0.27.
     const result = computeWeightedReadiness('skill.c', state, graph);
-    expect(result.score).toBeCloseTo(0.5, 5);
-    expect(result.state).toBe('nearly_ready'); // ≥ 0.50 is nearly_ready
+    expect(result.score).toBeCloseTo(0.27, 5);
+    expect(result.state).toBe('blocked');
   });
 
   it('decaying prerequisite (mastery 0.6) gives nearly_ready', async () => {

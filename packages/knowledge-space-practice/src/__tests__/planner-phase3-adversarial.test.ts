@@ -7,8 +7,8 @@
  * `syntheticMathFixture`) — no fake harnesses.
  *
  * Coverage categories:
- *   - boundary: `getRecommendedNext` topN with NaN / Infinity / negative /
- *     fractional / larger-than-N; `getUnlockValue` self-loops;
+ *   - boundary: `getRecommendedNext` rejects non-finite, negative, and
+ *     fractional topN configuration; `getUnlockValue` self-loops;
  *     `getGoalProximity` goal at disconnected component
  *   - failure-path: empty candidate set; mastery-everywhere; planner input
  *     with non-skill kinds excluded by visualization; node id returned by
@@ -54,42 +54,40 @@ const closeTo = (a: number, b: number): boolean => Math.abs(a - b) < EPS;
 // ---------------------------------------------------------------------------
 
 describe('getRecommendedNext — topN boundary values', () => {
-  const graph = makePlannerChain({ length: 4, goalIds: ['chain.n4'] });
+  const graph = makePlannerChain({
+    length: 4,
+    goalIds: ['chain.n4'],
+    readiness: { 'chain.n1': 1, 'chain.n2': 1, 'chain.n3': 1, 'chain.n4': 1 },
+  });
 
   it('topN=0 returns []', () => {
     expect(getRecommendedNext(graph, defaultPriorityWeights, 0)).toEqual([]);
   });
 
-  it('topN=-1 returns [] (defensive against caller bugs)', () => {
-    expect(getRecommendedNext(graph, defaultPriorityWeights, -1)).toEqual([]);
+  it('topN=-1 is rejected by the v3.2 public contract', () => {
+    expect(() => getRecommendedNext(graph, defaultPriorityWeights, -1)).toThrow();
   });
 
-  it('topN=-100 returns [] (deeply negative)', () => {
-    expect(getRecommendedNext(graph, defaultPriorityWeights, -100)).toEqual([]);
+  it('topN=-100 is rejected by the v3.2 public contract', () => {
+    expect(() => getRecommendedNext(graph, defaultPriorityWeights, -100)).toThrow();
   });
 
   it('topN=1 returns the single highest-priority node (chain.n1)', () => {
     expect(getRecommendedNext(graph, defaultPriorityWeights, 1)).toEqual(['chain.n1']);
   });
 
-  it('topN=2.5 truncates to 2 (Array.prototype.slice floors the end index)', () => {
-    expect(getRecommendedNext(graph, defaultPriorityWeights, 2.5)).toEqual([
-      'chain.n1',
-      'chain.n2',
-    ]);
+  it('topN=2.5 is rejected instead of silently truncated', () => {
+    expect(() => getRecommendedNext(graph, defaultPriorityWeights, 2.5)).toThrow();
   });
 
-  it('topN=NaN returns [] (NaN <= 0 fails; slice(0, NaN) converts NaN to 0)', () => {
-    expect(getRecommendedNext(graph, defaultPriorityWeights, Number.NaN)).toEqual([]);
+  it('topN=NaN is rejected', () => {
+    expect(() => getRecommendedNext(graph, defaultPriorityWeights, Number.NaN)).toThrow();
   });
 
-  it('topN=Infinity returns every node in rank order', () => {
-    expect(getRecommendedNext(graph, defaultPriorityWeights, Number.POSITIVE_INFINITY)).toEqual([
-      'chain.n1',
-      'chain.n2',
-      'chain.n3',
-      'chain.n4',
-    ]);
+  it('topN=Infinity is rejected', () => {
+    expect(() =>
+      getRecommendedNext(graph, defaultPriorityWeights, Number.POSITIVE_INFINITY),
+    ).toThrow();
   });
 
   it('topN larger than the node count returns every node in rank order', () => {
@@ -245,10 +243,7 @@ describe('getRecommendedNext — failure-path inputs', () => {
       goalNodeIds: [],
       misconceptionLinks: [],
     };
-    expect(getRecommendedNext(graph, defaultPriorityWeights)).toEqual([
-      'mix.skill',
-      'mix.misc',
-    ]);
+    expect(getRecommendedNext(graph, defaultPriorityWeights)).toEqual(['mix.skill']);
   });
 });
 
@@ -568,7 +563,10 @@ describe('getRecommendedNext — regression: pre-track slice-of-5 preserved in d
   });
 
   it('topN=5 with a 7-node graph truncates the ranker output to 5 (matches pre-track `slice(0, 5)` default)', () => {
-    const graph = makePlannerChain({ length: 7, goalIds: ['chain.n7'] });
+    const readiness = Object.fromEntries(
+      Array.from({ length: 7 }, (_, index) => [`chain.n${index + 1}`, 1]),
+    );
+    const graph = makePlannerChain({ length: 7, goalIds: ['chain.n7'], readiness });
     const out = getRecommendedNext(graph, defaultPriorityWeights);
     expect(out).toHaveLength(5);
   });

@@ -287,9 +287,8 @@ describe('Visualization projections', () => {
         nodes: rankNodes.map((n) => ({ id: n.id, kind: n.kind, title: n.title, domain: n.domain })),
         edges: [],
         readinessByNode: {
-          'rank.z': 0.1,
-          'rank.a': 0.5,
-          'rank.m': 0.0,
+          'rank.z': 0.8,
+          'rank.a': 0.8,
         },
         goalNodeIds: [],
         misconceptionLinks: [],
@@ -299,7 +298,7 @@ describe('Visualization projections', () => {
       expect(viz.recommendedNext.map((n) => n.nodeId)).toEqual(expected);
     });
 
-    it('excludes mastered, blocked, and review-due nodes from recommendedNext', () => {
+    it('excludes mastered, blocked, review-due, and unknown nodes from recommendedNext', () => {
       const mixedNodes = [
         {
           id: 'mixed.mastered',
@@ -358,7 +357,7 @@ describe('Visualization projections', () => {
 
       const ids = viz.recommendedNext.map((n) => n.nodeId);
       expect(ids).toContain('mixed.ready');
-      expect(ids).toContain('mixed.unknown');
+      expect(ids).not.toContain('mixed.unknown');
       expect(ids).not.toContain('mixed.mastered');
       expect(ids).not.toContain('mixed.blocked');
       expect(ids).not.toContain('mixed.review-due');

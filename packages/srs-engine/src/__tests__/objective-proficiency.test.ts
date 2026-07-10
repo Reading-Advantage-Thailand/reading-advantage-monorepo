@@ -210,7 +210,7 @@ describe('computeObjectiveProficiency', () => {
       expect(result.practiceCoverage).toBe(0.3);
     });
 
-    it('averages across multiple families', () => {
+    it('v3.1 averages corrected proficiency evidence across practice variants', () => {
       const result = computeObjectiveProficiency({
         objectiveId: '1a',
         priority: 'essential',

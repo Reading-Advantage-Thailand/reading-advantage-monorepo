@@ -7,15 +7,58 @@
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
-    "./contract": { "types": "./dist/srs/contract.d.ts", "import": "./dist/srs/contract.js" },
-    "./scheduler": { "types": "./dist/srs/scheduler.d.ts", "import": "./dist/srs/scheduler.js" },
-    "./review-processor": { "types": "./dist/srs/review-processor.d.ts", "import": "./dist/srs/review-processor.js" },
-    "./queue": { "types": "./dist/srs/queue.d.ts", "import": "./dist/srs/queue.js" },
-    "./adapters": { "types": "./dist/srs/adapters.d.ts", "import": "./dist/srs/adapters.js" },
-    "./submission-adapter": { "types": "./dist/srs/submission-srs-adapter.d.ts", "import": "./dist/srs/submission-srs-adapter.js" }
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./contract": {
+      "types": "./dist/srs/contract.d.ts",
+      "import": "./dist/srs/contract.js"
+    },
+    "./scheduler": {
+      "types": "./dist/srs/scheduler.d.ts",
+      "import": "./dist/srs/scheduler.js"
+    },
+    "./review-processor": {
+      "types": "./dist/srs/review-processor.d.ts",
+      "import": "./dist/srs/review-processor.js"
+    },
+    "./queue": {
+      "types": "./dist/srs/queue.d.ts",
+      "import": "./dist/srs/queue.js"
+    },
+    "./adapters": {
+      "types": "./dist/srs/adapters.d.ts",
+      "import": "./dist/srs/adapters.js"
+    },
+    "./submission-adapter": {
+      "types": "./dist/srs/submission-srs-adapter.d.ts",
+      "import": "./dist/srs/submission-srs-adapter.js"
+    },
+    "./proficiency": {
+      "types": "./dist/srs/srs-proficiency.d.ts",
+      "import": "./dist/srs/srs-proficiency.js"
+    },
+    "./edge-calibration": {
+      "types": "./dist/srs/edge-calibration.d.ts",
+      "import": "./dist/srs/edge-calibration.js"
+    },
+    "./fsrs-calibration": {
+      "types": "./dist/srs/fsrs-calibration.d.ts",
+      "import": "./dist/srs/fsrs-calibration.js"
+    },
+    "./evaluation-harness": {
+      "types": "./dist/srs/evaluation-harness.d.ts",
+      "import": "./dist/srs/evaluation-harness.js"
+    },
+    "./session-composition": {
+      "types": "./dist/srs/session-composition.d.ts",
+      "import": "./dist/srs/session-composition.js"
+    }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc",
     "check-types": "tsc --noEmit",

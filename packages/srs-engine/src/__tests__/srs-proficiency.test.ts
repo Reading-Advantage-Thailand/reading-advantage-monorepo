@@ -35,9 +35,11 @@ describe('stabilityToRetention', () => {
     expect(result).toBeLessThanOrEqual(1);
   });
 
-  it('should allow custom scaleFactor override', () => {
-    expect(stabilityToRetention(15, 15)).toBeCloseTo(0.5, 6);
-    expect(stabilityToRetention(60, 60)).toBeCloseTo(0.5, 6);
+  it('v3 interprets the second argument as elapsed days, not the v2 scale factor', () => {
+    // MIGRATION-v3 §3 changes the signature to (stability, elapsedDays).
+    // FSRS defines retention at t=S as exactly 0.9.
+    expect(stabilityToRetention(15, 15)).toBeCloseTo(0.9, 6);
+    expect(stabilityToRetention(60, 60)).toBeCloseTo(0.9, 6);
   });
 
   it('should return 0 for NaN input', () => {

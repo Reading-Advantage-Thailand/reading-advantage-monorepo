@@ -11,6 +11,11 @@
     "./misconception-loop": { "types": "./dist/misconception-loop.d.ts", "import": "./dist/misconception-loop.js" },
     "./blueprints": { "types": "./dist/blueprints/index.d.ts", "import": "./dist/blueprints/index.js" },
     "./planner/types": { "types": "./dist/planner/types.d.ts", "import": "./dist/planner/types.js" },
+    "./planner/priority": { "types": "./dist/planner/priority.d.ts", "import": "./dist/planner/priority.js" },
+    "./planner/unlock-value": { "types": "./dist/planner/unlock-value.d.ts", "import": "./dist/planner/unlock-value.js" },
+    "./planner/recommended-next": { "types": "./dist/planner/recommended-next.d.ts", "import": "./dist/planner/recommended-next.js" },
+    "./planner/domain-utility": { "types": "./dist/planner/domain-utility.d.ts", "import": "./dist/planner/domain-utility.js" },
+    "./planner/review-load": { "types": "./dist/planner/review-load.d.ts", "import": "./dist/planner/review-load.js" },
     "./projections": { "types": "./dist/projections/index.d.ts", "import": "./dist/projections/index.js" }
   },
   "files": ["dist"],

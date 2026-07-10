@@ -1,7 +1,7 @@
 /**
  * Daily Practice SRS Product Contract
  *
- * Version: srs.contract.v1
+ * Version: srs.contract.v2
  *
  * This module consolidates all types needed for the spaced-repetition daily
  * practice pipeline. It re-exports from `@reading-advantage/practice-core` where
@@ -31,7 +31,7 @@
 /**
  * Canonical version identifier for the SRS contract.
  */
-export const SRS_CONTRACT_VERSION = 'srs.contract.v1' as const;
+export const SRS_CONTRACT_VERSION = "srs.contract.v2" as const;
 
 // ============================================
 // Objective Policy Types (SRS-specific)
@@ -40,7 +40,11 @@ export const SRS_CONTRACT_VERSION = 'srs.contract.v1' as const;
 /**
  * Priority level assigned to an objective's practice policy.
  */
-export type ObjectivePriority = 'essential' | 'supporting' | 'extension' | 'triaged';
+export type ObjectivePriority =
+  | "essential"
+  | "supporting"
+  | "extension"
+  | "triaged";
 
 /**
  * Policy configuration governing how an objective is practiced and evaluated.
@@ -56,27 +60,38 @@ export type ObjectivePracticePolicy = {
 /**
  * Default priority settings for objectives.
  */
-export const PRIORITY_DEFAULTS: Record<ObjectivePriority, ObjectivePracticePolicy> = {
-  essential: { objectiveId: '', priority: 'essential' },
-  supporting: { objectiveId: '', priority: 'supporting' },
-  extension: { objectiveId: '', priority: 'extension' },
-  triaged: { objectiveId: '', priority: 'triaged' },
+export const PRIORITY_DEFAULTS: Record<
+  ObjectivePriority,
+  ObjectivePracticePolicy
+> = {
+  essential: { objectiveId: "", priority: "essential" },
+  supporting: { objectiveId: "", priority: "supporting" },
+  extension: { objectiveId: "", priority: "extension" },
+  triaged: { objectiveId: "", priority: "triaged" },
 };
 
 // ============================================
 // Types: SRS Rating (re-exported from practice-core)
 // ============================================
 
-import type { SrsRating, SrsRatingInput, SrsRatingResult } from '@reading-advantage/practice-core/srs-rating';
-export type { SrsRating, SrsRatingInput, SrsRatingResult } from '@reading-advantage/practice-core/srs-rating';
+import type {
+  SrsRating,
+  SrsRatingInput,
+  SrsRatingResult,
+} from "@reading-advantage/practice-core/srs-rating";
+export type {
+  SrsRating,
+  SrsRatingInput,
+  SrsRatingResult,
+} from "@reading-advantage/practice-core/srs-rating";
 
 // ============================================
 // Types: Timing Baseline (re-exported from practice-core)
 // ============================================
 
-export type { PracticeTimingBaseline } from '@reading-advantage/practice-core/timing-baseline';
-export type { TimingSpeedBand } from '@reading-advantage/practice-core/timing-baseline';
-export type { PracticeTimingFeatures } from '@reading-advantage/practice-core/timing-baseline';
+export type { PracticeTimingBaseline } from "@reading-advantage/practice-core/timing-baseline";
+export type { TimingSpeedBand } from "@reading-advantage/practice-core/timing-baseline";
+export type { PracticeTimingFeatures } from "@reading-advantage/practice-core/timing-baseline";
 
 // ============================================
 // Types: Practice Contract (re-exported from practice-core)
@@ -86,7 +101,7 @@ export type {
   PracticeSubmissionPart,
   PracticeTimingSummary,
   PracticeSubmissionEnvelope,
-} from '@reading-advantage/practice-core/contract';
+} from "@reading-advantage/practice-core/contract";
 
 // ============================================
 // New Types: Card State
@@ -108,7 +123,7 @@ export type SrsCardState = {
   variantKey: string;
   stability: number;
   difficulty: number;
-  state: 'new' | 'learning' | 'review' | 'relearning';
+  state: "new" | "learning" | "review" | "relearning";
   dueDate: string; // ISO timestamp
   elapsedDays: number;
   scheduledDays: number;
@@ -134,7 +149,7 @@ export type SrsReviewLogEntry = {
   submissionId: string;
   evidence:
     | {
-        action: 'teacher_reset';
+        action: "teacher_reset";
         objectiveId: string;
       }
     | {
@@ -145,11 +160,11 @@ export type SrsReviewLogEntry = {
       };
   stateBefore: Pick<
     SrsCardState,
-    'stability' | 'difficulty' | 'state' | 'reps' | 'lapses'
+    "stability" | "difficulty" | "state" | "reps" | "lapses"
   >;
   stateAfter: Pick<
     SrsCardState,
-    'stability' | 'difficulty' | 'state' | 'reps' | 'lapses'
+    "stability" | "difficulty" | "state" | "reps" | "lapses"
   >;
   reviewedAt: string; // ISO timestamp
 };
@@ -189,8 +204,8 @@ export type SrsSession = {
  */
 export const STUDENT_DAILY_PRACTICE_COPY = {
   queueSummary: (count: number): string =>
-    `You have ${count} item${count === 1 ? '' : 's'} to review today.`,
-  allDone: 'All done for today! Come back tomorrow for your next review.',
+    `You have ${count} item${count === 1 ? "" : "s"} to review today.`,
+  allDone: "All done for today! Come back tomorrow for your next review.",
   buildingRecall: "You're building strong recall on this skill.",
 } as const;
 
@@ -198,5 +213,5 @@ export const STUDENT_DAILY_PRACTICE_COPY = {
  * Teacher-facing copy for daily practice dashboard surfaces.
  */
 export const TEACHER_DAILY_PRACTICE_COPY = {
-  sessionOverview: 'Review session overview for your class.',
+  sessionOverview: "Review session overview for your class.",
 } as const;

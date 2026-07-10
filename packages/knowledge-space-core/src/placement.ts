@@ -56,7 +56,9 @@ export function isPlacementResult(value: unknown): value is PlacementResult {
   const obj = value as Record<string, unknown>;
   if (typeof obj.nodeId !== "string" || obj.nodeId.length === 0) return false;
   if (!CORE_ID_PATTERN.test(obj.nodeId)) return false;
-  if (typeof obj.masteryEstimate !== "number") return false;
+  if (typeof obj.masteryEstimate !== "number" || !Number.isFinite(obj.masteryEstimate)) {
+    return false;
+  }
   if (obj.masteryEstimate < 0 || obj.masteryEstimate > 1) return false;
   if (
     obj.confidence !== "low" &&
@@ -75,6 +77,12 @@ export function isPlacementResult(value: unknown): value is PlacementResult {
 export interface ProbeAdapter {
   domain: string;
   probe(nodeId: string): ProbeResult | Promise<ProbeResult>;
+  /** Optional adapter-declared chance floor used for guess-corrected decisions. */
+  guessFloor?(nodeId: string): number;
+  /** Whether this adapter's probe instrument may emit high-confidence placement. */
+  highFidelityProbeInstrument?: boolean;
+  /** Explicit compatibility mode for retained v2 one-probe consumers. */
+  legacySingleProbe?: boolean;
 }
 
 // ---------------------------------------------------------------------------
@@ -104,8 +112,25 @@ export interface PlacementSeedCard {
   lastReview: number;
   /** Initial due timestamp derived from stability. */
   dueDate: number;
+  /** FSRS initial difficulty for a first `Good` placement rating. */
+  difficulty: number;
   /** Auditable placement provenance. */
   metadata: { source: "placement"; specVersion: "3.0" };
+}
+
+/** Scheduler port used to synthesize provider-neutral placement cards. */
+export interface PlacementCardScheduler {
+  /**
+   * Schedules the first review-state card from placement stability.
+   * @param input Deterministic first-Good placement scheduling inputs.
+   * @returns Initial difficulty and due timestamp from the configured scheduler.
+   */
+  schedulePlacementCard(input: {
+    nodeId: string;
+    initialStability: number;
+    placedAt: number;
+    rating: "Good";
+  }): { difficulty: number; dueDate: number };
 }
 
 /** Options controlling placement-card synthesis and hard-edge closure. */
@@ -118,7 +143,20 @@ export interface BuildSeedOptions {
   hardGateThreshold?: number;
   /** Placement threshold for provisional mastery. */
   masteryEnter?: number;
+  /** Whether the domain adapter declared a high-fidelity probe instrument. */
+  highFidelityProbeInstrument?: boolean;
+  /** Injected scheduler used for first-Good difficulty and due-date semantics. */
+  scheduler?: PlacementCardScheduler;
 }
+
+const defaultPlacementScheduler: PlacementCardScheduler = {
+  schedulePlacementCard({ initialStability, placedAt }) {
+    return {
+      difficulty: 5,
+      dueDate: placedAt + initialStability * 24 * 60 * 60 * 1_000,
+    };
+  },
+};
 
 /**
  * Enrich placement results with provenance metadata to create knowledge state seeds.
@@ -131,26 +169,33 @@ export function buildKnowledgeStateSeed(
   results: ReadonlyArray<PlacementResult>,
   options: BuildSeedOptions = {},
 ): KnowledgeStateSeed[] {
-  const now = options.now ?? Date.now();
-  const hardGateThreshold = options.hardGateThreshold ?? 1;
-  const masteryEnter = options.masteryEnter ?? 0.8;
-
-  for (const r of results) {
-    if (
-      r.confidence !== "low" &&
-      r.confidence !== "medium" &&
-      r.confidence !== "high"
-    ) {
-      throw new Error(
-        `Invalid confidence value: "${r.confidence}". Placement seeds must be low, medium, or high.`,
-      );
-    }
-    if (r.masteryEstimate < 0 || r.masteryEstimate > 1) {
-      throw new Error(
-        `Invalid masteryEstimate: ${r.masteryEstimate}. Must be in [0, 1].`,
-      );
-    }
+  const now = z
+    .number()
+    .finite()
+    .nonnegative()
+    .parse(options.now ?? Date.now());
+  const hardGateThreshold = z
+    .number()
+    .finite()
+    .min(0)
+    .max(1)
+    .parse(options.hardGateThreshold ?? 1);
+  const masteryEnter = z
+    .number()
+    .finite()
+    .min(0)
+    .max(1)
+    .parse(options.masteryEnter ?? 0.9);
+  const validatedResults = placementResultsSchema.parse(results);
+  if (
+    !options.highFidelityProbeInstrument &&
+    validatedResults.some((result) => result.confidence === "high")
+  ) {
+    throw new Error(
+      "High placement confidence requires a high-fidelity probe instrument",
+    );
   }
+  const scheduler = options.scheduler ?? defaultPlacementScheduler;
 
   const horizons = { low: 5, medium: 15, high: 30 } as const;
   const createSeed = (
@@ -159,6 +204,21 @@ export function buildKnowledgeStateSeed(
   ): KnowledgeStateSeed => {
     const initialStability =
       horizons[result.confidence] * result.masteryEstimate;
+    const scheduled = scheduler.schedulePlacementCard({
+      nodeId: result.nodeId,
+      initialStability,
+      placedAt: now,
+      rating: "Good",
+    });
+    if (
+      !Number.isFinite(scheduled.difficulty) ||
+      !Number.isFinite(scheduled.dueDate) ||
+      scheduled.dueDate < now
+    ) {
+      throw new Error(
+        "Placement scheduler returned invalid first-Good card state",
+      );
+    }
     return {
       ...result,
       source: "placement",
@@ -175,14 +235,15 @@ export function buildKnowledgeStateSeed(
         reps: 1,
         lapses: 0,
         lastReview: now,
-        dueDate: now + initialStability * 24 * 60 * 60 * 1_000,
+        dueDate: scheduled.dueDate,
+        difficulty: scheduled.difficulty,
         metadata: { source: "placement", specVersion: "3.0" },
       },
     };
   };
 
   const seeds = new Map<string, KnowledgeStateSeed>();
-  for (const result of results)
+  for (const result of validatedResults)
     seeds.set(result.nodeId, createSeed(result, "direct"));
   if (!options.graph) return [...seeds.values()];
 
@@ -200,7 +261,7 @@ export function buildKnowledgeStateSeed(
   ): PlacementResult["confidence"] =>
     confidence === "high" ? "medium" : "low";
 
-  for (const result of results) {
+  for (const result of validatedResults) {
     const queue = (hardParents.get(result.nodeId) ?? []).map((nodeId) => ({
       nodeId,
       confidence: downgrade(result.confidence),

@@ -2,7 +2,7 @@
 export interface InterleavableReviewItem {
   cardId: string;
   objectiveId: string;
-  objectivePriority: 'essential' | 'supporting' | 'extension';
+  objectivePriority: "essential" | "supporting" | "extension";
 }
 
 /** Inputs for deterministic interval fuzzing. */
@@ -21,13 +21,16 @@ export interface DueDateBalanceInput {
   projectedLoadByDate: Readonly<Record<string, number>>;
 }
 
-const PRIORITY_ORDER: Readonly<Record<InterleavableReviewItem['objectivePriority'], number>> = {
+const PRIORITY_ORDER: Readonly<
+  Record<InterleavableReviewItem["objectivePriority"], number>
+> = {
   essential: 0,
   supporting: 1,
   extension: 2,
 };
 
 const DAY_MS = 86_400_000;
+const MAX_BALANCE_WINDOW_DAYS = 3_660;
 
 /**
  * Presents selected reviews round-robin across deterministically ordered objectives.
@@ -43,7 +46,10 @@ export function interleaveReviewItems<T extends InterleavableReviewItem>(
       priority: PRIORITY_ORDER[item.objectivePriority],
       items: [],
     };
-    group.priority = Math.min(group.priority, PRIORITY_ORDER[item.objectivePriority]);
+    group.priority = Math.min(
+      group.priority,
+      PRIORITY_ORDER[item.objectivePriority],
+    );
     group.items.push(item);
     groups.set(item.objectiveId, group);
   }
@@ -52,7 +58,9 @@ export function interleaveReviewItems<T extends InterleavableReviewItem>(
     ([objectiveA, groupA], [objectiveB, groupB]) =>
       groupA.priority - groupB.priority || objectiveA.localeCompare(objectiveB),
   );
-  const offsets = new Map(orderedGroups.map(([objectiveId]) => [objectiveId, 0]));
+  const offsets = new Map(
+    orderedGroups.map(([objectiveId]) => [objectiveId, 0]),
+  );
   const result: T[] = [];
 
   while (result.length < selectedReviews.length) {
@@ -75,7 +83,7 @@ export function interleaveReviewItems<T extends InterleavableReviewItem>(
  */
 export function fuzzIntervalDays(input: IntervalFuzzInput): number {
   if (!Number.isFinite(input.intervalDays) || input.intervalDays < 0) {
-    throw new Error('intervalDays must be a non-negative finite number');
+    throw new Error("intervalDays must be a non-negative finite number");
   }
   const fraction = stableHashFraction(`${input.cardId}:${input.reps}`);
   const jitter = fraction * 0.1 - 0.05;
@@ -89,21 +97,34 @@ export function fuzzIntervalDays(input: IntervalFuzzInput): number {
  * @throws When dates or the maximum interval are invalid.
  */
 export function balanceDueDate(input: DueDateBalanceInput): string {
-  const baseMs = parseIso(input.baseDueDate, 'baseDueDate');
-  const minimumMs = parseIso(input.minimumDueDate, 'minimumDueDate');
-  const requestedMaximumMs = parseIso(input.maximumDueDate, 'maximumDueDate');
-  if (!Number.isFinite(input.maximumIntervalDays) || input.maximumIntervalDays < 0) {
-    throw new Error('maximumIntervalDays must be a non-negative finite number');
+  const baseMs = parseIso(input.baseDueDate, "baseDueDate");
+  const minimumMs = parseIso(input.minimumDueDate, "minimumDueDate");
+  const requestedMaximumMs = parseIso(input.maximumDueDate, "maximumDueDate");
+  if (
+    !Number.isFinite(input.maximumIntervalDays) ||
+    input.maximumIntervalDays < 0
+  ) {
+    throw new Error("maximumIntervalDays must be a non-negative finite number");
   }
   const maximumMs = Math.min(
     requestedMaximumMs,
     baseMs + input.maximumIntervalDays * DAY_MS,
   );
-  if (minimumMs > maximumMs) throw new Error('due-date window is empty');
+  if (minimumMs > maximumMs) throw new Error("due-date window is empty");
+  const windowDays = Math.ceil((maximumMs - minimumMs) / DAY_MS);
+  if (windowDays > MAX_BALANCE_WINDOW_DAYS) {
+    throw new Error(
+      `due-date window exceeds maximum of ${MAX_BALANCE_WINDOW_DAYS} days`,
+    );
+  }
 
   let selectedMs = minimumMs;
   let selectedLoad = Number.POSITIVE_INFINITY;
-  for (let candidateMs = minimumMs; candidateMs <= maximumMs; candidateMs += DAY_MS) {
+  for (
+    let candidateMs = minimumMs;
+    candidateMs <= maximumMs;
+    candidateMs += DAY_MS
+  ) {
     const dateKey = new Date(candidateMs).toISOString().slice(0, 10);
     const load = input.projectedLoadByDate[dateKey] ?? 0;
     if (load < selectedLoad) {
@@ -125,6 +146,7 @@ function stableHashFraction(value: string): number {
 
 function parseIso(value: string, field: string): number {
   const parsed = Date.parse(value);
-  if (!Number.isFinite(parsed)) throw new Error(`${field} must be an ISO timestamp`);
+  if (!Number.isFinite(parsed))
+    throw new Error(`${field} must be an ISO timestamp`);
   return parsed;
 }

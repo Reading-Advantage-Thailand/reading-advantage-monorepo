@@ -17,36 +17,97 @@ import {
   type PriorityWeightInput,
 } from './types.js';
 import { getPriority } from './priority.js';
+import { getWeaknessFit } from './weakness-fit.js';
+import {
+  evaluateDomainUtility,
+  type DomainUtilityProvider,
+  type EvaluatedDomainUtility,
+} from './domain-utility.js';
+import {
+  computePrerequisiteDensity,
+  computeUtilityLedScore,
+  projectReviewLoad,
+  type PrerequisiteDensityResult,
+  type ReviewLoadInput,
+  type ReviewLoadProjection,
+} from './review-load.js';
+import { z } from 'zod';
 
 const DEFAULT_DIVERSITY_CAP = 2;
+const DEFAULT_READY_THRESHOLD = 0.8;
+const DEFAULT_NEAR_THRESHOLD = 0.5;
+
+/** Runtime configuration for the v3.2 recommendation policy. */
+export const recommendationPolicySchema = z
+  .strictObject({
+    readyThreshold: z.number().finite().min(0).max(1).default(DEFAULT_READY_THRESHOLD),
+    nearThreshold: z.number().finite().min(0).max(1).default(DEFAULT_NEAR_THRESHOLD),
+    topN: z.number().finite().int().min(0).default(5),
+  })
+  .refine((value) => value.readyThreshold >= value.nearThreshold, {
+    message: 'readyThreshold must be greater than or equal to nearThreshold',
+  });
+
+/** Configurable candidate thresholds and result limit for the v3.2 planner. */
+export interface RecommendationPolicy {
+  readonly readyThreshold?: number;
+  readonly nearThreshold?: number;
+  readonly topN?: number;
+}
+
+/** Input for the integrated provider-neutral v3.2 recommendation planner. */
+export interface PlanRecommendedNextInput<Context = unknown> {
+  readonly input: PlannerInput;
+  readonly weights?: PriorityWeightInput;
+  readonly policy?: RecommendationPolicy;
+  readonly utilityProvider?: DomainUtilityProvider<Context>;
+  readonly utilityContext?: Context;
+  readonly reviewLoad?: ReviewLoadInput;
+}
+
+/** Integrated v3.2 recommendation result with auditable policy state. */
+export interface PlanRecommendedNextResult {
+  readonly recommendedNext: readonly string[];
+  readonly rankingMode: 'composite' | 'utility-led';
+  readonly prerequisiteDensity: PrerequisiteDensityResult;
+  readonly reviewLoad: ReviewLoadProjection;
+  readonly utilityByNode: Readonly<Record<string, EvaluatedDomainUtility>>;
+}
+
+const readinessByNodeSchema = z.record(
+  z.string().min(1),
+  z.number().finite().min(0).max(1),
+);
 
 /**
  * Ranks candidates and applies the nearest-container diversity cap.
  * @param input Planner graph and learner signals.
  * @param weights Versioned five-term priority weights.
  * @param topN Maximum number of candidate identifiers to return.
+ * @param policy Optional readiness thresholds for candidate eligibility.
  * @returns Deterministically ranked candidate identifiers.
+ * @throws When readiness, weights, thresholds, or result limit are invalid.
  */
 export function getRecommendedNext(
   input: PlannerInput,
   weights: PriorityWeightInput = DEFAULT_PRIORITY_WEIGHTS,
   topN = 5,
+  policy: Omit<RecommendationPolicy, 'topN'> = {},
 ): readonly string[] {
-  if (topN <= 0 || input.nodes.length === 0) return [];
+  const validatedPolicy = recommendationPolicySchema.parse({ ...policy, topN });
+  const readinessByNode = readinessByNodeSchema.parse(input.readinessByNode);
+  if (validatedPolicy.topN === 0 || input.nodes.length === 0) return [];
 
   const priorityCache = new Map<string, number>();
-  const ready: string[] = [];
-  const unknown: string[] = [];
+  const candidates: string[] = [];
 
   for (const node of input.nodes) {
     const p = getPriority(node.id, input, weights);
     priorityCache.set(node.id, p);
 
-    const readiness = input.readinessByNode[node.id];
-    if (readiness !== undefined && readiness > 0) {
-      ready.push(node.id);
-    } else {
-      unknown.push(node.id);
+    const readiness = readinessByNode[node.id];
+    if (readiness !== undefined && readiness >= validatedPolicy.nearThreshold) {
+      candidates.push(node.id);
     }
   }
 
@@ -57,10 +118,103 @@ export function getRecommendedNext(
     return a.localeCompare(b);
   };
 
-  ready.sort(comparator);
-  unknown.sort(comparator);
+  candidates.sort(comparator);
 
-  return applyDiversityCap([...ready, ...unknown], input, topN);
+  return applyDiversityCap(candidates, input, validatedPolicy.topN);
+}
+
+/**
+ * Plans recommendations with sparse-domain utility ranking and review-load gating.
+ * @param request Graph input, provider injection, policy, and review-load context.
+ * @returns Recommendations plus ranking, provenance, density, and load state.
+ * @throws When readiness, provider output, policy, or review-load input is invalid.
+ */
+export function planRecommendedNext<Context>(
+  request: PlanRecommendedNextInput<Context>,
+): PlanRecommendedNextResult {
+  const policy = recommendationPolicySchema.parse(request.policy ?? {});
+  const readinessByNode = readinessByNodeSchema.parse(request.input.readinessByNode);
+  const reviewLoad = projectReviewLoad(
+    request.reviewLoad ?? { cardsDueWithinSevenDays: 0, maxReviewsPerDay: 20 },
+  );
+  const prerequisiteDensity = computePrerequisiteDensity(
+    request.input.nodes,
+    request.input.edges,
+  );
+  const utilityByNode: Record<string, EvaluatedDomainUtility> = {};
+  const eligibleNodeIds = request.input.nodes
+    .filter((node) => (readinessByNode[node.id] ?? 0) >= policy.nearThreshold)
+    .map((node) => node.id);
+
+  for (const nodeId of eligibleNodeIds) {
+    utilityByNode[nodeId] = evaluateDomainUtility(
+      request.utilityProvider,
+      nodeId,
+      request.utilityContext as Context,
+    );
+  }
+
+  if (!reviewLoad.allowNewSkills) {
+    return {
+      recommendedNext: [],
+      rankingMode: prerequisiteDensity.prerequisiteSparse ? 'utility-led' : 'composite',
+      prerequisiteDensity,
+      reviewLoad,
+      utilityByNode,
+    };
+  }
+
+  const utilityScores = Object.fromEntries(
+    Object.entries(utilityByNode).map(([nodeId, value]) => [nodeId, value.utility]),
+  );
+  const plannerInput: PlannerInput = {
+    ...request.input,
+    readinessByNode,
+    utilityByNode: utilityScores,
+  };
+
+  if (!prerequisiteDensity.prerequisiteSparse) {
+    return {
+      recommendedNext: getRecommendedNext(
+        plannerInput,
+        request.weights ?? DEFAULT_PRIORITY_WEIGHTS,
+        policy.topN,
+        {
+          readyThreshold: policy.readyThreshold,
+          nearThreshold: policy.nearThreshold,
+        },
+      ),
+      rankingMode: 'composite',
+      prerequisiteDensity,
+      reviewLoad,
+      utilityByNode,
+    };
+  }
+
+  const scoreByNode = new Map<string, number>();
+  for (const nodeId of eligibleNodeIds) {
+    const score = computeUtilityLedScore(
+      {
+        readiness: readinessByNode[nodeId] ?? 0,
+        utility: utilityByNode[nodeId]?.utility ?? 0,
+        weaknessFit: getWeaknessFit(nodeId, plannerInput),
+      },
+      policy.nearThreshold,
+    );
+    if (score !== null) scoreByNode.set(nodeId, score);
+  }
+  const rankedNodeIds = [...scoreByNode.keys()].sort((a, b) => {
+    const scoreDifference = (scoreByNode.get(b) ?? 0) - (scoreByNode.get(a) ?? 0);
+    return scoreDifference === 0 ? a.localeCompare(b) : scoreDifference;
+  });
+
+  return {
+    recommendedNext: applyDiversityCap(rankedNodeIds, plannerInput, policy.topN),
+    rankingMode: 'utility-led',
+    prerequisiteDensity,
+    reviewLoad,
+    utilityByNode,
+  };
 }
 
 function applyDiversityCap(
@@ -97,13 +251,30 @@ function nearestContainsAncestorByNode(input: PlannerInput): ReadonlyMap<string,
   const groups = new Map<string, string>();
   for (const node of input.nodes) {
     const directParents = [...(parentsByNode.get(node.id) ?? [])].sort();
-    const instructionalUnit = directParents.find(
-      (parentId) => nodeKind.get(parentId) === 'instructional_unit',
-    );
-    const contentGroup = directParents.find(
-      (parentId) => nodeKind.get(parentId) === 'content_group',
-    );
-    const nearest = instructionalUnit ?? contentGroup ?? directParents[0];
+    const queue = directParents.map((parentId) => ({ parentId, distance: 1 }));
+    const visited = new Set<string>([node.id]);
+    let nearest: string | undefined;
+    let nearestDistance = Number.POSITIVE_INFINITY;
+
+    while (queue.length > 0) {
+      const current = queue.shift();
+      if (!current || current.distance > nearestDistance) break;
+      if (visited.has(current.parentId)) continue;
+      visited.add(current.parentId);
+      const kind = nodeKind.get(current.parentId);
+      if (kind === 'instructional_unit' || kind === 'content_group') {
+        nearest = nearest === undefined
+          ? current.parentId
+          : [nearest, current.parentId].sort()[0];
+        nearestDistance = current.distance;
+        continue;
+      }
+      for (const parentId of [...(parentsByNode.get(current.parentId) ?? [])].sort()) {
+        queue.push({ parentId, distance: current.distance + 1 });
+      }
+    }
+
+    nearest ??= directParents[0];
     if (nearest) groups.set(node.id, nearest);
   }
   return groups;

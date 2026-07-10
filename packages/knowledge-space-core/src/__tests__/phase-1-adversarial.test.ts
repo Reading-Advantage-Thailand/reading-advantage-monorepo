@@ -72,6 +72,8 @@ describe('probe 1: threshold-order invariant', () => {
       masteryExit: 0.90, // <-- inverted, would break hysteresis
       readyThreshold: 0.50,
       nearThreshold: 0.80, // <-- inverted, would break readiness ladder
+      hardGateThreshold: 1,
+      trendThreshold: 3,
     };
     const parsed = masteryThresholdsSchema.parse(inverted);
     // Schema accepts (no order check); the runtime invariant is upstream.

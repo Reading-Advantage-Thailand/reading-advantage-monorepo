@@ -78,7 +78,7 @@ describe("v3 placement seeding contract (§11.4)", () => {
       evidenceType: "direct",
       source: "placement",
       initialStability: 12,
-      provisionalState: "mastered",
+      provisionalState: "inProgress",
       card: {
         variantKey: "test.skill.target",
         state: "review",
@@ -99,7 +99,7 @@ describe("v3 placement seeding contract (§11.4)", () => {
           confidence: "high",
         } as unknown as PlacementResult,
       ],
-      { now: NOW },
+      { now: NOW, highFidelityProbeInstrument: true },
     ) as unknown as V3PlacementSeed[];
 
     expect(seeds[0]?.initialStability).toBeCloseTo(28.5, 12);

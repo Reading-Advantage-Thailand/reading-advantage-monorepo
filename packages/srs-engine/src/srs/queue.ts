@@ -19,6 +19,7 @@ import type {
   SrsCardState,
   SrsSessionConfig,
 } from "./contract.js";
+import { interleaveReviewItems } from "./session-composition.js";
 
 /**
  * A single item in the daily practice queue.
@@ -32,6 +33,14 @@ export type QueueItem = {
   isOverdue: boolean;
   /** Number of whole days the card is overdue (0 if not overdue). */
   daysOverdue: number;
+  /** Queue role used to preserve remediation-before-progression ordering. */
+  kind?: "remediation" | "review" | "new";
+};
+
+/** Optional v3.2 composition inputs for a daily queue. */
+export type BuildDailyQueueOptions = {
+  remediationItems?: QueueItem[];
+  composeSession?: boolean;
 };
 
 const PRIORITY_ORDER: Record<ObjectivePriority, number> = {
@@ -104,6 +113,7 @@ export function buildDailyQueue(
   policies: Map<string, ObjectivePracticePolicy>,
   config: SrsSessionConfig,
   now: string,
+  options: BuildDailyQueueOptions = {},
 ): QueueItem[] {
   if (cards.length === 0) {
     return [];
@@ -144,11 +154,21 @@ export function buildDailyQueue(
     })
     .map(({ predictedRetention: _predictedRetention, ...item }) => item);
 
-  const selectedReviews = sortedReviews.slice(0, maxReviewsPerDay);
+  const remediationItems = options.remediationItems ?? [];
+  const reviewCapacity = Math.max(
+    0,
+    maxReviewsPerDay - remediationItems.length,
+  );
+  const selectedReviews = sortedReviews
+    .slice(0, reviewCapacity)
+    .map((item) => ({
+      ...item,
+      kind: "review" as const,
+    }));
   const backlogMode = dueReviewCards.length > maxReviewsPerDay;
   const remainingCapacity = Math.max(
     0,
-    maxReviewsPerDay - selectedReviews.length,
+    maxReviewsPerDay - remediationItems.length - selectedReviews.length,
   );
   const newCardAllowance = backlogMode
     ? 0
@@ -169,8 +189,25 @@ export function buildDailyQueue(
       objectivePriority: policies.get(card.objectiveId)!.priority,
       isOverdue: false,
       daysOverdue: 0,
+      kind: "new",
     }),
   );
 
-  return [...selectedReviews, ...selectedNewCards];
+  const selectedByCardId = new Map(
+    selectedReviews.map((item) => [item.card.cardId, item] as const),
+  );
+  const composedReviews =
+    options.composeSession === true
+      ? interleaveReviewItems(
+          selectedReviews.map((item) => ({
+            cardId: item.card.cardId,
+            objectiveId: item.card.objectiveId,
+            objectivePriority: item.objectivePriority as Exclude<
+              ObjectivePriority,
+              "triaged"
+            >,
+          })),
+        ).map((item) => selectedByCardId.get(item.cardId)!)
+      : selectedReviews;
+  return [...remediationItems, ...composedReviews, ...selectedNewCards];
 }

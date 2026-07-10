@@ -27,19 +27,22 @@ export interface EvaluatedDomainUtility extends DomainUtilityValue {
   providerVersion: string | null;
 }
 
-const utilitySignalSchema = z.strictObject({
+/** Runtime contract for one versioned domain utility signal. */
+export const utilitySignalSchema = z.strictObject({
   source: z.string().trim().min(1),
   sourceVersion: z.string().trim().min(1),
   value: z.number().finite(),
   weight: z.number().finite().min(0),
 });
 
-const providerSchema = z.strictObject({
+/** Runtime contract for domain utility provider identity. */
+export const domainUtilityProviderIdentitySchema = z.strictObject({
   providerKey: z.string().trim().min(1),
   version: z.string().trim().min(1),
 });
 
-const utilityValueSchema = z.strictObject({
+/** Runtime contract for provider-owned utility output. */
+export const domainUtilityValueSchema = z.strictObject({
   utility: z.number().finite().min(0).max(1),
   signals: z.array(utilitySignalSchema).min(1),
 });
@@ -66,11 +69,11 @@ export function evaluateDomainUtility<Context>(
     };
   }
 
-  const identity = providerSchema.parse({
+  const identity = domainUtilityProviderIdentitySchema.parse({
     providerKey: provider.providerKey,
     version: provider.version,
   });
-  const value = utilityValueSchema.parse(provider.getUtility(nodeId, context));
+  const value = domainUtilityValueSchema.parse(provider.getUtility(nodeId, context));
   return {
     utility: value.utility,
     providerKey: identity.providerKey,

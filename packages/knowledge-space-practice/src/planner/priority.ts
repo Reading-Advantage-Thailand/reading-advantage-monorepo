@@ -11,6 +11,7 @@
 
 import {
   DEFAULT_PRIORITY_WEIGHTS,
+  priorityWeightsSchema,
   type PlannerInput,
   type PriorityWeightInput,
   type PriorityWeights,
@@ -74,7 +75,7 @@ export function computePriorities(
 }
 
 function resolveWeights(weights: PriorityWeightInput): PriorityWeights {
-  return { ...weights, e: weights.e ?? 0 };
+  return priorityWeightsSchema.parse({ ...weights, e: weights.e ?? 0 });
 }
 
 /** Clamps a planner term to its normative zero-to-one range. */

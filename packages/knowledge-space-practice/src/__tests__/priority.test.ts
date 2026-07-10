@@ -53,22 +53,26 @@ const CHAIN_READINESS = { 'chain.n1': 0.1, 'chain.n2': 0.2, 'chain.n3': 0.3, 'ch
 // Default equal weights
 // ---------------------------------------------------------------------------
 
-describe('priority — default equal weights (a=b=c=d=1)', () => {
-  it('composite = readiness + unlockValue + goalProximity + weaknessFit for chain.n1 (3.35)', () => {
+describe('priority — v3.2 normalized terms with utility disabled', () => {
+  it('uses normalized maximum unlock reach for chain.n1', () => {
     const graph = makePlannerChain({ length: 4, goalIds: ['chain.n4'], readiness: CHAIN_READINESS });
-    // 0.1 + 3 + 0.25 + 0 = 3.35
-    expect(closeTo(getPriority('chain.n1', graph, defaultPriorityWeights), 3.35)).toBe(true);
+    // 0.1 readiness + 1 normalized unlock + 0.25 goal proximity.
+    expect(closeTo(getPriority('chain.n1', graph, defaultPriorityWeights), 1.35)).toBe(true);
   });
 
-  it('composite for chain.n2 = readiness + unlockValue + goalProximity + weaknessFit (0.2 + 2 + 1/3 ≈ 2.53)', () => {
+  it('uses logarithmic normalized unlock reach for chain.n2', () => {
     const graph = makePlannerChain({ length: 4, goalIds: ['chain.n4'], readiness: CHAIN_READINESS });
-    // 0.2 + 2 + 1/3 + 0 ≈ 2.5333
-    expect(closeTo(getPriority('chain.n2', graph, defaultPriorityWeights), 0.2 + 2 + 1 / 3)).toBe(true);
+    expect(
+      closeTo(
+        getPriority('chain.n2', graph, defaultPriorityWeights),
+        0.2 + Math.log(3) / Math.log(4) + 1 / 3,
+      ),
+    ).toBe(true);
   });
 
-  it('composite for chain.n3 = 1.8 (readiness 0.3 + unlock 1 + proximity 0.5)', () => {
+  it('normalizes one reachable descendant for chain.n3', () => {
     const graph = makePlannerChain({ length: 4, goalIds: ['chain.n4'], readiness: CHAIN_READINESS });
-    expect(closeTo(getPriority('chain.n3', graph, defaultPriorityWeights), 1.8)).toBe(true);
+    expect(closeTo(getPriority('chain.n3', graph, defaultPriorityWeights), 1.3)).toBe(true);
   });
 
   it('composite for chain.n4 = 1.4 (readiness 0.4 + unlock 0 + proximity 1)', () => {
@@ -91,12 +95,12 @@ describe('priority — single-weight collapse (regression-equivalent to pre-trac
     expect(closeTo(getPriority('chain.n4', graph, weights), 0.4)).toBe(true);
   });
 
-  it('b=1, a=c=d=0 collapses to unlockValue-only ordering', () => {
+  it('b=1, a=c=d=e=0 collapses to normalized unlockValue-only ordering', () => {
     const graph = makePlannerChain({ length: 4, goalIds: ['chain.n4'], readiness: CHAIN_READINESS });
     const weights = { a: 0, b: 1, c: 0, d: 0 };
-    expect(getPriority('chain.n1', graph, weights)).toBe(3);
-    expect(getPriority('chain.n2', graph, weights)).toBe(2);
-    expect(getPriority('chain.n3', graph, weights)).toBe(1);
+    expect(getPriority('chain.n1', graph, weights)).toBe(1);
+    expect(getPriority('chain.n2', graph, weights)).toBeCloseTo(Math.log(3) / Math.log(4), 10);
+    expect(getPriority('chain.n3', graph, weights)).toBe(0.5);
     expect(getPriority('chain.n4', graph, weights)).toBe(0);
   });
 
@@ -140,12 +144,12 @@ describe('priority — zero and scaled weights', () => {
     expect(closeTo(getPriority('chain.n4', graph, weights), 0.8)).toBe(true);
   });
 
-  it('b=0.5 scales the unlockValue contribution by 0.5', () => {
+  it('b=0.5 scales normalized unlockValue by 0.5', () => {
     const graph = makePlannerChain({ length: 4, goalIds: ['chain.n4'], readiness: CHAIN_READINESS });
     const weights = { a: 0, b: 0.5, c: 0, d: 0 };
-    expect(closeTo(getPriority('chain.n1', graph, weights), 1.5)).toBe(true);
-    expect(closeTo(getPriority('chain.n2', graph, weights), 1.0)).toBe(true);
-    expect(closeTo(getPriority('chain.n3', graph, weights), 0.5)).toBe(true);
+    expect(closeTo(getPriority('chain.n1', graph, weights), 0.5)).toBe(true);
+    expect(closeTo(getPriority('chain.n2', graph, weights), 0.5 * Math.log(3) / Math.log(4))).toBe(true);
+    expect(closeTo(getPriority('chain.n3', graph, weights), 0.25)).toBe(true);
     expect(getPriority('chain.n4', graph, weights)).toBe(0);
   });
 });

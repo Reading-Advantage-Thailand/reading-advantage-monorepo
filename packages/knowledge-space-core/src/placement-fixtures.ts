@@ -296,6 +296,7 @@ export function createDeterministicProbeAdapter(
   const calls: string[] = [];
 
   const adapter: DeterministicProbeAdapter = {
+    legacySingleProbe: true,
     domain,
     probeCalls: calls,
     get callCount() {

@@ -172,22 +172,19 @@ export function projectStudentVisualization(
   }
 
   // Phase 3 (Track 4 next-skill-planner): recommendedNext is top-5 by
-  // composite priority over the ready+unknown set (FR5). Derive readiness
-  // from learnerState for the planner partition; default equal weights.
-  const defaultWeights = { a: 1, b: 1, c: 1, d: 1 } as const;
+  // v3.2 ranks only the ready/nearly-ready fringe. Use computed state rather
+  // than raw learner-state presence so newly unlocked nodes remain eligible.
+  const defaultWeights = { a: 1, b: 1, c: 1, d: 1, e: 0 } as const;
 
   const candidateNodes = skillAndTaskNodes.filter((n) => {
     const state = stateByNodeId.get(n.id);
-    return state === 'ready' || state === 'unknown';
+    return state === 'ready' || state === 'nearly_ready';
   });
 
   const plannerReadiness: Record<string, number> = {};
   for (const node of candidateNodes) {
-    const ls = learnerState[node.id];
-    plannerReadiness[node.id] =
-      ls === 'ready' || ls === 'review_due' || ls === 'nearly_ready' ? 0.5
-      : ls === 'mastered' ? 1
-      : 0;
+    const state = stateByNodeId.get(node.id);
+    plannerReadiness[node.id] = state === 'ready' ? 0.8 : 0.5;
   }
 
   const plannerInput = {

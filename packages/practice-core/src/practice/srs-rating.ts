@@ -27,7 +27,12 @@ export type SrsRatingInput = {
   /** Practice parts extracted from the submission envelope. */
   parts: Pick<
     PracticeSubmissionPart,
-    "isCorrect" | "hintsUsed" | "revealStepsSeen" | "misconceptionTags"
+    | "isCorrect"
+    | "hintsUsed"
+    | "revealStepsSeen"
+    | "totalRevealSteps"
+    | "misconceptionTags"
+    | "misconceptionSeverityByTag"
   >[];
   /** Derived timing features for the attempt. */
   timingFeatures: PracticeTimingFeatures;
@@ -313,11 +318,10 @@ export function mapPracticeToSrsRating(input: SrsRatingInput): SrsRatingResult {
     retrievalCapped = true;
     reasons.push("reveal_hard_cap");
   }
-  if (
-    input.totalRevealSteps !== undefined &&
-    input.totalRevealSteps > 0 &&
-    revealCount >= input.totalRevealSteps
-  ) {
+  const totalRevealSteps =
+    input.totalRevealSteps ??
+    input.parts.reduce((sum, part) => sum + (part.totalRevealSteps ?? 0), 0);
+  if (totalRevealSteps > 0 && revealCount >= totalRevealSteps) {
     rating = "Again";
     reasons.push("all_steps_revealed");
   }
@@ -346,7 +350,11 @@ export function mapPracticeToSrsRating(input: SrsRatingInput): SrsRatingResult {
       rating =
         rating === "Easy" ? "Good" : rating === "Good" ? "Hard" : "Again";
       timingAdjusted = true;
-      reasons.push("timing_slow", "timing_downgraded_one_step");
+      reasons.push(
+        "timing_slow",
+        "timing_downgraded_one_step",
+        "timing_downgraded_hard",
+      );
     }
   } else if (input.timingFeatures.hasReliableTiming) {
     reasons.push("timing_ignored_unreliable");
@@ -357,8 +365,13 @@ export function mapPracticeToSrsRating(input: SrsRatingInput): SrsRatingResult {
   );
   const misconceptionCapped = misconceptionTags.length > 0;
   if (misconceptionCapped) {
+    const severityByTag = Object.assign(
+      {},
+      ...input.parts.map((part) => part.misconceptionSeverityByTag ?? {}),
+      input.severityByTag ?? {},
+    ) as SeverityByTag;
     const severe = misconceptionTags.some(
-      (tag) => (input.severityByTag?.[tag] ?? "minor") === "severe",
+      (tag) => (severityByTag[tag] ?? "minor") === "severe",
     );
     rating = severe ? "Again" : capAt(rating, "Hard");
     reasons.push(severe ? "misconception_severe" : "misconception_hard_cap");

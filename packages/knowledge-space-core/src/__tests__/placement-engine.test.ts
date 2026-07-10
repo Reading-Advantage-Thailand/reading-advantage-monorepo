@@ -369,6 +369,7 @@ describe('runPlacementTraversal — cycle safety', () => {
     const calls: string[] = [];
     const adapter: ProbeAdapter = {
       domain: 'test',
+      legacySingleProbe: true,
       probe(nodeId: string): ProbeResult {
         calls.push(nodeId);
         return 'pass';

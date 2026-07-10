@@ -26,6 +26,8 @@ describe('mastery-state contract', () => {
       masteryExit: 0.7,
       readyThreshold: 0.8,
       nearThreshold: 0.5,
+      hardGateThreshold: 1,
+      trendThreshold: 3,
     });
   });
 

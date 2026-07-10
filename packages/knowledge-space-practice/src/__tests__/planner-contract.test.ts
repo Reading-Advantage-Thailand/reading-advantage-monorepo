@@ -10,47 +10,48 @@ import {
 describe('Planner contract — priority weights schema', () => {
   describe('Zod parse rejects invalid weights', () => {
     it('rejects negative a weight', () => {
-      const result = priorityWeightsSchema.safeParse({ a: -1, b: 1, c: 1, d: 1 });
+      const result = priorityWeightsSchema.safeParse({ a: -1, b: 1, c: 1, d: 1, e: 0 });
       expect(result.success).toBe(false);
     });
 
     it('rejects negative b weight', () => {
-      const result = priorityWeightsSchema.safeParse({ a: 1, b: -0.1, c: 1, d: 1 });
+      const result = priorityWeightsSchema.safeParse({ a: 1, b: -0.1, c: 1, d: 1, e: 0 });
       expect(result.success).toBe(false);
     });
 
     it('rejects negative c weight', () => {
-      const result = priorityWeightsSchema.safeParse({ a: 1, b: 1, c: -0.01, d: 1 });
+      const result = priorityWeightsSchema.safeParse({ a: 1, b: 1, c: -0.01, d: 1, e: 0 });
       expect(result.success).toBe(false);
     });
 
     it('rejects negative d weight', () => {
-      const result = priorityWeightsSchema.safeParse({ a: 1, b: 1, c: 1, d: -2 });
+      const result = priorityWeightsSchema.safeParse({ a: 1, b: 1, c: 1, d: -2, e: 0 });
       expect(result.success).toBe(false);
     });
 
     it('rejects NaN', () => {
-      const result = priorityWeightsSchema.safeParse({ a: NaN, b: 1, c: 1, d: 1 });
+      const result = priorityWeightsSchema.safeParse({ a: NaN, b: 1, c: 1, d: 1, e: 0 });
       expect(result.success).toBe(false);
     });
 
     it('rejects Infinity', () => {
-      const result = priorityWeightsSchema.safeParse({ a: Infinity, b: 1, c: 1, d: 1 });
+      const result = priorityWeightsSchema.safeParse({ a: Infinity, b: 1, c: 1, d: 1, e: 0 });
       expect(result.success).toBe(false);
     });
 
     it('rejects string values', () => {
-      const result = priorityWeightsSchema.safeParse({ a: '1' as unknown, b: 1, c: 1, d: 1 });
+      const result = priorityWeightsSchema.safeParse({ a: '1' as unknown, b: 1, c: 1, d: 1, e: 0 });
       expect(result.success).toBe(false);
     });
 
-    it('rejects unknown extra keys (strict contract: only a/b/c/d allowed)', () => {
+    it('rejects unknown extra keys beyond the v3.2 a/b/c/d/e contract', () => {
       const result = priorityWeightsSchema.safeParse({
         a: 1,
         b: 1,
         c: 1,
         d: 1,
         e: 1,
+        f: 1,
       });
       expect(result.success).toBe(false);
     });
@@ -61,6 +62,7 @@ describe('Planner contract — priority weights schema', () => {
         b: 1,
         c: 1,
         d: 1,
+        e: 0,
         unknownWeight: 'high',
       });
       expect(result.success).toBe(false);
@@ -68,12 +70,12 @@ describe('Planner contract — priority weights schema', () => {
   });
 
   it('accepts valid zero and positive weights', () => {
-    const result = priorityWeightsSchema.safeParse({ a: 0, b: 0.5, c: 1, d: 0 });
+    const result = priorityWeightsSchema.safeParse({ a: 0, b: 0.5, c: 1, d: 0, e: 0.25 });
     expect(result.success).toBe(true);
   });
 
   it('accepts default equal weights', () => {
-    const result = priorityWeightsSchema.safeParse({ a: 1, b: 1, c: 1, d: 1 });
+    const result = priorityWeightsSchema.safeParse({ a: 1, b: 1, c: 1, d: 1, e: 1 });
     expect(result.success).toBe(true);
   });
 });
@@ -106,6 +108,7 @@ describe('Planner contract — PriorityScore discriminated union', () => {
         unlockValue: 0.7,
         goalProximity: 0.5,
         weaknessFit: 0.0,
+        utility: 0.0,
       },
     };
     expect(renderScoreLabel(ranked)).toBe('Ranked: 0.850');
@@ -150,6 +153,7 @@ describe('Planner contract — input/output type shapes', () => {
             unlockValue: 0.6,
             goalProximity: 0.4,
             weaknessFit: 0.0,
+            utility: 0.0,
           },
         },
       ],

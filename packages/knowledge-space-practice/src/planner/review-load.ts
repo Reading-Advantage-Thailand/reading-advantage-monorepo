@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 /** Minimal node shape needed for prerequisite-density computation. */
 export interface DensityNode {
   id: string;
@@ -38,6 +40,22 @@ export interface ReviewLoadProjection {
   allowNewSkills: boolean;
 }
 
+/** Runtime contract for utility-led ranking terms. */
+export const utilityLedTermsSchema = z.strictObject({
+  readiness: z.number().finite().min(0).max(1),
+  utility: z.number().finite().min(0).max(1),
+  weaknessFit: z.number().finite().min(0).max(1),
+});
+
+/** Runtime contract for seven-day review-load projection input. */
+export const reviewLoadInputSchema = z.strictObject({
+  cardsDueWithinSevenDays: z.number().finite().min(0),
+  maxReviewsPerDay: z.number().finite().positive(),
+  loadBudgetFactor: z.number().finite().min(0).max(1).optional(),
+});
+
+const thresholdSchema = z.number().finite().min(0).max(1);
+
 /**
  * Computes the fraction of skill nodes with a prerequisite in-edge.
  * @param nodes Graph nodes for one domain release.
@@ -68,8 +86,10 @@ export function computeUtilityLedScore(
   terms: UtilityLedTerms,
   readyThreshold: number,
 ): number | null {
-  if (terms.readiness < readyThreshold) return null;
-  return 0.7 * clamp01(terms.utility) + 0.3 * clamp01(terms.weaknessFit);
+  const validatedTerms = utilityLedTermsSchema.parse(terms);
+  const validatedThreshold = thresholdSchema.parse(readyThreshold);
+  if (validatedTerms.readiness < validatedThreshold) return null;
+  return 0.7 * validatedTerms.utility + 0.3 * validatedTerms.weaknessFit;
 }
 
 /**
@@ -78,9 +98,10 @@ export function computeUtilityLedScore(
  * @returns Projected load, budget, state, and new-skill allowance.
  */
 export function projectReviewLoad(input: ReviewLoadInput): ReviewLoadProjection {
-  const factor = input.loadBudgetFactor ?? 0.8;
-  const projectedDailyLoad = input.cardsDueWithinSevenDays / 7;
-  const budget = input.maxReviewsPerDay * factor;
+  const validated = reviewLoadInputSchema.parse(input);
+  const factor = validated.loadBudgetFactor ?? 0.8;
+  const projectedDailyLoad = validated.cardsDueWithinSevenDays / 7;
+  const budget = validated.maxReviewsPerDay * factor;
   const saturated = projectedDailyLoad > budget;
   const elevated = projectedDailyLoad >= budget * 0.6;
   return {
@@ -89,9 +110,4 @@ export function projectReviewLoad(input: ReviewLoadInput): ReviewLoadProjection 
     reviewLoadState: saturated ? 'saturated' : elevated ? 'elevated' : 'normal',
     allowNewSkills: !saturated,
   };
-}
-
-function clamp01(value: number): number {
-  if (!Number.isFinite(value)) return 0;
-  return Math.max(0, Math.min(1, value));
 }
