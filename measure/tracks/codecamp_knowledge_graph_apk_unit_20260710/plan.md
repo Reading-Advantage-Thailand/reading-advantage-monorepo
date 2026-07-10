@@ -10,18 +10,32 @@
 _Story ref: spec.md#story-s1_
 _Graph context: the parent Code domain is currently planning-only; this repo has curriculum/module symbols but no Codecamp objective-graph runtime nodes._
 
-- [~] Task: Freeze graph taxonomy and authoring contracts
-  - [ ] Define domains, node granularity, ID policy, edge semantics, priorities, status, provenance, and standards projections
-  - [ ] Record reviewer roles and graph/version migration rules
-- [~] Task: Write graph validation and counterexample tests
-  - [ ] Cover schema, duplicate IDs, dangling edges, cycles, hard-gate misuse, disconnected objectives, and invalid domain transfers
-  - [ ] Add representative coding subgraphs before full authoring
-- [~] Task: Author and review the Codecamp graph
-  - [ ] Build foundation, frontend, backend, data, testing, AI, workflow, deployment, architecture, and game-development clusters
-  - [ ] Review prerequisite direction/weights and capture unresolved edges as draft rather than guessing approval
-- [~] Task: Verify and document Phase S1
-  - [ ] Run graph validator, fixtures, statistics, diff report, and human review checklist
-  - [ ] Task: Measure - User Manual Verification 'Phase S1: Author the coding knowledge graph' (Protocol in workflow.md)
+- [x] Task: Freeze graph taxonomy and authoring contracts — `779c1006`
+  - [x] Define domains, node granularity, ID policy, edge semantics, priorities, status, provenance, and standards projections — `779c1006`
+  - [x] Record reviewer roles and graph/version migration rules — `779c1006`
+- [x] Task: Write graph validation and counterexample tests — `4ee63a98`
+  - [x] Cover schema, duplicate IDs, dangling edges, cycles, hard-gate misuse, disconnected objectives, and invalid domain transfers — `afb217de`
+  - [x] Add representative coding subgraphs before full authoring — `4ee63a98`
+- [x] Task: Author and review the Codecamp graph — `2c9e012f`
+  - [x] Build foundation, frontend, backend, data, testing, AI, workflow, deployment, architecture, and game-development clusters — `2c9e012f`
+  - [x] Review prerequisite direction/weights and capture unresolved edges as draft rather than guessing approval — `afb217de`
+- [x] Task: Verify and document Phase S1 — `afb217de`
+  - [x] Run graph validator, fixtures, statistics, diff report, and human review checklist — `afb217de`
+  - [x] Task: Measure - User Manual Verification 'Phase S1: Author the coding knowledge graph' (Protocol in workflow.md) — `afb217de`
+
+  - Green evidence: the reviewed release contains 54 nodes and 139 edges across
+    all ten required clusters, with 42 engine-parity hard gates, five soft
+    supports, two standards projections, and zero disconnected objectives.
+    Full tests pass 39/39; coverage is 93.45/85.79/92.10/93.46 and every
+    typecheck, lint, build, validation, report, packed-artifact, and source-sync
+    gate passes.
+  - Provenance evidence: the normative graph is parent commit
+    `dba65dccd519e77d83954c14fc4e136ab572dfe3`; source and packaged bytes share
+    SHA-256 `f703c50db99244356b2d432c5abbef126f7e104dc7b4ca5f943cf4326ff1862a`.
+  - Review evidence: independent re-audit passed after `afb217de` closed approval,
+    publication, prerequisite-gate, monotonic-version, stable-ID, and
+    test-inclusive type-safety findings. Browser acceptance is truthfully N/A
+    because S1 owns no route, component, style, or learner interaction.
 
 ## Phase S2: Bind the existing curriculum
 _Story ref: spec.md#story-s2_

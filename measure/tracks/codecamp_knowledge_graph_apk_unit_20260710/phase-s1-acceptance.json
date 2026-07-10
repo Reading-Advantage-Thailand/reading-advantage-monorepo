@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Phase S1 acceptance passes. The normative Mastery Advantage Code domain now publishes a reviewed 54-node, 139-edge Codecamp graph; the shared adapter validates strict authoring, governance, topology, version transitions, publication projection, and byte-identical source provenance.",
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "evidence": [
+    "Normative graph commit dba65dccd519e77d83954c14fc4e136ab572dfe3 is recorded separately from the immutable packaged snapshot digest f703c50db99244356b2d432c5abbef126f7e104dc7b4ca5f943cf4326ff1862a.",
+    "The graph report contains all ten instructional clusters, 54 nodes, 139 edges, 42 engine-parity hard gates, 5 non-gating supports, 2 standards projections, and zero disconnected objectives.",
+    "Full package tests pass 39/39, including packed ./graph bytes, packed CLI output, default sibling source resolution, strict unknown-field boundaries, low-confidence cycles, review transitions, stable IDs, semver monotonicity, and runtime publication filtering.",
+    "Coverage passes at 93.45% statements, 85.79% branches, 92.10% functions, and 93.46% lines; test-inclusive typecheck, lint, build, graph validation, report, and source verification pass.",
+    "Independent re-audit passed after commits 2c9e012f and afb217de closed every blocking governance and release-artifact finding."
+  ],
+  "commands": [
+    "pnpm --filter @reading-advantage/codecamp-knowledge test",
+    "pnpm --filter @reading-advantage/codecamp-knowledge test:coverage",
+    "pnpm --filter @reading-advantage/codecamp-knowledge check-types",
+    "pnpm --filter @reading-advantage/codecamp-knowledge lint",
+    "pnpm --filter @reading-advantage/codecamp-knowledge build",
+    "pnpm --filter @reading-advantage/codecamp-knowledge graph:validate",
+    "pnpm --filter @reading-advantage/codecamp-knowledge graph:report",
+    "pnpm --filter @reading-advantage/codecamp-knowledge graph:verify-source"
+  ],
+  "changed_files": [],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "proceed_to_phase_s2",
+  "confidence": "high"
+}
