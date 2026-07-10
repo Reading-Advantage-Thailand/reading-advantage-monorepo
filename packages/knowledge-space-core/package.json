@@ -1,0 +1,36 @@
+{
+  "name": "@reading-advantage/knowledge-space-core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
+    "./types": { "types": "./dist/types.d.ts", "import": "./dist/types.js" },
+    "./schemas": { "types": "./dist/schemas.d.ts", "import": "./dist/schemas.js" },
+    "./validation": { "types": "./dist/validation.d.ts", "import": "./dist/validation.js" },
+    "./level-projection": { "types": "./dist/level-projection.d.ts", "import": "./dist/level-projection.js" },
+    "./progress-trend": { "types": "./dist/progress-trend.d.ts", "import": "./dist/progress-trend.js" },
+    "./adapters": { "types": "./dist/adapters.d.ts", "import": "./dist/adapters.js" },
+    "./fixtures": { "types": "./dist/fixtures.d.ts", "import": "./dist/fixtures.js" }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc",
+    "check-types": "tsc --noEmit",
+    "lint": "eslint src/",
+    "test": "pnpm build && vitest run",
+    "test:coverage": "pnpm build && vitest run --coverage"
+  },
+  "dependencies": {
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@reading-advantage/config": "workspace:*",
+    "@vitest/coverage-v8": "catalog:",
+    "typescript": "5.9.3",
+    "vitest": "4.1.8"
+  }
+}

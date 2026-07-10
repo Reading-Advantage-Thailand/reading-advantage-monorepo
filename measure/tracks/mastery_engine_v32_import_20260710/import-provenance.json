@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "repository": "/home/daniel-bo/Desktop/ra-math-advantage",
+    "commit": "3e0b3517c42cfe0b603295a1ec48548505617169"
+  },
+  "specification": {
+    "version": "kst-srs.v2",
+    "normativeRepository": "/home/daniel-bo/Desktop/mastery-advantage"
+  },
+  "ownership": {
+    "classification": "same-owner internal source",
+    "sourceCommitAuthor": "Daniel Bo <bodangren@gmail.com>",
+    "licenseFileAtSourceCommit": null,
+    "note": "No standalone license file exists at the frozen source commit; this is an internal same-owner transfer, not a third-party redistribution."
+  },
+  "transformations": [
+    "package-scope",
+    "workspace-dependency-syntax",
+    "import-specifiers",
+    "build-output-and-exports",
+    "workspace-configuration"
+  ],
+  "packages": [
+    {
+      "sourcePath": "packages/knowledge-space-core",
+      "sourceTree": "59d65b7820bed92bfd81796369c4265d8e37b84f",
+      "sourceFileCount": 77,
+      "destinationPath": "packages/knowledge-space-core",
+      "destinationName": "@reading-advantage/knowledge-space-core",
+      "destinationFileCount": 77
+    },
+    {
+      "sourcePath": "packages/knowledge-space-practice",
+      "sourceTree": "def1ea044552c026ee4a2bbb700068dab13e1bc5",
+      "sourceFileCount": 48,
+      "destinationPath": "packages/knowledge-space-practice",
+      "destinationName": "@reading-advantage/knowledge-space-practice",
+      "destinationFileCount": 48
+    },
+    {
+      "sourcePath": "packages/srs-engine",
+      "sourceTree": "30ee7d4533f0aaa5dffa0fb5cf4a292bc1f30901",
+      "sourceFileCount": 33,
+      "destinationPath": "packages/srs-engine",
+      "destinationName": "@reading-advantage/srs-engine",
+      "destinationFileCount": 33
+    },
+    {
+      "sourcePath": "packages/practice-core",
+      "sourceTree": "fa72f9313d35dda8ffc22c098fd62c3ad7f8ff19",
+      "sourceFileCount": 41,
+      "destinationPath": "packages/practice-core",
+      "destinationName": "@reading-advantage/practice-core",
+      "destinationFileCount": 41
+    }
+  ],
+  "inventory": {
+    "sourceFileCount": 199,
+    "destinationFileCount": 199,
+    "mapping": "Every tracked path below each source package root maps one-to-one to the identical relative path below its destination package root.",
+    "sourceCommand": "git ls-tree -r --name-only 3e0b3517c42cfe0b603295a1ec48548505617169 -- packages/knowledge-space-core packages/knowledge-space-practice packages/srs-engine packages/practice-core",
+    "destinationCommand": "find packages/knowledge-space-core packages/knowledge-space-practice packages/srs-engine packages/practice-core -type f"
+  },
+  "equivalence": {
+    "status": "mechanically-equivalent",
+    "behaviorBearingDeviations": [],
+    "normalizedFilesCompared": 183,
+    "workspaceConfigurationFilesReviewed": 16,
+    "comparisonMethod": "Compare all 199 frozen files by identical relative path after normalizing the four approved package scopes, resolvable relative TypeScript specifiers to emitted .js paths, package manifests, TypeScript/ESLint/Vitest workspace configuration, and README package-name examples.",
+    "unexplainedAddedFiles": [],
+    "unexplainedRemovedFiles": [],
+    "unexplainedChangedFiles": []
+  },
+  "deviations": [
+    {
+      "category": "declared workspace dependency",
+      "package": "@reading-advantage/knowledge-space-practice",
+      "change": "Declared @reading-advantage/practice-core as workspace:* because the frozen production file src/misconception-loop.ts already imports its contract subpath.",
+      "algorithmBehaviorChanged": false
+    },
+    {
+      "category": "test-only workspace dependency",
+      "package": "@reading-advantage/srs-engine",
+      "change": "Declared @reading-advantage/knowledge-space-core as a dev dependency because a retained source test imports its ReviewStatus type.",
+      "algorithmBehaviorChanged": false
+    },
+    {
+      "category": "deterministic package harness",
+      "package": "all four packages",
+      "change": "Package test scripts build emitted ESM before Vitest; dependent packages build their declared workspace prerequisites for direct filtered runs.",
+      "algorithmBehaviorChanged": false
+    }
+  ]
+}

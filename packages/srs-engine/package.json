@@ -1,0 +1,37 @@
+{
+  "name": "@reading-advantage/srs-engine",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
+    "./contract": { "types": "./dist/srs/contract.d.ts", "import": "./dist/srs/contract.js" },
+    "./scheduler": { "types": "./dist/srs/scheduler.d.ts", "import": "./dist/srs/scheduler.js" },
+    "./review-processor": { "types": "./dist/srs/review-processor.d.ts", "import": "./dist/srs/review-processor.js" },
+    "./queue": { "types": "./dist/srs/queue.d.ts", "import": "./dist/srs/queue.js" },
+    "./adapters": { "types": "./dist/srs/adapters.d.ts", "import": "./dist/srs/adapters.js" },
+    "./submission-adapter": { "types": "./dist/srs/submission-srs-adapter.d.ts", "import": "./dist/srs/submission-srs-adapter.js" }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc",
+    "check-types": "tsc --noEmit",
+    "lint": "eslint src/",
+    "test": "pnpm --filter @reading-advantage/practice-core build && pnpm build && vitest run",
+    "test:coverage": "pnpm --filter @reading-advantage/practice-core build && pnpm build && vitest run --coverage"
+  },
+  "dependencies": {
+    "@reading-advantage/practice-core": "workspace:*",
+    "ts-fsrs": "^5.3.2"
+  },
+  "devDependencies": {
+    "@reading-advantage/config": "workspace:*",
+    "@reading-advantage/knowledge-space-core": "workspace:*",
+    "@vitest/coverage-v8": "catalog:",
+    "typescript": "5.9.3",
+    "vitest": "4.1.8"
+  }
+}

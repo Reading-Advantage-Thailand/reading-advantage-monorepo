@@ -1,0 +1,40 @@
+{
+  "name": "@reading-advantage/practice-core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
+    "./contract": { "types": "./dist/practice/contract.d.ts", "import": "./dist/practice/contract.js" },
+    "./submission-schema": { "types": "./dist/practice/submission.schema.d.ts", "import": "./dist/practice/submission.schema.js" },
+    "./timing": { "types": "./dist/practice/timing.d.ts", "import": "./dist/practice/timing.js" },
+    "./timing-baseline": { "types": "./dist/practice/timing-baseline.d.ts", "import": "./dist/practice/timing-baseline.js" },
+    "./srs-rating": { "types": "./dist/practice/srs-rating.d.ts", "import": "./dist/practice/srs-rating.js" },
+    "./problem-family": { "types": "./dist/practice/problem-family.d.ts", "import": "./dist/practice/problem-family.js" },
+    "./practice-item": { "types": "./dist/practice/practice-item.d.ts", "import": "./dist/practice/practice-item.js" },
+    "./error-analysis": { "types": "./dist/practice/error-analysis/index.d.ts", "import": "./dist/practice/error-analysis/index.js" },
+    "./generator-qa": { "types": "./dist/generator-qa/verify-generator.d.ts", "import": "./dist/generator-qa/verify-generator.js" }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc",
+    "check-types": "tsc --noEmit",
+    "lint": "eslint src/",
+    "test": "pnpm build && vitest run",
+    "test:generators": "vitest run src/generator-qa/__tests__/ci-gate.test.ts",
+    "test:coverage": "pnpm build && vitest run --coverage"
+  },
+  "dependencies": {
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@reading-advantage/config": "workspace:*",
+    "@types/node": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "typescript": "5.9.3",
+    "vitest": "4.1.8"
+  }
+}

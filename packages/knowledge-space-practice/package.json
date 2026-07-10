@@ -1,0 +1,37 @@
+{
+  "name": "@reading-advantage/knowledge-space-practice",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
+    "./types": { "types": "./dist/types.d.ts", "import": "./dist/types.js" },
+    "./schemas": { "types": "./dist/schemas.d.ts", "import": "./dist/schemas.js" },
+    "./misconception-loop": { "types": "./dist/misconception-loop.d.ts", "import": "./dist/misconception-loop.js" },
+    "./blueprints": { "types": "./dist/blueprints/index.d.ts", "import": "./dist/blueprints/index.js" },
+    "./planner/types": { "types": "./dist/planner/types.d.ts", "import": "./dist/planner/types.js" },
+    "./projections": { "types": "./dist/projections/index.d.ts", "import": "./dist/projections/index.js" }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc",
+    "check-types": "tsc --noEmit",
+    "lint": "eslint src/",
+    "test": "pnpm --filter @reading-advantage/knowledge-space-core build && pnpm --filter @reading-advantage/practice-core build && pnpm build && vitest run",
+    "test:coverage": "pnpm --filter @reading-advantage/knowledge-space-core build && pnpm --filter @reading-advantage/practice-core build && pnpm build && vitest run --coverage"
+  },
+  "dependencies": {
+    "@reading-advantage/knowledge-space-core": "workspace:*",
+    "@reading-advantage/practice-core": "workspace:*",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@reading-advantage/config": "workspace:*",
+    "@vitest/coverage-v8": "catalog:",
+    "typescript": "5.9.3",
+    "vitest": "4.1.8"
+  }
+}
