@@ -1,61 +1,43 @@
 {
   "schema_version": 1,
-  "status": "fail",
-  "summary": "Phase S3 fails final public API and developer-experience review. The focused tests and affected package builds are green and all new exported declarations have JSDoc, but the only public mastery subpath eagerly initializes the database, the exported Drizzle adapter cannot satisfy the exported orchestration dependency, public commit schemas/types describe incompatible commands, unexpected database failures are mislabeled as validation errors, two frozen uniqueness contracts were removed, and migration 0027 has no committed Drizzle snapshot.",
-  "blocking_findings": [
-    "S3-API-001 [High] packages/domain/src/mastery/index.ts:1-7 and packages/domain/src/mastery/record-run.ts:1-13 — importing @reading-advantage/domain/mastery for Zod contracts or the in-memory adapter statically evaluates legacy record-run.ts and @reading-advantage/db. A real built-package cold import emits 'DATABASE_URL is not set' and takes 1.18s even though the Drizzle factory itself is lazy. This violates the provider-neutral package boundary and gives Advantage-app consumers no DB-free public persistence entrypoint. Add a provider-neutral persistence subpath/barrel or lazily isolate the legacy DB-bound record-run surface, then add a cold-import test asserting no DB initialization or warning.",
-    "S3-API-002 [High] packages/domain/src/mastery/index.ts:23-78, packages/domain/src/mastery/persistence-ports.ts:33-50, and packages/domain/src/mastery/commit-evidence.ts:142-177 — the public surface exposes two incompatible commit models under overlapping names. createDrizzleMasteryPersistence returns MasteryPersistencePort, while commitMasteryEvidence requires MasteryTransactionalPersistence; a consumer compile probe fails TS2741 because the adapter has no transaction method. The public commitMasteryEvidenceInputSchema is additionally a union that accepts the adapter command even though commitMasteryEvidence reparses only the orchestration command, and CommitMasteryEvidenceInput names only the adapter type. Define one composable application path: either make the Drizzle adapter implement/export the transactional port or provide a public transactional adapter, and keep each runtime schema aligned one-to-one with its function and inferred type.",
-    "S3-API-003 [High] packages/domain/src/mastery/drizzle-mastery-persistence.ts:223-240 — portableFailure maps every unexpected driver, connectivity, missing-migration, timeout, and programmer failure to MasteryPersistenceError code VALIDATION_ERROR. Applications cannot distinguish caller-invalid data from retryable infrastructure failures, and the original cause is discarded. Add a provider-neutral infrastructure/internal error code with retryability and safe cause handling; reserve VALIDATION_ERROR for Zod/boundary failures and test a simulated non-23505 database outage.",
-    "S3-API-004 [High] packages/db/src/schema/mastery.ts:234-321 and packages/db/src/__tests__/mastery-persistence-schema.test.ts:103-131 — the Green commit removed the Red contract expectations for mastery_placements_school_student_objective_release_type_unique and mastery_calibrations_school_population_version_unique, then implemented neither constraint. This contradicts phase-s3-test-strategy.md and permits duplicate logical placement/calibration artifacts behind the public adapter. Restore both tenant-aware unique constraints in schema, migration, and tests rather than weakening the frozen Red oracle.",
-    "S3-API-005 [High] packages/db/drizzle/meta/_journal.json:194-200 — the committed journal consumes 0027_mastery_persistence, but commit 08e942a2 contains no packages/db/drizzle/meta/0027_snapshot.json. The schema test named 'does not accept a hand-written migration without the generated schema snapshot' only checks that schema/mastery.ts exists, so it cannot detect this omission. Commit the generated 0027 snapshot and make the guard assert the matching snapshot/journal pair so future drizzle-kit generation starts from the actual schema state."
-  ],
+  "status": "pass",
+  "summary": "Phase S3 passes the remediated API and developer-experience review. The public surface now has one schema/type/service/port, both adapters compose through that port, approved non-legacy entrypoints cold-import without database initialization, operational failures use provider-neutral retry semantics, frozen uniqueness and snapshot contracts are restored, all new mastery files are represented in the code graph, and focused public, canonical, Drizzle, type, build, and lint gates are green. No Critical or High API/DX finding remains.",
+  "blocking_findings": [],
   "nonblocking_findings": [
-    "S3-API-006 [Medium] packages/domain/src/mastery/drizzle-mastery-persistence.ts:40-46 and 243-249 — DrizzleMasteryPersistenceOptions types both db and tenantDb as unknown, casts db internally, and explicitly ignores tenantDb. This accepts nonsensical construction at compile time and advertises tenant composition that does nothing. Type db to the supported schema-aware Drizzle contract and remove or implement tenantDb.",
-    "S3-API-007 [Medium] packages/domain/package.json and packages/domain/src/mastery/index.ts — the package exports 28 mastery symbols and two distinct commit pathways but adds no README, usage example, error-code table, transaction composition example, or migration guidance for Advantage-app consumers. Add concise consumer documentation after the public contract is consolidated.",
-    "S3-API-008 [Medium] graph.db — the fresh graph contains commit-evidence.ts and drizzle-mastery-persistence.ts but omits the new persistence-contracts.ts, persistence-ports.ts, in-memory adapter, and mastery DB schema. Graph caller results therefore show no external callers for indexed additive symbols but are incomplete; rerun per-file graph updates and audit before claiming graph verification.",
-    "S3-API-009 [Low] packages/domain/src/index.ts:41-46 — commit 08e942a2 also adds unrelated reading FSRS scheduler exports outside the Phase S3 file ownership and public API scope. Preserve them only with their owning-track evidence or separate them from the mastery persistence commit."
+    "S3-API-010 [Medium] packages/domain/src/mastery/drizzle-mastery-persistence.ts:48-55 — DrizzleMasteryPersistenceOptions documents db as a schema-aware Drizzle database but exposes it as unknown, so a consumer compile probe can pass db: {} and only fail at runtime. This preserves PGlite/postgres-js flexibility but weakens construction-time guidance. Follow up with a minimal structural Drizzle capability interface or supported adapter overloads when the package API is versioned; this does not block Phase S3 because the factory is authority-bound and the real PGlite path is covered.",
+    "S3-API-011 [Low] packages/domain/src/mastery/README.md:1-24 — the new boundary and error documentation is accurate, but it remains reference-oriented rather than copy-paste-oriented: it has no complete service-plus-adapter example or migration prerequisite example. Add one concise server composition example during S4 consumer-governance documentation.",
+    "S3-API-012 [Low] packages/domain/src/mastery/legacy.ts:56-59 — the exported resetRateLimitStore compatibility wrapper has a descriptive JSDoc comment but omits an explicit @returns tag, and its asynchronous lazy reset cannot provide the old synchronous test-helper timing guarantee. No production caller was found; document it as best-effort or expose an awaited test helper if a consumer needs deterministic reset semantics."
   ],
   "evidence": [
-    "Exact implementation scope: 08e942a2 adds 16 S3 files/changes with 2307 insertions and six deletions; f005e0fc records the Green gate and plan evidence.",
-    "Public export inspection confirms @reading-advantage/domain/mastery exposes all requested Zod records, inferred types, in-memory factory, lazy Drizzle factory, orchestration functions, and errors; @reading-advantage/db exports all seven tables.",
-    "Built-package self-import succeeds with 28 mastery exports, but emits the DATABASE_URL warning before any adapter operation; root and namespace exports are both reachable.",
-    "Consumer-shaped TypeScript probe assigning createDrizzleMasteryPersistence({ db }) to MasteryTransactionalPersistence fails with TS2741: transaction is missing from MasteryPersistencePort.",
-    "TypeScript AST JSDoc audit inspected every exported function, class, interface, type alias, schema, and table declaration added by S3 and found zero undocumented exports.",
-    "The four focused persistence suites pass 4 files and 58/58 tests with one worker, but the schema test passes only because the Green commit changed the two frozen uniqueNames expectations to empty arrays and the migration-snapshot test does not inspect meta snapshots.",
-    "Domain check-types passes. DB check-types is inconclusive for S3 because unrelated untracked packages/db/src/seed/codecamp-users-seed.ts imports auth source outside db rootDir and triggers TS6059 errors.",
-    "DB and domain builds pass. DB lint passes with nine unrelated/inherited warnings; domain lint passes with 21 unrelated/inherited warnings and no S3-file warning.",
-    "No frontend files are in the S3 implementation commits, so browser, visual, network, and route-parity review are not applicable.",
-    "Graph caller check finds no external callers for the indexed new additive public symbols; no non-additive caller break was detected, but the graph is missing four S3 files and is not sufficient as complete acceptance evidence."
+    "The public package now exposes explicit mastery facade, contracts, service, memory-adapter, Drizzle-adapter, and legacy subpaths; the facade no longer eagerly exports the DB-bound record-run implementation.",
+    "The public API suite passes 9/9, including DB-variable-free cold imports of the facade and every approved pure/injected subpath, package export checks, exact schema/type inference, legacy-name compatibility, and direct Drizzle-adapter-to-service compile composition.",
+    "The canonical schema, in-memory adapter, and transport-independent service selection passes 27/27 focused assertions; the Drizzle shared and adversarial selection passes 30/30 against real PGlite behavior.",
+    "commitMasteryEvidenceInputSchema is a single strict schema, CommitMasteryEvidenceInput is inferred directly from it, commitMasteryEvidence parses that schema, and MasteryPersistencePort is the sole injected service boundary including calibration approval.",
+    "Both createInMemoryMasteryPersistence and the lazy createDrizzleMasteryPersistence return MasteryPersistencePort with readSnapshot, commitMasteryEvidence, and approveMasteryCalibration, closing the former transaction-port composition mismatch.",
+    "MasteryPersistenceError now distinguishes validation, tenant, idempotency, append-only, revision, unavailable, timeout, missing-migration, and internal errors with stable retryability; focused Drizzle adversarial tests cover connectivity, timeout, missing-table, serialization, and unexpected-driver mappings.",
+    "Domain check-types and build pass. Focused mastery lint exits zero with one inherited warning in legacy record-run.ts and no error in the remediated API files.",
+    "All exported schemas, inferred types, interfaces, error classes, and adapter/service factory functions added or changed by remediation have descriptive JSDoc; service and factory functions document parameters and returns.",
+    "The 0026, 0027, and 0028 snapshots exist with a continuous prevId chain matching the final journal entries. The restored placement and calibration unique names appear in schema, 0028 SQL, snapshot, and migration-repro tests.",
+    "The fresh graph contains every file under packages/domain/src/mastery plus packages/db/src/schema/mastery.ts; additive public service, port, memory, and Drizzle symbols are indexed and no pre-existing breaking caller was found.",
+    "No frontend route, component, style, or browser-executed API is part of Phase S3, so browser, route-parity, accessibility, and visual verification are not applicable."
   ],
   "commands": [
-    "git show/git diff 257c39fd..08e942a2 and 08e942a2..f005e0fc (reviewed exact implementation and gate commits)",
-    "TZ=UTC pnpm exec vitest run four Phase S3 persistence test files --maxWorkers=1 --reporter=default (pass: 4 files, 58/58 tests)",
-    "pnpm --dir packages/domain check-types (pass)",
-    "pnpm --dir packages/db check-types (inconclusive for S3: fails only on unrelated dirty codecamp-users-seed.ts/auth rootDir TS6059 errors)",
-    "pnpm --dir packages/db build; pnpm --dir packages/domain build (pass)",
-    "pnpm --dir packages/db lint; pnpm --dir packages/domain lint (pass with 9 and 21 unrelated/inherited warnings respectively; zero S3 warnings)",
-    "Built package cold-import probes from packages/domain for @reading-advantage/domain/mastery and root export (imports succeed; DATABASE_URL warning reproduced; mastery cold import 1.18s)",
-    "Temporary consumer TypeScript compile probe for Drizzle adapter to MasteryTransactionalPersistence assignment (expected incompatibility reproduced: TS2741)",
-    "TypeScript AST exported-declaration JSDoc audit over S3 production files (pass: no missing JSDoc)",
-    "build-graph stats/files/query/callers on S3 symbols (partial: no breaking external caller found; graph missing four new S3 files)",
-    "Migration journal/snapshot inspection and Red-to-Green schema-test diff (fail: 0027 snapshot absent; two uniqueness expectations removed)"
+    "TZ=UTC pnpm exec vitest run packages/domain/src/__tests__/mastery-persistence-public-api.test.ts --maxWorkers=1 --reporter=dot (pass: 1 file, 9/9 tests)",
+    "TZ=UTC pnpm exec vitest run packages/domain/src/__tests__/mastery-persistence-remediation-contract.test.ts packages/domain/src/__tests__/mastery-persistence.in-memory.test.ts packages/domain/src/__tests__/mastery-persistence-transaction.test.ts --maxWorkers=1 --reporter=dot (pass: 3 files, 27/27 tests)",
+    "TZ=UTC pnpm exec vitest run packages/domain/src/__tests__/mastery-persistence.drizzle.test.ts packages/domain/src/__tests__/mastery-persistence-drizzle-adversarial.test.ts --maxWorkers=1 --reporter=dot (pass: 2 files, 30/30 tests)",
+    "pnpm --filter @reading-advantage/domain check-types (pass)",
+    "pnpm --filter @reading-advantage/domain build (pass)",
+    "pnpm --filter @reading-advantage/domain exec eslint src/mastery src/__tests__/mastery-persistence-public-api.test.ts src/__tests__/mastery-persistence-remediation-contract.test.ts src/__tests__/mastery-persistence-drizzle-adversarial.test.ts (pass: zero errors; one inherited record-run warning)",
+    "build-graph stats/search/callers plus graph.db files query for mastery persistence symbols and files (pass: fresh graph, complete mastery file coverage, no breaking pre-existing caller)",
+    "Snapshot/journal and uniqueness inspection across packages/db/src/schema/mastery.ts, 0028 SQL, 0026/0027/0028 snapshots, _journal.json, and migration-repro tests (pass)"
   ],
   "changed_files": [
     "measure/tracks/mastery_engine_v32_import_20260710/phase-s3-review-api.json"
   ],
-  "test_strategy_violations": [
-    "The Green implementation changed the committed Red schema contract to remove the placement and calibration unique constraints instead of satisfying it.",
-    "The migration-snapshot guard claims to require a generated snapshot but checks only for schema/mastery.ts, allowing journal entry 0027 without 0027_snapshot.json.",
-    "The graph verification claim is incomplete because four new S3 files are absent from graph.db."
-  ],
-  "live_contract_violations": [
-    "The public mastery contract-only import eagerly initializes the DB-bound legacy record-run module and emits a DATABASE_URL warning.",
-    "The public commit schema accepts both adapter and orchestration commands while the public commitMasteryEvidence function accepts only the orchestration command."
-  ],
-  "prod_wiring_violations": [
-    "The exported Drizzle adapter does not implement the exported MasteryTransactionalPersistence interface required by commitMasteryEvidence, so the production adapter cannot be injected into the production orchestration function."
-  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
   "route_parity_violations": [],
-  "retry_recommendation": "retry_implementation",
+  "retry_recommendation": "proceed_to_phase_acceptance",
   "confidence": "high"
 }
