@@ -8,11 +8,21 @@ const packageRoot = join(dirname(fileURLToPath(import.meta.url)), "../..");
 
 describe("shared-core and provider-neutral boundaries", () => {
   it("uses only the public core API and no app, database, or provider imports", () => {
-    const files = ["adapter.ts", "contracts.ts", "validation.ts", "publication.ts"];
+    const files = [
+      "adapter.ts",
+      "bindings.ts",
+      "contracts.ts",
+      "curriculum-inventory.ts",
+      "validation.ts",
+      "publication.ts",
+    ];
     const source = files.map((file) => readFileSync(join(packageRoot, "src", file), "utf8")).join("\n");
     expect(source).toContain('from "@reading-advantage/knowledge-space-core"');
     expect(source).not.toMatch(/from ["'](?:@reading-advantage\/(?:domain|db)|\.\.\/\.\.\/apps|@ai-sdk|openai)/);
     expect(source).not.toContain("knowledge-space-core/src/");
+    const generator = readFileSync(join(packageRoot, "scripts/generate-curriculum-bindings.ts"), "utf8");
+    expect(generator).not.toMatch(/writeFileSync\([^,]+source/i);
+    expect(generator).toContain("collectCurriculumInventory");
   });
 
   it("declares packed graph and CLI verification contracts", () => {
