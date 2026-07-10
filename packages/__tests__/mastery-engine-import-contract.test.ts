@@ -1,0 +1,229 @@
+import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { dirname, extname, join, relative, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+import { describe, expect, it } from "vitest";
+
+const repositoryRoot = resolve(
+  dirname(fileURLToPath(import.meta.url)),
+  "../..",
+);
+const provenancePath = join(
+  repositoryRoot,
+  "measure/tracks/mastery_engine_v32_import_20260710/import-provenance.json",
+);
+
+const packages = [
+  {
+    directory: "knowledge-space-core",
+    name: "@reading-advantage/knowledge-space-core",
+    sourceTree: "59d65b7820bed92bfd81796369c4265d8e37b84f",
+    exportKeys: [
+      ".",
+      "./types",
+      "./schemas",
+      "./validation",
+      "./level-projection",
+      "./progress-trend",
+      "./adapters",
+      "./fixtures",
+    ],
+  },
+  {
+    directory: "knowledge-space-practice",
+    name: "@reading-advantage/knowledge-space-practice",
+    sourceTree: "def1ea044552c026ee4a2bbb700068dab13e1bc5",
+    exportKeys: [
+      ".",
+      "./types",
+      "./schemas",
+      "./misconception-loop",
+      "./blueprints",
+      "./planner/types",
+      "./projections",
+    ],
+  },
+  {
+    directory: "srs-engine",
+    name: "@reading-advantage/srs-engine",
+    sourceTree: "30ee7d4533f0aaa5dffa0fb5cf4a292bc1f30901",
+    exportKeys: [
+      ".",
+      "./contract",
+      "./scheduler",
+      "./review-processor",
+      "./queue",
+      "./adapters",
+      "./submission-adapter",
+    ],
+  },
+  {
+    directory: "practice-core",
+    name: "@reading-advantage/practice-core",
+    sourceTree: "fa72f9313d35dda8ffc22c098fd62c3ad7f8ff19",
+    exportKeys: [
+      ".",
+      "./contract",
+      "./submission-schema",
+      "./timing",
+      "./timing-baseline",
+      "./srs-rating",
+      "./problem-family",
+      "./practice-item",
+      "./error-analysis",
+      "./generator-qa",
+    ],
+  },
+] as const;
+
+const allowedProductionDependencies = new Set([
+  "zod",
+  "ts-fsrs",
+  ...packages.map(({ name }) => name),
+]);
+
+const forbiddenImport =
+  /^(?:react(?:\/|$)|next(?:\/|$)|vinext(?:\/|$)|vite(?:\/|$)|drizzle-orm(?:\/|$)|pg$|postgres(?:\/|$)|convex(?:\/|$)|@convex-dev\/|firebase(?:\/|$)|@prisma\/client(?:\/|$)|@trpc\/|hono(?:\/|$)|ai$|@ai-sdk\/|openai(?:\/|$)|@anthropic-ai\/sdk(?:\/|$)|@google\/generative-ai(?:\/|$)|@reading-advantage\/(?:auth|auth-client|storage|api|webhooks)(?:\/|$)|\.\.?\/(?:apps?|routes?|transport)(?:\/|$))/;
+
+type PackageManifest = {
+  name?: string;
+  type?: string;
+  exports?: Record<string, unknown>;
+  dependencies?: Record<string, string>;
+};
+
+type ProvenanceArtifact = {
+  source?: { repository?: string; commit?: string };
+  transformations?: string[];
+  packages?: Array<{
+    sourcePath?: string;
+    sourceTree?: string;
+    destinationPath?: string;
+    destinationName?: string;
+  }>;
+};
+
+function readJson<T>(path: string): T {
+  expect(
+    existsSync(path),
+    `Required contract artifact is missing: ${relative(repositoryRoot, path)}`,
+  ).toBe(true);
+  return JSON.parse(readFileSync(path, "utf8")) as T;
+}
+
+function productionTypeScriptFiles(directory: string): string[] {
+  if (!existsSync(directory)) return [];
+
+  return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    const path = join(directory, entry.name);
+    if (entry.isDirectory()) {
+      return /^(?:__tests__|test|tests|fixtures)$/.test(entry.name)
+        ? []
+        : productionTypeScriptFiles(path);
+    }
+
+    return /\.(?:ts|tsx)$/.test(entry.name) &&
+      !/\.(?:test|spec)\.(?:ts|tsx)$/.test(entry.name)
+      ? [path]
+      : [];
+  });
+}
+
+function importSpecifiers(source: string): string[] {
+  const specifiers: string[] = [];
+  const pattern =
+    /(?:\b(?:import|export)\s+(?:[\s\S]*?\s+from\s+)?|\bimport\s*\(|\brequire\s*\()\s*["']([^"']+)["']/g;
+  for (const match of source.matchAll(pattern)) specifiers.push(match[1]);
+  return specifiers;
+}
+
+describe("Mastery engine v2 mechanical import contract", () => {
+  it.each(packages)(
+    "discovers $name with its approved name and export surface",
+    (pkg) => {
+      const manifestPath = join(
+        repositoryRoot,
+        "packages",
+        pkg.directory,
+        "package.json",
+      );
+      const manifest = readJson<PackageManifest>(manifestPath);
+
+      expect(manifest.name).toBe(pkg.name);
+      expect(manifest.type).toBe("module");
+      expect(Object.keys(manifest.exports ?? {}).sort()).toEqual(
+        [...pkg.exportKeys].sort(),
+      );
+      expect(manifest.exports?.["."]).toBeDefined();
+
+      for (const [dependency, version] of Object.entries(
+        manifest.dependencies ?? {},
+      )) {
+        expect(
+          allowedProductionDependencies.has(dependency),
+          `${pkg.name} has non-neutral dependency ${dependency}`,
+        ).toBe(true);
+        if (dependency.startsWith("@reading-advantage/"))
+          expect(version).toBe("workspace:*");
+      }
+    },
+  );
+
+  it("records frozen source provenance and normalized mechanical transformations", () => {
+    const provenance = readJson<ProvenanceArtifact>(provenancePath);
+
+    expect(provenance.source).toEqual({
+      repository: "/home/daniel-bo/Desktop/ra-math-advantage",
+      commit: "3e0b3517c42cfe0b603295a1ec48548505617169",
+    });
+    expect(provenance.transformations).toEqual(
+      expect.arrayContaining([
+        "package-scope",
+        "workspace-dependency-syntax",
+        "import-specifiers",
+        "build-output-and-exports",
+        "workspace-configuration",
+      ]),
+    );
+    expect(provenance.packages).toHaveLength(packages.length);
+
+    for (const pkg of packages) {
+      expect(provenance.packages).toContainEqual(
+        expect.objectContaining({
+          sourcePath: `packages/${pkg.directory}`,
+          sourceTree: pkg.sourceTree,
+          destinationPath: `packages/${pkg.directory}`,
+          destinationName: pkg.name,
+        }),
+      );
+    }
+  });
+
+  it.each(packages)(
+    "keeps $name production imports framework and provider neutral",
+    (pkg) => {
+      const packageRoot = join(repositoryRoot, "packages", pkg.directory);
+      expect(
+        existsSync(packageRoot),
+        `Destination package is missing: packages/${pkg.directory}`,
+      ).toBe(true);
+
+      for (const path of productionTypeScriptFiles(join(packageRoot, "src"))) {
+        const source = readFileSync(path, "utf8");
+        expect(source).not.toMatch(/\bprocess\.env\b|\bimport\.meta\.env\b/);
+
+        for (const specifier of importSpecifiers(source)) {
+          expect(
+            forbiddenImport.test(specifier),
+            `${relative(repositoryRoot, path)} imports forbidden module ${specifier}`,
+          ).toBe(false);
+          if (specifier.startsWith(".")) {
+            expect(
+              extname(specifier),
+              `${relative(repositoryRoot, path)} must use a .js ESM import for ${specifier}`,
+            ).toBe(".js");
+          }
+        }
+      }
+    },
+  );
+});
