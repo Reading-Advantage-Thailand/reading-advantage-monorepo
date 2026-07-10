@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Phase S3 adversarial acceptance passes. The focused Red-to-Green oracle exercises the former review failures directly: cross-school and actor mismatch, null tenant, cross-owner and owner-chain foreign keys, immutable retarget protection, caller digest spoofing, concurrent duplicate replay, stale CAS, mid-transaction rollback, malformed inputs, calibration release gates, provider error mapping, natural uniqueness, and snapshot/journal drift.",
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "evidence": [
+    "The remediation Red oracle began with 42 audited failures and 13 passing controls across five new test files; every failure is now Green without removing the protected behavior.",
+    "mastery-persistence-drizzle-adversarial.test.ts proves bound authority, actual TenantDB reuse, immutable identities, rollback, concurrent applied/replayed receipts, stale conflicts, and portable provider failures.",
+    "mastery-persistence-tenant-adversarial.test.ts proves PostgreSQL/PGlite composite user, card, review, and evidence ownership constraints with same-school controls.",
+    "mastery-persistence-remediation-contract.test.ts proves canonical schemas, internally derived digests, identifier parity, calibration invariants, and retryable errors.",
+    "mastery-persistence-migration-repro.test.ts proves restored natural uniqueness and the 0026-0028 migration/snapshot/journal chain."
+  ],
+  "commands": [
+    "TZ=UTC vitest run packages/domain/src/__tests__/mastery-persistence-drizzle-adversarial.test.ts packages/domain/src/__tests__/mastery-persistence-remediation-contract.test.ts packages/domain/src/__tests__/mastery-persistence-transaction.test.ts --maxWorkers=1",
+    "TZ=UTC vitest run packages/db/src/__tests__/mastery-persistence-tenant-adversarial.test.ts packages/db/src/__tests__/mastery-persistence-migration-repro.test.ts --maxWorkers=1"
+  ],
+  "changed_files": [],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}

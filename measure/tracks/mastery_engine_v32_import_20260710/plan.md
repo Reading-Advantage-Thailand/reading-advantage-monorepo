@@ -131,10 +131,15 @@ _Story ref: spec.md#story-s3_
     user/card/review ownership constraints, internally canonicalized digests,
     complete calibration governance evidence, reconstructed 0026/0027 snapshots,
     and a non-destructive 0028 tenant-hardening migration.
-Review follow-up required before Phase S3 acceptance:
+- [x] Task: Re-run Phase S3 reviews and acceptance — `bc582c80`, `d6b8be6f`, `4565377b`, `636cc09c`
   - [ ] Re-run correctness, security/boundary, and API/DX audit roles until all pass
   - [ ] Run phase acceptance and adversarial gates; record browser review as not
     applicable only because this phase exposes no user-facing route or component
+
+  - Final acceptance: all three independent re-audits pass with no blocker;
+    phase acceptance and adversarial mechanical gates pass. The UX audit proves
+    browser review is not applicable from `38` track-owned paths with zero app,
+    route, page, component, style, or React/Next changes.
 
 ## Phase S4: Establish runtime governance
 _Story ref: spec.md#story-s4_
