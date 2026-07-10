@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "status": "fail",
+  "summary": "Phase S3 has strong provider-neutral schemas, seven FLAT registrations, atomic Drizzle writes, green focused gates, and a currently valid SQL/journal ledger, but it is not boundary-safe or future-generation-safe. A tenant-bound adapter can read another school, owner foreign keys permit a school A mastery row to reference a school B student, the production Drizzle adapter does not implement the transaction-orchestration interface tested for no-evidence/concurrency/rollback, idempotency trusts a caller-supplied non-canonical digest, required placement/calibration uniqueness was removed by weakening the Red schema test, and no 0027 Drizzle snapshot is tracked.",
+  "blocking_findings": [
+    "High - Tenant authority and owner FK bypass: DrizzleMasteryPersistenceOptions.tenantDb is optional unknown and the constructor discards it at drizzle-mastery-persistence.ts:243-249; reads and writes use raw DB plus caller-supplied schoolId. PGlite proved that an adapter constructed with TenantDB bound to school A reads a school B card (BOUND_A_READ_B_CARD_COUNT=1), and that mastery_cards accepts school A with a users row owned by school B (CROSS_OWNER_INSERT_SUCCEEDED). The seven tables use independent schoolId/studentId FKs rather than composite (school_id, student_id) owner protection. Bind the adapter to authenticated TenantDB/Tenant context, reject input school mismatch, route all FLAT operations through TenantDB, and add composite owner constraints or equivalent transactional owner checks with adversarial tests.",
+    "High - Real persistence is disconnected from atomic orchestration: the real adapters implement MasteryPersistencePort (persistence-ports.ts:33-50), while exported commitMasteryEvidence requires MasteryTransactionalPersistence/MasteryEvidenceTransaction (commit-evidence.ts:142-167). The transaction suite uses only TransactionalPersistenceDouble, so real PGlite/Drizzle never executes required concurrent duplicate, retryable stale conflict, no-evidence, rollback, or calibration orchestration cases. Unify the interfaces or implement the transaction port over Drizzle and run the adversarial matrix against it, including typed retryable serialization handling.",
+    "High - Idempotency digest is caller asserted, not payload bound: persistence-contracts.ts:151-212 accepts any `sha256:[A-Za-z0-9._:-]+`; both adapters compare only that supplied string, and resultDigest is set equal to requestDigest (in-memory-mastery-persistence.ts:198-250; drizzle-mastery-persistence.ts:332-358,623-645). Canonical hashing exists only in the disconnected orchestration. A changed payload can reuse the same key and asserted digest and silently replay. Compute a canonical request digest inside the trusted boundary, require sha256 plus 64 lowercase hex, compute a separate result digest, and add changed-payload/same-asserted-digest tests against both adapters.",
+    "High - Green weakened approved natural uniqueness contracts: baseline 257c39fd required mastery placement uniqueness by school/student/objective/graphRelease/evidenceType and calibration uniqueness by school/domain/ageBand/paramsVersion, matching strategy lines 71-80. Commit 08e942a2 changed both schema test uniqueNames arrays to empty; schema/mastery.ts and 0027 SQL omit the constraints. Resolve whether placement/calibration are optional per commit and retain the approved uniqueness, or amend strategy/spec through product review before changing Red expectations.",
+    "High - Current ledger is valid but future Drizzle generation is unreproducible: 0027 SQL, journal, sentinel, PGlite application, and drizzle-kit check pass, but git ls-tree HEAD for drizzle/meta ends at 0025_snapshot.json. The working tree has an unrelated untracked 0026 snapshot and no 0027 snapshot. The test at mastery-persistence-schema.test.ts:283-286 claims to require a generated snapshot but only checks schema/mastery.ts exists. Coordinate and commit valid 0026/0027 snapshots with correct prevId chain, add journal-to-snapshot parity/table checks, and prove clean-checkout generation emits no duplicate 0026/0027 DDL."
+  ],
+  "nonblocking_findings": [
+    "Medium - Runtime ID schemas use a general 1-256 character identifier while all seven DB primary keys are uuid, so in-memory accepts IDs Drizzle rejects. Align Zod and storage types and add shared invalid-ID parity cases.",
+    "Medium - Focused coverage passed 39/39 with 91.70% statements, 91.89% lines, and 98.21% functions, but branch coverage is 77.47%, below the greater-than-80-percent track target. Missing branches include provider-error and CAS paths central to S3.",
+    "Low - git diff --check reports extra EOF blank lines in persistence-contracts.ts and persistence-ports.ts.",
+    "Infrastructure - Live migration-ledger verification with --check --required-migration 0027_mastery_persistence is unavailable because DIRECT_DATABASE_URL and DATABASE_URL are unset. Offline journal, sentinel, schema, PGlite, and drizzle-kit checks passed."
+  ],
+  "evidence": [
+    "Story S3 requires tenant ownership to prevent cross-school mutation and explicit owner-FK behavior (spec.md lines 47-56).",
+    "All seven mastery tables are registered FLAT in tenant-registry.ts lines 119-126; classification coverage itself is green.",
+    "Focused schema/adapter/tenant/journal run passed 6 files and 76 tests.",
+    "Focused persistence coverage run passed 3 files and 39 tests with 91.70% statements and 77.47% branches.",
+    "DB build, DB noEmit type-check, domain check-types, DB lint, domain lint, and drizzle-kit check all exited 0; lint reported only warnings.",
+    "PGlite live probe: TenantDB-bound school A adapter read one school B card.",
+    "PGlite live probe: school A mastery_cards row referencing a school B student inserted successfully.",
+    "Current 0027 SQL/journal/sentinel application is valid offline; the snapshot finding is limited to future generation reproducibility.",
+    "Provider-neutral boundary scan found Drizzle/DB imports only in the dedicated Drizzle adapter and no React/Next/network/environment coupling in the new persistence core."
+  ],
+  "commands": [
+    "PASS - TZ=UTC Vitest focused mastery in-memory, Drizzle, transaction, schema, tenant coverage, and journal integrity: 6 files, 76 tests.",
+    "PASS - TZ=UTC focused persistence coverage: 3 files, 39 tests; 91.70% statements, 77.47% branches, 98.21% functions, 91.89% lines.",
+    "PASS - pnpm --filter @reading-advantage/db build.",
+    "PASS - node node_modules/typescript/bin/tsc -p packages/db/tsconfig.build.json --noEmit.",
+    "PASS - pnpm --filter @reading-advantage/domain check-types.",
+    "PASS - pnpm --filter @reading-advantage/db lint with 9 warnings and no errors; warnings include unrelated dirty files.",
+    "PASS - pnpm --filter @reading-advantage/domain lint with 21 warnings and no errors; warnings are outside the Phase S3 diff.",
+    "PASS - pnpm --dir packages/db exec drizzle-kit check --config drizzle.config.ts: Everything's fine.",
+    "FAIL CONTRACT - PGlite tenant probe createDrizzleMasteryPersistence bound to school A then readSnapshot school B: BOUND_A_READ_B_CARD_COUNT=1.",
+    "FAIL CONTRACT - PGlite owner probe inserted mastery_cards school A with student owned by school B: CROSS_OWNER_INSERT_SUCCEEDED.",
+    "INFRASTRUCTURE UNAVAILABLE - migration-ledger-doctor --check --required-migration 0027_mastery_persistence: database URLs unset.",
+    "STYLE WARNING - git diff --check 257c39fd..f005e0fc over S3 paths found two EOF blank-line warnings."
+  ],
+  "changed_files": [
+    "measure/tracks/mastery_engine_v32_import_20260710/phase-s3-review-boundaries.json"
+  ],
+  "test_strategy_violations": [
+    "Strategy lines 107-122 require real transaction/concurrency/tenant assertions with shared Drizzle acceptance; transaction tests use only TransactionalPersistenceDouble and the real adapter implements a different interface.",
+    "Strategy lines 77-78 require natural placement and calibration uniqueness; Green changed the baseline Red test expectations to empty arrays without an approved strategy change.",
+    "Strategy lines 113-114 require TenantDB cross-school denial and missing-tenant fail-closed behavior; the adapter discards tenantDb and trusts input.schoolId.",
+    "Strategy lines 128 and 142-145 require a generated/reviewed migration; no 0027 snapshot exists and the purported snapshot guard never checks metadata.",
+    "Strategy and spec require greater-than-80-percent coverage; focused branch coverage is 77.47%."
+  ],
+  "live_contract_violations": [
+    "A Drizzle adapter supplied a TenantDB bound to school A can read school B records.",
+    "PostgreSQL/PGlite accepts a school A mastery record whose student owner belongs to school B.",
+    "The adapter idempotency contract does not bind the request digest to the validated record payload."
+  ],
+  "prod_wiring_violations": [
+    "No production Drizzle implementation satisfies MasteryTransactionalPersistence, so the exported no-evidence/rollback/concurrency orchestration is tested only against a bespoke double and cannot be composed with createDrizzleMasteryPersistence."
+  ],
+  "route_parity_violations": [],
+  "retry_recommendation": "retry_implementation",
+  "confidence": "high"
+}

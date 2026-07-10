@@ -107,6 +107,22 @@ _Story ref: spec.md#story-s3_
     is not applicable to this package-only phase; user-facing browser
     acceptance remains mandatory for Tracks 2–5.
 
+- [~] Task: Remediate failed Phase S3 independent reviews
+  - [ ] Unify the public orchestration and adapter contracts and prove the real
+    Drizzle path with PGlite transaction, rollback, CAS, retry, and replay tests
+  - [ ] Bind persistence to an authenticated school and enforce student owner
+    identity plus immutable card/state natural keys at the database boundary
+  - [ ] Canonicalize request/result digests, align identifier contracts, and
+    preserve provider-neutral infrastructure/retry error semantics
+  - [ ] Carry calibration release evidence and restore the frozen placement and
+    calibration uniqueness contracts across schema, migration, and tests
+  - [ ] Add reproducible 0026/0027 Drizzle snapshots, DB-free public imports,
+    exact cross-adapter parity, complete graph coverage, and >80% branch coverage
+- [~] Task: Re-run Phase S3 reviews and acceptance
+  - [ ] Re-run correctness, security/boundary, and API/DX audit roles until all pass
+  - [ ] Run phase acceptance and adversarial gates; record browser review as not
+    applicable only because this phase exposes no user-facing route or component
+
 ## Phase S4: Establish runtime governance
 _Story ref: spec.md#story-s4_
 
