@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "W1 passes final acceptance: Astral Mage and The Sorcerer's Ziggurat are distinct Phaser 4 cartridges with deterministic sentence mechanics, dual editions, stable educational contracts, consuming-host proofs, browser-visible keyboard and touch completion, and explicit product-owner approval.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "measure/doctor.sh still reports deprecated task markers in unrelated concurrent Codecamp and TypeScript 7 tracks.",
+    "The five APK cartridges remain QC/typed-host proven; authenticated student-route mounting and server-owned persistence belong to the successor Arcade Host track."
+  ],
+  "evidence": [
+    "c378c3cc implements both sentence-action cartridges and their reusable mechanic families.",
+    "fe74db01 records the implementation checkpoint and automated verification evidence.",
+    "6ca2220c records explicit product-owner approval.",
+    "Game-cartridges tests passed 55/55 with 96.34% statement and 97.03% line coverage overall.",
+    "Reading host smoke passed 9/9; Primary package run passed 65/65 including the host smoke.",
+    "Advantage focused Jest passed 11/11 and the production type-check/build passed with /qc emitted.",
+    "Chromium APK QC passed 6/6, including real keyboard and 390x844 touchscreen completion for both W1 games.",
+    "Mandatory change-quality review found no remaining Critical or High findings."
+  ],
+  "commands": [
+    "pnpm --filter @reading-advantage/game-cartridges test:coverage",
+    "pnpm --filter @reading-advantage/game-cartridges lint",
+    "pnpm --filter @reading-advantage/game-cartridges check-types",
+    "pnpm --filter @reading-advantage/game-cartridges build",
+    "pnpm --filter @reading-advantage/game-contracts check:architecture",
+    "pnpm --filter vocabulary-games exec jest src/features/apk-qc/APKQCLab.test.tsx src/lib/gameCards.test.ts src/app/page.test.tsx --runInBand",
+    "pnpm --filter reading-advantage test -- --runInBand lib/games/apk-host-smoke.test.ts",
+    "pnpm --filter primary-advantage test -- lib/games/apk-host-smoke.test.ts",
+    "pnpm exec playwright test tests/e2e/apk-qc.spec.ts --project=chromium",
+    "CI=true pnpm --filter vocabulary-games exec playwright test tests/e2e/apk-qc.spec.ts --project=chromium --grep 'completes both new cartridges'",
+    "pnpm --filter vocabulary-games check-types",
+    "pnpm --filter vocabulary-games build"
+  ],
+  "changed_files": [
+    "packages/game-cartridges/src/cartridges/astral-mage/",
+    "packages/game-cartridges/src/cartridges/sorcerer-ziggurat/",
+    "packages/game-cartridges/src/families/target-action/",
+    "packages/game-cartridges/src/families/isometric-step-graph/",
+    "apps/advantage-games/src/features/apk-qc/",
+    "apps/advantage-games/tests/e2e/apk-qc.spec.ts",
+    "apps/reading-advantage/lib/games/apk-host-smoke.ts",
+    "apps/primary-advantage/lib/games/apk-host-smoke.ts"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}

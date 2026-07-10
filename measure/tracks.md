@@ -57,10 +57,6 @@ Two parallel programs are in flight; priority order when picking the next track:
 
 ---
 
-## Advantage Play Kit Program (created 2026-07-10)
-
-- [~] **Track: APK Incomplete Sentence Action W1** *Link: [./tracks/apk_incomplete_sentence_action_20260710/](./tracks/apk_incomplete_sentence_action_20260710/)*
-  Build the zero-implementation Astral Mage and The Sorcerer's Ziggurat catalog entries as distinctive Phaser 4 sentence cartridges; establish reusable target-action and isometric-step families; prove both editions and consuming hosts; and replace their dead coming-soon links with QC-testbed deep links without widening the stable educational ABI.
 
 ---
 
@@ -91,6 +87,9 @@ Two parallel programs are in flight; priority order when picking the next track:
 ---
 
 ## Archived Tracks
+
+- [x] **Track: APK Incomplete Sentence Action W1** *Link: [./archive/apk_incomplete_sentence_action_20260710/](./archive/apk_incomplete_sentence_action_20260710/)*
+  Archived 2026-07-10 after product-owner approval. Delivered Astral Mage target action and The Sorcerer's Ziggurat isometric traversal as Phaser 4 cartridges, dual-edition and Reading/Primary host proofs, real keyboard and mobile-touch QC, and playable Advantage Games QC deep links while preserving the stable sentence/result ABI. Authenticated production hosting remains successor-owned.
 
 - [x] **Track: Phaser 4 Advantage Play Kit** *Link: [./archive/advantage_play_kit_20260710/](./archive/advantage_play_kit_20260710/)*
   Archived 2026-07-10 after product-owner QC approval. Delivered the frozen educational I/O ABI, Phaser 4 runtime, Primary Chibi and Secondary Epic edition seam, three representative cartridges, the Advantage Games QC testbed, and Reading/Primary package-consumption proofs. Product public IDs, all-game host registries, and exact legacy deletion evidence continue in `apk_catalog_cutover_w0_20260710`.
