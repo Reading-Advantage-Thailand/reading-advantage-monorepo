@@ -119,12 +119,19 @@ function masterySnapshotKeys(snapshot: Snapshot): string[] {
 
 function tableMetadataNames(table: PgTable): string[] {
   const config = getTableConfig(table);
-  return [
+  const names = [
+    ...config.columns
+      .filter(({ isUnique }) => isUnique)
+      .map(({ uniqueName }) => uniqueName),
     ...config.uniqueConstraints.map(({ name }) => name),
     ...config.foreignKeys.map((foreignKey) => foreignKey.getName()),
     ...config.checks.map(({ name }) => name),
     ...config.indexes.map(({ config: indexConfig }) => indexConfig.name),
-  ].sort();
+  ];
+
+  return names
+    .filter((name): name is string => typeof name === "string")
+    .sort();
 }
 
 function snapshotMetadataNames(table: SnapshotTable): string[] {
@@ -208,6 +215,21 @@ describe("Phase S3 remediation: migration ledger controls", () => {
     expect(masterySnapshotKeys(snapshot27)).toEqual(
       MASTERY_TABLES.map((table) => `public.${getTableConfig(table).name}`).sort(),
     );
+  });
+
+  it("preserves the 0026 leaderboards NOT NULL post-state in 0027 metadata", () => {
+    const path26 = snapshotPath(26);
+    const path27 = snapshotPath(27);
+    expect(existsSync(path26), "historical 0026 snapshot missing").toBe(true);
+    expect(existsSync(path27), "historical 0027 snapshot missing").toBe(true);
+    if (!existsSync(path26) || !existsSync(path27)) return;
+
+    const snapshot26 = readJson<Snapshot>(path26);
+    const snapshot27 = readJson<Snapshot>(path27);
+    const leaderboard26 = snapshot26.tables["public.leaderboards"];
+    const leaderboard27 = snapshot27.tables["public.leaderboards"];
+    expect(leaderboard26?.columns.school_id).toMatchObject({ notNull: true });
+    expect(leaderboard27?.columns.school_id).toMatchObject({ notNull: true });
   });
 
   it("adds one 0028 tenant-hardening journal/SQL/snapshot triplet", () => {

@@ -22,29 +22,37 @@ export const schools = pgTable("schools", {
 
 // ─── Users ────────────────────────────────────────────────
 
-export const users = pgTable("users", {
-  id: text("id").primaryKey(),
-  username: text("username").notNull().unique(),
-  displayUsername: text("display_username").notNull().unique(),
-  name: text("name"),
-  email: text("email"),
-  image: text("image"),
-  githubUsername: text("github_username").unique(),
-  role: roleEnum("role").default("STUDENT").notNull(),
-  schoolId: uuid("school_id").references(() => schools.id),
-  // FK to licenses.id — declared as plain text to avoid circular import (licenses.ts → users.ts)
-  licenseId: text("license_id"),
-  expiredDate: timestamp("expired_date"),
-  xp: integer("xp").default(0).notNull(),
-  level: integer("level").default(1).notNull(),
-  cefrLevel: text("cefr_level").default("A1-").notNull(),
-  gradeLevel: integer("grade_level"),
-  // Prisma-ported columns (track: primary_advantage_drizzle_migration_20260526, Phase 1)
-  password: text("password"),
-  emailVerified: timestamp("email_verified"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
-});
+/** First-party account with optional school ownership for global SYSTEM users. */
+export const users = pgTable(
+  "users",
+  {
+    id: text("id").primaryKey(),
+    username: text("username").notNull().unique(),
+    displayUsername: text("display_username").notNull().unique(),
+    name: text("name"),
+    email: text("email"),
+    image: text("image"),
+    githubUsername: text("github_username").unique(),
+    role: roleEnum("role").default("STUDENT").notNull(),
+    schoolId: uuid("school_id").references(() => schools.id),
+    // FK to licenses.id — declared as plain text to avoid circular import (licenses.ts → users.ts)
+    licenseId: text("license_id"),
+    expiredDate: timestamp("expired_date"),
+    xp: integer("xp").default(0).notNull(),
+    level: integer("level").default(1).notNull(),
+    cefrLevel: text("cefr_level").default("A1-").notNull(),
+    gradeLevel: integer("grade_level"),
+    // Prisma-ported columns (track: primary_advantage_drizzle_migration_20260526, Phase 1)
+    password: text("password"),
+    emailVerified: timestamp("email_verified"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  },
+  (table) => [
+    // Enables nullable-user-safe composite ownership from school-owned tables.
+    unique("users_school_id_id_unique").on(table.schoolId, table.id),
+  ],
+);
 
 // ─── Accounts ─────────────────────────────────────────────
 

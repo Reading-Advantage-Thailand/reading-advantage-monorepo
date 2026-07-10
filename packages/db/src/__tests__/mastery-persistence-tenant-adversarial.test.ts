@@ -32,11 +32,12 @@ interface Journal {
 
 type TestDatabase = ReturnType<typeof drizzle<typeof schema>>;
 
-function migrationScripts(): string[] {
+function migrationScripts(maximumIndex = Number.POSITIVE_INFINITY): string[] {
   const journal = JSON.parse(
     readFileSync(join(MIGRATIONS_ROOT, "meta/_journal.json"), "utf8"),
   ) as Journal;
   return journal.entries
+    .filter(({ idx }) => idx <= maximumIndex)
     .map(({ tag }) => {
       const source = readFileSync(join(MIGRATIONS_ROOT, `${tag}.sql`), "utf8");
       // PGlite cannot load pgcrypto. This matches the established domain PGlite
@@ -100,6 +101,26 @@ async function seedOwners(db: TestDatabase): Promise<void> {
       schoolId: SCHOOL_B,
     },
   ]);
+}
+
+async function expectPostgresCode(
+  operation: Promise<unknown>,
+  expectedCode: "23503" | "23505",
+  redReason: string,
+): Promise<void> {
+  try {
+    await operation;
+    throw new Error(`${redReason}: operation unexpectedly succeeded`);
+  } catch (error) {
+    const codes = new Set<unknown>();
+    let current: unknown = error;
+    for (let depth = 0; depth < 5 && current && typeof current === "object"; depth += 1) {
+      const record = current as { code?: unknown; cause?: unknown };
+      codes.add(record.code);
+      current = record.cause;
+    }
+    expect(codes, redReason).toContain(expectedCode);
+  }
 }
 
 function cardValues({
@@ -228,12 +249,13 @@ describe("Phase S3 remediation: physical tenant ownership", () => {
   });
 
   it("rejects a school-A mastery card owned by a school-B user", async () => {
-    await expect(
+    await expectPostgresCode(
       db.insert(schema.masteryCards).values(
         cardValues({ schoolId: SCHOOL_A, studentId: STUDENT_B }),
       ),
+      "23503",
       "RED S3-CORRECTNESS-002: (school_id, student_id) must reference users(school_id, id)",
-    ).rejects.toThrow(/foreign key|23503|users_school/i);
+    );
   });
 
   it("control: accepts a mastery card whose user belongs to the same school", async () => {
@@ -244,29 +266,31 @@ describe("Phase S3 remediation: physical tenant ownership", () => {
 
   it("rejects a review whose student differs from the referenced card owner", async () => {
     await db.insert(schema.masteryCards).values(cardValues());
-    await expect(
+    await expectPostgresCode(
       db.insert(schema.masteryReviews).values(
         reviewValues({ studentId: STUDENT_A2 }),
       ),
+      "23503",
       "RED owner-chain: review must reference (school_id, card_id, student_id)",
-    ).rejects.toThrow(/foreign key|23503|school_card_student/i);
+    );
   });
 
   it("rejects evidence whose student differs from the referenced review owner", async () => {
     await db.insert(schema.masteryCards).values(cardValues());
     await db.insert(schema.masteryReviews).values(reviewValues());
-    await expect(
+    await expectPostgresCode(
       db.insert(schema.masteryEvidence).values(
         evidenceValues({ studentId: STUDENT_A2 }),
       ),
+      "23503",
       "RED owner-chain: evidence must reference (school_id, review_id, student_id)",
-    ).rejects.toThrow(/foreign key|23503|school_review_student/i);
+    );
   });
 
   it("prevents an existing card owner from changing while reviews reference it", async () => {
     await db.insert(schema.masteryCards).values(cardValues());
     await db.insert(schema.masteryReviews).values(reviewValues());
-    await expect(
+    await expectPostgresCode(
       db
         .update(schema.masteryCards)
         .set({ studentId: STUDENT_A2 })
@@ -276,8 +300,9 @@ describe("Phase S3 remediation: physical tenant ownership", () => {
             eq(schema.masteryCards.id, cardValues().id),
           ),
         ),
+      "23503",
       "RED immutable owner chain: referenced card student identity cannot be retargeted",
-    ).rejects.toThrow(/foreign key|23503|school_card_student/i);
+    );
   });
 
   it("control: enforces FK-safe card-before-review write order", async () => {
@@ -369,4 +394,43 @@ describe("Phase S3 remediation: physical tenant ownership", () => {
       "RED S3-CORRECTNESS-006: duplicate calibration natural key must be rejected",
     ).rejects.toThrow(/unique|duplicate|23505|calibration/i);
   });
+});
+
+describe("Phase S3 remediation: fail-closed 0028 preflight", () => {
+  it("preserves invalid rows and applies no constraints when ownership preflight fails", async () => {
+    const client = new PGlite();
+    const db = drizzle(client, { schema });
+    try {
+      for (const migration of migrationScripts(27)) {
+        await client.exec(migration);
+      }
+      await seedOwners(db);
+      await db.insert(schema.masteryCards).values(
+        cardValues({ schoolId: SCHOOL_A, studentId: STUDENT_B }),
+      );
+
+      const hardening = readFileSync(
+        join(MIGRATIONS_ROOT, "0028_mastery_tenant_hardening.sql"),
+        "utf8",
+      );
+      await expect(client.exec(hardening)).rejects.toThrow(
+        /mastery tenant hardening blocked/i,
+      );
+
+      const cards = await db
+        .select({ id: schema.masteryCards.id })
+        .from(schema.masteryCards)
+        .where(eq(schema.masteryCards.id, cardValues().id));
+      expect(cards).toEqual([{ id: cardValues().id }]);
+
+      const constraint = await db.execute(sql.raw(`
+        SELECT conname
+        FROM pg_constraint
+        WHERE conname = 'users_school_id_id_unique'
+      `));
+      expect(constraint.rows).toEqual([]);
+    } finally {
+      await client.close();
+    }
+  }, 120_000);
 });

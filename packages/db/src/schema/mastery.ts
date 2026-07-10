@@ -23,9 +23,7 @@ export const masteryCards = pgTable(
     schoolId: uuid("school_id")
       .notNull()
       .references(() => schools.id, { onDelete: "cascade" }),
-    studentId: text("student_id")
-      .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
+    studentId: text("student_id").notNull(),
     objectiveId: text("objective_id").notNull(),
     variantKey: text("variant_key").notNull(),
     stability: real("stability").notNull(),
@@ -48,12 +46,22 @@ export const masteryCards = pgTable(
   },
   (table) => [
     unique("mastery_cards_school_id_unique").on(table.schoolId, table.id),
+    unique("mastery_cards_school_id_student_id_unique").on(
+      table.schoolId,
+      table.id,
+      table.studentId,
+    ),
     unique("mastery_cards_school_student_objective_variant_unique").on(
       table.schoolId,
       table.studentId,
       table.objectiveId,
       table.variantKey,
     ),
+    foreignKey({
+      name: "mastery_cards_school_student_fk",
+      columns: [table.schoolId, table.studentId],
+      foreignColumns: [users.schoolId, users.id],
+    }).onDelete("cascade"),
     check(
       "mastery_cards_numeric_bounds_check",
       sql`${table.stability} >= 0 AND ${table.difficulty} >= 0 AND ${table.difficulty} <= 10 AND ${table.elapsedDays} >= 0 AND ${table.scheduledDays} >= 0 AND ${table.reps} >= 0 AND ${table.lapses} >= 0 AND ${table.revision} >= 0 AND ${table.state} IN ('new', 'learning', 'review', 'relearning')`,
@@ -79,9 +87,7 @@ export const masteryReviews = pgTable(
       .notNull()
       .references(() => schools.id, { onDelete: "cascade" }),
     cardId: uuid("card_id").notNull(),
-    studentId: text("student_id")
-      .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
+    studentId: text("student_id").notNull(),
     submissionId: text("submission_id").notNull(),
     rating: text("rating").notNull(),
     evidenceJson: jsonb("evidence_json")
@@ -101,15 +107,29 @@ export const masteryReviews = pgTable(
   },
   (table) => [
     unique("mastery_reviews_school_id_unique").on(table.schoolId, table.id),
+    unique("mastery_reviews_school_id_student_id_unique").on(
+      table.schoolId,
+      table.id,
+      table.studentId,
+    ),
     unique("mastery_reviews_school_card_submission_unique").on(
       table.schoolId,
       table.cardId,
       table.submissionId,
     ),
     foreignKey({
-      name: "mastery_reviews_school_card_fk",
-      columns: [table.schoolId, table.cardId],
-      foreignColumns: [masteryCards.schoolId, masteryCards.id],
+      name: "mastery_reviews_school_student_fk",
+      columns: [table.schoolId, table.studentId],
+      foreignColumns: [users.schoolId, users.id],
+    }).onDelete("cascade"),
+    foreignKey({
+      name: "mastery_reviews_school_card_student_fk",
+      columns: [table.schoolId, table.cardId, table.studentId],
+      foreignColumns: [
+        masteryCards.schoolId,
+        masteryCards.id,
+        masteryCards.studentId,
+      ],
     }).onDelete("cascade"),
     check(
       "mastery_reviews_rating_check",
@@ -137,9 +157,7 @@ export const masteryEvidence = pgTable(
       .notNull()
       .references(() => schools.id, { onDelete: "cascade" }),
     reviewId: uuid("review_id").notNull(),
-    studentId: text("student_id")
-      .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
+    studentId: text("student_id").notNull(),
     objectiveId: text("objective_id").notNull(),
     variantKey: text("variant_key").notNull(),
     sourceId: text("source_id").notNull(),
@@ -164,9 +182,18 @@ export const masteryEvidence = pgTable(
       table.evidenceOrdinal,
     ),
     foreignKey({
-      name: "mastery_evidence_school_review_fk",
-      columns: [table.schoolId, table.reviewId],
-      foreignColumns: [masteryReviews.schoolId, masteryReviews.id],
+      name: "mastery_evidence_school_student_fk",
+      columns: [table.schoolId, table.studentId],
+      foreignColumns: [users.schoolId, users.id],
+    }).onDelete("cascade"),
+    foreignKey({
+      name: "mastery_evidence_school_review_student_fk",
+      columns: [table.schoolId, table.reviewId, table.studentId],
+      foreignColumns: [
+        masteryReviews.schoolId,
+        masteryReviews.id,
+        masteryReviews.studentId,
+      ],
     }).onDelete("cascade"),
     check(
       "mastery_evidence_bounds_check",
@@ -193,9 +220,7 @@ export const masteryStates = pgTable(
     schoolId: uuid("school_id")
       .notNull()
       .references(() => schools.id, { onDelete: "cascade" }),
-    studentId: text("student_id")
-      .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
+    studentId: text("student_id").notNull(),
     objectiveId: text("objective_id").notNull(),
     masteryState: text("mastery_state").notNull(),
     masteryLevel: real("mastery_level").notNull(),
@@ -216,6 +241,11 @@ export const masteryStates = pgTable(
       table.studentId,
       table.objectiveId,
     ),
+    foreignKey({
+      name: "mastery_states_school_student_fk",
+      columns: [table.schoolId, table.studentId],
+      foreignColumns: [users.schoolId, users.id],
+    }).onDelete("cascade"),
     check(
       "mastery_states_bounds_check",
       sql`${table.masteryLevel} >= 0 AND ${table.masteryLevel} <= 1 AND ${table.liveRetention} >= 0 AND ${table.liveRetention} <= 1 AND ${table.evidenceConfidence} >= 0 AND ${table.evidenceConfidence} <= 1 AND ${table.revision} >= 0 AND ${table.masteryState} IN ('unseen', 'introduced', 'practicing', 'proficient', 'mastered')`,
@@ -239,9 +269,7 @@ export const masteryPlacements = pgTable(
     schoolId: uuid("school_id")
       .notNull()
       .references(() => schools.id, { onDelete: "cascade" }),
-    studentId: text("student_id")
-      .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
+    studentId: text("student_id").notNull(),
     objectiveId: text("objective_id").notNull(),
     masteryEstimate: real("mastery_estimate").notNull(),
     confidence: text("confidence").notNull(),
@@ -263,6 +291,18 @@ export const masteryPlacements = pgTable(
       .notNull(),
   },
   (table) => [
+    unique("mastery_placements_school_student_objective_release_type_unique").on(
+      table.schoolId,
+      table.studentId,
+      table.objectiveId,
+      table.graphRelease,
+      table.evidenceType,
+    ),
+    foreignKey({
+      name: "mastery_placements_school_student_fk",
+      columns: [table.schoolId, table.studentId],
+      foreignColumns: [users.schoolId, users.id],
+    }).onDelete("cascade"),
     check(
       "mastery_placements_bounds_check",
       sql`${table.masteryEstimate} >= 0 AND ${table.masteryEstimate} <= 1 AND ${table.confidence} IN ('low', 'medium', 'high')`,
@@ -309,6 +349,12 @@ export const masteryCalibrations = pgTable(
       .notNull(),
   },
   (table) => [
+    unique("mastery_calibrations_school_population_version_unique").on(
+      table.schoolId,
+      table.domain,
+      table.ageBand,
+      table.paramsVersion,
+    ),
     check(
       "mastery_calibrations_release_governance_check",
       sql`${table.reviewCount} >= 0 AND ${table.studentCount} >= 0 AND (NOT ${table.releaseEligible} OR (${table.volumeGatePassed} AND ${table.improvesIncumbent} AND ${table.humanReleaseApproved}))`,
@@ -329,9 +375,7 @@ export const masteryCommits = pgTable(
     schoolId: uuid("school_id")
       .notNull()
       .references(() => schools.id, { onDelete: "cascade" }),
-    studentId: text("student_id")
-      .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
+    studentId: text("student_id").notNull(),
     idempotencyKey: text("idempotency_key").notNull(),
     requestId: text("request_id").notNull(),
     actorId: text("actor_id").notNull(),
@@ -357,6 +401,11 @@ export const masteryCommits = pgTable(
       table.schoolId,
       table.idempotencyKey,
     ),
+    foreignKey({
+      name: "mastery_commits_school_student_fk",
+      columns: [table.schoolId, table.studentId],
+      foreignColumns: [users.schoolId, users.id],
+    }).onDelete("cascade"),
     check(
       "mastery_commits_status_check",
       sql`${table.status} = 'applied'`,

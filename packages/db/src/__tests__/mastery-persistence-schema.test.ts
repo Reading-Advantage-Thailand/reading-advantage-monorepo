@@ -42,6 +42,7 @@ const TABLES: readonly TableContract[] = [
       "revision", "created_at", "updated_at",
     ],
     uniqueNames: [
+      "mastery_cards_school_id_student_id_unique",
       "mastery_cards_school_id_unique",
       "mastery_cards_school_student_objective_variant_unique",
     ],
@@ -61,6 +62,7 @@ const TABLES: readonly TableContract[] = [
     ],
     uniqueNames: [
       "mastery_reviews_school_id_unique",
+      "mastery_reviews_school_id_student_id_unique",
       "mastery_reviews_school_card_submission_unique",
     ],
     checkNames: ["mastery_reviews_rating_check"],
@@ -109,7 +111,9 @@ const TABLES: readonly TableContract[] = [
       "seed_provenance_json",
       "replaced_by_direct_at", "placed_at", "created_at", "updated_at",
     ],
-    uniqueNames: [],
+    uniqueNames: [
+      "mastery_placements_school_student_objective_release_type_unique",
+    ],
     checkNames: ["mastery_placements_bounds_check"],
     indexNames: [
       "mastery_placements_school_student_objective_idx",
@@ -126,7 +130,7 @@ const TABLES: readonly TableContract[] = [
       "improves_incumbent", "human_release_approved", "release_eligible",
       "created_at", "updated_at",
     ],
-    uniqueNames: [],
+    uniqueNames: ["mastery_calibrations_school_population_version_unique"],
     checkNames: ["mastery_calibrations_release_governance_check"],
     indexNames: ["mastery_calibrations_school_population_idx"],
   },
@@ -209,12 +213,20 @@ describe.each(TABLES)("$sqlName Drizzle contract", (contract) => {
 });
 
 describe("Phase S3 school-scoped relationships", () => {
-  it("uses composite (school_id, parent_id) foreign keys for review and evidence ownership", () => {
+  it("uses composite school, parent, and student foreign keys for immutable ownership", () => {
     const expected = [
-      ["mastery_reviews_school_card_fk", "masteryReviews"],
-      ["mastery_evidence_school_review_fk", "masteryEvidence"],
+      [
+        "mastery_reviews_school_card_student_fk",
+        "masteryReviews",
+        ["school_id", "card_id", "student_id"],
+      ],
+      [
+        "mastery_evidence_school_review_student_fk",
+        "masteryEvidence",
+        ["school_id", "review_id", "student_id"],
+      ],
     ] as const;
-    for (const [foreignKeyName, exportName] of expected) {
+    for (const [foreignKeyName, exportName, columns] of expected) {
       const table = schemaExports[exportName] as PgTable | undefined;
       expect(table, `${exportName} is missing from the schema barrel`).toBeDefined();
       if (!table) continue;
@@ -224,13 +236,11 @@ describe("Phase S3 school-scoped relationships", () => {
       expect(foreignKey, `${foreignKeyName} is missing`).toBeDefined();
       if (!foreignKey) continue;
       const reference = foreignKey.reference();
-      expect(reference.columns.map(({ name }) => name)).toEqual([
-        "school_id",
-        exportName === "masteryReviews" ? "card_id" : "review_id",
-      ]);
+      expect(reference.columns.map(({ name }) => name)).toEqual(columns);
       expect(reference.foreignColumns.map(({ name }) => name)).toEqual([
         "school_id",
         "id",
+        "student_id",
       ]);
     }
   });
@@ -251,16 +261,19 @@ describe("Phase S3 tenant registry coverage", () => {
 });
 
 describe("Phase S3 generated migration", () => {
-  it("creates all seven tables and named constraints without destructive SQL", () => {
+  it("creates all seven tables and hardens named constraints without destructive SQL", () => {
     const migrationNames = readdirSync(MIGRATION_DIR).filter((name) =>
-      /^\d{4}_.*mastery.*persistence.*\.sql$/i.test(name),
+      /^\d{4}_.*mastery.*(?:persistence|tenant.*hardening).*\.sql$/i.test(name),
     );
     expect(
       migrationNames,
-      "generate one reviewed ####_*mastery*persistence*.sql migration",
-    ).toHaveLength(1);
-    if (migrationNames.length !== 1) return;
-    const sql = readFileSync(join(MIGRATION_DIR, migrationNames[0]!), "utf8");
+      "retain 0027 creation and add one reviewed 0028 tenant-hardening migration",
+    ).toHaveLength(2);
+    if (migrationNames.length !== 2) return;
+    const sql = migrationNames
+      .sort()
+      .map((name) => readFileSync(join(MIGRATION_DIR, name), "utf8"))
+      .join("\n");
 
     for (const contract of TABLES) {
       expect(sql, `migration must create ${contract.sqlName}`).toMatch(
@@ -274,8 +287,8 @@ describe("Phase S3 generated migration", () => {
         expect(sql, `migration must include ${name}`).toContain(name);
       }
     }
-    expect(sql).toContain("mastery_reviews_school_card_fk");
-    expect(sql).toContain("mastery_evidence_school_review_fk");
+    expect(sql).toContain("mastery_reviews_school_card_student_fk");
+    expect(sql).toContain("mastery_evidence_school_review_student_fk");
     expect(sql).not.toMatch(/\bDROP\s+(?:TABLE|COLUMN|SCHEMA|DATABASE|TYPE)\b/i);
     expect(sql).not.toMatch(/\bTRUNCATE\b|\bDELETE\s+FROM\b/i);
   });
@@ -283,5 +296,11 @@ describe("Phase S3 generated migration", () => {
   it("does not accept a hand-written migration without the generated schema snapshot", () => {
     const schemaSource = join(DB_ROOT, "src/schema/mastery.ts");
     expect(existsSync(schemaSource), "schema/mastery.ts must own the generated migration").toBe(true);
+    for (const index of [26, 27, 28]) {
+      expect(
+        existsSync(join(MIGRATION_DIR, "meta", `${index.toString().padStart(4, "0")}_snapshot.json`)),
+        `generated ${index.toString().padStart(4, "0")}_snapshot.json is required`,
+      ).toBe(true);
+    }
   });
 });

@@ -42,4 +42,5 @@ export const sentinelProbes: Record<string, SentinelProbe> = {
   "0025_review_jobs": { tag: "0025_review_jobs", kind: "table", target: "review_jobs" },
   "0026_game_completions": { tag: "0026_game_completions", kind: "table", target: "game_completions" },
   "0027_mastery_persistence": { tag: "0027_mastery_persistence", kind: "table", target: "mastery_commits" },
+  "0028_mastery_tenant_hardening": { tag: "0028_mastery_tenant_hardening", kind: "table", target: "mastery_cards" },
 };

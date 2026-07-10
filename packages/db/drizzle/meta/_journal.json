@@ -197,6 +197,13 @@
       "when": 1782700000002,
       "tag": "0027_mastery_persistence",
       "breakpoints": true
+    },
+    {
+      "idx": 28,
+      "version": "7",
+      "when": 1783689951727,
+      "tag": "0028_mastery_tenant_hardening",
+      "breakpoints": true
     }
   ]
 }
