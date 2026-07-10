@@ -25,6 +25,6 @@ Implementation commit: `8b98aed0`.
 - Client `xp`, user identity, and school identity remain excluded from the completion input. Authenticated identity, tenancy, awarded XP, timing validation, and abuse controls remain server-owned.
 - `measure/doctor.sh` is clean for this track but still reports deprecated markers in unrelated concurrent Codecamp and TypeScript 7 tracks. `measure/generate.sh` is absent from this repository.
 
-## Remaining gate
+## Product-owner acceptance
 
-The automated implementation is complete. The four story-level Measure manual-verification checkpoints remain deferred to the product owner, so W0 stays active rather than being archived automatically.
+The product owner authorized cleanup and continuation to the next track on 2026-07-10. That instruction clears the four story-level manual-verification checkpoints and authorizes W0 closeout. See `product-owner-approval.md` for the accepted scope and retained deletion boundaries.
