@@ -16,6 +16,7 @@ const ENGINE_DIRECTORIES = [
   "practice-core",
   "srs-engine",
 ] as const;
+const FORBIDDEN_LOCAL_DEPENDENCY_PROTOCOL = /^(?:workspace|file|link|portal):/;
 
 interface PackageJson {
   name: string;
@@ -59,6 +60,8 @@ async function executeLocal(
       CI: "true",
       npm_config_audit: "false",
       npm_config_fund: "false",
+      npm_config_ignore_scripts: "true",
+      npm_config_offline: "true",
     },
     maxBuffer: 20 * 1024 * 1024,
   });
@@ -77,7 +80,7 @@ function exportTargets(manifest: PackageJson): string[] {
   });
 }
 
-function workspaceReferences(manifest: PackageJson): string[] {
+function nonPublishableDependencyReferences(manifest: PackageJson): string[] {
   const sections = [
     manifest.dependencies,
     manifest.devDependencies,
@@ -86,7 +89,7 @@ function workspaceReferences(manifest: PackageJson): string[] {
   ];
   return sections.flatMap((section) =>
     Object.entries(section ?? {})
-      .filter(([, version]) => version.startsWith("workspace:"))
+      .filter(([, version]) => FORBIDDEN_LOCAL_DEPENDENCY_PROTOCOL.test(version))
       .map(([name, version]) => `${manifest.name}:${name}@${version}`),
   );
 }
@@ -246,12 +249,14 @@ export async function runReleaseArtifactCheck(): Promise<ReleaseArtifactCheckRes
         throw new Error(`${manifest.name} packed metadata changed name or version`);
       }
       assertExportTargets(packed.manifest, packed.paths);
-      workspaceDependencies.push(...workspaceReferences(packed.manifest));
+      workspaceDependencies.push(
+        ...nonPublishableDependencyReferences(packed.manifest),
+      );
       archives.set(manifest.name, archivePath);
     }
     if (workspaceDependencies.length > 0) {
       throw new Error(
-        `Packed artifacts retain workspace dependencies: ${workspaceDependencies.join(", ")}`,
+        `Packed artifacts retain non-publishable local dependencies: ${workspaceDependencies.join(", ")}`,
       );
     }
 
