@@ -33,10 +33,10 @@ export type CartridgeSemanticAsset = SemanticAsset;
 /** Public audience edition type shared with the APK runtime. */
 export type CartridgeEdition = RuntimeEdition;
 
-/** Manifest specialization for the three representative cartridges. */
+/** Manifest specialization for the three public APK cartridges. */
 export type CartridgeManifest = RuntimeCartridgeManifest & {
-  /** Stable representative cartridge identifier. */
-  id: "gate-runner" | "sentence-collector" | "typing-defense";
+  /** Stable product-facing cartridge identifier. */
+  id: "dragon-flight" | "dungeon-liberator" | "magic-defense";
   /** Educational input mode used by runtime validation. */
   inputMode: CartridgeContentMode;
   /** Phaser capability families demonstrated by this cartridge. */

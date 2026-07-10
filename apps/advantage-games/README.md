@@ -66,7 +66,7 @@ Games should expose this final XP value (e.g., via a callback prop like `onCompl
 
 ### Vocabulary Management
 
-Each game loads its vocabulary from a dedicated JSON file in the `public/vocab/` directory. This allows you to customize vocabulary for each game without rebuilding the application.
+Legacy games may load vocabulary from dedicated JSON files in `public/vocab/`. APK games instead receive the stable vocabulary or sentence arrays from their host, so a public fixture file is not required for Dragon Flight, Dungeon Liberator, or Magic Defense.
 
 #### File Structure
 
@@ -76,9 +76,7 @@ public/vocab/
 ├── enchanted-library.json # Word-based game
 ├── rune-match.json       # Word-based game
 ├── wizard-vs-zombie.json # Word-based game
-├── dragon-flight.json    # Word-based game
 ├── rpg-battle.json       # Word-based game
-├── magic-defense.json    # Word-based game
 ├── potion-rush.json      # Sentence-based game
 └── castle-defense.json   # Sentence-based game
 ```

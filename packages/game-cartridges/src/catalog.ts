@@ -3,27 +3,27 @@ import type {
   GameCartridgeDefinition,
 } from "./internal/types";
 
-/** Browser-safe representative cartridge metadata. */
+/** Browser-safe public APK cartridge metadata. */
 export const cartridgeCatalog = [
   {
-    id: "gate-runner",
-    title: "Sky Gate Sprint",
+    id: "dragon-flight",
+    title: "Dragon Flight",
     description: "Choose the correct translation gate while racing forward.",
     inputMode: "vocabulary",
     mechanic: "gate-runner",
     editions: ["primary-chibi", "secondary-epic"],
   },
   {
-    id: "sentence-collector",
-    title: "Rune Trail",
+    id: "dungeon-liberator",
+    title: "Dungeon Liberator",
     description: "Collect word runes in order to rebuild each sentence.",
     inputMode: "sentence",
     mechanic: "sentence-order-collection",
     editions: ["primary-chibi", "secondary-epic"],
   },
   {
-    id: "typing-defense",
-    title: "Arcane Bulwark",
+    id: "magic-defense",
+    title: "Magic Defense",
     description: "Type translations to stop enemies before they reach the wall.",
     inputMode: "vocabulary",
     mechanic: "typing-defense",
@@ -33,15 +33,17 @@ export const cartridgeCatalog = [
 
 /** Literal dynamic imports that keep unused Phaser cartridges out of host entry bundles. */
 export const cartridgeLoaders = {
-  "gate-runner": () =>
-    import("./gate-runner").then(({ gateRunnerCartridge }) => gateRunnerCartridge),
-  "sentence-collector": () =>
-    import("./sentence-collector").then(
-      ({ sentenceCollectorCartridge }) => sentenceCollectorCartridge,
+  "dragon-flight": () =>
+    import("./gate-runner").then(
+      ({ dragonFlightCartridge }) => dragonFlightCartridge,
     ),
-  "typing-defense": () =>
+  "dungeon-liberator": () =>
+    import("./sentence-collector").then(
+      ({ dungeonLiberatorCartridge }) => dungeonLiberatorCartridge,
+    ),
+  "magic-defense": () =>
     import("./typing-defense").then(
-      ({ typingDefenseCartridge }) => typingDefenseCartridge,
+      ({ magicDefenseCartridge }) => magicDefenseCartridge,
     ),
 } satisfies Record<
   (typeof cartridgeCatalog)[number]["id"],

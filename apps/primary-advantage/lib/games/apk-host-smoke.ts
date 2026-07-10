@@ -5,33 +5,80 @@ import {
 import { primaryChibiEdition } from "@reading-advantage/game-cartridges/editions";
 import {
   mapGameResultsToCompletionInput,
+  normalizeSentenceInput,
   normalizeVocabularyInput,
   type GameCompletionInput,
   type GameResults,
   type HostCompletionContext,
+  type SentenceInput,
   type VocabularyInput,
 } from "@reading-advantage/game-contracts";
 
-/** Primary Advantage package-consumption proof using the Primary Chibi edition. */
-export const primaryAPKSmokeConfig = {
-  cartridgeId: "gate-runner" as CartridgeId,
-  edition: primaryChibiEdition,
-  input: normalizeVocabularyInput([
-    { id: "primary-1", term: "cat", translation: "gato" },
-    { id: "primary-2", term: "dog", translation: "perro" },
-  ]),
-} satisfies {
-  cartridgeId: CartridgeId;
+type PrimaryVocabularySmokeConfig = {
+  cartridgeId: Extract<CartridgeId, "dragon-flight" | "magic-defense">;
   edition: typeof primaryChibiEdition;
+  inputMode: "vocabulary";
   input: VocabularyInput;
 };
 
+type PrimarySentenceSmokeConfig = {
+  cartridgeId: Extract<CartridgeId, "dungeon-liberator">;
+  edition: typeof primaryChibiEdition;
+  inputMode: "sentence";
+  input: SentenceInput;
+};
+
+/** One Primary Advantage host fixture for a public APK cartridge. */
+export type PrimaryAPKSmokeConfig =
+  | PrimaryVocabularySmokeConfig
+  | PrimarySentenceSmokeConfig;
+
+/** Primary Advantage package-consumption proofs using the Primary Chibi edition. */
+export const primaryAPKSmokeConfigs = [
+  {
+    cartridgeId: "dragon-flight",
+    edition: primaryChibiEdition,
+    inputMode: "vocabulary",
+    input: normalizeVocabularyInput([
+      { id: "primary-dragon-1", term: "cat", translation: "gato" },
+      { id: "primary-dragon-2", term: "dog", translation: "perro" },
+    ]),
+  },
+  {
+    cartridgeId: "dungeon-liberator",
+    edition: primaryChibiEdition,
+    inputMode: "sentence",
+    input: normalizeSentenceInput([
+      {
+        id: "primary-dungeon-1",
+        term: "The little fox found a key.",
+        translation: "El pequeno zorro encontro una llave.",
+      },
+      {
+        id: "primary-dungeon-2",
+        term: "The door opened with a click.",
+        translation: "La puerta se abrio con un clic.",
+      },
+    ]),
+  },
+  {
+    cartridgeId: "magic-defense",
+    edition: primaryChibiEdition,
+    inputMode: "vocabulary",
+    input: normalizeVocabularyInput([
+      { id: "primary-magic-1", term: "sun", translation: "sol" },
+      { id: "primary-magic-2", term: "moon", translation: "luna" },
+    ]),
+  },
+] as const satisfies readonly PrimaryAPKSmokeConfig[];
+
 /**
- * Loads the Primary smoke cartridge through the shared literal dynamic registry.
+ * Loads a Primary smoke cartridge through the shared literal dynamic registry.
+ * @param cartridgeId Public cartridge identifier selected by the Primary host.
  * @returns The shared cartridge definition without copied source or assets.
  */
-export function loadPrimaryAPKSmokeCartridge() {
-  return cartridgeLoaders[primaryAPKSmokeConfig.cartridgeId]();
+export function loadPrimaryAPKSmokeCartridge(cartridgeId: CartridgeId) {
+  return cartridgeLoaders[cartridgeId]();
 }
 
 /**

@@ -5,7 +5,7 @@ import {
   createTouchAnswers,
   createTypingDefenseState,
   submitDefenseAnswer,
-  typingDefenseCartridge,
+  magicDefenseCartridge,
 } from "../typing-defense";
 
 const vocabulary = vocabularyInputSchema.parse([
@@ -60,8 +60,9 @@ describe("typing defense cartridge", () => {
   });
 
   it("declares Arcade Physics, timers, tweens, and object pooling", () => {
-    expect(typingDefenseCartridge.manifest.inputMode).toBe("vocabulary");
-    expect(typingDefenseCartridge.manifest.capabilities).toEqual(
+    expect(magicDefenseCartridge.manifest.id).toBe("magic-defense");
+    expect(magicDefenseCartridge.manifest.inputMode).toBe("vocabulary");
+    expect(magicDefenseCartridge.manifest.capabilities).toEqual(
       expect.arrayContaining([
         "arcade-physics",
         "timers",

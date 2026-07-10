@@ -10,9 +10,9 @@ import { primaryChibiEdition } from "../editions";
 describe("cartridge catalog", () => {
   it("publishes the three representative Phaser-native mechanics", () => {
     expect(cartridgeCatalog.map((entry) => entry.id)).toEqual([
-      "gate-runner",
-      "sentence-collector",
-      "typing-defense",
+      "dragon-flight",
+      "dungeon-liberator",
+      "magic-defense",
     ]);
     expect(cartridgeCatalog.map((entry) => entry.mechanic)).toEqual([
       "gate-runner",
@@ -23,9 +23,9 @@ describe("cartridge catalog", () => {
 
   it("keeps catalog metadata independent from eager cartridge imports", () => {
     expect(Object.keys(cartridgeLoaders)).toEqual([
-      "gate-runner",
-      "sentence-collector",
-      "typing-defense",
+      "dragon-flight",
+      "dungeon-liberator",
+      "magic-defense",
     ]);
     for (const loader of Object.values(cartridgeLoaders)) {
       expect(loader).toBeTypeOf("function");
@@ -33,9 +33,18 @@ describe("cartridge catalog", () => {
   });
 
   it("loads each cartridge through a literal dynamic import", async () => {
+    expect(Object.keys(cartridgeLoaders)).toEqual(
+      cartridgeCatalog.map(({ id }) => id),
+    );
+
     for (const entry of cartridgeCatalog) {
       const cartridge = await cartridgeLoaders[entry.id]();
-      expect(cartridge.manifest.id).toBe(entry.id);
+      expect(cartridge.manifest).toMatchObject({
+        id: entry.id,
+        title: entry.title,
+        description: entry.description,
+        inputMode: entry.inputMode,
+      });
       expect(cartridge.manifest.runtimeApiVersion).toBe("1.0.0");
       expect(cartridge.createGameConfig).toBeTypeOf("function");
     }
@@ -89,4 +98,12 @@ describe("cartridge catalog", () => {
   it("returns undefined for an unknown cartridge", () => {
     expect(getCartridgeCatalogEntry("not-a-game")).toBeUndefined();
   });
+
+  it.each(["gate-runner", "sentence-collector", "typing-defense"])(
+    "rejects retired public ID %s",
+    (retiredId) => {
+      expect(getCartridgeCatalogEntry(retiredId)).toBeUndefined();
+      expect(retiredId in cartridgeLoaders).toBe(false);
+    },
+  );
 });

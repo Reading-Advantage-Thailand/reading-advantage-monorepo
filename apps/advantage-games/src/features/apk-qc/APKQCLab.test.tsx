@@ -12,9 +12,9 @@ jest.mock("next/dynamic", () => () => function MockAPKGameHost(props: { onComple
 
 jest.mock("@reading-advantage/game-cartridges/catalog", () => {
   const entries = [
-    ["gate-runner", "Sky Gate Sprint", "vocabulary", "gate-runner"],
-    ["sentence-collector", "Rune Trail", "sentence", "sentence-order-collection"],
-    ["typing-defense", "Arcane Bulwark", "vocabulary", "typing-defense"],
+    ["dragon-flight", "Dragon Flight", "vocabulary", "gate-runner"],
+    ["dungeon-liberator", "Dungeon Liberator", "sentence", "sentence-order-collection"],
+    ["magic-defense", "Magic Defense", "vocabulary", "typing-defense"],
   ] as const;
   const cartridgeCatalog = entries.map(([id, title, inputMode, mechanic]) => ({ id, title, inputMode, mechanic }));
   const cartridgeLoaders = Object.fromEntries(entries.map(([id, title, inputMode]) => [id, async () => ({ manifest: { id, title, inputMode }, createGameConfig: jest.fn() })]));
@@ -44,8 +44,10 @@ describe("APKQCLab", () => {
     render(<APKQCLab />);
 
     expect(screen.getByRole("heading", { name: /Cartridge proving ground/i })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Sky Gate Sprint/i })).toHaveAttribute("aria-pressed", "true");
-    expect(screen.getByRole("button", { name: /Rune Trail/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Dragon Flight/i })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("button", { name: /Dungeon Liberator/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Magic Defense/i })).toBeInTheDocument();
+    expect(screen.queryByText(/Sky Gate Sprint|Rune Trail|Arcane Bulwark/i)).not.toBeInTheDocument();
     expect(screen.getByText(/Nothing is authenticated or persisted/i)).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "Secondary Epic" }));
@@ -55,6 +57,7 @@ describe("APKQCLab", () => {
     fireEvent.click(complete);
     await waitFor(() => expect(screen.getAllByText(/"score": 400/)).toHaveLength(2));
     expect(screen.getAllByText(/"xp": 40/)).toHaveLength(1);
+    expect(screen.getByText(/"gameType": "dragon-flight"/)).toBeInTheDocument();
     expect(screen.getByText(/display XP is deliberately excluded/i)).toBeInTheDocument();
   });
 });

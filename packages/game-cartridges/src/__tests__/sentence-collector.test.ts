@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import {
   collectSentenceToken,
   createSentenceCollectorState,
-  sentenceCollectorCartridge,
+  dungeonLiberatorCartridge,
 } from "../sentence-collector";
 
 const sentences = sentenceInputSchema.parse([
@@ -72,8 +72,9 @@ describe("sentence collector cartridge", () => {
   });
 
   it("declares Arcade Physics, camera, particles, and tweens", () => {
-    expect(sentenceCollectorCartridge.manifest.inputMode).toBe("sentence");
-    expect(sentenceCollectorCartridge.manifest.capabilities).toEqual(
+    expect(dungeonLiberatorCartridge.manifest.id).toBe("dungeon-liberator");
+    expect(dungeonLiberatorCartridge.manifest.inputMode).toBe("sentence");
+    expect(dungeonLiberatorCartridge.manifest.capabilities).toEqual(
       expect.arrayContaining([
         "arcade-physics",
         "camera",

@@ -341,11 +341,11 @@ export function createTypingDefenseGameConfig(
   };
 }
 
-/** Phaser-native vocabulary typing-defense proof cartridge. */
-export const typingDefenseCartridge: GameCartridgeDefinition = {
+/** Public Magic Defense cartridge backed by the typing-defense mechanic. */
+export const magicDefenseCartridge: GameCartridgeDefinition = {
   manifest: {
-    id: "typing-defense",
-    title: "Arcane Bulwark",
+    id: "magic-defense",
+    title: "Magic Defense",
     description: "Type translations to stop enemies before they reach the wall.",
     inputMode: "vocabulary",
     runtimeApiVersion: "1.0.0",
@@ -363,5 +363,5 @@ export const typingDefenseCartridge: GameCartridgeDefinition = {
     }),
 };
 
-export default typingDefenseCartridge;
+export default magicDefenseCartridge;
 /* v8 ignore stop */

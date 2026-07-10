@@ -3,20 +3,27 @@ import { createGateRunnerState } from "@reading-advantage/game-cartridges/gate-r
 
 test.describe("APK quality-control lab", () => {
   test("loads a Phaser cartridge and swaps editions without copied game routes", async ({ page }) => {
+    test.setTimeout(60_000);
     await page.setViewportSize({ width: 1440, height: 1000 });
     await page.goto("/qc");
 
     await expect(page.getByRole("heading", { name: "Cartridge proving ground" })).toBeVisible();
-    await expect(page.getByRole("button", { name: /Sky Gate Sprint/ })).toHaveAttribute("aria-pressed", "true");
+    await expect(page.getByRole("button", { name: /Dragon Flight/ })).toHaveAttribute("aria-pressed", "true");
     await expect(page.locator("[data-apk-canvas-host] canvas")).toHaveCount(1, { timeout: 30_000 });
 
-    await page.getByRole("button", { name: "Secondary Epic" }).click();
-    await expect(page.getByRole("button", { name: "Secondary Epic" })).toHaveAttribute("aria-pressed", "true");
-    await expect(page.locator("[data-apk-canvas-host] canvas")).toHaveCount(1);
-
-    await page.getByRole("button", { name: /Rune Trail/ }).click();
-    await expect(page.getByText("sentence-collector · sentence", { exact: true })).toBeVisible();
-    await expect(page.locator("[data-apk-canvas-host] canvas")).toHaveCount(1);
+    for (const game of [
+      { title: "Dragon Flight", id: "dragon-flight", input: "vocabulary" },
+      { title: "Dungeon Liberator", id: "dungeon-liberator", input: "sentence" },
+      { title: "Magic Defense", id: "magic-defense", input: "vocabulary" },
+    ]) {
+      await page.getByRole("button", { name: new RegExp(game.title) }).click();
+      await expect(page.getByText(`${game.id} · ${game.input}`, { exact: true })).toBeVisible();
+      for (const edition of ["Primary Chibi", "Secondary Epic"]) {
+        await page.getByRole("button", { name: edition }).click();
+        await expect(page.getByRole("button", { name: edition })).toHaveAttribute("aria-pressed", "true");
+        await expect(page.locator("[data-apk-canvas-host] canvas")).toHaveCount(1);
+      }
+    }
     await expect(page.getByText(/Nothing is authenticated or persisted/)).toBeVisible();
     await page.screenshot({ path: "/tmp/apk-qc-desktop.png", fullPage: true });
   });
@@ -57,6 +64,6 @@ test.describe("APK quality-control lab", () => {
 
     await expect(page.getByText("Game complete", { exact: true })).toBeVisible();
     await expect(page.getByLabel("Game result")).toContainText("Accuracy: 100%");
-    await expect(page.getByText(/"gameType": "gate-runner"/)).toBeVisible();
+    await expect(page.getByText(/"gameType": "dragon-flight"/)).toBeVisible();
   });
 });

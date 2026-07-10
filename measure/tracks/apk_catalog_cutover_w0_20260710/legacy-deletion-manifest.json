@@ -1,0 +1,646 @@
+{
+  "$schema": "reading-advantage/legacy-deletion-manifest/v1",
+  "trackId": "apk_catalog_cutover_w0_20260710",
+  "generatedAt": "2026-07-10",
+  "status": "evidence-only-no-deletions-performed",
+  "publicIds": ["dragon-flight", "dungeon-liberator", "magic-defense"],
+  "dispositions": {
+    "retain": "Keep because the path is shared, is an asset/cover worth reusing, or is durable audit evidence.",
+    "delete": "Caller-free tracked data or duplicate content that a later scoped commit may remove without a compatibility alias.",
+    "defer": "Still has a route, import, fetch, test, or production caller; removal belongs to the named successor wave."
+  },
+  "namedWaves": [
+    {
+      "id": "apk_catalog_cutover_w0_20260710",
+      "scope": "Publish APK identities and evidence; do not remove legacy Next.js game routes."
+    },
+    {
+      "id": "advantage_games_arcade_w1",
+      "scope": "Mount APK cartridges in authenticated Advantage Games routes, migrate legacy route tests, then remove caller-free testbed implementations."
+    },
+    {
+      "id": "reading_apk_route_cutover_w2",
+      "scope": "Cut Reading production routes and lesson embeds to APK with server-owned completion before deleting copied implementations."
+    }
+  ],
+  "inventoryEvidence": {
+    "graph": {
+      "command": "build-graph stats ./graph.db; build-graph search ./graph.db '<game name>'",
+      "result": "Graph contained 23,642 nodes across 2,854 files. Name searches returned no exact game-name nodes, so caller evidence was completed with path and source-reference scans."
+    },
+    "textScans": [
+      "rg --files | rg -i '(dragon[-_ ]?flight|dungeon[-_ ]?liberator|magic[-_ ]?defen[cs]e)'",
+      "rg -n -i '(dragon-flight|dragonFlight|DragonFlight)' apps/advantage-games/src apps/reading-advantage",
+      "rg -n -i '(dungeon-liberator|dungeonLiberator|DungeonLiberator)' apps/advantage-games/src",
+      "rg -n -i '(magic-defense|magicDefense|MagicDefense)' apps/advantage-games/src apps/reading-advantage",
+      "rg -n '(dragon-flight\\.json|dungeon-liberator\\.json|magic-defense\\.json)' apps/advantage-games/src"
+    ],
+    "limitations": [
+      "Text and graph scans cannot prove that an unreferenced public URL has no external bookmark; delete dispositions are restricted to non-route fixture/data or duplicate asset content.",
+      "Reading production paths are never marked delete in W0.",
+      "Directories are exact recursive inventory units; mixed-use directories are split into individual files where their dispositions differ."
+    ]
+  },
+  "games": [
+    {
+      "publicId": "dragon-flight",
+      "replacement": {
+        "cartridgeModule": "packages/game-cartridges/src/gate-runner.ts",
+        "exportName": "dragonFlightCartridge",
+        "internalMechanic": "gate-runner",
+        "inputContract": "VocabularyInputArraySchema",
+        "resultContract": "GameResultsSchema (exact five fields)",
+        "editionPacks": ["primary-chibi", "secondary-epic"],
+        "hostProofs": [
+          "apps/advantage-games/src/features/apk-qc/APKQCLab.test.tsx",
+          "apps/reading-advantage/lib/games/apk-host-smoke.test.ts",
+          "apps/primary-advantage/lib/games/apk-host-smoke.test.ts"
+        ],
+        "completionBoundary": "packages/game-contracts/src/completion.ts"
+      },
+      "legacyPaths": [
+        {
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/dragon-flight",
+          "kind": "route-directory",
+          "coverage": "recursive",
+          "disposition": "defer",
+          "ownerWave": "advantage_games_arcade_w1",
+          "callers": ["apps/advantage-games/src/lib/gameCards.ts"],
+          "reason": "The playable catalog still links to this route."
+        },
+        {
+          "path": "apps/advantage-games/src/app/api/v1/games/dragon-flight",
+          "kind": "api-directory",
+          "coverage": "recursive",
+          "disposition": "defer",
+          "ownerWave": "advantage_games_arcade_w1",
+          "callers": [
+            "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/dragon-flight/page.tsx",
+            "apps/advantage-games/src/components/games/vocabulary/dragon-flight/RankingDialog.tsx"
+          ],
+          "reason": "Vocabulary, completion, and ranking fetches still target these handlers."
+        },
+        {
+          "path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+          "kind": "legacy-gameplay-source",
+          "coverage": "file",
+          "disposition": "defer",
+          "ownerWave": "advantage_games_arcade_w1",
+          "callers": ["apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/dragon-flight/page.tsx"],
+          "reason": "The legacy route imports this renderer directly."
+        },
+        {
+          "path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.test.tsx",
+          "kind": "legacy-test",
+          "coverage": "file",
+          "disposition": "defer",
+          "ownerWave": "advantage_games_arcade_w1",
+          "callers": ["apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx"],
+          "reason": "Remove with the implementation only after route-level APK coverage replaces it."
+        },
+        {
+          "path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/RankingDialog.tsx",
+          "kind": "shared-legacy-ui",
+          "coverage": "file",
+          "disposition": "retain",
+          "ownerWave": "shared-ui-owner-review",
+          "callers": [
+            "apps/advantage-games/src/components/games/sentence/castle-defense/CastleDefenseGame.tsx",
+            "apps/advantage-games/src/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx"
+          ],
+          "reason": "Other games reuse this dialog; it is not Dragon Flight-owned deletion scope."
+        },
+        {
+          "path": "apps/advantage-games/src/lib/games/dragonFlight.ts",
+          "kind": "legacy-gameplay-source",
+          "coverage": "file",
+          "disposition": "defer",
+          "ownerWave": "advantage_games_arcade_w1",
+          "callers": ["apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx"],
+          "reason": "The legacy renderer still imports this state machine."
+        },
+        {
+          "path": "apps/advantage-games/src/lib/games/dragonFlight.test.ts",
+          "kind": "legacy-test",
+          "coverage": "file",
+          "disposition": "defer",
+          "ownerWave": "advantage_games_arcade_w1",
+          "callers": ["apps/advantage-games/src/lib/games/dragonFlight.ts"],
+          "reason": "Remove with its implementation after APK route cutover."
+        },
+        {
+          "path": "apps/advantage-games/public/games/vocabulary/dragon-flight",
+          "kind": "legacy-runtime-assets",
+          "coverage": "recursive",
+          "disposition": "defer",
+          "ownerWave": "advantage_games_arcade_w1",
+          "callers": ["apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx"],
+          "reason": "The legacy renderer loads these exact URLs; selected art may later move into an edition pack."
+        },
+        {
+          "path": "apps/advantage-games/public/games/dragon-flight",
+          "kind": "duplicate-assets-and-screenshot-target",
+          "coverage": "recursive",
+          "disposition": "defer",
+          "ownerWave": "advantage_games_arcade_w1",
+          "callers": ["apps/advantage-games/tests/e2e/helpers/screenshotHelpers.ts"],
+          "reason": "Runtime uses the vocabulary path, but the legacy E2E harness still writes screenshots here."
+        },
+        {
+          "path": "apps/advantage-games/public/vocab/dragon-flight.json",
+          "kind": "caller-free-static-data",
+          "coverage": "file",
+          "disposition": "delete",
+          "ownerWave": "apk_catalog_cutover_w0_20260710",
+          "callers": [],
+          "reason": "Source scans find no reader; the static vocabulary route uses SAMPLE_VOCABULARY instead."
+        },
+        {
+          "path": "apps/advantage-games/public/games/cover/dragon-flight-cover.png",
+          "kind": "cover-art",
+          "coverage": "file",
+          "disposition": "retain",
+          "ownerWave": "asset-library",
+          "callers": ["apps/advantage-games/src/lib/gameCards.ts"],
+          "reason": "Covers remain reusable product identity assets."
+        },
+        {
+          "path": "apps/advantage-games/public/dragon-flight.png",
+          "kind": "documentation-image",
+          "coverage": "file",
+          "disposition": "retain",
+          "ownerWave": "documentation",
+          "callers": ["apps/advantage-games/README.md"],
+          "reason": "The repository README displays this image."
+        },
+        {
+          "path": "apps/advantage-games/public/sounds/dragon-flight-adventure.mp3",
+          "kind": "reusable-audio",
+          "coverage": "file",
+          "disposition": "retain",
+          "ownerWave": "asset-library",
+          "callers": [],
+          "reason": "Retain as a candidate semantic audio asset; it is not legacy gameplay code."
+        },
+        {
+          "path": "apps/advantage-games/tests/e2e/games/vocabulary/dragon-flight.spec.ts",
+          "kind": "legacy-route-e2e",
+          "coverage": "file",
+          "disposition": "defer",
+          "ownerWave": "advantage_games_arcade_w1",
+          "callers": ["apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/dragon-flight/page.tsx"],
+          "reason": "This test deliberately exercises the legacy route, not /qc."
+        },
+        {
+          "path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-flight",
+          "kind": "production-route-directory",
+          "coverage": "recursive",
+          "disposition": "defer",
+          "ownerWave": "reading_apk_route_cutover_w2",
+          "callers": [
+            "apps/reading-advantage/app/[locale]/(student)/student/games/page.tsx",
+            "apps/reading-advantage/lib/games/gameCards.ts"
+          ],
+          "reason": "Reading still links students to this production route."
+        },
+        {
+          "path": "apps/reading-advantage/app/api/v1/games/dragon-flight",
+          "kind": "production-api-directory",
+          "coverage": "recursive",
+          "disposition": "defer",
+          "ownerWave": "reading_apk_route_cutover_w2",
+          "callers": [
+            "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-flight/page.tsx",
+            "apps/reading-advantage/components/games/vocabulary/dragon-flight/RankingDialog.tsx"
+          ],
+          "reason": "Production vocabulary, completion, and ranking calls remain live."
+        },
+        {
+          "path": "apps/reading-advantage/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+          "kind": "copied-production-gameplay",
+          "coverage": "file",
+          "disposition": "defer",
+          "ownerWave": "reading_apk_route_cutover_w2",
+          "callers": [
+            "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-flight/page.tsx",
+            "apps/reading-advantage/components/lesson/phases/phase10-vocabulary-matching.tsx"
+          ],
+          "reason": "Both the direct route and lesson embed import the copied renderer."
+        },
+        {
+          "path": "apps/reading-advantage/components/games/vocabulary/dragon-flight/RankingDialog.tsx",
+          "kind": "shared-legacy-ui",
+          "coverage": "file",
+          "disposition": "retain",
+          "ownerWave": "shared-ui-owner-review",
+          "callers": [
+            "apps/reading-advantage/components/games/sentence/castle-defense/CastleDefenseGame.tsx",
+            "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx"
+          ],
+          "reason": "Other production games import the dialog."
+        },
+        {
+          "path": "apps/reading-advantage/lib/games/dragonFlight.ts",
+          "kind": "copied-production-gameplay",
+          "coverage": "file",
+          "disposition": "defer",
+          "ownerWave": "reading_apk_route_cutover_w2",
+          "callers": ["apps/reading-advantage/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx"],
+          "reason": "Production renderer still imports this state machine."
+        },
+        {
+          "path": "apps/reading-advantage/server/controllers/dragon-flight-controller.ts",
+          "kind": "production-controller",
+          "coverage": "file",
+          "disposition": "defer",
+          "ownerWave": "reading_apk_route_cutover_w2",
+          "callers": ["apps/reading-advantage/app/api/v1/games/dragon-flight"],
+          "reason": "All three production API handlers delegate to this controller."
+        },
+        {
+          "path": "apps/reading-advantage/public/games/vocabulary/dragon-flight",
+          "kind": "production-assets",
+          "coverage": "recursive",
+          "disposition": "defer",
+          "ownerWave": "reading_apk_route_cutover_w2",
+          "callers": ["apps/reading-advantage/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx"],
+          "reason": "Production code loads these assets and some may be migrated into Secondary Epic."
+        },
+        {
+          "path": "apps/reading-advantage/public/games/cover/dragon-flight-cover.png",
+          "kind": "cover-art",
+          "coverage": "file",
+          "disposition": "retain",
+          "ownerWave": "asset-library",
+          "callers": [
+            "apps/reading-advantage/lib/games/gameCards.ts",
+            "apps/reading-advantage/components/lesson/phases/phase10-vocabulary-matching.tsx"
+          ],
+          "reason": "Covers remain reusable and are actively displayed."
+        }
+      ]
+    },
+    {
+      "publicId": "dungeon-liberator",
+      "replacement": {
+        "cartridgeModule": "packages/game-cartridges/src/sentence-collector.ts",
+        "exportName": "dungeonLiberatorCartridge",
+        "internalMechanic": "sentence-order-collection",
+        "inputContract": "SentenceInputArraySchema",
+        "resultContract": "GameResultsSchema (exact five fields)",
+        "editionPacks": ["primary-chibi", "secondary-epic"],
+        "hostProofs": [
+          "apps/advantage-games/src/features/apk-qc/APKQCLab.test.tsx",
+          "apps/reading-advantage/lib/games/apk-host-smoke.test.ts",
+          "apps/primary-advantage/lib/games/apk-host-smoke.test.ts"
+        ],
+        "completionBoundary": "packages/game-contracts/src/completion.ts"
+      },
+      "legacyPaths": [
+        {
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/dungeon-liberator",
+          "kind": "route-directory",
+          "coverage": "recursive",
+          "disposition": "defer",
+          "ownerWave": "advantage_games_arcade_w1",
+          "callers": ["apps/advantage-games/src/lib/gameCards.ts"],
+          "reason": "The playable catalog links to this legacy route."
+        },
+        {
+          "path": "apps/advantage-games/src/app/api/v1/games/dungeon-liberator",
+          "kind": "api-directory",
+          "coverage": "recursive",
+          "disposition": "defer",
+          "ownerWave": "advantage_games_arcade_w1",
+          "callers": ["apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/dungeon-liberator/page.tsx"],
+          "reason": "Sentence and completion fetches still target these handlers."
+        },
+        {
+          "path": "apps/advantage-games/src/components/games/sentence/dungeon-liberator",
+          "kind": "legacy-gameplay-directory",
+          "coverage": "recursive",
+          "disposition": "defer",
+          "ownerWave": "advantage_games_arcade_w1",
+          "callers": ["apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/dungeon-liberator/page.tsx"],
+          "reason": "The legacy route dynamically imports this renderer barrel."
+        },
+        {
+          "path": "apps/advantage-games/src/lib/games/dungeonLiberator.ts",
+          "kind": "legacy-gameplay-source",
+          "coverage": "file",
+          "disposition": "defer",
+          "ownerWave": "advantage_games_arcade_w1",
+          "callers": ["apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx"],
+          "reason": "The legacy renderer imports this state machine."
+        },
+        {
+          "path": "apps/advantage-games/src/lib/games/dungeonLiberator.test.ts",
+          "kind": "legacy-test",
+          "coverage": "file",
+          "disposition": "defer",
+          "ownerWave": "advantage_games_arcade_w1",
+          "callers": ["apps/advantage-games/src/lib/games/dungeonLiberator.ts"],
+          "reason": "Remove only with its implementation after APK route coverage."
+        },
+        {
+          "path": "apps/advantage-games/src/lib/games/dungeonLiberatorIndicators.ts",
+          "kind": "legacy-gameplay-source",
+          "coverage": "file",
+          "disposition": "defer",
+          "ownerWave": "advantage_games_arcade_w1",
+          "callers": ["apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx"],
+          "reason": "The legacy renderer imports the indicator projection."
+        },
+        {
+          "path": "apps/advantage-games/public/games/sentence/dungeon-liberator",
+          "kind": "legacy-runtime-assets",
+          "coverage": "recursive",
+          "disposition": "defer",
+          "ownerWave": "advantage_games_arcade_w1",
+          "callers": ["apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx"],
+          "reason": "The legacy renderer loads these exact URLs."
+        },
+        {
+          "path": "apps/advantage-games/public/games/dungeon-liberator",
+          "kind": "duplicate-assets-and-screenshot-target",
+          "coverage": "recursive",
+          "disposition": "defer",
+          "ownerWave": "advantage_games_arcade_w1",
+          "callers": ["apps/advantage-games/tests/e2e/helpers/screenshotHelpers.ts"],
+          "reason": "Runtime moved to the sentence path, but legacy E2E still writes screenshots here."
+        },
+        {
+          "path": "apps/advantage-games/public/vocab/dungeon-liberator.json",
+          "kind": "caller-free-static-data",
+          "coverage": "file",
+          "disposition": "delete",
+          "ownerWave": "apk_catalog_cutover_w0_20260710",
+          "callers": [],
+          "reason": "Source scans find no reader; the route uses SAMPLE_SENTENCES instead."
+        },
+        {
+          "path": "apps/advantage-games/public/games/cover/dungeon-liberator.png",
+          "kind": "cover-art",
+          "coverage": "file",
+          "disposition": "retain",
+          "ownerWave": "asset-library",
+          "callers": ["apps/advantage-games/src/lib/gameCards.ts"],
+          "reason": "Covers remain reusable product identity assets."
+        },
+        {
+          "path": "apps/advantage-games/tests/e2e/games/sentence/dungeon-liberator.spec.ts",
+          "kind": "legacy-route-e2e",
+          "coverage": "file",
+          "disposition": "defer",
+          "ownerWave": "advantage_games_arcade_w1",
+          "callers": ["apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/dungeon-liberator/page.tsx"],
+          "reason": "This test exercises the legacy route rather than the APK QC host."
+        },
+        {
+          "path": "apps/advantage-games/measure/notes/dungeon-liberator-assets.md",
+          "kind": "historical-evidence",
+          "coverage": "file",
+          "disposition": "retain",
+          "ownerWave": "measure-history",
+          "callers": [],
+          "reason": "Durable provenance and asset notes are not runtime deletion scope."
+        }
+      ]
+    },
+    {
+      "publicId": "magic-defense",
+      "replacement": {
+        "cartridgeModule": "packages/game-cartridges/src/typing-defense.ts",
+        "exportName": "magicDefenseCartridge",
+        "internalMechanic": "typing-defense",
+        "inputContract": "VocabularyInputArraySchema",
+        "resultContract": "GameResultsSchema (exact five fields)",
+        "editionPacks": ["primary-chibi", "secondary-epic"],
+        "hostProofs": [
+          "apps/advantage-games/src/features/apk-qc/APKQCLab.test.tsx",
+          "apps/reading-advantage/lib/games/apk-host-smoke.test.ts",
+          "apps/primary-advantage/lib/games/apk-host-smoke.test.ts"
+        ],
+        "completionBoundary": "packages/game-contracts/src/completion.ts"
+      },
+      "legacyPaths": [
+        {
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/magic-defense",
+          "kind": "route-directory",
+          "coverage": "recursive",
+          "disposition": "defer",
+          "ownerWave": "advantage_games_arcade_w1",
+          "callers": ["apps/advantage-games/src/lib/gameCards.ts"],
+          "reason": "The playable catalog links to this route."
+        },
+        {
+          "path": "apps/advantage-games/src/app/api/v1/games/magic-defense",
+          "kind": "api-directory",
+          "coverage": "recursive",
+          "disposition": "defer",
+          "ownerWave": "advantage_games_arcade_w1",
+          "callers": ["apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/magic-defense/page.tsx"],
+          "reason": "Vocabulary and completion fetches still target these handlers."
+        },
+        {
+          "path": "apps/advantage-games/src/components/games/game",
+          "kind": "shared-legacy-ui",
+          "coverage": "recursive",
+          "disposition": "retain",
+          "ownerWave": "shared-ui-owner-review",
+          "callers": ["apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/magic-defense/page.tsx"],
+          "reason": "Conservatively retain the shared game UI directory; do not bulk-delete generic HUD/input/result components in W0."
+        },
+        {
+          "path": "apps/advantage-games/src/lib/games/magicDefenseConfig.ts",
+          "kind": "shared-legacy-config",
+          "coverage": "file",
+          "disposition": "retain",
+          "ownerWave": "shared-ui-owner-review",
+          "callers": ["apps/advantage-games/src/components/games/game/GameEngine.tsx"],
+          "reason": "Active shared legacy UI imports this asset and difficulty configuration."
+        },
+        {
+          "path": "apps/advantage-games/public/games/magic-defense",
+          "kind": "legacy-runtime-assets",
+          "coverage": "recursive",
+          "disposition": "retain",
+          "ownerWave": "asset-library",
+          "callers": [
+            "apps/advantage-games/src/lib/games/magicDefenseConfig.ts",
+            "apps/advantage-games/src/components/games/game/Enemy.tsx",
+            "apps/advantage-games/tests/e2e/helpers/screenshotHelpers.ts"
+          ],
+          "reason": "Active runtime and screenshot callers exist; the art may also seed an edition pack."
+        },
+        {
+          "path": "apps/advantage-games/public/vocab/magic-defense.json",
+          "kind": "caller-free-static-data",
+          "coverage": "file",
+          "disposition": "delete",
+          "ownerWave": "apk_catalog_cutover_w0_20260710",
+          "callers": [],
+          "reason": "Source scans find no reader; the route uses SAMPLE_VOCABULARY instead."
+        },
+        {
+          "path": "apps/advantage-games/public/games/cover/magic-defense-cover.png",
+          "kind": "cover-art",
+          "coverage": "file",
+          "disposition": "retain",
+          "ownerWave": "asset-library",
+          "callers": ["apps/advantage-games/src/lib/gameCards.ts"],
+          "reason": "Covers remain reusable product identity assets."
+        },
+        {
+          "path": "apps/advantage-games/tests/e2e/games/vocabulary/magic-defense.spec.ts",
+          "kind": "legacy-route-e2e",
+          "coverage": "file",
+          "disposition": "defer",
+          "ownerWave": "advantage_games_arcade_w1",
+          "callers": ["apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/magic-defense/page.tsx"],
+          "reason": "This test exercises the legacy route rather than the APK QC host."
+        },
+        {
+          "path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/magic-defense",
+          "kind": "production-route-directory",
+          "coverage": "recursive",
+          "disposition": "defer",
+          "ownerWave": "reading_apk_route_cutover_w2",
+          "callers": [
+            "apps/reading-advantage/app/[locale]/(student)/student/games/page.tsx",
+            "apps/reading-advantage/lib/games/gameCards.ts"
+          ],
+          "reason": "Reading still links students to this production route."
+        },
+        {
+          "path": "apps/reading-advantage/app/api/v1/games/magic-defense",
+          "kind": "production-api-directory",
+          "coverage": "recursive",
+          "disposition": "defer",
+          "ownerWave": "reading_apk_route_cutover_w2",
+          "callers": [
+            "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/magic-defense/page.tsx",
+            "apps/reading-advantage/components/games/game/RankingDialog.tsx"
+          ],
+          "reason": "Production vocabulary, completion, and ranking calls remain live."
+        },
+        {
+          "path": "apps/reading-advantage/components/games/game",
+          "kind": "shared-legacy-ui",
+          "coverage": "recursive",
+          "disposition": "retain",
+          "ownerWave": "shared-ui-owner-review",
+          "callers": [
+            "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/magic-defense/page.tsx",
+            "apps/reading-advantage/components/lesson/phases/phase10-vocabulary-matching.tsx"
+          ],
+          "reason": "Retain shared game UI until consumer-by-consumer ownership is proven; no bulk deletion in W0."
+        },
+        {
+          "path": "apps/reading-advantage/lib/games/magicDefenseConfig.ts",
+          "kind": "shared-legacy-config",
+          "coverage": "file",
+          "disposition": "retain",
+          "ownerWave": "shared-ui-owner-review",
+          "callers": ["apps/reading-advantage/components/games/game/GameEngine.tsx"],
+          "reason": "Active production UI imports this configuration."
+        },
+        {
+          "path": "apps/reading-advantage/server/controllers/magic-defense-controller.ts",
+          "kind": "production-controller",
+          "coverage": "file",
+          "disposition": "defer",
+          "ownerWave": "reading_apk_route_cutover_w2",
+          "callers": ["apps/reading-advantage/app/api/v1/games/magic-defense"],
+          "reason": "Production API handlers delegate to this controller."
+        },
+        {
+          "path": "apps/reading-advantage/public/games/vocabulary/magic-defense",
+          "kind": "production-assets",
+          "coverage": "recursive",
+          "disposition": "retain",
+          "ownerWave": "asset-library",
+          "callers": [
+            "apps/reading-advantage/lib/games/magicDefenseConfig.ts",
+            "apps/reading-advantage/components/games/game/Enemy.tsx"
+          ],
+          "reason": "Active production assets may also seed Secondary Epic."
+        },
+        {
+          "path": "apps/reading-advantage/public/games/cover/magic-defense-cover.png",
+          "kind": "cover-art",
+          "coverage": "file",
+          "disposition": "retain",
+          "ownerWave": "asset-library",
+          "callers": [
+            "apps/reading-advantage/lib/games/gameCards.ts",
+            "apps/reading-advantage/components/lesson/phases/phase10-vocabulary-matching.tsx"
+          ],
+          "reason": "Covers remain reusable and are actively displayed."
+        }
+      ]
+    }
+  ],
+  "crossGamePaths": [
+    {
+      "path": "apps/advantage-games/src/lib/gameCards.ts",
+      "kind": "shared-catalog",
+      "coverage": "file",
+      "disposition": "retain",
+      "ownerWave": "advantage_games_arcade_w1",
+      "callers": [],
+      "reason": "Shared catalog for many games; only its W0 entries may be cut over."
+    },
+    {
+      "path": "apps/advantage-games/tests/e2e/helpers/gameHelpers.ts",
+      "kind": "shared-test-helper",
+      "coverage": "file",
+      "disposition": "retain",
+      "ownerWave": "test-infrastructure",
+      "callers": [],
+      "reason": "Shared by many non-W0 legacy game tests."
+    },
+    {
+      "path": "apps/advantage-games/tests/e2e/helpers/screenshotHelpers.ts",
+      "kind": "shared-test-helper",
+      "coverage": "file",
+      "disposition": "retain",
+      "ownerWave": "test-infrastructure",
+      "callers": [],
+      "reason": "Shared by many non-W0 legacy game tests."
+    },
+    {
+      "path": "apps/reading-advantage/lib/games/gameCards.ts",
+      "kind": "shared-production-catalog",
+      "coverage": "file",
+      "disposition": "retain",
+      "ownerWave": "reading_apk_route_cutover_w2",
+      "callers": [],
+      "reason": "Shared catalog remains; W2 changes individual entries only."
+    },
+    {
+      "path": "apps/reading-advantage/components/lesson/phases/phase10-vocabulary-matching.tsx",
+      "kind": "production-lesson-integration",
+      "coverage": "file",
+      "disposition": "retain",
+      "ownerWave": "reading_apk_route_cutover_w2",
+      "callers": [],
+      "reason": "The lesson phase itself remains and needs an in-place APK integration, not deletion."
+    },
+    {
+      "path": "apps/www-reading-advantage/public/images/dragon-flight.png",
+      "kind": "marketing-image",
+      "coverage": "file",
+      "disposition": "retain",
+      "ownerWave": "marketing",
+      "callers": ["apps/www-reading-advantage/src/locales/pages/products/reading-advantage.ts"],
+      "reason": "Marketing content actively references this image."
+    }
+  ],
+  "explicitExclusions": [
+    "packages/game-cartridges/src/gate-runner.ts, sentence-collector.ts, and typing-defense.ts are retained internal mechanic modules, not compatibility aliases.",
+    "Game-name localization strings are reusable product copy and are not deletion candidates.",
+    "Measure archives, compliance reports, and audit reports are durable evidence and are not runtime deletion candidates.",
+    "Primary Advantage has no copied W0 legacy implementation in the scanned inventory; its W0 footprint is the shared APK host proof."
+  ]
+}

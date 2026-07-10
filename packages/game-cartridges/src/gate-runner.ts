@@ -267,11 +267,11 @@ export function createGateRunnerGameConfig(
   };
 }
 
-/** Phaser-native vocabulary gate-runner proof cartridge. */
-export const gateRunnerCartridge: GameCartridgeDefinition = {
+/** Public Dragon Flight cartridge backed by the gate-runner mechanic. */
+export const dragonFlightCartridge: GameCartridgeDefinition = {
   manifest: {
-    id: "gate-runner",
-    title: "Sky Gate Sprint",
+    id: "dragon-flight",
+    title: "Dragon Flight",
     description: "Choose the correct translation gate while racing forward.",
     inputMode: "vocabulary",
     runtimeApiVersion: "1.0.0",
@@ -289,5 +289,5 @@ export const gateRunnerCartridge: GameCartridgeDefinition = {
     }),
 };
 
-export default gateRunnerCartridge;
+export default dragonFlightCartridge;
 /* v8 ignore stop */

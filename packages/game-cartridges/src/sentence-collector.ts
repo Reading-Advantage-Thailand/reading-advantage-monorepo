@@ -322,11 +322,11 @@ export function createSentenceCollectorGameConfig(
   };
 }
 
-/** Phaser-native sentence-order collection proof cartridge. */
-export const sentenceCollectorCartridge: GameCartridgeDefinition = {
+/** Public Dungeon Liberator cartridge backed by the sentence-collector mechanic. */
+export const dungeonLiberatorCartridge: GameCartridgeDefinition = {
   manifest: {
-    id: "sentence-collector",
-    title: "Rune Trail",
+    id: "dungeon-liberator",
+    title: "Dungeon Liberator",
     description: "Collect word runes in order to rebuild each sentence.",
     inputMode: "sentence",
     runtimeApiVersion: "1.0.0",
@@ -344,5 +344,5 @@ export const sentenceCollectorCartridge: GameCartridgeDefinition = {
     }),
 };
 
-export default sentenceCollectorCartridge;
+export default dungeonLiberatorCartridge;
 /* v8 ignore stop */

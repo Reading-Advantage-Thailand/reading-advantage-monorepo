@@ -60,7 +60,7 @@ const difficultySeeds: Record<Difficulty, number> = {
  * @returns The accessible cartridge catalog, launch surface, and diagnostics panels.
  */
 export function APKQCLab() {
-  const [cartridgeId, setCartridgeId] = useState<CartridgeId>("gate-runner");
+  const [cartridgeId, setCartridgeId] = useState<CartridgeId>("dragon-flight");
   const [editionId, setEditionId] = useState(primaryChibiEdition.id);
   const [fixtureId, setFixtureId] = useState(APK_QC_FIXTURES[0].id);
   const [difficulty, setDifficulty] = useState<Difficulty>("medium");

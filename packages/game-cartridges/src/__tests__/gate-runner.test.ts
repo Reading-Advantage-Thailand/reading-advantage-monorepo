@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import {
   chooseGate,
   createGateRunnerState,
-  gateRunnerCartridge,
+  dragonFlightCartridge,
 } from "../gate-runner";
 
 const vocabulary = vocabularyInputSchema.parse([
@@ -91,8 +91,9 @@ describe("gate runner cartridge", () => {
   });
 
   it("declares Arcade Physics, camera, and tween capabilities", () => {
-    expect(gateRunnerCartridge.manifest.inputMode).toBe("vocabulary");
-    expect(gateRunnerCartridge.manifest.capabilities).toEqual(
+    expect(dragonFlightCartridge.manifest.id).toBe("dragon-flight");
+    expect(dragonFlightCartridge.manifest.inputMode).toBe("vocabulary");
+    expect(dragonFlightCartridge.manifest.capabilities).toEqual(
       expect.arrayContaining(["arcade-physics", "camera", "tweens"]),
     );
   });
