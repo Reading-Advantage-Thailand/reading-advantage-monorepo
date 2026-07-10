@@ -1,0 +1,11 @@
+{
+  "track_id": "typescript7_native_migration_20260710",
+  "type": "chore",
+  "status": "new",
+  "created_at": "2026-07-10T07:46:30Z",
+  "updated_at": "2026-07-10T07:46:30Z",
+  "description": "Adopt the native TypeScript 7 compiler for monorepo type-checking and eligible builds while retaining the TypeScript 6 compatibility API for tools that embed TypeScript.",
+  "estimated_tasks": 23,
+  "actual_tasks": null,
+  "deviation_notes": "Supersedes the deferred typescript6_major_migration stub. TypeScript 6 remains in scope only as the compatibility bridge required by TypeScript 7.0 tooling."
+}
