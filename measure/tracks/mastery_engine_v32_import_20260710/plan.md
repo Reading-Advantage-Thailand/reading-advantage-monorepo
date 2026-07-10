@@ -107,7 +107,7 @@ _Story ref: spec.md#story-s3_
     is not applicable to this package-only phase; user-facing browser
     acceptance remains mandatory for Tracks 2–5.
 
-- [~] Task: Remediate failed Phase S3 independent reviews
+- [x] Task: Remediate failed Phase S3 independent reviews — `b951d696`, `4505666f`, `a7312a12`, `2ffd496a`, `61937c56`
   - [ ] Unify the public orchestration and adapter contracts and prove the real
     Drizzle path with PGlite transaction, rollback, CAS, retry, and replay tests
   - [ ] Bind persistence to an authenticated school and enforce student owner
@@ -118,7 +118,20 @@ _Story ref: spec.md#story-s3_
     calibration uniqueness contracts across schema, migration, and tests
   - [ ] Add reproducible 0026/0027 Drizzle snapshots, DB-free public imports,
     exact cross-adapter parity, complete graph coverage, and >80% branch coverage
-- [~] Task: Re-run Phase S3 reviews and acceptance
+
+  - Remediation Green evidence: the canonical domain/public slice passes `26/26`,
+    the hardened schema/migration slice passes `44/44`, the original plus
+    adversarial Drizzle slice passes `29/29`, and the post-TenantDB aggregate
+    passes `10` files and `118/118` assertions.
+  - Coverage now exceeds the track threshold on every executable metric:
+    statements `90.6%`, branches `80.76%`, functions `100%`, and lines `92.18%`
+    across the canonical service, in-memory adapter, and Drizzle adapter.
+  - The implementation now uses one public schema/type/service/port, DB-free
+    package subpaths, a school-and-actor-bound lazily created TenantDB, composite
+    user/card/review ownership constraints, internally canonicalized digests,
+    complete calibration governance evidence, reconstructed 0026/0027 snapshots,
+    and a non-destructive 0028 tenant-hardening migration.
+Review follow-up required before Phase S3 acceptance:
   - [ ] Re-run correctness, security/boundary, and API/DX audit roles until all pass
   - [ ] Run phase acceptance and adversarial gates; record browser review as not
     applicable only because this phase exposes no user-facing route or component
