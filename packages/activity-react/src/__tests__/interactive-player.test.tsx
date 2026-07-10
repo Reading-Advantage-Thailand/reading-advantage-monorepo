@@ -65,6 +65,8 @@ describe("InteractiveActivityPlayer", () => {
     act(() => controller.emit({ status: "playing", currentSeconds: 36, durationSeconds: 90, captionsEnabled: true }));
     expect(controller.pause).toHaveBeenCalled();
     expect(screen.getByRole("group", { name: "What does git add do?" })).toBeVisible();
+    fireEvent.click(screen.getByRole("button", { name: "Check answer" }));
+    expect(onAssess).not.toHaveBeenCalled();
     fireEvent.click(screen.getByLabelText("Publishes changes"));
     fireEvent.click(screen.getByRole("button", { name: "Check answer" }));
     expect(await screen.findByRole("status")).toHaveTextContent("Review staging");
@@ -84,5 +86,45 @@ describe("InteractiveActivityPlayer", () => {
     await waitFor(() => expect(screen.getByRole("status")).toHaveTextContent("Correct"));
     fireEvent.click(screen.getByRole("button", { name: "Continue video" }));
     expect(controller.play).toHaveBeenCalled();
+  });
+
+  it("enforces an explicitly approved hosted hard gate until a correct answer", async () => {
+    const hosted = activitySchema.parse({
+      ...activity,
+      resources: activity.resources.map((resource) => resource.kind === "video" ? {
+        ...resource,
+        provider: "hosted",
+        videoId: undefined,
+        assetId: "hosted.asset",
+        hardGateApproval: { approvalId: "approval.1", approvedBy: "owner", approvedAt: "2026-07-10T00:00:00Z" }
+      } : resource),
+      checkpoints: activity.checkpoints.map((checkpoint) => ({ ...checkpoint, gate: "answer_before_continue" }))
+    });
+    const controller = createFakeMediaController();
+    render(<InteractiveActivityPlayer activity={hosted} controller={controller} locale="th" onAssess={async () => ({ isCorrect: true })} />);
+    fireEvent.click(screen.getByRole("button", { name: "Play" }));
+    expect(controller.play).toHaveBeenCalled();
+    act(() => controller.emit({ status: "playing", currentSeconds: 36, durationSeconds: 90, captionsEnabled: true }));
+    const continueButton = screen.getByRole("button", { name: "Continue video" });
+    expect(continueButton).toBeDisabled();
+    fireEvent.click(screen.getByLabelText("Stages changes"));
+    fireEvent.click(screen.getByRole("button", { name: "Check answer" }));
+    await waitFor(() => expect(continueButton).toBeEnabled());
+  });
+
+  it("supports free-text checkpoints and playing-state pause controls", () => {
+    const freeText = activitySchema.parse({
+      ...activity,
+      checkpoints: [{
+        ...activity.checkpoints[0],
+        question: { kind: "free_text", prompt: { en: "Which command stages files?" }, acceptedAnswers: ["git add"] }
+      }]
+    });
+    const controller = createFakeMediaController();
+    render(<InteractiveActivityPlayer activity={freeText} controller={controller} locale="en" onAssess={async () => ({ isCorrect: true })} />);
+    act(() => controller.emit({ status: "playing", currentSeconds: 36, durationSeconds: 90, captionsEnabled: true }));
+    expect(screen.getByRole("textbox", { name: "Answer" })).toBeVisible();
+    fireEvent.click(screen.getByRole("button", { name: "Pause" }));
+    expect(controller.pause).toHaveBeenCalled();
   });
 });

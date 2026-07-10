@@ -12,7 +12,8 @@ describe("interactive media policies", () => {
     expect(mergeWatchedRanges([
       { startSeconds: 0, endSeconds: 4 },
       { startSeconds: 3, endSeconds: 8 },
-      { startSeconds: 12, endSeconds: 15 }
+      { startSeconds: 12, endSeconds: 15 },
+      { startSeconds: 20, endSeconds: 20 }
     ])).toEqual([{ startSeconds: 0, endSeconds: 8 }, { startSeconds: 12, endSeconds: 15 }]);
   });
 
