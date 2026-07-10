@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "role": "closeout",
+  "track_id": "advantage_play_kit_20260710",
+  "closeout_date": "2026-07-10",
+  "final_acceptance": {
+    "status": "pass",
+    "evaluated_at": "2026-07-10",
+    "may_proceed_to_closeout": true,
+    "summary": "The Phaser 4 APK foundation, frozen educational ABI, dual editions, three representative cartridges, Advantage Games QC host, and Reading/Primary package-consumption proofs passed scoped automated gates and received product-owner QC approval."
+  },
+  "plan_tasks": {
+    "total": 43,
+    "complete": 43,
+    "blocked": 0,
+    "deferred": 0
+  },
+  "phase_summary": {
+    "S1_freeze_architecture": { "tasks": 6, "status": "complete" },
+    "S2_build_runtime": { "tasks": 7, "status": "complete" },
+    "S3_support_editions": { "tasks": 6, "status": "complete" },
+    "S4_operate_qc_testbed": { "tasks": 6, "status": "complete" },
+    "S5_prove_cartridges": { "tasks": 7, "status": "complete" },
+    "S6_prove_hosts": { "tasks": 6, "status": "complete" },
+    "S7_plan_rebuild_waves": { "tasks": 5, "status": "complete" }
+  },
+  "gates": [
+    { "name": "CONTRACTS", "status": "pass", "summary": "40 tests; 100% statements and lines." },
+    { "name": "APK_RUNTIME", "status": "pass", "summary": "17 tests; 83.43% statements and 90.09% lines." },
+    { "name": "CARTRIDGES", "status": "pass", "summary": "23 tests including adversarial preflight, distractor, asset, and edition validation." },
+    { "name": "HOST_SMOKES", "status": "pass", "summary": "Reading 2/2 and Primary 2/2." },
+    { "name": "ADVANTAGE_GAMES", "status": "pass", "summary": "Focused QC Jest green and production build emitted /qc." },
+    { "name": "PLAYWRIGHT", "status": "pass", "summary": "Chromium 3/3 across edition switching, mobile lifecycle, and real Phaser completion." },
+    { "name": "MEASURE_DOCTOR", "status": "bounded_exception", "summary": "Only unrelated concurrent Codecamp and TypeScript 7 track marker failures remained; measure/generate.sh is absent." }
+  ],
+  "key_commits": [
+    "01fe1f1f - APK foundation implementation and automated verification"
+  ],
+  "baseline_sha": "ba9f01ec98945f62673516631ac98fd8e8b190ec",
+  "implementation_sha": "01fe1f1f",
+  "changed_files": [
+    "packages/game-contracts/",
+    "packages/advantage-play-kit/",
+    "packages/game-cartridges/",
+    "apps/advantage-games/src/features/apk-qc/",
+    "apps/reading-advantage/lib/games/apk-host-smoke.ts",
+    "apps/primary-advantage/lib/games/apk-host-smoke.ts",
+    "measure/archive/advantage_play_kit_20260710/"
+  ],
+  "evidence_preserved": [
+    "verification.md",
+    "qc-checklist.md",
+    "architecture.md",
+    "asset-pack-contract.md",
+    "catalog-rebuild-roadmap.md",
+    "plan.md and metadata.json"
+  ],
+  "artifact_cleanup_notes": "Archive preserves only source-controlled specifications and evidence. Browser output and transient test artifacts are excluded.",
+  "anti_pattern_audit": {
+    "A5_false_claim_text": "pass - bounded exceptions are explicit",
+    "A6_registry_overstatement": "pass - foundation completion is distinct from W0 product cutover",
+    "A9_archived_track_references": "pass - successor points to archive evidence, not active execution files"
+  },
+  "next_actions": [
+    "Execute apk_catalog_cutover_w0_20260710",
+    "Keep authenticated standalone Advantage Games arcade work in a separate product track"
+  ]
+}

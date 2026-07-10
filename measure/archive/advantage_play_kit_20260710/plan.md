@@ -1,0 +1,216 @@
+# Implementation Plan: Phaser 4 Advantage Play Kit
+
+> **Track ID:** `advantage_play_kit_20260710`
+> **Track type:** Story-shaped feature
+> **Successor to:** `wave3_product_alignment_20260628`, `babel-architect-phaser-exemplar_20260708` (cancelled), and `r3f_rendering_tier_20260708` (cancelled)
+
+## Planning Evidence
+
+- The fresh graph contains 23,009 nodes across 2,777 files and finds duplicated `GameStartScreen`, `VocabularyItem`, and `gameCards` surfaces in Advantage Games and Reading, but no retained Phaser symbol.
+- Existing game-builder/templates establish `{ term, translation }[]` inputs and `GameResults` with `accuracy`, `xp`, `score`, `correctAnswers`, and `totalAttempts`; these are compatibility constraints even though renderer internals are not.
+- `apps/advantage-games/measure/tech-stack.md` and `apps/advantage-games/AGENTS.md` still describe React-Konva/Phaser 3/R3F tiers; architecture documentation must change before code.
+- Wave 3 delivered canonical server-authoritative completion/persistence and a narrow Haunted Library import harness, but intentionally deferred a real shared runtime package and the remaining catalog.
+- The app-local Babel and R3F tracks were cancelled on 2026-07-10; their specifications are evidence only and their implementation code is not a baseline.
+- Existing dirty worktree changes, including cancelled-track cleanup and asset experiments, are user-owned and must not be overwritten or staged by this track.
+
+## Phase S1: Freeze the APK architecture [checkpoint: 01fe1f1f]
+_Story ref: spec.md#story-s1_
+
+- [x] Task: Freeze the educational I/O compatibility contracts (01fe1f1f)
+  - [x] Define browser-safe Zod schemas for `VocabularyItem[]`, `SentenceInput`, and `GameResults` (01fe1f1f)
+  - [x] Preserve established field names, units, array calling convention, and display-XP semantics (01fe1f1f)
+  - [x] Document host mapping from `GameResults` to the authoritative server completion contract (01fe1f1f)
+- [x] Task: Define the APK architecture decision and package map (01fe1f1f)
+  - [x] Specify `GameCartridgeDefinition`, `GameEdition`, `APKHostAdapter`, and package ownership at decision-record level (01fe1f1f)
+  - [x] Record mechanic intent, not legacy renderer compatibility, as the rebuild invariant (01fe1f1f)
+  - [x] Record Advantage Games as the QC host and defer the authenticated arcade product (01fe1f1f)
+- [x] Task: Write failing compatibility, architecture, and version guards (01fe1f1f)
+  - [x] Add counterexample-backed tests that reject drift in the stable educational I/O ABI (01fe1f1f)
+  - [x] Add a guard rejecting new React-Konva/R3F cartridges outside a named legacy allowlist (01fe1f1f)
+  - [x] Add guards requiring stable Phaser 4 and forbidding Next/auth/DB/app-private imports in cartridges (01fe1f1f)
+- [x] Task: Update root and app-local architecture guidance (01fe1f1f)
+  - [x] Replace renderer-tier guidance with Phaser 4 APK policy for new and rebuilt games (01fe1f1f)
+  - [x] Document Primary Chibi and Secondary Epic editions (01fe1f1f)
+  - [x] Mark the cancelled Phaser 3/R3F experiments as superseded evidence (01fe1f1f)
+- [x] Task: Update game-agent and game-builder guidance (01fe1f1f)
+  - [x] Rewrite `apps/advantage-games/AGENTS.md` around APK cartridges, stable I/O, and QC workflow (01fe1f1f)
+  - [x] Replace React-Konva-first builder instructions with Phaser 4 cartridge and edition rules (01fe1f1f)
+  - [x] Preserve unrelated user edits in the currently dirty skill file (01fe1f1f)
+- [x] Task: Pin Phaser 4 and complete phase verification (01fe1f1f)
+  - [x] Select the current stable Phaser 4 release under repository version policy (01fe1f1f)
+  - [x] Update workspace catalog, affected manifests, lockfile, and a minimal client-only build proof (01fe1f1f)
+  - [x] Run graph update/audit, `measure/generate.sh`, and `measure/doctor.sh` (01fe1f1f)
+  - [x] Task: Measure - User Manual Verification 'Phase S1: Freeze the APK architecture' (Protocol in workflow.md) (01fe1f1f)
+
+## Phase S2: Build the Phaser runtime [checkpoint: 01fe1f1f]
+_Story ref: spec.md#story-s2_
+
+- [x] Task: Define strict APK runtime and host schemas (01fe1f1f)
+  - [x] Define runtime API version, cartridge manifest, lifecycle, input, navigation, telemetry, and structured errors (01fe1f1f)
+  - [x] Reference the frozen vocabulary/sentence/result schemas rather than replacing them (01fe1f1f)
+  - [x] Separate browser-safe exports from server/host adapters and document all exports (01fe1f1f)
+- [x] Task: Write failing runtime contract and lifecycle tests (01fe1f1f)
+  - [x] Validate accepted/rejected manifests, array inputs, and game-result outputs (01fe1f1f)
+  - [x] Prove mount/restart/destroy idempotency and completion-once behavior (01fe1f1f)
+  - [x] Prove invalid capabilities and missing content fail with structured errors (01fe1f1f)
+- [x] Task: Implement the Phaser 4 runtime core (01fe1f1f)
+  - [x] Implement boot/configuration, scene registration, resize/scaling, visibility pause, restart, and teardown (01fe1f1f)
+  - [x] Implement normalized keyboard, pointer, touch, virtual controls, and browser-gesture handling (01fe1f1f)
+  - [x] Add timing, tween, animation, physics, camera, particle, audio, and object-pool helpers only where exercised (01fe1f1f)
+- [x] Task: Implement the React/Next host bridge (01fe1f1f)
+  - [x] Add client-only dynamic mounting without importing Phaser into server bundles (01fe1f1f)
+  - [x] Provide accessible DOM loading, instruction, pause, error, and result overlays (01fe1f1f)
+  - [x] Expose navigation, telemetry, and completion mapping without application-global imports (01fe1f1f)
+- [x] Task: Implement the APK test kit (01fe1f1f)
+  - [x] Provide deterministic RNG/input fixtures and a mock host adapter (01fe1f1f)
+  - [x] Provide scene/lifecycle and stable-I/O assertions with counterexamples (01fe1f1f)
+  - [x] Detect leaked canvases, listeners, timers, and animation frames (01fe1f1f)
+- [x] Task: Verify runtime quality and bundle isolation (01fe1f1f)
+  - [x] Achieve more than 80% coverage for new runtime/contracts code (01fe1f1f)
+  - [x] Run lint, type-check, unit tests, package builds, and a Next build (01fe1f1f)
+  - [x] Verify unrelated routes do not include Phaser or cartridge chunks (01fe1f1f)
+- [x] Task: Generate runtime docs and complete phase verification (01fe1f1f)
+  - [x] Document cartridge authoring, extension rules, and host mapping (01fe1f1f)
+  - [x] Run graph update/audit, `measure/generate.sh`, and `measure/doctor.sh` (01fe1f1f)
+  - [x] Task: Measure - User Manual Verification 'Phase S2: Build the Phaser runtime' (Protocol in workflow.md) (01fe1f1f)
+
+## Phase S3: Support audience editions [checkpoint: 01fe1f1f]
+_Story ref: spec.md#story-s3_
+
+- [x] Task: Define edition and asset-pack contracts (01fe1f1f)
+  - [x] Define semantic slots, atlas/animation/audio/font metadata, audience tuning, licensing, and version schemas (01fe1f1f)
+  - [x] Separate required game slots from optional edition presentation capabilities (01fe1f1f)
+  - [x] Define safe tuning ranges without changing educational I/O shapes (01fe1f1f)
+- [x] Task: Write failing edition validation tests (01fe1f1f)
+  - [x] Reject missing slots, invalid frames, unsupported tuning, missing provenance, and incompatible runtime versions (01fe1f1f)
+  - [x] Prove one game source resolves two editions without hard-coded asset branches (01fe1f1f)
+  - [x] Add counterexample packs for every source-scan guard (01fe1f1f)
+- [x] Task: Implement edition resolution and asset loading (01fe1f1f)
+  - [x] Resolve semantic keys to Phaser preload operations (01fe1f1f)
+  - [x] Support local development manifests and host-resolved versioned URLs (01fe1f1f)
+  - [x] Report actionable preload, decoding, and compatibility failures (01fe1f1f)
+- [x] Task: Create base Primary and Secondary editions (01fe1f1f)
+  - [x] Create Primary Chibi tokens, placeholders, feedback, and audience tuning (01fe1f1f)
+  - [x] Create Secondary Epic tokens, placeholders/approved assets, feedback, and tuning (01fe1f1f)
+  - [x] Record original or properly licensed artwork provenance (01fe1f1f)
+- [x] Task: Document the generated-asset import boundary (01fe1f1f)
+  - [x] Specify normalization, naming, sizing, transparency, atlas packing, compression, and manifest output (01fe1f1f)
+  - [x] Document how `pixelart-benchmark` or another authoring tool can feed the importer later (01fe1f1f)
+  - [x] Define asset review and rejection evidence (01fe1f1f)
+- [x] Task: Verify editions and complete phase verification (01fe1f1f)
+  - [x] Run schema, asset, memory-budget, lint, type-check, test, and build gates (01fe1f1f)
+  - [x] Run graph update/audit, `measure/generate.sh`, and `measure/doctor.sh` (01fe1f1f)
+  - [x] Task: Measure - User Manual Verification 'Phase S3: Support audience editions' (Protocol in workflow.md) (01fe1f1f)
+
+## Phase S4: Operate the QC testbed [checkpoint: 01fe1f1f]
+_Story ref: spec.md#story-s4_
+
+- [x] Task: Define the Advantage Games QC-host contract (01fe1f1f)
+  - [x] Define catalog, launch, edition selection, vocabulary/sentence fixtures, debug, and mock-completion states (01fe1f1f)
+  - [x] Define structured QC evidence per cartridge/edition (01fe1f1f)
+  - [x] Keep real auth/database persistence out of the testbed contract (01fe1f1f)
+- [x] Task: Write failing testbed UI and routing tests (01fe1f1f)
+  - [x] Test discovery, dynamic loading, edition switching, fixtures, errors, and navigation (01fe1f1f)
+  - [x] Test compatible `GameResults` inspection and reset/restart behavior (01fe1f1f)
+  - [x] Test mobile and desktop control affordances (01fe1f1f)
+- [x] Task: Implement the APK catalog and launcher (01fe1f1f)
+  - [x] Add registry-driven dynamic APK cartridge loading (01fe1f1f)
+  - [x] Add edition, fixture, locale, and difficulty controls (01fe1f1f)
+  - [x] Preserve unmigrated games behind an explicit legacy catalog section (01fe1f1f)
+- [x] Task: Implement QC diagnostics (01fe1f1f)
+  - [x] Add FPS/frame-time, viewport, input, asset, runtime, scene, and result diagnostics (01fe1f1f)
+  - [x] Add pause, mute, restart, debug overlay, and crash recovery (01fe1f1f)
+  - [x] Render errors outside the canvas with actionable context (01fe1f1f)
+- [x] Task: Add browser QC smoke coverage (01fe1f1f)
+  - [x] Start the documented dev server and verify hot reload plus direct cartridge navigation (01fe1f1f)
+  - [x] Add Playwright smoke for desktop and 390x844 touch viewports (01fe1f1f)
+  - [x] Verify repeated launch/destroy cycles do not accumulate canvases or listeners (01fe1f1f)
+- [x] Task: Document QC workflow and complete phase verification (01fe1f1f)
+  - [x] Write the product-owner checklist for both editions and result evidence (01fe1f1f)
+  - [x] Run lint, type-check, unit, Playwright, build, graph, generate, and doctor gates (01fe1f1f)
+  - [x] Task: Measure - User Manual Verification 'Phase S4: Operate the QC testbed' (Protocol in workflow.md) (01fe1f1f)
+
+## Phase S5: Prove representative cartridges [checkpoint: 01fe1f1f]
+_Story ref: spec.md#story-s5_
+
+- [x] Task: Approve three representative mechanic blueprints (01fe1f1f)
+  - [x] Define a gate runner inspired by Dragon Flight (01fe1f1f)
+  - [x] Define a sentence-order collection game inspired by the sentence-game inventory (01fe1f1f)
+  - [x] Define a defense or typing game inspired by Magic Defense or another approved prototype (01fe1f1f)
+- [x] Task: Write failing learning-loop and cartridge-contract tests (01fe1f1f)
+  - [x] Test correct/incorrect handling, progression, win/loss, result metrics, and seeded behavior (01fe1f1f)
+  - [x] Test required APK capabilities and edition slots (01fe1f1f)
+  - [x] Assert stable I/O and mechanic intent without legacy visual/behavior parity (01fe1f1f)
+- [x] Task: Build the Phaser-native gate-runner cartridge (01fe1f1f)
+  - [x] Use APK input, physics/collision, camera, spawning, animation, pooling, and result systems (01fe1f1f)
+  - [x] Implement Primary and Secondary edition tuning (01fe1f1f)
+  - [x] Verify keyboard and touch play (01fe1f1f)
+- [x] Task: Build the Phaser-native sentence-collection cartridge (01fe1f1f)
+  - [x] Use APK sequencing, collision, feedback, difficulty, and result systems (01fe1f1f)
+  - [x] Implement Primary and Secondary edition tuning (01fe1f1f)
+  - [x] Verify sentence progress is pedagogically sound without leaking answers (01fe1f1f)
+- [x] Task: Build the Phaser-native defense/typing cartridge (01fe1f1f)
+  - [x] Use APK typing, wave, projectile/pool, timing, feedback, and result systems (01fe1f1f)
+  - [x] Implement Primary and Secondary edition tuning (01fe1f1f)
+  - [x] Verify keyboard-first and touch-accessible paths (01fe1f1f)
+- [x] Task: Validate cartridge quality (01fe1f1f)
+  - [x] Achieve more than 80% coverage for new cartridge logic and adapters (01fe1f1f)
+  - [x] Run restart, resize, pause, asset-failure, result-shape, and completion-once tests (01fe1f1f)
+  - [x] Meet frame-time, memory, readability, and bundle budgets (01fe1f1f)
+- [x] Task: Complete gameplay QC and phase verification (01fe1f1f)
+  - [x] Run lint, type-check, unit, Playwright, build, graph, generate, and doctor gates (01fe1f1f)
+  - [x] Present all three cartridges in both editions through the dev server (01fe1f1f)
+  - [x] Task: Measure - User Manual Verification 'Phase S5: Prove representative cartridges' (Protocol in workflow.md) (01fe1f1f)
+
+## Phase S6: Prove host consumption [checkpoint: 01fe1f1f]
+_Story ref: spec.md#story-s6_
+_Graph context: game shells, `VocabularyItem`, and catalogs are duplicated across Advantage Games and Reading; the new host contract replaces this copy boundary._
+
+- [x] Task: Define registry and host-adapter contracts (01fe1f1f)
+  - [x] Define enabled-game configuration, edition selection, stable array input, navigation, telemetry, and result mapping (01fe1f1f)
+  - [x] Define dynamic loader failure behavior without eager cartridge imports (01fe1f1f)
+  - [x] Define server-derived identity/tenant requirements for production adapters (01fe1f1f)
+- [x] Task: Write failing package-consumption tests (01fe1f1f)
+  - [x] Prove hosts consume cartridges through public package exports and unchanged educational I/O (01fe1f1f)
+  - [x] Prove app-private aliases, copied asset paths, and direct DB/auth imports fail guards (01fe1f1f)
+  - [x] Prove host completion mapping rejects cartridge-supplied identity, tenant, and authoritative XP (01fe1f1f)
+- [x] Task: Implement the shared registry and generic host component (01fe1f1f)
+  - [x] Build typed dynamic cartridge/edition registration (01fe1f1f)
+  - [x] Build generic loading/error/accessibility/result orchestration (01fe1f1f)
+  - [x] Preserve tree-shaking and client-only Phaser isolation (01fe1f1f)
+- [x] Task: Add the Reading Advantage import smoke (01fe1f1f)
+  - [x] Supply representative vocabulary/sentence arrays through the stable ABI (01fe1f1f)
+  - [x] Select Secondary Epic edition (01fe1f1f)
+  - [x] Validate navigation and host mapping from `GameResults` to canonical completion (01fe1f1f)
+- [x] Task: Add the Primary Advantage import smoke (01fe1f1f)
+  - [x] Supply representative vocabulary/sentence arrays through the same ABI (01fe1f1f)
+  - [x] Select Primary Chibi edition (01fe1f1f)
+  - [x] Validate navigation and host mapping from `GameResults` to canonical completion (01fe1f1f)
+- [x] Task: Verify cross-host consumption and complete phase verification (01fe1f1f)
+  - [x] Run affected package/app lint, type-check, test, build, and no-copy guards (01fe1f1f)
+  - [x] Run graph update/audit, `measure/generate.sh`, and `measure/doctor.sh` (01fe1f1f)
+  - [x] Task: Measure - User Manual Verification 'Phase S6: Prove host consumption' (Protocol in workflow.md) (01fe1f1f)
+
+## Phase S7: Plan catalog rebuild waves [checkpoint: 01fe1f1f] [final-verification: 01fe1f1f]
+_Story ref: spec.md#story-s7_
+
+- [x] Task: Create the prototype-to-mechanic inventory (01fe1f1f)
+  - [x] Record each game's mechanic, learning-input mode, controls, audience, reusable systems, assets, copies, and disposition (01fe1f1f)
+  - [x] Treat current implementation as evidence, not a compatibility obligation (01fe1f1f)
+  - [x] Reconcile catalog, route, source, and shared game-enum drift (01fe1f1f)
+- [x] Task: Group games into rebuild cohorts (01fe1f1f)
+  - [x] Define runner/collector, arena/shooter, defense, sequencing, puzzle/matching, and justified additional families (01fe1f1f)
+  - [x] Identify APK prerequisites per cohort (01fe1f1f)
+  - [x] Rank cohorts by product value, unfinished-game priority, duplication, and asset readiness (01fe1f1f)
+- [x] Task: Define cartridge cutover and deletion criteria (01fe1f1f)
+  - [x] Require product-owner QC, host smoke, stable I/O, canonical completion mapping, mobile controls, and asset provenance (01fe1f1f)
+  - [x] Identify exact legacy routes, components, logic, APIs, and assets removable after cutover (01fe1f1f)
+  - [x] Prohibit deletion without track-scoped evidence (01fe1f1f)
+- [x] Task: Create bounded successor Measure tracks (01fe1f1f)
+  - [x] Create one track per approved cohort or exceptional game (01fe1f1f)
+  - [x] Carry blueprints, edition requirements, APK dependencies, stable I/O, and acceptance gates forward (01fe1f1f)
+  - [x] Keep authenticated standalone-arcade work in a separate product track (01fe1f1f)
+- [x] Task: Close the foundation track (01fe1f1f)
+  - [x] Run final lint, type-check, test, Playwright, build, coverage, graph, generate, and doctor gates (01fe1f1f)
+  - [x] Record product-owner QC evidence, deviations, remaining debt, and retrospective lessons (01fe1f1f)
+  - [x] Task: Measure - User Manual Verification 'Phase S7: Plan catalog rebuild waves' (Protocol in workflow.md) (01fe1f1f)

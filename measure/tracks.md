@@ -57,6 +57,13 @@ Two parallel programs are in flight; priority order when picking the next track:
 
 ---
 
+## Advantage Play Kit Program (created 2026-07-10)
+
+- [~] **Track: APK Catalog Cutover W0** *Link: [./tracks/apk_catalog_cutover_w0_20260710/](./tracks/apk_catalog_cutover_w0_20260710/)*
+  Publish the three APK foundation mechanics as `dragon-flight`, `dungeon-liberator`, and `magic-defense`; remove temporary mechanic IDs from public surfaces; prove all three games in the Advantage Games QC host and both consuming apps; and lock exact legacy-deletion evidence without changing the vocabulary, sentence, or five-field result ABI.
+
+---
+
 ## App Go-Live / MVP Completion (created 2026-07-01)
 
 > Deploy-and-ship tracks for the two apps that are feature-built but not on Cloud Run.
@@ -84,6 +91,9 @@ Two parallel programs are in flight; priority order when picking the next track:
 ---
 
 ## Archived Tracks
+
+- [x] **Track: Phaser 4 Advantage Play Kit** *Link: [./archive/advantage_play_kit_20260710/](./archive/advantage_play_kit_20260710/)*
+  Archived 2026-07-10 after product-owner QC approval. Delivered the frozen educational I/O ABI, Phaser 4 runtime, Primary Chibi and Secondary Epic edition seam, three representative cartridges, the Advantage Games QC testbed, and Reading/Primary package-consumption proofs. Product public IDs, all-game host registries, and exact legacy deletion evidence continue in `apk_catalog_cutover_w0_20260710`.
 
 - [x] **Track: Shared Foundation Review** *Link: [./archive/shared_foundation_review_20260626/](./archive/shared_foundation_review_20260626/)*
   Archived 2026-06-27 after the superseding line-by-line review completed coverage of 516 shared-package files / 110277 lines with 85 evidence files and 34 LR findings.   This is review-completeness closeout only; the shared foundation is not claimed fixed or product-green, and source remediation remains for separate tracks.

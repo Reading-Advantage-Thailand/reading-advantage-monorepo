@@ -1,0 +1,22 @@
+{
+  "track_id": "apk_catalog_cutover_w0_20260710",
+  "type": "feature",
+  "status": "in-progress",
+  "created_at": "2026-07-10T11:15:00Z",
+  "updated_at": "2026-07-10T11:15:00Z",
+  "description": "Cut the three APK foundation mechanics over to public game identities, prove every public game and edition in the QC and consuming hosts, and produce exact legacy deletion evidence while preserving the stable vocabulary, sentence, and GameResults ABI.",
+  "estimated_tasks": 16,
+  "actual_tasks": null,
+  "deviation_notes": "The foundation intentionally used mechanic-oriented IDs. W0 replaces those public IDs without preserving compatibility aliases; mechanic module filenames and pure gameplay helpers may remain internal implementation details.",
+  "sprint": {
+    "goal": "Publish the first three APK games under product identities and prove they can be QCed and consumed without copied gameplay code or educational-contract drift.",
+    "stories": [
+      { "id": "S1", "title": "Publish product game identities", "size": "M", "priority": "Must", "status": "in-progress" },
+      { "id": "S2", "title": "Cut over the QC testbed", "size": "M", "priority": "Must", "status": "pending" },
+      { "id": "S3", "title": "Prove both production hosts", "size": "L", "priority": "Must", "status": "pending" },
+      { "id": "S4", "title": "Lock legacy deletion evidence", "size": "M", "priority": "Must", "status": "pending" }
+    ],
+    "demo_notes": null,
+    "retro_ref": null
+  }
+}

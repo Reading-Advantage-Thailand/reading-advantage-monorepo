@@ -1,12 +1,14 @@
 {
   "track_id": "advantage_play_kit_20260710",
   "type": "feature",
-  "status": "in-progress",
+  "status": "done",
   "created_at": "2026-07-10T07:03:08Z",
-  "updated_at": "2026-07-10T08:45:33Z",
+  "updated_at": "2026-07-10T11:15:00Z",
+  "completed": "2026-07-10",
+  "completed_at": "2026-07-10T11:15:00Z",
   "description": "Build the Phaser 4 Advantage Play Kit (APK), keep advantage-games as its development and QC testbed, preserve the established game I/O contracts, support Primary and Secondary editions, prove package consumption across host apps, and establish the existing-game rebuild program.",
   "estimated_tasks": 43,
-  "actual_tasks": null,
+  "actual_tasks": 43,
   "deviation_notes": "Successor to archived Wave 3 game import-readiness work and the cancelled app-local Babel Architect Phaser and R3F rendering experiments. This track preserves the established vocabulary-array, sentence-array, and game-result ABI while intentionally preserving mechanic concepts rather than legacy renderer behavior or source compatibility.",
   "sprint": {
     "goal": "Establish the Phaser 4 Advantage Play Kit as the canonical game platform, with advantage-games as its live QC testbed, stable learning I/O contracts, dual Primary and Secondary editions, representative cartridges, and proven package consumption by host applications.",
@@ -16,52 +18,52 @@
         "title": "Freeze the APK architecture",
         "size": "M",
         "priority": "Must",
-        "status": "completed"
+        "status": "done"
       },
       {
         "id": "S2",
         "title": "Build the Phaser runtime",
         "size": "XL",
         "priority": "Must",
-        "status": "completed"
+        "status": "done"
       },
       {
         "id": "S3",
         "title": "Support audience editions",
         "size": "L",
         "priority": "Must",
-        "status": "completed"
+        "status": "done"
       },
       {
         "id": "S4",
         "title": "Operate the QC testbed",
         "size": "L",
         "priority": "Must",
-        "status": "completed"
+        "status": "done"
       },
       {
         "id": "S5",
         "title": "Prove representative cartridges",
         "size": "XL",
         "priority": "Must",
-        "status": "in-progress"
+        "status": "done"
       },
       {
         "id": "S6",
         "title": "Prove host consumption",
         "size": "L",
         "priority": "Must",
-        "status": "in-progress"
+        "status": "done"
       },
       {
         "id": "S7",
         "title": "Plan catalog rebuild waves",
         "size": "M",
         "priority": "Should",
-        "status": "in-progress"
+        "status": "done"
       }
     ],
-    "demo_notes": null,
+    "demo_notes": "Product-owner QC approved all three representative cartridges in Primary Chibi and Secondary Epic on 2026-07-10. Automated evidence: contracts 40/40, runtime 17/17, cartridges 23/23, both host smokes 2/2, QC Jest 1/1, Playwright Chromium 3/3, and Advantage Games production build green.",
     "retro_ref": null
   }
 }
