@@ -87,3 +87,20 @@ export {
   curriculumSourceProvenance,
 } from "./curriculum-inventory.js";
 export { curriculumBindings } from "./binding-data.js";
+
+export {
+  APKGuidedPracticeSchema,
+  APKIndependentPracticeSchema,
+  APKLearningBlueprintSchema,
+  APKObjectiveBlueprintSchema,
+  APKWorkedExampleSchema,
+  buildAPKBlueprintReport,
+  validateAPKLearningBlueprint,
+} from "./apk-blueprint.js";
+export type {
+  APKBlueprintIssue,
+  APKBlueprintReport,
+  APKBlueprintValidationResult,
+  APKLearningBlueprint,
+} from "./apk-blueprint.js";
+export { apkLearningBlueprint } from "./apk-blueprint-data.js";

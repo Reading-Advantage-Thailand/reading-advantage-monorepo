@@ -1,8 +1,8 @@
 {
   "schemaVersion": "code-graph-source.v1",
   "sourceRepository": "mastery-advantage",
-  "sourceCommit": "4a86a526d20f9891a6c8235256abe971e17cba28",
-  "sourceDigest": "79ca97c28b9011b956aa590dc54a660b0de7ef508d27768cc652a5771f59643b",
+  "sourceCommit": "a90ffe93596eaed93f6851325164b7dfa8dba427",
+  "sourceDigest": "a3f45e5596350c4fd99227b927e437139a57359a0b67dd56e8d0d4eba3679e35",
   "authorityPath": "code/code-knowledge-space.json",
-  "graphVersion": "1.1.0"
+  "graphVersion": "1.2.0"
 }

@@ -210,7 +210,7 @@ const rubrics = [
 const release = {
   schemaVersion: "codecamp-curriculum-bindings.v1",
   releaseId: "codecamp-curriculum-2026-07",
-  graphVersion: "1.1.0",
+  graphVersion: "1.2.0",
   curriculumVersion: "19-modules.88-lessons.v1",
   provenance: {
     sourcePath: "packages/db/src/seed/codecamp-curriculum-data.ts",
