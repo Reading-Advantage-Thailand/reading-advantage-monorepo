@@ -17,8 +17,22 @@ import {
   Rating,
   type Card,
   type Grade,
-} from 'ts-fsrs';
-import type { SrsCardId, SrsCardState, SrsRating } from './contract.js';
+} from "ts-fsrs";
+import type {
+  ObjectivePriority,
+  SrsCardId,
+  SrsCardState,
+  SrsRating,
+} from "./contract.js";
+
+/** Normative request-retention defaults by objective priority. */
+export const DEFAULT_REQUEST_RETENTION_BY_PRIORITY: Readonly<
+  Record<Exclude<ObjectivePriority, "triaged">, number>
+> = {
+  essential: 0.95,
+  supporting: 0.9,
+  extension: 0.8,
+};
 
 /**
  * Scheduler configuration parameters.
@@ -29,6 +43,9 @@ export type SchedulerConfig = {
    * Default: 0.9 (90%)
    */
   requestRetention: number;
+
+  /** Optional per-priority overrides for the normative retention targets. */
+  requestRetentionByPriority?: Partial<Record<ObjectivePriority, number>>;
 
   /**
    * Maximum interval in days.
@@ -48,22 +65,40 @@ export type SchedulerConfig = {
  */
 export const DEFAULT_SCHEDULER_CONFIG: SchedulerConfig = {
   requestRetention: 0.9,
+  requestRetentionByPriority: DEFAULT_REQUEST_RETENTION_BY_PRIORITY,
   maximumInterval: 365,
   enableShortTermPreview: false,
 };
+
+/**
+ * Resolve the retention target for an objective priority without mutating configuration.
+ * @param priority Objective priority being scheduled.
+ * @param config Optional scalar and per-priority scheduler overrides.
+ * @returns The configured override or normative target for the priority.
+ */
+export function resolveRequestRetention(
+  priority: ObjectivePriority,
+  config: Partial<SchedulerConfig> = {},
+): number {
+  const explicit = config.requestRetentionByPriority?.[priority];
+  if (explicit !== undefined) return explicit;
+  if (priority !== "triaged")
+    return DEFAULT_REQUEST_RETENTION_BY_PRIORITY[priority];
+  return config.requestRetention ?? DEFAULT_SCHEDULER_CONFIG.requestRetention;
+}
 
 /**
  * Map our SrsRating enum to ts-fsrs Grade enum.
  */
 export function mapSrsRatingToGrade(rating: SrsRating): Grade {
   switch (rating) {
-    case 'Again':
+    case "Again":
       return Rating.Again;
-    case 'Hard':
+    case "Hard":
       return Rating.Hard;
-    case 'Good':
+    case "Good":
       return Rating.Good;
-    case 'Easy':
+    case "Easy":
       return Rating.Easy;
   }
 }
@@ -74,15 +109,15 @@ export function mapSrsRatingToGrade(rating: SrsRating): Grade {
 export function mapGradeToSrsRating(grade: Grade): SrsRating {
   switch (grade) {
     case Rating.Again:
-      return 'Again';
+      return "Again";
     case Rating.Hard:
-      return 'Hard';
+      return "Hard";
     case Rating.Good:
-      return 'Good';
+      return "Good";
     case Rating.Easy:
-      return 'Easy';
+      return "Easy";
     default:
-      return 'Again';
+      return "Again";
   }
 }
 
@@ -121,18 +156,18 @@ function mapFsrsCardToSrsCardState(
 /**
  * Map ts-fsrs state number to our card state string.
  */
-function mapCardState(state: number): SrsCardState['state'] {
+function mapCardState(state: number): SrsCardState["state"] {
   switch (state) {
     case 0:
-      return 'new';
+      return "new";
     case 1:
-      return 'learning';
+      return "learning";
     case 2:
-      return 'review';
+      return "review";
     case 3:
-      return 'relearning';
+      return "relearning";
     default:
-      return 'new';
+      return "new";
   }
 }
 
@@ -157,7 +192,7 @@ export function createCard(params: {
     variantKey,
     stability: 0,
     difficulty: 0,
-    state: 'new',
+    state: "new",
     dueDate: now,
     elapsedDays: 0,
     scheduledDays: 0,
@@ -189,18 +224,28 @@ function toFsrsCard(card: SrsCardState): Card {
 
 /**
  * Apply a review rating to a card and return the updated state.
+ * @param card Current SRS card state.
+ * @param rating Recall rating produced by validated practice evidence.
+ * @param now Optional deterministic review timestamp.
+ * @param config Optional scheduler configuration overrides.
+ * @param objectivePriority Optional objective priority used to resolve a targeted retention rate.
+ * @returns The updated card state after applying the FSRS transition.
  */
 export function reviewCard(
   card: SrsCardState,
   rating: SrsRating,
   now?: string,
   config?: Partial<SchedulerConfig>,
+  objectivePriority?: ObjectivePriority,
 ): SrsCardState {
   const currentTime = now ?? new Date().toISOString();
   const fullConfig = { ...DEFAULT_SCHEDULER_CONFIG, ...config };
+  const requestRetention = objectivePriority
+    ? resolveRequestRetention(objectivePriority, fullConfig)
+    : fullConfig.requestRetention;
 
   const params = generatorParameters({
-    request_retention: fullConfig.requestRetention,
+    request_retention: requestRetention,
     maximum_interval: fullConfig.maximumInterval,
     enable_short_term: fullConfig.enableShortTermPreview,
   });
@@ -225,7 +270,10 @@ export function reviewCard(
 /**
  * Filter cards to return only those with dueDate <= now.
  */
-export function getDueCards(cards: SrsCardState[], now?: string): SrsCardState[] {
+export function getDueCards(
+  cards: SrsCardState[],
+  now?: string,
+): SrsCardState[] {
   const currentTime = now ?? new Date().toISOString();
   const nowMs = new Date(currentTime).getTime();
 
@@ -261,15 +309,15 @@ export function previewInterval(
 /**
  * Map our state string to ts-fsrs state number.
  */
-function mapSrsStateToNumber(state: SrsCardState['state']): number {
+function mapSrsStateToNumber(state: SrsCardState["state"]): number {
   switch (state) {
-    case 'new':
+    case "new":
       return 0;
-    case 'learning':
+    case "learning":
       return 1;
-    case 'review':
+    case "review":
       return 2;
-    case 'relearning':
+    case "relearning":
       return 3;
   }
 }
@@ -281,7 +329,7 @@ function generateCardId(): SrsCardId {
   const bytes = new Uint8Array(16);
   crypto.getRandomValues(bytes);
   const hex = Array.from(bytes)
-    .map((b) => b.toString(16).padStart(2, '0'))
-    .join('');
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
   return `card_${hex}`;
 }

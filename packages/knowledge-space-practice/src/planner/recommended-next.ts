@@ -11,12 +11,25 @@
  * Pure functions, no I/O, no app imports, domain-neutral.
  */
 
-import type { PlannerInput } from './types.js';
+import {
+  DEFAULT_PRIORITY_WEIGHTS,
+  type PlannerInput,
+  type PriorityWeightInput,
+} from './types.js';
 import { getPriority } from './priority.js';
 
+const DEFAULT_DIVERSITY_CAP = 2;
+
+/**
+ * Ranks candidates and applies the nearest-container diversity cap.
+ * @param input Planner graph and learner signals.
+ * @param weights Versioned five-term priority weights.
+ * @param topN Maximum number of candidate identifiers to return.
+ * @returns Deterministically ranked candidate identifiers.
+ */
 export function getRecommendedNext(
   input: PlannerInput,
-  weights: { a: number; b: number; c: number; d: number },
+  weights: PriorityWeightInput = DEFAULT_PRIORITY_WEIGHTS,
   topN = 5,
 ): readonly string[] {
   if (topN <= 0 || input.nodes.length === 0) return [];
@@ -47,5 +60,51 @@ export function getRecommendedNext(
   ready.sort(comparator);
   unknown.sort(comparator);
 
-  return [...ready, ...unknown].slice(0, topN);
+  return applyDiversityCap([...ready, ...unknown], input, topN);
+}
+
+function applyDiversityCap(
+  rankedNodeIds: readonly string[],
+  input: PlannerInput,
+  topN: number,
+): string[] {
+  const groupByNode = nearestContainsAncestorByNode(input);
+  const countByGroup = new Map<string, number>();
+  const selected: string[] = [];
+
+  for (const nodeId of rankedNodeIds) {
+    const groupId = groupByNode.get(nodeId) ?? `ungrouped:${nodeId}`;
+    const currentCount = countByGroup.get(groupId) ?? 0;
+    if (currentCount >= DEFAULT_DIVERSITY_CAP) continue;
+    selected.push(nodeId);
+    countByGroup.set(groupId, currentCount + 1);
+    if (selected.length >= topN) break;
+  }
+
+  return selected;
+}
+
+function nearestContainsAncestorByNode(input: PlannerInput): ReadonlyMap<string, string> {
+  const nodeKind = new Map(input.nodes.map((node) => [node.id, node.kind]));
+  const parentsByNode = new Map<string, string[]>();
+  for (const edge of input.edges) {
+    if (edge.type !== 'contains') continue;
+    const parents = parentsByNode.get(edge.targetId) ?? [];
+    parents.push(edge.sourceId);
+    parentsByNode.set(edge.targetId, parents);
+  }
+
+  const groups = new Map<string, string>();
+  for (const node of input.nodes) {
+    const directParents = [...(parentsByNode.get(node.id) ?? [])].sort();
+    const instructionalUnit = directParents.find(
+      (parentId) => nodeKind.get(parentId) === 'instructional_unit',
+    );
+    const contentGroup = directParents.find(
+      (parentId) => nodeKind.get(parentId) === 'content_group',
+    );
+    const nearest = instructionalUnit ?? contentGroup ?? directParents[0];
+    if (nearest) groups.set(node.id, nearest);
+  }
+  return groups;
 }

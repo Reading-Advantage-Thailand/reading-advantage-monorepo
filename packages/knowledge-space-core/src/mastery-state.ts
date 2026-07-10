@@ -5,7 +5,7 @@
 // domain-neutral — no app, convex, or curriculum imports allowed (boundary
 // rule, see measure/knowledge-space.md Implementation Rule 6).
 
-import { z } from 'zod';
+import { z } from "zod";
 
 // ---------------------------------------------------------------------------
 // Thresholds
@@ -27,6 +27,12 @@ export interface MasteryThresholds {
   readyThreshold: number;
   /** Composite readiness at or above which a node is `nearly_ready` (default 0.50). */
   nearThreshold: number;
+  /** Edge weight at or above which a prerequisite is a non-compensatory gate. */
+  hardGateThreshold: number;
+  /** Symmetric mastered-count delta used by progress-trend projections. */
+  trendThreshold: number;
+  /** Optional version tag for persisted or replayed engine configuration. */
+  configVersion?: string;
 }
 
 /**
@@ -38,6 +44,8 @@ export const MASTERY_THRESHOLDS_DEFAULT: MasteryThresholds = Object.freeze({
   masteryExit: 0.7,
   readyThreshold: 0.8,
   nearThreshold: 0.5,
+  hardGateThreshold: 1,
+  trendThreshold: 3,
 });
 
 /**
@@ -49,6 +57,9 @@ export const masteryThresholdsSchema = z.strictObject({
   masteryExit: z.number().min(0).max(1),
   readyThreshold: z.number().min(0).max(1),
   nearThreshold: z.number().min(0).max(1),
+  hardGateThreshold: z.number().min(0).max(1),
+  trendThreshold: z.number().positive(),
+  configVersion: z.string().min(1).optional(),
 });
 
 // ---------------------------------------------------------------------------
@@ -63,9 +74,14 @@ export const masteryThresholdsSchema = z.strictObject({
  * - `inProgress` — has evidence but not proficient
  * - `untouched` — no evidence
  */
-export type MasteryState = 'mastered' | 'decaying' | 'inProgress' | 'untouched';
+export type MasteryState = "mastered" | "decaying" | "inProgress" | "untouched";
 
-const masteryStateValues = ['mastered', 'decaying', 'inProgress', 'untouched'] as const;
+const masteryStateValues = [
+  "mastered",
+  "decaying",
+  "inProgress",
+  "untouched",
+] as const;
 
 // ---------------------------------------------------------------------------
 // Three-way readiness state (kst-srs.v2 §5.2)
@@ -79,9 +95,9 @@ const masteryStateValues = ['mastered', 'decaying', 'inProgress', 'untouched'] a
  * - `nearly_ready` — `readiness ≥ nearThreshold` (default 0.50)
  * - `blocked`    — otherwise
  */
-export type ReadinessState = 'ready' | 'nearly_ready' | 'blocked';
+export type ReadinessState = "ready" | "nearly_ready" | "blocked";
 
-const readinessStateValues = ['ready', 'nearly_ready', 'blocked'] as const;
+const readinessStateValues = ["ready", "nearly_ready", "blocked"] as const;
 
 // ---------------------------------------------------------------------------
 // KnowledgeStateEntry (per-node entry in the v2 state map, kst-srs.v2 §3.5)
@@ -136,10 +152,14 @@ export const knowledgeStateEntrySchema = z.object({
   retention: z.number().min(0).max(1),
   isProficient: z.boolean(),
   state: z.enum(masteryStateValues),
-  evidence: z.array(z.object({
-    sourceId: z.string().min(1),
-    observedAt: z.number().optional(),
-  })).optional(),
+  evidence: z
+    .array(
+      z.object({
+        sourceId: z.string().min(1),
+        observedAt: z.number().optional(),
+      }),
+    )
+    .optional(),
   lastUpdated: z.number().optional(),
   readinessScore: z.number().min(0).max(1).optional(),
   readinessState: z.enum(readinessStateValues).optional(),

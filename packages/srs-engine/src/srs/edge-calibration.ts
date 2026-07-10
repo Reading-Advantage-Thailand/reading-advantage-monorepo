@@ -23,16 +23,47 @@
  * - `refuted`   — evidence contradicts the authored edge
  * - `untested`  — no student has attempted B without a verdict on A (confounding guardrail)
  */
-export type CalibrationStatus = 'confirmed' | 'refuted' | 'untested';
+export type CalibrationStatus = "confirmed" | "refuted" | "untested";
+
+/** Learner-ability tercile used to stratify edge-calibration evidence. */
+export type CalibrationAbilityBand = "low" | "mid" | "high";
+
+/** Contingency evidence collected for one learner-ability tercile. */
+export type CalibrationAbilityStratum = {
+  band: CalibrationAbilityBand;
+  table: CalibrationContingencyTable;
+};
+
+/** Configuration and evidence for an ability-stratified calibration verdict. */
+export type AbilityStratifiedCalibrationInput = {
+  strata: CalibrationAbilityStratum[];
+  prior: { alpha: number; beta: number };
+  minBandEvidence?: number;
+  maxMeanDivergence?: number;
+};
+
+/** Posterior summary for one informative ability band. */
+export type CalibrationBandPosterior = {
+  band: CalibrationAbilityBand;
+  necessityMean: number;
+  evidenceCount: number;
+};
+
+/** Ability-adjusted edge verdict with an auditable reason and band posteriors. */
+export type AbilityStratifiedCalibrationResult = {
+  status: CalibrationStatus;
+  reason: "confounded_by_ability" | "insufficient_strata" | null;
+  bandPosteriors: CalibrationBandPosterior[];
+};
 
 /**
  * Readonly tuple of all valid `CalibrationStatus` values.
  * Used for exhaustive iteration and runtime validation.
  */
 export const CALIBRATION_STATUS_VALUES: readonly CalibrationStatus[] = [
-  'confirmed',
-  'refuted',
-  'untested',
+  "confirmed",
+  "refuted",
+  "untested",
 ] as const;
 
 // ============================================
@@ -147,7 +178,9 @@ export type VerdictMap = ReadonlyMap<string, EdgeVerdicts>;
  * @param {VerdictMap} verdicts - Per-student verdict map with optional A and B verdicts
  * @returns {CalibrationObservation[]} - Array of observations for students with both A and B verdicts
  */
-export function extractObservations(verdicts: VerdictMap): CalibrationObservation[] {
+export function extractObservations(
+  verdicts: VerdictMap,
+): CalibrationObservation[] {
   const observations: CalibrationObservation[] = [];
   for (const [studentId, v] of verdicts) {
     if (v.a !== undefined && v.b !== undefined) {
@@ -190,9 +223,10 @@ export function buildContingencyTable(
  * @returns {number} - Necessity score, or 0 when the not-proficient-A row is empty
  */
 export function computeNecessity(table: CalibrationContingencyTable): number {
-  const notProfA = table.notProficientAProficientB + table.notProficientANotProficientB;
+  const notProfA =
+    table.notProficientAProficientB + table.notProficientANotProficientB;
   if (notProfA === 0) return 0;
-  return table.notProficientAProficientB / notProfA;
+  return table.notProficientANotProficientB / notProfA;
 }
 
 /**
@@ -200,9 +234,12 @@ export function computeNecessity(table: CalibrationContingencyTable): number {
  * @param {CalibrationContingencyTable} table - The 2×2 contingency table
  * @returns {number} - Informativeness (lift), or 0 when either row is empty
  */
-export function computeInformativeness(table: CalibrationContingencyTable): number {
+export function computeInformativeness(
+  table: CalibrationContingencyTable,
+): number {
   const profA = table.proficientAProficientB + table.proficientANotProficientB;
-  const notProfA = table.notProficientAProficientB + table.notProficientANotProficientB;
+  const notProfA =
+    table.notProficientAProficientB + table.notProficientANotProficientB;
   if (profA === 0 || notProfA === 0) return 0;
   const pBGivenA = table.proficientAProficientB / profA;
   const pBGivenNotA = table.notProficientAProficientB / notProfA;
@@ -250,16 +287,92 @@ export function updatePosterior(
 ): EdgeCalibration {
   let alpha = state.alpha;
   let beta = state.beta;
-  if (observation.a && observation.b) {
-    alpha++;
-  } else if (observation.a && !observation.b) {
-    beta++;
+  if (!observation.a) {
+    if (observation.b) {
+      beta++;
+    } else {
+      alpha++;
+    }
   }
   return {
     ...state,
     alpha,
     beta,
     lastUpdated: opts?.now ?? state.lastUpdated,
+  };
+}
+
+/**
+ * Classify an edge after comparing necessity posteriors across ability terciles.
+ * @param input Ability-band contingency evidence, prior, and decision thresholds.
+ * @returns The pooled verdict or an auditable untested reason when strata are insufficient or divergent.
+ */
+export function classifyAbilityStratifiedCalibration(
+  input: AbilityStratifiedCalibrationInput,
+): AbilityStratifiedCalibrationResult {
+  const minBandEvidence = input.minBandEvidence ?? 5;
+  const maxMeanDivergence = input.maxMeanDivergence ?? 0.2;
+
+  const bandPosteriors = input.strata
+    .map(({ band, table }) => {
+      const violations = table.notProficientAProficientB;
+      const necessityEvidence = table.notProficientANotProficientB;
+      const evidenceCount = violations + necessityEvidence;
+
+      return {
+        band,
+        necessityMean: posteriorMean(
+          input.prior.alpha + necessityEvidence,
+          input.prior.beta + violations,
+        ),
+        evidenceCount,
+      };
+    })
+    .filter((posterior) => posterior.evidenceCount >= minBandEvidence);
+
+  if (bandPosteriors.length < 2) {
+    return {
+      status: "untested",
+      reason: "insufficient_strata",
+      bandPosteriors,
+    };
+  }
+
+  const means = bandPosteriors.map((posterior) => posterior.necessityMean);
+  const divergence = Math.max(...means) - Math.min(...means);
+  if (divergence > maxMeanDivergence) {
+    return {
+      status: "untested",
+      reason: "confounded_by_ability",
+      bandPosteriors,
+    };
+  }
+
+  const pooledAlpha = bandPosteriors.reduce(
+    (alpha, posterior) =>
+      alpha +
+      input.strata.find((stratum) => stratum.band === posterior.band)!.table
+        .notProficientANotProficientB,
+    input.prior.alpha,
+  );
+  const pooledBeta = bandPosteriors.reduce(
+    (beta, posterior) =>
+      beta +
+      input.strata.find((stratum) => stratum.band === posterior.band)!.table
+        .notProficientAProficientB,
+    input.prior.beta,
+  );
+  const pooledMean = posteriorMean(pooledAlpha, pooledBeta);
+
+  return {
+    status:
+      pooledMean > 0.5
+        ? "confirmed"
+        : pooledMean < 0.5
+          ? "refuted"
+          : "untested",
+    reason: null,
+    bandPosteriors,
   };
 }
 
@@ -303,10 +416,11 @@ export function bucketVariance(
   alpha?: number,
   beta?: number,
 ): string {
-  if (alpha !== undefined && beta !== undefined && alpha + beta === 0) return 'none';
-  if (variance >= 0.2) return 'low';
-  if (variance >= 0.05) return 'medium';
-  return 'high';
+  if (alpha !== undefined && beta !== undefined && alpha + beta === 0)
+    return "none";
+  if (variance >= 0.2) return "low";
+  if (variance >= 0.05) return "medium";
+  return "high";
 }
 
 // ============================================
@@ -352,19 +466,19 @@ export function classifyStatus(
   );
 
   if (!hasConfoundingBreaker || !hasPairedObs) {
-    return { ...state, status: 'untested' };
+    return { ...state, status: "untested" };
   }
 
   const mean = posteriorMean(state.alpha, state.beta);
   const totalEvidence = state.alpha + state.beta;
 
   if (mean > 0.5 && totalEvidence > 2) {
-    return { ...state, status: 'confirmed' };
+    return { ...state, status: "confirmed" };
   }
   if (mean < 0.5 && totalEvidence > 2) {
-    return { ...state, status: 'refuted' };
+    return { ...state, status: "refuted" };
   }
-  return { ...state, status: 'untested' };
+  return { ...state, status: "untested" };
 }
 
 // ============================================
@@ -397,9 +511,9 @@ function confidenceOrdinal(conf: string): number {
  * @returns {string} - Confidence label: 'low', 'medium', or 'high'
  */
 function meanToConfidence(mean: number): string {
-  if (mean < 0.33) return 'low';
-  if (mean < 0.67) return 'medium';
-  return 'high';
+  if (mean < 0.33) return "low";
+  if (mean < 0.67) return "medium";
+  return "high";
 }
 
 /**
@@ -412,21 +526,29 @@ export function buildReviewQueueItem(
   input: ReviewQueueBuildInput,
   opts?: ReviewQueueBuildOptions,
 ): CalibrationReviewQueueItem | null {
-  if (input.calibration.status === 'untested') return null;
+  if (input.calibration.status === "untested") return null;
   if (input.derived && !opts?.includeDerived) return null;
 
   const weightThreshold = opts?.weightThreshold ?? DEFAULT_WEIGHT_THRESHOLD;
-  const confidenceThreshold = opts?.confidenceThreshold ?? DEFAULT_CONFIDENCE_THRESHOLD;
+  const confidenceThreshold =
+    opts?.confidenceThreshold ?? DEFAULT_CONFIDENCE_THRESHOLD;
 
-  const calibratedWeight = posteriorMean(input.calibration.alpha, input.calibration.beta);
+  const calibratedWeight = posteriorMean(
+    input.calibration.alpha,
+    input.calibration.beta,
+  );
   const calibratedConfidence = meanToConfidence(calibratedWeight);
 
   const weightDiff = Math.abs(input.authoredWeight - calibratedWeight);
   const confDistance = Math.abs(
-    confidenceOrdinal(input.authoredConfidence) - confidenceOrdinal(calibratedConfidence),
+    confidenceOrdinal(input.authoredConfidence) -
+      confidenceOrdinal(calibratedConfidence),
   );
 
-  const divergence = Math.max(weightDiff, confDistance / MAX_CONFIDENCE_DISTANCE);
+  const divergence = Math.max(
+    weightDiff,
+    confDistance / MAX_CONFIDENCE_DISTANCE,
+  );
 
   if (weightDiff <= weightThreshold && confDistance <= confidenceThreshold) {
     return null;

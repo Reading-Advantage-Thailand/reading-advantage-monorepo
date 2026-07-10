@@ -1,8 +1,8 @@
 // Planner contract types and the priority weight Zod schema.
 //
 // kst-srs.v2 §7 + spec.md FR4: priority(B) = a·readiness(B) +
-// b·unlockValue(B) + c·goalProximity(B) + d·weaknessFit(B), with
-// configurable engine weights a, b, c, d. The weight schema is the
+// b·unlockValue(B) + c·goalProximity(B) + d·weaknessFit(B) + e·utility(B),
+// with configurable engine weights a, b, c, d, e. The weight schema is the
 // runtime-parsable surface; the planner input / output types describe
 // the contract between the planner and downstream consumers (e.g.,
 // the `recommendedNext` field in `StudentVisualizationV1`).
@@ -14,7 +14,7 @@
 import * as z from 'zod';
 
 // ---------------------------------------------------------------------------
-// 1. priorityWeights — runtime Zod schema for the a/b/c/d engine weights
+// 1. priorityWeights — runtime Zod schema for the a/b/c/d/e engine weights
 // ---------------------------------------------------------------------------
 //
 // Each weight is a finite, non-negative number. NaN, ±Infinity, negative
@@ -29,10 +29,23 @@ export const priorityWeightsSchema = z
     b: z.number().finite().min(0),
     c: z.number().finite().min(0),
     d: z.number().finite().min(0),
+    e: z.number().finite().min(0),
   })
   .strict();
 
 export type PriorityWeights = z.infer<typeof priorityWeightsSchema>;
+
+/** Backward-compatible call input; persisted v3.2 configs still require `e`. */
+export type PriorityWeightInput = Omit<PriorityWeights, 'e'> & { e?: number };
+
+/** Default normalized planner weights from kst-srs.v3.2 §10.1. */
+export const DEFAULT_PRIORITY_WEIGHTS: PriorityWeights = Object.freeze({
+  a: 0.35,
+  b: 0.2,
+  c: 0.15,
+  d: 0.1,
+  e: 0.2,
+});
 
 // ---------------------------------------------------------------------------
 // 2. PriorityScore — discriminated union (ranked | unranked | mastered)
@@ -54,6 +67,7 @@ export interface PriorityScoreTerms {
   readonly unlockValue: number;
   readonly goalProximity: number;
   readonly weaknessFit: number;
+  readonly utility: number;
 }
 
 export type PriorityScore =
@@ -120,6 +134,8 @@ export interface PlannerInput {
   readonly readinessByNode: Readonly<Record<string, number>>;
   readonly goalNodeIds: readonly string[];
   readonly misconceptionLinks: readonly PlannerMisconceptionLink[];
+  /** Validated utility scores supplied by an injected domain provider. */
+  readonly utilityByNode?: Readonly<Record<string, number>>;
 }
 
 export interface PlannerOutput {

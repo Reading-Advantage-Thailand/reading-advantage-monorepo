@@ -3,13 +3,13 @@
 // Pure, deterministic computation of prerequisite-weighted readiness.
 // Domain-neutral: no app, convex, or curriculum imports.
 
-import type { KnowledgeSpace } from './types.js';
+import type { KnowledgeSpace } from "./types.js";
 import type {
   KnowledgeStateEntry,
   MasteryThresholds,
   ReadinessState,
-} from './mastery-state.js';
-import { MASTERY_THRESHOLDS_DEFAULT } from './mastery-state.js';
+} from "./mastery-state.js";
+import { MASTERY_THRESHOLDS_DEFAULT } from "./mastery-state.js";
 
 /**
  * Result of a weighted readiness computation.
@@ -25,8 +25,8 @@ export interface ReadinessResult {
  * Compute the weighted readiness score for a node given the current knowledge
  * state and the prerequisite structure.
  *
- * Formula (kst-srs.v2 §5.1):
- *   readiness(B) = Σ(wᵢ · mᵢ) / Σ(wᵢ) over prerequisite_for edges i → B
+ * Formula (kst-srs.v3 §2.5):
+ *   readiness(B) = min(hard prerequisite mastery) × weighted soft mastery
  *
  * Where wᵢ is edge weight and mᵢ is the student mastery level of prerequisite i.
  * readiness = 1 if B has no prerequisites or if all edge weights sum to zero.
@@ -47,36 +47,41 @@ export function computeWeightedReadiness(
 
   // Filter prerequisite edges targeting this node
   const prereqEdges = graph.edges.filter(
-    (e) => e.type === 'prerequisite_for' && e.targetId === nodeId,
+    (e) => e.type === "prerequisite_for" && e.targetId === nodeId,
   );
 
   // No prerequisites → full readiness
   if (prereqEdges.length === 0) {
-    return { score: 1, state: 'ready' };
+    return { score: 1, state: "ready" };
   }
 
-  let weightedSum = 0;
-  let totalWeight = 0;
+  const hard = prereqEdges.filter((edge) => edge.weight >= t.hardGateThreshold);
+  const soft = prereqEdges.filter((edge) => edge.weight < t.hardGateThreshold);
+  const masteryFor = (sourceId: string): number =>
+    state.get(sourceId)?.mastery ?? 0;
 
-  for (const edge of prereqEdges) {
-    const prereqEntry = state.get(edge.sourceId);
-    const mastery = prereqEntry?.mastery ?? 0;
-    const weight = edge.weight;
-    weightedSum += weight * mastery;
-    totalWeight += weight;
-  }
-
-  // If all weights sum to zero, no meaningful prerequisites → full readiness
-  const score = totalWeight === 0 ? 1 : weightedSum / totalWeight;
+  const gate =
+    hard.length > 0
+      ? Math.min(...hard.map((edge) => masteryFor(edge.sourceId)))
+      : 1;
+  const totalSoftWeight = soft.reduce((sum, edge) => sum + edge.weight, 0);
+  const component =
+    soft.length === 0 || totalSoftWeight === 0
+      ? 1
+      : soft.reduce(
+          (sum, edge) => sum + edge.weight * masteryFor(edge.sourceId),
+          0,
+        ) / totalSoftWeight;
+  const score = gate * component;
 
   // Map to readiness state band (kst-srs.v2 §5.2)
   let s: ReadinessState;
   if (score >= t.readyThreshold) {
-    s = 'ready';
+    s = "ready";
   } else if (score >= t.nearThreshold) {
-    s = 'nearly_ready';
+    s = "nearly_ready";
   } else {
-    s = 'blocked';
+    s = "blocked";
   }
 
   return { score, state: s };

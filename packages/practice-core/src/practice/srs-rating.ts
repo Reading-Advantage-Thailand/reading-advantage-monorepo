@@ -1,5 +1,5 @@
-import type { PracticeSubmissionPart } from './contract.js';
-import type { PracticeTimingFeatures } from './timing-baseline.js';
+import type { PracticeSubmissionPart } from "./contract.js";
+import type { PracticeTimingFeatures } from "./timing-baseline.js";
 
 /**
  * FSRS-compatible rating for a practice attempt.
@@ -9,7 +9,7 @@ import type { PracticeTimingFeatures } from './timing-baseline.js';
  * - **Good**: Correct without assistance.
  * - **Easy**: Correct and fast relative to baseline.
  */
-export type SrsRating = 'Again' | 'Hard' | 'Good' | 'Easy';
+export type SrsRating = "Again" | "Hard" | "Good" | "Easy";
 
 /**
  * Input payload for computing an SRS rating from practice evidence.
@@ -27,12 +27,16 @@ export type SrsRatingInput = {
   /** Practice parts extracted from the submission envelope. */
   parts: Pick<
     PracticeSubmissionPart,
-    'isCorrect' | 'hintsUsed' | 'revealStepsSeen' | 'misconceptionTags'
+    "isCorrect" | "hintsUsed" | "revealStepsSeen" | "misconceptionTags"
   >[];
   /** Derived timing features for the attempt. */
   timingFeatures: PracticeTimingFeatures;
   /** Number of baseline samples available for the problem family. */
   baselineSampleCount?: number;
+  /** Total worked steps available, used to distinguish any reveal from all revealed. */
+  totalRevealSteps?: number;
+  /** Domain-owned misconception severity lookup. */
+  severityByTag?: SeverityByTag;
 };
 
 /**
@@ -56,6 +60,8 @@ export type SrsRatingResult = {
   baseRating: SrsRating;
   /** Whether timing caused the final rating to differ from the base rating. */
   timingAdjusted: boolean;
+  /** Whether misconception evidence capped the final rating. */
+  misconceptionCapped: boolean;
   /** Human-readable audit reasons for the rating decision. */
   reasons: string[];
   /** Snapshot of timing evidence included for diagnostics. */
@@ -73,7 +79,7 @@ export type SrsRatingResult = {
  * Tags absent from the map default to `'minor'` (cap at Hard).
  * An empty map does NOT regress to the v1 "Again for any tag" behavior.
  */
-export type SeverityByTag = Readonly<Record<string, 'minor' | 'severe'>>;
+export type SeverityByTag = Readonly<Record<string, "minor" | "severe">>;
 
 /**
  * Options for {@link computeBaseRating}.
@@ -107,11 +113,11 @@ export type ComputeBaseRatingOptions = {
  * ```
  */
 export function computeBaseRating(
-  parts: SrsRatingInput['parts'],
+  parts: SrsRatingInput["parts"],
   options?: ComputeBaseRatingOptions,
 ): SrsRating {
   if (parts.length === 0) {
-    return 'Again';
+    return "Again";
   }
 
   let allCorrect = true;
@@ -121,15 +127,15 @@ export function computeBaseRating(
 
   for (const part of parts) {
     if (part.isCorrect === false) {
-      return 'Again';
+      return "Again";
     }
 
     if (part.misconceptionTags && part.misconceptionTags.length > 0) {
       if (options) {
         // v2 severity-aware path
         for (const tag of part.misconceptionTags) {
-          const severity = options.severityByTag?.[tag] ?? 'minor';
-          if (severity === 'severe') {
+          const severity = options.severityByTag?.[tag] ?? "minor";
+          if (severity === "severe") {
             hasSevere = true;
           } else {
             hasMinor = true;
@@ -137,7 +143,7 @@ export function computeBaseRating(
         }
       } else {
         // v1 backward-compatible path: any tag → Again
-        return 'Again';
+        return "Again";
       }
     }
 
@@ -151,23 +157,23 @@ export function computeBaseRating(
   }
 
   if (!allCorrect) {
-    return 'Again';
+    return "Again";
   }
 
   // v2 precedence: severe > minor (cap) > hints > Good
   if (hasSevere) {
-    return 'Again';
+    return "Again";
   }
 
   if (hasMinor) {
-    return 'Hard';
+    return "Hard";
   }
 
   if (hasAid) {
-    return 'Hard';
+    return "Hard";
   }
 
-  return 'Good';
+  return "Good";
 }
 
 /**
@@ -193,36 +199,49 @@ export function computeBaseRating(
 export function applyTimingToRating(
   baseRating: SrsRating,
   timingFeatures: PracticeTimingFeatures,
-): Pick<SrsRatingResult, 'rating' | 'timingAdjusted' | 'reasons'> {
+): Pick<SrsRatingResult, "rating" | "timingAdjusted" | "reasons"> {
   const reasons: string[] = [];
 
   if (!timingFeatures.hasReliableTiming) {
-    reasons.push('timing_ignored_unreliable');
+    reasons.push("timing_ignored_unreliable");
     return { rating: baseRating, timingAdjusted: false, reasons };
   }
 
-  if (timingFeatures.speedBand && timingFeatures.speedBand !== 'expected') {
+  if (timingFeatures.speedBand && timingFeatures.speedBand !== "expected") {
     reasons.push(`timing_${timingFeatures.speedBand}`);
   }
 
-  if (baseRating === 'Again') {
-    return { rating: 'Again', timingAdjusted: false, reasons };
+  if (baseRating === "Again") {
+    return { rating: "Again", timingAdjusted: false, reasons };
   }
 
-  if (baseRating === 'Good') {
-    if (timingFeatures.speedBand === 'fast') {
-      reasons.push('timing_upgraded_easy');
-      return { rating: 'Easy', timingAdjusted: true, reasons };
+  if (baseRating === "Good") {
+    if (timingFeatures.zScore !== undefined && timingFeatures.zScore <= -1) {
+      reasons.push("timing_fast");
+      reasons.push("timing_upgraded_easy");
+      return { rating: "Easy", timingAdjusted: true, reasons };
     }
-    if (timingFeatures.speedBand === 'slow' || timingFeatures.speedBand === 'very_slow') {
-      reasons.push('timing_downgraded_hard');
-      return { rating: 'Hard', timingAdjusted: true, reasons };
+    if (timingFeatures.zScore !== undefined && timingFeatures.zScore >= 2) {
+      reasons.push("timing_slow");
+      reasons.push("timing_downgraded_hard");
+      return { rating: "Hard", timingAdjusted: true, reasons };
+    }
+    if (timingFeatures.speedBand === "fast") {
+      reasons.push("timing_upgraded_easy");
+      return { rating: "Easy", timingAdjusted: true, reasons };
+    }
+    if (
+      timingFeatures.speedBand === "slow" ||
+      timingFeatures.speedBand === "very_slow"
+    ) {
+      reasons.push("timing_downgraded_hard");
+      return { rating: "Hard", timingAdjusted: true, reasons };
     }
   }
 
-  if (baseRating === 'Hard') {
+  if (baseRating === "Hard") {
     // Timing cannot upgrade Hard because hints/reveals already indicate supported work
-    return { rating: 'Hard', timingAdjusted: false, reasons };
+    return { rating: "Hard", timingAdjusted: false, reasons };
   }
 
   return { rating: baseRating, timingAdjusted: false, reasons };
@@ -246,14 +265,111 @@ export function applyTimingToRating(
  * ```
  */
 export function mapPracticeToSrsRating(input: SrsRatingInput): SrsRatingResult {
-  const baseRating = computeBaseRating(input.parts);
-  const timingResult = applyTimingToRating(baseRating, input.timingFeatures);
+  const correctness = input.parts.map((part) => part.isCorrect);
+  const correctCount = correctness.filter((value) => value === true).length;
+  const incorrectCount = correctness.filter((value) => value === false).length;
+  const baseRating: SrsRating =
+    input.parts.length === 0 ||
+    correctCount + incorrectCount !== input.parts.length
+      ? "Again"
+      : correctCount === input.parts.length
+        ? "Good"
+        : incorrectCount === input.parts.length
+          ? "Again"
+          : "Hard";
+
+  const reasons: string[] = [];
+  const ratingRank: Record<SrsRating, number> = {
+    Again: 0,
+    Hard: 1,
+    Good: 2,
+    Easy: 3,
+  };
+  const capAt = (rating: SrsRating, cap: SrsRating): SrsRating =>
+    ratingRank[rating] <= ratingRank[cap] ? rating : cap;
+  let rating: SrsRating = baseRating;
+  const hintCount = input.parts.reduce(
+    (sum, part) => sum + (part.hintsUsed ?? 0),
+    0,
+  );
+  const revealCount = input.parts.reduce(
+    (sum, part) => sum + (part.revealStepsSeen ?? 0),
+    0,
+  );
+  let retrievalCapped = false;
+
+  if (hintCount >= 3) {
+    rating = capAt(rating, "Hard");
+    retrievalCapped = true;
+    reasons.push("hints_hard_cap");
+  } else if (hintCount >= 1) {
+    rating = capAt(rating, "Good");
+    retrievalCapped = true;
+    reasons.push("hints_good_cap");
+  }
+
+  if (revealCount >= 1) {
+    rating = capAt(rating, "Hard");
+    retrievalCapped = true;
+    reasons.push("reveal_hard_cap");
+  }
+  if (
+    input.totalRevealSteps !== undefined &&
+    input.totalRevealSteps > 0 &&
+    revealCount >= input.totalRevealSteps
+  ) {
+    rating = "Again";
+    reasons.push("all_steps_revealed");
+  }
+
+  const timingReliable =
+    input.timingFeatures.hasReliableTiming &&
+    input.timingFeatures.confidence !== "low" &&
+    (input.baselineSampleCount ?? 0) >= 10;
+  let timingAdjusted = false;
+  if (timingReliable && rating !== "Again") {
+    const zScore = input.timingFeatures.zScore;
+    const fast =
+      zScore !== undefined
+        ? zScore <= -1
+        : input.timingFeatures.speedBand === "fast";
+    const slow =
+      zScore !== undefined
+        ? zScore >= 2
+        : input.timingFeatures.speedBand === "slow" ||
+          input.timingFeatures.speedBand === "very_slow";
+    if (fast && rating === "Good" && !retrievalCapped) {
+      rating = "Easy";
+      timingAdjusted = true;
+      reasons.push("timing_fast", "timing_upgraded_easy");
+    } else if (slow) {
+      rating =
+        rating === "Easy" ? "Good" : rating === "Good" ? "Hard" : "Again";
+      timingAdjusted = true;
+      reasons.push("timing_slow", "timing_downgraded_one_step");
+    }
+  } else if (input.timingFeatures.hasReliableTiming) {
+    reasons.push("timing_ignored_unreliable");
+  }
+
+  const misconceptionTags = input.parts.flatMap(
+    (part) => part.misconceptionTags ?? [],
+  );
+  const misconceptionCapped = misconceptionTags.length > 0;
+  if (misconceptionCapped) {
+    const severe = misconceptionTags.some(
+      (tag) => (input.severityByTag?.[tag] ?? "minor") === "severe",
+    );
+    rating = severe ? "Again" : capAt(rating, "Hard");
+    reasons.push(severe ? "misconception_severe" : "misconception_hard_cap");
+  }
 
   return {
-    rating: timingResult.rating,
+    rating,
     baseRating,
-    timingAdjusted: timingResult.timingAdjusted,
-    reasons: timingResult.reasons,
+    timingAdjusted,
+    misconceptionCapped,
+    reasons,
     timingFeatures: {
       hasReliableTiming: input.timingFeatures.hasReliableTiming,
       timeRatio: input.timingFeatures.timeRatio,

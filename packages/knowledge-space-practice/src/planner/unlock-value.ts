@@ -32,49 +32,26 @@ function buildDownstreamMap(
 }
 
 /**
- * Count distinct descendants reachable from `nodeId` via
- * `prerequisite_for` edges. Uses iterative DFS with a visited set
- * to handle cycles safely.
+ * Computes normalized downstream reach for one node using
+ * `ln(1 + reach) / ln(1 + maxReach)` from kst-srs.v3.2 §10.1.
+ * @param nodeId Candidate node identifier.
+ * @param graph Planner graph containing prerequisite edges.
+ * @returns Normalized unlock value in the zero-to-one range.
  */
 export function getUnlockValue(
   nodeId: string,
   graph: PlannerInput,
 ): number {
   const downstream = buildDownstreamMap(graph.edges);
-
-  const visited = new Set<string>();
-  const stack: string[] = [];
-
-  const initials = downstream.get(nodeId);
-  if (!initials || initials.length === 0) return 0;
-
-  visited.add(nodeId);
-  for (const child of initials) {
-    if (!visited.has(child)) {
-      visited.add(child);
-      stack.push(child);
-    }
-  }
-
-  while (stack.length > 0) {
-    const current = stack.pop()!;
-    const children = downstream.get(current);
-    if (children) {
-      for (const child of children) {
-        if (!visited.has(child)) {
-          visited.add(child);
-          stack.push(child);
-        }
-      }
-    }
-  }
-
-  return visited.size - 1;
+  const reachByNode = computeRawReachByNode(graph, downstream);
+  return normalizeReach(reachByNode.get(nodeId) ?? 0, maximumReach(reachByNode));
 }
 
 /**
- * Bulk precompute unlock values for every node in the graph.
+ * Bulk precomputes normalized unlock values for every node in the graph.
+ * @param graph Planner graph containing candidate nodes and prerequisite edges.
  * Returns a map keyed by every node id in `graph.nodes`.
+ * @returns Read-only map of normalized unlock values.
  */
 export function computeUnlockValues(
   graph: PlannerInput,
@@ -83,38 +60,39 @@ export function computeUnlockValues(
 
   if (graph.nodes.length === 0) return map;
 
-  const downstream = buildDownstreamMap(graph.edges);
-
+  const reachByNode = computeRawReachByNode(graph, buildDownstreamMap(graph.edges));
+  const maxReach = maximumReach(reachByNode);
   for (const node of graph.nodes) {
-    const visited = new Set<string>();
-    const stack: string[] = [];
-
-    visited.add(node.id);
-    const initials = downstream.get(node.id);
-    if (initials) {
-      for (const child of initials) {
-        if (!visited.has(child)) {
-          visited.add(child);
-          stack.push(child);
-        }
-      }
-    }
-
-    while (stack.length > 0) {
-      const current = stack.pop()!;
-      const children = downstream.get(current);
-      if (children) {
-        for (const child of children) {
-          if (!visited.has(child)) {
-            visited.add(child);
-            stack.push(child);
-          }
-        }
-      }
-    }
-
-    map.set(node.id, visited.size - 1);
+    map.set(node.id, normalizeReach(reachByNode.get(node.id) ?? 0, maxReach));
   }
 
   return map;
+}
+
+function computeRawReachByNode(
+  graph: PlannerInput,
+  downstream: ReadonlyMap<string, string[]>,
+): ReadonlyMap<string, number> {
+  const result = new Map<string, number>();
+  for (const node of graph.nodes) {
+    const visited = new Set<string>([node.id]);
+    const stack = [...(downstream.get(node.id) ?? [])];
+    while (stack.length > 0) {
+      const current = stack.pop()!;
+      if (visited.has(current)) continue;
+      visited.add(current);
+      stack.push(...(downstream.get(current) ?? []));
+    }
+    result.set(node.id, visited.size - 1);
+  }
+  return result;
+}
+
+function maximumReach(reachByNode: ReadonlyMap<string, number>): number {
+  return Math.max(0, ...reachByNode.values());
+}
+
+function normalizeReach(reach: number, maxReach: number): number {
+  if (reach <= 0 || maxReach <= 0) return 0;
+  return Math.log1p(reach) / Math.log1p(maxReach);
 }

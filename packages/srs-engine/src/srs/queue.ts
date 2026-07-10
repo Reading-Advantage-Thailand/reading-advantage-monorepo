@@ -5,10 +5,10 @@
  *
  * Queue ordering rules (per spec.md):
  * 1. Exclude cards for triaged objectives and cards with no policy.
- * 2. New cards prioritized by objective priority (up to `newCardsPerDay` total).
- * 3. Overdue cards sorted by days overdue descending (or due date ascending).
- * 4. Due cards sorted by due date ascending.
- * 5. Cap total at `maxReviewsPerDay`.
+ * 2. Due reviews are selected before new cards.
+ * 3. Reviews are ordered by predicted retention ascending.
+ * 4. Backlog mode suppresses new cards while due reviews exceed the daily cap.
+ * 5. New cards are capped by both `newCardsPerDay` and remaining session capacity.
  *
  * All functions are pure — no side effects, no browser/convex imports.
  */
@@ -18,7 +18,7 @@ import type {
   ObjectivePriority,
   SrsCardState,
   SrsSessionConfig,
-} from './contract.js';
+} from "./contract.js";
 
 /**
  * A single item in the daily practice queue.
@@ -41,11 +41,40 @@ const PRIORITY_ORDER: Record<ObjectivePriority, number> = {
   triaged: 3,
 };
 
+const DAY_MS = 86_400_000;
+const RETENTION_FACTOR = 19 / 81;
+const RETENTION_DECAY = -0.5;
+
+/**
+ * Predict current retention from a reviewed card's stability and elapsed time.
+ * @param card Reviewed SRS card to project.
+ * @param now Evaluation timestamp as an ISO string.
+ * @returns Predicted recall probability in the inclusive range zero to one.
+ */
+export function predictCardRetention(card: SrsCardState, now: string): number {
+  if (card.stability <= 0 || !Number.isFinite(card.stability)) {
+    return card.stability === Infinity ? 1 : 0;
+  }
+
+  const elapsedDays = card.lastReview
+    ? Math.max(
+        0,
+        (new Date(now).getTime() - new Date(card.lastReview).getTime()) /
+          DAY_MS,
+      )
+    : Math.max(0, card.elapsedDays);
+
+  return Math.pow(
+    1 + (RETENTION_FACTOR * elapsedDays) / card.stability,
+    RETENTION_DECAY,
+  );
+}
+
 /**
  * Determine if a card is overdue (past its due date and in review/relearning state).
  */
 export function isOverdue(card: SrsCardState, now: string): boolean {
-  if (card.state === 'new' || card.state === 'learning') {
+  if (card.state === "new" || card.state === "learning") {
     return false;
   }
   const dueMs = new Date(card.dueDate).getTime();
@@ -74,7 +103,7 @@ export function buildDailyQueue(
   cards: SrsCardState[],
   policies: Map<string, ObjectivePracticePolicy>,
   config: SrsSessionConfig,
-  now: string
+  now: string,
 ): QueueItem[] {
   if (cards.length === 0) {
     return [];
@@ -84,98 +113,64 @@ export function buildDailyQueue(
 
   const nonTriaged = cards.filter((card) => {
     const policy = policies.get(card.objectiveId);
-    return policy?.priority !== 'triaged';
+    return policy !== undefined && policy.priority !== "triaged";
   });
 
-  const newCards = nonTriaged.filter((card) => card.state === 'new');
-  const reviewCards = nonTriaged.filter((card) => card.state !== 'new');
+  const nowMs = new Date(now).getTime();
+  const newCards = nonTriaged.filter((card) => card.state === "new");
+  const dueReviewCards = nonTriaged.filter(
+    (card) => card.state !== "new" && new Date(card.dueDate).getTime() <= nowMs,
+  );
 
-  const essentialNew: QueueItem[] = [];
-  const supportingNew: QueueItem[] = [];
-  const extensionNew: QueueItem[] = [];
-  let totalNewCount = 0;
+  const sortedReviews = dueReviewCards
+    .map((card): QueueItem & { predictedRetention: number } => {
+      const policy = policies.get(card.objectiveId);
+      return {
+        card,
+        objectivePriority: policy!.priority,
+        isOverdue: isOverdue(card, now),
+        daysOverdue: daysOverdue(card, now),
+        predictedRetention: predictCardRetention(card, now),
+      };
+    })
+    .sort((a, b) => {
+      if (a.predictedRetention !== b.predictedRetention) {
+        return a.predictedRetention - b.predictedRetention;
+      }
+      const dueDifference =
+        new Date(a.card.dueDate).getTime() - new Date(b.card.dueDate).getTime();
+      if (dueDifference !== 0) return dueDifference;
+      return a.card.cardId.localeCompare(b.card.cardId);
+    })
+    .map(({ predictedRetention: _predictedRetention, ...item }) => item);
 
-  const sortedNew = newCards.sort((a, b) => {
+  const selectedReviews = sortedReviews.slice(0, maxReviewsPerDay);
+  const backlogMode = dueReviewCards.length > maxReviewsPerDay;
+  const remainingCapacity = Math.max(
+    0,
+    maxReviewsPerDay - selectedReviews.length,
+  );
+  const newCardAllowance = backlogMode
+    ? 0
+    : Math.min(newCardsPerDay, remainingCapacity);
+
+  const sortedNew = [...newCards].sort((a, b) => {
     const policyA = policies.get(a.objectiveId);
     const policyB = policies.get(b.objectiveId);
     const priorityA = policyA ? PRIORITY_ORDER[policyA.priority] : 3;
     const priorityB = policyB ? PRIORITY_ORDER[policyB.priority] : 3;
     if (priorityA !== priorityB) return priorityA - priorityB;
-    return 0;
+    return a.cardId.localeCompare(b.cardId);
   });
 
-  for (const card of sortedNew) {
-    if (totalNewCount >= newCardsPerDay) break;
-
-    const policy = policies.get(card.objectiveId);
-    if (!policy) continue;
-
-    const queueItem: QueueItem = {
+  const selectedNewCards = sortedNew.slice(0, newCardAllowance).map(
+    (card): QueueItem => ({
       card,
-      objectivePriority: policy.priority,
+      objectivePriority: policies.get(card.objectiveId)!.priority,
       isOverdue: false,
       daysOverdue: 0,
-    };
+    }),
+  );
 
-    if (policy.priority === 'essential') {
-      essentialNew.push(queueItem);
-      totalNewCount++;
-    } else if (policy.priority === 'supporting') {
-      supportingNew.push(queueItem);
-      totalNewCount++;
-    } else if (policy.priority === 'extension') {
-      extensionNew.push(queueItem);
-      totalNewCount++;
-    }
-  }
-
-  const overdueCards = reviewCards.filter((card) => isOverdue(card, now));
-  const dueCards = reviewCards.filter((card) => !isOverdue(card, now));
-
-  const sortedOverdue = overdueCards
-    .map((card) => {
-      const policy = policies.get(card.objectiveId);
-      return {
-        card,
-        objectivePriority: policy?.priority ?? null,
-        isOverdue: true as const,
-        daysOverdue: daysOverdue(card, now),
-      };
-    })
-    .filter((item) => item.objectivePriority !== null)
-    .map((item) => ({ ...item, objectivePriority: item.objectivePriority as ObjectivePriority }))
-    .sort((a, b) => {
-      if (config.prioritizeOverdue) {
-        return b.daysOverdue - a.daysOverdue;
-      }
-      return new Date(a.card.dueDate).getTime() - new Date(b.card.dueDate).getTime();
-    });
-
-  const sortedDue = dueCards
-    .map((card) => {
-      const policy = policies.get(card.objectiveId);
-      return {
-        card,
-        objectivePriority: policy?.priority ?? null,
-        isOverdue: false as const,
-        daysOverdue: 0,
-      };
-    })
-    .filter((item) => item.objectivePriority !== null)
-    .map((item) => ({ ...item, objectivePriority: item.objectivePriority as ObjectivePriority }))
-    .sort((a, b) => {
-      const aMs = new Date(a.card.dueDate).getTime();
-      const bMs = new Date(b.card.dueDate).getTime();
-      return aMs - bMs;
-    });
-
-  const combined: QueueItem[] = [
-    ...essentialNew,
-    ...supportingNew,
-    ...extensionNew,
-    ...sortedOverdue,
-    ...sortedDue,
-  ];
-
-  return combined.slice(0, maxReviewsPerDay);
+  return [...selectedReviews, ...selectedNewCards];
 }
