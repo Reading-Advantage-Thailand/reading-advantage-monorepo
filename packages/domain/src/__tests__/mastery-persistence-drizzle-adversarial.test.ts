@@ -10,7 +10,8 @@ import {
   users,
 } from "@reading-advantage/db";
 import { count, sql } from "drizzle-orm";
-import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import * as tenantDbModule from "../db-contract.js";
 import { createTestDb, type TestDb } from "./helpers/testDb.js";
 
 const SCHOOL_A = "11111111-1111-4111-8111-111111111111";
@@ -328,6 +329,27 @@ describe("Phase S3 remediation: bound Drizzle adapter adversarial contract", () 
     expect(() =>
       factory({ db: harness.db, tenant: null, actorId: ACTOR_A }),
     ).toThrow();
+  });
+
+  it("creates and caches a real TenantDB for all database execution", async () => {
+    const createTenantDbSpy = vi.spyOn(tenantDbModule, "createTenantDB");
+    try {
+      const adapter = factory({
+        db: harness.db,
+        tenant: { schoolId: SCHOOL_A },
+        actorId: ACTOR_A,
+      });
+
+      await adapter.readSnapshot({ schoolId: SCHOOL_A });
+      await adapter.commitMasteryEvidence(makeInput());
+
+      expect(createTenantDbSpy).toHaveBeenCalledTimes(1);
+      expect(createTenantDbSpy).toHaveBeenCalledWith(harness.db, {
+        schoolId: SCHOOL_A,
+      });
+    } finally {
+      createTenantDbSpy.mockRestore();
+    }
   });
 
   it("rejects a foreign-school read even when the caller supplies that school", async () => {

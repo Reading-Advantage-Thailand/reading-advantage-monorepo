@@ -29,6 +29,7 @@ import {
   MasteryPersistenceError,
   type MasteryPersistencePort,
 } from "./persistence-ports.js";
+import type { TenantDB } from "../db-contract.js";
 
 type DbModule = typeof import("@reading-advantage/db");
 type MasteryCardRow = DbModule["masteryCards"]["$inferSelect"];
@@ -288,6 +289,7 @@ class DrizzleMasteryPersistence implements MasteryPersistencePort {
   private readonly db: DB;
   private readonly schoolId: string;
   private readonly actorId: string;
+  private tenantDbPromise: Promise<TenantDB> | undefined;
 
   constructor(options: DrizzleMasteryPersistenceOptions) {
     if (!options.tenant?.schoolId || !options.actorId.trim()) {
@@ -299,6 +301,14 @@ class DrizzleMasteryPersistence implements MasteryPersistencePort {
     this.db = options.db as DB;
     this.schoolId = options.tenant.schoolId;
     this.actorId = options.actorId;
+  }
+
+  private scopedDb(): Promise<TenantDB> {
+    this.tenantDbPromise ??= import("../db-contract.js").then(
+      ({ createTenantDB }) =>
+        createTenantDB(this.db, { schoolId: this.schoolId }),
+    );
+    return this.tenantDbPromise;
   }
 
   private assertSchool(schoolId: string): void {
@@ -325,7 +335,8 @@ class DrizzleMasteryPersistence implements MasteryPersistencePort {
     requestDigest: string,
   ): Promise<CommitMasteryEvidenceResult | null> {
     const { masteryCommits } = await loadDbModule();
-    const [existing] = await this.db
+    const tenantDb = await this.scopedDb();
+    const [existing] = await tenantDb
       .select()
       .from(masteryCommits)
       .where(
@@ -357,6 +368,7 @@ class DrizzleMasteryPersistence implements MasteryPersistencePort {
     const parsed = parseOrThrow(masterySnapshotInputSchema, input);
     this.assertSchool(parsed.schoolId);
     try {
+      const tenantDb = await this.scopedDb();
       const {
         masteryCalibrations,
         masteryCards,
@@ -368,37 +380,37 @@ class DrizzleMasteryPersistence implements MasteryPersistencePort {
       } = await loadDbModule();
       const [cards, reviews, evidence, states, placements, calibrations, commits] =
         await Promise.all([
-          this.db
+          tenantDb
             .select()
             .from(masteryCards)
             .where(eq(masteryCards.schoolId, parsed.schoolId))
             .orderBy(asc(masteryCards.id)),
-          this.db
+          tenantDb
             .select()
             .from(masteryReviews)
             .where(eq(masteryReviews.schoolId, parsed.schoolId))
             .orderBy(asc(masteryReviews.id)),
-          this.db
+          tenantDb
             .select()
             .from(masteryEvidence)
             .where(eq(masteryEvidence.schoolId, parsed.schoolId))
             .orderBy(asc(masteryEvidence.id)),
-          this.db
+          tenantDb
             .select()
             .from(masteryStates)
             .where(eq(masteryStates.schoolId, parsed.schoolId))
             .orderBy(asc(masteryStates.id)),
-          this.db
+          tenantDb
             .select()
             .from(masteryPlacements)
             .where(eq(masteryPlacements.schoolId, parsed.schoolId))
             .orderBy(asc(masteryPlacements.id)),
-          this.db
+          tenantDb
             .select()
             .from(masteryCalibrations)
             .where(eq(masteryCalibrations.schoolId, parsed.schoolId))
             .orderBy(asc(masteryCalibrations.id)),
-          this.db
+          tenantDb
             .select()
             .from(masteryCommits)
             .where(eq(masteryCommits.schoolId, parsed.schoolId))
@@ -427,6 +439,7 @@ class DrizzleMasteryPersistence implements MasteryPersistencePort {
     assertOwnership(parsed);
     const requestDigest = digest(parsed);
     try {
+      const tenantDb = await this.scopedDb();
       const {
         masteryCards,
         masteryCommits,
@@ -435,7 +448,7 @@ class DrizzleMasteryPersistence implements MasteryPersistencePort {
         masteryReviews,
         masteryStates,
       } = await loadDbModule();
-      return await this.db.transaction(
+      return await tenantDb.transaction(
         async (transaction) => {
           const existingRows = await transaction
             .select()
@@ -797,8 +810,9 @@ class DrizzleMasteryPersistence implements MasteryPersistencePort {
     this.assertActor(parsed.audit.actorId);
     const requestDigest = digest(parsed);
     try {
+      const tenantDb = await this.scopedDb();
       const { masteryCalibrations } = await loadDbModule();
-      return await this.db.transaction(
+      return await tenantDb.transaction(
         async (transaction) => {
           const [existing] = await transaction
             .select()
