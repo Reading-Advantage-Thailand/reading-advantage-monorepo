@@ -14,13 +14,14 @@
   },
   "files": ["dist"],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && node scripts/copy-data.mjs",
     "check-types": "tsc --noEmit",
     "lint": "eslint src/",
     "test": "vitest run",
-    "test:coverage": "vitest run --coverage",
+    "test:coverage": "vitest run --coverage --exclude src/__tests__/release-artifact.test.ts",
     "graph:validate": "pnpm build && node dist/cli.js validate",
-    "graph:report": "pnpm build && node dist/cli.js report"
+    "graph:report": "pnpm build && node dist/cli.js report",
+    "graph:verify-source": "pnpm build && node dist/cli.js verify-source"
   },
   "dependencies": {
     "@reading-advantage/knowledge-space-core": "workspace:*",

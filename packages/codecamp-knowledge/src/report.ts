@@ -25,6 +25,7 @@ export interface CodeGraphDiff {
   changedNodeIds: string[];
   addedEdgeIds: string[];
   removedEdgeIds: string[];
+  changedEdgeIds: string[];
 }
 
 function countBy(values: string[]): Record<string, number> {
@@ -82,6 +83,8 @@ export function diffCodeKnowledgeGraphs(
   const afterNodes = new Map(after.knowledgeSpace.nodes.map((node) => [node.id, node]));
   const beforeEdges = new Set(before.knowledgeSpace.edges.map((edge) => edge.id));
   const afterEdges = new Set(after.knowledgeSpace.edges.map((edge) => edge.id));
+  const beforeEdgeMap = new Map(before.knowledgeSpace.edges.map((edge) => [edge.id, edge]));
+  const afterEdgeMap = new Map(after.knowledgeSpace.edges.map((edge) => [edge.id, edge]));
   const changedNodeIds = [...beforeNodes.keys()]
     .filter((id) => {
       const next = afterNodes.get(id);
@@ -96,5 +99,11 @@ export function diffCodeKnowledgeGraphs(
     changedNodeIds,
     addedEdgeIds: sortedDifference(afterEdges, beforeEdges),
     removedEdgeIds: sortedDifference(beforeEdges, afterEdges),
+    changedEdgeIds: [...beforeEdgeMap.keys()]
+      .filter((id) => {
+        const next = afterEdgeMap.get(id);
+        return next !== undefined && JSON.stringify(beforeEdgeMap.get(id)) !== JSON.stringify(next);
+      })
+      .sort(),
   };
 }

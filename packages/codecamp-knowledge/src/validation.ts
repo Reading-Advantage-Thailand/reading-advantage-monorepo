@@ -1,4 +1,5 @@
 import {
+  MASTERY_THRESHOLDS_DEFAULT,
   getPrerequisiteCycles,
   validateKnowledgeSpace,
   type KnowledgeSpaceEdge,
@@ -6,9 +7,13 @@ import {
 } from "@reading-advantage/knowledge-space-core";
 
 import {
+  CODE_REQUIRED_CLUSTERS,
   CodeKnowledgeGraphSchema,
   type CodeKnowledgeGraph,
 } from "./contracts.js";
+
+/** Exact weight at which the imported mastery engine treats a prerequisite as non-compensatory. */
+export const HARD_GATE_THRESHOLD = MASTERY_THRESHOLDS_DEFAULT.hardGateThreshold;
 
 /** One stable, actionable authoring problem returned by Codecamp graph validation. */
 export interface CodeGraphIssue {
@@ -61,11 +66,15 @@ function containsReachableObjectives(
 function validateGate(edge: KnowledgeSpaceEdge, issues: CodeGraphIssue[]): void {
   const gate = edge.metadata?.gate;
   if (gate === "hard") {
-    if (edge.type !== "prerequisite_for" || edge.weight < 0.8 || edge.confidence !== "high") {
+    if (
+      edge.type !== "prerequisite_for" ||
+      edge.weight < HARD_GATE_THRESHOLD ||
+      edge.confidence !== "high"
+    ) {
       issues.push({
         code: "INVALID_HARD_GATE",
         entityId: edge.id,
-        message: "Hard gates must be high-confidence prerequisite_for edges with weight at least 0.8.",
+        message: `Hard gates must be high-confidence prerequisite_for edges with weight ${HARD_GATE_THRESHOLD}.`,
       });
     }
     if (edge.reviewStatus !== "approved") {
@@ -144,10 +153,27 @@ export function validateCodeKnowledgeGraph(input: unknown): CodeGraphValidationR
 
   for (const edge of graph.knowledgeSpace.edges) validateGate(edge, issues);
 
+  if (graph.releaseStatus === "reviewed") {
+    const presentClusters = new Set(
+      graph.knowledgeSpace.nodes
+        .filter((node) => node.kind === "content_group" && node.domain === "codecamp")
+        .map((node) => String(node.metadata.cluster)),
+    );
+    for (const cluster of CODE_REQUIRED_CLUSTERS) {
+      if (!presentClusters.has(cluster)) {
+        issues.push({
+          code: "MISSING_REQUIRED_CLUSTER",
+          entityId: cluster,
+          message: `Reviewed releases must include the ${cluster} instructional cluster.`,
+        });
+      }
+    }
+  }
+
   const existingCycles = new Set(
     issues.filter((issue) => issue.code === "PREREQUISITE_CYCLE").map((issue) => issue.entityId),
   );
-  for (const cycle of getPrerequisiteCycles(graph.knowledgeSpace)) {
+  for (const cycle of getPrerequisiteCycles(graph.knowledgeSpace, { includeLowConfidence: true })) {
     const entityId = cycle.edgeIds.join(", ");
     if (!existingCycles.has(entityId)) {
       issues.push({

@@ -1,4 +1,7 @@
-import { knowledgeSpaceSchema } from "@reading-advantage/knowledge-space-core";
+import {
+  knowledgeSpaceSchema,
+  type KnowledgeSpace,
+} from "@reading-advantage/knowledge-space-core";
 import { z } from "zod";
 
 /** Instructional clusters used to organize Codecamp objectives without changing their IDs. */
@@ -15,6 +18,20 @@ export const CodeClusterSchema = z.enum([
   "game-development",
   "standards",
 ]);
+
+/** Required instructional clusters for a reviewed Codecamp graph release. */
+export const CODE_REQUIRED_CLUSTERS = [
+  "foundation",
+  "frontend",
+  "backend",
+  "data",
+  "testing",
+  "ai",
+  "workflow",
+  "deployment",
+  "architecture",
+  "game-development",
+] as const;
 
 /** Granularity classes that distinguish concepts, applications, workflows, containers, and projections. */
 export const CodeObjectiveTypeSchema = z.enum([
@@ -59,11 +76,58 @@ const ProvenanceSchema = z
     authority: z.literal("Mastery Advantage Code domain"),
     authorityPath: z.literal("code/code-knowledge-space.json"),
     sourceRepository: z.literal("mastery-advantage"),
-    sourceRevision: z.string().regex(/^[0-9a-f]{40}$/),
-    sourceDigest: z.string().regex(/^[0-9a-f]{64}$/),
+    authoredAgainstRevision: z.string().regex(/^[0-9a-f]{40}$/),
     authoredAt: z.string().datetime({ offset: true }),
   })
   .strict();
+
+const NODE_KEYS = new Set([
+  "id", "kind", "title", "domain", "description", "sourceRefs", "derived",
+  "derivationMethod", "reviewStatus", "metadata", "difficulty", "alignmentRefs",
+  "rendererKey", "generatorKey", "independentPracticeReady", "exceptions",
+]);
+const EDGE_KEYS = new Set([
+  "id", "type", "sourceId", "targetId", "weight", "confidence", "sourceRefs",
+  "derived", "derivationMethod", "reviewStatus", "rationale", "metadata",
+]);
+
+const StrictKnowledgeSpaceSchema = z
+  .unknown()
+  .superRefine((input, context) => {
+    const result = knowledgeSpaceSchema.safeParse(input);
+    if (!result.success) {
+      for (const issue of result.error.issues) {
+        context.addIssue({
+          code: "custom",
+          path: issue.path,
+          message: issue.message,
+        });
+      }
+    }
+  })
+  .transform((input) => input as KnowledgeSpace)
+  .superRefine((space, context) => {
+    space.nodes.forEach((node, index) => {
+      const unknownKeys = Object.keys(node).filter((key) => !NODE_KEYS.has(key));
+      if (unknownKeys.length > 0) {
+        context.addIssue({
+          code: "custom",
+          path: ["nodes", index],
+          message: `Unknown node fields: ${unknownKeys.sort().join(", ")}`,
+        });
+      }
+    });
+    space.edges.forEach((edge, index) => {
+      const unknownKeys = Object.keys(edge).filter((key) => !EDGE_KEYS.has(key));
+      if (unknownKeys.length > 0) {
+        context.addIssue({
+          code: "custom",
+          path: ["edges", index],
+          message: `Unknown edge fields: ${unknownKeys.sort().join(", ")}`,
+        });
+      }
+    });
+  });
 
 const MigrationSchema = z
   .object({
@@ -99,7 +163,7 @@ export const CodeKnowledgeGraphSchema = z
       })
       .strict(),
     standardsProjections: z.array(StandardsProjectionSchema).min(1),
-    knowledgeSpace: knowledgeSpaceSchema,
+    knowledgeSpace: StrictKnowledgeSpaceSchema,
   })
   .strict()
   .superRefine((graph, context) => {

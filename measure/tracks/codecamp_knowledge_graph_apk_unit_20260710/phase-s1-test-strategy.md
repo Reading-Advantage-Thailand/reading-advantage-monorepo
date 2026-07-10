@@ -16,7 +16,7 @@ The phase tests must fail before implementation for:
 
 1. strict envelope/schema violations and unknown fields;
 2. duplicate IDs, dangling edges, invalid endpoint pairs, and prerequisite cycles;
-3. hard gates that are not high-confidence prerequisite edges with weight at least 0.8;
+3. hard gates that are not high-confidence prerequisite edges at the shared engine threshold;
 4. soft relationships that can accidentally become progression gates;
 5. disconnected active objectives and invalid intra-domain transfer edges;
 6. missing cluster, priority, lifecycle, objective-type, source, review, or provenance data;
@@ -61,4 +61,3 @@ S1 creates no learner- or teacher-visible UI. Browser acceptance is therefore N/
 this phase. Manual verification consists of reviewing the deterministic graph report,
 the prerequisite-edge checklist, the migration impact record, and the source/snapshot
 digest proof. Browser testing becomes mandatory when S4 publishes graph-backed content.
-

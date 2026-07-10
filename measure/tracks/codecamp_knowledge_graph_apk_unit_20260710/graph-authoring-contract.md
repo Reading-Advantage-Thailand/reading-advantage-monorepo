@@ -24,7 +24,8 @@ projections. Standards never replace Codecamp objective IDs.
 ## Edge semantics
 
 - `prerequisite_for` points from prerequisite to dependent objective.
-- A hard gate has `metadata.gate = "hard"`, weight `0.8..1`, high confidence, and an
+- A hard gate has `metadata.gate = "hard"`, weight `1.0` (the imported engine's
+  executable `MASTERY_THRESHOLDS_DEFAULT.hardGateThreshold`), high confidence, and an
   explicit rationale. It means the learner genuinely cannot proceed safely without it.
 - A soft relationship uses `supports`, has `metadata.gate = "soft"`, and never gates
   readiness regardless of weight.
@@ -43,4 +44,3 @@ Objective priority is `must`, `should`, or `could`. Reviewer roles are:
 
 Every release records these roles, review outcomes, version provenance, and source
 revision. No generator or runtime process may mutate the committed graph.
-
