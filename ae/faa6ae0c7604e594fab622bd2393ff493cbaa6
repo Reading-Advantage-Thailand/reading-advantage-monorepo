@@ -1,0 +1,1 @@
+Task: Write S1 activity schema, migration, state-machine, evidence-mapping, and boundary Red tests. Files: packages/activity-runtime package scaffold and six test fixtures/suites. Red proof: 4 suites failed on missing core/authoring modules; boundary suite passed. Why: lock behavior before framework-neutral implementation.
