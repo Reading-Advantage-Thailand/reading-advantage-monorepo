@@ -7,22 +7,22 @@
 > and the resulting learner/teacher state; screenshots are required at key
 > state transitions.
 
-## Phase S1: Freeze the activity contracts
+## Phase S1: Freeze the activity contracts [checkpoint: 08de1c28]
 _Story ref: spec.md#story-s1_
 _Graph context: current `LessonContent` exposes only app-local `youtubeId`/`imagePath`; no shared interactive-video symbols or persistence path exist._
 
-- [~] Task: Define package boundaries and versioned schemas
-  - [ ] Create core contracts for activities, sources, segments, checkpoints, questions, remediation, tutorial steps, and events
-  - [ ] Define subpath exports for core, React, server ports, authoring, and testing
-- [~] Task: Write schema and migration tests
-  - [ ] Add valid fixtures plus unknown-version, duplicate-ID, dangling-resource, invalid-time, and evidence-mapping counterexamples
-  - [ ] Prove resource IDs, not model-generated timestamps/paths, are authoritative
-- [~] Task: Implement the core state machine and authoring validator
-  - [ ] Normalize playback/checkpoint/tutorial transitions without framework dependencies
-  - [ ] Map assessed results and support metadata into shared practice envelopes
-- [~] Task: Verify and document Phase S1
-  - [ ] Run package boundary, lint, type-check, tests, coverage, build, graph update/audit, generated docs, and doctor
-  - [ ] Task: Measure - User Manual Verification 'Phase S1: Freeze the activity contracts' (Protocol in workflow.md)
+- [x] Task: Define package boundaries and versioned schemas — `7db9bbe2`
+  - [x] Create core contracts for activities, sources, segments, checkpoints, questions, remediation, tutorial steps, and events
+  - [x] Define subpath exports for core, React, server ports, authoring, and testing
+- [x] Task: Write schema and migration tests — `f16aeef9`
+  - [x] Add valid fixtures plus unknown-version, duplicate-ID, dangling-resource, invalid-time, and evidence-mapping counterexamples
+  - [x] Prove resource IDs, not model-generated timestamps/paths, are authoritative
+- [x] Task: Implement the core state machine and authoring validator — `0a017ed3`
+  - [x] Normalize playback/checkpoint/tutorial transitions without framework dependencies
+  - [x] Map assessed results and support metadata into shared practice envelopes
+- [x] Task: Verify and document Phase S1 — `08de1c28`
+  - [x] Run package boundary, lint, type-check, tests, coverage, build, graph update/audit, generated docs, and doctor
+  - [x] Task: Measure - User Manual Verification 'Phase S1: Freeze the activity contracts' (Protocol in workflow.md) — browser N/A; distribution verified
 
 ## Phase S2: Build interactive video for React
 _Story ref: spec.md#story-s2_
