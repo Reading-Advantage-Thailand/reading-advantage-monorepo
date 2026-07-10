@@ -50,12 +50,13 @@ describe("practice.v1 evidence mapping", () => {
 
   it("maps a server-verified tutorial step with fading scaffold usage", () => {
     const activity = activitySchema.parse(validActivity);
+    const verification = verifyTutorialStepResult(activity, "wedo.stage", () => true);
     const envelope = mapTutorialStepResultToPractice(activity, {
       stepId: "wedo.stage",
       submissionId: "tutorial-submission.1",
       attemptNumber: 1,
-      checkResults: [{ checkId: "check.staged", passed: true }],
-      verifiedResult: verifyTutorialStepResult(activity, "wedo.stage", [{ checkId: "check.staged", passed: true }]),
+      checkResults: verification.checkResults,
+      verifiedResult: verification.verifiedResult,
       submittedAt: "2026-07-10T00:02:00Z",
       hintsUsed: 1,
       revealsUsed: 0,

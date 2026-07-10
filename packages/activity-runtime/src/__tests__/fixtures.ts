@@ -18,6 +18,7 @@ export const validActivity = {
       resourceId: "video.commit-demo",
       provider: "youtube",
       videoId: "abc123",
+      captionsAvailable: true,
       transcriptResourceId: "transcript.commit-demo",
       segments: [
         { segmentId: "segment.stage", label: { en: "Stage files" }, startSeconds: 12, endSeconds: 35 },

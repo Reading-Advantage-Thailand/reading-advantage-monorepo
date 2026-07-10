@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   ActivityContractError,
+  activityEventSchema,
   activitySchema,
   createInitialActivityState,
   loadActivity,
@@ -29,10 +30,10 @@ const metadata = {
   interventionLevel: 0,
   evidenceConfidence: 0.6,
   timing: { wallClockMs: 1000, activeMs: 800 },
-} as const;
+};
 
-function event(input: Omit<ActivityEventInput, keyof typeof metadata> & Partial<typeof metadata>): ActivityEventInput {
-  return { ...metadata, ...input } as ActivityEventInput;
+function event(input: { eventId: string; kind: string; occurredAt: string; [key: string]: unknown }): ActivityEventInput {
+  return activityEventSchema.parse({ ...metadata, ...input });
 }
 
 describe("core contract edge cases", () => {
@@ -107,7 +108,7 @@ describe("server verification and practice mapping edge cases", () => {
     checkpointId: "checkpoint.stage",
     submissionId: "submission.edge",
     attemptNumber: 1,
-    answer: "publish",
+    answer: "stage",
     submittedAt: "2026-07-10T00:01:00Z",
     hintsUsed: 0,
     revealsUsed: 0,
@@ -130,31 +131,31 @@ describe("server verification and practice mapping edge cases", () => {
   });
 
   it("rejects missing or engagement-only checkpoints and maps low-confidence verified scoring", () => {
-    expect(() => mapCheckpointAttemptToPractice(activity, { ...baseCheckpointInput, checkpointId: "missing", verifiedResult: { source: "server", isCorrect: false } })).toThrow("Checkpoint not found");
+    expect(() => mapCheckpointAttemptToPractice(activity, { ...baseCheckpointInput, checkpointId: "missing", verifiedResult: verifyCheckpointAnswer(activity, "checkpoint.stage", "stage") })).toThrow("Checkpoint not found");
     const engagementOnly = activitySchema.parse({
       ...validActivity,
       checkpoints: [{ ...validActivity.checkpoints[0], evidence: { behavior: "engagement", weight: 0 } }]
     });
-    expect(() => mapCheckpointAttemptToPractice(engagementOnly, { ...baseCheckpointInput, verifiedResult: { source: "server", isCorrect: false } })).toThrow("not assessed");
+    expect(() => mapCheckpointAttemptToPractice(engagementOnly, { ...baseCheckpointInput, verifiedResult: verifyCheckpointAnswer(activity, "checkpoint.stage", "stage") })).toThrow("not assessed");
+    const partialVerification = { ...verifyCheckpointAnswer(activity, "checkpoint.stage", "stage"), score: 0.5 };
     const envelope = mapCheckpointAttemptToPractice(activity, {
       ...baseCheckpointInput,
-      verifiedResult: { source: "server", isCorrect: true, score: 0.5 }
+      verifiedResult: partialVerification
     });
     expect(envelope.parts[0]?.score).toBe(0.25);
     expect(envelope.timing?.confidence).toBe("low");
   });
 
   it("verifies tutorial omissions, failures, missing steps, and low-confidence mapping", () => {
-    expect(() => verifyTutorialStepResult(activity, "missing", [])).toThrow("Tutorial step not found");
-    expect(() => verifyTutorialStepResult(activity, "wedo.stage", [])).toThrow("omit");
-    const failed = verifyTutorialStepResult(activity, "wedo.stage", [{ checkId: "check.staged", passed: false }]);
-    expect(failed).toMatchObject({ isCorrect: false, score: 0 });
+    expect(() => verifyTutorialStepResult(activity, "missing", () => false)).toThrow("Tutorial step not found");
+    const failed = verifyTutorialStepResult(activity, "wedo.stage", () => false);
+    expect(failed.verifiedResult).toMatchObject({ isCorrect: false, score: 0 });
     expect(() => mapTutorialStepResultToPractice(activity, {
       stepId: "missing",
       submissionId: "tutorial.missing",
       attemptNumber: 1,
-      checkResults: [{ checkId: "missing", passed: false }],
-      verifiedResult: failed,
+      checkResults: failed.checkResults,
+      verifiedResult: failed.verifiedResult,
       submittedAt: "2026-07-10T00:02:00Z",
       hintsUsed: 0,
       revealsUsed: 0,
@@ -166,8 +167,8 @@ describe("server verification and practice mapping edge cases", () => {
       stepId: "wedo.stage",
       submissionId: "tutorial.failed",
       attemptNumber: 2,
-      checkResults: [{ checkId: "check.staged", passed: false }],
-      verifiedResult: failed,
+      checkResults: failed.checkResults,
+      verifiedResult: failed.verifiedResult,
       submittedAt: "2026-07-10T00:02:00Z",
       hintsUsed: 0,
       revealsUsed: 1,

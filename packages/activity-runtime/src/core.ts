@@ -1,6 +1,5 @@
 import {
   buildPracticeSubmissionEnvelope,
-  type PracticeSubmissionEnvelope,
 } from "@reading-advantage/practice-core/contract";
 import { z } from "zod";
 
@@ -12,7 +11,9 @@ export type ActivityContractErrorCode =
   | "UNSUPPORTED_VERSION"
   | "INVALID_LEGACY_ACTIVITY"
   | "RESOURCE_NOT_FOUND"
-  | "SEGMENT_NOT_FOUND";
+  | "SEGMENT_NOT_FOUND"
+  | "ACTIVITY_MISMATCH"
+  | "VERIFICATION_MISMATCH";
 
 /** Error raised when an activity cannot be loaded or resolved deterministically. */
 export class ActivityContractError extends Error {
@@ -55,6 +56,15 @@ export const videoResourceSchema = z
     videoId: z.string().trim().min(1).optional(),
     assetId: z.string().trim().min(1).optional(),
     transcriptResourceId: z.string().trim().min(1).optional(),
+    captionsAvailable: z.boolean(),
+    hardGateApproval: z
+      .object({
+        approvalId: z.string().trim().min(1),
+        approvedBy: z.string().trim().min(1),
+        approvedAt: z.string().datetime({ offset: true }),
+      })
+      .strict()
+      .optional(),
     segments: z.array(videoSegmentSchema),
   })
   .strict()
@@ -104,7 +114,14 @@ export const repositoryLocationResourceSchema = z
     kind: z.literal("repository_location"),
     resourceId: z.string().trim().min(1),
     repositoryId: z.string().trim().min(1),
-    filePath: z.string().trim().min(1),
+    filePath: z
+      .string()
+      .trim()
+      .min(1)
+      .refine(
+        (path) => !path.startsWith("/") && !path.startsWith("\\") && !path.split(/[\\/]/).includes(".."),
+        "Repository filePath must be relative and cannot traverse parent directories",
+      ),
     symbol: z.string().trim().min(1).nullable(),
     label: localizedTextSchema,
   })
@@ -320,13 +337,17 @@ const timingMetadataSchema = z
   .strict()
   .refine((timing) => timing.activeMs <= timing.wallClockMs, "activeMs cannot exceed wallClockMs");
 
-const activityEvidenceMetadataShape = {
+const activityEngagementMetadataShape = {
   schemaVersion: z.literal(ACTIVITY_EVIDENCE_SCHEMA_VERSION).default(ACTIVITY_EVIDENCE_SCHEMA_VERSION),
   activityId: z.string().trim().min(1),
   activityVersion: z.string().trim().min(1),
   graphVersion: z.string().trim().min(1),
   objectiveId: z.string().trim().min(1),
   variantKey: z.string().trim().min(1),
+};
+
+const activityEvidenceMetadataShape = {
+  ...activityEngagementMetadataShape,
   stepId: z.string().trim().min(1),
   submissionId: z.string().trim().min(1),
   attemptNumber: z.number().int().positive(),
@@ -338,6 +359,12 @@ const activityEvidenceMetadataShape = {
   timing: timingMetadataSchema,
 };
 
+/** Strict context for engagement events that never implies an assessed attempt. */
+export const activityEngagementMetadataSchema = z.object(activityEngagementMetadataShape).strict();
+
+/** Engagement metadata inferred from the context-only schema. */
+export type ActivityEngagementMetadata = z.infer<typeof activityEngagementMetadataSchema>;
+
 /** Strict metadata shared by assessed activity evidence and contextual events. */
 export const activityEvidenceMetadataSchema = z.object(activityEvidenceMetadataShape).strict();
 
@@ -346,8 +373,19 @@ export type ActivityEvidenceMetadata = z.infer<typeof activityEvidenceMetadataSc
 
 /** Server-authoritative result attached after evaluating an authored answer or check. */
 export const serverVerifiedResultSchema = z
-  .object({ source: z.literal("server"), isCorrect: z.boolean(), score: z.number().finite().min(0).max(1).optional() })
-  .strict();
+  .object({
+    source: z.literal("server"),
+    activityId: z.string().trim().min(1),
+    subjectId: z.string().trim().min(1),
+    inputDigest: z.string().regex(/^[a-f0-9]{8}$/),
+    isCorrect: z.boolean(),
+    score: z.number().finite().min(0).max(1).optional(),
+  })
+  .strict()
+  .refine((result) => result.isCorrect || result.score == null || result.score === 0, {
+    path: ["score"],
+    message: "An incorrect verification result cannot have a positive score",
+  });
 
 /** Server-authoritative result inferred from the verification schema. */
 export type ServerVerifiedResult = z.infer<typeof serverVerifiedResultSchema>;
@@ -365,28 +403,55 @@ export function normalizeActivityAnswer(value: unknown): string {
   return JSON.stringify(value);
 }
 
-/** Strict persistence-ready activity evidence event. */
-export const activityEvidenceEventSchema = z
-  .object({
-    ...activityEvidenceMetadataShape,
-    eventId: z.string().trim().min(1),
-    kind: z.enum([
-      "playback_started",
-      "playback_paused",
-      "playback_seeked",
-      "watched_range",
-      "checkpoint_answered",
-      "resource_opened",
-      "hint_used",
-      "reveal_used",
-      "intervention_used",
-      "tutorial_step_completed",
-      "activity_completed",
-    ]),
-    occurredAt: z.string().datetime({ offset: true }),
-    payload: z.record(z.string(), z.unknown()),
-  })
-  .strict();
+/**
+ * Produces a stable non-secret digest that binds verification to authored context.
+ * @param activityId Stable activity identifier.
+ * @param subjectId Checkpoint or tutorial-step identifier.
+ * @param input Normalized answer or deterministic check results.
+ * @returns Eight-character hexadecimal FNV-1a digest.
+ */
+export function createVerificationDigest(activityId: string, subjectId: string, input: unknown): string {
+  const serialized = `${activityId}\u0000${subjectId}\u0000${normalizeActivityAnswer(input)}`;
+  let hash = 0x811c9dc5;
+  for (let index = 0; index < serialized.length; index += 1) {
+    hash ^= serialized.charCodeAt(index);
+    hash = Math.imul(hash, 0x01000193);
+  }
+  return (hash >>> 0).toString(16).padStart(8, "0");
+}
+
+/**
+ * Evaluates an answer from trusted authored checkpoint correctness data.
+ * @param question Validated checkpoint question.
+ * @param answer Learner answer to normalize and compare.
+ * @returns Whether the answer matches the authored correct response.
+ */
+export function evaluateActivityQuestion(question: z.infer<typeof activityQuestionSchema>, answer: unknown): boolean {
+  const normalized = normalizeActivityAnswer(answer);
+  if (question.kind === "free_text") return question.acceptedAnswers.map(normalizeActivityAnswer).includes(normalized);
+  return normalized === normalizeActivityAnswer(question.correctOptionIds);
+}
+
+const persistedEventBase = {
+  eventId: z.string().trim().min(1),
+  occurredAt: z.string().datetime({ offset: true }),
+};
+const emptyEventPayloadSchema = z.object({}).strict();
+
+/** Strict persistence-ready event with kind-discriminated payloads and metadata. */
+export const activityEvidenceEventSchema = z.union([
+  z.object({ ...activityEngagementMetadataShape, ...persistedEventBase, kind: z.literal("playback_started"), payload: z.object({ positionSeconds: z.number().nonnegative() }).strict() }).strict(),
+  z.object({ ...activityEngagementMetadataShape, ...persistedEventBase, kind: z.literal("playback_paused"), payload: z.object({ positionSeconds: z.number().nonnegative() }).strict() }).strict(),
+  z.object({ ...activityEngagementMetadataShape, ...persistedEventBase, kind: z.literal("playback_seeked"), payload: z.object({ fromSeconds: z.number().nonnegative(), toSeconds: z.number().nonnegative() }).strict() }).strict(),
+  z.object({ ...activityEngagementMetadataShape, ...persistedEventBase, kind: z.literal("watched_range"), payload: z.object({ startSeconds: z.number().nonnegative(), endSeconds: z.number().nonnegative() }).strict().refine((range) => range.endSeconds > range.startSeconds) }).strict(),
+  z.object({ ...activityEngagementMetadataShape, ...persistedEventBase, kind: z.literal("resource_opened"), payload: z.object({ resourceId: z.string().trim().min(1) }).strict() }).strict(),
+  z.object({ ...activityEngagementMetadataShape, ...persistedEventBase, kind: z.literal("activity_completed"), payload: emptyEventPayloadSchema }).strict(),
+  z.object({ ...activityEvidenceMetadataShape, ...persistedEventBase, kind: z.literal("checkpoint_answered"), payload: z.object({ checkpointId: z.string().trim().min(1), answer: z.unknown(), verifiedResult: serverVerifiedResultSchema }).strict() }).strict(),
+  z.object({ ...activityEvidenceMetadataShape, ...persistedEventBase, kind: z.literal("tutorial_step_completed"), payload: z.object({ stepId: z.string().trim().min(1), checkResults: z.array(z.object({ checkId: z.string().trim().min(1), passed: z.boolean() }).strict()), verifiedResult: serverVerifiedResultSchema }).strict() }).strict(),
+  z.object({ ...activityEvidenceMetadataShape, ...persistedEventBase, kind: z.literal("hint_used"), payload: z.object({ hintId: z.string().trim().min(1) }).strict() }).strict(),
+  z.object({ ...activityEvidenceMetadataShape, ...persistedEventBase, kind: z.literal("reveal_used"), payload: z.object({ revealId: z.string().trim().min(1) }).strict() }).strict(),
+  z.object({ ...activityEvidenceMetadataShape, ...persistedEventBase, kind: z.literal("intervention_used"), payload: z.object({ level: z.number().int().min(1).max(3) }).strict() }).strict(),
+]);
 
 const stateEventMetadata = {
   ...activityEvidenceMetadataShape,
@@ -470,6 +535,12 @@ function mergeWatchedRanges(ranges: ActivityState["watchedRanges"]): ActivitySta
  */
 export function reduceActivityEvent(state: ActivityState, input: ActivityEventInput): ActivityState {
   const event = activityEventSchema.parse(input);
+  if (event.activityId !== state.activityId) {
+    throw new ActivityContractError(
+      "ACTIVITY_MISMATCH",
+      `Event activity ${event.activityId} does not match state activity ${state.activityId}`,
+    );
+  }
   if (state.processedEventIds.includes(event.eventId)) return state;
   const next: ActivityState = {
     ...state,
@@ -521,6 +592,67 @@ export const checkpointPracticeInputSchema = z
 /** Input required to map an assessed checkpoint response into practice.v1. */
 export type CheckpointPracticeInput = z.input<typeof checkpointPracticeInputSchema>;
 
+const activityPracticePartSchema = z
+  .object({
+    partId: z.string().trim().min(1),
+    rawAnswer: z.unknown(),
+    normalizedAnswer: z.string().optional(),
+    isCorrect: z.boolean().optional(),
+    score: z.number().optional(),
+    maxScore: z.number().optional(),
+    misconceptionTags: z.array(z.string()).optional(),
+    hintsUsed: z.number().int().nonnegative().optional(),
+    revealStepsSeen: z.number().int().nonnegative().optional(),
+    totalRevealSteps: z.number().int().nonnegative().optional(),
+    misconceptionSeverityByTag: z.record(z.enum(["minor", "severe"])).optional(),
+    changedCount: z.number().int().nonnegative().optional(),
+    firstInteractionAt: z.string().min(1).optional(),
+    answeredAt: z.string().min(1).optional(),
+    wallClockMs: z.number().nonnegative().optional(),
+    activeMs: z.number().nonnegative().optional(),
+  })
+  .strict();
+
+const activityPracticeTimingSchema = z
+  .object({
+    startedAt: z.string().min(1),
+    submittedAt: z.string().min(1),
+    wallClockMs: z.number().nonnegative(),
+    activeMs: z.number().nonnegative(),
+    idleMs: z.number().nonnegative(),
+    pauseCount: z.number().int().nonnegative(),
+    focusLossCount: z.number().int().nonnegative(),
+    visibilityHiddenCount: z.number().int().nonnegative(),
+    longestIdleMs: z.number().nonnegative().optional(),
+    confidence: z.enum(["high", "medium", "low"]),
+    confidenceReasons: z.array(z.string()).optional(),
+  })
+  .strict()
+  .refine((timing) => timing.activeMs <= timing.wallClockMs, "activeMs cannot exceed wallClockMs");
+
+/** Strict practice.v1 envelope with required activity evidence metadata. */
+export const activityPracticeSubmissionEnvelopeSchema = z
+  .object({
+    contractVersion: z.literal("practice.v1"),
+    activityId: z.string().trim().min(1),
+    mode: z.enum(["worked_example", "guided_practice", "independent_practice", "assessment", "teaching"]),
+    status: z.enum(["draft", "submitted", "graded", "returned"]),
+    attemptNumber: z.number().int().positive(),
+    submittedAt: z.string().min(1),
+    answers: z.record(z.unknown()),
+    parts: z.array(activityPracticePartSchema),
+    artifact: z.record(z.unknown()).optional(),
+    interactionHistory: z.array(z.unknown()).optional(),
+    analytics: activityEvidenceMetadataSchema,
+    studentFeedback: z.string().optional(),
+    teacherSummary: z.string().optional(),
+    timing: activityPracticeTimingSchema.optional(),
+  })
+  .strict();
+
+/** Practice.v1 submission whose analytics are guaranteed to be activity evidence. */
+export type ActivityPracticeSubmissionEnvelope = z.infer<typeof activityPracticeSubmissionEnvelopeSchema>;
+
 /**
  * Maps one assessed checkpoint response directly into practice.v1.
  * @param activity Validated activity containing the checkpoint contract.
@@ -528,12 +660,22 @@ export type CheckpointPracticeInput = z.input<typeof checkpointPracticeInputSche
  * @returns A validated practice.v1 submission envelope.
  * @throws ActivityContractError when the checkpoint is absent or engagement-only.
  */
-export function mapCheckpointAttemptToPractice(activity: Activity, input: CheckpointPracticeInput): PracticeSubmissionEnvelope {
+export function mapCheckpointAttemptToPractice(activity: Activity, input: CheckpointPracticeInput): ActivityPracticeSubmissionEnvelope {
   const parsedInput = checkpointPracticeInputSchema.parse(input);
   const checkpoint = activity.checkpoints.find((candidate) => candidate.checkpointId === parsedInput.checkpointId);
   if (!checkpoint) throw new ActivityContractError("RESOURCE_NOT_FOUND", `Checkpoint not found: ${parsedInput.checkpointId}`);
   if (checkpoint.evidence.behavior !== "assessed") {
     throw new ActivityContractError("RESOURCE_NOT_FOUND", `Checkpoint is not assessed: ${input.checkpointId}`);
+  }
+  const expectedCorrectness = evaluateActivityQuestion(checkpoint.question, parsedInput.answer);
+  const expectedDigest = createVerificationDigest(activity.activityId, checkpoint.checkpointId, parsedInput.answer);
+  if (
+    parsedInput.verifiedResult.activityId !== activity.activityId
+    || parsedInput.verifiedResult.subjectId !== checkpoint.checkpointId
+    || parsedInput.verifiedResult.inputDigest !== expectedDigest
+    || parsedInput.verifiedResult.isCorrect !== expectedCorrectness
+  ) {
+    throw new ActivityContractError("VERIFICATION_MISMATCH", `Checkpoint verification does not match ${checkpoint.checkpointId}`);
   }
   const submittedAt = new Date(parsedInput.submittedAt);
   const startedAt = new Date(submittedAt.getTime() - parsedInput.timingMs).toISOString();
@@ -553,7 +695,7 @@ export function mapCheckpointAttemptToPractice(activity: Activity, input: Checkp
     evidenceConfidence: parsedInput.evidenceConfidence,
     timing: { wallClockMs: parsedInput.timingMs, activeMs: parsedInput.timingMs },
   });
-  return buildPracticeSubmissionEnvelope({
+  return activityPracticeSubmissionEnvelopeSchema.parse(buildPracticeSubmissionEnvelope({
     activityId: activity.activityId,
     mode: activity.mode,
     attemptNumber: parsedInput.attemptNumber,
@@ -583,7 +725,7 @@ export function mapCheckpointAttemptToPractice(activity: Activity, input: Checkp
       visibilityHiddenCount: 0,
       confidence: parsedInput.evidenceConfidence >= 0.8 ? "high" : parsedInput.evidenceConfidence >= 0.5 ? "medium" : "low",
     },
-  });
+  }));
 }
 
 /** Strict tutorial check result supplied to server verification. */
@@ -616,10 +758,24 @@ export type TutorialStepPracticeInput = z.input<typeof tutorialStepPracticeInput
  * @returns A validated practice.v1 submission envelope.
  * @throws ActivityContractError when the tutorial step is absent.
  */
-export function mapTutorialStepResultToPractice(activity: Activity, input: TutorialStepPracticeInput): PracticeSubmissionEnvelope {
+export function mapTutorialStepResultToPractice(activity: Activity, input: TutorialStepPracticeInput): ActivityPracticeSubmissionEnvelope {
   const parsedInput = tutorialStepPracticeInputSchema.parse(input);
   const step = activity.tutorialSteps.find((candidate) => candidate.stepId === parsedInput.stepId);
   if (!step) throw new ActivityContractError("RESOURCE_NOT_FOUND", `Tutorial step not found: ${parsedInput.stepId}`);
+  const authoredCheckIds = new Set(step.checks.map((check) => check.checkId));
+  const suppliedCheckIds = new Set(parsedInput.checkResults.map((result) => result.checkId));
+  const completeResults = authoredCheckIds.size === suppliedCheckIds.size
+    && [...authoredCheckIds].every((checkId) => suppliedCheckIds.has(checkId));
+  const expectedCorrectness = completeResults && parsedInput.checkResults.every((result) => result.passed);
+  const expectedDigest = createVerificationDigest(activity.activityId, step.stepId, parsedInput.checkResults);
+  if (
+    parsedInput.verifiedResult.activityId !== activity.activityId
+    || parsedInput.verifiedResult.subjectId !== step.stepId
+    || parsedInput.verifiedResult.inputDigest !== expectedDigest
+    || parsedInput.verifiedResult.isCorrect !== expectedCorrectness
+  ) {
+    throw new ActivityContractError("VERIFICATION_MISMATCH", `Tutorial verification does not match ${step.stepId}`);
+  }
   const submittedAt = new Date(parsedInput.submittedAt);
   const startedAt = new Date(submittedAt.getTime() - parsedInput.timingMs).toISOString();
   const metadata = activityEvidenceMetadataSchema.parse({
@@ -638,7 +794,7 @@ export function mapTutorialStepResultToPractice(activity: Activity, input: Tutor
     evidenceConfidence: parsedInput.evidenceConfidence,
     timing: { wallClockMs: parsedInput.timingMs, activeMs: parsedInput.timingMs },
   });
-  return buildPracticeSubmissionEnvelope({
+  return activityPracticeSubmissionEnvelopeSchema.parse(buildPracticeSubmissionEnvelope({
     activityId: activity.activityId,
     mode: activity.mode,
     attemptNumber: parsedInput.attemptNumber,
@@ -668,7 +824,7 @@ export function mapTutorialStepResultToPractice(activity: Activity, input: Tutor
       visibilityHiddenCount: 0,
       confidence: parsedInput.evidenceConfidence >= 0.8 ? "high" : parsedInput.evidenceConfidence >= 0.5 ? "medium" : "low",
     },
-  });
+  }));
 }
 
 /** Context-only engagement projection that deliberately has no correctness fields. */

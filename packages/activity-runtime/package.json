@@ -15,10 +15,10 @@
   "files": ["dist"],
   "scripts": {
     "build": "tsc",
-    "check-types": "tsc --noEmit",
+    "check-types": "pnpm build && tsc --noEmit -p tsconfig.test.json",
     "lint": "eslint src/",
-    "test": "vitest run --maxWorkers=1",
-    "test:coverage": "vitest run --coverage --maxWorkers=1"
+    "test": "pnpm build && vitest run --maxWorkers=1",
+    "test:coverage": "pnpm build && vitest run --coverage --maxWorkers=1"
   },
   "dependencies": {
     "@reading-advantage/practice-core": "workspace:*",

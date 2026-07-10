@@ -31,7 +31,17 @@ describe("activity authoring validator", () => {
     const hosted = {
       ...validActivity,
       resources: [
-        { ...validActivity.resources[0], provider: "hosted", videoId: undefined, assetId: "hosted.commit-demo" },
+        {
+          ...validActivity.resources[0],
+          provider: "hosted",
+          videoId: undefined,
+          assetId: "hosted.commit-demo",
+          hardGateApproval: {
+            approvalId: "approval.commit-demo.v1",
+            approvedBy: "curriculum-owner",
+            approvedAt: "2026-07-10T00:00:00Z"
+          }
+        },
         ...validActivity.resources.slice(1)
       ],
       checkpoints: [{ ...validActivity.checkpoints[0], gate: "answer_before_continue" }]

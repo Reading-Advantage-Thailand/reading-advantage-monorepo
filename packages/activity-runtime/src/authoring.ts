@@ -7,8 +7,11 @@ export type ActivityAuthoringIssueCode =
   | "DUPLICATE_ID"
   | "DANGLING_RESOURCE"
   | "DANGLING_SEGMENT"
+  | "RESOURCE_KIND_MISMATCH"
   | "INVALID_TIME_RANGE"
   | "YOUTUBE_HARD_GATE"
+  | "HOSTED_HARD_GATE_UNAPPROVED"
+  | "ACCESSIBILITY_REQUIREMENT"
   | "INVALID_QUESTION";
 
 /** One actionable activity authoring problem. */
@@ -69,8 +72,18 @@ export function validateActivity(input: unknown): ActivityValidationResult {
         issues.push(issue("INVALID_TIME_RANGE", `resources.${resource.resourceId}.segments.${index}`, "Segment endSeconds must be greater than startSeconds"));
       }
     });
-    if (resource.transcriptResourceId && !resources.has(resource.transcriptResourceId)) {
-      issues.push(issue("DANGLING_RESOURCE", `resources.${resource.resourceId}.transcriptResourceId`, `Unknown transcript resource: ${resource.transcriptResourceId}`));
+    if (resource.transcriptResourceId) {
+      const transcript = resources.get(resource.transcriptResourceId);
+      if (!transcript) {
+        issues.push(issue("DANGLING_RESOURCE", `resources.${resource.resourceId}.transcriptResourceId`, `Unknown transcript resource: ${resource.transcriptResourceId}`));
+      } else if (transcript.kind !== "transcript") {
+        issues.push(issue("RESOURCE_KIND_MISMATCH", `resources.${resource.resourceId}.transcriptResourceId`, `Resource ${resource.transcriptResourceId} is not a transcript`));
+      }
+    } else if (activity.accessibility.transcriptRequired) {
+      issues.push(issue("ACCESSIBILITY_REQUIREMENT", `resources.${resource.resourceId}.transcriptResourceId`, "A transcript is required for every video"));
+    }
+    if (activity.accessibility.captionsRequired && !resource.captionsAvailable) {
+      issues.push(issue("ACCESSIBILITY_REQUIREMENT", `resources.${resource.resourceId}.captionsAvailable`, "Captions are required for every video"));
     }
   }
 
@@ -84,11 +97,20 @@ export function validateActivity(input: unknown): ActivityValidationResult {
       if (resource.kind !== "video" || !resource.segments.some((segment) => segment.segmentId === ref.segmentId)) {
         issues.push(issue("DANGLING_SEGMENT", path, `Unknown video segment: ${ref.resourceId}/${ref.segmentId}`));
       }
+      return;
+    }
+    if (resource.kind !== ref.kind) {
+      issues.push(issue("RESOURCE_KIND_MISMATCH", path, `Resource ${ref.resourceId} is ${resource.kind}, not ${ref.kind}`));
     }
   };
 
-  if (activity.accessibility.nonVideoAlternativeResourceId && !resources.has(activity.accessibility.nonVideoAlternativeResourceId)) {
-    issues.push(issue("DANGLING_RESOURCE", "accessibility.nonVideoAlternativeResourceId", `Unknown accessibility resource: ${activity.accessibility.nonVideoAlternativeResourceId}`));
+  if (activity.accessibility.nonVideoAlternativeResourceId) {
+    const alternative = resources.get(activity.accessibility.nonVideoAlternativeResourceId);
+    if (!alternative) {
+      issues.push(issue("DANGLING_RESOURCE", "accessibility.nonVideoAlternativeResourceId", `Unknown accessibility resource: ${activity.accessibility.nonVideoAlternativeResourceId}`));
+    } else if (!(["diagram", "transcript", "lesson_section"] as const).includes(alternative.kind as "diagram" | "transcript" | "lesson_section")) {
+      issues.push(issue("RESOURCE_KIND_MISMATCH", "accessibility.nonVideoAlternativeResourceId", `Resource ${alternative.resourceId} is not a non-video learning alternative`));
+    }
   }
 
   activity.checkpoints.forEach((checkpoint, checkpointIndex) => {
@@ -100,6 +122,9 @@ export function validateActivity(input: unknown): ActivityValidationResult {
     }
     if (video?.kind === "video" && video.provider === "youtube" && checkpoint.gate === "answer_before_continue") {
       issues.push(issue("YOUTUBE_HARD_GATE", `checkpoints.${checkpointIndex}.gate`, "YouTube checkpoints must remain non-blocking"));
+    }
+    if (video?.kind === "video" && video.provider === "hosted" && checkpoint.gate === "answer_before_continue" && !video.hardGateApproval) {
+      issues.push(issue("HOSTED_HARD_GATE_UNAPPROVED", `checkpoints.${checkpointIndex}.gate`, "Hosted hard gates require explicit approval metadata"));
     }
     checkpoint.remediation.forEach((ref, refIndex) => validateRef(ref, `checkpoints.${checkpointIndex}.remediation.${refIndex}`));
     if (checkpoint.question.kind !== "free_text") {

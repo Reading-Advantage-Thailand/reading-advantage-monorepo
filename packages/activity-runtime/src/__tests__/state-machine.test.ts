@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { createInitialActivityState, reduceActivityEvent } from "../core.js";
+import { activitySchema, createInitialActivityState, reduceActivityEvent } from "../core.js";
+import { verifyCheckpointAnswer } from "../server.js";
+import { validActivity } from "./fixtures.js";
 
 describe("framework-neutral activity state machine", () => {
+  const activity = activitySchema.parse(validActivity);
   const metadata = {
     activityId: "activity.git-commit-demo",
     activityVersion: "1.0.0",
@@ -22,7 +25,7 @@ describe("framework-neutral activity state machine", () => {
     const events = [
       { ...metadata, eventId: "1", kind: "playback_started", occurredAt: "2026-07-10T00:00:00Z", positionSeconds: 12 },
       { ...metadata, eventId: "2", kind: "watched_range", occurredAt: "2026-07-10T00:00:10Z", startSeconds: 12, endSeconds: 22 },
-      { ...metadata, eventId: "3", kind: "checkpoint_answered", occurredAt: "2026-07-10T00:00:11Z", checkpointId: "checkpoint.stage", answer: "stage", verifiedResult: { source: "server", isCorrect: true } },
+      { ...metadata, eventId: "3", kind: "checkpoint_answered", occurredAt: "2026-07-10T00:00:11Z", checkpointId: "checkpoint.stage", answer: "stage", verifiedResult: verifyCheckpointAnswer(activity, "checkpoint.stage", "stage") },
       { ...metadata, eventId: "4", kind: "hint_used", occurredAt: "2026-07-10T00:00:12Z", stepId: "wedo.stage", hintId: "hint.stage", hintsUsed: 1 },
       { ...metadata, eventId: "5", kind: "tutorial_step_completed", occurredAt: "2026-07-10T00:00:13Z", stepId: "wedo.stage" },
       { ...metadata, eventId: "6", kind: "activity_completed", occurredAt: "2026-07-10T00:00:14Z" }
@@ -36,7 +39,7 @@ describe("framework-neutral activity state machine", () => {
   });
 
   it("is idempotent by event ID and merges overlapping watched ranges", () => {
-    const start = createInitialActivityState("activity.one");
+    const start = createInitialActivityState("activity.git-commit-demo");
     const first = reduceActivityEvent(start, { ...metadata, eventId: "range", kind: "watched_range", occurredAt: "2026-07-10T00:00:00Z", startSeconds: 0, endSeconds: 10 });
     const duplicate = reduceActivityEvent(first, { ...metadata, eventId: "range", kind: "watched_range", occurredAt: "2026-07-10T00:00:00Z", startSeconds: 0, endSeconds: 10 });
     const merged = reduceActivityEvent(duplicate, { ...metadata, eventId: "range-2", kind: "watched_range", occurredAt: "2026-07-10T00:00:01Z", startSeconds: 8, endSeconds: 14 });

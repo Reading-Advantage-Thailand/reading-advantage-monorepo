@@ -9,6 +9,7 @@ import {
   resolveVideoSegment
 } from "../core.js";
 import { validActivity } from "./fixtures.js";
+import { verifyCheckpointAnswer } from "../server.js";
 
 describe("activity.v1 contract", () => {
   it("validates an explicit bilingual video, checkpoint, tutorial, accessibility, and evidence contract", () => {
@@ -43,6 +44,7 @@ describe("activity.v1 contract", () => {
         resourceId: "video.legacy",
         provider: "hosted",
         assetId: "legacy-video-asset",
+        captionsAvailable: false,
         segments: [{ segmentId: "legacy.intro", label: { en: "Introduction" }, startSeconds: 0, endSeconds: 10 }]
       }],
       checkpoints: [],
@@ -97,12 +99,18 @@ describe("activity.v1 contract", () => {
     });
     expect(metadata.attemptNumber).toBe(2);
     expect(activityEvidenceMetadataSchema.safeParse({ ...metadata, objectiveId: undefined }).success).toBe(false);
-    expect(activityEvidenceEventSchema.parse({
+    const parsedEvent = activityEvidenceEventSchema.parse({
       ...metadata,
       eventId: "event.1",
       kind: "checkpoint_answered",
       occurredAt: "2026-07-10T00:01:00Z",
-      payload: { checkpointId: "checkpoint.stage", answer: "stage" }
-    }).submissionId).toBe("submission.1");
+      payload: {
+        checkpointId: "checkpoint.stage",
+        answer: "stage",
+        verifiedResult: verifyCheckpointAnswer(activitySchema.parse(validActivity), "checkpoint.stage", "stage")
+      }
+    });
+    expect(parsedEvent.kind).toBe("checkpoint_answered");
+    if (parsedEvent.kind === "checkpoint_answered") expect(parsedEvent.submissionId).toBe("submission.1");
   });
 });

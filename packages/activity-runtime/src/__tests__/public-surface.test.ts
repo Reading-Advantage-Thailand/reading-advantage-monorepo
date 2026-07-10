@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import * as root from "../index.js";
-import * as core from "../core.js";
-import * as authoring from "../authoring.js";
-import * as server from "../server.js";
-import * as testing from "../testing.js";
+import * as root from "@reading-advantage/activity-runtime";
+import * as core from "@reading-advantage/activity-runtime/core";
+import * as authoring from "@reading-advantage/activity-runtime/authoring";
+import * as server from "@reading-advantage/activity-runtime/server";
+import * as testing from "@reading-advantage/activity-runtime/testing";
 
 describe("activity runtime public surfaces", () => {
   it("cold-imports root, core, authoring, server, and testing entrypoints", () => {
