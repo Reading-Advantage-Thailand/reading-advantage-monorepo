@@ -5,6 +5,7 @@ import { activitySchema, loadActivity, resourceRefSchema, type Activity } from "
 export type ActivityAuthoringIssueCode =
   | "SCHEMA_INVALID"
   | "DUPLICATE_ID"
+  | "DUPLICATE_ORDER"
   | "DANGLING_RESOURCE"
   | "DANGLING_SEGMENT"
   | "RESOURCE_KIND_MISMATCH"
@@ -60,6 +61,9 @@ export function validateActivity(input: unknown): ActivityValidationResult {
   for (const value of duplicates(stepIds)) issues.push(issue("DUPLICATE_ID", "steps", `Duplicate stepId: ${value}`));
   for (const value of duplicates(activity.checkpoints.map((checkpoint) => checkpoint.checkpointId))) {
     issues.push(issue("DUPLICATE_ID", "checkpoints", `Duplicate checkpointId: ${value}`));
+  }
+  for (const value of duplicates(activity.tutorialSteps.map((step) => String(step.order)))) {
+    issues.push(issue("DUPLICATE_ORDER", "tutorialSteps", `Duplicate tutorial order: ${value}`));
   }
 
   for (const resource of activity.resources) {

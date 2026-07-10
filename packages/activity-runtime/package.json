@@ -14,7 +14,7 @@
   },
   "files": ["dist"],
   "scripts": {
-    "build": "tsc",
+    "build": "node scripts/clean-dist.mjs && tsc",
     "check-types": "pnpm build && tsc --noEmit -p tsconfig.test.json",
     "lint": "eslint src/",
     "test": "pnpm build && vitest run --maxWorkers=1",

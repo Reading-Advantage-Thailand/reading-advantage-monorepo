@@ -9,7 +9,7 @@ import {
   resolveVideoSegment
 } from "../core.js";
 import { validActivity } from "./fixtures.js";
-import { verifyCheckpointAnswer } from "../server.js";
+import { assessCheckpointAttempt } from "../server.js";
 
 describe("activity.v1 contract", () => {
   it("validates an explicit bilingual video, checkpoint, tutorial, accessibility, and evidence contract", () => {
@@ -99,17 +99,20 @@ describe("activity.v1 contract", () => {
     });
     expect(metadata.attemptNumber).toBe(2);
     expect(activityEvidenceMetadataSchema.safeParse({ ...metadata, objectiveId: undefined }).success).toBe(false);
-    const parsedEvent = activityEvidenceEventSchema.parse({
-      ...metadata,
+    const assessed = assessCheckpointAttempt(activitySchema.parse(validActivity), {
       eventId: "event.1",
-      kind: "checkpoint_answered",
-      occurredAt: "2026-07-10T00:01:00Z",
-      payload: {
-        checkpointId: "checkpoint.stage",
-        answer: "stage",
-        verifiedResult: verifyCheckpointAnswer(activitySchema.parse(validActivity), "checkpoint.stage", "stage")
-      }
+      checkpointId: "checkpoint.stage",
+      submissionId: "submission.1",
+      attemptNumber: 2,
+      answer: "stage",
+      submittedAt: "2026-07-10T00:01:00Z",
+      hintsUsed: 1,
+      revealsUsed: 0,
+      interventionLevel: 1,
+      evidenceConfidence: 0.8,
+      timingMs: 24000,
     });
+    const parsedEvent = activityEvidenceEventSchema.parse(assessed.event);
     expect(parsedEvent.kind).toBe("checkpoint_answered");
     if (parsedEvent.kind === "checkpoint_answered") expect(parsedEvent.submissionId).toBe("submission.1");
   });

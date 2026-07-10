@@ -1,16 +1,24 @@
 import {
-  createVerificationDigest,
-  evaluateActivityQuestion,
-  serverVerifiedResultSchema,
+  activityEvidenceEventSchema,
+  normalizeActivityAnswer,
   type Activity,
+  type ActivityEvidenceEvent,
   type ActivityEngagementContext,
   type ActivityEvent,
-  type ServerVerifiedResult,
+  type ActivityPracticeSubmissionEnvelope,
 } from "./core.js";
 import { z } from "zod";
+import { mapVerifiedCheckpointAttempt, mapVerifiedTutorialStep } from "./internal/practice-mapping.js";
+import { createVerificationDigest, serverVerifiedResultSchema, type ServerVerifiedResult } from "./internal/verification.js";
 
 /** Version of the framework-neutral server port contract. */
 export const ACTIVITY_SERVER_PORT_VERSION = "activity-server.v1" as const;
+
+function evaluateActivityQuestion(question: Activity["checkpoints"][number]["question"], answer: unknown): boolean {
+  const normalized = normalizeActivityAnswer(answer);
+  if (question.kind === "free_text") return question.acceptedAnswers.map(normalizeActivityAnswer).includes(normalized);
+  return normalized === normalizeActivityAnswer(question.correctOptionIds);
+}
 
 /**
  * Verifies a checkpoint answer against trusted authored correctness data.
@@ -20,7 +28,7 @@ export const ACTIVITY_SERVER_PORT_VERSION = "activity-server.v1" as const;
  * @returns A server-authoritative correctness result.
  * @throws Error when the checkpoint does not exist.
  */
-export function verifyCheckpointAnswer(activity: Activity, checkpointId: string, answer: unknown): ServerVerifiedResult {
+function verifyCheckpointAnswer(activity: Activity, checkpointId: string, answer: unknown): ServerVerifiedResult {
   const checkpoint = activity.checkpoints.find((candidate) => candidate.checkpointId === checkpointId);
   if (!checkpoint) throw new Error(`Checkpoint not found: ${checkpointId}`);
   const isCorrect = evaluateActivityQuestion(checkpoint.question, answer);
@@ -53,7 +61,7 @@ export type VerifiedTutorialStepResult = {
  * @returns Server-produced check details and their bound aggregate result.
  * @throws Error when the step does not exist.
  */
-export function verifyTutorialStepResult(
+function verifyTutorialStepResult(
   activity: Activity,
   stepId: string,
   executeCheck: TutorialCheckExecutor,
@@ -73,6 +81,110 @@ export function verifyTutorialStepResult(
       score: isCorrect ? 1 : 0,
     }),
   };
+}
+
+/** Strict client checkpoint attempt without any correctness constructor. */
+export const checkpointAssessmentInputSchema = z
+  .object({
+    eventId: z.string().trim().min(1),
+    checkpointId: z.string().trim().min(1),
+    submissionId: z.string().trim().min(1),
+    attemptNumber: z.number().int().positive(),
+    answer: z.unknown(),
+    submittedAt: z.string().datetime({ offset: true }),
+    hintsUsed: z.number().int().nonnegative(),
+    revealsUsed: z.number().int().nonnegative(),
+    interventionLevel: z.number().int().min(0).max(3),
+    evidenceConfidence: z.number().finite().min(0).max(1),
+    timingMs: z.number().finite().nonnegative(),
+  })
+  .strict();
+
+/** Client checkpoint attempt accepted by the atomic server assessment operation. */
+export type CheckpointAssessmentInput = z.input<typeof checkpointAssessmentInputSchema>;
+
+/** Strict tutorial attempt without caller-supplied check outcomes or correctness. */
+export const tutorialAssessmentInputSchema = z
+  .object({
+    eventId: z.string().trim().min(1),
+    stepId: z.string().trim().min(1),
+    submissionId: z.string().trim().min(1),
+    attemptNumber: z.number().int().positive(),
+    submittedAt: z.string().datetime({ offset: true }),
+    hintsUsed: z.number().int().nonnegative(),
+    revealsUsed: z.number().int().nonnegative(),
+    interventionLevel: z.number().int().min(0).max(3),
+    evidenceConfidence: z.number().finite().min(0).max(1),
+    timingMs: z.number().finite().nonnegative(),
+  })
+  .strict();
+
+/** Client tutorial attempt accepted without caller-supplied check outcomes. */
+export type TutorialAssessmentInput = z.input<typeof tutorialAssessmentInputSchema>;
+
+/** Atomic checkpoint assessment output that can be serialized and replayed. */
+export type CheckpointAssessmentResult = {
+  submission: ActivityPracticeSubmissionEnvelope;
+  event: Extract<ActivityEvidenceEvent, { kind: "checkpoint_answered" }>;
+};
+
+/** Atomic tutorial assessment output that can be serialized and replayed. */
+export type TutorialAssessmentResult = {
+  submission: ActivityPracticeSubmissionEnvelope;
+  event: Extract<ActivityEvidenceEvent, { kind: "tutorial_step_completed" }>;
+};
+
+/**
+ * Verifies and maps one checkpoint attempt atomically on the server.
+ * @param activity Validated activity containing trusted correctness data.
+ * @param input Client attempt context without any correctness field.
+ * @returns Practice submission and bound server-generated persistence event.
+ */
+export function assessCheckpointAttempt(activity: Activity, input: CheckpointAssessmentInput): CheckpointAssessmentResult {
+  const parsedInput = checkpointAssessmentInputSchema.parse(input);
+  const { eventId, ...attemptInput } = parsedInput;
+  const verification = verifyCheckpointAnswer(activity, parsedInput.checkpointId, parsedInput.answer);
+  const submission = mapVerifiedCheckpointAttempt(activity, { ...attemptInput, verifiedResult: verification });
+  const event = activityEvidenceEventSchema.parse({
+    ...submission.analytics,
+    eventId,
+    kind: "checkpoint_answered",
+    occurredAt: parsedInput.submittedAt,
+    payload: { checkpointId: parsedInput.checkpointId, answer: parsedInput.answer, verifiedResult: verification },
+  });
+  if (event.kind !== "checkpoint_answered") throw new Error("Checkpoint assessment produced an unexpected event kind");
+  return { submission, event };
+}
+
+/**
+ * Executes authored tutorial checks and maps the result atomically on the server.
+ * @param activity Validated activity containing deterministic tutorial checks.
+ * @param input Client attempt context without check outcomes or correctness.
+ * @param executeCheck Server-owned deterministic check executor.
+ * @returns Practice submission and bound server-generated persistence event.
+ */
+export function assessTutorialStep(
+  activity: Activity,
+  input: TutorialAssessmentInput,
+  executeCheck: TutorialCheckExecutor,
+): TutorialAssessmentResult {
+  const parsedInput = tutorialAssessmentInputSchema.parse(input);
+  const { eventId, ...attemptInput } = parsedInput;
+  const verified = verifyTutorialStepResult(activity, parsedInput.stepId, executeCheck);
+  const submission = mapVerifiedTutorialStep(activity, {
+    ...attemptInput,
+    checkResults: verified.checkResults,
+    verifiedResult: verified.verifiedResult,
+  });
+  const event = activityEvidenceEventSchema.parse({
+    ...submission.analytics,
+    eventId,
+    kind: "tutorial_step_completed",
+    occurredAt: parsedInput.submittedAt,
+    payload: { stepId: parsedInput.stepId, checkResults: verified.checkResults, verifiedResult: verified.verifiedResult },
+  });
+  if (event.kind !== "tutorial_step_completed") throw new Error("Tutorial assessment produced an unexpected event kind");
+  return { submission, event };
 }
 
 /** Tenant-scoped identity for school and explicit platform-level Codecamp actors. */

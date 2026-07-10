@@ -11,6 +11,7 @@ describe("activity authoring validator", () => {
     ["duplicate check IDs", { tutorialSteps: [{ ...validActivity.tutorialSteps[0], checks: [...validActivity.tutorialSteps[0].checks, validActivity.tutorialSteps[0].checks[0]] }, validActivity.tutorialSteps[1]] }, "DUPLICATE_ID"],
     ["duplicate hint IDs", { tutorialSteps: [{ ...validActivity.tutorialSteps[0], hints: [...validActivity.tutorialSteps[0].hints, validActivity.tutorialSteps[0].hints[0]] }, validActivity.tutorialSteps[1]] }, "DUPLICATE_ID"],
     ["duplicate option IDs", { checkpoints: [{ ...validActivity.checkpoints[0], question: { ...validActivity.checkpoints[0].question, options: [...validActivity.checkpoints[0].question.options, validActivity.checkpoints[0].question.options[0]] } }] }, "DUPLICATE_ID"],
+    ["duplicate tutorial order", { tutorialSteps: [validActivity.tutorialSteps[0], { ...validActivity.tutorialSteps[1], order: 1 }] }, "DUPLICATE_ORDER"],
     ["dangling remediation", { checkpoints: [{ ...validActivity.checkpoints[0], remediation: [{ kind: "diagram", resourceId: "missing" }] }] }, "DANGLING_RESOURCE"],
     ["dangling trigger segment", { checkpoints: [{ ...validActivity.checkpoints[0], trigger: { resourceId: "video.commit-demo", segmentId: "missing" } }] }, "DANGLING_SEGMENT"],
     ["invalid segment time", { resources: [{ ...validActivity.resources[0], segments: [{ segmentId: "bad", label: { en: "Bad" }, startSeconds: 8, endSeconds: 2 }] }, ...validActivity.resources.slice(1)] }, "INVALID_TIME_RANGE"],

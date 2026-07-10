@@ -29,11 +29,17 @@ then obtains the trusted time range from validated activity content.
 
 ## Correctness and evidence
 
-Client activity events cannot submit an `isCorrect` property. Server adapters call
-`verifyCheckpointAnswer()` or `verifyTutorialStepResult()`, then pass the returned
-server result into a strict mapping input. Assessed responses become `practice.v1`
-parts. Watch ranges and opened resources remain `activity_engagement.v1` context and
-never fabricate mastery.
+Client activity events cannot submit correctness, verification results, or tutorial
+check outcomes. Server adapters call `assessCheckpointAttempt()` or
+`assessTutorialStep()`. Each operation verifies or executes the authored criteria and
+maps the result to `practice.v1` atomically. Raw verification constructors and mapping
+helpers live behind non-exported package paths. Watch ranges and opened resources remain
+`activity_engagement.v1` context and never fabricate mastery.
+
+Atomic assessment also returns a server-generated event that survives JSON
+serialization and deterministic replay through `reduceAssessedActivityEvent()`. The S3
+persistence phase owns durable signatures, tenant storage, and idempotency; S1 does not
+pretend an in-memory capability is durable authentication.
 
 Evidence metadata always carries activity, graph, objective, variant, step,
 submission, attempt, timing, scaffold, intervention, and confidence fields.

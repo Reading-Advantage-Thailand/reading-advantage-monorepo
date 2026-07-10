@@ -5,15 +5,13 @@ import {
   activitySchema,
   createInitialActivityState,
   loadActivity,
-  mapCheckpointAttemptToPractice,
-  mapTutorialStepResultToPractice,
   normalizeActivityAnswer,
   reduceActivityEvent,
   resolveVideoSegment,
   type ActivityEventInput,
 } from "../core.js";
 import { validateActivity } from "../authoring.js";
-import { verifyCheckpointAnswer, verifyTutorialStepResult } from "../server.js";
+import { assessCheckpointAttempt, assessTutorialStep } from "../server.js";
 import { validActivity } from "./fixtures.js";
 
 const metadata = {
@@ -118,7 +116,8 @@ describe("server verification and practice mapping edge cases", () => {
   } as const;
 
   it("verifies incorrect choice and free-text answers on the server", () => {
-    expect(verifyCheckpointAnswer(activity, "checkpoint.stage", "publish").isCorrect).toBe(false);
+    const incorrect = assessCheckpointAttempt(activity, { ...baseCheckpointInput, eventId: "event.incorrect", answer: "publish" });
+    expect(incorrect.submission.parts[0]?.isCorrect).toBe(false);
     const freeText = activitySchema.parse({
       ...validActivity,
       checkpoints: [{
@@ -126,56 +125,49 @@ describe("server verification and practice mapping edge cases", () => {
         question: { kind: "free_text", prompt: { en: "Command?" }, acceptedAnswers: ["git add README.md"] }
       }]
     });
-    expect(verifyCheckpointAnswer(freeText, "checkpoint.stage", " GIT ADD README.MD ").isCorrect).toBe(true);
-    expect(() => verifyCheckpointAnswer(activity, "missing", "answer")).toThrow("Checkpoint not found");
+    const correct = assessCheckpointAttempt(freeText, { ...baseCheckpointInput, eventId: "event.free-text", answer: " GIT ADD README.MD " });
+    expect(correct.submission.parts[0]?.isCorrect).toBe(true);
+    expect(() => assessCheckpointAttempt(activity, { ...baseCheckpointInput, eventId: "event.missing", checkpointId: "missing" })).toThrow("Checkpoint not found");
   });
 
   it("rejects missing or engagement-only checkpoints and maps low-confidence verified scoring", () => {
-    expect(() => mapCheckpointAttemptToPractice(activity, { ...baseCheckpointInput, checkpointId: "missing", verifiedResult: verifyCheckpointAnswer(activity, "checkpoint.stage", "stage") })).toThrow("Checkpoint not found");
     const engagementOnly = activitySchema.parse({
       ...validActivity,
       checkpoints: [{ ...validActivity.checkpoints[0], evidence: { behavior: "engagement", weight: 0 } }]
     });
-    expect(() => mapCheckpointAttemptToPractice(engagementOnly, { ...baseCheckpointInput, verifiedResult: verifyCheckpointAnswer(activity, "checkpoint.stage", "stage") })).toThrow("not assessed");
-    const partialVerification = { ...verifyCheckpointAnswer(activity, "checkpoint.stage", "stage"), score: 0.5 };
-    const envelope = mapCheckpointAttemptToPractice(activity, {
+    expect(() => assessCheckpointAttempt(engagementOnly, { ...baseCheckpointInput, eventId: "event.engagement-only" })).toThrow("not assessed");
+    const envelope = assessCheckpointAttempt(activity, {
       ...baseCheckpointInput,
-      verifiedResult: partialVerification
-    });
-    expect(envelope.parts[0]?.score).toBe(0.25);
+      eventId: "event.low-confidence"
+    }).submission;
+    expect(envelope.parts[0]?.score).toBe(0.5);
     expect(envelope.timing?.confidence).toBe("low");
   });
 
   it("verifies tutorial omissions, failures, missing steps, and low-confidence mapping", () => {
-    expect(() => verifyTutorialStepResult(activity, "missing", () => false)).toThrow("Tutorial step not found");
-    const failed = verifyTutorialStepResult(activity, "wedo.stage", () => false);
-    expect(failed.verifiedResult).toMatchObject({ isCorrect: false, score: 0 });
-    expect(() => mapTutorialStepResultToPractice(activity, {
-      stepId: "missing",
-      submissionId: "tutorial.missing",
-      attemptNumber: 1,
-      checkResults: failed.checkResults,
-      verifiedResult: failed.verifiedResult,
-      submittedAt: "2026-07-10T00:02:00Z",
-      hintsUsed: 0,
-      revealsUsed: 0,
-      interventionLevel: 0,
-      evidenceConfidence: 0.4,
-      timingMs: 1000
-    })).toThrow("Tutorial step not found");
-    const envelope = mapTutorialStepResultToPractice(activity, {
+    const tutorialInput = {
+      eventId: "event.tutorial-failed",
       stepId: "wedo.stage",
       submissionId: "tutorial.failed",
       attemptNumber: 2,
-      checkResults: failed.checkResults,
-      verifiedResult: failed.verifiedResult,
       submittedAt: "2026-07-10T00:02:00Z",
       hintsUsed: 0,
       revealsUsed: 1,
       interventionLevel: 2,
       evidenceConfidence: 0.4,
-      timingMs: 1000
-    });
+      timingMs: 1000,
+    } as const;
+    expect(() => assessTutorialStep(activity, { ...tutorialInput, eventId: "event.tutorial-missing", stepId: "missing" }, () => false)).toThrow("Tutorial step not found");
+    const failed = assessTutorialStep(activity, tutorialInput, () => false);
+    expect(failed.submission.parts[0]).toMatchObject({ isCorrect: false, score: 0 });
+    expect(() => assessTutorialStep(activity, {
+      ...tutorialInput,
+      eventId: "event.tutorial-missing-map",
+      stepId: "missing",
+      submissionId: "tutorial.missing",
+      attemptNumber: 1,
+    }, () => false)).toThrow("Tutorial step not found");
+    const envelope = failed.submission;
     expect(envelope).toMatchObject({ attemptNumber: 2, timing: { confidence: "low" } });
     expect(envelope.parts[0]).toMatchObject({ isCorrect: false, score: 0 });
   });

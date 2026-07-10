@@ -1,7 +1,5 @@
-import {
-  buildPracticeSubmissionEnvelope,
-} from "@reading-advantage/practice-core/contract";
 import { z } from "zod";
+import { createVerificationDigest, serverVerifiedResultSchema } from "./internal/verification.js";
 
 /** Canonical schema version for interactive learning activities. */
 export const ACTIVITY_SCHEMA_VERSION = "activity.v1" as const;
@@ -119,7 +117,10 @@ export const repositoryLocationResourceSchema = z
       .trim()
       .min(1)
       .refine(
-        (path) => !path.startsWith("/") && !path.startsWith("\\") && !path.split(/[\\/]/).includes(".."),
+        (path) => !path.startsWith("/")
+          && !path.startsWith("\\")
+          && !path.split(/[\\/]/).includes("..")
+          && !/^[A-Za-z]:[\\/]/.test(path),
         "Repository filePath must be relative and cannot traverse parent directories",
       ),
     symbol: z.string().trim().min(1).nullable(),
@@ -371,25 +372,6 @@ export const activityEvidenceMetadataSchema = z.object(activityEvidenceMetadataS
 /** Complete evidence metadata inferred from the strict schema. */
 export type ActivityEvidenceMetadata = z.infer<typeof activityEvidenceMetadataSchema>;
 
-/** Server-authoritative result attached after evaluating an authored answer or check. */
-export const serverVerifiedResultSchema = z
-  .object({
-    source: z.literal("server"),
-    activityId: z.string().trim().min(1),
-    subjectId: z.string().trim().min(1),
-    inputDigest: z.string().regex(/^[a-f0-9]{8}$/),
-    isCorrect: z.boolean(),
-    score: z.number().finite().min(0).max(1).optional(),
-  })
-  .strict()
-  .refine((result) => result.isCorrect || result.score == null || result.score === 0, {
-    path: ["score"],
-    message: "An incorrect verification result cannot have a positive score",
-  });
-
-/** Server-authoritative result inferred from the verification schema. */
-export type ServerVerifiedResult = z.infer<typeof serverVerifiedResultSchema>;
-
 /**
  * Normalizes learner answers for deterministic server comparison.
  * @param value Raw learner or authored answer value.
@@ -403,43 +385,13 @@ export function normalizeActivityAnswer(value: unknown): string {
   return JSON.stringify(value);
 }
 
-/**
- * Produces a stable non-secret digest that binds verification to authored context.
- * @param activityId Stable activity identifier.
- * @param subjectId Checkpoint or tutorial-step identifier.
- * @param input Normalized answer or deterministic check results.
- * @returns Eight-character hexadecimal FNV-1a digest.
- */
-export function createVerificationDigest(activityId: string, subjectId: string, input: unknown): string {
-  const serialized = `${activityId}\u0000${subjectId}\u0000${normalizeActivityAnswer(input)}`;
-  let hash = 0x811c9dc5;
-  for (let index = 0; index < serialized.length; index += 1) {
-    hash ^= serialized.charCodeAt(index);
-    hash = Math.imul(hash, 0x01000193);
-  }
-  return (hash >>> 0).toString(16).padStart(8, "0");
-}
-
-/**
- * Evaluates an answer from trusted authored checkpoint correctness data.
- * @param question Validated checkpoint question.
- * @param answer Learner answer to normalize and compare.
- * @returns Whether the answer matches the authored correct response.
- */
-export function evaluateActivityQuestion(question: z.infer<typeof activityQuestionSchema>, answer: unknown): boolean {
-  const normalized = normalizeActivityAnswer(answer);
-  if (question.kind === "free_text") return question.acceptedAnswers.map(normalizeActivityAnswer).includes(normalized);
-  return normalized === normalizeActivityAnswer(question.correctOptionIds);
-}
-
 const persistedEventBase = {
   eventId: z.string().trim().min(1),
   occurredAt: z.string().datetime({ offset: true }),
 };
 const emptyEventPayloadSchema = z.object({}).strict();
 
-/** Strict persistence-ready event with kind-discriminated payloads and metadata. */
-export const activityEvidenceEventSchema = z.union([
+const activityEvidenceEventUnionSchema = z.union([
   z.object({ ...activityEngagementMetadataShape, ...persistedEventBase, kind: z.literal("playback_started"), payload: z.object({ positionSeconds: z.number().nonnegative() }).strict() }).strict(),
   z.object({ ...activityEngagementMetadataShape, ...persistedEventBase, kind: z.literal("playback_paused"), payload: z.object({ positionSeconds: z.number().nonnegative() }).strict() }).strict(),
   z.object({ ...activityEngagementMetadataShape, ...persistedEventBase, kind: z.literal("playback_seeked"), payload: z.object({ fromSeconds: z.number().nonnegative(), toSeconds: z.number().nonnegative() }).strict() }).strict(),
@@ -453,19 +405,39 @@ export const activityEvidenceEventSchema = z.union([
   z.object({ ...activityEvidenceMetadataShape, ...persistedEventBase, kind: z.literal("intervention_used"), payload: z.object({ level: z.number().int().min(1).max(3) }).strict() }).strict(),
 ]);
 
+/** Strict persistence-ready event with kind-discriminated payloads and metadata. */
+export const activityEvidenceEventSchema = activityEvidenceEventUnionSchema.superRefine((event, context) => {
+  if (event.kind === "checkpoint_answered") {
+    const verification = event.payload.verifiedResult;
+    const digest = createVerificationDigest(event.activityId, event.payload.checkpointId, event.payload.answer);
+    if (verification.activityId !== event.activityId || verification.subjectId !== event.payload.checkpointId || verification.inputDigest !== digest) {
+      context.addIssue({ code: "custom", path: ["payload", "verifiedResult"], message: "Checkpoint verification binding does not match event metadata" });
+    }
+  }
+  if (event.kind === "tutorial_step_completed") {
+    const verification = event.payload.verifiedResult;
+    const digest = createVerificationDigest(event.activityId, event.payload.stepId, event.payload.checkResults);
+    if (verification.activityId !== event.activityId || verification.subjectId !== event.payload.stepId || verification.inputDigest !== digest) {
+      context.addIssue({ code: "custom", path: ["payload", "verifiedResult"], message: "Tutorial verification binding does not match event metadata" });
+    }
+  }
+});
+
+/** Server-generated persistence event inferred from its discriminated schema. */
+export type ActivityEvidenceEvent = z.infer<typeof activityEvidenceEventSchema>;
+
 const stateEventMetadata = {
   ...activityEvidenceMetadataShape,
   ...eventBase,
 };
 
-/** Canonical bounded client event schema for activity state transitions. */
-export const activityEventSchema = z.union([
+const activityEventUnionSchema = z.union([
   z.object({ ...stateEventMetadata, kind: z.literal("playback_started"), positionSeconds: z.number().nonnegative() }).strict(),
   z.object({ ...stateEventMetadata, kind: z.literal("playback_paused"), positionSeconds: z.number().nonnegative() }).strict(),
   z.object({ ...stateEventMetadata, kind: z.literal("playback_seeked"), positionSeconds: z.number().nonnegative() }).strict(),
   z.object({ ...stateEventMetadata, kind: z.literal("watched_range"), startSeconds: z.number().nonnegative(), endSeconds: z.number().nonnegative() }).strict()
     .refine((event) => event.endSeconds > event.startSeconds, "endSeconds must be greater than startSeconds"),
-  z.object({ ...stateEventMetadata, kind: z.literal("checkpoint_answered"), checkpointId: z.string().min(1), answer: z.unknown(), verifiedResult: serverVerifiedResultSchema }).strict(),
+  z.object({ ...stateEventMetadata, kind: z.literal("checkpoint_answered"), checkpointId: z.string().min(1), answer: z.unknown() }).strict(),
   z.object({ ...stateEventMetadata, kind: z.literal("resource_opened"), resourceId: z.string().min(1) }).strict(),
   z.object({ ...stateEventMetadata, kind: z.literal("hint_used"), stepId: z.string().min(1), hintId: z.string().min(1) }).strict(),
   z.object({ ...stateEventMetadata, kind: z.literal("reveal_used"), stepId: z.string().min(1), revealId: z.string().min(1) }).strict(),
@@ -473,6 +445,9 @@ export const activityEventSchema = z.union([
   z.object({ ...stateEventMetadata, kind: z.literal("tutorial_step_completed"), stepId: z.string().min(1) }).strict(),
   z.object({ ...stateEventMetadata, kind: z.literal("activity_completed") }).strict(),
 ]);
+
+/** Canonical bounded client event schema for activity state transitions. */
+export const activityEventSchema = activityEventUnionSchema;
 
 /** Activity event inferred from the canonical event schema. */
 export type ActivityEvent = z.infer<typeof activityEventSchema>;
@@ -486,12 +461,15 @@ export type ActivityState = {
   playback: "idle" | "playing" | "paused";
   positionSeconds: number;
   watchedRanges: Array<{ startSeconds: number; endSeconds: number }>;
-  checkpointAttempts: Record<string, { attemptNumber: number; answer: unknown; isCorrect: boolean }>;
+  checkpointAttempts: Record<string, { attemptNumber: number; answer: unknown }>;
+  assessedCheckpointResults: Record<string, { attemptNumber: number; isCorrect: boolean; score: number }>;
+  assessedTutorialResults: Record<string, { attemptNumber: number; isCorrect: boolean; score: number }>;
   completedStepIds: string[];
   openedResourceIds: string[];
   support: { hintsUsed: number; revealsUsed: number; interventionLevel: number };
   completed: boolean;
   processedEventIds: string[];
+  processedAssessedEventIds: string[];
 };
 
 /**
@@ -506,12 +484,56 @@ export function createInitialActivityState(activityId: string): ActivityState {
     positionSeconds: 0,
     watchedRanges: [],
     checkpointAttempts: {},
+    assessedCheckpointResults: {},
+    assessedTutorialResults: {},
     completedStepIds: [],
     openedResourceIds: [],
     support: { hintsUsed: 0, revealsUsed: 0, interventionLevel: 0 },
     completed: false,
     processedEventIds: [],
+    processedAssessedEventIds: [],
   };
+}
+
+/**
+ * Replays one server-generated assessed event after JSON persistence.
+ * @param state Current activity projection state.
+ * @param input Serialized or typed assessed persistence event.
+ * @returns State with server-assessed correctness projected idempotently.
+ * @throws ActivityContractError for engagement events or activity mismatches.
+ */
+export function reduceAssessedActivityEvent(state: ActivityState, input: unknown): ActivityState {
+  const event = activityEvidenceEventSchema.parse(input);
+  if (event.activityId !== state.activityId) {
+    throw new ActivityContractError(
+      "ACTIVITY_MISMATCH",
+      `Assessed event activity ${event.activityId} does not match state activity ${state.activityId}`,
+    );
+  }
+  if (event.kind !== "checkpoint_answered" && event.kind !== "tutorial_step_completed") {
+    throw new ActivityContractError("VERIFICATION_MISMATCH", `Event is not an assessed result: ${event.kind}`);
+  }
+  if (state.processedAssessedEventIds.includes(event.eventId)) return state;
+  const next: ActivityState = {
+    ...state,
+    assessedCheckpointResults: { ...state.assessedCheckpointResults },
+    assessedTutorialResults: { ...state.assessedTutorialResults },
+    processedAssessedEventIds: [...state.processedAssessedEventIds, event.eventId],
+  };
+  if (event.kind === "checkpoint_answered") {
+    next.assessedCheckpointResults[event.payload.checkpointId] = {
+      attemptNumber: event.attemptNumber,
+      isCorrect: event.payload.verifiedResult.isCorrect,
+      score: event.payload.verifiedResult.score ?? (event.payload.verifiedResult.isCorrect ? 1 : 0),
+    };
+  } else {
+    next.assessedTutorialResults[event.payload.stepId] = {
+      attemptNumber: event.attemptNumber,
+      isCorrect: event.payload.verifiedResult.isCorrect,
+      score: event.payload.verifiedResult.score ?? (event.payload.verifiedResult.isCorrect ? 1 : 0),
+    };
+  }
+  return next;
 }
 
 function mergeWatchedRanges(ranges: ActivityState["watchedRanges"]): ActivityState["watchedRanges"] {
@@ -558,7 +580,7 @@ export function reduceActivityEvent(state: ActivityState, input: ActivityEventIn
     case "watched_range": next.watchedRanges = mergeWatchedRanges([...next.watchedRanges, { startSeconds: event.startSeconds, endSeconds: event.endSeconds }]); next.positionSeconds = Math.max(next.positionSeconds, event.endSeconds); break;
     case "checkpoint_answered": {
       const previous = next.checkpointAttempts[event.checkpointId];
-      next.checkpointAttempts[event.checkpointId] = { attemptNumber: (previous?.attemptNumber ?? 0) + 1, answer: event.answer, isCorrect: event.verifiedResult.isCorrect };
+      next.checkpointAttempts[event.checkpointId] = { attemptNumber: (previous?.attemptNumber ?? 0) + 1, answer: event.answer };
       next.playback = "paused";
       break;
     }
@@ -571,26 +593,6 @@ export function reduceActivityEvent(state: ActivityState, input: ActivityEventIn
   }
   return next;
 }
-
-/** Strict input accepted when mapping a checkpoint into practice.v1. */
-export const checkpointPracticeInputSchema = z
-  .object({
-    checkpointId: z.string().trim().min(1),
-    submissionId: z.string().trim().min(1),
-    attemptNumber: z.number().int().positive(),
-    answer: z.unknown(),
-    verifiedResult: serverVerifiedResultSchema,
-    submittedAt: z.string().datetime({ offset: true }),
-    hintsUsed: z.number().int().nonnegative(),
-    revealsUsed: z.number().int().nonnegative(),
-    interventionLevel: z.number().int().min(0).max(3),
-    evidenceConfidence: z.number().finite().min(0).max(1),
-    timingMs: z.number().finite().nonnegative(),
-  })
-  .strict();
-
-/** Input required to map an assessed checkpoint response into practice.v1. */
-export type CheckpointPracticeInput = z.input<typeof checkpointPracticeInputSchema>;
 
 const activityPracticePartSchema = z
   .object({
@@ -652,180 +654,6 @@ export const activityPracticeSubmissionEnvelopeSchema = z
 
 /** Practice.v1 submission whose analytics are guaranteed to be activity evidence. */
 export type ActivityPracticeSubmissionEnvelope = z.infer<typeof activityPracticeSubmissionEnvelopeSchema>;
-
-/**
- * Maps one assessed checkpoint response directly into practice.v1.
- * @param activity Validated activity containing the checkpoint contract.
- * @param input Server-authoritative response and support metadata.
- * @returns A validated practice.v1 submission envelope.
- * @throws ActivityContractError when the checkpoint is absent or engagement-only.
- */
-export function mapCheckpointAttemptToPractice(activity: Activity, input: CheckpointPracticeInput): ActivityPracticeSubmissionEnvelope {
-  const parsedInput = checkpointPracticeInputSchema.parse(input);
-  const checkpoint = activity.checkpoints.find((candidate) => candidate.checkpointId === parsedInput.checkpointId);
-  if (!checkpoint) throw new ActivityContractError("RESOURCE_NOT_FOUND", `Checkpoint not found: ${parsedInput.checkpointId}`);
-  if (checkpoint.evidence.behavior !== "assessed") {
-    throw new ActivityContractError("RESOURCE_NOT_FOUND", `Checkpoint is not assessed: ${input.checkpointId}`);
-  }
-  const expectedCorrectness = evaluateActivityQuestion(checkpoint.question, parsedInput.answer);
-  const expectedDigest = createVerificationDigest(activity.activityId, checkpoint.checkpointId, parsedInput.answer);
-  if (
-    parsedInput.verifiedResult.activityId !== activity.activityId
-    || parsedInput.verifiedResult.subjectId !== checkpoint.checkpointId
-    || parsedInput.verifiedResult.inputDigest !== expectedDigest
-    || parsedInput.verifiedResult.isCorrect !== expectedCorrectness
-  ) {
-    throw new ActivityContractError("VERIFICATION_MISMATCH", `Checkpoint verification does not match ${checkpoint.checkpointId}`);
-  }
-  const submittedAt = new Date(parsedInput.submittedAt);
-  const startedAt = new Date(submittedAt.getTime() - parsedInput.timingMs).toISOString();
-  const metadata = activityEvidenceMetadataSchema.parse({
-    activityId: activity.activityId,
-    activityVersion: activity.activityVersion,
-    graphVersion: activity.graphVersion,
-    objectiveId: checkpoint.objectiveId,
-    variantKey: checkpoint.variantKey,
-    stepId: checkpoint.stepId,
-    submissionId: parsedInput.submissionId,
-    attemptNumber: parsedInput.attemptNumber,
-    hintsUsed: parsedInput.hintsUsed,
-    revealsUsed: parsedInput.revealsUsed,
-    scaffoldLevel: 0,
-    interventionLevel: parsedInput.interventionLevel,
-    evidenceConfidence: parsedInput.evidenceConfidence,
-    timing: { wallClockMs: parsedInput.timingMs, activeMs: parsedInput.timingMs },
-  });
-  return activityPracticeSubmissionEnvelopeSchema.parse(buildPracticeSubmissionEnvelope({
-    activityId: activity.activityId,
-    mode: activity.mode,
-    attemptNumber: parsedInput.attemptNumber,
-    submittedAt: parsedInput.submittedAt,
-    answers: { [checkpoint.stepId]: parsedInput.answer },
-    parts: [{
-      partId: checkpoint.stepId,
-      rawAnswer: parsedInput.answer,
-      isCorrect: parsedInput.verifiedResult.isCorrect,
-      score: (parsedInput.verifiedResult.score ?? (parsedInput.verifiedResult.isCorrect ? 1 : 0)) * checkpoint.evidence.weight,
-      maxScore: checkpoint.evidence.weight,
-      hintsUsed: parsedInput.hintsUsed,
-      revealStepsSeen: parsedInput.revealsUsed,
-      wallClockMs: parsedInput.timingMs,
-      activeMs: parsedInput.timingMs,
-      answeredAt: parsedInput.submittedAt,
-    }],
-    analytics: metadata,
-    timing: {
-      startedAt,
-      submittedAt: parsedInput.submittedAt,
-      wallClockMs: parsedInput.timingMs,
-      activeMs: parsedInput.timingMs,
-      idleMs: 0,
-      pauseCount: 0,
-      focusLossCount: 0,
-      visibilityHiddenCount: 0,
-      confidence: parsedInput.evidenceConfidence >= 0.8 ? "high" : parsedInput.evidenceConfidence >= 0.5 ? "medium" : "low",
-    },
-  }));
-}
-
-/** Strict tutorial check result supplied to server verification. */
-export const tutorialCheckResultSchema = z.object({ checkId: z.string().trim().min(1), passed: z.boolean() }).strict();
-
-/** Strict input accepted when mapping a tutorial step into practice.v1. */
-export const tutorialStepPracticeInputSchema = z
-  .object({
-    stepId: z.string().trim().min(1),
-    submissionId: z.string().trim().min(1),
-    attemptNumber: z.number().int().positive(),
-    checkResults: z.array(tutorialCheckResultSchema).min(1),
-    verifiedResult: serverVerifiedResultSchema,
-    submittedAt: z.string().datetime({ offset: true }),
-    hintsUsed: z.number().int().nonnegative(),
-    revealsUsed: z.number().int().nonnegative(),
-    interventionLevel: z.number().int().min(0).max(3),
-    evidenceConfidence: z.number().finite().min(0).max(1),
-    timingMs: z.number().finite().nonnegative(),
-  })
-  .strict();
-
-/** Input required to map a server-verified tutorial result into practice.v1. */
-export type TutorialStepPracticeInput = z.input<typeof tutorialStepPracticeInputSchema>;
-
-/**
- * Maps one server-verified tutorial step result directly into practice.v1.
- * @param activity Validated activity containing the tutorial step.
- * @param input Server-authoritative deterministic check and scaffold metadata.
- * @returns A validated practice.v1 submission envelope.
- * @throws ActivityContractError when the tutorial step is absent.
- */
-export function mapTutorialStepResultToPractice(activity: Activity, input: TutorialStepPracticeInput): ActivityPracticeSubmissionEnvelope {
-  const parsedInput = tutorialStepPracticeInputSchema.parse(input);
-  const step = activity.tutorialSteps.find((candidate) => candidate.stepId === parsedInput.stepId);
-  if (!step) throw new ActivityContractError("RESOURCE_NOT_FOUND", `Tutorial step not found: ${parsedInput.stepId}`);
-  const authoredCheckIds = new Set(step.checks.map((check) => check.checkId));
-  const suppliedCheckIds = new Set(parsedInput.checkResults.map((result) => result.checkId));
-  const completeResults = authoredCheckIds.size === suppliedCheckIds.size
-    && [...authoredCheckIds].every((checkId) => suppliedCheckIds.has(checkId));
-  const expectedCorrectness = completeResults && parsedInput.checkResults.every((result) => result.passed);
-  const expectedDigest = createVerificationDigest(activity.activityId, step.stepId, parsedInput.checkResults);
-  if (
-    parsedInput.verifiedResult.activityId !== activity.activityId
-    || parsedInput.verifiedResult.subjectId !== step.stepId
-    || parsedInput.verifiedResult.inputDigest !== expectedDigest
-    || parsedInput.verifiedResult.isCorrect !== expectedCorrectness
-  ) {
-    throw new ActivityContractError("VERIFICATION_MISMATCH", `Tutorial verification does not match ${step.stepId}`);
-  }
-  const submittedAt = new Date(parsedInput.submittedAt);
-  const startedAt = new Date(submittedAt.getTime() - parsedInput.timingMs).toISOString();
-  const metadata = activityEvidenceMetadataSchema.parse({
-    activityId: activity.activityId,
-    activityVersion: activity.activityVersion,
-    graphVersion: activity.graphVersion,
-    objectiveId: step.objectiveId,
-    variantKey: step.variantKey,
-    stepId: step.stepId,
-    submissionId: parsedInput.submissionId,
-    attemptNumber: parsedInput.attemptNumber,
-    hintsUsed: parsedInput.hintsUsed,
-    revealsUsed: parsedInput.revealsUsed,
-    scaffoldLevel: step.scaffoldLevel,
-    interventionLevel: parsedInput.interventionLevel,
-    evidenceConfidence: parsedInput.evidenceConfidence,
-    timing: { wallClockMs: parsedInput.timingMs, activeMs: parsedInput.timingMs },
-  });
-  return activityPracticeSubmissionEnvelopeSchema.parse(buildPracticeSubmissionEnvelope({
-    activityId: activity.activityId,
-    mode: activity.mode,
-    attemptNumber: parsedInput.attemptNumber,
-    submittedAt: parsedInput.submittedAt,
-    answers: { [step.stepId]: parsedInput.checkResults },
-    parts: [{
-      partId: step.stepId,
-      rawAnswer: parsedInput.checkResults,
-      isCorrect: parsedInput.verifiedResult.isCorrect,
-      score: parsedInput.verifiedResult.score ?? (parsedInput.verifiedResult.isCorrect ? 1 : 0),
-      maxScore: 1,
-      hintsUsed: parsedInput.hintsUsed,
-      revealStepsSeen: parsedInput.revealsUsed,
-      wallClockMs: parsedInput.timingMs,
-      activeMs: parsedInput.timingMs,
-      answeredAt: parsedInput.submittedAt,
-    }],
-    analytics: metadata,
-    timing: {
-      startedAt,
-      submittedAt: parsedInput.submittedAt,
-      wallClockMs: parsedInput.timingMs,
-      activeMs: parsedInput.timingMs,
-      idleMs: 0,
-      pauseCount: 0,
-      focusLossCount: 0,
-      visibilityHiddenCount: 0,
-      confidence: parsedInput.evidenceConfidence >= 0.8 ? "high" : parsedInput.evidenceConfidence >= 0.5 ? "medium" : "low",
-    },
-  }));
-}
 
 /** Context-only engagement projection that deliberately has no correctness fields. */
 export type ActivityEngagementContext = {

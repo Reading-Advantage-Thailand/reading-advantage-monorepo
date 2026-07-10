@@ -5,10 +5,9 @@ import {
   activityEvidenceMetadataSchema,
   activityPracticeSubmissionEnvelopeSchema,
   activitySchema,
-  mapCheckpointAttemptToPractice,
 } from "../core.js";
 import { validateActivity } from "../authoring.js";
-import { activityActorSchema, verifyCheckpointAnswer } from "../server.js";
+import { activityActorSchema, assessCheckpointAttempt } from "../server.js";
 import { validActivity } from "./fixtures.js";
 
 describe("high-severity contract closure", () => {
@@ -58,19 +57,19 @@ describe("high-severity contract closure", () => {
   });
 
   it("exports a strict practice envelope with required activity analytics", () => {
-    const envelope = mapCheckpointAttemptToPractice(activity, {
+    const envelope = assessCheckpointAttempt(activity, {
+      eventId: "event.strict-envelope",
       checkpointId: "checkpoint.stage",
       submissionId: "submission.strict-envelope",
       attemptNumber: 1,
       answer: "stage",
-      verifiedResult: verifyCheckpointAnswer(activity, "checkpoint.stage", "stage"),
       submittedAt: "2026-07-10T00:01:00Z",
       hintsUsed: 0,
       revealsUsed: 0,
       interventionLevel: 0,
       evidenceConfidence: 1,
       timingMs: 1000,
-    });
+    }).submission;
     expect(activityPracticeSubmissionEnvelopeSchema.parse(envelope)).toEqual(envelope);
     expect(activityPracticeSubmissionEnvelopeSchema.safeParse({ ...envelope, analytics: undefined }).success).toBe(false);
   });

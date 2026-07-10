@@ -1,116 +1,150 @@
-import { describe, expect, it } from "vitest";
-import {
-  activitySchema,
-  createInitialActivityState,
-  mapCheckpointAttemptToPractice,
-  mapTutorialStepResultToPractice,
-  reduceActivityEvent,
-  serverVerifiedResultSchema,
-} from "../core.js";
+import { describe, expect, it, vi } from "vitest";
+import * as core from "../core.js";
+import * as server from "../server.js";
 import { validateActivity } from "../authoring.js";
-import { verifyCheckpointAnswer, verifyTutorialStepResult } from "../server.js";
 import { validActivity } from "./fixtures.js";
 
 describe("mastery-integrity boundaries", () => {
-  const activity = activitySchema.parse(validActivity);
+  const activity = core.activitySchema.parse(validActivity);
+  const checkpointInput = {
+    eventId: "event.checkpoint.integrity",
+    checkpointId: "checkpoint.stage",
+    submissionId: "submission.integrity",
+    attemptNumber: 1,
+    answer: "stage",
+    submittedAt: "2026-07-10T00:01:00Z",
+    hintsUsed: 0,
+    revealsUsed: 0,
+    interventionLevel: 0,
+    evidenceConfidence: 1,
+    timingMs: 1000,
+  } as const;
+  const tutorialInput = {
+    eventId: "event.tutorial.integrity",
+    stepId: "wedo.stage",
+    submissionId: "tutorial.integrity",
+    attemptNumber: 1,
+    submittedAt: "2026-07-10T00:02:00Z",
+    hintsUsed: 0,
+    revealsUsed: 0,
+    interventionLevel: 0,
+    evidenceConfidence: 1,
+    timingMs: 1000,
+  } as const;
 
-  it("rejects checkpoint verification bound to a different answer", () => {
-    const verificationForStage = verifyCheckpointAnswer(activity, "checkpoint.stage", "stage");
-    expect(() => mapCheckpointAttemptToPractice(activity, {
-      checkpointId: "checkpoint.stage",
-      submissionId: "submission.forged-answer",
-      attemptNumber: 1,
-      answer: "publish",
-      verifiedResult: verificationForStage,
-      submittedAt: "2026-07-10T00:01:00Z",
-      hintsUsed: 0,
-      revealsUsed: 0,
-      interventionLevel: 0,
-      evidenceConfidence: 1,
-      timingMs: 1000,
-    })).toThrowError(expect.objectContaining({ code: "VERIFICATION_MISMATCH" }));
+  it("does not export unsafe verification constructors or raw mappers", () => {
+    for (const name of [
+      "createVerificationDigest",
+      "serverVerifiedResultSchema",
+      "checkpointPracticeInputSchema",
+      "tutorialStepPracticeInputSchema",
+      "mapCheckpointAttemptToPractice",
+      "mapTutorialStepResultToPractice",
+    ]) expect(core).not.toHaveProperty(name);
+    expect(server).not.toHaveProperty("verifyCheckpointAnswer");
+    expect(server).not.toHaveProperty("verifyTutorialStepResult");
   });
 
-  it("runs tutorial checks through a server-owned executor and rejects a forged bundle", () => {
-    const serverBundle = verifyTutorialStepResult(activity, "wedo.stage", (check) => check.checkId === "check.staged");
-    expect(serverBundle).toMatchObject({
+  it("executes each authored tutorial check exactly once and rejects caller checkResults", () => {
+    const executeCheck = vi.fn(() => true);
+    const assessed = server.assessTutorialStep(activity, tutorialInput, executeCheck);
+    expect(executeCheck).toHaveBeenCalledTimes(activity.tutorialSteps[0]?.checks.length ?? 0);
+    expect(assessed.submission.parts[0]).toMatchObject({ isCorrect: true, score: 1 });
+    expect(server.tutorialAssessmentInputSchema.safeParse({
+      ...tutorialInput,
       checkResults: [{ checkId: "check.staged", passed: true }],
-      verifiedResult: { source: "server", isCorrect: true },
-    });
-    expect(() => verifyTutorialStepResult(activity, "wedo.stage", [{ checkId: "check.staged", passed: true }] as never)).toThrow();
-    expect(() => mapTutorialStepResultToPractice(activity, {
-      stepId: "wedo.stage",
-      submissionId: "submission.forged-tutorial",
-      attemptNumber: 1,
-      checkResults: [{ checkId: "check.staged", passed: false }],
-      verifiedResult: serverBundle.verifiedResult,
-      submittedAt: "2026-07-10T00:01:00Z",
-      hintsUsed: 0,
-      revealsUsed: 0,
-      interventionLevel: 0,
-      evidenceConfidence: 1,
-      timingMs: 1000,
-    })).toThrowError(expect.objectContaining({ code: "VERIFICATION_MISMATCH" }));
+    }).success).toBe(false);
   });
 
-  it("rejects events from another activity before mutating projection state", () => {
-    expect(() => reduceActivityEvent(createInitialActivityState(activity.activityId), {
-      activityId: "other.activity",
-      activityVersion: "1.0.0",
-      graphVersion: "codecamp.graph.v1",
-      objectiveId: "git.commit.create",
-      variantKey: "git-commit.video.v1",
+  it("rejects correctness and verification fields on client submission events", () => {
+    const metadata = {
+      activityId: activity.activityId,
+      activityVersion: activity.activityVersion,
+      graphVersion: activity.graphVersion,
+      objectiveId: activity.objectiveId,
+      variantKey: activity.variantKey,
       stepId: "ido.stage-prediction",
-      submissionId: "submission.other",
+      submissionId: "submission.client",
       attemptNumber: 1,
       hintsUsed: 0,
       revealsUsed: 0,
       interventionLevel: 0,
       evidenceConfidence: 1,
       timing: { wallClockMs: 1000, activeMs: 1000 },
-      eventId: "event.other",
-      kind: "playback_started",
+      eventId: "event.client",
+      kind: "checkpoint_answered",
       occurredAt: "2026-07-10T00:00:00Z",
-      positionSeconds: 0,
-    })).toThrowError(expect.objectContaining({ code: "ACTIVITY_MISMATCH" }));
+      checkpointId: "checkpoint.stage",
+      answer: "stage",
+    } as const;
+    expect(core.activityEventSchema.parse(metadata)).not.toHaveProperty("isCorrect");
+    expect(core.activityEventSchema.safeParse({ ...metadata, isCorrect: true }).success).toBe(false);
+    expect(core.activityEventSchema.safeParse({ ...metadata, verifiedResult: {} }).success).toBe(false);
   });
 
-  it("rejects remediation resource-kind mismatches and repository traversal", () => {
+  it("atomically binds practice submissions and assessed persistence events", () => {
+    const checkpoint = server.assessCheckpointAttempt(activity, checkpointInput);
+    expect(checkpoint.submission.analytics).toMatchObject({
+      activityId: checkpoint.event.activityId,
+      submissionId: checkpoint.event.submissionId,
+      attemptNumber: checkpoint.event.attemptNumber,
+    });
+    expect(checkpoint.event).toMatchObject({
+      kind: "checkpoint_answered",
+      payload: { checkpointId: "checkpoint.stage", verifiedResult: { isCorrect: true } },
+    });
+    expect(core.activityEvidenceEventSchema.parse(checkpoint.event)).toEqual(checkpoint.event);
+  });
+
+  it("round-trips assessed JSON and replays identical correctness idempotently", () => {
+    const assessed = server.assessTutorialStep(activity, tutorialInput, () => true);
+    const serialized = JSON.parse(JSON.stringify(assessed.event)) as unknown;
+    const direct = core.reduceAssessedActivityEvent(core.createInitialActivityState(activity.activityId), assessed.event);
+    const replayed = core.reduceAssessedActivityEvent(core.createInitialActivityState(activity.activityId), serialized);
+    expect(replayed).toEqual(direct);
+    expect(core.reduceAssessedActivityEvent(replayed, serialized)).toBe(replayed);
+    expect(replayed.assessedTutorialResults["wedo.stage"]).toMatchObject({ isCorrect: true, score: 1 });
+  });
+
+  it("rejects nested assessed verification bound to another activity, answer, or score", () => {
+    const assessed = server.assessCheckpointAttempt(activity, checkpointInput);
+    const mismatched = JSON.parse(JSON.stringify(assessed.event)) as {
+      payload: { answer: unknown; verifiedResult: { activityId: string; isCorrect: boolean; score?: number } };
+    };
+    mismatched.payload.answer = "publish";
+    expect(core.activityEvidenceEventSchema.safeParse(mismatched).success).toBe(false);
+    mismatched.payload.answer = "stage";
+    mismatched.payload.verifiedResult.activityId = "other.activity";
+    expect(core.activityEvidenceEventSchema.safeParse(mismatched).success).toBe(false);
+    mismatched.payload.verifiedResult.activityId = activity.activityId;
+    mismatched.payload.verifiedResult.isCorrect = false;
+    mismatched.payload.verifiedResult.score = 1;
+    expect(core.activityEvidenceEventSchema.safeParse(mismatched).success).toBe(false);
+  });
+
+  it("rejects remediation kind mismatches, traversal, and Windows absolute paths", () => {
     const mismatch = validateActivity({
       ...validActivity,
-      checkpoints: [{
-        ...validActivity.checkpoints[0],
-        remediation: [{ kind: "diagram", resourceId: "video.commit-demo" }],
-      }],
+      checkpoints: [{ ...validActivity.checkpoints[0], remediation: [{ kind: "diagram", resourceId: "video.commit-demo" }] }],
     });
-    expect(mismatch).toMatchObject({ ok: false });
     expect(mismatch.issues).toContainEqual(expect.objectContaining({ code: "RESOURCE_KIND_MISMATCH" }));
 
-    const traversal = validateActivity({
-      ...validActivity,
-      resources: [
-        ...validActivity.resources,
-        {
-          kind: "repository_location",
-          resourceId: "repo.escape",
-          repositoryId: "tutorial.repo",
-          filePath: "../../etc/passwd",
-          symbol: null,
-          label: { en: "Escape" },
-        },
-      ],
-    });
-    expect(traversal).toMatchObject({ ok: false, issues: [{ code: "SCHEMA_INVALID" }] });
-  });
-
-  it("rejects contradictory correctness and score before evidence mapping", () => {
-    expect(serverVerifiedResultSchema.safeParse({
-      source: "server",
-      activityId: activity.activityId,
-      subjectId: "checkpoint.stage",
-      inputDigest: "deadbeef",
-      isCorrect: false,
-      score: 1,
-    }).success).toBe(false);
+    for (const filePath of ["../../etc/passwd", "C:\\Windows\\system.ini", "C:/Windows/system.ini"]) {
+      const result = validateActivity({
+        ...validActivity,
+        resources: [
+          ...validActivity.resources,
+          {
+            kind: "repository_location",
+            resourceId: `repo.invalid.${filePath.length}`,
+            repositoryId: "tutorial.repo",
+            filePath,
+            symbol: null,
+            label: { en: "Invalid path" },
+          },
+        ],
+      });
+      expect(result).toMatchObject({ ok: false, issues: [{ code: "SCHEMA_INVALID" }] });
+    }
   });
 });
