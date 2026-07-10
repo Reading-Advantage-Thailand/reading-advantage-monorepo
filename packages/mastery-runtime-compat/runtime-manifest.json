@@ -156,16 +156,16 @@
         }
       ],
       "graph": {
-        "release": "knowledge-space-codecamp-foundation-v1.0.0",
-        "schema": "knowledge-space.v3"
+        "release": "knowledge-space-synthetic-codecamp-proof-v1.0.0",
+        "schema": "knowledge-space.v1"
       },
       "contracts": {
-        "practice": "practice.v3",
-        "srs": "srs.v3",
-        "persistence": "mastery-persistence.v1"
+        "practice": "practice.v1",
+        "srs": "srs.contract.v2",
+        "persistence": "mastery.persistence.v1"
       },
       "persistence": {
-        "schema": "mastery-persistence.v1",
+        "schema": "mastery.persistence.v1",
         "migrationHead": "0028_mastery_tenant_hardening"
       },
       "fixtures": {

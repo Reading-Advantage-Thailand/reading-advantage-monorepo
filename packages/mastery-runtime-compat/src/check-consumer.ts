@@ -32,7 +32,7 @@ export async function runConsumerCompatibilityGateFromPath(
 }
 
 async function runCli(): Promise<void> {
-  const descriptorPath = process.argv[2];
+  const descriptorPath = process.argv.slice(2).find((argument) => argument !== "--");
   if (!descriptorPath) {
     process.stderr.write("Usage: mastery-runtime-check <consumer-descriptor.json>\n");
     process.exitCode = 2;

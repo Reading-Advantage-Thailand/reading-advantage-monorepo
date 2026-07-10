@@ -301,11 +301,11 @@ describe("authoritative runtime manifest", () => {
       expect(new Set(entry.exports).size).toBe(entry.exports.length);
     }
     expect(release.graph.release).toMatch(/^knowledge-space-[a-z0-9.-]+$/);
-    expect(release.graph.schema).toBe("knowledge-space.v3");
-    expect(release.contracts.practice).toBe("practice.v3");
-    expect(release.contracts.srs).toBe("srs.v3");
-    expect(release.contracts.persistence).toBe("mastery-persistence.v1");
-    expect(release.persistence.schema).toBe("mastery-persistence.v1");
+    expect(release.graph.schema).toBe("knowledge-space.v1");
+    expect(release.contracts.practice).toBe("practice.v1");
+    expect(release.contracts.srs).toBe("srs.contract.v2");
+    expect(release.contracts.persistence).toBe("mastery.persistence.v1");
+    expect(release.persistence.schema).toBe("mastery.persistence.v1");
     expect(release.persistence.migrationHead).toBe(
       "0028_mastery_tenant_hardening",
     );

@@ -10,7 +10,10 @@ const SemVerSchema = z.string().regex(SEMVER_PATTERN, "must be an exact semantic
 const CommitSchema = z.string().regex(COMMIT_PATTERN, "must be a full lowercase Git commit");
 const VersionedContractSchema = z
   .string()
-  .regex(/^[a-z][a-z0-9-]*\.v\d+(?:\.\d+)*$/, "must be an explicitly versioned contract");
+  .regex(
+    /^[a-z][a-z0-9.-]*\.v\d+(?:\.\d+)*$/,
+    "must be an explicitly versioned contract",
+  );
 
 /** Validates one authority for an independently versioned runtime axis. */
 export const RuntimeAuthoritySchema = z

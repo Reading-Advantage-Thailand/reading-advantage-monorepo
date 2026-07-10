@@ -17,9 +17,12 @@
   ],
   "scripts": {
     "build": "tsc",
+    "check:consumer": "pnpm build && node dist/check-consumer.js",
     "check-types": "tsc --noEmit",
     "lint": "eslint src/",
-    "test": "vitest run"
+    "test": "vitest run --maxWorkers=1",
+    "test:codecamp-proof": "vitest run src/__tests__/codecamp-proof.test.ts --maxWorkers=1",
+    "test:packed-consumer": "vitest run src/__tests__/release-artifact.test.ts --maxWorkers=1"
   },
   "dependencies": {
     "@reading-advantage/domain": "workspace:*",

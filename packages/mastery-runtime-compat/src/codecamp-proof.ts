@@ -78,7 +78,7 @@ const GRAPH: KnowledgeSpace = {
 const PROVENANCE: MasteryProvenance = {
   normativeSpecVersion: "kst-srs.v3.2",
   engineContractVersion: "mastery-runtime-0.1.0",
-  graphRelease: "knowledge-space-codecamp-foundation-v1.0.0",
+  graphRelease: "knowledge-space-synthetic-codecamp-proof-v1.0.0",
   configVersion: "codecamp-proof.v1",
   paramsVersion: "fsrs.synthetic.v1",
   adapterVersion: MASTERY_PERSISTENCE_CONTRACT_VERSION,
