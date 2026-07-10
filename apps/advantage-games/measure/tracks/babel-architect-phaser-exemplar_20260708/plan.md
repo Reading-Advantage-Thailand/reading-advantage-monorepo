@@ -87,11 +87,18 @@ Track: babel-architect-phaser-exemplar_20260708
   - [x] Run focused Jest tests for logic, page, route, adapter/component
   - [x] Run `pnpm check-types`
   - [x] Run `pnpm lint`
-  - [ ] Run a browser/e2e smoke for start → play → completion
-- [~] Task: Manual verification
-  - [ ] Verify 390×844 portrait gameplay with low-poly/low-color placeholder art
-  - [ ] Verify correct and incorrect placements
-  - [ ] Verify completion, XP, leaderboard/session history, and back navigation
+  - [x] Run a browser/e2e smoke for start → play → completion
+- [x] Task: Repair playable implementation regressions
+  - [x] Wrap/selectable block layout for the 390×844 viewport
+  - [x] Remove already-placed correct blocks from the active click targets
+  - [x] Submit the canonical server-authoritative completion payload
+  - [x] Add regression tests for the repaired behavior
+  - [x] Add visible Exit control and countdown/idle defeat pressure
+  - [x] Move tower/feedback away from bottom instruction overlay
+- [b] Task: Manual verification (deferred:cancelled-by-user)
+  - [b] Verify 390×844 portrait gameplay with low-poly/low-color placeholder art (deferred:cancelled-by-user)
+  - [b] Verify correct and incorrect placements (deferred:cancelled-by-user)
+  - [b] Verify completion, XP, leaderboard/session history, and back navigation (deferred:cancelled-by-user)
 - [x] Task: Closeout docs
   - [x] Record Phaser exemplar lessons in `measure/lessons-learned.md`
   - [x] Update `measure/tech-debt.md` for deferred preferred asset-pack ingestion or Phaser testing gaps

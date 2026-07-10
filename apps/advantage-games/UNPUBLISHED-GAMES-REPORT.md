@@ -14,14 +14,6 @@ start a session and interact with the canvas → capture page/console errors + s
 - `eslint src/components/games src/app`: **0 errors** (1858 warnings, all missing jest globals in
   the ESLint config for `*.test.*` files — config noise, not code defects)
 
-## Cross-cutting findings
-
-- **babel-architect**: `src/lib/gameCards.ts` marks it `playable` with href
-  `/student/games/sentence/babel-architect`, but no page or component exists anywhere in the app.
-  The main-menu card links to a guaranteed 404. Either flip to `coming-soon` or remove the href.
-
----
-
 ## Per-game results
 
 ### 1. alchemists-synthesis (vocabulary)
@@ -76,20 +68,7 @@ start a session and interact with the canvas → capture page/console errors + s
 - **Worth a manual look**: during the automated run the prompt word ("Hello") was visible but
   enemy word labels were not obvious on the gargoyle grid — verify labels appear as designed.
 
-### 4. abyssal-well (sentence)
-
-**Verdict: PLAYABLE — runs clean; two content issues to verify.**
-
-- **Syntax/static**: clean. **Jest**: 11/11 pass.
-- **Gameplay**: native start click works, canvas mounts, HUD renders (Thai target sentence,
-  hearts, "Target: The"), cannon + well rings drawn. Zero runtime errors. Touch handlers exist
-  in `AbyssalWellGame.tsx` alongside the keyboard hints ("← → Rotate / Space = Fire").
-- **Worth a manual look**: no enemies were visible after ~15 s of play in the automated run —
-  verify spawn pacing isn't too slow (or spawns aren't off-screen) at 390×844.
-- **i18n**: back-button text is **hardcoded Thai** (`กลับไปหน้าเกม`, page.tsx:129,185) even on the
-  `/en/` route; game title/description are hardcoded English. Mixed-language UI on every locale.
-
-### 5. devourer-slime (sentence)
+### 4. devourer-slime (sentence)
 
 **Verdict: PLAYABLE.**
 
@@ -100,7 +79,7 @@ start a session and interact with the canvas → capture page/console errors + s
 - **Cosmetic**: D-pad buttons overlap word orbs in the lower-left at 390×844; worth checking
   that orbs never spawn unreachable behind the controls.
 
-### 6. dungeon-liberator (sentence)
+### 5. dungeon-liberator (sentence)
 
 **Verdict: PLAYABLE — polished.**
 
@@ -108,10 +87,10 @@ start a session and interact with the canvas → capture page/console errors + s
 - **Gameplay**: native start click works. Full scene renders (dungeon art, knight, prisoner
   sprites labeled with sentence words, Thai prompt bubble, lives/rescued/level HUD, virtual
   joystick). Zero runtime errors.
-- **i18n**: hardcoded Thai back button (`กลับไปหน้าเกม`) on the `/en/` route, same as abyssal-well.
+- **i18n**: hardcoded Thai back button (`กลับไปหน้าเกม`) on the `/en/` route.
 - **Cosmetic**: word labels stack tightly at the right edge ("exams/study/for") at 390px.
 
-### 7. griffin-riders-escape (sentence)
+### 6. griffin-riders-escape (sentence)
 
 **Verdict: BROKEN — game freezes after one frame.**
 
@@ -128,7 +107,7 @@ start a session and interact with the canvas → capture page/console errors + s
 - No runtime errors; start button natively clickable; HUD (hearts, score, translate prompt,
   word chips) renders fine.
 
-### 8. griffin-sky-joust (sentence)
+### 7. griffin-sky-joust (sentence)
 
 **Verdict: PLAYABLE.**
 
@@ -140,7 +119,7 @@ start a session and interact with the canvas → capture page/console errors + s
   issue observed — flow goes straight into the game).
 - Keyboard hints ("Space/Tap = Flap, A/D = Drift") include touch, good for mobile.
 
-### 9. gryphon-patrol (sentence)
+### 8. gryphon-patrol (sentence)
 
 **Verdict: PLAYABLE with layout defects.**
 
@@ -154,7 +133,7 @@ start a session and interact with the canvas → capture page/console errors + s
   art); prompt sentence is shown in English rather than the Thai translation pattern used by
   the other sentence games — confirm intended.
 
-### 10. haunted-library (sentence)
+### 9. haunted-library (sentence)
 
 **Verdict: BROKEN — rAF storm renders the game at ~1 FPS.**
 
@@ -174,7 +153,7 @@ start a session and interact with the canvas → capture page/console errors + s
 - Start screen, HUD, and canvas all mount; no i18n issues seen on the start screen (English
   literals; Thai prompt appears in HUD as designed).
 
-### 11. labyrinth-goblin-king (sentence)
+### 10. labyrinth-goblin-king (sentence)
 
 **Verdict: PLAYABLE.**
 
@@ -185,7 +164,7 @@ start a session and interact with the canvas → capture page/console errors + s
 - **i18n**: hardcoded Thai back button (`กลับไปหน้าเกม`) on `/en/`, same pattern as others.
 - **Cosmetic**: dead vertical gap between the maze (top ~55%) and the joystick zone at 390×844.
 
-### 12. realm-carver (sentence)
+### 11. realm-carver (sentence)
 
 **Verdict: BROKEN — cannot start at all.**
 
@@ -199,7 +178,7 @@ start a session and interact with the canvas → capture page/console errors + s
   mat","translation":"แมวนั่งบนเสื่อ"},...]}`. `sentence.text` is undefined.
   **Fix**: use `sentence.term` (matching the other sentence game pages).
 
-### 13. rune-forge-chamber (sentence)
+### 12. rune-forge-chamber (sentence)
 
 **Verdict: PLAYABLE.**
 
@@ -210,7 +189,7 @@ start a session and interact with the canvas → capture page/console errors + s
 - **i18n**: page header renders the raw key `title` as the game title; back button is hardcoded
   Thai (`กลับไปหน้าเกม`) on `/en/`.
 
-### 14. shadow-gate-dungeon (sentence)
+### 13. shadow-gate-dungeon (sentence)
 
 **Verdict: PLAYABLE.**
 
@@ -223,7 +202,7 @@ start a session and interact with the canvas → capture page/console errors + s
   at 390px.
 - **i18n**: hardcoded Thai back button on `/en/`.
 
-### 15. spellweavers-run (sentence)
+### 14. spellweavers-run (sentence)
 
 **Verdict: PLAYABLE.**
 
@@ -234,7 +213,7 @@ start a session and interact with the canvas → capture page/console errors + s
   and continue below the mana bar outside the playfield — no clipping on the play area.
 - **i18n**: hardcoded Thai back button on `/en/`.
 
-### 16. storm-castle-tower (sentence)
+### 15. storm-castle-tower (sentence)
 
 **Verdict: PLAYABLE.**
 
@@ -247,7 +226,7 @@ start a session and interact with the canvas → capture page/console errors + s
 - Start flow shows a "Loading..." state briefly; automated native click missed it but the game
   proceeds normally (no user-facing issue).
 
-### 17. village-guardian (sentence)
+### 16. village-guardian (sentence)
 
 **Verdict: PLAYABLE.**
 
@@ -265,7 +244,6 @@ start a session and interact with the canvas → capture page/console errors + s
 | alchemists-synthesis | **BLOCKED** | Start button not clickable (layout clips start screen) |
 | archers-revenge | Playable | stale route test; raw i18n page header |
 | paladins-twin-soul | Playable | — |
-| abyssal-well | Playable | verify enemy spawn pacing |
 | devourer-slime | Playable | — |
 | dungeon-liberator | Playable | — |
 | griffin-riders-escape | **BROKEN** | game loop never re-schedules → frozen after 1 frame |
@@ -279,10 +257,9 @@ start a session and interact with the canvas → capture page/console errors + s
 | spellweavers-run | Playable | HUD z-order |
 | storm-castle-tower | Playable | difficulty default easy vs test's medium — decide |
 | village-guardian | Playable | — |
-| babel-architect | **MISSING** | gameCards says `playable` but no page/component exists → 404 |
 
 **4 games cannot be played at all** (griffin-riders-escape, haunted-library, realm-carver, plus
-alchemists-synthesis whose start button is unreachable); babel-architect's card 404s.
+alchemists-synthesis whose start button is unreachable).
 
 Systemic items:
 1. **i18n**: `en.ts` covers only published games — unpublished ones render raw keys or rely on
@@ -312,11 +289,7 @@ Systemic items:
    indefinite parent and clipped the start screen (Start unclickable). Now `height: "85svh"`.
    Same fix applied to wizard-vs-zombie's page (identical latent bug). Verified: native click
    starts the game.
-5. **abyssal-well** (was "verify spawn pacing") — real bug found: the spawn check mutated
-   `lastSpawnRef` inside the state updater; StrictMode's discarded first invocation consumed
-   every spawn window, so **no enemy ever spawned**. Tick hoisted out of the updater.
-   Verified via live React state: 4 enemies climbing at t=8 s.
-6. **storm-castle-tower** — identical impure-updater bug for oil hazards (never spawned); same
+5. **storm-castle-tower** — identical impure-updater bug for oil hazards (never spawned); same
    fix. Also the difficulty select offered `value="medium"`, which doesn't exist in the
    config map (silently fell back to normal) — option now `value="normal"`, matching the
    engine's easy/normal/hard vocabulary.
@@ -327,8 +300,8 @@ Systemic items:
   `runeForgeChamber.title`. Alchemists and archers headers + alchemists start screen/HUD now
   render real strings.
 - Hardcoded Thai back button (`กลับไปหน้าเกม`) replaced with `t("backToGames")`
-  (`pages.student.gamesPage` scope) in 8 pages: castle-defense, village-guardian,
-  rune-forge-chamber, labyrinth-goblin-king, dungeon-liberator, abyssal-well,
+  (`pages.student.gamesPage` scope) in 7 pages: castle-defense, village-guardian,
+  rune-forge-chamber, labyrinth-goblin-king, dungeon-liberator,
   shadow-gate-dungeon, spellweavers-run. Verified live ("Back to Games" on `/en/`).
 
 **Layout/cosmetic fixes:**
@@ -339,8 +312,6 @@ Systemic items:
 - **word-label wrapping** (shadow-gate-dungeon, village-guardian ×2, griffin-sky-joust):
   labels widened to 2× and `wrap="none"` — whole words render ("students", "flies", "walks").
   Trade-off: a label on an edge-hugging entity can clip at the canvas boundary.
-- **babel-architect** card: already `coming-soon` without href in current tree (commit
-  e9f71eab) — no menu 404 remains.
 
 **Test fixes (stale expectations updated to current contracts):**
 - archers-revenge + shadow-gate-dungeon `/complete` route tests → real

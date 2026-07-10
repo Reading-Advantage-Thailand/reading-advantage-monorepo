@@ -139,14 +139,6 @@ export const gameCards: GameCard[] = [
     status: 'playable',
   },
   {
-    id: 'abyssal-well',
-    title: 'The Abyssal Well',
-    description: 'Defend the rim! Rotate and fire at enemies climbing from the depths carrying word orbs in correct order!',
-    cover: withBasePath('/games/cover/cover-the-abyssal-well.png'),
-    href: '/student/games/sentence/abyssal-well',
-    status: 'playable',
-  },
-  {
     id: 'archers-revenge',
     title: "Archer's Revenge",
     description: "Shoot enemies matching the target translation. Don't hit shielded enemies!",
@@ -208,14 +200,6 @@ export const gameCards: GameCard[] = [
     description: 'Start small in a forest arena and eat words in the correct order to grow big enough to devour enemy knights!',
     cover: withBasePath('/games/cover/cover-devourer-slime.png'),
     href: '/student/games/sentence/devourer-slime',
-    status: 'playable',
-  },
-  {
-    id: 'babel-architect',
-    title: "Babel's Architect",
-    description: 'Stack stone blocks in the correct sentence order to build the tallest legendary tower!',
-    cover: withBasePath('/games/cover/cover-babel-architect.png'),
-    href: '/student/games/sentence/babel-architect',
     status: 'playable',
   },
   {

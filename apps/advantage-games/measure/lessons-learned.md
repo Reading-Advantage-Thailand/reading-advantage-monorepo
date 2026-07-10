@@ -34,3 +34,8 @@
 - Phaser is testable in jsdom by mocking the `phaser` module and asserting the adapter lifecycle (mount, setState, intent forwarding, destroy); the real scene is browser-verified.
 - Keep HUD text (translation, stability, sentence counter) in the DOM overlay, not in the Phaser canvas, so screen readers and component tests can read it.
 - A code-generated low-color palette satisfies the placeholder-art requirement without binary asset files; a stable manifest maps each slot to a future Pixel Crawler replacement path.
+
+## Track: R3F Rendering Tier (2026-07-08)
+- Do not fake 3D in Konva; if camera/depth/lighting are core to the fantasy, choose R3F at track creation.
+- R3F stays testable when pure logic owns rules and `@react-three/test-renderer` asserts scene graph projection without a GPU.
+- Abyssal Well S5 lesson: sentence games should not leak the next answer through target highlights; use translation + built progress instead.

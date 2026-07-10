@@ -1,13 +1,13 @@
 {
   "track_id": "r3f_rendering_tier_20260708",
   "type": "feature",
-  "status": "new",
+  "status": "cancelled",
   "created_at": "2026-07-08T00:52:47Z",
-  "updated_at": "2026-07-08T02:10:00Z",
+  "updated_at": "2026-07-10T00:00:00Z",
   "description": "Add React Three Fiber (R3F) as a 3D/2.5D rendering tier alongside React-Konva, rewrite The Abyssal Well in R3F as proof of concept and exemplar, add a stack-selection decision gate to the game creation workflow, and brainstorm/seed R3F game candidates.",
-  "estimated_tasks": 28,
+  "estimated_tasks": 34,
   "actual_tasks": null,
-  "deviation_notes": "Phase S2 user verification found the original game rules contradictory (breach damage + in-order shooting + highlighted target leaking the answer). Story S5 added: cycling words, mistake-based lives, continuous smooth rotation.",
+  "deviation_notes": "Phase S2 user verification found the original game rules contradictory (breach damage + in-order shooting + highlighted target leaking the answer). Story S5 added: cycling words, mistake-based lives, continuous smooth rotation. Implementation/docs for S3/S4 and S5 gameplay are complete; remaining gates are user manual verification for S2/S3/S4/S5 and a full hydrated browser/canvas smoke for S5 after local browser automation is available. Story S6 added 2026-07-08: retheme The Abyssal Well from primitive geometry to the KayKit 3D house family (Dungeon Remastered + Skeletons + Adventurers + RPG Tools + Character Animations) to prove the GLB-asset pipeline; creature types swap to skeleton variants so no custom models are required. S6 is blocked on KayKit pack files landing in public/assets/3d/kaykit/ (see kaykit-asset-shopping-list.md). CANCELLED by user on 2026-07-10. S1 fully complete (R3F stack adoption). S2/S3/S4/S5: implementation/docs complete but user manual verification never performed. S6 blocked and unstarted. Spec preserved; implementation code not retained.",
   "sprint": {
     "goal": "Establish React Three Fiber as a production-ready 3D/2.5D rendering tier alongside React-Konva, proven by a fully compliant R3F rewrite of The Abyssal Well, with a documented stack-selection decision gate in the game creation workflow and a seeded pipeline of 3D game candidates.",
     "stories": [
@@ -16,35 +16,42 @@
         "title": "Adopt the R3F stack",
         "size": "M",
         "priority": "Must",
-        "status": "pending"
+        "status": "done"
       },
       {
         "id": "S2",
         "title": "Rewrite The Abyssal Well in R3F",
         "size": "L",
         "priority": "Must",
-        "status": "pending"
+        "status": "partial"
       },
       {
         "id": "S3",
         "title": "Stack-selection gate in the game creation workflow",
         "size": "S",
         "priority": "Must",
-        "status": "pending"
+        "status": "partial"
       },
       {
         "id": "S4",
         "title": "R3F game candidates brainstorm and seeded tracks",
         "size": "S",
         "priority": "Should",
-        "status": "pending"
+        "status": "partial"
       },
       {
         "id": "S5",
         "title": "Pedagogically sound cycling gameplay with smooth motion",
         "size": "M",
         "priority": "Must",
-        "status": "pending"
+        "status": "partial"
+      },
+      {
+        "id": "S6",
+        "title": "KayKit dungeon-fantasy asset pass",
+        "size": "M",
+        "priority": "Should",
+        "status": "blocked"
       }
     ],
     "demo_notes": null,

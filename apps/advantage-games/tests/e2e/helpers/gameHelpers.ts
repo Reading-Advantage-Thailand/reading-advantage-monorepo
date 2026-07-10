@@ -1,8 +1,6 @@
 import { expect, type Page } from "@playwright/test";
 
 import {
-  ABYSSAL_WELL_GAME_PATH,
-  ABYSSAL_WELL_SAMPLE_SENTENCES,
   ARCHERS_REVENGE_GAME_PATH,
   ARCHERS_REVENGE_SAMPLE_VOCABULARY,
   CASTLE_DEFENSE_GAME_PATH,
@@ -57,6 +55,7 @@ type ApiResponse = {
   status: number;
   message: string;
   vocabulary?: unknown[];
+  sentences?: unknown[];
   xpEarned?: number;
   activityId?: string;
 };
@@ -444,36 +443,6 @@ export async function expectWizardVsZombieStartScreen(page: Page) {
 }
 export function getWizardVsZombieUrl() {
   return WIZARD_VS_ZOMBIE_GAME_PATH;
-}
-
-// ABYSSAL_WELL (Sentence Game)
-export async function mockAbyssalWellApis(
-  page: Page,
-  sentences = ABYSSAL_WELL_SAMPLE_SENTENCES
-) {
-  await page.route("**/api/v1/games/abyssal-well/sentences**", async (route) => {
-    const response: ApiResponse = {
-      status: 200,
-      message: "Sentences retrieved successfully",
-      vocabulary: sentences,
-    };
-    await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(response) });
-  });
-  await page.route("/api/v1/games/abyssal-well/complete", async (route) => {
-    const response: ApiResponse = {
-      status: 200,
-      message: "Game completed successfully",
-      xpEarned: 0,
-      activityId: "mock-activity-playwright",
-    };
-    await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(response) });
-  });
-}
-export async function expectAbyssalWellStartScreen(page: Page) {
-  await expect(page.getByText(/Abyssal/i)).toBeVisible({ timeout: 15000 });
-}
-export function getAbyssalWellUrl() {
-  return ABYSSAL_WELL_GAME_PATH;
 }
 
 // CASTLE_DEFENSE (Sentence Game)

@@ -4,8 +4,6 @@ import path from "node:path";
 import type { Page } from "@playwright/test";
 
 import {
-  ABYSSAL_WELL_SCREENSHOT_DIR,
-  ABYSSAL_WELL_SCREENSHOT_FILE,
   ARCHERS_REVENGE_SCREENSHOT_DIR,
   ARCHERS_REVENGE_SCREENSHOT_FILE,
   CASTLE_DEFENSE_SCREENSHOT_DIR,
@@ -164,14 +162,6 @@ export async function captureWizardVsZombieScreenshot(page: Page) {
   const screenshotDir = path.join(process.cwd(), WIZARD_VS_ZOMBIE_SCREENSHOT_DIR);
   await fs.mkdir(screenshotDir, { recursive: true });
   const screenshotPath = path.join(screenshotDir, WIZARD_VS_ZOMBIE_SCREENSHOT_FILE);
-  await page.screenshot({ path: screenshotPath, fullPage: true });
-  return screenshotPath;
-}
-
-export async function captureAbyssalWellScreenshot(page: Page) {
-  const screenshotDir = path.join(process.cwd(), ABYSSAL_WELL_SCREENSHOT_DIR);
-  await fs.mkdir(screenshotDir, { recursive: true });
-  const screenshotPath = path.join(screenshotDir, ABYSSAL_WELL_SCREENSHOT_FILE);
   await page.screenshot({ path: screenshotPath, fullPage: true });
   return screenshotPath;
 }

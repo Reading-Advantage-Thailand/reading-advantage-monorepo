@@ -446,12 +446,12 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-- [x] **Track: Babel Architect Phaser Exemplar**
+- [-] **Track: Babel Architect Phaser Exemplar**
 *Link: [./measure/tracks/babel-architect-phaser-exemplar_20260708/](./measure/tracks/babel-architect-phaser-exemplar_20260708/)*
 *Description: Implement Babel's Architect as the Phaser 2D engine exemplar using low-poly/low-color placeholder art and existing sentence-game contracts. Supersedes the archived audit's implementation remediation.*
 *Priority: High*
 *Type: Feature*
-*Status: Complete - 27 tests passing, catalog playable, manual browser verification pending*
+*Status: ❌ CANCELLED - All Phase 1-6 implementation completed (Phaser stack, logic, routes, scene, assets, catalog promotion, regression repairs). Final manual visual verification never performed. Spec preserved; code not retained. Cancelled by user 2026-07-10.*
 
 ---
 
@@ -688,9 +688,37 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-- [~] **Track: R3F 3D Rendering Tier**
+- [-] **Track: R3F 3D Rendering Tier**
 *Link: [./tracks/r3f_rendering_tier_20260708/](./tracks/r3f_rendering_tier_20260708/)*
 *Description: Add React Three Fiber as a 3D/2.5D rendering tier alongside React-Konva; rewrite The Abyssal Well in R3F as proof of concept and exemplar; add a Konva-vs-R3F stack-selection gate to the game creation workflow; brainstorm and seed R3F game candidates.*
 *Priority: High*
 *Type: Feature*
-*Status: In Progress*
+*Status: ❌ CANCELLED - S1 fully complete (R3F stack adoption). S2/S3/S4/S5: implementation/docs complete but user manual verification never performed. S6 blocked and unstarted. Spec preserved; code not retained. Cancelled by user 2026-07-10.*
+
+
+---
+
+- [-] **Track: Griffin Rider's Escape R3F Rebuild**
+*Link: [./tracks/r3f_rendering_tier_20260708/r3f-game-candidates.md#1-griffin-riders-escape--r3f-rebuild](./tracks/r3f_rendering_tier_20260708/r3f-game-candidates.md#1-griffin-riders-escape--r3f-rebuild)*
+*Description: Rebuild Griffin Rider's Escape as a real forward-camera R3F runner with perspective word gates and the sentence-game contract.*
+*Priority: High*
+*Type: Feature*
+*Status: ❌ CANCELLED (parent track R3F 3D Rendering Tier cancelled)*
+
+---
+
+- [-] **Track: Storm the Castle Tower R3F Rebuild**
+*Link: [./tracks/r3f_rendering_tier_20260708/r3f-game-candidates.md#2-storm-the-castle-tower--r3f-rebuild](./tracks/r3f_rendering_tier_20260708/r3f-game-candidates.md#2-storm-the-castle-tower--r3f-rebuild)*
+*Description: Rebuild Storm the Castle Tower as a fixed-camera 2.5D R3F climber with real wall depth and sentence-order plaques.*
+*Priority: Medium*
+*Type: Feature*
+*Status: ❌ CANCELLED (parent track R3F 3D Rendering Tier cancelled)*
+
+---
+
+- [-] **Track: Crystal Cavern Rail Runner**
+*Link: [./tracks/r3f_rendering_tier_20260708/r3f-game-candidates.md#1-crystal-cavern-rail-runner](./tracks/r3f_rendering_tier_20260708/r3f-game-candidates.md#1-crystal-cavern-rail-runner)*
+*Description: Build a new first-person R3F mine-cart sentence runner where students steer through word crystals in translation-derived order.*
+*Priority: Medium*
+*Type: Feature*
+*Status: ❌ CANCELLED (parent track R3F 3D Rendering Tier cancelled)*

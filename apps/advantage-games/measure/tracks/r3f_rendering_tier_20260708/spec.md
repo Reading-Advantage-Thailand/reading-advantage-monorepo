@@ -91,6 +91,35 @@ order + breach damage + highlighted target) were contradictory and leaked the an
 **Estimate:** M
 **Priority:** Must
 
+### Story S6: KayKit dungeon-fantasy asset pass
+**As a** student playing The Abyssal Well
+**I want** the well rendered with the project's KayKit 3D house style — stone shaft, torches, skeletons, adventurer
+**So that** the R3F exemplar proves the full GLB-asset pipeline end-to-end, not just primitive geometry
+
+_Added 2026-07-08 after the S5 retheme decision: the primitive-shape R3F rewrite proves the
+rendering tier but not the asset pipeline. Retheme to the documented KayKit 3D house family
+(see `measure/tech-stack.md#asset-families`) so the exemplar is a faithful reference for
+future R3F games. Shopping list: `kaykit-asset-shopping-list.md` in this track dir._
+
+**Acceptance Criteria:**
+- Given the shared 3D asset family in `measure/tech-stack.md`, When the asset pass ships,
+  Then the well is skinned with KayKit Dungeon Remastered stone, lit by KayKit torches,
+  enemies are KayKit Skeletons, and the player is a KayKit Adventurer — all loaded from
+  `public/assets/3d/kaykit/` via a shared loader. No non-KayKit 3D assets are introduced.
+- Given the creature-type config, When the retheme ships, Then `CreatureType` is swapped
+  from `goblin-scout` / `cave-spider` / `shadow-demon` to `skeleton-scout` /
+  `skeleton-warrior` / `skeleton-mage` (slow / medium / fast), and the start-screen labels
+  reflect the new creatures. Pure logic module stays deterministic and unchanged in behavior.
+- Given the 25 shared game specifications, When the compliance checklist is re-run, Then all
+  25 still pass (the R3F-canvas deviation from S2 remains; the asset-dir spec now points at
+  the shared KayKit family location), and coverage stays >80%.
+- Given the mobile performance budget, When playing on a mid-range device in portrait
+  (390×844), Then the frame rate stays stable with capped DPR, instanced/low-poly GLBs, and
+  the torch + bloom lighting kept within the existing budget.
+
+**Estimate:** M
+**Priority:** Should
+
 ### Story S3: Stack-selection gate in the game creation workflow
 **As a** developer starting a new game track
 **I want** the game creation workflow to force an explicit Konva-vs-R3F decision

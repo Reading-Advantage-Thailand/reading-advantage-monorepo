@@ -130,12 +130,6 @@ export const WIZARD_VS_ZOMBIE_SCREENSHOT_DIR = "public/games/wizard-vs-zombie";
 export const WIZARD_VS_ZOMBIE_SCREENSHOT_FILE = "wizard-vs-zombie-gameplay.png";
 export const WIZARD_VS_ZOMBIE_SAMPLE_VOCABULARY: VocabularyItem[] = SAMPLE_VOCABULARY;
 
-// ABYSSAL_WELL (Sentence Game)
-export const ABYSSAL_WELL_GAME_PATH = "/en/student/games/sentence/abyssal-well";
-export const ABYSSAL_WELL_SCREENSHOT_DIR = "public/games/abyssal-well";
-export const ABYSSAL_WELL_SCREENSHOT_FILE = "abyssal-well-gameplay.png";
-export const ABYSSAL_WELL_SAMPLE_SENTENCES: VocabularyItem[] = SAMPLE_VOCABULARY;
-
 // CASTLE_DEFENSE (Sentence Game)
 export const CASTLE_DEFENSE_GAME_PATH = "/en/student/games/sentence/castle-defense";
 export const CASTLE_DEFENSE_SCREENSHOT_DIR = "public/games/castle-defense";
