@@ -44,6 +44,26 @@
       "types": "./dist/mastery/index.d.ts",
       "import": "./dist/mastery/index.js"
     },
+    "./mastery/contracts": {
+      "types": "./dist/mastery/contracts.d.ts",
+      "import": "./dist/mastery/contracts.js"
+    },
+    "./mastery/service": {
+      "types": "./dist/mastery/service.d.ts",
+      "import": "./dist/mastery/service.js"
+    },
+    "./mastery/adapters/memory": {
+      "types": "./dist/mastery/adapters/memory.d.ts",
+      "import": "./dist/mastery/adapters/memory.js"
+    },
+    "./mastery/adapters/drizzle": {
+      "types": "./dist/mastery/adapters/drizzle.d.ts",
+      "import": "./dist/mastery/adapters/drizzle.js"
+    },
+    "./mastery/legacy": {
+      "types": "./dist/mastery/legacy.d.ts",
+      "import": "./dist/mastery/legacy.js"
+    },
     "./ai": {
       "types": "./dist/ai/index.d.ts",
       "import": "./dist/ai/index.js"

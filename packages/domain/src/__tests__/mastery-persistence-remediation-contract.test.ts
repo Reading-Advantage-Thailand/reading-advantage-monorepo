@@ -155,21 +155,6 @@ function makePersistenceCommand(): Record<string, unknown> {
         replacedByDirectEvidence: false,
         createdAt: NOW,
       },
-      calibration: {
-        id: CALIBRATION_ID,
-        schoolId: SCHOOL_ID,
-        domain: "reading",
-        ageBand: "middle",
-        paramsVersion: provenance.paramsVersion,
-        optimizerVersion: "optimizer-1",
-        incumbentParamsVersion: "fsrs-params.reading.secondary.v1",
-        weights: [0.4, 0.35, 0.25],
-        volumeGatePassed: true,
-        evaluationGatePassed: true,
-        humanReleaseApproved: true,
-        provenance,
-        createdAt: NOW,
-      },
     },
   };
 }
@@ -193,10 +178,24 @@ function makeCommitRecord(): Record<string, unknown> {
       evidence: [EVIDENCE_ID],
       state: STATE_ID,
       placement: PLACEMENT_ID,
-      calibration: CALIBRATION_ID,
     },
     provenance: command.provenance,
     audit: command.audit,
+    createdAt: NOW,
+  };
+}
+
+function makeCalibrationRecord(): Record<string, unknown> {
+  const approval = makeCalibrationApproval();
+  return {
+    id: CALIBRATION_ID,
+    schoolId: SCHOOL_ID,
+    idempotencyKey: approval.idempotencyKey,
+    domain: approval.domain,
+    ageBand: approval.ageBand,
+    artifact: approval.artifact,
+    approval: approval.approval,
+    audit: approval.audit,
     createdAt: NOW,
   };
 }
@@ -258,7 +257,7 @@ describe("mastery persistence remediation contract", () => {
       [mastery.masteryEvidenceRecordSchema, evidence[0]],
       [mastery.masteryStateRecordSchema, records.state],
       [mastery.masteryPlacementRecordSchema, records.placement],
-      [mastery.masteryCalibrationRecordSchema, records.calibration],
+      [mastery.masteryCalibrationRecordSchema, makeCalibrationRecord()],
       [mastery.masteryCommitRecordSchema, makeCommitRecord()],
     ];
 
@@ -318,6 +317,7 @@ describe("mastery persistence remediation contract", () => {
     const recordFixtures: Record<string, Record<string, unknown>> = {
       ...records,
       evidence: evidence[0],
+      calibration: makeCalibrationRecord(),
       commit: makeCommitRecord(),
     };
     const schemas: Array<[string, RuntimeSchema]> = [

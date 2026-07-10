@@ -15,7 +15,6 @@ export * as curriculum from "./curriculum/index.js";
 export * as quiz from "./quiz/index.js";
 export * as teachers from "./teachers/index.js";
 export * as mastery from "./mastery/index.js";
-export * from "./mastery/index.js";
 export * as ai from "./ai/index.js";
 export * as interventions from "./interventions/index.js";
 export * as sales from "./sales/index.js";

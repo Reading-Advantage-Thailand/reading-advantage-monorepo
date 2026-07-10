@@ -23,7 +23,6 @@ interface CommitInput {
   schoolId: string;
   studentId: string;
   idempotencyKey: string;
-  requestDigest: string;
   expectedRevisions: { card: number | null; state: number | null };
   provenance: Record<string, string>;
   audit: Record<string, string>;
@@ -33,7 +32,6 @@ interface CommitInput {
     evidence: PersistenceRecord[];
     state: PersistenceRecord;
     placement: PersistenceRecord;
-    calibration: PersistenceRecord;
   };
 }
 
@@ -67,7 +65,8 @@ function uuid(value: number): string {
   return `00000000-0000-4000-8000-${value.toString(16).padStart(12, "0")}`;
 }
 
-function makeInput({
+/** Creates a canonical mastery persistence command for adapter and service tests. */
+export function makeInput({
   seed = 1,
   schoolId = SCHOOL_A,
   studentId = STUDENT_A,
@@ -111,7 +110,6 @@ function makeInput({
     schoolId,
     studentId,
     idempotencyKey: uuid(seed * 20 + 12),
-    requestDigest: `sha256:request-${seed}`,
     expectedRevisions: {
       card: expectedCardRevision,
       state: expectedStateRevision,
@@ -195,21 +193,6 @@ function makeInput({
         graphRelease: provenance.graphRelease,
         seedProvenance: provenance,
         replacedByDirectEvidence: false,
-        createdAt: reviewedAt,
-      },
-      calibration: {
-        id: uuid(seed * 20 + 6),
-        schoolId,
-        domain: "reading",
-        ageBand: "secondary",
-        paramsVersion: provenance.paramsVersion,
-        optimizerVersion: "deterministic-grid.v1",
-        incumbentParamsVersion: "fsrs-params.reading.secondary.v1",
-        weights: Array.from({ length: 19 }, (_, index) => index + 0.5),
-        volumeGatePassed: true,
-        evaluationGatePassed: true,
-        humanReleaseApproved: true,
-        provenance,
         createdAt: reviewedAt,
       },
     },
@@ -298,13 +281,13 @@ export function runMasteryPersistenceContract(
       expect(snapshot.evidence).toEqual(input.records.evidence);
       expect(snapshot.states).toEqual([input.records.state]);
       expect(snapshot.placements).toEqual([input.records.placement]);
-      expect(snapshot.calibrations).toEqual([input.records.calibration]);
+      expect(snapshot.calibrations).toEqual([]);
       expect(snapshot.commits).toHaveLength(1);
       expect(snapshot.commits[0]).toMatchObject({
         id: result.commitId,
         schoolId: SCHOOL_A,
         contractVersion: CONTRACT_VERSION,
-        requestDigest: input.requestDigest,
+        requestDigest: expect.stringMatching(/^sha256:[a-f0-9]{64}$/),
         resultDigest: result.resultDigest,
         provenance: input.provenance,
         audit: input.audit,
@@ -370,7 +353,13 @@ export function runMasteryPersistenceContract(
       await expectTypedError(
         harness.adapter().commitMasteryEvidence({
           ...structuredClone(input),
-          requestDigest: "sha256:different-request",
+          records: {
+            ...structuredClone(input.records),
+            evidence: input.records.evidence.map((record) => ({
+              ...record,
+              correctedStrength: 0.25,
+            })),
+          },
         }),
         "IDEMPOTENCY_CONFLICT",
       );
@@ -459,9 +448,6 @@ export function runMasteryPersistenceContract(
       expect(snapshot.placements[0]).toMatchObject({
         seedProvenance: input.provenance,
       });
-      expect(snapshot.calibrations[0]).toMatchObject({
-        provenance: input.provenance,
-      });
       expect(snapshot.commits[0]).toMatchObject({
         provenance: input.provenance,
         audit: input.audit,
@@ -488,7 +474,13 @@ export function runMasteryPersistenceContract(
       await expectTypedError(
         harness.adapter().commitMasteryEvidence({
           ...structuredClone(input),
-          requestDigest: "sha256:conflict",
+          records: {
+            ...structuredClone(input.records),
+            evidence: input.records.evidence.map((record) => ({
+              ...record,
+              confidence: 0.25,
+            })),
+          },
         }),
         "IDEMPOTENCY_CONFLICT",
       );
