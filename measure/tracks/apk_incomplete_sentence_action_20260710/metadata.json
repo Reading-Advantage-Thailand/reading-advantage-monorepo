@@ -3,20 +3,20 @@
   "type": "feature",
   "status": "in-progress",
   "created_at": "2026-07-10T12:30:00Z",
-  "updated_at": "2026-07-10T12:30:00Z",
+  "updated_at": "2026-07-10T20:50:00Z",
   "description": "Implement Astral Mage and The Sorcerer's Ziggurat as distinct Phaser 4 sentence cartridges using reusable target-action and isometric-step families, with dual editions, QC coverage, typed host proofs, and safe catalog cutover.",
   "estimated_tasks": 20,
-  "actual_tasks": null,
-  "deviation_notes": "Both games currently have zero gameplay implementation. Their catalog descriptions and APK roadmap mechanics are the baseline; obsolete React-Konva audit recommendations are not compatibility requirements.",
+  "actual_tasks": 16,
+  "deviation_notes": "Both zero-implementation games were rebuilt directly on Phaser 4 APK families. Review added swept projectile collision, visible duplicate-token equivalence, tween-safe touch queuing, and real 390x844 completion coverage. Product-owner QC remains the only open gate.",
   "sprint": {
     "goal": "Turn the two unfinished sentence placeholders into distinctive, package-consumable Phaser games without changing the educational input or result contracts.",
     "stories": [
-      { "id": "S1", "title": "Build Astral Mage target action", "size": "XL", "priority": "Must", "status": "in-progress" },
-      { "id": "S2", "title": "Build Ziggurat step traversal", "size": "XL", "priority": "Must", "status": "pending" },
-      { "id": "S3", "title": "Prove editions and hosts", "size": "L", "priority": "Must", "status": "pending" },
-      { "id": "S4", "title": "Cut over unfinished catalog entries", "size": "M", "priority": "Must", "status": "pending" }
+      { "id": "S1", "title": "Build Astral Mage target action", "size": "XL", "priority": "Must", "status": "completed" },
+      { "id": "S2", "title": "Build Ziggurat step traversal", "size": "XL", "priority": "Must", "status": "completed" },
+      { "id": "S3", "title": "Prove editions and hosts", "size": "L", "priority": "Must", "status": "completed" },
+      { "id": "S4", "title": "Cut over unfinished catalog entries", "size": "M", "priority": "Must", "status": "completed" }
     ],
-    "demo_notes": null,
+    "demo_notes": "Use Advantage Games `/qc?cartridge=astral-mage` and `/qc?cartridge=sorcerer-ziggurat`; verify Primary Chibi and Secondary Epic, keyboard/touch completion, exact result rendering, and clean relaunch.",
     "retro_ref": null
   }
 }
