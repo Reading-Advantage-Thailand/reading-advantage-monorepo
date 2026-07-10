@@ -108,11 +108,13 @@ async function createDrizzleHarness(): Promise<MasteryPersistenceTestHarness> {
     const adapter = await Promise.resolve(
       createAdapter({
         db: testDb.db,
-        tenantDb: testDb.tenantDb,
+        tenant: { schoolId: SCHOOL_A },
+        actorId: "teacher-1",
       }) as MasteryPersistenceTestPort,
     );
     return {
       adapter: () => adapter,
+      boundSchoolId: SCHOOL_A,
       reset: async () => {
         await testDb.reset();
         await seedOwners(testDb);

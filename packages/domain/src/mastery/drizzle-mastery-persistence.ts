@@ -1,12 +1,18 @@
+import { createHash } from "node:crypto";
 import type { DB } from "@reading-advantage/db";
 import { and, asc, eq, inArray } from "drizzle-orm";
 import type { z } from "zod";
 import {
+  approveMasteryCalibrationResultSchema,
   commitMasteryEvidenceInputSchema,
   commitMasteryEvidenceResultSchema,
+  masteryCalibrationApprovalInputSchema,
+  masteryCalibrationRecordSchema,
   masteryCommitRecordSchema,
   masterySnapshotInputSchema,
   masterySnapshotSchema,
+  type ApproveMasteryCalibrationInput,
+  type ApproveMasteryCalibrationResult,
   type CommitMasteryEvidenceInput,
   type CommitMasteryEvidenceResult,
   type MasteryCalibrationRecord,
@@ -41,8 +47,10 @@ async function loadDbModule(): Promise<DbModule> {
 export interface DrizzleMasteryPersistenceOptions {
   /** Schema-aware Drizzle database instance. */
   db: unknown;
-  /** Optional tenant factory retained for composition with application backends. */
-  tenantDb?: unknown;
+  /** Authenticated tenant that permanently scopes this adapter. */
+  tenant: { schoolId: string } | null;
+  /** Authenticated actor that must match every write audit. */
+  actorId: string;
 }
 
 function parseOrThrow<T>(schema: z.ZodType<T>, value: unknown): T {
@@ -62,6 +70,32 @@ function iso(value: Date): string {
   return value.toISOString();
 }
 
+function canonicalize(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(canonicalize);
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value as Record<string, unknown>)
+        .sort(([left], [right]) => left.localeCompare(right))
+        .map(([key, nested]) => [key, canonicalize(nested)]),
+    );
+  }
+  return value;
+}
+
+function digest(value: unknown): string {
+  return `sha256:${createHash("sha256")
+    .update(JSON.stringify(canonicalize(value)))
+    .digest("hex")}`;
+}
+
+function uuidFromDigest(value: string): string {
+  const hex = value.replace(/^sha256:/, "").padEnd(32, "0");
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-4${hex.slice(13, 16)}-8${hex.slice(
+    17,
+    20,
+  )}-${hex.slice(20, 32)}`;
+}
+
 function assertOwnership(input: CommitMasteryEvidenceInput): void {
   const records = [
     input.records.card,
@@ -69,7 +103,6 @@ function assertOwnership(input: CommitMasteryEvidenceInput): void {
     ...input.records.evidence,
     input.records.state,
     input.records.placement,
-    input.records.calibration,
   ];
   if (records.some((record) => record.schoolId !== input.schoolId)) {
     throw new MasteryPersistenceError(
@@ -198,32 +231,23 @@ function placementFromRow(
 function calibrationFromRow(
   row: MasteryCalibrationRow,
 ): MasteryCalibrationRecord {
-  return {
-    id: row.id,
-    schoolId: row.schoolId,
-    domain: row.domain,
-    ageBand: row.ageBand,
-    paramsVersion: row.paramsVersion,
-    optimizerVersion: row.optimizerVersion,
-    incumbentParamsVersion: row.incumbentParamsVersion,
-    weights: row.fsrsParametersJson.weights as number[],
-    volumeGatePassed: row.volumeGatePassed,
-    evaluationGatePassed: row.improvesIncumbent,
-    humanReleaseApproved: row.humanReleaseApproved,
-    provenance:
-      row.fsrsParametersJson.provenance as MasteryCalibrationRecord["provenance"],
-    createdAt: iso(row.createdAt),
-  };
+  const stored = row.fsrsParametersJson.record;
+  return parseOrThrow(masteryCalibrationRecordSchema, stored);
 }
 
 function commitFromRow(row: MasteryCommitRow): MasteryCommitRecord {
   return parseOrThrow(masteryCommitRecordSchema, row.resultJson);
 }
 
-function isUniqueViolation(error: unknown): boolean {
-  if (!error || typeof error !== "object") return false;
+function providerCode(error: unknown): string | undefined {
+  if (!error || typeof error !== "object") return undefined;
   const candidate = error as { code?: unknown; cause?: { code?: unknown } };
-  return candidate.code === "23505" || candidate.cause?.code === "23505";
+  const code = candidate.code ?? candidate.cause?.code;
+  return typeof code === "string" ? code : undefined;
+}
+
+function isUniqueViolation(error: unknown): boolean {
+  return providerCode(error) === "23505";
 }
 
 function portableFailure(error: unknown): never {
@@ -232,24 +256,106 @@ function portableFailure(error: unknown): never {
     throw new MasteryPersistenceError(
       "APPEND_ONLY_CONFLICT",
       "An immutable mastery record conflicts with persisted data.",
+      { cause: error },
+    );
+  }
+  const code = providerCode(error);
+  if (code === "40001" || code === "ECONNREFUSED") {
+    throw new MasteryPersistenceError(
+      "PERSISTENCE_UNAVAILABLE",
+      "The mastery persistence service is temporarily unavailable.",
+    );
+  }
+  if (code === "ETIMEDOUT") {
+    throw new MasteryPersistenceError(
+      "PERSISTENCE_TIMEOUT",
+      "The mastery persistence operation timed out.",
+    );
+  }
+  if (code === "42P01") {
+    throw new MasteryPersistenceError(
+      "MISSING_MIGRATION",
+      "The mastery persistence schema is not available.",
     );
   }
   throw new MasteryPersistenceError(
-    "VALIDATION_ERROR",
+    "INTERNAL_ERROR",
     "The mastery persistence operation could not be applied.",
   );
 }
 
 class DrizzleMasteryPersistence implements MasteryPersistencePort {
   private readonly db: DB;
+  private readonly schoolId: string;
+  private readonly actorId: string;
 
   constructor(options: DrizzleMasteryPersistenceOptions) {
+    if (!options.tenant?.schoolId || !options.actorId.trim()) {
+      throw new MasteryPersistenceError(
+        "TENANT_SCOPE_ERROR",
+        "An authenticated tenant and actor are required.",
+      );
+    }
     this.db = options.db as DB;
-    void options.tenantDb;
+    this.schoolId = options.tenant.schoolId;
+    this.actorId = options.actorId;
+  }
+
+  private assertSchool(schoolId: string): void {
+    if (schoolId !== this.schoolId) {
+      throw new MasteryPersistenceError(
+        "TENANT_SCOPE_ERROR",
+        "The mastery operation is outside the authenticated tenant.",
+      );
+    }
+  }
+
+  private assertActor(actorId: string): void {
+    if (actorId !== this.actorId) {
+      throw new MasteryPersistenceError(
+        "TENANT_SCOPE_ERROR",
+        "The mastery audit actor does not match the authenticated actor.",
+      );
+    }
+  }
+
+  private async findReplay(
+    schoolId: string,
+    idempotencyKey: string,
+    requestDigest: string,
+  ): Promise<CommitMasteryEvidenceResult | null> {
+    const { masteryCommits } = await loadDbModule();
+    const [existing] = await this.db
+      .select()
+      .from(masteryCommits)
+      .where(
+        and(
+          eq(masteryCommits.schoolId, schoolId),
+          eq(masteryCommits.idempotencyKey, idempotencyKey),
+        ),
+      )
+      .limit(1);
+    if (!existing) return null;
+    const commit = commitFromRow(existing);
+    if (commit.requestDigest !== requestDigest) {
+      throw new MasteryPersistenceError(
+        "IDEMPOTENCY_CONFLICT",
+        "The idempotency key is already bound to a different request.",
+      );
+    }
+    return parseOrThrow(commitMasteryEvidenceResultSchema, {
+      status: "replayed",
+      commitId: commit.id,
+      resultDigest: commit.resultDigest,
+      cardRevision: commit.cardRevision,
+      stateRevision: commit.stateRevision,
+      recordIds: commit.recordIds,
+    });
   }
 
   async readSnapshot(input: MasterySnapshotInput): Promise<MasterySnapshot> {
     const parsed = parseOrThrow(masterySnapshotInputSchema, input);
+    this.assertSchool(parsed.schoolId);
     try {
       const {
         masteryCalibrations,
@@ -316,10 +422,12 @@ class DrizzleMasteryPersistence implements MasteryPersistencePort {
     input: CommitMasteryEvidenceInput,
   ): Promise<CommitMasteryEvidenceResult> {
     const parsed = parseOrThrow(commitMasteryEvidenceInputSchema, input);
+    this.assertSchool(parsed.schoolId);
+    this.assertActor(parsed.audit.actorId);
     assertOwnership(parsed);
+    const requestDigest = digest(parsed);
     try {
       const {
-        masteryCalibrations,
         masteryCards,
         masteryCommits,
         masteryEvidence,
@@ -342,7 +450,7 @@ class DrizzleMasteryPersistence implements MasteryPersistencePort {
           const existing = existingRows[0];
           if (existing) {
             const commit = commitFromRow(existing);
-            if (commit.requestDigest !== parsed.requestDigest) {
+            if (commit.requestDigest !== requestDigest) {
               throw new MasteryPersistenceError(
                 "IDEMPOTENCY_CONFLICT",
                 "The idempotency key is already bound to a different request.",
@@ -358,7 +466,7 @@ class DrizzleMasteryPersistence implements MasteryPersistencePort {
             });
           }
 
-          const [reviewCollision, evidenceCollisions, placementCollision, calibrationCollision] =
+          const [reviewCollision, evidenceCollisions, placementCollision] =
             await Promise.all([
               transaction
                 .select({ id: masteryReviews.id })
@@ -392,22 +500,11 @@ class DrizzleMasteryPersistence implements MasteryPersistencePort {
                   ),
                 )
                 .limit(1),
-              transaction
-                .select({ id: masteryCalibrations.id })
-                .from(masteryCalibrations)
-                .where(
-                  and(
-                    eq(masteryCalibrations.schoolId, parsed.schoolId),
-                    eq(masteryCalibrations.id, parsed.records.calibration.id),
-                  ),
-                )
-                .limit(1),
             ]);
           if (
             reviewCollision.length > 0 ||
             evidenceCollisions.length > 0 ||
-            placementCollision.length > 0 ||
-            calibrationCollision.length > 0
+            placementCollision.length > 0
           ) {
             throw new MasteryPersistenceError(
               "APPEND_ONLY_CONFLICT",
@@ -416,7 +513,12 @@ class DrizzleMasteryPersistence implements MasteryPersistencePort {
           }
 
           const [currentCard] = await transaction
-            .select({ revision: masteryCards.revision })
+            .select({
+              revision: masteryCards.revision,
+              studentId: masteryCards.studentId,
+              objectiveId: masteryCards.objectiveId,
+              variantKey: masteryCards.variantKey,
+            })
             .from(masteryCards)
             .where(
               and(
@@ -426,7 +528,11 @@ class DrizzleMasteryPersistence implements MasteryPersistencePort {
             )
             .limit(1);
           const [currentState] = await transaction
-            .select({ revision: masteryStates.revision })
+            .select({
+              revision: masteryStates.revision,
+              studentId: masteryStates.studentId,
+              objectiveId: masteryStates.objectiveId,
+            })
             .from(masteryStates)
             .where(
               and(
@@ -435,6 +541,27 @@ class DrizzleMasteryPersistence implements MasteryPersistencePort {
               ),
             )
             .limit(1);
+          if (
+            currentCard &&
+            (currentCard.studentId !== parsed.studentId ||
+              currentCard.objectiveId !== parsed.records.card.objectiveId ||
+              currentCard.variantKey !== parsed.records.card.variantKey)
+          ) {
+            throw new MasteryPersistenceError(
+              "APPEND_ONLY_CONFLICT",
+              "An existing mastery card cannot be retargeted.",
+            );
+          }
+          if (
+            currentState &&
+            (currentState.studentId !== parsed.studentId ||
+              currentState.objectiveId !== parsed.records.state.objectiveId)
+          ) {
+            throw new MasteryPersistenceError(
+              "APPEND_ONLY_CONFLICT",
+              "An existing mastery state cannot be retargeted.",
+            );
+          }
           const cardCurrentRevision = currentCard?.revision ?? null;
           const stateCurrentRevision = currentState?.revision ?? null;
           if (
@@ -585,45 +712,24 @@ class DrizzleMasteryPersistence implements MasteryPersistencePort {
             createdAt: new Date(parsed.records.placement.createdAt),
             updatedAt: new Date(parsed.records.placement.createdAt),
           });
-          await transaction.insert(masteryCalibrations).values({
-            id: parsed.records.calibration.id,
-            schoolId: parsed.schoolId,
-            domain: parsed.records.calibration.domain,
-            ageBand: parsed.records.calibration.ageBand,
-            paramsVersion: parsed.records.calibration.paramsVersion,
-            optimizerVersion: parsed.records.calibration.optimizerVersion,
-            incumbentParamsVersion:
-              parsed.records.calibration.incumbentParamsVersion,
-            fsrsParametersJson: {
-              weights: parsed.records.calibration.weights,
-              provenance: parsed.records.calibration.provenance,
-            },
-            reviewCount: 0,
-            studentCount: 0,
-            volumeGatePassed: parsed.records.calibration.volumeGatePassed,
-            improvesIncumbent: parsed.records.calibration.evaluationGatePassed,
-            humanReleaseApproved:
-              parsed.records.calibration.humanReleaseApproved,
-            releaseEligible:
-              parsed.records.calibration.volumeGatePassed &&
-              parsed.records.calibration.evaluationGatePassed &&
-              parsed.records.calibration.humanReleaseApproved,
-            createdAt: new Date(parsed.records.calibration.createdAt),
-            updatedAt: new Date(parsed.records.calibration.createdAt),
-          });
-
           const recordIds = {
             card: parsed.records.card.id,
             review: parsed.records.review.id,
             evidence: parsed.records.evidence.map((record) => record.id),
             state: parsed.records.state.id,
             placement: parsed.records.placement.id,
-            calibration: parsed.records.calibration.id,
           };
+          const commitId = uuidFromDigest(requestDigest);
+          const resultDigest = digest({
+            commitId,
+            recordIds,
+            cardRevision: parsed.records.card.revision,
+            stateRevision: parsed.records.state.revision,
+          });
           const result = parseOrThrow(commitMasteryEvidenceResultSchema, {
             status: "applied",
-            commitId: parsed.idempotencyKey,
-            resultDigest: parsed.requestDigest,
+            commitId,
+            resultDigest,
             cardRevision: parsed.records.card.revision,
             stateRevision: parsed.records.state.revision,
             recordIds,
@@ -634,7 +740,7 @@ class DrizzleMasteryPersistence implements MasteryPersistencePort {
             studentId: parsed.studentId,
             idempotencyKey: parsed.idempotencyKey,
             contractVersion: parsed.contractVersion,
-            requestDigest: parsed.requestDigest,
+            requestDigest,
             resultDigest: result.resultDigest,
             status: "applied",
             cardRevision: result.cardRevision,
@@ -667,6 +773,99 @@ class DrizzleMasteryPersistence implements MasteryPersistencePort {
         { isolationLevel: "serializable" },
       );
     } catch (error) {
+      if (isUniqueViolation(error) || providerCode(error) === "40001") {
+        try {
+          const replay = await this.findReplay(
+            parsed.schoolId,
+            parsed.idempotencyKey,
+            requestDigest,
+          );
+          if (replay) return replay;
+        } catch (replayError) {
+          if (replayError instanceof MasteryPersistenceError) throw replayError;
+        }
+      }
+      return portableFailure(error);
+    }
+  }
+
+  async approveMasteryCalibration(
+    input: ApproveMasteryCalibrationInput,
+  ): Promise<ApproveMasteryCalibrationResult> {
+    const parsed = parseOrThrow(masteryCalibrationApprovalInputSchema, input);
+    this.assertSchool(parsed.schoolId);
+    this.assertActor(parsed.audit.actorId);
+    const requestDigest = digest(parsed);
+    try {
+      const { masteryCalibrations } = await loadDbModule();
+      return await this.db.transaction(
+        async (transaction) => {
+          const [existing] = await transaction
+            .select()
+            .from(masteryCalibrations)
+            .where(
+              and(
+                eq(masteryCalibrations.schoolId, parsed.schoolId),
+                eq(masteryCalibrations.domain, parsed.domain),
+                eq(masteryCalibrations.ageBand, parsed.ageBand),
+                eq(
+                  masteryCalibrations.paramsVersion,
+                  parsed.artifact.paramsVersion,
+                ),
+              ),
+            )
+            .limit(1);
+          if (existing) {
+            const storedDigest = existing.fsrsParametersJson.requestDigest;
+            if (storedDigest !== requestDigest) {
+              throw new MasteryPersistenceError(
+                "IDEMPOTENCY_CONFLICT",
+                "The calibration release is already bound to different evidence.",
+              );
+            }
+            return parseOrThrow(approveMasteryCalibrationResultSchema, {
+              calibrationId: existing.id,
+              status: "approved",
+            });
+          }
+
+          const record = parseOrThrow(masteryCalibrationRecordSchema, {
+            id: parsed.artifact.id,
+            schoolId: parsed.schoolId,
+            idempotencyKey: parsed.idempotencyKey,
+            domain: parsed.domain,
+            ageBand: parsed.ageBand,
+            artifact: parsed.artifact,
+            approval: parsed.approval,
+            audit: parsed.audit,
+            createdAt: parsed.approval.approvedAt,
+          });
+          await transaction.insert(masteryCalibrations).values({
+            id: record.id,
+            schoolId: record.schoolId,
+            domain: record.domain,
+            ageBand: record.ageBand,
+            paramsVersion: record.artifact.paramsVersion,
+            optimizerVersion: record.artifact.optimizerVersion,
+            incumbentParamsVersion: record.artifact.incumbentParamsVersion,
+            fsrsParametersJson: { record, requestDigest },
+            reviewCount: record.artifact.reviewCount,
+            studentCount: record.artifact.studentCount,
+            volumeGatePassed: record.artifact.volumeGatePassed,
+            improvesIncumbent: record.artifact.evaluationGatePassed,
+            humanReleaseApproved: true,
+            releaseEligible: true,
+            createdAt: new Date(record.createdAt),
+            updatedAt: new Date(record.createdAt),
+          });
+          return parseOrThrow(approveMasteryCalibrationResultSchema, {
+            calibrationId: record.id,
+            status: "approved",
+          });
+        },
+        { isolationLevel: "serializable" },
+      );
+    } catch (error) {
       return portableFailure(error);
     }
   }
@@ -674,7 +873,7 @@ class DrizzleMasteryPersistence implements MasteryPersistencePort {
 
 /**
  * Creates a school-scoped, provider-neutral mastery persistence adapter over Drizzle.
- * @param options Schema-aware Drizzle database and optional tenant composition factory.
+ * @param options Database, authenticated tenant, and authenticated actor binding.
  * @returns A mastery persistence port backed by atomic PostgreSQL transactions.
  */
 export function createDrizzleMasteryPersistence(

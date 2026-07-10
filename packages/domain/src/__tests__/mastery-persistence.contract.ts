@@ -53,6 +53,7 @@ export interface MasteryPersistenceTestPort {
 /** Lifecycle wrapper supplied by each adapter-specific contract harness. */
 export interface MasteryPersistenceTestHarness {
   adapter(): MasteryPersistenceTestPort;
+  boundSchoolId?: string;
   reset(): Promise<void>;
   close(): Promise<void>;
 }
@@ -189,7 +190,7 @@ export function makeInput({
         objectiveId,
         estimate: 0.68,
         confidence: "medium",
-        evidenceType: "two_probe",
+        evidenceType: `two_probe_${seed}`,
         graphRelease: provenance.graphRelease,
         seedProvenance: provenance,
         replacedByDirectEvidence: false,
@@ -318,6 +319,31 @@ export function runMasteryPersistenceContract(
 
     it("isolates all records by school", async () => {
       await harness.adapter().commitMasteryEvidence(makeInput());
+      if (harness.boundSchoolId) {
+        await expect(
+          harness.adapter().commitMasteryEvidence(
+            makeInput({ seed: 3, schoolId: SCHOOL_B, studentId: STUDENT_B }),
+          ),
+        ).rejects.toMatchObject({
+          code: "TENANT_SCOPE_ERROR",
+          retryable: false,
+        });
+        await expect(
+          harness.adapter().readSnapshot({ schoolId: SCHOOL_B }),
+        ).rejects.toMatchObject({
+          code: "TENANT_SCOPE_ERROR",
+          retryable: false,
+        });
+        const schoolA = await harness.adapter().readSnapshot({
+          schoolId: harness.boundSchoolId,
+        });
+        for (const rows of Object.values(schoolA)) {
+          expect(rows.every((row) => row.schoolId === harness.boundSchoolId)).toBe(
+            true,
+          );
+        }
+        return;
+      }
       await harness.adapter().commitMasteryEvidence(
         makeInput({ seed: 3, schoolId: SCHOOL_B, studentId: STUDENT_B }),
       );

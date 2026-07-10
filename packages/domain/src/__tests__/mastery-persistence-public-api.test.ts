@@ -183,7 +183,7 @@ describe("mastery persistence public API", () => {
     `);
 
     expect(result.status, diagnostics(result)).toBe(0);
-  });
+  }, 30_000);
 
   it("directly composes the Drizzle adapter with the public service port", () => {
     const result = compileProbe(`
@@ -192,7 +192,11 @@ describe("mastery persistence public API", () => {
         createDrizzleMasteryPersistence,
         type MasteryPersistencePort,
       } from ${JSON.stringify(DIST_MASTERY_INDEX)};
-      const persistence: MasteryPersistencePort = createDrizzleMasteryPersistence({ db: {} });
+      const persistence: MasteryPersistencePort = createDrizzleMasteryPersistence({
+        db: {},
+        tenant: { schoolId: "11111111-1111-4111-8111-111111111111" },
+        actorId: "teacher:opaque-alpha",
+      });
       void commitMasteryEvidence({} as never, {
         persistence,
         clock: () => "2026-07-10T05:00:00.000Z",

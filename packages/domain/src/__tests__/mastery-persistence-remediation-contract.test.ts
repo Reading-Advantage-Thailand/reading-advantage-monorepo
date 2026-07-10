@@ -362,7 +362,11 @@ describe("mastery persistence remediation contract", () => {
   it("requires both adapters to implement the same high-level observable port", async () => {
     const mastery = await loadMastery();
     const memory = mastery.createInMemoryMasteryPersistence();
-    const drizzle = mastery.createDrizzleMasteryPersistence({ db: {} });
+    const drizzle = mastery.createDrizzleMasteryPersistence({
+      db: {},
+      tenant: { schoolId: SCHOOL_ID },
+      actorId: "teacher:opaque-alpha",
+    });
 
     for (const adapter of [memory, drizzle]) {
       expect(typeof adapter.readSnapshot).toBe("function");

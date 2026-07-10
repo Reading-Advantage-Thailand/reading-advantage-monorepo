@@ -48,6 +48,7 @@ type Snapshot = {
 type DrizzleAdapter = {
   readSnapshot(input: { schoolId: string }): Promise<Snapshot>;
   commitMasteryEvidence(input: unknown): Promise<CommitResult>;
+  approveMasteryCalibration(input: unknown): Promise<unknown>;
 };
 type DrizzleFactory = (options: {
   db: unknown;
@@ -57,10 +58,6 @@ type DrizzleFactory = (options: {
 
 function uuid(value: number): string {
   return `00000000-0000-4000-8000-${value.toString(16).padStart(12, "0")}`;
-}
-
-function digest(value: number): string {
-  return `sha256:${value.toString(16).padStart(64, "0")}`;
 }
 
 function makeInput({
@@ -111,7 +108,6 @@ function makeInput({
     schoolId,
     studentId,
     idempotencyKey: uuid(base + 12),
-    requestDigest: digest(seed),
     expectedRevisions: {
       card: expectedCardRevision,
       state: expectedStateRevision,
@@ -197,21 +193,47 @@ function makeInput({
         replacedByDirectEvidence: false,
         createdAt: NOW,
       },
-      calibration: {
-        id: uuid(base + 6),
-        schoolId,
-        domain: "codecamp",
-        ageBand: "secondary",
-        paramsVersion: provenance.paramsVersion,
+    },
+  };
+}
+
+function makeCalibrationApproval(): Record<string, unknown> {
+  return {
+    contractVersion: "mastery.persistence.v1",
+    schoolId: SCHOOL_A,
+    idempotencyKey: "calibration:codecamp:secondary:v2",
+    domain: "codecamp",
+    ageBand: "secondary",
+    artifact: {
+      id: uuid(7001),
+      paramsVersion: "fsrs-params.codecamp.secondary.v2",
+      optimizerVersion: "deterministic-grid.v1",
+      incumbentParamsVersion: "fsrs-params.codecamp.secondary.v1",
+      weights: Array.from({ length: 19 }, (_, index) => index + 0.5),
+      reviewCount: 12_000,
+      studentCount: 400,
+      trainingReviewCount: 9_000,
+      holdoutReviewCount: 3_000,
+      candidateMetrics: { logLoss: 0.31 },
+      incumbentMetrics: { logLoss: 0.36 },
+      volumeGatePassed: true,
+      evaluationGatePassed: true,
+      provenance: {
+        engineVersion: "3.2.0",
+        fsrsVersion: "6.1.1",
+        calibrationVersion: "calibration-2026-07",
+        policyVersion: "policy-2026-07",
+        paramsVersion: "fsrs-params.codecamp.secondary.v2",
+        algorithmVersion: "mastery-v3.2",
         optimizerVersion: "deterministic-grid.v1",
-        incumbentParamsVersion: "fsrs-params.codecamp.secondary.v0",
-        weights: Array.from({ length: 19 }, (_, index) => index + 0.5),
-        volumeGatePassed: true,
-        evaluationGatePassed: true,
-        humanReleaseApproved: true,
-        provenance,
-        createdAt: NOW,
       },
+    },
+    approval: { approvedBy: ACTOR_A, approvedAt: NOW, decision: "approved" },
+    audit: {
+      actorId: ACTOR_A,
+      requestId: "calibration-request-1",
+      sourceId: "calibration-worker",
+      correlationId: uuid(7002),
     },
   };
 }
@@ -429,7 +451,7 @@ describe("Phase S3 remediation: bound Drizzle adapter adversarial contract", () 
       evidence: 1,
       states: 1,
       placements: 1,
-      calibrations: 1,
+      calibrations: 0,
       commits: 1,
     });
   });
@@ -531,12 +553,57 @@ describe("Phase S3 remediation: bound Drizzle adapter adversarial contract", () 
     expect(await adapter.readSnapshot({ schoolId: SCHOOL_A })).toEqual(before);
   });
 
+  it("persists and replays a complete calibration artifact independently", async () => {
+    const adapter = factory({
+      db: harness.db,
+      tenant: { schoolId: SCHOOL_A },
+      actorId: ACTOR_A,
+    });
+    const input = makeCalibrationApproval();
+
+    const first = await adapter.approveMasteryCalibration(input);
+    const second = await adapter.approveMasteryCalibration(structuredClone(input));
+    const snapshot = await adapter.readSnapshot({ schoolId: SCHOOL_A });
+
+    expect(second).toEqual(first);
+    expect(snapshot.calibrations).toHaveLength(1);
+    expect(snapshot.calibrations[0]).toMatchObject({
+      id: uuid(7001),
+      schoolId: SCHOOL_A,
+      artifact: {
+        reviewCount: 12_000,
+        trainingReviewCount: 9_000,
+        holdoutReviewCount: 3_000,
+        volumeGatePassed: true,
+        evaluationGatePassed: true,
+      },
+      approval: { approvedBy: ACTOR_A, decision: "approved" },
+    });
+    expect((await recordCounts(harness)).calibrations).toBe(1);
+    expect((await recordCounts(harness)).commits).toBe(0);
+  });
+
   it.each([
-    ["serialization exhaustion", { code: "40001" }, "UNAVAILABLE", true],
-    ["connection refusal", { code: "ECONNREFUSED" }, "UNAVAILABLE", true],
-    ["database timeout", { code: "ETIMEDOUT" }, "TIMEOUT", true],
+    [
+      "serialization exhaustion",
+      { code: "40001" },
+      "PERSISTENCE_UNAVAILABLE",
+      true,
+    ],
+    [
+      "connection refusal",
+      { code: "ECONNREFUSED" },
+      "PERSISTENCE_UNAVAILABLE",
+      true,
+    ],
+    [
+      "database timeout",
+      { code: "ETIMEDOUT" },
+      "PERSISTENCE_TIMEOUT",
+      true,
+    ],
     ["missing migration", { code: "42P01" }, "MISSING_MIGRATION", false],
-    ["unexpected driver failure", { code: "XX999" }, "INTERNAL", false],
+    ["unexpected driver failure", { code: "XX999" }, "INTERNAL_ERROR", false],
   ])(
     "maps %s to a portable error taxonomy",
     async (_label, providerShape, expectedCode, retryable) => {
