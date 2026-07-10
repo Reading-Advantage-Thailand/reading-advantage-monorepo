@@ -115,10 +115,6 @@ export function buildDailyQueue(
   now: string,
   options: BuildDailyQueueOptions = {},
 ): QueueItem[] {
-  if (cards.length === 0) {
-    return [];
-  }
-
   const { newCardsPerDay, maxReviewsPerDay } = config;
 
   const nonTriaged = cards.filter((card) => {

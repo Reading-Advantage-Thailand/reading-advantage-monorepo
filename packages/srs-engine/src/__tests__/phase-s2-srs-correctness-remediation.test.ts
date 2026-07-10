@@ -254,6 +254,38 @@ describe("Phase S2 queue and public numeric boundaries", () => {
     expect(DEFAULT_SCHEDULER_CONFIG.enableIntervalFuzz).toBe(true);
   });
 
+  it("serves remediation-only queues and truncates over-cap items deterministically", () => {
+    const policies = new Map<string, ObjectivePracticePolicy>([
+      ["r", { objectiveId: "r", priority: "essential" }],
+    ]);
+    const remediationItems: QueueItem[] = Array.from(
+      { length: 5 },
+      (_, index) => ({
+        card: card({
+          cardId: `r${index}`,
+          objectiveId: "r",
+          variantKey: `r${index}`,
+        }),
+        objectivePriority: "essential",
+        isOverdue: true,
+        daysOverdue: 1,
+        kind: "remediation",
+      }),
+    );
+    const config: SrsSessionConfig = {
+      newCardsPerDay: 0,
+      maxReviewsPerDay: 4,
+      prioritizeOverdue: true,
+    };
+
+    expect(
+      buildDailyQueue([], policies, config, NOW, { remediationItems }).map(
+        (item) => item.card.cardId,
+      ),
+    ).toEqual(["r0", "r1", "r2", "r3"]);
+    expect(buildDailyQueue([], policies, config, NOW)).toEqual([]);
+  });
+
   it.each([Number.NaN, Infinity, -0.1, 0, 1.01])(
     "rejects invalid request retention %s",
     (requestRetention) => {
