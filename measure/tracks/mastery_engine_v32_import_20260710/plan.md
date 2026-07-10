@@ -144,15 +144,39 @@ _Story ref: spec.md#story-s3_
 ## Phase S4: Establish runtime governance
 _Story ref: spec.md#story-s4_
 
-- [~] Task: Define ownership and version policy
+- [x] Task: Define ownership and version policy — `f912b992`, `a710461a`
   - [ ] Record authoritative spec, implementation, graph, fixture, release, and consumer responsibilities
   - [ ] Define semantic-version and compatibility-matrix rules for engine/spec/graph versions
-- [~] Task: Write consumer compatibility gates
+- [x] Task: Write consumer compatibility gates — `f849efd2`, `3ba80ed2`, `5e0adfad`
   - [ ] Add fixture packages proving app-neutral consumption and release reproducibility
   - [ ] Add a synthetic Codecamp flow covering readiness, submission, SRS update, and projection
-- [~] Task: Cut consumers over to canonical packages
-  - [ ] Replace or retire duplicate ra-math package sources under a linked change plan
+- [x] Task: Define reproducible consumer cutover to canonical packages — `cec5d556`
+  - [ ] Inventory and retire duplicate ra-math package sources under a linked external change plan
   - [ ] Document upgrade/migration procedures for future Advantage apps
-- [~] Task: Close and verify the shared runtime
+- [x] Task: Close and verify the shared runtime — `f849efd2`
   - [ ] Run root affected gates, package publication/dry-run checks, graph/generate/doctor, and cross-repo compatibility evidence
   - [ ] Task: Measure - User Manual Verification 'Phase S4: Establish runtime governance' (Protocol in workflow.md)
+
+  - Green evidence: the strict manifest/evaluator suite passes `18/18`; the
+    synthetic Codecamp and packed release suites pass `4/4`; the tooling package
+    type-check and lint pass. The offline consumer installs all four local
+    tarballs, verifies declared public exports and workspace-dependency rewriting,
+    and evaluates the committed Codecamp descriptor without registry access.
+  - The runtime now has explicit ownership and compatibility axes for normative
+    behavior, four package versions, graph/schema majors, practice/SRS/persistence
+    contracts, migration head, fixtures, and provenance. Unknown majors,
+    wildcards, undeclared imports, missing provenance, and stale migrations fail
+    closed.
+  - The pinned ra-math plan inventories its four duplicate packages and live
+    wildcard consumers at commit `3e0b3517`, with ordered replacement, affected
+    gates, rollback, and deletion criteria. The external dirty repository was
+    inspected read-only and was not mutated by this track.
+
+- [x] Task: Re-run Phase S4 reviews and acceptance — `7b096f19`, `4adbc907`, `a710461a`
+  - [ ] Confirm correctness, security/boundary, and API/DX audits have no blocker
+  - [ ] Run phase/adversarial acceptance and prove browser review is not applicable
+
+  - Final acceptance: all three reviews pass after correcting aspirational
+    contract labels, persisted-state projection, and packed local-protocol
+    enforcement. Phase and adversarial audits pass; UX/browser is N/A because
+    this phase contains no user-visible path.
