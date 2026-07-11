@@ -14,6 +14,8 @@ export * from "./cartridges/astral-mage";
 export * from "./cartridges/sorcerer-ziggurat";
 /** Phaser-native Dragon Rider gate-traversal cartridge. */
 export * from "./cartridges/dragon-rider";
+/** Phaser-native Spellweavers Run ordered-lane cartridge. */
+export * from "./cartridges/spellweavers-run";
 /** Reusable sentence target-action family. */
 export * from "./families/target-action";
 /** Reusable deterministic isometric step-graph family. */

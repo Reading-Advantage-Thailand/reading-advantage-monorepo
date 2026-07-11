@@ -27,6 +27,10 @@ export const GAMEPLAY_ASSET_SLOTS = [
   "target.gate",
   "ally.dragon",
   "enemy.boss",
+  "lane.marker",
+  "target.word-orb",
+  "zone.collection",
+  "effect.mana",
 ] as const;
 
 function createProceduralAsset(
