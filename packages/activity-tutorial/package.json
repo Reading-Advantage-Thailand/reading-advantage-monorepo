@@ -11,6 +11,7 @@
     "./checker": { "types": "./dist/checker.d.ts", "import": "./dist/checker.js" },
     "./credentials": { "types": "./dist/credentials.d.ts", "import": "./dist/credentials.js" },
     "./credential-contracts": { "types": "./dist/credential-contracts.d.ts", "import": "./dist/credential-contracts.js" },
+    "./report-contracts": { "types": "./dist/report-contracts.d.ts", "import": "./dist/report-contracts.js" },
     "./reporting": { "types": "./dist/reporting.d.ts", "import": "./dist/reporting.js" },
     "./offline": { "types": "./dist/offline.d.ts", "import": "./dist/offline.js" },
     "./scaffold": { "types": "./dist/scaffold.d.ts", "import": "./dist/scaffold.js" }

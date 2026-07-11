@@ -1,5 +1,5 @@
 import { tutorialCredentialClaimsSchema } from "./credential-contracts.js";
-import { tutorialReportRequestSchema, uploadTutorialReport, type VerifiedTutorialReport } from "./reporting.js";
+import { tutorialReportRequestSchema, uploadTutorialReport, type VerifiedTutorialReport } from "./report-contracts.js";
 import { z } from "zod";
 
 /** Minimal synchronous storage surface implemented by browser localStorage. */
