@@ -12,7 +12,7 @@
 - [x] Task: Add Red catalog and blueprint contract tests
   - [x] Freeze exact IDs, input modes, semantic slots, controls, and stable result mapping
   - [x] Reject unknown IDs, copied host pages, and provider/route coupling
-- [ ] Task: Author the runner-wave blueprint and cutover manifest skeleton
+- [x] Task: Author the runner-wave blueprint and cutover manifest skeleton
 - [ ] Task: Verify S1 docs/tests and mandatory phase review
 - [ ] Task: Measure - User Manual Verification 'Phase S1: Freeze the runner wave contracts'
 

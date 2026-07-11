@@ -3,6 +3,8 @@ import type {
   GameCartridgeDefinition,
 } from "./internal/types";
 
+export { runnerWaveBlueprints } from "./runner-wave-blueprints";
+
 /** Browser-safe public APK cartridge metadata. */
 export const cartridgeCatalog = [
   {
