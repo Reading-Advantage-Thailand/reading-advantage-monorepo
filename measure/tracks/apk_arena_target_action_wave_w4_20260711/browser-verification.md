@@ -2,7 +2,7 @@
 
 ## Result
 
-Accepted locally on 2026-07-11 against the current W4 source and package build.
+Accepted locally on 2026-07-11 against the current W4 source and package build. The final independent review found no Critical, High, or Medium W4 findings.
 
 ## Kimi WebBridge manual pass
 

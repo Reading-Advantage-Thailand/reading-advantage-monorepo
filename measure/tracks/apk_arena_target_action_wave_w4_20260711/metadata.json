@@ -1,22 +1,22 @@
 {
   "track_id": "apk_arena_target_action_wave_w4_20260711",
   "type": "feature",
-  "status": "in-progress",
+  "status": "completed",
   "created_at": "2026-07-11T03:16:00Z",
-  "updated_at": "2026-07-11T03:16:00Z",
+  "updated_at": "2026-07-11T09:25:40Z",
   "description": "Rebuild five arena and target-action games as shared Phaser 4 APK cartridges with dual editions, generic authenticated hosting, and exact legacy cutover evidence.",
   "estimated_tasks": 22,
-  "actual_tasks": null,
-  "deviation_notes": "Activated after W3 established traversal lifecycle, mobile input, authenticated completion, deletion, and browser acceptance patterns. Cohort identity follows the bounded arena/target-action successor in the accepted APK catalog roadmap.",
+  "actual_tasks": 22,
+  "deviation_notes": "Activated after W3 established traversal lifecycle, mobile input, authenticated completion, deletion, and browser acceptance patterns. Two rejected reviews and one final remediation cycle added mechanic-specific state, camera-aware targeting, queued keyboard and pointer edges, cancellation safety, recoverable aerial physics, live health/wave visuals, and adversarial browser coverage before final acceptance. The repository-wide doctor remains red only on deprecated markers owned by unrelated concurrent tracks; W4 itself has no deprecated markers.",
   "sprint": {
     "goal": "Students can play five distinct arena, aerial-target, patrol, and territory APK cartridges through the shared authenticated arcade.",
     "stories": [
-      { "id": "S1", "title": "Freeze arena-wave contracts", "size": "L", "priority": "Must", "status": "in-progress" },
-      { "id": "S2", "title": "Extend reusable arena and target-action systems", "size": "XL", "priority": "Must", "status": "pending" },
-      { "id": "S3", "title": "Build five dual-edition cartridges", "size": "XL", "priority": "Must", "status": "pending" },
-      { "id": "S4", "title": "Cut over and verify the arena wave", "size": "XL", "priority": "Must", "status": "pending" }
+      { "id": "S1", "title": "Freeze arena-wave contracts", "size": "L", "priority": "Must", "status": "completed" },
+      { "id": "S2", "title": "Extend reusable arena and target-action systems", "size": "XL", "priority": "Must", "status": "completed" },
+      { "id": "S3", "title": "Build five dual-edition cartridges", "size": "XL", "priority": "Must", "status": "completed" },
+      { "id": "S4", "title": "Cut over and verify the arena wave", "size": "XL", "priority": "Must", "status": "completed" }
     ],
-    "demo_notes": null,
+    "demo_notes": "Five dual-edition Phaser cartridges now run through the shared arcade host with distinct protected-target, paired-survival, aerial, patrol/minimap, and territory behavior. Playwright passed 9 of 9 scenarios and Kimi WebBridge captured ten accepted desktop/mobile screenshots. Final mandatory review: ACCEPT with no Critical, High, or Medium findings.",
     "retro_ref": null
   }
 }
