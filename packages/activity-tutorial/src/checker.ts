@@ -3,6 +3,7 @@ import { execFile } from "node:child_process";
 import { readFile, realpath } from "node:fs/promises";
 import { resolve, sep } from "node:path";
 import { promisify } from "node:util";
+import ts from "typescript";
 import { tutorialCheckResultSchema, tutorialManifestSchema, type TutorialCheckResult, type TutorialManifest } from "./contracts.js";
 
 /** Injected filesystem and command ports for deterministic tutorial checks. */
@@ -19,6 +20,48 @@ function digest(value: string): string {
   return `sha256:${createHash("sha256").update(value).digest("hex")}`;
 }
 
+function unwrapExpression(expression: ts.Expression): ts.Expression {
+  if (ts.isAsExpression(expression) || ts.isSatisfiesExpression(expression) || ts.isParenthesizedExpression(expression)) return unwrapExpression(expression.expression);
+  return expression;
+}
+
+function propertyName(node: ts.PropertyName): string | undefined {
+  if (ts.isIdentifier(node) || ts.isStringLiteral(node) || ts.isNumericLiteral(node)) return node.text;
+  return undefined;
+}
+
+function hasNonEmptyLiteralValue(expression: ts.Expression): boolean {
+  const value = unwrapExpression(expression);
+  if (ts.isStringLiteral(value) || ts.isNoSubstitutionTemplateLiteral(value)) return value.text.trim().length > 0;
+  if (ts.isNumericLiteral(value) || value.kind === ts.SyntaxKind.TrueKeyword || value.kind === ts.SyntaxKind.FalseKeyword) return true;
+  if (ts.isArrayLiteralExpression(value)) return value.elements.length > 0;
+  if (ts.isObjectLiteralExpression(value)) return value.properties.length > 0;
+  return false;
+}
+
+function verifiesTypescriptObjectShape(source: string, exportName: string, requiredProperties: string[]): boolean {
+  const file = ts.createSourceFile("tutorial.ts", source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
+  for (const statement of file.statements) {
+    if (!ts.isVariableStatement(statement) || !statement.modifiers?.some(({ kind }) => kind === ts.SyntaxKind.ExportKeyword)) continue;
+    for (const declaration of statement.declarationList.declarations) {
+      if (!ts.isIdentifier(declaration.name) || declaration.name.text !== exportName || !declaration.initializer) continue;
+      const initializer = unwrapExpression(declaration.initializer);
+      if (!ts.isObjectLiteralExpression(initializer)) return false;
+      const properties = new Map<string, ts.Expression>();
+      for (const property of initializer.properties) {
+        if (!ts.isPropertyAssignment(property)) continue;
+        const name = propertyName(property.name);
+        if (name) properties.set(name, property.initializer);
+      }
+      return requiredProperties.every((name) => {
+        const value = properties.get(name);
+        return value !== undefined && hasNonEmptyLiteralValue(value);
+      });
+    }
+  }
+  return false;
+}
+
 /**
  * Runs one authored tutorial step and emits only secret-free structured evidence.
  * @param manifestInput Untrusted repository manifest.
@@ -33,8 +76,12 @@ export async function runTutorialStep(manifestInput: unknown, stepId: string, po
   const commandById = new Map(manifest.allowedCommands.map((command) => [command.commandId, command]));
   const checks = [];
   for (const check of step.checks) {
-    const output = check.kind === "file_contains" ? await ports.readAllowedFile(check.filePath) : await ports.runAllowedCommand(commandById.get(check.commandId)!.profile);
-    const passed = check.kind === "file_contains" ? output.includes(check.expected) : check.expected === "clean" ? output.trim() === "" : output.split("\n").some((line) => line[0] !== " " && line[0] !== "?" && line.slice(3) === check.expected.slice("staged:".length));
+    const output = check.kind === "command" ? await ports.runAllowedCommand(commandById.get(check.commandId)!.profile) : await ports.readAllowedFile(check.filePath);
+    const passed = check.kind === "file_contains"
+      ? output.includes(check.expected)
+      : check.kind === "typescript_object_shape"
+        ? verifiesTypescriptObjectShape(output, check.exportName, check.requiredProperties)
+        : check.expected === "clean" ? output.trim() === "" : output.split("\n").some((line) => line[0] !== " " && line[0] !== "?" && line.slice(3) === check.expected.slice("staged:".length));
     checks.push({ checkId: check.checkId, passed, evidenceDigest: digest(JSON.stringify({ checkId: check.checkId, passed })) });
   }
   const evidenceDigest = digest(JSON.stringify({ repositoryId: manifest.repositoryId, activityId: manifest.activityId, stepId, checks }));

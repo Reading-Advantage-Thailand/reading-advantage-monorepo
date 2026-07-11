@@ -13,6 +13,11 @@ const fileCheckSchema = z.object({
   checkId: z.string().regex(/^[a-z0-9.-]+$/), kind: z.literal("file_contains"),
   filePath: safeRelativePathSchema, expected: z.string().min(1).max(500),
 }).strict();
+const typescriptObjectShapeCheckSchema = z.object({
+  checkId: z.string().regex(/^[a-z0-9.-]+$/), kind: z.literal("typescript_object_shape"),
+  filePath: safeRelativePathSchema, exportName: z.string().regex(/^[A-Za-z_$][A-Za-z0-9_$]*$/),
+  requiredProperties: z.array(z.string().regex(/^[A-Za-z_$][A-Za-z0-9_$]*$/)).min(1),
+}).strict();
 const commandCheckSchema = z.object({
   checkId: z.string().regex(/^[a-z0-9.-]+$/), kind: z.literal("command"),
   commandId: z.string().regex(/^[a-z0-9.-]+$/), expected: z.union([z.literal("clean"), z.string().regex(/^staged:[^\r\n]+$/)]),
@@ -29,7 +34,7 @@ export const tutorialManifestSchema = z.object({
   steps: z.array(z.object({
     stepId: z.string().regex(/^[a-z0-9.-]+$/), order: z.number().int().positive(),
     objectiveId: z.string().trim().min(1), instruction: z.record(z.string(), z.string().min(1)),
-    checks: z.array(z.discriminatedUnion("kind", [fileCheckSchema, commandCheckSchema])).min(1),
+    checks: z.array(z.discriminatedUnion("kind", [fileCheckSchema, typescriptObjectShapeCheckSchema, commandCheckSchema])).min(1),
     hints: z.array(z.object({ hintId: z.string().min(1), text: z.record(z.string(), z.string().min(1)) }).strict()),
     reveals: z.array(z.object({ revealId: z.string().min(1), text: z.record(z.string(), z.string().min(1)) }).strict()),
     resourceIds: z.array(z.string().min(1)), scaffoldLevel: z.number().int().min(0).max(3),
@@ -55,7 +60,7 @@ export const tutorialManifestSchema = z.object({
   for (const [stepIndex, step] of manifest.steps.entries()) {
     if (!unique(step.checks.map(({ checkId }) => checkId))) context.addIssue({ code: "custom", path: ["steps", stepIndex, "checks"], message: "Check IDs must be unique within a step" });
     for (const [checkIndex, check] of step.checks.entries()) {
-      if (check.kind === "file_contains" && !fileSet.has(check.filePath)) context.addIssue({ code: "custom", path: ["steps", stepIndex, "checks", checkIndex, "filePath"], message: "Check file is not allowlisted" });
+      if ((check.kind === "file_contains" || check.kind === "typescript_object_shape") && !fileSet.has(check.filePath)) context.addIssue({ code: "custom", path: ["steps", stepIndex, "checks", checkIndex, "filePath"], message: "Check file is not allowlisted" });
       if (check.kind === "command" && !commandSet.has(check.commandId)) context.addIssue({ code: "custom", path: ["steps", stepIndex, "checks", checkIndex, "commandId"], message: "Check command is not allowlisted" });
     }
   }

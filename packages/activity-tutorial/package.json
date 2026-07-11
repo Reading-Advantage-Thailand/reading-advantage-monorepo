@@ -23,11 +23,10 @@
     "lint": "eslint src/",
     "test": "vitest run --maxWorkers=1"
   },
-  "dependencies": { "zod": "catalog:" },
+  "dependencies": { "typescript": "5.9.3", "zod": "catalog:" },
   "devDependencies": {
     "@reading-advantage/config": "workspace:*",
     "@types/node": "catalog:",
-    "typescript": "5.9.3",
     "vitest": "4.1.8"
   }
 }

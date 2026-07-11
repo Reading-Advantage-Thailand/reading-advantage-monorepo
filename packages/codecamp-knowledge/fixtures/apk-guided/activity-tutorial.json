@@ -13,14 +13,7 @@
     "objectiveId": "codecamp.game-development.skill.apk-contract",
     "instruction": { "en": "Complete the cartridge manifest and deterministic educational result.", "th": "เติม cartridge manifest และผลการเรียนรู้แบบกำหนดได้" },
     "checks": [
-      { "checkId": "manifest.id", "kind": "file_contains", "filePath": "src/cartridge.ts", "expected": "id" },
-      { "checkId": "manifest.title", "kind": "file_contains", "filePath": "src/cartridge.ts", "expected": "title" },
-      { "checkId": "manifest.description", "kind": "file_contains", "filePath": "src/cartridge.ts", "expected": "description" },
-      { "checkId": "manifest.version", "kind": "file_contains", "filePath": "src/cartridge.ts", "expected": "version" },
-      { "checkId": "manifest.runtimeapiversion", "kind": "file_contains", "filePath": "src/cartridge.ts", "expected": "runtimeApiVersion" },
-      { "checkId": "manifest.inputmode", "kind": "file_contains", "filePath": "src/cartridge.ts", "expected": "inputMode" },
-      { "checkId": "manifest.requiredassetslots", "kind": "file_contains", "filePath": "src/cartridge.ts", "expected": "requiredAssetSlots" },
-      { "checkId": "manifest.capabilities", "kind": "file_contains", "filePath": "src/cartridge.ts", "expected": "capabilities" },
+      { "checkId": "manifest.shape", "kind": "typescript_object_shape", "filePath": "src/cartridge.ts", "exportName": "cartridgeManifest", "requiredProperties": ["id", "title", "description", "version", "runtimeApiVersion", "inputMode", "requiredAssetSlots", "capabilities"] },
       { "checkId": "git.stage", "kind": "command", "commandId": "git.stage", "expected": "staged:src/cartridge.ts" }
     ],
     "hints": [{ "hintId": "hint.boundary", "text": { "en": "Keep persistence in the host, not the cartridge.", "th": "เก็บ persistence ไว้ใน host ไม่ใช่ cartridge" } }],

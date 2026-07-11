@@ -79,6 +79,15 @@ describe("tutorial repository protocol", () => {
     expect(result.checks.find(({ checkId }) => checkId === "git.stage")).toMatchObject({ passed: false });
   });
 
+  it("rejects comment-only TypeScript object-shape matches without executing repository code", async () => {
+    const objectManifest = structuredClone(manifest);
+    objectManifest.steps[0]!.checks = [{ checkId: "manifest.shape", kind: "typescript_object_shape", filePath: "src/game.ts", exportName: "cartridgeManifest", requiredProperties: ["id", "title", "capabilities"] }] as never;
+    const commentOnly = "export const cartridgeManifest = { cartridgeId: 'starter' }; // id title capabilities";
+    await expect(runTutorialStep(objectManifest, "step.game", { readAllowedFile: async () => commentOnly, runAllowedCommand: async () => "", now: () => "2026-07-10T00:00:00Z" })).resolves.toMatchObject({ passed: false, checks: [{ checkId: "manifest.shape", passed: false }] });
+    const valid = "export const cartridgeManifest = { id: 'game', title: 'Game', capabilities: ['keyboard'] } as const;";
+    await expect(runTutorialStep(objectManifest, "step.game", { readAllowedFile: async () => valid, runAllowedCommand: async () => "", now: () => "2026-07-10T00:00:00Z" })).resolves.toMatchObject({ passed: true, checks: [{ checkId: "manifest.shape", passed: true }] });
+  });
+
   it("rejects traversal, undeclared files, commands, and unknown fields", () => {
     type MutableManifest = { allowedFiles: string[]; steps: Array<{ checks: Array<{ filePath?: string; commandId?: string; unexpected?: boolean }> }> };
     const mutations: Array<(input: MutableManifest) => void> = [

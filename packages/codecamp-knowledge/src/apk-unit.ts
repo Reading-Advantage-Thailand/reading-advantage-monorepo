@@ -51,7 +51,7 @@ export const codecampAPKUnit = CodecampAPKUnitSchema.parse({
       allowedFiles: ["src/cartridge.ts", "src/game-state.ts"],
       allowedCommands: [{ commandId: "git.stage", profile: "git-status-porcelain" }],
       completionCriteria: { requiredStepIds: ["wedo.apk.manifest"] },
-      steps: [{ stepId: "wedo.apk.manifest", order: 1, objectiveId: "codecamp.game-development.skill.apk-contract", instruction: { en: "Complete the cartridge manifest and deterministic educational result.", th: "เติม cartridge manifest และผลการเรียนรู้แบบกำหนดได้" }, checks: [...REQUIRED_MANIFEST_FIELDS.map((field) => ({ checkId: `manifest.${field.toLowerCase()}`, kind: "file_contains" as const, filePath: "src/cartridge.ts", expected: field })), { checkId: "git.stage", kind: "command" as const, commandId: "git.stage", expected: "staged:src/cartridge.ts" }], hints: [{ hintId: "hint.boundary", text: { en: "Keep persistence in the host, not the cartridge.", th: "เก็บ persistence ไว้ใน host ไม่ใช่ cartridge" } }], reveals: [{ revealId: "reveal.fields", text: { en: "Declare every RuntimeCartridgeManifest field before staging the file.", th: "ระบุทุก field ของ RuntimeCartridgeManifest ก่อน stage ไฟล์" } }], resourceIds: ["diagram.apk.boundaries"], scaffoldLevel: 2 }],
+      steps: [{ stepId: "wedo.apk.manifest", order: 1, objectiveId: "codecamp.game-development.skill.apk-contract", instruction: { en: "Complete the cartridge manifest and deterministic educational result.", th: "เติม cartridge manifest และผลการเรียนรู้แบบกำหนดได้" }, checks: [{ checkId: "manifest.shape", kind: "typescript_object_shape" as const, filePath: "src/cartridge.ts", exportName: "cartridgeManifest", requiredProperties: [...REQUIRED_MANIFEST_FIELDS] }, { checkId: "git.stage", kind: "command" as const, commandId: "git.stage", expected: "staged:src/cartridge.ts" }], hints: [{ hintId: "hint.boundary", text: { en: "Keep persistence in the host, not the cartridge.", th: "เก็บ persistence ไว้ใน host ไม่ใช่ cartridge" } }], reveals: [{ revealId: "reveal.fields", text: { en: "Declare every RuntimeCartridgeManifest field before staging the file.", th: "ระบุทุก field ของ RuntimeCartridgeManifest ก่อน stage ไฟล์" } }], resourceIds: ["diagram.apk.boundaries"], scaffoldLevel: 2 }],
     },
   },
   youdo: {
@@ -105,9 +105,11 @@ export function createCodecampAPKTutorialActivity(_locale: string) {
       stepId: step.stepId, order: step.order, objectiveId: step.objectiveId,
       variantKey: "apk.apk-contract.guided.extension", instruction: step.instruction,
       resourceRefs: step.resourceIds.map((resourceId) => ({ kind: "diagram" as const, resourceId })),
-      checks: step.checks.map((check) => check.kind === "file_contains"
-        ? { checkId: check.checkId, kind: "file_contains" as const, expected: `${check.filePath}:${check.expected}` }
-        : { checkId: check.checkId, kind: "git_status" as const, expected: check.expected }),
+      checks: step.checks.map((check) => {
+        if (check.kind === "command") return { checkId: check.checkId, kind: "git_status" as const, expected: check.expected };
+        if (check.kind === "typescript_object_shape") return { checkId: check.checkId, kind: "file_contains" as const, expected: `${check.filePath}:${check.exportName}` };
+        return { checkId: check.checkId, kind: "file_contains" as const, expected: `${check.filePath}:${check.expected}` };
+      }),
       hints: step.hints, reveals: step.reveals, scaffoldLevel: step.scaffoldLevel,
     })),
   });
