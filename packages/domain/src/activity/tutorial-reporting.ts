@@ -18,6 +18,11 @@ export const prepareTutorialReportInputSchema = z.object({
   sessionId: z.string().uuid(), submissionId: z.string().trim().min(1), repositoryId: z.string().trim().min(1), stepId: z.string().trim().min(1),
 }).strict();
 
+/** Strict request to reissue a credential for an existing server-owned snapshot. */
+export const reissueTutorialReportCredentialInputSchema = z.object({
+  sessionId: z.string().uuid(), submissionId: z.string().trim().min(1), repositoryStateId: z.string().trim().min(1), stepId: z.string().trim().min(1),
+}).strict();
+
 /** Server response binding a short-lived credential to one exact repository snapshot. */
 export const prepareTutorialReportResponseSchema = z.object({
   submissionId: z.string(), repositoryStateId: z.string(), repositoryCapturedAt: z.string().datetime({ offset: true }), credential: z.string(), expiresAt: z.string().datetime({ offset: true }),
@@ -192,13 +197,43 @@ export async function prepareCodecampTutorialReport(tenantDb: TenantDB, actor: A
   const session = await persistence.getOwnedSession(actor, request.sessionId);
   if (!session || session.activityId !== activity.activityId || session.activityVersion !== activity.activityVersion) throw new Error("Tutorial activity session not found");
   const snapshot = capturedRepositoryStateSchema.parse(await capture.capture({ tenantKey: actorTenantKey(actor), learnerId: actor.learnerId, sessionId: request.sessionId, repositoryId: request.repositoryId, allowedFiles: [...codecampAPKUnit.wedo.manifest.allowedFiles] }));
+  const capturedAt = new Date(snapshot.capturedAt).toISOString();
   const files = Object.fromEntries(codecampAPKUnit.wedo.manifest.allowedFiles.flatMap((filePath) => snapshot.files[filePath] === undefined ? [] : [[filePath, snapshot.files[filePath]!]]));
-  const repositoryStateId = await recordTutorialRepositoryState(tenantDb, actor, { sessionId: request.sessionId, repositoryId: request.repositoryId, activityId: activity.activityId, activityVersion: activity.activityVersion, graphVersion: activity.graphVersion, files, gitStatus: snapshot.gitStatus, capturedAt: snapshot.capturedAt });
+  const repositoryStateId = await recordTutorialRepositoryState(tenantDb, actor, { sessionId: request.sessionId, repositoryId: request.repositoryId, activityId: activity.activityId, activityVersion: activity.activityVersion, graphVersion: activity.graphVersion, files, gitStatus: snapshot.gitStatus, capturedAt });
   const issuedAt = new Date().toISOString();
-  if (Date.parse(issuedAt) - Date.parse(snapshot.capturedAt) > 5 * 60_000 || Date.parse(snapshot.capturedAt) > Date.parse(issuedAt)) throw new Error("Repository worker returned a stale capture");
+  if (Date.parse(issuedAt) - Date.parse(capturedAt) > 5 * 60_000 || Date.parse(capturedAt) > Date.parse(issuedAt)) throw new Error("Repository worker returned a stale capture");
   const expiresAt = new Date(Date.parse(issuedAt) + 10 * 60_000).toISOString();
-  const credential = issueTutorialCredential({ tokenId: randomUUID(), sessionId: request.sessionId, submissionId: request.submissionId, activityId: activity.activityId, repositoryId: request.repositoryId, repositoryStateId, repositoryCapturedAt: snapshot.capturedAt, activityVersion: activity.activityVersion, graphVersion: activity.graphVersion, purpose: "tutorial-report", learnerId: actor.learnerId, tenantKey: actorTenantKey(actor), allowedStepIds: [request.stepId], issuedAt, expiresAt, nonce: randomUUID() }, secret);
-  return prepareTutorialReportResponseSchema.parse({ submissionId: request.submissionId, repositoryStateId, repositoryCapturedAt: snapshot.capturedAt, credential, expiresAt });
+  const credential = issueTutorialCredential({ tokenId: randomUUID(), sessionId: request.sessionId, submissionId: request.submissionId, activityId: activity.activityId, repositoryId: request.repositoryId, repositoryStateId, repositoryCapturedAt: capturedAt, activityVersion: activity.activityVersion, graphVersion: activity.graphVersion, purpose: "tutorial-report", learnerId: actor.learnerId, tenantKey: actorTenantKey(actor), allowedStepIds: [request.stepId], issuedAt, expiresAt, nonce: randomUUID() }, secret);
+  return prepareTutorialReportResponseSchema.parse({ submissionId: request.submissionId, repositoryStateId, repositoryCapturedAt: capturedAt, credential, expiresAt });
+}
+
+/**
+ * Reissues a short-lived credential for the same owned snapshot after offline expiry.
+ * @param tenantDb Request-scoped database boundary.
+ * @param actor Authenticated learner identity.
+ * @param input Existing session, submission, snapshot, and step binding.
+ * @param secret Server credential-signing secret.
+ * @returns A new credential preserving the report's stable idempotency identity.
+ */
+export async function reissueCodecampTutorialReportCredential(tenantDb: TenantDB, actor: ActivityActor, input: unknown, secret: string): Promise<z.infer<typeof prepareTutorialReportResponseSchema>> {
+  const request = reissueTutorialReportCredentialInputSchema.parse(input);
+  const activity = createCodecampAPKTutorialActivity("en");
+  const persistence = new DrizzleActivityPersistence(tenantDb);
+  const session = await persistence.getOwnedSession(actor, request.sessionId);
+  if (!session || session.activityId !== activity.activityId || session.activityVersion !== activity.activityVersion || !codecampAPKUnit.wedo.manifest.steps.some(({ stepId }) => stepId === request.stepId)) throw new Error("Tutorial activity session not found");
+  const rawDb = tenantDb.unscoped("tutorial credential reissue scopes an existing server-owned snapshot by authenticated owner");
+  const [state] = await rawDb.select().from(activityTutorialRepositoryStates).where(and(
+    eq(activityTutorialRepositoryStates.id, request.repositoryStateId), eq(activityTutorialRepositoryStates.tenantKey, actorTenantKey(actor)),
+    eq(activityTutorialRepositoryStates.learnerId, actor.learnerId), eq(activityTutorialRepositoryStates.sessionId, request.sessionId),
+    eq(activityTutorialRepositoryStates.activityId, activity.activityId), eq(activityTutorialRepositoryStates.activityVersion, activity.activityVersion), eq(activityTutorialRepositoryStates.graphVersion, activity.graphVersion),
+  )).limit(1);
+  if (!state) throw new Error("Tutorial repository state not found");
+  const issuedAt = new Date().toISOString();
+  if (Date.parse(issuedAt) - state.capturedAt.getTime() > 30 * 60_000) throw new Error("Tutorial repository state must be recaptured");
+  const repositoryCapturedAt = state.capturedAt.toISOString();
+  const expiresAt = new Date(Date.parse(issuedAt) + 10 * 60_000).toISOString();
+  const credential = issueTutorialCredential({ tokenId: randomUUID(), sessionId: request.sessionId, submissionId: request.submissionId, activityId: activity.activityId, repositoryId: state.repositoryId, repositoryStateId: state.id, repositoryCapturedAt, activityVersion: activity.activityVersion, graphVersion: activity.graphVersion, purpose: "tutorial-report", learnerId: actor.learnerId, tenantKey: actorTenantKey(actor), allowedStepIds: [request.stepId], issuedAt, expiresAt, nonce: randomUUID() }, secret);
+  return prepareTutorialReportResponseSchema.parse({ submissionId: request.submissionId, repositoryStateId: state.id, repositoryCapturedAt, credential, expiresAt });
 }
 
 /**

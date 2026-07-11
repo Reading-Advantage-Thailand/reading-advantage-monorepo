@@ -2,12 +2,12 @@ import { activitySchema, createActivitySessionRecord } from "@reading-advantage/
 import { assessCheckpointAttempt } from "@reading-advantage/activity-runtime/server";
 import { runTutorialStep } from "@reading-advantage/activity-tutorial";
 import { codecampAPKUnit, createCodecampAPKTutorialActivity } from "@reading-advantage/codecamp-knowledge/apk-unit";
-import { activitySessionEvents, activityTutorialReports, masteryCommits, masteryEvidence, masteryPrincipals, users } from "@reading-advantage/db";
+import { activitySessionEvents, activityTutorialReports, activityTutorialRepositoryStates, masteryCommits, masteryEvidence, masteryPrincipals, users } from "@reading-advantage/db";
 import { eq } from "drizzle-orm";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { createTestDb, type TestDb } from "../../__tests__/helpers/testDb.js";
 import { CODECAMP_MASTERY_SCHOOL_ID, DrizzleActivityPersistence } from "../drizzle-activity-persistence.js";
-import { prepareCodecampTutorialReport, processCodecampTutorialReport } from "../tutorial-reporting.js";
+import { DrizzleTutorialReportStore, prepareCodecampTutorialReport, processCodecampTutorialReport, reissueCodecampTutorialReportCredential } from "../tutorial-reporting.js";
 
 const activity = activitySchema.parse({
   schemaVersion: "activity.v1", activityId: "activity.codecamp.outbox", activityVersion: "1.0.0", graphVersion: "graph.v1", objectiveId: "objective.apk", variantKey: "apk.v1", mode: "guided_practice", title: { en: "Outbox" }, accessibility: { transcriptRequired: true, captionsRequired: true, nonVideoAlternativeResourceId: "diagram" },
@@ -47,12 +47,13 @@ describe("activity Drizzle outbox and Codecamp mastery", () => {
     const repositoryCapturedAt = new Date(Date.now() - 90_000).toISOString();
     await persistence.createSession(createActivitySessionRecord({ sessionId, actor, activityId: tutorialActivity.activityId, activityVersion: tutorialActivity.activityVersion, startedAt: "2026-07-10T00:00:00Z" }));
     const prepared = await prepareCodecampTutorialReport(tenantDb, actor, { sessionId, submissionId: "submission-apk-1", repositoryId: codecampAPKUnit.wedo.manifest.repositoryId, stepId: "wedo.apk.manifest" }, "integration-tutorial-secret-at-least-32-bytes", {
-      capture: async () => ({ files: { "src/cartridge.ts": "export const runtimeApiVersion = '1';", "src/game-state.ts": "export {};", ".env": "must-not-persist" }, gitStatus: "M  src/cartridge.ts", capturedAt: repositoryCapturedAt }),
+      capture: async () => ({ files: { "src/cartridge.ts": "export const runtimeApiVersion = '1';", "src/game-state.ts": "export {};", ".env": "must-not-persist" }, gitStatus: "M  src/cartridge.ts", capturedAt: repositoryCapturedAt.replace("Z", "+00:00") }),
     });
+    const reissued = await reissueCodecampTutorialReportCredential(tenantDb, actor, { sessionId, submissionId: "submission-apk-1", repositoryStateId: prepared.repositoryStateId, stepId: "wedo.apk.manifest" }, "integration-tutorial-secret-at-least-32-bytes");
     const localResult = await runTutorialStep(codecampAPKUnit.wedo.manifest, "wedo.apk.manifest", {
       readAllowedFile: async () => "export const runtimeApiVersion = '1';", runAllowedCommand: async () => "M  src/cartridge.ts", now: () => "2026-07-10T00:01:00Z",
     });
-    const request = { submissionId: "submission-apk-1", credential: prepared.credential, repositoryStateId: prepared.repositoryStateId, localResult };
+    const request = { submissionId: "submission-apk-1", credential: reissued.credential, repositoryStateId: prepared.repositoryStateId, localResult };
     const evidenceBefore = await harness.db.select().from(masteryEvidence);
     const first = await processCodecampTutorialReport(tenantDb, actor, request, "integration-tutorial-secret-at-least-32-bytes");
     const replay = await processCodecampTutorialReport(tenantDb, actor, request, "integration-tutorial-secret-at-least-32-bytes");
@@ -61,6 +62,26 @@ describe("activity Drizzle outbox and Codecamp mastery", () => {
     expect(first.session.assessedTutorialResults["wedo.apk.manifest"]).toMatchObject({ attemptNumber: 1, isCorrect: true });
     expect(replay).toEqual(first);
     expect(await harness.db.select().from(activityTutorialReports)).toHaveLength(1);
+    expect(await harness.db.select().from(activityTutorialRepositoryStates)).toEqual([expect.objectContaining({ id: prepared.repositoryStateId, filesJson: expect.not.objectContaining({ ".env": expect.anything() }) })]);
     expect(await harness.db.select().from(masteryEvidence)).toHaveLength(evidenceBefore.length + 1);
+  });
+
+  it("serializes concurrent claims and rejects stale lease completion", async () => {
+    const tenantDb = harness.tenantDb({ schoolId: null });
+    const persistence = new DrizzleActivityPersistence(tenantDb);
+    const actor = { learnerId: "codecamp-learner", schoolId: null, tenantKey: "codecamp" } as const;
+    const sessionId = "00000000-0000-4000-8000-000000000903";
+    const tutorialActivity = createCodecampAPKTutorialActivity("en");
+    await persistence.createSession(createActivitySessionRecord({ sessionId, actor, activityId: tutorialActivity.activityId, activityVersion: tutorialActivity.activityVersion, startedAt: "2026-07-10T00:00:00Z" }));
+    const store = new DrizzleTutorialReportStore(tenantDb);
+    const input = { scopedKey: `codecamp\u0000codecamp-learner\u0000${sessionId}\u0000submission-race`, nonce: "nonce-race-1234567890", requestDigest: "digest-race", expiresAt: "2026-07-10T00:10:00Z", leaseUntil: new Date(Date.now() + 60_000).toISOString() };
+    const claims = await Promise.all([store.begin(input), store.begin(input)]);
+    expect(claims.map(({ kind }) => kind).sort()).toEqual(["busy", "execute"]);
+    const executing = claims.find((claim): claim is Extract<typeof claim, { kind: "execute" }> => claim.kind === "execute");
+    if (!executing) throw new Error("Expected an executing claim");
+    await store.fail(executing.claimId, new Date(Date.now() - 1_000).toISOString(), "retry");
+    const replacement = await store.begin({ ...input, nonce: "nonce-race-2234567890" });
+    expect(replacement.kind).toBe("execute");
+    await expect(store.complete(executing.claimId, { submissionId: "submission-race", sessionId, activityId: tutorialActivity.activityId, activityVersion: tutorialActivity.activityVersion, graphVersion: tutorialActivity.graphVersion, repositoryId: codecampAPKUnit.wedo.manifest.repositoryId, learnerId: actor.learnerId, tenantKey: actor.tenantKey, stepId: "wedo.apk.manifest", passed: true, checks: [], verifiedAt: new Date().toISOString() })).rejects.toThrow("Unknown tutorial report claim");
   });
 });

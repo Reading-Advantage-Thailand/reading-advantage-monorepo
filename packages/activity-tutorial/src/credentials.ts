@@ -29,7 +29,6 @@ export function issueTutorialCredential(claimsInput: unknown, secret: string): s
   if (Date.parse(claims.expiresAt) <= Date.parse(claims.issuedAt)) throw new Error("Credential expiry must follow issue time");
   if (Date.parse(claims.expiresAt) - Date.parse(claims.issuedAt) > 15 * 60 * 1000) throw new Error("Tutorial credential lifetime cannot exceed 15 minutes");
   if (Date.parse(claims.repositoryCapturedAt) > Date.parse(claims.issuedAt)) throw new Error("Repository state cannot be captured after credential issue");
-  if (Date.parse(claims.issuedAt) - Date.parse(claims.repositoryCapturedAt) > 5 * 60 * 1000) throw new Error("Repository state is too old for credential issue");
   const payload = Buffer.from(JSON.stringify(claims)).toString("base64url");
   return `${payload}.${signature(payload, secret).toString("base64url")}`;
 }

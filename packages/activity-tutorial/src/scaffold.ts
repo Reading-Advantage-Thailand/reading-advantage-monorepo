@@ -4,7 +4,11 @@ import { tutorialManifestSchema, type TutorialManifest } from "./contracts.js";
 
 /** Source port for versioned tutorial starter files. */
 export interface TutorialStarterSource {
-  /** Reads one manifest-allowlisted starter file. */
+  /**
+   * Reads one manifest-allowlisted starter file.
+   * @param filePath Repository-relative path from the validated manifest.
+   * @returns UTF-8 starter content without executing repository code.
+   */
   readStarterFile(filePath: string): Promise<string>;
 }
 

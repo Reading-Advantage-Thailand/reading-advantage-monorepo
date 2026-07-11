@@ -87,7 +87,8 @@ export function createStorageTutorialReportQueue(storage: TutorialQueueStorage, 
  */
 export async function enqueueTutorialReport(queue: TutorialReportQueue, endpoint: string, request: unknown, now: string): Promise<string> {
   const parsed = tutorialReportRequestSchema.parse(request);
-  const credentialExpiresAt = decodeCredentialExpiry(parsed.credential);
+  const decodedExpiresAt = decodeCredentialExpiry(parsed.credential);
+  const credentialExpiresAt = new Date(Math.min(Date.parse(decodedExpiresAt), Date.parse(now) + 15 * 60_000)).toISOString();
   const queueId = `${endpoint}\u0000${parsed.submissionId}\u0000${parsed.credential.slice(-16)}`;
   await queue.enqueue({ queueId, endpoint, request: parsed, credentialExpiresAt, attempts: 0, nextAttemptAt: now });
   return queueId;
