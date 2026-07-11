@@ -1,0 +1,1 @@
+Track: shared_video_tutorial_runtime_20260710\nTask: Phase S2 mobile browser remediation\nFinding: Kimi mobile viewport showed overlapping Codecamp navigation and session controls.\nFix: Use a two-row mobile header and retain the single-row desktop layout.\nVerification: Codecamp typecheck and targeted ESLint pass; E2E now checks header control intersections.
