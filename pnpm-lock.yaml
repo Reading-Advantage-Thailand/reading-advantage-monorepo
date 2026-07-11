@@ -557,6 +557,9 @@ importers:
       '@reading-advantage/activity-runtime':
         specifier: workspace:*
         version: link:../../packages/activity-runtime
+      '@reading-advantage/codecamp-knowledge':
+        specifier: workspace:*
+        version: link:../../packages/codecamp-knowledge
       '@reading-advantage/ai':
         specifier: workspace:*
         version: link:../../packages/ai
@@ -2437,6 +2440,9 @@ importers:
       '@reading-advantage/auth':
         specifier: workspace:*
         version: link:../auth
+      '@reading-advantage/codecamp-knowledge':
+        specifier: workspace:*
+        version: link:../codecamp-knowledge
       '@reading-advantage/db':
         specifier: workspace:*
         version: link:../db

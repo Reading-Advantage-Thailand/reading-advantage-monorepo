@@ -12,33 +12,33 @@ test("completes the interactive video, remediation, and persisted resume loop", 
   const contentSecurityPolicy = response?.headers()["content-security-policy"];
   expect(contentSecurityPolicy).toContain("script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.youtube.com https://s.ytimg.com");
   expect(contentSecurityPolicy).toContain("frame-src https://www.youtube.com");
-  await expect(page.getByTitle("Git commit tutorial video")).toBeVisible({ timeout: 20_000 });
+  await expect(page.getByTitle("Phaser cartridge lifecycle video")).toBeVisible({ timeout: 20_000 });
   await expect(page.getByRole("button", { name: "Play" })).toBeVisible();
-  await expect(page.locator('[data-slot="activity-alternative"]').getByRole("img", { name: "Working tree flows to staging area, then to repository" })).toBeVisible();
+  await expect(page.locator('[data-slot="activity-alternative"]').getByRole("img", { name: "React host mounts a client-only cartridge that returns a validated educational result" })).toBeVisible();
   await page.screenshot({ path: resolve(evidenceDirectory, `s2-${testInfo.project.name}-initial.png`) });
 
   await page.getByRole("button", { name: "Play" }).focus();
   await page.keyboard.press("Enter");
   await expect(page.getByRole("button", { name: "Pause" })).toBeVisible();
-  await page.getByRole("slider", { name: "Seek tutorial video" }).fill("36");
-  await expect(page.getByRole("group", { name: "What does git add do?" })).toBeVisible();
-  await expect(page.getByLabel("Stages changes")).toBeFocused();
-  await expect(page.locator('[data-slot="activity-remediation-resources"]').getByRole("img", { name: "Working tree flows to staging area, then to repository" })).toBeVisible();
+  await page.getByRole("slider", { name: "Seek tutorial video" }).fill("56");
+  await expect(page.getByRole("group", { name: "Which responsibility belongs to the React host?" })).toBeVisible();
+  await expect(page.getByLabel("Persist the validated result")).toBeFocused();
+  await expect(page.locator('[data-slot="activity-remediation-resources"]').getByRole("img", { name: "React host mounts a client-only cartridge that returns a validated educational result" })).toBeVisible();
   await page.screenshot({ path: resolve(evidenceDirectory, `s2-${testInfo.project.name}-checkpoint.png`) });
 
-  await page.getByLabel("Publishes changes").check();
+  await page.getByLabel("Run per-frame collision physics").check();
   await page.getByRole("button", { name: "Check answer" }).click();
   await expect(page.locator('[data-slot="interactive-activity-player"] [role="status"]')).toContainText("Not yet");
   await expect(page.getByText("Persisted attempts: 1")).toBeVisible();
-  await page.getByRole("button", { name: "Replay Stage files" }).click();
+  await page.getByRole("button", { name: "Replay Scene lifecycle" }).click();
   await expect(page.getByRole("button", { name: "Pause" })).toBeVisible();
 
-  await page.getByLabel("Stages changes").check();
+  await page.getByLabel("Persist the validated result").check();
   await page.getByRole("button", { name: "Check answer" }).click();
   await expect(page.locator('[data-slot="interactive-activity-player"] [role="status"]')).toContainText("Correct");
   await expect(page.getByText("Persisted attempts: 2")).toBeVisible();
   await page.getByRole("button", { name: "Show transcript" }).click();
-  await expect(page.getByText("Use git add to move changes")).toBeVisible();
+  await expect(page.getByText("A Phaser Scene separates object creation")).toBeVisible();
   await page.screenshot({ path: resolve(evidenceDirectory, `s2-${testInfo.project.name}-remediation-correct.png`) });
 
   await page.getByRole("button", { name: "Continue video" }).click();
@@ -75,9 +75,9 @@ test("passes the Thai route locale into activity content and shared controls", a
   await page.goto("/th/activity-runtime-demo");
   await expect(page.getByRole("button", { name: "เล่น" })).toBeVisible({ timeout: 20_000 });
   await expect(page.getByRole("slider", { name: "เลื่อนวิดีโอบทเรียน" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "I Do: สาธิตการสร้าง commit แบบโต้ตอบ" })).toBeVisible();
-  await expect(page.getByTitle("วิดีโอบทเรียน Git commit")).toBeVisible({ timeout: 20_000 });
-  await expect.poll(async () => Number(await page.getByRole("slider", { name: "เลื่อนวิดีโอบทเรียน" }).getAttribute("max"))).toBeGreaterThan(35);
-  await page.getByRole("slider", { name: "เลื่อนวิดีโอบทเรียน" }).fill("36");
-  await expect(page.getByRole("group", { name: "git add ทำอะไร?" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "I Do: วิเคราะห์ Phaser cartridge แบบโต้ตอบ" })).toBeVisible();
+  await expect(page.getByTitle("วิดีโอวงจร Phaser cartridge")).toBeVisible({ timeout: 20_000 });
+  await expect.poll(async () => Number(await page.getByRole("slider", { name: "เลื่อนวิดีโอบทเรียน" }).getAttribute("max"))).toBeGreaterThan(55);
+  await page.getByRole("slider", { name: "เลื่อนวิดีโอบทเรียน" }).fill("56");
+  await expect(page.getByRole("group", { name: "หน้าที่ใดเป็นของ React host?" })).toBeVisible();
 });

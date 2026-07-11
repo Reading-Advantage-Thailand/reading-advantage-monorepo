@@ -1,7 +1,7 @@
 "use client";
 
 import { createYouTubeMediaController, InteractiveActivityPlayer, type MediaController, type MediaSnapshot, type YouTubeMediaController, type YouTubePlayerPort } from "@reading-advantage/activity-react";
-import { activitySchema } from "@reading-advantage/activity-runtime/core";
+import { createCodecampAPKActivity } from "@reading-advantage/codecamp-knowledge";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 function readStoredNumber(key: string, maximum: number): number {
@@ -22,52 +22,6 @@ function readStoredWatchedRanges(): Array<{ startSeconds: number; endSeconds: nu
   } catch {
     return [];
   }
-}
-
-function createDemoActivity(locale: string) {
-  const thai = locale.toLowerCase().startsWith("th");
-  return activitySchema.parse({
-  schemaVersion: "activity.v1",
-  activityId: "codecamp.activity.runtime-demo",
-  activityVersion: "1.0.0",
-  graphVersion: "codecamp.graph.v1",
-  objectiveId: "git.commit.create",
-  variantKey: "video.runtime-demo.v1",
-  mode: "worked_example",
-  title: { en: "Interactive Git Commit Tutorial", th: "บทเรียน Git Commit แบบโต้ตอบ" },
-  accessibility: { transcriptRequired: true, captionsRequired: true, nonVideoAlternativeResourceId: "diagram.commit-flow" },
-  resources: [
-    {
-      kind: "video",
-      resourceId: "video.commit-demo",
-      provider: "youtube",
-      videoId: "RGOj5yH7evk",
-      captionsAvailable: true,
-      transcriptResourceId: "transcript.commit-demo",
-      segments: [{ segmentId: "segment.stage", label: { en: "Stage files", th: "เตรียมไฟล์" }, startSeconds: 12, endSeconds: 35 }]
-    },
-    { kind: "transcript", resourceId: "transcript.commit-demo", language: thai ? "th" : "en", text: thai ? "ใช้ git add เพื่อย้ายการเปลี่ยนแปลงจาก working tree ไปยัง staging area ก่อน commit" : "Use git add to move changes from the working tree into the staging area before committing." },
-    { kind: "diagram", resourceId: "diagram.commit-flow", assetId: "diagram.commit-flow.v1", alt: { en: "Working tree flows to staging area, then to repository", th: "ลำดับจาก working tree ไป staging area แล้วเข้าสู่ repository" } }
-  ],
-  checkpoints: [{
-    checkpointId: "checkpoint.stage",
-    stepId: "ido.stage",
-    objectiveId: "git.commit.create",
-    variantKey: "checkpoint.runtime-demo.v1",
-    trigger: { resourceId: "video.commit-demo", segmentId: "segment.stage" },
-    question: {
-      kind: "single_choice",
-      prompt: { en: "What does git add do?", th: "git add ทำอะไร?" },
-      options: [{ optionId: "stage", label: { en: "Stages changes", th: "เตรียมการเปลี่ยนแปลง" } }, { optionId: "publish", label: { en: "Publishes changes", th: "เผยแพร่การเปลี่ยนแปลง" } }],
-      correctOptionIds: ["stage"]
-    },
-    feedback: { correct: { en: "Correct — the changes are now staged.", th: "ถูกต้อง — การเปลี่ยนแปลงถูกเตรียมไว้แล้ว" }, incorrect: { en: "Not yet. Review the staging segment and diagram.", th: "ยังไม่ถูก ลองทบทวนช่วง staging และแผนภาพ" } },
-    remediation: [{ kind: "video_segment", resourceId: "video.commit-demo", segmentId: "segment.stage" }, { kind: "diagram", resourceId: "diagram.commit-flow" }],
-    evidence: { behavior: "assessed", weight: 0.5 },
-    gate: "pause_non_blocking"
-  }],
-  tutorialSteps: []
-  });
 }
 
 type RefreshingMediaController = YouTubeMediaController;
@@ -138,7 +92,7 @@ function YouTubeMediaHost({ videoId, locale, onReady }: { videoId: string; local
               target.destroy();
               return;
             }
-            target.getIframe().title = locale.startsWith("th") ? "วิดีโอบทเรียน Git commit" : "Git commit tutorial video";
+            target.getIframe().title = locale.startsWith("th") ? "วิดีโอวงจร Phaser cartridge" : "Phaser cartridge lifecycle video";
             controller = createYouTubeMediaController(target);
             onReady(controller);
             refreshTimer = window.setInterval(() => controller?.refresh(), 500);
@@ -202,7 +156,7 @@ class DemoController implements MediaController {
  */
 export function ActivityRuntimeDemo({ locale }: { locale: string }) {
   const thai = locale.toLowerCase().startsWith("th");
-  const demoActivity = useMemo(() => createDemoActivity(locale), [locale]);
+  const demoActivity = useMemo(() => createCodecampAPKActivity(locale), [locale]);
   const controller = useMemo(() => new DemoController(), []);
   const attachYouTubeController = useCallback((nextController: RefreshingMediaController) => controller.attach(nextController), [controller]);
   const [attempts, setAttempts] = useState(0);
@@ -244,8 +198,8 @@ export function ActivityRuntimeDemo({ locale }: { locale: string }) {
     <main className="mx-auto min-h-screen max-w-3xl space-y-6 bg-slate-50 p-4 text-slate-950 sm:p-8">
       <header>
         <p className="text-sm font-semibold uppercase tracking-wide text-blue-700">{thai ? "ตัวอย่างการทำงาน Codecamp" : "Codecamp proof of life"}</p>
-        <h1 className="text-3xl font-bold">{thai ? "I Do: สาธิตการสร้าง commit แบบโต้ตอบ" : "I Do: interactive commit demonstration"}</h1>
-        <p>{thai ? "เล่นหรือเลื่อนไปหลัง 35 วินาทีเพื่อเปิดคำถามระหว่างเรียน การดู YouTube ต่อจะไม่ถูกบังคับให้ตอบถูก" : "Play or seek past 35 seconds to open the formative checkpoint. YouTube continuation remains non-blocking."}</p>
+        <h1 className="text-3xl font-bold">{thai ? "I Do: วิเคราะห์ Phaser cartridge แบบโต้ตอบ" : "I Do: trace a Phaser cartridge interactively"}</h1>
+        <p>{thai ? "เล่นหรือเลื่อนไปหลัง 55 วินาทีเพื่อเปิดคำถามเรื่องขอบเขต React host การดู YouTube ต่อจะไม่ถูกบังคับให้ตอบถูก" : "Play or seek past 55 seconds to open the React-host boundary checkpoint. YouTube continuation remains non-blocking."}</p>
       </header>
       <div className="rounded-xl border bg-white p-5 shadow-sm [&_button]:m-1 [&_button]:min-h-11 [&_button]:rounded-md [&_button]:border [&_button]:px-4 [&_input]:m-2">
         <InteractiveActivityPlayer
@@ -268,20 +222,20 @@ export function ActivityRuntimeDemo({ locale }: { locale: string }) {
               className="my-3 rounded-lg border border-blue-200 bg-blue-50 p-4"
             >
               <div aria-hidden="true" className="flex flex-wrap items-center justify-center gap-2 font-semibold text-blue-950">
-                <span className="rounded-md bg-white px-3 py-2 shadow-sm">{thai ? "พื้นที่ทำงาน" : "Working tree"}</span>
-                <span>→ git add →</span>
-                <span className="rounded-md bg-white px-3 py-2 shadow-sm">{thai ? "พื้นที่เตรียม" : "Staging area"}</span>
-                <span>→ git commit →</span>
-                <span className="rounded-md bg-white px-3 py-2 shadow-sm">{thai ? "คลังโค้ด" : "Repository"}</span>
+                <span className="rounded-md bg-white px-3 py-2 shadow-sm">React host</span>
+                <span>→ mount →</span>
+                <span className="rounded-md bg-white px-3 py-2 shadow-sm">Phaser cartridge</span>
+                <span>→ result →</span>
+                <span className="rounded-md bg-white px-3 py-2 shadow-sm">{thai ? "หลักฐานการเรียนรู้" : "Learning evidence"}</span>
               </div>
-              <figcaption className="mt-2 text-center text-sm text-blue-800">{thai ? "ใช้ staging area เพื่อเลือกสิ่งที่จะบันทึกใน commit ถัดไป" : "Use the staging area to choose what the next commit records."}</figcaption>
+              <figcaption className="mt-2 text-center text-sm text-blue-800">{thai ? "host ดูแลการ mount, persistence และ navigation ส่วน cartridge ดูแลกลไกเกม" : "The host owns mounting, persistence, and navigation; the cartridge owns the game mechanic."}</figcaption>
             </figure>
           ) : undefined}
           onAssess={async ({ answer }) => {
             const next = attempts + 1;
             globalThis.localStorage?.setItem("activity-runtime-demo-attempts", String(next));
             setAttempts(next);
-            return { isCorrect: answer === "stage" };
+            return { isCorrect: answer === "persist" };
           }}
         />
       </div>
