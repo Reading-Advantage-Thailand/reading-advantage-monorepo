@@ -104,7 +104,7 @@ describe("InteractiveActivityPlayer", () => {
       checkpoints: activity.checkpoints.map((checkpoint) => ({ ...checkpoint, gate: "answer_before_continue" }))
     });
     const controller = createFakeMediaController();
-    render(<InteractiveActivityPlayer activity={hosted} controller={controller} locale="th" onAssess={async () => ({ isCorrect: true })} />);
+    render(<InteractiveActivityPlayer activity={hosted} controller={controller} locale="en" onAssess={async () => ({ isCorrect: true })} />);
     fireEvent.click(screen.getByRole("button", { name: "Play" }));
     expect(controller.play).toHaveBeenCalled();
     act(() => controller.emit({ status: "playing", currentSeconds: 36, durationSeconds: 90, captionsEnabled: true }));
@@ -125,6 +125,14 @@ describe("InteractiveActivityPlayer", () => {
     fireEvent.click(screen.getByRole("button", { name: "Check answer" }));
     await waitFor(() => expect(continueButton).toBeEnabled());
     expect(playToggle).toBeEnabled();
+  });
+
+  it("localizes essential shared controls for Thai learners", () => {
+    const controller = createFakeMediaController();
+    render(<InteractiveActivityPlayer activity={activity} controller={controller} locale="th" onAssess={vi.fn()} />);
+    expect(screen.getByRole("button", { name: "เล่น" })).toBeVisible();
+    expect(screen.getByRole("slider", { name: "เลื่อนวิดีโอบทเรียน" })).toBeVisible();
+    expect(screen.getByRole("button", { name: "แสดงบทถอดเสียง" })).toBeVisible();
   });
 
   it("supports free-text checkpoints and playing-state pause controls", () => {

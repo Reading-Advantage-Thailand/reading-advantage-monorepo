@@ -4,6 +4,26 @@ import { createYouTubeMediaController, InteractiveActivityPlayer, type MediaCont
 import { activitySchema } from "@reading-advantage/activity-runtime/core";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
+function readStoredNumber(key: string, maximum: number): number {
+  const value = Number(globalThis.localStorage?.getItem(key));
+  return Number.isFinite(value) && value >= 0 && value <= maximum ? value : 0;
+}
+
+function readStoredWatchedRanges(): Array<{ startSeconds: number; endSeconds: number }> {
+  try {
+    const value: unknown = JSON.parse(globalThis.localStorage?.getItem("activity-runtime-demo-watched-ranges") ?? "[]");
+    if (!Array.isArray(value)) return [];
+    return value.filter((range): range is { startSeconds: number; endSeconds: number } =>
+      typeof range === "object" && range !== null
+      && Number.isFinite((range as { startSeconds?: unknown }).startSeconds)
+      && Number.isFinite((range as { endSeconds?: unknown }).endSeconds)
+      && Number((range as { startSeconds: number }).startSeconds) >= 0
+      && Number((range as { endSeconds: number }).endSeconds) > Number((range as { startSeconds: number }).startSeconds));
+  } catch {
+    return [];
+  }
+}
+
 const demoActivity = activitySchema.parse({
   schemaVersion: "activity.v1",
   activityId: "codecamp.activity.runtime-demo",
@@ -182,13 +202,17 @@ export function ActivityRuntimeDemo() {
   const [initialPosition, setInitialPosition] = useState(0);
   const [position, setPosition] = useState(0);
   const [watchedRangeCount, setWatchedRangeCount] = useState(0);
+  const [initialWatchedRanges, setInitialWatchedRanges] = useState<Array<{ startSeconds: number; endSeconds: number }>>([]);
   const [hydrated, setHydrated] = useState(false);
   useEffect(() => {
-    const storedAttempts = Number(globalThis.localStorage?.getItem("activity-runtime-demo-attempts") ?? 0);
-    const storedPosition = Number(globalThis.localStorage?.getItem("activity-runtime-demo-position") ?? 0);
+    const storedAttempts = readStoredNumber("activity-runtime-demo-attempts", 10_000);
+    const storedPosition = readStoredNumber("activity-runtime-demo-position", 24 * 60 * 60);
+    const storedWatchedRanges = readStoredWatchedRanges();
     setAttempts(storedAttempts);
     setInitialPosition(storedPosition);
     setPosition(storedPosition);
+    setInitialWatchedRanges(storedWatchedRanges);
+    setWatchedRangeCount(storedWatchedRanges.length);
     setHydrated(true);
   }, []);
   const savePosition = useCallback((seconds: number) => {
@@ -219,6 +243,7 @@ export function ActivityRuntimeDemo() {
           controller={controller}
           locale="en"
           initialPositionSeconds={initialPosition}
+          initialWatchedRanges={initialWatchedRanges}
           onPositionChange={savePosition}
           onWatchedRangesChange={saveWatchedRanges}
           renderMedia={({ video }) => video.provider === "youtube" && video.videoId

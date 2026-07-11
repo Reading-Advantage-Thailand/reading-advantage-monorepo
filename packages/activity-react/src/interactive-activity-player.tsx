@@ -15,9 +15,44 @@ export type InteractiveActivityPlayerProps = {
   renderMedia?(input: { video: Extract<Activity["resources"][number], { kind: "video" }> }): ReactNode;
   renderResource?(input: { resource: Activity["resources"][number]; context: "alternative" | "remediation" }): ReactNode;
   initialPositionSeconds?: number;
+  initialWatchedRanges?: Array<{ startSeconds: number; endSeconds: number }>;
+  labels?: Partial<InteractiveActivityPlayerLabels>;
   onPositionChange?(seconds: number): void;
   onWatchedRangesChange?(ranges: Array<{ startSeconds: number; endSeconds: number }>): void;
 };
+
+/** Localizable labels for essential shared player controls and status text. */
+export type InteractiveActivityPlayerLabels = {
+  media: string;
+  play: string;
+  pause: string;
+  seek: string;
+  retry: string;
+  mediaError: string;
+  showTranscript: string;
+  hideTranscript: string;
+  answer: string;
+  checkAnswer: string;
+  replay: string;
+  segment: string;
+  continueVideo: string;
+};
+
+function defaultLabels(locale: string): InteractiveActivityPlayerLabels {
+  if (locale.toLowerCase().startsWith("th")) {
+    return {
+      media: "สื่อบทเรียน", play: "เล่น", pause: "หยุดชั่วคราว", seek: "เลื่อนวิดีโอบทเรียน",
+      retry: "ลองเล่นสื่ออีกครั้ง", mediaError: "ไม่สามารถโหลดสื่อได้", showTranscript: "แสดงบทถอดเสียง",
+      hideTranscript: "ซ่อนบทถอดเสียง", answer: "คำตอบ", checkAnswer: "ตรวจคำตอบ", replay: "เล่นซ้ำ",
+      segment: "ช่วงวิดีโอ", continueVideo: "ดูวิดีโอต่อ",
+    };
+  }
+  return {
+    media: "Tutorial media", play: "Play", pause: "Pause", seek: "Seek tutorial video", retry: "Retry media",
+    mediaError: "Media could not be loaded.", showTranscript: "Show transcript", hideTranscript: "Hide transcript",
+    answer: "Answer", checkAnswer: "Check answer", replay: "Replay", segment: "segment", continueVideo: "Continue video",
+  };
+}
 
 function text(value: Record<string, string>, locale: string): string {
   return value[locale] ?? value.en ?? Object.values(value)[0] ?? "";
@@ -52,7 +87,8 @@ function resourceContent(resource: Activity["resources"][number], locale: string
  * @param props Activity content, controller, locale, and server assessment callback.
  * @returns Accessible React learning activity.
  */
-export function InteractiveActivityPlayer({ activity, controller, locale, onAssess, onEngage, renderMedia, renderResource, initialPositionSeconds = 0, onPositionChange, onWatchedRangesChange }: InteractiveActivityPlayerProps) {
+export function InteractiveActivityPlayer({ activity, controller, locale, onAssess, onEngage, renderMedia, renderResource, initialPositionSeconds = 0, initialWatchedRanges = [], labels, onPositionChange, onWatchedRangesChange }: InteractiveActivityPlayerProps) {
+  const playerLabels = { ...defaultLabels(locale), ...labels };
   const [snapshot, setSnapshot] = useState<MediaSnapshot>(() => controller.getSnapshot());
   const [activeCheckpointId, setActiveCheckpointId] = useState<string | null>(null);
   const [selectedOptionIds, setSelectedOptionIds] = useState<string[]>([]);
@@ -62,7 +98,7 @@ export function InteractiveActivityPlayer({ activity, controller, locale, onAsse
   const previousSeconds = useRef(snapshot.currentSeconds);
   const previousStatus = useRef(snapshot.status);
   const triggered = useRef(new Set<string>());
-  const watchedRanges = useRef<Array<{ startSeconds: number; endSeconds: number }>>([]);
+  const watchedRanges = useRef<Array<{ startSeconds: number; endSeconds: number }>>(mergeWatchedRanges(initialWatchedRanges));
   const initialPosition = useRef(initialPositionSeconds);
   const positionChangeCallback = useRef(onPositionChange);
   const watchedRangesChangeCallback = useRef(onWatchedRangesChange);
@@ -169,14 +205,14 @@ export function InteractiveActivityPlayer({ activity, controller, locale, onAsse
 
   return (
     <section aria-label={text(activity.title, locale)} data-slot="interactive-activity-player" data-reduced-motion={reducedMotion}>
-      <div data-slot="activity-media-surface" aria-label="Tutorial media">
+      <div data-slot="activity-media-surface" aria-label={playerLabels.media}>
         {video ? renderMedia?.({ video }) : null}
       </div>
       <button data-slot="activity-play-toggle" data-touch-target="true" type="button" disabled={hardGateLocked} onClick={() => snapshot.status === "playing" ? controller.pause() : void controller.play()}>
-        {snapshot.status === "playing" ? "Pause" : "Play"}
+        {snapshot.status === "playing" ? playerLabels.pause : playerLabels.play}
       </button>
       <label>
-        Seek tutorial video
+        {playerLabels.seek}
         <input
           type="range"
           min={0}
@@ -188,8 +224,8 @@ export function InteractiveActivityPlayer({ activity, controller, locale, onAsse
       </label>
       {snapshot.status === "error" ? (
         <div role="alert">
-          <p>{snapshot.errorMessage ?? "Media could not be loaded."}</p>
-          <button data-touch-target="true" type="button" onClick={() => hardGateLocked ? replay() : void controller.play()}>Retry media</button>
+          <p>{snapshot.errorMessage ?? playerLabels.mediaError}</p>
+          <button data-touch-target="true" type="button" onClick={() => hardGateLocked ? replay() : void controller.play()}>{playerLabels.retry}</button>
         </div>
       ) : null}
       <span role="status" aria-live="polite">
@@ -198,7 +234,7 @@ export function InteractiveActivityPlayer({ activity, controller, locale, onAsse
       {transcript ? (
         <div data-slot="activity-transcript">
           <button type="button" aria-expanded={transcriptOpen} onClick={() => setTranscriptOpen((open) => !open)}>
-            {transcriptOpen ? "Hide transcript" : "Show transcript"}
+            {transcriptOpen ? playerLabels.hideTranscript : playerLabels.showTranscript}
           </button>
           {transcriptOpen ? <p>{transcript.text}</p> : null}
         </div>
@@ -229,15 +265,15 @@ export function InteractiveActivityPlayer({ activity, controller, locale, onAsse
               </label>
             )) : (
               <label>
-                Answer
+                {playerLabels.answer}
                 <input type="text" value={freeTextAnswer} onChange={(event) => setFreeTextAnswer(event.currentTarget.value)} />
               </label>
             )}
           </fieldset>
-          <button data-touch-target="true" type="submit">Check answer</button>
+          <button data-touch-target="true" type="submit">{playerLabels.checkAnswer}</button>
           {checkpoint.remediation.some((resource) => resource.kind === "video_segment") ? (
             <button data-touch-target="true" type="button" onClick={replay}>
-              Replay {checkpointVideo?.segments.find((segment) => segment.segmentId === checkpoint.trigger.segmentId) ? text(checkpointVideo.segments.find((segment) => segment.segmentId === checkpoint.trigger.segmentId)!.label, locale) : "segment"}
+              {playerLabels.replay} {checkpointVideo?.segments.find((segment) => segment.segmentId === checkpoint.trigger.segmentId) ? text(checkpointVideo.segments.find((segment) => segment.segmentId === checkpoint.trigger.segmentId)!.label, locale) : playerLabels.segment}
             </button>
           ) : null}
           <div data-slot="activity-remediation-resources">
@@ -257,7 +293,7 @@ export function InteractiveActivityPlayer({ activity, controller, locale, onAsse
             data-touch-target="true"
             onClick={() => { setActiveCheckpointId(null); void controller.play(); previousFocus.current?.focus(); }}
           >
-            Continue video
+            {playerLabels.continueVideo}
           </button>
         </form>
       ) : null}
