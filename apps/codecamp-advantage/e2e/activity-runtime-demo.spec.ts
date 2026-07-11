@@ -17,7 +17,8 @@ test("completes the interactive video, remediation, and persisted resume loop", 
   await expect(page.locator('[data-slot="activity-alternative"]').getByRole("img", { name: "Working tree flows to staging area, then to repository" })).toBeVisible();
   await page.screenshot({ path: resolve(evidenceDirectory, `s2-${testInfo.project.name}-initial.png`) });
 
-  await page.getByRole("button", { name: "Play" }).click();
+  await page.getByRole("button", { name: "Play" }).focus();
+  await page.keyboard.press("Enter");
   await expect(page.getByRole("button", { name: "Pause" })).toBeVisible();
   await page.getByRole("slider", { name: "Seek tutorial video" }).fill("36");
   await expect(page.getByRole("group", { name: "What does git add do?" })).toBeVisible();
