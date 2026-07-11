@@ -225,6 +225,13 @@
       "when": 1783758000000,
       "tag": "0031_tutorial_claim_fencing",
       "breakpoints": true
+    },
+    {
+      "idx": 32,
+      "version": "7",
+      "when": 1783760000000,
+      "tag": "0032_tutorial_snapshot_submission_binding",
+      "breakpoints": true
     }
   ]
 }

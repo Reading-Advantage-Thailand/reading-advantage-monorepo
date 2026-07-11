@@ -4,9 +4,9 @@ import { z } from "zod";
 
 /** Minimal synchronous storage surface implemented by browser localStorage. */
 export interface TutorialQueueStorage {
-  /** Reads one serialized queue value. */
+  /** @param key Namespaced storage key. @returns Serialized queue value or null. */
   getItem(key: string): string | null;
-  /** Writes one serialized queue value. */
+  /** @param key Namespaced storage key. @param value Serialized validated queue. @returns Nothing. */
   setItem(key: string, value: string): void;
 }
 
@@ -35,13 +35,13 @@ function decodeCredentialExpiry(token: string): string {
 
 /** Durable offline queue used by tutorial upload clients. */
 export interface TutorialReportQueue {
-  /** Adds or replaces one deduplicated queued report. */
+  /** @param entry Validated report and retry metadata. @returns Completion after durable enqueue. */
   enqueue(entry: QueuedTutorialReport): Promise<void>;
-  /** Returns due reports in deterministic queue order. */
+  /** @param now Current client timestamp. @returns Due reports in deterministic order. */
   due(now: string): Promise<QueuedTutorialReport[]>;
-  /** Removes a successfully uploaded report. */
+  /** @param queueId Stable report queue identity. @returns Completion after removal. */
   remove(queueId: string): Promise<void>;
-  /** Updates retry metadata after a failed upload. */
+  /** @param queueId Stable report queue identity. @param attempts Updated failure count. @param nextAttemptAt Earliest retry. @returns Completion after durable update. */
   retry(queueId: string, attempts: number, nextAttemptAt: string): Promise<void>;
 }
 

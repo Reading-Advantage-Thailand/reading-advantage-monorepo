@@ -74,7 +74,9 @@ export interface TutorialRepositoryVerifier {
 /** Dependencies for authenticated tutorial reporting. */
 export type TutorialReportingDependencies = {
   secret: string;
+  /** @returns Server current time used for credential and lease decisions. */
   now(): string;
+  /** @param activityId Credential-bound activity identity. @returns Server-authored manifest or null. */
   loadManifest(activityId: string): Promise<TutorialManifest | null>;
   verifier: TutorialRepositoryVerifier;
   store: TutorialReportStore;

@@ -151,6 +151,7 @@ export class DrizzleTutorialRepositoryVerifier implements TutorialRepositoryVeri
       eq(activityTutorialRepositoryStates.learnerId, claims.learnerId), eq(activityTutorialRepositoryStates.sessionId, claims.sessionId),
       eq(activityTutorialRepositoryStates.repositoryId, claims.repositoryId), eq(activityTutorialRepositoryStates.activityId, claims.activityId),
       eq(activityTutorialRepositoryStates.activityVersion, claims.activityVersion), eq(activityTutorialRepositoryStates.graphVersion, claims.graphVersion),
+      eq(activityTutorialRepositoryStates.submissionId, claims.submissionId), eq(activityTutorialRepositoryStates.stepId, stepId),
     )).limit(1);
     if (!state) throw new Error("Tutorial repository state not found");
     if (claims.repositoryStateId !== repositoryStateId || state.capturedAt.toISOString() !== claims.repositoryCapturedAt) throw new Error("Tutorial repository state credential mismatch");
@@ -173,10 +174,10 @@ export class DrizzleTutorialRepositoryVerifier implements TutorialRepositoryVeri
  * @param input Server-captured repository files and Git status.
  * @returns Stable repository-state identifier accepted by reporting.
  */
-export async function recordTutorialRepositoryState(tenantDb: TenantDB, actor: ActivityActor, input: { stateId?: string; sessionId: string; repositoryId: string; activityId: string; activityVersion: string; graphVersion: string; files: Record<string, string>; gitStatus: string; capturedAt: string }): Promise<string> {
+export async function recordTutorialRepositoryState(tenantDb: TenantDB, actor: ActivityActor, input: { stateId?: string; sessionId: string; repositoryId: string; activityId: string; activityVersion: string; graphVersion: string; submissionId: string; stepId: string; files: Record<string, string>; gitStatus: string; capturedAt: string }): Promise<string> {
   const rawDb = tenantDb.unscoped("tutorial clone worker writes normalized state for the exact authenticated owner");
   const stateId = input.stateId ?? randomUUID();
-  await rawDb.insert(activityTutorialRepositoryStates).values({ id: stateId, tenantKey: actorTenantKey(actor), learnerId: actor.learnerId, sessionId: input.sessionId, repositoryId: input.repositoryId, activityId: input.activityId, activityVersion: input.activityVersion, graphVersion: input.graphVersion, filesJson: input.files, gitStatus: input.gitStatus, capturedAt: new Date(input.capturedAt) });
+  await rawDb.insert(activityTutorialRepositoryStates).values({ id: stateId, tenantKey: actorTenantKey(actor), learnerId: actor.learnerId, sessionId: input.sessionId, repositoryId: input.repositoryId, activityId: input.activityId, activityVersion: input.activityVersion, graphVersion: input.graphVersion, submissionId: input.submissionId, stepId: input.stepId, filesJson: input.files, gitStatus: input.gitStatus, capturedAt: new Date(input.capturedAt) });
   return stateId;
 }
 
@@ -199,7 +200,7 @@ export async function prepareCodecampTutorialReport(tenantDb: TenantDB, actor: A
   const snapshot = capturedRepositoryStateSchema.parse(await capture.capture({ tenantKey: actorTenantKey(actor), learnerId: actor.learnerId, sessionId: request.sessionId, repositoryId: request.repositoryId, allowedFiles: [...codecampAPKUnit.wedo.manifest.allowedFiles] }));
   const capturedAt = new Date(snapshot.capturedAt).toISOString();
   const files = Object.fromEntries(codecampAPKUnit.wedo.manifest.allowedFiles.flatMap((filePath) => snapshot.files[filePath] === undefined ? [] : [[filePath, snapshot.files[filePath]!]]));
-  const repositoryStateId = await recordTutorialRepositoryState(tenantDb, actor, { sessionId: request.sessionId, repositoryId: request.repositoryId, activityId: activity.activityId, activityVersion: activity.activityVersion, graphVersion: activity.graphVersion, files, gitStatus: snapshot.gitStatus, capturedAt });
+  const repositoryStateId = await recordTutorialRepositoryState(tenantDb, actor, { sessionId: request.sessionId, repositoryId: request.repositoryId, activityId: activity.activityId, activityVersion: activity.activityVersion, graphVersion: activity.graphVersion, submissionId: request.submissionId, stepId: request.stepId, files, gitStatus: snapshot.gitStatus, capturedAt });
   const issuedAt = new Date().toISOString();
   if (Date.parse(issuedAt) - Date.parse(capturedAt) > 5 * 60_000 || Date.parse(capturedAt) > Date.parse(issuedAt)) throw new Error("Repository worker returned a stale capture");
   const expiresAt = new Date(Date.parse(issuedAt) + 10 * 60_000).toISOString();
@@ -226,6 +227,7 @@ export async function reissueCodecampTutorialReportCredential(tenantDb: TenantDB
     eq(activityTutorialRepositoryStates.id, request.repositoryStateId), eq(activityTutorialRepositoryStates.tenantKey, actorTenantKey(actor)),
     eq(activityTutorialRepositoryStates.learnerId, actor.learnerId), eq(activityTutorialRepositoryStates.sessionId, request.sessionId),
     eq(activityTutorialRepositoryStates.activityId, activity.activityId), eq(activityTutorialRepositoryStates.activityVersion, activity.activityVersion), eq(activityTutorialRepositoryStates.graphVersion, activity.graphVersion),
+    eq(activityTutorialRepositoryStates.submissionId, request.submissionId), eq(activityTutorialRepositoryStates.stepId, request.stepId),
   )).limit(1);
   if (!state) throw new Error("Tutorial repository state not found");
   const issuedAt = new Date().toISOString();

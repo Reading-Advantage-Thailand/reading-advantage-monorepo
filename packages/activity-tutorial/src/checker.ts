@@ -7,8 +7,11 @@ import { tutorialCheckResultSchema, tutorialManifestSchema, type TutorialCheckRe
 
 /** Injected filesystem and command ports for deterministic tutorial checks. */
 export type TutorialCheckerPorts = {
+  /** @param filePath Allowlisted repository-relative path. @returns UTF-8 file content retained locally. */
   readAllowedFile(filePath: string): Promise<string>;
+  /** @param profile Fixed host-owned command profile. @returns Local command output retained by the checker. */
   runAllowedCommand(profile: "git-status-porcelain"): Promise<string>;
+  /** @returns Current ISO timestamp for deterministic result metadata. */
   now(): string;
 };
 

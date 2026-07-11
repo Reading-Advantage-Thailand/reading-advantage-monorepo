@@ -118,7 +118,7 @@ export const activityTutorialRepositoryStates = pgTable(
   "activity_tutorial_repository_states",
   {
     id: text("id").primaryKey(), tenantKey: text("tenant_key").notNull(), learnerId: text("learner_id").notNull(), sessionId: uuid("session_id").notNull(), repositoryId: text("repository_id").notNull(),
-    activityId: text("activity_id").notNull(), activityVersion: text("activity_version").notNull(), graphVersion: text("graph_version").notNull(),
+    activityId: text("activity_id").notNull(), activityVersion: text("activity_version").notNull(), graphVersion: text("graph_version").notNull(), submissionId: text("submission_id").notNull(), stepId: text("step_id").notNull(),
     filesJson: jsonb("files_json").$type<Record<string, string>>().notNull(), gitStatus: text("git_status").notNull(), capturedAt: timestamp("captured_at", { withTimezone: true }).notNull(),
   },
   (table) => [

@@ -50,6 +50,8 @@ describe("activity Drizzle outbox and Codecamp mastery", () => {
       capture: async () => ({ files: { "src/cartridge.ts": "export const runtimeApiVersion = '1';", "src/game-state.ts": "export {};", ".env": "must-not-persist" }, gitStatus: "M  src/cartridge.ts", capturedAt: repositoryCapturedAt.replace("Z", "+00:00") }),
     });
     const reissued = await reissueCodecampTutorialReportCredential(tenantDb, actor, { sessionId, submissionId: "submission-apk-1", repositoryStateId: prepared.repositoryStateId, stepId: "wedo.apk.manifest" }, "integration-tutorial-secret-at-least-32-bytes");
+    await expect(reissueCodecampTutorialReportCredential(tenantDb, actor, { sessionId, submissionId: "submission-apk-2", repositoryStateId: prepared.repositoryStateId, stepId: "wedo.apk.manifest" }, "integration-tutorial-secret-at-least-32-bytes")).rejects.toThrow("state not found");
+    await expect(reissueCodecampTutorialReportCredential(tenantDb, actor, { sessionId, submissionId: "submission-apk-1", repositoryStateId: prepared.repositoryStateId, stepId: "wedo.apk.other" }, "integration-tutorial-secret-at-least-32-bytes")).rejects.toThrow("session not found");
     const localResult = await runTutorialStep(codecampAPKUnit.wedo.manifest, "wedo.apk.manifest", {
       readAllowedFile: async () => "export const runtimeApiVersion = '1';", runAllowedCommand: async () => "M  src/cartridge.ts", now: () => "2026-07-10T00:01:00Z",
     });
