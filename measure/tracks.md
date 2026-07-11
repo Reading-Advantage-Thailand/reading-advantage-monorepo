@@ -59,8 +59,8 @@ Two parallel programs are in flight; priority order when picking the next track:
 
 ## Advantage Play Kit Program (created 2026-07-10)
 
-- [~] **Track: APK Advantage Games Arcade Host W2** *Link: [./tracks/apk_advantage_games_arcade_host_w2_20260710/](./tracks/apk_advantage_games_arcade_host_w2_20260710/)*
-  Convert Advantage Games from a static/QC showcase into the authenticated production host for all five shared cartridges, with one generic student route, server-owned completion persistence, and a continuous arcade loop while preserving the stable educational ABI.
+- [~] **Track: APK Runner Traversal Wave W3** *Link: [./tracks/apk_runner_traversal_wave_w3_20260711/](./tracks/apk_runner_traversal_wave_w3_20260711/)*
+  Rebuild Dragon Rider, Spellweaver's Run, Griffin Rider's Escape, and Storm the Castle Tower as shared Phaser 4 APK cartridges on the proven runner/traversal systems, with dual editions, authenticated-host proof, and exact legacy cutover evidence.
 
 ---
 
@@ -116,6 +116,9 @@ Two parallel programs are in flight; priority order when picking the next track:
 
 - [x] **Track: APK Incomplete Sentence Action W1** *Link: [./archive/apk_incomplete_sentence_action_20260710/](./archive/apk_incomplete_sentence_action_20260710/)*
   Archived 2026-07-10 after product-owner approval. Delivered Astral Mage target action and The Sorcerer's Ziggurat isometric traversal as Phaser 4 cartridges, dual-edition and Reading/Primary host proofs, real keyboard and mobile-touch QC, and playable Advantage Games QC deep links while preserving the stable sentence/result ABI. Authenticated production hosting remains successor-owned.
+
+- [x] **Track: APK Advantage Games Arcade Host W2** *Link: [./archive/apk_advantage_games_arcade_host_w2_20260710/](./archive/apk_advantage_games_arcade_host_w2_20260710/)*
+  Archived 2026-07-11 after product-owner authorization and browser acceptance. Delivered the dynamic first-party student session host, one generic route for all five APK cartridges, strict server-owned completion persistence with concurrent idempotency, responsive one-canvas lifecycle, and the continuous production arcade loop.
 
 - [x] **Track: Phaser 4 Advantage Play Kit** *Link: [./archive/advantage_play_kit_20260710/](./archive/advantage_play_kit_20260710/)*
   Archived 2026-07-10 after product-owner QC approval. Delivered the frozen educational I/O ABI, Phaser 4 runtime, Primary Chibi and Secondary Epic edition seam, three representative cartridges, the Advantage Games QC testbed, and Reading/Primary package-consumption proofs. Product public IDs, all-game host registries, and exact legacy deletion evidence continue in `apk_catalog_cutover_w0_20260710`.
