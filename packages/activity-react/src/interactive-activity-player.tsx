@@ -19,6 +19,8 @@ export type InteractiveActivityPlayerProps = {
   labels?: Partial<InteractiveActivityPlayerLabels>;
   onPositionChange?(seconds: number): void;
   onWatchedRangesChange?(ranges: Array<{ startSeconds: number; endSeconds: number }>): void;
+  onPlaybackIntent?(): void;
+  onSeekIntent?(seconds: number): void;
 };
 
 /** Localizable labels for essential shared player controls and status text. */
@@ -87,7 +89,7 @@ function resourceContent(resource: Activity["resources"][number], locale: string
  * @param props Activity content, controller, locale, and server assessment callback.
  * @returns Accessible React learning activity.
  */
-export function InteractiveActivityPlayer({ activity, controller, locale, onAssess, onEngage, renderMedia, renderResource, initialPositionSeconds = 0, initialWatchedRanges = [], labels, onPositionChange, onWatchedRangesChange }: InteractiveActivityPlayerProps) {
+export function InteractiveActivityPlayer({ activity, controller, locale, onAssess, onEngage, renderMedia, renderResource, initialPositionSeconds = 0, initialWatchedRanges = [], labels, onPositionChange, onWatchedRangesChange, onPlaybackIntent, onSeekIntent }: InteractiveActivityPlayerProps) {
   const playerLabels = { ...defaultLabels(locale), ...labels };
   const [snapshot, setSnapshot] = useState<MediaSnapshot>(() => controller.getSnapshot());
   const [activeCheckpointId, setActiveCheckpointId] = useState<string | null>(null);
@@ -195,6 +197,7 @@ export function InteractiveActivityPlayer({ activity, controller, locale, onAsse
     const segment = source?.kind === "video" ? source.segments.find((item) => item.segmentId === checkpoint.trigger.segmentId) : undefined;
     if (!segment) return;
     remediationEndSeconds.current = segment.endSeconds;
+    onPlaybackIntent?.();
     controller.seek(segment.startSeconds);
     void controller.play();
   };
@@ -208,7 +211,7 @@ export function InteractiveActivityPlayer({ activity, controller, locale, onAsse
       <div data-slot="activity-media-surface" aria-label={playerLabels.media}>
         {video ? renderMedia?.({ video }) : null}
       </div>
-      <button data-slot="activity-play-toggle" data-touch-target="true" type="button" disabled={hardGateLocked} onClick={() => snapshot.status === "playing" ? controller.pause() : void controller.play()}>
+      <button data-slot="activity-play-toggle" data-touch-target="true" type="button" disabled={hardGateLocked} onClick={() => { onPlaybackIntent?.(); if (snapshot.status === "playing") controller.pause(); else void controller.play(); }}>
         {snapshot.status === "playing" ? playerLabels.pause : playerLabels.play}
       </button>
       <label>
@@ -219,7 +222,7 @@ export function InteractiveActivityPlayer({ activity, controller, locale, onAsse
           max={Math.max(1, snapshot.durationSeconds)}
           value={Math.min(snapshot.currentSeconds, Math.max(1, snapshot.durationSeconds))}
           disabled={hardGateLocked}
-          onChange={(event) => controller.seek(Number(event.currentTarget.value))}
+          onChange={(event) => { const seconds = Number(event.currentTarget.value); onSeekIntent?.(seconds); controller.seek(seconds); }}
         />
       </label>
       {snapshot.status === "error" ? (
@@ -291,7 +294,7 @@ export function InteractiveActivityPlayer({ activity, controller, locale, onAsse
             type="button"
             disabled={hardGateLocked}
             data-touch-target="true"
-            onClick={() => { setActiveCheckpointId(null); void controller.play(); previousFocus.current?.focus(); }}
+            onClick={() => { onPlaybackIntent?.(); setActiveCheckpointId(null); void controller.play(); previousFocus.current?.focus(); }}
           >
             {playerLabels.continueVideo}
           </button>

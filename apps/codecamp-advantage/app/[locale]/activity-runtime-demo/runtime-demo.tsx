@@ -211,6 +211,7 @@ export function ActivityRuntimeDemo({ locale }: { locale: string }) {
   const [watchedRangeCount, setWatchedRangeCount] = useState(0);
   const [initialWatchedRanges, setInitialWatchedRanges] = useState<Array<{ startSeconds: number; endSeconds: number }>>([]);
   const [hydrated, setHydrated] = useState(false);
+  const resumePositionGuard = useRef<number | null>(null);
   useEffect(() => {
     const storedAttempts = readStoredNumber("activity-runtime-demo-attempts", 10_000);
     const storedPosition = readStoredNumber("activity-runtime-demo-position", 24 * 60 * 60);
@@ -218,11 +219,13 @@ export function ActivityRuntimeDemo({ locale }: { locale: string }) {
     setAttempts(storedAttempts);
     setInitialPosition(storedPosition);
     setPosition(storedPosition);
+    resumePositionGuard.current = storedPosition > 0 ? storedPosition : null;
     setInitialWatchedRanges(storedWatchedRanges);
     setWatchedRangeCount(storedWatchedRanges.length);
     setHydrated(true);
   }, []);
   const savePosition = useCallback((seconds: number) => {
+    if (resumePositionGuard.current !== null && Math.abs(seconds - resumePositionGuard.current) > 0.75) return;
     globalThis.localStorage?.setItem("activity-runtime-demo-position", String(seconds));
     setPosition(seconds);
   }, []);
@@ -252,6 +255,8 @@ export function ActivityRuntimeDemo({ locale }: { locale: string }) {
           initialPositionSeconds={initialPosition}
           initialWatchedRanges={initialWatchedRanges}
           onPositionChange={savePosition}
+          onPlaybackIntent={() => { resumePositionGuard.current = null; }}
+          onSeekIntent={() => { resumePositionGuard.current = null; }}
           onWatchedRangesChange={saveWatchedRanges}
           renderMedia={({ video }) => video.provider === "youtube" && video.videoId
             ? <YouTubeMediaHost videoId={video.videoId} locale={locale} onReady={attachYouTubeController} />
