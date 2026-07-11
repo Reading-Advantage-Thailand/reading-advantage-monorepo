@@ -76,6 +76,8 @@ test("passes the Thai route locale into activity content and shared controls", a
   await expect(page.getByRole("button", { name: "เล่น" })).toBeVisible({ timeout: 20_000 });
   await expect(page.getByRole("slider", { name: "เลื่อนวิดีโอบทเรียน" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "I Do: สาธิตการสร้าง commit แบบโต้ตอบ" })).toBeVisible();
+  await expect(page.getByTitle("วิดีโอบทเรียน Git commit")).toBeVisible({ timeout: 20_000 });
+  await expect.poll(async () => Number(await page.getByRole("slider", { name: "เลื่อนวิดีโอบทเรียน" }).getAttribute("max"))).toBeGreaterThan(35);
   await page.getByRole("slider", { name: "เลื่อนวิดีโอบทเรียน" }).fill("36");
   await expect(page.getByRole("group", { name: "git add ทำอะไร?" })).toBeVisible();
 });

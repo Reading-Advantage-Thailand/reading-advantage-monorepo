@@ -181,6 +181,7 @@ class DemoController implements MediaController {
     this.publish(this.snapshot);
     if (this.pendingSeekSeconds !== undefined) {
       controller.seek(this.pendingSeekSeconds);
+      controller.pause();
       this.pendingSeekSeconds = undefined;
     }
   }
