@@ -24,6 +24,10 @@ type RunnerWaveBlueprint = {
     | "three-lane-ordered-collector"
     | "three-lane-perspective-gates"
     | "vertical-ordered-traversal";
+  readonly contentFixture: readonly {
+    readonly term: string;
+    readonly translation: string;
+  }[];
   readonly requiredAssetSlots: readonly string[];
   readonly controls: RunnerControlContract;
   readonly resultMapping: RunnerResultMapping;
@@ -48,6 +52,12 @@ export const runnerWaveBlueprints = [
     id: "dragon-rider",
     inputMode: "vocabulary",
     mechanic: "two-lane-gate-traversal",
+    contentFixture: [
+      { term: "สวัสดี", translation: "Hello" },
+      { term: "ขอบคุณ", translation: "Thank you" },
+      { term: "หนังสือ", translation: "Book" },
+      { term: "ดวงจันทร์", translation: "Moon" },
+    ],
     requiredAssetSlots: [
       ...COMMON_RUNNER_ASSET_SLOTS,
       "target.gate",
@@ -73,6 +83,10 @@ export const runnerWaveBlueprints = [
     id: "spellweavers-run",
     inputMode: "sentence",
     mechanic: "three-lane-ordered-collector",
+    contentFixture: [
+      { term: "The cat sits on the mat", translation: "แมวนั่งบนเสื่อ" },
+      { term: "We play games together", translation: "พวกเราเล่นเกมด้วยกัน" },
+    ],
     requiredAssetSlots: [
       ...COMMON_RUNNER_ASSET_SLOTS,
       "lane.marker",
@@ -99,6 +113,10 @@ export const runnerWaveBlueprints = [
     id: "griffin-riders-escape",
     inputMode: "sentence",
     mechanic: "three-lane-perspective-gates",
+    contentFixture: [
+      { term: "The knight rides the griffin", translation: "อัศวินขี่กริฟฟิน" },
+      { term: "Fly through the golden gates", translation: "บินผ่านประตูสีทอง" },
+    ],
     requiredAssetSlots: [
       ...COMMON_RUNNER_ASSET_SLOTS,
       "lane.marker",
@@ -125,6 +143,10 @@ export const runnerWaveBlueprints = [
     id: "storm-castle-tower",
     inputMode: "sentence",
     mechanic: "vertical-ordered-traversal",
+    contentFixture: [
+      { term: "The bird flies in the sky", translation: "นกบินบนท้องฟ้า" },
+      { term: "The sun is shining bright", translation: "ดวงอาทิตย์ส่องแสงสว่าง" },
+    ],
     requiredAssetSlots: [
       ...COMMON_RUNNER_ASSET_SLOTS,
       "terrain.tower",

@@ -1,3 +1,6 @@
+import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
+import { dirname, resolve, sep } from "node:path";
+import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
 import * as catalogModule from "../catalog";
@@ -6,6 +9,10 @@ type RunnerWaveBlueprint = {
   readonly id: string;
   readonly inputMode: "vocabulary" | "sentence";
   readonly mechanic: string;
+  readonly contentFixture: readonly {
+    readonly term: string;
+    readonly translation: string;
+  }[];
   readonly requiredAssetSlots: readonly string[];
   readonly controls: {
     readonly keyboard: readonly string[];
@@ -33,12 +40,26 @@ const COMMON_SLOTS = [
   "feedback.incorrect",
   "ui.panel",
 ] as const;
+const REPOSITORY_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../../../..");
+
+function listFiles(root: string): readonly string[] {
+  if (!existsSync(root)) return [];
+  return readdirSync(root, { encoding: "utf8", recursive: true })
+    .map((relativePath) => resolve(root, relativePath))
+    .filter((path) => statSync(path).isFile());
+}
 
 const expectedRunnerWaveBlueprints = [
   {
     id: "dragon-rider",
     inputMode: "vocabulary",
     mechanic: "two-lane-gate-traversal",
+    contentFixture: [
+      { term: "สวัสดี", translation: "Hello" },
+      { term: "ขอบคุณ", translation: "Thank you" },
+      { term: "หนังสือ", translation: "Book" },
+      { term: "ดวงจันทร์", translation: "Moon" },
+    ],
     requiredAssetSlots: [
       ...COMMON_SLOTS,
       "target.gate",
@@ -64,6 +85,10 @@ const expectedRunnerWaveBlueprints = [
     id: "spellweavers-run",
     inputMode: "sentence",
     mechanic: "three-lane-ordered-collector",
+    contentFixture: [
+      { term: "The cat sits on the mat", translation: "แมวนั่งบนเสื่อ" },
+      { term: "We play games together", translation: "พวกเราเล่นเกมด้วยกัน" },
+    ],
     requiredAssetSlots: [
       ...COMMON_SLOTS,
       "lane.marker",
@@ -90,6 +115,10 @@ const expectedRunnerWaveBlueprints = [
     id: "griffin-riders-escape",
     inputMode: "sentence",
     mechanic: "three-lane-perspective-gates",
+    contentFixture: [
+      { term: "The knight rides the griffin", translation: "อัศวินขี่กริฟฟิน" },
+      { term: "Fly through the golden gates", translation: "บินผ่านประตูสีทอง" },
+    ],
     requiredAssetSlots: [
       ...COMMON_SLOTS,
       "lane.marker",
@@ -116,6 +145,10 @@ const expectedRunnerWaveBlueprints = [
     id: "storm-castle-tower",
     inputMode: "sentence",
     mechanic: "vertical-ordered-traversal",
+    contentFixture: [
+      { term: "The bird flies in the sky", translation: "นกบินบนท้องฟ้า" },
+      { term: "The sun is shining bright", translation: "ดวงอาทิตย์ส่องแสงสว่าง" },
+    ],
     requiredAssetSlots: [
       ...COMMON_SLOTS,
       "terrain.tower",
@@ -180,6 +213,32 @@ describe("APK runner traversal wave contract", () => {
       expect(blueprint.productionRoute).toBe(GENERIC_ARCADE_ROUTE);
       expect(blueprint.productionRoute).not.toContain(blueprint.id);
     }
+
+    const appRoot = resolve(REPOSITORY_ROOT, "apps/advantage-games/src/app");
+    const copiedArcadePages = listFiles(appRoot).filter(
+      (path) =>
+        path.endsWith(`${sep}page.tsx`) &&
+        expectedRunnerWaveBlueprints.some(({ id }) =>
+          path.includes(`${sep}student${sep}arcade${sep}${id}${sep}`),
+        ),
+    );
+    expect(copiedArcadePages).toEqual([]);
+
+    const cartridgeSourceRoot = resolve(
+      REPOSITORY_ROOT,
+      "packages/game-cartridges/src/cartridges",
+    );
+    const providerImports = listFiles(cartridgeSourceRoot)
+      .filter((path) => path.endsWith(".ts") && !path.endsWith(".test.ts"))
+      .flatMap((path) => {
+        const source = readFileSync(path, "utf8");
+        return /(?:from\s+|import\s*\()["'](?:firebase|@google-cloud|@prisma|prisma|drizzle-orm|next\/)/i.test(
+          source,
+        )
+          ? [path]
+          : [];
+      });
+    expect(providerImports).toEqual([]);
   });
 
   it("continues to reject unknown IDs instead of routing to a copied host", () => {

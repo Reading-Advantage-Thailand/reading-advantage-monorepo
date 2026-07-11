@@ -13,12 +13,12 @@
   - [x] Freeze exact IDs, input modes, semantic slots, controls, and stable result mapping
   - [x] Reject unknown IDs, copied host pages, and provider/route coupling
 - [x] Task: Author the runner-wave blueprint and cutover manifest skeleton
-- [ ] Task: Verify S1 docs/tests and mandatory phase review
-- [ ] Task: Measure - User Manual Verification 'Phase S1: Freeze the runner wave contracts'
+- [x] Task: Verify S1 docs/tests and mandatory phase review
+- [x] Task: Measure - User Manual Verification 'Phase S1: Freeze the runner wave contracts'
 
 ## Phase S2: Extend reusable traversal systems
 
-- [ ] Task: Add Red deterministic lane/gate/scroll/vertical traversal tests
+- [~] Task: Add Red deterministic lane/gate/scroll/vertical traversal tests
 - [ ] Task: Implement the minimum shared traversal systems
 - [ ] Task: Add keyboard, pointer, and touch input contract tests and implementation
 - [ ] Task: Verify lifecycle, coverage, package gates, and mandatory phase review

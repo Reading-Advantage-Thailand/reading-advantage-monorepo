@@ -30,6 +30,8 @@ This baseline freezes mechanic and content evidence for the four W3 legacy games
 
 The mobile contact sheet is [browser-evidence/mobile-contact-sheet.png](browser-evidence/mobile-contact-sheet.png). The isolated desktop Storm sizing failure is [browser-evidence/storm-castle-tower-desktop.png](browser-evidence/storm-castle-tower-desktop.png). Individual 390x844 captures are retained beside the contact sheet.
 
+The exact ordered S1 content fixtures are frozen in `packages/game-cartridges/src/runner-wave-blueprints.ts`: four vocabulary pairs for `dragon-rider` and two sentences for each sentence cartridge. They are bounded contract inputs derived from the seeded browser payloads, not an attempt to preserve the entire mutable legacy fixture database.
+
 ## Shared contract implications
 
 1. The wave needs one deterministic lane/traversal clock and seeded spawn API, with per-cartridge configuration for two-lane gates, three-lane collection, forward collision, or vertical grid traversal.
