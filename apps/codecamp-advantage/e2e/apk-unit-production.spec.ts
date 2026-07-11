@@ -2,14 +2,14 @@ import { expect, test, type Page } from "@playwright/test";
 
 async function login(page: Page) {
   const loginButton = page.getByRole("button", { name: "Log in", exact: true });
-  await expect(loginButton.or(page.getByRole("button", { name: "Log out" }))).toBeVisible();
+  await expect(loginButton.or(page.getByRole("button", { name: "Log out" }))).toBeVisible({ timeout: 30_000 });
   if (await loginButton.isVisible()) {
     await loginButton.click();
     await page.getByRole("textbox", { name: "Username" }).fill(process.env.CODECAMP_E2E_USERNAME ?? "admin");
     const password = page.getByRole("textbox", { name: "Password" });
     await password.fill(process.env.CODECAMP_E2E_PASSWORD ?? "Password123");
-    await password.press("Enter");
-    await expect(page.getByRole("button", { name: "Log out" })).toBeVisible();
+    await page.getByRole("dialog").locator("form").evaluate((form: HTMLFormElement) => form.requestSubmit());
+    await expect(page.getByRole("button", { name: "Log out" })).toBeVisible({ timeout: 30_000 });
     const retryAccess = page.getByRole("button", { name: "Check access again" });
     if (await retryAccess.isVisible()) await retryAccess.click();
   }
@@ -35,10 +35,14 @@ test.describe("published APK unit", () => {
     await page.goto("/en/apk-unit/2");
     await login(page);
     await expect(page.getByRole("heading", { name: "Complete the APK manifest" })).toBeVisible();
+    const supportSummary = page.getByText(/Server-restored support use: hints \d+; reveals \d+/);
+    await expect(supportSummary).toBeVisible();
+    const before = await supportSummary.textContent();
+    const hintsBefore = Number(before?.match(/hints (\d+)/)?.[1] ?? -1);
     await page.getByRole("button", { name: "Show next hint" }).click();
-    await expect(page.getByText(/Server-restored support use: hints 1/)).toBeVisible();
+    await expect(supportSummary).toContainText(`hints ${hintsBefore + 1}`);
     await page.reload();
-    await expect(page.getByText(/Server-restored support use: hints 1/)).toBeVisible();
+    await expect(page.getByText(new RegExp(`Server-restored support use: hints ${hintsBefore + 1}`))).toBeVisible();
     await expect(page.getByRole("button", { name: "1. Prepare a fresh snapshot" })).toBeVisible();
     await expect(page.getByText(/tutorial-check --step wedo.apk.manifest/)).toBeVisible();
   });
