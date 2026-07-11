@@ -170,7 +170,7 @@ export function createArenaGameConfig(options: ArenaSceneOptions): Phaser.Types.
  */
 export function createArenaCartridge(blueprint: ArenaWaveBlueprint, title: string, description: string): GameCartridgeDefinition {
   return {
-    manifest: { id: blueprint.id, title, description, inputMode: blueprint.inputMode, runtimeApiVersion: "1.0.0", version: "0.1.0", capabilities: ["arcade-physics", "camera", "object-pool", "tweens"], requiredAssetSlots: blueprint.requiredAssetSlots },
+    manifest: { id: blueprint.id, title, description, inputMode: blueprint.inputMode, runtimeApiVersion: "1.0.0", version: "0.1.0", capabilities: ["arcade-physics"], requiredAssetSlots: blueprint.requiredAssetSlots },
     createGameConfig: (context) => createArenaGameConfig({ blueprint, input: context.input, edition: context.edition, inputController: context.inputController, complete: (result) => context.complete(result), diagnostic: (code, details) => context.diagnostic({ level: "info", code, message: code.toLowerCase().replaceAll("_", " "), ...(details ? { details } : {}) }) }),
   };
 }

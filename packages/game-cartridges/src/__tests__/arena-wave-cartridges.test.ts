@@ -5,7 +5,7 @@ import { cartridgeLoaders } from "../catalog";
 describe("W4 dual-edition arena cartridges", () => {
   it.each(arenaWaveBlueprints)("loads $id with its frozen manifest and shared scene", async (blueprint) => {
     const cartridge = await cartridgeLoaders[blueprint.id]();
-    expect(cartridge.manifest).toMatchObject({ id: blueprint.id, inputMode: blueprint.inputMode, requiredAssetSlots: blueprint.requiredAssetSlots });
+    expect(cartridge.manifest).toMatchObject({ id: blueprint.id, inputMode: blueprint.inputMode, capabilities: ["arcade-physics"], requiredAssetSlots: blueprint.requiredAssetSlots });
     const config = cartridge.createGameConfig({
       input: blueprint.contentFixture,
       edition: { id: "test", title: "Test", runtimeApiVersion: "1.0.0", assets: {}, palette: { background: 0, player: 1, friendly: 2, hostile: 3, accent: 4, text: "#fff" }, tuning: { speed: 1, targetScale: 1, collisionScale: 1, intensity: 1 } },
