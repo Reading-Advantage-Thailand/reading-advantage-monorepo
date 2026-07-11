@@ -13,6 +13,7 @@ Accepted locally on 2026-07-11 against the current W4 source and package build.
 - Visually inspected the final screenshots after the distinct-scene correction: Archer wall defense, Paladin twin heroes/wave status, Griffin aerial clouds/flap lane, Gryphon patrol bounds/minimap, and Realm territory grid.
 - Re-ran the evidence after the mandatory-review correction that connected projectile shots, health/failure, wave progress, flap altitude, patrol camera state, territory capture, aimed keyboard selection, and normalized pointer release to the runtime state.
 - Re-ran the evidence after queuing short keyboard press edges in the APK input adapter, so a press/release between Phaser frames is consumed exactly once instead of being lost.
+- Re-ran after the final input correction: pointer completion is queued once, canceled gestures are suppressed, camera-scrolled targets resolve in world coordinates, aerial altitude falls under gravity after a flap, and gated actions do not alter result accounting.
 - Canonical evidence is stored under `browser-evidence/kimi-<public-id>-{desktop,mobile}.png`.
 
 Kimi's first command timed out while the extension was disconnected. After reconnection, the complete manual pass above succeeded. Transient screenshots captured before the replacement canvas appeared were discarded and are not evidence.
@@ -23,7 +24,8 @@ Kimi's first command timed out while the extension was disconnected. After recon
 
 - Five desktop keyboard scenarios completed under Secondary Epic with 100% results and lifecycle-safe edition switching. An adversarial Archer scenario aimed right for one wrong shot, then left for four correct shots, and verified the exact five result keys with 80% accuracy.
 - One mobile touch scenario completed all five games at `390x844`, waiting for every `ARENA_TARGET_RESOLVED` event and asserting no horizontal overflow.
-- Final result: 7 passed in 2.5 minutes.
+- Adversarial runtime scenarios also prove protected-target loss fires once and a held pointer release resolves once while a canceled gesture resolves zero times.
+- Final result: 9 passed in 1.7 minutes.
 - Ten final Playwright screenshots were produced in `apps/advantage-games/test-results/`; test outputs remain ignored runtime artifacts rather than committed evidence.
 
 ## Verification notes

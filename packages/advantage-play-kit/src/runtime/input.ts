@@ -2,6 +2,8 @@
 export interface APKPointerState {
   /** Whether the pointer is currently pressed. */
   down: boolean;
+  /** Whether a completed release is queued for the next snapshot. */
+  released?: boolean;
   /** Whether the most recent active gesture ended through browser cancellation. */
   cancelled: boolean;
   /** Active pointer identifier. */
@@ -48,6 +50,7 @@ export function createInputController(surface: HTMLElement): APKInputController 
   const pressed = new Set<string>();
   const pointer: APKPointerState = {
     down: false,
+    released: false,
     cancelled: false,
     id: null,
     kind: null,
@@ -69,6 +72,7 @@ export function createInputController(surface: HTMLElement): APKInputController 
   const onKeyUp = (event: KeyboardEvent) => keys.delete(event.code);
   const onPointerDown = (event: PointerEvent) => {
     pointer.down = true;
+    pointer.released = false;
     pointer.cancelled = false;
     pointer.id = event.pointerId;
     pointer.kind = event.pointerType === "touch" ||
@@ -89,6 +93,7 @@ export function createInputController(surface: HTMLElement): APKInputController 
   const finishPointer = (event: PointerEvent, cancelled: boolean) => {
     if (pointer.id !== null && event.pointerId !== pointer.id) return;
     pointer.down = false;
+    pointer.released = !cancelled;
     pointer.cancelled = cancelled;
     pointer.id = null;
     pointer.kind = event.pointerType === "touch" ||
@@ -121,6 +126,7 @@ export function createInputController(surface: HTMLElement): APKInputController 
         destroyed,
       };
       pressed.clear();
+      pointer.released = false;
       return snapshot;
     },
     destroy: () => {
@@ -129,6 +135,7 @@ export function createInputController(surface: HTMLElement): APKInputController 
       keys.clear();
       pressed.clear();
       pointer.down = false;
+      pointer.released = false;
       pointer.cancelled = false;
       pointer.id = null;
       pointer.kind = null;

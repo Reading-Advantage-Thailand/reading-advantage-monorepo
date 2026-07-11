@@ -100,9 +100,11 @@ export function createArenaGameConfig(options: ArenaSceneOptions): Phaser.Types.
         } else {
           for (let i = 0; i < 12; i += 1) this.add.circle(80 + (i % 6) * 160, 150 + Math.floor(i / 6) * 260, 36, accent, 0.22);
         }
+        let wallStatus: Phaser.GameObjects.Text | undefined;
+        let twinStatus: Phaser.GameObjects.Text | undefined;
         if (options.blueprint.mechanic === "protected-target-aim") {
           this.add.rectangle(480, 478, 620, 28, 0x713f12).setStrokeStyle(4, 0xfde68a);
-          this.add.text(480, 478, "KEEP WALL  ♥♥♥", { color: "#ffffff", fontSize: "17px" }).setOrigin(0.5);
+          wallStatus = this.add.text(480, 478, "", { color: "#ffffff", fontSize: "17px" }).setOrigin(0.5);
           this.add.line(0, 0, 480, 420, 280, 245, options.edition.palette.accent, 0.8).setLineWidth(4);
         }
         const playerStart = options.blueprint.mechanic === "aerial-ordered-targets"
@@ -113,7 +115,7 @@ export function createArenaGameConfig(options: ArenaSceneOptions): Phaser.Types.
         const player = this.add.rectangle(playerStart.x, playerStart.y, 58, 58, options.edition.palette.player).setStrokeStyle(4, 0xffffff);
         if (options.blueprint.mechanic === "paired-hero-arena") {
           this.add.rectangle(playerStart.x + 86, playerStart.y, 52, 52, options.edition.palette.friendly).setStrokeStyle(4, 0xffffff);
-          this.add.text(480, 475, "TWIN SOULS  ♥♥  ·  WAVE 1", { color: "#ffffff", fontSize: "18px" }).setOrigin(0.5);
+          twinStatus = this.add.text(480, 475, "", { color: "#ffffff", fontSize: "18px" }).setOrigin(0.5);
         }
         this.physics.add.existing(player);
         const body = player.body as Phaser.Physics.Arcade.Body;
@@ -135,7 +137,6 @@ export function createArenaGameConfig(options: ArenaSceneOptions): Phaser.Types.
             ? this.add.rectangle(x, y, 178, 86, slot === 0 ? accent : options.edition.palette.hostile, 0.9).setStrokeStyle(4, 0xffffff).setInteractive({ useHandCursor: true })
             : this.add.circle(x, y, 88 * options.edition.tuning.targetScale, slot === 0 ? accent : options.edition.palette.hostile, 0.9).setStrokeStyle(4, 0xffffff).setInteractive({ useHandCursor: true });
           const label = this.add.text(x, y, "", { color: "#ffffff", fontSize: "25px", fontStyle: "bold", align: "center", wordWrap: { width: 150 } }).setOrigin(0.5).setInteractive({ useHandCursor: true });
-          bodyView.on("pointerdown", () => choose(label.text)); label.on("pointerdown", () => choose(label.text));
           return { bodyView, label };
         });
         const render = () => {
@@ -145,17 +146,19 @@ export function createArenaGameConfig(options: ArenaSceneOptions): Phaser.Types.
           targets.forEach((target, index) => target.label.setText(round.choices[index] ?? round.correct));
           targets.forEach((target, index) => target.bodyView.setStrokeStyle(index === selectedIndex ? 7 : 3, index === selectedIndex ? 0xfef08a : 0xffffff));
           progress.setText(`${options.blueprint.mechanic} · ${roundIndex + 1}/${rounds.length} · ♥${mechanicState.health} · wave ${mechanicState.wave} · captured ${mechanicState.captured}`);
+          wallStatus?.setText(`KEEP WALL  ${"♥".repeat(mechanicState.health)}${"♡".repeat(3 - mechanicState.health)}`);
+          twinStatus?.setText(`TWIN SOULS  ${"♥".repeat(mechanicState.health)} + ${"♥".repeat(mechanicState.companionHealth)}  ·  WAVE ${mechanicState.wave}`);
         };
         choose = (choice) => {
           if (completed) return;
           const round = rounds[roundIndex]; if (!round) return;
-          totalAttempts += 1;
           const correct = choice === round.correct;
           const target = targets.find((candidate) => candidate.label.text === choice) ?? targets[selectedIndex]!;
           if (!canResolveArenaAction(mechanicState, { x: player.x, y: player.y }, { x: target.label.x, y: target.label.y })) {
             options.diagnostic("ARENA_ACTION_OUT_OF_RANGE", { id: options.blueprint.id, altitude: mechanicState.altitude, playerX: player.x, playerY: player.y });
             return;
           }
+          totalAttempts += 1;
           mechanicState = resolveArenaMechanicAttempt(mechanicState, correct);
           const projectile = this.add.circle(player.x, player.y, 8, options.edition.palette.accent);
           this.tweens.add({ targets: projectile, x: target.label.x, y: target.label.y, duration: 140, onComplete: () => projectile.destroy() });
@@ -180,13 +183,17 @@ export function createArenaGameConfig(options: ArenaSceneOptions): Phaser.Types.
           if (newlyPressed.some((key) => ["ArrowRight", "KeyD"].includes(key))) { selectedIndex = 1; render(); }
           if (options.blueprint.mechanic === "aerial-ordered-targets" && newlyPressed.some((key) => ["ArrowUp", "KeyW"].includes(key))) {
             mechanicState = flapArenaState(mechanicState, 0.18);
+          }
+          if (options.blueprint.mechanic === "aerial-ordered-targets") {
+            mechanicState = flapArenaState(mechanicState, -this.game.loop.delta * 0.00018);
             player.y = 450 - mechanicState.altitude * 300;
           }
           if (newlyPressed.includes("Space") || newlyPressed.includes("Enter")) choose(targets[selectedIndex]?.label.text ?? "");
-          if (previous.pointer.down && !snapshot.pointer.down && !snapshot.pointer.cancelled) {
+          if ((snapshot.pointer.released ?? (previous.pointer.down && !snapshot.pointer.down)) && !snapshot.pointer.cancelled) {
             const rect = this.game.canvas.getBoundingClientRect();
             const logical = { x: (snapshot.pointer.x - rect.left) / rect.width * 960, y: (snapshot.pointer.y - rect.top) / rect.height * 540 };
-            const hit = targets.findIndex((target) => Math.hypot(target.label.x - logical.x, target.label.y - logical.y) <= 120);
+            const world = this.cameras.main.getWorldPoint(logical.x, logical.y);
+            const hit = targets.findIndex((target) => Math.hypot(target.label.x - world.x, target.label.y - world.y) <= 120);
             if (hit >= 0) { selectedIndex = hit; choose(targets[selectedIndex]?.label.text ?? ""); }
           }
           previous = snapshot;

@@ -35,6 +35,46 @@ test.describe("APK W4 arena wave desktop", () => {
     expect(result).toMatchObject({ accuracy: 0.8, correctAnswers: 4, totalAttempts: 5 });
   });
 
+  test("emits a loss exactly once after protected-target health is depleted", async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto("/qc?cartridge=archers-revenge");
+    await waitForArena(page);
+    const resolved = page.getByTestId("diagnostic-log").locator("p", { hasText: "ARENA_TARGET_RESOLVED" });
+    await page.keyboard.press("ArrowRight");
+    for (let index = 0; index < 3; index += 1) {
+      await page.keyboard.press("Space");
+      await expect(resolved).toHaveCount(index + 1);
+    }
+    await expect(page.getByText("Game complete", { exact: true })).toBeVisible();
+    await page.keyboard.press("Space");
+    await expect(resolved).toHaveCount(3);
+    const result = JSON.parse(await page.getByRole("heading", { name: "Stable result ABI" }).locator("..").locator("pre").textContent() ?? "{}");
+    expect(result).toMatchObject({ accuracy: 0, correctAnswers: 0, score: 0, totalAttempts: 3, xp: 0 });
+  });
+
+  test("resolves a held pointer release once and ignores pointer cancellation", async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto("/qc?cartridge=archers-revenge");
+    await waitForArena(page);
+    const canvas = page.locator("[data-apk-canvas-host] canvas");
+    const bounds = await canvas.boundingBox();
+    if (!bounds) throw new Error("Archer canvas has no bounds");
+    const target = { x: bounds.x + 280 / 960 * bounds.width, y: bounds.y + 245 / 540 * bounds.height };
+    const resolved = page.getByTestId("diagnostic-log").locator("p", { hasText: "ARENA_TARGET_RESOLVED" });
+
+    await canvas.dispatchEvent("pointerdown", { pointerId: 17, pointerType: "touch", clientX: target.x, clientY: target.y });
+    await canvas.dispatchEvent("pointercancel", { pointerId: 17, pointerType: "touch", clientX: target.x, clientY: target.y });
+    await expect(resolved).toHaveCount(0);
+
+    await page.mouse.move(target.x, target.y);
+    await page.mouse.down();
+    await page.waitForTimeout(200);
+    await page.mouse.up();
+    await expect(resolved).toHaveCount(1);
+    await page.waitForTimeout(200);
+    await expect(resolved).toHaveCount(1);
+  });
+
   for (const game of games) {
     test(`completes ${game.id} by keyboard with both editions lifecycle-safe`, async ({ page }, testInfo) => {
       test.setTimeout(90_000);

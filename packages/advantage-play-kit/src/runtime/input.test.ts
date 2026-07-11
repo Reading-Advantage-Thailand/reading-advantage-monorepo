@@ -69,6 +69,7 @@ describe("createInputController", () => {
 
     expect(controller.snapshot().pointer).toEqual({
       down: false,
+      released: true,
       cancelled: false,
       id: null,
       kind: "touch",
@@ -77,6 +78,20 @@ describe("createInputController", () => {
       x: 70,
       y: 305,
     });
+    controller.destroy();
+  });
+
+  it("queues a short pointer release once and suppresses canceled gestures", () => {
+    const surface = document.createElement("div");
+    const controller = createInputController(surface);
+    surface.dispatchEvent(new PointerEvent("pointerdown", { pointerId: 4, pointerType: "touch", clientX: 40, clientY: 50 }));
+    surface.dispatchEvent(new PointerEvent("pointerup", { pointerId: 4, pointerType: "touch", clientX: 42, clientY: 52 }));
+    expect(controller.snapshot().pointer).toMatchObject({ down: false, released: true, cancelled: false });
+    expect(controller.snapshot().pointer.released).toBe(false);
+
+    surface.dispatchEvent(new PointerEvent("pointerdown", { pointerId: 5, pointerType: "touch", clientX: 60, clientY: 70 }));
+    surface.dispatchEvent(new PointerEvent("pointercancel", { pointerId: 5, pointerType: "touch", clientX: 62, clientY: 72 }));
+    expect(controller.snapshot().pointer).toMatchObject({ down: false, released: false, cancelled: true });
     controller.destroy();
   });
 
