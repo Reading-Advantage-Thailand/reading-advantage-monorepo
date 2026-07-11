@@ -9,9 +9,9 @@
   - [x] Query graph callers/dependencies before inspecting bounded source
   - [x] Run each reachable game in the browser at desktop and 390x844
   - [x] Record mechanic, content mode, controls, defects, and reusable APK systems
-- [ ] Task: Add Red catalog and blueprint contract tests
-  - [ ] Freeze exact IDs, input modes, semantic slots, controls, and stable result mapping
-  - [ ] Reject unknown IDs, copied host pages, and provider/route coupling
+- [x] Task: Add Red catalog and blueprint contract tests
+  - [x] Freeze exact IDs, input modes, semantic slots, controls, and stable result mapping
+  - [x] Reject unknown IDs, copied host pages, and provider/route coupling
 - [ ] Task: Author the runner-wave blueprint and cutover manifest skeleton
 - [ ] Task: Verify S1 docs/tests and mandatory phase review
 - [ ] Task: Measure - User Manual Verification 'Phase S1: Freeze the runner wave contracts'
