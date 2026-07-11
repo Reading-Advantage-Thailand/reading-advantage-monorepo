@@ -239,6 +239,13 @@
       "when": 1783762000000,
       "tag": "0033_codecamp_curriculum_assignments",
       "breakpoints": true
+    },
+    {
+      "idx": 34,
+      "version": "7",
+      "when": 1783764000000,
+      "tag": "0034_codecamp_pr_rubric_evaluation",
+      "breakpoints": true
     }
   ]
 }

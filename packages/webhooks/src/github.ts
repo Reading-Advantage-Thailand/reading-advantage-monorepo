@@ -340,7 +340,7 @@ github.post("/pr", async (c) => {
 
       const runReview = async () => {
         let token: string | undefined;
-        let reviewResult: { passed: boolean; summary: string; comments: { line?: number; body: string }[] } | undefined;
+        let reviewResult: { passed: boolean; summary: string; comments: { line?: number; body: string }[]; apkEvaluation?: unknown } | undefined;
 
         try {
           token = await getInstallationTokenForRepo();
@@ -363,6 +363,7 @@ github.post("/pr", async (c) => {
               reviewId,
               reviewStatus: reviewResult.passed ? "approved" : "needs_changes",
               llmReviewSummary: reviewResult.summary,
+              rubricEvaluation: reviewResult.apkEvaluation,
             },
           });
 

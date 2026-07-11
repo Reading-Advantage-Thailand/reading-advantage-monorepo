@@ -1151,7 +1151,7 @@ describe("createPrReview", () => {
 describe("updatePrReview", () => {
   it("updates review status and summary", async () => {
     const review = { id: "pr1", exerciseRepoId: "r1", userId: "st1", prUrl: "https://github.com/org/repo1/pull/1", reviewStatus: "approved", llmReviewSummary: "Great work!", reviewedAt: new Date(), createdAt: new Date() };
-    const db = createMockDb({ updateReturning: [review] });
+    const db = createMockDb({ selectSequence: [[{ moduleSlug: "legacy-module" }]], updateReturning: [review] });
 
     const admin = { id: "a1", username: "admin1", name: "Admin", role: "ADMIN" as const, schoolId: "s1" };
     const result = await updatePrReview({
@@ -1246,7 +1246,7 @@ describe("updatePrReview", () => {
       reviewedAt: new Date(),
       createdAt: new Date(),
     };
-    const db = createMockDb({ updateReturning: [review] });
+    const db = createMockDb({ selectSequence: [[{ moduleSlug: "legacy-module" }]], updateReturning: [review] });
 
     const admin = { id: "a1", username: "admin1", name: "Admin", role: "ADMIN" as const, schoolId: "s1" };
     const result = await updatePrReview({

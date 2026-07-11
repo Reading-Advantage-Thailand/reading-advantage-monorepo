@@ -10,6 +10,18 @@ import { CODECAMP_MASTERY_SCHOOL_ID, DrizzleActivityPersistence } from "../drizz
 import { DrizzleTutorialReportStore, prepareCodecampTutorialReport, processCodecampTutorialReport, reissueCodecampTutorialReportCredential } from "../tutorial-reporting.js";
 import { updatePrReview } from "../../codecamp/pr-reviews.js";
 
+const passingAPKEvaluation = {
+  rubricId: "apk.rubric.independent-cartridge" as const,
+  dimensions: [
+    { dimensionId: "objective" as const, score: 1, evidence: "Educational result mapping test passes." },
+    { dimensionId: "contract" as const, score: 1, evidence: "Runtime manifest ABI test passes." },
+    { dimensionId: "tests" as const, score: 1, evidence: "Unit and browser checks pass." },
+    { dimensionId: "accessibility" as const, score: 1, evidence: "Keyboard and reduced-motion checks pass." },
+  ],
+  requiredChecks: codecampAPKUnit.youdo.requiredChecks.map((check) => ({ check, passed: true, evidence: `${check} passed in CI.` })),
+  totalScore: 1,
+};
+
 const activity = activitySchema.parse({
   schemaVersion: "activity.v1", activityId: "activity.codecamp.outbox", activityVersion: "1.0.0", graphVersion: "graph.v1", objectiveId: "objective.apk", variantKey: "apk.v1", mode: "guided_practice", title: { en: "Outbox" }, accessibility: { transcriptRequired: true, captionsRequired: true, nonVideoAlternativeResourceId: "diagram" },
   resources: [{ kind: "video", resourceId: "video", provider: "youtube", videoId: "video", captionsAvailable: true, transcriptResourceId: "transcript", segments: [{ segmentId: "segment", label: { en: "Segment" }, startSeconds: 0, endSeconds: 10 }] }, { kind: "transcript", resourceId: "transcript", language: "en", text: "Transcript" }, { kind: "diagram", resourceId: "diagram", assetId: "diagram", alt: { en: "Diagram" } }],
@@ -100,11 +112,14 @@ describe("activity Drizzle outbox and Codecamp mastery", () => {
     const [repository] = await harness.db.insert(codecampExerciseRepos).values({ moduleId: module!.id, repoUrl: "https://github.com/example/apk", description: "APK", order: 1 }).returning();
     const [review] = await harness.db.insert(codecampPrReviews).values({ exerciseRepoId: repository!.id, userId: "codecamp-learner", prUrl: "https://github.com/example/apk/pull/1", reviewStatus: "pending" }).returning();
 
-    await updatePrReview({ db: tenantDb, user: { id: "admin", username: "admin", name: "Admin", role: "ADMIN", schoolId: null, xp: 0, level: 1, cefrLevel: "A1" }, tenant: { schoolId: null }, input: { reviewId: review!.id, reviewStatus: "approved" } });
+    await expect(updatePrReview({ db: tenantDb, user: { id: "admin", username: "admin", name: "Admin", role: "ADMIN", schoolId: null, xp: 0, level: 1, cefrLevel: "A1" }, tenant: { schoolId: null }, input: { reviewId: review!.id, reviewStatus: "approved" } })).rejects.toThrow();
+    await updatePrReview({ db: tenantDb, user: { id: "admin", username: "admin", name: "Admin", role: "ADMIN", schoolId: null, xp: 0, level: 1, cefrLevel: "A1" }, tenant: { schoolId: null }, input: { reviewId: review!.id, reviewStatus: "approved", rubricEvaluation: passingAPKEvaluation } });
 
     const persistence = new DrizzleActivityPersistence(tenantDb);
     await expect(persistence.getPlatformTeacherSummary("codecamp-learner", review!.id)).resolves.toMatchObject({ assessedCheckpointResults: { "checkpoint.apk.pr-approved": { isCorrect: true } } });
     expect(await harness.db.select().from(masteryEvidence)).toContainEqual(expect.objectContaining({ objectiveId: "codecamp.game-development.skill.apk-contract", variantKey: "apk.apk-contract.independent.transfer" }));
     expect(await harness.db.select().from(masteryCards)).toContainEqual(expect.objectContaining({ studentId: "codecamp-learner", objectiveId: "codecamp.game-development.skill.apk-contract", variantKey: "apk.apk-contract.independent.transfer" }));
+    for (const followUp of codecampAPKUnit.srsFollowUps) expect(await harness.db.select().from(masteryCards)).toContainEqual(expect.objectContaining({ studentId: "codecamp-learner", objectiveId: followUp.objectiveId, variantKey: followUp.variantKey, scheduledDays: followUp.afterDays }));
+    expect((await harness.db.select().from(codecampPrReviews).where(eq(codecampPrReviews.id, review!.id)))[0]?.rubricEvaluationJson).toMatchObject({ rubricId: codecampAPKUnit.youdo.rubric.rubricId, totalScore: 1 });
   });
 });

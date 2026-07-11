@@ -274,6 +274,7 @@ export const prReviewInputSchema = z.object({
 export const prReviewUpdateSchema = z.object({
   reviewStatus: z.enum(["pending", "reviewed", "needs_changes", "approved"]),
   llmReviewSummary: z.string().optional(),
+  rubricEvaluation: z.unknown().optional(),
 });
 
 export type PrReview = z.infer<typeof prReviewSchema>;

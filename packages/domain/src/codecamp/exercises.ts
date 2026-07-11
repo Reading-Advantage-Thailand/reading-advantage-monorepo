@@ -3,6 +3,7 @@ import { codecampExercises, codecampExerciseRepos, codecampModules } from "@read
 import { assertCan, type UserContext, type Tenant } from "@reading-advantage/auth";
 import type { TenantDB } from "../db-contract.js";
 import { updateUserProgress } from "./progress.js";
+import { hasCodecampAPKCurriculum } from "./curriculum-assignments.js";
 
 /**
  * Persists an exercise code submission as a progress record marked in_progress.
@@ -51,7 +52,10 @@ export async function getExerciseRepos({
   if (input.moduleId) conditions.push(eq(codecampExerciseRepos.moduleId, input.moduleId));
   const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 
-  return rawDb.select().from(codecampExerciseRepos).where(whereClause).orderBy(codecampExerciseRepos.order);
+  const repos = await rawDb.select().from(codecampExerciseRepos).where(whereClause).orderBy(codecampExerciseRepos.order);
+  if (input.moduleId || await hasCodecampAPKCurriculum(db, user.id)) return repos;
+  const [apkModule] = await rawDb.select({ id: codecampModules.id }).from(codecampModules).where(eq(codecampModules.slug, "apk-game-creation")).limit(1);
+  return apkModule ? repos.filter(({ moduleId }) => moduleId !== apkModule.id) : repos;
 }
 
 /**

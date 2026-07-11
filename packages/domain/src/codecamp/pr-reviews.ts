@@ -9,7 +9,12 @@ import { updateUserProgress } from "./progress.js";
 import { createActivitySessionRecord } from "@reading-advantage/activity-runtime";
 import { assessCheckpointAttempt } from "@reading-advantage/activity-runtime/server";
 import { createCodecampAPKIndependentActivity } from "@reading-advantage/codecamp-knowledge";
+import { codecampAPKUnit } from "@reading-advantage/codecamp-knowledge";
+import { masteryCards } from "@reading-advantage/db/schema";
 import { DrizzleActivityPersistence } from "../activity/drizzle-activity-persistence.js";
+import { CODECAMP_MASTERY_SCHOOL_ID } from "../activity/drizzle-activity-persistence.js";
+import { apkPrEvaluationSchema, isPassingAPKPrEvaluation, type APKPrEvaluation } from "./review-exercise.js";
+import { assertCodecampModuleAssigned } from "./curriculum-assignments.js";
 
 export type CodecampWebhookEventOutcome = "ignored" | "failed";
 
@@ -22,6 +27,11 @@ export type CodecampWebhookEventOutcome = "ignored" | "failed";
  * DB SELECT below plus the unique index on `codecamp_webhook_events.delivery_id`.
  */
 const processedDeliveryIds = new Set<string>();
+
+function publicPrReview(row: typeof codecampPrReviews.$inferSelect) {
+  const { rubricEvaluationJson: _rubricEvaluationJson, ...publicRow } = row;
+  return publicRow;
+}
 
 /**
  * Lists all PR reviews submitted by the current user.
@@ -38,8 +48,8 @@ export async function getPrReviewsForUser({
 
   const rawDb = db.unscoped("codecamp pr-reviews scoped by userId");
 
-  return rawDb.select().from(codecampPrReviews)
-    .where(eq(codecampPrReviews.userId, user.id)).orderBy(desc(codecampPrReviews.createdAt));
+  return (await rawDb.select().from(codecampPrReviews)
+    .where(eq(codecampPrReviews.userId, user.id)).orderBy(desc(codecampPrReviews.createdAt))).map(publicPrReview);
 }
 
 /**
@@ -58,9 +68,10 @@ export async function createPrReview({
 
   const rawDb = db.unscoped("codecamp pr-reviews/exercise_repos scoped by prUrl and exerciseRepoId");
 
-  const [repo] = await rawDb.select({ id: codecampExerciseRepos.id, moduleId: codecampExerciseRepos.moduleId, repoUrl: codecampExerciseRepos.repoUrl })
-    .from(codecampExerciseRepos).where(eq(codecampExerciseRepos.id, input.exerciseRepoId)).limit(1);
+  const [repo] = await rawDb.select({ id: codecampExerciseRepos.id, moduleId: codecampExerciseRepos.moduleId, repoUrl: codecampExerciseRepos.repoUrl, moduleSlug: codecampModules.slug })
+    .from(codecampExerciseRepos).innerJoin(codecampModules, eq(codecampModules.id, codecampExerciseRepos.moduleId)).where(eq(codecampExerciseRepos.id, input.exerciseRepoId)).limit(1);
   if (!repo) throw new Error("Exercise repo not found");
+  if (repo.moduleSlug === "apk-game-creation") await assertCodecampModuleAssigned(db, user.id, repo.moduleId);
 
   let prUrlObj: URL;
   try { prUrlObj = new URL(input.prUrl); } catch { throw new Error("Invalid PR URL"); }
@@ -84,7 +95,7 @@ export async function createPrReview({
   const [result] = await rawDb.insert(codecampPrReviews)
     .values({ exerciseRepoId: input.exerciseRepoId, userId: user.id, prUrl: input.prUrl, reviewStatus: "pending" })
     .returning();
-  return result;
+  return result ? publicPrReview(result) : result;
 }
 
 /**
@@ -96,23 +107,37 @@ export async function updatePrReview({
   db, user, tenant, input,
 }: {
   db: TenantDB; user: UserContext; tenant: Tenant;
-  input: { reviewId: string; reviewStatus: "pending" | "reviewed" | "needs_changes" | "approved"; llmReviewSummary?: string };
+  input: { reviewId: string; reviewStatus: "pending" | "reviewed" | "needs_changes" | "approved"; llmReviewSummary?: string; rubricEvaluation?: unknown };
 }) {
   assertCan(user, "admin:dashboard", tenant);
 
   const rawDb = db.unscoped("codecamp pr-reviews scoped by reviewId");
 
+  let apkEvaluation: APKPrEvaluation | null = null;
+  if (input.reviewStatus === "approved") {
+    const [target] = await rawDb.select({ moduleSlug: codecampModules.slug }).from(codecampPrReviews)
+      .innerJoin(codecampExerciseRepos, eq(codecampExerciseRepos.id, codecampPrReviews.exerciseRepoId))
+      .innerJoin(codecampModules, eq(codecampModules.id, codecampExerciseRepos.moduleId))
+      .where(eq(codecampPrReviews.id, input.reviewId)).limit(1);
+    if (!target) throw new Error("Review not found");
+    if (target.moduleSlug === "apk-game-creation") {
+      apkEvaluation = apkPrEvaluationSchema.parse(input.rubricEvaluation);
+      if (!isPassingAPKPrEvaluation(apkEvaluation)) throw new Error("APK PR does not meet the authored rubric and required checks");
+    }
+  }
+
   const [result] = await rawDb.update(codecampPrReviews)
     .set({
       reviewStatus: input.reviewStatus,
       llmReviewSummary: input.llmReviewSummary ?? null,
+      rubricEvaluationJson: apkEvaluation,
       reviewedAt: input.reviewStatus !== "pending" ? new Date() : sql`${codecampPrReviews.reviewedAt}`,
     })
     .where(eq(codecampPrReviews.id, input.reviewId)).returning();
 
   if (!result) throw new Error("Review not found");
   if (result.reviewStatus === "approved") await projectApprovedAPKReview(db, result);
-  return result;
+  return publicPrReview(result);
 }
 
 async function projectApprovedAPKReview(db: TenantDB, review: typeof codecampPrReviews.$inferSelect): Promise<void> {
@@ -129,6 +154,12 @@ async function projectApprovedAPKReview(db: TenantDB, review: typeof codecampPrR
   if (!existing) await persistence.createSession(createActivitySessionRecord({ sessionId, actor, activityId: activity.activityId, activityVersion: activity.activityVersion, startedAt: (review.reviewedAt ?? new Date()).toISOString() }));
   const assessment = assessCheckpointAttempt(activity, { eventId: `pr-review:${review.id}:approved`, checkpointId: "checkpoint.apk.pr-approved", submissionId: `pr-review:${review.id}`, attemptNumber: 1, answer: "approved", submittedAt: (review.reviewedAt ?? new Date()).toISOString(), hintsUsed: 0, revealsUsed: 0, interventionLevel: 0, evidenceConfidence: 1, timingMs: 0 });
   await persistence.recordAssessment(actor, sessionId, assessment);
+  const approvedAt = review.reviewedAt ?? new Date();
+  await rawDb.insert(masteryCards).values(codecampAPKUnit.srsFollowUps.map(({ objectiveId, variantKey, afterDays }) => ({
+    schoolId: CODECAMP_MASTERY_SCHOOL_ID, studentId: review.userId, objectiveId, variantKey,
+    stability: 0, difficulty: 0, state: "new", dueDate: new Date(approvedAt.getTime() + afterDays * 24 * 60 * 60 * 1000),
+    elapsedDays: 0, scheduledDays: afterDays, reps: 0, lapses: 0, lastReview: null, paramsVersion: "fsrs-default.v1",
+  }))).onConflictDoNothing();
 }
 
 /**
@@ -184,7 +215,7 @@ export async function getPrReviewByPrUrl({
 
   const [result] = await rawDb.select().from(codecampPrReviews)
     .where(and(...conditions)).limit(1);
-  return result ?? null;
+  return result ? publicPrReview(result) : null;
 }
 
 /**

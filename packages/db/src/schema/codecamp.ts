@@ -168,6 +168,7 @@ export const codecampPrReviews = pgTable("codecamp_pr_reviews", {
   prUrl: text("pr_url").notNull(),
   reviewStatus: codecampReviewStatusEnum("review_status").default("pending").notNull(),
   llmReviewSummary: text("llm_review_summary"),
+  rubricEvaluationJson: jsonb("rubric_evaluation_json").$type<Record<string, unknown> | null>(),
   reviewedAt: timestamp("reviewed_at"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 }, (table) => [
