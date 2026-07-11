@@ -8,7 +8,7 @@ import { tutorialCheckResultSchema, tutorialManifestSchema, type TutorialCheckRe
 /** Injected filesystem and command ports for deterministic tutorial checks. */
 export type TutorialCheckerPorts = {
   readAllowedFile(filePath: string): Promise<string>;
-  runAllowedCommand(executable: "git" | "node" | "pnpm", args: string[]): Promise<string>;
+  runAllowedCommand(profile: "git-status-porcelain"): Promise<string>;
   now(): string;
 };
 
@@ -30,15 +30,15 @@ export async function runTutorialStep(manifestInput: unknown, stepId: string, po
   const commandById = new Map(manifest.allowedCommands.map((command) => [command.commandId, command]));
   const checks = [];
   for (const check of step.checks) {
-    const output = check.kind === "file_contains"
-      ? await ports.readAllowedFile(check.filePath)
-      : await ports.runAllowedCommand(commandById.get(check.commandId)!.executable, commandById.get(check.commandId)!.args);
-    checks.push({ checkId: check.checkId, passed: output.includes(check.expected), evidenceDigest: digest(output) });
+    const output = check.kind === "file_contains" ? await ports.readAllowedFile(check.filePath) : await ports.runAllowedCommand(commandById.get(check.commandId)!.profile);
+    const passed = check.kind === "file_contains" ? output.includes(check.expected) : check.expected === "clean" ? output.trim() === "" : output.split("\n").some((line) => line.slice(0, 2).trim() && line.slice(0, 2) !== "??" && line.slice(3) === check.expected.slice("staged:".length));
+    checks.push({ checkId: check.checkId, passed, evidenceDigest: digest(JSON.stringify({ checkId: check.checkId, passed })) });
   }
+  const evidenceDigest = digest(JSON.stringify({ repositoryId: manifest.repositoryId, activityId: manifest.activityId, stepId, checks }));
   return tutorialCheckResultSchema.parse({
     schemaVersion: "activity-tutorial-result.v1", repositoryId: manifest.repositoryId,
     activityId: manifest.activityId, stepId, passed: checks.every(({ passed }) => passed),
-    checkedAt: ports.now(), checks,
+    checkedAt: ports.now(), evidenceDigest, checks,
   });
 }
 
@@ -51,7 +51,7 @@ export async function runTutorialStep(manifestInput: unknown, stepId: string, po
  */
 export function createNodeTutorialCheckerPorts(root: string, manifest: TutorialManifest, now: () => string = () => new Date().toISOString()): TutorialCheckerPorts {
   const allowedFiles = new Set(manifest.allowedFiles);
-  const allowedCommands = new Set(manifest.allowedCommands.map(({ executable, args }) => JSON.stringify([executable, args])));
+  const allowedCommands = new Set(manifest.allowedCommands.map(({ profile }) => profile));
   return {
     async readAllowedFile(filePath) {
       if (!allowedFiles.has(filePath)) throw new Error(`File is not allowlisted: ${filePath}`);
@@ -60,9 +60,9 @@ export function createNodeTutorialCheckerPorts(root: string, manifest: TutorialM
       if (target !== rootPath && !target.startsWith(`${rootPath}${sep}`)) throw new Error(`File escapes repository root: ${filePath}`);
       return readFile(target, "utf8");
     },
-    async runAllowedCommand(executable, args) {
-      if (!allowedCommands.has(JSON.stringify([executable, args]))) throw new Error(`Command is not allowlisted: ${executable}`);
-      const result = await promisify(execFile)(executable, args, { cwd: root, timeout: 30_000, maxBuffer: 1024 * 1024, windowsHide: true });
+    async runAllowedCommand(profile) {
+      if (!allowedCommands.has(profile)) throw new Error(`Command profile is not allowlisted: ${profile}`);
+      const result = await promisify(execFile)("git", ["-c", "core.hooksPath=/dev/null", "status", "--porcelain=v1", "--untracked-files=all"], { cwd: root, timeout: 10_000, maxBuffer: 256 * 1024, windowsHide: true, env: { PATH: process.env.PATH ?? "" } });
       return result.stdout;
     },
     now,

@@ -3,7 +3,8 @@ import { z } from "zod";
 
 /** Short-lived claims binding tutorial reports to an activity learner and tenant. */
 export const tutorialCredentialClaimsSchema = z.object({
-  tokenId: z.string().min(1), sessionId: z.string().min(1), activityId: z.string().min(1),
+  tokenId: z.string().min(1), sessionId: z.string().min(1), activityId: z.string().min(1), repositoryId: z.string().min(1),
+  activityVersion: z.string().regex(/^\d+\.\d+\.\d+$/), graphVersion: z.string().min(1), purpose: z.literal("tutorial-report"),
   learnerId: z.string().min(1), tenantKey: z.string().min(1), allowedStepIds: z.array(z.string().min(1)).min(1),
   issuedAt: z.string().datetime({ offset: true }), expiresAt: z.string().datetime({ offset: true }), nonce: z.string().min(16),
 }).strict();
@@ -33,8 +34,10 @@ function signature(payload: string, secret: string): Buffer {
  * @returns Compact payload and HMAC signature.
  */
 export function issueTutorialCredential(claimsInput: unknown, secret: string): string {
+  if (Buffer.byteLength(secret) < 32) throw new Error("Tutorial credential secret must be at least 32 bytes");
   const claims = tutorialCredentialClaimsSchema.parse(claimsInput);
   if (Date.parse(claims.expiresAt) <= Date.parse(claims.issuedAt)) throw new Error("Credential expiry must follow issue time");
+  if (Date.parse(claims.expiresAt) - Date.parse(claims.issuedAt) > 15 * 60 * 1000) throw new Error("Tutorial credential lifetime cannot exceed 15 minutes");
   const payload = Buffer.from(JSON.stringify(claims)).toString("base64url");
   return `${payload}.${signature(payload, secret).toString("base64url")}`;
 }
@@ -48,6 +51,7 @@ export function issueTutorialCredential(claimsInput: unknown, secret: string): s
  * @returns Verified tenant- and learner-bound claims.
  */
 export function verifyTutorialCredential(token: string, secret: string, stepId: string, now: string): TutorialCredentialClaims {
+  if (Buffer.byteLength(secret) < 32) throw new Error("Tutorial credential secret must be at least 32 bytes");
   const [payload, encodedSignature, extra] = token.split(".");
   if (!payload || !encodedSignature || extra) throw new Error("Malformed tutorial credential");
   const expected = signature(payload, secret);

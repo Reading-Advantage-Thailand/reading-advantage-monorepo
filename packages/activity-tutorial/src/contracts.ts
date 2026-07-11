@@ -6,8 +6,7 @@ const safeRelativePathSchema = z.string().trim().min(1).refine((path) =>
 
 const commandSchema = z.object({
   commandId: z.string().regex(/^[a-z0-9.-]+$/),
-  executable: z.enum(["git", "node", "pnpm"]),
-  args: z.array(z.string().max(200)).max(20),
+  profile: z.literal("git-status-porcelain"),
 }).strict();
 
 const fileCheckSchema = z.object({
@@ -16,7 +15,7 @@ const fileCheckSchema = z.object({
 }).strict();
 const commandCheckSchema = z.object({
   checkId: z.string().regex(/^[a-z0-9.-]+$/), kind: z.literal("command"),
-  commandId: z.string().regex(/^[a-z0-9.-]+$/), expected: z.string().min(1).max(500),
+  commandId: z.string().regex(/^[a-z0-9.-]+$/), expected: z.union([z.literal("clean"), z.string().regex(/^staged:[^\r\n]+$/)]),
 }).strict();
 
 /** Versioned tutorial repository manifest with allowlisted files and commands. */
@@ -37,7 +36,13 @@ export const tutorialManifestSchema = z.object({
 }).strict().superRefine((manifest, context) => {
   const fileSet = new Set(manifest.allowedFiles);
   const commandSet = new Set(manifest.allowedCommands.map(({ commandId }) => commandId));
+  const unique = (values: string[]) => new Set(values).size === values.length;
+  if (!unique(manifest.allowedFiles)) context.addIssue({ code: "custom", path: ["allowedFiles"], message: "Allowed files must be unique" });
+  if (!unique(manifest.allowedCommands.map(({ commandId }) => commandId))) context.addIssue({ code: "custom", path: ["allowedCommands"], message: "Command IDs must be unique" });
+  if (!unique(manifest.steps.map(({ stepId }) => stepId))) context.addIssue({ code: "custom", path: ["steps"], message: "Step IDs must be unique" });
+  if (!unique(manifest.steps.map(({ order }) => String(order)))) context.addIssue({ code: "custom", path: ["steps"], message: "Step order values must be unique" });
   for (const [stepIndex, step] of manifest.steps.entries()) {
+    if (!unique(step.checks.map(({ checkId }) => checkId))) context.addIssue({ code: "custom", path: ["steps", stepIndex, "checks"], message: "Check IDs must be unique within a step" });
     for (const [checkIndex, check] of step.checks.entries()) {
       if (check.kind === "file_contains" && !fileSet.has(check.filePath)) context.addIssue({ code: "custom", path: ["steps", stepIndex, "checks", checkIndex, "filePath"], message: "Check file is not allowlisted" });
       if (check.kind === "command" && !commandSet.has(check.commandId)) context.addIssue({ code: "custom", path: ["steps", stepIndex, "checks", checkIndex, "commandId"], message: "Check command is not allowlisted" });
@@ -52,6 +57,7 @@ export type TutorialManifest = z.infer<typeof tutorialManifestSchema>;
 export const tutorialCheckResultSchema = z.object({
   schemaVersion: z.literal("activity-tutorial-result.v1"), repositoryId: z.string(), activityId: z.string(),
   stepId: z.string(), passed: z.boolean(), checkedAt: z.string().datetime({ offset: true }),
+  evidenceDigest: z.string().regex(/^sha256:[a-f0-9]{64}$/),
   checks: z.array(z.object({ checkId: z.string(), passed: z.boolean(), evidenceDigest: z.string().regex(/^sha256:[a-f0-9]{64}$/) }).strict()),
 }).strict();
 
