@@ -59,11 +59,11 @@ Two parallel programs are in flight; priority order when picking the next track:
 
 ## Advantage Play Kit Program (created 2026-07-10)
 
-- [x] **Track: APK Arena & Target Action Wave W4** *Link: [./tracks/apk_arena_target_action_wave_w4_20260711/](./tracks/apk_arena_target_action_wave_w4_20260711/)*
 - [~] **Track: APK Dual-Theme Production Asset Packs** *Link: [./tracks/apk_dual_theme_asset_packs_20260711/](./tracks/apk_dual_theme_asset_packs_20260711/)*
   Produce and integrate the required Chibi Quest and Riven Lands asset packs across every current APK cartridge, replacing procedural edition placeholders before the APK program may be called complete.
 
-  Rebuild Archer's Revenge, Paladin's Twin-Soul, Griffin Sky-Joust, Gryphon Patrol, and Realm Carver as shared Phaser 4 APK cartridges, establishing reusable arena, projectile, aerial-target, minimap, and territory systems with exact cutover evidence.
+- [x] **Track: APK Arena & Target Action Wave W4** *Link: [./archive/apk_arena_target_action_wave_w4_20260711/](./archive/apk_arena_target_action_wave_w4_20260711/)*
+  Rebuild Archer's Revenge, Paladin's Twin-Soul, Griffin Sky-Joust, Gryphon Patrol, and Realm Carver as shared Phaser 4 APK cartridges, establishing reusable arena, projectile, aerial-target, minimap, and territory systems with exact cutover evidence. Archived 2026-07-12.
 
 - [x] **Track: APK Runner Traversal Wave W3** *Link: [./archive/apk_runner_traversal_wave_w3_20260711/](./archive/apk_runner_traversal_wave_w3_20260711/)*
   Archived 2026-07-11 after dual-edition desktop/mobile completion, shared authenticated persistence, 120 cartridge tests at 92.91% statement coverage, exact 44-file legacy retirement, and mandatory review with zero Critical/High/Medium findings.
@@ -78,14 +78,26 @@ Two parallel programs are in flight; priority order when picking the next track:
 > Execute the engine import first; graph and activity-runtime work may then proceed in
 > parallel, followed by intervention tutoring and PR mastery evaluation.
 
-- [ ] **Track: Codecamp Knowledge Graph and APK Game-Creation Unit** *Link: [./tracks/codecamp_knowledge_graph_apk_unit_20260710/](./tracks/codecamp_knowledge_graph_apk_unit_20260710/)*
-  Author the Codecamp prerequisite graph, bind the current curriculum and PR exercises to objective/variant evidence, and add a tutorial-first Phaser 4 game-creation unit built on the Advantage Play Kit and React host components.
-- [ ] **Track: Shared Interactive Video and Tutorial Runtime** *Link: [./tracks/shared_video_tutorial_runtime_20260710/](./tracks/shared_video_tutorial_runtime_20260710/)*
-  Build the React/Next/Vinext-compatible I Do and We Do runtime for YouTube/hosted video, diagrams, timestamped questions, tutorial repositories, deterministic step checks, and `practice.v1` evidence.
+- [x] **Track: Codecamp Knowledge Graph and APK Game-Creation Unit** *Link: [./archive/codecamp_knowledge_graph_apk_unit_20260710/](./archive/codecamp_knowledge_graph_apk_unit_20260710/)*
+  Author the Codecamp prerequisite graph, bind the current curriculum and PR exercises to objective/variant evidence, and add a tutorial-first Phaser 4 game-creation unit built on the Advantage Play Kit and React host components. Archived 2026-07-12.
+- [x] **Track: Shared Interactive Video and Tutorial Runtime** *Link: [./archive/shared_video_tutorial_runtime_20260710/](./archive/shared_video_tutorial_runtime_20260710/)*
+  Build the React/Next/Vinext-compatible I Do and We Do runtime for YouTube/hosted video, diagrams, timestamped questions, tutorial repositories, deterministic step checks, and `practice.v1` evidence. Archived 2026-07-12.
 - [ ] **Track: Codecamp Targeted Intervention Tutor** *Link: [./tracks/codecamp_intervention_tutor_20260710/](./tracks/codecamp_intervention_tutor_20260710/)*
   Replace general chat with a MiMo-V2.5 intervention coach grounded in the current objective, activity step, test failure, misconceptions, hint history, and curated lesson/video/repository resources.
 - [ ] **Track: Codecamp PR Review as Mastery Evidence** *Link: [./tracks/codecamp_pr_mastery_evaluation_20260710/](./tracks/codecamp_pr_mastery_evaluation_20260710/)*
   Route PR review explicitly to OpenRouter `~x-ai/grok-latest`, expand the structured Zod result into graph-linked rubric evidence, preserve advisory review semantics, and feed validated results into KST+SRS without equating one approval with permanent mastery.
+
+---
+
+## Versioned Workbook Content Program (created 2026-07-11)
+
+> Workbook editions reuse Reading Advantage and Primary Advantage source content while
+> preserving an immutable, reproducible release snapshot. This program establishes the
+> versioning foundation before the standalone workbook dashboard is imported.
+
+- [ ] **Track: Versioned Workbook Content and Editions** *Link: [./tracks/workbook_content_versioning_20260711/](./tracks/workbook_content_versioning_20260711/)*
+  Define the shared article-and-asset catalog contract, publish immutable workbook editions,
+  and retain the provenance needed to reproduce every rendered workbook artifact.
 
 ---
 
@@ -111,7 +123,13 @@ Two parallel programs are in flight; priority order when picking the next track:
   green on 2026-07-01) — Phase 0 verifies + pins it. Hard-gates on Wave 3 marketing security
   (the `GET /api/settings` decrypted-API-key leak + unauthenticated `/api/video/*` routes),
   adds a **vinext-runtime** Dockerfile + cloudbuild, provisions the DB, deploys to Cloud Run,
-  and runs manual QA. Successor to the deferred build/deploy remainder of `video_pipeline_20260613`.
+    and runs manual QA. Successor to the deferred build/deploy remainder of `video_pipeline_20260613`.
+
+- [ ] **Track: CodeCamp Measure-Driven AI Development Curriculum Unit** *Link: [./tracks/codecamp_measure_curriculum_unit_20260709/](./tracks/codecamp_measure_curriculum_unit_20260709/)*
+  Add a standalone Measure methodology unit after AI Integration, then shift Monorepo, Cloud/Docker, and Real-World Practice to later unit numbers without disrupting interns currently in Unit 10 or Unit 11.
+
+- [ ] **Track: CodeCamp Interactive Media and Diagrams Integration** *Link: [./tracks/codecamp_interactive_media_diagrams_20260709/](./tracks/codecamp_interactive_media_diagrams_20260709/)*
+  Introduce curated YouTube tutorial embeds and 16 unit-level visual diagrams/illustrations across the CodeCamp curriculum, adapting database seed data and frontend rendering components.
 
 ---
 

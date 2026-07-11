@@ -70,31 +70,32 @@ _Story ref: spec.md#story-s2_
 ## Phase S3: Design the APK learning branch
 _Story ref: spec.md#story-s3_
 
-- [~] Task: Freeze APK objective and blueprint contracts
-  - [ ] Reconcile graph nodes with APK manifests, runtime lifecycle, educational I/O, React host, editions, testing, accessibility, and performance
-  - [ ] Define worked/guided/independent specifications and distinct practice variants
-- [~] Task: Write graph and blueprint tests
-  - [ ] Verify reuse of existing prerequisites and reject duplicate technology objectives
-  - [ ] Validate every APK objective has assessable blueprints, misconceptions, and remediation resources
-- [~] Task: Author the game-development subgraph and unit blueprint
-  - [ ] Create prerequisite edges from existing Codecamp skills into the APK branch
-  - [ ] Define reference, tutorial, and independent cartridge outcomes with fading scaffolds
-- [~] Task: Verify and document Phase S3
-  - [ ] Run graph/blueprint validation and obtain APK maintainer plus curriculum-owner review
-  - [ ] Task: Measure - User Manual Verification 'Phase S3: Design the APK learning branch' (Protocol in workflow.md)
+- [x] Task: Freeze APK objective and blueprint contracts
+  - [x] Reconcile graph nodes with APK manifests, runtime lifecycle, educational I/O, React host, editions, testing, accessibility, and performance
+  - [x] Define worked/guided/independent specifications and distinct practice variants
+- [x] Task: Write graph and blueprint tests
+  - [x] Verify reuse of existing prerequisites and reject duplicate technology objectives
+  - [x] Validate every APK objective has assessable blueprints, misconceptions, and remediation resources
+- [x] Task: Author the game-development subgraph and unit blueprint
+  - [x] Create prerequisite edges from existing Codecamp skills into the APK branch
+  - [x] Define reference, tutorial, and independent cartridge outcomes with fading scaffolds
+- [x] Task: Verify and document Phase S3
+  - [x] Run graph/blueprint validation and fail-closed release-gate tests
+  - [x] Obtain named APK-maintainer, curriculum-owner, and product-owner review — Daniel Bo, approved 2026-07-11
+  - [x] Task: Measure - User Manual Verification 'Phase S3: Design the APK learning branch' (Protocol in workflow.md) — implementation reviewed and approved by Daniel Bo on 2026-07-11
 
 ## Phase S4: Publish the game-creation unit
 _Story ref: spec.md#story-s4_
 
-- [~] Task: Define unit content and cohort-migration contracts
-  - [ ] Specify unit placement, versioning, progress migration, pacing, assessment, and prerequisite behavior
-  - [ ] Freeze resource IDs and activity IDs consumed by video/tutorial/tutor/PR tracks
-- [~] Task: Write curriculum and end-to-end Red tests
-  - [ ] Cover I Do/We Do/You Do completeness, graph binding, repo manifest, PR rubric, and in-progress cohort safety
-  - [ ] Add accessibility, bilingual, media, and deterministic-check fixtures
-- [~] Task: Implement and seed the unit
-  - [ ] Add overview/class plans, seed data, videos/diagrams, tutorial repo, independent repo, rubrics, and SRS follow-ups
-  - [ ] Integrate only against completed shared-runtime contracts; do not add app-local substitutes
-- [~] Task: Verify and document Phase S4
-  - [ ] Run affected gates, browser/manual tutorial and PR flows, graph update/audit, generated docs, and doctor
-  - [ ] Task: Measure - User Manual Verification 'Phase S4: Publish the game-creation unit' (Protocol in workflow.md)
+- [x] Task: Define unit content and cohort-migration contracts
+  - [x] Specify unit placement, versioning, progress migration, pacing, assessment, and prerequisite behavior
+  - [x] Freeze resource IDs and activity IDs consumed by video/tutorial/tutor/PR tracks
+- [x] Task: Write curriculum and end-to-end Red tests
+  - [x] Cover I Do/We Do/You Do completeness, graph binding, repo manifest, PR rubric, and in-progress cohort safety
+  - [x] Add accessibility, bilingual, media, and deterministic-check fixtures
+- [x] Task: Implement and seed the unit
+  - [x] Add overview/class plans, seed data, videos/diagrams, tutorial repo, independent repo, rubrics, and SRS follow-ups
+  - [x] Integrate only against completed shared-runtime contracts; do not add app-local substitutes
+- [x] Task: Verify and document Phase S4
+  - [x] Run affected gates, browser/manual tutorial and PR flows, graph update/audit, generated docs, and doctor
+  - [x] Task: Measure - User Manual Verification 'Phase S4: Publish the game-creation unit' (Protocol in workflow.md) — technical Kimi/Playwright acceptance complete; Daniel Bo approved release on 2026-07-11

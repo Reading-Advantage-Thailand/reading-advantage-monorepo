@@ -79,31 +79,32 @@ _Story ref: spec.md#story-s3_
 ## Phase S4: Create the tutorial repository protocol
 _Story ref: spec.md#story-s4_
 
-- [~] Task: Define manifest, checker, and credential contracts
-  - [ ] Specify step/check/hint/reveal/resource/result schemas and allowlisted command/file behavior
-  - [ ] Define short-lived activity tokens, submission signing/replay protection, and server verification
-- [~] Task: Write adversarial checker and reporting tests
-  - [ ] Cover secret files, path traversal, undeclared commands, output injection, forged results, stale tokens, duplicates, and offline recovery
-  - [ ] Prove deterministic checks produce identical evidence for identical repository states
-- [~] Task: Implement tutorial CLI/test kit and reporting bridge
-  - [ ] Build repository scaffolding helpers, local check runner, structured output, and safe upload client
-  - [ ] Build server verification and map step results/hints/reveals into activity evidence
-- [~] Task: Verify and document Phase S4
-  - [ ] Run security, cross-platform, offline, fixture-repo, package, graph, generated-doc, and doctor gates
-  - [ ] Task: Measure - User Manual Verification 'Phase S4: Create the tutorial repository protocol' (Protocol in workflow.md)
+- [x] Task: Define manifest, checker, and credential contracts
+  - [x] Specify step/check/hint/reveal/resource/result schemas and allowlisted command/file behavior
+  - [x] Define short-lived activity tokens, submission signing/replay protection, and server verification
+- [x] Task: Write adversarial checker and reporting tests
+  - [x] Cover secret files, path traversal, undeclared commands, output injection, forged results, stale tokens, duplicates, and offline recovery
+  - [x] Prove deterministic checks produce identical evidence for identical repository states
+- [x] Task: Implement tutorial CLI/test kit and reporting bridge
+  - [x] Build repository scaffolding helpers, local check runner, structured output, and safe upload client
+  - [x] Build server verification and map step results/hints/reveals into activity evidence
+- [x] Task: Verify and document Phase S4
+  - [x] Run security, cross-platform, offline, fixture-repo, package, graph, generated-doc, and doctor gates
+  - [x] Task: Measure - User Manual Verification 'Phase S4: Create the tutorial repository protocol' (Protocol in workflow.md) — production Codecamp clone/recheck/queue/reconnect flow passed on desktop/mobile and in Kimi
 
 ## Phase S5: Prove the Codecamp vertical slice
 _Story ref: spec.md#story-s5_
 
-- [~] Task: Select and freeze the pilot activity
-  - [ ] Choose one graph-approved objective sequence with existing video/diagram inputs and a bounded tutorial repository
-  - [ ] Define expected student, teacher, evidence, and framework-host outcomes
-- [~] Task: Write integration and E2E Red tests
-  - [ ] Cover content load, checkpoint/replay, clone/check/report, resume, progress projection, and legacy-lesson fallback
-  - [ ] Add Next and Vinext-compatible consumption fixtures
-- [~] Task: Integrate the pilot without app-local forks
-  - [ ] Replace plain embed behavior only for the versioned pilot activity
-  - [ ] Wire sessions/evidence and preserve unaffected lesson rendering/progress
-- [~] Task: Verify and close the vertical slice
-  - [ ] Run affected/root gates and conduct student-like, teacher, mobile, accessibility, offline/reconnect, and product-owner walkthroughs
-  - [ ] Task: Measure - User Manual Verification 'Phase S5: Prove the Codecamp vertical slice' (Protocol in workflow.md)
+- [x] Task: Select and freeze the pilot activity
+  - [x] Choose one graph-approved objective sequence with existing video/diagram inputs and a bounded tutorial repository
+  - [x] Define expected student, teacher, evidence, and framework-host outcomes
+- [x] Task: Write integration and E2E Red tests
+  - [x] Cover content load, checkpoint/replay, clone/check/report, resume, progress projection, and legacy-lesson fallback
+  - [x] Add Next and Vinext-compatible consumption fixtures
+- [x] Task: Integrate the pilot without app-local forks
+  - [x] Replace plain embed behavior only for the versioned pilot activity
+  - [x] Wire sessions/evidence and preserve unaffected lesson rendering/progress
+- [x] Task: Verify and close the vertical slice
+  - [x] Run affected/root gates and conduct student-like, teacher, mobile, accessibility, and offline/reconnect walkthroughs
+  - [x] Obtain product-owner approval for learner experience and teacher evidence before mass migration — Daniel Bo, approved 2026-07-11
+  - [x] Task: Measure - User Manual Verification 'Phase S5: Prove the Codecamp vertical slice' (Protocol in workflow.md) — technical browser walkthrough complete; Daniel Bo approved on 2026-07-11

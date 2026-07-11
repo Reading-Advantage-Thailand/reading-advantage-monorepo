@@ -1,7 +1,7 @@
 {
   "track_id": "apk_arena_target_action_wave_w4_20260711",
   "type": "feature",
-  "status": "completed",
+  "status": "archived",
   "created_at": "2026-07-11T03:16:00Z",
   "updated_at": "2026-07-11T09:25:40Z",
   "description": "Rebuild five arena and target-action games as shared Phaser 4 APK cartridges with dual editions, generic authenticated hosting, and exact legacy cutover evidence.",
