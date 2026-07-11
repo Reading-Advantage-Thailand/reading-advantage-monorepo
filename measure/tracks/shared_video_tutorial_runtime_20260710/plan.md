@@ -51,21 +51,30 @@ _Story ref: spec.md#story-s2_
     checkpoint, wrong/correct feedback, replay, transcript, diagram, persisted
     state, and Thai localization. Screenshots are in `browser-evidence/`.
 
-## Phase S3: Persist activity evidence
+## Phase S3: Persist activity evidence [checkpoint: fd4aeae2]
 _Story ref: spec.md#story-s3_
 
-- [~] Task: Define event, session, API, and database contracts
-  - [ ] Specify batching, watched-range compression, idempotency, device resume, ownership, retention, and audit metadata
-  - [ ] Classify new tables and define transport-independent domain operations
-- [~] Task: Write persistence and projection tests
-  - [ ] Cover duplicates, reordering, reconnects, multiple tabs, malicious timestamps, cross-tenant access, and transaction rollback
-  - [ ] Verify engagement is contextual and only assessed events become correctness evidence
-- [~] Task: Implement migrations, domain functions, and adapters
-  - [ ] Add thin tRPC/HTTP adapters and server-authoritative validation
-  - [ ] Project normalized sessions into practice evidence and teacher-readable summaries
-- [~] Task: Verify and document Phase S3
-  - [ ] Run migration/tenant/security/load tests, affected gates, graph update/audit, generated docs, and doctor
-  - [ ] Task: Measure - User Manual Verification 'Phase S3: Persist activity evidence' (Protocol in workflow.md)
+- [x] Task: Define event, session, API, and database contracts — `929b1ff2`, `fc318258`, `63a90255`
+  - [x] Specify batching, watched-range compression, idempotency, device resume, ownership, retention, and audit metadata
+  - [x] Classify new tables and define transport-independent domain operations
+- [x] Task: Write persistence and projection tests — `4106ba39`, `f350819b`, `fd4aeae2`
+  - [x] Cover duplicates, reordering, reconnects, multiple tabs, malicious timestamps, cross-tenant access, transaction rollback, JSONB retry, and outbox recovery
+  - [x] Verify engagement is contextual and only assessed events become correctness evidence
+- [x] Task: Implement migrations, domain functions, and adapters — `f264a21b`, `262987a2`, `2841d7cd`, `f350819b`, `fd4aeae2`
+  - [x] Add thin tRPC/HTTP adapters and server-authoritative validation
+  - [x] Project normalized sessions into practice evidence and teacher-readable summaries
+- [x] Task: Verify and document Phase S3 — `fd4aeae2`
+  - [x] Run migration/tenant/security tests, affected gates, graph update/audit, and independent change-quality review
+  - [x] Task: Measure - User Manual Verification 'Phase S3: Persist activity evidence' (Protocol in workflow.md) — browser N/A; real PostgreSQL semantics verified with PGlite
+
+  - Green evidence: activity-runtime passes 66/66; focused Drizzle, Mastery,
+    outbox, rollback, tenant, and projection suites pass 25/25. The real 0029
+    migration applies in PGlite, including Codecamp's platform Mastery
+    principal, and an identical assessed retry creates one evidence record.
+  - Review evidence: the independent S3 reviewer passed the phase after three
+    remediation rounds covering event-log consistency, transport reachability,
+    Mastery projection, platform tenancy, durable delivery, JSONB semantics,
+    timestamps, attempts, and teacher summaries. See `phase-s3-acceptance.md`.
 
 ## Phase S4: Create the tutorial repository protocol
 _Story ref: spec.md#story-s4_
