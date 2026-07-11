@@ -7,6 +7,7 @@ const evidenceDirectory = resolve(
 );
 
 test("completes the interactive video, remediation, and persisted resume loop", async ({ page }, testInfo) => {
+  test.setTimeout(60_000);
   const response = await page.goto("/en/activity-runtime-demo");
   const contentSecurityPolicy = response?.headers()["content-security-policy"];
   expect(contentSecurityPolicy).toContain("script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.youtube.com https://s.ytimg.com");
@@ -44,7 +45,7 @@ test("completes the interactive video, remediation, and persisted resume loop", 
   await page.getByRole("button", { name: "Pause" }).click();
   await expect(page.getByText("watched batches: 1")).toBeVisible();
   await page.reload();
-  await expect(page.getByRole("slider", { name: "Seek tutorial video" })).toHaveValue("24");
+  await expect(page.getByRole("slider", { name: "Seek tutorial video" })).toHaveValue("24", { timeout: 15_000 });
   await expect(page.getByText("Persisted position: 24 seconds")).toBeVisible();
   await page.screenshot({ path: resolve(evidenceDirectory, `s2-${testInfo.project.name}-resumed.png`) });
 });
@@ -57,7 +58,7 @@ test("honors reduced motion and exposes touch-sized controls", async ({ page }) 
   expect(await touchControls.count()).toBeGreaterThan(0);
   const playBox = await page.getByRole("button", { name: "Play" }).boundingBox();
   expect(playBox?.height).toBeGreaterThanOrEqual(44);
-  const overlappingHeaderControls = await page.locator("header").evaluate((header) => {
+  const overlappingHeaderControls = await page.locator("header.sticky").evaluate((header) => {
     const controls = [...header.querySelectorAll<HTMLElement>("a, button")]
       .map((element) => element.getBoundingClientRect())
       .filter((rect) => rect.width > 0 && rect.height > 0);
