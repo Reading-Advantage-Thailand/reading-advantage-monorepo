@@ -16,6 +16,8 @@ export * from "./cartridges/sorcerer-ziggurat";
 export * from "./cartridges/dragon-rider";
 /** Phaser-native Spellweavers Run ordered-lane cartridge. */
 export * from "./cartridges/spellweavers-run";
+/** Phaser-native Griffin Riders Escape perspective-gate cartridge. */
+export * from "./cartridges/griffin-riders-escape";
 /** Reusable sentence target-action family. */
 export * from "./families/target-action";
 /** Reusable deterministic isometric step-graph family. */

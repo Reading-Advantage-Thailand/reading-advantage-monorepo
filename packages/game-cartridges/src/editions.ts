@@ -31,6 +31,8 @@ export const GAMEPLAY_ASSET_SLOTS = [
   "target.word-orb",
   "zone.collection",
   "effect.mana",
+  "hazard.obstacle",
+  "effect.wind",
 ] as const;
 
 function createProceduralAsset(
