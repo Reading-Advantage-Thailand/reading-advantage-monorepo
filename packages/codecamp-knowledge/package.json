@@ -28,6 +28,8 @@
     "bindings:generate": "tsx scripts/generate-curriculum-bindings.ts"
   },
   "dependencies": {
+    "@reading-advantage/activity-runtime": "workspace:*",
+    "@reading-advantage/activity-tutorial": "workspace:*",
     "@reading-advantage/knowledge-space-core": "workspace:*",
     "zod": "^4.1.12"
   },

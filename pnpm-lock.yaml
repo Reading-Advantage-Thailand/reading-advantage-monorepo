@@ -2333,6 +2333,12 @@ importers:
 
   packages/codecamp-knowledge:
     dependencies:
+      '@reading-advantage/activity-runtime':
+        specifier: workspace:*
+        version: link:../activity-runtime
+      '@reading-advantage/activity-tutorial':
+        specifier: workspace:*
+        version: link:../activity-tutorial
       '@reading-advantage/knowledge-space-core':
         specifier: workspace:*
         version: link:../knowledge-space-core
