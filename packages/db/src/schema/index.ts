@@ -16,3 +16,4 @@ export * from "./marketing.js";
 export * from "./sales.js";
 export * from "./primary.js";
 export * from "./mastery.js";
+export * from "./activity.js";

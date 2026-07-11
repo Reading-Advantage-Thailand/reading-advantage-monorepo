@@ -81,6 +81,8 @@ import {
   masteryPlacements,
   masteryCalibrations,
   masteryCommits,
+  activitySessions,
+  activitySessionEvents,
 } from "@reading-advantage/db";
 
 register(users, "FLAT");
@@ -124,6 +126,13 @@ register(masteryStates, "FLAT");
 register(masteryPlacements, "FLAT");
 register(masteryCalibrations, "FLAT");
 register(masteryCommits, "FLAT");
+
+// Shared activity sessions support both school tenants and the explicit
+// platform-level Codecamp tenant key. Domain adapters scope every access by
+// tenantKey + learnerId, so TenantDB must fail closed instead of auto-scoping
+// the nullable schoolId column.
+register(activitySessions, "REFERENTIAL");
+register(activitySessionEvents, "REFERENTIAL");
 
 // ─── EXEMPT tables (intentionally global) ───────────────────
 
