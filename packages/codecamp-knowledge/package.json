@@ -14,6 +14,10 @@
       "types": "./dist/apk-unit.d.ts",
       "import": "./dist/apk-unit.js"
     },
+    "./tutorial-offline": {
+      "types": "./dist/tutorial-offline.d.ts",
+      "import": "./dist/tutorial-offline.js"
+    },
     "./graph": "./dist/data/code-knowledge-space.json"
   },
   "files": ["dist", "source-snapshots", "fixtures"],

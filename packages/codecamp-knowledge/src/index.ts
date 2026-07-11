@@ -105,6 +105,4 @@ export type {
 } from "./apk-blueprint.js";
 export { apkLearningBlueprint } from "./apk-blueprint-data.js";
 export { CodecampAPKUnitSchema, codecampAPKReference, codecampAPKUnit, createCodecampAPKActivity, createCodecampAPKIndependentActivity, createCodecampAPKTutorialActivity } from "./apk-unit.js";
-export { createStorageTutorialReportQueue, enqueueTutorialReport, flushTutorialReportQueue } from "@reading-advantage/activity-tutorial/offline";
-export type { QueuedTutorialReport, TutorialReportQueue } from "@reading-advantage/activity-tutorial/offline";
 export type { CodecampAPKUnit } from "./apk-unit.js";

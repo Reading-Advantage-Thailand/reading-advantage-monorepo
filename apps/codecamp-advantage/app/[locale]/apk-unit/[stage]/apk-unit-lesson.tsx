@@ -17,7 +17,7 @@ import {
   createCodecampAPKActivity,
   createCodecampAPKTutorialActivity,
 } from "@reading-advantage/codecamp-knowledge/apk-unit";
-import { createStorageTutorialReportQueue, enqueueTutorialReport, flushTutorialReportQueue } from "@reading-advantage/codecamp-knowledge";
+import { createStorageTutorialReportQueue, enqueueTutorialReport, flushTutorialReportQueue } from "@reading-advantage/codecamp-knowledge/tutorial-offline";
 import type { inferRouterOutputs } from "@trpc/server";
 import type { inferRouterInputs } from "@trpc/server";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
