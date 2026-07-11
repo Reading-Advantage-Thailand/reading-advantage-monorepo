@@ -92,6 +92,22 @@ describe("Phase 3 — success settle", () => {
     expect(postCalls, `postPrComment call count: ${postCalls}`).toBe(1);
   });
 
+  it("forwards the complete APK rubric evaluation through the durable worker", async () => {
+    const apkEvaluation = {
+      rubricId: "apk.rubric.independent-cartridge" as const,
+      dimensions: ["objective", "contract", "tests", "accessibility"].map((dimensionId) => ({ dimensionId, score: 1, evidence: `${dimensionId} evidence` })),
+      requiredChecks: ["manifest ABI", "deterministic educational logic", "keyboard-equivalent input", "unit tests", "browser smoke test"].map((check) => ({ check, passed: true, evidence: `${check} evidence` })),
+      totalScore: 1,
+    };
+    const update = vi.fn().mockResolvedValue({ id: "review-apk", reviewStatus: "approved" });
+    await processJob({ id: "job-apk", reviewId: "review-apk", prOwner: "org", prRepo: "repo", prPullNumber: 2, status: "claimed", attempts: 0, maxAttempts: 5, payloadJson: {} } as unknown as Parameters<typeof processJob>[0], {
+      db: mockDb as unknown as import("@reading-advantage/db").DB,
+      updatePrReview: update,
+      getAIClient: () => ({ generateObject: vi.fn().mockResolvedValue({ passed: true, summary: "APK passes", comments: [], apkEvaluation }) }),
+    });
+    expect(update).toHaveBeenCalledWith(expect.objectContaining({ input: expect.objectContaining({ reviewStatus: "approved", rubricEvaluation: apkEvaluation }) }));
+  });
+
   it("settleJob returns succeeded payload for a passing result", () => {
     const settled = settleJob(
       { id: "job-1", attempts: 0, maxAttempts: 5 } as unknown as SettleJobInput,

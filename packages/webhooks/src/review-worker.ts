@@ -697,6 +697,7 @@ export async function processJob(
         reviewId: job.reviewId,
         reviewStatus: reviewResult.passed ? "approved" : "needs_changes",
         llmReviewSummary: reviewResult.summary,
+        rubricEvaluation: reviewResult.apkEvaluation,
       },
     });
   }
