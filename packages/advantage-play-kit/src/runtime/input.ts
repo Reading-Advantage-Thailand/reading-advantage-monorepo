@@ -2,6 +2,8 @@
 export interface APKPointerState {
   /** Whether the pointer is currently pressed. */
   down: boolean;
+  /** Whether the most recent active gesture ended through browser cancellation. */
+  cancelled: boolean;
   /** Active pointer identifier. */
   id: number | null;
   /** Browser pointer category retained through release for gesture resolution. */
@@ -43,6 +45,7 @@ export function createInputController(surface: HTMLElement): APKInputController 
   const keys = new Set<string>();
   const pointer: APKPointerState = {
     down: false,
+    cancelled: false,
     id: null,
     kind: null,
     startX: 0,
@@ -53,10 +56,16 @@ export function createInputController(surface: HTMLElement): APKInputController 
   const previousTouchAction = surface.style.touchAction;
   let destroyed = false;
 
-  const onKeyDown = (event: KeyboardEvent) => keys.add(event.code);
+  const onKeyDown = (event: KeyboardEvent) => {
+    keys.add(event.code);
+    if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Space"].includes(event.code)) {
+      event.preventDefault();
+    }
+  };
   const onKeyUp = (event: KeyboardEvent) => keys.delete(event.code);
   const onPointerDown = (event: PointerEvent) => {
     pointer.down = true;
+    pointer.cancelled = false;
     pointer.id = event.pointerId;
     pointer.kind = event.pointerType === "touch" ||
       event.pointerType === "pen" ||
@@ -73,9 +82,10 @@ export function createInputController(surface: HTMLElement): APKInputController 
     pointer.x = event.clientX;
     pointer.y = event.clientY;
   };
-  const onPointerUp = (event: PointerEvent) => {
+  const finishPointer = (event: PointerEvent, cancelled: boolean) => {
     if (pointer.id !== null && event.pointerId !== pointer.id) return;
     pointer.down = false;
+    pointer.cancelled = cancelled;
     pointer.id = null;
     pointer.kind = event.pointerType === "touch" ||
       event.pointerType === "pen" ||
@@ -85,6 +95,8 @@ export function createInputController(surface: HTMLElement): APKInputController 
     pointer.x = event.clientX;
     pointer.y = event.clientY;
   };
+  const onPointerUp = (event: PointerEvent) => finishPointer(event, false);
+  const onPointerCancel = (event: PointerEvent) => finishPointer(event, true);
   const preventBrowserGesture = (event: Event) => event.preventDefault();
 
   surface.style.touchAction = "none";
@@ -93,7 +105,7 @@ export function createInputController(surface: HTMLElement): APKInputController 
   surface.addEventListener("pointerdown", onPointerDown);
   surface.addEventListener("pointermove", onPointerMove);
   surface.addEventListener("pointerup", onPointerUp);
-  surface.addEventListener("pointercancel", onPointerUp);
+  surface.addEventListener("pointercancel", onPointerCancel);
   surface.addEventListener("contextmenu", preventBrowserGesture);
 
   return {
@@ -107,6 +119,7 @@ export function createInputController(surface: HTMLElement): APKInputController 
       destroyed = true;
       keys.clear();
       pointer.down = false;
+      pointer.cancelled = false;
       pointer.id = null;
       pointer.kind = null;
       surface.style.touchAction = previousTouchAction;
@@ -115,7 +128,7 @@ export function createInputController(surface: HTMLElement): APKInputController 
       surface.removeEventListener("pointerdown", onPointerDown);
       surface.removeEventListener("pointermove", onPointerMove);
       surface.removeEventListener("pointerup", onPointerUp);
-      surface.removeEventListener("pointercancel", onPointerUp);
+      surface.removeEventListener("pointercancel", onPointerCancel);
       surface.removeEventListener("contextmenu", preventBrowserGesture);
     },
   };

@@ -84,6 +84,9 @@ describe("deterministic traversal family", () => {
     expect(traversal.createGateWave?.(options)).toEqual(
       traversal.createGateWave?.(options),
     );
+    expect(() => traversal.createGateWave?.({ ...options, seed: 1.5 })).toThrow(
+      /seed must be an integer/i,
+    );
   });
 
   it("reports targets that cross a collision line between frames", () => {

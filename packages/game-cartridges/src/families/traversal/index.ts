@@ -145,6 +145,7 @@ export function createGateWave(options: GateWaveOptions): readonly GateWaveTarge
   }
   requireNonNegativeInteger(correctIndex, "Correct index");
   requireNonNegativeInteger(waveIndex, "Wave index");
+  if (!Number.isInteger(seed)) throw new Error("Gate wave seed must be an integer");
   const uniqueDecoys = [...new Set(decoyIndices)];
   if (uniqueDecoys.length !== decoyIndices.length) {
     throw new Error("Gate wave decoy indices must be unique");

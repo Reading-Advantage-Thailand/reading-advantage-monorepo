@@ -27,6 +27,7 @@ function snapshot(
     destroyed: false,
     pointer: {
       down: false,
+      cancelled: false,
       id: null,
       kind: null,
       startX: 0,
@@ -65,6 +66,21 @@ describe("resolveTraversalActions", () => {
     },
   );
 
+  it("chooses one deterministic action at a shared region boundary", () => {
+    const boundaryPress = snapshot([], {
+      down: true,
+      id: 5,
+      kind: "touch",
+      startX: 110,
+      startY: 200,
+      x: 110,
+      y: 200,
+    });
+    expect(resolveTraversalActions(snapshot(), boundaryPress, bindings, bounds)).toEqual([
+      "left",
+    ]);
+  });
+
   it("maps a completed touch swipe but ignores the same mouse gesture", () => {
     const started = snapshot([], {
       down: true,
@@ -93,5 +109,30 @@ describe("resolveTraversalActions", () => {
         bounds,
       ),
     ).toEqual([]);
+  });
+
+  it("ignores canceled touch swipes and rejects non-finite surface origins", () => {
+    const started = snapshot([], {
+      down: true,
+      id: 8,
+      kind: "touch",
+      startX: 260,
+      startY: 300,
+      x: 260,
+      y: 300,
+    });
+    const cancelled = snapshot([], {
+      cancelled: true,
+      kind: "touch",
+      startX: 260,
+      startY: 300,
+      x: 100,
+      y: 300,
+    });
+    expect(resolveTraversalActions(started, cancelled, bindings, bounds)).toEqual([]);
+    expect(() => resolveTraversalActions(snapshot(), snapshot(), bindings, {
+      ...bounds,
+      left: Number.NaN,
+    })).toThrow(/surface bounds/i);
   });
 });

@@ -91,7 +91,8 @@ export function resolveTraversalActions(
   bindings: TraversalInputBindings,
   bounds: TraversalSurfaceBounds,
 ): readonly TraversalAction[] {
-  if (!Number.isFinite(bounds.width) || !Number.isFinite(bounds.height) ||
+  if (!Number.isFinite(bounds.left) || !Number.isFinite(bounds.top) ||
+      !Number.isFinite(bounds.width) || !Number.isFinite(bounds.height) ||
       bounds.width <= 0 || bounds.height <= 0) {
     throw new Error("Traversal input surface bounds must be positive and finite");
   }
@@ -118,6 +119,7 @@ export function resolveTraversalActions(
       if (normalizedX >= region.minimumX && normalizedX <= region.maximumX &&
           normalizedY >= region.minimumY && normalizedY <= region.maximumY) {
         appendUnique(actions, region.action);
+        break;
       }
     }
   }
@@ -128,6 +130,7 @@ export function resolveTraversalActions(
     }
     const touchReleased = previous.pointer.down &&
       !current.pointer.down &&
+      !current.pointer.cancelled &&
       current.pointer.kind === "touch";
     if (touchReleased) appendUnique(actions, resolveSwipeAction(current, bindings.swipe));
   }

@@ -16,6 +16,7 @@ describe("createInputController", () => {
       keys: ["ArrowLeft"],
       pointer: {
         down: true,
+        cancelled: false,
         id: 3,
         kind: "touch",
         startX: 10,
@@ -56,12 +57,58 @@ describe("createInputController", () => {
 
     expect(controller.snapshot().pointer).toEqual({
       down: false,
+      cancelled: false,
       id: null,
       kind: "touch",
       startX: 240,
       startY: 300,
       x: 70,
       y: 305,
+    });
+    controller.destroy();
+  });
+
+  it("prevents gameplay scroll keys without blocking unrelated keyboard defaults", () => {
+    const surface = document.createElement("div");
+    const controller = createInputController(surface);
+    const arrow = new KeyboardEvent("keydown", {
+      code: "ArrowDown",
+      cancelable: true,
+    });
+    const space = new KeyboardEvent("keydown", { code: "Space", cancelable: true });
+    const tab = new KeyboardEvent("keydown", { code: "Tab", cancelable: true });
+
+    window.dispatchEvent(arrow);
+    window.dispatchEvent(space);
+    window.dispatchEvent(tab);
+    expect(arrow.defaultPrevented).toBe(true);
+    expect(space.defaultPrevented).toBe(true);
+    expect(tab.defaultPrevented).toBe(false);
+    controller.destroy();
+  });
+
+  it("distinguishes a canceled touch gesture from a completed release", () => {
+    const surface = document.createElement("div");
+    const controller = createInputController(surface);
+    surface.dispatchEvent(new PointerEvent("pointerdown", {
+      pointerId: 9,
+      pointerType: "touch",
+      clientX: 200,
+      clientY: 300,
+    }));
+    surface.dispatchEvent(new PointerEvent("pointercancel", {
+      pointerId: 9,
+      pointerType: "touch",
+      clientX: 80,
+      clientY: 300,
+    }));
+
+    expect(controller.snapshot().pointer).toMatchObject({
+      down: false,
+      cancelled: true,
+      kind: "touch",
+      startX: 200,
+      x: 80,
     });
     controller.destroy();
   });
