@@ -5,10 +5,10 @@
 
 ## Phase S1: Freeze the runner wave contracts
 
-- [~] Task: Capture live and source baselines for all four legacy games
-  - [ ] Query graph callers/dependencies before inspecting bounded source
-  - [ ] Run each reachable game in the browser at desktop and 390x844
-  - [ ] Record mechanic, content mode, controls, defects, and reusable APK systems
+- [x] Task: Capture live and source baselines for all four legacy games
+  - [x] Query graph callers/dependencies before inspecting bounded source
+  - [x] Run each reachable game in the browser at desktop and 390x844
+  - [x] Record mechanic, content mode, controls, defects, and reusable APK systems
 - [ ] Task: Add Red catalog and blueprint contract tests
   - [ ] Freeze exact IDs, input modes, semantic slots, controls, and stable result mapping
   - [ ] Reject unknown IDs, copied host pages, and provider/route coupling
