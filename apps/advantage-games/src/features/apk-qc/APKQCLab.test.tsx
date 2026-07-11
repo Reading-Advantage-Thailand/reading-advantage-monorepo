@@ -17,6 +17,10 @@ jest.mock("@reading-advantage/game-cartridges/catalog", () => {
     ["magic-defense", "Magic Defense", "vocabulary", "typing-defense"],
     ["astral-mage", "Astral Mage", "sentence", "target-action"],
     ["sorcerer-ziggurat", "The Sorcerer's Ziggurat", "sentence", "step-traversal"],
+    ["dragon-rider", "Dragon Rider", "vocabulary", "two-lane-gate-traversal"],
+    ["spellweavers-run", "Spellweavers Run", "sentence", "three-lane-ordered-collector"],
+    ["griffin-riders-escape", "Griffin Riders Escape", "sentence", "three-lane-perspective-gates"],
+    ["storm-castle-tower", "Storm Castle Tower", "sentence", "vertical-ordered-traversal"],
   ] as const;
   const cartridgeCatalog = entries.map(([id, title, inputMode, mechanic]) => ({ id, title, inputMode, mechanic }));
   const cartridgeLoaders = Object.fromEntries(entries.map(([id, title, inputMode]) => [id, async () => ({ manifest: { id, title, inputMode }, createGameConfig: jest.fn() })]));
@@ -55,6 +59,10 @@ describe("APKQCLab", () => {
     expect(screen.getByRole("button", { name: /Magic Defense/i })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Astral Mage/i })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /The Sorcerer's Ziggurat/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Dragon Rider/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Spellweavers Run/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Griffin Riders Escape/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Storm Castle Tower/i })).toBeInTheDocument();
     expect(screen.queryByText(/Sky Gate Sprint|Rune Trail|Arcane Bulwark/i)).not.toBeInTheDocument();
     expect(screen.getByText(/Nothing is authenticated or persisted/i)).toBeInTheDocument();
 
@@ -72,6 +80,8 @@ describe("APKQCLab", () => {
   it.each([
     ["Astral Mage", "astral-mage"],
     ["The Sorcerer's Ziggurat", "sorcerer-ziggurat"],
+    ["Spellweavers Run", "spellweavers-run"],
+    ["Storm Castle Tower", "storm-castle-tower"],
   ] as const)(
     "discovers %s and emits its public cartridge identity",
     async (title, cartridgeId) => {

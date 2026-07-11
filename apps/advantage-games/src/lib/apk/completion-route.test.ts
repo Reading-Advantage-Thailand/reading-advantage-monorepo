@@ -85,6 +85,25 @@ describe("authenticated APK completion route", () => {
     });
   });
 
+  it.each([
+    "dragon-rider",
+    "spellweavers-run",
+    "griffin-riders-escape",
+    "storm-castle-tower",
+  ])("accepts W3 game type %s through the shared persistence command", async (gameType) => {
+    const dependencies = createDependencies();
+    const response = await createApkCompletionRoute(dependencies).POST(
+      createRequest({ ...validPayload, gameType }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(dependencies.recordCompletion).toHaveBeenCalledWith(
+      expect.objectContaining({
+        input: expect.objectContaining({ gameType }),
+      }),
+    );
+  });
+
   it("returns an explicit successful duplicate without changing it", async () => {
     const dependencies = createDependencies();
     dependencies.recordCompletion.mockResolvedValue({

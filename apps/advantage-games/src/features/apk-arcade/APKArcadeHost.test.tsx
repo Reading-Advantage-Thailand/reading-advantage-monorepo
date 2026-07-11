@@ -48,6 +48,10 @@ jest.mock("@reading-advantage/game-cartridges/catalog", () => ({
     { id: "magic-defense", title: "Magic Defense", inputMode: "vocabulary" },
     { id: "astral-mage", title: "Astral Mage", inputMode: "sentence" },
     { id: "sorcerer-ziggurat", title: "The Sorcerer's Ziggurat", inputMode: "sentence" },
+    { id: "dragon-rider", title: "Dragon Rider", inputMode: "vocabulary" },
+    { id: "spellweavers-run", title: "Spellweavers Run", inputMode: "sentence" },
+    { id: "griffin-riders-escape", title: "Griffin Riders Escape", inputMode: "sentence" },
+    { id: "storm-castle-tower", title: "Storm Castle Tower", inputMode: "sentence" },
   ],
   cartridgeLoaders: {
     "dragon-flight": jest.fn(async () => ({ manifest: { id: "dragon-flight" } })),
@@ -55,6 +59,10 @@ jest.mock("@reading-advantage/game-cartridges/catalog", () => ({
     "magic-defense": jest.fn(async () => ({ manifest: { id: "magic-defense" } })),
     "astral-mage": jest.fn(async () => ({ manifest: { id: "astral-mage" } })),
     "sorcerer-ziggurat": jest.fn(async () => ({ manifest: { id: "sorcerer-ziggurat" } })),
+    "dragon-rider": jest.fn(async () => ({ manifest: { id: "dragon-rider" } })),
+    "spellweavers-run": jest.fn(async () => ({ manifest: { id: "spellweavers-run" } })),
+    "griffin-riders-escape": jest.fn(async () => ({ manifest: { id: "griffin-riders-escape" } })),
+    "storm-castle-tower": jest.fn(async () => ({ manifest: { id: "storm-castle-tower" } })),
   },
 }));
 
@@ -167,5 +175,24 @@ describe("APKArcadeHost", () => {
 
     expect(screen.queryByTestId("apk-host")).not.toBeInTheDocument();
     expect(screen.getByRole("alert")).toHaveTextContent("Sign in");
+  });
+
+  it("publishes readable keyboard and touch instructions for the runner wave", async () => {
+    render(
+      <APKArcadeHost
+        cartridgeId="dragon-rider"
+        locale="en"
+        title="Dragon Rider"
+        inputMode="vocabulary"
+      />,
+    );
+
+    expect(
+      screen.getByLabelText("Dragon Rider controls"),
+    ).toHaveTextContent("Arrow Left and Arrow Right");
+    expect(screen.getByLabelText("Dragon Rider controls")).toHaveTextContent(
+      "tapping",
+    );
+    expect(await screen.findByTestId("apk-host")).toBeInTheDocument();
   });
 });

@@ -255,4 +255,36 @@ describe("APK runner traversal wave contract", () => {
     expect(catalogModule.getCartridgeCatalogEntry("runner-wave-preview")).toBeUndefined();
     expect(catalogModule.getCartridgeCatalogEntry("not-a-game")).toBeUndefined();
   });
+
+  it("removes every W3 legacy page, component, state module, and per-game API", () => {
+    const legacyPaths = [
+      "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/dragon-rider",
+      "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/spellweavers-run",
+      "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/griffin-riders-escape",
+      "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/storm-castle-tower",
+      "apps/advantage-games/src/components/games/vocabulary/dragon-rider",
+      "apps/advantage-games/src/components/games/sentence/spellweavers-run",
+      "apps/advantage-games/src/components/games/sentence/griffin-riders-escape",
+      "apps/advantage-games/src/components/games/sentence/storm-castle-tower",
+      "apps/advantage-games/src/lib/games/dragonRider.ts",
+      "apps/advantage-games/src/lib/games/spellweaversRun.ts",
+      "apps/advantage-games/src/lib/games/spellweaversRunConfig.ts",
+      "apps/advantage-games/src/lib/games/griffinRidersEscape.ts",
+      "apps/advantage-games/src/lib/games/griffinRidersEscapeConfig.ts",
+      "apps/advantage-games/src/lib/games/stormCastleTower.ts",
+      "apps/advantage-games/src/lib/games/stormCastleTowerConfig.ts",
+      "apps/advantage-games/src/app/api/v1/games/dragon-rider",
+      "apps/advantage-games/src/app/api/v1/games/spellweavers-run",
+      "apps/advantage-games/src/app/api/v1/games/griffin-riders-escape",
+      "apps/advantage-games/src/app/api/v1/games/storm-castle-tower",
+    ];
+
+    expect(
+      legacyPaths.filter((path) => {
+        const absolutePath = resolve(REPOSITORY_ROOT, path);
+        if (!existsSync(absolutePath)) return false;
+        return statSync(absolutePath).isFile() || listFiles(absolutePath).length > 0;
+      }),
+    ).toEqual([]);
+  });
 });

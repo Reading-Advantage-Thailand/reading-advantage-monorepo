@@ -49,6 +49,13 @@ type SavedCompletion = {
   duplicate: boolean;
 };
 
+const controlInstructions: Partial<Record<CartridgeId, string>> = {
+  "dragon-rider": "Choose the left or right gate with Arrow Left and Arrow Right, A and D, or by tapping the matching side.",
+  "spellweavers-run": "Choose the left, center, or right lane with Arrow Left, Arrow Down, and Arrow Right, A, S, and D, or by tapping a lane.",
+  "griffin-riders-escape": "Move left or right with the arrow keys, A and D, a side tap, or a horizontal swipe.",
+  "storm-castle-tower": "Move with the arrow keys or W, A, S, and D. Collect with Space or Enter. Touch players can tap the matching direction or Collect.",
+};
+
 function createIdempotencyKey(): string {
   return globalThis.crypto?.randomUUID?.() ??
     "00000000-0000-4000-8000-000000000000";
@@ -213,6 +220,16 @@ export function APKArcadeHost({
             </button>
           ))}
         </fieldset>
+
+        {controlInstructions[cartridgeId] && (
+          <p
+            aria-label={`${title} controls`}
+            className="mb-4 border border-slate-700 bg-slate-900/70 p-3 text-sm leading-6 text-slate-200"
+          >
+            <span className="font-semibold text-cyan-200">Controls: </span>
+            {controlInstructions[cartridgeId]}
+          </p>
+        )}
 
         <section aria-label={`${title} play surface`} className="min-h-[320px] w-full min-w-0 overflow-hidden border border-slate-700 bg-black p-2 sm:p-4">
           {loadError && <p role="alert" className="p-4 text-red-200">{loadError}</p>}
