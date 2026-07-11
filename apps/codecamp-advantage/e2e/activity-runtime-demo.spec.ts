@@ -28,7 +28,7 @@ test("completes the interactive video, remediation, and persisted resume loop", 
 
   await page.getByLabel("Run per-frame collision physics").check();
   await page.getByRole("button", { name: "Check answer" }).click();
-  await expect(page.locator('[data-slot="interactive-activity-player"] [role="status"]')).toContainText("Not yet");
+  await expect(page.locator('[data-slot="interactive-activity-player"] [role="status"]')).toContainText("Review the host/cartridge diagram");
   await expect(page.getByText("Persisted attempts: 1")).toBeVisible();
   await page.getByRole("button", { name: "Replay Scene lifecycle" }).click();
   await expect(page.getByRole("button", { name: "Pause" })).toBeVisible();
