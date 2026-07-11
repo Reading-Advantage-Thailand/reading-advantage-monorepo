@@ -17,7 +17,7 @@ export const spellweaversRunCartridge = {
     inputMode: "sentence",
     runtimeApiVersion: "1.0.0",
     version: "0.1.0",
-    capabilities: ["timers", "tweens"],
+    capabilities: [],
     requiredAssetSlots: SPELLWEAVERS_RUN_ASSET_SLOTS,
   },
   createGameConfig: (context) => createSpellweaversRunGameConfig({

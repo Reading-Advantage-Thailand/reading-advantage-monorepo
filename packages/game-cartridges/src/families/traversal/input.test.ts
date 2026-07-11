@@ -82,6 +82,7 @@ describe("resolveTraversalActions", () => {
   });
 
   it("maps a completed touch swipe but ignores the same mouse gesture", () => {
+    const swipeBindings = { ...bindings, regions: [] };
     const started = snapshot([], {
       down: true,
       id: 8,
@@ -98,14 +99,14 @@ describe("resolveTraversalActions", () => {
       x: 100,
       y: 310,
     });
-    expect(resolveTraversalActions(started, released, bindings, bounds)).toEqual([
+    expect(resolveTraversalActions(started, released, swipeBindings, bounds)).toEqual([
       "left",
     ]);
     expect(
       resolveTraversalActions(
         { ...started, pointer: { ...started.pointer, kind: "mouse" } },
         { ...released, pointer: { ...released.pointer, kind: "mouse" } },
-        bindings,
+        swipeBindings,
         bounds,
       ),
     ).toEqual([]);
@@ -134,5 +135,25 @@ describe("resolveTraversalActions", () => {
       ...bounds,
       left: Number.NaN,
     })).toThrow(/surface bounds/i);
+  });
+
+  it("does not emit a swipe after a touch began inside a tap region", () => {
+    const started = snapshot([], {
+      down: true,
+      id: 10,
+      kind: "touch",
+      startX: 80,
+      startY: 500,
+      x: 80,
+      y: 500,
+    });
+    const released = snapshot([], {
+      kind: "touch",
+      startX: 80,
+      startY: 500,
+      x: 250,
+      y: 500,
+    });
+    expect(resolveTraversalActions(started, released, bindings, bounds)).toEqual([]);
   });
 });

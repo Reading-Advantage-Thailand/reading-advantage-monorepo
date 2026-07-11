@@ -8,7 +8,11 @@ import {
 import type { GameResults, SentenceInput } from "@reading-advantage/game-contracts";
 import type Phaser from "phaser";
 
-import { resolveTraversalActions, type TraversalInputBindings } from "../../families/traversal";
+import {
+  createCompletionLatch,
+  resolveTraversalActions,
+  type TraversalInputBindings,
+} from "../../families/traversal";
 import {
   advanceSpellweaversRun,
   collectSpellweaverLane,
@@ -73,7 +77,6 @@ function report(
   });
 }
 
-/* v8 ignore start -- Phaser lifecycle and visuals are exercised through browser QC after catalog integration. */
 /**
  * Creates the Phaser 4 Spellweavers Run lane-collector configuration.
  * @param options Stable content, edition, input, callbacks, and seed.
@@ -83,6 +86,7 @@ export function createSpellweaversRunGameConfig(
   options: SpellweaversRunGameConfigOptions,
 ): Phaser.Types.Core.GameConfig {
   let model = createSpellweaversRunState(options.input, options.seed);
+  const deliverComplete = createCompletionLatch(options.complete);
   let previousInput = options.inputController.snapshot();
   let selectLane: (lane: number) => void = () => undefined;
   let render: () => void = () => undefined;
@@ -169,7 +173,7 @@ export function createSpellweaversRunGameConfig(
               victory: model.victory,
               elapsedMs: model.elapsedMs,
             });
-            options.complete(model.results);
+            deliverComplete(model.results);
           }
         };
         render();
@@ -187,7 +191,7 @@ export function createSpellweaversRunGameConfig(
         }
         render();
         if (model.complete && model.results) {
-          options.complete(model.results);
+          deliverComplete(model.results);
           return;
         }
         const currentInput: APKInputSnapshot = options.inputController.snapshot();
@@ -208,4 +212,3 @@ export function createSpellweaversRunGameConfig(
     },
   };
 }
-/* v8 ignore stop */

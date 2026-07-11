@@ -8,7 +8,11 @@ import {
 import type { GameResults, SentenceInput } from "@reading-advantage/game-contracts";
 import type Phaser from "phaser";
 
-import { resolveTraversalActions, type TraversalInputBindings } from "../../families/traversal";
+import {
+  createCompletionLatch,
+  resolveTraversalActions,
+  type TraversalInputBindings,
+} from "../../families/traversal";
 import {
   advanceGriffinRiders,
   createGriffinRidersState,
@@ -74,7 +78,6 @@ interface TargetView {
   readonly label: Phaser.GameObjects.Text;
 }
 
-/* v8 ignore start -- Phaser lifecycle and visuals are exercised through browser QC after catalog integration. */
 /**
  * Creates the Phaser 4 Griffin Riders Escape perspective-gate configuration.
  * @param options Stable content, edition, input, callbacks, and seed.
@@ -84,6 +87,7 @@ export function createGriffinRidersGameConfig(
   options: GriffinRidersGameConfigOptions,
 ): Phaser.Types.Core.GameConfig {
   let model = createGriffinRidersState(options.input, options.seed);
+  const deliverComplete = createCompletionLatch(options.complete);
   let previousInput = options.inputController.snapshot();
   let views: TargetView[] = [];
   let player: Phaser.GameObjects.Triangle | Phaser.GameObjects.Image | undefined;
@@ -199,7 +203,7 @@ export function createGriffinRidersGameConfig(
             victory: model.victory,
             elapsedMs: model.elapsedMs,
           });
-          options.complete(model.results);
+          deliverComplete(model.results);
           return;
         }
         const currentInput: APKInputSnapshot = options.inputController.snapshot();
@@ -220,4 +224,3 @@ export function createGriffinRidersGameConfig(
     },
   };
 }
-/* v8 ignore stop */

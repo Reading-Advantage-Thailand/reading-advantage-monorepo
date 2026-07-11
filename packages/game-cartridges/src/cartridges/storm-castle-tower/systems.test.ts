@@ -53,6 +53,22 @@ describe("Storm Castle Tower systems", () => {
       lastOutcome: "incorrect",
     });
     expect(state.windows.find(({ wordIndex }) => wordIndex === 1)?.state).toBe("closed");
+    state = moveToWindow(state, 0);
+    state = collectStormWindow(state);
+    expect(state.targetIndex).toBe(1);
+    expect(state.windows.find(({ wordIndex }) => wordIndex === 1)?.state).toBe("open");
+  });
+
+  it("can still complete after selecting a future window out of order", () => {
+    let state = createStormCastleState(sentences, 53);
+    state = moveToWindow(state, 2);
+    state = collectStormWindow(state);
+    while (!state.complete) {
+      state = moveToWindow(state, state.targetIndex);
+      state = collectStormWindow(state);
+    }
+    expect(state.victory).toBe(true);
+    expect(state.totalAttempts).toBe(7);
   });
 
   it("spawns deterministic hazards and resolves a falling collision", () => {

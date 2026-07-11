@@ -213,9 +213,13 @@ export function collectStormWindow(state: StormCastleState): StormCastleState {
   }
 
   const score = state.score + 100;
-  const windows = state.windows.map((window) =>
-    window.id === selected.id ? { ...window, state: "collected" as const } : window,
-  );
+  const windows = state.windows.map((window) => {
+    if (window.id === selected.id) return { ...window, state: "collected" as const };
+    if (window.wordIndex === resolution.nextTargetIndex && window.state === "closed") {
+      return { ...window, state: "open" as const };
+    }
+    return window;
+  });
   if (resolution.nextTargetIndex < state.words.length) {
     return {
       ...state,

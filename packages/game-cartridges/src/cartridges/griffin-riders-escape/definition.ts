@@ -17,7 +17,7 @@ export const griffinRidersEscapeCartridge = {
     inputMode: "sentence",
     runtimeApiVersion: "1.0.0",
     version: "0.1.0",
-    capabilities: ["camera", "timers", "tweens"],
+    capabilities: [],
     requiredAssetSlots: GRIFFIN_RIDERS_ASSET_SLOTS,
   },
   createGameConfig: (context) => createGriffinRidersGameConfig({

@@ -76,6 +76,15 @@ function resolveSwipeAction(
   return deltaY < 0 ? swipe.up : swipe.down;
 }
 
+function containsPoint(
+  region: TraversalInputRegion,
+  normalizedX: number,
+  normalizedY: number,
+): boolean {
+  return normalizedX >= region.minimumX && normalizedX <= region.maximumX &&
+    normalizedY >= region.minimumY && normalizedY <= region.maximumY;
+}
+
 /**
  * Resolves newly pressed keys, pointer regions, and completed touch swipes.
  * @param previous Prior immutable APK input snapshot.
@@ -116,8 +125,7 @@ export function resolveTraversalActions(
           region.minimumX > region.maximumX || region.minimumY > region.maximumY) {
         throw new Error("Traversal input regions must use ordered zero-to-one bounds");
       }
-      if (normalizedX >= region.minimumX && normalizedX <= region.maximumX &&
-          normalizedY >= region.minimumY && normalizedY <= region.maximumY) {
+      if (containsPoint(region, normalizedX, normalizedY)) {
         appendUnique(actions, region.action);
         break;
       }
@@ -132,7 +140,14 @@ export function resolveTraversalActions(
       !current.pointer.down &&
       !current.pointer.cancelled &&
       current.pointer.kind === "touch";
-    if (touchReleased) appendUnique(actions, resolveSwipeAction(current, bindings.swipe));
+    const startX = (current.pointer.startX - bounds.left) / bounds.width;
+    const startY = (current.pointer.startY - bounds.top) / bounds.height;
+    const startedInRegion = (bindings.regions ?? []).some((region) =>
+      containsPoint(region, startX, startY),
+    );
+    if (touchReleased && !startedInRegion) {
+      appendUnique(actions, resolveSwipeAction(current, bindings.swipe));
+    }
   }
 
   return actions;

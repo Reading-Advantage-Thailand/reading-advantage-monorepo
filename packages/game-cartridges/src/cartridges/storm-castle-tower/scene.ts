@@ -8,7 +8,11 @@ import {
 import type { GameResults, SentenceInput } from "@reading-advantage/game-contracts";
 import type Phaser from "phaser";
 
-import { resolveTraversalActions, type TraversalInputBindings } from "../../families/traversal";
+import {
+  createCompletionLatch,
+  resolveTraversalActions,
+  type TraversalInputBindings,
+} from "../../families/traversal";
 import {
   advanceStormCastle,
   collectStormWindow,
@@ -79,7 +83,6 @@ function report(
   });
 }
 
-/* v8 ignore start -- Phaser lifecycle and visuals are exercised through browser QC after catalog integration. */
 /**
  * Creates the Phaser 4 Storm Castle Tower vertical-grid configuration.
  * @param options Stable content, edition, input, callbacks, and seed.
@@ -89,6 +92,7 @@ export function createStormCastleGameConfig(
   options: StormCastleGameConfigOptions,
 ): Phaser.Types.Core.GameConfig {
   let model = createStormCastleState(options.input, options.seed);
+  const deliverComplete = createCompletionLatch(options.complete);
   let previousInput = options.inputController.snapshot();
   let render: () => void = () => undefined;
 
@@ -237,10 +241,9 @@ export function createStormCastleGameConfig(
             victory: model.victory,
             elapsedMs: model.elapsedMs,
           });
-          options.complete(model.results);
+          deliverComplete(model.results);
         }
       },
     },
   };
 }
-/* v8 ignore stop */

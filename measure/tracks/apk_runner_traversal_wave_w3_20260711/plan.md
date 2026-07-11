@@ -30,12 +30,12 @@
 - [x] Task: Build and test `spellweavers-run`
 - [x] Task: Build and test `griffin-riders-escape`
 - [x] Task: Build and test `storm-castle-tower`
-- [ ] Task: Verify both editions, content modes, results, coverage, and mandatory phase review
-- [ ] Task: Measure - User Manual Verification 'Phase S3: Build four dual-edition cartridges'
+- [x] Task: Verify both editions, content modes, results, coverage, and mandatory phase review
+- [~] Task: Measure - User Manual Verification 'Phase S3: Build four dual-edition cartridges'
 
 ## Phase S4: Cut over and verify the runner wave
 
-- [ ] Task: Add the four cartridges to package and authenticated-host registries
+- [~] Task: Add the four cartridges to package and authenticated-host registries
 - [ ] Task: Add Red host, persistence, catalog, accessibility, and deletion guards
 - [ ] Task: Produce and review the exact legacy disposition manifest
 - [ ] Task: Run final lint, type, test, coverage, build, graph, browser, and Measure gates

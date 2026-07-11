@@ -8,7 +8,11 @@ import {
 import type { GameResults, VocabularyInput } from "@reading-advantage/game-contracts";
 import type Phaser from "phaser";
 
-import { resolveTraversalActions, type TraversalInputBindings } from "../../families/traversal";
+import {
+  createCompletionLatch,
+  resolveTraversalActions,
+  type TraversalInputBindings,
+} from "../../families/traversal";
 import {
   advanceDragonRiderTime,
   chooseDragonRiderGate,
@@ -69,7 +73,6 @@ function report(
   });
 }
 
-/* v8 ignore start -- Phaser lifecycle and visuals are exercised through browser QC after catalog integration. */
 /**
  * Creates the Phaser 4 Dragon Rider gate-flight configuration.
  * @param options Stable content, edition, input, callbacks, and seed.
@@ -79,6 +82,7 @@ export function createDragonRiderGameConfig(
   options: DragonRiderGameConfigOptions,
 ): Phaser.Types.Core.GameConfig {
   let model = createDragonRiderState(options.input, options.seed);
+  const deliverComplete = createCompletionLatch(options.complete);
   let previousInput: APKInputSnapshot = options.inputController.snapshot();
   let chooseLane: (lane: number) => void = () => undefined;
 
@@ -192,7 +196,7 @@ export function createDragonRiderGameConfig(
                     bossPower: model.bossPower,
                     elapsedMs: model.elapsedMs,
                   });
-                  options.complete(model.results!);
+                  deliverComplete(model.results!);
                 });
                 return;
               }
@@ -223,4 +227,3 @@ export function createDragonRiderGameConfig(
     },
   };
 }
-/* v8 ignore stop */
