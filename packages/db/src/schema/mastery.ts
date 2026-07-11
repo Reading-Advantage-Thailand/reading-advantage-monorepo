@@ -13,7 +13,22 @@ import {
   unique,
   uuid,
 } from "drizzle-orm/pg-core";
-import { schools, users } from "./users.js";
+import { schools } from "./users.js";
+
+/** Tenant-scoped learner identity accepted by the provider-neutral mastery store. */
+export const masteryPrincipals = pgTable(
+  "mastery_principals",
+  {
+    schoolId: uuid("school_id").notNull().references(() => schools.id, { onDelete: "cascade" }),
+    studentId: text("student_id").notNull(),
+    sourceTenantKey: text("source_tenant_key").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [
+    unique("mastery_principals_school_student_unique").on(table.schoolId, table.studentId),
+    index("mastery_principals_source_tenant_idx").on(table.sourceTenantKey),
+  ],
+);
 
 /** School-scoped FSRS card state for one student objective variant. */
 export const masteryCards = pgTable(
@@ -60,7 +75,7 @@ export const masteryCards = pgTable(
     foreignKey({
       name: "mastery_cards_school_student_fk",
       columns: [table.schoolId, table.studentId],
-      foreignColumns: [users.schoolId, users.id],
+      foreignColumns: [masteryPrincipals.schoolId, masteryPrincipals.studentId],
     }).onDelete("cascade"),
     check(
       "mastery_cards_numeric_bounds_check",
@@ -120,7 +135,7 @@ export const masteryReviews = pgTable(
     foreignKey({
       name: "mastery_reviews_school_student_fk",
       columns: [table.schoolId, table.studentId],
-      foreignColumns: [users.schoolId, users.id],
+      foreignColumns: [masteryPrincipals.schoolId, masteryPrincipals.studentId],
     }).onDelete("cascade"),
     foreignKey({
       name: "mastery_reviews_school_card_student_fk",
@@ -184,7 +199,7 @@ export const masteryEvidence = pgTable(
     foreignKey({
       name: "mastery_evidence_school_student_fk",
       columns: [table.schoolId, table.studentId],
-      foreignColumns: [users.schoolId, users.id],
+      foreignColumns: [masteryPrincipals.schoolId, masteryPrincipals.studentId],
     }).onDelete("cascade"),
     foreignKey({
       name: "mastery_evidence_school_review_student_fk",
@@ -244,7 +259,7 @@ export const masteryStates = pgTable(
     foreignKey({
       name: "mastery_states_school_student_fk",
       columns: [table.schoolId, table.studentId],
-      foreignColumns: [users.schoolId, users.id],
+      foreignColumns: [masteryPrincipals.schoolId, masteryPrincipals.studentId],
     }).onDelete("cascade"),
     check(
       "mastery_states_bounds_check",
@@ -301,7 +316,7 @@ export const masteryPlacements = pgTable(
     foreignKey({
       name: "mastery_placements_school_student_fk",
       columns: [table.schoolId, table.studentId],
-      foreignColumns: [users.schoolId, users.id],
+      foreignColumns: [masteryPrincipals.schoolId, masteryPrincipals.studentId],
     }).onDelete("cascade"),
     check(
       "mastery_placements_bounds_check",
@@ -404,7 +419,7 @@ export const masteryCommits = pgTable(
     foreignKey({
       name: "mastery_commits_school_student_fk",
       columns: [table.schoolId, table.studentId],
-      foreignColumns: [users.schoolId, users.id],
+      foreignColumns: [masteryPrincipals.schoolId, masteryPrincipals.studentId],
     }).onDelete("cascade"),
     check(
       "mastery_commits_status_check",

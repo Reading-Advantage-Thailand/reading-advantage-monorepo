@@ -4,6 +4,7 @@ import {
   masteryCommits,
   masteryEvidence,
   masteryPlacements,
+  masteryPrincipals,
   masteryReviews,
   masteryStates,
   schools,
@@ -273,6 +274,11 @@ async function seedOwners(harness: TestDb): Promise<void> {
       name: "Mastery Student B",
       schoolId: SCHOOL_B,
     },
+  ]);
+  await harness.db.insert(masteryPrincipals).values([
+    { schoolId: SCHOOL_A, studentId: STUDENT_A, sourceTenantKey: SCHOOL_A },
+    { schoolId: SCHOOL_A, studentId: STUDENT_A_2, sourceTenantKey: SCHOOL_A },
+    { schoolId: SCHOOL_B, studentId: STUDENT_B, sourceTenantKey: SCHOOL_B },
   ]);
 }
 

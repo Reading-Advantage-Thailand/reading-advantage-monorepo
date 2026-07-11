@@ -52,6 +52,8 @@ export interface DrizzleMasteryPersistenceOptions {
   tenant: { schoolId: string } | null;
   /** Authenticated actor that must match every write audit. */
   actorId: string;
+  /** Source tenant key retained when a platform learner maps into a mastery namespace. */
+  sourceTenantKey?: string;
 }
 
 function parseOrThrow<T>(schema: z.ZodType<T>, value: unknown): T {
@@ -282,6 +284,7 @@ function portableFailure(error: unknown): never {
   throw new MasteryPersistenceError(
     "INTERNAL_ERROR",
     "The mastery persistence operation could not be applied.",
+    { cause: error },
   );
 }
 
@@ -289,6 +292,7 @@ class DrizzleMasteryPersistence implements MasteryPersistencePort {
   private readonly db: DB;
   private readonly schoolId: string;
   private readonly actorId: string;
+  private readonly sourceTenantKey: string;
   private tenantDbPromise: Promise<TenantDB> | undefined;
 
   constructor(options: DrizzleMasteryPersistenceOptions) {
@@ -301,6 +305,7 @@ class DrizzleMasteryPersistence implements MasteryPersistencePort {
     this.db = options.db as DB;
     this.schoolId = options.tenant.schoolId;
     this.actorId = options.actorId;
+    this.sourceTenantKey = options.sourceTenantKey ?? options.tenant.schoolId;
   }
 
   private scopedDb(): Promise<TenantDB> {
@@ -450,6 +455,12 @@ class DrizzleMasteryPersistence implements MasteryPersistencePort {
       } = await loadDbModule();
       return await tenantDb.transaction(
         async (transaction) => {
+          const { masteryPrincipals } = await loadDbModule();
+          await transaction.insert(masteryPrincipals).values({
+            schoolId: parsed.schoolId,
+            studentId: parsed.studentId,
+            sourceTenantKey: this.sourceTenantKey,
+          }).onConflictDoNothing();
           const existingRows = await transaction
             .select()
             .from(masteryCommits)

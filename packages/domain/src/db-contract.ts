@@ -186,6 +186,7 @@ function wrapQueryBuilder(builder: unknown, table: unknown, tenant: Tenant) {
             typeof table === "object" &&
             "schoolId" in table &&
             (table as Record<string, unknown>).schoolId !== undefined &&
+            typeof (target as Record<string, unknown>)["where"] === "function" &&
             tenant.schoolId
           ) {
             const tenantCondition = eq(
@@ -331,6 +332,12 @@ function enforceSingleRow(row: unknown, tenantSchoolId: string): unknown {
  */
 export function createTenantDB(db: DB, tenant: Tenant): TenantDB {
   const tenantDb = new Proxy(db, {
+    has(target, prop) {
+      if (prop === "unscoped") {
+        return true;
+      }
+      return Reflect.has(target, prop);
+    },
     get(target, prop, receiver) {
       const val = Reflect.get(target, prop, receiver);
 

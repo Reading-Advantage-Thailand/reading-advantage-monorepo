@@ -29,6 +29,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, resolve, join } from "node:path";
 import { readFileSync } from "node:fs";
 import * as schema from "@reading-advantage/db";
+import type { DB } from "@reading-advantage/db";
 import type { Tenant } from "@reading-advantage/auth";
 import { createTenantDB } from "../../db-contract.js";
 
@@ -94,7 +95,7 @@ export async function createTestDb(): Promise<TestDb> {
 
   return {
     db,
-    tenantDb: (tenant: Tenant) => createTenantDB(db, tenant),
+    tenantDb: (tenant: Tenant) => createTenantDB(db as unknown as DB, tenant),
     reset: async () => {
       const result = await db.execute(
         sql.raw(

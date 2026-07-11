@@ -75,6 +75,7 @@ import {
   leaderboards,
   gameCompletions,
   masteryCards,
+  masteryPrincipals,
   masteryReviews,
   masteryEvidence,
   masteryStates,
@@ -120,6 +121,7 @@ register(gameCompletions, "FLAT");
 
 // Mastery Engine Phase S3 — all persistence records carry schoolId directly.
 register(masteryCards, "FLAT");
+register(masteryPrincipals, "FLAT");
 register(masteryReviews, "FLAT");
 register(masteryEvidence, "FLAT");
 register(masteryStates, "FLAT");

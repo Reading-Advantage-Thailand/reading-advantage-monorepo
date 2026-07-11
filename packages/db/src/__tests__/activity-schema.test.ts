@@ -23,6 +23,9 @@ describe("activity persistence schema", () => {
       "is_assessed",
       "submission_id",
       "submission_json",
+      "mastery_projection_status",
+      "mastery_projection_attempts",
+      "mastery_commit_id",
     ]));
   });
 

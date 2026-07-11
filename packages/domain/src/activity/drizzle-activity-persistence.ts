@@ -1,5 +1,6 @@
 import {
   activityEventBatchSchema,
+  activityPracticeSubmissionEnvelopeSchema,
   appendActivityEventBatch,
   reduceAssessedActivityEvent,
   type ActivityEventBatch,
@@ -12,12 +13,25 @@ import {
 import type { ActivityActor } from "@reading-advantage/activity-runtime/server";
 import type { ActivityAssessmentPersistenceResult, ActivityPersistencePort } from "@reading-advantage/activity-runtime/transport";
 import { activitySessionEvents, activitySessions } from "@reading-advantage/db";
-import { and, eq } from "drizzle-orm";
+import { and, eq, inArray, sql } from "drizzle-orm";
 import type { TenantDB } from "../db-contract.js";
 import { createDrizzleMasteryPersistence } from "../mastery/index.js";
 import { projectActivitySubmissionToMastery } from "./activity-mastery-projection.js";
 
 type ActivitySessionRow = typeof activitySessions.$inferSelect;
+
+/** Reserved Mastery namespace for Codecamp's explicit platform tenant. */
+export const CODECAMP_MASTERY_SCHOOL_ID = "c0deca00-0000-4000-8000-000000000001";
+
+function canonicalize(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(canonicalize);
+  if (value && typeof value === "object") return Object.fromEntries(Object.entries(value as Record<string, unknown>).sort(([left], [right]) => left.localeCompare(right)).map(([key, nested]) => [key, canonicalize(nested)]));
+  return value;
+}
+
+function semanticallyEqual(left: unknown, right: unknown): boolean {
+  return JSON.stringify(canonicalize(left)) === JSON.stringify(canonicalize(right));
+}
 
 function tenantKey(actor: ActivityActor): string {
   return actor.schoolId ?? actor.tenantKey;
@@ -168,7 +182,7 @@ export class DrizzleActivityPersistence implements ActivityPersistencePort {
         const [stored] = await tx.select({ eventJson: activitySessionEvents.eventJson, submissionJson: activitySessionEvents.submissionJson }).from(activitySessionEvents).where(and(
           eq(activitySessionEvents.sessionId, sessionId), eq(activitySessionEvents.eventId, result.event.eventId),
         )).limit(1);
-        if (!stored || JSON.stringify(stored.eventJson) !== JSON.stringify(result.event) || JSON.stringify(stored.submissionJson) !== JSON.stringify(result.submission)) {
+        if (!stored || !semanticallyEqual(stored.eventJson, result.event) || !semanticallyEqual(stored.submissionJson, result.submission)) {
           throw new Error(`Activity assessment idempotency conflict: ${result.event.eventId}`);
         }
         return current;
@@ -189,6 +203,7 @@ export class DrizzleActivityPersistence implements ActivityPersistencePort {
         serverSequence, eventKind: result.event.kind, isAssessed: true,
         submissionId: result.event.submissionId,
         submissionJson: result.submission as unknown as Record<string, unknown>,
+        masteryProjectionStatus: "pending", masteryProjectionAttempts: 0,
         eventJson: result.event as unknown as Record<string, unknown>,
         occurredAt: new Date(result.event.occurredAt),
       });
@@ -201,11 +216,29 @@ export class DrizzleActivityPersistence implements ActivityPersistencePort {
       if (!saved) throw new Error(`Activity assessment update failed: ${sessionId}`);
       return rowToRecord(saved);
     });
-    if (actor.schoolId) {
-      const mastery = createDrizzleMasteryPersistence({ db: rawDb, tenant: { schoolId: actor.schoolId }, actorId: actor.learnerId });
-      await projectActivitySubmissionToMastery(actor.schoolId, actor.learnerId, result.submission, mastery, new Date().toISOString());
-    }
+    await this.projectAssessment(actor, sessionId, result.event.eventId, result.submission);
     return savedSession;
+  }
+
+  /**
+   * Projects one durable assessed outbox row into Mastery and records its receipt.
+   * @param actor Authenticated school or Codecamp platform learner.
+   * @param sessionId Owning activity session identifier.
+   * @param eventId Assessed outbox event identifier.
+   * @param submission Server-verified practice.v1 envelope.
+   * @returns Completion after projected or failed outbox state is durable.
+   */
+  async projectAssessment(actor: ActivityActor, sessionId: string, eventId: string, submission: ActivityAssessmentPersistenceResult["submission"]): Promise<void> {
+    const rawDb = this.tenantDb.unscoped("activity mastery outbox projection scopes the exact session event and canonical mastery tenant");
+    const schoolId = actor.schoolId ?? CODECAMP_MASTERY_SCHOOL_ID;
+    const mastery = createDrizzleMasteryPersistence({ db: rawDb, tenant: { schoolId }, actorId: actor.learnerId, sourceTenantKey: tenantKey(actor) });
+    try {
+      const receipt = await projectActivitySubmissionToMastery(schoolId, actor.learnerId, submission, mastery, new Date().toISOString());
+      await rawDb.update(activitySessionEvents).set({ masteryProjectionStatus: "projected", masteryProjectionError: null, masteryCommitId: receipt.commitId, masteryProjectedAt: new Date(), masteryProjectionAttempts: sql`${activitySessionEvents.masteryProjectionAttempts} + 1` }).where(and(eq(activitySessionEvents.sessionId, sessionId), eq(activitySessionEvents.eventId, eventId)));
+    } catch (error) {
+      await rawDb.update(activitySessionEvents).set({ masteryProjectionStatus: "failed", masteryProjectionError: error instanceof Error ? error.message.slice(0, 1000) : "Unknown mastery projection failure", masteryProjectionAttempts: sql`${activitySessionEvents.masteryProjectionAttempts} + 1` }).where(and(eq(activitySessionEvents.sessionId, sessionId), eq(activitySessionEvents.eventId, eventId)));
+      throw error;
+    }
   }
 
   /**
@@ -240,4 +273,29 @@ export class DrizzleActivityPersistence implements ActivityPersistencePort {
     )).limit(1);
     return row ? summarizeActivitySession(rowToRecord(row), checkpointIds) : null;
   }
+}
+
+/**
+ * Retries pending or failed assessed activity outbox rows through canonical Mastery.
+ * @param tenantDb Database boundary used for explicitly scoped outbox recovery.
+ * @param limit Maximum rows processed in one worker invocation.
+ * @returns Counts of projected and failed rows.
+ */
+export async function retryPendingActivityMasteryProjections(tenantDb: TenantDB, limit = 25): Promise<{ projected: number; failed: number }> {
+  const rawDb = tenantDb.unscoped("activity mastery retry worker reads only pending or failed assessed outbox rows");
+  const rows = await rawDb.select().from(activitySessionEvents).where(and(eq(activitySessionEvents.isAssessed, true), inArray(activitySessionEvents.masteryProjectionStatus, ["pending", "failed"]))).limit(limit);
+  const adapter = new DrizzleActivityPersistence(tenantDb);
+  let projected = 0;
+  let failed = 0;
+  for (const row of rows) {
+    const actor: ActivityActor = row.tenantKey === "codecamp" ? { learnerId: row.learnerId, schoolId: null, tenantKey: "codecamp" } : { learnerId: row.learnerId, schoolId: row.tenantKey };
+    try {
+      const submission = activityPracticeSubmissionEnvelopeSchema.parse(row.submissionJson);
+      await adapter.projectAssessment(actor, row.sessionId, row.eventId, submission);
+      projected += 1;
+    } catch {
+      failed += 1;
+    }
+  }
+  return { projected, failed };
 }
