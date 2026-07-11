@@ -117,7 +117,13 @@ function useDurableActivitySession(activity: Activity) {
     });
   }, [activity, append, sessionId, summary]);
 
-  return { sessionId, summary, setSummary, existing, appendSupport, error: start.error ?? existing.error ?? append.error };
+  const retry = () => {
+    start.reset();
+    startRequested.current = false;
+    startNewSession();
+  };
+
+  return { sessionId, summary, setSummary, existing, appendSupport, retry, error: start.error ?? existing.error ?? append.error };
 }
 
 function LessonShell({ locale, eyebrow, title, children }: { locale: string; eyebrow: string; title: string; children: React.ReactNode }) {
@@ -170,7 +176,7 @@ function WorkedExample({ locale }: { locale: string }) {
         />
       </div>
       <p role="status" aria-live="polite">{session.summary ? (thai ? `Session ที่บันทึก: ${session.summary.sessionId}` : `Durable session: ${session.summary.sessionId}`) : (thai ? "กำลังเริ่ม session…" : "Starting durable session…")}</p>
-      {session.error ? <p role="alert" className="text-red-700">{session.error.message}</p> : null}
+      {session.error ? <div role="alert" className="space-y-2 text-red-700"><p>{session.error.message}</p><button type="button" className="min-h-11 rounded-md border px-4" onClick={session.retry}>{thai ? "ลองเริ่ม session อีกครั้ง" : "Retry durable session"}</button></div> : null}
     </LessonShell>
   );
 }
@@ -231,7 +237,7 @@ function GuidedPractice({ locale }: { locale: string }) {
         }}
       />
       <p role="status" aria-live="polite">{session.summary ? (thai ? `Session ที่บันทึก: ${session.summary.sessionId}` : `Durable session: ${session.summary.sessionId}`) : (thai ? "กำลังเริ่ม session…" : "Starting durable session…")}</p>
-      {session.error ? <p role="alert" className="text-red-700">{session.error.message}</p> : null}
+      {session.error ? <div role="alert" className="space-y-2 text-red-700"><p>{session.error.message}</p><button type="button" className="min-h-11 rounded-md border px-4" onClick={session.retry}>{thai ? "ลองเริ่ม session อีกครั้ง" : "Retry durable session"}</button></div> : null}
     </LessonShell>
   );
 }
