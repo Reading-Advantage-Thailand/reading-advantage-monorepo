@@ -70,3 +70,12 @@ test("honors reduced motion and exposes touch-sized controls", async ({ page }) 
   });
   expect(overlappingHeaderControls).toBe(0);
 });
+
+test("passes the Thai route locale into activity content and shared controls", async ({ page }) => {
+  await page.goto("/th/activity-runtime-demo");
+  await expect(page.getByRole("button", { name: "เล่น" })).toBeVisible({ timeout: 20_000 });
+  await expect(page.getByRole("slider", { name: "เลื่อนวิดีโอบทเรียน" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "I Do: สาธิตการสร้าง commit แบบโต้ตอบ" })).toBeVisible();
+  await page.getByRole("slider", { name: "เลื่อนวิดีโอบทเรียน" }).fill("36");
+  await expect(page.getByRole("group", { name: "git add ทำอะไร?" })).toBeVisible();
+});

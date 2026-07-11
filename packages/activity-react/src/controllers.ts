@@ -177,7 +177,7 @@ export function createYouTubeMediaController(player: YouTubePlayerPort): YouTube
  * @returns Provider-neutral media controller.
  */
 export function createHostedMediaController(media: HTMLMediaElement): MediaController {
-  let snapshot: MediaSnapshot = { status: "idle", currentSeconds: media.currentTime, durationSeconds: Number.isFinite(media.duration) ? media.duration : 0, captionsEnabled: false };
+  let snapshot: MediaSnapshot = { status: "idle", currentSeconds: media.currentTime, durationSeconds: Number.isFinite(media.duration) ? media.duration : 0, captionsEnabled: Array.from(media.textTracks).some((track) => track.mode === "showing") };
   const listeners = new Set<(value: MediaSnapshot) => void>();
   const refresh = (): void => {
     snapshot = {
@@ -203,9 +203,10 @@ export function createHostedMediaController(media: HTMLMediaElement): MediaContr
   const eventHandlers: Array<[string, EventListener]> = [
     ["timeupdate", refresh], ["play", refresh], ["pause", refresh], ["ended", refresh],
     ["loadedmetadata", refresh], ["canplay", refresh], ["error", fail], ["stalled", reconnect],
-    ["waiting", reconnect], ["volumechange", refreshCaptions],
+    ["waiting", reconnect],
   ];
   for (const [eventName, handler] of eventHandlers) media.addEventListener(eventName, handler);
+  media.textTracks.addEventListener?.("change", refreshCaptions);
   return {
     getSnapshot: () => snapshot,
     subscribe: (listener) => { listeners.add(listener); return () => listeners.delete(listener); },
@@ -223,6 +224,7 @@ export function createHostedMediaController(media: HTMLMediaElement): MediaContr
     destroy: () => {
       listeners.clear();
       for (const [eventName, handler] of eventHandlers) media.removeEventListener(eventName, handler);
+      media.textTracks.removeEventListener?.("change", refreshCaptions);
     },
   };
 }

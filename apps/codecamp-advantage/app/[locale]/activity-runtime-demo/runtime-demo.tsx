@@ -24,7 +24,9 @@ function readStoredWatchedRanges(): Array<{ startSeconds: number; endSeconds: nu
   }
 }
 
-const demoActivity = activitySchema.parse({
+function createDemoActivity(locale: string) {
+  const thai = locale.toLowerCase().startsWith("th");
+  return activitySchema.parse({
   schemaVersion: "activity.v1",
   activityId: "codecamp.activity.runtime-demo",
   activityVersion: "1.0.0",
@@ -32,7 +34,7 @@ const demoActivity = activitySchema.parse({
   objectiveId: "git.commit.create",
   variantKey: "video.runtime-demo.v1",
   mode: "worked_example",
-  title: { en: "Interactive Git Commit Tutorial" },
+  title: { en: "Interactive Git Commit Tutorial", th: "บทเรียน Git Commit แบบโต้ตอบ" },
   accessibility: { transcriptRequired: true, captionsRequired: true, nonVideoAlternativeResourceId: "diagram.commit-flow" },
   resources: [
     {
@@ -42,10 +44,10 @@ const demoActivity = activitySchema.parse({
       videoId: "RGOj5yH7evk",
       captionsAvailable: true,
       transcriptResourceId: "transcript.commit-demo",
-      segments: [{ segmentId: "segment.stage", label: { en: "Stage files" }, startSeconds: 12, endSeconds: 35 }]
+      segments: [{ segmentId: "segment.stage", label: { en: "Stage files", th: "เตรียมไฟล์" }, startSeconds: 12, endSeconds: 35 }]
     },
-    { kind: "transcript", resourceId: "transcript.commit-demo", language: "en", text: "Use git add to move changes from the working tree into the staging area before committing." },
-    { kind: "diagram", resourceId: "diagram.commit-flow", assetId: "diagram.commit-flow.v1", alt: { en: "Working tree flows to staging area, then to repository" } }
+    { kind: "transcript", resourceId: "transcript.commit-demo", language: thai ? "th" : "en", text: thai ? "ใช้ git add เพื่อย้ายการเปลี่ยนแปลงจาก working tree ไปยัง staging area ก่อน commit" : "Use git add to move changes from the working tree into the staging area before committing." },
+    { kind: "diagram", resourceId: "diagram.commit-flow", assetId: "diagram.commit-flow.v1", alt: { en: "Working tree flows to staging area, then to repository", th: "ลำดับจาก working tree ไป staging area แล้วเข้าสู่ repository" } }
   ],
   checkpoints: [{
     checkpointId: "checkpoint.stage",
@@ -55,17 +57,18 @@ const demoActivity = activitySchema.parse({
     trigger: { resourceId: "video.commit-demo", segmentId: "segment.stage" },
     question: {
       kind: "single_choice",
-      prompt: { en: "What does git add do?" },
-      options: [{ optionId: "stage", label: { en: "Stages changes" } }, { optionId: "publish", label: { en: "Publishes changes" } }],
+      prompt: { en: "What does git add do?", th: "git add ทำอะไร?" },
+      options: [{ optionId: "stage", label: { en: "Stages changes", th: "เตรียมการเปลี่ยนแปลง" } }, { optionId: "publish", label: { en: "Publishes changes", th: "เผยแพร่การเปลี่ยนแปลง" } }],
       correctOptionIds: ["stage"]
     },
-    feedback: { correct: { en: "Correct — the changes are now staged." }, incorrect: { en: "Not yet. Review the staging segment and diagram." } },
+    feedback: { correct: { en: "Correct — the changes are now staged.", th: "ถูกต้อง — การเปลี่ยนแปลงถูกเตรียมไว้แล้ว" }, incorrect: { en: "Not yet. Review the staging segment and diagram.", th: "ยังไม่ถูก ลองทบทวนช่วง staging และแผนภาพ" } },
     remediation: [{ kind: "video_segment", resourceId: "video.commit-demo", segmentId: "segment.stage" }, { kind: "diagram", resourceId: "diagram.commit-flow" }],
     evidence: { behavior: "assessed", weight: 0.5 },
     gate: "pause_non_blocking"
   }],
   tutorialSteps: []
-});
+  });
+}
 
 type RefreshingMediaController = YouTubeMediaController;
 
@@ -118,7 +121,7 @@ function loadYouTubeApi(): Promise<YouTubeApi> {
   return youtubeApiPromise;
 }
 
-function YouTubeMediaHost({ videoId, onReady }: { videoId: string; onReady(controller: RefreshingMediaController): void }) {
+function YouTubeMediaHost({ videoId, locale, onReady }: { videoId: string; locale: string; onReady(controller: RefreshingMediaController): void }) {
   const mount = useRef<HTMLDivElement>(null);
   useEffect(() => {
     let disposed = false;
@@ -135,7 +138,7 @@ function YouTubeMediaHost({ videoId, onReady }: { videoId: string; onReady(contr
               target.destroy();
               return;
             }
-            target.getIframe().title = "Git commit tutorial video";
+            target.getIframe().title = locale.startsWith("th") ? "วิดีโอบทเรียน Git commit" : "Git commit tutorial video";
             controller = createYouTubeMediaController(target);
             onReady(controller);
             refreshTimer = window.setInterval(() => controller?.refresh(), 500);
@@ -151,8 +154,8 @@ function YouTubeMediaHost({ videoId, onReady }: { videoId: string; onReady(contr
       if (refreshTimer !== undefined) window.clearInterval(refreshTimer);
       controller?.destroy();
     };
-  }, [onReady, videoId]);
-  return <div ref={mount} className="aspect-video w-full rounded-lg bg-slate-950" aria-label="Loading tutorial video" />;
+  }, [locale, onReady, videoId]);
+  return <div ref={mount} className="aspect-video w-full rounded-lg bg-slate-950" aria-label={locale.startsWith("th") ? "กำลังโหลดวิดีโอบทเรียน" : "Loading tutorial video"} />;
 }
 
 class DemoController implements MediaController {
@@ -193,9 +196,12 @@ class DemoController implements MediaController {
 
 /**
  * Renders a live browser host for the shared interactive activity package.
+ * @param props Active route locale for content and shared controls.
  * @returns Browser-verifiable interactive tutorial content.
  */
-export function ActivityRuntimeDemo() {
+export function ActivityRuntimeDemo({ locale }: { locale: string }) {
+  const thai = locale.toLowerCase().startsWith("th");
+  const demoActivity = useMemo(() => createDemoActivity(locale), [locale]);
   const controller = useMemo(() => new DemoController(), []);
   const attachYouTubeController = useCallback((nextController: RefreshingMediaController) => controller.attach(nextController), [controller]);
   const [attempts, setAttempts] = useState(0);
@@ -226,43 +232,43 @@ export function ActivityRuntimeDemo() {
   if (!hydrated) {
     return (
       <main className="mx-auto min-h-screen max-w-3xl bg-slate-50 p-4 text-slate-950 sm:p-8">
-        <p role="status">Loading interactive tutorial…</p>
+        <p role="status">{thai ? "กำลังโหลดบทเรียนแบบโต้ตอบ…" : "Loading interactive tutorial…"}</p>
       </main>
     );
   }
   return (
     <main className="mx-auto min-h-screen max-w-3xl space-y-6 bg-slate-50 p-4 text-slate-950 sm:p-8">
       <header>
-        <p className="text-sm font-semibold uppercase tracking-wide text-blue-700">Codecamp proof of life</p>
-        <h1 className="text-3xl font-bold">I Do: interactive commit demonstration</h1>
-        <p>Play or seek past 35 seconds to open the formative checkpoint. YouTube continuation remains non-blocking.</p>
+        <p className="text-sm font-semibold uppercase tracking-wide text-blue-700">{thai ? "ตัวอย่างการทำงาน Codecamp" : "Codecamp proof of life"}</p>
+        <h1 className="text-3xl font-bold">{thai ? "I Do: สาธิตการสร้าง commit แบบโต้ตอบ" : "I Do: interactive commit demonstration"}</h1>
+        <p>{thai ? "เล่นหรือเลื่อนไปหลัง 35 วินาทีเพื่อเปิดคำถามระหว่างเรียน การดู YouTube ต่อจะไม่ถูกบังคับให้ตอบถูก" : "Play or seek past 35 seconds to open the formative checkpoint. YouTube continuation remains non-blocking."}</p>
       </header>
       <div className="rounded-xl border bg-white p-5 shadow-sm [&_button]:m-1 [&_button]:min-h-11 [&_button]:rounded-md [&_button]:border [&_button]:px-4 [&_input]:m-2">
         <InteractiveActivityPlayer
           activity={demoActivity}
           controller={controller}
-          locale="en"
+          locale={locale}
           initialPositionSeconds={initialPosition}
           initialWatchedRanges={initialWatchedRanges}
           onPositionChange={savePosition}
           onWatchedRangesChange={saveWatchedRanges}
           renderMedia={({ video }) => video.provider === "youtube" && video.videoId
-            ? <YouTubeMediaHost videoId={video.videoId} onReady={attachYouTubeController} />
+            ? <YouTubeMediaHost videoId={video.videoId} locale={locale} onReady={attachYouTubeController} />
             : null}
           renderResource={({ resource }) => resource.kind === "diagram" ? (
             <figure
               role="img"
-              aria-label={resource.alt.en}
+              aria-label={resource.alt[locale] ?? resource.alt.en}
               className="my-3 rounded-lg border border-blue-200 bg-blue-50 p-4"
             >
               <div aria-hidden="true" className="flex flex-wrap items-center justify-center gap-2 font-semibold text-blue-950">
-                <span className="rounded-md bg-white px-3 py-2 shadow-sm">Working tree</span>
+                <span className="rounded-md bg-white px-3 py-2 shadow-sm">{thai ? "พื้นที่ทำงาน" : "Working tree"}</span>
                 <span>→ git add →</span>
-                <span className="rounded-md bg-white px-3 py-2 shadow-sm">Staging area</span>
+                <span className="rounded-md bg-white px-3 py-2 shadow-sm">{thai ? "พื้นที่เตรียม" : "Staging area"}</span>
                 <span>→ git commit →</span>
-                <span className="rounded-md bg-white px-3 py-2 shadow-sm">Repository</span>
+                <span className="rounded-md bg-white px-3 py-2 shadow-sm">{thai ? "คลังโค้ด" : "Repository"}</span>
               </div>
-              <figcaption className="mt-2 text-center text-sm text-blue-800">Use the staging area to choose what the next commit records.</figcaption>
+              <figcaption className="mt-2 text-center text-sm text-blue-800">{thai ? "ใช้ staging area เพื่อเลือกสิ่งที่จะบันทึกใน commit ถัดไป" : "Use the staging area to choose what the next commit records."}</figcaption>
             </figure>
           ) : undefined}
           onAssess={async ({ answer }) => {
@@ -273,8 +279,8 @@ export function ActivityRuntimeDemo() {
           }}
         />
       </div>
-      <output aria-live="polite" className="block rounded-md bg-blue-50 p-3 font-medium">Persisted attempts: {attempts}</output>
-      <output aria-live="polite" className="block rounded-md bg-blue-50 p-3 font-medium">Persisted position: {position} seconds; watched batches: {watchedRangeCount}</output>
+      <output aria-live="polite" className="block rounded-md bg-blue-50 p-3 font-medium">{thai ? "จำนวนครั้งที่บันทึกไว้" : "Persisted attempts"}: {attempts}</output>
+      <output aria-live="polite" className="block rounded-md bg-blue-50 p-3 font-medium">{thai ? `ตำแหน่งที่บันทึกไว้: ${position} วินาที; ช่วงที่ดู: ${watchedRangeCount}` : `Persisted position: ${position} seconds; watched batches: ${watchedRangeCount}`}</output>
     </main>
   );
 }

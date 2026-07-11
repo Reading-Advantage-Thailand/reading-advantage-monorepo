@@ -54,10 +54,20 @@ describe("provider controller adapters", () => {
     let duration = Number.NaN;
     let paused = true;
     let ended = false;
+    const captionTrack = { mode: "disabled" };
+    let notifyCaptionChange: (() => void) | undefined;
+    const textTracks = {
+      0: captionTrack,
+      length: 1,
+      addEventListener: vi.fn((_event: string, listener: () => void) => { notifyCaptionChange = listener; }),
+      removeEventListener: vi.fn(),
+      *[Symbol.iterator]() { yield captionTrack; },
+    };
     Object.defineProperty(media, "currentTime", { configurable: true, get: () => currentTime, set: (value) => { currentTime = value; } });
     Object.defineProperty(media, "duration", { configurable: true, get: () => duration });
     Object.defineProperty(media, "paused", { configurable: true, get: () => paused });
     Object.defineProperty(media, "ended", { configurable: true, get: () => ended });
+    Object.defineProperty(media, "textTracks", { configurable: true, value: textTracks });
     const play = vi.spyOn(media, "play").mockResolvedValue();
     const pause = vi.spyOn(media, "pause").mockImplementation(() => undefined);
     const controller = createHostedMediaController(media);
@@ -82,7 +92,11 @@ describe("provider controller adapters", () => {
     expect(controller.getSnapshot()).toMatchObject({ status: "idle", errorMessage: expect.stringContaining("interrupted") });
     media.dispatchEvent(new Event("error"));
     expect(controller.getSnapshot()).toMatchObject({ status: "error" });
+    captionTrack.mode = "showing";
+    notifyCaptionChange?.();
+    expect(controller.getSnapshot().captionsEnabled).toBe(true);
     controller.destroy();
+    expect(textTracks.removeEventListener).toHaveBeenCalledWith("change", expect.any(Function));
     const count = listener.mock.calls.length;
     media.dispatchEvent(new Event("timeupdate"));
     expect(listener).toHaveBeenCalledTimes(count);
