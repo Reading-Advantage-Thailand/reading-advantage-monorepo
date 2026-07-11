@@ -176,6 +176,7 @@ function WorkedExample({ locale }: { locale: string }) {
         />
       </div>
       <p role="status" aria-live="polite">{session.summary ? (thai ? `Session ที่บันทึก: ${session.summary.sessionId}` : `Durable session: ${session.summary.sessionId}`) : (thai ? "กำลังเริ่ม session…" : "Starting durable session…")}</p>
+      {session.summary?.assessedCheckpointResults[checkpoint.checkpointId] ? <p className="rounded-md bg-green-50 p-3 text-green-900">{thai ? "ผลที่ server บันทึก" : "Server-restored assessment"}: {session.summary.assessedCheckpointResults[checkpoint.checkpointId].isCorrect ? (thai ? "ผ่าน" : "passed") : (thai ? "ยังไม่ผ่าน" : "not yet passed")} ({thai ? "ครั้งที่" : "attempt"} {session.summary.assessedCheckpointResults[checkpoint.checkpointId].attemptNumber})</p> : null}
       {session.error ? <div role="alert" className="space-y-2 text-red-700"><p>{session.error.message}</p><button type="button" className="min-h-11 rounded-md border px-4" onClick={session.retry}>{thai ? "ลองเริ่ม session อีกครั้ง" : "Retry durable session"}</button></div> : null}
     </LessonShell>
   );
@@ -237,6 +238,7 @@ function GuidedPractice({ locale }: { locale: string }) {
         }}
       />
       <p role="status" aria-live="polite">{session.summary ? (thai ? `Session ที่บันทึก: ${session.summary.sessionId}` : `Durable session: ${session.summary.sessionId}`) : (thai ? "กำลังเริ่ม session…" : "Starting durable session…")}</p>
+      {session.summary ? <p className="rounded-md bg-blue-50 p-3">{thai ? "ตัวช่วยที่ server บันทึก" : "Server-restored support use"}: {thai ? "คำใบ้" : "hints"} {session.summary.support.hintsUsed}; {thai ? "เฉลยช่วยเหลือ" : "reveals"} {session.summary.support.revealsUsed}</p> : null}
       {session.error ? <div role="alert" className="space-y-2 text-red-700"><p>{session.error.message}</p><button type="button" className="min-h-11 rounded-md border px-4" onClick={session.retry}>{thai ? "ลองเริ่ม session อีกครั้ง" : "Retry durable session"}</button></div> : null}
     </LessonShell>
   );
@@ -249,9 +251,9 @@ function IndependentTransfer({ locale }: { locale: string }) {
       <p>{codecampAPKUnit.youdo.brief[locale] ?? codecampAPKUnit.youdo.brief.en}</p>
       <section className="rounded-xl border bg-white p-5 shadow-sm">
         <h2 className="text-xl font-semibold">{thai ? "เกณฑ์ PR" : "PR rubric"}</h2>
-        <ul className="mt-3 list-disc space-y-2 pl-6">{codecampAPKUnit.youdo.rubric.dimensions.map((dimension) => <li key={dimension.dimensionId}><strong>{Math.round(dimension.weight * 100)}%</strong> — {dimension.criteria}</li>)}</ul>
+        <ul className="mt-3 list-disc space-y-2 pl-6">{codecampAPKUnit.youdo.rubric.dimensions.map((dimension) => <li key={dimension.dimensionId}><strong>{Math.round(dimension.weight * 100)}%</strong> — {dimension.criteria[locale] ?? dimension.criteria.en}</li>)}</ul>
         <h2 className="mt-6 text-xl font-semibold">{thai ? "การตรวจที่จำเป็น" : "Required checks"}</h2>
-        <ul className="mt-3 list-disc space-y-2 pl-6">{codecampAPKUnit.youdo.requiredChecks.map((check) => <li key={check}>{check}</li>)}</ul>
+        <ul className="mt-3 list-disc space-y-2 pl-6">{(codecampAPKUnit.youdo.requiredCheckLabels[locale] ?? codecampAPKUnit.youdo.requiredCheckLabels.en).map((check) => <li key={check}>{check}</li>)}</ul>
       </section>
       <p>{thai ? "ส่ง PR จาก repository ของ Unit 20 การประเมินที่ผ่านจะเข้าสู่ mastery evidence และตารางทบทวน FSRS" : "Submit the PR from the Unit 20 repository. Passing assessment projects mastery evidence and the canonical FSRS review schedule."}</p>
       <Link href="/module/apk-game-creation" className="inline-flex min-h-11 items-center rounded-md bg-blue-700 px-4 text-white">{thai ? "เปิด repository และส่ง PR" : "Open repository and submit PR"}</Link>

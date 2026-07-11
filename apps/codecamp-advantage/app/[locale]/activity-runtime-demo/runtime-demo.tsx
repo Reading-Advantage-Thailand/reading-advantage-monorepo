@@ -285,7 +285,7 @@ export function ActivityRuntimeDemo({ locale }: { locale: string }) {
         <h2 id="you-do-heading" className="text-2xl font-bold">{thai ? "You Do: สร้างเกมเรียงประโยค" : "You Do: build a sentence-sorting cartridge"}</h2>
         <p>{codecampAPKUnit.youdo.brief[locale] ?? codecampAPKUnit.youdo.brief.en}</p>
         <h3 className="font-semibold">{thai ? "เกณฑ์ PR" : "PR rubric"}</h3>
-        <ul className="list-disc space-y-1 pl-6">{codecampAPKUnit.youdo.rubric.dimensions.map((dimension) => <li key={dimension.dimensionId}><strong>{Math.round(dimension.weight * 100)}%</strong> — {dimension.criteria}</li>)}</ul>
+        <ul className="list-disc space-y-1 pl-6">{codecampAPKUnit.youdo.rubric.dimensions.map((dimension) => <li key={dimension.dimensionId}><strong>{Math.round(dimension.weight * 100)}%</strong> — {dimension.criteria[locale] ?? dimension.criteria.en}</li>)}</ul>
         <p>{thai ? "ตรวจที่จำเป็น" : "Required checks"}: {codecampAPKUnit.youdo.requiredChecks.join(", ")}</p>
       </section>
     </main>

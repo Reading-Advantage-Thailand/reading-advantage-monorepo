@@ -17,7 +17,8 @@ export const CodecampAPKUnitSchema = z.object({
   youdo: z.object({
     activityId: z.string(), repositoryId: z.string(), objectiveId: z.string(), variantKey: z.string(),
     brief: z.record(z.string(), z.string().min(1)), requiredChecks: z.array(z.string().min(1)).min(1),
-    rubric: z.object({ rubricId: z.string(), dimensions: z.array(z.object({ dimensionId: z.string(), weight: z.number().positive(), criteria: z.string().min(1) }).strict()).min(1) }).strict(),
+    requiredCheckLabels: z.record(z.string(), z.array(z.string().min(1)).min(1)),
+    rubric: z.object({ rubricId: z.string(), dimensions: z.array(z.object({ dimensionId: z.string(), weight: z.number().positive(), criteria: z.record(z.string(), z.string().min(1)) }).strict()).min(1) }).strict(),
   }).strict(),
   srsFollowUps: z.array(z.object({ objectiveId: z.string(), variantKey: z.string(), afterDays: z.number().int().positive() }).strict()).min(1),
 }).strict().superRefine((unit, context) => {
@@ -57,7 +58,8 @@ export const codecampAPKUnit = CodecampAPKUnitSchema.parse({
     activityId: APK_ACTIVITY_IDS[2], repositoryId: "repo.apk.independent", objectiveId: "codecamp.game-development.skill.apk-contract", variantKey: "apk.apk-contract.independent.transfer",
     brief: { en: "Build a sentence-sorting cartridge that uses a different mechanic from the guided reference and returns a validated educational result.", th: "สร้าง cartridge เรียงประโยคด้วยกลไกที่ต่างจากตัวอย่างและส่งคืนผลการเรียนรู้ที่ตรวจสอบแล้ว" },
     requiredChecks: ["manifest ABI", "deterministic educational logic", "keyboard-equivalent input", "unit tests", "browser smoke test"],
-    rubric: { rubricId: "apk.rubric.independent-cartridge", dimensions: [{ dimensionId: "objective", weight: 0.35, criteria: "Educational objective and result mapping are correct." }, { dimensionId: "contract", weight: 0.3, criteria: "Cartridge and host responsibilities preserve the APK ABI." }, { dimensionId: "tests", weight: 0.2, criteria: "Deterministic and browser-visible checks pass." }, { dimensionId: "accessibility", weight: 0.15, criteria: "Keyboard, readable status, and reduced motion remain usable." }] },
+    requiredCheckLabels: { en: ["Manifest ABI", "Deterministic educational logic", "Keyboard-equivalent input", "Unit tests", "Browser smoke test"], th: ["Manifest ABI", "ตรรกะการเรียนรู้แบบกำหนดผลได้", "การควบคุมด้วยแป้นพิมพ์ที่เทียบเท่า", "Unit tests", "Browser smoke test"] },
+    rubric: { rubricId: "apk.rubric.independent-cartridge", dimensions: [{ dimensionId: "objective", weight: 0.35, criteria: { en: "Educational objective and result mapping are correct.", th: "วัตถุประสงค์การเรียนรู้และการแมปผลลัพธ์ถูกต้อง" } }, { dimensionId: "contract", weight: 0.3, criteria: { en: "Cartridge and host responsibilities preserve the APK ABI.", th: "หน้าที่ของ cartridge และ host รักษาสัญญา APK ABI" } }, { dimensionId: "tests", weight: 0.2, criteria: { en: "Deterministic and browser-visible checks pass.", th: "ผ่านการตรวจแบบกำหนดผลได้และการตรวจที่เห็นได้ใน browser" } }, { dimensionId: "accessibility", weight: 0.15, criteria: { en: "Keyboard, readable status, and reduced motion remain usable.", th: "แป้นพิมพ์ สถานะที่อ่านได้ และ reduced motion ใช้งานได้" } }] },
   },
   srsFollowUps: [{ objectiveId: "codecamp.game-development.skill.apk-contract", variantKey: "apk.apk-contract.code-reading", afterDays: 2 }, { objectiveId: "codecamp.game-development.skill.apk-contract", variantKey: "apk.apk-contract.independent-construction", afterDays: 7 }],
 });
