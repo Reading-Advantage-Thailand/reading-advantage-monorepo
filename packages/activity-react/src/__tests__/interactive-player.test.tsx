@@ -110,9 +110,21 @@ describe("InteractiveActivityPlayer", () => {
     act(() => controller.emit({ status: "playing", currentSeconds: 36, durationSeconds: 90, captionsEnabled: true }));
     const continueButton = screen.getByRole("button", { name: "Continue video" });
     expect(continueButton).toBeDisabled();
+    const playToggle = screen.getByRole("button", { name: "Pause" });
+    expect(playToggle).toBeDisabled();
+    expect(screen.getByRole("slider", { name: "Seek tutorial video" })).toBeDisabled();
+    fireEvent.click(playToggle);
+    expect(controller.play).toHaveBeenCalledTimes(1);
+    act(() => controller.emit({ status: "error", currentSeconds: 36, durationSeconds: 90, captionsEnabled: true, errorMessage: "Connection lost" }));
+    fireEvent.click(screen.getByRole("button", { name: "Retry media" }));
+    expect(controller.seek).toHaveBeenCalledWith(12);
+    expect(controller.play).toHaveBeenCalledTimes(2);
+    act(() => controller.emit({ status: "playing", currentSeconds: 36, durationSeconds: 90, captionsEnabled: true }));
+    expect(controller.pause).toHaveBeenCalledTimes(2);
     fireEvent.click(screen.getByLabelText("Stages changes"));
     fireEvent.click(screen.getByRole("button", { name: "Check answer" }));
     await waitFor(() => expect(continueButton).toBeEnabled());
+    expect(playToggle).toBeEnabled();
   });
 
   it("supports free-text checkpoints and playing-state pause controls", () => {

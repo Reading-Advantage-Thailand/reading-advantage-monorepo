@@ -68,6 +68,7 @@ export function InteractiveActivityPlayer({ activity, controller, locale, onAsse
   const watchedRangesChangeCallback = useRef(onWatchedRangesChange);
   const checkpointForm = useRef<HTMLFormElement>(null);
   const previousFocus = useRef<HTMLElement | null>(null);
+  const remediationEndSeconds = useRef<number | null>(null);
   const video = activity.resources.find((resource) => resource.kind === "video");
   const checkpoint = activity.checkpoints.find((candidate) => candidate.checkpointId === activeCheckpointId);
   const checkpointVideoCandidate = checkpoint
@@ -99,6 +100,10 @@ export function InteractiveActivityPlayer({ activity, controller, locale, onAsse
 
   useEffect(() => {
     const unsubscribe = controller.subscribe((next) => {
+    if (remediationEndSeconds.current !== null && next.status === "playing" && next.currentSeconds >= remediationEndSeconds.current) {
+      remediationEndSeconds.current = null;
+      controller.pause();
+    }
     const cues = activity.checkpoints.flatMap((candidate) => {
       const source = activity.resources.find((resource) => resource.resourceId === candidate.trigger.resourceId);
       const segment = source?.kind === "video" ? source.segments.find((item) => item.segmentId === candidate.trigger.segmentId) : undefined;
@@ -153,19 +158,21 @@ export function InteractiveActivityPlayer({ activity, controller, locale, onAsse
     const source = activity.resources.find((resource) => resource.resourceId === checkpoint.trigger.resourceId);
     const segment = source?.kind === "video" ? source.segments.find((item) => item.segmentId === checkpoint.trigger.segmentId) : undefined;
     if (!segment) return;
+    remediationEndSeconds.current = segment.endSeconds;
     controller.seek(segment.startSeconds);
     void controller.play();
   };
   const policy = checkpointVideo && checkpoint
     ? resolveCheckpointPolicy(checkpointVideo.provider, checkpoint.gate, Boolean(checkpointVideo.hardGateApproval))
     : "pause_non_blocking";
+  const hardGateLocked = policy === "answer_before_continue" && assessment?.isCorrect !== true;
 
   return (
     <section aria-label={text(activity.title, locale)} data-slot="interactive-activity-player" data-reduced-motion={reducedMotion}>
       <div data-slot="activity-media-surface" aria-label="Tutorial media">
         {video ? renderMedia?.({ video }) : null}
       </div>
-      <button data-slot="activity-play-toggle" data-touch-target="true" type="button" onClick={() => snapshot.status === "playing" ? controller.pause() : void controller.play()}>
+      <button data-slot="activity-play-toggle" data-touch-target="true" type="button" disabled={hardGateLocked} onClick={() => snapshot.status === "playing" ? controller.pause() : void controller.play()}>
         {snapshot.status === "playing" ? "Pause" : "Play"}
       </button>
       <label>
@@ -175,13 +182,14 @@ export function InteractiveActivityPlayer({ activity, controller, locale, onAsse
           min={0}
           max={Math.max(1, snapshot.durationSeconds)}
           value={Math.min(snapshot.currentSeconds, Math.max(1, snapshot.durationSeconds))}
+          disabled={hardGateLocked}
           onChange={(event) => controller.seek(Number(event.currentTarget.value))}
         />
       </label>
       {snapshot.status === "error" ? (
         <div role="alert">
           <p>{snapshot.errorMessage ?? "Media could not be loaded."}</p>
-          <button data-touch-target="true" type="button" onClick={() => void controller.play()}>Retry media</button>
+          <button data-touch-target="true" type="button" onClick={() => hardGateLocked ? replay() : void controller.play()}>Retry media</button>
         </div>
       ) : null}
       <span role="status" aria-live="polite">
@@ -245,7 +253,7 @@ export function InteractiveActivityPlayer({ activity, controller, locale, onAsse
           </div>
           <button
             type="button"
-            disabled={policy === "answer_before_continue" && assessment?.isCorrect !== true}
+            disabled={hardGateLocked}
             data-touch-target="true"
             onClick={() => { setActiveCheckpointId(null); void controller.play(); previousFocus.current?.focus(); }}
           >

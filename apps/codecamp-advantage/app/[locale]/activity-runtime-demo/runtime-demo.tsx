@@ -1,6 +1,6 @@
 "use client";
 
-import { createYouTubeMediaController, InteractiveActivityPlayer, type MediaController, type MediaSnapshot, type YouTubePlayerPort } from "@reading-advantage/activity-react";
+import { createYouTubeMediaController, InteractiveActivityPlayer, type MediaController, type MediaSnapshot, type YouTubeMediaController, type YouTubePlayerPort } from "@reading-advantage/activity-react";
 import { activitySchema } from "@reading-advantage/activity-runtime/core";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
@@ -47,7 +47,7 @@ const demoActivity = activitySchema.parse({
   tutorialSteps: []
 });
 
-type RefreshingMediaController = MediaController & { refresh(): void };
+type RefreshingMediaController = YouTubeMediaController;
 
 interface YouTubePlayer extends YouTubePlayerPort {
   getIframe(): HTMLIFrameElement;
@@ -57,7 +57,12 @@ interface YouTubeApi {
   Player: new (element: HTMLElement, options: {
     videoId: string;
     playerVars: { enablejsapi: 1; origin: string };
-    events: { onReady(event: { target: YouTubePlayer }): void };
+    events: {
+      onReady(event: { target: YouTubePlayer }): void;
+      onStateChange(event: { data: number }): void;
+      onError(event: { data: number }): void;
+      onApiChange(): void;
+    };
   }) => YouTubePlayer;
 }
 
@@ -115,6 +120,9 @@ function YouTubeMediaHost({ videoId, onReady }: { videoId: string; onReady(contr
             onReady(controller);
             refreshTimer = window.setInterval(() => controller?.refresh(), 500);
           },
+          onStateChange: ({ data }) => controller?.handleStateChange(data),
+          onError: ({ data }) => controller?.handleError(data),
+          onApiChange: () => controller?.handleApiChange(),
         },
       });
     });

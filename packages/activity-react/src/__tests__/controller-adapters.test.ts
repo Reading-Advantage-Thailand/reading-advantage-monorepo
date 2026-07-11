@@ -5,12 +5,16 @@ describe("provider controller adapters", () => {
   it("wraps every YouTube port operation and publishes refreshed snapshots", () => {
     let currentSeconds = 2;
     let durationSeconds = 90;
+    let playerState = 2;
+    let captionsTrack: unknown = null;
     const port = {
       playVideo: vi.fn(),
       pauseVideo: vi.fn(),
       seekTo: vi.fn(),
       getCurrentTime: vi.fn(() => currentSeconds),
       getDuration: vi.fn(() => durationSeconds),
+      getPlayerState: vi.fn(() => playerState),
+      getOption: vi.fn(() => captionsTrack),
       destroy: vi.fn(),
     };
     const controller = createYouTubeMediaController(port);
@@ -31,6 +35,14 @@ describe("provider controller adapters", () => {
     controller.refresh();
     expect(controller.getSnapshot()).toMatchObject({ currentSeconds: 12.25, durationSeconds: 120 });
     expect(listener).toHaveBeenCalled();
+    playerState = 0;
+    controller.handleStateChange(playerState);
+    expect(controller.getSnapshot().status).toBe("ended");
+    captionsTrack = { languageCode: "en" };
+    controller.handleApiChange();
+    expect(controller.getSnapshot().captionsEnabled).toBe(true);
+    controller.handleError(100);
+    expect(controller.getSnapshot()).toMatchObject({ status: "error", errorMessage: "YouTube playback error (100)" });
     unsubscribe();
     controller.destroy();
     expect(port.destroy).toHaveBeenCalledOnce();
@@ -64,8 +76,12 @@ describe("provider controller adapters", () => {
     media.dispatchEvent(new Event("play"));
     expect(controller.getSnapshot()).toMatchObject({ status: "playing", durationSeconds: 100 });
     ended = true;
-    media.dispatchEvent(new Event("timeupdate"));
+    media.dispatchEvent(new Event("ended"));
     expect(controller.getSnapshot().status).toBe("ended");
+    media.dispatchEvent(new Event("stalled"));
+    expect(controller.getSnapshot()).toMatchObject({ status: "idle", errorMessage: expect.stringContaining("interrupted") });
+    media.dispatchEvent(new Event("error"));
+    expect(controller.getSnapshot()).toMatchObject({ status: "error" });
     controller.destroy();
     const count = listener.mock.calls.length;
     media.dispatchEvent(new Event("timeupdate"));

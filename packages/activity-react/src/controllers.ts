@@ -83,8 +83,41 @@ export interface YouTubePlayerPort {
   getCurrentTime(): number;
   /** Reads the media duration. */
   getDuration(): number;
+  /** Reads the provider state when supported by the host API. */
+  getPlayerState?(): number;
+  /** Reads a provider option such as the active captions track. */
+  getOption?(module: string, option: string): unknown;
   /** Destroys the iframe player. */
   destroy(): void;
+}
+
+/** YouTube controller extensions called by IFrame API lifecycle events. */
+export interface YouTubeMediaController extends MediaController {
+  /** Refreshes time, duration, state, and caption data from the provider. */
+  refresh(): void;
+  /** Applies an IFrame API player-state event. */
+  handleStateChange(state: number): void;
+  /** Applies an IFrame API playback error. */
+  handleError(code: number): void;
+  /** Refreshes provider options after an API module changes. */
+  handleApiChange(): void;
+}
+
+function youtubeStatus(state: number | undefined, fallback: MediaSnapshot["status"]): MediaSnapshot["status"] {
+  switch (state) {
+    case 0: return "ended";
+    case 1: return "playing";
+    case 2: return "paused";
+    case 5: return "ready";
+    case -1:
+    case 3: return fallback === "error" ? "ready" : fallback;
+    default: return fallback;
+  }
+}
+
+function youtubeCaptionsEnabled(player: YouTubePlayerPort): boolean {
+  const track = player.getOption?.("captions", "track");
+  return typeof track === "object" && track !== null;
 }
 
 /**
@@ -92,15 +125,15 @@ export interface YouTubePlayerPort {
  * @param player Host-created YouTube player port.
  * @returns Media controller with explicit polling notifications.
  */
-export function createYouTubeMediaController(player: YouTubePlayerPort): MediaController & { refresh(): void } {
-  let snapshot: MediaSnapshot = { status: "ready", currentSeconds: player.getCurrentTime(), durationSeconds: player.getDuration(), captionsEnabled: false };
+export function createYouTubeMediaController(player: YouTubePlayerPort): YouTubeMediaController {
+  let snapshot: MediaSnapshot = { status: "ready", currentSeconds: player.getCurrentTime(), durationSeconds: player.getDuration(), captionsEnabled: youtubeCaptionsEnabled(player) };
   let pendingSeek: { seconds: number; refreshesRemaining: number } | undefined;
   const listeners = new Set<(value: MediaSnapshot) => void>();
   const publish = (): void => listeners.forEach((listener) => listener(snapshot));
   return {
     getSnapshot: () => snapshot,
     subscribe: (listener) => { listeners.add(listener); return () => listeners.delete(listener); },
-    play: () => { player.playVideo(); snapshot = { ...snapshot, status: "playing" }; publish(); },
+    play: () => { player.playVideo(); snapshot = { ...snapshot, status: "playing", errorMessage: undefined }; publish(); },
     pause: () => { player.pauseVideo(); snapshot = { ...snapshot, status: "paused" }; publish(); },
     seek: (seconds) => {
       player.seekTo(seconds, true);
@@ -115,9 +148,23 @@ export function createYouTubeMediaController(player: YouTubePlayerPort): MediaCo
       else pendingSeek = undefined;
       snapshot = {
         ...snapshot,
+        status: youtubeStatus(player.getPlayerState?.(), snapshot.status),
         currentSeconds: pendingSeek?.seconds ?? providerSeconds,
         durationSeconds: player.getDuration(),
+        captionsEnabled: youtubeCaptionsEnabled(player),
       };
+      publish();
+    },
+    handleStateChange: (state) => {
+      snapshot = { ...snapshot, status: youtubeStatus(state, snapshot.status), errorMessage: undefined };
+      publish();
+    },
+    handleError: (code) => {
+      snapshot = { ...snapshot, status: "error", errorMessage: `YouTube playback error (${code})` };
+      publish();
+    },
+    handleApiChange: () => {
+      snapshot = { ...snapshot, captionsEnabled: youtubeCaptionsEnabled(player) };
       publish();
     },
     destroy: () => { listeners.clear(); player.destroy(); },
@@ -141,20 +188,41 @@ export function createHostedMediaController(media: HTMLMediaElement): MediaContr
     };
     listeners.forEach((listener) => listener(snapshot));
   };
-  media.addEventListener("timeupdate", refresh);
-  media.addEventListener("play", refresh);
-  media.addEventListener("pause", refresh);
+  const refreshCaptions = (): void => {
+    snapshot = { ...snapshot, captionsEnabled: Array.from(media.textTracks).some((track) => track.mode === "showing") };
+    listeners.forEach((listener) => listener(snapshot));
+  };
+  const fail = (): void => {
+    snapshot = { ...snapshot, status: "error", errorMessage: media.error?.message || "Hosted media could not be loaded." };
+    listeners.forEach((listener) => listener(snapshot));
+  };
+  const reconnect = (): void => {
+    snapshot = { ...snapshot, status: "idle", errorMessage: "Hosted media playback was interrupted. Retry when the connection is available." };
+    listeners.forEach((listener) => listener(snapshot));
+  };
+  const eventHandlers: Array<[string, EventListener]> = [
+    ["timeupdate", refresh], ["play", refresh], ["pause", refresh], ["ended", refresh],
+    ["loadedmetadata", refresh], ["canplay", refresh], ["error", fail], ["stalled", reconnect],
+    ["waiting", reconnect], ["volumechange", refreshCaptions],
+  ];
+  for (const [eventName, handler] of eventHandlers) media.addEventListener(eventName, handler);
   return {
     getSnapshot: () => snapshot,
     subscribe: (listener) => { listeners.add(listener); return () => listeners.delete(listener); },
-    play: () => media.play(),
+    play: async () => {
+      snapshot = { ...snapshot, errorMessage: undefined };
+      try {
+        await media.play();
+      } catch (error) {
+        snapshot = { ...snapshot, status: "error", errorMessage: error instanceof Error ? error.message : "Hosted media playback failed." };
+        listeners.forEach((listener) => listener(snapshot));
+      }
+    },
     pause: () => media.pause(),
     seek: (seconds) => { media.currentTime = seconds; refresh(); },
     destroy: () => {
       listeners.clear();
-      media.removeEventListener("timeupdate", refresh);
-      media.removeEventListener("play", refresh);
-      media.removeEventListener("pause", refresh);
+      for (const [eventName, handler] of eventHandlers) media.removeEventListener(eventName, handler);
     },
   };
 }
