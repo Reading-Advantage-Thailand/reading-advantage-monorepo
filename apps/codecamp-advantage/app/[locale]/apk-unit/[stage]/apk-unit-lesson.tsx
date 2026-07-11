@@ -226,7 +226,7 @@ function GuidedPractice({ locale }: { locale: string }) {
 
   useEffect(() => {
     if (!session.sessionId) return;
-    const retryQueued = () => { void flushQueuedReports(); };
+    const retryQueued = () => { void flushQueuedReports().then(({ uploaded }) => { if (uploaded.length > 0) { setReportStored(true); setReportError(null); setPrepared(null); setLocalResultText(""); } }); };
     retryQueued();
     globalThis.addEventListener?.("online", retryQueued);
     return () => globalThis.removeEventListener?.("online", retryQueued);

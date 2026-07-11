@@ -1,4 +1,32 @@
 import { expect, test, type Page } from "@playwright/test";
+import { execFileSync } from "node:child_process";
+import { mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
+
+const e2eForkRoot = process.env.CODECAMP_E2E_FORK_ROOT ?? "/tmp/codecamp-e2e-forks";
+const validCartridge = "export const cartridgeManifest = { id: 'apk.e2e.guided', title: 'E2E Guided APK', description: 'Browser acceptance cartridge.', version: '1.0.0', runtimeApiVersion: '1.0.0', inputMode: 'vocabulary', requiredAssetSlots: ['background'], capabilities: ['keyboard'] } as const;";
+const fakeDigest = `sha256:${"0".repeat(64)}`;
+const localCheckerResult = {
+  schemaVersion: "activity-tutorial-result.v1", repositoryId: "repo.apk.guided", activityId: "codecamp.activity.apk.wedo",
+  stepId: "wedo.apk.manifest", passed: false, checkedAt: "2026-07-11T00:00:00Z", evidenceDigest: fakeDigest,
+  checks: [{ checkId: "manifest.shape", passed: false, evidenceDigest: fakeDigest }, { checkId: "git.clean", passed: false, evidenceDigest: fakeDigest }],
+};
+
+test.beforeAll(() => {
+  const work = join(e2eForkRoot, "work");
+  const bare = join(e2eForkRoot, "admin", "reading-advantage-monorepo.git");
+  rmSync(e2eForkRoot, { recursive: true, force: true });
+  mkdirSync(join(work, "packages/codecamp-knowledge/fixtures/apk-guided/src"), { recursive: true });
+  writeFileSync(join(work, "packages/codecamp-knowledge/fixtures/apk-guided/src/cartridge.ts"), validCartridge);
+  writeFileSync(join(work, "packages/codecamp-knowledge/fixtures/apk-guided/src/game-state.ts"), "export const gameState = { score: 0 };\n");
+  execFileSync("git", ["init"], { cwd: work });
+  execFileSync("git", ["config", "user.email", "codecamp-e2e@example.invalid"], { cwd: work });
+  execFileSync("git", ["config", "user.name", "Codecamp E2E"], { cwd: work });
+  execFileSync("git", ["add", "."], { cwd: work });
+  execFileSync("git", ["commit", "-m", "test fixture"], { cwd: work });
+  mkdirSync(join(e2eForkRoot, "admin"), { recursive: true });
+  execFileSync("git", ["clone", "--bare", work, bare]);
+});
 
 async function login(page: Page) {
   const loginButton = page.getByRole("button", { name: /^(Log in|เข้าสู่ระบบ)$/ });
@@ -44,6 +72,17 @@ test.describe("published APK unit", () => {
     await expect(page.getByText(new RegExp(`Server-restored support use: hints ${hintsBefore + 1}`))).toBeVisible({ timeout: 30_000 });
     await expect(page.getByRole("button", { name: "1. Prepare a fresh snapshot" })).toBeVisible();
     await expect(page.getByText(/tutorial-check --step wedo.apk.manifest/)).toBeVisible();
+    await page.getByRole("button", { name: "1. Prepare a fresh snapshot" }).click();
+    await expect(page.getByText(/Snapshot prepared:/)).toBeVisible({ timeout: 30_000 });
+    await page.getByLabel("tutorial-check JSON").fill(JSON.stringify(localCheckerResult));
+    await page.context().setOffline(true);
+    await page.getByRole("button", { name: "2. Re-verify and store on server" }).click();
+    await expect(page.getByRole("alert")).toContainText(/queued|fetch|network/i, { timeout: 30_000 });
+    await page.context().setOffline(false);
+    await page.evaluate(() => globalThis.dispatchEvent(new Event("online")));
+    await expect(page.getByText("Evidence stored")).toBeVisible({ timeout: 30_000 });
+    await page.reload();
+    await expect(page.getByText(/Server-restored support use:/)).toBeVisible({ timeout: 30_000 });
   });
 
   test("bounds invalid stages and localizes independent transfer", async ({ page }) => {
