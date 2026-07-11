@@ -20,12 +20,14 @@ type RunnerWaveBlueprint = {
     readonly touch: readonly string[];
   };
   readonly resultMapping: {
-    readonly score: string;
     readonly accuracy: string;
-    readonly durationMs: string;
-    readonly completed: string;
-    readonly metadata: readonly string[];
+    readonly xp: string;
+    readonly score: string;
+    readonly correctAnswers: string;
+    readonly totalAttempts: string;
   };
+  readonly completionCondition: string;
+  readonly diagnosticMetadata: readonly string[];
   readonly sourceModule: string;
   readonly productionRoute: string;
 };
@@ -72,12 +74,14 @@ const expectedRunnerWaveBlueprints = [
       touch: ["choose-left-gate", "choose-right-gate"],
     },
     resultMapping: {
-      score: "correctAnswers",
       accuracy: "correctAnswers / totalAttempts",
-      durationMs: "elapsedMs",
-      completed: "dragonCount >= bossPower",
-      metadata: ["dragonCount", "bossPower", "totalAttempts"],
+      xp: "floor(max(0, score) / 10)",
+      score: "max(0, correctAnswers * 100 - incorrectAnswers * 20)",
+      correctAnswers: "correctAnswers",
+      totalAttempts: "totalAttempts",
     },
+    completionCondition: "all vocabulary gates resolved and boss threshold evaluated",
+    diagnosticMetadata: ["dragonCount", "bossPower", "elapsedMs"],
     sourceModule: "./cartridges/dragon-rider",
     productionRoute: GENERIC_ARCADE_ROUTE,
   },
@@ -102,12 +106,14 @@ const expectedRunnerWaveBlueprints = [
       touch: ["choose-left-lane", "choose-center-lane", "choose-right-lane"],
     },
     resultMapping: {
-      score: "score",
       accuracy: "correctAnswers / totalAttempts",
-      durationMs: "elapsedMs",
-      completed: "all sentence words collected",
-      metadata: ["combo", "mana", "sentencesCompleted", "totalAttempts"],
+      xp: "floor(max(0, score) / 10)",
+      score: "max(0, score)",
+      correctAnswers: "correctAnswers",
+      totalAttempts: "totalAttempts",
     },
+    completionCondition: "all sentence words collected or mana depleted",
+    diagnosticMetadata: ["combo", "mana", "sentencesCompleted", "elapsedMs"],
     sourceModule: "./cartridges/spellweavers-run",
     productionRoute: GENERIC_ARCADE_ROUTE,
   },
@@ -132,12 +138,14 @@ const expectedRunnerWaveBlueprints = [
       touch: ["move-left", "move-right", "swipe-left", "swipe-right"],
     },
     resultMapping: {
-      score: "score",
       accuracy: "correctAnswers / totalAttempts",
-      durationMs: "elapsedMs",
-      completed: "all sentence gates cleared",
-      metadata: ["combo", "lives", "totalAttempts"],
+      xp: "floor(max(0, score) / 10)",
+      score: "max(0, score)",
+      correctAnswers: "correctAnswers",
+      totalAttempts: "totalAttempts",
     },
+    completionCondition: "all sentence gates cleared or lives depleted",
+    diagnosticMetadata: ["combo", "lives", "elapsedMs"],
     sourceModule: "./cartridges/griffin-riders-escape",
     productionRoute: GENERIC_ARCADE_ROUTE,
   },
@@ -173,12 +181,14 @@ const expectedRunnerWaveBlueprints = [
       touch: ["move-up", "move-down", "move-left", "move-right", "collect"],
     },
     resultMapping: {
-      score: "correctAnswers",
       accuracy: "correctAnswers / totalAttempts",
-      durationMs: "elapsedMs",
-      completed: "all sentence windows collected",
-      metadata: ["lives", "targetIndex", "totalAttempts"],
+      xp: "floor(max(0, score) / 10)",
+      score: "max(0, correctAnswers * 100 - incorrectAnswers * 20)",
+      correctAnswers: "correctAnswers",
+      totalAttempts: "totalAttempts",
     },
+    completionCondition: "all sentence windows collected or lives depleted",
+    diagnosticMetadata: ["lives", "targetIndex", "elapsedMs"],
     sourceModule: "./cartridges/storm-castle-tower",
     productionRoute: GENERIC_ARCADE_ROUTE,
   },

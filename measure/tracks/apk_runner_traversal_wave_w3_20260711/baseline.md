@@ -37,7 +37,7 @@ The exact ordered S1 content fixtures are frozen in `packages/game-cartridges/sr
 1. The wave needs one deterministic lane/traversal clock and seeded spawn API, with per-cartridge configuration for two-lane gates, three-lane collection, forward collision, or vertical grid traversal.
 2. Input declarations must be truthful and equivalent across keyboard, pointer, and touch. A declared input must have both a tested binding and an accessible visible affordance where the viewport requires one.
 3. Each cartridge owns only mechanic configuration and presentation hooks. Content loading, edition selection, lifecycle, completion persistence, and route ownership remain with the W2 generic authenticated host.
-4. The stable five-field APK result remains `score`, `accuracy`, `durationMs`, `completed`, and `metadata`. Legacy-only XP, difficulty, lives, boss power, combo, and victory detail must be mapped into score/completion or bounded metadata; XP remains server-owned.
+4. The stable five-field cartridge result remains `accuracy`, `xp`, `score`, `correctAnswers`, and `totalAttempts`. Cartridge XP is display-only input to the W2 completion boundary; persisted XP remains server-owned. Difficulty, lives, boss power, combo, elapsed time, and victory detail are diagnostic state rather than extra result fields.
 5. Responsive acceptance must assert target readability and control visibility, not only the absence of horizontal overflow.
 
 ## Evidence commands
