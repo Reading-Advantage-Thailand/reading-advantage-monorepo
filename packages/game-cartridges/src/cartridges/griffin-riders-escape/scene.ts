@@ -164,12 +164,19 @@ export function createGriffinRidersGameConfig(
           player?.setX(160 + model.playerLane * 320);
           model.targets.forEach((target, index) => {
             const view = views[index]!;
+            const color = target.kind === "correct"
+              ? options.edition.palette.friendly
+              : target.kind === "decoy"
+                ? options.edition.palette.accent
+                : options.edition.palette.hostile;
             const ratio = Math.max(0, Math.min(1, (target.position - 100) / 350));
             const x = 480 + (target.lane - 1) * 320 * (0.25 + ratio * 0.75);
             const y = 125 + ratio * 305;
             const scale = 0.35 + ratio * 0.8;
-            view.body.setPosition(x, y).setScale(scale).setVisible(!model.complete);
-            view.label.setPosition(x, y).setScale(scale).setVisible(!model.complete);
+            view.body.setFillStyle(color, 0.9)
+              .setPosition(x, y).setScale(scale).setVisible(!model.complete);
+            view.label.setText(target.kind === "obstacle" ? "⚡" : target.word!)
+              .setPosition(x, y).setScale(scale).setVisible(!model.complete);
           });
         };
         render();

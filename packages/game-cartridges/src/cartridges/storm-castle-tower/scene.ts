@@ -157,6 +157,10 @@ export function createStormCastleGameConfig(
           status.setText(`Lives ${model.lives}  •  Floor ${model.player.row}  •  Score ${Math.max(0, model.score)}`);
           target.setText(`Target: ${model.words[model.targetIndex] ?? "Tower complete"}`);
           player.setPosition(195 + model.player.column * 190, 385);
+          windowViews.forEach((view) => {
+            view.body.setVisible(false);
+            view.label.setVisible(false);
+          });
           for (const window of model.windows) {
             let view = windowViews.get(window.id);
             if (!view) {
@@ -179,6 +183,7 @@ export function createStormCastleGameConfig(
             view.body.setPosition(x, y).setVisible(visible);
             view.label.setPosition(x, y).setVisible(visible);
           }
+          hazardViews.forEach((view) => view.setVisible(false));
           for (const hazard of model.hazards) {
             let view = hazardViews.get(hazard.id);
             if (!view) {
