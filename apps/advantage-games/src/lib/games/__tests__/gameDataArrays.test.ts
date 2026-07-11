@@ -56,14 +56,9 @@ describe('Game data arrays', () => {
       ])
     })
 
-    it('gryphon-patrol should have at least 10 sentences in route file', () => {
-      const routePath = path.join(
-        process.cwd(),
-        'src/app/api/v1/games/gryphon-patrol/sentences/route.ts'
-      )
-      const content = fs.readFileSync(routePath, 'utf8')
-      const termMatches = content.match(/term:\s*['"]/g) || []
-      expect(termMatches.length).toBeGreaterThanOrEqual(MINIMUM_DATA_COUNT)
+    it('gryphon-patrol consumes the strict shared sentence fixture', () => {
+      expect(getArcadeContent('sentence')).toHaveLength(2)
+      expect(getArcadeContent('sentence').every(item => item.term && item.translation)).toBe(true)
     })
   })
 

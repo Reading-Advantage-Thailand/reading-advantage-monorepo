@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { arenaWaveIndex, createArenaMechanicState, expectedArenaTarget, flapArenaState, moveArenaPoint, projectilePathDistance, projectToMinimap, resolveArenaMechanicAttempt, territoryProgress } from ".";
+import { arenaWaveIndex, canResolveArenaAction, createArenaMechanicState, expectedArenaTarget, flapArenaState, moveArenaPoint, projectilePathDistance, projectToMinimap, resolveArenaMechanicAttempt, territoryProgress } from ".";
 
 describe("deterministic arena family", () => {
   it("clamps movement and projects the same position onto a minimap", () => {
@@ -25,8 +25,8 @@ describe("deterministic arena family", () => {
   });
   it("drives distinct survival, wave, aerial, and territory state", () => {
     const paladin = createArenaMechanicState("paired-hero-arena", 4);
-    expect(paladin.health).toBe(6);
-    expect(resolveArenaMechanicAttempt(paladin, false)).toMatchObject({ health: 5, shots: 1, resolved: 0 });
+    expect(paladin).toMatchObject({ health: 3, companionHealth: 3 });
+    expect(resolveArenaMechanicAttempt(paladin, false)).toMatchObject({ health: 2, companionHealth: 3, shots: 1, resolved: 0 });
     const progressed = resolveArenaMechanicAttempt(resolveArenaMechanicAttempt(resolveArenaMechanicAttempt(paladin, true), true), true);
     expect(progressed).toMatchObject({ wave: 2, resolved: 3, complete: false });
     const realm = resolveArenaMechanicAttempt(createArenaMechanicState("ordered-territory-capture", 1), true);
@@ -35,5 +35,9 @@ describe("deterministic arena family", () => {
     expect(aerial.altitude).toBe(1);
     expect(() => flapArenaState(paladin, 0.2)).toThrow(/aerial/);
     expect(() => createArenaMechanicState("patrol-minimap", 0)).toThrow(/target count/);
+    expect(canResolveArenaAction(aerial, { x: 0, y: 0 }, { x: 2, y: 540 })).toBe(true);
+    expect(canResolveArenaAction(aerial, { x: 0, y: 0 }, { x: 2, y: 0 })).toBe(false);
+    expect(canResolveArenaAction(createArenaMechanicState("patrol-minimap", 2), { x: 0, y: 0 }, { x: 300, y: 0 })).toBe(true);
+    expect(canResolveArenaAction(createArenaMechanicState("ordered-territory-capture", 2), { x: 0, y: 0 }, { x: 400, y: 0 })).toBe(false);
   });
 });

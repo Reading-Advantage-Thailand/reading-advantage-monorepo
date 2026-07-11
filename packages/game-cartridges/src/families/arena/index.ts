@@ -12,6 +12,7 @@ export interface ArenaMechanicState {
   readonly targetCount: number;
   readonly resolved: number;
   readonly health: number;
+  readonly companionHealth: number;
   readonly wave: number;
   readonly altitude: number;
   readonly captured: number;
@@ -28,7 +29,7 @@ export interface ArenaMechanicState {
  */
 export function createArenaMechanicState(mechanic: ArenaMechanic, targetCount: number): ArenaMechanicState {
   if (!Number.isInteger(targetCount) || targetCount <= 0) throw new Error("arena target count must be a positive integer");
-  return { mechanic, targetCount, resolved: 0, health: mechanic === "paired-hero-arena" ? 6 : 3, wave: 1, altitude: mechanic === "aerial-ordered-targets" ? 0.5 : 0, captured: 0, shots: 0, complete: false };
+  return { mechanic, targetCount, resolved: 0, health: 3, companionHealth: mechanic === "paired-hero-arena" ? 3 : 0, wave: 1, altitude: mechanic === "aerial-ordered-targets" ? 0.5 : 0, captured: 0, shots: 0, complete: false };
 }
 
 /** Resolves a projectile, strike, patrol shot, or territory capture attempt.
@@ -39,9 +40,25 @@ export function createArenaMechanicState(mechanic: ArenaMechanic, targetCount: n
 export function resolveArenaMechanicAttempt(state: ArenaMechanicState, correct: boolean): ArenaMechanicState {
   if (state.complete) return state;
   const resolved = state.resolved + (correct ? 1 : 0);
-  const health = Math.max(0, state.health - (correct ? 0 : 1));
-  const complete = resolved >= state.targetCount || health === 0;
-  return { ...state, resolved, health, shots: state.shots + 1, wave: arenaWaveIndex(resolved, 3) + 1, captured: state.mechanic === "ordered-territory-capture" ? resolved : state.captured, complete, ...(complete ? { victory: resolved >= state.targetCount } : {}) };
+  const damageCompanion = state.mechanic === "paired-hero-arena" && state.shots % 2 === 1;
+  const health = Math.max(0, state.health - (!correct && !damageCompanion ? 1 : 0));
+  const companionHealth = Math.max(0, state.companionHealth - (!correct && damageCompanion ? 1 : 0));
+  const complete = resolved >= state.targetCount || health === 0 || (state.mechanic === "paired-hero-arena" && companionHealth === 0);
+  return { ...state, resolved, health, companionHealth, shots: state.shots + 1, wave: arenaWaveIndex(resolved, 3) + 1, captured: state.mechanic === "ordered-territory-capture" ? resolved : state.captured, complete, ...(complete ? { victory: resolved >= state.targetCount } : {}) };
+}
+
+/** Tests whether the active mechanic can reach a selected target.
+ * @param state Current specialized mechanic state.
+ * @param player Player world position.
+ * @param target Selected target world position.
+ * @returns Whether aim, altitude, patrol range, or capture range permits resolution.
+ */
+export function canResolveArenaAction(state: ArenaMechanicState, player: ArenaPoint, target: ArenaPoint): boolean {
+  const distance = Math.hypot(target.x - player.x, target.y - player.y);
+  if (state.mechanic === "aerial-ordered-targets") return Math.abs(state.altitude - target.y / 540) <= 0.3;
+  if (state.mechanic === "patrol-minimap") return distance <= 360;
+  if (state.mechanic === "ordered-territory-capture") return distance <= 300;
+  return true;
 }
 
 /** Applies one bounded flap impulse to aerial state.

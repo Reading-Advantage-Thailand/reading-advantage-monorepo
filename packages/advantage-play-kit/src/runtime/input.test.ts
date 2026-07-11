@@ -14,6 +14,7 @@ describe("createInputController", () => {
     }));
     expect(controller.snapshot()).toMatchObject({
       keys: ["ArrowLeft"],
+      pressed: ["ArrowLeft"],
       pointer: {
         down: true,
         cancelled: false,
@@ -31,6 +32,17 @@ describe("createInputController", () => {
     window.dispatchEvent(new KeyboardEvent("keyup", { code: "ArrowLeft" }));
     expect(controller.snapshot().destroyed).toBe(true);
     expect(surface.style.touchAction).toBe("");
+  });
+
+  it("queues a short key tap until a cartridge consumes the next snapshot", () => {
+    const surface = document.createElement("div");
+    const controller = createInputController(surface);
+    window.dispatchEvent(new KeyboardEvent("keydown", { code: "Space" }));
+    window.dispatchEvent(new KeyboardEvent("keyup", { code: "Space" }));
+
+    expect(controller.snapshot()).toMatchObject({ keys: [], pressed: ["Space"] });
+    expect(controller.snapshot()).toMatchObject({ keys: [], pressed: [] });
+    controller.destroy();
   });
 
   it("retains pointer kind and origin through release for gesture resolution", () => {

@@ -22,6 +22,8 @@ export interface APKPointerState {
 export interface APKInputSnapshot {
   /** Pressed KeyboardEvent codes. */
   keys: readonly string[];
+  /** Key-down codes observed since the previous snapshot, including short taps. */
+  pressed?: readonly string[];
   /** Current primary pointer state. */
   pointer: APKPointerState;
   /** Whether this controller has released its listeners. */
@@ -43,6 +45,7 @@ export interface APKInputController {
  */
 export function createInputController(surface: HTMLElement): APKInputController {
   const keys = new Set<string>();
+  const pressed = new Set<string>();
   const pointer: APKPointerState = {
     down: false,
     cancelled: false,
@@ -58,6 +61,7 @@ export function createInputController(surface: HTMLElement): APKInputController 
 
   const onKeyDown = (event: KeyboardEvent) => {
     keys.add(event.code);
+    if (!event.repeat) pressed.add(event.code);
     if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Space"].includes(event.code)) {
       event.preventDefault();
     }
@@ -109,15 +113,21 @@ export function createInputController(surface: HTMLElement): APKInputController 
   surface.addEventListener("contextmenu", preventBrowserGesture);
 
   return {
-    snapshot: () => ({
-      keys: [...keys].sort(),
-      pointer: { ...pointer },
-      destroyed,
-    }),
+    snapshot: () => {
+      const snapshot: APKInputSnapshot = {
+        keys: [...keys].sort(),
+        pressed: [...pressed],
+        pointer: { ...pointer },
+        destroyed,
+      };
+      pressed.clear();
+      return snapshot;
+    },
     destroy: () => {
       if (destroyed) return;
       destroyed = true;
       keys.clear();
+      pressed.clear();
       pointer.down = false;
       pointer.cancelled = false;
       pointer.id = null;
