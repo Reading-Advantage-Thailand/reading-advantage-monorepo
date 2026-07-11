@@ -15,6 +15,8 @@ describe("Codecamp APK game-creation unit", () => {
 
   it("ships distinct guided and independent repository fixtures", async () => {
     expect(createCodecampAPKTutorialActivity("en").tutorialSteps.map(({ stepId }) => stepId)).toEqual(codecampAPKUnit.wedo.manifest.completionCriteria.requiredStepIds);
+    const executableManifest = JSON.parse(await readFile(new URL("../../fixtures/apk-guided/activity-tutorial.json", import.meta.url), "utf8"));
+    expect(executableManifest).toEqual(codecampAPKUnit.wedo.manifest);
     const guided = await readFile(new URL("../../fixtures/apk-guided/src/cartridge.ts", import.meta.url), "utf8");
     const independent = await readFile(new URL("../../fixtures/apk-independent/src/cartridge.ts", import.meta.url), "utf8");
     expect(guided).toContain("every RuntimeCartridgeManifest field");

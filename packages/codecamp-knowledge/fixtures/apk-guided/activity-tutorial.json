@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "activity-tutorial.v1",
+  "repositoryId": "repo.apk.guided",
+  "activityId": "codecamp.activity.apk.wedo",
+  "activityVersion": "1.0.0",
+  "graphVersion": "1.2.0",
+  "allowedFiles": ["src/cartridge.ts", "src/game-state.ts"],
+  "allowedCommands": [{ "commandId": "git.stage", "profile": "git-status-porcelain" }],
+  "completionCriteria": { "requiredStepIds": ["wedo.apk.manifest"] },
+  "steps": [{
+    "stepId": "wedo.apk.manifest",
+    "order": 1,
+    "objectiveId": "codecamp.game-development.skill.apk-contract",
+    "instruction": { "en": "Complete the cartridge manifest and deterministic educational result.", "th": "เติม cartridge manifest และผลการเรียนรู้แบบกำหนดได้" },
+    "checks": [
+      { "checkId": "manifest.id", "kind": "file_contains", "filePath": "src/cartridge.ts", "expected": "id" },
+      { "checkId": "manifest.title", "kind": "file_contains", "filePath": "src/cartridge.ts", "expected": "title" },
+      { "checkId": "manifest.description", "kind": "file_contains", "filePath": "src/cartridge.ts", "expected": "description" },
+      { "checkId": "manifest.version", "kind": "file_contains", "filePath": "src/cartridge.ts", "expected": "version" },
+      { "checkId": "manifest.runtimeapiversion", "kind": "file_contains", "filePath": "src/cartridge.ts", "expected": "runtimeApiVersion" },
+      { "checkId": "manifest.inputmode", "kind": "file_contains", "filePath": "src/cartridge.ts", "expected": "inputMode" },
+      { "checkId": "manifest.requiredassetslots", "kind": "file_contains", "filePath": "src/cartridge.ts", "expected": "requiredAssetSlots" },
+      { "checkId": "manifest.capabilities", "kind": "file_contains", "filePath": "src/cartridge.ts", "expected": "capabilities" },
+      { "checkId": "git.stage", "kind": "command", "commandId": "git.stage", "expected": "staged:src/cartridge.ts" }
+    ],
+    "hints": [{ "hintId": "hint.boundary", "text": { "en": "Keep persistence in the host, not the cartridge.", "th": "เก็บ persistence ไว้ใน host ไม่ใช่ cartridge" } }],
+    "reveals": [{ "revealId": "reveal.fields", "text": { "en": "Declare every RuntimeCartridgeManifest field before staging the file.", "th": "ระบุทุก field ของ RuntimeCartridgeManifest ก่อน stage ไฟล์" } }],
+    "resourceIds": ["diagram.apk.boundaries"],
+    "scaffoldLevel": 2
+  }]
+}

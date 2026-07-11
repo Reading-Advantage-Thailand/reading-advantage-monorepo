@@ -141,7 +141,7 @@ export default function ModulePage() {
               description={lesson.description}
               status={lesson.userStatus ?? "not_started"}
               score={lesson.userScore}
-              href={`/lesson/${lesson.id}`}
+              href={moduleData.slug === "apk-game-creation" ? `/apk-unit/${lesson.order}` : `/lesson/${lesson.id}`}
             />
           ))
         ) : (
