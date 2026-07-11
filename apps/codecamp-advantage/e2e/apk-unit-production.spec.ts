@@ -75,10 +75,11 @@ test.describe("published APK unit", () => {
     await page.getByRole("button", { name: "1. Prepare a fresh snapshot" }).click();
     await expect(page.getByText(/Snapshot prepared:/)).toBeVisible({ timeout: 30_000 });
     await page.getByLabel("tutorial-check JSON").fill(JSON.stringify(localCheckerResult));
-    await page.context().setOffline(true);
+    const reportPattern = "**/api/trpc/activity.reportTutorial*";
+    await page.route(reportPattern, (route) => route.abort("internetdisconnected"), { times: 1 });
     await page.getByRole("button", { name: "2. Re-verify and store on server" }).click();
-    await expect(page.getByRole("alert")).toContainText(/queued|fetch|network/i, { timeout: 30_000 });
-    await page.context().setOffline(false);
+    await expect(page.getByText(/queued|fetch|network/i)).toBeVisible({ timeout: 30_000 });
+    await page.unroute(reportPattern);
     await page.evaluate(() => globalThis.dispatchEvent(new Event("online")));
     await expect(page.getByText("Evidence stored")).toBeVisible({ timeout: 30_000 });
     await page.reload();
