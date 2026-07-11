@@ -1,12 +1,12 @@
 ---
 name: vocab-game-builder
 description: |
-  Build vocabulary learning games using React-Konva canvas architecture with strict TDD workflow and phased development. Use this skill when the user wants to: (1) Create a new vocabulary game from scratch, (2) Resume work on an existing game track, (3) Build a mini-game for language learning. Triggers include: "create a vocab game", "build a new game", "make a vocabulary game", "resume game development", "/vocab-game-builder", "new mini-game".
+  Build Phaser 4 Advantage Play Kit cartridges with strict educational contracts, dual audience editions, TDD, and browser QC. Use this skill when the user wants to create or rebuild a Reading Advantage language-learning game.
 ---
 
 # Vocab Game Builder
 
-Build vocabulary learning games using the project's established Konva-based architecture with strict TDD workflow.
+Build language-learning cartridges on the canonical Phaser 4 Advantage Play Kit (APK), preserving the stable educational input/result ABI and transport-independent host boundary.
 
 ---
 
@@ -39,7 +39,9 @@ Engage the user in a structured conversation to understand the game concept. Ask
 
 7. **Input Style**: "How does the player interact? (tap targets, drag items, swipe gestures, virtual D-pad, tilt, etc.)"
 
-8. **Inspiration**: "Any similar games to reference for mechanics or feel? (e.g., Bejeweled, Fruit Ninja, Space Invaders)"
+8. **Cartridge and Edition Fit**: Identify the reusable APK systems, semantic asset slots, and Primary Chibi / Secondary Epic tuning required. Existing React-Konva, Phaser 3, or R3F games are mechanic references only; do not retain their renderer architecture.
+
+9. **Inspiration**: "Any similar games to reference for mechanics or feel? (e.g., Bejeweled, Fruit Ninja, Space Invaders)"
 
 **After Discovery**: Summarize your understanding back to the user and confirm before proceeding.
 
@@ -121,9 +123,9 @@ Use this template structure:
 - **Effects:** [Particles, animations, feedback]
 
 ## 11. Technical Approach
-- **Engine:** React + React-Konva (Canvas)
-- **State:** Pure state object with tick/update functions
-- **Architecture:** Follow existing patterns (DragonFlight, WizardZombie, RuneMatch)
+- **Engine:** Phaser 4 through `@reading-advantage/advantage-play-kit`.
+- **State:** Deterministic cartridge state and Phaser-native scene lifecycle.
+- **Architecture:** Shared APK cartridge package + semantic edition manifests + thin authenticated host adapter.
 
 ## 12. Configuration
 [Config object structure with all tunable values]
@@ -208,6 +210,15 @@ Present the spec.md and asset-spec.md to the user for review. Ask:
 Revise based on feedback before proceeding.
 
 ---
+
+## APK Cartridge Guidance
+
+- Freeze vocabulary/sentence input arrays and the five-field `GameResults` output before gameplay work.
+- Keep identity, school tenancy, authoritative XP, idempotency, and persistence in the host/domain boundary.
+- Use Phaser-native scenes, physics, cameras, tweens, timers, particles, input, audio, and object pools.
+- Load cartridges client-only through the package catalog; never add per-game production host pages.
+- Supply art and tuning through semantic Primary Chibi and Secondary Epic edition manifests rather than game-source forks.
+- Require deterministic learning-loop tests, shared-host lifecycle tests, mobile touch/keyboard browser QC, one-canvas verification, and explicit product-owner approval.
 
 ## Templates
 
