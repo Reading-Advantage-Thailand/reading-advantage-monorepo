@@ -1,3 +1,9 @@
+import {
+  CHARACTER_COLLISION,
+  CHARACTER_ORIGIN,
+  TOP_DOWN_CHARACTER_ANIMATIONS,
+  TOP_DOWN_CHARACTER_GRID,
+} from "../editions/asset-contract.js";
 import type { RuntimeCartridge, RuntimeEdition } from "../runtime/types.js";
 
 export const validResults = {
@@ -9,48 +15,58 @@ export const validResults = {
 };
 
 /**
- * Creates a valid audience edition fixture for APK tests.
+ * Creates a valid physical-pack audience edition fixture for APK tests.
  * @param overrides Edition fields to replace in the default fixture.
  * @returns A runtime-compatible Primary Chibi edition.
  */
 export function createRuntimeEdition(overrides: Partial<RuntimeEdition> = {}): RuntimeEdition {
-  return {
+  const edition: RuntimeEdition = {
     id: "primary-chibi",
     title: "Primary Chibi",
     runtimeApiVersion: "1.0.0",
-    assets: {
-      "player.hero": {
-        key: "player.hero",
-        type: "image",
-        url: "/apk/primary/hero.svg",
-        provenance: { source: "in-repo-placeholder", license: "CC0-1.0" },
-        metadata: {
-          version: "1.0.0",
-          format: "svg",
-          optimized: true,
-          width: 64,
-          height: 64,
+    pack: {
+      id: "chibi-quest",
+      version: "1.0.0",
+      root: "/assets/apk/chibi-quest/v1",
+      files: {
+        "characters/knight_top": {
+          id: "characters/knight_top",
+          path: "characters/knight_top.png",
+          kind: "spritesheet",
+          view: "top-down",
+          width: 512,
+          height: 1024,
+          format: "png",
+          alpha: true,
+          byteSize: 4096,
+          sha256: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          grid: TOP_DOWN_CHARACTER_GRID,
+          animations: TOP_DOWN_CHARACTER_ANIMATIONS,
+          origin: CHARACTER_ORIGIN,
+          collision: CHARACTER_COLLISION,
+          provenance: { source: "test-fixture", license: "LicenseRef-Test" },
         },
       },
-      "feedback.correct": {
-        key: "feedback.correct",
-        type: "audio",
-        url: "/apk/primary/correct.ogg",
-        provenance: { source: "in-repo-placeholder", license: "CC0-1.0" },
-        metadata: { version: "1.0.0", format: "ogg", optimized: true, byteSize: 2048 },
+    },
+    bindings: {
+      "player.hero.top.idle.down": {
+        key: "player.hero.top.idle.down",
+        file: "characters/knight_top",
+        usage: "animation",
+        view: "top-down",
+        animation: "idle.down",
+      },
+      "player.hero.top.walk.down": {
+        key: "player.hero.top.walk.down",
+        file: "characters/knight_top",
+        usage: "animation",
+        view: "top-down",
+        animation: "walk.down",
       },
     },
-    palette: {
-      background: 0x8bd3dd,
-      player: 0xffd166,
-      friendly: 0x6ee7b7,
-      hostile: 0xfb7185,
-      accent: 0xa78bfa,
-      text: "#172554",
-    },
     tuning: { speed: 1, targetScale: 1, collisionScale: 1, intensity: 0.5 },
-    ...overrides,
   };
+  return { ...edition, ...overrides };
 }
 
 /**
@@ -66,7 +82,7 @@ export function createRuntimeCartridge(): RuntimeCartridge {
       version: "0.1.0",
       runtimeApiVersion: "1.0.0",
       inputMode: "vocabulary",
-      requiredAssetSlots: ["player.hero", "feedback.correct"],
+      requiredAssetBindings: ["player.hero.top.idle.down"],
       capabilities: [],
     },
     createGameConfig: () => ({ scene: [] }),

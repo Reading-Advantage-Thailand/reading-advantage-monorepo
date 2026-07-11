@@ -58,3 +58,37 @@ Evidence:
 The remaining `/api/v1/apk/complete` endpoint is retained only as independently
 tested server-authoritative completion infrastructure. It does not expose a game,
 edition, asset, catalog, or client route.
+
+
+## Physical sprite asset ABI checkpoint — 2026-07-11
+
+The retained APK runtime now validates a production physical-pack model instead
+of generic loader records:
+
+- physical file IDs and safe versioned pack-relative paths;
+- immutable PNG metadata, alpha, byte size, SHA-256, provenance, and dimensions;
+- exact 4x8 top-down and 4x4 side-scroll 128px character grids;
+- exact directional/action frame sequences and playback metadata;
+- bottom-center origin and 32x48 body at offset 48x80;
+- exact 4x4 64px Wang grid with bitmasks zero through fifteen;
+- view-specific semantic bindings to image, frame, animation, tileset, or
+  nine-slice usage;
+- one physical preload for multiple semantic bindings;
+- deterministic Phaser texture and animation keys;
+- exact paired-theme parity across file paths, dimensions, grids, animations,
+  origins, collisions, Wang masks, UI insets, and semantic bindings;
+- schema rejection of `procedural` as a physical production kind.
+
+Evidence:
+
+| Gate | Result |
+|---|---|
+| Focused edition/asset contract | 10 tests passed |
+| Complete Advantage Play Kit suite | 6 files, 27 tests passed |
+| TypeScript check | Passed |
+| Package build | Passed |
+| Package ESLint | Passed |
+| Graph update | 8 files updated; 58 to 150 nodes and 71 to 162 edges |
+
+No cartridge is reintroduced by this checkpoint. The empty public catalog remains
+the guard until physical assets and the corrected inspection pipeline exist.

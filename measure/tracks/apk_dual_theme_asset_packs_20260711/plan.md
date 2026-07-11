@@ -19,13 +19,13 @@
 
 ## Phase S1: Freeze physical sheets and semantic bindings
 
-- [~] Task: Audit the source specification, existing assets, Theme Bench, APK
+- [x] Task: Audit the source specification, existing assets, Theme Bench, APK
   loader, edition manifests, and every cartridge asset consumer
-- [ ] Task: Define a typed physical pack manifest for sheets, frame grids,
+- [x] Task: Define a typed physical pack manifest for sheets, frame grids,
   animations, autotiles, static art, UI slices, and parallax layers
-- [ ] Task: Define view-specific semantic bindings from cartridge roles to
+- [x] Task: Define view-specific semantic bindings from cartridge roles to
   physical files, frames, and animations
-- [ ] Task: Replace the invalid one-WebP-per-slot Red test with contract tests for
+- [x] Task: Replace the invalid one-WebP-per-slot Red test with contract tests for
   grid parity, frame maps, loader deduplication, and semantic animation bindings
 - [ ] Task: Measure - User Manual Verification 'Phase S1' (Protocol in workflow.md)
 

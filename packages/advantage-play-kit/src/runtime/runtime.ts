@@ -49,7 +49,7 @@ export async function mountCartridge(
   const input = parsedInput.data as GameInput;
   const edition = validateEdition(
     options.edition,
-    cartridge.manifest.requiredAssetSlots,
+    cartridge.manifest.requiredAssetBindings,
     APK_RUNTIME_API_VERSION,
   );
 

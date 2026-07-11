@@ -12,16 +12,6 @@ export const APK_RUNTIME_API_VERSION = "1.0.0";
 /** Canonical learning content accepted by a cartridge launch. */
 export type GameInput = VocabularyInput | SentenceInput;
 
-/** Supported semantic asset loading operations. */
-export type SemanticAssetType =
-  | "procedural"
-  | "image"
-  | "spritesheet"
-  | "atlas"
-  | "audio"
-  | "font"
-  | "tilemap";
-
 /** Provenance attached to every edition asset. */
 export interface AssetProvenance {
   /** Original source or generation workflow. */
@@ -34,35 +24,143 @@ export interface AssetProvenance {
   sourceUrl?: string;
 }
 
-/** One semantic asset supplied by an audience edition. */
-export interface SemanticAsset {
-  /** Stable semantic key requested by cartridge source. */
-  key: string;
-  /** Phaser loader operation used for this asset. */
-  type: SemanticAssetType;
-  /** Local or host-resolved asset URL; procedural placeholders do not require one. */
-  url?: string;
-  /** Optional atlas, spritesheet, or loader metadata. */
-  config?: Readonly<Record<string, unknown>>;
+/** Physical file kinds admitted by a production APK asset pack. */
+export type PhysicalAssetKind =
+  | "image"
+  | "spritesheet"
+  | "wang-tileset"
+  | "nine-slice"
+  | "parallax"
+  | "audio";
+
+/** Camera or projection context in which an asset is valid. */
+export type AssetView = "top-down" | "side-scroll" | "isometric" | "screen" | "ui";
+
+/** Exact rectangular frame grid encoded in a physical raster. */
+export interface FrameGrid {
+  /** Width of one frame in pixels. */
+  frameWidth: number;
+  /** Height of one frame in pixels. */
+  frameHeight: number;
+  /** Number of frame columns. */
+  columns: number;
+  /** Number of frame rows. */
+  rows: number;
+  /** Total addressable frames. */
+  frameCount: number;
+}
+
+/** One named animation over frame indices in a physical sheet. */
+export interface AssetAnimation {
+  /** Stable animation name within the physical file. */
+  name: string;
+  /** Ordered zero-based frames. */
+  frames: readonly number[];
+  /** Playback speed in frames per second. */
+  frameRate: number;
+  /** Phaser repeat count; -1 loops indefinitely. */
+  repeat: number;
+}
+
+/** Normalized sprite origin within one frame. */
+export interface AssetOrigin {
+  /** Horizontal origin from zero through one. */
+  x: number;
+  /** Vertical origin from zero through one. */
+  y: number;
+}
+
+/** Arcade-physics body shared by paired theme sprites. */
+export interface AssetCollisionBox {
+  /** Body width in source-frame pixels. */
+  width: number;
+  /** Body height in source-frame pixels. */
+  height: number;
+  /** Horizontal body offset in source-frame pixels. */
+  offsetX: number;
+  /** Vertical body offset in source-frame pixels. */
+  offsetY: number;
+}
+
+/** Insets used to stretch a UI raster without distorting its border. */
+export interface NineSliceInsets {
+  /** Left fixed border in pixels. */
+  left: number;
+  /** Right fixed border in pixels. */
+  right: number;
+  /** Top fixed border in pixels. */
+  top: number;
+  /** Bottom fixed border in pixels. */
+  bottom: number;
+}
+
+/** One immutable physical file in a versioned audience pack. */
+export interface PhysicalAssetFile {
+  /** Stable file identifier shared by both audience packs. */
+  id: string;
+  /** Safe relative path beneath the pack root. */
+  path: string;
+  /** Loader and structural category. */
+  kind: PhysicalAssetKind;
+  /** Projection context for the art. */
+  view: AssetView;
+  /** Encoded width in pixels. */
+  width: number;
+  /** Encoded height in pixels. */
+  height: number;
+  /** Lowercase encoded format. */
+  format: "png" | "ogg" | "webm";
+  /** Whether the raster contains a real alpha channel. */
+  alpha: boolean;
+  /** Encoded transfer size. */
+  byteSize: number;
+  /** Lowercase SHA-256 digest of the encoded file. */
+  sha256: string;
+  /** Optional exact frame grid. */
+  grid?: FrameGrid;
+  /** Named animations addressable within the grid. */
+  animations?: Readonly<Record<string, AssetAnimation>>;
+  /** Sprite origin when the file represents a positioned actor. */
+  origin?: AssetOrigin;
+  /** Physics body when the file represents a collidable actor. */
+  collision?: AssetCollisionBox;
+  /** Wang bitmask-to-frame mapping for a 16-frame autotile. */
+  wangFrames?: readonly number[];
+  /** Stretch-safe UI borders. */
+  nineSlice?: NineSliceInsets;
   /** Source and license evidence. */
   provenance: AssetProvenance;
-  /** Versioned dimensions, format, frames, and optimization evidence. */
-  metadata: {
-    /** Edition-asset release version. */
-    version: string;
-    /** Encoded or procedural asset format. */
-    format: string;
-    /** Whether the asset passed the import optimization step. */
-    optimized: boolean;
-    /** Source pixel width when applicable. */
-    width?: number;
-    /** Source pixel height when applicable. */
-    height?: number;
-    /** Named atlas or animation frames when applicable. */
-    frames?: readonly string[];
-    /** Optimized transfer size when applicable. */
-    byteSize?: number;
-  };
+}
+
+/** A complete immutable physical asset pack for one audience. */
+export interface AssetPackManifest {
+  /** Stable pack identifier. */
+  id: string;
+  /** Semantic version of the pack. */
+  version: string;
+  /** Browser URL prefix containing all files. */
+  root: string;
+  /** Physical files keyed by stable file identifier. */
+  files: Readonly<Record<string, PhysicalAssetFile>>;
+}
+
+/** Runtime presentation operation selected by a semantic binding. */
+export type SemanticAssetUsage = "image" | "frame" | "animation" | "tileset" | "nine-slice";
+
+/** One gameplay role bound to a physical file, frame, or animation. */
+export interface SemanticAssetBinding {
+  /** Stable gameplay-facing semantic key. */
+  key: string;
+  /** Physical file identifier in the owning pack. */
+  file: string;
+  /** How the runtime consumes the physical file. */
+  usage: SemanticAssetUsage;
+  /** Required projection context. */
+  view: AssetView;
+  /** Named animation for animation bindings. */
+  animation?: string;
+  /** Zero-based frame for static-frame bindings. */
+  frame?: number;
 }
 
 /** Audience-safe tuning knobs that do not alter educational I/O. */
@@ -79,7 +177,7 @@ export interface AudienceTuning {
   custom?: Readonly<Record<string, number>>;
 }
 
-/** Complete visual and tuning edition selected by a host. */
+/** Complete physical-asset and tuning edition selected by a host. */
 export interface RuntimeEdition {
   /** Stable edition identifier. */
   id: string;
@@ -87,23 +185,10 @@ export interface RuntimeEdition {
   title: string;
   /** APK runtime API version required by this edition. */
   runtimeApiVersion: string;
-  /** Semantic asset table. */
-  assets: Readonly<Record<string, SemanticAsset>>;
-  /** Procedural fallback palette used before final art packs are imported. */
-  palette: {
-    /** World background color. */
-    background: number;
-    /** Player color. */
-    player: number;
-    /** Friendly feedback color. */
-    friendly: number;
-    /** Hostile feedback color. */
-    hostile: number;
-    /** Accent and particle color. */
-    accent: number;
-    /** Accessible foreground text color. */
-    text: string;
-  };
+  /** Versioned physical source pack. */
+  pack: AssetPackManifest;
+  /** Gameplay roles mapped to physical files and frames. */
+  bindings: Readonly<Record<string, SemanticAssetBinding>>;
   /** Audience-specific presentation and game-feel tuning. */
   tuning: AudienceTuning;
 }
@@ -122,8 +207,8 @@ export interface RuntimeCartridgeManifest {
   runtimeApiVersion: string;
   /** Educational input mode. */
   inputMode: "vocabulary" | "sentence";
-  /** Semantic assets that every edition must provide. */
-  requiredAssetSlots: readonly string[];
+  /** Semantic bindings that every edition must provide. */
+  requiredAssetBindings: readonly string[];
   /** Phaser capability families exercised by the cartridge. */
   capabilities: readonly string[];
 }

@@ -1,136 +1,171 @@
 import { describe, expect, it, vi } from "vitest";
+
 import { APKRuntimeError } from "../runtime/errors.js";
-import {
-  preloadSemanticAssets,
-  resolveEdition,
-  resolveSemanticAsset,
-  validateEdition,
-} from "./editions.js";
+import type { RuntimeEdition } from "../runtime/types.js";
 import { createRuntimeEdition } from "../testing/fixtures.js";
+import { WANG_MASK_FRAMES, WANG_TILE_GRID } from "./asset-contract.js";
+import {
+  preloadAssetBindings,
+  registerAssetAnimations,
+  resolveAssetBinding,
+  resolveEdition,
+  validateEdition,
+  validateEditionPair,
+} from "./editions.js";
 
-describe("edition resolution", () => {
-  it("validates runtime compatibility and required semantic slots", () => {
-    const edition = createRuntimeEdition();
-    expect(validateEdition(edition, ["player.hero", "feedback.correct"], "1.0.0")).toBe(edition);
-    expect(() => validateEdition(edition, ["enemy.basic"], "1.0.0")).toThrowError(APKRuntimeError);
-    expect(() => validateEdition({ ...edition, runtimeApiVersion: "2" }, [], "1.0.0")).toThrow(
-      /runtime/i,
-    );
-    expect(() =>
-      validateEdition(
-        {
-          ...edition,
-          assets: {
-            ...edition.assets,
-            "player.hero": { ...edition.assets["player.hero"]!, key: "wrong.texture" },
-          },
-        },
-        ["player.hero"],
-        "1.0.0",
-      ),
-    ).toThrow(/key/i);
+function cloneEdition(overrides: Partial<RuntimeEdition> = {}): RuntimeEdition {
+  return { ...structuredClone(createRuntimeEdition()), ...overrides };
+}
+
+describe("physical APK edition contract", () => {
+  it("accepts the canonical 4x8 top-down sheet and required semantic animation", () => {
+    const edition = cloneEdition();
+    expect(validateEdition(edition, ["player.hero.top.walk.down"], "1.0.0")).toBe(edition);
   });
 
-  it("selects one edition without game-source branches", () => {
-    const primary = createRuntimeEdition({ id: "primary-chibi" });
-    const secondary = createRuntimeEdition({ id: "secondary-epic" });
-    expect(resolveEdition([primary, secondary], "secondary-epic", ["player.hero"], "1.0.0")).toBe(
-      secondary,
-    );
-    expect(() => resolveEdition([primary], "missing", [], "1.0.0")).toThrow(/missing/i);
+  it("rejects placeholder kinds, missing bindings, and incompatible runtimes", () => {
+    const edition = cloneEdition();
+    const file = edition.pack.files["characters/knight_top"]!;
+    expect(() => validateEdition({
+      ...edition,
+      pack: { ...edition.pack, files: { ...edition.pack.files, [file.id]: { ...file, kind: "procedural" } } },
+    }, [], "1.0.0")).toThrowError(APKRuntimeError);
+    expect(() => validateEdition(edition, ["enemy.basic.top.walk.down"], "1.0.0")).toThrow(/missing required asset bindings/i);
+    expect(() => validateEdition({ ...edition, runtimeApiVersion: "2.0.0" }, [], "1.0.0")).toThrow(/runtime/i);
   });
 
-  it("resolves semantic local and host-relative asset locations", () => {
-    const edition = createRuntimeEdition();
-    expect(resolveSemanticAsset(edition, "player.hero")).toMatchObject({
-      key: "player.hero",
-      url: "/apk/primary/hero.svg",
-    });
-    expect(
-      resolveSemanticAsset(edition, "player.hero", (asset) => `https://cdn.test/v1/${asset.url}`),
-    ).toMatchObject({ url: "https://cdn.test/v1//apk/primary/hero.svg" });
-    expect(() => resolveSemanticAsset(edition, "enemy.missing")).toThrow(/enemy\.missing/);
+  it("rejects a sheet whose dimensions or grid do not encode 4x8 128px cells", () => {
+    const edition = cloneEdition();
+    const file = edition.pack.files["characters/knight_top"]!;
+    expect(() => validateEdition({
+      ...edition,
+      pack: { ...edition.pack, files: { ...edition.pack.files, [file.id]: { ...file, width: 384 } } },
+    }, [], "1.0.0")).toThrow(/frame grid/i);
   });
 
-  it("translates semantic assets into Phaser preload calls", () => {
-    const loader = { image: vi.fn(), audio: vi.fn() };
-    const edition = createRuntimeEdition();
-    preloadSemanticAssets(loader, edition, ["player.hero", "feedback.correct"]);
-    expect(loader.image).toHaveBeenCalledWith("player.hero", "/apk/primary/hero.svg");
-    expect(loader.audio).toHaveBeenCalledWith("feedback.correct", "/apk/primary/correct.ogg");
+  it("rejects animation, origin, and collision drift from the canonical actor contract", () => {
+    const edition = cloneEdition();
+    const file = edition.pack.files["characters/knight_top"]!;
+    const invalidFiles = [
+      { ...file, animations: { ...file.animations, "walk.down": { ...file.animations!["walk.down"]!, frames: [0, 1, 2] } } },
+      { ...file, origin: { x: 0.5, y: 0.5 } },
+      { ...file, collision: { width: 64, height: 64, offsetX: 32, offsetY: 64 } },
+    ];
+    for (const invalidFile of invalidFiles) {
+      expect(() => validateEdition({
+        ...edition,
+        pack: { ...edition.pack, files: { ...edition.pack.files, [file.id]: invalidFile } },
+      }, [], "1.0.0")).toThrow(/canonical|origin|collision/i);
+    }
   });
 
-  it("covers every Phaser loader family and skips procedural placeholders", () => {
-    const loader = {
-      image: vi.fn(),
-      audio: vi.fn(),
-      spritesheet: vi.fn(),
-      atlas: vi.fn(),
-      tilemapTiledJSON: vi.fn(),
+  it("rejects unsafe roots, traversal paths, and file-key mismatches", () => {
+    const edition = cloneEdition();
+    const file = edition.pack.files["characters/knight_top"]!;
+    expect(() => validateEdition({ ...edition, pack: { ...edition.pack, root: "/uploads/latest" } }, [], "1.0.0")).toThrow(/root/i);
+    expect(() => validateEdition({
+      ...edition,
+      pack: { ...edition.pack, files: { ...edition.pack.files, [file.id]: { ...file, path: "../knight_top.png" } } },
+    }, [], "1.0.0")).toThrow(/unsafe relative path/i);
+    expect(() => validateEdition({
+      ...edition,
+      pack: { ...edition.pack, files: { wrong: file } },
+    }, [], "1.0.0")).toThrow(/key mismatch/i);
+  });
+
+  it("requires all sixteen Wang bitmasks to map directly to the 4x4 tile grid", () => {
+    const edition = cloneEdition();
+    const tiles = {
+      id: "tiles/dungeon_walls",
+      path: "tiles/dungeon_walls.png",
+      kind: "wang-tileset" as const,
+      view: "top-down" as const,
+      width: 256,
+      height: 256,
+      format: "png" as const,
+      alpha: true,
+      byteSize: 2048,
+      sha256: "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      grid: WANG_TILE_GRID,
+      wangFrames: WANG_MASK_FRAMES,
+      provenance: { source: "test-fixture", license: "LicenseRef-Test" },
     };
-    const base = createRuntimeEdition();
-    const edition = createRuntimeEdition({
-      assets: {
-        ...base.assets,
-        placeholder: {
-          key: "placeholder",
-          type: "procedural",
-          provenance: { source: "test", license: "original" },
-          metadata: { version: "1", format: "procedural", optimized: true },
-        },
-        font: {
-          key: "font",
-          type: "font",
-          url: "/font.png",
-          provenance: { source: "test", license: "original" },
-          metadata: { version: "1", format: "png", optimized: true },
-        },
-        sheet: {
-          key: "sheet",
-          type: "spritesheet",
-          url: "/sheet.png",
-          config: { frameWidth: 32 },
-          provenance: { source: "test", license: "original" },
-          metadata: { version: "1", format: "png", optimized: true, frames: ["idle"] },
-        },
-        atlas: {
-          key: "atlas",
-          type: "atlas",
-          url: "/atlas.png",
-          config: { atlasUrl: "/atlas.json" },
-          provenance: { source: "test", license: "original" },
-          metadata: { version: "1", format: "png", optimized: true, frames: ["hero"] },
-        },
-        map: {
-          key: "map",
-          type: "tilemap",
-          url: "/map.json",
-          provenance: { source: "test", license: "original" },
-          metadata: { version: "1", format: "json", optimized: true },
-        },
-      },
-    });
-
-    preloadSemanticAssets(loader, edition, ["placeholder", "font", "sheet", "atlas", "map"]);
-    expect(loader.image).toHaveBeenCalledWith("font", "/font.png");
-    expect(loader.spritesheet).toHaveBeenCalledWith("sheet", "/sheet.png", { frameWidth: 32 });
-    expect(loader.atlas).toHaveBeenCalledWith("atlas", "/atlas.png", "/atlas.json");
-    expect(loader.tilemapTiledJSON).toHaveBeenCalledWith("map", "/map.json");
+    const withTiles = {
+      ...edition,
+      pack: { ...edition.pack, files: { ...edition.pack.files, [tiles.id]: tiles } },
+      bindings: { ...edition.bindings, "terrain.dungeon.walls.top": {
+        key: "terrain.dungeon.walls.top",
+        file: tiles.id,
+        usage: "tileset" as const,
+        view: "top-down" as const,
+      } },
+    };
+    expect(validateEdition(withTiles, ["terrain.dungeon.walls.top"], "1.0.0")).toBe(withTiles);
+    expect(() => validateEdition({
+      ...withTiles,
+      pack: { ...withTiles.pack, files: { ...withTiles.pack.files, [tiles.id]: { ...tiles, wangFrames: [0, 1] } } },
+    }, [], "1.0.0")).toThrow(/16-mask/i);
   });
 
-  it("reports a semantic asset that cannot be loaded", () => {
-    const base = createRuntimeEdition();
-    const edition = createRuntimeEdition({
-      assets: {
-        ...base.assets,
-        broken: {
-          key: "broken",
-          type: "image",
-          provenance: { source: "test", license: "original" },
-          metadata: { version: "1", format: "png", optimized: false },
-        },
+  it("requires paired themes to have identical files, paths, grids, animations, and bindings", () => {
+    const primary = cloneEdition();
+    const secondary = cloneEdition({
+      id: "secondary-epic",
+      title: "Secondary Epic",
+      pack: {
+        ...structuredClone(primary.pack),
+        id: "riven-lands",
+        root: "/assets/apk/riven-lands/v1",
       },
     });
-    expect(() => preloadSemanticAssets({ image: vi.fn() }, edition, ["broken"])).toThrow(/no URL/i);
+    expect(() => validateEditionPair(primary, secondary)).not.toThrow();
+    const file = secondary.pack.files["characters/knight_top"]!;
+    const drifted = {
+      ...secondary,
+      pack: { ...secondary.pack, files: { ...secondary.pack.files, [file.id]: { ...file, path: "characters/hero_top.png" } } },
+    };
+    expect(() => validateEditionPair(primary, drifted)).toThrow(/physical contract/i);
+  });
+
+  it("resolves editions and view-specific animation bindings without theme branches", () => {
+    const primary = cloneEdition();
+    const secondary = cloneEdition({ id: "secondary-epic", title: "Secondary Epic" });
+    expect(resolveEdition([primary, secondary], "secondary-epic", ["player.hero.top.idle.down"], "1.0.0")).toBe(secondary);
+    expect(() => resolveEdition([primary], "missing", [], "1.0.0")).toThrow(/missing/i);
+    expect(resolveAssetBinding(primary, "player.hero.top.walk.down")).toMatchObject({
+      url: "/assets/apk/chibi-quest/v1/characters/knight_top.png",
+      textureKey: "apk:primary-chibi:characters/knight_top",
+      animationKey: "apk:primary-chibi:characters/knight_top:walk.down",
+    });
+  });
+
+  it("preloads a shared physical sheet only once for multiple semantic animations", () => {
+    const loader = { image: vi.fn(), audio: vi.fn(), spritesheet: vi.fn() };
+    const edition = cloneEdition();
+    preloadAssetBindings(loader, edition, [
+      "player.hero.top.idle.down",
+      "player.hero.top.walk.down",
+    ]);
+    expect(loader.spritesheet).toHaveBeenCalledTimes(1);
+    expect(loader.spritesheet).toHaveBeenCalledWith(
+      "apk:primary-chibi:characters/knight_top",
+      "/assets/apk/chibi-quest/v1/characters/knight_top.png",
+      { frameWidth: 128, frameHeight: 128 },
+    );
+  });
+
+  it("registers the exact named frame sequence selected by a semantic binding", () => {
+    const manager = { exists: vi.fn(() => false), create: vi.fn() };
+    const edition = cloneEdition();
+    registerAssetAnimations(manager, edition, ["player.hero.top.walk.down"]);
+    expect(manager.create).toHaveBeenCalledWith({
+      key: "apk:primary-chibi:characters/knight_top:walk.down",
+      frames: [0, 1, 2, 3].map((frame) => ({
+        key: "apk:primary-chibi:characters/knight_top",
+        frame,
+      })),
+      frameRate: 8,
+      repeat: -1,
+    });
   });
 });
