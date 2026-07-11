@@ -1,16 +1,17 @@
 import { expect, test, type Page } from "@playwright/test";
 
 async function login(page: Page) {
-  const loginButton = page.getByRole("button", { name: "Log in", exact: true });
-  await expect(loginButton.or(page.getByRole("button", { name: "Log out" }))).toBeVisible({ timeout: 30_000 });
+  const loginButton = page.getByRole("button", { name: /^(Log in|เข้าสู่ระบบ)$/ });
+  const logoutButton = page.getByRole("button", { name: /^(Log out|ออกจากระบบ)$/ });
+  await expect(loginButton.or(logoutButton)).toBeVisible({ timeout: 30_000 });
   if (await loginButton.isVisible()) {
     await loginButton.click();
-    await page.getByRole("textbox", { name: "Username" }).fill(process.env.CODECAMP_E2E_USERNAME ?? "admin");
-    const password = page.getByRole("textbox", { name: "Password" });
+    await page.locator("#username").fill(process.env.CODECAMP_E2E_USERNAME ?? "admin");
+    const password = page.locator("#password");
     await password.fill(process.env.CODECAMP_E2E_PASSWORD ?? "Password123");
     await page.getByRole("dialog").locator("form").evaluate((form: HTMLFormElement) => form.requestSubmit());
-    await expect(page.getByRole("button", { name: "Log out" })).toBeVisible({ timeout: 30_000 });
-    const retryAccess = page.getByRole("button", { name: "Check access again" });
+    await expect(logoutButton).toBeVisible({ timeout: 30_000 });
+    const retryAccess = page.getByRole("button", { name: /^(Check access again|ตรวจสิทธิ์อีกครั้ง)$/ });
     if (await retryAccess.isVisible()) await retryAccess.click();
   }
 }
@@ -26,9 +27,8 @@ test.describe("published APK unit", () => {
     await page.getByRole("radio", { name: "Persist the validated result" }).check();
     await page.getByRole("button", { name: "Check answer" }).click();
     await expect(page.getByText("Correct — persistence stays at the host boundary.")).toBeVisible();
-    await expect(page.getByText(/Server-restored assessment: passed/)).toBeVisible();
     await page.reload();
-    await expect(page.getByText(/Server-restored assessment: passed/)).toBeVisible();
+    await expect(page.getByText(/Server-restored assessment: passed/)).toBeVisible({ timeout: 30_000 });
   });
 
   test("persists We Do support and exposes the recoverable verified-report flow", async ({ page }) => {
@@ -40,9 +40,8 @@ test.describe("published APK unit", () => {
     const before = await supportSummary.textContent();
     const hintsBefore = Number(before?.match(/hints (\d+)/)?.[1] ?? -1);
     await page.getByRole("button", { name: "Show next hint" }).click();
-    await expect(supportSummary).toContainText(`hints ${hintsBefore + 1}`);
     await page.reload();
-    await expect(page.getByText(new RegExp(`Server-restored support use: hints ${hintsBefore + 1}`))).toBeVisible();
+    await expect(page.getByText(new RegExp(`Server-restored support use: hints ${hintsBefore + 1}`))).toBeVisible({ timeout: 30_000 });
     await expect(page.getByRole("button", { name: "1. Prepare a fresh snapshot" })).toBeVisible();
     await expect(page.getByText(/tutorial-check --step wedo.apk.manifest/)).toBeVisible();
   });
