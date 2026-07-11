@@ -1,16 +1,22 @@
-import { captureRegisteredTutorialRepository } from "@/lib/tutorial-repository-capture";
-import { cloneTutorialRepository, readTutorialFixtureFile, tutorialFixtureGitStatus } from "@/lib/node-tutorial-repository-capture";
-import { db, users } from "@reading-advantage/db";
-import { eq } from "drizzle-orm";
+import { createTutorialCaptureLimiter, TutorialCaptureLimitError } from "@/lib/tutorial-capture-limiter";
 
 export const runtime = "nodejs";
+const captureLimiter = createTutorialCaptureLimiter({ maxConcurrent: 2, maxPerLearner: 20, windowMs: 60_000 });
 
 /** Handles service-authenticated capture of a registered learner fork. */
 export async function POST(request: Request) {
   const token = process.env.TUTORIAL_REPOSITORY_WORKER_TOKEN;
   if (!token || request.headers.get("authorization") !== `Bearer ${token}`) return Response.json({ error: "Unauthorized" }, { status: 401 });
   try {
-    const result = await captureRegisteredTutorialRepository(await request.json(), {
+    const [{ captureRegisteredTutorialRepository }, { cloneTutorialRepository, readTutorialFixtureFile, tutorialFixtureGitStatus }, { db, users }, { eq }] = await Promise.all([
+      import("@/lib/tutorial-repository-capture"),
+      import("@/lib/node-tutorial-repository-capture"),
+      import("@reading-advantage/db"),
+      import("drizzle-orm"),
+    ]);
+    const body = await request.json();
+    const learnerId = typeof body === "object" && body !== null && "learnerId" in body && typeof body.learnerId === "string" ? body.learnerId : "invalid";
+    const result = await captureLimiter.run(learnerId, () => captureRegisteredTutorialRepository(body, {
       async getGithubUsername(learnerId) {
         const [learner] = await db.select({ githubUsername: users.githubUsername }).from(users).where(eq(users.id, learnerId)).limit(1);
         return learner?.githubUsername ?? null;
@@ -20,9 +26,9 @@ export async function POST(request: Request) {
       gitStatus: tutorialFixtureGitStatus,
       now: () => new Date().toISOString(),
       repositoryBaseUrl: process.env.TUTORIAL_REPOSITORY_BASE_URL,
-    });
+    }));
     return Response.json(result);
   } catch (error) {
-    return Response.json({ error: error instanceof Error ? error.message : "Capture failed" }, { status: 400 });
+    return Response.json({ error: error instanceof Error ? error.message : "Capture failed" }, { status: error instanceof TutorialCaptureLimitError ? 429 : 400 });
   }
 }
