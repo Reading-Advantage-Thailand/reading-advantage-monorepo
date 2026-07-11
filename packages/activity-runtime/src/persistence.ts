@@ -165,7 +165,9 @@ export function appendActivityEventBatch(
   for (const { event } of newEvents) assertEventPolicy(session, event, policy);
 
   const state = newEvents.reduce((current, { event }) => reduceActivityEvent(current, event), session.state);
-  const maximumSequence = Math.max(highWatermark, ...batch.events.map(({ clientSequence }) => clientSequence));
+  const maximumSequence = newEvents.length > 0
+    ? Math.max(highWatermark, ...newEvents.map(({ clientSequence }) => clientSequence))
+    : highWatermark;
   return {
     ...session,
     updatedAt: policy.now,

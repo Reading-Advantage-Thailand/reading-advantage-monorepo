@@ -28,7 +28,7 @@ describe("activity persistence schema", () => {
   it("declares unique constraints for event and sequence replay protection", () => {
     const uniqueNames = getTableConfig(activitySessionEvents).uniqueConstraints.map((constraint) => constraint.name);
     expect(uniqueNames).toEqual(expect.arrayContaining([
-      "activity_session_events_tenant_event_unique",
+      "activity_session_events_session_event_unique",
       "activity_session_events_session_server_sequence_unique",
       "activity_session_events_session_device_client_unique",
     ]));

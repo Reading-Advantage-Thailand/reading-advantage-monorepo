@@ -2,6 +2,7 @@ import { sql } from "drizzle-orm";
 import {
   boolean,
   check,
+  foreignKey,
   index,
   integer,
   jsonb,
@@ -51,9 +52,7 @@ export const activitySessionEvents = pgTable(
   "activity_session_events",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    sessionId: uuid("session_id")
-      .notNull()
-      .references(() => activitySessions.id, { onDelete: "cascade" }),
+    sessionId: uuid("session_id").notNull(),
     tenantKey: text("tenant_key").notNull(),
     learnerId: text("learner_id").notNull(),
     eventId: text("event_id").notNull(),
@@ -69,7 +68,7 @@ export const activitySessionEvents = pgTable(
     receivedAt: timestamp("received_at", { withTimezone: true }).defaultNow().notNull(),
   },
   (table) => [
-    unique("activity_session_events_tenant_event_unique").on(table.tenantKey, table.eventId),
+    unique("activity_session_events_session_event_unique").on(table.sessionId, table.eventId),
     unique("activity_session_events_session_server_sequence_unique").on(table.sessionId, table.serverSequence),
     unique("activity_session_events_session_device_client_unique").on(table.sessionId, table.deviceId, table.clientSequence),
     check("activity_session_events_client_sequence_check", sql`${table.clientSequence} > 0`),
@@ -78,6 +77,11 @@ export const activitySessionEvents = pgTable(
       "activity_session_events_assessment_check",
       sql`(${table.isAssessed} = false AND ${table.submissionId} IS NULL) OR (${table.isAssessed} = true AND ${table.submissionId} IS NOT NULL)`,
     ),
+    foreignKey({
+      name: "activity_session_events_owner_fk",
+      columns: [table.tenantKey, table.sessionId, table.learnerId],
+      foreignColumns: [activitySessions.tenantKey, activitySessions.id, activitySessions.learnerId],
+    }).onDelete("cascade"),
     index("activity_session_events_tenant_learner_occurred_idx").on(table.tenantKey, table.learnerId, table.occurredAt),
     index("activity_session_events_session_received_idx").on(table.sessionId, table.receivedAt),
   ],

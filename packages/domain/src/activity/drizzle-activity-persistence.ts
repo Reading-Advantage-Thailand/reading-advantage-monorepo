@@ -124,8 +124,7 @@ export class DrizzleActivityPersistence implements ActivityPersistencePort {
           submissionId: null,
           eventJson: event as unknown as Record<string, unknown>,
           occurredAt: new Date(event.occurredAt),
-        })))
-          .onConflictDoNothing({ target: [activitySessionEvents.tenantKey, activitySessionEvents.eventId] });
+        })));
       }
       const [saved] = await tx.update(activitySessions).set({
         stateJson: updated.state as unknown as Record<string, unknown>,

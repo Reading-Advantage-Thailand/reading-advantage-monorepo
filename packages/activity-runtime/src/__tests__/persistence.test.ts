@@ -62,6 +62,16 @@ describe("activity persistence projection", () => {
     expect(secondDevice.state.openedResourceIds).toEqual(["diagram.commit-flow"]);
   });
 
+  it("does not poison a device watermark when an existing event is replayed under a new batch", () => {
+    const session = createActivitySessionRecord({ sessionId: "session-1", actor, activityId: metadata.activityId, activityVersion: metadata.activityVersion, startedAt: "2026-07-10T00:00:00Z" });
+    const accepted = appendActivityEventBatch(session, { batchId: "batch-1", deviceId: "laptop", events: [event("event-1", "resource_opened", 1)] }, { now: "2026-07-10T00:01:00Z", maxPositionSeconds: 120 });
+    const replayed = appendActivityEventBatch(accepted, { batchId: "batch-replay", deviceId: "laptop", events: [event("event-1", "resource_opened", 999)] }, { now: "2026-07-10T00:02:00Z", maxPositionSeconds: 120 });
+    const next = appendActivityEventBatch(replayed, { batchId: "batch-2", deviceId: "laptop", events: [event("event-2", "resource_opened", 2)] }, { now: "2026-07-10T00:03:00Z", maxPositionSeconds: 120 });
+    expect(replayed.deviceHighWatermarks.laptop).toBe(1);
+    expect(next.deviceHighWatermarks.laptop).toBe(2);
+    expect(next.lastEventSequence).toBe(2);
+  });
+
   it("rejects stale reordering, malicious positions, and future timestamps atomically", () => {
     const session = createActivitySessionRecord({
       sessionId: "session-1",

@@ -15,7 +15,7 @@ function sourceFiles(directory: string): string[] {
 describe("activity runtime package boundaries", () => {
   it("declares stable core, authoring, server, and testing subpath exports", () => {
     const manifest = JSON.parse(readFileSync(join(sourceRoot, "..", "package.json"), "utf8"));
-    expect(Object.keys(manifest.exports)).toEqual([".", "./core", "./authoring", "./server", "./testing"]);
+    expect(Object.keys(manifest.exports)).toEqual([".", "./core", "./authoring", "./server", "./transport", "./testing"]);
   });
 
   it("contains no forbidden framework, UI, database, auth, or provider imports", () => {
