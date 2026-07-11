@@ -1,38 +1,74 @@
-# Implementation Plan: APK Dual-Theme Production Asset Packs
+# Implementation Plan: APK Dual-Theme Sprite Asset Packs
 
 > **Track ID:** `apk_dual_theme_asset_packs_20260711`
-> **Predecessors:** `advantage_play_kit_20260710`, `apk_catalog_cutover_w0_20260710`, `apk_incomplete_sentence_action_20260710`, `apk_advantage_games_arcade_host_w2_20260710`, `apk_runner_traversal_wave_w3_20260711`, `apk_arena_target_action_wave_w4_20260711`
+> **Source contract:** `/home/daniel-bo/Desktop/pixel-art-benchmark/dual_theme_asset_specification.md`
 
-## Phase S1: Freeze production asset contracts
-_Story ref: spec.md#story-s1_
-_Blast radius: `GAMEPLAY_ASSET_SLOTS`, `CartridgeEdition`, `preloadSemanticAssets`, and all cartridge `requiredAssetSlots`._
+## Phase S1: Freeze physical sheets and semantic bindings
 
-- [x] Task: Reconcile the dual-theme specification with the live 40-slot APK inventory — `22bc7ae9`
-- [x] Task: Add Red manifest parity, provenance, path-safety, budget, and placeholder-rejection tests — `e912b455`
-- [~] Task: Define versioned pack manifests and deterministic validation tooling
-- [ ] Task: Measure - User Manual Verification 'Phase S1: Freeze production asset contracts' (Protocol in workflow.md)
+- [~] Task: Audit the source specification, existing assets, Theme Bench, APK
+  loader, edition manifests, and every cartridge asset consumer
+- [ ] Task: Define a typed physical pack manifest for sheets, frame grids,
+  animations, autotiles, static art, UI slices, and parallax layers
+- [ ] Task: Define view-specific semantic bindings from cartridge roles to
+  physical files, frames, and animations
+- [ ] Task: Replace the invalid one-WebP-per-slot Red test with contract tests for
+  grid parity, frame maps, loader deduplication, and semantic animation bindings
+- [ ] Task: Measure - User Manual Verification 'Phase S1' (Protocol in workflow.md)
 
-## Phase S2: Produce both theme packs
-_Story ref: spec.md#story-s2_
+## Phase S2: Repair deterministic processing and inspection
 
-- [ ] Task: Generate and normalize the Chibi Quest asset set
-- [ ] Task: Generate and normalize the Riven Lands asset set
-- [ ] Task: Record paired-file inventory, dimensions, byte size, hashes, and provenance
-- [ ] Task: Measure - User Manual Verification 'Phase S2: Produce both theme packs' (Protocol in workflow.md)
+- [ ] Task: Add validators for dimensions, grids, alpha, chroma residue,
+  cross-cell bleed, paired-theme parity, hashes, and byte budgets
+- [ ] Task: Add deterministic frame/strip assembly around the existing chroma
+  cleanup strategy, preserving nearest-neighbor pixel boundaries
+- [ ] Task: Correct Theme Bench character animation maps from the erroneous 3x3
+  assumptions to the canonical 4x8 top-down and 4x4 side-scroll contracts
+- [ ] Task: Verify frame stepping, playback, anchor, collision, autotile, prop,
+  VFX, and theme-swap inspection paths
+- [ ] Task: Measure - User Manual Verification 'Phase S2' (Protocol in workflow.md)
 
-## Phase S3: Integrate assets into cartridges
-_Story ref: spec.md#story-s3_
-_Blast radius: edition manifests, semantic preloader, 14 cartridge scenes, QC host, and production arcade host._
+## Phase S3: Produce the minimum playable paired set
 
-- [ ] Task: Replace both procedural edition manifests with local pack manifests
-- [ ] Task: Add a shared semantic texture presentation helper
-- [ ] Task: Adopt semantic textures in every current cartridge family without edition branches
-- [ ] Task: Measure - User Manual Verification 'Phase S3: Integrate assets into cartridges' (Protocol in workflow.md)
+- [ ] Task: Generate one approved identity/reference pose per theme on solid magenta
+- [ ] Task: Generate and assemble `knight_top` and `skeleton_top` as exact 4x8
+  sprite sheets, inspecting every frame and every animation cycle
+- [ ] Task: Generate and verify `dungeon_floor` and `dungeon_walls` as exact
+  16-mask Wang sheets
+- [ ] Task: Generate and verify the animated `chest` and `torch` strips plus
+  `key_gold`, `healthbar`, `panel_9slice`, and `dialog_frame`
+- [ ] Task: Run the paired-theme top-down smoke scene and hot-swap verification
+- [ ] Task: Measure - User Manual Verification 'Phase S3' (Protocol in workflow.md)
 
-## Phase S4: Verify production presentation
-_Story ref: spec.md#story-s4_
+## Phase S4: Complete both mirrored physical packs
 
-- [ ] Task: Run manifest, package, coverage, lint, type, build, graph, and Measure gates
-- [ ] Task: Run the 28-combination boot matrix plus desktop/mobile interaction flows
-- [ ] Task: Capture Kimi WebBridge evidence and complete independent review remediation
-- [ ] Task: Measure - User Manual Verification 'Phase S4: Verify production presentation' (Protocol in workflow.md)
+- [ ] Task: Produce side-scroll hero/enemy sheets, forest tiles, parallax layers,
+  and required combat VFX
+- [ ] Task: Produce remaining heroes, enemies, boss, NPCs, and portraits
+- [ ] Task: Produce remaining tilesets, props, items, VFX, UI, and backgrounds
+- [ ] Task: Record prompt lineage, manual-inspection disposition, dimensions,
+  alpha/chroma result, hashes, byte size, and provenance for every file
+- [ ] Task: Run exhaustive animation, autotile, slice, and theme-parity QC
+- [ ] Task: Measure - User Manual Verification 'Phase S4' (Protocol in workflow.md)
+
+## Phase S5: Integrate sprite semantics into APK
+
+- [ ] Task: Extend the edition manifest and semantic preloader for physical-file
+  deduplication, frame selection, and stable animation definitions
+- [ ] Task: Replace global view-ambiguous roles with cartridge-appropriate
+  top-down, side-scroll, isometric, static-frame, and animation bindings
+- [ ] Task: Adopt the semantic sprite bindings in all current cartridge families
+  without edition branches or authoring-tool runtime dependencies
+- [ ] Task: Prove educational and result ABI parity
+- [ ] Task: Measure - User Manual Verification 'Phase S5' (Protocol in workflow.md)
+
+## Phase S6: Full verification and closeout
+
+- [ ] Task: Run scoped tests, coverage, lint, type-check, build, graph, and
+  Measure validation gates
+- [ ] Task: Run the 28-edition/cartridge boot matrix and desktop/mobile
+  interaction matrix
+- [ ] Task: Use Kimi WebBridge to manually inspect animation, theme swapping,
+  readability, responsiveness, console output, and final result flows
+- [ ] Task: Complete independent review and remediate every Critical, High, and
+  Medium finding
+- [ ] Task: Measure - User Manual Verification 'Phase S6' (Protocol in workflow.md)
