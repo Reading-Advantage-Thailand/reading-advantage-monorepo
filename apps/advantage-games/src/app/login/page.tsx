@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { getCartridgeCatalogEntry } from "@reading-advantage/game-cartridges/catalog";
 import { LoginForm } from "@/features/auth/LoginForm";
 
 export const metadata: Metadata = {
@@ -12,15 +11,13 @@ type LoginPageProps = {
 };
 
 /**
- * Accepts only a localized production arcade path as a post-login destination.
+ * Withholds former arcade redirects while APK cartridges are quarantined.
  * @param value Untrusted redirect query value.
- * @returns A safe same-app arcade path.
+ * @returns The safe application root.
  */
 export function resolveStudentRedirect(value: string | string[] | undefined): string {
-  const fallback = "/en/student/arcade/dragon-flight";
-  if (typeof value !== "string") return fallback;
-  const match = value.match(/^\/(en|th|zh)\/student\/arcade\/([^/?#]+)$/u);
-  return match && getCartridgeCatalogEntry(match[2]) ? value : fallback;
+  void value;
+  return "/";
 }
 
 /** Renders the Advantage Games student login page.

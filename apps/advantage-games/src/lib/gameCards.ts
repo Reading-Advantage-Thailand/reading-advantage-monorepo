@@ -9,7 +9,24 @@ export type GameCard = {
   status: 'playable' | 'coming-soon'
 }
 
-export const gameCards: GameCard[] = [
+const withdrawnApkGameIds = new Set([
+  'dragon-flight',
+  'dungeon-liberator',
+  'magic-defense',
+  'astral-mage',
+  'sorcerer-ziggurat',
+  'dragon-rider',
+  'spellweavers-run',
+  'griffin-riders-escape',
+  'storm-castle-tower',
+  'archers-revenge',
+  'paladins-twin-soul',
+  'griffin-sky-joust',
+  'gryphon-patrol',
+  'realm-carver',
+]);
+
+const catalogCards: GameCard[] = [
   {
     id: 'castle-defense',
     title: 'Castle Defense',
@@ -23,7 +40,6 @@ export const gameCards: GameCard[] = [
     title: 'Dragon Rider',
     description: 'Ride your dragon to protect your village',
     cover: withBasePath('/games/cover/cover-dragon-rider.png'),
-    href: '/student/arcade/dragon-rider',
     status: 'playable',
   },
   {
@@ -31,7 +47,6 @@ export const gameCards: GameCard[] = [
     title: 'Magic Defense',
     description: 'Defend your castles from falling words by typing their translations.',
     cover: withBasePath('/games/cover/magic-defense-cover.png'),
-    href: '/student/arcade/magic-defense',
     status: 'playable',
   },
   {
@@ -47,7 +62,6 @@ export const gameCards: GameCard[] = [
     title: 'Dragon Flight',
     description: 'Choose the correct gate to grow your dragon flight.',
     cover: withBasePath('/games/cover/dragon-flight-cover.png'),
-    href: '/student/arcade/dragon-flight',
     status: 'playable',
   },
   {
@@ -95,7 +109,6 @@ export const gameCards: GameCard[] = [
     title: 'Dungeon Liberator',
     description: 'Rescue prisoners by collecting them in the correct word order and escape the dungeon!',
     cover: withBasePath('/games/cover/dungeon-liberator.png'),
-    href: '/student/arcade/dungeon-liberator',
     status: 'playable',
   },
   {
@@ -103,7 +116,6 @@ export const gameCards: GameCard[] = [
     title: "Spellweaver's Run",
     description: 'Collect word orbs in the correct order to form sentences in this enchanted forest runner!',
     cover: withBasePath('/games/cover/cover-spellweavers-run.png'),
-    href: '/student/arcade/spellweavers-run',
     status: 'playable',
   },
   {
@@ -143,7 +155,6 @@ export const gameCards: GameCard[] = [
     title: "Archer's Revenge",
     description: "Shoot enemies matching the target translation. Don't hit shielded enemies!",
     cover: withBasePath('/games/cover/cover-archers-revenge.png'),
-    href: '/student/arcade/archers-revenge',
     status: 'playable',
   },
   {
@@ -151,7 +162,6 @@ export const gameCards: GameCard[] = [
     title: 'Storm the Castle Tower',
     description: 'Scale the castle walls! Collect words in the correct order while dodging boiling oil and falling rocks!',
     cover: withBasePath('/games/cover/cover-storm-the-castle-tower.png'),
-    href: '/student/arcade/storm-castle-tower',
     status: 'playable',
   },
   {
@@ -159,7 +169,6 @@ export const gameCards: GameCard[] = [
     title: 'Griffin Sky-Joust',
     description: 'Take to the skies! Strike down enemy knights from above in the correct word order!',
     cover: withBasePath('/games/cover/cover-griffin-sky-joust.png'),
-    href: '/student/arcade/griffin-sky-joust',
     status: 'playable',
   },
   {
@@ -167,7 +176,6 @@ export const gameCards: GameCard[] = [
     title: 'Realm Carver',
     description: 'Carve a path through the wild magic! Claim territory and capture words in the correct order!',
     cover: withBasePath('/games/cover/cover-realm-carver.png'),
-    href: '/student/arcade/realm-carver',
     status: 'playable',
   },
   {
@@ -175,7 +183,6 @@ export const gameCards: GameCard[] = [
     title: "Paladin's Twin-Soul",
     description: 'Defend the realm and rescue your twin soul! Match the magic to double your power!',
     cover: withBasePath('/games/cover/cover-paladins-twin-soul.png'),
-    href: '/student/arcade/paladins-twin-soul',
     status: 'playable',
   },
   {
@@ -183,7 +190,6 @@ export const gameCards: GameCard[] = [
     title: "Griffin Rider's Escape",
     description: 'Fly through the magical gates in the correct order to complete the sentence!',
     cover: withBasePath('/games/cover/cover-griffin-riders-escape.png'),
-    href: '/student/arcade/griffin-riders-escape',
     status: 'playable',
   },
   {
@@ -191,7 +197,6 @@ export const gameCards: GameCard[] = [
     title: 'Astral Mage',
     description: 'Navigate the magical void and shoot word crystals in the correct order to complete sentences!',
     cover: withBasePath('/games/cover/cover-astral-mage.png'),
-    href: '/student/arcade/astral-mage',
     status: 'playable',
   },
   {
@@ -207,7 +212,6 @@ export const gameCards: GameCard[] = [
     title: "The Sorcerer's Ziggurat",
     description: 'Jump through an isometric pyramid of cubes to complete ancient rituals in the correct sentence order!',
     cover: withBasePath('/games/cover/cover-sorcerers-ziggurat.png'),
-    href: '/student/arcade/sorcerer-ziggurat',
     status: 'playable',
   },
   {
@@ -223,7 +227,13 @@ export const gameCards: GameCard[] = [
     title: 'Gryphon Patrol',
     description: 'Hunt the sentences across the sky!',
     cover: withBasePath('/games/cover/cover-gryphon-patrol.png'),
-    href: '/student/arcade/gryphon-patrol',
     status: 'playable',
   },
 ]
+
+/** Game catalog with invalid APK cartridges withdrawn from playable routing. */
+export const gameCards: GameCard[] = catalogCards.map((card) =>
+  withdrawnApkGameIds.has(card.id)
+    ? { ...card, href: undefined, status: 'coming-soon' }
+    : card
+)

@@ -20,7 +20,7 @@ describe('gameCards — locale-agnostic hrefs', () => {
     expect(withHref.length).toBe(playable.length)
   })
 
-  it('publishes the exact nine APK cartridges through production arcade routes', () => {
+  it('withholds every invalid APK cartridge from production arcade routes', () => {
     const apkIds = [
       'dragon-flight',
       'dungeon-liberator',
@@ -30,17 +30,18 @@ describe('gameCards — locale-agnostic hrefs', () => {
       'dragon-rider',
       'spellweavers-run',
       'griffin-riders-escape',
-      'storm-castle-tower',
+      'storm-castle-tower', 'archers-revenge', 'paladins-twin-soul',
+      'griffin-sky-joust', 'gryphon-patrol', 'realm-carver',
     ]
     const apkCards = gameCards.filter((card) =>
       apkIds.includes(card.id)
     )
 
-    expect(apkCards).toHaveLength(9)
+    expect(apkCards).toHaveLength(14)
     for (const card of apkCards) {
       expect(card).toEqual(expect.objectContaining({
-        status: 'playable',
-        href: `/student/arcade/${card.id}`,
+        status: 'coming-soon',
+        href: undefined,
       }))
     }
   })

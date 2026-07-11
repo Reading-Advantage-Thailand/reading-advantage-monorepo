@@ -26,7 +26,7 @@ function readErrorMessage(value: unknown): string {
  * @returns The student credential form.
  */
 export function LoginForm({
-  redirectTo = "/en/student/arcade/dragon-flight",
+  redirectTo = "/",
 }: LoginFormProps) {
   const router = useRouter();
   const [username, setUsername] = useState("");

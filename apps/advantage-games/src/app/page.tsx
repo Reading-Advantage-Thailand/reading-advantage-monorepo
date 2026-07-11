@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { FlaskConical } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
@@ -9,10 +8,10 @@ import { gameCards } from '@/lib/gameCards'
 /**
  * Resolves a locale-agnostic game path into its public launch URL.
  * @param href Catalog path for a playable game.
- * @returns A root QC deep link or an English-prefixed legacy student route.
+ * @returns An English-prefixed legacy student route.
  */
 export function resolveGameHref(href: string): string {
-  return href.startsWith('/qc') ? href : `/en${href}`
+  return `/en${href}`
 }
 
 export default function MainMenu() {
@@ -26,14 +25,6 @@ export default function MainMenu() {
           <p className="text-lg md:text-xl text-muted-foreground">
             High-precision vocabulary training
           </p>
-          <div className="flex justify-center pt-4">
-            <Button asChild size="lg" className="rounded-full px-7">
-              <Link href="/qc">
-                <FlaskConical aria-hidden="true" className="mr-2 h-5 w-5" />
-                Open APK QC Lab
-              </Link>
-            </Button>
-          </div>
         </header>
 
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">

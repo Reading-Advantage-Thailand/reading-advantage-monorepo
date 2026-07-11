@@ -7,13 +7,13 @@
 
 - [x] Task: Record the asset-ABI closeout failure and invalidate the production
   completion claim — `eddf99d7`
-- [~] Task: Remove all 14 invalid cartridge catalog entries, dynamic loaders,
+- [x] Task: Remove all 14 invalid cartridge catalog entries, dynamic loaders,
   production arcade routes, QC exposure, and cross-host smoke claims
-- [ ] Task: Remove the cartridge implementations and procedural edition manifests
+- [x] Task: Remove the cartridge implementations and procedural edition manifests
   built against the invalid contract
-- [ ] Task: Retain only the stable educational I/O contracts and any independently
+- [x] Task: Retain only the stable educational I/O contracts and any independently
   verified Phaser lifecycle primitives; no old asset or cartridge API is grandfathered
-- [ ] Task: Add a failing empty-catalog guard proving no cartridge is re-exposed
+- [x] Task: Add an empty-catalog guard proving no cartridge is re-exposed
   before it passes the new sprite asset ABI
 - [ ] Task: Measure - User Manual Verification 'Phase S0' (Protocol in workflow.md)
 

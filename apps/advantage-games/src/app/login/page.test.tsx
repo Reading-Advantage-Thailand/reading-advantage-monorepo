@@ -8,7 +8,7 @@ jest.mock("@/features/auth/LoginForm", () => ({
 }));
 
 describe("login page", () => {
-  it("identifies Advantage Games and preserves a valid arcade redirect", async () => {
+  it("identifies Advantage Games and withholds former arcade redirects", async () => {
     render(await LoginPage({
       searchParams: Promise.resolve({
         redirect: "/th/student/arcade/astral-mage",
@@ -20,7 +20,7 @@ describe("login page", () => {
     ).toBeInTheDocument();
     expect(screen.getByRole("form", { name: "Student sign in" })).toHaveAttribute(
       "data-redirect",
-      "/th/student/arcade/astral-mage",
+      "/",
     );
   });
 
@@ -30,8 +30,6 @@ describe("login page", () => {
     "/en/student/arcade/not-a-cartridge",
     "/admin",
   ])("rejects an unsafe redirect %s", (value) => {
-    expect(resolveStudentRedirect(value)).toBe(
-      "/en/student/arcade/dragon-flight",
-    );
+    expect(resolveStudentRedirect(value)).toBe("/");
   });
 });

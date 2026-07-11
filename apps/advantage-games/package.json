@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "predev": "pnpm --filter @reading-advantage/game-contracts build && pnpm --filter @reading-advantage/advantage-play-kit build && pnpm --filter @reading-advantage/game-cartridges build",
+    "predev": "pnpm --filter @reading-advantage/game-contracts build",
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
@@ -14,11 +14,9 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
-    "@reading-advantage/advantage-play-kit": "workspace:*",
     "@reading-advantage/api": "workspace:*",
     "@reading-advantage/auth": "workspace:*",
     "@reading-advantage/db": "workspace:*",
-    "@reading-advantage/game-cartridges": "workspace:*",
     "@reading-advantage/game-contracts": "workspace:*",
     "@radix-ui/react-avatar": "catalog:",
     "@radix-ui/react-dialog": "catalog:",

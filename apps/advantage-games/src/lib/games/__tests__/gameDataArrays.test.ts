@@ -1,6 +1,5 @@
 import { SAMPLE_VOCABULARY } from '@/lib/games/sampleVocabulary'
 import { SAMPLE_SENTENCES } from '@/lib/games/sampleSentences'
-import { getArcadeContent } from '@/features/apk-arcade/content'
 import type { VocabularyItem } from '@/store/useGameStore'
 import fs from 'fs'
 import path from 'path'
@@ -39,26 +38,6 @@ describe('Game data arrays', () => {
         expect(item.term.length).toBeGreaterThan(0)
         expect(item.translation.length).toBeGreaterThan(0)
       })
-    })
-  })
-
-  describe('game-specific inline data', () => {
-    it('runner-wave sentence cartridges use the strict shared arcade fixture', () => {
-      expect(getArcadeContent('sentence')).toEqual([
-        {
-          term: 'The curious fox crossed the quiet bridge',
-          translation: 'Narrative sentence',
-        },
-        {
-          term: 'We practice new words every morning',
-          translation: 'Habit sentence',
-        },
-      ])
-    })
-
-    it('gryphon-patrol consumes the strict shared sentence fixture', () => {
-      expect(getArcadeContent('sentence')).toHaveLength(2)
-      expect(getArcadeContent('sentence').every(item => item.term && item.translation)).toBe(true)
     })
   })
 

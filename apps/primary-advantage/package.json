@@ -43,7 +43,6 @@
     "@reading-advantage/auth": "workspace:*",
     "@reading-advantage/auth-client": "workspace:*",
     "@reading-advantage/db": "workspace:*",
-    "@reading-advantage/game-cartridges": "workspace:*",
     "@reading-advantage/game-contracts": "workspace:*",
     "@reading-advantage/ui": "workspace:*",
     "@reading-advantage/utils": "workspace:*",
