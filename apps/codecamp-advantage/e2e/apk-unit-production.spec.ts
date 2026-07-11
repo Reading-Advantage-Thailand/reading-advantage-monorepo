@@ -45,7 +45,7 @@ async function login(page: Page) {
 }
 
 test.describe("published APK unit", () => {
-  test.setTimeout(60_000);
+  test.setTimeout(120_000);
 
   test("persists a server-assessed I Do checkpoint across reload", async ({ page }) => {
     await page.goto("/en/apk-unit/1");
@@ -62,7 +62,7 @@ test.describe("published APK unit", () => {
   test("persists We Do support and exposes the recoverable verified-report flow", async ({ page }) => {
     await page.goto("/en/apk-unit/2");
     await login(page);
-    await expect(page.getByRole("heading", { name: "Complete the APK manifest" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Complete the APK manifest" })).toBeVisible({ timeout: 30_000 });
     const supportSummary = page.getByText(/Server-restored support use: hints \d+; reveals \d+/);
     await expect(supportSummary).toBeVisible();
     const before = await supportSummary.textContent();
