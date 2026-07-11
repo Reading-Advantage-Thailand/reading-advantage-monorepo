@@ -182,6 +182,14 @@ export function createSpellweaversRunGameConfig(
       },
       update(this: Phaser.Scene, _time: number, delta: number) {
         if (model.complete) return;
+        const rect = this.game.canvas.getBoundingClientRect();
+        const bounds = {
+          left: rect.left,
+          top: rect.top,
+          width: rect.width,
+          height: rect.height,
+        };
+        if (!isTraversalSurfaceReady(bounds)) return;
         const previousAttempts = model.totalAttempts;
         model = advanceSpellweaversRun(model, delta * options.edition.tuning.speed);
         if (model.totalAttempts !== previousAttempts) {
@@ -196,14 +204,6 @@ export function createSpellweaversRunGameConfig(
           return;
         }
         const currentInput: APKInputSnapshot = options.inputController.snapshot();
-        const rect = this.game.canvas.getBoundingClientRect();
-        const bounds = {
-          left: rect.left,
-          top: rect.top,
-          width: rect.width,
-          height: rect.height,
-        };
-        if (!isTraversalSurfaceReady(bounds)) return;
         const actions = resolveTraversalActions(previousInput, currentInput, INPUT_BINDINGS, bounds);
         previousInput = currentInput;
         for (const action of actions) {

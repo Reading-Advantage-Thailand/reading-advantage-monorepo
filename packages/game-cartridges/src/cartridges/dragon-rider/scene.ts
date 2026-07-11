@@ -210,8 +210,6 @@ export function createDragonRiderGameConfig(
         report(options, "DRAGON_RIDER_READY", "dragon rider scene ready");
       },
       update(this: Phaser.Scene, _time: number, delta: number) {
-        model = advanceDragonRiderTime(model, delta);
-        const currentInput = options.inputController.snapshot();
         const rect = this.game.canvas.getBoundingClientRect();
         const bounds = {
           left: rect.left,
@@ -220,6 +218,8 @@ export function createDragonRiderGameConfig(
           height: rect.height,
         };
         if (!isTraversalSurfaceReady(bounds)) return;
+        model = advanceDragonRiderTime(model, delta);
+        const currentInput = options.inputController.snapshot();
         const actions = resolveTraversalActions(previousInput, currentInput, INPUT_BINDINGS, bounds);
         previousInput = currentInput;
         for (const action of actions) {

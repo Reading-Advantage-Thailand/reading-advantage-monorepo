@@ -1,8 +1,12 @@
 import type {
+  APKDiagnosticInput,
   APKInputController,
   APKInputSnapshot,
 } from "@reading-advantage/advantage-play-kit";
-import { gameResultsSchema } from "@reading-advantage/game-contracts";
+import {
+  gameResultsSchema,
+  type GameResults,
+} from "@reading-advantage/game-contracts";
 import type Phaser from "phaser";
 import { describe, expect, it, vi } from "vitest";
 
@@ -163,6 +167,82 @@ describe("runner wave Phaser scene callbacks", () => {
     expect(() => sceneCallbacks.update.call(scene, 0, 0)).not.toThrow();
     mounted = true;
     expect(() => sceneCallbacks.update.call(scene, 0, 0)).not.toThrow();
+  });
+
+  it("freezes every traversal simulation while its canvas has no usable size", () => {
+    const cases = [
+      {
+        name: "Dragon Rider",
+        createConfig: (input: ReturnType<typeof createMutableInput>, complete: (results: GameResults) => void, diagnostics: (event: APKDiagnosticInput) => void) =>
+          createDragonRiderGameConfig({
+            input: [
+              { term: "สวัสดี", translation: "Hello" },
+              { term: "ขอบคุณ", translation: "Thank you" },
+            ],
+            edition: primaryChibiEdition,
+            inputController: input.controller,
+            complete,
+            diagnostics,
+            seed: 41,
+          }),
+      },
+      {
+        name: "Spellweavers Run",
+        createConfig: (input: ReturnType<typeof createMutableInput>, complete: (results: GameResults) => void, diagnostics: (event: APKDiagnosticInput) => void) =>
+          createSpellweaversRunGameConfig({
+            input: [{ term: "We play", translation: "พวกเราเล่น" }],
+            edition: primaryChibiEdition,
+            inputController: input.controller,
+            complete,
+            diagnostics,
+            seed: 17,
+          }),
+      },
+      {
+        name: "Griffin Riders Escape",
+        createConfig: (input: ReturnType<typeof createMutableInput>, complete: (results: GameResults) => void, diagnostics: (event: APKDiagnosticInput) => void) =>
+          createGriffinRidersGameConfig({
+            input: [{ term: "The griffin flies", translation: "กริฟฟินบิน" }],
+            edition: primaryChibiEdition,
+            inputController: input.controller,
+            complete,
+            diagnostics,
+            seed: 29,
+          }),
+      },
+      {
+        name: "Storm Castle Tower",
+        createConfig: (input: ReturnType<typeof createMutableInput>, complete: (results: GameResults) => void, diagnostics: (event: APKDiagnosticInput) => void) =>
+          createStormCastleGameConfig({
+            input: [{ term: "The bird flies", translation: "นกบิน" }],
+            edition: primaryChibiEdition,
+            inputController: input.controller,
+            complete,
+            diagnostics,
+            seed: 37,
+          }),
+      },
+    ];
+
+    for (const testCase of cases) {
+      const input = createMutableInput();
+      const complete = vi.fn<(results: GameResults) => void>();
+      const diagnostics = vi.fn<(event: APKDiagnosticInput) => void>();
+      const sceneCallbacks = callbacks(testCase.createConfig(input, complete, diagnostics));
+      const scene = createSceneHarness(() => ({ left: 0, top: 0, width: 0, height: 0 }));
+      sceneCallbacks.create.call(scene);
+      const readyDiagnostics = diagnostics.mock.calls.length;
+
+      for (let frame = 0; frame < 12; frame++) {
+        sceneCallbacks.update.call(scene, frame * 10_000, 10_000);
+      }
+
+      expect(complete, `${testCase.name} must not complete while hidden`).not.toHaveBeenCalled();
+      expect(
+        diagnostics.mock.calls.length,
+        `${testCase.name} must not report gameplay progress while hidden`,
+      ).toBe(readyDiagnostics);
+    }
   });
 
   it("drives Dragon Rider through input to one boss completion", () => {

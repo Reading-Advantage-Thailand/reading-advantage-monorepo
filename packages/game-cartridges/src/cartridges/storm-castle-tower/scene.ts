@@ -204,14 +204,6 @@ export function createStormCastleGameConfig(
       },
       update(this: Phaser.Scene, _time: number, delta: number) {
         if (model.complete) return;
-        const previousLives = model.lives;
-        model = advanceStormCastle(model, delta * options.edition.tuning.speed);
-        if (model.lives < previousLives) {
-          report(options, "STORM_CASTLE_HAZARD", "storm castle hazard collision", {
-            lives: model.lives,
-          });
-        }
-        const currentInput: APKInputSnapshot = options.inputController.snapshot();
         const rect = this.game.canvas.getBoundingClientRect();
         const bounds = {
           left: rect.left,
@@ -220,6 +212,14 @@ export function createStormCastleGameConfig(
           height: rect.height,
         };
         if (!isTraversalSurfaceReady(bounds)) return;
+        const previousLives = model.lives;
+        model = advanceStormCastle(model, delta * options.edition.tuning.speed);
+        if (model.lives < previousLives) {
+          report(options, "STORM_CASTLE_HAZARD", "storm castle hazard collision", {
+            lives: model.lives,
+          });
+        }
+        const currentInput: APKInputSnapshot = options.inputController.snapshot();
         const actions = resolveTraversalActions(previousInput, currentInput, INPUT_BINDINGS, bounds);
         previousInput = currentInput;
         for (const action of actions) {
