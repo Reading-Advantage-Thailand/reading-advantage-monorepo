@@ -4,6 +4,7 @@ import type {
 } from "./internal/types";
 
 export { runnerWaveBlueprints } from "./runner-wave-blueprints";
+export { arenaWaveBlueprints } from "./arena-wave-blueprints";
 
 /** Browser-safe public APK cartridge metadata. */
 export const cartridgeCatalog = [
@@ -79,6 +80,11 @@ export const cartridgeCatalog = [
     mechanic: "vertical-ordered-traversal",
     editions: ["primary-chibi", "secondary-epic"],
   },
+  { id: "archers-revenge", title: "Archer's Revenge", description: "Aim at the correct translation before the wall falls.", inputMode: "vocabulary", mechanic: "protected-target-aim", editions: ["primary-chibi", "secondary-epic"] },
+  { id: "paladins-twin-soul", title: "Paladin's Twin-Soul", description: "Protect two linked heroes through vocabulary waves.", inputMode: "vocabulary", mechanic: "paired-hero-arena", editions: ["primary-chibi", "secondary-epic"] },
+  { id: "griffin-sky-joust", title: "Griffin Sky-Joust", description: "Strike airborne word targets in sentence order.", inputMode: "sentence", mechanic: "aerial-ordered-targets", editions: ["primary-chibi", "secondary-epic"] },
+  { id: "gryphon-patrol", title: "Gryphon Patrol", description: "Patrol a wide arena and resolve sentence targets by minimap.", inputMode: "sentence", mechanic: "patrol-minimap", editions: ["primary-chibi", "secondary-epic"] },
+  { id: "realm-carver", title: "Realm Carver", description: "Capture sentence beacons in order to reclaim the realm.", inputMode: "sentence", mechanic: "ordered-territory-capture", editions: ["primary-chibi", "secondary-epic"] },
 ] as const satisfies readonly CartridgeCatalogEntry[];
 
 /** Literal dynamic imports that keep unused Phaser cartridges out of host entry bundles. */
@@ -119,6 +125,11 @@ export const cartridgeLoaders = {
     import("./cartridges/storm-castle-tower").then(
       ({ stormCastleTowerCartridge }) => stormCastleTowerCartridge,
     ),
+  "archers-revenge": () => import("./cartridges/archers-revenge").then(({ archersRevengeCartridge }) => archersRevengeCartridge),
+  "paladins-twin-soul": () => import("./cartridges/paladins-twin-soul").then(({ paladinsTwinSoulCartridge }) => paladinsTwinSoulCartridge),
+  "griffin-sky-joust": () => import("./cartridges/griffin-sky-joust").then(({ griffinSkyJoustCartridge }) => griffinSkyJoustCartridge),
+  "gryphon-patrol": () => import("./cartridges/gryphon-patrol").then(({ gryphonPatrolCartridge }) => gryphonPatrolCartridge),
+  "realm-carver": () => import("./cartridges/realm-carver").then(({ realmCarverCartridge }) => realmCarverCartridge),
 } satisfies Record<
   (typeof cartridgeCatalog)[number]["id"],
   () => Promise<GameCartridgeDefinition>

@@ -37,6 +37,17 @@ export const GAMEPLAY_ASSET_SLOTS = [
   "target.window",
   "hazard.oil",
   "hazard.rock",
+  "projectile.arrow",
+  "structure.wall",
+  "player.companion",
+  "enemy.gargoyle",
+  "mount.griffin",
+  "target.word",
+  "hazard.lance",
+  "mount.gryphon",
+  "ui.minimap",
+  "terrain.tile",
+  "target.beacon",
 ] as const;
 
 function createProceduralAsset(

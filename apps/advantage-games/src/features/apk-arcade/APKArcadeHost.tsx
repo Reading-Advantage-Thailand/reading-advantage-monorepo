@@ -54,6 +54,11 @@ const controlInstructions: Partial<Record<CartridgeId, string>> = {
   "spellweavers-run": "Choose the left, center, or right lane with Arrow Left, Arrow Down, and Arrow Right, A, S, and D, or by tapping a lane.",
   "griffin-riders-escape": "Move left or right with the arrow keys, A and D, a side tap, or a horizontal swipe.",
   "storm-castle-tower": "Move with the arrow keys or W, A, S, and D. Collect with Space or Enter. Touch players can tap the matching direction or Collect.",
+  "archers-revenge": "Move with the arrow keys and fire with Space, or tap the correct target.",
+  "paladins-twin-soul": "Move with the arrow keys or W, A, S, and D. Fire with Space or tap the correct target.",
+  "griffin-sky-joust": "Fly with the arrow keys or W, A, and D. Strike with Space or tap the next word target.",
+  "gryphon-patrol": "Patrol with the arrow keys or W, A, S, and D. Fire with Space or tap the correct target; use the minimap to orient.",
+  "realm-carver": "Move with the arrow keys or W, A, S, and D. Capture with Space or tap the next sentence beacon.",
 };
 
 function createIdempotencyKey(): string {

@@ -13,7 +13,8 @@ describe("APK arcade content", () => {
     );
     expect(getNextCartridgeId("dragon-flight")).toBe("dungeon-liberator");
     expect(getNextCartridgeId("sorcerer-ziggurat")).toBe("dragon-rider");
-    expect(getNextCartridgeId("storm-castle-tower")).toBe("dragon-flight");
+    expect(getNextCartridgeId("storm-castle-tower")).toBe("archers-revenge");
+    expect(getNextCartridgeId("realm-carver")).toBe("dragon-flight");
   });
 
   it("returns stable strict vocabulary and sentence arrays", () => {

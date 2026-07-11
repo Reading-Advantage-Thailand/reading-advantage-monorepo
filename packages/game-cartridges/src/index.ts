@@ -20,6 +20,17 @@ export * from "./cartridges/spellweavers-run";
 export * from "./cartridges/griffin-riders-escape";
 /** Phaser-native Storm Castle Tower vertical-traversal cartridge. */
 export * from "./cartridges/storm-castle-tower";
+/** Frozen W4 arena-wave contracts. */
+export * from "./arena-wave-blueprints";
+/** Shared W4 arena systems and scene factory. */
+export * from "./families/arena";
+export * from "./families/arena/cartridge";
+/** W4 public cartridges. */
+export * from "./cartridges/archers-revenge";
+export * from "./cartridges/paladins-twin-soul";
+export * from "./cartridges/griffin-sky-joust";
+export * from "./cartridges/gryphon-patrol";
+export * from "./cartridges/realm-carver";
 /** Reusable sentence target-action family. */
 export * from "./families/target-action";
 /** Reusable deterministic isometric step-graph family. */

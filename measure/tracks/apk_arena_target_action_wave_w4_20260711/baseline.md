@@ -2,7 +2,7 @@
 
 ## Evidence state
 
-S1 source/graph inventory began on 2026-07-11 after W3 archive. Live desktop and `390x844` browser baselines remain the next task; the rows below are not visual acceptance or deletion approval.
+S1 source/graph inventory began on 2026-07-11 after W3 archive. Kimi WebBridge was invoked for the live desktop baseline, but the connected-browser command timed out while the daemon remained healthy; therefore no new visual acceptance or deletion approval is claimed from that attempt. The prior app audit identifies Realm Carver as unable to start because of its route/content mismatch and Gryphon Patrol as having mobile canvas dead bands. Fresh replacement acceptance remains mandatory after implementation.
 
 The code graph was queried before bounded source inspection. `ArchersRevengeGame` currently has ambiguous duplicate graph nodes, so caller conclusions must be reconciled with exact text imports before cutover. The other legacy surfaces were inventoried by exact route/component/state/API paths rather than inferred from catalog labels.
 
@@ -34,4 +34,4 @@ No candidate is deletion-approved. S1 must still capture live behavior, freeze d
 - Archer, Griffin, and the other components depend on Konva/manual RAF lifecycle behavior that must not be copied into APK.
 - Gryphon Patrol's visible keyboard instructions need handler-level and browser confirmation.
 - Realm Carver currently discards sentence translations while splitting the first sentence; W4 must preserve the strict sentence pair-array contract rather than this route transformation.
-- Mobile height/aspect, touch aiming/movement, canvas count, overflow, start/terminal loops, and current console errors remain unverified until the Kimi/Playwright baseline pass.
+- Fresh mobile height/aspect, touch aiming/movement, canvas count, overflow, start/terminal loops, and current console errors remain unverified until the Kimi replacement pass; the initial 2026-07-11 Kimi command timed out at the extension boundary.

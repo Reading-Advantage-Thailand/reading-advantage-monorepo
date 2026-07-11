@@ -143,7 +143,7 @@ export const gameCards: GameCard[] = [
     title: "Archer's Revenge",
     description: "Shoot enemies matching the target translation. Don't hit shielded enemies!",
     cover: withBasePath('/games/cover/cover-archers-revenge.png'),
-    href: '/student/games/vocabulary/archers-revenge',
+    href: '/student/arcade/archers-revenge',
     status: 'playable',
   },
   {
@@ -159,7 +159,7 @@ export const gameCards: GameCard[] = [
     title: 'Griffin Sky-Joust',
     description: 'Take to the skies! Strike down enemy knights from above in the correct word order!',
     cover: withBasePath('/games/cover/cover-griffin-sky-joust.png'),
-    href: '/student/games/sentence/griffin-sky-joust',
+    href: '/student/arcade/griffin-sky-joust',
     status: 'playable',
   },
   {
@@ -167,7 +167,7 @@ export const gameCards: GameCard[] = [
     title: 'Realm Carver',
     description: 'Carve a path through the wild magic! Claim territory and capture words in the correct order!',
     cover: withBasePath('/games/cover/cover-realm-carver.png'),
-    href: '/student/games/sentence/realm-carver',
+    href: '/student/arcade/realm-carver',
     status: 'playable',
   },
   {
@@ -175,7 +175,7 @@ export const gameCards: GameCard[] = [
     title: "Paladin's Twin-Soul",
     description: 'Defend the realm and rescue your twin soul! Match the magic to double your power!',
     cover: withBasePath('/games/cover/cover-paladins-twin-soul.png'),
-    href: '/student/games/vocabulary/paladins-twin-soul',
+    href: '/student/arcade/paladins-twin-soul',
     status: 'playable',
   },
   {
@@ -223,7 +223,7 @@ export const gameCards: GameCard[] = [
     title: 'Gryphon Patrol',
     description: 'Hunt the sentences across the sky!',
     cover: withBasePath('/games/cover/cover-gryphon-patrol.png'),
-    href: '/student/games/sentence/gryphon-patrol',
+    href: '/student/arcade/gryphon-patrol',
     status: 'playable',
   },
 ]

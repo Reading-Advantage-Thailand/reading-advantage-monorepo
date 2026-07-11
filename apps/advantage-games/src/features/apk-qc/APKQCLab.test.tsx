@@ -21,6 +21,11 @@ jest.mock("@reading-advantage/game-cartridges/catalog", () => {
     ["spellweavers-run", "Spellweavers Run", "sentence", "three-lane-ordered-collector"],
     ["griffin-riders-escape", "Griffin Riders Escape", "sentence", "three-lane-perspective-gates"],
     ["storm-castle-tower", "Storm Castle Tower", "sentence", "vertical-ordered-traversal"],
+    ["archers-revenge", "Archer's Revenge", "vocabulary", "protected-target-aim"],
+    ["paladins-twin-soul", "Paladin's Twin-Soul", "vocabulary", "paired-hero-arena"],
+    ["griffin-sky-joust", "Griffin Sky-Joust", "sentence", "aerial-ordered-targets"],
+    ["gryphon-patrol", "Gryphon Patrol", "sentence", "patrol-minimap"],
+    ["realm-carver", "Realm Carver", "sentence", "ordered-territory-capture"],
   ] as const;
   const cartridgeCatalog = entries.map(([id, title, inputMode, mechanic]) => ({ id, title, inputMode, mechanic }));
   const cartridgeLoaders = Object.fromEntries(entries.map(([id, title, inputMode]) => [id, async () => ({ manifest: { id, title, inputMode }, createGameConfig: jest.fn() })]));
@@ -63,6 +68,11 @@ describe("APKQCLab", () => {
     expect(screen.getByRole("button", { name: /Spellweavers Run/i })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Griffin Riders Escape/i })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Storm Castle Tower/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Archer's Revenge/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Paladin's Twin-Soul/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Griffin Sky-Joust/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Gryphon Patrol/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Realm Carver/i })).toBeInTheDocument();
     expect(screen.queryByText(/Sky Gate Sprint|Rune Trail|Arcane Bulwark/i)).not.toBeInTheDocument();
     expect(screen.getByText(/Nothing is authenticated or persisted/i)).toBeInTheDocument();
 
@@ -82,6 +92,9 @@ describe("APKQCLab", () => {
     ["The Sorcerer's Ziggurat", "sorcerer-ziggurat"],
     ["Spellweavers Run", "spellweavers-run"],
     ["Storm Castle Tower", "storm-castle-tower"],
+    ["Griffin Sky-Joust", "griffin-sky-joust"],
+    ["Gryphon Patrol", "gryphon-patrol"],
+    ["Realm Carver", "realm-carver"],
   ] as const)(
     "discovers %s and emits its public cartridge identity",
     async (title, cartridgeId) => {

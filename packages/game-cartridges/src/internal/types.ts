@@ -45,7 +45,12 @@ export type CartridgeManifest = RuntimeCartridgeManifest & {
     | "dragon-rider"
     | "spellweavers-run"
     | "griffin-riders-escape"
-    | "storm-castle-tower";
+    | "storm-castle-tower"
+    | "archers-revenge"
+    | "paladins-twin-soul"
+    | "griffin-sky-joust"
+    | "gryphon-patrol"
+    | "realm-carver";
   /** Educational input mode used by runtime validation. */
   inputMode: CartridgeContentMode;
   /** Phaser capability families demonstrated by this cartridge. */
@@ -102,7 +107,12 @@ export interface CartridgeCatalogEntry {
     | "two-lane-gate-traversal"
     | "three-lane-ordered-collector"
     | "three-lane-perspective-gates"
-    | "vertical-ordered-traversal";
+    | "vertical-ordered-traversal"
+    | "protected-target-aim"
+    | "paired-hero-arena"
+    | "aerial-ordered-targets"
+    | "patrol-minimap"
+    | "ordered-territory-capture";
   /** Edition IDs verified for this cartridge. */
   editions: readonly CartridgeEditionId[];
 }
