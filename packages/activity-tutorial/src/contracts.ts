@@ -20,6 +20,8 @@ const typescriptObjectShapeCheckSchema = z.object({
   propertyContracts: z.array(z.discriminatedUnion("kind", [
     z.object({ property: z.string().regex(/^[A-Za-z_$][A-Za-z0-9_$]*$/), kind: z.literal("string"), format: z.enum(["nonempty", "semver"]).default("nonempty"), allowedValues: z.array(z.string().min(1)).min(1).optional() }).strict(),
     z.object({ property: z.string().regex(/^[A-Za-z_$][A-Za-z0-9_$]*$/), kind: z.literal("string_array"), minItems: z.number().int().nonnegative().default(0) }).strict(),
+    z.object({ property: z.string().regex(/^[A-Za-z_$][A-Za-z0-9_$]*$/), kind: z.literal("number"), integer: z.boolean().default(false), min: z.number().optional() }).strict(),
+    z.object({ property: z.string().regex(/^[A-Za-z_$][A-Za-z0-9_$]*$/), kind: z.literal("boolean") }).strict(),
   ])).min(1),
 }).strict();
 const commandCheckSchema = z.object({

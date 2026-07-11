@@ -9,7 +9,7 @@ const fakeDigest = `sha256:${"0".repeat(64)}`;
 const localCheckerResult = {
   schemaVersion: "activity-tutorial-result.v1", repositoryId: "repo.apk.guided", activityId: "codecamp.activity.apk.wedo",
   stepId: "wedo.apk.manifest", passed: false, checkedAt: "2026-07-11T00:00:00Z", evidenceDigest: fakeDigest,
-  checks: [{ checkId: "manifest.shape", passed: false, evidenceDigest: fakeDigest }, { checkId: "git.clean", passed: false, evidenceDigest: fakeDigest }],
+  checks: [{ checkId: "manifest.shape", passed: false, evidenceDigest: fakeDigest }, { checkId: "result.shape", passed: false, evidenceDigest: fakeDigest }, { checkId: "git.clean", passed: false, evidenceDigest: fakeDigest }],
 };
 
 test.beforeAll(() => {
@@ -18,7 +18,7 @@ test.beforeAll(() => {
   rmSync(e2eForkRoot, { recursive: true, force: true });
   mkdirSync(join(work, "packages/codecamp-knowledge/fixtures/apk-guided/src"), { recursive: true });
   writeFileSync(join(work, "packages/codecamp-knowledge/fixtures/apk-guided/src/cartridge.ts"), validCartridge);
-  writeFileSync(join(work, "packages/codecamp-knowledge/fixtures/apk-guided/src/game-state.ts"), "export const gameState = { score: 0 };\n");
+  writeFileSync(join(work, "packages/codecamp-knowledge/fixtures/apk-guided/src/game-state.ts"), "export const educationalResult = { objectiveId: 'codecamp.game-development.skill.apk-contract', correct: true, attempts: 1 } as const;\n");
   execFileSync("git", ["init"], { cwd: work });
   execFileSync("git", ["config", "user.email", "codecamp-e2e@example.invalid"], { cwd: work });
   execFileSync("git", ["config", "user.name", "Codecamp E2E"], { cwd: work });

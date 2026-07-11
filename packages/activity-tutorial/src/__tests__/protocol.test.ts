@@ -92,6 +92,19 @@ describe("tutorial repository protocol", () => {
     await expect(runTutorialStep(objectManifest, "step.game", { readAllowedFile: async () => invalidSyntax, runAllowedCommand: async () => "", now: () => "2026-07-10T00:00:00Z" })).resolves.toMatchObject({ passed: false, checks: [{ checkId: "manifest.shape", passed: false }] });
   });
 
+  it("validates literal number and boolean result fields without executing repository code", async () => {
+    const resultManifest = structuredClone(manifest);
+    resultManifest.steps[0]!.checks = [{
+      checkId: "result.shape", kind: "typescript_object_shape", filePath: "src/game.ts", exportName: "educationalResult",
+      requiredProperties: ["objectiveId", "correct", "attempts"],
+      propertyContracts: [{ property: "objectiveId", kind: "string", format: "nonempty", allowedValues: ["objective.apk"] }, { property: "correct", kind: "boolean" }, { property: "attempts", kind: "number", integer: true, min: 1 }],
+    }] as never;
+    const run = (source: string) => runTutorialStep(resultManifest, "step.game", { readAllowedFile: async () => source, runAllowedCommand: async () => "", now: () => "2026-07-10T00:00:00Z" });
+    await expect(run("export const educationalResult = { objectiveId: 'objective.apk', correct: true, attempts: 1 } as const;")).resolves.toMatchObject({ passed: true });
+    await expect(run("export const educationalResult = { objectiveId: 'objective.apk', correct: 'yes', attempts: 0 };")).resolves.toMatchObject({ passed: false });
+    await expect(run("export const educationalResult = { objectiveId: 'wrong', correct: false, attempts: 1.5 };")).resolves.toMatchObject({ passed: false });
+  });
+
   it("rejects traversal, undeclared files, commands, and unknown fields", () => {
     type MutableManifest = { allowedFiles: string[]; steps: Array<{ checks: Array<{ filePath?: string; commandId?: string; unexpected?: boolean }> }> };
     const mutations: Array<(input: MutableManifest) => void> = [

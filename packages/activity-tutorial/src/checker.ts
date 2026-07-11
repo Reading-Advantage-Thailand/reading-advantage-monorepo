@@ -45,6 +45,12 @@ function verifiesPropertyContract(expression: ts.Expression, contract: Typescrip
     return !contract.allowedValues || contract.allowedValues.includes(value);
   }
   const value = unwrapExpression(expression);
+  if (contract.kind === "number") {
+    if (!ts.isNumericLiteral(value)) return false;
+    const number = Number(value.text);
+    return Number.isFinite(number) && (!contract.integer || Number.isInteger(number)) && (contract.min === undefined || number >= contract.min);
+  }
+  if (contract.kind === "boolean") return value.kind === ts.SyntaxKind.TrueKeyword || value.kind === ts.SyntaxKind.FalseKeyword;
   if (!ts.isArrayLiteralExpression(value) || value.elements.length < contract.minItems) return false;
   return value.elements.every((element) => {
     const item = stringLiteralValue(element as ts.Expression);
