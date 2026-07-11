@@ -115,6 +115,14 @@ function maximumMediaPosition(activity: Activity): number {
     .flatMap((resource) => resource.segments.map((segment) => segment.endSeconds)));
 }
 
+function assertAssessmentTime(session: ActivitySessionRecord, submittedAt: string, now: string): void {
+  const submittedMs = Date.parse(submittedAt);
+  const nowMs = Date.parse(now);
+  if (submittedMs < Date.parse(session.startedAt) || submittedMs > nowMs + 5 * 60 * 1000) {
+    throw new Error("Activity assessment time is outside the server-owned session window");
+  }
+}
+
 /**
  * Creates thin framework-neutral activity handlers for tRPC or HTTP routes.
  * @param dependencies Authored activity repository, persistence port, and server clocks.
@@ -159,6 +167,7 @@ export function createActivityTransportHandlers(dependencies: ActivityTransportD
       const parsed = assessActivityCheckpointInputSchema.parse(input);
       const session = await dependencies.persistence.getOwnedSession(actor, parsed.sessionId);
       if (!session) throw new Error(`Activity session not found: ${parsed.sessionId}`);
+      assertAssessmentTime(session, parsed.attempt.submittedAt, dependencies.now());
       const activity = await dependencies.activities.getActivity(session.activityId, session.activityVersion);
       if (!activity) throw new Error(`Activity not found: ${session.activityId}@${session.activityVersion}`);
       const result = assessCheckpointAttempt(activity, parsed.attempt);
@@ -170,6 +179,7 @@ export function createActivityTransportHandlers(dependencies: ActivityTransportD
       const parsed = assessActivityTutorialInputSchema.parse(input);
       const session = await dependencies.persistence.getOwnedSession(actor, parsed.sessionId);
       if (!session) throw new Error(`Activity session not found: ${parsed.sessionId}`);
+      assertAssessmentTime(session, parsed.attempt.submittedAt, dependencies.now());
       const activity = await dependencies.activities.getActivity(session.activityId, session.activityVersion);
       if (!activity) throw new Error(`Activity not found: ${session.activityId}@${session.activityVersion}`);
       const result = assessTutorialStep(activity, parsed.attempt, dependencies.executeTutorialCheck);

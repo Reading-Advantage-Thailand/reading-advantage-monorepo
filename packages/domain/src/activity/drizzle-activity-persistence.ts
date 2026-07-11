@@ -14,6 +14,8 @@ import type { ActivityAssessmentPersistenceResult, ActivityPersistencePort } fro
 import { activitySessionEvents, activitySessions } from "@reading-advantage/db";
 import { and, eq } from "drizzle-orm";
 import type { TenantDB } from "../db-contract.js";
+import { createDrizzleMasteryPersistence } from "../mastery/index.js";
+import { projectActivitySubmissionToMastery } from "./activity-mastery-projection.js";
 
 type ActivitySessionRow = typeof activitySessions.$inferSelect;
 
@@ -156,13 +158,28 @@ export class DrizzleActivityPersistence implements ActivityPersistencePort {
    */
   async recordAssessment(actor: ActivityActor, sessionId: string, result: ActivityAssessmentPersistenceResult): Promise<ActivitySessionRecord> {
     const rawDb = this.tenantDb.unscoped("activity assessment append manually scopes tenantKey + learnerId and locks the owned session");
-    return rawDb.transaction(async (tx) => {
+    const savedSession = await rawDb.transaction(async (tx) => {
       const [row] = await tx.select().from(activitySessions).where(and(
         eq(activitySessions.id, sessionId), eq(activitySessions.tenantKey, tenantKey(actor)), eq(activitySessions.learnerId, actor.learnerId),
       )).for("update");
       if (!row) throw new Error(`Activity session not found: ${sessionId}`);
       const current = rowToRecord(row);
-      if (current.state.processedAssessedEventIds.includes(result.event.eventId)) return current;
+      if (current.state.processedAssessedEventIds.includes(result.event.eventId)) {
+        const [stored] = await tx.select({ eventJson: activitySessionEvents.eventJson, submissionJson: activitySessionEvents.submissionJson }).from(activitySessionEvents).where(and(
+          eq(activitySessionEvents.sessionId, sessionId), eq(activitySessionEvents.eventId, result.event.eventId),
+        )).limit(1);
+        if (!stored || JSON.stringify(stored.eventJson) !== JSON.stringify(result.event) || JSON.stringify(stored.submissionJson) !== JSON.stringify(result.submission)) {
+          throw new Error(`Activity assessment idempotency conflict: ${result.event.eventId}`);
+        }
+        return current;
+      }
+      const prior = result.event.kind === "checkpoint_answered"
+        ? current.state.assessedCheckpointResults[result.event.payload.checkpointId]
+        : current.state.assessedTutorialResults[result.event.payload.stepId];
+      const expectedAttempt = (prior?.attemptNumber ?? 0) + 1;
+      if (result.event.attemptNumber !== expectedAttempt) {
+        throw new Error(`Activity assessment attempt must be ${expectedAttempt}`);
+      }
       const state = reduceAssessedActivityEvent(current.state, result.event);
       const serverSequence = current.lastEventSequence + 1;
       await tx.insert(activitySessionEvents).values({
@@ -177,13 +194,18 @@ export class DrizzleActivityPersistence implements ActivityPersistencePort {
       });
       const [saved] = await tx.update(activitySessions).set({
         stateJson: state as unknown as Record<string, unknown>, lastEventSequence: serverSequence,
-        updatedAt: new Date(result.event.occurredAt),
+        updatedAt: new Date(),
       }).where(and(
         eq(activitySessions.id, sessionId), eq(activitySessions.tenantKey, tenantKey(actor)), eq(activitySessions.learnerId, actor.learnerId),
       )).returning();
       if (!saved) throw new Error(`Activity assessment update failed: ${sessionId}`);
       return rowToRecord(saved);
     });
+    if (actor.schoolId) {
+      const mastery = createDrizzleMasteryPersistence({ db: rawDb, tenant: { schoolId: actor.schoolId }, actorId: actor.learnerId });
+      await projectActivitySubmissionToMastery(actor.schoolId, actor.learnerId, result.submission, mastery, new Date().toISOString());
+    }
+    return savedSession;
   }
 
   /**
@@ -207,14 +229,15 @@ export class DrizzleActivityPersistence implements ActivityPersistencePort {
    * @param schoolId Authenticated teacher school identifier.
    * @param learnerId Learner whose session is being inspected.
    * @param sessionId Server-issued session identifier.
+   * @param checkpointIds Authored checkpoint identifiers for unresolved reporting.
    * @returns Scoped teacher summary or null.
    */
-  async getTeacherSummary(schoolId: string, learnerId: string, sessionId: string): Promise<ActivitySessionSummary | null> {
+  async getTeacherSummary(schoolId: string, learnerId: string, sessionId: string, checkpointIds: string[] = []): Promise<ActivitySessionSummary | null> {
     const rawDb = this.tenantDb.unscoped("activity teacher summary manually scopes school tenantKey + learnerId");
     const [row] = await rawDb.select().from(activitySessions).where(and(
       eq(activitySessions.id, sessionId), eq(activitySessions.tenantKey, schoolId),
       eq(activitySessions.schoolId, schoolId), eq(activitySessions.learnerId, learnerId),
     )).limit(1);
-    return row ? summarizeActivitySession(rowToRecord(row)) : null;
+    return row ? summarizeActivitySession(rowToRecord(row), checkpointIds) : null;
   }
 }

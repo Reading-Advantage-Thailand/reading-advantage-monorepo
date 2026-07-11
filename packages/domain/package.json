@@ -116,6 +116,7 @@
     "@reading-advantage/auth": "workspace:*",
     "@reading-advantage/db": "workspace:*",
     "@reading-advantage/integrations-github": "workspace:*",
+    "@reading-advantage/srs-engine": "workspace:*",
     "@reading-advantage/types": "workspace:*",
     "drizzle-orm": "^0.45.0",
     "zod": "catalog:"

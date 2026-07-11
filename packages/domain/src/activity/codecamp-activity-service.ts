@@ -38,6 +38,8 @@ export function createCodecampActivityHandlers(tenantDb: TenantDB): CodecampActi
   });
   return {
     ...handlers,
-    getTeacherSummary: (schoolId, learnerId, sessionId) => persistence.getTeacherSummary(schoolId, learnerId, sessionId),
+    getTeacherSummary: (schoolId, learnerId, sessionId) => persistence.getTeacherSummary(
+      schoolId, learnerId, sessionId, codecampPilotActivity.checkpoints.map(({ checkpointId }) => checkpointId),
+    ),
   };
 }
