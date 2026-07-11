@@ -35,11 +35,21 @@ describe("APKLearningBlueprintSchema", () => {
 });
 
 describe("validateAPKLearningBlueprint", () => {
-  it("validates the reviewed game-development branch end to end", () => {
+  it("fails release closed until named human owners approve the branch", () => {
     expect(validateAPKLearningBlueprint(apkLearningBlueprint, codeKnowledgeGraph)).toEqual({
-      valid: true,
-      issues: [],
+      valid: false,
+      issues: [
+        { code: "APK_REVIEW_PENDING", entityId: "apkMaintainer", message: "apkMaintainer approval is required before release." },
+        { code: "APK_REVIEW_PENDING", entityId: "curriculumOwner", message: "curriculumOwner approval is required before release." },
+      ],
     });
+  });
+
+  it("validates the game-development branch when both release owners approve", () => {
+    const reviewed = structuredClone(apkLearningBlueprint);
+    reviewed.reviews.curriculumOwner = { name: "Named curriculum owner", status: "approved", reviewedAt: "2026-07-11" };
+    reviewed.reviews.apkMaintainer = { name: "Named APK maintainer", status: "approved", reviewedAt: "2026-07-11" };
+    expect(validateAPKLearningBlueprint(reviewed, codeKnowledgeGraph)).toEqual({ valid: true, issues: [] });
   });
 
   it("requires every active APK objective exactly once and rejects technology duplication", () => {

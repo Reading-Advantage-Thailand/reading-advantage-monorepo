@@ -1,9 +1,15 @@
 import { codecampCurriculumAssignments, codecampModules } from "@reading-advantage/db/schema";
+import { apkLearningBlueprint } from "@reading-advantage/codecamp-knowledge";
 import { and, eq } from "drizzle-orm";
 import type { TenantDB } from "../db-contract.js";
 
 /** Current curriculum release assigned to newly enrolled Codecamp learners. */
 export const CODECAMP_APK_CURRICULUM_VERSION = "codecamp.curriculum.v2-apk";
+
+/** Reports whether both required human release owners approved Unit 20. */
+export function isCodecampAPKCurriculumReleased(): boolean {
+  return Object.values(apkLearningBlueprint.reviews).every(({ status, reviewedAt }) => status === "approved" && reviewedAt !== null && reviewedAt !== undefined);
+}
 
 /**
  * Reports whether a learner is assigned the curriculum release containing Unit 20.

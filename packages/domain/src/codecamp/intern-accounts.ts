@@ -6,7 +6,7 @@ import {
 import { hashPassword } from "@reading-advantage/auth";
 import { assertCan, type UserContext, type Tenant } from "@reading-advantage/auth";
 import type { TenantDB } from "../db-contract.js";
-import { CODECAMP_APK_CURRICULUM_VERSION } from "./curriculum-assignments.js";
+import { CODECAMP_APK_CURRICULUM_VERSION, isCodecampAPKCurriculumReleased } from "./curriculum-assignments.js";
 
 const PASSWORD_COMPLEXITY = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/;
 
@@ -52,7 +52,9 @@ export async function createInternAccount({
     await tx.insert(accounts).values({
       id: `${userId}_credential`, userId, providerId: "credential", password: passwordHash,
     });
-    await tx.insert(codecampCurriculumAssignments).values({ userId, curriculumVersion: CODECAMP_APK_CURRICULUM_VERSION });
+    if (isCodecampAPKCurriculumReleased()) {
+      await tx.insert(codecampCurriculumAssignments).values({ userId, curriculumVersion: CODECAMP_APK_CURRICULUM_VERSION });
+    }
 
     return created;
   });

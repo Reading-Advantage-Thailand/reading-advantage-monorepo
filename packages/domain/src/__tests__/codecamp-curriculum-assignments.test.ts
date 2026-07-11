@@ -5,6 +5,7 @@ import {
   assertCodecampModuleAssigned,
   filterCodecampModulesForAssignment,
   hasCodecampAPKCurriculum,
+  isCodecampAPKCurriculumReleased,
 } from "../codecamp/curriculum-assignments.js";
 import { createMockDb } from "./mock-db.js";
 
@@ -14,6 +15,10 @@ const wrapDb = (results: unknown[][]) => createTenantDB(
 );
 
 describe("Codecamp curriculum release assignments", () => {
+  it("keeps automatic cohort enrollment closed while human approvals are pending", () => {
+    expect(isCodecampAPKCurriculumReleased()).toBe(false);
+  });
+
   it("keeps Unit 20 hidden from legacy learners", async () => {
     const db = wrapDb([[]]);
     const modules = [{ slug: "real-world-practice" }, { slug: "apk-game-creation" }];

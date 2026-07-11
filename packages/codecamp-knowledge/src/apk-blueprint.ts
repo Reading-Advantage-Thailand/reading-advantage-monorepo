@@ -78,8 +78,8 @@ export const APKLearningBlueprintSchema = z
     apkRuntimeApiVersion: z.literal("1.0.0"),
     reviews: z
       .object({
-        curriculumOwner: z.object({ name: z.string().min(1), status: z.literal("approved"), reviewedAt: z.string().date() }).strict(),
-        apkMaintainer: z.object({ name: z.string().min(1), status: z.literal("approved"), reviewedAt: z.string().date() }).strict(),
+        curriculumOwner: z.object({ name: z.string().min(1), status: z.enum(["pending", "approved", "changes-requested"]), reviewedAt: z.string().date().nullable().optional() }).strict(),
+        apkMaintainer: z.object({ name: z.string().min(1), status: z.enum(["pending", "approved", "changes-requested"]), reviewedAt: z.string().date().nullable().optional() }).strict(),
       })
       .strict(),
     prerequisiteRoots: z
@@ -193,6 +193,9 @@ export function validateAPKLearningBlueprint(input: unknown, graph: CodeKnowledg
   }
   const blueprint = parsed.data;
   const issues: APKBlueprintIssue[] = [];
+  for (const [role, review] of Object.entries(blueprint.reviews)) {
+    if (review.status !== "approved" || !review.reviewedAt) issues.push({ code: "APK_REVIEW_PENDING", entityId: role, message: `${role} approval is required before release.` });
+  }
   if (blueprint.graphVersion !== graph.version) issues.push({ code: "APK_GRAPH_VERSION_MISMATCH", message: `Blueprint targets ${blueprint.graphVersion}, graph is ${graph.version}.` });
   const graphAPKObjectives = graph.knowledgeSpace.nodes.filter(
     (node) => node.metadata.cluster === "game-development" && node.metadata.objectiveType !== "container" && node.metadata.lifecycle === "active",
