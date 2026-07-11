@@ -247,4 +247,52 @@ export interface ActivityEvidenceSink {
    * @returns Completion when the context is durably recorded.
    */
   recordEngagement(actor: ActivityActor, context: ActivityEngagementContext): Promise<void>;
+
+  /**
+   * Records one server-verified assessed practice submission.
+   * @param actor Tenant-scoped authenticated learner.
+   * @param submission Server-produced practice.v1 assessment envelope.
+   * @returns Completion when evidence is durably recorded.
+   */
+  recordAssessment(actor: ActivityActor, submission: ActivityPracticeSubmissionEnvelope): Promise<void>;
+}
+
+/**
+ * Verifies, maps, and records one checkpoint assessment atomically at the service boundary.
+ * @param actor Authenticated tenant-scoped learner.
+ * @param activity Validated activity containing trusted correctness data.
+ * @param input Client checkpoint attempt without correctness.
+ * @param sink Mastery evidence sink.
+ * @returns Server-generated submission and persistence event.
+ */
+export async function assessAndRecordCheckpoint(
+  actor: ActivityActor,
+  activity: Activity,
+  input: CheckpointAssessmentInput,
+  sink: ActivityEvidenceSink,
+): Promise<CheckpointAssessmentResult> {
+  const result = assessCheckpointAttempt(activity, input);
+  await sink.recordAssessment(actor, result.submission);
+  return result;
+}
+
+/**
+ * Executes, maps, and records one tutorial assessment atomically at the service boundary.
+ * @param actor Authenticated tenant-scoped learner.
+ * @param activity Validated activity containing authored deterministic checks.
+ * @param input Client tutorial attempt without correctness.
+ * @param executeCheck Server-owned deterministic check executor.
+ * @param sink Mastery evidence sink.
+ * @returns Server-generated submission and persistence event.
+ */
+export async function assessAndRecordTutorialStep(
+  actor: ActivityActor,
+  activity: Activity,
+  input: TutorialAssessmentInput,
+  executeCheck: TutorialCheckExecutor,
+  sink: ActivityEvidenceSink,
+): Promise<TutorialAssessmentResult> {
+  const result = assessTutorialStep(activity, input, executeCheck);
+  await sink.recordAssessment(actor, result.submission);
+  return result;
 }
