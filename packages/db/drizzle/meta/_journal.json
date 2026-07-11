@@ -218,6 +218,13 @@
       "when": 1783755000000,
       "tag": "0030_activity_tutorial_reporting",
       "breakpoints": true
+    },
+    {
+      "idx": 31,
+      "version": "7",
+      "when": 1783758000000,
+      "tag": "0031_tutorial_claim_fencing",
+      "breakpoints": true
     }
   ]
 }

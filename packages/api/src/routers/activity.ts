@@ -8,6 +8,7 @@ import {
 } from "@reading-advantage/activity-runtime/transport";
 import type { ActivityActor } from "@reading-advantage/activity-runtime/server";
 import { tutorialReportRequestSchema, verifiedTutorialReportSchema } from "@reading-advantage/activity-tutorial/reporting";
+import { prepareTutorialReportInputSchema, prepareTutorialReportResponseSchema } from "@reading-advantage/domain/activity";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import type { Context } from "../trpc.js";
@@ -38,6 +39,7 @@ function actorFromContext(auth: { user: { id: string }; tenant: { schoolId: stri
 export function createActivityRouter(resolveHandlers: (context: Context) => ActivityTransportHandlers & {
   getTeacherSummary(schoolId: string, learnerId: string, sessionId: string): Promise<z.infer<typeof activitySessionSummarySchema> | null>;
   reportTutorial(actor: ActivityActor, input: unknown): Promise<{ verified: z.infer<typeof verifiedTutorialReportSchema>; session: z.infer<typeof activitySessionSummarySchema> }>;
+  prepareTutorial(actor: ActivityActor, input: unknown): Promise<z.infer<typeof prepareTutorialReportResponseSchema>>;
 }) {
   return router({
     start: protectedProcedure
@@ -64,6 +66,10 @@ export function createActivityRouter(resolveHandlers: (context: Context) => Acti
       .input(tutorialReportRequestSchema)
       .output(z.object({ verified: verifiedTutorialReportSchema, session: activitySessionSummarySchema }).strict())
       .mutation(({ ctx, input }) => resolveHandlers(ctx).reportTutorial(actorFromContext(ctx.auth), input)),
+    prepareTutorial: protectedProcedure
+      .input(prepareTutorialReportInputSchema)
+      .output(prepareTutorialReportResponseSchema)
+      .mutation(({ ctx, input }) => resolveHandlers(ctx).prepareTutorial(actorFromContext(ctx.auth), input)),
     teacherGet: protectedProcedure
       .input(z.object({ learnerId: z.string().min(1), sessionId: z.string().uuid() }).strict())
       .output(activitySessionSummarySchema.nullable())

@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { z } from "zod";
 import { tutorialCheckResultSchema, tutorialManifestSchema, type TutorialCheckResult, type TutorialManifest } from "./contracts.js";
-import { verifyTutorialCredential, type TutorialCredentialClaims } from "./credentials.js";
+import { authenticateTutorialCredential, verifyTutorialCredential, type TutorialCredentialClaims } from "./credentials.js";
 
 /** Authenticated actor supplied by the server transport, never by the report body. */
 export type TutorialReportActor = { learnerId: string; tenantKey: string };
@@ -43,7 +43,7 @@ export interface TutorialReportStore {
   begin(input: { scopedKey: string; nonce: string; requestDigest: string; expiresAt: string; leaseUntil: string }): Promise<{ kind: "execute"; claimId: string } | { kind: "replay"; result: VerifiedTutorialReport } | { kind: "busy"; retryAt: string } | { kind: "conflict" }>;
   /**
    * Completes an accepted report for deterministic retry responses.
-   * @param submissionId Stable submission identifier.
+   * @param claimId Store-issued fenced claim identity.
    * @param result Server-verified response to cache.
    * @returns Completion after durable storage.
    */
@@ -80,12 +80,11 @@ export type TutorialReportingDependencies = {
   store: TutorialReportStore;
 };
 
-function reportDigest(request: z.infer<typeof tutorialReportRequestSchema>, claims: TutorialCredentialClaims): string {
+function reportDigest(request: z.infer<typeof tutorialReportRequestSchema>): string {
   return `sha256:${createHash("sha256").update(JSON.stringify({
     submissionId: request.submissionId,
     repositoryStateId: request.repositoryStateId,
     localResult: request.localResult,
-    tokenId: claims.tokenId,
   })).digest("hex")}`;
 }
 
@@ -100,9 +99,10 @@ function reportDigest(request: z.infer<typeof tutorialReportRequestSchema>, clai
 export async function reportTutorialResult(actor: TutorialReportActor, requestInput: unknown, dependencies: TutorialReportingDependencies): Promise<VerifiedTutorialReport> {
   const request = tutorialReportRequestSchema.parse(requestInput);
   const now = dependencies.now();
-  const claims = verifyTutorialCredential(request.credential, dependencies.secret, request.localResult.stepId, now);
+  const claims = authenticateTutorialCredential(request.credential, dependencies.secret);
   if (claims.learnerId !== actor.learnerId || claims.tenantKey !== actor.tenantKey) throw new Error("Tutorial credential identity mismatch");
   if (claims.activityId !== request.localResult.activityId) throw new Error("Tutorial credential activity mismatch");
+  if (claims.submissionId !== request.submissionId || claims.repositoryStateId !== request.repositoryStateId) throw new Error("Tutorial credential submission mismatch");
   const manifest = await dependencies.loadManifest(claims.activityId);
   if (!manifest) throw new Error(`Tutorial manifest not found: ${claims.activityId}`);
   tutorialManifestSchema.parse(manifest);
@@ -110,7 +110,7 @@ export async function reportTutorialResult(actor: TutorialReportActor, requestIn
 
   const scopedKey = `${claims.tenantKey}\u0000${claims.learnerId}\u0000${claims.sessionId}\u0000${request.submissionId}`;
   const claimed = await dependencies.store.begin({
-    scopedKey, nonce: claims.nonce, requestDigest: reportDigest(request, claims), expiresAt: claims.expiresAt,
+    scopedKey, nonce: claims.nonce, requestDigest: reportDigest(request), expiresAt: claims.expiresAt,
     leaseUntil: new Date(Date.parse(now) + 60_000).toISOString(),
   });
   if (claimed.kind === "replay") return verifiedTutorialReportSchema.parse(claimed.result);
@@ -118,6 +118,7 @@ export async function reportTutorialResult(actor: TutorialReportActor, requestIn
   if (claimed.kind === "busy") throw new Error(`Tutorial report is already processing; retry after ${claimed.retryAt}`);
 
   try {
+    verifyTutorialCredential(request.credential, dependencies.secret, request.localResult.stepId, now);
     const rerun = tutorialCheckResultSchema.parse(await dependencies.verifier.verify(manifest, request.localResult.stepId, request.repositoryStateId, claims));
     if (rerun.activityId !== claims.activityId || rerun.repositoryId !== manifest.repositoryId || rerun.stepId !== request.localResult.stepId) throw new Error("Server verifier returned mismatched tutorial evidence");
     const authoredStep = manifest.steps.find(({ stepId }) => stepId === rerun.stepId);
@@ -155,8 +156,11 @@ export function createInMemoryTutorialReportStore(now: () => string): TutorialRe
       if (existingKey && existingKey !== input.scopedKey) return { kind: "conflict" };
       const existing = entries.get(input.scopedKey);
       if (existing) {
-        if (existing.digest !== input.requestDigest || existing.nonce !== input.nonce) return { kind: "conflict" };
-        if (existing.result) return { kind: "replay", result: existing.result };
+        if (existing.digest !== input.requestDigest) return { kind: "conflict" };
+        if (existing.result) {
+          claims.set(input.nonce, input.scopedKey);
+          return { kind: "replay", result: existing.result };
+        }
         const retryAt = existing.retryAt ?? existing.leaseUntil;
         if (Date.parse(now()) < Date.parse(retryAt)) return { kind: "busy", retryAt };
       }

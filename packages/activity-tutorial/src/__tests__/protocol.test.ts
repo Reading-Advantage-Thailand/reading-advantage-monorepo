@@ -1,13 +1,23 @@
 import { describe, expect, it, vi } from "vitest";
+import { execFile } from "node:child_process";
+import { mkdtemp, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { promisify } from "node:util";
 import {
   issueTutorialCredential,
+  createInMemoryTutorialReportStore,
   reportTutorialResult,
   runTutorialStep,
+  scaffoldTutorialRepository,
+  tutorialReportRequestSchema,
+  uploadTutorialReport,
   tutorialManifestSchema,
   verifyAndConsumeTutorialCredential,
   type TutorialReportStore,
   type VerifiedTutorialReport,
 } from "../index.js";
+import { runTutorialCli } from "../cli.js";
 import { createStorageTutorialReportQueue, enqueueTutorialReport, flushTutorialReportQueue } from "../offline.js";
 
 const manifest = {
@@ -22,6 +32,21 @@ const manifest = {
 const secret = "server-secret-32-bytes-minimum-key";
 
 describe("tutorial repository protocol", () => {
+  it("scaffolds and checks a real Git repository without executing authored commands", async () => {
+    const root = await mkdtemp(join(tmpdir(), "activity-tutorial-"));
+    try {
+      await scaffoldTutorialRepository(manifest, root, { readStarterFile: async () => "export const transition = true;\n" });
+      const run = promisify(execFile);
+      await run("git", ["init", "--quiet"], { cwd: root });
+      await run("git", ["add", "src/game.ts"], { cwd: root });
+      const outputs: string[] = [];
+      await expect(runTutorialCli(["--step", "step.game"], root, (output) => outputs.push(output))).resolves.toBe(0);
+      expect(JSON.parse(outputs[0] ?? "{}")).toMatchObject({ passed: true, stepId: "step.game" });
+      await expect(scaffoldTutorialRepository(manifest, root, { readStarterFile: async () => "" })).rejects.toThrow("must be empty");
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
+  });
   it("emits deterministic secret-free evidence for allowlisted checks", async () => {
     const ports = { readAllowedFile: vi.fn().mockResolvedValue("transition SECRET=value"), runAllowedCommand: vi.fn().mockResolvedValue("M  src/game.ts\ntoken=secret"), now: () => "2026-07-10T00:00:00Z" };
     const first = await runTutorialStep(manifest, "step.game", ports);
@@ -39,6 +64,13 @@ describe("tutorial repository protocol", () => {
     const duplicate = structuredClone(manifest);
     duplicate.steps.push(structuredClone(duplicate.steps[0]));
     expect(tutorialManifestSchema.safeParse(duplicate).success).toBe(false);
+    const unknownCompletion = structuredClone(manifest);
+    unknownCompletion.completionCriteria.requiredStepIds = ["missing.step"];
+    expect(tutorialManifestSchema.safeParse(unknownCompletion).success).toBe(false);
+    const increasingScaffold = structuredClone(manifest);
+    increasingScaffold.steps.push({ ...structuredClone(increasingScaffold.steps[0]), stepId: "step.two", order: 3, scaffoldLevel: 3 });
+    increasingScaffold.completionCriteria.requiredStepIds.push("step.two");
+    expect(tutorialManifestSchema.safeParse(increasingScaffold).success).toBe(false);
   });
 
   it("does not mistake an unstaged worktree change for a staged file", async () => {
@@ -62,7 +94,7 @@ describe("tutorial repository protocol", () => {
   });
 
   it("binds short-lived credentials and rejects forgery, expiry, wrong steps, and replay", async () => {
-    const claims = { tokenId: "token-1", sessionId: "session-1", activityId: "activity-1", repositoryId: "repo-1", activityVersion: "1.0.0", graphVersion: "1.2.0", purpose: "tutorial-report", learnerId: "learner-1", tenantKey: "school-1", allowedStepIds: ["step.game"], issuedAt: "2026-07-10T00:00:00Z", expiresAt: "2026-07-10T00:05:00Z", nonce: "nonce-1234567890abcdef" } as const;
+    const claims = { tokenId: "token-1", sessionId: "session-1", submissionId: "submission-1", activityId: "activity-1", repositoryId: "repo-1", repositoryStateId: "snapshot-1", repositoryCapturedAt: "2026-07-10T00:00:00Z", activityVersion: "1.0.0", graphVersion: "1.2.0", purpose: "tutorial-report", learnerId: "learner-1", tenantKey: "school-1", allowedStepIds: ["step.game"], issuedAt: "2026-07-10T00:00:00Z", expiresAt: "2026-07-10T00:05:00Z", nonce: "nonce-1234567890abcdef" } as const;
     const token = issueTutorialCredential(claims, secret);
     const consumeOnce = vi.fn().mockResolvedValueOnce(true).mockResolvedValueOnce(false);
     await expect(verifyAndConsumeTutorialCredential(token, secret, "step.game", "2026-07-10T00:01:00Z", { consumeOnce })).resolves.toEqual(claims);
@@ -76,7 +108,7 @@ describe("tutorial repository protocol", () => {
   });
 
   it("ignores forged local correctness, reruns server checks, and scopes identity", async () => {
-    const claims = { tokenId: "token-1", sessionId: "session-1", activityId: "activity-1", repositoryId: "repo-1", activityVersion: "1.0.0", graphVersion: "1.2.0", purpose: "tutorial-report", learnerId: "learner-1", tenantKey: "school-1", allowedStepIds: ["step.game"], issuedAt: "2026-07-10T00:00:00Z", expiresAt: "2026-07-10T00:05:00Z", nonce: "nonce-1234567890abcdef" } as const;
+    const claims = { tokenId: "token-1", sessionId: "session-1", submissionId: "submission-1", activityId: "activity-1", repositoryId: "repo-1", repositoryStateId: "snapshot-1", repositoryCapturedAt: "2026-07-10T00:00:00Z", activityVersion: "1.0.0", graphVersion: "1.2.0", purpose: "tutorial-report", learnerId: "learner-1", tenantKey: "school-1", allowedStepIds: ["step.game"], issuedAt: "2026-07-10T00:00:00Z", expiresAt: "2026-07-10T00:05:00Z", nonce: "nonce-1234567890abcdef" } as const;
     const localResult = await runTutorialStep(manifest, "step.game", { readAllowedFile: async () => "transition", runAllowedCommand: async () => "passed", now: () => "2026-07-10T00:00:30Z" });
     const request = { submissionId: "submission-1", credential: issueTutorialCredential(claims, secret), repositoryStateId: "snapshot-1", localResult };
     const complete = vi.fn();
@@ -89,25 +121,60 @@ describe("tutorial repository protocol", () => {
     expect(verified).toMatchObject({ passed: false, sessionId: "session-1", stepId: "step.game" });
     expect(verifier.verify).toHaveBeenCalledWith(expect.anything(), "step.game", "snapshot-1", expect.objectContaining({ learnerId: "learner-1" }));
     expect(complete).toHaveBeenCalledWith("claim-1", verified);
+    await expect(reportTutorialResult({ learnerId: "learner-1", tenantKey: "school-1" }, request, { ...dependencies, store: { begin: async () => ({ kind: "conflict" }), complete: vi.fn(), fail: vi.fn() } })).rejects.toThrow("replay conflict");
+    await expect(reportTutorialResult({ learnerId: "learner-1", tenantKey: "school-1" }, request, { ...dependencies, store: { begin: async () => ({ kind: "busy", retryAt: "2026-07-10T00:02:00Z" }), complete: vi.fn(), fail: vi.fn() } })).rejects.toThrow("already processing");
+    const fail = vi.fn();
+    await expect(reportTutorialResult({ learnerId: "learner-1", tenantKey: "school-1" }, request, { ...dependencies, verifier: { verify: async () => ({ ...localResult, passed: true, checks: [...localResult.checks].reverse() }) }, store: { begin: async () => ({ kind: "execute", claimId: "claim-bad" }), complete: vi.fn(), fail } })).rejects.toThrow("mismatched tutorial checks");
+    expect(fail).toHaveBeenCalledWith("claim-bad", expect.any(String), expect.stringContaining("mismatched"));
   });
 
   it("returns a cached result for an identical retry without rerunning checks", async () => {
-    const claims = { tokenId: "token-2", sessionId: "session-2", activityId: "activity-1", repositoryId: "repo-1", activityVersion: "1.0.0", graphVersion: "1.2.0", purpose: "tutorial-report", learnerId: "learner-1", tenantKey: "school-1", allowedStepIds: ["step.game"], issuedAt: "2026-07-10T00:00:00Z", expiresAt: "2026-07-10T00:05:00Z", nonce: "nonce-2234567890abcdef" } as const;
+    const claims = { tokenId: "token-2", sessionId: "session-2", submissionId: "submission-2", activityId: "activity-1", repositoryId: "repo-1", repositoryStateId: "snapshot-2", repositoryCapturedAt: "2026-07-10T00:00:00Z", activityVersion: "1.0.0", graphVersion: "1.2.0", purpose: "tutorial-report", learnerId: "learner-1", tenantKey: "school-1", allowedStepIds: ["step.game"], issuedAt: "2026-07-10T00:00:00Z", expiresAt: "2026-07-10T00:05:00Z", nonce: "nonce-2234567890abcdef" } as const;
     const localResult = await runTutorialStep(manifest, "step.game", { readAllowedFile: async () => "transition", runAllowedCommand: async () => "passed", now: () => "2026-07-10T00:00:30Z" });
     const cached: VerifiedTutorialReport = { submissionId: "submission-2", sessionId: "session-2", activityId: "activity-1", activityVersion: "1.0.0", graphVersion: "1.2.0", repositoryId: "repo-1", learnerId: "learner-1", tenantKey: "school-1", stepId: "step.game", passed: true, checks: [{ checkId: "file.game", passed: true }, { checkId: "git.stage", passed: true }], verifiedAt: "2026-07-10T00:01:00Z" };
     const verifier = { verify: vi.fn() };
     const result = await reportTutorialResult({ learnerId: "learner-1", tenantKey: "school-1" }, {
       submissionId: "submission-2", credential: issueTutorialCredential(claims, secret), repositoryStateId: "snapshot-2", localResult,
     }, {
-      secret, now: () => "2026-07-10T00:01:30Z", loadManifest: async () => tutorialManifestSchema.parse(manifest), verifier,
+      secret, now: () => "2026-07-10T00:06:00Z", loadManifest: async () => tutorialManifestSchema.parse(manifest), verifier,
       store: { begin: async () => ({ kind: "replay", result: cached }), complete: vi.fn(), fail: vi.fn() },
     });
     expect(result).toEqual(cached);
     expect(verifier.verify).not.toHaveBeenCalled();
   });
 
+  it("fences in-memory claims across busy, failure, retry, replay, and conflict paths", async () => {
+    let now = "2026-07-10T00:00:00Z";
+    const store = createInMemoryTutorialReportStore(() => now);
+    const input = { scopedKey: "school\u0000learner\u0000session\u0000submission", nonce: "nonce-7234567890abcdef", requestDigest: "digest-1", expiresAt: "2026-07-10T00:10:00Z", leaseUntil: "2026-07-10T00:01:00Z" };
+    const first = await store.begin(input);
+    expect(first).toMatchObject({ kind: "execute" });
+    await expect(store.begin(input)).resolves.toMatchObject({ kind: "busy" });
+    if (first.kind !== "execute") throw new Error("Expected executable claim");
+    await store.fail(first.claimId, "2026-07-10T00:00:30Z", "temporary");
+    now = "2026-07-10T00:00:31Z";
+    const retry = await store.begin({ ...input, nonce: "nonce-8234567890abcdef" });
+    if (retry.kind !== "execute") throw new Error("Expected retry claim");
+    const result: VerifiedTutorialReport = { submissionId: "submission", sessionId: "session", activityId: "activity-1", activityVersion: "1.0.0", graphVersion: "1.2.0", repositoryId: "repo-1", learnerId: "learner", tenantKey: "school", stepId: "step.game", passed: true, checks: [{ checkId: "file.game", passed: true }, { checkId: "git.stage", passed: true }], verifiedAt: now };
+    await store.complete(retry.claimId, result);
+    await expect(store.begin({ ...input, nonce: "nonce-9234567890abcdef" })).resolves.toEqual({ kind: "replay", result });
+    await expect(store.begin({ ...input, requestDigest: "changed" })).resolves.toEqual({ kind: "conflict" });
+    await expect(store.begin({ ...input, scopedKey: "school\u0000other\u0000session\u0000submission" })).resolves.toEqual({ kind: "conflict" });
+    await expect(store.complete("missing", result)).rejects.toThrow("Unknown");
+    await expect(store.fail("missing", now, "error")).rejects.toThrow("Unknown");
+  });
+
+  it("validates upload requests and server responses at the network boundary", async () => {
+    const claims = { tokenId: "token-7", sessionId: "session-7", submissionId: "submission-7", activityId: "activity-1", repositoryId: "repo-1", repositoryStateId: "snapshot-7", repositoryCapturedAt: "2026-07-10T00:00:00Z", activityVersion: "1.0.0", graphVersion: "1.2.0", purpose: "tutorial-report", learnerId: "learner-1", tenantKey: "school-1", allowedStepIds: ["step.game"], issuedAt: "2026-07-10T00:00:00Z", expiresAt: "2026-07-10T00:05:00Z", nonce: "nonce-a234567890abcdef" } as const;
+    const localResult = await runTutorialStep(manifest, "step.game", { readAllowedFile: async () => "transition", runAllowedCommand: async () => "M  src/game.ts", now: () => "2026-07-10T00:00:30Z" });
+    const request = { submissionId: "submission-7", credential: issueTutorialCredential(claims, secret), repositoryStateId: "snapshot-7", localResult };
+    const response: VerifiedTutorialReport = { submissionId: "submission-7", sessionId: "session-7", activityId: "activity-1", activityVersion: "1.0.0", graphVersion: "1.2.0", repositoryId: "repo-1", learnerId: "learner-1", tenantKey: "school-1", stepId: "step.game", passed: true, checks: [{ checkId: "file.game", passed: true }, { checkId: "git.stage", passed: true }], verifiedAt: "2026-07-10T00:01:00Z" };
+    await expect(uploadTutorialReport("/activity/tutorial", request, async (endpoint, body) => endpoint === "/activity/tutorial" && tutorialReportRequestSchema.parse(body) ? response : null)).resolves.toEqual(response);
+    await expect(uploadTutorialReport("/activity/tutorial", request, async () => ({ forged: true }))).rejects.toThrow();
+  });
+
   it("durably queues an offline report and retries it without duplicating delivery", async () => {
-    const claims = { tokenId: "token-3", sessionId: "session-3", activityId: "activity-1", repositoryId: "repo-1", activityVersion: "1.0.0", graphVersion: "1.2.0", purpose: "tutorial-report", learnerId: "learner-1", tenantKey: "school-1", allowedStepIds: ["step.game"], issuedAt: "2026-07-10T00:00:00Z", expiresAt: "2026-07-10T00:05:00Z", nonce: "nonce-3234567890abcdef" } as const;
+    const claims = { tokenId: "token-3", sessionId: "session-3", submissionId: "submission-3", activityId: "activity-1", repositoryId: "repo-1", repositoryStateId: "snapshot-3", repositoryCapturedAt: "2026-07-10T00:00:00Z", activityVersion: "1.0.0", graphVersion: "1.2.0", purpose: "tutorial-report", learnerId: "learner-1", tenantKey: "school-1", allowedStepIds: ["step.game"], issuedAt: "2026-07-10T00:00:00Z", expiresAt: "2026-07-10T00:05:00Z", nonce: "nonce-3234567890abcdef" } as const;
     const localResult = await runTutorialStep(manifest, "step.game", { readAllowedFile: async () => "transition", runAllowedCommand: async () => "M  src/game.ts", now: () => "2026-07-10T00:00:30Z" });
     const memory = new Map<string, string>();
     const queue = createStorageTutorialReportQueue({ getItem: (key) => memory.get(key) ?? null, setItem: (key, value) => { memory.set(key, value); } });
@@ -120,7 +187,7 @@ describe("tutorial repository protocol", () => {
   });
 
   it("discards an expired queued credential or replaces it through an authenticated refresh", async () => {
-    const claims = { tokenId: "token-4", sessionId: "session-4", activityId: "activity-1", repositoryId: "repo-1", activityVersion: "1.0.0", graphVersion: "1.2.0", purpose: "tutorial-report", learnerId: "learner-1", tenantKey: "school-1", allowedStepIds: ["step.game"], issuedAt: "2026-07-10T00:00:00Z", expiresAt: "2026-07-10T00:01:00Z", nonce: "nonce-4234567890abcdef" } as const;
+    const claims = { tokenId: "token-4", sessionId: "session-4", submissionId: "submission-4", activityId: "activity-1", repositoryId: "repo-1", repositoryStateId: "snapshot-4", repositoryCapturedAt: "2026-07-10T00:00:00Z", activityVersion: "1.0.0", graphVersion: "1.2.0", purpose: "tutorial-report", learnerId: "learner-1", tenantKey: "school-1", allowedStepIds: ["step.game"], issuedAt: "2026-07-10T00:00:00Z", expiresAt: "2026-07-10T00:01:00Z", nonce: "nonce-4234567890abcdef" } as const;
     const localResult = await runTutorialStep(manifest, "step.game", { readAllowedFile: async () => "transition", runAllowedCommand: async () => "M  src/game.ts", now: () => "2026-07-10T00:00:30Z" });
     const memory = new Map<string, string>();
     const queue = createStorageTutorialReportQueue({ getItem: (key) => memory.get(key) ?? null, setItem: (key, value) => { memory.set(key, value); } });
@@ -128,5 +195,19 @@ describe("tutorial repository protocol", () => {
     await enqueueTutorialReport(queue, "/activity/tutorial", request, "2026-07-10T00:00:30Z");
     await expect(flushTutorialReportQueue(queue, "2026-07-10T00:01:00Z", vi.fn())).resolves.toEqual({ uploaded: [], failed: 0, expired: 1 });
     await expect(queue.due("2026-07-10T01:00:00Z")).resolves.toEqual([]);
+  });
+
+  it("refreshes an expired queued credential without changing submission idempotency", async () => {
+    const expiredClaims = { tokenId: "token-5", sessionId: "session-5", submissionId: "submission-5", activityId: "activity-1", repositoryId: "repo-1", repositoryStateId: "snapshot-5", repositoryCapturedAt: "2026-07-10T00:00:00Z", activityVersion: "1.0.0", graphVersion: "1.2.0", purpose: "tutorial-report", learnerId: "learner-1", tenantKey: "school-1", allowedStepIds: ["step.game"], issuedAt: "2026-07-10T00:00:00Z", expiresAt: "2026-07-10T00:01:00Z", nonce: "nonce-5234567890abcdef" } as const;
+    const refreshedClaims = { ...expiredClaims, tokenId: "token-6", issuedAt: "2026-07-10T00:01:00Z", expiresAt: "2026-07-10T00:06:00Z", nonce: "nonce-6234567890abcdef" } as const;
+    const localResult = await runTutorialStep(manifest, "step.game", { readAllowedFile: async () => "transition", runAllowedCommand: async () => "M  src/game.ts", now: () => "2026-07-10T00:00:30Z" });
+    const memory = new Map<string, string>();
+    const queue = createStorageTutorialReportQueue({ getItem: (key) => memory.get(key) ?? null, setItem: (key, value) => { memory.set(key, value); } });
+    const request = { submissionId: "submission-5", credential: issueTutorialCredential(expiredClaims, secret), repositoryStateId: "snapshot-5", localResult };
+    const refreshed = { ...request, credential: issueTutorialCredential(refreshedClaims, secret) };
+    await enqueueTutorialReport(queue, "/activity/tutorial", request, "2026-07-10T00:00:30Z");
+    await expect(flushTutorialReportQueue(queue, "2026-07-10T00:01:00Z", vi.fn(), async () => refreshed)).resolves.toEqual({ uploaded: [], failed: 0, expired: 0 });
+    const [queued] = await queue.due("2026-07-10T00:01:00Z");
+    expect(tutorialReportRequestSchema.parse(queued?.request)).toMatchObject({ submissionId: "submission-5", credential: refreshed.credential });
   });
 });

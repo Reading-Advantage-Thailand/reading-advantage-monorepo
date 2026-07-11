@@ -1,16 +1,6 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
-import { z } from "zod";
-
-/** Short-lived claims binding tutorial reports to an activity learner and tenant. */
-export const tutorialCredentialClaimsSchema = z.object({
-  tokenId: z.string().min(1), sessionId: z.string().min(1), activityId: z.string().min(1), repositoryId: z.string().min(1),
-  activityVersion: z.string().regex(/^\d+\.\d+\.\d+$/), graphVersion: z.string().min(1), purpose: z.literal("tutorial-report"),
-  learnerId: z.string().min(1), tenantKey: z.string().min(1), allowedStepIds: z.array(z.string().min(1)).min(1),
-  issuedAt: z.string().datetime({ offset: true }), expiresAt: z.string().datetime({ offset: true }), nonce: z.string().min(16),
-}).strict();
-
-/** Validated tutorial credential claims. */
-export type TutorialCredentialClaims = z.infer<typeof tutorialCredentialClaimsSchema>;
+import { tutorialCredentialClaimsSchema, type TutorialCredentialClaims } from "./credential-contracts.js";
+export { tutorialCredentialClaimsSchema, type TutorialCredentialClaims } from "./credential-contracts.js";
 
 /** Replay store that atomically consumes a credential nonce once. */
 export interface TutorialReplayStore {
@@ -38,8 +28,26 @@ export function issueTutorialCredential(claimsInput: unknown, secret: string): s
   const claims = tutorialCredentialClaimsSchema.parse(claimsInput);
   if (Date.parse(claims.expiresAt) <= Date.parse(claims.issuedAt)) throw new Error("Credential expiry must follow issue time");
   if (Date.parse(claims.expiresAt) - Date.parse(claims.issuedAt) > 15 * 60 * 1000) throw new Error("Tutorial credential lifetime cannot exceed 15 minutes");
+  if (Date.parse(claims.repositoryCapturedAt) > Date.parse(claims.issuedAt)) throw new Error("Repository state cannot be captured after credential issue");
+  if (Date.parse(claims.issuedAt) - Date.parse(claims.repositoryCapturedAt) > 5 * 60 * 1000) throw new Error("Repository state is too old for credential issue");
   const payload = Buffer.from(JSON.stringify(claims)).toString("base64url");
   return `${payload}.${signature(payload, secret).toString("base64url")}`;
+}
+
+/**
+ * Authenticates tutorial claims without applying time or step authorization.
+ * @param token Compact signed credential.
+ * @param secret Server credential-signing secret.
+ * @returns Authenticated claims used for idempotent replay lookup.
+ */
+export function authenticateTutorialCredential(token: string, secret: string): TutorialCredentialClaims {
+  if (Buffer.byteLength(secret) < 32) throw new Error("Tutorial credential secret must be at least 32 bytes");
+  const [payload, encodedSignature, extra] = token.split(".");
+  if (!payload || !encodedSignature || extra) throw new Error("Malformed tutorial credential");
+  const expected = signature(payload, secret);
+  const actual = Buffer.from(encodedSignature, "base64url");
+  if (actual.length !== expected.length || !timingSafeEqual(actual, expected)) throw new Error("Invalid tutorial credential signature");
+  return tutorialCredentialClaimsSchema.parse(JSON.parse(Buffer.from(payload, "base64url").toString("utf8")));
 }
 
 /**
@@ -51,13 +59,7 @@ export function issueTutorialCredential(claimsInput: unknown, secret: string): s
  * @returns Verified tenant- and learner-bound claims.
  */
 export function verifyTutorialCredential(token: string, secret: string, stepId: string, now: string): TutorialCredentialClaims {
-  if (Buffer.byteLength(secret) < 32) throw new Error("Tutorial credential secret must be at least 32 bytes");
-  const [payload, encodedSignature, extra] = token.split(".");
-  if (!payload || !encodedSignature || extra) throw new Error("Malformed tutorial credential");
-  const expected = signature(payload, secret);
-  const actual = Buffer.from(encodedSignature, "base64url");
-  if (actual.length !== expected.length || !timingSafeEqual(actual, expected)) throw new Error("Invalid tutorial credential signature");
-  const claims = tutorialCredentialClaimsSchema.parse(JSON.parse(Buffer.from(payload, "base64url").toString("utf8")));
+  const claims = authenticateTutorialCredential(token, secret);
   if (Date.parse(now) >= Date.parse(claims.expiresAt)) throw new Error("Tutorial credential expired");
   if (Date.parse(now) < Date.parse(claims.issuedAt)) throw new Error("Tutorial credential is not active");
   if (!claims.allowedStepIds.includes(stepId)) throw new Error(`Tutorial step is not authorized: ${stepId}`);

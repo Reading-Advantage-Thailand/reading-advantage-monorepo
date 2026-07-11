@@ -100,7 +100,7 @@ export const activityTutorialReports = pgTable(
   "activity_tutorial_reports",
   {
     id: uuid("id").primaryKey().defaultRandom(), tenantKey: text("tenant_key").notNull(), learnerId: text("learner_id").notNull(), sessionId: uuid("session_id").notNull(),
-    submissionId: text("submission_id").notNull(), nonce: text("nonce").notNull(), requestDigest: text("request_digest").notNull(), status: text("status").notNull(),
+    submissionId: text("submission_id").notNull(), nonce: text("nonce").notNull(), requestDigest: text("request_digest").notNull(), status: text("status").notNull(), claimToken: text("claim_token").notNull(),
     leaseUntil: timestamp("lease_until", { withTimezone: true }), retryAt: timestamp("retry_at", { withTimezone: true }), resultJson: jsonb("result_json").$type<Record<string, unknown>>(), error: text("error"),
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(), updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
   },
@@ -118,6 +118,7 @@ export const activityTutorialRepositoryStates = pgTable(
   "activity_tutorial_repository_states",
   {
     id: text("id").primaryKey(), tenantKey: text("tenant_key").notNull(), learnerId: text("learner_id").notNull(), sessionId: uuid("session_id").notNull(), repositoryId: text("repository_id").notNull(),
+    activityId: text("activity_id").notNull(), activityVersion: text("activity_version").notNull(), graphVersion: text("graph_version").notNull(),
     filesJson: jsonb("files_json").$type<Record<string, string>>().notNull(), gitStatus: text("git_status").notNull(), capturedAt: timestamp("captured_at", { withTimezone: true }).notNull(),
   },
   (table) => [

@@ -1,13 +1,13 @@
 import { activitySchema, createActivitySessionRecord } from "@reading-advantage/activity-runtime";
 import { assessCheckpointAttempt } from "@reading-advantage/activity-runtime/server";
-import { issueTutorialCredential, runTutorialStep } from "@reading-advantage/activity-tutorial";
+import { runTutorialStep } from "@reading-advantage/activity-tutorial";
 import { codecampAPKUnit, createCodecampAPKTutorialActivity } from "@reading-advantage/codecamp-knowledge/apk-unit";
 import { activitySessionEvents, activityTutorialReports, masteryCommits, masteryEvidence, masteryPrincipals, users } from "@reading-advantage/db";
 import { eq } from "drizzle-orm";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { createTestDb, type TestDb } from "../../__tests__/helpers/testDb.js";
 import { CODECAMP_MASTERY_SCHOOL_ID, DrizzleActivityPersistence } from "../drizzle-activity-persistence.js";
-import { processCodecampTutorialReport, recordTutorialRepositoryState } from "../tutorial-reporting.js";
+import { prepareCodecampTutorialReport, processCodecampTutorialReport } from "../tutorial-reporting.js";
 
 const activity = activitySchema.parse({
   schemaVersion: "activity.v1", activityId: "activity.codecamp.outbox", activityVersion: "1.0.0", graphVersion: "graph.v1", objectiveId: "objective.apk", variantKey: "apk.v1", mode: "guided_practice", title: { en: "Outbox" }, accessibility: { transcriptRequired: true, captionsRequired: true, nonVideoAlternativeResourceId: "diagram" },
@@ -44,23 +44,15 @@ describe("activity Drizzle outbox and Codecamp mastery", () => {
     const actor = { learnerId: "codecamp-learner", schoolId: null, tenantKey: "codecamp" } as const;
     const tutorialActivity = createCodecampAPKTutorialActivity("en");
     const sessionId = "00000000-0000-4000-8000-000000000902";
+    const repositoryCapturedAt = new Date(Date.now() - 90_000).toISOString();
     await persistence.createSession(createActivitySessionRecord({ sessionId, actor, activityId: tutorialActivity.activityId, activityVersion: tutorialActivity.activityVersion, startedAt: "2026-07-10T00:00:00Z" }));
-    const repositoryStateId = await recordTutorialRepositoryState(tenantDb, actor, {
-      stateId: "snapshot-apk-1", sessionId, repositoryId: codecampAPKUnit.wedo.manifest.repositoryId,
-      files: { "src/cartridge.ts": "export const runtimeApiVersion = '1';", "src/game-state.ts": "export {};" },
-      gitStatus: "M  src/cartridge.ts", capturedAt: "2026-07-10T00:01:00Z",
+    const prepared = await prepareCodecampTutorialReport(tenantDb, actor, { sessionId, submissionId: "submission-apk-1", repositoryId: codecampAPKUnit.wedo.manifest.repositoryId, stepId: "wedo.apk.manifest" }, "integration-tutorial-secret-at-least-32-bytes", {
+      capture: async () => ({ files: { "src/cartridge.ts": "export const runtimeApiVersion = '1';", "src/game-state.ts": "export {};", ".env": "must-not-persist" }, gitStatus: "M  src/cartridge.ts", capturedAt: repositoryCapturedAt }),
     });
     const localResult = await runTutorialStep(codecampAPKUnit.wedo.manifest, "wedo.apk.manifest", {
       readAllowedFile: async () => "export const runtimeApiVersion = '1';", runAllowedCommand: async () => "M  src/cartridge.ts", now: () => "2026-07-10T00:01:00Z",
     });
-    const issuedAt = new Date(Date.now() - 60_000).toISOString();
-    const expiresAt = new Date(Date.now() + 5 * 60_000).toISOString();
-    const credential = issueTutorialCredential({
-      tokenId: "token-apk-1", sessionId, activityId: tutorialActivity.activityId, repositoryId: codecampAPKUnit.wedo.manifest.repositoryId,
-      activityVersion: tutorialActivity.activityVersion, graphVersion: tutorialActivity.graphVersion, purpose: "tutorial-report",
-      learnerId: actor.learnerId, tenantKey: actor.tenantKey, allowedStepIds: ["wedo.apk.manifest"], issuedAt, expiresAt, nonce: "nonce-apk-1234567890abcdef",
-    }, "integration-tutorial-secret-at-least-32-bytes");
-    const request = { submissionId: "submission-apk-1", credential, repositoryStateId, localResult };
+    const request = { submissionId: "submission-apk-1", credential: prepared.credential, repositoryStateId: prepared.repositoryStateId, localResult };
     const evidenceBefore = await harness.db.select().from(masteryEvidence);
     const first = await processCodecampTutorialReport(tenantDb, actor, request, "integration-tutorial-secret-at-least-32-bytes");
     const replay = await processCodecampTutorialReport(tenantDb, actor, request, "integration-tutorial-secret-at-least-32-bytes");

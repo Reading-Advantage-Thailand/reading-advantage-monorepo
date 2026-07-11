@@ -1,4 +1,6 @@
+import { tutorialCredentialClaimsSchema } from "./credential-contracts.js";
 import { tutorialReportRequestSchema, uploadTutorialReport, type VerifiedTutorialReport } from "./reporting.js";
+import { z } from "zod";
 
 /** Minimal synchronous storage surface implemented by browser localStorage. */
 export interface TutorialQueueStorage {
@@ -17,6 +19,19 @@ export type QueuedTutorialReport = {
   attempts: number;
   nextAttemptAt: string;
 };
+
+const queuedTutorialReportSchema = z.object({
+  queueId: z.string().min(1), endpoint: z.string().min(1), request: tutorialReportRequestSchema,
+  credentialExpiresAt: z.string().datetime({ offset: true }), attempts: z.number().int().nonnegative(), nextAttemptAt: z.string().datetime({ offset: true }),
+}).strict();
+
+function decodeCredentialExpiry(token: string): string {
+  const [payload, signature, extra] = token.split(".");
+  if (!payload || !signature || extra) throw new Error("Malformed tutorial credential");
+  const base64 = payload.replace(/-/g, "+").replace(/_/g, "/").padEnd(Math.ceil(payload.length / 4) * 4, "=");
+  const json = decodeURIComponent(Array.from(globalThis.atob(base64), (character) => `%${character.charCodeAt(0).toString(16).padStart(2, "0")}`).join(""));
+  return tutorialCredentialClaimsSchema.parse(JSON.parse(json)).expiresAt;
+}
 
 /** Durable offline queue used by tutorial upload clients. */
 export interface TutorialReportQueue {
@@ -40,7 +55,10 @@ export function createStorageTutorialReportQueue(storage: TutorialQueueStorage, 
   const read = (): QueuedTutorialReport[] => {
     try {
       const parsed: unknown = JSON.parse(storage.getItem(storageKey) ?? "[]");
-      return Array.isArray(parsed) ? parsed.filter((entry): entry is QueuedTutorialReport => typeof entry === "object" && entry !== null && typeof (entry as QueuedTutorialReport).queueId === "string") : [];
+      return Array.isArray(parsed) ? parsed.flatMap((entry) => {
+        const result = queuedTutorialReportSchema.safeParse(entry);
+        return result.success ? [result.data] : [];
+      }) : [];
     } catch {
       return [];
     }
@@ -48,7 +66,7 @@ export function createStorageTutorialReportQueue(storage: TutorialQueueStorage, 
   const write = (entries: QueuedTutorialReport[]) => storage.setItem(storageKey, JSON.stringify(entries));
   return {
     async enqueue(entry) {
-      tutorialReportRequestSchema.parse(entry.request);
+      queuedTutorialReportSchema.parse(entry);
       const entries = read().filter(({ queueId }) => queueId !== entry.queueId);
       entries.push(entry);
       write(entries.sort((left, right) => left.queueId.localeCompare(right.queueId)));
@@ -69,16 +87,7 @@ export function createStorageTutorialReportQueue(storage: TutorialQueueStorage, 
  */
 export async function enqueueTutorialReport(queue: TutorialReportQueue, endpoint: string, request: unknown, now: string): Promise<string> {
   const parsed = tutorialReportRequestSchema.parse(request);
-  const [payload] = parsed.credential.split(".");
-  if (!payload) throw new Error("Malformed tutorial credential");
-  let credentialExpiresAt: string;
-  try {
-    const claims = JSON.parse(Buffer.from(payload, "base64url").toString("utf8")) as { expiresAt?: unknown };
-    if (typeof claims.expiresAt !== "string" || !Number.isFinite(Date.parse(claims.expiresAt))) throw new Error("missing expiry");
-    credentialExpiresAt = claims.expiresAt;
-  } catch {
-    throw new Error("Malformed tutorial credential claims");
-  }
+  const credentialExpiresAt = decodeCredentialExpiry(parsed.credential);
   const queueId = `${endpoint}\u0000${parsed.submissionId}\u0000${parsed.credential.slice(-16)}`;
   await queue.enqueue({ queueId, endpoint, request: parsed, credentialExpiresAt, attempts: 0, nextAttemptAt: now });
   return queueId;
