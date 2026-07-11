@@ -47,6 +47,7 @@ export const codecampAPKUnit = CodecampAPKUnitSchema.parse({
       activityVersion: "1.0.0", graphVersion: apkLearningBlueprint.graphVersion,
       allowedFiles: ["src/cartridge.ts", "src/game-state.ts"],
       allowedCommands: [{ commandId: "git.stage", profile: "git-status-porcelain" }],
+      completionCriteria: { requiredStepIds: ["wedo.apk.manifest"] },
       steps: [{ stepId: "wedo.apk.manifest", order: 1, objectiveId: "codecamp.game-development.skill.apk-contract", instruction: { en: "Complete the cartridge manifest and deterministic educational result.", th: "เติม cartridge manifest และผลการเรียนรู้แบบกำหนดได้" }, checks: [{ checkId: "manifest.runtime", kind: "file_contains", filePath: "src/cartridge.ts", expected: "runtimeApiVersion" }, { checkId: "git.stage", kind: "command", commandId: "git.stage", expected: "staged:src/cartridge.ts" }], hints: [{ hintId: "hint.boundary", text: { en: "Keep persistence in the host, not the cartridge.", th: "เก็บ persistence ไว้ใน host ไม่ใช่ cartridge" } }], reveals: [{ revealId: "reveal.fields", text: { en: "The manifest must declare runtimeApiVersion and capabilities.", th: "manifest ต้องระบุ runtimeApiVersion และ capabilities" } }], resourceIds: ["diagram.apk.boundaries"], scaffoldLevel: 2 }],
     },
   },
@@ -78,5 +79,32 @@ export function createCodecampAPKActivity(locale: string) {
     ],
     checkpoints: [{ checkpointId: "checkpoint.apk.host-boundary", stepId: "ido.apk.host-boundary", objectiveId: "codecamp.game-development.skill.react-host", variantKey: "apk.react-host.worked.reference-debug", trigger: { resourceId: "video.apk.phaser-overview", segmentId: "segment.scene-lifecycle" }, question: { kind: "single_choice", prompt: { en: "Which responsibility belongs to the React host?", th: "หน้าที่ใดเป็นของ React host?" }, options: [{ optionId: "persist", label: { en: "Persist the validated result", th: "บันทึกผลที่ตรวจสอบแล้ว" } }, { optionId: "physics", label: { en: "Run per-frame collision physics", th: "คำนวณ collision ทุกเฟรม" } }], correctOptionIds: ["persist"] }, feedback: { correct: { en: "Correct — persistence stays at the host boundary.", th: "ถูกต้อง — persistence อยู่ที่ host" }, incorrect: { en: "Review the host/cartridge diagram before retrying.", th: "ทบทวนแผนภาพ host/cartridge แล้วลองใหม่" } }, remediation: [{ kind: "video_segment", resourceId: "video.apk.phaser-overview", segmentId: "segment.scene-lifecycle" }, { kind: "diagram", resourceId: "diagram.apk.boundaries" }], evidence: { behavior: "assessed", weight: 0.15 }, gate: "pause_non_blocking" }],
     tutorialSteps: [],
+  });
+}
+
+/**
+ * Creates the shared We Do tutorial activity that receives verified repository evidence.
+ * @param _locale Requested learner locale reserved for future locale-specific resources.
+ * @returns Strict activity.v1 content aligned with the signed tutorial manifest.
+ */
+export function createCodecampAPKTutorialActivity(_locale: string) {
+  const manifest = codecampAPKUnit.wedo.manifest;
+  return activitySchema.parse({
+    schemaVersion: "activity.v1", activityId: manifest.activityId, activityVersion: manifest.activityVersion,
+    graphVersion: manifest.graphVersion, objectiveId: manifest.steps[0]!.objectiveId,
+    variantKey: "apk.apk-contract.guided.extension", mode: "guided_practice",
+    title: { en: "We Do: complete an APK cartridge manifest", th: "We Do: เติม APK cartridge manifest" },
+    accessibility: { transcriptRequired: false, captionsRequired: false, nonVideoAlternativeResourceId: "diagram.apk.boundaries" },
+    resources: [{ kind: "diagram", resourceId: "diagram.apk.boundaries", assetId: "diagram.apk.boundaries.v1", alt: { en: "React host and client-only cartridge responsibility boundary", th: "ขอบเขตหน้าที่ระหว่าง React host และ cartridge ฝั่ง client" } }],
+    checkpoints: [],
+    tutorialSteps: manifest.steps.map((step) => ({
+      stepId: step.stepId, order: step.order, objectiveId: step.objectiveId,
+      variantKey: "apk.apk-contract.guided.extension", instruction: step.instruction,
+      resourceRefs: step.resourceIds.map((resourceId) => ({ kind: "diagram" as const, resourceId })),
+      checks: step.checks.map((check) => check.kind === "file_contains"
+        ? { checkId: check.checkId, kind: "file_contains" as const, expected: `${check.filePath}:${check.expected}` }
+        : { checkId: check.checkId, kind: "git_status" as const, expected: check.expected }),
+      hints: step.hints, reveals: step.reveals, scaffoldLevel: step.scaffoldLevel,
+    })),
   });
 }

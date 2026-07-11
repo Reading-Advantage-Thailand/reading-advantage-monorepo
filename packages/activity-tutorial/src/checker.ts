@@ -31,7 +31,7 @@ export async function runTutorialStep(manifestInput: unknown, stepId: string, po
   const checks = [];
   for (const check of step.checks) {
     const output = check.kind === "file_contains" ? await ports.readAllowedFile(check.filePath) : await ports.runAllowedCommand(commandById.get(check.commandId)!.profile);
-    const passed = check.kind === "file_contains" ? output.includes(check.expected) : check.expected === "clean" ? output.trim() === "" : output.split("\n").some((line) => line.slice(0, 2).trim() && line.slice(0, 2) !== "??" && line.slice(3) === check.expected.slice("staged:".length));
+    const passed = check.kind === "file_contains" ? output.includes(check.expected) : check.expected === "clean" ? output.trim() === "" : output.split("\n").some((line) => line[0] !== " " && line[0] !== "?" && line.slice(3) === check.expected.slice("staged:".length));
     checks.push({ checkId: check.checkId, passed, evidenceDigest: digest(JSON.stringify({ checkId: check.checkId, passed })) });
   }
   const evidenceDigest = digest(JSON.stringify({ repositoryId: manifest.repositoryId, activityId: manifest.activityId, stepId, checks }));
@@ -62,7 +62,7 @@ export function createNodeTutorialCheckerPorts(root: string, manifest: TutorialM
     },
     async runAllowedCommand(profile) {
       if (!allowedCommands.has(profile)) throw new Error(`Command profile is not allowlisted: ${profile}`);
-      const result = await promisify(execFile)("git", ["-c", "core.hooksPath=/dev/null", "status", "--porcelain=v1", "--untracked-files=all"], { cwd: root, timeout: 10_000, maxBuffer: 256 * 1024, windowsHide: true, env: { PATH: process.env.PATH ?? "" } });
+      const result = await promisify(execFile)("git", ["-c", "core.hooksPath=/dev/null", "-c", "core.fsmonitor=false", "-c", "submodule.recurse=false", "status", "--porcelain=v1", "--untracked-files=all"], { cwd: root, timeout: 10_000, maxBuffer: 256 * 1024, windowsHide: true, env: { PATH: process.env.PATH ?? "" } });
       return result.stdout;
     },
     now,

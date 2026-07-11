@@ -104,5 +104,5 @@ export type {
   APKLearningBlueprint,
 } from "./apk-blueprint.js";
 export { apkLearningBlueprint } from "./apk-blueprint-data.js";
-export { CodecampAPKUnitSchema, codecampAPKUnit, createCodecampAPKActivity } from "./apk-unit.js";
+export { CodecampAPKUnitSchema, codecampAPKUnit, createCodecampAPKActivity, createCodecampAPKTutorialActivity } from "./apk-unit.js";
 export type { CodecampAPKUnit } from "./apk-unit.js";

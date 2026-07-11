@@ -13,6 +13,7 @@ export type QueuedTutorialReport = {
   queueId: string;
   endpoint: string;
   request: unknown;
+  credentialExpiresAt: string;
   attempts: number;
   nextAttemptAt: string;
 };
@@ -68,8 +69,18 @@ export function createStorageTutorialReportQueue(storage: TutorialQueueStorage, 
  */
 export async function enqueueTutorialReport(queue: TutorialReportQueue, endpoint: string, request: unknown, now: string): Promise<string> {
   const parsed = tutorialReportRequestSchema.parse(request);
+  const [payload] = parsed.credential.split(".");
+  if (!payload) throw new Error("Malformed tutorial credential");
+  let credentialExpiresAt: string;
+  try {
+    const claims = JSON.parse(Buffer.from(payload, "base64url").toString("utf8")) as { expiresAt?: unknown };
+    if (typeof claims.expiresAt !== "string" || !Number.isFinite(Date.parse(claims.expiresAt))) throw new Error("missing expiry");
+    credentialExpiresAt = claims.expiresAt;
+  } catch {
+    throw new Error("Malformed tutorial credential claims");
+  }
   const queueId = `${endpoint}\u0000${parsed.submissionId}\u0000${parsed.credential.slice(-16)}`;
-  await queue.enqueue({ queueId, endpoint, request: parsed, attempts: 0, nextAttemptAt: now });
+  await queue.enqueue({ queueId, endpoint, request: parsed, credentialExpiresAt, attempts: 0, nextAttemptAt: now });
   return queueId;
 }
 
@@ -78,12 +89,24 @@ export async function enqueueTutorialReport(queue: TutorialReportQueue, endpoint
  * @param queue Durable offline queue.
  * @param now Current client time.
  * @param send Injected authenticated network adapter.
- * @returns Successfully verified server responses and remaining failure count.
+ * @param refreshCredential Optional authenticated refresh adapter for expired queued reports.
+ * @returns Successfully verified responses plus retryable and terminal expiry counts.
  */
-export async function flushTutorialReportQueue(queue: TutorialReportQueue, now: string, send: (endpoint: string, body: unknown) => Promise<unknown>): Promise<{ uploaded: VerifiedTutorialReport[]; failed: number }> {
+export async function flushTutorialReportQueue(queue: TutorialReportQueue, now: string, send: (endpoint: string, body: unknown) => Promise<unknown>, refreshCredential?: (entry: QueuedTutorialReport) => Promise<unknown | null>): Promise<{ uploaded: VerifiedTutorialReport[]; failed: number; expired: number }> {
   const uploaded: VerifiedTutorialReport[] = [];
   let failed = 0;
+  let expired = 0;
   for (const entry of await queue.due(now)) {
+    if (Date.parse(now) >= Date.parse(entry.credentialExpiresAt)) {
+      const refreshed = refreshCredential ? await refreshCredential(entry) : null;
+      await queue.remove(entry.queueId);
+      if (refreshed) {
+        await enqueueTutorialReport(queue, entry.endpoint, refreshed, now);
+      } else {
+        expired += 1;
+      }
+      continue;
+    }
     try {
       uploaded.push(await uploadTutorialReport(entry.endpoint, tutorialReportRequestSchema.parse(entry.request), send));
       await queue.remove(entry.queueId);
@@ -94,5 +117,5 @@ export async function flushTutorialReportQueue(queue: TutorialReportQueue, now: 
       await queue.retry(entry.queueId, attempts, new Date(Date.parse(now) + delayMs).toISOString());
     }
   }
-  return { uploaded, failed };
+  return { uploaded, failed, expired };
 }

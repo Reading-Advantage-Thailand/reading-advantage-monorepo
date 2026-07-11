@@ -12,7 +12,6 @@ export const tutorialReportRequestSchema = z.object({
   credential: z.string().trim().min(1),
   repositoryStateId: z.string().trim().min(1).max(200),
   localResult: tutorialCheckResultSchema,
-  attempt: z.object({ attemptNumber: z.number().int().positive(), submittedAt: z.string().datetime({ offset: true }), hintsUsed: z.number().int().nonnegative(), revealsUsed: z.number().int().nonnegative(), interventionLevel: z.number().int().min(0).max(3), evidenceConfidence: z.number().min(0).max(1), timingMs: z.number().nonnegative() }).strict(),
 }).strict();
 
 /** Server-owned result returned after deterministic repository verification. */
@@ -29,7 +28,6 @@ export const verifiedTutorialReportSchema = z.object({
   passed: z.boolean(),
   checks: z.array(z.object({ checkId: z.string().trim().min(1), passed: z.boolean() }).strict()),
   verifiedAt: z.string().datetime({ offset: true }),
-  attempt: tutorialReportRequestSchema.shape.attempt,
 }).strict();
 
 /** Server-owned verified tutorial report. */
@@ -122,11 +120,17 @@ export async function reportTutorialResult(actor: TutorialReportActor, requestIn
   try {
     const rerun = tutorialCheckResultSchema.parse(await dependencies.verifier.verify(manifest, request.localResult.stepId, request.repositoryStateId, claims));
     if (rerun.activityId !== claims.activityId || rerun.repositoryId !== manifest.repositoryId || rerun.stepId !== request.localResult.stepId) throw new Error("Server verifier returned mismatched tutorial evidence");
+    const authoredStep = manifest.steps.find(({ stepId }) => stepId === rerun.stepId);
+    if (!authoredStep) throw new Error("Server verifier returned an unauthored tutorial step");
+    const authoredCheckIds = authoredStep.checks.map(({ checkId }) => checkId);
+    const rerunCheckIds = rerun.checks.map(({ checkId }) => checkId);
+    if (JSON.stringify(rerunCheckIds) !== JSON.stringify(authoredCheckIds)) throw new Error("Server verifier returned mismatched tutorial checks");
+    if (rerun.passed !== rerun.checks.every(({ passed }) => passed)) throw new Error("Server verifier returned inconsistent tutorial correctness");
     const result = verifiedTutorialReportSchema.parse({
       submissionId: request.submissionId, sessionId: claims.sessionId, activityId: claims.activityId,
       activityVersion: claims.activityVersion, graphVersion: claims.graphVersion, repositoryId: claims.repositoryId,
       learnerId: claims.learnerId, tenantKey: claims.tenantKey, stepId: rerun.stepId, passed: rerun.passed,
-      checks: rerun.checks.map(({ checkId, passed }) => ({ checkId, passed })), verifiedAt: now, attempt: request.attempt,
+      checks: rerun.checks.map(({ checkId, passed }) => ({ checkId, passed })), verifiedAt: now,
     });
     await dependencies.store.complete(claimed.claimId, result);
     return result;

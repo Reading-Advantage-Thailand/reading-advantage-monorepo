@@ -25,6 +25,7 @@ export const tutorialManifestSchema = z.object({
   activityVersion: z.string().trim().min(1), graphVersion: z.string().trim().min(1),
   allowedFiles: z.array(safeRelativePathSchema).min(1),
   allowedCommands: z.array(commandSchema),
+  completionCriteria: z.object({ requiredStepIds: z.array(z.string().regex(/^[a-z0-9.-]+$/)).min(1) }).strict(),
   steps: z.array(z.object({
     stepId: z.string().regex(/^[a-z0-9.-]+$/), order: z.number().int().positive(),
     objectiveId: z.string().trim().min(1), instruction: z.record(z.string(), z.string().min(1)),
@@ -41,6 +42,16 @@ export const tutorialManifestSchema = z.object({
   if (!unique(manifest.allowedCommands.map(({ commandId }) => commandId))) context.addIssue({ code: "custom", path: ["allowedCommands"], message: "Command IDs must be unique" });
   if (!unique(manifest.steps.map(({ stepId }) => stepId))) context.addIssue({ code: "custom", path: ["steps"], message: "Step IDs must be unique" });
   if (!unique(manifest.steps.map(({ order }) => String(order)))) context.addIssue({ code: "custom", path: ["steps"], message: "Step order values must be unique" });
+  if (!unique(manifest.completionCriteria.requiredStepIds)) context.addIssue({ code: "custom", path: ["completionCriteria", "requiredStepIds"], message: "Required step IDs must be unique" });
+  const stepIds = new Set(manifest.steps.map(({ stepId }) => stepId));
+  for (const [requiredIndex, stepId] of manifest.completionCriteria.requiredStepIds.entries()) {
+    if (!stepIds.has(stepId)) context.addIssue({ code: "custom", path: ["completionCriteria", "requiredStepIds", requiredIndex], message: "Required completion step is not authored" });
+  }
+  const orderedSteps = [...manifest.steps].sort((left, right) => left.order - right.order);
+  for (const [index, step] of orderedSteps.entries()) {
+    if (step.order !== index + 1) context.addIssue({ code: "custom", path: ["steps"], message: "Step order must be consecutive starting at one" });
+    if (index > 0 && step.scaffoldLevel > orderedSteps[index - 1]!.scaffoldLevel) context.addIssue({ code: "custom", path: ["steps", manifest.steps.indexOf(step), "scaffoldLevel"], message: "Scaffolding must fade or remain stable as steps advance" });
+  }
   for (const [stepIndex, step] of manifest.steps.entries()) {
     if (!unique(step.checks.map(({ checkId }) => checkId))) context.addIssue({ code: "custom", path: ["steps", stepIndex, "checks"], message: "Check IDs must be unique within a step" });
     for (const [checkIndex, check] of step.checks.entries()) {
