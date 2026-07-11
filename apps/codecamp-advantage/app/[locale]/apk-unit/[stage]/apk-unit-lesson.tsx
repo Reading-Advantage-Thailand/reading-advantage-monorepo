@@ -263,6 +263,10 @@ function IndependentTransfer({ locale }: { locale: string }) {
 
 /** Renders the requested production APK lesson stage. */
 export function APKUnitLesson({ locale, stage }: { locale: string; stage: number }) {
+  const thai = locale.toLowerCase().startsWith("th");
+  const access = trpc.codecamp.moduleBySlug.useQuery({ slug: "apk-game-creation" }, { retry: false });
+  if (access.isLoading) return <main className="container py-12"><p role="status">{thai ? "กำลังตรวจสิทธิ์ Unit 20…" : "Checking Unit 20 access…"}</p></main>;
+  if (!access.data) return <main className="container py-12"><h1 className="text-2xl font-bold">{thai ? "ยังไม่ได้มอบหมาย Unit 20" : "Unit 20 is not assigned"}</h1><p className="mt-2 text-muted-foreground">{thai ? "หลักสูตรเดิมของคุณยังคงลำดับเดิม" : "Your existing curriculum sequence remains unchanged."}</p></main>;
   if (stage === 1) return <WorkedExample locale={locale} />;
   if (stage === 2) return <GuidedPractice locale={locale} />;
   return <IndependentTransfer locale={locale} />;
