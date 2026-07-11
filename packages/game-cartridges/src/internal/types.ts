@@ -44,7 +44,8 @@ export type CartridgeManifest = RuntimeCartridgeManifest & {
     | "sorcerer-ziggurat"
     | "dragon-rider"
     | "spellweavers-run"
-    | "griffin-riders-escape";
+    | "griffin-riders-escape"
+    | "storm-castle-tower";
   /** Educational input mode used by runtime validation. */
   inputMode: CartridgeContentMode;
   /** Phaser capability families demonstrated by this cartridge. */

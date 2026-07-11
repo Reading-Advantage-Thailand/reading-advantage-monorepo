@@ -18,6 +18,8 @@ export * from "./cartridges/dragon-rider";
 export * from "./cartridges/spellweavers-run";
 /** Phaser-native Griffin Riders Escape perspective-gate cartridge. */
 export * from "./cartridges/griffin-riders-escape";
+/** Phaser-native Storm Castle Tower vertical-traversal cartridge. */
+export * from "./cartridges/storm-castle-tower";
 /** Reusable sentence target-action family. */
 export * from "./families/target-action";
 /** Reusable deterministic isometric step-graph family. */

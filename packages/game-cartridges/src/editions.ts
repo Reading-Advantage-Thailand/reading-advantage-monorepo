@@ -33,6 +33,10 @@ export const GAMEPLAY_ASSET_SLOTS = [
   "effect.mana",
   "hazard.obstacle",
   "effect.wind",
+  "terrain.tower",
+  "target.window",
+  "hazard.oil",
+  "hazard.rock",
 ] as const;
 
 function createProceduralAsset(

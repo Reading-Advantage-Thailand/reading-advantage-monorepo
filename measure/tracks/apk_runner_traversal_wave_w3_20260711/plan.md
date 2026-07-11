@@ -29,7 +29,7 @@
 - [x] Task: Build and test `dragon-rider`
 - [x] Task: Build and test `spellweavers-run`
 - [x] Task: Build and test `griffin-riders-escape`
-- [ ] Task: Build and test `storm-castle-tower`
+- [x] Task: Build and test `storm-castle-tower`
 - [ ] Task: Verify both editions, content modes, results, coverage, and mandatory phase review
 - [ ] Task: Measure - User Manual Verification 'Phase S3: Build four dual-edition cartridges'
 
