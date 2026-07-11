@@ -17,6 +17,10 @@ import { BookOpen, MessageCircle, LogOut, User, Shield, Languages } from "lucide
 import { useTranslations } from "next-intl";
 import { LanguageSwitcher } from "./language-switcher";
 
+/**
+ * Renders Codecamp navigation, locale controls, and session actions.
+ * @returns Responsive application header content.
+ */
 export function Header() {
   const t = useTranslations("navigation");
   const tl = useTranslations("login");
@@ -46,8 +50,8 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur">
-      <div className="container mx-auto flex h-14 items-center justify-between gap-2 px-4">
-        <div className="flex min-w-0 items-center gap-4">
+      <div className="container mx-auto flex min-h-14 flex-wrap items-center justify-between gap-2 px-4 py-2 sm:h-14 sm:flex-nowrap sm:py-0">
+        <div className="flex w-full min-w-0 items-center justify-between gap-4 sm:w-auto sm:justify-start">
           <Link href="/" className="flex min-h-8 shrink-0 items-center gap-2 font-semibold">
             <BookOpen className="h-5 w-5" />
             <span>CodeCamp</span>
@@ -78,7 +82,7 @@ export function Header() {
           </nav>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex w-full min-w-0 items-center justify-end gap-3 sm:w-auto">
           <div className="flex items-center gap-1 border-r pr-3">
             <Languages className="h-3.5 w-3.5 text-muted-foreground" />
             <LanguageSwitcher />

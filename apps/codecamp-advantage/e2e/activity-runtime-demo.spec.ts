@@ -57,4 +57,14 @@ test("honors reduced motion and exposes touch-sized controls", async ({ page }) 
   expect(await touchControls.count()).toBeGreaterThan(0);
   const playBox = await page.getByRole("button", { name: "Play" }).boundingBox();
   expect(playBox?.height).toBeGreaterThanOrEqual(44);
+  const overlappingHeaderControls = await page.locator("header").evaluate((header) => {
+    const controls = [...header.querySelectorAll<HTMLElement>("a, button")]
+      .map((element) => element.getBoundingClientRect())
+      .filter((rect) => rect.width > 0 && rect.height > 0);
+    return controls.flatMap((left, index) => controls.slice(index + 1).filter((right) => (
+      Math.min(left.right, right.right) > Math.max(left.left, right.left)
+      && Math.min(left.bottom, right.bottom) > Math.max(left.top, right.top)
+    ))).length;
+  });
+  expect(overlappingHeaderControls).toBe(0);
 });
