@@ -24,7 +24,7 @@ _Graph context: current `LessonContent` exposes only app-local `youtubeId`/`imag
   - [x] Run package boundary, lint, type-check, tests, coverage, build, graph update/audit, generated docs, and doctor
   - [x] Task: Measure - User Manual Verification 'Phase S1: Freeze the activity contracts' (Protocol in workflow.md) — browser N/A; distribution verified
 
-## Phase S2: Build interactive video for React
+## Phase S2: Build interactive video for React [checkpoint: 975ece89]
 _Story ref: spec.md#story-s2_
 
 - [x] Task: Freeze player and accessibility contracts — `55725748`
