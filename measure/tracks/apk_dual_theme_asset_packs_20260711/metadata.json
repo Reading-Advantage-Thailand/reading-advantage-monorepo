@@ -1,0 +1,22 @@
+{
+  "track_id": "apk_dual_theme_asset_packs_20260711",
+  "type": "feature",
+  "status": "in-progress",
+  "created_at": "2026-07-11T09:40:00Z",
+  "updated_at": "2026-07-11T09:40:00Z",
+  "description": "Generate and integrate the required Chibi Quest and Riven Lands production asset packs across every current Advantage Play Kit cartridge and edition.",
+  "estimated_tasks": 16,
+  "actual_tasks": null,
+  "deviation_notes": "Corrects the APK program completion claim: W0-W4 proved architecture and gameplay with procedural placeholders, but the product remains incomplete until both required dual-theme packs replace those placeholders.",
+  "sprint": {
+    "goal": "Every current APK cartridge renders production Chibi Quest and Riven Lands artwork through validated, versioned edition manifests with no procedural placeholder assets.",
+    "stories": [
+      { "id": "S1", "title": "Freeze production asset contracts", "size": "L", "priority": "Must", "status": "in-progress" },
+      { "id": "S2", "title": "Produce both theme packs", "size": "XL", "priority": "Must", "status": "pending" },
+      { "id": "S3", "title": "Integrate assets into cartridges", "size": "XL", "priority": "Must", "status": "pending" },
+      { "id": "S4", "title": "Verify production presentation", "size": "XL", "priority": "Must", "status": "pending" }
+    ],
+    "demo_notes": null,
+    "retro_ref": null
+  }
+}

@@ -60,6 +60,9 @@ Two parallel programs are in flight; priority order when picking the next track:
 ## Advantage Play Kit Program (created 2026-07-10)
 
 - [x] **Track: APK Arena & Target Action Wave W4** *Link: [./tracks/apk_arena_target_action_wave_w4_20260711/](./tracks/apk_arena_target_action_wave_w4_20260711/)*
+- [~] **Track: APK Dual-Theme Production Asset Packs** *Link: [./tracks/apk_dual_theme_asset_packs_20260711/](./tracks/apk_dual_theme_asset_packs_20260711/)*
+  Produce and integrate the required Chibi Quest and Riven Lands asset packs across every current APK cartridge, replacing procedural edition placeholders before the APK program may be called complete.
+
   Rebuild Archer's Revenge, Paladin's Twin-Soul, Griffin Sky-Joust, Gryphon Patrol, and Realm Carver as shared Phaser 4 APK cartridges, establishing reusable arena, projectile, aerial-target, minimap, and territory systems with exact cutover evidence.
 
 - [x] **Track: APK Runner Traversal Wave W3** *Link: [./archive/apk_runner_traversal_wave_w3_20260711/](./archive/apk_runner_traversal_wave_w3_20260711/)*
