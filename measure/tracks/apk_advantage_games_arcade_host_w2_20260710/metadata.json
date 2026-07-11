@@ -1,22 +1,22 @@
 {
   "track_id": "apk_advantage_games_arcade_host_w2_20260710",
   "type": "feature",
-  "status": "in-progress",
+  "status": "completed",
   "created_at": "2026-07-10T14:11:47Z",
   "updated_at": "2026-07-11T00:00:00Z",
   "description": "Convert Advantage Games from a static/QC showcase into the authenticated production host for all five APK cartridges, with a generic student route, server-owned persistence, and a continuous arcade loop.",
   "estimated_tasks": 20,
-  "actual_tasks": 16,
-  "deviation_notes": "W0 and W1 proved package cartridges and QC. W2 composed those packages into the dynamic authenticated host without porting another game batch. Browser QA exposed an async StrictMode double-canvas race and an unstable edition-object remount; both were fixed. Mandatory review found base-path fetch and browser-matrix gaps; both were fixed in 839cdc23. Four product-owner manual verification tasks remain before completion.",
+  "actual_tasks": 20,
+  "deviation_notes": "W0 and W1 proved package cartridges and QC. W2 composed those packages into the dynamic authenticated host without porting another game batch. Browser QA exposed an async StrictMode double-canvas race and an unstable edition-object remount; both were fixed. Mandatory review found base-path fetch and browser-matrix gaps; both were fixed in 839cdc23. The product owner explicitly instructed completion and continuation after agent-driven browser evidence; this is authorization to proceed, not a claim that the product owner personally operated the browser.",
   "sprint": {
     "goal": "A student can sign in to Advantage Games, play any of the five shared APK cartridges through one production host, persist a completion safely, and continue directly to another game.",
     "stories": [
-      { "id": "S1", "title": "Activate first-party student sessions", "size": "L", "priority": "Must", "status": "in-progress" },
-      { "id": "S2", "title": "Mount the production cartridge host", "size": "XL", "priority": "Must", "status": "in-progress" },
-      { "id": "S3", "title": "Persist completion server-side", "size": "XL", "priority": "Must", "status": "in-progress" },
-      { "id": "S4", "title": "Ship the continuous arcade loop", "size": "L", "priority": "Must", "status": "in-progress" }
+      { "id": "S1", "title": "Activate first-party student sessions", "size": "L", "priority": "Must", "status": "done" },
+      { "id": "S2", "title": "Mount the production cartridge host", "size": "XL", "priority": "Must", "status": "done" },
+      { "id": "S3", "title": "Persist completion server-side", "size": "XL", "priority": "Must", "status": "done" },
+      { "id": "S4", "title": "Ship the continuous arcade loop", "size": "L", "priority": "Must", "status": "done" }
     ],
-    "demo_notes": "Automated and agent-driven browser QA passes for login, all-five generic host routing, one-canvas lifecycle, concurrent persistence, responsive layout, and deterministic continuation. Awaiting product-owner confirmation.",
+    "demo_notes": "Automated and agent-driven browser QA passes for login, all-five generic host routing, one-canvas lifecycle, concurrent persistence, responsive layout, and deterministic continuation. Product owner authorized completion and continuation on 2026-07-11.",
     "retro_ref": null
   }
 }

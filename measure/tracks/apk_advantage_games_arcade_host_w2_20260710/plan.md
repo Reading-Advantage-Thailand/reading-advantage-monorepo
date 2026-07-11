@@ -25,7 +25,7 @@ _Blast radius: Next config, shared login handler, session cookie adapter, login/
   - [x] Delegate login/logout/session lookup to shared packages and create the accessible login screen
   - [x] Remove static export constraints without changing unrelated game routes
 - [x] Task: Verify auth package, app tests, type-check, and build (839cdc23)
-- [~] Task: Measure - User Manual Verification 'Phase S1: Activate first-party student sessions' — browser evidence complete; awaiting product-owner confirmation
+- [x] Task: Measure - User Manual Verification 'Phase S1: Activate first-party student sessions' — product owner authorized completion and continuation after browser evidence (2026-07-11)
 
 ## Phase S2: Mount the production cartridge host
 _Story ref: spec.md#story-s2_
@@ -41,7 +41,7 @@ _Blast radius: APKGameHost, cartridgeCatalog/loaders, edition resolver, catalog 
   - [x] Build one server route plus client host adapter around package loaders and stable fixtures
   - [x] Preserve client-only Phaser isolation and responsive controls
 - [x] Task: Run component, package-boundary, and browser lifecycle gates (839cdc23)
-- [~] Task: Measure - User Manual Verification 'Phase S2: Mount the production cartridge host' — Kimi and Playwright evidence complete; awaiting product-owner confirmation
+- [x] Task: Measure - User Manual Verification 'Phase S2: Mount the production cartridge host' — product owner authorized completion and continuation after Kimi/Playwright evidence (2026-07-11)
 
 ## Phase S3: Persist completion server-side
 _Story ref: spec.md#story-s3_
@@ -57,7 +57,7 @@ _Blast radius: gameCompletionInputSchema/gameTypeEnum, recordGameCompletion, DB 
   - [x] Resolve session and TenantDB then delegate to recordGameCompletion
   - [x] Map structured domain/auth/validation failures without leaking internals
 - [x] Task: Run domain, DB-contract, route, type, architecture, and build gates (839cdc23)
-- [~] Task: Measure - User Manual Verification 'Phase S3: Persist completion server-side' — live first-write/duplicate/concurrent evidence complete; awaiting product-owner confirmation
+- [x] Task: Measure - User Manual Verification 'Phase S3: Persist completion server-side' — product owner authorized completion and continuation after live persistence evidence (2026-07-11)
 
 ## Phase S4: Ship the continuous arcade loop
 _Story ref: spec.md#story-s4_
@@ -73,7 +73,7 @@ _Blast radius: gameCards, MainMenu catalog, production host completion UI, Playw
   - [x] Replace five QC/legacy hrefs with generic production routes and add replay/catalog/next actions
   - [x] Delete only verified caller-free first-five legacy surfaces, if any
 - [x] Task: Run final W2 acceptance, graph update, review, and Measure closeout preparation (839cdc23)
-- [~] Task: Measure - User Manual Verification 'Phase S4: Ship the continuous arcade loop' — browser evidence complete; awaiting product-owner confirmation
+- [x] Task: Measure - User Manual Verification 'Phase S4: Ship the continuous arcade loop' — product owner authorized completion and continuation after browser evidence (2026-07-11)
 
 ## Verification Evidence (2026-07-11)
 
