@@ -9,6 +9,10 @@ import { progressRouter } from "./routers/progress.js";
 import { reportsRouter } from "./routers/reports.js";
 import { codecampRouter } from "./routers/codecamp.js";
 import { salesRouter } from "./routers/sales.js";
+import { createActivityRouter } from "./routers/activity.js";
+import { createCodecampActivityHandlers } from "@reading-advantage/domain/activity";
+
+const activityRouter = createActivityRouter((context) => createCodecampActivityHandlers(context.tenantDb));
 
 export const appRouter = router({
   auth: authRouter,
@@ -21,6 +25,7 @@ export const appRouter = router({
   reports: reportsRouter,
   codecamp: codecampRouter,
   sales: salesRouter,
+  activity: activityRouter,
 });
 
 export type AppRouter = typeof appRouter;

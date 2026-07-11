@@ -63,6 +63,7 @@ export const activitySessionEvents = pgTable(
     eventKind: text("event_kind").notNull(),
     isAssessed: boolean("is_assessed").default(false).notNull(),
     submissionId: text("submission_id"),
+    submissionJson: jsonb("submission_json").$type<Record<string, unknown>>(),
     eventJson: jsonb("event_json").$type<Record<string, unknown>>().notNull(),
     occurredAt: timestamp("occurred_at", { withTimezone: true }).notNull(),
     receivedAt: timestamp("received_at", { withTimezone: true }).defaultNow().notNull(),
@@ -71,11 +72,12 @@ export const activitySessionEvents = pgTable(
     unique("activity_session_events_session_event_unique").on(table.sessionId, table.eventId),
     unique("activity_session_events_session_server_sequence_unique").on(table.sessionId, table.serverSequence),
     unique("activity_session_events_session_device_client_unique").on(table.sessionId, table.deviceId, table.clientSequence),
+    unique("activity_session_events_session_submission_unique").on(table.sessionId, table.submissionId),
     check("activity_session_events_client_sequence_check", sql`${table.clientSequence} > 0`),
     check("activity_session_events_server_sequence_check", sql`${table.serverSequence} > 0`),
     check(
       "activity_session_events_assessment_check",
-      sql`(${table.isAssessed} = false AND ${table.submissionId} IS NULL) OR (${table.isAssessed} = true AND ${table.submissionId} IS NOT NULL)`,
+      sql`(${table.isAssessed} = false AND ${table.submissionId} IS NULL AND ${table.submissionJson} IS NULL) OR (${table.isAssessed} = true AND ${table.submissionId} IS NOT NULL AND ${table.submissionJson} IS NOT NULL)`,
     ),
     foreignKey({
       name: "activity_session_events_owner_fk",

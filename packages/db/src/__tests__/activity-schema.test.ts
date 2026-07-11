@@ -22,6 +22,7 @@ describe("activity persistence schema", () => {
       "server_sequence",
       "is_assessed",
       "submission_id",
+      "submission_json",
     ]));
   });
 
@@ -31,6 +32,7 @@ describe("activity persistence schema", () => {
       "activity_session_events_session_event_unique",
       "activity_session_events_session_server_sequence_unique",
       "activity_session_events_session_device_client_unique",
+      "activity_session_events_session_submission_unique",
     ]));
   });
 });

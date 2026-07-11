@@ -1,13 +1,16 @@
 import {
   activityEventBatchSchema,
   appendActivityEventBatch,
+  reduceAssessedActivityEvent,
   type ActivityEventBatch,
   type ActivityPersistencePolicy,
   type ActivitySessionRecord,
   type ActivityState,
+  summarizeActivitySession,
+  type ActivitySessionSummary,
 } from "@reading-advantage/activity-runtime";
 import type { ActivityActor } from "@reading-advantage/activity-runtime/server";
-import type { ActivityPersistencePort } from "@reading-advantage/activity-runtime/transport";
+import type { ActivityAssessmentPersistenceResult, ActivityPersistencePort } from "@reading-advantage/activity-runtime/transport";
 import { activitySessionEvents, activitySessions } from "@reading-advantage/db";
 import { and, eq } from "drizzle-orm";
 import type { TenantDB } from "../db-contract.js";
@@ -122,6 +125,7 @@ export class DrizzleActivityPersistence implements ActivityPersistencePort {
           eventKind: event.kind,
           isAssessed: false,
           submissionId: null,
+          submissionJson: null,
           eventJson: event as unknown as Record<string, unknown>,
           occurredAt: new Date(event.occurredAt),
         })));
@@ -144,6 +148,45 @@ export class DrizzleActivityPersistence implements ActivityPersistencePort {
   }
 
   /**
+   * Atomically persists one server-verified assessed event and practice submission.
+   * @param actor Authenticated tenant-scoped learner.
+   * @param sessionId Server-issued session identifier.
+   * @param result Server-generated assessment event and practice.v1 envelope.
+   * @returns Updated durable session projection.
+   */
+  async recordAssessment(actor: ActivityActor, sessionId: string, result: ActivityAssessmentPersistenceResult): Promise<ActivitySessionRecord> {
+    const rawDb = this.tenantDb.unscoped("activity assessment append manually scopes tenantKey + learnerId and locks the owned session");
+    return rawDb.transaction(async (tx) => {
+      const [row] = await tx.select().from(activitySessions).where(and(
+        eq(activitySessions.id, sessionId), eq(activitySessions.tenantKey, tenantKey(actor)), eq(activitySessions.learnerId, actor.learnerId),
+      )).for("update");
+      if (!row) throw new Error(`Activity session not found: ${sessionId}`);
+      const current = rowToRecord(row);
+      if (current.state.processedAssessedEventIds.includes(result.event.eventId)) return current;
+      const state = reduceAssessedActivityEvent(current.state, result.event);
+      const serverSequence = current.lastEventSequence + 1;
+      await tx.insert(activitySessionEvents).values({
+        sessionId, tenantKey: tenantKey(actor), learnerId: actor.learnerId,
+        eventId: result.event.eventId, batchId: `assessment:${result.event.submissionId}`,
+        deviceId: `server:${result.event.kind}:${result.event.stepId}`, clientSequence: result.event.attemptNumber,
+        serverSequence, eventKind: result.event.kind, isAssessed: true,
+        submissionId: result.event.submissionId,
+        submissionJson: result.submission as unknown as Record<string, unknown>,
+        eventJson: result.event as unknown as Record<string, unknown>,
+        occurredAt: new Date(result.event.occurredAt),
+      });
+      const [saved] = await tx.update(activitySessions).set({
+        stateJson: state as unknown as Record<string, unknown>, lastEventSequence: serverSequence,
+        updatedAt: new Date(result.event.occurredAt),
+      }).where(and(
+        eq(activitySessions.id, sessionId), eq(activitySessions.tenantKey, tenantKey(actor)), eq(activitySessions.learnerId, actor.learnerId),
+      )).returning();
+      if (!saved) throw new Error(`Activity assessment update failed: ${sessionId}`);
+      return rowToRecord(saved);
+    });
+  }
+
+  /**
    * Loads an activity session only for its authenticated owner.
    * @param actor Authenticated tenant-scoped learner.
    * @param sessionId Server-issued session identifier.
@@ -157,5 +200,21 @@ export class DrizzleActivityPersistence implements ActivityPersistencePort {
       eq(activitySessions.learnerId, actor.learnerId),
     )).limit(1);
     return row ? rowToRecord(row) : null;
+  }
+
+  /**
+   * Loads a teacher-readable learner session within the teacher's school.
+   * @param schoolId Authenticated teacher school identifier.
+   * @param learnerId Learner whose session is being inspected.
+   * @param sessionId Server-issued session identifier.
+   * @returns Scoped teacher summary or null.
+   */
+  async getTeacherSummary(schoolId: string, learnerId: string, sessionId: string): Promise<ActivitySessionSummary | null> {
+    const rawDb = this.tenantDb.unscoped("activity teacher summary manually scopes school tenantKey + learnerId");
+    const [row] = await rawDb.select().from(activitySessions).where(and(
+      eq(activitySessions.id, sessionId), eq(activitySessions.tenantKey, schoolId),
+      eq(activitySessions.schoolId, schoolId), eq(activitySessions.learnerId, learnerId),
+    )).limit(1);
+    return row ? summarizeActivitySession(rowToRecord(row)) : null;
   }
 }

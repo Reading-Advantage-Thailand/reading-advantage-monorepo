@@ -37,15 +37,17 @@ CREATE TABLE "activity_session_events" (
 	"event_kind" text NOT NULL,
 	"is_assessed" boolean DEFAULT false NOT NULL,
 	"submission_id" text,
+	"submission_json" jsonb,
 	"event_json" jsonb NOT NULL,
 	"occurred_at" timestamp with time zone NOT NULL,
 	"received_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "activity_session_events_session_event_unique" UNIQUE("session_id", "event_id"),
 	CONSTRAINT "activity_session_events_session_server_sequence_unique" UNIQUE("session_id", "server_sequence"),
 	CONSTRAINT "activity_session_events_session_device_client_unique" UNIQUE("session_id", "device_id", "client_sequence"),
+	CONSTRAINT "activity_session_events_session_submission_unique" UNIQUE("session_id", "submission_id"),
 	CONSTRAINT "activity_session_events_client_sequence_check" CHECK ("activity_session_events"."client_sequence" > 0),
 	CONSTRAINT "activity_session_events_server_sequence_check" CHECK ("activity_session_events"."server_sequence" > 0),
-	CONSTRAINT "activity_session_events_assessment_check" CHECK (("activity_session_events"."is_assessed" = false AND "activity_session_events"."submission_id" IS NULL) OR ("activity_session_events"."is_assessed" = true AND "activity_session_events"."submission_id" IS NOT NULL))
+	CONSTRAINT "activity_session_events_assessment_check" CHECK (("activity_session_events"."is_assessed" = false AND "activity_session_events"."submission_id" IS NULL AND "activity_session_events"."submission_json" IS NULL) OR ("activity_session_events"."is_assessed" = true AND "activity_session_events"."submission_id" IS NOT NULL AND "activity_session_events"."submission_json" IS NOT NULL))
 );
 --> statement-breakpoint
 ALTER TABLE "activity_session_events" ADD CONSTRAINT "activity_session_events_owner_fk" FOREIGN KEY ("tenant_key", "session_id", "learner_id") REFERENCES "public"."activity_sessions"("tenant_key", "id", "learner_id") ON DELETE cascade ON UPDATE no action;

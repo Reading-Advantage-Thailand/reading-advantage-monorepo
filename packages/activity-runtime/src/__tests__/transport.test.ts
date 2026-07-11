@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { activitySchema } from "../core.js";
+import { reduceAssessedActivityEvent } from "../core.js";
 import { appendActivityEventBatch, type ActivitySessionRecord } from "../persistence.js";
 import { createActivityTransportHandlers, type ActivityPersistencePort } from "../transport.js";
 import { validActivity } from "./fixtures.js";
@@ -22,6 +23,13 @@ function memoryPersistence(): ActivityPersistencePort {
       const session = sessions.get(sessionId);
       return session && JSON.stringify(session.actor) === JSON.stringify(requestActor) ? session : null;
     },
+    async recordAssessment(requestActor, sessionId, result) {
+      const current = sessions.get(sessionId);
+      if (!current || JSON.stringify(current.actor) !== JSON.stringify(requestActor)) throw new Error("Not found");
+      const updated = { ...current, lastEventSequence: current.lastEventSequence + 1, state: reduceAssessedActivityEvent(current.state, result.event), updatedAt: result.event.occurredAt };
+      sessions.set(sessionId, updated);
+      return updated;
+    },
   };
 }
 
@@ -33,6 +41,7 @@ describe("activity transport handlers", () => {
       persistence,
       createSessionId: () => "session-1",
       now: () => "2026-07-10T00:01:00Z",
+      executeTutorialCheck: () => true,
     });
     await expect(handlers.start(actor, { activityId: activity.activityId, activityVersion: activity.activityVersion })).resolves.toMatchObject({ sessionId: "session-1" });
     await expect(handlers.get({ learnerId: "other", schoolId: "school-1" }, { sessionId: "session-1" })).resolves.toBeNull();
@@ -49,12 +58,17 @@ describe("activity transport handlers", () => {
         }}],
       },
     })).resolves.toMatchObject({ watchedRanges: [{ startSeconds: 12, endSeconds: 30 }] });
+    await expect(handlers.assessCheckpoint(actor, {
+      sessionId: "session-1",
+      attempt: { eventId: "assessment-1", checkpointId: "checkpoint.stage", submissionId: "submission-1", attemptNumber: 1, answer: "stage", submittedAt: "2026-07-10T00:02:00Z", hintsUsed: 0, revealsUsed: 0, interventionLevel: 0, evidenceConfidence: 1, timingMs: 1000 },
+    })).resolves.toMatchObject({ isCorrect: true, score: 1, session: { assessedCheckpointResults: { "checkpoint.stage": { isCorrect: true } } } });
   });
 
   it("rejects unknown activities, oversized positions, and client-owned identity fields", async () => {
     const handlers = createActivityTransportHandlers({
       activities: { async getActivity(id) { return id === activity.activityId ? activity : null; } },
       persistence: memoryPersistence(), createSessionId: () => "session-1", now: () => "2026-07-10T00:01:00Z",
+      executeTutorialCheck: () => true,
     });
     await expect(handlers.start(actor, { activityId: "missing", activityVersion: "1" })).rejects.toThrow("Activity not found");
     await expect(handlers.start(actor, { activityId: activity.activityId, activityVersion: activity.activityVersion, learnerId: "attacker" })).rejects.toThrow();
