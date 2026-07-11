@@ -1,0 +1,29 @@
+{
+  "name": "@reading-advantage/activity-tutorial",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
+    "./contracts": { "types": "./dist/contracts.d.ts", "import": "./dist/contracts.js" },
+    "./checker": { "types": "./dist/checker.d.ts", "import": "./dist/checker.js" },
+    "./credentials": { "types": "./dist/credentials.d.ts", "import": "./dist/credentials.js" }
+  },
+  "bin": { "tutorial-check": "./dist/cli.js" },
+  "files": ["dist", "README.md"],
+  "scripts": {
+    "build": "tsc",
+    "check-types": "tsc --noEmit -p tsconfig.test.json",
+    "lint": "eslint src/",
+    "test": "vitest run --maxWorkers=1"
+  },
+  "dependencies": { "zod": "catalog:" },
+  "devDependencies": {
+    "@reading-advantage/config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "5.9.3",
+    "vitest": "4.1.8"
+  }
+}
