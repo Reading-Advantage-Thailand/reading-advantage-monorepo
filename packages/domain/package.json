@@ -99,6 +99,10 @@
     "./games": {
       "types": "./dist/games/index.d.ts",
       "import": "./dist/games/index.js"
+    },
+    "./activity": {
+      "types": "./dist/activity/index.d.ts",
+      "import": "./dist/activity/index.js"
     }
   },
   "scripts": {
@@ -108,6 +112,7 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
+    "@reading-advantage/activity-runtime": "workspace:*",
     "@reading-advantage/auth": "workspace:*",
     "@reading-advantage/db": "workspace:*",
     "@reading-advantage/integrations-github": "workspace:*",

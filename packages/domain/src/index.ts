@@ -18,6 +18,7 @@ export * as mastery from "./mastery/index.js";
 export * as ai from "./ai/index.js";
 export * as interventions from "./interventions/index.js";
 export * as sales from "./sales/index.js";
+export * as activity from "./activity/index.js";
 export {
   createTenantDB,
   type TenantDB,
