@@ -286,7 +286,7 @@ export function ActivityRuntimeDemo({ locale }: { locale: string }) {
         />
       </div>
       <output aria-live="polite" className="block rounded-md bg-blue-50 p-3 font-medium">{thai ? "จำนวนครั้งที่บันทึกไว้" : "Persisted attempts"}: {attempts}</output>
-      <output aria-live="polite" className="block rounded-md bg-blue-50 p-3 font-medium">{thai ? `ตำแหน่งที่บันทึกไว้: ${position} วินาที; ช่วงที่ดู: ${watchedRangeCount}` : `Persisted position: ${position} seconds; watched batches: ${watchedRangeCount}`}</output>
+      <output aria-live="polite" className="block rounded-md bg-blue-50 p-3 font-medium">{thai ? `ตำแหน่งที่บันทึกไว้: ${Math.round(position)} วินาที; ช่วงที่ดู: ${watchedRangeCount}` : `Persisted position: ${Math.round(position)} seconds; watched batches: ${watchedRangeCount}`}</output>
     </main>
   );
 }
