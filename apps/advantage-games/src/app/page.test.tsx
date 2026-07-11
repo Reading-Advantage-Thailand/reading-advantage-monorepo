@@ -52,7 +52,7 @@ describe('MainMenu', () => {
     ).toHaveAttribute('href', '/qc')
   })
 
-  it('locale-prefixes the five production APK arcade links', () => {
+  it('locale-prefixes the nine production APK arcade links', () => {
     render(<MainMenu />)
 
     const startLinks = screen.getAllByRole('link', { name: /Start Game/i })
@@ -63,6 +63,10 @@ describe('MainMenu', () => {
         '/en/student/arcade/magic-defense',
         '/en/student/arcade/astral-mage',
         '/en/student/arcade/sorcerer-ziggurat',
+        '/en/student/arcade/dragon-rider',
+        '/en/student/arcade/spellweavers-run',
+        '/en/student/arcade/griffin-riders-escape',
+        '/en/student/arcade/storm-castle-tower',
       ])
     )
   })

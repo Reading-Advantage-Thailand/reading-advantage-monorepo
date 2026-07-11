@@ -98,7 +98,11 @@ export interface CartridgeCatalogEntry {
     | "sentence-order-collection"
     | "typing-defense"
     | "target-action"
-    | "step-traversal";
+    | "step-traversal"
+    | "two-lane-gate-traversal"
+    | "three-lane-ordered-collector"
+    | "three-lane-perspective-gates"
+    | "vertical-ordered-traversal";
   /** Edition IDs verified for this cartridge. */
   editions: readonly CartridgeEditionId[];
 }

@@ -23,7 +23,7 @@ export const gameCards: GameCard[] = [
     title: 'Dragon Rider',
     description: 'Ride your dragon to protect your village',
     cover: withBasePath('/games/cover/cover-dragon-rider.png'),
-    href: '/student/games/vocabulary/dragon-rider',
+    href: '/student/arcade/dragon-rider',
     status: 'playable',
   },
   {
@@ -103,7 +103,7 @@ export const gameCards: GameCard[] = [
     title: "Spellweaver's Run",
     description: 'Collect word orbs in the correct order to form sentences in this enchanted forest runner!',
     cover: withBasePath('/games/cover/cover-spellweavers-run.png'),
-    href: '/student/games/sentence/spellweavers-run',
+    href: '/student/arcade/spellweavers-run',
     status: 'playable',
   },
   {
@@ -151,7 +151,7 @@ export const gameCards: GameCard[] = [
     title: 'Storm the Castle Tower',
     description: 'Scale the castle walls! Collect words in the correct order while dodging boiling oil and falling rocks!',
     cover: withBasePath('/games/cover/cover-storm-the-castle-tower.png'),
-    href: '/student/games/sentence/storm-castle-tower',
+    href: '/student/arcade/storm-castle-tower',
     status: 'playable',
   },
   {
@@ -183,7 +183,7 @@ export const gameCards: GameCard[] = [
     title: "Griffin Rider's Escape",
     description: 'Fly through the magical gates in the correct order to complete the sentence!',
     cover: withBasePath('/games/cover/cover-griffin-riders-escape.png'),
-    href: '/student/games/sentence/griffin-riders-escape',
+    href: '/student/arcade/griffin-riders-escape',
     status: 'playable',
   },
   {

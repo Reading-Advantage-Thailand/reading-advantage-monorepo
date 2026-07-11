@@ -47,6 +47,38 @@ export const cartridgeCatalog = [
     mechanic: "step-traversal",
     editions: ["primary-chibi", "secondary-epic"],
   },
+  {
+    id: "dragon-rider",
+    title: "Dragon Rider",
+    description: "Choose translation gates to assemble a dragon flight and defeat the boss.",
+    inputMode: "vocabulary",
+    mechanic: "two-lane-gate-traversal",
+    editions: ["primary-chibi", "secondary-epic"],
+  },
+  {
+    id: "spellweavers-run",
+    title: "Spellweavers Run",
+    description: "Collect approaching word orbs in order before the spell loses its mana.",
+    inputMode: "sentence",
+    mechanic: "three-lane-ordered-collector",
+    editions: ["primary-chibi", "secondary-epic"],
+  },
+  {
+    id: "griffin-riders-escape",
+    title: "Griffin Riders Escape",
+    description: "Switch lanes to clear ordered word gates and evade sky obstacles.",
+    inputMode: "sentence",
+    mechanic: "three-lane-perspective-gates",
+    editions: ["primary-chibi", "secondary-epic"],
+  },
+  {
+    id: "storm-castle-tower",
+    title: "Storm Castle Tower",
+    description: "Climb ordered word windows while avoiding falling tower hazards.",
+    inputMode: "sentence",
+    mechanic: "vertical-ordered-traversal",
+    editions: ["primary-chibi", "secondary-epic"],
+  },
 ] as const satisfies readonly CartridgeCatalogEntry[];
 
 /** Literal dynamic imports that keep unused Phaser cartridges out of host entry bundles. */
@@ -70,6 +102,22 @@ export const cartridgeLoaders = {
   "sorcerer-ziggurat": () =>
     import("./cartridges/sorcerer-ziggurat").then(
       ({ sorcererZigguratCartridge }) => sorcererZigguratCartridge,
+    ),
+  "dragon-rider": () =>
+    import("./cartridges/dragon-rider").then(
+      ({ dragonRiderCartridge }) => dragonRiderCartridge,
+    ),
+  "spellweavers-run": () =>
+    import("./cartridges/spellweavers-run").then(
+      ({ spellweaversRunCartridge }) => spellweaversRunCartridge,
+    ),
+  "griffin-riders-escape": () =>
+    import("./cartridges/griffin-riders-escape").then(
+      ({ griffinRidersEscapeCartridge }) => griffinRidersEscapeCartridge,
+    ),
+  "storm-castle-tower": () =>
+    import("./cartridges/storm-castle-tower").then(
+      ({ stormCastleTowerCartridge }) => stormCastleTowerCartridge,
     ),
 } satisfies Record<
   (typeof cartridgeCatalog)[number]["id"],

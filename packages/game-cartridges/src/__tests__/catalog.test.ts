@@ -8,13 +8,17 @@ import {
 import { primaryChibiEdition } from "../editions";
 
 describe("cartridge catalog", () => {
-  it("publishes the exact five public Phaser-native cartridges", () => {
+  it("publishes the exact nine public Phaser-native cartridges", () => {
     expect(cartridgeCatalog.map((entry) => entry.id)).toEqual([
       "dragon-flight",
       "dungeon-liberator",
       "magic-defense",
       "astral-mage",
       "sorcerer-ziggurat",
+      "dragon-rider",
+      "spellweavers-run",
+      "griffin-riders-escape",
+      "storm-castle-tower",
     ]);
     expect(cartridgeCatalog.map((entry) => entry.mechanic)).toEqual([
       "gate-runner",
@@ -22,6 +26,10 @@ describe("cartridge catalog", () => {
       "typing-defense",
       "target-action",
       "step-traversal",
+      "two-lane-gate-traversal",
+      "three-lane-ordered-collector",
+      "three-lane-perspective-gates",
+      "vertical-ordered-traversal",
     ]);
   });
 
@@ -32,6 +40,10 @@ describe("cartridge catalog", () => {
       "magic-defense",
       "astral-mage",
       "sorcerer-ziggurat",
+      "dragon-rider",
+      "spellweavers-run",
+      "griffin-riders-escape",
+      "storm-castle-tower",
     ]);
     for (const loader of Object.values(cartridgeLoaders)) {
       expect(loader).toBeTypeOf("function");

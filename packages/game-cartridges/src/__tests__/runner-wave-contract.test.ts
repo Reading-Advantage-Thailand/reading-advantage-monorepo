@@ -205,7 +205,7 @@ describe("APK runner traversal wave contract", () => {
     );
   });
 
-  it.fails("publishes the four W3 IDs after the five accepted W2 cartridges", () => {
+  it("publishes the four W3 IDs after the five accepted W2 cartridges", () => {
     expect(catalogModule.cartridgeCatalog.map(({ id }) => id)).toEqual([
       "dragon-flight",
       "dungeon-liberator",

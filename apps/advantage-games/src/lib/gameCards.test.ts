@@ -20,19 +20,23 @@ describe('gameCards — locale-agnostic hrefs', () => {
     expect(withHref.length).toBe(playable.length)
   })
 
-  it('publishes the exact five APK cartridges through production arcade routes', () => {
+  it('publishes the exact nine APK cartridges through production arcade routes', () => {
     const apkIds = [
       'dragon-flight',
       'dungeon-liberator',
       'magic-defense',
       'astral-mage',
       'sorcerer-ziggurat',
+      'dragon-rider',
+      'spellweavers-run',
+      'griffin-riders-escape',
+      'storm-castle-tower',
     ]
     const apkCards = gameCards.filter((card) =>
       apkIds.includes(card.id)
     )
 
-    expect(apkCards).toHaveLength(5)
+    expect(apkCards).toHaveLength(9)
     for (const card of apkCards) {
       expect(card).toEqual(expect.objectContaining({
         status: 'playable',

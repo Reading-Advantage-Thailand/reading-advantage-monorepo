@@ -35,7 +35,7 @@
 
 ## Phase S4: Cut over and verify the runner wave
 
-- [~] Task: Add the four cartridges to package and authenticated-host registries
+- [x] Task: Add the four cartridges to package and authenticated-host registries
 - [ ] Task: Add Red host, persistence, catalog, accessibility, and deletion guards
 - [ ] Task: Produce and review the exact legacy disposition manifest
 - [ ] Task: Run final lint, type, test, coverage, build, graph, browser, and Measure gates
