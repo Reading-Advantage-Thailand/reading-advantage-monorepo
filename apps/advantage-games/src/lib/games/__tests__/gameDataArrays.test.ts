@@ -1,5 +1,6 @@
 import { SAMPLE_VOCABULARY } from '@/lib/games/sampleVocabulary'
 import { SAMPLE_SENTENCES } from '@/lib/games/sampleSentences'
+import { getArcadeContent } from '@/features/apk-arcade/content'
 import type { VocabularyItem } from '@/store/useGameStore'
 import fs from 'fs'
 import path from 'path'
@@ -42,14 +43,17 @@ describe('Game data arrays', () => {
   })
 
   describe('game-specific inline data', () => {
-    it('griffin-riders-escape should have at least 10 sentences in route file', () => {
-      const routePath = path.join(
-        process.cwd(),
-        'src/app/api/v1/games/griffin-riders-escape/sentences/route.ts'
-      )
-      const content = fs.readFileSync(routePath, 'utf8')
-      const termMatches = content.match(/term:\s*['"]/g) || []
-      expect(termMatches.length).toBeGreaterThanOrEqual(MINIMUM_DATA_COUNT)
+    it('runner-wave sentence cartridges use the strict shared arcade fixture', () => {
+      expect(getArcadeContent('sentence')).toEqual([
+        {
+          term: 'The curious fox crossed the quiet bridge',
+          translation: 'Narrative sentence',
+        },
+        {
+          term: 'We practice new words every morning',
+          translation: 'Habit sentence',
+        },
+      ])
     })
 
     it('gryphon-patrol should have at least 10 sentences in route file', () => {
