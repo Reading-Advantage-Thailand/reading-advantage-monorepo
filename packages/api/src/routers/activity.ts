@@ -38,6 +38,7 @@ function actorFromContext(auth: { user: { id: string }; tenant: { schoolId: stri
  */
 export function createActivityRouter(resolveHandlers: (context: Context) => ActivityTransportHandlers & {
   getTeacherSummary(schoolId: string, learnerId: string, sessionId: string): Promise<z.infer<typeof activitySessionSummarySchema> | null>;
+  getCodecampTeacherSummary(learnerId: string, sessionId: string): Promise<z.infer<typeof activitySessionSummarySchema> | null>;
   reportTutorial(actor: ActivityActor, input: unknown): Promise<{ verified: z.infer<typeof verifiedTutorialReportSchema>; session: z.infer<typeof activitySessionSummarySchema> }>;
   prepareTutorial(actor: ActivityActor, input: unknown): Promise<z.infer<typeof prepareTutorialReportResponseSchema>>;
   reissueTutorialCredential(actor: ActivityActor, input: unknown): Promise<z.infer<typeof prepareTutorialReportResponseSchema>>;
@@ -79,8 +80,10 @@ export function createActivityRouter(resolveHandlers: (context: Context) => Acti
       .input(z.object({ learnerId: z.string().min(1), sessionId: z.string().uuid() }).strict())
       .output(activitySessionSummarySchema.nullable())
       .query(({ ctx, input }) => {
-        if (!ctx.auth.tenant.schoolId || !["TEACHER", "ADMIN", "SYSTEM"].includes(ctx.auth.user.role)) throw new TRPCError({ code: "FORBIDDEN", message: "Teacher activity access requires a school-scoped educator" });
-        return resolveHandlers(ctx).getTeacherSummary(ctx.auth.tenant.schoolId, input.learnerId, input.sessionId);
+        if (!["TEACHER", "ADMIN", "SYSTEM"].includes(ctx.auth.user.role)) throw new TRPCError({ code: "FORBIDDEN", message: "Teacher activity access requires an educator" });
+        if (ctx.auth.tenant.schoolId) return resolveHandlers(ctx).getTeacherSummary(ctx.auth.tenant.schoolId, input.learnerId, input.sessionId);
+        if (["ADMIN", "SYSTEM"].includes(ctx.auth.user.role)) return resolveHandlers(ctx).getCodecampTeacherSummary(input.learnerId, input.sessionId);
+        throw new TRPCError({ code: "FORBIDDEN", message: "Codecamp activity access requires a platform administrator" });
       }),
   });
 }

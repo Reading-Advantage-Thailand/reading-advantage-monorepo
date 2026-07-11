@@ -13,7 +13,7 @@ import {
 import type { ActivityActor } from "@reading-advantage/activity-runtime/server";
 import type { ActivityAssessmentPersistenceResult, ActivityPersistencePort } from "@reading-advantage/activity-runtime/transport";
 import { activitySessionEvents, activitySessions } from "@reading-advantage/db";
-import { and, eq, inArray, sql } from "drizzle-orm";
+import { and, eq, inArray, isNull, sql } from "drizzle-orm";
 import type { TenantDB } from "../db-contract.js";
 import { createDrizzleMasteryPersistence } from "../mastery/index.js";
 import { projectActivitySubmissionToMastery } from "./activity-mastery-projection.js";
@@ -270,6 +270,22 @@ export class DrizzleActivityPersistence implements ActivityPersistencePort {
     const [row] = await rawDb.select().from(activitySessions).where(and(
       eq(activitySessions.id, sessionId), eq(activitySessions.tenantKey, schoolId),
       eq(activitySessions.schoolId, schoolId), eq(activitySessions.learnerId, learnerId),
+    )).limit(1);
+    return row ? summarizeActivitySession(rowToRecord(row), checkpointIds) : null;
+  }
+
+  /**
+   * Loads a Codecamp administrator-readable platform learner session.
+   * @param learnerId Platform learner whose session is being inspected.
+   * @param sessionId Server-issued session identifier.
+   * @param checkpointIds Authored checkpoint identifiers for unresolved reporting.
+   * @returns Codecamp-scoped teacher summary or null.
+   */
+  async getPlatformTeacherSummary(learnerId: string, sessionId: string, checkpointIds: string[] = []): Promise<ActivitySessionSummary | null> {
+    const rawDb = this.tenantDb.unscoped("activity platform teacher summary manually scopes codecamp tenantKey + learnerId");
+    const [row] = await rawDb.select().from(activitySessions).where(and(
+      eq(activitySessions.id, sessionId), eq(activitySessions.tenantKey, "codecamp"),
+      isNull(activitySessions.schoolId), eq(activitySessions.learnerId, learnerId),
     )).limit(1);
     return row ? summarizeActivitySession(rowToRecord(row), checkpointIds) : null;
   }

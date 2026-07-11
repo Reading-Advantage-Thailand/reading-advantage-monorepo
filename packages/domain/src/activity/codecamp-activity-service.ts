@@ -21,6 +21,13 @@ export type CodecampActivityHandlers = ActivityTransportHandlers & {
    */
   getTeacherSummary(schoolId: string, learnerId: string, sessionId: string): Promise<ActivitySessionSummary | null>;
   /**
+   * Reads a Codecamp administrator-authorized platform session summary.
+   * @param learnerId Platform learner identity.
+   * @param sessionId Activity session identity.
+   * @returns Codecamp teacher-readable session or null.
+   */
+  getCodecampTeacherSummary(learnerId: string, sessionId: string): Promise<ActivitySessionSummary | null>;
+  /**
    * Verifies and persists a local tutorial report.
    * @param actor Authenticated learner.
    * @param input Untrusted local report.
@@ -61,6 +68,9 @@ export function createCodecampActivityHandlers(tenantDb: TenantDB): CodecampActi
     ...handlers,
     getTeacherSummary: (schoolId, learnerId, sessionId) => persistence.getTeacherSummary(
       schoolId, learnerId, sessionId, codecampPilotActivity.checkpoints.map(({ checkpointId }) => checkpointId),
+    ),
+    getCodecampTeacherSummary: (learnerId, sessionId) => persistence.getPlatformTeacherSummary(
+      learnerId, sessionId, codecampPilotActivity.checkpoints.map(({ checkpointId }) => checkpointId),
     ),
     reportTutorial: (actor, input) => processCodecampTutorialReport(
       tenantDb,

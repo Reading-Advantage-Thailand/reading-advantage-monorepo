@@ -47,13 +47,13 @@ describe("activity Drizzle outbox and Codecamp mastery", () => {
     const repositoryCapturedAt = new Date(Date.now() - 90_000).toISOString();
     await persistence.createSession(createActivitySessionRecord({ sessionId, actor, activityId: tutorialActivity.activityId, activityVersion: tutorialActivity.activityVersion, startedAt: "2026-07-10T00:00:00Z" }));
     const prepared = await prepareCodecampTutorialReport(tenantDb, actor, { sessionId, submissionId: "submission-apk-1", repositoryId: codecampAPKUnit.wedo.manifest.repositoryId, stepId: "wedo.apk.manifest" }, "integration-tutorial-secret-at-least-32-bytes", {
-      capture: async () => ({ files: { "src/cartridge.ts": "export const runtimeApiVersion = '1';", "src/game-state.ts": "export {};", ".env": "must-not-persist" }, gitStatus: "M  src/cartridge.ts", capturedAt: repositoryCapturedAt.replace("Z", "+00:00") }),
+      capture: async () => ({ files: { "src/cartridge.ts": "export const id = title = description = version = runtimeApiVersion = inputMode = requiredAssetSlots = capabilities = 'value';", "src/game-state.ts": "export {};", ".env": "must-not-persist" }, gitStatus: "M  src/cartridge.ts", capturedAt: repositoryCapturedAt.replace("Z", "+00:00") }),
     });
     const reissued = await reissueCodecampTutorialReportCredential(tenantDb, actor, { sessionId, submissionId: "submission-apk-1", repositoryStateId: prepared.repositoryStateId, stepId: "wedo.apk.manifest" }, "integration-tutorial-secret-at-least-32-bytes");
     await expect(reissueCodecampTutorialReportCredential(tenantDb, actor, { sessionId, submissionId: "submission-apk-2", repositoryStateId: prepared.repositoryStateId, stepId: "wedo.apk.manifest" }, "integration-tutorial-secret-at-least-32-bytes")).rejects.toThrow("state not found");
     await expect(reissueCodecampTutorialReportCredential(tenantDb, actor, { sessionId, submissionId: "submission-apk-1", repositoryStateId: prepared.repositoryStateId, stepId: "wedo.apk.other" }, "integration-tutorial-secret-at-least-32-bytes")).rejects.toThrow("session not found");
     const localResult = await runTutorialStep(codecampAPKUnit.wedo.manifest, "wedo.apk.manifest", {
-      readAllowedFile: async () => "export const runtimeApiVersion = '1';", runAllowedCommand: async () => "M  src/cartridge.ts", now: () => "2026-07-10T00:01:00Z",
+      readAllowedFile: async () => "export const id = title = description = version = runtimeApiVersion = inputMode = requiredAssetSlots = capabilities = 'value';", runAllowedCommand: async () => "M  src/cartridge.ts", now: () => "2026-07-10T00:01:00Z",
     });
     const request = { submissionId: "submission-apk-1", credential: reissued.credential, repositoryStateId: prepared.repositoryStateId, localResult };
     const evidenceBefore = await harness.db.select().from(masteryEvidence);
@@ -63,6 +63,11 @@ describe("activity Drizzle outbox and Codecamp mastery", () => {
     expect(first.verified).toMatchObject({ passed: true, sessionId, stepId: "wedo.apk.manifest" });
     expect(first.session.assessedTutorialResults["wedo.apk.manifest"]).toMatchObject({ attemptNumber: 1, isCorrect: true });
     expect(replay).toEqual(first);
+    await expect(persistence.getPlatformTeacherSummary(actor.learnerId, sessionId)).resolves.toMatchObject({
+      sessionId,
+      assessedTutorialResults: { "wedo.apk.manifest": { isCorrect: true } },
+    });
+    await expect(persistence.getPlatformTeacherSummary("another-learner", sessionId)).resolves.toBeNull();
     expect(await harness.db.select().from(activityTutorialReports)).toHaveLength(1);
     expect(await harness.db.select().from(activityTutorialRepositoryStates)).toEqual([expect.objectContaining({ id: prepared.repositoryStateId, filesJson: expect.not.objectContaining({ ".env": expect.anything() }) })]);
     expect(await harness.db.select().from(masteryEvidence)).toHaveLength(evidenceBefore.length + 1);
