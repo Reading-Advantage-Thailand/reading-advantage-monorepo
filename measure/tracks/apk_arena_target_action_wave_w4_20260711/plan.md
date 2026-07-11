@@ -6,7 +6,7 @@
 ## Phase S1: Freeze arena-wave contracts
 
 - [~] Task: Capture live and source baselines for all five games
-  - [ ] Query graph callers/dependencies before bounded source inspection
+  - [x] Query graph callers/dependencies before bounded source inspection
   - [ ] Run each reachable game in the browser at desktop and 390x844
   - [ ] Record mechanic, content mode, controls, defects, and reusable APK systems
 - [ ] Task: Add Red catalog and blueprint contract tests
