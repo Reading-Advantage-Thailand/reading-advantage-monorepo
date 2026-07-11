@@ -86,6 +86,7 @@ import {
   activitySessionEvents,
   activityTutorialReports,
   activityTutorialRepositoryStates,
+  codecampCurriculumAssignments,
 } from "@reading-advantage/db";
 
 register(users, "FLAT");
@@ -139,6 +140,7 @@ register(activitySessions, "REFERENTIAL");
 register(activitySessionEvents, "REFERENTIAL");
 register(activityTutorialReports, "REFERENTIAL");
 register(activityTutorialRepositoryStates, "REFERENTIAL");
+register(codecampCurriculumAssignments, "REFERENTIAL");
 
 // ─── EXEMPT tables (intentionally global) ───────────────────
 

@@ -232,6 +232,13 @@
       "when": 1783760000000,
       "tag": "0032_tutorial_snapshot_submission_binding",
       "breakpoints": true
+    },
+    {
+      "idx": 33,
+      "version": "7",
+      "when": 1783762000000,
+      "tag": "0033_codecamp_curriculum_assignments",
+      "breakpoints": true
     }
   ]
 }

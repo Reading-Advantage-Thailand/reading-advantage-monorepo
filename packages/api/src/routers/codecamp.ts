@@ -72,11 +72,12 @@ export const codecampRouter = router({
     .output(z.array(moduleResponseSchema))
     .query(async ({ ctx }) => {
       try {
-        return await codecamp.getModulesWithProgress({
+        const modules = await codecamp.getModulesWithProgress({
           db: ctx.tenantDb,
           user: ctx.auth.user,
           tenant: ctx.auth.tenant,
         });
+        return codecamp.filterCodecampModulesForAssignment(ctx.tenantDb, ctx.auth.user.id, modules);
       } catch (err) {
         throw mapDomainError(err);
       }
@@ -87,12 +88,14 @@ export const codecampRouter = router({
     .output(moduleBySlugResponseSchema)
     .query(async ({ ctx, input }) => {
       try {
-        return await codecamp.getModuleBySlug({
+        const module = await codecamp.getModuleBySlug({
           db: ctx.tenantDb,
           user: ctx.auth.user,
           tenant: ctx.auth.tenant,
           input,
         });
+        if (module.slug === "apk-game-creation" && !await codecamp.hasCodecampAPKCurriculum(ctx.tenantDb, ctx.auth.user.id)) throw new Error("Module not found");
+        return module;
       } catch (err) {
         throw mapDomainError(err);
       }
@@ -103,6 +106,7 @@ export const codecampRouter = router({
     .output(z.array(lessonListItemSchema))
     .query(async ({ ctx, input }) => {
       try {
+        await codecamp.assertCodecampModuleAssigned(ctx.tenantDb, ctx.auth.user.id, input.moduleId);
         return await codecamp.getLessonsForModule({
           db: ctx.tenantDb,
           user: ctx.auth.user,
@@ -119,12 +123,14 @@ export const codecampRouter = router({
     .output(lessonResponseSchema)
     .query(async ({ ctx, input }) => {
       try {
-        return await codecamp.getLessonWithContent({
+        const lesson = await codecamp.getLessonWithContent({
           db: ctx.tenantDb,
           user: ctx.auth.user,
           tenant: ctx.auth.tenant,
           input,
         });
+        await codecamp.assertCodecampModuleAssigned(ctx.tenantDb, ctx.auth.user.id, lesson.moduleId);
+        return lesson;
       } catch (err) {
         throw mapDomainError(err);
       }

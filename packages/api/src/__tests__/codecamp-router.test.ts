@@ -8,6 +8,9 @@ import type { DB } from "@reading-advantage/db";
 import { AuthError } from "@reading-advantage/auth";
 
 vi.mock("@reading-advantage/domain/codecamp", () => ({
+  assertCodecampModuleAssigned: vi.fn().mockResolvedValue(undefined),
+  filterCodecampModulesForAssignment: vi.fn(async (_db: unknown, _userId: string, modules: unknown[]) => modules),
+  hasCodecampAPKCurriculum: vi.fn().mockResolvedValue(true),
   getModulesWithProgress: vi.fn(),
   getLessonsForModule: vi.fn(),
   getLessonWithContent: vi.fn(),

@@ -41,6 +41,13 @@ export const codecampModules = pgTable("codecamp_modules", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
+/** Explicit learner curriculum release assignment preserving in-progress cohorts. */
+export const codecampCurriculumAssignments = pgTable("codecamp_curriculum_assignments", {
+  userId: text("user_id").primaryKey().references(() => users.id, { onDelete: "cascade" }),
+  curriculumVersion: text("curriculum_version").notNull(),
+  assignedAt: timestamp("assigned_at").defaultNow().notNull(),
+});
+
 export const codecampLessons = pgTable("codecamp_lessons", {
   id: uuid("id").primaryKey().defaultRandom(),
   moduleId: uuid("module_id")

@@ -33,6 +33,7 @@ export {
 } from "./review-jobs.js";
 
 export { createInternAccount, updateInternGithubUsername, listInterns, getInternProgress } from "./intern-accounts.js";
+export { assertCodecampModuleAssigned, CODECAMP_APK_CURRICULUM_VERSION, filterCodecampModulesForAssignment, hasCodecampAPKCurriculum } from "./curriculum-assignments.js";
 
 export { CODECAMP_PERMISSIONS } from "./permissions.js";
 
