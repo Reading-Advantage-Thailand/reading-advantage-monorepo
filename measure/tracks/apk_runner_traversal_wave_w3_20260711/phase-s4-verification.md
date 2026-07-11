@@ -15,8 +15,8 @@
 
 - Lint: pass.
 - Type-check: pass.
-- Tests: 24 files, 119 tests, all pass.
-- Coverage: 92.6% statements, 84.18% branches, 90.62% functions, 94.74% lines.
+- Tests: 24 files, 120 tests, all pass.
+- Coverage: 92.91% statements, 84.72% branches, 90.62% functions, 94.74% lines.
 - Build: pass, including literal chunks for all four W3 cartridges.
 - Graph: incrementally updated for all structural cartridge, catalog, scene, host, and deletion changes.
 
@@ -38,6 +38,6 @@
 - One-canvas lifecycle, readable controls, active edition, and no-overflow assertions: pass.
 - Temporary student/school acceptance rows: removed; zero rows remain.
 
-## Remaining gate
+## Mandatory review
 
-Mandatory S4 review must report no Critical or High finding before the track is archived and the next APK track is activated.
+Initial review found one Medium hidden-surface simulation race and zero Critical/High findings. Commit `9c56ce15` moved the surface guard before simulation advancement and added all-four-cartridge zero-sized-frame coverage. Re-review passed with zero Critical, High, or Medium findings.

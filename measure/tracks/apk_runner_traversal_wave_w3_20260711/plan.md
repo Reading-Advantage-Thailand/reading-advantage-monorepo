@@ -38,5 +38,5 @@
 - [x] Task: Add the four cartridges to package and authenticated-host registries
 - [x] Task: Add Red host, persistence, catalog, accessibility, and deletion guards
 - [x] Task: Produce and review the exact legacy disposition manifest
-- [~] Task: Run final lint, type, test, coverage, build, graph, browser, and Measure gates
+- [x] Task: Run final lint, type, test, coverage, build, graph, browser, and Measure gates
 - [x] Task: Measure - User Manual Verification 'Phase S4: Cut over and verify the runner wave'

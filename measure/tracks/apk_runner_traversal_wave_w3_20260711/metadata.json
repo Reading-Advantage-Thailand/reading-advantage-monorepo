@@ -1,22 +1,22 @@
 {
   "track_id": "apk_runner_traversal_wave_w3_20260711",
   "type": "feature",
-  "status": "in-progress",
+  "status": "completed",
   "created_at": "2026-07-11T00:00:00Z",
-  "updated_at": "2026-07-11T00:00:00Z",
+  "updated_at": "2026-07-11T03:15:00Z",
   "description": "Rebuild four runner and traversal games as shared Phaser 4 APK cartridges with dual editions, authenticated-host proof, and exact legacy cutover evidence.",
   "estimated_tasks": 20,
-  "actual_tasks": null,
+  "actual_tasks": 20,
   "deviation_notes": "Activated after W2 completed the authenticated Advantage Games host. The wave consumes the existing gate-runner proof and preserves each legacy game's recognizable mechanic without renderer parity.",
   "sprint": {
     "goal": "Students can play four distinct runner/traversal APK cartridges through the shared authenticated arcade on desktop and touch devices.",
     "stories": [
-      { "id": "S1", "title": "Freeze the runner wave contracts", "size": "M", "priority": "Must", "status": "in-progress" },
-      { "id": "S2", "title": "Extend reusable traversal systems", "size": "L", "priority": "Must", "status": "pending" },
-      { "id": "S3", "title": "Build four dual-edition cartridges", "size": "XL", "priority": "Must", "status": "pending" },
-      { "id": "S4", "title": "Cut over and verify the runner wave", "size": "XL", "priority": "Must", "status": "pending" }
+      { "id": "S1", "title": "Freeze the runner wave contracts", "size": "M", "priority": "Must", "status": "completed" },
+      { "id": "S2", "title": "Extend reusable traversal systems", "size": "L", "priority": "Must", "status": "completed" },
+      { "id": "S3", "title": "Build four dual-edition cartridges", "size": "XL", "priority": "Must", "status": "completed" },
+      { "id": "S4", "title": "Cut over and verify the runner wave", "size": "XL", "priority": "Must", "status": "completed" }
     ],
-    "demo_notes": null,
+    "demo_notes": "All four public IDs complete through the generic authenticated host in Primary desktop keyboard and Secondary 390x844 touch runs, with HTTP 200 shared persistence and committed browser evidence.",
     "retro_ref": null
   }
 }
