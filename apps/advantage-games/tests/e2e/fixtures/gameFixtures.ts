@@ -2,7 +2,7 @@ import type { VocabularyItem } from "../../../src/store/useGameStore";
 import { SAMPLE_VOCABULARY } from "../../../src/lib/games/sampleVocabulary";
 
 export const ARCHERS_REVENGE_GAME_PATH =
-  "/en/student/games/vocabulary/archers-revenge";
+  "/en/student/arcade/archers-revenge";
 
 export const ARCHERS_REVENGE_SCREENSHOT_DIR = "public/games/archers-revenge";
 
@@ -79,7 +79,7 @@ export const MAGIC_DEFENSE_COMPLETION_RESPONSE = {
   status: 200,
 };
 
-export const PALADINS_TWIN_SOUL_GAME_PATH = "/en/student/games/vocabulary/paladins-twin-soul";
+export const PALADINS_TWIN_SOUL_GAME_PATH = "/en/student/arcade/paladins-twin-soul";
 
 export const PALADINS_TWIN_SOUL_SCREENSHOT_DIR = "public/games/paladins-twin-soul";
 
@@ -155,13 +155,13 @@ export const GRIFFIN_RIDERS_ESCAPE_SCREENSHOT_FILE = "griffin-riders-escape-game
 export const GRIFFIN_RIDERS_ESCAPE_SAMPLE_SENTENCES: VocabularyItem[] = SAMPLE_VOCABULARY;
 
 // GRIFFIN_SKY_JOUST (Sentence Game)
-export const GRIFFIN_SKY_JOUST_GAME_PATH = "/en/student/games/sentence/griffin-sky-joust";
+export const GRIFFIN_SKY_JOUST_GAME_PATH = "/en/student/arcade/griffin-sky-joust";
 export const GRIFFIN_SKY_JOUST_SCREENSHOT_DIR = "public/games/griffin-sky-joust";
 export const GRIFFIN_SKY_JOUST_SCREENSHOT_FILE = "griffin-sky-joust-gameplay.png";
 export const GRIFFIN_SKY_JOUST_SAMPLE_SENTENCES: VocabularyItem[] = SAMPLE_VOCABULARY;
 
 // GRYPHON_PATROL (Sentence Game)
-export const GRYPHON_PATROL_GAME_PATH = "/en/student/games/sentence/gryphon-patrol";
+export const GRYPHON_PATROL_GAME_PATH = "/en/student/arcade/gryphon-patrol";
 export const GRYPHON_PATROL_SCREENSHOT_DIR = "public/games/gryphon-patrol";
 export const GRYPHON_PATROL_SCREENSHOT_FILE = "gryphon-patrol-gameplay.png";
 export const GRYPHON_PATROL_SAMPLE_SENTENCES: VocabularyItem[] = SAMPLE_VOCABULARY;
@@ -185,7 +185,7 @@ export const POTION_RUSH_SCREENSHOT_FILE = "potion-rush-gameplay.png";
 export const POTION_RUSH_SAMPLE_SENTENCES: VocabularyItem[] = SAMPLE_VOCABULARY;
 
 // REALM_CARVER (Sentence Game)
-export const REALM_CARVER_GAME_PATH = "/en/student/games/sentence/realm-carver";
+export const REALM_CARVER_GAME_PATH = "/en/student/arcade/realm-carver";
 export const REALM_CARVER_SCREENSHOT_DIR = "public/games/realm-carver";
 export const REALM_CARVER_SCREENSHOT_FILE = "realm-carver-gameplay.png";
 export const REALM_CARVER_SAMPLE_SENTENCES: VocabularyItem[] = SAMPLE_VOCABULARY;

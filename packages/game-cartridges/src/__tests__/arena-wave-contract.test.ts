@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { existsSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { resolve } from "node:path";
 
 import * as catalog from "../catalog";
@@ -69,6 +69,17 @@ describe("APK arena and target-action W4 contract", () => {
     for (const legacyName of ["archersRevenge", "paladinsTwinSoul", "griffinSkyJoust", "gryphonPatrol", "realmCarver"]) {
       expect(existsSync(resolve(root, `apps/advantage-games/src/lib/games/${legacyName}.ts`))).toBe(false);
       expect(existsSync(resolve(root, `apps/advantage-games/src/lib/games/${legacyName}Config.ts`))).toBe(false);
+    }
+    const e2eRoot = resolve(root, "apps/advantage-games/tests/e2e");
+    const e2eFiles = readdirSync(e2eRoot, { recursive: true, withFileTypes: true })
+      .filter((entry) => entry.isFile() && entry.name.endsWith(".ts"))
+      .map((entry) => resolve(entry.parentPath, entry.name));
+    for (const file of e2eFiles) {
+      const source = readFileSync(file, "utf8");
+      for (const id of ids) {
+        expect(source).not.toContain(`/api/v1/${["games", id].join("/")}`);
+        expect(source).not.toMatch(new RegExp(`/student/games/(?:sentence|vocabulary)/${id}`));
+      }
     }
   });
 });

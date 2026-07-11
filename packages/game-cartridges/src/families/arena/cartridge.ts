@@ -5,6 +5,7 @@ import type Phaser from "phaser";
 import type { ArenaWaveBlueprint } from "../../arena-wave-blueprints";
 import { createGameResults } from "../../internal/results";
 import type { GameCartridgeDefinition } from "../../internal/types";
+import { createArenaMechanicState, flapArenaState, resolveArenaMechanicAttempt } from ".";
 
 /** Options used by the shared W4 arena scene. */
 export interface ArenaSceneOptions {
@@ -57,7 +58,9 @@ function resolveRounds(blueprint: ArenaWaveBlueprint, input: VocabularyInput | S
  */
 export function createArenaGameConfig(options: ArenaSceneOptions): Phaser.Types.Core.GameConfig {
   const rounds = resolveRounds(options.blueprint, options.input);
+  let mechanicState = createArenaMechanicState(options.blueprint.mechanic, rounds.length);
   let roundIndex = 0; let correctAnswers = 0; let totalAttempts = 0; let score = 0; let completed = false;
+  let selectedIndex = 0;
   let previous: APKInputSnapshot = options.inputController.snapshot();
   let choose: (choice: string) => void = () => undefined;
   const accentByMechanic: Record<ArenaWaveBlueprint["mechanic"], number> = {
@@ -101,7 +104,11 @@ export function createArenaGameConfig(options: ArenaSceneOptions): Phaser.Types.
           this.add.text(480, 478, "KEEP WALL  ♥♥♥", { color: "#ffffff", fontSize: "17px" }).setOrigin(0.5);
           this.add.line(0, 0, 480, 420, 280, 245, options.edition.palette.accent, 0.8).setLineWidth(4);
         }
-        const playerStart = options.blueprint.mechanic === "aerial-ordered-targets" ? { x: 165, y: 290 } : { x: 480, y: 430 };
+        const playerStart = options.blueprint.mechanic === "aerial-ordered-targets"
+          ? { x: 165, y: 290 }
+          : options.blueprint.mechanic === "patrol-minimap"
+            ? { x: 480, y: 270 }
+            : { x: 480, y: 430 };
         const player = this.add.rectangle(playerStart.x, playerStart.y, 58, 58, options.edition.palette.player).setStrokeStyle(4, 0xffffff);
         if (options.blueprint.mechanic === "paired-hero-arena") {
           this.add.rectangle(playerStart.x + 86, playerStart.y, 52, 52, options.edition.palette.friendly).setStrokeStyle(4, 0xffffff);
@@ -110,6 +117,11 @@ export function createArenaGameConfig(options: ArenaSceneOptions): Phaser.Types.
         this.physics.add.existing(player);
         const body = player.body as Phaser.Physics.Arcade.Body;
         body.setCollideWorldBounds(true);
+        if (options.blueprint.mechanic === "patrol-minimap") {
+          this.physics.world.setBounds(0, 0, 1_600, 900);
+          this.cameras.main.setBounds(0, 0, 1_600, 900).startFollow(player, true, 0.12, 0.12);
+          this.add.text(870, 92, "TARGET ↗", { color: "#fef08a", fontSize: "18px", backgroundColor: "#0f172acc", padding: { x: 8, y: 6 } }).setScrollFactor(0);
+        }
         const title = this.add.text(24, 20, options.blueprint.id.replaceAll("-", " ").toUpperCase(), { color: options.edition.palette.text, fontSize: "18px", fontStyle: "bold" });
         const prompt = this.add.text(480, 55, "", { color: options.edition.palette.text, backgroundColor: "#0f172add", fontSize: "28px", padding: { x: 16, y: 10 }, align: "center", wordWrap: { width: 760 } }).setOrigin(0.5, 0);
         const progress = this.add.text(24, 500, "", { color: "#ffffff", fontSize: "17px" });
@@ -130,16 +142,21 @@ export function createArenaGameConfig(options: ArenaSceneOptions): Phaser.Types.
           if (!round) return;
           prompt.setText(round.prompt);
           targets.forEach((target, index) => target.label.setText(round.choices[index] ?? round.correct));
-          progress.setText(`${options.blueprint.mechanic} · ${roundIndex + 1}/${rounds.length}`);
+          targets.forEach((target, index) => target.bodyView.setStrokeStyle(index === selectedIndex ? 7 : 3, index === selectedIndex ? 0xfef08a : 0xffffff));
+          progress.setText(`${options.blueprint.mechanic} · ${roundIndex + 1}/${rounds.length} · ♥${mechanicState.health} · wave ${mechanicState.wave} · captured ${mechanicState.captured}`);
         };
         choose = (choice) => {
           if (completed) return;
           const round = rounds[roundIndex]; if (!round) return;
           totalAttempts += 1;
           const correct = choice === round.correct;
+          mechanicState = resolveArenaMechanicAttempt(mechanicState, correct);
+          const target = targets.find((candidate) => candidate.label.text === choice) ?? targets[selectedIndex]!;
+          const projectile = this.add.circle(player.x, player.y, 8, options.edition.palette.accent);
+          this.tweens.add({ targets: projectile, x: target.label.x, y: target.label.y, duration: 140, onComplete: () => projectile.destroy() });
           if (correct) { correctAnswers += 1; score += 100; roundIndex += 1; } else { score = Math.max(0, score - 20); }
-          options.diagnostic("ARENA_TARGET_RESOLVED", { id: options.blueprint.id, roundIndex, correct });
-          if (roundIndex >= rounds.length) { completed = true; options.complete(createGameResults(score, correctAnswers, totalAttempts)); return; }
+          options.diagnostic("ARENA_TARGET_RESOLVED", { id: options.blueprint.id, roundIndex, correct, health: mechanicState.health, wave: mechanicState.wave, captured: mechanicState.captured, shots: mechanicState.shots });
+          if (mechanicState.complete) { completed = true; options.complete(createGameResults(score, correctAnswers, totalAttempts)); return; }
           render();
         };
         render();
@@ -153,7 +170,17 @@ export function createArenaGameConfig(options: ArenaSceneOptions): Phaser.Types.
           );
           marker.setPosition(808 + player.x / 960 * 132, 440 + player.y / 540 * 76);
           const newlyPressed = snapshot.keys.filter((key) => !previous.keys.includes(key));
-          if (newlyPressed.includes("Space") || newlyPressed.includes("Enter")) choose(rounds[roundIndex]?.correct ?? "");
+          if (newlyPressed.some((key) => ["ArrowLeft", "KeyA"].includes(key))) { selectedIndex = 0; render(); }
+          if (newlyPressed.some((key) => ["ArrowRight", "KeyD"].includes(key))) { selectedIndex = 1; render(); }
+          if (options.blueprint.mechanic === "aerial-ordered-targets" && newlyPressed.some((key) => ["ArrowUp", "KeyW"].includes(key))) {
+            mechanicState = flapArenaState(mechanicState, 0.18);
+            player.y = 450 - mechanicState.altitude * 300;
+          }
+          if (newlyPressed.includes("Space") || newlyPressed.includes("Enter")) choose(targets[selectedIndex]?.label.text ?? "");
+          if (previous.pointer.down && !snapshot.pointer.down && !snapshot.pointer.cancelled) {
+            selectedIndex = snapshot.pointer.x < window.innerWidth / 2 ? 0 : 1;
+            choose(targets[selectedIndex]?.label.text ?? "");
+          }
           previous = snapshot;
         };
       },
@@ -170,7 +197,7 @@ export function createArenaGameConfig(options: ArenaSceneOptions): Phaser.Types.
  */
 export function createArenaCartridge(blueprint: ArenaWaveBlueprint, title: string, description: string): GameCartridgeDefinition {
   return {
-    manifest: { id: blueprint.id, title, description, inputMode: blueprint.inputMode, runtimeApiVersion: "1.0.0", version: "0.1.0", capabilities: ["arcade-physics"], requiredAssetSlots: blueprint.requiredAssetSlots },
+    manifest: { id: blueprint.id, title, description, inputMode: blueprint.inputMode, runtimeApiVersion: "1.0.0", version: "0.1.0", capabilities: blueprint.mechanic === "patrol-minimap" ? ["arcade-physics", "camera", "tweens"] : ["arcade-physics", "tweens"], requiredAssetSlots: blueprint.requiredAssetSlots },
     createGameConfig: (context) => createArenaGameConfig({ blueprint, input: context.input, edition: context.edition, inputController: context.inputController, complete: (result) => context.complete(result), diagnostic: (code, details) => context.diagnostic({ level: "info", code, message: code.toLowerCase().replaceAll("_", " "), ...(details ? { details } : {}) }) }),
   };
 }

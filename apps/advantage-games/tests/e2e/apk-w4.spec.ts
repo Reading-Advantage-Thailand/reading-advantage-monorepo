@@ -16,6 +16,25 @@ async function waitForArena(page: Page): Promise<void> {
 test.describe.configure({ mode: "serial" });
 
 test.describe("APK W4 arena wave desktop", () => {
+  test("penalizes a wrong aimed shot and emits exactly five result fields", async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto("/qc?cartridge=archers-revenge");
+    await waitForArena(page);
+    const resolved = page.getByTestId("diagnostic-log").locator("p", { hasText: "ARENA_TARGET_RESOLVED" });
+    await page.keyboard.press("ArrowRight");
+    await page.keyboard.press("Space");
+    await expect(resolved).toHaveCount(1);
+    await page.keyboard.press("ArrowLeft");
+    for (let index = 0; index < 4; index += 1) {
+      await page.keyboard.press("Space");
+      await expect(resolved).toHaveCount(index + 2);
+    }
+    await expect(page.getByText("Game complete", { exact: true })).toBeVisible();
+    const result = JSON.parse(await page.getByRole("heading", { name: "Stable result ABI" }).locator("..").locator("pre").textContent() ?? "{}");
+    expect(Object.keys(result).sort()).toEqual(["accuracy", "correctAnswers", "score", "totalAttempts", "xp"]);
+    expect(result).toMatchObject({ accuracy: 0.8, correctAnswers: 4, totalAttempts: 5 });
+  });
+
   for (const game of games) {
     test(`completes ${game.id} by keyboard with both editions lifecycle-safe`, async ({ page }, testInfo) => {
       test.setTimeout(90_000);

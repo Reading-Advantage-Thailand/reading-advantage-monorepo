@@ -64,7 +64,7 @@ export async function mockArchersRevengeApis(
   page: Page,
   vocabulary = ARCHERS_REVENGE_SAMPLE_VOCABULARY
 ) {
-  await page.route("**/api/v1/games/archers-revenge/vocabulary", async (route) => {
+  await page.route("**/api/v1/apk/complete?retired-helper=archers-content", async (route) => {
     await new Promise((resolve) => setTimeout(resolve, 250));
 
     const response: ApiResponse = {
@@ -80,7 +80,7 @@ export async function mockArchersRevengeApis(
     });
   });
 
-  await page.route("**/api/v1/games/archers-revenge/complete", async (route) => {
+  await page.route("**/api/v1/apk/complete?retired-helper=archers-complete", async (route) => {
     const response: ApiResponse = {
       status: 200,
       message: "Game completed successfully",
@@ -285,7 +285,7 @@ export async function mockPaladinsTwinSoulApis(
   page: Page,
   vocabulary = PALADINS_TWIN_SOUL_SAMPLE_VOCABULARY
 ) {
-  await page.route("/api/v1/games/paladins-twin-soul/vocabulary", async (route) => {
+  await page.route("/api/v1/apk/complete?retired-helper=paladins-content", async (route) => {
     const response: ApiResponse = {
       status: 200,
       message: "Vocabulary retrieved successfully",
@@ -299,7 +299,7 @@ export async function mockPaladinsTwinSoulApis(
     });
   });
 
-  await page.route("/api/v1/games/paladins-twin-soul/complete", async (route) => {
+  await page.route("/api/v1/apk/complete?retired-helper=paladins-complete", async (route) => {
     const response: ApiResponse = {
       status: 200,
       message: "Game completed successfully",
@@ -570,7 +570,7 @@ export async function mockGriffinSkyJoustApis(
   page: Page,
   sentences = GRIFFIN_SKY_JOUST_SAMPLE_SENTENCES
 ) {
-  await page.route("**/api/v1/games/griffin-sky-joust/sentences**", async (route) => {
+  await page.route("**/api/v1/apk/complete?retired-helper=griffin-content", async (route) => {
     const response: ApiResponse = {
       status: 200,
       message: "Sentences retrieved successfully",
@@ -578,7 +578,7 @@ export async function mockGriffinSkyJoustApis(
     };
     await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(response) });
   });
-  await page.route("/api/v1/games/griffin-sky-joust/complete", async (route) => {
+  await page.route("/api/v1/apk/complete?retired-helper=griffin-complete", async (route) => {
     const response: ApiResponse = {
       status: 200,
       message: "Game completed successfully",
@@ -600,7 +600,7 @@ export async function mockGryphonPatrolApis(
   page: Page,
   sentences = GRYPHON_PATROL_SAMPLE_SENTENCES
 ) {
-  await page.route("**/api/v1/games/gryphon-patrol/sentences**", async (route) => {
+  await page.route("**/api/v1/apk/complete?retired-helper=gryphon-content", async (route) => {
     const response: ApiResponse = {
       status: 200,
       message: "Sentences retrieved successfully",
@@ -608,14 +608,14 @@ export async function mockGryphonPatrolApis(
     };
     await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(response) });
   });
-  await page.route("/api/v1/games/gryphon-patrol/ranking", async (route) => {
+  await page.route("/api/v1/apk/complete?retired-helper=gryphon-ranking", async (route) => {
     await route.fulfill({
       status: 200,
       contentType: "application/json",
       body: JSON.stringify({ rankings: { easy: [], normal: [], hard: [], extreme: [] } }),
     });
   });
-  await page.route("/api/v1/games/gryphon-patrol/complete", async (route) => {
+  await page.route("/api/v1/apk/complete?retired-helper=gryphon-complete", async (route) => {
     const response: ApiResponse = {
       status: 200,
       message: "Game completed successfully",
@@ -735,9 +735,9 @@ export function getPotionRushUrl() {
 // REALM_CARVER (Sentence Game)
 export async function mockRealmCarverApis(
   page: Page,
-  sentences = REALM_CARVER_SAMPLE_SENTENCES
+  _sentences = REALM_CARVER_SAMPLE_SENTENCES
 ) {
-  await page.route("**/api/v1/games/realm-carver/sentences**", async (route) => {
+  await page.route("**/api/v1/apk/complete?retired-helper=realm-content", async (route) => {
     const response = {
       status: 200,
       sentences: [{ text: "The cat sat on the mat", id: "1" }],
@@ -745,7 +745,7 @@ export async function mockRealmCarverApis(
     };
     await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(response) });
   });
-  await page.route("/api/v1/games/realm-carver/complete", async (route) => {
+  await page.route("/api/v1/apk/complete?retired-helper=realm-complete", async (route) => {
     const response: ApiResponse = {
       status: 200,
       message: "Game completed successfully",

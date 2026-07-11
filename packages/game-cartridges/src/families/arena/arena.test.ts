@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { arenaWaveIndex, expectedArenaTarget, moveArenaPoint, projectilePathDistance, projectToMinimap, territoryProgress } from ".";
+import { arenaWaveIndex, createArenaMechanicState, expectedArenaTarget, flapArenaState, moveArenaPoint, projectilePathDistance, projectToMinimap, resolveArenaMechanicAttempt, territoryProgress } from ".";
 
 describe("deterministic arena family", () => {
   it("clamps movement and projects the same position onto a minimap", () => {
@@ -22,5 +22,18 @@ describe("deterministic arena family", () => {
     expect(projectilePathDistance({ x: 3, y: 4 }, { x: 0, y: 0 }, { x: 0, y: 0 })).toBe(5);
     expect(territoryProgress(-1, 4)).toBe(0);
     expect(territoryProgress(8, 4)).toBe(1);
+  });
+  it("drives distinct survival, wave, aerial, and territory state", () => {
+    const paladin = createArenaMechanicState("paired-hero-arena", 4);
+    expect(paladin.health).toBe(6);
+    expect(resolveArenaMechanicAttempt(paladin, false)).toMatchObject({ health: 5, shots: 1, resolved: 0 });
+    const progressed = resolveArenaMechanicAttempt(resolveArenaMechanicAttempt(resolveArenaMechanicAttempt(paladin, true), true), true);
+    expect(progressed).toMatchObject({ wave: 2, resolved: 3, complete: false });
+    const realm = resolveArenaMechanicAttempt(createArenaMechanicState("ordered-territory-capture", 1), true);
+    expect(realm).toMatchObject({ captured: 1, complete: true, victory: true });
+    const aerial = flapArenaState(createArenaMechanicState("aerial-ordered-targets", 2), 0.8);
+    expect(aerial.altitude).toBe(1);
+    expect(() => flapArenaState(paladin, 0.2)).toThrow(/aerial/);
+    expect(() => createArenaMechanicState("patrol-minimap", 0)).toThrow(/target count/);
   });
 });
