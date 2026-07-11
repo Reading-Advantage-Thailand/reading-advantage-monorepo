@@ -27,18 +27,29 @@ _Graph context: current `LessonContent` exposes only app-local `youtubeId`/`imag
 ## Phase S2: Build interactive video for React
 _Story ref: spec.md#story-s2_
 
-- [~] Task: Freeze player and accessibility contracts
-  - [ ] Define provider adapter, controller, UI state, checkpoint, transcript, diagram, and replay APIs
-  - [ ] Record YouTube versus hosted-media gating rules as executable policy tests
-- [~] Task: Write component and browser Red tests
-  - [ ] Cover player states, time/range sampling, cue points, seeking, replay, questions, feedback, errors, and reconnects
-  - [ ] Cover keyboard/touch, focus, captions/transcript, reduced motion, screen reader, responsive layout, and CSP
-- [~] Task: Implement React player and source adapters
-  - [ ] Build YouTube IFrame API and hosted HTML5 adapters behind one controller
-  - [ ] Render checkpoint, diagram, transcript, resource, and non-blocking remediation surfaces
-- [~] Task: Verify and document Phase S2
-  - [ ] Run unit/browser/accessibility/mobile/performance gates and manually verify provider policy behavior
-  - [ ] Task: Measure - User Manual Verification 'Phase S2: Build interactive video for React' (Protocol in workflow.md)
+- [x] Task: Freeze player and accessibility contracts — `55725748`
+  - [x] Define provider adapter, controller, UI state, checkpoint, transcript, diagram, and replay APIs
+  - [x] Record YouTube versus hosted-media gating rules as executable policy tests
+- [x] Task: Write component and browser Red tests — `a51e7fd1`, `6cec0819`
+  - [x] Cover player states, time/range sampling, cue points, seeking, replay, questions, feedback, errors, and reconnects
+  - [x] Cover keyboard/touch, focus, captions/transcript, reduced motion, screen reader, responsive layout, CSP, and Thai route propagation
+- [x] Task: Implement React player and source adapters — `f4f78ce8`, `55725748`, `ed108506`
+  - [x] Build YouTube IFrame API and hosted HTML5 adapters behind one controller
+  - [x] Render checkpoint, diagram, transcript, resource, and non-blocking remediation surfaces
+- [x] Task: Verify and document Phase S2 — `27cfc85f`, `8acb481f`
+  - [x] Run unit/browser/accessibility/mobile/performance gates and manually verify provider policy behavior
+  - [x] Task: Measure - User Manual Verification 'Phase S2: Build interactive video for React' (Protocol in workflow.md) — Kimi English/Thai walkthrough and six Playwright scenarios passed
+
+  - Green evidence: Activity React type-check/lint and 17/17 tests pass. The
+    sequential Playwright gate passes 6/6 across desktop and mobile Chrome,
+    including keyboard playback, reload persistence, reduced motion, responsive
+    controls, and Thai route integration.
+  - Review evidence: independent review found and verified remediation for hosted
+    hard-gate bypass, real provider events/errors, resume validation, bilingual
+    host propagation, and hosted caption updates. See `plan-review.md`.
+  - Browser evidence: Kimi WebBridge exercised the live YouTube iframe,
+    checkpoint, wrong/correct feedback, replay, transcript, diagram, persisted
+    state, and Thai localization. Screenshots are in `browser-evidence/`.
 
 ## Phase S3: Persist activity evidence
 _Story ref: spec.md#story-s3_
