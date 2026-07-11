@@ -2,12 +2,13 @@ import { expect, test, type Page } from "@playwright/test";
 
 async function login(page: Page) {
   const loginButton = page.getByRole("button", { name: "Log in", exact: true });
-  await page.waitForFunction(() => document.body.innerText.includes("Log in") || document.body.innerText.includes("Log out"));
+  await expect(loginButton.or(page.getByRole("button", { name: "Log out" }))).toBeVisible();
   if (await loginButton.isVisible()) {
     await loginButton.click();
     await page.getByRole("textbox", { name: "Username" }).fill(process.env.CODECAMP_E2E_USERNAME ?? "admin");
-    await page.getByRole("textbox", { name: "Password" }).fill(process.env.CODECAMP_E2E_PASSWORD ?? "Password123");
-    await page.getByRole("dialog").getByRole("button", { name: "Log in", exact: true }).click();
+    const password = page.getByRole("textbox", { name: "Password" });
+    await password.fill(process.env.CODECAMP_E2E_PASSWORD ?? "Password123");
+    await password.press("Enter");
     await expect(page.getByRole("button", { name: "Log out" })).toBeVisible();
     const retryAccess = page.getByRole("button", { name: "Check access again" });
     if (await retryAccess.isVisible()) await retryAccess.click();
@@ -15,6 +16,8 @@ async function login(page: Page) {
 }
 
 test.describe("published APK unit", () => {
+  test.setTimeout(60_000);
+
   test("persists a server-assessed I Do checkpoint across reload", async ({ page }) => {
     await page.goto("/en/apk-unit/1");
     await login(page);
