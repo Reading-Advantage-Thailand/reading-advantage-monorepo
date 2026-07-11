@@ -170,10 +170,19 @@ class DemoController implements MediaController {
 export function ActivityRuntimeDemo() {
   const controller = useMemo(() => new DemoController(), []);
   const attachYouTubeController = useCallback((nextController: RefreshingMediaController) => controller.attach(nextController), [controller]);
-  const [attempts, setAttempts] = useState(() => Number(globalThis.localStorage?.getItem("activity-runtime-demo-attempts") ?? 0));
-  const [initialPosition] = useState(() => Number(globalThis.localStorage?.getItem("activity-runtime-demo-position") ?? 0));
-  const [position, setPosition] = useState(initialPosition);
+  const [attempts, setAttempts] = useState(0);
+  const [initialPosition, setInitialPosition] = useState(0);
+  const [position, setPosition] = useState(0);
   const [watchedRangeCount, setWatchedRangeCount] = useState(0);
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => {
+    const storedAttempts = Number(globalThis.localStorage?.getItem("activity-runtime-demo-attempts") ?? 0);
+    const storedPosition = Number(globalThis.localStorage?.getItem("activity-runtime-demo-position") ?? 0);
+    setAttempts(storedAttempts);
+    setInitialPosition(storedPosition);
+    setPosition(storedPosition);
+    setHydrated(true);
+  }, []);
   const savePosition = useCallback((seconds: number) => {
     globalThis.localStorage?.setItem("activity-runtime-demo-position", String(seconds));
     setPosition(seconds);
@@ -182,6 +191,13 @@ export function ActivityRuntimeDemo() {
     globalThis.localStorage?.setItem("activity-runtime-demo-watched-ranges", JSON.stringify(ranges));
     setWatchedRangeCount(ranges.length);
   }, []);
+  if (!hydrated) {
+    return (
+      <main className="mx-auto min-h-screen max-w-3xl bg-slate-50 p-4 text-slate-950 sm:p-8">
+        <p role="status">Loading interactive tutorial…</p>
+      </main>
+    );
+  }
   return (
     <main className="mx-auto min-h-screen max-w-3xl space-y-6 bg-slate-50 p-4 text-slate-950 sm:p-8">
       <header>
