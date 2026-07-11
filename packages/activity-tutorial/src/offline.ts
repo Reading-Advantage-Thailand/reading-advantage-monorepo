@@ -111,7 +111,14 @@ export async function flushTutorialReportQueue(queue: TutorialReportQueue, now: 
       const refreshed = refreshCredential ? await refreshCredential(entry) : null;
       await queue.remove(entry.queueId);
       if (refreshed) {
-        await enqueueTutorialReport(queue, entry.endpoint, refreshed, now);
+        const refreshedQueueId = await enqueueTutorialReport(queue, entry.endpoint, refreshed, now);
+        try {
+          uploaded.push(await uploadTutorialReport(entry.endpoint, tutorialReportRequestSchema.parse(refreshed), send));
+          await queue.remove(refreshedQueueId);
+        } catch {
+          failed += 1;
+          await queue.retry(refreshedQueueId, 1, new Date(Date.parse(now) + 2_000).toISOString());
+        }
       } else {
         expired += 1;
       }

@@ -218,9 +218,11 @@ describe("tutorial repository protocol", () => {
     const queue = createStorageTutorialReportQueue({ getItem: (key) => memory.get(key) ?? null, setItem: (key, value) => { memory.set(key, value); } });
     const request = { submissionId: "submission-5", credential: issueTutorialCredential(expiredClaims, secret), repositoryStateId: "snapshot-5", localResult };
     const refreshed = { ...request, credential: issueTutorialCredential(refreshedClaims, secret) };
+    const response: VerifiedTutorialReport = { submissionId: "submission-5", sessionId: "session-5", activityId: "activity-1", activityVersion: "1.0.0", graphVersion: "1.2.0", repositoryId: "repo-1", learnerId: "learner-1", tenantKey: "school-1", stepId: "step.game", passed: true, checks: [{ checkId: "file.game", passed: true }, { checkId: "git.stage", passed: true }], verifiedAt: "2026-07-10T00:01:00Z" };
     await enqueueTutorialReport(queue, "/activity/tutorial", request, "2026-07-10T00:00:30Z");
-    await expect(flushTutorialReportQueue(queue, "2026-07-10T00:01:00Z", vi.fn(), async () => refreshed)).resolves.toEqual({ uploaded: [], failed: 0, expired: 0 });
-    const [queued] = await queue.due("2026-07-10T00:01:00Z");
-    expect(tutorialReportRequestSchema.parse(queued?.request)).toMatchObject({ submissionId: "submission-5", credential: refreshed.credential });
+    const send = vi.fn().mockResolvedValue(response);
+    await expect(flushTutorialReportQueue(queue, "2026-07-10T00:01:00Z", send, async () => refreshed)).resolves.toEqual({ uploaded: [response], failed: 0, expired: 0 });
+    expect(send).toHaveBeenCalledWith("/activity/tutorial", expect.objectContaining({ submissionId: "submission-5", credential: refreshed.credential }));
+    await expect(queue.due("2026-07-10T01:00:00Z")).resolves.toEqual([]);
   });
 });
