@@ -39,6 +39,11 @@ test.describe("APK Advantage Games Arcade Host W2", () => {
       page.getByRole("heading", { name: "Dragon Flight" }),
     ).toBeVisible();
     await expect(page.locator("canvas")).toHaveCount(1);
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= document.documentElement.clientWidth,
+      ),
+    ).toBe(true);
 
     const sessionCookie = (await context.cookies()).find(
       (cookie) => cookie.name === "session_token",
@@ -49,6 +54,12 @@ test.describe("APK Advantage Games Arcade Host W2", () => {
       path: testInfo.outputPath("apk-w2-authenticated-mobile.png"),
       fullPage: true,
     });
+
+    const secondaryEdition = page.getByRole("button", { name: "Secondary Epic" });
+    await secondaryEdition.focus();
+    await page.keyboard.press("Enter");
+    await expect(secondaryEdition).toHaveAttribute("aria-pressed", "true");
+    await expect(page.locator("canvas")).toHaveCount(1);
 
     const idempotencyKey = crypto.randomUUID();
     const persist = () =>
@@ -73,16 +84,36 @@ test.describe("APK Advantage Games Arcade Host W2", () => {
         return { status: response.status, body: await response.json() };
       }, idempotencyKey);
 
-    const first = await persist();
-    expect(first.status).toBe(200);
-    expect(first.body).toMatchObject({ duplicate: false, status: 200 });
+    const concurrent = await Promise.all([persist(), persist()]);
+    expect(concurrent.map(({ status }) => status)).toEqual([200, 200]);
+    expect(concurrent).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          body: expect.objectContaining({ duplicate: false, status: 200 }),
+        }),
+        expect.objectContaining({
+          body: expect.objectContaining({
+            duplicate: true,
+            status: 200,
+            xpEarned: 0,
+          }),
+        }),
+      ]),
+    );
 
-    const duplicate = await persist();
-    expect(duplicate.status).toBe(200);
-    expect(duplicate.body).toMatchObject({
-      duplicate: true,
-      status: 200,
-      xpEarned: 0,
-    });
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.reload();
+    await expect(page.locator("canvas")).toHaveCount(1);
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= document.documentElement.clientWidth,
+      ),
+    ).toBe(true);
+
+    await page.goto("/en/student/arcade/sorcerer-ziggurat");
+    await expect(
+      page.getByRole("heading", { name: "The Sorcerer's Ziggurat" }),
+    ).toBeVisible();
+    await expect(page.locator("canvas")).toHaveCount(1);
   });
 });

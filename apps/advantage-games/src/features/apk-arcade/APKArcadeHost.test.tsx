@@ -8,6 +8,10 @@ jest.mock("./use-arcade-session", () => ({
   useArcadeSession: () => mockUseArcadeSession(),
 }));
 
+jest.mock("@/lib/basePath", () => ({
+  withBasePath: (path: string) => `/reading${path}`,
+}));
+
 jest.mock("next/dynamic", () => () => {
   function MockAPKGameHost(props: {
     edition: { id: string };
@@ -119,7 +123,7 @@ describe("APKArcadeHost", () => {
 
     await waitFor(() => expect(global.fetch).toHaveBeenCalledTimes(1));
     expect(global.fetch).toHaveBeenCalledWith(
-      "/api/v1/apk/complete",
+      "/reading/api/v1/apk/complete",
       expect.objectContaining({ method: "POST" }),
     );
     const request = (global.fetch as jest.Mock).mock.calls[0]?.[1] as NonNullable<

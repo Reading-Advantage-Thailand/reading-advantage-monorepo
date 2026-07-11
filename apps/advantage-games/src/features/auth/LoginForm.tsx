@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 import { studentLoginInputSchema } from "@/lib/auth/contracts";
+import { withBasePath } from "@/lib/basePath";
 
 interface LoginFormProps {
   redirectTo?: string;
@@ -44,7 +45,7 @@ export function LoginForm({
 
     setSubmitting(true);
     try {
-      const response = await fetch("/api/auth/login", {
+      const response = await fetch(withBasePath("/api/auth/login"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(parsed.data),

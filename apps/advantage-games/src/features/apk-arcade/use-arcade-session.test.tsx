@@ -2,6 +2,10 @@ import { renderHook, waitFor } from "@testing-library/react";
 
 import { useArcadeSession } from "./use-arcade-session";
 
+jest.mock("@/lib/basePath", () => ({
+  withBasePath: (path: string) => `/reading${path}`,
+}));
+
 describe("useArcadeSession", () => {
   beforeEach(() => {
     global.fetch = jest.fn();
@@ -25,7 +29,7 @@ describe("useArcadeSession", () => {
     await waitFor(() => expect(result.current.status).toBe("authenticated"));
     expect(result.current.session?.user.role).toBe("STUDENT");
     expect(global.fetch).toHaveBeenCalledWith(
-      "/api/auth/session",
+      "/reading/api/auth/session",
       expect.objectContaining({ cache: "no-store", credentials: "same-origin" }),
     );
   });

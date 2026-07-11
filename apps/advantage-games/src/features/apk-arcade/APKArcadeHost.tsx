@@ -20,6 +20,7 @@ import {
 
 import { getArcadeContent, getNextCartridgeId } from "./content";
 import { useArcadeSession } from "./use-arcade-session";
+import { withBasePath } from "@/lib/basePath";
 
 const APKGameHost = dynamic(
   () =>
@@ -76,7 +77,10 @@ export function APKArcadeHost({
   const idempotencyKey = useRef(createIdempotencyKey());
 
   const input = useMemo(() => getArcadeContent(inputMode), [inputMode]);
-  const edition = resolveCartridgeEdition(editionId);
+  const edition = useMemo(
+    () => resolveCartridgeEdition(editionId),
+    [editionId],
+  );
   const nextCartridgeId = getNextCartridgeId(cartridgeId);
 
   useEffect(() => {
@@ -138,7 +142,7 @@ export function APKArcadeHost({
           clientTimestamp: Date.now(),
           metadata: { editionId },
         });
-        const response = await fetch("/api/v1/apk/complete", {
+        const response = await fetch(withBasePath("/api/v1/apk/complete"), {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),

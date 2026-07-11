@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { sharedSessionResponseSchema } from "@/lib/auth/contracts";
+import { withBasePath } from "@/lib/basePath";
 
 /** Student session exposed to the production arcade UI. */
 export type ArcadeSession = {
@@ -35,7 +36,7 @@ export function useArcadeSession(): ArcadeSessionState {
   useEffect(() => {
     const controller = new AbortController();
 
-    void fetch("/api/auth/session", {
+    void fetch(withBasePath("/api/auth/session"), {
       cache: "no-store",
       credentials: "same-origin",
       signal: controller.signal,

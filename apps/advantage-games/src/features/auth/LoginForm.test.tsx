@@ -3,6 +3,9 @@ import { useRouter } from "next/navigation";
 import { LoginForm } from "./LoginForm";
 
 jest.mock("next/navigation", () => ({ useRouter: jest.fn() }));
+jest.mock("@/lib/basePath", () => ({
+  withBasePath: (path: string) => `/reading${path}`,
+}));
 
 describe("LoginForm", () => {
   const replace = jest.fn();
@@ -43,7 +46,7 @@ describe("LoginForm", () => {
     fireEvent.click(screen.getByRole("button", { name: "Sign in" }));
 
     await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith("/api/auth/login", {
+      expect(global.fetch).toHaveBeenCalledWith("/reading/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username: "Student.One", password: "secret" }),
