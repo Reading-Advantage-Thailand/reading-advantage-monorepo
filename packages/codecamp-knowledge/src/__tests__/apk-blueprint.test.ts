@@ -70,6 +70,7 @@ describe("validateAPKLearningBlueprint", () => {
       ["APK_ABI_INPUT_MISMATCH", (input) => { input.abi.educationalInputModes = ["vocabulary"]; }],
       ["APK_ABI_RESULT_MISMATCH", (input) => { input.abi.educationalResultFields.pop(); }],
       ["APK_HOST_RESPONSIBILITY_MISMATCH", (input) => { input.abi.hostResponsibilities.pop(); }],
+      ["APK_CARTRIDGE_RESPONSIBILITY_MISMATCH", (input) => { input.abi.cartridgeResponsibilities = ["manifest"]; }],
       ["APK_EDITION_CONTRACT_MISMATCH", (input) => { input.abi.editionResponsibilities.pop(); }],
       ["APK_ISOLATION_MISMATCH", (input) => { input.abi.isolation.phaser = "server-safe" as never; }],
     ];

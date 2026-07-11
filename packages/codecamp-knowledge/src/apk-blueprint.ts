@@ -146,6 +146,7 @@ const REQUIRED_MANIFEST_FIELDS = ["id", "title", "description", "version", "runt
 const REQUIRED_INPUT_MODES = ["vocabulary", "sentence"];
 const REQUIRED_RESULT_FIELDS = ["accuracy", "xp", "score", "correctAnswers", "totalAttempts"];
 const REQUIRED_HOST_RESPONSIBILITIES = ["mount", "completion", "diagnostics", "navigation", "persistence"];
+const REQUIRED_CARTRIDGE_RESPONSIBILITIES = ["manifest", "game-config", "educational-logic", "validated-result", "deterministic-cleanup"];
 const REQUIRED_EDITION_RESPONSIBILITIES = ["semantic-assets", "asset-provenance", "palette", "audience-tuning", "runtime-version"];
 const REQUIRED_PREREQUISITES: Record<string, string> = {
   javascript: "codecamp.foundation.skill.functions",
@@ -228,6 +229,7 @@ export function validateAPKLearningBlueprint(input: unknown, graph: CodeKnowledg
   if (!sameMembers(blueprint.abi.educationalInputModes, REQUIRED_INPUT_MODES)) issues.push({ code: "APK_ABI_INPUT_MISMATCH", message: "Blueprint educational inputs drift from the vocabulary and sentence ABI." });
   if (!sameMembers(blueprint.abi.educationalResultFields, REQUIRED_RESULT_FIELDS)) issues.push({ code: "APK_ABI_RESULT_MISMATCH", message: "Blueprint results drift from the five-field GameResults ABI." });
   if (!sameMembers(blueprint.abi.hostResponsibilities, REQUIRED_HOST_RESPONSIBILITIES)) issues.push({ code: "APK_HOST_RESPONSIBILITY_MISMATCH", message: "Blueprint must preserve host-owned lifecycle and persistence responsibilities." });
+  if (!sameMembers(blueprint.abi.cartridgeResponsibilities, REQUIRED_CARTRIDGE_RESPONSIBILITIES)) issues.push({ code: "APK_CARTRIDGE_RESPONSIBILITY_MISMATCH", message: "Blueprint must preserve cartridge-owned manifest, game configuration, educational logic, validated results, and deterministic cleanup." });
   if (!sameMembers(blueprint.abi.editionResponsibilities, REQUIRED_EDITION_RESPONSIBILITIES)) issues.push({ code: "APK_EDITION_CONTRACT_MISMATCH", message: "Blueprint must preserve edition asset, provenance, palette, tuning, and version responsibilities." });
   if (blueprint.abi.isolation.phaser !== "client-only" || !blueprint.abi.isolation.reactHostOwnsMount || !blueprint.abi.isolation.serverImportsForbidden) {
     issues.push({ code: "APK_ISOLATION_MISMATCH", message: "Phaser must remain client-only behind a React-owned mount with no server imports." });
