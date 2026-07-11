@@ -332,6 +332,37 @@ pnpmfileChecksum: sha256-pU4HNGlvjxxBJ85dKrOi8k104qXNitGe+FYk2EN3ZKk=
 
 importers:
 
+  apps/activity-vinext-fixture:
+    dependencies:
+      '@reading-advantage/activity-react':
+        specifier: workspace:*
+        version: link:../../packages/activity-react
+      '@reading-advantage/activity-runtime':
+        specifier: workspace:*
+        version: link:../../packages/activity-runtime
+      react:
+        specifier: 19.2.7
+        version: 19.2.7
+      react-dom:
+        specifier: 19.2.7
+        version: 19.2.7(react@19.2.7)
+      vinext:
+        specifier: 0.2.0
+        version: 0.2.0(@vitejs/plugin-react@6.0.3(vite@8.1.0(@types/node@20.19.43)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0)))(@vitejs/plugin-rsc@0.5.27(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vite@8.1.0(@types/node@20.19.43)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0)))(next@16.2.9(@opentelemetry/api@1.9.1)(@playwright/test@1.61.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vite-tsconfig-paths@6.1.1(typescript@5.9.3)(vite@8.1.0(@types/node@20.19.43)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0)))(vite@8.1.0(@types/node@20.19.43)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))
+    devDependencies:
+      '@types/react':
+        specifier: 19.2.2
+        version: 19.2.2
+      '@types/react-dom':
+        specifier: 19.2.2
+        version: 19.2.2(@types/react@19.2.2)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      vite:
+        specifier: 8.1.0
+        version: 8.1.0(@types/node@20.19.43)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0)
+
   .:
     devDependencies:
       '@commitlint/cli':
@@ -2339,6 +2370,9 @@ importers:
 
   packages/codecamp-knowledge:
     dependencies:
+      '@reading-advantage/advantage-play-kit':
+        specifier: workspace:*
+        version: link:../advantage-play-kit
       '@reading-advantage/activity-runtime':
         specifier: workspace:*
         version: link:../activity-runtime

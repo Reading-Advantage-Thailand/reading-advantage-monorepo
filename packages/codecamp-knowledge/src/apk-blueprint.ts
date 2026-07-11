@@ -1,4 +1,5 @@
 import type { CodeKnowledgeGraph } from "./contracts.js";
+import type { RuntimeCartridgeManifest } from "@reading-advantage/advantage-play-kit/runtime";
 import { z } from "zod";
 
 const PracticeBaseSchema = z
@@ -142,7 +143,9 @@ export interface APKBlueprintReport {
   prerequisiteRoles: string[];
 }
 
-const REQUIRED_MANIFEST_FIELDS = ["id", "title", "description", "version", "runtimeApiVersion", "inputMode", "requiredAssetSlots", "capabilities"];
+const REQUIRED_MANIFEST_FIELDS = ["id", "title", "description", "version", "runtimeApiVersion", "inputMode", "requiredAssetSlots", "capabilities"] as const satisfies readonly (keyof RuntimeCartridgeManifest)[];
+const _manifestFieldsAreExhaustive: Exclude<keyof RuntimeCartridgeManifest, typeof REQUIRED_MANIFEST_FIELDS[number]> extends never ? true : never = true;
+void _manifestFieldsAreExhaustive;
 const REQUIRED_INPUT_MODES = ["vocabulary", "sentence"];
 const REQUIRED_RESULT_FIELDS = ["accuracy", "xp", "score", "correctAnswers", "totalAttempts"];
 const REQUIRED_HOST_RESPONSIBILITIES = ["mount", "completion", "diagnostics", "navigation", "persistence"];

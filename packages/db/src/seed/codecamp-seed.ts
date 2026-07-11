@@ -103,7 +103,7 @@ async function seed() {
   const phaseD = getPhaseDCurriculumData();
   const apk = getCodecampAPKCurriculumData();
   const modules = [...phaseA.modules, ...phaseB.modules, ...phaseC.modules, ...phaseD.modules, ...apk.modules];
-  const exerciseRepos = [...phaseA.exerciseRepos, ...phaseB.exerciseRepos, ...phaseC.exerciseRepos, ...phaseD.exerciseRepos];
+  const exerciseRepos = [...phaseA.exerciseRepos, ...phaseB.exerciseRepos, ...phaseC.exerciseRepos, ...phaseD.exerciseRepos, ...apk.exerciseRepos];
 
   let newModules = 0;
   let updatedModules = 0;
@@ -294,7 +294,7 @@ async function seed() {
 
     // Clean up orphaned exercise-repo rows for modules no longer in MODULE_REPO_MAP
     // (e.g. M1 dev-environment and M16 monorepo-packages were removed from the map)
-    const validSlugs = new Set(Object.keys(MODULE_REPO_MAP));
+    const validSlugs = new Set([...Object.keys(MODULE_REPO_MAP), ...exerciseRepos.map(({ moduleSlug }) => moduleSlug)]);
     const allModules = await tx
       .select({ id: codecampModules.id, slug: codecampModules.slug })
       .from(codecampModules);

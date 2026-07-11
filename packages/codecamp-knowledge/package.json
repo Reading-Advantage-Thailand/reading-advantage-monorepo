@@ -32,6 +32,7 @@
     "bindings:generate": "tsx scripts/generate-curriculum-bindings.ts"
   },
   "dependencies": {
+    "@reading-advantage/advantage-play-kit": "workspace:*",
     "@reading-advantage/activity-runtime": "workspace:*",
     "@reading-advantage/activity-tutorial": "workspace:*",
     "@reading-advantage/knowledge-space-core": "workspace:*",

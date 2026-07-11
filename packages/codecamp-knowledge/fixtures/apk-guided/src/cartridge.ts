@@ -1,4 +1,6 @@
 export const cartridgeManifest = {
   cartridgeId: "codecamp.guided.word-match",
-  // TODO: declare runtimeApiVersion and capabilities.
+  // TODO: replace this starter with every RuntimeCartridgeManifest field:
+  // id, title, description, version, runtimeApiVersion, inputMode,
+  // requiredAssetSlots, capabilities.
 };

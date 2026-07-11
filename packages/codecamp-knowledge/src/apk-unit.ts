@@ -3,6 +3,8 @@ import { tutorialManifestSchema, type TutorialManifest } from "@reading-advantag
 import { z } from "zod";
 import { apkLearningBlueprint } from "./apk-blueprint-data.js";
 
+const REQUIRED_MANIFEST_FIELDS = ["id", "title", "description", "version", "runtimeApiVersion", "inputMode", "requiredAssetSlots", "capabilities"] as const;
+
 /** Versioned Codecamp game-creation unit contract. */
 export const CodecampAPKUnitSchema = z.object({
   schemaVersion: z.literal("codecamp-apk-unit.v1"), unitId: z.literal("codecamp.unit.apk-game-creation"),
@@ -35,7 +37,7 @@ const APK_ACTIVITY_IDS = ["codecamp.activity.apk.ido", "codecamp.activity.apk.we
 export const codecampAPKUnit = CodecampAPKUnitSchema.parse({
   schemaVersion: "codecamp-apk-unit.v1", unitId: "codecamp.unit.apk-game-creation", version: "1.0.0",
   graphVersion: apkLearningBlueprint.graphVersion, unitNumber: 20,
-  placement: { afterModuleSlug: "architecture", prerequisiteObjectiveIds: apkLearningBlueprint.prerequisiteRoots.map(({ objectiveId }) => objectiveId) },
+  placement: { afterModuleSlug: "real-world-practice", prerequisiteObjectiveIds: apkLearningBlueprint.prerequisiteRoots.map(({ objectiveId }) => objectiveId) },
   migration: { strategy: "append-only-versioned", inProgressCohorts: "retain-original-sequence", newCohorts: "assign-unit-version", progressKey: "codecamp.unit.apk-game-creation@1.0.0" },
   resourceIds: ["video.apk.phaser-overview", "transcript.apk.phaser-overview", "diagram.apk.boundaries", "repo.apk.guided", "repo.apk.independent", "rubric.apk.independent"],
   activityIds: [...APK_ACTIVITY_IDS],
@@ -48,7 +50,7 @@ export const codecampAPKUnit = CodecampAPKUnitSchema.parse({
       allowedFiles: ["src/cartridge.ts", "src/game-state.ts"],
       allowedCommands: [{ commandId: "git.stage", profile: "git-status-porcelain" }],
       completionCriteria: { requiredStepIds: ["wedo.apk.manifest"] },
-      steps: [{ stepId: "wedo.apk.manifest", order: 1, objectiveId: "codecamp.game-development.skill.apk-contract", instruction: { en: "Complete the cartridge manifest and deterministic educational result.", th: "เติม cartridge manifest และผลการเรียนรู้แบบกำหนดได้" }, checks: [{ checkId: "manifest.runtime", kind: "file_contains", filePath: "src/cartridge.ts", expected: "runtimeApiVersion" }, { checkId: "git.stage", kind: "command", commandId: "git.stage", expected: "staged:src/cartridge.ts" }], hints: [{ hintId: "hint.boundary", text: { en: "Keep persistence in the host, not the cartridge.", th: "เก็บ persistence ไว้ใน host ไม่ใช่ cartridge" } }], reveals: [{ revealId: "reveal.fields", text: { en: "The manifest must declare runtimeApiVersion and capabilities.", th: "manifest ต้องระบุ runtimeApiVersion และ capabilities" } }], resourceIds: ["diagram.apk.boundaries"], scaffoldLevel: 2 }],
+      steps: [{ stepId: "wedo.apk.manifest", order: 1, objectiveId: "codecamp.game-development.skill.apk-contract", instruction: { en: "Complete the cartridge manifest and deterministic educational result.", th: "เติม cartridge manifest และผลการเรียนรู้แบบกำหนดได้" }, checks: [...REQUIRED_MANIFEST_FIELDS.map((field) => ({ checkId: `manifest.${field.toLowerCase()}`, kind: "file_contains" as const, filePath: "src/cartridge.ts", expected: field })), { checkId: "git.stage", kind: "command" as const, commandId: "git.stage", expected: "staged:src/cartridge.ts" }], hints: [{ hintId: "hint.boundary", text: { en: "Keep persistence in the host, not the cartridge.", th: "เก็บ persistence ไว้ใน host ไม่ใช่ cartridge" } }], reveals: [{ revealId: "reveal.fields", text: { en: "Declare every RuntimeCartridgeManifest field before staging the file.", th: "ระบุทุก field ของ RuntimeCartridgeManifest ก่อน stage ไฟล์" } }], resourceIds: ["diagram.apk.boundaries"], scaffoldLevel: 2 }],
     },
   },
   youdo: {

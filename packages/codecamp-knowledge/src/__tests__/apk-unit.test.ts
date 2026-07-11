@@ -5,6 +5,7 @@ import { codecampAPKUnit, CodecampAPKUnitSchema, createCodecampAPKActivity, crea
 describe("Codecamp APK game-creation unit", () => {
   it("freezes versioned placement, cohort migration, gradual release, and bilingual activity resources", () => {
     expect(CodecampAPKUnitSchema.safeParse(codecampAPKUnit).success).toBe(true);
+    expect(codecampAPKUnit.placement.afterModuleSlug).toBe("real-world-practice");
     expect(codecampAPKUnit.migration).toMatchObject({ strategy: "append-only-versioned", inProgressCohorts: "retain-original-sequence" });
     expect(codecampAPKUnit.activityIds).toEqual([codecampAPKUnit.ido.activityId, codecampAPKUnit.wedo.activityId, codecampAPKUnit.youdo.activityId]);
     expect(createCodecampAPKActivity("en").activityId).toBe(codecampAPKUnit.ido.activityId);
@@ -16,8 +17,8 @@ describe("Codecamp APK game-creation unit", () => {
     expect(createCodecampAPKTutorialActivity("en").tutorialSteps.map(({ stepId }) => stepId)).toEqual(codecampAPKUnit.wedo.manifest.completionCriteria.requiredStepIds);
     const guided = await readFile(new URL("../../fixtures/apk-guided/src/cartridge.ts", import.meta.url), "utf8");
     const independent = await readFile(new URL("../../fixtures/apk-independent/src/cartridge.ts", import.meta.url), "utf8");
-    expect(guided).toContain("TODO: declare runtimeApiVersion");
-    expect(independent).toContain("sentence-sorting");
+    expect(guided).toContain("every RuntimeCartridgeManifest field");
+    expect(independent).toContain("createSentenceSortingCartridge");
     expect(independent).not.toEqual(guided);
   });
 

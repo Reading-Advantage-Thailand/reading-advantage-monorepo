@@ -1,10 +1,10 @@
-import type { CurriculumModule } from "./codecamp-curriculum-data.js";
+import type { CurriculumModule, CurriculumRepo } from "./codecamp-curriculum-data.js";
 
 /**
  * Returns the append-only Unit 20 curriculum shell for the APK game-creation sequence.
  * @returns One published module with I Do, We Do, and You Do class periods.
  */
-export function getCodecampAPKCurriculumData(): { modules: CurriculumModule[] } {
+export function getCodecampAPKCurriculumData(): { modules: CurriculumModule[]; exerciseRepos: CurriculumRepo[] } {
   return {
     modules: [{
       title: "Advantage Play Kit Game Creation",
@@ -13,11 +13,11 @@ export function getCodecampAPKCurriculumData(): { modules: CurriculumModule[] } 
       lessons: [
         {
           title: "I Do — Trace a Phaser Cartridge", description: "Follow a worked cartridge through the Phaser lifecycle and React host boundary.", order: 1, type: "theory",
-          contentJson: { schemaVersion: "codecamp-apk-lesson.v1", localePolicy: "bilingual", activityId: "codecamp.activity.apk.ido", mode: "worked_example", resourceIds: ["video.apk.phaser-overview", "transcript.apk.phaser-overview", "diagram.apk.boundaries", "apk.reference.word-match", "apk.diff.word-match-boundaries"], sections: [{ heading: "Host and cartridge responsibilities", headingTh: "หน้าที่ของ host และ cartridge", body: "Predict which layer owns mounting, persistence, navigation, game state, and per-frame input before inspecting the annotated diff.", bodyTh: "คาดการณ์ว่า layer ใดดูแล mounting, persistence, navigation, game state และ input ก่อนดู annotated diff" }] },
+          contentJson: { schemaVersion: "codecamp-apk-lesson.v1", localePolicy: "bilingual", activityId: "codecamp.activity.apk.ido", objectiveId: "codecamp.game-development.skill.phaser-lifecycle", variantKey: "apk.phaser-lifecycle.worked.reference-debug", mode: "worked_example", resourceIds: ["video.apk.phaser-overview", "transcript.apk.phaser-overview", "diagram.apk.boundaries", "apk.reference.word-match", "apk.diff.word-match-boundaries"], sections: [{ heading: "Host and cartridge responsibilities", headingTh: "หน้าที่ของ host และ cartridge", body: "Predict which layer owns mounting, persistence, navigation, game state, and per-frame input before inspecting the annotated diff.", bodyTh: "คาดการณ์ว่า layer ใดดูแล mounting, persistence, navigation, game state และ input ก่อนดู annotated diff" }] },
         },
         {
           title: "We Do — Complete the APK Manifest", description: "Clone the guided fixture and satisfy deterministic manifest checks with fading support.", order: 2, type: "exercise",
-          contentJson: { schemaVersion: "codecamp-apk-lesson.v1", localePolicy: "bilingual", activityId: "codecamp.activity.apk.wedo", mode: "guided_practice", repositoryId: "repo.apk.guided", fixturePath: "packages/codecamp-knowledge/fixtures/apk-guided", manifestStepIds: ["wedo.apk.manifest"], completionCriteria: { requiredStepIds: ["wedo.apk.manifest"] }, remediationResourceIds: ["diagram.apk.boundaries"] },
+          contentJson: { schemaVersion: "codecamp-apk-lesson.v1", localePolicy: "bilingual", activityId: "codecamp.activity.apk.wedo", objectiveId: "codecamp.game-development.skill.apk-contract", variantKey: "apk.apk-contract.guided.extension", mode: "guided_practice", repositoryId: "repo.apk.guided", fixturePath: "packages/codecamp-knowledge/fixtures/apk-guided", manifestStepIds: ["wedo.apk.manifest"], completionCriteria: { requiredStepIds: ["wedo.apk.manifest"] }, remediationResourceIds: ["diagram.apk.boundaries"] },
           exercises: [{ title: "Implement and stage the cartridge manifest", instructions: "Add the APK runtime version and capabilities without moving persistence into the cartridge. Run the tutorial checker and report the server-verified result.", starterCode: "export const cartridgeManifest = {\n  // TODO: runtimeApiVersion and capabilities\n};", expectedOutput: "Both manifest.runtime and git.stage checks pass.", hintsJson: ["Inspect the host/cartridge boundary diagram.", "The host owns persistence; the cartridge declares capabilities."], order: 1 }],
         },
         {
@@ -27,5 +27,6 @@ export function getCodecampAPKCurriculumData(): { modules: CurriculumModule[] } 
         },
       ],
     }],
+    exerciseRepos: [{ moduleSlug: "apk-game-creation", repoUrl: "https://github.com/bodangren/reading-advantage-monorepo", description: "Unit 20 guided, independent, reference, and annotated-diff fixtures under packages/codecamp-knowledge/fixtures", order: 20 }],
   };
 }
