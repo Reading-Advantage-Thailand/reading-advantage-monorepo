@@ -40,6 +40,27 @@ export function issueTutorialCredential(claimsInput: unknown, secret: string): s
 }
 
 /**
+ * Verifies a tutorial credential without changing replay state.
+ * @param token Compact signed credential.
+ * @param secret Server credential-signing secret.
+ * @param stepId Submitted authored step identifier.
+ * @param now Server current time.
+ * @returns Verified tenant- and learner-bound claims.
+ */
+export function verifyTutorialCredential(token: string, secret: string, stepId: string, now: string): TutorialCredentialClaims {
+  const [payload, encodedSignature, extra] = token.split(".");
+  if (!payload || !encodedSignature || extra) throw new Error("Malformed tutorial credential");
+  const expected = signature(payload, secret);
+  const actual = Buffer.from(encodedSignature, "base64url");
+  if (actual.length !== expected.length || !timingSafeEqual(actual, expected)) throw new Error("Invalid tutorial credential signature");
+  const claims = tutorialCredentialClaimsSchema.parse(JSON.parse(Buffer.from(payload, "base64url").toString("utf8")));
+  if (Date.parse(now) >= Date.parse(claims.expiresAt)) throw new Error("Tutorial credential expired");
+  if (Date.parse(now) < Date.parse(claims.issuedAt)) throw new Error("Tutorial credential is not active");
+  if (!claims.allowedStepIds.includes(stepId)) throw new Error(`Tutorial step is not authorized: ${stepId}`);
+  return claims;
+}
+
+/**
  * Verifies and atomically consumes a tutorial credential for one submitted step.
  * @param token Compact signed credential.
  * @param secret Server credential-signing secret.
@@ -49,14 +70,7 @@ export function issueTutorialCredential(claimsInput: unknown, secret: string): s
  * @returns Verified tenant- and learner-bound claims.
  */
 export async function verifyAndConsumeTutorialCredential(token: string, secret: string, stepId: string, now: string, replayStore: TutorialReplayStore): Promise<TutorialCredentialClaims> {
-  const [payload, encodedSignature, extra] = token.split(".");
-  if (!payload || !encodedSignature || extra) throw new Error("Malformed tutorial credential");
-  const expected = signature(payload, secret);
-  const actual = Buffer.from(encodedSignature, "base64url");
-  if (actual.length !== expected.length || !timingSafeEqual(actual, expected)) throw new Error("Invalid tutorial credential signature");
-  const claims = tutorialCredentialClaimsSchema.parse(JSON.parse(Buffer.from(payload, "base64url").toString("utf8")));
-  if (Date.parse(now) > Date.parse(claims.expiresAt)) throw new Error("Tutorial credential expired");
-  if (!claims.allowedStepIds.includes(stepId)) throw new Error(`Tutorial step is not authorized: ${stepId}`);
+  const claims = verifyTutorialCredential(token, secret, stepId, now);
   if (!await replayStore.consumeOnce(claims.nonce, claims.expiresAt)) throw new Error("Tutorial credential replayed");
   return claims;
 }
