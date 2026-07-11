@@ -94,6 +94,7 @@ export interface YouTubePlayerPort {
  */
 export function createYouTubeMediaController(player: YouTubePlayerPort): MediaController & { refresh(): void } {
   let snapshot: MediaSnapshot = { status: "ready", currentSeconds: player.getCurrentTime(), durationSeconds: player.getDuration(), captionsEnabled: false };
+  let pendingSeek: { seconds: number; refreshesRemaining: number } | undefined;
   const listeners = new Set<(value: MediaSnapshot) => void>();
   const publish = (): void => listeners.forEach((listener) => listener(snapshot));
   return {
@@ -101,8 +102,24 @@ export function createYouTubeMediaController(player: YouTubePlayerPort): MediaCo
     subscribe: (listener) => { listeners.add(listener); return () => listeners.delete(listener); },
     play: () => { player.playVideo(); snapshot = { ...snapshot, status: "playing" }; publish(); },
     pause: () => { player.pauseVideo(); snapshot = { ...snapshot, status: "paused" }; publish(); },
-    seek: (seconds) => { player.seekTo(seconds, true); snapshot = { ...snapshot, currentSeconds: seconds }; publish(); },
-    refresh: () => { snapshot = { ...snapshot, currentSeconds: player.getCurrentTime(), durationSeconds: player.getDuration() }; publish(); },
+    seek: (seconds) => {
+      player.seekTo(seconds, true);
+      pendingSeek = { seconds, refreshesRemaining: 4 };
+      snapshot = { ...snapshot, currentSeconds: seconds };
+      publish();
+    },
+    refresh: () => {
+      const providerSeconds = player.getCurrentTime();
+      if (pendingSeek && Math.abs(providerSeconds - pendingSeek.seconds) <= 0.75) pendingSeek = undefined;
+      else if (pendingSeek && pendingSeek.refreshesRemaining > 0) pendingSeek.refreshesRemaining -= 1;
+      else pendingSeek = undefined;
+      snapshot = {
+        ...snapshot,
+        currentSeconds: pendingSeek?.seconds ?? providerSeconds,
+        durationSeconds: player.getDuration(),
+      };
+      publish();
+    },
     destroy: () => { listeners.clear(); player.destroy(); },
   };
 }

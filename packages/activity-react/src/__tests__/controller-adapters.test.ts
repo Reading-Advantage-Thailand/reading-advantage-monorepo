@@ -26,7 +26,10 @@ describe("provider controller adapters", () => {
     currentSeconds = 36;
     durationSeconds = 120;
     controller.refresh();
-    expect(controller.getSnapshot()).toMatchObject({ currentSeconds: 36, durationSeconds: 120 });
+    expect(controller.getSnapshot()).toMatchObject({ currentSeconds: 12, durationSeconds: 120 });
+    currentSeconds = 12.25;
+    controller.refresh();
+    expect(controller.getSnapshot()).toMatchObject({ currentSeconds: 12.25, durationSeconds: 120 });
     expect(listener).toHaveBeenCalled();
     unsubscribe();
     controller.destroy();
