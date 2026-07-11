@@ -321,6 +321,7 @@ export const codecampRouter = router({
     .output(z.array(exerciseRepoSchema))
     .query(async ({ ctx, input }) => {
       try {
+        if (input.moduleId) await codecamp.assertCodecampModuleAssigned(ctx.tenantDb, ctx.auth.user.id, input.moduleId);
         return await codecamp.getExerciseRepos({
           db: ctx.tenantDb,
           user: ctx.auth.user,
@@ -419,12 +420,13 @@ export const codecampRouter = router({
     .output(z.array(moduleResponseSchema))
     .query(async ({ ctx, input }) => {
       try {
-        return await codecamp.getModulesByPhase({
+        const modules = await codecamp.getModulesByPhase({
           db: ctx.tenantDb,
           user: ctx.auth.user,
           tenant: ctx.auth.tenant,
           input,
         });
+        return codecamp.filterCodecampModulesForAssignment(ctx.tenantDb, ctx.auth.user.id, modules);
       } catch (err) {
         throw mapDomainError(err);
       }
@@ -435,6 +437,7 @@ export const codecampRouter = router({
     .output(moduleWithReposSchema)
     .query(async ({ ctx, input }) => {
       try {
+        await codecamp.assertCodecampModuleAssigned(ctx.tenantDb, ctx.auth.user.id, input.moduleId);
         return await codecamp.getModuleWithExercises({
           db: ctx.tenantDb,
           user: ctx.auth.user,
@@ -451,6 +454,7 @@ export const codecampRouter = router({
     .output(z.object({ canStart: z.boolean() }))
     .query(async ({ ctx, input }) => {
       try {
+        await codecamp.assertCodecampModuleAssigned(ctx.tenantDb, ctx.auth.user.id, input.moduleId);
         return await codecamp.checkModulePrerequisite({
           db: ctx.tenantDb,
           user: ctx.auth.user,

@@ -41,6 +41,7 @@ describe("validateAPKLearningBlueprint", () => {
       issues: [
         { code: "APK_REVIEW_PENDING", entityId: "apkMaintainer", message: "apkMaintainer approval is required before release." },
         { code: "APK_REVIEW_PENDING", entityId: "curriculumOwner", message: "curriculumOwner approval is required before release." },
+        { code: "APK_REVIEW_PENDING", entityId: "productOwner", message: "productOwner approval is required before release." },
       ],
     });
   });
@@ -49,6 +50,7 @@ describe("validateAPKLearningBlueprint", () => {
     const reviewed = structuredClone(apkLearningBlueprint);
     reviewed.reviews.curriculumOwner = { name: "Named curriculum owner", status: "approved", reviewedAt: "2026-07-11" };
     reviewed.reviews.apkMaintainer = { name: "Named APK maintainer", status: "approved", reviewedAt: "2026-07-11" };
+    reviewed.reviews.productOwner = { name: "Named product owner", status: "approved", reviewedAt: "2026-07-11" };
     expect(validateAPKLearningBlueprint(reviewed, codeKnowledgeGraph)).toEqual({ valid: true, issues: [] });
   });
 

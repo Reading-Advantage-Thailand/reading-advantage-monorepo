@@ -80,6 +80,7 @@ export const APKLearningBlueprintSchema = z
       .object({
         curriculumOwner: z.object({ name: z.string().min(1), status: z.enum(["pending", "approved", "changes-requested"]), reviewedAt: z.string().date().nullable().optional() }).strict(),
         apkMaintainer: z.object({ name: z.string().min(1), status: z.enum(["pending", "approved", "changes-requested"]), reviewedAt: z.string().date().nullable().optional() }).strict(),
+        productOwner: z.object({ name: z.string().min(1), status: z.enum(["pending", "approved", "changes-requested"]), reviewedAt: z.string().date().nullable().optional() }).strict(),
       })
       .strict(),
     prerequisiteRoots: z

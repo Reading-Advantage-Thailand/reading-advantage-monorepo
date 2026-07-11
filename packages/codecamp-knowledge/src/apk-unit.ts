@@ -34,6 +34,24 @@ export type CodecampAPKUnit = z.infer<typeof CodecampAPKUnitSchema>;
 
 const APK_ACTIVITY_IDS = ["codecamp.activity.apk.ido", "codecamp.activity.apk.wedo", "codecamp.activity.apk.youdo"] as const;
 
+/** Complete reference cartridge and boundary notes shown during the I Do walkthrough. */
+export const codecampAPKReference = {
+  code: `export const cartridgeManifest = {
+  id: "apk.reference.word-match",
+  title: "Word Match Reference",
+  description: "Complete instructor reference cartridge.",
+  version: "1.0.0",
+  runtimeApiVersion: "1.0.0",
+  inputMode: "vocabulary" as const,
+  requiredAssetSlots: ["background", "card", "success"],
+  capabilities: ["pointer", "keyboard", "reduced-motion"],
+};`,
+  annotations: {
+    en: ["The manifest declares compatibility; it never persists learner state.", "The cartridge owns deterministic educational logic.", "The React host mounts, validates, persists evidence, and navigates."],
+    th: ["manifest ประกาศความเข้ากันได้และไม่บันทึกสถานะผู้เรียน", "cartridge ดูแลตรรกะการเรียนรู้แบบกำหนดผลได้", "React host ทำหน้าที่ mount ตรวจสอบ บันทึกหลักฐาน และ navigation"],
+  },
+} as const;
+
 /** Reviewed, versioned Codecamp APK unit shared by curriculum, runtime, and reporting adapters. */
 export const codecampAPKUnit = CodecampAPKUnitSchema.parse({
   schemaVersion: "codecamp-apk-unit.v1", unitId: "codecamp.unit.apk-game-creation", version: "1.0.0",
@@ -112,5 +130,23 @@ export function createCodecampAPKTutorialActivity(_locale: string) {
       }),
       hints: step.hints, reveals: step.reveals, scaffoldLevel: step.scaffoldLevel,
     })),
+  });
+}
+
+/** Creates the server-owned independent PR assessment projected to Mastery and FSRS. */
+export function createCodecampAPKIndependentActivity(locale: string) {
+  const thai = locale.toLowerCase().startsWith("th");
+  return activitySchema.parse({
+    schemaVersion: "activity.v1", activityId: codecampAPKUnit.youdo.activityId, activityVersion: codecampAPKUnit.version,
+    graphVersion: codecampAPKUnit.graphVersion, objectiveId: codecampAPKUnit.youdo.objectiveId,
+    variantKey: codecampAPKUnit.youdo.variantKey, mode: "independent_practice",
+    title: { en: "You Do: approved APK pull request", th: "You Do: pull request APK ที่ผ่านการอนุมัติ" },
+    accessibility: { transcriptRequired: false, captionsRequired: false, nonVideoAlternativeResourceId: "diagram.apk.boundaries" },
+    resources: [
+      { kind: "video", resourceId: "video.apk.pr-review", provider: "youtube", videoId: "gZNyyQUvaNo", captionsAvailable: true, segments: [{ segmentId: "segment.apk.pr-review", label: { en: "PR review", th: "ตรวจ PR" }, startSeconds: 0, endSeconds: 1 }] },
+      { kind: "diagram", resourceId: "diagram.apk.boundaries", assetId: "diagram.apk.boundaries.v1", alt: { en: "Approved pull request projects independent mastery evidence", th: "Pull request ที่ผ่านการอนุมัติส่งหลักฐาน mastery แบบอิสระ" } },
+    ],
+    checkpoints: [{ checkpointId: "checkpoint.apk.pr-approved", stepId: "youdo.apk.pr", objectiveId: codecampAPKUnit.youdo.objectiveId, variantKey: codecampAPKUnit.youdo.variantKey, trigger: { resourceId: "video.apk.pr-review", segmentId: "segment.apk.pr-review" }, question: { kind: "free_text", prompt: { en: "Server-owned PR decision", th: "ผลตรวจ PR จาก server" }, acceptedAnswers: ["approved"] }, feedback: { correct: { en: "The independent PR passed review.", th: "PR แบบอิสระผ่านการตรวจแล้ว" }, incorrect: { en: "Address the requested changes and resubmit.", th: "แก้ไขตามคำแนะนำแล้วส่งใหม่" } }, remediation: [{ kind: "diagram", resourceId: "diagram.apk.boundaries" }], evidence: { behavior: "assessed", weight: 0.5 }, gate: "answer_before_continue" }],
+    tutorialSteps: [],
   });
 }

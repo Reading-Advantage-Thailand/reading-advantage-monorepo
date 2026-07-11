@@ -101,6 +101,8 @@ export async function listInterns({
   const interns = await rawDb.select().from(users).where(eq(users.role, "INTERN")).orderBy(users.createdAt);
 
   const modules = await rawDb.select().from(codecampModules).where(eq(codecampModules.status, "published")).orderBy(codecampModules.order);
+  const curriculumAssignments = await rawDb.select().from(codecampCurriculumAssignments);
+  const apkLearnerIds = new Set(curriculumAssignments.filter(({ curriculumVersion }) => curriculumVersion === CODECAMP_APK_CURRICULUM_VERSION).map(({ userId }) => userId));
   const moduleIds = modules.map((m) => m.id);
   const internIds = interns.map((i) => i.id);
 
@@ -122,9 +124,12 @@ export async function listInterns({
     : [];
 
   return interns.map((intern) => {
-    const internProgress = allProgress.filter((p) => p.userId === intern.id);
+    const availableModules = apkLearnerIds.has(intern.id) ? modules : modules.filter(({ slug }) => slug !== "apk-game-creation");
+    const availableModuleIds = new Set(availableModules.map(({ id }) => id));
+    const availableLessons = allLessons.filter(({ moduleId }) => availableModuleIds.has(moduleId));
+    const internProgress = allProgress.filter((p) => p.userId === intern.id && availableModuleIds.has(p.moduleId));
     const completedModules = new Set(internProgress.filter((p) => p.status === "completed").map((p) => p.moduleId)).size;
-    const quizScores = internProgress.filter((p) => { const l = allLessons.find((l) => l.id === p.lessonId); return p.score > 0 && l?.type === "quiz"; }).map((p) => p.score);
+    const quizScores = internProgress.filter((p) => { const l = availableLessons.find((l) => l.id === p.lessonId); return p.score > 0 && l?.type === "quiz"; }).map((p) => p.score);
     const quizAverage = quizScores.length > 0 ? Math.round(quizScores.reduce((a, b) => a + b, 0) / quizScores.length) : 0;
 
     const internReviews = allReviews.filter((r) => r.userId === intern.id);
@@ -136,11 +141,11 @@ export async function listInterns({
       ? [...internProgress].sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime())[0].updatedAt
       : null;
 
-    const totalLessons = allLessons.length;
+    const totalLessons = availableLessons.length;
     const completedLessons = internProgress.filter((p) => p.status === "completed").length;
     const overallProgress = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
-    const currentModule = modules.find((mod) => {
-      const moduleLessons = allLessons.filter((lesson) => lesson.moduleId === mod.id);
+    const currentModule = availableModules.find((mod) => {
+      const moduleLessons = availableLessons.filter((lesson) => lesson.moduleId === mod.id);
       if (moduleLessons.length === 0) return false;
       const completedForModule = internProgress.filter((p) => p.moduleId === mod.id && p.status === "completed").length;
       return completedForModule < moduleLessons.length;
@@ -150,7 +155,7 @@ export async function listInterns({
 
     return {
       userId: intern.id, name: intern.name, username: intern.username,
-      overallProgress, completedModules, totalModules: modules.length, quizAverage,
+      overallProgress, completedModules, totalModules: availableModules.length, quizAverage,
       prReviewsPending: pending, prReviewsApproved: approved, reviewExpectation,
       latestPrReview: latestPrReview ? { prUrl: latestPrReview.prUrl, reviewStatus: latestPrReview.reviewStatus, llmReviewSummary: latestPrReview.llmReviewSummary, createdAt: latestPrReview.createdAt } : null,
       lastActiveAt: lastActive,
@@ -174,7 +179,9 @@ export async function getInternProgress({
   const [intern] = await rawDb.select().from(users).where(eq(users.id, input.userId)).limit(1);
   if (!intern || intern.role !== "INTERN") throw new Error("Intern not found");
 
-  const modules = await rawDb.select().from(codecampModules).where(eq(codecampModules.status, "published")).orderBy(codecampModules.order);
+  const publishedModules = await rawDb.select().from(codecampModules).where(eq(codecampModules.status, "published")).orderBy(codecampModules.order);
+  const [curriculumAssignment] = await rawDb.select().from(codecampCurriculumAssignments).where(and(eq(codecampCurriculumAssignments.userId, input.userId), eq(codecampCurriculumAssignments.curriculumVersion, CODECAMP_APK_CURRICULUM_VERSION))).limit(1);
+  const modules = curriculumAssignment ? publishedModules : publishedModules.filter(({ slug }) => slug !== "apk-game-creation");
   const moduleIds = modules.map((m) => m.id);
   const lessons = moduleIds.length > 0 ? await rawDb.select().from(codecampLessons).where(inArray(codecampLessons.moduleId, moduleIds)) : [];
   const progress = await rawDb.select().from(codecampUserProgress).where(eq(codecampUserProgress.userId, input.userId));

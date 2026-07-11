@@ -135,6 +135,8 @@ describe("activity persistence projection", () => {
       sessionId: "session-1",
       activityId: metadata.activityId,
       completed: false,
+      playback: "idle",
+      positionSeconds: 0,
       watchedRanges: [],
       checkpointAttempts: {},
       assessedCheckpointResults: {},

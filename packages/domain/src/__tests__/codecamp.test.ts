@@ -1753,7 +1753,7 @@ describe("listInterns", () => {
       { id: "pr1", exerciseRepoId: "repo2", userId: "u1", prUrl: "https://github.com/org/repo2/pull/1", reviewStatus: "pending", llmReviewSummary: null, reviewedAt: null, createdAt },
       { id: "pr2", exerciseRepoId: "repo2", userId: "u1", prUrl: "https://github.com/org/repo2/pull/2", reviewStatus: "approved", llmReviewSummary: "Good work", reviewedAt: later, createdAt: later },
     ];
-    const db = createMockDb({ selectSequence: [internUsers, modules, progress, lessons, repos, reviews] });
+    const db = createMockDb({ selectSequence: [internUsers, modules, [], progress, lessons, repos, reviews] });
 
     const admin = { id: "a1", username: "admin1", name: "Admin", role: "ADMIN" as const, schoolId: "s1" };
     const result = await listInterns({
@@ -1798,24 +1798,27 @@ describe("getInternProgress", () => {
           selectCallCount++;
           if (selectCallCount === 1) return queryResult([intern]);
           if (selectCallCount === 2) return queryResult(modules);
-          if (selectCallCount === 3) return queryResult(lessons);
-          if (selectCallCount === 4) return queryResult(progress);
+          if (selectCallCount === 3) return queryResult([]);
+          if (selectCallCount === 4) return queryResult(lessons);
+          if (selectCallCount === 5) return queryResult(progress);
           return queryResult([]);
         }),
         limit: vi.fn().mockImplementation(() => {
           selectCallCount++;
           if (selectCallCount === 1) return queryResult([intern]);
           if (selectCallCount === 2) return queryResult(modules);
-          if (selectCallCount === 3) return queryResult(lessons);
-          if (selectCallCount === 4) return queryResult(progress);
+          if (selectCallCount === 3) return queryResult([]);
+          if (selectCallCount === 4) return queryResult(lessons);
+          if (selectCallCount === 5) return queryResult(progress);
           return queryResult([]);
         }),
         orderBy: vi.fn().mockImplementation(() => {
           selectCallCount++;
           if (selectCallCount === 1) return queryResult([intern]);
           if (selectCallCount === 2) return queryResult(modules);
-          if (selectCallCount === 3) return queryResult(lessons);
-          if (selectCallCount === 4) return queryResult(progress);
+          if (selectCallCount === 3) return queryResult([]);
+          if (selectCallCount === 4) return queryResult(lessons);
+          if (selectCallCount === 5) return queryResult(progress);
           return queryResult([]);
         }),
       }),
@@ -1855,7 +1858,7 @@ describe("getInternProgress", () => {
     const reviews = [
       { id: "pr1", exerciseRepoId: "repo2", userId: "u1", prUrl: "https://github.com/org/repo2/pull/1", reviewStatus: "approved", llmReviewSummary: "Good work", reviewedAt: now, createdAt: now },
     ];
-    const db = createMockDb({ selectSequence: [[intern], modules, lessons, progress, repos, reviews] });
+    const db = createMockDb({ selectSequence: [[intern], modules, [], lessons, progress, repos, reviews] });
 
     const admin = { id: "a1", username: "admin1", name: "Admin", role: "ADMIN" as const, schoolId: "s1" };
     const result = await getInternProgress({

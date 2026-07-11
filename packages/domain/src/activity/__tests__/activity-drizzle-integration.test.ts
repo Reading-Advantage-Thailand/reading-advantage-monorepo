@@ -2,12 +2,13 @@ import { activitySchema, createActivitySessionRecord } from "@reading-advantage/
 import { assessCheckpointAttempt } from "@reading-advantage/activity-runtime/server";
 import { runTutorialStep } from "@reading-advantage/activity-tutorial";
 import { codecampAPKUnit, createCodecampAPKTutorialActivity } from "@reading-advantage/codecamp-knowledge/apk-unit";
-import { activitySessionEvents, activityTutorialReports, activityTutorialRepositoryStates, masteryCommits, masteryEvidence, masteryPrincipals, users } from "@reading-advantage/db";
+import { activitySessionEvents, activityTutorialReports, activityTutorialRepositoryStates, codecampExerciseRepos, codecampModules, codecampPrReviews, masteryCards, masteryCommits, masteryEvidence, masteryPrincipals, users } from "@reading-advantage/db";
 import { eq } from "drizzle-orm";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { createTestDb, type TestDb } from "../../__tests__/helpers/testDb.js";
 import { CODECAMP_MASTERY_SCHOOL_ID, DrizzleActivityPersistence } from "../drizzle-activity-persistence.js";
 import { DrizzleTutorialReportStore, prepareCodecampTutorialReport, processCodecampTutorialReport, reissueCodecampTutorialReportCredential } from "../tutorial-reporting.js";
+import { updatePrReview } from "../../codecamp/pr-reviews.js";
 
 const activity = activitySchema.parse({
   schemaVersion: "activity.v1", activityId: "activity.codecamp.outbox", activityVersion: "1.0.0", graphVersion: "graph.v1", objectiveId: "objective.apk", variantKey: "apk.v1", mode: "guided_practice", title: { en: "Outbox" }, accessibility: { transcriptRequired: true, captionsRequired: true, nonVideoAlternativeResourceId: "diagram" },
@@ -44,16 +45,17 @@ describe("activity Drizzle outbox and Codecamp mastery", () => {
     const actor = { learnerId: "codecamp-learner", schoolId: null, tenantKey: "codecamp" } as const;
     const tutorialActivity = createCodecampAPKTutorialActivity("en");
     const sessionId = "00000000-0000-4000-8000-000000000902";
+    const validManifest = "export const cartridgeManifest = { id: 'game', title: 'Game', description: 'Guided game', version: '1.0.0', runtimeApiVersion: '1.0.0', inputMode: 'vocabulary', requiredAssetSlots: ['background'], capabilities: ['keyboard'] } as const;";
     const repositoryCapturedAt = new Date(Date.now() - 90_000).toISOString();
     await persistence.createSession(createActivitySessionRecord({ sessionId, actor, activityId: tutorialActivity.activityId, activityVersion: tutorialActivity.activityVersion, startedAt: "2026-07-10T00:00:00Z" }));
     const prepared = await prepareCodecampTutorialReport(tenantDb, actor, { sessionId, submissionId: "submission-apk-1", repositoryId: codecampAPKUnit.wedo.manifest.repositoryId, stepId: "wedo.apk.manifest" }, "integration-tutorial-secret-at-least-32-bytes", {
-      capture: async () => ({ files: { "src/cartridge.ts": "export const id = title = description = version = runtimeApiVersion = inputMode = requiredAssetSlots = capabilities = 'value';", "src/game-state.ts": "export {};", ".env": "must-not-persist" }, gitStatus: "M  src/cartridge.ts", capturedAt: repositoryCapturedAt.replace("Z", "+00:00") }),
+      capture: async () => ({ files: { "src/cartridge.ts": validManifest, "src/game-state.ts": "export {};", ".env": "must-not-persist" }, gitStatus: "M  src/cartridge.ts", capturedAt: repositoryCapturedAt.replace("Z", "+00:00") }),
     });
     const reissued = await reissueCodecampTutorialReportCredential(tenantDb, actor, { sessionId, submissionId: "submission-apk-1", repositoryStateId: prepared.repositoryStateId, stepId: "wedo.apk.manifest" }, "integration-tutorial-secret-at-least-32-bytes");
     await expect(reissueCodecampTutorialReportCredential(tenantDb, actor, { sessionId, submissionId: "submission-apk-2", repositoryStateId: prepared.repositoryStateId, stepId: "wedo.apk.manifest" }, "integration-tutorial-secret-at-least-32-bytes")).rejects.toThrow("state not found");
     await expect(reissueCodecampTutorialReportCredential(tenantDb, actor, { sessionId, submissionId: "submission-apk-1", repositoryStateId: prepared.repositoryStateId, stepId: "wedo.apk.other" }, "integration-tutorial-secret-at-least-32-bytes")).rejects.toThrow("session not found");
     const localResult = await runTutorialStep(codecampAPKUnit.wedo.manifest, "wedo.apk.manifest", {
-      readAllowedFile: async () => "export const id = title = description = version = runtimeApiVersion = inputMode = requiredAssetSlots = capabilities = 'value';", runAllowedCommand: async () => "M  src/cartridge.ts", now: () => "2026-07-10T00:01:00Z",
+      readAllowedFile: async () => validManifest, runAllowedCommand: async () => "M  src/cartridge.ts", now: () => "2026-07-10T00:01:00Z",
     });
     const request = { submissionId: "submission-apk-1", credential: reissued.credential, repositoryStateId: prepared.repositoryStateId, localResult };
     const evidenceBefore = await harness.db.select().from(masteryEvidence);
@@ -90,5 +92,19 @@ describe("activity Drizzle outbox and Codecamp mastery", () => {
     const replacement = await store.begin({ ...input, nonce: "nonce-race-2234567890" });
     expect(replacement.kind).toBe("execute");
     await expect(store.complete(executing.claimId, { submissionId: "submission-race", sessionId, activityId: tutorialActivity.activityId, activityVersion: tutorialActivity.activityVersion, graphVersion: tutorialActivity.graphVersion, repositoryId: codecampAPKUnit.wedo.manifest.repositoryId, learnerId: actor.learnerId, tenantKey: actor.tenantKey, stepId: "wedo.apk.manifest", passed: true, checks: [], verifiedAt: new Date().toISOString() })).rejects.toThrow("Unknown tutorial report claim");
+  });
+
+  it("projects an approved independent APK pull request into Mastery and FSRS", async () => {
+    const tenantDb = harness.tenantDb({ schoolId: null });
+    const [module] = await harness.db.insert(codecampModules).values({ title: "APK", description: "APK", slug: "apk-game-creation", order: 999, phase: "D", status: "published" }).returning();
+    const [repository] = await harness.db.insert(codecampExerciseRepos).values({ moduleId: module!.id, repoUrl: "https://github.com/example/apk", description: "APK", order: 1 }).returning();
+    const [review] = await harness.db.insert(codecampPrReviews).values({ exerciseRepoId: repository!.id, userId: "codecamp-learner", prUrl: "https://github.com/example/apk/pull/1", reviewStatus: "pending" }).returning();
+
+    await updatePrReview({ db: tenantDb, user: { id: "admin", username: "admin", name: "Admin", role: "ADMIN", schoolId: null, xp: 0, level: 1, cefrLevel: "A1" }, tenant: { schoolId: null }, input: { reviewId: review!.id, reviewStatus: "approved" } });
+
+    const persistence = new DrizzleActivityPersistence(tenantDb);
+    await expect(persistence.getPlatformTeacherSummary("codecamp-learner", review!.id)).resolves.toMatchObject({ assessedCheckpointResults: { "checkpoint.apk.pr-approved": { isCorrect: true } } });
+    expect(await harness.db.select().from(masteryEvidence)).toContainEqual(expect.objectContaining({ objectiveId: "codecamp.game-development.skill.apk-contract", variantKey: "apk.apk-contract.independent.transfer" }));
+    expect(await harness.db.select().from(masteryCards)).toContainEqual(expect.objectContaining({ studentId: "codecamp-learner", objectiveId: "codecamp.game-development.skill.apk-contract", variantKey: "apk.apk-contract.independent.transfer" }));
   });
 });

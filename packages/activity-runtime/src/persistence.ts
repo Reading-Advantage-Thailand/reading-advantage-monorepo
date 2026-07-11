@@ -91,6 +91,8 @@ export type CreateActivitySessionRecordInput = {
 /** Teacher-readable activity session summary that keeps engagement separate from assessment. */
 export type ActivitySessionSummary = Pick<ActivitySessionRecord, "sessionId" | "activityId"> & {
   completed: boolean;
+  playback: ActivityState["playback"];
+  positionSeconds: number;
   watchedRanges: ActivityState["watchedRanges"];
   checkpointAttempts: ActivityState["checkpointAttempts"];
   assessedCheckpointResults: ActivityState["assessedCheckpointResults"];
@@ -192,6 +194,8 @@ export function summarizeActivitySession(
     sessionId: session.sessionId,
     activityId: session.activityId,
     completed: session.state.completed,
+    playback: session.state.playback,
+    positionSeconds: session.state.positionSeconds,
     watchedRanges: session.state.watchedRanges.map((range) => ({ ...range })),
     checkpointAttempts: { ...session.state.checkpointAttempts },
     assessedCheckpointResults: { ...session.state.assessedCheckpointResults },

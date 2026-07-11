@@ -28,6 +28,7 @@ export const apkLearningBlueprint = APKLearningBlueprintSchema.parse({
   reviews: {
     curriculumOwner: { name: "Codecamp curriculum owner", status: "pending", reviewedAt: null },
     apkMaintainer: { name: "Advantage Play Kit maintainer", status: "pending", reviewedAt: null },
+    productOwner: { name: "Codecamp product owner", status: "pending", reviewedAt: null },
   },
   prerequisiteRoots: [
     { role: "javascript", objectiveId: "codecamp.foundation.skill.functions" },

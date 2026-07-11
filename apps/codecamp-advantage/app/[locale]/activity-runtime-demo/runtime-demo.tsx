@@ -75,7 +75,7 @@ function loadYouTubeApi(): Promise<YouTubeApi> {
   return youtubeApiPromise;
 }
 
-function YouTubeMediaHost({ videoId, locale, onReady }: { videoId: string; locale: string; onReady(controller: RefreshingMediaController): void }) {
+export function YouTubeMediaHost({ videoId, locale, onReady }: { videoId: string; locale: string; onReady(controller: RefreshingMediaController): void }) {
   const mount = useRef<HTMLDivElement>(null);
   useEffect(() => {
     let disposed = false;
@@ -112,7 +112,7 @@ function YouTubeMediaHost({ videoId, locale, onReady }: { videoId: string; local
   return <div ref={mount} className="aspect-video w-full rounded-lg bg-slate-950" aria-label={locale.startsWith("th") ? "กำลังโหลดวิดีโอบทเรียน" : "Loading tutorial video"} />;
 }
 
-class DemoController implements MediaController {
+export class DemoController implements MediaController {
   private snapshot: MediaSnapshot = { status: "idle", currentSeconds: 0, durationSeconds: 0, captionsEnabled: false };
   private readonly listeners = new Set<(snapshot: MediaSnapshot) => void>();
   private delegate: RefreshingMediaController | undefined;

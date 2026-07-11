@@ -1,11 +1,15 @@
 import { eq, and, desc, sql } from "drizzle-orm";
 import {
-  codecampPrReviews, codecampExerciseRepos, codecampLessons,
+  codecampPrReviews, codecampExerciseRepos, codecampLessons, codecampModules,
   codecampWebhookEvents,
 } from "@reading-advantage/db/schema";
 import { assertCan, type UserContext, type Tenant } from "@reading-advantage/auth";
 import type { TenantDB } from "../db-contract.js";
 import { updateUserProgress } from "./progress.js";
+import { createActivitySessionRecord } from "@reading-advantage/activity-runtime";
+import { assessCheckpointAttempt } from "@reading-advantage/activity-runtime/server";
+import { createCodecampAPKIndependentActivity } from "@reading-advantage/codecamp-knowledge";
+import { DrizzleActivityPersistence } from "../activity/drizzle-activity-persistence.js";
 
 export type CodecampWebhookEventOutcome = "ignored" | "failed";
 
@@ -107,7 +111,24 @@ export async function updatePrReview({
     .where(eq(codecampPrReviews.id, input.reviewId)).returning();
 
   if (!result) throw new Error("Review not found");
+  if (result.reviewStatus === "approved") await projectApprovedAPKReview(db, result);
   return result;
+}
+
+async function projectApprovedAPKReview(db: TenantDB, review: typeof codecampPrReviews.$inferSelect): Promise<void> {
+  const rawDb = db.unscoped("approved APK PR projection resolves the review repository module");
+  const [repository] = await rawDb.select({ moduleSlug: codecampModules.slug }).from(codecampExerciseRepos)
+    .innerJoin(codecampModules, eq(codecampModules.id, codecampExerciseRepos.moduleId))
+    .where(eq(codecampExerciseRepos.id, review.exerciseRepoId)).limit(1);
+  if (repository?.moduleSlug !== "apk-game-creation") return;
+  const activity = createCodecampAPKIndependentActivity("en");
+  const actor = { learnerId: review.userId, schoolId: null, tenantKey: "codecamp" } as const;
+  const persistence = new DrizzleActivityPersistence(db);
+  const sessionId = review.id;
+  const existing = await persistence.getOwnedSession(actor, sessionId);
+  if (!existing) await persistence.createSession(createActivitySessionRecord({ sessionId, actor, activityId: activity.activityId, activityVersion: activity.activityVersion, startedAt: (review.reviewedAt ?? new Date()).toISOString() }));
+  const assessment = assessCheckpointAttempt(activity, { eventId: `pr-review:${review.id}:approved`, checkpointId: "checkpoint.apk.pr-approved", submissionId: `pr-review:${review.id}`, attemptNumber: 1, answer: "approved", submittedAt: (review.reviewedAt ?? new Date()).toISOString(), hintsUsed: 0, revealsUsed: 0, interventionLevel: 0, evidenceConfidence: 1, timingMs: 0 });
+  await persistence.recordAssessment(actor, sessionId, assessment);
 }
 
 /**

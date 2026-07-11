@@ -16,6 +16,7 @@ import { protectedProcedure, router } from "../trpc.js";
 
 const activitySessionSummarySchema = z.object({
   sessionId: z.string(), activityId: z.string(), completed: z.boolean(),
+  playback: z.enum(["idle", "playing", "paused", "ended", "error"]), positionSeconds: z.number().nonnegative(),
   watchedRanges: z.array(z.object({ startSeconds: z.number(), endSeconds: z.number() })),
   checkpointAttempts: z.record(z.object({ attemptNumber: z.number(), answer: z.unknown() })),
   assessedCheckpointResults: z.record(z.object({ attemptNumber: z.number(), isCorrect: z.boolean(), score: z.number() })),

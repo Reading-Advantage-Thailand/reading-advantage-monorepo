@@ -5,15 +5,15 @@ import { trpc } from "@/lib/trpc";
 import {
   InteractiveActivityPlayer,
   TutorialActivityPanel,
-  type MediaController,
-  type MediaSnapshot,
   type TutorialSupportUsage,
 } from "@reading-advantage/activity-react";
+import { DemoController, YouTubeMediaHost } from "../../activity-runtime-demo/runtime-demo";
 import type { Activity } from "@reading-advantage/activity-runtime";
 import { activityEventSchema } from "@reading-advantage/activity-runtime/core";
 import type { AppRouter } from "@reading-advantage/api";
 import {
   codecampAPKUnit,
+  codecampAPKReference,
   createCodecampAPKActivity,
   createCodecampAPKTutorialActivity,
 } from "@reading-advantage/codecamp-knowledge/apk-unit";
@@ -23,19 +23,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 type SessionSummary = NonNullable<inferRouterOutputs<AppRouter>["activity"]["get"]>;
 type TutorialReportInput = inferRouterInputs<AppRouter>["activity"]["reportTutorial"];
-
-class ReviewMediaController implements MediaController {
-  private snapshot: MediaSnapshot = { status: "paused", currentSeconds: 0, durationSeconds: 55, captionsEnabled: false };
-  private readonly listeners = new Set<(snapshot: MediaSnapshot) => void>();
-
-  getSnapshot(): MediaSnapshot { return this.snapshot; }
-  subscribe(listener: (snapshot: MediaSnapshot) => void): () => void { this.listeners.add(listener); return () => this.listeners.delete(listener); }
-  play(): void { this.publish({ ...this.snapshot, status: "playing" }); }
-  pause(): void { this.publish({ ...this.snapshot, status: "paused" }); }
-  seek(seconds: number): void { this.publish({ ...this.snapshot, status: "paused", currentSeconds: seconds }); }
-  destroy(): void { this.listeners.clear(); }
-  private publish(snapshot: MediaSnapshot): void { this.snapshot = snapshot; this.listeners.forEach((listener) => listener(snapshot)); }
-}
 
 function useDurableActivitySession(activity: Activity) {
   const storageKey = `codecamp-activity-session:${activity.activityId}@${activity.activityVersion}`;
@@ -55,6 +42,28 @@ function useDurableActivitySession(activity: Activity) {
     { enabled: sessionId !== null, retry: false },
   );
   const append = trpc.activity.append.useMutation({ onSuccess: setSummary });
+
+  const appendEvent = useCallback(async (details: Record<string, unknown>) => {
+    if (!sessionId) return;
+    const authoredStep = activity.checkpoints[0] ?? activity.tutorialSteps[0];
+    if (!authoredStep) return;
+    const eventId = crypto.randomUUID();
+    const event = activityEventSchema.parse({
+      schemaVersion: "activity-evidence.v1", activityId: activity.activityId, activityVersion: activity.activityVersion,
+      graphVersion: activity.graphVersion, objectiveId: authoredStep.objectiveId, variantKey: authoredStep.variantKey,
+      stepId: authoredStep.stepId, submissionId: eventId, attemptNumber: 1,
+      hintsUsed: summary?.support.hintsUsed ?? 0, revealsUsed: summary?.support.revealsUsed ?? 0,
+      scaffoldLevel: "scaffoldLevel" in authoredStep ? authoredStep.scaffoldLevel : 0,
+      interventionLevel: summary?.support.interventionLevel ?? 0, evidenceConfidence: 0.5,
+      timing: { wallClockMs: 0, activeMs: 0 }, eventId, occurredAt: new Date().toISOString(), ...details,
+    });
+    const sequenceKey = `codecamp-activity-sequence:${sessionId}`;
+    const storedSequence = Number(globalThis.localStorage?.getItem(sequenceKey) ?? 0);
+    const nextSequence = Math.max(sequence.current, Number.isFinite(storedSequence) ? storedSequence : 0) + 1;
+    sequence.current = nextSequence;
+    globalThis.localStorage?.setItem(sequenceKey, String(nextSequence));
+    await append.mutateAsync({ sessionId, batch: { batchId: crypto.randomUUID(), deviceId: `codecamp-web-${sessionId}`, events: [{ clientSequence: nextSequence, event }] } });
+  }, [activity, append, sessionId, summary]);
 
   const startNewSession = useCallback(() => {
     if (startRequested.current) return;
@@ -82,40 +91,8 @@ function useDurableActivitySession(activity: Activity) {
     if (!sessionId) return;
     const step = activity.tutorialSteps.find(({ stepId }) => stepId === usage.stepId);
     if (!step) return;
-    const occurredAt = new Date().toISOString();
-    const eventId = crypto.randomUUID();
-    const common = {
-      schemaVersion: "activity-evidence.v1" as const,
-      activityId: activity.activityId,
-      activityVersion: activity.activityVersion,
-      graphVersion: activity.graphVersion,
-      objectiveId: step.objectiveId,
-      variantKey: step.variantKey,
-      stepId: step.stepId,
-      submissionId: eventId,
-      attemptNumber: 1,
-      hintsUsed: summary?.support.hintsUsed ?? 0,
-      revealsUsed: summary?.support.revealsUsed ?? 0,
-      scaffoldLevel: step.scaffoldLevel,
-      interventionLevel: summary?.support.interventionLevel ?? 0,
-      evidenceConfidence: 0.5,
-      timing: { wallClockMs: 0, activeMs: 0 },
-      eventId,
-      occurredAt,
-    };
-    const event = activityEventSchema.parse(usage.kind === "hint"
-      ? { ...common, kind: "hint_used", hintId: usage.supportId }
-      : { ...common, kind: "reveal_used", revealId: usage.supportId });
-    const sequenceKey = `codecamp-activity-sequence:${sessionId}`;
-    const storedSequence = Number(globalThis.localStorage?.getItem(sequenceKey) ?? 0);
-    const nextSequence = Math.max(sequence.current, Number.isFinite(storedSequence) ? storedSequence : 0) + 1;
-    sequence.current = nextSequence;
-    globalThis.localStorage?.setItem(sequenceKey, String(nextSequence));
-    await append.mutateAsync({
-      sessionId,
-      batch: { batchId: crypto.randomUUID(), deviceId: `codecamp-web-${sessionId}`, events: [{ clientSequence: nextSequence, event }] },
-    });
-  }, [activity, append, sessionId, summary]);
+    await appendEvent(usage.kind === "hint" ? { kind: "hint_used", stepId: step.stepId, hintId: usage.supportId } : { kind: "reveal_used", stepId: step.stepId, revealId: usage.supportId });
+  }, [activity.tutorialSteps, appendEvent, sessionId]);
 
   const retry = () => {
     start.reset();
@@ -123,7 +100,7 @@ function useDurableActivitySession(activity: Activity) {
     startNewSession();
   };
 
-  return { sessionId, summary, setSummary, existing, appendSupport, retry, error: start.error ?? existing.error ?? append.error };
+  return { sessionId, summary, setSummary, existing, appendSupport, appendEvent, retry, error: start.error ?? existing.error ?? append.error };
 }
 
 function LessonShell({ locale, eyebrow, title, children }: { locale: string; eyebrow: string; title: string; children: React.ReactNode }) {
@@ -143,7 +120,9 @@ function LessonShell({ locale, eyebrow, title, children }: { locale: string; eye
 function WorkedExample({ locale }: { locale: string }) {
   const thai = locale.toLowerCase().startsWith("th");
   const activity = useMemo(() => createCodecampAPKActivity(locale), [locale]);
-  const controller = useMemo(() => new ReviewMediaController(), []);
+  const controller = useMemo(() => new DemoController(), []);
+  const attachYouTubeController = useCallback((nextController: Parameters<DemoController["attach"]>[0]) => controller.attach(nextController), [controller]);
+  const lastWatchedEnd = useRef(0);
   const session = useDurableActivitySession(activity);
   const assess = trpc.activity.assessCheckpoint.useMutation();
   const checkpoint = activity.checkpoints[0]!;
@@ -156,10 +135,15 @@ function WorkedExample({ locale }: { locale: string }) {
           activity={activity}
           controller={controller}
           locale={locale}
+          initialPositionSeconds={session.summary?.positionSeconds ?? 0}
+          initialWatchedRanges={session.summary?.watchedRanges ?? []}
+          onPlaybackIntent={() => void session.appendEvent({ kind: controller.getSnapshot().status === "playing" ? "playback_paused" : "playback_started", positionSeconds: controller.getSnapshot().currentSeconds })}
+          onSeekIntent={(positionSeconds) => void session.appendEvent({ kind: "playback_seeked", positionSeconds })}
+          onWatchedRangesChange={(ranges) => { const latest = ranges.at(-1); if (latest && latest.endSeconds > lastWatchedEnd.current + 0.5) { lastWatchedEnd.current = latest.endSeconds; void session.appendEvent({ kind: "watched_range", ...latest }); } }}
           renderMedia={({ video }) => (
             <div className="space-y-3">
-              <iframe className="aspect-video w-full rounded-lg" src={`https://www.youtube-nocookie.com/embed/${video.videoId}`} title={thai ? "วิดีโอ Phaser cartridge" : "Phaser cartridge video"} allowFullScreen />
-              <button type="button" className="min-h-11 rounded-md bg-blue-700 px-4 text-white" onClick={() => controller.seek(55)}>{thai ? "อ่าน/ดูตัวอย่างแล้ว — เปิด checkpoint" : "Worked example reviewed — open checkpoint"}</button>
+              <YouTubeMediaHost videoId={video.videoId!} locale={locale} onReady={attachYouTubeController} />
+              <button type="button" className="min-h-11 rounded-md border px-4" onClick={() => controller.seek(55)}>{thai ? "ใช้ transcript/แผนภาพแทน — เปิด checkpoint" : "Use transcript/diagram alternative — open checkpoint"}</button>
             </div>
           )}
           renderResource={({ resource }) => resource.kind === "diagram" ? <div role="img" aria-label={resource.alt[locale] ?? resource.alt.en} className="rounded-md bg-blue-50 p-4">React host → APK cartridge → validated learning result</div> : undefined}
@@ -175,6 +159,11 @@ function WorkedExample({ locale }: { locale: string }) {
           }}
         />
       </div>
+      <section aria-labelledby="reference-cartridge-heading" className="space-y-3 rounded-xl border bg-white p-5 shadow-sm">
+        <h2 id="reference-cartridge-heading" className="text-xl font-semibold">{thai ? "Reference cartridge และ annotated diff" : "Reference cartridge and annotated diff"}</h2>
+        <pre className="overflow-x-auto rounded-md bg-slate-950 p-4 text-sm text-slate-50"><code>{codecampAPKReference.code}</code></pre>
+        <ul className="list-disc space-y-2 pl-6">{codecampAPKReference.annotations[thai ? "th" : "en"].map((annotation) => <li key={annotation}>{annotation}</li>)}</ul>
+      </section>
       <p role="status" aria-live="polite">{session.summary ? (thai ? `Session ที่บันทึก: ${session.summary.sessionId}` : `Durable session: ${session.summary.sessionId}`) : (thai ? "กำลังเริ่ม session…" : "Starting durable session…")}</p>
       {session.summary?.assessedCheckpointResults[checkpoint.checkpointId] ? <p className="rounded-md bg-green-50 p-3 text-green-900">{thai ? "ผลที่ server บันทึก" : "Server-restored assessment"}: {session.summary.assessedCheckpointResults[checkpoint.checkpointId].isCorrect ? (thai ? "ผ่าน" : "passed") : (thai ? "ยังไม่ผ่าน" : "not yet passed")} ({thai ? "ครั้งที่" : "attempt"} {session.summary.assessedCheckpointResults[checkpoint.checkpointId].attemptNumber})</p> : null}
       {session.error ? <div role="alert" className="space-y-2 text-red-700"><p>{session.error.message}</p><button type="button" className="min-h-11 rounded-md border px-4" onClick={session.retry}>{thai ? "ลองเริ่ม session อีกครั้ง" : "Retry durable session"}</button></div> : null}
@@ -265,6 +254,7 @@ function IndependentTransfer({ locale }: { locale: string }) {
 export function APKUnitLesson({ locale, stage }: { locale: string; stage: number }) {
   const thai = locale.toLowerCase().startsWith("th");
   const access = trpc.codecamp.moduleBySlug.useQuery({ slug: "apk-game-creation" }, { retry: false });
+  if (![1, 2, 3].includes(stage)) return <main className="container py-12"><h1 className="text-2xl font-bold">{thai ? "ไม่พบบทเรียน" : "Lesson not found"}</h1></main>;
   if (access.isLoading) return <main className="container py-12"><p role="status">{thai ? "กำลังตรวจสิทธิ์ Unit 20…" : "Checking Unit 20 access…"}</p></main>;
   if (!access.data) return <main className="container py-12"><h1 className="text-2xl font-bold">{thai ? "ยังไม่ได้มอบหมาย Unit 20" : "Unit 20 is not assigned"}</h1><p className="mt-2 text-muted-foreground">{thai ? "หลักสูตรเดิมของคุณยังคงลำดับเดิม" : "Your existing curriculum sequence remains unchanged."}</p></main>;
   if (stage === 1) return <WorkedExample locale={locale} />;

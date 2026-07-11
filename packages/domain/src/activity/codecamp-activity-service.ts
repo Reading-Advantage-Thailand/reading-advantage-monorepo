@@ -2,13 +2,14 @@ import { randomUUID } from "node:crypto";
 import { createActivityTransportHandlers, type ActivityTransportHandlers } from "@reading-advantage/activity-runtime/transport";
 import type { ActivitySessionSummary } from "@reading-advantage/activity-runtime";
 import type { ActivityActor } from "@reading-advantage/activity-runtime/server";
-import { createCodecampAPKActivity, createCodecampAPKTutorialActivity } from "@reading-advantage/codecamp-knowledge";
+import { createCodecampAPKActivity, createCodecampAPKIndependentActivity, createCodecampAPKTutorialActivity } from "@reading-advantage/codecamp-knowledge";
 import type { TenantDB } from "../db-contract.js";
 import { DrizzleActivityPersistence } from "./drizzle-activity-persistence.js";
 import { HttpTutorialRepositoryCaptureAdapter, prepareCodecampTutorialReport, processCodecampTutorialReport, reissueCodecampTutorialReportCredential } from "./tutorial-reporting.js";
 
 const codecampPilotActivity = createCodecampAPKActivity("en");
 const codecampTutorialActivity = createCodecampAPKTutorialActivity("en");
+const codecampIndependentActivity = createCodecampAPKIndependentActivity("en");
 
 /** Activity handlers plus the separately authorized teacher summary boundary. */
 export type CodecampActivityHandlers = ActivityTransportHandlers & {
@@ -59,7 +60,7 @@ export function createCodecampActivityHandlers(tenantDb: TenantDB): CodecampActi
   const persistence = new DrizzleActivityPersistence(tenantDb);
   const handlers = createActivityTransportHandlers({
     activities: { async getActivity(activityId, activityVersion) {
-      return [codecampPilotActivity, codecampTutorialActivity].find((activity) => activity.activityId === activityId && activity.activityVersion === activityVersion) ?? null;
+      return [codecampPilotActivity, codecampTutorialActivity, codecampIndependentActivity].find((activity) => activity.activityId === activityId && activity.activityVersion === activityVersion) ?? null;
     } },
     persistence, createSessionId: randomUUID, now: () => new Date().toISOString(),
     executeTutorialCheck: () => { throw new Error("Tutorial checks require the server repository verifier"); },

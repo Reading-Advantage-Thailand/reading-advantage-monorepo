@@ -5,6 +5,8 @@ const summary = {
   sessionId: "session-1",
   activityId: "activity-1",
   completed: false,
+  playback: "idle" as const,
+  positionSeconds: 0,
   watchedRanges: [],
   checkpointAttempts: {},
   assessedCheckpointResults: {},
