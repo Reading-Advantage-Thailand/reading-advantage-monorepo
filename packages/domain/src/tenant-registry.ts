@@ -84,6 +84,8 @@ import {
   masteryCommits,
   activitySessions,
   activitySessionEvents,
+  activityTutorialReports,
+  activityTutorialRepositoryStates,
 } from "@reading-advantage/db";
 
 register(users, "FLAT");
@@ -135,6 +137,8 @@ register(masteryCommits, "FLAT");
 // the nullable schoolId column.
 register(activitySessions, "REFERENTIAL");
 register(activitySessionEvents, "REFERENTIAL");
+register(activityTutorialReports, "REFERENTIAL");
+register(activityTutorialRepositoryStates, "REFERENTIAL");
 
 // ─── EXEMPT tables (intentionally global) ───────────────────
 

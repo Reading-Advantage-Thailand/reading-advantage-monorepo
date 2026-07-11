@@ -1,15 +1,18 @@
 import { randomUUID } from "node:crypto";
 import { createActivityTransportHandlers, type ActivityTransportHandlers } from "@reading-advantage/activity-runtime/transport";
 import type { ActivitySessionSummary } from "@reading-advantage/activity-runtime";
+import type { ActivityActor } from "@reading-advantage/activity-runtime/server";
 import { createCodecampAPKActivity } from "@reading-advantage/codecamp-knowledge";
 import type { TenantDB } from "../db-contract.js";
 import { DrizzleActivityPersistence } from "./drizzle-activity-persistence.js";
+import { processCodecampTutorialReport } from "./tutorial-reporting.js";
 
 const codecampPilotActivity = createCodecampAPKActivity("en");
 
 /** Activity handlers plus the separately authorized teacher summary boundary. */
 export type CodecampActivityHandlers = ActivityTransportHandlers & {
   getTeacherSummary(schoolId: string, learnerId: string, sessionId: string): Promise<ActivitySessionSummary | null>;
+  reportTutorial(actor: ActivityActor, input: unknown): ReturnType<typeof processCodecampTutorialReport>;
 };
 
 /**
@@ -28,6 +31,12 @@ export function createCodecampActivityHandlers(tenantDb: TenantDB): CodecampActi
     ...handlers,
     getTeacherSummary: (schoolId, learnerId, sessionId) => persistence.getTeacherSummary(
       schoolId, learnerId, sessionId, codecampPilotActivity.checkpoints.map(({ checkpointId }) => checkpointId),
+    ),
+    reportTutorial: (actor, input) => processCodecampTutorialReport(
+      tenantDb,
+      actor,
+      input,
+      process.env.TUTORIAL_REPORT_SECRET ?? "",
     ),
   };
 }

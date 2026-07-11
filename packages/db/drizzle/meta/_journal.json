@@ -211,6 +211,13 @@
       "when": 1783750000000,
       "tag": "0029_activity_sessions",
       "breakpoints": true
+    },
+    {
+      "idx": 30,
+      "version": "7",
+      "when": 1783755000000,
+      "tag": "0030_activity_tutorial_reporting",
+      "breakpoints": true
     }
   ]
 }
