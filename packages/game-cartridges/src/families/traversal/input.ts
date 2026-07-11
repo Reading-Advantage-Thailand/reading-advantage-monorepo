@@ -59,6 +59,17 @@ export interface TraversalSurfaceBounds {
   readonly height: number;
 }
 
+/**
+ * Reports whether a mounted play surface can safely normalize pointer input.
+ * @param bounds Current client-space play-surface bounds.
+ * @returns True when every bound is finite and both dimensions are positive.
+ */
+export function isTraversalSurfaceReady(bounds: TraversalSurfaceBounds): boolean {
+  return Number.isFinite(bounds.left) && Number.isFinite(bounds.top) &&
+    Number.isFinite(bounds.width) && Number.isFinite(bounds.height) &&
+    bounds.width > 0 && bounds.height > 0;
+}
+
 function appendUnique(actions: TraversalAction[], action: TraversalAction | undefined): void {
   if (action !== undefined && !actions.includes(action)) actions.push(action);
 }
@@ -100,9 +111,7 @@ export function resolveTraversalActions(
   bindings: TraversalInputBindings,
   bounds: TraversalSurfaceBounds,
 ): readonly TraversalAction[] {
-  if (!Number.isFinite(bounds.left) || !Number.isFinite(bounds.top) ||
-      !Number.isFinite(bounds.width) || !Number.isFinite(bounds.height) ||
-      bounds.width <= 0 || bounds.height <= 0) {
+  if (!isTraversalSurfaceReady(bounds)) {
     throw new Error("Traversal input surface bounds must be positive and finite");
   }
   const actions: TraversalAction[] = [];

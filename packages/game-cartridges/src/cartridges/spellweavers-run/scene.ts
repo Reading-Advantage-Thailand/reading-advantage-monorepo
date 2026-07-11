@@ -10,6 +10,7 @@ import type Phaser from "phaser";
 
 import {
   createCompletionLatch,
+  isTraversalSurfaceReady,
   resolveTraversalActions,
   type TraversalInputBindings,
 } from "../../families/traversal";
@@ -196,12 +197,14 @@ export function createSpellweaversRunGameConfig(
         }
         const currentInput: APKInputSnapshot = options.inputController.snapshot();
         const rect = this.game.canvas.getBoundingClientRect();
-        const actions = resolveTraversalActions(previousInput, currentInput, INPUT_BINDINGS, {
+        const bounds = {
           left: rect.left,
           top: rect.top,
           width: rect.width,
           height: rect.height,
-        });
+        };
+        if (!isTraversalSurfaceReady(bounds)) return;
+        const actions = resolveTraversalActions(previousInput, currentInput, INPUT_BINDINGS, bounds);
         previousInput = currentInput;
         for (const action of actions) {
           if (action === "left") selectLane(0);

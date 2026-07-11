@@ -86,7 +86,10 @@ function createDisplayObject(): Record<string, unknown> {
   return display;
 }
 
-function createSceneHarness(): Phaser.Scene {
+function createSceneHarness(
+  getBounds: () => { left: number; top: number; width: number; height: number } =
+    () => ({ left: 0, top: 0, width: 960, height: 540 }),
+): Phaser.Scene {
   const add = new Proxy({}, {
     get: () => vi.fn(() => createDisplayObject()),
   });
@@ -109,7 +112,7 @@ function createSceneHarness(): Phaser.Scene {
     },
     game: {
       canvas: {
-        getBoundingClientRect: () => ({ left: 0, top: 0, width: 960, height: 540 }),
+        getBoundingClientRect: getBounds,
       },
     },
   } as unknown as Phaser.Scene;
@@ -134,6 +137,34 @@ function press(
 const laneCode = (lane: number): string => ["ArrowLeft", "ArrowDown", "ArrowRight"][lane]!;
 
 describe("runner wave Phaser scene callbacks", () => {
+  it("waits for a positive mounted surface before resolving initial input", () => {
+    let mounted = false;
+    const input = createMutableInput();
+    const sceneCallbacks = callbacks(createDragonRiderGameConfig({
+      input: [
+        { term: "สวัสดี", translation: "Hello" },
+        { term: "ขอบคุณ", translation: "Thank you" },
+      ],
+      edition: primaryChibiEdition,
+      inputController: input.controller,
+      complete: vi.fn(),
+      diagnostics: vi.fn(),
+      seed: 41,
+    }));
+    const scene = createSceneHarness(() => ({
+      left: 0,
+      top: 0,
+      width: mounted ? 960 : 0,
+      height: mounted ? 540 : 0,
+    }));
+    sceneCallbacks.create.call(scene);
+    input.setKeys(["ArrowLeft"]);
+
+    expect(() => sceneCallbacks.update.call(scene, 0, 0)).not.toThrow();
+    mounted = true;
+    expect(() => sceneCallbacks.update.call(scene, 0, 0)).not.toThrow();
+  });
+
   it("drives Dragon Rider through input to one boss completion", () => {
     const content = [
       { term: "สวัสดี", translation: "Hello" },
