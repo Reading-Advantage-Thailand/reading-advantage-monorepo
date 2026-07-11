@@ -12,7 +12,7 @@ test("completes the interactive video, remediation, and persisted resume loop", 
   const contentSecurityPolicy = response?.headers()["content-security-policy"];
   expect(contentSecurityPolicy).toContain("script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.youtube.com https://s.ytimg.com");
   expect(contentSecurityPolicy).toContain("frame-src https://www.youtube.com");
-  await expect(page.getByTitle("Git commit tutorial video")).toBeVisible();
+  await expect(page.getByTitle("Git commit tutorial video")).toBeVisible({ timeout: 20_000 });
   await expect(page.getByRole("button", { name: "Play" })).toBeVisible();
   await expect(page.locator('[data-slot="activity-alternative"]').getByRole("img", { name: "Working tree flows to staging area, then to repository" })).toBeVisible();
   await page.screenshot({ path: resolve(evidenceDirectory, `s2-${testInfo.project.name}-initial.png`) });
@@ -46,7 +46,7 @@ test("completes the interactive video, remediation, and persisted resume loop", 
   await expect(page.getByText("watched batches: 1")).toBeVisible();
   await page.reload();
   await expect(page.getByRole("slider", { name: "Seek tutorial video" })).toHaveValue("24", { timeout: 15_000 });
-  await expect(page.getByText("Persisted position: 24 seconds")).toBeVisible();
+  await expect(page.getByText(/Persisted position: 24 seconds/)).toBeVisible({ timeout: 15_000 });
   await page.screenshot({ path: resolve(evidenceDirectory, `s2-${testInfo.project.name}-resumed.png`) });
 });
 

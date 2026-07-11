@@ -137,7 +137,7 @@ export function createYouTubeMediaController(player: YouTubePlayerPort): YouTube
     pause: () => { player.pauseVideo(); snapshot = { ...snapshot, status: "paused" }; publish(); },
     seek: (seconds) => {
       player.seekTo(seconds, true);
-      pendingSeek = { seconds, refreshesRemaining: 4 };
+      pendingSeek = { seconds, refreshesRemaining: 20 };
       snapshot = { ...snapshot, currentSeconds: seconds };
       publish();
     },
