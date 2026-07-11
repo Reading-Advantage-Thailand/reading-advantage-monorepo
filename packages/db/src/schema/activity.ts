@@ -124,5 +124,6 @@ export const activityTutorialRepositoryStates = pgTable(
   (table) => [
     foreignKey({ name: "activity_tutorial_repository_states_owner_fk", columns: [table.tenantKey, table.sessionId, table.learnerId], foreignColumns: [activitySessions.tenantKey, activitySessions.id, activitySessions.learnerId] }).onDelete("cascade"),
     index("activity_tutorial_repository_states_owner_idx").on(table.tenantKey, table.learnerId, table.sessionId),
+    unique("activity_tutorial_repository_states_submission_idx").on(table.tenantKey, table.learnerId, table.sessionId, table.submissionId),
   ],
 );

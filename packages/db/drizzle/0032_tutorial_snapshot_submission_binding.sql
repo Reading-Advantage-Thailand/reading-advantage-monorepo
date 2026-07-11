@@ -2,7 +2,7 @@ ALTER TABLE "activity_tutorial_repository_states" ADD COLUMN "submission_id" tex
 --> statement-breakpoint
 ALTER TABLE "activity_tutorial_repository_states" ADD COLUMN "step_id" text;
 --> statement-breakpoint
-UPDATE "activity_tutorial_repository_states" SET "submission_id" = 'legacy', "step_id" = 'legacy' WHERE "submission_id" IS NULL;
+UPDATE "activity_tutorial_repository_states" SET "submission_id" = 'legacy:' || "id", "step_id" = 'legacy' WHERE "submission_id" IS NULL;
 --> statement-breakpoint
 ALTER TABLE "activity_tutorial_repository_states" ALTER COLUMN "submission_id" SET NOT NULL;
 --> statement-breakpoint
