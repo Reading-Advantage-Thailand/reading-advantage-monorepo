@@ -1,5 +1,7 @@
 import { createSeededRandom, seededShuffle } from "../../internal/random";
 
+export * from "./input";
+
 /** Horizontal direction used by bounded lane traversal. */
 export type LaneDirection = "left" | "right";
 

@@ -4,6 +4,12 @@ export interface APKPointerState {
   down: boolean;
   /** Active pointer identifier. */
   id: number | null;
+  /** Browser pointer category retained through release for gesture resolution. */
+  kind: "mouse" | "pen" | "touch" | null;
+  /** Client-space horizontal coordinate where the active gesture began. */
+  startX: number;
+  /** Client-space vertical coordinate where the active gesture began. */
+  startY: number;
   /** Client-space horizontal coordinate. */
   x: number;
   /** Client-space vertical coordinate. */
@@ -35,7 +41,15 @@ export interface APKInputController {
  */
 export function createInputController(surface: HTMLElement): APKInputController {
   const keys = new Set<string>();
-  const pointer: APKPointerState = { down: false, id: null, x: 0, y: 0 };
+  const pointer: APKPointerState = {
+    down: false,
+    id: null,
+    kind: null,
+    startX: 0,
+    startY: 0,
+    x: 0,
+    y: 0,
+  };
   const previousTouchAction = surface.style.touchAction;
   let destroyed = false;
 
@@ -44,6 +58,13 @@ export function createInputController(surface: HTMLElement): APKInputController 
   const onPointerDown = (event: PointerEvent) => {
     pointer.down = true;
     pointer.id = event.pointerId;
+    pointer.kind = event.pointerType === "touch" ||
+      event.pointerType === "pen" ||
+      event.pointerType === "mouse"
+      ? event.pointerType
+      : "mouse";
+    pointer.startX = event.clientX;
+    pointer.startY = event.clientY;
     pointer.x = event.clientX;
     pointer.y = event.clientY;
   };
@@ -56,6 +77,11 @@ export function createInputController(surface: HTMLElement): APKInputController 
     if (pointer.id !== null && event.pointerId !== pointer.id) return;
     pointer.down = false;
     pointer.id = null;
+    pointer.kind = event.pointerType === "touch" ||
+      event.pointerType === "pen" ||
+      event.pointerType === "mouse"
+      ? event.pointerType
+      : pointer.kind;
     pointer.x = event.clientX;
     pointer.y = event.clientY;
   };
@@ -82,6 +108,7 @@ export function createInputController(surface: HTMLElement): APKInputController 
       keys.clear();
       pointer.down = false;
       pointer.id = null;
+      pointer.kind = null;
       surface.style.touchAction = previousTouchAction;
       window.removeEventListener("keydown", onKeyDown);
       window.removeEventListener("keyup", onKeyUp);
