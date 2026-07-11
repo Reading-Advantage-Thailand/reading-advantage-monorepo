@@ -32,4 +32,10 @@ describe("TutorialActivityPanel", () => {
     expect(await screen.findByRole("status")).toHaveTextContent("ยังต้องแก้ไขบางจุด");
     expect(screen.getByRole("button", { name: "ตรวจสอบ repository" })).toBeEnabled();
   });
+
+  it("hydrates controlled completion from a durable session projection", () => {
+    render(<TutorialActivityPanel activity={activity} locale="en" completedStepIds={["step-1"]} onCheck={vi.fn()} />);
+    expect(screen.getByRole("progressbar")).toHaveAttribute("aria-valuenow", "1");
+    expect(screen.getByRole("status")).toHaveTextContent("Tutorial complete");
+  });
 });

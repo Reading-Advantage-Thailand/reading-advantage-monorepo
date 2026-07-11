@@ -22,6 +22,9 @@ export type TutorialActivityPanelProps = {
   locale: string;
   onCheck(stepId: string): Promise<TutorialStepVerification>;
   onSupportUsage?(usage: TutorialSupportUsage): void | Promise<void>;
+  completedStepIds?: string[];
+  defaultCompletedStepIds?: string[];
+  onCompletedStep?(stepId: string): void | Promise<void>;
   renderResource?(resourceId: string): React.ReactNode;
 };
 
@@ -35,7 +38,7 @@ const labels = {
  * @param props Authored activity, locale, verification callback, and optional resource renderer.
  * @returns An accessible tutorial region that never computes assessed correctness locally.
  */
-export function TutorialActivityPanel({ activity, locale, onCheck, onSupportUsage, renderResource }: TutorialActivityPanelProps) {
+export function TutorialActivityPanel({ activity, locale, onCheck, onSupportUsage, completedStepIds: controlledCompletedStepIds, defaultCompletedStepIds = [], onCompletedStep, renderResource }: TutorialActivityPanelProps) {
   const copy = locale.toLowerCase().startsWith("th") ? labels.th : labels.en;
   const steps = useMemo(() => [...activity.tutorialSteps].sort((left, right) => left.order - right.order), [activity.tutorialSteps]);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -43,7 +46,8 @@ export function TutorialActivityPanel({ activity, locale, onCheck, onSupportUsag
   const [revealCount, setRevealCount] = useState(0);
   const [verification, setVerification] = useState<TutorialStepVerification | null>(null);
   const [checking, setChecking] = useState(false);
-  const [completedStepIds, setCompletedStepIds] = useState<string[]>([]);
+  const [internalCompletedStepIds, setInternalCompletedStepIds] = useState<string[]>(defaultCompletedStepIds);
+  const completedStepIds = controlledCompletedStepIds ?? internalCompletedStepIds;
   const step = steps[activeIndex];
 
   if (!step) return null;
@@ -63,7 +67,8 @@ export function TutorialActivityPanel({ activity, locale, onCheck, onSupportUsag
       const result = await onCheck(step.stepId);
       setVerification(result);
       if (result.passed && !completed) {
-        setCompletedStepIds((ids) => [...ids, step.stepId]);
+        if (controlledCompletedStepIds === undefined) setInternalCompletedStepIds((ids) => [...ids, step.stepId]);
+        await onCompletedStep?.(step.stepId);
       }
     } finally {
       setChecking(false);

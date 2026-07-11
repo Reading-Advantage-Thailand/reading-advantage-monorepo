@@ -166,6 +166,7 @@ export function ActivityRuntimeDemo({ locale }: { locale: string }) {
   const [watchedRangeCount, setWatchedRangeCount] = useState(0);
   const [tutorialChecks, setTutorialChecks] = useState(0);
   const [supportUses, setSupportUses] = useState(0);
+  const [completedTutorialStepIds, setCompletedTutorialStepIds] = useState<string[]>([]);
   const [initialWatchedRanges, setInitialWatchedRanges] = useState<Array<{ startSeconds: number; endSeconds: number }>>([]);
   const [hydrated, setHydrated] = useState(false);
   const resumePositionGuard = useRef<number | null>(null);
@@ -181,6 +182,12 @@ export function ActivityRuntimeDemo({ locale }: { locale: string }) {
     setWatchedRangeCount(storedWatchedRanges.length);
     setTutorialChecks(readStoredNumber("activity-runtime-demo-tutorial-checks", 10_000));
     setSupportUses(readStoredNumber("activity-runtime-demo-support-uses", 10_000));
+    try {
+      const storedCompleted: unknown = JSON.parse(globalThis.localStorage?.getItem("activity-runtime-demo-completed-tutorial-steps") ?? "[]");
+      setCompletedTutorialStepIds(Array.isArray(storedCompleted) ? storedCompleted.filter((stepId): stepId is string => typeof stepId === "string") : []);
+    } catch {
+      setCompletedTutorialStepIds([]);
+    }
     setHydrated(true);
   }, []);
   const savePosition = useCallback((seconds: number) => {
@@ -257,6 +264,12 @@ export function ActivityRuntimeDemo({ locale }: { locale: string }) {
             const next = supportUses + 1;
             globalThis.localStorage?.setItem("activity-runtime-demo-support-uses", String(next));
             setSupportUses(next);
+          }}
+          completedStepIds={completedTutorialStepIds}
+          onCompletedStep={(stepId) => {
+            const next = [...new Set([...completedTutorialStepIds, stepId])];
+            globalThis.localStorage?.setItem("activity-runtime-demo-completed-tutorial-steps", JSON.stringify(next));
+            setCompletedTutorialStepIds(next);
           }}
           onCheck={async () => {
             const next = tutorialChecks + 1;
