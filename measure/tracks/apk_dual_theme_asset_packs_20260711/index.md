@@ -5,4 +5,5 @@
 - [Metadata](./metadata.json)
 - [Asset Inventory](./asset-inventory.md)
 - [APK Foundation Asset-ABI Erratum](./apk-foundation-asset-abi-erratum.md)
+- [Scoped Teardown Manifest](./teardown-manifest.md)
 - [Verification](./verification.md)
