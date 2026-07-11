@@ -2182,6 +2182,9 @@ importers:
 
   packages/api:
     dependencies:
+      '@reading-advantage/activity-runtime':
+        specifier: workspace:*
+        version: link:../activity-runtime
       '@reading-advantage/ai':
         specifier: workspace:*
         version: link:../ai

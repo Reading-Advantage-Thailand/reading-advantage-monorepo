@@ -30,6 +30,7 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
+    "@reading-advantage/activity-runtime": "workspace:*",
     "@reading-advantage/ai": "workspace:*",
     "@reading-advantage/db": "workspace:*",
     "@reading-advantage/auth": "workspace:*",
