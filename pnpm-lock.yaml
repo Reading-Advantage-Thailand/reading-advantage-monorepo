@@ -551,6 +551,12 @@ importers:
       '@node-rs/argon2':
         specifier: 'catalog:'
         version: 2.0.2
+      '@reading-advantage/activity-react':
+        specifier: workspace:*
+        version: link:../../packages/activity-react
+      '@reading-advantage/activity-runtime':
+        specifier: workspace:*
+        version: link:../../packages/activity-runtime
       '@reading-advantage/ai':
         specifier: workspace:*
         version: link:../../packages/ai
