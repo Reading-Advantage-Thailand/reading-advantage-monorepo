@@ -17,12 +17,14 @@ import {
   createCodecampAPKActivity,
   createCodecampAPKTutorialActivity,
 } from "@reading-advantage/codecamp-knowledge/apk-unit";
+import { createStorageTutorialReportQueue, enqueueTutorialReport, flushTutorialReportQueue } from "@reading-advantage/codecamp-knowledge";
 import type { inferRouterOutputs } from "@trpc/server";
 import type { inferRouterInputs } from "@trpc/server";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 type SessionSummary = NonNullable<inferRouterOutputs<AppRouter>["activity"]["get"]>;
 type TutorialReportInput = inferRouterInputs<AppRouter>["activity"]["reportTutorial"];
+type PreparedTutorialReport = inferRouterOutputs<AppRouter>["activity"]["prepareTutorial"];
 
 function useDurableActivitySession(activity: Activity) {
   const storageKey = `codecamp-activity-session:${activity.activityId}@${activity.activityVersion}`;
@@ -175,28 +177,60 @@ function GuidedPractice({ locale }: { locale: string }) {
   const thai = locale.toLowerCase().startsWith("th");
   const activity = useMemo(() => createCodecampAPKTutorialActivity(locale), [locale]);
   const session = useDurableActivitySession(activity);
-  const [submissionId, setSubmissionId] = useState("");
+  const [prepared, setPrepared] = useState<PreparedTutorialReport | null>(null);
   const [localResultText, setLocalResultText] = useState("");
   const [reportError, setReportError] = useState<string | null>(null);
+  const [reportStored, setReportStored] = useState(false);
   const prepare = trpc.activity.prepareTutorial.useMutation();
-  const report = trpc.activity.reportTutorial.useMutation({ onSuccess: ({ session: next }) => session.setSummary(next) });
-  useEffect(() => setSubmissionId(crypto.randomUUID()), []);
+  const reissue = trpc.activity.reissueTutorialCredential.useMutation();
+  const report = trpc.activity.reportTutorial.useMutation();
+
+  const prepareSnapshot = async () => {
+    if (!session.sessionId) return;
+    setReportError(null);
+    setReportStored(false);
+    setPrepared(await prepare.mutateAsync({ sessionId: session.sessionId, submissionId: crypto.randomUUID(), repositoryId: codecampAPKUnit.wedo.manifest.repositoryId, stepId: "wedo.apk.manifest" }));
+  };
+
+  const flushQueuedReports = useCallback(async () => {
+    if (!session.sessionId) return { uploaded: [], failed: 0, expired: 0 };
+    const queue = createStorageTutorialReportQueue(globalThis.localStorage);
+    return flushTutorialReportQueue(queue, new Date().toISOString(), async (_endpoint, body) => {
+      const response = await report.mutateAsync(body as TutorialReportInput);
+      session.setSummary(response.session);
+      return response.verified;
+    }, async (entry) => {
+      const queued = entry.request as TutorialReportInput;
+      const refreshed = await reissue.mutateAsync({ sessionId: session.sessionId!, submissionId: queued.submissionId, repositoryStateId: queued.repositoryStateId, stepId: queued.localResult.stepId });
+      return { ...queued, credential: refreshed.credential };
+    });
+  }, [reissue, report, session]);
 
   const submitVerifiedResult = async () => {
-    if (!prepare.data) return;
+    if (!prepared || !session.sessionId) return;
     try {
       setReportError(null);
       const localResult = JSON.parse(localResultText) as TutorialReportInput["localResult"];
-      await report.mutateAsync({
-        submissionId: prepare.data.submissionId,
-        repositoryStateId: prepare.data.repositoryStateId,
-        credential: prepare.data.credential,
-        localResult,
-      });
+      const request: TutorialReportInput = { submissionId: prepared.submissionId, repositoryStateId: prepared.repositoryStateId, credential: prepared.credential, localResult };
+      const queue = createStorageTutorialReportQueue(globalThis.localStorage);
+      await enqueueTutorialReport(queue, "trpc:activity.reportTutorial", request, new Date().toISOString());
+      const result = await flushQueuedReports();
+      if (result.uploaded.length === 0) throw new Error("Report queued for automatic retry when the connection returns");
+      setReportStored(true);
+      setPrepared(null);
+      setLocalResultText("");
     } catch (error) {
       setReportError(error instanceof Error ? error.message : "Invalid tutorial result");
     }
   };
+
+  useEffect(() => {
+    if (!session.sessionId) return;
+    const retryQueued = () => { void flushQueuedReports(); };
+    retryQueued();
+    globalThis.addEventListener?.("online", retryQueued);
+    return () => globalThis.removeEventListener?.("online", retryQueued);
+  }, [flushQueuedReports, session.sessionId]);
 
   return (
     <LessonShell locale={locale} eyebrow="We Do" title={thai ? "เติม APK manifest" : "Complete the APK manifest"}>
@@ -205,13 +239,13 @@ function GuidedPractice({ locale }: { locale: string }) {
       <section aria-labelledby="repository-report-heading" className="space-y-3 rounded-xl border bg-white p-5 shadow-sm">
         <h2 id="repository-report-heading" className="text-xl font-semibold">{thai ? "ส่งผล repository ที่ตรวจแล้ว" : "Report verified repository evidence"}</h2>
         <p>{thai ? "เตรียม snapshot ก่อนรัน checker แล้ววาง JSON ที่ checker ส่งออก" : "Prepare a server-captured snapshot before running the checker, then paste its JSON output."}</p>
-        <button type="button" disabled={!session.sessionId || !submissionId || prepare.isPending} className="min-h-11 rounded-md border px-4 disabled:opacity-60" onClick={() => session.sessionId && prepare.mutate({ sessionId: session.sessionId, submissionId, repositoryId: codecampAPKUnit.wedo.manifest.repositoryId, stepId: "wedo.apk.manifest" })}>{prepare.isPending ? (thai ? "กำลังเตรียม…" : "Preparing…") : (thai ? "1. เตรียม snapshot" : "1. Prepare snapshot")}</button>
-        {prepare.data ? <p role="status" className="text-sm text-green-800">{thai ? "snapshot พร้อมแล้ว" : "Snapshot prepared"}: <code>{prepare.data.repositoryStateId}</code></p> : null}
+        <button type="button" disabled={!session.sessionId || prepare.isPending} className="min-h-11 rounded-md border px-4 disabled:opacity-60" onClick={() => void prepareSnapshot()}>{prepare.isPending ? (thai ? "กำลังเตรียม…" : "Preparing…") : (thai ? "1. เตรียม snapshot ใหม่" : "1. Prepare a fresh snapshot")}</button>
+        {prepared ? <p role="status" className="text-sm text-green-800">{thai ? "snapshot พร้อมแล้ว" : "Snapshot prepared"}: <code>{prepared.repositoryStateId}</code></p> : null}
         <label className="block font-medium" htmlFor="tutorial-result">{thai ? "JSON จาก tutorial-check" : "tutorial-check JSON"}</label>
         <textarea id="tutorial-result" value={localResultText} onChange={(event) => setLocalResultText(event.target.value)} rows={8} className="w-full rounded-md border p-3 font-mono text-sm" />
-        <button type="button" disabled={!prepare.data || !localResultText || report.isPending} className="min-h-11 rounded-md bg-blue-700 px-4 text-white disabled:opacity-60" onClick={() => void submitVerifiedResult()}>{report.isPending ? (thai ? "กำลังส่ง…" : "Reporting…") : (thai ? "2. ตรวจซ้ำและบันทึกบน server" : "2. Re-verify and store on server")}</button>
-        {report.data ? <p role="status" className="text-green-800">{thai ? "บันทึกหลักฐานแล้ว" : "Evidence stored"}</p> : null}
-        {reportError || prepare.error || report.error ? <p role="alert" className="text-red-700">{reportError ?? prepare.error?.message ?? report.error?.message}</p> : null}
+        <button type="button" disabled={!prepared || !localResultText || report.isPending || reissue.isPending} className="min-h-11 rounded-md bg-blue-700 px-4 text-white disabled:opacity-60" onClick={() => void submitVerifiedResult()}>{report.isPending || reissue.isPending ? (thai ? "กำลังส่ง…" : "Reporting…") : (thai ? "2. ตรวจซ้ำและบันทึกบน server" : "2. Re-verify and store on server")}</button>
+        {reportStored ? <p role="status" className="text-green-800">{thai ? "บันทึกหลักฐานแล้ว" : "Evidence stored"}</p> : null}
+        {reportError || prepare.error || report.error || reissue.error ? <p role="alert" className="text-red-700">{reportError ?? prepare.error?.message ?? report.error?.message ?? reissue.error?.message}</p> : null}
       </section>
       <TutorialActivityPanel
         activity={activity}
@@ -256,7 +290,7 @@ export function APKUnitLesson({ locale, stage }: { locale: string; stage: number
   const access = trpc.codecamp.moduleBySlug.useQuery({ slug: "apk-game-creation" }, { retry: false });
   if (![1, 2, 3].includes(stage)) return <main className="container py-12"><h1 className="text-2xl font-bold">{thai ? "ไม่พบบทเรียน" : "Lesson not found"}</h1></main>;
   if (access.isLoading) return <main className="container py-12"><p role="status">{thai ? "กำลังตรวจสิทธิ์ Unit 20…" : "Checking Unit 20 access…"}</p></main>;
-  if (!access.data) return <main className="container py-12"><h1 className="text-2xl font-bold">{thai ? "ยังไม่ได้มอบหมาย Unit 20" : "Unit 20 is not assigned"}</h1><p className="mt-2 text-muted-foreground">{thai ? "หลักสูตรเดิมของคุณยังคงลำดับเดิม" : "Your existing curriculum sequence remains unchanged."}</p></main>;
+  if (!access.data) return <main className="container space-y-3 py-12"><h1 className="text-2xl font-bold">{thai ? "ยังไม่ได้มอบหมาย Unit 20" : "Unit 20 is not assigned"}</h1><p className="text-muted-foreground">{thai ? "หลักสูตรเดิมของคุณยังคงลำดับเดิม" : "Your existing curriculum sequence remains unchanged."}</p><button type="button" className="min-h-11 rounded-md border px-4" onClick={() => void access.refetch()}>{thai ? "ตรวจสิทธิ์อีกครั้ง" : "Check access again"}</button></main>;
   if (stage === 1) return <WorkedExample locale={locale} />;
   if (stage === 2) return <GuidedPractice locale={locale} />;
   return <IndependentTransfer locale={locale} />;

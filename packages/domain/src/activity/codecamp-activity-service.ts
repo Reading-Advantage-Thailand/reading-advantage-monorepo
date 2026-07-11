@@ -11,6 +11,12 @@ const codecampPilotActivity = createCodecampAPKActivity("en");
 const codecampTutorialActivity = createCodecampAPKTutorialActivity("en");
 const codecampIndependentActivity = createCodecampAPKIndependentActivity("en");
 
+function requiredTutorialEnvironment(name: "TUTORIAL_REPORT_SECRET" | "TUTORIAL_REPOSITORY_WORKER_URL" | "TUTORIAL_REPOSITORY_WORKER_TOKEN"): string {
+  const value = process.env[name]?.trim();
+  if (!value) throw new Error(`${name} is required for tutorial reporting`);
+  return value;
+}
+
 /** Activity handlers plus the separately authorized teacher summary boundary. */
 export type CodecampActivityHandlers = ActivityTransportHandlers & {
   /**
@@ -77,12 +83,12 @@ export function createCodecampActivityHandlers(tenantDb: TenantDB): CodecampActi
       tenantDb,
       actor,
       input,
-      process.env.TUTORIAL_REPORT_SECRET ?? "",
+      requiredTutorialEnvironment("TUTORIAL_REPORT_SECRET"),
     ),
     prepareTutorial: (actor, input) => prepareCodecampTutorialReport(
-      tenantDb, actor, input, process.env.TUTORIAL_REPORT_SECRET ?? "",
-      new HttpTutorialRepositoryCaptureAdapter(process.env.TUTORIAL_REPOSITORY_WORKER_URL ?? "", process.env.TUTORIAL_REPOSITORY_WORKER_TOKEN ?? ""),
+      tenantDb, actor, input, requiredTutorialEnvironment("TUTORIAL_REPORT_SECRET"),
+      new HttpTutorialRepositoryCaptureAdapter(requiredTutorialEnvironment("TUTORIAL_REPOSITORY_WORKER_URL"), requiredTutorialEnvironment("TUTORIAL_REPOSITORY_WORKER_TOKEN")),
     ),
-    reissueTutorialCredential: (actor, input) => reissueCodecampTutorialReportCredential(tenantDb, actor, input, process.env.TUTORIAL_REPORT_SECRET ?? ""),
+    reissueTutorialCredential: (actor, input) => reissueCodecampTutorialReportCredential(tenantDb, actor, input, requiredTutorialEnvironment("TUTORIAL_REPORT_SECRET")),
   };
 }

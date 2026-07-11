@@ -11,10 +11,10 @@
     "stepId": "wedo.apk.manifest",
     "order": 1,
     "objectiveId": "codecamp.game-development.skill.apk-contract",
-    "instruction": { "en": "Complete the cartridge manifest and deterministic educational result.", "th": "เติม cartridge manifest และผลการเรียนรู้แบบกำหนดได้" },
+    "instruction": { "en": "Complete, commit, and push the cartridge manifest and deterministic educational result.", "th": "เติม commit และ push cartridge manifest กับผลการเรียนรู้แบบกำหนดได้" },
     "checks": [
       { "checkId": "manifest.shape", "kind": "typescript_object_shape", "filePath": "src/cartridge.ts", "exportName": "cartridgeManifest", "requiredProperties": ["id", "title", "description", "version", "runtimeApiVersion", "inputMode", "requiredAssetSlots", "capabilities"] },
-      { "checkId": "git.stage", "kind": "command", "commandId": "git.stage", "expected": "staged:src/cartridge.ts" }
+      { "checkId": "git.clean", "kind": "command", "commandId": "git.stage", "expected": "clean" }
     ],
     "hints": [{ "hintId": "hint.boundary", "text": { "en": "Keep persistence in the host, not the cartridge.", "th": "เก็บ persistence ไว้ใน host ไม่ใช่ cartridge" } }],
     "reveals": [{ "revealId": "reveal.fields", "text": { "en": "Declare every RuntimeCartridgeManifest field before staging the file.", "th": "ระบุทุก field ของ RuntimeCartridgeManifest ก่อน stage ไฟล์" } }],
