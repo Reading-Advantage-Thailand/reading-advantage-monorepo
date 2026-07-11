@@ -26,6 +26,8 @@ RUN pnpm turbo run build --filter=codecamp-advantage
 
 FROM node:22-alpine AS runner
 
+RUN apk add --no-cache git
+
 ENV HOSTNAME=0.0.0.0
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1

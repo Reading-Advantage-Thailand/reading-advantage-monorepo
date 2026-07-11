@@ -45,11 +45,11 @@ steps:
       - "--allow-unauthenticated"
       - "--service-account=codecamp-cloud-run@$PROJECT_ID.iam.gserviceaccount.com"
       - "--add-cloudsql-instances=reading-advantage:asia-southeast1:cloud-sql"
-      - "--set-env-vars=NODE_ENV=production,NEXT_PUBLIC_API_URL=https://codecamp.reading-advantage.com"
+      - "--set-env-vars=NODE_ENV=production,NEXT_PUBLIC_API_URL=https://codecamp.reading-advantage.com,TUTORIAL_REPOSITORY_WORKER_URL=https://codecamp.reading-advantage.com/api/internal/tutorial-repository-capture,TUTORIAL_REPOSITORY_BASE_URL=https://github.com"
       - "--min-instances=1"
       - "--max-instances=100"
       - "--concurrency=80"
-      - "--set-secrets=DATABASE_URL=DATABASE_URL:latest,AUTH_SECRET=AUTH_SECRET:latest,GITHUB_APP_ID=GITHUB_APP_ID:latest,GITHUB_PRIVATE_KEY=GITHUB_PRIVATE_KEY:latest,GITHUB_WEBHOOK_SECRET=GITHUB_WEBHOOK_SECRET:latest,GITHUB_INSTALLATION_ID=GITHUB_INSTALLATION_ID:latest,OPENROUTER_API_KEY=OPENROUTER_API_KEY:latest,OPENAI_API_KEY=OPENAI_API_KEY:latest,GOOGLE_AI_API_KEY=GOOGLE_AI_API_KEY:latest"
+      - "--set-secrets=DATABASE_URL=DATABASE_URL:latest,AUTH_SECRET=AUTH_SECRET:latest,GITHUB_APP_ID=GITHUB_APP_ID:latest,GITHUB_PRIVATE_KEY=GITHUB_PRIVATE_KEY:latest,GITHUB_WEBHOOK_SECRET=GITHUB_WEBHOOK_SECRET:latest,GITHUB_INSTALLATION_ID=GITHUB_INSTALLATION_ID:latest,OPENROUTER_API_KEY=OPENROUTER_API_KEY:latest,OPENAI_API_KEY=OPENAI_API_KEY:latest,GOOGLE_AI_API_KEY=GOOGLE_AI_API_KEY:latest,TUTORIAL_REPORT_SECRET=CODECAMP_TUTORIAL_REPORT_SECRET:latest,TUTORIAL_REPOSITORY_WORKER_TOKEN=CODECAMP_TUTORIAL_REPOSITORY_WORKER_TOKEN:latest"
 
   - name: "gcr.io/cloud-builders/gcloud"
     id: "allow-public-invoker"
