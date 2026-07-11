@@ -18,6 +18,8 @@ export interface TutorialCapturePorts {
   gitStatus(checkoutRoot: string): Promise<string>;
   /** Returns the capture timestamp. */
   now(): string;
+  /** Server-configured repository host root; defaults to public GitHub. */
+  repositoryBaseUrl?: string;
 }
 
 /** Captures a learner fork without accepting a client-controlled URL or path. */
@@ -27,7 +29,10 @@ export async function captureRegisteredTutorialRepository(input: unknown, ports:
   if (JSON.stringify([...request.allowedFiles].sort()) !== JSON.stringify(expectedFiles)) throw new Error("Tutorial capture allowlist mismatch");
   const githubUsername = await ports.getGithubUsername(request.learnerId);
   if (!githubUsername || !/^[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?$/.test(githubUsername)) throw new Error("Learner GitHub identity is not registered");
-  const clone = await ports.clone(`https://github.com/${githubUsername}/reading-advantage-monorepo.git`);
+  const baseUrl = ports.repositoryBaseUrl?.replace(/\/$/, "") ?? "https://github.com";
+  const parsedBase = new URL(baseUrl);
+  if (!["https:", "http:", "file:"].includes(parsedBase.protocol)) throw new Error("Tutorial repository base URL uses an unsupported protocol");
+  const clone = await ports.clone(`${baseUrl}/${githubUsername}/reading-advantage-monorepo.git`);
   try {
     const files = Object.fromEntries(await Promise.all(expectedFiles.map(async (filePath) => [filePath, await ports.readFixtureFile(clone.checkoutRoot, filePath)] as const)));
     return { files, gitStatus: await ports.gitStatus(clone.checkoutRoot), capturedAt: new Date(ports.now()).toISOString() };

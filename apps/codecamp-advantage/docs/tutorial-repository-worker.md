@@ -22,6 +22,9 @@ Set these environment variables on the Codecamp service:
   `/api/internal/tutorial-repository-capture`.
 - `TUTORIAL_REPOSITORY_WORKER_TOKEN`: a service-only bearer token shared by the
   caller and capture endpoint.
+- `TUTORIAL_REPOSITORY_BASE_URL`: optional server-owned repository host root;
+  production defaults to `https://github.com`. Local acceptance may point this
+  at a temporary `file://` fork root without accepting a browser-supplied URL.
 
 The worker URL may point to the same Cloud Run service or a separately scaled
 private service using the same application image. Do not expose the worker
@@ -49,6 +52,7 @@ reissued through the authenticated API and the queued request is retried. The
 server reruns authored checks and applies nonce and submission idempotency
 before projecting any result into activity evidence.
 
-Operational failures are explicit: missing environment variables fail startup
-validation, invalid service authentication returns an authorization error, and
-clone/check failures do not issue a repository snapshot identity.
+Operational failures are explicit: missing required environment variables fail
+the first tutorial request, invalid service authentication returns an
+authorization error, and clone/check failures do not issue a repository
+snapshot identity.
