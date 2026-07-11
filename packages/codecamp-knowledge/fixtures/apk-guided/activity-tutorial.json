@@ -18,7 +18,7 @@
       { "checkId": "git.clean", "kind": "command", "commandId": "git.stage", "expected": "clean" }
     ],
     "hints": [{ "hintId": "hint.boundary", "text": { "en": "Keep persistence in the host, not the cartridge.", "th": "เก็บ persistence ไว้ใน host ไม่ใช่ cartridge" } }],
-    "reveals": [{ "revealId": "reveal.fields", "text": { "en": "Declare every RuntimeCartridgeManifest field before staging the file.", "th": "ระบุทุก field ของ RuntimeCartridgeManifest ก่อน stage ไฟล์" } }],
+      "reveals": [{ "revealId": "reveal.fields", "text": { "en": "Declare every RuntimeCartridgeManifest field and a deterministic educationalResult before staging the files.", "th": "ระบุทุก field ของ RuntimeCartridgeManifest และ educationalResult แบบกำหนดได้ก่อน stage ไฟล์" } }],
     "resourceIds": ["diagram.apk.boundaries"],
     "scaffoldLevel": 2
   }]
