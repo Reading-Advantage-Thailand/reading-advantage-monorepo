@@ -181,6 +181,7 @@ function GuidedPractice({ locale }: { locale: string }) {
   const [localResultText, setLocalResultText] = useState("");
   const [reportError, setReportError] = useState<string | null>(null);
   const [reportStored, setReportStored] = useState(false);
+  const flushInFlight = useRef(false);
   const prepare = trpc.activity.prepareTutorial.useMutation();
   const reissue = trpc.activity.reissueTutorialCredential.useMutation();
   const report = trpc.activity.reportTutorial.useMutation();
@@ -194,16 +195,22 @@ function GuidedPractice({ locale }: { locale: string }) {
 
   const flushQueuedReports = useCallback(async () => {
     if (!session.sessionId) return { uploaded: [], failed: 0, expired: 0 };
-    const queue = createStorageTutorialReportQueue(globalThis.localStorage);
-    return flushTutorialReportQueue(queue, new Date().toISOString(), async (_endpoint, body) => {
-      const response = await report.mutateAsync(body as TutorialReportInput);
-      session.setSummary(response.session);
-      return response.verified;
-    }, async (entry) => {
-      const queued = entry.request as TutorialReportInput;
-      const refreshed = await reissue.mutateAsync({ sessionId: session.sessionId!, submissionId: queued.submissionId, repositoryStateId: queued.repositoryStateId, stepId: queued.localResult.stepId });
-      return { ...queued, credential: refreshed.credential };
-    });
+    if (flushInFlight.current) return { uploaded: [], failed: 0, expired: 0 };
+    flushInFlight.current = true;
+    try {
+      const queue = createStorageTutorialReportQueue(globalThis.localStorage);
+      return await flushTutorialReportQueue(queue, new Date().toISOString(), async (_endpoint, body) => {
+        const response = await report.mutateAsync(body as TutorialReportInput);
+        session.setSummary(response.session);
+        return response.verified;
+      }, async (entry) => {
+        const queued = entry.request as TutorialReportInput;
+        const refreshed = await reissue.mutateAsync({ sessionId: session.sessionId!, submissionId: queued.submissionId, repositoryStateId: queued.repositoryStateId, stepId: queued.localResult.stepId });
+        return { ...queued, credential: refreshed.credential };
+      });
+    } finally {
+      flushInFlight.current = false;
+    }
   }, [reissue, report, session]);
 
   const submitVerifiedResult = async () => {
