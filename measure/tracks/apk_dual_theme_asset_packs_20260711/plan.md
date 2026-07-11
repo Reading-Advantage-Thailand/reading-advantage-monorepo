@@ -7,9 +7,9 @@
 _Story ref: spec.md#story-s1_
 _Blast radius: `GAMEPLAY_ASSET_SLOTS`, `CartridgeEdition`, `preloadSemanticAssets`, and all cartridge `requiredAssetSlots`._
 
-- [~] Task: Reconcile the dual-theme specification with the live 40-slot APK inventory
-- [ ] Task: Add Red manifest parity, provenance, path-safety, budget, and placeholder-rejection tests
-- [ ] Task: Define versioned pack manifests and deterministic validation tooling
+- [x] Task: Reconcile the dual-theme specification with the live 40-slot APK inventory — `22bc7ae9`
+- [x] Task: Add Red manifest parity, provenance, path-safety, budget, and placeholder-rejection tests — `e912b455`
+- [~] Task: Define versioned pack manifests and deterministic validation tooling
 - [ ] Task: Measure - User Manual Verification 'Phase S1: Freeze production asset contracts' (Protocol in workflow.md)
 
 ## Phase S2: Produce both theme packs
