@@ -48,6 +48,14 @@ test("completes the interactive video, remediation, and persisted resume loop", 
   await page.reload();
   await expect(page.getByRole("slider", { name: "Seek tutorial video" })).toHaveValue("24", { timeout: 15_000 });
   await expect(page.getByText(/Persisted position: 24 seconds/)).toBeVisible({ timeout: 15_000 });
+  await page.getByRole("button", { name: "Show next hint" }).click();
+  await page.getByRole("button", { name: "Show reveal" }).click();
+  await page.getByRole("button", { name: "Run verified checks" }).click();
+  await expect(page.getByText("Tutorial complete")).toBeVisible();
+  await expect(page.getByText("Persisted tutorial checks: 1; support uses: 2")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "You Do: build a sentence-sorting cartridge" })).toBeVisible();
+  await page.reload();
+  await expect(page.getByText("Tutorial complete")).toBeVisible({ timeout: 15_000 });
   await page.screenshot({ path: resolve(evidenceDirectory, `s2-${testInfo.project.name}-resumed.png`) });
 });
 
@@ -80,4 +88,7 @@ test("passes the Thai route locale into activity content and shared controls", a
   await expect.poll(async () => Number(await page.getByRole("slider", { name: "เลื่อนวิดีโอบทเรียน" }).getAttribute("max"))).toBeGreaterThan(55);
   await page.getByRole("slider", { name: "เลื่อนวิดีโอบทเรียน" }).fill("56");
   await expect(page.getByRole("group", { name: "หน้าที่ใดเป็นของ React host?" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "แสดงคำใบ้ถัดไป" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "ตรวจสอบ repository" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "You Do: สร้างเกมเรียงประโยค" })).toBeVisible();
 });
