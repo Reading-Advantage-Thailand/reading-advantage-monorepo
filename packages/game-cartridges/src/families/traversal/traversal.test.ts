@@ -57,8 +57,8 @@ type TraversalModule = {
 
 const traversal = cartridgeModule as typeof cartridgeModule & TraversalModule;
 
-describe("deterministic traversal family Red contract", () => {
-  it.fails("moves between bounded lanes without wrapping", () => {
+describe("deterministic traversal family", () => {
+  it("moves between bounded lanes without wrapping", () => {
     expect(traversal.moveLane).toBeTypeOf("function");
     expect(traversal.moveLane?.(0, "left", 3)).toBe(0);
     expect(traversal.moveLane?.(0, "right", 3)).toBe(1);
@@ -66,7 +66,7 @@ describe("deterministic traversal family Red contract", () => {
     expect(() => traversal.moveLane?.(0, "right", 0)).toThrow(/lane count/i);
   });
 
-  it.fails("creates a seeded gate wave with one correct unique lane", () => {
+  it("creates a seeded gate wave with one correct unique lane", () => {
     expect(traversal.createGateWave).toBeTypeOf("function");
     const options = {
       correctIndex: 2,
@@ -86,7 +86,7 @@ describe("deterministic traversal family Red contract", () => {
     );
   });
 
-  it.fails("reports targets that cross a collision line between frames", () => {
+  it("reports targets that cross a collision line between frames", () => {
     expect(traversal.advanceScrollTargets).toBeTypeOf("function");
     const targets = [
       { id: "near", position: 80 },
@@ -110,7 +110,7 @@ describe("deterministic traversal family Red contract", () => {
     expect(targets[0].position).toBe(80);
   });
 
-  it.fails("clamps grid movement and resolves ordered vertical targets", () => {
+  it("clamps grid movement and resolves ordered vertical targets", () => {
     expect(traversal.moveGridPosition).toBeTypeOf("function");
     expect(traversal.resolveOrderedTarget).toBeTypeOf("function");
     const bounds = { columns: 4, minimumRow: 0, maximumRow: 12 } as const;

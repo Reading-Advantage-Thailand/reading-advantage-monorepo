@@ -19,7 +19,7 @@
 ## Phase S2: Extend reusable traversal systems
 
 - [x] Task: Add Red deterministic lane/gate/scroll/vertical traversal tests
-- [ ] Task: Implement the minimum shared traversal systems
+- [x] Task: Implement the minimum shared traversal systems
 - [ ] Task: Add keyboard, pointer, and touch input contract tests and implementation
 - [ ] Task: Verify lifecycle, coverage, package gates, and mandatory phase review
 - [ ] Task: Measure - User Manual Verification 'Phase S2: Extend reusable traversal systems'

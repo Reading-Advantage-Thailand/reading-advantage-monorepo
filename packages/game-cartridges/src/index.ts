@@ -16,5 +16,7 @@ export * from "./cartridges/sorcerer-ziggurat";
 export * from "./families/target-action";
 /** Reusable deterministic isometric step-graph family. */
 export * from "./families/isometric-step-graph";
+/** Reusable deterministic lane, gate, scroll, and vertical traversal family. */
+export * from "./families/traversal";
 /** Shared public cartridge types. */
 export type * from "./internal/types";
