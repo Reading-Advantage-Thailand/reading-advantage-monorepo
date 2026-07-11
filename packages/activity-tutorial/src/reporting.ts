@@ -12,6 +12,7 @@ export const tutorialReportRequestSchema = z.object({
   credential: z.string().trim().min(1),
   repositoryStateId: z.string().trim().min(1).max(200),
   localResult: tutorialCheckResultSchema,
+  attempt: z.object({ attemptNumber: z.number().int().positive(), submittedAt: z.string().datetime({ offset: true }), hintsUsed: z.number().int().nonnegative(), revealsUsed: z.number().int().nonnegative(), interventionLevel: z.number().int().min(0).max(3), evidenceConfidence: z.number().min(0).max(1), timingMs: z.number().nonnegative() }).strict(),
 }).strict();
 
 /** Server-owned result returned after deterministic repository verification. */
@@ -19,10 +20,16 @@ export const verifiedTutorialReportSchema = z.object({
   submissionId: z.string().trim().min(1),
   sessionId: z.string().trim().min(1),
   activityId: z.string().trim().min(1),
+  activityVersion: z.string().trim().min(1),
+  graphVersion: z.string().trim().min(1),
+  repositoryId: z.string().trim().min(1),
+  learnerId: z.string().trim().min(1),
+  tenantKey: z.string().trim().min(1),
   stepId: z.string().trim().min(1),
   passed: z.boolean(),
   checks: z.array(z.object({ checkId: z.string().trim().min(1), passed: z.boolean() }).strict()),
   verifiedAt: z.string().datetime({ offset: true }),
+  attempt: tutorialReportRequestSchema.shape.attempt,
 }).strict();
 
 /** Server-owned verified tutorial report. */
@@ -35,14 +42,22 @@ export interface TutorialReportStore {
    * @param input Credential nonce, stable submission identity, digest, and expiry.
    * @returns Execute for first use, replay for an identical completed retry, or conflict.
    */
-  begin(input: { nonce: string; submissionId: string; requestDigest: string; expiresAt: string }): Promise<{ kind: "execute" } | { kind: "replay"; result: VerifiedTutorialReport } | { kind: "conflict" }>;
+  begin(input: { scopedKey: string; nonce: string; requestDigest: string; expiresAt: string; leaseUntil: string }): Promise<{ kind: "execute"; claimId: string } | { kind: "replay"; result: VerifiedTutorialReport } | { kind: "busy"; retryAt: string } | { kind: "conflict" }>;
   /**
    * Completes an accepted report for deterministic retry responses.
    * @param submissionId Stable submission identifier.
    * @param result Server-verified response to cache.
    * @returns Completion after durable storage.
    */
-  complete(submissionId: string, result: VerifiedTutorialReport): Promise<void>;
+  complete(claimId: string, result: VerifiedTutorialReport): Promise<void>;
+  /**
+   * Releases a failed claim for bounded retry after its lease.
+   * @param claimId Store-issued claim identity.
+   * @param retryAt Earliest retry time.
+   * @param error Safe failure description.
+   * @returns Completion after failure state is durable.
+   */
+  fail(claimId: string, retryAt: string, error: string): Promise<void>;
 }
 
 /** Server repository verifier that reruns authored checks against trusted state. */
@@ -93,24 +108,70 @@ export async function reportTutorialResult(actor: TutorialReportActor, requestIn
   const manifest = await dependencies.loadManifest(claims.activityId);
   if (!manifest) throw new Error(`Tutorial manifest not found: ${claims.activityId}`);
   tutorialManifestSchema.parse(manifest);
-  if (manifest.activityId !== claims.activityId || manifest.repositoryId !== request.localResult.repositoryId) throw new Error("Tutorial report manifest mismatch");
+  if (manifest.activityId !== claims.activityId || manifest.repositoryId !== claims.repositoryId || manifest.repositoryId !== request.localResult.repositoryId || manifest.activityVersion !== claims.activityVersion || manifest.graphVersion !== claims.graphVersion) throw new Error("Tutorial report manifest mismatch");
 
+  const scopedKey = `${claims.tenantKey}\u0000${claims.learnerId}\u0000${claims.sessionId}\u0000${request.submissionId}`;
   const claimed = await dependencies.store.begin({
-    nonce: claims.nonce, submissionId: request.submissionId,
-    requestDigest: reportDigest(request, claims), expiresAt: claims.expiresAt,
+    scopedKey, nonce: claims.nonce, requestDigest: reportDigest(request, claims), expiresAt: claims.expiresAt,
+    leaseUntil: new Date(Date.parse(now) + 60_000).toISOString(),
   });
   if (claimed.kind === "replay") return verifiedTutorialReportSchema.parse(claimed.result);
   if (claimed.kind === "conflict") throw new Error("Tutorial report replay conflict");
+  if (claimed.kind === "busy") throw new Error(`Tutorial report is already processing; retry after ${claimed.retryAt}`);
 
-  const rerun = tutorialCheckResultSchema.parse(await dependencies.verifier.verify(manifest, request.localResult.stepId, request.repositoryStateId, claims));
-  if (rerun.activityId !== claims.activityId || rerun.repositoryId !== manifest.repositoryId || rerun.stepId !== request.localResult.stepId) throw new Error("Server verifier returned mismatched tutorial evidence");
-  const result = verifiedTutorialReportSchema.parse({
-    submissionId: request.submissionId, sessionId: claims.sessionId, activityId: claims.activityId,
-    stepId: rerun.stepId, passed: rerun.passed,
-    checks: rerun.checks.map(({ checkId, passed }) => ({ checkId, passed })), verifiedAt: now,
-  });
-  await dependencies.store.complete(request.submissionId, result);
-  return result;
+  try {
+    const rerun = tutorialCheckResultSchema.parse(await dependencies.verifier.verify(manifest, request.localResult.stepId, request.repositoryStateId, claims));
+    if (rerun.activityId !== claims.activityId || rerun.repositoryId !== manifest.repositoryId || rerun.stepId !== request.localResult.stepId) throw new Error("Server verifier returned mismatched tutorial evidence");
+    const result = verifiedTutorialReportSchema.parse({
+      submissionId: request.submissionId, sessionId: claims.sessionId, activityId: claims.activityId,
+      activityVersion: claims.activityVersion, graphVersion: claims.graphVersion, repositoryId: claims.repositoryId,
+      learnerId: claims.learnerId, tenantKey: claims.tenantKey, stepId: rerun.stepId, passed: rerun.passed,
+      checks: rerun.checks.map(({ checkId, passed }) => ({ checkId, passed })), verifiedAt: now, attempt: request.attempt,
+    });
+    await dependencies.store.complete(claimed.claimId, result);
+    return result;
+  } catch (error) {
+    await dependencies.store.fail(claimed.claimId, new Date(Date.parse(now) + 30_000).toISOString(), error instanceof Error ? error.message.slice(0, 500) : "Tutorial verification failed");
+    throw error;
+  }
+}
+
+/**
+ * Creates a deterministic process-local report store for tests and single-process hosts.
+ * @param now Store clock used for lease and retry decisions.
+ * @returns Tenant-scoped report store with replay, conflict, lease, and failure recovery.
+ */
+export function createInMemoryTutorialReportStore(now: () => string): TutorialReportStore {
+  type Entry = { claimId: string; nonce: string; digest: string; leaseUntil: string; retryAt?: string; result?: VerifiedTutorialReport };
+  const entries = new Map<string, Entry>();
+  const claims = new Map<string, string>();
+  return {
+    async begin(input) {
+      const existingKey = claims.get(input.nonce);
+      if (existingKey && existingKey !== input.scopedKey) return { kind: "conflict" };
+      const existing = entries.get(input.scopedKey);
+      if (existing) {
+        if (existing.digest !== input.requestDigest || existing.nonce !== input.nonce) return { kind: "conflict" };
+        if (existing.result) return { kind: "replay", result: existing.result };
+        const retryAt = existing.retryAt ?? existing.leaseUntil;
+        if (Date.parse(now()) < Date.parse(retryAt)) return { kind: "busy", retryAt };
+      }
+      const claimId = `${input.scopedKey}\u0000${input.nonce}`;
+      entries.set(input.scopedKey, { claimId, nonce: input.nonce, digest: input.requestDigest, leaseUntil: input.leaseUntil });
+      claims.set(input.nonce, input.scopedKey);
+      return { kind: "execute", claimId };
+    },
+    async complete(claimId, result) {
+      const entry = [...entries.values()].find((candidate) => candidate.claimId === claimId);
+      if (!entry) throw new Error("Unknown tutorial report claim");
+      entry.result = verifiedTutorialReportSchema.parse(result);
+    },
+    async fail(claimId, retryAt) {
+      const entry = [...entries.values()].find((candidate) => candidate.claimId === claimId);
+      if (!entry) throw new Error("Unknown tutorial report claim");
+      entry.retryAt = retryAt;
+    },
+  };
 }
 
 /**

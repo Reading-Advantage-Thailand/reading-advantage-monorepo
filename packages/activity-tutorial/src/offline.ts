@@ -1,0 +1,98 @@
+import { tutorialReportRequestSchema, uploadTutorialReport, type VerifiedTutorialReport } from "./reporting.js";
+
+/** Minimal synchronous storage surface implemented by browser localStorage. */
+export interface TutorialQueueStorage {
+  /** Reads one serialized queue value. */
+  getItem(key: string): string | null;
+  /** Writes one serialized queue value. */
+  setItem(key: string, value: string): void;
+}
+
+/** Durable queued tutorial report awaiting an authenticated upload retry. */
+export type QueuedTutorialReport = {
+  queueId: string;
+  endpoint: string;
+  request: unknown;
+  attempts: number;
+  nextAttemptAt: string;
+};
+
+/** Durable offline queue used by tutorial upload clients. */
+export interface TutorialReportQueue {
+  /** Adds or replaces one deduplicated queued report. */
+  enqueue(entry: QueuedTutorialReport): Promise<void>;
+  /** Returns due reports in deterministic queue order. */
+  due(now: string): Promise<QueuedTutorialReport[]>;
+  /** Removes a successfully uploaded report. */
+  remove(queueId: string): Promise<void>;
+  /** Updates retry metadata after a failed upload. */
+  retry(queueId: string, attempts: number, nextAttemptAt: string): Promise<void>;
+}
+
+/**
+ * Creates a durable browser-storage queue for offline tutorial reports.
+ * @param storage Browser-compatible persistent key-value storage.
+ * @param storageKey Namespaced storage key for this application.
+ * @returns Queue with deduplication and bounded retry metadata.
+ */
+export function createStorageTutorialReportQueue(storage: TutorialQueueStorage, storageKey = "activity-tutorial-report-queue.v1"): TutorialReportQueue {
+  const read = (): QueuedTutorialReport[] => {
+    try {
+      const parsed: unknown = JSON.parse(storage.getItem(storageKey) ?? "[]");
+      return Array.isArray(parsed) ? parsed.filter((entry): entry is QueuedTutorialReport => typeof entry === "object" && entry !== null && typeof (entry as QueuedTutorialReport).queueId === "string") : [];
+    } catch {
+      return [];
+    }
+  };
+  const write = (entries: QueuedTutorialReport[]) => storage.setItem(storageKey, JSON.stringify(entries));
+  return {
+    async enqueue(entry) {
+      tutorialReportRequestSchema.parse(entry.request);
+      const entries = read().filter(({ queueId }) => queueId !== entry.queueId);
+      entries.push(entry);
+      write(entries.sort((left, right) => left.queueId.localeCompare(right.queueId)));
+    },
+    async due(now) { return read().filter(({ nextAttemptAt }) => Date.parse(nextAttemptAt) <= Date.parse(now)); },
+    async remove(queueId) { write(read().filter((entry) => entry.queueId !== queueId)); },
+    async retry(queueId, attempts, nextAttemptAt) { write(read().map((entry) => entry.queueId === queueId ? { ...entry, attempts, nextAttemptAt } : entry)); },
+  };
+}
+
+/**
+ * Enqueues one validated report before attempting network delivery.
+ * @param queue Durable offline queue.
+ * @param endpoint Authenticated server report endpoint.
+ * @param request Secret-free local report and short-lived credential.
+ * @param now Current client time.
+ * @returns Stable queue identifier used to deduplicate retries.
+ */
+export async function enqueueTutorialReport(queue: TutorialReportQueue, endpoint: string, request: unknown, now: string): Promise<string> {
+  const parsed = tutorialReportRequestSchema.parse(request);
+  const queueId = `${endpoint}\u0000${parsed.submissionId}\u0000${parsed.credential.slice(-16)}`;
+  await queue.enqueue({ queueId, endpoint, request: parsed, attempts: 0, nextAttemptAt: now });
+  return queueId;
+}
+
+/**
+ * Flushes due offline reports with bounded exponential retry metadata.
+ * @param queue Durable offline queue.
+ * @param now Current client time.
+ * @param send Injected authenticated network adapter.
+ * @returns Successfully verified server responses and remaining failure count.
+ */
+export async function flushTutorialReportQueue(queue: TutorialReportQueue, now: string, send: (endpoint: string, body: unknown) => Promise<unknown>): Promise<{ uploaded: VerifiedTutorialReport[]; failed: number }> {
+  const uploaded: VerifiedTutorialReport[] = [];
+  let failed = 0;
+  for (const entry of await queue.due(now)) {
+    try {
+      uploaded.push(await uploadTutorialReport(entry.endpoint, tutorialReportRequestSchema.parse(entry.request), send));
+      await queue.remove(entry.queueId);
+    } catch {
+      failed += 1;
+      const attempts = entry.attempts + 1;
+      const delayMs = Math.min(5 * 60_000, 1000 * 2 ** Math.min(attempts, 8));
+      await queue.retry(entry.queueId, attempts, new Date(Date.parse(now) + delayMs).toISOString());
+    }
+  }
+  return { uploaded, failed };
+}

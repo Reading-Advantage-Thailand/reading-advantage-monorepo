@@ -10,7 +10,8 @@
     "./contracts": { "types": "./dist/contracts.d.ts", "import": "./dist/contracts.js" },
     "./checker": { "types": "./dist/checker.d.ts", "import": "./dist/checker.js" },
     "./credentials": { "types": "./dist/credentials.d.ts", "import": "./dist/credentials.js" },
-    "./reporting": { "types": "./dist/reporting.d.ts", "import": "./dist/reporting.js" }
+    "./reporting": { "types": "./dist/reporting.d.ts", "import": "./dist/reporting.js" },
+    "./offline": { "types": "./dist/offline.d.ts", "import": "./dist/offline.js" }
   },
   "bin": { "tutorial-check": "./dist/cli.js" },
   "files": ["dist", "README.md"],
