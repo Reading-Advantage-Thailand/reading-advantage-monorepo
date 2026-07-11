@@ -1,7 +1,7 @@
 "use client";
 
 import { createYouTubeMediaController, InteractiveActivityPlayer, type MediaController, type MediaSnapshot, type YouTubeMediaController, type YouTubePlayerPort } from "@reading-advantage/activity-react";
-import { createCodecampAPKActivity } from "@reading-advantage/codecamp-knowledge";
+import { createCodecampAPKActivity } from "@reading-advantage/codecamp-knowledge/apk-unit";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 function readStoredNumber(key: string, maximum: number): number {
