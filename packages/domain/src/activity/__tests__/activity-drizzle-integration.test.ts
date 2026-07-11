@@ -61,7 +61,7 @@ describe("activity Drizzle outbox and Codecamp mastery", () => {
     const repositoryCapturedAt = new Date(Date.now() - 90_000).toISOString();
     await persistence.createSession(createActivitySessionRecord({ sessionId, actor, activityId: tutorialActivity.activityId, activityVersion: tutorialActivity.activityVersion, startedAt: "2026-07-10T00:00:00Z" }));
     const prepared = await prepareCodecampTutorialReport(tenantDb, actor, { sessionId, submissionId: "submission-apk-1", repositoryId: codecampAPKUnit.wedo.manifest.repositoryId, stepId: "wedo.apk.manifest" }, "integration-tutorial-secret-at-least-32-bytes", {
-      capture: async () => ({ files: { "src/cartridge.ts": validManifest, "src/game-state.ts": "export {};", ".env": "must-not-persist" }, gitStatus: "", capturedAt: repositoryCapturedAt.replace("Z", "+00:00") }),
+      capture: async () => ({ files: { "src/cartridge.ts": validManifest, "src/game-state.ts": "export const educationalResult = { objectiveId: 'codecamp.game-development.skill.apk-contract', correct: true, attempts: 1 } as const;", ".env": "must-not-persist" }, gitStatus: "", capturedAt: repositoryCapturedAt.replace("Z", "+00:00") }),
     });
     const reissued = await reissueCodecampTutorialReportCredential(tenantDb, actor, { sessionId, submissionId: "submission-apk-1", repositoryStateId: prepared.repositoryStateId, stepId: "wedo.apk.manifest" }, "integration-tutorial-secret-at-least-32-bytes");
     await expect(reissueCodecampTutorialReportCredential(tenantDb, actor, { sessionId, submissionId: "submission-apk-2", repositoryStateId: prepared.repositoryStateId, stepId: "wedo.apk.manifest" }, "integration-tutorial-secret-at-least-32-bytes")).rejects.toThrow("state not found");
