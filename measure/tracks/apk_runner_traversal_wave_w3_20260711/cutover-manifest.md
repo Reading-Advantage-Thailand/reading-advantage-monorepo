@@ -21,6 +21,7 @@ The only production destination is `/[locale]/student/arcade/[cartridgeId]`. W3 
 - A bounded `rg` search outside the candidate route, component, and state trees returned no imports of those components/state modules and no calls to their per-game APIs.
 - The recursive deletion guard in `runner-wave-contract.test.ts` fails if any retired page, component, state/config module, or API directory reappears.
 - The catalog, generic route, authenticated host, QC host, and shared completion adapter tests cover all four replacement IDs.
+- The full app suite exposed and removed one non-production test assumption that directly opened Griffin's deleted sentence API; the repeated 182-suite run passed after it was routed to the shared stable content contract.
 
 ## Required evidence before changing a row to `delete-approved`
 

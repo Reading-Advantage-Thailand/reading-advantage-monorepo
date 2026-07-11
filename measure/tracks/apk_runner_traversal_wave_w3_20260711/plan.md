@@ -31,12 +31,12 @@
 - [x] Task: Build and test `griffin-riders-escape`
 - [x] Task: Build and test `storm-castle-tower`
 - [x] Task: Verify both editions, content modes, results, coverage, and mandatory phase review
-- [~] Task: Measure - User Manual Verification 'Phase S3: Build four dual-edition cartridges'
+- [x] Task: Measure - User Manual Verification 'Phase S3: Build four dual-edition cartridges'
 
 ## Phase S4: Cut over and verify the runner wave
 
 - [x] Task: Add the four cartridges to package and authenticated-host registries
 - [x] Task: Add Red host, persistence, catalog, accessibility, and deletion guards
 - [x] Task: Produce and review the exact legacy disposition manifest
-- [ ] Task: Run final lint, type, test, coverage, build, graph, browser, and Measure gates
-- [ ] Task: Measure - User Manual Verification 'Phase S4: Cut over and verify the runner wave'
+- [~] Task: Run final lint, type, test, coverage, build, graph, browser, and Measure gates
+- [x] Task: Measure - User Manual Verification 'Phase S4: Cut over and verify the runner wave'
