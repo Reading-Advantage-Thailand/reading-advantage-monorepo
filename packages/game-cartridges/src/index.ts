@@ -12,6 +12,8 @@ export * from "./typing-defense";
 export * from "./cartridges/astral-mage";
 /** Phaser-native Sorcerer's Ziggurat step-traversal cartridge. */
 export * from "./cartridges/sorcerer-ziggurat";
+/** Phaser-native Dragon Rider gate-traversal cartridge. */
+export * from "./cartridges/dragon-rider";
 /** Reusable sentence target-action family. */
 export * from "./families/target-action";
 /** Reusable deterministic isometric step-graph family. */

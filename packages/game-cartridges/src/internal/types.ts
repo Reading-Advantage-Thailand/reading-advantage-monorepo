@@ -41,7 +41,8 @@ export type CartridgeManifest = RuntimeCartridgeManifest & {
     | "dungeon-liberator"
     | "magic-defense"
     | "astral-mage"
-    | "sorcerer-ziggurat";
+    | "sorcerer-ziggurat"
+    | "dragon-rider";
   /** Educational input mode used by runtime validation. */
   inputMode: CartridgeContentMode;
   /** Phaser capability families demonstrated by this cartridge. */

@@ -24,6 +24,9 @@ export const GAMEPLAY_ASSET_SLOTS = [
   "platform.rune-cube",
   "token.rune",
   "effect.ritual",
+  "target.gate",
+  "ally.dragon",
+  "enemy.boss",
 ] as const;
 
 function createProceduralAsset(

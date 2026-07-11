@@ -26,7 +26,7 @@
 
 ## Phase S3: Build four dual-edition cartridges
 
-- [~] Task: Build and test `dragon-rider`
+- [x] Task: Build and test `dragon-rider`
 - [ ] Task: Build and test `spellweavers-run`
 - [ ] Task: Build and test `griffin-riders-escape`
 - [ ] Task: Build and test `storm-castle-tower`
