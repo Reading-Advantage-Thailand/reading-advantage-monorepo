@@ -17,6 +17,10 @@ const typescriptObjectShapeCheckSchema = z.object({
   checkId: z.string().regex(/^[a-z0-9.-]+$/), kind: z.literal("typescript_object_shape"),
   filePath: safeRelativePathSchema, exportName: z.string().regex(/^[A-Za-z_$][A-Za-z0-9_$]*$/),
   requiredProperties: z.array(z.string().regex(/^[A-Za-z_$][A-Za-z0-9_$]*$/)).min(1),
+  propertyContracts: z.array(z.discriminatedUnion("kind", [
+    z.object({ property: z.string().regex(/^[A-Za-z_$][A-Za-z0-9_$]*$/), kind: z.literal("string"), format: z.enum(["nonempty", "semver"]).default("nonempty"), allowedValues: z.array(z.string().min(1)).min(1).optional() }).strict(),
+    z.object({ property: z.string().regex(/^[A-Za-z_$][A-Za-z0-9_$]*$/), kind: z.literal("string_array"), minItems: z.number().int().nonnegative().default(0) }).strict(),
+  ])).min(1),
 }).strict();
 const commandCheckSchema = z.object({
   checkId: z.string().regex(/^[a-z0-9.-]+$/), kind: z.literal("command"),
@@ -62,6 +66,12 @@ export const tutorialManifestSchema = z.object({
     for (const [checkIndex, check] of step.checks.entries()) {
       if ((check.kind === "file_contains" || check.kind === "typescript_object_shape") && !fileSet.has(check.filePath)) context.addIssue({ code: "custom", path: ["steps", stepIndex, "checks", checkIndex, "filePath"], message: "Check file is not allowlisted" });
       if (check.kind === "command" && !commandSet.has(check.commandId)) context.addIssue({ code: "custom", path: ["steps", stepIndex, "checks", checkIndex, "commandId"], message: "Check command is not allowlisted" });
+      if (check.kind === "typescript_object_shape") {
+        const required = new Set(check.requiredProperties);
+        const contracted = check.propertyContracts.map(({ property }) => property);
+        if (new Set(contracted).size !== contracted.length) context.addIssue({ code: "custom", path: ["steps", stepIndex, "checks", checkIndex, "propertyContracts"], message: "Property contracts must be unique" });
+        if (contracted.some((property) => !required.has(property)) || check.requiredProperties.some((property) => !contracted.includes(property))) context.addIssue({ code: "custom", path: ["steps", stepIndex, "checks", checkIndex, "propertyContracts"], message: "Every required property must have exactly one property contract" });
+      }
     }
   }
 });

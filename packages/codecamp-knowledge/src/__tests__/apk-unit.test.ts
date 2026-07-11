@@ -24,6 +24,8 @@ describe("Codecamp APK game-creation unit", () => {
     expect(independent).toContain("createSentenceSortingCartridge");
     expect(independent).not.toEqual(guided);
     await expect(runTutorialStep(executableManifest, "wedo.apk.manifest", { readAllowedFile: async () => guided, runAllowedCommand: async () => "", now: () => "2026-07-11T00:00:00Z" })).resolves.toMatchObject({ passed: false, checks: [{ checkId: "manifest.shape", passed: false }, { checkId: "git.clean", passed: true }] });
+    const abiInvalid = "export const cartridgeManifest = { id: true, title: false, description: 1, version: 2, runtimeApiVersion: 3, inputMode: 'invalid', requiredAssetSlots: { wrong: true }, capabilities: `wrong` };";
+    await expect(runTutorialStep(executableManifest, "wedo.apk.manifest", { readAllowedFile: async () => abiInvalid, runAllowedCommand: async () => "", now: () => "2026-07-11T00:00:00Z" })).resolves.toMatchObject({ passed: false, checks: [{ checkId: "manifest.shape", passed: false }, { checkId: "git.clean", passed: true }] });
   });
 
   it("fails closed on activity drift, unsafe cohort migration, and incomplete rubric weights", () => {

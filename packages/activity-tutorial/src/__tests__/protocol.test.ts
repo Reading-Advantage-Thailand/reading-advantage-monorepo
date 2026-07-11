@@ -81,11 +81,15 @@ describe("tutorial repository protocol", () => {
 
   it("rejects comment-only TypeScript object-shape matches without executing repository code", async () => {
     const objectManifest = structuredClone(manifest);
-    objectManifest.steps[0]!.checks = [{ checkId: "manifest.shape", kind: "typescript_object_shape", filePath: "src/game.ts", exportName: "cartridgeManifest", requiredProperties: ["id", "title", "capabilities"] }] as never;
+    objectManifest.steps[0]!.checks = [{ checkId: "manifest.shape", kind: "typescript_object_shape", filePath: "src/game.ts", exportName: "cartridgeManifest", requiredProperties: ["id", "title", "capabilities"], propertyContracts: [{ property: "id", kind: "string", format: "nonempty" }, { property: "title", kind: "string", format: "nonempty" }, { property: "capabilities", kind: "string_array", minItems: 1 }] }] as never;
     const commentOnly = "export const cartridgeManifest = { cartridgeId: 'starter' }; // id title capabilities";
     await expect(runTutorialStep(objectManifest, "step.game", { readAllowedFile: async () => commentOnly, runAllowedCommand: async () => "", now: () => "2026-07-10T00:00:00Z" })).resolves.toMatchObject({ passed: false, checks: [{ checkId: "manifest.shape", passed: false }] });
     const valid = "export const cartridgeManifest = { id: 'game', title: 'Game', capabilities: ['keyboard'] } as const;";
     await expect(runTutorialStep(objectManifest, "step.game", { readAllowedFile: async () => valid, runAllowedCommand: async () => "", now: () => "2026-07-10T00:00:00Z" })).resolves.toMatchObject({ passed: true, checks: [{ checkId: "manifest.shape", passed: true }] });
+    const wrongTypes = "export const cartridgeManifest = { id: true, title: false, capabilities: { keyboard: true } };";
+    await expect(runTutorialStep(objectManifest, "step.game", { readAllowedFile: async () => wrongTypes, runAllowedCommand: async () => "", now: () => "2026-07-10T00:00:00Z" })).resolves.toMatchObject({ passed: false, checks: [{ checkId: "manifest.shape", passed: false }] });
+    const invalidSyntax = "export const cartridgeManifest = { id: 'game', title: 'Game', capabilities: ['keyboard']";
+    await expect(runTutorialStep(objectManifest, "step.game", { readAllowedFile: async () => invalidSyntax, runAllowedCommand: async () => "", now: () => "2026-07-10T00:00:00Z" })).resolves.toMatchObject({ passed: false, checks: [{ checkId: "manifest.shape", passed: false }] });
   });
 
   it("rejects traversal, undeclared files, commands, and unknown fields", () => {

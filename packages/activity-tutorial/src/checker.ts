@@ -30,17 +30,32 @@ function propertyName(node: ts.PropertyName): string | undefined {
   return undefined;
 }
 
-function hasNonEmptyLiteralValue(expression: ts.Expression): boolean {
+type TypescriptPropertyContract = Extract<TutorialManifest["steps"][number]["checks"][number], { kind: "typescript_object_shape" }>["propertyContracts"][number];
+
+function stringLiteralValue(expression: ts.Expression): string | undefined {
   const value = unwrapExpression(expression);
-  if (ts.isStringLiteral(value) || ts.isNoSubstitutionTemplateLiteral(value)) return value.text.trim().length > 0;
-  if (ts.isNumericLiteral(value) || value.kind === ts.SyntaxKind.TrueKeyword || value.kind === ts.SyntaxKind.FalseKeyword) return true;
-  if (ts.isArrayLiteralExpression(value)) return value.elements.length > 0;
-  if (ts.isObjectLiteralExpression(value)) return value.properties.length > 0;
-  return false;
+  return ts.isStringLiteral(value) || ts.isNoSubstitutionTemplateLiteral(value) ? value.text : undefined;
 }
 
-function verifiesTypescriptObjectShape(source: string, exportName: string, requiredProperties: string[]): boolean {
+function verifiesPropertyContract(expression: ts.Expression, contract: TypescriptPropertyContract): boolean {
+  if (contract.kind === "string") {
+    const value = stringLiteralValue(expression);
+    if (!value?.trim()) return false;
+    if (contract.format === "semver" && !/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(value)) return false;
+    return !contract.allowedValues || contract.allowedValues.includes(value);
+  }
+  const value = unwrapExpression(expression);
+  if (!ts.isArrayLiteralExpression(value) || value.elements.length < contract.minItems) return false;
+  return value.elements.every((element) => {
+    const item = stringLiteralValue(element as ts.Expression);
+    return item !== undefined && item.trim().length > 0;
+  });
+}
+
+function verifiesTypescriptObjectShape(source: string, exportName: string, contracts: TypescriptPropertyContract[]): boolean {
   const file = ts.createSourceFile("tutorial.ts", source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
+  const parseDiagnostics = (file as ts.SourceFile & { parseDiagnostics?: readonly ts.Diagnostic[] }).parseDiagnostics ?? [];
+  if (parseDiagnostics.length > 0) return false;
   for (const statement of file.statements) {
     if (!ts.isVariableStatement(statement) || !statement.modifiers?.some(({ kind }) => kind === ts.SyntaxKind.ExportKeyword)) continue;
     for (const declaration of statement.declarationList.declarations) {
@@ -53,9 +68,9 @@ function verifiesTypescriptObjectShape(source: string, exportName: string, requi
         const name = propertyName(property.name);
         if (name) properties.set(name, property.initializer);
       }
-      return requiredProperties.every((name) => {
-        const value = properties.get(name);
-        return value !== undefined && hasNonEmptyLiteralValue(value);
+      return contracts.every((contract) => {
+        const value = properties.get(contract.property);
+        return value !== undefined && verifiesPropertyContract(value, contract);
       });
     }
   }
@@ -80,7 +95,7 @@ export async function runTutorialStep(manifestInput: unknown, stepId: string, po
     const passed = check.kind === "file_contains"
       ? output.includes(check.expected)
       : check.kind === "typescript_object_shape"
-        ? verifiesTypescriptObjectShape(output, check.exportName, check.requiredProperties)
+        ? verifiesTypescriptObjectShape(output, check.exportName, check.propertyContracts)
         : check.expected === "clean" ? output.trim() === "" : output.split("\n").some((line) => line[0] !== " " && line[0] !== "?" && line.slice(3) === check.expected.slice("staged:".length));
     checks.push({ checkId: check.checkId, passed, evidenceDigest: digest(JSON.stringify({ checkId: check.checkId, passed })) });
   }

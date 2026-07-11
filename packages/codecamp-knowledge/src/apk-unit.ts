@@ -4,6 +4,16 @@ import { z } from "zod";
 import { apkLearningBlueprint } from "./apk-blueprint-data.js";
 
 const REQUIRED_MANIFEST_FIELDS = ["id", "title", "description", "version", "runtimeApiVersion", "inputMode", "requiredAssetSlots", "capabilities"] as const;
+const MANIFEST_PROPERTY_CONTRACTS = [
+  { property: "id", kind: "string", format: "nonempty" },
+  { property: "title", kind: "string", format: "nonempty" },
+  { property: "description", kind: "string", format: "nonempty" },
+  { property: "version", kind: "string", format: "semver" },
+  { property: "runtimeApiVersion", kind: "string", format: "semver" },
+  { property: "inputMode", kind: "string", format: "nonempty", allowedValues: ["vocabulary", "sentence"] },
+  { property: "requiredAssetSlots", kind: "string_array", minItems: 1 },
+  { property: "capabilities", kind: "string_array", minItems: 0 },
+] as const;
 
 /** Versioned Codecamp game-creation unit contract. */
 export const CodecampAPKUnitSchema = z.object({
@@ -69,7 +79,7 @@ export const codecampAPKUnit = CodecampAPKUnitSchema.parse({
       allowedFiles: ["src/cartridge.ts", "src/game-state.ts"],
       allowedCommands: [{ commandId: "git.stage", profile: "git-status-porcelain" }],
       completionCriteria: { requiredStepIds: ["wedo.apk.manifest"] },
-      steps: [{ stepId: "wedo.apk.manifest", order: 1, objectiveId: "codecamp.game-development.skill.apk-contract", instruction: { en: "Complete, commit, and push the cartridge manifest and deterministic educational result.", th: "เติม commit และ push cartridge manifest กับผลการเรียนรู้แบบกำหนดได้" }, checks: [{ checkId: "manifest.shape", kind: "typescript_object_shape" as const, filePath: "src/cartridge.ts", exportName: "cartridgeManifest", requiredProperties: [...REQUIRED_MANIFEST_FIELDS] }, { checkId: "git.clean", kind: "command" as const, commandId: "git.stage", expected: "clean" }], hints: [{ hintId: "hint.boundary", text: { en: "Keep persistence in the host, not the cartridge.", th: "เก็บ persistence ไว้ใน host ไม่ใช่ cartridge" } }], reveals: [{ revealId: "reveal.fields", text: { en: "Declare every RuntimeCartridgeManifest field before staging the file.", th: "ระบุทุก field ของ RuntimeCartridgeManifest ก่อน stage ไฟล์" } }], resourceIds: ["diagram.apk.boundaries"], scaffoldLevel: 2 }],
+      steps: [{ stepId: "wedo.apk.manifest", order: 1, objectiveId: "codecamp.game-development.skill.apk-contract", instruction: { en: "Complete, commit, and push the cartridge manifest and deterministic educational result.", th: "เติม commit และ push cartridge manifest กับผลการเรียนรู้แบบกำหนดได้" }, checks: [{ checkId: "manifest.shape", kind: "typescript_object_shape" as const, filePath: "src/cartridge.ts", exportName: "cartridgeManifest", requiredProperties: [...REQUIRED_MANIFEST_FIELDS], propertyContracts: [...MANIFEST_PROPERTY_CONTRACTS] }, { checkId: "git.clean", kind: "command" as const, commandId: "git.stage", expected: "clean" }], hints: [{ hintId: "hint.boundary", text: { en: "Keep persistence in the host, not the cartridge.", th: "เก็บ persistence ไว้ใน host ไม่ใช่ cartridge" } }], reveals: [{ revealId: "reveal.fields", text: { en: "Declare every RuntimeCartridgeManifest field before staging the file.", th: "ระบุทุก field ของ RuntimeCartridgeManifest ก่อน stage ไฟล์" } }], resourceIds: ["diagram.apk.boundaries"], scaffoldLevel: 2 }],
     },
   },
   youdo: {
