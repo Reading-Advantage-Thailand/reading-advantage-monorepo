@@ -22,6 +22,7 @@ import {
   codecampExerciseRepos,
 } from "../schema/codecamp.js";
 import { getPhaseACurriculumData, getPhaseBCurriculumData, getPhaseCCurriculumData, getPhaseDCurriculumData, type CurriculumLesson, MODULE_REPO_MAP } from "./codecamp-curriculum-data.js";
+import { getCodecampAPKCurriculumData } from "./codecamp-apk-curriculum-data.js";
 
 const seedConnectionString =
   process.env.DIRECT_DATABASE_URL ?? process.env.DATABASE_URL;
@@ -100,7 +101,8 @@ async function seed() {
   const phaseB = getPhaseBCurriculumData();
   const phaseC = getPhaseCCurriculumData();
   const phaseD = getPhaseDCurriculumData();
-  const modules = [...phaseA.modules, ...phaseB.modules, ...phaseC.modules, ...phaseD.modules];
+  const apk = getCodecampAPKCurriculumData();
+  const modules = [...phaseA.modules, ...phaseB.modules, ...phaseC.modules, ...phaseD.modules, ...apk.modules];
   const exerciseRepos = [...phaseA.exerciseRepos, ...phaseB.exerciseRepos, ...phaseC.exerciseRepos, ...phaseD.exerciseRepos];
 
   let newModules = 0;

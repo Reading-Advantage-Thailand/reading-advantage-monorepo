@@ -16,7 +16,7 @@
     },
     "./graph": "./dist/data/code-knowledge-space.json"
   },
-  "files": ["dist", "source-snapshots"],
+  "files": ["dist", "source-snapshots", "fixtures"],
   "scripts": {
     "build": "tsc && node scripts/copy-data.mjs",
     "check-types": "tsc --noEmit && tsc -p tsconfig.test.json",

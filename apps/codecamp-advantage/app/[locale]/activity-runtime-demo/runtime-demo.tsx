@@ -1,7 +1,7 @@
 "use client";
 
-import { createYouTubeMediaController, InteractiveActivityPlayer, type MediaController, type MediaSnapshot, type YouTubeMediaController, type YouTubePlayerPort } from "@reading-advantage/activity-react";
-import { createCodecampAPKActivity } from "@reading-advantage/codecamp-knowledge/apk-unit";
+import { createYouTubeMediaController, InteractiveActivityPlayer, TutorialActivityPanel, type MediaController, type MediaSnapshot, type YouTubeMediaController, type YouTubePlayerPort } from "@reading-advantage/activity-react";
+import { codecampAPKUnit, createCodecampAPKActivity, createCodecampAPKTutorialActivity } from "@reading-advantage/codecamp-knowledge/apk-unit";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 function readStoredNumber(key: string, maximum: number): number {
@@ -157,12 +157,15 @@ class DemoController implements MediaController {
 export function ActivityRuntimeDemo({ locale }: { locale: string }) {
   const thai = locale.toLowerCase().startsWith("th");
   const demoActivity = useMemo(() => createCodecampAPKActivity(locale), [locale]);
+  const tutorialActivity = useMemo(() => createCodecampAPKTutorialActivity(locale), [locale]);
   const controller = useMemo(() => new DemoController(), []);
   const attachYouTubeController = useCallback((nextController: RefreshingMediaController) => controller.attach(nextController), [controller]);
   const [attempts, setAttempts] = useState(0);
   const [initialPosition, setInitialPosition] = useState(0);
   const [position, setPosition] = useState(0);
   const [watchedRangeCount, setWatchedRangeCount] = useState(0);
+  const [tutorialChecks, setTutorialChecks] = useState(0);
+  const [supportUses, setSupportUses] = useState(0);
   const [initialWatchedRanges, setInitialWatchedRanges] = useState<Array<{ startSeconds: number; endSeconds: number }>>([]);
   const [hydrated, setHydrated] = useState(false);
   const resumePositionGuard = useRef<number | null>(null);
@@ -176,6 +179,8 @@ export function ActivityRuntimeDemo({ locale }: { locale: string }) {
     resumePositionGuard.current = storedPosition > 0 ? storedPosition : null;
     setInitialWatchedRanges(storedWatchedRanges);
     setWatchedRangeCount(storedWatchedRanges.length);
+    setTutorialChecks(readStoredNumber("activity-runtime-demo-tutorial-checks", 10_000));
+    setSupportUses(readStoredNumber("activity-runtime-demo-support-uses", 10_000));
     setHydrated(true);
   }, []);
   const savePosition = useCallback((seconds: number) => {
@@ -241,6 +246,35 @@ export function ActivityRuntimeDemo({ locale }: { locale: string }) {
       </div>
       <output aria-live="polite" className="block rounded-md bg-blue-50 p-3 font-medium">{thai ? "จำนวนครั้งที่บันทึกไว้" : "Persisted attempts"}: {attempts}</output>
       <output aria-live="polite" className="block rounded-md bg-blue-50 p-3 font-medium">{thai ? `ตำแหน่งที่บันทึกไว้: ${Math.round(position)} วินาที; ช่วงที่ดู: ${watchedRangeCount}` : `Persisted position: ${Math.round(position)} seconds; watched batches: ${watchedRangeCount}`}</output>
+      <section aria-labelledby="we-do-heading" className="space-y-3">
+        <h2 id="we-do-heading" className="text-2xl font-bold">{thai ? "We Do: เติม APK cartridge manifest" : "We Do: complete an APK cartridge manifest"}</h2>
+        <p>{thai ? "clone repo แบบมีคำแนะนำ แล้วใช้ผลตรวจจาก server เพื่อบันทึกหลักฐาน" : "Clone the guided repository, then use server-verified checks to record evidence."}</p>
+        <TutorialActivityPanel
+          activity={tutorialActivity}
+          locale={locale}
+          renderResource={() => <div role="img" aria-label={thai ? "ขอบเขต React host และ cartridge" : "React host and cartridge boundary"} className="rounded-md bg-blue-50 p-3">React host → APK cartridge → validated result</div>}
+          onSupportUsage={() => {
+            const next = supportUses + 1;
+            globalThis.localStorage?.setItem("activity-runtime-demo-support-uses", String(next));
+            setSupportUses(next);
+          }}
+          onCheck={async () => {
+            const next = tutorialChecks + 1;
+            globalThis.localStorage?.setItem("activity-runtime-demo-tutorial-checks", String(next));
+            setTutorialChecks(next);
+            return { passed: true, checks: codecampAPKUnit.wedo.manifest.steps[0]!.checks.map(({ checkId }) => ({ checkId, passed: true })) };
+          }}
+        />
+        <output aria-live="polite" className="block rounded-md bg-blue-50 p-3 font-medium">{thai ? "การตรวจที่บันทึกไว้" : "Persisted tutorial checks"}: {tutorialChecks}; {thai ? "การใช้ตัวช่วย" : "support uses"}: {supportUses}</output>
+      </section>
+      <section aria-labelledby="you-do-heading" className="space-y-3 rounded-xl border bg-white p-5 shadow-sm">
+        <p className="text-sm font-semibold uppercase tracking-wide text-blue-700">{thai ? "งานอิสระ" : "Independent transfer"}</p>
+        <h2 id="you-do-heading" className="text-2xl font-bold">{thai ? "You Do: สร้างเกมเรียงประโยค" : "You Do: build a sentence-sorting cartridge"}</h2>
+        <p>{codecampAPKUnit.youdo.brief[locale] ?? codecampAPKUnit.youdo.brief.en}</p>
+        <h3 className="font-semibold">{thai ? "เกณฑ์ PR" : "PR rubric"}</h3>
+        <ul className="list-disc space-y-1 pl-6">{codecampAPKUnit.youdo.rubric.dimensions.map((dimension) => <li key={dimension.dimensionId}><strong>{Math.round(dimension.weight * 100)}%</strong> — {dimension.criteria}</li>)}</ul>
+        <p>{thai ? "ตรวจที่จำเป็น" : "Required checks"}: {codecampAPKUnit.youdo.requiredChecks.join(", ")}</p>
+      </section>
     </main>
   );
 }

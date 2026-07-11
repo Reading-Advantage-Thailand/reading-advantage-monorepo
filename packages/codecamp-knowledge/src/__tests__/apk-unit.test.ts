@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { codecampAPKUnit, CodecampAPKUnitSchema, createCodecampAPKActivity } from "../apk-unit.js";
+import { readFile } from "node:fs/promises";
+import { codecampAPKUnit, CodecampAPKUnitSchema, createCodecampAPKActivity, createCodecampAPKTutorialActivity } from "../apk-unit.js";
 
 describe("Codecamp APK game-creation unit", () => {
   it("freezes versioned placement, cohort migration, gradual release, and bilingual activity resources", () => {
@@ -9,6 +10,15 @@ describe("Codecamp APK game-creation unit", () => {
     expect(createCodecampAPKActivity("en").activityId).toBe(codecampAPKUnit.ido.activityId);
     const thai = createCodecampAPKActivity("th");
     expect(thai.resources.find((resource) => resource.kind === "transcript")).toMatchObject({ language: "th" });
+  });
+
+  it("ships distinct guided and independent repository fixtures", async () => {
+    expect(createCodecampAPKTutorialActivity("en").tutorialSteps.map(({ stepId }) => stepId)).toEqual(codecampAPKUnit.wedo.manifest.completionCriteria.requiredStepIds);
+    const guided = await readFile(new URL("../../fixtures/apk-guided/src/cartridge.ts", import.meta.url), "utf8");
+    const independent = await readFile(new URL("../../fixtures/apk-independent/src/cartridge.ts", import.meta.url), "utf8");
+    expect(guided).toContain("TODO: declare runtimeApiVersion");
+    expect(independent).toContain("sentence-sorting");
+    expect(independent).not.toEqual(guided);
   });
 
   it("fails closed on activity drift, unsafe cohort migration, and incomplete rubric weights", () => {
