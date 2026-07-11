@@ -1,0 +1,1 @@
+Track: shared_video_tutorial_runtime_20260710\nTask: Phase S2 Kimi browser remediation\nFinding: A late YouTube refresh overwrote a new seek position with the prior provider time.\nFix: Preserve the requested seek through a bounded provider-settling window and release it once the provider converges.\nVerification: activity-react typecheck, lint, and 16 tests pass.
