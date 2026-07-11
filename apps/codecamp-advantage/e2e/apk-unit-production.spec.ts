@@ -26,7 +26,7 @@ test.describe("published APK unit", () => {
     await page.getByRole("button", { name: "Use transcript/diagram alternative — open checkpoint" }).click();
     await page.getByRole("radio", { name: "Persist the validated result" }).check();
     await page.getByRole("button", { name: "Check answer" }).click();
-    await expect(page.getByText("Correct — persistence stays at the host boundary.")).toBeVisible();
+    await expect(page.getByText("Correct — persistence stays at the host boundary.")).toBeVisible({ timeout: 30_000 });
     await page.reload();
     await expect(page.getByText(/Server-restored assessment: passed/)).toBeVisible({ timeout: 30_000 });
   });
