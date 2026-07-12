@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "status": "fail",
+  "summary": "FR1, FR2, FR4, FR5, reason-code mutations, supervisor wiring, A1-A15 guards, and archive-path portability passed executable checks. Final acceptance is blocked because the production accepted-manifest path validates approval summary fields rather than resolving authentic owner-event provenance, the mandatory reviewer fork_turns=none attestation is absent, and the exact raw OpenCode snapshots were not retained and current exports are malformed JSON, preventing an independent replay of the accepted provenance claims.",
+  "blocking_findings": [
+    {
+      "id": "FA-001",
+      "severity": "Critical",
+      "title": "Production acceptance does not authenticate product-owner event provenance",
+      "evidence": [
+        "measure/evidence_integrity_gates/supervisor_gate.py:189-231",
+        "measure/tests/evidence_integrity_gates/test_supervisor_integration.py:77-101"
+      ],
+      "detail": "_validate_acceptance_bindings accepts an approval object from decision/revocation/candidate/review/gate fields only. It does not resolve approval_event or root_owner_delegation, verify raw-export bytes, verify the exact user-message hash, enforce event chronology, or consume the event once. The production integration control intentionally uses a bare approval object with no provenance and passes. This violates FR3 and the inherited candidate/acceptance ordering contract.",
+      "remediation": "Create a new gate version whose production accepted-manifest validator resolves and validates the owner event through the event adapter, add forged/replayed/earlier-event mutation tests at the supervisor boundary, then obtain fresh independent review and owner approval for the changed gate bytes. The current approval cannot authorize that post-approval gate change."
+    },
+    {
+      "id": "FA-002",
+      "severity": "High",
+      "title": "Mandatory reviewer fork isolation is unproved",
+      "evidence": [
+        "measure/apk-evidence-reconstruction-program.md:43-59",
+        "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/phase4-independent-review.json:138",
+        "measure/tracks/measure_apk_evidence_integrity_gates_20260712/plan.md:68"
+      ],
+      "detail": "The inherited role contract requires each receipt to record fork_turns and requires independent reviewers to use fork_turns=none; missing runtime attestation fails closed. The accepted review records schema-field-absent and the plan nevertheless marks the fork_turns=none task complete. Distinct session and chronology are useful but are not the required context-isolation attestation.",
+      "remediation": "Repeat independent review on a collaboration surface that exposes and attests fork_turns=none, or obtain an explicit product specification amendment before generating a new accepted manifest."
+    },
+    {
+      "id": "FA-003",
+      "severity": "High",
+      "title": "Accepted collaboration provenance is not independently replayable",
+      "evidence": [
+        "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/phase4-independent-review.json:16-17",
+        "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/phase4-owner-approval.json:16-23"
+      ],
+      "detail": "The artifacts retain hashes and byte counts but not the exact raw export snapshots. Fresh opencode export calls for the reviewer, delegated owner, and root owner sessions produced different stream hashes and all three streams failed JSON parsing with unterminated-string errors. Therefore this audit cannot inspect the exact bytes whose hashes underwrite role and owner provenance and cannot accept those summaries as independent proof.",
+      "remediation": "Retain immutable raw exports or a provider-verifiable content-addressed receipt at acceptance time, validate them through the adapter, and regenerate review/approval/accepted artifacts in a new gate version."
+    }
+  ],
+  "nonblocking_findings": [],
+  "evidence": [
+    "FR1: exact Git revision/path/range/hash and fact/interpretation controls passed.",
+    "FR2: independent discovery-origin denominator and reconciliation controls passed.",
+    "FR4: attempts 1-5 and all named shortcut fixtures reject with stable intended reason codes.",
+    "FR5: batch, unsupported claim, denominator, two-cycle, severity, numeric resource, ordering, revocation, pilot, and product-pin lifecycle mutations passed.",
+    "FR6: canonical depends_on, structured marker handling, accepted file hashes, supervisor dry-run, six guards, doctor, and diff checks passed, subject to FA-001 through FA-003.",
+    "A1-A15: all six repository guards passed; focused Python mutations cover A2-A10 lifecycle/acceptance analogues and A11-A15 integration conditions.",
+    "Archive portability: exact candidate, review, and approval bytes moved to measure/acceptance with unchanged SHA-256 values; the isolated no-active-track portability test passed.",
+    "Approved immutable hashes remain candidate 9b43d2893b38ea7c618a320f1a561b61295dd93b13fbf143c408e6c0686d0a44, review 7ee4b9c8d52236eafc96cebbb7bd6eac01b8c3e85f3cb90238f4c70500cfdbe9, and approval 3a91ecd11efe5e190a3360c0bbea0fcc6405462df5ceee07628736217de6cd18."
+  ],
+  "commands": [
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -v -s measure/tests/evidence_integrity_gates -p 'test_*.py' => pass: 121 tests",
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.evidence_integrity_gates.test_acceptance_portability => pass: 1 focused portability test",
+    "bash tests/orchestrator_supervisor_invariants.sh && bash tests/orchestrator_review_execution_truthfulness.sh && bash tests/orchestrator_catalog.sh && bash tests/orchestrator_marker_vocabulary.sh && bash tests/orchestrator_detector_syntax.sh && bash tests/orchestrator_role_receipt_integrity.sh => pass: 6/6",
+    "bash measure/doctor.sh => pass",
+    "production supervisor_gate._validate_manifest(Path('.').resolve()) => pass",
+    "PYTHONDONTWRITEBYTECODE=1 python3 measure/automation-supervisor.py --dry-run --track '^measure_apk_evidence_integrity_gates_20260712$' --limit 1 => pass; all phases complete",
+    "git fsck --no-dangling; git diff --check 5d1e1f92^..210d44e3; git diff --check => pass",
+    "opencode export <review|owner|root> --pure | python3 -m json.tool => fail for all three with unterminated JSON strings"
+  ],
+  "changed_files": [
+    "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/phase4-candidate-gate-manifest.json",
+    "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/phase4-independent-review.json",
+    "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/phase4-owner-approval.json",
+    "measure/evidence-integrity-accepted-gate.json",
+    "measure/tests/evidence_integrity_gates/test_acceptance_portability.py",
+    "measure/tracks/measure_apk_evidence_integrity_gates_20260712/final-acceptance.json",
+    "measure/tracks/measure_apk_evidence_integrity_gates_20260712/phase4-verification.json",
+    "measure/tracks/measure_apk_evidence_integrity_gates_20260712/plan.md"
+  ],
+  "test_strategy_violations": [
+    "Phase 4 requires a real tool export with fork_turns=none; accepted evidence records schema-field-absent.",
+    "Closeout requires independently replayable authentic owner provenance; exact raw snapshots are not retained and current exports are malformed."
+  ],
+  "live_contract_violations": [
+    "The production accepted-manifest validator does not invoke authentic owner-event validation and accepts a provenance-free approval control."
+  ],
+  "prod_wiring_violations": [
+    "Authentic approval validation exists in denominator_roles.validate_owner_approval but is not wired into supervisor_gate._validate_acceptance_bindings."
+  ],
+  "route_parity_violations": [],
+  "retry_recommendation": "retry_implementation",
+  "confidence": "high",
+  "closeout_authorized": false
+}

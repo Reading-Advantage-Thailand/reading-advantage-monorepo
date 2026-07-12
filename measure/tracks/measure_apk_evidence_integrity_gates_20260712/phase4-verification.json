@@ -6,7 +6,8 @@
   "candidate_manifest_sha256": "9b43d2893b38ea7c618a320f1a561b61295dd93b13fbf143c408e6c0686d0a44",
   "independent_review_sha256": "7ee4b9c8d52236eafc96cebbb7bd6eac01b8c3e85f3cb90238f4c70500cfdbe9",
   "owner_approval_sha256": "3a91ecd11efe5e190a3360c0bbea0fcc6405462df5ceee07628736217de6cd18",
-  "accepted_manifest_sha256": "d08dc7936eefe38e8742baf31ffa5dcc8f922f13f6e0ef6632f6c391b4605ff8",
+  "accepted_manifest_sha256_at_publication": "d08dc7936eefe38e8742baf31ffa5dcc8f922f13f6e0ef6632f6c391b4605ff8",
+  "accepted_manifest_sha256_after_portable_path_update": "8ae00745d3906cd69225bf10ca5a94b72af49ee1a00858a995a69e653da27e02",
   "review_findings": {
     "unresolved_critical": 0,
     "unresolved_high": 0,
@@ -49,12 +50,13 @@
   ],
   "manual_verification": {
     "approved": true,
-    "approval_artifact": "measure/tracks/measure_apk_evidence_integrity_gates_20260712/phase4-owner-approval.json",
+    "approval_artifact": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/phase4-owner-approval.json",
     "prompt_message_id": "msg_f56fc6a6c001Kj1tD8aoBXAbtu",
     "prompt_message_sha256": "e7221b6630497b70b769c99010293e47a3c88a42097ce1f7318c69b14ddacd9a"
   },
   "notes": [
     "Candidate and independent-review files were not modified.",
+    "Final acceptance relocated the exact candidate, review, and approval bytes to measure/acceptance so their bindings survive active-track archival; their approved SHA-256 values are unchanged.",
     "The first diagnostic call to the private _validate_manifest helper supplied a relative repository path and therefore failed its canonical-path check; the corrected resolved-path invocation passed. Public validate_supervisor_completion resolves the repository path itself, and all 10 supervisor integration cases passed.",
     "Unrelated dirty work was preserved and excluded from the acceptance commit."
   ],
