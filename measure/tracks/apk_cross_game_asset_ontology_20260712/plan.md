@@ -32,15 +32,15 @@
 
 ## Phase 2: Recover mechanic and learning blueprints [checkpoint: pending]
 
-- [ ] Task: Read each raw game component, deterministic logic/config, route, test,
+- [x] Task: Read each raw game component, deterministic logic/config, route, test,
       and strongest historical evidence
-- [ ] Task: Produce one blueprint per game covering learning loop, controls, world,
+- [x] Task: Produce one blueprint per game covering learning loop, controls, world,
       camera, actors, progression, scoring, difficulty, terminal state, and identity
-- [ ] Task: Classify retained behavior, allowed Phaser-native redesign, and
+- [x] Task: Classify retained behavior, allowed Phaser-native redesign, and
       accidental renderer assumptions
-- [ ] Task: Extract deterministic transitions and counterexamples for future Red tests
-- [ ] Task: Cross-review every blueprint against current implementation evidence
-- [ ] Task: Measure - User Manual Verification 'Phase 2' (Protocol in workflow.md)
+- [x] Task: Extract deterministic transitions and counterexamples for future Red tests
+- [x] Task: Cross-review every blueprint against current implementation evidence
+- [~] Task: Measure - User Manual Verification 'Phase 2' (Protocol in workflow.md)
 
 ## Phase 3: Baseline developer effort and repeated capabilities [checkpoint: pending]
 

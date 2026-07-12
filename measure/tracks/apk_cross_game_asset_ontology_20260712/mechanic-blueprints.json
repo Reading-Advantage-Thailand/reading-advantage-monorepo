@@ -1,0 +1,1058 @@
+[
+  {
+    "id": "mechanic:castle-defense:core",
+    "gameId": "game:castle-defense",
+    "sceneIds": ["scene:castle-defense:main"],
+    "fantasy": "Build a word-powered castle defense",
+    "learningLoop": "collect or place sentence words in order to build towers and repel waves",
+    "worldAndControls": "tap, drag, or select tower slots in a defended battlefield",
+    "terminalState": "victory after the final wave; loss when the protected castle reaches zero health",
+    "retain": [
+      "educational input mode and ordered/correct-answer semantics",
+      "distinctive player fantasy and terminal loop",
+      "GameResults-compatible scoring evidence"
+    ],
+    "redesign": [
+      "legacy React/Konva/R3F renderer assumptions",
+      "fixed portrait coordinates and CSS breakpoint scaling",
+      "client-owned persistence and XP authority"
+    ],
+    "transitions": [
+      "ready -> active only after explicit start",
+      "correct action advances exactly one deterministic content step",
+      "incorrect action records one attempt without skipping required content",
+      "terminal state emits completion exactly once"
+    ],
+    "counterexamples": [
+      "resize must not reset content progress or duplicate completion",
+      "duplicate labels must not share unstable identity",
+      "wrong or out-of-order interaction must not advance progression"
+    ],
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:source:components",
+      "evidence:source:logic",
+      "evidence:source:reading-copies"
+    ],
+    "confidence": "high"
+  },
+  {
+    "id": "mechanic:dragon-rider:core",
+    "gameId": "game:dragon-rider",
+    "sceneIds": ["scene:dragon-rider:main"],
+    "fantasy": "Ride a dragon while protecting a village",
+    "learningLoop": "collect the correct vocabulary target while avoiding hazards",
+    "worldAndControls": "directional flight through a scrolling village with camera and indicators",
+    "terminalState": "complete the content set; lose health on wrong targets or hazards",
+    "retain": [
+      "educational input mode and ordered/correct-answer semantics",
+      "distinctive player fantasy and terminal loop",
+      "GameResults-compatible scoring evidence"
+    ],
+    "redesign": [
+      "legacy React/Konva/R3F renderer assumptions",
+      "fixed portrait coordinates and CSS breakpoint scaling",
+      "client-owned persistence and XP authority"
+    ],
+    "transitions": [
+      "ready -> active only after explicit start",
+      "correct action advances exactly one deterministic content step",
+      "incorrect action records one attempt without skipping required content",
+      "terminal state emits completion exactly once"
+    ],
+    "counterexamples": [
+      "resize must not reset content progress or duplicate completion",
+      "duplicate labels must not share unstable identity",
+      "wrong or out-of-order interaction must not advance progression"
+    ],
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:measure:roadmap",
+      "evidence:source:reading-copies",
+      "evidence:history:catalog"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "id": "mechanic:magic-defense:core",
+    "gameId": "game:magic-defense",
+    "sceneIds": ["scene:magic-defense:main"],
+    "fantasy": "Cast typed spells to protect castles",
+    "learningLoop": "type each falling threat's translation before impact",
+    "worldAndControls": "keyboard-first defense lanes with touch-accessible text input",
+    "terminalState": "clear all waves or lose when protected castles fall",
+    "retain": [
+      "educational input mode and ordered/correct-answer semantics",
+      "distinctive player fantasy and terminal loop",
+      "GameResults-compatible scoring evidence"
+    ],
+    "redesign": [
+      "legacy React/Konva/R3F renderer assumptions",
+      "fixed portrait coordinates and CSS breakpoint scaling",
+      "client-owned persistence and XP authority"
+    ],
+    "transitions": [
+      "ready -> active only after explicit start",
+      "correct action advances exactly one deterministic content step",
+      "incorrect action records one attempt without skipping required content",
+      "terminal state emits completion exactly once"
+    ],
+    "counterexamples": [
+      "resize must not reset content progress or duplicate completion",
+      "duplicate labels must not share unstable identity",
+      "wrong or out-of-order interaction must not advance progression"
+    ],
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:source:components",
+      "evidence:source:logic",
+      "evidence:source:reading-copies",
+      "evidence:history:catalog"
+    ],
+    "confidence": "high"
+  },
+  {
+    "id": "mechanic:rpg-battle:core",
+    "gameId": "game:rpg-battle",
+    "sceneIds": ["scene:rpg-battle:main"],
+    "fantasy": "Win a fantasy duel through vocabulary mastery",
+    "learningLoop": "choose an action then type the requested translation",
+    "worldAndControls": "turn-based menu and battle arena",
+    "terminalState": "defeat the opponent or reach zero player health",
+    "retain": [
+      "educational input mode and ordered/correct-answer semantics",
+      "distinctive player fantasy and terminal loop",
+      "GameResults-compatible scoring evidence"
+    ],
+    "redesign": [
+      "legacy React/Konva/R3F renderer assumptions",
+      "fixed portrait coordinates and CSS breakpoint scaling",
+      "client-owned persistence and XP authority"
+    ],
+    "transitions": [
+      "ready -> active only after explicit start",
+      "correct action advances exactly one deterministic content step",
+      "incorrect action records one attempt without skipping required content",
+      "terminal state emits completion exactly once"
+    ],
+    "counterexamples": [
+      "resize must not reset content progress or duplicate completion",
+      "duplicate labels must not share unstable identity",
+      "wrong or out-of-order interaction must not advance progression"
+    ],
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:source:components",
+      "evidence:source:logic",
+      "evidence:source:reading-copies"
+    ],
+    "confidence": "high"
+  },
+  {
+    "id": "mechanic:dragon-flight:core",
+    "gameId": "game:dragon-flight",
+    "sceneIds": ["scene:dragon-flight:main"],
+    "fantasy": "Grow a dragon flight through correct gates",
+    "learningLoop": "steer through the gate matching the vocabulary translation",
+    "worldAndControls": "horizontal steering in a forward-scrolling sky",
+    "terminalState": "complete seeded rounds; wrong gates reduce growth or health",
+    "retain": [
+      "educational input mode and ordered/correct-answer semantics",
+      "distinctive player fantasy and terminal loop",
+      "GameResults-compatible scoring evidence"
+    ],
+    "redesign": [
+      "legacy React/Konva/R3F renderer assumptions",
+      "fixed portrait coordinates and CSS breakpoint scaling",
+      "client-owned persistence and XP authority"
+    ],
+    "transitions": [
+      "ready -> active only after explicit start",
+      "correct action advances exactly one deterministic content step",
+      "incorrect action records one attempt without skipping required content",
+      "terminal state emits completion exactly once"
+    ],
+    "counterexamples": [
+      "resize must not reset content progress or duplicate completion",
+      "duplicate labels must not share unstable identity",
+      "wrong or out-of-order interaction must not advance progression"
+    ],
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:source:components",
+      "evidence:source:logic",
+      "evidence:source:reading-copies",
+      "evidence:history:catalog"
+    ],
+    "confidence": "high"
+  },
+  {
+    "id": "mechanic:wizard-vs-zombie:core",
+    "gameId": "game:wizard-vs-zombie",
+    "sceneIds": ["scene:wizard-vs-zombie:main"],
+    "fantasy": "Survive a non-graphic magical horde",
+    "learningLoop": "collect the correct vocabulary orb while evading enemies",
+    "worldAndControls": "free-roam arena movement with camera and indicators",
+    "terminalState": "finish the vocabulary set or lose all health",
+    "retain": [
+      "educational input mode and ordered/correct-answer semantics",
+      "distinctive player fantasy and terminal loop",
+      "GameResults-compatible scoring evidence"
+    ],
+    "redesign": [
+      "legacy React/Konva/R3F renderer assumptions",
+      "fixed portrait coordinates and CSS breakpoint scaling",
+      "client-owned persistence and XP authority"
+    ],
+    "transitions": [
+      "ready -> active only after explicit start",
+      "correct action advances exactly one deterministic content step",
+      "incorrect action records one attempt without skipping required content",
+      "terminal state emits completion exactly once"
+    ],
+    "counterexamples": [
+      "resize must not reset content progress or duplicate completion",
+      "duplicate labels must not share unstable identity",
+      "wrong or out-of-order interaction must not advance progression"
+    ],
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:source:components",
+      "evidence:source:logic",
+      "evidence:source:reading-copies"
+    ],
+    "confidence": "high"
+  },
+  {
+    "id": "mechanic:enchanted-library:core",
+    "gameId": "game:enchanted-library",
+    "sceneIds": ["scene:enchanted-library:main"],
+    "fantasy": "Explore an enchanted archive for magic books",
+    "learningLoop": "collect the book matching the current vocabulary prompt while dodging spirits",
+    "worldAndControls": "free-roam library with directional controls",
+    "terminalState": "complete the vocabulary set or exhaust health/time",
+    "retain": [
+      "educational input mode and ordered/correct-answer semantics",
+      "distinctive player fantasy and terminal loop",
+      "GameResults-compatible scoring evidence"
+    ],
+    "redesign": [
+      "legacy React/Konva/R3F renderer assumptions",
+      "fixed portrait coordinates and CSS breakpoint scaling",
+      "client-owned persistence and XP authority"
+    ],
+    "transitions": [
+      "ready -> active only after explicit start",
+      "correct action advances exactly one deterministic content step",
+      "incorrect action records one attempt without skipping required content",
+      "terminal state emits completion exactly once"
+    ],
+    "counterexamples": [
+      "resize must not reset content progress or duplicate completion",
+      "duplicate labels must not share unstable identity",
+      "wrong or out-of-order interaction must not advance progression"
+    ],
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:source:components",
+      "evidence:source:logic",
+      "evidence:source:reading-copies"
+    ],
+    "confidence": "high"
+  },
+  {
+    "id": "mechanic:rune-match:core",
+    "gameId": "game:rune-match",
+    "sceneIds": ["scene:rune-match:main"],
+    "fantasy": "Defeat monsters by matching language runes",
+    "learningLoop": "select matching term and translation runes",
+    "worldAndControls": "pointer/touch puzzle board with combat feedback",
+    "terminalState": "clear the encounter set; mistakes consume attempts or enemy turns",
+    "retain": [
+      "educational input mode and ordered/correct-answer semantics",
+      "distinctive player fantasy and terminal loop",
+      "GameResults-compatible scoring evidence"
+    ],
+    "redesign": [
+      "legacy React/Konva/R3F renderer assumptions",
+      "fixed portrait coordinates and CSS breakpoint scaling",
+      "client-owned persistence and XP authority"
+    ],
+    "transitions": [
+      "ready -> active only after explicit start",
+      "correct action advances exactly one deterministic content step",
+      "incorrect action records one attempt without skipping required content",
+      "terminal state emits completion exactly once"
+    ],
+    "counterexamples": [
+      "resize must not reset content progress or duplicate completion",
+      "duplicate labels must not share unstable identity",
+      "wrong or out-of-order interaction must not advance progression"
+    ],
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:source:components",
+      "evidence:source:logic",
+      "evidence:source:reading-copies"
+    ],
+    "confidence": "high"
+  },
+  {
+    "id": "mechanic:alchemists-synthesis:core",
+    "gameId": "game:alchemists-synthesis",
+    "sceneIds": ["scene:alchemists-synthesis:main"],
+    "fantasy": "Synthesize spells in an alchemy workshop",
+    "learningLoop": "match and merge vocabulary ingredients into valid recipes",
+    "worldAndControls": "drag/tap workstation with deterministic board state",
+    "terminalState": "complete recipes before attempts or time expire",
+    "retain": [
+      "educational input mode and ordered/correct-answer semantics",
+      "distinctive player fantasy and terminal loop",
+      "GameResults-compatible scoring evidence"
+    ],
+    "redesign": [
+      "legacy React/Konva/R3F renderer assumptions",
+      "fixed portrait coordinates and CSS breakpoint scaling",
+      "client-owned persistence and XP authority"
+    ],
+    "transitions": [
+      "ready -> active only after explicit start",
+      "correct action advances exactly one deterministic content step",
+      "incorrect action records one attempt without skipping required content",
+      "terminal state emits completion exactly once"
+    ],
+    "counterexamples": [
+      "resize must not reset content progress or duplicate completion",
+      "duplicate labels must not share unstable identity",
+      "wrong or out-of-order interaction must not advance progression"
+    ],
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:source:components",
+      "evidence:source:logic"
+    ],
+    "confidence": "high"
+  },
+  {
+    "id": "mechanic:potion-rush:core",
+    "gameId": "game:potion-rush",
+    "sceneIds": ["scene:potion-rush:main"],
+    "fantasy": "Serve a busy magical potion shop",
+    "learningLoop": "collect conveyor ingredients in sentence order for each customer",
+    "worldAndControls": "tap/drag conveyor and cauldron stations",
+    "terminalState": "serve the order queue before patience/time expires",
+    "retain": [
+      "educational input mode and ordered/correct-answer semantics",
+      "distinctive player fantasy and terminal loop",
+      "GameResults-compatible scoring evidence"
+    ],
+    "redesign": [
+      "legacy React/Konva/R3F renderer assumptions",
+      "fixed portrait coordinates and CSS breakpoint scaling",
+      "client-owned persistence and XP authority"
+    ],
+    "transitions": [
+      "ready -> active only after explicit start",
+      "correct action advances exactly one deterministic content step",
+      "incorrect action records one attempt without skipping required content",
+      "terminal state emits completion exactly once"
+    ],
+    "counterexamples": [
+      "resize must not reset content progress or duplicate completion",
+      "duplicate labels must not share unstable identity",
+      "wrong or out-of-order interaction must not advance progression"
+    ],
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:source:components",
+      "evidence:source:logic",
+      "evidence:source:reading-copies"
+    ],
+    "confidence": "high"
+  },
+  {
+    "id": "mechanic:dungeon-liberator:core",
+    "gameId": "game:dungeon-liberator",
+    "sceneIds": ["scene:dungeon-liberator:main"],
+    "fantasy": "Rescue prisoners and escape a dungeon",
+    "learningLoop": "collect word-bearing prisoners in sentence order",
+    "worldAndControls": "directional dungeon navigation with camera, collision, and exit",
+    "terminalState": "open the exit after the sentence is complete or lose to hazards/time",
+    "retain": [
+      "educational input mode and ordered/correct-answer semantics",
+      "distinctive player fantasy and terminal loop",
+      "GameResults-compatible scoring evidence"
+    ],
+    "redesign": [
+      "legacy React/Konva/R3F renderer assumptions",
+      "fixed portrait coordinates and CSS breakpoint scaling",
+      "client-owned persistence and XP authority"
+    ],
+    "transitions": [
+      "ready -> active only after explicit start",
+      "correct action advances exactly one deterministic content step",
+      "incorrect action records one attempt without skipping required content",
+      "terminal state emits completion exactly once"
+    ],
+    "counterexamples": [
+      "resize must not reset content progress or duplicate completion",
+      "duplicate labels must not share unstable identity",
+      "wrong or out-of-order interaction must not advance progression"
+    ],
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:source:components",
+      "evidence:source:logic",
+      "evidence:history:catalog"
+    ],
+    "confidence": "high"
+  },
+  {
+    "id": "mechanic:spellweavers-run:core",
+    "gameId": "game:spellweavers-run",
+    "sceneIds": ["scene:spellweavers-run:main"],
+    "fantasy": "Weave a sentence while sprinting through a forest",
+    "learningLoop": "change lanes to collect word orbs in order",
+    "worldAndControls": "three-lane runner using keys or lane taps",
+    "terminalState": "finish the sentence/course; wrong orbs break the sequence or cost health",
+    "retain": [
+      "educational input mode and ordered/correct-answer semantics",
+      "distinctive player fantasy and terminal loop",
+      "GameResults-compatible scoring evidence"
+    ],
+    "redesign": [
+      "legacy React/Konva/R3F renderer assumptions",
+      "fixed portrait coordinates and CSS breakpoint scaling",
+      "client-owned persistence and XP authority"
+    ],
+    "transitions": [
+      "ready -> active only after explicit start",
+      "correct action advances exactly one deterministic content step",
+      "incorrect action records one attempt without skipping required content",
+      "terminal state emits completion exactly once"
+    ],
+    "counterexamples": [
+      "resize must not reset content progress or duplicate completion",
+      "duplicate labels must not share unstable identity",
+      "wrong or out-of-order interaction must not advance progression"
+    ],
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:measure:roadmap",
+      "evidence:history:catalog"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "id": "mechanic:shadow-gate-dungeon:core",
+    "gameId": "game:shadow-gate-dungeon",
+    "sceneIds": ["scene:shadow-gate-dungeon:main"],
+    "fantasy": "Escape a shadow creature with ordered crystals",
+    "learningLoop": "collect sentence crystals in order while remaining outside detection",
+    "worldAndControls": "free-roam dungeon with stealth radius and indicators",
+    "terminalState": "complete the sentence and escape or lose health/time to the pursuer",
+    "retain": [
+      "educational input mode and ordered/correct-answer semantics",
+      "distinctive player fantasy and terminal loop",
+      "GameResults-compatible scoring evidence"
+    ],
+    "redesign": [
+      "legacy React/Konva/R3F renderer assumptions",
+      "fixed portrait coordinates and CSS breakpoint scaling",
+      "client-owned persistence and XP authority"
+    ],
+    "transitions": [
+      "ready -> active only after explicit start",
+      "correct action advances exactly one deterministic content step",
+      "incorrect action records one attempt without skipping required content",
+      "terminal state emits completion exactly once"
+    ],
+    "counterexamples": [
+      "resize must not reset content progress or duplicate completion",
+      "duplicate labels must not share unstable identity",
+      "wrong or out-of-order interaction must not advance progression"
+    ],
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:source:components",
+      "evidence:source:logic"
+    ],
+    "confidence": "high"
+  },
+  {
+    "id": "mechanic:rune-forge-chamber:core",
+    "gameId": "game:rune-forge-chamber",
+    "sceneIds": ["scene:rune-forge-chamber:main"],
+    "fantasy": "Forge a rune before the chamber cools",
+    "learningLoop": "tap word circles in sentence order",
+    "worldAndControls": "radial pointer/touch sequencing around a forge",
+    "terminalState": "complete the ordered sequence before the forge timer expires",
+    "retain": [
+      "educational input mode and ordered/correct-answer semantics",
+      "distinctive player fantasy and terminal loop",
+      "GameResults-compatible scoring evidence"
+    ],
+    "redesign": [
+      "legacy React/Konva/R3F renderer assumptions",
+      "fixed portrait coordinates and CSS breakpoint scaling",
+      "client-owned persistence and XP authority"
+    ],
+    "transitions": [
+      "ready -> active only after explicit start",
+      "correct action advances exactly one deterministic content step",
+      "incorrect action records one attempt without skipping required content",
+      "terminal state emits completion exactly once"
+    ],
+    "counterexamples": [
+      "resize must not reset content progress or duplicate completion",
+      "duplicate labels must not share unstable identity",
+      "wrong or out-of-order interaction must not advance progression"
+    ],
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:source:components",
+      "evidence:source:logic"
+    ],
+    "confidence": "high"
+  },
+  {
+    "id": "mechanic:village-guardian:core",
+    "gameId": "game:village-guardian",
+    "sceneIds": ["scene:village-guardian:main"],
+    "fantasy": "Rescue villagers and escort them to safety",
+    "learningLoop": "reach word-bearing villagers in sentence order",
+    "worldAndControls": "directional village arena with follower and safe-zone state",
+    "terminalState": "escort the full ordered group or lose to pursuer/time",
+    "retain": [
+      "educational input mode and ordered/correct-answer semantics",
+      "distinctive player fantasy and terminal loop",
+      "GameResults-compatible scoring evidence"
+    ],
+    "redesign": [
+      "legacy React/Konva/R3F renderer assumptions",
+      "fixed portrait coordinates and CSS breakpoint scaling",
+      "client-owned persistence and XP authority"
+    ],
+    "transitions": [
+      "ready -> active only after explicit start",
+      "correct action advances exactly one deterministic content step",
+      "incorrect action records one attempt without skipping required content",
+      "terminal state emits completion exactly once"
+    ],
+    "counterexamples": [
+      "resize must not reset content progress or duplicate completion",
+      "duplicate labels must not share unstable identity",
+      "wrong or out-of-order interaction must not advance progression"
+    ],
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:source:components",
+      "evidence:source:logic"
+    ],
+    "confidence": "high"
+  },
+  {
+    "id": "mechanic:labyrinth-goblin-king:core",
+    "gameId": "game:labyrinth-goblin-king",
+    "sceneIds": ["scene:labyrinth-goblin-king:main"],
+    "fantasy": "Become a paladin inside a goblin maze",
+    "learningLoop": "collect ordered word orbs then confront goblins",
+    "worldAndControls": "maze navigation with camera, collisions, and empowered-state transition",
+    "terminalState": "complete the sentence and final encounter or lose health/time",
+    "retain": [
+      "educational input mode and ordered/correct-answer semantics",
+      "distinctive player fantasy and terminal loop",
+      "GameResults-compatible scoring evidence"
+    ],
+    "redesign": [
+      "legacy React/Konva/R3F renderer assumptions",
+      "fixed portrait coordinates and CSS breakpoint scaling",
+      "client-owned persistence and XP authority"
+    ],
+    "transitions": [
+      "ready -> active only after explicit start",
+      "correct action advances exactly one deterministic content step",
+      "incorrect action records one attempt without skipping required content",
+      "terminal state emits completion exactly once"
+    ],
+    "counterexamples": [
+      "resize must not reset content progress or duplicate completion",
+      "duplicate labels must not share unstable identity",
+      "wrong or out-of-order interaction must not advance progression"
+    ],
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:source:components",
+      "evidence:source:logic"
+    ],
+    "confidence": "high"
+  },
+  {
+    "id": "mechanic:archers-revenge:core",
+    "gameId": "game:archers-revenge",
+    "sceneIds": ["scene:archers-revenge:main"],
+    "fantasy": "Become a precision archer",
+    "learningLoop": "shoot enemies matching the target translation and spare shielded decoys",
+    "worldAndControls": "pointer/touch aiming and projectile combat",
+    "terminalState": "clear target waves; incorrect or shielded hits consume attempts",
+    "retain": [
+      "educational input mode and ordered/correct-answer semantics",
+      "distinctive player fantasy and terminal loop",
+      "GameResults-compatible scoring evidence"
+    ],
+    "redesign": [
+      "legacy React/Konva/R3F renderer assumptions",
+      "fixed portrait coordinates and CSS breakpoint scaling",
+      "client-owned persistence and XP authority"
+    ],
+    "transitions": [
+      "ready -> active only after explicit start",
+      "correct action advances exactly one deterministic content step",
+      "incorrect action records one attempt without skipping required content",
+      "terminal state emits completion exactly once"
+    ],
+    "counterexamples": [
+      "resize must not reset content progress or duplicate completion",
+      "duplicate labels must not share unstable identity",
+      "wrong or out-of-order interaction must not advance progression"
+    ],
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:measure:roadmap",
+      "evidence:history:catalog"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "id": "mechanic:storm-castle-tower:core",
+    "gameId": "game:storm-castle-tower",
+    "sceneIds": ["scene:storm-castle-tower:main"],
+    "fantasy": "Scale a besieged castle tower",
+    "learningLoop": "collect sentence words in order while climbing",
+    "worldAndControls": "platform movement with vertical camera and falling hazards",
+    "terminalState": "reach the summit with a complete sentence or lose health/time",
+    "retain": [
+      "educational input mode and ordered/correct-answer semantics",
+      "distinctive player fantasy and terminal loop",
+      "GameResults-compatible scoring evidence"
+    ],
+    "redesign": [
+      "legacy React/Konva/R3F renderer assumptions",
+      "fixed portrait coordinates and CSS breakpoint scaling",
+      "client-owned persistence and XP authority"
+    ],
+    "transitions": [
+      "ready -> active only after explicit start",
+      "correct action advances exactly one deterministic content step",
+      "incorrect action records one attempt without skipping required content",
+      "terminal state emits completion exactly once"
+    ],
+    "counterexamples": [
+      "resize must not reset content progress or duplicate completion",
+      "duplicate labels must not share unstable identity",
+      "wrong or out-of-order interaction must not advance progression"
+    ],
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:measure:roadmap",
+      "evidence:history:catalog"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "id": "mechanic:griffin-sky-joust:core",
+    "gameId": "game:griffin-sky-joust",
+    "sceneIds": ["scene:griffin-sky-joust:main"],
+    "fantasy": "Joust through the sky on a griffin",
+    "learningLoop": "strike enemies carrying the next sentence word",
+    "worldAndControls": "tap/key flap with horizontal drift and aerial collision",
+    "terminalState": "complete the ordered targets or lose aerial health",
+    "retain": [
+      "educational input mode and ordered/correct-answer semantics",
+      "distinctive player fantasy and terminal loop",
+      "GameResults-compatible scoring evidence"
+    ],
+    "redesign": [
+      "legacy React/Konva/R3F renderer assumptions",
+      "fixed portrait coordinates and CSS breakpoint scaling",
+      "client-owned persistence and XP authority"
+    ],
+    "transitions": [
+      "ready -> active only after explicit start",
+      "correct action advances exactly one deterministic content step",
+      "incorrect action records one attempt without skipping required content",
+      "terminal state emits completion exactly once"
+    ],
+    "counterexamples": [
+      "resize must not reset content progress or duplicate completion",
+      "duplicate labels must not share unstable identity",
+      "wrong or out-of-order interaction must not advance progression"
+    ],
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:measure:roadmap",
+      "evidence:history:catalog"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "id": "mechanic:realm-carver:core",
+    "gameId": "game:realm-carver",
+    "sceneIds": ["scene:realm-carver:main"],
+    "fantasy": "Carve safe territory through wild magic",
+    "learningLoop": "capture word beacons in sentence order",
+    "worldAndControls": "directional movement over a territory grid with camera/minimap",
+    "terminalState": "complete the ordered territory path or lose to corruption/time",
+    "retain": [
+      "educational input mode and ordered/correct-answer semantics",
+      "distinctive player fantasy and terminal loop",
+      "GameResults-compatible scoring evidence"
+    ],
+    "redesign": [
+      "legacy React/Konva/R3F renderer assumptions",
+      "fixed portrait coordinates and CSS breakpoint scaling",
+      "client-owned persistence and XP authority"
+    ],
+    "transitions": [
+      "ready -> active only after explicit start",
+      "correct action advances exactly one deterministic content step",
+      "incorrect action records one attempt without skipping required content",
+      "terminal state emits completion exactly once"
+    ],
+    "counterexamples": [
+      "resize must not reset content progress or duplicate completion",
+      "duplicate labels must not share unstable identity",
+      "wrong or out-of-order interaction must not advance progression"
+    ],
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:measure:roadmap",
+      "evidence:history:catalog"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "id": "mechanic:paladins-twin-soul:core",
+    "gameId": "game:paladins-twin-soul",
+    "sceneIds": ["scene:paladins-twin-soul:main"],
+    "fantasy": "Reunite and strengthen paired paladins",
+    "learningLoop": "match vocabulary magic while surviving arena waves",
+    "worldAndControls": "move and aim/fire with keyboard or virtual stick",
+    "terminalState": "survive all waves with the pair intact or lose shared health",
+    "retain": [
+      "educational input mode and ordered/correct-answer semantics",
+      "distinctive player fantasy and terminal loop",
+      "GameResults-compatible scoring evidence"
+    ],
+    "redesign": [
+      "legacy React/Konva/R3F renderer assumptions",
+      "fixed portrait coordinates and CSS breakpoint scaling",
+      "client-owned persistence and XP authority"
+    ],
+    "transitions": [
+      "ready -> active only after explicit start",
+      "correct action advances exactly one deterministic content step",
+      "incorrect action records one attempt without skipping required content",
+      "terminal state emits completion exactly once"
+    ],
+    "counterexamples": [
+      "resize must not reset content progress or duplicate completion",
+      "duplicate labels must not share unstable identity",
+      "wrong or out-of-order interaction must not advance progression"
+    ],
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:measure:roadmap",
+      "evidence:history:catalog"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "id": "mechanic:griffin-riders-escape:core",
+    "gameId": "game:griffin-riders-escape",
+    "sceneIds": ["scene:griffin-riders-escape:main"],
+    "fantasy": "Escape through sentence gates on a griffin",
+    "learningLoop": "fly through ordered word gates while avoiding obstacles",
+    "worldAndControls": "vertical/lane steering in a scrolling sky",
+    "terminalState": "complete the sentence flight or lose collision health",
+    "retain": [
+      "educational input mode and ordered/correct-answer semantics",
+      "distinctive player fantasy and terminal loop",
+      "GameResults-compatible scoring evidence"
+    ],
+    "redesign": [
+      "legacy React/Konva/R3F renderer assumptions",
+      "fixed portrait coordinates and CSS breakpoint scaling",
+      "client-owned persistence and XP authority"
+    ],
+    "transitions": [
+      "ready -> active only after explicit start",
+      "correct action advances exactly one deterministic content step",
+      "incorrect action records one attempt without skipping required content",
+      "terminal state emits completion exactly once"
+    ],
+    "counterexamples": [
+      "resize must not reset content progress or duplicate completion",
+      "duplicate labels must not share unstable identity",
+      "wrong or out-of-order interaction must not advance progression"
+    ],
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:measure:roadmap",
+      "evidence:history:catalog"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "id": "mechanic:astral-mage:core",
+    "gameId": "game:astral-mage",
+    "sceneIds": ["scene:astral-mage:main"],
+    "fantasy": "Restore an astral ritual by shooting crystals",
+    "learningLoop": "shoot word crystals in sentence order",
+    "worldAndControls": "free movement plus directional aim/fire in a bounded void",
+    "terminalState": "complete the ritual sequence or lose health/time",
+    "retain": [
+      "educational input mode and ordered/correct-answer semantics",
+      "distinctive player fantasy and terminal loop",
+      "GameResults-compatible scoring evidence"
+    ],
+    "redesign": [
+      "legacy React/Konva/R3F renderer assumptions",
+      "fixed portrait coordinates and CSS breakpoint scaling",
+      "client-owned persistence and XP authority"
+    ],
+    "transitions": [
+      "ready -> active only after explicit start",
+      "correct action advances exactly one deterministic content step",
+      "incorrect action records one attempt without skipping required content",
+      "terminal state emits completion exactly once"
+    ],
+    "counterexamples": [
+      "resize must not reset content progress or duplicate completion",
+      "duplicate labels must not share unstable identity",
+      "wrong or out-of-order interaction must not advance progression"
+    ],
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:measure:roadmap",
+      "evidence:history:catalog"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "id": "mechanic:devourer-slime:core",
+    "gameId": "game:devourer-slime",
+    "sceneIds": ["scene:devourer-slime:main"],
+    "fantasy": "Grow from tiny slime to knight-devourer",
+    "learningLoop": "eat words in sentence order to unlock growth tiers",
+    "worldAndControls": "directional forest-arena movement and tiered collisions",
+    "terminalState": "reach the final size and defeat enemies or lose health/time",
+    "retain": [
+      "educational input mode and ordered/correct-answer semantics",
+      "distinctive player fantasy and terminal loop",
+      "GameResults-compatible scoring evidence"
+    ],
+    "redesign": [
+      "legacy React/Konva/R3F renderer assumptions",
+      "fixed portrait coordinates and CSS breakpoint scaling",
+      "client-owned persistence and XP authority"
+    ],
+    "transitions": [
+      "ready -> active only after explicit start",
+      "correct action advances exactly one deterministic content step",
+      "incorrect action records one attempt without skipping required content",
+      "terminal state emits completion exactly once"
+    ],
+    "counterexamples": [
+      "resize must not reset content progress or duplicate completion",
+      "duplicate labels must not share unstable identity",
+      "wrong or out-of-order interaction must not advance progression"
+    ],
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:source:components",
+      "evidence:source:logic"
+    ],
+    "confidence": "high"
+  },
+  {
+    "id": "mechanic:sorcerer-ziggurat:core",
+    "gameId": "game:sorcerer-ziggurat",
+    "sceneIds": ["scene:sorcerer-ziggurat:main"],
+    "fantasy": "Complete a ritual atop an isometric ziggurat",
+    "learningLoop": "step across word cubes in sentence order",
+    "worldAndControls": "deterministic directional tile-step graph",
+    "terminalState": "reach the ritual summit with the sequence complete; invalid steps cost attempts",
+    "retain": [
+      "educational input mode and ordered/correct-answer semantics",
+      "distinctive player fantasy and terminal loop",
+      "GameResults-compatible scoring evidence"
+    ],
+    "redesign": [
+      "legacy React/Konva/R3F renderer assumptions",
+      "fixed portrait coordinates and CSS breakpoint scaling",
+      "client-owned persistence and XP authority"
+    ],
+    "transitions": [
+      "ready -> active only after explicit start",
+      "correct action advances exactly one deterministic content step",
+      "incorrect action records one attempt without skipping required content",
+      "terminal state emits completion exactly once"
+    ],
+    "counterexamples": [
+      "resize must not reset content progress or duplicate completion",
+      "duplicate labels must not share unstable identity",
+      "wrong or out-of-order interaction must not advance progression"
+    ],
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:measure:roadmap",
+      "evidence:history:catalog"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "id": "mechanic:haunted-library:core",
+    "gameId": "game:haunted-library",
+    "sceneIds": ["scene:haunted-library:main"],
+    "fantasy": "Open enchanted doors across a haunted library",
+    "learningLoop": "find and open word doors in sentence order",
+    "worldAndControls": "multi-floor directional exploration with room transitions",
+    "terminalState": "complete the ordered doors and exit or lose to haunts/time",
+    "retain": [
+      "educational input mode and ordered/correct-answer semantics",
+      "distinctive player fantasy and terminal loop",
+      "GameResults-compatible scoring evidence"
+    ],
+    "redesign": [
+      "legacy React/Konva/R3F renderer assumptions",
+      "fixed portrait coordinates and CSS breakpoint scaling",
+      "client-owned persistence and XP authority"
+    ],
+    "transitions": [
+      "ready -> active only after explicit start",
+      "correct action advances exactly one deterministic content step",
+      "incorrect action records one attempt without skipping required content",
+      "terminal state emits completion exactly once"
+    ],
+    "counterexamples": [
+      "resize must not reset content progress or duplicate completion",
+      "duplicate labels must not share unstable identity",
+      "wrong or out-of-order interaction must not advance progression"
+    ],
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:source:components",
+      "evidence:source:logic"
+    ],
+    "confidence": "high"
+  },
+  {
+    "id": "mechanic:gryphon-patrol:core",
+    "gameId": "game:gryphon-patrol",
+    "sceneIds": ["scene:gryphon-patrol:main"],
+    "fantasy": "Patrol a broad sky realm for sentence targets",
+    "learningLoop": "hunt and select aerial targets in sentence order",
+    "worldAndControls": "free flight with large-world camera, minimap, and indicators",
+    "terminalState": "complete the patrol sequence or lose health/time",
+    "retain": [
+      "educational input mode and ordered/correct-answer semantics",
+      "distinctive player fantasy and terminal loop",
+      "GameResults-compatible scoring evidence"
+    ],
+    "redesign": [
+      "legacy React/Konva/R3F renderer assumptions",
+      "fixed portrait coordinates and CSS breakpoint scaling",
+      "client-owned persistence and XP authority"
+    ],
+    "transitions": [
+      "ready -> active only after explicit start",
+      "correct action advances exactly one deterministic content step",
+      "incorrect action records one attempt without skipping required content",
+      "terminal state emits completion exactly once"
+    ],
+    "counterexamples": [
+      "resize must not reset content progress or duplicate completion",
+      "duplicate labels must not share unstable identity",
+      "wrong or out-of-order interaction must not advance progression"
+    ],
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:measure:roadmap",
+      "evidence:history:catalog"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "id": "mechanic:abyssal-well:core",
+    "gameId": "game:abyssal-well",
+    "sceneIds": ["scene:abyssal-well:main"],
+    "fantasy": "Defend a magical well from cycling threats",
+    "learningLoop": "target the current sentence word without leaking the next answer",
+    "worldAndControls": "cancelled 3D arena evidence with camera, enemies, and projectiles",
+    "terminalState": "complete the sentence waves or allow threats to breach the well",
+    "retain": [
+      "educational input mode and ordered/correct-answer semantics",
+      "distinctive player fantasy and terminal loop",
+      "GameResults-compatible scoring evidence"
+    ],
+    "redesign": [
+      "legacy React/Konva/R3F renderer assumptions",
+      "fixed portrait coordinates and CSS breakpoint scaling",
+      "client-owned persistence and XP authority"
+    ],
+    "transitions": [
+      "ready -> active only after explicit start",
+      "correct action advances exactly one deterministic content step",
+      "incorrect action records one attempt without skipping required content",
+      "terminal state emits completion exactly once"
+    ],
+    "counterexamples": [
+      "resize must not reset content progress or duplicate completion",
+      "duplicate labels must not share unstable identity",
+      "wrong or out-of-order interaction must not advance progression"
+    ],
+    "evidenceIds": [
+      "evidence:measure:abyssal",
+      "evidence:measure:roadmap",
+      "evidence:history:catalog"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "id": "mechanic:babel-architect:core",
+    "gameId": "game:babel-architect",
+    "sceneIds": ["scene:babel-architect:main"],
+    "fantasy": "Build a tower from correctly ordered words",
+    "learningLoop": "place or type sentence pieces in construction order",
+    "worldAndControls": "provisional keyboard/pointer construction concept",
+    "terminalState": "complete the sentence structure; exact failure loop remains product-owner provisional",
+    "retain": [
+      "educational input mode and ordered/correct-answer semantics",
+      "distinctive player fantasy and terminal loop",
+      "GameResults-compatible scoring evidence"
+    ],
+    "redesign": [
+      "legacy React/Konva/R3F renderer assumptions",
+      "fixed portrait coordinates and CSS breakpoint scaling",
+      "client-owned persistence and XP authority"
+    ],
+    "transitions": [
+      "ready -> active only after explicit start",
+      "correct action advances exactly one deterministic content step",
+      "incorrect action records one attempt without skipping required content",
+      "terminal state emits completion exactly once"
+    ],
+    "counterexamples": [
+      "resize must not reset content progress or duplicate completion",
+      "duplicate labels must not share unstable identity",
+      "wrong or out-of-order interaction must not advance progression"
+    ],
+    "evidenceIds": [
+      "evidence:measure:babel",
+      "evidence:measure:roadmap",
+      "evidence:history:catalog"
+    ],
+    "confidence": "medium"
+  }
+]
