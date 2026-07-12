@@ -1,16 +1,25 @@
 {
   "schema_version": "evidence-integrity.supervisor.v1",
-  "gate_version": "phase4-v1-candidate",
+  "gate_version": "phase4-v2-candidate",
   "status": "candidate",
   "consumable": false,
   "revoked": false,
   "source_base_commit": "d11ae2da29cc5802eff1413eb80264b0035a7caf",
   "implementation_commit": null,
   "files": {
-    "measure/automation-supervisor.py": "58a02835abecc6e3ed0a50a5cd6abd6268fe526510b0929041d786338d20299b",
+    "measure/automation-supervisor.py": "c1489f3ee8246e3e06f7b009836455d2a5688af48ac082a10aa3b5227b8ba809",
+    "measure/evidence_integrity_gates/__init__.py": "20b90c2879eb83b720e1766795e379b5007467d4cd446d1a45b9d12f552846a8",
+    "measure/evidence_integrity_gates/claim_contracts.py": "15ba2ca28cc8a738c6b5ff1dd8c8238e4723a9a7b24974dd035ffd4282ad2cc8",
     "measure/evidence_integrity_gates/cli.py": "40f15fb3f33e5c67f76cd2b701433dc3f1a19e88d734dcdab0d7b310bb1c4fd2",
-    "measure/evidence_integrity_gates/supervisor_gate.py": "13ff4f3f0ea1d60178e497fa4e376d5c3b4c860cc91d7a9318f0aa3e79151d1b",
-    "measure/tests/evidence_integrity_gates/test_supervisor_integration.py": "57a0a159ee902f745639b5376865337ba83f3a5be98bd1706fea7fb8da4339de"
+    "measure/evidence_integrity_gates/contracts.py": "06b8d2a3adb7c4d7149b1c44c7794fc94c44ca32baa878d2daadddc93aa04d8c",
+    "measure/evidence_integrity_gates/denominator_roles.py": "d8813680a0dd018fbbc078fc8fa75e12bf10b6e471b11a66765eb9a0ea44c02d",
+    "measure/evidence_integrity_gates/events.py": "52f36162bbdcdb2a2dca6db2fc185323c5c5049fff955311f70229c518d6eefc",
+    "measure/evidence_integrity_gates/git_source.py": "20945f0a297e34c206236288bd25831cc6c11af2e8a61b752bc4242a5f07765a",
+    "measure/evidence_integrity_gates/lifecycle.py": "56d5e603823442ab2afd71eed77753b83937cef48698cdcea2b601ee308cef6c",
+    "measure/evidence_integrity_gates/opencode_provenance.py": "ed43aee7eb891771142f53c7b36a3a20bbcc71fc0b1b83d6d99039da16871bd1",
+    "measure/evidence_integrity_gates/supervisor_gate.py": "48b9f285ded5a6bfac4ae29905f6bca3d669abe18ff4ea165619e81ac197c27f",
+    "measure/evidence_integrity_gates/validator.py": "4e201ee6457c2d1b9132b48821d84a95fe466b1e63ec2dcb624be6469d8afdce",
+    "measure/tests/evidence_integrity_gates/test_supervisor_integration.py": "5c4738f1d9427f9f7da06de57913760dc5868a3ad67c37048d7b3fbc631dbf1c"
   },
   "reports": {
     "measure/tracks/measure_apk_evidence_integrity_gates_20260712/phase4-live-run-report.json": "1a7b35ac9b32b9dcfc3d6d0c5cacec45ae948394bb484f15b01a319065a662e8",

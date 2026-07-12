@@ -642,7 +642,9 @@ def track_requires_evidence_gate(config: Config, track_id: str) -> bool:
             continue
         if not isinstance(metadata, dict):
             continue
-        dependencies = metadata.get("depends_on", metadata.get("dependencies"))
+        if "dependencies" in metadata:
+            return True
+        dependencies = metadata.get("depends_on")
         if isinstance(dependencies, list):
             pending.extend(item for item in dependencies if isinstance(item, str))
     return False
@@ -658,9 +660,13 @@ def run_evidence_gate(config: Config, track_id: str, stage: str) -> GateResult:
     """
     if not track_requires_evidence_gate(config, track_id):
         return GateResult(True, [])
+    environment = os.environ.copy()
+    environment["PYTHONPATH"] = str(config.repo_root)
+    environment["PYTHONDONTWRITEBYTECODE"] = "1"
     result = run_command(
         [
             sys.executable,
+            "-P",
             "-m",
             "measure.evidence_integrity_gates.cli",
             "supervisor-completion",
@@ -672,6 +678,7 @@ def run_evidence_gate(config: Config, track_id: str, stage: str) -> GateResult:
             stage,
         ],
         cwd=config.repo_root,
+        env=environment,
         timeout=config.project_gate_timeout_seconds,
     )
     if result.returncode == 0:

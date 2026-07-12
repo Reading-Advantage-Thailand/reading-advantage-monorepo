@@ -41,13 +41,50 @@ class SupervisorIntegrationTests(unittest.TestCase):
         self._write("measure/tracks/product_track/plan.md", "# Plan\n\n## Phase 1\n\n- [x] Task: done 1234567\n")
         self._write("measure/tracks/measure_apk_evidence_integrity_gates_20260712/plan.md", "# Plan\n\n## Phase 4\n\n- [b] Task: owner acceptance deferred:product-owner\n")
         self._write("measure/gate.py", "GATE = 1\n")
+        self._write_bytes("measure/gate.bin", b"\xff\x00gate\n")
         self._git("init", "-q")
         self._git("config", "user.email", "test@example.com")
         self._git("config", "user.name", "Test")
         self._git("add", ".")
         self._git("commit", "-qm", "gate implementation")
         gate_commit = self._git("rev-parse", "HEAD").stdout.strip()
-        gate_files = {"measure/gate.py": self._sha(self.repo / "measure" / "gate.py")}
+        gate_paths = ["measure/automation-supervisor.py", "measure/gate.py", "measure/gate.bin"]
+        gate_paths.extend(
+            str(path.relative_to(self.repo))
+            for path in sorted((self.repo / "measure/evidence_integrity_gates").glob("*.py"))
+        )
+        gate_files = {path: self._sha(self.repo / path) for path in gate_paths}
+        candidate = {
+            "schema_version": "evidence-integrity.supervisor.v1",
+            "gate_version": "phase4-v1",
+            "status": "candidate",
+            "consumable": False,
+            "revoked": False,
+            "implementation_commit": gate_commit,
+            "files": gate_files,
+        }
+        candidate_path = "measure/candidate.json"
+        self._write(candidate_path, json.dumps(candidate, sort_keys=True) + "\n")
+        candidate_hash = self._sha(self.repo / candidate_path)
+        review = {
+            "review_status": "pass",
+            "candidate_manifest_sha256": candidate_hash,
+            "unresolved_findings": {"critical": [], "high": [], "medium": []},
+        }
+        review_path = "measure/review.json"
+        self._write(review_path, json.dumps(review, sort_keys=True) + "\n")
+        review_hash = self._sha(self.repo / review_path)
+        approval = {
+            "decision": "approve",
+            "revoked": False,
+            "candidate_manifest_hash": candidate_hash,
+            "review_report_hash": review_hash,
+            "gate_version": "phase4-v1",
+            "gate_commit": gate_commit,
+        }
+        approval_path = "measure/approval.json"
+        self._write(approval_path, json.dumps(approval, sort_keys=True) + "\n")
+        approval_hash = self._sha(self.repo / approval_path)
         manifest = {
             "schema_version": "evidence-integrity.supervisor.v1",
             "gate_version": "phase4-v1",
@@ -55,8 +92,12 @@ class SupervisorIntegrationTests(unittest.TestCase):
             "revoked": False,
             "gate_commit": gate_commit,
             "files": gate_files,
-            "review_hash": "a" * 64,
-            "owner_approval_hash": "b" * 64,
+            "candidate_manifest_path": candidate_path,
+            "candidate_manifest_hash": candidate_hash,
+            "review_report_path": review_path,
+            "review_hash": review_hash,
+            "owner_approval_path": approval_path,
+            "owner_approval_hash": approval_hash,
         }
         self._write("measure/evidence-integrity-accepted-gate.json", json.dumps(manifest, sort_keys=True) + "\n")
         manifest_hash = self._sha(self.repo / "measure" / "evidence-integrity-accepted-gate.json")
@@ -83,7 +124,6 @@ class SupervisorIntegrationTests(unittest.TestCase):
         self._write_generated_facts()
         self._git("add", ".")
         self._git("commit", "-qm", "record work and generated facts")
-        self._write_generated_facts()
 
     def tearDown(self) -> None:
         """Removes the isolated repository."""
@@ -94,6 +134,12 @@ class SupervisorIntegrationTests(unittest.TestCase):
         path = self.repo / relative_path
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(content, encoding="utf-8")
+
+    def _write_bytes(self, relative_path: str, content: bytes) -> None:
+        """Writes exact fixture bytes below the isolated repository."""
+        path = self.repo / relative_path
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(content)
 
     def _git(self, *arguments: str) -> subprocess.CompletedProcess[str]:
         """Runs Git in the isolated repository and requires success."""
@@ -110,6 +156,11 @@ class SupervisorIntegrationTests(unittest.TestCase):
             "measure/generated/architecture.json",
             json.dumps({"schemaVersion": "measure.architecture.v1", "sourceRevision": revision}) + "\n",
         )
+
+    def _replace_fixture(self) -> None:
+        """Disposes the current repository and creates a fresh baseline fixture."""
+        self.temporary_directory.cleanup()
+        self.setUp()
 
     def _run_gate(self) -> tuple[subprocess.CompletedProcess[str], dict[str, Any]]:
         """Runs the versioned completion runner as a real subprocess."""
@@ -203,6 +254,54 @@ class SupervisorIntegrationTests(unittest.TestCase):
         )
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("Evidence gate status: PASS", result.stdout)
+
+    def test_008_manifest_requires_runtime_gate_files_and_bound_acceptance_artifacts(self) -> None:
+        """Rejects manifests that omit the runtime gate or forge review and approval hashes."""
+        manifest_path = self.repo / "measure/evidence-integrity-accepted-gate.json"
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        manifest["files"] = {"measure/gate.py": manifest["files"]["measure/gate.py"]}
+        manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+        self._assert_blocked("ACCEPTED_GATE_MANIFEST_INVALID")
+
+        self._replace_fixture()
+        (self.repo / "measure/review.json").write_text('{"status":"pass"}\n', encoding="utf-8")
+        self._assert_blocked("ACCEPTED_GATE_MANIFEST_INVALID")
+
+    def test_009_symlinks_path_traversal_and_dirty_worktrees_fail_closed(self) -> None:
+        """Rejects filesystem indirection, unsafe manifest paths, and uncommitted source."""
+        gate_path = self.repo / "measure/gate.py"
+        external = self.repo.parent / f"{self.repo.name}-external-gate.py"
+        external.write_bytes(gate_path.read_bytes())
+        gate_path.unlink()
+        gate_path.symlink_to(external)
+        self._assert_blocked("GATE_FILE_HASH_MISMATCH")
+        external.unlink()
+
+        self._replace_fixture()
+        manifest_path = self.repo / "measure/evidence-integrity-accepted-gate.json"
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        manifest["files"]["../outside"] = "0" * 64
+        manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+        self._assert_blocked("ACCEPTED_GATE_MANIFEST_INVALID")
+
+        self._replace_fixture()
+        self._write("product.txt", "dirty\n")
+        self._assert_blocked("DIRTY_WORKTREE")
+
+    def test_010_dependency_cycles_and_marker_evasion_do_not_pass(self) -> None:
+        """Rejects a cyclic dependency branch and plans with hidden or absent work markers."""
+        metadata_path = self.repo / "measure/tracks/product_track/metadata.json"
+        metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+        metadata["depends_on"] = ["cycle_a", GATE_TRACK]
+        metadata_path.write_text(json.dumps(metadata), encoding="utf-8")
+        self._write("measure/tracks/cycle_a/metadata.json", json.dumps({"depends_on": ["product_track"]}))
+        self._assert_blocked("CANONICAL_DEPENDENCY_REQUIRED")
+
+        self._replace_fixture()
+        self._write("measure/tracks/product_track/plan.md", "# Plan\n\n  - [~] hidden task\n")
+        self._assert_blocked("INCOMPLETE_TASK")
+        self._write("measure/tracks/product_track/plan.md", "# Plan without tasks\n")
+        self._assert_blocked("INCOMPLETE_TASK")
 
 
 if __name__ == "__main__":
