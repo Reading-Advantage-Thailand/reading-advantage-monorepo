@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "status": "blocked",
+  "track_id": "measure_apk_evidence_integrity_gates_20260712",
+  "phase": "Phase 0: Freeze failure cases, contracts, and role boundaries",
+  "baseline_sha": "fc8aaa73e352b3aeb4f336f8d46781aa04b43751",
+  "reviewed_through_sha": "eee01936220c9aec42c9e85a178505595a0f5c17",
+  "reviewed_commits": [
+    "ad45eebd02a1f5a9c787da268d0784854be57b63",
+    "b216690b3a9fcc7a455ec73eb884bf92fbe9f7e4",
+    "b862e37e60438f3b99f24b7fa909430485bbf462",
+    "62dd28ba84376b61e24bb8efa1b4fb36eb8283ee",
+    "ed56123b86c2074c3802f99a23e486f12f4b16cb",
+    "4a85803866a19f2928a44202b35503feee4980f6",
+    "563bdd6d0fffe58899f67b235e475e0adcd1eb76",
+    "d3fa87266db48ba578ee95946e974fa433962046",
+    "eee01936220c9aec42c9e85a178505595a0f5c17"
+  ],
+  "summary": "Phase 0 is not accepted. The focused contract suite and focused supervisor guards pass, but authentic distinct role/event provenance is absent, no event resolver live proof exists, the asserted allowed-input hash is not resolvable, and the global marker-vocabulary aggregate remains red. The acceptance audit corrected the plan so the freeze task is no longer marked complete without its required allowed-input evidence.",
+  "task_status": {
+    "completed": 2,
+    "in_progress": 2,
+    "structurally_blocked": 1,
+    "phase_result": "INCOMPLETE"
+  },
+  "blocking_findings": [
+    {
+      "id": "P0-ACCEPT-001",
+      "severity": "high",
+      "title": "Required distinct role receipts are not authentic",
+      "evidence": "measure/tests/evidence_integrity_gates/role-receipts/phase0.json records one Red author for contracts and counterexamples and uses NOT_FABRICATED for spawn_id, parent_id, prompt hash, start/end event IDs, timestamps, and final response hash. It cannot establish FR3 ownership, role independence, or an adversarial fork_turns=none review. review-b-security-result.json leaves APK-EIG-B-005 open and blocking."
+    },
+    {
+      "id": "P0-ACCEPT-002",
+      "severity": "high",
+      "title": "Allowed-input freeze evidence is missing or unresolvable",
+      "evidence": "fixtures/manifest.json has no allowed-input hash field. phase0.json contains only an asserted allowed_input_manifest_hash without the referenced input manifest or an authentic event binding. The plan task was corrected from [x] to [~] in eee01936."
+    },
+    {
+      "id": "P0-ACCEPT-003",
+      "severity": "medium",
+      "title": "Shared aggregate integrity gates remain red",
+      "evidence": "bash tests/orchestrator_marker_vocabulary.sh exits 1 on deprecated [ ] markers in active successor and unrelated tracks. The phase0 aggregate sweep intentionally fails closed while seven catalog guard references remain dangling. review-b-security-result.json leaves APK-EIG-B-006 open and blocking."
+    },
+    {
+      "id": "P0-ACCEPT-004",
+      "severity": "medium",
+      "title": "Phase 0 has no real collaboration-event resolver proof",
+      "evidence": "The only Phase 0 implementation is contracts.py and fixture-shape validation. test-strategy.md reserves real event-export resolution for the Phase 4 live proof; no events adapter, raw tool export, or live resolver invocation is present in this phase. Artifact parsing cannot substitute for the required live role proof."
+    }
+  ],
+  "nonblocking_findings": [
+    "The named attempts, fixture hashes, baseline pointer, candidate output paths, gate-edit prohibition, status checks, dependency alias check, and marker check have focused unit coverage. This is limited contract/fixture evidence, not Phase 0 closeout evidence.",
+    "The role-receipt output hashes differ from the current post-Green files. That is expected for a receipt of older Red outputs, but without an authentic event/commit binding it cannot serve as verification of current authorship or ownership."
+  ],
+  "anti_pattern_checks": {
+    "A1": "pass: tests/orchestrator_supervisor_invariants.sh passes; supervisor task regexes use [~xb], and is_task_structurally_blocked recognizes status b and deferred:<owner> rather than free-text deferred.",
+    "A3": "pass for Phase 0 scope: parse_labeled_budget parses a labeled positive integer/unit and rejects unmeasured, dates, generic count labels, non-integers, and non-positive values; focused suite passes. No digit-only rg count assertion was found in changed Phase 0 files.",
+    "A4": "pass for the implemented fixture-harness scope: focused tests reject empty positive and negative corpora; the actual Phase 0 marker count is x=2, ~=2, b=1 and is reported INCOMPLETE, not complete. No markers-consistent assertion with zero [x] was used to certify this phase.",
+    "A5": "pass: no Phase 0 plan claim of PASS=N, FAIL=0 or all checks pass was used. The focused suite actually exits 0; aggregate failures are recorded as failures.",
+    "A6": "pass: measure/tracks.md lists this gate track as pending and does not claim it resolved; review-b-security-result.json remains BLOCKED.",
+    "A7": "pass for changed Phase 0 files: no over-broad banned-term exclusion filter was introduced; A12 extraction reports every discovered reference and the aggregate sweep fails closed on dangling hits.",
+    "A8": "pass locally / aggregate blocked: the Phase 0 plan uses [~], [x], and [b] only, while the repository-wide active-plan marker guard exits 1 for other tracks.",
+    "A12": "blocked globally: contracts.sweep_phase0 reports failure while the seven catalog guard references are dangling; the focused test preserves detection rather than filtering it away."
+  },
+  "commands": [
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.evidence_integrity_gates.test_contract_scaffold",
+      "result": "PASS: 46 tests"
+    },
+    {
+      "command": "bash tests/orchestrator_supervisor_invariants.sh && bash tests/orchestrator_review_execution_truthfulness.sh && bash tests/orchestrator_catalog.sh",
+      "result": "PASS"
+    },
+    {
+      "command": "bash tests/orchestrator_marker_vocabulary.sh",
+      "result": "FAIL: active plans retain deprecated [ ] markers"
+    },
+    {
+      "command": "bash measure/doctor.sh",
+      "result": "FAIL: delegates to the red active-plan marker-vocabulary guard"
+    },
+    {
+      "command": "phase marker count",
+      "result": "x=2, ~=2, b=1; INCOMPLETE"
+    },
+    {
+      "command": "role receipt hash comparison",
+      "result": "4 current-output hash mismatches; no authentic tool-event fields available"
+    },
+    {
+      "command": "git diff --check fc8aaa73e352b3aeb4f336f8d46781aa04b43751..HEAD",
+      "result": "PASS"
+    }
+  ],
+  "fixes_committed": [
+    "eee01936220c9aec42c9e85a178505595a0f5c17: corrected the unsupported completed marker for the Phase 0 freeze task"
+  ],
+  "accepted_artifacts": [],
+  "retry_recommendation": "Do not proceed to Phase 1 or any APK successor. First produce authentic, distinct tool-attested role receipts and a resolver-backed allowed-input manifest; then rerun the Phase 0 acceptance audit. Shared active-plan marker and catalog-guard failures must remain visible and block any global completion claim.",
+  "confidence": "high"
+}
