@@ -3,21 +3,21 @@
 > **Track ID:** `apk_cross_game_asset_ontology_20260712`
 > **Execution type:** requirements and product-modeling; no production implementation
 
-## Phase 0: Freeze scope, evidence, and schemas [checkpoint: pending]
+## Phase 0: Freeze scope, evidence, and schemas [checkpoint: cf13ca3]
 
-- [x] Task: Snapshot repository and graph evidence
+- [x] Task: Snapshot repository and graph evidence [cf13ca3]
   - [x] Record HEAD, working-tree boundaries, graph freshness, catalog revision,
         relevant archived revisions, and concurrent work exclusions
   - [x] Inventory raw Advantage Games, Reading, and Primary game roots without
         treating copied implementations as separate product requirements
-- [x] Task: Define machine-validatable audit schemas
+- [x] Task: Define machine-validatable audit schemas [cf13ca3]
   - [x] Define game, scene, mechanic, capability usage, responsive composition,
         asset usage, evidence, confidence, discrepancy, and disposition schemas
   - [x] Define stable IDs and cross-artifact referential-integrity rules
-- [x] Task: Write validation tests that reject omitted games/scenes, unsupported
+- [x] Task: Write validation tests that reject omitted games/scenes, unsupported [cf13ca3]
       standard capabilities, orphan assets, missing responsive profiles, and broken evidence
-- [x] Task: Publish audit method and source-of-truth/conflict rules
-- [x] Task: Measure - User Manual Verification 'Phase 0' (Protocol in workflow.md)
+- [x] Task: Publish audit method and source-of-truth/conflict rules [cf13ca3]
+- [x] Task: Measure - User Manual Verification 'Phase 0' (Protocol in workflow.md) [accepted 2026-07-12]
 
 ## Phase 1: Reconcile the complete game corpus [checkpoint: pending]
 
