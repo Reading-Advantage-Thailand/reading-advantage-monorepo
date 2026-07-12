@@ -46,11 +46,11 @@ until Phase 4's accepted gate manifest exists.
 
 ## Phase 2: Independent denominator and role-independence gates (FR2–FR4)
 
-- [~] Task: Define independent denominator-item, discovery-origin, reconciliation, and coverage schemas; prohibit authored requirement outputs from being their own denominator source.
-- [~] Task: Define ownership manifests, role-applicability and incompatible-role matrices, collaboration-event receipts, event-resolver interface, output inventory, and approval-event contracts.
-- [~] Task: Write Red fixtures for authored denominators, synthetic scenes, hardcoded summaries, keyword-responsive profiles, slug asset allowlists, cohort-only asset inspection, missing roles, copied IDs, root substitution, unowned outputs, final-response/output hash mismatch, inherited reviewer context, forged/replayed owner approval, and `dependencies` aliasing.
-- [~] Task: Implement denominator, receipt, role, output-ownership, and authentic-approval validators with stable rejection codes.
-- [b] Task: Measure - User Manual Verification 'Phase 2' (Protocol in workflow.md) deferred:product-owner
+- [x] Task: Define independent denominator-item, discovery-origin, reconciliation, and coverage schemas; prohibit authored requirement outputs from being their own denominator source. Evidence: `phase2-verification.json`; `test_denominator_roles`.
+- [x] Task: Define ownership manifests, role-applicability and incompatible-role matrices, collaboration-event receipts, event-resolver interface, output inventory, and approval-event contracts. Evidence: `phase2-verification.json`; raw OpenCode adapter replay.
+- [x] Task: Write Red fixtures for authored denominators, synthetic scenes, hardcoded summaries, keyword-responsive profiles, slug asset allowlists, cohort-only asset inspection, missing roles, copied IDs, root substitution, unowned outputs, final-response/output hash mismatch, inherited reviewer context, forged/replayed owner approval, and `dependencies` aliasing. Evidence: paired controls and stable reason codes in `fixtures/{valid,invalid}`.
+- [x] Task: Implement denominator, receipt, role, output-ownership, and authentic-approval validators with stable rejection codes. Evidence: 95 focused/prior tests passed; live provenance replay passed.
+- [x] Task: Measure - User Manual Verification 'Phase 2' (Protocol in workflow.md). The primary orchestrator/product owner authorized completion only after the gates passed; exact raw user-event binding is recorded in `phase2-verification.json`.
 
 ## Phase 3: Stop-loss, freeze, and completion enforcement (FR5)
 

@@ -1,0 +1,39 @@
+{
+  "schema_version": "evidence-integrity.phase2-verification.v1",
+  "status": "passed",
+  "phase": 2,
+  "test_results": {
+    "targeted_and_prior_tests": {"passed": 95, "failed": 0},
+    "live_opencode_provenance_replay": "passed",
+    "ruff": "passed",
+    "measure_doctor": "passed",
+    "git_diff_check": "passed"
+  },
+  "implementation_session": {
+    "binding": "current API coding subagent session",
+    "raw_opencode_export": "not exposed by this transport",
+    "disposition": "bound as implementation narrative only; never substituted for a tool-attested mandatory role receipt"
+  },
+  "independent_review": {
+    "session_id": "ses_0a93f7bd6ffeJ4OhbkYSIp3SMg",
+    "raw_export_sha256": "9e66f0edb4a38df7105f66894c6d56eac3d37ed43b1a8d8a78863235f236ef04",
+    "prompt_message_id": "msg_f56c08ec6001pOGD0L7m42quDm",
+    "final_response_message_id": "msg_f56c2aaf0001f1Y1yCsrOnDS07",
+    "fork_turns": "schema-field-absent",
+    "resolution": "Every reported Critical/High/Medium bypass was reproduced and fixed; final focused and prior suites plus live adapter replay passed after the fixes.",
+    "unresolved_critical_high_medium": 0
+  },
+  "product_owner_manual_verification": {
+    "session_id": "ses_0aa8a4740ffe2BOVmChNfZLEv0",
+    "raw_export_sha256": "05eea27ef2e02b9635f8a6564cb7c8445e9734790182e6d7fcf33e4d90af1b9c",
+    "user_message_id": "msg_f56600d810018CxHK1al7hwx82",
+    "user_message_sha256": "b0cb4c42b1446efc39e9749998c1b408d7bb9b2cc9076c0b7fd70b1d969c82d1",
+    "created_ms": 1783860563329,
+    "instruction": "mark manual verification complete only after gates pass",
+    "completed_after_gates": true
+  },
+  "schema_omissions": {
+    "opencode_version": "1.17.18",
+    "fork_turns": "absent from exports; adapter records omission and validators require raw/normalized agreement without assuming independence"
+  }
+}

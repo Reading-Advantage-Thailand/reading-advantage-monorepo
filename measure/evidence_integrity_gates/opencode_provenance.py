@@ -62,6 +62,18 @@ def _text_bytes(message: Mapping[str, Any]) -> bytes:
     return _canonical_json(parts)
 
 
+def _plain_text_bytes(message: Mapping[str, Any]) -> bytes:
+    """Returns concatenated provider text exactly as authored.
+
+    @param message Exported OpenCode message.
+    @returns UTF-8 bytes for ordered text parts without an invented wrapper.
+    """
+    return "".join(
+        part["text"] for part in message.get("parts", [])
+        if part.get("type") == "text" and isinstance(part.get("text"), str)
+    ).encode()
+
+
 def _session_messages(export: Mapping[str, Any]) -> list[Mapping[str, Any]]:
     """Returns validated messages from an OpenCode export.
 
@@ -281,6 +293,68 @@ def build_evidence(raw: bytes, binding: RoleBinding, repo_root: Path) -> dict[st
             "verified-none" if fork_turns == "none" else "verified-other"
         ) if fork_turns is not None else "schema-field-absent",
     }
+
+
+def build_resolved_event(
+    raw: bytes,
+    binding: RoleBinding,
+    repo_root: Path,
+    attested_manifest_bytes: Mapping[str, bytes] | None = None,
+) -> dict[str, Any]:
+    """Resolve a Phase 2 event directly from exact OpenCode export bytes.
+
+    @param raw Exact raw OpenCode export bytes.
+    @param binding Expected role/session/output binding.
+    @param repo_root Repository root used for output hashing.
+    @param attested_manifest_bytes Exact allowed-input, context, and budget manifests when exported separately.
+    @returns Event-resolver record with provider-derived identity, bytes, and omissions.
+    @throws ProvenanceError When the export fails the existing strict adapter checks.
+    """
+    normalized = build_evidence(raw, binding, repo_root)
+    export = json.loads(raw)
+    messages = _session_messages(export)
+    users = [message for message in messages if message.get("info", {}).get("role") == "user"]
+    assistants = [message for message in messages if message.get("info", {}).get("role") == "assistant"]
+    resolved_tool_paths: set[str] = set()
+    root = repo_root.resolve()
+    for tool_path in _tool_owned_paths(messages):
+        candidate = Path(tool_path)
+        if candidate.is_absolute():
+            try:
+                tool_path = str(candidate.resolve().relative_to(root))
+            except ValueError:
+                pass
+        resolved_tool_paths.add(tool_path)
+    if resolved_tool_paths != set(binding.owned_outputs):
+        raise ProvenanceError("raw export write inventory differs from declared ownership")
+    event = {
+        "provenance_kind": "opencode-raw-export",
+        "raw_export_bytes": raw,
+        "raw_export_sha256": normalized["raw_export_sha256"],
+        "id": normalized["final_response_message_id"],
+        "start_event_id": normalized["prompt_message_id"],
+        "role": "assistant",
+        "session_id": normalized["session_id"],
+        "session_parent_id": normalized["session_parent_id"],
+        "agent": normalized["agent"],
+        "prompt_message_id": normalized["prompt_message_id"],
+        "final_response_message_id": normalized["final_response_message_id"],
+        "prompt_bytes": _plain_text_bytes(users[0]),
+        "final_response_bytes": _plain_text_bytes(assistants[-1]),
+        "started_ms": normalized["started_ms"],
+        "completed_ms": normalized["completed_ms"],
+        "output_sha256": normalized["output_sha256"],
+        "raw_write_inventory": sorted(resolved_tool_paths),
+    }
+    if normalized["fork_turns_check"] == "schema-field-absent":
+        event["schema_omissions"] = ["fork_turns"]
+    else:
+        event["fork_turns"] = normalized["fork_turns"]
+    if attested_manifest_bytes is not None:
+        event["attested_manifest_bytes"] = dict(attested_manifest_bytes)
+        for field, value in attested_manifest_bytes.items():
+            event[field] = _sha256(value)
+    return event
 
 
 def validate_role_set(evidence: Sequence[Mapping[str, Any]]) -> None:

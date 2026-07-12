@@ -1,0 +1,39 @@
+{
+  "denominator": {
+    "schema_version": "evidence-integrity.phase2.v1",
+    "discovery_origin": {
+      "kind": "independent-discovery-export",
+      "event_id": "evt_discovery",
+      "session_id": "ses_discovery",
+      "agent": "discovery-agent",
+      "source_ref": "discovery.json",
+      "source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    "requirements_author_session_id": "ses_requirements",
+    "requirements_author_event_id": "evt_requirements",
+    "requirements_source_ref": "requirements.json",
+    "requirement_ids": ["req-1"],
+    "items": [
+      {"item_id": "scene-1", "item_kind": "scene", "discovery_method": "source-enumeration"},
+      {"item_id": "asset-1", "item_kind": "asset", "selection_method": "full-inventory", "inspection_scope": "individual"}
+    ],
+    "reconciliation": [
+      {"denominator_item_id": "scene-1", "requirement_id": "req-1", "status": "matched"},
+      {"denominator_item_id": "asset-1", "requirement_id": null, "status": "unmatched"}
+    ],
+    "coverage": {"denominator_items": 2, "reconciled_items": 2, "matched_items": 1}
+  },
+  "approval": {
+    "schema_version": "evidence-integrity.phase2.v1",
+    "event_id": "evt_approval",
+    "session_id": "ses_owner",
+    "event_timestamp_ms": 30,
+    "decision": "approve",
+    "message_sha256": "__APPROVAL_HASH__",
+    "approved_hashes": {
+      "candidate": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "review": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "gate": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    }
+  }
+}

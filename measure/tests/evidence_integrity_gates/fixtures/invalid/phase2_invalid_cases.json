@@ -1,0 +1,33 @@
+{
+  "denominator_cases": [
+    {"name": "authored denominator", "mutation": {"path": "discovery_origin.kind", "value": "authored-requirements"}, "expected": "AUTHORED_DENOMINATOR_REJECTED"},
+    {"name": "empty denominator", "mutation": {"path": "items", "value": []}, "expected": "EMPTY_DENOMINATOR"},
+    {"name": "duplicate denominator", "mutation": {"path": "items.1.item_id", "value": "scene-1"}, "expected": "DUPLICATE_DENOMINATOR_ITEM"},
+    {"name": "synthetic scene", "mutation": {"path": "items.0.discovery_method", "value": "synthetic"}, "expected": "SYNTHETIC_SCENE_REJECTED"},
+    {"name": "hardcoded summary", "mutation": {"path": "items.0", "value": {"item_id": "scene-1", "item_kind": "summary", "evidence_method": "hardcoded"}}, "expected": "HARDCODED_SUMMARY_REJECTED"},
+    {"name": "keyword responsive", "mutation": {"path": "items.0", "value": {"item_id": "scene-1", "item_kind": "responsive-profile", "discovery_method": "keyword-match"}}, "expected": "KEYWORD_RESPONSIVE_PROFILE_REJECTED"},
+    {"name": "slug allowlist", "mutation": {"path": "items.1.selection_method", "value": "slug-allowlist"}, "expected": "SLUG_ASSET_ALLOWLIST_REJECTED"},
+    {"name": "cohort only", "mutation": {"path": "items.1.inspection_scope", "value": "cohort-only"}, "expected": "COHORT_ONLY_ASSET_INSPECTION_REJECTED"},
+    {"name": "empty reconciliation", "mutation": {"path": "reconciliation", "value": []}, "expected": "EMPTY_RECONCILIATION"},
+    {"name": "duplicate reconciliation", "mutation": {"path": "reconciliation.1.denominator_item_id", "value": "scene-1"}, "expected": "DUPLICATE_RECONCILIATION"},
+    {"name": "incomplete reconciliation", "mutation": {"path": "reconciliation.1.denominator_item_id", "value": "unknown"}, "expected": "INCOMPLETE_RECONCILIATION"},
+    {"name": "coverage mismatch", "mutation": {"path": "coverage.denominator_items", "value": 1}, "expected": "COVERAGE_COUNT_MISMATCH"}
+  ],
+  "role_cases": [
+    {"name": "missing role", "kind": "missing-role", "expected": "MISSING_REQUIRED_ROLE"},
+    {"name": "incompatible role", "kind": "shared-session", "expected": "INCOMPATIBLE_ROLE_ASSIGNMENT"},
+    {"name": "copied id", "kind": "copied-event", "expected": "EVENT_ID_REPLAYED"},
+    {"name": "root substitution", "kind": "root", "expected": "ROOT_ROLE_SUBSTITUTION"},
+    {"name": "unowned output", "kind": "unowned", "expected": "UNOWNED_OUTPUT"},
+    {"name": "duplicate output", "kind": "duplicate-output", "expected": "DUPLICATE_OUTPUT_OWNERSHIP"},
+    {"name": "output mismatch", "kind": "output-hash", "expected": "OUTPUT_HASH_MISMATCH"},
+    {"name": "response mismatch", "kind": "response-hash", "expected": "FINAL_RESPONSE_HASH_MISMATCH"},
+    {"name": "inherited context", "kind": "fork", "expected": "INHERITED_REVIEWER_CONTEXT"},
+    {"name": "dependency alias", "kind": "dependencies", "expected": "NON_CANONICAL_DEPENDENCY_FIELD"}
+  ],
+  "approval_cases": [
+    {"name": "forged approval", "kind": "forged", "expected": "FORGED_OWNER_APPROVAL"},
+    {"name": "replayed approval", "kind": "replayed", "expected": "REPLAYED_OWNER_APPROVAL"},
+    {"name": "approval hash", "kind": "hash", "expected": "OWNER_APPROVAL_HASH_MISMATCH"}
+  ]
+}
