@@ -11,16 +11,16 @@ Gameplay meaning is stable; Chibi Quest and Riven Lands are parallel treatments.
 | `asset:ui:hud-and-prompt`                           | ui          |        29 | must     | gap      |
 | `asset:audio:semantic-audio-cues`                   | audio       |        29 | should   | gap      |
 | `asset:control:active-input-controls`               | control     |        29 | should   | gap      |
-| `asset:creature:mount-or-companion`                 | creature    |        29 | should   | gap      |
 | `asset:terrain:traversable-terrain`                 | terrain     |        29 | should   | gap      |
-| `asset:structure:objective-or-station`              | structure   |        29 | should   | gap      |
-| `asset:prop:interactive-prop`                       | prop        |        29 | should   | gap      |
-| `asset:hazard:gameplay-hazard`                      | hazard      |        29 | should   | gap      |
-| `asset:pickup:collectible-content`                  | pickup      |        29 | must     | gap      |
-| `asset:weapon:player-action-tool`                   | weapon      |        29 | should   | gap      |
-| `asset:projectile:gameplay-projectile`              | projectile  |        29 | should   | gap      |
+| `asset:structure:objective-or-station`              | structure   |         8 | should   | gap      |
+| `asset:weapon:player-action-tool`                   | weapon      |         9 | should   | gap      |
+| `asset:projectile:gameplay-projectile`              | projectile  |         7 | should   | gap      |
 | `asset:background:composable-background`            | background  |        29 | should   | gap      |
-| `asset:indicator:offscreen-and-objective-indicator` | indicator   |        29 | should   | gap      |
+| `asset:creature:mount-or-companion`                 | creature    |         6 | should   | gap      |
+| `asset:hazard:gameplay-hazard`                      | hazard      |        11 | should   | gap      |
+| `asset:pickup:collectible-content`                  | pickup      |        10 | must     | gap      |
+| `asset:indicator:offscreen-and-objective-indicator` | indicator   |        15 | should   | gap      |
+| `asset:prop:interactive-prop`                       | prop        |         8 | should   | gap      |
 
 ## Substitution rule
 

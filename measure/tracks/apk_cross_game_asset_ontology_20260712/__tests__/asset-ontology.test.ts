@@ -25,4 +25,19 @@ describe("APK semantic asset ontology", () => {
       expect(entry.id).not.toMatch(/chibi|riven/);
     }
   });
+  it("does not invent optional roles for unrelated games", () => {
+    const mountIds = usages
+      .filter((item) => item.semanticRole === "mount-or-companion")
+      .map((item) => item.id);
+    expect(mountIds).not.toContain("asset-usage:rune-match:mount-or-companion");
+    expect(mountIds).not.toContain(
+      "asset-usage:magic-defense:mount-or-companion",
+    );
+    const projectileIds = usages
+      .filter((item) => item.semanticRole === "gameplay-projectile")
+      .map((item) => item.id);
+    expect(projectileIds).not.toContain(
+      "asset-usage:alchemists-synthesis:gameplay-projectile",
+    );
+  });
 });

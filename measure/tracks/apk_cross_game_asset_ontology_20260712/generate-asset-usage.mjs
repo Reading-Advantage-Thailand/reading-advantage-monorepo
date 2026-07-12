@@ -149,35 +149,133 @@ const roles = [
   ],
 ];
 
+const optionalConsumers = {
+  "mount-or-companion": [
+    "dragon-rider",
+    "dragon-flight",
+    "griffin-riders-escape",
+    "griffin-sky-joust",
+    "gryphon-patrol",
+    "paladins-twin-soul",
+  ],
+  "objective-or-station": [
+    "castle-defense",
+    "magic-defense",
+    "potion-rush",
+    "rune-forge-chamber",
+    "village-guardian",
+    "haunted-library",
+    "sorcerer-ziggurat",
+    "babel-architect",
+  ],
+  "interactive-prop": [
+    "rune-match",
+    "alchemists-synthesis",
+    "potion-rush",
+    "rune-forge-chamber",
+    "dungeon-liberator",
+    "enchanted-library",
+    "haunted-library",
+    "babel-architect",
+  ],
+  "gameplay-hazard": [
+    "dragon-rider",
+    "dragon-flight",
+    "spellweavers-run",
+    "griffin-riders-escape",
+    "storm-castle-tower",
+    "wizard-vs-zombie",
+    "shadow-gate-dungeon",
+    "labyrinth-goblin-king",
+    "gryphon-patrol",
+    "realm-carver",
+    "abyssal-well",
+  ],
+  "collectible-content": [
+    "dragon-rider",
+    "spellweavers-run",
+    "dungeon-liberator",
+    "enchanted-library",
+    "shadow-gate-dungeon",
+    "village-guardian",
+    "labyrinth-goblin-king",
+    "realm-carver",
+    "devourer-slime",
+    "haunted-library",
+  ],
+  "player-action-tool": [
+    "magic-defense",
+    "rpg-battle",
+    "castle-defense",
+    "archers-revenge",
+    "paladins-twin-soul",
+    "griffin-sky-joust",
+    "astral-mage",
+    "wizard-vs-zombie",
+    "abyssal-well",
+  ],
+  "gameplay-projectile": [
+    "magic-defense",
+    "castle-defense",
+    "archers-revenge",
+    "paladins-twin-soul",
+    "astral-mage",
+    "wizard-vs-zombie",
+    "abyssal-well",
+  ],
+  "offscreen-and-objective-indicator": [
+    "dragon-rider",
+    "dragon-flight",
+    "spellweavers-run",
+    "griffin-riders-escape",
+    "storm-castle-tower",
+    "dungeon-liberator",
+    "enchanted-library",
+    "shadow-gate-dungeon",
+    "village-guardian",
+    "labyrinth-goblin-king",
+    "realm-carver",
+    "devourer-slime",
+    "haunted-library",
+    "gryphon-patrol",
+    "astral-mage",
+  ],
+};
+
 const usages = corpus.games.flatMap((game) => {
   const sceneId = game.sceneIds[0];
   const capabilityIds = capabilities
     .filter((item) => item.consumerSceneIds.includes(sceneId))
     .map((item) => item.id);
-  return roles.map(([family, role, states, view, scale, collision]) => ({
-    id: `asset-usage:${game.slug}:${role}`,
-    family,
-    semanticRole: role,
-    consumerSceneIds: [sceneId],
-    capabilityIds,
-    states,
-    directions:
-      family === "character"
-        ? ["left", "right", "up", "down"]
-        : ["not-applicable"],
-    view,
-    scale,
-    animation:
-      family === "audio" ? "cue lifecycle" : "state-dependent when required",
-    collision,
-    profileUsage: ["compact", "wide"],
-    reusePotential:
-      role === "learning-target"
-        ? "shared contract with game-specific treatment"
-        : "cross-game semantic family",
-    disposition: "gap",
-    evidenceIds: game.evidenceIds,
-  }));
+  return roles
+    .filter(
+      ([, role]) =>
+        !optionalConsumers[role] || optionalConsumers[role].includes(game.slug),
+    )
+    .map(([family, role, states, view, scale, collision]) => ({
+      id: `asset-usage:${game.slug}:${role}`,
+      family,
+      semanticRole: role,
+      consumerSceneIds: [sceneId],
+      capabilityIds,
+      states,
+      directions:
+        family === "character"
+          ? ["left", "right", "up", "down"]
+          : ["not-applicable"],
+      view,
+      scale,
+      animation:
+        family === "audio" ? "cue lifecycle" : "state-dependent when required",
+      collision,
+      profileUsage: ["compact", "wide"],
+      reusePotential:
+        role === "learning-target"
+          ? "shared contract with game-specific treatment"
+          : "cross-game semantic family",
+      disposition: "gap",
+      evidenceIds: game.evidenceIds,
+    }));
 });
 
 writeFileSync(

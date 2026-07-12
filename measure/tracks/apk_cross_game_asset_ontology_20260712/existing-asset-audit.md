@@ -17,7 +17,7 @@ Reject cover art, placeholders, procedural stand-ins presented as final art, bak
 
 ## Usage coverage
 
-The machine matrix contains 493 scene usages across 29 scenes. Every usage currently resolves to a visible production gap; Phase 6 may normalize these roles but cannot convert a candidate to reuse without recorded inspection evidence.
+The machine matrix contains 335 justified scene usages across 29 scenes. Every usage resolves to a visible production gap; normalization cannot convert a candidate to reuse without recorded inspection evidence.
 
 ## Candidate inspection — 2026-07-12
 

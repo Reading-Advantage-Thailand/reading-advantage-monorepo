@@ -95,13 +95,13 @@
 
 ## Phase 7: Acceptance and dependent-track handoff [checkpoint: pending]
 
-- [ ] Task: Run schema, completeness, evidence, referential-integrity, graph, and
+- [x] Task: Run schema, completeness, evidence, referential-integrity, graph, and
       contradiction checks across all artifacts
-- [ ] Task: Run independent review for missing games, weak evidence, false reuse,
+- [x] Task: Run independent review for missing games, weak evidence, false reuse,
       over-generalization, under-generalization, and responsive/asset gaps
-- [ ] Task: Remediate every Critical, High, and Medium finding
-- [ ] Task: Publish `dependent-track-inputs.md` with accepted artifact versions and hashes
-- [ ] Task: Update developer-kit, asset-production, and cartridge dependencies
+- [x] Task: Remediate every Critical, High, and Medium finding
+- [x] Task: Publish `dependent-track-inputs.md` with accepted artifact versions and hashes
+- [x] Task: Update developer-kit, asset-production, and cartridge dependencies
       without beginning their implementation
-- [ ] Task: Obtain explicit product-owner acceptance
+- [~] Task: Obtain explicit product-owner acceptance
 - [ ] Task: Measure - User Manual Verification 'Phase 7' (Protocol in workflow.md)
