@@ -58,15 +58,15 @@
 
 ## Phase 4: Define responsive composition requirements [checkpoint: pending]
 
-- [ ] Task: Audit each game's current mobile/desktop canvas, camera, HUD, prompt,
+- [x] Task: Audit each game's current mobile/desktop canvas, camera, HUD, prompt,
       controls, text, safe regions, and scaling behavior
-- [ ] Task: Define compact and wide strategies, input modes, required visibility,
+- [x] Task: Define compact and wide strategies, input modes, required visibility,
       camera policy, reserved regions, and transitions per game
-- [ ] Task: Add real short/worst-case Thai and English fixtures and enlarged-text cases
-- [ ] Task: Identify shared responsive primitives required by the developer kit
-- [ ] Task: Publish and validate `responsive-composition-matrix.md` against the
+- [x] Task: Add real short/worst-case Thai and English fixtures and enlarged-text cases
+- [x] Task: Identify shared responsive primitives required by the developer kit
+- [x] Task: Publish and validate `responsive-composition-matrix.md` against the
       repository-level responsive composition specification
-- [ ] Task: Measure - User Manual Verification 'Phase 4' (Protocol in workflow.md)
+- [~] Task: Measure - User Manual Verification 'Phase 4' (Protocol in workflow.md)
 
 ## Phase 5: Build the asset usage matrix and reuse audit [checkpoint: pending]
 

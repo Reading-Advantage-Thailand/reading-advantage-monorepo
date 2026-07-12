@@ -1,0 +1,1696 @@
+[
+  {
+    "id": "responsive:castle-defense",
+    "gameId": "game:castle-defense",
+    "sceneIds": ["scene:castle-defense:main"],
+    "currentRisk": "Legacy fixed coordinates, canvas scaling, HUD overlays, and renderer-specific camera assumptions require rebuild validation.",
+    "compact": {
+      "strategies": ["follow", "stage", "panel"],
+      "inputModes": ["touch", "hybrid"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "controls",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Preserve world scale and follow the active player/target inside the gameplay region."
+    },
+    "wide": {
+      "strategies": ["reveal", "follow", "panel"],
+      "inputModes": ["keyboard", "pointer"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "secondary-status",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Reveal materially more valid world with bounded camera and wider dead zones."
+    },
+    "requiredVisibility": [
+      "primary learning prompt",
+      "active player or selection",
+      "current target or answer choices",
+      "immediate hazards",
+      "essential status"
+    ],
+    "statePreserved": [
+      "current content step",
+      "score",
+      "attempts",
+      "health/lives",
+      "timer",
+      "active target",
+      "completion-once guard"
+    ],
+    "fixtures": {
+      "englishShort": "cat — แมว",
+      "englishWorstCase": "environmentally sustainable transportation infrastructure",
+      "thaiShort": "แมว — cat",
+      "thaiWorstCase": "การพัฒนาโครงสร้างพื้นฐานด้านการคมนาคมอย่างยั่งยืนและปลอดภัย",
+      "enlargedTextScale": 1.5
+    },
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:source:components",
+      "evidence:source:logic",
+      "evidence:source:reading-copies"
+    ]
+  },
+  {
+    "id": "responsive:dragon-rider",
+    "gameId": "game:dragon-rider",
+    "sceneIds": ["scene:dragon-rider:main"],
+    "currentRisk": "No current playable implementation; geometry is provisional and must be proven by Red tests.",
+    "compact": {
+      "strategies": ["follow", "stage", "panel"],
+      "inputModes": ["touch", "hybrid"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "controls",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Preserve world scale and follow the active player/target inside the gameplay region."
+    },
+    "wide": {
+      "strategies": ["reveal", "follow", "panel"],
+      "inputModes": ["keyboard", "pointer"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "secondary-status",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Reveal materially more valid world with bounded camera and wider dead zones."
+    },
+    "requiredVisibility": [
+      "primary learning prompt",
+      "active player or selection",
+      "current target or answer choices",
+      "immediate hazards",
+      "essential status"
+    ],
+    "statePreserved": [
+      "current content step",
+      "score",
+      "attempts",
+      "health/lives",
+      "timer",
+      "active target",
+      "completion-once guard"
+    ],
+    "fixtures": {
+      "englishShort": "cat — แมว",
+      "englishWorstCase": "environmentally sustainable transportation infrastructure",
+      "thaiShort": "แมว — cat",
+      "thaiWorstCase": "การพัฒนาโครงสร้างพื้นฐานด้านการคมนาคมอย่างยั่งยืนและปลอดภัย",
+      "enlargedTextScale": 1.5
+    },
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:measure:roadmap",
+      "evidence:source:reading-copies",
+      "evidence:history:catalog"
+    ]
+  },
+  {
+    "id": "responsive:magic-defense",
+    "gameId": "game:magic-defense",
+    "sceneIds": ["scene:magic-defense:main"],
+    "currentRisk": "Legacy fixed coordinates, canvas scaling, HUD overlays, and renderer-specific camera assumptions require rebuild validation.",
+    "compact": {
+      "strategies": ["reflow", "panel"],
+      "inputModes": ["touch", "hybrid"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "controls",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Reflow the mechanic into the gameplay region without shrinking text or targets."
+    },
+    "wide": {
+      "strategies": ["reflow", "panel"],
+      "inputModes": ["keyboard", "pointer"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "secondary-status",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Use horizontal space for gameplay plus an intentional prompt/status side panel."
+    },
+    "requiredVisibility": [
+      "primary learning prompt",
+      "active player or selection",
+      "current target or answer choices",
+      "immediate hazards",
+      "essential status"
+    ],
+    "statePreserved": [
+      "current content step",
+      "score",
+      "attempts",
+      "health/lives",
+      "timer",
+      "active target",
+      "completion-once guard"
+    ],
+    "fixtures": {
+      "englishShort": "cat — แมว",
+      "englishWorstCase": "environmentally sustainable transportation infrastructure",
+      "thaiShort": "แมว — cat",
+      "thaiWorstCase": "การพัฒนาโครงสร้างพื้นฐานด้านการคมนาคมอย่างยั่งยืนและปลอดภัย",
+      "enlargedTextScale": 1.5
+    },
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:source:components",
+      "evidence:source:logic",
+      "evidence:source:reading-copies",
+      "evidence:history:catalog"
+    ]
+  },
+  {
+    "id": "responsive:rpg-battle",
+    "gameId": "game:rpg-battle",
+    "sceneIds": ["scene:rpg-battle:main"],
+    "currentRisk": "Legacy fixed coordinates, canvas scaling, HUD overlays, and renderer-specific camera assumptions require rebuild validation.",
+    "compact": {
+      "strategies": ["follow", "stage", "panel"],
+      "inputModes": ["touch", "hybrid"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "controls",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Preserve world scale and follow the active player/target inside the gameplay region."
+    },
+    "wide": {
+      "strategies": ["reveal", "follow", "panel"],
+      "inputModes": ["keyboard", "pointer"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "secondary-status",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Reveal materially more valid world with bounded camera and wider dead zones."
+    },
+    "requiredVisibility": [
+      "primary learning prompt",
+      "active player or selection",
+      "current target or answer choices",
+      "immediate hazards",
+      "essential status"
+    ],
+    "statePreserved": [
+      "current content step",
+      "score",
+      "attempts",
+      "health/lives",
+      "timer",
+      "active target",
+      "completion-once guard"
+    ],
+    "fixtures": {
+      "englishShort": "cat — แมว",
+      "englishWorstCase": "environmentally sustainable transportation infrastructure",
+      "thaiShort": "แมว — cat",
+      "thaiWorstCase": "การพัฒนาโครงสร้างพื้นฐานด้านการคมนาคมอย่างยั่งยืนและปลอดภัย",
+      "enlargedTextScale": 1.5
+    },
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:source:components",
+      "evidence:source:logic",
+      "evidence:source:reading-copies"
+    ]
+  },
+  {
+    "id": "responsive:dragon-flight",
+    "gameId": "game:dragon-flight",
+    "sceneIds": ["scene:dragon-flight:main"],
+    "currentRisk": "Legacy fixed coordinates, canvas scaling, HUD overlays, and renderer-specific camera assumptions require rebuild validation.",
+    "compact": {
+      "strategies": ["follow", "stage", "panel"],
+      "inputModes": ["touch", "hybrid"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "controls",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Preserve world scale and follow the active player/target inside the gameplay region."
+    },
+    "wide": {
+      "strategies": ["reveal", "follow", "panel"],
+      "inputModes": ["keyboard", "pointer"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "secondary-status",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Reveal materially more valid world with bounded camera and wider dead zones."
+    },
+    "requiredVisibility": [
+      "primary learning prompt",
+      "active player or selection",
+      "current target or answer choices",
+      "immediate hazards",
+      "essential status"
+    ],
+    "statePreserved": [
+      "current content step",
+      "score",
+      "attempts",
+      "health/lives",
+      "timer",
+      "active target",
+      "completion-once guard"
+    ],
+    "fixtures": {
+      "englishShort": "cat — แมว",
+      "englishWorstCase": "environmentally sustainable transportation infrastructure",
+      "thaiShort": "แมว — cat",
+      "thaiWorstCase": "การพัฒนาโครงสร้างพื้นฐานด้านการคมนาคมอย่างยั่งยืนและปลอดภัย",
+      "enlargedTextScale": 1.5
+    },
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:source:components",
+      "evidence:source:logic",
+      "evidence:source:reading-copies",
+      "evidence:history:catalog"
+    ]
+  },
+  {
+    "id": "responsive:wizard-vs-zombie",
+    "gameId": "game:wizard-vs-zombie",
+    "sceneIds": ["scene:wizard-vs-zombie:main"],
+    "currentRisk": "Legacy fixed coordinates, canvas scaling, HUD overlays, and renderer-specific camera assumptions require rebuild validation.",
+    "compact": {
+      "strategies": ["follow", "stage", "panel"],
+      "inputModes": ["touch", "hybrid"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "controls",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Preserve world scale and follow the active player/target inside the gameplay region."
+    },
+    "wide": {
+      "strategies": ["reveal", "follow", "panel"],
+      "inputModes": ["keyboard", "pointer"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "secondary-status",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Reveal materially more valid world with bounded camera and wider dead zones."
+    },
+    "requiredVisibility": [
+      "primary learning prompt",
+      "active player or selection",
+      "current target or answer choices",
+      "immediate hazards",
+      "essential status"
+    ],
+    "statePreserved": [
+      "current content step",
+      "score",
+      "attempts",
+      "health/lives",
+      "timer",
+      "active target",
+      "completion-once guard"
+    ],
+    "fixtures": {
+      "englishShort": "cat — แมว",
+      "englishWorstCase": "environmentally sustainable transportation infrastructure",
+      "thaiShort": "แมว — cat",
+      "thaiWorstCase": "การพัฒนาโครงสร้างพื้นฐานด้านการคมนาคมอย่างยั่งยืนและปลอดภัย",
+      "enlargedTextScale": 1.5
+    },
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:source:components",
+      "evidence:source:logic",
+      "evidence:source:reading-copies"
+    ]
+  },
+  {
+    "id": "responsive:enchanted-library",
+    "gameId": "game:enchanted-library",
+    "sceneIds": ["scene:enchanted-library:main"],
+    "currentRisk": "Legacy fixed coordinates, canvas scaling, HUD overlays, and renderer-specific camera assumptions require rebuild validation.",
+    "compact": {
+      "strategies": ["reflow", "panel"],
+      "inputModes": ["touch", "hybrid"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "controls",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Reflow the mechanic into the gameplay region without shrinking text or targets."
+    },
+    "wide": {
+      "strategies": ["reflow", "panel"],
+      "inputModes": ["keyboard", "pointer"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "secondary-status",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Use horizontal space for gameplay plus an intentional prompt/status side panel."
+    },
+    "requiredVisibility": [
+      "primary learning prompt",
+      "active player or selection",
+      "current target or answer choices",
+      "immediate hazards",
+      "essential status"
+    ],
+    "statePreserved": [
+      "current content step",
+      "score",
+      "attempts",
+      "health/lives",
+      "timer",
+      "active target",
+      "completion-once guard"
+    ],
+    "fixtures": {
+      "englishShort": "cat — แมว",
+      "englishWorstCase": "environmentally sustainable transportation infrastructure",
+      "thaiShort": "แมว — cat",
+      "thaiWorstCase": "การพัฒนาโครงสร้างพื้นฐานด้านการคมนาคมอย่างยั่งยืนและปลอดภัย",
+      "enlargedTextScale": 1.5
+    },
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:source:components",
+      "evidence:source:logic",
+      "evidence:source:reading-copies"
+    ]
+  },
+  {
+    "id": "responsive:rune-match",
+    "gameId": "game:rune-match",
+    "sceneIds": ["scene:rune-match:main"],
+    "currentRisk": "Legacy fixed coordinates, canvas scaling, HUD overlays, and renderer-specific camera assumptions require rebuild validation.",
+    "compact": {
+      "strategies": ["reflow", "panel"],
+      "inputModes": ["touch", "hybrid"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "controls",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Reflow the mechanic into the gameplay region without shrinking text or targets."
+    },
+    "wide": {
+      "strategies": ["reflow", "panel"],
+      "inputModes": ["keyboard", "pointer"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "secondary-status",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Use horizontal space for gameplay plus an intentional prompt/status side panel."
+    },
+    "requiredVisibility": [
+      "primary learning prompt",
+      "active player or selection",
+      "current target or answer choices",
+      "immediate hazards",
+      "essential status"
+    ],
+    "statePreserved": [
+      "current content step",
+      "score",
+      "attempts",
+      "health/lives",
+      "timer",
+      "active target",
+      "completion-once guard"
+    ],
+    "fixtures": {
+      "englishShort": "cat — แมว",
+      "englishWorstCase": "environmentally sustainable transportation infrastructure",
+      "thaiShort": "แมว — cat",
+      "thaiWorstCase": "การพัฒนาโครงสร้างพื้นฐานด้านการคมนาคมอย่างยั่งยืนและปลอดภัย",
+      "enlargedTextScale": 1.5
+    },
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:source:components",
+      "evidence:source:logic",
+      "evidence:source:reading-copies"
+    ]
+  },
+  {
+    "id": "responsive:alchemists-synthesis",
+    "gameId": "game:alchemists-synthesis",
+    "sceneIds": ["scene:alchemists-synthesis:main"],
+    "currentRisk": "Legacy fixed coordinates, canvas scaling, HUD overlays, and renderer-specific camera assumptions require rebuild validation.",
+    "compact": {
+      "strategies": ["reflow", "panel"],
+      "inputModes": ["touch", "hybrid"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "controls",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Reflow the mechanic into the gameplay region without shrinking text or targets."
+    },
+    "wide": {
+      "strategies": ["reflow", "panel"],
+      "inputModes": ["keyboard", "pointer"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "secondary-status",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Use horizontal space for gameplay plus an intentional prompt/status side panel."
+    },
+    "requiredVisibility": [
+      "primary learning prompt",
+      "active player or selection",
+      "current target or answer choices",
+      "immediate hazards",
+      "essential status"
+    ],
+    "statePreserved": [
+      "current content step",
+      "score",
+      "attempts",
+      "health/lives",
+      "timer",
+      "active target",
+      "completion-once guard"
+    ],
+    "fixtures": {
+      "englishShort": "cat — แมว",
+      "englishWorstCase": "environmentally sustainable transportation infrastructure",
+      "thaiShort": "แมว — cat",
+      "thaiWorstCase": "การพัฒนาโครงสร้างพื้นฐานด้านการคมนาคมอย่างยั่งยืนและปลอดภัย",
+      "enlargedTextScale": 1.5
+    },
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:source:components",
+      "evidence:source:logic"
+    ]
+  },
+  {
+    "id": "responsive:potion-rush",
+    "gameId": "game:potion-rush",
+    "sceneIds": ["scene:potion-rush:main"],
+    "currentRisk": "Legacy fixed coordinates, canvas scaling, HUD overlays, and renderer-specific camera assumptions require rebuild validation.",
+    "compact": {
+      "strategies": ["reflow", "panel"],
+      "inputModes": ["touch", "hybrid"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "controls",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Reflow the mechanic into the gameplay region without shrinking text or targets."
+    },
+    "wide": {
+      "strategies": ["reflow", "panel"],
+      "inputModes": ["keyboard", "pointer"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "secondary-status",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Use horizontal space for gameplay plus an intentional prompt/status side panel."
+    },
+    "requiredVisibility": [
+      "primary learning prompt",
+      "active player or selection",
+      "current target or answer choices",
+      "immediate hazards",
+      "essential status"
+    ],
+    "statePreserved": [
+      "current content step",
+      "score",
+      "attempts",
+      "health/lives",
+      "timer",
+      "active target",
+      "completion-once guard"
+    ],
+    "fixtures": {
+      "englishShort": "cat — แมว",
+      "englishWorstCase": "environmentally sustainable transportation infrastructure",
+      "thaiShort": "แมว — cat",
+      "thaiWorstCase": "การพัฒนาโครงสร้างพื้นฐานด้านการคมนาคมอย่างยั่งยืนและปลอดภัย",
+      "enlargedTextScale": 1.5
+    },
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:source:components",
+      "evidence:source:logic",
+      "evidence:source:reading-copies"
+    ]
+  },
+  {
+    "id": "responsive:dungeon-liberator",
+    "gameId": "game:dungeon-liberator",
+    "sceneIds": ["scene:dungeon-liberator:main"],
+    "currentRisk": "Legacy fixed coordinates, canvas scaling, HUD overlays, and renderer-specific camera assumptions require rebuild validation.",
+    "compact": {
+      "strategies": ["follow", "stage", "panel"],
+      "inputModes": ["touch", "hybrid"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "controls",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Preserve world scale and follow the active player/target inside the gameplay region."
+    },
+    "wide": {
+      "strategies": ["reveal", "follow", "panel"],
+      "inputModes": ["keyboard", "pointer"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "secondary-status",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Reveal materially more valid world with bounded camera and wider dead zones."
+    },
+    "requiredVisibility": [
+      "primary learning prompt",
+      "active player or selection",
+      "current target or answer choices",
+      "immediate hazards",
+      "essential status"
+    ],
+    "statePreserved": [
+      "current content step",
+      "score",
+      "attempts",
+      "health/lives",
+      "timer",
+      "active target",
+      "completion-once guard"
+    ],
+    "fixtures": {
+      "englishShort": "cat — แมว",
+      "englishWorstCase": "environmentally sustainable transportation infrastructure",
+      "thaiShort": "แมว — cat",
+      "thaiWorstCase": "การพัฒนาโครงสร้างพื้นฐานด้านการคมนาคมอย่างยั่งยืนและปลอดภัย",
+      "enlargedTextScale": 1.5
+    },
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:source:components",
+      "evidence:source:logic",
+      "evidence:history:catalog"
+    ]
+  },
+  {
+    "id": "responsive:spellweavers-run",
+    "gameId": "game:spellweavers-run",
+    "sceneIds": ["scene:spellweavers-run:main"],
+    "currentRisk": "No current playable implementation; geometry is provisional and must be proven by Red tests.",
+    "compact": {
+      "strategies": ["reflow", "panel"],
+      "inputModes": ["touch", "hybrid"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "controls",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Reflow the mechanic into the gameplay region without shrinking text or targets."
+    },
+    "wide": {
+      "strategies": ["reflow", "panel"],
+      "inputModes": ["keyboard", "pointer"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "secondary-status",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Use horizontal space for gameplay plus an intentional prompt/status side panel."
+    },
+    "requiredVisibility": [
+      "primary learning prompt",
+      "active player or selection",
+      "current target or answer choices",
+      "immediate hazards",
+      "essential status"
+    ],
+    "statePreserved": [
+      "current content step",
+      "score",
+      "attempts",
+      "health/lives",
+      "timer",
+      "active target",
+      "completion-once guard"
+    ],
+    "fixtures": {
+      "englishShort": "cat — แมว",
+      "englishWorstCase": "environmentally sustainable transportation infrastructure",
+      "thaiShort": "แมว — cat",
+      "thaiWorstCase": "การพัฒนาโครงสร้างพื้นฐานด้านการคมนาคมอย่างยั่งยืนและปลอดภัย",
+      "enlargedTextScale": 1.5
+    },
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:measure:roadmap",
+      "evidence:history:catalog"
+    ]
+  },
+  {
+    "id": "responsive:shadow-gate-dungeon",
+    "gameId": "game:shadow-gate-dungeon",
+    "sceneIds": ["scene:shadow-gate-dungeon:main"],
+    "currentRisk": "Legacy fixed coordinates, canvas scaling, HUD overlays, and renderer-specific camera assumptions require rebuild validation.",
+    "compact": {
+      "strategies": ["follow", "stage", "panel"],
+      "inputModes": ["touch", "hybrid"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "controls",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Preserve world scale and follow the active player/target inside the gameplay region."
+    },
+    "wide": {
+      "strategies": ["reveal", "follow", "panel"],
+      "inputModes": ["keyboard", "pointer"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "secondary-status",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Reveal materially more valid world with bounded camera and wider dead zones."
+    },
+    "requiredVisibility": [
+      "primary learning prompt",
+      "active player or selection",
+      "current target or answer choices",
+      "immediate hazards",
+      "essential status"
+    ],
+    "statePreserved": [
+      "current content step",
+      "score",
+      "attempts",
+      "health/lives",
+      "timer",
+      "active target",
+      "completion-once guard"
+    ],
+    "fixtures": {
+      "englishShort": "cat — แมว",
+      "englishWorstCase": "environmentally sustainable transportation infrastructure",
+      "thaiShort": "แมว — cat",
+      "thaiWorstCase": "การพัฒนาโครงสร้างพื้นฐานด้านการคมนาคมอย่างยั่งยืนและปลอดภัย",
+      "enlargedTextScale": 1.5
+    },
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:source:components",
+      "evidence:source:logic"
+    ]
+  },
+  {
+    "id": "responsive:rune-forge-chamber",
+    "gameId": "game:rune-forge-chamber",
+    "sceneIds": ["scene:rune-forge-chamber:main"],
+    "currentRisk": "Legacy fixed coordinates, canvas scaling, HUD overlays, and renderer-specific camera assumptions require rebuild validation.",
+    "compact": {
+      "strategies": ["reflow", "panel"],
+      "inputModes": ["touch", "hybrid"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "controls",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Reflow the mechanic into the gameplay region without shrinking text or targets."
+    },
+    "wide": {
+      "strategies": ["reflow", "panel"],
+      "inputModes": ["keyboard", "pointer"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "secondary-status",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Use horizontal space for gameplay plus an intentional prompt/status side panel."
+    },
+    "requiredVisibility": [
+      "primary learning prompt",
+      "active player or selection",
+      "current target or answer choices",
+      "immediate hazards",
+      "essential status"
+    ],
+    "statePreserved": [
+      "current content step",
+      "score",
+      "attempts",
+      "health/lives",
+      "timer",
+      "active target",
+      "completion-once guard"
+    ],
+    "fixtures": {
+      "englishShort": "cat — แมว",
+      "englishWorstCase": "environmentally sustainable transportation infrastructure",
+      "thaiShort": "แมว — cat",
+      "thaiWorstCase": "การพัฒนาโครงสร้างพื้นฐานด้านการคมนาคมอย่างยั่งยืนและปลอดภัย",
+      "enlargedTextScale": 1.5
+    },
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:source:components",
+      "evidence:source:logic"
+    ]
+  },
+  {
+    "id": "responsive:village-guardian",
+    "gameId": "game:village-guardian",
+    "sceneIds": ["scene:village-guardian:main"],
+    "currentRisk": "Legacy fixed coordinates, canvas scaling, HUD overlays, and renderer-specific camera assumptions require rebuild validation.",
+    "compact": {
+      "strategies": ["follow", "stage", "panel"],
+      "inputModes": ["touch", "hybrid"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "controls",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Preserve world scale and follow the active player/target inside the gameplay region."
+    },
+    "wide": {
+      "strategies": ["reveal", "follow", "panel"],
+      "inputModes": ["keyboard", "pointer"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "secondary-status",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Reveal materially more valid world with bounded camera and wider dead zones."
+    },
+    "requiredVisibility": [
+      "primary learning prompt",
+      "active player or selection",
+      "current target or answer choices",
+      "immediate hazards",
+      "essential status"
+    ],
+    "statePreserved": [
+      "current content step",
+      "score",
+      "attempts",
+      "health/lives",
+      "timer",
+      "active target",
+      "completion-once guard"
+    ],
+    "fixtures": {
+      "englishShort": "cat — แมว",
+      "englishWorstCase": "environmentally sustainable transportation infrastructure",
+      "thaiShort": "แมว — cat",
+      "thaiWorstCase": "การพัฒนาโครงสร้างพื้นฐานด้านการคมนาคมอย่างยั่งยืนและปลอดภัย",
+      "enlargedTextScale": 1.5
+    },
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:source:components",
+      "evidence:source:logic"
+    ]
+  },
+  {
+    "id": "responsive:labyrinth-goblin-king",
+    "gameId": "game:labyrinth-goblin-king",
+    "sceneIds": ["scene:labyrinth-goblin-king:main"],
+    "currentRisk": "Legacy fixed coordinates, canvas scaling, HUD overlays, and renderer-specific camera assumptions require rebuild validation.",
+    "compact": {
+      "strategies": ["follow", "stage", "panel"],
+      "inputModes": ["touch", "hybrid"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "controls",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Preserve world scale and follow the active player/target inside the gameplay region."
+    },
+    "wide": {
+      "strategies": ["reveal", "follow", "panel"],
+      "inputModes": ["keyboard", "pointer"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "secondary-status",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Reveal materially more valid world with bounded camera and wider dead zones."
+    },
+    "requiredVisibility": [
+      "primary learning prompt",
+      "active player or selection",
+      "current target or answer choices",
+      "immediate hazards",
+      "essential status"
+    ],
+    "statePreserved": [
+      "current content step",
+      "score",
+      "attempts",
+      "health/lives",
+      "timer",
+      "active target",
+      "completion-once guard"
+    ],
+    "fixtures": {
+      "englishShort": "cat — แมว",
+      "englishWorstCase": "environmentally sustainable transportation infrastructure",
+      "thaiShort": "แมว — cat",
+      "thaiWorstCase": "การพัฒนาโครงสร้างพื้นฐานด้านการคมนาคมอย่างยั่งยืนและปลอดภัย",
+      "enlargedTextScale": 1.5
+    },
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:source:components",
+      "evidence:source:logic"
+    ]
+  },
+  {
+    "id": "responsive:archers-revenge",
+    "gameId": "game:archers-revenge",
+    "sceneIds": ["scene:archers-revenge:main"],
+    "currentRisk": "No current playable implementation; geometry is provisional and must be proven by Red tests.",
+    "compact": {
+      "strategies": ["reflow", "panel"],
+      "inputModes": ["touch", "hybrid"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "controls",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Reflow the mechanic into the gameplay region without shrinking text or targets."
+    },
+    "wide": {
+      "strategies": ["reflow", "panel"],
+      "inputModes": ["keyboard", "pointer"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "secondary-status",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Use horizontal space for gameplay plus an intentional prompt/status side panel."
+    },
+    "requiredVisibility": [
+      "primary learning prompt",
+      "active player or selection",
+      "current target or answer choices",
+      "immediate hazards",
+      "essential status"
+    ],
+    "statePreserved": [
+      "current content step",
+      "score",
+      "attempts",
+      "health/lives",
+      "timer",
+      "active target",
+      "completion-once guard"
+    ],
+    "fixtures": {
+      "englishShort": "cat — แมว",
+      "englishWorstCase": "environmentally sustainable transportation infrastructure",
+      "thaiShort": "แมว — cat",
+      "thaiWorstCase": "การพัฒนาโครงสร้างพื้นฐานด้านการคมนาคมอย่างยั่งยืนและปลอดภัย",
+      "enlargedTextScale": 1.5
+    },
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:measure:roadmap",
+      "evidence:history:catalog"
+    ]
+  },
+  {
+    "id": "responsive:storm-castle-tower",
+    "gameId": "game:storm-castle-tower",
+    "sceneIds": ["scene:storm-castle-tower:main"],
+    "currentRisk": "No current playable implementation; geometry is provisional and must be proven by Red tests.",
+    "compact": {
+      "strategies": ["follow", "stage", "panel"],
+      "inputModes": ["touch", "hybrid"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "controls",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Preserve world scale and follow the active player/target inside the gameplay region."
+    },
+    "wide": {
+      "strategies": ["reveal", "follow", "panel"],
+      "inputModes": ["keyboard", "pointer"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "secondary-status",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Reveal materially more valid world with bounded camera and wider dead zones."
+    },
+    "requiredVisibility": [
+      "primary learning prompt",
+      "active player or selection",
+      "current target or answer choices",
+      "immediate hazards",
+      "essential status"
+    ],
+    "statePreserved": [
+      "current content step",
+      "score",
+      "attempts",
+      "health/lives",
+      "timer",
+      "active target",
+      "completion-once guard"
+    ],
+    "fixtures": {
+      "englishShort": "cat — แมว",
+      "englishWorstCase": "environmentally sustainable transportation infrastructure",
+      "thaiShort": "แมว — cat",
+      "thaiWorstCase": "การพัฒนาโครงสร้างพื้นฐานด้านการคมนาคมอย่างยั่งยืนและปลอดภัย",
+      "enlargedTextScale": 1.5
+    },
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:measure:roadmap",
+      "evidence:history:catalog"
+    ]
+  },
+  {
+    "id": "responsive:griffin-sky-joust",
+    "gameId": "game:griffin-sky-joust",
+    "sceneIds": ["scene:griffin-sky-joust:main"],
+    "currentRisk": "No current playable implementation; geometry is provisional and must be proven by Red tests.",
+    "compact": {
+      "strategies": ["reflow", "panel"],
+      "inputModes": ["touch", "hybrid"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "controls",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Reflow the mechanic into the gameplay region without shrinking text or targets."
+    },
+    "wide": {
+      "strategies": ["reflow", "panel"],
+      "inputModes": ["keyboard", "pointer"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "secondary-status",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Use horizontal space for gameplay plus an intentional prompt/status side panel."
+    },
+    "requiredVisibility": [
+      "primary learning prompt",
+      "active player or selection",
+      "current target or answer choices",
+      "immediate hazards",
+      "essential status"
+    ],
+    "statePreserved": [
+      "current content step",
+      "score",
+      "attempts",
+      "health/lives",
+      "timer",
+      "active target",
+      "completion-once guard"
+    ],
+    "fixtures": {
+      "englishShort": "cat — แมว",
+      "englishWorstCase": "environmentally sustainable transportation infrastructure",
+      "thaiShort": "แมว — cat",
+      "thaiWorstCase": "การพัฒนาโครงสร้างพื้นฐานด้านการคมนาคมอย่างยั่งยืนและปลอดภัย",
+      "enlargedTextScale": 1.5
+    },
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:measure:roadmap",
+      "evidence:history:catalog"
+    ]
+  },
+  {
+    "id": "responsive:realm-carver",
+    "gameId": "game:realm-carver",
+    "sceneIds": ["scene:realm-carver:main"],
+    "currentRisk": "No current playable implementation; geometry is provisional and must be proven by Red tests.",
+    "compact": {
+      "strategies": ["follow", "stage", "panel"],
+      "inputModes": ["touch", "hybrid"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "controls",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Preserve world scale and follow the active player/target inside the gameplay region."
+    },
+    "wide": {
+      "strategies": ["reveal", "follow", "panel"],
+      "inputModes": ["keyboard", "pointer"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "secondary-status",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Reveal materially more valid world with bounded camera and wider dead zones."
+    },
+    "requiredVisibility": [
+      "primary learning prompt",
+      "active player or selection",
+      "current target or answer choices",
+      "immediate hazards",
+      "essential status"
+    ],
+    "statePreserved": [
+      "current content step",
+      "score",
+      "attempts",
+      "health/lives",
+      "timer",
+      "active target",
+      "completion-once guard"
+    ],
+    "fixtures": {
+      "englishShort": "cat — แมว",
+      "englishWorstCase": "environmentally sustainable transportation infrastructure",
+      "thaiShort": "แมว — cat",
+      "thaiWorstCase": "การพัฒนาโครงสร้างพื้นฐานด้านการคมนาคมอย่างยั่งยืนและปลอดภัย",
+      "enlargedTextScale": 1.5
+    },
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:measure:roadmap",
+      "evidence:history:catalog"
+    ]
+  },
+  {
+    "id": "responsive:paladins-twin-soul",
+    "gameId": "game:paladins-twin-soul",
+    "sceneIds": ["scene:paladins-twin-soul:main"],
+    "currentRisk": "No current playable implementation; geometry is provisional and must be proven by Red tests.",
+    "compact": {
+      "strategies": ["reflow", "panel"],
+      "inputModes": ["touch", "hybrid"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "controls",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Reflow the mechanic into the gameplay region without shrinking text or targets."
+    },
+    "wide": {
+      "strategies": ["reflow", "panel"],
+      "inputModes": ["keyboard", "pointer"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "secondary-status",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Use horizontal space for gameplay plus an intentional prompt/status side panel."
+    },
+    "requiredVisibility": [
+      "primary learning prompt",
+      "active player or selection",
+      "current target or answer choices",
+      "immediate hazards",
+      "essential status"
+    ],
+    "statePreserved": [
+      "current content step",
+      "score",
+      "attempts",
+      "health/lives",
+      "timer",
+      "active target",
+      "completion-once guard"
+    ],
+    "fixtures": {
+      "englishShort": "cat — แมว",
+      "englishWorstCase": "environmentally sustainable transportation infrastructure",
+      "thaiShort": "แมว — cat",
+      "thaiWorstCase": "การพัฒนาโครงสร้างพื้นฐานด้านการคมนาคมอย่างยั่งยืนและปลอดภัย",
+      "enlargedTextScale": 1.5
+    },
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:measure:roadmap",
+      "evidence:history:catalog"
+    ]
+  },
+  {
+    "id": "responsive:griffin-riders-escape",
+    "gameId": "game:griffin-riders-escape",
+    "sceneIds": ["scene:griffin-riders-escape:main"],
+    "currentRisk": "No current playable implementation; geometry is provisional and must be proven by Red tests.",
+    "compact": {
+      "strategies": ["follow", "stage", "panel"],
+      "inputModes": ["touch", "hybrid"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "controls",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Preserve world scale and follow the active player/target inside the gameplay region."
+    },
+    "wide": {
+      "strategies": ["reveal", "follow", "panel"],
+      "inputModes": ["keyboard", "pointer"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "secondary-status",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Reveal materially more valid world with bounded camera and wider dead zones."
+    },
+    "requiredVisibility": [
+      "primary learning prompt",
+      "active player or selection",
+      "current target or answer choices",
+      "immediate hazards",
+      "essential status"
+    ],
+    "statePreserved": [
+      "current content step",
+      "score",
+      "attempts",
+      "health/lives",
+      "timer",
+      "active target",
+      "completion-once guard"
+    ],
+    "fixtures": {
+      "englishShort": "cat — แมว",
+      "englishWorstCase": "environmentally sustainable transportation infrastructure",
+      "thaiShort": "แมว — cat",
+      "thaiWorstCase": "การพัฒนาโครงสร้างพื้นฐานด้านการคมนาคมอย่างยั่งยืนและปลอดภัย",
+      "enlargedTextScale": 1.5
+    },
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:measure:roadmap",
+      "evidence:history:catalog"
+    ]
+  },
+  {
+    "id": "responsive:astral-mage",
+    "gameId": "game:astral-mage",
+    "sceneIds": ["scene:astral-mage:main"],
+    "currentRisk": "No current playable implementation; geometry is provisional and must be proven by Red tests.",
+    "compact": {
+      "strategies": ["follow", "stage", "panel"],
+      "inputModes": ["touch", "hybrid"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "controls",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Preserve world scale and follow the active player/target inside the gameplay region."
+    },
+    "wide": {
+      "strategies": ["reveal", "follow", "panel"],
+      "inputModes": ["keyboard", "pointer"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "secondary-status",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Reveal materially more valid world with bounded camera and wider dead zones."
+    },
+    "requiredVisibility": [
+      "primary learning prompt",
+      "active player or selection",
+      "current target or answer choices",
+      "immediate hazards",
+      "essential status"
+    ],
+    "statePreserved": [
+      "current content step",
+      "score",
+      "attempts",
+      "health/lives",
+      "timer",
+      "active target",
+      "completion-once guard"
+    ],
+    "fixtures": {
+      "englishShort": "cat — แมว",
+      "englishWorstCase": "environmentally sustainable transportation infrastructure",
+      "thaiShort": "แมว — cat",
+      "thaiWorstCase": "การพัฒนาโครงสร้างพื้นฐานด้านการคมนาคมอย่างยั่งยืนและปลอดภัย",
+      "enlargedTextScale": 1.5
+    },
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:measure:roadmap",
+      "evidence:history:catalog"
+    ]
+  },
+  {
+    "id": "responsive:devourer-slime",
+    "gameId": "game:devourer-slime",
+    "sceneIds": ["scene:devourer-slime:main"],
+    "currentRisk": "Legacy fixed coordinates, canvas scaling, HUD overlays, and renderer-specific camera assumptions require rebuild validation.",
+    "compact": {
+      "strategies": ["follow", "stage", "panel"],
+      "inputModes": ["touch", "hybrid"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "controls",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Preserve world scale and follow the active player/target inside the gameplay region."
+    },
+    "wide": {
+      "strategies": ["reveal", "follow", "panel"],
+      "inputModes": ["keyboard", "pointer"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "secondary-status",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Reveal materially more valid world with bounded camera and wider dead zones."
+    },
+    "requiredVisibility": [
+      "primary learning prompt",
+      "active player or selection",
+      "current target or answer choices",
+      "immediate hazards",
+      "essential status"
+    ],
+    "statePreserved": [
+      "current content step",
+      "score",
+      "attempts",
+      "health/lives",
+      "timer",
+      "active target",
+      "completion-once guard"
+    ],
+    "fixtures": {
+      "englishShort": "cat — แมว",
+      "englishWorstCase": "environmentally sustainable transportation infrastructure",
+      "thaiShort": "แมว — cat",
+      "thaiWorstCase": "การพัฒนาโครงสร้างพื้นฐานด้านการคมนาคมอย่างยั่งยืนและปลอดภัย",
+      "enlargedTextScale": 1.5
+    },
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:source:components",
+      "evidence:source:logic"
+    ]
+  },
+  {
+    "id": "responsive:sorcerer-ziggurat",
+    "gameId": "game:sorcerer-ziggurat",
+    "sceneIds": ["scene:sorcerer-ziggurat:main"],
+    "currentRisk": "No current playable implementation; geometry is provisional and must be proven by Red tests.",
+    "compact": {
+      "strategies": ["reflow", "panel"],
+      "inputModes": ["touch", "hybrid"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "controls",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Reflow the mechanic into the gameplay region without shrinking text or targets."
+    },
+    "wide": {
+      "strategies": ["reflow", "panel"],
+      "inputModes": ["keyboard", "pointer"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "secondary-status",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Use horizontal space for gameplay plus an intentional prompt/status side panel."
+    },
+    "requiredVisibility": [
+      "primary learning prompt",
+      "active player or selection",
+      "current target or answer choices",
+      "immediate hazards",
+      "essential status"
+    ],
+    "statePreserved": [
+      "current content step",
+      "score",
+      "attempts",
+      "health/lives",
+      "timer",
+      "active target",
+      "completion-once guard"
+    ],
+    "fixtures": {
+      "englishShort": "cat — แมว",
+      "englishWorstCase": "environmentally sustainable transportation infrastructure",
+      "thaiShort": "แมว — cat",
+      "thaiWorstCase": "การพัฒนาโครงสร้างพื้นฐานด้านการคมนาคมอย่างยั่งยืนและปลอดภัย",
+      "enlargedTextScale": 1.5
+    },
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:measure:roadmap",
+      "evidence:history:catalog"
+    ]
+  },
+  {
+    "id": "responsive:haunted-library",
+    "gameId": "game:haunted-library",
+    "sceneIds": ["scene:haunted-library:main"],
+    "currentRisk": "Legacy fixed coordinates, canvas scaling, HUD overlays, and renderer-specific camera assumptions require rebuild validation.",
+    "compact": {
+      "strategies": ["reflow", "panel"],
+      "inputModes": ["touch", "hybrid"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "controls",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Reflow the mechanic into the gameplay region without shrinking text or targets."
+    },
+    "wide": {
+      "strategies": ["reflow", "panel"],
+      "inputModes": ["keyboard", "pointer"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "secondary-status",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Use horizontal space for gameplay plus an intentional prompt/status side panel."
+    },
+    "requiredVisibility": [
+      "primary learning prompt",
+      "active player or selection",
+      "current target or answer choices",
+      "immediate hazards",
+      "essential status"
+    ],
+    "statePreserved": [
+      "current content step",
+      "score",
+      "attempts",
+      "health/lives",
+      "timer",
+      "active target",
+      "completion-once guard"
+    ],
+    "fixtures": {
+      "englishShort": "cat — แมว",
+      "englishWorstCase": "environmentally sustainable transportation infrastructure",
+      "thaiShort": "แมว — cat",
+      "thaiWorstCase": "การพัฒนาโครงสร้างพื้นฐานด้านการคมนาคมอย่างยั่งยืนและปลอดภัย",
+      "enlargedTextScale": 1.5
+    },
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:source:components",
+      "evidence:source:logic"
+    ]
+  },
+  {
+    "id": "responsive:gryphon-patrol",
+    "gameId": "game:gryphon-patrol",
+    "sceneIds": ["scene:gryphon-patrol:main"],
+    "currentRisk": "No current playable implementation; geometry is provisional and must be proven by Red tests.",
+    "compact": {
+      "strategies": ["follow", "stage", "panel"],
+      "inputModes": ["touch", "hybrid"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "controls",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Preserve world scale and follow the active player/target inside the gameplay region."
+    },
+    "wide": {
+      "strategies": ["reveal", "follow", "panel"],
+      "inputModes": ["keyboard", "pointer"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "secondary-status",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Reveal materially more valid world with bounded camera and wider dead zones."
+    },
+    "requiredVisibility": [
+      "primary learning prompt",
+      "active player or selection",
+      "current target or answer choices",
+      "immediate hazards",
+      "essential status"
+    ],
+    "statePreserved": [
+      "current content step",
+      "score",
+      "attempts",
+      "health/lives",
+      "timer",
+      "active target",
+      "completion-once guard"
+    ],
+    "fixtures": {
+      "englishShort": "cat — แมว",
+      "englishWorstCase": "environmentally sustainable transportation infrastructure",
+      "thaiShort": "แมว — cat",
+      "thaiWorstCase": "การพัฒนาโครงสร้างพื้นฐานด้านการคมนาคมอย่างยั่งยืนและปลอดภัย",
+      "enlargedTextScale": 1.5
+    },
+    "evidenceIds": [
+      "evidence:source:catalog",
+      "evidence:measure:roadmap",
+      "evidence:history:catalog"
+    ]
+  },
+  {
+    "id": "responsive:abyssal-well",
+    "gameId": "game:abyssal-well",
+    "sceneIds": ["scene:abyssal-well:main"],
+    "currentRisk": "No current playable implementation; geometry is provisional and must be proven by Red tests.",
+    "compact": {
+      "strategies": ["follow", "stage", "panel"],
+      "inputModes": ["touch", "hybrid"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "controls",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Preserve world scale and follow the active player/target inside the gameplay region."
+    },
+    "wide": {
+      "strategies": ["reveal", "follow", "panel"],
+      "inputModes": ["keyboard", "pointer"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "secondary-status",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Reveal materially more valid world with bounded camera and wider dead zones."
+    },
+    "requiredVisibility": [
+      "primary learning prompt",
+      "active player or selection",
+      "current target or answer choices",
+      "immediate hazards",
+      "essential status"
+    ],
+    "statePreserved": [
+      "current content step",
+      "score",
+      "attempts",
+      "health/lives",
+      "timer",
+      "active target",
+      "completion-once guard"
+    ],
+    "fixtures": {
+      "englishShort": "cat — แมว",
+      "englishWorstCase": "environmentally sustainable transportation infrastructure",
+      "thaiShort": "แมว — cat",
+      "thaiWorstCase": "การพัฒนาโครงสร้างพื้นฐานด้านการคมนาคมอย่างยั่งยืนและปลอดภัย",
+      "enlargedTextScale": 1.5
+    },
+    "evidenceIds": [
+      "evidence:measure:abyssal",
+      "evidence:measure:roadmap",
+      "evidence:history:catalog"
+    ]
+  },
+  {
+    "id": "responsive:babel-architect",
+    "gameId": "game:babel-architect",
+    "sceneIds": ["scene:babel-architect:main"],
+    "currentRisk": "No current playable implementation; geometry is provisional and must be proven by Red tests.",
+    "compact": {
+      "strategies": ["reflow", "panel"],
+      "inputModes": ["touch", "hybrid"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "controls",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Reflow the mechanic into the gameplay region without shrinking text or targets."
+    },
+    "wide": {
+      "strategies": ["reflow", "panel"],
+      "inputModes": ["keyboard", "pointer"],
+      "reservedRegions": [
+        "primary-prompt",
+        "primary-status",
+        "secondary-status",
+        "feedback",
+        "navigation"
+      ],
+      "cameraPolicy": "Use horizontal space for gameplay plus an intentional prompt/status side panel."
+    },
+    "requiredVisibility": [
+      "primary learning prompt",
+      "active player or selection",
+      "current target or answer choices",
+      "immediate hazards",
+      "essential status"
+    ],
+    "statePreserved": [
+      "current content step",
+      "score",
+      "attempts",
+      "health/lives",
+      "timer",
+      "active target",
+      "completion-once guard"
+    ],
+    "fixtures": {
+      "englishShort": "cat — แมว",
+      "englishWorstCase": "environmentally sustainable transportation infrastructure",
+      "thaiShort": "แมว — cat",
+      "thaiWorstCase": "การพัฒนาโครงสร้างพื้นฐานด้านการคมนาคมอย่างยั่งยืนและปลอดภัย",
+      "enlargedTextScale": 1.5
+    },
+    "evidenceIds": [
+      "evidence:measure:babel",
+      "evidence:measure:roadmap",
+      "evidence:history:catalog"
+    ]
+  }
+]
