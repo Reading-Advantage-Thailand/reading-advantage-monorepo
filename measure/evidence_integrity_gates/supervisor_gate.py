@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import gzip
 import hashlib
+import io
 import json
 import re
 import subprocess
@@ -91,6 +92,15 @@ def _sha256_bytes(value: bytes) -> str:
     @returns Lowercase hexadecimal digest.
     """
     return hashlib.sha256(value).hexdigest()
+
+
+def _canonical_json(value: Mapping[str, Any]) -> bytes:
+    """Serializes a contract to its unique UTF-8 representation.
+
+    @param value JSON object to serialize.
+    @returns Canonical JSON bytes.
+    """
+    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode()
 
 
 def _blocked(code: str, **detail: Any) -> dict[str, Any]:
@@ -206,19 +216,25 @@ def _message_text_bytes(message: Mapping[str, Any]) -> bytes:
 
 
 def _load_bound_raw_export(
-    repo: Path, relative_path: Any, expected_raw_hash: Any
+    repo: Path,
+    relative_path: Any,
+    expected_raw_hash: Any,
+    expected_stored_hash: Any,
 ) -> Mapping[str, Any] | None:
     """Loads a content-addressed retained raw export after exact-byte verification.
 
     @param repo Resolved repository root.
     @param relative_path Repository-relative raw or gzip-compressed snapshot path.
     @param expected_raw_hash SHA-256 of the uncompressed provider bytes.
+    @param expected_stored_hash SHA-256 of the exact retained file bytes.
     @returns Parsed raw export, or ``None`` for any path, hash, compression, or JSON failure.
     """
     if (
         not isinstance(relative_path, str)
         or not isinstance(expected_raw_hash, str)
+        or not isinstance(expected_stored_hash, str)
         or re.fullmatch(r"[0-9a-f]{64}", expected_raw_hash) is None
+        or re.fullmatch(r"[0-9a-f]{64}", expected_stored_hash) is None
         or not _is_regular_repo_file(repo, relative_path)
         or PurePosixPath(relative_path).name
         not in {f"{expected_raw_hash}.json", f"{expected_raw_hash}.json.gz"}
@@ -226,7 +242,13 @@ def _load_bound_raw_export(
         return None
     try:
         stored = (repo / relative_path).read_bytes()
-        raw = gzip.decompress(stored) if relative_path.endswith(".gz") else stored
+        if _sha256_bytes(stored) != expected_stored_hash:
+            return None
+        if relative_path.endswith(".gz"):
+            with gzip.GzipFile(fileobj=io.BytesIO(stored)) as compressed:
+                raw = compressed.read(32 * 1024 * 1024 + 1)
+        else:
+            raw = stored
         if len(raw) > 32 * 1024 * 1024 or _sha256_bytes(raw) != expected_raw_hash:
             return None
         value = json.loads(raw)
@@ -251,7 +273,7 @@ def _validated_export_messages(
         not isinstance(info, Mapping)
         or not isinstance(session_id, str)
         or info.get("id") != session_id
-        or (parent_session_id is not None and info.get("parentID") != parent_session_id)
+        or info.get("parentID") != parent_session_id
         or not isinstance(messages, list)
         or not messages
         or not all(isinstance(message, Mapping) for message in messages)
@@ -263,27 +285,38 @@ def _validated_export_messages(
         time = message_info.get("time") if isinstance(message_info, Mapping) else None
         message_id = message_info.get("id") if isinstance(message_info, Mapping) else None
         created = time.get("created") if isinstance(time, Mapping) else None
+        completed = time.get("completed") if isinstance(time, Mapping) else None
         parent = message_info.get("parentID") if isinstance(message_info, Mapping) else None
+        role = message_info.get("role") if isinstance(message_info, Mapping) else None
         if (
             not isinstance(message_id, str)
             or not message_id.startswith("msg_")
             or message_info.get("sessionID") != session_id
             or isinstance(created, bool)
             or not isinstance(created, int)
+            or role not in {"user", "assistant"}
             or (parent is not None and not isinstance(parent, str))
+            or (
+                completed is not None
+                and (
+                    isinstance(completed, bool)
+                    or not isinstance(completed, int)
+                    or completed < created
+                )
+            )
         ):
             return None
         identities.append((message_id, created, parent))
     ids = [identity[0] for identity in identities]
     if len(ids) != len(set(ids)) or identities != sorted(identities, key=lambda item: item[1]):
         return None
-    known_ids = set(ids)
-    if any(
-        message.get("info", {}).get("role") == "assistant"
-        and parent not in known_ids
-        for message, (_, _, parent) in zip(messages, identities, strict=True)
-    ):
-        return None
+    prior_users: set[str] = set()
+    for message, (message_id, _, parent) in zip(messages, identities, strict=True):
+        role = message.get("info", {}).get("role")
+        if role == "assistant" and parent not in prior_users:
+            return None
+        if role == "user":
+            prior_users.add(message_id)
     return list(messages)
 
 
@@ -301,19 +334,32 @@ def _message_by_id(
 
 
 def _validate_review_provenance(
-    repo: Path, review: Mapping[str, Any]
+    repo: Path,
+    review: Mapping[str, Any],
+    *,
+    candidate_hash: Any,
+    candidate: Mapping[str, Any],
+    gate_commit: Any,
+    gate_version: Any,
 ) -> tuple[bool, int | None]:
     """Validates retained reviewer identity and provider-neutral context isolation.
 
     @param repo Resolved repository root.
     @param review Bound independent-review report.
+    @param candidate_hash Exact candidate manifest hash.
+    @param candidate Parsed candidate manifest.
+    @param gate_commit Reviewed implementation commit.
+    @param gate_version Reviewed gate version.
     @returns Validation result and provider completion timestamp.
     """
     provenance = review.get("fresh_context_provenance")
     if not isinstance(provenance, Mapping) or provenance.get("role") != "adversarial-reviewer":
         return False, None
     export = _load_bound_raw_export(
-        repo, provenance.get("raw_export_path"), provenance.get("raw_export_sha256")
+        repo,
+        provenance.get("raw_export_path"),
+        provenance.get("raw_export_sha256"),
+        provenance.get("stored_export_sha256"),
     )
     if export is None:
         return False, None
@@ -340,9 +386,23 @@ def _validate_review_provenance(
         provenance.get("isolation_proof") == "raw-history-begins-with-fresh-prompt"
         and messages[0] is prompt
     )
+    expected_prompt = _canonical_json({
+        "candidate_manifest_sha256": candidate_hash,
+        "gate_version": gate_version,
+        "implementation_commit": gate_commit,
+        "source_base_commit": candidate.get("source_base_commit"),
+        "task": "independent-adversarial-review",
+    })
+    expected_final = _canonical_json({
+        "candidate_manifest_sha256": candidate_hash,
+        "review_status": review.get("review_status"),
+        "unresolved_findings": review.get("unresolved_findings"),
+    })
     valid = bool(
         prompt_info.get("role") == "user"
+        and export.get("info", {}).get("agent") == provenance.get("agent")
         and final_info.get("role") == "assistant"
+        and final_info.get("parentID") == provenance.get("prompt_message_id")
         and final is assistants[-1]
         and assistants
         and {message.get("info", {}).get("agent") for message in assistants}
@@ -353,6 +413,9 @@ def _validate_review_provenance(
         and prompt_info.get("time", {}).get("created") == provenance.get("started_ms")
         and isinstance(completed, int)
         and completed == provenance.get("completed_ms")
+        and _message_text_bytes(prompt) == expected_prompt
+        and _message_text_bytes(final) == expected_final
+        and messages[0] is prompt
         and (explicit_none or equivalent_fresh_history)
     )
     return valid, completed if valid else None
@@ -384,10 +447,16 @@ def _validate_owner_provenance(
     if not isinstance(event, Mapping) or not isinstance(root, Mapping):
         return False, None
     export = _load_bound_raw_export(
-        repo, event.get("raw_export_path"), event.get("raw_export_sha256")
+        repo,
+        event.get("raw_export_path"),
+        event.get("raw_export_sha256"),
+        event.get("stored_export_sha256"),
     )
     root_export = _load_bound_raw_export(
-        repo, root.get("raw_export_path"), root.get("raw_export_sha256")
+        repo,
+        root.get("raw_export_path"),
+        root.get("raw_export_sha256"),
+        root.get("stored_export_sha256"),
     )
     if export is None or root_export is None:
         return False, None
@@ -418,13 +487,13 @@ def _validate_owner_provenance(
     prompt_created = prompt.get("info", {}).get("time", {}).get("created")
     designation_created = designation.get("info", {}).get("time", {}).get("created")
     publication_created = publication.get("info", {}).get("time", {}).get("created")
-    required_phrases = (
-        f"candidate {candidate_hash}",
-        f"review {review_hash}",
-        f"gate commit {gate_commit}",
-        f"gate version {gate_version}",
-    )
-    text = prompt_bytes.decode("utf-8", errors="strict")
+    expected_prompt = _canonical_json({
+        "candidate_manifest_sha256": candidate_hash,
+        "decision": "approve",
+        "gate_commit": gate_commit,
+        "gate_version": gate_version,
+        "review_report_sha256": review_hash,
+    })
     task_parts = [
         part
         for part in publication.get("parts", [])
@@ -441,7 +510,10 @@ def _validate_owner_provenance(
     ]
     valid = bool(
         event.get("role") == "product-owner"
+        and export.get("info", {}).get("agent") == event.get("agent")
+        and root_export.get("info", {}).get("agent") == root.get("agent")
         and prompt.get("info", {}).get("role") == "user"
+        and messages[0] is prompt
         and approval_assistants
         and {message.get("info", {}).get("agent") for message in approval_assistants}
         == {event.get("agent")}
@@ -449,17 +521,22 @@ def _validate_owner_provenance(
         and prompt_created == event.get("prompt_created_ms")
         and isinstance(prompt_created, int)
         and prompt_created > review_completed_ms
-        and all(phrase in text for phrase in required_phrases)
+        and prompt_bytes == expected_prompt
         and designation.get("info", {}).get("role") == "user"
+        and designation_contract.get("designated_role") == "product-owner"
+        and designation_contract.get("delegate_agent") == event.get("agent")
         and _sha256_bytes(_message_text_bytes(designation))
         == designation_contract.get("message_text_sha256")
         and designation_created == designation_contract.get("created_ms")
         and publication_created == publication_contract.get("created_ms")
+        and publication.get("info", {}).get("role") == "assistant"
+        and publication.get("info", {}).get("agent") == root.get("agent")
         and isinstance(designation_created, int)
         and isinstance(publication_created, int)
         and designation_created < publication_created < prompt_created
         and isinstance(task_input, Mapping)
         and isinstance(task_metadata, Mapping)
+        and task_state.get("status") == "completed"
         and task_metadata.get("sessionId") == event.get("session_id")
         and task_metadata.get("parentSessionId") == root.get("session_id")
         and task_metadata.get("sessionId") == publication_contract.get("delegated_session_id")
@@ -495,7 +572,14 @@ def _validate_acceptance_bindings(
     no_blockers = isinstance(unresolved, Mapping) and all(
         unresolved.get(level) == [] for level in ("critical", "high", "medium")
     )
-    review_provenance_valid, review_completed_ms = _validate_review_provenance(repo, review)
+    review_provenance_valid, review_completed_ms = _validate_review_provenance(
+        repo,
+        review,
+        candidate_hash=candidate_hash,
+        candidate=candidate,
+        gate_commit=manifest.get("gate_commit"),
+        gate_version=manifest.get("gate_version"),
+    )
     if not review_provenance_valid or review_completed_ms is None:
         return False
     owner_provenance_valid, approval_event_id = _validate_owner_provenance(
@@ -508,6 +592,8 @@ def _validate_acceptance_bindings(
         review_completed_ms=review_completed_ms,
     )
     consumption = manifest.get("approval_consumption")
+    candidate_review = candidate.get("independent_review")
+    candidate_owner = candidate.get("owner_approval")
     replay_resistant = bool(
         owner_provenance_valid
         and isinstance(consumption, Mapping)
@@ -526,9 +612,15 @@ def _validate_acceptance_bindings(
         and candidate.get("status") == "candidate"
         and candidate.get("consumable") is False
         and candidate.get("revoked") is False
+        and candidate.get("accepted_manifest_published") is False
+        and isinstance(candidate_review, Mapping)
+        and candidate_review.get("status") == "pending"
+        and isinstance(candidate_owner, Mapping)
+        and candidate_owner.get("status") == "pending"
         and candidate.get("implementation_commit") == manifest.get("gate_commit")
         and candidate.get("files") == manifest.get("files")
         and review.get("review_status") == "pass"
+        and review.get("revoked") is False
         and review.get("candidate_manifest_sha256") == candidate_hash
         and no_blockers
         and approval.get("decision") == "approve"

@@ -316,7 +316,12 @@ def validate_roles_and_outputs(
                 == receipt.get("start_event_id")
                 and raw_messages[0].get("info", {}).get("role") == "user"
             )
-            if not (explicit_none or equivalent_raw_proof):
+            fresh_prompt = (
+                raw_messages[0].get("info", {}).get("id")
+                == receipt.get("start_event_id")
+                and raw_messages[0].get("info", {}).get("role") == "user"
+            )
+            if not fresh_prompt or not (explicit_none or equivalent_raw_proof):
                 return _reject("INHERITED_REVIEWER_CONTEXT")
         response = event.get("final_response_bytes")
         if not isinstance(response, bytes) or hashlib.sha256(response).hexdigest() != receipt.get("final_response_sha256"):

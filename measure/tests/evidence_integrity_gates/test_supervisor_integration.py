@@ -14,6 +14,8 @@ import unittest
 from pathlib import Path
 from typing import Any
 
+from measure.evidence_integrity_gates.supervisor_gate import _validate_review_provenance
+
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 GATE_TRACK = "measure_apk_evidence_integrity_gates_20260712"
@@ -62,12 +64,28 @@ class SupervisorIntegrationTests(unittest.TestCase):
             "consumable": False,
             "revoked": False,
             "implementation_commit": gate_commit,
+            "source_base_commit": gate_commit,
             "files": gate_files,
+            "independent_review": {"status": "pending"},
+            "owner_approval": {"status": "pending"},
+            "accepted_manifest_published": False,
         }
         candidate_path = "measure/candidate.json"
         self._write(candidate_path, json.dumps(candidate, sort_keys=True) + "\n")
         candidate_hash = self._sha(self.repo / candidate_path)
-        review_prompt = "Fresh independent review prompt"
+        review_prompt = json.dumps({
+            "candidate_manifest_sha256": candidate_hash,
+            "gate_version": "phase4-v1",
+            "implementation_commit": gate_commit,
+            "source_base_commit": gate_commit,
+            "task": "independent-adversarial-review",
+        }, sort_keys=True, separators=(",", ":"))
+        review_result = {
+            "candidate_manifest_sha256": candidate_hash,
+            "review_status": "pass",
+            "unresolved_findings": {"critical": [], "high": [], "medium": []},
+        }
+        review_final = json.dumps(review_result, sort_keys=True, separators=(",", ":"))
         review_raw = self._raw_export(
             session_id="ses_review",
             parent_session_id="ses_root",
@@ -76,17 +94,17 @@ class SupervisorIntegrationTests(unittest.TestCase):
             prompt=review_prompt,
             prompt_created_ms=20,
             final_id="msg_review_final",
-            final_text="Review passed",
+            final_text=review_final,
             completed_ms=30,
         )
         review_export_path, review_export_hash = self._write_export(review_raw)
         review = {
-            "review_status": "pass",
-            "candidate_manifest_sha256": candidate_hash,
-            "unresolved_findings": {"critical": [], "high": [], "medium": []},
+            **review_result,
+            "revoked": False,
             "fresh_context_provenance": {
                 "raw_export_path": review_export_path,
                 "raw_export_sha256": review_export_hash,
+                "stored_export_sha256": self._sha(self.repo / review_export_path),
                 "session_id": "ses_review",
                 "parent_session_id": "ses_root",
                 "agent": "independent-reviewer",
@@ -94,7 +112,7 @@ class SupervisorIntegrationTests(unittest.TestCase):
                 "prompt_message_id": "msg_review_prompt",
                 "prompt_text_sha256": self._sha_bytes(review_prompt.encode()),
                 "final_response_message_id": "msg_review_final",
-                "final_response_text_sha256": self._sha_bytes(b"Review passed"),
+                "final_response_text_sha256": self._sha_bytes(review_final.encode()),
                 "started_ms": 20,
                 "completed_ms": 30,
                 "isolation_proof": "raw-history-begins-with-fresh-prompt",
@@ -103,10 +121,13 @@ class SupervisorIntegrationTests(unittest.TestCase):
         review_path = "measure/review.json"
         self._write(review_path, json.dumps(review, sort_keys=True) + "\n")
         review_hash = self._sha(self.repo / review_path)
-        approval_prompt = (
-            f"OWNER APPROVAL candidate {candidate_hash} review {review_hash} "
-            f"gate commit {gate_commit} gate version phase4-v1"
-        )
+        approval_prompt = json.dumps({
+            "candidate_manifest_sha256": candidate_hash,
+            "decision": "approve",
+            "gate_commit": gate_commit,
+            "gate_version": "phase4-v1",
+            "review_report_sha256": review_hash,
+        }, sort_keys=True, separators=(",", ":"))
         approval_raw = self._raw_export(
             session_id="ses_approval",
             parent_session_id="ses_root",
@@ -131,6 +152,7 @@ class SupervisorIntegrationTests(unittest.TestCase):
             "approval_event": {
                 "raw_export_path": approval_export_path,
                 "raw_export_sha256": approval_export_hash,
+                "stored_export_sha256": self._sha(self.repo / approval_export_path),
                 "session_id": "ses_approval",
                 "parent_session_id": "ses_root",
                 "agent": "approval-publisher",
@@ -142,11 +164,15 @@ class SupervisorIntegrationTests(unittest.TestCase):
             "root_owner_delegation": {
                 "raw_export_path": root_export_path,
                 "raw_export_sha256": root_export_hash,
+                "stored_export_sha256": self._sha(self.repo / root_export_path),
                 "session_id": "ses_root",
+                "agent": "root-agent",
                 "owner_designation_event": {
                     "message_id": "msg_owner_designation",
                     "message_text_sha256": self._sha_bytes(b"YOU are acting as the owner."),
                     "created_ms": 10,
+                    "designated_role": "product-owner",
+                    "delegate_agent": "approval-publisher",
                 },
                 "approval_publication_event": {
                     "message_id": "msg_publication",
@@ -257,7 +283,7 @@ class SupervisorIntegrationTests(unittest.TestCase):
     ) -> bytes:
         """Builds a minimal provider export with exact IDs, text, and chronology."""
         return json.dumps({
-            "info": {"id": session_id, "parentID": parent_session_id},
+            "info": {"id": session_id, "parentID": parent_session_id, "agent": agent},
             "messages": [
                 {
                     "info": {"id": prompt_id, "sessionID": session_id, "role": "user", "time": {"created": prompt_created_ms}},
@@ -280,7 +306,7 @@ class SupervisorIntegrationTests(unittest.TestCase):
     def _root_export(self, delegated_prompt: str) -> bytes:
         """Builds root owner-designation and approval-publication evidence."""
         return json.dumps({
-            "info": {"id": "ses_root"},
+            "info": {"id": "ses_root", "agent": "root-agent"},
             "messages": [
                 {
                     "info": {"id": "msg_owner_designation", "sessionID": "ses_root", "role": "user", "time": {"created": 10}},
@@ -518,6 +544,147 @@ class SupervisorIntegrationTests(unittest.TestCase):
         manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
         self._assert_blocked("ACCEPTED_GATE_MANIFEST_INVALID")
 
+    def test_013_review_prompt_and_final_response_bind_exact_candidate(self) -> None:
+        """Rejects stale review exports replayed across candidate or gate revisions."""
+        manifest = json.loads(
+            (self.repo / "measure/evidence-integrity-accepted-gate.json").read_text()
+        )
+        candidate = json.loads((self.repo / manifest["candidate_manifest_path"]).read_text())
+        review = json.loads((self.repo / manifest["review_report_path"]).read_text())
+        valid, _ = _validate_review_provenance(
+            self.repo,
+            review,
+            candidate_hash=manifest["candidate_manifest_hash"],
+            candidate=candidate,
+            gate_commit=manifest["gate_commit"],
+            gate_version=manifest["gate_version"],
+        )
+        self.assertTrue(valid)
+        replayed, _ = _validate_review_provenance(
+            self.repo,
+            review,
+            candidate_hash="f" * 64,
+            candidate=candidate,
+            gate_commit=manifest["gate_commit"],
+            gate_version=manifest["gate_version"],
+        )
+        self.assertFalse(replayed)
+
+    def test_014_recompressed_export_and_explicit_fork_with_history_fail(self) -> None:
+        """Binds stored gzip bytes and rejects inherited turns despite a fork-none claim."""
+        manifest = json.loads(
+            (self.repo / "measure/evidence-integrity-accepted-gate.json").read_text()
+        )
+        candidate = json.loads((self.repo / manifest["candidate_manifest_path"]).read_text())
+        review_path = self.repo / manifest["review_report_path"]
+        review = json.loads(review_path.read_text())
+        provenance = review["fresh_context_provenance"]
+        export_path = self.repo / provenance["raw_export_path"]
+        raw = gzip.decompress(export_path.read_bytes())
+        export_path.write_bytes(gzip.compress(raw, mtime=123))
+        valid, _ = _validate_review_provenance(
+            self.repo,
+            review,
+            candidate_hash=manifest["candidate_manifest_hash"],
+            candidate=candidate,
+            gate_commit=manifest["gate_commit"],
+            gate_version=manifest["gate_version"],
+        )
+        self.assertFalse(valid)
+
+        raw_document = json.loads(raw)
+        raw_document["info"]["fork_turns"] = "none"
+        raw_document["messages"].insert(0, {
+            "info": {
+                "id": "msg_inherited",
+                "sessionID": "ses_review",
+                "role": "user",
+                "time": {"created": 19},
+            },
+            "parts": [{"type": "text", "text": "inherited"}],
+        })
+        inherited_raw = json.dumps(raw_document, sort_keys=True).encode()
+        inherited_path, inherited_hash = self._write_export(inherited_raw)
+        provenance["raw_export_path"] = inherited_path
+        provenance["raw_export_sha256"] = inherited_hash
+        provenance["stored_export_sha256"] = self._sha(self.repo / inherited_path)
+        valid, _ = _validate_review_provenance(
+            self.repo,
+            review,
+            candidate_hash=manifest["candidate_manifest_hash"],
+            candidate=candidate,
+            gate_commit=manifest["gate_commit"],
+            gate_version=manifest["gate_version"],
+        )
+        self.assertFalse(valid)
+
+    def test_015_revoked_review_or_candidate_fails_closed(self) -> None:
+        """Prevents revocation fields from being ignored after acceptance publication."""
+        manifest_path = self.repo / "measure/evidence-integrity-accepted-gate.json"
+        manifest = json.loads(manifest_path.read_text())
+        review_path = self.repo / manifest["review_report_path"]
+        review = json.loads(review_path.read_text())
+        review["revoked"] = True
+        review_path.write_text(json.dumps(review))
+        manifest["review_hash"] = self._sha(review_path)
+        manifest_path.write_text(json.dumps(manifest))
+        self._assert_blocked("ACCEPTED_GATE_MANIFEST_INVALID")
+
+        self._replace_fixture()
+        manifest_path = self.repo / "measure/evidence-integrity-accepted-gate.json"
+        manifest = json.loads(manifest_path.read_text())
+        candidate_path = self.repo / manifest["candidate_manifest_path"]
+        candidate = json.loads(candidate_path.read_text())
+        candidate["revoked"] = True
+        candidate_path.write_text(json.dumps(candidate))
+        manifest["candidate_manifest_hash"] = self._sha(candidate_path)
+        manifest_path.write_text(json.dumps(manifest))
+        self._assert_blocked("ACCEPTED_GATE_MANIFEST_INVALID")
+
+    def test_016_forged_reviewer_agent_message_parent_role_and_prompt_fail(self) -> None:
+        """Rejects independently rehashed identity and exact-prompt forgeries."""
+        mutations = ("agent", "message", "parent", "role", "prompt")
+        for index, mutation in enumerate(mutations):
+            with self.subTest(mutation=mutation):
+                if index:
+                    self._replace_fixture()
+                manifest = json.loads(
+                    (self.repo / "measure/evidence-integrity-accepted-gate.json").read_text()
+                )
+                review_path = self.repo / manifest["review_report_path"]
+                review = json.loads(review_path.read_text())
+                provenance = review["fresh_context_provenance"]
+                raw = json.loads(gzip.decompress(
+                    (self.repo / provenance["raw_export_path"]).read_bytes()
+                ))
+                if mutation == "agent":
+                    raw["info"]["agent"] = "forged-agent"
+                elif mutation == "message":
+                    raw["messages"][-1]["info"]["id"] = "msg_forged_final"
+                elif mutation == "parent":
+                    raw["messages"][-1]["info"]["parentID"] = "msg_forged_parent"
+                elif mutation == "role":
+                    raw["messages"][-1]["info"]["role"] = "user"
+                else:
+                    raw["messages"][0]["parts"][0]["text"] = "wrong prompt bytes"
+                    provenance["prompt_text_sha256"] = self._sha_bytes(b"wrong prompt bytes")
+                mutated_raw = json.dumps(raw, sort_keys=True).encode()
+                export_path, raw_hash = self._write_export(mutated_raw)
+                provenance["raw_export_path"] = export_path
+                provenance["raw_export_sha256"] = raw_hash
+                provenance["stored_export_sha256"] = self._sha(self.repo / export_path)
+                candidate = json.loads(
+                    (self.repo / manifest["candidate_manifest_path"]).read_text()
+                )
+                valid, _ = _validate_review_provenance(
+                    self.repo,
+                    review,
+                    candidate_hash=manifest["candidate_manifest_hash"],
+                    candidate=candidate,
+                    gate_commit=manifest["gate_commit"],
+                    gate_version=manifest["gate_version"],
+                )
+                self.assertFalse(valid)
 
 if __name__ == "__main__":
     unittest.main()

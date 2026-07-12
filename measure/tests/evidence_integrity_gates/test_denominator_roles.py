@@ -225,6 +225,24 @@ class DenominatorRoleTests(unittest.TestCase):
         )
         self.assertEqual(result["code"], "INHERITED_REVIEWER_CONTEXT")
 
+    def test_explicit_fork_none_does_not_excuse_inherited_session_turns(self):
+        events = copy.deepcopy(self.events)
+        raw = json.loads(events["evt_4"]["raw_export_bytes"])
+        raw["info"]["fork_turns"] = "none"
+        raw["messages"].insert(0, {
+            "info": {"id": "msg_inherited", "role": "user"},
+            "parts": [{"type": "text", "text": "inherited"}],
+        })
+        events["evt_4"]["fork_turns"] = "none"
+        events["evt_4"]["raw_export_bytes"] = json.dumps(raw).encode()
+        events["evt_4"]["raw_export_sha256"] = hashlib.sha256(
+            events["evt_4"]["raw_export_bytes"]
+        ).hexdigest()
+        result = validate_roles_and_outputs(
+            self.roles, MappingEventResolver(events), self.outputs
+        )
+        self.assertEqual(result["code"], "INHERITED_REVIEWER_CONTEXT")
+
     def test_denominator_requires_distinct_resolved_requirements_author(self):
         payload = copy.deepcopy(self.controls["denominator"])
         payload["requirements_author_session_id"] = "ses_discovery"
