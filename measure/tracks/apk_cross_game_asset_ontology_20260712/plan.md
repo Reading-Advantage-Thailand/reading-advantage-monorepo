@@ -70,11 +70,11 @@
 
 ## Phase 5: Build the asset usage matrix and reuse audit [checkpoint: pending]
 
-- [ ] Task: Inventory every scene's character, environment, gameplay object, VFX,
+- [x] Task: Inventory every scene's character, environment, gameplay object, VFX,
       audio, UI, control, background, transition, and result presentation usage
-- [ ] Task: Record states, directions, view, scale, collision, animation,
+- [x] Task: Record states, directions, view, scale, collision, animation,
       compact/wide use, and developer-capability relationship
-- [ ] Task: Enumerate and manually inspect all existing production candidates
+- [~] Task: Enumerate and manually inspect all existing production candidates
 - [ ] Task: Record provenance/license, dimensions, content, current use, responsive
       suitability, and reuse/reject/replace disposition
 - [ ] Task: Publish `game-asset-usage-matrix.json` and `existing-asset-audit.md`
