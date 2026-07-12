@@ -113,7 +113,27 @@
       "gzip_bytes": 1181885,
       "path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/exports/8f4c9a2ef19a8919ce4f7d25e9db79a9098d8996d87c414c8865e82ad4619382.json.gz",
       "json_parse": "pass"
+    },
+    {
+      "purpose": "v8-corrected-owner-approval-at-acceptance",
+      "session_id": "ses_0a86187ecffes5DKeoIWwb5zN2",
+      "raw_sha256": "c63516ce4d8f0b3e7d227189da9336e49e1cccb390b4a27a393f7163f69ab18b",
+      "raw_bytes": 646978,
+      "gzip_sha256": "1ed133454056914d7a16bbc0efe32120116cf195cad933d94efe1b692e71a3cc",
+      "gzip_bytes": 136068,
+      "path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/exports/c63516ce4d8f0b3e7d227189da9336e49e1cccb390b4a27a393f7163f69ab18b.json.gz",
+      "json_parse": "pass"
+    },
+    {
+      "purpose": "v8-corrected-root-owner-at-acceptance",
+      "session_id": "ses_0aa8a4740ffe2BOVmChNfZLEv0",
+      "raw_sha256": "4235197396f5ffe53c8fda911e868460fc83f810f935824e8d872293f2fc9323",
+      "raw_bytes": 6547434,
+      "gzip_sha256": "3f635d435b3a8f37f5e7f6a63d0f3199b355d9a874d985cc9b244a64a15ba0ed",
+      "gzip_bytes": 1363164,
+      "path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/exports/4235197396f5ffe53c8fda911e868460fc83f810f935824e8d872293f2fc9323.json.gz",
+      "json_parse": "pass"
     }
   ],
-  "note": "All v2 snapshots are historical evidence and cannot approve v3. The v3 reviewer evidence is revoked. The v6 reviewer, owner-approval, and root-owner snapshots bind the accepted v6 candidate. The corrected v8 reviewer snapshot is retained and validates against the trusted live provider. The existing v8 approval and root snapshots remain unconsumed; this correction does not approve or accept v8."
+  "note": "All v2 snapshots are historical evidence and cannot approve v3. The v3 reviewer evidence is revoked. The v6 reviewer, owner-approval, and root-owner snapshots bind the accepted v6 candidate. The corrected v8 reviewer, owner-approval, and root-owner snapshots bind the accepted v8 candidate; the earlier v8 approval remains retained as unconsumed historical evidence."
 }

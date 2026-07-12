@@ -1,14 +1,14 @@
 {
   "schema_version": "evidence-integrity.approval-consumption.v1",
-  "status": "blocked",
-  "event_id": "msg_f578ceeb1001IlZt3xnANEjlrZ",
+  "status": "consumed",
+  "event_id": "msg_f579e7823001G80miqgsouEs6x",
   "candidate_manifest_hash": "f6bf22ec31a00d2066d410b3a34c3f67251f4cc83f40701c4aadb336931ce153",
-  "review_report_hash": "2faeaa4b7b37214a492f647b9e8d495a1c1a384080915cb78ecf4e5899ea06cd",
+  "review_report_hash": "760c01c280110c734c00b07723188a3773d220d0408322e5188e09a2852cf5b3",
   "gate_commit": "5aea360f94f978ac78e590e0a64d33d176beaa1a",
   "gate_version": "phase4-v8-candidate",
   "owner_approval_path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/phase4-v8-owner-approval.json",
-  "owner_approval_hash": "71919c691d9f30a9779d7850e5c63eda56a2a02313ac054d1282d71f1248a691",
-  "consumed_once": false,
-  "blocker_code": "V8-ACCEPT-REVIEW-PROVENANCE",
-  "blocker": "The approval is authentic and unconsumed, but the exact stable review artifact fails the production review-provenance contract."
+  "owner_approval_hash": "c4843cff682e4954609550e4f311cdce1b3de8c9df6670b6f186730730c4e1d2",
+  "consumed_once": true,
+  "supersedes_accepted_gate_version": "phase4-v6-candidate",
+  "prior_accepted_gate_status": "revoked"
 }

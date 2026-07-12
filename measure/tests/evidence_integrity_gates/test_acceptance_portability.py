@@ -24,13 +24,6 @@ HISTORICAL_V2_MANIFEST = (
 )
 V6_ACCEPTED_MANIFEST_SHA256 = "22acc73ab7a2c75b9a472b18d3327c6d1a6c8ec105a17062ffa1e6cb1c3abcec"
 V2_REVOKED_MANIFEST_SHA256 = "d52d06ed4926273f1105e3950f4adf998e18c88d7e55c82f6d6325b058abfc20"
-V7_CANDIDATE_MANIFEST_PATH = (
-    "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/"
-    "phase4-v7-candidate-gate-manifest.json"
-)
-V7_CANDIDATE_MANIFEST_SHA256 = "4d784c3e2adfee45f81d5b8abd389e645fef8f4c23a2275d13426c08b0f20a5a"
-
-
 class AcceptancePortabilityTests(unittest.TestCase):
     """Proves accepted and revoked acceptance evidence remains portable."""
 
@@ -91,17 +84,15 @@ class AcceptancePortabilityTests(unittest.TestCase):
         self.assertFalse(manifest["consumable"])
         self._assert_portable_bound_artifacts(manifest)
 
-    def test_v7_revocation_preserves_accepted_and_v2_historical_records(self) -> None:
-        """Prevents the pre-v8 revocation from overwriting historical acceptance evidence."""
+    def test_v8_acceptance_preserves_v6_and_v2_historical_records(self) -> None:
+        """Prevents v8 acceptance from overwriting historical acceptance evidence."""
         current = json.loads(ACCEPTED_MANIFEST.read_text(encoding="utf-8"))
         accepted = json.loads(HISTORICAL_V6_ACCEPTED_MANIFEST.read_text(encoding="utf-8"))
         historical = json.loads(HISTORICAL_V2_MANIFEST.read_text(encoding="utf-8"))
-        self.assertEqual(current["gate_version"], "phase4-v7-candidate")
-        self.assertEqual(current["status"], "revoked")
-        self.assertTrue(current["revoked"])
-        self.assertFalse(current["consumable"])
-        self.assertEqual(current["candidate_manifest_path"], V7_CANDIDATE_MANIFEST_PATH)
-        self.assertEqual(current["candidate_manifest_hash"], V7_CANDIDATE_MANIFEST_SHA256)
+        self._assert_accepted_manifest(current)
+        self.assertEqual(current["gate_version"], "phase4-v8-candidate")
+        self.assertEqual(current["supersedes"]["gate_version"], "phase4-v7-candidate")
+        self.assertEqual(current["supersedes"]["status"], "revoked")
         self.assertEqual(current["prior_accepted_manifest_path"], str(HISTORICAL_V6_ACCEPTED_MANIFEST.relative_to(REPO_ROOT)))
         self.assertEqual(current["prior_accepted_manifest_hash"], V6_ACCEPTED_MANIFEST_SHA256)
         self.assertNotIn("superseded_by", current)

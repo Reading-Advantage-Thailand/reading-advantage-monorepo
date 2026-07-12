@@ -3,34 +3,34 @@
   "decision": "approve",
   "revoked": false,
   "candidate_manifest_hash": "f6bf22ec31a00d2066d410b3a34c3f67251f4cc83f40701c4aadb336931ce153",
-  "review_report_hash": "2faeaa4b7b37214a492f647b9e8d495a1c1a384080915cb78ecf4e5899ea06cd",
+  "review_report_hash": "760c01c280110c734c00b07723188a3773d220d0408322e5188e09a2852cf5b3",
   "gate_commit": "5aea360f94f978ac78e590e0a64d33d176beaa1a",
   "gate_version": "phase4-v8-candidate",
   "approval_event": {
     "provenance_kind": "opencode-raw-export",
-    "raw_export_path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/exports/ec2a7ccd3afdffc2e6378ad9a68cab9281bf628cc4a284d6b8a4a6db9a7542b9.json.gz",
-    "raw_export_sha256": "ec2a7ccd3afdffc2e6378ad9a68cab9281bf628cc4a284d6b8a4a6db9a7542b9",
-    "stored_export_sha256": "342e293eceab0255f1b0ec415d44fadba7536a0acfc01bbf0c1ae9f12165f14f",
-    "raw_export_snapshot_bytes": 396392,
-    "stored_export_snapshot_bytes": 93845,
-    "session_id": "ses_0a8731162ffeKnEnggX5iZiZuv",
+    "raw_export_path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/exports/c63516ce4d8f0b3e7d227189da9336e49e1cccb390b4a27a393f7163f69ab18b.json.gz",
+    "raw_export_sha256": "c63516ce4d8f0b3e7d227189da9336e49e1cccb390b4a27a393f7163f69ab18b",
+    "stored_export_sha256": "1ed133454056914d7a16bbc0efe32120116cf195cad933d94efe1b692e71a3cc",
+    "raw_export_snapshot_bytes": 646978,
+    "stored_export_snapshot_bytes": 136068,
+    "session_id": "ses_0a86187ecffes5DKeoIWwb5zN2",
     "parent_session_id": "ses_0aa8a4740ffe2BOVmChNfZLEv0",
     "agent": "coder-openai-gpt-5-6-sol-pro",
     "role": "product-owner",
-    "prompt_message_id": "msg_f578ceeb1001IlZt3xnANEjlrZ",
-    "prompt_text_sha256": "47ed163b8590758ca4434d2f04167e4b870d3f274c1390ba7f78415e0896a382",
-    "prompt_created_ms": 1783880281780,
-    "final_response_message_id": "msg_f578fd160001cylby4ILjRSCrP",
-    "final_response_text_sha256": "47ed163b8590758ca4434d2f04167e4b870d3f274c1390ba7f78415e0896a382",
-    "final_response_completed_ms": 1783880480148,
+    "prompt_message_id": "msg_f579e7823001G80miqgsouEs6x",
+    "prompt_text_sha256": "e8384cf0cfdbb98a39f751accadbd47380320e9bcf56d8245d07e46070f6f94b",
+    "prompt_created_ms": 1783881431078,
+    "final_response_message_id": "msg_f579fedb6001w6b2TRYvSQaWQO",
+    "final_response_text_sha256": "2c74a3293bd38b6fdde7971a72777e9d559537f7326ca507ed92fc892844f0d3",
+    "final_response_completed_ms": 1783881535442,
     "runtime": "OpenCode CLI 1.17.18"
   },
   "root_owner_delegation": {
-    "raw_export_path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/exports/8f4c9a2ef19a8919ce4f7d25e9db79a9098d8996d87c414c8865e82ad4619382.json.gz",
-    "raw_export_sha256": "8f4c9a2ef19a8919ce4f7d25e9db79a9098d8996d87c414c8865e82ad4619382",
-    "stored_export_sha256": "09b2d708d7643531d8649a3fdaebcfbdec4baa87ade98d01de682d4bebc0f079",
-    "raw_export_snapshot_bytes": 5689966,
-    "stored_export_snapshot_bytes": 1181885,
+    "raw_export_path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/exports/4235197396f5ffe53c8fda911e868460fc83f810f935824e8d872293f2fc9323.json.gz",
+    "raw_export_sha256": "4235197396f5ffe53c8fda911e868460fc83f810f935824e8d872293f2fc9323",
+    "stored_export_sha256": "3f635d435b3a8f37f5e7f6a63d0f3199b355d9a874d985cc9b244a64a15ba0ed",
+    "raw_export_snapshot_bytes": 6547434,
+    "stored_export_snapshot_bytes": 1363164,
     "session_id": "ses_0aa8a4740ffe2BOVmChNfZLEv0",
     "agent": "coder-orchestrator",
     "owner_designation_event": {
@@ -41,22 +41,23 @@
       "delegate_agent": "coder-openai-gpt-5-6-sol-pro"
     },
     "approval_publication_event": {
-      "message_id": "msg_f578cbde7001J2ZSAL7nvbvqrs",
-      "task_call_id": "call_pEjYJxNRXFXCDvr845ulqE0d",
-      "delegated_session_id": "ses_0a8731162ffeKnEnggX5iZiZuv",
-      "delegated_prompt_sha256": "47ed163b8590758ca4434d2f04167e4b870d3f274c1390ba7f78415e0896a382",
-      "task_output_sha256": "248038c6138ee795e9fa8fbf54a6077cc141cd004ff51a19e6719f9cd6960356",
+      "message_id": "msg_f579e48d8001y6A04gMkm9DtSH",
+      "task_call_id": "call_BFOQHxHU65VySNs3kdDxPhyq",
+      "delegated_session_id": "ses_0a86187ecffes5DKeoIWwb5zN2",
+      "delegated_prompt_sha256": "e8384cf0cfdbb98a39f751accadbd47380320e9bcf56d8245d07e46070f6f94b",
+      "task_output_sha256": "a83fdee9eb2fb3fc3685b984a027c35d787dbc84dcb6c5b673ac5bced70ca12a",
       "task_status": "completed",
-      "created_ms": 1783880269287,
-      "completed_ms": 1783880481188
+      "created_ms": 1783881418968,
+      "completed_ms": 1783881535518
     }
   },
   "verification": {
     "review_completed_ms": 1783879954144,
     "chronology": "review-completed-before-root-publication-before-approval-prompt-before-approval-final-before-root-task-completed",
-    "canonical_prompt_equals_final_response": true,
+    "canonical_prompt_equals_final_response": false,
+    "authoritative_decision_source": "canonical-user-prompt",
     "live_provider_resolution_required": true,
-    "replay_event_id": "msg_f578ceeb1001IlZt3xnANEjlrZ"
+    "replay_event_id": "msg_f579e7823001G80miqgsouEs6x"
   },
-  "note": "The completed canonical approval is retained exactly. It is not consumable while the bound stable review artifact fails the production review-provenance contract."
+  "note": "The canonical user prompt is the authoritative corrected approval decision. The complete final response is retained as provenance and truthfully notes that publication remained root-owned."
 }
