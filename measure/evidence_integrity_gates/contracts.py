@@ -1,6 +1,6 @@
 """Phase 0 contract scaffold for APK evidence integrity gates.
 
-The Green phase will replace every ``_RED_STUB`` body with the real
+The Green phase has replaced every Red stub body with the real
 parser/validator; the public surface here (function names, return
 shapes, rejection-code strings) is FROZEN at the Phase 0 baseline
 (commit ``f61eb643``) and any change is a gate-modification that
@@ -205,6 +205,28 @@ def rejection_code_for(violation: str) -> str:
 # ---------------------------------------------------------------------------
 
 
+# Generic quantity nouns that do not encode a concrete unit of measurement.
+# A payload such as ``{"amount": 1000}`` carries a bare integer with no unit;
+# per A3 this must fail closed rather than pass as a labeled count. The list is
+# intentionally narrow: it covers the generic-quantity words a shortcut author
+# would reach for when dodging a real unit, not every English noun.
+_GENERIC_QUANTITY_LABELS: frozenset[str] = frozenset(
+    {
+        "amount",
+        "value",
+        "count",
+        "number",
+        "total",
+        "quantity",
+        "sum",
+        "size",
+        "metric",
+        "num",
+        "n",
+    }
+)
+
+
 def parse_labeled_budget(payload: Mapping[str, Any]) -> dict[str, Any]:
     """Parse a labeled integer-plus-unit payload.
 
@@ -216,19 +238,59 @@ def parse_labeled_budget(payload: Mapping[str, Any]) -> dict[str, Any]:
       * missing or non-integer value
       * missing or empty unit/label
       * the literal value ``"unmeasured"`` (fail-closed: never default)
+      * a generic quantity noun (``amount``, ``value``, ``count`` ...) that
+        does not encode a concrete unit of measurement (A3 defense)
 
     Raises :class:`BudgetParseError` on any rejection.
     """
-    # RED-STUB: full parser lands in the Green phase. The stub raises
-    # so the targeted Red command fails on every valid payload until
-    # the Green implementation lands. Tests assert the parser exists
-    # AND returns the expected shape on a real payload, so this stub
-    # is intentionally non-functional.
-    raise NotImplementedError(
-        "Phase 0 RED stub: parse_labeled_budget is not yet implemented. "
-        "Green phase will parse labeled integer-plus-unit payloads and "
-        "raise BudgetParseError on malformed input."
-    )
+    if not isinstance(payload, Mapping) or len(payload) == 0:
+        raise BudgetParseError(
+            rejection_code_for("missing_integer_value"),
+            "budget payload must be a non-empty mapping",
+        )
+
+    keys = list(payload.keys())
+    if len(keys) != 1:
+        raise BudgetParseError(
+            rejection_code_for("missing_unit"),
+            "budget payload must have exactly one unit-encoding key",
+        )
+
+    label = keys[0]
+    raw_value = payload[label]
+
+    # Fail closed on the literal "unmeasured" sentinel before any other check
+    # so a budget can never silently default to an inferred number.
+    if raw_value == "unmeasured" or label == "unmeasured":
+        raise BudgetParseError(
+            rejection_code_for("unmeasured_budget_not_allowed"),
+            "'unmeasured' is not an allowed budget value; a real integer-plus-unit is required",
+        )
+
+    # Booleans are a subclass of int in Python; reject them explicitly.
+    if isinstance(raw_value, bool) or not isinstance(raw_value, int):
+        raise BudgetParseError(
+            rejection_code_for("non_numeric_budget_value"),
+            f"budget value must be an integer, got {type(raw_value).__name__}",
+        )
+
+    if not isinstance(label, str) or not label.strip():
+        raise BudgetParseError(
+            rejection_code_for("missing_unit"),
+            "budget key must be a non-empty unit label",
+        )
+
+    # A generic quantity noun (amount/value/count/...) does not encode a
+    # concrete unit of measurement; a bare digit under such a label is the
+    # A3 anti-pattern (digit-only as a "labeled count").
+    if label.lower() in _GENERIC_QUANTITY_LABELS:
+        raise BudgetParseError(
+            rejection_code_for("missing_unit"),
+            f"{label!r} is a generic quantity noun, not a concrete unit; "
+            "supply a real unit key (e.g. 'tokens', 'seconds', 'bytes')",
+        )
+
+    return {"value": raw_value, "unit": label, "label": label}
 
 
 def validate_envelope(envelope: Mapping[str, Any]) -> dict[str, Any]:
@@ -240,10 +302,38 @@ def validate_envelope(envelope: Mapping[str, Any]) -> dict[str, Any]:
 
     Returns a result dict; never raises.
     """
-    # RED-STUB
-    raise NotImplementedError(
-        "Phase 0 RED stub: validate_envelope is not yet implemented."
-    )
+    if not isinstance(envelope, Mapping):
+        return _reject(
+            "BASELINE_GATE_COMMIT_MISSING",
+            detail={"reason": "envelope is not a mapping"},
+        )
+
+    # A5/A6 defense: a Phase 0 fixture must carry status "candidate".
+    # "accepted" is only set after the full gate pipeline has run.
+    status = envelope.get("status")
+    if status == "accepted":
+        return _reject("ACCEPTED_STATUS_NOT_ALLOWED")
+
+    # The baseline gate commit may appear as ``baseline_gate_commit`` or
+    # ``frozen_at_sha`` (the per-fixture freeze pointer). Without one of
+    # them, input changes cannot be detected and candidate outputs cannot
+    # be revoked.
+    baseline = envelope.get("baseline_gate_commit")
+    if not baseline:
+        baseline = envelope.get("frozen_at_sha")
+    if not baseline:
+        return _reject("BASELINE_GATE_COMMIT_MISSING")
+
+    # Reject unknown schema versions so a future-version envelope cannot
+    # pass through a gate that does not understand its contract.
+    schema_version = envelope.get("schema_version")
+    if schema_version is not None and schema_version != SCHEMA_VERSION:
+        return _reject(
+            "UNKNOWN_SCHEMA_VERSION",
+            detail={"got": schema_version, "expected": SCHEMA_VERSION},
+        )
+
+    return _ok()
 
 
 def validate_fixture_manifest(manifest: Mapping[str, Any]) -> dict[str, Any]:
@@ -256,10 +346,65 @@ def validate_fixture_manifest(manifest: Mapping[str, Any]) -> dict[str, Any]:
       * the positive control corpus is non-empty
       * the negative fixture corpus is non-empty (anti-A4)
     """
-    # RED-STUB
-    raise NotImplementedError(
-        "Phase 0 RED stub: validate_fixture_manifest is not yet implemented."
-    )
+    if not isinstance(manifest, Mapping):
+        return _reject("ATTEMPT_NOT_REPRESENTED")
+
+    frozen = manifest.get("frozen_attempts")
+    if not isinstance(frozen, Mapping):
+        return _reject("ATTEMPT_NOT_REPRESENTED")
+
+    # Every frozen attempt 1-5 must be represented.
+    for attempt in FROZEN_ATTEMPTS:
+        if attempt not in frozen:
+            return _reject(
+                "ATTEMPT_NOT_REPRESENTED",
+                detail={"attempt": attempt},
+            )
+
+    # Every represented attempt must carry a stable rejection code and a
+    # paired valid control.
+    for attempt, entry in frozen.items():
+        if not isinstance(entry, Mapping):
+            return _reject(
+                "MISSING_EXPECTED_REJECTION_CODE",
+                detail={"attempt": attempt},
+            )
+        code = entry.get("expected_rejection_code")
+        if not code:
+            return _reject(
+                "MISSING_EXPECTED_REJECTION_CODE",
+                detail={"attempt": attempt},
+            )
+        if code not in REJECTION_CODES:
+            return _reject(
+                "MISSING_EXPECTED_REJECTION_CODE",
+                detail={"attempt": attempt, "code": code},
+            )
+        if not entry.get("paired_valid_control"):
+            return _reject(
+                "MISSING_PAIRED_CONTROL",
+                detail={"attempt": attempt},
+            )
+
+    # A4 defense: an empty positive control corpus is a vacuous pass.
+    valid_controls = manifest.get("valid_controls")
+    if not valid_controls:
+        return _reject("EMPTY_CONTROL_CORPUS")
+
+    # A4 defense: an empty negative corpus is also a vacuous pass. A
+    # negative fixture may come from the manifest's ``invalid_controls``
+    # list OR from a frozen attempt's ``invalid_fixture_path``.
+    invalid_controls = manifest.get("invalid_controls")
+    has_negative = bool(invalid_controls)
+    if not has_negative:
+        for entry in frozen.values():
+            if isinstance(entry, Mapping) and entry.get("invalid_fixture_path"):
+                has_negative = True
+                break
+    if not has_negative:
+        return _reject("EMPTY_CONTROL_CORPUS")
+
+    return _ok()
 
 
 def validate_dependency_field(payload: Mapping[str, Any]) -> dict[str, Any]:
@@ -270,10 +415,17 @@ def validate_dependency_field(payload: Mapping[str, Any]) -> dict[str, Any]:
     alias is used. Missing dependency is allowed at Phase 0; later
     phases may require it.
     """
-    # RED-STUB
-    raise NotImplementedError(
-        "Phase 0 RED stub: validate_dependency_field is not yet implemented."
-    )
+    if not isinstance(payload, Mapping):
+        return _reject("NON_CANONICAL_DEPENDENCY_FIELD")
+
+    has_legacy = "dependencies" in payload
+    if has_legacy:
+        return _reject(
+            "NON_CANONICAL_DEPENDENCY_FIELD",
+            detail={"legacy_field": "dependencies", "canonical": CANONICAL_DEPENDENCY_FIELD},
+        )
+
+    return _ok()
 
 
 def validate_plan_marker(text: str) -> dict[str, Any]:
@@ -282,10 +434,21 @@ def validate_plan_marker(text: str) -> dict[str, Any]:
     Accepted: ``[~]``, ``[x]``, ``[b]``. A ``[ ]`` (legacy space) or
     any other marker is rejected with ``INVALID_MARKER``.
     """
-    # RED-STUB
-    raise NotImplementedError(
-        "Phase 0 RED stub: validate_plan_marker is not yet implemented."
-    )
+    import re
+
+    if not isinstance(text, str):
+        return _reject("INVALID_MARKER")
+
+    match = re.match(r"^- \[([^\]]*)\] ", text)
+    if match is None:
+        # Not a recognisable task line; reject rather than silently accept.
+        return _reject("INVALID_MARKER")
+
+    marker = match.group(1)
+    if marker in ACCEPTED_PLAN_MARKERS:
+        return _ok()
+
+    return _reject("INVALID_MARKER", detail={"marker": marker})
 
 
 def collect_catalog_guard_references(catalog_text: str) -> list[str]:
@@ -331,10 +494,25 @@ def sweep_phase0(
     Returns a single result dict summarising the sweep. The Green
     phase wires this into the CLI runner.
     """
-    # RED-STUB
-    raise NotImplementedError(
-        "Phase 0 RED stub: sweep_phase0 is not yet implemented."
-    )
+    manifest_result = validate_fixture_manifest(manifest)
+
+    references = collect_catalog_guard_references(catalog_text)
+    resolved = resolve_catalog_guards(references, repo_root=repo_root)
+    dangling = sorted(ref for ref, ok in resolved.items() if not ok)
+
+    catalog_result: dict[str, Any] = {
+        "total": len(references),
+        "resolved": len(references) - len(dangling),
+        "dangling": dangling,
+        "all_resolved": len(dangling) == 0,
+    }
+
+    overall_ok = bool(manifest_result.get("ok"))
+    return {
+        "ok": overall_ok,
+        "manifest": manifest_result,
+        "catalog_guards": catalog_result,
+    }
 
 
 __all__ = [
