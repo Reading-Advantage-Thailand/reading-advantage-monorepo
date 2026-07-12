@@ -348,6 +348,8 @@ def build_resolved_event(
     }
     if normalized["fork_turns_check"] == "schema-field-absent":
         event["schema_omissions"] = ["fork_turns"]
+        if messages[0] is users[0]:
+            event["reviewer_isolation_proof"] = "raw-history-begins-with-fresh-prompt"
     else:
         event["fork_turns"] = normalized["fork_turns"]
     if attested_manifest_bytes is not None:

@@ -1,9 +1,10 @@
 {
   "schema_version": "evidence-integrity.supervisor.v1",
   "gate_version": "phase4-v2-candidate",
-  "status": "accepted",
-  "consumable": true,
-  "revoked": false,
+  "status": "revoked",
+  "consumable": false,
+  "revoked": true,
+  "revocation_reason": "Gate v2 predates production validation of retained raw review, approval, and root-owner exports; fresh v3 review and approval are required.",
   "gate_commit": "014bb4fa14c74d34ed9abfa6815c33e6ec19402e",
   "files": {
     "measure/automation-supervisor.py": "c1489f3ee8246e3e06f7b009836455d2a5688af48ac082a10aa3b5227b8ba809",

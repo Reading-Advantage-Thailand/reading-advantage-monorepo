@@ -137,6 +137,7 @@ class DenominatorRoleTests(unittest.TestCase):
             cls.events[event_id]["task_manifest_sha256"] = receipt["task_manifest_sha256"]
             if role == "adversarial-reviewer":
                 cls.events[event_id]["schema_omissions"] = ["fork_turns"]
+                cls.events[event_id]["reviewer_isolation_proof"] = "raw-history-begins-with-fresh-prompt"
         cls.roles = {
             "schema_version": "evidence-integrity.phase2.v1", "depends_on": ["phase1"],
             "root_session_id": "ses_owner", "required_roles": list(role_names),
@@ -207,6 +208,22 @@ class DenominatorRoleTests(unittest.TestCase):
 
     def test_valid_roles_with_truthful_omitted_fork_field_control(self):
         self.assertEqual(validate_roles_and_outputs(self.roles, MappingEventResolver(self.events), self.outputs), {"ok": True})
+
+    def test_reviewer_with_inherited_pre_prompt_message_is_rejected(self):
+        events = copy.deepcopy(self.events)
+        raw = json.loads(events["evt_4"]["raw_export_bytes"])
+        raw["messages"].insert(0, {
+            "info": {"id": "msg_inherited", "role": "user"},
+            "parts": [{"type": "text", "text": "inherited"}],
+        })
+        events["evt_4"]["raw_export_bytes"] = json.dumps(raw).encode()
+        events["evt_4"]["raw_export_sha256"] = hashlib.sha256(
+            events["evt_4"]["raw_export_bytes"]
+        ).hexdigest()
+        result = validate_roles_and_outputs(
+            self.roles, MappingEventResolver(events), self.outputs
+        )
+        self.assertEqual(result["code"], "INHERITED_REVIEWER_CONTEXT")
 
     def test_denominator_requires_distinct_resolved_requirements_author(self):
         payload = copy.deepcopy(self.controls["denominator"])

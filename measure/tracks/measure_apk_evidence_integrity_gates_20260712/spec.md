@@ -18,7 +18,7 @@ Define denominator item and reconciliation schemas. Authored requirement outputs
 
 ### FR3: Role independence
 
-Define tool-attested role receipts and per-task ownership manifests. Mechanically reject missing collaboration-event provenance, non-`none` reviewer context forks, incompatible roles, fabricated/copied IDs, unowned outputs, output/final-response hash mismatch, or root-authored substantive work. Product-owner acceptance must likewise resolve to an authentic tool-generated user-message event and exact message hash.
+Define tool-attested role receipts and per-task ownership manifests. Mechanically reject missing collaboration-event provenance; reviewer isolation lacking both explicit `fork_turns=none` and equivalent retained raw-export proof of an exactly fresh first prompt with no inherited pre-prompt turns; incompatible roles; fabricated/copied IDs; unowned outputs; output/final-response hash mismatch; or root-authored substantive work. Product-owner acceptance must resolve retained immutable raw exports to an authentic tool-generated user-message event and exact message hash, verify root owner designation and post-review chronology, bind the exact candidate/review/gate values in the prompt, and reject replay.
 
 ### FR4: Truthfulness counterexamples
 

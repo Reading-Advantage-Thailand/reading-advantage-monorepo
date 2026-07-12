@@ -44,7 +44,7 @@ Tracks T4–T7 may run in parallel only after T3 is accepted. T8 begins only aft
 
 Every execution phase publishes a machine-readable task-ownership manifest and tool-attested role receipts. Each task records `owner_role`, `forbidden_roles`, allowed-input manifest hash, expected output paths/hashes, and reviewer role.
 
-Each receipt records the collaboration-tool spawn ID, parent/ancestry IDs, `fork_turns` mode, exact prompt hash, allowed-input manifest hash, actual context-manifest hash, prior-role history, start/end event IDs and timestamps, final-response hash, enumerated output-file hashes, findings, budget-declaration hash, and commit SHA. Independent reviewers must use `fork_turns="none"`. Missing runtime attestation, inherited narrative, copied agent IDs, output ownership not corroborated by the final response, or a mismatch between task and output hashes fails closed.
+Each receipt records the collaboration-tool spawn ID, parent/ancestry IDs, exact prompt hash, allowed-input manifest hash, actual context-manifest hash, prior-role history, start/end event IDs and timestamps, final-response hash, enumerated output-file hashes, findings, budget-declaration hash, and commit SHA. Independent-review isolation requires either an explicit provider `fork_turns="none"` attestation or retained raw-export proof that the session history begins with exactly the fresh review prompt and contains no inherited pre-prompt turns. Missing both proofs, inherited narrative, copied agent IDs, output ownership not corroborated by the final response, or a mismatch between task and output hashes fails closed.
 
 Required distinct roles:
 
@@ -54,7 +54,7 @@ Required distinct roles:
 4. Truth-test author.
 5. Adversarial reviewer.
 
-The root agent must spawn the required subagents. It cannot substitute its own work for a missing receipt. Root may coordinate, apply independently authored and reviewed patches, commit, and report; it may not author discovery, evidence, mapping, truth-test, browser-audit, asset-inspection, or review outputs. Reviewers receive fresh context containing only the specification, raw-source pointers, accepted manifests, and revision range—not the mapper's reasoning or completion narrative.
+The root agent must spawn the required subagents. It cannot substitute its own work for a missing receipt. Root may coordinate, apply independently authored and reviewed patches, commit, and report; it may not author discovery, evidence, mapping, truth-test, browser-audit, asset-inspection, or review outputs. Reviewers receive fresh context containing only the specification, raw-source pointers, accepted manifests, and revision range—not the mapper's reasoning or completion narrative. Retained exports are content-addressed immutable snapshots; acceptance validates their uncompressed raw hash, session/parent/message identities, exact prompt bytes, agent/role, chronology, root owner designation, exact candidate/review/gate bindings, and one-event consumption record.
 
 Before each phase, a machine-readable role-applicability matrix assigns every task to the required roles. The discovery auditor is mandatory for denominator-changing work; evidence collector and requirements mapper are mandatory for every game package; truth-test author and adversarial reviewer are mandatory for every accepted artifact. Specialized browser, history, asset, or domain reviewers supplement rather than replace these roles. One agent may not hold incompatible roles for the same artifact.
 

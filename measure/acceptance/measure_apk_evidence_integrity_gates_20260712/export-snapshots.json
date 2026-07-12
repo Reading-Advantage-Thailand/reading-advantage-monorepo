@@ -1,0 +1,46 @@
+{
+  "schema_version": "evidence-integrity.raw-export-snapshots.v1",
+  "snapshots": [
+    {
+      "purpose": "v2-review-at-acceptance",
+      "session_id": "ses_0a91ab4b9ffeNuOg6F9ekOJtR8",
+      "raw_sha256": "4eeae6c9570a043048f4fda78248a71410bd8f24f607c03bf5444fbbaee41c04",
+      "raw_bytes": 1180166,
+      "path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/exports/4eeae6c9570a043048f4fda78248a71410bd8f24f607c03bf5444fbbaee41c04.json.gz",
+      "json_parse": "pass"
+    },
+    {
+      "purpose": "v2-approval-at-acceptance",
+      "session_id": "ses_0a90395a3ffet93hvtEOcvaG35",
+      "raw_sha256": "2ad77306d63a2152c16dff1004c838dbe3a3f93fbf6d28b6e98f0d34e25617fe",
+      "raw_bytes": 665433,
+      "path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/exports/2ad77306d63a2152c16dff1004c838dbe3a3f93fbf6d28b6e98f0d34e25617fe.json.gz",
+      "json_parse": "pass"
+    },
+    {
+      "purpose": "v2-root-at-acceptance",
+      "session_id": "ses_0aa8a4740ffe2BOVmChNfZLEv0",
+      "raw_sha256": "b1ccb516c6cc80c170a083c7e38efe27402dbe081edc33f44509506f379f87f6",
+      "raw_bytes": 3211418,
+      "path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/exports/b1ccb516c6cc80c170a083c7e38efe27402dbe081edc33f44509506f379f87f6.json.gz",
+      "json_parse": "pass"
+    },
+    {
+      "purpose": "fresh-v2-approval-recheck",
+      "session_id": "ses_0a90395a3ffet93hvtEOcvaG35",
+      "raw_sha256": "d4b6f590bc66cacef2ece0977ef2901fb2b769d35e08b22540ab66819444853b",
+      "raw_bytes": 1015382,
+      "path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/exports/d4b6f590bc66cacef2ece0977ef2901fb2b769d35e08b22540ab66819444853b.json.gz",
+      "json_parse": "pass"
+    },
+    {
+      "purpose": "fresh-v2-root-recheck",
+      "session_id": "ses_0aa8a4740ffe2BOVmChNfZLEv0",
+      "raw_sha256": "ea72c55956b2d5c8a9819611d17c2aff962ff6c058595d7fe312fada3069b1a9",
+      "raw_bytes": 3456117,
+      "path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/exports/ea72c55956b2d5c8a9819611d17c2aff962ff6c058595d7fe312fada3069b1a9.json.gz",
+      "json_parse": "pass"
+    }
+  ],
+  "note": "Fresh reviewer, delegated-owner, and root exports parsed successfully. The reviewer bytes remained identical; owner and root histories grew append-only. These v2 snapshots are historical evidence and cannot approve v3."
+}

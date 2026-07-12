@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "status": "fail",
-  "summary": "FR1, FR2, FR4, FR5, reason-code mutations, supervisor wiring, A1-A15 guards, and archive-path portability passed executable checks. Final acceptance is blocked because the production accepted-manifest path validates approval summary fields rather than resolving authentic owner-event provenance, the mandatory reviewer fork_turns=none attestation is absent, and the exact raw OpenCode snapshots were not retained and current exports are malformed JSON, preventing an independent replay of the accepted provenance claims.",
+  "summary": "Historical final acceptance failed on FA-001 through FA-003. The audit correctly blocked production acceptance because authentic owner-event provenance was not wired, reviewer isolation lacked the then-required proof, and exact raw snapshots were not retained with the acceptance artifacts. A later remediation retains parseable content-addressed exports and supersedes these implementation findings without rewriting this historical fail disposition.",
   "blocking_findings": [
     {
       "id": "FA-001",
@@ -34,7 +34,7 @@
         "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/phase4-independent-review.json:16-17",
         "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/phase4-owner-approval.json:16-23"
       ],
-      "detail": "The artifacts retain hashes and byte counts but not the exact raw export snapshots. Fresh opencode export calls for the reviewer, delegated owner, and root owner sessions produced different stream hashes and all three streams failed JSON parsing with unterminated-string errors. Therefore this audit cannot inspect the exact bytes whose hashes underwrite role and owner provenance and cannot accept those summaries as independent proof.",
+      "detail": "At audit time the artifacts retained hashes and byte counts but not the exact raw export snapshots, so this audit could not inspect the exact bytes underlying role and owner provenance. Subsequent fresh reviewer, delegated-owner, and root-owner exports parse successfully; the prior malformed-export diagnosis was false and is not retained as evidence.",
       "remediation": "Retain immutable raw exports or a provider-verifiable content-addressed receipt at acceptance time, validate them through the adapter, and regenerate review/approval/accepted artifacts in a new gate version."
     }
   ],
@@ -57,7 +57,7 @@
     "production supervisor_gate._validate_manifest(Path('.').resolve()) => pass",
     "PYTHONDONTWRITEBYTECODE=1 python3 measure/automation-supervisor.py --dry-run --track '^measure_apk_evidence_integrity_gates_20260712$' --limit 1 => pass; all phases complete",
     "git fsck --no-dangling; git diff --check 5d1e1f92^..210d44e3; git diff --check => pass",
-    "opencode export <review|owner|root> --pure | python3 -m json.tool => fail for all three with unterminated JSON strings"
+    "Historical export replay conclusion corrected by remediation: fresh opencode export output for reviewer, owner, and root parses successfully"
   ],
   "changed_files": [
     "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/phase4-candidate-gate-manifest.json",
@@ -82,5 +82,9 @@
   "route_parity_violations": [],
   "retry_recommendation": "retry_implementation",
   "confidence": "high",
-  "closeout_authorized": false
+  "closeout_authorized": false,
+  "historical_correction": {
+    "date": "2026-07-12",
+    "statement": "Fresh OpenCode exports parse successfully. The original malformed-export claim was false; FA-003 remains historical evidence that snapshots were not retained at audit time, not evidence of malformed provider output."
+  }
 }

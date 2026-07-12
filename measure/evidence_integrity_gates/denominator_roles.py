@@ -305,19 +305,18 @@ def validate_roles_and_outputs(
         agents.add(agent)
         if role == "adversarial-reviewer":
             raw_root = raw_document
-            if "fork_turns" in event and event["fork_turns"] != "none":
-                return _reject("INHERITED_REVIEWER_CONTEXT")
-            omissions = event.get("schema_omissions")
-            if "fork_turns" not in event and (
-                not isinstance(omissions, list) or "fork_turns" not in omissions
-            ):
-                return _reject("INHERITED_REVIEWER_CONTEXT")
             raw_fork = raw_info.get("fork_turns", raw_root.get("fork_turns"))
-            if raw_fork is None and "fork_turns" in event:
-                return _reject("INHERITED_REVIEWER_CONTEXT")
-            if raw_fork is not None and (
-                raw_fork != "none" or event.get("fork_turns") != raw_fork
-            ):
+            explicit_none = raw_fork == "none" and event.get("fork_turns") == "none"
+            equivalent_raw_proof = (
+                raw_fork is None
+                and "fork_turns" not in event
+                and event.get("reviewer_isolation_proof")
+                == "raw-history-begins-with-fresh-prompt"
+                and raw_messages[0].get("info", {}).get("id")
+                == receipt.get("start_event_id")
+                and raw_messages[0].get("info", {}).get("role") == "user"
+            )
+            if not (explicit_none or equivalent_raw_proof):
                 return _reject("INHERITED_REVIEWER_CONTEXT")
         response = event.get("final_response_bytes")
         if not isinstance(response, bytes) or hashlib.sha256(response).hexdigest() != receipt.get("final_response_sha256"):
