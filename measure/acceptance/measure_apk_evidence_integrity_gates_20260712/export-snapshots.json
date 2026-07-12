@@ -40,7 +40,17 @@
       "raw_bytes": 3456117,
       "path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/exports/ea72c55956b2d5c8a9819611d17c2aff962ff6c058595d7fe312fada3069b1a9.json.gz",
       "json_parse": "pass"
+    },
+    {
+      "purpose": "v3-reviewer-provenance-binding",
+      "session_id": "ses_0a8e47717ffeJxVqU4sJNFhZwn",
+      "raw_sha256": "495186b1e8b096baa93670a1285a03432d34ce734a1ab396cf6dc438808eb8ec",
+      "raw_bytes": 1463416,
+      "gzip_sha256": "2c6ba38db077b414c9d625cd7a3b96b5f8a6aa7badfa487328dcd76e25a6b986",
+      "gzip_bytes": 288386,
+      "path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/exports/495186b1e8b096baa93670a1285a03432d34ce734a1ab396cf6dc438808eb8ec.json.gz",
+      "json_parse": "pass"
     }
   ],
-  "note": "Fresh reviewer, delegated-owner, and root exports parsed successfully. The reviewer bytes remained identical; owner and root histories grew append-only. These v2 snapshots are historical evidence and cannot approve v3."
+  "note": "All v2 snapshots are historical evidence and cannot approve v3. The v3-reviewer-provenance-binding export binds the fresh isolated adversarial review of gate candidate ad8ef96a846c5f0d9432f5726e638f52d432758ead99fe5c2786cd47adb64a37."
 }
