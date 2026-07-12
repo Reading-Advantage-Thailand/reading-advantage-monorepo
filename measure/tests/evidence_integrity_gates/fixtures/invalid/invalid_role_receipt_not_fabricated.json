@@ -1,0 +1,29 @@
+{
+  "fixture_kind": "invalid-control",
+  "control_id": "invalid_role_receipt_not_fabricated",
+  "schema_version": "0.0.0-red",
+  "frozen_at_sha": "f61eb643",
+  "expected_rejection_code": "ROLE_PROVENANCE_PLACEHOLDER",
+  "status": "candidate",
+  "description": "Role receipt whose spawn_id and parent_id are the literal placeholder value 'NOT_FABRICATED'. The Phase 0 retry validator MUST reject this with ROLE_PROVENANCE_PLACEHOLDER; a receipt that names a placeholder instead of an authentic collaboration-tool event ID cannot establish FR3 role independence.",
+  "role_receipt": {
+    "receipt_kind": "phase0-retry-role-receipt",
+    "owner_role": "gate-contract-author",
+    "spawn_id": "NOT_FABRICATED",
+    "parent_id": "NOT_FABRICATED",
+    "fork_turns": "none",
+    "exact_prompt_hash": "NOT_FABRICATED",
+    "allowed_input_manifest_hash": "NOT_FABRICATED",
+    "actual_context_manifest_hash": "NOT_FABRICATED",
+    "prior_role_history": [],
+    "start_event_id": "NOT_FABRICATED",
+    "end_event_id": "NOT_FABRICATED",
+    "start_timestamp": "NOT_FABRICATED",
+    "end_timestamp": "NOT_FABRICATED",
+    "final_response_hash": "NOT_FABRICATED",
+    "enumerated_output_file_hashes": {},
+    "findings": [],
+    "budget_declaration_hash": "NOT_FABRICATED",
+    "commit_sha": "NOT_FABRICATED"
+  }
+}

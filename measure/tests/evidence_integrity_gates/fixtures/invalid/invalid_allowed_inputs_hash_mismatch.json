@@ -1,0 +1,24 @@
+{
+  "fixture_kind": "invalid-control",
+  "control_id": "invalid_allowed_inputs_hash_mismatch",
+  "schema_version": "0.0.0-red",
+  "frozen_at_sha": "f61eb643",
+  "expected_rejection_code": "ALLOWED_INPUTS_HASH_MISMATCH",
+  "status": "candidate",
+  "description": "Allowed-input manifest binding whose inputs_manifest_hash does not match the SHA-256 of the referenced allowed-inputs file. The validator MUST reject this with ALLOWED_INPUTS_HASH_MISMATCH; a forged binding is functionally equivalent to a missing one.",
+  "allowed_inputs_record": {
+    "manifest_kind": "phase0-retry-allowed-inputs",
+    "schema_version": "0.0.0-red",
+    "gate_version": "0.0.2-phase0-retry-red",
+    "frozen_at_sha": "f61eb643",
+    "inputs_manifest_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+    "description": "A manifest whose inputs_manifest_hash claims to bind the allowed-inputs file but the value is the wrong 64-zero string. The Phase 0 retry validator MUST detect this mismatch and fail closed.",
+    "inputs": [
+      {
+        "path": "measure/tracks/measure_apk_evidence_integrity_gates_20260712/plan.md",
+        "sha256": "abababababababababababababababababababababababababababababababab",
+        "role": "plan source"
+      }
+    ]
+  }
+}

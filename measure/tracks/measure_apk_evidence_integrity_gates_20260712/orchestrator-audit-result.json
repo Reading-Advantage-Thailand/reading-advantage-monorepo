@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "status": "fail",
+  "summary": "Phase 0 cannot be accepted. A1/A3/A5/A6/A7/A8-supervisor/A9 guards are clean and the Phase 0 fixture validator retains fail-closed behavior for malformed envelopes, tampered fixture hashes, empty corpora, and dangling catalog guards. However authentic distinct-role provenance is absent, the sole receipt contains placeholders and four stale output hashes, the plan overstates completion of severity/stop-loss/acceptance/revocation contracts, and the requested atomic-per-phase boundary was not honored (eight post-baseline commits). Repository-wide A8, A10, A12, and A13 findings remain open. This audit also found and guarded A14 (non-executable rg -nE detector recipes) and A15 (stale role-receipt hashes).",
+  "blocking_findings": [
+    "Role provenance is not acceptable: measure/tests/evidence_integrity_gates/role-receipts/phase0.json:93-104 uses NOT_FABRICATED or runtime-placeholder values instead of tool-resolved spawn/event/context/final-response provenance, and lines 139-146 defer the required counterexample and adversarial roles.",
+    "A15: tests/orchestrator_role_receipt_integrity.sh reports stale SHA-256 attestations for manifest.json, control_claim.json, contracts.py, and test_contract_scaffold.py after Green/security-review edits; no later role receipt supersedes the Red receipt.",
+    "Plan truthfulness: plan.md:16 marks the severity, stop-loss, acceptance, and revocation contract task [x], but contracts.py:380-393 merely treats those names as optional non-empty envelope keys and defines no field schemas or semantic validation; the 46-test suite has no tests for their values.",
+    "Independent review is not acceptance evidence: review-b-security-result.json:11 is BLOCKED, lines 54-66 retain open High/Medium blockers, and no tool-attested reviewer receipt binds the review to a distinct author/event/context. The plan correctly leaves role spawning [~], so Phase 0 must remain incomplete.",
+    "Atomic-per-phase instruction was not honored: fc8aaa73..d3fa8726 contains eight post-baseline commits for Phase 0 (Green, plan update, three implementation fixes, two documentation/version syncs, and review receipt) rather than one atomic phase boundary; all Git commits also have the same repository author identity and cannot establish role separation.",
+    "A8 aggregate: tests/orchestrator_marker_vocabulary.sh exits 1 on deprecated [ ] markers in multiple active plans. The focused supervisor regex remains correct, but the live registry contract is red.",
+    "A12: seven catalog guard references are still dangling (tests/_lib/track_dir.sh, tests/cs_p4.sh, tests/mir_p1.sh, tests/mr_p1.sh through tests/mr_p4.sh). sweep_phase0 correctly returns ok=false, so no aggregate completion claim is allowed.",
+    "A13: measure/tracks/agents_md_audit_science_advantage_20260603 remains as a stale active directory while tracks.md points to its archive and the active directory has no plan.md."
+  ],
+  "nonblocking_findings": [
+    "A10: .git/hooks/pre-commit is absent. measure/generate.sh now exists in the worktree, but generated-facts regeneration is still manual and drift-prone.",
+    "A14 maintenance fix: six invalid rg -nE recipes in measure/anti-patterns.md were corrected to rg -n and tests/orchestrator_detector_syntax.sh was added; the new guard passes.",
+    "AGENTS.md:675 contains the required peer-reviewed supervisor rule, not the retired blanket do-not-modify rule. No supervisor change occurred in Phase 0.",
+    "A2 is not applicable to the four existing tests/*.sh files because none is a Phase 4/closeout publish gate; no consent-blind publication transition was found.",
+    "A3, A7, and A9 corrected detector runs produced no hits in tests/*.sh; A5 produced no matching active-plan claim; A6 produced no matching registry overstatement."
+  ],
+  "evidence": [
+    {
+      "file": "measure/tracks/measure_apk_evidence_integrity_gates_20260712/plan.md",
+      "line": 14,
+      "snippet": "[~] Spawn distinct ... roles ... distinct role separation has NOT been achieved"
+    },
+    {
+      "file": "measure/tracks/measure_apk_evidence_integrity_gates_20260712/plan.md",
+      "line": 16,
+      "snippet": "[x] Define versioned envelope, numeric-budget/unit, severity, stop-loss, acceptance, revocation ... contracts"
+    },
+    {
+      "file": "measure/tests/evidence_integrity_gates/role-receipts/phase0.json",
+      "line": 93,
+      "snippet": "spawn_id: NOT_FABRICATED; parent_id: NOT_FABRICATED"
+    },
+    {
+      "file": "measure/tests/evidence_integrity_gates/role-receipts/phase0.json",
+      "line": 141,
+      "snippet": "current fixture corpus was authored by the same Red subagent ... acknowledged FR3 separation violation"
+    },
+    {
+      "file": "measure/evidence_integrity_gates/contracts.py",
+      "line": 380,
+      "snippet": "severity/stop_loss/acceptance/revocation are only names in contract_fields; no value contract is validated"
+    },
+    {
+      "file": "measure/evidence_integrity_gates/contracts.py",
+      "line": 660,
+      "snippet": "overall_ok = manifest_result.ok and catalog_result.all_resolved"
+    },
+    {
+      "file": "measure/tracks/measure_apk_evidence_integrity_gates_20260712/review-b-security-result.json",
+      "line": 11,
+      "snippet": "status: BLOCKED"
+    },
+    {
+      "file": "measure/tracks/measure_apk_evidence_integrity_gates_20260712/review-b-security-result.json",
+      "line": 54,
+      "snippet": "APK-EIG-B-005 High open: Required independent role provenance is absent"
+    },
+    {
+      "file": "tests/orchestrator_role_receipt_integrity.sh",
+      "line": 1,
+      "snippet": "A15 guard recomputes every enumerated role-receipt output hash and exits nonzero on drift"
+    },
+    {
+      "file": "AGENTS.md",
+      "line": 675,
+      "snippet": "automation-supervisor.py is a peer-reviewed Measure infrastructure component"
+    }
+  ],
+  "commands": [
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.evidence_integrity_gates.test_contract_scaffold => PASS, 46 tests",
+    "bash tests/orchestrator_supervisor_invariants.sh => PASS",
+    "bash tests/orchestrator_review_execution_truthfulness.sh => PASS",
+    "bash tests/orchestrator_catalog.sh => PASS (headings only; does not clear A12)",
+    "bash tests/orchestrator_marker_vocabulary.sh => FAIL, deprecated [ ] markers in active plans",
+    "bash tests/orchestrator_detector_syntax.sh => PASS after A14 recipe correction",
+    "bash tests/orchestrator_role_receipt_integrity.sh => FAIL, four stale output hashes",
+    "rg -n detector suite for A3/A5/A6/A7/A8/A9 => no hits",
+    "git log --format=... fc8aaa73..HEAD and git show --stat for each Phase 0 commit => eight post-baseline commits, one Git author identity",
+    "git notes show fc8aaa73; git notes show ad45eebd; git notes show d3fa8726 => no notes for all three commits",
+    "A12/A13 Python sweep => seven dangling guards and one stale archived-track active directory",
+    "ls -la .git/hooks/pre-commit => absent"
+  ],
+  "changed_files": [
+    "measure/anti-patterns.md",
+    "tests/orchestrator_detector_syntax.sh",
+    "tests/orchestrator_catalog.sh",
+    "tests/orchestrator_role_receipt_integrity.sh",
+    "measure/tracks/measure_apk_evidence_integrity_gates_20260712/orchestrator-audit-result.json"
+  ],
+  "test_strategy_violations": [
+    "Phase 0 closeout requires different contract/counterexample/review authors with tool-attested receipts; the receipt admits a single Red author and deferred roles.",
+    "The strategy says allowed-input hashes and role receipts are frozen; four receipt hashes no longer match HEAD.",
+    "The strategy requires severity, stop-loss, acceptance, and revocation contracts, but current tests only exercise envelope presence/status/baseline/schema and do not falsify malformed values for those fields."
+  ],
+  "live_contract_violations": [
+    "Role/event provenance cannot be resolved from real tool events, so FR3 fails closed by remaining unaccepted rather than being honestly accepted.",
+    "Repository aggregate catalog/marker contracts remain red; no accepted or complete Phase 0/Phase 4 manifest may be emitted."
+  ],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "retry_implementation",
+  "confidence": "high"
+}

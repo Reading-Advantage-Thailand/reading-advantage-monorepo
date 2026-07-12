@@ -1,0 +1,29 @@
+{
+  "fixture_kind": "invalid-control",
+  "control_id": "invalid_role_receipt_empty_provenance",
+  "schema_version": "0.0.0-red",
+  "frozen_at_sha": "f61eb643",
+  "expected_rejection_code": "ROLE_PROVENANCE_MISSING",
+  "status": "candidate",
+  "description": "Role receipt whose spawn_id and parent_id are empty strings. The Phase 0 retry validator MUST reject this with ROLE_PROVENANCE_MISSING; an empty provenance field is no provenance at all and cannot satisfy FR3.",
+  "role_receipt": {
+    "receipt_kind": "phase0-retry-role-receipt",
+    "owner_role": "counterexample-author",
+    "spawn_id": "",
+    "parent_id": "",
+    "fork_turns": "none",
+    "exact_prompt_hash": "",
+    "allowed_input_manifest_hash": "",
+    "actual_context_manifest_hash": "",
+    "prior_role_history": [],
+    "start_event_id": "",
+    "end_event_id": "",
+    "start_timestamp": "",
+    "end_timestamp": "",
+    "final_response_hash": "",
+    "enumerated_output_file_hashes": {},
+    "findings": [],
+    "budget_declaration_hash": "",
+    "commit_sha": ""
+  }
+}

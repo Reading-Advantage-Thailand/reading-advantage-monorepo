@@ -1,0 +1,20 @@
+{
+  "fixture_kind": "valid-control",
+  "control_id": "control_acceptance",
+  "schema_version": "0.0.0-red",
+  "frozen_at_sha": "f61eb643",
+  "expected_rejection_code": null,
+  "status": "candidate",
+  "description": "A valid acceptance configuration. The Phase 0 retry validator MUST accept this and reject acceptance configurations that skip independent review, owner approval, pilot acceptance, or break the candidate/reviewed/owner_approved/accepted ordering.",
+  "acceptance_record": {
+    "requires_complete_independent_review": true,
+    "requires_authentic_owner_approval": true,
+    "requires_pilot_acceptance": true,
+    "ordering": [
+      "candidate",
+      "reviewed",
+      "owner_approved",
+      "accepted"
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "fixture_kind": "invalid-control",
+  "control_id": "invalid_revocation_no_triggers",
+  "schema_version": "0.0.0-red",
+  "frozen_at_sha": "f61eb643",
+  "expected_rejection_code": "REVOCATION_NO_TRIGGERS",
+  "status": "candidate",
+  "description": "Revocation configuration with every trigger set to False. The validator MUST reject this with REVOCATION_NO_TRIGGERS; a revocation policy with no triggers cannot revoke a stale or tampered acceptance.",
+  "revocation_record": {
+    "revoke_on_input_change": false,
+    "revoke_on_stale_review": false,
+    "revoke_on_changed_approval": false,
+    "revalidation_requires_fresh_acceptance": true
+  }
+}

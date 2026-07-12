@@ -1,7 +1,7 @@
 {
   "manifest_kind": "phase0-freeze",
   "schema_version": "0.0.0-red",
-  "gate_version": "0.0.1-security-review",
+  "gate_version": "0.0.2-phase0-retry-red",
   "baseline_gate_commit": "f61eb643f138373c6357ec35e6ac296a7014800c",
   "baseline_gate_short_sha": "f61eb643",
   "gate_edit_prohibition": {
@@ -68,7 +68,12 @@
     "valid/control_claim.json",
     "valid/control_budget.json",
     "valid/control_dependency.json",
-    "valid/control_marker_plan.json"
+    "valid/control_marker_plan.json",
+    "valid/control_severity.json",
+    "valid/control_stop_loss.json",
+    "valid/control_acceptance.json",
+    "valid/control_revocation.json",
+    "valid/control_allowed_inputs.json"
   ],
   "invalid_controls": [
     "invalid/invalid_budget_unmeasured.json",
@@ -76,7 +81,19 @@
     "invalid/invalid_dependency_alias.json",
     "invalid/invalid_marker_legacy_space.json",
     "invalid/invalid_status_accepted.json",
-    "invalid/invalid_baseline_commit_missing.json"
+    "invalid/invalid_baseline_commit_missing.json",
+    "invalid/invalid_severity_unknown_level.json",
+    "invalid/invalid_severity_missing_rationale.json",
+    "invalid/invalid_stop_loss_oversized_batch.json",
+    "invalid/invalid_stop_loss_trigger_disabled.json",
+    "invalid/invalid_acceptance_no_owner_approval.json",
+    "invalid/invalid_acceptance_ordering_skip.json",
+    "invalid/invalid_revocation_no_triggers.json",
+    "invalid/invalid_revocation_revalidation_unguarded.json",
+    "invalid/invalid_allowed_inputs_missing.json",
+    "invalid/invalid_allowed_inputs_hash_mismatch.json",
+    "invalid/invalid_role_receipt_not_fabricated.json",
+    "invalid/invalid_role_receipt_empty_provenance.json"
   ],
   "fixture_hashes": {
     "attempts/attempt_01_synthetic_main_scene.json": "1caaa2b160d70cbe1ab4261113b28b0996bbefc29f9c1d859f6cd5291c96b9a7",
@@ -88,11 +105,58 @@
     "valid/control_claim.json": "273b3eec3ff073324888c22ca0d2f38c48315813a0a4f18c6855cd472145a64d",
     "valid/control_dependency.json": "e2fd5d4121b802b9e720c4944f4577d1e7b89e6ca7db828cbab8cf6882bd5f98",
     "valid/control_marker_plan.json": "9de7486794bcd79cb6d5a8894e9753ca668b4470925561936f3531e49dd844a0",
+    "valid/control_severity.json": "0ddd19bee58fcc1444b152213c9f6bdbf4b9b5e1fca40120795900379122fd69",
+    "valid/control_stop_loss.json": "e8767be7b82b515588c7c015764345852b19d837f5d0fc7480722468266da5f0",
+    "valid/control_acceptance.json": "b3ef8553a3a18347e605712175a7acde42eb9bf83c60fc859e0b70dbd74ede48",
+    "valid/control_revocation.json": "9a5084db5ffb956e9dddc366a035bf86fcbac75461e6de53f377a0f41bf6209e",
+    "valid/control_allowed_inputs.json": "cee519a3594dda87b88b9b9551efb60a3129788ae6b420db7239eec1fa57aee7",
     "invalid/invalid_baseline_commit_missing.json": "5b077f3eae532bdfef7e776b054227c5cecd5134f894e893ec771aba42894676",
     "invalid/invalid_budget_missing_unit.json": "2742927a21f4471a47858ec7b8493becbd9e549d45103a815691f823f31d9e28",
     "invalid/invalid_budget_unmeasured.json": "0b64faecc4276c6304adf72390e5d2a3869f980ea3ac5706d8f413ec6116ac80",
     "invalid/invalid_dependency_alias.json": "b11bc66e24907e9f34418ea830e22f710970fe60e48b2ecd6fc06aacb82822ef",
     "invalid/invalid_marker_legacy_space.json": "145ed6acad58293fc66435d82dd25e042fe554b74e73938af9b7006dacbdd15f",
-    "invalid/invalid_status_accepted.json": "a6929fcac32e8212a80c0231c1806234d61d0d5d80853e27ce7d56f1492161cd"
+    "invalid/invalid_status_accepted.json": "a6929fcac32e8212a80c0231c1806234d61d0d5d80853e27ce7d56f1492161cd",
+    "invalid/invalid_severity_unknown_level.json": "b405428dc99f94b4ed6d1ee1e199bd8cfa52e7a7f672d8e50350b9f090a23561",
+    "invalid/invalid_severity_missing_rationale.json": "c6c38b4c21631fd6ba39b6290597bc26e9361647ffa3f838d74b859d310aff07",
+    "invalid/invalid_stop_loss_oversized_batch.json": "302fea51a6e0005a78ab2edef883ae00c69638bfe4d1477abf1c05bd31c19415",
+    "invalid/invalid_stop_loss_trigger_disabled.json": "3e2f4a0f0dc8baf262611f9e87b0844f7bdb6a046888ba780c964f9e93ba10a3",
+    "invalid/invalid_acceptance_no_owner_approval.json": "cc832cd638e4396b1e9844946b9eb321b3b3e5284fb8ea32c22d7f6126756b66",
+    "invalid/invalid_acceptance_ordering_skip.json": "02ff572a633665d2510192262b4e8b73ee351f683a8d3f24b755ecacf575be33",
+    "invalid/invalid_revocation_no_triggers.json": "056aa988abead2f8d24d0e354f9b3273d6c5737bad95d3be26e45bf9ef71bb02",
+    "invalid/invalid_revocation_revalidation_unguarded.json": "1fbef610c4c0062db1690eb039044ea7411b6959906a01e664e44e66ca5ac1db",
+    "invalid/invalid_allowed_inputs_missing.json": "a6c92c52f1e593461faf659b59379ab2ac5d91354e35d0f9b086440d2061a448",
+    "invalid/invalid_allowed_inputs_hash_mismatch.json": "8cf6f5a6bce5ec84f413669e2ebd32e4dead258f0f3aa912b50707564bbb9e74",
+    "invalid/invalid_role_receipt_not_fabricated.json": "d0fab6e3ef38140d61957c896212c51095e544fee5d936867a7e3565d6eb918c",
+    "invalid/invalid_role_receipt_empty_provenance.json": "9b7fdc91fe78bc4d7cfe1fe8c275c0d4553ab66c4ee9a68896fd28897ece81c2"
+  },
+  "allowed_inputs": {
+    "manifest_kind": "phase0-retry-allowed-inputs",
+    "schema_version": "0.0.0-red",
+    "gate_version": "0.0.2-phase0-retry-red",
+    "frozen_at_sha": "f61eb643",
+    "description": "Allowed-input manifest for the Phase 0 retry. Every sha256 below is the live SHA-256 of the referenced file and inputs_manifest_hash is the SHA-256 of the canonical JSON of this block with inputs_manifest_hash removed. Any hash mismatch fails closed with ALLOWED_INPUT_MANIFEST_MISSING or ALLOWED_INPUTS_HASH_MISMATCH.",
+    "inputs_manifest_hash": "db9fa025d45045fb77da83ba08f6b27ddb580ae23d3e0769196b9f19a0c67a54",
+    "inputs": [
+      {
+        "path": "measure/tracks/measure_apk_evidence_integrity_gates_20260712/plan.md",
+        "sha256": "01572ceb0f55c07fc467faf863c81b08c688a879f5c7292692741913da77b704",
+        "role": "plan source"
+      },
+      {
+        "path": "measure/tracks/measure_apk_evidence_integrity_gates_20260712/test-strategy.md",
+        "sha256": "81bb44da49a598bf32c46333f9c9c17a4858334134c1d0be8eac1da6873490ed",
+        "role": "test strategy"
+      },
+      {
+        "path": "measure/tracks/measure_apk_evidence_integrity_gates_20260712/spec.md",
+        "sha256": "72ad98e61b413b88baa9cc4a470b6a09f63ac686f19f27e832c02f69331e4108",
+        "role": "spec source"
+      },
+      {
+        "path": "measure/apk-evidence-reconstruction-program.md",
+        "sha256": "aa50396b42bbe06208990ce5ab1ec1fcbb3b48079dd59ddaabe4ab0e3d6ef7de",
+        "role": "program source"
+      }
+    ]
   }
 }

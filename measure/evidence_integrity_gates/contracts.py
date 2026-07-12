@@ -45,6 +45,7 @@ Anti-pattern defenses baked into this scaffold
 from __future__ import annotations
 
 import hashlib
+import json
 import re
 from pathlib import Path
 from typing import Any, Iterable, Mapping
@@ -54,7 +55,7 @@ from typing import Any, Iterable, Mapping
 # ---------------------------------------------------------------------------
 
 SCHEMA_VERSION: str = "0.0.0-red"
-GATE_VERSION: str = "0.0.1-security-review"
+GATE_VERSION: str = "0.0.2-phase0-retry-red"
 
 # Canonical dependency field name. The legacy alias ``"dependencies"``
 # is rejected by ``validate_dependency_field`` per the program rule.
@@ -96,6 +97,31 @@ REJECTION_CODES: frozenset[str] = frozenset(
         "HARDCODED_SUMMARY_AS_EVIDENCE_REJECTED",
         "KEYWORD_RESPONSIVE_PROFILE_REJECTED",
         "SLUG_ASSET_ALLOWLIST_REJECTED",
+        # Phase 0 retry semantic-contract codes (FR5 + FR3 freeze)
+        "UNKNOWN_SEVERITY_LEVEL",
+        "MISSING_SEVERITY_RATIONALE",
+        "MISSING_SEVERITY_EVIDENCE_REFS",
+        "INVALID_SEVERITY_STRUCTURE",
+        "STOP_LOSS_BATCH_SIZE_EXCEEDED",
+        "STOP_LOSS_TRIGGER_DISABLED",
+        "MISSING_STOP_LOSS_FIELD",
+        "INVALID_STOP_LOSS_STRUCTURE",
+        "ACCEPTANCE_REQUIRES_INDEPENDENT_REVIEW",
+        "ACCEPTANCE_REQUIRES_OWNER_APPROVAL",
+        "ACCEPTANCE_REQUIRES_PILOT",
+        "ACCEPTANCE_ORDERING_INVALID",
+        "INVALID_ACCEPTANCE_STRUCTURE",
+        "REVOCATION_NO_TRIGGERS",
+        "REVOCATION_REVALIDATION_UNGUARDED",
+        "MISSING_REVOCATION_FIELD",
+        "INVALID_REVOCATION_STRUCTURE",
+        "ALLOWED_INPUT_MANIFEST_MISSING",
+        "ALLOWED_INPUTS_HASH_MISMATCH",
+        "ALLOWED_INPUT_PATH_MISSING",
+        "ROLE_PROVENANCE_PLACEHOLDER",
+        "ROLE_PROVENANCE_MISSING",
+        "AUTHENTIC_EVENT_PROVENANCE_REQUIRED",
+        "ACCEPTANCE_REQUIRES_AUTHENTIC_PROVENANCE",
     }
 )
 
@@ -208,6 +234,31 @@ def rejection_code_for(violation: str) -> str:
         "hardcoded_summary_as_evidence": "HARDCODED_SUMMARY_AS_EVIDENCE_REJECTED",
         "keyword_responsive_profile": "KEYWORD_RESPONSIVE_PROFILE_REJECTED",
         "slug_asset_allowlist": "SLUG_ASSET_ALLOWLIST_REJECTED",
+        # Phase 0 retry semantic-contract mappings (FR5 + FR3 freeze)
+        "unknown_severity_level": "UNKNOWN_SEVERITY_LEVEL",
+        "missing_severity_rationale": "MISSING_SEVERITY_RATIONALE",
+        "missing_severity_evidence_refs": "MISSING_SEVERITY_EVIDENCE_REFS",
+        "invalid_severity_structure": "INVALID_SEVERITY_STRUCTURE",
+        "stop_loss_batch_size_exceeded": "STOP_LOSS_BATCH_SIZE_EXCEEDED",
+        "stop_loss_trigger_disabled": "STOP_LOSS_TRIGGER_DISABLED",
+        "missing_stop_loss_field": "MISSING_STOP_LOSS_FIELD",
+        "invalid_stop_loss_structure": "INVALID_STOP_LOSS_STRUCTURE",
+        "acceptance_requires_independent_review": "ACCEPTANCE_REQUIRES_INDEPENDENT_REVIEW",
+        "acceptance_requires_owner_approval": "ACCEPTANCE_REQUIRES_OWNER_APPROVAL",
+        "acceptance_requires_pilot": "ACCEPTANCE_REQUIRES_PILOT",
+        "acceptance_ordering_invalid": "ACCEPTANCE_ORDERING_INVALID",
+        "invalid_acceptance_structure": "INVALID_ACCEPTANCE_STRUCTURE",
+        "revocation_no_triggers": "REVOCATION_NO_TRIGGERS",
+        "revocation_revalidation_unguarded": "REVOCATION_REVALIDATION_UNGUARDED",
+        "missing_revocation_field": "MISSING_REVOCATION_FIELD",
+        "invalid_revocation_structure": "INVALID_REVOCATION_STRUCTURE",
+        "allowed_input_manifest_missing": "ALLOWED_INPUT_MANIFEST_MISSING",
+        "allowed_inputs_hash_mismatch": "ALLOWED_INPUTS_HASH_MISMATCH",
+        "allowed_input_path_missing": "ALLOWED_INPUT_PATH_MISSING",
+        "role_provenance_placeholder": "ROLE_PROVENANCE_PLACEHOLDER",
+        "role_provenance_missing": "ROLE_PROVENANCE_MISSING",
+        "authentic_event_provenance_required": "AUTHENTIC_EVENT_PROVENANCE_REQUIRED",
+        "acceptance_requires_authentic_provenance": "ACCEPTANCE_REQUIRES_AUTHENTIC_PROVENANCE",
     }
     try:
         return mapping[violation]
@@ -628,6 +679,366 @@ def resolve_catalog_guards(
 
 
 # ---------------------------------------------------------------------------
+# Phase 0 retry semantic contracts (FR5 + FR3 freeze)
+# ---------------------------------------------------------------------------
+#
+# These functions implement the Phase 0 retry API surface for the
+# formerly untested semantic contracts called out by the orchestrator
+# audit of plan.md:16 (severity/stop_loss/acceptance/revocation are
+# only names in contract_fields; no value contract is validated) and
+# by phase0-acceptance-result.json P0-ACCEPT-002 / P0-ACCEPT-004
+# (allowed-input hash manifest is missing; no real
+# collaboration-event resolver proof is present).
+#
+# The signatures and the frozen REJECTION_CODES additions are the
+# Phase 0 contract freeze. The Green phase implements the bodies so
+# the focused suite passes; the rejection codes remain frozen and
+# unchanged.
+
+_SEVERITY_LEVELS: frozenset[str] = frozenset(
+    {"critical", "high", "medium", "low", "info"}
+)
+
+_REQUIRED_ACCEPTANCE_ORDER: tuple[str, ...] = (
+    "candidate",
+    "reviewed",
+    "owner_approved",
+    "accepted",
+)
+
+_PROVENANCE_PLACEHOLDER_VALUES: frozenset[str] = frozenset(
+    {
+        "NOT_FABRICATED",
+        "NOT_APPLICABLE_THIS_PHASE",
+        "NOT_DECLARED",
+        "PENDING",
+        "",
+    }
+)
+
+_PROVENANCE_REQUIRED_FIELDS: tuple[str, ...] = (
+    "spawn_id",
+    "parent_id",
+    "fork_turns",
+    "exact_prompt_hash",
+    "allowed_input_manifest_hash",
+    "start_event_id",
+    "end_event_id",
+    "start_timestamp",
+    "end_timestamp",
+    "final_response_hash",
+)
+
+
+def validate_severity(severity: Mapping[str, Any]) -> dict[str, Any]:
+    """Validate a typed severity record (Phase 0 retry contract).
+
+    Required shape::
+
+        {"level": <one of critical|high|medium|low|info>,
+         "rationale": <non-empty string>,
+         "evidence_refs": [<non-empty list of string IDs>]}
+
+    Rejects a non-mapping payload, an unknown severity level, a
+    missing/empty rationale, or an empty/non-list evidence_refs
+    collection with the documented stable rejection code.
+    """
+    if not isinstance(severity, Mapping):
+        return _reject(rejection_code_for("invalid_severity_structure"))
+
+    level = severity.get("level")
+    if not isinstance(level, str) or level.lower() not in _SEVERITY_LEVELS:
+        return _reject(rejection_code_for("unknown_severity_level"), detail={"level": level})
+
+    rationale = severity.get("rationale")
+    if not isinstance(rationale, str) or not rationale.strip():
+        return _reject(rejection_code_for("missing_severity_rationale"))
+
+    evidence_refs = severity.get("evidence_refs")
+    if not isinstance(evidence_refs, list) or not evidence_refs:
+        return _reject(rejection_code_for("missing_severity_evidence_refs"))
+    if not all(isinstance(ref, str) and ref for ref in evidence_refs):
+        return _reject(rejection_code_for("missing_severity_evidence_refs"))
+
+    return _ok()
+
+
+_STOP_LOSS_REQUIRED_FIELDS: tuple[str, ...] = (
+    "unsupported_claim_stop",
+    "denominator_mismatch_stop",
+    "two_failed_cycles_block",
+    "unresolved_severity_block",
+)
+
+
+def validate_stop_loss(stop_loss: Mapping[str, Any]) -> dict[str, Any]:
+    """Validate a typed stop-loss configuration (Phase 0 retry contract).
+
+    Required fields (per ``apk-evidence-reconstruction-program.md``
+    Stop-loss rules)::
+
+        {"max_batch_size": int <= 3,
+         "unsupported_claim_stop": True,
+         "denominator_mismatch_stop": True,
+         "two_failed_cycles_block": True,
+         "unresolved_severity_block": True}
+
+    Rejects a non-mapping payload, a missing or non-integer
+    ``max_batch_size``, a batch larger than three, or any disabled
+    mandatory stop trigger with the documented stable rejection code.
+    """
+    if not isinstance(stop_loss, Mapping):
+        return _reject(rejection_code_for("invalid_stop_loss_structure"))
+
+    max_batch_size = stop_loss.get("max_batch_size")
+    if not isinstance(max_batch_size, int) or isinstance(max_batch_size, bool):
+        return _reject(rejection_code_for("missing_stop_loss_field"), detail={"field": "max_batch_size"})
+    if max_batch_size > 3:
+        return _reject(rejection_code_for("stop_loss_batch_size_exceeded"), detail={"max_batch_size": max_batch_size})
+
+    for field in _STOP_LOSS_REQUIRED_FIELDS:
+        value = stop_loss.get(field)
+        if value is None:
+            return _reject(rejection_code_for("missing_stop_loss_field"), detail={"field": field})
+        if value is not True:
+            return _reject(rejection_code_for("stop_loss_trigger_disabled"), detail={"field": field})
+
+    return _ok()
+
+
+_ACCEPTANCE_REQUIRED_FLAGS: tuple[str, ...] = (
+    "requires_complete_independent_review",
+    "requires_authentic_owner_approval",
+    "requires_pilot_acceptance",
+)
+
+
+def validate_acceptance(acceptance: Mapping[str, Any]) -> dict[str, Any]:
+    """Validate a typed acceptance configuration (Phase 0 retry contract).
+
+    Required shape::
+
+        {"requires_complete_independent_review": True,
+         "requires_authentic_owner_approval": True,
+         "requires_pilot_acceptance": True,
+         "ordering": ["candidate", "reviewed", "owner_approved", "accepted"]}
+
+    Rejects a non-mapping payload, a disabled independent-review /
+    authentic-owner-approval / pilot-acceptance flag, or a non-canonical
+    ordering with the documented stable rejection code.
+    """
+    if not isinstance(acceptance, Mapping):
+        return _reject(rejection_code_for("invalid_acceptance_structure"))
+
+    _ACCEPTANCE_FLAG_TO_CODE: dict[str, str] = {
+        "requires_complete_independent_review": "acceptance_requires_independent_review",
+        "requires_authentic_owner_approval": "acceptance_requires_owner_approval",
+        "requires_pilot_acceptance": "acceptance_requires_pilot",
+    }
+    for flag, violation in _ACCEPTANCE_FLAG_TO_CODE.items():
+        if acceptance.get(flag) is not True:
+            return _reject(rejection_code_for(violation), detail={"flag": flag})
+
+    ordering = acceptance.get("ordering")
+    if not isinstance(ordering, list) or tuple(ordering) != _REQUIRED_ACCEPTANCE_ORDER:
+        return _reject(
+            rejection_code_for("acceptance_ordering_invalid"),
+            detail={"got": ordering, "expected": list(_REQUIRED_ACCEPTANCE_ORDER)},
+        )
+
+    return _ok()
+
+
+_REVOCATION_TRIGGER_FIELDS: tuple[str, ...] = (
+    "revoke_on_input_change",
+    "revoke_on_stale_review",
+    "revoke_on_changed_approval",
+)
+
+
+def validate_revocation(revocation: Mapping[str, Any]) -> dict[str, Any]:
+    """Validate a typed revocation configuration (Phase 0 retry contract).
+
+    Required shape::
+
+        {"revoke_on_input_change": True,
+         "revoke_on_stale_review": True,
+         "revoke_on_changed_approval": True,
+         "revalidation_requires_fresh_acceptance": True}
+
+    Rejects a non-mapping payload, a record with no active trigger, a
+    missing field, or unguarded revalidation with the documented stable
+    rejection code.
+    """
+    if not isinstance(revocation, Mapping):
+        return _reject(rejection_code_for("invalid_revocation_structure"))
+
+    for field in _REVOCATION_TRIGGER_FIELDS:
+        if field not in revocation:
+            return _reject(rejection_code_for("missing_revocation_field"), detail={"field": field})
+
+    active_triggers = sum(
+        1 for field in _REVOCATION_TRIGGER_FIELDS if revocation.get(field) is True
+    )
+    if active_triggers == 0:
+        return _reject(rejection_code_for("revocation_no_triggers"))
+    if active_triggers < len(_REVOCATION_TRIGGER_FIELDS):
+        return _reject(rejection_code_for("revocation_no_triggers"), detail={"active": active_triggers})
+
+    if revocation.get("revalidation_requires_fresh_acceptance") is not True:
+        return _reject(rejection_code_for("revocation_revalidation_unguarded"))
+
+    return _ok()
+
+
+def _canonical_json(payload: Any) -> str:
+    """Serialize a payload to canonical JSON for stable hashing.
+
+    Uses ``sort_keys=True`` and compact separators so the hash is
+    deterministic regardless of dict insertion order or whitespace.
+    """
+    return json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+
+
+def _compute_inputs_manifest_hash(record: Mapping[str, Any]) -> str:
+    """Compute the expected ``inputs_manifest_hash`` for a record.
+
+    The hash is the SHA-256 of the canonical JSON serialization of the
+    record with the ``inputs_manifest_hash`` field removed. This binds
+    every other field (manifest_kind, inputs list, descriptions, etc.)
+    so any tampering with the manifest content is detectable.
+    """
+    record_without_hash = {
+        key: value
+        for key, value in record.items()
+        if key != "inputs_manifest_hash"
+    }
+    return hashlib.sha256(_canonical_json(record_without_hash).encode("utf-8")).hexdigest()
+
+
+def validate_allowed_input_manifest(
+    manifest: Mapping[str, Any],
+    *,
+    repo_root: Path | None = None,
+) -> dict[str, Any]:
+    """Validate the allowed-input manifest binding (Phase 0 retry contract).
+
+    A valid manifest carries an ``allowed_inputs`` block with::
+
+        {"manifest_kind": "phase0-retry-allowed-inputs",
+         "inputs_manifest_hash": <sha256 hex>,
+         "inputs": [{"path": <repo-relative path>, "sha256": <sha256 hex>}, ...]}
+
+    When ``repo_root`` is supplied, every input path must resolve to a
+    real file whose live SHA-256 matches the declared ``sha256``; the
+    ``inputs_manifest_hash`` itself must match the recomputed hash of
+    the manifest content (record with ``inputs_manifest_hash`` removed).
+    """
+    if not isinstance(manifest, Mapping):
+        return _reject(rejection_code_for("allowed_input_manifest_missing"))
+
+    if "inputs_manifest_hash" not in manifest:
+        return _reject(rejection_code_for("allowed_input_manifest_missing"))
+
+    declared_hash = manifest.get("inputs_manifest_hash")
+    if not isinstance(declared_hash, str) or not declared_hash:
+        return _reject(rejection_code_for("allowed_input_manifest_missing"))
+
+    expected_hash = _compute_inputs_manifest_hash(manifest)
+    if declared_hash != expected_hash:
+        return _reject(
+            rejection_code_for("allowed_inputs_hash_mismatch"),
+            detail={"declared": declared_hash, "expected": expected_hash},
+        )
+
+    inputs = manifest.get("inputs")
+    if not isinstance(inputs, list) or not inputs:
+        return _reject(rejection_code_for("allowed_input_manifest_missing"), detail={"field": "inputs"})
+
+    for entry in inputs:
+        if not isinstance(entry, Mapping):
+            return _reject(rejection_code_for("allowed_input_manifest_missing"), detail={"entry": entry})
+        if not entry.get("path") or not isinstance(entry.get("path"), str):
+            return _reject(rejection_code_for("allowed_input_manifest_missing"), detail={"field": "path"})
+        if not entry.get("sha256") or not isinstance(entry.get("sha256"), str):
+            return _reject(rejection_code_for("allowed_input_manifest_missing"), detail={"field": "sha256"})
+
+    if repo_root is not None:
+        root = Path(repo_root).resolve()
+        for entry in inputs:
+            relative_path = entry["path"]
+            candidate = (root / relative_path).resolve()
+            try:
+                candidate.relative_to(root)
+            except ValueError:
+                return _reject(rejection_code_for("allowed_input_path_missing"), detail={"path": relative_path})
+            if not candidate.is_file():
+                return _reject(rejection_code_for("allowed_input_path_missing"), detail={"path": relative_path})
+            actual_hash = hashlib.sha256(candidate.read_bytes()).hexdigest()
+            if actual_hash != entry["sha256"]:
+                return _reject(
+                    rejection_code_for("allowed_inputs_hash_mismatch"),
+                    detail={"path": relative_path, "declared": entry["sha256"], "actual": actual_hash},
+                )
+
+    return _ok()
+
+
+def validate_role_provenance(receipt: Mapping[str, Any]) -> dict[str, Any]:
+    """Reject role receipts with missing or placeholder event provenance.
+
+    Every role receipt MUST carry authentic collaboration-tool values
+    for ``spawn_id``, ``parent_id``, event IDs, timestamps, and hashes.
+    A receipt that carries any placeholder sentinel
+    (``NOT_FABRICATED`` etc.) or empty string in a required field is
+    rejected with ``ROLE_PROVENANCE_PLACEHOLDER`` or
+    ``ROLE_PROVENANCE_MISSING``. The validator explicitly demonstrates
+    the inability to accept absent authentic provenance instead of
+    silently passing a deferred placeholder.
+    """
+    if not isinstance(receipt, Mapping):
+        return _reject(rejection_code_for("role_provenance_missing"))
+
+    for field in _PROVENANCE_REQUIRED_FIELDS:
+        value = receipt.get(field)
+        # Empty string, None, or missing field -> no provenance at all.
+        if not isinstance(value, str) or value == "":
+            return _reject(rejection_code_for("role_provenance_missing"), detail={"field": field})
+        # Placeholder sentinel -> fabricated or deferred provenance.
+        if value in _PROVENANCE_PLACEHOLDER_VALUES:
+            return _reject(rejection_code_for("role_provenance_placeholder"), detail={"field": field})
+
+    return _ok()
+
+
+def assert_acceptance_requires_authentic_provenance(
+    acceptance: Mapping[str, Any],
+    receipt: Mapping[str, Any] | None,
+) -> dict[str, Any]:
+    """Reject acceptance transitions that lack authentic event provenance.
+
+    Even when ``acceptance`` carries the right structural flags, an
+    acceptance transition cannot occur without a role receipt whose
+    provenance passes :func:`validate_role_provenance`. A missing
+    receipt is rejected with ``AUTHENTIC_EVENT_PROVENANCE_REQUIRED``;
+    a present-but-untrusted receipt is rejected with
+    ``ACCEPTANCE_REQUIRES_AUTHENTIC_PROVENANCE``. This preserves the
+    explicit rule that absent authentic provenance blocks acceptance.
+    """
+    if receipt is None:
+        return _reject(rejection_code_for("authentic_event_provenance_required"))
+
+    provenance_result = validate_role_provenance(receipt)
+    if not provenance_result.get("ok"):
+        return _reject(
+            rejection_code_for("acceptance_requires_authentic_provenance"),
+            detail={"provenance": provenance_result},
+        )
+
+    return _ok()
+
+
+# ---------------------------------------------------------------------------
 # Convenience: full integrity sweep
 # ---------------------------------------------------------------------------
 
@@ -675,13 +1086,20 @@ __all__ = [
     "GATE_VERSION",
     "REJECTION_CODES",
     "SCHEMA_VERSION",
+    "assert_acceptance_requires_authentic_provenance",
     "collect_catalog_guard_references",
     "parse_labeled_budget",
     "rejection_code_for",
     "resolve_catalog_guards",
     "sweep_phase0",
+    "validate_acceptance",
+    "validate_allowed_input_manifest",
     "validate_dependency_field",
     "validate_envelope",
     "validate_fixture_manifest",
     "validate_plan_marker",
+    "validate_revocation",
+    "validate_role_provenance",
+    "validate_severity",
+    "validate_stop_loss",
 ]

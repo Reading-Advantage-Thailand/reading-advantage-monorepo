@@ -1,7 +1,7 @@
 {
   "receipt_kind": "phase0-role-receipts",
   "track_id": "measure_apk_evidence_integrity_gates_20260712",
-  "phase": "Phase 0 \u2014 Freeze failure cases, contracts, and role boundaries (FR3\u2013FR5 foundation)",
+  "phase": "Phase 0 — Freeze failure cases, contracts, and role boundaries (FR3–FR5 foundation)",
   "baseline_gate_commit": "f61eb643f138373c6357ec35e6ac296a7014800c",
   "created_by_subagent": "measure-mid-red (Red phase subagent for this track)",
   "created_at": "2026-07-12",
@@ -12,7 +12,7 @@
       {
         "task_id": "T-0.1",
         "plan_md_title": "Spawn distinct gate-contract, counterexample, and adversarial-review roles; publish task ownership manifests and tool-attested receipts before they author substantive outputs.",
-        "owner_role": "gate-contract-author (DEFERRED \u2014 distinct subagent not spawned in this Red execution)",
+        "owner_role": "gate-contract-author (DEFERRED — distinct subagent not spawned in this Red execution)",
         "forbidden_roles": [
           "evidence-collector",
           "truth-test-author",
@@ -38,8 +38,8 @@
       },
       {
         "task_id": "T-0.2",
-        "plan_md_title": "Freeze attempts 1\u20135 as immutable, named negative fixtures; record the baseline gate commit, allowed-input hashes, candidate-output paths, and gate-edit prohibition.",
-        "owner_role": "counterexample-author (DEFERRED \u2014 see T-0.1 honesty note)",
+        "plan_md_title": "Freeze attempts 1–5 as immutable, named negative fixtures; record the baseline gate commit, allowed-input hashes, candidate-output paths, and gate-edit prohibition.",
+        "owner_role": "counterexample-author (DEFERRED — see T-0.1 honesty note)",
         "this_subagent_role": "measure-mid-red",
         "subagent_owner_outputs": [
           "measure/tests/evidence_integrity_gates/fixtures/manifest.json (baseline_gate_commit, gate_edit_prohibition, candidate_output_paths)",
@@ -55,7 +55,7 @@
       {
         "task_id": "T-0.3",
         "plan_md_title": "Define versioned envelope, numeric-budget/unit, severity, stop-loss, acceptance, revocation, and canonical `depends_on` contracts; reject `unmeasured` rather than defaulting it.",
-        "owner_role": "gate-contract-author (this subagent, sole author \u2014 see T-0.1 honesty note)",
+        "owner_role": "gate-contract-author (this subagent, sole author — see T-0.1 honesty note)",
         "this_subagent_role": "measure-mid-red",
         "subagent_owner_outputs": [
           "measure/evidence_integrity_gates/contracts.py (SCHEMA_VERSION, REJECTION_CODES, FROZEN_ATTEMPTS, ATTEMPT_REJECTION_BINDINGS, ACCEPTED_PLAN_MARKERS, CANONICAL_DEPENDENCY_FIELD, parse_labeled_budget, validate_envelope, validate_fixture_manifest, validate_dependency_field, validate_plan_marker)"
@@ -79,7 +79,7 @@
         "task_id": "T-0.5",
         "plan_md_title": "Measure - User Manual Verification 'Phase 0' (Protocol in workflow.md) deferred:product-owner",
         "owner_role": "product-owner (human-gated; NEVER executed by any subagent)",
-        "this_subagent_role": "n/a \u2014 this task is structurally blocked",
+        "this_subagent_role": "n/a — this task is structurally blocked",
         "subagent_owner_outputs": [],
         "explicit_structured_marker": "deferred:product-owner"
       }
@@ -87,47 +87,65 @@
   },
   "tool_attested_receipts": {
     "receipt_kind": "phase0-tool-attestation",
-    "honesty_note": "This Red subagent CANNOT fabricate tool-event provenance (spawn IDs, parent IDs, fork_turns='none', or tool-generated user-message events). The receipt below records what THIS subagent actually produced and explicitly defers distinct role separation, fork_turns='none' reviewer attestation, and tool-event resolution to the future phases that are authorised to spawn them.",
+    "honesty_note": "This Red subagent CANNOT fabricate tool-event provenance (spawn IDs, parent IDs, fork_turns='none', or tool-generated user-message events). The receipt below records what THIS subagent actually produced and explicitly defers distinct role separation, fork_turns='none' reviewer attestation, and tool-event resolution to the future phases that are authorised to spawn them. The Green subagent (measure-jr-green) refreshed enumerated_output_file_hashes to match HEAD after implementing the seven validator bodies and updating fixture hashes; the provenance fields (spawn_id, parent_id, event IDs, timestamps, final_response_hash) remain NOT_FABRICATED because no collaboration-tool spawn API is available on this surface.",
     "this_subagent_receipt": {
       "subagent_role": "measure-mid-red",
       "spawn_id": "NOT_FABRICATED",
       "parent_id": "NOT_FABRICATED",
-      "fork_turns": "NOT_APPLICABLE_THIS_PHASE \u2014 fork_turns='none' is REQUIRED for the adversarial reviewer per the program rule and is reserved for Phase 4 (FR6) when that role is spawned.",
-      "exact_prompt_hash": "NOT_FABRICATED \u2014 recorded in git commit metadata at commit time, not in this receipt",
+      "fork_turns": "NOT_APPLICABLE_THIS_PHASE — fork_turns='none' is REQUIRED for the adversarial reviewer per the program rule and is reserved for Phase 4 (FR6) when that role is spawned.",
+      "exact_prompt_hash": "NOT_FABRICATED — recorded in git commit metadata at commit time, not in this receipt",
       "allowed_input_manifest_hash": "9c1d3ad16d917f743098aeb5bb6ad569757ef26a735affd8fa8ad456830c98c4",
       "actual_context_manifest_hash": "Recorded by the orchestrator at run time; this receipt records the produced artifacts only.",
       "prior_role_history": [],
       "start_event_id": "NOT_FABRICATED",
       "end_event_id": "NOT_FABRICATED",
-      "start_timestamp": "NOT_FABRICATED \u2014 captured in git log when commit lands",
-      "end_timestamp": "NOT_FABRICATED \u2014 captured in git log when commit lands",
+      "start_timestamp": "NOT_FABRICATED — captured in git log when commit lands",
+      "end_timestamp": "NOT_FABRICATED — captured in git log when commit lands",
       "final_response_hash": "Recorded by the orchestrator at run time.",
       "enumerated_output_file_hashes": {
-        "measure/tests/evidence_integrity_gates/fixtures/manifest.json": "e2280dbacff2edc839cb598ada6aae9d1433549440be545df93907730a012dfb",
+        "measure/evidence_integrity_gates/__init__.py": "20b90c2879eb83b720e1766795e379b5007467d4cd446d1a45b9d12f552846a8",
+        "measure/evidence_integrity_gates/contracts.py": "af3e6cc3238fd67ed12b8f41806d12fb01d403c05c920a6556dd1d00a6d21027",
+        "measure/tests/evidence_integrity_gates/__init__.py": "6dbd8fa4666061d795c080e92f4c1c52b2096a564b336eb0b2494c89696cb6a6",
+        "measure/tests/__init__.py": "13ff36e889bd6f35df1884af6e276ec92cb6955cc3e50caff5b5e2f27c17f4b5",
+        "measure/tests/evidence_integrity_gates/test_contract_scaffold.py": "c41553bfa506cc14fc6b4050bb625d567f57375480fe0adfe91e9aee879ccf33",
+        "measure/tests/evidence_integrity_gates/test_phase0_retry_contracts.py": "d502de53a384408e6ee3996d28d1325537f6f06a6ed05b5ceac5c9ccacb28fe6",
+        "measure/tests/evidence_integrity_gates/fixtures/manifest.json": "7cb67c845339307593f3116e89df05b063d797cf3bd28642ca2cd50715c36ad0",
         "measure/tests/evidence_integrity_gates/fixtures/attempts/attempt_01_synthetic_main_scene.json": "1caaa2b160d70cbe1ab4261113b28b0996bbefc29f9c1d859f6cd5291c96b9a7",
         "measure/tests/evidence_integrity_gates/fixtures/attempts/attempt_02_directory_citation.json": "3716bca38239b1868f426244875927041299056b3e56f9a5df9195173754a9db",
         "measure/tests/evidence_integrity_gates/fixtures/attempts/attempt_03_hardcoded_summary.json": "f9921568c98c482c000671e5d0722941de80dac196b0971977bec476bc940297",
         "measure/tests/evidence_integrity_gates/fixtures/attempts/attempt_04_keyword_responsive.json": "827d2c32876ed6f33e4cddb2c67cb1d77c5516982eca3db3012d6d329dca2010",
         "measure/tests/evidence_integrity_gates/fixtures/attempts/attempt_05_slug_asset_allowlist.json": "6f101236666ca9ee889e0e151546070e8d7891d26c595154afd6033110747ad3",
-        "measure/tests/evidence_integrity_gates/fixtures/valid/control_claim.json": "ad57a156e497879d05d449c249c7bada629c00d89fd642224b7506ea7dc73dc2",
+        "measure/tests/evidence_integrity_gates/fixtures/valid/control_claim.json": "273b3eec3ff073324888c22ca0d2f38c48315813a0a4f18c6855cd472145a64d",
         "measure/tests/evidence_integrity_gates/fixtures/valid/control_budget.json": "10e79d242a6749aa5985c770e580ff38df1f8b9017a61d00f201159859d2515b",
         "measure/tests/evidence_integrity_gates/fixtures/valid/control_dependency.json": "e2fd5d4121b802b9e720c4944f4577d1e7b89e6ca7db828cbab8cf6882bd5f98",
         "measure/tests/evidence_integrity_gates/fixtures/valid/control_marker_plan.json": "9de7486794bcd79cb6d5a8894e9753ca668b4470925561936f3531e49dd844a0",
+        "measure/tests/evidence_integrity_gates/fixtures/valid/control_severity.json": "0ddd19bee58fcc1444b152213c9f6bdbf4b9b5e1fca40120795900379122fd69",
+        "measure/tests/evidence_integrity_gates/fixtures/valid/control_stop_loss.json": "e8767be7b82b515588c7c015764345852b19d837f5d0fc7480722468266da5f0",
+        "measure/tests/evidence_integrity_gates/fixtures/valid/control_acceptance.json": "b3ef8553a3a18347e605712175a7acde42eb9bf83c60fc859e0b70dbd74ede48",
+        "measure/tests/evidence_integrity_gates/fixtures/valid/control_revocation.json": "9a5084db5ffb956e9dddc366a035bf86fcbac75461e6de53f377a0f41bf6209e",
+        "measure/tests/evidence_integrity_gates/fixtures/valid/control_allowed_inputs.json": "cee519a3594dda87b88b9b9551efb60a3129788ae6b420db7239eec1fa57aee7",
         "measure/tests/evidence_integrity_gates/fixtures/invalid/invalid_budget_unmeasured.json": "0b64faecc4276c6304adf72390e5d2a3869f980ea3ac5706d8f413ec6116ac80",
         "measure/tests/evidence_integrity_gates/fixtures/invalid/invalid_budget_missing_unit.json": "2742927a21f4471a47858ec7b8493becbd9e549d45103a815691f823f31d9e28",
         "measure/tests/evidence_integrity_gates/fixtures/invalid/invalid_dependency_alias.json": "b11bc66e24907e9f34418ea830e22f710970fe60e48b2ecd6fc06aacb82822ef",
         "measure/tests/evidence_integrity_gates/fixtures/invalid/invalid_marker_legacy_space.json": "145ed6acad58293fc66435d82dd25e042fe554b74e73938af9b7006dacbdd15f",
         "measure/tests/evidence_integrity_gates/fixtures/invalid/invalid_status_accepted.json": "a6929fcac32e8212a80c0231c1806234d61d0d5d80853e27ce7d56f1492161cd",
         "measure/tests/evidence_integrity_gates/fixtures/invalid/invalid_baseline_commit_missing.json": "5b077f3eae532bdfef7e776b054227c5cecd5134f894e893ec771aba42894676",
-        "measure/evidence_integrity_gates/contracts.py": "d7c0c5752ab7b61280243e873ab4be234d7c5cceabde76dc42c86898d774ef12",
-        "measure/evidence_integrity_gates/__init__.py": "20b90c2879eb83b720e1766795e379b5007467d4cd446d1a45b9d12f552846a8",
-        "measure/tests/evidence_integrity_gates/test_contract_scaffold.py": "f341d7d06ac256075e29964c18ac7f6a6d49d0cdda9d57ebf64868c6fd629ead",
-        "measure/tests/evidence_integrity_gates/__init__.py": "6dbd8fa4666061d795c080e92f4c1c52b2096a564b336eb0b2494c89696cb6a6",
-        "measure/tests/__init__.py": "13ff36e889bd6f35df1884af6e276ec92cb6955cc3e50caff5b5e2f27c17f4b5"
+        "measure/tests/evidence_integrity_gates/fixtures/invalid/invalid_severity_unknown_level.json": "b405428dc99f94b4ed6d1ee1e199bd8cfa52e7a7f672d8e50350b9f090a23561",
+        "measure/tests/evidence_integrity_gates/fixtures/invalid/invalid_severity_missing_rationale.json": "c6c38b4c21631fd6ba39b6290597bc26e9361647ffa3f838d74b859d310aff07",
+        "measure/tests/evidence_integrity_gates/fixtures/invalid/invalid_stop_loss_oversized_batch.json": "302fea51a6e0005a78ab2edef883ae00c69638bfe4d1477abf1c05bd31c19415",
+        "measure/tests/evidence_integrity_gates/fixtures/invalid/invalid_stop_loss_trigger_disabled.json": "3e2f4a0f0dc8baf262611f9e87b0844f7bdb6a046888ba780c964f9e93ba10a3",
+        "measure/tests/evidence_integrity_gates/fixtures/invalid/invalid_acceptance_no_owner_approval.json": "cc832cd638e4396b1e9844946b9eb321b3b3e5284fb8ea32c22d7f6126756b66",
+        "measure/tests/evidence_integrity_gates/fixtures/invalid/invalid_acceptance_ordering_skip.json": "02ff572a633665d2510192262b4e8b73ee351f683a8d3f24b755ecacf575be33",
+        "measure/tests/evidence_integrity_gates/fixtures/invalid/invalid_revocation_no_triggers.json": "056aa988abead2f8d24d0e354f9b3273d6c5737bad95d3be26e45bf9ef71bb02",
+        "measure/tests/evidence_integrity_gates/fixtures/invalid/invalid_revocation_revalidation_unguarded.json": "1fbef610c4c0062db1690eb039044ea7411b6959906a01e664e44e66ca5ac1db",
+        "measure/tests/evidence_integrity_gates/fixtures/invalid/invalid_allowed_inputs_missing.json": "a6c92c52f1e593461faf659b59379ab2ac5d91354e35d0f9b086440d2061a448",
+        "measure/tests/evidence_integrity_gates/fixtures/invalid/invalid_allowed_inputs_hash_mismatch.json": "8cf6f5a6bce5ec84f413669e2ebd32e4dead258f0f3aa912b50707564bbb9e74",
+        "measure/tests/evidence_integrity_gates/fixtures/invalid/invalid_role_receipt_not_fabricated.json": "d0fab6e3ef38140d61957c896212c51095e544fee5d936867a7e3565d6eb918c",
+        "measure/tests/evidence_integrity_gates/fixtures/invalid/invalid_role_receipt_empty_provenance.json": "9b7fdc91fe78bc4d7cfe1fe8c275c0d4553ab66c4ee9a68896fd28897ece81c2"
       },
       "findings": [],
-      "budget_declaration_hash": "NOT_DECLARED \u2014 Phase 0 Red does not declare a budget; the budget contract is the schema scaffold in contracts.py.",
-      "commit_sha": "Pending \u2014 recorded by git at commit time."
+      "budget_declaration_hash": "NOT_DECLARED — Phase 0 Red does not declare a budget; the budget contract is the schema scaffold in contracts.py.",
+      "commit_sha": "Pending - recorded by git at commit time. The Green subagent's work is included in the single retry commit per the atomic-per-phase instruction."
     },
     "deferred_role_receipts": [
       {
@@ -138,18 +156,18 @@
       {
         "role": "counterexample-author",
         "status": "deferred:future-spawn",
-        "when": "Before Phase 1 Green. The current fixture corpus was authored by the same Red subagent that wrote the contract scaffold \u2014 an acknowledged FR3 separation violation that MUST be cured by an independent counterexample-author pass before any Phase 1 fixture is treated as authoritative."
+        "when": "Before Phase 1 Green. The current fixture corpus was authored by the same Red subagent that wrote the contract scaffold — an acknowledged FR3 separation violation that MUST be cured by an independent counterexample-author pass before any Phase 1 fixture is treated as authoritative."
       },
       {
         "role": "adversarial-reviewer",
         "status": "deferred:future-spawn",
-        "when": "Phase 4 (FR6). fork_turns='none' is required. The reviewer receives only the spec, raw-source pointers, accepted manifests, and revision range \u2014 NOT the mapper's reasoning or completion narrative."
+        "when": "Phase 4 (FR6). fork_turns='none' is required. The reviewer receives only the spec, raw-source pointers, accepted manifests, and revision range — NOT the mapper's reasoning or completion narrative."
       }
     ]
   },
   "red_evidence_summary": {
     "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.evidence_integrity_gates.test_contract_scaffold",
-    "result": "Ran 33 tests in 0.039s \u2014 FAILED (failures=1, errors=15, passes=17)",
+    "result": "Ran 33 tests in 0.039s — FAILED (failures=1, errors=15, passes=17)",
     "passing_tests_count": 17,
     "passing_tests_meaning": "Scaffolding and fixture-completeness checks: every required module constant exists, every frozen attempt 1-5 has a named invalid + paired valid fixture, every manifest metadata field is present, every attempt fixture's status is 'candidate', every attempt fixture's expected_rejection_code is in REJECTION_CODES. These tests assert the Phase 0 DELIVERABLES (fixtures + scaffold) are correctly authored.",
     "error_tests_count": 15,
@@ -157,11 +175,11 @@
     "failure_tests_count": 1,
     "failure_tests_meaning": "Anti-A12 catalog guard reference resolution: measure/anti-patterns.md references 7 missing guard files (tests/_lib/track_dir.sh, tests/cs_p4.sh, tests/mir_p1.sh, tests/mr_p1.sh, tests/mr_p2.sh, tests/mr_p3.sh, tests/mr_p4.sh). This is a PRE-EXISTING repo-wide integrity failure documented in anti-patterns.md itself (A12) and is exactly the kind of finding the Phase 0 harness is designed to detect. The failure is the expected Red outcome of the A12 defense: the harness exists, the catalog has dangling refs, the test catches them. Remediation of the dangling references is the responsibility of their respective owners and is NOT Phase 0 Red work.",
     "anti_pattern_defenses_exercised": [
-      "A3 \u2014 labeled integer-plus-unit parsing: tests assert value+unit are extracted (test_030, test_031) and that 'unmeasured' is rejected (test_032).",
-      "A4 \u2014 empty control corpus rejection: test_009, test_010, test_101, test_102, test_103.",
-      "A5/A6 \u2014 candidate status required: test_060, test_091, manifest.gate_edit_prohibition.enabled.",
-      "A8 \u2014 [ ] (space) marker rejected: test_051.",
-      "A12 \u2014 catalog guard references must resolve: test_081 (currently finds 7 pre-existing dangling refs; remediation deferred to the relevant owners)."
+      "A3 — labeled integer-plus-unit parsing: tests assert value+unit are extracted (test_030, test_031) and that 'unmeasured' is rejected (test_032).",
+      "A4 — empty control corpus rejection: test_009, test_010, test_101, test_102, test_103.",
+      "A5/A6 — candidate status required: test_060, test_091, manifest.gate_edit_prohibition.enabled.",
+      "A8 — [ ] (space) marker rejected: test_051.",
+      "A12 — catalog guard references must resolve: test_081 (currently finds 7 pre-existing dangling refs; remediation deferred to the relevant owners)."
     ]
   }
 }
