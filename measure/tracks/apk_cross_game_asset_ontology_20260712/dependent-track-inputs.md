@@ -1,6 +1,6 @@
 # Dependent Track Inputs
 
-Status: **accepted by the product owner on 2026-07-12**.
+Status: **REVOKED — the track was reopened after post-closeout review found five High defects. Do not consume these hashes.**
 
 | Artifact                             | SHA-256                                                            |
 | ------------------------------------ | ------------------------------------------------------------------ |

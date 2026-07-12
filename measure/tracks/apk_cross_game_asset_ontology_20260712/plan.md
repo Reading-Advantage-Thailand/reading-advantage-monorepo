@@ -105,3 +105,15 @@
       without beginning their implementation
 - [x] Task: Obtain explicit product-owner acceptance [accepted 2026-07-12]
 - [x] Task: Measure - User Manual Verification 'Phase 7' (Protocol in workflow.md) [accepted 2026-07-12]
+
+## Phase 8: Post-closeout review remediation [checkpoint: pending]
+
+- [~] Task: Replace the synthetic one-main-scene corpus with source-grounded scene/state inventories and exact evidence
+- [ ] Task: Replace hardcoded blueprint summaries with claim-level source/revision/line evidence and behavior-focused tests
+- [ ] Task: Replace keyword-derived responsive profiles with per-game current-state audits and intentional compact/wide contracts
+- [ ] Task: Replace templated asset roles with concrete scene usages, variants, and source evidence
+- [ ] Task: Publish a per-candidate asset audit with dimensions, format, provenance, current use, visual inspection, responsive/theme suitability, and disposition
+- [ ] Task: Regenerate capability, ontology, gap, verification, and dependent-track artifacts from remediated inputs
+- [ ] Task: Run independent review and remediate every Critical, High, and Medium finding
+- [ ] Task: Obtain explicit product-owner re-acceptance
+- [ ] Task: Measure - User Manual Verification 'Phase 8' (Protocol in workflow.md)
