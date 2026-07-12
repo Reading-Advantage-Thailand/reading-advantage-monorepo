@@ -15,14 +15,17 @@ VFX, UI, and backgrounds into one universal sheet format.
 
 ## Required predecessor artifacts
 
-Work may not start until `apk_cross_game_asset_ontology_20260712` provides and
-the product owner accepts:
+Work may not start until `apk_independent_acceptance_handoff_20260712` publishes
+an accepted manifest bound to product-owner acceptance and exact hashes for:
 
 - Complete game corpus.
+- Accepted mechanic blueprints and developer-capability links.
 - Scene-level asset usage matrix.
 - Existing-asset audit.
 - Normalized ontology and variant rules.
 - Environment-kit definitions.
+- Responsive compact/wide UI, control, text-capacity, and safe-region requirements.
+- Accepted audio roles or an explicit no-audio disposition for each usage.
 - Gap analysis and coverage-driven production priorities.
 
 Any unresolved Must-have requirement blocks physical contract freeze.
@@ -48,6 +51,9 @@ Acceptance criteria:
 - Chibi Quest and Riven Lands implement the same semantic IDs, states, and
   per-type physical structure for drop-in theme replacement.
 - The contract distinguishes gameplay variants from theme treatments.
+- UI/control assets declare nine-slice, text-capacity, safe-padding, compact/wide,
+  and focal/cropping behavior required by the responsive composition specification.
+- Audio roles use typed delivery/state contracts when the accepted corpus requires them.
 
 ### Story S2: Plan bounded production batches
 
@@ -99,6 +105,9 @@ Acceptance criteria:
 - Strength and behavior variants remain visibly distinguishable in both themes.
 - Environment kits are internally coherent and contain every capability required
   by their mapped games.
+- UI, controls, prompts, and results preserve usable text and gameplay regions in
+  compact and wide compositions.
+- Accepted audio roles exist with equivalent gameplay meaning in both themes.
 - Existing assets are reused only according to the accepted manual audit and
   retain provenance/license evidence.
 
@@ -124,5 +133,5 @@ Acceptance criteria:
 - Rewriting cartridge gameplay or educational rules.
 - Reopening withdrawn catalog routes.
 - Adding assets not justified by the accepted ontology/change-control process.
-- Audio production unless a successor decision explicitly adds it.
+- Audio uses or variants absent from the accepted corpus ontology.
 - Preserving legacy renderer or filename compatibility.

@@ -1,12 +1,13 @@
 # Implementation Plan: APK Dual-Theme Asset Contract and Production
 
 > **Track ID:** `apk_dual_theme_asset_production_20260712`
-> **Blocked by:** `apk_cross_game_asset_ontology_20260712`
+> **Blocked by:** exact accepted `apk_independent_acceptance_handoff_20260712` manifest hashes
 
 ## Phase 0: Enforce the predecessor gate [checkpoint: pending]
 
-- [ ] Task: Verify the predecessor track is complete and record the accepted
-  corpus, usage-matrix, ontology, variant, environment-kit, and gap-analysis SHAs
+- [ ] Task: Validate the T10 acceptance record and accepted manifest, then record the
+  corpus, mechanic/capability links, responsive matrix, usage-matrix, ontology,
+  variant, environment-kit, audio-role, and gap-analysis SHAs
 - [ ] Task: Write a dependency test that rejects contract or production entries
   without an accepted ontology/gap ID and source game coverage
 - [ ] Task: Audit prior APK physical-ABI and authoring-pipeline commits against
@@ -26,6 +27,9 @@
   paths and physical filenames
 - [ ] Task: Define mirrored Chibi Quest/Riven Lands parity and substitutions
   without requiring unrelated asset families to share one layout
+- [ ] Task: Define responsive UI/control physical contracts with text capacity,
+  nine-slice, safe-padding, compact/wide, and cropping/focal rules
+- [ ] Task: Define physical audio contracts for every accepted semantic audio role
 - [ ] Task: Implement typed schemas and validators for the accepted contracts
 - [ ] Task: Publish `semantic-to-physical-contracts.md` with source-usage links
   and no unresolved Must-have physical decision
@@ -50,6 +54,8 @@
 - [ ] Task: Write Red tests for each physical contract family and all rejection cases
 - [ ] Task: Make the inspection harness load real manifest entries and expose
   state playback/stepping, grid/tile/slice overlays, anchors, collisions, and theme swap
+- [ ] Task: Add compact/wide safe-region and real Thai/English text-capacity
+  inspection for UI, prompts, controls, HUD, and result assets
 - [ ] Task: Prove the harness never turns a whole sheet into one frame and never
   accepts placeholders as production evidence
 - [ ] Task: Run coverage, lint, syntax/type, and Kimi browser checks using test fixtures
@@ -76,7 +82,8 @@
 - [ ] Task: Run automated semantic parity, structural, state, path, hash, and
   no-fallback validation across both packs
 - [ ] Task: Use Kimi WebBridge to inspect every real state/animation, environment
-  kit, prop/hazard, projectile/VFX sequence, UI slice/state, and theme swap
+  kit, prop/hazard, projectile/VFX/audio sequence, responsive UI slice/state,
+  worst-case text fixture, and theme swap
 - [ ] Task: Run independent review and remediate every Critical, High, and Medium finding
 - [ ] Task: Obtain explicit product-owner acceptance and publish immutable pack versions
 - [ ] Task: Measure - User Manual Verification 'Phase 5' (Protocol in workflow.md)

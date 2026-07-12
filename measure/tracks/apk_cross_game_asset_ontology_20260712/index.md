@@ -1,5 +1,7 @@
 # APK Cross-Game Requirements and Capability Ontology
 
+> **FAILED AND SUPERSEDED — DO NOT CONSUME.** All hashes in this track are revoked. See the [APK Evidence Reconstruction Program](../../apk-evidence-reconstruction-program.md).
+
 - [Specification](./spec.md)
 - [Implementation Plan](./plan.md)
 - [Metadata](./metadata.json)

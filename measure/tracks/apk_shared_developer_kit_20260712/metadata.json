@@ -1,0 +1,14 @@
+{
+  "track_id": "apk_shared_developer_kit_20260712",
+  "type": "feature",
+  "status": "pending",
+  "created_at": "2026-07-12T00:00:00Z",
+  "updated_at": "2026-07-12T00:00:00Z",
+  "description": "Implement the corpus-approved shared Phaser systems, responsive composition primitives, standard game UI, testing tools, scaffolding, documentation, and Advantage Games QC workflow that make APK games simpler to develop.",
+  "estimated_tasks": 57,
+  "actual_tasks": null,
+  "depends_on": [
+    "apk_independent_acceptance_handoff_20260712"
+  ],
+  "deviation_notes": "Added after the APK fitness review established that the surviving foundation provides runtime plumbing but does not yet implement the complete corpus-derived developer kit."
+}

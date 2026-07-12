@@ -3,10 +3,11 @@
 - [Specification](./spec.md)
 - [Implementation Plan](./plan.md)
 - [Metadata](./metadata.json)
-- [APK Asset System Program](../../apk-asset-system-program.md)
+- [APK Delivery Program](../../apk-asset-system-program.md)
+- [Responsive Composition Specification](../../apk-responsive-game-composition-spec.md)
 
-This track is dependency-blocked until
-`apk_cross_game_asset_ontology_20260712` is accepted.
+This track is dependency-blocked until the exact accepted manifest hashes from
+`apk_independent_acceptance_handoff_20260712` validate.
 
 Planned deliverables created during execution:
 

@@ -1,0 +1,12 @@
+{
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "type": "chore",
+  "status": "pending",
+  "created_at": "2026-07-12T00:00:00Z",
+  "updated_at": "2026-07-12T00:00:00Z",
+  "description": "Recover exact evidence packages for eight action, defense, escort, projectile, and arena games in bounded independently reviewed batches.",
+  "estimated_tasks": 27,
+  "actual_tasks": null,
+  "deviation_notes": null,
+  "depends_on": ["apk_three_game_truth_pilot_20260712"]
+}

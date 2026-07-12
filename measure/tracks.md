@@ -62,23 +62,53 @@ Two parallel programs are in flight; priority order when picking the next track:
 > **Program correction (2026-07-12):** Requirements for the developer kit,
 > responsive compositions, and semantic assets must be derived from the complete
 > `apps/advantage-games` corpus before shared systems or physical art are frozen.
-> See the [APK Delivery Program](./apk-asset-system-program.md) and
+> See the [APK Evidence Reconstruction Program](./apk-evidence-reconstruction-program.md), [APK Delivery Program](./apk-asset-system-program.md), and
 > [Responsive Game Composition Specification](./apk-responsive-game-composition-spec.md).
-> Developer-kit and asset work may proceed in parallel only after the combined
-> requirements artifacts receive explicit product-owner acceptance; cartridge
-> cohorts require both accepted kit capabilities and both-theme asset batches.
+> No successor implementation may begin until the independent acceptance track
+> publishes post-review, post-approval hashes. Required subagent roles, evidence
+> receipts, stop-loss gates, and a three-game pilot are mandatory.
 
-- [~] **Track: APK Cross-Game Requirements and Capability Ontology** *Link: [./tracks/apk_cross_game_asset_ontology_20260712/](./tracks/apk_cross_game_asset_ontology_20260712/)*
-  Audit every raw game and scene to recover mechanic blueprints, baseline developer effort, decide shared-versus-bespoke developer capabilities, define compact/wide composition requirements, and derive the semantic asset ontology and delivery priorities.
+- [x] **Track: APK Cross-Game Requirements and Capability Ontology — FAILED/SUPERSEDED, DO NOT CONSUME** *Link: [./tracks/apk_cross_game_asset_ontology_20260712/](./tracks/apk_cross_game_asset_ontology_20260712/)*
+  Failed after structural tests and generated assumptions were incorrectly treated as source-grounded completion. All hashes are revoked; artifacts remain only as negative/failure evidence.
+
+- [ ] **Track: Measure APK Evidence Integrity Gates** *Link: [./tracks/measure_apk_evidence_integrity_gates_20260712/](./tracks/measure_apk_evidence_integrity_gates_20260712/)*
+  Build exact-source, independent-denominator, mandatory-subagent, stop-loss, counterexample, and completion gates before another APK audit begins.
+
+- [ ] **Track: APK Independent Source Denominator Inventory** *Link: [./tracks/apk_source_denominator_inventory_20260712/](./tracks/apk_source_denominator_inventory_20260712/)*
+  Independently discover and fully reconcile the game, file, scene/state, copy, history, and asset denominator without interpreting product requirements.
+
+- [ ] **Track: APK Three-Game Source-Truth Pilot** *Link: [./tracks/apk_three_game_truth_pilot_20260712/](./tracks/apk_three_game_truth_pilot_20260712/)*
+  Prove the method on Dragon Flight, RPG Battle, and Abyssal Well before authorizing corpus-scale work.
+
+- [ ] **Track: APK Action and Defense Evidence Cohort** *Link: [./tracks/apk_corpus_audit_action_defense_20260712/](./tracks/apk_corpus_audit_action_defense_20260712/)*
+  Recover exact independently reviewed evidence packages for eight action, defense, escort, projectile, and arena games.
+
+- [ ] **Track: APK Traversal and Exploration Evidence Cohort** *Link: [./tracks/apk_corpus_audit_traversal_exploration_20260712/](./tracks/apk_corpus_audit_traversal_exploration_20260712/)*
+  Recover exact world, camera, movement, collision, transition, responsive, and asset evidence for seven traversal/exploration games.
+
+- [ ] **Track: APK Puzzle and Crafting Evidence Cohort** *Link: [./tracks/apk_corpus_audit_puzzle_crafting_20260712/](./tracks/apk_corpus_audit_puzzle_crafting_20260712/)*
+  Recover exact board, station, matching, crafting, sequencing, content, responsive, and asset evidence for six games.
+
+- [ ] **Track: APK Special and Historical Evidence Cohort** *Link: [./tracks/apk_corpus_audit_special_historical_20260712/](./tracks/apk_corpus_audit_special_historical_20260712/)*
+  Recover exact current and historical evidence for five distinctive, changed, cancelled, or missing games.
+
+- [ ] **Track: APK Per-Candidate Asset Forensics** *Link: [./tracks/apk_existing_asset_candidate_audit_20260712/](./tracks/apk_existing_asset_candidate_audit_20260712/)*
+  Publish one forensic record per independently discovered asset path; contact-sheet summaries cannot satisfy completion.
+
+- [ ] **Track: APK Evidence-Backed Ontology Synthesis** *Link: [./tracks/apk_evidence_backed_ontology_synthesis_20260712/](./tracks/apk_evidence_backed_ontology_synthesis_20260712/)*
+  Derive mechanics, capabilities, responsive contracts, semantic assets, gaps, and cohorts from accepted evidence only, without adding factual claims.
+
+- [ ] **Track: APK Independent Acceptance and Handoff** *Link: [./tracks/apk_independent_acceptance_handoff_20260712/](./tracks/apk_independent_acceptance_handoff_20260712/)*
+  Revalidate the full corpus from raw sources and exclusively publish successor hashes after independent review and product-owner approval.
 
 - [ ] **Track: APK Shared Developer Kit and Authoring Workflow** *Link: [./tracks/apk_shared_developer_kit_20260712/](./tracks/apk_shared_developer_kit_20260712/)*
-  Implement the accepted shared Phaser session, input, gameplay, responsive, presentation, semantic-loading, diagnostic, and testing capabilities; provide cartridge scaffolding, documentation, an exemplar, and the Advantage Games authoring/QC workflow.
+  BLOCKED until the independent acceptance track publishes valid hashes. Then implement accepted shared capabilities and authoring workflow.
 
 - [ ] **Track: APK Dual-Theme Asset Contract and Production** *Link: [./tracks/apk_dual_theme_asset_production_20260712/](./tracks/apk_dual_theme_asset_production_20260712/)*
-  After ontology acceptance, define type-specific physical formats and produce mirrored Chibi Quest and Riven Lands assets in bounded batches prioritized by cross-game coverage.
+  BLOCKED until the independent acceptance track publishes valid hashes. Then define physical contracts and mirrored theme batches.
 
 - [ ] **Track: APK Cartridge Rebuild, Integration, and Cutover** *Link: [./tracks/apk_cartridge_semantic_rewrite_20260712/](./tracks/apk_cartridge_semantic_rewrite_20260712/)*
-  Rebuild Ready games in bounded cohorts through the shared kit and both-theme assets, verify compact/wide gameplay, integrate Reading/Primary through shared domain and appropriate tRPC/thin host adapters, restore exposure per game, and retire exact legacy copies.
+  BLOCKED until independent acceptance, accepted kit capabilities, and required both-theme batches exist.
 
 - [x] **Track: APK Dual-Theme Production Asset Packs — SUPERSEDED, DO NOT IMPLEMENT** *Link: [./archive/apk_dual_theme_asset_packs_20260711/](./archive/apk_dual_theme_asset_packs_20260711/)*
   Superseded 2026-07-12 because it froze a speculative physical inventory before completing cross-game requirements analysis. Retained as failure evidence; no completion claim is made.

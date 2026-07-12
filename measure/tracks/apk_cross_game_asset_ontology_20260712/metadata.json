@@ -1,11 +1,11 @@
 {
   "track_id": "apk_cross_game_asset_ontology_20260712",
   "type": "chore",
-  "status": "in_progress",
+  "status": "superseded",
   "created_at": "2026-07-12T00:00:00Z",
-  "updated_at": "2026-07-12T04:05:00Z",
+  "updated_at": "2026-07-12T04:30:00Z",
   "description": "Derive complete APK mechanic blueprints, shared developer-capability requirements, responsive composition contracts, semantic assets, and delivery priorities from the Advantage Games corpus before implementing the kit or generating art.",
   "estimated_tasks": 50,
   "actual_tasks": 50,
-  "deviation_notes": "Reopened after post-closeout review found five High defects: synthetic single-scene modeling, directory-level evidence for hardcoded blueprints, heuristic responsive profiles, templated asset usages, and a cohort-only asset audit. Previously accepted dependent hashes are revoked until remediation is independently reviewed."
+  "deviation_notes": "FAILED AND SUPERSEDED. Post-closeout review found five High defects: synthetic single-scene modeling, directory-level evidence for hardcoded blueprints, heuristic responsive profiles, templated asset usages, and a cohort-only asset audit. All dependent hashes are permanently revoked. Artifacts remain only as failure evidence for the APK Evidence Reconstruction Program."
 }
