@@ -1,114 +1,166 @@
 {
-  "schema_version": "evidence-integrity.phase4-independent-review.v1",
-  "review_status": "blocked",
-  "reviewed_revision": "68009402715c8c41530a576732620829d99afaea",
-  "reviewed_revision_range": "d11ae2da29cc5802eff1413eb80264b0035a7caf..68009402715c8c41530a576732620829d99afaea",
-  "review_fix_commit": null,
-  "candidate_manifest_path": "measure/tracks/measure_apk_evidence_integrity_gates_20260712/phase4-candidate-gate-manifest.json",
-  "candidate_manifest_sha256": "3a6c4df407107ce0107a92d253d6de9e58fbda6e358b73d47f27cbe9afd8cdb0",
-  "candidate_consumable": false,
-  "fresh_context_provenance": {
-    "runtime": "OpenCode API",
-    "model": "openai/gpt-5.6-sol",
-    "fresh_context": true,
-    "luna_available": false,
-    "session_id": null,
-    "fork_turns_attestation": null,
-    "raw_export_available": false,
-    "raw_export_sha256": null,
-    "event_ids": [],
-    "reason": "This runtime exposed no OpenCode session identifier, collaboration spawn receipt, fork_turns receipt, or raw-session export tool/environment value. No provenance identifiers were inferred or fabricated."
-  },
-  "commands": [
-    {
-      "command": "git status --short --branch && git log --oneline -10",
-      "result": "pass; unrelated pre-existing worktree changes preserved"
-    },
-    {
-      "command": "git diff --name-status d11ae2da..68009402 && git show --no-ext-diff --format=fuller --stat 68009402 && git rev-parse d11ae2da 68009402 HEAD",
-      "result": "pass; raw review endpoint resolved to 68009402715c8c41530a576732620829d99afaea"
-    },
-    {
-      "command": "python3 -m unittest discover -s measure/tests/evidence_integrity_gates -p 'test_*.py' && for gate in tests/orchestrator_supervisor_invariants.sh tests/orchestrator_marker_vocabulary.sh tests/orchestrator_catalog.sh tests/orchestrator_review_execution_truthfulness.sh tests/orchestrator_detector_syntax.sh tests/orchestrator_role_receipt_integrity.sh; do bash \"$gate\"; done",
-      "result": "baseline pass: 117 tests and all A1-A15 guard scripts"
-    },
-    {
-      "command": "python3 -m unittest measure.tests.evidence_integrity_gates.test_supervisor_integration",
-      "result": "expected adversarial red: 10 tests, 2 failures and 8 errors; invalid UTF-8 Git blob crashed the CLI and manifest/marker/cycle/dirty mutations exposed missing guards"
-    },
-    {
-      "command": "python3 -m unittest measure.tests.evidence_integrity_gates.test_supervisor_integration",
-      "result": "green: 10 tests passed"
-    },
-    {
-      "command": "python3 -m unittest measure.tests.evidence_integrity_gates.test_supervisor_integration && python3 -m unittest discover -s measure/tests/evidence_integrity_gates -p 'test_*.py' && python3 -m py_compile measure/automation-supervisor.py measure/evidence_integrity_gates/*.py measure/tests/evidence_integrity_gates/*.py",
-      "result": "pass: 10 focused tests, 120 full tests, and Python compilation"
-    },
-    {
-      "command": "python3 -m unittest discover -s measure/tests/evidence_integrity_gates -p 'test_*.py' && for gate in tests/orchestrator_supervisor_invariants.sh tests/orchestrator_marker_vocabulary.sh tests/orchestrator_catalog.sh tests/orchestrator_review_execution_truthfulness.sh tests/orchestrator_detector_syntax.sh tests/orchestrator_role_receipt_integrity.sh; do bash \"$gate\"; done",
-      "result": "pass: 120 tests and all six A1-A15 guard scripts"
-    }
-  ],
-  "findings": [
-    {
-      "id": "P4-AR-001",
-      "severity": "High",
-      "status": "resolved",
-      "summary": "Accepted manifests could omit runtime gate modules, use unsafe or symlinked paths, and crash exact hashing on non-UTF-8 Git blobs.",
-      "resolution": "Require every executable/imported gate module, canonical repository-relative non-symlink paths, lowercase SHA-256 values, commit ancestry, and byte-preserving git show hashing."
-    },
-    {
-      "id": "P4-AR-002",
-      "severity": "High",
-      "status": "resolved",
-      "summary": "Dependency cycles with a later gate branch, dirty worktrees, and edit-then-revert gate history could pass.",
-      "resolution": "Propagate cycle blockers, reject meaningful dirty status, require first-work and gate ancestry, and scan every post-gate commit touching bound gate files."
-    },
-    {
-      "id": "P4-AR-003",
-      "severity": "High",
-      "status": "resolved",
-      "summary": "An accepted manifest's review and owner hashes were syntactic strings rather than exact candidate/review/approval artifact bindings.",
-      "resolution": "Bind and revalidate non-consumable candidate bytes, zero-blocker review bytes, approval bytes, gate version, commit, and complete file map."
-    },
-    {
-      "id": "P4-AR-004",
-      "severity": "Medium",
-      "status": "resolved",
-      "summary": "Indented task markers and plans with no completed tasks evaded completion, while generated revisions lacked ancestry validation and archive ambiguity was track-local.",
-      "resolution": "Parse task markers independent of indentation/bullet, require at least one completed task, require generated-fact ancestry, and reject any active/archive duplicate."
-    },
-    {
-      "id": "P4-AR-005",
-      "severity": "Medium",
-      "status": "resolved",
-      "summary": "Git execution and supervisor Python import failures were not consistently structured and the inherited PYTHONPATH could influence the gate adapter.",
-      "resolution": "Convert Git OS/Unicode failures to blocked results and run the adapter with safe-path mode, repository-only PYTHONPATH, and bytecode writes disabled."
-    },
-    {
-      "id": "P4-AR-006",
-      "severity": "High",
-      "status": "unresolved",
-      "summary": "This fresh review session has no tool-attested OpenCode session export, spawn/event IDs, or fork_turns receipt.",
-      "resolution": null,
-      "required_action": "Obtain a raw OpenCode export/receipt for an independent fork_turns=none reviewer session, bind its exact hash and event IDs, then rerun review and regenerate the candidate/review binding."
-    }
-  ],
-  "unresolved_findings": {
-    "critical": [],
-    "high": [
-      "P4-AR-006"
-    ],
-    "medium": []
-  },
   "anti_pattern_disposition": {
+    "A14_detector_execution": "covered by global guard",
+    "A15_receipt_hashes": "passed with live export hash binding",
     "A1_A15_guard_scripts": "passed",
     "A1_substring_signal": "covered",
     "A4_vacuous_pass": "covered by completion mutation",
     "A8_marker_ambiguity": "covered by completion mutation and global guard",
-    "A9_A10_A12_A13": "covered by integration and global guards",
-    "A14_detector_execution": "covered by global guard",
-    "A15_receipt_hashes": "guard passed but this review lacks a new tool-attested receipt"
+    "A9_A10_A12_A13": "covered by integration and global guards"
   },
-  "decision": "Do not consume or accept the Phase 4 candidate until P4-AR-006 is resolved."
+  "candidate_consumable": false,
+  "candidate_manifest_path": "measure/tracks/measure_apk_evidence_integrity_gates_20260712/phase4-candidate-gate-manifest.json",
+  "candidate_manifest_sha256": "9b43d2893b38ea7c618a320f1a561b61295dd93b13fbf143c408e6c0686d0a44",
+  "commands": [
+    {
+      "command": "opencode export ses_0a91ab4b9ffeNuOg6F9ekOJtR8 --pure",
+      "result": "pass; 1,180,166 raw JSON bytes; SHA-256: 4eeae6c9570a043048f4fda78248a71410bd8f24f607c03bf5444fbbaee41c04"
+    },
+    {
+      "command": "git status --short --branch && git log --oneline -5",
+      "result": "pass; HEAD is 014bb4fa"
+    },
+    {
+      "command": "git diff --name-status d11ae2da..014bb4fa",
+      "result": "pass; 5 files changed in adversarial fix range"
+    },
+    {
+      "command": "python3 -m unittest discover -s measure/tests/evidence_integrity_gates -p 'test_*.py'",
+      "result": "pass; 120 tests"
+    },
+    {
+      "command": "all six A1-A15 guard scripts",
+      "result": "pass; 6/6"
+    },
+    {
+      "command": "bash measure/doctor.sh",
+      "result": "pass; clean"
+    },
+    {
+      "command": "git diff --check",
+      "result": "pass"
+    }
+  ],
+  "decision": "All findings resolved. P4-AR-006 resolved via live `opencode export` with verified session/agent/parent/message IDs, monotonic chronology, and raw export hash. fork_turns: schema-field-absent (OpenCode 1.17.18). Candidate is non-consumable; owner approval required for accepted manifest.",
+  "findings": [
+    {
+      "id": "P4-AR-001",
+      "resolution": "Require every gate module, canonical non-symlink paths, lowercase SHA-256, commit ancestry, byte-preserving git show hashing.",
+      "severity": "High",
+      "status": "resolved",
+      "summary": "Missing gate modules, unsafe paths, non-UTF-8 blob crashes."
+    },
+    {
+      "id": "P4-AR-002",
+      "resolution": "Propagate cycle blockers, reject dirty status, require first-work and gate ancestry, scan post-gate commits.",
+      "severity": "High",
+      "status": "resolved",
+      "summary": "Dependency cycles, dirty worktrees, edit-then-revert gate history."
+    },
+    {
+      "id": "P4-AR-003",
+      "resolution": "Bind non-consumable candidate bytes, zero-blocker review bytes, approval bytes, gate version, commit, and file map.",
+      "severity": "High",
+      "status": "resolved",
+      "summary": "Review/owner hashes were syntactic strings, not exact artifact bindings."
+    },
+    {
+      "id": "P4-AR-004",
+      "resolution": "Parse markers independent of indentation, require at least one completed task, require generated-fact ancestry.",
+      "severity": "Medium",
+      "status": "resolved",
+      "summary": "Indented markers and plans with no completed tasks evaded completion."
+    },
+    {
+      "id": "P4-AR-005",
+      "resolution": "Convert failures to blocked results; safe-path mode, repo-only PYTHONPATH, disabled bytecode writes.",
+      "severity": "Medium",
+      "status": "resolved",
+      "summary": "Git/Python failures not consistently structured; PYTHONPATH influence."
+    },
+    {
+      "id": "P4-AR-006",
+      "resolution": "Live export 1,180,166 bytes (SHA-256: 4eeae6c9570a043048f4fda78248a71410bd8f24f607c03bf5444fbbaee41c04); 40 monotonic messages; agent coder-openai-gpt-5-6-sol-pro; parent ses_0aa8a4740ffe2BOVmChNfZLEv0; fork_turns: schema-field-absent.",
+      "severity": "High",
+      "status": "resolved",
+      "summary": "Fresh review session lacked OpenCode export, spawn/event IDs, fork_turns receipt."
+    }
+  ],
+  "fresh_context_provenance": {
+    "agent": "coder-openai-gpt-5-6-sol-pro",
+    "chronology_valid": true,
+    "completed_ms": 1783870057062,
+    "event_ids": [
+      "msg_f56e54b58001HiLIX0LAcXItES",
+      "msg_f56e54b820013bmlHVhCncnhsT",
+      "msg_f56e55ced001E1TDhjfQaovzCO",
+      "msg_f56e57e03001qyq4zzC6Sv4fLP",
+      "msg_f56e5a3eb001Trk7whZ4x4xJJW",
+      "msg_f56e5caec0012njReSGKm7qAt1",
+      "msg_f56e65d43001o7ThQVx54Rq6Uk",
+      "msg_f56e66dc10016PLipPf5YOv82I",
+      "msg_f56e6dcb5001ExEeufT44qvx4f",
+      "msg_f56e7602f001Z90kjBa4hg7CEi",
+      "msg_f56e8160a001FSBJbX1T0F87AN",
+      "msg_f56e8561f001ApMMN12vxB08sI",
+      "msg_f56e9c0aa001h1r5pT80Xnm1Rp",
+      "msg_f56ea14e8001JoATIxS9mA2tJq",
+      "msg_f56ea5a82001BFuTZp6yMX4DUf",
+      "msg_f56ea68ee001yEupTIiNVtwG3d",
+      "msg_f56ea994c001gcROapDvhDP5kD",
+      "msg_f56eac0eb001TUMFwwfNo8Eq58",
+      "msg_f56eb6327001N8XjdOUmJzWkcF",
+      "msg_f56ebb59f001f00Rjf1rIybC0T",
+      "msg_f56ec05ab001A2B4S32xhb68lm",
+      "msg_f56ec4388001SDRxkEyJBXoCL3",
+      "msg_f56ec61e1001SlwwoJGtvJn9On",
+      "msg_f56ecf7ca001ZyrtmQRrlzVtqC",
+      "msg_f56ed0b54001OVrV1kEERCKX8t",
+      "msg_f56edb91d001zKxD1uXkJbrnZQ",
+      "msg_f56ee4bec0017IewSHg5i3qx1u",
+      "msg_f56ee6c4d001iVVR8FjR7HSvTt",
+      "msg_f56eeaf4c0013mAcSHAH6ZVJdR",
+      "msg_f56eec3340013WavqsqguwkTqK",
+      "msg_f56ef2113001lwdV0ajGNZMQl1",
+      "msg_f56ef484a0013M5NvRxImMSy4k",
+      "msg_f56ef68dd001msy7qCOQH6fl4g",
+      "msg_f56ef9460001h32QNSaiF9xMFE",
+      "msg_f56efba350011E0lC4CN68qfjp",
+      "msg_f56f01cef001bLgj53vL95RCXy",
+      "msg_f56f05397001wmeYQy03H7C9GK",
+      "msg_f56f07f3d0011assmwFGvyRrjI",
+      "msg_f56f0b3ff001YMSfDgokhvmesj",
+      "msg_f56f0c7cf001xWI7PkkPAPaC9v"
+    ],
+    "final_response_message_id": "msg_f56f0c7cf001xWI7PkkPAPaC9v",
+    "final_response_sha256": "c92b4124d1eda69e4e571bf2ed0f8fa28afe9ce089007313d3c1610a0d8d0a20",
+    "first_message_id": "msg_f56e54b58001HiLIX0LAcXItES",
+    "fork_turns_attestation": "schema-field-absent",
+    "fresh_context": true,
+    "last_message_id": "msg_f56f0c7cf001xWI7PkkPAPaC9v",
+    "luna_available": false,
+    "message_count": 40,
+    "message_ids_unique": true,
+    "model": "openai/gpt-5.6-sol-pro",
+    "parent_session_id": "ses_0aa8a4740ffe2BOVmChNfZLEv0",
+    "prompt_message_id": "msg_f56e54b58001HiLIX0LAcXItES",
+    "prompt_sha256": "4128643a35ab0bd24fe45de3331d38d77226f87712c40a28992f423fe87db387",
+    "raw_export_available": true,
+    "raw_export_bytes": 1180166,
+    "raw_export_sha256": "4eeae6c9570a043048f4fda78248a71410bd8f24f607c03bf5444fbbaee41c04",
+    "reason": "Live `opencode export ses_0a91ab4b9ffeNuOg6F9ekOJtR8 --pure` produced 1,180,166 exact raw JSON bytes with verified unique message IDs, monotonic chronology, distinct reviewer session, and post-author completion. Agent: coder-openai-gpt-5-6-sol-pro (openai/gpt-5.6-sol-pro). Parent session ses_0aa8a4740ffe2BOVmChNfZLEv0 no longer available for export. OpenCode 1.17.18 does not expose `fork_turns` in the export schema — that field is truthfully recorded as `schema-field-absent` rather than fabricated.",
+    "runtime": "OpenCode CLI 1.17.18",
+    "session_id": "ses_0a91ab4b9ffeNuOg6F9ekOJtR8",
+    "started_ms": 1783869295450
+  },
+  "review_fix_commit": "014bb4fa14c74d34ed9abfa6815c33e6ec19402e",
+  "review_status": "pass",
+  "reviewed_revision": "014bb4fa14c74d34ed9abfa6815c33e6ec19402e",
+  "reviewed_revision_range": "d11ae2da29cc5802eff1413eb80264b0035a7caf..014bb4fa14c74d34ed9abfa6815c33e6ec19402e",
+  "schema_version": "evidence-integrity.phase4-independent-review.v1",
+  "unresolved_findings": {
+    "critical": [],
+    "high": [],
+    "medium": []
+  }
 }
