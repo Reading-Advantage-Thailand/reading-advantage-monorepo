@@ -169,7 +169,7 @@
     "dir_moved_from": "measure/tracks/measure_apk_evidence_integrity_gates_20260712",
     "dir_moved_to": "measure/archive/measure_apk_evidence_integrity_gates_20260712",
     "tracks_md_active_row_removed": true,
-    "tracks_md_archived_row_added": false,
+    "tracks_md_archived_row_added": true,
     "tracks_md_entry_updated": true,
     "metadata_status_flipped": "in_progress → done",
     "completion_date": "2026-07-13"

@@ -19,6 +19,9 @@ Two parallel programs are in flight; priority order when picking the next track:
 3. **codecamp-advantage productization** (deployment, prod-QA, exercise-repos) proceeds
    independently; lower priority than securing the shared packages above.
 
+- [~] **Track: OpenCode Agent Roster Refresh** *Link: [./tracks/opencode_agent_roster_20260712/](./tracks/opencode_agent_roster_20260712/)*
+  Refresh global coding and Measure agents for the GPT-5.6 Luna/Terra/Sol family, remove unavailable Moonshot routing, and prioritize active subscription-backed providers.
+
 ---
 
 ## Monorepo Feature Review Program (created 2026-06-26)
@@ -70,9 +73,6 @@ Two parallel programs are in flight; priority order when picking the next track:
 
 - [x] **Track: APK Cross-Game Requirements and Capability Ontology — FAILED/SUPERSEDED, DO NOT CONSUME** *Link: [./tracks/apk_cross_game_asset_ontology_20260712/](./tracks/apk_cross_game_asset_ontology_20260712/)*
   Failed after structural tests and generated assumptions were incorrectly treated as source-grounded completion. All hashes are revoked; artifacts remain only as negative/failure evidence.
-
-- [x] **Track: Measure APK Evidence Integrity Gates — COMPLETED** *Link: [./archive/measure_apk_evidence_integrity_gates_20260712/](./archive/measure_apk_evidence_integrity_gates_20260712/)*
-  Build exact-source, independent-denominator, mandatory-subagent, stop-loss, counterexample, and completion gates before another APK audit begins. All 46 tasks complete; v8 accepted manifest at measure/evidence-integrity-accepted-gate.json; successor APK evidence tracks unblocked. Archived 2026-07-13.
 
 - [ ] **Track: APK Independent Source Denominator Inventory** *Link: [./tracks/apk_source_denominator_inventory_20260712/](./tracks/apk_source_denominator_inventory_20260712/)*
   Independently discover and fully reconcile the game, file, scene/state, copy, history, and asset denominator without interpreting product requirements.
@@ -133,9 +133,9 @@ Two parallel programs are in flight; priority order when picking the next track:
   Author the Codecamp prerequisite graph, bind the current curriculum and PR exercises to objective/variant evidence, and add a tutorial-first Phaser 4 game-creation unit built on the Advantage Play Kit and React host components. Archived 2026-07-12.
 - [x] **Track: Shared Interactive Video and Tutorial Runtime** *Link: [./archive/shared_video_tutorial_runtime_20260710/](./archive/shared_video_tutorial_runtime_20260710/)*
   Build the React/Next/Vinext-compatible I Do and We Do runtime for YouTube/hosted video, diagrams, timestamped questions, tutorial repositories, deterministic step checks, and `practice.v1` evidence. Archived 2026-07-12.
-- [ ] **Track: Codecamp Targeted Intervention Tutor** *Link: [./tracks/codecamp_intervention_tutor_20260710/](./tracks/codecamp_intervention_tutor_20260710/)*
+- [~] **Track: Codecamp Targeted Intervention Tutor** *Link: [./tracks/codecamp_intervention_tutor_20260710/](./tracks/codecamp_intervention_tutor_20260710/)*
   Replace general chat with a MiMo-V2.5 intervention coach grounded in the current objective, activity step, test failure, misconceptions, hint history, and curated lesson/video/repository resources.
-- [ ] **Track: Codecamp PR Review as Mastery Evidence** *Link: [./tracks/codecamp_pr_mastery_evaluation_20260710/](./tracks/codecamp_pr_mastery_evaluation_20260710/)*
+- [~] **Track: Codecamp PR Review as Mastery Evidence** *Link: [./tracks/codecamp_pr_mastery_evaluation_20260710/](./tracks/codecamp_pr_mastery_evaluation_20260710/)*
   Route PR review explicitly to OpenRouter `~x-ai/grok-latest`, expand the structured Zod result into graph-linked rubric evidence, preserve advisory review semantics, and feed validated results into KST+SRS without equating one approval with permanent mastery.
 
 ---
@@ -185,6 +185,9 @@ Two parallel programs are in flight; priority order when picking the next track:
 ---
 
 ## Archived Tracks
+
+- [x] **Track: Measure APK Evidence Integrity Gates — COMPLETED** *Link: [./archive/measure_apk_evidence_integrity_gates_20260712/](./archive/measure_apk_evidence_integrity_gates_20260712/)*
+  Build exact-source, independent-denominator, mandatory-subagent, stop-loss, counterexample, and completion gates before another APK audit begins. All 46 tasks complete; v8 accepted manifest at measure/evidence-integrity-accepted-gate.json; successor APK evidence tracks unblocked. Archived 2026-07-13.
 
 - [x] **Track: Mastery Engine v3.2 Import and Shared Runtime** *Link: [./archive/mastery_engine_v32_import_20260710/](./archive/mastery_engine_v32_import_20260710/)*
   Completed 2026-07-10. Imported and migrated the four domain-neutral engine packages to `kst-srs.v3.2`, added tenant-safe portable persistence, and established strict runtime/release governance with a synthetic Codecamp consumer proof.
