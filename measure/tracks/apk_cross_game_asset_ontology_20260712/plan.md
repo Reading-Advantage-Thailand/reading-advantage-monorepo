@@ -74,11 +74,11 @@
       audio, UI, control, background, transition, and result presentation usage
 - [x] Task: Record states, directions, view, scale, collision, animation,
       compact/wide use, and developer-capability relationship
-- [~] Task: Enumerate and manually inspect all existing production candidates
-- [ ] Task: Record provenance/license, dimensions, content, current use, responsive
+- [x] Task: Enumerate and manually inspect all existing production candidates
+- [x] Task: Record provenance/license, dimensions, content, current use, responsive
       suitability, and reuse/reject/replace disposition
-- [ ] Task: Publish `game-asset-usage-matrix.json` and `existing-asset-audit.md`
-- [ ] Task: Measure - User Manual Verification 'Phase 5' (Protocol in workflow.md)
+- [x] Task: Publish `game-asset-usage-matrix.json` and `existing-asset-audit.md`
+- [~] Task: Measure - User Manual Verification 'Phase 5' (Protocol in workflow.md)
 
 ## Phase 6: Normalize semantic assets and delivery gaps [checkpoint: pending]
 
