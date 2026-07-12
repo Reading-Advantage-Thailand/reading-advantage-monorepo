@@ -519,6 +519,7 @@ def _validate_review_provenance(
     final_time = final_info.get("time", {})
     completed = final_time.get("completed")
     assistants = [message for message in messages if message.get("info", {}).get("role") == "assistant"]
+    reviewer_users = [message for message in messages if message.get("info", {}).get("role") == "user"]
     explicit_none = export.get("info", {}).get(
         "fork_turns", export.get("fork_turns")
     ) == "none"
@@ -545,6 +546,11 @@ def _validate_review_provenance(
         and final_info.get("parentID") == provenance.get("prompt_message_id")
         and final is assistants[-1]
         and assistants
+        and reviewer_users == [prompt]
+        and all(
+            message.get("info", {}).get("parentID") == provenance.get("prompt_message_id")
+            for message in assistants
+        )
         and {message.get("info", {}).get("agent") for message in assistants}
         == {provenance.get("agent")}
         and _sha256_bytes(_message_text_bytes(prompt)) == provenance.get("prompt_text_sha256")

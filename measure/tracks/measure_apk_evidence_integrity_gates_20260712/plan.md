@@ -90,3 +90,8 @@ until Phase 4's accepted gate manifest exists.
 - [x] Task: Add verification tooling that derives and emits the exact canonical review prompt from candidate file bytes, including the byte-derived candidate SHA-256 and full source-base/implementation commits; publish a non-consumable v5 candidate and revoke v4. No review, approval, or acceptance is published.
 - [~] Task: Obtain a fresh isolated adversarial review of the exact v5 candidate and implementation bytes using only the emitted canonical prompt. No v4 review is reusable.
 - [~] Task: Obtain a later product-owner approval event whose prompt binds the exact v5 candidate, fresh review, gate commit, and gate version; only then may a v5 accepted manifest be generated.
+
+## Phase 8: V5-ADV-001 remediation and v6 candidate
+
+- [x] Task: Require every production reviewer provenance retained/live session to have exactly one user turn, the canonical first review prompt; reject all later user turns and assistant branches influenced by them even when the final response is canonical. Focused retained/live-matched mutation tests cover both a post-prompt user turn and a user-influenced assistant branch.
+- [~] Task: Revoke v5 and publish only a non-consumable v6 candidate after focused mutation, aggregate, guard, and doctor verification; do not publish review, owner approval, or acceptance.

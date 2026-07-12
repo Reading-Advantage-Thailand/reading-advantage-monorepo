@@ -304,6 +304,20 @@ class SupervisorIntegrationTests(unittest.TestCase):
         self._write_bytes(relative_path, gzip.compress(raw, mtime=0))
         return relative_path, raw_hash
 
+    def _bind_review_export(self, review: dict[str, Any], raw: bytes) -> None:
+        """Binds matching retained and trusted reviewer exports for a mutation test.
+
+        @param review Review report whose provenance references the retained export.
+        @param raw Exact mutated provider export bytes.
+        @returns Nothing.
+        """
+        export_path, raw_hash = self._write_export(raw)
+        provenance = review["fresh_context_provenance"]
+        provenance["raw_export_path"] = export_path
+        provenance["raw_export_sha256"] = raw_hash
+        provenance["stored_export_sha256"] = self._sha(self.repo / export_path)
+        self.trusted_exports[provenance["session_id"]] = raw
+
     def _raw_export(
         self,
         *,
@@ -853,6 +867,90 @@ class SupervisorIntegrationTests(unittest.TestCase):
         )
         self.assertEqual(result.returncode, 0, result.stderr.decode())
         self.assertEqual(result.stdout, expected)
+
+    def test_022_live_matched_post_prompt_user_turn_fails(self) -> None:
+        """Rejects a complete matching reviewer session with a later user turn."""
+        manifest = json.loads(
+            (self.repo / "measure/evidence-integrity-accepted-gate.json").read_text()
+        )
+        candidate = json.loads((self.repo / manifest["candidate_manifest_path"]).read_text())
+        review = json.loads((self.repo / manifest["review_report_path"]).read_text())
+        raw = json.loads(gzip.decompress(
+            (self.repo / review["fresh_context_provenance"]["raw_export_path"]).read_bytes()
+        ))
+        raw["messages"].insert(1, {
+            "info": {
+                "id": "msg_post_prompt_user",
+                "sessionID": "ses_review",
+                "role": "user",
+                "time": {"created": 21},
+            },
+            "parts": [{"type": "text", "text": "post-prompt instruction"}],
+        })
+        raw["messages"][-1]["info"]["time"]["created"] = 22
+        mutated_raw = json.dumps(raw, sort_keys=True).encode()
+        self._bind_review_export(review, mutated_raw)
+
+        valid, _ = _validate_review_provenance(
+            self.repo,
+            review,
+            candidate_hash=manifest["candidate_manifest_hash"],
+            candidate=candidate,
+            gate_commit=manifest["gate_commit"],
+            gate_version=manifest["gate_version"],
+            trusted_resolver=FixtureTrustedResolver(self.trusted_exports),
+        )
+        self.assertFalse(valid)
+
+    def test_023_live_matched_multiple_user_branches_fail(self) -> None:
+        """Rejects a canonical final response when another user influences an assistant branch."""
+        manifest = json.loads(
+            (self.repo / "measure/evidence-integrity-accepted-gate.json").read_text()
+        )
+        candidate = json.loads((self.repo / manifest["candidate_manifest_path"]).read_text())
+        review = json.loads((self.repo / manifest["review_report_path"]).read_text())
+        raw = json.loads(gzip.decompress(
+            (self.repo / review["fresh_context_provenance"]["raw_export_path"]).read_bytes()
+        ))
+        canonical_final = raw["messages"][1]
+        canonical_final["info"]["time"]["created"] = 23
+        raw["messages"] = [
+            raw["messages"][0],
+            {
+                "info": {
+                    "id": "msg_branch_user",
+                    "sessionID": "ses_review",
+                    "role": "user",
+                    "time": {"created": 21},
+                },
+                "parts": [{"type": "text", "text": "branch instruction"}],
+            },
+            {
+                "info": {
+                    "id": "msg_branch_assistant",
+                    "sessionID": "ses_review",
+                    "parentID": "msg_branch_user",
+                    "role": "assistant",
+                    "agent": "independent-reviewer",
+                    "time": {"created": 22, "completed": 22},
+                },
+                "parts": [{"type": "text", "text": "branch response"}],
+            },
+            canonical_final,
+        ]
+        mutated_raw = json.dumps(raw, sort_keys=True).encode()
+        self._bind_review_export(review, mutated_raw)
+
+        valid, _ = _validate_review_provenance(
+            self.repo,
+            review,
+            candidate_hash=manifest["candidate_manifest_hash"],
+            candidate=candidate,
+            gate_commit=manifest["gate_commit"],
+            gate_version=manifest["gate_version"],
+            trusted_resolver=FixtureTrustedResolver(self.trusted_exports),
+        )
+        self.assertFalse(valid)
 
 if __name__ == "__main__":
     unittest.main()
