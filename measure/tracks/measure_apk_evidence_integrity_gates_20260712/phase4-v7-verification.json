@@ -1,0 +1,35 @@
+{
+  "schema_version": "evidence-integrity.phase4-v7-verification.v1",
+  "status": "candidate-verified",
+  "gate_version": "phase4-v7-candidate",
+  "implementation_commit": "4b439a853e0510bd6aa0ee237d4636bf5be9cf56",
+  "candidate_manifest_path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/phase4-v7-candidate-gate-manifest.json",
+  "candidate_manifest_sha256": "4d784c3e2adfee45f81d5b8abd389e645fef8f4c23a2275d13426c08b0f20a5a",
+  "canonical_review_prompt_path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/phase4-v7-canonical-review-prompt.json",
+  "canonical_review_prompt_sha256": "1e01723c7b6ba005e50b4572679899285c10f0150b775e2443546ea5dd2151b3",
+  "v6_revocation_path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/phase4-v6-revocation.json",
+  "v6_revocation_sha256": "4adc42ca215fda7559caf37362c3dd4fe4dd4c0684eab5c757b8bd389509ebc9",
+  "root_revoked_manifest_sha256": "7143185ca4ddee104fb4af9a80cbb4c5f8fbec775ac5a0f90f3c62ac7cfb7479",
+  "runtime_gate_files": 12,
+  "review": "not published",
+  "owner_approval": "not published",
+  "accepted_manifest": "not published",
+  "commands": [
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -v -s measure/tests/evidence_integrity_gates -p 'test_*.py'",
+      "result": "pass; 139 tests"
+    },
+    {
+      "command": "bash tests/orchestrator_supervisor_invariants.sh && bash tests/orchestrator_review_execution_truthfulness.sh && bash tests/orchestrator_catalog.sh && bash tests/orchestrator_marker_vocabulary.sh && bash tests/orchestrator_detector_syntax.sh && bash tests/orchestrator_role_receipt_integrity.sh",
+      "result": "pass; 6 of 6 guards"
+    },
+    {
+      "command": "bash measure/doctor.sh",
+      "result": "pass"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m measure.evidence_integrity_gates.cli review-prompt --candidate measure/acceptance/measure_apk_evidence_integrity_gates_20260712/phase4-v7-candidate-gate-manifest.json | sha256sum",
+      "result": "pass; 1e01723c7b6ba005e50b4572679899285c10f0150b775e2443546ea5dd2151b3"
+    }
+  ]
+}

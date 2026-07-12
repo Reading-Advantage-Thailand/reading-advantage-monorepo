@@ -1,0 +1,45 @@
+{
+  "schema_version": "evidence-integrity.supervisor.v1",
+  "gate_version": "phase4-v7-candidate",
+  "status": "candidate",
+  "consumable": false,
+  "revoked": false,
+  "implementation_commit": "4b439a853e0510bd6aa0ee237d4636bf5be9cf56",
+  "source_base_commit": "58fac4480bf519777ceed58169f2b5f1749ac2bd",
+  "review_range": "58fac4480bf519777ceed58169f2b5f1749ac2bd..4b439a853e0510bd6aa0ee237d4636bf5be9cf56",
+  "files": {
+    "measure/automation-supervisor.py": "c1489f3ee8246e3e06f7b009836455d2a5688af48ac082a10aa3b5227b8ba809",
+    "measure/evidence_integrity_gates/__init__.py": "20b90c2879eb83b720e1766795e379b5007467d4cd446d1a45b9d12f552846a8",
+    "measure/evidence_integrity_gates/claim_contracts.py": "15ba2ca28cc8a738c6b5ff1dd8c8238e4723a9a7b24974dd035ffd4282ad2cc8",
+    "measure/evidence_integrity_gates/cli.py": "23d01d9245bcc49fd991c8964f24c1b370897f86dccdbd9d141ed0fa15b8152c",
+    "measure/evidence_integrity_gates/contracts.py": "06b8d2a3adb7c4d7149b1c44c7794fc94c44ca32baa878d2daadddc93aa04d8c",
+    "measure/evidence_integrity_gates/denominator_roles.py": "26d228c49bf554a3be5d43c9c8a83bd73c2b3de8a6eb57f851e3b58426902586",
+    "measure/evidence_integrity_gates/events.py": "52f36162bbdcdb2a2dca6db2fc185323c5c5049fff955311f70229c518d6eefc",
+    "measure/evidence_integrity_gates/git_source.py": "20945f0a297e34c206236288bd25831cc6c11af2e8a61b752bc4242a5f07765a",
+    "measure/evidence_integrity_gates/lifecycle.py": "56d5e603823442ab2afd71eed77753b83937cef48698cdcea2b601ee308cef6c",
+    "measure/evidence_integrity_gates/opencode_provenance.py": "26a03cc80318fd8b2e37bdaa5777a8608023472c29403dd561d702afb208278b",
+    "measure/evidence_integrity_gates/supervisor_gate.py": "ed2287fa9a5d89f6d0800b55a998a5d797a621e141fdcc4c811414f92277d362",
+    "measure/evidence_integrity_gates/validator.py": "4e201ee6457c2d1b9132b48821d84a95fe466b1e63ec2dcb624be6469d8afdce"
+  },
+  "supersedes_candidate_sha256": "5ac5900c6d68a2c0da2900f13e9cfd401dcf38ef85459cf14ad17403da4c405b",
+  "remediates": ["V6-ACCEPT-TEST-001"],
+  "predecessor": {
+    "gate_version": "phase4-v6-candidate",
+    "candidate_manifest_path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/phase4-v6-candidate-gate-manifest.json",
+    "original_candidate_sha256": "5ac5900c6d68a2c0da2900f13e9cfd401dcf38ef85459cf14ad17403da4c405b",
+    "status": "revoked"
+  },
+  "independent_review": {
+    "status": "pending",
+    "review_hash": null,
+    "required_isolation": "fresh-live-resolved-provider-session-with-exact-full-retained-history-identity-match-and-exactly-one-canonical-user-prompt",
+    "canonical_prompt_command": "python3 -m measure.evidence_integrity_gates.cli review-prompt --candidate measure/acceptance/measure_apk_evidence_integrity_gates_20260712/phase4-v7-candidate-gate-manifest.json",
+    "canonical_prompt_artifact_path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/phase4-v7-canonical-review-prompt.json"
+  },
+  "owner_approval": {
+    "status": "pending",
+    "approval_hash": null,
+    "required_designation_text": "For this project, YOU are the orchestrator, therefore YOU are acting as the owner."
+  },
+  "accepted_manifest_published": false
+}

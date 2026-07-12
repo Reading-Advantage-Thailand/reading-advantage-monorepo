@@ -1,0 +1,19 @@
+{
+  "schema_version": "evidence-integrity.gate-revocation.v1",
+  "gate_version": "phase4-v6-candidate",
+  "status": "revoked",
+  "consumable": false,
+  "revoked": true,
+  "revocation_reason": "V6-ACCEPT-TEST-001: v6 bound mutable test files as runtime gate files. V7 uses the exact runtime-only REQUIRED_GATE_FILES set and requires fresh review and approval.",
+  "candidate_manifest_path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/phase4-v6-candidate-gate-manifest.json",
+  "candidate_manifest_hash": "5ac5900c6d68a2c0da2900f13e9cfd401dcf38ef85459cf14ad17403da4c405b",
+  "review_report_path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/phase4-v6-independent-review.json",
+  "review_hash": "e198a45d57badb364f4c16e48074108f9bafbe92825c9c2a005fa4e8c8b5213c",
+  "owner_approval_path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/phase4-v6-owner-approval.json",
+  "owner_approval_hash": "9c36ca53f845068d83fefc9d95aa4b672883e0e8cd8b0bb3516450d69740b081",
+  "superseded_by": {
+    "gate_version": "phase4-v7-candidate",
+    "candidate_manifest_path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/phase4-v7-candidate-gate-manifest.json",
+    "candidate_manifest_hash": "4d784c3e2adfee45f81d5b8abd389e645fef8f4c23a2275d13426c08b0f20a5a"
+  }
+}

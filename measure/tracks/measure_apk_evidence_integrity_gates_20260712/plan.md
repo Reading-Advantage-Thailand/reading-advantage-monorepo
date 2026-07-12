@@ -103,4 +103,4 @@ until Phase 4's accepted gate manifest exists.
 
 ## Phase 10: V6-ACCEPT-TEST-001 remediation and v7 candidate
 
-- [~] Task: Move revoked-v2 portability assertions to a stable historical manifest, validate the active accepted root generically, require exact runtime-only gate file sets, revoke v6, and publish a non-consumable v7 candidate with its generated canonical review prompt. No v7 review, approval, or accepted manifest may be published.
+- [x] Task: Move revoked-v2 portability assertions to a stable historical manifest, validate accepted evidence generically, require exact runtime-only gate file sets, revoke v6, and publish a non-consumable v7 candidate with its generated canonical review prompt. Evidence: `phase4-v7-verification.json`; v7 candidate SHA-256 `4d784c3e2adfee45f81d5b8abd389e645fef8f4c23a2275d13426c08b0f20a5a`; canonical prompt SHA-256 `1e01723c7b6ba005e50b4572679899285c10f0150b775e2443546ea5dd2151b3`. No v7 review, approval, or accepted manifest is published.
