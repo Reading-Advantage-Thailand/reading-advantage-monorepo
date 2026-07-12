@@ -19,16 +19,16 @@
 - [x] Task: Publish audit method and source-of-truth/conflict rules [cf13ca3]
 - [x] Task: Measure - User Manual Verification 'Phase 0' (Protocol in workflow.md) [accepted 2026-07-12]
 
-## Phase 1: Reconcile the complete game corpus [checkpoint: pending]
+## Phase 1: Reconcile the complete game corpus [checkpoint: 7720d86]
 
-- [x] Task: Enumerate every catalog, route, raw component, logic/config module,
+- [x] Task: Enumerate every catalog, route, raw component, logic/config module, [7720d86]
       imported copy, test, asset root, and relevant Measure track
-- [x] Task: Resolve playable, withdrawn, in-development, planned, missing, stale,
+- [x] Task: Resolve playable, withdrawn, in-development, planned, missing, stale, [7720d86]
       duplicate, and deleted-source discrepancies
-- [x] Task: Publish `game-corpus.md` and machine-readable corpus with exact evidence
-- [x] Task: Run completeness and referential-integrity tests
-- [~] Task: Obtain product-owner acceptance of the corpus boundary
-- [ ] Task: Measure - User Manual Verification 'Phase 1' (Protocol in workflow.md)
+- [x] Task: Publish `game-corpus.md` and machine-readable corpus with exact evidence [7720d86]
+- [x] Task: Run completeness and referential-integrity tests [7720d86]
+- [x] Task: Obtain product-owner acceptance of the corpus boundary [accepted 2026-07-12]
+- [x] Task: Measure - User Manual Verification 'Phase 1' (Protocol in workflow.md) [accepted 2026-07-12]
 
 ## Phase 2: Recover mechanic and learning blueprints [checkpoint: pending]
 
