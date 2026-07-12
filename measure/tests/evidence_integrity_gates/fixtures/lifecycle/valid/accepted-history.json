@@ -1,0 +1,67 @@
+{
+  "approval": {
+    "approved_hashes": {
+      "candidate": "3cfab3726b580664a961e4e8a02a8e409cbb44f0048ab44ae63f1ecdd04ae668",
+      "gate": "57051935584587a98532b154d8f77318774cff3009de7505846fafdf07954cdc",
+      "review": "c4a5732ba76c548c31daabd5a3b34377847d5ae9cdcb34e5d17244b2c3c48387"
+    },
+    "decision": "approve",
+    "event_id": "evt_owner_approval",
+    "event_timestamp_ms": 20,
+    "message_sha256": "677b51a9a4063dbccd749601db3f4d8565f78bf76935e73eb1af61e1c56aba3b",
+    "schema_version": "evidence-integrity.phase2.v1",
+    "session_id": "ses_owner"
+  },
+  "candidate": {
+    "denominator": {"discovered_items": 3, "reconciled_items": 3},
+    "failed_fix_review_cycles": 0,
+    "frozen_resource_ceilings": {"seconds": 90, "tokens": 1200},
+    "games": ["dragon-flight", "rpg-battle", "abyssal-well"],
+    "gate": {
+      "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "files": {"measure/evidence_integrity_gates/lifecycle.py": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"},
+      "manifest_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "phase": 4,
+      "status": "accepted",
+      "version": "phase4-accepted-v1"
+    },
+    "inputs_manifest_hash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "resources": {"seconds": 60, "tokens": 1000},
+    "status": "candidate",
+    "unsupported_claims": []
+  },
+  "events": {
+    "evt_owner_approval": {
+      "actor_role": "product-owner",
+      "created_ms": 20,
+      "id": "evt_owner_approval",
+      "message_base64": "eyJhcHByb3ZlZF9oYXNoZXMiOnsiY2FuZGlkYXRlIjoiM2NmYWIzNzI2YjU4MDY2NGE5NjFlNGU4YTAyYThlNDA5Y2JiNDRmMDA0OGFiNDRhZTYzZjFlY2RkMDRhZTY2OCIsImdhdGUiOiI1NzA1MTkzNTU4NDU4N2E5ODUzMmIxNTRkOGY3NzMxODc3NGNmZjMwMDlkZTc1MDU4NDZmYWZkZjA3OTU0Y2RjIiwicmV2aWV3IjoiYzRhNTczMmJhNzZjNTQ4YzMxZGFhYmQ1YTNiMzQzNzc4NDdkNWFlOWNkY2IzNGU1ZDE3MjQ0YjJjM2M0ODM4NyJ9LCJkZWNpc2lvbiI6ImFwcHJvdmUifQ==",
+      "provenance_kind": "opencode-raw-export",
+      "raw_export_base64": "eyJpbmZvIjp7ImlkIjoic2VzX293bmVyIn0sIm1lc3NhZ2VzIjpbeyJpbmZvIjp7ImlkIjoiZXZ0X293bmVyX2FwcHJvdmFsIiwicm9sZSI6InVzZXIifSwicGFydHMiOlt7InRleHQiOiJ7XCJhcHByb3ZlZF9oYXNoZXNcIjp7XCJjYW5kaWRhdGVcIjpcIjNjZmFiMzcyNmI1ODA2NjRhOTYxZTRlOGEwMmE4ZTQwOWNiYjQ0ZjAwNDhhYjQ0YWU2M2YxZWNkZDA0YWU2NjhcIixcImdhdGVcIjpcIjU3MDUxOTM1NTg0NTg3YTk4NTMyYjE1NGQ4Zjc3MzE4Nzc0Y2ZmMzAwOWRlNzUwNTg0NmZhZmRmMDc5NTRjZGNcIixcInJldmlld1wiOlwiYzRhNTczMmJhNzZjNTQ4YzMxZGFhYmQ1YTNiMzQzNzc4NDdkNWFlOWNkY2IzNGU1ZDE3MjQ0YjJjM2M0ODM4N1wifSxcImRlY2lzaW9uXCI6XCJhcHByb3ZlXCJ9IiwidHlwZSI6InRleHQifV19XX0=",
+      "raw_export_sha256": "9827f8e8dfd68c5b7aded00cc9fda923a37cdaf9e0cc592efa8e0ee7f107e6df",
+      "role": "user",
+      "session_id": "ses_owner"
+    }
+  },
+  "pilot": {
+    "candidate_hash": "3cfab3726b580664a961e4e8a02a8e409cbb44f0048ab44ae63f1ecdd04ae668",
+    "review_hash": "c4a5732ba76c548c31daabd5a3b34377847d5ae9cdcb34e5d17244b2c3c48387",
+    "status": "accepted"
+  },
+  "product_track": {
+    "first_work_started": true,
+    "gate_commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "gate_files": {"measure/evidence_integrity_gates/lifecycle.py": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"},
+    "gate_manifest_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "gate_version": "phase4-accepted-v1"
+  },
+  "review": {
+    "candidate_hash": "3cfab3726b580664a961e4e8a02a8e409cbb44f0048ab44ae63f1ecdd04ae668",
+    "completed_ms": 10,
+    "findings": [],
+    "gate_hash": "57051935584587a98532b154d8f77318774cff3009de7505846fafdf07954cdc",
+    "inputs_manifest_hash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "status": "reviewed"
+  },
+  "schema_version": "evidence-integrity.phase3.v1"
+}

@@ -1,0 +1,52 @@
+{
+  "schema_version": "evidence-integrity.phase3-verification.v1",
+  "phase": 3,
+  "status": "passed",
+  "owner": "primary-orchestrator",
+  "test_results": {
+    "test_stop_loss_lifecycle": {"passed": 12, "failed": 0},
+    "all_prior_and_phase3_evidence_tests": {"passed": 110, "failed": 0},
+    "cli_valid_history": {"exit_code": 0, "state": "accepted"},
+    "cli_invalid_history": {"exit_code": 1, "blocker": "BATCH_SIZE_EXCEEDED"},
+    "ruff_changed_files": "passed",
+    "measure_doctor": "passed",
+    "git_diff_check": "passed"
+  },
+  "transition_report": {
+    "state": "accepted",
+    "transitions": ["candidate", "reviewed", "owner_approved", "accepted"],
+    "candidate_hash": "3cfab3726b580664a961e4e8a02a8e409cbb44f0048ab44ae63f1ecdd04ae668",
+    "review_hash": "c4a5732ba76c548c31daabd5a3b34377847d5ae9cdcb34e5d17244b2c3c48387"
+  },
+  "resource_report": {
+    "seconds": {"used": 60, "ceiling": 90, "remaining": 30},
+    "tokens": {"used": 1000, "ceiling": 1200, "remaining": 200}
+  },
+  "stable_blocker_codes_exercised": [
+    "BATCH_SIZE_EXCEEDED",
+    "UNSUPPORTED_CLAIM_STOP",
+    "DENOMINATOR_MISMATCH_STOP",
+    "FAILED_FIX_REVIEW_CYCLES_EXHAUSTED",
+    "UNRESOLVED_BLOCKING_FINDING",
+    "UNMEASURED_RESOURCE",
+    "NON_NUMERIC_RESOURCE",
+    "NON_POSITIVE_RESOURCE",
+    "RESOURCE_UNIT_INVALID",
+    "RESOURCE_CEILING_EXCEEDED",
+    "REVIEW_REQUIRED_BEFORE_APPROVAL",
+    "PILOT_ACCEPTANCE_REQUIRED",
+    "OWNER_APPROVAL_REPLAYED",
+    "INPUT_CHANGED_REVALIDATION_REQUIRED",
+    "CANDIDATE_CHANGED_REVALIDATION_REQUIRED",
+    "REVIEW_CHANGED_REVALIDATION_REQUIRED",
+    "GATE_CHANGED_REVALIDATION_REQUIRED",
+    "PRODUCT_GATE_PIN_REQUIRED_BEFORE_WORK",
+    "PRODUCT_GATE_PIN_CHANGED_REVALIDATION_REQUIRED",
+    "ACCEPTED_PHASE4_GATE_REQUIRED"
+  ],
+  "manual_verification": {
+    "completed_after_gates": true,
+    "method": "Primary orchestrator executed committed valid and invalid histories through the CLI and confirmed the emitted transition/resource reports and stable blocker code."
+  },
+  "scope": "Gate package, focused evidence tests, lifecycle fixtures, and this track artifact only; no product conclusion or accepted Phase 4 manifest is claimed."
+}

@@ -55,11 +55,11 @@ until Phase 4's accepted gate manifest exists.
 
 ## Phase 3: Stop-loss, freeze, and completion enforcement (FR5)
 
-- [~] Task: Write Red transition tests for batch size over three, unsupported claims, denominator mismatches, two failed fix/review cycles, unresolved Critical/High/Medium findings, and each unmeasured or non-numeric resource field.
-- [~] Task: Implement fail-closed stop-loss transitions, deterministic blocker reasons, candidate-to-review-to-approval-to-accepted ordering, automatic revocation, and required pilot-acceptance checks.
-- [~] Task: Prove a product track cannot start without the accepted Phase 4 version and cannot alter that version, its manifest hash, or gate files after its first task; require revalidation after any gate/input change.
-- [~] Task: Exercise valid and invalid state histories end-to-end through the CLI/adapter, not only through direct data-structure construction.
-- [b] Task: Measure - User Manual Verification 'Phase 3' (Protocol in workflow.md) deferred:product-owner
+- [x] Task: Write Red transition tests for batch size over three, unsupported claims, denominator mismatches, two failed fix/review cycles, unresolved Critical/High/Medium findings, and each unmeasured or non-numeric resource field. Evidence: `test_stop_loss_lifecycle` recorded the expected absent-CLI Red failure before implementation; its CLI-only cases now pass.
+- [x] Task: Implement fail-closed stop-loss transitions, deterministic blocker reasons, candidate-to-review-to-approval-to-accepted ordering, automatic revocation, and required pilot-acceptance checks. Evidence: `lifecycle.py`, `cli.py`, and `phase3-verification.json`.
+- [x] Task: Prove a product track cannot start without the accepted Phase 4 version and cannot alter that version, its manifest hash, or gate files after its first task; require revalidation after any gate/input change. Evidence: CLI end-to-end lifecycle mutation cases and stable revalidation blocker codes in `phase3-verification.json`.
+- [x] Task: Exercise valid and invalid state histories end-to-end through the CLI/adapter, not only through direct data-structure construction. Evidence: committed `fixtures/lifecycle/{valid,invalid}/` histories and CLI test cases.
+- [x] Task: Measure - User Manual Verification 'Phase 3' (Protocol in workflow.md). Primary orchestrator completed it only after focused, prior, and CLI gates passed; evidence: `phase3-verification.json`.
 
 ## Phase 4: Supervisor integration, independent audit, and acceptance (FR6)
 

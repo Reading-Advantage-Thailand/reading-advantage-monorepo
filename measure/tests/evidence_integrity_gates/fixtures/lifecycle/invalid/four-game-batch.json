@@ -1,0 +1,8 @@
+{
+  "schema_version": "evidence-integrity.phase3.v1",
+  "candidate": {
+    "status": "candidate",
+    "games": ["one", "two", "three", "four"]
+  },
+  "events": {}
+}
