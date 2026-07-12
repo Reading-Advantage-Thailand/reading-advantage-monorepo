@@ -81,5 +81,12 @@ until Phase 4's accepted gate manifest exists.
 
 - [x] Task: Require production acceptance validation to resolve named review, approval, and root sessions through a trusted live provider adapter; compare exact identity, event bytes, text, and timestamps; fail closed for local-only evidence, unavailable tools/sessions, and synthetic export impersonation; require the exact root owner-delegation contract. Implementation commit: `a0d5d7955d8ee9fdfe4d4f9cc1cfd630e486856c`; 133 evidence tests, six guards, doctor, compile, and diff checks passed.
 - [x] Task: Revoke v3 and publish a non-consumable v4 candidate bound to the remediation implementation commit and exact files. Candidate SHA-256: `c0207015cb6288138fae656f073202919798bffce26d6aa6f39be5e4e414620a`; no review, approval, or acceptance published.
-- [~] Task: Obtain a fresh isolated adversarial review of the exact v4 candidate and implementation bytes. No v3 review is reusable.
-- [~] Task: Obtain a later product-owner approval event whose prompt binds the exact v4 candidate, fresh review, gate commit, and gate version; only then may a v4 accepted manifest be generated.
+- [x] Task: Obtain a fresh isolated adversarial review of the exact v4 candidate and implementation bytes. The canonical review reported V4-ADV-001 Critical and V4-ADV-002 as a protocol-input correction; v4 cannot advance.
+- [x] Task: Prohibit v4 owner approval and acceptance after canonical findings. The v4 candidate is revoked and superseded by v5 without publishing any v4 approval or accepted manifest.
+
+## Phase 7: Canonical v4 review remediation and v5 candidate (V4-ADV-001–V4-ADV-002)
+
+- [x] Task: Require completed reviewer retained exports to match the full canonical trusted live message history and stable session identity, rejecting retained truncation, hidden or appended live turns, and any divergence while preserving fail-closed provider resolution. Implementation commit: `29297eac3b370a184793e42d7c2530c4497265a8`; 135 evidence tests, six guards, doctor, compile, and diff checks passed.
+- [x] Task: Add verification tooling that derives and emits the exact canonical review prompt from candidate file bytes, including the byte-derived candidate SHA-256 and full source-base/implementation commits; publish a non-consumable v5 candidate and revoke v4. No review, approval, or acceptance is published.
+- [~] Task: Obtain a fresh isolated adversarial review of the exact v5 candidate and implementation bytes using only the emitted canonical prompt. No v4 review is reusable.
+- [~] Task: Obtain a later product-owner approval event whose prompt binds the exact v5 candidate, fresh review, gate commit, and gate version; only then may a v5 accepted manifest be generated.
