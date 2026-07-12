@@ -1,0 +1,1 @@
+Phase 1 — exact claim evidence\n\nAdded versioned claim/source/review contracts, a Git-backed exact source resolver, and source-byte validation. Negative fixtures cover locator mutations, generated prose, inference-as-fact, and malformed accountability fields.\n\nVerification: test_claim_evidence (6), Phase 0 suites (76), measure/doctor.sh, git diff --check.
