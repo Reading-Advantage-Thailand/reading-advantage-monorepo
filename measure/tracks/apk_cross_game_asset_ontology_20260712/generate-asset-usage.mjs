@@ -67,6 +67,86 @@ const roles = [
     "touch-target safe",
     "screen-space hit area",
   ],
+  [
+    "creature",
+    "mount-or-companion",
+    ["idle", "move", "action", "damage"],
+    "world",
+    "world-scaled",
+    "semantic body when present",
+  ],
+  [
+    "terrain",
+    "traversable-terrain",
+    ["base", "edge", "blocked"],
+    "world",
+    "tileable and seam-safe",
+    "world collision surface",
+  ],
+  [
+    "structure",
+    "objective-or-station",
+    ["idle", "active", "damaged", "complete"],
+    "world",
+    "world-scaled or reflow-safe",
+    "objective interaction bounds",
+  ],
+  [
+    "prop",
+    "interactive-prop",
+    ["idle", "highlighted", "used"],
+    "world",
+    "world-scaled",
+    "interaction bounds",
+  ],
+  [
+    "hazard",
+    "gameplay-hazard",
+    ["telegraph", "active", "impact", "disabled"],
+    "world",
+    "minimum readable size",
+    "damage or avoidance bounds",
+  ],
+  [
+    "pickup",
+    "collectible-content",
+    ["available", "active", "collected", "incorrect"],
+    "world",
+    "prompt-readable",
+    "pickup bounds",
+  ],
+  [
+    "weapon",
+    "player-action-tool",
+    ["idle", "windup", "active", "cooldown"],
+    "world",
+    "actor-relative",
+    "action bounds when applicable",
+  ],
+  [
+    "projectile",
+    "gameplay-projectile",
+    ["spawn", "travel", "impact"],
+    "world",
+    "minimum readable size",
+    "projectile body",
+  ],
+  [
+    "background",
+    "composable-background",
+    ["base", "ambient"],
+    "world",
+    "tileable or focal-crop safe",
+    "none",
+  ],
+  [
+    "indicator",
+    "offscreen-and-objective-indicator",
+    ["hidden", "active", "warning", "complete"],
+    "screen",
+    "screen-space accessible",
+    "none",
+  ],
 ];
 
 const usages = corpus.games.flatMap((game) => {
@@ -103,8 +183,4 @@ const usages = corpus.games.flatMap((game) => {
 writeFileSync(
   resolve(dir, "game-asset-usage-matrix.json"),
   `${JSON.stringify(usages, null, 2)}\n`,
-);
-writeFileSync(
-  resolve(dir, "existing-asset-audit.md"),
-  `# Existing Asset Audit\n\n## Current decision\n\nNo current candidate is automatically accepted as a production semantic asset. Legacy files remain mechanic/visual evidence until each file has verified dimensions, provenance/license, visible-content inspection, required states, focal/crop behavior, compact/wide suitability, and both-theme contract fit.\n\n## Inventoried roots\n\n- \`apps/advantage-games/public/games/\` — legacy game and cover assets.\n- \`apps/advantage-games/public/sounds/\` — legacy audio cues and music.\n- \`apps/reading-advantage/public/games/\` and copied component imports — deployment evidence.\n- \`packages/advantage-play-kit/\` and \`packages/game-cartridges/\` — current semantic contract/runtime evidence.\n\n## Rejection policy\n\nReject cover art, placeholders, procedural stand-ins presented as final art, baked text, baked checkerboards, unverifiable provenance, incomplete directional/state coverage, unsafe fixed borders, and imagery that cannot satisfy compact and wide composition. Unknown provenance or uninspected visible content remains **unknown/gap**, never reusable.\n\n## Usage coverage\n\nThe machine matrix contains ${usages.length} scene usages across ${corpus.scenes.length} scenes. Every usage currently resolves to a visible production gap; Phase 6 may normalize these roles but cannot convert a candidate to reuse without recorded inspection evidence.\n`,
 );

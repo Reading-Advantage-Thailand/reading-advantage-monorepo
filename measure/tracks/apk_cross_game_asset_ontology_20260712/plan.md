@@ -82,16 +82,16 @@
 
 ## Phase 6: Normalize semantic assets and delivery gaps [checkpoint: pending]
 
-- [ ] Task: Normalize usages into semantic families, gameplay variants,
+- [x] Task: Normalize usages into semantic families, gameplay variants,
       environment kits, audio/UI roles, allowed substitutions, and prohibited conflations
-- [ ] Task: Prove every ontology entry has source usage and every usage resolves or
+- [x] Task: Prove every ontology entry has source usage and every usage resolves or
       remains a visible gap
-- [ ] Task: Separate Must-have blockers from polish and variety opportunities
-- [ ] Task: Rank developer-kit slices and asset batches by cross-game coverage,
+- [x] Task: Separate Must-have blockers from polish and variety opportunities
+- [x] Task: Rank developer-kit slices and asset batches by cross-game coverage,
       dependency order, and product value
-- [ ] Task: Recommend bounded cartridge cohorts without opening implementation tracks
-- [ ] Task: Publish `asset-ontology.md` and `gap-and-coverage-plan.md`
-- [ ] Task: Measure - User Manual Verification 'Phase 6' (Protocol in workflow.md)
+- [x] Task: Recommend bounded cartridge cohorts without opening implementation tracks
+- [x] Task: Publish `asset-ontology.md` and `gap-and-coverage-plan.md`
+- [~] Task: Measure - User Manual Verification 'Phase 6' (Protocol in workflow.md)
 
 ## Phase 7: Acceptance and dependent-track handoff [checkpoint: pending]
 
