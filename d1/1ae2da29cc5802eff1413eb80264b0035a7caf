@@ -1,0 +1,3 @@
+Track: measure_apk_evidence_integrity_gates_20260712
+Phase 3: added fail-closed candidate→reviewed→owner-approved→accepted lifecycle CLI, stop-loss/resource/pilot/product-pin enforcement, deterministic blocker reports, committed valid/invalid histories, and Phase 3 verification evidence.
+Verification: 110 evidence-integrity tests passed; measure/doctor.sh, changed-file ruff, git diff --check, and CLI valid/invalid runs passed.
