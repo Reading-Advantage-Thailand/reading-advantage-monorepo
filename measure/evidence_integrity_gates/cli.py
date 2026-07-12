@@ -12,6 +12,7 @@ from typing import Any, Mapping, Sequence
 
 from measure.evidence_integrity_gates.events import MappingEventResolver
 from measure.evidence_integrity_gates.lifecycle import validate_lifecycle
+from measure.evidence_integrity_gates.supervisor_gate import validate_supervisor_completion
 
 
 def _decode_event(value: Mapping[str, Any]) -> dict[str, Any]:
@@ -89,8 +90,21 @@ def main(argv: Sequence[str] | None = None) -> int:
     subparsers = parser.add_subparsers(dest="command", required=True)
     lifecycle = subparsers.add_parser("lifecycle", help="validate a lifecycle history")
     lifecycle.add_argument("--history", type=Path, required=True, help="history JSON file")
+    completion = subparsers.add_parser(
+        "supervisor-completion", help="validate a protected track completion"
+    )
+    completion.add_argument("--repo", type=Path, required=True, help="repository root")
+    completion.add_argument("--track", required=True, help="protected Measure track id")
+    completion.add_argument(
+        "--stage", choices=("preflight", "completion"), default="completion"
+    )
     arguments = parser.parse_args(argv)
-    report = run_lifecycle(arguments.history)
+    if arguments.command == "lifecycle":
+        report = run_lifecycle(arguments.history)
+    else:
+        report = validate_supervisor_completion(
+            arguments.repo, arguments.track, stage=arguments.stage
+        )
     print(json.dumps(report, sort_keys=True, separators=(",", ":")))
     return 0 if report["ok"] else 1
 

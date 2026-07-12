@@ -63,9 +63,9 @@ until Phase 4's accepted gate manifest exists.
 
 ## Phase 4: Supervisor integration, independent audit, and acceptance (FR6)
 
-- [~] Task: Modify `measure/automation-supervisor.py` only in this dedicated track to invoke the versioned gate runner and canonical `depends_on` checks; retain structured marker/block handling and fail closed on absent gate records.
-- [~] Task: Extend and run focused gate tests plus supervisor invariants, marker vocabulary, review-execution truthfulness, catalog-reference, archive-resolution, generated-facts, and A1–A13 audit checks.
+- [x] Task: Modify `measure/automation-supervisor.py` only in this dedicated track to invoke the versioned gate runner and canonical `depends_on` checks; retain structured marker/block handling and fail closed on absent gate records. Evidence: `supervisor_gate.py`, CLI subprocess adapter, and the containing Phase 4 implementation commit.
+- [x] Task: Extend and run focused gate tests plus supervisor invariants, marker vocabulary, review-execution truthfulness, catalog-reference, archive-resolution, generated-facts, and A1–A13 audit checks. Evidence: 117 evidence tests, all six orchestrator guards, doctor, dry-run, and expected blocked status command in `phase4-live-run-report.json`; containing Phase 4 implementation commit.
 - [~] Task: Spawn a `fork_turns="none"` adversarial reviewer from raw sources, manifests, receipts, and revision range only; resolve every Critical, High, and Medium finding, or stop.
-- [~] Task: Publish a non-consumable candidate gate manifest, live-run report, resource report, and independent review report with exact hashes.
+- [~] Task: Publish a non-consumable candidate gate manifest, live-run report, resource report, and independent review report with exact hashes. Candidate/live/resource artifacts are published at `phase4-candidate-gate-manifest.json`, `phase4-live-run-report.json`, and `phase4-resource-report.json`; the task remains incomplete because the fresh-context independent review report does not yet exist. No accepted manifest was published.
 - [b] Task: Obtain a product-owner acceptance event bound to the exact candidate/review/gate hashes; only then generate the accepted gate manifest deferred:product-owner
 - [b] Task: Measure - User Manual Verification 'Phase 4' (Protocol in workflow.md) deferred:product-owner

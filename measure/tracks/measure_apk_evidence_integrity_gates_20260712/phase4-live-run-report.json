@@ -1,0 +1,33 @@
+{
+  "schema_version": "evidence-integrity.phase4-live-run.v1",
+  "status": "candidate",
+  "consumable": false,
+  "source_revision": "d11ae2da29cc5802eff1413eb80264b0035a7caf",
+  "commands": [
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -v -s measure/tests/evidence_integrity_gates -p 'test_*.py'",
+      "exit_code": 0,
+      "result": "117 tests passed"
+    },
+    {"command": "bash tests/orchestrator_supervisor_invariants.sh", "exit_code": 0, "result": "PASS"},
+    {"command": "bash tests/orchestrator_review_execution_truthfulness.sh", "exit_code": 0, "result": "PASS"},
+    {"command": "bash tests/orchestrator_catalog.sh", "exit_code": 0, "result": "PASS; 6 guards resolved; A1-A15 present"},
+    {"command": "bash tests/orchestrator_marker_vocabulary.sh", "exit_code": 0, "result": "PASS; 41 active plans checked"},
+    {"command": "bash tests/orchestrator_detector_syntax.sh", "exit_code": 0, "result": "PASS"},
+    {"command": "bash tests/orchestrator_role_receipt_integrity.sh", "exit_code": 0, "result": "PASS; 1 OpenCode manifest checked"},
+    {"command": "bash measure/doctor.sh", "exit_code": 0, "result": "PASS"},
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 measure/automation-supervisor.py --dry-run --track '^measure_apk_evidence_integrity_gates_20260712$' --limit 1",
+      "exit_code": 0,
+      "result": "Phase 4 discovered; dry run performed no commands"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m measure.evidence_integrity_gates.cli supervisor-completion --repo . --track apk_source_denominator_inventory_20260712 --stage preflight",
+      "exit_code": 1,
+      "result": "expected fail-closed ACCEPTED_GATE_MANIFEST_REQUIRED"
+    }
+  ],
+  "accepted_manifest_published": false,
+  "independent_review_status": "pending",
+  "owner_hash_approval_status": "pending"
+}

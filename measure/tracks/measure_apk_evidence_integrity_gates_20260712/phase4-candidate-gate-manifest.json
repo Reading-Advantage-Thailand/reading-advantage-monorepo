@@ -1,0 +1,30 @@
+{
+  "schema_version": "evidence-integrity.supervisor.v1",
+  "gate_version": "phase4-v1-candidate",
+  "status": "candidate",
+  "consumable": false,
+  "revoked": false,
+  "source_base_commit": "d11ae2da29cc5802eff1413eb80264b0035a7caf",
+  "implementation_commit": null,
+  "files": {
+    "measure/automation-supervisor.py": "58a02835abecc6e3ed0a50a5cd6abd6268fe526510b0929041d786338d20299b",
+    "measure/evidence_integrity_gates/cli.py": "40f15fb3f33e5c67f76cd2b701433dc3f1a19e88d734dcdab0d7b310bb1c4fd2",
+    "measure/evidence_integrity_gates/supervisor_gate.py": "13ff4f3f0ea1d60178e497fa4e376d5c3b4c860cc91d7a9318f0aa3e79151d1b",
+    "measure/tests/evidence_integrity_gates/test_supervisor_integration.py": "57a0a159ee902f745639b5376865337ba83f3a5be98bd1706fea7fb8da4339de"
+  },
+  "reports": {
+    "measure/tracks/measure_apk_evidence_integrity_gates_20260712/phase4-live-run-report.json": "1a7b35ac9b32b9dcfc3d6d0c5cacec45ae948394bb484f15b01a319065a662e8",
+    "measure/tracks/measure_apk_evidence_integrity_gates_20260712/phase4-resource-report.json": "9cbfcb87b828b0d0534ed3c42cab298dd75c60301f962821d39eb174cf98f5f5"
+  },
+  "independent_review": {
+    "status": "pending",
+    "fork_turns": "none-required",
+    "review_hash": null
+  },
+  "owner_approval": {
+    "status": "pending",
+    "approved_hashes": null
+  },
+  "accepted_manifest_path": "measure/evidence-integrity-accepted-gate.json",
+  "accepted_manifest_published": false
+}

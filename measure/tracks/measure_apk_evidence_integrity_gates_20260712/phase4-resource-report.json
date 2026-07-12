@@ -1,0 +1,15 @@
+{
+  "schema_version": "evidence-integrity.phase4-resources.v1",
+  "status": "candidate",
+  "consumable": false,
+  "measured": {
+    "evidence_test_cases": {"value": 117, "unit": "test_cases"},
+    "focused_supervisor_cases": {"value": 7, "unit": "test_cases"},
+    "orchestrator_guard_commands": {"value": 6, "unit": "commands"},
+    "doctor_commands": {"value": 1, "unit": "commands"},
+    "supervisor_status_commands": {"value": 2, "unit": "commands"},
+    "implementation_files": {"value": 4, "unit": "files"}
+  },
+  "unmeasured_fields": [],
+  "note": "Counts describe the bounded Phase 4 implementation verification run; they are not APK product evidence."
+}
