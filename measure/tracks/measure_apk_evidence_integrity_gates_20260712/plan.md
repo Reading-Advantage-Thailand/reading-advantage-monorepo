@@ -94,4 +94,4 @@ until Phase 4's accepted gate manifest exists.
 ## Phase 8: V5-ADV-001 remediation and v6 candidate
 
 - [x] Task: Require every production reviewer provenance retained/live session to have exactly one user turn, the canonical first review prompt; reject all later user turns and assistant branches influenced by them even when the final response is canonical. Focused retained/live-matched mutation tests cover both a post-prompt user turn and a user-influenced assistant branch.
-- [~] Task: Revoke v5 and publish only a non-consumable v6 candidate after focused mutation, aggregate, guard, and doctor verification; do not publish review, owner approval, or acceptance.
+- [x] Task: Revoke v5 and publish only a non-consumable v6 candidate after focused mutation, aggregate, guard, and doctor verification; do not publish review, owner approval, or acceptance. v5 original candidate SHA-256: `72d3039feddbac6d8b99738a7639f30685ce0ae0105cbb0f1b3f1ec9953c0d00`; v6 candidate SHA-256: `5ac5900c6d68a2c0da2900f13e9cfd401dcf38ef85459cf14ad17403da4c405b`; implementation commit: `88ba3a986db2c3855fa1d9af73759bcac660c3df`.

@@ -1,17 +1,12 @@
 {
   "schema_version": "evidence-integrity.supervisor.v1",
-  "gate_version": "phase4-v5-candidate",
+  "gate_version": "phase4-v6-candidate",
   "status": "candidate",
   "consumable": false,
-  "revoked": true,
-  "revoked_reason": "Canonical v5 review reported V5-ADV-001 Critical; v5 is superseded by v6 and cannot be reviewed, approved, or accepted.",
-  "superseded_by": {
-    "gate_version": "phase4-v6-candidate",
-    "candidate_manifest_path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/phase4-v6-candidate-gate-manifest.json"
-  },
-  "implementation_commit": "29297eac3b370a184793e42d7c2530c4497265a8",
-  "source_base_commit": "623e6fb754c16072c188f0305f2a890f93149244",
-  "review_range": "623e6fb754c16072c188f0305f2a890f93149244..29297eac3b370a184793e42d7c2530c4497265a8",
+  "revoked": false,
+  "implementation_commit": "88ba3a986db2c3855fa1d9af73759bcac660c3df",
+  "source_base_commit": "cd2518f82efab020027e6e645013fdf1d8d736a9",
+  "review_range": "cd2518f82efab020027e6e645013fdf1d8d736a9..88ba3a986db2c3855fa1d9af73759bcac660c3df",
   "files": {
     "measure/automation-supervisor.py": "c1489f3ee8246e3e06f7b009836455d2a5688af48ac082a10aa3b5227b8ba809",
     "measure/evidence_integrity_gates/__init__.py": "20b90c2879eb83b720e1766795e379b5007467d4cd446d1a45b9d12f552846a8",
@@ -23,29 +18,29 @@
     "measure/evidence_integrity_gates/git_source.py": "20945f0a297e34c206236288bd25831cc6c11af2e8a61b752bc4242a5f07765a",
     "measure/evidence_integrity_gates/lifecycle.py": "56d5e603823442ab2afd71eed77753b83937cef48698cdcea2b601ee308cef6c",
     "measure/evidence_integrity_gates/opencode_provenance.py": "26a03cc80318fd8b2e37bdaa5777a8608023472c29403dd561d702afb208278b",
-    "measure/evidence_integrity_gates/supervisor_gate.py": "8b72ea639ea5995dc92503cf1d0506ee5713fc053e5746cc9105b668cd3cebb8",
+    "measure/evidence_integrity_gates/supervisor_gate.py": "cb81dfa0f75065dc3bcd56202b6a9be3d8e7276d59486bd5aec6870c7e87a098",
     "measure/evidence_integrity_gates/validator.py": "4e201ee6457c2d1b9132b48821d84a95fe466b1e63ec2dcb624be6469d8afdce",
     "measure/tests/evidence_integrity_gates/test_acceptance_portability.py": "1112636be9d0f21c6fda66ed1719aecaea0809ae34c5e2942c6c5bdb5fd12164",
     "measure/tests/evidence_integrity_gates/test_denominator_roles.py": "feda12bfdc053fc52694c931432d0ff6e85bb14d0014ce047c1414fffe263c75",
-    "measure/tests/evidence_integrity_gates/test_supervisor_integration.py": "81629aeb83c90d9e90b031b433dfd1d16910cd5fd6111aaa2dff46e9b86b5163"
+    "measure/tests/evidence_integrity_gates/test_supervisor_integration.py": "e8d4a8f1dbd5d6020f4801956238ffba0d16a0898e48206ef864f0687a03b83a"
   },
-  "supersedes_candidate_sha256": "c0207015cb6288138fae656f073202919798bffce26d6aa6f39be5e4e414620a",
-  "remediates": ["V4-ADV-001", "V4-ADV-002"],
+  "supersedes_candidate_sha256": "72d3039feddbac6d8b99738a7639f30685ce0ae0105cbb0f1b3f1ec9953c0d00",
+  "remediates": ["V5-ADV-001"],
   "predecessor": {
-    "gate_version": "phase4-v4-candidate",
-    "candidate_manifest_path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/phase4-v4-candidate-gate-manifest.json",
-    "original_candidate_sha256": "c0207015cb6288138fae656f073202919798bffce26d6aa6f39be5e4e414620a",
+    "gate_version": "phase4-v5-candidate",
+    "candidate_manifest_path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/phase4-v5-candidate-gate-manifest.json",
+    "original_candidate_sha256": "72d3039feddbac6d8b99738a7639f30685ce0ae0105cbb0f1b3f1ec9953c0d00",
     "status": "revoked"
   },
   "independent_review": {
-    "status": "failed",
+    "status": "pending",
     "review_hash": null,
-    "finding_ids": ["V5-ADV-001"],
     "required_isolation": "fresh-live-resolved-provider-session-with-exact-full-retained-history-identity-match-and-exactly-one-canonical-user-prompt",
-    "canonical_prompt_command": "python3 -m measure.evidence_integrity_gates.cli review-prompt --candidate measure/acceptance/measure_apk_evidence_integrity_gates_20260712/phase4-v5-candidate-gate-manifest.json"
+    "canonical_prompt_command": "python3 -m measure.evidence_integrity_gates.cli review-prompt --candidate measure/acceptance/measure_apk_evidence_integrity_gates_20260712/phase4-v6-candidate-gate-manifest.json",
+    "canonical_prompt_artifact_path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/phase4-v6-canonical-review-prompt.json"
   },
   "owner_approval": {
-    "status": "prohibited",
+    "status": "pending",
     "approval_hash": null,
     "required_designation_text": "For this project, YOU are the orchestrator, therefore YOU are acting as the owner."
   },
