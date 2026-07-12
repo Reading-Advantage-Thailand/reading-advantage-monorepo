@@ -88,10 +88,15 @@ until Phase 4's accepted gate manifest exists.
 
 - [x] Task: Require completed reviewer retained exports to match the full canonical trusted live message history and stable session identity, rejecting retained truncation, hidden or appended live turns, and any divergence while preserving fail-closed provider resolution. Implementation commit: `29297eac3b370a184793e42d7c2530c4497265a8`; 135 evidence tests, six guards, doctor, compile, and diff checks passed.
 - [x] Task: Add verification tooling that derives and emits the exact canonical review prompt from candidate file bytes, including the byte-derived candidate SHA-256 and full source-base/implementation commits; publish a non-consumable v5 candidate and revoke v4. No review, approval, or acceptance is published.
-- [~] Task: Obtain a fresh isolated adversarial review of the exact v5 candidate and implementation bytes using only the emitted canonical prompt. No v4 review is reusable.
-- [~] Task: Obtain a later product-owner approval event whose prompt binds the exact v5 candidate, fresh review, gate commit, and gate version; only then may a v5 accepted manifest be generated.
+- [x] Task: The v5 evaluation reported V5-ADV-001 Critical; v5 is revoked and no v5 review artifact is published or reusable.
+- [x] Task: Prohibit v5 owner approval and acceptance after V5-ADV-001. No v5 approval or accepted manifest is published.
 
 ## Phase 8: V5-ADV-001 remediation and v6 candidate
 
 - [x] Task: Require every production reviewer provenance retained/live session to have exactly one user turn, the canonical first review prompt; reject all later user turns and assistant branches influenced by them even when the final response is canonical. Focused retained/live-matched mutation tests cover both a post-prompt user turn and a user-influenced assistant branch.
 - [x] Task: Revoke v5 and publish only a non-consumable v6 candidate after focused mutation, aggregate, guard, and doctor verification; do not publish review, owner approval, or acceptance. v5 original candidate SHA-256: `72d3039feddbac6d8b99738a7639f30685ce0ae0105cbb0f1b3f1ec9953c0d00`; v6 candidate SHA-256: `5ac5900c6d68a2c0da2900f13e9cfd401dcf38ef85459cf14ad17403da4c405b`; implementation commit: `88ba3a986db2c3855fa1d9af73759bcac660c3df`.
+
+## Phase 9: v6 evidence gates
+
+- [~] Task: Obtain a fresh isolated adversarial review of the exact v6 candidate and implementation bytes using only `phase4-v6-canonical-review-prompt.json`; no v5 evidence is reusable.
+- [~] Task: Obtain a later product-owner approval event whose prompt binds the exact v6 candidate, fresh review, gate commit, and gate version; only then may a v6 accepted manifest be generated.
