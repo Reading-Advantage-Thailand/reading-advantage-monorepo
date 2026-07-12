@@ -50,7 +50,17 @@
       "gzip_bytes": 288386,
       "path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/exports/495186b1e8b096baa93670a1285a03432d34ce734a1ab396cf6dc438808eb8ec.json.gz",
       "json_parse": "pass"
+    },
+    {
+      "purpose": "v6-reviewer-provenance-binding",
+      "session_id": "ses_0a8ae19b6ffe0suzkJilQi9IJW",
+      "raw_sha256": "31369418a019bf836e68631e11e091e9b9cd5f83df4d31e2a5cd1148e45fc85d",
+      "raw_bytes": 738795,
+      "gzip_sha256": "376aa8aed9b6bb241018513cb9c9c8f8be74d67f428fb7f48e1a44ce2459c4f2",
+      "gzip_bytes": 157877,
+      "path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/exports/31369418a019bf836e68631e11e091e9b9cd5f83df4d31e2a5cd1148e45fc85d.json.gz",
+      "json_parse": "pass"
     }
   ],
-  "note": "All v2 snapshots are historical evidence and cannot approve v3. The v3-reviewer-provenance-binding export binds the fresh isolated adversarial review of gate candidate ad8ef96a846c5f0d9432f5726e638f52d432758ead99fe5c2786cd47adb64a37."
+  "note": "All v2 snapshots are historical evidence and cannot approve v3. The v3-reviewer-provenance-binding export binds the fresh isolated adversarial review of gate candidate ad8ef96a846c5f0d9432f5726e638f52d432758ead99fe5c2786cd47adb64a37. The v6-reviewer-provenance-binding export binds the fresh isolated adversarial review of gate candidate 5ac5900c6d68a2c0da2900f13e9cfd401dcf38ef85459cf14ad17403da4c405b."
 }

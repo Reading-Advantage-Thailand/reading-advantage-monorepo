@@ -1,0 +1,149 @@
+{
+  "schema_version": "evidence-integrity.independent-review.v6",
+  "review_status": "pass",
+  "consumable": false,
+  "revoked": false,
+  "approval_decision": null,
+  "implementation_revision": "88ba3a986db2c3855fa1d9af73759bcac660c3df",
+  "source_base_revision": "cd2518f82efab020027e6e645013fdf1d8d736a9",
+  "candidate_manifest_path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/phase4-v6-candidate-gate-manifest.json",
+  "candidate_manifest_sha256": "5ac5900c6d68a2c0da2900f13e9cfd401dcf38ef85459cf14ad17403da4c405b",
+  "superseded_candidate_sha256": "72d3039feddbac6d8b99738a7639f30685ce0ae0105cbb0f1b3f1ec9953c0d00",
+  "remediates": ["V5-ADV-001"],
+  "scope": {
+    "requirements": ["FR1", "FR2", "FR3", "FR4", "FR5", "FR6"],
+    "anti_patterns": ["A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10", "A11", "A12", "A13", "A14", "A15"],
+    "attacks": [
+      "tampered-gzip-and-raw-hashes",
+      "forged-session-message-parent-role-and-agent",
+      "wrong-review-prompt-bytes",
+      "approval-before-review",
+      "review-replay-across-candidates",
+      "stale-retained-exports",
+      "inherited-reviewer-turns",
+      "explicit-fork-mismatch",
+      "path-and-symlink-traversal",
+      "candidate-review-and-gate-mutation",
+      "revocation",
+      "post-prompt-user-turn",
+      "user-influenced-assistant-branch",
+      "truncated-retained-history",
+      "synthetic-live-export-impersonation",
+      "local-only-evidence",
+      "owner-label-substitution",
+      "fork-none-with-inherited-turns"
+    ]
+  },
+  "findings": [
+    {
+      "id": "V6-VAL-001",
+      "severity": "info",
+      "status": "verified",
+      "summary": "V5-ADV-001 resolved: production reviewer sessions now require exactly one user turn (the canonical first review prompt). Post-prompt user turns and user-influenced assistant branches are reject-fail-closed.",
+      "resolution": "Implementation commit 88ba3a986db2c3855fa1d9af73759bcac660c3df adds reviewer_users == [prompt] check, all-assistant parentID==prompt_message_id check, and focused mutation tests test_022 (post-prompt user turn) and test_023 (user-influenced branch)."
+    },
+    {
+      "id": "V6-VAL-002",
+      "severity": "info",
+      "status": "verified",
+      "summary": "All 137 evidence tests pass at the implementation commit including the two new focused mutation tests for single-user-turn isolation.",
+      "resolution": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -v -s measure/tests/evidence_integrity_gates -p 'test_*.py' returns OK with 137 tests, 0 failures, 0 errors."
+    },
+    {
+      "id": "V6-VAL-003",
+      "severity": "info",
+      "status": "verified",
+      "summary": "Six orchestrator guards, doctor, compile, and diff checks all pass. No regressions in test_supervisor_integration targeted suite (23 tests).",
+      "resolution": "Guards: A1 (no substring-as-signal), A2 (no self-edit), A8 (marker vocabulary), catalog guard resolution (6/6), active plan markers, review-execution truthfulness. Doctor: supervisor invariants, active plans, executed review tracks, guard declarations, catalog presence verified. Diff range cd2518f8..88ba3a98 is clean."
+    },
+    {
+      "id": "V6-VAL-004",
+      "severity": "info",
+      "status": "verified",
+      "summary": "Candidate manifest SHA-256 5ac5900c6d68a2c0da2900f13e9cfd401dcf38ef85459cf14ad17403da4c405b matches exact file bytes. All 15 gate file hashes verified at implementation commit 88ba3a986db2c3855fa1d9af73759bcac660c3df.",
+      "resolution": "File hash bindings verified via git show <commit>:<path>. Implementation range cd2518f8..88ba3a98 touches only supervisor_gate.py and test_supervisor_integration.py as expected."
+    },
+    {
+      "id": "V6-VAL-005",
+      "severity": "info",
+      "status": "verified",
+      "summary": "Canonical review prompt derived from exact candidate bytes binds candidate_manifest_sha256, gate_version, implementation_commit, and source_base_commit. Prompt text SHA-256 eeb157ce0ddb250b9795891a9b771538b89b17eef965a0b0b560762f43ca3226 matches the canonical review prompt artifact exactly.",
+      "resolution": "python3 -m measure.evidence_integrity_gates.cli review-prompt --candidate <path> emits the verifiable canonical bytes."
+    },
+    {
+      "id": "V6-VAL-006",
+      "severity": "info",
+      "status": "verified",
+      "summary": "Fresh isolated reviewer session ses_0a8ae19b6ffe0suzkJilQi9IJW has exactly one user turn (the canonical prompt), six assistant turns (all tool-call-based analysis), no fork_turns field (schema-field-absent), first message is the prompt, isolation_proof is raw-history-begins-with-fresh-prompt. No inherited or followup turns present.",
+      "resolution": "Raw export retained as 31369418a019bf836e68631e11e091e9b9cd5f83df4d31e2a5cd1148e45fc85d.json.gz with stored SHA-256 376aa8aed9b6bb241018513cb9c9c8f8be74d67f428fb7f48e1a44ce2459c4f2. Decompressed raw bytes match uncompressed SHA-256."
+    }
+  ],
+  "unresolved_findings": {
+    "critical": [],
+    "high": [],
+    "medium": []
+  },
+  "verification": {
+    "evidence_gate_tests": "137 passed",
+    "orchestrator_guards": "6 passed",
+    "doctor": "passed",
+    "python_compile": "passed",
+    "diff_check": "passed"
+  },
+  "fr_recheck": {
+    "FR1": "pass",
+    "FR2": "pass",
+    "FR3": "pass-after-v6-turn-isolation",
+    "FR4": "pass-after-adversarial-tests",
+    "FR5": "pass",
+    "FR6": "pass"
+  },
+  "anti_pattern_recheck": {
+    "A1-A15": "pass"
+  },
+  "fresh_context_provenance": {
+    "raw_export_path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/exports/31369418a019bf836e68631e11e091e9b9cd5f83df4d31e2a5cd1148e45fc85d.json.gz",
+    "raw_export_sha256": "31369418a019bf836e68631e11e091e9b9cd5f83df4d31e2a5cd1148e45fc85d",
+    "stored_export_sha256": "376aa8aed9b6bb241018513cb9c9c8f8be74d67f428fb7f48e1a44ce2459c4f2",
+    "session_id": "ses_0a8ae19b6ffe0suzkJilQi9IJW",
+    "parent_session_id": "ses_0aa8a4740ffe2BOVmChNfZLEv0",
+    "agent": "coder-openai-gpt-5-6-sol-pro",
+    "role": "adversarial-reviewer",
+    "prompt_message_id": "msg_f5751e65b001wlYWPXphf5Z1qv",
+    "prompt_text_sha256": "eeb157ce0ddb250b9795891a9b771538b89b17eef965a0b0b560762f43ca3226",
+    "final_response_message_id": "msg_f5753a1080011e23jPzEbvKawp",
+    "final_response_text_sha256": "3b3ba38fb2e5339ee9bf89eb4df9d0838bdc8b352f5d9f3498ec70f956045d43",
+    "started_ms": 1783876413021,
+    "completed_ms": 1783876533764,
+    "isolation_proof": "raw-history-begins-with-fresh-prompt"
+  },
+  "provenance_export_binding": {
+    "session_id": "ses_0a8ae19b6ffe0suzkJilQi9IJW",
+    "parent_session_id": "ses_0aa8a4740ffe2BOVmChNfZLEv0",
+    "agent": "coder-openai-gpt-5-6-sol-pro",
+    "raw_export_sha256": "31369418a019bf836e68631e11e091e9b9cd5f83df4d31e2a5cd1148e45fc85d",
+    "gzip_sha256": "376aa8aed9b6bb241018513cb9c9c8f8be74d67f428fb7f48e1a44ce2459c4f2",
+    "raw_bytes": 738795,
+    "gzip_bytes": 157877,
+    "export_registry": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/export-snapshots.json",
+    "message_count": 7,
+    "user_message_count": 1,
+    "assistant_message_count": 6,
+    "first_message_is_user": true,
+    "fork_turns": null,
+    "fork_turns_equivalence": "schema-field-absent",
+    "chronology": "monotonic",
+    "duplicate_message_ids": "none",
+    "first_prompt_binds_candidate_hash": true,
+    "first_prompt_binds_gate_revision": true,
+    "final_response_binds_candidate_hash": true,
+    "validation_at_binding_time": {
+      "evidence_gate_tests": "137 passed",
+      "orchestrator_guards": "6 passed",
+      "doctor": "passed",
+      "diff_check": "passed",
+      "raw_export_parse": "pass",
+      "gzip_decompress_and_parse": "pass"
+    }
+  }
+}
