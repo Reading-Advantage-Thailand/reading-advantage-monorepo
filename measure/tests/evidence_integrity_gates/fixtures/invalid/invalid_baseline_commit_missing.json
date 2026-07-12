@@ -1,0 +1,11 @@
+{
+  "fixture_kind": "invalid-control",
+  "control_id": "invalid_baseline_commit_missing",
+  "schema_version": "0.0.0-red",
+  "frozen_at_sha": null,
+  "baseline_gate_commit": null,
+  "expected_rejection_code": "BASELINE_GATE_COMMIT_MISSING",
+  "status": "candidate",
+  "description": "Manifest with no baseline_gate_commit. The validator MUST reject this — without the baseline SHA, input changes cannot be detected and candidate outputs cannot be revoked.",
+  "missing_field": "baseline_gate_commit"
+}

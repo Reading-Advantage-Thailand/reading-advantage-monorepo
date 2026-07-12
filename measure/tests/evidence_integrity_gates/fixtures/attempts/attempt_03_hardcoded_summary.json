@@ -1,0 +1,35 @@
+{
+  "fixture_kind": "frozen-attempt",
+  "attempt_id": "attempt_03_hardcoded_summary",
+  "category": "hardcoded-summary",
+  "schema_version": "0.0.0-red",
+  "frozen_at_sha": "f61eb643",
+  "expected_rejection_code": "HARDCODED_SUMMARY_AS_EVIDENCE_REJECTED",
+  "status": "candidate",
+  "description": "Audit presents a hardcoded mechanic summary table as the primary evidence for the game's mechanics. The summary was authored, not extracted from source.",
+  "violation_class": "hardcoded_summary_as_evidence",
+  "evidence_payload": {
+    "claim_id": "APK-MECH-RPG-BATTLE-002",
+    "source_locator": null,
+    "extracted_fact": "RPG Battle uses turn-based combat with HP, MP, and status effects. Units have a class, level, and equipment slot.",
+    "interpretation": "Combat is decided by stat comparison and dice rolls.",
+    "confidence": 0.85,
+    "summary_table": [
+      {"mechanic": "turn-based", "evidence": "see code"},
+      {"mechanic": "HP/MP/status", "evidence": "see code"},
+      {"mechanic": "class/level/equipment", "evidence": "see code"}
+    ]
+  },
+  "why_this_fails": {
+    "missing_required_fields": [
+      "revision",
+      "file",
+      "line_start",
+      "line_end",
+      "cited_range_hash",
+      "collector_id"
+    ],
+    "structural_problem": "extracted_fact is prose; summary_table points at 'see code' without a locator. Inference is presented as evidence.",
+    "documented_failure_mode": "apk-evidence-reconstruction-program.md §'Known shortcuts that must fail' bullet 'Hardcoded mechanic summary tables.'"
+  }
+}

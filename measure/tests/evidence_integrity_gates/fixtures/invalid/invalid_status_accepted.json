@@ -1,0 +1,10 @@
+{
+  "fixture_kind": "invalid-control",
+  "control_id": "invalid_status_accepted",
+  "schema_version": "0.0.0-red",
+  "frozen_at_sha": "f61eb643",
+  "expected_rejection_code": "ACCEPTED_STATUS_NOT_ALLOWED",
+  "status": "accepted",
+  "description": "Fixture whose status is 'accepted' before the gate has run. Anti-pattern A5/A6 — candidate manifest status MUST be 'candidate' until the actual phase gate result is present.",
+  "why_this_fails": "Status 'accepted' can only be set after the full pipeline (review → no blocking findings → product-owner acceptance → accepted manifest) has run. A Phase 0 manifest is always 'candidate'."
+}

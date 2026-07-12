@@ -1,0 +1,41 @@
+{
+  "fixture_kind": "valid-control",
+  "control_id": "control_claim",
+  "schema_version": "0.0.0-red",
+  "frozen_at_sha": "f61eb643",
+  "expected_rejection_code": null,
+  "status": "candidate",
+  "description": "A valid Phase 0 control claim — exact source locator with revision, file, line range, cited_range_hash, separated fact/interpretation, confidence, collector, and reviewer fields. This is the shape every attempt 1-5 fixture fails to match.",
+  "envelope": {
+    "schema_version": "0.0.0-red",
+    "kind": "claim",
+    "claim_id": "CTRL-CLAIM-DRAGON-FLIGHT-MOVE-001",
+    "claim_category": "movement",
+    "game_id": "dragon-flight",
+    "scene_id": "main-play",
+    "state_id": "play-active",
+    "source_locator": {
+      "revision": "f61eb643f138373c6357ec35e6ac296a7014800c",
+      "file": "apps/advantage-games/games/dragon-flight/src/scenes/PlayScene.ts",
+      "line_start": 42,
+      "line_end": 78,
+      "cited_range_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "extracted_fact": "PlayScene.update() advances the dragon sprite by deltaX/deltaY each tick and clamps to the canvas bounds.",
+    "interpretation": "Movement is per-frame delta application with a clamp guard.",
+    "confidence": 0.9,
+    "evidence_class": "exact-source",
+    "discovery_method": "git-show-with-line-range",
+    "collector_id": "evidence-collector-role-deferred",
+    "conflict_state": "none",
+    "reviewer_id": "adversarial-reviewer-role-deferred",
+    "reviewer_disposition": "pending"
+  },
+  "paired_with_attempts": [
+    "attempt_01_synthetic_main_scene",
+    "attempt_02_directory_citation",
+    "attempt_03_hardcoded_summary",
+    "attempt_04_keyword_responsive",
+    "attempt_05_slug_asset_allowlist"
+  ]
+}
