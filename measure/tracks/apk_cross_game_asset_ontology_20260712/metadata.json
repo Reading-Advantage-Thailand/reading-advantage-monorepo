@@ -1,9 +1,9 @@
 {
   "track_id": "apk_cross_game_asset_ontology_20260712",
   "type": "chore",
-  "status": "pending",
+  "status": "in_progress",
   "created_at": "2026-07-12T00:00:00Z",
-  "updated_at": "2026-07-12T00:00:00Z",
+  "updated_at": "2026-07-12T02:16:00Z",
   "description": "Derive complete APK mechanic blueprints, shared developer-capability requirements, responsive composition contracts, semantic assets, and delivery priorities from the Advantage Games corpus before implementing the kit or generating art.",
   "estimated_tasks": 50,
   "actual_tasks": null,

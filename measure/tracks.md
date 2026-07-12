@@ -59,20 +59,26 @@ Two parallel programs are in flight; priority order when picking the next track:
 
 ## Advantage Play Kit Program (created 2026-07-10)
 
-> **Asset-system correction (2026-07-12):** Requirements must be derived from
-> developed and in-development games before physical formats or art are selected.
-> See the [APK Asset System Program](./apk-asset-system-program.md). Execute the
-> following three tracks in order; the latter two are dependency-blocked until
-> their predecessor artifacts receive explicit product-owner acceptance.
+> **Program correction (2026-07-12):** Requirements for the developer kit,
+> responsive compositions, and semantic assets must be derived from the complete
+> `apps/advantage-games` corpus before shared systems or physical art are frozen.
+> See the [APK Delivery Program](./apk-asset-system-program.md) and
+> [Responsive Game Composition Specification](./apk-responsive-game-composition-spec.md).
+> Developer-kit and asset work may proceed in parallel only after the combined
+> requirements artifacts receive explicit product-owner acceptance; cartridge
+> cohorts require both accepted kit capabilities and both-theme asset batches.
 
-- [ ] **Track: APK Cross-Game Asset Requirements and Ontology** *Link: [./tracks/apk_cross_game_asset_ontology_20260712/](./tracks/apk_cross_game_asset_ontology_20260712/)*
-  Inventory every relevant game and scene, audit existing assets, normalize shared semantic asset types, distinguish gameplay variants from theme treatments, define environment kits, and identify coverage gaps without choosing speculative physical layouts.
+- [~] **Track: APK Cross-Game Requirements and Capability Ontology** *Link: [./tracks/apk_cross_game_asset_ontology_20260712/](./tracks/apk_cross_game_asset_ontology_20260712/)*
+  Audit every raw game and scene to recover mechanic blueprints, baseline developer effort, decide shared-versus-bespoke developer capabilities, define compact/wide composition requirements, and derive the semantic asset ontology and delivery priorities.
+
+- [ ] **Track: APK Shared Developer Kit and Authoring Workflow** *Link: [./tracks/apk_shared_developer_kit_20260712/](./tracks/apk_shared_developer_kit_20260712/)*
+  Implement the accepted shared Phaser session, input, gameplay, responsive, presentation, semantic-loading, diagnostic, and testing capabilities; provide cartridge scaffolding, documentation, an exemplar, and the Advantage Games authoring/QC workflow.
 
 - [ ] **Track: APK Dual-Theme Asset Contract and Production** *Link: [./tracks/apk_dual_theme_asset_production_20260712/](./tracks/apk_dual_theme_asset_production_20260712/)*
   After ontology acceptance, define type-specific physical formats and produce mirrored Chibi Quest and Riven Lands assets in bounded batches prioritized by cross-game coverage.
 
-- [ ] **Track: APK Cartridge Semantic Rewrite and Integration** *Link: [./tracks/apk_cartridge_semantic_rewrite_20260712/](./tracks/apk_cartridge_semantic_rewrite_20260712/)*
-  Rewrite Ready games in bounded child cohorts against semantic asset roles, route newly discovered requirements through change control, and restore production exposure one verified game at a time.
+- [ ] **Track: APK Cartridge Rebuild, Integration, and Cutover** *Link: [./tracks/apk_cartridge_semantic_rewrite_20260712/](./tracks/apk_cartridge_semantic_rewrite_20260712/)*
+  Rebuild Ready games in bounded cohorts through the shared kit and both-theme assets, verify compact/wide gameplay, integrate Reading/Primary through shared domain and appropriate tRPC/thin host adapters, restore exposure per game, and retire exact legacy copies.
 
 - [x] **Track: APK Dual-Theme Production Asset Packs — SUPERSEDED, DO NOT IMPLEMENT** *Link: [./archive/apk_dual_theme_asset_packs_20260711/](./archive/apk_dual_theme_asset_packs_20260711/)*
   Superseded 2026-07-12 because it froze a speculative physical inventory before completing cross-game requirements analysis. Retained as failure evidence; no completion claim is made.

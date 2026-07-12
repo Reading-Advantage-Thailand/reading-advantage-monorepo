@@ -5,19 +5,19 @@
 
 ## Phase 0: Freeze scope, evidence, and schemas [checkpoint: pending]
 
-- [ ] Task: Snapshot repository and graph evidence
-  - [ ] Record HEAD, working-tree boundaries, graph freshness, catalog revision,
+- [x] Task: Snapshot repository and graph evidence
+  - [x] Record HEAD, working-tree boundaries, graph freshness, catalog revision,
         relevant archived revisions, and concurrent work exclusions
-  - [ ] Inventory raw Advantage Games, Reading, and Primary game roots without
+  - [x] Inventory raw Advantage Games, Reading, and Primary game roots without
         treating copied implementations as separate product requirements
-- [ ] Task: Define machine-validatable audit schemas
-  - [ ] Define game, scene, mechanic, capability usage, responsive composition,
+- [x] Task: Define machine-validatable audit schemas
+  - [x] Define game, scene, mechanic, capability usage, responsive composition,
         asset usage, evidence, confidence, discrepancy, and disposition schemas
-  - [ ] Define stable IDs and cross-artifact referential-integrity rules
-- [ ] Task: Write validation tests that reject omitted games/scenes, unsupported
+  - [x] Define stable IDs and cross-artifact referential-integrity rules
+- [x] Task: Write validation tests that reject omitted games/scenes, unsupported
       standard capabilities, orphan assets, missing responsive profiles, and broken evidence
-- [ ] Task: Publish audit method and source-of-truth/conflict rules
-- [ ] Task: Measure - User Manual Verification 'Phase 0' (Protocol in workflow.md)
+- [x] Task: Publish audit method and source-of-truth/conflict rules
+- [x] Task: Measure - User Manual Verification 'Phase 0' (Protocol in workflow.md)
 
 ## Phase 1: Reconcile the complete game corpus [checkpoint: pending]
 
