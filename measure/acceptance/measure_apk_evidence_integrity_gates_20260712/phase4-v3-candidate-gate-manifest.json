@@ -1,0 +1,42 @@
+{
+  "schema_version": "evidence-integrity.supervisor.v1",
+  "gate_version": "phase4-v3-candidate",
+  "status": "candidate",
+  "consumable": false,
+  "revoked": false,
+  "implementation_commit": "a6f565ab09a983f07ceef427db7536cdb8fe144d",
+  "source_base_commit": "5101b7b2e264229e916c98dbfd456e1ea7de886c",
+  "files": {
+    "measure/automation-supervisor.py": "c1489f3ee8246e3e06f7b009836455d2a5688af48ac082a10aa3b5227b8ba809",
+    "measure/evidence_integrity_gates/__init__.py": "20b90c2879eb83b720e1766795e379b5007467d4cd446d1a45b9d12f552846a8",
+    "measure/evidence_integrity_gates/claim_contracts.py": "15ba2ca28cc8a738c6b5ff1dd8c8238e4723a9a7b24974dd035ffd4282ad2cc8",
+    "measure/evidence_integrity_gates/cli.py": "40f15fb3f33e5c67f76cd2b701433dc3f1a19e88d734dcdab0d7b310bb1c4fd2",
+    "measure/evidence_integrity_gates/contracts.py": "06b8d2a3adb7c4d7149b1c44c7794fc94c44ca32baa878d2daadddc93aa04d8c",
+    "measure/evidence_integrity_gates/denominator_roles.py": "28d1dc0f95210fba9a43d542309e613c2bf6228fb297b1dc4e4d059472b330d8",
+    "measure/evidence_integrity_gates/events.py": "52f36162bbdcdb2a2dca6db2fc185323c5c5049fff955311f70229c518d6eefc",
+    "measure/evidence_integrity_gates/git_source.py": "20945f0a297e34c206236288bd25831cc6c11af2e8a61b752bc4242a5f07765a",
+    "measure/evidence_integrity_gates/lifecycle.py": "56d5e603823442ab2afd71eed77753b83937cef48698cdcea2b601ee308cef6c",
+    "measure/evidence_integrity_gates/opencode_provenance.py": "87de0e6e16064922e6612205cd850e49135fb14bd2d3e049278de26f08b1b984",
+    "measure/evidence_integrity_gates/supervisor_gate.py": "a65fd73d0ffb5a4af8148d57499156964507cbed8919692bfe144d68a106b81b",
+    "measure/evidence_integrity_gates/validator.py": "4e201ee6457c2d1b9132b48821d84a95fe466b1e63ec2dcb624be6469d8afdce",
+    "measure/tests/evidence_integrity_gates/test_acceptance_portability.py": "1112636be9d0f21c6fda66ed1719aecaea0809ae34c5e2942c6c5bdb5fd12164",
+    "measure/tests/evidence_integrity_gates/test_denominator_roles.py": "3bbedff2b0a8bb9528add7cc0cb3c4dbfcd53ba0f4e089e0c1ba8dd10b400316",
+    "measure/tests/evidence_integrity_gates/test_supervisor_integration.py": "89da83e9012ba5c7e773f911f87ebedbc45cf87e173ff3bfa831008a8348dbd0"
+  },
+  "retained_export_registry": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/export-snapshots.json",
+  "predecessor": {
+    "gate_version": "phase4-v2-candidate",
+    "accepted_manifest_path": "measure/evidence-integrity-accepted-gate.json",
+    "status": "revoked"
+  },
+  "independent_review": {
+    "status": "pending",
+    "review_hash": null,
+    "required_isolation": "explicit-fork-turns-none-or-raw-history-begins-with-exact-fresh-prompt"
+  },
+  "owner_approval": {
+    "status": "pending",
+    "approval_hash": null
+  },
+  "accepted_manifest_published": false
+}

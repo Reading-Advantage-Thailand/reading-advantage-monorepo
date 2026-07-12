@@ -34,7 +34,7 @@
         "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/phase4-independent-review.json:16-17",
         "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/phase4-owner-approval.json:16-23"
       ],
-      "detail": "At audit time the artifacts retained hashes and byte counts but not the exact raw export snapshots, so this audit could not inspect the exact bytes underlying role and owner provenance. Subsequent fresh reviewer, delegated-owner, and root-owner exports parse successfully; the prior malformed-export diagnosis was false and is not retained as evidence.",
+      "detail": "At audit time the artifacts retained hashes and byte counts but not the exact raw export snapshots, so this audit could not inspect the exact bytes underlying role and owner provenance. Subsequent fresh reviewer, delegated-owner, and root-owner exports parse successfully.",
       "remediation": "Retain immutable raw exports or a provider-verifiable content-addressed receipt at acceptance time, validate them through the adapter, and regenerate review/approval/accepted artifacts in a new gate version."
     }
   ],
@@ -71,7 +71,7 @@
   ],
   "test_strategy_violations": [
     "Phase 4 requires a real tool export with fork_turns=none; accepted evidence records schema-field-absent.",
-    "Closeout requires independently replayable authentic owner provenance; exact raw snapshots are not retained and current exports are malformed."
+    "At audit time, closeout lacked independently replayable authentic owner provenance because exact raw snapshots were not retained. Later fresh exports parse successfully."
   ],
   "live_contract_violations": [
     "The production accepted-manifest validator does not invoke authentic owner-event validation and accepts a provenance-free approval control."
@@ -85,6 +85,6 @@
   "closeout_authorized": false,
   "historical_correction": {
     "date": "2026-07-12",
-    "statement": "Fresh OpenCode exports parse successfully. The original malformed-export claim was false; FA-003 remains historical evidence that snapshots were not retained at audit time, not evidence of malformed provider output."
+    "statement": "Fresh OpenCode exports parse successfully. FA-003 remains historical evidence that snapshots were not retained at audit time; it makes no claim that provider output is invalid."
   }
 }
