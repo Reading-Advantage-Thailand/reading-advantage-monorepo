@@ -28,3 +28,11 @@ No unresolved Critical, High, or Medium findings remain.
 - Theme treatments do not alter semantic meaning or geometry.
 - Host ownership of identity, tenancy, persistence, idempotency, and authoritative XP is preserved.
 - No production route, runtime, cartridge, or physical asset was implemented.
+
+## Closeout generation and doctor
+
+- `bash measure/generate.sh`: **passed**; architecture and route facts regenerated for closeout commit `1cc448ae`.
+- `git diff --exit-code measure/generated/`: **passed** for tracked differences; the generator and generated directory were already untracked concurrent work and were not claimed by this track.
+- `bash measure/doctor.sh`: **failed** because its marker check rejects pending `[ ]` tasks in five other active tracks: the three APK successors, `typescript7_native_migration_20260710`, and `workbook_content_versioning_20260711`.
+
+Rewriting those pending tasks as blocked or in progress would falsify their owners' state, so no drive-by remediation was made. The anti-pattern-catalog and supervisor-invariant doctor checks passed.
