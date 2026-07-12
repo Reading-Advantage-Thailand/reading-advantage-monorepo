@@ -16,6 +16,7 @@ from types import SimpleNamespace
 from typing import Any
 
 from measure.evidence_integrity_gates.supervisor_gate import (
+    REQUIRED_GATE_FILES,
     canonical_review_prompt,
     _validate_owner_provenance,
     _validate_review_provenance,
@@ -74,19 +75,13 @@ class SupervisorIntegrationTests(unittest.TestCase):
         self._write("tests/guard.sh", "#!/usr/bin/env bash\nexit 0\n")
         self._write("measure/tracks/product_track/plan.md", "# Plan\n\n## Phase 1\n\n- [x] Task: done 1234567\n")
         self._write("measure/tracks/measure_apk_evidence_integrity_gates_20260712/plan.md", "# Plan\n\n## Phase 4\n\n- [b] Task: owner acceptance deferred:product-owner\n")
-        self._write("measure/gate.py", "GATE = 1\n")
-        self._write_bytes("measure/gate.bin", b"\xff\x00gate\n")
         self._git("init", "-q")
         self._git("config", "user.email", "test@example.com")
         self._git("config", "user.name", "Test")
         self._git("add", ".")
         self._git("commit", "-qm", "gate implementation")
         gate_commit = self._git("rev-parse", "HEAD").stdout.strip()
-        gate_paths = ["measure/automation-supervisor.py", "measure/gate.py", "measure/gate.bin"]
-        gate_paths.extend(
-            str(path.relative_to(self.repo))
-            for path in sorted((self.repo / "measure/evidence_integrity_gates").glob("*.py"))
-        )
+        gate_paths = sorted(REQUIRED_GATE_FILES)
         gate_files = {path: self._sha(self.repo / path) for path in gate_paths}
         candidate = {
             "schema_version": "evidence-integrity.supervisor.v1",
@@ -427,7 +422,7 @@ class SupervisorIntegrationTests(unittest.TestCase):
         manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
         self._assert_blocked("ACCEPTED_GATE_REVOKED")
         manifest_path.write_text(original, encoding="utf-8")
-        self._write("measure/gate.py", "GATE = 2\n")
+        self._write("measure/automation-supervisor.py", "GATE = 2\n")
         self._assert_blocked("GATE_FILE_HASH_MISMATCH")
 
     def test_003_legacy_dependencies_and_unpinned_work_are_rejected(self) -> None:
@@ -451,8 +446,8 @@ class SupervisorIntegrationTests(unittest.TestCase):
 
     def test_005_product_track_cannot_edit_accepted_gate_files(self) -> None:
         """Rejects gate implementation edits after product work starts."""
-        self._write("measure/gate.py", "GATE = 2\n")
-        self._git("add", "measure/gate.py")
+        self._write("measure/automation-supervisor.py", "GATE = 2\n")
+        self._git("add", "measure/automation-supervisor.py")
         self._git("commit", "-qm", "self edit gate")
         self._assert_blocked("PRODUCT_TRACK_EDITED_GATE")
 
@@ -488,7 +483,18 @@ class SupervisorIntegrationTests(unittest.TestCase):
         """Rejects manifests that omit the runtime gate or forge review and approval hashes."""
         manifest_path = self.repo / "measure/evidence-integrity-accepted-gate.json"
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-        manifest["files"] = {"measure/gate.py": manifest["files"]["measure/gate.py"]}
+        manifest["files"] = {
+            "measure/automation-supervisor.py": manifest["files"][
+                "measure/automation-supervisor.py"
+            ]
+        }
+        manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+        self._assert_blocked("ACCEPTED_GATE_MANIFEST_INVALID")
+
+        self._replace_fixture()
+        manifest_path = self.repo / "measure/evidence-integrity-accepted-gate.json"
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        manifest["files"]["measure/tests/evidence_integrity_gates/test_mutable.py"] = "0" * 64
         manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
         self._assert_blocked("ACCEPTED_GATE_MANIFEST_INVALID")
 
@@ -498,7 +504,7 @@ class SupervisorIntegrationTests(unittest.TestCase):
 
     def test_009_symlinks_path_traversal_and_dirty_worktrees_fail_closed(self) -> None:
         """Rejects filesystem indirection, unsafe manifest paths, and uncommitted source."""
-        gate_path = self.repo / "measure/gate.py"
+        gate_path = self.repo / "measure/automation-supervisor.py"
         external = self.repo.parent / f"{self.repo.name}-external-gate.py"
         external.write_bytes(gate_path.read_bytes())
         gate_path.unlink()

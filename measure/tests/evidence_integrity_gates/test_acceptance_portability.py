@@ -12,17 +12,23 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 ACCEPTED_MANIFEST = REPO_ROOT / "measure/evidence-integrity-accepted-gate.json"
+HISTORICAL_V2_MANIFEST = (
+    REPO_ROOT
+    / "measure/acceptance/measure_apk_evidence_integrity_gates_20260712"
+    / "phase4-v2-revoked-accepted-gate-manifest.json"
+)
+V2_REVOKED_MANIFEST_SHA256 = "d52d06ed4926273f1105e3950f4adf998e18c88d7e55c82f6d6325b058abfc20"
 
 
 class AcceptancePortabilityTests(unittest.TestCase):
-    """Proves historical v2 bindings remain portable while revoked."""
+    """Proves accepted and revoked acceptance evidence remains portable."""
 
-    def test_bound_artifacts_are_stable_and_portable_after_archive(self) -> None:
-        """Retains exact historical bytes without treating revoked v2 as consumable."""
-        manifest = json.loads(ACCEPTED_MANIFEST.read_text(encoding="utf-8"))
-        self.assertEqual(manifest["status"], "revoked")
-        self.assertTrue(manifest["revoked"])
-        self.assertFalse(manifest["consumable"])
+    def _assert_portable_bound_artifacts(self, manifest: dict[str, object]) -> None:
+        """Verifies that one manifest's bound evidence is stable and archive-portable.
+
+        @param manifest Parsed accepted or revoked acceptance manifest.
+        @returns Nothing.
+        """
         bound_fields = (
             ("candidate_manifest_path", "candidate_manifest_hash"),
             ("review_report_path", "review_hash"),
@@ -44,6 +50,34 @@ class AcceptancePortabilityTests(unittest.TestCase):
                 shutil.copyfile(source, destination)
 
             self.assertFalse((portable_repo / "measure/tracks").exists())
+
+    def test_current_root_accepted_manifest_is_consumable_and_portable(self) -> None:
+        """Validates the active root manifest without binding it to a historical version."""
+        manifest = json.loads(ACCEPTED_MANIFEST.read_text(encoding="utf-8"))
+        self.assertEqual(manifest["status"], "accepted")
+        self.assertTrue(manifest["consumable"])
+        self.assertFalse(manifest["revoked"])
+        self._assert_portable_bound_artifacts(manifest)
+
+    def test_historical_v2_revoked_manifest_remains_non_consumable_and_portable(self) -> None:
+        """Retains exact v2 evidence without assuming the active root is v2."""
+        manifest_bytes = HISTORICAL_V2_MANIFEST.read_bytes()
+        manifest = json.loads(manifest_bytes)
+        self.assertEqual(hashlib.sha256(manifest_bytes).hexdigest(), V2_REVOKED_MANIFEST_SHA256)
+        self.assertEqual(manifest["gate_version"], "phase4-v2-candidate")
+        self.assertEqual(manifest["status"], "revoked")
+        self.assertTrue(manifest["revoked"])
+        self.assertFalse(manifest["consumable"])
+        self._assert_portable_bound_artifacts(manifest)
+
+    def test_current_root_and_historical_v2_are_distinct_transition_records(self) -> None:
+        """Prevents a new accepted root from overwriting preserved revoked v2 evidence."""
+        current = json.loads(ACCEPTED_MANIFEST.read_text(encoding="utf-8"))
+        historical = json.loads(HISTORICAL_V2_MANIFEST.read_text(encoding="utf-8"))
+        self.assertNotEqual(current["gate_version"], historical["gate_version"])
+        self.assertNotEqual(
+            current["candidate_manifest_hash"], historical["candidate_manifest_hash"]
+        )
 
     def test_retained_exports_are_parseable_and_content_addressed(self) -> None:
         """Verifies every retained compressed snapshot against its exact raw hash."""

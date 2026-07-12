@@ -835,7 +835,7 @@ def _validate_manifest(
         or not isinstance(files, Mapping)
         or not files
         or not all(isinstance(key, str) and isinstance(value, str) for key, value in files.items())
-        or not REQUIRED_GATE_FILES.issubset(files.keys())
+        or set(files) != REQUIRED_GATE_FILES
     ):
         return None, _blocked("ACCEPTED_GATE_MANIFEST_INVALID")
     if _run_git(repo, "cat-file", "-e", f"{commit}^{{commit}}").returncode != 0:
