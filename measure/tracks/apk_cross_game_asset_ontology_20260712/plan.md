@@ -68,7 +68,7 @@
       repository-level responsive composition specification
 - [x] Task: Measure - User Manual Verification 'Phase 4' (Protocol in workflow.md) [accepted 2026-07-12]
 
-## Phase 5: Build the asset usage matrix and reuse audit [checkpoint: pending]
+## Phase 5: Build the asset usage matrix and reuse audit [checkpoint: 8054971]
 
 - [x] Task: Inventory every scene's character, environment, gameplay object, VFX,
       audio, UI, control, background, transition, and result presentation usage
@@ -78,7 +78,7 @@
 - [x] Task: Record provenance/license, dimensions, content, current use, responsive
       suitability, and reuse/reject/replace disposition
 - [x] Task: Publish `game-asset-usage-matrix.json` and `existing-asset-audit.md`
-- [~] Task: Measure - User Manual Verification 'Phase 5' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Phase 5' (Protocol in workflow.md) [accepted 2026-07-12]
 
 ## Phase 6: Normalize semantic assets and delivery gaps [checkpoint: pending]
 
