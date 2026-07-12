@@ -80,7 +80,7 @@
 - [x] Task: Publish `game-asset-usage-matrix.json` and `existing-asset-audit.md`
 - [x] Task: Measure - User Manual Verification 'Phase 5' (Protocol in workflow.md) [accepted 2026-07-12]
 
-## Phase 6: Normalize semantic assets and delivery gaps [checkpoint: pending]
+## Phase 6: Normalize semantic assets and delivery gaps [checkpoint: 0aaac92]
 
 - [x] Task: Normalize usages into semantic families, gameplay variants,
       environment kits, audio/UI roles, allowed substitutions, and prohibited conflations
@@ -91,7 +91,7 @@
       dependency order, and product value
 - [x] Task: Recommend bounded cartridge cohorts without opening implementation tracks
 - [x] Task: Publish `asset-ontology.md` and `gap-and-coverage-plan.md`
-- [~] Task: Measure - User Manual Verification 'Phase 6' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Phase 6' (Protocol in workflow.md) [accepted 2026-07-12]
 
 ## Phase 7: Acceptance and dependent-track handoff [checkpoint: pending]
 
