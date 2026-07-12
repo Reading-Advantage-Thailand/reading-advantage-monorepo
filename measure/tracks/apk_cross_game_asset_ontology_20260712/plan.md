@@ -44,16 +44,16 @@
 
 ## Phase 3: Baseline developer effort and repeated capabilities [checkpoint: pending]
 
-- [ ] Task: Decompose every implementation into lifecycle, content, input,
+- [x] Task: Decompose every implementation into lifecycle, content, input,
       simulation, physics, camera, presentation, UI, audio, accessibility, host, and tests
-- [ ] Task: Quantify representative file/line/module complexity and document the
+- [x] Task: Quantify representative file/line/module complexity and document the
       current author-test-theme-QC-ship workflow
-- [ ] Task: Build `capability-usage-matrix.json` across all games and scenes
-- [ ] Task: Classify every repeated capability as retain, standardize,
+- [x] Task: Build `capability-usage-matrix.json` across all games and scenes
+- [x] Task: Classify every repeated capability as retain, standardize,
       extend-existing, bespoke, or retire with source consumers and rationale
-- [ ] Task: Publish `developer-effort-baseline.md` and
+- [x] Task: Publish `developer-effort-baseline.md` and
       `developer-capability-ontology.md`
-- [ ] Task: Obtain product-owner acceptance of standardization boundaries
+- [~] Task: Obtain product-owner acceptance of standardization boundaries
 - [ ] Task: Measure - User Manual Verification 'Phase 3' (Protocol in workflow.md)
 
 ## Phase 4: Define responsive composition requirements [checkpoint: pending]
