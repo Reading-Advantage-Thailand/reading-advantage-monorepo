@@ -231,7 +231,7 @@ role: strategy
 status: complete
 track: measure_apk_evidence_integrity_gates_20260712
 phase: track setup and full-track strategy
-commits: pending
+commits: afcfd215
 tests_run: bash tests/orchestrator_marker_vocabulary.sh (expected aggregate red: legacy markers in other active plans); bash tests/orchestrator_supervisor_invariants.sh (pass); bash tests/orchestrator_review_execution_truthfulness.sh (pass); bash tests/orchestrator_catalog.sh (pass)
 files_changed: measure/tracks/measure_apk_evidence_integrity_gates_20260712/test-strategy.md (new); measure/tracks/measure_apk_evidence_integrity_gates_20260712/plan.md
 plan_updates: replaced deprecated blank task markers with truthful incomplete or product-owner-blocked markers; no implementation task claimed complete
