@@ -1,0 +1,75 @@
+{
+  "schema_version": "apk-source-denominator.phase0-role-ownership.v1",
+  "status": "frozen-not-executed",
+  "track_id": "apk_source_denominator_inventory_20260712",
+  "allowed_input_manifest_path": "measure/tracks/apk_source_denominator_inventory_20260712/phase0-input-freeze.json",
+  "allowed_input_manifest_sha256": "e4bba6919b9b60992a388a9cf4f37c7885400b96bec7b31898f59eaa80d12a9f",
+  "root_agent": {
+    "permitted_actions": ["coordinate", "apply reviewed patches", "commit", "report"],
+    "forbidden_roles": ["discovery-auditor", "evidence-collector", "requirements-mapper", "truth-test-author", "adversarial-reviewer"]
+  },
+  "required_roles": ["discovery-auditor", "evidence-collector", "requirements-mapper", "truth-test-author", "adversarial-reviewer"],
+  "role_applicability": {
+    "discovery-auditor": true,
+    "evidence-collector": true,
+    "requirements-mapper": true,
+    "truth-test-author": true,
+    "adversarial-reviewer": true
+  },
+  "incompatible_roles": [
+    ["discovery-auditor", "evidence-collector"],
+    ["discovery-auditor", "requirements-mapper"],
+    ["discovery-auditor", "truth-test-author"],
+    ["discovery-auditor", "adversarial-reviewer"],
+    ["evidence-collector", "requirements-mapper"],
+    ["evidence-collector", "truth-test-author"],
+    ["evidence-collector", "adversarial-reviewer"],
+    ["requirements-mapper", "truth-test-author"],
+    ["requirements-mapper", "adversarial-reviewer"],
+    ["truth-test-author", "adversarial-reviewer"]
+  ],
+  "receipt_contract": {
+    "path_pattern": "measure/tracks/apk_source_denominator_inventory_20260712/role-receipts/<role>.json",
+    "schema_version": "apk-role-receipt.v1",
+    "required_provenance": ["spawn_id", "parent_ancestry_ids", "prompt_sha256", "actual_context_manifest_sha256", "start_event_id", "end_event_id", "final_response_sha256", "output_sha256", "budget_declaration_sha256", "commit_sha"],
+    "reviewer_isolation": "fork_turns=none or a retained raw export whose history starts with exactly the fresh review prompt; no inherited author narrative is allowed."
+  },
+  "tasks": [
+    {
+      "task_id": "discovery-auditor:mechanical-denominator",
+      "owner_role": "discovery-auditor",
+      "forbidden_roles": ["evidence-collector", "requirements-mapper", "truth-test-author", "adversarial-reviewer"],
+      "reviewer_role": "adversarial-reviewer",
+      "expected_outputs": ["source-denominator.json", "game-identity-ledger.json", "scene-state-denominator.json"]
+    },
+    {
+      "task_id": "evidence-collector:asset-history-denominator",
+      "owner_role": "evidence-collector",
+      "forbidden_roles": ["discovery-auditor", "requirements-mapper", "truth-test-author", "adversarial-reviewer"],
+      "reviewer_role": "adversarial-reviewer",
+      "expected_outputs": ["asset-file-denominator.json", "historical-source-denominator.json"]
+    },
+    {
+      "task_id": "requirements-mapper:reconciliation-records",
+      "owner_role": "requirements-mapper",
+      "forbidden_roles": ["discovery-auditor", "evidence-collector", "truth-test-author", "adversarial-reviewer"],
+      "reviewer_role": "adversarial-reviewer",
+      "expected_outputs": ["denominator-discrepancies.json", "denominator-method.md"]
+    },
+    {
+      "task_id": "truth-test-author:denominator-contract-tests",
+      "owner_role": "truth-test-author",
+      "forbidden_roles": ["discovery-auditor", "evidence-collector", "requirements-mapper", "adversarial-reviewer"],
+      "reviewer_role": "adversarial-reviewer",
+      "expected_outputs": ["denominator-contract-test-report.json"]
+    },
+    {
+      "task_id": "adversarial-reviewer:independent-reconciliation-review",
+      "owner_role": "adversarial-reviewer",
+      "forbidden_roles": ["discovery-auditor", "evidence-collector", "requirements-mapper", "truth-test-author"],
+      "reviewer_role": "product-owner",
+      "expected_outputs": ["independent-review.json"]
+    }
+  ],
+  "execution_note": "This is a role plan, not a receipt. No discovery, evidence collection, mapping, test authoring, or review session has been launched or represented as complete by this artifact."
+}

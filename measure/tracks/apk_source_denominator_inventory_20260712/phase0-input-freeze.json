@@ -1,0 +1,73 @@
+{
+  "schema_version": "apk-source-denominator.phase0-input-freeze.v1",
+  "status": "frozen-not-discovered",
+  "track_id": "apk_source_denominator_inventory_20260712",
+  "baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "accepted_predecessor": {
+    "track_id": "measure_apk_evidence_integrity_gates_20260712",
+    "manifest_path": "measure/evidence-integrity-accepted-gate.json",
+    "manifest_sha256": "d9f5c4771a755bae72c037fdbed6e330e523e9f2fabf60010154b981bfb283a3",
+    "gate_version": "phase4-v8-candidate",
+    "gate_commit": "5aea360f94f978ac78e590e0a64d33d176beaa1a",
+    "required_status": "accepted",
+    "required_consumable": true,
+    "required_revoked": false
+  },
+  "source_scope": {
+    "current_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "current_tree_rule": "Only blobs committed at current_revision are current-source inputs; uncommitted worktree bytes are excluded.",
+    "historical_revision_rule": "Only commits reachable as ancestors of current_revision may be searched. Record each historical locator at its exact reachable revision.",
+    "history_command_template": "git rev-list 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- <root>",
+    "roots": [
+      "apps/advantage-games",
+      "apps/reading-advantage",
+      "apps/primary-advantage",
+      "packages",
+      "measure"
+    ],
+    "exclusions": [
+      "Uncommitted worktree bytes and generated outputs created after current_revision.",
+      "All factual assertions, inferred IDs, product dispositions, source lists, and generated artifacts below measure/tracks/apk_cross_game_asset_ontology_20260712/.",
+      "Any future Track 3+ candidate, acceptance, or synthesis artifact.",
+      "Catalog prose as a substitute for an exact source locator."
+    ]
+  },
+  "failed_track_quarantine": {
+    "track_id": "apk_cross_game_asset_ontology_20260712",
+    "path": "measure/tracks/apk_cross_game_asset_ontology_20260712",
+    "baseline_tree_sha1": "f35df55e9943b4da3ece9f1dbbf8dd75232f7c20",
+    "disposition": "rejected-not-completion",
+    "permitted_use": "Negative fixture and failure-mode reference only.",
+    "forbidden_use": "It may not supply the source denominator, game identity, scene/state, historical fact, asset candidate, count, route, root, requirement, capability, responsive conclusion, or acceptance evidence."
+  },
+  "frozen_resource_ceilings": {
+    "discovery-auditor": {"source_files": 7500, "command_invocations": 120, "bytes_read": 268435456},
+    "evidence-collector": {"source_files": 7500, "command_invocations": 120, "bytes_read": 268435456},
+    "requirements-mapper": {"claim_records": 12000, "command_invocations": 60, "bytes_read": 134217728},
+    "truth-test-author": {"test_cases": 180, "command_invocations": 80, "bytes_read": 67108864},
+    "adversarial-reviewer": {"source_files": 7500, "command_invocations": 120, "bytes_read": 268435456}
+  },
+  "stop_loss": {
+    "max_games_per_batch": 3,
+    "unsupported_factual_claims_before_stop": 1,
+    "denominator_mismatches_before_stop": 1,
+    "failed_fix_review_cycles_before_block": 2,
+    "unresolved_blocking_severities": ["critical", "high", "medium"],
+    "unmeasured_resource_usage_blocks_checkpoint": true,
+    "ceiling_change_requires_product_owner_approval": true
+  },
+  "expected_artifacts": [
+    {"path": "measure/tracks/apk_source_denominator_inventory_20260712/source-denominator.json", "schema_version": "apk-source-denominator.v1"},
+    {"path": "measure/tracks/apk_source_denominator_inventory_20260712/game-identity-ledger.json", "schema_version": "apk-game-identity-ledger.v1"},
+    {"path": "measure/tracks/apk_source_denominator_inventory_20260712/scene-state-denominator.json", "schema_version": "apk-scene-state-denominator.v1"},
+    {"path": "measure/tracks/apk_source_denominator_inventory_20260712/asset-file-denominator.json", "schema_version": "apk-asset-file-denominator.v1"},
+    {"path": "measure/tracks/apk_source_denominator_inventory_20260712/historical-source-denominator.json", "schema_version": "apk-historical-source-denominator.v1"},
+    {"path": "measure/tracks/apk_source_denominator_inventory_20260712/denominator-discrepancies.json", "schema_version": "apk-denominator-discrepancies.v1"},
+    {"path": "measure/tracks/apk_source_denominator_inventory_20260712/denominator-method.md", "schema_version": "apk-denominator-method.v1"},
+    {"path": "measure/tracks/apk_source_denominator_inventory_20260712/role-receipts/", "schema_version": "apk-role-receipt.v1"},
+    {"path": "measure/tracks/apk_source_denominator_inventory_20260712/independent-review.json", "schema_version": "apk-denominator-independent-review.v1"},
+    {"path": "measure/tracks/apk_source_denominator_inventory_20260712/candidate-denominator-manifest.json", "schema_version": "apk-denominator-candidate-manifest.v1"},
+    {"path": "measure/tracks/apk_source_denominator_inventory_20260712/product-owner-acceptance.json", "schema_version": "apk-denominator-owner-acceptance.v1"},
+    {"path": "measure/tracks/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json", "schema_version": "apk-denominator-accepted-manifest.v1"}
+  ]
+}
