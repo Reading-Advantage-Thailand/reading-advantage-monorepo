@@ -1,0 +1,20 @@
+{
+  "schema_version": "apk-denominator-contract-test-report.v1",
+  "status": "red-contract-authored",
+  "track_id": "apk_source_denominator_inventory_20260712",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "phase_authoring_baseline_revision": "6c860c5a49144beaf489a938d992425259765a1c",
+  "role": "truth-test-author",
+  "scope": "Contract only; this report contains no discovered source, asset, route, scene, state, or historical facts and is not a usable denominator.",
+  "red_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase1",
+  "green_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase1",
+  "required_contracts": [
+    "source identity, file, route, copy, and graph records",
+    "real source-evidenced scenes, states, and transitions without synthetic fallback IDs",
+    "asset, audio, and data candidate hashes, format metadata, and identical-hash groups",
+    "reachable committed revisions with exact path, blob, line range, and range hashes",
+    "negative fixtures that reject failed-track factual sources",
+    "absence of mechanic, capability, responsive, suitability, semantic-role, and product-disposition conclusions"
+  ],
+  "green_handoff": "discovery-auditor"
+}

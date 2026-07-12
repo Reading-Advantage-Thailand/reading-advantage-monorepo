@@ -36,10 +36,40 @@ The focused test is
   `python3 ~/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py status --repo .`
 
 The Mid-Red role must preserve the freeze test and add only denominator-contract
-counterexamples. Its exact Red command is the focused test command above after adding
-a failing assertion for the next contract. The Jr-Green role reruns that exact command,
-then the project gate. No generated report, fixture, role plan, or passing test may
-be represented as discovered source truth (A4/A5/A6).
+counterexamples. No generated report, fixture, role plan, or passing test may be
+represented as discovered source truth (A4/A5/A6).
+
+## Phase 1 mechanical-discovery contracts
+
+The focused test is `measure.tests.test_apk_source_denominator_inventory_phase1`.
+It uses the frozen committed source revision
+`23bb5ad578c01fb29f9e8bb76a7d934d24a4b286`, not worktree bytes, to resolve every
+claimed path, blob, and inclusive line-range hash. The test contract itself is pinned
+to authoring baseline `6c860c5a49144beaf489a938d992425259765a1c` in
+`denominator-contract-test-report.json`; that report is a red contract, not discovery
+evidence or an accepted denominator.
+
+- **RED command:**
+  `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase1`
+  It exits nonzero at this stage with `AssertionError: Missing Phase-1 denominator
+  artifact: measure/tracks/apk_source_denominator_inventory_20260712/source-denominator.json`.
+  Missing denominator artifacts are the expected failure; import, JSON, Git, or Python
+  syntax errors are not an acceptable Red result.
+- **GREEN command:**
+  `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase1`
+  It exits zero only when source identity/file/route/copy/graph records, identity-ledger
+  routes, real source-evidenced scene/state/transition records, exhaustive candidate
+  asset/audio/data hashes and basic format metadata, identical-hash groups, reachable
+  historical locators, and quarantine rejection fixtures are present. Every factual
+  locator must resolve to the frozen baseline (or a reachable ancestor for history),
+  match its blob and inclusive line-range SHA-256 hashes, and avoid the failed-track
+  tree. The suite rejects synthetic fallback scene/state IDs and forbidden mechanic,
+  capability, responsive, suitability, semantic-role, or product-disposition fields.
+- **Static syntax command:**
+  `PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile measure/tests/test_apk_source_denominator_inventory_phase1.py`
+- **Handoff:** The discovery-auditor must author the missing denominator artifacts and
+  rerun the exact GREEN command. This remains a Phase-1 in-progress contract; it does
+  not mark Phase 1 complete or authorize acceptance.
 
 ## Required future artifact schemas
 
