@@ -12,13 +12,43 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any
 
-from measure.evidence_integrity_gates.supervisor_gate import _validate_review_provenance
+from measure.evidence_integrity_gates.supervisor_gate import (
+    _validate_owner_provenance,
+    _validate_review_provenance,
+    validate_supervisor_completion,
+)
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 GATE_TRACK = "measure_apk_evidence_integrity_gates_20260712"
+OWNER_DELEGATION_TEXT = (
+    "For this project, YOU are the orchestrator, therefore YOU are acting as the owner."
+)
+
+
+class FixtureTrustedResolver:
+    """Resolves test sessions from an explicit trusted-export mapping."""
+
+    def __init__(self, exports: dict[str, bytes]) -> None:
+        """Creates a resolver over immutable fixture exports.
+
+        @param exports Session IDs mapped to trusted provider bytes.
+        """
+        self.exports = dict(exports)
+
+    def resolve(self, session_id: str) -> bytes:
+        """Returns trusted export bytes for a named fixture session.
+
+        @param session_id Session to resolve.
+        @returns Exact trusted provider export bytes.
+        @throws RuntimeError When the session is unavailable.
+        """
+        if session_id not in self.exports:
+            raise RuntimeError("trusted session unavailable")
+        return self.exports[session_id]
 
 
 class SupervisorIntegrationTests(unittest.TestCase):
@@ -142,6 +172,11 @@ class SupervisorIntegrationTests(unittest.TestCase):
         approval_export_path, approval_export_hash = self._write_export(approval_raw)
         root_raw = self._root_export(approval_prompt)
         root_export_path, root_export_hash = self._write_export(root_raw)
+        self.trusted_exports = {
+            "ses_review": review_raw,
+            "ses_approval": approval_raw,
+            "ses_root": root_raw,
+        }
         approval = {
             "decision": "approve",
             "revoked": False,
@@ -169,7 +204,7 @@ class SupervisorIntegrationTests(unittest.TestCase):
                 "agent": "root-agent",
                 "owner_designation_event": {
                     "message_id": "msg_owner_designation",
-                    "message_text_sha256": self._sha_bytes(b"YOU are acting as the owner."),
+                    "message_text_sha256": self._sha_bytes(OWNER_DELEGATION_TEXT.encode()),
                     "created_ms": 10,
                     "designated_role": "product-owner",
                     "delegate_agent": "approval-publisher",
@@ -310,7 +345,7 @@ class SupervisorIntegrationTests(unittest.TestCase):
             "messages": [
                 {
                     "info": {"id": "msg_owner_designation", "sessionID": "ses_root", "role": "user", "time": {"created": 10}},
-                    "parts": [{"type": "text", "text": "YOU are acting as the owner."}],
+                    "parts": [{"type": "text", "text": OWNER_DELEGATION_TEXT}],
                 },
                 {
                     "info": {
@@ -343,15 +378,14 @@ class SupervisorIntegrationTests(unittest.TestCase):
         self.setUp()
 
     def _run_gate(self) -> tuple[subprocess.CompletedProcess[str], dict[str, Any]]:
-        """Runs the versioned completion runner as a real subprocess."""
-        result = subprocess.run(
-            [sys.executable, "-m", "measure.evidence_integrity_gates.cli", "supervisor-completion", "--repo", str(self.repo), "--track", "product_track"],
-            cwd=self.repo,
-            text=True,
-            capture_output=True,
-            check=False,
+        """Runs the completion gate with an explicit trusted session resolver."""
+        report = validate_supervisor_completion(
+            self.repo,
+            "product_track",
+            trusted_resolver=FixtureTrustedResolver(self.trusted_exports),
         )
-        return result, json.loads(result.stdout)
+        result = SimpleNamespace(returncode=0 if report["ok"] else 1, stderr="")
+        return result, report
 
     def _assert_blocked(self, code: str) -> None:
         """Requires the completion runner to fail with one stable blocker code."""
@@ -420,8 +454,8 @@ class SupervisorIntegrationTests(unittest.TestCase):
         self._git("commit", "-qm", "structural change")
         self._assert_blocked("GENERATED_FACTS_STALE")
 
-    def test_007_supervisor_dry_run_executes_gate_status_subprocess(self) -> None:
-        """Makes dry-run status report the real completion gate result."""
+    def test_007_supervisor_dry_run_fails_closed_without_live_provider_session(self) -> None:
+        """Makes production dry-run reject locally valid snapshots when live export fails."""
         environment = os.environ.copy()
         environment["MEASURE_REPO_ROOT"] = str(self.repo)
         result = subprocess.run(
@@ -432,8 +466,8 @@ class SupervisorIntegrationTests(unittest.TestCase):
             capture_output=True,
             check=False,
         )
-        self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertIn("Evidence gate status: PASS", result.stdout)
+        self.assertNotEqual(result.returncode, 0, result.stderr)
+        self.assertIn("Evidence gate status: BLOCKED", result.stdout)
 
     def test_008_manifest_requires_runtime_gate_files_and_bound_acceptance_artifacts(self) -> None:
         """Rejects manifests that omit the runtime gate or forge review and approval hashes."""
@@ -558,6 +592,7 @@ class SupervisorIntegrationTests(unittest.TestCase):
             candidate=candidate,
             gate_commit=manifest["gate_commit"],
             gate_version=manifest["gate_version"],
+            trusted_resolver=FixtureTrustedResolver(self.trusted_exports),
         )
         self.assertTrue(valid)
         replayed, _ = _validate_review_provenance(
@@ -567,6 +602,7 @@ class SupervisorIntegrationTests(unittest.TestCase):
             candidate=candidate,
             gate_commit=manifest["gate_commit"],
             gate_version=manifest["gate_version"],
+            trusted_resolver=FixtureTrustedResolver(self.trusted_exports),
         )
         self.assertFalse(replayed)
 
@@ -685,6 +721,62 @@ class SupervisorIntegrationTests(unittest.TestCase):
                     gate_version=manifest["gate_version"],
                 )
                 self.assertFalse(valid)
+
+    def test_017_local_snapshots_fail_when_trusted_tool_is_unavailable(self) -> None:
+        """Rejects otherwise valid local artifacts without trusted live resolution."""
+        report = validate_supervisor_completion(
+            self.repo,
+            "product_track",
+            trusted_resolver=FixtureTrustedResolver({}),
+        )
+        self.assertFalse(report["ok"])
+        self.assertEqual(report["blockers"][0]["code"], "ACCEPTED_GATE_MANIFEST_INVALID")
+
+    def test_018_synthetic_live_export_impersonation_fails_exact_event_comparison(self) -> None:
+        """Rejects a live export that impersonates labels but changes provider event bytes."""
+        forged = json.loads(self.trusted_exports["ses_review"])
+        forged["messages"][0]["parts"][0]["text"] = "synthetic impersonation"
+        exports = dict(self.trusted_exports)
+        exports["ses_review"] = json.dumps(forged, sort_keys=True).encode()
+        report = validate_supervisor_completion(
+            self.repo,
+            "product_track",
+            trusted_resolver=FixtureTrustedResolver(exports),
+        )
+        self.assertFalse(report["ok"])
+        self.assertEqual(report["blockers"][0]["code"], "ACCEPTED_GATE_MANIFEST_INVALID")
+
+    def test_019_owner_label_cannot_replace_exact_delegation_contract(self) -> None:
+        """Rejects matching retained/live owner labels that omit the exact owner contract."""
+        manifest = json.loads(
+            (self.repo / "measure/evidence-integrity-accepted-gate.json").read_text()
+        )
+        approval = json.loads((self.repo / manifest["owner_approval_path"]).read_text())
+        weak_text = "YOU are acting as the owner."
+        root = json.loads(self.trusted_exports["ses_root"])
+        root["messages"][0]["parts"][0]["text"] = weak_text
+        weak_raw = json.dumps(root, sort_keys=True).encode()
+        weak_path, weak_hash = self._write_export(weak_raw)
+        delegation = approval["root_owner_delegation"]
+        delegation["raw_export_path"] = weak_path
+        delegation["raw_export_sha256"] = weak_hash
+        delegation["stored_export_sha256"] = self._sha(self.repo / weak_path)
+        delegation["owner_designation_event"]["message_text_sha256"] = self._sha_bytes(
+            weak_text.encode()
+        )
+        valid, _ = _validate_owner_provenance(
+            self.repo,
+            approval,
+            candidate_hash=manifest["candidate_manifest_hash"],
+            review_hash=manifest["review_hash"],
+            gate_commit=manifest["gate_commit"],
+            gate_version=manifest["gate_version"],
+            review_completed_ms=30,
+            trusted_resolver=FixtureTrustedResolver(
+                {**self.trusted_exports, "ses_root": weak_raw}
+            ),
+        )
+        self.assertFalse(valid)
 
 if __name__ == "__main__":
     unittest.main()

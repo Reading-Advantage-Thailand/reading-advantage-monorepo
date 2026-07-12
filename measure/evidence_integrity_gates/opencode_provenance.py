@@ -11,11 +11,24 @@ import subprocess
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Mapping, Sequence
+from typing import Any, Mapping, Protocol, Sequence
 
 
 class ProvenanceError(RuntimeError):
     """Raised when exported provenance cannot be resolved or validated."""
+
+
+class TrustedSessionResolver(Protocol):
+    """Resolves session evidence through a trusted live provider boundary."""
+
+    def resolve(self, session_id: str) -> bytes:
+        """Returns exact live export bytes for a provider session.
+
+        @param session_id Provider session identifier.
+        @returns Exact provider export bytes.
+        @throws ProvenanceError When the provider or session is unavailable.
+        """
+        ...
 
 
 @dataclass(frozen=True)
@@ -196,6 +209,27 @@ class OpenCodeExportAdapter:
             temporary = Path(temporary_name)
             if temporary.exists():
                 temporary.unlink()
+
+
+class OpenCodeTrustedSessionResolver:
+    """Resolves trusted session bytes through the OpenCode export adapter."""
+
+    def __init__(self, adapter: OpenCodeExportAdapter | None = None) -> None:
+        """Creates a live session resolver.
+
+        @param adapter Optional provider adapter override.
+        """
+        self._adapter = adapter or OpenCodeExportAdapter()
+
+    def resolve(self, session_id: str) -> bytes:
+        """Exports a named session through the trusted OpenCode command.
+
+        @param session_id OpenCode session identifier.
+        @returns Exact live provider export bytes.
+        @throws ProvenanceError When the command or session cannot be resolved.
+        """
+        with tempfile.TemporaryDirectory(prefix="measure-opencode-export-") as directory:
+            return self._adapter.export(session_id, Path(directory) / "export.json")
 
 
 def build_evidence(raw: bytes, binding: RoleBinding, repo_root: Path) -> dict[str, Any]:

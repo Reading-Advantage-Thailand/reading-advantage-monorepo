@@ -76,3 +76,10 @@ until Phase 4's accepted gate manifest exists.
 - [x] Task: Publish a non-consumable v3 candidate bound to the remediation implementation commit and revoke v2. Fresh-review fixes republished the candidate at SHA-256 `ad8ef96a846c5f0d9432f5726e638f52d432758ead99fe5c2786cd47adb64a37` for implementation commit `6eb03add0b2c339495b012a46810a926a5b76de7`; candidate `875c3f7a11b8512df1f23c94fa70bbd8a6893af8ea07072a6d8f1d1f78086143` is superseded and v2 accepted manifest status remains `revoked`.
 - [~] Task: Obtain a fresh isolated adversarial review of the exact v3 candidate and implementation bytes with explicit `fork_turns=none` or equivalent retained raw-history proof. No prior v2 review is reusable.
 - [~] Task: Obtain a fresh product-owner approval event after review, bound in its prompt to the exact v3 candidate, review, gate commit, and gate version; only then may a new accepted manifest be generated.
+
+## Phase 6: Canonical v3 review remediation and v4 candidate (V3-ADV-001–V3-ADV-002)
+
+- [~] Task: Require production acceptance validation to resolve named review, approval, and root sessions through a trusted live provider adapter; compare exact identity, event bytes, text, and timestamps; fail closed for local-only evidence, unavailable tools/sessions, and synthetic export impersonation; require the exact root owner-delegation contract.
+- [~] Task: Revoke v3 and publish a non-consumable v4 candidate bound to the remediation implementation commit and exact files. Do not publish review, approval, or acceptance.
+- [~] Task: Obtain a fresh isolated adversarial review of the exact v4 candidate and implementation bytes. No v3 review is reusable.
+- [~] Task: Obtain a later product-owner approval event whose prompt binds the exact v4 candidate, fresh review, gate commit, and gate version; only then may a v4 accepted manifest be generated.

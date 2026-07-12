@@ -11,10 +11,15 @@ import subprocess
 from pathlib import Path, PurePosixPath
 from typing import Any, Mapping
 
+from .opencode_provenance import OpenCodeTrustedSessionResolver, TrustedSessionResolver
+
 
 SUPERVISOR_GATE_SCHEMA_VERSION = "evidence-integrity.supervisor.v1"
 GATE_TRACK_ID = "measure_apk_evidence_integrity_gates_20260712"
 ACCEPTED_MANIFEST_PATH = "measure/evidence-integrity-accepted-gate.json"
+OWNER_DELEGATION_TEXT = (
+    b"For this project, YOU are the orchestrator, therefore YOU are acting as the owner."
+)
 REQUIRED_GATE_FILES = frozenset(
     {
         "measure/automation-supervisor.py",
@@ -333,6 +338,75 @@ def _message_by_id(
     return matches[0] if len(matches) == 1 else None
 
 
+def _resolve_trusted_export(
+    resolver: TrustedSessionResolver, session_id: Any
+) -> Mapping[str, Any] | None:
+    """Resolves and parses one session exclusively through a trusted provider adapter.
+
+    @param resolver Trusted live provider boundary.
+    @param session_id Session identifier declared by retained evidence.
+    @returns Parsed live export, or ``None`` when resolution fails closed.
+    """
+    if not isinstance(session_id, str):
+        return None
+    try:
+        value = json.loads(resolver.resolve(session_id))
+    except (OSError, RuntimeError, UnicodeDecodeError, json.JSONDecodeError):
+        return None
+    return value if isinstance(value, Mapping) else None
+
+
+def _validate_trusted_event_snapshots(
+    retained_export: Mapping[str, Any],
+    *,
+    resolver: TrustedSessionResolver,
+    session_id: Any,
+    parent_session_id: Any | None,
+    agent: Any,
+    event_ids: tuple[Any, ...],
+) -> bool:
+    """Compares retained named events byte-for-byte with trusted live exports.
+
+    @param retained_export Locally retained export already bound by content hashes.
+    @param resolver Trusted live provider boundary.
+    @param session_id Expected session identity.
+    @param parent_session_id Expected parent session identity.
+    @param agent Expected session agent identity.
+    @param event_ids Exact provider event IDs that must match.
+    @returns Whether live session identity and every named event exactly match retention.
+    """
+    live_export = _resolve_trusted_export(resolver, session_id)
+    if live_export is None:
+        return False
+    retained_messages = _validated_export_messages(
+        retained_export, session_id=session_id, parent_session_id=parent_session_id
+    )
+    live_messages = _validated_export_messages(
+        live_export, session_id=session_id, parent_session_id=parent_session_id
+    )
+    retained_info = retained_export.get("info")
+    live_info = live_export.get("info")
+    if (
+        retained_messages is None
+        or live_messages is None
+        or not isinstance(retained_info, Mapping)
+        or not isinstance(live_info, Mapping)
+        or retained_info.get("agent") != agent
+        or live_info.get("agent") != agent
+    ):
+        return False
+    for event_id in event_ids:
+        retained_event = _message_by_id(retained_messages, event_id)
+        live_event = _message_by_id(live_messages, event_id)
+        if (
+            retained_event is None
+            or live_event is None
+            or _canonical_json(retained_event) != _canonical_json(live_event)
+        ):
+            return False
+    return True
+
+
 def _validate_review_provenance(
     repo: Path,
     review: Mapping[str, Any],
@@ -341,6 +415,7 @@ def _validate_review_provenance(
     candidate: Mapping[str, Any],
     gate_commit: Any,
     gate_version: Any,
+    trusted_resolver: TrustedSessionResolver | None = None,
 ) -> tuple[bool, int | None]:
     """Validates retained reviewer identity and provider-neutral context isolation.
 
@@ -350,6 +425,7 @@ def _validate_review_provenance(
     @param candidate Parsed candidate manifest.
     @param gate_commit Reviewed implementation commit.
     @param gate_version Reviewed gate version.
+    @param trusted_resolver Explicit trusted live provider resolver.
     @returns Validation result and provider completion timestamp.
     """
     provenance = review.get("fresh_context_provenance")
@@ -362,6 +438,18 @@ def _validate_review_provenance(
         provenance.get("stored_export_sha256"),
     )
     if export is None:
+        return False, None
+    if trusted_resolver is None or not _validate_trusted_event_snapshots(
+        export,
+        resolver=trusted_resolver,
+        session_id=provenance.get("session_id"),
+        parent_session_id=provenance.get("parent_session_id"),
+        agent=provenance.get("agent"),
+        event_ids=(
+            provenance.get("prompt_message_id"),
+            provenance.get("final_response_message_id"),
+        ),
+    ):
         return False, None
     messages = _validated_export_messages(
         export,
@@ -430,6 +518,7 @@ def _validate_owner_provenance(
     gate_commit: Any,
     gate_version: Any,
     review_completed_ms: int,
+    trusted_resolver: TrustedSessionResolver | None = None,
 ) -> tuple[bool, str | None]:
     """Validates retained owner approval, root designation, bindings, and ordering.
 
@@ -440,6 +529,7 @@ def _validate_owner_provenance(
     @param gate_commit Reviewed gate implementation commit.
     @param gate_version Reviewed gate version.
     @param review_completed_ms Provider timestamp when review completed.
+    @param trusted_resolver Explicit trusted live provider resolver.
     @returns Validation result and the approval event ID for replay protection.
     """
     event = approval.get("approval_event")
@@ -477,6 +567,25 @@ def _validate_owner_provenance(
         prompt is None
         or not isinstance(designation_contract, Mapping)
         or not isinstance(publication_contract, Mapping)
+    ):
+        return False, None
+    if trusted_resolver is None or not _validate_trusted_event_snapshots(
+        export,
+        resolver=trusted_resolver,
+        session_id=event.get("session_id"),
+        parent_session_id=event.get("parent_session_id"),
+        agent=event.get("agent"),
+        event_ids=(event.get("prompt_message_id"),),
+    ) or not _validate_trusted_event_snapshots(
+        root_export,
+        resolver=trusted_resolver,
+        session_id=root.get("session_id"),
+        parent_session_id=None,
+        agent=root.get("agent"),
+        event_ids=(
+            designation_contract.get("message_id"),
+            publication_contract.get("message_id"),
+        ),
     ):
         return False, None
     designation = _message_by_id(root_messages, designation_contract.get("message_id"))
@@ -523,6 +632,7 @@ def _validate_owner_provenance(
         and prompt_created > review_completed_ms
         and prompt_bytes == expected_prompt
         and designation.get("info", {}).get("role") == "user"
+        and _message_text_bytes(designation) == OWNER_DELEGATION_TEXT
         and designation_contract.get("designated_role") == "product-owner"
         and designation_contract.get("delegate_agent") == event.get("agent")
         and _sha256_bytes(_message_text_bytes(designation))
@@ -548,12 +658,15 @@ def _validate_owner_provenance(
 
 
 def _validate_acceptance_bindings(
-    repo: Path, manifest: Mapping[str, Any]
+    repo: Path,
+    manifest: Mapping[str, Any],
+    trusted_resolver: TrustedSessionResolver | None,
 ) -> bool:
     """Validates candidate, independent-review, and owner-approval byte bindings.
 
     @param repo Resolved repository root.
     @param manifest Accepted gate manifest.
+    @param trusted_resolver Trusted live provider resolver.
     @returns Whether acceptance was produced from the exact non-consumable candidate.
     """
     candidate_hash = manifest.get("candidate_manifest_hash")
@@ -579,6 +692,7 @@ def _validate_acceptance_bindings(
         candidate=candidate,
         gate_commit=manifest.get("gate_commit"),
         gate_version=manifest.get("gate_version"),
+        trusted_resolver=trusted_resolver,
     )
     if not review_provenance_valid or review_completed_ms is None:
         return False
@@ -590,6 +704,7 @@ def _validate_acceptance_bindings(
         gate_commit=manifest.get("gate_commit"),
         gate_version=manifest.get("gate_version"),
         review_completed_ms=review_completed_ms,
+        trusted_resolver=trusted_resolver,
     )
     consumption = manifest.get("approval_consumption")
     candidate_review = candidate.get("independent_review")
@@ -633,10 +748,13 @@ def _validate_acceptance_bindings(
     )
 
 
-def _validate_manifest(repo: Path) -> tuple[Mapping[str, Any] | None, dict[str, Any] | None]:
+def _validate_manifest(
+    repo: Path, trusted_resolver: TrustedSessionResolver | None
+) -> tuple[Mapping[str, Any] | None, dict[str, Any] | None]:
     """Validates the accepted manifest and every live gate-file hash.
 
     @param repo Repository root.
+    @param trusted_resolver Trusted live provider resolver.
     @returns Manifest and no blocker, or no manifest and a blocker.
     """
     path = repo / ACCEPTED_MANIFEST_PATH
@@ -680,7 +798,7 @@ def _validate_manifest(repo: Path) -> tuple[Mapping[str, Any] | None, dict[str, 
             or _sha256_bytes(committed.stdout) != expected_hash
         ):
             return None, _blocked("GATE_FILE_HASH_MISMATCH", path=relative_path)
-    if not _validate_acceptance_bindings(repo, manifest):
+    if not _validate_acceptance_bindings(repo, manifest, trusted_resolver):
         return None, _blocked("ACCEPTED_GATE_MANIFEST_INVALID")
     return manifest, None
 
@@ -859,18 +977,24 @@ def _validate_clean_worktree(repo: Path) -> dict[str, Any] | None:
 
 
 def validate_supervisor_completion(
-    repo: Path, track_id: str, *, stage: str = "completion"
+    repo: Path,
+    track_id: str,
+    *,
+    stage: str = "completion",
+    trusted_resolver: TrustedSessionResolver | None = None,
 ) -> dict[str, Any]:
     """Validates evidence-integrity requirements before work or completion.
 
     @param repo Repository root.
     @param track_id Protected product track identifier.
     @param stage ``preflight`` before work or ``completion`` after tasks finish.
+    @param trusted_resolver Optional trusted provider resolver; production uses OpenCode.
     @returns Versioned pass or fail-closed completion report.
     """
     if stage not in {"preflight", "completion"}:
         raise ValueError(f"unsupported supervisor gate stage: {stage}")
     repo = repo.resolve()
+    resolver = trusted_resolver or OpenCodeTrustedSessionResolver()
     track_dir = repo / "measure" / "tracks" / track_id
     metadata = _load_object(track_dir / "metadata.json")
     if metadata is None:
@@ -880,7 +1004,7 @@ def validate_supervisor_completion(
         return dependency_blocker
     if not reaches_gate:
         return _blocked("CANONICAL_DEPENDENCY_REQUIRED")
-    manifest, blocker = _validate_manifest(repo)
+    manifest, blocker = _validate_manifest(repo, resolver)
     if blocker:
         return blocker
     assert manifest is not None
