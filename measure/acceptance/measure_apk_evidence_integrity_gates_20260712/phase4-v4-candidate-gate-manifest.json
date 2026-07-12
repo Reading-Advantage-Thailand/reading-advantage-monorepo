@@ -1,11 +1,11 @@
 {
   "schema_version": "evidence-integrity.supervisor.v1",
-  "gate_version": "phase4-v3-candidate",
-  "status": "revoked",
+  "gate_version": "phase4-v4-candidate",
+  "status": "candidate",
   "consumable": false,
-  "revoked": true,
-  "implementation_commit": "6eb03add0b2c339495b012a46810a926a5b76de7",
-  "source_base_commit": "5101b7b2e264229e916c98dbfd456e1ea7de886c",
+  "revoked": false,
+  "implementation_commit": "a0d5d7955d8ee9fdfe4d4f9cc1cfd630e486856c",
+  "source_base_commit": "a49327ff9d69278ea45ba7a61458d95ff01d97d2",
   "files": {
     "measure/automation-supervisor.py": "c1489f3ee8246e3e06f7b009836455d2a5688af48ac082a10aa3b5227b8ba809",
     "measure/evidence_integrity_gates/__init__.py": "20b90c2879eb83b720e1766795e379b5007467d4cd446d1a45b9d12f552846a8",
@@ -16,34 +16,29 @@
     "measure/evidence_integrity_gates/events.py": "52f36162bbdcdb2a2dca6db2fc185323c5c5049fff955311f70229c518d6eefc",
     "measure/evidence_integrity_gates/git_source.py": "20945f0a297e34c206236288bd25831cc6c11af2e8a61b752bc4242a5f07765a",
     "measure/evidence_integrity_gates/lifecycle.py": "56d5e603823442ab2afd71eed77753b83937cef48698cdcea2b601ee308cef6c",
-    "measure/evidence_integrity_gates/opencode_provenance.py": "87de0e6e16064922e6612205cd850e49135fb14bd2d3e049278de26f08b1b984",
-    "measure/evidence_integrity_gates/supervisor_gate.py": "ca0227048ce3de56a95647a608f536af944fe107a6aaa37593ad648f4ced4330",
+    "measure/evidence_integrity_gates/opencode_provenance.py": "26a03cc80318fd8b2e37bdaa5777a8608023472c29403dd561d702afb208278b",
+    "measure/evidence_integrity_gates/supervisor_gate.py": "e140379eca477e2446cec1b63f26598e089f56d9acdcdcc1ae02fccb9eafa664",
     "measure/evidence_integrity_gates/validator.py": "4e201ee6457c2d1b9132b48821d84a95fe466b1e63ec2dcb624be6469d8afdce",
     "measure/tests/evidence_integrity_gates/test_acceptance_portability.py": "1112636be9d0f21c6fda66ed1719aecaea0809ae34c5e2942c6c5bdb5fd12164",
     "measure/tests/evidence_integrity_gates/test_denominator_roles.py": "feda12bfdc053fc52694c931432d0ff6e85bb14d0014ce047c1414fffe263c75",
-    "measure/tests/evidence_integrity_gates/test_supervisor_integration.py": "90e589618439eb03b94255d3a2008ae5e6dfeb3e56760ffe9c6de46629f4408e"
+    "measure/tests/evidence_integrity_gates/test_supervisor_integration.py": "8ae03e1a3ffb630009fc9bd1219f157e33e3e0b08c829800c5f6e7d34e01b48b"
   },
-  "supersedes_candidate_sha256": "875c3f7a11b8512df1f23c94fa70bbd8a6893af8ea07072a6d8f1d1f78086143",
-  "retained_export_registry": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/export-snapshots.json",
+  "supersedes_candidate_sha256": "ad8ef96a846c5f0d9432f5726e638f52d432758ead99fe5c2786cd47adb64a37",
+  "remediates": ["V3-ADV-001", "V3-ADV-002"],
   "predecessor": {
-    "gate_version": "phase4-v2-candidate",
-    "accepted_manifest_path": "measure/evidence-integrity-accepted-gate.json",
+    "gate_version": "phase4-v3-candidate",
+    "candidate_manifest_path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/phase4-v3-candidate-gate-manifest.json",
     "status": "revoked"
   },
   "independent_review": {
     "status": "pending",
     "review_hash": null,
-    "required_isolation": "explicit-fork-turns-none-or-raw-history-begins-with-exact-fresh-prompt"
+    "required_isolation": "fresh-live-resolved-provider-session-with-exact-retained-event-byte-match"
   },
   "owner_approval": {
     "status": "pending",
-    "approval_hash": null
+    "approval_hash": null,
+    "required_designation_text": "For this project, YOU are the orchestrator, therefore YOU are acting as the owner."
   },
-  "accepted_manifest_published": false,
-  "revocation": {
-    "reason_codes": ["V3-ADV-001", "V3-ADV-002"],
-    "summary": "Canonical review found local retained exports forgeable and owner designation semantically under-bound.",
-    "superseded_by_version": "phase4-v4-candidate",
-    "superseded_by_path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/phase4-v4-candidate-gate-manifest.json"
-  }
+  "accepted_manifest_published": false
 }
