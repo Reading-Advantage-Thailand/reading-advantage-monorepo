@@ -59,8 +59,23 @@ Two parallel programs are in flight; priority order when picking the next track:
 
 ## Advantage Play Kit Program (created 2026-07-10)
 
-- [~] **Track: APK Dual-Theme Production Asset Packs** *Link: [./tracks/apk_dual_theme_asset_packs_20260711/](./tracks/apk_dual_theme_asset_packs_20260711/)*
-  Produce and integrate the required Chibi Quest and Riven Lands asset packs across every current APK cartridge, replacing procedural edition placeholders before the APK program may be called complete.
+> **Asset-system correction (2026-07-12):** Requirements must be derived from
+> developed and in-development games before physical formats or art are selected.
+> See the [APK Asset System Program](./apk-asset-system-program.md). Execute the
+> following three tracks in order; the latter two are dependency-blocked until
+> their predecessor artifacts receive explicit product-owner acceptance.
+
+- [ ] **Track: APK Cross-Game Asset Requirements and Ontology** *Link: [./tracks/apk_cross_game_asset_ontology_20260712/](./tracks/apk_cross_game_asset_ontology_20260712/)*
+  Inventory every relevant game and scene, audit existing assets, normalize shared semantic asset types, distinguish gameplay variants from theme treatments, define environment kits, and identify coverage gaps without choosing speculative physical layouts.
+
+- [ ] **Track: APK Dual-Theme Asset Contract and Production** *Link: [./tracks/apk_dual_theme_asset_production_20260712/](./tracks/apk_dual_theme_asset_production_20260712/)*
+  After ontology acceptance, define type-specific physical formats and produce mirrored Chibi Quest and Riven Lands assets in bounded batches prioritized by cross-game coverage.
+
+- [ ] **Track: APK Cartridge Semantic Rewrite and Integration** *Link: [./tracks/apk_cartridge_semantic_rewrite_20260712/](./tracks/apk_cartridge_semantic_rewrite_20260712/)*
+  Rewrite Ready games in bounded child cohorts against semantic asset roles, route newly discovered requirements through change control, and restore production exposure one verified game at a time.
+
+- [x] **Track: APK Dual-Theme Production Asset Packs — SUPERSEDED, DO NOT IMPLEMENT** *Link: [./archive/apk_dual_theme_asset_packs_20260711/](./archive/apk_dual_theme_asset_packs_20260711/)*
+  Superseded 2026-07-12 because it froze a speculative physical inventory before completing cross-game requirements analysis. Retained as failure evidence; no completion claim is made.
 
 - [x] **Track: APK Arena & Target Action Wave W4** *Link: [./archive/apk_arena_target_action_wave_w4_20260711/](./archive/apk_arena_target_action_wave_w4_20260711/)*
   Rebuild Archer's Revenge, Paladin's Twin-Soul, Griffin Sky-Joust, Gryphon Patrol, and Realm Carver as shared Phaser 4 APK cartridges, establishing reusable arena, projectile, aerial-target, minimap, and territory systems with exact cutover evidence. Archived 2026-07-12.

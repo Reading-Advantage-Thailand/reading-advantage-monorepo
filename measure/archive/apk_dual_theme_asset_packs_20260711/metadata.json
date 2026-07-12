@@ -1,9 +1,9 @@
 {
   "track_id": "apk_dual_theme_asset_packs_20260711",
   "type": "remediation",
-  "status": "in-progress",
+  "status": "superseded",
   "created_at": "2026-07-11T09:40:00Z",
-  "updated_at": "2026-07-11T11:30:00Z",
+  "updated_at": "2026-07-12T00:00:00Z",
   "description": "Remediate the incomplete APK asset ABI, then generate and integrate the required Chibi Quest and Riven Lands sprite packs across every current cartridge and edition.",
   "estimated_tasks": 31,
   "actual_tasks": null,

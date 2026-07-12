@@ -1,0 +1,12 @@
+{
+  "track_id": "apk_dual_theme_asset_production_20260712",
+  "type": "feature",
+  "status": "pending",
+  "created_at": "2026-07-12T00:00:00Z",
+  "updated_at": "2026-07-12T00:00:00Z",
+  "description": "Convert the accepted cross-game asset ontology into type-specific physical contracts and produce mirrored Chibi Quest and Riven Lands assets in bounded, coverage-driven batches.",
+  "estimated_tasks": 38,
+  "actual_tasks": null,
+  "dependencies": ["apk_cross_game_asset_ontology_20260712"],
+  "deviation_notes": "Physical layouts and file counts are intentionally deferred until the predecessor track proves the semantic types, states, variants, environment kits, and production priorities."
+}

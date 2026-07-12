@@ -1,0 +1,11 @@
+{
+  "track_id": "apk_cross_game_asset_ontology_20260712",
+  "type": "chore",
+  "status": "pending",
+  "created_at": "2026-07-12T00:00:00Z",
+  "updated_at": "2026-07-12T00:00:00Z",
+  "description": "Derive the APK semantic asset ontology, gameplay variants, environment kits, and coverage gaps from every relevant developed and in-development game before choosing physical formats or generating art.",
+  "estimated_tasks": 36,
+  "actual_tasks": null,
+  "deviation_notes": "Supersedes the requirements portion of apk_dual_theme_asset_packs_20260711, which selected a speculative physical inventory before completing cross-game asset analysis."
+}

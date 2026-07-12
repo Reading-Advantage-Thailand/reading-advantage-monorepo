@@ -1,0 +1,15 @@
+{
+  "track_id": "apk_cartridge_semantic_rewrite_20260712",
+  "type": "feature",
+  "status": "pending",
+  "created_at": "2026-07-12T00:00:00Z",
+  "updated_at": "2026-07-12T00:00:00Z",
+  "description": "Rewrite developed and in-development games in bounded cohorts against the accepted semantic asset contract, integrating validated dual-theme assets before restoring production exposure.",
+  "estimated_tasks": 39,
+  "actual_tasks": null,
+  "dependencies": [
+    "apk_cross_game_asset_ontology_20260712",
+    "apk_dual_theme_asset_production_20260712"
+  ],
+  "deviation_notes": "Cartridge cohorts and game IDs are frozen from the accepted readiness matrix rather than from legacy implementation waves or speculative pack contents."
+}
