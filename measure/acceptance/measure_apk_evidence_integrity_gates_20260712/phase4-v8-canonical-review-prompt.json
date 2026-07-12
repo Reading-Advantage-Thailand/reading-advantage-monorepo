@@ -1,0 +1,8 @@
+{
+  "schema_version": "evidence-integrity.canonical-review-prompt.v1",
+  "candidate_manifest_path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/phase4-v8-candidate-gate-manifest.json",
+  "candidate_manifest_sha256": "f6bf22ec31a00d2066d410b3a34c3f67251f4cc83f40701c4aadb336931ce153",
+  "generator": "python3 -m measure.evidence_integrity_gates.cli review-prompt --candidate measure/acceptance/measure_apk_evidence_integrity_gates_20260712/phase4-v8-candidate-gate-manifest.json",
+  "canonical_prompt_sha256": "89b9d10e8a7c28b03f3ebd549cf433a761f765241319b1944d1b755a52bda427",
+  "canonical_prompt": "{\"candidate_manifest_sha256\":\"f6bf22ec31a00d2066d410b3a34c3f67251f4cc83f40701c4aadb336931ce153\",\"gate_version\":\"phase4-v8-candidate\",\"implementation_commit\":\"5aea360f94f978ac78e590e0a64d33d176beaa1a\",\"source_base_commit\":\"4b439a853e0510bd6aa0ee237d4636bf5be9cf56\",\"task\":\"independent-adversarial-review\"}"
+}

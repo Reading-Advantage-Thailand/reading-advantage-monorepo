@@ -1,0 +1,18 @@
+{
+  "schema_version": "evidence-integrity.gate-revocation.v1",
+  "gate_version": "phase4-v7-candidate",
+  "status": "revoked",
+  "consumable": false,
+  "revoked": true,
+  "revocation_reason": "V7-ADV-001: the v7 candidate did not prove its root revocation transition at its implementation commit. V8 is bound to the independently verified pre-v8 implementation commit and requires fresh review and approval.",
+  "candidate_manifest_path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/phase4-v7-candidate-gate-manifest.json",
+  "candidate_manifest_hash": "4d784c3e2adfee45f81d5b8abd389e645fef8f4c23a2275d13426c08b0f20a5a",
+  "review": "not published",
+  "owner_approval": "not published",
+  "accepted_manifest": "not published",
+  "superseded_by": {
+    "gate_version": "phase4-v8-candidate",
+    "candidate_manifest_path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/phase4-v8-candidate-gate-manifest.json",
+    "candidate_manifest_hash": "f6bf22ec31a00d2066d410b3a34c3f67251f4cc83f40701c4aadb336931ce153"
+  }
+}
