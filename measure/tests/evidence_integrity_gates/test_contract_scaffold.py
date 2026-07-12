@@ -263,6 +263,13 @@ class FrozenAttemptsScaffoldTests(unittest.TestCase):
             "attempts/ directory must contain exactly the frozen attempts 1-5.",
         )
 
+    def test_012_positive_claim_control_contains_no_apk_product_conclusion(self) -> None:
+        control_text = (VALID_DIR / "control_claim.json").read_text(encoding="utf-8")
+        self.assertNotIn("apps/advantage-games", control_text)
+        for product_id in ("dragon-flight", "rpg-battle", "the-abyssal-well"):
+            self.assertNotIn(product_id, control_text)
+        self.assertIn("not APK product evidence", control_text)
+
 
 class BaselineCommitAndGateProhibitionTests(unittest.TestCase):
     """Phase 0 freezes the baseline gate commit and the gate-edit
