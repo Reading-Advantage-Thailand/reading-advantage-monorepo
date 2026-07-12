@@ -375,6 +375,20 @@ class LabeledBudgetTests(unittest.TestCase):
             "missing-unit budget must raise a BudgetParseError with a labeled-budget code.",
         )
 
+    def test_034_parse_labeled_budget_rejects_non_positive_value(self) -> None:
+        for value in (0, -1):
+            with self.subTest(value=value), self.assertRaises(contracts.BudgetParseError) as ctx:
+                contracts.parse_labeled_budget({"tokens": value})
+            self.assertEqual(
+                ctx.exception.code,
+                contracts.rejection_code_for("invalid_budget_value"),
+            )
+
+    def test_035_parse_labeled_budget_rejects_date_as_unit(self) -> None:
+        with self.assertRaises(contracts.BudgetParseError) as ctx:
+            contracts.parse_labeled_budget({"2026": 7})
+        self.assertEqual(ctx.exception.code, contracts.rejection_code_for("missing_unit"))
+
 
 class DependencyFieldTests(unittest.TestCase):
     """The canonical ``depends_on`` field MUST be accepted; the legacy
@@ -480,6 +494,49 @@ class EnvelopeValidationTests(unittest.TestCase):
             result.get("code"),
             contracts.rejection_code_for("baseline_gate_commit_missing"),
             "missing baseline_gate_commit must produce BASELINE_GATE_COMMIT_MISSING.",
+        )
+
+    def test_072_missing_schema_and_kind_rejected(self) -> None:
+        result = contracts.validate_envelope(
+            {"baseline_gate_commit": BASELINE_GATE_COMMIT, "status": "candidate"}
+        )
+        self.assertFalse(result.get("ok"))
+        self.assertEqual(result.get("code"), contracts.rejection_code_for("unknown_schema_version"))
+
+    def test_073_arbitrary_success_status_rejected(self) -> None:
+        result = contracts.validate_envelope(
+            {
+                "baseline_gate_commit": BASELINE_GATE_COMMIT,
+                "schema_version": contracts.SCHEMA_VERSION,
+                "fixture_kind": "valid-control",
+                "envelope": {},
+                "status": "all checks pass",
+            }
+        )
+        self.assertFalse(result.get("ok"))
+        self.assertEqual(
+            result.get("code"),
+            contracts.rejection_code_for("candidate_status_not_candidate"),
+        )
+
+    def test_074_forged_baseline_rejected(self) -> None:
+        control = _read_json(VALID_DIR / "control_claim.json")
+        control["frozen_at_sha"] = "deadbeef"
+        result = contracts.validate_envelope(control)
+        self.assertFalse(result.get("ok"))
+        self.assertEqual(
+            result.get("code"),
+            contracts.rejection_code_for("baseline_gate_commit_missing"),
+        )
+
+    def test_075_empty_contract_payload_rejected(self) -> None:
+        control = _read_json(VALID_DIR / "control_claim.json")
+        control["envelope"] = {}
+        result = contracts.validate_envelope(control)
+        self.assertFalse(result.get("ok"))
+        self.assertEqual(
+            result.get("code"),
+            contracts.rejection_code_for("missing_envelope_field"),
         )
 
 
@@ -635,7 +692,7 @@ class FrozenAttemptValidatorTests(unittest.TestCase):
 
     def test_100_validate_fixture_manifest_accepts_complete(self) -> None:
         manifest = _read_json(MANIFEST_PATH)
-        result = contracts.validate_fixture_manifest(manifest)
+        result = contracts.validate_fixture_manifest(manifest, fixture_root=FIXTURE_DIR)
         self.assertTrue(
             result.get("ok"),
             f"validate_fixture_manifest must accept the complete Phase 0 manifest: {result}",
@@ -644,7 +701,7 @@ class FrozenAttemptValidatorTests(unittest.TestCase):
     def test_101_validate_fixture_manifest_rejects_empty_frozen_attempts(self) -> None:
         manifest = _read_json(MANIFEST_PATH)
         manifest["frozen_attempts"] = {}
-        result = contracts.validate_fixture_manifest(manifest)
+        result = contracts.validate_fixture_manifest(manifest, fixture_root=FIXTURE_DIR)
         self.assertFalse(
             result.get("ok"),
             "validate_fixture_manifest must reject a manifest with empty frozen_attempts.",
@@ -658,7 +715,7 @@ class FrozenAttemptValidatorTests(unittest.TestCase):
     def test_102_validate_fixture_manifest_rejects_empty_valid_controls(self) -> None:
         manifest = _read_json(MANIFEST_PATH)
         manifest["valid_controls"] = []
-        result = contracts.validate_fixture_manifest(manifest)
+        result = contracts.validate_fixture_manifest(manifest, fixture_root=FIXTURE_DIR)
         self.assertFalse(
             result.get("ok"),
             "validate_fixture_manifest must reject a manifest with empty valid_controls.",
@@ -681,10 +738,50 @@ class FrozenAttemptValidatorTests(unittest.TestCase):
         # An attempt entry missing its invalid_fixture_path means the
         # negative corpus is empty; the validator must reject.
         manifest["invalid_controls"] = []
-        result = contracts.validate_fixture_manifest(manifest)
+        result = contracts.validate_fixture_manifest(manifest, fixture_root=FIXTURE_DIR)
         self.assertFalse(
             result.get("ok"),
             "validate_fixture_manifest must reject a manifest whose negative corpus is empty.",
+        )
+
+    def test_104_validate_fixture_manifest_rejects_forged_baseline(self) -> None:
+        manifest = _read_json(MANIFEST_PATH)
+        manifest["baseline_gate_commit"] = "0" * 40
+        result = contracts.validate_fixture_manifest(manifest, fixture_root=FIXTURE_DIR)
+        self.assertFalse(result.get("ok"))
+        self.assertEqual(
+            result.get("code"),
+            contracts.rejection_code_for("baseline_gate_commit_missing"),
+        )
+
+    def test_105_validate_fixture_manifest_rejects_reason_code_misuse(self) -> None:
+        manifest = _read_json(MANIFEST_PATH)
+        manifest["frozen_attempts"][EXPECTED_ATTEMPTS[0]]["expected_rejection_code"] = (
+            "DIRECTORY_CITATION_REJECTED"
+        )
+        result = contracts.validate_fixture_manifest(manifest, fixture_root=FIXTURE_DIR)
+        self.assertFalse(result.get("ok"))
+        self.assertEqual(
+            result.get("code"),
+            contracts.rejection_code_for("missing_expected_rejection_code"),
+        )
+
+    def test_106_validate_fixture_manifest_rejects_tampered_fixture(self) -> None:
+        manifest = _read_json(MANIFEST_PATH)
+        manifest["fixture_hashes"]["valid/control_claim.json"] = "0" * 64
+        result = contracts.validate_fixture_manifest(manifest, fixture_root=FIXTURE_DIR)
+        self.assertFalse(result.get("ok"))
+        self.assertEqual(result.get("code"), contracts.rejection_code_for("fixture_hash_mismatch"))
+
+    def test_107_phase0_sweep_fails_on_dangling_catalog_guards(self) -> None:
+        result = contracts.sweep_phase0(
+            repo_root=REPO_ROOT,
+            manifest=_read_json(MANIFEST_PATH),
+            catalog_text=(REPO_ROOT / "measure" / "anti-patterns.md").read_text(encoding="utf-8"),
+        )
+        self.assertFalse(
+            result.get("ok"),
+            "the aggregate sweep must not pass while A12 guard references are dangling",
         )
 
 

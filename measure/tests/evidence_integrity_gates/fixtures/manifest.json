@@ -76,5 +76,22 @@
     "invalid/invalid_marker_legacy_space.json",
     "invalid/invalid_status_accepted.json",
     "invalid/invalid_baseline_commit_missing.json"
-  ]
+  ],
+  "fixture_hashes": {
+    "attempts/attempt_01_synthetic_main_scene.json": "1caaa2b160d70cbe1ab4261113b28b0996bbefc29f9c1d859f6cd5291c96b9a7",
+    "attempts/attempt_02_directory_citation.json": "3716bca38239b1868f426244875927041299056b3e56f9a5df9195173754a9db",
+    "attempts/attempt_03_hardcoded_summary.json": "f9921568c98c482c000671e5d0722941de80dac196b0971977bec476bc940297",
+    "attempts/attempt_04_keyword_responsive.json": "827d2c32876ed6f33e4cddb2c67cb1d77c5516982eca3db3012d6d329dca2010",
+    "attempts/attempt_05_slug_asset_allowlist.json": "6f101236666ca9ee889e0e151546070e8d7891d26c595154afd6033110747ad3",
+    "valid/control_budget.json": "10e79d242a6749aa5985c770e580ff38df1f8b9017a61d00f201159859d2515b",
+    "valid/control_claim.json": "ad57a156e497879d05d449c249c7bada629c00d89fd642224b7506ea7dc73dc2",
+    "valid/control_dependency.json": "e2fd5d4121b802b9e720c4944f4577d1e7b89e6ca7db828cbab8cf6882bd5f98",
+    "valid/control_marker_plan.json": "9de7486794bcd79cb6d5a8894e9753ca668b4470925561936f3531e49dd844a0",
+    "invalid/invalid_baseline_commit_missing.json": "5b077f3eae532bdfef7e776b054227c5cecd5134f894e893ec771aba42894676",
+    "invalid/invalid_budget_missing_unit.json": "2742927a21f4471a47858ec7b8493becbd9e549d45103a815691f823f31d9e28",
+    "invalid/invalid_budget_unmeasured.json": "0b64faecc4276c6304adf72390e5d2a3869f980ea3ac5706d8f413ec6116ac80",
+    "invalid/invalid_dependency_alias.json": "b11bc66e24907e9f34418ea830e22f710970fe60e48b2ecd6fc06aacb82822ef",
+    "invalid/invalid_marker_legacy_space.json": "145ed6acad58293fc66435d82dd25e042fe554b74e73938af9b7006dacbdd15f",
+    "invalid/invalid_status_accepted.json": "a6929fcac32e8212a80c0231c1806234d61d0d5d80853e27ce7d56f1492161cd"
+  }
 }

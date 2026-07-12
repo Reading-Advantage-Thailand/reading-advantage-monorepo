@@ -44,6 +44,8 @@ Anti-pattern defenses baked into this scaffold
 
 from __future__ import annotations
 
+import hashlib
+import re
 from pathlib import Path
 from typing import Any, Iterable, Mapping
 
@@ -80,6 +82,13 @@ REJECTION_CODES: frozenset[str] = frozenset(
         "BASELINE_GATE_COMMIT_MISSING",
         "FIXTURE_NOT_FROZEN",
         "GATE_EDIT_PROHIBITED",
+        "INVALID_ENVELOPE",
+        "MISSING_ENVELOPE_FIELD",
+        "INVALID_FIXTURE_MANIFEST",
+        "UNEXPECTED_ATTEMPT",
+        "FIXTURE_HASH_MISSING",
+        "FIXTURE_HASH_MISMATCH",
+        "INVALID_BUDGET_VALUE",
         # Phase 0 attempt-specific codes (matched 1-1 with frozen_attempts)
         "SYNTHETIC_MAIN_SCENE_REJECTED",
         "DIRECTORY_CITATION_REJECTED",
@@ -186,6 +195,13 @@ def rejection_code_for(violation: str) -> str:
         "baseline_gate_commit_missing": "BASELINE_GATE_COMMIT_MISSING",
         "fixture_not_frozen": "FIXTURE_NOT_FROZEN",
         "gate_edit_prohibited": "GATE_EDIT_PROHIBITED",
+        "invalid_envelope": "INVALID_ENVELOPE",
+        "missing_envelope_field": "MISSING_ENVELOPE_FIELD",
+        "invalid_fixture_manifest": "INVALID_FIXTURE_MANIFEST",
+        "unexpected_attempt": "UNEXPECTED_ATTEMPT",
+        "fixture_hash_missing": "FIXTURE_HASH_MISSING",
+        "fixture_hash_mismatch": "FIXTURE_HASH_MISMATCH",
+        "invalid_budget_value": "INVALID_BUDGET_VALUE",
         "synthetic_main_scene": "SYNTHETIC_MAIN_SCENE_REJECTED",
         "directory_citation": "DIRECTORY_CITATION_REJECTED",
         "hardcoded_summary_as_evidence": "HARDCODED_SUMMARY_AS_EVIDENCE_REJECTED",
@@ -274,10 +290,22 @@ def parse_labeled_budget(payload: Mapping[str, Any]) -> dict[str, Any]:
             f"budget value must be an integer, got {type(raw_value).__name__}",
         )
 
+    if raw_value <= 0:
+        raise BudgetParseError(
+            rejection_code_for("invalid_budget_value"),
+            "budget value must be a positive integer",
+        )
+
     if not isinstance(label, str) or not label.strip():
         raise BudgetParseError(
             rejection_code_for("missing_unit"),
             "budget key must be a non-empty unit label",
+        )
+
+    if re.fullmatch(r"[A-Za-z][A-Za-z0-9_-]*", label) is None:
+        raise BudgetParseError(
+            rejection_code_for("missing_unit"),
+            "budget key must be a concrete unit label, not a date or bare number",
         )
 
     # A generic quantity noun (amount/value/count/...) does not encode a
@@ -303,40 +331,74 @@ def validate_envelope(envelope: Mapping[str, Any]) -> dict[str, Any]:
     Returns a result dict; never raises.
     """
     if not isinstance(envelope, Mapping):
-        return _reject(
-            "BASELINE_GATE_COMMIT_MISSING",
-            detail={"reason": "envelope is not a mapping"},
-        )
+        return _reject("INVALID_ENVELOPE")
 
     # A5/A6 defense: a Phase 0 fixture must carry status "candidate".
     # "accepted" is only set after the full gate pipeline has run.
     status = envelope.get("status")
     if status == "accepted":
         return _reject("ACCEPTED_STATUS_NOT_ALLOWED")
+    if status != "candidate":
+        return _reject(
+            "CANDIDATE_STATUS_NOT_CANDIDATE",
+            detail={"got": status},
+        )
 
     # The baseline gate commit may appear as ``baseline_gate_commit`` or
     # ``frozen_at_sha`` (the per-fixture freeze pointer). Without one of
     # them, input changes cannot be detected and candidate outputs cannot
     # be revoked.
-    baseline = envelope.get("baseline_gate_commit")
-    if not baseline:
-        baseline = envelope.get("frozen_at_sha")
-    if not baseline:
+    baseline_commit = envelope.get("baseline_gate_commit")
+    frozen_at_sha = envelope.get("frozen_at_sha")
+    allowed_baselines = {
+        "f61eb643",
+        "f61eb643f138373c6357ec35e6ac296a7014800c",
+    }
+    if baseline_commit is not None and baseline_commit != max(allowed_baselines, key=len):
+        return _reject("BASELINE_GATE_COMMIT_MISSING")
+    if frozen_at_sha is not None and frozen_at_sha not in allowed_baselines:
+        return _reject("BASELINE_GATE_COMMIT_MISSING")
+    if baseline_commit is None and frozen_at_sha is None:
         return _reject("BASELINE_GATE_COMMIT_MISSING")
 
     # Reject unknown schema versions so a future-version envelope cannot
     # pass through a gate that does not understand its contract.
     schema_version = envelope.get("schema_version")
-    if schema_version is not None and schema_version != SCHEMA_VERSION:
+    if schema_version != SCHEMA_VERSION:
         return _reject(
             "UNKNOWN_SCHEMA_VERSION",
             detail={"got": schema_version, "expected": SCHEMA_VERSION},
         )
 
+    if not envelope.get("kind") and not envelope.get("fixture_kind"):
+        return _reject(
+            "MISSING_ENVELOPE_FIELD",
+            detail={"field": "kind"},
+        )
+
+    contract_fields = {
+        "budget",
+        "severity",
+        "stop_loss",
+        "acceptance",
+        "revocation",
+        "depends_on",
+        "envelope",
+    }
+    if not any(envelope.get(field) not in (None, "", [], {}) for field in contract_fields):
+        return _reject(
+            "MISSING_ENVELOPE_FIELD",
+            detail={"field": "contract"},
+        )
+
     return _ok()
 
 
-def validate_fixture_manifest(manifest: Mapping[str, Any]) -> dict[str, Any]:
+def validate_fixture_manifest(
+    manifest: Mapping[str, Any],
+    *,
+    fixture_root: Path | None = None,
+) -> dict[str, Any]:
     """Validate the Phase 0 fixture manifest completeness.
 
     A valid manifest has:
@@ -349,6 +411,24 @@ def validate_fixture_manifest(manifest: Mapping[str, Any]) -> dict[str, Any]:
     if not isinstance(manifest, Mapping):
         return _reject("ATTEMPT_NOT_REPRESENTED")
 
+    if manifest.get("manifest_kind") != "phase0-freeze":
+        return _reject("INVALID_FIXTURE_MANIFEST", detail={"field": "manifest_kind"})
+    if manifest.get("schema_version") != SCHEMA_VERSION:
+        return _reject("UNKNOWN_SCHEMA_VERSION")
+    if manifest.get("baseline_gate_commit") != "f61eb643f138373c6357ec35e6ac296a7014800c":
+        return _reject("BASELINE_GATE_COMMIT_MISSING")
+
+    prohibition = manifest.get("gate_edit_prohibition")
+    if not isinstance(prohibition, Mapping) or not all(
+        prohibition.get(field) is True
+        for field in (
+            "enabled",
+            "change_requires_version_bump",
+            "change_invalidates_active_candidates",
+        )
+    ):
+        return _reject("GATE_EDIT_PROHIBITED")
+
     frozen = manifest.get("frozen_attempts")
     if not isinstance(frozen, Mapping):
         return _reject("ATTEMPT_NOT_REPRESENTED")
@@ -360,6 +440,13 @@ def validate_fixture_manifest(manifest: Mapping[str, Any]) -> dict[str, Any]:
                 "ATTEMPT_NOT_REPRESENTED",
                 detail={"attempt": attempt},
             )
+
+    unexpected = set(frozen) - set(FROZEN_ATTEMPTS)
+    if unexpected:
+        return _reject(
+            "UNEXPECTED_ATTEMPT",
+            detail={"attempts": sorted(unexpected)},
+        )
 
     # Every represented attempt must carry a stable rejection code and a
     # paired valid control.
@@ -380,6 +467,16 @@ def validate_fixture_manifest(manifest: Mapping[str, Any]) -> dict[str, Any]:
                 "MISSING_EXPECTED_REJECTION_CODE",
                 detail={"attempt": attempt, "code": code},
             )
+        if code != ATTEMPT_REJECTION_BINDINGS.get(attempt):
+            return _reject(
+                "MISSING_EXPECTED_REJECTION_CODE",
+                detail={"attempt": attempt, "code": code},
+            )
+        if not entry.get("invalid_fixture_path"):
+            return _reject(
+                "INVALID_FIXTURE_MANIFEST",
+                detail={"attempt": attempt, "field": "invalid_fixture_path"},
+            )
         if not entry.get("paired_valid_control"):
             return _reject(
                 "MISSING_PAIRED_CONTROL",
@@ -388,13 +485,19 @@ def validate_fixture_manifest(manifest: Mapping[str, Any]) -> dict[str, Any]:
 
     # A4 defense: an empty positive control corpus is a vacuous pass.
     valid_controls = manifest.get("valid_controls")
-    if not valid_controls:
+    if not isinstance(valid_controls, list) or not valid_controls or not all(
+        isinstance(path, str) and path for path in valid_controls
+    ):
         return _reject("EMPTY_CONTROL_CORPUS")
 
     # A4 defense: an empty negative corpus is also a vacuous pass. A
     # negative fixture may come from the manifest's ``invalid_controls``
     # list OR from a frozen attempt's ``invalid_fixture_path``.
     invalid_controls = manifest.get("invalid_controls")
+    if not isinstance(invalid_controls, list) or not all(
+        isinstance(path, str) and path for path in invalid_controls
+    ):
+        return _reject("INVALID_FIXTURE_MANIFEST", detail={"field": "invalid_controls"})
     has_negative = bool(invalid_controls)
     if not has_negative:
         for entry in frozen.values():
@@ -403,6 +506,49 @@ def validate_fixture_manifest(manifest: Mapping[str, Any]) -> dict[str, Any]:
                 break
     if not has_negative:
         return _reject("EMPTY_CONTROL_CORPUS")
+
+    referenced_paths: set[str] = set()
+    for entry in frozen.values():
+        referenced_paths.add(str(entry["invalid_fixture_path"]))
+        referenced_paths.add(str(entry["paired_valid_control"]))
+    referenced_paths.update(str(path) for path in valid_controls)
+    referenced_paths.update(str(path) for path in invalid_controls)
+
+    fixture_hashes = manifest.get("fixture_hashes")
+    if not isinstance(fixture_hashes, Mapping):
+        return _reject("FIXTURE_HASH_MISSING")
+    if set(fixture_hashes) != referenced_paths:
+        return _reject(
+            "FIXTURE_HASH_MISSING",
+            detail={"missing": sorted(referenced_paths - set(fixture_hashes))},
+        )
+    if fixture_root is None:
+        return _reject(
+            "FIXTURE_HASH_MISSING",
+            detail={"reason": "fixture_root is required for live hash verification"},
+        )
+
+    root = Path(fixture_root).resolve()
+    for relative_path in sorted(referenced_paths):
+        candidate = (root / relative_path).resolve()
+        try:
+            candidate.relative_to(root)
+        except ValueError:
+            return _reject(
+                "INVALID_FIXTURE_MANIFEST",
+                detail={"path": relative_path},
+            )
+        if not candidate.is_file():
+            return _reject(
+                "FIXTURE_HASH_MISSING",
+                detail={"path": relative_path},
+            )
+        actual_hash = hashlib.sha256(candidate.read_bytes()).hexdigest()
+        if fixture_hashes.get(relative_path) != actual_hash:
+            return _reject(
+                "FIXTURE_HASH_MISMATCH",
+                detail={"path": relative_path},
+            )
 
     return _ok()
 
@@ -494,7 +640,8 @@ def sweep_phase0(
     Returns a single result dict summarising the sweep. The Green
     phase wires this into the CLI runner.
     """
-    manifest_result = validate_fixture_manifest(manifest)
+    fixture_root = repo_root / "measure" / "tests" / "evidence_integrity_gates" / "fixtures"
+    manifest_result = validate_fixture_manifest(manifest, fixture_root=fixture_root)
 
     references = collect_catalog_guard_references(catalog_text)
     resolved = resolve_catalog_guards(references, repo_root=repo_root)
@@ -507,7 +654,7 @@ def sweep_phase0(
         "all_resolved": len(dangling) == 0,
     }
 
-    overall_ok = bool(manifest_result.get("ok"))
+    overall_ok = bool(manifest_result.get("ok")) and catalog_result["all_resolved"]
     return {
         "ok": overall_ok,
         "manifest": manifest_result,
