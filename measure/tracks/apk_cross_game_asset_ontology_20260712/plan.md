@@ -42,7 +42,7 @@
 - [x] Task: Cross-review every blueprint against current implementation evidence [883d21c]
 - [x] Task: Measure - User Manual Verification 'Phase 2' (Protocol in workflow.md) [accepted 2026-07-12]
 
-## Phase 3: Baseline developer effort and repeated capabilities [checkpoint: pending]
+## Phase 3: Baseline developer effort and repeated capabilities [checkpoint: 45d8c9d]
 
 - [x] Task: Decompose every implementation into lifecycle, content, input,
       simulation, physics, camera, presentation, UI, audio, accessibility, host, and tests
@@ -53,8 +53,8 @@
       extend-existing, bespoke, or retire with source consumers and rationale
 - [x] Task: Publish `developer-effort-baseline.md` and
       `developer-capability-ontology.md`
-- [~] Task: Obtain product-owner acceptance of standardization boundaries
-- [ ] Task: Measure - User Manual Verification 'Phase 3' (Protocol in workflow.md)
+- [x] Task: Obtain product-owner acceptance of standardization boundaries [accepted 2026-07-12]
+- [x] Task: Measure - User Manual Verification 'Phase 3' (Protocol in workflow.md) [accepted 2026-07-12]
 
 ## Phase 4: Define responsive composition requirements [checkpoint: pending]
 
