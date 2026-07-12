@@ -68,7 +68,7 @@ Two parallel programs are in flight; priority order when picking the next track:
 > requirements artifacts receive explicit product-owner acceptance; cartridge
 > cohorts require both accepted kit capabilities and both-theme asset batches.
 
-- [~] **Track: APK Cross-Game Requirements and Capability Ontology** *Link: [./tracks/apk_cross_game_asset_ontology_20260712/](./tracks/apk_cross_game_asset_ontology_20260712/)*
+- [x] **Track: APK Cross-Game Requirements and Capability Ontology** *Link: [./tracks/apk_cross_game_asset_ontology_20260712/](./tracks/apk_cross_game_asset_ontology_20260712/)*
   Audit every raw game and scene to recover mechanic blueprints, baseline developer effort, decide shared-versus-bespoke developer capabilities, define compact/wide composition requirements, and derive the semantic asset ontology and delivery priorities.
 
 - [ ] **Track: APK Shared Developer Kit and Authoring Workflow** *Link: [./tracks/apk_shared_developer_kit_20260712/](./tracks/apk_shared_developer_kit_20260712/)*

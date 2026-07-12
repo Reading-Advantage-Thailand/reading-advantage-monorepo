@@ -1,6 +1,6 @@
 # Dependent Track Inputs
 
-Status: **candidate inputs pending final Phase 7 product-owner approval**.
+Status: **accepted by the product owner on 2026-07-12**.
 
 | Artifact                             | SHA-256                                                            |
 | ------------------------------------ | ------------------------------------------------------------------ |

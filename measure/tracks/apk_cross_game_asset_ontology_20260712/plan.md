@@ -93,7 +93,7 @@
 - [x] Task: Publish `asset-ontology.md` and `gap-and-coverage-plan.md`
 - [x] Task: Measure - User Manual Verification 'Phase 6' (Protocol in workflow.md) [accepted 2026-07-12]
 
-## Phase 7: Acceptance and dependent-track handoff [checkpoint: pending]
+## Phase 7: Acceptance and dependent-track handoff [checkpoint: b551b9c]
 
 - [x] Task: Run schema, completeness, evidence, referential-integrity, graph, and
       contradiction checks across all artifacts
@@ -103,5 +103,5 @@
 - [x] Task: Publish `dependent-track-inputs.md` with accepted artifact versions and hashes
 - [x] Task: Update developer-kit, asset-production, and cartridge dependencies
       without beginning their implementation
-- [~] Task: Obtain explicit product-owner acceptance
-- [ ] Task: Measure - User Manual Verification 'Phase 7' (Protocol in workflow.md)
+- [x] Task: Obtain explicit product-owner acceptance [accepted 2026-07-12]
+- [x] Task: Measure - User Manual Verification 'Phase 7' (Protocol in workflow.md) [accepted 2026-07-12]
