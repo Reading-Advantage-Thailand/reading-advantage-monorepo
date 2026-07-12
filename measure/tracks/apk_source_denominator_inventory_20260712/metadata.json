@@ -27,5 +27,6 @@
       "measure/evidence_integrity_gates/supervisor_gate.py": "ed2287fa9a5d89f6d0800b55a998a5d797a621e141fdcc4c811414f92277d362",
       "measure/evidence_integrity_gates/validator.py": "4e201ee6457c2d1b9132b48821d84a95fe466b1e63ec2dcb624be6469d8afdce"
     }
-  }
+  },
+  "first_work_commit": "bb95b52315de006ee661e48a090837b767b9443b"
 }

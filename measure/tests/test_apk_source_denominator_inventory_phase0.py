@@ -17,6 +17,7 @@ TRACK_DIR = REPO_ROOT / "measure" / "tracks" / TRACK
 FREEZE_PATH = TRACK_DIR / "phase0-input-freeze.json"
 ROLE_PATH = TRACK_DIR / "phase0-role-ownership-manifest.json"
 METADATA_PATH = TRACK_DIR / "metadata.json"
+PLAN_PATH = TRACK_DIR / "plan.md"
 
 
 def _load(path: Path) -> dict[str, object]:
@@ -167,6 +168,22 @@ class Phase0FreezeTests(unittest.TestCase):
         self.assertEqual({task["owner_role"] for task in tasks}, set(self.roles["required_roles"]))
         owned = [output for task in tasks for output in task["expected_outputs"]]
         self.assertEqual(len(owned), len(set(owned)))
+
+    def test_phase_zero_records_only_freeze_evidence_and_keeps_owner_verification_blocked(self) -> None:
+        """Requires evidence-backed freeze tasks without representing owner approval.
+
+        Returns:
+            Nothing.
+        """
+        phase_zero = PLAN_PATH.read_text(encoding="utf-8").split("## Phase 1:", 1)[0]
+        self.assertNotIn("[ ]", phase_zero)
+        self.assertEqual(phase_zero.count("- [x] Task:"), 3)
+        self.assertIn("phase0-input-freeze.json", phase_zero)
+        self.assertIn("phase0-role-ownership-manifest.json", phase_zero)
+        self.assertIn("test-strategy.md", phase_zero)
+        self.assertIn("freeze commit `bb95b523`", phase_zero)
+        self.assertIn("- [b] Task: Measure - User Manual Verification 'Phase 0'", phase_zero)
+        self.assertIn("deferred:product-owner", phase_zero)
 
 
 if __name__ == "__main__":

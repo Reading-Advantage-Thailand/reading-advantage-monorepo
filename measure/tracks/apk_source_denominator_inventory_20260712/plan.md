@@ -2,9 +2,9 @@
 
 ## Phase 0: Freeze inputs and independent methods
 
-- [~] Task: Verify accepted truth-gate hashes and reject all failed-track factual inputs
-- [~] Task: Spawn mechanical-discovery, human-discovery, historical, asset, and adversarial-review subagents with isolated prompts
-- [~] Task: Freeze current revision, historical search bounds, roots, exclusions, and stop-loss budget
+- [x] Task: Bind the accepted truth-gate manifest and quarantine all failed-track factual inputs. Evidence: `phase0-input-freeze.json`; focused falsification test; freeze commit `bb95b523`. No source discovery occurred.
+- [x] Task: Freeze the required mechanical-discovery, human-discovery, historical, asset, truth-test, and adversarial-review role ownership and isolation contract without launching a discovery session. Evidence: `phase0-role-ownership-manifest.json`; focused falsification test; freeze commit `bb95b523`.
+- [x] Task: Freeze the current revision, ancestor-only historical search rule, roots, exclusions, numeric resource ceilings, stop-loss thresholds, expected artifact schemas/paths, and exact Red/Green/project gate commands. Evidence: `phase0-input-freeze.json`; `test-strategy.md`; focused falsification test; freeze commit `bb95b523`.
 - [b] Task: Measure - User Manual Verification 'Phase 0' (Protocol in workflow.md) — deferred:product-owner
 
 ## Phase 1: Mechanical discovery
