@@ -6,6 +6,16 @@ shapes, rejection-code strings) is FROZEN at the Phase 0 baseline
 (commit ``f61eb643``) and any change is a gate-modification that
 invalidates active candidate manifests.
 
+Immutable source binding (Phase 2 remediation)
+----------------------------------------------
+
+Allowed-input manifests now carry an optional ``revision`` field per
+input entry. When present, ``validate_allowed_input_manifest`` resolves
+the file bytes from the named Git commit object (via the GitSourceAdapter),
+not from the mutable worktree. This prevents legitimate plan/documentation
+updates from invalidating previously frozen input hashes. A missing or
+unreachable revision is rejected fail-closed.
+
 Public surface
 --------------
 
@@ -49,6 +59,8 @@ import json
 import re
 from pathlib import Path
 from typing import Any, Iterable, Mapping
+
+from measure.evidence_integrity_gates.git_source import GitSourceError
 
 # ---------------------------------------------------------------------------
 # Frozen contract constants
@@ -122,6 +134,9 @@ REJECTION_CODES: frozenset[str] = frozenset(
         "ROLE_PROVENANCE_MISSING",
         "AUTHENTIC_EVENT_PROVENANCE_REQUIRED",
         "ACCEPTANCE_REQUIRES_AUTHENTIC_PROVENANCE",
+        # Phase 2 immutable source binding (delegated from GitSourceError codes)
+        "REVISION_UNREACHABLE",
+        "INPUT_PATH_UNRESOLVABLE_AT_REVISION",
     }
 )
 
@@ -259,6 +274,9 @@ def rejection_code_for(violation: str) -> str:
         "role_provenance_missing": "ROLE_PROVENANCE_MISSING",
         "authentic_event_provenance_required": "AUTHENTIC_EVENT_PROVENANCE_REQUIRED",
         "acceptance_requires_authentic_provenance": "ACCEPTANCE_REQUIRES_AUTHENTIC_PROVENANCE",
+        # Phase 2 immutable source binding (delegated from GitSourceError codes)
+        "revision_unreachable": "REVISION_UNREACHABLE",
+        "input_path_unresolvable_at_revision": "INPUT_PATH_UNRESOLVABLE_AT_REVISION",
     }
     try:
         return mapping[violation]
@@ -920,19 +938,28 @@ def validate_allowed_input_manifest(
     manifest: Mapping[str, Any],
     *,
     repo_root: Path | None = None,
+    git_adapter: Any = None,
 ) -> dict[str, Any]:
-    """Validate the allowed-input manifest binding (Phase 0 retry contract).
+    """Validate the allowed-input manifest binding (Phase 0 retry contract,
+    Phase 2 immutable-source remediation).
 
     A valid manifest carries an ``allowed_inputs`` block with::
 
         {"manifest_kind": "phase0-retry-allowed-inputs",
          "inputs_manifest_hash": <sha256 hex>,
-         "inputs": [{"path": <repo-relative path>, "sha256": <sha256 hex>}, ...]}
+         "inputs": [{"path": <repo-relative path>,
+                     "sha256": <sha256 hex>,
+                     "revision": <optional full commit sha>, ...}, ...]}
 
-    When ``repo_root`` is supplied, every input path must resolve to a
-    real file whose live SHA-256 matches the declared ``sha256``; the
-    ``inputs_manifest_hash`` itself must match the recomputed hash of
-    the manifest content (record with ``inputs_manifest_hash`` removed).
+    When an input entry carries a ``revision`` field AND ``git_adapter``
+    is supplied, the validator resolves file bytes from that Git commit
+    object (immutable source binding). When ``revision`` is absent but
+    ``repo_root`` is supplied, the validator reads the worktree file
+    (backward-compatible). When neither ``repo_root`` nor ``git_adapter``
+    is supplied, only structural validation is performed.
+
+    The ``inputs_manifest_hash`` must match the recomputed hash of the
+    manifest content (record with ``inputs_manifest_hash`` removed).
     """
     if not isinstance(manifest, Mapping):
         return _reject(rejection_code_for("allowed_input_manifest_missing"))
@@ -963,23 +990,74 @@ def validate_allowed_input_manifest(
         if not entry.get("sha256") or not isinstance(entry.get("sha256"), str):
             return _reject(rejection_code_for("allowed_input_manifest_missing"), detail={"field": "sha256"})
 
-    if repo_root is not None:
-        root = Path(repo_root).resolve()
+    # Immutable source binding: when revision + git_adapter are present,
+    # resolve bytes from the Git commit object, not the worktree.
+    if git_adapter is not None:
         for entry in inputs:
             relative_path = entry["path"]
-            candidate = (root / relative_path).resolve()
-            try:
-                candidate.relative_to(root)
-            except ValueError:
-                return _reject(rejection_code_for("allowed_input_path_missing"), detail={"path": relative_path})
-            if not candidate.is_file():
-                return _reject(rejection_code_for("allowed_input_path_missing"), detail={"path": relative_path})
-            actual_hash = hashlib.sha256(candidate.read_bytes()).hexdigest()
-            if actual_hash != entry["sha256"]:
-                return _reject(
-                    rejection_code_for("allowed_inputs_hash_mismatch"),
-                    detail={"path": relative_path, "declared": entry["sha256"], "actual": actual_hash},
-                )
+            declared_hash = entry["sha256"]
+
+            revision = entry.get("revision")
+            if isinstance(revision, str) and revision.strip():
+                # Immutable path: resolve bytes from the named Git commit.
+                try:
+                    blob_bytes = git_adapter.resolve_blob_bytes(revision, relative_path)
+                except GitSourceError as exc:
+                    return _reject(
+                        exc.code,
+                        detail={"path": relative_path, "revision": revision},
+                    )
+                actual_hash = hashlib.sha256(blob_bytes).hexdigest()
+                if actual_hash != declared_hash:
+                    return _reject(
+                        rejection_code_for("allowed_inputs_hash_mismatch"),
+                        detail={
+                            "path": relative_path,
+                            "revision": revision,
+                            "declared": declared_hash,
+                            "actual": actual_hash,
+                        },
+                    )
+            elif repo_root is not None:
+                # Fallback: worktree resolution (for inputs without revision).
+                root = Path(repo_root).resolve()
+                candidate = (root / relative_path).resolve()
+                try:
+                    candidate.relative_to(root)
+                except ValueError:
+                    return _reject(rejection_code_for("allowed_input_path_missing"), detail={"path": relative_path})
+                if not candidate.is_file():
+                    return _reject(rejection_code_for("allowed_input_path_missing"), detail={"path": relative_path})
+                actual_hash = hashlib.sha256(candidate.read_bytes()).hexdigest()
+                if actual_hash != declared_hash:
+                    return _reject(
+                        rejection_code_for("allowed_inputs_hash_mismatch"),
+                        detail={"path": relative_path, "declared": declared_hash, "actual": actual_hash},
+                    )
+            # If neither revision nor repo_root, we can't resolve — skip live check.
+        return _ok()
+
+    # No git_adapter: worktree-only path (backward compat).
+    if repo_root is None:
+        return _ok()
+
+    root = Path(repo_root).resolve()
+    for entry in inputs:
+        relative_path = entry["path"]
+        declared_hash = entry["sha256"]
+        candidate = (root / relative_path).resolve()
+        try:
+            candidate.relative_to(root)
+        except ValueError:
+            return _reject(rejection_code_for("allowed_input_path_missing"), detail={"path": relative_path})
+        if not candidate.is_file():
+            return _reject(rejection_code_for("allowed_input_path_missing"), detail={"path": relative_path})
+        actual_hash = hashlib.sha256(candidate.read_bytes()).hexdigest()
+        if actual_hash != declared_hash:
+            return _reject(
+                rejection_code_for("allowed_inputs_hash_mismatch"),
+                detail={"path": relative_path, "declared": declared_hash, "actual": actual_hash},
+            )
 
     return _ok()
 

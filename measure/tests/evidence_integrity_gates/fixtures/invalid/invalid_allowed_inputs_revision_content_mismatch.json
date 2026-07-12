@@ -1,0 +1,25 @@
+{
+  "fixture_kind": "invalid-control",
+  "control_id": "invalid_allowed_inputs_revision_content_mismatch",
+  "schema_version": "0.0.0-red",
+  "frozen_at_sha": "f61eb643",
+  "expected_rejection_code": "ALLOWED_INPUTS_HASH_MISMATCH",
+  "status": "candidate",
+  "description": "Allowed-input manifest whose input entry carries a valid reachable revision, but the declared sha256 does not match the file content at that revision. The immutable source binding MUST reject this with ALLOWED_INPUTS_HASH_MISMATCH; a hash that does not match the committed bytes at the claimed revision is a falsified binding.",
+  "allowed_inputs_record": {
+    "manifest_kind": "phase0-retry-allowed-inputs",
+    "schema_version": "0.0.0-red",
+    "gate_version": "0.0.2-phase0-retry-red",
+    "frozen_at_sha": "f61eb643",
+    "description": "A manifest whose input entry points to a real revision but declares a hash that does not match the file bytes at that revision. The revision is valid; the hash is forged.",
+    "inputs_manifest_hash": "8eebe8ee89727d83f81fc41cbe018a98cfcc084bf470d03543caa41b6544ab71",
+    "inputs": [
+      {
+        "path": "measure/tracks/measure_apk_evidence_integrity_gates_20260712/plan.md",
+        "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "revision": "8c6a88b6ecb75d7fc7eb5d60520f17c96eb66959",
+        "role": "plan source"
+      }
+    ]
+  }
+}

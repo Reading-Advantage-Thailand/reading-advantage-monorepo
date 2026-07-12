@@ -101,3 +101,30 @@ class GitSourceAdapter:
         if line_start < 1 or line_end < line_start or line_end > len(lines):
             raise GitSourceError("LINE_RANGE_INVALID", "claimed line range is outside the committed file")
         return ResolvedSource(canonical, path, line_start, line_end, b"".join(lines[line_start - 1 : line_end]))
+
+    def resolve_blob_bytes(self, revision: str, path: str) -> bytes:
+        """Returns the full committed blob bytes at a reachable revision.
+
+        Validates that the revision is a reachable commit, ensures the
+        object at that path is a file blob, and returns its exact bytes.
+        This is the immutable-source primitive for allowed-input binding:
+        bytes are resolved from Git object storage, never the worktree.
+
+        @param revision Git commit object ID whose tree is authoritative.
+        @param path Repository-relative file path within that tree.
+        @returns Exact committed file bytes.
+        @throws GitSourceError When the revision, file type, or path cannot resolve.
+        """
+        canonical = self._resolve_reachable_commit(revision)
+        object_name = f"{canonical}:{path}"
+        object_type = self._run("cat-file", "-t", object_name)
+        if object_type.returncode != 0:
+            raise GitSourceError("INPUT_PATH_UNRESOLVABLE_AT_REVISION", "claimed input file is absent at the claimed revision")
+        if object_type.stdout.strip() == b"tree":
+            raise GitSourceError("INPUT_PATH_UNRESOLVABLE_AT_REVISION", "allowed input must name a file blob, not a directory")
+        if object_type.stdout.strip() != b"blob":
+            raise GitSourceError("INPUT_PATH_UNRESOLVABLE_AT_REVISION", "claimed locator is not a file blob")
+        source = self._run("show", object_name)
+        if source.returncode != 0:
+            raise GitSourceError("INPUT_PATH_UNRESOLVABLE_AT_REVISION", "claimed file bytes cannot be loaded")
+        return source.stdout

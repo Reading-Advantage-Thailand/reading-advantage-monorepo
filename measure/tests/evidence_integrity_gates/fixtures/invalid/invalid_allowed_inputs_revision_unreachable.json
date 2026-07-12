@@ -1,0 +1,25 @@
+{
+  "fixture_kind": "invalid-control",
+  "control_id": "invalid_allowed_inputs_revision_unreachable",
+  "schema_version": "0.0.0-red",
+  "frozen_at_sha": "f61eb643",
+  "expected_rejection_code": "REVISION_UNREACHABLE",
+  "status": "candidate",
+  "description": "Allowed-input manifest whose input entry carries a revision commit SHA that does not exist in the repository. The immutable source binding MUST reject this with ALLOWED_INPUT_REVISION_UNREACHABLE; an unreachable commit cannot be an authoritative source for bytes.",
+  "allowed_inputs_record": {
+    "manifest_kind": "phase0-retry-allowed-inputs",
+    "schema_version": "0.0.0-red",
+    "gate_version": "0.0.2-phase0-retry-red",
+    "frozen_at_sha": "f61eb643",
+    "description": "A manifest whose input entry supplies a revision that is not reachable from any Git ref. The validator must surface this as an unreachable-revision failure.",
+    "inputs_manifest_hash": "c87cc01a7511a101b9da8e1c429ab20a3d6a955190a27874329dc61090be7a3e",
+    "inputs": [
+      {
+        "path": "measure/tracks/measure_apk_evidence_integrity_gates_20260712/plan.md",
+        "sha256": "e1065016da849693db853432b9999e682f7696ef2ae160eace964c6649522311",
+        "revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "role": "plan source"
+      }
+    ]
+  }
+}

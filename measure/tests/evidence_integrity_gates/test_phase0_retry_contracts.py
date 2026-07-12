@@ -70,6 +70,7 @@ from pathlib import Path
 from typing import Any
 
 from measure.evidence_integrity_gates import contracts
+from measure.evidence_integrity_gates.git_source import GitSourceAdapter
 
 
 # ---------------------------------------------------------------------------
@@ -166,6 +167,8 @@ class ModuleSurfaceTests(unittest.TestCase):
             ("role_provenance_missing", "ROLE_PROVENANCE_MISSING"),
             ("authentic_event_provenance_required", "AUTHENTIC_EVENT_PROVENANCE_REQUIRED"),
             ("acceptance_requires_authentic_provenance", "ACCEPTANCE_REQUIRES_AUTHENTIC_PROVENANCE"),
+            ("revision_unreachable", "REVISION_UNREACHABLE"),
+            ("input_path_unresolvable_at_revision", "INPUT_PATH_UNRESOLVABLE_AT_REVISION"),
         ):
             self.assertEqual(
                 contracts.rejection_code_for(violation),
@@ -403,11 +406,19 @@ class RevocationContractTests(unittest.TestCase):
 
 
 class AllowedInputManifestTests(unittest.TestCase):
-    """The allowed-input manifest binds the exact input paths and
-    their hashes so input changes are detectable and candidate
-    outputs are revocable. A missing manifest hash or a hash
-    mismatch MUST be rejected with a stable code (P0-ACCEPT-002 /
-    blocking finding from orchestrator audit)."""
+    """The allowed-input manifest binds the exact input paths,
+    their revisions, and their hashes so input changes are
+    detectable and candidate outputs are revocable. A missing
+    manifest hash or a hash mismatch MUST be rejected with a
+    stable code (P0-ACCEPT-002 / blocking finding from
+    orchestrator audit).
+
+    Phase 2 immutable source binding: when an input entry
+    carries a ``revision`` field, the validator resolves file
+    bytes from that Git commit object (not the worktree). This
+    proves that legitimate plan/documentation updates after
+    freeze do not invalidate previously valid input bindings.
+    """
 
     def test_050_manifest_declares_allowed_inputs_block(self) -> None:
         manifest = _read_json(MANIFEST_PATH)
@@ -434,15 +445,15 @@ class AllowedInputManifestTests(unittest.TestCase):
         record = _read_record(
             VALID_DIR / "control_allowed_inputs.json", "allowed_inputs_record"
         )
-        # The Green phase will fully validate the placeholder hashes
-        # by replacing each placeholder with the live SHA-256. At Red
-        # time the record is still syntactically valid and the
-        # validator must accept the structural shape.
         self.assertEqual(record.get("manifest_kind"), "phase0-retry-allowed-inputs")
-        # Exercise the validator. It will raise NotImplementedError
-        # at HEAD; this is the expected Red state for the contract
-        # freeze.
-        result = contracts.validate_allowed_input_manifest(record, repo_root=REPO_ROOT)
+        # Immutable source binding: use the Git adapter to resolve
+        # bytes from the declared revision, not the mutable worktree.
+        # This proves that later plan.md updates do not invalidate
+        # the frozen input bindings.
+        adapter = GitSourceAdapter(REPO_ROOT)
+        result = contracts.validate_allowed_input_manifest(
+            record, repo_root=REPO_ROOT, git_adapter=adapter
+        )
         self.assertTrue(
             result.get("ok"),
             f"validate_allowed_input_manifest must accept the control fixture: {result}",
@@ -489,6 +500,90 @@ class AllowedInputManifestTests(unittest.TestCase):
             result.get("code"),
             contracts.rejection_code_for("allowed_inputs_hash_mismatch"),
             "a forged inputs_manifest_hash must produce ALLOWED_INPUTS_HASH_MISMATCH.",
+        )
+
+    def test_054_worktree_change_does_not_invalidate_revision_bound_input(self) -> None:
+        """Proves that legitimate worktree changes after freeze do not
+        invalidate a frozen input binding that carries a reachable
+        revision.
+
+        The current worktree ``plan.md`` has been updated since the
+        Phase 0 freeze (tasks marked complete in Phase 2). The
+        control fixture carries ``revision: 8c6a88b6...``, which is
+        the exact commit where the frozen SHA-256 was computed. When
+        the validator resolves bytes through the Git adapter, it must
+        find the committed bytes whose hash matches the declared
+        ``sha256``, regardless of the worktree state.
+        """
+        record = _read_record(
+            VALID_DIR / "control_allowed_inputs.json", "allowed_inputs_record"
+        )
+        # Sanity: the worktree plan.md hash does NOT match the frozen hash.
+        import hashlib
+
+        worktree_plan = REPO_ROOT / record["inputs"][0]["path"]
+        worktree_hash = hashlib.sha256(worktree_plan.read_bytes()).hexdigest()
+        self.assertNotEqual(
+            worktree_hash,
+            record["inputs"][0]["sha256"],
+            "sanity: the worktree plan.md must have changed since freeze; "
+            "otherwise this test does not exercise the immutability property.",
+        )
+        # The Git adapter must still find the committed bytes at the
+        # frozen revision whose hash matches the declared sha256.
+        adapter = GitSourceAdapter(REPO_ROOT)
+        result = contracts.validate_allowed_input_manifest(
+            record, repo_root=REPO_ROOT, git_adapter=adapter
+        )
+        self.assertTrue(
+            result.get("ok"),
+            f"immutable source binding must accept a revision-bound input "
+            f"even when the worktree has changed: {result}",
+        )
+
+    def test_055_unreachable_revision_rejected(self) -> None:
+        """Rejects an allowed-input entry whose ``revision`` commit is
+        not reachable from any repository ref. An unreachable commit
+        cannot serve as an authoritative source for bytes."""
+        record = _read_record(
+            INVALID_DIR / "invalid_allowed_inputs_revision_unreachable.json",
+            "allowed_inputs_record",
+        )
+        adapter = GitSourceAdapter(REPO_ROOT)
+        result = contracts.validate_allowed_input_manifest(
+            record, repo_root=REPO_ROOT, git_adapter=adapter
+        )
+        self.assertFalse(
+            result.get("ok"),
+            "validate_allowed_input_manifest must reject an unreachable revision.",
+        )
+        self.assertEqual(
+            result.get("code"),
+            contracts.rejection_code_for("revision_unreachable"),
+            "unreachable revision must produce REVISION_UNREACHABLE.",
+        )
+
+    def test_056_revision_content_hash_mismatch_rejected(self) -> None:
+        """Rejects an allowed-input entry whose revision is reachable
+        but the declared sha256 does not match the committed file
+        bytes at that revision. The revision is valid; the hash is
+        forged."""
+        record = _read_record(
+            INVALID_DIR / "invalid_allowed_inputs_revision_content_mismatch.json",
+            "allowed_inputs_record",
+        )
+        adapter = GitSourceAdapter(REPO_ROOT)
+        result = contracts.validate_allowed_input_manifest(
+            record, repo_root=REPO_ROOT, git_adapter=adapter
+        )
+        self.assertFalse(
+            result.get("ok"),
+            "validate_allowed_input_manifest must reject a content hash mismatch at the declared revision.",
+        )
+        self.assertEqual(
+            result.get("code"),
+            contracts.rejection_code_for("allowed_inputs_hash_mismatch"),
+            "content hash mismatch at revision must produce ALLOWED_INPUTS_HASH_MISMATCH.",
         )
 
 

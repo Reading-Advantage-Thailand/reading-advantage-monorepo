@@ -93,7 +93,9 @@
     "invalid/invalid_allowed_inputs_missing.json",
     "invalid/invalid_allowed_inputs_hash_mismatch.json",
     "invalid/invalid_role_receipt_not_fabricated.json",
-    "invalid/invalid_role_receipt_empty_provenance.json"
+    "invalid/invalid_role_receipt_empty_provenance.json",
+    "invalid/invalid_allowed_inputs_revision_unreachable.json",
+    "invalid/invalid_allowed_inputs_revision_content_mismatch.json"
   ],
   "fixture_hashes": {
     "attempts/attempt_01_synthetic_main_scene.json": "1caaa2b160d70cbe1ab4261113b28b0996bbefc29f9c1d859f6cd5291c96b9a7",
@@ -109,7 +111,7 @@
     "valid/control_stop_loss.json": "e8767be7b82b515588c7c015764345852b19d837f5d0fc7480722468266da5f0",
     "valid/control_acceptance.json": "b3ef8553a3a18347e605712175a7acde42eb9bf83c60fc859e0b70dbd74ede48",
     "valid/control_revocation.json": "9a5084db5ffb956e9dddc366a035bf86fcbac75461e6de53f377a0f41bf6209e",
-    "valid/control_allowed_inputs.json": "eb2d1868629a65e44f25a2bb0280546972935f5394b67e71711f114dbf94dd1c",
+    "valid/control_allowed_inputs.json": "763dacb642592ce040c038a2bdfb3633ba60a3156eb0566b0394aa44f3b44e87",
     "invalid/invalid_baseline_commit_missing.json": "5b077f3eae532bdfef7e776b054227c5cecd5134f894e893ec771aba42894676",
     "invalid/invalid_budget_missing_unit.json": "2742927a21f4471a47858ec7b8493becbd9e549d45103a815691f823f31d9e28",
     "invalid/invalid_budget_unmeasured.json": "0b64faecc4276c6304adf72390e5d2a3869f980ea3ac5706d8f413ec6116ac80",
@@ -127,7 +129,9 @@
     "invalid/invalid_allowed_inputs_missing.json": "a6c92c52f1e593461faf659b59379ab2ac5d91354e35d0f9b086440d2061a448",
     "invalid/invalid_allowed_inputs_hash_mismatch.json": "8cf6f5a6bce5ec84f413669e2ebd32e4dead258f0f3aa912b50707564bbb9e74",
     "invalid/invalid_role_receipt_not_fabricated.json": "d0fab6e3ef38140d61957c896212c51095e544fee5d936867a7e3565d6eb918c",
-    "invalid/invalid_role_receipt_empty_provenance.json": "9b7fdc91fe78bc4d7cfe1fe8c275c0d4553ab66c4ee9a68896fd28897ece81c2"
+    "invalid/invalid_role_receipt_empty_provenance.json": "9b7fdc91fe78bc4d7cfe1fe8c275c0d4553ab66c4ee9a68896fd28897ece81c2",
+    "invalid/invalid_allowed_inputs_revision_unreachable.json": "382a225391f85f4c67384c985fbe7cb33e9e64d7b2602e3a30f286a416c9316a",
+    "invalid/invalid_allowed_inputs_revision_content_mismatch.json": "1403fe4f4ecd6286c5d1fe2d70c8b543251f64054e5e308d26ba291616c879c3"
   },
   "allowed_inputs": {
     "manifest_kind": "phase0-retry-allowed-inputs",
@@ -135,27 +139,31 @@
     "gate_version": "0.0.2-phase0-retry-red",
     "frozen_at_sha": "f61eb643",
     "description": "Allowed-input manifest for the Phase 0 retry. Every sha256 below is the live SHA-256 of the referenced file and inputs_manifest_hash is the SHA-256 of the canonical JSON of this block with inputs_manifest_hash removed. Any hash mismatch fails closed with ALLOWED_INPUT_MANIFEST_MISSING or ALLOWED_INPUTS_HASH_MISMATCH.",
-    "inputs_manifest_hash": "a45ae8fa8571a78b2266917c2c39b8522e559a431f8be4919290a7fc56782409",
+    "inputs_manifest_hash": "8b28e98179f4372f329ebff60b5450fcfaeccb5b186946dce92eba2e07693ee5",
     "inputs": [
       {
         "path": "measure/tracks/measure_apk_evidence_integrity_gates_20260712/plan.md",
         "sha256": "e1065016da849693db853432b9999e682f7696ef2ae160eace964c6649522311",
-        "role": "plan source"
+        "role": "plan source",
+        "revision": "8c6a88b6ecb75d7fc7eb5d60520f17c96eb66959"
       },
       {
         "path": "measure/tracks/measure_apk_evidence_integrity_gates_20260712/test-strategy.md",
         "sha256": "f301eac9efe0051d6a5a11409561900fefa4ba4b0bcad537214ead9107eaf33c",
-        "role": "test strategy"
+        "role": "test strategy",
+        "revision": "8c6a88b6ecb75d7fc7eb5d60520f17c96eb66959"
       },
       {
         "path": "measure/tracks/measure_apk_evidence_integrity_gates_20260712/spec.md",
         "sha256": "72ad98e61b413b88baa9cc4a470b6a09f63ac686f19f27e832c02f69331e4108",
-        "role": "spec source"
+        "role": "spec source",
+        "revision": "8c6a88b6ecb75d7fc7eb5d60520f17c96eb66959"
       },
       {
         "path": "measure/apk-evidence-reconstruction-program.md",
         "sha256": "aa50396b42bbe06208990ce5ab1ec1fcbb3b48079dd59ddaabe4ab0e3d6ef7de",
-        "role": "program source"
+        "role": "program source",
+        "revision": "8c6a88b6ecb75d7fc7eb5d60520f17c96eb66959"
       }
     ]
   }

@@ -16,20 +16,23 @@
       {
         "path": "measure/tracks/measure_apk_evidence_integrity_gates_20260712/plan.md",
         "sha256": "e1065016da849693db853432b9999e682f7696ef2ae160eace964c6649522311",
-        "role": "plan source"
+        "role": "plan source",
+        "revision": "8c6a88b6ecb75d7fc7eb5d60520f17c96eb66959"
       },
       {
         "path": "measure/tracks/measure_apk_evidence_integrity_gates_20260712/test-strategy.md",
         "sha256": "f301eac9efe0051d6a5a11409561900fefa4ba4b0bcad537214ead9107eaf33c",
-        "role": "test strategy"
+        "role": "test strategy",
+        "revision": "8c6a88b6ecb75d7fc7eb5d60520f17c96eb66959"
       },
       {
         "path": "measure/apk-evidence-reconstruction-program.md",
         "sha256": "aa50396b42bbe06208990ce5ab1ec1fcbb3b48079dd59ddaabe4ab0e3d6ef7de",
-        "role": "program source"
+        "role": "program source",
+        "revision": "8c6a88b6ecb75d7fc7eb5d60520f17c96eb66959"
       }
     ],
-    "inputs_manifest_hash": "9932e0c6411ece3472646f99d94dbf3f45153a0a989e9b26309dda2a0084df31"
+    "inputs_manifest_hash": "cfcb3a6bb6b02557f98bebe4498a1de97f6418f08dad80abd1a802aefdfb7870"
   },
   "note": "Green phase: every placeholder sha256 has been replaced with the live SHA-256 of the referenced file and inputs_manifest_hash is computed as the SHA-256 of the canonical JSON of this record with inputs_manifest_hash removed."
 }
