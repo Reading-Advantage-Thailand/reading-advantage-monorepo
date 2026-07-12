@@ -30,17 +30,17 @@
 - [x] Task: Obtain product-owner acceptance of the corpus boundary [accepted 2026-07-12]
 - [x] Task: Measure - User Manual Verification 'Phase 1' (Protocol in workflow.md) [accepted 2026-07-12]
 
-## Phase 2: Recover mechanic and learning blueprints [checkpoint: pending]
+## Phase 2: Recover mechanic and learning blueprints [checkpoint: 883d21c]
 
-- [x] Task: Read each raw game component, deterministic logic/config, route, test,
+- [x] Task: Read each raw game component, deterministic logic/config, route, test, [883d21c]
       and strongest historical evidence
-- [x] Task: Produce one blueprint per game covering learning loop, controls, world,
+- [x] Task: Produce one blueprint per game covering learning loop, controls, world, [883d21c]
       camera, actors, progression, scoring, difficulty, terminal state, and identity
-- [x] Task: Classify retained behavior, allowed Phaser-native redesign, and
+- [x] Task: Classify retained behavior, allowed Phaser-native redesign, and [883d21c]
       accidental renderer assumptions
-- [x] Task: Extract deterministic transitions and counterexamples for future Red tests
-- [x] Task: Cross-review every blueprint against current implementation evidence
-- [~] Task: Measure - User Manual Verification 'Phase 2' (Protocol in workflow.md)
+- [x] Task: Extract deterministic transitions and counterexamples for future Red tests [883d21c]
+- [x] Task: Cross-review every blueprint against current implementation evidence [883d21c]
+- [x] Task: Measure - User Manual Verification 'Phase 2' (Protocol in workflow.md) [accepted 2026-07-12]
 
 ## Phase 3: Baseline developer effort and repeated capabilities [checkpoint: pending]
 
