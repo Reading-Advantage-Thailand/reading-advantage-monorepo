@@ -9,10 +9,21 @@ export {
   validateEditionPair,
 } from "./editions.js";
 
+/** Canonical complete production-pack inventory and validator. */
+export {
+  REQUIRED_PHYSICAL_ASSETS,
+  validateCompleteAssetPack,
+} from "./required-pack.js";
+export type { PhysicalAssetRequirement } from "./required-pack.js";
+
 /** Canonical sprite-grid and animation contracts. */
 export {
   CHARACTER_COLLISION,
   CHARACTER_ORIGIN,
+  DOOR_PROP_GRID,
+  FOUR_FRAME_PROP_GRID,
+  FOUR_FRAME_VFX_GRID,
+  ISOMETRIC_WANG_TILE_GRID,
   SIDE_SCROLL_CHARACTER_ANIMATIONS,
   SIDE_SCROLL_CHARACTER_GRID,
   TOP_DOWN_CHARACTER_ANIMATIONS,

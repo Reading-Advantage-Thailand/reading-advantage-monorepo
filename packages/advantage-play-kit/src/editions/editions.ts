@@ -11,6 +11,7 @@ import type {
 import {
   CHARACTER_COLLISION,
   CHARACTER_ORIGIN,
+  ISOMETRIC_WANG_TILE_GRID,
   SIDE_SCROLL_CHARACTER_ANIMATIONS,
   SIDE_SCROLL_CHARACTER_GRID,
   TOP_DOWN_CHARACTER_ANIMATIONS,
@@ -41,13 +42,14 @@ const animationSchema = z.object({
   frames: z.array(z.number().int().nonnegative()).min(1),
   frameRate: z.number().positive().max(60),
   repeat: z.number().int().min(-1),
+  yoyo: z.boolean().optional(),
 }).strict();
 
 const physicalAssetFileSchema = z.object({
   id: z.string().min(1),
   path: z.string().min(1),
   kind: z.enum(["image", "spritesheet", "wang-tileset", "nine-slice", "parallax", "audio"]),
-  view: z.enum(["top-down", "side-scroll", "isometric", "screen", "ui"]),
+  view: z.enum(["top-down", "side-scroll", "isometric", "world", "screen", "ui"]),
   width: z.number().int().positive(),
   height: z.number().int().positive(),
   format: z.enum(["png", "ogg", "webm"]),
@@ -84,7 +86,7 @@ const semanticBindingSchema = z.object({
   key: z.string().min(1),
   file: z.string().min(1),
   usage: z.enum(["image", "frame", "animation", "tileset", "nine-slice"]),
-  view: z.enum(["top-down", "side-scroll", "isometric", "screen", "ui"]),
+  view: z.enum(["top-down", "side-scroll", "isometric", "world", "screen", "ui"]),
   animation: z.string().min(1).optional(),
   frame: z.number().int().nonnegative().optional(),
 }).strict();
@@ -128,6 +130,7 @@ export interface PhysicalAnimationManager {
     frames: readonly { key: string; frame: number }[];
     frameRate: number;
     repeat: number;
+    yoyo?: boolean;
   }): unknown;
 }
 
@@ -207,7 +210,8 @@ function assertPhysicalFile(file: PhysicalAssetFile): void {
   assertGrid(file);
   assertCanonicalActor(file);
   if (file.kind === "wang-tileset") {
-    if (!same(file.grid, WANG_TILE_GRID) || !same(file.wangFrames, WANG_MASK_FRAMES)) {
+    const expectedGrid = file.view === "isometric" ? ISOMETRIC_WANG_TILE_GRID : WANG_TILE_GRID;
+    if (!same(file.grid, expectedGrid) || !same(file.wangFrames, WANG_MASK_FRAMES)) {
       invalid(`Wang tileset ${file.id} violates the canonical 16-mask contract`);
     }
   }
@@ -436,6 +440,7 @@ export function registerAssetAnimations(
       frames: animation.frames.map((frame) => ({ key: resolved.textureKey, frame })),
       frameRate: animation.frameRate,
       repeat: animation.repeat,
+      ...(animation.yoyo === undefined ? {} : { yoyo: animation.yoyo }),
     });
   }
 }

@@ -34,7 +34,7 @@ export type PhysicalAssetKind =
   | "audio";
 
 /** Camera or projection context in which an asset is valid. */
-export type AssetView = "top-down" | "side-scroll" | "isometric" | "screen" | "ui";
+export type AssetView = "top-down" | "side-scroll" | "isometric" | "world" | "screen" | "ui";
 
 /** Exact rectangular frame grid encoded in a physical raster. */
 export interface FrameGrid {
@@ -60,6 +60,8 @@ export interface AssetAnimation {
   frameRate: number;
   /** Phaser repeat count; -1 loops indefinitely. */
   repeat: number;
+  /** Whether playback reverses through the frame sequence before repeating. */
+  yoyo?: boolean;
 }
 
 /** Normalized sprite origin within one frame. */

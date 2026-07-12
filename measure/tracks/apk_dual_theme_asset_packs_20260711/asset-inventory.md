@@ -11,6 +11,34 @@ frame/animation bindings exist for both themes.
 | Chibi Quest | Primary Chibi | 40 current slots, view taxonomy pending | Not present | In progress |
 | Riven Lands | Secondary Epic | 40 current slots, view taxonomy pending | Not present | In progress |
 
+## Current retained filesystem inventory — 2026-07-11
+
+A complete image-file enumeration of `/home/daniel-bo/Desktop/pixel-art-benchmark`
+using PNG, JPEG, WebP, GIF, and SVG extensions returned **zero retained assets**.
+The rejected files below were deleted rather than kept as implicit candidates.
+Nothing from the failed generation attempts is eligible for import.
+
+The executable production requirement is now 75 exact PNG files per theme, 150
+physical files across the mirrored pair:
+
+| Family | Files per theme |
+|---|---:|
+| Player, enemy, and NPC top/side actor sheets | 22 |
+| Boss sprite | 1 |
+| Dialog portraits | 8 |
+| Wang tilesets | 7 |
+| Props | 6 |
+| Item icons | 10 |
+| VFX sheets | 6 |
+| UI/HUD | 10 |
+| Parallax backgrounds | 5 |
+| **Total** | **75** |
+
+The authoritative list, paths, encoded dimensions, grids, animations, views,
+origins, collision boxes, Wang masks, and nine-slice insets live in
+`packages/advantage-play-kit/src/editions/required-pack.ts`. A pack with a
+missing file, extra file, or structural mismatch is rejected.
+
 ## Existing-asset visual audit
 
 | Source | Visual inspection | Decision |

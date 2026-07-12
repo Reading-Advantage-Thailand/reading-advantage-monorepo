@@ -25,6 +25,8 @@
   animations, autotiles, static art, UI slices, and parallax layers
 - [x] Task: Define view-specific semantic bindings from cartridge roles to
   physical files, frames, and animations
+- [x] Task: Freeze the exhaustive 75-file-per-theme production inventory with
+  exact paths, dimensions, grids, playback, view, slice, and parity metadata
 - [x] Task: Replace the invalid one-WebP-per-slot Red test with contract tests for
   grid parity, frame maps, loader deduplication, and semantic animation bindings
 - [ ] Task: Measure - User Manual Verification 'Phase S1' (Protocol in workflow.md)
@@ -33,9 +35,9 @@
 
 - [ ] Task: Add validators for dimensions, grids, alpha, chroma residue,
   cross-cell bleed, paired-theme parity, hashes, and byte budgets
-- [ ] Task: Add deterministic frame/strip assembly around the existing chroma
+- [x] Task: Add deterministic frame/strip assembly around the existing chroma
   cleanup strategy, preserving nearest-neighbor pixel boundaries
-- [ ] Task: Correct Theme Bench character animation maps from the erroneous 3x3
+- [x] Task: Correct Theme Bench character animation maps from the erroneous 3x3
   assumptions to the canonical 4x8 top-down and 4x4 side-scroll contracts
 - [ ] Task: Verify frame stepping, playback, anchor, collision, autotile, prop,
   VFX, and theme-swap inspection paths

@@ -27,6 +27,42 @@ export const WANG_TILE_GRID: FrameGrid = {
   frameCount: 16,
 };
 
+/** Canonical 4x4 grid for 128x64 isometric Wang autotiles. */
+export const ISOMETRIC_WANG_TILE_GRID: FrameGrid = {
+  frameWidth: 128,
+  frameHeight: 64,
+  columns: 4,
+  rows: 4,
+  frameCount: 16,
+};
+
+/** Canonical four-frame grid for 64px animated world props. */
+export const FOUR_FRAME_PROP_GRID: FrameGrid = {
+  frameWidth: 64,
+  frameHeight: 64,
+  columns: 4,
+  rows: 1,
+  frameCount: 4,
+};
+
+/** Canonical three-frame grid for a 64x128 opening door. */
+export const DOOR_PROP_GRID: FrameGrid = {
+  frameWidth: 64,
+  frameHeight: 128,
+  columns: 3,
+  rows: 1,
+  frameCount: 3,
+};
+
+/** Canonical four-frame grid for 128px combat effects. */
+export const FOUR_FRAME_VFX_GRID: FrameGrid = {
+  frameWidth: 128,
+  frameHeight: 128,
+  columns: 4,
+  rows: 1,
+  frameCount: 4,
+};
+
 /** Canonical bottom-center actor origin. */
 export const CHARACTER_ORIGIN: AssetOrigin = { x: 0.5, y: 1 };
 

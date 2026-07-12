@@ -92,3 +92,37 @@ Evidence:
 
 No cartridge is reintroduced by this checkpoint. The empty public catalog remains
 the guard until physical assets and the corrected inspection pipeline exist.
+
+
+## Exhaustive production inventory checkpoint — 2026-07-11
+
+The earlier physical ABI could validate files presented to it but did not define
+the complete pack. That gap is now closed by an executable 75-file requirement
+for each audience pack (150 PNGs across the pair).
+
+Contract decisions made explicit:
+
+- separate 4x8 top-down and 4x4 side-scroll sheets for all four heroes, four
+  standard enemies, and three NPCs;
+- one 256x256 static boss sprite plus the required boss portrait;
+- seven exact 16-mask Wang sheets, including 512x256 isometric sheets with
+  128x64 cells;
+- exact chest, torch, spike, door, and VFX animation grids, including spike
+  yoyo playback;
+- view-neutral `world` assets for props and VFX instead of falsely labeling
+  them as one camera projection;
+- exact dimensions and slice insets for all ten UI files;
+- all five 1280x720 parallax layers.
+
+Evidence:
+
+| Gate | Result |
+|---|---|
+| Complete Advantage Play Kit suite | 7 files, 31 tests passed |
+| Exhaustive inventory tests | 4 tests passed; 75 unique IDs and paths |
+| TypeScript check | Passed |
+| Package ESLint | Passed |
+| Existing asset enumeration | Zero retained image files |
+| Kimi WebBridge | Blocked before navigation: daemon started, browser extension reported `no extension connected` |
+
+The Kimi failure is not waived. Theme Bench manual acceptance remains open.
