@@ -1,0 +1,40 @@
+{
+  "schema_version": "evidence-integrity.phase4-owner-approval.v1",
+  "decision": "approve",
+  "revoked": false,
+  "candidate_manifest_hash": "9b43d2893b38ea7c618a320f1a561b61295dd93b13fbf143c408e6c0686d0a44",
+  "review_report_hash": "7ee4b9c8d52236eafc96cebbb7bd6eac01b8c3e85f3cb90238f4c70500cfdbe9",
+  "gate_commit": "014bb4fa14c74d34ed9abfa6815c33e6ec19402e",
+  "gate_version": "phase4-v2-candidate",
+  "approval_event": {
+    "provenance_kind": "opencode-raw-export",
+    "session_id": "ses_0a90395a3ffet93hvtEOcvaG35",
+    "parent_session_id": "ses_0aa8a4740ffe2BOVmChNfZLEv0",
+    "prompt_message_id": "msg_f56fc6a6c001Kj1tD8aoBXAbtu",
+    "prompt_message_sha256": "e7221b6630497b70b769c99010293e47a3c88a42097ce1f7318c69b14ddacd9a",
+    "prompt_created_ms": 1783870810735,
+    "raw_export_snapshot_bytes": 665433,
+    "raw_export_snapshot_sha256": "2ad77306d63a2152c16dff1004c838dbe3a3f93fbf6d28b6e98f0d34e25617fe",
+    "runtime": "OpenCode CLI 1.17.18"
+  },
+  "root_owner_delegation": {
+    "session_id": "ses_0aa8a4740ffe2BOVmChNfZLEv0",
+    "raw_export_snapshot_bytes": 3211418,
+    "raw_export_snapshot_sha256": "b1ccb516c6cc80c170a083c7e38efe27402dbe081edc33f44509506f379f87f6",
+    "owner_designation_event": {
+      "message_id": "msg_f56521237001iEKkL5c2stmWKq",
+      "message_sha256": "b7b416bf8a172c6f216025b559bbe40d874bf08999685096f01f2750cfb38353",
+      "created_ms": 1783859647031
+    },
+    "approval_publication_event": {
+      "message_id": "msg_f56fc101300165U5qFSXLm36fx",
+      "message_text_sha256": "18e095398fe43889d0c11588afc42175d9ac0467f1991ee32c9e086459589868",
+      "task_part_sha256": "4c028283503371634b1b072d3bfb4dc85d0bc3af3dc15b68af2e366acf04ee8e",
+      "task_call_id": "call_4zidewMvO4KbFpukn52uhG3h",
+      "delegated_session_id": "ses_0a90395a3ffet93hvtEOcvaG35",
+      "delegated_prompt_sha256": "e7221b6630497b70b769c99010293e47a3c88a42097ce1f7318c69b14ddacd9a",
+      "created_ms": 1783870787603
+    }
+  },
+  "note": "The raw-export hashes bind the exact snapshots inspected during acceptance. No unavailable identifier or fork_turns value is inferred."
+}
