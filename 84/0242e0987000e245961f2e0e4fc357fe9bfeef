@@ -1,0 +1,3 @@
+Track: apk_cross_game_asset_ontology_20260712 Phase 5 asset usage slice
+Summary: Mapped 203 semantic asset usages across all 29 canonical scenes with states, directions, view, scale, animation, collision, responsive usage, reuse potential, capability links, and evidence. Existing candidates remain gaps pending visual/provenance inspection.
+Verification: 19/19 track tests pass.
