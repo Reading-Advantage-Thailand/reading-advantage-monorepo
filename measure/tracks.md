@@ -71,8 +71,8 @@ Two parallel programs are in flight; priority order when picking the next track:
 - [x] **Track: APK Cross-Game Requirements and Capability Ontology — FAILED/SUPERSEDED, DO NOT CONSUME** *Link: [./tracks/apk_cross_game_asset_ontology_20260712/](./tracks/apk_cross_game_asset_ontology_20260712/)*
   Failed after structural tests and generated assumptions were incorrectly treated as source-grounded completion. All hashes are revoked; artifacts remain only as negative/failure evidence.
 
-- [ ] **Track: Measure APK Evidence Integrity Gates** *Link: [./tracks/measure_apk_evidence_integrity_gates_20260712/](./tracks/measure_apk_evidence_integrity_gates_20260712/)*
-  Build exact-source, independent-denominator, mandatory-subagent, stop-loss, counterexample, and completion gates before another APK audit begins.
+- [x] **Track: Measure APK Evidence Integrity Gates — COMPLETED** *Link: [./archive/measure_apk_evidence_integrity_gates_20260712/](./archive/measure_apk_evidence_integrity_gates_20260712/)*
+  Build exact-source, independent-denominator, mandatory-subagent, stop-loss, counterexample, and completion gates before another APK audit begins. All 46 tasks complete; v8 accepted manifest at measure/evidence-integrity-accepted-gate.json; successor APK evidence tracks unblocked. Archived 2026-07-13.
 
 - [ ] **Track: APK Independent Source Denominator Inventory** *Link: [./tracks/apk_source_denominator_inventory_20260712/](./tracks/apk_source_denominator_inventory_20260712/)*
   Independently discover and fully reconcile the game, file, scene/state, copy, history, and asset denominator without interpreting product requirements.

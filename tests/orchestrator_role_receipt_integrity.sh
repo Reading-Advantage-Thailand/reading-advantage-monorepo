@@ -43,7 +43,17 @@ for receipt_path in receipts:
                 f"{receipt_path}: stale hash for {output}: expected {expected}, got {actual}"
             )
 
-provenance_files = sorted(Path("measure/tracks").glob("*/phase*-opencode-provenance.json"))
+# Scan both active and archived track roots for OpenCode provenance.
+# Deduplicate by track: if a track exists in both roots (possible during
+# partial archive), prefer the active track path.
+provenance_by_track: dict[str, Path] = {}
+for root in ("measure/tracks", "measure/archive"):
+    for path in sorted(Path(root).glob("*/phase*-opencode-provenance.json")):
+        track = path.parent.name
+        # Only register if unseen (first root wins, i.e. active > archived)
+        if track not in provenance_by_track:
+            provenance_by_track[track] = path
+provenance_files = sorted(provenance_by_track.values())
 for provenance_path in provenance_files:
     payload = json.loads(provenance_path.read_text(encoding="utf-8"))
     for role in payload.get("roles", []):

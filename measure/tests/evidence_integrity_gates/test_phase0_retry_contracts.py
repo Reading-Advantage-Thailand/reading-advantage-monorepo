@@ -519,10 +519,14 @@ class AllowedInputManifestTests(unittest.TestCase):
             VALID_DIR / "control_allowed_inputs.json", "allowed_inputs_record"
         )
         # Sanity: the worktree plan.md hash does NOT match the frozen hash.
+        # The track file may have moved to archive/ post-closeout, so
+        # check both the original tracks/ path and the archive/ path.
         import hashlib
 
-        worktree_plan = REPO_ROOT / record["inputs"][0]["path"]
-        worktree_hash = hashlib.sha256(worktree_plan.read_bytes()).hexdigest()
+        worktree_path = REPO_ROOT / record["inputs"][0]["path"]
+        if not worktree_path.exists():
+            worktree_path = REPO_ROOT / "measure/archive/measure_apk_evidence_integrity_gates_20260712/plan.md"
+        worktree_hash = hashlib.sha256(worktree_path.read_bytes()).hexdigest()
         self.assertNotEqual(
             worktree_hash,
             record["inputs"][0]["sha256"],

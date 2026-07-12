@@ -1,0 +1,12 @@
+{
+  "track_id": "measure_apk_evidence_integrity_gates_20260712",
+  "type": "chore",
+  "status": "done",
+  "created_at": "2026-07-12T00:00:00Z",
+  "updated_at": "2026-07-13T03:00:00Z",
+  "completion_date": "2026-07-13",
+  "description": "Build immutable Measure truthfulness, evidence, denominator, role-independence, stop-loss, and completion gates before another APK audit attempt.",
+  "estimated_tasks": 26,
+  "actual_tasks": 46,
+  "deviation_notes": "Scope grew from 26 estimated to 46 actual tasks due to 7 remediation phases (5-11) required for adversarial review cycles (V3-ADV-001 through V8) and canonical review/provenance hardening cycles."
+}

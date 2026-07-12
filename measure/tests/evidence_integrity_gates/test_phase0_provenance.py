@@ -12,7 +12,7 @@ from measure.evidence_integrity_gates.opencode_provenance import validate_role_s
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-TRACK = REPO_ROOT / "measure/tracks/measure_apk_evidence_integrity_gates_20260712"
+TRACK = REPO_ROOT / "measure/archive/measure_apk_evidence_integrity_gates_20260712"
 
 
 class Phase0ProvenanceTests(unittest.TestCase):

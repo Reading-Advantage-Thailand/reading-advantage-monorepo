@@ -1,0 +1,195 @@
+{
+  "manifest_version": 1,
+  "role": "measure-closeout",
+  "track": "measure_apk_evidence_integrity_gates_20260712",
+  "closeout_timestamp": "2026-07-13T03:00:00+07:00",
+  "final_acceptance_sha": "21f26efaccc9ccb099c737317407bfdfef61e244",
+  "status": "done",
+  "summary": "Formal closeout of the Measure APK Evidence Integrity Gates track. Delivered: six FR1-FR6 evidence-integrity gate suites, immutable source binding with Git revision resolution, independent denominator validation, role-independence enforcement with OpenCode trusted session resolution (fork_turns=none), stop-loss lifecycle enforcement with fail-closed transitions, supervisor integration (automation-supervisor.py subprocess gate), and a v8 accepted manifest (SHA-256 d9f5c477) validated through 139 Python tests, 6 orchestrator guards, doctor, live accepted-manifest validation, and post-archive portability. The accepted gate at measure/evidence-integrity-accepted-gate.json is the canonical root artifact enabling successor APK evidence tracks.",
+  "task_summary": {
+    "total_tasks": 46,
+    "completed": 46,
+    "deferred_po": 0,
+    "deferred_infra": 0,
+    "non_deferred_remaining": 0
+  },
+  "phase_completion": {
+    "phase_0_freeze_contracts_and_roles": {
+      "status": "done",
+      "tasks": 5,
+      "evidence": "phase0-acceptance-result.json, phase0-completion-result.json, phase0-opencode-provenance.json, phase0-owner-authorization.json (final: 21f26efa)",
+      "notes": "Phase 0 retry completed all 7 validator bodies and 46 contract scaffold + 23 retry tests green."
+    },
+    "phase_1_claim_evidence_contracts": {
+      "status": "done",
+      "tasks": 5,
+      "sha_evidence": "8c6a88b6"
+    },
+    "phase_2_denominator_and_role_independence": {
+      "status": "done",
+      "tasks": 6,
+      "sha_evidence": "98ccc4e7, b2e437d9"
+    },
+    "phase_3_stop_loss_freeze_enforcement": {
+      "status": "done",
+      "tasks": 5,
+      "sha_evidence": "d11ae2da"
+    },
+    "phase_4_supervisor_integration_and_acceptance": {
+      "status": "done",
+      "tasks": 6,
+      "sha_evidence": "014bb4fa, 2c3e8e82, 210d44e3"
+    },
+    "phase_5_final_acceptance_remediation_v3": {
+      "status": "done",
+      "tasks": 4,
+      "sha_evidence": "a6f565ab, 6eb03add, e7757815, a49327ff, 623e6fb7"
+    },
+    "phase_6_v3_review_remediation_v4": {
+      "status": "done",
+      "tasks": 4,
+      "sha_evidence": "a0d5d795, 623e6fb7, cd2518f8"
+    },
+    "phase_7_v4_review_remediation_v5": {
+      "status": "done",
+      "tasks": 4,
+      "sha_evidence": "29297eac, 88ba3a98, 816f00a0"
+    },
+    "phase_8_v5_adv_remediation_v6": {
+      "status": "done",
+      "tasks": 2,
+      "sha_evidence": "88ba3a98"
+    },
+    "phase_9_v6_evidence_gates": {
+      "status": "done",
+      "tasks": 2,
+      "sha_evidence": "ea3c9155, 58fac448"
+    },
+    "phase_10_v6_accept_test_remediation_v7": {
+      "status": "done",
+      "tasks": 1,
+      "sha_evidence": "84322fde"
+    },
+    "phase_11_v8_owner_approval_and_acceptance": {
+      "status": "done",
+      "tasks": 2,
+      "sha_evidence": "c3aa3fe0, 21f26efa"
+    }
+  },
+  "gates_run": [
+    {"command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -v -s measure/tests/evidence_integrity_gates -p 'test_*.py'", "result": "139 tests, 0 failures, 0 errors (exit 0)"},
+    {"command": "bash tests/orchestrator_supervisor_invariants.sh", "result": "pass (exit 0)"},
+    {"command": "bash tests/orchestrator_review_execution_truthfulness.sh", "result": "pass (exit 0)"},
+    {"command": "bash tests/orchestrator_catalog.sh", "result": "pass (exit 0)"},
+    {"command": "bash tests/orchestrator_marker_vocabulary.sh", "result": "pass (exit 0)"},
+    {"command": "bash tests/orchestrator_detector_syntax.sh", "result": "pass (exit 0)"},
+    {"command": "bash tests/orchestrator_role_receipt_integrity.sh", "result": "pass (exit 0)"},
+    {"command": "bash measure/doctor.sh", "result": "pass (exit 0)"},
+    {"command": "production supervisor_gate._validate_manifest(Path('.').resolve(), OpenCodeTrustedSessionResolver())", "result": "pass; accepted phase4-v8-candidate at 5aea360f"},
+    {"command": "PYTHONDONTWRITEBYTECODE=1 python3 measure/automation-supervisor.py --dry-run --track '^measure_apk_evidence_integrity_gates_20260712$' --limit 1", "result": "pass; all phases complete; no commands executed"},
+    {"command": "post-archive verification: PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -v -s measure/tests/evidence_integrity_gates -p 'test_*.py'", "result": "post-archive: 139 tests, 0 failures, 0 errors (exit 0)"},
+    {"command": "post-archive: bash measure/doctor.sh", "result": "pass (exit 0)"},
+    {"command": "git fsck --no-dangling && git diff --check 4b439a85..21f26efa && git diff --check", "result": "pass"},
+    {"command": "direct SHA-256 verification: v8 candidate f6bf22ec, review 760c01c2, accepted d9f5c477", "result": "pass"}
+  ],
+  "audit_evidence_retained": [
+    "measure/archive/measure_apk_evidence_integrity_gates_20260712/final-acceptance.json",
+    "measure/archive/measure_apk_evidence_integrity_gates_20260712/plan.md",
+    "measure/archive/measure_apk_evidence_integrity_gates_20260712/metadata.json",
+    "measure/archive/measure_apk_evidence_integrity_gates_20260712/spec.md",
+    "measure/archive/measure_apk_evidence_integrity_gates_20260712/test-strategy.md",
+    "measure/archive/measure_apk_evidence_integrity_gates_20260712/index.md",
+    "measure/archive/measure_apk_evidence_integrity_gates_20260712/orchestrator-audit-result.json",
+    "measure/archive/measure_apk_evidence_integrity_gates_20260712/phase0-acceptance-result.json",
+    "measure/archive/measure_apk_evidence_integrity_gates_20260712/phase0-completion-result.json",
+    "measure/archive/measure_apk_evidence_integrity_gates_20260712/phase0-opencode-provenance.json",
+    "measure/archive/measure_apk_evidence_integrity_gates_20260712/phase0-owner-authorization.json",
+    "measure/archive/measure_apk_evidence_integrity_gates_20260712/phase0-retry-acceptance-result.json",
+    "measure/archive/measure_apk_evidence_integrity_gates_20260712/phase1-verification.json",
+    "measure/archive/measure_apk_evidence_integrity_gates_20260712/phase2-verification.json",
+    "measure/archive/measure_apk_evidence_integrity_gates_20260712/phase3-verification.json",
+    "measure/archive/measure_apk_evidence_integrity_gates_20260712/phase4-live-run-report.json",
+    "measure/archive/measure_apk_evidence_integrity_gates_20260712/phase4-resource-report.json",
+    "measure/archive/measure_apk_evidence_integrity_gates_20260712/phase4-v3-independent-review.json",
+    "measure/archive/measure_apk_evidence_integrity_gates_20260712/phase4-v6-independent-review.json",
+    "measure/archive/measure_apk_evidence_integrity_gates_20260712/phase4-v7-verification.json",
+    "measure/archive/measure_apk_evidence_integrity_gates_20260712/phase4-v8-verification.json",
+    "measure/archive/measure_apk_evidence_integrity_gates_20260712/phase4-verification.json",
+    "measure/archive/measure_apk_evidence_integrity_gates_20260712/review-b-security-result.json",
+    "measure/archive/measure_apk_evidence_integrity_gates_20260712/automation-supervisor-closeout-manifest.json"
+  ],
+  "anti_pattern_checks": {
+    "A1_marker_ambiguity": "pass — plan uses only [x] markers for all 46 tasks; no legacy [ ] space; no [~] remaining; no [b] deferred markers",
+    "A5_false_claim_text": "pass — no 'all checks pass'/'PASS=N FAIL=0'/'all tests pass' in plan text; each task includes specific commit/hash evidence",
+    "A6_registry_overstatement": "pass — tracks.md entry is now marked [x] and links to archive; closeout summary honest about 46/46 tasks complete with zero deferrals; v8 accepted manifest is the sole consumable version; v2-v7 revoked/non-consumable",
+    "A9_archived_track_path_refs": "pass_with_notes — test fixtures, provenance files, and acceptance exports reference the original measure/tracks/ path. These are static content-addressed hashes and historical records. No runtime path dependency exists. All test code references archive-track path post-move.",
+    "A11_executed_review_track_left_blocked": "pass — this is a feature/infrastructure track, not a review-only track"
+  },
+  "a9_findings": [
+    {
+      "file": "measure/tests/evidence_integrity_gates/fixtures/valid/control_allowed_inputs.json",
+      "line": 17,
+      "content": "\"path\": \"measure/tracks/measure_apk_evidence_integrity_gates_20260712/plan.md\"",
+      "severity": "low",
+      "impact": "Fixture content referencing historical track path. Static content-addressed fixture; no runtime dependency. Historical evidence of what the path was during the active track."
+    },
+    {
+      "file": "measure/tests/evidence_integrity_gates/fixtures/manifest.json",
+      "line": 145,
+      "content": "\"path\": \"measure/tracks/measure_apk_evidence_integrity_gates_20260712/plan.md\"",
+      "severity": "low",
+      "impact": "Fixture content with historical path reference. Static content-addressed fixture; no runtime dependency."
+    },
+    {
+      "file": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/exports/.../export.json",
+      "line": 426,
+      "content": "\"pattern\": \"measure/tracks/measure_apk_evidence_integrity_gates_20260712/**\"",
+      "severity": "low",
+      "impact": "Historical export record referencing the active track path at time of export. Preserved as immutably hashed acceptance evidence."
+    },
+    {
+      "file": "measure/evidence_integrity_gates/opencode_provenance.py",
+      "line": 440,
+      "content": "RoleBinding with strategy session referencing measure/tracks/.../test-strategy.md",
+      "severity": "low",
+      "impact": "Static role-binding path in gateway code. No runtime path dependency; references are string constants for role-binding metadata."
+    }
+  ],
+  "artifact_cleanup": {
+    "retained": [
+      "All track files (spec, plan, metadata, index, test-strategy, all phase verifications, acceptance results, reviews, reports, closeout manifest)",
+      "measure/evidence-integrity-accepted-gate.json (canonical root accepted artifact, preserved at monorepo root for stable path)",
+      "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/ (acceptance evidence artifacts, preserved outside track path)"
+    ],
+    "deleted": [],
+    "notes": "All evidence preserved for audit trail. No bulky run artifacts to delete. The acceptance evidence directory under measure/acceptance/ is a stable path independent of the track active/archive location and is not moved."
+  },
+  "deferred_items": [],
+  "archive_operations": {
+    "dir_moved_from": "measure/tracks/measure_apk_evidence_integrity_gates_20260712",
+    "dir_moved_to": "measure/archive/measure_apk_evidence_integrity_gates_20260712",
+    "tracks_md_active_row_removed": true,
+    "tracks_md_archived_row_added": false,
+    "tracks_md_entry_updated": true,
+    "metadata_status_flipped": "in_progress → done",
+    "completion_date": "2026-07-13"
+  },
+  "post_closeout_remediation": {
+    "date": "2026-07-13",
+    "commit_sha": "ff1ac22c42f6d8b6eb9219076867c90cb0f1a6cd",
+    "reason": "A15 guard only scanned measure/tracks/ for provenance; archived tracks caused false 'no active evidence' failure",
+    "fix": "expand provenance scan to both measure/tracks/ and measure/archive/, deduplicate by track",
+    "tests_added": 4,
+    "total_tests_after": 143,
+    "guards_verified": [
+      "bash tests/orchestrator_role_receipt_integrity.sh",
+      "bash tests/orchestrator_supervisor_invariants.sh",
+      "bash tests/orchestrator_review_execution_truthfulness.sh",
+      "bash tests/orchestrator_catalog.sh",
+      "bash tests/orchestrator_marker_vocabulary.sh",
+      "bash tests/orchestrator_detector_syntax.sh"
+    ],
+    "doctor_verified": true,
+    "accepted_manifest_verified": true
+  }
+}
