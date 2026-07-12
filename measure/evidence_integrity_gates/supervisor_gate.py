@@ -108,6 +108,44 @@ def _canonical_json(value: Mapping[str, Any]) -> bytes:
     return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode()
 
 
+def canonical_review_prompt(candidate_bytes: bytes) -> bytes:
+    """Derives the exact adversarial-review prompt from candidate file bytes.
+
+    @param candidate_bytes Exact bytes of the candidate manifest under review.
+    @returns Canonical prompt bytes binding the candidate hash and review range.
+    @throws ValueError When candidate bytes are malformed or ambiguously identify revisions.
+    """
+    try:
+        candidate = json.loads(candidate_bytes)
+    except (UnicodeDecodeError, json.JSONDecodeError) as error:
+        raise ValueError("candidate manifest is not valid JSON") from error
+    if not isinstance(candidate, Mapping):
+        raise ValueError("candidate manifest root must be an object")
+    gate_version = candidate.get("gate_version")
+    implementation_commit = candidate.get("implementation_commit")
+    source_base_commit = candidate.get("source_base_commit")
+    if (
+        candidate.get("schema_version") != SUPERVISOR_GATE_SCHEMA_VERSION
+        or candidate.get("status") != "candidate"
+        or candidate.get("consumable") is not False
+        or candidate.get("revoked") is not False
+        or not isinstance(gate_version, str)
+        or not gate_version
+        or not isinstance(implementation_commit, str)
+        or re.fullmatch(r"[0-9a-f]{40}", implementation_commit) is None
+        or not isinstance(source_base_commit, str)
+        or re.fullmatch(r"[0-9a-f]{40}", source_base_commit) is None
+    ):
+        raise ValueError("candidate manifest does not define an unambiguous review range")
+    return _canonical_json({
+        "candidate_manifest_sha256": _sha256_bytes(candidate_bytes),
+        "gate_version": gate_version,
+        "implementation_commit": implementation_commit,
+        "source_base_commit": source_base_commit,
+        "task": "independent-adversarial-review",
+    })
+
+
 def _blocked(code: str, **detail: Any) -> dict[str, Any]:
     """Builds one deterministic fail-closed gate report.
 
@@ -364,8 +402,9 @@ def _validate_trusted_event_snapshots(
     parent_session_id: Any | None,
     agent: Any,
     event_ids: tuple[Any, ...],
+    require_full_history: bool = False,
 ) -> bool:
-    """Compares retained named events byte-for-byte with trusted live exports.
+    """Compares retained evidence with trusted live provider exports.
 
     @param retained_export Locally retained export already bound by content hashes.
     @param resolver Trusted live provider boundary.
@@ -373,7 +412,8 @@ def _validate_trusted_event_snapshots(
     @param parent_session_id Expected parent session identity.
     @param agent Expected session agent identity.
     @param event_ids Exact provider event IDs that must match.
-    @returns Whether live session identity and every named event exactly match retention.
+    @param require_full_history Whether the complete canonical message sequence must match.
+    @returns Whether live session identity and required history exactly match retention.
     """
     live_export = _resolve_trusted_export(resolver, session_id)
     if live_export is None:
@@ -393,6 +433,17 @@ def _validate_trusted_event_snapshots(
         or not isinstance(live_info, Mapping)
         or retained_info.get("agent") != agent
         or live_info.get("agent") != agent
+    ):
+        return False
+    identity_fields = ("id", "parentID", "agent", "fork_turns")
+    if (
+        {field: retained_info.get(field) for field in identity_fields}
+        != {field: live_info.get(field) for field in identity_fields}
+        or (
+            require_full_history
+            and _canonical_json({"messages": retained_messages})
+            != _canonical_json({"messages": live_messages})
+        )
     ):
         return False
     for event_id in event_ids:
@@ -449,6 +500,7 @@ def _validate_review_provenance(
             provenance.get("prompt_message_id"),
             provenance.get("final_response_message_id"),
         ),
+        require_full_history=True,
     ):
         return False, None
     messages = _validated_export_messages(
@@ -1073,5 +1125,6 @@ __all__ = [
     "REQUIRED_GATE_FILES",
     "SUPERVISOR_GATE_SCHEMA_VERSION",
     "SUPERVISOR_REJECTION_CODES",
+    "canonical_review_prompt",
     "validate_supervisor_completion",
 ]

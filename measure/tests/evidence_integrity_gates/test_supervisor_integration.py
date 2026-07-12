@@ -16,6 +16,7 @@ from types import SimpleNamespace
 from typing import Any
 
 from measure.evidence_integrity_gates.supervisor_gate import (
+    canonical_review_prompt,
     _validate_owner_provenance,
     _validate_review_provenance,
     validate_supervisor_completion,
@@ -777,6 +778,81 @@ class SupervisorIntegrationTests(unittest.TestCase):
             ),
         )
         self.assertFalse(valid)
+
+    def test_020_truncated_retained_review_fails_against_fuller_live_history(self) -> None:
+        """Rejects retained reviewer exports that omit trusted live pre-prompt turns."""
+        manifest = json.loads(
+            (self.repo / "measure/evidence-integrity-accepted-gate.json").read_text()
+        )
+        candidate = json.loads((self.repo / manifest["candidate_manifest_path"]).read_text())
+        review = json.loads((self.repo / manifest["review_report_path"]).read_text())
+        live = json.loads(self.trusted_exports["ses_review"])
+        live["messages"][0:0] = [
+            {
+                "info": {
+                    "id": "msg_hidden_prompt",
+                    "sessionID": "ses_review",
+                    "role": "user",
+                    "time": {"created": 10},
+                },
+                "parts": [{"type": "text", "text": "hidden inherited context"}],
+            },
+            {
+                "info": {
+                    "id": "msg_hidden_final",
+                    "sessionID": "ses_review",
+                    "parentID": "msg_hidden_prompt",
+                    "role": "assistant",
+                    "agent": "independent-reviewer",
+                    "time": {"created": 11, "completed": 12},
+                },
+                "parts": [{"type": "text", "text": "hidden response"}],
+            },
+        ]
+        trusted = dict(self.trusted_exports)
+        trusted["ses_review"] = json.dumps(live, sort_keys=True).encode()
+        valid, _ = _validate_review_provenance(
+            self.repo,
+            review,
+            candidate_hash=manifest["candidate_manifest_hash"],
+            candidate=candidate,
+            gate_commit=manifest["gate_commit"],
+            gate_version=manifest["gate_version"],
+            trusted_resolver=FixtureTrustedResolver(trusted),
+        )
+        self.assertFalse(valid)
+
+    def test_021_canonical_review_prompt_is_emitted_from_exact_candidate_bytes(self) -> None:
+        """Derives the only valid review prompt and candidate hash from file bytes."""
+        manifest = json.loads(
+            (self.repo / "measure/evidence-integrity-accepted-gate.json").read_text()
+        )
+        candidate_path = self.repo / manifest["candidate_manifest_path"]
+        candidate_bytes = candidate_path.read_bytes()
+        expected = json.dumps({
+            "candidate_manifest_sha256": self._sha_bytes(candidate_bytes),
+            "gate_version": "phase4-v1",
+            "implementation_commit": manifest["gate_commit"],
+            "source_base_commit": manifest["gate_commit"],
+            "task": "independent-adversarial-review",
+        }, sort_keys=True, separators=(",", ":")).encode()
+        self.assertEqual(canonical_review_prompt(candidate_bytes), expected)
+
+        result = subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "measure.evidence_integrity_gates.cli",
+                "review-prompt",
+                "--candidate",
+                str(candidate_path),
+            ],
+            cwd=self.repo,
+            capture_output=True,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr.decode())
+        self.assertEqual(result.stdout, expected)
 
 if __name__ == "__main__":
     unittest.main()

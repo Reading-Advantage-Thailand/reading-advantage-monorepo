@@ -12,7 +12,10 @@ from typing import Any, Mapping, Sequence
 
 from measure.evidence_integrity_gates.events import MappingEventResolver
 from measure.evidence_integrity_gates.lifecycle import validate_lifecycle
-from measure.evidence_integrity_gates.supervisor_gate import validate_supervisor_completion
+from measure.evidence_integrity_gates.supervisor_gate import (
+    canonical_review_prompt,
+    validate_supervisor_completion,
+)
 
 
 def _decode_event(value: Mapping[str, Any]) -> dict[str, Any]:
@@ -98,9 +101,22 @@ def main(argv: Sequence[str] | None = None) -> int:
     completion.add_argument(
         "--stage", choices=("preflight", "completion"), default="completion"
     )
+    review_prompt = subparsers.add_parser(
+        "review-prompt", help="emit the canonical review prompt for exact candidate bytes"
+    )
+    review_prompt.add_argument(
+        "--candidate", type=Path, required=True, help="candidate manifest file"
+    )
     arguments = parser.parse_args(argv)
     if arguments.command == "lifecycle":
         report = run_lifecycle(arguments.history)
+    elif arguments.command == "review-prompt":
+        try:
+            prompt = canonical_review_prompt(arguments.candidate.read_bytes())
+        except (OSError, ValueError) as error:
+            parser.error(str(error))
+        sys.stdout.buffer.write(prompt)
+        return 0
     else:
         report = validate_supervisor_completion(
             arguments.repo, arguments.track, stage=arguments.stage
