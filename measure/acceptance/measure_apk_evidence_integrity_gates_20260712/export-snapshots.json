@@ -60,7 +60,29 @@
       "gzip_bytes": 157877,
       "path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/exports/31369418a019bf836e68631e11e091e9b9cd5f83df4d31e2a5cd1148e45fc85d.json.gz",
       "json_parse": "pass"
+    },
+    {
+      "purpose": "v6-owner-approval-at-acceptance",
+      "session_id": "ses_0a8a1eba9ffeUUUxW3EnlLv4aJ",
+      "raw_sha256": "e4f87429c766e87995b182db724694339fb7df9319f93a9e6dcf93d71531964d",
+      "raw_bytes": 622862,
+      "gzip_sha256": "df25d577525eb387fc307addd71b8c3c6b4a30c6c3996ba6bed2e86514fafe3e",
+      "gzip_bytes": 134087,
+      "raw_path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/exports/e4f87429c766e87995b182db724694339fb7df9319f93a9e6dcf93d71531964d.json",
+      "path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/exports/e4f87429c766e87995b182db724694339fb7df9319f93a9e6dcf93d71531964d.json.gz",
+      "json_parse": "pass"
+    },
+    {
+      "purpose": "v6-root-owner-at-acceptance",
+      "session_id": "ses_0aa8a4740ffe2BOVmChNfZLEv0",
+      "raw_sha256": "de3de2408a4a0b001b8c4495f4d1bbd3fffab5754280a66d77178a3290368fb4",
+      "raw_bytes": 4784461,
+      "gzip_sha256": "6068d119a26f52a2aea8a4c5b74af5d8228d00367dfb93fe8756c04bc0e51b01",
+      "gzip_bytes": 997972,
+      "raw_path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/exports/de3de2408a4a0b001b8c4495f4d1bbd3fffab5754280a66d77178a3290368fb4.json",
+      "path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/exports/de3de2408a4a0b001b8c4495f4d1bbd3fffab5754280a66d77178a3290368fb4.json.gz",
+      "json_parse": "pass"
     }
   ],
-  "note": "All v2 snapshots are historical evidence and cannot approve v3. The v3-reviewer-provenance-binding export binds the fresh isolated adversarial review of gate candidate ad8ef96a846c5f0d9432f5726e638f52d432758ead99fe5c2786cd47adb64a37. The v6-reviewer-provenance-binding export binds the fresh isolated adversarial review of gate candidate 5ac5900c6d68a2c0da2900f13e9cfd401dcf38ef85459cf14ad17403da4c405b."
+  "note": "All v2 snapshots are historical evidence and cannot approve v3. The v3 reviewer evidence is revoked. The v6 reviewer, owner-approval, and root-owner snapshots bind the accepted v6 candidate; v6 acceptance does not make any prior failed version reusable."
 }

@@ -1,0 +1,13 @@
+{
+  "schema_version": "evidence-integrity.approval-consumption.v1",
+  "event_id": "msg_f575e1462001AIsAAT98kP7U8b",
+  "candidate_manifest_hash": "5ac5900c6d68a2c0da2900f13e9cfd401dcf38ef85459cf14ad17403da4c405b",
+  "review_report_hash": "e198a45d57badb364f4c16e48074108f9bafbe92825c9c2a005fa4e8c8b5213c",
+  "gate_commit": "88ba3a986db2c3855fa1d9af73759bcac660c3df",
+  "gate_version": "phase4-v6-candidate",
+  "owner_approval_path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/phase4-v6-owner-approval.json",
+  "owner_approval_hash": "9c36ca53f845068d83fefc9d95aa4b672883e0e8cd8b0bb3516450d69740b081",
+  "consumed_once": true,
+  "supersedes_accepted_gate_version": "phase4-v2-candidate",
+  "prior_accepted_gate_status": "revoked"
+}

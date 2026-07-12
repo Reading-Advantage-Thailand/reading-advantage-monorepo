@@ -1,34 +1,43 @@
 {
-  "schema_version": "evidence-integrity.phase4-verification.v1",
-  "status": "accepted",
-  "gate_version": "phase4-v2-candidate",
-  "gate_commit": "014bb4fa14c74d34ed9abfa6815c33e6ec19402e",
-  "candidate_manifest_sha256": "9b43d2893b38ea7c618a320f1a561b61295dd93b13fbf143c408e6c0686d0a44",
-  "independent_review_sha256": "7ee4b9c8d52236eafc96cebbb7bd6eac01b8c3e85f3cb90238f4c70500cfdbe9",
-  "owner_approval_sha256": "3a91ecd11efe5e190a3360c0bbea0fcc6405462df5ceee07628736217de6cd18",
-  "accepted_manifest_sha256_at_publication": "d08dc7936eefe38e8742baf31ffa5dcc8f922f13f6e0ef6632f6c391b4605ff8",
-  "accepted_manifest_sha256_after_portable_path_update": "8ae00745d3906cd69225bf10ca5a94b72af49ee1a00858a995a69e653da27e02",
+  "schema_version": "evidence-integrity.phase4-verification.v2",
+  "status": "accepted-with-known-verification-blocker",
+  "gate_version": "phase4-v6-candidate",
+  "gate_commit": "88ba3a986db2c3855fa1d9af73759bcac660c3df",
+  "candidate_manifest_sha256": "5ac5900c6d68a2c0da2900f13e9cfd401dcf38ef85459cf14ad17403da4c405b",
+  "independent_review_sha256": "e198a45d57badb364f4c16e48074108f9bafbe92825c9c2a005fa4e8c8b5213c",
+  "owner_approval_sha256": "9c36ca53f845068d83fefc9d95aa4b672883e0e8cd8b0bb3516450d69740b081",
+  "approval_consumption_sha256": "81ebef43e0b18735c645676578282a6b1f4c894b315ebb5cc5a8598ff7a5c018",
+  "accepted_manifest_sha256": "22acc73ab7a2c75b9a472b18d3327c6d1a6c8ec105a17062ffa1e6cb1c3abcec",
   "review_findings": {
     "unresolved_critical": 0,
     "unresolved_high": 0,
     "unresolved_medium": 0
   },
-  "gate_file_binding": {
-    "file_count": 13,
-    "result": "pass",
-    "detail": "Every file hash in the candidate and accepted manifests was recomputed from exact git-show bytes at 014bb4fa14c74d34ed9abfa6815c33e6ec19402e."
+  "approval_event": {
+    "session_id": "ses_0a8a1eba9ffeUUUxW3EnlLv4aJ",
+    "parent_session_id": "ses_0aa8a4740ffe2BOVmChNfZLEv0",
+    "prompt_message_id": "msg_f575e1462001AIsAAT98kP7U8b",
+    "prompt_and_final_text_sha256": "ec34077171489d44ba96b46984db895fe7b294e80e1727211de2146408cae6de",
+    "approval_raw_export_sha256": "e4f87429c766e87995b182db724694339fb7df9319f93a9e6dcf93d71531964d",
+    "approval_gzip_sha256": "df25d577525eb387fc307addd71b8c3c6b4a30c6c3996ba6bed2e86514fafe3e",
+    "root_raw_export_sha256": "de3de2408a4a0b001b8c4495f4d1bbd3fffab5754280a66d77178a3290368fb4",
+    "root_gzip_sha256": "6068d119a26f52a2aea8a4c5b74af5d8228d00367dfb93fe8756c04bc0e51b01",
+    "root_task_status": "completed",
+    "chronology": "pass",
+    "live_resolution": "pass",
+    "non_replay": "pass"
   },
   "commands": [
     {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.evidence_integrity_gates.test_supervisor_integration",
+      "result": "pass; 23 tests"
+    },
+    {
       "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -v -s measure/tests/evidence_integrity_gates -p 'test_*.py'",
-      "result": "pass; 120 tests"
+      "result": "fail; 136 passed and 1 stale portability assertion expected the root accepted manifest to remain revoked v2"
     },
     {
-      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v <accepted-manifest mutation cases 002, 008, 009>",
-      "result": "pass; 3 focused mutation tests"
-    },
-    {
-      "command": "bash tests/orchestrator_supervisor_invariants.sh; bash tests/orchestrator_review_execution_truthfulness.sh; bash tests/orchestrator_catalog.sh; bash tests/orchestrator_marker_vocabulary.sh; bash tests/orchestrator_detector_syntax.sh; bash tests/orchestrator_role_receipt_integrity.sh",
+      "command": "bash tests/orchestrator_supervisor_invariants.sh && bash tests/orchestrator_review_execution_truthfulness.sh && bash tests/orchestrator_catalog.sh && bash tests/orchestrator_marker_vocabulary.sh && bash tests/orchestrator_detector_syntax.sh && bash tests/orchestrator_role_receipt_integrity.sh",
       "result": "pass; 6 of 6 guards"
     },
     {
@@ -36,29 +45,39 @@
       "result": "pass"
     },
     {
-      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -c '<resolve repo; call supervisor_gate._validate_manifest>'",
-      "result": "pass; accepted manifest and all bound artifacts validated by the production supervisor gate implementation"
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -c '<call production _validate_manifest with OpenCodeTrustedSessionResolver>'",
+      "result": "pass; phase4-v6-candidate resolved live with no blocker"
     },
     {
       "command": "PYTHONDONTWRITEBYTECODE=1 python3 measure/automation-supervisor.py --dry-run --track '^measure_apk_evidence_integrity_gates_20260712$' --limit 1",
-      "result": "pass; one Phase 4 track selected and no commands executed"
+      "result": "pass; one track selected and no commands executed"
     },
     {
-      "command": "git diff --check -- <acceptance files>",
-      "result": "pass"
+      "command": "git diff --check -- <v6 acceptance files>; git diff -- <candidate> <review>",
+      "result": "pass; no whitespace errors and candidate/review bytes unchanged"
     }
   ],
-  "manual_verification": {
-    "approved": true,
-    "approval_artifact": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/phase4-owner-approval.json",
-    "prompt_message_id": "msg_f56fc6a6c001Kj1tD8aoBXAbtu",
-    "prompt_message_sha256": "e7221b6630497b70b769c99010293e47a3c88a42097ce1f7318c69b14ddacd9a"
-  },
-  "notes": [
-    "Candidate and independent-review files were not modified.",
-    "Final acceptance relocated the exact candidate, review, and approval bytes to measure/acceptance so their bindings survive active-track archival; their approved SHA-256 values are unchanged.",
-    "The first diagnostic call to the private _validate_manifest helper supplied a relative repository path and therefore failed its canonical-path check; the corrected resolved-path invocation passed. Public validate_supervisor_completion resolves the repository path itself, and all 10 supervisor integration cases passed.",
-    "Unrelated dirty work was preserved and excluded from the acceptance commit."
+  "historical_acceptances": [
+    {
+      "gate_version": "phase4-v2-candidate",
+      "status": "revoked",
+      "candidate_manifest_sha256": "9b43d2893b38ea7c618a320f1a561b61295dd93b13fbf143c408e6c0686d0a44",
+      "independent_review_sha256": "7ee4b9c8d52236eafc96cebbb7bd6eac01b8c3e85f3cb90238f4c70500cfdbe9",
+      "owner_approval_sha256": "3a91ecd11efe5e190a3360c0bbea0fcc6405462df5ceee07628736217de6cd18",
+      "accepted_manifest_sha256_after_portable_path_update": "8ae00745d3906cd69225bf10ca5a94b72af49ee1a00858a995a69e653da27e02"
+    }
   ],
-  "blockers": []
+  "blockers": [
+    {
+      "id": "V6-ACCEPT-TEST-001",
+      "severity": "medium",
+      "summary": "test_acceptance_portability.py is bound by the immutable v6 candidate but still asserts that the root accepted manifest has revoked-v2 status. Updating that gate-bound test after review would invalidate the exact v6 candidate/review binding, so the aggregate suite is truthfully red after publication even though production live validation passes.",
+      "required_follow_up": "A future gate candidate must move the revoked-v2 assertion to a frozen historical artifact and separately test the current accepted manifest before claiming an aggregate-green acceptance publication."
+    }
+  ],
+  "notes": [
+    "Candidate and independent-review bytes were not modified.",
+    "Prior failed and revoked versions remain in place as negative evidence.",
+    "No mutation test was changed because the only discovered coverage drift is in a file frozen by the exact reviewed v6 candidate; changing it would require a new candidate, review, and owner approval."
+  ]
 }

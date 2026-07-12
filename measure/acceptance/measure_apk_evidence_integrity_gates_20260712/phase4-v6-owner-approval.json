@@ -1,0 +1,62 @@
+{
+  "schema_version": "evidence-integrity.phase4-owner-approval.v1",
+  "decision": "approve",
+  "revoked": false,
+  "candidate_manifest_hash": "5ac5900c6d68a2c0da2900f13e9cfd401dcf38ef85459cf14ad17403da4c405b",
+  "review_report_hash": "e198a45d57badb364f4c16e48074108f9bafbe92825c9c2a005fa4e8c8b5213c",
+  "gate_commit": "88ba3a986db2c3855fa1d9af73759bcac660c3df",
+  "gate_version": "phase4-v6-candidate",
+  "approval_event": {
+    "provenance_kind": "opencode-raw-export",
+    "raw_export_path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/exports/e4f87429c766e87995b182db724694339fb7df9319f93a9e6dcf93d71531964d.json.gz",
+    "raw_export_sha256": "e4f87429c766e87995b182db724694339fb7df9319f93a9e6dcf93d71531964d",
+    "stored_export_sha256": "df25d577525eb387fc307addd71b8c3c6b4a30c6c3996ba6bed2e86514fafe3e",
+    "raw_export_snapshot_bytes": 622862,
+    "stored_export_snapshot_bytes": 134087,
+    "session_id": "ses_0a8a1eba9ffeUUUxW3EnlLv4aJ",
+    "parent_session_id": "ses_0aa8a4740ffe2BOVmChNfZLEv0",
+    "agent": "coder-openai-gpt-5-6-sol-pro",
+    "role": "product-owner",
+    "prompt_message_id": "msg_f575e1462001AIsAAT98kP7U8b",
+    "prompt_text_sha256": "ec34077171489d44ba96b46984db895fe7b294e80e1727211de2146408cae6de",
+    "prompt_created_ms": 1783877211235,
+    "final_response_message_id": "msg_f575f3884001YHlqbCcHS1QhU9",
+    "final_response_text_sha256": "ec34077171489d44ba96b46984db895fe7b294e80e1727211de2146408cae6de",
+    "final_response_completed_ms": 1783877292907,
+    "runtime": "OpenCode CLI 1.17.18"
+  },
+  "root_owner_delegation": {
+    "raw_export_path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/exports/de3de2408a4a0b001b8c4495f4d1bbd3fffab5754280a66d77178a3290368fb4.json.gz",
+    "raw_export_sha256": "de3de2408a4a0b001b8c4495f4d1bbd3fffab5754280a66d77178a3290368fb4",
+    "stored_export_sha256": "6068d119a26f52a2aea8a4c5b74af5d8228d00367dfb93fe8756c04bc0e51b01",
+    "raw_export_snapshot_bytes": 4784461,
+    "stored_export_snapshot_bytes": 997972,
+    "session_id": "ses_0aa8a4740ffe2BOVmChNfZLEv0",
+    "agent": "coder-orchestrator",
+    "owner_designation_event": {
+      "message_id": "msg_f56521237001iEKkL5c2stmWKq",
+      "message_text_sha256": "b7b416bf8a172c6f216025b559bbe40d874bf08999685096f01f2750cfb38353",
+      "created_ms": 1783859647031,
+      "designated_role": "product-owner",
+      "delegate_agent": "coder-openai-gpt-5-6-sol-pro"
+    },
+    "approval_publication_event": {
+      "message_id": "msg_f575de8b7001H5BETtnOQ39sPv",
+      "task_call_id": "call_LOfxd0RNlbLWY5nVg1xcOA7J",
+      "delegated_session_id": "ses_0a8a1eba9ffeUUUxW3EnlLv4aJ",
+      "delegated_prompt_sha256": "ec34077171489d44ba96b46984db895fe7b294e80e1727211de2146408cae6de",
+      "task_output_sha256": "e635e888db44e63b26d1a195f9cf3533903c08c14d4f581cd89e7960c396ab93",
+      "task_status": "completed",
+      "created_ms": 1783877200055,
+      "completed_ms": 1783877293728
+    }
+  },
+  "verification": {
+    "review_completed_ms": 1783876533764,
+    "chronology": "review-completed-before-root-publication-before-approval-prompt-before-approval-final",
+    "canonical_prompt_equals_final_response": true,
+    "live_provider_resolution_required": true,
+    "replay_event_id": "msg_f575e1462001AIsAAT98kP7U8b"
+  },
+  "note": "The approval and root exports are retained as exact raw JSON and deterministic mtime=0 gzip snapshots. The authoritative approval is the canonical user prompt in the completed root task; the matching final response is retained as an exact evidentiary cross-check."
+}
