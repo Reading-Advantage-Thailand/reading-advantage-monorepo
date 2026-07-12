@@ -1,0 +1,5 @@
+Track: apk_cross_game_asset_ontology_20260712 Phase 2 mechanic blueprints
+Summary: Published one machine and human mechanic blueprint for each of 29 canonical games, including learning loop, controls/world, terminal state, retained behavior, Phaser redesign boundary, deterministic transitions, counterexamples, confidence, and evidence.
+Files: mechanic-blueprints.json; mechanic-blueprints/*.md; generate-blueprints.mjs; blueprint-cross-review.md; __tests__/mechanic-blueprints.test.ts; plan.md
+Why: Cartridge and shared-kit work need behavioral contracts that preserve identity without preserving renderer accidents.
+Verification: 12/12 track tests pass; 88.57% statement and 87.5% line coverage for audit-schema.ts; all evidence references resolve.
