@@ -82,7 +82,27 @@
       "raw_path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/exports/de3de2408a4a0b001b8c4495f4d1bbd3fffab5754280a66d77178a3290368fb4.json",
       "path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/exports/de3de2408a4a0b001b8c4495f4d1bbd3fffab5754280a66d77178a3290368fb4.json.gz",
       "json_parse": "pass"
+    },
+    {
+      "purpose": "v8-owner-approval-completed-task",
+      "session_id": "ses_0a8731162ffeKnEnggX5iZiZuv",
+      "raw_sha256": "ec2a7ccd3afdffc2e6378ad9a68cab9281bf628cc4a284d6b8a4a6db9a7542b9",
+      "raw_bytes": 396392,
+      "gzip_sha256": "342e293eceab0255f1b0ec415d44fadba7536a0acfc01bbf0c1ae9f12165f14f",
+      "gzip_bytes": 93845,
+      "path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/exports/ec2a7ccd3afdffc2e6378ad9a68cab9281bf628cc4a284d6b8a4a6db9a7542b9.json.gz",
+      "json_parse": "pass"
+    },
+    {
+      "purpose": "v8-root-owner-completed-task",
+      "session_id": "ses_0aa8a4740ffe2BOVmChNfZLEv0",
+      "raw_sha256": "8f4c9a2ef19a8919ce4f7d25e9db79a9098d8996d87c414c8865e82ad4619382",
+      "raw_bytes": 5689966,
+      "gzip_sha256": "09b2d708d7643531d8649a3fdaebcfbdec4baa87ade98d01de682d4bebc0f079",
+      "gzip_bytes": 1181885,
+      "path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/exports/8f4c9a2ef19a8919ce4f7d25e9db79a9098d8996d87c414c8865e82ad4619382.json.gz",
+      "json_parse": "pass"
     }
   ],
-  "note": "All v2 snapshots are historical evidence and cannot approve v3. The v3 reviewer evidence is revoked. The v6 reviewer, owner-approval, and root-owner snapshots bind the accepted v6 candidate; v6 acceptance does not make any prior failed version reusable."
+  "note": "All v2 snapshots are historical evidence and cannot approve v3. The v3 reviewer evidence is revoked. The v6 reviewer, owner-approval, and root-owner snapshots bind the accepted v6 candidate. The v8 approval and root snapshots retain the completed canonical owner task but are not consumed because the stable v8 review artifact fails production provenance validation."
 }

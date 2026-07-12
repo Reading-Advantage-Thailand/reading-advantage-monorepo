@@ -1,0 +1,84 @@
+{
+  "schema_version": "evidence-integrity.phase4-verification.v3",
+  "status": "blocked-before-acceptance-publication",
+  "gate_version": "phase4-v8-candidate",
+  "gate_commit": "5aea360f94f978ac78e590e0a64d33d176beaa1a",
+  "candidate_manifest_sha256": "f6bf22ec31a00d2066d410b3a34c3f67251f4cc83f40701c4aadb336931ce153",
+  "independent_review_sha256": "2faeaa4b7b37214a492f647b9e8d495a1c1a384080915cb78ecf4e5899ea06cd",
+  "owner_approval_sha256": "71919c691d9f30a9779d7850e5c63eda56a2a02313ac054d1282d71f1248a691",
+  "accepted_manifest_published": false,
+  "root_manifest_status": "revoked",
+  "root_manifest_sha256": "cbc76c872cf8b46676989655f4c1a98eb5f9454d2ff7d3d7555cc647b093e057",
+  "approval_event": {
+    "session_id": "ses_0a8731162ffeKnEnggX5iZiZuv",
+    "parent_session_id": "ses_0aa8a4740ffe2BOVmChNfZLEv0",
+    "prompt_message_id": "msg_f578ceeb1001IlZt3xnANEjlrZ",
+    "final_response_message_id": "msg_f578fd160001cylby4ILjRSCrP",
+    "prompt_and_final_text_sha256": "47ed163b8590758ca4434d2f04167e4b870d3f274c1390ba7f78415e0896a382",
+    "approval_raw_export_sha256": "ec2a7ccd3afdffc2e6378ad9a68cab9281bf628cc4a284d6b8a4a6db9a7542b9",
+    "approval_gzip_sha256": "342e293eceab0255f1b0ec415d44fadba7536a0acfc01bbf0c1ae9f12165f14f",
+    "root_raw_export_sha256": "8f4c9a2ef19a8919ce4f7d25e9db79a9098d8996d87c414c8865e82ad4619382",
+    "root_gzip_sha256": "09b2d708d7643531d8649a3fdaebcfbdec4baa87ade98d01de682d4bebc0f079",
+    "root_owner_designation_message_id": "msg_f56521237001iEKkL5c2stmWKq",
+    "root_publication_message_id": "msg_f578cbde7001J2ZSAL7nvbvqrs",
+    "root_task_call_id": "call_pEjYJxNRXFXCDvr845ulqE0d",
+    "root_task_status": "completed",
+    "chronology": "pass",
+    "live_resolution": "pass",
+    "non_replay": "pass",
+    "consumed": false
+  },
+  "commands": [
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -v -s measure/tests/evidence_integrity_gates -p 'test_*.py'",
+      "result": "pass; 139 tests"
+    },
+    {
+      "command": "bash tests/orchestrator_supervisor_invariants.sh && bash tests/orchestrator_review_execution_truthfulness.sh && bash tests/orchestrator_catalog.sh && bash tests/orchestrator_marker_vocabulary.sh && bash tests/orchestrator_detector_syntax.sh && bash tests/orchestrator_role_receipt_integrity.sh",
+      "result": "pass; 6 of 6 guards"
+    },
+    {
+      "command": "bash measure/doctor.sh",
+      "result": "pass"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -c '<call production _validate_owner_provenance with OpenCodeTrustedSessionResolver>'",
+      "result": "pass; authentic event msg_f578ceeb1001IlZt3xnANEjlrZ"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -c '<call production _validate_review_provenance with OpenCodeTrustedSessionResolver>'",
+      "result": "fail closed; returned (False, None)"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -c '<call production _validate_manifest with OpenCodeTrustedSessionResolver>'",
+      "result": "blocked; ACCEPTED_GATE_MANIFEST_INVALID because no valid v8 accepted manifest was published"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 measure/automation-supervisor.py --dry-run --track '^measure_apk_evidence_integrity_gates_20260712$' --limit 1",
+      "result": "pass; all phases complete under structured blocked-task semantics and no commands executed"
+    },
+    {
+      "command": "detached worktree at 5aea360f94f978ac78e590e0a64d33d176beaa1a; recompute candidate runtime file hashes",
+      "result": "pass; 12 of 12 gate files match"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "V8-ACCEPT-REVIEW-PROVENANCE",
+      "severity": "critical",
+      "summary": "The exact stable review artifact cannot satisfy the production live validator.",
+      "details": {
+        "artifact_role": "independent-reviewer",
+        "required_role": "adversarial-reviewer",
+        "artifact_agent": "deepseek-v4-pro",
+        "live_agent": "coder-openai-gpt-5-6-sol-pro",
+        "artifact_parent_session_id": null,
+        "live_parent_session_id": "ses_0aa8a4740ffe2BOVmChNfZLEv0",
+        "artifact_retained_raw_export_path": null,
+        "live_review_session_id": "ses_0a87a88dfffe0HGaHtbtDwEFIh",
+        "live_review_raw_export_sha256": "8b72f9e70a68244e0dbfab9ffc4bf2fe478a3d315f3057334c4b218069f41a67"
+      },
+      "required_follow_up": "Start a fresh candidate/review/approval cycle whose immutable review artifact carries the exact retained/live provenance fields required by the gate. The v8 candidate and review were intentionally left unchanged."
+    }
+  ]
+}
