@@ -1,0 +1,115 @@
+{
+  "schema_version": "evidence-integrity.independent-review.v8",
+  "review_status": "pass",
+  "consumable": false,
+  "revoked": false,
+  "approval_decision": null,
+  "review_hash": "f7732e265f70ab59b36f7a8306f14c3dae258515a2381f67d092550b09ed2fa0",
+  "retained_deterministic_export_sha256": "c046009c4b3a504866c40b52da54f31b6696c0d8122ec1c87482faf6da4311b5",
+  "implementation_revision": "5aea360f94f978ac78e590e0a64d33d176beaa1a",
+  "source_base_revision": "4b439a853e0510bd6aa0ee237d4636bf5be9cf56",
+  "review_range": "4b439a853e0510bd6aa0ee237d4636bf5be9cf56..5aea360f94f978ac78e590e0a64d33d176beaa1a",
+  "candidate_manifest_path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/phase4-v8-candidate-gate-manifest.json",
+  "candidate_manifest_sha256": "f6bf22ec31a00d2066d410b3a34c3f67251f4cc83f40701c4aadb336931ce153",
+  "superseded_candidate_sha256": "4d784c3e2adfee45f81d5b8abd389e645fef8f4c23a2275d13426c08b0f20a5a",
+  "remediates": ["V7-ADV-001"],
+  "scope": {
+    "requirements": ["FR1", "FR2", "FR3", "FR4", "FR5", "FR6"],
+    "anti_patterns": ["A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10", "A11", "A12", "A13", "A14", "A15"]
+  },
+  "findings": [
+    {
+      "id": "V8-VAL-001",
+      "severity": "info",
+      "status": "verified",
+      "summary": "V7-ADV-001 resolved: the v8 candidate is bound to the independently verified pre-v8 implementation commit (5aea360f). The evidence-integrity-accepted-gate.json root now records phase4-v7-candidate as revoked with prior_accepted_manifest refs preserved.",
+      "resolution": "Implementation commit 5aea360f transitions the root accepted-gate manifest from v6-accepted state to v7-revoked pre-v8 state. The v6-accepted historical manifest (SHA-256 22acc73ab7) is preserved as prior_accepted_manifest. The v7 candidate is revoked, and v8 supersedes it. No accepted manifest is published for v7 or v8."
+    },
+    {
+      "id": "V8-VAL-002",
+      "severity": "info",
+      "status": "verified",
+      "summary": "All 139 evidence integrity gate tests pass at HEAD. No regressions in any test suite.",
+      "resolution": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -v -s measure/tests/evidence_integrity_gates -p 'test_*.py' returns OK with 139 tests, 0 failures, 0 errors."
+    },
+    {
+      "id": "V8-VAL-003",
+      "severity": "info",
+      "status": "verified",
+      "summary": "Six orchestrator guards, doctor, and all gate checks pass. Zero guard failures, zero doctor failures.",
+      "resolution": "Guards: supervisor_invariants, review_execution_truthfulness, catalog, marker_vocabulary, detector_syntax, role_receipt_integrity all pass. Doctor: all checks pass (supervisor invariants, active plans, executed review tracks, guard declarations, catalog presence)."
+    },
+    {
+      "id": "V8-VAL-004",
+      "severity": "info",
+      "status": "verified",
+      "summary": "Candidate manifest SHA-256 f6bf22ec31a00d2066d410b3a34c3f67251f4cc83f40701c4aadb336931ce153 matches exact file bytes. All 12 gate file hashes verified at HEAD, observed: ['c1489f3e...7b8ba809'..'4e201ee6...d8afdce']. No test files in runtime gate set. File count: 12 (exactly REQUIRED_GATE_FILES).",
+      "resolution": "sha256sum on each file path matches the manifest entries exactly. No mutable test files bound as gate files."
+    },
+    {
+      "id": "V8-VAL-005",
+      "severity": "info",
+      "status": "verified",
+      "summary": "Canonical review prompt derived from exact candidate bytes via 'python3 -m measure.evidence_integrity_gates.cli review-prompt'. Live output SHA-256 89b9d10e8a7c28b03f3ebd549cf433a761f765241319b1944d1b755a52bda427 matches the stored artifact SHA-256 exactly.",
+      "resolution": "Derived prompt binds candidate_manifest_sha256, gate_version, implementation_commit, and source_base_commit. Exact match between live generation and phase4-v8-canonical-review-prompt.json."
+    },
+    {
+      "id": "V8-VAL-006",
+      "severity": "info",
+      "status": "verified",
+      "summary": "V7 revocation record (phase4-v7-revocation.json) correctly supersedes v7 with v8. V6 accepted historical manifest (SHA-256 22acc73ab7a2c75b9a472b18d3327c6d1a6c8ec105a17062ffa1e6cb1c3abcec) preserved. Root accepted-gate.json correctly records v7 revoked state. No unresolved C/H/M findings.",
+      "resolution": "The full evidence chain is: v6 accepted → v7 candidate (revoked) → v8 candidate (pending review). v6 acceptance evidence is preserved. The accepted-gate-root is at v7 candidate/revoked, with prior_accepted_manifest pointing to v6. No superseded_by field on the root (correct for revoked state awaiting v8 review)."
+    }
+  ],
+  "unresolved_findings": {
+    "critical": [],
+    "high": [],
+    "medium": []
+  },
+  "verification": {
+    "evidence_gate_tests": "139 passed",
+    "orchestrator_guards": "6 passed",
+    "doctor": "passed",
+    "production_review_validator": "passed",
+    "canonical_prompt_match": "passed",
+    "file_hash_verification": "12/12 match"
+  },
+  "fr_recheck": {
+    "FR1": "pass",
+    "FR2": "pass",
+    "FR3": "pass",
+    "FR4": "pass",
+    "FR5": "pass",
+    "FR6": "pass"
+  },
+  "anti_pattern_recheck": {
+    "A1-A15": "pass"
+  },
+  "fresh_context_provenance": {
+    "session_id": "ses_0a87a88dfffe0HGaHtbtDwEFIh",
+    "parent_session_id": null,
+    "agent": "deepseek-v4-pro",
+    "role": "independent-reviewer",
+    "canonical_prompt_text_sha256": "89b9d10e8a7c28b03f3ebd549cf433a761f765241319b1944d1b755a52bda427",
+    "exactly_one_user_prompt": true,
+    "no_inherited_followup_turns": true,
+    "candidate_unchanged": true,
+    "approval_not_granted": true,
+    "review_hash": "f7732e265f70ab59b36f7a8306f14c3dae258515a2381f67d092550b09ed2fa0"
+  },
+  "export_binding": {
+    "deterministic_gzip_sha256": "c046009c4b3a504866c40b52da54f31b6696c0d8122ec1c87482faf6da4311b5",
+    "deterministic_gzip_path": "/tmp/v8-deterministic-export.tar.gz",
+    "contains": [
+      "implementation.diff",
+      "12 gate files (exact bytes at HEAD)",
+      "candidate manifest",
+      "canonical review prompt",
+      "v7 revocation record",
+      "v6 accepted historical manifest",
+      "accepted-gate root",
+      "hashes.txt"
+    ],
+    "determinism_verified": "two independent compressions produce identical SHA-256"
+  }
+}
