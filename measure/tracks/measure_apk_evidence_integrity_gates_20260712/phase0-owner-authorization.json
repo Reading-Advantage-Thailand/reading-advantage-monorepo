@@ -1,0 +1,10 @@
+{
+  "schema_version": "owner-authorization.v1",
+  "track_id": "measure_apk_evidence_integrity_gates_20260712",
+  "authorization": "phase0-execution-and-completion",
+  "source": "explicit current user instruction",
+  "event_id": null,
+  "event_id_status": "not exposed by this execution surface; intentionally not invented",
+  "exact_text": "Bind the user’s explicit owner designation as authorization without inventing an event ID; resolve the parent session if possible.",
+  "exact_text_sha256": "b1bd367649184696ed36782be9e702a267968a3d68117652507eab7db5868c92"
+}

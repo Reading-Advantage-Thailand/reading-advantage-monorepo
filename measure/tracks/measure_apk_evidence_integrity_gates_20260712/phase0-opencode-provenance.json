@@ -1,0 +1,97 @@
+{
+  "schema_version": "opencode-provenance.v1",
+  "roles": [
+    {
+      "role": "strategy",
+      "session_id": "ses_0aa191e2bffebBv1iZ52qxCX4d",
+      "session_parent_id": "ses_0aa8a4740ffe2BOVmChNfZLEv0",
+      "agent": "measure-strategy",
+      "raw_export_sha256": "a0e39440d3a9e1871140d4a70020c015e6b0eb673fe3dff91238d022478eb8e6",
+      "raw_export_bytes": 829204,
+      "first_message_id": "msg_f55e6e30a001GzETrTBtKbFRu7",
+      "last_message_id": "msg_f55eca2ec001rIuvcyPk1LzS8m",
+      "message_count": 14,
+      "prompt_message_id": "msg_f55e6e30a001GzETrTBtKbFRu7",
+      "prompt_sha256": "13d71a303ab1b9e9fff694abf2e0b80e0c10bd7a9072c2827b18a45375b0f661",
+      "final_response_message_id": "msg_f55eca2ec001rIuvcyPk1LzS8m",
+      "final_response_sha256": "f7956260c3cdcad554547f1c61eb8607fac2ffb90df36c253e3bb83289e8d7b5",
+      "started_ms": 1783852622614,
+      "completed_ms": 1783853009713,
+      "output_sha256": {
+        "measure/tracks/measure_apk_evidence_integrity_gates_20260712/test-strategy.md": "81bb44da49a598bf32c46333f9c9c17a4858334134c1d0be8eac1da6873490ed"
+      },
+      "output_commit": "75a12493b8e2fba4bf57566a132a9bd04eb03dc6",
+      "fork_turns": null,
+      "fork_turns_check": "schema-field-absent"
+    },
+    {
+      "role": "red-counterexamples",
+      "session_id": "ses_0aa12e938ffeoWHrt15XNN5uGp",
+      "session_parent_id": "ses_0aa8a4740ffe2BOVmChNfZLEv0",
+      "agent": "measure-mid-red",
+      "raw_export_sha256": "6cf3fbc46ea31970570b1b58273afebadc164920327472d53eafe2057d91b1b2",
+      "raw_export_bytes": 1423799,
+      "first_message_id": "msg_f55ed172f001PIm78A6FWwqWbe",
+      "last_message_id": "msg_f55fd7e5a00196Whvxwy3MW1yZ",
+      "message_count": 98,
+      "prompt_message_id": "msg_f55ed172f001PIm78A6FWwqWbe",
+      "prompt_sha256": "b3742b5ab1d7407e7b773da65b42670ffcfffd545e604471e043bfb00639420d",
+      "final_response_message_id": "msg_f55fd7e5a00196Whvxwy3MW1yZ",
+      "final_response_sha256": "6cf284beda70411cac3b9e286af98dacfa523b22f00f50eb82674dbfeb8135ef",
+      "started_ms": 1783853029191,
+      "completed_ms": 1783854139788,
+      "output_sha256": {
+        "measure/tests/evidence_integrity_gates/fixtures/invalid/invalid_severity_unknown_level.json": "b405428dc99f94b4ed6d1ee1e199bd8cfa52e7a7f672d8e50350b9f090a23561"
+      },
+      "output_commit": "535bfdfed6d9d6d100a9f066e255efd722341262",
+      "fork_turns": null,
+      "fork_turns_check": "schema-field-absent"
+    },
+    {
+      "role": "green-contracts",
+      "session_id": "ses_0aa01bc31ffe09LS2OIF6AtCme",
+      "session_parent_id": "ses_0aa8a4740ffe2BOVmChNfZLEv0",
+      "agent": "measure-jr-green",
+      "raw_export_sha256": "44371b5301ddd5e467021801ee1bf96d748b0e47aa000548d0cde35a28f755fd",
+      "raw_export_bytes": 1402705,
+      "first_message_id": "msg_f55fe4401001CBP4ab032Nf8Yx",
+      "last_message_id": "msg_f56368bcf001gys7Yzt5pwwACX",
+      "message_count": 87,
+      "prompt_message_id": "msg_f55fe4401001CBP4ab032Nf8Yx",
+      "prompt_sha256": "5f0b73ba3360145963525d1d243023cbb3c9d367e748eda1d7d5862bc80ee3a0",
+      "final_response_message_id": "msg_f56368bcf001gys7Yzt5pwwACX",
+      "final_response_sha256": "74e586b90c25db2e4a158e7bf8ea37a8ff6c5df3554e837102f8d30bca735ca8",
+      "started_ms": 1783854154764,
+      "completed_ms": 1783857932350,
+      "output_sha256": {
+        "measure/evidence_integrity_gates/contracts.py": "af3e6cc3238fd67ed12b8f41806d12fb01d403c05c920a6556dd1d00a6d21027"
+      },
+      "output_commit": "535bfdfed6d9d6d100a9f066e255efd722341262",
+      "fork_turns": null,
+      "fork_turns_check": "schema-field-absent"
+    },
+    {
+      "role": "independent-review",
+      "session_id": "ses_0a9ad6d31ffeUD4CqyaL5NZidM",
+      "session_parent_id": "ses_0aa8a4740ffe2BOVmChNfZLEv0",
+      "agent": "coder-openai-gpt-5-6-terra-pro",
+      "raw_export_sha256": "74aef6de36b15fb0afa34f40972ccb115ccec60dd608415c58fbb07111261b56",
+      "raw_export_bytes": 738452,
+      "first_message_id": "msg_f565292f7001OFoqQ6ttFJO4KH",
+      "last_message_id": "msg_f56552aef001xPBcDekUxw8kvY",
+      "message_count": 15,
+      "prompt_message_id": "msg_f565292f7001OFoqQ6ttFJO4KH",
+      "prompt_sha256": "032fda5c150b268e224fd5765f21545730e11b5f623de055de1994b9a4b3d36e",
+      "final_response_message_id": "msg_f56552aef001xPBcDekUxw8kvY",
+      "final_response_sha256": "ba1812e8a49555a4ace864ab5a0474867d6922bf5d899bf738801f377a8f6c6b",
+      "started_ms": 1783859679994,
+      "completed_ms": 1783859863845,
+      "output_sha256": {
+        "measure/tracks/measure_apk_evidence_integrity_gates_20260712/phase0-retry-acceptance-result.json": "8a8e1643c09fb712bdfbeff1dba560f34cf35dd857fdcfdae2597232832fa7d5"
+      },
+      "output_commit": "8a6d17c44c9485e1b93a7ea3edae65865362d419",
+      "fork_turns": null,
+      "fork_turns_check": "schema-field-absent"
+    }
+  ]
+}

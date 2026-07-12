@@ -1,0 +1,44 @@
+{
+  "schema_version": "phase-completion.v1",
+  "track_id": "measure_apk_evidence_integrity_gates_20260712",
+  "phase": "Phase 0",
+  "status": "complete",
+  "completed_at": "2026-07-12",
+  "provenance": "phase0-opencode-provenance.json",
+  "owner_authorization": "phase0-owner-authorization.json",
+  "truthful_equivalences": {
+    "fork_turns": "OpenCode 1.17.18 export schema omits this field; reviewer independence is checked through a distinct session, distinct final message, shared resolved parent session, and reviewer start after all author sessions completed.",
+    "owner_event_id": "The current execution surface does not expose the user's message event ID; the exact authorization text and SHA-256 are stored without inventing an ID."
+  },
+  "verification": [
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.evidence_integrity_gates.test_contract_scaffold",
+      "result": "pass",
+      "tests": 46
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.evidence_integrity_gates.test_phase0_retry_contracts",
+      "result": "pass",
+      "tests": 23
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.evidence_integrity_gates.test_opencode_provenance measure.tests.evidence_integrity_gates.test_phase0_provenance",
+      "result": "pass",
+      "tests": 7
+    },
+    {
+      "command": "bash tests/orchestrator_supervisor_invariants.sh && bash tests/orchestrator_review_execution_truthfulness.sh && bash tests/orchestrator_catalog.sh && bash tests/orchestrator_marker_vocabulary.sh && bash tests/orchestrator_detector_syntax.sh && bash tests/orchestrator_role_receipt_integrity.sh",
+      "result": "pass"
+    },
+    {
+      "command": "bash measure/doctor.sh",
+      "result": "pass"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m measure.evidence_integrity_gates.opencode_provenance verify --repo . --evidence measure/tracks/measure_apk_evidence_integrity_gates_20260712/phase0-opencode-provenance.json --raw-dir /tmp/opencode/measure-apk-phase0-live",
+      "result": "pass"
+    }
+  ],
+  "remaining_work": "Phases 1-4 only",
+  "blockers": []
+}

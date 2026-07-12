@@ -1,0 +1,8 @@
+{
+  "schema_version": "role-receipt-supersession.v1",
+  "superseded_receipt": "measure/tests/evidence_integrity_gates/role-receipts/phase0.json",
+  "reason": "The legacy receipt contains explicit placeholder event provenance and cannot attest Phase 0 completion.",
+  "replacement_evidence": "measure/tracks/measure_apk_evidence_integrity_gates_20260712/phase0-opencode-provenance.json",
+  "replacement_source": "opencode export <sessionID>",
+  "legacy_disposition": "preserved-rejected-not-completion"
+}

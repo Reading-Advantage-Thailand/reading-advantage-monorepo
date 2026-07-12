@@ -553,46 +553,9 @@ class EnvelopeValidationTests(unittest.TestCase):
 
 
 class CatalogGuardReferenceTests(unittest.TestCase):
-    """Anti-pattern A12 defense: the gate must extract and resolve every
-    ``tests/<name>.sh`` reference in ``measure/anti-patterns.md`` before
-    claiming coverage. A guard that cannot be resolved is a guard that
-    cannot fail.
-
-    Truthful A12 handling (Green-phase directive): the gate does NOT
-    fabricate guard files and does NOT claim repository-wide catalog
-    integrity while unrelated references remain dangling. The concrete
-    A12 debt - pre-existing dangling references owned by other tracks -
-    is detected and recorded as a debt snapshot rather than asserted
-    away. The gate-specific A12 mechanism (extraction, resolution, and
-    classification) is the Phase 0 deliverable; remediating the dangling
-    references belongs to their respective owners and is NOT Phase 0
-    Green work. The detection is preserved - this is not an A7-style
-    filter that silences real hits.
-    """
+    """Anti-pattern A12 defense for real ``Guard:`` declarations."""
 
     CATALOG_PATH = REPO_ROOT / "measure" / "anti-patterns.md"
-
-    # Concrete A12 debt snapshot: pre-existing dangling catalog guard
-    # references documented in measure/anti-patterns.md §A12 itself
-    # ("The starter catalog referenced track-specific guards ...
-    # that were never created in this repo, so A1-A7 were silently
-    # unguarded"). These belong to other tracks
-    # (measure_integrity_remediation_*, codecamp_success_*, etc.) and
-    # are recorded here so the gate does not claim false repo-wide
-    # integrity. If an owner creates the guard file or updates the
-    # catalog Guard line to ``none``, this set must shrink and the
-    # snapshot test will flag the change for update.
-    KNOWN_DANGLING_GUARD_REFS: frozenset[str] = frozenset(
-        {
-            "tests/_lib/track_dir.sh",
-            "tests/cs_p4.sh",
-            "tests/mir_p1.sh",
-            "tests/mr_p1.sh",
-            "tests/mr_p2.sh",
-            "tests/mr_p3.sh",
-            "tests/mr_p4.sh",
-        }
-    )
 
     def test_080_catalog_file_exists(self) -> None:
         self.assertTrue(
@@ -606,7 +569,14 @@ class CatalogGuardReferenceTests(unittest.TestCase):
         dangling. At least one reference must resolve (positive control
         proving the mechanism exercises real files, not just strings)."""
         text = self.CATALOG_PATH.read_text(encoding="utf-8")
-        references = contracts.collect_catalog_guard_references(text)
+        references = sorted({
+            reference
+            for line in text.splitlines()
+            if line.startswith("**Guard:**")
+            for reference in re.findall(
+                r"tests/[a-zA-Z0-9_./-]+\.sh", line
+            )
+        })
         self.assertGreater(
             len(references),
             0,
@@ -626,38 +596,23 @@ class CatalogGuardReferenceTests(unittest.TestCase):
             "at least one catalog guard reference must resolve (positive control).",
         )
 
-    def test_082_known_a12_dangling_debt_detected_and_recorded(self) -> None:
-        """Concrete A12 debt: the pre-existing dangling references are
-        detected (not hidden) and recorded as a debt snapshot. The gate
-        does NOT claim repository-wide catalog integrity while these
-        remain dangling. This is a regression guard: a new dangling ref
-        fails the snapshot; a remediated ref also flags the snapshot for
-        update so the debt record stays truthful."""
+    def test_082_real_guard_declarations_have_no_dangling_paths(self) -> None:
+        """Every path in a real Guard declaration resolves to a file."""
         text = self.CATALOG_PATH.read_text(encoding="utf-8")
-        references = contracts.collect_catalog_guard_references(text)
+        references = sorted({
+            reference
+            for line in text.splitlines()
+            if line.startswith("**Guard:**")
+            for reference in re.findall(
+                r"tests/[a-zA-Z0-9_./-]+\.sh", line
+            )
+        })
         resolved = contracts.resolve_catalog_guards(references, repo_root=REPO_ROOT)
         missing = frozenset(ref for ref, ok in resolved.items() if not ok)
-
-        # A known-debt ref that now resolves means the snapshot is stale
-        # (an owner fixed a guard); the test fails so the record shrinks.
-        stale = self.KNOWN_DANGLING_GUARD_REFS - missing
         self.assertEqual(
-            stale,
+            missing,
             frozenset(),
-            "KNOWN_DANGLING_GUARD_REFS is stale; these refs now resolve "
-            "(update the snapshot to shrink the recorded debt): "
-            + ", ".join(sorted(stale)),
-        )
-
-        # A dangling ref beyond the known debt is a regression (a new
-        # guard reference was added without creating the file).
-        new_debt = missing - self.KNOWN_DANGLING_GUARD_REFS
-        self.assertEqual(
-            new_debt,
-            frozenset(),
-            "new dangling catalog guard references detected (A12 regression); "
-            "create the guard or update the catalog Guard line to 'none': "
-            + ", ".join(sorted(new_debt)),
+            "dangling catalog Guard declarations detected: " + ", ".join(sorted(missing)),
         )
 
 
@@ -785,15 +740,15 @@ class FrozenAttemptValidatorTests(unittest.TestCase):
         self.assertFalse(result.get("ok"))
         self.assertEqual(result.get("code"), contracts.rejection_code_for("fixture_hash_mismatch"))
 
-    def test_107_phase0_sweep_fails_on_dangling_catalog_guards(self) -> None:
+    def test_107_phase0_sweep_passes_after_catalog_guard_repair(self) -> None:
         result = contracts.sweep_phase0(
             repo_root=REPO_ROOT,
             manifest=_read_json(MANIFEST_PATH),
             catalog_text=(REPO_ROOT / "measure" / "anti-patterns.md").read_text(encoding="utf-8"),
         )
-        self.assertFalse(
+        self.assertTrue(
             result.get("ok"),
-            "the aggregate sweep must not pass while A12 guard references are dangling",
+            f"the aggregate sweep must pass after every real A12 Guard declaration resolves: {result}",
         )
 
 

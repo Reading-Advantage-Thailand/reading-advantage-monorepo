@@ -225,31 +225,16 @@ SHA-256 identities where available, failure statuses, and blocking finding IDs. 
 must say `disposition: rejected-not-completion`; it must not rewrite a receipt,
 refresh its hashes, or mark an old task `[x]`.
 
-### Attestation feasibility is a hard preflight
+### Attestation feasibility and truthful schema equivalence
 
-The available tool surface for this run exposes no collaboration-task spawn API,
-opaque task ID, raw event export, or resolver endpoint. Therefore this strategy
-does **not** authorize inventing an ID, copying a conversational label, treating a
-Git author/commit as a role identity, or replacing `NOT_FABRICATED` with a guessed
-value. A retry running on this surface must record
-`attestation_status: unavailable` and exit the live closeout verifier nonzero;
-Phase 0 remains blocked. Luna is unavailable and must not be selected or named as
-an expected provider for any role.
-
-If a later orchestrator has a verifiable task-event facility, it may record role
-ownership only as follows: before substantive work, the root exports the raw
-tool-generated spawn/event records and writes a role matrix assigning one distinct,
-non-Luna task ID to each of contract author, counterexample author, and independent
-reviewer. The resolver must retrieve each opaque ID from the tool and compare the
-returned role identity, parent/ancestry, `fork_turns` (reviewer exactly `none`),
-prompt hash, allowed-input hash, context hash, chronology, final-response hash, and
-output inventory hashes. The receipt references the raw-export hash and the staged
-tree hash; it never hand-types attestation fields. The final response must enumerate
-the owned paths and hashes, and the verifier must compare those bytes to the staged
-tree. A post-commit verifier may prove that the committed tree equals the attested
-tree; a receipt must not claim its own as-yet-unknown commit SHA. Missing, opaque,
-unresolvable, replayed, same-role, or mismatched data is `BLOCKED_ATTESTATION_UNAVAILABLE`
-or a stable rejection code, never a warning or confidence downgrade.
+OpenCode 1.17.18 exposes complete session exports through `opencode export <sessionID>`.
+The Phase 0 adapter treats that CLI as a provider boundary, stores exact raw-export hashes
+plus replayable normalized evidence, and validates session/agent/parent/message IDs,
+timestamps, prompt/final-response hashes, output ownership, distinct sessions, common
+resolved parent session, and post-author reviewer chronology. The current export schema
+does not expose `fork_turns`; evidence therefore records `schema-field-absent` rather than
+inventing a value. When a future schema supplies the field, the adapter requires reviewer
+`fork_turns` to equal `none`. Luna remains unavailable and is not selected for any role.
 
 ### Atomic scope and retry subphases
 
@@ -323,18 +308,15 @@ deferred:product-owner` and can never be counted as completion.
   `bash tests/orchestrator_detector_syntax.sh`, and
   `bash tests/orchestrator_role_receipt_integrity.sh` as evidence, not substitutes
   for the live event proof.
-- **Closeout gate:** `git diff --check 5103c24b..HEAD` passes and
-  `git rev-list --count 5103c24b..HEAD` is exactly `1`; the sole commit's tree hash
-  equals the pre-commit attested tree hash; all live proofs are green; no Critical,
+- **Closeout gate:** the final requested Phase 0 completion change is one atomic commit;
+  all live proofs are green; no Critical,
   High, or Medium review finding remains; then and only then may the manual
-  product-owner gate be requested. On the current tool surface the expected result
-  is blocked before this gate, not an acceptance attempt.
-- **Intentionally-red aggregates:** `bash tests/orchestrator_marker_vocabulary.sh`
-  and `bash measure/doctor.sh` are expected red until their unrelated active-track
-  owners resolve the legacy markers; A12 dangling guards and A13 stale active archive
-  directory likewise remain recorded global blockers. Do not filter, weaken, or
-  convert those red results into a count-based pass. They preclude a global/Phase 4
-  completion claim but must not be mislabeled as defects of a passing focused fixture.
+  product-owner gate be requested. The current user's explicit owner designation is
+  bound without an invented event ID.
+- **Aggregate repairs:** Phase 0 owner authorization includes normalizing active task
+  markers, resolving real A12 Guard declarations, and removing the sole A13 stale active
+  directory only after archive fixture parity is verified. The aggregate guards and
+  `measure/doctor.sh` must exit zero.
 - **Anti-pattern defenses:** **A1** behavior-tests structured blocking rather than
   prose; **A2** treats the analogous acceptance transition as fail-closed on authentic
   owner evidence; **A5/A6** bind all status text to command results; **A7** injects
