@@ -1,0 +1,4 @@
+{
+  "expected_rejection_code": "DIRECTORY_LOCATOR_REJECTED",
+  "mutation": {"source.path": "src"}
+}

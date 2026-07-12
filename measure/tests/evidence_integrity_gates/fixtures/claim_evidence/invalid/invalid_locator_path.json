@@ -1,0 +1,4 @@
+{
+  "expected_rejection_code": "SOURCE_FILE_NOT_FOUND",
+  "mutation": {"source.path": "src/missing.ts"}
+}

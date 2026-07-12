@@ -1,0 +1,12 @@
+{
+  "expected_rejection_code": "GENERATED_PROSE_PRIMARY_EVIDENCE_REJECTED",
+  "mutation": {
+    "source.path": "generated/report.md",
+    "source.line_start": 1,
+    "source.line_end": 1,
+    "source.cited_range_sha256": "${GENERATED_RANGE_SHA256}",
+    "source.source_class": "generated-prose",
+    "extracted_fact": "Generated report says the fixture is ready.",
+    "interpretation": "The generated report is not primary evidence."
+  }
+}

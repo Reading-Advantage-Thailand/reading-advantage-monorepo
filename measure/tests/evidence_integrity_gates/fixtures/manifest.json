@@ -109,7 +109,7 @@
     "valid/control_stop_loss.json": "e8767be7b82b515588c7c015764345852b19d837f5d0fc7480722468266da5f0",
     "valid/control_acceptance.json": "b3ef8553a3a18347e605712175a7acde42eb9bf83c60fc859e0b70dbd74ede48",
     "valid/control_revocation.json": "9a5084db5ffb956e9dddc366a035bf86fcbac75461e6de53f377a0f41bf6209e",
-    "valid/control_allowed_inputs.json": "a9455ad622d3dbfd0b58ca26185086c97a0021d90c7f73b4365934b9e74d8f49",
+    "valid/control_allowed_inputs.json": "eb2d1868629a65e44f25a2bb0280546972935f5394b67e71711f114dbf94dd1c",
     "invalid/invalid_baseline_commit_missing.json": "5b077f3eae532bdfef7e776b054227c5cecd5134f894e893ec771aba42894676",
     "invalid/invalid_budget_missing_unit.json": "2742927a21f4471a47858ec7b8493becbd9e549d45103a815691f823f31d9e28",
     "invalid/invalid_budget_unmeasured.json": "0b64faecc4276c6304adf72390e5d2a3869f980ea3ac5706d8f413ec6116ac80",
@@ -135,11 +135,11 @@
     "gate_version": "0.0.2-phase0-retry-red",
     "frozen_at_sha": "f61eb643",
     "description": "Allowed-input manifest for the Phase 0 retry. Every sha256 below is the live SHA-256 of the referenced file and inputs_manifest_hash is the SHA-256 of the canonical JSON of this block with inputs_manifest_hash removed. Any hash mismatch fails closed with ALLOWED_INPUT_MANIFEST_MISSING or ALLOWED_INPUTS_HASH_MISMATCH.",
-    "inputs_manifest_hash": "8623500849873ff824e5fe5670e8ae2c0cc5a6f01c9d4a61e28092821968696c",
+    "inputs_manifest_hash": "a45ae8fa8571a78b2266917c2c39b8522e559a431f8be4919290a7fc56782409",
     "inputs": [
       {
         "path": "measure/tracks/measure_apk_evidence_integrity_gates_20260712/plan.md",
-        "sha256": "c231998b4a01e5df0dc874b2fc8fbe619099e749892ad482a55cdc88012a5e54",
+        "sha256": "e1065016da849693db853432b9999e682f7696ef2ae160eace964c6649522311",
         "role": "plan source"
       },
       {

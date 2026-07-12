@@ -1,0 +1,4 @@
+{
+  "expected_rejection_code": "CITED_RANGE_HASH_MISMATCH",
+  "mutation": {"source.revision": "${CHANGED_REVISION}"}
+}

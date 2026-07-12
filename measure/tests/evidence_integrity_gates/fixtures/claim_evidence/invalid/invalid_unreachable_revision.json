@@ -1,0 +1,4 @@
+{
+  "expected_rejection_code": "REVISION_UNREACHABLE",
+  "mutation": {"source.revision": "${UNREACHABLE_REVISION}"}
+}

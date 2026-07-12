@@ -1,0 +1,32 @@
+{
+  "schema_version": "phase1-verification.v1",
+  "track_id": "measure_apk_evidence_integrity_gates_20260712",
+  "phase": "Phase 1",
+  "status": "complete",
+  "scope": "claim-evidence infrastructure only; no APK product conclusion",
+  "owner_manual_verification": {
+    "status": "complete",
+    "owner_role": "primary-orchestrator",
+    "completion_condition": "Executable claim-evidence and Phase 0 suites passed before this record was created."
+  },
+  "opencode_provenance_snapshot": {
+    "source": "opencode export ses_0aa8a4740ffe2BOVmChNfZLEv0 --pure",
+    "session_id": "ses_0aa8a4740ffe2BOVmChNfZLEv0",
+    "agent": "coder-orchestrator",
+    "final_message_id": "msg_f567c71000016h1q3HmjAx9iTX",
+    "raw_export_sha256": "4ffc3c0b10138bce64c6e59ccced57b8e8ee4c3caa9ba5d6fe4723d84619bc81",
+    "output_ownership": "not asserted: this Phase 1 record does not fabricate an unverified write-tool ownership receipt"
+  },
+  "executable_evidence": [
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.evidence_integrity_gates.test_claim_evidence",
+      "tests_run": 6,
+      "status": "passed"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.evidence_integrity_gates.test_contract_scaffold measure.tests.evidence_integrity_gates.test_phase0_provenance measure.tests.evidence_integrity_gates.test_phase0_retry_contracts measure.tests.evidence_integrity_gates.test_opencode_provenance",
+      "tests_run": 76,
+      "status": "passed"
+    }
+  ]
+}

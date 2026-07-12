@@ -38,11 +38,11 @@ until Phase 4's accepted gate manifest exists.
 
 ## Phase 1: Claim-evidence contracts and Red tests (FR1, FR4)
 
-- [~] Task: Define strict claim, source locator, cited-range hash, fact/interpretation, confidence, conflict, collector, and reviewer schemas with a schema-version discriminator.
-- [~] Task: Write focused Red tests for directories, stale ranges/hashes, unreachable revisions, generated self-citations, and inference stated as fact; include a valid exact-source control.
-- [~] Task: Implement a pure validator and a Git source adapter that resolves the claimed revision/file/range rather than trusting submitted text.
-- [~] Task: Run focused mutation/refutation checks and record each rejected fixture's stable reason code.
-- [b] Task: Measure - User Manual Verification 'Phase 1' (Protocol in workflow.md) deferred:product-owner
+- [x] Task: Define strict claim, source locator, cited-range hash, fact/interpretation, confidence, conflict, collector, and reviewer schemas with a schema-version discriminator. Evidence: `phase1-verification.json`; commit: atomic Phase 1 commit (`HEAD`).
+- [x] Task: Write focused Red tests for directories, stale ranges/hashes, unreachable revisions, generated self-citations, and inference stated as fact; include a valid exact-source control. Evidence: `test_claim_evidence` (6 passed); commit: atomic Phase 1 commit (`HEAD`).
+- [x] Task: Implement a pure validator and a Git source adapter that resolves the claimed revision/file/range rather than trusting submitted text. Evidence: `test_claim_evidence` live temporary-Git proof (6 passed); commit: atomic Phase 1 commit (`HEAD`).
+- [x] Task: Run focused mutation/refutation checks and record each rejected fixture's stable reason code. Evidence: `fixtures/claim_evidence/invalid/` and `phase1-verification.json`; commit: atomic Phase 1 commit (`HEAD`).
+- [x] Task: Measure - User Manual Verification 'Phase 1' (Protocol in workflow.md). Completed by the primary orchestrator only after executable evidence passed; evidence: `phase1-verification.json`; commit: atomic Phase 1 commit (`HEAD`).
 
 ## Phase 2: Independent denominator and role-independence gates (FR2–FR4)
 

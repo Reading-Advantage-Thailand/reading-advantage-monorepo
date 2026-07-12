@@ -1,0 +1,36 @@
+{
+  "schema_version": "claim-evidence.v1",
+  "claim_id": "synthetic-exact-source-control",
+  "source": {
+    "revision": "${REVISION}",
+    "path": "src/evidence.ts",
+    "line_start": 2,
+    "line_end": 2,
+    "cited_range_sha256": "${CITED_RANGE_SHA256}",
+    "source_class": "repository-source",
+    "primary_evidence": true
+  },
+  "extracted_fact": "export const status = 'ready';",
+  "interpretation": "The cited source contains a readiness assignment.",
+  "confidence": {
+    "level": "high",
+    "rationale": "The exact cited source bytes resolve at the declared revision."
+  },
+  "conflict": {
+    "state": "none",
+    "detail": "No conflicting source is asserted by this synthetic control."
+  },
+  "collector": {
+    "kind": "opencode-export",
+    "session_id": "ses_0aa8a4740ffe2BOVmChNfZLEv0",
+    "message_id": "msg_f55e6e30a001GzETrTBtKbFRu7",
+    "raw_export_sha256": "a0e39440d3a9e1871140d4a70020c015e6b0eb673fe3dff91238d022478eb8e6"
+  },
+  "reviewer": {
+    "disposition": "approved",
+    "kind": "opencode-export",
+    "session_id": "ses_0a9ad6d31ffeUD4CqyaL5NZidM",
+    "message_id": "msg_f56552aef001xPBcDekUxw8kvY",
+    "raw_export_sha256": "74aef6de36b15fb0afa34f40972ccb115ccec60dd608415c58fbb07111261b56"
+  }
+}

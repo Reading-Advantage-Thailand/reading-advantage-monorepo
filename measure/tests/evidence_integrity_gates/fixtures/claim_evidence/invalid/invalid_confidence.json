@@ -1,0 +1,4 @@
+{
+  "expected_rejection_code": "MALFORMED_CONFIDENCE",
+  "mutation": {"confidence.level": "certain"}
+}

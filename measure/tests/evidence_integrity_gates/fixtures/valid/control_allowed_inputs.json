@@ -15,7 +15,7 @@
     "inputs": [
       {
         "path": "measure/tracks/measure_apk_evidence_integrity_gates_20260712/plan.md",
-        "sha256": "c231998b4a01e5df0dc874b2fc8fbe619099e749892ad482a55cdc88012a5e54",
+        "sha256": "e1065016da849693db853432b9999e682f7696ef2ae160eace964c6649522311",
         "role": "plan source"
       },
       {
@@ -29,7 +29,7 @@
         "role": "program source"
       }
     ],
-    "inputs_manifest_hash": "70d97cc82f91ea5b57eb1ada09c4967b5e6d1f98a27704ba42090711bfa8a634"
+    "inputs_manifest_hash": "9932e0c6411ece3472646f99d94dbf3f45153a0a989e9b26309dda2a0084df31"
   },
   "note": "Green phase: every placeholder sha256 has been replaced with the live SHA-256 of the referenced file and inputs_manifest_hash is computed as the SHA-256 of the canonical JSON of this record with inputs_manifest_hash removed."
 }

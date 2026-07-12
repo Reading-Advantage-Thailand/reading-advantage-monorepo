@@ -1,0 +1,7 @@
+{
+  "expected_rejection_code": "INFERENCE_PRESENTED_AS_FACT",
+  "mutation": {
+    "extracted_fact": "The cited source proves the fixture is ready.",
+    "interpretation": "The cited source proves the fixture is ready."
+  }
+}
