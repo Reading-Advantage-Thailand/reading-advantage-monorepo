@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "status": "fail",
+  "summary": "Phase 0 retry acceptance is not warranted. Focused retry and scaffold suites pass and the receipt-hash guard passes, but the retry lacks authentic independent task-event provenance, required Phase 0A rejected-evidence/live-verifier artifacts, and a passing marker-vocabulary aggregate. The designated primary orchestrator is recorded only as product-owner authorization; no product-owner acceptance event is asserted.",
+  "blocking_findings": [
+    {
+      "id": "P0-RETRY-ACCEPT-001",
+      "severity": "high",
+      "title": "Independent task-event provenance is absent",
+      "evidence": "measure/tests/evidence_integrity_gates/role-receipts/phase0.json records NOT_FABRICATED for spawn_id, parent_id, start_event_id, end_event_id, and final_response_hash; it also records measure-mid-red as the sole author and defers counterexample and adversarial-review roles. This cannot satisfy FR3 or the Phase 0 closeout requirement for distinct, tool-attested roles."
+    },
+    {
+      "id": "P0-RETRY-ACCEPT-002",
+      "severity": "high",
+      "title": "Required unavailable-attestation retry artifacts and live proof are missing",
+      "evidence": "test-strategy.md requires phase0-retry-rejected-evidence.json, test_phase0_retry_provenance, and measure.evidence_integrity_gates.phase0_retry_verify for Retry Phase 0A. None exists at reviewed SHA 535bfdfe. The strategy requires a structured blocked result and stop when live task-event resolution is unavailable, but the receipt contains placeholders without authentic resolver evidence."
+    },
+    {
+      "id": "P0-RETRY-ACCEPT-003",
+      "severity": "high",
+      "title": "Retry did not meet its one-implementation-commit boundary",
+      "evidence": "git rev-list --count 5103c24b..535bfdfe returns 2 (75a12493 and 535bfdfe), while test-strategy.md requires exactly one post-baseline commit for Retry Phase 0C. Git author identity is not role-event provenance and does not cure P0-RETRY-ACCEPT-001."
+    },
+    {
+      "id": "P0-RETRY-ACCEPT-004",
+      "severity": "medium",
+      "title": "Marker-vocabulary aggregate remains failing",
+      "evidence": "bash tests/orchestrator_marker_vocabulary.sh exits 1 because active plans retain deprecated [ ] markers. The test strategy requires this aggregate failure to remain visible and forbids describing it as a pass."
+    },
+    {
+      "id": "P0-RETRY-ACCEPT-005",
+      "severity": "high",
+      "title": "Prior independent security review remains blocked on the same provenance requirement",
+      "evidence": "review-b-security-result.json is BLOCKED and leaves APK-EIG-B-005 (High, authentic independent role provenance absent) and APK-EIG-B-006 (Medium, shared aggregate gates red) open and blocking."
+    }
+  ],
+  "nonblocking_findings": [
+    "The retry semantic suite passes 23 tests, the existing scaffold suite passes 46 tests, and tests/orchestrator_role_receipt_integrity.sh reports current enumerated output hashes match HEAD. Hash consistency does not authenticate the role, event, ancestry, context, or final response.",
+    "User authorization: the primary orchestrator is designated as product owner. This is recorded as owner authorization only; no tool-generated product-owner event ID, message hash, approval timestamp, or acceptance transition is claimed."
+  ],
+  "evidence": [
+    {
+      "source": "spec.md FR3 / acceptance criteria",
+      "detail": "Authentic tool-attested role receipts and a product-owner event are required; Phase 0 has neither."
+    },
+    {
+      "source": "plan.md Phase 0 retry Green evidence",
+      "detail": "The plan explicitly states authentic distinct-role provenance is unavailable and Phase 0 remains incomplete."
+    },
+    {
+      "source": "phase0-acceptance-result.json and orchestrator-audit-result.json",
+      "detail": "The prior failed/blocked acceptance artifacts are preserved evidence, not completion evidence."
+    },
+    {
+      "source": "role-receipts/phase0.json",
+      "detail": "Placeholder provenance is present and deferred roles admit that independent authorship was not achieved."
+    },
+    {
+      "source": "current commit history",
+      "detail": "The retry range 5103c24b..535bfdfe contains two commits, not the strategy's required one."
+    }
+  ],
+  "commands": [
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.evidence_integrity_gates.test_phase0_retry_contracts",
+      "result": "PASS: 23 tests"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.evidence_integrity_gates.test_contract_scaffold",
+      "result": "PASS: 46 tests"
+    },
+    {
+      "command": "bash tests/orchestrator_role_receipt_integrity.sh",
+      "result": "PASS: current enumerated output hashes match HEAD"
+    },
+    {
+      "command": "bash tests/orchestrator_marker_vocabulary.sh",
+      "result": "FAIL: active plans retain deprecated [ ] markers"
+    },
+    {
+      "command": "git diff --check 5103c24b..535bfdfe && git rev-list --count 5103c24b..535bfdfe",
+      "result": "diff check PASS; commit count FAILS retry requirement (2, expected 1)"
+    }
+  ],
+  "changed_files": [
+    "measure/tracks/measure_apk_evidence_integrity_gates_20260712/phase0-retry-acceptance-result.json"
+  ],
+  "test_strategy_violations": [
+    "Retry Phase 0A's rejected-evidence ledger, provenance suite, and live attestation verifier are absent.",
+    "The unavailable-attestation preflight required a structured blocked result and stop; no authentic task-event resolver proof exists.",
+    "Retry Phase 0C requires exactly one commit from 5103c24b through the reviewed retry head; the range has two."
+  ],
+  "live_contract_violations": [
+    "No real collaboration-event export or resolver validates distinct role IDs, ancestry, fork_turns=none review, context, chronology, final-response hash, or output ownership.",
+    "The marker-vocabulary aggregate is failing; it cannot be represented as a passing aggregate gate."
+  ],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "escalate_human",
+  "confidence": "high"
+}
