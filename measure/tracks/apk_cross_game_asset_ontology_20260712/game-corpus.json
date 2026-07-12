@@ -1,0 +1,1293 @@
+{
+  "version": "apk-corpus.v1",
+  "sourceRevision": "ab80f58c55285c164c1b3cdbc3b9ed5b2a03c0ee",
+  "evidence": [
+    {
+      "id": "evidence:source:catalog",
+      "kind": "source",
+      "path": "apps/advantage-games/src/lib/gameCards.ts",
+      "revision": "ab80f58c",
+      "confidence": "high",
+      "note": "27-row current catalog plus 14-row withdrawal override"
+    },
+    {
+      "id": "evidence:source:components",
+      "kind": "source",
+      "path": "apps/advantage-games/src/components/games/",
+      "revision": "ab80f58c",
+      "confidence": "high",
+      "note": "raw gameplay components"
+    },
+    {
+      "id": "evidence:source:logic",
+      "kind": "source",
+      "path": "apps/advantage-games/src/lib/games/",
+      "revision": "ab80f58c",
+      "confidence": "high",
+      "note": "deterministic rules, configs, and tests"
+    },
+    {
+      "id": "evidence:route:advantage-games",
+      "kind": "route",
+      "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/",
+      "revision": "ab80f58c",
+      "confidence": "high",
+      "note": "current localized routes"
+    },
+    {
+      "id": "evidence:test:catalog",
+      "kind": "test",
+      "path": "apps/advantage-games/src/lib/gameCards.test.ts",
+      "revision": "ab80f58c",
+      "confidence": "high",
+      "note": "catalog withdrawal assertions"
+    },
+    {
+      "id": "evidence:source:reading-copies",
+      "kind": "source",
+      "path": "apps/reading-advantage/components/games/",
+      "revision": "ab80f58c",
+      "confidence": "high",
+      "note": "imported copy evidence; not separate identities"
+    },
+    {
+      "id": "evidence:source:primary-lessons",
+      "kind": "source",
+      "path": "apps/primary-advantage/components/lesson/games/",
+      "revision": "ab80f58c",
+      "confidence": "high",
+      "note": "Primary lesson activities outside catalog boundary"
+    },
+    {
+      "id": "evidence:measure:roadmap",
+      "kind": "measure",
+      "path": "measure/archive/advantage_play_kit_20260710/catalog-rebuild-roadmap.md",
+      "revision": "ab80f58c",
+      "confidence": "medium",
+      "note": "27-game mechanic recovery and deleted-source discrepancies"
+    },
+    {
+      "id": "evidence:measure:abyssal",
+      "kind": "measure",
+      "path": "apps/advantage-games/measure/tracks/r3f_rendering_tier_20260708/review-2026-07-10.md",
+      "revision": "ab80f58c",
+      "confidence": "medium",
+      "note": "cancelled Abyssal Well evidence"
+    },
+    {
+      "id": "evidence:measure:babel",
+      "kind": "measure",
+      "path": "apps/advantage-games/measure/archive/babel-architect-compliance-audit_20260426/report.md",
+      "revision": "ab80f58c",
+      "confidence": "medium",
+      "note": "Babel Architect placeholder evidence"
+    },
+    {
+      "id": "evidence:history:catalog",
+      "kind": "history",
+      "path": "apps/advantage-games/src/lib/gameCards.ts",
+      "revision": "05bb6d29",
+      "confidence": "high",
+      "note": "catalog withdrawal and removal history"
+    }
+  ],
+  "games": [
+    {
+      "id": "game:castle-defense",
+      "slug": "castle-defense",
+      "title": "Castle Defense",
+      "inputMode": "sentence",
+      "catalogState": "playable",
+      "routeState": "present",
+      "confidence": "high",
+      "evidenceIds": [
+        "evidence:source:catalog",
+        "evidence:source:components",
+        "evidence:source:logic",
+        "evidence:source:reading-copies"
+      ],
+      "sceneIds": ["scene:castle-defense:main"],
+      "implementationPaths": [
+        "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/castle-defense/page.tsx",
+        "apps/advantage-games/src/app/api/v1/games/castle-defense/complete/route.ts",
+        "apps/advantage-games/src/app/api/v1/games/castle-defense/sentences/route.ts",
+        "apps/advantage-games/src/components/games/sentence/castle-defense/BackgroundLayer.test.tsx",
+        "apps/advantage-games/src/components/games/sentence/castle-defense/BackgroundLayer.tsx",
+        "apps/advantage-games/src/components/games/sentence/castle-defense/CastleDefenseGame.test.tsx",
+        "apps/advantage-games/src/components/games/sentence/castle-defense/CastleDefenseGame.tsx",
+        "apps/advantage-games/src/components/games/sentence/castle-defense/index.ts",
+        "apps/advantage-games/src/lib/games/castleDefense.test.ts",
+        "apps/advantage-games/src/lib/games/castleDefense.ts"
+      ],
+      "importedCopyPaths": [
+        "apps/reading-advantage/components/games/sentence/castle-defense/BackgroundLayer.tsx",
+        "apps/reading-advantage/components/games/sentence/castle-defense/CastleDefenseGame.test.tsx",
+        "apps/reading-advantage/components/games/sentence/castle-defense/CastleDefenseGame.tsx",
+        "apps/reading-advantage/components/games/sentence/castle-defense/index.ts",
+        "apps/reading-advantage/lib/games/castleDefense.test.ts",
+        "apps/reading-advantage/lib/games/castleDefense.ts",
+        "apps/reading-advantage/app/[locale]/(student)/student/games/sentence/castle-defense/page.tsx",
+        "apps/reading-advantage/app/api/v1/games/castle-defense/complete/route.ts",
+        "apps/reading-advantage/app/api/v1/games/castle-defense/ranking/route.ts",
+        "apps/reading-advantage/app/api/v1/games/castle-defense/sentences/route.ts"
+      ],
+      "measureEvidencePaths": [],
+      "assetRoots": [
+        "apps/advantage-games/public/games/sentence/castle-defense",
+        "apps/advantage-games/public/games/cover"
+      ]
+    },
+    {
+      "id": "game:dragon-rider",
+      "slug": "dragon-rider",
+      "title": "Dragon Rider",
+      "inputMode": "vocabulary",
+      "catalogState": "withdrawn",
+      "routeState": "missing",
+      "confidence": "medium",
+      "evidenceIds": [
+        "evidence:source:catalog",
+        "evidence:measure:roadmap",
+        "evidence:source:reading-copies",
+        "evidence:history:catalog"
+      ],
+      "sceneIds": ["scene:dragon-rider:main"],
+      "implementationPaths": [],
+      "importedCopyPaths": [
+        "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.test.tsx",
+        "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx",
+        "apps/reading-advantage/lib/games/dragonRider.test.ts",
+        "apps/reading-advantage/lib/games/dragonRider.ts",
+        "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-rider/page.test.tsx",
+        "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-rider/page.tsx",
+        "apps/reading-advantage/app/api/v1/games/dragon-rider/complete/route.ts",
+        "apps/reading-advantage/app/api/v1/games/dragon-rider/ranking/route.ts",
+        "apps/reading-advantage/app/api/v1/games/dragon-rider/vocabulary/route.ts"
+      ],
+      "measureEvidencePaths": [
+        "measure/archive/advantage_play_kit_20260710/catalog-rebuild-roadmap.md"
+      ],
+      "assetRoots": [
+        "apps/advantage-games/public/games/vocabulary/dragon-rider",
+        "apps/advantage-games/public/games/cover"
+      ]
+    },
+    {
+      "id": "game:magic-defense",
+      "slug": "magic-defense",
+      "title": "Magic Defense",
+      "inputMode": "vocabulary",
+      "catalogState": "withdrawn",
+      "routeState": "missing",
+      "confidence": "high",
+      "evidenceIds": [
+        "evidence:source:catalog",
+        "evidence:source:components",
+        "evidence:source:logic",
+        "evidence:source:reading-copies",
+        "evidence:history:catalog"
+      ],
+      "sceneIds": ["scene:magic-defense:main"],
+      "implementationPaths": [
+        "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/magic-defense/page.test.tsx",
+        "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/magic-defense/page.tsx",
+        "apps/advantage-games/src/app/api/v1/games/magic-defense/complete/route.ts",
+        "apps/advantage-games/src/app/api/v1/games/magic-defense/vocabulary/route.ts",
+        "apps/advantage-games/src/lib/games/magicDefenseConfig.test.ts",
+        "apps/advantage-games/src/lib/games/magicDefenseConfig.ts"
+      ],
+      "importedCopyPaths": [
+        "apps/reading-advantage/lib/games/magicDefenseConfig.ts",
+        "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/magic-defense/page.test.tsx",
+        "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/magic-defense/page.tsx",
+        "apps/reading-advantage/app/api/v1/games/magic-defense/complete/route.ts",
+        "apps/reading-advantage/app/api/v1/games/magic-defense/ranking/route.ts",
+        "apps/reading-advantage/app/api/v1/games/magic-defense/vocabulary/route.ts"
+      ],
+      "measureEvidencePaths": [],
+      "assetRoots": ["apps/advantage-games/public/games/cover"]
+    },
+    {
+      "id": "game:rpg-battle",
+      "slug": "rpg-battle",
+      "title": "RPG Battle",
+      "inputMode": "vocabulary",
+      "catalogState": "playable",
+      "routeState": "present",
+      "confidence": "high",
+      "evidenceIds": [
+        "evidence:source:catalog",
+        "evidence:source:components",
+        "evidence:source:logic",
+        "evidence:source:reading-copies"
+      ],
+      "sceneIds": ["scene:rpg-battle:main"],
+      "implementationPaths": [
+        "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/rpg-battle/page.test.tsx",
+        "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/rpg-battle/page.tsx",
+        "apps/advantage-games/src/app/api/v1/games/rpg-battle/complete/route.ts",
+        "apps/advantage-games/src/app/api/v1/games/rpg-battle/vocabulary/route.ts",
+        "apps/advantage-games/src/components/games/vocabulary/rpg-battle/ActionMenu.test.tsx",
+        "apps/advantage-games/src/components/games/vocabulary/rpg-battle/ActionMenu.tsx",
+        "apps/advantage-games/src/components/games/vocabulary/rpg-battle/BattleEffects.test.tsx",
+        "apps/advantage-games/src/components/games/vocabulary/rpg-battle/BattleEffects.tsx",
+        "apps/advantage-games/src/components/games/vocabulary/rpg-battle/BattleLog.test.tsx",
+        "apps/advantage-games/src/components/games/vocabulary/rpg-battle/BattleLog.tsx",
+        "apps/advantage-games/src/components/games/vocabulary/rpg-battle/BattleResults.test.tsx",
+        "apps/advantage-games/src/components/games/vocabulary/rpg-battle/BattleResults.tsx",
+        "apps/advantage-games/src/components/games/vocabulary/rpg-battle/BattleScene.test.tsx",
+        "apps/advantage-games/src/components/games/vocabulary/rpg-battle/BattleScene.tsx",
+        "apps/advantage-games/src/components/games/vocabulary/rpg-battle/BattleSelectionModal.test.tsx",
+        "apps/advantage-games/src/components/games/vocabulary/rpg-battle/BattleSelectionModal.tsx",
+        "apps/advantage-games/src/components/games/vocabulary/rpg-battle/ComboIndicator.tsx",
+        "apps/advantage-games/src/components/games/vocabulary/rpg-battle/EnemySprite.test.tsx",
+        "apps/advantage-games/src/components/games/vocabulary/rpg-battle/EnemySprite.tsx",
+        "apps/advantage-games/src/components/games/vocabulary/rpg-battle/FloatingText.tsx",
+        "apps/advantage-games/src/components/games/vocabulary/rpg-battle/HealthBar.test.tsx",
+        "apps/advantage-games/src/components/games/vocabulary/rpg-battle/HealthBar.tsx",
+        "apps/advantage-games/src/components/games/vocabulary/rpg-battle/PlayerSprite.test.tsx",
+        "apps/advantage-games/src/components/games/vocabulary/rpg-battle/PlayerSprite.tsx",
+        "apps/advantage-games/src/components/games/vocabulary/rpg-battle/Sprite.test.tsx",
+        "apps/advantage-games/src/components/games/vocabulary/rpg-battle/Sprite.tsx",
+        "apps/advantage-games/src/components/games/vocabulary/rpg-battle/StartScreen.tsx",
+        "apps/advantage-games/src/lib/games/rpgBattleScaling.test.ts",
+        "apps/advantage-games/src/lib/games/rpgBattleScaling.ts",
+        "apps/advantage-games/src/lib/games/rpgBattleSelection.test.ts",
+        "apps/advantage-games/src/lib/games/rpgBattleSelection.ts",
+        "apps/advantage-games/src/lib/games/rpgBattleSprites.test.ts",
+        "apps/advantage-games/src/lib/games/rpgBattleSprites.ts",
+        "apps/advantage-games/src/lib/games/rpgBattleWordSelection.test.ts",
+        "apps/advantage-games/src/lib/games/rpgBattleWordSelection.ts",
+        "apps/advantage-games/src/lib/games/rpgBattleXp.test.ts",
+        "apps/advantage-games/src/lib/games/rpgBattleXp.ts",
+        "apps/advantage-games/src/store/useRPGBattleStore.test.ts",
+        "apps/advantage-games/src/store/useRPGBattleStore.ts"
+      ],
+      "importedCopyPaths": [
+        "apps/reading-advantage/components/games/vocabulary/rpg-battle/ActionMenu.test.tsx",
+        "apps/reading-advantage/components/games/vocabulary/rpg-battle/ActionMenu.tsx",
+        "apps/reading-advantage/components/games/vocabulary/rpg-battle/BattleEffects.test.tsx",
+        "apps/reading-advantage/components/games/vocabulary/rpg-battle/BattleEffects.tsx",
+        "apps/reading-advantage/components/games/vocabulary/rpg-battle/BattleLog.test.tsx",
+        "apps/reading-advantage/components/games/vocabulary/rpg-battle/BattleLog.tsx",
+        "apps/reading-advantage/components/games/vocabulary/rpg-battle/BattleResults.test.tsx",
+        "apps/reading-advantage/components/games/vocabulary/rpg-battle/BattleResults.tsx",
+        "apps/reading-advantage/components/games/vocabulary/rpg-battle/BattleScene.test.tsx",
+        "apps/reading-advantage/components/games/vocabulary/rpg-battle/BattleScene.tsx",
+        "apps/reading-advantage/components/games/vocabulary/rpg-battle/BattleSelectionModal.test.tsx",
+        "apps/reading-advantage/components/games/vocabulary/rpg-battle/BattleSelectionModal.tsx",
+        "apps/reading-advantage/components/games/vocabulary/rpg-battle/ComboIndicator.tsx",
+        "apps/reading-advantage/components/games/vocabulary/rpg-battle/EnemySprite.test.tsx",
+        "apps/reading-advantage/components/games/vocabulary/rpg-battle/EnemySprite.tsx",
+        "apps/reading-advantage/components/games/vocabulary/rpg-battle/FloatingText.tsx",
+        "apps/reading-advantage/components/games/vocabulary/rpg-battle/HealthBar.test.tsx",
+        "apps/reading-advantage/components/games/vocabulary/rpg-battle/HealthBar.tsx",
+        "apps/reading-advantage/components/games/vocabulary/rpg-battle/PlayerSprite.test.tsx",
+        "apps/reading-advantage/components/games/vocabulary/rpg-battle/PlayerSprite.tsx",
+        "apps/reading-advantage/components/games/vocabulary/rpg-battle/Sprite.test.tsx",
+        "apps/reading-advantage/components/games/vocabulary/rpg-battle/Sprite.tsx",
+        "apps/reading-advantage/components/games/vocabulary/rpg-battle/StartScreen.tsx",
+        "apps/reading-advantage/lib/games/rpgBattleScaling.test.ts",
+        "apps/reading-advantage/lib/games/rpgBattleScaling.ts",
+        "apps/reading-advantage/lib/games/rpgBattleSelection.test.ts",
+        "apps/reading-advantage/lib/games/rpgBattleSelection.ts",
+        "apps/reading-advantage/lib/games/rpgBattleSprites.test.ts",
+        "apps/reading-advantage/lib/games/rpgBattleSprites.ts",
+        "apps/reading-advantage/lib/games/rpgBattleWordSelection.test.ts",
+        "apps/reading-advantage/lib/games/rpgBattleWordSelection.ts",
+        "apps/reading-advantage/lib/games/rpgBattleXp.test.ts",
+        "apps/reading-advantage/lib/games/rpgBattleXp.ts",
+        "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/rpg-battle/page.test.tsx",
+        "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/rpg-battle/page.tsx",
+        "apps/reading-advantage/app/api/v1/games/rpg-battle/complete/route.ts",
+        "apps/reading-advantage/app/api/v1/games/rpg-battle/ranking/route.ts",
+        "apps/reading-advantage/app/api/v1/games/rpg-battle/vocabulary/route.ts"
+      ],
+      "measureEvidencePaths": [],
+      "assetRoots": [
+        "apps/advantage-games/public/games/vocabulary/rpg-battle",
+        "apps/advantage-games/public/games/cover"
+      ]
+    },
+    {
+      "id": "game:dragon-flight",
+      "slug": "dragon-flight",
+      "title": "Dragon Flight",
+      "inputMode": "vocabulary",
+      "catalogState": "withdrawn",
+      "routeState": "missing",
+      "confidence": "high",
+      "evidenceIds": [
+        "evidence:source:catalog",
+        "evidence:source:components",
+        "evidence:source:logic",
+        "evidence:source:reading-copies",
+        "evidence:history:catalog"
+      ],
+      "sceneIds": ["scene:dragon-flight:main"],
+      "implementationPaths": [
+        "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/dragon-flight/page.test.tsx",
+        "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/dragon-flight/page.tsx",
+        "apps/advantage-games/src/app/api/v1/games/dragon-flight/complete/route.ts",
+        "apps/advantage-games/src/app/api/v1/games/dragon-flight/ranking/route.ts",
+        "apps/advantage-games/src/app/api/v1/games/dragon-flight/vocabulary/route.ts",
+        "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.test.tsx",
+        "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+        "apps/advantage-games/src/components/games/vocabulary/dragon-flight/RankingDialog.test.tsx",
+        "apps/advantage-games/src/components/games/vocabulary/dragon-flight/RankingDialog.tsx",
+        "apps/advantage-games/src/lib/games/dragonFlight.test.ts",
+        "apps/advantage-games/src/lib/games/dragonFlight.ts"
+      ],
+      "importedCopyPaths": [
+        "apps/reading-advantage/components/games/vocabulary/dragon-flight/DragonFlightGame.test.tsx",
+        "apps/reading-advantage/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+        "apps/reading-advantage/components/games/vocabulary/dragon-flight/RankingDialog.tsx",
+        "apps/reading-advantage/lib/games/dragonFlight.test.ts",
+        "apps/reading-advantage/lib/games/dragonFlight.ts",
+        "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-flight/page.test.tsx",
+        "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-flight/page.tsx",
+        "apps/reading-advantage/app/api/v1/games/dragon-flight/complete/route.ts",
+        "apps/reading-advantage/app/api/v1/games/dragon-flight/ranking/route.ts",
+        "apps/reading-advantage/app/api/v1/games/dragon-flight/vocabulary/route.ts"
+      ],
+      "measureEvidencePaths": [],
+      "assetRoots": [
+        "apps/advantage-games/public/games/vocabulary/dragon-flight",
+        "apps/advantage-games/public/games/cover"
+      ]
+    },
+    {
+      "id": "game:wizard-vs-zombie",
+      "slug": "wizard-vs-zombie",
+      "title": "Wizard vs Zombie",
+      "inputMode": "vocabulary",
+      "catalogState": "playable",
+      "routeState": "present",
+      "confidence": "high",
+      "evidenceIds": [
+        "evidence:source:catalog",
+        "evidence:source:components",
+        "evidence:source:logic",
+        "evidence:source:reading-copies"
+      ],
+      "sceneIds": ["scene:wizard-vs-zombie:main"],
+      "implementationPaths": [
+        "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/wizard-vs-zombie/page.test.tsx",
+        "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/wizard-vs-zombie/page.tsx",
+        "apps/advantage-games/src/app/api/v1/games/wizard-vs-zombie/complete/route.ts",
+        "apps/advantage-games/src/app/api/v1/games/wizard-vs-zombie/vocabulary/route.ts",
+        "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.test.tsx",
+        "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx"
+      ],
+      "importedCopyPaths": [
+        "apps/reading-advantage/components/games/vocabulary/wizard-vs-zombie/StartScreen.tsx",
+        "apps/reading-advantage/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.test.tsx",
+        "apps/reading-advantage/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx",
+        "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/wizard-vs-zombie/page.test.tsx",
+        "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/wizard-vs-zombie/page.tsx",
+        "apps/reading-advantage/app/api/v1/games/wizard-vs-zombie/complete/route.ts",
+        "apps/reading-advantage/app/api/v1/games/wizard-vs-zombie/ranking/route.ts",
+        "apps/reading-advantage/app/api/v1/games/wizard-vs-zombie/vocabulary/route.ts"
+      ],
+      "measureEvidencePaths": [],
+      "assetRoots": [
+        "apps/advantage-games/public/games/vocabulary/wizard-vs-zombie",
+        "apps/advantage-games/public/games/cover"
+      ]
+    },
+    {
+      "id": "game:enchanted-library",
+      "slug": "enchanted-library",
+      "title": "Enchanted Library",
+      "inputMode": "vocabulary",
+      "catalogState": "playable",
+      "routeState": "present",
+      "confidence": "high",
+      "evidenceIds": [
+        "evidence:source:catalog",
+        "evidence:source:components",
+        "evidence:source:logic",
+        "evidence:source:reading-copies"
+      ],
+      "sceneIds": ["scene:enchanted-library:main"],
+      "implementationPaths": [
+        "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/enchanted-library/page.test.tsx",
+        "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/enchanted-library/page.tsx",
+        "apps/advantage-games/src/app/api/v1/games/enchanted-library/complete/route.ts",
+        "apps/advantage-games/src/app/api/v1/games/enchanted-library/vocabulary/route.ts",
+        "apps/advantage-games/src/components/games/vocabulary/enchanted-library/BookPickupBurst.test.tsx",
+        "apps/advantage-games/src/components/games/vocabulary/enchanted-library/BookPickupBurst.tsx",
+        "apps/advantage-games/src/components/games/vocabulary/enchanted-library/DifficultySelector.tsx",
+        "apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.test.tsx",
+        "apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx",
+        "apps/advantage-games/src/components/games/vocabulary/enchanted-library/RankingDisplay.test.tsx",
+        "apps/advantage-games/src/components/games/vocabulary/enchanted-library/RankingDisplay.tsx",
+        "apps/advantage-games/src/components/games/vocabulary/enchanted-library/SparkleBurst.test.tsx",
+        "apps/advantage-games/src/components/games/vocabulary/enchanted-library/SparkleBurst.tsx",
+        "apps/advantage-games/src/components/games/vocabulary/enchanted-library/VocabularyProgress.test.tsx",
+        "apps/advantage-games/src/components/games/vocabulary/enchanted-library/VocabularyProgress.tsx",
+        "apps/advantage-games/src/components/games/vocabulary/enchanted-library/enchantedLibraryInput.test.ts",
+        "apps/advantage-games/src/components/games/vocabulary/enchanted-library/enchantedLibraryInput.ts",
+        "apps/advantage-games/src/lib/games/enchantedLibrary.test.ts",
+        "apps/advantage-games/src/lib/games/enchantedLibrary.ts"
+      ],
+      "importedCopyPaths": [
+        "apps/reading-advantage/components/games/vocabulary/enchanted-library/BookPickupBurst.test.tsx",
+        "apps/reading-advantage/components/games/vocabulary/enchanted-library/BookPickupBurst.tsx",
+        "apps/reading-advantage/components/games/vocabulary/enchanted-library/DifficultySelector.tsx",
+        "apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.test.tsx",
+        "apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx",
+        "apps/reading-advantage/components/games/vocabulary/enchanted-library/RankingDisplay.tsx",
+        "apps/reading-advantage/components/games/vocabulary/enchanted-library/SparkleBurst.test.tsx",
+        "apps/reading-advantage/components/games/vocabulary/enchanted-library/SparkleBurst.tsx",
+        "apps/reading-advantage/components/games/vocabulary/enchanted-library/VocabularyProgress.test.tsx",
+        "apps/reading-advantage/components/games/vocabulary/enchanted-library/VocabularyProgress.tsx",
+        "apps/reading-advantage/components/games/vocabulary/enchanted-library/enchantedLibraryInput.test.ts",
+        "apps/reading-advantage/components/games/vocabulary/enchanted-library/enchantedLibraryInput.ts",
+        "apps/reading-advantage/lib/games/enchantedLibrary.test.ts",
+        "apps/reading-advantage/lib/games/enchantedLibrary.ts",
+        "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/enchanted-library/page.test.tsx",
+        "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/enchanted-library/page.tsx",
+        "apps/reading-advantage/app/api/v1/games/enchanted-library/complete/route.ts",
+        "apps/reading-advantage/app/api/v1/games/enchanted-library/ranking/route.ts",
+        "apps/reading-advantage/app/api/v1/games/enchanted-library/vocabulary/route.ts"
+      ],
+      "measureEvidencePaths": [],
+      "assetRoots": [
+        "apps/advantage-games/public/games/vocabulary/enchanted-library",
+        "apps/advantage-games/public/games/cover"
+      ]
+    },
+    {
+      "id": "game:rune-match",
+      "slug": "rune-match",
+      "title": "Rune Match",
+      "inputMode": "vocabulary",
+      "catalogState": "playable",
+      "routeState": "present",
+      "confidence": "high",
+      "evidenceIds": [
+        "evidence:source:catalog",
+        "evidence:source:components",
+        "evidence:source:logic",
+        "evidence:source:reading-copies"
+      ],
+      "sceneIds": ["scene:rune-match:main"],
+      "implementationPaths": [
+        "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/rune-match/page.test.tsx",
+        "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/rune-match/page.tsx",
+        "apps/advantage-games/src/app/api/v1/games/rune-match/complete/route.ts",
+        "apps/advantage-games/src/app/api/v1/games/rune-match/vocabulary/route.ts",
+        "apps/advantage-games/src/components/games/vocabulary/rune-match/MonsterSelection.test.tsx",
+        "apps/advantage-games/src/components/games/vocabulary/rune-match/MonsterSelection.tsx",
+        "apps/advantage-games/src/components/games/vocabulary/rune-match/RuneMatchGame.test.tsx",
+        "apps/advantage-games/src/components/games/vocabulary/rune-match/RuneMatchGame.tsx",
+        "apps/advantage-games/src/lib/games/runeMatch.test.ts",
+        "apps/advantage-games/src/lib/games/runeMatch.ts",
+        "apps/advantage-games/src/lib/games/runeMatchConfig.test.ts",
+        "apps/advantage-games/src/lib/games/runeMatchConfig.ts"
+      ],
+      "importedCopyPaths": [
+        "apps/reading-advantage/components/games/vocabulary/rune-match/MonsterSelection.test.tsx",
+        "apps/reading-advantage/components/games/vocabulary/rune-match/MonsterSelection.tsx",
+        "apps/reading-advantage/components/games/vocabulary/rune-match/RuneMatchGame.test.tsx",
+        "apps/reading-advantage/components/games/vocabulary/rune-match/RuneMatchGame.tsx",
+        "apps/reading-advantage/components/games/vocabulary/rune-match/StartScreen.tsx",
+        "apps/reading-advantage/lib/games/runeMatch.test.ts",
+        "apps/reading-advantage/lib/games/runeMatch.ts",
+        "apps/reading-advantage/lib/games/runeMatchConfig.test.ts",
+        "apps/reading-advantage/lib/games/runeMatchConfig.ts",
+        "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/rune-match/page.test.tsx",
+        "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/rune-match/page.tsx",
+        "apps/reading-advantage/app/api/v1/games/rune-match/complete/route.ts",
+        "apps/reading-advantage/app/api/v1/games/rune-match/ranking/route.ts",
+        "apps/reading-advantage/app/api/v1/games/rune-match/vocabulary/route.ts"
+      ],
+      "measureEvidencePaths": [],
+      "assetRoots": [
+        "apps/advantage-games/public/games/vocabulary/rune-match",
+        "apps/advantage-games/public/games/cover"
+      ]
+    },
+    {
+      "id": "game:alchemists-synthesis",
+      "slug": "alchemists-synthesis",
+      "title": "Alchemist's Synthesis",
+      "inputMode": "vocabulary",
+      "catalogState": "playable",
+      "routeState": "present",
+      "confidence": "high",
+      "evidenceIds": [
+        "evidence:source:catalog",
+        "evidence:source:components",
+        "evidence:source:logic"
+      ],
+      "sceneIds": ["scene:alchemists-synthesis:main"],
+      "implementationPaths": [
+        "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/alchemists-synthesis/page.test.tsx",
+        "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/alchemists-synthesis/page.tsx",
+        "apps/advantage-games/src/app/api/v1/games/alchemists-synthesis/complete/route.ts",
+        "apps/advantage-games/src/app/api/v1/games/alchemists-synthesis/vocabulary/route.ts",
+        "apps/advantage-games/src/components/games/vocabulary/alchemists-synthesis/AlchemistsSynthesisGame.test.tsx",
+        "apps/advantage-games/src/components/games/vocabulary/alchemists-synthesis/AlchemistsSynthesisGame.tsx",
+        "apps/advantage-games/src/lib/games/alchemistsSynthesis.test.ts",
+        "apps/advantage-games/src/lib/games/alchemistsSynthesis.ts"
+      ],
+      "importedCopyPaths": [],
+      "measureEvidencePaths": [],
+      "assetRoots": ["apps/advantage-games/public/games/cover"]
+    },
+    {
+      "id": "game:potion-rush",
+      "slug": "potion-rush",
+      "title": "Potion Rush",
+      "inputMode": "sentence",
+      "catalogState": "playable",
+      "routeState": "present",
+      "confidence": "high",
+      "evidenceIds": [
+        "evidence:source:catalog",
+        "evidence:source:components",
+        "evidence:source:logic",
+        "evidence:source:reading-copies"
+      ],
+      "sceneIds": ["scene:potion-rush:main"],
+      "implementationPaths": [
+        "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/potion-rush/page.test.tsx",
+        "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/potion-rush/page.tsx",
+        "apps/advantage-games/src/app/api/v1/games/potion-rush/complete/route.ts",
+        "apps/advantage-games/src/app/api/v1/games/potion-rush/ranking/route.ts",
+        "apps/advantage-games/src/app/api/v1/games/potion-rush/sentences/route.ts",
+        "apps/advantage-games/src/components/games/sentence/potion-rush/CauldronStation.tsx",
+        "apps/advantage-games/src/components/games/sentence/potion-rush/ConveyorBelt.test.tsx",
+        "apps/advantage-games/src/components/games/sentence/potion-rush/ConveyorBelt.tsx",
+        "apps/advantage-games/src/components/games/sentence/potion-rush/CustomerQueue.test.tsx",
+        "apps/advantage-games/src/components/games/sentence/potion-rush/CustomerQueue.tsx",
+        "apps/advantage-games/src/components/games/sentence/potion-rush/PotionRushEffectsLayer.tsx",
+        "apps/advantage-games/src/components/games/sentence/potion-rush/PotionRushGame.test.tsx",
+        "apps/advantage-games/src/components/games/sentence/potion-rush/PotionRushGame.tsx",
+        "apps/advantage-games/src/components/games/sentence/potion-rush/PotionRushSoundController.tsx",
+        "apps/advantage-games/src/components/games/sentence/potion-rush/TrashPortal.tsx",
+        "apps/advantage-games/src/lib/__tests__/potionRushEffects.test.ts",
+        "apps/advantage-games/src/lib/games/potionRushEffects.test.ts",
+        "apps/advantage-games/src/lib/games/potionRushEffects.ts",
+        "apps/advantage-games/src/store/__tests__/usePotionRushStore.test.ts",
+        "apps/advantage-games/src/store/usePotionRushStore.calculateXP.test.ts",
+        "apps/advantage-games/src/store/usePotionRushStore.test.ts",
+        "apps/advantage-games/src/store/usePotionRushStore.ts",
+        "apps/advantage-games/src/store/usePotionRushStoreEndless.test.ts",
+        "apps/advantage-games/src/store/usePotionRushStoreScaling.test.ts"
+      ],
+      "importedCopyPaths": [
+        "apps/reading-advantage/components/games/sentence/potion-rush/CauldronStation.tsx",
+        "apps/reading-advantage/components/games/sentence/potion-rush/ConveyorBelt.tsx",
+        "apps/reading-advantage/components/games/sentence/potion-rush/CustomerQueue.tsx",
+        "apps/reading-advantage/components/games/sentence/potion-rush/PotionRushEffectsLayer.tsx",
+        "apps/reading-advantage/components/games/sentence/potion-rush/PotionRushGame.test.tsx",
+        "apps/reading-advantage/components/games/sentence/potion-rush/PotionRushGame.tsx",
+        "apps/reading-advantage/components/games/sentence/potion-rush/PotionRushSoundController.tsx",
+        "apps/reading-advantage/components/games/sentence/potion-rush/TrashPortal.tsx",
+        "apps/reading-advantage/lib/games/potionRushEffects.test.ts",
+        "apps/reading-advantage/lib/games/potionRushEffects.ts",
+        "apps/reading-advantage/app/[locale]/(student)/student/games/sentence/potion-rush/page.tsx",
+        "apps/reading-advantage/app/api/v1/games/potion-rush/complete/route.ts",
+        "apps/reading-advantage/app/api/v1/games/potion-rush/ranking/route.ts",
+        "apps/reading-advantage/app/api/v1/games/potion-rush/sentences/route.ts"
+      ],
+      "measureEvidencePaths": [],
+      "assetRoots": [
+        "apps/advantage-games/public/games/sentence/potion-rush",
+        "apps/advantage-games/public/games/cover"
+      ]
+    },
+    {
+      "id": "game:dungeon-liberator",
+      "slug": "dungeon-liberator",
+      "title": "Dungeon Liberator",
+      "inputMode": "sentence",
+      "catalogState": "withdrawn",
+      "routeState": "missing",
+      "confidence": "high",
+      "evidenceIds": [
+        "evidence:source:catalog",
+        "evidence:source:components",
+        "evidence:source:logic",
+        "evidence:history:catalog"
+      ],
+      "sceneIds": ["scene:dungeon-liberator:main"],
+      "implementationPaths": [
+        "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/dungeon-liberator/page.test.tsx",
+        "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/dungeon-liberator/page.tsx",
+        "apps/advantage-games/src/app/api/v1/games/dungeon-liberator/complete/route.ts",
+        "apps/advantage-games/src/app/api/v1/games/dungeon-liberator/ranking/route.ts",
+        "apps/advantage-games/src/app/api/v1/games/dungeon-liberator/sentences/route.ts",
+        "apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.test.tsx",
+        "apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx",
+        "apps/advantage-games/src/components/games/sentence/dungeon-liberator/index.ts",
+        "apps/advantage-games/src/lib/games/dungeonLiberator.test.ts",
+        "apps/advantage-games/src/lib/games/dungeonLiberator.ts",
+        "apps/advantage-games/src/lib/games/dungeonLiberatorIndicators.test.ts",
+        "apps/advantage-games/src/lib/games/dungeonLiberatorIndicators.ts"
+      ],
+      "importedCopyPaths": [],
+      "measureEvidencePaths": [],
+      "assetRoots": [
+        "apps/advantage-games/public/games/sentence/dungeon-liberator",
+        "apps/advantage-games/public/games/cover"
+      ]
+    },
+    {
+      "id": "game:spellweavers-run",
+      "slug": "spellweavers-run",
+      "title": "Spellweaver's Run",
+      "inputMode": "sentence",
+      "catalogState": "withdrawn",
+      "routeState": "missing",
+      "confidence": "medium",
+      "evidenceIds": [
+        "evidence:source:catalog",
+        "evidence:measure:roadmap",
+        "evidence:history:catalog"
+      ],
+      "sceneIds": ["scene:spellweavers-run:main"],
+      "implementationPaths": [],
+      "importedCopyPaths": [],
+      "measureEvidencePaths": [
+        "measure/archive/advantage_play_kit_20260710/catalog-rebuild-roadmap.md"
+      ],
+      "assetRoots": ["apps/advantage-games/public/games/cover"]
+    },
+    {
+      "id": "game:shadow-gate-dungeon",
+      "slug": "shadow-gate-dungeon",
+      "title": "Shadow Gate Dungeon",
+      "inputMode": "sentence",
+      "catalogState": "playable",
+      "routeState": "present",
+      "confidence": "high",
+      "evidenceIds": [
+        "evidence:source:catalog",
+        "evidence:source:components",
+        "evidence:source:logic"
+      ],
+      "sceneIds": ["scene:shadow-gate-dungeon:main"],
+      "implementationPaths": [
+        "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/shadow-gate-dungeon/page.test.tsx",
+        "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/shadow-gate-dungeon/page.tsx",
+        "apps/advantage-games/src/app/api/v1/games/shadow-gate-dungeon/complete/route.test.ts",
+        "apps/advantage-games/src/app/api/v1/games/shadow-gate-dungeon/complete/route.ts",
+        "apps/advantage-games/src/app/api/v1/games/shadow-gate-dungeon/sentences/route.test.ts",
+        "apps/advantage-games/src/app/api/v1/games/shadow-gate-dungeon/sentences/route.ts",
+        "apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.test.tsx",
+        "apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx",
+        "apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/index.ts",
+        "apps/advantage-games/src/lib/games/shadowGateDungeon.test.ts",
+        "apps/advantage-games/src/lib/games/shadowGateDungeon.ts",
+        "apps/advantage-games/src/lib/games/shadowGateDungeonConfig.test.ts",
+        "apps/advantage-games/src/lib/games/shadowGateDungeonConfig.ts"
+      ],
+      "importedCopyPaths": [],
+      "measureEvidencePaths": [],
+      "assetRoots": ["apps/advantage-games/public/games/cover"]
+    },
+    {
+      "id": "game:rune-forge-chamber",
+      "slug": "rune-forge-chamber",
+      "title": "Rune Forge Chamber",
+      "inputMode": "sentence",
+      "catalogState": "playable",
+      "routeState": "present",
+      "confidence": "high",
+      "evidenceIds": [
+        "evidence:source:catalog",
+        "evidence:source:components",
+        "evidence:source:logic"
+      ],
+      "sceneIds": ["scene:rune-forge-chamber:main"],
+      "implementationPaths": [
+        "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/rune-forge-chamber/page.test.tsx",
+        "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/rune-forge-chamber/page.tsx",
+        "apps/advantage-games/src/app/api/v1/games/rune-forge-chamber/complete/route.ts",
+        "apps/advantage-games/src/app/api/v1/games/rune-forge-chamber/sentences/route.ts",
+        "apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.test.tsx",
+        "apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx",
+        "apps/advantage-games/src/components/games/sentence/rune-forge-chamber/index.ts",
+        "apps/advantage-games/src/lib/games/runeForgeChamber.test.ts",
+        "apps/advantage-games/src/lib/games/runeForgeChamber.ts",
+        "apps/advantage-games/src/lib/games/runeForgeChamberConfig.test.ts",
+        "apps/advantage-games/src/lib/games/runeForgeChamberConfig.ts"
+      ],
+      "importedCopyPaths": [],
+      "measureEvidencePaths": [],
+      "assetRoots": ["apps/advantage-games/public/games/cover"]
+    },
+    {
+      "id": "game:village-guardian",
+      "slug": "village-guardian",
+      "title": "Village Guardian",
+      "inputMode": "sentence",
+      "catalogState": "playable",
+      "routeState": "present",
+      "confidence": "high",
+      "evidenceIds": [
+        "evidence:source:catalog",
+        "evidence:source:components",
+        "evidence:source:logic"
+      ],
+      "sceneIds": ["scene:village-guardian:main"],
+      "implementationPaths": [
+        "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/village-guardian/page.tsx",
+        "apps/advantage-games/src/app/api/v1/games/village-guardian/complete/route.ts",
+        "apps/advantage-games/src/app/api/v1/games/village-guardian/sentences/route.ts",
+        "apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.test.tsx",
+        "apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx",
+        "apps/advantage-games/src/components/games/sentence/village-guardian/index.ts",
+        "apps/advantage-games/src/lib/games/__tests__/villageGuardian.test.ts",
+        "apps/advantage-games/src/lib/games/villageGuardian.ts",
+        "apps/advantage-games/src/lib/games/villageGuardianConfig.ts"
+      ],
+      "importedCopyPaths": [],
+      "measureEvidencePaths": [],
+      "assetRoots": ["apps/advantage-games/public/games/cover"]
+    },
+    {
+      "id": "game:labyrinth-goblin-king",
+      "slug": "labyrinth-goblin-king",
+      "title": "Labyrinth of the Goblin King",
+      "inputMode": "sentence",
+      "catalogState": "playable",
+      "routeState": "present",
+      "confidence": "high",
+      "evidenceIds": [
+        "evidence:source:catalog",
+        "evidence:source:components",
+        "evidence:source:logic"
+      ],
+      "sceneIds": ["scene:labyrinth-goblin-king:main"],
+      "implementationPaths": [
+        "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/labyrinth-goblin-king/page.tsx",
+        "apps/advantage-games/src/app/api/v1/games/labyrinth-goblin-king/complete/route.ts",
+        "apps/advantage-games/src/app/api/v1/games/labyrinth-goblin-king/sentences/route.ts",
+        "apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.test.tsx",
+        "apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx",
+        "apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/index.ts",
+        "apps/advantage-games/src/lib/games/__tests__/labyrinthGoblinKing.test.ts",
+        "apps/advantage-games/src/lib/games/__tests__/labyrinthGoblinKingConfig.test.ts",
+        "apps/advantage-games/src/lib/games/labyrinthGoblinKing.ts",
+        "apps/advantage-games/src/lib/games/labyrinthGoblinKingConfig.ts"
+      ],
+      "importedCopyPaths": [],
+      "measureEvidencePaths": [],
+      "assetRoots": ["apps/advantage-games/public/games/cover"]
+    },
+    {
+      "id": "game:archers-revenge",
+      "slug": "archers-revenge",
+      "title": "Archer's Revenge",
+      "inputMode": "vocabulary",
+      "catalogState": "withdrawn",
+      "routeState": "missing",
+      "confidence": "medium",
+      "evidenceIds": [
+        "evidence:source:catalog",
+        "evidence:measure:roadmap",
+        "evidence:history:catalog"
+      ],
+      "sceneIds": ["scene:archers-revenge:main"],
+      "implementationPaths": [],
+      "importedCopyPaths": [],
+      "measureEvidencePaths": [
+        "measure/archive/advantage_play_kit_20260710/catalog-rebuild-roadmap.md"
+      ],
+      "assetRoots": ["apps/advantage-games/public/games/cover"]
+    },
+    {
+      "id": "game:storm-castle-tower",
+      "slug": "storm-castle-tower",
+      "title": "Storm the Castle Tower",
+      "inputMode": "sentence",
+      "catalogState": "withdrawn",
+      "routeState": "missing",
+      "confidence": "medium",
+      "evidenceIds": [
+        "evidence:source:catalog",
+        "evidence:measure:roadmap",
+        "evidence:history:catalog"
+      ],
+      "sceneIds": ["scene:storm-castle-tower:main"],
+      "implementationPaths": [],
+      "importedCopyPaths": [],
+      "measureEvidencePaths": [
+        "measure/archive/advantage_play_kit_20260710/catalog-rebuild-roadmap.md"
+      ],
+      "assetRoots": ["apps/advantage-games/public/games/cover"]
+    },
+    {
+      "id": "game:griffin-sky-joust",
+      "slug": "griffin-sky-joust",
+      "title": "Griffin Sky-Joust",
+      "inputMode": "sentence",
+      "catalogState": "withdrawn",
+      "routeState": "missing",
+      "confidence": "medium",
+      "evidenceIds": [
+        "evidence:source:catalog",
+        "evidence:measure:roadmap",
+        "evidence:history:catalog"
+      ],
+      "sceneIds": ["scene:griffin-sky-joust:main"],
+      "implementationPaths": [],
+      "importedCopyPaths": [],
+      "measureEvidencePaths": [
+        "measure/archive/advantage_play_kit_20260710/catalog-rebuild-roadmap.md"
+      ],
+      "assetRoots": [
+        "apps/advantage-games/public/games/sentence/griffin-sky-joust",
+        "apps/advantage-games/public/games/cover"
+      ]
+    },
+    {
+      "id": "game:realm-carver",
+      "slug": "realm-carver",
+      "title": "Realm Carver",
+      "inputMode": "sentence",
+      "catalogState": "withdrawn",
+      "routeState": "missing",
+      "confidence": "medium",
+      "evidenceIds": [
+        "evidence:source:catalog",
+        "evidence:measure:roadmap",
+        "evidence:history:catalog"
+      ],
+      "sceneIds": ["scene:realm-carver:main"],
+      "implementationPaths": [],
+      "importedCopyPaths": [],
+      "measureEvidencePaths": [
+        "measure/archive/advantage_play_kit_20260710/catalog-rebuild-roadmap.md"
+      ],
+      "assetRoots": [
+        "apps/advantage-games/public/games/sentence/realm-carver",
+        "apps/advantage-games/public/games/cover"
+      ]
+    },
+    {
+      "id": "game:paladins-twin-soul",
+      "slug": "paladins-twin-soul",
+      "title": "Paladin's Twin-Soul",
+      "inputMode": "vocabulary",
+      "catalogState": "withdrawn",
+      "routeState": "missing",
+      "confidence": "medium",
+      "evidenceIds": [
+        "evidence:source:catalog",
+        "evidence:measure:roadmap",
+        "evidence:history:catalog"
+      ],
+      "sceneIds": ["scene:paladins-twin-soul:main"],
+      "implementationPaths": [],
+      "importedCopyPaths": [],
+      "measureEvidencePaths": [
+        "measure/archive/advantage_play_kit_20260710/catalog-rebuild-roadmap.md"
+      ],
+      "assetRoots": [
+        "apps/advantage-games/public/games/vocabulary/paladins-twin-soul",
+        "apps/advantage-games/public/games/cover"
+      ]
+    },
+    {
+      "id": "game:griffin-riders-escape",
+      "slug": "griffin-riders-escape",
+      "title": "Griffin Rider's Escape",
+      "inputMode": "sentence",
+      "catalogState": "withdrawn",
+      "routeState": "missing",
+      "confidence": "medium",
+      "evidenceIds": [
+        "evidence:source:catalog",
+        "evidence:measure:roadmap",
+        "evidence:history:catalog"
+      ],
+      "sceneIds": ["scene:griffin-riders-escape:main"],
+      "implementationPaths": [],
+      "importedCopyPaths": [],
+      "measureEvidencePaths": [
+        "measure/archive/advantage_play_kit_20260710/catalog-rebuild-roadmap.md"
+      ],
+      "assetRoots": [
+        "apps/advantage-games/public/games/sentence/griffin-riders-escape",
+        "apps/advantage-games/public/games/cover"
+      ]
+    },
+    {
+      "id": "game:astral-mage",
+      "slug": "astral-mage",
+      "title": "Astral Mage",
+      "inputMode": "sentence",
+      "catalogState": "withdrawn",
+      "routeState": "missing",
+      "confidence": "medium",
+      "evidenceIds": [
+        "evidence:source:catalog",
+        "evidence:measure:roadmap",
+        "evidence:history:catalog"
+      ],
+      "sceneIds": ["scene:astral-mage:main"],
+      "implementationPaths": [],
+      "importedCopyPaths": [],
+      "measureEvidencePaths": [
+        "measure/archive/advantage_play_kit_20260710/catalog-rebuild-roadmap.md"
+      ],
+      "assetRoots": ["apps/advantage-games/public/games/cover"]
+    },
+    {
+      "id": "game:devourer-slime",
+      "slug": "devourer-slime",
+      "title": "Devourer Slime",
+      "inputMode": "sentence",
+      "catalogState": "playable",
+      "routeState": "present",
+      "confidence": "high",
+      "evidenceIds": [
+        "evidence:source:catalog",
+        "evidence:source:components",
+        "evidence:source:logic"
+      ],
+      "sceneIds": ["scene:devourer-slime:main"],
+      "implementationPaths": [
+        "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/devourer-slime/page.tsx",
+        "apps/advantage-games/src/app/api/v1/games/devourer-slime/complete/route.ts",
+        "apps/advantage-games/src/app/api/v1/games/devourer-slime/sentences/route.ts",
+        "apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.test.tsx",
+        "apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx",
+        "apps/advantage-games/src/lib/games/devourerSlime.test.ts",
+        "apps/advantage-games/src/lib/games/devourerSlime.ts"
+      ],
+      "importedCopyPaths": [],
+      "measureEvidencePaths": [],
+      "assetRoots": ["apps/advantage-games/public/games/cover"]
+    },
+    {
+      "id": "game:sorcerer-ziggurat",
+      "slug": "sorcerer-ziggurat",
+      "title": "The Sorcerer's Ziggurat",
+      "inputMode": "sentence",
+      "catalogState": "withdrawn",
+      "routeState": "missing",
+      "confidence": "medium",
+      "evidenceIds": [
+        "evidence:source:catalog",
+        "evidence:measure:roadmap",
+        "evidence:history:catalog"
+      ],
+      "sceneIds": ["scene:sorcerer-ziggurat:main"],
+      "implementationPaths": [],
+      "importedCopyPaths": [],
+      "measureEvidencePaths": [
+        "measure/archive/advantage_play_kit_20260710/catalog-rebuild-roadmap.md"
+      ],
+      "assetRoots": ["apps/advantage-games/public/games/cover"]
+    },
+    {
+      "id": "game:haunted-library",
+      "slug": "haunted-library",
+      "title": "The Haunted Library",
+      "inputMode": "sentence",
+      "catalogState": "playable",
+      "routeState": "present",
+      "confidence": "high",
+      "evidenceIds": [
+        "evidence:source:catalog",
+        "evidence:source:components",
+        "evidence:source:logic"
+      ],
+      "sceneIds": ["scene:haunted-library:main"],
+      "implementationPaths": [
+        "apps/advantage-games/src/__tests__/import-harness/haunted-library-import.test.tsx",
+        "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/haunted-library/page.tsx",
+        "apps/advantage-games/src/app/api/v1/games/haunted-library/complete/route.ts",
+        "apps/advantage-games/src/app/api/v1/games/haunted-library/sentences/route.ts",
+        "apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.test.tsx",
+        "apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx",
+        "apps/advantage-games/src/lib/games/hauntedLibrary.test.ts",
+        "apps/advantage-games/src/lib/games/hauntedLibrary.ts"
+      ],
+      "importedCopyPaths": [],
+      "measureEvidencePaths": [],
+      "assetRoots": ["apps/advantage-games/public/games/cover"]
+    },
+    {
+      "id": "game:gryphon-patrol",
+      "slug": "gryphon-patrol",
+      "title": "Gryphon Patrol",
+      "inputMode": "sentence",
+      "catalogState": "withdrawn",
+      "routeState": "missing",
+      "confidence": "medium",
+      "evidenceIds": [
+        "evidence:source:catalog",
+        "evidence:measure:roadmap",
+        "evidence:history:catalog"
+      ],
+      "sceneIds": ["scene:gryphon-patrol:main"],
+      "implementationPaths": [],
+      "importedCopyPaths": [],
+      "measureEvidencePaths": [
+        "measure/archive/advantage_play_kit_20260710/catalog-rebuild-roadmap.md"
+      ],
+      "assetRoots": ["apps/advantage-games/public/games/cover"]
+    },
+    {
+      "id": "game:abyssal-well",
+      "slug": "abyssal-well",
+      "title": "The Abyssal Well",
+      "inputMode": "sentence",
+      "catalogState": "stale",
+      "routeState": "withdrawn",
+      "confidence": "medium",
+      "evidenceIds": [
+        "evidence:measure:abyssal",
+        "evidence:measure:roadmap",
+        "evidence:history:catalog"
+      ],
+      "sceneIds": ["scene:abyssal-well:main"],
+      "implementationPaths": [],
+      "importedCopyPaths": [],
+      "measureEvidencePaths": [
+        "apps/advantage-games/measure/tracks/r3f_rendering_tier_20260708/review-2026-07-10.md"
+      ],
+      "assetRoots": []
+    },
+    {
+      "id": "game:babel-architect",
+      "slug": "babel-architect",
+      "title": "Babel Architect",
+      "inputMode": "sentence",
+      "catalogState": "stale",
+      "routeState": "missing",
+      "confidence": "medium",
+      "evidenceIds": [
+        "evidence:measure:babel",
+        "evidence:measure:roadmap",
+        "evidence:history:catalog"
+      ],
+      "sceneIds": ["scene:babel-architect:main"],
+      "implementationPaths": [],
+      "importedCopyPaths": [],
+      "measureEvidencePaths": [
+        "apps/advantage-games/measure/archive/babel-architect-compliance-audit_20260426/report.md"
+      ],
+      "assetRoots": []
+    }
+  ],
+  "scenes": [
+    {
+      "id": "scene:castle-defense:main",
+      "gameId": "game:castle-defense",
+      "name": "main",
+      "evidenceIds": ["evidence:source:components"]
+    },
+    {
+      "id": "scene:dragon-rider:main",
+      "gameId": "game:dragon-rider",
+      "name": "main",
+      "evidenceIds": ["evidence:measure:roadmap"]
+    },
+    {
+      "id": "scene:magic-defense:main",
+      "gameId": "game:magic-defense",
+      "name": "main",
+      "evidenceIds": ["evidence:source:components"]
+    },
+    {
+      "id": "scene:rpg-battle:main",
+      "gameId": "game:rpg-battle",
+      "name": "main",
+      "evidenceIds": ["evidence:source:components"]
+    },
+    {
+      "id": "scene:dragon-flight:main",
+      "gameId": "game:dragon-flight",
+      "name": "main",
+      "evidenceIds": ["evidence:source:components"]
+    },
+    {
+      "id": "scene:wizard-vs-zombie:main",
+      "gameId": "game:wizard-vs-zombie",
+      "name": "main",
+      "evidenceIds": ["evidence:source:components"]
+    },
+    {
+      "id": "scene:enchanted-library:main",
+      "gameId": "game:enchanted-library",
+      "name": "main",
+      "evidenceIds": ["evidence:source:components"]
+    },
+    {
+      "id": "scene:rune-match:main",
+      "gameId": "game:rune-match",
+      "name": "main",
+      "evidenceIds": ["evidence:source:components"]
+    },
+    {
+      "id": "scene:alchemists-synthesis:main",
+      "gameId": "game:alchemists-synthesis",
+      "name": "main",
+      "evidenceIds": ["evidence:source:components"]
+    },
+    {
+      "id": "scene:potion-rush:main",
+      "gameId": "game:potion-rush",
+      "name": "main",
+      "evidenceIds": ["evidence:source:components"]
+    },
+    {
+      "id": "scene:dungeon-liberator:main",
+      "gameId": "game:dungeon-liberator",
+      "name": "main",
+      "evidenceIds": ["evidence:source:components"]
+    },
+    {
+      "id": "scene:spellweavers-run:main",
+      "gameId": "game:spellweavers-run",
+      "name": "main",
+      "evidenceIds": ["evidence:measure:roadmap"]
+    },
+    {
+      "id": "scene:shadow-gate-dungeon:main",
+      "gameId": "game:shadow-gate-dungeon",
+      "name": "main",
+      "evidenceIds": ["evidence:source:components"]
+    },
+    {
+      "id": "scene:rune-forge-chamber:main",
+      "gameId": "game:rune-forge-chamber",
+      "name": "main",
+      "evidenceIds": ["evidence:source:components"]
+    },
+    {
+      "id": "scene:village-guardian:main",
+      "gameId": "game:village-guardian",
+      "name": "main",
+      "evidenceIds": ["evidence:source:components"]
+    },
+    {
+      "id": "scene:labyrinth-goblin-king:main",
+      "gameId": "game:labyrinth-goblin-king",
+      "name": "main",
+      "evidenceIds": ["evidence:source:components"]
+    },
+    {
+      "id": "scene:archers-revenge:main",
+      "gameId": "game:archers-revenge",
+      "name": "main",
+      "evidenceIds": ["evidence:measure:roadmap"]
+    },
+    {
+      "id": "scene:storm-castle-tower:main",
+      "gameId": "game:storm-castle-tower",
+      "name": "main",
+      "evidenceIds": ["evidence:measure:roadmap"]
+    },
+    {
+      "id": "scene:griffin-sky-joust:main",
+      "gameId": "game:griffin-sky-joust",
+      "name": "main",
+      "evidenceIds": ["evidence:measure:roadmap"]
+    },
+    {
+      "id": "scene:realm-carver:main",
+      "gameId": "game:realm-carver",
+      "name": "main",
+      "evidenceIds": ["evidence:measure:roadmap"]
+    },
+    {
+      "id": "scene:paladins-twin-soul:main",
+      "gameId": "game:paladins-twin-soul",
+      "name": "main",
+      "evidenceIds": ["evidence:measure:roadmap"]
+    },
+    {
+      "id": "scene:griffin-riders-escape:main",
+      "gameId": "game:griffin-riders-escape",
+      "name": "main",
+      "evidenceIds": ["evidence:measure:roadmap"]
+    },
+    {
+      "id": "scene:astral-mage:main",
+      "gameId": "game:astral-mage",
+      "name": "main",
+      "evidenceIds": ["evidence:measure:roadmap"]
+    },
+    {
+      "id": "scene:devourer-slime:main",
+      "gameId": "game:devourer-slime",
+      "name": "main",
+      "evidenceIds": ["evidence:source:components"]
+    },
+    {
+      "id": "scene:sorcerer-ziggurat:main",
+      "gameId": "game:sorcerer-ziggurat",
+      "name": "main",
+      "evidenceIds": ["evidence:measure:roadmap"]
+    },
+    {
+      "id": "scene:haunted-library:main",
+      "gameId": "game:haunted-library",
+      "name": "main",
+      "evidenceIds": ["evidence:source:components"]
+    },
+    {
+      "id": "scene:gryphon-patrol:main",
+      "gameId": "game:gryphon-patrol",
+      "name": "main",
+      "evidenceIds": ["evidence:measure:roadmap"]
+    },
+    {
+      "id": "scene:abyssal-well:main",
+      "gameId": "game:abyssal-well",
+      "name": "main",
+      "evidenceIds": ["evidence:measure:abyssal"]
+    },
+    {
+      "id": "scene:babel-architect:main",
+      "gameId": "game:babel-architect",
+      "name": "main",
+      "evidenceIds": ["evidence:measure:babel"]
+    }
+  ],
+  "discrepancies": [
+    {
+      "id": "discrepancy:catalog:withdrawn-playable",
+      "claim": "Fourteen raw cards say playable but the exported catalog withdraws them.",
+      "resolution": "Use exported catalog state and preserve raw literals as discrepancy evidence.",
+      "evidenceIds": ["evidence:source:catalog", "evidence:test:catalog"],
+      "confidence": "high"
+    },
+    {
+      "id": "discrepancy:abyssal-well:deleted-source",
+      "gameId": "game:abyssal-well",
+      "claim": "Abyssal Well existed in earlier source but is absent now.",
+      "resolution": "Retain stale requirements pending explicit retirement or successor decision.",
+      "evidenceIds": ["evidence:measure:abyssal", "evidence:history:catalog"],
+      "confidence": "medium"
+    },
+    {
+      "id": "discrepancy:babel-architect:deleted-source",
+      "gameId": "game:babel-architect",
+      "claim": "Babel Architect had catalog and cancelled exemplar evidence but no accepted implementation.",
+      "resolution": "Retain provisional requirements without restoring a route.",
+      "evidenceIds": ["evidence:measure:babel", "evidence:history:catalog"],
+      "confidence": "medium"
+    },
+    {
+      "id": "discrepancy:imports:duplicate-copies",
+      "claim": "Reading contains copied implementations that could inflate corpus count.",
+      "resolution": "Treat copies as evidence for canonical IDs.",
+      "evidenceIds": [
+        "evidence:source:catalog",
+        "evidence:source:reading-copies"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

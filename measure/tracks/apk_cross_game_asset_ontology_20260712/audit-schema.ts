@@ -48,6 +48,10 @@ export const GameSchema = z.object({
   confidence: ConfidenceSchema,
   evidenceIds: EvidenceIdsSchema,
   sceneIds: z.array(StableIdSchema).min(1),
+  implementationPaths: z.array(z.string().min(1)).default([]),
+  importedCopyPaths: z.array(z.string().min(1)).default([]),
+  measureEvidencePaths: z.array(z.string().min(1)).default([]),
+  assetRoots: z.array(z.string().min(1)).default([]),
 });
 
 /** A distinct gameplay scene or state requiring its own behavior and asset mapping. */
@@ -154,6 +158,16 @@ export const DiscrepancySchema = z.object({
   resolution: z.string().min(1),
   evidenceIds: z.array(StableIdSchema).min(2),
   confidence: ConfidenceSchema,
+});
+
+/** Phase 1 corpus envelope used before mechanic and ontology mappings are added. */
+export const GameCorpusSchema = z.object({
+  version: z.literal("apk-corpus.v1"),
+  sourceRevision: z.string().min(7),
+  evidence: z.array(EvidenceSchema).min(1),
+  games: z.array(GameSchema).min(1),
+  scenes: z.array(SceneSchema).min(1),
+  discrepancies: z.array(DiscrepancySchema),
 });
 
 /** Versioned machine-readable envelope for every ontology deliverable. */

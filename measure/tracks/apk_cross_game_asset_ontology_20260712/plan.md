@@ -21,13 +21,13 @@
 
 ## Phase 1: Reconcile the complete game corpus [checkpoint: pending]
 
-- [ ] Task: Enumerate every catalog, route, raw component, logic/config module,
+- [x] Task: Enumerate every catalog, route, raw component, logic/config module,
       imported copy, test, asset root, and relevant Measure track
-- [ ] Task: Resolve playable, withdrawn, in-development, planned, missing, stale,
+- [x] Task: Resolve playable, withdrawn, in-development, planned, missing, stale,
       duplicate, and deleted-source discrepancies
-- [ ] Task: Publish `game-corpus.md` and machine-readable corpus with exact evidence
-- [ ] Task: Run completeness and referential-integrity tests
-- [ ] Task: Obtain product-owner acceptance of the corpus boundary
+- [x] Task: Publish `game-corpus.md` and machine-readable corpus with exact evidence
+- [x] Task: Run completeness and referential-integrity tests
+- [~] Task: Obtain product-owner acceptance of the corpus boundary
 - [ ] Task: Measure - User Manual Verification 'Phase 1' (Protocol in workflow.md)
 
 ## Phase 2: Recover mechanic and learning blueprints [checkpoint: pending]
