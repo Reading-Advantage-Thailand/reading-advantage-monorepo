@@ -54,6 +54,7 @@ from typing import Any, Iterable, Mapping
 # ---------------------------------------------------------------------------
 
 SCHEMA_VERSION: str = "0.0.0-red"
+GATE_VERSION: str = "0.0.1-security-review"
 
 # Canonical dependency field name. The legacy alias ``"dependencies"``
 # is rejected by ``validate_dependency_field`` per the program rule.
@@ -415,6 +416,8 @@ def validate_fixture_manifest(
         return _reject("INVALID_FIXTURE_MANIFEST", detail={"field": "manifest_kind"})
     if manifest.get("schema_version") != SCHEMA_VERSION:
         return _reject("UNKNOWN_SCHEMA_VERSION")
+    if manifest.get("gate_version") != GATE_VERSION:
+        return _reject("UNKNOWN_SCHEMA_VERSION", detail={"field": "gate_version"})
     if manifest.get("baseline_gate_commit") != "f61eb643f138373c6357ec35e6ac296a7014800c":
         return _reject("BASELINE_GATE_COMMIT_MISSING")
 
@@ -669,6 +672,7 @@ __all__ = [
     "CANONICAL_DEPENDENCY_FIELD",
     "ContractError",
     "FROZEN_ATTEMPTS",
+    "GATE_VERSION",
     "REJECTION_CODES",
     "SCHEMA_VERSION",
     "collect_catalog_guard_references",

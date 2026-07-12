@@ -143,6 +143,7 @@ class FrozenAttemptsScaffoldTests(unittest.TestCase):
     def test_001_attempts_module_exposes_required_constants(self) -> None:
         for name in (
             "SCHEMA_VERSION",
+            "GATE_VERSION",
             "REJECTION_CODES",
             "FROZEN_ATTEMPTS",
             "ATTEMPT_REJECTION_BINDINGS",
@@ -319,6 +320,10 @@ class BaselineCommitAndGateProhibitionTests(unittest.TestCase):
                 paths,
                 f"candidate_output_paths must declare {required}.",
             )
+
+    def test_023_manifest_records_review_gate_version(self) -> None:
+        manifest = _read_json(MANIFEST_PATH)
+        self.assertEqual(manifest.get("gate_version"), contracts.GATE_VERSION)
 
 
 class LabeledBudgetTests(unittest.TestCase):

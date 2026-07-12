@@ -1,6 +1,7 @@
 {
   "manifest_kind": "phase0-freeze",
   "schema_version": "0.0.0-red",
+  "gate_version": "0.0.1-security-review",
   "baseline_gate_commit": "f61eb643f138373c6357ec35e6ac296a7014800c",
   "baseline_gate_short_sha": "f61eb643",
   "gate_edit_prohibition": {
