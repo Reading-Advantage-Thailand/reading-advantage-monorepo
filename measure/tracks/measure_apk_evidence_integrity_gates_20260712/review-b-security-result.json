@@ -1,0 +1,118 @@
+{
+  "track_id": "measure_apk_evidence_integrity_gates_20260712",
+  "phase": "Phase 0: Freeze failure cases, contracts, and role boundaries",
+  "review_role": "B",
+  "review_domain": "security and data handling",
+  "baseline_sha": "fc8aaa73e352b3aeb4f336f8d46781aa04b43751",
+  "reviewed_commits": [
+    "ad45eebd02a1f5a9c787da268d0784854be57b63",
+    "b216690b"
+  ],
+  "status": "BLOCKED",
+  "findings_summary": {
+    "critical": 0,
+    "high": 1,
+    "medium": 1,
+    "low": 0,
+    "resolved_during_review": 4
+  },
+  "findings": [
+    {
+      "id": "APK-EIG-B-001",
+      "severity": "High",
+      "status": "resolved",
+      "title": "Phase 0 validators accepted forged or incomplete success envelopes",
+      "detail": "The reviewed implementation accepted arbitrary success-like statuses, missing schema/kind/contract fields, forged baseline values, mismatched attempt reason codes, and manifests without live fixture-hash verification. sweep_phase0 also ignored dangling A12 guards when deriving its overall result.",
+      "fix_commits": ["b862e37e", "4a858038"]
+    },
+    {
+      "id": "APK-EIG-B-002",
+      "severity": "High",
+      "status": "resolved",
+      "title": "Positive control encoded an unsupported APK product claim",
+      "detail": "control_claim.json named Dragon Flight and asserted movement behavior with an all-zero cited-range hash. It was therefore unsafe as a positive control and contradicted the Phase 0 prohibition on APK product conclusions. The control now uses an explicitly synthetic, non-product fixture identity.",
+      "fix_commit": "62dd28ba"
+    },
+    {
+      "id": "APK-EIG-B-003",
+      "severity": "Medium",
+      "status": "resolved",
+      "title": "Numeric resource contract accepted non-positive values and dates as units",
+      "detail": "Zero/negative ceilings and a numeric date key could pass as measured resources. The parser now requires a positive integer and a concrete alphabetic unit label.",
+      "fix_commit": "b862e37e"
+    },
+    {
+      "id": "APK-EIG-B-004",
+      "severity": "Medium",
+      "status": "resolved",
+      "title": "Plan claims did not identify post-Green security corrections",
+      "detail": "The Phase 0 plan attributed completion only to ad45eebd even though that revision was fail-open. The plan now records the security fixes, current test count, versioned review gate, and the unresolved A12 state without claiming repository-wide resolution.",
+      "fix_commits": ["ed56123b", "563bdd6d"]
+    },
+    {
+      "id": "APK-EIG-B-005",
+      "severity": "High",
+      "status": "open",
+      "title": "Required independent role provenance is absent",
+      "detail": "phase0.json explicitly contains NOT_FABRICATED placeholders rather than tool-resolved spawn/event IDs, response hashes, context hashes, timestamps, and commit binding. It also acknowledges that one Red author produced both contracts and counterexamples. This honesty is preferable to forgery, but the artifact cannot satisfy FR3 or the Phase 0 closeout gate. The plan correctly leaves the role-spawn task incomplete; Phase 0 must not be accepted until authentic distinct-role receipts are resolved through the real event adapter.",
+      "blocking": true
+    },
+    {
+      "id": "APK-EIG-B-006",
+      "severity": "Medium",
+      "status": "open",
+      "title": "Repository-wide A12 and marker gates remain red",
+      "detail": "Seven catalog guard references remain dangling, and tests/orchestrator_marker_vocabulary.sh reports deprecated blank markers in unrelated active tracks. The reviewed gate now fails closed on dangling guards, but Phase 4 and any global completion claim remain blocked until owners remediate or formally change those shared contracts.",
+      "blocking": true
+    }
+  ],
+  "anti_pattern_checks": {
+    "A1": "focused supervisor invariant passed",
+    "A2": "not triggered; reviewed changes contain no draft-to-published transition",
+    "A3": "fixed and adversarially tested",
+    "A4": "empty positive and negative corpora rejected",
+    "A5": "plan claims corrected to include review fixes",
+    "A6": "measure/tracks.md remains pending and does not claim this gate resolved",
+    "A7": "no broad exclusion filter introduced",
+    "A8": "focused validator passes; repository-wide marker command remains red",
+    "A9": "not triggered by reviewed files",
+    "A10": "no generated product facts used as evidence",
+    "A11": "review-execution truthfulness guard passed",
+    "A12": "aggregate gate now fails closed; seven pre-existing dangling references remain",
+    "A13": "not triggered; track is active and not archived"
+  },
+  "tests": [
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.evidence_integrity_gates.test_contract_scaffold",
+      "result": "PASS: 46 tests"
+    },
+    {
+      "command": "bash tests/orchestrator_supervisor_invariants.sh",
+      "result": "PASS"
+    },
+    {
+      "command": "bash tests/orchestrator_review_execution_truthfulness.sh",
+      "result": "PASS"
+    },
+    {
+      "command": "bash tests/orchestrator_catalog.sh",
+      "result": "PASS: existence/headings only; does not resolve A12 debt"
+    },
+    {
+      "command": "bash tests/orchestrator_marker_vocabulary.sh",
+      "result": "FAIL: pre-existing deprecated markers in unrelated active tracks"
+    },
+    {
+      "command": "git diff --check",
+      "result": "PASS for review changes"
+    }
+  ],
+  "review_fix_commits": [
+    "b862e37e",
+    "62dd28ba",
+    "ed56123b",
+    "4a858038",
+    "563bdd6d"
+  ],
+  "disposition": "Do not close Phase 0 or begin successor APK work. Authentic distinct-role/event provenance and the shared aggregate blockers remain unresolved."
+}
