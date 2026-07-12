@@ -4,8 +4,8 @@
   "status": "pending",
   "created_at": "2026-07-12T00:00:00Z",
   "updated_at": "2026-07-12T00:00:00Z",
-  "description": "Derive the APK semantic asset ontology, gameplay variants, environment kits, and coverage gaps from every relevant developed and in-development game before choosing physical formats or generating art.",
-  "estimated_tasks": 36,
+  "description": "Derive complete APK mechanic blueprints, shared developer-capability requirements, responsive composition contracts, semantic assets, and delivery priorities from the Advantage Games corpus before implementing the kit or generating art.",
+  "estimated_tasks": 50,
   "actual_tasks": null,
-  "deviation_notes": "Supersedes the requirements portion of apk_dual_theme_asset_packs_20260711, which selected a speculative physical inventory before completing cross-game asset analysis."
+  "deviation_notes": "Expanded after fitness review: the earlier replacement plan covered asset requirements but did not fully derive the shared game-development kit from apps/advantage-games. This track now owns the combined mechanic, capability, responsive, and asset requirements audit."
 }

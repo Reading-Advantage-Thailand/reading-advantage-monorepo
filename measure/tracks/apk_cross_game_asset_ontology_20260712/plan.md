@@ -1,88 +1,107 @@
-# Implementation Plan: APK Cross-Game Asset Requirements and Ontology
+# Implementation Plan: APK Cross-Game Requirements and Capability Ontology
 
 > **Track ID:** `apk_cross_game_asset_ontology_20260712`
-> **Program:** `measure/apk-asset-system-program.md`
+> **Execution type:** requirements and product-modeling; no production implementation
 
-## Phase 0: Freeze the evidence model [checkpoint: pending]
+## Phase 0: Freeze scope, evidence, and schemas [checkpoint: pending]
 
-- [ ] Task: Record the superseded planning assumptions and prohibit art
-  generation, physical-manifest expansion, and cartridge rewriting in this track
-- [ ] Task: Define a versioned schema for the game corpus, scene-level asset
-  usage matrix, source citations, confidence, disposition, and ontology links
-- [ ] Task: Write failing validation tests for missing game IDs, uncited usages,
-  orphan ontology entries, invalid statuses, and unreviewed existing assets
-- [ ] Task: Implement only the validation tooling needed to keep the research
-  artifacts complete and machine-checkable
+- [ ] Task: Snapshot repository and graph evidence
+  - [ ] Record HEAD, working-tree boundaries, graph freshness, catalog revision,
+        relevant archived revisions, and concurrent work exclusions
+  - [ ] Inventory raw Advantage Games, Reading, and Primary game roots without
+        treating copied implementations as separate product requirements
+- [ ] Task: Define machine-validatable audit schemas
+  - [ ] Define game, scene, mechanic, capability usage, responsive composition,
+        asset usage, evidence, confidence, discrepancy, and disposition schemas
+  - [ ] Define stable IDs and cross-artifact referential-integrity rules
+- [ ] Task: Write validation tests that reject omitted games/scenes, unsupported
+      standard capabilities, orphan assets, missing responsive profiles, and broken evidence
+- [ ] Task: Publish audit method and source-of-truth/conflict rules
 - [ ] Task: Measure - User Manual Verification 'Phase 0' (Protocol in workflow.md)
 
-## Phase 1: Build the complete game corpus [checkpoint: pending]
+## Phase 1: Reconcile the complete game corpus [checkpoint: pending]
 
-- [ ] Task: Reconcile all 27 entries in `gameCards.ts` with current routes,
-  implementations, tests, and status overrides
-- [ ] Task: Recover the withdrawn W0-W4 cartridge mechanics and asset-consumer
-  evidence from Git history, archived baselines, blueprints, and cutover manifests
-- [ ] Task: Discover active/in-development game tracks and implementations not
-  represented accurately in the current catalog, including Babel Architect
-- [ ] Task: Record conflicts between catalog, implementation, route, test, and
-  Measure claims rather than selecting one silently
-- [ ] Task: Publish `game-corpus.md` with a completeness check proving every
-  discovered game has an evidence-backed status and source set
+- [ ] Task: Enumerate every catalog, route, raw component, logic/config module,
+      imported copy, test, asset root, and relevant Measure track
+- [ ] Task: Resolve playable, withdrawn, in-development, planned, missing, stale,
+      duplicate, and deleted-source discrepancies
+- [ ] Task: Publish `game-corpus.md` and machine-readable corpus with exact evidence
+- [ ] Task: Run completeness and referential-integrity tests
+- [ ] Task: Obtain product-owner acceptance of the corpus boundary
 - [ ] Task: Measure - User Manual Verification 'Phase 1' (Protocol in workflow.md)
 
-## Phase 2: Extract scene-level asset usages [checkpoint: pending]
+## Phase 2: Recover mechanic and learning blueprints [checkpoint: pending]
 
-- [ ] Task: Analyze defense, combat, duel, and survival games for actors,
-  strength/attack roles, defenses, projectiles, waves, damage states, and HUD
-- [ ] Task: Analyze runners, traversal, aerial, patrol, and territory games for
-  mounts, gates, lanes, targets, hazards, camera indicators, minimaps, and biomes
-- [ ] Task: Analyze collector, adventure, maze, dungeon, and rescue games for
-  environments, NPCs, enemies, pickups, doors, props, paths, and feedback states
-- [ ] Task: Analyze puzzle, forge, alchemy, shop, matching, and construction
-  games for workstations, pieces, ingredients, containers, UI states, and effects
-- [ ] Task: Capture cross-cutting start/result, touch-control, prompt, progress,
-  accessibility, and responsive presentation needs
-- [ ] Task: Publish `game-asset-usage-matrix.md` with one source citation and
-  confidence value for every usage row
+- [ ] Task: Read each raw game component, deterministic logic/config, route, test,
+      and strongest historical evidence
+- [ ] Task: Produce one blueprint per game covering learning loop, controls, world,
+      camera, actors, progression, scoring, difficulty, terminal state, and identity
+- [ ] Task: Classify retained behavior, allowed Phaser-native redesign, and
+      accidental renderer assumptions
+- [ ] Task: Extract deterministic transitions and counterexamples for future Red tests
+- [ ] Task: Cross-review every blueprint against current implementation evidence
 - [ ] Task: Measure - User Manual Verification 'Phase 2' (Protocol in workflow.md)
 
-## Phase 3: Audit existing assets [checkpoint: pending]
+## Phase 3: Baseline developer effort and repeated capabilities [checkpoint: pending]
 
-- [ ] Task: Enumerate candidate 2D assets across app/package/public paths and
-  the approved authoring repository, excluding build output and dependency caches
-- [ ] Task: Manually inspect every candidate and record visual content,
-  dimensions, provenance/license, current callers, and contract suitability
-- [ ] Task: Classify each candidate as reusable, adaptable, cover-only,
-  placeholder-only, rejected, or unknown with explicit evidence
-- [ ] Task: Publish `existing-asset-audit.md` and validate that no proposed reuse
-  lacks manual inspection
+- [ ] Task: Decompose every implementation into lifecycle, content, input,
+      simulation, physics, camera, presentation, UI, audio, accessibility, host, and tests
+- [ ] Task: Quantify representative file/line/module complexity and document the
+      current author-test-theme-QC-ship workflow
+- [ ] Task: Build `capability-usage-matrix.json` across all games and scenes
+- [ ] Task: Classify every repeated capability as retain, standardize,
+      extend-existing, bespoke, or retire with source consumers and rationale
+- [ ] Task: Publish `developer-effort-baseline.md` and
+      `developer-capability-ontology.md`
+- [ ] Task: Obtain product-owner acceptance of standardization boundaries
 - [ ] Task: Measure - User Manual Verification 'Phase 3' (Protocol in workflow.md)
 
-## Phase 4: Normalize the shared asset ontology [checkpoint: pending]
+## Phase 4: Define responsive composition requirements [checkpoint: pending]
 
-- [ ] Task: Group repeated usages into semantic families without referring to
-  physical filenames or legacy sheet layouts
-- [ ] Task: Define gameplay variants only for proven strength, behavior,
-  movement, attack, scale, interaction, collision/readability, or scene roles
-- [ ] Task: Define reusable environment kits and their terrain, boundary,
-  structure, prop, hazard, ambient, and navigation capabilities
-- [ ] Task: Record allowed reuse/substitution and prohibited conflations for
-  actors, enemies, mounts, targets, props, projectiles, VFX, and UI
-- [ ] Task: Publish `asset-ontology.md` and pass orphan, duplicate, citation,
-  and game-coverage validators
+- [ ] Task: Audit each game's current mobile/desktop canvas, camera, HUD, prompt,
+      controls, text, safe regions, and scaling behavior
+- [ ] Task: Define compact and wide strategies, input modes, required visibility,
+      camera policy, reserved regions, and transitions per game
+- [ ] Task: Add real short/worst-case Thai and English fixtures and enlarged-text cases
+- [ ] Task: Identify shared responsive primitives required by the developer kit
+- [ ] Task: Publish and validate `responsive-composition-matrix.md` against the
+      repository-level responsive composition specification
 - [ ] Task: Measure - User Manual Verification 'Phase 4' (Protocol in workflow.md)
 
-## Phase 5: Identify holes and production coverage [checkpoint: pending]
+## Phase 5: Build the asset usage matrix and reuse audit [checkpoint: pending]
 
-- [ ] Task: Compare the usage matrix, ontology, and existing-asset audit to
-  identify missing Must/Should/Could capabilities
-- [ ] Task: Distinguish required gameplay variants from optional visual variety
-  and record rejected duplicate concepts
-- [ ] Task: Rank asset groups by the number of games/scenes unlocked and by
-  upstream dependencies such as shared environment or actor capabilities
-- [ ] Task: Publish `asset-gap-analysis.md` and `asset-coverage-plan.md` with
-  proposed bounded production batches and explicit game coverage
-- [ ] Task: Run independent completeness review and remediate every Critical,
-  High, and Medium finding
-- [ ] Task: Obtain explicit product-owner acceptance of the corpus, ontology,
-  variants, environment kits, gaps, and batch priorities
+- [ ] Task: Inventory every scene's character, environment, gameplay object, VFX,
+      audio, UI, control, background, transition, and result presentation usage
+- [ ] Task: Record states, directions, view, scale, collision, animation,
+      compact/wide use, and developer-capability relationship
+- [ ] Task: Enumerate and manually inspect all existing production candidates
+- [ ] Task: Record provenance/license, dimensions, content, current use, responsive
+      suitability, and reuse/reject/replace disposition
+- [ ] Task: Publish `game-asset-usage-matrix.json` and `existing-asset-audit.md`
 - [ ] Task: Measure - User Manual Verification 'Phase 5' (Protocol in workflow.md)
+
+## Phase 6: Normalize semantic assets and delivery gaps [checkpoint: pending]
+
+- [ ] Task: Normalize usages into semantic families, gameplay variants,
+      environment kits, audio/UI roles, allowed substitutions, and prohibited conflations
+- [ ] Task: Prove every ontology entry has source usage and every usage resolves or
+      remains a visible gap
+- [ ] Task: Separate Must-have blockers from polish and variety opportunities
+- [ ] Task: Rank developer-kit slices and asset batches by cross-game coverage,
+      dependency order, and product value
+- [ ] Task: Recommend bounded cartridge cohorts without opening implementation tracks
+- [ ] Task: Publish `asset-ontology.md` and `gap-and-coverage-plan.md`
+- [ ] Task: Measure - User Manual Verification 'Phase 6' (Protocol in workflow.md)
+
+## Phase 7: Acceptance and dependent-track handoff [checkpoint: pending]
+
+- [ ] Task: Run schema, completeness, evidence, referential-integrity, graph, and
+      contradiction checks across all artifacts
+- [ ] Task: Run independent review for missing games, weak evidence, false reuse,
+      over-generalization, under-generalization, and responsive/asset gaps
+- [ ] Task: Remediate every Critical, High, and Medium finding
+- [ ] Task: Publish `dependent-track-inputs.md` with accepted artifact versions and hashes
+- [ ] Task: Update developer-kit, asset-production, and cartridge dependencies
+      without beginning their implementation
+- [ ] Task: Obtain explicit product-owner acceptance
+- [ ] Task: Measure - User Manual Verification 'Phase 7' (Protocol in workflow.md)

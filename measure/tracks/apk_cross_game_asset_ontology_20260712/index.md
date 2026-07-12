@@ -1,16 +1,22 @@
-# APK Cross-Game Asset Requirements and Ontology
+# APK Cross-Game Requirements and Capability Ontology
 
 - [Specification](./spec.md)
 - [Implementation Plan](./plan.md)
 - [Metadata](./metadata.json)
-- [APK Asset System Program](../../apk-asset-system-program.md)
+- [APK Delivery Program](../../apk-asset-system-program.md)
+- [Responsive Composition Specification](../../apk-responsive-game-composition-spec.md)
 
-Planned deliverables created during execution:
+Planned deliverables:
 
-- `game-corpus.md`
-- `game-asset-usage-matrix.md`
+- `game-corpus.md` plus machine-readable corpus
+- `mechanic-blueprints/`
+- `developer-effort-baseline.md`
+- `capability-usage-matrix.json`
+- `developer-capability-ontology.md`
+- `responsive-composition-matrix.md`
+- `game-asset-usage-matrix.json`
 - `existing-asset-audit.md`
 - `asset-ontology.md`
-- `asset-gap-analysis.md`
-- `asset-coverage-plan.md`
+- `gap-and-coverage-plan.md`
+- `dependent-track-inputs.md`
 - `verification.md`

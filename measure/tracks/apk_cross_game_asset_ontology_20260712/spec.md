@@ -1,132 +1,204 @@
-# Specification: APK Cross-Game Asset Requirements and Ontology
+# Specification: APK Cross-Game Requirements and Capability Ontology
 
 ## Overview
 
-The APK program needs two coherent theme packs, but the asset requirements must
-come from the games rather than from legacy file layouts or a generic fantasy
-manifest. This track inventories every relevant developed and in-development
-game, records where presentation assets are used, normalizes those usages into
-reusable semantic asset types, and identifies missing variants and environment
-kits.
+Advantage Play Kit must be designed from the complete `apps/advantage-games`
+corpus. This track determines what each game is, which behavior must survive a
+Phaser rebuild, which repeated development concerns belong in APK, which logic is
+genuinely bespoke, how compact and wide compositions differ, and which semantic
+assets both themes must provide.
 
-This is a requirements and product-modeling track. It does not generate art,
-choose final sprite-sheet layouts, rewrite cartridges, or reopen withdrawn
-routes.
+This is a requirements and product-modeling track. It does not implement shared
+systems, generate art, rewrite cartridges, or reopen production routes.
 
-## Definitions
+## Fixed product boundary
 
-- **Game asset usage:** one concrete need in a game scene, such as a weak melee
-  enemy, protected target, flying mount, dungeon wall, breakable prop,
-  projectile, hit effect, minimap marker, or health display.
-- **Semantic asset type:** a reusable contract role shared across games without
-  referring to a physical filename.
-- **Gameplay variant:** a distinct visual identity justified by gameplay role,
-  behavior, strength, movement, attack, scale, collision/readability, or scene
-  function.
-- **Theme treatment:** the Chibi Quest or Riven Lands rendering of the same
-  semantic asset type or accepted variant.
-- **Environment kit:** a coherent reusable set of terrain, boundaries, props,
-  hazards, and ambient elements for a proven setting.
+- Input is the established vocabulary or sentence array.
+- Output is the established `GameResults` object.
+- Identity, tenancy, authoritative XP, idempotency, and persistence remain
+  host/server-owned.
+- Gameplay between those boundaries is bespoke unless a repeated corpus-backed
+  capability is accepted into APK.
+- Phaser 4 is the target runtime; Konva/R3F/React implementation details are
+  evidence, not compatibility requirements.
 
 ## Source-of-truth order
 
-When sources disagree, use this order and record the conflict:
+When evidence conflicts, record the conflict and use:
 
-1. Current playable implementation and its tests.
-2. Current in-development implementation and active Measure specification.
-3. Archived game baseline, APK blueprint, and cutover evidence.
-4. Catalog title/description when no stronger source exists; such requirements
-   remain provisional until product review.
+1. Current playable implementation and behavioral tests.
+2. Current raw implementation plus current app routes and data modules.
+3. Active Measure specification for genuinely in-development work.
+4. Archived baseline, APK blueprint, browser evidence, or cutover evidence.
+5. Catalog title/description only when no stronger evidence exists; such rows
+   remain provisional until product-owner review.
 
-The initial corpus includes all 27 entries in
-`apps/advantage-games/src/lib/gameCards.ts`, all games covered by archived APK
-W0-W4, and additional active/in-development game tracks found during the audit.
+The corpus includes all entries in `apps/advantage-games/src/lib/gameCards.ts`,
+all raw game components and logic modules, Reading/Primary imported copies, APK
+W0-W4 evidence, and discovered active/in-development games.
 
 ## Functional requirements
 
-### FR1: Complete game corpus
+### FR1: Reconcile the complete game corpus
 
-- Record every relevant game ID, title, learning input, current status,
-  implementation path, Measure source, primary mechanics, camera/view,
-  gameplay scenes, and confidence level.
-- Distinguish playable, withdrawn, in development, planned, missing, and stale
-  catalog claims.
-- Do not silently omit games because their implementations were deleted or
-  their routes are currently withdrawn.
+- Record game ID, title, input mode, catalog state, route state, implementation
+  paths, imported copies, Measure evidence, confidence, and discrepancies.
+- Distinguish playable, withdrawn, in development, planned, missing, stale, and
+  duplicate claims.
+- Do not omit deleted or withdrawn games when their requirements remain relevant.
+- Record exact source revision when current files no longer contain the strongest
+  implementation evidence.
 
-### FR2: Scene-level asset usage matrix
+### FR2: Produce mechanic and learning blueprints
 
-- For every game, enumerate player/mount roles, enemies and difficulty roles,
-  targets, environment, obstacles, hazards, interactables, pickups, weapons,
-  projectiles, VFX, UI, backgrounds, transitions, and result presentation.
-- Record where each usage appears and the states it must communicate.
-- Cite a source path, archived revision, specification section, screenshot, or
-  explicit product decision for every non-provisional row.
-- Record view, scale, directional needs, animation/state needs, interaction,
-  strength/behavior tier, and potential reuse candidates.
+For every game, record:
 
-### FR3: Existing-asset audit
+- Recognizable fantasy/product identity and core player fantasy.
+- Learning prompt, correct/incorrect action, content progression, repetition,
+  feedback, and terminal loop.
+- Controls, camera/view, world model, actors, targets, hazards, and interactions.
+- Scoring, accuracy, XP display, health/lives, combo, timer, waves, and win/loss.
+- Difficulty and audience tuning.
+- Deterministic state transitions and evidence suitable for Red tests.
+- Behavior that must survive, behavior that may change, and accidental renderer
+  assumptions that must not survive.
 
-- Enumerate existing 2D production candidates across the relevant apps,
-  packages, public directories, and approved authoring repository.
-- Manually inspect each candidate before proposing reuse.
-- Record dimensions, format, license/provenance, visible content, current use,
-  semantic suitability, and reuse/reject/replace disposition.
-- Generated placeholders, cover art, baked checkerboards, and visually similar
-  assets are not accepted without proving they satisfy the intended usage.
+### FR3: Inventory current developer effort
 
-### FR4: Normalized ontology
+- Decompose raw game implementations into lifecycle, state, controllers, physics,
+  cameras, rendering, UI, content handling, audio, accessibility, persistence
+  mapping, tests, and game-specific rules.
+- Record repeated code, repeated concepts implemented differently, unused shared
+  utilities, and components copied into Reading/Primary.
+- Measure representative implementation size and complexity so later kit work can
+  demonstrate reduced developer effort.
+- Record the current steps required to add, run, test, theme, host, and ship a game.
 
-- Normalize usages into reusable families for actors, creatures/mounts,
-  environments, terrain, structures, props, hazards, targets, pickups,
-  weapons, projectiles, VFX, UI/HUD, backgrounds, and navigation indicators.
-- Define variants by gameplay meaning rather than arbitrary cosmetic diversity.
-- For example, one skeleton may cover weak melee usages, while armored,
-  ranged, caster, or boss skeletons are separate only when the game matrix
-  proves those roles are required.
-- Organize environment needs into reusable kits such as ruins, plains,
-  dungeons, forests, castles, or other settings established by the corpus.
-- Record allowed substitutions and prohibited conflations so a visually similar
-  asset cannot conceal a gameplay distinction.
+### FR4: Define the developer-capability ontology
 
-### FR5: Gap analysis and coverage plan
+Normalize repeated needs across at least these domains:
 
-- Identify usages not satisfied by a reusable semantic type or acceptable
-  existing asset.
-- Separate Must-have gaps from later variety/polish opportunities.
-- Calculate which accepted types and variants unlock the greatest number of
-  games and scenes without erasing meaningful distinctions.
-- Produce recommended production batches based on shared coverage and dependency
-  order, not on an arbitrary character-first list.
+- Lifecycle and scene/session orchestration.
+- Educational progression and result calculation.
+- Input and controls.
+- Movement, collision, combat, collection, sequencing, defense, runner, arena,
+  puzzle/matching, escort, and turn-based mechanics.
+- Camera, spawning, pooling, animation, VFX, audio, and timing.
+- Start, instruction, pause, HUD, prompts, feedback, and results.
+- Difficulty, audience tuning, accessibility, diagnostics, and performance.
+- Deterministic testing, simulation, browser QC, and cartridge scaffolding.
 
-### FR6: Reviewable contract input
+For each capability, record:
 
-- Produce a machine-validatable matrix and human-readable ontology.
-- Every game must map to its full set of usages.
-- Every ontology entry must point to at least one game/scene usage or an
-  explicitly accepted gap.
-- Unknowns and disagreements remain visible; they are not resolved by guessing.
-- Track 2 remains blocked until the product owner explicitly accepts the corpus,
-  ontology, variants, environment kits, and gap priorities.
+- Exact game/scene consumers.
+- Required behavior and extension points.
+- Similarities and meaningful differences.
+- `retain`, `standardize`, `extend-existing`, `bespoke`, or `retire` disposition.
+- Proposed owning package/module and dependency boundary.
+- Minimum tests and acceptance evidence.
+
+Do not standardize a mechanic merely because two games share nouns or artwork.
+Do not leave repeated infrastructure bespoke merely because legacy implementations
+used different code.
+
+### FR5: Define responsive composition requirements
+
+- Apply `/measure/apk-responsive-game-composition-spec.md` to every game/scene.
+- Record current compact and wide behavior, fixed-world assumptions, camera,
+  persistent/transient UI, touch controls, text risks, and known failures.
+- Define compact and wide composition strategies, required simultaneous
+  visibility, reserved regions, camera policy, and input modes per game.
+- Include short and worst-case Thai/English content requirements.
+- Identify shared layout, camera, HUD, prompt, controls, text measurement, and
+  diagnostic capabilities for the developer-kit track.
+
+### FR6: Build the scene-level asset usage matrix
+
+- Enumerate player/mount roles, enemies and strength/behavior variants, targets,
+  environments, terrain, obstacles, hazards, interactables, pickups, weapons,
+  projectiles, VFX, audio roles, UI/HUD, controls, backgrounds, transitions, and
+  result presentation.
+- Record required states, directions, view, scale, animation, collision,
+  compact/wide usage, and potential reuse.
+- Cite source evidence for every non-provisional row.
+
+### FR7: Audit existing assets
+
+- Enumerate production candidates in relevant apps, packages, public trees, and
+  approved authoring sources.
+- Record dimensions, format, provenance/license, visible content, current use,
+  theme suitability, responsive suitability, and disposition.
+- Manually inspect candidates; filenames and visual similarity are insufficient.
+- Reject placeholders, cover art, baked checkerboards, unsafe text-bearing art,
+  and assets that cannot meet required states or layout contracts.
+
+### FR8: Normalize the semantic asset ontology
+
+- Define reusable semantic families for characters, creatures/mounts,
+  environments, terrain, structures, props, hazards, targets, pickups, weapons,
+  projectiles, VFX, audio, UI/HUD, controls, backgrounds, and indicators.
+- Define gameplay variants by meaning rather than cosmetic variety.
+- Separate gameplay variants from Chibi Quest/Riven Lands treatments.
+- Define environment kits from proven game settings.
+- Record allowed substitutions and prohibited conflations.
+- Record links from semantic roles to developer capabilities and compact/wide
+  regions where relevant.
+
+### FR9: Analyze gaps and sequence delivery
+
+- Identify missing shared developer capabilities, missing responsive primitives,
+  missing semantic assets, and unclear game requirements.
+- Separate Must-have migration blockers from later polish or variety.
+- Calculate which capabilities and assets unlock the most games without erasing
+  meaningful distinctions.
+- Recommend developer-kit implementation slices, asset batches, and candidate
+  cartridge cohorts.
+- Surface conflicts and unknowns for product-owner decisions; do not guess.
+
+### FR10: Publish machine-validatable requirements
+
+Produce schemas and human-readable documents in which:
+
+- Every in-scope game maps to a mechanic blueprint.
+- Every repeated capability maps to source consumers and a disposition.
+- Every game maps to compact and wide composition requirements.
+- Every asset usage maps to an ontology entry or visible unresolved gap.
+- Every proposed standard capability and asset traces back to corpus evidence.
+- Unresolved Must-have decisions block dependent implementation.
+
+## Required deliverables
+
+- `game-corpus.md` and machine-readable corpus.
+- `mechanic-blueprints/` with one blueprint per game.
+- `developer-effort-baseline.md`.
+- `capability-usage-matrix.json`.
+- `developer-capability-ontology.md`.
+- `responsive-composition-matrix.md`.
+- `game-asset-usage-matrix.json`.
+- `existing-asset-audit.md`.
+- `asset-ontology.md`.
+- `gap-and-coverage-plan.md`.
+- `dependent-track-inputs.md` containing accepted versions/hashes.
+- `verification.md`.
 
 ## Acceptance criteria
 
-- The current 27-card catalog and every discovered active game track are fully
-  reconciled with implementations and archived evidence.
-- No in-scope game, gameplay scene, or required presentation category lacks a
-  traceable matrix row.
-- Duplicate usages are normalized; distinct strength/behavior roles are not
-  collapsed merely because they share a species or silhouette.
-- Environment kits reflect proven game settings and identify their shared and
-  game-specific components.
-- Existing asset reuse decisions include manual visual evidence.
-- Proposed physical formats and file counts are absent from the accepted output
-  except where a game imposes a genuine capability constraint.
+- The complete catalog, raw implementations, imported copies, and active game
+  tracks are reconciled.
+- No in-scope game lacks mechanic, capability, responsive, and asset mappings.
+- The analysis covers the actual raw files rather than catalog descriptions alone.
+- Repeated infrastructure has an explicit standardization decision.
+- Bespoke decisions include concrete reasons and extension boundaries.
+- Compact and wide strategies are intentional and satisfy the responsive spec.
+- Proposed shared systems and assets trace to real game/scene usage.
 - Independent review finds no missing game cohort or unsupported ontology entry.
+- Product owner explicitly accepts the corpus, blueprints, capability decisions,
+  responsive matrix, asset ontology, gaps, and delivery priorities.
 
 ## Out of scope
 
-- Generating, editing, or importing production art.
-- Freezing universal sprite-sheet dimensions or filenames.
-- Rewriting APK runtime, cartridges, hosts, or educational behavior.
-- Reopening catalog routes or claiming any theme pack complete.
+- Implementing APK developer capabilities.
+- Generating, importing, or editing production assets.
+- Rewriting game logic or scenes.
+- Reopening catalog or production routes.
+- Preserving legacy renderer APIs, filenames, or physical asset layouts.
