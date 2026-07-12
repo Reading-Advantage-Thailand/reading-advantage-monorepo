@@ -73,6 +73,6 @@ until Phase 4's accepted gate manifest exists.
 ## Phase 5: Final-acceptance remediation and v3 revalidation (FA-001–FA-003)
 
 - [x] Task: Wire supervisor acceptance to content-addressed retained raw exports, exact identities/prompt bytes/agent-role/chronology/bindings/root designation, and replay resistance; add tamper, forgery, replay, early-event, and inherited-message mutations. Implementation commit: `a6f565ab09a983f07ceef427db7536cdb8fe144d`.
-- [x] Task: Publish a non-consumable v3 candidate bound to the remediation implementation commit and revoke v2. Candidate SHA-256: `875c3f7a11b8512df1f23c94fa70bbd8a6893af8ea07072a6d8f1d1f78086143`; v2 accepted manifest status is `revoked`.
+- [x] Task: Publish a non-consumable v3 candidate bound to the remediation implementation commit and revoke v2. Fresh-review fixes republished the candidate at SHA-256 `ad8ef96a846c5f0d9432f5726e638f52d432758ead99fe5c2786cd47adb64a37` for implementation commit `6eb03add0b2c339495b012a46810a926a5b76de7`; candidate `875c3f7a11b8512df1f23c94fa70bbd8a6893af8ea07072a6d8f1d1f78086143` is superseded and v2 accepted manifest status remains `revoked`.
 - [~] Task: Obtain a fresh isolated adversarial review of the exact v3 candidate and implementation bytes with explicit `fork_turns=none` or equivalent retained raw-history proof. No prior v2 review is reusable.
 - [~] Task: Obtain a fresh product-owner approval event after review, bound in its prompt to the exact v3 candidate, review, gate commit, and gate version; only then may a new accepted manifest be generated.

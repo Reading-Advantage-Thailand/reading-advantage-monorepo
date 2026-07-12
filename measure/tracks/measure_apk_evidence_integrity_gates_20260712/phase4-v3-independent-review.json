@@ -1,0 +1,93 @@
+{
+  "schema_version": "evidence-integrity.independent-review.v3",
+  "review_status": "pass-pending-provenance-binding",
+  "consumable": false,
+  "approval_decision": null,
+  "implementation_revision": "6eb03add0b2c339495b012a46810a926a5b76de7",
+  "source_base_revision": "5101b7b2e264229e916c98dbfd456e1ea7de886c",
+  "candidate_manifest_path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/phase4-v3-candidate-gate-manifest.json",
+  "candidate_manifest_sha256": "ad8ef96a846c5f0d9432f5726e638f52d432758ead99fe5c2786cd47adb64a37",
+  "superseded_candidate_sha256": "875c3f7a11b8512df1f23c94fa70bbd8a6893af8ea07072a6d8f1d1f78086143",
+  "scope": {
+    "requirements": ["FR1", "FR2", "FR3", "FR4", "FR5", "FR6"],
+    "anti_patterns": ["A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10", "A11", "A12", "A13", "A14", "A15"],
+    "attacks": [
+      "tampered-gzip-and-raw-hashes",
+      "forged-session-message-parent-role-and-agent",
+      "wrong-review-prompt-bytes",
+      "approval-before-review",
+      "review-replay-across-candidates",
+      "stale-retained-exports",
+      "inherited-reviewer-turns",
+      "explicit-fork-mismatch",
+      "path-and-symlink-traversal",
+      "candidate-review-and-gate-mutation",
+      "revocation"
+    ]
+  },
+  "findings": [
+    {
+      "id": "V3-FRESH-001",
+      "severity": "high",
+      "status": "resolved",
+      "summary": "A stale reviewer export could be replayed across candidates because the retained prompt and final response were not derived from the exact candidate, revision, and gate values.",
+      "resolution": "Require canonical exact review prompt and final-response contracts derived from the bound candidate hash, source base, implementation commit, gate version, findings, and disposition."
+    },
+    {
+      "id": "V3-FRESH-002",
+      "severity": "high",
+      "status": "resolved",
+      "summary": "Recompressed or otherwise mutated gzip bytes passed when their uncompressed raw bytes were unchanged.",
+      "resolution": "Bind both retained-file SHA-256 and uncompressed raw SHA-256, and cap decompression output before JSON parsing."
+    },
+    {
+      "id": "V3-FRESH-003",
+      "severity": "high",
+      "status": "resolved",
+      "summary": "An explicit fork_turns=none value excused inherited pre-prompt turns in both role and production review validation.",
+      "resolution": "Require the exact review prompt to be the first retained message regardless of fork attestation, while still rejecting explicit fork mismatches."
+    },
+    {
+      "id": "V3-FRESH-004",
+      "severity": "medium",
+      "status": "resolved",
+      "summary": "Owner binding used substring phrases and did not fully validate root agent, publication role, completed task state, or designation semantics.",
+      "resolution": "Require an exact canonical approval contract and bind root/delegate agents, designation role, publication role, task status, parent, and chronology."
+    },
+    {
+      "id": "V3-FRESH-005",
+      "severity": "medium",
+      "status": "resolved",
+      "summary": "Review revocation and candidate pre-acceptance state were not completely enforced.",
+      "resolution": "Reject revoked reviews and require the exact candidate to remain non-consumable, unrevoked, unpublished, and pending review and owner approval."
+    }
+  ],
+  "unresolved_findings": {
+    "critical": [],
+    "high": [],
+    "medium": [],
+    "low": []
+  },
+  "verification": {
+    "evidence_gate_tests": "130 passed",
+    "orchestrator_guards": "6 passed",
+    "doctor": "passed",
+    "python_compile": "passed",
+    "diff_check": "passed"
+  },
+  "fr_recheck": {
+    "FR1": "pass",
+    "FR2": "pass",
+    "FR3": "pass-after-fixes",
+    "FR4": "pass-after-adversarial-tests",
+    "FR5": "pass-after-revocation-fix",
+    "FR6": "pass"
+  },
+  "anti_pattern_recheck": {
+    "A1-A15": "pass"
+  },
+  "fresh_context_provenance": {
+    "status": "awaiting-parent-binding",
+    "note": "The parent must bind this review to the retained raw session export after return; this artifact is not acceptance or owner approval."
+  }
+}
