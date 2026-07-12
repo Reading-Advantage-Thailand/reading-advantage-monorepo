@@ -4,8 +4,6 @@
   "consumable": false,
   "revoked": false,
   "approval_decision": null,
-  "review_hash": "f7732e265f70ab59b36f7a8306f14c3dae258515a2381f67d092550b09ed2fa0",
-  "retained_deterministic_export_sha256": "c046009c4b3a504866c40b52da54f31b6696c0d8122ec1c87482faf6da4311b5",
   "implementation_revision": "5aea360f94f978ac78e590e0a64d33d176beaa1a",
   "source_base_revision": "4b439a853e0510bd6aa0ee237d4636bf5be9cf56",
   "review_range": "4b439a853e0510bd6aa0ee237d4636bf5be9cf56..5aea360f94f978ac78e590e0a64d33d176beaa1a",
@@ -86,30 +84,41 @@
     "A1-A15": "pass"
   },
   "fresh_context_provenance": {
+    "raw_export_path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/exports/8b72f9e70a68244e0dbfab9ffc4bf2fe478a3d315f3057334c4b218069f41a67.json.gz",
+    "raw_export_sha256": "8b72f9e70a68244e0dbfab9ffc4bf2fe478a3d315f3057334c4b218069f41a67",
+    "stored_export_sha256": "16905877313a41da286e795875e67daa6f7a5d01ad273538e5169977dc2eb817",
     "session_id": "ses_0a87a88dfffe0HGaHtbtDwEFIh",
-    "parent_session_id": null,
-    "agent": "deepseek-v4-pro",
-    "role": "independent-reviewer",
-    "canonical_prompt_text_sha256": "89b9d10e8a7c28b03f3ebd549cf433a761f765241319b1944d1b755a52bda427",
-    "exactly_one_user_prompt": true,
-    "no_inherited_followup_turns": true,
-    "candidate_unchanged": true,
-    "approval_not_granted": true,
-    "review_hash": "f7732e265f70ab59b36f7a8306f14c3dae258515a2381f67d092550b09ed2fa0"
+    "parent_session_id": "ses_0aa8a4740ffe2BOVmChNfZLEv0",
+    "agent": "coder-openai-gpt-5-6-sol-pro",
+    "role": "adversarial-reviewer",
+    "prompt_message_id": "msg_f57857732001hvOTxY3dH7S7kS",
+    "prompt_text_sha256": "89b9d10e8a7c28b03f3ebd549cf433a761f765241319b1944d1b755a52bda427",
+    "final_response_message_id": "msg_f5787df2f001e4lFR1k5gE863u",
+    "final_response_text_sha256": "23be72043a3ebd72fb81c2dbeb9bf7c6d073b1d6cdc0cb3fb25815bf32e3ef07",
+    "started_ms": 1783879792437,
+    "completed_ms": 1783879954144,
+    "isolation_proof": "raw-history-begins-with-fresh-prompt"
   },
-  "export_binding": {
-    "deterministic_gzip_sha256": "c046009c4b3a504866c40b52da54f31b6696c0d8122ec1c87482faf6da4311b5",
-    "deterministic_gzip_path": "/tmp/v8-deterministic-export.tar.gz",
-    "contains": [
-      "implementation.diff",
-      "12 gate files (exact bytes at HEAD)",
-      "candidate manifest",
-      "canonical review prompt",
-      "v7 revocation record",
-      "v6 accepted historical manifest",
-      "accepted-gate root",
-      "hashes.txt"
-    ],
-    "determinism_verified": "two independent compressions produce identical SHA-256"
+  "provenance_export_binding": {
+    "session_id": "ses_0a87a88dfffe0HGaHtbtDwEFIh",
+    "parent_session_id": "ses_0aa8a4740ffe2BOVmChNfZLEv0",
+    "agent": "coder-openai-gpt-5-6-sol-pro",
+    "raw_export_path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/exports/8b72f9e70a68244e0dbfab9ffc4bf2fe478a3d315f3057334c4b218069f41a67.json",
+    "raw_export_sha256": "8b72f9e70a68244e0dbfab9ffc4bf2fe478a3d315f3057334c4b218069f41a67",
+    "raw_bytes": 751814,
+    "deterministic_gzip_path": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/exports/8b72f9e70a68244e0dbfab9ffc4bf2fe478a3d315f3057334c4b218069f41a67.json.gz",
+    "deterministic_gzip_sha256": "16905877313a41da286e795875e67daa6f7a5d01ad273538e5169977dc2eb817",
+    "deterministic_gzip_bytes": 162414,
+    "export_registry": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/export-snapshots.json",
+    "message_count": 10,
+    "user_message_count": 1,
+    "assistant_message_count": 9,
+    "first_message_is_user": true,
+    "fork_turns": null,
+    "fork_turns_equivalence": "schema-field-absent",
+    "duplicate_message_ids": "none",
+    "first_prompt_binds_candidate_hash": true,
+    "first_prompt_binds_gate_revision": true,
+    "final_response_binds_candidate_hash": true
   }
 }
