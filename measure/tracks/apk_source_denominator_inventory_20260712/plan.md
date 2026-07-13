@@ -34,9 +34,9 @@
 
 ## Phase 4: Full independent acceptance
 
-- [~] Task: Spawn a `fork_turns="none"`, tool-attested reviewer to re-run full denominator reconciliation
-- [~] Task: Run claim hash, revision reachability, denominator, role-receipt, and stop-loss validators
-- [~] Task: Remediate every Critical, High, and Medium finding
-- [~] Task: Publish non-consumable candidate denominator and partition manifests plus complete review report
-- [b] Task: Obtain product-owner acceptance bound to exact candidate/review hashes, then publish accepted denominator and partition manifests — deferred:product-owner
-- [b] Task: Measure - User Manual Verification 'Phase 4' (Protocol in workflow.md) — deferred:product-owner
+- [b] Task: Spawn a `fork_turns="none"`, tool-attested reviewer to re-run full denominator reconciliation - deferred:adversarial-reviewer; the root/Green agent is forbidden from the adversarial-reviewer role per `phase0-role-ownership-manifest.json` (`root_agent.forbidden_roles` includes `adversarial-reviewer`); the Admission gate is additionally blocked by a committed Phase-3 file-reconciliation gap where `source-denominator.json` was modified at `e14ab11e` without regenerating `phase3-reconciliation.json` (4 predecessor failures at HEAD)
+- [b] Task: Run claim hash, revision reachability, denominator, role-receipt, and stop-loss validators - deferred:adversarial-reviewer
+- [b] Task: Remediate every Critical, High, and Medium finding - deferred:adversarial-reviewer
+- [b] Task: Publish non-consumable candidate denominator and partition manifests plus complete review report - deferred:adversarial-reviewer
+- [b] Task: Obtain product-owner acceptance bound to exact candidate/review hashes, then publish accepted denominator and partition manifests - deferred:product-owner
+- [b] Task: Measure - User Manual Verification 'Phase 4' (Protocol in workflow.md) - deferred:product-owner
