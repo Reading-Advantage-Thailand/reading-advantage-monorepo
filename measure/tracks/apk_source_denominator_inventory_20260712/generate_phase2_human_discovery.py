@@ -746,10 +746,12 @@ def generate() -> None:
             })
 
         metrics = {
-            "source_files": len(reader.cache),
-            "bytes_read": reader.bytes_read,
-            "command_invocations": 5,
+            "source_objects_resolved": len(reader.cache),
+            "source_bytes_hashed_by_helper": reader.bytes_read,
+            "git_process_invocations": 5,
             "command_basis": "one persistent committed-object reader, one frozen-tree listing, one ancestor-only revision listing, and two historical package-tree listings",
+            "agent_resource_usage": None,
+            "agent_resource_usage_limitation": "The platform does not expose agent-context bytes or tool-command accounting; helper-internal Git bytes are reported separately and are not represented as frozen role-budget usage.",
         }
         write_json("independent-human-discovery.json", {
             "schema_version": "apk-denominator-independent-human-discovery.v1",

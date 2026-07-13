@@ -9180,10 +9180,12 @@
     }
   ],
   "collection_metrics": {
-    "bytes_read": 402352181,
+    "agent_resource_usage": null,
+    "agent_resource_usage_limitation": "The platform does not expose agent-context bytes or tool-command accounting; helper-internal Git bytes are reported separately and are not represented as frozen role-budget usage.",
     "command_basis": "one persistent committed-object reader, one frozen-tree listing, one ancestor-only revision listing, and two historical package-tree listings",
-    "command_invocations": 5,
-    "source_files": 1085
+    "git_process_invocations": 5,
+    "source_bytes_hashed_by_helper": 402352181,
+    "source_objects_resolved": 1085
   },
   "collector_identity": "evidence-collector-remediation-20260713",
   "current_source_claims": [
