@@ -437,7 +437,7 @@ def build_scene_state_denominator(paths: list[str]) -> dict[str, Any]:
                 "discovery_method": "mechanical-syntax-traversal",
                 "evidence": line_locator(path, line, line),
             })
-        declarations: dict[str, tuple[str, set[str], int, int]] = {}
+        declarations: dict[str, tuple[str, set[str], str, int, int]] = {}
         for declaration in STATE_DECLARATION.finditer(text):
             state_name, setter_name, type_text = declaration.groups()
             if not STATE_NAME.search(state_name):
@@ -446,7 +446,15 @@ def build_scene_state_denominator(paths: list[str]) -> dict[str, Any]:
             if not literals:
                 continue
             line = source_line_number(text, declaration.start())
-            declarations[setter_name] = (state_name, literals, declaration.start(), line)
+            initial_value = next(iter(sorted(literals)))
+            init_match = re.search(
+                r"\b" + re.escape(state_name) + r"\s*[,)]\s*=\s*(?:React\.)?useState\s*<[^>]+>\(\s*([\"'])([^\"']+)\1",
+                text[: declaration.end() + 200],
+                re.DOTALL,
+            )
+            if init_match:
+                initial_value = init_match.group(2)
+            declarations[setter_name] = (state_name, literals, initial_value, declaration.start(), line)
             for literal in literals:
                 state_records.append({
                     "state_occurrence_id": f"{path}:{line}:{state_name}:{literal}",
@@ -455,15 +463,17 @@ def build_scene_state_denominator(paths: list[str]) -> dict[str, Any]:
                     "discovery_method": "mechanical-syntax-traversal",
                     "evidence": line_locator(path, line, line),
                 })
-        for setter_name, (state_name, literals, declaration_offset, declaration_line) in declarations.items():
+        for setter_name, (state_name, literals, initial_value, declaration_offset, declaration_line) in declarations.items():
             guard = re.compile(
                 rf"if\s*\([^)]*\b{re.escape(state_name)}\s*===?\s*['\"]([^'\"]+)['\"][^)]*\)\s*\{{?[^{{}}]{{0,500}}?\b{re.escape(setter_name)}\s*\(\s*['\"]([^'\"]+)['\"]",
                 re.MULTILINE,
             )
+            guarded_from_states: set[str] = set()
             for match in guard.finditer(text):
                 from_state, to_state = match.groups()
                 if from_state not in literals or to_state not in literals:
                     continue
+                guarded_from_states.add(from_state)
                 line = source_line_number(text, match.start())
                 transitions.append({
                     "from_state_occurrence_id": f"{path}:{declaration_line}:{state_name}:{from_state}",
@@ -475,6 +485,23 @@ def build_scene_state_denominator(paths: list[str]) -> dict[str, Any]:
                     "discovery_method": "mechanical-syntax-traversal",
                     "evidence": line_locator(path, line, source_line_number(text, match.end())),
                 })
+            if not guarded_from_states:
+                setter = re.compile(rf"\b{re.escape(setter_name)}\s*\(\s*['\"]([^'\"]+)['\"]")
+                for match in setter.finditer(text, declaration_offset):
+                    to_state = match.group(1)
+                    if to_state not in literals or to_state == initial_value:
+                        continue
+                    line = source_line_number(text, match.start())
+                    transitions.append({
+                        "from_state_occurrence_id": f"{path}:{declaration_line}:{state_name}:{initial_value}",
+                        "to_state_occurrence_id": f"{path}:{declaration_line}:{state_name}:{to_state}",
+                        "from_state_id": initial_value,
+                        "to_state_id": to_state,
+                        "transition_kind": "phase",
+                        "transition_evidence_kind": "useState-initial-to-setter-call",
+                        "discovery_method": "mechanical-syntax-traversal",
+                        "evidence": line_locator(path, line, source_line_number(text, match.end())),
+                    })
     unique_transitions = {
         (record["from_state_occurrence_id"], record["to_state_occurrence_id"], record["evidence"]["range"]["start_line"]): record
         for record in transitions

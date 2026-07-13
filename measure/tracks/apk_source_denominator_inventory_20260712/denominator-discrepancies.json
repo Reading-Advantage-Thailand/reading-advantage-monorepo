@@ -215,6 +215,130 @@
       ],
       "observation_id": "multiple-page-paths:vocabulary/wizard-vs-zombie",
       "observation_type": "multiple-paths-for-canonical-identity"
+    },
+    {
+      "canonical_identity_id": "sentence/dungeon-liberator",
+      "evidence": [
+        {
+          "blob_sha256": "47bffd7c6a13246e02df106a47db47b0d3cfc8c7f650c853b162cdcff1179e00",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/dungeon-liberator/page.tsx",
+          "range": {
+            "end_line": 216,
+            "sha256": "47bffd7c6a13246e02df106a47db47b0d3cfc8c7f650c853b162cdcff1179e00",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+          "path": "apps/advantage-games/src/lib/gameCards.ts",
+          "range": {
+            "end_line": 14,
+            "sha256": "c6e2622fe7485f5c4410a61edde82216b0401eb74830e2813e58805bad68d36d",
+            "start_line": 14
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "observation_id": "simultaneous-current-and-catalog-withdrawn:sentence/dungeon-liberator",
+      "observation_type": "simultaneous-source-classes",
+      "source_classes": [
+        "current-page-source",
+        "catalog-withdrawn-registration"
+      ]
+    },
+    {
+      "canonical_identity_id": "vocabulary/dragon-flight",
+      "evidence": [
+        {
+          "blob_sha256": "3506322282874f3dd429d37cee85292ed7934255bfcb966318fb8488ecf83a13",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/dragon-flight/page.tsx",
+          "range": {
+            "end_line": 165,
+            "sha256": "3506322282874f3dd429d37cee85292ed7934255bfcb966318fb8488ecf83a13",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+          "path": "apps/advantage-games/src/lib/gameCards.ts",
+          "range": {
+            "end_line": 13,
+            "sha256": "72e75f01b3adfbc6029d4e6da69d92cf7a4b12e60ca6f11d86a5eb13d040e086",
+            "start_line": 13
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "observation_id": "simultaneous-current-and-catalog-withdrawn:vocabulary/dragon-flight",
+      "observation_type": "simultaneous-source-classes",
+      "source_classes": [
+        "current-page-source",
+        "catalog-withdrawn-registration"
+      ]
+    },
+    {
+      "canonical_identity_id": "vocabulary/dragon-rider",
+      "evidence": [
+        {
+          "blob_sha256": "9a8ad3e447ef36a8212cba933b5bfce326ed8ce7d3a09a3e09a82d06a4034f98",
+          "path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-rider/page.tsx",
+          "range": {
+            "end_line": 119,
+            "sha256": "9a8ad3e447ef36a8212cba933b5bfce326ed8ce7d3a09a3e09a82d06a4034f98",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+          "path": "apps/advantage-games/src/lib/gameCards.ts",
+          "range": {
+            "end_line": 18,
+            "sha256": "cb1210da9bcdeb0192e72168c75327ea9aa417030dbd1bfb3897c55c31588bc3",
+            "start_line": 18
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "observation_id": "simultaneous-current-and-catalog-withdrawn:vocabulary/dragon-rider",
+      "observation_type": "simultaneous-source-classes",
+      "source_classes": [
+        "current-page-source",
+        "catalog-withdrawn-registration"
+      ]
+    },
+    {
+      "canonical_identity_id": "vocabulary/magic-defense",
+      "evidence": [
+        {
+          "blob_sha256": "a2c7a21f2fcd124ed7da74ac357677dce6f26af8a832199c36abb3f21fd9bd74",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/magic-defense/page.tsx",
+          "range": {
+            "end_line": 150,
+            "sha256": "a2c7a21f2fcd124ed7da74ac357677dce6f26af8a832199c36abb3f21fd9bd74",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+          "path": "apps/advantage-games/src/lib/gameCards.ts",
+          "range": {
+            "end_line": 15,
+            "sha256": "d57e71c91911fe3094e688ac15835029192ce9131afa761532e39255e124870a",
+            "start_line": 15
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "observation_id": "simultaneous-current-and-catalog-withdrawn:vocabulary/magic-defense",
+      "observation_type": "simultaneous-source-classes",
+      "source_classes": [
+        "current-page-source",
+        "catalog-withdrawn-registration"
+      ]
     }
   ],
   "schema_version": "apk-denominator-discrepancies.v1",

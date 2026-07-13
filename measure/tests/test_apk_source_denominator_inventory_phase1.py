@@ -21,8 +21,16 @@ IDENTITY_PATH = TRACK_DIR / "game-identity-ledger.json"
 SCENE_PATH = TRACK_DIR / "scene-state-denominator.json"
 ASSET_PATH = TRACK_DIR / "asset-file-denominator.json"
 HISTORICAL_PATH = TRACK_DIR / "historical-source-denominator.json"
+DISCREPANCY_PATH = TRACK_DIR / "denominator-discrepancies.json"
 SHA256 = re.compile(r"^[0-9a-f]{64}$")
 REQUIRED_SOURCE_RECORD_TYPES = {"identity", "file", "route", "copy", "graph"}
+REQUIRED_NON_GAME_SOURCES = {
+    "measure/apk-asset-system-program.md",
+    "measure/apk-evidence-reconstruction-program.md",
+    "packages/game-cartridges/src/catalog.test.ts",
+    "packages/game-cartridges/src/catalog.ts",
+    "packages/game-cartridges/src/index.ts",
+}
 FORBIDDEN_INTERPRETATION_FIELDS = {
     "asset_suitability",
     "capability",
@@ -278,6 +286,12 @@ class Phase1MechanicalDiscoveryContracts(unittest.TestCase):
             elif record_type == "graph":
                 self.assertIsInstance(record.get("graph_node_id"), str)
         self.assertTrue(REQUIRED_SOURCE_RECORD_TYPES.issubset(record_types))
+        file_paths = {
+            record["file_path"]
+            for record in records
+            if record.get("record_type") == "file" and isinstance(record.get("file_path"), str)
+        }
+        self.assertTrue(REQUIRED_NON_GAME_SOURCES.issubset(file_paths))
         graph_edges = source.get("graph_edges")
         self.assertIsInstance(graph_edges, list)
         assert isinstance(graph_edges, list)
@@ -288,6 +302,39 @@ class Phase1MechanicalDiscoveryContracts(unittest.TestCase):
             self.assertIn(edge.get("from_record_id"), ids)
             self.assertIn(edge.get("to_record_id"), ids)
             self._assert_locator(edge.get("evidence"))
+
+        edge_keys = {
+            (
+                str(record.get("file_path")),
+                str(graph.get("import_specifier")),
+                str(next(item.get("file_path") for item in records if item.get("record_id") == edge.get("to_record_id"))),
+            )
+            for graph in records
+            if graph.get("record_type") == "graph"
+            for edge in graph_edges
+            if edge.get("evidence") == graph.get("evidence")
+            for record in records
+            if record.get("record_id") == edge.get("from_record_id")
+        }
+        suffixes = ("", ".ts", ".tsx", ".js", ".jsx", ".json")
+        for source_path in sorted(path for path in file_paths if path.startswith("apps/")):
+            text = _git_bytes(self.source_baseline, source_path).decode("utf-8", errors="replace")
+            for specifier in re.findall(r"^\s*import(?:[\s\S]*?from\s*)?['\"]([^'\"]+)['\"]", text, re.MULTILINE):
+                if not specifier.startswith("@/"):
+                    continue
+                if source_path.startswith("apps/advantage-games/"):
+                    base = "apps/advantage-games/src/" + specifier[2:]
+                elif source_path.startswith("apps/reading-advantage/"):
+                    base = "apps/reading-advantage/" + specifier[2:]
+                elif source_path.startswith("apps/primary-advantage/"):
+                    base = "apps/primary-advantage/" + specifier[2:]
+                else:
+                    continue
+                candidates = [base + suffix for suffix in suffixes]
+                candidates.extend(base + "/index" + suffix for suffix in suffixes[1:-1])
+                target = next((candidate for candidate in candidates if candidate in file_paths), None)
+                if target is not None:
+                    self.assertIn((source_path, specifier, target), edge_keys)
 
     def test_identity_ledger_and_scene_state_transitions_are_real_source_evidenced(self) -> None:
         """Rejects synthetic fallback scenes and unpinned identity or state transitions.
@@ -339,11 +386,12 @@ class Phase1MechanicalDiscoveryContracts(unittest.TestCase):
         self.assertTrue(scene_records, "real scene records cannot be replaced with a synthetic fallback")
         self.assertTrue(state_records, "real state records cannot be omitted")
         self.assertTrue(transitions, "real transitions cannot be omitted")
-        scene_ids: set[str] = set()
+        scene_occurrences: set[str] = set()
+        state_occurrences: set[str] = set()
         state_ids: set[str] = set()
-        for records, label, record_ids in (
-            (scene_records, "scene_id", scene_ids),
-            (state_records, "state_id", state_ids),
+        for records, label, occurrence_label, occurrence_ids in (
+            (scene_records, "scene_id", "scene_occurrence_id", scene_occurrences),
+            (state_records, "state_id", "state_occurrence_id", state_occurrences),
         ):
             for record in records:
                 self.assertIsInstance(record, dict)
@@ -353,8 +401,13 @@ class Phase1MechanicalDiscoveryContracts(unittest.TestCase):
                 assert isinstance(identifier, str)
                 self.assertTrue(identifier)
                 self.assertNotIn(identifier.lower(), {"main", "default", "fallback", "synthetic"}, "synthetic fallback IDs are forbidden")
-                self.assertNotIn(identifier, record_ids)
-                record_ids.add(identifier)
+                occurrence_id = record.get(occurrence_label)
+                self.assertIsInstance(occurrence_id, str)
+                assert isinstance(occurrence_id, str)
+                self.assertNotIn(occurrence_id, occurrence_ids)
+                occurrence_ids.add(occurrence_id)
+                if label == "state_id":
+                    state_ids.add(identifier)
                 locator = self._assert_locator(record.get("evidence"))
                 lines = _git_bytes(locator["revision"], locator["path"]).decode("utf-8", errors="replace").splitlines()
                 cited = "\n".join(lines[locator["range"]["start_line"] - 1 : locator["range"]["end_line"]])
@@ -364,8 +417,67 @@ class Phase1MechanicalDiscoveryContracts(unittest.TestCase):
             assert isinstance(transition, dict)
             self.assertIn(transition.get("from_state_id"), state_ids)
             self.assertIn(transition.get("to_state_id"), state_ids)
+            self.assertIn(transition.get("from_state_occurrence_id"), state_occurrences)
+            self.assertIn(transition.get("to_state_occurrence_id"), state_occurrences)
             self.assertIn(transition.get("transition_kind"), {"scene", "mode", "overlay", "phase", "wave", "floor", "terminal", "presentation"})
-            self._assert_locator(transition.get("evidence"))
+            evidence_kind = transition.get("transition_evidence_kind")
+            self.assertIn(evidence_kind, {"explicit-state-guarded-setter", "useState-initial-to-setter-call"})
+            locator = self._assert_locator(transition.get("evidence"))
+            lines = _git_bytes(locator["revision"], locator["path"]).decode("utf-8", errors="replace").splitlines()
+            cited = "\n".join(lines[locator["range"]["start_line"] - 1 : locator["range"]["end_line"]])
+            if evidence_kind == "explicit-state-guarded-setter":
+                self.assertRegex(cited, rf"if\s*\([^)]*{re.escape(str(transition['from_state_id']))}[^)]*\)")
+            self.assertRegex(cited, rf"set\w+\s*\(\s*['\"]{re.escape(str(transition['to_state_id']))}['\"]")
+
+        expected_scene_occurrences: set[tuple[str, int, str]] = set()
+        expected_state_occurrences: set[tuple[str, int, str, str]] = set()
+        for record in _load_json(SOURCE_PATH)["records"]:
+            if record.get("record_type") != "file" or not str(record.get("file_path", "")).endswith((".ts", ".tsx", ".js", ".jsx")):
+                continue
+            path = record["file_path"]
+            text = _git_bytes(self.source_baseline, path).decode("utf-8", errors="replace")
+            for match in re.finditer(r"(?:export\s+)?(?:function|const)\s+([A-Z][A-Za-z0-9]*(?:Game|Screen|Scene))\b", text):
+                expected_scene_occurrences.add((path, text.count("\n", 0, match.start(1)) + 1, match.group(1)))
+            for match in re.finditer(r"(?:const|let)\s*\[\s*(\w+)\s*,\s*set\w+\s*\]\s*=\s*(?:React\.)?useState\s*<([^>]+)>", text, re.DOTALL):
+                state_name, type_text = match.groups()
+                if not re.search(r"(?:state|phase|mode|scene|screen|overlay|wave|floor)", state_name, re.IGNORECASE):
+                    continue
+                line = text.count("\n", 0, match.start()) + 1
+                for literal in re.findall(r"['\"]([^'\"\n]+)['\"]", type_text):
+                    expected_state_occurrences.add((path, line, state_name, literal))
+        self.assertEqual(
+            {(row["evidence"]["path"], row["evidence"]["range"]["start_line"], row["scene_id"]) for row in scene_records},
+            expected_scene_occurrences,
+        )
+        self.assertEqual(
+            {(row["evidence"]["path"], row["evidence"]["range"]["start_line"], row["source_symbol"], row["state_id"]) for row in state_records},
+            expected_state_occurrences,
+        )
+
+    def test_current_page_and_catalog_withdrawn_states_remain_simultaneous(self) -> None:
+        """Retains current page evidence separately from catalog withdrawal registration."""
+        identities = self._artifact(IDENTITY_PATH, "apk-game-identity-ledger.v1")
+        states = {
+            row["canonical_identity_id"]: {state["source_class"] for state in row["source_states"]}
+            for row in identities["identity_records"]
+        }
+        simultaneous = {
+            identity for identity, source_states in states.items()
+            if source_states == {"current-page-source", "catalog-withdrawn-registration"}
+        }
+        self.assertEqual(simultaneous, {
+            "sentence/dungeon-liberator",
+            "vocabulary/dragon-flight",
+            "vocabulary/dragon-rider",
+            "vocabulary/magic-defense",
+        })
+        discrepancies = _load_json(DISCREPANCY_PATH)
+        observed = {
+            row["canonical_identity_id"]
+            for row in discrepancies["records"]
+            if row.get("observation_type") == "simultaneous-source-classes"
+        }
+        self.assertEqual(observed, simultaneous)
 
     def test_asset_audio_and_data_candidates_have_committed_hashes_format_metadata_and_duplicate_groups(self) -> None:
         """Requires every recorded candidate file to be hash- and format-pinned.

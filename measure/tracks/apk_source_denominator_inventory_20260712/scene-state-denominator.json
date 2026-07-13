@@ -3,203 +3,216 @@
     {
       "discovery_method": "mechanical-syntax-traversal",
       "evidence": {
-        "blob_sha256": "3b278af9847ce63517b72dce80ad0e7e4b63193a8d6e3dfb529ad62bb68e4ca2",
-        "path": "apps/reading-advantage/components/games/sentence/castle-defense/CastleDefenseGame.tsx",
+        "blob_sha256": "eb70ba245a4a7a1ee7637c679afe2a64dc94a883ed17d09d152687a2ad1f3a67",
+        "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/castle-defense/page.tsx",
         "range": {
-          "end_line": 86,
-          "sha256": "cb7be24f65ab8f39e1459092c8237a4b3d788ca1661e47a4bf71c760592514e9",
-          "start_line": 86
+          "end_line": 13,
+          "sha256": "b622129c7ed50b46b06fee1eea64aee4ddf11f8a1aa310578c85c38bb4a8a945",
+          "start_line": 13
         },
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "scene_id": "CastleDefenseGame",
+      "scene_occurrence_id": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/castle-defense/page.tsx:13:CastleDefenseGame",
       "source_symbol_kind": "component-declaration"
     },
     {
       "discovery_method": "mechanical-syntax-traversal",
       "evidence": {
-        "blob_sha256": "42fa273465fd0f11c165c3fb60963f7c386b6c4cc126e9f3fbefde850bfedfdc",
-        "path": "apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx",
+        "blob_sha256": "34ef5cd03faed720f3ff2ac02073681cf88d75d9db29f2876d9b1c4a394eda01",
+        "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/devourer-slime/page.tsx",
         "range": {
-          "end_line": 33,
-          "sha256": "2429224713aaf4df7a4ecde79322895c91ec1ba39950dd153e87b5dae6ccfe0d",
-          "start_line": 33
+          "end_line": 16,
+          "sha256": "0fef9c90ee62b06b4987cefd26bf66291312f132f3e9a1400fe344314507890c",
+          "start_line": 16
         },
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "scene_id": "DevourerSlimeGame",
+      "scene_occurrence_id": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/devourer-slime/page.tsx:16:DevourerSlimeGame",
       "source_symbol_kind": "component-declaration"
     },
     {
       "discovery_method": "mechanical-syntax-traversal",
       "evidence": {
-        "blob_sha256": "bf33b1798fdcce01fbb39d1595b94eda48ff46235c42e0c0790207f7c71fc047",
-        "path": "apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx",
+        "blob_sha256": "47bffd7c6a13246e02df106a47db47b0d3cfc8c7f650c853b162cdcff1179e00",
+        "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/dungeon-liberator/page.tsx",
         "range": {
-          "end_line": 55,
-          "sha256": "a414341f29bb4d3021c635f0dd0f4917f4ba72115edc3569947ef2b03b76acb7",
-          "start_line": 55
+          "end_line": 14,
+          "sha256": "b03379642157c70f618e474506b6c3a25157e870c2f2cb9b82ddc087159b048d",
+          "start_line": 14
         },
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "scene_id": "DungeonLiberatorGame",
+      "scene_occurrence_id": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/dungeon-liberator/page.tsx:14:DungeonLiberatorGame",
       "source_symbol_kind": "component-declaration"
     },
     {
       "discovery_method": "mechanical-syntax-traversal",
       "evidence": {
-        "blob_sha256": "3a6b1fc6d2ed94cb6800855e0c72c3b95e9ac0f33e73c99bd20151a9e62c1207",
-        "path": "apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx",
+        "blob_sha256": "543ccda4237aa0daa98affb5d3fd806566cff27553db3c38334c4b6f522bd922",
+        "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/haunted-library/page.tsx",
         "range": {
-          "end_line": 80,
-          "sha256": "7b75afd5b86402bd1f98d8787f58a41beace7541f9d3fbc8a6fdbfa77a9f5388",
-          "start_line": 80
+          "end_line": 14,
+          "sha256": "13d85f37abe4ec1a60c756369bc06341c47b0204df621eeda72b4895e7aaabbb",
+          "start_line": 14
         },
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "scene_id": "HauntedLibraryGame",
+      "scene_occurrence_id": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/haunted-library/page.tsx:14:HauntedLibraryGame",
       "source_symbol_kind": "component-declaration"
     },
     {
       "discovery_method": "mechanical-syntax-traversal",
       "evidence": {
-        "blob_sha256": "23a76bf75fb4c2f4c4e4f68d6554150337c7dd4ad149b5e0f4cd50dd32752b71",
-        "path": "apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx",
+        "blob_sha256": "900abccf446802b2c2038f4ce1ffd976703d67a0730f171225e2f631e2864afa",
+        "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/labyrinth-goblin-king/page.tsx",
         "range": {
-          "end_line": 35,
-          "sha256": "8f407e44aeb206ac3cd9a0692b67669194157240ad7843f31e222f6696496771",
-          "start_line": 35
+          "end_line": 13,
+          "sha256": "6b8e079add6b265d59fe1b590dbe147cebfab6a0a9ffaba78cc88c072d563915",
+          "start_line": 13
         },
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "scene_id": "LabyrinthGoblinKingGame",
+      "scene_occurrence_id": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/labyrinth-goblin-king/page.tsx:13:LabyrinthGoblinKingGame",
       "source_symbol_kind": "component-declaration"
     },
     {
       "discovery_method": "mechanical-syntax-traversal",
       "evidence": {
-        "blob_sha256": "d58e18fff9fe2146378cada5e72fd9419bf10cbefd03636153c068e3402310bf",
-        "path": "apps/reading-advantage/components/games/sentence/potion-rush/PotionRushGame.tsx",
+        "blob_sha256": "f23a839f56a1d749c5bfe264442b7a08aeda52e8bfa282044d7bc1ce3702be3d",
+        "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/potion-rush/page.tsx",
         "range": {
-          "end_line": 41,
-          "sha256": "6fd67c362f8f9f8a739ca6120d15c013c4d36a3c2ff6b84fea1c4cffc72a503e",
-          "start_line": 41
+          "end_line": 25,
+          "sha256": "e441585671dc5db2d886e0262dd63caff68b50b6e7f6741719dca8e3f6049cae",
+          "start_line": 25
         },
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "scene_id": "PotionRushGame",
+      "scene_occurrence_id": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/potion-rush/page.tsx:25:PotionRushGame",
       "source_symbol_kind": "component-declaration"
     },
     {
       "discovery_method": "mechanical-syntax-traversal",
       "evidence": {
-        "blob_sha256": "45cf46e19255ba7107193d2ceeef63d88b4bcf959d54d830840c2e0cbca23d8f",
-        "path": "apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx",
+        "blob_sha256": "efc5c35bb043100473599f3a6c70d7e47a1cf21f0be832a950f15032b6742a57",
+        "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/rune-forge-chamber/page.tsx",
         "range": {
-          "end_line": 33,
-          "sha256": "acfc8ebacf1527480b2656e6b4a99a9f6fcd584da3dc026b9ab04874b83819d4",
-          "start_line": 33
+          "end_line": 13,
+          "sha256": "754ebd945df22eef87d35898f8a2bb187aba39e306efe00ab2d8616a7bb8504c",
+          "start_line": 13
         },
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "scene_id": "RuneForgeChamberGame",
+      "scene_occurrence_id": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/rune-forge-chamber/page.tsx:13:RuneForgeChamberGame",
       "source_symbol_kind": "component-declaration"
     },
     {
       "discovery_method": "mechanical-syntax-traversal",
       "evidence": {
-        "blob_sha256": "730b5cc3d5d97ac2d64e26a68078b827b1ecc1a913cbf548b037dfdc78befc2b",
-        "path": "apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx",
+        "blob_sha256": "759a587f3409885a32d418ee8c46763b204361f84569b47ec0012d7275f09ac6",
+        "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/shadow-gate-dungeon/page.tsx",
         "range": {
-          "end_line": 34,
-          "sha256": "1eb4ae29f33365ca289a686d9f66bd05f9bf826b03e1c940c4fb76d6666341ce",
-          "start_line": 34
+          "end_line": 13,
+          "sha256": "f8a8597b6f89e3632a682f86f3b37b17ad1c96aa4b7f513ff81085e27ae0214a",
+          "start_line": 13
         },
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "scene_id": "ShadowGateDungeonGame",
+      "scene_occurrence_id": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/shadow-gate-dungeon/page.tsx:13:ShadowGateDungeonGame",
       "source_symbol_kind": "component-declaration"
     },
     {
       "discovery_method": "mechanical-syntax-traversal",
       "evidence": {
-        "blob_sha256": "bdef057d6019a89dacd01b3c264f7cacd9704f2bf3dbc705d92419364e34c102",
-        "path": "apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx",
+        "blob_sha256": "1d30def299d97d0531c1b24c9aa9374e995baa8f256fe86ac7956171e49de16e",
+        "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/village-guardian/page.tsx",
         "range": {
-          "end_line": 35,
-          "sha256": "d24efcaf07037c03dee21aeac75431f90767e69fb734748fbf800f85dce636b2",
-          "start_line": 35
+          "end_line": 13,
+          "sha256": "bac911732ee5bcda98caa6976c3aef63a84adf0a3aab83e9e1e3c6d6183d753c",
+          "start_line": 13
         },
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "scene_id": "VillageGuardianGame",
+      "scene_occurrence_id": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/village-guardian/page.tsx:13:VillageGuardianGame",
       "source_symbol_kind": "component-declaration"
     },
     {
       "discovery_method": "mechanical-syntax-traversal",
       "evidence": {
-        "blob_sha256": "943b662d09ff3df1e4729d3ec775624dea6042ca83046bb57a9fb7adc49dd4b5",
-        "path": "apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx",
+        "blob_sha256": "940b18a18b2d31a93b6048948f216d75ca980f975002bfc3d61e90138ef8d616",
+        "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/enchanted-library/page.tsx",
         "range": {
-          "end_line": 91,
-          "sha256": "eb79a5a10a38761ff5f6735aa961530aaf741ddcf8b066315e1339b00e939425",
-          "start_line": 91
+          "end_line": 18,
+          "sha256": "2db8995045aebb3506e53e32659a9e439e82f9a19643d0cb43040b8f91800185",
+          "start_line": 18
         },
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "scene_id": "EnchantedLibraryGame",
+      "scene_occurrence_id": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/enchanted-library/page.tsx:18:EnchantedLibraryGame",
       "source_symbol_kind": "component-declaration"
     },
     {
       "discovery_method": "mechanical-syntax-traversal",
       "evidence": {
-        "blob_sha256": "050201330b39435f19b42e7af306abeff4449d7d664fe989ca466e5b8ef376df",
-        "path": "apps/reading-advantage/components/games/vocabulary/rune-match/RuneMatchGame.tsx",
+        "blob_sha256": "a951b2113f67f78730482ae034d49adcbf58a0303aa93495578e1cb0a196c918",
+        "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/rune-match/page.tsx",
         "range": {
-          "end_line": 72,
-          "sha256": "ce021ee254cbfe1ef180f3beca30947b1ef61133613de8e9ccbdf802c2cc3336",
-          "start_line": 72
+          "end_line": 15,
+          "sha256": "c6d64f8ee85181f83e5729ae82e4694fa9ec573255a193c0e9aacda923e5cbb3",
+          "start_line": 15
         },
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "scene_id": "RuneMatchGame",
+      "scene_occurrence_id": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/rune-match/page.tsx:15:RuneMatchGame",
       "source_symbol_kind": "component-declaration"
     },
     {
       "discovery_method": "mechanical-syntax-traversal",
       "evidence": {
-        "blob_sha256": "73178c39a5910e2ea1856770c32d062a7cec526ebefb092e4ce209e9fbde50c8",
-        "path": "apps/reading-advantage/components/games/game/GameEndScreen.tsx",
+        "blob_sha256": "ff2f4b2afc709b78ae08775f73f178f81a66ecf3378dfc092ce78ed59d120d8f",
+        "path": "apps/advantage-games/src/components/games/game/GameEndScreen.tsx",
         "range": {
-          "end_line": 72,
+          "end_line": 74,
           "sha256": "4657e22cc7406643527038cf0408028a07492c8cc57d57dca8413ffcce599bb1",
-          "start_line": 72
+          "start_line": 74
         },
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "scene_id": "GameEndScreen",
+      "scene_occurrence_id": "apps/advantage-games/src/components/games/game/GameEndScreen.tsx:74:GameEndScreen",
       "source_symbol_kind": "component-declaration"
     },
     {
       "discovery_method": "mechanical-syntax-traversal",
       "evidence": {
-        "blob_sha256": "7172b8318fc254d9087349ab33d4224f380f2fc9cf4f4da3446053bfa0e0591e",
-        "path": "apps/reading-advantage/components/games/game/GameStartScreen.tsx",
+        "blob_sha256": "a1d696858d4a69fabf359d9d413b07773385e9f8379be736a8d494f98c491cec",
+        "path": "apps/advantage-games/src/components/games/game/GameStartScreen.tsx",
         "range": {
-          "end_line": 39,
+          "end_line": 35,
           "sha256": "d22ea4dd1fb288e1fb91255f72597e5a686e551704ce79503a460d02ad43373c",
-          "start_line": 39
+          "start_line": 35
         },
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "scene_id": "GameStartScreen",
+      "scene_occurrence_id": "apps/advantage-games/src/components/games/game/GameStartScreen.tsx:35:GameStartScreen",
       "source_symbol_kind": "component-declaration"
     },
     {
       "discovery_method": "mechanical-syntax-traversal",
       "evidence": {
         "blob_sha256": "a1ea40d1e0aa0e5e14c62ea39f1fc6993737fba020cb14c295455d4949fc0715",
-        "path": "apps/reading-advantage/components/games/game/ResultsScreen.tsx",
+        "path": "apps/advantage-games/src/components/games/game/ResultsScreen.tsx",
         "range": {
           "end_line": 17,
           "sha256": "f8aa4c7847d5438bc6a228ceb827654a2857d1c10e1ba32c33dc8613e604b8f3",
@@ -208,21 +221,23 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "scene_id": "ResultsScreen",
+      "scene_occurrence_id": "apps/advantage-games/src/components/games/game/ResultsScreen.tsx:17:ResultsScreen",
       "source_symbol_kind": "component-declaration"
     },
     {
       "discovery_method": "mechanical-syntax-traversal",
       "evidence": {
-        "blob_sha256": "d43fefe225a98480a40b388fb51bd2334fcad1418cffd11d7e9f4e5bbd2526c9",
-        "path": "apps/reading-advantage/components/games/vocabulary/wizard-vs-zombie/StartScreen.tsx",
+        "blob_sha256": "5a20eac0be17303b5d6bb0559079d15147af147ca4d19ce9901a5ead769478aa",
+        "path": "apps/advantage-games/src/components/games/game/StartScreen.tsx",
         "range": {
-          "end_line": 59,
-          "sha256": "a0248113671b916aec6c5e1715f79cf27a345293e6e0b3e803d94ab363cdbc57",
-          "start_line": 59
+          "end_line": 21,
+          "sha256": "83db274a1cc8bf3b1f9aa5cf53804bc48d957aa02568e62d3b784283c9f2e0a8",
+          "start_line": 21
         },
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "scene_id": "StartScreen",
+      "scene_occurrence_id": "apps/advantage-games/src/components/games/game/StartScreen.tsx:21:StartScreen",
       "source_symbol_kind": "component-declaration"
     },
     {
@@ -238,6 +253,151 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "scene_id": "SmokeScene",
+      "scene_occurrence_id": "apps/advantage-games/src/components/games/r3f/SmokeScene.tsx:22:SmokeScene",
+      "source_symbol_kind": "component-declaration"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "374522ec38a85b8ec4bd1fdb25bde724b71f8b5f0e2ae3114f5d7f388e8b85e9",
+        "path": "apps/advantage-games/src/components/games/sentence/castle-defense/CastleDefenseGame.tsx",
+        "range": {
+          "end_line": 83,
+          "sha256": "cb7be24f65ab8f39e1459092c8237a4b3d788ca1661e47a4bf71c760592514e9",
+          "start_line": 83
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "scene_id": "CastleDefenseGame",
+      "scene_occurrence_id": "apps/advantage-games/src/components/games/sentence/castle-defense/CastleDefenseGame.tsx:83:CastleDefenseGame",
+      "source_symbol_kind": "component-declaration"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "42fa273465fd0f11c165c3fb60963f7c386b6c4cc126e9f3fbefde850bfedfdc",
+        "path": "apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx",
+        "range": {
+          "end_line": 33,
+          "sha256": "2429224713aaf4df7a4ecde79322895c91ec1ba39950dd153e87b5dae6ccfe0d",
+          "start_line": 33
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "scene_id": "DevourerSlimeGame",
+      "scene_occurrence_id": "apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx:33:DevourerSlimeGame",
+      "source_symbol_kind": "component-declaration"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "bf33b1798fdcce01fbb39d1595b94eda48ff46235c42e0c0790207f7c71fc047",
+        "path": "apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx",
+        "range": {
+          "end_line": 55,
+          "sha256": "a414341f29bb4d3021c635f0dd0f4917f4ba72115edc3569947ef2b03b76acb7",
+          "start_line": 55
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "scene_id": "DungeonLiberatorGame",
+      "scene_occurrence_id": "apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx:55:DungeonLiberatorGame",
+      "source_symbol_kind": "component-declaration"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "3a6b1fc6d2ed94cb6800855e0c72c3b95e9ac0f33e73c99bd20151a9e62c1207",
+        "path": "apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx",
+        "range": {
+          "end_line": 80,
+          "sha256": "7b75afd5b86402bd1f98d8787f58a41beace7541f9d3fbc8a6fdbfa77a9f5388",
+          "start_line": 80
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "scene_id": "HauntedLibraryGame",
+      "scene_occurrence_id": "apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx:80:HauntedLibraryGame",
+      "source_symbol_kind": "component-declaration"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "23a76bf75fb4c2f4c4e4f68d6554150337c7dd4ad149b5e0f4cd50dd32752b71",
+        "path": "apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx",
+        "range": {
+          "end_line": 35,
+          "sha256": "8f407e44aeb206ac3cd9a0692b67669194157240ad7843f31e222f6696496771",
+          "start_line": 35
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "scene_id": "LabyrinthGoblinKingGame",
+      "scene_occurrence_id": "apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx:35:LabyrinthGoblinKingGame",
+      "source_symbol_kind": "component-declaration"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "dcb1c616067d6c982ee27d3e3f54849ccf500898dcb677f8e6a2e72e4d78fbac",
+        "path": "apps/advantage-games/src/components/games/sentence/potion-rush/PotionRushGame.tsx",
+        "range": {
+          "end_line": 34,
+          "sha256": "6fd67c362f8f9f8a739ca6120d15c013c4d36a3c2ff6b84fea1c4cffc72a503e",
+          "start_line": 34
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "scene_id": "PotionRushGame",
+      "scene_occurrence_id": "apps/advantage-games/src/components/games/sentence/potion-rush/PotionRushGame.tsx:34:PotionRushGame",
+      "source_symbol_kind": "component-declaration"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "45cf46e19255ba7107193d2ceeef63d88b4bcf959d54d830840c2e0cbca23d8f",
+        "path": "apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx",
+        "range": {
+          "end_line": 33,
+          "sha256": "acfc8ebacf1527480b2656e6b4a99a9f6fcd584da3dc026b9ab04874b83819d4",
+          "start_line": 33
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "scene_id": "RuneForgeChamberGame",
+      "scene_occurrence_id": "apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx:33:RuneForgeChamberGame",
+      "source_symbol_kind": "component-declaration"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "730b5cc3d5d97ac2d64e26a68078b827b1ecc1a913cbf548b037dfdc78befc2b",
+        "path": "apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx",
+        "range": {
+          "end_line": 34,
+          "sha256": "1eb4ae29f33365ca289a686d9f66bd05f9bf826b03e1c940c4fb76d6666341ce",
+          "start_line": 34
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "scene_id": "ShadowGateDungeonGame",
+      "scene_occurrence_id": "apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx:34:ShadowGateDungeonGame",
+      "source_symbol_kind": "component-declaration"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "bdef057d6019a89dacd01b3c264f7cacd9704f2bf3dbc705d92419364e34c102",
+        "path": "apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx",
+        "range": {
+          "end_line": 35,
+          "sha256": "d24efcaf07037c03dee21aeac75431f90767e69fb734748fbf800f85dce636b2",
+          "start_line": 35
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "scene_id": "VillageGuardianGame",
+      "scene_occurrence_id": "apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx:35:VillageGuardianGame",
       "source_symbol_kind": "component-declaration"
     },
     {
@@ -253,28 +413,46 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "scene_id": "AlchemistsSynthesisGame",
+      "scene_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/alchemists-synthesis/AlchemistsSynthesisGame.tsx:36:AlchemistsSynthesisGame",
       "source_symbol_kind": "component-declaration"
     },
     {
       "discovery_method": "mechanical-syntax-traversal",
       "evidence": {
-        "blob_sha256": "69e898e84cde0cbe72371483b28c7a7d3415db1e0f27abe237df1a661568daad",
-        "path": "apps/reading-advantage/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+        "blob_sha256": "907ca0536af578d31c36cb48a3a2ca60661c8d02e29b068161d1917f560cf54b",
+        "path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
         "range": {
-          "end_line": 432,
+          "end_line": 437,
           "sha256": "f872df3a3889af962412e90f77978c717832e7bba72e08b21e050765d6247f91",
-          "start_line": 432
+          "start_line": 437
         },
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "scene_id": "DragonFlightGame",
+      "scene_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx:437:DragonFlightGame",
+      "source_symbol_kind": "component-declaration"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "342703a685400060427b112be4142740b51fb457194548244cb9619b9fc53dbd",
+        "path": "apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx",
+        "range": {
+          "end_line": 94,
+          "sha256": "eb79a5a10a38761ff5f6735aa961530aaf741ddcf8b066315e1339b00e939425",
+          "start_line": 94
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "scene_id": "EnchantedLibraryGame",
+      "scene_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:94:EnchantedLibraryGame",
       "source_symbol_kind": "component-declaration"
     },
     {
       "discovery_method": "mechanical-syntax-traversal",
       "evidence": {
         "blob_sha256": "e9393f155c9066cf78342c9701d3eb3ee9a168905320d97070fe6ced9d73f0d5",
-        "path": "apps/reading-advantage/components/games/vocabulary/rpg-battle/BattleScene.tsx",
+        "path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/BattleScene.tsx",
         "range": {
           "end_line": 19,
           "sha256": "1a7d6fc7b8dcba84e7035b479ec6432120487d07c527a9b0524a1cf3932a66af",
@@ -283,13 +461,46 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "scene_id": "BattleScene",
+      "scene_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/BattleScene.tsx:19:BattleScene",
       "source_symbol_kind": "component-declaration"
     },
     {
       "discovery_method": "mechanical-syntax-traversal",
       "evidence": {
-        "blob_sha256": "246145eb0cbc6d01e3da0fbf7c468fb45ef3fb5805c6b84018e661336b56c1ca",
-        "path": "apps/reading-advantage/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx",
+        "blob_sha256": "9ed10cde4aab300061ace1c3aa140a70ac70859e2420d946e0abde93f5049e94",
+        "path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/StartScreen.tsx",
+        "range": {
+          "end_line": 33,
+          "sha256": "a0248113671b916aec6c5e1715f79cf27a345293e6e0b3e803d94ab363cdbc57",
+          "start_line": 33
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "scene_id": "StartScreen",
+      "scene_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/StartScreen.tsx:33:StartScreen",
+      "source_symbol_kind": "component-declaration"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "420f5ffc1d93e7ddea9527ae56ea7f5640492e60c01fb69506bfcb1557c9ffa4",
+        "path": "apps/advantage-games/src/components/games/vocabulary/rune-match/RuneMatchGame.tsx",
+        "range": {
+          "end_line": 79,
+          "sha256": "ce021ee254cbfe1ef180f3beca30947b1ef61133613de8e9ccbdf802c2cc3336",
+          "start_line": 79
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "scene_id": "RuneMatchGame",
+      "scene_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/rune-match/RuneMatchGame.tsx:79:RuneMatchGame",
+      "source_symbol_kind": "component-declaration"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "71ff7b6d8b573fe2c3ee4cff37e2a85285e9f28acbaa105b4984b1272c91ceb4",
+        "path": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx",
         "range": {
           "end_line": 86,
           "sha256": "11db9622ddff7537708844e25bbb4674b4ccf7ca132dd4a1fbbbf75307929375",
@@ -298,6 +509,7 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "scene_id": "WizardZombieGame",
+      "scene_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx:86:WizardZombieGame",
       "source_symbol_kind": "component-declaration"
     },
     {
@@ -313,6 +525,7 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "scene_id": "LobbyScreen",
+      "scene_occurrence_id": "apps/advantage-games/src/components/multiplayer/LobbyScreen.tsx:30:LobbyScreen",
       "source_symbol_kind": "component-declaration"
     },
     {
@@ -328,6 +541,7 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "scene_id": "PodiumScreen",
+      "scene_occurrence_id": "apps/advantage-games/src/components/multiplayer/PodiumScreen.tsx:21:PodiumScreen",
       "source_symbol_kind": "component-declaration"
     },
     {
@@ -343,6 +557,7 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "scene_id": "LessonSentenceFlashcardGame",
+      "scene_occurrence_id": "apps/primary-advantage/components/lesson/games/lesson-sentence-flashcard.tsx:731:LessonSentenceFlashcardGame",
       "source_symbol_kind": "component-declaration"
     },
     {
@@ -358,6 +573,183 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "scene_id": "LessonVocabularyFlashcardGame",
+      "scene_occurrence_id": "apps/primary-advantage/components/lesson/games/lesson-vocabulary-flashcard-card.tsx:739:LessonVocabularyFlashcardGame",
+      "source_symbol_kind": "component-declaration"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "fc6ead3439a8118004f48420e8fa94eb316b74ac8f186fb27c1e9c024fd9a653",
+        "path": "apps/reading-advantage/app/[locale]/(student)/student/games/sentence/castle-defense/page.tsx",
+        "range": {
+          "end_line": 12,
+          "sha256": "b622129c7ed50b46b06fee1eea64aee4ddf11f8a1aa310578c85c38bb4a8a945",
+          "start_line": 12
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "scene_id": "CastleDefenseGame",
+      "scene_occurrence_id": "apps/reading-advantage/app/[locale]/(student)/student/games/sentence/castle-defense/page.tsx:12:CastleDefenseGame",
+      "source_symbol_kind": "component-declaration"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "e2ef1550bea67c51bf8a500071966d577164922e050d612b3813d12aaf1ae6f6",
+        "path": "apps/reading-advantage/app/[locale]/(student)/student/games/sentence/potion-rush/page.tsx",
+        "range": {
+          "end_line": 25,
+          "sha256": "e441585671dc5db2d886e0262dd63caff68b50b6e7f6741719dca8e3f6049cae",
+          "start_line": 25
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "scene_id": "PotionRushGame",
+      "scene_occurrence_id": "apps/reading-advantage/app/[locale]/(student)/student/games/sentence/potion-rush/page.tsx:25:PotionRushGame",
+      "source_symbol_kind": "component-declaration"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "a175f2335d6252f7289a625ab3c21a54de266f3f1e1adcd6e1cfed71edc769da",
+        "path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/enchanted-library/page.tsx",
+        "range": {
+          "end_line": 16,
+          "sha256": "2db8995045aebb3506e53e32659a9e439e82f9a19643d0cb43040b8f91800185",
+          "start_line": 16
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "scene_id": "EnchantedLibraryGame",
+      "scene_occurrence_id": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/enchanted-library/page.tsx:16:EnchantedLibraryGame",
+      "source_symbol_kind": "component-declaration"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "2f53e5999d8b6426c0e3209c8a761fec5c89ad1888a772982d5c144353690551",
+        "path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/rune-match/page.tsx",
+        "range": {
+          "end_line": 16,
+          "sha256": "c6d64f8ee85181f83e5729ae82e4694fa9ec573255a193c0e9aacda923e5cbb3",
+          "start_line": 16
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "scene_id": "RuneMatchGame",
+      "scene_occurrence_id": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/rune-match/page.tsx:16:RuneMatchGame",
+      "source_symbol_kind": "component-declaration"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "73178c39a5910e2ea1856770c32d062a7cec526ebefb092e4ce209e9fbde50c8",
+        "path": "apps/reading-advantage/components/games/game/GameEndScreen.tsx",
+        "range": {
+          "end_line": 72,
+          "sha256": "4657e22cc7406643527038cf0408028a07492c8cc57d57dca8413ffcce599bb1",
+          "start_line": 72
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "scene_id": "GameEndScreen",
+      "scene_occurrence_id": "apps/reading-advantage/components/games/game/GameEndScreen.tsx:72:GameEndScreen",
+      "source_symbol_kind": "component-declaration"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "7172b8318fc254d9087349ab33d4224f380f2fc9cf4f4da3446053bfa0e0591e",
+        "path": "apps/reading-advantage/components/games/game/GameStartScreen.tsx",
+        "range": {
+          "end_line": 39,
+          "sha256": "d22ea4dd1fb288e1fb91255f72597e5a686e551704ce79503a460d02ad43373c",
+          "start_line": 39
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "scene_id": "GameStartScreen",
+      "scene_occurrence_id": "apps/reading-advantage/components/games/game/GameStartScreen.tsx:39:GameStartScreen",
+      "source_symbol_kind": "component-declaration"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "a1ea40d1e0aa0e5e14c62ea39f1fc6993737fba020cb14c295455d4949fc0715",
+        "path": "apps/reading-advantage/components/games/game/ResultsScreen.tsx",
+        "range": {
+          "end_line": 17,
+          "sha256": "f8aa4c7847d5438bc6a228ceb827654a2857d1c10e1ba32c33dc8613e604b8f3",
+          "start_line": 17
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "scene_id": "ResultsScreen",
+      "scene_occurrence_id": "apps/reading-advantage/components/games/game/ResultsScreen.tsx:17:ResultsScreen",
+      "source_symbol_kind": "component-declaration"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "bc7183ade727d1db6c89bf7c969d44977be4a7936056fd6b94c0b7bcc0cbcaa9",
+        "path": "apps/reading-advantage/components/games/game/StartScreen.tsx",
+        "range": {
+          "end_line": 21,
+          "sha256": "83db274a1cc8bf3b1f9aa5cf53804bc48d957aa02568e62d3b784283c9f2e0a8",
+          "start_line": 21
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "scene_id": "StartScreen",
+      "scene_occurrence_id": "apps/reading-advantage/components/games/game/StartScreen.tsx:21:StartScreen",
+      "source_symbol_kind": "component-declaration"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "3b278af9847ce63517b72dce80ad0e7e4b63193a8d6e3dfb529ad62bb68e4ca2",
+        "path": "apps/reading-advantage/components/games/sentence/castle-defense/CastleDefenseGame.tsx",
+        "range": {
+          "end_line": 86,
+          "sha256": "cb7be24f65ab8f39e1459092c8237a4b3d788ca1661e47a4bf71c760592514e9",
+          "start_line": 86
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "scene_id": "CastleDefenseGame",
+      "scene_occurrence_id": "apps/reading-advantage/components/games/sentence/castle-defense/CastleDefenseGame.tsx:86:CastleDefenseGame",
+      "source_symbol_kind": "component-declaration"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "d58e18fff9fe2146378cada5e72fd9419bf10cbefd03636153c068e3402310bf",
+        "path": "apps/reading-advantage/components/games/sentence/potion-rush/PotionRushGame.tsx",
+        "range": {
+          "end_line": 41,
+          "sha256": "6fd67c362f8f9f8a739ca6120d15c013c4d36a3c2ff6b84fea1c4cffc72a503e",
+          "start_line": 41
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "scene_id": "PotionRushGame",
+      "scene_occurrence_id": "apps/reading-advantage/components/games/sentence/potion-rush/PotionRushGame.tsx:41:PotionRushGame",
+      "source_symbol_kind": "component-declaration"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "69e898e84cde0cbe72371483b28c7a7d3415db1e0f27abe237df1a661568daad",
+        "path": "apps/reading-advantage/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+        "range": {
+          "end_line": 432,
+          "sha256": "f872df3a3889af962412e90f77978c717832e7bba72e08b21e050765d6247f91",
+          "start_line": 432
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "scene_id": "DragonFlightGame",
+      "scene_occurrence_id": "apps/reading-advantage/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx:432:DragonFlightGame",
       "source_symbol_kind": "component-declaration"
     },
     {
@@ -373,6 +765,119 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "scene_id": "DragonRiderGame",
+      "scene_occurrence_id": "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx:381:DragonRiderGame",
+      "source_symbol_kind": "component-declaration"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "943b662d09ff3df1e4729d3ec775624dea6042ca83046bb57a9fb7adc49dd4b5",
+        "path": "apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx",
+        "range": {
+          "end_line": 91,
+          "sha256": "eb79a5a10a38761ff5f6735aa961530aaf741ddcf8b066315e1339b00e939425",
+          "start_line": 91
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "scene_id": "EnchantedLibraryGame",
+      "scene_occurrence_id": "apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:91:EnchantedLibraryGame",
+      "source_symbol_kind": "component-declaration"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "e9393f155c9066cf78342c9701d3eb3ee9a168905320d97070fe6ced9d73f0d5",
+        "path": "apps/reading-advantage/components/games/vocabulary/rpg-battle/BattleScene.tsx",
+        "range": {
+          "end_line": 19,
+          "sha256": "1a7d6fc7b8dcba84e7035b479ec6432120487d07c527a9b0524a1cf3932a66af",
+          "start_line": 19
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "scene_id": "BattleScene",
+      "scene_occurrence_id": "apps/reading-advantage/components/games/vocabulary/rpg-battle/BattleScene.tsx:19:BattleScene",
+      "source_symbol_kind": "component-declaration"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "8e4e97891ebca11b155a3576ea158bea13e32ac52808255cf466ad9f26a1d07b",
+        "path": "apps/reading-advantage/components/games/vocabulary/rpg-battle/StartScreen.tsx",
+        "range": {
+          "end_line": 35,
+          "sha256": "a0248113671b916aec6c5e1715f79cf27a345293e6e0b3e803d94ab363cdbc57",
+          "start_line": 35
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "scene_id": "StartScreen",
+      "scene_occurrence_id": "apps/reading-advantage/components/games/vocabulary/rpg-battle/StartScreen.tsx:35:StartScreen",
+      "source_symbol_kind": "component-declaration"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "050201330b39435f19b42e7af306abeff4449d7d664fe989ca466e5b8ef376df",
+        "path": "apps/reading-advantage/components/games/vocabulary/rune-match/RuneMatchGame.tsx",
+        "range": {
+          "end_line": 72,
+          "sha256": "ce021ee254cbfe1ef180f3beca30947b1ef61133613de8e9ccbdf802c2cc3336",
+          "start_line": 72
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "scene_id": "RuneMatchGame",
+      "scene_occurrence_id": "apps/reading-advantage/components/games/vocabulary/rune-match/RuneMatchGame.tsx:72:RuneMatchGame",
+      "source_symbol_kind": "component-declaration"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "9d5994579b4f12c78184999e856a33753a846b15752d4e75366ce7f6daecab4f",
+        "path": "apps/reading-advantage/components/games/vocabulary/rune-match/StartScreen.tsx",
+        "range": {
+          "end_line": 48,
+          "sha256": "a0248113671b916aec6c5e1715f79cf27a345293e6e0b3e803d94ab363cdbc57",
+          "start_line": 48
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "scene_id": "StartScreen",
+      "scene_occurrence_id": "apps/reading-advantage/components/games/vocabulary/rune-match/StartScreen.tsx:48:StartScreen",
+      "source_symbol_kind": "component-declaration"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "d43fefe225a98480a40b388fb51bd2334fcad1418cffd11d7e9f4e5bbd2526c9",
+        "path": "apps/reading-advantage/components/games/vocabulary/wizard-vs-zombie/StartScreen.tsx",
+        "range": {
+          "end_line": 59,
+          "sha256": "a0248113671b916aec6c5e1715f79cf27a345293e6e0b3e803d94ab363cdbc57",
+          "start_line": 59
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "scene_id": "StartScreen",
+      "scene_occurrence_id": "apps/reading-advantage/components/games/vocabulary/wizard-vs-zombie/StartScreen.tsx:59:StartScreen",
+      "source_symbol_kind": "component-declaration"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "246145eb0cbc6d01e3da0fbf7c468fb45ef3fb5805c6b84018e661336b56c1ca",
+        "path": "apps/reading-advantage/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx",
+        "range": {
+          "end_line": 86,
+          "sha256": "11db9622ddff7537708844e25bbb4674b4ccf7ca132dd4a1fbbbf75307929375",
+          "start_line": 86
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "scene_id": "WizardZombieGame",
+      "scene_occurrence_id": "apps/reading-advantage/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx:86:WizardZombieGame",
       "source_symbol_kind": "component-declaration"
     }
   ],
@@ -392,7 +897,8 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "source_symbol": "gamePhase",
-      "state_id": "start"
+      "state_id": "ended",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx:35:gamePhase:ended"
     },
     {
       "discovery_method": "mechanical-syntax-traversal",
@@ -407,7 +913,8 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "source_symbol": "gamePhase",
-      "state_id": "ended"
+      "state_id": "playing",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx:35:gamePhase:playing"
     },
     {
       "discovery_method": "mechanical-syntax-traversal",
@@ -422,7 +929,392 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "source_symbol": "gamePhase",
-      "state_id": "playing"
+      "state_id": "start",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx:35:gamePhase:start"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "bf33b1798fdcce01fbb39d1595b94eda48ff46235c42e0c0790207f7c71fc047",
+        "path": "apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx",
+        "range": {
+          "end_line": 59,
+          "sha256": "5ae7cc2774263a7f3fba8b7194f4893fca7349ca4cad699c03da409e53b44d02",
+          "start_line": 59
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "gamePhase",
+      "state_id": "ended",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx:59:gamePhase:ended"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "bf33b1798fdcce01fbb39d1595b94eda48ff46235c42e0c0790207f7c71fc047",
+        "path": "apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx",
+        "range": {
+          "end_line": 59,
+          "sha256": "5ae7cc2774263a7f3fba8b7194f4893fca7349ca4cad699c03da409e53b44d02",
+          "start_line": 59
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "gamePhase",
+      "state_id": "playing",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx:59:gamePhase:playing"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "bf33b1798fdcce01fbb39d1595b94eda48ff46235c42e0c0790207f7c71fc047",
+        "path": "apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx",
+        "range": {
+          "end_line": 59,
+          "sha256": "5ae7cc2774263a7f3fba8b7194f4893fca7349ca4cad699c03da409e53b44d02",
+          "start_line": 59
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "gamePhase",
+      "state_id": "start",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx:59:gamePhase:start"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "3a6b1fc6d2ed94cb6800855e0c72c3b95e9ac0f33e73c99bd20151a9e62c1207",
+        "path": "apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx",
+        "range": {
+          "end_line": 90,
+          "sha256": "5ae7cc2774263a7f3fba8b7194f4893fca7349ca4cad699c03da409e53b44d02",
+          "start_line": 90
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "gamePhase",
+      "state_id": "ended",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx:90:gamePhase:ended"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "3a6b1fc6d2ed94cb6800855e0c72c3b95e9ac0f33e73c99bd20151a9e62c1207",
+        "path": "apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx",
+        "range": {
+          "end_line": 90,
+          "sha256": "5ae7cc2774263a7f3fba8b7194f4893fca7349ca4cad699c03da409e53b44d02",
+          "start_line": 90
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "gamePhase",
+      "state_id": "playing",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx:90:gamePhase:playing"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "3a6b1fc6d2ed94cb6800855e0c72c3b95e9ac0f33e73c99bd20151a9e62c1207",
+        "path": "apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx",
+        "range": {
+          "end_line": 90,
+          "sha256": "5ae7cc2774263a7f3fba8b7194f4893fca7349ca4cad699c03da409e53b44d02",
+          "start_line": 90
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "gamePhase",
+      "state_id": "start",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx:90:gamePhase:start"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "23a76bf75fb4c2f4c4e4f68d6554150337c7dd4ad149b5e0f4cd50dd32752b71",
+        "path": "apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx",
+        "range": {
+          "end_line": 39,
+          "sha256": "5ae7cc2774263a7f3fba8b7194f4893fca7349ca4cad699c03da409e53b44d02",
+          "start_line": 39
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "gamePhase",
+      "state_id": "ended",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx:39:gamePhase:ended"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "23a76bf75fb4c2f4c4e4f68d6554150337c7dd4ad149b5e0f4cd50dd32752b71",
+        "path": "apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx",
+        "range": {
+          "end_line": 39,
+          "sha256": "5ae7cc2774263a7f3fba8b7194f4893fca7349ca4cad699c03da409e53b44d02",
+          "start_line": 39
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "gamePhase",
+      "state_id": "playing",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx:39:gamePhase:playing"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "23a76bf75fb4c2f4c4e4f68d6554150337c7dd4ad149b5e0f4cd50dd32752b71",
+        "path": "apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx",
+        "range": {
+          "end_line": 39,
+          "sha256": "5ae7cc2774263a7f3fba8b7194f4893fca7349ca4cad699c03da409e53b44d02",
+          "start_line": 39
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "gamePhase",
+      "state_id": "start",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx:39:gamePhase:start"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "45cf46e19255ba7107193d2ceeef63d88b4bcf959d54d830840c2e0cbca23d8f",
+        "path": "apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx",
+        "range": {
+          "end_line": 35,
+          "sha256": "5ae7cc2774263a7f3fba8b7194f4893fca7349ca4cad699c03da409e53b44d02",
+          "start_line": 35
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "gamePhase",
+      "state_id": "ended",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx:35:gamePhase:ended"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "45cf46e19255ba7107193d2ceeef63d88b4bcf959d54d830840c2e0cbca23d8f",
+        "path": "apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx",
+        "range": {
+          "end_line": 35,
+          "sha256": "5ae7cc2774263a7f3fba8b7194f4893fca7349ca4cad699c03da409e53b44d02",
+          "start_line": 35
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "gamePhase",
+      "state_id": "playing",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx:35:gamePhase:playing"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "45cf46e19255ba7107193d2ceeef63d88b4bcf959d54d830840c2e0cbca23d8f",
+        "path": "apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx",
+        "range": {
+          "end_line": 35,
+          "sha256": "5ae7cc2774263a7f3fba8b7194f4893fca7349ca4cad699c03da409e53b44d02",
+          "start_line": 35
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "gamePhase",
+      "state_id": "start",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx:35:gamePhase:start"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "730b5cc3d5d97ac2d64e26a68078b827b1ecc1a913cbf548b037dfdc78befc2b",
+        "path": "apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx",
+        "range": {
+          "end_line": 40,
+          "sha256": "5ae7cc2774263a7f3fba8b7194f4893fca7349ca4cad699c03da409e53b44d02",
+          "start_line": 40
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "gamePhase",
+      "state_id": "ended",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx:40:gamePhase:ended"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "730b5cc3d5d97ac2d64e26a68078b827b1ecc1a913cbf548b037dfdc78befc2b",
+        "path": "apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx",
+        "range": {
+          "end_line": 40,
+          "sha256": "5ae7cc2774263a7f3fba8b7194f4893fca7349ca4cad699c03da409e53b44d02",
+          "start_line": 40
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "gamePhase",
+      "state_id": "playing",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx:40:gamePhase:playing"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "730b5cc3d5d97ac2d64e26a68078b827b1ecc1a913cbf548b037dfdc78befc2b",
+        "path": "apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx",
+        "range": {
+          "end_line": 40,
+          "sha256": "5ae7cc2774263a7f3fba8b7194f4893fca7349ca4cad699c03da409e53b44d02",
+          "start_line": 40
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "gamePhase",
+      "state_id": "start",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx:40:gamePhase:start"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "bdef057d6019a89dacd01b3c264f7cacd9704f2bf3dbc705d92419364e34c102",
+        "path": "apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx",
+        "range": {
+          "end_line": 37,
+          "sha256": "5ae7cc2774263a7f3fba8b7194f4893fca7349ca4cad699c03da409e53b44d02",
+          "start_line": 37
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "gamePhase",
+      "state_id": "ended",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx:37:gamePhase:ended"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "bdef057d6019a89dacd01b3c264f7cacd9704f2bf3dbc705d92419364e34c102",
+        "path": "apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx",
+        "range": {
+          "end_line": 37,
+          "sha256": "5ae7cc2774263a7f3fba8b7194f4893fca7349ca4cad699c03da409e53b44d02",
+          "start_line": 37
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "gamePhase",
+      "state_id": "playing",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx:37:gamePhase:playing"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "bdef057d6019a89dacd01b3c264f7cacd9704f2bf3dbc705d92419364e34c102",
+        "path": "apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx",
+        "range": {
+          "end_line": 37,
+          "sha256": "5ae7cc2774263a7f3fba8b7194f4893fca7349ca4cad699c03da409e53b44d02",
+          "start_line": 37
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "gamePhase",
+      "state_id": "start",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx:37:gamePhase:start"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "342703a685400060427b112be4142740b51fb457194548244cb9619b9fc53dbd",
+        "path": "apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx",
+        "range": {
+          "end_line": 116,
+          "sha256": "a39e247ce3cde3e41f9683685a1a0a885224904852cbbe7d2288f42538538e20",
+          "start_line": 116
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "gamePhase",
+      "state_id": "ended",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:116:gamePhase:ended"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "342703a685400060427b112be4142740b51fb457194548244cb9619b9fc53dbd",
+        "path": "apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx",
+        "range": {
+          "end_line": 116,
+          "sha256": "a39e247ce3cde3e41f9683685a1a0a885224904852cbbe7d2288f42538538e20",
+          "start_line": 116
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "gamePhase",
+      "state_id": "playing",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:116:gamePhase:playing"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "342703a685400060427b112be4142740b51fb457194548244cb9619b9fc53dbd",
+        "path": "apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx",
+        "range": {
+          "end_line": 116,
+          "sha256": "a39e247ce3cde3e41f9683685a1a0a885224904852cbbe7d2288f42538538e20",
+          "start_line": 116
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "gamePhase",
+      "state_id": "start",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:116:gamePhase:start"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "71ff7b6d8b573fe2c3ee4cff37e2a85285e9f28acbaa105b4984b1272c91ceb4",
+        "path": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx",
+        "range": {
+          "end_line": 99,
+          "sha256": "45f9ec31c5c70ab99b8dd891bbc85132ba2fc72d6620dd388dcf6aa72604dc01",
+          "start_line": 99
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "gamePhase",
+      "state_id": "ended",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx:99:gamePhase:ended"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "71ff7b6d8b573fe2c3ee4cff37e2a85285e9f28acbaa105b4984b1272c91ceb4",
+        "path": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx",
+        "range": {
+          "end_line": 99,
+          "sha256": "45f9ec31c5c70ab99b8dd891bbc85132ba2fc72d6620dd388dcf6aa72604dc01",
+          "start_line": 99
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "gamePhase",
+      "state_id": "playing",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx:99:gamePhase:playing"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "71ff7b6d8b573fe2c3ee4cff37e2a85285e9f28acbaa105b4984b1272c91ceb4",
+        "path": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx",
+        "range": {
+          "end_line": 99,
+          "sha256": "45f9ec31c5c70ab99b8dd891bbc85132ba2fc72d6620dd388dcf6aa72604dc01",
+          "start_line": 99
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "gamePhase",
+      "state_id": "start",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx:99:gamePhase:start"
     },
     {
       "discovery_method": "mechanical-syntax-traversal",
@@ -437,7 +1329,8 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "source_symbol": "mode",
-      "state_id": "join"
+      "state_id": "join",
+      "state_occurrence_id": "apps/advantage-games/src/components/multiplayer/LobbyScreen.tsx:45:mode:join"
     },
     {
       "discovery_method": "mechanical-syntax-traversal",
@@ -452,7 +1345,8 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "source_symbol": "mode",
-      "state_id": "lobby"
+      "state_id": "lobby",
+      "state_occurrence_id": "apps/advantage-games/src/components/multiplayer/LobbyScreen.tsx:45:mode:lobby"
     },
     {
       "discovery_method": "mechanical-syntax-traversal",
@@ -467,7 +1361,104 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "source_symbol": "mode",
-      "state_id": "create"
+      "state_id": "create",
+      "state_occurrence_id": "apps/advantage-games/src/components/multiplayer/LobbyScreen.tsx:45:mode:create"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "62f3ee98f007b4a29b063c391f26d8484564776aa257d670698060043d951f78",
+        "path": "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx",
+        "range": {
+          "end_line": 390,
+          "sha256": "a39e247ce3cde3e41f9683685a1a0a885224904852cbbe7d2288f42538538e20",
+          "start_line": 390
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "gamePhase",
+      "state_id": "ended",
+      "state_occurrence_id": "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx:390:gamePhase:ended"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "62f3ee98f007b4a29b063c391f26d8484564776aa257d670698060043d951f78",
+        "path": "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx",
+        "range": {
+          "end_line": 390,
+          "sha256": "a39e247ce3cde3e41f9683685a1a0a885224904852cbbe7d2288f42538538e20",
+          "start_line": 390
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "gamePhase",
+      "state_id": "playing",
+      "state_occurrence_id": "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx:390:gamePhase:playing"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "62f3ee98f007b4a29b063c391f26d8484564776aa257d670698060043d951f78",
+        "path": "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx",
+        "range": {
+          "end_line": 390,
+          "sha256": "a39e247ce3cde3e41f9683685a1a0a885224904852cbbe7d2288f42538538e20",
+          "start_line": 390
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "gamePhase",
+      "state_id": "start",
+      "state_occurrence_id": "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx:390:gamePhase:start"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "943b662d09ff3df1e4729d3ec775624dea6042ca83046bb57a9fb7adc49dd4b5",
+        "path": "apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx",
+        "range": {
+          "end_line": 110,
+          "sha256": "a39e247ce3cde3e41f9683685a1a0a885224904852cbbe7d2288f42538538e20",
+          "start_line": 110
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "gamePhase",
+      "state_id": "ended",
+      "state_occurrence_id": "apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:110:gamePhase:ended"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "943b662d09ff3df1e4729d3ec775624dea6042ca83046bb57a9fb7adc49dd4b5",
+        "path": "apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx",
+        "range": {
+          "end_line": 110,
+          "sha256": "a39e247ce3cde3e41f9683685a1a0a885224904852cbbe7d2288f42538538e20",
+          "start_line": 110
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "gamePhase",
+      "state_id": "playing",
+      "state_occurrence_id": "apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:110:gamePhase:playing"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "943b662d09ff3df1e4729d3ec775624dea6042ca83046bb57a9fb7adc49dd4b5",
+        "path": "apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx",
+        "range": {
+          "end_line": 110,
+          "sha256": "a39e247ce3cde3e41f9683685a1a0a885224904852cbbe7d2288f42538538e20",
+          "start_line": 110
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "gamePhase",
+      "state_id": "start",
+      "state_occurrence_id": "apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:110:gamePhase:start"
     }
   ],
   "status": "mechanical-discovery-complete",
@@ -479,13 +1470,16 @@
         "path": "apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx",
         "range": {
           "end_line": 54,
-          "sha256": "129b00dc421fdf765cbf2e8b23d1c4ecc45ea4ff8ae07ea74e43d9f4f3ce4a64",
-          "start_line": 35
+          "sha256": "40ea4fe94aacdf8ad44981f02e6b3fbc4e5f1fa7880f69d35a662ac42cf1c769",
+          "start_line": 54
         },
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "from_state_id": "ended",
+      "from_state_occurrence_id": "apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx:35:gamePhase:ended",
       "to_state_id": "playing",
+      "to_state_occurrence_id": "apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx:35:gamePhase:playing",
+      "transition_evidence_kind": "useState-initial-to-setter-call",
       "transition_kind": "phase"
     },
     {
@@ -495,45 +1489,16 @@
         "path": "apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx",
         "range": {
           "end_line": 59,
-          "sha256": "0047a1b234876fc12231bfd680a7a7075651c312885e090b0b6a32a959278cc7",
-          "start_line": 35
-        },
-        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-      },
-      "from_state_id": "ended",
-      "to_state_id": "start",
-      "transition_kind": "phase"
-    },
-    {
-      "discovery_method": "mechanical-syntax-traversal",
-      "evidence": {
-        "blob_sha256": "42fa273465fd0f11c165c3fb60963f7c386b6c4cc126e9f3fbefde850bfedfdc",
-        "path": "apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx",
-        "range": {
-          "end_line": 65,
-          "sha256": "8018a0802321c061f312dcaeea7e4e280d7596cbc5ccd39813e46a2f7041ecb9",
-          "start_line": 35
-        },
-        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-      },
-      "from_state_id": "ended",
-      "to_state_id": "ended",
-      "transition_kind": "phase"
-    },
-    {
-      "discovery_method": "mechanical-syntax-traversal",
-      "evidence": {
-        "blob_sha256": "bf33b1798fdcce01fbb39d1595b94eda48ff46235c42e0c0790207f7c71fc047",
-        "path": "apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx",
-        "range": {
-          "end_line": 230,
-          "sha256": "d0ba6549e256bc9273c9c9893aa9fb3a8f5e3a88dd59f5f301e55070b820f08c",
+          "sha256": "15e6e39b499f9ab5d2714fec4ab4eba4f9897217e7dc664798e311664cc8b32b",
           "start_line": 59
         },
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "from_state_id": "ended",
-      "to_state_id": "ended",
+      "from_state_occurrence_id": "apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx:35:gamePhase:ended",
+      "to_state_id": "start",
+      "to_state_occurrence_id": "apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx:35:gamePhase:start",
+      "transition_evidence_kind": "useState-initial-to-setter-call",
       "transition_kind": "phase"
     },
     {
@@ -543,13 +1508,16 @@
         "path": "apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx",
         "range": {
           "end_line": 289,
-          "sha256": "6fa18cb3d414576febf6e1e54d6cbea2a9c90c7162a6702b6be8237a6f3b5064",
-          "start_line": 59
+          "sha256": "88542e78ec86a3b0663273d856ce2de5667763dec067726adbb3818bd9f7006d",
+          "start_line": 289
         },
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "from_state_id": "ended",
+      "from_state_occurrence_id": "apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx:59:gamePhase:ended",
       "to_state_id": "playing",
+      "to_state_occurrence_id": "apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx:59:gamePhase:playing",
+      "transition_evidence_kind": "useState-initial-to-setter-call",
       "transition_kind": "phase"
     },
     {
@@ -559,13 +1527,16 @@
         "path": "apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx",
         "range": {
           "end_line": 616,
-          "sha256": "6854e07981d3770b0a1991185beb2fe89a09a7cb776dfc6cec465bb30a4f90da",
-          "start_line": 59
+          "sha256": "a62b1f9c76f8496bc4cd7615686626bb93cef8cc0999fae35929c23f32bd3ec9",
+          "start_line": 616
         },
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "from_state_id": "ended",
+      "from_state_occurrence_id": "apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx:59:gamePhase:ended",
       "to_state_id": "start",
+      "to_state_occurrence_id": "apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx:59:gamePhase:start",
+      "transition_evidence_kind": "useState-initial-to-setter-call",
       "transition_kind": "phase"
     },
     {
@@ -575,13 +1546,16 @@
         "path": "apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx",
         "range": {
           "end_line": 129,
-          "sha256": "854b2eff115f2ebfbc2a77569b5ea7371da9cc08fb28aabf39a92ef10508d086",
-          "start_line": 90
+          "sha256": "9c08cf636459367877123fa1d0e24066ff373568901652b3f6e57962a02aad34",
+          "start_line": 129
         },
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "from_state_id": "ended",
+      "from_state_occurrence_id": "apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx:90:gamePhase:ended",
       "to_state_id": "playing",
+      "to_state_occurrence_id": "apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx:90:gamePhase:playing",
+      "transition_evidence_kind": "useState-initial-to-setter-call",
       "transition_kind": "phase"
     },
     {
@@ -591,45 +1565,16 @@
         "path": "apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx",
         "range": {
           "end_line": 141,
-          "sha256": "ecac32bdd6fd8eeae5bb1d794629265a3d406526852014a3e9560458e462eb93",
-          "start_line": 90
+          "sha256": "15e6e39b499f9ab5d2714fec4ab4eba4f9897217e7dc664798e311664cc8b32b",
+          "start_line": 141
         },
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "from_state_id": "ended",
+      "from_state_occurrence_id": "apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx:90:gamePhase:ended",
       "to_state_id": "start",
-      "transition_kind": "phase"
-    },
-    {
-      "discovery_method": "mechanical-syntax-traversal",
-      "evidence": {
-        "blob_sha256": "3a6b1fc6d2ed94cb6800855e0c72c3b95e9ac0f33e73c99bd20151a9e62c1207",
-        "path": "apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx",
-        "range": {
-          "end_line": 151,
-          "sha256": "7ad09f6ade81f8528264f4e492c6bbb15ca40df271940cd0e0202e253583e6d0",
-          "start_line": 90
-        },
-        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-      },
-      "from_state_id": "ended",
-      "to_state_id": "ended",
-      "transition_kind": "phase"
-    },
-    {
-      "discovery_method": "mechanical-syntax-traversal",
-      "evidence": {
-        "blob_sha256": "23a76bf75fb4c2f4c4e4f68d6554150337c7dd4ad149b5e0f4cd50dd32752b71",
-        "path": "apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx",
-        "range": {
-          "end_line": 138,
-          "sha256": "5524089519e2edeb5d6f47031514b9929557a1c9210151907449c45ca28398b9",
-          "start_line": 39
-        },
-        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-      },
-      "from_state_id": "ended",
-      "to_state_id": "ended",
+      "to_state_occurrence_id": "apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx:90:gamePhase:start",
+      "transition_evidence_kind": "useState-initial-to-setter-call",
       "transition_kind": "phase"
     },
     {
@@ -639,13 +1584,16 @@
         "path": "apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx",
         "range": {
           "end_line": 209,
-          "sha256": "5a43bf0953f09b8c6f20e65c8d930b7668e389f38fb38789bedbb1e3414bff3c",
-          "start_line": 39
+          "sha256": "88542e78ec86a3b0663273d856ce2de5667763dec067726adbb3818bd9f7006d",
+          "start_line": 209
         },
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "from_state_id": "ended",
+      "from_state_occurrence_id": "apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx:39:gamePhase:ended",
       "to_state_id": "playing",
+      "to_state_occurrence_id": "apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx:39:gamePhase:playing",
+      "transition_evidence_kind": "useState-initial-to-setter-call",
       "transition_kind": "phase"
     },
     {
@@ -655,29 +1603,16 @@
         "path": "apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx",
         "range": {
           "end_line": 393,
-          "sha256": "3369cd68fcc07fb37205f187628dc12c4303def8a9f7f02c0bca3ca88a82a99a",
-          "start_line": 39
+          "sha256": "a62b1f9c76f8496bc4cd7615686626bb93cef8cc0999fae35929c23f32bd3ec9",
+          "start_line": 393
         },
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "from_state_id": "ended",
+      "from_state_occurrence_id": "apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx:39:gamePhase:ended",
       "to_state_id": "start",
-      "transition_kind": "phase"
-    },
-    {
-      "discovery_method": "mechanical-syntax-traversal",
-      "evidence": {
-        "blob_sha256": "45cf46e19255ba7107193d2ceeef63d88b4bcf959d54d830840c2e0cbca23d8f",
-        "path": "apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx",
-        "range": {
-          "end_line": 156,
-          "sha256": "ab8c80e0070b0fa4e581d694e08f483776b18aa9d4b29208240f740748b102b9",
-          "start_line": 35
-        },
-        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-      },
-      "from_state_id": "ended",
-      "to_state_id": "ended",
+      "to_state_occurrence_id": "apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx:39:gamePhase:start",
+      "transition_evidence_kind": "useState-initial-to-setter-call",
       "transition_kind": "phase"
     },
     {
@@ -687,13 +1622,16 @@
         "path": "apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx",
         "range": {
           "end_line": 211,
-          "sha256": "883386a875c935f45cd3c162a58644d406afcb526b051a1e81e86d1c204f4ba4",
-          "start_line": 35
+          "sha256": "88542e78ec86a3b0663273d856ce2de5667763dec067726adbb3818bd9f7006d",
+          "start_line": 211
         },
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "from_state_id": "ended",
+      "from_state_occurrence_id": "apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx:35:gamePhase:ended",
       "to_state_id": "playing",
+      "to_state_occurrence_id": "apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx:35:gamePhase:playing",
+      "transition_evidence_kind": "useState-initial-to-setter-call",
       "transition_kind": "phase"
     },
     {
@@ -703,29 +1641,16 @@
         "path": "apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx",
         "range": {
           "end_line": 444,
-          "sha256": "3b1d575840b333a89abe14faacc82d6870ec1cd84e98688fdd603418ef987509",
-          "start_line": 35
+          "sha256": "a62b1f9c76f8496bc4cd7615686626bb93cef8cc0999fae35929c23f32bd3ec9",
+          "start_line": 444
         },
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "from_state_id": "ended",
+      "from_state_occurrence_id": "apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx:35:gamePhase:ended",
       "to_state_id": "start",
-      "transition_kind": "phase"
-    },
-    {
-      "discovery_method": "mechanical-syntax-traversal",
-      "evidence": {
-        "blob_sha256": "730b5cc3d5d97ac2d64e26a68078b827b1ecc1a913cbf548b037dfdc78befc2b",
-        "path": "apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx",
-        "range": {
-          "end_line": 136,
-          "sha256": "6104fd5568cf7f22e2ad626166b82aba682fba28f04a2a4331adadc14e6ad317",
-          "start_line": 40
-        },
-        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-      },
-      "from_state_id": "ended",
-      "to_state_id": "ended",
+      "to_state_occurrence_id": "apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx:35:gamePhase:start",
+      "transition_evidence_kind": "useState-initial-to-setter-call",
       "transition_kind": "phase"
     },
     {
@@ -735,13 +1660,16 @@
         "path": "apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx",
         "range": {
           "end_line": 223,
-          "sha256": "c7fe799bd79929a07e6b56331e7ac61c9191c8d02478e2d51a4177d2499f3d74",
-          "start_line": 40
+          "sha256": "88542e78ec86a3b0663273d856ce2de5667763dec067726adbb3818bd9f7006d",
+          "start_line": 223
         },
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "from_state_id": "ended",
+      "from_state_occurrence_id": "apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx:40:gamePhase:ended",
       "to_state_id": "playing",
+      "to_state_occurrence_id": "apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx:40:gamePhase:playing",
+      "transition_evidence_kind": "useState-initial-to-setter-call",
       "transition_kind": "phase"
     },
     {
@@ -751,29 +1679,16 @@
         "path": "apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx",
         "range": {
           "end_line": 474,
-          "sha256": "6b0cb9152280172fd4a3351fa2a3646934da6488a9d7dfd8f1d2cd2d56134abf",
-          "start_line": 40
+          "sha256": "a62b1f9c76f8496bc4cd7615686626bb93cef8cc0999fae35929c23f32bd3ec9",
+          "start_line": 474
         },
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "from_state_id": "ended",
+      "from_state_occurrence_id": "apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx:40:gamePhase:ended",
       "to_state_id": "start",
-      "transition_kind": "phase"
-    },
-    {
-      "discovery_method": "mechanical-syntax-traversal",
-      "evidence": {
-        "blob_sha256": "bdef057d6019a89dacd01b3c264f7cacd9704f2bf3dbc705d92419364e34c102",
-        "path": "apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx",
-        "range": {
-          "end_line": 139,
-          "sha256": "dc0bbcb52e4f65892c8708431c76075e021c1ae84f12a44743635d7d7895812f",
-          "start_line": 37
-        },
-        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-      },
-      "from_state_id": "ended",
-      "to_state_id": "ended",
+      "to_state_occurrence_id": "apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx:40:gamePhase:start",
+      "transition_evidence_kind": "useState-initial-to-setter-call",
       "transition_kind": "phase"
     },
     {
@@ -783,13 +1698,16 @@
         "path": "apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx",
         "range": {
           "end_line": 210,
-          "sha256": "4849fbd538afb91cfbe1d0c8bb8241aa489b0f40cfb3e0933925f58170ef222c",
-          "start_line": 37
+          "sha256": "88542e78ec86a3b0663273d856ce2de5667763dec067726adbb3818bd9f7006d",
+          "start_line": 210
         },
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "from_state_id": "ended",
+      "from_state_occurrence_id": "apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx:37:gamePhase:ended",
       "to_state_id": "playing",
+      "to_state_occurrence_id": "apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx:37:gamePhase:playing",
+      "transition_evidence_kind": "useState-initial-to-setter-call",
       "transition_kind": "phase"
     },
     {
@@ -799,13 +1717,16 @@
         "path": "apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx",
         "range": {
           "end_line": 508,
-          "sha256": "90ffdd291d1710dc4e70986e29750262b558054413b8625aba2d7b39aba775d7",
-          "start_line": 37
+          "sha256": "a62b1f9c76f8496bc4cd7615686626bb93cef8cc0999fae35929c23f32bd3ec9",
+          "start_line": 508
         },
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "from_state_id": "ended",
+      "from_state_occurrence_id": "apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx:37:gamePhase:ended",
       "to_state_id": "start",
+      "to_state_occurrence_id": "apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx:37:gamePhase:start",
+      "transition_evidence_kind": "useState-initial-to-setter-call",
       "transition_kind": "phase"
     },
     {
@@ -814,30 +1735,17 @@
         "blob_sha256": "342703a685400060427b112be4142740b51fb457194548244cb9619b9fc53dbd",
         "path": "apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx",
         "range": {
-          "end_line": 920,
-          "sha256": "bf37d9bda90f690439fccf83771ed06175ea9dc4e25447407360b03d9bfc4a60",
-          "start_line": 116
+          "end_line": 248,
+          "sha256": "5292d04ad409c17657d4bd7d20889bfc2204d630a1f4476b62b9af0caaed81a6",
+          "start_line": 248
         },
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "from_state_id": "ended",
+      "from_state_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:116:gamePhase:ended",
       "to_state_id": "start",
-      "transition_kind": "phase"
-    },
-    {
-      "discovery_method": "mechanical-syntax-traversal",
-      "evidence": {
-        "blob_sha256": "342703a685400060427b112be4142740b51fb457194548244cb9619b9fc53dbd",
-        "path": "apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx",
-        "range": {
-          "end_line": 421,
-          "sha256": "87cb055487a61e97d484e87ac86fd9bf09f5ecf8551a89cc5c5b4e402fb1aad7",
-          "start_line": 116
-        },
-        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-      },
-      "from_state_id": "ended",
-      "to_state_id": "ended",
+      "to_state_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:116:gamePhase:start",
+      "transition_evidence_kind": "useState-initial-to-setter-call",
       "transition_kind": "phase"
     },
     {
@@ -847,13 +1755,35 @@
         "path": "apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx",
         "range": {
           "end_line": 600,
-          "sha256": "c0ccd9776c0b9a3d601ea129ff579033f2df52e618bc0f061ffa7bc403d1e132",
-          "start_line": 116
+          "sha256": "9691beedc7a28759e656869a5e52efc6f81682c93ffe4ab6ec5ca88c35173075",
+          "start_line": 600
         },
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "from_state_id": "ended",
+      "from_state_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:116:gamePhase:ended",
       "to_state_id": "playing",
+      "to_state_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:116:gamePhase:playing",
+      "transition_evidence_kind": "useState-initial-to-setter-call",
+      "transition_kind": "phase"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "342703a685400060427b112be4142740b51fb457194548244cb9619b9fc53dbd",
+        "path": "apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx",
+        "range": {
+          "end_line": 920,
+          "sha256": "168d3e26f8b12ee51e72a0bcdc29cc6d0b5927c37c808d201385b1ca13635a09",
+          "start_line": 920
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "from_state_id": "ended",
+      "from_state_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:116:gamePhase:ended",
+      "to_state_id": "start",
+      "to_state_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:116:gamePhase:start",
+      "transition_evidence_kind": "useState-initial-to-setter-call",
       "transition_kind": "phase"
     },
     {
@@ -863,13 +1793,35 @@
         "path": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx",
         "range": {
           "end_line": 198,
-          "sha256": "6824bf721a238dc63432cede39a1d1d74deb9531feaf652d5b81fc4c1e1b196e",
-          "start_line": 99
+          "sha256": "253925dd898fbea64be95ffe0e1f0d90da0aa8a9534d060e472c83570f5da7ea",
+          "start_line": 198
         },
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "from_state_id": "ended",
+      "from_state_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx:99:gamePhase:ended",
       "to_state_id": "playing",
+      "to_state_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx:99:gamePhase:playing",
+      "transition_evidence_kind": "useState-initial-to-setter-call",
+      "transition_kind": "phase"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "71ff7b6d8b573fe2c3ee4cff37e2a85285e9f28acbaa105b4984b1272c91ceb4",
+        "path": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx",
+        "range": {
+          "end_line": 208,
+          "sha256": "5292d04ad409c17657d4bd7d20889bfc2204d630a1f4476b62b9af0caaed81a6",
+          "start_line": 208
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "from_state_id": "ended",
+      "from_state_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx:99:gamePhase:ended",
+      "to_state_id": "start",
+      "to_state_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx:99:gamePhase:start",
+      "transition_evidence_kind": "useState-initial-to-setter-call",
       "transition_kind": "phase"
     },
     {
@@ -879,45 +1831,16 @@
         "path": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx",
         "range": {
           "end_line": 231,
-          "sha256": "d62c71a47ee515ed87e5a2ba0c166862001019194fb9ea6c2077ec2a2117bae2",
-          "start_line": 99
+          "sha256": "5292d04ad409c17657d4bd7d20889bfc2204d630a1f4476b62b9af0caaed81a6",
+          "start_line": 231
         },
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "from_state_id": "ended",
+      "from_state_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx:99:gamePhase:ended",
       "to_state_id": "start",
-      "transition_kind": "phase"
-    },
-    {
-      "discovery_method": "mechanical-syntax-traversal",
-      "evidence": {
-        "blob_sha256": "71ff7b6d8b573fe2c3ee4cff37e2a85285e9f28acbaa105b4984b1272c91ceb4",
-        "path": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx",
-        "range": {
-          "end_line": 388,
-          "sha256": "b716b9500f139a406480730adaa61e35c16f7a3ba9a4308560c3da7ac6537479",
-          "start_line": 99
-        },
-        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-      },
-      "from_state_id": "ended",
-      "to_state_id": "ended",
-      "transition_kind": "phase"
-    },
-    {
-      "discovery_method": "mechanical-syntax-traversal",
-      "evidence": {
-        "blob_sha256": "d28b34f89e64bdfa039a55df5262e4256730045829b2b7ab5455b13d72069fcc",
-        "path": "apps/advantage-games/src/components/multiplayer/LobbyScreen.tsx",
-        "range": {
-          "end_line": 194,
-          "sha256": "6e1779e1b97ff1e9557971dd3c1e987e458b00486b8dd98a076fdc23c0f1de57",
-          "start_line": 45
-        },
-        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-      },
-      "from_state_id": "create",
-      "to_state_id": "create",
+      "to_state_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx:99:gamePhase:start",
+      "transition_evidence_kind": "useState-initial-to-setter-call",
       "transition_kind": "phase"
     },
     {
@@ -927,13 +1850,16 @@
         "path": "apps/advantage-games/src/components/multiplayer/LobbyScreen.tsx",
         "range": {
           "end_line": 202,
-          "sha256": "2a68d1cbc422db14c1990735aae237b41657b1b751f3cb497df48ed1724a3159",
-          "start_line": 45
+          "sha256": "71f4954e3e2e9dad373ef6b9e62a6cea66d7fb79398087cc2e5a685daf7562f6",
+          "start_line": 202
         },
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "from_state_id": "create",
+      "from_state_occurrence_id": "apps/advantage-games/src/components/multiplayer/LobbyScreen.tsx:45:mode:create",
       "to_state_id": "join",
+      "to_state_occurrence_id": "apps/advantage-games/src/components/multiplayer/LobbyScreen.tsx:45:mode:join",
+      "transition_evidence_kind": "useState-initial-to-setter-call",
       "transition_kind": "phase"
     },
     {
@@ -942,30 +1868,17 @@
         "blob_sha256": "62f3ee98f007b4a29b063c391f26d8484564776aa257d670698060043d951f78",
         "path": "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx",
         "range": {
-          "end_line": 1232,
-          "sha256": "fc51cef206525ca639a7ce98270235181f7c47e66b50272b27fcd429ed538cc6",
-          "start_line": 390
+          "end_line": 485,
+          "sha256": "5292d04ad409c17657d4bd7d20889bfc2204d630a1f4476b62b9af0caaed81a6",
+          "start_line": 485
         },
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "from_state_id": "ended",
+      "from_state_occurrence_id": "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx:390:gamePhase:ended",
       "to_state_id": "start",
-      "transition_kind": "phase"
-    },
-    {
-      "discovery_method": "mechanical-syntax-traversal",
-      "evidence": {
-        "blob_sha256": "62f3ee98f007b4a29b063c391f26d8484564776aa257d670698060043d951f78",
-        "path": "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx",
-        "range": {
-          "end_line": 817,
-          "sha256": "fd71a8b147b14ecb087cf4aa9b4fa12616819b0ff1eb405bc64d187ec1478c2c",
-          "start_line": 390
-        },
-        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-      },
-      "from_state_id": "ended",
-      "to_state_id": "ended",
+      "to_state_occurrence_id": "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx:390:gamePhase:start",
+      "transition_evidence_kind": "useState-initial-to-setter-call",
       "transition_kind": "phase"
     },
     {
@@ -975,29 +1888,35 @@
         "path": "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx",
         "range": {
           "end_line": 1173,
-          "sha256": "7c40a4402accf03cd85d6c0f77fdab355f969f47fac78a3f9fed3556cf8b8d27",
-          "start_line": 390
+          "sha256": "9691beedc7a28759e656869a5e52efc6f81682c93ffe4ab6ec5ca88c35173075",
+          "start_line": 1173
         },
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "from_state_id": "ended",
+      "from_state_occurrence_id": "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx:390:gamePhase:ended",
       "to_state_id": "playing",
+      "to_state_occurrence_id": "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx:390:gamePhase:playing",
+      "transition_evidence_kind": "useState-initial-to-setter-call",
       "transition_kind": "phase"
     },
     {
       "discovery_method": "mechanical-syntax-traversal",
       "evidence": {
-        "blob_sha256": "943b662d09ff3df1e4729d3ec775624dea6042ca83046bb57a9fb7adc49dd4b5",
-        "path": "apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx",
+        "blob_sha256": "62f3ee98f007b4a29b063c391f26d8484564776aa257d670698060043d951f78",
+        "path": "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx",
         "range": {
-          "end_line": 802,
-          "sha256": "b9334b0da6984610c19de290b79e8f48966b694b8d58edc9d582ff2f28d02bf5",
-          "start_line": 110
+          "end_line": 1232,
+          "sha256": "2d9c7ffb53fb1a7ae4585fb25c923c1611cd4b38e06d49ea2a284328223d1eb8",
+          "start_line": 1232
         },
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "from_state_id": "ended",
+      "from_state_occurrence_id": "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx:390:gamePhase:ended",
       "to_state_id": "start",
+      "to_state_occurrence_id": "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx:390:gamePhase:start",
+      "transition_evidence_kind": "useState-initial-to-setter-call",
       "transition_kind": "phase"
     },
     {
@@ -1006,14 +1925,17 @@
         "blob_sha256": "943b662d09ff3df1e4729d3ec775624dea6042ca83046bb57a9fb7adc49dd4b5",
         "path": "apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx",
         "range": {
-          "end_line": 351,
-          "sha256": "4786b0e912be3cdfd9a1fe8453b34421eb35de463fc62fc015bccb50c0fc8e5a",
-          "start_line": 110
+          "end_line": 209,
+          "sha256": "5292d04ad409c17657d4bd7d20889bfc2204d630a1f4476b62b9af0caaed81a6",
+          "start_line": 209
         },
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "from_state_id": "ended",
-      "to_state_id": "ended",
+      "from_state_occurrence_id": "apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:110:gamePhase:ended",
+      "to_state_id": "start",
+      "to_state_occurrence_id": "apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:110:gamePhase:start",
+      "transition_evidence_kind": "useState-initial-to-setter-call",
       "transition_kind": "phase"
     },
     {
@@ -1023,13 +1945,35 @@
         "path": "apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx",
         "range": {
           "end_line": 524,
-          "sha256": "fb56afa5f6edc3c4f2ae26554c5394a3aaf4c68ee0b8d6ba3c28e2da7ab32b24",
-          "start_line": 110
+          "sha256": "9691beedc7a28759e656869a5e52efc6f81682c93ffe4ab6ec5ca88c35173075",
+          "start_line": 524
         },
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "from_state_id": "ended",
+      "from_state_occurrence_id": "apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:110:gamePhase:ended",
       "to_state_id": "playing",
+      "to_state_occurrence_id": "apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:110:gamePhase:playing",
+      "transition_evidence_kind": "useState-initial-to-setter-call",
+      "transition_kind": "phase"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "943b662d09ff3df1e4729d3ec775624dea6042ca83046bb57a9fb7adc49dd4b5",
+        "path": "apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx",
+        "range": {
+          "end_line": 802,
+          "sha256": "168d3e26f8b12ee51e72a0bcdc29cc6d0b5927c37c808d201385b1ca13635a09",
+          "start_line": 802
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "from_state_id": "ended",
+      "from_state_occurrence_id": "apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:110:gamePhase:ended",
+      "to_state_id": "start",
+      "to_state_occurrence_id": "apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:110:gamePhase:start",
+      "transition_evidence_kind": "useState-initial-to-setter-call",
       "transition_kind": "phase"
     }
   ]

@@ -15,11 +15,14 @@ line-range SHA-256.
 1. Enumerate the frozen tree under the Phase-0 roots. Game-page identities are emitted
    in deterministic batches of no more than three; a failed committed-locator resolution
    raises an exception before later batch output is written.
-2. Select source files by the documented game-path predicate; record file, game-page
-   identity, route, byte-identical copy, and literal relative-import records.
+2. Select source files by the documented game-path predicate plus the frozen cartridge
+   catalog/index/test and active APK program sources; record file, game-page identity,
+   route, byte-identical copy, and every resolvable relative or `@/` import edge.
 3. Extract declared component symbols ending in `Game`, `Screen`, or `Scene`, literal
    `useState` declarations whose variable names include a state vocabulary token, and
-   source-local guarded setter pairs. This is syntax traversal, not runtime execution.
+   source-local explicitly guarded setter pairs. Component and state occurrences remain
+   path-scoped even when symbols/literals repeat. Unguarded setters never imply a
+   from-state. This is syntax traversal, not runtime execution.
 4. Enumerate media, audio, and data suffixes below the three public roots plus
    game-associated data files; hash every committed byte sequence and report basic
    encoded format metadata.
