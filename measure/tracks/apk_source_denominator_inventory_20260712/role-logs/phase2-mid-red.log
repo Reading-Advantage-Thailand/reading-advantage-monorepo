@@ -1,0 +1,14 @@
+MEASURE_AGENT_RESULT
+role=truth-test-author / mid-red (fresh isolated session)
+status=complete
+track=apk_source_denominator_inventory_20260712
+phase=Phase 2: Independent human discovery
+commit=af9733ee25af1758aaeb758900fc530b10caae92
+tests_run=PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase2; expected_red_exit=1; actual_exit=1; result=FAILED (failures=7), as expected
+tests_run=PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile measure/tests/test_apk_source_denominator_inventory_phase2.py; expected_exit=0; actual_exit=0; result=passed
+verification=PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase1; actual_exit=0; result=passed (6 tests)
+files_changed=measure/tests/test_apk_source_denominator_inventory_phase2.py; measure/tracks/apk_source_denominator_inventory_20260712/phase2-human-discovery-contract-test-report.json; measure/tracks/apk_source_denominator_inventory_20260712/test-strategy.md
+plan_updates=none; Phase 2 remains in progress and was not marked complete
+known_failures=AssertionError: Missing Phase-2 human-discovery artifact: measure/tracks/apk_source_denominator_inventory_20260712/independent-human-discovery.json (all 7 expected Red failures)
+handoff=discovery-auditor and evidence-collector Green: author the required independent human-discovery, duplicate/drift, historical/deleted, discrepancy, and separate evidence-collector receipt artifacts; then rerun PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase2
+END_MEASURE_AGENT_RESULT
