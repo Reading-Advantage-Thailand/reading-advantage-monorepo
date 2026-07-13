@@ -1,0 +1,13 @@
+MEASURE_AGENT_RESULT
+role=mid-red
+status=complete
+track=apk_source_denominator_inventory_20260712
+phase=Phase 1: Mechanical discovery
+commit=14dd2048
+tests_run=PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase1; expected_red_exit=1; actual_exit=1; result=FAILED (failures=5), as expected
+tests_run=PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile measure/tests/test_apk_source_denominator_inventory_phase1.py; expected_exit=0; actual_exit=0; result=passed
+files_changed=measure/tests/test_apk_source_denominator_inventory_phase1.py; measure/tracks/apk_source_denominator_inventory_20260712/denominator-contract-test-report.json; measure/tracks/apk_source_denominator_inventory_20260712/test-strategy.md
+plan_updates=none; Phase 1 remains in progress and was not marked complete
+known_failures=AssertionError: Missing Phase-1 denominator artifact: measure/tracks/apk_source_denominator_inventory_20260712/source-denominator.json; other required denominator artifacts are also absent
+handoff=discovery-auditor Green: author the missing denominator artifacts and rerun PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase1
+END_MEASURE_AGENT_RESULT
