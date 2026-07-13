@@ -664,9 +664,19 @@ class Phase2IndependentHumanDiscoveryContracts(unittest.TestCase):
         outputs = receipt.get("output_paths")
         self.assertIsInstance(outputs, list)
         assert isinstance(outputs, list)
+        self.assertIn(str(HUMAN_DISCOVERY_PATH.relative_to(REPO_ROOT)), outputs)
         self.assertIn(str(DUPLICATE_DRIFT_PATH.relative_to(REPO_ROOT)), outputs)
         self.assertIn(str(HISTORICAL_PATH.relative_to(REPO_ROOT)), outputs)
-        self.assertNotIn(str(HUMAN_DISCOVERY_PATH.relative_to(REPO_ROOT)), outputs)
+        self.assertIn(str(DISCREPANCY_PATH.relative_to(REPO_ROOT)), outputs)
+        output_hashes = receipt.get("output_hashes")
+        self.assertIsInstance(output_hashes, dict)
+        assert isinstance(output_hashes, dict)
+        self.assertEqual(set(output_hashes), set(outputs))
+        commit_sha = receipt["commit_sha"]
+        for path in outputs:
+            self.assertEqual(output_hashes[path], hashlib.sha256(_git_bytes(commit_sha, path)).hexdigest())
+        hash_basis = json.dumps(output_hashes, sort_keys=True, separators=(",", ":")).encode()
+        self.assertEqual(receipt.get("output_sha256"), hashlib.sha256(hash_basis).hexdigest())
 
     def test_discrepancies_cover_phase1_observations_and_fail_closed_without_interpretation(self) -> None:
         """Blocks advancement for omitted, unresolved, or interpretive comparison records.

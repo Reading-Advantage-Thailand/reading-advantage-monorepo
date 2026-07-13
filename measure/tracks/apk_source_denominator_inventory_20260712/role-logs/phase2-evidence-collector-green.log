@@ -1,9 +1,22 @@
-Evidence-collector Phase-2 source review log
+Evidence-collector Phase-2 exhaustive remediation log
 
-Source boundary: committed blobs only; baseline 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286.
-Excluded: worktree bytes and measure/tracks/apk_cross_game_asset_ontology_20260712.
+Source boundary: committed Git objects only; frozen baseline 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 and its reachable ancestors for history.
+Mechanical input revision: f17fa78b36453e4aba36bc90f32bf25cd5b65ddb.
+Excluded: worktree source bytes and measure/tracks/apk_cross_game_asset_ontology_20260712.
 
-Accepted identity batches (all at most three identities):
+Replacement-program game batches (all at most three identities):
+- human-program-01: Dragon Flight; RPG Battle; The Abyssal Well
+- human-program-02: Castle Defense; Magic Defense; Wizard vs Zombie
+- human-program-03: Village Guardian; Archer's Revenge; Storm the Castle Tower
+- human-program-04: Paladin's Twin-Soul; Gryphon Patrol; Dragon Rider
+- human-program-05: Dungeon Liberator; Spellweaver's Run; Shadow Gate Dungeon
+- human-program-06: Labyrinth of the Goblin King; Griffin Rider's Escape; The Sorcerer's Ziggurat
+- human-program-07: Enchanted Library; Rune Match; Alchemist's Synthesis
+- human-program-08: Potion Rush; Rune Forge Chamber; Astral Mage
+- human-program-09: Griffin Sky-Joust; Realm Carver; Devourer Slime
+- human-program-10: The Haunted Library; Babel Architect
+
+Current mechanical-identity batches (all at most three identities):
 - human-current-01: sentence/castle-defense, sentence/devourer-slime, sentence/dungeon-liberator
 - human-current-02: sentence/haunted-library, sentence/labyrinth-goblin-king, sentence/potion-rush
 - human-current-03: sentence/rune-forge-chamber, sentence/shadow-gate-dungeon, sentence/village-guardian
@@ -11,20 +24,30 @@ Accepted identity batches (all at most three identities):
 - human-current-05: vocabulary/enchanted-library, vocabulary/magic-defense, vocabulary/rpg-battle
 - human-current-06: vocabulary/rune-match, vocabulary/wizard-vs-zombie
 
-Raw-source retrieval evidence (each group used git show on the listed committed page objects):
-- batch 01, 4 objects, concatenated SHA-256 684469a272bebc24eec894b5a3b58cfbff72fa94bc2ff6405b138d335cb84fbf
-- batch 02, 4 objects, concatenated SHA-256 ef9463a7f0d6fe1047f63a5df2136bfdee92d9f793e07076bd83a13818fc33e5
-- batch 03, 3 objects, concatenated SHA-256 aff135035fa6e69277309021309d49b42d5700213b9ec4d9d46818b98d48c59d
-- batch 04, 4 objects, concatenated SHA-256 ca2b193934ac97c3de5e17ac07fb5de4667bbd7647aaeb5557fb64558f97e404
-- batch 05, 6 objects, concatenated SHA-256 b86974674f97f36f5d751bf623aba8bf22aa704cc626c6b7a12dd9e8085378a0
-- batch 06, 4 objects, concatenated SHA-256 bbca6a82c1ff929782836bb90353f92dcd2310493000a35c594fabc7fb0cb0f7
+Explicit non-game/global batches:
+- human-global-shared-01: shared source, graph, route, identity, scene/state, and copy records
+- human-global-assets-01: cross-game identical-hash groups
 
-Reachable historical/deleted raw-source retrieval evidence:
-- 097545f14a8029d0c3451e3514841f9c5bf3e1c2: 3 objects, concatenated SHA-256 d1236cf2f2144aff419679ae8ebd74abe1745d7442934395c101c359029a2cc2
-- 1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f: 18 objects, concatenated SHA-256 9e421963543d451657db6d50d5b3361c87f841173d1f06699f4fcda335009550
-- 4106ba39547c8cac7645ce0f257a6bdd133712e9: 36 objects, concatenated SHA-256 a6f2a9f82c95538c2e152e8cb47c68469818a33865a7eb9b137c8f4ac5d19c7a
-- c76f6af3f62c03979f5073a871e775afd952a070: 30 objects, concatenated SHA-256 f4548fbe8cdf4ea87040930b76292e319ff600bc6781cede19ec82ae34c8815d
-- cd1936387d136ffb12e77a647f36cbce2d1fdd4e: 52 objects, concatenated SHA-256 4dcbca9e5bb4acd4559d2ed409a6f77a3708fde6875a2f7f962008c1823a77ce
+Exact exhaustive coverage at the frozen source boundary:
+- replacement program identities: 29 reviewed; 0 uncovered
+- current mechanical identities: 17 reviewed; 0 uncovered
+- mechanical source records: 1031 reviewed; 0 uncovered
+- graph edges: 323 reviewed; 0 uncovered
+- scene/state/transition surfaces: 66 reviewed; 0 uncovered
+- asset candidates: 353 reviewed; 0 uncovered
+- identical-hash groups: 153 reviewed; 0 uncovered
+- copy records: 92 reviewed; 0 uncovered
+- Reading/Primary family records: 34 reviewed; 0 uncovered
+- historical locators: 164 reviewed; 0 uncovered
+- mechanical discrepancy observations: 8 reviewed; 0 uncovered
+- total uncovered records across all categories: 0
 
-Primary mapping: the committed primary tree enumeration returned no exact current page suffix for any accepted identity. This is recorded as not-observed, not as a source or product conclusion.
-Platform provenance fields are null in the separate receipt because no platform event/context export was supplied.
+Absent-at-baseline identities retain exact replacement-program evidence, baseline catalog and implementation-path search metadata, and reachable historical locators. No current implementation was invented.
+Two empty committed PNG candidates use the explicit empty range 0-0 with the SHA-256 of zero bytes.
+The deterministic helper resolved 1085 committed source objects and hashed 402352181 source bytes internally. These helper-internal bytes are not represented as platform agent-context usage; the platform did not expose a role-usage ledger.
+
+Verification:
+- Phase 0/1/2 focused unit tests: pass
+- Phase-2 static syntax check: pass
+- explicit helper coverage check: pass, uncovered_count=0
+- acceptance and Phase-3 reconciliation: not claimed or authored

@@ -21,14 +21,18 @@
   "final_response_sha256": null,
   "final_response_sha256_limitation": "No immutable platform final-response export was supplied.",
   "output_paths": [
+    "measure/tracks/apk_source_denominator_inventory_20260712/independent-human-discovery.json",
     "measure/tracks/apk_source_denominator_inventory_20260712/human-duplicate-drift-records.json",
-    "measure/tracks/apk_source_denominator_inventory_20260712/human-historical-deleted-records.json"
+    "measure/tracks/apk_source_denominator_inventory_20260712/human-historical-deleted-records.json",
+    "measure/tracks/apk_source_denominator_inventory_20260712/human-discrepancy-records.json"
   ],
-  "output_sha256": "ec53ebc10c82c1ca359dcb4699f928f9e8a7ebd557d4325456fb9bb06093db59",
+  "output_sha256": "e252a0d62fa3bd16ff3a603249a538d92fa48d52048010a9adcf5d38b17fd038",
   "output_hash_basis": "SHA-256 of canonical compact JSON with sorted keys mapping each output path to the SHA-256 of its committed bytes at commit_sha.",
   "output_hashes": {
-    "measure/tracks/apk_source_denominator_inventory_20260712/human-duplicate-drift-records.json": "1c8fa4cd90f5461dfdc63a5906eec8a895598f7c06a66a21dc053b0c885a4ec1",
-    "measure/tracks/apk_source_denominator_inventory_20260712/human-historical-deleted-records.json": "8d9d2afa904b8587394c4267bd1b0d8daaedaaf7f9d0bdaa146030f66159f5e4"
+    "measure/tracks/apk_source_denominator_inventory_20260712/human-discrepancy-records.json": "9a28c155f99c37441958ac8a0617d22ff9ea6c180fe26641ceb9eb8c284ed9ef",
+    "measure/tracks/apk_source_denominator_inventory_20260712/human-duplicate-drift-records.json": "3709e551cd84f2c13a355e8b7e664be8df0f528124573615110728f80d4e19f0",
+    "measure/tracks/apk_source_denominator_inventory_20260712/human-historical-deleted-records.json": "076dbbe882b4b2a8dd6a71271ea270a9bc7f9c7ba3918f0b79a1d52c333ff2a7",
+    "measure/tracks/apk_source_denominator_inventory_20260712/independent-human-discovery.json": "0054e5bced5ad9868e15face30961b577f8038808381a5bdea8f5a796cf955ab"
   },
   "budget_declaration": {
     "role": "evidence-collector",
@@ -42,11 +46,11 @@
   },
   "budget_declaration_sha256": "c27f6e60d6872e3c7852727f3307dee1dfcd43270121a9388d725aeb3390cae6",
   "budget_hash_basis": "SHA-256 of canonical compact JSON with sorted keys for budget_declaration.",
-  "commit_sha": "4b6175f44dc2285084072bacebd87c7c3ce48bc3",
+  "commit_sha": "bcc8d08034fdf1993bc0f79b053163f6047bf2af",
   "commit_binding": {
     "status": "committed-output-binding",
-    "source": "git show 4b6175f44dc2285084072bacebd87c7c3ce48bc3:<output-path>",
-    "limitation": "This receipt is committed after the two attested outputs and proves only their committed byte binding, not platform event ordering."
+    "source": "git show bcc8d08034fdf1993bc0f79b053163f6047bf2af:<output-path>",
+    "limitation": "This receipt is committed after the four attested Phase-2 outputs and proves only their committed byte binding, not platform event ordering."
   },
   "findings": [],
   "acceptance": "not-claimed"
