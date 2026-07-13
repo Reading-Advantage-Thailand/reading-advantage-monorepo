@@ -24,6 +24,33 @@ Two parallel programs are in flight; priority order when picking the next track:
 
 ---
 
+## Backend Platform Program (created 2026-07-13)
+
+> Bounded program for the [portable backend-as-code architecture](./backend-platform-spec.md).
+> Enforcement is Gate 1. Kernel Task 1 must then publish the accepted
+> `packages/backend` package scaffold. After that structural gate, the remaining
+> kernel work and durable queue phases may proceed in parallel. Capability-bound
+> job handlers remain blocked on full kernel acceptance. Migration is staged:
+> small/new apps first, Reading Advantage next, and Primary Advantage last. This
+> program does not authorize a big-bang rewrite or Cloudflare Workers as a
+> backend runtime.
+
+- [ ] **Track: Backend Architecture Enforcement** *Link: [./tracks/backend_architecture_enforcement_20260713/](./tracks/backend_architecture_enforcement_20260713/)*
+  Add AST database/provider boundary rules, counterexample fixtures, reviewed
+  ratcheting baselines, and shared CI/doctor enforcement. **Program Gate 1.**
+- [ ] **Track: Backend Capability Kernel** *Link: [./tracks/backend_capability_kernel_20260713/](./tracks/backend_capability_kernel_20260713/)*
+  Build capability descriptors, the policy executor, deterministic catalog and
+  generated route bindings, then prove one bounded small/new-app slice. **Depends
+  on Backend Architecture Enforcement.**
+- [ ] **Track: Durable Job Worker Platform** *Link: [./tracks/durable_job_worker_platform_20260713/](./tracks/durable_job_worker_platform_20260713/)*
+  Generalize the proven Postgres `review_jobs` behavior into a durable job port
+  and `services/worker`. Contract/test work under `packages/backend/src/jobs`
+  depends on enforcement plus the accepted Kernel Task 1 package scaffold; it
+  may then run alongside the remaining kernel work. Capability-bound handlers
+  depend on full kernel acceptance.
+
+---
+
 ## Monorepo Feature Review Program (created 2026-06-26)
 
 > Planning program to review every app feature, shared package, integration boundary,
@@ -71,7 +98,7 @@ Two parallel programs are in flight; priority order when picking the next track:
 > publishes post-review, post-approval hashes. Required subagent roles, evidence
 > receipts, stop-loss gates, and a three-game pilot are mandatory.
 
-- [x] **Track: APK Cross-Game Requirements and Capability Ontology — FAILED/SUPERSEDED, DO NOT CONSUME** *Link: [./tracks/apk_cross_game_asset_ontology_20260712/](./tracks/apk_cross_game_asset_ontology_20260712/)*
+- [x] **Track: APK Cross-Game Requirements and Capability Ontology — FAILED/SUPERSEDED, DO NOT CONSUME** *Link: [./archive/apk_cross_game_asset_ontology_20260712/](./archive/apk_cross_game_asset_ontology_20260712/)*
   Failed after structural tests and generated assumptions were incorrectly treated as source-grounded completion. All hashes are revoked; artifacts remain only as negative/failure evidence.
 
 - [ ] **Track: APK Independent Source Denominator Inventory** *Link: [./tracks/apk_source_denominator_inventory_20260712/](./tracks/apk_source_denominator_inventory_20260712/)*
