@@ -17,6 +17,9 @@ TRACK_DIR = REPO_ROOT / "measure" / "tracks" / TRACK
 FREEZE_PATH = TRACK_DIR / "phase0-input-freeze.json"
 OWNERSHIP_PATH = TRACK_DIR / "phase0-role-ownership-manifest.json"
 IDENTITY_PATH = TRACK_DIR / "game-identity-ledger.json"
+SOURCE_PATH = TRACK_DIR / "source-denominator.json"
+SCENE_PATH = TRACK_DIR / "scene-state-denominator.json"
+ASSET_PATH = TRACK_DIR / "asset-file-denominator.json"
 PHASE1_HISTORICAL_PATH = TRACK_DIR / "historical-source-denominator.json"
 PHASE1_DISCREPANCY_PATH = TRACK_DIR / "denominator-discrepancies.json"
 REPORT_PATH = TRACK_DIR / "phase2-human-discovery-contract-test-report.json"
@@ -27,6 +30,8 @@ DISCREPANCY_PATH = TRACK_DIR / "human-discrepancy-records.json"
 EVIDENCE_RECEIPT_PATH = TRACK_DIR / "role-receipts" / "evidence-collector.json"
 SHA256 = re.compile(r"^[0-9a-f]{64}$")
 COMMIT_SHA = re.compile(r"^[0-9a-f]{40}$")
+PHASE1_REVISION = "f17fa78b36453e4aba36bc90f32bf25cd5b65ddb"
+PROGRAM_PATH = "measure/apk-evidence-reconstruction-program.md"
 FORBIDDEN_INTERPRETATION_FIELDS = {
     "asset_suitability",
     "capability",
@@ -92,6 +97,22 @@ def _git_bytes(revision: str, path: str) -> bytes:
     return result.stdout
 
 
+def _git_json(revision: str, path: Path) -> dict[str, Any]:
+    """Loads a JSON artifact from an exact committed revision.
+
+    Args:
+        revision: Commit containing the artifact.
+        path: Repository-local artifact path.
+
+    Returns:
+        The committed JSON object.
+    """
+    value = json.loads(_git_bytes(revision, str(path.relative_to(REPO_ROOT))))
+    if not isinstance(value, dict):
+        raise AssertionError(f"Committed artifact must be an object: {revision}:{path}")
+    return value
+
+
 def _is_ancestor(revision: str, baseline: str) -> bool:
     """Reports whether a cited historical revision is reachable from the baseline.
 
@@ -134,9 +155,12 @@ class Phase2IndependentHumanDiscoveryContracts(unittest.TestCase):
         """
         self.freeze = _load_json(FREEZE_PATH)
         self.ownership = _load_json(OWNERSHIP_PATH)
-        self.ledger = _load_json(IDENTITY_PATH)
-        self.phase1_historical = _load_json(PHASE1_HISTORICAL_PATH)
-        self.phase1_discrepancies = _load_json(PHASE1_DISCREPANCY_PATH)
+        self.ledger = _git_json(PHASE1_REVISION, IDENTITY_PATH)
+        self.source = _git_json(PHASE1_REVISION, SOURCE_PATH)
+        self.scenes = _git_json(PHASE1_REVISION, SCENE_PATH)
+        self.assets = _git_json(PHASE1_REVISION, ASSET_PATH)
+        self.phase1_historical = _git_json(PHASE1_REVISION, PHASE1_HISTORICAL_PATH)
+        self.phase1_discrepancies = _git_json(PHASE1_REVISION, PHASE1_DISCREPANCY_PATH)
         self.human_discovery = _load_json(HUMAN_DISCOVERY_PATH, phase2=True)
         scope = self.freeze["source_scope"]
         self.assertIsInstance(scope, dict)
@@ -218,6 +242,10 @@ class Phase2IndependentHumanDiscoveryContracts(unittest.TestCase):
         self.assertIsInstance(end_line, int)
         assert isinstance(start_line, int) and isinstance(end_line, int)
         lines = blob.splitlines(keepends=True)
+        if not lines:
+            self.assertEqual((start_line, end_line), (0, 0))
+            self.assertEqual(cited_range.get("sha256"), hashlib.sha256(b"").hexdigest())
+            return locator
         self.assertGreaterEqual(start_line, 1)
         self.assertGreaterEqual(end_line, start_line)
         self.assertLessEqual(end_line, len(lines))
@@ -247,6 +275,36 @@ class Phase2IndependentHumanDiscoveryContracts(unittest.TestCase):
         elif isinstance(value, list):
             for index, nested in enumerate(value):
                 self._assert_no_interpretation_fields(nested, f"{location}[{index}]")
+
+    def _assert_review_record(self, record: object, *, location: str) -> dict[str, Any]:
+        """Validates provenance and exact evidence for one human disposition.
+
+        Args:
+            record: Human review record to validate.
+            location: Record location used in assertion failures.
+
+        Returns:
+            The validated review record.
+        """
+        self.assertIsInstance(record, dict, location)
+        assert isinstance(record, dict)
+        self.assertEqual(record.get("collector_role"), "evidence-collector", location)
+        self.assertIsInstance(record.get("collector_identity"), str, location)
+        self.assertTrue(record.get("collector_identity"), location)
+        self.assertIsInstance(record.get("method"), str, location)
+        self.assertTrue(record.get("method"), location)
+        self.assertIsInstance(record.get("source_fact"), str, location)
+        self.assertTrue(record.get("source_fact"), location)
+        self.assertEqual(record.get("interpretation"), {}, location)
+        evidence = record.get("evidence")
+        self.assertIsInstance(evidence, list, location)
+        assert isinstance(evidence, list)
+        self.assertTrue(evidence, location)
+        for item in evidence:
+            self.assertIsInstance(item, dict, location)
+            assert isinstance(item, dict)
+            self._assert_locator(item, historical=item.get("revision") != self.baseline)
+        return record
 
     def test_red_report_is_nonfactual_and_names_the_phase2_gate(self) -> None:
         """Keeps the Phase-2 test report distinct from human discovery evidence.
@@ -364,6 +422,10 @@ class Phase2IndependentHumanDiscoveryContracts(unittest.TestCase):
             self.assertNotIn(key, keys, "Reading and Primary records cannot be silently merged")
             keys.add(key)
             self.assertEqual(row.get("method"), "human-raw-source-review")
+            self.assertEqual(row.get("collector_role"), "evidence-collector")
+            self.assertIsInstance(row.get("collector_identity"), str)
+            self.assertTrue(row.get("source_fact"))
+            self.assertEqual(row.get("interpretation"), {})
             self.assertIn(row.get("observation_status"), {"duplicate-observed", "drift-observed", "not-observed"})
             evidence = row.get("evidence")
             self.assertIsInstance(evidence, list)
@@ -401,12 +463,161 @@ class Phase2IndependentHumanDiscoveryContracts(unittest.TestCase):
             assert isinstance(row, dict)
             self.assertIsInstance(row.get("record_id"), str)
             self.assertEqual(row.get("method"), "human-history-review")
+            self.assertEqual(row.get("collector_role"), "evidence-collector")
+            self.assertIsInstance(row.get("collector_identity"), str)
+            self.assertTrue(row.get("source_fact"))
+            self.assertEqual(row.get("interpretation"), {})
             self.assertIn(row.get("source_classification"), {"historical", "deleted", "withdrawn"})
             locator = self._assert_locator(row.get("evidence"), historical=True)
             key = _locator_key(locator)
             self.assertNotIn(key, actual, "historical records may not be double counted")
             actual.add(key)
         self.assertEqual(actual, expected, "all Phase-1 historical/deleted locators require exact human review")
+
+    def test_all_29_program_identities_have_bounded_current_or_absent_source_reviews(self) -> None:
+        """Requires exhaustive program identity review without inventing missing implementations.
+
+        Returns:
+            Nothing.
+        """
+        program = _git_bytes(self.baseline, PROGRAM_PATH).decode("utf-8")
+        partition = program.split("### Pilot\n", 1)[1].split(
+            "The partition covers 29 canonical identities exactly once.", 1
+        )[0]
+        expected_labels = re.findall(r"^- (.+)$", partition, flags=re.MULTILINE)
+        self.assertEqual(len(expected_labels), 29)
+
+        batches = self.human_discovery.get("replacement_program_review_batches")
+        self.assertIsInstance(batches, list)
+        assert isinstance(batches, list)
+        batched_labels: list[str] = []
+        for index, batch in enumerate(batches):
+            self.assertIsInstance(batch, dict)
+            assert isinstance(batch, dict)
+            labels = batch.get("accepted_identity_ids")
+            self.assertIsInstance(labels, list)
+            assert isinstance(labels, list)
+            self.assertGreaterEqual(len(labels), 1)
+            self.assertLessEqual(len(labels), 3, "program game batches may contain no more than three identities")
+            self.assertEqual(batch.get("status"), "accepted")
+            self.assertEqual(batch.get("collector_role"), "evidence-collector")
+            self.assertEqual(batch.get("interpretation"), {})
+            batched_labels.extend(labels)
+        self.assertEqual(batched_labels, expected_labels)
+        self.assertEqual(len(batched_labels), len(set(batched_labels)))
+
+        reviews = self.human_discovery.get("replacement_program_identity_reviews")
+        self.assertIsInstance(reviews, list)
+        assert isinstance(reviews, list)
+        self.assertEqual([row.get("program_identity_label") for row in reviews if isinstance(row, dict)], expected_labels)
+        for index, value in enumerate(reviews):
+            row = self._assert_review_record(value, location=f"replacement_program_identity_reviews[{index}]")
+            self.assertIn(row.get("review_batch_id"), {batch["batch_id"] for batch in batches})
+            search = row.get("baseline_implementation_search")
+            self.assertIsInstance(search, dict)
+            assert isinstance(search, dict)
+            self.assertEqual(search.get("revision"), self.baseline)
+            self.assertIn(row["catalog_id"], str(search.get("exact_path_fragment")))
+            catalog_search = row.get("catalog_search")
+            self.assertIsInstance(catalog_search, dict)
+            assert isinstance(catalog_search, dict)
+            self.assertEqual(catalog_search.get("revision"), self.baseline)
+            catalog_evidence = catalog_search.get("search_evidence")
+            self.assertIsInstance(catalog_evidence, list)
+            assert isinstance(catalog_evidence, list)
+            self.assertTrue(catalog_evidence)
+            for evidence in catalog_evidence:
+                self._assert_locator(evidence)
+
+            current = row.get("current_source_evidence")
+            history = row.get("historical_source_evidence")
+            self.assertIsInstance(current, list)
+            self.assertIsInstance(history, list)
+            assert isinstance(current, list) and isinstance(history, list)
+            if row.get("disposition") == "current-page-source-observed":
+                self.assertTrue(current)
+                self.assertFalse(history)
+            else:
+                self.assertEqual(row.get("disposition"), "absent-at-baseline-with-reachable-history")
+                self.assertFalse(current)
+                self.assertEqual(search.get("matched_implementation_paths"), [])
+                self.assertTrue(history)
+                history_search = row.get("history_search")
+                self.assertIsInstance(history_search, dict)
+                assert isinstance(history_search, dict)
+                self.assertEqual(history_search.get("baseline_revision"), self.baseline)
+                self.assertTrue(history_search.get("ancestor_only"))
+                self.assertEqual(len(history_search.get("matched_locator_keys", [])), len(history))
+                for evidence in history:
+                    self._assert_locator(evidence, historical=True)
+
+    def test_every_mechanical_record_has_one_exact_human_disposition(self) -> None:
+        """Compares all mechanical record classes to independent human dispositions.
+
+        Returns:
+            Nothing.
+        """
+        source_reviews = self.human_discovery.get("mechanical_source_record_reviews")
+        graph_reviews = self.human_discovery.get("mechanical_graph_edge_reviews")
+        surface_reviews = self.human_discovery.get("surface_reviews")
+        asset_reviews = self.human_discovery.get("asset_candidate_reviews")
+        group_reviews = self.human_discovery.get("identical_hash_group_reviews")
+        for rows in (source_reviews, graph_reviews, surface_reviews, asset_reviews, group_reviews):
+            self.assertIsInstance(rows, list)
+        assert all(isinstance(rows, list) for rows in (source_reviews, graph_reviews, surface_reviews, asset_reviews, group_reviews))
+
+        expected_source = {row["record_id"] for row in self.source["records"]}
+        self.assertEqual({row["mechanical_record_id"] for row in source_reviews}, expected_source)
+        expected_graph = {_locator_key(row) for row in self.source["graph_edges"]}
+        self.assertEqual({row["mechanical_graph_edge_key"] for row in graph_reviews}, expected_graph)
+        expected_surfaces = {
+            _locator_key(row)
+            for field in ("scene_records", "state_records", "transitions")
+            for row in self.scenes[field]
+        }
+        self.assertEqual({row["mechanical_surface_key"] for row in surface_reviews}, expected_surfaces)
+        expected_assets = {row["canonical_path"] for row in self.assets["candidate_files"]}
+        self.assertEqual({row["canonical_path"] for row in asset_reviews}, expected_assets)
+        expected_groups = {row["identical_hash_group"] for row in self.assets["candidate_files"]}
+        self.assertEqual({row["identical_hash_group"] for row in group_reviews}, expected_groups)
+
+        for field, rows in (
+            ("mechanical_source_record_reviews", source_reviews),
+            ("mechanical_graph_edge_reviews", graph_reviews),
+            ("surface_reviews", surface_reviews),
+            ("asset_candidate_reviews", asset_reviews),
+            ("identical_hash_group_reviews", group_reviews),
+        ):
+            for index, row in enumerate(rows):
+                self._assert_review_record(row, location=f"{field}[{index}]")
+
+    def test_coverage_receipt_reports_zero_uncovered_for_every_category(self) -> None:
+        """Requires explicit zero-uncovered counts for the complete mechanical denominator.
+
+        Returns:
+            Nothing.
+        """
+        discrepancies = _load_json(DISCREPANCY_PATH, phase2=True)
+        counts = discrepancies.get("exhaustive_coverage_counts")
+        self.assertIsInstance(counts, dict)
+        assert isinstance(counts, dict)
+        expected_counts = {
+            "asset_candidates": len(self.assets["candidate_files"]),
+            "copy_records": sum(row.get("record_type") == "copy" for row in self.source["records"]),
+            "current_identities": len(self.ledger["identity_records"]),
+            "duplicate_family_records": 2 * len(self.ledger["identity_records"]),
+            "graph_edges": len(self.source["graph_edges"]),
+            "historical_locators": len(self.phase1_historical["records"]),
+            "identical_hash_groups": len({row["identical_hash_group"] for row in self.assets["candidate_files"]}),
+            "mechanical_discrepancies": len(self.phase1_discrepancies["records"]),
+            "replacement_program_identities": 29,
+            "source_records": len(self.source["records"]),
+            "surfaces": sum(len(self.scenes[field]) for field in ("scene_records", "state_records", "transitions")),
+        }
+        self.assertEqual(counts, expected_counts)
+        self.assertEqual(discrepancies.get("coverage_status"), "complete")
+        self.assertEqual(discrepancies.get("uncovered_count"), 0)
+        self.assertEqual(discrepancies.get("uncovered_by_category"), {key: 0 for key in expected_counts})
 
     def test_evidence_collector_receipt_is_separate_and_attests_its_outputs(self) -> None:
         """Requires an evidence-collector receipt distinct from the human review data.
@@ -481,6 +692,7 @@ class Phase2IndependentHumanDiscoveryContracts(unittest.TestCase):
             seen_identities.add(identity_id)
             self.assertIn(row.get("comparison_status"), {"no-discrepancy", "resolved"})
             self.assertFalse(row.get("blocking"), "unresolved discrepancies must block Phase 2")
+            self._assert_review_record(row, location=f"identity_comparison_records[{identity_id}]")
         self.assertEqual(seen_identities, self._identity_ids())
 
         phase1_rows = self.phase1_discrepancies.get("records")
@@ -503,6 +715,7 @@ class Phase2IndependentHumanDiscoveryContracts(unittest.TestCase):
             seen_observations.add(observation_id)
             self.assertIn(row.get("comparison_status"), {"no-discrepancy", "resolved"})
             self.assertFalse(row.get("blocking"), "unresolved discrepancies must block Phase 2")
+            self._assert_review_record(row, location=f"mechanical_observation_records[{observation_id}]")
         self.assertEqual(seen_observations, expected_observations)
 
         for artifact in (self.human_discovery, discrepancies):

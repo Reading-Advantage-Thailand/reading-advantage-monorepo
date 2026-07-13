@@ -1,8 +1,24 @@
 {
+  "collector_identity": "evidence-collector-remediation-20260713",
+  "coverage_status": "complete",
+  "exhaustive_coverage_counts": {
+    "asset_candidates": 353,
+    "copy_records": 92,
+    "current_identities": 17,
+    "duplicate_family_records": 34,
+    "graph_edges": 323,
+    "historical_locators": 164,
+    "identical_hash_groups": 153,
+    "mechanical_discrepancies": 8,
+    "replacement_program_identities": 29,
+    "source_records": 1031,
+    "surfaces": 66
+  },
   "identity_comparison_records": [
     {
       "blocking": false,
       "canonical_identity_id": "sentence/castle-defense",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "comparison_status": "resolved",
       "confidence": "high",
@@ -30,11 +46,12 @@
       ],
       "interpretation": {},
       "method": "human-raw-source-review",
-      "source_fact": "Every current page-source locator associated with this denominator identity resolved at the frozen baseline; distinct paths remain distinct records."
+      "source_fact": "Every current page-source locator for this mechanical identity resolved; distinct paths remain distinct records."
     },
     {
       "blocking": false,
       "canonical_identity_id": "sentence/devourer-slime",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "comparison_status": "no-discrepancy",
       "confidence": "high",
@@ -52,11 +69,12 @@
       ],
       "interpretation": {},
       "method": "human-raw-source-review",
-      "source_fact": "Every current page-source locator associated with this denominator identity resolved at the frozen baseline; distinct paths remain distinct records."
+      "source_fact": "Every current page-source locator for this mechanical identity resolved; distinct paths remain distinct records."
     },
     {
       "blocking": false,
       "canonical_identity_id": "sentence/dungeon-liberator",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "comparison_status": "no-discrepancy",
       "confidence": "high",
@@ -74,11 +92,12 @@
       ],
       "interpretation": {},
       "method": "human-raw-source-review",
-      "source_fact": "Every current page-source locator associated with this denominator identity resolved at the frozen baseline; distinct paths remain distinct records."
+      "source_fact": "Every current page-source locator for this mechanical identity resolved; distinct paths remain distinct records."
     },
     {
       "blocking": false,
       "canonical_identity_id": "sentence/haunted-library",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "comparison_status": "no-discrepancy",
       "confidence": "high",
@@ -96,11 +115,12 @@
       ],
       "interpretation": {},
       "method": "human-raw-source-review",
-      "source_fact": "Every current page-source locator associated with this denominator identity resolved at the frozen baseline; distinct paths remain distinct records."
+      "source_fact": "Every current page-source locator for this mechanical identity resolved; distinct paths remain distinct records."
     },
     {
       "blocking": false,
       "canonical_identity_id": "sentence/labyrinth-goblin-king",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "comparison_status": "no-discrepancy",
       "confidence": "high",
@@ -118,11 +138,12 @@
       ],
       "interpretation": {},
       "method": "human-raw-source-review",
-      "source_fact": "Every current page-source locator associated with this denominator identity resolved at the frozen baseline; distinct paths remain distinct records."
+      "source_fact": "Every current page-source locator for this mechanical identity resolved; distinct paths remain distinct records."
     },
     {
       "blocking": false,
       "canonical_identity_id": "sentence/potion-rush",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "comparison_status": "resolved",
       "confidence": "high",
@@ -150,11 +171,12 @@
       ],
       "interpretation": {},
       "method": "human-raw-source-review",
-      "source_fact": "Every current page-source locator associated with this denominator identity resolved at the frozen baseline; distinct paths remain distinct records."
+      "source_fact": "Every current page-source locator for this mechanical identity resolved; distinct paths remain distinct records."
     },
     {
       "blocking": false,
       "canonical_identity_id": "sentence/rune-forge-chamber",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "comparison_status": "no-discrepancy",
       "confidence": "high",
@@ -172,11 +194,12 @@
       ],
       "interpretation": {},
       "method": "human-raw-source-review",
-      "source_fact": "Every current page-source locator associated with this denominator identity resolved at the frozen baseline; distinct paths remain distinct records."
+      "source_fact": "Every current page-source locator for this mechanical identity resolved; distinct paths remain distinct records."
     },
     {
       "blocking": false,
       "canonical_identity_id": "sentence/shadow-gate-dungeon",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "comparison_status": "no-discrepancy",
       "confidence": "high",
@@ -194,11 +217,12 @@
       ],
       "interpretation": {},
       "method": "human-raw-source-review",
-      "source_fact": "Every current page-source locator associated with this denominator identity resolved at the frozen baseline; distinct paths remain distinct records."
+      "source_fact": "Every current page-source locator for this mechanical identity resolved; distinct paths remain distinct records."
     },
     {
       "blocking": false,
       "canonical_identity_id": "sentence/village-guardian",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "comparison_status": "no-discrepancy",
       "confidence": "high",
@@ -216,11 +240,12 @@
       ],
       "interpretation": {},
       "method": "human-raw-source-review",
-      "source_fact": "Every current page-source locator associated with this denominator identity resolved at the frozen baseline; distinct paths remain distinct records."
+      "source_fact": "Every current page-source locator for this mechanical identity resolved; distinct paths remain distinct records."
     },
     {
       "blocking": false,
       "canonical_identity_id": "vocabulary/alchemists-synthesis",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "comparison_status": "no-discrepancy",
       "confidence": "high",
@@ -238,11 +263,12 @@
       ],
       "interpretation": {},
       "method": "human-raw-source-review",
-      "source_fact": "Every current page-source locator associated with this denominator identity resolved at the frozen baseline; distinct paths remain distinct records."
+      "source_fact": "Every current page-source locator for this mechanical identity resolved; distinct paths remain distinct records."
     },
     {
       "blocking": false,
       "canonical_identity_id": "vocabulary/dragon-flight",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "comparison_status": "resolved",
       "confidence": "high",
@@ -270,11 +296,12 @@
       ],
       "interpretation": {},
       "method": "human-raw-source-review",
-      "source_fact": "Every current page-source locator associated with this denominator identity resolved at the frozen baseline; distinct paths remain distinct records."
+      "source_fact": "Every current page-source locator for this mechanical identity resolved; distinct paths remain distinct records."
     },
     {
       "blocking": false,
       "canonical_identity_id": "vocabulary/dragon-rider",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "comparison_status": "no-discrepancy",
       "confidence": "high",
@@ -292,11 +319,12 @@
       ],
       "interpretation": {},
       "method": "human-raw-source-review",
-      "source_fact": "Every current page-source locator associated with this denominator identity resolved at the frozen baseline; distinct paths remain distinct records."
+      "source_fact": "Every current page-source locator for this mechanical identity resolved; distinct paths remain distinct records."
     },
     {
       "blocking": false,
       "canonical_identity_id": "vocabulary/enchanted-library",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "comparison_status": "resolved",
       "confidence": "high",
@@ -324,11 +352,12 @@
       ],
       "interpretation": {},
       "method": "human-raw-source-review",
-      "source_fact": "Every current page-source locator associated with this denominator identity resolved at the frozen baseline; distinct paths remain distinct records."
+      "source_fact": "Every current page-source locator for this mechanical identity resolved; distinct paths remain distinct records."
     },
     {
       "blocking": false,
       "canonical_identity_id": "vocabulary/magic-defense",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "comparison_status": "resolved",
       "confidence": "high",
@@ -356,11 +385,12 @@
       ],
       "interpretation": {},
       "method": "human-raw-source-review",
-      "source_fact": "Every current page-source locator associated with this denominator identity resolved at the frozen baseline; distinct paths remain distinct records."
+      "source_fact": "Every current page-source locator for this mechanical identity resolved; distinct paths remain distinct records."
     },
     {
       "blocking": false,
       "canonical_identity_id": "vocabulary/rpg-battle",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "comparison_status": "resolved",
       "confidence": "high",
@@ -388,11 +418,12 @@
       ],
       "interpretation": {},
       "method": "human-raw-source-review",
-      "source_fact": "Every current page-source locator associated with this denominator identity resolved at the frozen baseline; distinct paths remain distinct records."
+      "source_fact": "Every current page-source locator for this mechanical identity resolved; distinct paths remain distinct records."
     },
     {
       "blocking": false,
       "canonical_identity_id": "vocabulary/rune-match",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "comparison_status": "resolved",
       "confidence": "high",
@@ -420,11 +451,12 @@
       ],
       "interpretation": {},
       "method": "human-raw-source-review",
-      "source_fact": "Every current page-source locator associated with this denominator identity resolved at the frozen baseline; distinct paths remain distinct records."
+      "source_fact": "Every current page-source locator for this mechanical identity resolved; distinct paths remain distinct records."
     },
     {
       "blocking": false,
       "canonical_identity_id": "vocabulary/wizard-vs-zombie",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "comparison_status": "resolved",
       "confidence": "high",
@@ -452,13 +484,14 @@
       ],
       "interpretation": {},
       "method": "human-raw-source-review",
-      "source_fact": "Every current page-source locator associated with this denominator identity resolved at the frozen baseline; distinct paths remain distinct records."
+      "source_fact": "Every current page-source locator for this mechanical identity resolved; distinct paths remain distinct records."
     }
   ],
   "interpretation": {},
   "mechanical_observation_records": [
     {
       "blocking": false,
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "comparison_status": "resolved",
       "confidence": "high",
@@ -487,10 +520,11 @@
       "interpretation": {},
       "method": "human-raw-source-review",
       "observation_id": "multiple-page-paths:sentence/castle-defense",
-      "source_fact": "Every current locator listed by the mechanical observation resolves independently at the frozen baseline; no path was merged or omitted."
+      "source_fact": "Every current locator listed by the mechanical observation resolves independently; no path was merged or omitted."
     },
     {
       "blocking": false,
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "comparison_status": "resolved",
       "confidence": "high",
@@ -519,10 +553,11 @@
       "interpretation": {},
       "method": "human-raw-source-review",
       "observation_id": "multiple-page-paths:sentence/potion-rush",
-      "source_fact": "Every current locator listed by the mechanical observation resolves independently at the frozen baseline; no path was merged or omitted."
+      "source_fact": "Every current locator listed by the mechanical observation resolves independently; no path was merged or omitted."
     },
     {
       "blocking": false,
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "comparison_status": "resolved",
       "confidence": "high",
@@ -551,10 +586,11 @@
       "interpretation": {},
       "method": "human-raw-source-review",
       "observation_id": "multiple-page-paths:vocabulary/dragon-flight",
-      "source_fact": "Every current locator listed by the mechanical observation resolves independently at the frozen baseline; no path was merged or omitted."
+      "source_fact": "Every current locator listed by the mechanical observation resolves independently; no path was merged or omitted."
     },
     {
       "blocking": false,
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "comparison_status": "resolved",
       "confidence": "high",
@@ -583,10 +619,11 @@
       "interpretation": {},
       "method": "human-raw-source-review",
       "observation_id": "multiple-page-paths:vocabulary/enchanted-library",
-      "source_fact": "Every current locator listed by the mechanical observation resolves independently at the frozen baseline; no path was merged or omitted."
+      "source_fact": "Every current locator listed by the mechanical observation resolves independently; no path was merged or omitted."
     },
     {
       "blocking": false,
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "comparison_status": "resolved",
       "confidence": "high",
@@ -615,10 +652,11 @@
       "interpretation": {},
       "method": "human-raw-source-review",
       "observation_id": "multiple-page-paths:vocabulary/magic-defense",
-      "source_fact": "Every current locator listed by the mechanical observation resolves independently at the frozen baseline; no path was merged or omitted."
+      "source_fact": "Every current locator listed by the mechanical observation resolves independently; no path was merged or omitted."
     },
     {
       "blocking": false,
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "comparison_status": "resolved",
       "confidence": "high",
@@ -647,10 +685,11 @@
       "interpretation": {},
       "method": "human-raw-source-review",
       "observation_id": "multiple-page-paths:vocabulary/rpg-battle",
-      "source_fact": "Every current locator listed by the mechanical observation resolves independently at the frozen baseline; no path was merged or omitted."
+      "source_fact": "Every current locator listed by the mechanical observation resolves independently; no path was merged or omitted."
     },
     {
       "blocking": false,
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "comparison_status": "resolved",
       "confidence": "high",
@@ -679,10 +718,11 @@
       "interpretation": {},
       "method": "human-raw-source-review",
       "observation_id": "multiple-page-paths:vocabulary/rune-match",
-      "source_fact": "Every current locator listed by the mechanical observation resolves independently at the frozen baseline; no path was merged or omitted."
+      "source_fact": "Every current locator listed by the mechanical observation resolves independently; no path was merged or omitted."
     },
     {
       "blocking": false,
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "comparison_status": "resolved",
       "confidence": "high",
@@ -711,11 +751,27 @@
       "interpretation": {},
       "method": "human-raw-source-review",
       "observation_id": "multiple-page-paths:vocabulary/wizard-vs-zombie",
-      "source_fact": "Every current locator listed by the mechanical observation resolves independently at the frozen baseline; no path was merged or omitted."
+      "source_fact": "Every current locator listed by the mechanical observation resolves independently; no path was merged or omitted."
     }
   ],
   "schema_version": "apk-denominator-human-discrepancies.v1",
   "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
   "status": "independent-human-discovery-complete",
-  "track_id": "apk_source_denominator_inventory_20260712"
+  "track_id": "apk_source_denominator_inventory_20260712",
+  "uncovered_by_category": {
+    "asset_candidates": 0,
+    "copy_records": 0,
+    "current_identities": 0,
+    "duplicate_family_records": 0,
+    "graph_edges": 0,
+    "historical_locators": 0,
+    "identical_hash_groups": 0,
+    "mechanical_discrepancies": 0,
+    "replacement_program_identities": 0,
+    "source_records": 0,
+    "surfaces": 0
+  },
+  "uncovered_count": 0,
+  "uncovered_mechanical_records": [],
+  "uncovered_replacement_program_identities": []
 }

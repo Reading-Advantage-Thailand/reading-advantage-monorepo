@@ -1,7 +1,9 @@
 {
+  "collector_identity": "evidence-collector-remediation-20260713",
   "duplicate_drift_records": [
     {
       "canonical_identity_id": "sentence/castle-defense",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "confidence": "high",
       "evidence": [
@@ -30,11 +32,12 @@
       "method": "human-raw-source-review",
       "observation_status": "drift-observed",
       "record_id": "reading:sentence/castle-defense",
-      "source_fact": "Reading and Advantage Games page-source blobs were both resolved; their recorded blob hashes are retained without merging the paths.",
+      "source_fact": "Reading and Advantage Games current page paths were retained separately exactly as observed in the frozen source ledger.",
       "source_family": "reading"
     },
     {
       "canonical_identity_id": "sentence/castle-defense",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "committed_tree_search": {
         "command": "git ls-tree -r --name-only 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/primary-advantage",
@@ -68,11 +71,12 @@
       "method": "human-raw-source-review",
       "observation_status": "not-observed",
       "record_id": "primary:sentence/castle-defense",
-      "source_fact": "The frozen Primary tree was enumerated for the exact identity page suffix; the matched path list is recorded separately from the cited raw source blobs.",
+      "source_fact": "The frozen Primary tree was searched for the exact identity page suffix; matched paths are recorded without merging.",
       "source_family": "primary"
     },
     {
       "canonical_identity_id": "sentence/devourer-slime",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "confidence": "high",
       "evidence": [
@@ -91,11 +95,12 @@
       "method": "human-raw-source-review",
       "observation_status": "not-observed",
       "record_id": "reading:sentence/devourer-slime",
-      "source_fact": "No Reading page-source path is present in this denominator identity record; the cited current source establishes the reviewed identity path.",
+      "source_fact": "Reading and Advantage Games current page paths were retained separately exactly as observed in the frozen source ledger.",
       "source_family": "reading"
     },
     {
       "canonical_identity_id": "sentence/devourer-slime",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "committed_tree_search": {
         "command": "git ls-tree -r --name-only 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/primary-advantage",
@@ -119,11 +124,12 @@
       "method": "human-raw-source-review",
       "observation_status": "not-observed",
       "record_id": "primary:sentence/devourer-slime",
-      "source_fact": "The frozen Primary tree was enumerated for the exact identity page suffix; the matched path list is recorded separately from the cited raw source blobs.",
+      "source_fact": "The frozen Primary tree was searched for the exact identity page suffix; matched paths are recorded without merging.",
       "source_family": "primary"
     },
     {
       "canonical_identity_id": "sentence/dungeon-liberator",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "confidence": "high",
       "evidence": [
@@ -142,11 +148,12 @@
       "method": "human-raw-source-review",
       "observation_status": "not-observed",
       "record_id": "reading:sentence/dungeon-liberator",
-      "source_fact": "No Reading page-source path is present in this denominator identity record; the cited current source establishes the reviewed identity path.",
+      "source_fact": "Reading and Advantage Games current page paths were retained separately exactly as observed in the frozen source ledger.",
       "source_family": "reading"
     },
     {
       "canonical_identity_id": "sentence/dungeon-liberator",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "committed_tree_search": {
         "command": "git ls-tree -r --name-only 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/primary-advantage",
@@ -170,11 +177,12 @@
       "method": "human-raw-source-review",
       "observation_status": "not-observed",
       "record_id": "primary:sentence/dungeon-liberator",
-      "source_fact": "The frozen Primary tree was enumerated for the exact identity page suffix; the matched path list is recorded separately from the cited raw source blobs.",
+      "source_fact": "The frozen Primary tree was searched for the exact identity page suffix; matched paths are recorded without merging.",
       "source_family": "primary"
     },
     {
       "canonical_identity_id": "sentence/haunted-library",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "confidence": "high",
       "evidence": [
@@ -193,11 +201,12 @@
       "method": "human-raw-source-review",
       "observation_status": "not-observed",
       "record_id": "reading:sentence/haunted-library",
-      "source_fact": "No Reading page-source path is present in this denominator identity record; the cited current source establishes the reviewed identity path.",
+      "source_fact": "Reading and Advantage Games current page paths were retained separately exactly as observed in the frozen source ledger.",
       "source_family": "reading"
     },
     {
       "canonical_identity_id": "sentence/haunted-library",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "committed_tree_search": {
         "command": "git ls-tree -r --name-only 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/primary-advantage",
@@ -221,11 +230,12 @@
       "method": "human-raw-source-review",
       "observation_status": "not-observed",
       "record_id": "primary:sentence/haunted-library",
-      "source_fact": "The frozen Primary tree was enumerated for the exact identity page suffix; the matched path list is recorded separately from the cited raw source blobs.",
+      "source_fact": "The frozen Primary tree was searched for the exact identity page suffix; matched paths are recorded without merging.",
       "source_family": "primary"
     },
     {
       "canonical_identity_id": "sentence/labyrinth-goblin-king",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "confidence": "high",
       "evidence": [
@@ -244,11 +254,12 @@
       "method": "human-raw-source-review",
       "observation_status": "not-observed",
       "record_id": "reading:sentence/labyrinth-goblin-king",
-      "source_fact": "No Reading page-source path is present in this denominator identity record; the cited current source establishes the reviewed identity path.",
+      "source_fact": "Reading and Advantage Games current page paths were retained separately exactly as observed in the frozen source ledger.",
       "source_family": "reading"
     },
     {
       "canonical_identity_id": "sentence/labyrinth-goblin-king",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "committed_tree_search": {
         "command": "git ls-tree -r --name-only 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/primary-advantage",
@@ -272,11 +283,12 @@
       "method": "human-raw-source-review",
       "observation_status": "not-observed",
       "record_id": "primary:sentence/labyrinth-goblin-king",
-      "source_fact": "The frozen Primary tree was enumerated for the exact identity page suffix; the matched path list is recorded separately from the cited raw source blobs.",
+      "source_fact": "The frozen Primary tree was searched for the exact identity page suffix; matched paths are recorded without merging.",
       "source_family": "primary"
     },
     {
       "canonical_identity_id": "sentence/potion-rush",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "confidence": "high",
       "evidence": [
@@ -305,11 +317,12 @@
       "method": "human-raw-source-review",
       "observation_status": "drift-observed",
       "record_id": "reading:sentence/potion-rush",
-      "source_fact": "Reading and Advantage Games page-source blobs were both resolved; their recorded blob hashes are retained without merging the paths.",
+      "source_fact": "Reading and Advantage Games current page paths were retained separately exactly as observed in the frozen source ledger.",
       "source_family": "reading"
     },
     {
       "canonical_identity_id": "sentence/potion-rush",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "committed_tree_search": {
         "command": "git ls-tree -r --name-only 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/primary-advantage",
@@ -343,11 +356,12 @@
       "method": "human-raw-source-review",
       "observation_status": "not-observed",
       "record_id": "primary:sentence/potion-rush",
-      "source_fact": "The frozen Primary tree was enumerated for the exact identity page suffix; the matched path list is recorded separately from the cited raw source blobs.",
+      "source_fact": "The frozen Primary tree was searched for the exact identity page suffix; matched paths are recorded without merging.",
       "source_family": "primary"
     },
     {
       "canonical_identity_id": "sentence/rune-forge-chamber",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "confidence": "high",
       "evidence": [
@@ -366,11 +380,12 @@
       "method": "human-raw-source-review",
       "observation_status": "not-observed",
       "record_id": "reading:sentence/rune-forge-chamber",
-      "source_fact": "No Reading page-source path is present in this denominator identity record; the cited current source establishes the reviewed identity path.",
+      "source_fact": "Reading and Advantage Games current page paths were retained separately exactly as observed in the frozen source ledger.",
       "source_family": "reading"
     },
     {
       "canonical_identity_id": "sentence/rune-forge-chamber",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "committed_tree_search": {
         "command": "git ls-tree -r --name-only 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/primary-advantage",
@@ -394,11 +409,12 @@
       "method": "human-raw-source-review",
       "observation_status": "not-observed",
       "record_id": "primary:sentence/rune-forge-chamber",
-      "source_fact": "The frozen Primary tree was enumerated for the exact identity page suffix; the matched path list is recorded separately from the cited raw source blobs.",
+      "source_fact": "The frozen Primary tree was searched for the exact identity page suffix; matched paths are recorded without merging.",
       "source_family": "primary"
     },
     {
       "canonical_identity_id": "sentence/shadow-gate-dungeon",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "confidence": "high",
       "evidence": [
@@ -417,11 +433,12 @@
       "method": "human-raw-source-review",
       "observation_status": "not-observed",
       "record_id": "reading:sentence/shadow-gate-dungeon",
-      "source_fact": "No Reading page-source path is present in this denominator identity record; the cited current source establishes the reviewed identity path.",
+      "source_fact": "Reading and Advantage Games current page paths were retained separately exactly as observed in the frozen source ledger.",
       "source_family": "reading"
     },
     {
       "canonical_identity_id": "sentence/shadow-gate-dungeon",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "committed_tree_search": {
         "command": "git ls-tree -r --name-only 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/primary-advantage",
@@ -445,11 +462,12 @@
       "method": "human-raw-source-review",
       "observation_status": "not-observed",
       "record_id": "primary:sentence/shadow-gate-dungeon",
-      "source_fact": "The frozen Primary tree was enumerated for the exact identity page suffix; the matched path list is recorded separately from the cited raw source blobs.",
+      "source_fact": "The frozen Primary tree was searched for the exact identity page suffix; matched paths are recorded without merging.",
       "source_family": "primary"
     },
     {
       "canonical_identity_id": "sentence/village-guardian",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "confidence": "high",
       "evidence": [
@@ -468,11 +486,12 @@
       "method": "human-raw-source-review",
       "observation_status": "not-observed",
       "record_id": "reading:sentence/village-guardian",
-      "source_fact": "No Reading page-source path is present in this denominator identity record; the cited current source establishes the reviewed identity path.",
+      "source_fact": "Reading and Advantage Games current page paths were retained separately exactly as observed in the frozen source ledger.",
       "source_family": "reading"
     },
     {
       "canonical_identity_id": "sentence/village-guardian",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "committed_tree_search": {
         "command": "git ls-tree -r --name-only 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/primary-advantage",
@@ -496,11 +515,12 @@
       "method": "human-raw-source-review",
       "observation_status": "not-observed",
       "record_id": "primary:sentence/village-guardian",
-      "source_fact": "The frozen Primary tree was enumerated for the exact identity page suffix; the matched path list is recorded separately from the cited raw source blobs.",
+      "source_fact": "The frozen Primary tree was searched for the exact identity page suffix; matched paths are recorded without merging.",
       "source_family": "primary"
     },
     {
       "canonical_identity_id": "vocabulary/alchemists-synthesis",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "confidence": "high",
       "evidence": [
@@ -519,11 +539,12 @@
       "method": "human-raw-source-review",
       "observation_status": "not-observed",
       "record_id": "reading:vocabulary/alchemists-synthesis",
-      "source_fact": "No Reading page-source path is present in this denominator identity record; the cited current source establishes the reviewed identity path.",
+      "source_fact": "Reading and Advantage Games current page paths were retained separately exactly as observed in the frozen source ledger.",
       "source_family": "reading"
     },
     {
       "canonical_identity_id": "vocabulary/alchemists-synthesis",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "committed_tree_search": {
         "command": "git ls-tree -r --name-only 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/primary-advantage",
@@ -547,11 +568,12 @@
       "method": "human-raw-source-review",
       "observation_status": "not-observed",
       "record_id": "primary:vocabulary/alchemists-synthesis",
-      "source_fact": "The frozen Primary tree was enumerated for the exact identity page suffix; the matched path list is recorded separately from the cited raw source blobs.",
+      "source_fact": "The frozen Primary tree was searched for the exact identity page suffix; matched paths are recorded without merging.",
       "source_family": "primary"
     },
     {
       "canonical_identity_id": "vocabulary/dragon-flight",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "confidence": "high",
       "evidence": [
@@ -580,11 +602,12 @@
       "method": "human-raw-source-review",
       "observation_status": "drift-observed",
       "record_id": "reading:vocabulary/dragon-flight",
-      "source_fact": "Reading and Advantage Games page-source blobs were both resolved; their recorded blob hashes are retained without merging the paths.",
+      "source_fact": "Reading and Advantage Games current page paths were retained separately exactly as observed in the frozen source ledger.",
       "source_family": "reading"
     },
     {
       "canonical_identity_id": "vocabulary/dragon-flight",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "committed_tree_search": {
         "command": "git ls-tree -r --name-only 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/primary-advantage",
@@ -618,11 +641,12 @@
       "method": "human-raw-source-review",
       "observation_status": "not-observed",
       "record_id": "primary:vocabulary/dragon-flight",
-      "source_fact": "The frozen Primary tree was enumerated for the exact identity page suffix; the matched path list is recorded separately from the cited raw source blobs.",
+      "source_fact": "The frozen Primary tree was searched for the exact identity page suffix; matched paths are recorded without merging.",
       "source_family": "primary"
     },
     {
       "canonical_identity_id": "vocabulary/dragon-rider",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "confidence": "high",
       "evidence": [
@@ -641,11 +665,12 @@
       "method": "human-raw-source-review",
       "observation_status": "duplicate-observed",
       "record_id": "reading:vocabulary/dragon-rider",
-      "source_fact": "A Reading page-source blob was resolved for this denominator identity; no Advantage Games page-source comparator is present in this identity record.",
+      "source_fact": "Reading and Advantage Games current page paths were retained separately exactly as observed in the frozen source ledger.",
       "source_family": "reading"
     },
     {
       "canonical_identity_id": "vocabulary/dragon-rider",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "committed_tree_search": {
         "command": "git ls-tree -r --name-only 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/primary-advantage",
@@ -669,11 +694,12 @@
       "method": "human-raw-source-review",
       "observation_status": "not-observed",
       "record_id": "primary:vocabulary/dragon-rider",
-      "source_fact": "The frozen Primary tree was enumerated for the exact identity page suffix; the matched path list is recorded separately from the cited raw source blobs.",
+      "source_fact": "The frozen Primary tree was searched for the exact identity page suffix; matched paths are recorded without merging.",
       "source_family": "primary"
     },
     {
       "canonical_identity_id": "vocabulary/enchanted-library",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "confidence": "high",
       "evidence": [
@@ -702,11 +728,12 @@
       "method": "human-raw-source-review",
       "observation_status": "drift-observed",
       "record_id": "reading:vocabulary/enchanted-library",
-      "source_fact": "Reading and Advantage Games page-source blobs were both resolved; their recorded blob hashes are retained without merging the paths.",
+      "source_fact": "Reading and Advantage Games current page paths were retained separately exactly as observed in the frozen source ledger.",
       "source_family": "reading"
     },
     {
       "canonical_identity_id": "vocabulary/enchanted-library",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "committed_tree_search": {
         "command": "git ls-tree -r --name-only 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/primary-advantage",
@@ -740,11 +767,12 @@
       "method": "human-raw-source-review",
       "observation_status": "not-observed",
       "record_id": "primary:vocabulary/enchanted-library",
-      "source_fact": "The frozen Primary tree was enumerated for the exact identity page suffix; the matched path list is recorded separately from the cited raw source blobs.",
+      "source_fact": "The frozen Primary tree was searched for the exact identity page suffix; matched paths are recorded without merging.",
       "source_family": "primary"
     },
     {
       "canonical_identity_id": "vocabulary/magic-defense",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "confidence": "high",
       "evidence": [
@@ -773,11 +801,12 @@
       "method": "human-raw-source-review",
       "observation_status": "drift-observed",
       "record_id": "reading:vocabulary/magic-defense",
-      "source_fact": "Reading and Advantage Games page-source blobs were both resolved; their recorded blob hashes are retained without merging the paths.",
+      "source_fact": "Reading and Advantage Games current page paths were retained separately exactly as observed in the frozen source ledger.",
       "source_family": "reading"
     },
     {
       "canonical_identity_id": "vocabulary/magic-defense",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "committed_tree_search": {
         "command": "git ls-tree -r --name-only 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/primary-advantage",
@@ -811,11 +840,12 @@
       "method": "human-raw-source-review",
       "observation_status": "not-observed",
       "record_id": "primary:vocabulary/magic-defense",
-      "source_fact": "The frozen Primary tree was enumerated for the exact identity page suffix; the matched path list is recorded separately from the cited raw source blobs.",
+      "source_fact": "The frozen Primary tree was searched for the exact identity page suffix; matched paths are recorded without merging.",
       "source_family": "primary"
     },
     {
       "canonical_identity_id": "vocabulary/rpg-battle",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "confidence": "high",
       "evidence": [
@@ -844,11 +874,12 @@
       "method": "human-raw-source-review",
       "observation_status": "drift-observed",
       "record_id": "reading:vocabulary/rpg-battle",
-      "source_fact": "Reading and Advantage Games page-source blobs were both resolved; their recorded blob hashes are retained without merging the paths.",
+      "source_fact": "Reading and Advantage Games current page paths were retained separately exactly as observed in the frozen source ledger.",
       "source_family": "reading"
     },
     {
       "canonical_identity_id": "vocabulary/rpg-battle",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "committed_tree_search": {
         "command": "git ls-tree -r --name-only 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/primary-advantage",
@@ -882,11 +913,12 @@
       "method": "human-raw-source-review",
       "observation_status": "not-observed",
       "record_id": "primary:vocabulary/rpg-battle",
-      "source_fact": "The frozen Primary tree was enumerated for the exact identity page suffix; the matched path list is recorded separately from the cited raw source blobs.",
+      "source_fact": "The frozen Primary tree was searched for the exact identity page suffix; matched paths are recorded without merging.",
       "source_family": "primary"
     },
     {
       "canonical_identity_id": "vocabulary/rune-match",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "confidence": "high",
       "evidence": [
@@ -915,11 +947,12 @@
       "method": "human-raw-source-review",
       "observation_status": "drift-observed",
       "record_id": "reading:vocabulary/rune-match",
-      "source_fact": "Reading and Advantage Games page-source blobs were both resolved; their recorded blob hashes are retained without merging the paths.",
+      "source_fact": "Reading and Advantage Games current page paths were retained separately exactly as observed in the frozen source ledger.",
       "source_family": "reading"
     },
     {
       "canonical_identity_id": "vocabulary/rune-match",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "committed_tree_search": {
         "command": "git ls-tree -r --name-only 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/primary-advantage",
@@ -953,11 +986,12 @@
       "method": "human-raw-source-review",
       "observation_status": "not-observed",
       "record_id": "primary:vocabulary/rune-match",
-      "source_fact": "The frozen Primary tree was enumerated for the exact identity page suffix; the matched path list is recorded separately from the cited raw source blobs.",
+      "source_fact": "The frozen Primary tree was searched for the exact identity page suffix; matched paths are recorded without merging.",
       "source_family": "primary"
     },
     {
       "canonical_identity_id": "vocabulary/wizard-vs-zombie",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "confidence": "high",
       "evidence": [
@@ -986,11 +1020,12 @@
       "method": "human-raw-source-review",
       "observation_status": "drift-observed",
       "record_id": "reading:vocabulary/wizard-vs-zombie",
-      "source_fact": "Reading and Advantage Games page-source blobs were both resolved; their recorded blob hashes are retained without merging the paths.",
+      "source_fact": "Reading and Advantage Games current page paths were retained separately exactly as observed in the frozen source ledger.",
       "source_family": "reading"
     },
     {
       "canonical_identity_id": "vocabulary/wizard-vs-zombie",
+      "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "committed_tree_search": {
         "command": "git ls-tree -r --name-only 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/primary-advantage",
@@ -1024,11 +1059,3233 @@
       "method": "human-raw-source-review",
       "observation_status": "not-observed",
       "record_id": "primary:vocabulary/wizard-vs-zombie",
-      "source_fact": "The frozen Primary tree was enumerated for the exact identity page suffix; the matched path list is recorded separately from the cited raw source blobs.",
+      "source_fact": "The frozen Primary tree was searched for the exact identity page suffix; matched paths are recorded without merging.",
       "source_family": "primary"
     }
   ],
   "interpretation": {},
+  "mechanical_copy_record_reviews": [
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/components/games/vocabulary/rpg-battle/Sprite.test.tsx",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "067859f69b14981aa879f30e2977d5cf825bf8cc8836ab94783870f243bb1b50",
+          "path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/Sprite.test.tsx",
+          "range": {
+            "end_line": 33,
+            "sha256": "067859f69b14981aa879f30e2977d5cf825bf8cc8836ab94783870f243bb1b50",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "067859f69b14981aa879f30e2977d5cf825bf8cc8836ab94783870f243bb1b50",
+          "path": "apps/reading-advantage/components/games/vocabulary/rpg-battle/Sprite.test.tsx",
+          "range": {
+            "end_line": 33,
+            "sha256": "067859f69b14981aa879f30e2977d5cf825bf8cc8836ab94783870f243bb1b50",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/rpg-battle/Sprite.test.tsx",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-01",
+      "review_id": "copy-review:001",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/app/api/v1/games/rune-forge-chamber/complete/route.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "09196bb8daff23c617705a7ab2f76cfba80eae6e927d75a7bf5f8f74438b5d9b",
+          "path": "apps/advantage-games/src/app/api/v1/games/rune-forge-chamber/complete/route.ts",
+          "range": {
+            "end_line": 6,
+            "sha256": "09196bb8daff23c617705a7ab2f76cfba80eae6e927d75a7bf5f8f74438b5d9b",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "09196bb8daff23c617705a7ab2f76cfba80eae6e927d75a7bf5f8f74438b5d9b",
+          "path": "apps/advantage-games/src/app/api/v1/games/village-guardian/complete/route.ts",
+          "range": {
+            "end_line": 6,
+            "sha256": "09196bb8daff23c617705a7ab2f76cfba80eae6e927d75a7bf5f8f74438b5d9b",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/advantage-games/src/app/api/v1/games/village-guardian/complete/route.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-03",
+      "review_id": "copy-review:002",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/app/api/v1/games/alchemists-synthesis/vocabulary/route.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "0998e726ff29a94a03f28e9f8e2e4cbfd6bda112f9eb5c94c751ef3771d950fd",
+          "path": "apps/advantage-games/src/app/api/v1/games/alchemists-synthesis/vocabulary/route.ts",
+          "range": {
+            "end_line": 7,
+            "sha256": "0998e726ff29a94a03f28e9f8e2e4cbfd6bda112f9eb5c94c751ef3771d950fd",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "0998e726ff29a94a03f28e9f8e2e4cbfd6bda112f9eb5c94c751ef3771d950fd",
+          "path": "apps/advantage-games/src/app/api/v1/games/enchanted-library/vocabulary/route.ts",
+          "range": {
+            "end_line": 7,
+            "sha256": "0998e726ff29a94a03f28e9f8e2e4cbfd6bda112f9eb5c94c751ef3771d950fd",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/advantage-games/src/app/api/v1/games/enchanted-library/vocabulary/route.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-07",
+      "review_id": "copy-review:003",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/app/api/v1/games/alchemists-synthesis/vocabulary/route.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "0998e726ff29a94a03f28e9f8e2e4cbfd6bda112f9eb5c94c751ef3771d950fd",
+          "path": "apps/advantage-games/src/app/api/v1/games/alchemists-synthesis/vocabulary/route.ts",
+          "range": {
+            "end_line": 7,
+            "sha256": "0998e726ff29a94a03f28e9f8e2e4cbfd6bda112f9eb5c94c751ef3771d950fd",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "0998e726ff29a94a03f28e9f8e2e4cbfd6bda112f9eb5c94c751ef3771d950fd",
+          "path": "apps/advantage-games/src/app/api/v1/games/magic-defense/vocabulary/route.ts",
+          "range": {
+            "end_line": 7,
+            "sha256": "0998e726ff29a94a03f28e9f8e2e4cbfd6bda112f9eb5c94c751ef3771d950fd",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/advantage-games/src/app/api/v1/games/magic-defense/vocabulary/route.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-02",
+      "review_id": "copy-review:004",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/app/api/v1/games/alchemists-synthesis/vocabulary/route.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "0998e726ff29a94a03f28e9f8e2e4cbfd6bda112f9eb5c94c751ef3771d950fd",
+          "path": "apps/advantage-games/src/app/api/v1/games/alchemists-synthesis/vocabulary/route.ts",
+          "range": {
+            "end_line": 7,
+            "sha256": "0998e726ff29a94a03f28e9f8e2e4cbfd6bda112f9eb5c94c751ef3771d950fd",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "0998e726ff29a94a03f28e9f8e2e4cbfd6bda112f9eb5c94c751ef3771d950fd",
+          "path": "apps/advantage-games/src/app/api/v1/games/rpg-battle/vocabulary/route.ts",
+          "range": {
+            "end_line": 7,
+            "sha256": "0998e726ff29a94a03f28e9f8e2e4cbfd6bda112f9eb5c94c751ef3771d950fd",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/advantage-games/src/app/api/v1/games/rpg-battle/vocabulary/route.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-01",
+      "review_id": "copy-review:005",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/app/api/v1/games/alchemists-synthesis/vocabulary/route.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "0998e726ff29a94a03f28e9f8e2e4cbfd6bda112f9eb5c94c751ef3771d950fd",
+          "path": "apps/advantage-games/src/app/api/v1/games/alchemists-synthesis/vocabulary/route.ts",
+          "range": {
+            "end_line": 7,
+            "sha256": "0998e726ff29a94a03f28e9f8e2e4cbfd6bda112f9eb5c94c751ef3771d950fd",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "0998e726ff29a94a03f28e9f8e2e4cbfd6bda112f9eb5c94c751ef3771d950fd",
+          "path": "apps/advantage-games/src/app/api/v1/games/rune-match/vocabulary/route.ts",
+          "range": {
+            "end_line": 7,
+            "sha256": "0998e726ff29a94a03f28e9f8e2e4cbfd6bda112f9eb5c94c751ef3771d950fd",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/advantage-games/src/app/api/v1/games/rune-match/vocabulary/route.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-07",
+      "review_id": "copy-review:006",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/app/api/v1/games/alchemists-synthesis/vocabulary/route.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "0998e726ff29a94a03f28e9f8e2e4cbfd6bda112f9eb5c94c751ef3771d950fd",
+          "path": "apps/advantage-games/src/app/api/v1/games/alchemists-synthesis/vocabulary/route.ts",
+          "range": {
+            "end_line": 7,
+            "sha256": "0998e726ff29a94a03f28e9f8e2e4cbfd6bda112f9eb5c94c751ef3771d950fd",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "0998e726ff29a94a03f28e9f8e2e4cbfd6bda112f9eb5c94c751ef3771d950fd",
+          "path": "apps/advantage-games/src/app/api/v1/games/wizard-vs-zombie/vocabulary/route.ts",
+          "range": {
+            "end_line": 7,
+            "sha256": "0998e726ff29a94a03f28e9f8e2e4cbfd6bda112f9eb5c94c751ef3771d950fd",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/advantage-games/src/app/api/v1/games/wizard-vs-zombie/vocabulary/route.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-02",
+      "review_id": "copy-review:007",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/components/games/vocabulary/rune-match/MonsterSelection.tsx",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "11cfd02dec8a624a23ac08c46e3b773de1ee3dc9914889f7c667d4f362cc1879",
+          "path": "apps/advantage-games/src/components/games/vocabulary/rune-match/MonsterSelection.tsx",
+          "range": {
+            "end_line": 68,
+            "sha256": "11cfd02dec8a624a23ac08c46e3b773de1ee3dc9914889f7c667d4f362cc1879",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "11cfd02dec8a624a23ac08c46e3b773de1ee3dc9914889f7c667d4f362cc1879",
+          "path": "apps/reading-advantage/components/games/vocabulary/rune-match/MonsterSelection.tsx",
+          "range": {
+            "end_line": 68,
+            "sha256": "11cfd02dec8a624a23ac08c46e3b773de1ee3dc9914889f7c667d4f362cc1879",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/rune-match/MonsterSelection.tsx",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-07",
+      "review_id": "copy-review:008",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/lib/games/rpgBattleXp.test.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "13b27ae2d30629044770134adfcb68a1293a31786a8c5f0990c977c80bbed81e",
+          "path": "apps/advantage-games/src/lib/games/rpgBattleXp.test.ts",
+          "range": {
+            "end_line": 78,
+            "sha256": "13b27ae2d30629044770134adfcb68a1293a31786a8c5f0990c977c80bbed81e",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "13b27ae2d30629044770134adfcb68a1293a31786a8c5f0990c977c80bbed81e",
+          "path": "apps/reading-advantage/lib/games/rpgBattleXp.test.ts",
+          "range": {
+            "end_line": 78,
+            "sha256": "13b27ae2d30629044770134adfcb68a1293a31786a8c5f0990c977c80bbed81e",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/lib/games/rpgBattleXp.test.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-01",
+      "review_id": "copy-review:009",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/lib/games/basePath.test.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "147e0ef200d565b8a1d82201df2cf7f33ebc22c5ec8c7f40c643734798ce5525",
+          "path": "apps/advantage-games/src/lib/games/basePath.test.ts",
+          "range": {
+            "end_line": 39,
+            "sha256": "147e0ef200d565b8a1d82201df2cf7f33ebc22c5ec8c7f40c643734798ce5525",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "147e0ef200d565b8a1d82201df2cf7f33ebc22c5ec8c7f40c643734798ce5525",
+          "path": "apps/reading-advantage/lib/games/basePath.test.ts",
+          "range": {
+            "end_line": 39,
+            "sha256": "147e0ef200d565b8a1d82201df2cf7f33ebc22c5ec8c7f40c643734798ce5525",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/lib/games/basePath.test.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-global-shared-01",
+      "review_id": "copy-review:010",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/components/games/vocabulary/rpg-battle/Sprite.tsx",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "1aacfc50d1e36d61b6a05e807e17e670b4c02a4ee3c1264dc593114988a5ac39",
+          "path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/Sprite.tsx",
+          "range": {
+            "end_line": 61,
+            "sha256": "1aacfc50d1e36d61b6a05e807e17e670b4c02a4ee3c1264dc593114988a5ac39",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "1aacfc50d1e36d61b6a05e807e17e670b4c02a4ee3c1264dc593114988a5ac39",
+          "path": "apps/reading-advantage/components/games/vocabulary/rpg-battle/Sprite.tsx",
+          "range": {
+            "end_line": 61,
+            "sha256": "1aacfc50d1e36d61b6a05e807e17e670b4c02a4ee3c1264dc593114988a5ac39",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/rpg-battle/Sprite.tsx",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-01",
+      "review_id": "copy-review:011",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/components/games/vocabulary/rpg-battle/EnemySprite.test.tsx",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "1e77b9a93d95c40ba5a905a504730d2a2476942cd3062ad269ca9ddb09af0050",
+          "path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/EnemySprite.test.tsx",
+          "range": {
+            "end_line": 10,
+            "sha256": "1e77b9a93d95c40ba5a905a504730d2a2476942cd3062ad269ca9ddb09af0050",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "1e77b9a93d95c40ba5a905a504730d2a2476942cd3062ad269ca9ddb09af0050",
+          "path": "apps/reading-advantage/components/games/vocabulary/rpg-battle/EnemySprite.test.tsx",
+          "range": {
+            "end_line": 10,
+            "sha256": "1e77b9a93d95c40ba5a905a504730d2a2476942cd3062ad269ca9ddb09af0050",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/rpg-battle/EnemySprite.test.tsx",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-01",
+      "review_id": "copy-review:012",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/lib/games/xp.test.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "274d1fee718bd923244c414363fc866c7ec3417bfc9a321c68186c9e28f0421f",
+          "path": "apps/advantage-games/src/lib/games/xp.test.ts",
+          "range": {
+            "end_line": 29,
+            "sha256": "274d1fee718bd923244c414363fc866c7ec3417bfc9a321c68186c9e28f0421f",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "274d1fee718bd923244c414363fc866c7ec3417bfc9a321c68186c9e28f0421f",
+          "path": "apps/advantage-games/src/lib/xp.test.ts",
+          "range": {
+            "end_line": 29,
+            "sha256": "274d1fee718bd923244c414363fc866c7ec3417bfc9a321c68186c9e28f0421f",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/advantage-games/src/lib/xp.test.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-global-shared-01",
+      "review_id": "copy-review:013",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/lib/games/xp.test.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "274d1fee718bd923244c414363fc866c7ec3417bfc9a321c68186c9e28f0421f",
+          "path": "apps/advantage-games/src/lib/games/xp.test.ts",
+          "range": {
+            "end_line": 29,
+            "sha256": "274d1fee718bd923244c414363fc866c7ec3417bfc9a321c68186c9e28f0421f",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "274d1fee718bd923244c414363fc866c7ec3417bfc9a321c68186c9e28f0421f",
+          "path": "apps/reading-advantage/lib/games/xp.test.ts",
+          "range": {
+            "end_line": 29,
+            "sha256": "274d1fee718bd923244c414363fc866c7ec3417bfc9a321c68186c9e28f0421f",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/lib/games/xp.test.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-global-shared-01",
+      "review_id": "copy-review:014",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/lib/games/runeMatchConfig.test.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "275cf84dd3255b98997010c80f43220512f19e3259ccc87f57fce0858284956b",
+          "path": "apps/advantage-games/src/lib/games/runeMatchConfig.test.ts",
+          "range": {
+            "end_line": 110,
+            "sha256": "275cf84dd3255b98997010c80f43220512f19e3259ccc87f57fce0858284956b",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "275cf84dd3255b98997010c80f43220512f19e3259ccc87f57fce0858284956b",
+          "path": "apps/reading-advantage/lib/games/runeMatchConfig.test.ts",
+          "range": {
+            "end_line": 110,
+            "sha256": "275cf84dd3255b98997010c80f43220512f19e3259ccc87f57fce0858284956b",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/lib/games/runeMatchConfig.test.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-07",
+      "review_id": "copy-review:015",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/components/games/vocabulary/rpg-battle/BattleLog.tsx",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "2f8cdcc567265fabf3263809dda6e5a291ac10ed710f9e89a0c65e54c41e6984",
+          "path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/BattleLog.tsx",
+          "range": {
+            "end_line": 43,
+            "sha256": "2f8cdcc567265fabf3263809dda6e5a291ac10ed710f9e89a0c65e54c41e6984",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "2f8cdcc567265fabf3263809dda6e5a291ac10ed710f9e89a0c65e54c41e6984",
+          "path": "apps/reading-advantage/components/games/vocabulary/rpg-battle/BattleLog.tsx",
+          "range": {
+            "end_line": 43,
+            "sha256": "2f8cdcc567265fabf3263809dda6e5a291ac10ed710f9e89a0c65e54c41e6984",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/rpg-battle/BattleLog.tsx",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-01",
+      "review_id": "copy-review:016",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/components/games/vocabulary/rpg-battle/HealthBar.tsx",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "3716e55f2e106a4c38f7303c61765e2c5c0ae235078fbc07fd19ce69135d43d0",
+          "path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/HealthBar.tsx",
+          "range": {
+            "end_line": 41,
+            "sha256": "3716e55f2e106a4c38f7303c61765e2c5c0ae235078fbc07fd19ce69135d43d0",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "3716e55f2e106a4c38f7303c61765e2c5c0ae235078fbc07fd19ce69135d43d0",
+          "path": "apps/reading-advantage/components/games/vocabulary/rpg-battle/HealthBar.tsx",
+          "range": {
+            "end_line": 41,
+            "sha256": "3716e55f2e106a4c38f7303c61765e2c5c0ae235078fbc07fd19ce69135d43d0",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/rpg-battle/HealthBar.tsx",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-01",
+      "review_id": "copy-review:017",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/lib/games/runeMatch.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "3a746af63bf3eccd10e770cc1eaad1eacc543e29442217a1845e64394ec32774",
+          "path": "apps/advantage-games/src/lib/games/runeMatch.ts",
+          "range": {
+            "end_line": 739,
+            "sha256": "3a746af63bf3eccd10e770cc1eaad1eacc543e29442217a1845e64394ec32774",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "3a746af63bf3eccd10e770cc1eaad1eacc543e29442217a1845e64394ec32774",
+          "path": "apps/reading-advantage/lib/games/runeMatch.ts",
+          "range": {
+            "end_line": 739,
+            "sha256": "3a746af63bf3eccd10e770cc1eaad1eacc543e29442217a1845e64394ec32774",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/lib/games/runeMatch.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-07",
+      "review_id": "copy-review:018",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/components/games/vocabulary/rpg-battle/BattleEffects.test.tsx",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "43d0c151cfd55c056e3ebf7b7708b235663eb24ef1dcbe771f09fc8ef211d5b4",
+          "path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/BattleEffects.test.tsx",
+          "range": {
+            "end_line": 26,
+            "sha256": "43d0c151cfd55c056e3ebf7b7708b235663eb24ef1dcbe771f09fc8ef211d5b4",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "43d0c151cfd55c056e3ebf7b7708b235663eb24ef1dcbe771f09fc8ef211d5b4",
+          "path": "apps/reading-advantage/components/games/vocabulary/rpg-battle/BattleEffects.test.tsx",
+          "range": {
+            "end_line": 26,
+            "sha256": "43d0c151cfd55c056e3ebf7b7708b235663eb24ef1dcbe771f09fc8ef211d5b4",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/rpg-battle/BattleEffects.test.tsx",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-01",
+      "review_id": "copy-review:019",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/components/games/game/MagicBolt.test.tsx",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "4430e3ae55a9ee615bfc6f25ba45628d4410e0a4346a48f75f8711519dd0a137",
+          "path": "apps/advantage-games/src/components/games/game/MagicBolt.test.tsx",
+          "range": {
+            "end_line": 8,
+            "sha256": "4430e3ae55a9ee615bfc6f25ba45628d4410e0a4346a48f75f8711519dd0a137",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "4430e3ae55a9ee615bfc6f25ba45628d4410e0a4346a48f75f8711519dd0a137",
+          "path": "apps/reading-advantage/components/games/game/MagicBolt.test.tsx",
+          "range": {
+            "end_line": 8,
+            "sha256": "4430e3ae55a9ee615bfc6f25ba45628d4410e0a4346a48f75f8711519dd0a137",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/game/MagicBolt.test.tsx",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-global-shared-01",
+      "review_id": "copy-review:020",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/components/games/vocabulary/enchanted-library/BookPickupBurst.test.tsx",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "4740fe657ee8b8a7bd197600eb68f2ba8699bda282b7958dd342fd064e7697f8",
+          "path": "apps/advantage-games/src/components/games/vocabulary/enchanted-library/BookPickupBurst.test.tsx",
+          "range": {
+            "end_line": 47,
+            "sha256": "4740fe657ee8b8a7bd197600eb68f2ba8699bda282b7958dd342fd064e7697f8",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "4740fe657ee8b8a7bd197600eb68f2ba8699bda282b7958dd342fd064e7697f8",
+          "path": "apps/reading-advantage/components/games/vocabulary/enchanted-library/BookPickupBurst.test.tsx",
+          "range": {
+            "end_line": 47,
+            "sha256": "4740fe657ee8b8a7bd197600eb68f2ba8699bda282b7958dd342fd064e7697f8",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/enchanted-library/BookPickupBurst.test.tsx",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-07",
+      "review_id": "copy-review:021",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/components/games/sentence/castle-defense/BackgroundLayer.tsx",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "4a49e143154c119f5f9a9e8e4bcc50bc6c72bd18b2b65aa0748a048dad12dc59",
+          "path": "apps/advantage-games/src/components/games/sentence/castle-defense/BackgroundLayer.tsx",
+          "range": {
+            "end_line": 127,
+            "sha256": "4a49e143154c119f5f9a9e8e4bcc50bc6c72bd18b2b65aa0748a048dad12dc59",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "4a49e143154c119f5f9a9e8e4bcc50bc6c72bd18b2b65aa0748a048dad12dc59",
+          "path": "apps/reading-advantage/components/games/sentence/castle-defense/BackgroundLayer.tsx",
+          "range": {
+            "end_line": 127,
+            "sha256": "4a49e143154c119f5f9a9e8e4bcc50bc6c72bd18b2b65aa0748a048dad12dc59",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/sentence/castle-defense/BackgroundLayer.tsx",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-02",
+      "review_id": "copy-review:022",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/components/games/vocabulary/enchanted-library/VocabularyProgress.test.tsx",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "4de506f9b04c7efda22bb5de1de509242586dec308a8194ded447d2638773028",
+          "path": "apps/advantage-games/src/components/games/vocabulary/enchanted-library/VocabularyProgress.test.tsx",
+          "range": {
+            "end_line": 65,
+            "sha256": "4de506f9b04c7efda22bb5de1de509242586dec308a8194ded447d2638773028",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "4de506f9b04c7efda22bb5de1de509242586dec308a8194ded447d2638773028",
+          "path": "apps/reading-advantage/components/games/vocabulary/enchanted-library/VocabularyProgress.test.tsx",
+          "range": {
+            "end_line": 65,
+            "sha256": "4de506f9b04c7efda22bb5de1de509242586dec308a8194ded447d2638773028",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/enchanted-library/VocabularyProgress.test.tsx",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-07",
+      "review_id": "copy-review:023",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/components/games/vocabulary/rpg-battle/ComboIndicator.tsx",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "50fa89d44b03fffffbd4709986a7c00e664c7b700457bd2a62057481bc9d6234",
+          "path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/ComboIndicator.tsx",
+          "range": {
+            "end_line": 36,
+            "sha256": "50fa89d44b03fffffbd4709986a7c00e664c7b700457bd2a62057481bc9d6234",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "50fa89d44b03fffffbd4709986a7c00e664c7b700457bd2a62057481bc9d6234",
+          "path": "apps/reading-advantage/components/games/vocabulary/rpg-battle/ComboIndicator.tsx",
+          "range": {
+            "end_line": 36,
+            "sha256": "50fa89d44b03fffffbd4709986a7c00e664c7b700457bd2a62057481bc9d6234",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/rpg-battle/ComboIndicator.tsx",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-01",
+      "review_id": "copy-review:024",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/lib/games/rpgBattleSprites.test.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "541cc4bbf4bb8634d04cd70c8022e052c9b7b182887ac283f094f05df45d8bbd",
+          "path": "apps/advantage-games/src/lib/games/rpgBattleSprites.test.ts",
+          "range": {
+            "end_line": 15,
+            "sha256": "541cc4bbf4bb8634d04cd70c8022e052c9b7b182887ac283f094f05df45d8bbd",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "541cc4bbf4bb8634d04cd70c8022e052c9b7b182887ac283f094f05df45d8bbd",
+          "path": "apps/reading-advantage/lib/games/rpgBattleSprites.test.ts",
+          "range": {
+            "end_line": 15,
+            "sha256": "541cc4bbf4bb8634d04cd70c8022e052c9b7b182887ac283f094f05df45d8bbd",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/lib/games/rpgBattleSprites.test.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-01",
+      "review_id": "copy-review:025",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/components/games/game/InputController.tsx",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "54425a8589565210cfdd01c80627e2f45fc813a80a392c06f383ce9ffb13adad",
+          "path": "apps/advantage-games/src/components/games/game/InputController.tsx",
+          "range": {
+            "end_line": 176,
+            "sha256": "54425a8589565210cfdd01c80627e2f45fc813a80a392c06f383ce9ffb13adad",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "54425a8589565210cfdd01c80627e2f45fc813a80a392c06f383ce9ffb13adad",
+          "path": "apps/reading-advantage/components/games/game/InputController.tsx",
+          "range": {
+            "end_line": 176,
+            "sha256": "54425a8589565210cfdd01c80627e2f45fc813a80a392c06f383ce9ffb13adad",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/game/InputController.tsx",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-global-shared-01",
+      "review_id": "copy-review:026",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/components/games/vocabulary/enchanted-library/enchantedLibraryInput.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "553959e9d7a8848fcd05ba7fb3a0895ff4fd2468d6926c60b4f0ae687b671c19",
+          "path": "apps/advantage-games/src/components/games/vocabulary/enchanted-library/enchantedLibraryInput.ts",
+          "range": {
+            "end_line": 12,
+            "sha256": "553959e9d7a8848fcd05ba7fb3a0895ff4fd2468d6926c60b4f0ae687b671c19",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "553959e9d7a8848fcd05ba7fb3a0895ff4fd2468d6926c60b4f0ae687b671c19",
+          "path": "apps/reading-advantage/components/games/vocabulary/enchanted-library/enchantedLibraryInput.ts",
+          "range": {
+            "end_line": 12,
+            "sha256": "553959e9d7a8848fcd05ba7fb3a0895ff4fd2468d6926c60b4f0ae687b671c19",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/enchanted-library/enchantedLibraryInput.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-07",
+      "review_id": "copy-review:027",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/lib/games/rpgBattleScaling.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "554202a3358bc9e0207676c08c4422dc7f0c4836986f893c2d8dd35180125e3b",
+          "path": "apps/advantage-games/src/lib/games/rpgBattleScaling.ts",
+          "range": {
+            "end_line": 38,
+            "sha256": "554202a3358bc9e0207676c08c4422dc7f0c4836986f893c2d8dd35180125e3b",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "554202a3358bc9e0207676c08c4422dc7f0c4836986f893c2d8dd35180125e3b",
+          "path": "apps/reading-advantage/lib/games/rpgBattleScaling.ts",
+          "range": {
+            "end_line": 38,
+            "sha256": "554202a3358bc9e0207676c08c4422dc7f0c4836986f893c2d8dd35180125e3b",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/lib/games/rpgBattleScaling.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-01",
+      "review_id": "copy-review:028",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/app/api/v1/games/rune-forge-chamber/sentences/route.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "5f5fa24105efd6c391a788eb195914e2e52351fa210003f050674954917a954a",
+          "path": "apps/advantage-games/src/app/api/v1/games/rune-forge-chamber/sentences/route.ts",
+          "range": {
+            "end_line": 7,
+            "sha256": "5f5fa24105efd6c391a788eb195914e2e52351fa210003f050674954917a954a",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "5f5fa24105efd6c391a788eb195914e2e52351fa210003f050674954917a954a",
+          "path": "apps/advantage-games/src/app/api/v1/games/village-guardian/sentences/route.ts",
+          "range": {
+            "end_line": 7,
+            "sha256": "5f5fa24105efd6c391a788eb195914e2e52351fa210003f050674954917a954a",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/advantage-games/src/app/api/v1/games/village-guardian/sentences/route.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-03",
+      "review_id": "copy-review:029",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/lib/games/rpgBattleXp.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "621a910f66de273471a2dd8bb21585543c7433fefbdb4b3cd65330b40f969c7c",
+          "path": "apps/advantage-games/src/lib/games/rpgBattleXp.ts",
+          "range": {
+            "end_line": 29,
+            "sha256": "621a910f66de273471a2dd8bb21585543c7433fefbdb4b3cd65330b40f969c7c",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "621a910f66de273471a2dd8bb21585543c7433fefbdb4b3cd65330b40f969c7c",
+          "path": "apps/reading-advantage/lib/games/rpgBattleXp.ts",
+          "range": {
+            "end_line": 29,
+            "sha256": "621a910f66de273471a2dd8bb21585543c7433fefbdb4b3cd65330b40f969c7c",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/lib/games/rpgBattleXp.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-01",
+      "review_id": "copy-review:030",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/components/games/vocabulary/rune-match/MonsterSelection.test.tsx",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "658f95097ddfd51ae1eff78a180985de545ab6c838d40856b82cdce345a305d8",
+          "path": "apps/advantage-games/src/components/games/vocabulary/rune-match/MonsterSelection.test.tsx",
+          "range": {
+            "end_line": 49,
+            "sha256": "658f95097ddfd51ae1eff78a180985de545ab6c838d40856b82cdce345a305d8",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "658f95097ddfd51ae1eff78a180985de545ab6c838d40856b82cdce345a305d8",
+          "path": "apps/reading-advantage/components/games/vocabulary/rune-match/MonsterSelection.test.tsx",
+          "range": {
+            "end_line": 49,
+            "sha256": "658f95097ddfd51ae1eff78a180985de545ab6c838d40856b82cdce345a305d8",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/rune-match/MonsterSelection.test.tsx",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-07",
+      "review_id": "copy-review:031",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/components/games/game/ResultsScreen.test.tsx",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "6bfdd1a8fba11d892d024da2fe2b37714dab343408f2bddef6e274bf366da1f0",
+          "path": "apps/advantage-games/src/components/games/game/ResultsScreen.test.tsx",
+          "range": {
+            "end_line": 38,
+            "sha256": "6bfdd1a8fba11d892d024da2fe2b37714dab343408f2bddef6e274bf366da1f0",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "6bfdd1a8fba11d892d024da2fe2b37714dab343408f2bddef6e274bf366da1f0",
+          "path": "apps/reading-advantage/components/games/game/ResultsScreen.test.tsx",
+          "range": {
+            "end_line": 38,
+            "sha256": "6bfdd1a8fba11d892d024da2fe2b37714dab343408f2bddef6e274bf366da1f0",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/game/ResultsScreen.test.tsx",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-global-shared-01",
+      "review_id": "copy-review:032",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/lib/games/rpgBattleSelection.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "6f91930a52cf00426feff25eb1bbe3c63d0505f9fc06a2062aaaea0f906f25ef",
+          "path": "apps/advantage-games/src/lib/games/rpgBattleSelection.ts",
+          "range": {
+            "end_line": 87,
+            "sha256": "6f91930a52cf00426feff25eb1bbe3c63d0505f9fc06a2062aaaea0f906f25ef",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "6f91930a52cf00426feff25eb1bbe3c63d0505f9fc06a2062aaaea0f906f25ef",
+          "path": "apps/reading-advantage/lib/games/rpgBattleSelection.ts",
+          "range": {
+            "end_line": 87,
+            "sha256": "6f91930a52cf00426feff25eb1bbe3c63d0505f9fc06a2062aaaea0f906f25ef",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/lib/games/rpgBattleSelection.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-01",
+      "review_id": "copy-review:033",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/app/api/v1/games/devourer-slime/sentences/route.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "70587c1af88b79bcceb951b7ddde40d765d60f013a1ec941900e4412f58bd089",
+          "path": "apps/advantage-games/src/app/api/v1/games/devourer-slime/sentences/route.ts",
+          "range": {
+            "end_line": 8,
+            "sha256": "70587c1af88b79bcceb951b7ddde40d765d60f013a1ec941900e4412f58bd089",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "70587c1af88b79bcceb951b7ddde40d765d60f013a1ec941900e4412f58bd089",
+          "path": "apps/advantage-games/src/app/api/v1/games/haunted-library/sentences/route.ts",
+          "range": {
+            "end_line": 8,
+            "sha256": "70587c1af88b79bcceb951b7ddde40d765d60f013a1ec941900e4412f58bd089",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/advantage-games/src/app/api/v1/games/haunted-library/sentences/route.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-10",
+      "review_id": "copy-review:034",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/app/api/v1/games/devourer-slime/sentences/route.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "70587c1af88b79bcceb951b7ddde40d765d60f013a1ec941900e4412f58bd089",
+          "path": "apps/advantage-games/src/app/api/v1/games/devourer-slime/sentences/route.ts",
+          "range": {
+            "end_line": 8,
+            "sha256": "70587c1af88b79bcceb951b7ddde40d765d60f013a1ec941900e4412f58bd089",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "70587c1af88b79bcceb951b7ddde40d765d60f013a1ec941900e4412f58bd089",
+          "path": "apps/advantage-games/src/app/api/v1/games/labyrinth-goblin-king/sentences/route.ts",
+          "range": {
+            "end_line": 8,
+            "sha256": "70587c1af88b79bcceb951b7ddde40d765d60f013a1ec941900e4412f58bd089",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/advantage-games/src/app/api/v1/games/labyrinth-goblin-king/sentences/route.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-06",
+      "review_id": "copy-review:035",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/lib/games/potionRushEffects.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "71d573ead0a0e113b0ff6097bdd3dff6a39dfd716f9374c1cbff267e5d8fbbec",
+          "path": "apps/advantage-games/src/lib/games/potionRushEffects.ts",
+          "range": {
+            "end_line": 18,
+            "sha256": "71d573ead0a0e113b0ff6097bdd3dff6a39dfd716f9374c1cbff267e5d8fbbec",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "71d573ead0a0e113b0ff6097bdd3dff6a39dfd716f9374c1cbff267e5d8fbbec",
+          "path": "apps/reading-advantage/lib/games/potionRushEffects.ts",
+          "range": {
+            "end_line": 18,
+            "sha256": "71d573ead0a0e113b0ff6097bdd3dff6a39dfd716f9374c1cbff267e5d8fbbec",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/lib/games/potionRushEffects.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-08",
+      "review_id": "copy-review:036",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/lib/utils.test.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "71f63c744b08880b64f02d085e278cce3e0f8f1585df42b7c6faef4a4143e26b",
+          "path": "apps/advantage-games/src/lib/utils.test.ts",
+          "range": {
+            "end_line": 15,
+            "sha256": "71f63c744b08880b64f02d085e278cce3e0f8f1585df42b7c6faef4a4143e26b",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "71f63c744b08880b64f02d085e278cce3e0f8f1585df42b7c6faef4a4143e26b",
+          "path": "apps/reading-advantage/lib/games/utils.test.ts",
+          "range": {
+            "end_line": 15,
+            "sha256": "71f63c744b08880b64f02d085e278cce3e0f8f1585df42b7c6faef4a4143e26b",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/lib/games/utils.test.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-global-shared-01",
+      "review_id": "copy-review:037",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/lib/games/rpgBattleSprites.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "7b7c8c4d396b6740f1833743bbcade14fcdb7208d2b56ede17fe9a3365dab5a2",
+          "path": "apps/advantage-games/src/lib/games/rpgBattleSprites.ts",
+          "range": {
+            "end_line": 33,
+            "sha256": "7b7c8c4d396b6740f1833743bbcade14fcdb7208d2b56ede17fe9a3365dab5a2",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "7b7c8c4d396b6740f1833743bbcade14fcdb7208d2b56ede17fe9a3365dab5a2",
+          "path": "apps/reading-advantage/lib/games/rpgBattleSprites.ts",
+          "range": {
+            "end_line": 33,
+            "sha256": "7b7c8c4d396b6740f1833743bbcade14fcdb7208d2b56ede17fe9a3365dab5a2",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/lib/games/rpgBattleSprites.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-01",
+      "review_id": "copy-review:038",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/components/games/vocabulary/rpg-battle/EnemySprite.tsx",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "7bccadf873521b07e14d8dc09dbb55fd0b2d4658a9ce4f52301dcc6eb3fdcb31",
+          "path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/EnemySprite.tsx",
+          "range": {
+            "end_line": 17,
+            "sha256": "7bccadf873521b07e14d8dc09dbb55fd0b2d4658a9ce4f52301dcc6eb3fdcb31",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "7bccadf873521b07e14d8dc09dbb55fd0b2d4658a9ce4f52301dcc6eb3fdcb31",
+          "path": "apps/reading-advantage/components/games/vocabulary/rpg-battle/EnemySprite.tsx",
+          "range": {
+            "end_line": 17,
+            "sha256": "7bccadf873521b07e14d8dc09dbb55fd0b2d4658a9ce4f52301dcc6eb3fdcb31",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/rpg-battle/EnemySprite.tsx",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-01",
+      "review_id": "copy-review:039",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/components/games/vocabulary/rpg-battle/BattleResults.tsx",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "829830407a5da92296826fa37be8552cfc2d69c86391d35b60be3808c8e6c80e",
+          "path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/BattleResults.tsx",
+          "range": {
+            "end_line": 65,
+            "sha256": "829830407a5da92296826fa37be8552cfc2d69c86391d35b60be3808c8e6c80e",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "829830407a5da92296826fa37be8552cfc2d69c86391d35b60be3808c8e6c80e",
+          "path": "apps/reading-advantage/components/games/vocabulary/rpg-battle/BattleResults.tsx",
+          "range": {
+            "end_line": 65,
+            "sha256": "829830407a5da92296826fa37be8552cfc2d69c86391d35b60be3808c8e6c80e",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/rpg-battle/BattleResults.tsx",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-01",
+      "review_id": "copy-review:040",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/lib/games/wizardZombieIndicators.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "82cebd1e104cdf825c0a22ba537e8f53215e9fef091d83b6923261af4fe0681c",
+          "path": "apps/advantage-games/src/lib/games/wizardZombieIndicators.ts",
+          "range": {
+            "end_line": 76,
+            "sha256": "82cebd1e104cdf825c0a22ba537e8f53215e9fef091d83b6923261af4fe0681c",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "82cebd1e104cdf825c0a22ba537e8f53215e9fef091d83b6923261af4fe0681c",
+          "path": "apps/reading-advantage/lib/games/wizardZombieIndicators.ts",
+          "range": {
+            "end_line": 76,
+            "sha256": "82cebd1e104cdf825c0a22ba537e8f53215e9fef091d83b6923261af4fe0681c",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/lib/games/wizardZombieIndicators.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-global-shared-01",
+      "review_id": "copy-review:041",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/components/games/vocabulary/rpg-battle/HealthBar.test.tsx",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "8455d7ef7341da0fe79f4397268014f68558471ffd92eb1fadbce26282604506",
+          "path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/HealthBar.test.tsx",
+          "range": {
+            "end_line": 20,
+            "sha256": "8455d7ef7341da0fe79f4397268014f68558471ffd92eb1fadbce26282604506",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "8455d7ef7341da0fe79f4397268014f68558471ffd92eb1fadbce26282604506",
+          "path": "apps/reading-advantage/components/games/vocabulary/rpg-battle/HealthBar.test.tsx",
+          "range": {
+            "end_line": 20,
+            "sha256": "8455d7ef7341da0fe79f4397268014f68558471ffd92eb1fadbce26282604506",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/rpg-battle/HealthBar.test.tsx",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-01",
+      "review_id": "copy-review:042",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/components/games/vocabulary/rpg-battle/BattleSelectionModal.tsx",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "86cdd95edd03b9caaa465bd3313484728f79cf42c5a7366d003dfbdcb5fdbc73",
+          "path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/BattleSelectionModal.tsx",
+          "range": {
+            "end_line": 181,
+            "sha256": "86cdd95edd03b9caaa465bd3313484728f79cf42c5a7366d003dfbdcb5fdbc73",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "86cdd95edd03b9caaa465bd3313484728f79cf42c5a7366d003dfbdcb5fdbc73",
+          "path": "apps/reading-advantage/components/games/vocabulary/rpg-battle/BattleSelectionModal.tsx",
+          "range": {
+            "end_line": 181,
+            "sha256": "86cdd95edd03b9caaa465bd3313484728f79cf42c5a7366d003dfbdcb5fdbc73",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/rpg-battle/BattleSelectionModal.tsx",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-01",
+      "review_id": "copy-review:043",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/lib/games/wizardZombie.test.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "8708e6a8007bf23c975ec130bc926f1b7938d91be90bf3ecd8966c39b2d67ae2",
+          "path": "apps/advantage-games/src/lib/games/wizardZombie.test.ts",
+          "range": {
+            "end_line": 31,
+            "sha256": "8708e6a8007bf23c975ec130bc926f1b7938d91be90bf3ecd8966c39b2d67ae2",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "8708e6a8007bf23c975ec130bc926f1b7938d91be90bf3ecd8966c39b2d67ae2",
+          "path": "apps/reading-advantage/lib/games/wizardZombie.test.ts",
+          "range": {
+            "end_line": 31,
+            "sha256": "8708e6a8007bf23c975ec130bc926f1b7938d91be90bf3ecd8966c39b2d67ae2",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/lib/games/wizardZombie.test.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-global-shared-01",
+      "review_id": "copy-review:044",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/app/api/v1/games/devourer-slime/complete/route.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "887d73799ce2461c560073dc5216e86cf7e783949a7fed04daa74a0e743ce9fd",
+          "path": "apps/advantage-games/src/app/api/v1/games/devourer-slime/complete/route.ts",
+          "range": {
+            "end_line": 7,
+            "sha256": "887d73799ce2461c560073dc5216e86cf7e783949a7fed04daa74a0e743ce9fd",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "887d73799ce2461c560073dc5216e86cf7e783949a7fed04daa74a0e743ce9fd",
+          "path": "apps/advantage-games/src/app/api/v1/games/haunted-library/complete/route.ts",
+          "range": {
+            "end_line": 7,
+            "sha256": "887d73799ce2461c560073dc5216e86cf7e783949a7fed04daa74a0e743ce9fd",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/advantage-games/src/app/api/v1/games/haunted-library/complete/route.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-10",
+      "review_id": "copy-review:045",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/app/api/v1/games/devourer-slime/complete/route.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "887d73799ce2461c560073dc5216e86cf7e783949a7fed04daa74a0e743ce9fd",
+          "path": "apps/advantage-games/src/app/api/v1/games/devourer-slime/complete/route.ts",
+          "range": {
+            "end_line": 7,
+            "sha256": "887d73799ce2461c560073dc5216e86cf7e783949a7fed04daa74a0e743ce9fd",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "887d73799ce2461c560073dc5216e86cf7e783949a7fed04daa74a0e743ce9fd",
+          "path": "apps/advantage-games/src/app/api/v1/games/labyrinth-goblin-king/complete/route.ts",
+          "range": {
+            "end_line": 7,
+            "sha256": "887d73799ce2461c560073dc5216e86cf7e783949a7fed04daa74a0e743ce9fd",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/advantage-games/src/app/api/v1/games/labyrinth-goblin-king/complete/route.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-06",
+      "review_id": "copy-review:046",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/components/games/vocabulary/enchanted-library/VocabularyProgress.tsx",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "894d8052d336e7114655feb8a47e837b4e8a9f7fe5929437a29226e8c9c82090",
+          "path": "apps/advantage-games/src/components/games/vocabulary/enchanted-library/VocabularyProgress.tsx",
+          "range": {
+            "end_line": 95,
+            "sha256": "894d8052d336e7114655feb8a47e837b4e8a9f7fe5929437a29226e8c9c82090",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "894d8052d336e7114655feb8a47e837b4e8a9f7fe5929437a29226e8c9c82090",
+          "path": "apps/reading-advantage/components/games/vocabulary/enchanted-library/VocabularyProgress.tsx",
+          "range": {
+            "end_line": 95,
+            "sha256": "894d8052d336e7114655feb8a47e837b4e8a9f7fe5929437a29226e8c9c82090",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/enchanted-library/VocabularyProgress.tsx",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-07",
+      "review_id": "copy-review:047",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/components/games/vocabulary/rpg-battle/BattleSelectionModal.test.tsx",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "8d0d791d3782d181f6678b8ffb6f3c8f61d7f2aaf13b0b7bf97e34f37109d88d",
+          "path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/BattleSelectionModal.test.tsx",
+          "range": {
+            "end_line": 88,
+            "sha256": "8d0d791d3782d181f6678b8ffb6f3c8f61d7f2aaf13b0b7bf97e34f37109d88d",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "8d0d791d3782d181f6678b8ffb6f3c8f61d7f2aaf13b0b7bf97e34f37109d88d",
+          "path": "apps/reading-advantage/components/games/vocabulary/rpg-battle/BattleSelectionModal.test.tsx",
+          "range": {
+            "end_line": 88,
+            "sha256": "8d0d791d3782d181f6678b8ffb6f3c8f61d7f2aaf13b0b7bf97e34f37109d88d",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/rpg-battle/BattleSelectionModal.test.tsx",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-01",
+      "review_id": "copy-review:048",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/components/games/game/MagicBolt.tsx",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "8daa8499b9ef9d0c52237687efa698a358333e99c18a7f5bfb45db18d0865385",
+          "path": "apps/advantage-games/src/components/games/game/MagicBolt.tsx",
+          "range": {
+            "end_line": 24,
+            "sha256": "8daa8499b9ef9d0c52237687efa698a358333e99c18a7f5bfb45db18d0865385",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "8daa8499b9ef9d0c52237687efa698a358333e99c18a7f5bfb45db18d0865385",
+          "path": "apps/reading-advantage/components/games/game/MagicBolt.tsx",
+          "range": {
+            "end_line": 24,
+            "sha256": "8daa8499b9ef9d0c52237687efa698a358333e99c18a7f5bfb45db18d0865385",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/game/MagicBolt.tsx",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-global-shared-01",
+      "review_id": "copy-review:049",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/components/games/sentence/potion-rush/PotionRushEffectsLayer.tsx",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "93730d736c0b30a011c4c871b1f24f05dcbb4cd0c53313b502faf20f09528fed",
+          "path": "apps/advantage-games/src/components/games/sentence/potion-rush/PotionRushEffectsLayer.tsx",
+          "range": {
+            "end_line": 153,
+            "sha256": "93730d736c0b30a011c4c871b1f24f05dcbb4cd0c53313b502faf20f09528fed",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "93730d736c0b30a011c4c871b1f24f05dcbb4cd0c53313b502faf20f09528fed",
+          "path": "apps/reading-advantage/components/games/sentence/potion-rush/PotionRushEffectsLayer.tsx",
+          "range": {
+            "end_line": 153,
+            "sha256": "93730d736c0b30a011c4c871b1f24f05dcbb4cd0c53313b502faf20f09528fed",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/sentence/potion-rush/PotionRushEffectsLayer.tsx",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-08",
+      "review_id": "copy-review:050",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/components/ui/input.test.tsx",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "9510521ea8a91bf6cddf30a90ae89267cf938252821a59e1b6299a040503d0d6",
+          "path": "apps/advantage-games/src/components/ui/input.test.tsx",
+          "range": {
+            "end_line": 13,
+            "sha256": "9510521ea8a91bf6cddf30a90ae89267cf938252821a59e1b6299a040503d0d6",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "9510521ea8a91bf6cddf30a90ae89267cf938252821a59e1b6299a040503d0d6",
+          "path": "apps/reading-advantage/components/games/ui/input.test.tsx",
+          "range": {
+            "end_line": 13,
+            "sha256": "9510521ea8a91bf6cddf30a90ae89267cf938252821a59e1b6299a040503d0d6",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/ui/input.test.tsx",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-global-shared-01",
+      "review_id": "copy-review:051",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/components/games/game/Explosion.test.tsx",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "99ec23c54ed0a9df7ec8e1d63db8d3f6de8fc00902df1df0e2cfe8ceab1c65d3",
+          "path": "apps/advantage-games/src/components/games/game/Explosion.test.tsx",
+          "range": {
+            "end_line": 38,
+            "sha256": "99ec23c54ed0a9df7ec8e1d63db8d3f6de8fc00902df1df0e2cfe8ceab1c65d3",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "99ec23c54ed0a9df7ec8e1d63db8d3f6de8fc00902df1df0e2cfe8ceab1c65d3",
+          "path": "apps/reading-advantage/components/games/game/Explosion.test.tsx",
+          "range": {
+            "end_line": 38,
+            "sha256": "99ec23c54ed0a9df7ec8e1d63db8d3f6de8fc00902df1df0e2cfe8ceab1c65d3",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/game/Explosion.test.tsx",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-global-shared-01",
+      "review_id": "copy-review:052",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/app/api/v1/games/castle-defense/sentences/route.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "9caff8ade74cb66f1554bf76bdc1388f0f1de02abaf30cc456ebcf4efc353f80",
+          "path": "apps/advantage-games/src/app/api/v1/games/castle-defense/sentences/route.ts",
+          "range": {
+            "end_line": 7,
+            "sha256": "9caff8ade74cb66f1554bf76bdc1388f0f1de02abaf30cc456ebcf4efc353f80",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "9caff8ade74cb66f1554bf76bdc1388f0f1de02abaf30cc456ebcf4efc353f80",
+          "path": "apps/advantage-games/src/app/api/v1/games/dungeon-liberator/sentences/route.ts",
+          "range": {
+            "end_line": 7,
+            "sha256": "9caff8ade74cb66f1554bf76bdc1388f0f1de02abaf30cc456ebcf4efc353f80",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/advantage-games/src/app/api/v1/games/dungeon-liberator/sentences/route.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-05",
+      "review_id": "copy-review:053",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/app/api/v1/games/castle-defense/sentences/route.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "9caff8ade74cb66f1554bf76bdc1388f0f1de02abaf30cc456ebcf4efc353f80",
+          "path": "apps/advantage-games/src/app/api/v1/games/castle-defense/sentences/route.ts",
+          "range": {
+            "end_line": 7,
+            "sha256": "9caff8ade74cb66f1554bf76bdc1388f0f1de02abaf30cc456ebcf4efc353f80",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "9caff8ade74cb66f1554bf76bdc1388f0f1de02abaf30cc456ebcf4efc353f80",
+          "path": "apps/advantage-games/src/app/api/v1/games/potion-rush/sentences/route.ts",
+          "range": {
+            "end_line": 7,
+            "sha256": "9caff8ade74cb66f1554bf76bdc1388f0f1de02abaf30cc456ebcf4efc353f80",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/advantage-games/src/app/api/v1/games/potion-rush/sentences/route.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-08",
+      "review_id": "copy-review:054",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/components/games/vocabulary/enchanted-library/DifficultySelector.tsx",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "9e9f26e6b6384efa02d31f48d3d29ac080cc7c8dc802cee99df15880fd595953",
+          "path": "apps/advantage-games/src/components/games/vocabulary/enchanted-library/DifficultySelector.tsx",
+          "range": {
+            "end_line": 107,
+            "sha256": "9e9f26e6b6384efa02d31f48d3d29ac080cc7c8dc802cee99df15880fd595953",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "9e9f26e6b6384efa02d31f48d3d29ac080cc7c8dc802cee99df15880fd595953",
+          "path": "apps/reading-advantage/components/games/vocabulary/enchanted-library/DifficultySelector.tsx",
+          "range": {
+            "end_line": 107,
+            "sha256": "9e9f26e6b6384efa02d31f48d3d29ac080cc7c8dc802cee99df15880fd595953",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/enchanted-library/DifficultySelector.tsx",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-07",
+      "review_id": "copy-review:055",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/components/games/vocabulary/enchanted-library/RankingDisplay.tsx",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "9fdbe853fbaffca3289a174414bf06a67079e70dff32fccc00de55ebe07e9fc2",
+          "path": "apps/advantage-games/src/components/games/vocabulary/enchanted-library/RankingDisplay.tsx",
+          "range": {
+            "end_line": 148,
+            "sha256": "9fdbe853fbaffca3289a174414bf06a67079e70dff32fccc00de55ebe07e9fc2",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "9fdbe853fbaffca3289a174414bf06a67079e70dff32fccc00de55ebe07e9fc2",
+          "path": "apps/reading-advantage/components/games/vocabulary/enchanted-library/RankingDisplay.tsx",
+          "range": {
+            "end_line": 148,
+            "sha256": "9fdbe853fbaffca3289a174414bf06a67079e70dff32fccc00de55ebe07e9fc2",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/enchanted-library/RankingDisplay.tsx",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-07",
+      "review_id": "copy-review:056",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/components/games/game/ResultsScreen.tsx",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "a1ea40d1e0aa0e5e14c62ea39f1fc6993737fba020cb14c295455d4949fc0715",
+          "path": "apps/advantage-games/src/components/games/game/ResultsScreen.tsx",
+          "range": {
+            "end_line": 114,
+            "sha256": "a1ea40d1e0aa0e5e14c62ea39f1fc6993737fba020cb14c295455d4949fc0715",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "a1ea40d1e0aa0e5e14c62ea39f1fc6993737fba020cb14c295455d4949fc0715",
+          "path": "apps/reading-advantage/components/games/game/ResultsScreen.tsx",
+          "range": {
+            "end_line": 114,
+            "sha256": "a1ea40d1e0aa0e5e14c62ea39f1fc6993737fba020cb14c295455d4949fc0715",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/game/ResultsScreen.tsx",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-global-shared-01",
+      "review_id": "copy-review:057",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/components/games/game/HUD.test.tsx",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "b31b49533f93e0b817696be6cec6b9c973de285d21f9e0a3d994c978ae36d999",
+          "path": "apps/advantage-games/src/components/games/game/HUD.test.tsx",
+          "range": {
+            "end_line": 19,
+            "sha256": "b31b49533f93e0b817696be6cec6b9c973de285d21f9e0a3d994c978ae36d999",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "b31b49533f93e0b817696be6cec6b9c973de285d21f9e0a3d994c978ae36d999",
+          "path": "apps/reading-advantage/components/games/game/HUD.test.tsx",
+          "range": {
+            "end_line": 19,
+            "sha256": "b31b49533f93e0b817696be6cec6b9c973de285d21f9e0a3d994c978ae36d999",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/game/HUD.test.tsx",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-global-shared-01",
+      "review_id": "copy-review:058",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/components/games/vocabulary/enchanted-library/enchantedLibraryInput.test.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "b3b15614a87191121d43a580f1671a08cb4c89272f31037bf40eeb75502508cd",
+          "path": "apps/advantage-games/src/components/games/vocabulary/enchanted-library/enchantedLibraryInput.test.ts",
+          "range": {
+            "end_line": 30,
+            "sha256": "b3b15614a87191121d43a580f1671a08cb4c89272f31037bf40eeb75502508cd",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "b3b15614a87191121d43a580f1671a08cb4c89272f31037bf40eeb75502508cd",
+          "path": "apps/reading-advantage/components/games/vocabulary/enchanted-library/enchantedLibraryInput.test.ts",
+          "range": {
+            "end_line": 30,
+            "sha256": "b3b15614a87191121d43a580f1671a08cb4c89272f31037bf40eeb75502508cd",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/enchanted-library/enchantedLibraryInput.test.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-07",
+      "review_id": "copy-review:059",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/components/games/vocabulary/enchanted-library/BookPickupBurst.tsx",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "b413de6edca22114357ac672f7230acd4e8bf80bc1746530277bb20daeb09b71",
+          "path": "apps/advantage-games/src/components/games/vocabulary/enchanted-library/BookPickupBurst.tsx",
+          "range": {
+            "end_line": 77,
+            "sha256": "b413de6edca22114357ac672f7230acd4e8bf80bc1746530277bb20daeb09b71",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "b413de6edca22114357ac672f7230acd4e8bf80bc1746530277bb20daeb09b71",
+          "path": "apps/reading-advantage/components/games/vocabulary/enchanted-library/BookPickupBurst.tsx",
+          "range": {
+            "end_line": 77,
+            "sha256": "b413de6edca22114357ac672f7230acd4e8bf80bc1746530277bb20daeb09b71",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/enchanted-library/BookPickupBurst.tsx",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-07",
+      "review_id": "copy-review:060",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/lib/games/rpgBattleWordSelection.test.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "b6639344de96ec3e073ec231e1cad912802e0b95701163cc6a52e978c59a8077",
+          "path": "apps/advantage-games/src/lib/games/rpgBattleWordSelection.test.ts",
+          "range": {
+            "end_line": 39,
+            "sha256": "b6639344de96ec3e073ec231e1cad912802e0b95701163cc6a52e978c59a8077",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "b6639344de96ec3e073ec231e1cad912802e0b95701163cc6a52e978c59a8077",
+          "path": "apps/reading-advantage/lib/games/rpgBattleWordSelection.test.ts",
+          "range": {
+            "end_line": 39,
+            "sha256": "b6639344de96ec3e073ec231e1cad912802e0b95701163cc6a52e978c59a8077",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/lib/games/rpgBattleWordSelection.test.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-01",
+      "review_id": "copy-review:061",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/app/api/v1/games/dragon-flight/ranking/route.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "b8f47fe0d7c4fb0d40217b1a42e193cadf0f419880424a5c3a04b80c74050180",
+          "path": "apps/advantage-games/src/app/api/v1/games/dragon-flight/ranking/route.ts",
+          "range": {
+            "end_line": 6,
+            "sha256": "b8f47fe0d7c4fb0d40217b1a42e193cadf0f419880424a5c3a04b80c74050180",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "b8f47fe0d7c4fb0d40217b1a42e193cadf0f419880424a5c3a04b80c74050180",
+          "path": "apps/advantage-games/src/app/api/v1/games/dungeon-liberator/ranking/route.ts",
+          "range": {
+            "end_line": 6,
+            "sha256": "b8f47fe0d7c4fb0d40217b1a42e193cadf0f419880424a5c3a04b80c74050180",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/advantage-games/src/app/api/v1/games/dungeon-liberator/ranking/route.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-05",
+      "review_id": "copy-review:062",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/app/api/v1/games/dragon-flight/ranking/route.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "b8f47fe0d7c4fb0d40217b1a42e193cadf0f419880424a5c3a04b80c74050180",
+          "path": "apps/advantage-games/src/app/api/v1/games/dragon-flight/ranking/route.ts",
+          "range": {
+            "end_line": 6,
+            "sha256": "b8f47fe0d7c4fb0d40217b1a42e193cadf0f419880424a5c3a04b80c74050180",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "b8f47fe0d7c4fb0d40217b1a42e193cadf0f419880424a5c3a04b80c74050180",
+          "path": "apps/advantage-games/src/app/api/v1/games/potion-rush/ranking/route.ts",
+          "range": {
+            "end_line": 6,
+            "sha256": "b8f47fe0d7c4fb0d40217b1a42e193cadf0f419880424a5c3a04b80c74050180",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/advantage-games/src/app/api/v1/games/potion-rush/ranking/route.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-08",
+      "review_id": "copy-review:063",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/components/games/vocabulary/rpg-battle/ActionMenu.tsx",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "bbf84cb8385f600f21a3b872ab8ac9f031997218a2884991a02a266935dc566b",
+          "path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/ActionMenu.tsx",
+          "range": {
+            "end_line": 97,
+            "sha256": "bbf84cb8385f600f21a3b872ab8ac9f031997218a2884991a02a266935dc566b",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "bbf84cb8385f600f21a3b872ab8ac9f031997218a2884991a02a266935dc566b",
+          "path": "apps/reading-advantage/components/games/vocabulary/rpg-battle/ActionMenu.tsx",
+          "range": {
+            "end_line": 97,
+            "sha256": "bbf84cb8385f600f21a3b872ab8ac9f031997218a2884991a02a266935dc566b",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/rpg-battle/ActionMenu.tsx",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-01",
+      "review_id": "copy-review:064",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/components/games/vocabulary/enchanted-library/SparkleBurst.test.tsx",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "bd46fef36b7099fa947d72d7e5d515892551906a3bcd6708a76c7feb40d2cf6a",
+          "path": "apps/advantage-games/src/components/games/vocabulary/enchanted-library/SparkleBurst.test.tsx",
+          "range": {
+            "end_line": 35,
+            "sha256": "bd46fef36b7099fa947d72d7e5d515892551906a3bcd6708a76c7feb40d2cf6a",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "bd46fef36b7099fa947d72d7e5d515892551906a3bcd6708a76c7feb40d2cf6a",
+          "path": "apps/reading-advantage/components/games/vocabulary/enchanted-library/SparkleBurst.test.tsx",
+          "range": {
+            "end_line": 35,
+            "sha256": "bd46fef36b7099fa947d72d7e5d515892551906a3bcd6708a76c7feb40d2cf6a",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/enchanted-library/SparkleBurst.test.tsx",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-07",
+      "review_id": "copy-review:065",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/components/games/game/Explosion.tsx",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "c491203eb4420387f83b3905c4520462ba0d4267c54d54d57c6078e27ade5c42",
+          "path": "apps/advantage-games/src/components/games/game/Explosion.tsx",
+          "range": {
+            "end_line": 38,
+            "sha256": "c491203eb4420387f83b3905c4520462ba0d4267c54d54d57c6078e27ade5c42",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "c491203eb4420387f83b3905c4520462ba0d4267c54d54d57c6078e27ade5c42",
+          "path": "apps/reading-advantage/components/games/game/Explosion.tsx",
+          "range": {
+            "end_line": 38,
+            "sha256": "c491203eb4420387f83b3905c4520462ba0d4267c54d54d57c6078e27ade5c42",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/game/Explosion.tsx",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-global-shared-01",
+      "review_id": "copy-review:066",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/components/games/vocabulary/rpg-battle/BattleResults.test.tsx",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "c5e1472c3b05ce890b679f5abc80848f0ba6cbf2400aca1a3a705001b3ae47a9",
+          "path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/BattleResults.test.tsx",
+          "range": {
+            "end_line": 47,
+            "sha256": "c5e1472c3b05ce890b679f5abc80848f0ba6cbf2400aca1a3a705001b3ae47a9",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "c5e1472c3b05ce890b679f5abc80848f0ba6cbf2400aca1a3a705001b3ae47a9",
+          "path": "apps/reading-advantage/components/games/vocabulary/rpg-battle/BattleResults.test.tsx",
+          "range": {
+            "end_line": 47,
+            "sha256": "c5e1472c3b05ce890b679f5abc80848f0ba6cbf2400aca1a3a705001b3ae47a9",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/rpg-battle/BattleResults.test.tsx",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-01",
+      "review_id": "copy-review:067",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/lib/games/dragonFlight.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "c6009a325600a4cd7db60a992dbbcff098c924c27ee6154d5c6c48b6c52414e9",
+          "path": "apps/advantage-games/src/lib/games/dragonFlight.ts",
+          "range": {
+            "end_line": 168,
+            "sha256": "c6009a325600a4cd7db60a992dbbcff098c924c27ee6154d5c6c48b6c52414e9",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "c6009a325600a4cd7db60a992dbbcff098c924c27ee6154d5c6c48b6c52414e9",
+          "path": "apps/reading-advantage/lib/games/dragonFlight.ts",
+          "range": {
+            "end_line": 168,
+            "sha256": "c6009a325600a4cd7db60a992dbbcff098c924c27ee6154d5c6c48b6c52414e9",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/lib/games/dragonFlight.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-01",
+      "review_id": "copy-review:068",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/components/games/vocabulary/rpg-battle/BattleEffects.tsx",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "c9a494f3733e86fb78557b3e5d24670acb44be206bc4159bff191a56abb754e0",
+          "path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/BattleEffects.tsx",
+          "range": {
+            "end_line": 50,
+            "sha256": "c9a494f3733e86fb78557b3e5d24670acb44be206bc4159bff191a56abb754e0",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "c9a494f3733e86fb78557b3e5d24670acb44be206bc4159bff191a56abb754e0",
+          "path": "apps/reading-advantage/components/games/vocabulary/rpg-battle/BattleEffects.tsx",
+          "range": {
+            "end_line": 50,
+            "sha256": "c9a494f3733e86fb78557b3e5d24670acb44be206bc4159bff191a56abb754e0",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/rpg-battle/BattleEffects.tsx",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-01",
+      "review_id": "copy-review:069",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/lib/games/dragonFlight.test.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "ca6974091a379d6172946943575855246588953a6139e464d2bc5a8140006953",
+          "path": "apps/advantage-games/src/lib/games/dragonFlight.test.ts",
+          "range": {
+            "end_line": 109,
+            "sha256": "ca6974091a379d6172946943575855246588953a6139e464d2bc5a8140006953",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "ca6974091a379d6172946943575855246588953a6139e464d2bc5a8140006953",
+          "path": "apps/reading-advantage/lib/games/dragonFlight.test.ts",
+          "range": {
+            "end_line": 109,
+            "sha256": "ca6974091a379d6172946943575855246588953a6139e464d2bc5a8140006953",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/lib/games/dragonFlight.test.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-01",
+      "review_id": "copy-review:070",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/components/games/vocabulary/rpg-battle/PlayerSprite.tsx",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "cb708242b3ea864b2102d98fda2998050e5f0fa8582ae42092bbbdeb3be501ed",
+          "path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/PlayerSprite.tsx",
+          "range": {
+            "end_line": 17,
+            "sha256": "cb708242b3ea864b2102d98fda2998050e5f0fa8582ae42092bbbdeb3be501ed",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "cb708242b3ea864b2102d98fda2998050e5f0fa8582ae42092bbbdeb3be501ed",
+          "path": "apps/reading-advantage/components/games/vocabulary/rpg-battle/PlayerSprite.tsx",
+          "range": {
+            "end_line": 17,
+            "sha256": "cb708242b3ea864b2102d98fda2998050e5f0fa8582ae42092bbbdeb3be501ed",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/rpg-battle/PlayerSprite.tsx",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-01",
+      "review_id": "copy-review:071",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/components/games/vocabulary/rpg-battle/ActionMenu.test.tsx",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "cc679078bcc962b609b4e24a868698bbe2f9cfc46d1570f4f246e48119cbffba",
+          "path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/ActionMenu.test.tsx",
+          "range": {
+            "end_line": 84,
+            "sha256": "cc679078bcc962b609b4e24a868698bbe2f9cfc46d1570f4f246e48119cbffba",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "cc679078bcc962b609b4e24a868698bbe2f9cfc46d1570f4f246e48119cbffba",
+          "path": "apps/reading-advantage/components/games/vocabulary/rpg-battle/ActionMenu.test.tsx",
+          "range": {
+            "end_line": 84,
+            "sha256": "cc679078bcc962b609b4e24a868698bbe2f9cfc46d1570f4f246e48119cbffba",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/rpg-battle/ActionMenu.test.tsx",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-01",
+      "review_id": "copy-review:072",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/lib/games/wizardZombieIndicators.test.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "d11d8a760d38549be53c8f45f2fdb14797ec8a15577edd854758eba62ca83373",
+          "path": "apps/advantage-games/src/lib/games/wizardZombieIndicators.test.ts",
+          "range": {
+            "end_line": 45,
+            "sha256": "d11d8a760d38549be53c8f45f2fdb14797ec8a15577edd854758eba62ca83373",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "d11d8a760d38549be53c8f45f2fdb14797ec8a15577edd854758eba62ca83373",
+          "path": "apps/reading-advantage/lib/games/wizardZombieIndicators.test.ts",
+          "range": {
+            "end_line": 45,
+            "sha256": "d11d8a760d38549be53c8f45f2fdb14797ec8a15577edd854758eba62ca83373",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/lib/games/wizardZombieIndicators.test.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-global-shared-01",
+      "review_id": "copy-review:073",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/app/api/v1/games/alchemists-synthesis/complete/route.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "d2e863865e41f0281609989c5334551172f3e8f76ecf44790759f5de10f6ffc1",
+          "path": "apps/advantage-games/src/app/api/v1/games/alchemists-synthesis/complete/route.ts",
+          "range": {
+            "end_line": 6,
+            "sha256": "d2e863865e41f0281609989c5334551172f3e8f76ecf44790759f5de10f6ffc1",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "d2e863865e41f0281609989c5334551172f3e8f76ecf44790759f5de10f6ffc1",
+          "path": "apps/advantage-games/src/app/api/v1/games/castle-defense/complete/route.ts",
+          "range": {
+            "end_line": 6,
+            "sha256": "d2e863865e41f0281609989c5334551172f3e8f76ecf44790759f5de10f6ffc1",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/advantage-games/src/app/api/v1/games/castle-defense/complete/route.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-02",
+      "review_id": "copy-review:074",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/app/api/v1/games/alchemists-synthesis/complete/route.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "d2e863865e41f0281609989c5334551172f3e8f76ecf44790759f5de10f6ffc1",
+          "path": "apps/advantage-games/src/app/api/v1/games/alchemists-synthesis/complete/route.ts",
+          "range": {
+            "end_line": 6,
+            "sha256": "d2e863865e41f0281609989c5334551172f3e8f76ecf44790759f5de10f6ffc1",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "d2e863865e41f0281609989c5334551172f3e8f76ecf44790759f5de10f6ffc1",
+          "path": "apps/advantage-games/src/app/api/v1/games/dragon-flight/complete/route.ts",
+          "range": {
+            "end_line": 6,
+            "sha256": "d2e863865e41f0281609989c5334551172f3e8f76ecf44790759f5de10f6ffc1",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/advantage-games/src/app/api/v1/games/dragon-flight/complete/route.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-01",
+      "review_id": "copy-review:075",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/app/api/v1/games/alchemists-synthesis/complete/route.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "d2e863865e41f0281609989c5334551172f3e8f76ecf44790759f5de10f6ffc1",
+          "path": "apps/advantage-games/src/app/api/v1/games/alchemists-synthesis/complete/route.ts",
+          "range": {
+            "end_line": 6,
+            "sha256": "d2e863865e41f0281609989c5334551172f3e8f76ecf44790759f5de10f6ffc1",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "d2e863865e41f0281609989c5334551172f3e8f76ecf44790759f5de10f6ffc1",
+          "path": "apps/advantage-games/src/app/api/v1/games/dungeon-liberator/complete/route.ts",
+          "range": {
+            "end_line": 6,
+            "sha256": "d2e863865e41f0281609989c5334551172f3e8f76ecf44790759f5de10f6ffc1",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/advantage-games/src/app/api/v1/games/dungeon-liberator/complete/route.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-05",
+      "review_id": "copy-review:076",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/app/api/v1/games/alchemists-synthesis/complete/route.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "d2e863865e41f0281609989c5334551172f3e8f76ecf44790759f5de10f6ffc1",
+          "path": "apps/advantage-games/src/app/api/v1/games/alchemists-synthesis/complete/route.ts",
+          "range": {
+            "end_line": 6,
+            "sha256": "d2e863865e41f0281609989c5334551172f3e8f76ecf44790759f5de10f6ffc1",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "d2e863865e41f0281609989c5334551172f3e8f76ecf44790759f5de10f6ffc1",
+          "path": "apps/advantage-games/src/app/api/v1/games/enchanted-library/complete/route.ts",
+          "range": {
+            "end_line": 6,
+            "sha256": "d2e863865e41f0281609989c5334551172f3e8f76ecf44790759f5de10f6ffc1",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/advantage-games/src/app/api/v1/games/enchanted-library/complete/route.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-07",
+      "review_id": "copy-review:077",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/app/api/v1/games/alchemists-synthesis/complete/route.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "d2e863865e41f0281609989c5334551172f3e8f76ecf44790759f5de10f6ffc1",
+          "path": "apps/advantage-games/src/app/api/v1/games/alchemists-synthesis/complete/route.ts",
+          "range": {
+            "end_line": 6,
+            "sha256": "d2e863865e41f0281609989c5334551172f3e8f76ecf44790759f5de10f6ffc1",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "d2e863865e41f0281609989c5334551172f3e8f76ecf44790759f5de10f6ffc1",
+          "path": "apps/advantage-games/src/app/api/v1/games/magic-defense/complete/route.ts",
+          "range": {
+            "end_line": 6,
+            "sha256": "d2e863865e41f0281609989c5334551172f3e8f76ecf44790759f5de10f6ffc1",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/advantage-games/src/app/api/v1/games/magic-defense/complete/route.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-02",
+      "review_id": "copy-review:078",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/app/api/v1/games/alchemists-synthesis/complete/route.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "d2e863865e41f0281609989c5334551172f3e8f76ecf44790759f5de10f6ffc1",
+          "path": "apps/advantage-games/src/app/api/v1/games/alchemists-synthesis/complete/route.ts",
+          "range": {
+            "end_line": 6,
+            "sha256": "d2e863865e41f0281609989c5334551172f3e8f76ecf44790759f5de10f6ffc1",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "d2e863865e41f0281609989c5334551172f3e8f76ecf44790759f5de10f6ffc1",
+          "path": "apps/advantage-games/src/app/api/v1/games/potion-rush/complete/route.ts",
+          "range": {
+            "end_line": 6,
+            "sha256": "d2e863865e41f0281609989c5334551172f3e8f76ecf44790759f5de10f6ffc1",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/advantage-games/src/app/api/v1/games/potion-rush/complete/route.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-08",
+      "review_id": "copy-review:079",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/app/api/v1/games/alchemists-synthesis/complete/route.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "d2e863865e41f0281609989c5334551172f3e8f76ecf44790759f5de10f6ffc1",
+          "path": "apps/advantage-games/src/app/api/v1/games/alchemists-synthesis/complete/route.ts",
+          "range": {
+            "end_line": 6,
+            "sha256": "d2e863865e41f0281609989c5334551172f3e8f76ecf44790759f5de10f6ffc1",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "d2e863865e41f0281609989c5334551172f3e8f76ecf44790759f5de10f6ffc1",
+          "path": "apps/advantage-games/src/app/api/v1/games/rpg-battle/complete/route.ts",
+          "range": {
+            "end_line": 6,
+            "sha256": "d2e863865e41f0281609989c5334551172f3e8f76ecf44790759f5de10f6ffc1",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/advantage-games/src/app/api/v1/games/rpg-battle/complete/route.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-01",
+      "review_id": "copy-review:080",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/app/api/v1/games/alchemists-synthesis/complete/route.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "d2e863865e41f0281609989c5334551172f3e8f76ecf44790759f5de10f6ffc1",
+          "path": "apps/advantage-games/src/app/api/v1/games/alchemists-synthesis/complete/route.ts",
+          "range": {
+            "end_line": 6,
+            "sha256": "d2e863865e41f0281609989c5334551172f3e8f76ecf44790759f5de10f6ffc1",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "d2e863865e41f0281609989c5334551172f3e8f76ecf44790759f5de10f6ffc1",
+          "path": "apps/advantage-games/src/app/api/v1/games/rune-match/complete/route.ts",
+          "range": {
+            "end_line": 6,
+            "sha256": "d2e863865e41f0281609989c5334551172f3e8f76ecf44790759f5de10f6ffc1",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/advantage-games/src/app/api/v1/games/rune-match/complete/route.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-07",
+      "review_id": "copy-review:081",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/app/api/v1/games/alchemists-synthesis/complete/route.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "d2e863865e41f0281609989c5334551172f3e8f76ecf44790759f5de10f6ffc1",
+          "path": "apps/advantage-games/src/app/api/v1/games/alchemists-synthesis/complete/route.ts",
+          "range": {
+            "end_line": 6,
+            "sha256": "d2e863865e41f0281609989c5334551172f3e8f76ecf44790759f5de10f6ffc1",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "d2e863865e41f0281609989c5334551172f3e8f76ecf44790759f5de10f6ffc1",
+          "path": "apps/advantage-games/src/app/api/v1/games/wizard-vs-zombie/complete/route.ts",
+          "range": {
+            "end_line": 6,
+            "sha256": "d2e863865e41f0281609989c5334551172f3e8f76ecf44790759f5de10f6ffc1",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/advantage-games/src/app/api/v1/games/wizard-vs-zombie/complete/route.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-02",
+      "review_id": "copy-review:082",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/components/games/vocabulary/rpg-battle/PlayerSprite.test.tsx",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "d8e79865620a1c4c8be8c5d93bf3ca765a928de440a2134370dcc58ce38b0fdb",
+          "path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/PlayerSprite.test.tsx",
+          "range": {
+            "end_line": 10,
+            "sha256": "d8e79865620a1c4c8be8c5d93bf3ca765a928de440a2134370dcc58ce38b0fdb",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "d8e79865620a1c4c8be8c5d93bf3ca765a928de440a2134370dcc58ce38b0fdb",
+          "path": "apps/reading-advantage/components/games/vocabulary/rpg-battle/PlayerSprite.test.tsx",
+          "range": {
+            "end_line": 10,
+            "sha256": "d8e79865620a1c4c8be8c5d93bf3ca765a928de440a2134370dcc58ce38b0fdb",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/rpg-battle/PlayerSprite.test.tsx",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-01",
+      "review_id": "copy-review:083",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/lib/games/rpgBattleSelection.test.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "e39f40d348e6a64de941248d994257be20ac2b06e3e17f6d2f6fdec4b992764e",
+          "path": "apps/advantage-games/src/lib/games/rpgBattleSelection.test.ts",
+          "range": {
+            "end_line": 73,
+            "sha256": "e39f40d348e6a64de941248d994257be20ac2b06e3e17f6d2f6fdec4b992764e",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "e39f40d348e6a64de941248d994257be20ac2b06e3e17f6d2f6fdec4b992764e",
+          "path": "apps/reading-advantage/lib/games/rpgBattleSelection.test.ts",
+          "range": {
+            "end_line": 73,
+            "sha256": "e39f40d348e6a64de941248d994257be20ac2b06e3e17f6d2f6fdec4b992764e",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/lib/games/rpgBattleSelection.test.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-01",
+      "review_id": "copy-review:084",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/lib/games/rpgBattleScaling.test.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "e682e624766679c565af82f74076af004ab7abb7960ca33e61fca2baf42b6c48",
+          "path": "apps/advantage-games/src/lib/games/rpgBattleScaling.test.ts",
+          "range": {
+            "end_line": 50,
+            "sha256": "e682e624766679c565af82f74076af004ab7abb7960ca33e61fca2baf42b6c48",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "e682e624766679c565af82f74076af004ab7abb7960ca33e61fca2baf42b6c48",
+          "path": "apps/reading-advantage/lib/games/rpgBattleScaling.test.ts",
+          "range": {
+            "end_line": 50,
+            "sha256": "e682e624766679c565af82f74076af004ab7abb7960ca33e61fca2baf42b6c48",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/lib/games/rpgBattleScaling.test.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-01",
+      "review_id": "copy-review:085",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/components/games/vocabulary/rpg-battle/FloatingText.tsx",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "e6c14c386cf975fc62d3e843597826db124f44c8a9eee95098e5a2ce1fae037a",
+          "path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/FloatingText.tsx",
+          "range": {
+            "end_line": 46,
+            "sha256": "e6c14c386cf975fc62d3e843597826db124f44c8a9eee95098e5a2ce1fae037a",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "e6c14c386cf975fc62d3e843597826db124f44c8a9eee95098e5a2ce1fae037a",
+          "path": "apps/reading-advantage/components/games/vocabulary/rpg-battle/FloatingText.tsx",
+          "range": {
+            "end_line": 46,
+            "sha256": "e6c14c386cf975fc62d3e843597826db124f44c8a9eee95098e5a2ce1fae037a",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/rpg-battle/FloatingText.tsx",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-01",
+      "review_id": "copy-review:086",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/components/games/vocabulary/rpg-battle/BattleScene.tsx",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "e9393f155c9066cf78342c9701d3eb3ee9a168905320d97070fe6ced9d73f0d5",
+          "path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/BattleScene.tsx",
+          "range": {
+            "end_line": 73,
+            "sha256": "e9393f155c9066cf78342c9701d3eb3ee9a168905320d97070fe6ced9d73f0d5",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "e9393f155c9066cf78342c9701d3eb3ee9a168905320d97070fe6ced9d73f0d5",
+          "path": "apps/reading-advantage/components/games/vocabulary/rpg-battle/BattleScene.tsx",
+          "range": {
+            "end_line": 73,
+            "sha256": "e9393f155c9066cf78342c9701d3eb3ee9a168905320d97070fe6ced9d73f0d5",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/rpg-battle/BattleScene.tsx",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-01",
+      "review_id": "copy-review:087",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/lib/games/potionRushEffects.test.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "ed28e87d9b917ea892ac1b94d581a95face3358f3eca2f21c396aada3f70b423",
+          "path": "apps/advantage-games/src/lib/games/potionRushEffects.test.ts",
+          "range": {
+            "end_line": 23,
+            "sha256": "ed28e87d9b917ea892ac1b94d581a95face3358f3eca2f21c396aada3f70b423",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "ed28e87d9b917ea892ac1b94d581a95face3358f3eca2f21c396aada3f70b423",
+          "path": "apps/reading-advantage/lib/games/potionRushEffects.test.ts",
+          "range": {
+            "end_line": 23,
+            "sha256": "ed28e87d9b917ea892ac1b94d581a95face3358f3eca2f21c396aada3f70b423",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/lib/games/potionRushEffects.test.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-08",
+      "review_id": "copy-review:088",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/lib/games/rpgBattleWordSelection.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "f2f36b681e3ca41ae0d1fe1e958d8774e61666f2ebd9322007d6966ccec90f71",
+          "path": "apps/advantage-games/src/lib/games/rpgBattleWordSelection.ts",
+          "range": {
+            "end_line": 87,
+            "sha256": "f2f36b681e3ca41ae0d1fe1e958d8774e61666f2ebd9322007d6966ccec90f71",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "f2f36b681e3ca41ae0d1fe1e958d8774e61666f2ebd9322007d6966ccec90f71",
+          "path": "apps/reading-advantage/lib/games/rpgBattleWordSelection.ts",
+          "range": {
+            "end_line": 87,
+            "sha256": "f2f36b681e3ca41ae0d1fe1e958d8774e61666f2ebd9322007d6966ccec90f71",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/lib/games/rpgBattleWordSelection.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-01",
+      "review_id": "copy-review:089",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/components/games/vocabulary/enchanted-library/SparkleBurst.tsx",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "f4092852f4b93e81e629f8051e26028ac215744fd99937698b3cbc1a4dacb6e7",
+          "path": "apps/advantage-games/src/components/games/vocabulary/enchanted-library/SparkleBurst.tsx",
+          "range": {
+            "end_line": 39,
+            "sha256": "f4092852f4b93e81e629f8051e26028ac215744fd99937698b3cbc1a4dacb6e7",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "f4092852f4b93e81e629f8051e26028ac215744fd99937698b3cbc1a4dacb6e7",
+          "path": "apps/reading-advantage/components/games/vocabulary/enchanted-library/SparkleBurst.tsx",
+          "range": {
+            "end_line": 39,
+            "sha256": "f4092852f4b93e81e629f8051e26028ac215744fd99937698b3cbc1a4dacb6e7",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/enchanted-library/SparkleBurst.tsx",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-07",
+      "review_id": "copy-review:090",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/lib/games/wizardZombieLogic.test.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "f9dc1ebb4d2abee9d1c807b216a63154b4b0ba0df21acc3218176e8f7a5a5604",
+          "path": "apps/advantage-games/src/lib/games/wizardZombieLogic.test.ts",
+          "range": {
+            "end_line": 197,
+            "sha256": "f9dc1ebb4d2abee9d1c807b216a63154b4b0ba0df21acc3218176e8f7a5a5604",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "f9dc1ebb4d2abee9d1c807b216a63154b4b0ba0df21acc3218176e8f7a5a5604",
+          "path": "apps/reading-advantage/lib/games/wizardZombieLogic.test.ts",
+          "range": {
+            "end_line": 197,
+            "sha256": "f9dc1ebb4d2abee9d1c807b216a63154b4b0ba0df21acc3218176e8f7a5a5604",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/lib/games/wizardZombieLogic.test.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-global-shared-01",
+      "review_id": "copy-review:091",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:apps/advantage-games/src/components/games/vocabulary/rpg-battle/BattleLog.test.tsx",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "fd0cc7a818f37967177b29c32ffc14a15891c51f64c5ebe2baabb08d19383160",
+          "path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/BattleLog.test.tsx",
+          "range": {
+            "end_line": 26,
+            "sha256": "fd0cc7a818f37967177b29c32ffc14a15891c51f64c5ebe2baabb08d19383160",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "fd0cc7a818f37967177b29c32ffc14a15891c51f64c5ebe2baabb08d19383160",
+          "path": "apps/reading-advantage/components/games/vocabulary/rpg-battle/BattleLog.test.tsx",
+          "range": {
+            "end_line": 26,
+            "sha256": "fd0cc7a818f37967177b29c32ffc14a15891c51f64c5ebe2baabb08d19383160",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/rpg-battle/BattleLog.test.tsx",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-program-01",
+      "review_id": "copy-review:092",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    }
+  ],
   "schema_version": "apk-denominator-human-duplicate-drift.v1",
   "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
   "status": "independent-human-discovery-complete",
