@@ -1,0 +1,14 @@
+MEASURE_AGENT_RESULT
+role=truth-test-author / mid-red (fresh isolated session)
+status=complete
+track=apk_source_denominator_inventory_20260712
+phase=Phase 4: Full independent acceptance
+commit=71462110f82f740d3609c95e30b559795ab9e525
+tests_run=PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase4; expected_red_exit=1; actual_exit=1; result=FAILED (failures=8), as expected
+tests_run=PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile measure/tests/test_apk_source_denominator_inventory_phase4.py; expected_exit=0; actual_exit=0; result=passed
+verification=PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase0 measure.tests.test_apk_source_denominator_inventory_phase1 measure.tests.test_apk_source_denominator_inventory_phase2 measure.tests.test_apk_source_denominator_inventory_phase3; actual_exit=0; result=passed (31 tests; 169.495s)
+files_changed=measure/tests/test_apk_source_denominator_inventory_phase4.py; measure/tracks/apk_source_denominator_inventory_20260712/phase4-acceptance-contract-test-report.json; measure/tracks/apk_source_denominator_inventory_20260712/test-strategy.md; measure/tracks/apk_source_denominator_inventory_20260712/role-logs/phase4-mid-red.log
+plan_updates=none; Phase 4 remains in progress and no product-owner acceptance is claimed
+known_failures=AssertionError: Missing Phase-4 independent-acceptance artifact: measure/tracks/apk_source_denominator_inventory_20260712/independent-review.json (all 8 expected RED failures)
+handoff=adversarial-reviewer Green: publish a fresh fork_turns=none independent-review.json, measured reviewer receipt, and exact non-consumable candidate denominator/partition manifests; product-owner: only after a zero-blocker review, publish current-authorized exact-hash approval and then accepted manifests; rerun the Phase-4 GREEN command.
+END_MEASURE_AGENT_RESULT
