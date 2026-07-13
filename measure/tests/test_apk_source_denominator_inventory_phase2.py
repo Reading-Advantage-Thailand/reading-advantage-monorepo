@@ -48,6 +48,12 @@ FORBIDDEN_INTERPRETATION_FIELDS = {
     "semantic_role",
     "suitability",
 }
+PROGRAM_DISPOSITIONS = {
+    "current",
+    "historical/withdrawn",
+    "alias/copy",
+    "unsupported program assumption",
+}
 
 
 def _load_json(path: Path, *, phase2: bool = False) -> dict[str, Any]:
@@ -474,8 +480,8 @@ class Phase2IndependentHumanDiscoveryContracts(unittest.TestCase):
             actual.add(key)
         self.assertEqual(actual, expected, "all Phase-1 historical/deleted locators require exact human review")
 
-    def test_all_29_program_identities_have_bounded_current_or_absent_source_reviews(self) -> None:
-        """Requires exhaustive program identity review without inventing missing implementations.
+    def test_all_29_program_identities_are_reviewed_and_strictly_dispositioned(self) -> None:
+        """Requires exhaustive program review without treating authored names as current identities.
 
         Returns:
             Nothing.
@@ -510,8 +516,14 @@ class Phase2IndependentHumanDiscoveryContracts(unittest.TestCase):
         self.assertIsInstance(reviews, list)
         assert isinstance(reviews, list)
         self.assertEqual([row.get("program_identity_label") for row in reviews if isinstance(row, dict)], expected_labels)
+        dispositions: dict[str, str] = {}
         for index, value in enumerate(reviews):
             row = self._assert_review_record(value, location=f"replacement_program_identity_reviews[{index}]")
+            label = row["program_identity_label"]
+            disposition = row.get("disposition")
+            self.assertIn(disposition, PROGRAM_DISPOSITIONS)
+            assert isinstance(disposition, str)
+            dispositions[label] = disposition
             self.assertIn(row.get("review_batch_id"), {batch["batch_id"] for batch in batches})
             search = row.get("baseline_implementation_search")
             self.assertIsInstance(search, dict)
@@ -534,22 +546,55 @@ class Phase2IndependentHumanDiscoveryContracts(unittest.TestCase):
             self.assertIsInstance(current, list)
             self.assertIsInstance(history, list)
             assert isinstance(current, list) and isinstance(history, list)
-            if row.get("disposition") == "current-page-source-observed":
+            if disposition == "current":
                 self.assertTrue(current)
                 self.assertFalse(history)
+                self.assertTrue(row.get("current_source_denominator_included"))
             else:
-                self.assertEqual(row.get("disposition"), "absent-at-baseline-with-reachable-history")
                 self.assertFalse(current)
                 self.assertEqual(search.get("matched_implementation_paths"), [])
-                self.assertTrue(history)
+                self.assertFalse(row.get("current_source_denominator_included"))
                 history_search = row.get("history_search")
                 self.assertIsInstance(history_search, dict)
                 assert isinstance(history_search, dict)
                 self.assertEqual(history_search.get("baseline_revision"), self.baseline)
                 self.assertTrue(history_search.get("ancestor_only"))
                 self.assertEqual(len(history_search.get("matched_locator_keys", [])), len(history))
+                self.assertIsInstance(history_search.get("search_methods"), list)
+                self.assertTrue(history_search.get("search_methods"))
+                if disposition == "historical/withdrawn":
+                    self.assertTrue(history)
+                    primary = self._assert_locator(row.get("primary_historical_evidence"), historical=True)
+                    self.assertIn(primary, history)
+                    deletion = history_search.get("primary_deletion")
+                    self.assertIsInstance(deletion, dict)
+                    assert isinstance(deletion, dict)
+                    self.assertRegex(str(deletion.get("deletion_commit")), COMMIT_SHA)
+                    self.assertEqual(deletion.get("parent_revision"), primary["revision"])
+                    self.assertEqual(deletion.get("path"), primary["path"])
+                elif disposition == "unsupported program assumption":
+                    self.assertFalse(history)
+                    self.assertEqual(history_search.get("exact_name_commit_hits"), [])
+                    self.assertEqual(history_search.get("slug_commit_hits"), [])
                 for evidence in history:
                     self._assert_locator(evidence, historical=True)
+
+        self.assertEqual(len(dispositions), 29)
+        self.assertEqual(sum(value == "current" for value in dispositions.values()), len(self._identity_ids()))
+        self.assertEqual(sum(value == "historical/withdrawn" for value in dispositions.values()), 12)
+
+        historical = _load_json(HISTORICAL_PATH, phase2=True)
+        program_history = historical.get("program_identity_history_reviews")
+        self.assertIsInstance(program_history, list)
+        assert isinstance(program_history, list)
+        self.assertEqual(
+            {row.get("program_identity_label") for row in program_history if isinstance(row, dict)},
+            {label for label, disposition in dispositions.items() if disposition == "historical/withdrawn"},
+        )
+        for index, value in enumerate(program_history):
+            row = self._assert_review_record(value, location=f"program_identity_history_reviews[{index}]")
+            self.assertEqual(row.get("disposition"), "historical/withdrawn")
+            self._assert_locator(row.get("primary_historical_evidence"), historical=True)
 
     def test_every_mechanical_record_has_one_exact_human_disposition(self) -> None:
         """Compares all mechanical record classes to independent human dispositions.
@@ -611,6 +656,8 @@ class Phase2IndependentHumanDiscoveryContracts(unittest.TestCase):
             "identical_hash_groups": len({row["identical_hash_group"] for row in self.assets["candidate_files"]}),
             "mechanical_discrepancies": len(self.phase1_discrepancies["records"]),
             "replacement_program_identities": 29,
+            "program_identity_dispositions": 29,
+            "historical_program_identities": 12,
             "source_records": len(self.source["records"]),
             "surfaces": sum(len(self.scenes[field]) for field in ("scene_records", "state_records", "transitions")),
         }

@@ -7302,6 +7302,680 @@
       "source_fact": "The cited committed blob resolves at its exact reachable revision and exact hashes match the cited bytes."
     }
   ],
+  "program_identity_history_reviews": [
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "disposition": "historical/withdrawn",
+      "evidence": [
+        {
+          "blob_sha256": "319603dbf1ef3ecca622255f366a5ade8b362c82754145243ccfcdc007abc938",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/abyssal-well/page.tsx",
+          "range": {
+            "end_line": 216,
+            "sha256": "319603dbf1ef3ecca622255f366a5ade8b362c82754145243ccfcdc007abc938",
+            "start_line": 1
+          },
+          "revision": "c76f6af3f62c03979f5073a871e775afd952a070"
+        }
+      ],
+      "history_search": {
+        "exact_name_command": "git log --format=%H -S The Abyssal Well 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "path_history_command": "git log --format=commit:%H --name-status 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/abyssal-well/page.tsx",
+        "primary_deletion": {
+          "command": "git log --format=%H%x09%P%x09%s --diff-filter=D 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/abyssal-well/page.tsx",
+          "commit_subject": "chore(advantage-games): retire cancelled renderer experiments",
+          "deletion_commit": "0ee9184728c11188c40b27c23fa649a9b67952dc",
+          "parent_revision": "c76f6af3f62c03979f5073a871e775afd952a070",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/abyssal-well/page.tsx"
+        },
+        "search_methods": [
+          "frozen-tree exact implementation path fragment",
+          "exact current catalog ID",
+          "Git pickaxe exact display name",
+          "Git pickaxe exact slug",
+          "ancestor path history and deletion-parent resolution",
+          "frozen-revision exact-name specification search"
+        ],
+        "slug_command": "git log --format=%H -S abyssal-well 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "specification_command": "git grep -l -F The Abyssal Well 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- measure"
+      },
+      "interpretation": {},
+      "method": "human-exhaustive-ancestor-history-review",
+      "primary_historical_evidence": {
+        "blob_sha256": "319603dbf1ef3ecca622255f366a5ade8b362c82754145243ccfcdc007abc938",
+        "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/abyssal-well/page.tsx",
+        "range": {
+          "end_line": 216,
+          "sha256": "319603dbf1ef3ecca622255f366a5ade8b362c82754145243ccfcdc007abc938",
+          "start_line": 1
+        },
+        "revision": "c76f6af3f62c03979f5073a871e775afd952a070"
+      },
+      "program_identity_label": "The Abyssal Well \u2014 stale/historical evidence recovery.",
+      "program_review_record_id": "program-identity:03",
+      "record_id": "program-history:program-identity:03",
+      "source_fact": "Ancestor-only exact-name, slug, route/path, deletion, catalog, and specification searches resolve this program identity only as historical/withdrawn.",
+      "source_identity_id": "sentence/abyssal-well"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "disposition": "historical/withdrawn",
+      "evidence": [
+        {
+          "blob_sha256": "6d09a4bc121cf0b506e54f92f344b500f50d80d69146b288f59de325be73bd6a",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/archers-revenge/page.tsx",
+          "range": {
+            "end_line": 151,
+            "sha256": "6d09a4bc121cf0b506e54f92f344b500f50d80d69146b288f59de325be73bd6a",
+            "start_line": 1
+          },
+          "revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e"
+        }
+      ],
+      "history_search": {
+        "exact_name_command": "git log --format=%H -S Archer's Revenge 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "path_history_command": "git log --format=commit:%H --name-status 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/archers-revenge/page.tsx",
+        "primary_deletion": {
+          "command": "git log --format=%H%x09%P%x09%s --diff-filter=D 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/archers-revenge/page.tsx",
+          "commit_subject": "feat(games): ship APK arena wave (track_id: apk_arena_target_action_wave_w4_20260711)",
+          "deletion_commit": "a30e8777952139460092c7d4649b8a72b5e8beda",
+          "parent_revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/archers-revenge/page.tsx"
+        },
+        "search_methods": [
+          "frozen-tree exact implementation path fragment",
+          "exact current catalog ID",
+          "Git pickaxe exact display name",
+          "Git pickaxe exact slug",
+          "ancestor path history and deletion-parent resolution",
+          "frozen-revision exact-name specification search"
+        ],
+        "slug_command": "git log --format=%H -S archers-revenge 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "specification_command": "git grep -l -F Archer's Revenge 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- measure"
+      },
+      "interpretation": {},
+      "method": "human-exhaustive-ancestor-history-review",
+      "primary_historical_evidence": {
+        "blob_sha256": "6d09a4bc121cf0b506e54f92f344b500f50d80d69146b288f59de325be73bd6a",
+        "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/archers-revenge/page.tsx",
+        "range": {
+          "end_line": 151,
+          "sha256": "6d09a4bc121cf0b506e54f92f344b500f50d80d69146b288f59de325be73bd6a",
+          "start_line": 1
+        },
+        "revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e"
+      },
+      "program_identity_label": "Archer's Revenge",
+      "program_review_record_id": "program-identity:08",
+      "record_id": "program-history:program-identity:08",
+      "source_fact": "Ancestor-only exact-name, slug, route/path, deletion, catalog, and specification searches resolve this program identity only as historical/withdrawn.",
+      "source_identity_id": "vocabulary/archers-revenge"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "disposition": "historical/withdrawn",
+      "evidence": [
+        {
+          "blob_sha256": "813bb933d8da5ebac3bcb6582d2a2929889c005be2b600274e3b322dee87d654",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/storm-castle-tower/page.tsx",
+          "range": {
+            "end_line": 217,
+            "sha256": "813bb933d8da5ebac3bcb6582d2a2929889c005be2b600274e3b322dee87d654",
+            "start_line": 1
+          },
+          "revision": "4106ba39547c8cac7645ce0f257a6bdd133712e9"
+        }
+      ],
+      "history_search": {
+        "exact_name_command": "git log --format=%H -S Storm the Castle Tower 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "path_history_command": "git log --format=commit:%H --name-status 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/storm-castle-tower/page.tsx",
+        "primary_deletion": {
+          "command": "git log --format=%H%x09%P%x09%s --diff-filter=D 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/storm-castle-tower/page.tsx",
+          "commit_subject": "refactor(apk): retire W3 legacy routes (track_id: apk_runner_traversal_wave_w3_20260711)",
+          "deletion_commit": "524269494fbb4f92667c2889f3206cafd88b1bd0",
+          "parent_revision": "4106ba39547c8cac7645ce0f257a6bdd133712e9",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/storm-castle-tower/page.tsx"
+        },
+        "search_methods": [
+          "frozen-tree exact implementation path fragment",
+          "exact current catalog ID",
+          "Git pickaxe exact display name",
+          "Git pickaxe exact slug",
+          "ancestor path history and deletion-parent resolution",
+          "frozen-revision exact-name specification search"
+        ],
+        "slug_command": "git log --format=%H -S storm-castle-tower 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "specification_command": "git grep -l -F Storm the Castle Tower 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- measure"
+      },
+      "interpretation": {},
+      "method": "human-exhaustive-ancestor-history-review",
+      "primary_historical_evidence": {
+        "blob_sha256": "813bb933d8da5ebac3bcb6582d2a2929889c005be2b600274e3b322dee87d654",
+        "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/storm-castle-tower/page.tsx",
+        "range": {
+          "end_line": 217,
+          "sha256": "813bb933d8da5ebac3bcb6582d2a2929889c005be2b600274e3b322dee87d654",
+          "start_line": 1
+        },
+        "revision": "4106ba39547c8cac7645ce0f257a6bdd133712e9"
+      },
+      "program_identity_label": "Storm the Castle Tower",
+      "program_review_record_id": "program-identity:09",
+      "record_id": "program-history:program-identity:09",
+      "source_fact": "Ancestor-only exact-name, slug, route/path, deletion, catalog, and specification searches resolve this program identity only as historical/withdrawn.",
+      "source_identity_id": "sentence/storm-castle-tower"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "disposition": "historical/withdrawn",
+      "evidence": [
+        {
+          "blob_sha256": "0ca5ec97b38504b27f72217a4885369ad09ab7792cc078637b7c3ff80be6678b",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/paladins-twin-soul/page.tsx",
+          "range": {
+            "end_line": 141,
+            "sha256": "0ca5ec97b38504b27f72217a4885369ad09ab7792cc078637b7c3ff80be6678b",
+            "start_line": 1
+          },
+          "revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e"
+        }
+      ],
+      "history_search": {
+        "exact_name_command": "git log --format=%H -S Paladin's Twin-Soul 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "path_history_command": "git log --format=commit:%H --name-status 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/paladins-twin-soul/page.tsx",
+        "primary_deletion": {
+          "command": "git log --format=%H%x09%P%x09%s --diff-filter=D 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/paladins-twin-soul/page.tsx",
+          "commit_subject": "feat(games): ship APK arena wave (track_id: apk_arena_target_action_wave_w4_20260711)",
+          "deletion_commit": "a30e8777952139460092c7d4649b8a72b5e8beda",
+          "parent_revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/paladins-twin-soul/page.tsx"
+        },
+        "search_methods": [
+          "frozen-tree exact implementation path fragment",
+          "exact current catalog ID",
+          "Git pickaxe exact display name",
+          "Git pickaxe exact slug",
+          "ancestor path history and deletion-parent resolution",
+          "frozen-revision exact-name specification search"
+        ],
+        "slug_command": "git log --format=%H -S paladins-twin-soul 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "specification_command": "git grep -l -F Paladin's Twin-Soul 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- measure"
+      },
+      "interpretation": {},
+      "method": "human-exhaustive-ancestor-history-review",
+      "primary_historical_evidence": {
+        "blob_sha256": "0ca5ec97b38504b27f72217a4885369ad09ab7792cc078637b7c3ff80be6678b",
+        "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/paladins-twin-soul/page.tsx",
+        "range": {
+          "end_line": 141,
+          "sha256": "0ca5ec97b38504b27f72217a4885369ad09ab7792cc078637b7c3ff80be6678b",
+          "start_line": 1
+        },
+        "revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e"
+      },
+      "program_identity_label": "Paladin's Twin-Soul",
+      "program_review_record_id": "program-identity:10",
+      "record_id": "program-history:program-identity:10",
+      "source_fact": "Ancestor-only exact-name, slug, route/path, deletion, catalog, and specification searches resolve this program identity only as historical/withdrawn.",
+      "source_identity_id": "vocabulary/paladins-twin-soul"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "disposition": "historical/withdrawn",
+      "evidence": [
+        {
+          "blob_sha256": "2ba834655ffb72df650da4446e527110f1986fe297769a50d36095304283c588",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/gryphon-patrol/page.tsx",
+          "range": {
+            "end_line": 369,
+            "sha256": "2ba834655ffb72df650da4446e527110f1986fe297769a50d36095304283c588",
+            "start_line": 1
+          },
+          "revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e"
+        }
+      ],
+      "history_search": {
+        "exact_name_command": "git log --format=%H -S Gryphon Patrol 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "path_history_command": "git log --format=commit:%H --name-status 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/gryphon-patrol/page.tsx",
+        "primary_deletion": {
+          "command": "git log --format=%H%x09%P%x09%s --diff-filter=D 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/gryphon-patrol/page.tsx",
+          "commit_subject": "feat(games): ship APK arena wave (track_id: apk_arena_target_action_wave_w4_20260711)",
+          "deletion_commit": "a30e8777952139460092c7d4649b8a72b5e8beda",
+          "parent_revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/gryphon-patrol/page.tsx"
+        },
+        "search_methods": [
+          "frozen-tree exact implementation path fragment",
+          "exact current catalog ID",
+          "Git pickaxe exact display name",
+          "Git pickaxe exact slug",
+          "ancestor path history and deletion-parent resolution",
+          "frozen-revision exact-name specification search"
+        ],
+        "slug_command": "git log --format=%H -S gryphon-patrol 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "specification_command": "git grep -l -F Gryphon Patrol 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- measure"
+      },
+      "interpretation": {},
+      "method": "human-exhaustive-ancestor-history-review",
+      "primary_historical_evidence": {
+        "blob_sha256": "2ba834655ffb72df650da4446e527110f1986fe297769a50d36095304283c588",
+        "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/gryphon-patrol/page.tsx",
+        "range": {
+          "end_line": 369,
+          "sha256": "2ba834655ffb72df650da4446e527110f1986fe297769a50d36095304283c588",
+          "start_line": 1
+        },
+        "revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e"
+      },
+      "program_identity_label": "Gryphon Patrol",
+      "program_review_record_id": "program-identity:11",
+      "record_id": "program-history:program-identity:11",
+      "source_fact": "Ancestor-only exact-name, slug, route/path, deletion, catalog, and specification searches resolve this program identity only as historical/withdrawn.",
+      "source_identity_id": "sentence/gryphon-patrol"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "disposition": "historical/withdrawn",
+      "evidence": [
+        {
+          "blob_sha256": "fe8d32581088b0808e715a5327fa9b24d17d48ee120b73b8c72e5dbb1d8ed64b",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/spellweavers-run/page.tsx",
+          "range": {
+            "end_line": 216,
+            "sha256": "fe8d32581088b0808e715a5327fa9b24d17d48ee120b73b8c72e5dbb1d8ed64b",
+            "start_line": 1
+          },
+          "revision": "4106ba39547c8cac7645ce0f257a6bdd133712e9"
+        }
+      ],
+      "history_search": {
+        "exact_name_command": "git log --format=%H -S Spellweaver's Run 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "path_history_command": "git log --format=commit:%H --name-status 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/spellweavers-run/page.tsx",
+        "primary_deletion": {
+          "command": "git log --format=%H%x09%P%x09%s --diff-filter=D 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/spellweavers-run/page.tsx",
+          "commit_subject": "refactor(apk): retire W3 legacy routes (track_id: apk_runner_traversal_wave_w3_20260711)",
+          "deletion_commit": "524269494fbb4f92667c2889f3206cafd88b1bd0",
+          "parent_revision": "4106ba39547c8cac7645ce0f257a6bdd133712e9",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/spellweavers-run/page.tsx"
+        },
+        "search_methods": [
+          "frozen-tree exact implementation path fragment",
+          "exact current catalog ID",
+          "Git pickaxe exact display name",
+          "Git pickaxe exact slug",
+          "ancestor path history and deletion-parent resolution",
+          "frozen-revision exact-name specification search"
+        ],
+        "slug_command": "git log --format=%H -S spellweavers-run 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "specification_command": "git grep -l -F Spellweaver's Run 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- measure"
+      },
+      "interpretation": {},
+      "method": "human-exhaustive-ancestor-history-review",
+      "primary_historical_evidence": {
+        "blob_sha256": "fe8d32581088b0808e715a5327fa9b24d17d48ee120b73b8c72e5dbb1d8ed64b",
+        "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/spellweavers-run/page.tsx",
+        "range": {
+          "end_line": 216,
+          "sha256": "fe8d32581088b0808e715a5327fa9b24d17d48ee120b73b8c72e5dbb1d8ed64b",
+          "start_line": 1
+        },
+        "revision": "4106ba39547c8cac7645ce0f257a6bdd133712e9"
+      },
+      "program_identity_label": "Spellweaver's Run",
+      "program_review_record_id": "program-identity:14",
+      "record_id": "program-history:program-identity:14",
+      "source_fact": "Ancestor-only exact-name, slug, route/path, deletion, catalog, and specification searches resolve this program identity only as historical/withdrawn.",
+      "source_identity_id": "sentence/spellweavers-run"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "disposition": "historical/withdrawn",
+      "evidence": [
+        {
+          "blob_sha256": "628bc2e3084ed24846c61fd2cf3c776f4b5206ce7582da2a9614d0f171ac34d3",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/griffin-riders-escape/page.tsx",
+          "range": {
+            "end_line": 70,
+            "sha256": "628bc2e3084ed24846c61fd2cf3c776f4b5206ce7582da2a9614d0f171ac34d3",
+            "start_line": 1
+          },
+          "revision": "4106ba39547c8cac7645ce0f257a6bdd133712e9"
+        }
+      ],
+      "history_search": {
+        "exact_name_command": "git log --format=%H -S Griffin Rider's Escape 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "path_history_command": "git log --format=commit:%H --name-status 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/griffin-riders-escape/page.tsx",
+        "primary_deletion": {
+          "command": "git log --format=%H%x09%P%x09%s --diff-filter=D 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/griffin-riders-escape/page.tsx",
+          "commit_subject": "refactor(apk): retire W3 legacy routes (track_id: apk_runner_traversal_wave_w3_20260711)",
+          "deletion_commit": "524269494fbb4f92667c2889f3206cafd88b1bd0",
+          "parent_revision": "4106ba39547c8cac7645ce0f257a6bdd133712e9",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/griffin-riders-escape/page.tsx"
+        },
+        "search_methods": [
+          "frozen-tree exact implementation path fragment",
+          "exact current catalog ID",
+          "Git pickaxe exact display name",
+          "Git pickaxe exact slug",
+          "ancestor path history and deletion-parent resolution",
+          "frozen-revision exact-name specification search"
+        ],
+        "slug_command": "git log --format=%H -S griffin-riders-escape 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "specification_command": "git grep -l -F Griffin Rider's Escape 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- measure"
+      },
+      "interpretation": {},
+      "method": "human-exhaustive-ancestor-history-review",
+      "primary_historical_evidence": {
+        "blob_sha256": "628bc2e3084ed24846c61fd2cf3c776f4b5206ce7582da2a9614d0f171ac34d3",
+        "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/griffin-riders-escape/page.tsx",
+        "range": {
+          "end_line": 70,
+          "sha256": "628bc2e3084ed24846c61fd2cf3c776f4b5206ce7582da2a9614d0f171ac34d3",
+          "start_line": 1
+        },
+        "revision": "4106ba39547c8cac7645ce0f257a6bdd133712e9"
+      },
+      "program_identity_label": "Griffin Rider's Escape",
+      "program_review_record_id": "program-identity:17",
+      "record_id": "program-history:program-identity:17",
+      "source_fact": "Ancestor-only exact-name, slug, route/path, deletion, catalog, and specification searches resolve this program identity only as historical/withdrawn.",
+      "source_identity_id": "sentence/griffin-riders-escape"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "disposition": "historical/withdrawn",
+      "evidence": [
+        {
+          "blob_sha256": "ef4842a143682dbf9a90c0050d5ea280dd00d28730c08ae29505b3d5f6c905a9",
+          "path": "packages/game-cartridges/src/cartridges/sorcerer-ziggurat/definition.ts",
+          "range": {
+            "end_line": 41,
+            "sha256": "ef4842a143682dbf9a90c0050d5ea280dd00d28730c08ae29505b3d5f6c905a9",
+            "start_line": 1
+          },
+          "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+        }
+      ],
+      "history_search": {
+        "exact_name_command": "git log --format=%H -S The Sorcerer's Ziggurat 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "path_history_command": "git log --format=commit:%H --name-status 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- packages/game-cartridges/src/cartridges/sorcerer-ziggurat/definition.ts",
+        "primary_deletion": {
+          "command": "git log --format=%H%x09%P%x09%s --diff-filter=D 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- packages/game-cartridges/src/cartridges/sorcerer-ziggurat/definition.ts",
+          "commit_subject": "chore(apk): withdraw invalid cartridge implementation",
+          "deletion_commit": "05bb6d2909268ea670b106240167f86c9814d67d",
+          "parent_revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f",
+          "path": "packages/game-cartridges/src/cartridges/sorcerer-ziggurat/definition.ts"
+        },
+        "search_methods": [
+          "frozen-tree exact implementation path fragment",
+          "exact current catalog ID",
+          "Git pickaxe exact display name",
+          "Git pickaxe exact slug",
+          "ancestor path history and deletion-parent resolution",
+          "frozen-revision exact-name specification search"
+        ],
+        "slug_command": "git log --format=%H -S sorcerer-ziggurat 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "specification_command": "git grep -l -F The Sorcerer's Ziggurat 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- measure"
+      },
+      "interpretation": {},
+      "method": "human-exhaustive-ancestor-history-review",
+      "primary_historical_evidence": {
+        "blob_sha256": "ef4842a143682dbf9a90c0050d5ea280dd00d28730c08ae29505b3d5f6c905a9",
+        "path": "packages/game-cartridges/src/cartridges/sorcerer-ziggurat/definition.ts",
+        "range": {
+          "end_line": 41,
+          "sha256": "ef4842a143682dbf9a90c0050d5ea280dd00d28730c08ae29505b3d5f6c905a9",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      },
+      "program_identity_label": "The Sorcerer's Ziggurat",
+      "program_review_record_id": "program-identity:18",
+      "record_id": "program-history:program-identity:18",
+      "source_fact": "Ancestor-only exact-name, slug, route/path, deletion, catalog, and specification searches resolve this program identity only as historical/withdrawn.",
+      "source_identity_id": "sentence/sorcerer-ziggurat"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "disposition": "historical/withdrawn",
+      "evidence": [
+        {
+          "blob_sha256": "e5242078cc070554949d40853fcb0768eb429fe39691bddbcf87372312725c54",
+          "path": "packages/game-cartridges/src/cartridges/astral-mage/definition.ts",
+          "range": {
+            "end_line": 42,
+            "sha256": "e5242078cc070554949d40853fcb0768eb429fe39691bddbcf87372312725c54",
+            "start_line": 1
+          },
+          "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+        }
+      ],
+      "history_search": {
+        "exact_name_command": "git log --format=%H -S Astral Mage 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "path_history_command": "git log --format=commit:%H --name-status 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- packages/game-cartridges/src/cartridges/astral-mage/definition.ts",
+        "primary_deletion": {
+          "command": "git log --format=%H%x09%P%x09%s --diff-filter=D 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- packages/game-cartridges/src/cartridges/astral-mage/definition.ts",
+          "commit_subject": "chore(apk): withdraw invalid cartridge implementation",
+          "deletion_commit": "05bb6d2909268ea670b106240167f86c9814d67d",
+          "parent_revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f",
+          "path": "packages/game-cartridges/src/cartridges/astral-mage/definition.ts"
+        },
+        "search_methods": [
+          "frozen-tree exact implementation path fragment",
+          "exact current catalog ID",
+          "Git pickaxe exact display name",
+          "Git pickaxe exact slug",
+          "ancestor path history and deletion-parent resolution",
+          "frozen-revision exact-name specification search"
+        ],
+        "slug_command": "git log --format=%H -S astral-mage 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "specification_command": "git grep -l -F Astral Mage 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- measure"
+      },
+      "interpretation": {},
+      "method": "human-exhaustive-ancestor-history-review",
+      "primary_historical_evidence": {
+        "blob_sha256": "e5242078cc070554949d40853fcb0768eb429fe39691bddbcf87372312725c54",
+        "path": "packages/game-cartridges/src/cartridges/astral-mage/definition.ts",
+        "range": {
+          "end_line": 42,
+          "sha256": "e5242078cc070554949d40853fcb0768eb429fe39691bddbcf87372312725c54",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      },
+      "program_identity_label": "Astral Mage",
+      "program_review_record_id": "program-identity:24",
+      "record_id": "program-history:program-identity:24",
+      "source_fact": "Ancestor-only exact-name, slug, route/path, deletion, catalog, and specification searches resolve this program identity only as historical/withdrawn.",
+      "source_identity_id": "sentence/astral-mage"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "disposition": "historical/withdrawn",
+      "evidence": [
+        {
+          "blob_sha256": "5603344c1cc4320e9390b355241512c501d812f41c4fee2c413c6a40f9136ddf",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/griffin-sky-joust/page.tsx",
+          "range": {
+            "end_line": 225,
+            "sha256": "5603344c1cc4320e9390b355241512c501d812f41c4fee2c413c6a40f9136ddf",
+            "start_line": 1
+          },
+          "revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e"
+        }
+      ],
+      "history_search": {
+        "exact_name_command": "git log --format=%H -S Griffin Sky-Joust 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "path_history_command": "git log --format=commit:%H --name-status 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/griffin-sky-joust/page.tsx",
+        "primary_deletion": {
+          "command": "git log --format=%H%x09%P%x09%s --diff-filter=D 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/griffin-sky-joust/page.tsx",
+          "commit_subject": "feat(games): ship APK arena wave (track_id: apk_arena_target_action_wave_w4_20260711)",
+          "deletion_commit": "a30e8777952139460092c7d4649b8a72b5e8beda",
+          "parent_revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/griffin-sky-joust/page.tsx"
+        },
+        "search_methods": [
+          "frozen-tree exact implementation path fragment",
+          "exact current catalog ID",
+          "Git pickaxe exact display name",
+          "Git pickaxe exact slug",
+          "ancestor path history and deletion-parent resolution",
+          "frozen-revision exact-name specification search"
+        ],
+        "slug_command": "git log --format=%H -S griffin-sky-joust 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "specification_command": "git grep -l -F Griffin Sky-Joust 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- measure"
+      },
+      "interpretation": {},
+      "method": "human-exhaustive-ancestor-history-review",
+      "primary_historical_evidence": {
+        "blob_sha256": "5603344c1cc4320e9390b355241512c501d812f41c4fee2c413c6a40f9136ddf",
+        "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/griffin-sky-joust/page.tsx",
+        "range": {
+          "end_line": 225,
+          "sha256": "5603344c1cc4320e9390b355241512c501d812f41c4fee2c413c6a40f9136ddf",
+          "start_line": 1
+        },
+        "revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e"
+      },
+      "program_identity_label": "Griffin Sky-Joust",
+      "program_review_record_id": "program-identity:25",
+      "record_id": "program-history:program-identity:25",
+      "source_fact": "Ancestor-only exact-name, slug, route/path, deletion, catalog, and specification searches resolve this program identity only as historical/withdrawn.",
+      "source_identity_id": "sentence/griffin-sky-joust"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "disposition": "historical/withdrawn",
+      "evidence": [
+        {
+          "blob_sha256": "6f1155f96a46485c77db8e0bf88a767419b808a1172c083636e2b29f2b05a93b",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/realm-carver/page.tsx",
+          "range": {
+            "end_line": 143,
+            "sha256": "6f1155f96a46485c77db8e0bf88a767419b808a1172c083636e2b29f2b05a93b",
+            "start_line": 1
+          },
+          "revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e"
+        }
+      ],
+      "history_search": {
+        "exact_name_command": "git log --format=%H -S Realm Carver 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "path_history_command": "git log --format=commit:%H --name-status 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/realm-carver/page.tsx",
+        "primary_deletion": {
+          "command": "git log --format=%H%x09%P%x09%s --diff-filter=D 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/realm-carver/page.tsx",
+          "commit_subject": "feat(games): ship APK arena wave (track_id: apk_arena_target_action_wave_w4_20260711)",
+          "deletion_commit": "a30e8777952139460092c7d4649b8a72b5e8beda",
+          "parent_revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/realm-carver/page.tsx"
+        },
+        "search_methods": [
+          "frozen-tree exact implementation path fragment",
+          "exact current catalog ID",
+          "Git pickaxe exact display name",
+          "Git pickaxe exact slug",
+          "ancestor path history and deletion-parent resolution",
+          "frozen-revision exact-name specification search"
+        ],
+        "slug_command": "git log --format=%H -S realm-carver 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "specification_command": "git grep -l -F Realm Carver 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- measure"
+      },
+      "interpretation": {},
+      "method": "human-exhaustive-ancestor-history-review",
+      "primary_historical_evidence": {
+        "blob_sha256": "6f1155f96a46485c77db8e0bf88a767419b808a1172c083636e2b29f2b05a93b",
+        "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/realm-carver/page.tsx",
+        "range": {
+          "end_line": 143,
+          "sha256": "6f1155f96a46485c77db8e0bf88a767419b808a1172c083636e2b29f2b05a93b",
+          "start_line": 1
+        },
+        "revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e"
+      },
+      "program_identity_label": "Realm Carver",
+      "program_review_record_id": "program-identity:26",
+      "record_id": "program-history:program-identity:26",
+      "source_fact": "Ancestor-only exact-name, slug, route/path, deletion, catalog, and specification searches resolve this program identity only as historical/withdrawn.",
+      "source_identity_id": "sentence/realm-carver"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "disposition": "historical/withdrawn",
+      "evidence": [
+        {
+          "blob_sha256": "f438feea924cc464ba6366949b3cd3926ee4b36a13f15c3c1b7162b1b5c76565",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/babel-architect/page.tsx",
+          "range": {
+            "end_line": 221,
+            "sha256": "f438feea924cc464ba6366949b3cd3926ee4b36a13f15c3c1b7162b1b5c76565",
+            "start_line": 1
+          },
+          "revision": "c76f6af3f62c03979f5073a871e775afd952a070"
+        }
+      ],
+      "history_search": {
+        "exact_name_command": "git log --format=%H -S Babel Architect 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "path_history_command": "git log --format=commit:%H --name-status 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/babel-architect/page.tsx",
+        "primary_deletion": {
+          "command": "git log --format=%H%x09%P%x09%s --diff-filter=D 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/babel-architect/page.tsx",
+          "commit_subject": "chore(advantage-games): retire cancelled renderer experiments",
+          "deletion_commit": "0ee9184728c11188c40b27c23fa649a9b67952dc",
+          "parent_revision": "c76f6af3f62c03979f5073a871e775afd952a070",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/babel-architect/page.tsx"
+        },
+        "search_methods": [
+          "frozen-tree exact implementation path fragment",
+          "exact current catalog ID",
+          "Git pickaxe exact display name",
+          "Git pickaxe exact slug",
+          "ancestor path history and deletion-parent resolution",
+          "frozen-revision exact-name specification search"
+        ],
+        "slug_command": "git log --format=%H -S babel-architect 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "specification_command": "git grep -l -F Babel Architect 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- measure"
+      },
+      "interpretation": {},
+      "method": "human-exhaustive-ancestor-history-review",
+      "primary_historical_evidence": {
+        "blob_sha256": "f438feea924cc464ba6366949b3cd3926ee4b36a13f15c3c1b7162b1b5c76565",
+        "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/babel-architect/page.tsx",
+        "range": {
+          "end_line": 221,
+          "sha256": "f438feea924cc464ba6366949b3cd3926ee4b36a13f15c3c1b7162b1b5c76565",
+          "start_line": 1
+        },
+        "revision": "c76f6af3f62c03979f5073a871e775afd952a070"
+      },
+      "program_identity_label": "Babel Architect",
+      "program_review_record_id": "program-identity:29",
+      "record_id": "program-history:program-identity:29",
+      "source_fact": "Ancestor-only exact-name, slug, route/path, deletion, catalog, and specification searches resolve this program identity only as historical/withdrawn.",
+      "source_identity_id": "sentence/babel-architect"
+    }
+  ],
   "schema_version": "apk-denominator-human-historical-deleted.v1",
   "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
   "status": "independent-human-discovery-complete",

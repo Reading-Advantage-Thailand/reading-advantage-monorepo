@@ -9,7 +9,7 @@
     {
       "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase2",
       "result": "passed",
-      "test_count": 7
+      "test_count": 10
     },
     {
       "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile measure/tests/test_apk_source_denominator_inventory_phase2.py",
@@ -41,7 +41,7 @@
   ],
   "owner_verification": {
     "owner_role": "evidence-collector",
-    "evidence": "The fresh evidence-collector source-review log records all six accepted batches, raw committed-source retrieval digests, and the exact Primary-tree not-observed result; the focused contract passed afterward.",
+    "evidence": "The fresh evidence-collector source-review log records all 29 authored program names as reviewed/dispositioned rather than accepted current identities: 17 current and 12 historical/withdrawn. Every historical disposition records exact ancestor path/range hashes, deletion commit and parent, catalog evidence, and reproducible exact-name, slug, route/path, and specification searches; the focused 10-test contract passed afterward.",
     "evidence_path": "role-logs/phase2-evidence-collector-green.log",
     "product_owner_acceptance": "not-claimed"
   },

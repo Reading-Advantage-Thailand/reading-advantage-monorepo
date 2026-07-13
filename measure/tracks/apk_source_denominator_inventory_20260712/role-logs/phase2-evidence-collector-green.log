@@ -30,6 +30,7 @@ Explicit non-game/global batches:
 
 Exact exhaustive coverage at the frozen source boundary:
 - replacement program identities: 29 reviewed; 0 uncovered
+- strict program dispositions: 17 current; 12 historical/withdrawn; 0 alias/copy; 0 unsupported program assumption; 0 undispositioned
 - current mechanical identities: 17 reviewed; 0 uncovered
 - mechanical source records: 1031 reviewed; 0 uncovered
 - graph edges: 323 reviewed; 0 uncovered
@@ -42,12 +43,13 @@ Exact exhaustive coverage at the frozen source boundary:
 - mechanical discrepancy observations: 8 reviewed; 0 uncovered
 - total uncovered records across all categories: 0
 
-Absent-at-baseline identities retain exact replacement-program evidence, baseline catalog and implementation-path search metadata, and reachable historical locators. No current implementation was invented.
+All 12 absent-at-baseline identities resolve as historical/withdrawn. Each retains exact replacement-program evidence, baseline catalog and implementation-path search metadata, exact-name and slug pickaxe commit hits, frozen specification hits, primary deleted route/source path history, deletion commit and parent revision, and reachable path/range/blob hashes. None is forced into the 17-identity current source denominator.
+Primary deletion commits: Abyssal Well and Babel Architect 0ee9184728c11188c40b27c23fa649a9b67952dc; Archer's Revenge, Paladin's Twin-Soul, Gryphon Patrol, Griffin Sky-Joust, and Realm Carver a30e8777952139460092c7d4649b8a72b5e8beda; Storm the Castle Tower, Spellweaver's Run, and Griffin Rider's Escape 524269494fbb4f92667c2889f3206cafd88b1bd0; Astral Mage and The Sorcerer's Ziggurat 05bb6d2909268ea670b106240167f86c9814d67d.
 Two empty committed PNG candidates use the explicit empty range 0-0 with the SHA-256 of zero bytes.
 The deterministic helper resolved 1085 committed source objects and hashed 402352181 source bytes internally. These helper-internal bytes are not represented as platform agent-context usage; the platform did not expose a role-usage ledger.
 
 Verification:
-- Phase 0/1/2 focused unit tests: pass
+- Phase-2 focused unit tests: pass (10 tests)
 - Phase-2 static syntax check: pass
 - explicit helper coverage check: pass, uncovered_count=0
 - acceptance and Phase-3 reconciliation: not claimed or authored

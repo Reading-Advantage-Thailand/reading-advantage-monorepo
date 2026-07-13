@@ -8,8 +8,10 @@
     "duplicate_family_records": 34,
     "graph_edges": 323,
     "historical_locators": 164,
+    "historical_program_identities": 12,
     "identical_hash_groups": 153,
     "mechanical_discrepancies": 8,
+    "program_identity_dispositions": 29,
     "replacement_program_identities": 29,
     "source_records": 1031,
     "surfaces": 66
@@ -754,6 +756,733 @@
       "source_fact": "Every current locator listed by the mechanical observation resolves independently; no path was merged or omitted."
     }
   ],
+  "program_identity_disposition_records": [
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "current_source_denominator_included": true,
+      "disposition": "current",
+      "evidence": [
+        {
+          "blob_sha256": "3506322282874f3dd429d37cee85292ed7934255bfcb966318fb8488ecf83a13",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/dragon-flight/page.tsx",
+          "range": {
+            "end_line": 165,
+            "sha256": "3506322282874f3dd429d37cee85292ed7934255bfcb966318fb8488ecf83a13",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "method": "human-program-denominator-disposition",
+      "program_identity_label": "Dragon Flight \u2014 large current action implementation.",
+      "record_id": "program-disposition:program-identity:01",
+      "source_fact": "The frozen baseline contains the cited current page-source object(s); exact catalog evidence is retained when present.",
+      "source_identity_id": "vocabulary/dragon-flight"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "current_source_denominator_included": true,
+      "disposition": "current",
+      "evidence": [
+        {
+          "blob_sha256": "1ec182f560b7a5bb0f33a4348d8998859ed2ffd347cfadbf7929ce85bb6d91ff",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/rpg-battle/page.tsx",
+          "range": {
+            "end_line": 645,
+            "sha256": "1ec182f560b7a5bb0f33a4348d8998859ed2ffd347cfadbf7929ce85bb6d91ff",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "method": "human-program-denominator-disposition",
+      "program_identity_label": "RPG Battle \u2014 multi-state turn-based implementation.",
+      "record_id": "program-disposition:program-identity:02",
+      "source_fact": "The frozen baseline contains the cited current page-source object(s); exact catalog evidence is retained when present.",
+      "source_identity_id": "vocabulary/rpg-battle"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "current_source_denominator_included": false,
+      "disposition": "historical/withdrawn",
+      "evidence": [
+        {
+          "blob_sha256": "319603dbf1ef3ecca622255f366a5ade8b362c82754145243ccfcdc007abc938",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/abyssal-well/page.tsx",
+          "range": {
+            "end_line": 216,
+            "sha256": "319603dbf1ef3ecca622255f366a5ade8b362c82754145243ccfcdc007abc938",
+            "start_line": 1
+          },
+          "revision": "c76f6af3f62c03979f5073a871e775afd952a070"
+        }
+      ],
+      "interpretation": {},
+      "method": "human-program-denominator-disposition",
+      "program_identity_label": "The Abyssal Well \u2014 stale/historical evidence recovery.",
+      "record_id": "program-disposition:program-identity:03",
+      "source_fact": "No current implementation path exists at the frozen baseline; ancestor-only exact-name, slug, route/path, deletion, catalog, and specification searches resolve the identity as historical/withdrawn.",
+      "source_identity_id": "sentence/abyssal-well"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "current_source_denominator_included": true,
+      "disposition": "current",
+      "evidence": [
+        {
+          "blob_sha256": "eb70ba245a4a7a1ee7637c679afe2a64dc94a883ed17d09d152687a2ad1f3a67",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/castle-defense/page.tsx",
+          "range": {
+            "end_line": 261,
+            "sha256": "eb70ba245a4a7a1ee7637c679afe2a64dc94a883ed17d09d152687a2ad1f3a67",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "method": "human-program-denominator-disposition",
+      "program_identity_label": "Castle Defense",
+      "record_id": "program-disposition:program-identity:04",
+      "source_fact": "The frozen baseline contains the cited current page-source object(s); exact catalog evidence is retained when present.",
+      "source_identity_id": "sentence/castle-defense"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "current_source_denominator_included": true,
+      "disposition": "current",
+      "evidence": [
+        {
+          "blob_sha256": "a2c7a21f2fcd124ed7da74ac357677dce6f26af8a832199c36abb3f21fd9bd74",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/magic-defense/page.tsx",
+          "range": {
+            "end_line": 150,
+            "sha256": "a2c7a21f2fcd124ed7da74ac357677dce6f26af8a832199c36abb3f21fd9bd74",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "method": "human-program-denominator-disposition",
+      "program_identity_label": "Magic Defense",
+      "record_id": "program-disposition:program-identity:05",
+      "source_fact": "The frozen baseline contains the cited current page-source object(s); exact catalog evidence is retained when present.",
+      "source_identity_id": "vocabulary/magic-defense"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "current_source_denominator_included": true,
+      "disposition": "current",
+      "evidence": [
+        {
+          "blob_sha256": "813c3330de1bb46686c23aa819839e43fe15a16266cac1cbe7330053125216f7",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/wizard-vs-zombie/page.tsx",
+          "range": {
+            "end_line": 122,
+            "sha256": "813c3330de1bb46686c23aa819839e43fe15a16266cac1cbe7330053125216f7",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "method": "human-program-denominator-disposition",
+      "program_identity_label": "Wizard vs Zombie",
+      "record_id": "program-disposition:program-identity:06",
+      "source_fact": "The frozen baseline contains the cited current page-source object(s); exact catalog evidence is retained when present.",
+      "source_identity_id": "vocabulary/wizard-vs-zombie"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "current_source_denominator_included": true,
+      "disposition": "current",
+      "evidence": [
+        {
+          "blob_sha256": "1d30def299d97d0531c1b24c9aa9374e995baa8f256fe86ac7956171e49de16e",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/village-guardian/page.tsx",
+          "range": {
+            "end_line": 216,
+            "sha256": "1d30def299d97d0531c1b24c9aa9374e995baa8f256fe86ac7956171e49de16e",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "method": "human-program-denominator-disposition",
+      "program_identity_label": "Village Guardian",
+      "record_id": "program-disposition:program-identity:07",
+      "source_fact": "The frozen baseline contains the cited current page-source object(s); exact catalog evidence is retained when present.",
+      "source_identity_id": "sentence/village-guardian"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "current_source_denominator_included": false,
+      "disposition": "historical/withdrawn",
+      "evidence": [
+        {
+          "blob_sha256": "6d09a4bc121cf0b506e54f92f344b500f50d80d69146b288f59de325be73bd6a",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/archers-revenge/page.tsx",
+          "range": {
+            "end_line": 151,
+            "sha256": "6d09a4bc121cf0b506e54f92f344b500f50d80d69146b288f59de325be73bd6a",
+            "start_line": 1
+          },
+          "revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e"
+        }
+      ],
+      "interpretation": {},
+      "method": "human-program-denominator-disposition",
+      "program_identity_label": "Archer's Revenge",
+      "record_id": "program-disposition:program-identity:08",
+      "source_fact": "No current implementation path exists at the frozen baseline; ancestor-only exact-name, slug, route/path, deletion, catalog, and specification searches resolve the identity as historical/withdrawn.",
+      "source_identity_id": "vocabulary/archers-revenge"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "current_source_denominator_included": false,
+      "disposition": "historical/withdrawn",
+      "evidence": [
+        {
+          "blob_sha256": "813bb933d8da5ebac3bcb6582d2a2929889c005be2b600274e3b322dee87d654",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/storm-castle-tower/page.tsx",
+          "range": {
+            "end_line": 217,
+            "sha256": "813bb933d8da5ebac3bcb6582d2a2929889c005be2b600274e3b322dee87d654",
+            "start_line": 1
+          },
+          "revision": "4106ba39547c8cac7645ce0f257a6bdd133712e9"
+        }
+      ],
+      "interpretation": {},
+      "method": "human-program-denominator-disposition",
+      "program_identity_label": "Storm the Castle Tower",
+      "record_id": "program-disposition:program-identity:09",
+      "source_fact": "No current implementation path exists at the frozen baseline; ancestor-only exact-name, slug, route/path, deletion, catalog, and specification searches resolve the identity as historical/withdrawn.",
+      "source_identity_id": "sentence/storm-castle-tower"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "current_source_denominator_included": false,
+      "disposition": "historical/withdrawn",
+      "evidence": [
+        {
+          "blob_sha256": "0ca5ec97b38504b27f72217a4885369ad09ab7792cc078637b7c3ff80be6678b",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/paladins-twin-soul/page.tsx",
+          "range": {
+            "end_line": 141,
+            "sha256": "0ca5ec97b38504b27f72217a4885369ad09ab7792cc078637b7c3ff80be6678b",
+            "start_line": 1
+          },
+          "revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e"
+        }
+      ],
+      "interpretation": {},
+      "method": "human-program-denominator-disposition",
+      "program_identity_label": "Paladin's Twin-Soul",
+      "record_id": "program-disposition:program-identity:10",
+      "source_fact": "No current implementation path exists at the frozen baseline; ancestor-only exact-name, slug, route/path, deletion, catalog, and specification searches resolve the identity as historical/withdrawn.",
+      "source_identity_id": "vocabulary/paladins-twin-soul"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "current_source_denominator_included": false,
+      "disposition": "historical/withdrawn",
+      "evidence": [
+        {
+          "blob_sha256": "2ba834655ffb72df650da4446e527110f1986fe297769a50d36095304283c588",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/gryphon-patrol/page.tsx",
+          "range": {
+            "end_line": 369,
+            "sha256": "2ba834655ffb72df650da4446e527110f1986fe297769a50d36095304283c588",
+            "start_line": 1
+          },
+          "revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e"
+        }
+      ],
+      "interpretation": {},
+      "method": "human-program-denominator-disposition",
+      "program_identity_label": "Gryphon Patrol",
+      "record_id": "program-disposition:program-identity:11",
+      "source_fact": "No current implementation path exists at the frozen baseline; ancestor-only exact-name, slug, route/path, deletion, catalog, and specification searches resolve the identity as historical/withdrawn.",
+      "source_identity_id": "sentence/gryphon-patrol"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "current_source_denominator_included": true,
+      "disposition": "current",
+      "evidence": [
+        {
+          "blob_sha256": "9a8ad3e447ef36a8212cba933b5bfce326ed8ce7d3a09a3e09a82d06a4034f98",
+          "path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-rider/page.tsx",
+          "range": {
+            "end_line": 119,
+            "sha256": "9a8ad3e447ef36a8212cba933b5bfce326ed8ce7d3a09a3e09a82d06a4034f98",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "method": "human-program-denominator-disposition",
+      "program_identity_label": "Dragon Rider",
+      "record_id": "program-disposition:program-identity:12",
+      "source_fact": "The frozen baseline contains the cited current page-source object(s); exact catalog evidence is retained when present.",
+      "source_identity_id": "vocabulary/dragon-rider"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "current_source_denominator_included": true,
+      "disposition": "current",
+      "evidence": [
+        {
+          "blob_sha256": "47bffd7c6a13246e02df106a47db47b0d3cfc8c7f650c853b162cdcff1179e00",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/dungeon-liberator/page.tsx",
+          "range": {
+            "end_line": 216,
+            "sha256": "47bffd7c6a13246e02df106a47db47b0d3cfc8c7f650c853b162cdcff1179e00",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "method": "human-program-denominator-disposition",
+      "program_identity_label": "Dungeon Liberator",
+      "record_id": "program-disposition:program-identity:13",
+      "source_fact": "The frozen baseline contains the cited current page-source object(s); exact catalog evidence is retained when present.",
+      "source_identity_id": "sentence/dungeon-liberator"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "current_source_denominator_included": false,
+      "disposition": "historical/withdrawn",
+      "evidence": [
+        {
+          "blob_sha256": "fe8d32581088b0808e715a5327fa9b24d17d48ee120b73b8c72e5dbb1d8ed64b",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/spellweavers-run/page.tsx",
+          "range": {
+            "end_line": 216,
+            "sha256": "fe8d32581088b0808e715a5327fa9b24d17d48ee120b73b8c72e5dbb1d8ed64b",
+            "start_line": 1
+          },
+          "revision": "4106ba39547c8cac7645ce0f257a6bdd133712e9"
+        }
+      ],
+      "interpretation": {},
+      "method": "human-program-denominator-disposition",
+      "program_identity_label": "Spellweaver's Run",
+      "record_id": "program-disposition:program-identity:14",
+      "source_fact": "No current implementation path exists at the frozen baseline; ancestor-only exact-name, slug, route/path, deletion, catalog, and specification searches resolve the identity as historical/withdrawn.",
+      "source_identity_id": "sentence/spellweavers-run"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "current_source_denominator_included": true,
+      "disposition": "current",
+      "evidence": [
+        {
+          "blob_sha256": "759a587f3409885a32d418ee8c46763b204361f84569b47ec0012d7275f09ac6",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/shadow-gate-dungeon/page.tsx",
+          "range": {
+            "end_line": 216,
+            "sha256": "759a587f3409885a32d418ee8c46763b204361f84569b47ec0012d7275f09ac6",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "method": "human-program-denominator-disposition",
+      "program_identity_label": "Shadow Gate Dungeon",
+      "record_id": "program-disposition:program-identity:15",
+      "source_fact": "The frozen baseline contains the cited current page-source object(s); exact catalog evidence is retained when present.",
+      "source_identity_id": "sentence/shadow-gate-dungeon"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "current_source_denominator_included": true,
+      "disposition": "current",
+      "evidence": [
+        {
+          "blob_sha256": "900abccf446802b2c2038f4ce1ffd976703d67a0730f171225e2f631e2864afa",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/labyrinth-goblin-king/page.tsx",
+          "range": {
+            "end_line": 218,
+            "sha256": "900abccf446802b2c2038f4ce1ffd976703d67a0730f171225e2f631e2864afa",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "method": "human-program-denominator-disposition",
+      "program_identity_label": "Labyrinth of the Goblin King",
+      "record_id": "program-disposition:program-identity:16",
+      "source_fact": "The frozen baseline contains the cited current page-source object(s); exact catalog evidence is retained when present.",
+      "source_identity_id": "sentence/labyrinth-goblin-king"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "current_source_denominator_included": false,
+      "disposition": "historical/withdrawn",
+      "evidence": [
+        {
+          "blob_sha256": "628bc2e3084ed24846c61fd2cf3c776f4b5206ce7582da2a9614d0f171ac34d3",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/griffin-riders-escape/page.tsx",
+          "range": {
+            "end_line": 70,
+            "sha256": "628bc2e3084ed24846c61fd2cf3c776f4b5206ce7582da2a9614d0f171ac34d3",
+            "start_line": 1
+          },
+          "revision": "4106ba39547c8cac7645ce0f257a6bdd133712e9"
+        }
+      ],
+      "interpretation": {},
+      "method": "human-program-denominator-disposition",
+      "program_identity_label": "Griffin Rider's Escape",
+      "record_id": "program-disposition:program-identity:17",
+      "source_fact": "No current implementation path exists at the frozen baseline; ancestor-only exact-name, slug, route/path, deletion, catalog, and specification searches resolve the identity as historical/withdrawn.",
+      "source_identity_id": "sentence/griffin-riders-escape"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "current_source_denominator_included": false,
+      "disposition": "historical/withdrawn",
+      "evidence": [
+        {
+          "blob_sha256": "ef4842a143682dbf9a90c0050d5ea280dd00d28730c08ae29505b3d5f6c905a9",
+          "path": "packages/game-cartridges/src/cartridges/sorcerer-ziggurat/definition.ts",
+          "range": {
+            "end_line": 41,
+            "sha256": "ef4842a143682dbf9a90c0050d5ea280dd00d28730c08ae29505b3d5f6c905a9",
+            "start_line": 1
+          },
+          "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+        }
+      ],
+      "interpretation": {},
+      "method": "human-program-denominator-disposition",
+      "program_identity_label": "The Sorcerer's Ziggurat",
+      "record_id": "program-disposition:program-identity:18",
+      "source_fact": "No current implementation path exists at the frozen baseline; ancestor-only exact-name, slug, route/path, deletion, catalog, and specification searches resolve the identity as historical/withdrawn.",
+      "source_identity_id": "sentence/sorcerer-ziggurat"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "current_source_denominator_included": true,
+      "disposition": "current",
+      "evidence": [
+        {
+          "blob_sha256": "940b18a18b2d31a93b6048948f216d75ca980f975002bfc3d61e90138ef8d616",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/enchanted-library/page.tsx",
+          "range": {
+            "end_line": 304,
+            "sha256": "940b18a18b2d31a93b6048948f216d75ca980f975002bfc3d61e90138ef8d616",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "method": "human-program-denominator-disposition",
+      "program_identity_label": "Enchanted Library",
+      "record_id": "program-disposition:program-identity:19",
+      "source_fact": "The frozen baseline contains the cited current page-source object(s); exact catalog evidence is retained when present.",
+      "source_identity_id": "vocabulary/enchanted-library"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "current_source_denominator_included": true,
+      "disposition": "current",
+      "evidence": [
+        {
+          "blob_sha256": "a951b2113f67f78730482ae034d49adcbf58a0303aa93495578e1cb0a196c918",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/rune-match/page.tsx",
+          "range": {
+            "end_line": 102,
+            "sha256": "a951b2113f67f78730482ae034d49adcbf58a0303aa93495578e1cb0a196c918",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "method": "human-program-denominator-disposition",
+      "program_identity_label": "Rune Match",
+      "record_id": "program-disposition:program-identity:20",
+      "source_fact": "The frozen baseline contains the cited current page-source object(s); exact catalog evidence is retained when present.",
+      "source_identity_id": "vocabulary/rune-match"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "current_source_denominator_included": true,
+      "disposition": "current",
+      "evidence": [
+        {
+          "blob_sha256": "b036d1ef56554ba0d98b8748219c933d2f64c718ad3bcc5460e681890e18ec82",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/alchemists-synthesis/page.tsx",
+          "range": {
+            "end_line": 118,
+            "sha256": "b036d1ef56554ba0d98b8748219c933d2f64c718ad3bcc5460e681890e18ec82",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "method": "human-program-denominator-disposition",
+      "program_identity_label": "Alchemist's Synthesis",
+      "record_id": "program-disposition:program-identity:21",
+      "source_fact": "The frozen baseline contains the cited current page-source object(s); exact catalog evidence is retained when present.",
+      "source_identity_id": "vocabulary/alchemists-synthesis"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "current_source_denominator_included": true,
+      "disposition": "current",
+      "evidence": [
+        {
+          "blob_sha256": "f23a839f56a1d749c5bfe264442b7a08aeda52e8bfa282044d7bc1ce3702be3d",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/potion-rush/page.tsx",
+          "range": {
+            "end_line": 371,
+            "sha256": "f23a839f56a1d749c5bfe264442b7a08aeda52e8bfa282044d7bc1ce3702be3d",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "method": "human-program-denominator-disposition",
+      "program_identity_label": "Potion Rush",
+      "record_id": "program-disposition:program-identity:22",
+      "source_fact": "The frozen baseline contains the cited current page-source object(s); exact catalog evidence is retained when present.",
+      "source_identity_id": "sentence/potion-rush"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "current_source_denominator_included": true,
+      "disposition": "current",
+      "evidence": [
+        {
+          "blob_sha256": "efc5c35bb043100473599f3a6c70d7e47a1cf21f0be832a950f15032b6742a57",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/rune-forge-chamber/page.tsx",
+          "range": {
+            "end_line": 221,
+            "sha256": "efc5c35bb043100473599f3a6c70d7e47a1cf21f0be832a950f15032b6742a57",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "method": "human-program-denominator-disposition",
+      "program_identity_label": "Rune Forge Chamber",
+      "record_id": "program-disposition:program-identity:23",
+      "source_fact": "The frozen baseline contains the cited current page-source object(s); exact catalog evidence is retained when present.",
+      "source_identity_id": "sentence/rune-forge-chamber"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "current_source_denominator_included": false,
+      "disposition": "historical/withdrawn",
+      "evidence": [
+        {
+          "blob_sha256": "e5242078cc070554949d40853fcb0768eb429fe39691bddbcf87372312725c54",
+          "path": "packages/game-cartridges/src/cartridges/astral-mage/definition.ts",
+          "range": {
+            "end_line": 42,
+            "sha256": "e5242078cc070554949d40853fcb0768eb429fe39691bddbcf87372312725c54",
+            "start_line": 1
+          },
+          "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+        }
+      ],
+      "interpretation": {},
+      "method": "human-program-denominator-disposition",
+      "program_identity_label": "Astral Mage",
+      "record_id": "program-disposition:program-identity:24",
+      "source_fact": "No current implementation path exists at the frozen baseline; ancestor-only exact-name, slug, route/path, deletion, catalog, and specification searches resolve the identity as historical/withdrawn.",
+      "source_identity_id": "sentence/astral-mage"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "current_source_denominator_included": false,
+      "disposition": "historical/withdrawn",
+      "evidence": [
+        {
+          "blob_sha256": "5603344c1cc4320e9390b355241512c501d812f41c4fee2c413c6a40f9136ddf",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/griffin-sky-joust/page.tsx",
+          "range": {
+            "end_line": 225,
+            "sha256": "5603344c1cc4320e9390b355241512c501d812f41c4fee2c413c6a40f9136ddf",
+            "start_line": 1
+          },
+          "revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e"
+        }
+      ],
+      "interpretation": {},
+      "method": "human-program-denominator-disposition",
+      "program_identity_label": "Griffin Sky-Joust",
+      "record_id": "program-disposition:program-identity:25",
+      "source_fact": "No current implementation path exists at the frozen baseline; ancestor-only exact-name, slug, route/path, deletion, catalog, and specification searches resolve the identity as historical/withdrawn.",
+      "source_identity_id": "sentence/griffin-sky-joust"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "current_source_denominator_included": false,
+      "disposition": "historical/withdrawn",
+      "evidence": [
+        {
+          "blob_sha256": "6f1155f96a46485c77db8e0bf88a767419b808a1172c083636e2b29f2b05a93b",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/realm-carver/page.tsx",
+          "range": {
+            "end_line": 143,
+            "sha256": "6f1155f96a46485c77db8e0bf88a767419b808a1172c083636e2b29f2b05a93b",
+            "start_line": 1
+          },
+          "revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e"
+        }
+      ],
+      "interpretation": {},
+      "method": "human-program-denominator-disposition",
+      "program_identity_label": "Realm Carver",
+      "record_id": "program-disposition:program-identity:26",
+      "source_fact": "No current implementation path exists at the frozen baseline; ancestor-only exact-name, slug, route/path, deletion, catalog, and specification searches resolve the identity as historical/withdrawn.",
+      "source_identity_id": "sentence/realm-carver"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "current_source_denominator_included": true,
+      "disposition": "current",
+      "evidence": [
+        {
+          "blob_sha256": "34ef5cd03faed720f3ff2ac02073681cf88d75d9db29f2876d9b1c4a394eda01",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/devourer-slime/page.tsx",
+          "range": {
+            "end_line": 164,
+            "sha256": "34ef5cd03faed720f3ff2ac02073681cf88d75d9db29f2876d9b1c4a394eda01",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "method": "human-program-denominator-disposition",
+      "program_identity_label": "Devourer Slime",
+      "record_id": "program-disposition:program-identity:27",
+      "source_fact": "The frozen baseline contains the cited current page-source object(s); exact catalog evidence is retained when present.",
+      "source_identity_id": "sentence/devourer-slime"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "current_source_denominator_included": true,
+      "disposition": "current",
+      "evidence": [
+        {
+          "blob_sha256": "543ccda4237aa0daa98affb5d3fd806566cff27553db3c38334c4b6f522bd922",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/haunted-library/page.tsx",
+          "range": {
+            "end_line": 193,
+            "sha256": "543ccda4237aa0daa98affb5d3fd806566cff27553db3c38334c4b6f522bd922",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "method": "human-program-denominator-disposition",
+      "program_identity_label": "The Haunted Library",
+      "record_id": "program-disposition:program-identity:28",
+      "source_fact": "The frozen baseline contains the cited current page-source object(s); exact catalog evidence is retained when present.",
+      "source_identity_id": "sentence/haunted-library"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "current_source_denominator_included": false,
+      "disposition": "historical/withdrawn",
+      "evidence": [
+        {
+          "blob_sha256": "f438feea924cc464ba6366949b3cd3926ee4b36a13f15c3c1b7162b1b5c76565",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/babel-architect/page.tsx",
+          "range": {
+            "end_line": 221,
+            "sha256": "f438feea924cc464ba6366949b3cd3926ee4b36a13f15c3c1b7162b1b5c76565",
+            "start_line": 1
+          },
+          "revision": "c76f6af3f62c03979f5073a871e775afd952a070"
+        }
+      ],
+      "interpretation": {},
+      "method": "human-program-denominator-disposition",
+      "program_identity_label": "Babel Architect",
+      "record_id": "program-disposition:program-identity:29",
+      "source_fact": "No current implementation path exists at the frozen baseline; ancestor-only exact-name, slug, route/path, deletion, catalog, and specification searches resolve the identity as historical/withdrawn.",
+      "source_identity_id": "sentence/babel-architect"
+    }
+  ],
   "schema_version": "apk-denominator-human-discrepancies.v1",
   "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
   "status": "independent-human-discovery-complete",
@@ -765,8 +1494,10 @@
     "duplicate_family_records": 0,
     "graph_edges": 0,
     "historical_locators": 0,
+    "historical_program_identities": 0,
     "identical_hash_groups": 0,
     "mechanical_discrepancies": 0,
+    "program_identity_dispositions": 0,
     "replacement_program_identities": 0,
     "source_records": 0,
     "surfaces": 0

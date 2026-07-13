@@ -25,36 +25,37 @@ COLLECTOR_IDENTITY = "evidence-collector-remediation-20260713"
 # Raw labels and exact source IDs are transcribed from the frozen replacement
 # program and catalog. This table is a search key, not an authored denominator.
 PROGRAM_IDENTITIES = [
-    ("Dragon Flight — large current action implementation.", "dragon-flight", "vocabulary/dragon-flight"),
-    ("RPG Battle — multi-state turn-based implementation.", "rpg-battle", "vocabulary/rpg-battle"),
-    ("The Abyssal Well — stale/historical evidence recovery.", "abyssal-well", None),
-    ("Castle Defense", "castle-defense", "sentence/castle-defense"),
-    ("Magic Defense", "magic-defense", "vocabulary/magic-defense"),
-    ("Wizard vs Zombie", "wizard-vs-zombie", "vocabulary/wizard-vs-zombie"),
-    ("Village Guardian", "village-guardian", "sentence/village-guardian"),
-    ("Archer's Revenge", "archers-revenge", None),
-    ("Storm the Castle Tower", "storm-castle-tower", None),
-    ("Paladin's Twin-Soul", "paladins-twin-soul", None),
-    ("Gryphon Patrol", "gryphon-patrol", None),
-    ("Dragon Rider", "dragon-rider", "vocabulary/dragon-rider"),
-    ("Dungeon Liberator", "dungeon-liberator", "sentence/dungeon-liberator"),
-    ("Spellweaver's Run", "spellweavers-run", None),
-    ("Shadow Gate Dungeon", "shadow-gate-dungeon", "sentence/shadow-gate-dungeon"),
-    ("Labyrinth of the Goblin King", "labyrinth-goblin-king", "sentence/labyrinth-goblin-king"),
-    ("Griffin Rider's Escape", "griffin-riders-escape", None),
-    ("The Sorcerer's Ziggurat", "sorcerer-ziggurat", None),
-    ("Enchanted Library", "enchanted-library", "vocabulary/enchanted-library"),
-    ("Rune Match", "rune-match", "vocabulary/rune-match"),
-    ("Alchemist's Synthesis", "alchemists-synthesis", "vocabulary/alchemists-synthesis"),
-    ("Potion Rush", "potion-rush", "sentence/potion-rush"),
-    ("Rune Forge Chamber", "rune-forge-chamber", "sentence/rune-forge-chamber"),
-    ("Astral Mage", "astral-mage", None),
-    ("Griffin Sky-Joust", "griffin-sky-joust", None),
-    ("Realm Carver", "realm-carver", None),
-    ("Devourer Slime", "devourer-slime", "sentence/devourer-slime"),
-    ("The Haunted Library", "haunted-library", "sentence/haunted-library"),
-    ("Babel Architect", "babel-architect", None),
+    ("Dragon Flight — large current action implementation.", "dragon-flight", "vocabulary/dragon-flight", "vocabulary/dragon-flight"),
+    ("RPG Battle — multi-state turn-based implementation.", "rpg-battle", "vocabulary/rpg-battle", "vocabulary/rpg-battle"),
+    ("The Abyssal Well — stale/historical evidence recovery.", "abyssal-well", None, "sentence/abyssal-well"),
+    ("Castle Defense", "castle-defense", "sentence/castle-defense", "sentence/castle-defense"),
+    ("Magic Defense", "magic-defense", "vocabulary/magic-defense", "vocabulary/magic-defense"),
+    ("Wizard vs Zombie", "wizard-vs-zombie", "vocabulary/wizard-vs-zombie", "vocabulary/wizard-vs-zombie"),
+    ("Village Guardian", "village-guardian", "sentence/village-guardian", "sentence/village-guardian"),
+    ("Archer's Revenge", "archers-revenge", None, "vocabulary/archers-revenge"),
+    ("Storm the Castle Tower", "storm-castle-tower", None, "sentence/storm-castle-tower"),
+    ("Paladin's Twin-Soul", "paladins-twin-soul", None, "vocabulary/paladins-twin-soul"),
+    ("Gryphon Patrol", "gryphon-patrol", None, "sentence/gryphon-patrol"),
+    ("Dragon Rider", "dragon-rider", "vocabulary/dragon-rider", "vocabulary/dragon-rider"),
+    ("Dungeon Liberator", "dungeon-liberator", "sentence/dungeon-liberator", "sentence/dungeon-liberator"),
+    ("Spellweaver's Run", "spellweavers-run", None, "sentence/spellweavers-run"),
+    ("Shadow Gate Dungeon", "shadow-gate-dungeon", "sentence/shadow-gate-dungeon", "sentence/shadow-gate-dungeon"),
+    ("Labyrinth of the Goblin King", "labyrinth-goblin-king", "sentence/labyrinth-goblin-king", "sentence/labyrinth-goblin-king"),
+    ("Griffin Rider's Escape", "griffin-riders-escape", None, "sentence/griffin-riders-escape"),
+    ("The Sorcerer's Ziggurat", "sorcerer-ziggurat", None, "sentence/sorcerer-ziggurat"),
+    ("Enchanted Library", "enchanted-library", "vocabulary/enchanted-library", "vocabulary/enchanted-library"),
+    ("Rune Match", "rune-match", "vocabulary/rune-match", "vocabulary/rune-match"),
+    ("Alchemist's Synthesis", "alchemists-synthesis", "vocabulary/alchemists-synthesis", "vocabulary/alchemists-synthesis"),
+    ("Potion Rush", "potion-rush", "sentence/potion-rush", "sentence/potion-rush"),
+    ("Rune Forge Chamber", "rune-forge-chamber", "sentence/rune-forge-chamber", "sentence/rune-forge-chamber"),
+    ("Astral Mage", "astral-mage", None, "sentence/astral-mage"),
+    ("Griffin Sky-Joust", "griffin-sky-joust", None, "sentence/griffin-sky-joust"),
+    ("Realm Carver", "realm-carver", None, "sentence/realm-carver"),
+    ("Devourer Slime", "devourer-slime", "sentence/devourer-slime", "sentence/devourer-slime"),
+    ("The Haunted Library", "haunted-library", "sentence/haunted-library", "sentence/haunted-library"),
+    ("Babel Architect", "babel-architect", None, "sentence/babel-architect"),
 ]
+SOURCE_ROOTS = ("apps/advantage-games", "apps/reading-advantage", "apps/primary-advantage", "packages", "measure")
 
 
 class GitObjectReader:
@@ -309,12 +310,12 @@ def batch_maps() -> tuple[list[dict[str, Any]], dict[str, str]]:
     for number, start in enumerate(range(0, len(PROGRAM_IDENTITIES), 3), start=1):
         group = PROGRAM_IDENTITIES[start : start + 3]
         batch_id = f"human-program-{number:02d}"
-        for _, slug, _ in group:
+        for _, slug, _, _ in group:
             slug_batches[slug] = batch_id
         batches.append({
             "batch_id": batch_id,
             "status": "accepted",
-            "accepted_identity_ids": [label for label, _, _ in group],
+            "accepted_identity_ids": [label for label, _, _, _ in group],
             "method": "human-raw-program-identity-review",
             "collector_role": "evidence-collector",
             "collector_identity": COLLECTOR_IDENTITY,
@@ -375,7 +376,7 @@ def program_reviews(
     history_by_slug: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in historical["records"]:
         path = row["evidence"]["path"]
-        for _, slug, _ in PROGRAM_IDENTITIES:
+        for _, slug, _, _ in PROGRAM_IDENTITIES:
             if f"/{slug}/" in path or slug in Path(path).name:
                 history_by_slug[slug].append(revalidate(reader, row["evidence"]))
 
@@ -389,31 +390,122 @@ def program_reviews(
         history_by_slug[slug].extend(locator(reader, ASTRAL_HISTORY_REVISION, path) for path in supplemental)
 
     reviews: list[dict[str, Any]] = []
-    for number, (label, catalog_id, mechanical_id) in enumerate(PROGRAM_IDENTITIES, start=1):
+    for number, (label, catalog_id, mechanical_id, source_identity_id) in enumerate(PROGRAM_IDENTITIES, start=1):
         program_evidence = locator(reader, BASELINE, PROGRAM_PATH, line_by_label[label], line_by_label[label])
         catalog_evidence = [catalog[catalog_id]] if catalog_id in catalog else []
         matches = implementation_matches(paths, catalog_id)
+        display_name = label.split(" —", 1)[0]
+        primary_historical_evidence: dict[str, Any] | None = None
         if mechanical_id is not None:
             current = [revalidate(reader, alias["evidence"]) for alias in ledger_by_id[mechanical_id]["aliases"]]
-            disposition = "current-page-source-observed"
+            disposition = "current"
             source_fact = "The frozen baseline contains the cited current page-source object(s); exact catalog evidence is retained when present."
             historical_evidence: list[dict[str, Any]] = []
+            history_search = {
+                "baseline_revision": BASELINE,
+                "ancestor_only": True,
+                "search_methods": ["frozen-tree exact implementation path fragment", "exact current catalog ID"],
+                "matched_locator_keys": [],
+            }
         else:
             current = []
-            disposition = "absent-at-baseline-with-reachable-history"
             historical_evidence = history_by_slug[catalog_id]
-            if not historical_evidence:
-                raise ValueError(f"No exact reachable history found for absent identity: {label}")
             if any(item["revision"] not in reachable_revisions for item in historical_evidence):
                 raise ValueError(f"Unreachable historical source found for absent identity: {label}")
-            source_fact = "The exact frozen implementation-path search returned no match; exact current catalog evidence, when present, and reachable historical source locators are recorded without inferring current implementation."
+            preferred = [
+                item for item in historical_evidence
+                if item["path"].endswith(f"/{catalog_id}/page.tsx")
+            ] or [
+                item for item in historical_evidence
+                if item["path"].endswith(f"/{catalog_id}/definition.ts")
+            ]
+            if historical_evidence:
+                primary_historical_evidence = (preferred or historical_evidence)[0]
+                disposition = "historical/withdrawn"
+                source_fact = "No current implementation path exists at the frozen baseline; ancestor-only exact-name, slug, route/path, deletion, catalog, and specification searches resolve the identity as historical/withdrawn."
+            else:
+                disposition = "unsupported program assumption"
+                source_fact = "No current or ancestor implementation evidence was found by the recorded exhaustive searches; the authored program name is reviewed but excluded from the current source denominator."
+
+            exact_name_command = ["git", "log", "--format=%H", "-S", display_name, BASELINE, "--", *SOURCE_ROOTS]
+            slug_command = ["git", "log", "--format=%H", "-S", catalog_id, BASELINE, "--", *SOURCE_ROOTS]
+            current_name_command = ["git", "grep", "-l", "-F", display_name, BASELINE, "--", *SOURCE_ROOTS]
+            spec_command = ["git", "grep", "-l", "-F", display_name, BASELINE, "--", "measure"]
+
+            def command_lines(command: list[str]) -> list[str]:
+                result = subprocess.run(command, cwd=REPO_ROOT, capture_output=True, text=True, check=False)
+                if result.returncode not in (0, 1):
+                    raise ValueError(f"Historical search failed ({result.returncode}): {' '.join(command)}: {result.stderr.strip()}")
+                return [line for line in result.stdout.splitlines() if line]
+
+            exact_name_hits = command_lines(exact_name_command)
+            slug_hits = command_lines(slug_command)
+            current_name_paths = command_lines(current_name_command)
+            current_spec_paths = command_lines(spec_command)
+            primary_deletion: dict[str, Any] | None = None
+            path_history_events: list[str] = []
+            if primary_historical_evidence is not None:
+                primary_path = primary_historical_evidence["path"]
+                deletion_command = [
+                    "git", "log", "--format=%H%x09%P%x09%s", "--diff-filter=D", BASELINE, "--", primary_path,
+                ]
+                deletion_lines = command_lines(deletion_command)
+                if not deletion_lines:
+                    raise ValueError(f"No deletion commit found for historical identity: {label}")
+                deletion_parts = deletion_lines[0].split("\t", 2)
+                parents = deletion_parts[1].split()
+                if primary_historical_evidence["revision"] not in parents:
+                    raise ValueError(f"Historical locator is not a deletion parent for {label}")
+                primary_deletion = {
+                    "command": " ".join(deletion_command),
+                    "deletion_commit": deletion_parts[0],
+                    "parent_revision": primary_historical_evidence["revision"],
+                    "commit_subject": deletion_parts[2],
+                    "path": primary_path,
+                }
+                path_history_command = [
+                    "git", "log", "--format=commit:%H", "--name-status", BASELINE, "--", primary_path,
+                ]
+                path_history_events = command_lines(path_history_command)
+            else:
+                deletion_command = ["git", "log", "--format=%H%x09%P%x09%s", "--diff-filter=D", BASELINE, "--", f"*{catalog_id}*"]
+                path_history_command = ["git", "log", "--format=commit:%H", "--name-status", BASELINE, "--", f"*{catalog_id}*"]
+
+            history_search = {
+                "baseline_revision": BASELINE,
+                "ancestor_only": True,
+                "search_methods": [
+                    "frozen-tree exact implementation path fragment",
+                    "exact current catalog ID",
+                    "Git pickaxe exact display name",
+                    "Git pickaxe exact slug",
+                    "ancestor path history and deletion-parent resolution",
+                    "frozen-revision exact-name specification search",
+                ],
+                "exact_name": display_name,
+                "slug_variants": [catalog_id, catalog_id.replace("-", ""), f"/{catalog_id}/"],
+                "exact_name_command": " ".join(exact_name_command),
+                "exact_name_commit_hits": exact_name_hits,
+                "slug_command": " ".join(slug_command),
+                "slug_commit_hits": slug_hits,
+                "current_name_command": " ".join(current_name_command),
+                "current_name_matched_paths": current_name_paths,
+                "specification_command": " ".join(spec_command),
+                "current_specification_matched_paths": current_spec_paths,
+                "path_history_command": " ".join(path_history_command),
+                "path_history_events": path_history_events,
+                "primary_deletion": primary_deletion,
+                "matched_locator_keys": [canonical_key(item) for item in historical_evidence],
+            }
         reviews.append(evidence_record(
             record_id=f"program-identity:{number:02d}",
             program_identity_label=label,
             catalog_id=catalog_id,
             canonical_identity_id=mechanical_id,
+            source_identity_id=source_identity_id,
             review_batch_id=slug_batches[catalog_id],
             disposition=disposition,
+            current_source_denominator_included=disposition == "current",
             baseline_implementation_search={
                 "command": f"git ls-tree -r --name-only {BASELINE} -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
                 "revision": BASELINE,
@@ -427,14 +519,10 @@ def program_reviews(
                 "matched_ranges": [item["range"] for item in catalog_evidence],
                 "search_evidence": catalog_evidence or [catalog_file_evidence],
             },
-            history_search={
-                "command": f"git rev-list {BASELINE} -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
-                "baseline_revision": BASELINE,
-                "ancestor_only": True,
-                "matched_locator_keys": [canonical_key(item) for item in historical_evidence],
-            },
+            history_search=history_search,
             current_source_evidence=current,
             historical_source_evidence=historical_evidence,
+            primary_historical_evidence=primary_historical_evidence,
             method="human-raw-program-identity-review",
             evidence=[program_evidence, *catalog_evidence, *current, *historical_evidence],
             source_fact=source_fact,
@@ -507,8 +595,15 @@ def check_coverage() -> dict[str, int]:
     actual_history = {row["mechanical_locator_key"] for row in human_history["mechanical_historical_locator_reviews"]}
     expected_discrepancies = {row["observation_id"] for row in mechanical_discrepancies["records"]}
     actual_discrepancies = {row["observation_id"] for row in human_discrepancies["mechanical_observation_records"]}
-    expected_program = {label for label, _, _ in PROGRAM_IDENTITIES}
+    expected_program = {label for label, _, _, _ in PROGRAM_IDENTITIES}
     actual_program = {row["program_identity_label"] for row in human["replacement_program_identity_reviews"]}
+    expected_program_history = {
+        row["program_identity_label"]
+        for row in human["replacement_program_identity_reviews"]
+        if row["disposition"] == "historical/withdrawn"
+    }
+    actual_program_history = {row["program_identity_label"] for row in human_history["program_identity_history_reviews"]}
+    actual_program_dispositions = {row["program_identity_label"] for row in human_discrepancies["program_identity_disposition_records"]}
     comparisons = {
         "source_records": (expected_source, actual_source),
         "graph_edges": (expected_graph, actual_graph),
@@ -521,6 +616,8 @@ def check_coverage() -> dict[str, int]:
         "historical_locators": (expected_history, actual_history),
         "mechanical_discrepancies": (expected_discrepancies, actual_discrepancies),
         "replacement_program_identities": (expected_program, actual_program),
+        "program_identity_dispositions": (expected_program, actual_program_dispositions),
+        "historical_program_identities": (expected_program_history, actual_program_history),
     }
     for category, (expected, actual) in comparisons.items():
         if expected != actual:
@@ -726,6 +823,37 @@ def generate() -> None:
                 legacy["evidence"] = evidence
                 historical_deleted.append(legacy)
 
+        program_history_reviews = [evidence_record(
+            record_id=f"program-history:{row['record_id']}",
+            program_review_record_id=row["record_id"],
+            program_identity_label=row["program_identity_label"],
+            source_identity_id=row["source_identity_id"],
+            disposition=row["disposition"],
+            primary_historical_evidence=row["primary_historical_evidence"],
+            history_search={
+                "search_methods": row["history_search"]["search_methods"],
+                "exact_name_command": row["history_search"]["exact_name_command"],
+                "slug_command": row["history_search"]["slug_command"],
+                "path_history_command": row["history_search"]["path_history_command"],
+                "specification_command": row["history_search"]["specification_command"],
+                "primary_deletion": row["history_search"]["primary_deletion"],
+            },
+            method="human-exhaustive-ancestor-history-review",
+            evidence=[row["primary_historical_evidence"]],
+            source_fact="Ancestor-only exact-name, slug, route/path, deletion, catalog, and specification searches resolve this program identity only as historical/withdrawn.",
+        ) for row in program if row["disposition"] == "historical/withdrawn"]
+
+        program_dispositions = [evidence_record(
+            record_id=f"program-disposition:{row['record_id']}",
+            program_identity_label=row["program_identity_label"],
+            source_identity_id=row["source_identity_id"],
+            disposition=row["disposition"],
+            current_source_denominator_included=row["current_source_denominator_included"],
+            method="human-program-denominator-disposition",
+            evidence=(row["current_source_evidence"][:1] or ([row["primary_historical_evidence"]] if row["primary_historical_evidence"] else [row["evidence"][0]])),
+            source_fact=row["source_fact"],
+        ) for row in program]
+
         mechanical_observations = [evidence_record(
             observation_id=row["observation_id"], comparison_status="resolved", blocking=False,
             method="human-raw-source-review",
@@ -777,7 +905,8 @@ def generate() -> None:
             "status": "independent-human-discovery-complete", "track_id": TRACK,
             "source_baseline_revision": BASELINE, "collector_identity": COLLECTOR_IDENTITY,
             "historical_deleted_records": historical_deleted,
-            "mechanical_historical_locator_reviews": all_history, "interpretation": {},
+            "mechanical_historical_locator_reviews": all_history,
+            "program_identity_history_reviews": program_history_reviews, "interpretation": {},
         })
         write_json("human-discrepancy-records.json", {
             "schema_version": "apk-denominator-human-discrepancies.v1",
@@ -785,6 +914,7 @@ def generate() -> None:
             "source_baseline_revision": BASELINE, "collector_identity": COLLECTOR_IDENTITY,
             "identity_comparison_records": identity_comparisons,
             "mechanical_observation_records": mechanical_observations,
+            "program_identity_disposition_records": program_dispositions,
             "coverage_status": "complete", "uncovered_mechanical_records": [],
             "uncovered_replacement_program_identities": [], "interpretation": {},
         })
