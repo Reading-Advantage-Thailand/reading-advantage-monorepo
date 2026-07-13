@@ -1,0 +1,190 @@
+{
+  "schema_version": 1,
+  "status": "fail",
+  "summary": "Phase 4 cannot accept this denominator. The raw role receipts do not prove the frozen five-role separation or measured stop-loss compliance, the Phase 4 gate trusts self-authored provenance and owner-approval fields instead of the provider-neutral event resolver, and the claimed human-discovery artifacts contain quarantined failed-track source-list entries and were generated from a hard-coded authored program inventory. No provenance was invented or rewritten during review.",
+  "blocking_findings": [
+    {
+      "id": "APK-DEN-B-001",
+      "severity": "critical",
+      "title": "Frozen role separation and receipt provenance are not established",
+      "detail": "phase0-role-ownership-manifest.json requires five mutually incompatible roles and non-null spawn, ancestry, prompt, context, event, response, output, budget, and commit provenance. Only three receipt files exist. discovery-auditor.json is explicitly retrospective and has four null required fields plus unavailable usage; evidence-collector.json has seven null required fields and null usage; requirements-mapper.json identifies its role as reconciliation-integrator, has seven null required fields and null usage; truth-test-author.json and adversarial-reviewer.json are absent. The frozen rule unmeasured_resource_usage_blocks_checkpoint is true. Phase 4 validates only a future adversarial-reviewer receipt and never validates the complete required role set, so these blockers could be bypassed.",
+      "evidence": [
+        "measure/tracks/apk_source_denominator_inventory_20260712/phase0-role-ownership-manifest.json:11-35",
+        "measure/tracks/apk_source_denominator_inventory_20260712/role-receipts/discovery-auditor.json:8-38",
+        "measure/tracks/apk_source_denominator_inventory_20260712/role-receipts/evidence-collector.json:9-53",
+        "measure/tracks/apk_source_denominator_inventory_20260712/role-receipts/requirements-mapper.json:6-46",
+        "measure/tests/test_apk_source_denominator_inventory_phase4.py:388-427"
+      ],
+      "remediation": "Re-run the affected roles in distinct provider-exportable sessions through the existing provenance adapter, record measured usage, publish canonical receipts for all five frozen roles, and re-run reconciliation. Null limitation text cannot substitute for required provenance."
+    },
+    {
+      "id": "APK-DEN-B-002",
+      "severity": "critical",
+      "title": "Reviewer and product-owner authorization are self-attested rather than provider-resolved",
+      "detail": "The Phase 4 test accepts reviewer isolation from strings inside independent-review.json and accepts product-owner authorization from strings inside product-owner-acceptance.json. It does not call validate_roles_and_outputs or validate_owner_approval, resolve raw provider events, bind actual prompt/context/final-response bytes, enforce event chronology, or consume approval event IDs once. A hand-authored event_id, currently-authorized status, timestamp string, and message digest can satisfy the current checks. The rerun command is also accepted by substring and self-reported status without a committed command transcript or independently generated output comparison.",
+      "evidence": [
+        "measure/tests/test_apk_source_denominator_inventory_phase4.py:248-283",
+        "measure/tests/test_apk_source_denominator_inventory_phase4.py:388-427",
+        "measure/tests/test_apk_source_denominator_inventory_phase4.py:462-502",
+        "measure/evidence_integrity_gates/denominator_roles.py:189-396",
+        "measure/evidence_integrity_gates/denominator_roles.py:399-470"
+      ],
+      "remediation": "Route reviewer receipts and owner approval through the accepted provider-neutral EventResolver contracts, verify raw export bytes and event chronology, bind prompt/context/final response and exact write inventory, and consume the owner event once before rendering accepted manifests."
+    },
+    {
+      "id": "APK-DEN-B-003",
+      "severity": "high",
+      "title": "Failed-track quarantine is present in claimed human and reconciliation source lists",
+      "detail": "The frozen contract excludes factual assertions and source lists below measure/tracks/apk_cross_game_asset_ontology_20260712 except explicit negative failure evidence. independent-human-discovery.json and phase3-reconciliation.json each contain 98 string entries under current_name_matched_paths/current_specification_matched_paths pointing into that failed track, without a quarantine-rejected classification. The Phase 2 generator searches the whole measure root without filtering the quarantine, and the Phase 4 locator validator checks neither allowed roots nor the quarantined prefix.",
+      "evidence": [
+        "measure/tracks/apk_source_denominator_inventory_20260712/phase0-input-freeze.json:28-41",
+        "measure/tracks/apk_source_denominator_inventory_20260712/generate_phase2_human_discovery.py:430-499",
+        "measure/tests/test_apk_source_denominator_inventory_phase4.py:168-208",
+        "programmatic recursive scan: 98 quarantined-path strings in independent-human-discovery.json and 98 in phase3-reconciliation.json"
+      ],
+      "remediation": "Regenerate the affected human and reconciliation artifacts from the frozen baseline with the failed-track prefix excluded before search results are recorded, or retain any occurrence only in an explicit negative quarantine-rejection collection that cannot influence disposition. Refresh downstream receipts rather than rewriting them."
+    },
+    {
+      "id": "APK-DEN-B-004",
+      "severity": "high",
+      "title": "The independent human denominator is generated from an authored program inventory",
+      "detail": "generate_phase2_human_discovery.py hard-codes 29 PROGRAM_IDENTITIES transcribed from measure/apk-evidence-reconstruction-program.md, hard-codes a collector identity, and emits records labelled human-raw-source-review. Phase 2 and Phase 3 tests derive the mandatory 29-label partition from the same authored program, while the specification says the denominator must come from raw and historical sources and never future authored requirements. With no authentic evidence-collector session provenance, these generated records do not establish the required independent human path and make mechanical/human agreement circular for the 29-label boundary.",
+      "evidence": [
+        "measure/tracks/apk_source_denominator_inventory_20260712/spec.md:5-7",
+        "measure/tracks/apk_source_denominator_inventory_20260712/spec.md:19-25",
+        "measure/tracks/apk_source_denominator_inventory_20260712/generate_phase2_human_discovery.py:21-58",
+        "measure/tracks/apk_source_denominator_inventory_20260712/generate_phase2_human_discovery.py:225-254",
+        "measure/tests/test_apk_source_denominator_inventory_phase2.py:483-585",
+        "measure/tests/test_apk_source_denominator_inventory_phase3.py:285-297"
+      ],
+      "remediation": "Repeat independent human discovery from frozen raw current and ancestor sources without preloading the authored 29-name list; reconcile the independently found set against authored program names only afterward as a discrepancy input. Preserve a fresh provider-attested collector receipt."
+    },
+    {
+      "id": "APK-DEN-B-005",
+      "severity": "high",
+      "title": "Candidate, partition, approval, and accepted outputs are not commit-bound and can consume coordinated worktree edits",
+      "detail": "Phase 4 loads Phase 1-3 inputs and all candidate/approval/accepted manifests directly from the working tree. Only independent-review.json is checked against a receipt commit. Candidate and owner artifacts need not exist in any reachable commit, the accepted partition does not bind candidate-partition-manifest.json, and the candidate partition checks only 29 ordered labels rather than exact Phase 3 disposition/source-identity assignments. Coordinated uncommitted edits can therefore satisfy set comparisons and approval hashes without an immutable transition commit.",
+      "evidence": [
+        "measure/tests/test_apk_source_denominator_inventory_phase4.py:39-58",
+        "measure/tests/test_apk_source_denominator_inventory_phase4.py:329-386",
+        "measure/tests/test_apk_source_denominator_inventory_phase4.py:429-460",
+        "measure/tests/test_apk_source_denominator_inventory_phase4.py:462-502"
+      ],
+      "remediation": "Require reachable full commit SHAs for every input and transition artifact, read accepted inputs with git show, bind candidate partitions to the exact 29 Phase 3 records including disposition and source identity, and bind accepted partitions to the exact candidate partition bytes."
+    },
+    {
+      "id": "APK-DEN-B-006",
+      "severity": "high",
+      "title": "The Phase 4 raw role log records a nonexistent full commit",
+      "detail": "phase4-mid-red.log records 71462110f82f740d3609c95e30b559795ab9e525, which git cannot resolve. The actual commit with prefix 71462110 is 71462110f4a74763c284818a9eba45d1ce096ef2. This prevents truthful full-hash binding of the role output. The original log was not rewritten during review.",
+      "evidence": [
+        "measure/tracks/apk_source_denominator_inventory_20260712/role-logs/phase4-mid-red.log:6",
+        "git rev-parse --verify 71462110f82f740d3609c95e30b559795ab9e525^{commit}: fatal",
+        "git rev-parse 71462110: 71462110f4a74763c284818a9eba45d1ce096ef2"
+      ],
+      "remediation": "Publish a separate correction/supersession record bound to the real commit and raw role response; do not silently edit the original role log."
+    }
+  ],
+  "nonblocking_findings": [
+    {
+      "id": "APK-DEN-B-N01",
+      "severity": "low",
+      "title": "Repository-wide marker guard is red outside this track",
+      "detail": "orchestrator_marker_vocabulary.sh reports legacy [ ] markers in three newly added backend tracks. The reviewed APK plan itself uses only [x], [~], and [b] deferred:product-owner markers, so this is unrelated dirty/shared state and was not modified."
+    }
+  ],
+  "evidence": [
+    {
+      "claim": "Review baseline and relevant track artifacts were clean before this audit output was created",
+      "result": "HEAD was 93e1c3417b724c74ad857e71bf06ac7311f9fe81; git status and git diff --check reported no changes under the reviewed track or Phase 4 test."
+    },
+    {
+      "claim": "Frozen source and role revisions are reachable",
+      "result": "23bb5ad5, 5aea360f, f17fa78b, 412c0222, 7b595ae2, and 93e1c341 resolve and are ancestors of HEAD. The full SHA written in phase4-mid-red.log does not resolve."
+    },
+    {
+      "claim": "Prior structural suites are false-green for the provenance problems",
+      "result": "Phase 0-3 focused suites passed 31 tests while Phase 2 explicitly permits null required provenance fields; this does not establish independent human execution."
+    },
+    {
+      "claim": "Current Phase 4 is a truthful Red only because independent-review.json is absent",
+      "result": "All 8 Phase 4 tests fail with the expected missing independent-review.json assertion. The missing artifact does not exercise the fail-open acceptance branches identified above."
+    }
+  ],
+  "commands": [
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase4",
+      "result": "EXPECTED RED: 8 failures, all missing independent-review.json"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile measure/tests/test_apk_source_denominator_inventory_phase4.py",
+      "result": "PASS"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase0 measure.tests.test_apk_source_denominator_inventory_phase1 measure.tests.test_apk_source_denominator_inventory_phase2 measure.tests.test_apk_source_denominator_inventory_phase3",
+      "result": "PASS: 31 tests"
+    },
+    {
+      "command": "bash tests/orchestrator_supervisor_invariants.sh",
+      "result": "PASS"
+    },
+    {
+      "command": "bash tests/orchestrator_review_execution_truthfulness.sh",
+      "result": "PASS"
+    },
+    {
+      "command": "bash tests/orchestrator_catalog.sh",
+      "result": "PASS"
+    },
+    {
+      "command": "bash tests/orchestrator_marker_vocabulary.sh",
+      "result": "FAIL: unrelated legacy markers in backend_architecture_enforcement_20260713, backend_capability_kernel_20260713, and durable_job_worker_platform_20260713"
+    },
+    {
+      "command": "bash tests/orchestrator_detector_syntax.sh",
+      "result": "PASS"
+    },
+    {
+      "command": "bash tests/orchestrator_role_receipt_integrity.sh",
+      "result": "PASS with coverage limitation: it scanned 0 legacy receipts and 1 unrelated OpenCode manifest; it does not inspect this track's role-receipts/*.json"
+    }
+  ],
+  "changed_files": [
+    "measure/tracks/apk_source_denominator_inventory_20260712/review-b-security.json"
+  ],
+  "test_strategy_violations": [
+    "Phase 2 permits null required provenance when a limitation string is present, contrary to the frozen unmeasured-usage stop-loss.",
+    "Phase 4 does not validate the complete frozen five-role receipt set or trusted provider events.",
+    "The human path is generator-authored from a hard-coded program list rather than independently discovered.",
+    "The Phase 4 Red setup masks all acceptance-branch checks behind the single missing review artifact, so its present Red result does not falsify forged Green artifacts.",
+    "Candidate partition assertions are label-count checks rather than exact partition bindings."
+  ],
+  "live_contract_violations": [
+    "Missing or null mandatory role provenance and unmeasured resource use violate phase0-role-ownership-manifest.json and phase0-input-freeze.json.",
+    "Quarantined failed-track source-list entries violate the frozen failed_track_quarantine exclusion.",
+    "Self-attested reviewer isolation and owner authorization bypass the accepted event resolver boundary.",
+    "The invalid full commit in phase4-mid-red.log violates truthful commit binding.",
+    "Worktree-loaded transition artifacts violate immutable baseline/transition evidence requirements."
+  ],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "anti_pattern_checks": {
+    "A1": "pass: supervisor invariant guard passed; no supervisor edit in scope",
+    "A2": "not applicable to consent publishing; exact owner approval is nevertheless fail-open under APK-DEN-B-002",
+    "A3": "pass for numeric syntax; candidate partition remains structurally underbound under APK-DEN-B-005",
+    "A4": "violation: structural Phase 2/3 passes do not prove that independent human work occurred",
+    "A5": "violation: plan marks independent human discovery/reconciliation complete despite null role provenance and authored generation",
+    "A6": "pass: tracks.md keeps this track pending",
+    "A7": "violation-equivalent: unfiltered measure-root searches admit quarantined failed-track source lists",
+    "A8": "pass in this plan; repository-wide guard fails only on unrelated tracks",
+    "A9": "pass: reviewed track is active, not archived",
+    "A10": "violation: generated records are represented as human-raw-source-review facts",
+    "A11": "not applicable: this is an execution track and is not fully deferred",
+    "A12": "pass: catalog guard declarations resolve",
+    "A13": "pass: no stale archived duplicate for this active track",
+    "A14": "pass: detector syntax guard passed",
+    "A15": "no stale output hash was proven, but the guard does not scan this track's receipt schema and therefore cannot establish receipt integrity"
+  },
+  "retry_recommendation": "retry_implementation",
+  "confidence": "high"
+}
