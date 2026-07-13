@@ -4,7 +4,7 @@
   "track_id": "apk_source_denominator_inventory_20260712",
   "phase": "Phase 2: Independent human discovery",
   "role": "evidence-collector",
-  "task_id": "evidence-collector:asset-history-denominator",
+  "task_id": "evidence-collector:historical-program-identity-remediation",
   "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
   "spawn_id": null,
   "spawn_id_limitation": "No platform spawn-event export was supplied to this session.",
@@ -26,13 +26,13 @@
     "measure/tracks/apk_source_denominator_inventory_20260712/human-historical-deleted-records.json",
     "measure/tracks/apk_source_denominator_inventory_20260712/human-discrepancy-records.json"
   ],
-  "output_sha256": "e252a0d62fa3bd16ff3a603249a538d92fa48d52048010a9adcf5d38b17fd038",
+  "output_sha256": "74410e4375741b6f82a38d2135c94000f3dd8464fb2757cce9f39ac184ab5fe8",
   "output_hash_basis": "SHA-256 of canonical compact JSON with sorted keys mapping each output path to the SHA-256 of its committed bytes at commit_sha.",
   "output_hashes": {
-    "measure/tracks/apk_source_denominator_inventory_20260712/human-discrepancy-records.json": "9a28c155f99c37441958ac8a0617d22ff9ea6c180fe26641ceb9eb8c284ed9ef",
+    "measure/tracks/apk_source_denominator_inventory_20260712/human-discrepancy-records.json": "7f241f99936c2b15eff1f2db79a7488de5a4ae693f822ccd27bb8f3f3778d442",
     "measure/tracks/apk_source_denominator_inventory_20260712/human-duplicate-drift-records.json": "3709e551cd84f2c13a355e8b7e664be8df0f528124573615110728f80d4e19f0",
-    "measure/tracks/apk_source_denominator_inventory_20260712/human-historical-deleted-records.json": "076dbbe882b4b2a8dd6a71271ea270a9bc7f9c7ba3918f0b79a1d52c333ff2a7",
-    "measure/tracks/apk_source_denominator_inventory_20260712/independent-human-discovery.json": "0054e5bced5ad9868e15face30961b577f8038808381a5bdea8f5a796cf955ab"
+    "measure/tracks/apk_source_denominator_inventory_20260712/human-historical-deleted-records.json": "c92bb55b9aac45666f352ad40a93f830f1e3f1d92ac03d1465dd07326b3d8f04",
+    "measure/tracks/apk_source_denominator_inventory_20260712/independent-human-discovery.json": "8197858ca790263194c245ef92eb16fcbe68174ccddcadbe1c16dedf35829439"
   },
   "budget_declaration": {
     "role": "evidence-collector",
@@ -46,12 +46,20 @@
   },
   "budget_declaration_sha256": "c27f6e60d6872e3c7852727f3307dee1dfcd43270121a9388d725aeb3390cae6",
   "budget_hash_basis": "SHA-256 of canonical compact JSON with sorted keys for budget_declaration.",
-  "commit_sha": "bcc8d08034fdf1993bc0f79b053163f6047bf2af",
+  "commit_sha": "412c022211ba7ee56cc031ff05d85c84a3a56548",
   "commit_binding": {
     "status": "committed-output-binding",
-    "source": "git show bcc8d08034fdf1993bc0f79b053163f6047bf2af:<output-path>",
+    "source": "git show 412c022211ba7ee56cc031ff05d85c84a3a56548:<output-path>",
     "limitation": "This receipt is committed after the four attested Phase-2 outputs and proves only their committed byte binding, not platform event ordering."
   },
   "findings": [],
+  "disposition_summary": {
+    "reviewed_program_names": 29,
+    "current": 17,
+    "historical/withdrawn": 12,
+    "alias/copy": 0,
+    "unsupported program assumption": 0,
+    "unresolved": 0
+  },
   "acceptance": "not-claimed"
 }

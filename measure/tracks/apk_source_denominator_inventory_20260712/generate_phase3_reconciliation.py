@@ -13,7 +13,7 @@ from typing import Any
 
 BASELINE = "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
 PHASE1_REVISION = "f17fa78b36453e4aba36bc90f32bf25cd5b65ddb"
-PHASE2_REVISION = "4d760ceccdc3b26ae0e0e0523d5bad0dc952623b"
+PHASE2_REVISION = "412c022211ba7ee56cc031ff05d85c84a3a56548"
 TRACK = "apk_source_denominator_inventory_20260712"
 TRACK_DIR = Path(__file__).resolve().parent
 REPO_ROOT = TRACK_DIR.parents[2]
@@ -274,12 +274,44 @@ def main() -> None:
     for label in program_labels:
         review = program_reviews[label]
         identity_id = review.get("canonical_identity_id")
+        disposition = review.get("disposition")
         evidence = locator(BASELINE, PROGRAM_PATH, label_line[label], label_line[label])
-        if identity_id is None:
+        common_fields = {
+            "program_identity_label": label,
+            "program_evidence": evidence,
+            "source_identity_id": review.get("source_identity_id"),
+            "disposition": disposition,
+            "current_source_denominator_included": review.get("current_source_denominator_included"),
+            "history_search": review.get("history_search"),
+        }
+        if disposition == "current" and identity_id is not None:
+            program_records.append(matched_record(
+                **common_fields,
+                mechanical_identity_ids=[identity_id],
+                human_identity_ids=[identity_id],
+                mechanical_evidence=[evidence],
+                human_evidence=review["current_source_evidence"],
+            ))
+        elif disposition == "historical/withdrawn" and review.get("historical_source_evidence"):
+            program_records.append(matched_record(
+                **common_fields,
+                mechanical_identity_ids=[],
+                human_identity_ids=[],
+                mechanical_evidence=[evidence],
+                human_evidence=review["historical_source_evidence"],
+            ))
+        elif disposition in {"alias/copy", "unsupported program assumption"}:
+            program_records.append(matched_record(
+                **common_fields,
+                mechanical_identity_ids=[],
+                human_identity_ids=[],
+                mechanical_evidence=[evidence],
+                human_evidence=[evidence],
+            ))
+        else:
             unresolved_id = f"program-identity:{label}"
             program_records.append(unresolved_record(
-                program_identity_label=label,
-                program_evidence=evidence,
+                **common_fields,
                 mechanical_identity_ids=[],
                 human_identity_ids=[],
                 unresolved_source_id=unresolved_id,
@@ -288,16 +320,6 @@ def main() -> None:
                 "unresolved_source_id": unresolved_id,
                 "program_identity_label": label,
             })
-        else:
-            program_records.append(matched_record(
-                program_identity_label=label,
-                program_evidence=evidence,
-                mechanical_identity_ids=[identity_id],
-                human_identity_ids=[identity_id],
-                mechanical_evidence=[evidence],
-                human_evidence=review["evidence"],
-            ))
-
     group_paths: dict[str, list[str]] = defaultdict(list)
     group_evidence: dict[str, list[dict[str, Any]]] = defaultdict(list)
     asset_records = []
@@ -387,8 +409,17 @@ def main() -> None:
         "source_baseline_revision": BASELINE,
         "status": reconciliation_status,
         "replacement_program_identity_count": len(program_labels),
+        "reviewed_program_identity_count": len(program_records),
         "mechanical_identity_count": len(ledger["identity_records"]),
         "human_identity_count": len(human_claim_ids),
+        "current_identity_denominator_count": sum(
+            row["disposition"] == "current" and row["current_source_denominator_included"]
+            for row in program_records
+        ),
+        "program_disposition_counts": {
+            disposition: sum(row["disposition"] == disposition for row in program_records)
+            for disposition in ("current", "historical/withdrawn", "alias/copy", "unsupported program assumption")
+        },
         "replacement_program_identity_records": program_records,
         "identity_reconciliation_records": identity_records,
         "file_reconciliation_records": file_records,

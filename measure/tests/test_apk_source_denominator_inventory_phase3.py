@@ -58,6 +58,12 @@ SURFACE_KINDS = {
 DISCREPANCY_TYPES = {"duplicate", "stale", "missing", "withdrawn", "historical"}
 RESOLVED_STATUSES = {"matched", "resolved"}
 UNRESOLVED_STATUS = "unresolved-source"
+PROGRAM_DISPOSITIONS = {
+    "current",
+    "historical/withdrawn",
+    "alias/copy",
+    "unsupported program assumption",
+}
 
 
 def _load_json(path: Path, *, phase3: bool = False) -> dict[str, Any]:
@@ -326,8 +332,8 @@ class Phase3ReconciliationContracts(unittest.TestCase):
         else:
             self.assertFalse(unresolved_ids, "complete reconciliation cannot carry unresolved source records")
 
-    def test_raw_replacement_program_expectation_of_29_is_not_silently_shrunk(self) -> None:
-        """Compares the authored mechanical identity set to the committed program expectation.
+    def test_all_29_program_names_are_reviewed_without_forcing_29_current_identities(self) -> None:
+        """Separates reviewed program names from the smaller source-backed current denominator.
 
         Returns:
             Nothing.
@@ -350,7 +356,7 @@ class Phase3ReconciliationContracts(unittest.TestCase):
         self.assertEqual(len(labels), 29)
         mapped_mechanical: list[str] = []
         mapped_human: list[str] = []
-        unresolved_labels: set[str] = set()
+        dispositions: dict[str, str] = {}
         for record in records:
             evidence = self._assert_locator(record.get("program_evidence"))
             lines = _git_bytes(evidence["revision"], evidence["path"]).decode("utf-8").splitlines()
@@ -362,16 +368,29 @@ class Phase3ReconciliationContracts(unittest.TestCase):
             assert isinstance(record.get("human_identity_ids"), list)
             mapped_mechanical.extend(record["mechanical_identity_ids"])
             mapped_human.extend(record["human_identity_ids"])
+            disposition = record.get("disposition")
+            self.assertIn(disposition, PROGRAM_DISPOSITIONS)
+            assert isinstance(disposition, str)
+            dispositions[record["program_identity_label"]] = disposition
             self._assert_resolution(record)
-            if record.get("resolution_status") == UNRESOLVED_STATUS:
-                unresolved_labels.add(record["program_identity_label"])
         self.assertEqual(set(mapped_mechanical), mechanical_ids)
         self.assertEqual(len(mapped_mechanical), len(set(mapped_mechanical)))
         self.assertEqual(set(mapped_human), human_ids)
         self.assertEqual(len(mapped_human), len(set(mapped_human)))
-        if len(mechanical_ids) != 29 or len(human_ids) != 29:
-            self.assertEqual(self.reconciliation.get("status"), "reconciliation-blocked")
-            self.assertTrue(unresolved_labels, "a smaller source-backed denominator requires explicit unresolved program identities")
+        self.assertEqual(len(dispositions), 29)
+        self.assertEqual(sum(value == "current" for value in dispositions.values()), len(mechanical_ids))
+        self.assertEqual(sum(value == "historical/withdrawn" for value in dispositions.values()), 12)
+        self.assertEqual(self.reconciliation.get("reviewed_program_identity_count"), 29)
+        self.assertEqual(self.reconciliation.get("current_identity_denominator_count"), len(mechanical_ids))
+        for record in records:
+            included = record.get("current_source_denominator_included")
+            if record.get("disposition") == "current":
+                self.assertTrue(included)
+                self.assertEqual(len(record["mechanical_identity_ids"]), 1)
+            else:
+                self.assertFalse(included)
+                self.assertEqual(record["mechanical_identity_ids"], [])
+                self.assertEqual(record["human_identity_ids"], [])
 
     def test_identity_and_file_denominators_are_exhaustively_compared(self) -> None:
         """Requires one comparison for every mechanical identity and source file record.
@@ -548,8 +567,8 @@ class Phase3ReconciliationContracts(unittest.TestCase):
         ]
         record_unresolved = {row.get("unresolved_source_id") for row in all_records if row.get("resolution_status") == UNRESOLVED_STATUS}
         self.assertEqual(record_unresolved, set(ids), "every unresolved source must be explicit and every explicit unresolved source must block a record")
-        if ids:
-            self.assertEqual(self.reconciliation.get("status"), "reconciliation-blocked")
+        self.assertEqual(ids, [], "all reviewed program identities must have evidence-backed dispositions")
+        self.assertEqual(self.reconciliation.get("status"), "reconciliation-complete")
 
     def test_phase3_contains_no_interpretation_or_vacuous_completion(self) -> None:
         """Rejects semantic conclusions and empty comparison collections.
