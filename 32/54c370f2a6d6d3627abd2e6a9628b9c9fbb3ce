@@ -1,0 +1,1 @@
+Phase 3 RED contract: added exhaustive reconciliation falsification tests, a non-factual report, and strategy coverage. The focused test is intentionally red only because phase3-reconciliation.json is absent; Phase 1 and 2 contracts remain green. No denominator facts or plan markers changed.
