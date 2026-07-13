@@ -168,3 +168,43 @@ reachable ancestor for historical work).
   evidence, then rerun the exact GREEN command. Phase 3 remains in progress until all
   blocking source gaps are independently reviewed; this contract never accepts a
   denominator or changes the product-owner gate.
+
+## Phase 4 full independent-acceptance contracts
+
+The focused test is `measure.tests.test_apk_source_denominator_inventory_phase4`.
+It starts with the absent `independent-review.json` as its sole expected RED cause;
+the authored RED report is contract-only and no candidate, owner approval, accepted
+manifest, partition, or completion assertion is authored by this role. The test
+independently resolves every reviewed locator against the frozen baseline or a
+reachable ancestor, recalculates blob and inclusive-range SHA-256 values, and compares
+the complete Phase-3 identity, file, source-record, surface, asset, identical-hash
+group, copy, and historical/discrepancy result sets rather than trusting summary counts.
+
+- **RED command:**
+  `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase4`
+  It exits nonzero until the independent-review output exists. At this handoff, every
+  failure must be `AssertionError: Missing Phase-4 independent-acceptance artifact:
+  measure/tracks/apk_source_denominator_inventory_20260712/independent-review.json`.
+  Import, JSON, Git, syntax, historical-artifact, candidate, acceptance, or plan-marker
+  failures are not acceptable RED causes.
+- **GREEN command:**
+  `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase4`
+  It exits zero only after a fresh `fork_turns="none"` adversarial reviewer publishes
+  a full reproducible Phase-3 rerun with zero unresolved Critical, High, and Medium
+  findings; exact locator/reachability/hash and all denominator partitions are
+  revalidated; its receipt records measured integer resource use under every frozen
+  ceiling and zero stop-loss events; and non-consumable candidate denominator and
+  29-identity partition manifests bind their exact review/reconciliation bytes. Before
+  product-owner approval, accepted manifests must be absent. After approval, current
+  product-owner authorization must bind the exact candidate/review/predecessor-gate
+  hashes before accepted denominator and partition manifests may exist. Terminal
+  metadata/plan/registry state then requires no `[~]`, `[b]`, or legacy `[ ]` markers
+  and a resolvable commit reference on every `[x]` task.
+- **Static syntax command:**
+  `PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile measure/tests/test_apk_source_denominator_inventory_phase4.py`
+- **Prior-contract verification:**
+  `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase0 measure.tests.test_apk_source_denominator_inventory_phase1 measure.tests.test_apk_source_denominator_inventory_phase2 measure.tests.test_apk_source_denominator_inventory_phase3`
+- **Handoff:** The adversarial-reviewer owns the fresh review, rerun evidence, and
+  measured receipt. The product owner alone may provide the current exact-hash approval
+  after that review; accepted manifests are rendered only afterwards. This RED contract
+  does not accept the denominator, mutate the phase plan, or claim owner approval.

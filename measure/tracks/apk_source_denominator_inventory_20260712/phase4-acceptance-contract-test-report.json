@@ -1,0 +1,32 @@
+{
+  "schema_version": "apk-denominator-phase4-acceptance-contract-report.v1",
+  "status": "red-contract-authored",
+  "track_id": "apk_source_denominator_inventory_20260712",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "phase_authoring_baseline_revision": "6a0c7db2",
+  "role": "truth-test-author",
+  "scope": "Contract only; this report contains no denominator, review, candidate, owner-approval, partition, accepted-manifest, or completion fact.",
+  "red_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase4",
+  "green_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase4",
+  "required_phase4_artifacts": [
+    "independent-review.json",
+    "role-receipts/adversarial-reviewer.json",
+    "candidate-denominator-manifest.json",
+    "candidate-partition-manifest.json",
+    "product-owner-acceptance.json",
+    "accepted-denominator-manifest.json",
+    "accepted-partition-manifest.json"
+  ],
+  "required_contracts": [
+    "a fork_turns=none fresh independent adversarial-reviewer result with an exact Phase-3 rerun binding",
+    "live Git revision reachability, blob SHA-256, and inclusive range SHA-256 validation for every reviewed source locator",
+    "exact identity, file, source-record, surface, asset-candidate, identical-hash-group, copy, and historical/discrepancy result-set reconciliation",
+    "a fresh reviewer receipt with measured integer usage under every frozen ceiling and zero numeric stop-loss observations",
+    "zero unresolved Critical, High, and Medium findings",
+    "non-consumable candidate denominator and complete exact 29-identity partition manifests before owner approval",
+    "current product-owner authorization bound to exact candidate, review, and accepted-predecessor gate hashes",
+    "accepted denominator and partition manifests generated only after that exact approval",
+    "terminal metadata, plan, and registry truthfulness with no [~], [b], or legacy [ ] markers and resolvable commit evidence for every [x] task"
+  ],
+  "green_handoff": ["adversarial-reviewer", "product-owner"]
+}
