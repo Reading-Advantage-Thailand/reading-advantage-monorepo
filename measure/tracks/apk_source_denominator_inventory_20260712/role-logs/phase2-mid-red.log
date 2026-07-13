@@ -3,7 +3,7 @@ role=truth-test-author / mid-red (fresh isolated session)
 status=complete
 track=apk_source_denominator_inventory_20260712
 phase=Phase 2: Independent human discovery
-commit=af9733ee25af1758aaeb758900fc530b10caae92
+commits=af9733ee25af1758aaeb758900fc530b10caae92; fbeac6d5
 tests_run=PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase2; expected_red_exit=1; actual_exit=1; result=FAILED (failures=7), as expected
 tests_run=PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile measure/tests/test_apk_source_denominator_inventory_phase2.py; expected_exit=0; actual_exit=0; result=passed
 verification=PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase1; actual_exit=0; result=passed (6 tests)
