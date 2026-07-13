@@ -9,10 +9,7 @@ export type GameCard = {
   status: 'playable' | 'coming-soon'
 }
 
-const withdrawnApkGameIds = new Set([
-  'dragon-flight',
-  'dungeon-liberator',
-  'magic-defense',
+const unroutableGameIds = new Set([
   'astral-mage',
   'sorcerer-ziggurat',
   'dragon-rider',
@@ -47,6 +44,7 @@ const catalogCards: GameCard[] = [
     title: 'Magic Defense',
     description: 'Defend your castles from falling words by typing their translations.',
     cover: withBasePath('/games/cover/magic-defense-cover.png'),
+    href: '/student/games/vocabulary/magic-defense',
     status: 'playable',
   },
   {
@@ -62,6 +60,7 @@ const catalogCards: GameCard[] = [
     title: 'Dragon Flight',
     description: 'Choose the correct gate to grow your dragon flight.',
     cover: withBasePath('/games/cover/dragon-flight-cover.png'),
+    href: '/student/games/vocabulary/dragon-flight',
     status: 'playable',
   },
   {
@@ -109,6 +108,7 @@ const catalogCards: GameCard[] = [
     title: 'Dungeon Liberator',
     description: 'Rescue prisoners by collecting them in the correct word order and escape the dungeon!',
     cover: withBasePath('/games/cover/dungeon-liberator.png'),
+    href: '/student/games/sentence/dungeon-liberator',
     status: 'playable',
   },
   {
@@ -231,9 +231,9 @@ const catalogCards: GameCard[] = [
   },
 ]
 
-/** Game catalog with invalid APK cartridges withdrawn from playable routing. */
+/** Game catalog with titles that do not have a launch route withheld. */
 export const gameCards: GameCard[] = catalogCards.map((card) =>
-  withdrawnApkGameIds.has(card.id)
+  unroutableGameIds.has(card.id)
     ? { ...card, href: undefined, status: 'coming-soon' }
     : card
 )

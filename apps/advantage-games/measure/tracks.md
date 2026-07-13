@@ -4,6 +4,15 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
+- [~] **Track: Game Catalog Route Repair**
+*Link: [./measure/tracks/game_catalog_route_repair_20260713/](./measure/tracks/game_catalog_route_repair_20260713/)*
+*Description: Restore valid standalone game launch URLs and accurate availability for retained game implementations.*
+*Priority: High*
+*Type: Bug*
+*Status: In Progress*
+
+---
+
 - [x] **Track: Visual Refresh: Define Unique Identity**
 *Link: [./measure/archive/visual_refresh_20260425/](./measure/archive/visual_refresh_20260425/)*
 *Description: Defined and implemented the "Obsidian Grimoire" visual identity, replacing generic AI slop with a high-contrast brutalist aesthetic.*

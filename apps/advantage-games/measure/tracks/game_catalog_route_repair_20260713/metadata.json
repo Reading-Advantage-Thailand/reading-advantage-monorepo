@@ -1,0 +1,11 @@
+{
+  "track_id": "game_catalog_route_repair_20260713",
+  "type": "bug",
+  "status": "in_progress",
+  "created_at": "2026-07-13T00:00:00Z",
+  "updated_at": "2026-07-13T00:00:00Z",
+  "description": "Restore valid game catalog launch links and accurately reflect playable legacy games.",
+  "estimated_tasks": 4,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}

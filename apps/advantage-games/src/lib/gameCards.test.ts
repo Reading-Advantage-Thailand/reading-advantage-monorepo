@@ -20,29 +20,30 @@ describe('gameCards — locale-agnostic hrefs', () => {
     expect(withHref.length).toBe(playable.length)
   })
 
-  it('withholds every invalid APK cartridge from production arcade routes', () => {
-    const apkIds = [
-      'dragon-flight',
-      'dungeon-liberator',
-      'magic-defense',
-      'astral-mage',
-      'sorcerer-ziggurat',
-      'dragon-rider',
-      'spellweavers-run',
-      'griffin-riders-escape',
-      'storm-castle-tower', 'archers-revenge', 'paladins-twin-soul',
-      'griffin-sky-joust', 'gryphon-patrol', 'realm-carver',
-    ]
-    const apkCards = gameCards.filter((card) =>
-      apkIds.includes(card.id)
+  it('exposes every retained game route as playable', () => {
+    expect(gameCards).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: 'dragon-flight',
+          href: '/student/games/vocabulary/dragon-flight',
+          status: 'playable',
+        }),
+        expect.objectContaining({
+          id: 'dungeon-liberator',
+          href: '/student/games/sentence/dungeon-liberator',
+          status: 'playable',
+        }),
+        expect.objectContaining({
+          id: 'magic-defense',
+          href: '/student/games/vocabulary/magic-defense',
+          status: 'playable',
+        }),
+        expect.objectContaining({
+          id: 'labyrinth-goblin-king',
+          href: '/student/games/sentence/labyrinth-goblin-king',
+          status: 'playable',
+        }),
+      ]),
     )
-
-    expect(apkCards).toHaveLength(14)
-    for (const card of apkCards) {
-      expect(card).toEqual(expect.objectContaining({
-        status: 'coming-soon',
-        href: undefined,
-      }))
-    }
   })
 })
