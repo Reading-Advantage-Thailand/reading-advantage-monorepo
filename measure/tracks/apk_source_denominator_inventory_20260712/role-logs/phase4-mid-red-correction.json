@@ -1,0 +1,12 @@
+{
+  "schema_version": "measure-role-log-correction.v1",
+  "track_id": "apk_source_denominator_inventory_20260712",
+  "phase": "Phase 4: Full independent acceptance",
+  "supersedes": "measure/tracks/apk_source_denominator_inventory_20260712/role-logs/phase4-mid-red.log",
+  "corrected_field": "commit",
+  "incorrect_value": "71462110f82f740d3609c95e30b559795ab9e525",
+  "correct_value": "71462110f4a74763c284818a9eba45d1ce096ef2",
+  "verification": "git rev-parse --verify 71462110f4a74763c284818a9eba45d1ce096ef2^{commit}",
+  "acceptance_claimed": false,
+  "note": "This correction preserves the original Red log and corrects only its unresolvable full commit hash."
+}

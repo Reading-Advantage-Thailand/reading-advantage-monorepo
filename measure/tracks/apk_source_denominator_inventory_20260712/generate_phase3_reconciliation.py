@@ -6,6 +6,7 @@ import hashlib
 import json
 import re
 import subprocess
+import sys
 from collections import defaultdict
 from pathlib import Path
 from typing import Any
@@ -193,8 +194,11 @@ def canonical_key(value: object) -> str:
     return json.dumps(value, sort_keys=True, separators=(",", ":"))
 
 
-def main() -> None:
+def main(output_path: Path | None = None) -> None:
     """Writes the exhaustive, non-consumable Phase-3 reconciliation artifact.
+
+    Args:
+        output_path: Optional destination for a reproducibility check.
 
     Returns:
         Nothing.
@@ -436,10 +440,15 @@ def main() -> None:
         "discrepancy_reconciliation_records": discrepancy_records,
         "unresolved_sources": unresolved_sources,
     }
-    (TRACK_DIR / "phase3-reconciliation.json").write_text(
+    (output_path or TRACK_DIR / "phase3-reconciliation.json").write_text(
         json.dumps(output, indent=2, sort_keys=True) + "\n", encoding="utf-8"
     )
 
 
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) == 1:
+        main()
+    elif len(sys.argv) == 3 and sys.argv[1] == "--output":
+        main(Path(sys.argv[2]))
+    else:
+        raise SystemExit("usage: generate_phase3_reconciliation.py [--output <path>]")

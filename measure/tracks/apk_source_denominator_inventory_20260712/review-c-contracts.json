@@ -1,0 +1,86 @@
+{
+  "schema_version": "measure-contract-review.v1",
+  "track_id": "apk_source_denominator_inventory_20260712",
+  "phase": "Phase 4 independent review",
+  "review_role": "review-c-ux-api/contracts",
+  "baseline_sha": "93e1c3417b724c74ad857e71bf06ac7311f9fe81",
+  "status": "blocked",
+  "acceptance_claimed": false,
+  "ux_applicability": "not_applicable",
+  "scope": "Inventory contracts and Measure artifacts only; browser/UX acceptance, ontology synthesis, mechanics, capabilities, responsive strategy, asset suitability, semantic roles, and product disposition are outside this review.",
+  "checks": {
+    "schema_api_consistency": "pass",
+    "plan_truthfulness": "pass",
+    "marker_vocabulary": "pass for this track; repository-wide script is blocked only by unrelated uncommitted tracks",
+    "artifact_path_index_discoverability": "pass",
+    "candidate_accepted_semantics": "pass",
+    "forbidden_ontology_ux_semantic_conclusions": "pass",
+    "exhaustive_non_vacuous_tests": "pass",
+    "browser_ux_review": "not_applicable"
+  },
+  "remediated_blockers": [
+    {
+      "id": "C-01",
+      "severity": "high",
+      "summary": "Owner approval and accepted partition outputs were not byte-bound to the candidate partition.",
+      "resolution": "Phase-4 contract now requires the candidate-partition hash in approval and binds accepted partition assignments to the candidate partition."
+    },
+    {
+      "id": "C-02",
+      "severity": "high",
+      "summary": "The claimed Phase-3 rerun was not independently reproduced by the Phase-4 contract.",
+      "resolution": "The generator now supports an isolated output path and the Phase-4 contract reproduces and byte-compares the reconciliation."
+    },
+    {
+      "id": "C-03",
+      "severity": "medium",
+      "summary": "Phase-4 outputs were not indexed, and published reviewer outputs were not tied to completed plan markers.",
+      "resolution": "The track index lists every Phase-4 output and the contract requires reviewer-task completion markers with commit evidence while retaining the deferred product-owner gate."
+    },
+    {
+      "id": "C-04",
+      "severity": "medium",
+      "summary": "Phase-4 outputs were not contractually screened for forbidden inventory conclusions.",
+      "resolution": "The contract recursively rejects ontology, semantic, responsive, suitability, mechanic, intent, recommendation, and product-disposition fields."
+    }
+  ],
+  "blocking_findings": [
+    {
+      "id": "APK-DEN-B-001",
+      "severity": "critical",
+      "source": "review-b-security.json",
+      "summary": "Frozen role provenance and measured-usage requirements remain unproven."
+    },
+    {
+      "id": "APK-DEN-B-002",
+      "severity": "critical",
+      "source": "review-b-security.json",
+      "summary": "Reviewer and owner authorization remain self-attested rather than provider-resolved."
+    },
+    {
+      "id": "APK-DEN-B-003",
+      "severity": "high",
+      "source": "review-b-security.json",
+      "summary": "Quarantined failed-track paths remain in claimed discovery and reconciliation records."
+    },
+    {
+      "id": "APK-DEN-B-004",
+      "severity": "high",
+      "source": "review-b-security.json",
+      "summary": "The human discovery path remains derived from an authored program inventory."
+    },
+    {
+      "id": "APK-DEN-B-005",
+      "severity": "high",
+      "source": "review-b-security.json",
+      "summary": "Immutable commit binding remains incomplete beyond the candidate-partition binding remediated here."
+    }
+  ],
+  "verification": {
+    "prior_phase_contracts": "passed: 31 tests",
+    "phase4_red_contract": "expected failure only because independent-review.json is absent",
+    "static_syntax": "passed",
+    "marker_vocabulary_gate": "track-local passed; repository-wide command reports deprecated [ ] markers only in unrelated uncommitted backend tracks"
+  },
+  "next_gate": "Resolve every blocking review-b security finding before publishing an adversarial review. Product-owner approval and accepted manifests remain deferred and are not claimed by this review."
+}

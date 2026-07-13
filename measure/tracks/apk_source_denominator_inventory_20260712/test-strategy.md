@@ -196,7 +196,7 @@ group, copy, and historical/discrepancy result sets rather than trusting summary
   ceiling and zero stop-loss events; and non-consumable candidate denominator and
   29-identity partition manifests bind their exact review/reconciliation bytes. Before
   product-owner approval, accepted manifests must be absent. After approval, current
-  product-owner authorization must bind the exact candidate/review/predecessor-gate
+  product-owner authorization must bind the exact candidate denominator/candidate partition/review/predecessor-gate
   hashes before accepted denominator and partition manifests may exist. Terminal
   metadata/plan/registry state then requires no `[~]`, `[b]`, or legacy `[ ]` markers
   and a resolvable commit reference on every `[x]` task.
