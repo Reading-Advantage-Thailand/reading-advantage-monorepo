@@ -208,3 +208,69 @@ group, copy, and historical/discrepancy result sets rather than trusting summary
   measured receipt. The product owner alone may provide the current exact-hash approval
   after that review; accepted manifests are rendered only afterwards. This RED contract
   does not accept the denominator, mutate the phase plan, or claim owner approval.
+
+### Phase-4 execution gates and falsification
+
+**Current entry state (baseline `d1e9d034dad90b0b870ed0edb25bb20b2addf695`):** the
+focused Phase-4 command is intentionally red solely because
+`independent-review.json` is absent (all ten cases fail at that same missing-artifact
+assertion). This is a valid Red result, not review evidence. The preceding combined
+Phase 0–3 run is currently red in the dirty worktree (including Phase-2 denominator
+set comparisons); Phase-4 work must not rationalize, overwrite, or mask those
+failures. Its first admission check is that the committed predecessor contracts are
+green again. The reviewer reports a blocking finding or stops if that check cannot be
+obtained.
+
+| Gate | Exact command / evidence | Pass condition and falsification |
+| --- | --- | --- |
+| Admission | `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase0 measure.tests.test_apk_source_denominator_inventory_phase1 measure.tests.test_apk_source_denominator_inventory_phase2 measure.tests.test_apk_source_denominator_inventory_phase3` | All prior tests exit 0 against their committed inputs. Any failed prior assertion, timeout, or worktree-derived factual input is a block, not a Phase-4 fix opportunity. |
+| Red | `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase4` | Before reviewer output, every failure is the explicit missing `independent-review.json` assertion. A syntax/import failure, a candidate/owner artifact, or a different failure cause invalidates Red. |
+| Reviewer Green (pre-owner) | `PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile measure/tests/test_apk_source_denominator_inventory_phase4.py && PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase4` | A fresh `fork_turns="none"` adversarial-reviewer receipt, independently regenerated Phase-3 bytes, all exact sets/locators/hashes, zero **numeric** CHM counts, and exact non-consumable candidate/partition manifests pass. `product-owner-acceptance.json` and both accepted manifests remain absent. Any stale hash, failed generator, missing partition member, nonzero CHM count, receipt-budget breach, or accepted output before owner approval fails. |
+| Phase closeout (owner-gated) | Run the Reviewer Green command, then `bash tests/orchestrator_supervisor_invariants.sh && bash tests/orchestrator_marker_vocabulary.sh && bash tests/orchestrator_role_receipt_integrity.sh && bash tests/orchestrator_detector_syntax.sh && bash measure/doctor.sh`. Retain the command output with the owner event. | Only a current product-owner authorization event bound to exact candidate, partition, review, and predecessor-gate hashes may make the Phase-4 test validate accepted manifests and terminal markers. Any missing/replayed/agent-authored authorization, changed bound bytes, unresolved global gate, legacy marker, or missing commit reference blocks closeout. This strategy neither requests nor records that approval. |
+
+### Phase-4 fixtures, proof types, and architecture guardrails
+
+- **Fixtures/refutations:** Use temporary copies or deliberately mutated artifacts,
+  never the real candidate as a test oracle: alter one locator range/blob hash; cite a
+  non-ancestor revision; remove or duplicate an identity/asset/hash-group/copy/history
+  record; set a CHM finding to `high`; set a receipt usage value to a string, boolean,
+  negative number, or over-ceiling integer; replace `fork_turns` with an inherited
+  context; mark a candidate consumable; add an accepted manifest before owner approval;
+  or bind the owner event to an old candidate hash. Each mutation must make the focused
+  contract fail at the corresponding assertion.
+- **Live-source proof, not a mock:** the reviewer must invoke the Phase-3 generator in
+  a temporary output path and compare its SHA-256 to the committed reconciliation,
+  resolve every source locator via `git show`, and verify history with
+  `git merge-base --is-ancestor`. Fixture/mocked JSON may prove rejection paths only;
+  it cannot prove a denominator, reviewer isolation, or owner approval. Browser/gameplay
+  behavior is explicitly out of scope: this inventory phase tests source evidence and
+  artifact provenance, not a runnable game route or UX.
+- **Changed-contract risks:** treat the frozen baseline, Phase-3 schema/result sets,
+  resource-ceiling keys, receipt schema, candidate status flags, 29-label program
+  partition order, and owner-hash binding as contracts. A source, generator, schema,
+  or candidate-byte change requires a new reviewer rerun and receipt; it must never be
+  repaired by editing summary counts or reusing a prior approval. No role may review
+  its own denominator, evidence, mapping, or truth-test output; the strategy role only
+  specifies these checks and is not the reviewer.
+
+### Phase-4 anti-pattern coverage
+
+| Anti-pattern | Required defense and falsification condition |
+| --- | --- |
+| A1 | Run `orchestrator_supervisor_invariants.sh`; task state is read from structured `[x]`/`[b] deferred:product-owner` markers, never prose containing “deferred”. A free-text mutation must not make an incomplete task disappear. |
+| A2 | Accepted outputs are impossible without a current product-owner event bound to all four exact hashes. A candidate-only or agent-written “approval” fails the owner-authorization assertion. |
+| A3 | Receipt usage and stop-loss fields are parsed as labeled JSON integers, with exact key sets and ceiling comparisons—not a digit regex. A date/string/boolean or unlabeled digit fails. |
+| A4 | Green requires nonempty exact Phase-3 collections plus a completed independent rerun; no artifact, all-`[~]` reviewer work, or zero-work summary can pass. |
+| A5 | `red-contract-authored`, `candidate-non-consumable`, and `accepted` are distinct assertions. Record a green/closeout claim only with the cited command exit 0 and required bytes; a passing structural report alone is refuted by the live-source rerun. |
+| A6 | Keep `metadata.json` and `tracks.md` in progress until the owner-bound accepted manifests exist; the Phase-4 terminal-state test rejects an early completed/“accepted” registry claim. |
+| A7 | Compare full keyed sets, exact hashes, and explicit severity values. Do not use broad keyword exclusions; a forbidden interpretation field or omitted record must remain visible and fail. |
+| A8 | Run `orchestrator_marker_vocabulary.sh`; only `[x]`, `[~]`, and real `[b] deferred:product-owner` states are allowed before closeout, and no `[ ]`, `[~]`, or `[b]` survives terminal closeout. |
+| A9 | Keep this active-track test rooted at `measure/tracks/<track>`; any later archive-aware validator must resolve active/archive paths rather than hard-code an obsolete active path. An archive move with a stale path is a validation failure. |
+| A10 | Run `measure/doctor.sh` at closeout. No TypeScript structural change is authorized by this strategy, so graph/generated-facts updates are not substituted for evidence; if any such change is introduced, regenerate/update its required generated facts and rerun all gates. |
+| A14/A15 | Treat detector exit 2 as a failure (never `|| true`), and rerun receipt-integrity validation after every reviewed fix. A non-executable detector or receipt hash that differs from current output blocks publication. |
+
+The aggregate suite is intentionally red before the independent reviewer supplies its
+outputs and remains blocked while a predecessor contract is red. Report those states
+as **expected Red / blocked**, never as test failure remediation or product-owner
+acceptance. Only the exact focused Green and closeout gates above may change that
+classification.
