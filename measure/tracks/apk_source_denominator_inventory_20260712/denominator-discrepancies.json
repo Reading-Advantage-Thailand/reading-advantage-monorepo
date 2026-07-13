@@ -1,0 +1,223 @@
+{
+  "records": [
+    {
+      "canonical_identity_id": "sentence/castle-defense",
+      "evidence": [
+        {
+          "blob_sha256": "eb70ba245a4a7a1ee7637c679afe2a64dc94a883ed17d09d152687a2ad1f3a67",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/castle-defense/page.tsx",
+          "range": {
+            "end_line": 261,
+            "sha256": "eb70ba245a4a7a1ee7637c679afe2a64dc94a883ed17d09d152687a2ad1f3a67",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "fc6ead3439a8118004f48420e8fa94eb316b74ac8f186fb27c1e9c024fd9a653",
+          "path": "apps/reading-advantage/app/[locale]/(student)/student/games/sentence/castle-defense/page.tsx",
+          "range": {
+            "end_line": 274,
+            "sha256": "fc6ead3439a8118004f48420e8fa94eb316b74ac8f186fb27c1e9c024fd9a653",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "observation_id": "multiple-page-paths:sentence/castle-defense",
+      "observation_type": "multiple-paths-for-canonical-identity"
+    },
+    {
+      "canonical_identity_id": "sentence/potion-rush",
+      "evidence": [
+        {
+          "blob_sha256": "f23a839f56a1d749c5bfe264442b7a08aeda52e8bfa282044d7bc1ce3702be3d",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/potion-rush/page.tsx",
+          "range": {
+            "end_line": 371,
+            "sha256": "f23a839f56a1d749c5bfe264442b7a08aeda52e8bfa282044d7bc1ce3702be3d",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "e2ef1550bea67c51bf8a500071966d577164922e050d612b3813d12aaf1ae6f6",
+          "path": "apps/reading-advantage/app/[locale]/(student)/student/games/sentence/potion-rush/page.tsx",
+          "range": {
+            "end_line": 379,
+            "sha256": "e2ef1550bea67c51bf8a500071966d577164922e050d612b3813d12aaf1ae6f6",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "observation_id": "multiple-page-paths:sentence/potion-rush",
+      "observation_type": "multiple-paths-for-canonical-identity"
+    },
+    {
+      "canonical_identity_id": "vocabulary/dragon-flight",
+      "evidence": [
+        {
+          "blob_sha256": "3506322282874f3dd429d37cee85292ed7934255bfcb966318fb8488ecf83a13",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/dragon-flight/page.tsx",
+          "range": {
+            "end_line": 165,
+            "sha256": "3506322282874f3dd429d37cee85292ed7934255bfcb966318fb8488ecf83a13",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "52d832ea36db1cc0cffd96e7370eb9e831d7966c45ab0c98da089d89645bf415",
+          "path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-flight/page.tsx",
+          "range": {
+            "end_line": 162,
+            "sha256": "52d832ea36db1cc0cffd96e7370eb9e831d7966c45ab0c98da089d89645bf415",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "observation_id": "multiple-page-paths:vocabulary/dragon-flight",
+      "observation_type": "multiple-paths-for-canonical-identity"
+    },
+    {
+      "canonical_identity_id": "vocabulary/enchanted-library",
+      "evidence": [
+        {
+          "blob_sha256": "940b18a18b2d31a93b6048948f216d75ca980f975002bfc3d61e90138ef8d616",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/enchanted-library/page.tsx",
+          "range": {
+            "end_line": 304,
+            "sha256": "940b18a18b2d31a93b6048948f216d75ca980f975002bfc3d61e90138ef8d616",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "a175f2335d6252f7289a625ab3c21a54de266f3f1e1adcd6e1cfed71edc769da",
+          "path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/enchanted-library/page.tsx",
+          "range": {
+            "end_line": 294,
+            "sha256": "a175f2335d6252f7289a625ab3c21a54de266f3f1e1adcd6e1cfed71edc769da",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "observation_id": "multiple-page-paths:vocabulary/enchanted-library",
+      "observation_type": "multiple-paths-for-canonical-identity"
+    },
+    {
+      "canonical_identity_id": "vocabulary/magic-defense",
+      "evidence": [
+        {
+          "blob_sha256": "a2c7a21f2fcd124ed7da74ac357677dce6f26af8a832199c36abb3f21fd9bd74",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/magic-defense/page.tsx",
+          "range": {
+            "end_line": 150,
+            "sha256": "a2c7a21f2fcd124ed7da74ac357677dce6f26af8a832199c36abb3f21fd9bd74",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "78f56b30c6851a9900e7e821aa5a7ad541118470782b834492fb8e4ea4aadd52",
+          "path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/magic-defense/page.tsx",
+          "range": {
+            "end_line": 144,
+            "sha256": "78f56b30c6851a9900e7e821aa5a7ad541118470782b834492fb8e4ea4aadd52",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "observation_id": "multiple-page-paths:vocabulary/magic-defense",
+      "observation_type": "multiple-paths-for-canonical-identity"
+    },
+    {
+      "canonical_identity_id": "vocabulary/rpg-battle",
+      "evidence": [
+        {
+          "blob_sha256": "1ec182f560b7a5bb0f33a4348d8998859ed2ffd347cfadbf7929ce85bb6d91ff",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/rpg-battle/page.tsx",
+          "range": {
+            "end_line": 645,
+            "sha256": "1ec182f560b7a5bb0f33a4348d8998859ed2ffd347cfadbf7929ce85bb6d91ff",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "b6474aa6642fef001d46707c9e3accb32ccd0c8714f76c28cdfc3c2483a9fa40",
+          "path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/rpg-battle/page.tsx",
+          "range": {
+            "end_line": 628,
+            "sha256": "b6474aa6642fef001d46707c9e3accb32ccd0c8714f76c28cdfc3c2483a9fa40",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "observation_id": "multiple-page-paths:vocabulary/rpg-battle",
+      "observation_type": "multiple-paths-for-canonical-identity"
+    },
+    {
+      "canonical_identity_id": "vocabulary/rune-match",
+      "evidence": [
+        {
+          "blob_sha256": "a951b2113f67f78730482ae034d49adcbf58a0303aa93495578e1cb0a196c918",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/rune-match/page.tsx",
+          "range": {
+            "end_line": 102,
+            "sha256": "a951b2113f67f78730482ae034d49adcbf58a0303aa93495578e1cb0a196c918",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "2f53e5999d8b6426c0e3209c8a761fec5c89ad1888a772982d5c144353690551",
+          "path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/rune-match/page.tsx",
+          "range": {
+            "end_line": 113,
+            "sha256": "2f53e5999d8b6426c0e3209c8a761fec5c89ad1888a772982d5c144353690551",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "observation_id": "multiple-page-paths:vocabulary/rune-match",
+      "observation_type": "multiple-paths-for-canonical-identity"
+    },
+    {
+      "canonical_identity_id": "vocabulary/wizard-vs-zombie",
+      "evidence": [
+        {
+          "blob_sha256": "813c3330de1bb46686c23aa819839e43fe15a16266cac1cbe7330053125216f7",
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/wizard-vs-zombie/page.tsx",
+          "range": {
+            "end_line": 122,
+            "sha256": "813c3330de1bb46686c23aa819839e43fe15a16266cac1cbe7330053125216f7",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "eb2c97ed11dd23d42c37cede903d314203e925ec269632f5fa40b21399fe2766",
+          "path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/wizard-vs-zombie/page.tsx",
+          "range": {
+            "end_line": 159,
+            "sha256": "eb2c97ed11dd23d42c37cede903d314203e925ec269632f5fa40b21399fe2766",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "observation_id": "multiple-page-paths:vocabulary/wizard-vs-zombie",
+      "observation_type": "multiple-paths-for-canonical-identity"
+    }
+  ],
+  "schema_version": "apk-denominator-discrepancies.v1",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "status": "mechanical-discovery-complete"
+}

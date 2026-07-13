@@ -1,0 +1,43 @@
+{
+  "schema_version": "apk-denominator-phase1-green-test-report.v1",
+  "status": "green-passed",
+  "track_id": "apk_source_denominator_inventory_20260712",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "role": "discovery-auditor",
+  "verification_scope": "Mechanical artifact-contract verification only; this is not an acceptance, independent review, or role receipt.",
+  "commands": [
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase1",
+      "result": "passed",
+      "test_count": 6
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase0",
+      "result": "passed",
+      "test_count": 5
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -v -s measure/tests/evidence_integrity_gates -p 'test_*.py'",
+      "result": "passed",
+      "test_count": 143
+    },
+    {
+      "command": "bash tests/orchestrator_supervisor_invariants.sh && bash tests/orchestrator_review_execution_truthfulness.sh && bash tests/orchestrator_catalog.sh && bash tests/orchestrator_marker_vocabulary.sh && bash tests/orchestrator_detector_syntax.sh && bash tests/orchestrator_role_receipt_integrity.sh",
+      "result": "passed"
+    },
+    {
+      "command": "bash measure/doctor.sh",
+      "result": "passed"
+    },
+    {
+      "command": "python3 ~/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py status --repo .",
+      "result": "passed",
+      "reported_incomplete_phases": 127
+    }
+  ],
+  "owner_verification": {
+    "owner_role": "discovery-auditor",
+    "evidence": "The named role reran the frozen-baseline contract after generation.",
+    "product_owner_acceptance": "not-claimed"
+  }
+}

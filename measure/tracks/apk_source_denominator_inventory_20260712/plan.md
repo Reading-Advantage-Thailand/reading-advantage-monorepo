@@ -9,11 +9,11 @@
 
 ## Phase 1: Mechanical discovery
 
-- [~] Task: Enumerate catalog, routes, registrations, components, logic, tests, copies, and graph relationships
-- [~] Task: Discover scene/state symbols and transitions without authored fallback IDs
-- [~] Task: Enumerate asset/audio/data files with hashes and format metadata
-- [~] Task: Run negative fixtures proving failed-track generators cannot supply the denominator
-- [b] Task: Measure - User Manual Verification 'Phase 1' (Protocol in workflow.md) — deferred:product-owner
+- [x] Task: Enumerate catalog, routes, registrations, components, logic, tests, copies, and graph relationships. Evidence: `source-denominator.json`; `game-identity-ledger.json`; frozen baseline locators and hashes verified by `phase1-green-test-report.json`.
+- [x] Task: Discover scene/state symbols and transitions without authored fallback IDs. Evidence: `scene-state-denominator.json`; focused Phase-1 GREEN contract in `phase1-green-test-report.json`.
+- [x] Task: Enumerate asset/audio/data files with hashes and format metadata. Evidence: `asset-file-denominator.json`; `historical-source-denominator.json`; `denominator-discrepancies.json`; `denominator-method.md`; focused Phase-1 GREEN contract in `phase1-green-test-report.json`.
+- [x] Task: Run negative fixtures proving failed-track generators cannot supply the denominator. Evidence: `source-denominator.json.quarantine_fixtures`; focused Phase-1 GREEN contract in `phase1-green-test-report.json`.
+- [x] Task: Measure - Owner-verified mechanical verification 'Phase 1'. Evidence: discovery-auditor verification commands and results in `phase1-green-test-report.json`; product-owner acceptance is not claimed.
 
 ## Phase 2: Independent human discovery
 
