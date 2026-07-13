@@ -1,0 +1,53 @@
+{
+  "schema_version": "apk-role-receipt.v1",
+  "status": "complete-with-platform-limitations",
+  "track_id": "apk_source_denominator_inventory_20260712",
+  "phase": "Phase 2: Independent human discovery",
+  "role": "evidence-collector",
+  "task_id": "evidence-collector:asset-history-denominator",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "spawn_id": null,
+  "spawn_id_limitation": "No platform spawn-event export was supplied to this session.",
+  "parent_ancestry_ids": null,
+  "parent_ancestry_ids_limitation": "No platform ancestry export was supplied to this fresh session.",
+  "prompt_sha256": null,
+  "prompt_sha256_limitation": "The platform did not provide immutable prompt bytes from which to derive this digest.",
+  "actual_context_manifest_sha256": null,
+  "actual_context_manifest_sha256_limitation": "No raw provider context export or orchestrator context-manifest bytes were supplied.",
+  "start_event_id": null,
+  "start_event_id_limitation": "No platform start-event ID was supplied.",
+  "end_event_id": null,
+  "end_event_id_limitation": "No platform end-event ID was supplied.",
+  "final_response_sha256": null,
+  "final_response_sha256_limitation": "No immutable platform final-response export was supplied.",
+  "output_paths": [
+    "measure/tracks/apk_source_denominator_inventory_20260712/human-duplicate-drift-records.json",
+    "measure/tracks/apk_source_denominator_inventory_20260712/human-historical-deleted-records.json"
+  ],
+  "output_sha256": "ec53ebc10c82c1ca359dcb4699f928f9e8a7ebd557d4325456fb9bb06093db59",
+  "output_hash_basis": "SHA-256 of canonical compact JSON with sorted keys mapping each output path to the SHA-256 of its committed bytes at commit_sha.",
+  "output_hashes": {
+    "measure/tracks/apk_source_denominator_inventory_20260712/human-duplicate-drift-records.json": "1c8fa4cd90f5461dfdc63a5906eec8a895598f7c06a66a21dc053b0c885a4ec1",
+    "measure/tracks/apk_source_denominator_inventory_20260712/human-historical-deleted-records.json": "8d9d2afa904b8587394c4267bd1b0d8daaedaaf7f9d0bdaa146030f66159f5e4"
+  },
+  "budget_declaration": {
+    "role": "evidence-collector",
+    "frozen_resource_ceiling": {
+      "bytes_read": 268435456,
+      "command_invocations": 120,
+      "source_files": 7500
+    },
+    "actual_usage": null,
+    "actual_usage_limitation": "The platform does not expose a tool-usage ledger to this session."
+  },
+  "budget_declaration_sha256": "c27f6e60d6872e3c7852727f3307dee1dfcd43270121a9388d725aeb3390cae6",
+  "budget_hash_basis": "SHA-256 of canonical compact JSON with sorted keys for budget_declaration.",
+  "commit_sha": "4b6175f44dc2285084072bacebd87c7c3ce48bc3",
+  "commit_binding": {
+    "status": "committed-output-binding",
+    "source": "git show 4b6175f44dc2285084072bacebd87c7c3ce48bc3:<output-path>",
+    "limitation": "This receipt is committed after the two attested outputs and proves only their committed byte binding, not platform event ordering."
+  },
+  "findings": [],
+  "acceptance": "not-claimed"
+}

@@ -1,0 +1,52 @@
+{
+  "schema_version": "apk-denominator-phase2-green-test-report.v1",
+  "status": "green-passed",
+  "track_id": "apk_source_denominator_inventory_20260712",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "role": "evidence-collector",
+  "verification_scope": "Independent human current-source, Reading/Primary mapping, historical/deleted locator, and discrepancy contract verification only; this is not a candidate denominator, independent Phase-4 review, or product-owner acceptance.",
+  "commands": [
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase2",
+      "result": "passed",
+      "test_count": 7
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile measure/tests/test_apk_source_denominator_inventory_phase2.py",
+      "result": "passed"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase0 measure.tests.test_apk_source_denominator_inventory_phase1",
+      "result": "passed",
+      "test_count": 11
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -v -s measure/tests/evidence_integrity_gates -p 'test_*.py'",
+      "result": "passed",
+      "test_count": 143
+    },
+    {
+      "command": "bash tests/orchestrator_supervisor_invariants.sh && bash tests/orchestrator_review_execution_truthfulness.sh && bash tests/orchestrator_catalog.sh && bash tests/orchestrator_marker_vocabulary.sh && bash tests/orchestrator_detector_syntax.sh && bash tests/orchestrator_role_receipt_integrity.sh",
+      "result": "passed"
+    },
+    {
+      "command": "bash measure/doctor.sh",
+      "result": "passed"
+    },
+    {
+      "command": "python3 ~/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py status --repo .",
+      "result": "passed",
+      "reported_incomplete_phases": 127
+    }
+  ],
+  "owner_verification": {
+    "owner_role": "evidence-collector",
+    "evidence": "The fresh evidence-collector source-review log records all six accepted batches, raw committed-source retrieval digests, and the exact Primary-tree not-observed result; the focused contract passed afterward.",
+    "evidence_path": "role-logs/phase2-evidence-collector-green.log",
+    "product_owner_acceptance": "not-claimed"
+  },
+  "limitations": [
+    "Platform event, context, prompt, final-response, and tool-usage exports were unavailable and are recorded as null with per-field limitations in role-receipts/evidence-collector.json.",
+    "Per the frozen stop-loss contract, unavailable platform usage prevents a Phase-2 checkpoint or acceptance claim."
+  ]
+}

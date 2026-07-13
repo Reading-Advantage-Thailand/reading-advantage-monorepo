@@ -1,0 +1,30 @@
+Evidence-collector Phase-2 source review log
+
+Source boundary: committed blobs only; baseline 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286.
+Excluded: worktree bytes and measure/tracks/apk_cross_game_asset_ontology_20260712.
+
+Accepted identity batches (all at most three identities):
+- human-current-01: sentence/castle-defense, sentence/devourer-slime, sentence/dungeon-liberator
+- human-current-02: sentence/haunted-library, sentence/labyrinth-goblin-king, sentence/potion-rush
+- human-current-03: sentence/rune-forge-chamber, sentence/shadow-gate-dungeon, sentence/village-guardian
+- human-current-04: vocabulary/alchemists-synthesis, vocabulary/dragon-flight, vocabulary/dragon-rider
+- human-current-05: vocabulary/enchanted-library, vocabulary/magic-defense, vocabulary/rpg-battle
+- human-current-06: vocabulary/rune-match, vocabulary/wizard-vs-zombie
+
+Raw-source retrieval evidence (each group used git show on the listed committed page objects):
+- batch 01, 4 objects, concatenated SHA-256 684469a272bebc24eec894b5a3b58cfbff72fa94bc2ff6405b138d335cb84fbf
+- batch 02, 4 objects, concatenated SHA-256 ef9463a7f0d6fe1047f63a5df2136bfdee92d9f793e07076bd83a13818fc33e5
+- batch 03, 3 objects, concatenated SHA-256 aff135035fa6e69277309021309d49b42d5700213b9ec4d9d46818b98d48c59d
+- batch 04, 4 objects, concatenated SHA-256 ca2b193934ac97c3de5e17ac07fb5de4667bbd7647aaeb5557fb64558f97e404
+- batch 05, 6 objects, concatenated SHA-256 b86974674f97f36f5d751bf623aba8bf22aa704cc626c6b7a12dd9e8085378a0
+- batch 06, 4 objects, concatenated SHA-256 bbca6a82c1ff929782836bb90353f92dcd2310493000a35c594fabc7fb0cb0f7
+
+Reachable historical/deleted raw-source retrieval evidence:
+- 097545f14a8029d0c3451e3514841f9c5bf3e1c2: 3 objects, concatenated SHA-256 d1236cf2f2144aff419679ae8ebd74abe1745d7442934395c101c359029a2cc2
+- 1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f: 18 objects, concatenated SHA-256 9e421963543d451657db6d50d5b3361c87f841173d1f06699f4fcda335009550
+- 4106ba39547c8cac7645ce0f257a6bdd133712e9: 36 objects, concatenated SHA-256 a6f2a9f82c95538c2e152e8cb47c68469818a33865a7eb9b137c8f4ac5d19c7a
+- c76f6af3f62c03979f5073a871e775afd952a070: 30 objects, concatenated SHA-256 f4548fbe8cdf4ea87040930b76292e319ff600bc6781cede19ec82ae34c8815d
+- cd1936387d136ffb12e77a647f36cbce2d1fdd4e: 52 objects, concatenated SHA-256 4dcbca9e5bb4acd4559d2ed409a6f77a3708fde6875a2f7f962008c1823a77ce
+
+Primary mapping: the committed primary tree enumeration returned no exact current page suffix for any accepted identity. This is recorded as not-observed, not as a source or product conclusion.
+Platform provenance fields are null in the separate receipt because no platform event/context export was supplied.
