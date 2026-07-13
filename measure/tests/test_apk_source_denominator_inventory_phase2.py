@@ -422,16 +422,27 @@ class Phase2IndependentHumanDiscoveryContracts(unittest.TestCase):
         required = self.ownership["receipt_contract"]["required_provenance"]
         self.assertIsInstance(required, list)
         assert isinstance(required, list)
+        digest_fields = {
+            "prompt_sha256",
+            "actual_context_manifest_sha256",
+            "final_response_sha256",
+            "output_sha256",
+            "budget_declaration_sha256",
+        }
         for field in required:
             self.assertIn(field, receipt)
             if field == "parent_ancestry_ids":
                 self.assertIsInstance(receipt[field], list)
+                self.assertTrue(all(isinstance(value, str) and value for value in receipt[field]))
             elif field == "commit_sha":
                 self.assertIsInstance(receipt[field], str)
                 self.assertRegex(receipt[field], COMMIT_SHA)
-            else:
+            elif field in digest_fields:
                 self.assertIsInstance(receipt[field], str)
                 self.assertRegex(receipt[field], SHA256)
+            else:
+                self.assertIsInstance(receipt[field], str)
+                self.assertTrue(receipt[field])
         outputs = receipt.get("output_paths")
         self.assertIsInstance(outputs, list)
         assert isinstance(outputs, list)
