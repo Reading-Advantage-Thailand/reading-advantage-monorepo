@@ -3,8 +3,8 @@
   "status": "complete-with-platform-limitations",
   "track_id": "apk_source_denominator_inventory_20260712",
   "phase": "Phase 3: Reconciliation",
-  "role": "requirements-mapper",
-  "task_id": "requirements-mapper:reconciliation-records",
+  "role": "reconciliation-integrator",
+  "task_id": "reconciliation-integrator:phase3-closeout",
   "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
   "spawn_id": null,
   "spawn_id_limitation": "No platform spawn-event export was supplied to this fresh session.",
@@ -21,13 +21,11 @@
   "final_response_sha256": null,
   "final_response_sha256_limitation": "No immutable platform final-response export was supplied.",
   "allowed_input_manifest_sha256": "e4bba6919b9b60992a388a9cf4f37c7885400b96bec7b31898f59eaa80d12a9f",
-  "output_paths": [
-    "measure/tracks/apk_source_denominator_inventory_20260712/phase3-reconciliation.json"
-  ],
+  "output_paths": ["measure/tracks/apk_source_denominator_inventory_20260712/phase3-reconciliation.json"],
   "output_hashes": {
-    "measure/tracks/apk_source_denominator_inventory_20260712/phase3-reconciliation.json": "4358e9bb2be5229582f0a05dbf296311468f95c34300ed0e015da1c424fbb548"
+    "measure/tracks/apk_source_denominator_inventory_20260712/phase3-reconciliation.json": "60a5a77ede93982e1b51053fca246b2dfc4774cc02d0db27d50dd6012d06fd14"
   },
-  "output_sha256": "461ba333b671e92831acf8d96ff6599073f988d387091612a12f15108662a31b",
+  "output_sha256": "ba8d11b899ebdfab2db714db4653e51ac4d46c75fd9152a3e51e62d252fbbae6",
   "output_hash_basis": "SHA-256 of canonical compact JSON with sorted keys mapping the output path to the SHA-256 of its committed bytes at commit_sha.",
   "budget_declaration": {
     "role": "requirements-mapper",
@@ -41,19 +39,19 @@
   },
   "budget_declaration_sha256": "e2495cfef4f852ecb318f5a5f59fde86aa0fd19922ec1abb0e3688c015f3588a",
   "budget_hash_basis": "SHA-256 of canonical compact JSON with sorted keys for budget_declaration.",
-  "commit_sha": "011a9e887418d6f54ab2eb0024573af924873569",
+  "commit_sha": "7b595ae2ae7c126d75771c71b57078d683bb394c",
   "commit_binding": {
     "status": "committed-output-binding",
-    "source": "git show 011a9e887418d6f54ab2eb0024573af924873569:<output-path>",
+    "source": "git show 7b595ae2ae7c126d75771c71b57078d683bb394c:<output-path>",
     "limitation": "This receipt was written after the output commit and proves only the output bytes at that commit, not platform event ordering."
   },
-  "findings": [
-    {
-      "finding_id": "phase3-unresolved-source-coverage",
-      "severity": "high",
-      "blocking": true,
-      "source_fact": "The reconciliation artifact records 1411 explicit unresolved source IDs and has reconciliation-blocked status."
-    }
-  ],
+  "findings": [],
+  "reconciliation_summary": {
+    "status": "reconciliation-complete",
+    "reviewed_program_identities": 29,
+    "current": 17,
+    "historical_withdrawn": 12,
+    "unresolved_sources": 0
+  },
   "acceptance": "not-claimed"
 }

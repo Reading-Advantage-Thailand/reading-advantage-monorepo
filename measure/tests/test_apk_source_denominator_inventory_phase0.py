@@ -169,21 +169,23 @@ class Phase0FreezeTests(unittest.TestCase):
         owned = [output for task in tasks for output in task["expected_outputs"]]
         self.assertEqual(len(owned), len(set(owned)))
 
-    def test_phase_zero_records_only_freeze_evidence_and_keeps_owner_verification_blocked(self) -> None:
-        """Requires evidence-backed freeze tasks without representing owner approval.
+    def test_phase_zero_records_freeze_gate_owner_verification_without_acceptance(self) -> None:
+        """Requires evidence-backed freeze tasks and verification without product-owner acceptance.
 
         Returns:
             Nothing.
         """
         phase_zero = PLAN_PATH.read_text(encoding="utf-8").split("## Phase 1:", 1)[0]
         self.assertNotIn("[ ]", phase_zero)
-        self.assertEqual(phase_zero.count("- [x] Task:"), 3)
+        self.assertEqual(phase_zero.count("- [x] Task:"), 4)
         self.assertIn("phase0-input-freeze.json", phase_zero)
         self.assertIn("phase0-role-ownership-manifest.json", phase_zero)
         self.assertIn("test-strategy.md", phase_zero)
         self.assertIn("freeze commit `bb95b523`", phase_zero)
-        self.assertIn("- [b] Task: Measure - User Manual Verification 'Phase 0'", phase_zero)
-        self.assertIn("deferred:product-owner", phase_zero)
+        self.assertIn("- [x] Task: Measure - Owner verification 'Phase 0'", phase_zero)
+        self.assertIn("test_apk_source_denominator_inventory_phase0", phase_zero)
+        self.assertIn("reconciliation commit `7b595ae2`", phase_zero)
+        self.assertIn("product-owner acceptance is not claimed", phase_zero)
 
 
 if __name__ == "__main__":

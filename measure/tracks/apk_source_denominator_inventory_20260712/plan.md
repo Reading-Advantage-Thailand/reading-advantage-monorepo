@@ -5,7 +5,7 @@
 - [x] Task: Bind the accepted truth-gate manifest and quarantine all failed-track factual inputs. Evidence: `phase0-input-freeze.json`; focused falsification test; freeze commit `bb95b523`. No source discovery occurred.
 - [x] Task: Freeze the required mechanical-discovery, human-discovery, historical, asset, truth-test, and adversarial-review role ownership and isolation contract without launching a discovery session. Evidence: `phase0-role-ownership-manifest.json`; focused falsification test; freeze commit `bb95b523`.
 - [x] Task: Freeze the current revision, ancestor-only historical search rule, roots, exclusions, numeric resource ceilings, stop-loss thresholds, expected artifact schemas/paths, and exact Red/Green/project gate commands. Evidence: `phase0-input-freeze.json`; `test-strategy.md`; focused falsification test; freeze commit `bb95b523`.
-- [b] Task: Measure - User Manual Verification 'Phase 0' (Protocol in workflow.md) — deferred:product-owner
+- [x] Task: Measure - Owner verification 'Phase 0' (Protocol in workflow.md). Evidence: reconciliation-integrator reran `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase0` (5 passed) against the frozen predecessor, scope, quarantine, ownership, and stop-loss gate at reconciliation commit `7b595ae2`; product-owner acceptance is not claimed.
 
 ## Phase 1: Mechanical discovery
 
@@ -25,12 +25,12 @@
 
 ## Phase 3: Reconciliation
 
-- [~] Task: Reconcile mechanical and human identity/file denominators
-- [~] Task: Reconcile every scene, state, phase, overlay, transition, and terminal surface
-- [~] Task: Reconcile every candidate asset and identical-hash group
-- [~] Task: Resolve every duplicate, stale, missing, withdrawn, and historical discrepancy
-- [~] Task: Stop rather than infer when sources remain incomplete
-- [b] Task: Measure - User Manual Verification 'Phase 3' (Protocol in workflow.md) — deferred:product-owner
+- [x] Task: Reconcile mechanical and human identity/file denominators. Evidence: `phase3-reconciliation.json` at `7b595ae2` records 17 identity, 574 file, and 1031 source-record comparisons with paired raw evidence; the Phase 0-3 focused contract passed (31 tests).
+- [x] Task: Reconcile every scene, state, phase, overlay, transition, and terminal surface. Evidence: `phase3-reconciliation.json` at `7b595ae2` records 66 surface comparisons and all seven category coverage records; the Phase-3 focused contract passed.
+- [x] Task: Reconcile every candidate asset and identical-hash group. Evidence: `phase3-reconciliation.json` at `7b595ae2` records 353 asset-candidate and 153 identical-hash-group comparisons with paired raw evidence; the Phase-3 focused contract passed.
+- [x] Task: Resolve every duplicate, stale, missing, withdrawn, and historical discrepancy. Evidence: `phase3-reconciliation.json` at `7b595ae2` records 353 discrepancy comparisons and the 29 reviewed program identities as 17 current plus 12 historical/withdrawn; `unresolved_sources` is empty.
+- [x] Task: Stop rather than infer when sources remain incomplete. Evidence: the Phase-3 contract at `7b595ae2` validates every historical locator/reachable ancestor and permits completion only when `unresolved_sources` is empty; deterministic regeneration SHA-256 is `60a5a77ede93982e1b51053fca246b2dfc4774cc02d0db27d50dd6012d06fd14`.
+- [x] Task: Measure - Owner verification 'Phase 3' (Protocol in workflow.md). Evidence: reconciliation-integrator results in `phase3-green-test-report.json` and `role-logs/phase3-requirements-mapper-green.log` at reconciliation commit `7b595ae2`; all Phase 0-3 focused tests passed, Phase-2 receipt binding at `412c0222` passed, and product-owner acceptance is not claimed.
 
 ## Phase 4: Full independent acceptance
 
