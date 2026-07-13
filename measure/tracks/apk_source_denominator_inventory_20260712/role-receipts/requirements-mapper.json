@@ -1,0 +1,59 @@
+{
+  "schema_version": "apk-role-receipt.v1",
+  "status": "complete-with-platform-limitations",
+  "track_id": "apk_source_denominator_inventory_20260712",
+  "phase": "Phase 3: Reconciliation",
+  "role": "requirements-mapper",
+  "task_id": "requirements-mapper:reconciliation-records",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "spawn_id": null,
+  "spawn_id_limitation": "No platform spawn-event export was supplied to this fresh session.",
+  "parent_ancestry_ids": null,
+  "parent_ancestry_ids_limitation": "No platform ancestry export was supplied to this fresh session.",
+  "prompt_sha256": null,
+  "prompt_sha256_limitation": "The platform did not provide immutable prompt bytes from which to derive this digest.",
+  "actual_context_manifest_sha256": null,
+  "actual_context_manifest_sha256_limitation": "No raw provider context export or orchestrator context-manifest bytes were supplied.",
+  "start_event_id": null,
+  "start_event_id_limitation": "No platform start-event ID was supplied.",
+  "end_event_id": null,
+  "end_event_id_limitation": "No platform end-event ID was supplied.",
+  "final_response_sha256": null,
+  "final_response_sha256_limitation": "No immutable platform final-response export was supplied.",
+  "allowed_input_manifest_sha256": "e4bba6919b9b60992a388a9cf4f37c7885400b96bec7b31898f59eaa80d12a9f",
+  "output_paths": [
+    "measure/tracks/apk_source_denominator_inventory_20260712/phase3-reconciliation.json"
+  ],
+  "output_hashes": {
+    "measure/tracks/apk_source_denominator_inventory_20260712/phase3-reconciliation.json": "4358e9bb2be5229582f0a05dbf296311468f95c34300ed0e015da1c424fbb548"
+  },
+  "output_sha256": "461ba333b671e92831acf8d96ff6599073f988d387091612a12f15108662a31b",
+  "output_hash_basis": "SHA-256 of canonical compact JSON with sorted keys mapping the output path to the SHA-256 of its committed bytes at commit_sha.",
+  "budget_declaration": {
+    "role": "requirements-mapper",
+    "frozen_resource_ceiling": {
+      "bytes_read": 134217728,
+      "claim_records": 12000,
+      "command_invocations": 60
+    },
+    "actual_usage": null,
+    "actual_usage_limitation": "The platform does not expose a tool-usage ledger to this session."
+  },
+  "budget_declaration_sha256": "e2495cfef4f852ecb318f5a5f59fde86aa0fd19922ec1abb0e3688c015f3588a",
+  "budget_hash_basis": "SHA-256 of canonical compact JSON with sorted keys for budget_declaration.",
+  "commit_sha": "011a9e887418d6f54ab2eb0024573af924873569",
+  "commit_binding": {
+    "status": "committed-output-binding",
+    "source": "git show 011a9e887418d6f54ab2eb0024573af924873569:<output-path>",
+    "limitation": "This receipt was written after the output commit and proves only the output bytes at that commit, not platform event ordering."
+  },
+  "findings": [
+    {
+      "finding_id": "phase3-unresolved-source-coverage",
+      "severity": "high",
+      "blocking": true,
+      "source_fact": "The reconciliation artifact records 1411 explicit unresolved source IDs and has reconciliation-blocked status."
+    }
+  ],
+  "acceptance": "not-claimed"
+}

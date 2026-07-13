@@ -1,0 +1,18 @@
+MEASURE_AGENT_RESULT
+role=requirements-mapper / reconciliation Green (fresh session)
+status=blocked
+track=apk_source_denominator_inventory_20260712
+phase=Phase 3: Reconciliation
+commit=011a9e887418d6f54ab2eb0024573af924873569
+tests_run=PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase3; actual_exit=0; result=passed (9 tests)
+tests_run=PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase1 measure.tests.test_apk_source_denominator_inventory_phase2 measure.tests.test_apk_source_denominator_inventory_phase3; actual_exit=0; result=passed (22 tests)
+tests_run=PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -v -s measure/tests/evidence_integrity_gates -p 'test_*.py'; actual_exit=0; result=passed (143 tests)
+guards_run=tests/orchestrator_supervisor_invariants.sh; tests/orchestrator_review_execution_truthfulness.sh; tests/orchestrator_catalog.sh; tests/orchestrator_detector_syntax.sh; tests/orchestrator_role_receipt_integrity.sh; result=passed
+guard_blocker=tests/orchestrator_marker_vocabulary.sh; actual_exit=1; result=blocked by pre-existing uncommitted [ ] markers in backend_architecture_enforcement_20260713, backend_capability_kernel_20260713, and durable_job_worker_platform_20260713, outside this track
+doctor_run=bash measure/doctor.sh; actual_exit=1; result=blocked by the same unrelated deprecated marker findings
+reconciliation=phase3-reconciliation.json status=reconciliation-blocked; replacement_program_identity_count=29; mechanical_identity_count=17; human_identity_count=17; unresolved_sources=1411
+source_revalidation=all emitted current locators were rebuilt from 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286; historical locators were re-read only from reachable ancestors before being recorded as blockers where independent current-source comparison evidence was absent
+plan_updates=none; Phase 3 tasks remain [~] because blocking unresolved-source records remain and the project marker/doctor gates do not pass
+provenance_limitations=spawn_id,parent_ancestry_ids,prompt_sha256,actual_context_manifest_sha256,start_event_id,end_event_id,final_response_sha256,actual_usage are null because no immutable platform export or tool ledger was supplied
+acceptance=not-claimed
+END_MEASURE_AGENT_RESULT
