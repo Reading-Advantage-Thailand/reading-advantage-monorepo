@@ -3,6 +3,14 @@
   "status": "fail",
   "summary": "Phase 4 cannot accept this denominator. The raw role receipts do not prove the frozen five-role separation or measured stop-loss compliance, the Phase 4 gate trusts self-authored provenance and owner-approval fields instead of the provider-neutral event resolver, and the claimed human-discovery artifacts contain quarantined failed-track source-list entries and were generated from a hard-coded authored program inventory. No provenance was invented or rewritten during review.",
   "blocking_findings": [
+    "APK-DEN-B-001: Frozen role separation and receipt provenance are not established.",
+    "APK-DEN-B-002: Reviewer and product-owner authorization are self-attested rather than provider-resolved.",
+    "APK-DEN-B-003: Failed-track quarantine is present in claimed human and reconciliation source lists.",
+    "APK-DEN-B-004: The independent human denominator is generated from an authored program inventory.",
+    "APK-DEN-B-005: Candidate, partition, approval, and accepted outputs are not commit-bound and can consume coordinated worktree edits.",
+    "APK-DEN-B-006: The Phase 4 raw role log records a nonexistent full commit."
+  ],
+  "finding_details": [
     {
       "id": "APK-DEN-B-001",
       "severity": "critical",
@@ -86,6 +94,9 @@
     }
   ],
   "nonblocking_findings": [
+    "APK-DEN-B-N01: Repository-wide marker guard is red outside this track."
+  ],
+  "nonblocking_finding_details": [
     {
       "id": "APK-DEN-B-N01",
       "severity": "low",
@@ -94,6 +105,12 @@
     }
   ],
   "evidence": [
+    "HEAD at review start was 93e1c3417b724c74ad857e71bf06ac7311f9fe81, and the relevant track artifacts were clean against that baseline.",
+    "Frozen source and role revisions resolve and are ancestors of HEAD, except the full SHA written in phase4-mid-red.log.",
+    "Phase 0-3 focused suites passed 31 tests despite the null provenance accepted by the Phase 2 contract.",
+    "All 8 Phase 4 tests produced the expected Red missing-independent-review assertion, which does not exercise the fail-open Green branches."
+  ],
+  "evidence_details": [
     {
       "claim": "Review baseline and relevant track artifacts were clean before this audit output was created",
       "result": "HEAD was 93e1c3417b724c74ad857e71bf06ac7311f9fe81; git status and git diff --check reported no changes under the reviewed track or Phase 4 test."
@@ -112,6 +129,17 @@
     }
   ],
   "commands": [
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase4 — EXPECTED RED: 8 missing-review failures",
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile measure/tests/test_apk_source_denominator_inventory_phase4.py — PASS",
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase0 measure.tests.test_apk_source_denominator_inventory_phase1 measure.tests.test_apk_source_denominator_inventory_phase2 measure.tests.test_apk_source_denominator_inventory_phase3 — PASS: 31 tests",
+    "bash tests/orchestrator_supervisor_invariants.sh — PASS",
+    "bash tests/orchestrator_review_execution_truthfulness.sh — PASS",
+    "bash tests/orchestrator_catalog.sh — PASS",
+    "bash tests/orchestrator_marker_vocabulary.sh — FAIL on unrelated backend-track legacy markers",
+    "bash tests/orchestrator_detector_syntax.sh — PASS",
+    "bash tests/orchestrator_role_receipt_integrity.sh — PASS with coverage limitation; this track's receipt schema was not scanned"
+  ],
+  "command_results": [
     {
       "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase4",
       "result": "EXPECTED RED: 8 failures, all missing independent-review.json"
