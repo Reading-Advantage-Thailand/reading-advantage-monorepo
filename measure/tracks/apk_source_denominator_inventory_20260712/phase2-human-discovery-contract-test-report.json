@@ -1,0 +1,28 @@
+{
+  "schema_version": "apk-denominator-phase2-human-discovery-contract-report.v1",
+  "status": "red-contract-authored",
+  "track_id": "apk_source_denominator_inventory_20260712",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "phase_authoring_baseline_revision": "0765d6b3",
+  "role": "truth-test-author",
+  "scope": "Contract only; this report contains no human source review, factual claim, duplicate/drift result, historical/deleted result, discrepancy result, receipt, or accepted denominator.",
+  "red_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase2",
+  "green_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase2",
+  "required_phase2_artifacts": [
+    "independent-human-discovery.json",
+    "human-duplicate-drift-records.json",
+    "human-historical-deleted-records.json",
+    "human-discrepancy-records.json",
+    "role-receipts/evidence-collector.json"
+  ],
+  "required_contracts": [
+    "explicit accepted identity batches of one to three identities with exact Phase-1 ledger coverage",
+    "raw current-source claim records with exact committed path, revision, blob hash, inclusive range hash, and human review method",
+    "separate Reading and Primary duplicate/drift observations for every Phase-1 identity",
+    "exact reachable human historical/deleted records for every Phase-1 historical/deleted locator",
+    "a separate evidence-collector receipt that attests only collector outputs",
+    "fail-closed discrepancy comparisons covering all Phase-1 identities and observations",
+    "absence of semantic, capability, responsive, suitability, mechanic, intent, or product-disposition conclusions"
+  ],
+  "green_handoff": ["discovery-auditor", "evidence-collector"]
+}

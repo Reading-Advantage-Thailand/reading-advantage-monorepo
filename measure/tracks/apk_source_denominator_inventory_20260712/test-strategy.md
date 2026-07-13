@@ -93,3 +93,39 @@ the input freeze; a ceiling change needs prior product-owner approval and revali
 The product-owner verification task remains `[b] deferred:product-owner`. No candidate
 or accepted denominator manifest exists after Phase 0, and no product-owner approval is
 requested by this strategy.
+
+## Phase 2 independent-human-discovery contracts
+
+The focused test is `measure.tests.test_apk_source_denominator_inventory_phase2`.
+It consumes Phase-1's committed `game-identity-ledger.json`,
+`historical-source-denominator.json`, and `denominator-discrepancies.json` solely as
+the exhaustive denominator to review; it does not use them as human evidence. Human
+claims must independently resolve their own committed current-source locators at
+`23bb5ad578c01fb29f9e8bb76a7d934d24a4b286`, with exact blob and inclusive
+line-range SHA-256 values. Historical locators must be exact Phase-1 locators at
+reachable ancestors of that baseline.
+
+- **RED command:**
+  `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase2`
+  It exits nonzero until the Phase-2 human-discovery artifacts exist. At this Red
+  handoff, every failure must be `AssertionError: Missing Phase-2 human-discovery
+  artifact: measure/tracks/apk_source_denominator_inventory_20260712/independent-human-discovery.json`.
+  Existing Phase-1 ledgers, imports, JSON, Git, and Python syntax are not an
+  acceptable source of Red failure.
+- **GREEN command:**
+  `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase2`
+  It exits zero only when all Phase-1 identities appear exactly once in explicit
+  accepted batches of one through three, all have raw current-source claims with
+  exact locators and the `human-raw-source-review` method, and Reading and Primary
+  observations exist separately for every identity. The suite requires exact
+  one-for-one coverage of every Phase-1 historical/deleted locator, an independent
+  evidence-collector receipt, and fail-closed comparison records for every Phase-1
+  identity and mechanical discrepancy observation. It rejects sampled coverage,
+  merged Reading/Primary records, unreachable history, unpinned evidence, unresolved
+  discrepancies, and semantic/product interpretation fields.
+- **Static syntax command:**
+  `PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile measure/tests/test_apk_source_denominator_inventory_phase2.py`
+- **Handoff:** The discovery-auditor and evidence-collector must independently author
+  the missing Phase-2 artifacts and their separate receipt, then rerun the exact
+  GREEN command. This contract neither accepts a denominator nor marks Phase 2
+  complete.
