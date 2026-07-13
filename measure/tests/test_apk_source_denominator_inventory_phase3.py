@@ -201,6 +201,10 @@ class Phase3ReconciliationContracts(unittest.TestCase):
         self.assertIsInstance(end, int)
         assert isinstance(start, int) and isinstance(end, int)
         lines = blob.splitlines(keepends=True)
+        if not lines:
+            self.assertEqual((start, end), (0, 0))
+            self.assertEqual(cited_range.get("sha256"), hashlib.sha256(blob).hexdigest())
+            return locator
         self.assertGreaterEqual(start, 1)
         self.assertGreaterEqual(end, start)
         self.assertLessEqual(end, len(lines))
@@ -268,7 +272,9 @@ class Phase3ReconciliationContracts(unittest.TestCase):
             assert isinstance(evidence, list)
             self.assertTrue(evidence, "a resolved comparison requires independent raw-source evidence")
             for locator in evidence:
-                self._assert_locator(locator)
+                self.assertIsInstance(locator, dict)
+                assert isinstance(locator, dict)
+                self._assert_locator(locator, historical=locator.get("revision") != self.baseline)
 
     def _replacement_program_identities(self) -> list[str]:
         """Extracts the exact replacement-program identity list from committed raw bytes.
@@ -395,6 +401,42 @@ class Phase3ReconciliationContracts(unittest.TestCase):
         for record in file_records:
             self._assert_resolution(record)
 
+        source_record_records = self._records("source_record_reconciliation_records")
+        self.assertEqual(
+            {row.get("mechanical_record_id") for row in source_record_records},
+            {row["record_id"] for row in source_records if isinstance(row, dict)},
+        )
+        for record in source_record_records:
+            self._assert_resolution(record)
+
+    def test_every_mechanical_graph_edge_and_copy_is_compared(self) -> None:
+        """Requires explicit raw-evidence comparisons for every graph edge and copy record.
+
+        Returns:
+            Nothing.
+        """
+        graph_edges = self.source.get("graph_edges")
+        source_records = self.source.get("records")
+        self.assertIsInstance(graph_edges, list)
+        self.assertIsInstance(source_records, list)
+        assert isinstance(graph_edges, list) and isinstance(source_records, list)
+
+        graph_records = self._records("graph_edge_reconciliation_records")
+        self.assertEqual(
+            {row.get("mechanical_graph_edge_key") for row in graph_records},
+            {_key(row) for row in graph_edges if isinstance(row, dict)},
+        )
+        for record in graph_records:
+            self._assert_resolution(record)
+
+        copy_records = self._records("copy_reconciliation_records")
+        self.assertEqual(
+            {row.get("mechanical_copy_record_id") for row in copy_records},
+            {row["record_id"] for row in source_records if isinstance(row, dict) and row.get("record_type") == "copy"},
+        )
+        for record in copy_records:
+            self._assert_resolution(record)
+
     def test_every_scene_state_and_surface_is_compared_with_raw_evidence(self) -> None:
         """Requires exhaustive scene, state, phase, overlay, transition, and terminal coverage.
 
@@ -496,9 +538,12 @@ class Phase3ReconciliationContracts(unittest.TestCase):
             *self._records("replacement_program_identity_records"),
             *self._records("identity_reconciliation_records"),
             *self._records("file_reconciliation_records"),
+            *self._records("source_record_reconciliation_records"),
+            *self._records("graph_edge_reconciliation_records"),
             *self._records("surface_reconciliation_records"),
             *self._records("asset_candidate_reconciliation_records"),
             *self._records("identical_hash_group_reconciliation_records"),
+            *self._records("copy_reconciliation_records"),
             *self._records("discrepancy_reconciliation_records"),
         ]
         record_unresolved = {row.get("unresolved_source_id") for row in all_records if row.get("resolution_status") == UNRESOLVED_STATUS}
@@ -517,9 +562,12 @@ class Phase3ReconciliationContracts(unittest.TestCase):
             "replacement_program_identity_records",
             "identity_reconciliation_records",
             "file_reconciliation_records",
+            "source_record_reconciliation_records",
+            "graph_edge_reconciliation_records",
             "surface_reconciliation_records",
             "asset_candidate_reconciliation_records",
             "identical_hash_group_reconciliation_records",
+            "copy_reconciliation_records",
             "discrepancy_reconciliation_records",
         ):
             self._records(field)

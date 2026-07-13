@@ -1,0 +1,69 @@
+{
+  "schema_version": "apk-denominator-phase3-green-test-report.v1",
+  "status": "green-passed",
+  "track_id": "apk_source_denominator_inventory_20260712",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "role": "requirements-mapper",
+  "verification_scope": "Reconciliation contract verification only; the reconciliation is fail-closed blocked and is not a candidate denominator, independent Phase-4 review, or product-owner acceptance.",
+  "reconciliation_status": "reconciliation-blocked",
+  "unresolved_source_count": 12,
+  "reconciliation_metrics": {
+    "replacement_program_identity_count": 29,
+    "mechanical_identity_count": 17,
+    "human_identity_count": 17,
+    "identity_reconciliation_records": 17,
+    "file_reconciliation_records": 574,
+    "source_record_reconciliation_records": 1031,
+    "graph_edge_reconciliation_records": 323,
+    "surface_reconciliation_records": 66,
+    "asset_candidate_reconciliation_records": 353,
+    "identical_hash_group_reconciliation_records": 153,
+    "copy_reconciliation_records": 92,
+    "discrepancy_reconciliation_records": 353
+  },
+  "commands": [
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase3",
+      "result": "passed",
+      "test_count": 10
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile measure/tests/test_apk_source_denominator_inventory_phase3.py",
+      "result": "passed"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase0 measure.tests.test_apk_source_denominator_inventory_phase1 measure.tests.test_apk_source_denominator_inventory_phase2 measure.tests.test_apk_source_denominator_inventory_phase3",
+      "result": "passed",
+      "test_count": 31
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -v -s measure/tests/evidence_integrity_gates -p 'test_*.py'",
+      "result": "passed",
+      "test_count": 143
+    },
+    {
+      "command": "bash tests/orchestrator_supervisor_invariants.sh && bash tests/orchestrator_review_execution_truthfulness.sh && bash tests/orchestrator_catalog.sh && bash tests/orchestrator_detector_syntax.sh && bash tests/orchestrator_role_receipt_integrity.sh",
+      "result": "passed"
+    },
+    {
+      "command": "bash tests/orchestrator_marker_vocabulary.sh",
+      "result": "blocked",
+      "limitation": "Pre-existing deprecated [ ] markers in backend_architecture_enforcement_20260713, backend_capability_kernel_20260713, and durable_job_worker_platform_20260713, outside this track; this track's plan.md has zero deprecated markers."
+    },
+    {
+      "command": "bash measure/doctor.sh",
+      "result": "blocked",
+      "limitation": "Same pre-existing unrelated marker-vocabulary failure; no finding originates from this track."
+    }
+  ],
+  "owner_verification": {
+    "owner_role": "requirements-mapper",
+    "evidence": "The named role regenerated the exhaustive reconciliation from committed Phase-1 and Phase-2 evidence, revalidated every frozen-revision path/range hash, and reran the frozen-baseline contract. Twelve program identities with no current source at baseline remain explicit blocking unresolved records; the remaining 17 identities, 1031 source records, 323 graph edges, 66 surfaces, 353 assets, 153 hash groups, 92 copies, and 353 discrepancy records are all matched with paired raw evidence.",
+    "evidence_path": "role-logs/phase3-requirements-mapper-green.log",
+    "product_owner_acceptance": "not-claimed"
+  },
+  "limitations": [
+    "Platform event, context, prompt, final-response, and tool-usage exports were unavailable and are recorded as null with per-field limitations in role-receipts/requirements-mapper.json.",
+    "The orchestrator marker-vocabulary and doctor gates are blocked by pre-existing deprecated [ ] markers in three unrelated tracks; this track's own plan.md is clean."
+  ]
+}
