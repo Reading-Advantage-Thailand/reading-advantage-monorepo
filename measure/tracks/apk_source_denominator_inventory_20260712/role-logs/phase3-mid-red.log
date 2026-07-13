@@ -1,0 +1,14 @@
+MEASURE_AGENT_RESULT
+role=truth-test-author / mid-red (fresh isolated session)
+status=complete
+track=apk_source_denominator_inventory_20260712
+phase=Phase 3: Reconciliation
+commit=3254c370f2a6d6d3627abd2e6a9628b9c9fbb3ce
+tests_run=PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase3; expected_red_exit=1; actual_exit=1; result=FAILED (failures=9), as expected
+tests_run=PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile measure/tests/test_apk_source_denominator_inventory_phase3.py; expected_exit=0; actual_exit=0; result=passed
+verification=PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase1 measure.tests.test_apk_source_denominator_inventory_phase2; actual_exit=0; result=passed (13 tests)
+files_changed=measure/tests/test_apk_source_denominator_inventory_phase3.py; measure/tracks/apk_source_denominator_inventory_20260712/phase3-reconciliation-contract-test-report.json; measure/tracks/apk_source_denominator_inventory_20260712/test-strategy.md
+plan_updates=none; Phase 3 remains in progress and was not marked complete
+known_failures=AssertionError: Missing Phase-3 reconciliation artifact: measure/tracks/apk_source_denominator_inventory_20260712/phase3-reconciliation.json (all 9 expected Red failures)
+handoff=requirements-mapper, discovery-auditor, and evidence-collector Green: author an exhaustive non-consumable phase3-reconciliation.json with raw committed comparison evidence or explicit blocking unresolved-source records; then rerun PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase3
+END_MEASURE_AGENT_RESULT
