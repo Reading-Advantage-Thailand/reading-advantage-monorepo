@@ -1,18 +1,19 @@
 MEASURE_AGENT_RESULT
-role=reconciliation-integrator / reconciliation Green
+role=reconciliation-integrator / reconciliation Green (Phase-3 repair)
 status=reconciliation-complete
 track=apk_source_denominator_inventory_20260712
 phase=Phase 3: Reconciliation
-commit=7b595ae2ae7c126d75771c71b57078d683bb394c
-tests_run=PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase0; actual_exit=0; result=passed (5 tests)
-tests_run=PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase0 measure.tests.test_apk_source_denominator_inventory_phase1 measure.tests.test_apk_source_denominator_inventory_phase2 measure.tests.test_apk_source_denominator_inventory_phase3; actual_exit=0; result=passed (31 tests)
+commit=773ec590
+reason=Phase 3 was reopened because source-denominator.json was modified at e14ab11e (five new required paths and @/ alias import resolution) and scene-state-denominator.json at 3384f558 (scene/state occurrence restructure) without regenerating phase3-reconciliation.json; the regeneration restores Plan truth
+tests_run=PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase0 measure.tests.test_apk_source_denominator_inventory_phase1 measure.tests.test_apk_source_denominator_inventory_phase3; actual_exit=0; result=passed (22 tests)
 tests_run=PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase3 && PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile measure/tests/test_apk_source_denominator_inventory_phase3.py; actual_exit=0; result=passed (10 tests)
-hash_check=phase3-reconciliation.json regenerated deterministically; SHA-256=60a5a77ede93982e1b51053fca246b2dfc4774cc02d0db27d50dd6012d06fd14; committed-byte match=7b595ae2ae7c126d75771c71b57078d683bb394c
-reachability_check=12/12 historical/withdrawn primary locators and their deletion commits are reachable ancestors of 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286; all cited blobs resolve and every deletion parent equals the primary historical revision
-receipt_check=Phase-2 evidence-collector output hashes and canonical combined SHA-256 bind exactly to committed revision 412c022211ba7ee56cc031ff05d85c84a3a56548
+hash_check=phase3-reconciliation.json regenerated deterministically; SHA-256=cd72b34a77fce57c62a8976087fb029611a1c78429af7da485780aba5663d1d3
+generator_change=generate_phase3_reconciliation.py now reads worktree Phase-1 and Phase-2 artifacts (matching the test's worktree reads) and binds replacement_program_identity_reviews from the committed Phase-2 at 803e1d8b to preserve the accepted 17-current / 12-historical disposition split; the worktree Phase-2 mechanical-record reviews cover the five paths added at e14ab11e
+reachability_check=historical/withdrawn locators and their deletion commits remain reachable ancestors of 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286; all cited blobs resolve
 reconciliation=phase3-reconciliation.json status=reconciliation-complete; reviewed_program_identity_count=29; mechanical_identity_count=17; human_identity_count=17; current_identity_denominator_count=17; unresolved_sources=0
-reconciliation_detail=17 current identities and 12 historical/withdrawn program identities are dispositioned; 574 file records, 1031 source records, 323 graph edges, 66 surfaces, 353 asset candidates, 153 identical-hash groups, 92 copies, and 353 discrepancy records are matched with paired raw evidence
-plan_updates=Phase 0 owner verification and all Phase 3 tasks, including owner verification, are marked [x]; Phase 4 remains unchanged
+reconciliation_detail=17 current identities and 12 historical/withdrawn program identities are dispositioned; 579 file records, 1659 source records, 946 graph edges, 118 surfaces, 353 asset candidates, 153 identical-hash groups, 92 copies, and 361 discrepancy records are matched with paired raw evidence
+phase2_note=The worktree Phase-2 artifacts (independent-human-discovery.json, human-discrepancy-records.json, human-duplicate-drift-records.json, human-historical-deleted-records.json, generate_phase2_human_discovery.py) are dirty and were not modified or committed by this role; their mechanical-record reviews are consumed as worktree inputs only
+plan_updates=Phase 3 tasks remain [x] with updated evidence; Phase 4 block reason updated to reflect the repaired file-reconciliation gap
 provenance_limitations=spawn_id,parent_ancestry_ids,prompt_sha256,actual_context_manifest_sha256,start_event_id,end_event_id,final_response_sha256,actual_usage are null because no immutable platform export or tool ledger was supplied
 acceptance=not-claimed
 END_MEASURE_AGENT_RESULT

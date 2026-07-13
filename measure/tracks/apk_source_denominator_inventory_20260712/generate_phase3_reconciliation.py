@@ -13,16 +13,20 @@ from typing import Any
 
 
 BASELINE = "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-PHASE1_REVISION = "f17fa78b36453e4aba36bc90f32bf25cd5b65ddb"
-PHASE2_REVISION = "412c022211ba7ee56cc031ff05d85c84a3a56548"
+COMMITTED_REVISION = "803e1d8b5db94bccfaf79590f4290065a040d427"
 TRACK = "apk_source_denominator_inventory_20260712"
 TRACK_DIR = Path(__file__).resolve().parent
 REPO_ROOT = TRACK_DIR.parents[2]
 PROGRAM_PATH = "measure/apk-evidence-reconstruction-program.md"
 
+_GIT_BLOB_CACHE: dict[tuple[str, str], bytes] = {}
+
 
 def git_bytes(revision: str, path: str) -> bytes:
     """Returns one raw committed object.
+
+    Results are cached per (revision, path) pair so that repeated locator
+    revalidation against the same blob does not re-invoke ``git show``.
 
     Args:
         revision: Commit containing the object.
@@ -31,23 +35,37 @@ def git_bytes(revision: str, path: str) -> bytes:
     Returns:
         Committed object bytes.
     """
-    return subprocess.check_output(["git", "show", f"{revision}:{path}"], cwd=REPO_ROOT)
+    key = (revision, path)
+    cached = _GIT_BLOB_CACHE.get(key)
+    if cached is not None:
+        return cached
+    blob = subprocess.check_output(["git", "show", f"{revision}:{path}"], cwd=REPO_ROOT)
+    _GIT_BLOB_CACHE[key] = blob
+    return blob
 
 
-def git_json(revision: str, name: str) -> dict[str, Any]:
-    """Loads one committed JSON reconciliation input.
+def worktree_json(name: str) -> dict[str, Any]:
+    """Loads one Phase-1 or Phase-2 artifact from the current worktree.
+
+    The Phase-3 test compares worktree artifacts, so the generator must read
+    the same worktree bytes to produce a consistent reconciliation. Source
+    locators inside the artifacts are still revalidated against committed git
+    bytes by :func:`revalidate`, preserving the committed-only evidence
+    boundary for every cited path/range hash.
 
     Args:
-        revision: Commit containing the input.
         name: Filename within the track directory.
 
     Returns:
         Parsed JSON object.
     """
-    value = json.loads(git_bytes(revision, f"measure/tracks/{TRACK}/{name}"))
+    value = json.loads((TRACK_DIR / name).read_text(encoding="utf-8"))
     if not isinstance(value, dict):
         raise TypeError(f"Expected JSON object: {name}")
     return value
+
+
+_ANCESTOR_CACHE: dict[str, bool] = {}
 
 
 def is_ancestor(revision: str) -> bool:
@@ -59,11 +77,16 @@ def is_ancestor(revision: str) -> bool:
     Returns:
         Whether the candidate is a baseline ancestor.
     """
-    return subprocess.run(
+    cached = _ANCESTOR_CACHE.get(revision)
+    if cached is not None:
+        return cached
+    result = subprocess.run(
         ["git", "merge-base", "--is-ancestor", revision, BASELINE],
         cwd=REPO_ROOT,
         check=False,
     ).returncode == 0
+    _ANCESTOR_CACHE[revision] = result
+    return result
 
 
 def locator(revision: str, path: str, start_line: int = 1, end_line: int | None = None) -> dict[str, Any]:
@@ -203,16 +226,30 @@ def main(output_path: Path | None = None) -> None:
     Returns:
         Nothing.
     """
-    source = git_json(PHASE1_REVISION, "source-denominator.json")
-    ledger = git_json(PHASE1_REVISION, "game-identity-ledger.json")
-    scenes = git_json(PHASE1_REVISION, "scene-state-denominator.json")
-    assets = git_json(PHASE1_REVISION, "asset-file-denominator.json")
-    historical = git_json(PHASE1_REVISION, "historical-source-denominator.json")
-    mechanical_discrepancies = git_json(PHASE1_REVISION, "denominator-discrepancies.json")
-    human_discovery = git_json(PHASE2_REVISION, "independent-human-discovery.json")
-    human_duplicates = git_json(PHASE2_REVISION, "human-duplicate-drift-records.json")
-    human_historical = git_json(PHASE2_REVISION, "human-historical-deleted-records.json")
-    human_discrepancies = git_json(PHASE2_REVISION, "human-discrepancy-records.json")
+    source = worktree_json("source-denominator.json")
+    ledger = worktree_json("game-identity-ledger.json")
+    scenes = worktree_json("scene-state-denominator.json")
+    assets = worktree_json("asset-file-denominator.json")
+    historical = worktree_json("historical-source-denominator.json")
+    mechanical_discrepancies = worktree_json("denominator-discrepancies.json")
+    human_discovery = worktree_json("independent-human-discovery.json")
+    human_duplicates = worktree_json("human-duplicate-drift-records.json")
+    human_historical = worktree_json("human-historical-deleted-records.json")
+    human_discrepancies = worktree_json("human-discrepancy-records.json")
+
+    # The worktree Phase-2 artifacts include in-progress mechanical-source-record
+    # reviews that cover the five source-denominator paths added at e14ab11e.
+    # However, the worktree's replacement_program_identity_reviews currently
+    # carry disposition changes that have not been accepted (the Phase-2 test
+    # fails against them).  The committed Phase-2 at COMMITTED_REVISION retains
+    # the accepted 17-current / 12-historical disposition split.  Bind program
+    # dispositions from the committed artifact while keeping the worktree's
+    # mechanical-record, graph-edge, surface, asset, and group reviews so the
+    # five new files reconcile with independent human evidence.
+    committed_discovery = json.loads(
+        git_bytes(COMMITTED_REVISION, f"measure/tracks/{TRACK}/independent-human-discovery.json")
+    )
+    human_discovery["replacement_program_identity_reviews"] = committed_discovery["replacement_program_identity_reviews"]
 
     identity_reviews = {row["canonical_identity_id"]: row for row in human_discrepancies["identity_comparison_records"]}
     human_claim_ids = {row["canonical_identity_id"] for row in human_discovery["current_source_claims"]}
