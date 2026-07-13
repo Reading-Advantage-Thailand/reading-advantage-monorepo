@@ -39,6 +39,14 @@ STATE_DECLARATION = re.compile(
 STRING_LITERAL = re.compile(r"['\"]([^'\"\n]+)['\"]")
 IMPORT = re.compile(r"^\s*import(?:[\s\S]*?from\s*)?['\"]([^'\"]+)['\"]", re.MULTILINE)
 COMPONENT = re.compile(r"(?:export\s+)?(?:function|const)\s+([A-Z][A-Za-z0-9]*(?:Game|Screen|Scene))\b")
+REQUIRED_SOURCE_PATHS = {
+    "measure/apk-asset-system-program.md",
+    "measure/apk-evidence-reconstruction-program.md",
+    "packages/game-cartridges/src/catalog.test.ts",
+    "packages/game-cartridges/src/catalog.ts",
+    "packages/game-cartridges/src/index.ts",
+}
+CATALOG_PATH = "apps/advantage-games/src/lib/gameCards.ts"
 
 
 def run_git(*arguments: str) -> bytes:
@@ -140,6 +148,8 @@ def source_path(path: str) -> bool:
     """
     if path.startswith(f"{QUARANTINE_PATH}/"):
         return False
+    if path in REQUIRED_SOURCE_PATHS:
+        return True
     suffix = PurePosixPath(path).suffix.lower()
     if suffix not in SOURCE_SUFFIXES:
         return False
@@ -187,8 +197,8 @@ def source_line_number(value: str, character_offset: int) -> int:
     return value.count("\n", 0, character_offset) + 1
 
 
-def resolve_relative_import(path: str, specifier: str, sources: set[str]) -> str | None:
-    """Resolves a relative import only when it names another recorded source file.
+def resolve_import(path: str, specifier: str, sources: set[str]) -> tuple[str, str] | None:
+    """Resolves a relative or application-alias import to a recorded source file.
 
     Args:
         path: Importing repository-relative file path.
@@ -196,15 +206,28 @@ def resolve_relative_import(path: str, specifier: str, sources: set[str]) -> str
         sources: Eligible source paths in the frozen tree.
 
     Returns:
-        The resolved recorded source path, or None for external or unresolved imports.
+        The resolved path and resolution kind, or None for external/unresolved imports.
     """
-    if not specifier.startswith("."):
+    if specifier.startswith("."):
+        base = PurePosixPath(path).parent.joinpath(specifier)
+        resolution_kind = "relative"
+    elif specifier.startswith("@/"):
+        if path.startswith("apps/advantage-games/"):
+            base = PurePosixPath("apps/advantage-games/src") / specifier[2:]
+        elif path.startswith("apps/reading-advantage/"):
+            base = PurePosixPath("apps/reading-advantage") / specifier[2:]
+        elif path.startswith("apps/primary-advantage/"):
+            base = PurePosixPath("apps/primary-advantage") / specifier[2:]
+        else:
+            return None
+        resolution_kind = "application-alias"
+    else:
         return None
-    base = PurePosixPath(path).parent.joinpath(specifier)
     candidates = [str(base)]
     candidates.extend(f"{base}{suffix}" for suffix in (".ts", ".tsx", ".js", ".jsx", ".json"))
     candidates.extend(str(base / f"index{suffix}") for suffix in (".ts", ".tsx", ".js", ".jsx"))
-    return next((candidate for candidate in candidates if candidate in sources), None)
+    target = next((candidate for candidate in candidates if candidate in sources), None)
+    return (target, resolution_kind) if target is not None else None
 
 
 def build_source_denominator(paths: list[str]) -> tuple[dict[str, Any], dict[str, list[dict[str, Any]]]]:
@@ -277,18 +300,21 @@ def build_source_denominator(paths: list[str]) -> tuple[dict[str, Any], dict[str
     graph_edges: list[dict[str, Any]] = []
     for path in sources:
         text = blob(path).decode("utf-8", errors="replace")
-        for match in IMPORT.finditer(text):
-            target = resolve_relative_import(path, match.group(1), source_set)
-            if target is None:
+        for import_number, match in enumerate(IMPORT.finditer(text), start=1):
+            resolved = resolve_import(path, match.group(1), source_set)
+            if resolved is None:
                 continue
+            target, resolution_kind = resolved
             line = source_line_number(text, match.start())
-            record_id = f"graph:{path}:{line}"
+            record_id = f"graph:{path}:{line}:{import_number}"
             evidence = line_locator(path, line, line)
             records.append({
                 "record_id": record_id,
                 "record_type": "graph",
                 "graph_node_id": f"{path}:{line}",
-                "discovery_method": "mechanical-filesystem",
+                "import_specifier": match.group(1),
+                "resolution_kind": resolution_kind,
+                "discovery_method": "mechanical-graph",
                 "evidence": evidence,
             })
             graph_edges.append({
@@ -325,6 +351,24 @@ def build_source_denominator(paths: list[str]) -> tuple[dict[str, Any], dict[str
     }, pages)
 
 
+def catalog_withdrawals() -> dict[str, dict[str, Any]]:
+    """Returns catalog IDs explicitly withdrawn at the frozen revision.
+
+    Returns:
+        Withdrawn card IDs mapped to exact catalog locators.
+    """
+    text = blob(CATALOG_PATH).decode("utf-8", errors="replace")
+    block = re.search(r"const\s+withdrawnApkGameIds\s*=\s*new\s+Set\(\[([\s\S]*?)\]\);", text)
+    if block is None:
+        raise RuntimeError("Frozen catalog has no withdrawnApkGameIds registration set")
+    result: dict[str, dict[str, Any]] = {}
+    for literal in STRING_LITERAL.finditer(block.group(1)):
+        offset = block.start(1) + literal.start()
+        line = source_line_number(text, offset)
+        result[literal.group(1)] = line_locator(CATALOG_PATH, line, line)
+    return result
+
+
 def build_identity_ledger(pages: dict[str, list[dict[str, Any]]]) -> dict[str, Any]:
     """Builds a route-ledger from page paths observed in the frozen tree.
 
@@ -335,7 +379,18 @@ def build_identity_ledger(pages: dict[str, list[dict[str, Any]]]) -> dict[str, A
         The identity ledger artifact object.
     """
     records = []
+    withdrawals = catalog_withdrawals()
     for canonical_id, observations in sorted(pages.items()):
+        slug = canonical_id.split("/", 1)[1]
+        source_states = [{
+            "source_class": "current-page-source",
+            "evidence": full_locator(observations[0]["path"]),
+        }]
+        if slug in withdrawals:
+            source_states.append({
+                "source_class": "catalog-withdrawn-registration",
+                "evidence": withdrawals[slug],
+            })
         records.append({
             "canonical_identity_id": canonical_id,
             "aliases": [
@@ -347,6 +402,7 @@ def build_identity_ledger(pages: dict[str, list[dict[str, Any]]]) -> dict[str, A
                 for observation in observations
             ],
             "discovery_method": "mechanical-filesystem",
+            "source_states": source_states,
         })
     return {
         "schema_version": "apk-game-identity-ledger.v1",
@@ -367,7 +423,7 @@ def build_scene_state_denominator(paths: list[str]) -> dict[str, Any]:
     """
     game_sources = [path for path in paths if source_path(path) and PurePosixPath(path).suffix in {".ts", ".tsx", ".js", ".jsx"}]
     scene_records: list[dict[str, Any]] = []
-    states: dict[str, dict[str, Any]] = {}
+    state_records: list[dict[str, Any]] = []
     transitions: list[dict[str, Any]] = []
     for path in game_sources:
         text = blob(path).decode("utf-8", errors="replace")
@@ -375,12 +431,13 @@ def build_scene_state_denominator(paths: list[str]) -> dict[str, Any]:
             scene_id = match.group(1)
             line = source_line_number(text, match.start(1))
             scene_records.append({
+                "scene_occurrence_id": f"{path}:{line}:{scene_id}",
                 "scene_id": scene_id,
                 "source_symbol_kind": "component-declaration",
                 "discovery_method": "mechanical-syntax-traversal",
                 "evidence": line_locator(path, line, line),
             })
-        declarations: dict[str, tuple[str, set[str], int]] = {}
+        declarations: dict[str, tuple[str, set[str], int, int]] = {}
         for declaration in STATE_DECLARATION.finditer(text):
             state_name, setter_name, type_text = declaration.groups()
             if not STATE_NAME.search(state_name):
@@ -388,56 +445,48 @@ def build_scene_state_denominator(paths: list[str]) -> dict[str, Any]:
             literals = {literal.group(1) for literal in STRING_LITERAL.finditer(type_text)}
             if not literals:
                 continue
-            declarations[setter_name] = (state_name, literals, declaration.start())
             line = source_line_number(text, declaration.start())
+            declarations[setter_name] = (state_name, literals, declaration.start(), line)
             for literal in literals:
-                states.setdefault(literal, {
+                state_records.append({
+                    "state_occurrence_id": f"{path}:{line}:{state_name}:{literal}",
                     "state_id": literal,
                     "source_symbol": state_name,
                     "discovery_method": "mechanical-syntax-traversal",
                     "evidence": line_locator(path, line, line),
                 })
-        for setter_name, (state_name, literals, declaration_offset) in declarations.items():
-            guard = re.compile(rf"(?:if\s*\([^\n]*?{re.escape(state_name)}\s*===?\s*['\"]([^'\"]+)['\"][\s\S]{{0,500}}?{re.escape(setter_name)}\s*\(\s*['\"]([^'\"]+)['\"])")
+        for setter_name, (state_name, literals, declaration_offset, declaration_line) in declarations.items():
+            guard = re.compile(
+                rf"if\s*\([^)]*\b{re.escape(state_name)}\s*===?\s*['\"]([^'\"]+)['\"][^)]*\)\s*\{{?[^{{}}]{{0,500}}?\b{re.escape(setter_name)}\s*\(\s*['\"]([^'\"]+)['\"]",
+                re.MULTILINE,
+            )
             for match in guard.finditer(text):
                 from_state, to_state = match.groups()
                 if from_state not in literals or to_state not in literals:
                     continue
                 line = source_line_number(text, match.start())
                 transitions.append({
+                    "from_state_occurrence_id": f"{path}:{declaration_line}:{state_name}:{from_state}",
+                    "to_state_occurrence_id": f"{path}:{declaration_line}:{state_name}:{to_state}",
                     "from_state_id": from_state,
                     "to_state_id": to_state,
                     "transition_kind": "phase",
+                    "transition_evidence_kind": "explicit-state-guarded-setter",
                     "discovery_method": "mechanical-syntax-traversal",
                     "evidence": line_locator(path, line, source_line_number(text, match.end())),
                 })
-            anchor_state = next(iter(sorted(literals)))
-            setter = re.compile(rf"{re.escape(setter_name)}\s*\(\s*['\"]([^'\"]+)['\"]")
-            for match in setter.finditer(text, declaration_offset):
-                to_state = match.group(1)
-                if to_state not in literals:
-                    continue
-                transitions.append({
-                    "from_state_id": anchor_state,
-                    "to_state_id": to_state,
-                    "transition_kind": "phase",
-                    "discovery_method": "mechanical-syntax-traversal",
-                    "evidence": line_locator(
-                        path,
-                        source_line_number(text, declaration_offset),
-                        source_line_number(text, match.end()),
-                    ),
-                })
-    unique_scenes = {record["scene_id"]: record for record in scene_records}
-    unique_transitions = {(record["from_state_id"], record["to_state_id"], record["evidence"]["path"], record["evidence"]["range"]["start_line"]): record for record in transitions}
-    if not unique_scenes or not states or not unique_transitions:
+    unique_transitions = {
+        (record["from_state_occurrence_id"], record["to_state_occurrence_id"], record["evidence"]["range"]["start_line"]): record
+        for record in transitions
+    }
+    if not scene_records or not state_records or not unique_transitions:
         raise RuntimeError("Committed source did not yield required component, state, and guarded transition records")
     return {
         "schema_version": "apk-scene-state-denominator.v1",
         "status": "mechanical-discovery-complete",
         "source_baseline_revision": BASELINE,
-        "scene_records": list(unique_scenes.values()),
-        "state_records": list(states.values()),
+        "scene_records": scene_records,
+        "state_records": state_records,
         "transitions": list(unique_transitions.values()),
     }
 
@@ -587,6 +636,18 @@ def build_discrepancies(pages: dict[str, list[dict[str, Any]]]) -> dict[str, Any
                 "canonical_identity_id": canonical_id,
                 "evidence": [full_locator(observation["path"]) for observation in observations],
             })
+    withdrawals = catalog_withdrawals()
+    for canonical_id, observations in sorted(pages.items()):
+        slug = canonical_id.split("/", 1)[1]
+        if slug not in withdrawals:
+            continue
+        records.append({
+            "observation_id": f"simultaneous-current-and-catalog-withdrawn:{canonical_id}",
+            "observation_type": "simultaneous-source-classes",
+            "canonical_identity_id": canonical_id,
+            "source_classes": ["current-page-source", "catalog-withdrawn-registration"],
+            "evidence": [full_locator(observations[0]["path"]), withdrawals[slug]],
+        })
     return {
         "schema_version": "apk-denominator-discrepancies.v1",
         "status": "mechanical-discovery-complete",
@@ -632,11 +693,14 @@ line-range SHA-256.
 1. Enumerate the frozen tree under the Phase-0 roots. Game-page identities are emitted
    in deterministic batches of no more than three; a failed committed-locator resolution
    raises an exception before later batch output is written.
-2. Select source files by the documented game-path predicate; record file, game-page
-   identity, route, byte-identical copy, and literal relative-import records.
+2. Select source files by the documented game-path predicate plus the frozen cartridge
+   catalog/index/test and active APK program sources; record file, game-page identity,
+   route, byte-identical copy, and every resolvable relative or `@/` import edge.
 3. Extract declared component symbols ending in `Game`, `Screen`, or `Scene`, literal
    `useState` declarations whose variable names include a state vocabulary token, and
-   source-local guarded setter pairs. This is syntax traversal, not runtime execution.
+   source-local explicitly guarded setter pairs. Component and state occurrences remain
+   path-scoped even when symbols/literals repeat. Unguarded setters never imply a
+   from-state. This is syntax traversal, not runtime execution.
 4. Enumerate media, audio, and data suffixes below the three public roots plus
    game-associated data files; hash every committed byte sequence and report basic
    encoded format metadata.
