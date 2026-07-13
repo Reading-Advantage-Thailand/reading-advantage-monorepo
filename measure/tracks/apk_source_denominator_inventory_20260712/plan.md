@@ -17,11 +17,11 @@
 
 ## Phase 2: Independent human discovery
 
-- [~] Task: Review raw current sources in batches of no more than three games
-- [~] Task: Review Reading/Primary copies and map duplication/behavior drift
-- [~] Task: Review historical/deleted implementations at exact reachable revisions
-- [~] Task: Record separate agent receipts and claim-level evidence
-- [b] Task: Measure - User Manual Verification 'Phase 2' (Protocol in workflow.md) — deferred:product-owner
+- [x] Task: Review raw current sources in batches of no more than three games. Evidence: `independent-human-discovery.json`; six explicit batches cover all 17 Phase-1 identities with committed source locators; evidence commit `4b6175f4`.
+- [x] Task: Review Reading/Primary copies and map duplication/behavior drift. Evidence: `human-duplicate-drift-records.json`; separate Reading and Primary observations cover every identity without path merging; evidence commit `4b6175f4`.
+- [x] Task: Review historical/deleted implementations at exact reachable revisions. Evidence: `human-historical-deleted-records.json`; 139 Phase-1 deleted locators were independently re-resolved from reachable revisions; evidence commit `4b6175f4`.
+- [x] Task: Record separate agent receipts and claim-level evidence. Evidence: `role-receipts/evidence-collector.json`, `role-logs/phase2-evidence-collector-green.log`, and `phase2-green-test-report.json`; evidence commit `e0b775d5`.
+- [x] Task: Measure - User Manual Verification 'Phase 2' (Protocol in workflow.md). Evidence: the explicit evidence-collector verification log and Phase-2 Green report at `e0b775d5`; product-owner acceptance is not claimed.
 
 ## Phase 3: Reconciliation
 
