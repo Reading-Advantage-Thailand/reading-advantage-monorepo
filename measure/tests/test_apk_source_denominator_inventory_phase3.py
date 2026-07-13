@@ -1,0 +1,529 @@
+"""Falsification contracts for APK denominator Phase-3 reconciliation."""
+
+from __future__ import annotations
+
+import hashlib
+import json
+import re
+import subprocess
+import unittest
+from pathlib import Path
+from typing import Any
+
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
+TRACK = "apk_source_denominator_inventory_20260712"
+TRACK_DIR = REPO_ROOT / "measure" / "tracks" / TRACK
+FREEZE_PATH = TRACK_DIR / "phase0-input-freeze.json"
+SOURCE_PATH = TRACK_DIR / "source-denominator.json"
+IDENTITY_PATH = TRACK_DIR / "game-identity-ledger.json"
+SCENE_PATH = TRACK_DIR / "scene-state-denominator.json"
+ASSET_PATH = TRACK_DIR / "asset-file-denominator.json"
+HISTORICAL_PATH = TRACK_DIR / "historical-source-denominator.json"
+MECHANICAL_DISCREPANCY_PATH = TRACK_DIR / "denominator-discrepancies.json"
+HUMAN_DISCOVERY_PATH = TRACK_DIR / "independent-human-discovery.json"
+HUMAN_DUPLICATE_PATH = TRACK_DIR / "human-duplicate-drift-records.json"
+HUMAN_HISTORICAL_PATH = TRACK_DIR / "human-historical-deleted-records.json"
+HUMAN_DISCREPANCY_PATH = TRACK_DIR / "human-discrepancy-records.json"
+REPORT_PATH = TRACK_DIR / "phase3-reconciliation-contract-test-report.json"
+RECONCILIATION_PATH = TRACK_DIR / "phase3-reconciliation.json"
+REPLACEMENT_PROGRAM_PATH = "measure/apk-evidence-reconstruction-program.md"
+SHA256 = re.compile(r"^[0-9a-f]{64}$")
+FORBIDDEN_INTERPRETATION_FIELDS = {
+    "asset_suitability",
+    "capability",
+    "capability_conclusion",
+    "conclusion",
+    "design_intent",
+    "gameplay_interpretation",
+    "intent",
+    "interpretation",
+    "mechanic",
+    "mechanics",
+    "product_disposition",
+    "recommendation",
+    "responsive_strategy",
+    "semantic_role",
+    "suitability",
+}
+SURFACE_KINDS = {
+    "scene",
+    "state",
+    "phase",
+    "overlay",
+    "transition",
+    "terminal",
+    "presentation",
+}
+DISCREPANCY_TYPES = {"duplicate", "stale", "missing", "withdrawn", "historical"}
+RESOLVED_STATUSES = {"matched", "resolved"}
+UNRESOLVED_STATUS = "unresolved-source"
+
+
+def _load_json(path: Path, *, phase3: bool = False) -> dict[str, Any]:
+    """Loads a contract object and identifies absent Phase-3 reconciliation output.
+
+    Args:
+        path: Artifact path to load.
+        phase3: Whether the artifact is the required Phase-3 output.
+
+    Returns:
+        Parsed JSON object.
+
+    Raises:
+        AssertionError: If the artifact is absent or is not a JSON object.
+    """
+    if not path.is_file():
+        phase = "Phase-3 reconciliation" if phase3 else "required"
+        raise AssertionError(f"Missing {phase} artifact: {path.relative_to(REPO_ROOT)}")
+    value = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(value, dict):
+        raise AssertionError(f"{path.relative_to(REPO_ROOT)} must contain a JSON object")
+    return value
+
+
+def _git_bytes(revision: str, path: str) -> bytes:
+    """Reads committed bytes for one exact revision and repository-relative path.
+
+    Args:
+        revision: Commit that must contain the cited path.
+        path: Repository-relative path to resolve.
+
+    Returns:
+        The committed bytes.
+
+    Raises:
+        AssertionError: If Git cannot resolve the locator.
+    """
+    result = subprocess.run(
+        ["git", "show", f"{revision}:{path}"],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        check=False,
+    )
+    if result.returncode != 0:
+        detail = result.stderr.decode("utf-8", errors="replace").strip()
+        raise AssertionError(f"Unresolvable committed source locator {revision}:{path}: {detail}")
+    return result.stdout
+
+
+def _is_ancestor(revision: str, baseline: str) -> bool:
+    """Reports whether a historical revision is reachable from the frozen baseline.
+
+    Args:
+        revision: Historical revision to validate.
+        baseline: Frozen source revision that bounds historical work.
+
+    Returns:
+        Whether the revision is a reachable ancestor of the baseline.
+    """
+    return subprocess.run(
+        ["git", "merge-base", "--is-ancestor", revision, baseline],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        check=False,
+    ).returncode == 0
+
+
+def _key(value: object) -> str:
+    """Returns a stable JSON key for one denominator item.
+
+    Args:
+        value: JSON-compatible value to identify.
+
+    Returns:
+        A canonical JSON representation.
+    """
+    return json.dumps(value, sort_keys=True, separators=(",", ":"))
+
+
+class Phase3ReconciliationContracts(unittest.TestCase):
+    """Rejects absent, sampled, interpretive, or non-fail-closed reconciliation."""
+
+    def setUp(self) -> None:
+        """Loads the required Phase-3 artifact before all comparison inputs.
+
+        Returns:
+            Nothing.
+        """
+        self.freeze = _load_json(FREEZE_PATH)
+        self.reconciliation = _load_json(RECONCILIATION_PATH, phase3=True)
+        scope = self.freeze["source_scope"]
+        self.assertIsInstance(scope, dict)
+        assert isinstance(scope, dict)
+        self.baseline = scope["current_revision"]
+        self.assertIsInstance(self.baseline, str)
+        assert isinstance(self.baseline, str)
+        self.source = _load_json(SOURCE_PATH)
+        self.ledger = _load_json(IDENTITY_PATH)
+        self.scenes = _load_json(SCENE_PATH)
+        self.assets = _load_json(ASSET_PATH)
+        self.historical = _load_json(HISTORICAL_PATH)
+        self.mechanical_discrepancies = _load_json(MECHANICAL_DISCREPANCY_PATH)
+        self.human_discovery = _load_json(HUMAN_DISCOVERY_PATH)
+        self.human_duplicates = _load_json(HUMAN_DUPLICATE_PATH)
+        self.human_historical = _load_json(HUMAN_HISTORICAL_PATH)
+        self.human_discrepancies = _load_json(HUMAN_DISCREPANCY_PATH)
+
+    def _assert_locator(self, locator: object, *, historical: bool = False) -> dict[str, Any]:
+        """Validates a committed exact path, blob, and inclusive range hash.
+
+        Args:
+            locator: Candidate source locator.
+            historical: Whether a reachable ancestor is allowed.
+
+        Returns:
+            The validated locator.
+        """
+        self.assertIsInstance(locator, dict)
+        assert isinstance(locator, dict)
+        revision = locator.get("revision")
+        path = locator.get("path")
+        self.assertIsInstance(revision, str)
+        self.assertIsInstance(path, str)
+        assert isinstance(revision, str) and isinstance(path, str)
+        self.assertFalse(path.startswith("/"))
+        self.assertFalse(path.endswith("/"))
+        if historical:
+            self.assertTrue(_is_ancestor(revision, self.baseline))
+        else:
+            self.assertEqual(revision, self.baseline)
+        blob = _git_bytes(revision, path)
+        self.assertIsInstance(locator.get("blob_sha256"), str)
+        self.assertRegex(str(locator.get("blob_sha256")), SHA256)
+        self.assertEqual(locator["blob_sha256"], hashlib.sha256(blob).hexdigest())
+        cited_range = locator.get("range")
+        self.assertIsInstance(cited_range, dict)
+        assert isinstance(cited_range, dict)
+        start = cited_range.get("start_line")
+        end = cited_range.get("end_line")
+        self.assertIsInstance(start, int)
+        self.assertIsInstance(end, int)
+        assert isinstance(start, int) and isinstance(end, int)
+        lines = blob.splitlines(keepends=True)
+        self.assertGreaterEqual(start, 1)
+        self.assertGreaterEqual(end, start)
+        self.assertLessEqual(end, len(lines))
+        self.assertIsInstance(cited_range.get("sha256"), str)
+        self.assertRegex(str(cited_range.get("sha256")), SHA256)
+        self.assertEqual(
+            cited_range["sha256"],
+            hashlib.sha256(b"".join(lines[start - 1 : end])).hexdigest(),
+        )
+        return locator
+
+    def _assert_no_interpretation_fields(self, value: object, location: str = "$") -> None:
+        """Rejects conclusion fields throughout the Phase-3 reconciliation object.
+
+        Args:
+            value: JSON value to inspect recursively.
+            location: JSON path used in failures.
+
+        Returns:
+            Nothing.
+        """
+        if isinstance(value, dict):
+            for key, nested in value.items():
+                normalized = key.lower().replace("-", "_").replace(" ", "_")
+                self.assertNotIn(normalized, FORBIDDEN_INTERPRETATION_FIELDS, f"forbidden interpretation field at {location}.{key}")
+                self._assert_no_interpretation_fields(nested, f"{location}.{key}")
+        elif isinstance(value, list):
+            for index, nested in enumerate(value):
+                self._assert_no_interpretation_fields(nested, f"{location}[{index}]")
+
+    def _records(self, field: str) -> list[dict[str, Any]]:
+        """Returns a nonempty reconciliation record collection.
+
+        Args:
+            field: Required reconciliation collection field.
+
+        Returns:
+            The validated record collection.
+        """
+        records = self.reconciliation.get(field)
+        self.assertIsInstance(records, list, f"{field} must be a list")
+        assert isinstance(records, list)
+        self.assertTrue(records, f"{field} cannot be empty")
+        self.assertTrue(all(isinstance(record, dict) for record in records))
+        return [record for record in records if isinstance(record, dict)]
+
+    def _assert_resolution(self, record: dict[str, Any]) -> None:
+        """Validates one explicit match or fail-closed unresolved result.
+
+        Args:
+            record: Reconciliation record to validate.
+
+        Returns:
+            Nothing.
+        """
+        status = record.get("resolution_status")
+        self.assertIn(status, RESOLVED_STATUSES | {UNRESOLVED_STATUS})
+        if status == UNRESOLVED_STATUS:
+            self.assertTrue(record.get("blocking"), "unresolved source must remain blocking")
+            self.assertIsInstance(record.get("unresolved_source_id"), str)
+        else:
+            self.assertFalse(record.get("blocking"), "resolved records cannot conceal a blocker")
+            evidence = record.get("human_evidence")
+            self.assertIsInstance(evidence, list)
+            assert isinstance(evidence, list)
+            self.assertTrue(evidence, "a resolved comparison requires independent raw-source evidence")
+            for locator in evidence:
+                self._assert_locator(locator)
+
+    def _replacement_program_identities(self) -> list[str]:
+        """Extracts the exact replacement-program identity list from committed raw bytes.
+
+        Returns:
+            The 29 raw program labels in their declared order.
+        """
+        program = _git_bytes(self.baseline, REPLACEMENT_PROGRAM_PATH).decode("utf-8")
+        self.assertIn("The partition covers 29 canonical identities exactly once.", program)
+        partition = program.split("### Pilot\n", 1)[1].split("The partition covers 29 canonical identities exactly once.", 1)[0]
+        identities = re.findall(r"^- (.+)$", partition, flags=re.MULTILINE)
+        self.assertEqual(len(identities), 29, "raw replacement-program evidence must contain 29 identities")
+        self.assertEqual(len(identities), len(set(identities)))
+        return identities
+
+    def test_red_report_is_contract_only_and_names_the_phase3_gate(self) -> None:
+        """Keeps the Phase-3 RED report distinct from reconciliation evidence.
+
+        Returns:
+            Nothing.
+        """
+        report = _load_json(REPORT_PATH)
+        self.assertEqual(report.get("schema_version"), "apk-denominator-phase3-reconciliation-contract-report.v1")
+        self.assertEqual(report.get("status"), "red-contract-authored")
+        self.assertEqual(report.get("source_baseline_revision"), self.baseline)
+        self.assertEqual(report.get("red_command"), report.get("green_command"))
+        self.assertIn("test_apk_source_denominator_inventory_phase3", str(report.get("red_command")))
+        self.assertNotIn("accepted", str(report.get("status")).lower())
+
+    def test_reconciliation_header_is_nonconsumable_and_fail_closed(self) -> None:
+        """Requires an explicit non-acceptance status and coherent unresolved blocking state.
+
+        Returns:
+            Nothing.
+        """
+        self.assertEqual(self.reconciliation.get("schema_version"), "apk-source-denominator-phase3-reconciliation.v1")
+        self.assertEqual(self.reconciliation.get("track_id"), TRACK)
+        self.assertEqual(self.reconciliation.get("source_baseline_revision"), self.baseline)
+        self.assertIn(self.reconciliation.get("status"), {"reconciliation-complete", "reconciliation-blocked"})
+        self.assertNotIn("candidate", str(self.reconciliation.get("status")).lower())
+        self.assertNotIn("accepted", str(self.reconciliation.get("status")).lower())
+        unresolved = self.reconciliation.get("unresolved_sources")
+        self.assertIsInstance(unresolved, list)
+        assert isinstance(unresolved, list)
+        unresolved_ids = {row.get("unresolved_source_id") for row in unresolved}
+        self.assertNotIn(None, unresolved_ids)
+        if self.reconciliation.get("status") == "reconciliation-blocked":
+            self.assertTrue(unresolved_ids, "blocked reconciliation requires explicit unresolved source records")
+        else:
+            self.assertFalse(unresolved_ids, "complete reconciliation cannot carry unresolved source records")
+
+    def test_raw_replacement_program_expectation_of_29_is_not_silently_shrunk(self) -> None:
+        """Compares the authored mechanical identity set to the committed program expectation.
+
+        Returns:
+            Nothing.
+        """
+        program_identities = self._replacement_program_identities()
+        mechanical = self.ledger.get("identity_records")
+        self.assertIsInstance(mechanical, list)
+        assert isinstance(mechanical, list)
+        mechanical_ids = {row.get("canonical_identity_id") for row in mechanical if isinstance(row, dict)}
+        self.assertEqual(self.reconciliation.get("replacement_program_identity_count"), 29)
+        self.assertEqual(self.reconciliation.get("mechanical_identity_count"), len(mechanical_ids))
+        human_claims = self.human_discovery.get("current_source_claims")
+        self.assertIsInstance(human_claims, list)
+        assert isinstance(human_claims, list)
+        human_ids = {row.get("canonical_identity_id") for row in human_claims if isinstance(row, dict)}
+        self.assertEqual(self.reconciliation.get("human_identity_count"), len(human_ids))
+        records = self._records("replacement_program_identity_records")
+        labels = [record.get("program_identity_label") for record in records]
+        self.assertEqual(labels, program_identities)
+        self.assertEqual(len(labels), 29)
+        mapped_mechanical: list[str] = []
+        mapped_human: list[str] = []
+        unresolved_labels: set[str] = set()
+        for record in records:
+            evidence = self._assert_locator(record.get("program_evidence"))
+            lines = _git_bytes(evidence["revision"], evidence["path"]).decode("utf-8").splitlines()
+            cited = "\n".join(lines[evidence["range"]["start_line"] - 1 : evidence["range"]["end_line"]])
+            self.assertIn(record["program_identity_label"], cited)
+            self.assertIsInstance(record.get("mechanical_identity_ids"), list)
+            self.assertIsInstance(record.get("human_identity_ids"), list)
+            assert isinstance(record.get("mechanical_identity_ids"), list)
+            assert isinstance(record.get("human_identity_ids"), list)
+            mapped_mechanical.extend(record["mechanical_identity_ids"])
+            mapped_human.extend(record["human_identity_ids"])
+            self._assert_resolution(record)
+            if record.get("resolution_status") == UNRESOLVED_STATUS:
+                unresolved_labels.add(record["program_identity_label"])
+        self.assertEqual(set(mapped_mechanical), mechanical_ids)
+        self.assertEqual(len(mapped_mechanical), len(set(mapped_mechanical)))
+        self.assertEqual(set(mapped_human), human_ids)
+        self.assertEqual(len(mapped_human), len(set(mapped_human)))
+        if len(mechanical_ids) != 29 or len(human_ids) != 29:
+            self.assertEqual(self.reconciliation.get("status"), "reconciliation-blocked")
+            self.assertTrue(unresolved_labels, "a smaller source-backed denominator requires explicit unresolved program identities")
+
+    def test_identity_and_file_denominators_are_exhaustively_compared(self) -> None:
+        """Requires one comparison for every mechanical identity and source file record.
+
+        Returns:
+            Nothing.
+        """
+        mechanical_identities = self.ledger.get("identity_records")
+        human_claims = self.human_discovery.get("current_source_claims")
+        source_records = self.source.get("records")
+        self.assertIsInstance(mechanical_identities, list)
+        self.assertIsInstance(human_claims, list)
+        self.assertIsInstance(source_records, list)
+        assert isinstance(mechanical_identities, list) and isinstance(human_claims, list) and isinstance(source_records, list)
+        expected_identities = {row["canonical_identity_id"] for row in mechanical_identities if isinstance(row, dict)}
+        expected_human_identities = {row["canonical_identity_id"] for row in human_claims if isinstance(row, dict)}
+        identity_records = self._records("identity_reconciliation_records")
+        identity_ids = {row.get("canonical_identity_id") for row in identity_records}
+        self.assertEqual(identity_ids, expected_identities)
+        self.assertEqual(expected_human_identities, expected_identities, "human and mechanical identity inputs must be compared, not independently counted")
+        for record in identity_records:
+            self._assert_resolution(record)
+
+        expected_files = {row["record_id"] for row in source_records if isinstance(row, dict) and row.get("record_type") == "file"}
+        file_records = self._records("file_reconciliation_records")
+        self.assertEqual({row.get("mechanical_record_id") for row in file_records}, expected_files)
+        for record in file_records:
+            self._assert_resolution(record)
+
+    def test_every_scene_state_and_surface_is_compared_with_raw_evidence(self) -> None:
+        """Requires exhaustive scene, state, phase, overlay, transition, and terminal coverage.
+
+        Returns:
+            Nothing.
+        """
+        scene_records = self.scenes.get("scene_records")
+        state_records = self.scenes.get("state_records")
+        transitions = self.scenes.get("transitions")
+        self.assertIsInstance(scene_records, list)
+        self.assertIsInstance(state_records, list)
+        self.assertIsInstance(transitions, list)
+        assert isinstance(scene_records, list) and isinstance(state_records, list) and isinstance(transitions, list)
+        expected: dict[str, str] = {}
+        for kind, rows in (("scene", scene_records), ("state", state_records), ("transition", transitions)):
+            for row in rows:
+                self.assertIsInstance(row, dict)
+                assert isinstance(row, dict)
+                expected[_key(row)] = kind if kind != "transition" else str(row["transition_kind"])
+        records = self._records("surface_reconciliation_records")
+        self.assertEqual({_key(row.get("mechanical_surface")) for row in records}, set(expected))
+        observed_kinds = {row.get("surface_kind") for row in records}
+        self.assertTrue(observed_kinds.issubset(SURFACE_KINDS))
+        for record in records:
+            self.assertEqual(record.get("surface_kind"), expected[_key(record.get("mechanical_surface"))])
+            self._assert_resolution(record)
+        category_records = self._records("surface_category_coverage")
+        self.assertEqual({row.get("surface_kind") for row in category_records}, SURFACE_KINDS)
+        for record in category_records:
+            self.assertIn(record.get("coverage_status"), {"reviewed", "not-found-with-raw-evidence"})
+            self._assert_locator(record.get("evidence"))
+
+    def test_every_asset_candidate_and_identical_hash_group_is_compared(self) -> None:
+        """Requires exact candidate path/hash and identical-hash-group reconciliation.
+
+        Returns:
+            Nothing.
+        """
+        candidates = self.assets.get("candidate_files")
+        self.assertIsInstance(candidates, list)
+        assert isinstance(candidates, list)
+        expected_candidates = {row["canonical_path"]: (row["sha256"], row["identical_hash_group"]) for row in candidates if isinstance(row, dict)}
+        candidate_records = self._records("asset_candidate_reconciliation_records")
+        self.assertEqual({row.get("canonical_path") for row in candidate_records}, set(expected_candidates))
+        for record in candidate_records:
+            path = record["canonical_path"]
+            self.assertEqual((record.get("sha256"), record.get("identical_hash_group")), expected_candidates[path])
+            self._assert_resolution(record)
+
+        expected_groups: dict[str, set[str]] = {}
+        for path, (_, group) in expected_candidates.items():
+            expected_groups.setdefault(group, set()).add(path)
+        group_records = self._records("identical_hash_group_reconciliation_records")
+        self.assertEqual({row.get("identical_hash_group") for row in group_records}, set(expected_groups))
+        for record in group_records:
+            group = record["identical_hash_group"]
+            self.assertEqual(set(record.get("canonical_paths", [])), expected_groups[group])
+            self._assert_resolution(record)
+
+    def test_duplicate_stale_missing_withdrawn_and_historical_inputs_are_all_resolved_or_blocked(self) -> None:
+        """Requires one explicit result for every duplicate and historical discrepancy input.
+
+        Returns:
+            Nothing.
+        """
+        mechanical = self.mechanical_discrepancies.get("records")
+        duplicates = self.human_duplicates.get("duplicate_drift_records")
+        history = self.historical.get("records")
+        human_history = self.human_historical.get("historical_deleted_records")
+        comparisons = self.human_discrepancies.get("mechanical_observation_records")
+        self.assertTrue(all(isinstance(rows, list) for rows in (mechanical, duplicates, history, human_history, comparisons)))
+        assert isinstance(mechanical, list) and isinstance(duplicates, list) and isinstance(history, list) and isinstance(human_history, list) and isinstance(comparisons, list)
+        expected = {
+            *(f"mechanical:{row['observation_id']}" for row in mechanical if isinstance(row, dict)),
+            *(f"human-duplicate:{row['record_id']}" for row in duplicates if isinstance(row, dict)),
+            *(f"historical:{_key(row['evidence'])}" for row in history if isinstance(row, dict)),
+            *(f"human-historical:{_key(row['evidence'])}" for row in human_history if isinstance(row, dict)),
+            *(f"human-comparison:{row['observation_id']}" for row in comparisons if isinstance(row, dict)),
+        }
+        records = self._records("discrepancy_reconciliation_records")
+        self.assertEqual({row.get("discrepancy_key") for row in records}, expected)
+        for record in records:
+            self.assertIn(record.get("discrepancy_type"), DISCREPANCY_TYPES)
+            self._assert_resolution(record)
+
+    def test_unresolved_sources_are_enumerated_once_and_block_all_completion(self) -> None:
+        """Ensures missing evidence is recorded as a blocker rather than inferred away.
+
+        Returns:
+            Nothing.
+        """
+        unresolved = self.reconciliation.get("unresolved_sources")
+        self.assertIsInstance(unresolved, list)
+        assert isinstance(unresolved, list)
+        ids = [row.get("unresolved_source_id") for row in unresolved]
+        self.assertTrue(all(isinstance(identifier, str) and identifier for identifier in ids))
+        self.assertEqual(len(ids), len(set(ids)))
+        all_records = [
+            *self._records("replacement_program_identity_records"),
+            *self._records("identity_reconciliation_records"),
+            *self._records("file_reconciliation_records"),
+            *self._records("surface_reconciliation_records"),
+            *self._records("asset_candidate_reconciliation_records"),
+            *self._records("identical_hash_group_reconciliation_records"),
+            *self._records("discrepancy_reconciliation_records"),
+        ]
+        record_unresolved = {row.get("unresolved_source_id") for row in all_records if row.get("resolution_status") == UNRESOLVED_STATUS}
+        self.assertEqual(record_unresolved, set(ids), "every unresolved source must be explicit and every explicit unresolved source must block a record")
+        if ids:
+            self.assertEqual(self.reconciliation.get("status"), "reconciliation-blocked")
+
+    def test_phase3_contains_no_interpretation_or_vacuous_completion(self) -> None:
+        """Rejects semantic conclusions and empty comparison collections.
+
+        Returns:
+            Nothing.
+        """
+        self._assert_no_interpretation_fields(self.reconciliation)
+        for field in (
+            "replacement_program_identity_records",
+            "identity_reconciliation_records",
+            "file_reconciliation_records",
+            "surface_reconciliation_records",
+            "asset_candidate_reconciliation_records",
+            "identical_hash_group_reconciliation_records",
+            "discrepancy_reconciliation_records",
+        ):
+            self._records(field)
+
+
+if __name__ == "__main__":
+    unittest.main()

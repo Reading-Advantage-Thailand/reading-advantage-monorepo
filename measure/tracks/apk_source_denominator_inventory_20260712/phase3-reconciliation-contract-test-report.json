@@ -1,0 +1,23 @@
+{
+  "schema_version": "apk-denominator-phase3-reconciliation-contract-report.v1",
+  "status": "red-contract-authored",
+  "track_id": "apk_source_denominator_inventory_20260712",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "phase_authoring_baseline_revision": "105d8080",
+  "role": "truth-test-author",
+  "scope": "Contract only; this report contains no reconciled identity, file, surface, asset, discrepancy, historical, or acceptance fact and is not a usable denominator.",
+  "red_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase3",
+  "green_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase3",
+  "required_phase3_artifact": "phase3-reconciliation.json",
+  "required_contracts": [
+    "raw committed replacement-program proof that its 29 canonical identity expectation is not silently replaced by a smaller authored denominator",
+    "one explicit mechanical-versus-human comparison for every identity and source-file denominator record",
+    "one explicit comparison for every scene, state, phase, overlay, transition, terminal, and presentation surface, plus category coverage with raw evidence",
+    "one explicit comparison for every asset candidate and every identical-hash group",
+    "one explicit result for every mechanical duplicate observation, human duplicate/drift observation, historical/deleted/withdrawn source record, and human comparison observation",
+    "live revision, blob, and inclusive range-hash validation for every Phase-3 source locator",
+    "unresolved source records that block completion rather than infer a match",
+    "absence of semantic, capability, responsive, suitability, mechanic, intent, interpretation, or product-disposition conclusions"
+  ],
+  "green_handoff": ["requirements-mapper", "discovery-auditor", "evidence-collector"]
+}

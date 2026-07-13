@@ -129,3 +129,42 @@ reachable ancestors of that baseline.
   the missing Phase-2 artifacts and their separate receipt, then rerun the exact
   GREEN command. This contract neither accepts a denominator nor marks Phase 2
   complete.
+
+## Phase 3 reconciliation contracts
+
+The focused test is `measure.tests.test_apk_source_denominator_inventory_phase3`.
+It compares the committed Phase-1 mechanical records with the separate Phase-2 human
+records and requires a new non-consumable `phase3-reconciliation.json`; it does not
+repair, merge, rename, or otherwise author a denominator fact. Exact source locators
+continue to resolve only from `23bb5ad578c01fb29f9e8bb76a7d934d24a4b286` (or a
+reachable ancestor for historical work).
+
+- **RED command:**
+  `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase3`
+  It exits nonzero until `phase3-reconciliation.json` exists. At this handoff, all
+  failures must be `AssertionError: Missing Phase-3 reconciliation artifact:
+  measure/tracks/apk_source_denominator_inventory_20260712/phase3-reconciliation.json`.
+  Existing Phase-1 and Phase-2 artifacts, imports, JSON, Git, and Python syntax are
+  not an acceptable source of Red failure.
+- **GREEN command:**
+  `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase3`
+  It exits zero only when every mechanical identity and file, scene/state/phase/
+  overlay/transition/terminal/presentation surface, asset candidate, identical-hash
+  group, duplicate/drift observation, and historical/deleted/withdrawn record has an
+  explicit raw-evidence comparison result. The test derives the replacement program's
+  exact 29-identity expectation from the committed program blob, checks that expectation
+  against recorded mechanical and human counts, and blocks rather than silently treating
+  a smaller authored denominator as complete. It validates every Phase-3 locator's
+  revision, blob hash, and inclusive range hash; rejects conclusion or interpretation
+  fields; rejects empty coverage collections; and requires every unresolved source to
+  appear exactly once in a blocking record. A truthful `reconciliation-blocked` result
+  is permitted when source evidence is incomplete; candidate or accepted status is not.
+- **Static syntax command:**
+  `PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile measure/tests/test_apk_source_denominator_inventory_phase3.py`
+- **Prior-contract verification:**
+  `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase1 measure.tests.test_apk_source_denominator_inventory_phase2`
+- **Handoff:** The requirements-mapper, discovery-auditor, and evidence-collector must
+  publish an exhaustive reconciliation or a fail-closed blocked result with raw source
+  evidence, then rerun the exact GREEN command. Phase 3 remains in progress until all
+  blocking source gaps are independently reviewed; this contract never accepts a
+  denominator or changes the product-owner gate.
