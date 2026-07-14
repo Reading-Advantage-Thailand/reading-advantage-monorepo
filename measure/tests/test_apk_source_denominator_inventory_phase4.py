@@ -13,34 +13,11 @@ import unittest
 from pathlib import Path
 from typing import Any
 
+from measure.evidence_integrity_gates.apk_inventory_acceptance import (
+    validate_phase4_inventory_acceptance,
+)
 from measure.evidence_integrity_gates.events import MappingEventResolver
 from measure.evidence_integrity_gates.git_source import GitSourceAdapter
-
-try:
-    from measure.evidence_integrity_gates.apk_inventory_acceptance import (
-        validate_phase4_inventory_acceptance,
-    )
-except ModuleNotFoundError as error:
-    if error.name != "measure.evidence_integrity_gates.apk_inventory_acceptance":
-        raise
-
-    def validate_phase4_inventory_acceptance(
-        bundle: dict[str, Any],
-        resolver: MappingEventResolver,
-        source_adapter: GitSourceAdapter,
-    ) -> dict[str, Any]:
-        """Models the current fail-open Phase-4 branch until Green supplies the validator.
-
-        Args:
-            bundle: Temporary Phase-4 transition fixture.
-            resolver: Trusted-event boundary for the fixture.
-            source_adapter: Commit-bound source reader for the fixture.
-
-        Returns:
-            A deliberately fail-open result that every negative contract must falsify.
-        """
-        del bundle, resolver, source_adapter
-        return {"ok": True, "code": "LEGACY_PHASE4_FAIL_OPEN"}
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -1115,56 +1092,31 @@ class Phase4GreenBranchCounterexamples(unittest.TestCase):
         events: dict[str, dict[str, Any]],
         expected_code: str,
     ) -> None:
-        """Requires a non-vacuous paired control and one attack rejection under the fail-open sentinel.
-
-        While the production ``validate_phase4_inventory_acceptance`` is absent and the
-        temporary fail-open sentinel returns ``{"ok": True, "code": "LEGACY_PHASE4_FAIL_OPEN"}``
-        for any input, this assertion is the falsification of that absence. The
-        paired control must also be rejected (an ok=True response is itself the
-        falsification), and the mutation must fail for the same stable sentinel
-        reason. The ``expected_code`` parameter documents the frozen falsification
-        contract that the production validator must emit once Green supplies it;
-        under the current fail-open sentinel, the actual code is the stable
-        ``LEGACY_PHASE4_FAIL_OPEN`` sentinel.
+        """Requires a passing paired control and one exact reason-coded rejection.
 
         Args:
             bundle: Mutated attack bundle.
             events: Mutated provider event map.
-            expected_code: Frozen falsification contract — the specific rejection
-                code the production validator must emit for this mutation class
-                once Green supplies it.
+            expected_code: Frozen rejection code for this mutation class.
 
         Returns:
             Nothing.
         """
         control_bundle, control_events = self._fixture()
         control = self._validate(control_bundle, control_events)
-        # Non-vacuous paired control: an unmodified bundle must also be rejected
-        # while the production validator is absent/fail-open. An ok=True response
-        # from the temporary stub is itself the falsification; this assertion
-        # would silently pass under a vacuous paired control.
-        self.assertFalse(
+        self.assertTrue(
             control.get("ok"),
-            f"paired Green control unexpectedly passed; the fail-open sentinel must reject it: {control}",
-        )
-        self.assertEqual(
-            control.get("code"),
-            "LEGACY_PHASE4_FAIL_OPEN",
-            f"paired Green control returned unexpected code while the fail-open sentinel is in effect: {control}",
+            f"paired Green control failed, so the mutation rejection is vacuous: {control}",
         )
         result = self._validate(bundle, events)
-        # The mutation must also fail for the stable fail-open sentinel. The
-        # specific falsification ``expected_code`` is the frozen contract the
-        # production validator must emit once Green supplies it; under the
-        # fail-open sentinel the actual code remains the stable sentinel.
         self.assertFalse(
             result.get("ok"),
-            f"forged Phase-4 transition reached Green; the fail-open sentinel must reject it: {result}",
+            f"forged Phase-4 transition reached Green: {result}",
         )
         self.assertEqual(
             result.get("code"),
-            "LEGACY_PHASE4_FAIL_OPEN",
-            f"forged Phase-4 transition returned unexpected code; expected the fail-open sentinel (frozen falsification: {expected_code}): {result}",
+            expected_code,
+            f"forged Phase-4 transition returned the wrong rejection code: {result}",
         )
 
     def _artifact(self, bundle: dict[str, Any], name: str) -> tuple[str, dict[str, Any]]:
@@ -1206,29 +1158,16 @@ class Phase4GreenBranchCounterexamples(unittest.TestCase):
             bundle["artifact_sha256"][path] = hashlib.sha256(data).hexdigest()
 
     def test_valid_temporary_green_control_uses_no_live_acceptance_artifact(self) -> None:
-        """Confirms the production validator is absent/fail-open via the paired control falsification.
-
-        While the production ``validate_phase4_inventory_acceptance`` is absent, the
-        temporary fail-open sentinel returns ``{"ok": True, "code": "LEGACY_PHASE4_FAIL_OPEN"}``
-        for any input. An unmodified bundle must therefore be rejected (ok=False)
-        with the stable ``LEGACY_PHASE4_FAIL_OPEN`` sentinel code; an ok=True
-        response indicates the stub is no longer in effect and the paired control
-        has become vacuous. This test is the non-vacuous paired control required
-        by every Green-branch counterexample below.
+        """Confirms the valid temporary transition reaches Green without live artifacts.
 
         Returns:
             Nothing.
         """
         bundle, events = self._fixture()
         result = self._validate(bundle, events)
-        self.assertFalse(
+        self.assertTrue(
             result.get("ok"),
-            f"unmodified bundle unexpectedly reached Green; the fail-open sentinel must reject it: {result}",
-        )
-        self.assertEqual(
-            result.get("code"),
-            "LEGACY_PHASE4_FAIL_OPEN",
-            f"unmodified bundle returned unexpected code while the fail-open sentinel is in effect: {result}",
+            f"unmodified temporary bundle did not reach Green: {result}",
         )
 
     def test_all_five_distinct_role_receipts_are_mandatory(self) -> None:
@@ -1514,16 +1453,7 @@ class Phase4GreenBranchCounterexamples(unittest.TestCase):
         self._assert_rejects(bundle, events, "ACCEPTED_BINDING_MISMATCH")
 
     def test_owner_authorization_event_is_single_use(self) -> None:
-        """Confirms the production validator is absent/fail-open via the owner-event replay falsification.
-
-        While the production ``validate_phase4_inventory_acceptance`` is absent and the
-        temporary fail-open sentinel returns ``{"ok": True, "code": "LEGACY_PHASE4_FAIL_OPEN"}``
-        for any input, both the first validation and the replay must be rejected
-        with the stable sentinel code. The specific ``REPLAYED_OWNER_APPROVAL``
-        rejection is the frozen falsification contract the production validator
-        must emit once Green supplies it; under the current fail-open sentinel
-        the actual code is the stable sentinel. The non-vacuous paired control
-        is the first validation: it must also fail for the same sentinel reason.
+        """Accepts an owner event once and rejects its replay deterministically.
 
         Returns:
             Nothing.
@@ -1531,30 +1461,19 @@ class Phase4GreenBranchCounterexamples(unittest.TestCase):
         bundle, events = self._fixture()
         resolver = MappingEventResolver(events)
         first = self._validate(bundle, events, resolver=resolver)
-        # Non-vacuous paired control: the first validation must also fail under
-        # the fail-open sentinel. An ok=True response is the falsification of
-        # the current absence of a real validator.
-        self.assertFalse(
+        self.assertTrue(
             first.get("ok"),
-            f"first validation unexpectedly reached Green; the fail-open sentinel must reject it: {first}",
-        )
-        self.assertEqual(
-            first.get("code"),
-            "LEGACY_PHASE4_FAIL_OPEN",
-            f"first validation returned unexpected code while the fail-open sentinel is in effect: {first}",
+            f"first validation did not reach Green: {first}",
         )
         replay = self._validate(bundle, events, resolver=resolver)
-        # The replay must also fail for the stable fail-open sentinel. The
-        # specific ``REPLAYED_OWNER_APPROVAL`` code is the frozen falsification
-        # contract the production validator must emit once Green supplies it.
         self.assertFalse(
             replay.get("ok"),
-            f"replay validation unexpectedly reached Green; the fail-open sentinel must reject it: {replay}",
+            f"replayed owner approval unexpectedly reached Green: {replay}",
         )
         self.assertEqual(
             replay.get("code"),
-            "LEGACY_PHASE4_FAIL_OPEN",
-            f"replay validation returned unexpected code; expected the fail-open sentinel (frozen falsification: REPLAYED_OWNER_APPROVAL): {replay}",
+            "REPLAYED_OWNER_APPROVAL",
+            f"replay validation returned the wrong rejection code: {replay}",
         )
 
 
