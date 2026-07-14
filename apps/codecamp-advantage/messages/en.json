@@ -110,6 +110,41 @@
     "backToAdmin": "Back to Admin",
     "internNotFound": "Intern not found",
     "moduleProgress": "Module Progress",
+    "tutorSupport": "Tutor Support",
+    "tutorInterventions": "Interventions",
+    "tutorVerifiedFollowUps": "Verified follow-ups",
+    "tutorResourceUses": "Curated resources used",
+    "tutorMisconceptions": "Observed misconception tags",
+    "tutorNoSupport": "No targeted tutor interactions yet.",
+    "prEvidence": "PR Evidence & Corrections",
+    "prEvidenceHint": "Model evidence is advisory unless marked deterministic. Corrections are appended to the audit history and do not rewrite the original attempt.",
+    "noPrEvidence": "No immutable PR evidence yet.",
+    "noPrObjectives": "No graph-bound objectives were recorded for this attempt.",
+    "prResolvedModel": "Resolved model",
+    "prConfidence": "Confidence",
+    "prCorrections": "Recorded corrections",
+    "prCorrectionDispositionLabel": "Corrected disposition",
+    "prCorrectionReasonLabel": "Correction reason",
+    "prCorrectionReasonPlaceholder": "Explain the deterministic evidence for this correction",
+    "recordPrCorrection": "Record correction",
+    "prAttemptStatus": {
+      "advisory": "Advisory",
+      "validated": "Validated",
+      "failed": "Failed"
+    },
+    "prEvidenceAuthority": {
+      "advisory_model": "Model advisory",
+      "trusted_deterministic": "Deterministic evidence"
+    },
+    "prEvidenceState": {
+      "advisory": "Advisory",
+      "validated": "Validated",
+      "rejected": "Rejected"
+    },
+    "prCorrectionDisposition": {
+      "pass": "Correct to pass",
+      "revise": "Correct to revise"
+    },
     "lessonsLabel": "lessons",
     "avgLabel": "Avg:",
     "quizScores": "Quiz Scores",

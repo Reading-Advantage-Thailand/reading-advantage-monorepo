@@ -2,6 +2,7 @@
 
 import { Link } from "@/i18n/navigation";
 import { trpc } from "@/lib/trpc";
+import { TutorCoach } from "@/components/tutor-coach";
 import {
   InteractiveActivityPlayer,
   TutorialActivityPanel,
@@ -181,10 +182,38 @@ function GuidedPractice({ locale }: { locale: string }) {
   const [localResultText, setLocalResultText] = useState("");
   const [reportError, setReportError] = useState<string | null>(null);
   const [reportStored, setReportStored] = useState(false);
+  const [unjoinedTutorInterventionIds, setUnjoinedTutorInterventionIds] = useState<string[]>([]);
   const flushInFlight = useRef(false);
   const prepare = trpc.activity.prepareTutorial.useMutation();
   const reissue = trpc.activity.reissueTutorialCredential.useMutation();
   const report = trpc.activity.reportTutorial.useMutation();
+
+  const joinTutorEvidence = useCallback(async (verifiedSubmissionId: string) => {
+    if (!session.sessionId || unjoinedTutorInterventionIds.length === 0) return;
+    const joined = await Promise.allSettled(unjoinedTutorInterventionIds.map(async (interventionId) => {
+      const response = await fetch("/api/tutor/intervention", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "join_verified_evidence",
+          interventionId,
+          activitySessionId: session.sessionId,
+          verifiedSubmissionId,
+        }),
+      });
+      if (!response.ok) {
+        const payload = await response.json() as { error?: string };
+        throw new Error(payload.error ?? "Tutor evidence attribution failed");
+      }
+      return interventionId;
+    }));
+    const joinedIds = joined.flatMap((result) => result.status === "fulfilled" ? [result.value] : []);
+    if (joinedIds.length > 0) {
+      setUnjoinedTutorInterventionIds((current) => current.filter((id) => !joinedIds.includes(id)));
+    }
+    const failure = joined.find((result): result is PromiseRejectedResult => result.status === "rejected");
+    if (failure) throw failure.reason;
+  }, [session.sessionId, unjoinedTutorInterventionIds]);
 
   const prepareSnapshot = async () => {
     if (!session.sessionId) return;
@@ -223,6 +252,7 @@ function GuidedPractice({ locale }: { locale: string }) {
       await enqueueTutorialReport(queue, "trpc:activity.reportTutorial", request, new Date().toISOString());
       const result = await flushQueuedReports();
       if (result.uploaded.length === 0) throw new Error("Report queued for automatic retry when the connection returns");
+      await joinTutorEvidence(result.uploaded.at(-1)!.submissionId);
       setReportStored(true);
       setPrepared(null);
       setLocalResultText("");
@@ -233,11 +263,11 @@ function GuidedPractice({ locale }: { locale: string }) {
 
   useEffect(() => {
     if (!session.sessionId) return;
-    const retryQueued = () => { void flushQueuedReports().then(({ uploaded }) => { if (uploaded.length > 0) { setReportStored(true); setReportError(null); setPrepared(null); setLocalResultText(""); } }); };
+    const retryQueued = () => { void flushQueuedReports().then(async ({ uploaded }) => { if (uploaded.length > 0) { await joinTutorEvidence(uploaded.at(-1)!.submissionId); setReportStored(true); setReportError(null); setPrepared(null); setLocalResultText(""); } }).catch((error: unknown) => setReportError(error instanceof Error ? error.message : "Tutor evidence attribution failed")); };
     retryQueued();
     globalThis.addEventListener?.("online", retryQueued);
     return () => globalThis.removeEventListener?.("online", retryQueued);
-  }, [flushQueuedReports, session.sessionId]);
+  }, [flushQueuedReports, joinTutorEvidence, session.sessionId]);
 
   return (
     <LessonShell locale={locale} eyebrow="We Do" title={thai ? "เติม APK manifest" : "Complete the APK manifest"}>
@@ -259,13 +289,32 @@ function GuidedPractice({ locale }: { locale: string }) {
         locale={locale}
         completedStepIds={session.summary?.completedStepIds ?? []}
         onSupportUsage={session.appendSupport}
-        renderResource={() => <div role="img" aria-label={thai ? "ขอบเขต React host และ APK" : "React host and APK boundary"} className="rounded-md bg-blue-50 p-4">React host → APK cartridge → validated result</div>}
+        renderResource={() => <div id="apk-boundary-diagram" role="img" aria-label={thai ? "ขอบเขต React host และ APK" : "React host and APK boundary"} className="rounded-md bg-blue-50 p-4">React host → APK cartridge → validated result</div>}
         onCheck={async (stepId) => {
           const refreshed = await session.existing.refetch();
           const result = refreshed.data?.assessedTutorialResults[stepId];
           const passed = result?.isCorrect === true;
           return { passed, checks: codecampAPKUnit.wedo.manifest.steps.find((step) => step.stepId === stepId)!.checks.map(({ checkId }) => ({ checkId, passed })) };
         }}
+      />
+      <TutorCoach
+        activitySessionId={session.sessionId}
+        stepId="wedo.apk.manifest"
+        locale={thai ? "th" : "en"}
+        onSupportLevel={async (level) => {
+          if (level === "diagnostic") return;
+          await session.appendSupport({
+            stepId: "wedo.apk.manifest",
+            kind: level === "worked_example" ? "reveal" : "hint",
+            supportId: `tutor.${level}`,
+          });
+        }}
+        onTrustedResourceAction={async (resource) => {
+          if (resource.action.type === "highlight") {
+            document.getElementById(resource.action.target)?.scrollIntoView({ block: "center", behavior: "smooth" });
+          }
+        }}
+        onInterventionCreated={(interventionId) => setUnjoinedTutorInterventionIds((current) => current.includes(interventionId) ? current : [...current, interventionId])}
       />
       <p role="status" aria-live="polite">{session.summary ? (thai ? `Session ที่บันทึก: ${session.summary.sessionId}` : `Durable session: ${session.summary.sessionId}`) : (thai ? "กำลังเริ่ม session…" : "Starting durable session…")}</p>
       {session.summary ? <p className="rounded-md bg-blue-50 p-3">{thai ? "ตัวช่วยที่ server บันทึก" : "Server-restored support use"}: {thai ? "คำใบ้" : "hints"} {session.summary.support.hintsUsed}; {thai ? "เฉลยช่วยเหลือ" : "reveals"} {session.summary.support.revealsUsed}</p> : null}
@@ -285,13 +334,17 @@ function IndependentTransfer({ locale }: { locale: string }) {
         <h2 className="mt-6 text-xl font-semibold">{thai ? "การตรวจที่จำเป็น" : "Required checks"}</h2>
         <ul className="mt-3 list-disc space-y-2 pl-6">{(codecampAPKUnit.youdo.requiredCheckLabels[locale] ?? codecampAPKUnit.youdo.requiredCheckLabels.en).map((check) => <li key={check}>{check}</li>)}</ul>
       </section>
-      <p>{thai ? "ส่ง PR จาก repository ของ Unit 20 การประเมินที่ผ่านจะเข้าสู่ mastery evidence และตารางทบทวน FSRS" : "Submit the PR from the Unit 20 repository. Passing assessment projects mastery evidence and the canonical FSRS review schedule."}</p>
+      <p>{thai ? "ส่ง PR จาก repository ของ Unit 20 ความเห็นจาก AI เป็นคำแนะนำเท่านั้น และจะไม่อนุมัติ บล็อก หรือสร้าง mastery evidence" : "Submit the PR from the Unit 20 repository. AI feedback is advisory only; it does not approve, block, or create mastery evidence."}</p>
       <Link href="/module/apk-game-creation" className="inline-flex min-h-11 items-center rounded-md bg-blue-700 px-4 text-white">{thai ? "เปิด repository และส่ง PR" : "Open repository and submit PR"}</Link>
     </LessonShell>
   );
 }
 
-/** Renders the requested production APK lesson stage. */
+/**
+ * Renders the requested production APK lesson stage.
+ * @param props Requested locale and gradual-release stage.
+ * @returns The authorized APK lesson stage or a bounded fallback surface.
+ */
 export function APKUnitLesson({ locale, stage }: { locale: string; stage: number }) {
   const thai = locale.toLowerCase().startsWith("th");
   const access = trpc.codecamp.moduleBySlug.useQuery({ slug: "apk-game-creation" }, { retry: false });

@@ -110,6 +110,41 @@
     "backToAdmin": "กลับไปหน้าผู้ดูแลระบบ",
     "internNotFound": "ไม่พบผู้ฝึกงาน",
     "moduleProgress": "ความคืบหน้าโมดูล",
+    "tutorSupport": "การช่วยเหลือจากโค้ช",
+    "tutorInterventions": "การช่วยเหลือ",
+    "tutorVerifiedFollowUps": "ผลติดตามที่ตรวจสอบแล้ว",
+    "tutorResourceUses": "แหล่งเรียนรู้ที่ใช้",
+    "tutorMisconceptions": "แท็กความเข้าใจคลาดเคลื่อนที่พบ",
+    "tutorNoSupport": "ยังไม่มีการใช้โค้ชช่วยคิดแบบเจาะจง",
+    "prEvidence": "หลักฐานและการแก้ไข PR",
+    "prEvidenceHint": "หลักฐานจากโมเดลเป็นเพียงคำแนะนำ เว้นแต่จะระบุว่าเป็นหลักฐานเชิงกำหนด การแก้ไขจะถูกเพิ่มลงในประวัติการตรวจสอบและไม่เขียนทับความพยายามเดิม",
+    "noPrEvidence": "ยังไม่มีหลักฐาน PR แบบเปลี่ยนแปลงไม่ได้",
+    "noPrObjectives": "ไม่มีวัตถุประสงค์ที่ผูกกับกราฟถูกบันทึกสำหรับความพยายามนี้",
+    "prResolvedModel": "โมเดลที่ใช้จริง",
+    "prConfidence": "ความเชื่อมั่น",
+    "prCorrections": "การแก้ไขที่บันทึกแล้ว",
+    "prCorrectionDispositionLabel": "ผลการแก้ไข",
+    "prCorrectionReasonLabel": "เหตุผลในการแก้ไข",
+    "prCorrectionReasonPlaceholder": "อธิบายหลักฐานเชิงกำหนดสำหรับการแก้ไขนี้",
+    "recordPrCorrection": "บันทึกการแก้ไข",
+    "prAttemptStatus": {
+      "advisory": "คำแนะนำ",
+      "validated": "ตรวจสอบแล้ว",
+      "failed": "ล้มเหลว"
+    },
+    "prEvidenceAuthority": {
+      "advisory_model": "คำแนะนำจากโมเดล",
+      "trusted_deterministic": "หลักฐานเชิงกำหนด"
+    },
+    "prEvidenceState": {
+      "advisory": "คำแนะนำ",
+      "validated": "ตรวจสอบแล้ว",
+      "rejected": "ถูกปฏิเสธ"
+    },
+    "prCorrectionDisposition": {
+      "pass": "แก้เป็นผ่าน",
+      "revise": "แก้เป็นต้องปรับปรุง"
+    },
     "lessonsLabel": "บทเรียน",
     "avgLabel": "เฉลี่ย:",
     "quizScores": "คะแนนแบบทดสอบ",

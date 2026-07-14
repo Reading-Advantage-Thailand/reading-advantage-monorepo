@@ -42,8 +42,19 @@ export default function InternDetailPage() {
       { enabled: user?.role === "ADMIN" && !!userId }
     );
   const [githubUsername, setGithubUsername] = useState(intern?.githubUsername ?? "");
+  const [overrideDrafts, setOverrideDrafts] = useState<Record<string, { disposition: "pass" | "revise"; reason: string }>>({});
   const updateGithub = trpc.codecamp.updateInternGithubUsername.useMutation({
     onSuccess: () => utils.codecamp.getInternProgress.invalidate(),
+  });
+  const recordPrReviewOverride = trpc.codecamp.recordPrReviewOverride.useMutation({
+    onSuccess: (_event, input) => {
+      setOverrideDrafts((drafts) => {
+        const next = { ...drafts };
+        delete next[input.attemptId];
+        return next;
+      });
+      return utils.codecamp.getInternProgress.invalidate({ userId });
+    },
   });
 
   if (authLoading || dataLoading) {
@@ -193,6 +204,27 @@ export default function InternDetailPage() {
         </div>
       </div>
 
+      <section className="mb-8 rounded-lg border" aria-labelledby="tutor-support-heading">
+        <div className="border-b p-4">
+          <h2 id="tutor-support-heading" className="text-lg font-semibold">{t("tutorSupport")}</h2>
+        </div>
+        {intern.tutorSupport.totalInterventions === 0 ? (
+          <p className="p-4 text-sm text-muted-foreground">{t("tutorNoSupport")}</p>
+        ) : (
+          <div className="space-y-4 p-4">
+            <div className="grid gap-3 sm:grid-cols-3">
+              <div><p className="text-sm text-muted-foreground">{t("tutorInterventions")}</p><p className="text-2xl font-semibold">{intern.tutorSupport.totalInterventions}</p></div>
+              <div><p className="text-sm text-muted-foreground">{t("tutorVerifiedFollowUps")}</p><p className="text-2xl font-semibold">{intern.tutorSupport.verifiedFollowUps}</p></div>
+              <div><p className="text-sm text-muted-foreground">{t("tutorResourceUses")}</p><p className="text-2xl font-semibold">{intern.tutorSupport.resourceUses}</p></div>
+            </div>
+            {intern.tutorSupport.misconceptionTags.length > 0 ? <div>
+              <p className="mb-2 text-sm text-muted-foreground">{t("tutorMisconceptions")}</p>
+              <div className="flex flex-wrap gap-2">{intern.tutorSupport.misconceptionTags.map((item: { tag: string; count: number }) => <Badge key={item.tag} variant="secondary">{item.tag} × {item.count}</Badge>)}</div>
+            </div> : null}
+          </div>
+        )}
+      </section>
+
       <div className="grid gap-8 md:grid-cols-2">
         <div className="rounded-lg border">
           <div className="border-b p-4">
@@ -288,6 +320,77 @@ export default function InternDetailPage() {
           )}
         </div>
       </div>
+
+      <section className="mt-8 rounded-lg border" aria-labelledby="pr-evidence-heading">
+        <div className="border-b p-4">
+          <div className="flex items-center gap-2">
+            <GitPullRequest className="h-5 w-5 text-primary" />
+            <h2 id="pr-evidence-heading" className="text-lg font-semibold">{t("prEvidence")}</h2>
+          </div>
+          <p className="mt-1 text-sm text-muted-foreground">{t("prEvidenceHint")}</p>
+        </div>
+        {intern.prReviewAttempts.length === 0 ? (
+          <p className="p-4 text-sm text-muted-foreground">{t("noPrEvidence")}</p>
+        ) : (
+          <div className="divide-y">
+            {intern.prReviewAttempts.map((attempt: {
+              id: string;
+              headSha: string;
+              attemptStatus: "advisory" | "validated" | "failed";
+              evidenceAuthority: "advisory_model" | "trusted_deterministic";
+              modelAlias: string | null;
+              resolvedModel: string | null;
+              createdAt: Date;
+              objectives: Array<{ objectiveId: string; variantKey: string; score: number; confidence: number; evidenceState: "advisory" | "validated" | "rejected" }>;
+              overrides: Array<{ id: string; correctedDisposition: "pass" | "revise"; reason: string; createdAt: Date }>;
+            }) => {
+              const draft = overrideDrafts[attempt.id] ?? { disposition: "revise" as const, reason: "" };
+              return <div key={attempt.id} className="space-y-3 p-4">
+                <div className="flex flex-wrap items-center gap-2">
+                  <code className="text-xs">{attempt.headSha.slice(0, 12)}</code>
+                  <Badge variant={attempt.attemptStatus === "validated" ? "default" : attempt.attemptStatus === "failed" ? "destructive" : "secondary"}>{t(`prAttemptStatus.${attempt.attemptStatus}`)}</Badge>
+                  <Badge variant="outline">{t(`prEvidenceAuthority.${attempt.evidenceAuthority}`)}</Badge>
+                  <span className="text-xs text-muted-foreground">{formatDate(attempt.createdAt, locale)}</span>
+                </div>
+                {attempt.resolvedModel || attempt.modelAlias ? <p className="text-xs text-muted-foreground">{t("prResolvedModel")}: {attempt.resolvedModel ?? attempt.modelAlias}</p> : null}
+                <div className="space-y-1 text-sm">
+                  {attempt.objectives.length === 0 ? <p className="text-muted-foreground">{t("noPrObjectives")}</p> : attempt.objectives.map((objective) => <p key={`${objective.objectiveId}:${objective.variantKey}`}><code>{objective.objectiveId}</code> · {objective.score}% · {t("prConfidence")}: {objective.confidence}% · {t(`prEvidenceState.${objective.evidenceState}`)}</p>)}
+                </div>
+                {attempt.overrides.length > 0 ? <div className="rounded bg-muted/50 p-3 text-sm">
+                  <p className="font-medium">{t("prCorrections")}</p>
+                  {attempt.overrides.map((override) => <p key={override.id} className="mt-1 text-muted-foreground">{t(`prCorrectionDisposition.${override.correctedDisposition}`)} — {override.reason}</p>)}
+                </div> : null}
+                <div className="grid gap-2 rounded border p-3 sm:grid-cols-[auto_1fr_auto]">
+                  <select
+                    aria-label={t("prCorrectionDispositionLabel")}
+                    className="rounded border bg-background px-2 py-1 text-sm"
+                    value={draft.disposition}
+                    onChange={(event) => setOverrideDrafts((drafts) => ({ ...drafts, [attempt.id]: { ...draft, disposition: event.target.value as "pass" | "revise" } }))}
+                  >
+                    <option value="pass">{t("prCorrectionDisposition.pass")}</option>
+                    <option value="revise">{t("prCorrectionDisposition.revise")}</option>
+                  </select>
+                  <input
+                    aria-label={t("prCorrectionReasonLabel")}
+                    className="rounded border bg-background px-2 py-1 text-sm"
+                    value={draft.reason}
+                    onChange={(event) => setOverrideDrafts((drafts) => ({ ...drafts, [attempt.id]: { ...draft, reason: event.target.value } }))}
+                    placeholder={t("prCorrectionReasonPlaceholder")}
+                  />
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    disabled={recordPrReviewOverride.isPending || draft.reason.trim().length < 10}
+                    onClick={() => recordPrReviewOverride.mutate({ attemptId: attempt.id, correctedDisposition: draft.disposition, reason: draft.reason, correctedObjectives: [] })}
+                  >
+                    {recordPrReviewOverride.isPending ? t("saving") : t("recordPrCorrection")}
+                  </Button>
+                </div>
+              </div>;
+            })}
+          </div>
+        )}
+      </section>
     </div>
   );
 }

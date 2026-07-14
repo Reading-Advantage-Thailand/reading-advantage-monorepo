@@ -19,6 +19,7 @@
     "@ai-sdk/react": "catalog:",
     "@hookform/resolvers": "catalog:",
     "@node-rs/argon2": "catalog:",
+    "@reading-advantage/ai": "workspace:*",
     "@reading-advantage/activity-react": "workspace:*",
     "@reading-advantage/activity-runtime": "workspace:*",
     "@reading-advantage/codecamp-knowledge": "workspace:*",
