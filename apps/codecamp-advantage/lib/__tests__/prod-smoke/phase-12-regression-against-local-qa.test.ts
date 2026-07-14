@@ -108,12 +108,12 @@ const LOCAL_QA_TRACK_REQUIRED_FILES = [
 // Curriculum oracle constants. The seed file is the source of
 // truth for "expected seed state" (test-strategy.md §2:
 // "Curriculum oracle: local seed in
-// `packages/db/src/seed/codecamp-curriculum-data.ts` (18 modules
-// / 85 lessons) is the source of truth for Phase 2 data-integrity
+// `packages/db/src/seed/codecamp-curriculum-data.ts` (19 modules
+// / 88 lessons) is the source of truth for Phase 2 data-integrity
 // checks. Diff prod against `getPhaseACurriculumData / B / C / D`
 // outputs.")
-const EXPECTED_MODULE_COUNT = 18;
-const EXPECTED_LESSON_COUNT = 85;
+const EXPECTED_MODULE_COUNT = 19;
+const EXPECTED_LESSON_COUNT = 88;
 
 // Entry-phase module slugs that Phase 4 (and Phase 12) assert on.
 // Mirrors `readSeedPhaseMap` from phase-4-feature-parity.test.ts.
@@ -130,8 +130,8 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const APP_ROOT = resolve(HERE, "../../..");
 const MONOREPO_ROOT = resolve(APP_ROOT, "../..");
 
-const LOCAL_QA_TRACK_DIR = resolve(MONOREPO_ROOT, "measure/tracks/codecamp_qa_local_20260517");
-const PROD_QA_TRACK_DIR = resolve(MONOREPO_ROOT, "measure/tracks/codecamp_qa_prod_20260517");
+const LOCAL_QA_TRACK_DIR = resolve(MONOREPO_ROOT, "measure/archive/codecamp_qa_local_20260517");
+const PROD_QA_TRACK_DIR = resolve(MONOREPO_ROOT, "measure/archive/codecamp_qa_prod_20260517");
 const ARCHIVED_LOCAL_QA_REPORT_PATH = resolve(
   MONOREPO_ROOT,
   "measure/archive/codecamp_qa_local_20260517/qa-report.md",
@@ -477,7 +477,7 @@ describe("Phase 12 — Local QA baseline filesystem contract", () => {
     expect(PROD_URL, "PHASE12_PROD_URL must be https://").toMatch(/^https:\/\//);
   });
 
-  it("`measure/tracks/codecamp_qa_local_20260517/` exists — local QA track is the regression baseline", () => {
+  it("archived `codecamp_qa_local_20260517` exists — local QA track is the regression baseline", () => {
     const exists = existsSync(LOCAL_QA_TRACK_DIR);
     expect(
       exists,
@@ -499,7 +499,7 @@ describe("Phase 12 — Local QA baseline filesystem contract", () => {
     });
   }
 
-  it("prod QA track directory still exists (regression is a cross-track check)", () => {
+  it("archived prod QA track directory still exists (regression is a cross-track check)", () => {
     const exists = existsSync(PROD_QA_TRACK_DIR);
     expect(
       exists,

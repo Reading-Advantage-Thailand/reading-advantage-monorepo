@@ -6,8 +6,14 @@ describe("Thai text-width regression prevention", () => {
   const appDir = path.resolve(__dirname, "../../app/[locale]");
   const componentsDir = path.resolve(__dirname, "../../components");
 
-  describe("dashboard page (page.tsx)", () => {
-    const content = fs.readFileSync(path.join(appDir, "page.tsx"), "utf-8");
+  // The dashboard markup lives in dashboard-content.tsx since the
+  // warm-SSR perf refactor (page.tsx now only renders auth gating and
+  // the skeleton around a dynamic import of it).
+  describe("dashboard page (dashboard-content.tsx)", () => {
+    const content = fs.readFileSync(
+      path.join(appDir, "dashboard-content.tsx"),
+      "utf-8",
+    );
 
     it("applies line-clamp-2 on module card title", () => {
       expect(content).toContain("line-clamp-2");
