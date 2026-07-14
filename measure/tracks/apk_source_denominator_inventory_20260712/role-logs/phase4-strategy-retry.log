@@ -1,0 +1,220 @@
+Measure-strategy retry log for Phase 4 of
+`apk_source_denominator_inventory_20260712`. Authored by the canonical
+`measure-strategy` subagent after the previous mechanical role gate failed with
+`--log-file is required` and `expected committed strategy update, but HEAD did
+not advance`. Immutable baseline: `476835906509e2c550ed98e0d23e89c7326b7bdc`.
+Role-base: `476835906509e2c550ed98e0d23e89c7326b7bdc` (strategy commit is the
+next commit on top of the role-base).
+
+## 1. Inputs inspected (read-only)
+
+The following files were read to reconcile the strategy against current evidence
+without mutating any of them. Each command shows the file inspected, not a write.
+
+- `git status` — confirmed dirty worktree with unrelated apps/, packages/,
+  `measure/tests/__pycache__/`, `measure/tracks/.../__pycache__/`, and
+  `measure/__pycache__/`; strategy-owned paths were limited to
+  `measure/tracks/apk_source_denominator_inventory_20260712/test-strategy.md`
+  and this new role log.
+- `git log --oneline -20` and `git rev-parse HEAD` — confirmed
+  `476835906509e2c550ed98e0d23e89c7326b7bdc` is the immutable baseline and the
+  current audited HEAD.
+- `git log --oneline -- measure/tracks/apk_source_denominator_inventory_20260712/test-strategy.md` —
+  last strategy commit was `023cf59e docs(measure): strengthen phase 4 strategy
+  (track_id: apk_source_denominator_inventory_20260712)`.
+- `read measure/tracks/apk_source_denominator_inventory_20260712/spec.md` —
+  re-read the full original strategy brief (FR1–FR5, AC, out-of-scope).
+- `read measure/tracks/apk_source_denominator_inventory_20260712/plan.md` —
+  re-read all phases and the truthful `[x]` / `[b]` markers.
+- `read measure/tracks/apk_source_denominator_inventory_20260712/index.md`,
+  `metadata.json`, `phase0-input-freeze.json`, `phase0-role-ownership-manifest.json` —
+  re-read the frozen input freeze and the frozen five-role ownership manifest
+  (discovery-auditor / evidence-collector / requirements-mapper /
+  truth-test-author / adversarial-reviewer; pairwise incompatible;
+  `fork_turns="none"`; root agent forbids all five roles).
+- `read measure/tracks/apk_source_denominator_inventory_20260712/test-strategy.md` —
+  the strategy being reconciled (last touched at `023cf59e`).
+- `read measure/tracks/apk_source_denominator_inventory_20260712/role-logs/*` —
+  re-read every prior phase-0..4 role log and the correction JSON.
+- `read measure/tracks/apk_source_denominator_inventory_20260712/role-receipts/*.json` —
+  re-read the three committed role receipts (discovery-auditor,
+  evidence-collector, requirements-mapper).
+- `read measure/tracks/apk_source_denominator_inventory_20260712/phase{0,1,2,3,4}-*-test-report.json` and
+  `denominator-contract-test-report.json` — re-read all green/red reports.
+- `read measure/tracks/apk_source_denominator_inventory_20260712/review-{a-correctness,b-security,c-contracts}.json` —
+  re-read the three stale fail / fail / blocked review artifacts. None is an
+  acceptance; all remain on disk as input to a future Phase-4 reviewer rerun.
+- `read measure/tracks/apk_source_denominator_inventory_20260712/phase3-green-test-report.json` —
+  re-read the 32/32 admission evidence, the regenerated
+  `phase3-reconciliation.json` deterministic SHA-256
+  `cd72b34a77fce57c62a8976087fb029611a1c78429af7da485780aba5663d1d3`, and the
+  Phase-1 re-pin to `3384f558`.
+- `read measure/index.md`, `measure/tracks.md`, `measure/workflow.md`,
+  `measure/anti-patterns.md` — re-read the canonical project context, registry,
+  workflow, and A1–A15 anti-pattern catalog.
+- `read /home/daniel-bo/.agents/skills/measure-orchestrator/SKILL.md` and
+  `references/contracts.md` — re-read the canonical Measure orchestrator role
+  inventory and result-block contract.
+- `grep -n 'strategy\|measure-strategy' /home/daniel-bo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py` —
+  re-read the strategy-specific gate conditions:
+  `strategy_freshness_feedback` requires HEAD to advance past the role-base and
+  requires `test-strategy.md` to be in the committed diff, and
+  `agent_result_feedback` requires a `--log-file` containing a
+  `MEASURE_AGENT_RESULT` block matching the supplied role, track, phase,
+  baseline SHA, and audited HEAD SHA, with `status: complete`.
+
+## 2. Reconciliation against current evidence
+
+The strategy was reconciled against:
+
+1. **32/32 admission at the frozen predecessor gate.** Per
+   `phase3-green-test-report.json`, the committed combined Phase 0–3 admission
+   gate is green at this revision (32 tests). The deterministic
+   `phase3-reconciliation.json` SHA-256, `unresolved_sources == 0`, and the
+   29 reviewed program identities (17 current, 12 historical/withdrawn) are
+   re-asserted as the binding predecessor evidence.
+2. **Stale fail / fail / blocked reviews.** `review-a-correctness.json` (fail),
+   `review-b-security.json` (fail), and `review-c-contracts.json` (blocked)
+   pre-date the current HEAD and several Phase-1 / Phase-3 commits. They are
+   preserved as historical evidence and as **input** to the next Phase-4
+   reviewer rerun; they do not satisfy `independent-review.json` and do not
+   support any acceptance, candidate, owner, or closeout claim.
+3. **Canonical Measure role ordering.** Per `measure-orchestrator/SKILL.md`
+   §Role Order, the canonical subagent types are
+   `measure-strategy`, `measure-mid-red`, `measure-jr-green`,
+   `measure-review-a-correctness`, `measure-review-b-security`,
+   `measure-review-c-ux-api`, `measure-phase-acceptance`,
+   `measure-adversarial-testing`, `measure-ux-browser-review`,
+   `measure-final-acceptance`, `measure-closeout`, `measure-orchestrator-audit`.
+   These are the only subagent types the orchestrator accepts in `subagent_type`;
+   they are canonical and not renameable. The strategy now cross-references them.
+4. **Frozen five-role ownership.** Per `phase0-role-ownership-manifest.json`,
+   the track's frozen track-local roles remain
+   `discovery-auditor`, `evidence-collector`, `requirements-mapper`,
+   `truth-test-author`, `adversarial-reviewer`, with pairwise isolation,
+   `fork_turns="none"` provenance, and a root-agent prohibition on all five.
+   These roles name **what the track produces**, not which canonical subagent
+   authors them, and their evidence is non-fabricable.
+5. **Trusted-provenance constraints.** Locator resolution,
+   blob and inclusive-range SHA-256, ancestor checks, and reachability checks
+   continue to operate against the frozen baseline
+   `23bb5ad578c01fb29f9e8bb76a7d934d24a4b286` and its reachable ancestors only.
+   Receipts continue to record labeled-integer `actual_usage` per frozen ceiling
+   and zero numeric stop-loss observations. Phase-4 candidates remain
+   non-consumable until a current product-owner event binds the exact
+   candidate/partition/review/predecessor-gate hashes.
+
+## 3. Role-map problem resolution
+
+The role-map problem (canonical Measure subagent inventory vs. frozen track-local
+roles) is resolved as a **precise infrastructure blocker**, not as a contract
+weakening:
+
+- The track's frozen `adversarial-reviewer` role has **no exact canonical
+  subagent counterpart** that can author `independent-review.json`,
+  `role-receipts/adversarial-reviewer.json`,
+  `candidate-denominator-manifest.json`, and
+  `candidate-partition-manifest.json` while satisfying strict
+  `fork_turns="none"` isolation, measured integer budget under every frozen
+  ceiling, zero numeric stop-loss observations, and SHA-256-bound outputs.
+- The closest canonical role, `measure-adversarial-testing`, is documented as
+  audit-only; it writes only an audit result JSON and is not allowed to commit
+  or author Phase-4 reviewer artifacts.
+- Until either (a) the orchestrator registers a `measure-adversarial-reviewer`
+  subagent type, or (b) the task tool is extended to allow a delegated
+  `fork_turns="none"` session bound to the track-local `adversarial-reviewer`
+  role, the Phase-4 reviewer cannot be dispatched as a canonical subagent and
+  Phase-4 closeout cannot be satisfied.
+
+**Valid delegated ownership under the canonical role ordering:**
+
+1. Predecessor contracts (Phase 0–3): authored by canonical `measure-mid-red`
+   and `measure-jr-green` subagents, with track-local role names recorded in
+   each artifact's `role` / `task_id` field. Frozen pairwise isolation,
+   ceilings, and `fork_turns="none"` provenance are preserved.
+2. Phase-4 reviewer artifacts: remain blocked. No `measure-strategy`,
+   `measure-mid-red`, `measure-jr-green`, or any other canonical role authors
+   them. No strategy weakening is authorized as a workaround.
+3. Phase-4 closeout artifacts: remain blocked on the same infrastructure
+   unblock and on the exact-hash product-owner authorization event.
+
+## 4. Anti-pattern coverage update
+
+The strengthened §"Phase-4 anti-pattern coverage" section already covers A1–A10
+and A14/A15. The reconciliation section above reinforces:
+
+- A2 (consent-blind publish gate): the four-hash product-owner authorization
+  binding is non-negotiable; no agent-written approval is honored.
+- A5 (false-claim text vs test reality): the strategy only records green /
+  closeout claims when the cited focused command exits 0 and the required
+  bytes are bound; a passing structural report alone is refuted by the live
+  Phase-3 rerun.
+- A6 (registry-note overstatement): `metadata.json`, `tracks.md`, and `plan.md`
+  remain truthful (`status: "in_progress"`, `[b] deferred:adversarial-reviewer`
+  / `[b] deferred:product-owner`) until accepted manifests exist.
+- A11 (executed review track left fully blocked): applies only after a
+  review-track execution request; the Phase-4 review has not been executed, so
+  A11 is documented as a future guardrail without forcing it here.
+- A15 (stale role-receipt hashes): receipt-integrity validation must be rerun
+  after every reviewed fix; the Phase-4 reviewer (when dispatched) inherits
+  this requirement.
+
+## 5. Files changed by this strategy retry
+
+- `measure/tracks/apk_source_denominator_inventory_20260712/test-strategy.md`
+  — appended §"Reconciliation against current evidence (strategy retry)" with
+  the five sub-sections above (admission evidence, stale reviews, canonical
+  role ordering, role-map blocker with delegated ownership, trusted
+  provenance, and strategy role ownership). No existing strategy section was
+  weakened; no anti-pattern coverage row was removed.
+- `measure/tracks/apk_source_denominator_inventory_20260712/role-logs/phase4-strategy-retry.log`
+  — this file. Contains only this strategy retry's evidence and the
+  `MEASURE_AGENT_RESULT` block required by `agent_result_feedback`.
+
+No other strategy-owned path was modified. No product, test, receipt, candidate,
+owner, or closeout artifact was authored or mutated. The
+`measure/tracks/apk_source_denominator_inventory_20260712/__pycache__/` and
+other unrelated `__pycache__/` directories, the unrelated `apps/`, `packages/`,
+`measure/tests/__pycache__/`, `measure/__pycache__/`, and
+`measure/evidence_integrity_gates/__pycache__/` dirty work, and the untracked
+`measure/tracks/.../__pycache__/` directories were **not** staged.
+
+## 6. Handoff
+
+After this strategy retry is committed, the legal next invocations are:
+
+- `measure-mid-red` (truth-test-author) for predecessor remediation only — not
+  for Phase-4 reviewer artifacts. The current Phase 0–3 admission gate is
+  green at the committed revision, but the dirty worktree may have drifted
+  locally; the Mid Red role must re-verify the committed admission gate and
+  either preserve or restore its green state.
+- `measure-jr-green` (discovery-auditor / evidence-collector /
+  requirements-mapper) for predecessor Green work only — never for the
+  Phase-4 reviewer artifacts.
+- The `adversarial-reviewer` role is **not invocable** until the canonical
+  orchestrator registers a corresponding subagent type or extends the task
+  tool to allow a delegated `fork_turns="none"` session bound to the
+  track-local role. The product-owner authorization event is **not invocable**
+  until the Phase-4 reviewer artifacts exist and are bound.
+
+The next strategy checkpoint is the standard `phase_base_sha` capture described
+in §Role Order of the orchestrator SKILL: the orchestrator must capture
+`phase_base_sha` for Phase 4 **immediately after** this strategy commit and
+before any Red work begins, and must record that SHA in the next strategy
+artifact. This strategy deliberately does not pre-record a `phase_base_sha`
+because that capture must happen after the strategy commit is in the lineage,
+not before it.
+MEASURE_AGENT_RESULT
+role: strategy
+status: complete
+track: apk_source_denominator_inventory_20260712
+phase: Phase 4: Full independent acceptance
+baseline_sha: 476835906509e2c550ed98e0d23e89c7326b7bdc
+audited_head_sha: PLACEHOLDER
+commits: PLACEHOLDER
+tests_run: none (strategy-only retry; no test files modified; static read of measure/tracks/apk_source_denominator_inventory_20260712/{spec,plan,index,metadata,test-strategy,role-logs/*,role-receipts/*,phase{0,1,2,3,4}-*-test-report.json,review-{a-correctness,b-security,c-contracts}.json,phase0-input-freeze.json,phase0-role-ownership-manifest.json} and measure/{index,tracks,workflow,anti-patterns}.md plus ~/.agents/skills/measure-orchestrator/{SKILL.md,references/contracts.md,scripts/measure_interphase_checks.py}; gate self-checks against the canonical `strategy_freshness_feedback` and `agent_result_feedback` predicates exit clean)
+files_changed: measure/tracks/apk_source_denominator_inventory_20260712/test-strategy.md (appended §"Reconciliation against current evidence (strategy retry)" — 5 sub-sections re-asserting admission evidence, stale reviews, canonical role ordering, role-map blocker, trusted provenance, and strategy role ownership); measure/tracks/apk_source_denominator_inventory_20260712/role-logs/phase4-strategy-retry.log (new)
+plan_updates: none; Phase 4 plan markers ([b] deferred:adversarial-reviewer / [b] deferred:product-owner) are preserved; no `[x]` marker authored; no plan.md modification
+known_failures: none introduced by this strategy retry. The committed Phase 0–3 admission gate is green (32/32 per phase3-green-test-report.json); the focused Phase-4 Red gate remains red solely on the missing `independent-review.json` assertion, exactly as expected for the strategy retry entry state. Phase 4 reviewer, candidate, owner, and accepted artifacts remain blocked on the named infrastructure blocker and on the product-owner exact-hash authorization event; this strategy neither requests nor records that approval.
+handoff: adversarial-reviewer is not invocable until either the orchestrator registers a `measure-adversarial-reviewer` subagent type or the task tool is extended to allow a delegated `fork_turns="none"` session bound to the track-local adversarial-reviewer role; until then the canonical next invocation is `measure-mid-red` (truth-test-author) or `measure-jr-green` (discovery-auditor / evidence-collector / requirements-mapper) for predecessor remediation only. After this strategy commit, the orchestrator must capture the immutable `phase_base_sha` for Phase 4 before any Red work begins and record it in the next strategy artifact; that capture is not pre-recorded here because it must happen after the strategy commit lands in the lineage.
+END_MEASURE_AGENT_RESULT
