@@ -1,0 +1,48 @@
+{
+  "schema_version": "phase1-pre-existing-failures.v1",
+  "status": "captured",
+  "captured_at": "2026-07-14T00:00:00Z",
+  "phase_base_sha": "879112353411912b80849037016cbd9ed2c1bf63",
+  "role_base_sha": "88d71cf3fb42a345631b98d85cca760afadae34c",
+  "scope": "Phase 1 is artifact-only; no aggregate gate (lint/test/check-types/build) is run. This file classifies known pre-existing failures for Phase 4 reconciliation.",
+  "pre_existing_failures": [
+    {
+      "surface": "primary-advantage ESLint",
+      "type": "lint",
+      "description": "49 pre-existing ESLint errors in primary-advantage",
+      "source": "AGENTS.md Known Issues; measure/tech-debt.md",
+      "classification": "pre-existing",
+      "owner": "primary-advantage",
+      "migration_caused": false
+    },
+    {
+      "surface": "test runner mix",
+      "type": "tooling",
+      "description": "Mixed Jest/Vitest test runners across apps (being normalized)",
+      "source": "AGENTS.md Known Issues; measure/tech-debt.md",
+      "classification": "pre-existing",
+      "owner": "repo-wide",
+      "migration_caused": false
+    },
+    {
+      "surface": "legacy API routes",
+      "type": "architecture",
+      "description": "294 legacy API routes across reading-advantage, primary-advantage, science-advantage not yet using domain functions",
+      "source": "AGENTS.md Known Issues",
+      "classification": "pre-existing",
+      "owner": "repo-wide",
+      "migration_caused": false
+    },
+    {
+      "surface": "dirty worktree",
+      "type": "worktree-state",
+      "description": "254 porcelain entries (modified + untracked) at Phase 1 capture; packages/types has 3 dirty entries affecting any scoped check-types baseline",
+      "source": "git status --porcelain at role_base_sha",
+      "classification": "pre-existing",
+      "owner": "concurrent agents / unrelated tracks",
+      "migration_caused": false,
+      "impact_on_baseline": "Scoped TS 5.9 check-types on packages/types reflects dirty worktree state, not committed state. Recorded as contaminated in compiler-baseline.json."
+    }
+  ],
+  "reconciliation_rule": "Phase 4 runs TURBO_CONCURRENCY=1 pnpm turbo run lint|test|check-types|build and reconciles each failure against this classification. A failure present here is 'pre-existing' (allowed). A failure NOT present here but present in Phase 4 is 'migration-caused' (stop-loss)."
+}

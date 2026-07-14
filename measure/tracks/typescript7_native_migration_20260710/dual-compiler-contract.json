@@ -1,0 +1,56 @@
+{
+  "schema_version": "dual-compiler-contract.v1",
+  "status": "proposed",
+  "captured_at": "2026-07-14T00:00:00Z",
+  "note": "Candidate contract data only. No aliases are installed, no resolution is changed, and no commands are wired in Phase 1. Phase 3a installs the aliases; Phase 3d wires the commands.",
+  "catalog_aliases": {
+    "typescript": "npm:@typescript/typescript6@6.0.2",
+    "typescript7": "npm:typescript@7.0.2",
+    "typescript6_alias_note": "The 'typescript' package name is aliased to @typescript/typescript6@6.0.2 so compiler-API consumers (typescript-eslint, ts-node, tsup, tsconfck) resolve the compatibility API. This alias is applied in pnpm-workspace.yaml overrides or catalog, NOT per-package, to avoid ambiguous resolution.",
+    "typescript7_alias_note": "TypeScript 7.0.2 is installed under a separate 'typescript7' alias that exposes the native tsc binary via a bin script or direct path. Workspace check-types scripts invoke the TS 7 binary explicitly.",
+    "exact_versions": {
+      "typescript7": "7.0.2",
+      "typescript6": "6.0.2",
+      "typescript5_9_current": "5.9.3"
+    },
+    "resolution_rule": "No floating major ranges. Both aliases are exact-pinned. pnpm-workspace.yaml overrides.typescript currently pins 5.9.3; Phase 3a replaces this with the typescript6 alias and adds the typescript7 alias."
+  },
+  "commands": {
+    "check-types:native": "pnpm exec typescript7-tsc --noEmit",
+    "check-types:compat": "pnpm exec tsc --noEmit",
+    "check-types:parity": "pnpm run check-types:compat && pnpm run check-types:native && <parity-harness-compare>",
+    "check-types:rollback": "pnpm exec tsc --noEmit",
+    "command_notes": {
+      "check-types:native": "Invokes the TypeScript 7 binary via the typescript7 alias. Used by required check-types gates after Phase 3d cutover.",
+      "check-types:compat": "Invokes the TypeScript 6 binary via the 'typescript' package (aliased to @typescript/typescript6). Used as the compatibility/fallback path.",
+      "check-types:parity": "Runs both compilers and compares normalized diagnostics modulo diagnostic-parity-ledger.json. Phase 2 implements the harness; Phase 3c reconciles.",
+      "check-types:rollback": "One-command fallback to TypeScript 6. Switches required checks back to TS 6 without reverting unrelated configuration correctness fixes."
+    },
+    "turbo_cache_inputs": {
+      "note": "turbo.json check-types task currently has no explicit inputs beyond dependsOn. Phase 3i requires adding inputs for compiler version hash, tsconfig path hash, and --checkers value so a TS 7 -> TS 6 -> TS 7 cycle busts the cache.",
+      "proposed_inputs": ["$TURBO_DEFAULT$", "tsconfig*.json", "pnpm-workspace.yaml", "turbo.json"]
+    }
+  },
+  "ownership_matrix": [
+    {"consumer": "Root + workspace check-types (post-cutover target)", "compiler": "TypeScript 7", "alias": "typescript7", "binding": "binding", "programmatic_api": false},
+    {"consumer": "tsc emit builds (JS + .d.ts)", "compiler": "TypeScript 7", "alias": "typescript7", "binding": "binding", "programmatic_api": false},
+    {"consumer": "typescript-eslint", "compiler": "TypeScript 6", "alias": "typescript (npm:@typescript/typescript6@6.0.2)", "binding": "hypothesis", "programmatic_api": true},
+    {"consumer": "ts-node", "compiler": "TypeScript 6", "alias": "typescript (npm:@typescript/typescript6@6.0.2)", "binding": "hypothesis", "programmatic_api": true},
+    {"consumer": "tsup", "compiler": "TypeScript 6", "alias": "typescript (npm:@typescript/typescript6@6.0.2)", "binding": "hypothesis", "programmatic_api": true},
+    {"consumer": "tsconfck", "compiler": "TypeScript 6", "alias": "typescript (npm:@typescript/typescript6@6.0.2)", "binding": "hypothesis", "programmatic_api": false},
+    {"consumer": "commitlint (transitive peer)", "compiler": "TypeScript 6", "alias": "typescript (npm:@typescript/typescript6@6.0.2)", "binding": "hypothesis", "programmatic_api": false},
+    {"consumer": "vitest / @vitest/* runner", "compiler": "TypeScript 6 or TS 7", "alias": "same or TS 7 alias", "binding": "hypothesis", "programmatic_api": false},
+    {"consumer": "jest / ts-jest runner", "compiler": "TypeScript 6 or TS 7", "alias": "same or TS 7 alias", "binding": "hypothesis", "programmatic_api": false},
+    {"consumer": "@playwright/test runner", "compiler": "TypeScript 6 or TS 7", "alias": "same or TS 7 alias", "binding": "hypothesis", "programmatic_api": false},
+    {"consumer": "Next.js next build / next typegen", "compiler": "Mixed", "alias": "documented per app", "binding": "hypothesis", "programmatic_api": false},
+    {"consumer": "Vinext/Vite vite build", "compiler": "Mixed", "alias": "documented per app", "binding": "hypothesis", "programmatic_api": false},
+    {"consumer": "Drizzle Kit / drizzle-kit CLI", "compiler": "TypeScript 6", "alias": "typescript (npm:@typescript/typescript6@6.0.2)", "binding": "hypothesis", "programmatic_api": false},
+    {"consumer": "ESLint flat config loaders", "compiler": "TypeScript 6", "alias": "typescript (npm:@typescript/typescript6@6.0.2)", "binding": "hypothesis", "programmatic_api": false}
+  ],
+  "tools_must_remain_on_ts6": [
+    "typescript-eslint (programmatic API consumer)",
+    "ts-node (programmatic API consumer)",
+    "tsup (programmatic API consumer for declaration emit)",
+    "Any consumer proven by Phase 2 smoke harness to embed the TypeScript programmatic API"
+  ]
+}

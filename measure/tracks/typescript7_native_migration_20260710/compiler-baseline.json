@@ -1,0 +1,61 @@
+{
+  "schema_version": "compiler-baseline.v1",
+  "status": "captured",
+  "captured_at": "2026-07-14T00:00:00Z",
+  "role_base_sha": "88d71cf3fb42a345631b98d85cca760afadae34c",
+  "phase_base_sha": "879112353411912b80849037016cbd9ed2c1bf63",
+  "head_sha_at_capture": "88d71cf3fb42a345631b98d85cca760afadae34c",
+  "typescript_resolved": "5.9.3",
+  "typescript_resolution_source": "pnpm-workspace.yaml overrides.typescript = 5.9.3 (hoisted linker; no catalog alias for typescript)",
+  "node_version": "v22.22.3",
+  "pnpm_version": "11.8.0",
+  "cpu_count": 4,
+  "total_memory_kib": 7671308,
+  "free_memory_kib": 354324,
+  "memory_available_kib": 778696,
+  "swap_total_kib": 8030208,
+  "swap_used_kib": 5719040,
+  "turbo_concurrency": 1,
+  "turbo_concurrency_source": "TURBO_CONCURRENCY=1 env var per test-strategy.md section 1; turbo.json does not pin global concurrency",
+  "graph_db_path": "graph.db",
+  "graph_db_mtime_unix": 1783942008,
+  "graph_db_age_seconds": 67175,
+  "graph_db_fresh": true,
+  "graph_db_freshness_rule": "stat -c %Y graph.db compared to date +%s; age < 86400 (24h) means fresh; no rescan performed",
+  "graph_stats": {
+    "total_nodes": 25428,
+    "total_edges": 49535,
+    "total_files": 3023
+  },
+  "worktree_state": {
+    "branch": "master",
+    "ahead_of_origin": 7,
+    "porcelain_entry_count": 254,
+    "dirty": true,
+    "note": "Worktree contains 254 unrelated modified/untracked entries preserved per test-strategy.md section 6; not stashed or reverted."
+  },
+  "ts59_scoped_baseline": {
+    "command": "TURBO_CONCURRENCY=1 /usr/bin/time -v pnpm --filter @reading-advantage/types exec tsc --noEmit -p tsconfig.json",
+    "workspace": "packages/types",
+    "compiler_version": "5.9.3",
+    "exit_status": 0,
+    "wall_clock_seconds": 15.84,
+    "user_time_seconds": 24.0,
+    "system_time_seconds": 1.47,
+    "peak_rss_kib": 397052,
+    "diagnostic_count": 0,
+    "swaps": 0,
+    "contaminated": true,
+    "contamination_reason": "packages/types has 3 dirty entries (src/codecamp.ts modified, src/index.ts modified, src/assignment-status.ts untracked) plus 254 total worktree dirty entries; this is a current-worktree snapshot, not a clean committed-state baseline",
+    "scope": "single workspace (packages/types); full Turbo check-types graph NOT run in Phase 1 (artifact-only phase)"
+  },
+  "pre_existing_failure_classification": {
+    "known_debt": [
+      "primary-advantage: 49 pre-existing ESLint errors (measure/tech-debt.md)",
+      "mixed Jest/Vitest test runners across apps (measure/tech-debt.md)",
+      "294 legacy API routes not yet using domain functions (AGENTS.md Known Issues)"
+    ],
+    "phase1_classification": "Phase 1 is artifact-only; no aggregate gate is run. Pre-existing failures are recorded for Phase 4 reconciliation against this baseline.",
+    "full_evidence_file": "phase1-pre-existing-failures.json"
+  }
+}

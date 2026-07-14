@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://reading-advantage/measure/tracks/typescript7_native_migration_20260710/rollout-record-schema.json",
+  "title": "CI Rollout Record",
+  "description": "CI observation record for the TypeScript 7 rollout lane. One record per representative CI run. Three consecutive clean runs are required before the TS 7 lane becomes required-blocking (test-strategy.md section 5 Phase 3h).",
+  "type": "object",
+  "properties": {
+    "run_id": {
+      "type": "string",
+      "description": "Real CI run identifier (e.g. GitHub Actions run number). Not fabricated."
+    },
+    "lane": {
+      "type": "string",
+      "enum": ["ts7-parity-non-blocking", "ts7-required-blocking", "ts6-fallback"],
+      "description": "CI lane name."
+    },
+    "ts7_gate_exit": {
+      "type": "integer",
+      "description": "Exit status of the TypeScript 7 gate in this run."
+    },
+    "ts6_parity_exit": {
+      "type": "integer",
+      "description": "Exit status of the TypeScript 6 parity gate in this run."
+    },
+    "cache_state": {
+      "type": ["string", "object"],
+      "description": "Turbo cache state for this run. HIT, MISS, BYPASSED, or the full parsed JSON object."
+    },
+    "order_dependent_diff_count": {
+      "type": "integer",
+      "description": "Count of order-dependent diagnostic differences observed in this run. Non-zero indicates nondeterminism that must be investigated.",
+      "minimum": 0
+    },
+    "peak_rss_kib": {
+      "type": "integer",
+      "description": "Peak resident set size in KiB for the CI run.",
+      "minimum": 0
+    }
+  },
+  "required": [
+    "run_id",
+    "lane",
+    "ts7_gate_exit",
+    "ts6_parity_exit",
+    "cache_state",
+    "order_dependent_diff_count",
+    "peak_rss_kib"
+  ],
+  "additionalProperties": true
+}
