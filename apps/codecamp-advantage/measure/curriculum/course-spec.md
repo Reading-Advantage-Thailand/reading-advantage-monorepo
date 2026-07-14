@@ -10,7 +10,7 @@ Interns (~1 year of a 2-year associate degree program) joining Reading Advantage
 
 ## Duration
 
-- **85 class periods** (one per workday) over ~4 months
+- **88 class periods** (one per workday) over ~4 months
 - 1+ hour per day
 - Each class period is sized for a single sitting
 
@@ -85,15 +85,16 @@ All versions are pinned to match the Reading Advantage monorepo.
 | 12 | tRPC & Server Actions | 5 | Type-safe API, thin routers / thick domain, Server Actions |
 | 13 | Authentication | 4 | Cookie sessions, RBAC, assertCan(), multi-tenancy |
 
-### Phase D: Production — Production-Ready Tracker (19 periods)
+### Phase D: Production — Production-Ready Tracker (22 periods)
 
 | Unit | Module | Periods | Key Topics |
 |------|--------|---------|-----------|
 | 14 | Internationalization | 3 | next-intl setup, message extraction, locale routing |
 | 15 | AI Integration | 5 | Vercel AI SDK, streamText, generateObject, chat UI |
-| 16 | Monorepo & Package Management | 3 | pnpm workspaces, Turborepo, shared packages |
-| 17 | Cloud & Dockerization | 4 | Docker basics, containerize, Google Cloud, deployment |
-| 18 | Real-World Practice | 4 | GitHub Issues, code review, feature delivery lifecycle |
+| 16 | Measure-Driven AI Development | 3 | Measure tracks, specs, plans, Red/Green, review evidence |
+| 17 | Monorepo & Package Management | 3 | pnpm workspaces, Turborepo, shared packages |
+| 18 | Cloud & Dockerization | 4 | Docker basics, containerize, Google Cloud, deployment |
+| 19 | Real-World Practice | 4 | GitHub Issues, Measure tracks, code review, feature delivery lifecycle |
 
 ## Prerequisites
 
@@ -106,7 +107,8 @@ All versions are pinned to match the Reading Advantage monorepo.
 - **Fork-based exercises**: Intern forks repo → completes on branch → opens PR → receives LLM code review
 - **Architecture mirroring**: Phase C+D exercises use simplified but structurally faithful Reading Advantage patterns
 - **AI chat tutor**: Conversational LLM interface, defaults to Thai, grounded in monorepo code
-- **GitHub Issues practice**: Full issue → branch → PR → review → merge cycle (Unit 18)
+- **Measure-driven AI development**: Interns learn to control AI coding agents with track specs, plans, Red/Green evidence, review, and closeout
+- **GitHub Issues practice**: Full issue → Measure track → branch → PR → review → merge cycle (Unit 19)
 - **Quizzes**: Multiple choice, immediate scoring with explanations, per module
 - **Progress tracking**: Per-user across all modules, exercises, and quizzes
 

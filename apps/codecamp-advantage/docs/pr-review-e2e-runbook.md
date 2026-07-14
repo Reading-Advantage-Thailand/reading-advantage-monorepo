@@ -10,7 +10,7 @@ This runbook walks through verifying the full intern PR-review pipeline against 
 ```
 fork upstream → push branch → open PR → GitHub App webhook →
 codecamp_pr_reviews row → reviewExercise() → OpenRouter LLM →
-postPrComment() back to the PR
+immutable advisory attempt → (approved active/canary only) postPrComment() back to the PR
 ```
 
 ---
@@ -32,9 +32,30 @@ postPrComment() back to the PR
 | 3 | `git` configured with a credential helper that can push to your fork | `git push --dry-run` against any of your own repos succeeds |
 | 4 | GitHub App `ra-codecamp-reviewer` installed on the upstream exercise repo with `contents:read`, `issues:read`, `metadata:read`, `pull_requests:write` | `gh api /orgs/Reading-Advantage-Thailand/installations --jq '.installations[] \| select(.app_slug=="ra-codecamp-reviewer")'` shows `updated_at` recent enough to include the repo |
 | 5 | `OPENROUTER_API_KEY` env var set on the Cloud Run service | Cloud Run service env vars |
-| 6 | Webhook URL `https://codecamp.reading-advantage.com/webhooks/github/pr` reachable | `curl -I https://codecamp.reading-advantage.com/webhooks/github/pr` returns 401 (missing signature — proves endpoint is up) |
+| 6 | Review feedback rollout is explicitly approved (`CODECAMP_PR_REVIEW_ROLLOUT_MODE=active` plus non-empty `CODECAMP_PR_REVIEW_RELEASE_APPROVED_BY`) | Cloud Run service env vars; do not enable before the frozen evaluation report is approved |
+| 7 | Webhook URL `https://codecamp.reading-advantage.com/webhooks/github/pr` reachable | `curl -I https://codecamp.reading-advantage.com/webhooks/github/pr` returns 401 (missing signature — proves endpoint is up) |
 
 If precondition 2 fails, register a codecamp user with your GitHub username in the dashboard before running.
+
+### Release-mode safety
+
+The worker is fail-closed: without configuration it runs in `shadow` mode.
+Shadow results may be retained as immutable advisory attempts but cannot update
+learner-visible review status or post GitHub comments. `disabled` and `fallback`
+skip model work entirely. `active` and `canary` require a non-empty
+`CODECAMP_PR_REVIEW_RELEASE_APPROVED_BY`; an unapproved request is downgraded
+to shadow. Canary selection is deterministic per durable job ID and uses
+`CODECAMP_PR_REVIEW_CANARY_PERCENT` (1–100, default 10).
+
+Promote only after a human-approved frozen evaluation report:
+
+1. Keep the candidate in `shadow` while validating immutable attempts and
+   provenance.
+2. Set `canary`, an approver identity, and a bounded percentage; verify the
+   expected cohort receives exactly one advisory comment per revision.
+3. Run this E2E procedure and review the audit trail.
+4. Set `active` only after that evidence is approved. Model feedback remains
+   advisory and never creates Mastery evidence.
 
 ---
 

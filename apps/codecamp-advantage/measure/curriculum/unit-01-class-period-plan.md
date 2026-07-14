@@ -8,7 +8,7 @@
 
 ### Opening (5 min)
 
-- Introduce the course structure: 85 periods, 18 units, 4 phases, 4 portfolio projects
+- Introduce the course structure: 88 periods, 19 units, 4 phases, 4 portfolio projects
 - Explain why dev environment matters: every Reading Advantage developer uses the same toolchain
 - Today's goal: terminal proficiency + Node.js + pnpm installed
 

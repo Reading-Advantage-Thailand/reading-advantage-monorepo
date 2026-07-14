@@ -1,265 +1,217 @@
-# Unit 16 Class Period Plans: Monorepo & Package Management
+# Unit 16 Class Period Plans: Measure-Driven AI Development
 
 ---
 
-## Period 1: pnpm Workspaces
+## Period 1: Measure Mental Model and Project Context
 
 **Duration:** ~60 minutes
 
 ### Opening (5 min)
 
-- The Reading Advantage codebase is a monorepo — many packages in one repo
-- pnpm 8.15.8 manages it with workspaces
-- Today: understand how workspaces work
+- AI coding assistants are powerful, but they drift when context is vague
+- Measure gives the assistant a controlled workflow: context → spec → plan → implementation → review
+- Today: learn the artifacts before asking AI to write code
 
-### Activity: Workspace Configuration (15 min)
+### Activity: Why Measure Exists (10 min)
 
-```yaml
-# pnpm-workspace.yaml
-packages:
-  - "apps/*"
-  - "packages/*"
+Discuss common AI coding failure modes:
+
+- It implements more than you asked for
+- It ignores project conventions
+- It changes the wrong layer
+- It writes tests after the fact that do not prove behavior
+- It forgets decisions from previous sessions
+
+Measure prevents these by making context and workflow explicit.
+
+### Activity: Inspect Core Measure Artifacts (20 min)
+
+Open the local Measure files and identify each artifact's purpose:
+
+```text
+measure/
+├── product.md              # Why the product exists
+├── tech-stack.md           # Deliberate technology choices
+├── workflow.md             # How work is executed and verified
+├── tracks.md               # Registry of active and archived work
+├── lessons-learned.md      # Project memory
+├── tech-debt.md            # Known shortcuts and deferred work
+└── tracks/<track_id>/
+    ├── spec.md             # What this track must accomplish
+    ├── plan.md             # How implementation proceeds
+    └── metadata.json       # Track identity and status
 ```
 
-This tells pnpm that every folder in `apps/` and `packages/` is a separate package with its own `package.json`.
+Prompt questions:
 
-The Reading Advantage monorepo structure:
-```
-reading-advantage-monorepo/
-├── apps/
-│   ├── reading-advantage/     # Main reading app
-│   ├── science-advantage/     # Science curriculum app
-│   ├── primary-advantage/     # Primary school app
-│   ├── codecamp-advantage/    # This bootcamp app
-│   └── www-reading-advantage/ # Marketing website
-├── packages/
-│   ├── db/          → @reading-advantage/db
-│   ├── auth/        → @reading-advantage/auth
-│   ├── auth-client/ → @reading-advantage/auth-client
-│   ├── types/       → @reading-advantage/types
-│   ├── domain/      → @reading-advantage/domain
-│   ├── api/         → @reading-advantage/api
-│   ├── webhooks/    → @reading-advantage/webhooks
-│   ├── ui/          → @reading-advantage/ui
-│   ├── config/      → @reading-advantage/config
-│   └── utils/       → @reading-advantage/utils
-└── package.json     # Root workspace config
+1. Which file explains why the product exists?
+2. Which file should change before introducing a new major dependency?
+3. Which file is the source of truth while implementing a feature?
+4. Where should a known shortcut be recorded?
+
+### Activity: Read a Tiny Track (20 min)
+
+Instructor provides a small example track:
+
+```text
+track_id: tracker_empty_state_YYYYMMDD
+goal: Show a helpful dashboard empty state when a student has no progress
 ```
 
-### Activity: workspace:* Dependencies (20 min)
+Students identify:
 
-When one package depends on another in the same monorepo, it uses `workspace:*`:
+- requirements
+- non-goals
+- acceptance criteria
+- likely test cases
+- files likely to change
 
-```json
-// packages/api/package.json
-{
-  "dependencies": {
-    "@reading-advantage/db": "workspace:*",
-    "@reading-advantage/auth": "workspace:*",
-    "@reading-advantage/domain": "workspace:*",
-    "@reading-advantage/types": "workspace:*"
-  }
-}
-```
+### Closing (5 min)
 
-`workspace:*` creates a **symlink** — changes to `packages/db` are instantly available to `packages/api` without publishing or reinstalling.
-
-```bash
-# Install all workspace dependencies
-pnpm install
-
-# Install a new dependency for a specific package
-pnpm add zod --filter=@reading-advantage/domain
-
-# Run a script in a specific package
-pnpm --filter @reading-advantage/db run build
-```
-
-### Activity: The Dependency Order (15 min)
-
-This is critical — packages must follow this order:
-
-```
-db → auth → types → domain → api / webhooks
-                ↓
-               ui (independent — no backend deps)
-```
-
-**What this means:**
-- `db` can import: nothing (only external packages like drizzle-orm)
-- `auth` can import: `db`
-- `types` can import: nothing (only Zod)
-- `domain` can import: `db`, `auth`, `types`
-- `api` can import: `db`, `auth`, `domain`, `types`
-- `ui` can import: nothing from backend packages (it's React components only)
-
-**What is NOT allowed:**
-- `db` importing from `domain` → ❌ circular dependency!
-- `domain` importing from `api` → ❌ wrong direction!
-- `ui` importing from `db` → ❌ UI must not know about the database!
-
-### Activity: Commit (5 min)
-
-```bash
-# No code changes — this is a documentation/exploration unit
-git add -A && git commit -m "docs: add monorepo dependency graph documentation"
-git push
-```
-
-### Closing
-
-- pnpm workspaces, `workspace:*`, dependency order ✓
-- Preview: Period 2 covers Turborepo
+- Measure is not paperwork; it is control over AI-assisted work
+- Preview: Period 2 turns a feature request into a spec and plan
 
 ---
 
-## Period 2: Turborepo Pipeline
+## Period 2: Track, Spec, and Plan Workshop
 
 **Duration:** ~60 minutes
 
 ### Opening (5 min)
 
-- In a monorepo with 15+ packages, building them in the right order is complex
-- Turborepo 2.9.8 automates this with a pipeline configuration
-- Today: understand and configure the build pipeline
+- Last period: Measure artifacts and mental model
+- Today: write a small track before coding
 
-### Activity: turbo.json Configuration (20 min)
+### Activity: Choose a Mini-Feature (5 min)
 
-```json
-// turbo.json
-{
-  "$schema": "https://turbo.build/schema.json",
-  "tasks": {
-    "build": {
-      "dependsOn": ["^build"],  // Build dependencies first
-      "outputs": ["dist/**", ".next/**"]
-    },
-    "test": {
-      "dependsOn": ["^build"],  // Need built deps to test
-      "outputs": []
-    },
-    "lint": {
-      "dependsOn": ["^build"],
-      "outputs": []
-    },
-    "check-types": {
-      "dependsOn": ["^build"],
-      "outputs": []
-    },
-    "dev": {
-      "cache": false,           // Never cache dev server
-      "persistent": true        // Keeps running
-    }
-  }
-}
+Pick one feature for the Student Progress Tracker:
+
+1. Dashboard empty state for students with no progress
+2. "Last active" label on student profile
+3. Quiz retake validation message
+4. Module completion status helper
+
+### Activity: Draft `spec.md` (20 min)
+
+Write a short spec with this structure:
+
+```markdown
+# Specification: <Feature Name>
+
+## Summary
+One paragraph describing the change.
+
+## Goals
+- Goal 1
+- Goal 2
+
+## Non-Goals
+- What this track will not do
+
+## Functional Requirements
+### FR-1: <Requirement>
+Specific required behavior.
+
+## Acceptance Criteria
+- [ ] Observable outcome 1
+- [ ] Test or verification outcome 2
 ```
 
-Key concepts:
-- `^build` = "build" task of all workspace dependencies (upstream)
-- `build` = "build" task of the current package
-- Turborepo runs tasks in parallel when possible
+Instructor checks that every acceptance criterion is testable or manually verifiable.
 
-### Activity: Pipeline in Action (15 min)
+### Activity: Draft `plan.md` (25 min)
+
+Create a phased plan:
+
+```markdown
+# Implementation Plan: <Feature Name>
+
+## Phase 1: Red
+- [ ] Write a failing test for the expected behavior.
+- [ ] Run the targeted test and confirm it fails for the right reason.
+
+## Phase 2: Green
+- [ ] Implement the minimum code needed to pass the test.
+- [ ] Run the targeted test and confirm it passes.
+
+## Phase 3: Review and Acceptance
+- [ ] Run lint/type/test checks required for the changed files.
+- [ ] Write PR summary with what changed, why, and how it was tested.
+- [ ] Record any lesson learned or tech debt if applicable.
+```
+
+Students must name the exact command they expect to run for Red and Green, for example:
 
 ```bash
-# Build everything (correct order automatically)
-pnpm turbo run build
-
-# What Turborepo does internally:
-# 1. Build @reading-advantage/db        (no deps)
-# 2. Build @reading-advantage/auth      (depends on db)
-# 3. Build @reading-advantage/types     (no deps)
-# 4. Build @reading-advantage/domain    (depends on db, auth, types)
-# 5. Build @reading-advantage/api       (depends on db, auth, domain, types)
-# 6. Build apps/codecamp-advantage      (depends on api, auth, db, ui, etc.)
-
-# Build a single package and its dependencies
-pnpm turbo run build --filter=codecamp-advantage
-
-# Run tests for a specific package only
-pnpm turbo run test --filter=@reading-advantage/domain
-
-# Run lint for all packages
-pnpm turbo run lint
+pnpm vitest run src/__tests__/module-completion.test.ts
 ```
 
-### Activity: Caching (15 min)
+### Closing (5 min)
 
-Turborepo caches task outputs. If nothing changed, it skips the task:
-
-```bash
-# First run: builds everything
-pnpm turbo run build
-# → FULL BUILD
-
-# Second run: nothing changed
-pnpm turbo run build
-# → FULL TURBO (all cached)
-
-# Change one file in packages/domain
-pnpm turbo run build
-# → Rebuilds domain + api + codecamp-advantage
-# → db, auth, types, ui still cached
-```
-
-This is why Turborepo is fast — it only rebuilds what changed and everything downstream.
-
-### Activity: Commit (5 min)
-
-```bash
-git add -A && git commit -m "docs: add Turborepo pipeline documentation"
-git push
-```
-
-### Closing
-
-- Turborepo pipeline, task dependencies, caching ✓
-- Preview: Period 3 wraps up with exercise and quiz
+- A good plan lets an AI assistant work safely
+- Preview: Period 3 uses the plan to implement with AI assistance
 
 ---
 
-## Period 3: Exercise, Quiz
+## Period 3: AI-Assisted Implementation, Review, and Closeout
 
 **Duration:** ~60 minutes
 
 ### Opening (5 min)
 
-- Monorepo understanding is crucial for working in the Reading Advantage codebase
-- Today: map the real monorepo and take the quiz
+- Today: use AI as an implementer, not as the planner
+- The intern remains responsible for verifying behavior and scope
 
-### Activity: Exercise — Map the Reading Advantage Monorepo (40 min)
+### Activity: Give the AI the Right Context (10 min)
 
-No exercise repo for this unit — the intern works directly in the real monorepo.
+Before asking for code, provide:
 
-Requirements:
-1. Read every `package.json` in `packages/` and `apps/`
-2. Create a file `docs/dependency-graph.md` that shows:
-   - Each package's name and purpose
-   - Each package's workspace dependencies (from `workspace:*`)
-   - The complete dependency graph as a text diagram
-3. For each package, identify:
-   - Which other packages import it
-   - What it's allowed to import vs. what it actually imports
-   - Any dependency order violations
-4. Answer these questions in the file:
-   - If you change `packages/db/src/schema/users.ts`, which packages need to be rebuilt?
-   - If you add a new Zod schema to `packages/types`, which packages need to be rebuilt?
-   - Why can't `packages/ui` import from `packages/db`?
-   - What would happen if `packages/db` imported from `packages/domain`?
-5. Run `pnpm turbo run build` and confirm it succeeds
-6. Run `pnpm turbo run build --filter=@reading-advantage/domain` and explain what gets built
+- the track goal
+- `spec.md`
+- `plan.md`
+- relevant file paths
+- the exact task to perform
+- the command that proves success
 
-### Quiz (10 min)
+Example prompt shape:
 
-5 questions covering:
+```text
+Read this spec and plan. Implement only Phase 1 Red for the dashboard empty state.
+Write the failing test first. Do not implement the UI yet. The test command is ...
+```
 
-1. What does `workspace:*` mean in a package.json? (a symlink to a local workspace package — changes are instantly available)
-2. What is the dependency order of the Reading Advantage packages? (`db → auth → types → domain → api/webhooks`)
-3. What does `^build` mean in turbo.json? (the "build" task of all upstream workspace dependencies)
-4. How does Turborepo know which tasks to cache? (based on input file hashes — if inputs haven't changed, skip the task)
-5. Why can't `packages/ui` import from `packages/db`? (UI is frontend-only; it must not depend on backend packages like the database)
+### Activity: Red and Green Implementation (25 min)
 
-### Closing
+Students execute the workflow:
 
-- Monorepo & Package Management unit complete
-- Next unit: Cloud & Dockerization
+1. Mark the current task in `plan.md`
+2. Ask AI to write the failing test only
+3. Run the targeted test and confirm Red
+4. Ask AI to implement the minimum Green change
+5. Run the targeted test again
+6. Run any broader checks required by the change
+
+### Activity: Review Evidence and PR Description (15 min)
+
+Write a PR description using this structure:
+
+```markdown
+## Summary
+What changed and why.
+
+## Measure Track
+Track: <track_id>
+
+## Acceptance Evidence
+- [x] Red test failed before implementation: <command>
+- [x] Green test passed after implementation: <command>
+- [x] Manual verification: <specific result>
+
+## Notes
+Lessons learned or tech debt, if any.
+```
+
+### Closing (5 min)
+
+- The mini-feature is complete only when evidence matches the plan
+- Next unit: Monorepo & Package Management

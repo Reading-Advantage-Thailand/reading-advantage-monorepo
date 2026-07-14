@@ -544,4 +544,4 @@ The intern creates a branch, implements, and opens a PR for LLM review.
 ### Closing
 
 - AI Integration unit complete — Student Progress Tracker has an AI tutor
-- Next unit: Monorepo & Package Management
+- Next unit: Measure-Driven AI Development

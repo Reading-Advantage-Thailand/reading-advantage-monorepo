@@ -1,50 +1,42 @@
-# Unit 17 Overview: Cloud & Dockerization
+# Unit 17 Overview: Monorepo & Package Management
 
 **Phase:** D (Production)
-**Periods:** 4
-**Portfolio Project:** Student Progress Tracker (containerized)
+**Periods:** 3
+**Portfolio Project:** Student Progress Tracker (monorepo understanding)
 
 ## Learning Objectives
 
 By the end of this unit, the intern can:
 
-1. Write a Dockerfile for a Next.js application
-2. Write a docker-compose.yml for multi-service apps (Next.js + PostgreSQL)
-3. Build and run Docker containers locally
-4. Understand Docker concepts (images, containers, volumes, networks)
-5. Understand the basics of deploying to Google Cloud
+1. Explain pnpm workspace configuration and dependency resolution
+2. Understand the Turborepo 2.9.8 pipeline and task dependencies
+3. Navigate the Reading Advantage monorepo's package structure
+4. Understand how shared packages (`@reading-advantage/db`, `@reading-advantage/ui`, etc.) are wired
+5. Follow the dependency order: `db → auth → types → domain → api / webhooks`
 
 ## Technologies & Versions
 
 | Technology | Version | Purpose |
 |-----------|---------|---------|
-| Docker | Latest | Containerization |
-| Docker Compose | Latest | Multi-container orchestration |
-| PostgreSQL | 16 (Alpine) | Database (already familiar) |
+| pnpm | 8.15.8 | Workspace package manager |
+| Turborepo | 2.9.8 | Build orchestration |
 
 ## Portfolio Connection
 
-The intern containerizes their Student Progress Tracker so it can run anywhere:
-
-- Dockerfile for the Next.js app
-- docker-compose.yml for the full stack (app + database)
-- Environment variable management
-- Production-ready configuration
+This unit is different — the intern doesn't add features to the tracker. Instead, they study the Reading Advantage monorepo structure and understand how their tracker app fits into the larger architecture. The "exercise" is exploratory: they map the dependency graph and explain how changes propagate.
 
 ## Key Concepts
 
-- **Image**: A read-only template with instructions for creating a container
-- **Container**: A running instance of an image
-- **Volume**: Persistent storage that survives container restarts
-- **Network**: How containers communicate with each other
-- **Dockerfile**: Instructions for building an image
-- **docker-compose.yml**: Define multi-container applications
+- **Workspaces**: pnpm manages multiple packages in one repo, sharing dependencies
+- **Pipeline**: Turborepo runs tasks in topological order (dependencies built first)
+- **`workspace:*`**: Symlink to a local package — changes are instantly available
+- **Dependency order**: Strict — `db` never imports from `domain`, `domain` never imports from `api`
 
 ## Prerequisites
 
-- Units 01–16 complete (monorepo understanding)
+- Units 01–16 complete (Measure-Driven AI Development)
 
 ## Assessment
 
-- Exercise repo: Write a Dockerfile and docker-compose.yml for the Student Progress Tracker
-- Quiz at the end of Period 4 (5 questions)
+- Written exercise: Map the Reading Advantage monorepo's dependency graph
+- Quiz at the end of Period 3 (5 questions)

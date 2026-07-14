@@ -1,42 +1,66 @@
-# Unit 16 Overview: Monorepo & Package Management
+# Unit 16 Overview: Measure-Driven AI Development
 
 **Phase:** D (Production)
 **Periods:** 3
-**Portfolio Project:** Student Progress Tracker (monorepo understanding)
+**Portfolio Project:** Student Progress Tracker (AI-assisted feature delivery)
 
 ## Learning Objectives
 
 By the end of this unit, the intern can:
 
-1. Explain pnpm workspace configuration and dependency resolution
-2. Understand the Turborepo 2.9.8 pipeline and task dependencies
-3. Navigate the Reading Advantage monorepo's package structure
-4. Understand how shared packages (`@reading-advantage/db`, `@reading-advantage/ui`, etc.) are wired
-5. Follow the dependency order: `db → auth → types → domain → api / webhooks`
+1. Explain why AI coding agents need explicit project context, specifications, and plans
+2. Identify the purpose of core Measure artifacts: `product.md`, `tech-stack.md`, `workflow.md`, `tracks.md`, `spec.md`, and `plan.md`
+3. Turn a small feature request into a scoped Measure track with acceptance criteria
+4. Write a phased implementation plan that includes Red, Green, review, and acceptance evidence
+5. Use an AI assistant against a plan without letting the implementation drift from the spec
+6. Record practical project memory in `lessons-learned.md` and known shortcuts in `tech-debt.md`
 
 ## Technologies & Versions
 
 | Technology | Version | Purpose |
 |-----------|---------|---------|
-| pnpm | 8.15.8 | Workspace package manager |
-| Turborepo | 2.9.8 | Build orchestration |
+| Measure | Local repo workflow | Spec-driven AI development methodology |
+| Git | Latest stable | Track implementation evidence and PR history |
+| Vitest | 4.1.5 | Red/Green proof for the mini-feature |
+| AI coding assistant | Instructor-approved | Implement against explicit context and plan |
 
 ## Portfolio Connection
 
-This unit is different — the intern doesn't add features to the tracker. Instead, they study the Reading Advantage monorepo structure and understand how their tracker app fits into the larger architecture. The "exercise" is exploratory: they map the dependency graph and explain how changes propagate.
+The intern uses Measure to deliver a small improvement to their Student Progress Tracker. The goal is not to learn a new framework API; the goal is to control AI-assisted implementation with clear context, scoped requirements, tests, review evidence, and a concise closeout.
+
+Example mini-feature options:
+
+- Add a dashboard empty state for students with no progress yet
+- Add a formatted "last active" label to the student profile
+- Add validation messaging for a quiz retake form
+- Add a small helper that calculates module completion status
 
 ## Key Concepts
 
-- **Workspaces**: pnpm manages multiple packages in one repo, sharing dependencies
-- **Pipeline**: Turborepo runs tasks in topological order (dependencies built first)
-- **`workspace:*`**: Symlink to a local package — changes are instantly available
-- **Dependency order**: Strict — `db` never imports from `domain`, `domain` never imports from `api`
+- **Context before code**: AI agents should read project context before editing
+- **Track**: One logical unit of work with a spec and plan
+- **Spec**: Requirements, acceptance criteria, non-goals, and constraints
+- **Plan**: Source of truth for phased execution and task status
+- **Red/Green/Review/Acceptance**: Evidence-backed delivery lifecycle
+- **Project memory**: Lessons learned and tech debt prevent repeated mistakes
+
+## Architecture Mirroring
+
+This unit mirrors the workflow used in the Reading Advantage monorepo:
+
+- Work starts from a Measure track instead of an unstructured prompt
+- New behavior is described in `spec.md` before implementation
+- Tasks are executed from `plan.md` in sequence
+- Tests prove behavior before a task is marked complete
+- Review focuses on correctness, security, UX/API contract, and acceptance evidence
+- Known shortcuts are logged instead of hidden
 
 ## Prerequisites
 
 - Units 01–15 complete (AI Integration)
+- Intern can write basic Vitest tests and open a GitHub PR
 
 ## Assessment
 
-- Written exercise: Map the Reading Advantage monorepo's dependency graph
-- Quiz at the end of Period 3 (5 questions)
+- Exercise repo: Complete one small feature using a Measure-style track, spec, plan, Red/Green proof, PR description, and closeout summary
+- No quiz — the track artifacts and PR are the assessment

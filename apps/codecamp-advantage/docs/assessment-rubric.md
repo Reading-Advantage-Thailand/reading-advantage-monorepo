@@ -33,7 +33,7 @@ This document defines assessment standards for theory lessons, exercises, and th
 
 ## 2. Exercise Rubric (Per-Module Exercises)
 
-Exercises follow a fork → change → open PR → LLM review workflow. Instructors and the LLM reviewer evaluate submissions against the five dimensions below.
+Exercises follow a fork → change → open PR → LLM review workflow. After the Measure unit, feature exercises should also include a short spec, plan, and acceptance evidence when the exercise scope warrants it. Instructors and the LLM reviewer evaluate submissions against the dimensions below.
 
 ### Rating Levels
 
@@ -90,11 +90,21 @@ Does the pull request explain the work?
 | Needs Improvement | Description exists but is brief or missing key context; the reviewer must infer intent |
 | Not Meeting Standard | Description is empty, a copy-paste of the exercise prompt, or says only "done" |
 
+#### Measure Workflow Discipline
+
+For exercises after Unit 16, did the intern use Measure-style planning to control AI-assisted work?
+
+| Level | Criteria |
+|---|---|
+| Meets Standard | Spec or PR notes state the goal, non-goals, acceptance criteria, Red/Green evidence, and any lessons learned or tech debt |
+| Needs Improvement | Some planning evidence exists, but acceptance criteria, test commands, or scope boundaries are incomplete |
+| Not Meeting Standard | Work was implemented directly from a vague prompt with no plan, no clear acceptance evidence, or no record of shortcuts |
+
 ---
 
-## 3. Capstone PR Rubric (Module 18)
+## 3. Capstone PR Rubric (Module 19)
 
-Module 18 is the capstone: a real GitHub PR workflow using `codecamp-progress-tracker`. Interns are evaluated on professional workflow behaviors in addition to code correctness.
+Module 19 is the capstone: a real Measure-style GitHub PR workflow using `codecamp-progress-tracker`. Interns are evaluated on professional workflow behaviors in addition to code correctness.
 
 ### Rubric Dimensions
 
@@ -130,6 +140,14 @@ Module 18 is the capstone: a real GitHub PR workflow using `codecamp-progress-tr
 | Needs Improvement | Tests exist but do not cover the new code path; or tests are present but not meaningful |
 | Not Meeting Standard | No tests; no verification described; purely manual check with no documentation |
 
+#### Measure Track Quality
+
+| Level | Criteria |
+|---|---|
+| Meets Standard | Track/spec/plan artifacts or PR equivalents clearly describe requirements, phases, Red/Green commands, review evidence, and closeout notes |
+| Needs Improvement | Track evidence exists but is incomplete, too broad, or not updated after implementation changed |
+| Not Meeting Standard | No meaningful track/spec/plan evidence, or the plan claims completion without matching tests or review proof |
+
 #### Independence
 
 | Level | Criteria |
@@ -151,10 +169,12 @@ The following table maps each dimension to its three levels for quick reference 
 | TypeScript Usage | Proper types throughout; no implicit `any` | A few untyped values or imprecise types | Absent types, pervasive `any`, or TypeScript bypassed |
 | Commit Message | Present-tense, scoped, descriptive | Vague but conveys general intent | Empty, auto-generated, or unrelated to change |
 | PR Description | What, why, and exercise reference included | Brief or missing key context | Empty, copy-pasted prompt, or "done" |
+| Measure Workflow Discipline | Goal, non-goals, acceptance criteria, Red/Green evidence, and memory notes present | Partial planning evidence but missing scope or test proof | Vague prompt-driven work with no plan or acceptance evidence |
 | PR Description Quality (Capstone) | Problem, approach, and testing notes present | Problem stated; approach or test notes missing | Description absent or mismatched to PR content |
 | Commit Hygiene (Capstone) | Atomic commits, meaningful messages | Mostly reasonable; a few squash candidates | Series of `fix` commits or single dump |
 | Code Review Responsiveness | Feedback addressed within 24h with explanation | Responds but late or without engagement | No response or feedback ignored |
 | Test Coverage | New functionality has tests or documented verification | Tests present but don't cover new path | No tests and no verification documented |
+| Measure Track Quality (Capstone) | Track/spec/plan evidence is scoped, phased, tested, reviewed, and closed out | Track evidence exists but is incomplete or stale | No meaningful track evidence or false completion claims |
 | Independence | Majority of issues solved independently | Frequent prompting needed | Could not progress without step-by-step guidance |
 
 ---

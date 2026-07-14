@@ -1,6 +1,6 @@
 # Pacing Guide — CodeCamp Advantage Intern Bootcamp
 
-This document provides pacing recommendations for instructors delivering the 18-module, 85-lesson CodeCamp Advantage curriculum. Each class period is approximately 80 minutes.
+This document provides pacing recommendations for instructors delivering the 19-module, 88-lesson CodeCamp Advantage curriculum. Each class period is approximately 80 minutes.
 
 ---
 
@@ -28,8 +28,9 @@ The following modules consistently require extra time due to conceptual density,
 | **Module 7** | Next.js | App Router, Server Components, and the RSC vs. Client Component distinction are a paradigm shift even for interns with React experience |
 | **Module 11** | Node.js / Async | Promises, `async`/`await`, and the event loop are a common confusion point; synchronous-thinking habits from earlier modules resurface here |
 | **Module 13** | Drizzle ORM / Databases | Schema design, migrations, and the query builder require hands-on time; interns often need multiple attempts to internalize the data model layer |
-| **Module 16** | Docker | Container concepts, Dockerfile authoring, and networking require a new mental model with no prior analogy in the curriculum |
-| **Module 18** | Capstone (GitHub PR Workflow) | Real-world review cycles, async feedback, and the full workflow introduce delays that cannot be fully compressed |
+| **Module 16** | Measure-Driven AI Development | Interns must shift from using AI as a chat tool to controlling AI through specs, plans, Red/Green proof, and review evidence |
+| **Module 18** | Docker | Container concepts, Dockerfile authoring, and networking require a new mental model with no prior analogy in the curriculum |
+| **Module 19** | Capstone (Measure + GitHub PR Workflow) | Real-world review cycles, async feedback, and the full workflow introduce delays that cannot be fully compressed |
 
 ---
 
@@ -57,12 +58,13 @@ Interns must demonstrate the following before advancing to the next phase. These
 - Creates tRPC procedures and calls them from a frontend component
 - Writes unit tests for domain logic that cover at least the happy path and one error case
 
-### Before Module 18 (Capstone Prerequisite)
+### Before Module 19 (Capstone Prerequisite)
 
 - Can fork a repository, create a feature branch, make a meaningful change, and open a pull request with a written description
+- Can create a short Measure-style track with `spec.md`, `plan.md`, and acceptance evidence
 - The GitHub App (`codecamp-progress-tracker`) is operational and linked to the intern's account
 
-> **Gate rule:** Module 18 must not be started until all Phase D modules are complete and the GitHub App is confirmed operational for the intern.
+> **Gate rule:** Module 19 must not be started until all Phase D modules are complete and the GitHub App is confirmed operational for the intern.
 
 ---
 
@@ -126,7 +128,7 @@ The admin dashboard provides the primary tooling for tracking cohort and individ
 
 ## 7. Module Pacing Reference
 
-Approximate time allocation across all 18 modules. Modules marked with a buffer indicator should have 1–2 extra periods allocated.
+Approximate time allocation across all 19 modules. Modules marked with a buffer indicator should have 1–2 extra periods allocated.
 
 | Module | Phase | Topic | Standard Periods | Buffer |
 |---|---|---|---|---|
@@ -145,8 +147,9 @@ Approximate time allocation across all 18 modules. Modules marked with a buffer 
 | 13 | C | Drizzle ORM | 4 | +1–2 |
 | 14 | C | tRPC | 3 | — |
 | 15 | C | Testing | 3 | — |
-| 16 | D | Docker | 4 | +1–2 |
+| 16 | D | Measure-Driven AI Development | 3 | +1 |
 | 17 | D | Monorepo Architecture | 3 | — |
-| 18 | D | Capstone: GitHub PR Workflow | 5 | +1–2 |
+| 18 | D | Docker | 4 | +1–2 |
+| 19 | D | Capstone: Measure + GitHub PR Workflow | 5 | +1–2 |
 
-> **Total:** ~63 standard periods. With buffers applied to high-load modules, plan for approximately 75–80 class periods (roughly 100–107 hours of instruction time).
+> **Total:** ~66 standard periods. With buffers applied to high-load modules, plan for approximately 78–83 class periods (roughly 104–111 hours of instruction time).
