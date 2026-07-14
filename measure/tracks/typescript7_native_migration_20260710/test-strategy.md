@@ -53,22 +53,31 @@ escalating into swap thrashing or OOM kills.
 - process count (`pgrep -fc tsc` + `pgrep -fc node` at sample points)
 - diagnostic count (normalized stdout+stderr)
 - Turbo cache state (`turbo run ... --summarize --json` parsed via `json.loads`)
-- exit status
+- exit status and signal (`WIFSIGNALED`, `WTERMSIG`)
+- spawned-process-group aggregate (sum of `VmRSS` across the `pgid` of the
+  spawned `tsc` process; sampled every 250 ms via `/proc/<pid>/status`)
 
 **Fail-closed triggers** (run is marked `invalid`, never silently passed):
 
-- `dmesg | tail -n 50` shows an OOM-kill for any node/tsc worker since the run start.
 - swap delta exceeds the per-phase ceiling recorded in `phase1-baseline.json`.
-- peak RSS exceeds the per-phase ceiling recorded in `phase1-baseline.json`.
+- spawned-process-group aggregate `VmRSS` exceeds the per-phase ceiling
+  recorded in `phase1-baseline.json`.
 - a compiler run completes `exit 0` with a different diagnostic count than the
   parity ledger claims for the same tsconfig (false speedup).
+- `dmesg | tail -n 50` shows an OOM-kill for any node/tsc worker since the
+  run start **when `dmesg` is available**. If `dmesg` is not readable on the
+  host (container / sandbox without `CAP_SYSLOG`), the harness records
+  `dmesg: unavailable` in the run record and relies on exit-status, signal,
+  process-group RSS, and swap-delta evidence alone. The harness does not
+  fail solely because `dmesg` is unavailable.
 
-Live benchmarks **abort** before swap/OOM thresholds: the harness samples
-`/proc/$$/status VmRSS` every 250 ms and sends `SIGTERM` to the spawned
-process group if RSS exceeds 80 % of the recorded ceiling or swap delta
-exceeds 50 % of the cold baseline. **No live benchmark intentionally drives
-the host into OOM.** Synthetic fixtures are used to prove the parser/
-stop-loss paths (§5); OOM behavior itself is not exercised on the host.
+Live benchmarks **abort** before swap/OOM thresholds: the harness samples the
+spawned-process-group aggregate `VmRSS` every 250 ms and sends `SIGTERM` to
+the spawned process group if aggregate RSS exceeds 80 % of the recorded
+ceiling or swap delta exceeds 50 % of the cold baseline. **No live benchmark
+intentionally drives the host into OOM.** Synthetic fixtures are used to prove
+the parser / stop-loss paths (§5); OOM behavior itself is not exercised on
+the host.
 
 ## 2. Surfaces the Strategy Distinguishes
 
@@ -97,25 +106,36 @@ Baseline commands respect each workspace's existing `tsconfig` (including any
 
 ## 3. Compiler / Tool Ownership Matrix
 
-| Tool / consumer | Compiler it must resolve | Alias (catalog or per-package) | Out of band? |
-|---|---|---|---|
-| Root + workspace `check-types` (after cutover) | TypeScript 7 | TS 7 catalog alias | n/a |
-| `tsc` invocations in package `build` scripts that emit JS + `.d.ts` | TypeScript 7 (only after byte-equivalence or reviewed diff) | same | n/a |
-| `typescript-eslint` | TypeScript 6 (`typescript` package) | `typescript: npm:@typescript/typescript6@6.0.2` | YES |
-| `ts-node` | TypeScript 6 | same | YES |
-| `tsup` | TypeScript 6 (programmatic API) | same | YES |
-| `tsconfck` | TypeScript 6 (programmatic API) | same | YES |
-| `commitlint` (transitive peer) | TypeScript 6 | same | YES |
-| `vitest` / `@vitest/*` | TypeScript 6 for the runner's type pipeline | same | YES |
-| `jest` / `ts-jest` | TypeScript 6 for the runner | same | YES (no wholesale migration) |
-| `@playwright/test` | TypeScript 6 for the runner | same | YES (preserved verbatim) |
-| Next.js `next build` / `next typegen` | Mixed; proven per app via `pnpm why typescript` and `.next/types/` resolution | mixed; documented | conditional |
-| Vinext/Vite `vite build` | Same as Next.js | same | conditional |
-| Drizzle Kit / `drizzle-kit` CLI | TypeScript 6 (peer) | same | YES |
-| ESLint flat config loaders | TypeScript 6 | same | YES |
+The matrix below is an **inventory hypothesis to verify during Phase 1**, not
+a binding decision. Each row is promoted to "binding" only when the Phase 1
+inventory proves the consumer's compiler-resolution behavior. Only consumers
+**proven** to embed the TypeScript programmatic API stay on TypeScript 6;
+rows whose Phase 1 evidence does not confirm programmatic-API usage are
+re-classified as "TS 7 eligible" and re-tested.
 
-If a new consumer appears in the Phase 1 inventory, a row is added here; if
-the row says "TypeScript 6", it stays on TS 6 until upstream signals otherwise.
+| Tool / consumer | Hypothesized compiler | Alias (catalog or per-package) | Binding? |
+|---|---|---|---|
+| Root + workspace `check-types` (after cutover) | TypeScript 7 | TS 7 catalog alias | **binding** (target) |
+| `tsc` invocations in package `build` scripts that emit JS + `.d.ts` | TypeScript 7 (only after byte-equivalence or reviewed diff) | same | **binding** (target) |
+| `typescript-eslint` | TypeScript 6 (`typescript` package) — programmatic API consumer | `typescript: npm:@typescript/typescript6@6.0.2` | hypothesis; promoted if Phase 1 inventory confirms programmatic API |
+| `ts-node` | TypeScript 6 — programmatic API consumer | same | hypothesis; promoted if Phase 1 inventory confirms programmatic API |
+| `tsup` | TypeScript 6 — programmatic API consumer (per spec) | same | hypothesis; promoted if Phase 1 inventory confirms programmatic API |
+| `tsconfck` | TypeScript 6 — programmatic API consumer | same | hypothesis; promoted if Phase 1 inventory confirms programmatic API |
+| `commitlint` (transitive peer) | TypeScript 6 | same | hypothesis; promoted if Phase 1 inventory confirms programmatic API |
+| `vitest` / `@vitest/*` runner | TypeScript 6 (or TS 7 — depends on whether the runner embeds the compiler) | same or TS 7 alias | **hypothesis**; Phase 1 inventory + Phase 2 smoke harness reclassify |
+| `jest` / `ts-jest` runner | TypeScript 6 (or TS 7) | same or TS 7 alias | **hypothesis**; Phase 1 inventory + Phase 2 smoke harness reclassify |
+| `@playwright/test` runner | TypeScript 6 (or TS 7) | same or TS 7 alias | **hypothesis**; preserved verbatim regardless (no wholesale migration) |
+| Next.js `next build` / `next typegen` | Mixed; depends on whether Next.js invokes the workspace `tsc` or its bundled compiler | mixed; documented | **hypothesis**; proven per app via `pnpm why typescript` and `.next/types/` resolution |
+| Vinext/Vite `vite build` | Same as Next.js | same | **hypothesis**; proven per app |
+| Drizzle Kit / `drizzle-kit` CLI | TypeScript 6 (peer) | same | hypothesis; promoted if Phase 1 inventory confirms programmatic API |
+| ESLint flat config loaders | TypeScript 6 | same | hypothesis; promoted if Phase 1 inventory confirms programmatic API |
+
+A row marked **binding** is committed for the track. A row marked
+**hypothesis** is re-tested by the Phase 2 compiler-consumer smoke harness;
+its outcome (TS 6 confirmed, TS 7 confirmed, or "no programmatic API found")
+drives Phase 3 row promotion. Only consumers **proven** to embed the
+TypeScript programmatic API stay on TypeScript 6. Unproven rows default to
+TS 7 unless the smoke harness shows otherwise.
 
 ## 4. Acceptance Order
 
@@ -142,23 +162,36 @@ surfaces can mislead the parity harness.
 
 ### Phase 1 — Contract & Schema Definition (artifact-only)
 
-Five JSON schemas are authored and committed under
+**Phase 1 Red** writes schema-shape and baseline tests under
+`measure/tests/test_typescript7_native_migration_phase1.py`. Each test
+asserts the presence, JSON parseability, and required-key shape of one of
+the six committed JSON artifacts. The tests reference the artifacts by
+path, not by content.
+
+**Phase 1 Green** writes the six JSON artifacts under
 `measure/tracks/typescript7_native_migration_20260710/`:
 
 - `compiler-baseline.json` — resolved `typescript` versions, Node + pnpm versions,
   CPU count, total RAM, `free -m`, Turbo concurrency setting, role-base SHA,
   `phase_base_sha`, `graph.db` mtime.
 - `surface-inventory.json` — every `tsconfig*.json`, every `tsc` script, every
-  peer dep on `typescript`, every catalog alias.
+  peer dep on `typescript`, every catalog alias, plus the inventory hypothesis
+  outcomes from §3 (programmatic-API usage verified or not).
 - `dual-compiler-contract.json` — alias lines for the catalog, four command
   names (`check-types:native`, `check-types:compat`, `check-types:parity`,
-  `check-types:rollback`), and the §3 ownership matrix.
-- `diagnostic-parity-ledger.json` — empty `[]` initially; populated when
-  intentional TS 7 differences are reviewed in Phase 3.
-- `benchmark-record-schema.json` + `rollout-record-schema.json` — JSON Schemas
-  defining per-run records (elapsed_ms, peak_rss_kib, swap_delta_kib,
-  oom_kill_count, process_count, diagnostic_count, exit_status,
-  turbo_cache_state, tsconfig_path, compiler_version, --checkers, host_idle_class).
+  `check-types:rollback`), and the §3 ownership matrix with each row marked
+  "binding" or "hypothesis".
+- `diagnostic-parity-ledger.json` — JSON array; empty `[]` is a valid
+  initial state when the Phase 2 parity harness reports an empty normalized
+  TS 6 ∩ TS 7 diff for every tsconfig. Populated when intentional TS 7
+  differences are reviewed in Phase 3.
+- `benchmark-record-schema.json` — JSON Schema defining per-run records
+  (elapsed_ms, peak_rss_kib, swap_delta_kib, oom_kill_count, process_count,
+  diagnostic_count, exit_status, signal, turbo_cache_state, tsconfig_path,
+  compiler_version, --checkers, host_idle_class).
+- `rollout-record-schema.json` — JSON Schema for CI observation rows
+  (run_id, lane, ts7_gate_exit, ts6_parity_exit, cache_state,
+  order_dependent_diff_count, peak_rss_kib).
 
 Validation uses the Python standard library only: `json.JSONDecodeError`,
 schema-shape tests (assert presence and types of required keys), and one
@@ -171,7 +204,8 @@ strategy must not introduce a new dependency for schema validation.
 PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v \
   measure.tests.test_typescript7_native_migration_phase1
 ```
-Exits non-zero: the five schema files do not exist yet.
+Exits non-zero: the six JSON artifacts and the schema-shape test do not
+exist yet.
 
 **Phase 1 Green / closeout gate:** the same command exits 0, plus the
 orchestrator audit:
@@ -186,39 +220,87 @@ bash measure/doctor.sh
 evidence. Defense: Phase 1 closeout re-runs the audit after the schemas are
 committed.
 
-### Phase 2 — Test (Red contracts)
+### Phase 2 — Test (Red contracts) → Phase 2 Green (reusable harness)
 
 **The focused test suite is
 `measure/tests/test_typescript7_native_migration_phase2.py`.** It runs on
 Python 3.12 and is the single source of truth for Phase 2 acceptance.
 
-Red owns **failing tests and fixtures only**. Red does not author schemas,
-contracts, or evidence — those are authored in Phase 3 (Green). The five
-contract harnesses below are authored as failing tests in Phase 2; the
-minimum schemas/contracts needed to make them pass are authored in Phase 3a.
+Every plan phase must complete its own canonical
+Red → Green → reviews → phase-acceptance cycle. **Phase 2 cannot defer
+implementation needed for its tests to Phase 3.** Phase 2 Red owns failing
+tests and fixtures only; **Phase 2 Green implements the reusable harness
+logic and contracts** required to make the failing tests pass — and **only
+that implementation**. Phase 2 Green does **not** change package resolution,
+tsconfigs, workspace scripts, the lockfile, or any production/toolchain
+behavior. Phase 3 then applies the already-green harnesses to the real
+TS 6 → TS 7 migration; that is where catalog aliases, tsconfig fixes, and
+lockfile changes happen.
+
+Phase 2 Green is bounded to:
+
+- the Python harness modules (`measure/tests/test_typescript7_native_migration_phase2.py`
+  and any helper modules it imports);
+- the Phase 2 fixtures under
+  `measure/tracks/typescript7_native_migration_20260710/fixtures/`;
+- the Phase 2 refutation fixtures (same directory);
+- the Phase 2 schema-shape additions to `compiler-baseline.json`,
+  `surface-inventory.json`, `dual-compiler-contract.json`,
+  `benchmark-record-schema.json`, and `rollout-record-schema.json` (only
+  Phase 2 may add fields to these; Phase 3 reads but does not extend them
+  except for the parity ledger, which Phase 3 owns exclusively).
+
+Phase 2 Green does **not** touch `pnpm-workspace.yaml`, `pnpm-lock.yaml`,
+any `package.json`, any `tsconfig*.json`, any `next.config.ts`, any
+`vite.config.ts`, any `turbo.json`, any `eslint.config.mjs`, or any
+production source. The Phase 2 §5.2 tsconfig contract is a **read-only
+shape test** in Phase 2 — it parses the existing tsconfigs and asserts
+their shape; it does not modify them. The Phase 2 §5.1 resolver contract is
+a **read-only** inspection of the *current* resolution state (whatever
+that state is at `phase_base_sha`) plus a written assertion of what
+"two distinct physical installations" would look like. Phase 2 Green does
+not install or alias TypeScript 7 in the workspace.
 
 Five contract harnesses:
 
 1. **Package-resolution contract.** Asserts that `pnpm why -r typescript`
    resolves to two distinct physical installations: TS 6 (via `typescript`)
    and TS 7 (via the catalog alias). Asserts that `node -e "console.log(
-   require.resolve('typescript'))"` resolves under TS 6's tree.
+   require.resolve('typescript'))"` resolves under TS 6's tree. In Phase 2
+   Green, this contract is implemented as a **pure-inspection harness** that
+   captures the current resolution state and compares it against the
+   expected post-cutover shape using a deterministic fixture resolver
+   module. The harness does not invoke `pnpm install`, edit the catalog, or
+   re-resolve; it inspects.
 2. **tsconfig compatibility contract.** Loads each `tsconfig*.json` and asserts
    absence of removed options (`baseUrl` outside marketing's transition plan;
    legacy `moduleResolution: "node"` not under bundler; deprecated
-   `suppressExcessPropertyErrors`) and presence of a narrow, explicit `types`
-   array matching the globals consumed.
+   `suppressExcessPropertyErrors`) and the **appropriate** ambient-globals
+   posture: a narrow, explicit `types` array **only where globals are
+   consumed**. An explicit empty `types: []` array is valid when the
+   inventory proves no ambient globals are needed and TS 7 semantics are
+   unchanged. Inherited omission of `types` (no `types` key at all) is
+   valid under the same condition.
 3. **Diagnostic parity harness.** For each `(tsconfig, compiler-version)` pair,
    spawns the real `tsc` binary (TS 6 and TS 7), normalizes output (strip
    absolute paths, strip timing, normalize CRLF, sort by file→line→column→code),
    and asserts TS 6 normalized set equals TS 7 normalized set modulo the
-   entries in `diagnostic-parity-ledger.json`. Each set must be non-empty for
-   a tsconfig that the inventory records as emitting diagnostics.
+   entries in `diagnostic-parity-ledger.json`. **An empty
+   `diagnostic-parity-ledger.json` is a valid Phase 2 Green state** when the
+   exact normalized TS 6 ∩ TS 7 diff for every tsconfig is empty. The harness
+   rejects only: (i) an **unexplained non-empty diff** (TS 6 or TS 7 reports
+   diagnostics the other does not, with no ledger entry justifying the
+   difference), or (ii) a **vacuous comparison with no compiler runs** (the
+   harness exited 0 without invoking any `tsc` process for any tsconfig).
 4. **Benchmark harness.** Wraps `/usr/bin/time -v` around a real
    `tsc --noEmit` invocation; parses `Maximum resident set size` and
    `Elapsed (wall clock) time` via labeled keys (not regex); asserts the host
    was idle at start by sampling `vmstat 1 3` and requiring CPU idle ≥ 70 %.
-   Otherwise the run is recorded as `invalid`, not passed.
+   Otherwise the run is recorded as `invalid`, not passed. Resource
+   monitoring observes the **spawned process group aggregate** (`pgid` of
+   the spawned `tsc`), not `/proc/$$`; if `dmesg` is unavailable the run
+   record notes it and the harness relies on exit/signal/process-group
+   RSS/swap evidence.
 5. **Compiler-consumer smoke harness.** For each row in the §3 matrix,
    executes the minimal real command: `eslint --print-config <fixture>`,
    `ts-node -e '...'`, `tsx -e '...'`, `tsup --help`, `vitest <one unit file>`,
@@ -226,7 +308,10 @@ Five contract harnesses:
    `commitlint --from HEAD~1 --to HEAD --verbose`. Next.js and Vinext are
    proven indirectly via `pnpm why typescript` and a `.next/types/` directory
    resolution from a one-route workspace, **not** by full app build inside
-   this track's gate.
+   this track's gate. Phase 2 Green re-classifies each §3 row from
+   "hypothesis" to "binding (TS 6)" or "binding (TS 7)" based on the smoke
+   harness outcome; the reclassification is written into
+   `surface-inventory.json`.
 
 **Refutations (live adversarial probes):**
 
@@ -249,7 +334,10 @@ Five contract harnesses:
 --force` once and captures the cache state JSON. Then mutates the compiler
 identity (temporarily renames the TS 7 alias to force re-resolution) and
 asserts that `pnpm turbo run check-types` re-executes (`cache.bypassed ==
-true`). Refutation: a mutation that does not bust the cache fails.
+true`). Refutation: a mutation that does not bust the cache fails. In Phase
+2 Green, this contract is a **pure-assertion harness** that verifies the
+cache-invalidation contract shape; Phase 3 performs the actual cutover that
+triggers the contract.
 
 **Phase 2 Red command:**
 ```
@@ -265,32 +353,48 @@ PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile \
   measure/tests/test_typescript7_native_migration_phase2.py
 ```
 All four refutations must also exit 0 on their deliberately broken fixtures.
+**Phase 2 phase-acceptance requires this Green state before Phase 3 may
+begin.** Reviews A (correctness/architecture) and B (security/supply-chain)
+sign off on the harnesses in Phase 2; Review C and UX browser review are
+not applicable at this phase.
 
 **Risk:** critical. Defines the migration's falsifiability. A vacuous parity
 harness (A4) or digit-only regex (A3) here is unrecoverable later.
 
-### Phase 3 — Implement (Green)
+### Phase 3 — Apply Already-Green Harnesses to the Real Migration
 
-Phase 3 implements the alias layout, fixes `tsconfig` files, runs parity, runs
-benchmarks, cuts over CI. Green owns the **minimum schema/contract
-implementation needed to pass Red** — no more, no less.
+Phase 3 applies the **already-green** Phase 2 harnesses to the real
+TypeScript 6 → TypeScript 7 migration. The harnesses themselves are not
+authored in Phase 3; Phase 3 changes the *workspace state* (catalog
+aliases, tsconfigs, lockfile, workspace scripts) and re-runs the harnesses
+to confirm they remain green against the new state. Phase 3 may add new
+fixtures, new sample inputs, and new captured evidence; it does not edit
+the Phase 2 harness logic, contracts, or refutation shapes.
 
 **Sub-phase 3a — alias install.** Edit the workspace catalog (or per-package
 `pnpm.packageExtensions` where the catalog slot is unavailable). Run
-`pnpm install` to regenerate the lockfile. The Phase 2 §5.1 contract is the
-gate. **No aggregate `pnpm turbo run check-types` is invoked in 3a.**
+`pnpm install` to regenerate the lockfile. Re-run the already-green Phase 2
+§5.1 contract against the new resolution state. **No aggregate
+`pnpm turbo run check-types` is invoked in 3a.**
 
-**Sub-phase 3b — tsconfig fixes.** Update each tsconfig with a narrow `types`
-array and remove `apps/marketing/tsconfig.json`'s `baseUrl`. The Phase 2 §5.2
-contract is the gate. **No aggregate `pnpm turbo run check-types` is invoked
-in 3b.**
+**Sub-phase 3b — tsconfig fixes.** Update each tsconfig with the
+appropriate ambient-globals posture per §6: a narrow, explicit `types` array
+**only where globals are consumed**; explicit empty `types: []` where the
+inventory proves no ambient globals are needed and TS 7 semantics are
+unchanged; inherited omission where the same condition holds under the
+current base config. Remove `apps/marketing/tsconfig.json`'s `baseUrl`.
+Re-run the already-green Phase 2 §5.2 contract. **No aggregate
+`pnpm turbo run check-types` is invoked in 3b.**
 
-**Sub-phase 3c — parity reconciliation.** Run the §5.3 parity harness across
-all tsconfigs with TS 6 and TS 7. For every difference, either (i) fix in
-the owning workspace with no escape hatch (no `skipLibCheck` expansion, no
-`ignoreBuildErrors`, no `@ts-ignore`/`@ts-nocheck` blanket), or (ii) record in
-`diagnostic-parity-ledger.json` with a review note. The harness exits 0 only
-when the ledger is the exact diff between normalized outputs.
+**Sub-phase 3c — parity reconciliation.** Run the already-green Phase 2
+§5.3 parity harness across all tsconfigs with TS 6 and TS 7. For every
+difference, either (i) fix in the owning workspace with no escape hatch (no
+`skipLibCheck` expansion, no `ignoreBuildErrors`, no `@ts-ignore`/
+`@ts-nocheck` blanket), or (ii) record in `diagnostic-parity-ledger.json`
+with a review note. **An empty ledger is a valid Phase 3c state** when the
+exact normalized TS 6 ∩ TS 7 diff for every tsconfig is empty. The harness
+rejects only an **unexplained non-empty diff** or a **vacuous comparison
+with no compiler runs**.
 
 **Sub-phase 3d — `check-types` cutover.** Workspace-by-workspace, flip
 `check-types` to invoke the TS 7 binary. Order is §4. The first workspace is
@@ -308,13 +412,13 @@ runner genuinely cannot load under TS 7 and the alternative is to pin it to
 TS 6 via the §3 matrix. The default is **no change**. A wholesale
 `jest → vitest` migration is rejected. Playwright is preserved.
 
-**Sub-phase 3g — benchmark suite.** Runs the §5.4 harness against the §4
-order, each workspace with `--checkers 1` and `--checkers 2`, three cold
-samples + three warm samples per setting. Medians are recorded. The
-acceptance threshold (spec §FR-6): ≥ 3× median speedup for
-`apps/reading-advantage` standalone, or ≥ 2× for the uncached full Turbo
+**Sub-phase 3g — benchmark suite.** Runs the already-green Phase 2 §5.4
+harness against the §4 order, each workspace with `--checkers 1` and
+`--checkers 2`, three cold samples + three warm samples per setting. Medians
+are recorded. The acceptance threshold (spec §FR-6): ≥ 3× median speedup
+for `apps/reading-advantage` standalone, or ≥ 2× for the uncached full Turbo
 `check-types` graph — unless a documented bottleneck shows TypeScript is no
-longer the dominant cost. A faster run with missing diagnostics (the §5
+longer the dominant cost. A faster run with missing diagnostics (the Phase 2
 false-speedup refutation) is not a 3× — it is a test failure.
 
 **Sub-phase 3h — CI rollout.** Add a temporary non-blocking CI lane running
@@ -326,14 +430,14 @@ identifier. **Three observed runs are an external live gate; this track
 cannot claim 100 % rollout completion without three real run IDs and their
 exit statuses recorded.**
 
-**Sub-phase 3i — Turbo cache verification.** The §5 cache-invalidation
-contract must pass on the post-cutover monorepo. A cache miss on a
-tsconfig-only edit, or a cache hit on a compiler-identity edit, is a
-Phase 3 closeout block.
+**Sub-phase 3i — Turbo cache verification.** The already-green Phase 2 §5
+cache-invalidation contract must pass on the post-cutover monorepo. A cache
+miss on a tsconfig-only edit, or a cache hit on a compiler-identity edit,
+is a Phase 3 closeout block.
 
-**Phase 3 Green gate (per sub-phase):** the contract for that sub-phase
-exits 0 in isolation. No aggregate `pnpm turbo run …` is invoked until
-Phase 4.
+**Phase 3 Green gate (per sub-phase):** the already-green Phase 2 contract
+for that sub-phase exits 0 against the post-cutover state. No aggregate
+`pnpm turbo run …` is invoked until Phase 4.
 
 **Risk:** critical. The cutover phase. Every aggregate command from the
 gates (`pnpm turbo run lint | test | check-types | build`) is invoked only
@@ -416,10 +520,10 @@ makes the migration's blast radius explicit and auditable.
 | Phase | Targeted Red command (must fail before code) | Green / closeout gate (must pass) | Surface | Risk |
 |------:|:---|:---|:---|:---|
 | 1 | `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase1` | `bash tests/orchestrator_catalog.sh && bash tests/orchestrator_marker_vocabulary.sh && bash tests/orchestrator_supervisor_invariants.sh && bash measure/doctor.sh` and the same unittest exits 0 | Artifact | medium |
-| 2 | `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase2` | Same exits 0 + `PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile measure/tests/test_typescript7_native_migration_phase2.py` + four refutations (missing-diagnostic, false-speedup, alias-swap, resource-parser-stop-loss) exit 0 on deliberately broken fixtures | Live | critical |
+| 2 | `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase2` | Same exits 0 + `PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile measure/tests/test_typescript7_native_migration_phase2.py` + four refutations (missing-diagnostic, false-speedup, alias-swap, resource-parser-stop-loss) exit 0 on deliberately broken fixtures. Phase 2 Green implements the reusable harness logic/contracts only; no package resolution, tsconfig, workspace script, lockfile, or production/toolchain changes are permitted in Phase 2. | Live | critical |
 | 3a | `pnpm why -r typescript` shows only TS 5.9 | `pnpm why -r typescript` shows exactly two trees (TS 6 + TS 7); resolver refutation exits 0 | Live (resolver only) | medium |
 | 3b | tsconfig contract reports `baseUrl` present | Same contract exits 0; new contract for narrow `types` arrays exits 0 | Artifact | medium |
-| 3c | parity harness reports a difference for one tsconfig | `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase2.ParityContract` exits 0; `diagnostic-parity-ledger.json` validates as JSON with required keys | Live | high |
+| 3c | parity harness reports a difference for one tsconfig | `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase2.ParityContract` exits 0; `diagnostic-parity-ledger.json` validates as JSON with required keys. An empty ledger is a valid Green state when the normalized TS 6 ∩ TS 7 diff for every tsconfig is empty; the harness rejects only an unexplained non-empty diff or a vacuous comparison with zero compiler runs. | Live | high |
 | 3d | `pnpm --filter @reading-advantage/types exec tsc --noEmit -p tsconfig.json` exits non-zero (today) | Same exits 0; repeat per workspace in §4 order | Live (native source) | critical |
 | 3e | byte diff between TS 6 and TS 7 `.d.ts` output for one package is non-empty | Diff empty for `packages/types` and `packages/db`, or fully accounted for in `declaration-emit-diff-ledger.json` | Live (declaration emit) | high |
 | 3f | n/a (default is no change) | If a runner needs TS 6 pinning, the §3 row exists and the resolver contract still passes | Live | medium |
@@ -463,9 +567,14 @@ actual HEAD is an A15 finding.
 - `runner-fixtures/` — one ESLint printable-config fixture, one ts-node
   `-e` expression, one tsup `--help` invocation shell.
 
-All fixtures are committed at the role-base SHA so Phase 2 references
-byte-pinned paths. They are **not** mocks; they invoke the real TS 6 / TS 7
-binaries on real source.
+All fixtures are **committed in their phase by the Red role**, not
+retroactively at the pre-strategy role-base SHA. Phase 2 Red commits the
+fixtures alongside the failing tests that reference them; Phase 3 may
+commit additional sample-input fixtures but does not move or rewrite the
+Phase 2 fixtures. Fixtures are pinned by path inside the strategy's commit
+allowlist (§6); a fixture whose path is missing or whose SHA-256 does not
+match the Phase 2 commit is treated as not-yet-committed. They are **not**
+mocks; they invoke the real TS 6 / TS 7 binaries on real source.
 
 **Mocks** of `node:child_process` are forbidden in the §5.3, §5.4, §5.5
 harnesses. Subprocesses are real. The only mocks used are: (i) the
@@ -539,6 +648,11 @@ following discipline to prevent A4 (vacuous pass):
   that have not yet been flipped; the harness records the workspace as
   `not_flipped_yet`, not `passing`. A workspace labeled `not_flipped_yet`
   may not be claimed as Green.
+- An empty `diagnostic-parity-ledger.json` at Phase 3c closeout is **valid**
+  when the exact normalized TS 6 ∩ TS 7 diff for every tsconfig is empty;
+  the ledger remains empty and the Phase 3c gate passes. An empty ledger is
+  **not** valid when one or more tsconfigs produced a non-empty diff that
+  was not explained — that is an A4 finding and a Phase 3c block.
 - During Phase 4 the aggregate suite is invoked once and recorded. A
   pre-existing failure (one that already existed at role-base SHA) is
   classified as pre-existing in `gate-reconciliation-<task>.json` and is
@@ -560,7 +674,7 @@ and its refutation.
 | A1 | The supervisor is unchanged by this track; the catalog audit `tests/orchestrator_catalog.sh` exits 0 in the Phase 1 closeout gate. | A free-text mutation of the supervisor regex must not bypass the catalog gate. |
 | A2 | n/a (no publish gate). | The track does not introduce a publish gate. |
 | A3 | Phase 2 §5.4 benchmark harness parses `Maximum resident set size` and `Elapsed (wall clock) time` via labeled keys. Phase 4 reconciliation parses `diagnostic_count` as a JSON integer with explicit key. Resource-parser refutation covers malformed labeled integers. | A `/usr/bin/time -v` line containing only a date or a path must not pass as elapsed time; a JSON string `"1"` must not pass as `diagnostic_count`; a string `"NaN"` for `peak_rss_kib` must not pass. |
-| A4 | Phase 2 contract assertions each count ≥ 1 element by construction; the Phase 1 audit must exit 0 with at least one schema artifact present; the Phase 3 Green state requires ≥ 1 `[x]` task with evidence. | An empty `diagnostic-parity-ledger.json` may not pass the Phase 3c gate; a Phase 2 run with 0 assertions fails. |
+| A4 | Phase 2 contract assertions each count ≥ 1 element by construction; the Phase 1 audit must exit 0 with at least one schema artifact present; the Phase 3 Green state requires ≥ 1 `[x]` task with evidence. An empty `diagnostic-parity-ledger.json` is a valid Phase 3c state when the exact normalized TS 6 ∩ TS 7 diff for every tsconfig is empty. The harness rejects only an unexplained non-empty diff or a vacuous comparison with no compiler runs. | A vacuous Phase 2 run with 0 assertions fails; a Phase 3c run with a non-empty unexplained diff fails; a Phase 3c run with an empty diff plus zero compiler invocations fails. |
 | A5 | Missing-diagnostic, false-speedup, and alias-swap refutations in Phase 2. | A parity run that reports "all checks pass" while omitting a refutation is rejected; a benchmark median that omits the false-speedup guard is rejected. |
 | A6 | `measure/tracks.md` entry remains `[ ]` until Phase 4 acceptance; `metadata.json.status` remains `"new"` until then. Phase 4 closeout asserts `metadata.json.status == "complete"` is absent before closeout. | A premature `metadata.json.status == "complete"` is an A6 finding. |
 | A7 | Phase 2 contract harness uses no exclusion filter on diagnostic codes; comparison is set-equality. | An exclusion of a real diagnostic class (e.g., "skip TS6133 unused") is rejected. |
