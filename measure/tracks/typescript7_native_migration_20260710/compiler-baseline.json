@@ -15,6 +15,14 @@
   "memory_available_kib": 778696,
   "swap_total_kib": 8030208,
   "swap_used_kib": 5719040,
+  "resource_limits": {
+    "max_process_group_rss_kib": 4602784,
+    "max_swap_delta_kib": 262144,
+    "stop_loss_process_group_rss_kib": 3682227,
+    "stop_loss_swap_delta_kib": 131072,
+    "derivation": "Policy-derived ceilings, not empirical benchmark results: max process-group RSS is a conservative 60% of captured total_memory_kib (7671308 * 0.60, rounded down to 4602784 KiB); max swap delta is fixed at 256 MiB (262144 KiB). Stop loss is 80% of the RSS ceiling (3682227 KiB, rounded down) and 50% of the swap ceiling (131072 KiB).",
+    "source": "Captured host resources in this compiler-baseline.json plus the resource-safety policy in test-strategy.md section 1; no local performance benchmark was used to select these limits."
+  },
   "turbo_concurrency": 1,
   "turbo_concurrency_source": "TURBO_CONCURRENCY=1 env var per test-strategy.md section 1; turbo.json does not pin global concurrency",
   "graph_db_path": "graph.db",
