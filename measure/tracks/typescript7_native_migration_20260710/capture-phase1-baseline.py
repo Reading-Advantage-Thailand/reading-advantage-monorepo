@@ -6,13 +6,22 @@ and a per-workspace timeout of 300 seconds. A timeout or failure is evidence,
 not a reason to fabricate green.
 
 Usage:
+    # Full live capture (sequential, ~10 min):
     python3 measure/tracks/typescript7_native_migration_20260710/capture-phase1-baseline.py
 
-Output:
+    # Read-only completeness verification (no writes, no live commands):
+    python3 measure/tracks/typescript7_native_migration_20260710/capture-phase1-baseline.py --check-completeness
+
+Output (full capture only):
     phase1-workspace-baseline.json  (machine-readable results)
     evidence/phase1/raw-logs/<N>-<workspace>.log  (bounded raw output per workspace)
 
 Resumable: if interrupted, re-run the script; already-captured workspaces are skipped.
+
+The --check-completeness mode reads existing surface-inventory.json and
+phase1-workspace-baseline.json, verifies exact workspace-set equality, count,
+and all_accounted, prints a concise result, and exits 0 or 1. It performs
+zero writes and zero live check-types commands.
 """
 
 from __future__ import annotations
@@ -59,6 +68,72 @@ def load_check_types_workspaces() -> list[dict[str, Any]]:
                 "emit": entry.get("emit", False),
             })
     return workspaces
+
+
+def check_completeness() -> int:
+    """Verify phase1-workspace-baseline.json covers all inventoried check-types workspaces.
+
+    Reads surface-inventory.json and phase1-workspace-baseline.json, then checks
+    that the workspace sets are exactly equal, counts match, and every workspace
+    is accounted for. Performs zero writes and zero live check-types commands.
+
+    Returns:
+        0 if completeness verification passes, 1 if it fails.
+    """
+    if not SURFACE_INVENTORY.is_file():
+        print(f"ERROR: {SURFACE_INVENTORY.relative_to(REPO_ROOT)} not found", file=sys.stderr)
+        return 1
+    if not OUTPUT_FILE.is_file():
+        print(f"ERROR: {OUTPUT_FILE.relative_to(REPO_ROOT)} not found", file=sys.stderr)
+        return 1
+
+    inventory = json.loads(SURFACE_INVENTORY.read_text(encoding="utf-8"))
+    baseline = json.loads(OUTPUT_FILE.read_text(encoding="utf-8"))
+
+    inv_workspaces = sorted(
+        e["workspace"] for e in inventory["tsc_scripts"]
+        if e.get("script") == "check-types"
+    )
+    cap_workspaces = sorted(r["workspace"] for r in baseline.get("workspaces", []))
+
+    inv_count = len(inv_workspaces)
+    cap_count = len(cap_workspaces)
+    inv_set = set(inv_workspaces)
+    cap_set = set(cap_workspaces)
+    sets_equal = inv_set == cap_set
+    counts_match = inv_count == cap_count
+    all_accounted = sets_equal and counts_match
+
+    missing = sorted(inv_set - cap_set)
+    extra = sorted(cap_set - inv_set)
+
+    print(f"Inventory check-types workspaces: {inv_count}")
+    print(f"Captured workspaces:              {cap_count}")
+    print(f"Counts match:                     {counts_match}")
+    print(f"Workspace sets equal:             {sets_equal}")
+    print(f"All accounted:                    {all_accounted}")
+    if missing:
+        print(f"Missing from baseline:            {missing}")
+    if extra:
+        print(f"Extra in baseline:                {extra}")
+
+    # Also verify the baseline file's own completeness_check field is consistent
+    stored_cc = baseline.get("completeness_check", {})
+    stored_match = stored_cc.get("match", False)
+    stored_all = stored_cc.get("all_accounted", False)
+    if stored_match != all_accounted:
+        print(f"WARNING: baseline completeness_check.match={stored_match} "
+              f"but recomputed={all_accounted}", file=sys.stderr)
+    if stored_all != all_accounted:
+        print(f"WARNING: baseline completeness_check.all_accounted={stored_all} "
+              f"but recomputed={all_accounted}", file=sys.stderr)
+
+    if all_accounted:
+        print("Completeness check: PASS")
+        return 0
+    else:
+        print("Completeness check: FAIL", file=sys.stderr)
+        return 1
 
 
 def get_package_name(workspace_path: str) -> str:
@@ -321,4 +396,6 @@ def main() -> int:
 
 
 if __name__ == "__main__":
+    if "--check-completeness" in sys.argv:
+        sys.exit(check_completeness())
     sys.exit(main())
