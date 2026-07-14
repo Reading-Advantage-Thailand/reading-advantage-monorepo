@@ -245,6 +245,9 @@ class SurfaceInventoryContract(unittest.TestCase):
 class DualCompilerContractArtifactContract(unittest.TestCase):
     """Falsifiable shape contract for dual-compiler-contract.json."""
 
+    EXPECTED_NATIVE_COMMAND = "node node_modules/typescript7/bin/tsc --noEmit"
+    EXPECTED_COMPAT_COMMAND = "node node_modules/typescript/bin/tsc6 --noEmit"
+
     REQUIRED_COMMAND_KEYS: frozenset[str] = frozenset({
         "check-types:native",
         "check-types:compat",
@@ -280,6 +283,34 @@ class DualCompilerContractArtifactContract(unittest.TestCase):
             missing,
             f"dual-compiler-contract.json is missing required commands: {sorted(missing)}",
         )
+
+    def test_native_command_uses_typescript7_exposed_executable_path(self) -> None:
+        """Requires the native command to use TypeScript 7's actual tsc executable."""
+        artifact = _load_json_object(DUAL_COMPILER_CONTRACT_PATH)
+        commands = artifact.get("commands")
+        self.assertIsInstance(commands, dict, "commands must be an object")
+        assert isinstance(commands, dict)
+        self.assertEqual(
+            commands.get("check-types:native"),
+            self.EXPECTED_NATIVE_COMMAND,
+            "native checks must use the deterministic typescript7 package path; "
+            "the aliased package exposes 'tsc', not 'typescript7-tsc'",
+        )
+
+    def test_compat_and_rollback_use_typescript6_exposed_executable_path(self) -> None:
+        """Requires compatibility commands to use TypeScript 6's actual tsc6 executable."""
+        artifact = _load_json_object(DUAL_COMPILER_CONTRACT_PATH)
+        commands = artifact.get("commands")
+        self.assertIsInstance(commands, dict, "commands must be an object")
+        assert isinstance(commands, dict)
+        for command_key in ("check-types:compat", "check-types:rollback"):
+            with self.subTest(command=command_key):
+                self.assertEqual(
+                    commands.get(command_key),
+                    self.EXPECTED_COMPAT_COMMAND,
+                    f"{command_key} must use the deterministic TypeScript 6 package "
+                    "path; @typescript/typescript6 exposes 'tsc6', not 'tsc'",
+                )
 
     def test_dual_compiler_contract_rejects_missing_commands(self) -> None:
         """Counterexample: a commands object missing parity/rollback fails."""
