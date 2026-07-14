@@ -15,23 +15,28 @@ steps:
       - "push"
       - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/codecamp/codecamp-advantage:$BUILD_ID"
 
-  - name: "node:20-slim"
+  # CODECAMP_DATABASE_URL is a Cloud SQL unix-socket URL
+  # (?host=/cloudsql/<instance>). Cloud Build steps have no /cloudsql socket,
+  # so migrate/doctor start the Cloud SQL Auth Proxy (IAM-authenticated,
+  # session-mode direct connection — no transaction pooler) listening on the
+  # same /cloudsql path the runtime uses; the secret URL then works as-is.
+  - name: "node:22-slim"
     id: "migrate-db"
     entrypoint: "bash"
     args:
       - "-c"
-      - "corepack enable && pnpm install --frozen-lockfile && export DATABASE_URL=\"$$DIRECT_DATABASE_URL\" && pnpm --filter @reading-advantage/db migrate"
+      - "set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && corepack enable && pnpm install --frozen-lockfile && export DATABASE_URL=\"$$CODECAMP_DATABASE_URL\" && export DIRECT_DATABASE_URL=\"$$CODECAMP_DATABASE_URL\" && pnpm --filter @reading-advantage/db migrate"
     secretEnv:
-      - "DIRECT_DATABASE_URL"
+      - "CODECAMP_DATABASE_URL"
 
-  - name: "node:20-slim"
+  - name: "node:22-slim"
     id: "doctor-check"
     entrypoint: "bash"
     args:
       - "-c"
-      - "corepack enable && pnpm install --frozen-lockfile && export DATABASE_URL=\"$$DIRECT_DATABASE_URL\" && pnpm --filter @reading-advantage/db doctor --check"
+      - "set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && corepack enable && pnpm install --frozen-lockfile && export DATABASE_URL=\"$$CODECAMP_DATABASE_URL\" && export DIRECT_DATABASE_URL=\"$$CODECAMP_DATABASE_URL\" && pnpm --filter @reading-advantage/db doctor --check --required-migration 0036_codecamp_mastery_evidence"
     secretEnv:
-      - "DIRECT_DATABASE_URL"
+      - "CODECAMP_DATABASE_URL"
 
   - name: "gcr.io/cloud-builders/gcloud"
     id: "deploy-cloudrun"
@@ -45,11 +50,11 @@ steps:
       - "--allow-unauthenticated"
       - "--service-account=codecamp-cloud-run@$PROJECT_ID.iam.gserviceaccount.com"
       - "--add-cloudsql-instances=reading-advantage:asia-southeast1:cloud-sql"
-      - "--set-env-vars=NODE_ENV=production,NEXT_PUBLIC_API_URL=https://codecamp.reading-advantage.com,TUTORIAL_REPOSITORY_WORKER_URL=https://codecamp.reading-advantage.com/api/internal/tutorial-repository-capture,TUTORIAL_REPOSITORY_BASE_URL=https://github.com"
+      - "--set-env-vars=NODE_ENV=production,NEXT_PUBLIC_API_URL=https://codecamp.reading-advantage.com,TUTORIAL_REPOSITORY_WORKER_URL=https://codecamp.reading-advantage.com/api/internal/tutorial-repository-capture,TUTORIAL_REPOSITORY_BASE_URL=https://github.com,CODECAMP_PR_REVIEW_ROLLOUT_MODE=shadow"
       - "--min-instances=1"
       - "--max-instances=100"
       - "--concurrency=80"
-      - "--set-secrets=DATABASE_URL=DATABASE_URL:latest,AUTH_SECRET=AUTH_SECRET:latest,GITHUB_APP_ID=GITHUB_APP_ID:latest,GITHUB_PRIVATE_KEY=GITHUB_PRIVATE_KEY:latest,GITHUB_WEBHOOK_SECRET=GITHUB_WEBHOOK_SECRET:latest,GITHUB_INSTALLATION_ID=GITHUB_INSTALLATION_ID:latest,OPENROUTER_API_KEY=OPENROUTER_API_KEY:latest,OPENAI_API_KEY=OPENAI_API_KEY:latest,GOOGLE_AI_API_KEY=GOOGLE_AI_API_KEY:latest,TUTORIAL_REPORT_SECRET=CODECAMP_TUTORIAL_REPORT_SECRET:latest,TUTORIAL_REPOSITORY_WORKER_TOKEN=CODECAMP_TUTORIAL_REPOSITORY_WORKER_TOKEN:latest"
+      - "--set-secrets=DATABASE_URL=CODECAMP_DATABASE_URL:latest,AUTH_SECRET=CODECAMP_AUTH_SECRET:latest,GITHUB_APP_ID=CODECAMP_GITHUB_APP_ID:latest,GITHUB_PRIVATE_KEY=CODECAMP_GITHUB_PRIVATE_KEY:latest,GITHUB_WEBHOOK_SECRET=CODECAMP_GITHUB_WEBHOOK_SECRET:latest,GITHUB_INSTALLATION_ID=CODECAMP_GITHUB_INSTALLATION_ID:latest,OPENROUTER_API_KEY=CODECAMP_OPENROUTER_API_KEY:latest,OPENAI_API_KEY=OpenAI_API_Key:latest,GOOGLE_AI_API_KEY=Goole_Cloud_API_Key:latest,TUTORIAL_REPORT_SECRET=CODECAMP_TUTORIAL_REPORT_SECRET:latest,TUTORIAL_REPOSITORY_WORKER_TOKEN=CODECAMP_TUTORIAL_REPOSITORY_WORKER_TOKEN:latest"
 
   - name: "gcr.io/cloud-builders/gcloud"
     id: "allow-public-invoker"
@@ -67,8 +72,8 @@ images:
 
 availableSecrets:
   secretManager:
-    - versionName: "projects/$PROJECT_ID/secrets/DIRECT_DATABASE_URL/versions/latest"
-      env: "DIRECT_DATABASE_URL"
+    - versionName: "projects/$PROJECT_ID/secrets/CODECAMP_DATABASE_URL/versions/latest"
+      env: "CODECAMP_DATABASE_URL"
 
 options:
   logging: CLOUD_LOGGING_ONLY

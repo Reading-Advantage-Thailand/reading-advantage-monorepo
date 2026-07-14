@@ -1,11 +1,17 @@
 .git
 .gitignore
 .gcloudignore
+apps/*
+!apps/codecamp-advantage/
+!apps/codecamp-advantage/**
 **/.env
 **/.env.*
 **/.next
 **/.turbo
 **/coverage
+**/playwright-report
+**/test-results
+**/.opencode
 **/dist
 **/node_modules
 **/tsconfig.tsbuildinfo
