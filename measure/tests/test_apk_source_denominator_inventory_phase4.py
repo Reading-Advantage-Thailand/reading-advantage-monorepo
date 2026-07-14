@@ -314,6 +314,25 @@ class Phase4IndependentAcceptanceContracts(unittest.TestCase):
         self.assertEqual(report.get("red_command"), report.get("green_command"))
         self.assertIn("test_apk_source_denominator_inventory_phase4", str(report.get("red_command")))
         self.assertNotIn("accepted", str(report.get("status")).lower())
+        # Phase-4 contract report must pin its authoring baseline to a real,
+        # abbreviated commit reference that resolves through `git rev-parse`.
+        # This mirrors the resolver used for plan-task commit evidence and
+        # prevents a future author from re-authoring the contract at an
+        # unresolvable revision without detection.
+        authoring_baseline = report.get("phase_authoring_baseline_revision")
+        self.assertIsInstance(authoring_baseline, str)
+        self.assertRegex(str(authoring_baseline), COMMIT_EVIDENCE)
+        assert isinstance(authoring_baseline, str)
+        self.assertEqual(
+            subprocess.run(
+                ["git", "rev-parse", "--verify", f"{authoring_baseline}^{{commit}}"],
+                cwd=REPO_ROOT,
+                capture_output=True,
+                check=False,
+            ).returncode,
+            0,
+            f"phase_authoring_baseline_revision {authoring_baseline!r} does not resolve to a git commit",
+        )
 
     def test_fresh_independent_review_replays_phase3_and_reports_no_blocking_findings(self) -> None:
         """Requires fresh reviewer provenance, full rerun evidence, and zero CHM findings.
