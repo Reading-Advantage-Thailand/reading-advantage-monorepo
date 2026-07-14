@@ -3,7 +3,7 @@ role=reconciliation-integrator / reconciliation Green (Phase-3 repair)
 status=reconciliation-complete
 track=apk_source_denominator_inventory_20260712
 phase=Phase 3: Reconciliation
-commit=773ec590
+commit=faf584d3
 reason=Phase 3 was reopened because source-denominator.json was modified at e14ab11e (five new required paths and @/ alias import resolution) and scene-state-denominator.json at 3384f558 (scene/state occurrence restructure) without regenerating phase3-reconciliation.json; the regeneration restores Plan truth
 tests_run=PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase0 measure.tests.test_apk_source_denominator_inventory_phase1 measure.tests.test_apk_source_denominator_inventory_phase3; actual_exit=0; result=passed (22 tests)
 tests_run=PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase3 && PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile measure/tests/test_apk_source_denominator_inventory_phase3.py; actual_exit=0; result=passed (10 tests)
