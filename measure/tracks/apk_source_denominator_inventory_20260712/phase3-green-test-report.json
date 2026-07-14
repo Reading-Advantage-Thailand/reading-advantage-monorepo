@@ -32,7 +32,7 @@
     {
       "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase0 measure.tests.test_apk_source_denominator_inventory_phase1 measure.tests.test_apk_source_denominator_inventory_phase2 measure.tests.test_apk_source_denominator_inventory_phase3",
       "result": "passed",
-      "test_count": 31
+      "test_count": 32
     },
     {
       "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase3 && PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile measure/tests/test_apk_source_denominator_inventory_phase3.py",
@@ -42,7 +42,7 @@
     {
       "command": "PYTHONDONTWRITEBYTECODE=1 python3 measure/tracks/apk_source_denominator_inventory_20260712/generate_phase3_reconciliation.py followed by SHA-256 comparison against the committed phase3-reconciliation.json and reachable historical locator/deletion-parent checks",
       "result": "passed",
-      "evidence": "Deterministic SHA-256 cd72b34a77fce57c62a8976087fb029611a1c78429af7da485780aba5663d1d3; the generator reads worktree Phase-1 artifacts and worktree Phase-2 mechanical-record reviews (which cover the five paths added at e14ab11e) while binding replacement_program_identity_reviews dispositions from the committed Phase-2 at 803e1d8b (17 current, 12 historical/withdrawn)."
+      "evidence": "Deterministic SHA-256 cd72b34a77fce57c62a8976087fb029611a1c78429af7da485780aba5663d1d3; the generator reads worktree Phase-1 artifacts and worktree Phase-2 mechanical-record reviews (which cover the five paths added at e14ab11e) while binding replacement_program_identity_reviews dispositions from the committed Phase-2 at 803e1d8b (17 current, 12 historical/withdrawn). The Phase-2 generator and contract test were re-pinned to Phase-1 revision 3384f558 (matching the Phase-1 test and worktree) and Phase-2 artifacts were regenerated against that revision so the Phase-2 and Phase-3 contracts read the same Phase-1 denominator."
     }
   ],
   "owner_verification": {

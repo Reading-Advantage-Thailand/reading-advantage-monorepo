@@ -30,7 +30,7 @@ DISCREPANCY_PATH = TRACK_DIR / "human-discrepancy-records.json"
 EVIDENCE_RECEIPT_PATH = TRACK_DIR / "role-receipts" / "evidence-collector.json"
 SHA256 = re.compile(r"^[0-9a-f]{64}$")
 COMMIT_SHA = re.compile(r"^[0-9a-f]{40}$")
-PHASE1_REVISION = "f17fa78b36453e4aba36bc90f32bf25cd5b65ddb"
+PHASE1_REVISION = "3384f558cb4db0772550dd79d7ed8a62e8a4f815"
 PROGRAM_PATH = "measure/apk-evidence-reconstruction-program.md"
 FORBIDDEN_INTERPRETATION_FIELDS = {
     "asset_suitability",

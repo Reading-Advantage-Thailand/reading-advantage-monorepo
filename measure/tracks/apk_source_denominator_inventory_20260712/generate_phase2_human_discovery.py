@@ -13,7 +13,7 @@ from typing import Any
 
 
 BASELINE = "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-PHASE1_REVISION = "f17fa78b36453e4aba36bc90f32bf25cd5b65ddb"
+PHASE1_REVISION = "3384f558cb4db0772550dd79d7ed8a62e8a4f815"
 ASTRAL_HISTORY_REVISION = "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
 TRACK = "apk_source_denominator_inventory_20260712"
 TRACK_DIR = Path(__file__).resolve().parent
