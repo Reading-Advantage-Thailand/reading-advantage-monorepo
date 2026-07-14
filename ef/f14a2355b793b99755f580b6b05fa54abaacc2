@@ -1,0 +1,6 @@
+Task: TypeScript 7 Phase 1 strategy-contract Green correction
+Track: typescript7_native_migration_20260710
+Summary: Added auditable policy-derived resource ceilings and stop-loss thresholds to compiler-baseline.json; corrected test-strategy.md so Phase 2 runs deterministic fixture executables as real OS subprocesses while Phase 3 runs installed TypeScript 6/7 binaries and real consumer commands after alias installation.
+Files: measure/tracks/typescript7_native_migration_20260710/compiler-baseline.json; measure/tracks/typescript7_native_migration_20260710/test-strategy.md
+Verification: 27/27 phase1 tests pass; py_compile passes; jq parses compiler-baseline.json; forbidden stale references absent; git diff --check passes.
+Why: Prevent false claims that Phase 2 exercises unavailable compiler installations and make constrained-host resource policy explicit and falsifiable.
