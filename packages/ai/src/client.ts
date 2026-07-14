@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { AIClient, AIConfig, AIProvider } from "./types.js";
+import type { AIClientWithProvenance, AIConfig, AIProvider } from "./types.js";
 import { ProviderNotConfiguredError } from "./errors.js";
 import { OpenAIProvider } from "./providers/openai.js";
 import { GoogleProvider } from "./providers/google.js";
@@ -22,7 +22,7 @@ const aiConfigSchema = z.object({
  * @throws {ProviderNotConfiguredError} When the provider requires an API key
  *   that is not supplied.
  */
-export function createAIClient(config: AIConfig): AIClient {
+export function createAIClient(config: AIConfig): AIClientWithProvenance {
   const parsed = aiConfigSchema.parse(config);
 
   switch (parsed.provider as AIProvider) {
@@ -77,7 +77,7 @@ export function createAIClient(config: AIConfig): AIClient {
   }
 }
 
-let singletonClient: AIClient | null = null;
+let singletonClient: AIClientWithProvenance | null = null;
 
 /**
  * Return a lazily-initialised singleton AIClient. The provider and API key
@@ -96,7 +96,7 @@ let singletonClient: AIClient | null = null;
  * @throws {ProviderNotConfiguredError} When the resolved provider requires
  *   an API key that is missing.
  */
-export function getAIClient(): AIClient {
+export function getAIClient(): AIClientWithProvenance {
   if (singletonClient) return singletonClient;
 
   const envProvider = process.env.AI_PROVIDER as AIProvider | undefined;

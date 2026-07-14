@@ -18,6 +18,57 @@ export interface GenerateObjectInput<T> {
 }
 
 /**
+ * Provider-reported token usage retained for an auditable AI generation.
+ * Values are null when the provider does not return that measurement.
+ */
+export interface AIGenerationUsage {
+  /** Tokens consumed by the prompt, when reported. */
+  inputTokens: number | null;
+  /** Tokens produced in the completion, when reported. */
+  outputTokens: number | null;
+  /** Total tokens reported by the provider, when available. */
+  totalTokens: number | null;
+  /** Reasoning tokens reported by the provider, when available. */
+  reasoningTokens: number | null;
+  /** Cached prompt tokens reported by the provider, when available. */
+  cachedInputTokens: number | null;
+}
+
+/**
+ * Stable provider-neutral provenance captured for a completed AI generation.
+ *
+ * Requested model records the application policy, while resolved model records
+ * the provider response. Fields that a provider does not report are null rather
+ * than inferred, so persisted audit records distinguish absent data from data.
+ */
+export interface AIGenerationProvenance {
+  /** Adapter provider selected for the request. */
+  provider: AIProvider;
+  /** Model identifier selected by the caller or provider default. */
+  requestedModel: string;
+  /** Provider-reported model identifier, when supplied in the response. */
+  resolvedModel: string | null;
+  /** Provider-generated response identifier, when supplied. */
+  responseId: string | null;
+  /** Provider request identifier from response headers, when supplied. */
+  requestId: string | null;
+  /** Provider-reported token usage. */
+  usage: AIGenerationUsage;
+  /** Wall-clock duration of the adapter request in milliseconds. */
+  latencyMs: number;
+}
+
+/**
+ * Structured generation output paired with its immutable adapter provenance.
+ */
+export interface GenerateObjectWithProvenanceResult<T> {
+  /** The schema-validated generated object. */
+  object: T;
+  /** Provider-neutral metadata recorded for the generation. */
+  provenance: AIGenerationProvenance;
+}
+
+/**
  * Media payload sent alongside a prompt for multimodal generation.
  */
 export interface MediaInput {
@@ -169,6 +220,24 @@ export interface AIClient {
    * @returns A StreamTextResult with textStream and toDataStreamResponse.
    */
   streamText(input: StreamTextInput): Promise<StreamTextResult>;
+}
+
+/**
+ * AIClient capability for structured generation with provider-neutral provenance.
+ *
+ * This separate interface keeps existing AIClient-typed consumers source
+ * compatible while allowing callers of createAIClient/getAIClient to persist
+ * model-routing and response metadata with their validated result.
+ */
+export interface AIClientWithProvenance extends AIClient {
+  /**
+   * Generate a structured object and return the validated object with provenance.
+   * @param input The schema, prompt, and optional task-specific model selection.
+   * @returns The parsed object together with provider-neutral generation metadata.
+   */
+  generateObjectWithProvenance<T>(
+    input: GenerateObjectInput<T>
+  ): Promise<GenerateObjectWithProvenanceResult<T>>;
 }
 
 /**

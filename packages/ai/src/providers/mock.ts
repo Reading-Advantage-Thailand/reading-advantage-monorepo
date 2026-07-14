@@ -1,8 +1,9 @@
 import type {
-  AIClient,
+  AIClientWithProvenance,
   GenerateImageInput,
   GenerateObjectFromMediaInput,
   GenerateObjectInput,
+  GenerateObjectWithProvenanceResult,
   GenerateTextInput,
   StreamTextInput,
   StreamTextResult,
@@ -10,6 +11,7 @@ import type {
   TranscribeAudioResult,
 } from "../types.js";
 import { ProviderNotConfiguredError, SchemaValidationError } from "../errors.js";
+import { createGenerationProvenance } from "../provenance.js";
 import { recommendationFixture } from "../__tests__/recommendations.fixture.js";
 import { diagramBuffer } from "../__tests__/diagram.fixture.js";
 
@@ -31,7 +33,7 @@ export interface MockResponses {
  * responses and optionally validates the output against the caller's Zod
  * schema so tests can verify schema compliance without a network round-trip.
  */
-export class MockProvider implements AIClient {
+export class MockProvider implements AIClientWithProvenance {
   private readonly responses: MockResponses;
   private callLog: Array<{
     method:
@@ -72,6 +74,28 @@ export class MockProvider implements AIClient {
     }
 
     return parsed.data;
+  }
+
+  /**
+   * Generates a deterministic object and captures the stable mock provenance.
+   * @param input The structured generation request.
+   * @returns The validated object and provider-neutral generation provenance.
+   */
+  async generateObjectWithProvenance<T>(
+    input: GenerateObjectInput<T>
+  ): Promise<GenerateObjectWithProvenanceResult<T>> {
+    const startedAtMs = Date.now();
+    const object = await this.generateObject(input);
+
+    return {
+      object,
+      provenance: createGenerationProvenance({
+        provider: "mock",
+        requestedModel: input.model ?? "mock",
+        startedAtMs,
+        result: {},
+      }),
+    };
   }
 
   async generateObjectFromMedia<T>(

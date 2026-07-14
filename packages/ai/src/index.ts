@@ -1,6 +1,11 @@
 export type {
   AIClient,
+  AIClientWithProvenance,
+  AIProvider,
+  AIGenerationProvenance,
+  AIGenerationUsage,
   GenerateObjectInput,
+  GenerateObjectWithProvenanceResult,
   GenerateObjectFromMediaInput,
   MediaInput,
   GenerateImageInput,

@@ -3,10 +3,11 @@ import { generateObject as aiGenerateObject } from "ai";
 import { generateText as aiGenerateText } from "ai";
 import { streamText as aiStreamText } from "ai";
 import type {
-  AIClient,
+  AIClientWithProvenance,
   GenerateImageInput,
   GenerateObjectFromMediaInput,
   GenerateObjectInput,
+  GenerateObjectWithProvenanceResult,
   GenerateTextInput,
   StreamTextInput,
   StreamTextResult,
@@ -14,6 +15,7 @@ import type {
   TranscribeAudioResult,
 } from "../types.js";
 import { AIClientError } from "../errors.js";
+import { createGenerationProvenance } from "../provenance.js";
 
 const OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1";
 const OPENROUTER_PREFIX = "openrouter/";
@@ -60,7 +62,7 @@ export function stripOpenRouterPrefix(modelId: string): string {
  * `@ai-sdk/openai` with a custom `baseURL`. The API key is passed
  * through the constructor — no process.env reads.
  */
-export class OpenRouterProvider implements AIClient {
+export class OpenRouterProvider implements AIClientWithProvenance {
   private readonly client: ReturnType<typeof createOpenAI>;
   private readonly defaultModel: string;
 
@@ -90,6 +92,49 @@ export class OpenRouterProvider implements AIClient {
     } catch (error) {
       throw new AIClientError(
         `OpenRouter generateObject failed: ${error instanceof Error ? error.message : "unknown"}`,
+        "PROVIDER_ERROR",
+        error
+      );
+    }
+  }
+
+  /**
+   * Generates a structured object and captures OpenRouter response provenance.
+   * @param input The structured generation request.
+   * @returns The validated object and provider-neutral generation provenance.
+   */
+  async generateObjectWithProvenance<T>(
+    input: GenerateObjectInput<T>
+  ): Promise<GenerateObjectWithProvenanceResult<T>> {
+    const requestedModel = input.model ?? this.defaultModel;
+    const startedAtMs = Date.now();
+
+    try {
+      const result = await aiGenerateObject({
+        model: this.client(stripOpenRouterPrefix(requestedModel)),
+        schema: input.schema,
+        prompt: input.prompt,
+        ...(input.temperature !== undefined
+          ? { temperature: input.temperature }
+          : {}),
+        ...(input.maxTokens !== undefined
+          ? { maxOutputTokens: input.maxTokens }
+          : {}),
+        maxRetries: 1,
+      });
+
+      return {
+        object: result.object,
+        provenance: createGenerationProvenance({
+          provider: "openrouter",
+          requestedModel,
+          startedAtMs,
+          result,
+        }),
+      };
+    } catch (error) {
+      throw new AIClientError(
+        `OpenRouter generateObjectWithProvenance failed: ${error instanceof Error ? error.message : "unknown"}`,
         "PROVIDER_ERROR",
         error
       );
