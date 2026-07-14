@@ -1,0 +1,24 @@
+/home/daniel-bo/Desktop/reading-advantage-monorepo/apps/reading-advantage:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] reading-advantage@0.1.0 check-types: `tsc --noEmit`
+Exit status 134
+$ tsc --noEmit
+
+<--- Last few GCs --->
+
+[3050696:0xb853000]   119685 ms: Scavenge (interleaved) 2042.2 (2083.0) -> 2040.5 (2087.2) MB, pooled: 0 MB, 11.70 / 0.00 ms  (average mu = 0.128, current mu = 0.058) allocation failure; 
+[3050696:0xb853000]   122035 ms: Mark-Compact (reduce) 2044.5 (2087.2) -> 2040.3 (2080.2) MB, pooled: 0 MB, 1802.39 / 0.00 ms  (+ 388.0 ms in 0 steps since start of marking, biggest step 0.0 ms, walltime since start of marking 2239 ms) (average mu = 0.155
+
+<--- JS stacktrace --->
+
+FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory
+----- Native stack trace -----
+
+ 1: 0xe46bbe node::OOMErrorHandler(char const*, v8::OOMDetails const&) [node]
+ 2: 0x1243640 v8::Utils::ReportOOMFailure(v8::internal::Isolate*, char const*, v8::OOMDetails const&) [node]
+ 3: 0x1243917 v8::internal::V8::FatalProcessOutOfMemory(v8::internal::Isolate*, char const*, v8::OOMDetails const&) [node]
+ 4: 0x1472825  [node]
+ 5: 0x1472853  [node]
+ 6: 0x148b92a  [node]
+ 7: 0x148eaf8  [node]
+ 8: 0x1cf7681  [node]
+Aborted (core dumped)

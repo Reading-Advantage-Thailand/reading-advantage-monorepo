@@ -34,28 +34,85 @@
     "dirty": true,
     "note": "Worktree contains 254 unrelated modified/untracked entries preserved per test-strategy.md section 6; not stashed or reverted."
   },
-  "ts59_scoped_baseline": {
-    "command": "TURBO_CONCURRENCY=1 /usr/bin/time -v pnpm --filter @reading-advantage/types exec tsc --noEmit -p tsconfig.json",
-    "workspace": "packages/types",
+  "ts59_workspace_baseline": {
+    "scope": "all 31 workspaces with check-types scripts (sequential, TURBO_CONCURRENCY=1, 300s per-workspace timeout)",
+    "evidence_file": "phase1-workspace-baseline.json",
+    "capture_script": "capture-phase1-baseline.py",
+    "raw_logs_dir": "evidence/phase1/raw-logs/",
     "compiler_version": "5.9.3",
+    "workspace_count": 31,
+    "summary": {
+      "pass": 27,
+      "fail": 4,
+      "timeout": 0,
+      "contaminated": 15,
+      "clean": 16
+    },
+    "failures": [
+      {
+        "workspace": "apps/primary-advantage",
+        "exit_status": 2,
+        "diagnostic_count": 131,
+        "elapsed_ms": 143081,
+        "contaminated": true,
+        "dirty_path_count": 2,
+        "classification": "pre-existing; primary-advantage has known ESLint/type debt per measure/tech-debt.md"
+      },
+      {
+        "workspace": "apps/reading-advantage",
+        "exit_status": 134,
+        "diagnostic_count": 0,
+        "elapsed_ms": 126902,
+        "contaminated": true,
+        "dirty_path_count": 11,
+        "classification": "pre-existing; exit 134 = SIGABRT (likely OOM kill on constrained 4-CPU/7.5GB host with swap already 71% used); 0 diagnostics emitted before crash"
+      },
+      {
+        "workspace": "apps/sales-advantage",
+        "exit_status": 2,
+        "diagnostic_count": 2,
+        "elapsed_ms": 28590,
+        "contaminated": true,
+        "dirty_path_count": 1,
+        "classification": "pre-existing; 2 type errors in dirty worktree state"
+      },
+      {
+        "workspace": "apps/science-advantage",
+        "exit_status": 2,
+        "diagnostic_count": 31,
+        "elapsed_ms": 61297,
+        "contaminated": false,
+        "dirty_path_count": 0,
+        "classification": "pre-existing; 31 type errors against clean workspace path"
+      }
+    ],
+    "completeness_check": {
+      "inventory_workspaces": 31,
+      "captured_workspaces": 31,
+      "match": true,
+      "all_accounted": true
+    },
+    "contamination_note": "15 of 31 workspaces have dirty paths in the worktree; all results are current-worktree snapshots, not clean committed-state baselines. Failures are preserved honestly and classified as pre-existing for Phase 4 reconciliation."
+  },
+  "ts59_scoped_packages_types_historical": {
+    "note": "Initial scoped measurement of packages/types only; superseded by the full 31-workspace baseline above. Retained as historical evidence of the first Phase 1 capture.",
+    "command": "TURBO_CONCURRENCY=1 /usr/bin/time -v pnpm --filter @reading-advantage/types exec tsc --noEmit -p tsconfig.json",
     "exit_status": 0,
     "wall_clock_seconds": 15.84,
-    "user_time_seconds": 24.0,
-    "system_time_seconds": 1.47,
     "peak_rss_kib": 397052,
-    "diagnostic_count": 0,
-    "swaps": 0,
-    "contaminated": true,
-    "contamination_reason": "packages/types has 3 dirty entries (src/codecamp.ts modified, src/index.ts modified, src/assignment-status.ts untracked) plus 254 total worktree dirty entries; this is a current-worktree snapshot, not a clean committed-state baseline",
-    "scope": "single workspace (packages/types); full Turbo check-types graph NOT run in Phase 1 (artifact-only phase)"
+    "diagnostic_count": 0
   },
   "pre_existing_failure_classification": {
     "known_debt": [
-      "primary-advantage: 49 pre-existing ESLint errors (measure/tech-debt.md)",
+      "primary-advantage: 49 pre-existing ESLint errors (measure/tech-debt.md); confirmed by check-types baseline: 131 type diagnostics, exit 2",
       "mixed Jest/Vitest test runners across apps (measure/tech-debt.md)",
-      "294 legacy API routes not yet using domain functions (AGENTS.md Known Issues)"
+      "294 legacy API routes not yet using domain functions (AGENTS.md Known Issues)",
+      "reading-advantage: check-types SIGABRT (exit 134) on constrained host; pre-existing OOM vulnerability under 4-CPU/7.5GB",
+      "science-advantage: 31 type errors against clean workspace path; pre-existing",
+      "sales-advantage: 2 type errors in dirty worktree state; pre-existing"
     ],
-    "phase1_classification": "Phase 1 is artifact-only; no aggregate gate is run. Pre-existing failures are recorded for Phase 4 reconciliation against this baseline.",
+    "phase1_classification": "Phase 1 check-types baseline captured for all 31 workspaces. 4 failures recorded honestly and classified as pre-existing for Phase 4 reconciliation. No aggregate Turbo gate is run in Phase 1.",
+    "workspace_baseline_file": "phase1-workspace-baseline.json",
     "full_evidence_file": "phase1-pre-existing-failures.json"
   }
 }

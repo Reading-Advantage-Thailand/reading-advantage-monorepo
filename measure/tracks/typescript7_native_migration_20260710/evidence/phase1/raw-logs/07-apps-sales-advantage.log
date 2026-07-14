@@ -1,0 +1,6 @@
+lib/trpc.ts(4,14): error TS2742: The inferred type of 'trpc' cannot be named without a reference to '../../../node_modules/@trpc/react-query/dist/getQueryKey.d-CruH3ncI.mjs'. This is likely not portable. A type annotation is necessary.
+lib/trpc.ts(4,14): error TS2742: The inferred type of 'trpc' cannot be named without a reference to '@/node_modules/@reading-advantage/api/dist/trpc'. This is likely not portable. A type annotation is necessary.
+/home/daniel-bo/Desktop/reading-advantage-monorepo/apps/sales-advantage:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] sales-advantage@0.1.0 check-types: `tsc --noEmit`
+Exit status 2
+$ tsc --noEmit

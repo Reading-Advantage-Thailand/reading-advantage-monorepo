@@ -1,0 +1,2 @@
+$ pnpm build && tsc --noEmit -p tsconfig.test.json
+$ node scripts/clean-dist.mjs && tsc
