@@ -51,6 +51,30 @@ describe("LessonContent", () => {
       expect(screen.getByText("Just text.")).toBeInTheDocument();
       expect(screen.queryAllByText(/Just text/i).length).toBe(1);
     });
+
+    it("renders an image illustration when imagePath is provided", () => {
+      const content = {
+        sections: [{ heading: "CSS Box Model", body: "Explanation", imagePath: "/images/diagrams/css-box.png" }],
+      };
+
+      render(<LessonContent type="theory" content={content} />);
+
+      const img = screen.getByAltText("CSS Box Model");
+      expect(img).toBeInTheDocument();
+      expect(img).toHaveAttribute("src", "/images/diagrams/css-box.png");
+    });
+
+    it("renders a YouTube iframe when youtubeId is provided", () => {
+      const content = {
+        sections: [{ heading: "React Hooks", body: "Explanation", youtubeId: "k5E265ksDSI" }],
+      };
+
+      render(<LessonContent type="theory" content={content} />);
+
+      const iframe = screen.getByTitle("React Hooks");
+      expect(iframe).toBeInTheDocument();
+      expect(iframe).toHaveAttribute("src", "https://www.youtube.com/embed/k5E265ksDSI");
+    });
   });
 
   describe("exercise lessons", () => {

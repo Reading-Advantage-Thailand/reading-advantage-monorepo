@@ -12,6 +12,8 @@ interface TheorySection {
   heading?: string;
   body?: string;
   code?: string;
+  youtubeId?: string;
+  imagePath?: string;
 }
 
 /**
@@ -64,10 +66,32 @@ function TheoryContent({ content }: { content: Record<string, unknown> }) {
             <h3 className="text-lg font-semibold text-foreground">{section.heading}</h3>
           ) : null}
 
+          {section.imagePath ? (
+            <div className="my-4 overflow-hidden rounded-lg border bg-muted shadow-sm">
+              <img
+                src={section.imagePath}
+                alt={section.heading ?? "Curriculum Illustration"}
+                className="w-full h-auto object-cover max-h-[400px]"
+              />
+            </div>
+          ) : null}
+
           {section.body ? (
             <p className="whitespace-pre-wrap text-muted-foreground leading-relaxed">
               {section.body}
             </p>
+          ) : null}
+
+          {section.youtubeId ? (
+            <div className="aspect-video w-full overflow-hidden rounded-lg border bg-muted my-4 shadow-sm">
+              <iframe
+                src={`https://www.youtube.com/embed/${section.youtubeId}`}
+                title={section.heading ?? "Video Tutorial"}
+                className="h-full w-full border-0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
           ) : null}
 
           {section.code ? (
@@ -104,5 +128,3 @@ function InstructionsContent({
     </div>
   );
 }
-
-

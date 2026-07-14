@@ -485,7 +485,7 @@ function ChatTutor({ lessonId, moduleId }: { lessonId: string; moduleId: string 
   );
 }
 
-// ─── Issue Selector (Module 18) ───────────────────────────
+// ─── Issue Selector (Module 19) ───────────────────────────
 
 const LABEL_COLORS: Record<string, string> = {
   Easy: "bg-green-100 text-green-700 border-green-300",

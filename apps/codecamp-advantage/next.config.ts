@@ -10,6 +10,12 @@ const nextConfig: NextConfig = {
   devIndicators: false,
   output: "standalone",
   outputFileTracingRoot: path.join(appDir, "../.."),
+  // Keep these out of the server bundle and let output-file-tracing copy
+  // them into .next/standalone instead: postgres.js breaks parameter
+  // serialization when minified into a chunk (Date params reach the socket
+  // writer raw), and @node-rs/argon2 is a native addon (same setting as
+  // sales-advantage).
+  serverExternalPackages: ["postgres", "@node-rs/argon2"],
   transpilePackages: [
     "@reading-advantage/api",
     "@reading-advantage/auth",
