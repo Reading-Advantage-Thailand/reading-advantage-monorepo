@@ -250,8 +250,8 @@ track: apk_source_denominator_inventory_20260712
 phase: Phase 4: Full independent acceptance
 baseline_sha: 476835906509e2c550ed98e0d23e89c7326b7bdc
 role_base_sha: 9849e6a963bb2518f8306b33b205ff4f714daad5
-audited_head_sha: 194cf246fd9d472054adaaef2075ab54841c168d
-commits: eca972787afa5fa21f51022f5e9abfcac1518a2e, 194cf246fd9d472054adaaef2075ab54841c168d
+audited_head_sha: 2bb355b355abaafdf20f55c7b074f720549252d3
+commits: eca972787afa5fa21f51022f5e9abfcac1518a2e, 194cf246fd9d472054adaaef2075ab54841c168d, 2bb355b355abaafdf20f55c7b074f720549252d3
 tests_run: PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile measure/tests/test_apk_source_denominator_inventory_phase4.py; expected_exit=0; actual_exit=0; result=passed (no syntax regression)
 tests_run: PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase0 measure.tests.test_apk_source_denominator_inventory_phase1 measure.tests.test_apk_source_denominator_inventory_phase2 measure.tests.test_apk_source_denominator_inventory_phase3; expected_exit=0; actual_exit=0; result=passed (32 tests against committed Phase 0-3 inputs)
 tests_run: PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase4; expected_red_exit=1; actual_exit=1; result=FAILED (failures=35), as expected
