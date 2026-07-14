@@ -325,53 +325,131 @@ The track's `phase0-role-ownership-manifest.json` freezes **five track-local rol
 with pairwise isolation and `fork_turns="none"` provenance:
 `discovery-auditor`, `evidence-collector`, `requirements-mapper`,
 `truth-test-author`, `adversarial-reviewer`. These roles name **what the track
-produces**, not which canonical subagent type authors them. They remain frozen and
-their evidence is non-fabricable: a receipt claiming `adversarial-reviewer` must come
-from a `fork_turns="none"` session with measured integer resource use under every
-frozen ceiling, zero numeric stop-loss observations, and SHA-256-bound outputs; an
-audit-only canonical role (`measure-review-a-correctness`, etc.) cannot satisfy
-this contract because it writes only an audit result JSON and is not allowed to
-commit, generate `independent-review.json`, or bind the candidate manifest hashes.
+produces**, and the canonical Measure orchestrator **canonical subagent types** are
+mapped to them under track-local ownership: `measure-mid-red` → `truth-test-author`,
+`measure-jr-green` → `discovery-auditor` / `evidence-collector` /
+`requirements-mapper` (one canonical subagent per role invocation),
+`measure-adversarial-testing` → `adversarial-reviewer`. The five track-local roles
+remain frozen and their evidence is non-fabricable: every receipt must come from a
+`fork_turns="none"` isolated session with measured labeled-integer resource use
+under every frozen ceiling, zero numeric stop-loss observations, and SHA-256-bound
+outputs. Audit-only canonical roles (`measure-review-a-correctness`,
+`measure-review-b-security`, `measure-review-c-ux-api`, `measure-phase-acceptance`,
+`measure-final-acceptance`, `measure-ux-browser-review`) write only their supplied
+audit result and route blockers to the owning role — they do not satisfy any of
+the five track-local role ownerships. `measure-adversarial-testing` is **not** in
+`CANNOT_COMMIT_ROLES` per
+`~/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py:41`,
+and per the SKILL §Delegation "Red, Green, adversarial testing, orchestrator-audit
+guard-test work, and closeout may edit within their explicit ownership," so it is
+the only audit-class canonical role that may author and commit
+`independent-review.json`, `role-receipts/adversarial-reviewer.json`,
+`candidate-denominator-manifest.json`, and `candidate-partition-manifest.json`
+when it is assigned the bounded track-local `adversarial-reviewer` ownership.
 
-### Role-map problem and infrastructure blocker
+### Canonical role-to-ownership mapping and order
 
-The track's frozen `adversarial-reviewer` role has **no exact canonical-subagent
-counterpart** that can author `independent-review.json`,
-`role-receipts/adversarial-reviewer.json`, `candidate-denominator-manifest.json`,
-and `candidate-partition-manifest.json` while satisfying the strict isolation,
-provenance, and budget-measurement requirements above. The closest canonical role,
-`measure-adversarial-testing`, is documented as **audit-only** and routes exposed
-defects to Green rather than authoring acceptance artifacts.
+The track's frozen `adversarial-reviewer` role **does** have a canonical-subagent
+counterpart: `measure-adversarial-testing`. Per `measure-orchestrator/SKILL.md`
+§Delegation, "Red, Green, adversarial testing, orchestrator-audit guard-test work,
+and closeout may edit within their explicit ownership." The
+`CANNOT_COMMIT_ROLES` set in
+`~/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py:41`
+is `{"review-a", "review-b", "review-c", "phase-acceptance", "ux-browser-review",
+"final-acceptance"}`; `adversarial-testing` is not in that set, so it may
+commit edits within its explicit ownership. The previously recorded claim that
+"`measure-adversarial-testing` is documented as **audit-only** and routes exposed
+defects to Green rather than authoring acceptance artifacts" was a
+strategy-owned canonical-contract error introduced when the canonical
+orchestrator audit-only class was over-generalized to `adversarial-testing`.
 
-This is a **precise infrastructure blocker**, not a contract weakness. Until either:
-(a) a future Measure orchestrator revision registers a `measure-adversarial-reviewer`
-subagent type capable of authoring Phase-4 reviewer artifacts with the required
-isolation properties, or (b) the orchestrator's task tool is extended to allow a
-delegated `fork_turns="none"` session bound to the track-local
-`adversarial-reviewer` role, the Phase-4 reviewer cannot be dispatched as a
-canonical subagent, the candidate manifests cannot be authored by a canonical
-subagent, and the closeout gate cannot be satisfied.
+The canonical mapping and order for this track's Phase 4 (and any later reviewer
+acceptance phase) is therefore:
 
-The valid **delegated ownership** while the blocker stands is therefore:
+1. **Predecessor contracts (Phase 0–3):** authored by canonical `measure-mid-red`
+   and `measure-jr-green` subagents under the track-local ownership names
+   `truth-test-author` (freeze contract and admission tests),
+   `discovery-auditor` (mechanical denominator),
+   `evidence-collector` (asset and historical denominator),
+   `requirements-mapper` (reconciliation records and discrepancies). One
+   canonical subagent is invoked per role; the track-local role name is recorded
+   in each artifact's `role` / `task_id` / receipt `task_id` field. Frozen
+   pairwise isolation, frozen ceilings, and `fork_turns="none"` provenance from
+   `phase0-role-ownership-manifest.json` are preserved.
+2. **Review A/B/C (audit-only, in parallel):** canonical
+   `measure-review-a-correctness`, `measure-review-b-security`, and
+   `measure-review-c-ux-api` after Jr commits Green work. They write only their
+   supplied audit result JSON and route blockers to Green. Their prior
+   `review-a`/`review-b`/`review-c` outputs on disk are stale and remain
+   historical input to the next reviewer rerun.
+3. **`measure-adversarial-testing` acting under explicit frozen
+   `adversarial-reviewer` ownership:** this canonical subagent is the bounded
+   track-local owner of `independent-review.json`,
+   `role-receipts/adversarial-reviewer.json`,
+   `candidate-denominator-manifest.json`, and
+   `candidate-partition-manifest.json`. It may also re-generate Phase-3
+   reconciliation bytes into a temporary output path, run the live contract
+   tests against them, and compare the SHA-256 against the committed
+   reconciliation. It is invoked with `fork_turns="none"` (or a retained raw
+   export whose history starts with exactly the fresh review prompt), measured
+   labeled-integer `actual_usage` per frozen ceiling, zero numeric stop-loss
+   observations, frozen freshness, ancestor-only inputs, prompt/context hashes,
+   output hashes, and no inherited author narrative. Defects found are routed to
+   Green via adversarial feedback, then the affected gates are rerun. It is
+   invoked once after the predecessor admission gate is green and after
+   Green-rerouted Review-A/B/C remediation has landed; if it returns a blocking
+   finding, Green remediates and `measure-adversarial-testing` reruns.
+4. **`measure-phase-acceptance`:** invoked only after every required Review
+   A/B/C, the `measure-adversarial-testing` reviewer rerun, and any UX/browser
+   review (none applicable here) target the same final phase HEAD. It is
+   audit-only, requires its supplied `--result-file`, and is not in the commit
+   path.
+5. **Product-owner exact-hash gate:** the product owner (human, external to
+   the orchestrator) binds the exact candidate/partition/review/predecessor-gate
+   hashes in `product-owner-acceptance.json` with a current
+   authorization event. This step is not a canonical subagent; it is the
+   non-substitutable authorization required to flip candidate manifests from
+   non-consumable to accepted.
+6. **`measure-final-acceptance`:** the pre-closeout audit-only role;
+   requires every `phase-acceptance` result, the candidate hashes, the owner
+   binding, and the global gates (`measure/doctor.sh`, `PROJECT_LINT`,
+   `PROJECT_CHECKS`, `PROJECT_TESTS`) to exit 0. Audit-only; not in the
+   commit path.
+7. **`measure-closeout`:** the canonical closeout role moves
+   `measure/tracks/<track>` to `measure/archive/<track>`, flips
+   `metadata.json.status` to `done`, removes the active track row from
+   `measure/tracks.md`, and writes the closeout manifest. Per the SKILL
+   §Closeout Standard and the SKILL §Delegation closeout allowance, it is
+   permitted to commit within its explicit ownership.
 
-1. **Predecessor contracts (Phase 0–3):** authored by the canonical
-   `measure-mid-red` and `measure-jr-green` subagents, whose track-local role names
-   (`truth-test-author`, `discovery-auditor`, `evidence-collector`,
-   `requirements-mapper`) are recorded in each artifact's `role` / `task_id` field
-   without weakening the frozen pairwise isolation. These roles continue to share
-   the same SHA-256-bound outputs, frozen ceilings, and `fork_turns="none"`
-   provenance required by `phase0-role-ownership-manifest.json`.
-2. **Phase-4 review artifacts** (`independent-review.json`,
-   `role-receipts/adversarial-reviewer.json`, candidate manifests): remain blocked.
-   They are not authored by `measure-strategy`, by any predecessor canonical role, or
-   by the orchestrator itself. They wait on the infrastructure unblock above. No
-   strategy weakening (e.g., dropping `fork_turns="none"`, accepting an inherited
-   reviewer context, accepting an all-`[~]` reviewer state, accepting an owner
-   authorization without the four exact hash bindings) is authorized as a workaround.
-3. **Phase-4 closeout artifacts** (`product-owner-acceptance.json`, accepted
-   manifests, terminal metadata/plan/registry state): remain blocked on the same
-   infrastructure unblock and on the product-owner authorization event bound to the
-   exact candidate/partition/review/predecessor-gate hashes.
+**Fabrication guards on the canonical-to-track-local mapping.** Mapping a
+canonical subagent to a track-local role is not permission to fabricate
+earlier discovery/evidence/mapper receipts. Each frozen track-local role still
+requires its own `fork_turns="none"` provenance, labeled-integer
+`actual_usage` per ceiling, zero numeric stop-loss, ancestor-only inputs, and
+SHA-256-bound outputs. Specifically:
+- The `adversarial-reviewer` receipt must record its own spawn id, parent
+  ancestry ids, prompt sha-256, context manifest sha-256, start/end event
+  ids, final response sha-256, output sha-256, and budget declaration
+  sha-256 — never a placeholder or a hash borrowed from any prior session.
+- Prior predecessor receipts (`discovery-auditor`, `evidence-collector`,
+  `requirements-mapper`, `truth-test-author`) are not refreshed or replaced
+  by the adversarial reviewer invocation. If any predecessor receipt fails
+  its `tests/orchestrator_role_receipt_integrity.sh` check (anti-pattern
+  A15), Green must remediate via a truthful rerun or an equivalent
+  provenance-correct regeneration, and Review A/B/C must re-audit before
+  the adversarial reviewer is invoked. The reviewer does not sign off on
+  a stale or missing predecessor receipt.
+- The browser-review applicability remains `not_applicable` for this
+  inventory phase; the strategy records `UX_REQUIRED=never` for the Phase-4
+  role gates, and `measure-ux-browser-review` is not invoked. Browser
+  acceptance applies only if future evidence changes this determination.
+
+No strategy weakening is authorized as a workaround in any of these steps
+(e.g., dropping `fork_turns="none"`, accepting an inherited reviewer context,
+accepting an all-`[~]` reviewer state, signing off on a stale predecessor
+receipt, or accepting an owner authorization without the four exact hash
+bindings is forbidden).
 
 ### Trusted-provenance constraints (re-asserted)
 
@@ -393,9 +471,13 @@ The valid **delegated ownership** while the blocker stands is therefore:
 ### Strategy role ownership on this retry
 
 This strategy update is owned by `measure-strategy` and is **strategy-only**: it
-re-asserts the existing frozen contract, reconciles it against current evidence,
-names the role-map infrastructure blocker, and defines the valid delegated
-ownership under the canonical role ordering. It does not author, mutate, or
+corrects a strategy-owned canonical-contract error about
+`measure-adversarial-testing`, re-asserts the existing frozen contract, reconciles
+it against current evidence, defines the canonical role-to-track-local-ownership
+mapping and the order in which the canonical roles (Mid-red, Jr-green, Review
+A/B/C, adversarial-testing, phase-acceptance, product-owner, final-acceptance,
+closeout) are invoked, and preserves the fabrication guards on earlier discovery,
+evidence, mapping, and truth-test receipts. It does not author, mutate, or
 approve any Phase-4 artifact; it does not mark any Phase-4 task `[x]`; it does not
 request product-owner acceptance; and it does not advance any canonical role's
 lifecycle past its current handoff. The canonical `measure-strategy` subagent is
@@ -404,5 +486,9 @@ above.
 
 The next legal subagent invocation after this strategy commit is the canonical
 `measure-mid-red` (truth-test-author) or `measure-jr-green` (discovery-auditor /
-evidence-collector / requirements-mapper) for predecessor remediation only — never
-the `adversarial-reviewer` until the infrastructure unblock above is in place.
+evidence-collector / requirements-mapper) for predecessor remediation only. After
+the predecessor admission gate is green, Review A/B/C have rerun, and Green has
+remediated any blocking findings, the canonical `measure-adversarial-testing`
+subagent may be invoked under the bounded frozen track-local `adversarial-reviewer`
+ownership, with `fork_turns="none"` isolation, measured labeled-integer budget,
+zero numeric stop-loss, and SHA-256-bound outputs as described above.
