@@ -83,28 +83,23 @@ export function useChatStream(options: UseChatStreamOptions = {}) {
 
           setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
 
+          // The route streams the AI SDK v5 text stream (raw text chunks,
+          // no line framing) re-framed with an SSE content-type. Append
+          // each decoded chunk directly.
           while (reader) {
             const { done, value } = await reader.read();
             if (done) break;
             const chunk = decoder.decode(value, { stream: true });
-            const lines = chunk.split("\n");
-            for (const line of lines) {
-              if (line.startsWith("0:")) {
-                try {
-                  const text = JSON.parse(line.slice(2));
-                  assistantMessage += text;
-                  setMessages((prev) => {
-                    const next = [...prev];
-                    next[next.length - 1] = {
-                      role: "assistant",
-                      content: assistantMessage,
-                    };
-                    return next;
-                  });
-                } catch {
-                  // ignore parse errors
-                }
-              }
+            if (chunk) {
+              assistantMessage += chunk;
+              setMessages((prev) => {
+                const next = [...prev];
+                next[next.length - 1] = {
+                  role: "assistant",
+                  content: assistantMessage,
+                };
+                return next;
+              });
             }
           }
 

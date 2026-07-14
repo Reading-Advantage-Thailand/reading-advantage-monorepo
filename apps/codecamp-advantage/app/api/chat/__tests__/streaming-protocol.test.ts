@@ -1,8 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-vi.mock("@reading-advantage/ai/internal-sdk", () => ({
-  createOpenAI: vi.fn(() => (model: string) => model),
-  streamText: vi.fn(),
+const aiMocks = vi.hoisted(() => ({ createAIClient: vi.fn(), streamText: vi.fn() }));
+
+vi.mock("@reading-advantage/ai", () => ({
+  createAIClient: aiMocks.createAIClient,
 }));
 
 vi.mock("@reading-advantage/auth", async () => {
@@ -36,7 +37,6 @@ vi.mock("@reading-advantage/db", async () => {
 });
 
 import { POST } from "../route.js";
-import { streamText } from "@reading-advantage/ai/internal-sdk";
 import { requireAuth } from "@reading-advantage/auth";
 import { getAuthToken } from "@reading-advantage/api/context";
 import { getChatContext } from "@reading-advantage/domain/codecamp";
@@ -53,38 +53,23 @@ const user = {
 };
 
 /**
- * Builds a streamText result whose toDataStreamResponse returns the given
- * chunks encoded as Vercel AI SDK data-stream lines. The Content-Type is set
- * to text/plain to mirror the default response from the real provider adapter;
- * this exposes the content-type mismatch with the client parser.
+ * Builds a public adapter streamText result containing the given raw chunks.
+ * @param chunks Text chunks emitted by the adapter.
+ * @returns A public streamText-shaped result.
  */
 function buildStreamTextResult(chunks: string[]) {
-  const body = chunks.map((chunk) => `0:${JSON.stringify(chunk)}`).join("\n") + "\n";
   return {
-    toDataStreamResponse() {
-      return new Response(body, {
-        headers: { "Content-Type": "text/plain; charset=utf-8" },
-      });
-    },
+    textStream: (async function* () { for (const chunk of chunks) yield chunk; })(),
   };
 }
 
 /**
  * Mirrors the parsing logic in lib/use-chat-stream.ts so the test verifies
- * that server framing and client parsing agree.
+ * that server framing and client parsing agree: the client appends decoded
+ * text chunks directly, so the reconstructed message is the raw body.
  */
 function parseClientStream(bodyText: string): string {
-  let message = "";
-  for (const line of bodyText.split("\n")) {
-    if (line.startsWith("0:")) {
-      try {
-        message += JSON.parse(line.slice(2));
-      } catch {
-        // ignore malformed lines, matching client behavior
-      }
-    }
-  }
-  return message;
+  return bodyText;
 }
 
 describe("POST /api/chat streaming protocol", () => {
@@ -96,14 +81,11 @@ describe("POST /api/chat streaming protocol", () => {
     >);
     vi.mocked(getAuthToken).mockResolvedValue("token");
     vi.mocked(getChatContext).mockResolvedValue("");
+    aiMocks.createAIClient.mockReturnValue({ streamText: aiMocks.streamText });
   });
 
-  it("returns a streaming content-type the client parser recognizes and emits Vercel AI SDK data stream chunks", async () => {
-    vi.mocked(streamText).mockResolvedValue(
-      buildStreamTextResult(["Hello", " world"]) as unknown as Awaited<
-        ReturnType<typeof streamText>
-      >
-    );
+  it("returns a streaming content-type the client parser recognizes and emits raw text-stream chunks", async () => {
+    aiMocks.streamText.mockResolvedValue(buildStreamTextResult(["Hello", " world"]));
 
     const req = new Request("http://localhost/api/chat", {
       method: "POST",
@@ -124,7 +106,12 @@ describe("POST /api/chat streaming protocol", () => {
     ).toContain("text/event-stream");
     expect(
       parsedMessage,
-      "client parser must reconstruct assistant message from data stream chunks"
+      "client parser must reconstruct assistant message from text stream chunks"
     ).toBe("Hello world");
+    expect(aiMocks.createAIClient).toHaveBeenCalledWith({
+      provider: "openrouter",
+      apiKey: "test-key",
+      model: "xiaomi/mimo-v2.5",
+    });
   });
 });

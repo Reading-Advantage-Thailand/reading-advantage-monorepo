@@ -1,6 +1,5 @@
 import { NextRequest } from "next/server";
-import { streamText } from "@reading-advantage/ai/internal-sdk";
-import { createOpenAI } from "@reading-advantage/ai/internal-sdk";
+import { createAIClient } from "@reading-advantage/ai";
 import { db } from "@reading-advantage/db";
 import { requireAuth } from "@reading-advantage/auth";
 import { getAuthToken } from "@reading-advantage/api/context";
@@ -9,11 +8,13 @@ import { getChatContext } from "@reading-advantage/domain/codecamp";
 import { checkChatRateLimit } from "@/lib/rate-limit";
 import { z } from "zod";
 
-const openrouter = createOpenAI({
-  apiKey: process.env.OPENROUTER_API_KEY,
-  baseURL: "https://openrouter.ai/api/v1",
-});
+const CODECAMP_TUTOR_MODEL = process.env.CODECAMP_TUTOR_MODEL ?? "xiaomi/mimo-v2.5";
 
+/**
+ * Creates the bounded, bilingual instruction set for legacy streaming chat.
+ * @param locale Requested learner locale.
+ * @returns A system prompt that keeps streaming chat in an intervention-first posture.
+ */
 function buildSystemPrompt(locale: string): string {
   const thaiInstruction = `Respond in Thai (ภาษาไทย) by default. **Mirror the user: if the user writes entirely in English, answer in English; otherwise answer in Thai.**
 Note: The lesson content is written in English, not Thai. If the user asks about lesson content or wants it explained, you may translate it to Thai on request.`;
@@ -23,7 +24,9 @@ Note: The lesson content is in English, which is the default language for all ma
   const effectiveLocale = locale === "en" ? "en" : "th";
   const languageInstruction = effectiveLocale === "th" ? thaiInstruction : englishInstruction;
 
-  return `You are CodeCamp Advantage AI Tutor, an expert in Next.js, React, TypeScript, and monorepo architecture.
+  return `You are CodeCamp Advantage AI Tutor, a targeted intervention coach for Next.js, React, TypeScript, and monorepo architecture.
+
+Do not claim that an answer is correct: deterministic checks and assessed checkpoints are the only correctness authority. Start with a prediction or conceptual cue, then provide the smallest useful next step. Do not give a ready-to-submit solution for independent learner work.
 
 You teach the Reading Advantage monorepo patterns:
 - Next.js 16 App Router with Server Components
@@ -50,6 +53,37 @@ const chatInputSchema = z.object({
   locale: z.enum(["th", "en"]).optional(),
 });
 
+/**
+ * Converts the adapter's text stream into the raw chunk protocol used by the legacy chat client.
+ * @param textStream Public AI-adapter text stream.
+ * @returns A no-cache SSE response whose body contains raw text chunks.
+ */
+function createChatStreamResponse(textStream: AsyncIterable<string>): Response {
+  const encoder = new TextEncoder();
+  const body = new ReadableStream<Uint8Array>({
+    async start(controller) {
+      try {
+        for await (const chunk of textStream) controller.enqueue(encoder.encode(chunk));
+        controller.close();
+      } catch (error) {
+        controller.error(error);
+      }
+    },
+  });
+  return new Response(body, {
+    headers: {
+      "Content-Type": "text/event-stream; charset=utf-8",
+      "Cache-Control": "no-cache, no-transform",
+      "X-Accel-Buffering": "no",
+    },
+  });
+}
+
+/**
+ * Streams a legacy Codecamp chat response through the public AI adapter.
+ * @param req Authenticated learner request with optional lesson context.
+ * @returns A streamed response, a safe fallback, or a structured HTTP error.
+ */
 export async function POST(req: NextRequest) {
   try {
     // Authenticate using shared token helper
@@ -98,25 +132,19 @@ export async function POST(req: NextRequest) {
 
     const systemPrompt = buildSystemPrompt(locale ?? "th") + contextAddition;
 
-    const result = await streamText({
-      model: openrouter("xiaomi/mimo-v2.5"),
+    const tutorClient = createAIClient({
+      provider: "openrouter",
+      apiKey: process.env.OPENROUTER_API_KEY,
+      model: CODECAMP_TUTOR_MODEL,
+    });
+    const result = await tutorClient.streamText({
+      model: CODECAMP_TUTOR_MODEL,
       system: systemPrompt,
       prompt: message,
       maxTokens: 2048,
     });
 
-    // Vercel AI SDK's `toDataStreamResponse()` returns `text/plain; charset=utf-8`
-    // for the line-delimited data-stream protocol. Our client parser
-    // (`lib/use-chat-stream.ts`) only recognizes `text/event-stream`, so we
-    // re-frame the body with the SSE content-type while keeping the data-stream
-    // framing (`0:"chunk"` lines) intact. This keeps the parser and the route
-    // on the same protocol without changing the SDK contract.
-    const aiResponse = result.toDataStreamResponse();
-    const headers = new Headers(aiResponse.headers);
-    headers.set("Content-Type", "text/event-stream; charset=utf-8");
-    headers.set("Cache-Control", "no-cache, no-transform");
-    headers.set("X-Accel-Buffering", "no");
-    return new Response(aiResponse.body, { headers, status: aiResponse.status });
+    return createChatStreamResponse(result.textStream);
   } catch (error) {
     if (error instanceof Error && error.message === "Authentication required") {
       return Response.json(
