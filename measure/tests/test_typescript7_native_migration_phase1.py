@@ -204,6 +204,31 @@ class SurfaceInventoryContract(unittest.TestCase):
         assert isinstance(matrix, list)
         self.assertTrue(matrix, "ownership_matrix cannot be empty")
 
+    def test_surface_inventory_tsconfig_count_matches_inventory_length(self) -> None:
+        """Requires tsconfig_count to equal the number of inventoried tsconfigs."""
+        artifact = _load_json_object(SURFACE_INVENTORY_PATH)
+        tsconfigs = artifact.get("tsconfigs")
+        self.assertIsInstance(tsconfigs, list, "tsconfigs must be a list")
+        assert isinstance(tsconfigs, list)
+        self.assertEqual(
+            artifact.get("tsconfig_count"),
+            len(tsconfigs),
+            "tsconfig_count must equal the number of entries in tsconfigs",
+        )
+
+    def test_surface_inventory_rejects_mismatched_tsconfig_count(self) -> None:
+        """Counterexample: a declared count different from the list length fails."""
+        mismatched: dict[str, Any] = {
+            "tsconfig_count": 2,
+            "tsconfigs": [{"path": "tsconfig.json"}],
+        }
+        with self.assertRaises(AssertionError):
+            self.assertEqual(
+                mismatched["tsconfig_count"],
+                len(mismatched["tsconfigs"]),
+                "tsconfig_count must equal the number of entries in tsconfigs",
+            )
+
     def test_surface_inventory_rejects_missing_ownership_matrix(self) -> None:
         """Counterexample: a record without ownership_matrix fails the required-key check."""
         incomplete: dict[str, Any] = {
