@@ -48,8 +48,13 @@ DUAL_COMPILER_CONTRACT_PATH = TRACK_DIR / "dual-compiler-contract.json"
 DIAGNOSTIC_PARITY_LEDGER_PATH = TRACK_DIR / "diagnostic-parity-ledger.json"
 BENCHMARK_RECORD_SCHEMA_PATH = TRACK_DIR / "benchmark-record-schema.json"
 ROLLOUT_RECORD_SCHEMA_PATH = TRACK_DIR / "rollout-record-schema.json"
+TEST_STRATEGY_PATH = TRACK_DIR / "test-strategy.md"
 
 COMMIT_SHA_RE = re.compile(r"^[0-9a-f]{40}$")
+RESOURCE_LIMIT_KEYS: tuple[str, ...] = (
+    "max_process_group_rss_kib",
+    "max_swap_delta_kib",
+)
 
 
 def _load_json_object(path: Path) -> dict[str, Any]:
@@ -122,6 +127,31 @@ def _load_json_schema(path: Path) -> dict[str, Any]:
     return schema
 
 
+def _assert_resource_limits(record: dict[str, Any]) -> None:
+    """Require explicit positive resource ceilings with auditable provenance.
+
+    Args:
+        record: Compiler baseline record containing the resource limit contract.
+
+    Raises:
+        AssertionError: When limits are missing, non-positive, non-numeric, or
+            lack a derivation and source.
+    """
+    limits = record.get("resource_limits")
+    if not isinstance(limits, dict):
+        raise AssertionError("resource_limits must be a JSON object")
+
+    for key in RESOURCE_LIMIT_KEYS:
+        value = limits.get(key)
+        if isinstance(value, bool) or not isinstance(value, (int, float)) or value <= 0:
+            raise AssertionError(f"resource_limits.{key} must be a positive number")
+
+    for key in ("derivation", "source"):
+        value = limits.get(key)
+        if not isinstance(value, str) or not value.strip():
+            raise AssertionError(f"resource_limits.{key} must be a non-empty string")
+
+
 class CompilerBaselineContract(unittest.TestCase):
     """Falsifiable shape contract for compiler-baseline.json."""
 
@@ -172,6 +202,61 @@ class CompilerBaselineContract(unittest.TestCase):
         )
         self.assertIn("phase_base_sha", missing)
         self.assertIn("role_base_sha", missing)
+
+    def test_compiler_baseline_defines_auditable_resource_limits(self) -> None:
+        """Requires positive process-group RSS and swap ceilings with provenance."""
+        artifact = _load_json_object(COMPILER_BASELINE_PATH)
+        _assert_resource_limits(artifact)
+
+    def test_resource_limit_contract_rejects_missing_and_malformed_limits(self) -> None:
+        """Counterexample: absent or invalid resource ceilings cannot pass."""
+        counterexamples: tuple[dict[str, Any], ...] = (
+            {},
+            {
+                "resource_limits": {
+                    "max_process_group_rss_kib": 0,
+                    "max_swap_delta_kib": "1024",
+                    "derivation": "",
+                    "source": "phase1-baseline.json",
+                }
+            },
+        )
+        for counterexample in counterexamples:
+            with self.subTest(counterexample=counterexample):
+                with self.assertRaises(AssertionError):
+                    _assert_resource_limits(counterexample)
+
+
+class TestStrategyPhaseBoundaryContract(unittest.TestCase):
+    """Falsifiable contract for Phase 2 fixture and Phase 3 compiler execution."""
+
+    def test_phase2_uses_fixture_subprocesses_and_phase3_runs_installed_compilers(self) -> None:
+        """Separates fixture subprocess proof from post-alias real compiler runs."""
+        strategy = TEST_STRATEGY_PATH.read_text(encoding="utf-8")
+        phase2_start = strategy.index("### Phase 2")
+        phase3_start = strategy.index("### Phase 3", phase2_start)
+        phase2 = strategy[phase2_start:phase3_start].lower()
+        phase3 = strategy[phase3_start:].lower()
+
+        violations: list[str] = []
+        if "deterministic fixture executable" not in phase2:
+            violations.append(
+                "Phase 2 must name deterministic fixture executables as its compiler stand-ins"
+            )
+        if "real subprocess" not in phase2:
+            violations.append(
+                "Phase 2 must execute fixture executables as real subprocesses"
+            )
+        if "spawns the real `tsc` binary" in phase2:
+            violations.append(
+                "Phase 2 must not claim unavailable real TypeScript compilers are executed"
+            )
+        if "real installed typescript 6" not in phase3:
+            violations.append("Phase 3 must run the real installed TypeScript 6 compiler")
+        if "real installed typescript 7" not in phase3:
+            violations.append("Phase 3 must run the real installed TypeScript 7 compiler")
+
+        self.assertFalse(violations, "\n".join(violations))
 
 
 class SurfaceInventoryContract(unittest.TestCase):
