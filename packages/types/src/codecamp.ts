@@ -445,6 +445,52 @@ export const internDetailSchema = z.object({
     })
   ),
   prReviews: z.array(prReviewSchema),
+  prReviewAttempts: z.array(z.object({
+    id: z.string().uuid(),
+    reviewId: z.string().uuid(),
+    headSha: z.string(),
+    attemptStatus: z.enum(["advisory", "validated", "failed"]),
+    evidenceAuthority: z.enum(["advisory_model", "trusted_deterministic"]),
+    modelAlias: z.string().nullable(),
+    resolvedModel: z.string().nullable(),
+    createdAt: z.date(),
+    objectives: z.array(z.object({
+      attemptId: z.string().uuid(),
+      objectiveId: z.string(),
+      variantKey: z.string(),
+      score: z.number().int().min(0).max(100),
+      confidence: z.number().int().min(0).max(100),
+      evidenceState: z.enum(["advisory", "validated", "rejected"]),
+    })),
+    overrides: z.array(z.object({
+      id: z.string(),
+      actorUserId: z.string().nullable(),
+      actorRole: z.string().nullable(),
+      correctedDisposition: z.enum(["pass", "revise"]),
+      reason: z.string(),
+      correctedObjectives: z.array(z.object({
+        objectiveId: z.string(),
+        correctedScore: z.number().int().min(0).max(100),
+        correctedConfidence: z.number().int().min(0).max(100),
+        reason: z.string(),
+      })),
+      createdAt: z.date(),
+    })),
+  })),
+  tutorSupport: z.object({
+    totalInterventions: z.number().int().nonnegative(),
+    verifiedFollowUps: z.number().int().nonnegative(),
+    resourceUses: z.number().int().nonnegative(),
+    levels: z.object({
+      diagnostic: z.number().int().nonnegative(),
+      conceptual_hint: z.number().int().nonnegative(),
+      location_hint: z.number().int().nonnegative(),
+      partial_scaffold: z.number().int().nonnegative(),
+      worked_example: z.number().int().nonnegative(),
+    }),
+    misconceptionTags: z.array(z.object({ tag: z.string(), count: z.number().int().positive() })),
+    latestInterventionAt: z.date().nullable(),
+  }),
 });
 
 export type InternAccountInput = z.infer<typeof internAccountInputSchema>;

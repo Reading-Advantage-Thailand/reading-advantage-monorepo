@@ -92,6 +92,18 @@ export const articleResponseSchema = z.object({
 
 export type ArticleResponse = z.infer<typeof articleResponseSchema>;
 
+// ─── Assignment Status (PB-4) ─────────────────────────────
+
+export {
+  AssignmentStatus,
+  assignmentStatusSchema,
+  ALLOWED_ASSIGNMENT_TRANSITIONS,
+  QuestionScoringRubric,
+  IllegalAssignmentTransitionError,
+  assertLegalAssignmentTransition,
+  type AssignmentStatus as AssignmentStatusType,
+} from "./assignment-status.js";
+
 // ─── Activity Types ───────────────────────────────────────
 
 export const activityResponseSchema = z.object({

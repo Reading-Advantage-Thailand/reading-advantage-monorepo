@@ -45,7 +45,7 @@ export const progressRouter = router({
     .input(
       z.object({
         lessonId: z.string().transform((v) => ExternalLessonId.parse(v)),
-        status: z.string(),
+        status: z.enum(["not_started", "in_progress", "completed"]),
         progress: z.number().min(0).max(100),
       })
     )

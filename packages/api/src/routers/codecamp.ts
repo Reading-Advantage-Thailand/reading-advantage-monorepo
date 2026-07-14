@@ -5,7 +5,7 @@ import { getAIClient } from "@reading-advantage/ai";
 import { getCachedDashboard } from "../cache/dashboard-cache.js";
 import { AuthError } from "@reading-advantage/auth";
 import * as codecamp from "@reading-advantage/domain/codecamp";
-import { reviewExercise, reviewResultSchema, aiClientToGenerateReview } from "@reading-advantage/domain/codecamp";
+import { reviewExercise, reviewResultSchema, reviewResultGenerationSchema, aiClientToGenerateReview } from "@reading-advantage/domain/codecamp";
 import {
   moduleResponseSchema,
   moduleBySlugResponseSchema,
@@ -56,7 +56,7 @@ function mapDomainError(err: unknown): never {
         stack: err.stack,
       }),
     );
-    if (err.message === "Lesson not found" || err.message === "Module not found" || err.message === "Exercise not found" || err.message === "Conversation not found" || err.message === "Intern not found" || err.message === "Exercise repo not found" || err.message === "Review not found") {
+    if (err.message === "Lesson not found" || err.message === "Module not found" || err.message === "Exercise not found" || err.message === "Conversation not found" || err.message === "Intern not found" || err.message === "Exercise repo not found" || err.message === "Review not found" || err.message === "PR review attempt not found") {
       throw new TRPCError({ code: "NOT_FOUND", message: err.message });
     }
     if (err.message === "No quiz questions found for this lesson" || err.message === "Invalid phase" || err.message === "Username already exists" || err.message === "GitHub username already exists" || err.message === "A review for this PR URL already exists" || err.message === "A repo with this URL already exists" || err.message === "Lesson is not a theory lesson" || err.message.startsWith("Password must contain") || err.message === "Invalid PR URL" || err.message === "PR URL must be a GitHub URL" || err.message.startsWith("Invalid PR URL: must be a GitHub pull request URL") || err.message.startsWith("PR URL must be for the")) {
@@ -475,7 +475,7 @@ export const codecampRouter = router({
     .output(reviewResultSchema)
     .mutation(async ({ ctx, input }) => {
       try {
-        const generateReview = aiClientToGenerateReview(getAIClient(), reviewResultSchema);
+        const generateReview = aiClientToGenerateReview(getAIClient(), reviewResultGenerationSchema);
 
         return await reviewExercise({
           db: ctx.tenantDb,
@@ -547,6 +547,32 @@ export const codecampRouter = router({
     .query(async ({ ctx, input }) => {
       try {
         return await codecamp.getInternProgress({
+          db: ctx.tenantDb,
+          user: ctx.auth.user,
+          tenant: ctx.auth.tenant,
+          input,
+        });
+      } catch (err) {
+        throw mapDomainError(err);
+      }
+    }),
+
+  recordPrReviewOverride: adminProcedure
+    .input(z.object({
+      attemptId: z.string().uuid(),
+      correctedDisposition: z.enum(["pass", "revise"]),
+      reason: z.string().trim().min(10).max(4_000),
+      correctedObjectives: z.array(z.object({
+        objectiveId: z.string().regex(/^codecamp\.[a-z0-9.-]+$/),
+        correctedScore: z.number().int().min(0).max(100),
+        correctedConfidence: z.number().int().min(0).max(100),
+        reason: z.string().trim().min(10).max(2_000),
+      }).strict()).max(24),
+    }).strict())
+    .output(z.object({ id: z.string(), action: z.string() }).passthrough())
+    .mutation(async ({ ctx, input }) => {
+      try {
+        return await codecamp.recordPrReviewOverride({
           db: ctx.tenantDb,
           user: ctx.auth.user,
           tenant: ctx.auth.tenant,

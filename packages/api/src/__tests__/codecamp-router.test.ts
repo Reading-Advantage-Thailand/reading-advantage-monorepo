@@ -33,8 +33,11 @@ vi.mock("@reading-advantage/domain/codecamp", () => ({
   createInternAccount: vi.fn(),
   listInterns: vi.fn(),
   getInternProgress: vi.fn(),
+  summarizeTutorSupport: vi.fn(),
+  recordPrReviewOverride: vi.fn(),
   reviewExercise: vi.fn(),
   reviewResultSchema: { parse: (val: unknown) => val } as unknown as import("zod").ZodTypeAny,
+  reviewResultGenerationSchema: { parse: (val: unknown) => val } as unknown as import("zod").ZodTypeAny,
   aiClientToGenerateReview: vi.fn(() => vi.fn()),
 }));
 
@@ -66,6 +69,7 @@ import {
   createInternAccount,
   listInterns,
   getInternProgress,
+  recordPrReviewOverride,
   reviewExercise,
 } from "@reading-advantage/domain/codecamp";
 
@@ -837,6 +841,8 @@ describe("codecamp router", () => {
         ],
         quizScores: [{ lessonId: "l1", lessonTitle: "Lesson 1", score: 100 }],
         prReviews: [],
+        prReviewAttempts: [],
+        tutorSupport: { totalInterventions: 0, verifiedFollowUps: 0, resourceUses: 0, levels: { diagnostic: 0, conceptual_hint: 0, location_hint: 0, partial_scaffold: 0, worked_example: 0 }, misconceptionTags: [], latestInterventionAt: null },
       };
       vi.mocked(getInternProgress).mockResolvedValue(detailRow as unknown as Awaited<ReturnType<typeof getInternProgress>>);
       const adminUser = { id: "a1", role: "ADMIN", schoolId: null };
@@ -863,6 +869,19 @@ describe("codecamp router", () => {
 
       await expect(caller.codecamp.getInternProgress({ userId: "u1" }))
         .rejects.toMatchObject({ code: "FORBIDDEN" });
+    });
+  });
+
+  describe("recordPrReviewOverride", () => {
+    it("records an append-only correction for an admin", async () => {
+      vi.mocked(recordPrReviewOverride).mockResolvedValue({ id: "audit-1", action: "codecamp.pr_review.override.v1" } as never);
+      const caller = createCaller({ user: { id: "a1", role: "ADMIN", schoolId: null }, tenant: testTenant });
+      await expect(caller.codecamp.recordPrReviewOverride({
+        attemptId: "27bc82f7-27bb-4815-9855-3e20d7f5a513",
+        correctedDisposition: "revise",
+        reason: "The deterministic CI artifact shows the required accessibility failure.",
+        correctedObjectives: [],
+      })).resolves.toMatchObject({ id: "audit-1" });
     });
   });
 
