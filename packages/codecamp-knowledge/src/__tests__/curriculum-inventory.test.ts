@@ -74,7 +74,7 @@ describe("read-only Codecamp curriculum inventory", () => {
     expect(result.snapshotDigest).toBe(curriculumSourceProvenance.snapshotDigest);
   });
 
-  it("reproduces from the artifact in a clean checkout while reporting source drift", () => {
+  it("reproduces the approved artifact from the committed source in a clean checkout", () => {
     const cleanCheckoutSource = execFileSync(
       "git",
       ["show", `HEAD:${curriculumSourceProvenance.sourcePath}`],
@@ -96,8 +96,8 @@ describe("read-only Codecamp curriculum inventory", () => {
       ),
     ).toMatchObject({
       valid: true,
-      currentSourceMatchesArtifact: false,
-      sourceDigest: curriculumSourceProvenance.originBaseDigest,
+      currentSourceMatchesArtifact: true,
+      sourceDigest: curriculumSourceProvenance.sourceDigest,
       artifactDigest: curriculumSourceProvenance.sourceDigest,
     });
   });

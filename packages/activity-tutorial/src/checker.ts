@@ -31,6 +31,7 @@ function propertyName(node: ts.PropertyName): string | undefined {
 }
 
 type TypescriptPropertyContract = Extract<TutorialManifest["steps"][number]["checks"][number], { kind: "typescript_object_shape" }>["propertyContracts"][number];
+type TypescriptFunctionCheck = Extract<TutorialManifest["steps"][number]["checks"][number], { kind: "typescript_function_contract" }>;
 
 function stringLiteralValue(expression: ts.Expression): string | undefined {
   const value = unwrapExpression(expression);
@@ -83,6 +84,55 @@ function verifiesTypescriptObjectShape(source: string, exportName: string, contr
   return false;
 }
 
+function returnedObject(expression: ts.ConciseBody): ts.ObjectLiteralExpression | undefined {
+  if (ts.isObjectLiteralExpression(unwrapExpression(expression as ts.Expression))) return unwrapExpression(expression as ts.Expression) as ts.ObjectLiteralExpression;
+  if (!ts.isBlock(expression)) return undefined;
+  const returned = expression.statements.find(ts.isReturnStatement)?.expression;
+  if (!returned) return undefined;
+  const value = unwrapExpression(returned);
+  return ts.isObjectLiteralExpression(value) ? value : undefined;
+}
+
+function verifiesTypescriptFunctionContract(source: string, check: TypescriptFunctionCheck): boolean {
+  const file = ts.createSourceFile("tutorial.ts", source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
+  const parseDiagnostics = (file as ts.SourceFile & { parseDiagnostics?: readonly ts.Diagnostic[] }).parseDiagnostics ?? [];
+  if (parseDiagnostics.length > 0) return false;
+  let parameters: readonly ts.ParameterDeclaration[] | undefined;
+  let body: ts.ConciseBody | undefined;
+  for (const statement of file.statements) {
+    if (ts.isFunctionDeclaration(statement) && statement.name?.text === check.exportName && statement.modifiers?.some(({ kind }) => kind === ts.SyntaxKind.ExportKeyword) && statement.body) {
+      parameters = statement.parameters;
+      body = statement.body;
+    }
+    if (ts.isVariableStatement(statement) && statement.modifiers?.some(({ kind }) => kind === ts.SyntaxKind.ExportKeyword)) {
+      const declaration = statement.declarationList.declarations.find((candidate) => ts.isIdentifier(candidate.name) && candidate.name.text === check.exportName);
+      const initializer = declaration?.initializer && unwrapExpression(declaration.initializer);
+      if (initializer && (ts.isArrowFunction(initializer) || ts.isFunctionExpression(initializer))) {
+        parameters = initializer.parameters;
+        body = initializer.body;
+      }
+    }
+  }
+  if (!parameters || !body || parameters.length !== check.parameters.length) return false;
+  const names = parameters.map(({ name }) => ts.isIdentifier(name) ? name.text : "");
+  if (!check.parameters.every((parameter, index) => names[index] === parameter)) return false;
+  const returned = returnedObject(body);
+  if (!returned) return false;
+  const properties = new Map<string, ts.Expression>();
+  for (const property of returned.properties) {
+    if (ts.isPropertyAssignment(property)) {
+      const name = propertyName(property.name);
+      if (name) properties.set(name, unwrapExpression(property.initializer));
+    } else if (ts.isShorthandPropertyAssignment(property)) properties.set(property.name.text, property.name);
+  }
+  return check.returnContracts.every((contract) => {
+    const value = properties.get(contract.property);
+    if (!value) return false;
+    if (contract.kind === "parameter") return ts.isIdentifier(value) && value.text === contract.parameter;
+    return ts.isBinaryExpression(value) && value.operatorToken.kind === ts.SyntaxKind.EqualsEqualsEqualsToken && ts.isIdentifier(value.left) && value.left.text === contract.leftParameter && ts.isIdentifier(value.right) && value.right.text === contract.rightParameter;
+  });
+}
+
 /**
  * Runs one authored tutorial step and emits only secret-free structured evidence.
  * @param manifestInput Untrusted repository manifest.
@@ -102,6 +152,8 @@ export async function runTutorialStep(manifestInput: unknown, stepId: string, po
       ? output.includes(check.expected)
       : check.kind === "typescript_object_shape"
         ? verifiesTypescriptObjectShape(output, check.exportName, check.propertyContracts)
+        : check.kind === "typescript_function_contract"
+          ? verifiesTypescriptFunctionContract(output, check)
         : check.expected === "clean" ? output.trim() === "" : output.split("\n").some((line) => line[0] !== " " && line[0] !== "?" && line.slice(3) === check.expected.slice("staged:".length));
     checks.push({ checkId: check.checkId, passed, evidenceDigest: digest(JSON.stringify({ checkId: check.checkId, passed })) });
   }

@@ -105,6 +105,19 @@ describe("tutorial repository protocol", () => {
     await expect(run("export const educationalResult = { objectiveId: 'wrong', correct: false, attempts: 1.5 };")).resolves.toMatchObject({ passed: false });
   });
 
+  it("requires a deterministic function result derived from authored inputs", async () => {
+    const behaviorManifest = structuredClone(manifest);
+    behaviorManifest.steps[0]!.checks = [{
+      checkId: "result.behavior", kind: "typescript_function_contract", filePath: "src/game.ts", exportName: "evaluateAttempt",
+      parameters: ["objectiveId", "selectedAnswerId", "correctAnswerId", "attempts"],
+      returnContracts: [{ property: "objectiveId", kind: "parameter", parameter: "objectiveId" }, { property: "correct", kind: "strict_equality", leftParameter: "selectedAnswerId", rightParameter: "correctAnswerId" }, { property: "attempts", kind: "parameter", parameter: "attempts" }],
+    }] as never;
+    const run = (source: string) => runTutorialStep(behaviorManifest, "step.game", { readAllowedFile: async () => source, runAllowedCommand: async () => "", now: () => "2026-07-10T00:00:00Z" });
+    await expect(run("export function evaluateAttempt(objectiveId: string, selectedAnswerId: string, correctAnswerId: string, attempts: number) { return { objectiveId, correct: selectedAnswerId === correctAnswerId, attempts }; }")).resolves.toMatchObject({ passed: true });
+    await expect(run("export function evaluateAttempt(objectiveId: string, selectedAnswerId: string, correctAnswerId: string, attempts: number) { return { objectiveId: 'fixed', correct: true, attempts: 1 }; }")).resolves.toMatchObject({ passed: false });
+    await expect(run("export const educationalResult = { objectiveId: 'fixed', correct: false, attempts: 1 };")).resolves.toMatchObject({ passed: false });
+  });
+
   it("rejects traversal, undeclared files, commands, and unknown fields", () => {
     type MutableManifest = { allowedFiles: string[]; steps: Array<{ checks: Array<{ filePath?: string; commandId?: string; unexpected?: boolean }> }> };
     const mutations: Array<(input: MutableManifest) => void> = [

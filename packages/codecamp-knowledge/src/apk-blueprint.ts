@@ -95,7 +95,7 @@ export const APKLearningBlueprintSchema = z
       .length(5),
     abi: z
       .object({
-        cartridgeManifestFields: z.array(z.enum(["id", "title", "description", "version", "runtimeApiVersion", "inputMode", "requiredAssetSlots", "capabilities"])).min(1),
+        cartridgeManifestFields: z.array(z.enum(["id", "title", "description", "version", "runtimeApiVersion", "inputMode", "requiredAssetBindings", "capabilities"])).min(1),
         educationalInputModes: z.array(z.enum(["vocabulary", "sentence"])).min(1),
         educationalResultFields: z.array(z.enum(["accuracy", "xp", "score", "correctAnswers", "totalAttempts"])).min(1),
         hostResponsibilities: z.array(z.enum(["mount", "completion", "diagnostics", "navigation", "persistence"])).min(1),
@@ -144,7 +144,7 @@ export interface APKBlueprintReport {
   prerequisiteRoles: string[];
 }
 
-const REQUIRED_MANIFEST_FIELDS = ["id", "title", "description", "version", "runtimeApiVersion", "inputMode", "requiredAssetSlots", "capabilities"] as const satisfies readonly (keyof RuntimeCartridgeManifest)[];
+const REQUIRED_MANIFEST_FIELDS = ["id", "title", "description", "version", "runtimeApiVersion", "inputMode", "requiredAssetBindings", "capabilities"] as const satisfies readonly (keyof RuntimeCartridgeManifest)[];
 const _manifestFieldsAreExhaustive: Exclude<keyof RuntimeCartridgeManifest, typeof REQUIRED_MANIFEST_FIELDS[number]> extends never ? true : never = true;
 void _manifestFieldsAreExhaustive;
 const REQUIRED_INPUT_MODES = ["vocabulary", "sentence"];

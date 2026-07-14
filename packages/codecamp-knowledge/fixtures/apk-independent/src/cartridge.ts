@@ -5,7 +5,7 @@ export const cartridgeManifest = {
   version: "0.1.0",
   runtimeApiVersion: "1.0.0",
   inputMode: "sentence" as const,
-  requiredAssetSlots: ["background", "tile", "success"],
+  requiredAssetBindings: ["background", "tile", "success"],
   capabilities: ["pointer", "keyboard", "reduced-motion"],
 };
 

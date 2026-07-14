@@ -35,18 +35,11 @@ describe("APKLearningBlueprintSchema", () => {
 });
 
 describe("validateAPKLearningBlueprint", () => {
-  it("fails release closed until named human owners approve the branch", () => {
-    expect(validateAPKLearningBlueprint(apkLearningBlueprint, codeKnowledgeGraph)).toEqual({
-      valid: false,
-      issues: [
-        { code: "APK_REVIEW_PENDING", entityId: "apkMaintainer", message: "apkMaintainer approval is required before release." },
-        { code: "APK_REVIEW_PENDING", entityId: "curriculumOwner", message: "curriculumOwner approval is required before release." },
-        { code: "APK_REVIEW_PENDING", entityId: "productOwner", message: "productOwner approval is required before release." },
-      ],
-    });
+  it("accepts the branch after all named human owners approve it", () => {
+    expect(validateAPKLearningBlueprint(apkLearningBlueprint, codeKnowledgeGraph)).toEqual({ valid: true, issues: [] });
   });
 
-  it("validates the game-development branch when both release owners approve", () => {
+  it("validates an explicitly reviewed copy of the game-development branch", () => {
     const reviewed = structuredClone(apkLearningBlueprint);
     reviewed.reviews.curriculumOwner = { name: "Named curriculum owner", status: "approved", reviewedAt: "2026-07-11" };
     reviewed.reviews.apkMaintainer = { name: "Named APK maintainer", status: "approved", reviewedAt: "2026-07-11" };

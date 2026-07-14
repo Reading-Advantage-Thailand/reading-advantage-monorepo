@@ -3,7 +3,7 @@ import { tutorialManifestSchema, type TutorialManifest } from "@reading-advantag
 import { z } from "zod";
 import { apkLearningBlueprint } from "./apk-blueprint-data.js";
 
-const REQUIRED_MANIFEST_FIELDS = ["id", "title", "description", "version", "runtimeApiVersion", "inputMode", "requiredAssetSlots", "capabilities"] as const;
+const REQUIRED_MANIFEST_FIELDS = ["id", "title", "description", "version", "runtimeApiVersion", "inputMode", "requiredAssetBindings", "capabilities"] as const;
 const MANIFEST_PROPERTY_CONTRACTS = [
   { property: "id", kind: "string", format: "nonempty" },
   { property: "title", kind: "string", format: "nonempty" },
@@ -11,7 +11,7 @@ const MANIFEST_PROPERTY_CONTRACTS = [
   { property: "version", kind: "string", format: "semver" },
   { property: "runtimeApiVersion", kind: "string", format: "nonempty", allowedValues: ["1.0.0"] },
   { property: "inputMode", kind: "string", format: "nonempty", allowedValues: ["vocabulary", "sentence"] },
-  { property: "requiredAssetSlots", kind: "string_array", minItems: 1 },
+  { property: "requiredAssetBindings", kind: "string_array", minItems: 1 },
   { property: "capabilities", kind: "string_array", minItems: 0 },
 ] as const;
 
@@ -53,7 +53,7 @@ export const codecampAPKReference = {
   version: "1.0.0",
   runtimeApiVersion: "1.0.0",
   inputMode: "vocabulary" as const,
-  requiredAssetSlots: ["background", "card", "success"],
+  requiredAssetBindings: ["background", "card", "success"],
   capabilities: ["pointer", "keyboard", "reduced-motion"],
 };`,
   annotations: {
@@ -79,7 +79,7 @@ export const codecampAPKUnit = CodecampAPKUnitSchema.parse({
       allowedFiles: ["src/cartridge.ts", "src/game-state.ts"],
       allowedCommands: [{ commandId: "git.stage", profile: "git-status-porcelain" }],
       completionCriteria: { requiredStepIds: ["wedo.apk.manifest"] },
-      steps: [{ stepId: "wedo.apk.manifest", order: 1, objectiveId: "codecamp.game-development.skill.apk-contract", instruction: { en: "Complete, commit, and push the cartridge manifest and deterministic educational result.", th: "เติม commit และ push cartridge manifest กับผลการเรียนรู้แบบกำหนดได้" }, checks: [{ checkId: "manifest.shape", kind: "typescript_object_shape" as const, filePath: "src/cartridge.ts", exportName: "cartridgeManifest", requiredProperties: [...REQUIRED_MANIFEST_FIELDS], propertyContracts: [...MANIFEST_PROPERTY_CONTRACTS] }, { checkId: "result.shape", kind: "typescript_object_shape" as const, filePath: "src/game-state.ts", exportName: "educationalResult", requiredProperties: ["objectiveId", "correct", "attempts"], propertyContracts: [{ property: "objectiveId", kind: "string" as const, format: "nonempty" as const, allowedValues: ["codecamp.game-development.skill.apk-contract"] }, { property: "correct", kind: "boolean" as const }, { property: "attempts", kind: "number" as const, integer: true, min: 1 }] }, { checkId: "git.clean", kind: "command" as const, commandId: "git.stage", expected: "clean" }], hints: [{ hintId: "hint.boundary", text: { en: "Keep persistence in the host, not the cartridge.", th: "เก็บ persistence ไว้ใน host ไม่ใช่ cartridge" } }], reveals: [{ revealId: "reveal.fields", text: { en: "Declare every RuntimeCartridgeManifest field and a deterministic educationalResult before staging the files.", th: "ระบุทุก field ของ RuntimeCartridgeManifest และ educationalResult แบบกำหนดได้ก่อน stage ไฟล์" } }], resourceIds: ["diagram.apk.boundaries"], scaffoldLevel: 2 }],
+      steps: [{ stepId: "wedo.apk.manifest", order: 1, objectiveId: "codecamp.game-development.skill.apk-contract", instruction: { en: "Complete, commit, and push the cartridge manifest and deterministic educational result.", th: "เติม commit และ push cartridge manifest กับผลการเรียนรู้แบบกำหนดได้" }, checks: [{ checkId: "manifest.shape", kind: "typescript_object_shape" as const, filePath: "src/cartridge.ts", exportName: "cartridgeManifest", requiredProperties: [...REQUIRED_MANIFEST_FIELDS], propertyContracts: [...MANIFEST_PROPERTY_CONTRACTS] }, { checkId: "result.behavior", kind: "typescript_function_contract" as const, filePath: "src/game-state.ts", exportName: "evaluateAttempt", parameters: ["objectiveId", "selectedAnswerId", "correctAnswerId", "attempts"], returnContracts: [{ property: "objectiveId", kind: "parameter" as const, parameter: "objectiveId" }, { property: "correct", kind: "strict_equality" as const, leftParameter: "selectedAnswerId", rightParameter: "correctAnswerId" }, { property: "attempts", kind: "parameter" as const, parameter: "attempts" }] }, { checkId: "git.clean", kind: "command" as const, commandId: "git.stage", expected: "clean" }], hints: [{ hintId: "hint.boundary", text: { en: "Keep persistence in the host, not the cartridge.", th: "เก็บ persistence ไว้ใน host ไม่ใช่ cartridge" } }], reveals: [{ revealId: "reveal.fields", text: { en: "Declare every RuntimeCartridgeManifest field and derive the educational result from evaluateAttempt inputs before staging the files.", th: "ระบุทุก field ของ RuntimeCartridgeManifest และสร้างผลการเรียนรู้จาก input ของ evaluateAttempt ก่อน stage ไฟล์" } }], resourceIds: ["diagram.apk.boundaries"], scaffoldLevel: 2 }],
     },
   },
   youdo: {
@@ -135,7 +135,7 @@ export function createCodecampAPKTutorialActivity(_locale: string) {
       resourceRefs: step.resourceIds.map((resourceId) => ({ kind: "diagram" as const, resourceId })),
       checks: step.checks.map((check) => {
         if (check.kind === "command") return { checkId: check.checkId, kind: "git_status" as const, expected: check.expected };
-        if (check.kind === "typescript_object_shape") return { checkId: check.checkId, kind: "file_contains" as const, expected: `${check.filePath}:${check.exportName}` };
+        if (check.kind === "typescript_object_shape" || check.kind === "typescript_function_contract") return { checkId: check.checkId, kind: "file_contains" as const, expected: `${check.filePath}:${check.exportName}` };
         return { checkId: check.checkId, kind: "file_contains" as const, expected: `${check.filePath}:${check.expected}` };
       }),
       hints: step.hints, reveals: step.reveals, scaffoldLevel: step.scaffoldLevel,
@@ -143,9 +143,12 @@ export function createCodecampAPKTutorialActivity(_locale: string) {
   });
 }
 
-/** Creates the server-owned independent PR assessment projected to Mastery and FSRS. */
-export function createCodecampAPKIndependentActivity(locale: string) {
-  const thai = locale.toLowerCase().startsWith("th");
+/**
+ * Creates the server-owned independent PR assessment projected to Mastery and FSRS.
+ * @param _locale Requested learner locale reserved for future locale-specific resources.
+ * @returns Strict activity.v1 content for the independent transfer assessment.
+ */
+export function createCodecampAPKIndependentActivity(_locale: string) {
   return activitySchema.parse({
     schemaVersion: "activity.v1", activityId: codecampAPKUnit.youdo.activityId, activityVersion: codecampAPKUnit.version,
     graphVersion: codecampAPKUnit.graphVersion, objectiveId: codecampAPKUnit.youdo.objectiveId,

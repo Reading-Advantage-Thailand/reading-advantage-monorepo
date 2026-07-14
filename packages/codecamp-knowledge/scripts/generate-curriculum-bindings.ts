@@ -10,11 +10,14 @@ import { sha256 } from "../src/source-sync.ts";
 
 const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const repoRoot = resolve(packageRoot, "../..");
-const sourceArtifact = "source-snapshots/codecamp-curriculum-e4d3fc7cc9927f91.ts";
 const sourceInputPath = process.env.CODECAMP_CURRICULUM_SOURCE == null
-  ? resolve(packageRoot, sourceArtifact)
+  ? resolve(repoRoot, "packages/db/src/seed/codecamp-curriculum-data.ts")
   : resolve(repoRoot, process.env.CODECAMP_CURRICULUM_SOURCE);
 const outputDirectory = resolve(packageRoot, "src/data");
+const sourceBytes = readFileSync(sourceInputPath);
+const sourceDigest = sha256(sourceBytes);
+const sourceArtifact = `source-snapshots/codecamp-curriculum-${sourceDigest.slice(0, 16)}.ts`;
+writeFileSync(resolve(packageRoot, sourceArtifact), sourceBytes);
 const curriculumData = await import(pathToFileURL(sourceInputPath).href);
 const {
   MODULE_REPO_MAP,
@@ -37,8 +40,6 @@ const inventory = collectCurriculumInventory({
   repositoryModuleSlugs: Object.keys(MODULE_REPO_MAP),
   portfolioPhases: PORTFOLIO_PROJECTS.map((portfolio) => portfolio.phase),
 });
-const sourceBytes = readFileSync(sourceInputPath);
-const sourceDigest = sha256(sourceBytes);
 const originBaseRevision = "08de1c28a154c2d0608c7b3515149b73dbe33152";
 const originBaseBytes = execFileSync(
   "git",

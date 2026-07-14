@@ -26,9 +26,9 @@ export const apkLearningBlueprint = APKLearningBlueprintSchema.parse({
   graphVersion: "1.2.0",
   apkRuntimeApiVersion: "1.0.0",
   reviews: {
-    curriculumOwner: { name: "Codecamp curriculum owner", status: "pending", reviewedAt: null },
-    apkMaintainer: { name: "Advantage Play Kit maintainer", status: "pending", reviewedAt: null },
-    productOwner: { name: "Codecamp product owner", status: "pending", reviewedAt: null },
+    curriculumOwner: { name: "Daniel Bo", status: "approved", reviewedAt: "2026-07-11" },
+    apkMaintainer: { name: "Daniel Bo", status: "approved", reviewedAt: "2026-07-11" },
+    productOwner: { name: "Daniel Bo", status: "approved", reviewedAt: "2026-07-11" },
   },
   prerequisiteRoots: [
     { role: "javascript", objectiveId: "codecamp.foundation.skill.functions" },
@@ -38,7 +38,7 @@ export const apkLearningBlueprint = APKLearningBlueprintSchema.parse({
     { role: "git", objectiveId: "codecamp.workflow.skill.git-branches" },
   ],
   abi: {
-    cartridgeManifestFields: ["id", "title", "description", "version", "runtimeApiVersion", "inputMode", "requiredAssetSlots", "capabilities"],
+    cartridgeManifestFields: ["id", "title", "description", "version", "runtimeApiVersion", "inputMode", "requiredAssetBindings", "capabilities"],
     educationalInputModes: ["vocabulary", "sentence"],
     educationalResultFields: ["accuracy", "xp", "score", "correctAnswers", "totalAttempts"],
     hostResponsibilities: ["mount", "completion", "diagnostics", "navigation", "persistence"],
