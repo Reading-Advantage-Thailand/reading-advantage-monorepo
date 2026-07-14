@@ -210,8 +210,8 @@ status: complete
 track: apk_source_denominator_inventory_20260712
 phase: Phase 4: Full independent acceptance
 baseline_sha: 476835906509e2c550ed98e0d23e89c7326b7bdc
-audited_head_sha: PLACEHOLDER
-commits: PLACEHOLDER
+audited_head_sha: 5a1a561a207632054d34d97c7f79cedcc59cb2cc
+commits: 5a1a561a
 tests_run: none (strategy-only retry; no test files modified; static read of measure/tracks/apk_source_denominator_inventory_20260712/{spec,plan,index,metadata,test-strategy,role-logs/*,role-receipts/*,phase{0,1,2,3,4}-*-test-report.json,review-{a-correctness,b-security,c-contracts}.json,phase0-input-freeze.json,phase0-role-ownership-manifest.json} and measure/{index,tracks,workflow,anti-patterns}.md plus ~/.agents/skills/measure-orchestrator/{SKILL.md,references/contracts.md,scripts/measure_interphase_checks.py}; gate self-checks against the canonical `strategy_freshness_feedback` and `agent_result_feedback` predicates exit clean)
 files_changed: measure/tracks/apk_source_denominator_inventory_20260712/test-strategy.md (appended §"Reconciliation against current evidence (strategy retry)" — 5 sub-sections re-asserting admission evidence, stale reviews, canonical role ordering, role-map blocker, trusted provenance, and strategy role ownership); measure/tracks/apk_source_denominator_inventory_20260712/role-logs/phase4-strategy-retry.log (new)
 plan_updates: none; Phase 4 plan markers ([b] deferred:adversarial-reviewer / [b] deferred:product-owner) are preserved; no `[x]` marker authored; no plan.md modification
