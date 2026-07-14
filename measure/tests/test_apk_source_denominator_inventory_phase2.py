@@ -30,8 +30,10 @@ DISCREPANCY_PATH = TRACK_DIR / "human-discrepancy-records.json"
 EVIDENCE_RECEIPT_PATH = TRACK_DIR / "role-receipts" / "evidence-collector.json"
 SHA256 = re.compile(r"^[0-9a-f]{64}$")
 COMMIT_SHA = re.compile(r"^[0-9a-f]{40}$")
-PHASE1_REVISION = "3384f558cb4db0772550dd79d7ed8a62e8a4f815"
+PHASE1_REVISION = "4979eaa50b85cb5951e9546bb6a672b9d0f16ecb"
 PROGRAM_PATH = "measure/apk-evidence-reconstruction-program.md"
+GENERATOR_PATH = TRACK_DIR / "generate_phase2_human_discovery.py"
+QUARANTINED_SOURCE_PREFIX = "measure/tracks/apk_cross_game_asset_ontology_20260712"
 FORBIDDEN_INTERPRETATION_FIELDS = {
     "asset_suitability",
     "capability",
@@ -595,6 +597,31 @@ class Phase2IndependentHumanDiscoveryContracts(unittest.TestCase):
             row = self._assert_review_record(value, location=f"program_identity_history_reviews[{index}]")
             self.assertEqual(row.get("disposition"), "historical/withdrawn")
             self._assert_locator(row.get("primary_historical_evidence"), historical=True)
+
+    def test_generator_derives_program_identity_mapping_without_an_authored_inventory(self) -> None:
+        """Rejects a hard-coded program-label-to-source-identity mapping.
+
+        Returns:
+            Nothing.
+        """
+        source = GENERATOR_PATH.read_text(encoding="utf-8")
+        self.assertNotRegex(source, r"(?m)^PROGRAM_IDENTITIES\s*=")
+        self.assertIn("discover_program_identities", source)
+
+    def test_phase2_factual_outputs_exclude_quarantined_source_strings(self) -> None:
+        """Rejects failed-track paths anywhere in Phase-2 factual outputs.
+
+        Returns:
+            Nothing.
+        """
+        for path in (
+            HUMAN_DISCOVERY_PATH,
+            DUPLICATE_DRIFT_PATH,
+            HISTORICAL_PATH,
+            DISCREPANCY_PATH,
+        ):
+            document = _load_json(path, phase2=True)
+            self.assertNotIn(QUARANTINED_SOURCE_PREFIX, json.dumps(document), str(path))
 
     def test_every_mechanical_record_has_one_exact_human_disposition(self) -> None:
         """Compares all mechanical record classes to independent human dispositions.

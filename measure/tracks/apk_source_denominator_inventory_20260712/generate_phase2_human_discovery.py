@@ -13,7 +13,7 @@ from typing import Any
 
 
 BASELINE = "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-PHASE1_REVISION = "3384f558cb4db0772550dd79d7ed8a62e8a4f815"
+PHASE1_REVISION = "4979eaa50b85cb5951e9546bb6a672b9d0f16ecb"
 ASTRAL_HISTORY_REVISION = "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
 TRACK = "apk_source_denominator_inventory_20260712"
 TRACK_DIR = Path(__file__).resolve().parent
@@ -21,40 +21,7 @@ REPO_ROOT = TRACK_DIR.parents[2]
 PROGRAM_PATH = "measure/apk-evidence-reconstruction-program.md"
 CATALOG_PATH = "apps/advantage-games/src/lib/gameCards.ts"
 COLLECTOR_IDENTITY = "evidence-collector-remediation-20260713"
-
-# Raw labels and exact source IDs are transcribed from the frozen replacement
-# program and catalog. This table is a search key, not an authored denominator.
-PROGRAM_IDENTITIES = [
-    ("Dragon Flight — large current action implementation.", "dragon-flight", "vocabulary/dragon-flight", "vocabulary/dragon-flight"),
-    ("RPG Battle — multi-state turn-based implementation.", "rpg-battle", "vocabulary/rpg-battle", "vocabulary/rpg-battle"),
-    ("The Abyssal Well — stale/historical evidence recovery.", "abyssal-well", None, "sentence/abyssal-well"),
-    ("Castle Defense", "castle-defense", "sentence/castle-defense", "sentence/castle-defense"),
-    ("Magic Defense", "magic-defense", "vocabulary/magic-defense", "vocabulary/magic-defense"),
-    ("Wizard vs Zombie", "wizard-vs-zombie", "vocabulary/wizard-vs-zombie", "vocabulary/wizard-vs-zombie"),
-    ("Village Guardian", "village-guardian", "sentence/village-guardian", "sentence/village-guardian"),
-    ("Archer's Revenge", "archers-revenge", None, "vocabulary/archers-revenge"),
-    ("Storm the Castle Tower", "storm-castle-tower", None, "sentence/storm-castle-tower"),
-    ("Paladin's Twin-Soul", "paladins-twin-soul", None, "vocabulary/paladins-twin-soul"),
-    ("Gryphon Patrol", "gryphon-patrol", None, "sentence/gryphon-patrol"),
-    ("Dragon Rider", "dragon-rider", "vocabulary/dragon-rider", "vocabulary/dragon-rider"),
-    ("Dungeon Liberator", "dungeon-liberator", "sentence/dungeon-liberator", "sentence/dungeon-liberator"),
-    ("Spellweaver's Run", "spellweavers-run", None, "sentence/spellweavers-run"),
-    ("Shadow Gate Dungeon", "shadow-gate-dungeon", "sentence/shadow-gate-dungeon", "sentence/shadow-gate-dungeon"),
-    ("Labyrinth of the Goblin King", "labyrinth-goblin-king", "sentence/labyrinth-goblin-king", "sentence/labyrinth-goblin-king"),
-    ("Griffin Rider's Escape", "griffin-riders-escape", None, "sentence/griffin-riders-escape"),
-    ("The Sorcerer's Ziggurat", "sorcerer-ziggurat", None, "sentence/sorcerer-ziggurat"),
-    ("Enchanted Library", "enchanted-library", "vocabulary/enchanted-library", "vocabulary/enchanted-library"),
-    ("Rune Match", "rune-match", "vocabulary/rune-match", "vocabulary/rune-match"),
-    ("Alchemist's Synthesis", "alchemists-synthesis", "vocabulary/alchemists-synthesis", "vocabulary/alchemists-synthesis"),
-    ("Potion Rush", "potion-rush", "sentence/potion-rush", "sentence/potion-rush"),
-    ("Rune Forge Chamber", "rune-forge-chamber", "sentence/rune-forge-chamber", "sentence/rune-forge-chamber"),
-    ("Astral Mage", "astral-mage", None, "sentence/astral-mage"),
-    ("Griffin Sky-Joust", "griffin-sky-joust", None, "sentence/griffin-sky-joust"),
-    ("Realm Carver", "realm-carver", None, "sentence/realm-carver"),
-    ("Devourer Slime", "devourer-slime", "sentence/devourer-slime", "sentence/devourer-slime"),
-    ("The Haunted Library", "haunted-library", "sentence/haunted-library", "sentence/haunted-library"),
-    ("Babel Architect", "babel-architect", None, "sentence/babel-architect"),
-]
+QUARANTINED_SOURCE_PREFIX = "measure/tracks/apk_cross_game_asset_ontology_20260712"
 SOURCE_ROOTS = ("apps/advantage-games", "apps/reading-advantage", "apps/primary-advantage", "packages", "measure")
 
 
@@ -277,6 +244,69 @@ def catalog_ranges(reader: GitObjectReader) -> dict[str, dict[str, Any]]:
     return result
 
 
+def discover_program_identities(
+    reader: GitObjectReader,
+    ledger: dict[str, Any],
+    historical: dict[str, Any],
+) -> list[tuple[str, str, str | None, str]]:
+    """Derives program-label mappings from committed catalog, page, and history evidence.
+
+    Args:
+        reader: Committed-object reader.
+        ledger: Corrected Phase-1 current identity ledger.
+        historical: Corrected Phase-1 historical source records.
+
+    Returns:
+        Program labels paired with independently resolved source identifiers.
+    """
+    program = reader.read(BASELINE, PROGRAM_PATH).decode("utf-8")
+    partition = program.split("### Pilot\n", 1)[1].split(
+        "The partition covers 29 canonical identities exactly once.", 1
+    )[0]
+    labels = re.findall(r"^- (.+)$", partition, flags=re.MULTILINE)
+    if len(labels) != 29 or len(set(labels)) != 29:
+        raise ValueError("Frozen program partition must contain 29 unique labels")
+
+    catalog_text = reader.read(BASELINE, CATALOG_PATH).decode("utf-8")
+    catalog_by_title: dict[str, str] = {}
+    for block in re.findall(r"\{\s*id:\s*['\"][^'\"]+['\"].*?\n\s*\},", catalog_text, flags=re.DOTALL):
+        id_match = re.search(r"\bid:\s*['\"]([^'\"]+)['\"]", block)
+        title_match = re.search(r"\btitle:\s*(['\"])(.*?)\1", block)
+        if id_match is not None and title_match is not None:
+            catalog_by_title[title_match.group(2)] = id_match.group(1)
+
+    ledger_ids = [row["canonical_identity_id"] for row in ledger["identity_records"]]
+    history_paths = [row["evidence"]["path"] for row in historical["records"]]
+    discovered: list[tuple[str, str, str | None, str]] = []
+    for label in labels:
+        display_name = label.split(" —", 1)[0]
+        catalog_id = catalog_by_title.get(display_name)
+        if catalog_id is None:
+            normalized = re.sub(r"^the-", "", re.sub(r"[^a-z0-9]+", "-", display_name.lower()).strip("-"))
+            catalog_id = normalized
+        mechanical_id = next((identity for identity in ledger_ids if identity.endswith(f"/{catalog_id}")), None)
+        if mechanical_id is not None:
+            source_identity_id = mechanical_id
+        else:
+            route_pattern = re.compile(rf"/games/(sentence|vocabulary)/{re.escape(catalog_id)}/")
+            route_match = next((route_pattern.search(path) for path in history_paths if route_pattern.search(path)), None)
+            if route_match is not None:
+                source_kind = route_match.group(1)
+            else:
+                definition_path = f"packages/game-cartridges/src/cartridges/{catalog_id}/definition.ts"
+                try:
+                    definition = reader.read(ASTRAL_HISTORY_REVISION, definition_path).decode("utf-8")
+                except ValueError as error:
+                    raise ValueError(f"No committed page/history source identity found for {label}") from error
+                input_mode = re.search(r"\binputMode:\s*['\"](sentence|vocabulary)['\"]", definition)
+                if input_mode is None:
+                    raise ValueError(f"Historical cartridge lacks an exact inputMode for {label}")
+                source_kind = input_mode.group(1)
+            source_identity_id = f"{source_kind}/{catalog_id}"
+        discovered.append((label, catalog_id, mechanical_id, source_identity_id))
+    return discovered
+
+
 def implementation_matches(paths: list[str], slug: str) -> list[str]:
     """Finds exact baseline implementation paths for one source slug.
 
@@ -299,7 +329,9 @@ def implementation_matches(paths: list[str], slug: str) -> list[str]:
     return [path for path in paths if path.startswith(prefixes) and needle in path]
 
 
-def batch_maps() -> tuple[list[dict[str, Any]], dict[str, str]]:
+def batch_maps(
+    program_identities: list[tuple[str, str, str | None, str]],
+) -> tuple[list[dict[str, Any]], dict[str, str]]:
     """Builds replacement-program batches of no more than three games.
 
     Returns:
@@ -307,8 +339,8 @@ def batch_maps() -> tuple[list[dict[str, Any]], dict[str, str]]:
     """
     batches: list[dict[str, Any]] = []
     slug_batches: dict[str, str] = {}
-    for number, start in enumerate(range(0, len(PROGRAM_IDENTITIES), 3), start=1):
-        group = PROGRAM_IDENTITIES[start : start + 3]
+    for number, start in enumerate(range(0, len(program_identities), 3), start=1):
+        group = program_identities[start : start + 3]
         batch_id = f"human-program-{number:02d}"
         for _, slug, _, _ in group:
             slug_batches[slug] = batch_id
@@ -347,6 +379,7 @@ def program_reviews(
     historical: dict[str, Any],
     catalog: dict[str, dict[str, Any]],
     slug_batches: dict[str, str],
+    program_identities: list[tuple[str, str, str | None, str]],
 ) -> list[dict[str, Any]]:
     """Reviews all 29 raw replacement-program identities.
 
@@ -376,7 +409,7 @@ def program_reviews(
     history_by_slug: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in historical["records"]:
         path = row["evidence"]["path"]
-        for _, slug, _, _ in PROGRAM_IDENTITIES:
+        for _, slug, _, _ in program_identities:
             if f"/{slug}/" in path or slug in Path(path).name:
                 history_by_slug[slug].append(revalidate(reader, row["evidence"]))
 
@@ -390,7 +423,7 @@ def program_reviews(
         history_by_slug[slug].extend(locator(reader, ASTRAL_HISTORY_REVISION, path) for path in supplemental)
 
     reviews: list[dict[str, Any]] = []
-    for number, (label, catalog_id, mechanical_id, source_identity_id) in enumerate(PROGRAM_IDENTITIES, start=1):
+    for number, (label, catalog_id, mechanical_id, source_identity_id) in enumerate(program_identities, start=1):
         program_evidence = locator(reader, BASELINE, PROGRAM_PATH, line_by_label[label], line_by_label[label])
         catalog_evidence = [catalog[catalog_id]] if catalog_id in catalog else []
         matches = implementation_matches(paths, catalog_id)
@@ -436,7 +469,10 @@ def program_reviews(
                 result = subprocess.run(command, cwd=REPO_ROOT, capture_output=True, text=True, check=False)
                 if result.returncode not in (0, 1):
                     raise ValueError(f"Historical search failed ({result.returncode}): {' '.join(command)}: {result.stderr.strip()}")
-                return [line for line in result.stdout.splitlines() if line]
+                return [
+                    line for line in result.stdout.splitlines()
+                    if line and QUARANTINED_SOURCE_PREFIX not in line
+                ]
 
             exact_name_hits = command_lines(exact_name_command)
             slug_hits = command_lines(slug_command)
@@ -564,6 +600,7 @@ def check_coverage() -> dict[str, int]:
         assets = git_json(reader, PHASE1_REVISION, "asset-file-denominator.json")
         historical = git_json(reader, PHASE1_REVISION, "historical-source-denominator.json")
         mechanical_discrepancies = git_json(reader, PHASE1_REVISION, "denominator-discrepancies.json")
+        program_identities = discover_program_identities(reader, ledger, historical)
     finally:
         reader.close()
     human = json.loads((TRACK_DIR / "independent-human-discovery.json").read_text())
@@ -595,7 +632,7 @@ def check_coverage() -> dict[str, int]:
     actual_history = {row["mechanical_locator_key"] for row in human_history["mechanical_historical_locator_reviews"]}
     expected_discrepancies = {row["observation_id"] for row in mechanical_discrepancies["records"]}
     actual_discrepancies = {row["observation_id"] for row in human_discrepancies["mechanical_observation_records"]}
-    expected_program = {label for label, _, _, _ in PROGRAM_IDENTITIES}
+    expected_program = {label for label, _, _, _ in program_identities}
     actual_program = {row["program_identity_label"] for row in human["replacement_program_identity_reviews"]}
     expected_program_history = {
         row["program_identity_label"]
@@ -663,8 +700,17 @@ def generate() -> None:
         historical = git_json(reader, PHASE1_REVISION, "historical-source-denominator.json")
         discrepancies = git_json(reader, PHASE1_REVISION, "denominator-discrepancies.json")
         paths = tree_paths()
-        program_batches, slug_batches = batch_maps()
-        program = program_reviews(reader, paths, ledger, historical, catalog_ranges(reader), slug_batches)
+        program_identities = discover_program_identities(reader, ledger, historical)
+        program_batches, slug_batches = batch_maps(program_identities)
+        program = program_reviews(
+            reader,
+            paths,
+            ledger,
+            historical,
+            catalog_ranges(reader),
+            slug_batches,
+            program_identities,
+        )
 
         current_batches: list[dict[str, Any]] = []
         current_claims: list[dict[str, Any]] = []

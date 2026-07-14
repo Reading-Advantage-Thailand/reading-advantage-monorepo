@@ -9184,7 +9184,7 @@
     "agent_resource_usage_limitation": "The platform does not expose agent-context bytes or tool-command accounting; helper-internal Git bytes are reported separately and are not represented as frozen role-budget usage.",
     "command_basis": "one persistent committed-object reader, one frozen-tree listing, one ancestor-only revision listing, and two historical package-tree listings",
     "git_process_invocations": 5,
-    "source_bytes_hashed_by_helper": 403418664,
+    "source_bytes_hashed_by_helper": 403402771,
     "source_objects_resolved": 1089
   },
   "collector_identity": "evidence-collector-remediation-20260713",
@@ -80910,10 +80910,6 @@
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/apk-evidence-reconstruction-program.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/archive/www_games_showcase_20260517/spec.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/audit-reports/advantage-games_20260626/line-review/games-batch-11.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.json",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/generate-corpus.mjs",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/mechanic-blueprints/abyssal-well.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_three_game_truth_pilot_20260712/spec.md"
         ],
         "current_specification_matched_paths": [
@@ -80921,10 +80917,6 @@
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/apk-evidence-reconstruction-program.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/archive/www_games_showcase_20260517/spec.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/audit-reports/advantage-games_20260626/line-review/games-batch-11.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.json",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/generate-corpus.mjs",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/mechanic-blueprints/abyssal-well.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_three_game_truth_pilot_20260712/spec.md"
         ],
         "exact_name": "The Abyssal Well",
@@ -81844,10 +81836,7 @@
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tests/evidence_integrity_gates/fixtures/attempts/attempt_05_slug_asset_allowlist.json",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_action_defense_20260712/plan.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_action_defense_20260712/spec.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.json",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/mechanic-blueprints/archers-revenge.md"
+          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_action_defense_20260712/spec.md"
         ],
         "current_specification_matched_paths": [
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/acceptance/measure_apk_evidence_integrity_gates_20260712/exports/31369418a019bf836e68631e11e091e9b9cd5f83df4d31e2a5cd1148e45fc85d.json",
@@ -81865,10 +81854,7 @@
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tests/evidence_integrity_gates/fixtures/attempts/attempt_05_slug_asset_allowlist.json",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_action_defense_20260712/plan.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_action_defense_20260712/spec.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.json",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/mechanic-blueprints/archers-revenge.md"
+          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_action_defense_20260712/spec.md"
         ],
         "exact_name": "Archer's Revenge",
         "exact_name_command": "git log --format=%H -S Archer's Revenge 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
@@ -82197,10 +82183,7 @@
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/archive/www_games_showcase_20260517/spec.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/audit-reports/advantage-games_20260626/line-review/games-batch-19.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_action_defense_20260712/plan.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_action_defense_20260712/spec.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.json",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/mechanic-blueprints/storm-castle-tower.md"
+          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_action_defense_20260712/spec.md"
         ],
         "current_specification_matched_paths": [
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/acceptance/measure_apk_evidence_integrity_gates_20260712/exports/de3de2408a4a0b001b8c4495f4d1bbd3fffab5754280a66d77178a3290368fb4.json",
@@ -82209,10 +82192,7 @@
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/archive/www_games_showcase_20260517/spec.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/audit-reports/advantage-games_20260626/line-review/games-batch-19.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_action_defense_20260712/plan.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_action_defense_20260712/spec.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.json",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/mechanic-blueprints/storm-castle-tower.md"
+          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_action_defense_20260712/spec.md"
         ],
         "exact_name": "Storm the Castle Tower",
         "exact_name_command": "git log --format=%H -S Storm the Castle Tower 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
@@ -82537,10 +82517,7 @@
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/audit-reports/advantage-games_20260626/line-review/games-batch-22.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_action_defense_20260712/plan.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_action_defense_20260712/spec.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.json",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/mechanic-blueprints/paladins-twin-soul.md"
+          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_action_defense_20260712/spec.md"
         ],
         "current_specification_matched_paths": [
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/acceptance/measure_apk_evidence_integrity_gates_20260712/exports/31369418a019bf836e68631e11e091e9b9cd5f83df4d31e2a5cd1148e45fc85d.json",
@@ -82553,10 +82530,7 @@
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/audit-reports/advantage-games_20260626/line-review/games-batch-22.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_action_defense_20260712/plan.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_action_defense_20260712/spec.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.json",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/mechanic-blueprints/paladins-twin-soul.md"
+          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_action_defense_20260712/spec.md"
         ],
         "exact_name": "Paladin's Twin-Soul",
         "exact_name_command": "git log --format=%H -S Paladin's Twin-Soul 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
@@ -82889,10 +82863,7 @@
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/audit-reports/advantage-games_20260626/line-review/games-batch-46.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_action_defense_20260712/plan.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_action_defense_20260712/spec.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.json",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/mechanic-blueprints/gryphon-patrol.md"
+          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_action_defense_20260712/spec.md"
         ],
         "current_specification_matched_paths": [
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/acceptance/measure_apk_evidence_integrity_gates_20260712/exports/31369418a019bf836e68631e11e091e9b9cd5f83df4d31e2a5cd1148e45fc85d.json",
@@ -82911,10 +82882,7 @@
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/audit-reports/advantage-games_20260626/line-review/games-batch-46.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_action_defense_20260712/plan.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_action_defense_20260712/spec.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.json",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/mechanic-blueprints/gryphon-patrol.md"
+          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_action_defense_20260712/spec.md"
         ],
         "exact_name": "Gryphon Patrol",
         "exact_name_command": "git log --format=%H -S Gryphon Patrol 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
@@ -83468,10 +83436,7 @@
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/audit-reports/advantage-games_20260626/line-review/games-batch-19.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/audit-reports/advantage-games_20260626/line-review/games-batch-29.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_traversal_exploration_20260712/plan.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_traversal_exploration_20260712/spec.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.json",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/mechanic-blueprints/spellweavers-run.md"
+          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_traversal_exploration_20260712/spec.md"
         ],
         "current_specification_matched_paths": [
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/acceptance/measure_apk_evidence_integrity_gates_20260712/exports/de3de2408a4a0b001b8c4495f4d1bbd3fffab5754280a66d77178a3290368fb4.json",
@@ -83481,10 +83446,7 @@
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/audit-reports/advantage-games_20260626/line-review/games-batch-19.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/audit-reports/advantage-games_20260626/line-review/games-batch-29.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_traversal_exploration_20260712/plan.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_traversal_exploration_20260712/spec.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.json",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/mechanic-blueprints/spellweavers-run.md"
+          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_traversal_exploration_20260712/spec.md"
         ],
         "exact_name": "Spellweaver's Run",
         "exact_name_command": "git log --format=%H -S Spellweaver's Run 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
@@ -84015,10 +83977,7 @@
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/archive/www_games_showcase_20260517/spec.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/audit-reports/advantage-games_20260626/line-review/games-batch-27.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_traversal_exploration_20260712/plan.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_traversal_exploration_20260712/spec.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.json",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/mechanic-blueprints/griffin-riders-escape.md"
+          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_traversal_exploration_20260712/spec.md"
         ],
         "current_specification_matched_paths": [
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/acceptance/measure_apk_evidence_integrity_gates_20260712/exports/de3de2408a4a0b001b8c4495f4d1bbd3fffab5754280a66d77178a3290368fb4.json",
@@ -84027,10 +83986,7 @@
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/archive/www_games_showcase_20260517/spec.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/audit-reports/advantage-games_20260626/line-review/games-batch-27.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_traversal_exploration_20260712/plan.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_traversal_exploration_20260712/spec.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.json",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/mechanic-blueprints/griffin-riders-escape.md"
+          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_traversal_exploration_20260712/spec.md"
         ],
         "exact_name": "Griffin Rider's Escape",
         "exact_name_command": "git log --format=%H -S Griffin Rider's Escape 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
@@ -84369,10 +84325,7 @@
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/archive/apk_incomplete_sentence_action_20260710/spec.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_traversal_exploration_20260712/plan.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_traversal_exploration_20260712/spec.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.json",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/mechanic-blueprints/sorcerer-ziggurat.md"
+          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_traversal_exploration_20260712/spec.md"
         ],
         "current_specification_matched_paths": [
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/acceptance/measure_apk_evidence_integrity_gates_20260712/exports/31369418a019bf836e68631e11e091e9b9cd5f83df4d31e2a5cd1148e45fc85d.json",
@@ -84388,10 +84341,7 @@
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/archive/apk_incomplete_sentence_action_20260710/spec.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_traversal_exploration_20260712/plan.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_traversal_exploration_20260712/spec.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.json",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/mechanic-blueprints/sorcerer-ziggurat.md"
+          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_traversal_exploration_20260712/spec.md"
         ],
         "exact_name": "The Sorcerer's Ziggurat",
         "exact_name_command": "git log --format=%H -S The Sorcerer's Ziggurat 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
@@ -85391,13 +85341,7 @@
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/audit-reports/advantage-games_20260626/line-review/games-batch-13.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/plan.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/spec.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/blueprint-cross-review.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.json",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/gap-and-coverage-plan.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/generate-ontology.mjs",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/mechanic-blueprints/astral-mage.md"
+          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/spec.md"
         ],
         "current_specification_matched_paths": [
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/acceptance/measure_apk_evidence_integrity_gates_20260712/exports/31369418a019bf836e68631e11e091e9b9cd5f83df4d31e2a5cd1148e45fc85d.json",
@@ -85418,13 +85362,7 @@
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/audit-reports/advantage-games_20260626/line-review/games-batch-13.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/plan.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/spec.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/blueprint-cross-review.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.json",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/gap-and-coverage-plan.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/generate-ontology.mjs",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/mechanic-blueprints/astral-mage.md"
+          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/spec.md"
         ],
         "exact_name": "Astral Mage",
         "exact_name_command": "git log --format=%H -S Astral Mage 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
@@ -85752,10 +85690,7 @@
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/audit-reports/advantage-games_20260626/line-review/games-batch-28.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_special_historical_20260712/plan.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_special_historical_20260712/spec.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.json",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/mechanic-blueprints/griffin-sky-joust.md"
+          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_special_historical_20260712/spec.md"
         ],
         "current_specification_matched_paths": [
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/acceptance/measure_apk_evidence_integrity_gates_20260712/exports/31369418a019bf836e68631e11e091e9b9cd5f83df4d31e2a5cd1148e45fc85d.json",
@@ -85771,10 +85706,7 @@
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/audit-reports/advantage-games_20260626/line-review/games-batch-28.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_special_historical_20260712/plan.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_special_historical_20260712/spec.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.json",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/mechanic-blueprints/griffin-sky-joust.md"
+          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_special_historical_20260712/spec.md"
         ],
         "exact_name": "Griffin Sky-Joust",
         "exact_name_command": "git log --format=%H -S Griffin Sky-Joust 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
@@ -86102,13 +86034,7 @@
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/audit-reports/advantage-games_20260626/line-review/games-batch-46.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_special_historical_20260712/plan.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_special_historical_20260712/spec.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/capability-usage-matrix.json",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/developer-capability-ontology.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.json",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/generate-capabilities.mjs",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/mechanic-blueprints/realm-carver.md"
+          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_special_historical_20260712/spec.md"
         ],
         "current_specification_matched_paths": [
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/acceptance/measure_apk_evidence_integrity_gates_20260712/exports/31369418a019bf836e68631e11e091e9b9cd5f83df4d31e2a5cd1148e45fc85d.json",
@@ -86130,13 +86056,7 @@
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/audit-reports/advantage-games_20260626/line-review/games-batch-46.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_special_historical_20260712/plan.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_special_historical_20260712/spec.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/capability-usage-matrix.json",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/developer-capability-ontology.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.json",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/generate-capabilities.mjs",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/mechanic-blueprints/realm-carver.md"
+          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_special_historical_20260712/spec.md"
         ],
         "exact_name": "Realm Carver",
         "exact_name_command": "git log --format=%H -S Realm Carver 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
@@ -86798,16 +86718,7 @@
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/archive/apk_incomplete_sentence_action_20260710/verification.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/audit-reports/advantage-games_20260626/line-review/games-batch-13.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_special_historical_20260712/plan.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_special_historical_20260712/spec.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/blueprint-cross-review.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/dependent-track-inputs.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/evidence-snapshot.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.json",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/gap-and-coverage-plan.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/generate-corpus.mjs",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/generate-ontology.mjs",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/mechanic-blueprints/babel-architect.md"
+          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_special_historical_20260712/spec.md"
         ],
         "current_specification_matched_paths": [
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/acceptance/measure_apk_evidence_integrity_gates_20260712/exports/de3de2408a4a0b001b8c4495f4d1bbd3fffab5754280a66d77178a3290368fb4.json",
@@ -86824,16 +86735,7 @@
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/archive/apk_incomplete_sentence_action_20260710/verification.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/audit-reports/advantage-games_20260626/line-review/games-batch-13.md",
           "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_special_historical_20260712/plan.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_special_historical_20260712/spec.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/blueprint-cross-review.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/dependent-track-inputs.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/evidence-snapshot.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.json",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/game-corpus.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/gap-and-coverage-plan.md",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/generate-corpus.mjs",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/generate-ontology.mjs",
-          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_cross_game_asset_ontology_20260712/mechanic-blueprints/babel-architect.md"
+          "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/tracks/apk_corpus_audit_special_historical_20260712/spec.md"
         ],
         "exact_name": "Babel Architect",
         "exact_name_command": "git log --format=%H -S Babel Architect 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
@@ -88938,7 +88840,7 @@
         }
       ],
       "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"42fa273465fd0f11c165c3fb60963f7c386b6c4cc126e9f3fbefde850bfedfdc\",\"path\":\"apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx\",\"range\":{\"end_line\":35,\"sha256\":\"5ae7cc2774263a7f3fba8b7194f4893fca7349ca4cad699c03da409e53b44d02\",\"start_line\":35},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"gamePhase\",\"state_id\":\"playing\",\"state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx:35:gamePhase:playing\"}",
+      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"42fa273465fd0f11c165c3fb60963f7c386b6c4cc126e9f3fbefde850bfedfdc\",\"path\":\"apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx\",\"range\":{\"end_line\":35,\"sha256\":\"5ae7cc2774263a7f3fba8b7194f4893fca7349ca4cad699c03da409e53b44d02\",\"start_line\":35},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"gamePhase\",\"state_id\":\"start\",\"state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx:35:gamePhase:start\"}",
       "method": "human-raw-surface-review",
       "review_batch_id": "human-program-09",
       "review_id": "surface-review:057",
@@ -88964,7 +88866,7 @@
         }
       ],
       "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"42fa273465fd0f11c165c3fb60963f7c386b6c4cc126e9f3fbefde850bfedfdc\",\"path\":\"apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx\",\"range\":{\"end_line\":35,\"sha256\":\"5ae7cc2774263a7f3fba8b7194f4893fca7349ca4cad699c03da409e53b44d02\",\"start_line\":35},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"gamePhase\",\"state_id\":\"start\",\"state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx:35:gamePhase:start\"}",
+      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"42fa273465fd0f11c165c3fb60963f7c386b6c4cc126e9f3fbefde850bfedfdc\",\"path\":\"apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx\",\"range\":{\"end_line\":35,\"sha256\":\"5ae7cc2774263a7f3fba8b7194f4893fca7349ca4cad699c03da409e53b44d02\",\"start_line\":35},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"gamePhase\",\"state_id\":\"playing\",\"state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx:35:gamePhase:playing\"}",
       "method": "human-raw-surface-review",
       "review_batch_id": "human-program-09",
       "review_id": "surface-review:058",
@@ -89016,7 +88918,7 @@
         }
       ],
       "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"bf33b1798fdcce01fbb39d1595b94eda48ff46235c42e0c0790207f7c71fc047\",\"path\":\"apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx\",\"range\":{\"end_line\":59,\"sha256\":\"5ae7cc2774263a7f3fba8b7194f4893fca7349ca4cad699c03da409e53b44d02\",\"start_line\":59},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"gamePhase\",\"state_id\":\"playing\",\"state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx:59:gamePhase:playing\"}",
+      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"bf33b1798fdcce01fbb39d1595b94eda48ff46235c42e0c0790207f7c71fc047\",\"path\":\"apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx\",\"range\":{\"end_line\":59,\"sha256\":\"5ae7cc2774263a7f3fba8b7194f4893fca7349ca4cad699c03da409e53b44d02\",\"start_line\":59},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"gamePhase\",\"state_id\":\"start\",\"state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx:59:gamePhase:start\"}",
       "method": "human-raw-surface-review",
       "review_batch_id": "human-program-05",
       "review_id": "surface-review:060",
@@ -89042,7 +88944,7 @@
         }
       ],
       "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"bf33b1798fdcce01fbb39d1595b94eda48ff46235c42e0c0790207f7c71fc047\",\"path\":\"apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx\",\"range\":{\"end_line\":59,\"sha256\":\"5ae7cc2774263a7f3fba8b7194f4893fca7349ca4cad699c03da409e53b44d02\",\"start_line\":59},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"gamePhase\",\"state_id\":\"start\",\"state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx:59:gamePhase:start\"}",
+      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"bf33b1798fdcce01fbb39d1595b94eda48ff46235c42e0c0790207f7c71fc047\",\"path\":\"apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx\",\"range\":{\"end_line\":59,\"sha256\":\"5ae7cc2774263a7f3fba8b7194f4893fca7349ca4cad699c03da409e53b44d02\",\"start_line\":59},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"gamePhase\",\"state_id\":\"playing\",\"state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx:59:gamePhase:playing\"}",
       "method": "human-raw-surface-review",
       "review_batch_id": "human-program-05",
       "review_id": "surface-review:061",
@@ -89094,7 +88996,7 @@
         }
       ],
       "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"3a6b1fc6d2ed94cb6800855e0c72c3b95e9ac0f33e73c99bd20151a9e62c1207\",\"path\":\"apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx\",\"range\":{\"end_line\":90,\"sha256\":\"5ae7cc2774263a7f3fba8b7194f4893fca7349ca4cad699c03da409e53b44d02\",\"start_line\":90},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"gamePhase\",\"state_id\":\"playing\",\"state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx:90:gamePhase:playing\"}",
+      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"3a6b1fc6d2ed94cb6800855e0c72c3b95e9ac0f33e73c99bd20151a9e62c1207\",\"path\":\"apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx\",\"range\":{\"end_line\":90,\"sha256\":\"5ae7cc2774263a7f3fba8b7194f4893fca7349ca4cad699c03da409e53b44d02\",\"start_line\":90},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"gamePhase\",\"state_id\":\"start\",\"state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx:90:gamePhase:start\"}",
       "method": "human-raw-surface-review",
       "review_batch_id": "human-program-10",
       "review_id": "surface-review:063",
@@ -89120,7 +89022,7 @@
         }
       ],
       "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"3a6b1fc6d2ed94cb6800855e0c72c3b95e9ac0f33e73c99bd20151a9e62c1207\",\"path\":\"apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx\",\"range\":{\"end_line\":90,\"sha256\":\"5ae7cc2774263a7f3fba8b7194f4893fca7349ca4cad699c03da409e53b44d02\",\"start_line\":90},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"gamePhase\",\"state_id\":\"start\",\"state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx:90:gamePhase:start\"}",
+      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"3a6b1fc6d2ed94cb6800855e0c72c3b95e9ac0f33e73c99bd20151a9e62c1207\",\"path\":\"apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx\",\"range\":{\"end_line\":90,\"sha256\":\"5ae7cc2774263a7f3fba8b7194f4893fca7349ca4cad699c03da409e53b44d02\",\"start_line\":90},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"gamePhase\",\"state_id\":\"playing\",\"state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx:90:gamePhase:playing\"}",
       "method": "human-raw-surface-review",
       "review_batch_id": "human-program-10",
       "review_id": "surface-review:064",
@@ -89172,7 +89074,7 @@
         }
       ],
       "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"23a76bf75fb4c2f4c4e4f68d6554150337c7dd4ad149b5e0f4cd50dd32752b71\",\"path\":\"apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx\",\"range\":{\"end_line\":39,\"sha256\":\"5ae7cc2774263a7f3fba8b7194f4893fca7349ca4cad699c03da409e53b44d02\",\"start_line\":39},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"gamePhase\",\"state_id\":\"playing\",\"state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx:39:gamePhase:playing\"}",
+      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"23a76bf75fb4c2f4c4e4f68d6554150337c7dd4ad149b5e0f4cd50dd32752b71\",\"path\":\"apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx\",\"range\":{\"end_line\":39,\"sha256\":\"5ae7cc2774263a7f3fba8b7194f4893fca7349ca4cad699c03da409e53b44d02\",\"start_line\":39},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"gamePhase\",\"state_id\":\"start\",\"state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx:39:gamePhase:start\"}",
       "method": "human-raw-surface-review",
       "review_batch_id": "human-program-06",
       "review_id": "surface-review:066",
@@ -89198,7 +89100,7 @@
         }
       ],
       "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"23a76bf75fb4c2f4c4e4f68d6554150337c7dd4ad149b5e0f4cd50dd32752b71\",\"path\":\"apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx\",\"range\":{\"end_line\":39,\"sha256\":\"5ae7cc2774263a7f3fba8b7194f4893fca7349ca4cad699c03da409e53b44d02\",\"start_line\":39},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"gamePhase\",\"state_id\":\"start\",\"state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx:39:gamePhase:start\"}",
+      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"23a76bf75fb4c2f4c4e4f68d6554150337c7dd4ad149b5e0f4cd50dd32752b71\",\"path\":\"apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx\",\"range\":{\"end_line\":39,\"sha256\":\"5ae7cc2774263a7f3fba8b7194f4893fca7349ca4cad699c03da409e53b44d02\",\"start_line\":39},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"gamePhase\",\"state_id\":\"playing\",\"state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx:39:gamePhase:playing\"}",
       "method": "human-raw-surface-review",
       "review_batch_id": "human-program-06",
       "review_id": "surface-review:067",
@@ -89250,7 +89152,7 @@
         }
       ],
       "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"45cf46e19255ba7107193d2ceeef63d88b4bcf959d54d830840c2e0cbca23d8f\",\"path\":\"apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx\",\"range\":{\"end_line\":35,\"sha256\":\"5ae7cc2774263a7f3fba8b7194f4893fca7349ca4cad699c03da409e53b44d02\",\"start_line\":35},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"gamePhase\",\"state_id\":\"playing\",\"state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx:35:gamePhase:playing\"}",
+      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"45cf46e19255ba7107193d2ceeef63d88b4bcf959d54d830840c2e0cbca23d8f\",\"path\":\"apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx\",\"range\":{\"end_line\":35,\"sha256\":\"5ae7cc2774263a7f3fba8b7194f4893fca7349ca4cad699c03da409e53b44d02\",\"start_line\":35},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"gamePhase\",\"state_id\":\"start\",\"state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx:35:gamePhase:start\"}",
       "method": "human-raw-surface-review",
       "review_batch_id": "human-program-08",
       "review_id": "surface-review:069",
@@ -89276,7 +89178,7 @@
         }
       ],
       "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"45cf46e19255ba7107193d2ceeef63d88b4bcf959d54d830840c2e0cbca23d8f\",\"path\":\"apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx\",\"range\":{\"end_line\":35,\"sha256\":\"5ae7cc2774263a7f3fba8b7194f4893fca7349ca4cad699c03da409e53b44d02\",\"start_line\":35},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"gamePhase\",\"state_id\":\"start\",\"state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx:35:gamePhase:start\"}",
+      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"45cf46e19255ba7107193d2ceeef63d88b4bcf959d54d830840c2e0cbca23d8f\",\"path\":\"apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx\",\"range\":{\"end_line\":35,\"sha256\":\"5ae7cc2774263a7f3fba8b7194f4893fca7349ca4cad699c03da409e53b44d02\",\"start_line\":35},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"gamePhase\",\"state_id\":\"playing\",\"state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx:35:gamePhase:playing\"}",
       "method": "human-raw-surface-review",
       "review_batch_id": "human-program-08",
       "review_id": "surface-review:070",
@@ -89328,7 +89230,7 @@
         }
       ],
       "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"730b5cc3d5d97ac2d64e26a68078b827b1ecc1a913cbf548b037dfdc78befc2b\",\"path\":\"apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx\",\"range\":{\"end_line\":40,\"sha256\":\"5ae7cc2774263a7f3fba8b7194f4893fca7349ca4cad699c03da409e53b44d02\",\"start_line\":40},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"gamePhase\",\"state_id\":\"playing\",\"state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx:40:gamePhase:playing\"}",
+      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"730b5cc3d5d97ac2d64e26a68078b827b1ecc1a913cbf548b037dfdc78befc2b\",\"path\":\"apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx\",\"range\":{\"end_line\":40,\"sha256\":\"5ae7cc2774263a7f3fba8b7194f4893fca7349ca4cad699c03da409e53b44d02\",\"start_line\":40},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"gamePhase\",\"state_id\":\"start\",\"state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx:40:gamePhase:start\"}",
       "method": "human-raw-surface-review",
       "review_batch_id": "human-program-05",
       "review_id": "surface-review:072",
@@ -89354,7 +89256,7 @@
         }
       ],
       "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"730b5cc3d5d97ac2d64e26a68078b827b1ecc1a913cbf548b037dfdc78befc2b\",\"path\":\"apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx\",\"range\":{\"end_line\":40,\"sha256\":\"5ae7cc2774263a7f3fba8b7194f4893fca7349ca4cad699c03da409e53b44d02\",\"start_line\":40},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"gamePhase\",\"state_id\":\"start\",\"state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx:40:gamePhase:start\"}",
+      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"730b5cc3d5d97ac2d64e26a68078b827b1ecc1a913cbf548b037dfdc78befc2b\",\"path\":\"apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx\",\"range\":{\"end_line\":40,\"sha256\":\"5ae7cc2774263a7f3fba8b7194f4893fca7349ca4cad699c03da409e53b44d02\",\"start_line\":40},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"gamePhase\",\"state_id\":\"playing\",\"state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx:40:gamePhase:playing\"}",
       "method": "human-raw-surface-review",
       "review_batch_id": "human-program-05",
       "review_id": "surface-review:073",
@@ -89406,7 +89308,7 @@
         }
       ],
       "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"bdef057d6019a89dacd01b3c264f7cacd9704f2bf3dbc705d92419364e34c102\",\"path\":\"apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx\",\"range\":{\"end_line\":37,\"sha256\":\"5ae7cc2774263a7f3fba8b7194f4893fca7349ca4cad699c03da409e53b44d02\",\"start_line\":37},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"gamePhase\",\"state_id\":\"playing\",\"state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx:37:gamePhase:playing\"}",
+      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"bdef057d6019a89dacd01b3c264f7cacd9704f2bf3dbc705d92419364e34c102\",\"path\":\"apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx\",\"range\":{\"end_line\":37,\"sha256\":\"5ae7cc2774263a7f3fba8b7194f4893fca7349ca4cad699c03da409e53b44d02\",\"start_line\":37},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"gamePhase\",\"state_id\":\"start\",\"state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx:37:gamePhase:start\"}",
       "method": "human-raw-surface-review",
       "review_batch_id": "human-program-03",
       "review_id": "surface-review:075",
@@ -89432,7 +89334,7 @@
         }
       ],
       "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"bdef057d6019a89dacd01b3c264f7cacd9704f2bf3dbc705d92419364e34c102\",\"path\":\"apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx\",\"range\":{\"end_line\":37,\"sha256\":\"5ae7cc2774263a7f3fba8b7194f4893fca7349ca4cad699c03da409e53b44d02\",\"start_line\":37},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"gamePhase\",\"state_id\":\"start\",\"state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx:37:gamePhase:start\"}",
+      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"bdef057d6019a89dacd01b3c264f7cacd9704f2bf3dbc705d92419364e34c102\",\"path\":\"apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx\",\"range\":{\"end_line\":37,\"sha256\":\"5ae7cc2774263a7f3fba8b7194f4893fca7349ca4cad699c03da409e53b44d02\",\"start_line\":37},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"gamePhase\",\"state_id\":\"playing\",\"state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx:37:gamePhase:playing\"}",
       "method": "human-raw-surface-review",
       "review_batch_id": "human-program-03",
       "review_id": "surface-review:076",
@@ -89484,7 +89386,7 @@
         }
       ],
       "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"342703a685400060427b112be4142740b51fb457194548244cb9619b9fc53dbd\",\"path\":\"apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx\",\"range\":{\"end_line\":116,\"sha256\":\"a39e247ce3cde3e41f9683685a1a0a885224904852cbbe7d2288f42538538e20\",\"start_line\":116},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"gamePhase\",\"state_id\":\"playing\",\"state_occurrence_id\":\"apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:116:gamePhase:playing\"}",
+      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"342703a685400060427b112be4142740b51fb457194548244cb9619b9fc53dbd\",\"path\":\"apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx\",\"range\":{\"end_line\":116,\"sha256\":\"a39e247ce3cde3e41f9683685a1a0a885224904852cbbe7d2288f42538538e20\",\"start_line\":116},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"gamePhase\",\"state_id\":\"start\",\"state_occurrence_id\":\"apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:116:gamePhase:start\"}",
       "method": "human-raw-surface-review",
       "review_batch_id": "human-program-07",
       "review_id": "surface-review:078",
@@ -89510,7 +89412,7 @@
         }
       ],
       "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"342703a685400060427b112be4142740b51fb457194548244cb9619b9fc53dbd\",\"path\":\"apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx\",\"range\":{\"end_line\":116,\"sha256\":\"a39e247ce3cde3e41f9683685a1a0a885224904852cbbe7d2288f42538538e20\",\"start_line\":116},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"gamePhase\",\"state_id\":\"start\",\"state_occurrence_id\":\"apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:116:gamePhase:start\"}",
+      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"342703a685400060427b112be4142740b51fb457194548244cb9619b9fc53dbd\",\"path\":\"apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx\",\"range\":{\"end_line\":116,\"sha256\":\"a39e247ce3cde3e41f9683685a1a0a885224904852cbbe7d2288f42538538e20\",\"start_line\":116},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"gamePhase\",\"state_id\":\"playing\",\"state_occurrence_id\":\"apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:116:gamePhase:playing\"}",
       "method": "human-raw-surface-review",
       "review_batch_id": "human-program-07",
       "review_id": "surface-review:079",
@@ -89562,7 +89464,7 @@
         }
       ],
       "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"71ff7b6d8b573fe2c3ee4cff37e2a85285e9f28acbaa105b4984b1272c91ceb4\",\"path\":\"apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx\",\"range\":{\"end_line\":99,\"sha256\":\"45f9ec31c5c70ab99b8dd891bbc85132ba2fc72d6620dd388dcf6aa72604dc01\",\"start_line\":99},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"gamePhase\",\"state_id\":\"playing\",\"state_occurrence_id\":\"apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx:99:gamePhase:playing\"}",
+      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"71ff7b6d8b573fe2c3ee4cff37e2a85285e9f28acbaa105b4984b1272c91ceb4\",\"path\":\"apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx\",\"range\":{\"end_line\":99,\"sha256\":\"45f9ec31c5c70ab99b8dd891bbc85132ba2fc72d6620dd388dcf6aa72604dc01\",\"start_line\":99},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"gamePhase\",\"state_id\":\"start\",\"state_occurrence_id\":\"apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx:99:gamePhase:start\"}",
       "method": "human-raw-surface-review",
       "review_batch_id": "human-program-02",
       "review_id": "surface-review:081",
@@ -89588,7 +89490,7 @@
         }
       ],
       "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"71ff7b6d8b573fe2c3ee4cff37e2a85285e9f28acbaa105b4984b1272c91ceb4\",\"path\":\"apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx\",\"range\":{\"end_line\":99,\"sha256\":\"45f9ec31c5c70ab99b8dd891bbc85132ba2fc72d6620dd388dcf6aa72604dc01\",\"start_line\":99},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"gamePhase\",\"state_id\":\"start\",\"state_occurrence_id\":\"apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx:99:gamePhase:start\"}",
+      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"71ff7b6d8b573fe2c3ee4cff37e2a85285e9f28acbaa105b4984b1272c91ceb4\",\"path\":\"apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx\",\"range\":{\"end_line\":99,\"sha256\":\"45f9ec31c5c70ab99b8dd891bbc85132ba2fc72d6620dd388dcf6aa72604dc01\",\"start_line\":99},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"gamePhase\",\"state_id\":\"playing\",\"state_occurrence_id\":\"apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx:99:gamePhase:playing\"}",
       "method": "human-raw-surface-review",
       "review_batch_id": "human-program-02",
       "review_id": "surface-review:082",
@@ -89614,7 +89516,7 @@
         }
       ],
       "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"d28b34f89e64bdfa039a55df5262e4256730045829b2b7ab5455b13d72069fcc\",\"path\":\"apps/advantage-games/src/components/multiplayer/LobbyScreen.tsx\",\"range\":{\"end_line\":45,\"sha256\":\"af19cd529f0dd86f89dfe2d75e46fda94749bf40208aae7794e5b490d881ce20\",\"start_line\":45},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"mode\",\"state_id\":\"join\",\"state_occurrence_id\":\"apps/advantage-games/src/components/multiplayer/LobbyScreen.tsx:45:mode:join\"}",
+      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"d28b34f89e64bdfa039a55df5262e4256730045829b2b7ab5455b13d72069fcc\",\"path\":\"apps/advantage-games/src/components/multiplayer/LobbyScreen.tsx\",\"range\":{\"end_line\":45,\"sha256\":\"af19cd529f0dd86f89dfe2d75e46fda94749bf40208aae7794e5b490d881ce20\",\"start_line\":45},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"mode\",\"state_id\":\"lobby\",\"state_occurrence_id\":\"apps/advantage-games/src/components/multiplayer/LobbyScreen.tsx:45:mode:lobby\"}",
       "method": "human-raw-surface-review",
       "review_batch_id": "human-global-shared-01",
       "review_id": "surface-review:083",
@@ -89640,7 +89542,7 @@
         }
       ],
       "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"d28b34f89e64bdfa039a55df5262e4256730045829b2b7ab5455b13d72069fcc\",\"path\":\"apps/advantage-games/src/components/multiplayer/LobbyScreen.tsx\",\"range\":{\"end_line\":45,\"sha256\":\"af19cd529f0dd86f89dfe2d75e46fda94749bf40208aae7794e5b490d881ce20\",\"start_line\":45},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"mode\",\"state_id\":\"lobby\",\"state_occurrence_id\":\"apps/advantage-games/src/components/multiplayer/LobbyScreen.tsx:45:mode:lobby\"}",
+      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"d28b34f89e64bdfa039a55df5262e4256730045829b2b7ab5455b13d72069fcc\",\"path\":\"apps/advantage-games/src/components/multiplayer/LobbyScreen.tsx\",\"range\":{\"end_line\":45,\"sha256\":\"af19cd529f0dd86f89dfe2d75e46fda94749bf40208aae7794e5b490d881ce20\",\"start_line\":45},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"mode\",\"state_id\":\"join\",\"state_occurrence_id\":\"apps/advantage-games/src/components/multiplayer/LobbyScreen.tsx:45:mode:join\"}",
       "method": "human-raw-surface-review",
       "review_batch_id": "human-global-shared-01",
       "review_id": "surface-review:084",
@@ -89718,7 +89620,7 @@
         }
       ],
       "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"62f3ee98f007b4a29b063c391f26d8484564776aa257d670698060043d951f78\",\"path\":\"apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx\",\"range\":{\"end_line\":390,\"sha256\":\"a39e247ce3cde3e41f9683685a1a0a885224904852cbbe7d2288f42538538e20\",\"start_line\":390},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"gamePhase\",\"state_id\":\"playing\",\"state_occurrence_id\":\"apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx:390:gamePhase:playing\"}",
+      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"62f3ee98f007b4a29b063c391f26d8484564776aa257d670698060043d951f78\",\"path\":\"apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx\",\"range\":{\"end_line\":390,\"sha256\":\"a39e247ce3cde3e41f9683685a1a0a885224904852cbbe7d2288f42538538e20\",\"start_line\":390},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"gamePhase\",\"state_id\":\"start\",\"state_occurrence_id\":\"apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx:390:gamePhase:start\"}",
       "method": "human-raw-surface-review",
       "review_batch_id": "human-program-04",
       "review_id": "surface-review:087",
@@ -89744,7 +89646,7 @@
         }
       ],
       "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"62f3ee98f007b4a29b063c391f26d8484564776aa257d670698060043d951f78\",\"path\":\"apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx\",\"range\":{\"end_line\":390,\"sha256\":\"a39e247ce3cde3e41f9683685a1a0a885224904852cbbe7d2288f42538538e20\",\"start_line\":390},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"gamePhase\",\"state_id\":\"start\",\"state_occurrence_id\":\"apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx:390:gamePhase:start\"}",
+      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"62f3ee98f007b4a29b063c391f26d8484564776aa257d670698060043d951f78\",\"path\":\"apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx\",\"range\":{\"end_line\":390,\"sha256\":\"a39e247ce3cde3e41f9683685a1a0a885224904852cbbe7d2288f42538538e20\",\"start_line\":390},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"gamePhase\",\"state_id\":\"playing\",\"state_occurrence_id\":\"apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx:390:gamePhase:playing\"}",
       "method": "human-raw-surface-review",
       "review_batch_id": "human-program-04",
       "review_id": "surface-review:088",
@@ -89796,7 +89698,7 @@
         }
       ],
       "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"943b662d09ff3df1e4729d3ec775624dea6042ca83046bb57a9fb7adc49dd4b5\",\"path\":\"apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx\",\"range\":{\"end_line\":110,\"sha256\":\"a39e247ce3cde3e41f9683685a1a0a885224904852cbbe7d2288f42538538e20\",\"start_line\":110},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"gamePhase\",\"state_id\":\"playing\",\"state_occurrence_id\":\"apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:110:gamePhase:playing\"}",
+      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"943b662d09ff3df1e4729d3ec775624dea6042ca83046bb57a9fb7adc49dd4b5\",\"path\":\"apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx\",\"range\":{\"end_line\":110,\"sha256\":\"a39e247ce3cde3e41f9683685a1a0a885224904852cbbe7d2288f42538538e20\",\"start_line\":110},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"gamePhase\",\"state_id\":\"start\",\"state_occurrence_id\":\"apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:110:gamePhase:start\"}",
       "method": "human-raw-surface-review",
       "review_batch_id": "human-program-07",
       "review_id": "surface-review:090",
@@ -89822,7 +89724,7 @@
         }
       ],
       "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"943b662d09ff3df1e4729d3ec775624dea6042ca83046bb57a9fb7adc49dd4b5\",\"path\":\"apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx\",\"range\":{\"end_line\":110,\"sha256\":\"a39e247ce3cde3e41f9683685a1a0a885224904852cbbe7d2288f42538538e20\",\"start_line\":110},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"gamePhase\",\"state_id\":\"start\",\"state_occurrence_id\":\"apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:110:gamePhase:start\"}",
+      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"943b662d09ff3df1e4729d3ec775624dea6042ca83046bb57a9fb7adc49dd4b5\",\"path\":\"apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx\",\"range\":{\"end_line\":110,\"sha256\":\"a39e247ce3cde3e41f9683685a1a0a885224904852cbbe7d2288f42538538e20\",\"start_line\":110},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"source_symbol\":\"gamePhase\",\"state_id\":\"playing\",\"state_occurrence_id\":\"apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:110:gamePhase:playing\"}",
       "method": "human-raw-surface-review",
       "review_batch_id": "human-program-07",
       "review_id": "surface-review:091",
@@ -89848,7 +89750,7 @@
         }
       ],
       "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"42fa273465fd0f11c165c3fb60963f7c386b6c4cc126e9f3fbefde850bfedfdc\",\"path\":\"apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx\",\"range\":{\"end_line\":54,\"sha256\":\"40ea4fe94aacdf8ad44981f02e6b3fbc4e5f1fa7880f69d35a662ac42cf1c769\",\"start_line\":54},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"ended\",\"from_state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx:35:gamePhase:ended\",\"to_state_id\":\"playing\",\"to_state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx:35:gamePhase:playing\",\"transition_evidence_kind\":\"useState-initial-to-setter-call\",\"transition_kind\":\"phase\"}",
+      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"42fa273465fd0f11c165c3fb60963f7c386b6c4cc126e9f3fbefde850bfedfdc\",\"path\":\"apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx\",\"range\":{\"end_line\":54,\"sha256\":\"40ea4fe94aacdf8ad44981f02e6b3fbc4e5f1fa7880f69d35a662ac42cf1c769\",\"start_line\":54},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"start\",\"from_state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx:35:gamePhase:start\",\"to_state_id\":\"playing\",\"to_state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx:35:gamePhase:playing\",\"transition_evidence_kind\":\"useState-initial-to-setter-call\",\"transition_kind\":\"phase\"}",
       "method": "human-raw-surface-review",
       "review_batch_id": "human-program-09",
       "review_id": "surface-review:092",
@@ -89863,73 +89765,21 @@
       "disposition": "raw-surface-range-reviewed",
       "evidence": [
         {
-          "blob_sha256": "42fa273465fd0f11c165c3fb60963f7c386b6c4cc126e9f3fbefde850bfedfdc",
-          "path": "apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx",
+          "blob_sha256": "bf33b1798fdcce01fbb39d1595b94eda48ff46235c42e0c0790207f7c71fc047",
+          "path": "apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx",
           "range": {
-            "end_line": 59,
-            "sha256": "15e6e39b499f9ab5d2714fec4ab4eba4f9897217e7dc664798e311664cc8b32b",
-            "start_line": 59
+            "end_line": 230,
+            "sha256": "50d1ed2695682a0c0061f6ae3f46bd23b99d569f8b23f3a02162b2402cda43cb",
+            "start_line": 230
           },
           "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
         }
       ],
       "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"42fa273465fd0f11c165c3fb60963f7c386b6c4cc126e9f3fbefde850bfedfdc\",\"path\":\"apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx\",\"range\":{\"end_line\":59,\"sha256\":\"15e6e39b499f9ab5d2714fec4ab4eba4f9897217e7dc664798e311664cc8b32b\",\"start_line\":59},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"ended\",\"from_state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx:35:gamePhase:ended\",\"to_state_id\":\"start\",\"to_state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx:35:gamePhase:start\",\"transition_evidence_kind\":\"useState-initial-to-setter-call\",\"transition_kind\":\"phase\"}",
+      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"bf33b1798fdcce01fbb39d1595b94eda48ff46235c42e0c0790207f7c71fc047\",\"path\":\"apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx\",\"range\":{\"end_line\":230,\"sha256\":\"50d1ed2695682a0c0061f6ae3f46bd23b99d569f8b23f3a02162b2402cda43cb\",\"start_line\":230},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"start\",\"from_state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx:59:gamePhase:start\",\"to_state_id\":\"ended\",\"to_state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx:59:gamePhase:ended\",\"transition_evidence_kind\":\"useState-initial-to-setter-call\",\"transition_kind\":\"phase\"}",
       "method": "human-raw-surface-review",
-      "review_batch_id": "human-program-09",
+      "review_batch_id": "human-program-05",
       "review_id": "surface-review:093",
-      "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
-      "source_kind": "transition",
-      "surface_kind": "phase"
-    },
-    {
-      "collector_identity": "evidence-collector-remediation-20260713",
-      "collector_role": "evidence-collector",
-      "confidence": "high",
-      "disposition": "raw-surface-range-reviewed",
-      "evidence": [
-        {
-          "blob_sha256": "bf33b1798fdcce01fbb39d1595b94eda48ff46235c42e0c0790207f7c71fc047",
-          "path": "apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx",
-          "range": {
-            "end_line": 289,
-            "sha256": "88542e78ec86a3b0663273d856ce2de5667763dec067726adbb3818bd9f7006d",
-            "start_line": 289
-          },
-          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-        }
-      ],
-      "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"bf33b1798fdcce01fbb39d1595b94eda48ff46235c42e0c0790207f7c71fc047\",\"path\":\"apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx\",\"range\":{\"end_line\":289,\"sha256\":\"88542e78ec86a3b0663273d856ce2de5667763dec067726adbb3818bd9f7006d\",\"start_line\":289},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"ended\",\"from_state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx:59:gamePhase:ended\",\"to_state_id\":\"playing\",\"to_state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx:59:gamePhase:playing\",\"transition_evidence_kind\":\"useState-initial-to-setter-call\",\"transition_kind\":\"phase\"}",
-      "method": "human-raw-surface-review",
-      "review_batch_id": "human-program-05",
-      "review_id": "surface-review:094",
-      "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
-      "source_kind": "transition",
-      "surface_kind": "phase"
-    },
-    {
-      "collector_identity": "evidence-collector-remediation-20260713",
-      "collector_role": "evidence-collector",
-      "confidence": "high",
-      "disposition": "raw-surface-range-reviewed",
-      "evidence": [
-        {
-          "blob_sha256": "bf33b1798fdcce01fbb39d1595b94eda48ff46235c42e0c0790207f7c71fc047",
-          "path": "apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx",
-          "range": {
-            "end_line": 616,
-            "sha256": "a62b1f9c76f8496bc4cd7615686626bb93cef8cc0999fae35929c23f32bd3ec9",
-            "start_line": 616
-          },
-          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-        }
-      ],
-      "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"bf33b1798fdcce01fbb39d1595b94eda48ff46235c42e0c0790207f7c71fc047\",\"path\":\"apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx\",\"range\":{\"end_line\":616,\"sha256\":\"a62b1f9c76f8496bc4cd7615686626bb93cef8cc0999fae35929c23f32bd3ec9\",\"start_line\":616},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"ended\",\"from_state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx:59:gamePhase:ended\",\"to_state_id\":\"start\",\"to_state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx:59:gamePhase:start\",\"transition_evidence_kind\":\"useState-initial-to-setter-call\",\"transition_kind\":\"phase\"}",
-      "method": "human-raw-surface-review",
-      "review_batch_id": "human-program-05",
-      "review_id": "surface-review:095",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition",
       "surface_kind": "phase"
@@ -89952,9 +89802,61 @@
         }
       ],
       "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"3a6b1fc6d2ed94cb6800855e0c72c3b95e9ac0f33e73c99bd20151a9e62c1207\",\"path\":\"apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx\",\"range\":{\"end_line\":129,\"sha256\":\"9c08cf636459367877123fa1d0e24066ff373568901652b3f6e57962a02aad34\",\"start_line\":129},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"ended\",\"from_state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx:90:gamePhase:ended\",\"to_state_id\":\"playing\",\"to_state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx:90:gamePhase:playing\",\"transition_evidence_kind\":\"useState-initial-to-setter-call\",\"transition_kind\":\"phase\"}",
+      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"3a6b1fc6d2ed94cb6800855e0c72c3b95e9ac0f33e73c99bd20151a9e62c1207\",\"path\":\"apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx\",\"range\":{\"end_line\":129,\"sha256\":\"9c08cf636459367877123fa1d0e24066ff373568901652b3f6e57962a02aad34\",\"start_line\":129},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"start\",\"from_state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx:90:gamePhase:start\",\"to_state_id\":\"playing\",\"to_state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx:90:gamePhase:playing\",\"transition_evidence_kind\":\"useState-initial-to-setter-call\",\"transition_kind\":\"phase\"}",
       "method": "human-raw-surface-review",
       "review_batch_id": "human-program-10",
+      "review_id": "surface-review:094",
+      "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
+      "source_kind": "transition",
+      "surface_kind": "phase"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "disposition": "raw-surface-range-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "23a76bf75fb4c2f4c4e4f68d6554150337c7dd4ad149b5e0f4cd50dd32752b71",
+          "path": "apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx",
+          "range": {
+            "end_line": 138,
+            "sha256": "50d1ed2695682a0c0061f6ae3f46bd23b99d569f8b23f3a02162b2402cda43cb",
+            "start_line": 138
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"23a76bf75fb4c2f4c4e4f68d6554150337c7dd4ad149b5e0f4cd50dd32752b71\",\"path\":\"apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx\",\"range\":{\"end_line\":138,\"sha256\":\"50d1ed2695682a0c0061f6ae3f46bd23b99d569f8b23f3a02162b2402cda43cb\",\"start_line\":138},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"start\",\"from_state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx:39:gamePhase:start\",\"to_state_id\":\"ended\",\"to_state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx:39:gamePhase:ended\",\"transition_evidence_kind\":\"useState-initial-to-setter-call\",\"transition_kind\":\"phase\"}",
+      "method": "human-raw-surface-review",
+      "review_batch_id": "human-program-06",
+      "review_id": "surface-review:095",
+      "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
+      "source_kind": "transition",
+      "surface_kind": "phase"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "disposition": "raw-surface-range-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "45cf46e19255ba7107193d2ceeef63d88b4bcf959d54d830840c2e0cbca23d8f",
+          "path": "apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx",
+          "range": {
+            "end_line": 156,
+            "sha256": "50d1ed2695682a0c0061f6ae3f46bd23b99d569f8b23f3a02162b2402cda43cb",
+            "start_line": 156
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"45cf46e19255ba7107193d2ceeef63d88b4bcf959d54d830840c2e0cbca23d8f\",\"path\":\"apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx\",\"range\":{\"end_line\":156,\"sha256\":\"50d1ed2695682a0c0061f6ae3f46bd23b99d569f8b23f3a02162b2402cda43cb\",\"start_line\":156},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"start\",\"from_state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx:35:gamePhase:start\",\"to_state_id\":\"ended\",\"to_state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx:35:gamePhase:ended\",\"transition_evidence_kind\":\"useState-initial-to-setter-call\",\"transition_kind\":\"phase\"}",
+      "method": "human-raw-surface-review",
+      "review_batch_id": "human-program-08",
       "review_id": "surface-review:096",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition",
@@ -89967,20 +89869,20 @@
       "disposition": "raw-surface-range-reviewed",
       "evidence": [
         {
-          "blob_sha256": "3a6b1fc6d2ed94cb6800855e0c72c3b95e9ac0f33e73c99bd20151a9e62c1207",
-          "path": "apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx",
+          "blob_sha256": "730b5cc3d5d97ac2d64e26a68078b827b1ecc1a913cbf548b037dfdc78befc2b",
+          "path": "apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx",
           "range": {
-            "end_line": 141,
-            "sha256": "15e6e39b499f9ab5d2714fec4ab4eba4f9897217e7dc664798e311664cc8b32b",
-            "start_line": 141
+            "end_line": 136,
+            "sha256": "50d1ed2695682a0c0061f6ae3f46bd23b99d569f8b23f3a02162b2402cda43cb",
+            "start_line": 136
           },
           "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
         }
       ],
       "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"3a6b1fc6d2ed94cb6800855e0c72c3b95e9ac0f33e73c99bd20151a9e62c1207\",\"path\":\"apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx\",\"range\":{\"end_line\":141,\"sha256\":\"15e6e39b499f9ab5d2714fec4ab4eba4f9897217e7dc664798e311664cc8b32b\",\"start_line\":141},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"ended\",\"from_state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx:90:gamePhase:ended\",\"to_state_id\":\"start\",\"to_state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx:90:gamePhase:start\",\"transition_evidence_kind\":\"useState-initial-to-setter-call\",\"transition_kind\":\"phase\"}",
+      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"730b5cc3d5d97ac2d64e26a68078b827b1ecc1a913cbf548b037dfdc78befc2b\",\"path\":\"apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx\",\"range\":{\"end_line\":136,\"sha256\":\"50d1ed2695682a0c0061f6ae3f46bd23b99d569f8b23f3a02162b2402cda43cb\",\"start_line\":136},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"start\",\"from_state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx:40:gamePhase:start\",\"to_state_id\":\"ended\",\"to_state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx:40:gamePhase:ended\",\"transition_evidence_kind\":\"useState-initial-to-setter-call\",\"transition_kind\":\"phase\"}",
       "method": "human-raw-surface-review",
-      "review_batch_id": "human-program-10",
+      "review_batch_id": "human-program-05",
       "review_id": "surface-review:097",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition",
@@ -89993,20 +89895,20 @@
       "disposition": "raw-surface-range-reviewed",
       "evidence": [
         {
-          "blob_sha256": "23a76bf75fb4c2f4c4e4f68d6554150337c7dd4ad149b5e0f4cd50dd32752b71",
-          "path": "apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx",
+          "blob_sha256": "bdef057d6019a89dacd01b3c264f7cacd9704f2bf3dbc705d92419364e34c102",
+          "path": "apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx",
           "range": {
-            "end_line": 209,
-            "sha256": "88542e78ec86a3b0663273d856ce2de5667763dec067726adbb3818bd9f7006d",
-            "start_line": 209
+            "end_line": 139,
+            "sha256": "9bf91f442609da0f92eacd91a620eb9f32838a90213206966acc7b617e3a5e91",
+            "start_line": 139
           },
           "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
         }
       ],
       "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"23a76bf75fb4c2f4c4e4f68d6554150337c7dd4ad149b5e0f4cd50dd32752b71\",\"path\":\"apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx\",\"range\":{\"end_line\":209,\"sha256\":\"88542e78ec86a3b0663273d856ce2de5667763dec067726adbb3818bd9f7006d\",\"start_line\":209},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"ended\",\"from_state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx:39:gamePhase:ended\",\"to_state_id\":\"playing\",\"to_state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx:39:gamePhase:playing\",\"transition_evidence_kind\":\"useState-initial-to-setter-call\",\"transition_kind\":\"phase\"}",
+      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"bdef057d6019a89dacd01b3c264f7cacd9704f2bf3dbc705d92419364e34c102\",\"path\":\"apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx\",\"range\":{\"end_line\":139,\"sha256\":\"9bf91f442609da0f92eacd91a620eb9f32838a90213206966acc7b617e3a5e91\",\"start_line\":139},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"start\",\"from_state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx:37:gamePhase:start\",\"to_state_id\":\"ended\",\"to_state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx:37:gamePhase:ended\",\"transition_evidence_kind\":\"useState-initial-to-setter-call\",\"transition_kind\":\"phase\"}",
       "method": "human-raw-surface-review",
-      "review_batch_id": "human-program-06",
+      "review_batch_id": "human-program-03",
       "review_id": "surface-review:098",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition",
@@ -90019,255 +89921,21 @@
       "disposition": "raw-surface-range-reviewed",
       "evidence": [
         {
-          "blob_sha256": "23a76bf75fb4c2f4c4e4f68d6554150337c7dd4ad149b5e0f4cd50dd32752b71",
-          "path": "apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx",
+          "blob_sha256": "342703a685400060427b112be4142740b51fb457194548244cb9619b9fc53dbd",
+          "path": "apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx",
           "range": {
-            "end_line": 393,
-            "sha256": "a62b1f9c76f8496bc4cd7615686626bb93cef8cc0999fae35929c23f32bd3ec9",
-            "start_line": 393
+            "end_line": 404,
+            "sha256": "7df82981f32437485dd8b5307f265a1b01469f87f60deeed3787cacf11c57bc8",
+            "start_line": 404
           },
           "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
         }
       ],
       "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"23a76bf75fb4c2f4c4e4f68d6554150337c7dd4ad149b5e0f4cd50dd32752b71\",\"path\":\"apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx\",\"range\":{\"end_line\":393,\"sha256\":\"a62b1f9c76f8496bc4cd7615686626bb93cef8cc0999fae35929c23f32bd3ec9\",\"start_line\":393},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"ended\",\"from_state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx:39:gamePhase:ended\",\"to_state_id\":\"start\",\"to_state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx:39:gamePhase:start\",\"transition_evidence_kind\":\"useState-initial-to-setter-call\",\"transition_kind\":\"phase\"}",
+      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"342703a685400060427b112be4142740b51fb457194548244cb9619b9fc53dbd\",\"path\":\"apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx\",\"range\":{\"end_line\":404,\"sha256\":\"7df82981f32437485dd8b5307f265a1b01469f87f60deeed3787cacf11c57bc8\",\"start_line\":404},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"start\",\"from_state_occurrence_id\":\"apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:116:gamePhase:start\",\"to_state_id\":\"ended\",\"to_state_occurrence_id\":\"apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:116:gamePhase:ended\",\"transition_evidence_kind\":\"useState-initial-to-setter-call\",\"transition_kind\":\"phase\"}",
       "method": "human-raw-surface-review",
-      "review_batch_id": "human-program-06",
+      "review_batch_id": "human-program-07",
       "review_id": "surface-review:099",
-      "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
-      "source_kind": "transition",
-      "surface_kind": "phase"
-    },
-    {
-      "collector_identity": "evidence-collector-remediation-20260713",
-      "collector_role": "evidence-collector",
-      "confidence": "high",
-      "disposition": "raw-surface-range-reviewed",
-      "evidence": [
-        {
-          "blob_sha256": "45cf46e19255ba7107193d2ceeef63d88b4bcf959d54d830840c2e0cbca23d8f",
-          "path": "apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx",
-          "range": {
-            "end_line": 211,
-            "sha256": "88542e78ec86a3b0663273d856ce2de5667763dec067726adbb3818bd9f7006d",
-            "start_line": 211
-          },
-          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-        }
-      ],
-      "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"45cf46e19255ba7107193d2ceeef63d88b4bcf959d54d830840c2e0cbca23d8f\",\"path\":\"apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx\",\"range\":{\"end_line\":211,\"sha256\":\"88542e78ec86a3b0663273d856ce2de5667763dec067726adbb3818bd9f7006d\",\"start_line\":211},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"ended\",\"from_state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx:35:gamePhase:ended\",\"to_state_id\":\"playing\",\"to_state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx:35:gamePhase:playing\",\"transition_evidence_kind\":\"useState-initial-to-setter-call\",\"transition_kind\":\"phase\"}",
-      "method": "human-raw-surface-review",
-      "review_batch_id": "human-program-08",
-      "review_id": "surface-review:100",
-      "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
-      "source_kind": "transition",
-      "surface_kind": "phase"
-    },
-    {
-      "collector_identity": "evidence-collector-remediation-20260713",
-      "collector_role": "evidence-collector",
-      "confidence": "high",
-      "disposition": "raw-surface-range-reviewed",
-      "evidence": [
-        {
-          "blob_sha256": "45cf46e19255ba7107193d2ceeef63d88b4bcf959d54d830840c2e0cbca23d8f",
-          "path": "apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx",
-          "range": {
-            "end_line": 444,
-            "sha256": "a62b1f9c76f8496bc4cd7615686626bb93cef8cc0999fae35929c23f32bd3ec9",
-            "start_line": 444
-          },
-          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-        }
-      ],
-      "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"45cf46e19255ba7107193d2ceeef63d88b4bcf959d54d830840c2e0cbca23d8f\",\"path\":\"apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx\",\"range\":{\"end_line\":444,\"sha256\":\"a62b1f9c76f8496bc4cd7615686626bb93cef8cc0999fae35929c23f32bd3ec9\",\"start_line\":444},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"ended\",\"from_state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx:35:gamePhase:ended\",\"to_state_id\":\"start\",\"to_state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx:35:gamePhase:start\",\"transition_evidence_kind\":\"useState-initial-to-setter-call\",\"transition_kind\":\"phase\"}",
-      "method": "human-raw-surface-review",
-      "review_batch_id": "human-program-08",
-      "review_id": "surface-review:101",
-      "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
-      "source_kind": "transition",
-      "surface_kind": "phase"
-    },
-    {
-      "collector_identity": "evidence-collector-remediation-20260713",
-      "collector_role": "evidence-collector",
-      "confidence": "high",
-      "disposition": "raw-surface-range-reviewed",
-      "evidence": [
-        {
-          "blob_sha256": "730b5cc3d5d97ac2d64e26a68078b827b1ecc1a913cbf548b037dfdc78befc2b",
-          "path": "apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx",
-          "range": {
-            "end_line": 223,
-            "sha256": "88542e78ec86a3b0663273d856ce2de5667763dec067726adbb3818bd9f7006d",
-            "start_line": 223
-          },
-          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-        }
-      ],
-      "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"730b5cc3d5d97ac2d64e26a68078b827b1ecc1a913cbf548b037dfdc78befc2b\",\"path\":\"apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx\",\"range\":{\"end_line\":223,\"sha256\":\"88542e78ec86a3b0663273d856ce2de5667763dec067726adbb3818bd9f7006d\",\"start_line\":223},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"ended\",\"from_state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx:40:gamePhase:ended\",\"to_state_id\":\"playing\",\"to_state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx:40:gamePhase:playing\",\"transition_evidence_kind\":\"useState-initial-to-setter-call\",\"transition_kind\":\"phase\"}",
-      "method": "human-raw-surface-review",
-      "review_batch_id": "human-program-05",
-      "review_id": "surface-review:102",
-      "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
-      "source_kind": "transition",
-      "surface_kind": "phase"
-    },
-    {
-      "collector_identity": "evidence-collector-remediation-20260713",
-      "collector_role": "evidence-collector",
-      "confidence": "high",
-      "disposition": "raw-surface-range-reviewed",
-      "evidence": [
-        {
-          "blob_sha256": "730b5cc3d5d97ac2d64e26a68078b827b1ecc1a913cbf548b037dfdc78befc2b",
-          "path": "apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx",
-          "range": {
-            "end_line": 474,
-            "sha256": "a62b1f9c76f8496bc4cd7615686626bb93cef8cc0999fae35929c23f32bd3ec9",
-            "start_line": 474
-          },
-          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-        }
-      ],
-      "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"730b5cc3d5d97ac2d64e26a68078b827b1ecc1a913cbf548b037dfdc78befc2b\",\"path\":\"apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx\",\"range\":{\"end_line\":474,\"sha256\":\"a62b1f9c76f8496bc4cd7615686626bb93cef8cc0999fae35929c23f32bd3ec9\",\"start_line\":474},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"ended\",\"from_state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx:40:gamePhase:ended\",\"to_state_id\":\"start\",\"to_state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx:40:gamePhase:start\",\"transition_evidence_kind\":\"useState-initial-to-setter-call\",\"transition_kind\":\"phase\"}",
-      "method": "human-raw-surface-review",
-      "review_batch_id": "human-program-05",
-      "review_id": "surface-review:103",
-      "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
-      "source_kind": "transition",
-      "surface_kind": "phase"
-    },
-    {
-      "collector_identity": "evidence-collector-remediation-20260713",
-      "collector_role": "evidence-collector",
-      "confidence": "high",
-      "disposition": "raw-surface-range-reviewed",
-      "evidence": [
-        {
-          "blob_sha256": "bdef057d6019a89dacd01b3c264f7cacd9704f2bf3dbc705d92419364e34c102",
-          "path": "apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx",
-          "range": {
-            "end_line": 210,
-            "sha256": "88542e78ec86a3b0663273d856ce2de5667763dec067726adbb3818bd9f7006d",
-            "start_line": 210
-          },
-          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-        }
-      ],
-      "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"bdef057d6019a89dacd01b3c264f7cacd9704f2bf3dbc705d92419364e34c102\",\"path\":\"apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx\",\"range\":{\"end_line\":210,\"sha256\":\"88542e78ec86a3b0663273d856ce2de5667763dec067726adbb3818bd9f7006d\",\"start_line\":210},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"ended\",\"from_state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx:37:gamePhase:ended\",\"to_state_id\":\"playing\",\"to_state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx:37:gamePhase:playing\",\"transition_evidence_kind\":\"useState-initial-to-setter-call\",\"transition_kind\":\"phase\"}",
-      "method": "human-raw-surface-review",
-      "review_batch_id": "human-program-03",
-      "review_id": "surface-review:104",
-      "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
-      "source_kind": "transition",
-      "surface_kind": "phase"
-    },
-    {
-      "collector_identity": "evidence-collector-remediation-20260713",
-      "collector_role": "evidence-collector",
-      "confidence": "high",
-      "disposition": "raw-surface-range-reviewed",
-      "evidence": [
-        {
-          "blob_sha256": "bdef057d6019a89dacd01b3c264f7cacd9704f2bf3dbc705d92419364e34c102",
-          "path": "apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx",
-          "range": {
-            "end_line": 508,
-            "sha256": "a62b1f9c76f8496bc4cd7615686626bb93cef8cc0999fae35929c23f32bd3ec9",
-            "start_line": 508
-          },
-          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-        }
-      ],
-      "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"bdef057d6019a89dacd01b3c264f7cacd9704f2bf3dbc705d92419364e34c102\",\"path\":\"apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx\",\"range\":{\"end_line\":508,\"sha256\":\"a62b1f9c76f8496bc4cd7615686626bb93cef8cc0999fae35929c23f32bd3ec9\",\"start_line\":508},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"ended\",\"from_state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx:37:gamePhase:ended\",\"to_state_id\":\"start\",\"to_state_occurrence_id\":\"apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx:37:gamePhase:start\",\"transition_evidence_kind\":\"useState-initial-to-setter-call\",\"transition_kind\":\"phase\"}",
-      "method": "human-raw-surface-review",
-      "review_batch_id": "human-program-03",
-      "review_id": "surface-review:105",
-      "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
-      "source_kind": "transition",
-      "surface_kind": "phase"
-    },
-    {
-      "collector_identity": "evidence-collector-remediation-20260713",
-      "collector_role": "evidence-collector",
-      "confidence": "high",
-      "disposition": "raw-surface-range-reviewed",
-      "evidence": [
-        {
-          "blob_sha256": "342703a685400060427b112be4142740b51fb457194548244cb9619b9fc53dbd",
-          "path": "apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx",
-          "range": {
-            "end_line": 248,
-            "sha256": "5292d04ad409c17657d4bd7d20889bfc2204d630a1f4476b62b9af0caaed81a6",
-            "start_line": 248
-          },
-          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-        }
-      ],
-      "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"342703a685400060427b112be4142740b51fb457194548244cb9619b9fc53dbd\",\"path\":\"apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx\",\"range\":{\"end_line\":248,\"sha256\":\"5292d04ad409c17657d4bd7d20889bfc2204d630a1f4476b62b9af0caaed81a6\",\"start_line\":248},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"ended\",\"from_state_occurrence_id\":\"apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:116:gamePhase:ended\",\"to_state_id\":\"start\",\"to_state_occurrence_id\":\"apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:116:gamePhase:start\",\"transition_evidence_kind\":\"useState-initial-to-setter-call\",\"transition_kind\":\"phase\"}",
-      "method": "human-raw-surface-review",
-      "review_batch_id": "human-program-07",
-      "review_id": "surface-review:106",
-      "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
-      "source_kind": "transition",
-      "surface_kind": "phase"
-    },
-    {
-      "collector_identity": "evidence-collector-remediation-20260713",
-      "collector_role": "evidence-collector",
-      "confidence": "high",
-      "disposition": "raw-surface-range-reviewed",
-      "evidence": [
-        {
-          "blob_sha256": "342703a685400060427b112be4142740b51fb457194548244cb9619b9fc53dbd",
-          "path": "apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx",
-          "range": {
-            "end_line": 600,
-            "sha256": "9691beedc7a28759e656869a5e52efc6f81682c93ffe4ab6ec5ca88c35173075",
-            "start_line": 600
-          },
-          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-        }
-      ],
-      "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"342703a685400060427b112be4142740b51fb457194548244cb9619b9fc53dbd\",\"path\":\"apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx\",\"range\":{\"end_line\":600,\"sha256\":\"9691beedc7a28759e656869a5e52efc6f81682c93ffe4ab6ec5ca88c35173075\",\"start_line\":600},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"ended\",\"from_state_occurrence_id\":\"apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:116:gamePhase:ended\",\"to_state_id\":\"playing\",\"to_state_occurrence_id\":\"apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:116:gamePhase:playing\",\"transition_evidence_kind\":\"useState-initial-to-setter-call\",\"transition_kind\":\"phase\"}",
-      "method": "human-raw-surface-review",
-      "review_batch_id": "human-program-07",
-      "review_id": "surface-review:107",
-      "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
-      "source_kind": "transition",
-      "surface_kind": "phase"
-    },
-    {
-      "collector_identity": "evidence-collector-remediation-20260713",
-      "collector_role": "evidence-collector",
-      "confidence": "high",
-      "disposition": "raw-surface-range-reviewed",
-      "evidence": [
-        {
-          "blob_sha256": "342703a685400060427b112be4142740b51fb457194548244cb9619b9fc53dbd",
-          "path": "apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx",
-          "range": {
-            "end_line": 920,
-            "sha256": "168d3e26f8b12ee51e72a0bcdc29cc6d0b5927c37c808d201385b1ca13635a09",
-            "start_line": 920
-          },
-          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-        }
-      ],
-      "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"342703a685400060427b112be4142740b51fb457194548244cb9619b9fc53dbd\",\"path\":\"apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx\",\"range\":{\"end_line\":920,\"sha256\":\"168d3e26f8b12ee51e72a0bcdc29cc6d0b5927c37c808d201385b1ca13635a09\",\"start_line\":920},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"ended\",\"from_state_occurrence_id\":\"apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:116:gamePhase:ended\",\"to_state_id\":\"start\",\"to_state_occurrence_id\":\"apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:116:gamePhase:start\",\"transition_evidence_kind\":\"useState-initial-to-setter-call\",\"transition_kind\":\"phase\"}",
-      "method": "human-raw-surface-review",
-      "review_batch_id": "human-program-07",
-      "review_id": "surface-review:108",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition",
       "surface_kind": "phase"
@@ -90290,88 +89958,10 @@
         }
       ],
       "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"71ff7b6d8b573fe2c3ee4cff37e2a85285e9f28acbaa105b4984b1272c91ceb4\",\"path\":\"apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx\",\"range\":{\"end_line\":198,\"sha256\":\"253925dd898fbea64be95ffe0e1f0d90da0aa8a9534d060e472c83570f5da7ea\",\"start_line\":198},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"ended\",\"from_state_occurrence_id\":\"apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx:99:gamePhase:ended\",\"to_state_id\":\"playing\",\"to_state_occurrence_id\":\"apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx:99:gamePhase:playing\",\"transition_evidence_kind\":\"useState-initial-to-setter-call\",\"transition_kind\":\"phase\"}",
+      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"71ff7b6d8b573fe2c3ee4cff37e2a85285e9f28acbaa105b4984b1272c91ceb4\",\"path\":\"apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx\",\"range\":{\"end_line\":198,\"sha256\":\"253925dd898fbea64be95ffe0e1f0d90da0aa8a9534d060e472c83570f5da7ea\",\"start_line\":198},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"start\",\"from_state_occurrence_id\":\"apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx:99:gamePhase:start\",\"to_state_id\":\"playing\",\"to_state_occurrence_id\":\"apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx:99:gamePhase:playing\",\"transition_evidence_kind\":\"useState-initial-to-setter-call\",\"transition_kind\":\"phase\"}",
       "method": "human-raw-surface-review",
       "review_batch_id": "human-program-02",
-      "review_id": "surface-review:109",
-      "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
-      "source_kind": "transition",
-      "surface_kind": "phase"
-    },
-    {
-      "collector_identity": "evidence-collector-remediation-20260713",
-      "collector_role": "evidence-collector",
-      "confidence": "high",
-      "disposition": "raw-surface-range-reviewed",
-      "evidence": [
-        {
-          "blob_sha256": "71ff7b6d8b573fe2c3ee4cff37e2a85285e9f28acbaa105b4984b1272c91ceb4",
-          "path": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx",
-          "range": {
-            "end_line": 208,
-            "sha256": "5292d04ad409c17657d4bd7d20889bfc2204d630a1f4476b62b9af0caaed81a6",
-            "start_line": 208
-          },
-          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-        }
-      ],
-      "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"71ff7b6d8b573fe2c3ee4cff37e2a85285e9f28acbaa105b4984b1272c91ceb4\",\"path\":\"apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx\",\"range\":{\"end_line\":208,\"sha256\":\"5292d04ad409c17657d4bd7d20889bfc2204d630a1f4476b62b9af0caaed81a6\",\"start_line\":208},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"ended\",\"from_state_occurrence_id\":\"apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx:99:gamePhase:ended\",\"to_state_id\":\"start\",\"to_state_occurrence_id\":\"apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx:99:gamePhase:start\",\"transition_evidence_kind\":\"useState-initial-to-setter-call\",\"transition_kind\":\"phase\"}",
-      "method": "human-raw-surface-review",
-      "review_batch_id": "human-program-02",
-      "review_id": "surface-review:110",
-      "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
-      "source_kind": "transition",
-      "surface_kind": "phase"
-    },
-    {
-      "collector_identity": "evidence-collector-remediation-20260713",
-      "collector_role": "evidence-collector",
-      "confidence": "high",
-      "disposition": "raw-surface-range-reviewed",
-      "evidence": [
-        {
-          "blob_sha256": "71ff7b6d8b573fe2c3ee4cff37e2a85285e9f28acbaa105b4984b1272c91ceb4",
-          "path": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx",
-          "range": {
-            "end_line": 231,
-            "sha256": "5292d04ad409c17657d4bd7d20889bfc2204d630a1f4476b62b9af0caaed81a6",
-            "start_line": 231
-          },
-          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-        }
-      ],
-      "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"71ff7b6d8b573fe2c3ee4cff37e2a85285e9f28acbaa105b4984b1272c91ceb4\",\"path\":\"apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx\",\"range\":{\"end_line\":231,\"sha256\":\"5292d04ad409c17657d4bd7d20889bfc2204d630a1f4476b62b9af0caaed81a6\",\"start_line\":231},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"ended\",\"from_state_occurrence_id\":\"apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx:99:gamePhase:ended\",\"to_state_id\":\"start\",\"to_state_occurrence_id\":\"apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx:99:gamePhase:start\",\"transition_evidence_kind\":\"useState-initial-to-setter-call\",\"transition_kind\":\"phase\"}",
-      "method": "human-raw-surface-review",
-      "review_batch_id": "human-program-02",
-      "review_id": "surface-review:111",
-      "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
-      "source_kind": "transition",
-      "surface_kind": "phase"
-    },
-    {
-      "collector_identity": "evidence-collector-remediation-20260713",
-      "collector_role": "evidence-collector",
-      "confidence": "high",
-      "disposition": "raw-surface-range-reviewed",
-      "evidence": [
-        {
-          "blob_sha256": "d28b34f89e64bdfa039a55df5262e4256730045829b2b7ab5455b13d72069fcc",
-          "path": "apps/advantage-games/src/components/multiplayer/LobbyScreen.tsx",
-          "range": {
-            "end_line": 202,
-            "sha256": "71f4954e3e2e9dad373ef6b9e62a6cea66d7fb79398087cc2e5a685daf7562f6",
-            "start_line": 202
-          },
-          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-        }
-      ],
-      "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"d28b34f89e64bdfa039a55df5262e4256730045829b2b7ab5455b13d72069fcc\",\"path\":\"apps/advantage-games/src/components/multiplayer/LobbyScreen.tsx\",\"range\":{\"end_line\":202,\"sha256\":\"71f4954e3e2e9dad373ef6b9e62a6cea66d7fb79398087cc2e5a685daf7562f6\",\"start_line\":202},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"create\",\"from_state_occurrence_id\":\"apps/advantage-games/src/components/multiplayer/LobbyScreen.tsx:45:mode:create\",\"to_state_id\":\"join\",\"to_state_occurrence_id\":\"apps/advantage-games/src/components/multiplayer/LobbyScreen.tsx:45:mode:join\",\"transition_evidence_kind\":\"useState-initial-to-setter-call\",\"transition_kind\":\"phase\"}",
-      "method": "human-raw-surface-review",
-      "review_batch_id": "human-global-shared-01",
-      "review_id": "surface-review:112",
+      "review_id": "surface-review:100",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition",
       "surface_kind": "phase"
@@ -90386,70 +89976,18 @@
           "blob_sha256": "62f3ee98f007b4a29b063c391f26d8484564776aa257d670698060043d951f78",
           "path": "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx",
           "range": {
-            "end_line": 485,
-            "sha256": "5292d04ad409c17657d4bd7d20889bfc2204d630a1f4476b62b9af0caaed81a6",
-            "start_line": 485
+            "end_line": 817,
+            "sha256": "7df82981f32437485dd8b5307f265a1b01469f87f60deeed3787cacf11c57bc8",
+            "start_line": 817
           },
           "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
         }
       ],
       "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"62f3ee98f007b4a29b063c391f26d8484564776aa257d670698060043d951f78\",\"path\":\"apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx\",\"range\":{\"end_line\":485,\"sha256\":\"5292d04ad409c17657d4bd7d20889bfc2204d630a1f4476b62b9af0caaed81a6\",\"start_line\":485},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"ended\",\"from_state_occurrence_id\":\"apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx:390:gamePhase:ended\",\"to_state_id\":\"start\",\"to_state_occurrence_id\":\"apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx:390:gamePhase:start\",\"transition_evidence_kind\":\"useState-initial-to-setter-call\",\"transition_kind\":\"phase\"}",
+      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"62f3ee98f007b4a29b063c391f26d8484564776aa257d670698060043d951f78\",\"path\":\"apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx\",\"range\":{\"end_line\":817,\"sha256\":\"7df82981f32437485dd8b5307f265a1b01469f87f60deeed3787cacf11c57bc8\",\"start_line\":817},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"start\",\"from_state_occurrence_id\":\"apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx:390:gamePhase:start\",\"to_state_id\":\"ended\",\"to_state_occurrence_id\":\"apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx:390:gamePhase:ended\",\"transition_evidence_kind\":\"useState-initial-to-setter-call\",\"transition_kind\":\"phase\"}",
       "method": "human-raw-surface-review",
       "review_batch_id": "human-program-04",
-      "review_id": "surface-review:113",
-      "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
-      "source_kind": "transition",
-      "surface_kind": "phase"
-    },
-    {
-      "collector_identity": "evidence-collector-remediation-20260713",
-      "collector_role": "evidence-collector",
-      "confidence": "high",
-      "disposition": "raw-surface-range-reviewed",
-      "evidence": [
-        {
-          "blob_sha256": "62f3ee98f007b4a29b063c391f26d8484564776aa257d670698060043d951f78",
-          "path": "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx",
-          "range": {
-            "end_line": 1173,
-            "sha256": "9691beedc7a28759e656869a5e52efc6f81682c93ffe4ab6ec5ca88c35173075",
-            "start_line": 1173
-          },
-          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-        }
-      ],
-      "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"62f3ee98f007b4a29b063c391f26d8484564776aa257d670698060043d951f78\",\"path\":\"apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx\",\"range\":{\"end_line\":1173,\"sha256\":\"9691beedc7a28759e656869a5e52efc6f81682c93ffe4ab6ec5ca88c35173075\",\"start_line\":1173},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"ended\",\"from_state_occurrence_id\":\"apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx:390:gamePhase:ended\",\"to_state_id\":\"playing\",\"to_state_occurrence_id\":\"apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx:390:gamePhase:playing\",\"transition_evidence_kind\":\"useState-initial-to-setter-call\",\"transition_kind\":\"phase\"}",
-      "method": "human-raw-surface-review",
-      "review_batch_id": "human-program-04",
-      "review_id": "surface-review:114",
-      "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
-      "source_kind": "transition",
-      "surface_kind": "phase"
-    },
-    {
-      "collector_identity": "evidence-collector-remediation-20260713",
-      "collector_role": "evidence-collector",
-      "confidence": "high",
-      "disposition": "raw-surface-range-reviewed",
-      "evidence": [
-        {
-          "blob_sha256": "62f3ee98f007b4a29b063c391f26d8484564776aa257d670698060043d951f78",
-          "path": "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx",
-          "range": {
-            "end_line": 1232,
-            "sha256": "2d9c7ffb53fb1a7ae4585fb25c923c1611cd4b38e06d49ea2a284328223d1eb8",
-            "start_line": 1232
-          },
-          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-        }
-      ],
-      "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"62f3ee98f007b4a29b063c391f26d8484564776aa257d670698060043d951f78\",\"path\":\"apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx\",\"range\":{\"end_line\":1232,\"sha256\":\"2d9c7ffb53fb1a7ae4585fb25c923c1611cd4b38e06d49ea2a284328223d1eb8\",\"start_line\":1232},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"ended\",\"from_state_occurrence_id\":\"apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx:390:gamePhase:ended\",\"to_state_id\":\"start\",\"to_state_occurrence_id\":\"apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx:390:gamePhase:start\",\"transition_evidence_kind\":\"useState-initial-to-setter-call\",\"transition_kind\":\"phase\"}",
-      "method": "human-raw-surface-review",
-      "review_batch_id": "human-program-04",
-      "review_id": "surface-review:115",
+      "review_id": "surface-review:101",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition",
       "surface_kind": "phase"
@@ -90464,70 +90002,18 @@
           "blob_sha256": "943b662d09ff3df1e4729d3ec775624dea6042ca83046bb57a9fb7adc49dd4b5",
           "path": "apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx",
           "range": {
-            "end_line": 209,
-            "sha256": "5292d04ad409c17657d4bd7d20889bfc2204d630a1f4476b62b9af0caaed81a6",
-            "start_line": 209
+            "end_line": 334,
+            "sha256": "7df82981f32437485dd8b5307f265a1b01469f87f60deeed3787cacf11c57bc8",
+            "start_line": 334
           },
           "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
         }
       ],
       "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"943b662d09ff3df1e4729d3ec775624dea6042ca83046bb57a9fb7adc49dd4b5\",\"path\":\"apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx\",\"range\":{\"end_line\":209,\"sha256\":\"5292d04ad409c17657d4bd7d20889bfc2204d630a1f4476b62b9af0caaed81a6\",\"start_line\":209},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"ended\",\"from_state_occurrence_id\":\"apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:110:gamePhase:ended\",\"to_state_id\":\"start\",\"to_state_occurrence_id\":\"apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:110:gamePhase:start\",\"transition_evidence_kind\":\"useState-initial-to-setter-call\",\"transition_kind\":\"phase\"}",
+      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"943b662d09ff3df1e4729d3ec775624dea6042ca83046bb57a9fb7adc49dd4b5\",\"path\":\"apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx\",\"range\":{\"end_line\":334,\"sha256\":\"7df82981f32437485dd8b5307f265a1b01469f87f60deeed3787cacf11c57bc8\",\"start_line\":334},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"start\",\"from_state_occurrence_id\":\"apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:110:gamePhase:start\",\"to_state_id\":\"ended\",\"to_state_occurrence_id\":\"apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:110:gamePhase:ended\",\"transition_evidence_kind\":\"useState-initial-to-setter-call\",\"transition_kind\":\"phase\"}",
       "method": "human-raw-surface-review",
       "review_batch_id": "human-program-07",
-      "review_id": "surface-review:116",
-      "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
-      "source_kind": "transition",
-      "surface_kind": "phase"
-    },
-    {
-      "collector_identity": "evidence-collector-remediation-20260713",
-      "collector_role": "evidence-collector",
-      "confidence": "high",
-      "disposition": "raw-surface-range-reviewed",
-      "evidence": [
-        {
-          "blob_sha256": "943b662d09ff3df1e4729d3ec775624dea6042ca83046bb57a9fb7adc49dd4b5",
-          "path": "apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx",
-          "range": {
-            "end_line": 524,
-            "sha256": "9691beedc7a28759e656869a5e52efc6f81682c93ffe4ab6ec5ca88c35173075",
-            "start_line": 524
-          },
-          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-        }
-      ],
-      "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"943b662d09ff3df1e4729d3ec775624dea6042ca83046bb57a9fb7adc49dd4b5\",\"path\":\"apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx\",\"range\":{\"end_line\":524,\"sha256\":\"9691beedc7a28759e656869a5e52efc6f81682c93ffe4ab6ec5ca88c35173075\",\"start_line\":524},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"ended\",\"from_state_occurrence_id\":\"apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:110:gamePhase:ended\",\"to_state_id\":\"playing\",\"to_state_occurrence_id\":\"apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:110:gamePhase:playing\",\"transition_evidence_kind\":\"useState-initial-to-setter-call\",\"transition_kind\":\"phase\"}",
-      "method": "human-raw-surface-review",
-      "review_batch_id": "human-program-07",
-      "review_id": "surface-review:117",
-      "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
-      "source_kind": "transition",
-      "surface_kind": "phase"
-    },
-    {
-      "collector_identity": "evidence-collector-remediation-20260713",
-      "collector_role": "evidence-collector",
-      "confidence": "high",
-      "disposition": "raw-surface-range-reviewed",
-      "evidence": [
-        {
-          "blob_sha256": "943b662d09ff3df1e4729d3ec775624dea6042ca83046bb57a9fb7adc49dd4b5",
-          "path": "apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx",
-          "range": {
-            "end_line": 802,
-            "sha256": "168d3e26f8b12ee51e72a0bcdc29cc6d0b5927c37c808d201385b1ca13635a09",
-            "start_line": 802
-          },
-          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-        }
-      ],
-      "interpretation": {},
-      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-syntax-traversal\",\"evidence\":{\"blob_sha256\":\"943b662d09ff3df1e4729d3ec775624dea6042ca83046bb57a9fb7adc49dd4b5\",\"path\":\"apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx\",\"range\":{\"end_line\":802,\"sha256\":\"168d3e26f8b12ee51e72a0bcdc29cc6d0b5927c37c808d201385b1ca13635a09\",\"start_line\":802},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"ended\",\"from_state_occurrence_id\":\"apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:110:gamePhase:ended\",\"to_state_id\":\"start\",\"to_state_occurrence_id\":\"apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:110:gamePhase:start\",\"transition_evidence_kind\":\"useState-initial-to-setter-call\",\"transition_kind\":\"phase\"}",
-      "method": "human-raw-surface-review",
-      "review_batch_id": "human-program-07",
-      "review_id": "surface-review:118",
+      "review_id": "surface-review:102",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition",
       "surface_kind": "phase"
