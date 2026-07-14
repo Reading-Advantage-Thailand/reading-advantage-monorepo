@@ -2,8 +2,8 @@
   "schema_version": "surface-inventory.v1",
   "status": "captured",
   "captured_at": "2026-07-14T00:00:00Z",
-  "tsconfig_count": 39,
-  "tsconfig_count_note": "Spec baseline audit (2026-07-10) reported 24; actual verified count at phase_base_sha is 39. Stale count not copied.",
+  "tsconfig_count": 38,
+  "tsconfig_count_note": "Spec baseline audit (2026-07-10) reported 24; actual verified count at phase_base_sha is 38. Stale count not copied.",
   "tsconfigs": [
     {"path": "apps/activity-vinext-fixture/tsconfig.json", "emit": false, "extends": "@reading-advantage/config/tsconfig"},
     {"path": "apps/advantage-games/tsconfig.json", "emit": false, "extends": "@reading-advantage/config/tsconfig"},
