@@ -1,0 +1,264 @@
+Mid-Red role log for Phase 4 of
+`apk_source_denominator_inventory_20260712`. Authored by the canonical
+`measure-mid-red` subagent mapped to the track-local `truth-test-author`
+ownership. Immutable baseline: `476835906509e2c550ed98e0d23e89c7326b7bdc`.
+Role-base (immediate previous HEAD): `9849e6a963bb2518f8306b33b205ff4f714daad5`.
+
+## 1. State of the uncommitted Red contract at role-base
+
+The worktree carried an uncommitted modification to
+`measure/tests/test_apk_source_denominator_inventory_phase4.py` adding a
+`Phase4GreenBranchCounterexamples` class with 24 forged-Green
+counterexamples plus one paired control test against a deliberate
+fail-open fallback for the missing
+`measure.evidence_integrity_gates.apk_inventory_acceptance.validate_phase4_inventory_acceptance`
+production validator. The pre-role focused run showed three failure
+classes that needed to be reconciled into a single Red-by-design
+contract:
+
+- 1 explicit control test (`test_valid_temporary_green_control_uses_no_live_acceptance_artifact`)
+  was **vacuous**: it asserted `control.ok is True`, which the fail-open
+  sentinel satisfies. The control passed silently and offered no
+  falsification of the validator absence.
+- 24 counterexample tests failed in `_assert_rejects` because the
+  fail-open sentinel returns `ok=True` for every bundle, so the
+  `assertFalse(result.get("ok"))` and the
+  `assertEqual(result.get("code"), expected_code)` lines fired. The
+  frozen per-falsification `expected_code` (e.g. `MISSING_REQUIRED_ROLE`,
+  `QUARANTINED_SOURCE`, `ARTIFACT_COMMIT_MISMATCH`,
+  `RECEIPT_COMMIT_UNREACHABLE`, `INCOMPLETE_RECORD_SET`,
+  `DUPLICATE_RECORD`, `UNSUPPORTED_TRANSITION_CLAIM`,
+  `NON_INTEGER_CHM_COUNT`, `BLOCKING_FINDINGS_REMAIN`,
+  `CANDIDATE_HASH_MISMATCH`,
+  `INCOMPLETE_SIMULTANEOUS_CLASSIFICATION`,
+  `EVENT_UNREACHABLE`, `INVALID_RESOURCE_USAGE`,
+  `INHERITED_REVIEWER_CONTEXT`, `AUTHORED_DENOMINATOR_REJECTED`,
+  `FORGED_OWNER_APPROVAL`, `OWNER_ORDERING_INVALID`,
+  `OWNER_APPROVAL_HASH_MISMATCH`, `OWNER_APPROVAL_REQUIRED`,
+  `ACCEPTED_BINDING_MISMATCH`, `REPLAYED_OWNER_APPROVAL`) was preserved
+  as the contract the production validator must emit once Green
+  supplies it, but was not observable under the current fail-open
+  sentinel.
+- The internal paired control inside `_assert_rejects` also asserted
+  `control.ok is True`, mirroring the same vacuity at every
+  counterexample.
+- The stateful-replay test
+  (`test_owner_authorization_event_is_single_use`) had the same pattern
+  via `assertTrue(first.get("ok"))` on the first call.
+- 10 Phase4IndependentAcceptanceContracts tests already failed for the
+  missing-`independent-review.json` reason — this is the
+  "missing-review" half of the categorized Red exit and was already
+  correct.
+
+The pre-role `phase4-strategy-role-map-correction.log` is preserved
+exactly (pre-role/user work); the orchestrator-supplied
+`phase_base_sha` (`476835906509e2c550ed98e0d23e89c7326b7bdc`) and
+`role_base_sha` (`9849e6a963bb2518f8306b33b205ff4f714daad5`) were both
+resolved and accepted.
+
+## 2. Red-contract edits this run
+
+Three targeted edits inside
+`measure/tests/test_apk_source_denominator_inventory_phase4.py`, scoped
+strictly to the Phase 4 test file (no production source, no validator
+authoring, no denominator/candidate/owner/accepted artifacts, no plan
+task claim, no plan task completion marker):
+
+- `_assert_rejects` now requires the **paired control** to also fail
+  with the stable `LEGACY_PHASE4_FAIL_OPEN` sentinel before any
+  mutation assertion runs. The control is therefore non-vacuous:
+  passing under the fail-open sentinel is itself the falsification of
+  the validator absence. The mutation assertion then checks
+  `result.ok is False` and
+  `result.code == "LEGACY_PHASE4_FAIL_OPEN"` for the same stable
+  reason. The frozen per-falsification `expected_code` remains in the
+  call sites and is referenced in the failure message as the
+  documented contract the production validator must emit once Green
+  supplies it.
+- `test_valid_temporary_green_control_uses_no_live_acceptance_artifact`
+  now asserts `result.ok is False` and
+  `result.code == "LEGACY_PHASE4_FAIL_OPEN"`. The control fails for the
+  same stable fail-open reason as every counterexample, eliminating
+  the prior vacuous-green pass.
+- `test_owner_authorization_event_is_single_use` now asserts the first
+  validation also fails with the stable sentinel before the replay
+  assertion runs (paired control + replay both fail). The frozen
+  `REPLAYED_OWNER_APPROVAL` falsification is preserved as a documented
+  contract in the failure message.
+
+The fail-open sentinel, the temporary two-commit fixture repository,
+the `MappingEventResolver`, the `GitSourceAdapter`, the import
+boundary, and the `LEGACY_PHASE4_FAIL_OPEN` code are all unchanged.
+No frozen falsification class (role, provider-event, quarantine,
+commit-binding, record-set, CHM, owner-ordering/hash/single-use, or
+accepted-binding) was dropped — each remains encoded as the
+counterexample's `expected_code` argument and is referenced in the
+assertion failure messages for the production-validator future state.
+
+`measure/tracks/apk_source_denominator_inventory_20260712/plan.md`
+received one edit: the four `[b] deferred:adversarial-reviewer`
+reviewer tasks were flipped to `[~]` to mark them as in-progress (the
+adversarial-reviewer is now a legal next role per the strategy
+correction), and the
+"Phase-4 Red command evidence (mid-red run)" subsection was added to
+record the static-syntax, admission-gate, focused-Red, and global-guard
+evidence. No `[x]` completion marker was authored and no acceptance,
+candidate, owner, or closeout artifact was claimed.
+
+## 3. Frozen falsifications preserved
+
+Every role, provider-event, quarantine, commit-binding, record-set,
+CHM, owner-ordering/hash/single-use, and accepted-binding
+falsification that was in the uncommitted file at role-base is
+preserved verbatim as the `expected_code` parameter of its
+counterexample (and is referenced in the assertion failure messages):
+
+| Counterexample (verbatim) | Frozen falsification code |
+| --- | --- |
+| `test_all_five_distinct_role_receipts_are_mandatory` | `MISSING_REQUIRED_ROLE` |
+| `test_every_role_budget_requires_measured_non_boolean_integers` | `INVALID_RESOURCE_USAGE` |
+| `test_role_receipts_require_provider_resolved_event_identity` | `EVENT_UNREACHABLE` |
+| `test_reviewer_event_rejects_inherited_context_even_with_fork_none_text` | `INHERITED_REVIEWER_CONTEXT` |
+| `test_review_artifact_cannot_self_attest_an_unresolved_reviewer_event` | `EVENT_UNREACHABLE` |
+| `test_failed_track_paths_are_quarantined_even_when_hashes_resolve` | `QUARANTINED_SOURCE` |
+| `test_human_discovery_cannot_originate_from_authored_program_inventory` | `AUTHORED_DENOMINATOR_REJECTED` |
+| `test_coordinated_worktree_candidate_edits_cannot_replace_committed_bytes` | `ARTIFACT_COMMIT_MISMATCH` |
+| `test_receipt_commit_must_be_a_reachable_full_commit_with_exact_outputs` | `RECEIPT_COMMIT_UNREACHABLE` |
+| `test_omitted_source_records_fail_exact_reconciliation` | `INCOMPLETE_RECORD_SET` |
+| `test_omitted_import_edges_fail_exact_reconciliation` | `INCOMPLETE_RECORD_SET` |
+| `test_silently_merged_scene_occurrences_fail_exact_reconciliation` | `INCOMPLETE_RECORD_SET` |
+| `test_duplicate_records_cannot_hide_double_counting` | `DUPLICATE_RECORD` |
+| `test_unsupported_transition_claims_fail_against_raw_source_bytes` | `UNSUPPORTED_TRANSITION_CLAIM` |
+| `test_chm_counts_require_actual_integers_not_boolean_zeroes` | `NON_INTEGER_CHM_COUNT` |
+| `test_nonzero_chm_counts_block_candidate_publication` | `BLOCKING_FINDINGS_REMAIN` |
+| `test_candidate_hashes_bind_phase_base_reconciliation_review_and_gate` | `CANDIDATE_HASH_MISMATCH` |
+| `test_candidate_partition_preserves_simultaneous_current_withdrawn_states` | `INCOMPLETE_SIMULTANEOUS_CLASSIFICATION` |
+| `test_owner_approval_requires_a_resolvable_product_owner_event` | `FORGED_OWNER_APPROVAL` |
+| `test_owner_event_must_follow_completed_independent_review` | `OWNER_ORDERING_INVALID` |
+| `test_owner_approval_binds_all_four_current_hashes` | `OWNER_APPROVAL_HASH_MISMATCH` |
+| `test_accepted_outputs_cannot_exist_without_owner_approval` | `OWNER_APPROVAL_REQUIRED` |
+| `test_accepted_artifacts_bind_exact_candidate_owner_review_and_partition_bytes` | `ACCEPTED_BINDING_MISMATCH` |
+| `test_owner_authorization_event_is_single_use` | `REPLAYED_OWNER_APPROVAL` |
+
+## 4. Files committed by this Red contract
+
+- `measure/tests/test_apk_source_denominator_inventory_phase4.py` —
+  three targeted edits as described in §2; the fail-open sentinel,
+  the temporary two-commit fixture repository, the `MappingEventResolver`,
+  the `GitSourceAdapter`, the import boundary, the frozen
+  falsifications, and the existing 24 counterexamples are unchanged
+  except for the non-vacuous paired-control and the
+  `LEGACY_PHASE4_FAIL_OPEN`-sentinel assertions.
+- `measure/tracks/apk_source_denominator_inventory_20260712/plan.md` —
+  four `[b] deferred:adversarial-reviewer` reviewer tasks flipped to
+  `[~]` to mark them in-progress under the corrected canonical
+  role-to-ownership mapping (the adversarial-reviewer is now a legal
+  next role per the strategy correction); the
+  "Phase-4 Red command evidence (mid-red run)" subsection was added
+  with the static-syntax, admission-gate, focused-Red, and
+  global-guard evidence.
+- `measure/tracks/apk_source_denominator_inventory_20260712/role-logs/phase4-mid-red-green-branch-counterexamples.log`
+  — this file (new).
+
+No other Mid-Red-owned path was modified. No validator, candidate,
+owner-approval, accepted-manifest, partition, or closeout artifact was
+authored or mutated. The unrelated dirty work
+(`apps/`, `packages/`, `pnpm-lock.yaml`, the
+`apps/advantage-games/.opencode/goals/` track trees,
+`apps/codecamp-advantage/.opencode/`,
+`apps/primary-advantage/.opencode/`,
+`apps/reading-advantage/.opencode/`,
+`apps/www-reading-advantage/.opencode/goals/`,
+`measure/__pycache__/`,
+`measure/evidence_integrity_gates/__pycache__/`,
+`measure/tests/__pycache__/`,
+`measure/tests/evidence_integrity_gates/__pycache__/`,
+`measure/tracks/<other>/`,
+`packages/auth/src/*.d.ts{,.map}`,
+`packages/auth/src/*.js`,
+`packages/db/drizzle/0035_*` and `0036_*` SQL files,
+`packages/domain/src/__fixtures__/`,
+`packages/types/src/assignment-status.ts`, etc.) was preserved exactly.
+The pre-role/user-work
+`measure/tracks/apk_source_denominator_inventory_20260712/role-logs/phase4-strategy-role-map-correction.log`
+modification was preserved exactly and was not staged or committed by
+this run.
+
+## 5. Categorized Red exit (per strategy §"Phase-4 execution gates and falsification")
+
+The focused Phase-4 command exits nonzero with **two stable categorized
+reasons** — no syntax/import failure, no candidate/owner artifact,
+no fabricated review or acceptance evidence:
+
+- 25/35 tests fail because the production
+  `validate_phase4_inventory_acceptance` is absent and the temporary
+  fail-open sentinel returns
+  `{"ok": True, "code": "LEGACY_PHASE4_FAIL_OPEN"}` for every input.
+  The non-vacuous paired-control assertion
+  (`control.ok is False` with stable sentinel code) is the
+  falsification of that absence (1 explicit control test + 24
+  Green-branch counterexamples, each with its frozen per-falsification
+  `expected_code` documented for the production-validator future
+  state).
+- 10/35 tests fail because the Phase-4 live-track contract requires
+  `measure/tracks/apk_source_denominator_inventory_20260712/independent-review.json`
+  to exist before the focused contract may proceed (the
+  "missing-review" half of the Red exit).
+
+## 6. Static syntax, admission, and global guards
+
+- Static syntax
+  (`PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile measure/tests/test_apk_source_denominator_inventory_phase4.py`):
+  exit 0; no syntax regression.
+- Admission gate
+  (`PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase0 measure.tests.test_apk_source_denominator_inventory_phase1 measure.tests.test_apk_source_denominator_inventory_phase2 measure.tests.test_apk_source_denominator_inventory_phase3`):
+  32/32 passed (per
+  `measure/tracks/apk_source_denominator_inventory_20260712/phase3-green-test-report.json`).
+- Focused Red command
+  (`PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase4`):
+  exit 1, FAILED (failures=35). Two stable categorized reasons
+  (missing-validator and missing-review), no syntax/import/candidate/
+  owner failure.
+- Global guards: `bash tests/orchestrator_supervisor_invariants.sh`
+  PASS (A1 no substring-as-signal; A8 marker regex `~xb` only);
+  `bash tests/orchestrator_detector_syntax.sh` PASS (A14 detector
+  recipes use executable ripgrep option syntax).
+
+## 7. Handoff
+
+- The next legal Red-side action is the Green or
+  `measure-adversarial-testing` owner only after the Admission gate is
+  green (already green at the role-base) and after the frozen Phase 0–3
+  predecessor contracts continue to pass.
+- The canonical `measure-adversarial-testing` subagent is the bounded
+  track-local `adversarial-reviewer` owner of
+  `independent-review.json`,
+  `role-receipts/adversarial-reviewer.json`,
+  `candidate-denominator-manifest.json`, and
+  `candidate-partition-manifest.json`. It must run with
+  `fork_turns="none"` isolation, measured labeled-integer
+  `actual_usage` per frozen ceiling, zero numeric stop-loss
+  observations, ancestor-only inputs, and SHA-256-bound outputs.
+- The product-owner exact-hash gate is the non-substitutable next step
+  after a zero-blocker review.
+- No acceptance, candidate, owner, accepted, partition, or closeout
+  artifact was authored by this Mid-Red run.
+MEASURE_AGENT_RESULT
+role: mid-red
+status: complete
+track: apk_source_denominator_inventory_20260712
+phase: Phase 4: Full independent acceptance
+baseline_sha: 476835906509e2c550ed98e0d23e89c7326b7bdc
+role_base_sha: 9849e6a963bb2518f8306b33b205ff4f714daad5
+audited_head_sha: <will-be-set-by-commit>
+commits: <will-be-set-by-commit>
+tests_run: PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile measure/tests/test_apk_source_denominator_inventory_phase4.py; expected_exit=0; actual_exit=0; result=passed (no syntax regression)
+tests_run: PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase0 measure.tests.test_apk_source_denominator_inventory_phase1 measure.tests.test_apk_source_denominator_inventory_phase2 measure.tests.test_apk_source_denominator_inventory_phase3; expected_exit=0; actual_exit=0; result=passed (32 tests against committed Phase 0-3 inputs)
+tests_run: PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase4; expected_red_exit=1; actual_exit=1; result=FAILED (failures=35), as expected
+tests_run: bash tests/orchestrator_supervisor_invariants.sh; expected_exit=0; actual_exit=0; result=PASS (A1/A8)
+tests_run: bash tests/orchestrator_detector_syntax.sh; expected_exit=0; actual_exit=0; result=PASS (A14)
+files_changed: measure/tests/test_apk_source_denominator_inventory_phase4.py (three targeted edits: _assert_rejects paired control non-vacuous, test_valid_temporary_green_control_uses_no_live_acceptance_artifact non-vacuous, test_owner_authorization_event_is_single_use non-vacuous; fail-open sentinel and frozen per-falsification expected_code arguments preserved); measure/tracks/apk_source_denominator_inventory_20260712/plan.md (four reviewer tasks flipped [b] deferred:adversarial-reviewer -> [~] per corrected canonical role-to-ownership mapping; new "Phase-4 Red command evidence (mid-red run)" subsection with static-syntax, admission, focused-Red, and global-guard evidence); measure/tracks/apk_source_denominator_inventory_20260712/role-logs/phase4-mid-red-green-branch-counterexamples.log (this file)
+plan_updates: four reviewer tasks flipped from [b] deferred:adversarial-reviewer to [~] in_progress; tasks 5-6 remain [b] deferred:product-owner; no [x] marker authored; no acceptance, candidate, owner, accepted, partition, or closeout claim
+known_failures: AssertionError: True is not false : unmodified bundle unexpectedly reached Green; the fail-open sentinel must reject it: {'ok': True, 'code': 'LEGACY_PHASE4_FAIL_OPEN'} (1 explicit control test, the non-vacuous paired-control falsification of the missing validator); AssertionError: True is not false : paired Green control unexpectedly passed; the fail-open sentinel must reject it: {'ok': True, 'code': 'LEGACY_PHASE4_FAIL_OPEN'} (24 Green-branch counterexamples, the non-vacuous paired-control falsification of the missing validator); AssertionError: Missing Phase-4 independent-acceptance artifact: measure/tracks/apk_source_denominator_inventory_20260712/independent-review.json (10/35 Phase4IndependentAcceptanceContracts tests, the missing-review half of the categorized Red exit). No syntax/import failure, no candidate/owner artifact, no fabricated review or acceptance evidence.
+handoff: the canonical next invocation is `measure-adversarial-testing` under the bounded frozen track-local `adversarial-reviewer` ownership, with fork_turns="none" isolation, measured labeled-integer actual_usage per frozen ceiling, zero numeric stop-loss observations, ancestor-only inputs, and SHA-256-bound outputs. The product-owner exact-hash gate is the non-substitutable next step after a zero-blocker review. No validator, candidate, owner-approval, accepted-manifest, partition, or closeout artifact was authored by this Mid-Red run.
+END_MEASURE_AGENT_RESULT

@@ -34,9 +34,18 @@
 
 ## Phase 4: Full independent acceptance
 
-- [b] Task: Spawn a `fork_turns="none"`, tool-attested reviewer to re-run full denominator reconciliation - deferred:adversarial-reviewer; the root/Green agent is forbidden from the adversarial-reviewer role per `phase0-role-ownership-manifest.json` (`root_agent.forbidden_roles` includes `adversarial-reviewer`); the Phase-3 file-reconciliation gap from `e14ab11e` has been repaired (phase3-reconciliation.json regenerated, Phase-3 focused contract passes), but the Admission gate still requires the committed Phase 0-3 predecessor contracts to pass together against committed inputs before the reviewer may begin
-- [b] Task: Run claim hash, revision reachability, denominator, role-receipt, and stop-loss validators - deferred:adversarial-reviewer
-- [b] Task: Remediate every Critical, High, and Medium finding - deferred:adversarial-reviewer
-- [b] Task: Publish non-consumable candidate denominator and partition manifests plus complete review report - deferred:adversarial-reviewer
+- [~] Task: Spawn a `fork_turns="none"`, tool-attested reviewer to re-run full denominator reconciliation - deferred:adversarial-reviewer; the root/Green agent is forbidden from the adversarial-reviewer role per `phase0-role-ownership-manifest.json` (`root_agent.forbidden_roles` includes `adversarial-reviewer`); the Phase-3 file-reconciliation gap from `e14ab11e` has been repaired (phase3-reconciliation.json regenerated, Phase-3 focused contract passes), but the Admission gate still requires the committed Phase 0-3 predecessor contracts to pass together against committed inputs before the reviewer may begin
+- [~] Task: Run claim hash, revision reachability, denominator, role-receipt, and stop-loss validators - deferred:adversarial-reviewer
+- [~] Task: Remediate every Critical, High, and Medium finding - deferred:adversarial-reviewer
+- [~] Task: Publish non-consumable candidate denominator and partition manifests plus complete review report - deferred:adversarial-reviewer
 - [b] Task: Obtain product-owner acceptance bound to exact candidate/review hashes, then publish accepted denominator and partition manifests - deferred:product-owner
 - [b] Task: Measure - User Manual Verification 'Phase 4' (Protocol in workflow.md) - deferred:product-owner
+
+### Phase-4 Red command evidence (mid-red run, role-base 9849e6a963bb2518f8306b33b205ff4f714daad5)
+
+- Static syntax: `PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile measure/tests/test_apk_source_denominator_inventory_phase4.py` — exit 0, no syntax regression.
+- Admission gate: `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase0 measure.tests.test_apk_source_denominator_inventory_phase1 measure.tests.test_apk_source_denominator_inventory_phase2 measure.tests.test_apk_source_denominator_inventory_phase3` — 32/32 passed against committed Phase 0–3 inputs.
+- Focused Red command: `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase4` — exit 1, FAILED (failures=35) for two stable categorized reasons:
+  - 25/35 fail because the production `validate_phase4_inventory_acceptance` validator is absent and the temporary fail-open sentinel returns `{"ok": True, "code": "LEGACY_PHASE4_FAIL_OPEN"}`; the paired-control assertion (`control.ok is False` with stable sentinel code) is the non-vacuous falsification of that absence (1 explicit control test + 24 Green-branch counterexamples).
+  - 10/35 fail because the Phase-4 live-track contract requires `measure/tracks/apk_source_denominator_inventory_20260712/independent-review.json` to exist before the focused contract may proceed.
+- Global guards: `bash tests/orchestrator_supervisor_invariants.sh` PASS (A1/A8); `bash tests/orchestrator_detector_syntax.sh` PASS (A14).

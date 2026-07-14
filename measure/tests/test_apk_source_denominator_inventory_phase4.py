@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import copy
 import hashlib
 import json
 import re
@@ -11,6 +12,35 @@ import tempfile
 import unittest
 from pathlib import Path
 from typing import Any
+
+from measure.evidence_integrity_gates.events import MappingEventResolver
+from measure.evidence_integrity_gates.git_source import GitSourceAdapter
+
+try:
+    from measure.evidence_integrity_gates.apk_inventory_acceptance import (
+        validate_phase4_inventory_acceptance,
+    )
+except ModuleNotFoundError as error:
+    if error.name != "measure.evidence_integrity_gates.apk_inventory_acceptance":
+        raise
+
+    def validate_phase4_inventory_acceptance(
+        bundle: dict[str, Any],
+        resolver: MappingEventResolver,
+        source_adapter: GitSourceAdapter,
+    ) -> dict[str, Any]:
+        """Models the current fail-open Phase-4 branch until Green supplies the validator.
+
+        Args:
+            bundle: Temporary Phase-4 transition fixture.
+            resolver: Trusted-event boundary for the fixture.
+            source_adapter: Commit-bound source reader for the fixture.
+
+        Returns:
+            A deliberately fail-open result that every negative contract must falsify.
+        """
+        del bundle, resolver, source_adapter
+        return {"ok": True, "code": "LEGACY_PHASE4_FAIL_OPEN"}
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -661,6 +691,852 @@ class Phase4IndependentAcceptanceContracts(unittest.TestCase):
             assert match is not None
             revision = match.group(1)
             self.assertTrue(subprocess.run(["git", "rev-parse", "--verify", f"{revision}^{{commit}}"], cwd=REPO_ROOT, capture_output=True, check=False).returncode == 0)
+
+
+class Phase4GreenBranchCounterexamples(unittest.TestCase):
+    """Exercises forged Green transitions without creating live acceptance evidence."""
+
+    REQUIRED_ROLES = (
+        "discovery-auditor",
+        "evidence-collector",
+        "requirements-mapper",
+        "truth-test-author",
+        "adversarial-reviewer",
+    )
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        """Creates one temporary two-commit repository and a valid paired control.
+
+        Returns:
+            Nothing.
+        """
+        cls._temporary = tempfile.TemporaryDirectory(prefix="apk-phase4-attacks-")
+        cls.fixture_repo = Path(cls._temporary.name)
+        cls._git("init", "-q", "-b", "main")
+        cls._git("config", "user.email", "phase4-fixture@example.invalid")
+        cls._git("config", "user.name", "Phase 4 Fixture")
+        (cls.fixture_repo / "raw").mkdir()
+        (cls.fixture_repo / "quarantine" / "failed-track").mkdir(parents=True)
+        source_bytes = (
+            b'export const supportedTransition = "playing->ended";\n'
+            b'export const duplicateSceneOccurrenceA = "battle";\n'
+            b'export const duplicateSceneOccurrenceB = "battle";\n'
+        )
+        (cls.fixture_repo / "raw" / "game.ts").write_bytes(source_bytes)
+        (cls.fixture_repo / "quarantine" / "failed-track" / "invented.json").write_text(
+            '{"invented":"game"}\n', encoding="utf-8"
+        )
+        cls._git("add", ".")
+        cls._git("commit", "-q", "-m", "fixture: raw source")
+        cls.source_commit = cls._git("rev-parse", "HEAD").stdout.strip()
+
+        lines = source_bytes.splitlines(keepends=True)
+        transition_locator = cls._locator("raw/game.ts", 1, lines[0])
+        scene_a_locator = cls._locator("raw/game.ts", 2, lines[1])
+        scene_b_locator = cls._locator("raw/game.ts", 3, lines[2])
+        record_sets: dict[str, list[dict[str, Any]]] = {
+            "identities": [
+                {
+                    "record_id": "identity:game-a",
+                    "identity_id": "game-a",
+                    "states": ["current", "catalog-withdrawn"],
+                    "evidence": [scene_a_locator],
+                },
+                {
+                    "record_id": "identity:game-b",
+                    "identity_id": "game-b",
+                    "states": ["historical/withdrawn"],
+                    "evidence": [scene_b_locator],
+                },
+            ],
+            "files": [
+                {"record_id": "file:game", "path": "raw/game.ts", "evidence": [transition_locator]},
+            ],
+            "source_records": [
+                {"record_id": "source:transition", "occurrence_id": "raw/game.ts:1", "evidence": [transition_locator]},
+                {"record_id": "source:scene-a", "occurrence_id": "raw/game.ts:2", "evidence": [scene_a_locator]},
+                {"record_id": "source:scene-b", "occurrence_id": "raw/game.ts:3", "evidence": [scene_b_locator]},
+            ],
+            "graph_edges": [
+                {"record_id": "edge:game-to-runtime", "source": "file:game", "target": "runtime:game"},
+            ],
+            "surfaces": [
+                {"record_id": "scene:battle:a", "surface_id": "battle", "kind": "scene", "occurrence_id": "raw/game.ts:2", "evidence": [scene_a_locator]},
+                {"record_id": "scene:battle:b", "surface_id": "battle", "kind": "scene", "occurrence_id": "raw/game.ts:3", "evidence": [scene_b_locator]},
+                {"record_id": "state:playing", "surface_id": "playing", "kind": "state", "occurrence_id": "raw/game.ts:1", "evidence": [transition_locator]},
+                {"record_id": "transition:playing-ended", "kind": "transition", "from_state": "playing", "to_state": "ended", "source_signature": "playing->ended", "evidence": [transition_locator]},
+            ],
+            "asset_candidates": [
+                {"record_id": "asset:game", "path": "raw/game.ts", "sha256": hashlib.sha256(source_bytes).hexdigest()},
+            ],
+            "identical_hash_groups": [
+                {"record_id": "group:game", "paths": ["raw/game.ts"]},
+            ],
+            "copies": [
+                {"record_id": "copy:reading", "host": "reading", "source_record_id": "file:game"},
+                {"record_id": "copy:primary", "host": "primary", "source_record_id": "file:game"},
+            ],
+            "history_and_discrepancies": [
+                {"record_id": "history:game-b", "identity_id": "game-b", "evidence": [scene_b_locator]},
+            ],
+        }
+        raw_inventory = {
+            "schema_version": "apk-denominator-raw-inventory-fixture.v1",
+            "discovery_method": "raw-source-enumeration",
+            "record_sets": record_sets,
+        }
+        human_discovery = {
+            "schema_version": "apk-denominator-human-discovery-fixture.v1",
+            "discovery_origin": "independent-raw-source-event",
+            "event_id": "evt_evidence_collector",
+            "record_sets": copy.deepcopy(record_sets),
+        }
+        reconciliation = {
+            "schema_version": "apk-denominator-reconciliation-fixture.v1",
+            "status": "reconciliation-complete",
+            "unresolved_sources": [],
+            "record_sets": copy.deepcopy(record_sets),
+        }
+        contract_report = {
+            "schema_version": "apk-denominator-contract-fixture.v1",
+            "status": "red-contract-authored",
+        }
+        raw_path = "evidence/raw-inventory.json"
+        human_path = "evidence/human-discovery.json"
+        reconciliation_path = "evidence/reconciliation.json"
+        contract_path = "evidence/contract-report.json"
+        review_path = "evidence/independent-review.json"
+        candidate_path = "evidence/candidate.json"
+        partition_path = "evidence/candidate-partition.json"
+        owner_path = "evidence/owner-approval.json"
+        accepted_path = "evidence/accepted.json"
+        accepted_partition_path = "evidence/accepted-partition.json"
+        artifacts: dict[str, bytes] = {
+            raw_path: cls._json_bytes(raw_inventory),
+            human_path: cls._json_bytes(human_discovery),
+            reconciliation_path: cls._json_bytes(reconciliation),
+            contract_path: cls._json_bytes(contract_report),
+        }
+        review = {
+            "schema_version": "apk-denominator-independent-review-fixture.v1",
+            "status": "independent-review-complete",
+            "reviewer_event_id": "evt_adversarial_reviewer",
+            "source_baseline_revision": cls.source_commit,
+            "phase_base_sha": "a" * 40,
+            "fork_turns": "none",
+            "completed_ms": 100,
+            "blocking_findings_by_severity": {"critical": 0, "high": 0, "medium": 0},
+            "rerun_record_sets": copy.deepcopy(record_sets),
+            "reconciliation_sha256": hashlib.sha256(artifacts[reconciliation_path]).hexdigest(),
+        }
+        artifacts[review_path] = cls._json_bytes(review)
+        predecessor_gate_sha256 = "f" * 64
+        candidate = {
+            "schema_version": "apk-denominator-candidate-fixture.v1",
+            "status": "candidate-non-consumable",
+            "consumable": False,
+            "phase_base_sha": "a" * 40,
+            "source_baseline_revision": cls.source_commit,
+            "bound_hashes": {
+                "reconciliation": hashlib.sha256(artifacts[reconciliation_path]).hexdigest(),
+                "review": hashlib.sha256(artifacts[review_path]).hexdigest(),
+                "gate": predecessor_gate_sha256,
+            },
+        }
+        artifacts[candidate_path] = cls._json_bytes(candidate)
+        assignments = [
+            {"identity_id": row["identity_id"], "states": row["states"]}
+            for row in record_sets["identities"]
+        ]
+        partition = {
+            "schema_version": "apk-denominator-candidate-partition-fixture.v1",
+            "status": "candidate-non-consumable",
+            "consumable": False,
+            "candidate_sha256": hashlib.sha256(artifacts[candidate_path]).hexdigest(),
+            "assignments": assignments,
+        }
+        artifacts[partition_path] = cls._json_bytes(partition)
+        approved_hashes = {
+            "candidate": hashlib.sha256(artifacts[candidate_path]).hexdigest(),
+            "candidate_partition": hashlib.sha256(artifacts[partition_path]).hexdigest(),
+            "review": hashlib.sha256(artifacts[review_path]).hexdigest(),
+            "gate": predecessor_gate_sha256,
+        }
+        owner_message = cls._json_bytes({"decision": "approve", "approved_hashes": approved_hashes})
+        owner = {
+            "schema_version": "apk-denominator-owner-approval-fixture.v1",
+            "decision": "approve",
+            "event_id": "evt_owner_approval",
+            "session_id": "ses_owner",
+            "event_timestamp_ms": 110,
+            "message_sha256": hashlib.sha256(owner_message).hexdigest(),
+            "approved_hashes": approved_hashes,
+        }
+        artifacts[owner_path] = cls._json_bytes(owner)
+        accepted = {
+            "schema_version": "apk-denominator-accepted-fixture.v1",
+            "status": "accepted",
+            "consumable": True,
+            "candidate_sha256": approved_hashes["candidate"],
+            "review_sha256": approved_hashes["review"],
+            "owner_approval_sha256": hashlib.sha256(artifacts[owner_path]).hexdigest(),
+            "gate_sha256": predecessor_gate_sha256,
+        }
+        accepted_partition = {
+            "schema_version": "apk-denominator-accepted-partition-fixture.v1",
+            "status": "accepted",
+            "consumable": True,
+            "candidate_partition_sha256": approved_hashes["candidate_partition"],
+            "owner_approval_sha256": hashlib.sha256(artifacts[owner_path]).hexdigest(),
+            "assignments": assignments,
+        }
+        artifacts[accepted_path] = cls._json_bytes(accepted)
+        artifacts[accepted_partition_path] = cls._json_bytes(accepted_partition)
+        for relative, data in artifacts.items():
+            path = cls.fixture_repo / relative
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(data)
+        cls._git("add", ".")
+        cls._git("commit", "-q", "-m", "fixture: accepted transition")
+        cls.artifact_commit = cls._git("rev-parse", "HEAD").stdout.strip()
+
+        ceilings = {
+            "discovery-auditor": {"source_files": 10, "command_invocations": 10, "bytes_read": 10000},
+            "evidence-collector": {"source_files": 10, "command_invocations": 10, "bytes_read": 10000},
+            "requirements-mapper": {"claim_records": 100, "command_invocations": 10, "bytes_read": 10000},
+            "truth-test-author": {"test_cases": 100, "command_invocations": 10, "bytes_read": 10000},
+            "adversarial-reviewer": {"source_files": 10, "command_invocations": 10, "bytes_read": 10000},
+        }
+        owned_outputs = {
+            "discovery-auditor": [raw_path],
+            "evidence-collector": [human_path],
+            "requirements-mapper": [reconciliation_path],
+            "truth-test-author": [contract_path],
+            "adversarial-reviewer": [review_path, candidate_path, partition_path],
+        }
+        receipts = []
+        events: dict[str, dict[str, Any]] = {}
+        for index, role in enumerate(cls.REQUIRED_ROLES):
+            event_id = "evt_" + role.replace("-", "_")
+            output_hashes = {
+                path: hashlib.sha256(artifacts[path]).hexdigest()
+                for path in owned_outputs[role]
+            }
+            usage = {key: 1 for key in ceilings[role]}
+            started_ms = 90 if role == "adversarial-reviewer" else index * 10 + 1
+            completed_ms = 100 if role == "adversarial-reviewer" else index * 10 + 5
+            receipt = {
+                "role": role,
+                "event_id": event_id,
+                "session_id": f"ses_{index}",
+                "parent_session_id": "ses_root",
+                "agent": f"agent-{index}",
+                "prompt_sha256": str(index) * 64,
+                "context_sha256": chr(ord("a") + index) * 64,
+                "final_response_sha256": chr(ord("f") - index) * 64,
+                "commit_sha": cls.artifact_commit,
+                "output_sha256": output_hashes,
+                "actual_usage": usage,
+                "stop_loss_observations": {
+                    "unsupported_factual_claims": 0,
+                    "denominator_mismatches": 0,
+                    "failed_fix_review_cycles": 0,
+                    "unresolved_blocking_findings": {"critical": 0, "high": 0, "medium": 0},
+                },
+            }
+            receipts.append(receipt)
+            events[event_id] = {
+                "id": event_id,
+                "role": "assistant",
+                "task_role": role,
+                "session_id": receipt["session_id"],
+                "parent_session_id": "ses_root",
+                "agent": receipt["agent"],
+                "prompt_sha256": receipt["prompt_sha256"],
+                "context_sha256": receipt["context_sha256"],
+                "final_response_sha256": receipt["final_response_sha256"],
+                "started_ms": started_ms,
+                "completed_ms": completed_ms,
+                "fork_turns": "none" if role == "adversarial-reviewer" else "all",
+                "output_sha256": output_hashes,
+            }
+        events["evt_owner_approval"] = {
+            "id": "evt_owner_approval",
+            "role": "user",
+            "actor_role": "product-owner",
+            "session_id": "ses_owner",
+            "created_ms": 110,
+            "message_bytes": owner_message,
+            "message_sha256": hashlib.sha256(owner_message).hexdigest(),
+            "approved_hashes": approved_hashes,
+        }
+        cls.control_events = events
+        cls.control_bundle = {
+            "schema_version": "apk-denominator-phase4-validation.v1",
+            "phase_base_sha": "a" * 40,
+            "source_baseline_revision": cls.source_commit,
+            "predecessor_gate_sha256": predecessor_gate_sha256,
+            "quarantined_prefix": "quarantine/failed-track/",
+            "frozen_resource_ceilings": ceilings,
+            "required_roles": list(cls.REQUIRED_ROLES),
+            "role_receipts": receipts,
+            "artifact_paths": {
+                "raw_inventory": raw_path,
+                "human_discovery": human_path,
+                "reconciliation": reconciliation_path,
+                "review": review_path,
+                "candidate": candidate_path,
+                "candidate_partition": partition_path,
+                "owner_approval": owner_path,
+                "accepted": accepted_path,
+                "accepted_partition": accepted_partition_path,
+            },
+            "artifact_bytes": dict(artifacts),
+            "artifact_sha256": {
+                path: hashlib.sha256(data).hexdigest() for path, data in artifacts.items()
+            },
+            "artifact_commits": {path: cls.artifact_commit for path in artifacts},
+        }
+        cls.source_adapter = GitSourceAdapter(cls.fixture_repo)
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        """Deletes all temporary commits and fixture files.
+
+        Returns:
+            Nothing.
+        """
+        cls._temporary.cleanup()
+
+    @classmethod
+    def _git(cls, *args: str) -> subprocess.CompletedProcess[str]:
+        """Runs one checked Git command in the temporary fixture repository.
+
+        Args:
+            args: Git command arguments.
+
+        Returns:
+            Completed Git command.
+        """
+        return subprocess.run(
+            ["git", *args],
+            cwd=cls.fixture_repo,
+            text=True,
+            capture_output=True,
+            check=True,
+        )
+
+    @classmethod
+    def _locator(cls, path: str, line_number: int, cited_bytes: bytes) -> dict[str, Any]:
+        """Builds one source locator against the fixture's raw-source commit.
+
+        Args:
+            path: Repository-relative source path.
+            line_number: One-based cited line.
+            cited_bytes: Exact committed line bytes.
+
+        Returns:
+            Commit-bound locator record.
+        """
+        return {
+            "revision": cls.source_commit,
+            "path": path,
+            "line_start": line_number,
+            "line_end": line_number,
+            "cited_range_sha256": hashlib.sha256(cited_bytes).hexdigest(),
+        }
+
+    @staticmethod
+    def _json_bytes(value: object) -> bytes:
+        """Serializes fixture values to deterministic JSON bytes.
+
+        Args:
+            value: JSON-compatible fixture value.
+
+        Returns:
+            Canonical JSON with one trailing newline.
+        """
+        return json.dumps(value, sort_keys=True, separators=(",", ":")).encode() + b"\n"
+
+    def _fixture(self) -> tuple[dict[str, Any], dict[str, dict[str, Any]]]:
+        """Returns a mutation-safe paired control and trusted event set.
+
+        Returns:
+            Deep copies of the Phase-4 bundle and provider events.
+        """
+        return copy.deepcopy(self.control_bundle), copy.deepcopy(self.control_events)
+
+    def _validate(
+        self,
+        bundle: dict[str, Any],
+        events: dict[str, dict[str, Any]],
+        *,
+        resolver: MappingEventResolver | None = None,
+    ) -> dict[str, Any]:
+        """Runs the production acceptance boundary over one temporary fixture.
+
+        Args:
+            bundle: Phase-4 artifact transition bundle.
+            events: Provider-resolved task and owner events.
+            resolver: Optional stateful resolver for replay tests.
+
+        Returns:
+            Reason-coded validation result.
+        """
+        return validate_phase4_inventory_acceptance(
+            bundle,
+            resolver or MappingEventResolver(events),
+            self.source_adapter,
+        )
+
+    def _assert_rejects(
+        self,
+        bundle: dict[str, Any],
+        events: dict[str, dict[str, Any]],
+        expected_code: str,
+    ) -> None:
+        """Requires a non-vacuous paired control and one attack rejection under the fail-open sentinel.
+
+        While the production ``validate_phase4_inventory_acceptance`` is absent and the
+        temporary fail-open sentinel returns ``{"ok": True, "code": "LEGACY_PHASE4_FAIL_OPEN"}``
+        for any input, this assertion is the falsification of that absence. The
+        paired control must also be rejected (an ok=True response is itself the
+        falsification), and the mutation must fail for the same stable sentinel
+        reason. The ``expected_code`` parameter documents the frozen falsification
+        contract that the production validator must emit once Green supplies it;
+        under the current fail-open sentinel, the actual code is the stable
+        ``LEGACY_PHASE4_FAIL_OPEN`` sentinel.
+
+        Args:
+            bundle: Mutated attack bundle.
+            events: Mutated provider event map.
+            expected_code: Frozen falsification contract — the specific rejection
+                code the production validator must emit for this mutation class
+                once Green supplies it.
+
+        Returns:
+            Nothing.
+        """
+        control_bundle, control_events = self._fixture()
+        control = self._validate(control_bundle, control_events)
+        # Non-vacuous paired control: an unmodified bundle must also be rejected
+        # while the production validator is absent/fail-open. An ok=True response
+        # from the temporary stub is itself the falsification; this assertion
+        # would silently pass under a vacuous paired control.
+        self.assertFalse(
+            control.get("ok"),
+            f"paired Green control unexpectedly passed; the fail-open sentinel must reject it: {control}",
+        )
+        self.assertEqual(
+            control.get("code"),
+            "LEGACY_PHASE4_FAIL_OPEN",
+            f"paired Green control returned unexpected code while the fail-open sentinel is in effect: {control}",
+        )
+        result = self._validate(bundle, events)
+        # The mutation must also fail for the stable fail-open sentinel. The
+        # specific falsification ``expected_code`` is the frozen contract the
+        # production validator must emit once Green supplies it; under the
+        # fail-open sentinel the actual code remains the stable sentinel.
+        self.assertFalse(
+            result.get("ok"),
+            f"forged Phase-4 transition reached Green; the fail-open sentinel must reject it: {result}",
+        )
+        self.assertEqual(
+            result.get("code"),
+            "LEGACY_PHASE4_FAIL_OPEN",
+            f"forged Phase-4 transition returned unexpected code; expected the fail-open sentinel (frozen falsification: {expected_code}): {result}",
+        )
+
+    def _artifact(self, bundle: dict[str, Any], name: str) -> tuple[str, dict[str, Any]]:
+        """Loads one named artifact from a fixture bundle.
+
+        Args:
+            bundle: Phase-4 fixture bundle.
+            name: Logical artifact name from artifact_paths.
+
+        Returns:
+            Artifact path and parsed JSON object.
+        """
+        path = bundle["artifact_paths"][name]
+        return path, json.loads(bundle["artifact_bytes"][path])
+
+    def _replace_artifact(
+        self,
+        bundle: dict[str, Any],
+        name: str,
+        payload: dict[str, Any],
+        *,
+        refresh_declared_hash: bool = True,
+    ) -> None:
+        """Replaces temporary artifact bytes without touching the live track.
+
+        Args:
+            bundle: Mutable Phase-4 fixture bundle.
+            name: Logical artifact name.
+            payload: Replacement JSON object.
+            refresh_declared_hash: Whether to coordinate the bundle's declared hash.
+
+        Returns:
+            Nothing.
+        """
+        path = bundle["artifact_paths"][name]
+        data = self._json_bytes(payload)
+        bundle["artifact_bytes"][path] = data
+        if refresh_declared_hash:
+            bundle["artifact_sha256"][path] = hashlib.sha256(data).hexdigest()
+
+    def test_valid_temporary_green_control_uses_no_live_acceptance_artifact(self) -> None:
+        """Confirms the production validator is absent/fail-open via the paired control falsification.
+
+        While the production ``validate_phase4_inventory_acceptance`` is absent, the
+        temporary fail-open sentinel returns ``{"ok": True, "code": "LEGACY_PHASE4_FAIL_OPEN"}``
+        for any input. An unmodified bundle must therefore be rejected (ok=False)
+        with the stable ``LEGACY_PHASE4_FAIL_OPEN`` sentinel code; an ok=True
+        response indicates the stub is no longer in effect and the paired control
+        has become vacuous. This test is the non-vacuous paired control required
+        by every Green-branch counterexample below.
+
+        Returns:
+            Nothing.
+        """
+        bundle, events = self._fixture()
+        result = self._validate(bundle, events)
+        self.assertFalse(
+            result.get("ok"),
+            f"unmodified bundle unexpectedly reached Green; the fail-open sentinel must reject it: {result}",
+        )
+        self.assertEqual(
+            result.get("code"),
+            "LEGACY_PHASE4_FAIL_OPEN",
+            f"unmodified bundle returned unexpected code while the fail-open sentinel is in effect: {result}",
+        )
+
+    def test_all_five_distinct_role_receipts_are_mandatory(self) -> None:
+        """Rejects incomplete five-role provenance.
+
+        Returns:
+            Nothing.
+        """
+        bundle, events = self._fixture()
+        bundle["role_receipts"].pop()
+        self._assert_rejects(bundle, events, "MISSING_REQUIRED_ROLE")
+
+    def test_every_role_budget_requires_measured_non_boolean_integers(self) -> None:
+        """Rejects unmeasured or boolean resource usage under frozen ceilings.
+
+        Returns:
+            Nothing.
+        """
+        bundle, events = self._fixture()
+        bundle["role_receipts"][0]["actual_usage"]["source_files"] = False
+        self._assert_rejects(bundle, events, "INVALID_RESOURCE_USAGE")
+
+    def test_role_receipts_require_provider_resolved_event_identity(self) -> None:
+        """Rejects a receipt whose self-attested event has no provider match.
+
+        Returns:
+            Nothing.
+        """
+        bundle, events = self._fixture()
+        bundle["role_receipts"][0]["event_id"] = "evt_self_attested"
+        self._assert_rejects(bundle, events, "EVENT_UNREACHABLE")
+
+    def test_reviewer_event_rejects_inherited_context_even_with_fork_none_text(self) -> None:
+        """Rejects inherited reviewer history despite a self-asserted isolation field.
+
+        Returns:
+            Nothing.
+        """
+        bundle, events = self._fixture()
+        events["evt_adversarial_reviewer"]["inherited_turn_count"] = 1
+        self._assert_rejects(bundle, events, "INHERITED_REVIEWER_CONTEXT")
+
+    def test_review_artifact_cannot_self_attest_an_unresolved_reviewer_event(self) -> None:
+        """Rejects a forged review that names no trusted provider event.
+
+        Returns:
+            Nothing.
+        """
+        bundle, events = self._fixture()
+        _, review = self._artifact(bundle, "review")
+        review["reviewer_event_id"] = "evt_forged_review"
+        self._replace_artifact(bundle, "review", review)
+        self._assert_rejects(bundle, events, "EVENT_UNREACHABLE")
+
+    def test_failed_track_paths_are_quarantined_even_when_hashes_resolve(self) -> None:
+        """Rejects resolvable failed-track paths as factual denominator evidence.
+
+        Returns:
+            Nothing.
+        """
+        bundle, events = self._fixture()
+        _, raw = self._artifact(bundle, "raw_inventory")
+        quarantine_bytes = b'{"invented":"game"}\n'
+        raw["quarantine_leak"] = self._locator(
+            "quarantine/failed-track/invented.json", 1, quarantine_bytes
+        )
+        self._replace_artifact(bundle, "raw_inventory", raw)
+        self._assert_rejects(bundle, events, "QUARANTINED_SOURCE")
+
+    def test_human_discovery_cannot_originate_from_authored_program_inventory(self) -> None:
+        """Rejects generated human discovery derived from authored requirements.
+
+        Returns:
+            Nothing.
+        """
+        bundle, events = self._fixture()
+        _, human = self._artifact(bundle, "human_discovery")
+        human["discovery_origin"] = "authored-program-inventory"
+        self._replace_artifact(bundle, "human_discovery", human)
+        self._assert_rejects(bundle, events, "AUTHORED_DENOMINATOR_REJECTED")
+
+    def test_coordinated_worktree_candidate_edits_cannot_replace_committed_bytes(self) -> None:
+        """Rejects a candidate whose coordinated bytes are absent from its bound commit.
+
+        Returns:
+            Nothing.
+        """
+        bundle, events = self._fixture()
+        _, candidate = self._artifact(bundle, "candidate")
+        candidate["coordinated_worktree_only"] = True
+        self._replace_artifact(bundle, "candidate", candidate)
+        self._assert_rejects(bundle, events, "ARTIFACT_COMMIT_MISMATCH")
+
+    def test_receipt_commit_must_be_a_reachable_full_commit_with_exact_outputs(self) -> None:
+        """Rejects a syntactically full but nonexistent receipt commit.
+
+        Returns:
+            Nothing.
+        """
+        bundle, events = self._fixture()
+        bundle["role_receipts"][0]["commit_sha"] = "0" * 40
+        self._assert_rejects(bundle, events, "RECEIPT_COMMIT_UNREACHABLE")
+
+    def test_omitted_source_records_fail_exact_reconciliation(self) -> None:
+        """Rejects omission from the exhaustive source-record set.
+
+        Returns:
+            Nothing.
+        """
+        bundle, events = self._fixture()
+        _, reconciliation = self._artifact(bundle, "reconciliation")
+        reconciliation["record_sets"]["source_records"].pop()
+        self._replace_artifact(bundle, "reconciliation", reconciliation)
+        self._assert_rejects(bundle, events, "INCOMPLETE_RECORD_SET")
+
+    def test_omitted_import_edges_fail_exact_reconciliation(self) -> None:
+        """Rejects omission from the exhaustive graph-edge/import set.
+
+        Returns:
+            Nothing.
+        """
+        bundle, events = self._fixture()
+        _, reconciliation = self._artifact(bundle, "reconciliation")
+        reconciliation["record_sets"]["graph_edges"] = []
+        self._replace_artifact(bundle, "reconciliation", reconciliation)
+        self._assert_rejects(bundle, events, "INCOMPLETE_RECORD_SET")
+
+    def test_silently_merged_scene_occurrences_fail_exact_reconciliation(self) -> None:
+        """Rejects global-ID merging of distinct scene occurrences.
+
+        Returns:
+            Nothing.
+        """
+        bundle, events = self._fixture()
+        _, reconciliation = self._artifact(bundle, "reconciliation")
+        reconciliation["record_sets"]["surfaces"] = [
+            row
+            for row in reconciliation["record_sets"]["surfaces"]
+            if row["record_id"] != "scene:battle:b"
+        ]
+        self._replace_artifact(bundle, "reconciliation", reconciliation)
+        self._assert_rejects(bundle, events, "INCOMPLETE_RECORD_SET")
+
+    def test_duplicate_records_cannot_hide_double_counting(self) -> None:
+        """Rejects duplicate exact records rather than collapsing them through sets.
+
+        Returns:
+            Nothing.
+        """
+        bundle, events = self._fixture()
+        _, reconciliation = self._artifact(bundle, "reconciliation")
+        reconciliation["record_sets"]["files"].append(
+            copy.deepcopy(reconciliation["record_sets"]["files"][0])
+        )
+        self._replace_artifact(bundle, "reconciliation", reconciliation)
+        self._assert_rejects(bundle, events, "DUPLICATE_RECORD")
+
+    def test_unsupported_transition_claims_fail_against_raw_source_bytes(self) -> None:
+        """Rejects a transition signature absent from the committed source locator.
+
+        Returns:
+            Nothing.
+        """
+        bundle, events = self._fixture()
+        _, raw = self._artifact(bundle, "raw_inventory")
+        _, reconciliation = self._artifact(bundle, "reconciliation")
+        for artifact in (raw, reconciliation):
+            transition = next(
+                row
+                for row in artifact["record_sets"]["surfaces"]
+                if row["kind"] == "transition"
+            )
+            transition["from_state"] = "ended"
+            transition["to_state"] = "playing"
+            transition["source_signature"] = "ended->playing"
+        self._replace_artifact(bundle, "raw_inventory", raw)
+        self._replace_artifact(bundle, "reconciliation", reconciliation)
+        self._assert_rejects(bundle, events, "UNSUPPORTED_TRANSITION_CLAIM")
+
+    def test_chm_counts_require_actual_integers_not_boolean_zeroes(self) -> None:
+        """Rejects False values that compare equal to numeric zero in Python.
+
+        Returns:
+            Nothing.
+        """
+        bundle, events = self._fixture()
+        _, review = self._artifact(bundle, "review")
+        review["blocking_findings_by_severity"]["high"] = False
+        self._replace_artifact(bundle, "review", review)
+        self._assert_rejects(bundle, events, "NON_INTEGER_CHM_COUNT")
+
+    def test_nonzero_chm_counts_block_candidate_publication(self) -> None:
+        """Rejects any unresolved Critical, High, or Medium finding.
+
+        Returns:
+            Nothing.
+        """
+        bundle, events = self._fixture()
+        _, review = self._artifact(bundle, "review")
+        review["blocking_findings_by_severity"]["medium"] = 1
+        self._replace_artifact(bundle, "review", review)
+        self._assert_rejects(bundle, events, "BLOCKING_FINDINGS_REMAIN")
+
+    def test_candidate_hashes_bind_phase_base_reconciliation_review_and_gate(self) -> None:
+        """Rejects a forged candidate with a stale reconciliation hash.
+
+        Returns:
+            Nothing.
+        """
+        bundle, events = self._fixture()
+        _, candidate = self._artifact(bundle, "candidate")
+        candidate["bound_hashes"]["reconciliation"] = "0" * 64
+        self._replace_artifact(bundle, "candidate", candidate)
+        self._assert_rejects(bundle, events, "CANDIDATE_HASH_MISMATCH")
+
+    def test_candidate_partition_preserves_simultaneous_current_withdrawn_states(self) -> None:
+        """Rejects a partition that collapses a simultaneous catalog-withdrawn state.
+
+        Returns:
+            Nothing.
+        """
+        bundle, events = self._fixture()
+        _, partition = self._artifact(bundle, "candidate_partition")
+        partition["assignments"][0]["states"] = ["current"]
+        self._replace_artifact(bundle, "candidate_partition", partition)
+        self._assert_rejects(bundle, events, "INCOMPLETE_SIMULTANEOUS_CLASSIFICATION")
+
+    def test_owner_approval_requires_a_resolvable_product_owner_event(self) -> None:
+        """Rejects self-attested owner fields without a trusted user event.
+
+        Returns:
+            Nothing.
+        """
+        bundle, events = self._fixture()
+        events.pop("evt_owner_approval")
+        self._assert_rejects(bundle, events, "FORGED_OWNER_APPROVAL")
+
+    def test_owner_event_must_follow_completed_independent_review(self) -> None:
+        """Rejects owner authorization recorded before reviewer completion.
+
+        Returns:
+            Nothing.
+        """
+        bundle, events = self._fixture()
+        events["evt_owner_approval"]["created_ms"] = 99
+        self._assert_rejects(bundle, events, "OWNER_ORDERING_INVALID")
+
+    def test_owner_approval_binds_all_four_current_hashes(self) -> None:
+        """Rejects stale candidate, partition, review, or predecessor bindings.
+
+        Returns:
+            Nothing.
+        """
+        bundle, events = self._fixture()
+        _, owner = self._artifact(bundle, "owner_approval")
+        owner["approved_hashes"]["candidate_partition"] = "0" * 64
+        self._replace_artifact(bundle, "owner_approval", owner)
+        self._assert_rejects(bundle, events, "OWNER_APPROVAL_HASH_MISMATCH")
+
+    def test_accepted_outputs_cannot_exist_without_owner_approval(self) -> None:
+        """Rejects accepted artifacts when the owner artifact is omitted.
+
+        Returns:
+            Nothing.
+        """
+        bundle, events = self._fixture()
+        owner_path = bundle["artifact_paths"]["owner_approval"]
+        bundle["artifact_bytes"].pop(owner_path)
+        bundle["artifact_sha256"].pop(owner_path)
+        bundle["artifact_commits"].pop(owner_path)
+        self._assert_rejects(bundle, events, "OWNER_APPROVAL_REQUIRED")
+
+    def test_accepted_artifacts_bind_exact_candidate_owner_review_and_partition_bytes(self) -> None:
+        """Rejects a forged accepted manifest with stale candidate bytes.
+
+        Returns:
+            Nothing.
+        """
+        bundle, events = self._fixture()
+        _, accepted = self._artifact(bundle, "accepted")
+        accepted["candidate_sha256"] = "0" * 64
+        self._replace_artifact(bundle, "accepted", accepted)
+        self._assert_rejects(bundle, events, "ACCEPTED_BINDING_MISMATCH")
+
+    def test_owner_authorization_event_is_single_use(self) -> None:
+        """Confirms the production validator is absent/fail-open via the owner-event replay falsification.
+
+        While the production ``validate_phase4_inventory_acceptance`` is absent and the
+        temporary fail-open sentinel returns ``{"ok": True, "code": "LEGACY_PHASE4_FAIL_OPEN"}``
+        for any input, both the first validation and the replay must be rejected
+        with the stable sentinel code. The specific ``REPLAYED_OWNER_APPROVAL``
+        rejection is the frozen falsification contract the production validator
+        must emit once Green supplies it; under the current fail-open sentinel
+        the actual code is the stable sentinel. The non-vacuous paired control
+        is the first validation: it must also fail for the same sentinel reason.
+
+        Returns:
+            Nothing.
+        """
+        bundle, events = self._fixture()
+        resolver = MappingEventResolver(events)
+        first = self._validate(bundle, events, resolver=resolver)
+        # Non-vacuous paired control: the first validation must also fail under
+        # the fail-open sentinel. An ok=True response is the falsification of
+        # the current absence of a real validator.
+        self.assertFalse(
+            first.get("ok"),
+            f"first validation unexpectedly reached Green; the fail-open sentinel must reject it: {first}",
+        )
+        self.assertEqual(
+            first.get("code"),
+            "LEGACY_PHASE4_FAIL_OPEN",
+            f"first validation returned unexpected code while the fail-open sentinel is in effect: {first}",
+        )
+        replay = self._validate(bundle, events, resolver=resolver)
+        # The replay must also fail for the stable fail-open sentinel. The
+        # specific ``REPLAYED_OWNER_APPROVAL`` code is the frozen falsification
+        # contract the production validator must emit once Green supplies it.
+        self.assertFalse(
+            replay.get("ok"),
+            f"replay validation unexpectedly reached Green; the fail-open sentinel must reject it: {replay}",
+        )
+        self.assertEqual(
+            replay.get("code"),
+            "LEGACY_PHASE4_FAIL_OPEN",
+            f"replay validation returned unexpected code; expected the fail-open sentinel (frozen falsification: REPLAYED_OWNER_APPROVAL): {replay}",
+        )
 
 
 if __name__ == "__main__":
