@@ -6,29 +6,29 @@
 
 ## Phase 1: Contract & Schema Definition
 
-- [~] Task: Capture the compiler and repository baseline.
-  - [ ] Record source SHA, `git status -sb`, Node/pnpm versions, CPU/memory, Turbo
+- [x] Task: Capture the compiler and repository baseline. [commit: f68897ac]
+  - [x] Record source SHA, `git status -sb`, Node/pnpm versions, CPU/memory, Turbo
     concurrency, and resolved TypeScript versions.
-  - [ ] Save TypeScript 5.9 diagnostic and timing evidence for all workspaces.
-  - [ ] Classify pre-existing failures separately from migration acceptance gates.
-  - [ ] Refresh `graph.db` if it is older than 24 hours and save graph statistics.
-- [~] Task: Inventory the complete TypeScript integration surface.
-  - [ ] Enumerate all manifests, catalogs, aliases, `tsc` scripts, tsconfigs, compiler
+  - [x] Save TypeScript 5.9 diagnostic and timing evidence for all workspaces.
+  - [x] Classify pre-existing failures separately from migration acceptance gates.
+  - [x] Refresh `graph.db` if it is older than 24 hours and save graph statistics.
+- [x] Task: Inventory the complete TypeScript integration surface. [commit: f68897ac]
+  - [x] Enumerate all manifests, catalogs, aliases, `tsc` scripts, tsconfigs, compiler
     plugins, API imports, and TypeScript peer dependencies.
-  - [ ] Map Next.js, Vinext/Vite, ESLint, Jest, Vitest, ts-node, tsx, tsup, Drizzle,
+  - [x] Map Next.js, Vinext/Vite, ESLint, Jest, Vitest, ts-node, tsx, tsup, Drizzle,
     commitlint, and config-loader compiler ownership.
-  - [ ] Identify emit/declaration builds separately from `--noEmit` checks.
-- [~] Task: Define the dual-compiler package contract.
-  - [ ] Specify exact TypeScript 7.0.2 and TypeScript 6.0.2 aliases in the workspace
+  - [x] Identify emit/declaration builds separately from `--noEmit` checks.
+- [x] Task: Define the dual-compiler package contract. [commit: f68897ac]
+  - [x] Specify exact TypeScript 7.0.2 and TypeScript 6.0.2 aliases in the workspace
     catalog without ambiguous executable resolution.
-  - [ ] Define native, compatibility, parity, and rollback commands.
-  - [ ] Define which tools must remain on the TypeScript 6 programmatic API.
-- [~] Task: Define diagnostic, benchmark, and rollout evidence schemas.
-  - [ ] Specify normalized diagnostic records and reviewed-exception fields.
-  - [ ] Specify benchmark records for elapsed time, RSS, diagnostics, CPU/checkers,
+  - [x] Define native, compatibility, parity, and rollback commands.
+  - [x] Define which tools must remain on the TypeScript 6 programmatic API.
+- [x] Task: Define diagnostic, benchmark, and rollout evidence schemas. [commit: f68897ac]
+  - [x] Specify normalized diagnostic records and reviewed-exception fields.
+  - [x] Specify benchmark records for elapsed time, RSS, diagnostics, CPU/checkers,
     cache state, and exit status.
-  - [ ] Specify CI observation records and rollback triggers.
-- [b] Task: Measure - User Manual Verification 'Phase 1: Contract & Schema Definition' (Protocol in workflow.md) — deferred:product-owner
+  - [x] Specify CI observation records and rollback triggers.
+- [b] Task: Measure - User Manual Verification 'Phase 1: Contract & Schema Definition' (Protocol in workflow.md) (deferred:product-owner)
 
 ## Phase 2: Test
 
