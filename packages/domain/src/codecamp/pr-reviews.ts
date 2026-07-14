@@ -1,4 +1,4 @@
-import { eq, and, desc, sql } from "drizzle-orm";
+import { eq, and, desc, ne, sql } from "drizzle-orm";
 import {
   codecampPrReviews, codecampExerciseRepos, codecampLessons, codecampModules,
   codecampWebhookEvents,
@@ -8,13 +8,12 @@ import type { TenantDB } from "../db-contract.js";
 import { updateUserProgress } from "./progress.js";
 import { createActivitySessionRecord } from "@reading-advantage/activity-runtime";
 import { assessCheckpointAttempt } from "@reading-advantage/activity-runtime/server";
-import { createCodecampAPKIndependentActivity } from "@reading-advantage/codecamp-knowledge";
-import { codecampAPKUnit } from "@reading-advantage/codecamp-knowledge";
+import { codecampAPKUnit, createCodecampAPKIndependentActivity } from "@reading-advantage/codecamp-knowledge";
 import { masteryCards } from "@reading-advantage/db/schema";
-import { DrizzleActivityPersistence } from "../activity/drizzle-activity-persistence.js";
-import { CODECAMP_MASTERY_SCHOOL_ID } from "../activity/drizzle-activity-persistence.js";
-import { apkPrEvaluationSchema, isPassingAPKPrEvaluation, type APKPrEvaluation } from "./review-exercise.js";
+import { DrizzleActivityPersistence, CODECAMP_MASTERY_SCHOOL_ID } from "../activity/drizzle-activity-persistence.js";
+import { apkPrEvaluationSchema, apkTrustedPrEvidenceSchema, type APKPrEvaluation } from "./review-exercise.js";
 import { assertCodecampModuleAssigned } from "./curriculum-assignments.js";
+import { recordTrustedPrReviewAttempt, resolveGraphBoundPrObjectives } from "./pr-review-attempts.js";
 
 export type CodecampWebhookEventOutcome = "ignored" | "failed";
 
@@ -113,18 +112,18 @@ export async function updatePrReview({
 
   const rawDb = db.unscoped("codecamp pr-reviews scoped by reviewId");
 
+  const [target] = await rawDb.select({ moduleSlug: codecampModules.slug, reviewStatus: codecampPrReviews.reviewStatus }).from(codecampPrReviews)
+    .innerJoin(codecampExerciseRepos, eq(codecampExerciseRepos.id, codecampPrReviews.exerciseRepoId))
+    .innerJoin(codecampModules, eq(codecampModules.id, codecampExerciseRepos.moduleId))
+    .where(eq(codecampPrReviews.id, input.reviewId)).limit(1);
+  if (!target) throw new Error("Review not found");
+  const isAPKReview = target.moduleSlug === "apk-game-creation";
   let apkEvaluation: APKPrEvaluation | null = null;
-  if (input.reviewStatus === "approved") {
-    const [target] = await rawDb.select({ moduleSlug: codecampModules.slug }).from(codecampPrReviews)
-      .innerJoin(codecampExerciseRepos, eq(codecampExerciseRepos.id, codecampPrReviews.exerciseRepoId))
-      .innerJoin(codecampModules, eq(codecampModules.id, codecampExerciseRepos.moduleId))
-      .where(eq(codecampPrReviews.id, input.reviewId)).limit(1);
-    if (!target) throw new Error("Review not found");
-    if (target.moduleSlug === "apk-game-creation") {
-      apkEvaluation = apkPrEvaluationSchema.parse(input.rubricEvaluation);
-      if (!isPassingAPKPrEvaluation(apkEvaluation)) throw new Error("APK PR does not meet the authored rubric and required checks");
-    }
-  }
+  if (isAPKReview) {
+    if (target.reviewStatus === "approved") throw new Error("Trusted APK approval cannot be overwritten by advisory feedback");
+    if (input.reviewStatus === "approved") throw new Error("APK approval requires trusted deterministic PR evidence; advisory LLM review cannot approve or mutate mastery");
+    if (input.rubricEvaluation !== undefined) apkEvaluation = apkPrEvaluationSchema.parse(input.rubricEvaluation);
+  } else if (input.rubricEvaluation !== undefined) throw new Error("APK rubric evaluation is only valid for the APK game-creation module");
 
   const [result] = await rawDb.update(codecampPrReviews)
     .set({
@@ -133,11 +132,100 @@ export async function updatePrReview({
       rubricEvaluationJson: apkEvaluation,
       reviewedAt: input.reviewStatus !== "pending" ? new Date() : sql`${codecampPrReviews.reviewedAt}`,
     })
-    .where(eq(codecampPrReviews.id, input.reviewId)).returning();
+    .where(isAPKReview
+      ? and(eq(codecampPrReviews.id, input.reviewId), ne(codecampPrReviews.reviewStatus, "approved"))
+      : eq(codecampPrReviews.id, input.reviewId))
+    .returning();
 
-  if (!result) throw new Error("Review not found");
-  if (result.reviewStatus === "approved") await projectApprovedAPKReview(db, result);
+  if (!result) {
+    if (isAPKReview) throw new Error("Trusted APK approval cannot be overwritten by advisory feedback");
+    throw new Error("Review not found");
+  }
   return publicPrReview(result);
+}
+
+/**
+ * Approves an APK pull request only from complete deterministic CI and browser evidence.
+ * @param params Database, authorized evaluator, tenant, review identifier, and trusted evidence bundle.
+ * @returns The approved public PR review record after projecting independent mastery evidence.
+ * @throws When the caller is unauthorized, the evidence is incomplete, or the review is not an APK review.
+ */
+export async function approveAPKPrReview({
+  db, user, tenant, input,
+}: {
+  db: TenantDB; user: UserContext; tenant: Tenant;
+  input: { reviewId: string; evidence: unknown };
+}) {
+  assertCan(user, "admin:dashboard", tenant);
+  const evidence = apkTrustedPrEvidenceSchema.parse(input.evidence);
+  return db.transaction(async (transactionDb) => {
+    const tenantTransaction = transactionDb as unknown as TenantDB;
+    const rawDb = tenantTransaction.unscoped("trusted APK PR approval scoped by reviewId FK chain");
+    const [review] = await rawDb.select().from(codecampPrReviews)
+      .where(eq(codecampPrReviews.id, input.reviewId)).limit(1);
+    if (!review) throw new Error("Review not found");
+    const [repository] = await rawDb.select({ moduleSlug: codecampModules.slug, repoUrl: codecampExerciseRepos.repoUrl }).from(codecampExerciseRepos)
+      .innerJoin(codecampModules, eq(codecampModules.id, codecampExerciseRepos.moduleId))
+      .where(eq(codecampExerciseRepos.id, review.exerciseRepoId)).limit(1);
+    if (repository?.moduleSlug !== "apk-game-creation") throw new Error("Trusted APK approval is only valid for the APK game-creation module");
+
+    const repositoryUrl = new URL(repository.repoUrl.replace(/\.git$/, ""));
+    const githubRunPrefix = `/${repositoryUrl.pathname.split("/").filter(Boolean).slice(0, 2).join("/")}/actions/runs/`;
+    for (const check of evidence.checks) {
+      const artifactUrl = new URL(check.evidenceUrl);
+      if (check.source === "github_check_run" && (artifactUrl.hostname !== "github.com" || !artifactUrl.pathname.startsWith(githubRunPrefix))) {
+        throw new Error("Trusted CI evidence must reference a GitHub Actions run for the reviewed PR repository");
+      }
+      if (artifactUrl.protocol !== "https:") throw new Error("Trusted evidence URLs must use HTTPS");
+    }
+
+    const reviewedAt = new Date();
+    const [result] = await rawDb.update(codecampPrReviews).set({
+      reviewStatus: "approved",
+      rubricEvaluationJson: {
+        ...evidence.evaluation,
+        trustedEvidence: {
+          schemaVersion: evidence.schemaVersion,
+          commitSha: evidence.commitSha,
+          checks: evidence.checks,
+          evaluatorUserId: user.id,
+        },
+      },
+      reviewedAt,
+    }).where(and(eq(codecampPrReviews.id, input.reviewId), ne(codecampPrReviews.reviewStatus, "approved"))).returning();
+    if (!result) throw new Error("APK PR is already approved");
+    const objectiveResults = resolveGraphBoundPrObjectives(repository.moduleSlug).map((binding) => ({
+      objectiveId: binding.objectiveId,
+      score: Math.round(evidence.evaluation.totalScore * 100),
+      confidence: 100,
+      passed: true,
+      evidenceReferences: {
+        commitSha: evidence.commitSha,
+        checks: evidence.checks.map(({ check, source, evidenceUrl, observedAt }) => ({ check, source, evidenceUrl, observedAt })),
+      },
+      supportHistory: { source: "trusted-evaluator", supportEvents: [] },
+    }));
+    await recordTrustedPrReviewAttempt({
+      db: tenantTransaction,
+      user,
+      tenant,
+      input: {
+        reviewId: result.id,
+        headSha: evidence.commitSha,
+        idempotencyKey: `codecamp-pr-review:${result.id}:${evidence.commitSha}:trusted-evaluator.v1`,
+        moduleSlug: repository.moduleSlug,
+        trustedContext: {
+          repository: repository.repoUrl,
+          evaluatorUserId: user.id,
+          reviewedAt: reviewedAt.toISOString(),
+        },
+        evaluatorEvidence: evidence,
+        objectives: objectiveResults,
+      },
+    });
+    await projectApprovedAPKReview(tenantTransaction, result);
+    return publicPrReview(result);
+  });
 }
 
 async function projectApprovedAPKReview(db: TenantDB, review: typeof codecampPrReviews.$inferSelect): Promise<void> {

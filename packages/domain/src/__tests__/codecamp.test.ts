@@ -17,6 +17,7 @@ import {
   getPrReviewsForUser,
   createPrReview,
   updatePrReview,
+  approveAPKPrReview,
   completeApprovedPrReviewLesson,
   getPrReviewByPrUrl,
   getModulesByPhase,
@@ -1149,6 +1150,32 @@ describe("createPrReview", () => {
 });
 
 describe("updatePrReview", () => {
+  it("does not let delayed advisory feedback overwrite a trusted APK approval", async () => {
+    const db = createMockDb({ selectSequence: [[{ moduleSlug: "apk-game-creation", reviewStatus: "approved" }]] });
+    const admin = { id: "a1", username: "admin1", name: "Admin", role: "ADMIN" as const, schoolId: "s1" };
+
+    await expect(updatePrReview({
+      db: wrapDb(db),
+      user: admin,
+      tenant: globalTenant,
+      input: { reviewId: "pr-apk", reviewStatus: "reviewed", rubricEvaluation: {} },
+    })).rejects.toThrow("cannot be overwritten by advisory feedback");
+    expect(db.update).not.toHaveBeenCalled();
+  });
+
+  it("rejects APK approval until trusted deterministic PR evidence exists", async () => {
+    const db = createMockDb({ selectSequence: [[{ moduleSlug: "apk-game-creation" }]] });
+    const admin = { id: "a1", username: "admin1", name: "Admin", role: "ADMIN" as const, schoolId: "s1" };
+
+    await expect(updatePrReview({
+      db: wrapDb(db),
+      user: admin,
+      tenant: globalTenant,
+      input: { reviewId: "pr-apk", reviewStatus: "approved", rubricEvaluation: {} },
+    })).rejects.toThrow("trusted deterministic PR evidence");
+    expect(db.update).not.toHaveBeenCalled();
+  });
+
   it("updates review status and summary", async () => {
     const review = { id: "pr1", exerciseRepoId: "r1", userId: "st1", prUrl: "https://github.com/org/repo1/pull/1", reviewStatus: "approved", llmReviewSummary: "Great work!", reviewedAt: new Date(), createdAt: new Date() };
     const db = createMockDb({ selectSequence: [[{ moduleSlug: "legacy-module" }]], updateReturning: [review] });
@@ -1190,7 +1217,7 @@ describe("updatePrReview", () => {
       reviewedAt: new Date("2026-01-01T00:00:00Z"),
       createdAt: new Date(),
     };
-    const db = createMockDb({ updateReturning: [existingReview] });
+    const db = createMockDb({ selectSequence: [[{ moduleSlug: "legacy-module", reviewStatus: "pending" }]], updateReturning: [existingReview] });
 
     const admin = { id: "a1", username: "admin1", name: "Admin", role: "ADMIN" as const, schoolId: "s1" };
     const result = await updatePrReview({
@@ -1219,7 +1246,7 @@ describe("updatePrReview", () => {
       reviewedAt: priorTerminalReviewedAt,
       createdAt: new Date(),
     };
-    const db = createMockDb({ updateReturning: [existingReview] });
+    const db = createMockDb({ selectSequence: [[{ moduleSlug: "legacy-module", reviewStatus: "approved" }]], updateReturning: [existingReview] });
 
     const admin = { id: "a1", username: "admin1", name: "Admin", role: "ADMIN" as const, schoolId: "s1" };
     await updatePrReview({
@@ -1261,6 +1288,60 @@ describe("updatePrReview", () => {
     if (setCall) {
       expect(setCall.reviewedAt).toBeInstanceOf(Date);
     }
+  });
+});
+
+describe("approveAPKPrReview", () => {
+  it("does not project mastery when the conditional approval update loses an idempotency race", async () => {
+    const review = {
+      id: "pr-apk", exerciseRepoId: "repo-apk", userId: "st1",
+      prUrl: "https://github.com/org/repo/pull/1", reviewStatus: "pending",
+      llmReviewSummary: null, reviewedAt: null, createdAt: new Date(),
+    };
+    const db = createMockDb({
+      selectSequence: [
+        [review],
+        [{ moduleSlug: "apk-game-creation", repoUrl: "https://github.com/org/repo" }],
+      ],
+      updateReturning: [],
+    });
+    const admin = { id: "a1", username: "admin1", name: "Admin", role: "ADMIN" as const, schoolId: "s1" };
+    const checks = [
+      "manifest ABI", "deterministic educational logic", "keyboard-equivalent input", "unit tests",
+    ].map((check) => ({
+      check,
+      passed: true as const,
+      source: "github_check_run" as const,
+      evidenceUrl: "https://github.com/org/repo/actions/runs/1",
+      observedAt: "2026-07-12T00:00:00.000Z",
+    }));
+    checks.push({
+      check: "browser smoke test",
+      passed: true as const,
+      source: "manual_browser" as const,
+      evidenceUrl: "https://evidence.example.test/runs/1",
+      observedAt: "2026-07-12T00:00:00.000Z",
+    });
+
+    await expect(approveAPKPrReview({
+      db: wrapDb(db), user: admin, tenant: globalTenant,
+      input: {
+        reviewId: review.id,
+        evidence: {
+          schemaVersion: "apk.trusted-pr-evidence.v1",
+          commitSha: "a".repeat(40),
+          evaluation: {
+            rubricId: "apk.rubric.independent-cartridge",
+            dimensions: ["objective", "contract", "tests", "accessibility"].map((dimensionId) => ({ dimensionId, score: 1, evidence: "verified" })),
+            requiredChecks: checks.map(({ check }) => ({ check, passed: true, evidence: "verified" })),
+            totalScore: 1,
+          },
+          checks,
+        },
+      },
+    })).rejects.toThrow("already approved");
+
+    expect(db.insert).not.toHaveBeenCalled();
   });
 });
 
@@ -1858,7 +1939,7 @@ describe("getInternProgress", () => {
     const reviews = [
       { id: "pr1", exerciseRepoId: "repo2", userId: "u1", prUrl: "https://github.com/org/repo2/pull/1", reviewStatus: "approved", llmReviewSummary: "Good work", reviewedAt: now, createdAt: now },
     ];
-    const db = createMockDb({ selectSequence: [[intern], modules, [], lessons, progress, repos, reviews] });
+    const db = createMockDb({ selectSequence: [[intern], modules, [], lessons, progress, repos, reviews, []] });
 
     const admin = { id: "a1", username: "admin1", name: "Admin", role: "ADMIN" as const, schoolId: "s1" };
     const result = await getInternProgress({

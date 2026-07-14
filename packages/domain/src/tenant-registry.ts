@@ -86,6 +86,7 @@ import {
   activitySessionEvents,
   activityTutorialReports,
   activityTutorialRepositoryStates,
+  activityTutorialCaptureLeases,
   codecampCurriculumAssignments,
 } from "@reading-advantage/db";
 
@@ -165,6 +166,7 @@ register(schools, "EXEMPT");
 register(accounts, "EXEMPT");
 register(sessions, "EXEMPT");
 register(loginAttempts, "EXEMPT");
+register(activityTutorialCaptureLeases, "EXEMPT");
 
 // ─── REFERENTIAL tables (tenant data via owner FK, no schoolId) ──
 
@@ -185,8 +187,13 @@ import {
   codecampUserProgress,
   codecampChatConversations,
   codecampChatMessages,
+  codecampTutorInterventions,
+  codecampTutorResourceUses,
+  codecampTutorEvidenceJoins,
   codecampExerciseRepos,
   codecampPrReviews,
+  codecampPrReviewAttempts,
+  codecampPrReviewObjectiveEvidence,
   codecampWebhookEvents,
   reviewJobs,
   articles,
@@ -257,8 +264,13 @@ register(codecampQuizQuestions, "REFERENTIAL");
 register(codecampUserProgress, "REFERENTIAL");
 register(codecampChatConversations, "REFERENTIAL");
 register(codecampChatMessages, "REFERENTIAL");
+register(codecampTutorInterventions, "REFERENTIAL");
+register(codecampTutorResourceUses, "REFERENTIAL");
+register(codecampTutorEvidenceJoins, "REFERENTIAL");
 register(codecampExerciseRepos, "REFERENTIAL");
 register(codecampPrReviews, "REFERENTIAL");
+register(codecampPrReviewAttempts, "REFERENTIAL");
+register(codecampPrReviewObjectiveEvidence, "REFERENTIAL");
 register(codecampWebhookEvents, "REFERENTIAL");
 // review_jobs queue (track_id: webhook_review_reliability_20260605) — codecamp
 // is single-tenant/global; review_jobs has no `schoolId`. Accessed via

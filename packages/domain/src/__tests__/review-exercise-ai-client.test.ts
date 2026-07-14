@@ -93,6 +93,7 @@ describe("reviewExercise with AIClient-backed callback", () => {
       passed: false,
       summary: "Needs more tests.",
       comments: [{ body: "Add a unit test for the new helper." }],
+      objectiveEvidence: [],
     };
     const client = makeAIClientMock(async () => reviewResult);
     const generateReview = aiClientToGenerateReview(client, reviewResultSchema);

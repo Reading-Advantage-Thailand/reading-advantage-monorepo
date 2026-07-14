@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "codecamp-tutor-response.v1",
+  "fixtureKind": "contract-only",
+  "modelAlias": "xiaomi/mimo-v2.5",
+  "cases": [
+    { "name": "diagnostic-first-response", "response": { "message": "Before changing the manifest, predict which side owns completion persistence.", "level": "diagnostic", "diagnosticQuestion": "Which responsibility belongs to the React host?", "misconceptionTags": ["host-cartridge-boundary"], "resource": null } },
+    { "name": "conceptual-hint", "response": { "message": "Separate rendering from the host-owned validation and persistence boundary.", "level": "conceptual_hint", "diagnosticQuestion": "What information must cross the host boundary?", "misconceptionTags": ["host-cartridge-boundary"], "resource": { "resourceId": "diagram:apk.boundaries" } } },
+    { "name": "location-hint", "response": { "message": "Inspect the manifest entry that declares the cartridge capability.", "level": "location_hint", "diagnosticQuestion": "Which manifest field describes the capability?", "misconceptionTags": ["manifest-contract"], "resource": { "resourceId": "repository:apk-stage-starter" } } },
+    { "name": "partial-scaffold", "response": { "message": "Start with the typed manifest shape, then fill one capability at a time and rerun the deterministic check.", "level": "partial_scaffold", "diagnosticQuestion": "Which required field can you verify first?", "misconceptionTags": ["manifest-contract"], "resource": { "resourceId": "repository:apk-stage-starter" } } },
+    { "name": "worked-example", "response": { "message": "Compare the demonstrated host-to-cartridge boundary with your own manifest before adapting it to your activity.", "level": "worked_example", "diagnosticQuestion": "Which part must remain activity-specific after you compare the example?", "misconceptionTags": ["host-cartridge-boundary", "manifest-contract"], "resource": { "resourceId": "video:apk-stage-intro" } } }
+  ]
+}
