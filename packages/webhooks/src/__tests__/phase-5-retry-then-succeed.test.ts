@@ -4,6 +4,7 @@ import githubApp, { waitForBackgroundReviews } from "../github.js";
 import { createReviewWorker } from "../review-worker.js";
 
 const WEBHOOK_SECRET = "phase-5-test-secret";
+const REVIEW_ID = "11111111-1111-4111-8111-111111111111";
 
 let attemptCount = 0;
 
@@ -72,6 +73,7 @@ vi.mock("../review-worker.js", async () => {
       prUrl: "https://github.com/org/repo/pull/1",
       enqueued: true,
     }),
+    runWorkerTick: vi.fn().mockResolvedValue({ processed: 0 }),
   };
 });
 
@@ -85,6 +87,7 @@ vi.mock("@reading-advantage/domain/codecamp", async () => {
     getExerciseRepoByUrl: vi.fn(),
     logWebhookEvent: vi.fn(),
     completeApprovedPrReviewLesson: vi.fn(),
+    listPriorPrReviewAttempts: vi.fn().mockResolvedValue([]),
     // Mock `reviewExercise` so the worker doesn't touch the real DB.
     reviewExercise: vi.fn().mockImplementation(async (args) => {
       if (args.generateReview) {
@@ -106,6 +109,7 @@ vi.mock("@reading-advantage/domain/users", async () => {
 
 vi.mock("../github-client", () => ({
   fetchPrDiff: vi.fn().mockResolvedValue("@@ -1,3 +1,4 @@\n+console.log('hello');\n"),
+  fetchPrCheckEvidence: vi.fn().mockResolvedValue({ availability: "unavailable", reason: "github_check_runs_unavailable", checkRuns: [] }),
   postPrComment: vi.fn().mockResolvedValue(undefined),
   parsePrUrl: vi.fn().mockReturnValue({ owner: "org", repo: "repo", pullNumber: 1 }),
   verifyWebhookSignature: vi.fn().mockReturnValue(true),
@@ -186,7 +190,7 @@ describe("Phase 5 — retry then succeed", () => {
       updatedAt: new Date(),
     } as unknown as Awaited<ReturnType<typeof getUserByGithubUsername>>);
     vi.mocked(createPrReview).mockResolvedValue({
-      id: "pr1",
+      id: REVIEW_ID,
       exerciseRepoId: "r1",
       userId: "u1",
       prUrl: "https://github.com/org/repo/pull/1",
@@ -218,17 +222,17 @@ describe("Phase 5 — retry then succeed", () => {
     delete process.env.AI_PROVIDER;
   });
 
-  it("Mock throws attempts 1-2 and succeeds on 3; final status approved, one comment", async () => {
+  it("Mock throws attempts 1-2 and succeeds on 3; final status reviewed, one advisory comment", async () => {
     const req = createRequest(openedPayload());
     const res = await githubApp.fetch(req);
     expect(res.status, "webhook response status").toBe(200);
 
-    // Drain the deferred inline review so we count the worker's
-    // postComment, not the inline one.
+    // Drain the mocked post-ACK durable-worker dispatch before injecting the
+    // one seeded worker used by this test.
     await waitForBackgroundReviews();
     vi.mocked(postPrComment).mockClear();
     vi.mocked(updatePrReview).mockClear();
-    attemptCount = 0; // reset after the inline review consumed attempt 1
+    attemptCount = 0;
 
     // The integration test injects the seeded job via the `claim` override
     // and a `deps` override that uses the per-test AIClient (the
@@ -249,7 +253,7 @@ describe("Phase 5 — retry then succeed", () => {
       createdAt: new Date(),
       updatedAt: new Date(),
       prUrl: "https://github.com/org/repo/pull/1",
-      reviewId: "pr1",
+      reviewId: REVIEW_ID,
       payloadJson: {},
     } as unknown as import("../review-worker.js").ReviewJob & {
       reviewId: string | null;
@@ -257,6 +261,12 @@ describe("Phase 5 — retry then succeed", () => {
     };
     const worker = createReviewWorker({
       intervalMs: 1000,
+      deps: {
+        resolveRollout: () => ({
+          mode: "active", runModel: true, mayPublishFeedback: true,
+          canaryPercent: 100, approvedBy: "assessment-owner", approvalRequired: false,
+        }),
+      },
       claim: vi.fn()
         .mockResolvedValueOnce([seededJob])
         .mockResolvedValueOnce([seededJob])
@@ -271,6 +281,7 @@ describe("Phase 5 — retry then succeed", () => {
         claimedAt: null,
         claimedBy: null,
       }),
+      applySettle: vi.fn().mockResolvedValue(undefined),
     });
     await worker.run();
 
@@ -279,10 +290,10 @@ describe("Phase 5 — retry then succeed", () => {
     const commentCalls = vi.mocked(postPrComment).mock.calls.length;
     expect(commentCalls, `postPrComment call count: ${commentCalls}`).toBe(1);
 
-    const approvedCalls = vi.mocked(updatePrReview).mock.calls.filter((call) => {
+    const advisoryCalls = vi.mocked(updatePrReview).mock.calls.filter((call) => {
       const input = (call[0] as { input?: { reviewStatus?: string } }).input;
-      return input?.reviewStatus === "approved";
+      return input?.reviewStatus === "reviewed";
     });
-    expect(approvedCalls.length, `approved updatePrReview call count: ${approvedCalls.length}`).toBe(1);
+    expect(advisoryCalls.length, `advisory updatePrReview call count: ${advisoryCalls.length}`).toBe(1);
   });
 });

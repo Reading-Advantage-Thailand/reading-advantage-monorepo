@@ -4,6 +4,9 @@ import githubApp, { waitForBackgroundReviews } from "../github.js";
 import { createReviewWorker } from "../review-worker.js";
 
 const WEBHOOK_SECRET = "phase-5-test-secret";
+const REVIEW_ID = "11111111-1111-4111-8111-111111111111";
+
+const mockRunWorkerTick = vi.hoisted(() => vi.fn().mockResolvedValue({ processed: 0 }));
 
 const { mockHolder } = vi.hoisted(() => {
   const mockHolder = {
@@ -23,6 +26,15 @@ vi.mock("@reading-advantage/ai", () => ({
   createAIClient: vi.fn(() => mockHolder),
 }));
 
+vi.mock("../review-worker.js", async () => {
+  const actual = await vi.importActual<typeof import("../review-worker.js")>("../review-worker.js");
+  return {
+    ...actual,
+    enqueueReviewJob: vi.fn().mockResolvedValue({ id: "job-1", enqueued: true }),
+    runWorkerTick: mockRunWorkerTick,
+  };
+});
+
 vi.mock("@reading-advantage/domain/codecamp", async () => {
   const actual = await vi.importActual<typeof import("@reading-advantage/domain/codecamp")>("@reading-advantage/domain/codecamp");
   return {
@@ -33,6 +45,7 @@ vi.mock("@reading-advantage/domain/codecamp", async () => {
     getExerciseRepoByUrl: vi.fn(),
     logWebhookEvent: vi.fn(),
     completeApprovedPrReviewLesson: vi.fn(),
+    listPriorPrReviewAttempts: vi.fn().mockResolvedValue([]),
     // Mock `reviewExercise` so the worker doesn't touch the real DB.
     // The real function queries `codecamp_modules` / `codecamp_exercise_repos`
     // by `repoUrl`, which the test cannot seed without a live DB.
@@ -60,6 +73,7 @@ vi.mock("@reading-advantage/domain/users", async () => {
 
 vi.mock("../github-client", () => ({
   fetchPrDiff: vi.fn().mockResolvedValue("@@ -1,3 +1,4 @@\n+console.log('hello');\n"),
+  fetchPrCheckEvidence: vi.fn().mockResolvedValue({ availability: "unavailable", reason: "github_check_runs_unavailable", checkRuns: [] }),
   postPrComment: vi.fn().mockResolvedValue(undefined),
   parsePrUrl: vi.fn().mockReturnValue({ owner: "org", repo: "repo", pullNumber: 1 }),
   verifyWebhookSignature: vi.fn().mockReturnValue(true),
@@ -139,7 +153,7 @@ describe("Phase 5 — happy path E2E", () => {
       updatedAt: new Date(),
     } as unknown as Awaited<ReturnType<typeof getUserByGithubUsername>>);
     vi.mocked(createPrReview).mockResolvedValue({
-      id: "pr1",
+      id: REVIEW_ID,
       exerciseRepoId: "r1",
       userId: "u1",
       prUrl: "https://github.com/org/repo/pull/1",
@@ -149,7 +163,7 @@ describe("Phase 5 — happy path E2E", () => {
       createdAt: new Date(),
     });
     vi.mocked(updatePrReview).mockResolvedValue({
-      id: "pr1",
+      id: REVIEW_ID,
       exerciseRepoId: "r1",
       userId: "u1",
       prUrl: "https://github.com/org/repo/pull/1",
@@ -174,10 +188,8 @@ describe("Phase 5 — happy path E2E", () => {
 
     expect(res.status, "webhook response status").toBe(200);
 
-    // Drain the deferred inline review (the webhook fires it via
-    // setImmediate so the ACK is not blocked). Without this, both the
-    // inline review and the worker race to postPrComment and the test
-    // sees 2 calls instead of 1.
+    // Drain the post-ACK durable-worker dispatch. It is mocked here because
+    // this test injects its own worker with a seeded job below.
     await waitForBackgroundReviews();
     vi.mocked(postPrComment).mockClear();
     vi.mocked(updatePrReview).mockClear();
@@ -202,7 +214,7 @@ describe("Phase 5 — happy path E2E", () => {
       createdAt: new Date(),
       updatedAt: new Date(),
       prUrl: "https://github.com/org/repo/pull/1",
-      reviewId: "pr1",
+      reviewId: REVIEW_ID,
       payloadJson: {},
     } as unknown as import("../review-worker.js").ReviewJob & {
       reviewId: string | null;
@@ -210,6 +222,12 @@ describe("Phase 5 — happy path E2E", () => {
     };
     const worker = createReviewWorker({
       intervalMs: 1000,
+      deps: {
+        resolveRollout: () => ({
+          mode: "active", runModel: true, mayPublishFeedback: true,
+          canaryPercent: 100, approvedBy: "assessment-owner", approvalRequired: false,
+        }),
+      },
       claim: vi.fn()
         .mockResolvedValueOnce([seededJob])
         .mockResolvedValue([]),
@@ -222,16 +240,17 @@ describe("Phase 5 — happy path E2E", () => {
         claimedAt: null,
         claimedBy: null,
       }),
+      applySettle: vi.fn().mockResolvedValue(undefined),
     });
     await worker.run();
 
     const commentCalls = vi.mocked(postPrComment).mock.calls.length;
     expect(commentCalls, `postPrComment call count: ${commentCalls}`).toBe(1);
 
-    const approvedCalls = vi.mocked(updatePrReview).mock.calls.filter((call) => {
+    const advisoryCalls = vi.mocked(updatePrReview).mock.calls.filter((call) => {
       const input = (call[0] as { input?: { reviewStatus?: string } }).input;
-      return input?.reviewStatus === "approved";
+      return input?.reviewStatus === "reviewed";
     });
-    expect(approvedCalls.length, `approved updatePrReview call count: ${approvedCalls.length}`).toBe(1);
+    expect(advisoryCalls.length, `advisory updatePrReview call count: ${advisoryCalls.length}`).toBe(1);
   });
 });

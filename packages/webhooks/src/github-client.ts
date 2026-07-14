@@ -15,6 +15,28 @@ export interface GitHubPRInfo {
   pullNumber: number;
 }
 
+/** A bounded, non-authoritative projection of one GitHub Check Run. */
+export interface GitHubCheckRunEvidence {
+  /** GitHub-authored check name. */
+  name: string;
+  /** Lifecycle status reported by GitHub. */
+  status: "queued" | "in_progress" | "completed";
+  /** Terminal conclusion reported by GitHub, when completed. */
+  conclusion: "action_required" | "cancelled" | "failure" | "neutral" | "skipped" | "stale" | "success" | "timed_out" | null;
+  /** GitHub HTTPS URL for inspecting the check details, when provided. */
+  detailsUrl: string | null;
+}
+
+/** Bounded check-run context that may be supplied to a PR review prompt. */
+export interface GitHubCheckEvidence {
+  /** Whether the worker obtained check data from GitHub. */
+  availability: "available" | "unavailable";
+  /** Stable absence reason; never a raw upstream error message. */
+  reason: "github_token_unavailable" | "github_check_runs_unavailable" | "missing_head_sha" | null;
+  /** Check-run summaries, capped before entering application context. */
+  checkRuns: GitHubCheckRunEvidence[];
+}
+
 // ─── Configuration ────────────────────────────────────────
 
 export /**
@@ -197,6 +219,67 @@ export async function fetchPrDiff(
   }
 
   return res.text();
+}
+
+const GITHUB_CHECK_STATUSES = new Set(["queued", "in_progress", "completed"]);
+const GITHUB_CHECK_CONCLUSIONS = new Set(["action_required", "cancelled", "failure", "neutral", "skipped", "stale", "success", "timed_out"]);
+
+/**
+ * Fetches a bounded, neutral projection of GitHub Check Runs for one PR head.
+ * @param prInfo Repository and pull-request identity.
+ * @param headSha Git commit SHA whose checks are relevant to the reviewed revision.
+ * @param token Optional GitHub App installation token.
+ * @returns Check evidence or a stable unavailable state when checks cannot be obtained.
+ */
+export async function fetchPrCheckEvidence(
+  prInfo: GitHubPRInfo,
+  headSha: string,
+  token?: string,
+): Promise<GitHubCheckEvidence> {
+  if (!/^[0-9a-f]{40}$/i.test(headSha)) {
+    return { availability: "unavailable", reason: "missing_head_sha", checkRuns: [] };
+  }
+  if (!token) {
+    return { availability: "unavailable", reason: "github_token_unavailable", checkRuns: [] };
+  }
+
+  const res = await fetch(
+    `https://api.github.com/repos/${encodeURIComponent(prInfo.owner)}/${encodeURIComponent(prInfo.repo)}/commits/${headSha}/check-runs?per_page=100`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/vnd.github+json",
+      },
+    },
+  );
+  if (!res.ok) {
+    return { availability: "unavailable", reason: "github_check_runs_unavailable", checkRuns: [] };
+  }
+
+  const payload = await res.json() as { check_runs?: unknown };
+  const rows = Array.isArray(payload.check_runs) ? payload.check_runs : [];
+  const checkRuns: GitHubCheckRunEvidence[] = [];
+  for (const row of rows) {
+    if (checkRuns.length === 25 || typeof row !== "object" || row === null) break;
+    const candidate = row as Record<string, unknown>;
+    const name = typeof candidate.name === "string" ? candidate.name.trim().slice(0, 160) : "";
+    const status = typeof candidate.status === "string" && GITHUB_CHECK_STATUSES.has(candidate.status) ? candidate.status as GitHubCheckRunEvidence["status"] : null;
+    const conclusion = typeof candidate.conclusion === "string" && GITHUB_CHECK_CONCLUSIONS.has(candidate.conclusion)
+      ? candidate.conclusion as NonNullable<GitHubCheckRunEvidence["conclusion"]>
+      : null;
+    const rawDetailsUrl = typeof candidate.details_url === "string" ? candidate.details_url : null;
+    let detailsUrl: string | null = null;
+    if (rawDetailsUrl) {
+      try {
+        const parsed = new URL(rawDetailsUrl);
+        if (parsed.protocol === "https:" && (parsed.hostname === "github.com" || parsed.hostname.endsWith(".github.com"))) detailsUrl = parsed.toString();
+      } catch {
+        // Invalid or non-GitHub URLs never enter the trusted context.
+      }
+    }
+    if (name && status) checkRuns.push({ name, status, conclusion, detailsUrl });
+  }
+  return { availability: "available", reason: null, checkRuns };
 }
 
 // ─── PR Comments ──────────────────────────────────────────

@@ -92,11 +92,12 @@ describe("GitHub webhook ACK latency", () => {
 
   it("returns HTTP 200 before the LLM review promise resolves", async () => {
     let reviewResolved = false;
-    let resolveReview: (value: { passed: boolean; summary: string; comments: { line?: number; body: string }[] }) => void = () => {};
+    let resolveReview: (value: { passed: boolean; summary: string; comments: { line?: number; body: string }[]; objectiveEvidence: [] }) => void = () => {};
     const reviewPromise = new Promise<{
       passed: boolean;
       summary: string;
       comments: { line?: number; body: string }[];
+      objectiveEvidence: [];
     }>((resolve) => {
       resolveReview = (value) => {
         reviewResolved = true;
@@ -198,7 +199,7 @@ describe("GitHub webhook ACK latency", () => {
       reviewResolvedWhenAcked = reviewResolved;
     } finally {
       // Always unblock the handler so we do not leave a dangling promise.
-      resolveReview({ passed: true, summary: "ok", comments: [] });
+      resolveReview({ passed: true, summary: "ok", comments: [], objectiveEvidence: [] });
       await responsePromise;
     }
 

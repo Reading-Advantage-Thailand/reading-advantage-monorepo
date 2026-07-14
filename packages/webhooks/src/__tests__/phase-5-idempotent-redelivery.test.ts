@@ -4,6 +4,9 @@ import githubApp, { waitForBackgroundReviews } from "../github.js";
 import { createReviewWorker } from "../review-worker.js";
 
 const WEBHOOK_SECRET = "phase-5-test-secret";
+const REVIEW_ID = "11111111-1111-4111-8111-111111111111";
+
+const mockRunWorkerTick = vi.hoisted(() => vi.fn().mockResolvedValue({ processed: 0 }));
 
 const mockHolder = vi.hoisted(() => ({
   generateObject: vi.fn().mockResolvedValue({
@@ -19,6 +22,15 @@ vi.mock("@reading-advantage/ai", () => ({
   getAIClient: mockGetAIClient,
   createAIClient: vi.fn(() => mockHolder),
 }));
+
+vi.mock("../review-worker.js", async () => {
+  const actual = await vi.importActual<typeof import("../review-worker.js")>("../review-worker.js");
+  return {
+    ...actual,
+    enqueueReviewJob: vi.fn().mockResolvedValue({ id: "job-1", enqueued: true }),
+    runWorkerTick: mockRunWorkerTick,
+  };
+});
 
 vi.mock("@reading-advantage/db", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@reading-advantage/db")>();
@@ -100,6 +112,7 @@ vi.mock("@reading-advantage/domain/codecamp", async () => {
     getExerciseRepoByUrl: vi.fn(),
     logWebhookEvent: vi.fn(),
     completeApprovedPrReviewLesson: vi.fn(),
+    listPriorPrReviewAttempts: vi.fn().mockResolvedValue([]),
     reviewExercise: vi.fn().mockImplementation(async (args) => {
       if (args.generateReview) {
         const prompt = `Please review the following code diff:\n\n\`\`\`diff\n${args.prDiff ?? ""}\n\`\`\``;
@@ -120,6 +133,7 @@ vi.mock("@reading-advantage/domain/users", async () => {
 
 vi.mock("../github-client", () => ({
   fetchPrDiff: vi.fn().mockResolvedValue("@@ -1,3 +1,4 @@\n+console.log('hello');\n"),
+  fetchPrCheckEvidence: vi.fn().mockResolvedValue({ availability: "unavailable", reason: "github_check_runs_unavailable", checkRuns: [] }),
   postPrComment: vi.fn().mockResolvedValue(undefined),
   parsePrUrl: vi.fn().mockReturnValue({ owner: "org", repo: "repo", pullNumber: 1 }),
   verifyWebhookSignature: vi.fn().mockReturnValue(true),
@@ -203,7 +217,7 @@ describe("Phase 5 — idempotent redelivery", () => {
       updatedAt: new Date(),
     } as unknown as Awaited<ReturnType<typeof getUserByGithubUsername>>);
     vi.mocked(createPrReview).mockResolvedValue({
-      id: "pr1",
+      id: REVIEW_ID,
       exerciseRepoId: "r1",
       userId: "u1",
       prUrl: "https://github.com/org/repo/pull/1",
@@ -213,7 +227,7 @@ describe("Phase 5 — idempotent redelivery", () => {
       createdAt: new Date(),
     });
     vi.mocked(updatePrReview).mockResolvedValue({
-      id: "pr1",
+      id: REVIEW_ID,
       exerciseRepoId: "r1",
       userId: "u1",
       prUrl: "https://github.com/org/repo/pull/1",
@@ -243,7 +257,8 @@ describe("Phase 5 — idempotent redelivery", () => {
     expect(res1.status, "first webhook response status").toBe(200);
     expect(res2.status, "second webhook response status").toBe(200);
 
-    // Drain the deferred inline reviews so we don't double-count.
+    // Drain the mocked post-ACK durable-worker dispatch before injecting the
+    // one seeded worker used by this test.
     await waitForBackgroundReviews();
     vi.mocked(postPrComment).mockClear();
     vi.mocked(updatePrReview).mockClear();
@@ -263,7 +278,7 @@ describe("Phase 5 — idempotent redelivery", () => {
       createdAt: new Date(),
       updatedAt: new Date(),
       prUrl: "https://github.com/org/repo/pull/1",
-      reviewId: "pr1",
+      reviewId: REVIEW_ID,
       payloadJson: {},
     } as unknown as import("../review-worker.js").ReviewJob & {
       reviewId: string | null;
@@ -271,6 +286,12 @@ describe("Phase 5 — idempotent redelivery", () => {
     };
     const worker = createReviewWorker({
       intervalMs: 1000,
+      deps: {
+        resolveRollout: () => ({
+          mode: "active", runModel: true, mayPublishFeedback: true,
+          canaryPercent: 100, approvedBy: "assessment-owner", approvalRequired: false,
+        }),
+      },
       claim: vi.fn()
         .mockResolvedValueOnce([seededJob])
         .mockResolvedValue([]),
@@ -283,6 +304,7 @@ describe("Phase 5 — idempotent redelivery", () => {
         claimedAt: null,
         claimedBy: null,
       }),
+      applySettle: vi.fn().mockResolvedValue(undefined),
     });
     await worker.run();
 

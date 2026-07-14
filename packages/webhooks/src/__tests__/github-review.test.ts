@@ -67,6 +67,8 @@ const mockHolder = vi.hoisted(() => ({
 
 const mockGetAIClient = vi.hoisted(() => vi.fn(() => mockHolder));
 const mockCreateAIClient = vi.hoisted(() => vi.fn(() => mockHolder));
+const mockEnqueueReviewJob = vi.hoisted(() => vi.fn());
+const mockRunWorkerTick = vi.hoisted(() => vi.fn());
 
 vi.mock("@reading-advantage/ai", () => {
   return {
@@ -168,11 +170,17 @@ vi.mock("@reading-advantage/db", async (importOriginal) => {
 
 vi.mock("../github-client", () => ({
   fetchPrDiff: vi.fn().mockResolvedValue("@@ -1,3 +1,4 @@\n+console.log('hello');\n"),
+  fetchPrCheckEvidence: vi.fn().mockResolvedValue({ availability: "unavailable", reason: "github_check_runs_unavailable", checkRuns: [] }),
   postPrComment: vi.fn().mockResolvedValue(undefined),
   parsePrUrl: vi.fn().mockReturnValue({ owner: "org", repo: "repo", number: 1 }),
   verifyWebhookSignature: vi.fn().mockReturnValue(true),
   getInstallationTokenForRepo: vi.fn().mockResolvedValue("ghs_mock-token"),
   MAX_TIMESTAMP_SKEW_SECONDS: 300,
+}));
+
+vi.mock("../review-worker", () => ({
+  enqueueReviewJob: mockEnqueueReviewJob,
+  runWorkerTick: mockRunWorkerTick,
 }));
 
 import {
@@ -183,7 +191,6 @@ import {
   logWebhookEvent,
 } from "@reading-advantage/domain/codecamp";
 import { getUserByGithubUsername } from "@reading-advantage/domain/users";
-import { reviewResultSchema } from "@reading-advantage/domain/codecamp";
 
 // ─── Test fixtures ─────────────────────────────────────────────────────────
 
@@ -267,6 +274,8 @@ describe("GitHub webhook — review path uses the AIClient abstraction", () => {
     // Re-prime after clearAllMocks reset the spy call counts.
     mockGetAIClient.mockImplementation(() => mockHolder);
     mockCreateAIClient.mockImplementation(() => mockHolder);
+    mockEnqueueReviewJob.mockResolvedValue({ enqueued: true });
+    mockRunWorkerTick.mockResolvedValue(undefined);
 
     vi.mocked(getPrReviewByPrUrl).mockResolvedValue(existingReview());
     vi.mocked(updatePrReview).mockImplementation(async (args) => {
@@ -285,64 +294,41 @@ describe("GitHub webhook — review path uses the AIClient abstraction", () => {
     delete process.env.AI_PROVIDER;
   });
 
-  it("invokes the injected AIClient (not the inline OpenRouter call) to generate the review", async () => {
+  it("enqueues then dispatches the durable worker after acknowledging the webhook", async () => {
     const req = createRequest(synchronizePayload());
     const res = await githubApp.fetch(req);
 
     expect(res.status).toBe(200);
-    // Phase 3 ACK-latency fix: the LLM review runs as a tracked background
-    // job. Drain before asserting on AIClient call counts.
     await waitForBackgroundReviews();
-    const aiClientCalls = mockGetAIClient.mock.calls.length + mockCreateAIClient.mock.calls.length;
-    expect(aiClientCalls).toBeGreaterThanOrEqual(1);
-    // The Mock AIClient must have received the request — proves the call
-    // flowed through the AIClient seam, not a hard-coded createOpenAI path.
-    expect(mockHolder.calls).toHaveLength(1);
-    const call = mockHolder.calls[0]!;
-    expect(call.method).toBe("generateObject");
+    expect(mockEnqueueReviewJob).toHaveBeenCalledTimes(1);
+    expect(mockRunWorkerTick).toHaveBeenCalledTimes(1);
   });
 
-  it("passes the reviewResultSchema to the AIClient.generateObject call", async () => {
+  it("does not call an AI provider directly from the webhook handler", async () => {
     const req = createRequest(synchronizePayload());
     await githubApp.fetch(req);
 
-    // Phase 3 ACK-latency fix: drain the tracked background review before
-    // asserting on the AIClient call record.
     await waitForBackgroundReviews();
-    expect(mockHolder.calls).toHaveLength(1);
-    const call = mockHolder.calls[0]!;
-    const input = call.input as { schema: z.ZodSchema<unknown> };
-    // The schema passed to the AIClient must be the canonical reviewResultSchema
-    // (Phase 1 deliverable: the schema is the single output contract).
-    expect(input.schema).toBe(reviewResultSchema);
+    expect(mockGetAIClient).not.toHaveBeenCalled();
+    expect(mockCreateAIClient).not.toHaveBeenCalled();
+    expect(mockHolder.calls).toHaveLength(0);
   });
 
-  it("persists the AIClient's review summary on the PR review row (status: approved)", async () => {
+  it("leaves the review pending until the durable worker records an outcome", async () => {
     mockHolder.setResponse(REVIEW_FIXTURE);
 
     const req = createRequest(synchronizePayload());
     const res = await githubApp.fetch(req);
 
     expect(res.status).toBe(200);
-    // Phase 3 ACK-latency fix: the LLM review runs as a tracked background
-    // job (no fire-and-forget that swallows failures) so the HTTP ACK is
-    // not blocked. Tests must await the tracked jobs before asserting on
-    // the post-review `updatePrReview` side-effect.
     await waitForBackgroundReviews();
-    // Find the second updatePrReview call (the post-review write — the
-    // first is the re-trigger to "pending" in the handler entry point).
     const updateCalls = vi.mocked(updatePrReview).mock.calls;
-    expect(updateCalls.length).toBeGreaterThanOrEqual(2);
-    const postReviewCall = updateCalls[updateCalls.length - 1]!;
-    const input = (postReviewCall[0] as { input: { reviewStatus: string; llmReviewSummary: string } }).input;
-    // The summary persisted must be the AIClient's fixture summary — NOT the
-    // hard-coded "[Mock review — LLM not configured]" string from the inline
-    // implementation. This is the regression guard for FR-3.
-    expect(input.llmReviewSummary).toBe(REVIEW_FIXTURE.summary);
-    expect(input.reviewStatus).toBe("approved");
+    expect(updateCalls).toHaveLength(1);
+    const input = (updateCalls[0]![0] as { input: { reviewStatus: string } }).input;
+    expect(input.reviewStatus).toBe("pending");
   });
 
-  it("persists needs_changes status when the AIClient reports passed: false", async () => {
+  it("never turns a webhook request into a merge gate", async () => {
     mockHolder.setResponse(REVIEW_FIXTURE_NEEDS_CHANGES);
 
     const req = createRequest(synchronizePayload());
@@ -351,11 +337,11 @@ describe("GitHub webhook — review path uses the AIClient abstraction", () => {
     expect(res.status).toBe(200);
     await waitForBackgroundReviews();
     const updateCalls = vi.mocked(updatePrReview).mock.calls;
-    expect(updateCalls.length).toBeGreaterThanOrEqual(2);
-    const postReviewCall = updateCalls[updateCalls.length - 1]!;
-    const input = (postReviewCall[0] as { input: { reviewStatus: string; llmReviewSummary: string } }).input;
-    expect(input.llmReviewSummary).toBe(REVIEW_FIXTURE_NEEDS_CHANGES.summary);
-    expect(input.reviewStatus).toBe("needs_changes");
+    const reviewedCalls = updateCalls.filter((call) => {
+      const input = (call[0] as { input?: { reviewStatus?: string } }).input;
+      return input?.reviewStatus === "reviewed";
+    });
+    expect(reviewedCalls).toHaveLength(0);
   });
 
   it("REWRITTEN FOR TRACK webhook_review_reliability_20260605: AIClient rejection returns 200 but does NOT stamp reviewed status", async () => {

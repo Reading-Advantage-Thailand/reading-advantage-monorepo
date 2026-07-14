@@ -198,6 +198,7 @@ describe("GitHub webhook idempotency by delivery id", () => {
       passed: true,
       summary: "Looks good",
       comments: [],
+      objectiveEvidence: [],
     });
     vi.mocked(completeApprovedPrReviewLesson).mockResolvedValue({} as Awaited<
       ReturnType<typeof completeApprovedPrReviewLesson>

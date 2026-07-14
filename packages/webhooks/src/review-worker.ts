@@ -587,12 +587,30 @@ export async function reclaimStuckJobs(
 export interface ProcessJobDeps {
   db: DB;
   /** Override the AIClient; defaults to `getAIClient()`. Tests inject a Mock. */
-  getAIClient?: () => { generateObject: (input: unknown) => Promise<unknown> };
+  getAIClient?: () => {
+    generateObject: (input: unknown) => Promise<unknown>;
+    generateObjectWithProvenance?: (input: unknown) => Promise<unknown>;
+  };
   /** Override the PR diff fetcher; defaults to `fetchPrDiff`. */
   fetchDiff?: (
     prInfo: { owner: string; repo: string; pullNumber: number },
     token?: string,
   ) => Promise<string>;
+  /** Override the bounded GitHub Check Runs fetcher used for deterministic context. */
+  fetchCheckEvidence?: (
+    prInfo: { owner: string; repo: string; pullNumber: number },
+    headSha: string,
+    token?: string,
+  ) => Promise<{
+    availability: "available" | "unavailable";
+    reason: "github_token_unavailable" | "github_check_runs_unavailable" | "missing_head_sha" | null;
+    checkRuns: Array<{
+      name: string;
+      status: "queued" | "in_progress" | "completed";
+      conclusion: "action_required" | "cancelled" | "failure" | "neutral" | "skipped" | "stale" | "success" | "timed_out" | null;
+      detailsUrl: string | null;
+    }>;
+  }>;
   /** Override the PR comment poster; defaults to `postPrComment`. */
   postComment?: (
     prInfo: { owner: string; repo: string; pullNumber: number },
@@ -603,18 +621,35 @@ export interface ProcessJobDeps {
   getToken?: () => Promise<string | undefined>;
   /** Override the domain `updatePrReview`. */
   updatePrReview?: typeof import("@reading-advantage/domain/codecamp").updatePrReview;
-  /** Override the domain `completeApprovedPrReviewLesson`. */
-  completeApprovedLesson?: typeof import("@reading-advantage/domain/codecamp").completeApprovedPrReviewLesson;
+  /** Resolve fail-closed model execution and learner-visible feedback policy. */
+  resolveRollout?: () => import("@reading-advantage/domain/codecamp").PrEvaluationRuntimeRollout;
   /** Identity to log under. */
   workerId?: string;
+}
+
+/**
+ * Renders bounded graph-authorized objective evidence as advisory Markdown.
+ * @param review Validated review result with diff-backed objective references.
+ * @returns Empty text when the repository has no graph-bound PR objective evidence.
+ */
+export function renderAdvisoryObjectiveEvidence(
+  review: import("@reading-advantage/domain/codecamp").ReviewResult,
+): string {
+  const objectiveEvidence = review.objectiveEvidence ?? [];
+  if (objectiveEvidence.length === 0) return "";
+  return "### Objective evidence (advisory)\n" + objectiveEvidence.map((objective) => {
+    const references = objective.references
+      .map((reference) => `\`${reference.filePath}:${reference.startLine}-${reference.endLine}\``)
+      .join(", ");
+    return `- \`${objective.objectiveId}\`: ${objective.score}/100 advisory score (${objective.confidence}% confidence); references ${references}`;
+  }).join("\n");
 }
 
 /**
  * Resolves a single claimed job by:
  *   1. Fetching the PR diff
  *   2. Calling `reviewExercise` via the single seam
- *   3. On success: `updatePrReview` + post PR comment + (on `passed`)
- *      `completeApprovedPrReviewLesson`
+ *   3. On success: store advisory `reviewed` feedback and post the PR comment
  *   4. Throwing on any error so `settleJob` can retry / dead-letter
  *
  * The job is NOT settled here — `runWorkerTick` calls `settleJob` after
@@ -624,6 +659,7 @@ export interface ProcessJobDeps {
  * @param job - The claimed job row (must include `prOwner`, `prRepo`,
  *   `prPullNumber`, `reviewId`, `payloadJson`).
  * @param deps - Dependency overrides for testing.
+ * @returns Completion after advisory feedback is persisted and posted.
  */
 export async function processJob(
   job: ReviewJob,
@@ -634,29 +670,60 @@ export async function processJob(
     postComment,
     getToken,
     updatePrReview,
-    completeApprovedLesson,
     workerId,
   } = deps;
 
   const prInfo = { owner: job.repoOwner, repo: job.repoName, pullNumber: job.pullNumber };
-  const tokenFn = getToken ?? (await import("./github-client")).getInstallationTokenForRepo;
-  const fetchDiffFn = fetchDiff ?? (await import("./github-client")).fetchPrDiff;
-  const postCommentFn = postComment ?? (await import("./github-client")).postPrComment;
-
-  const token = await tokenFn();
-  const diff = await fetchDiffFn(prInfo, token);
-
-  const client = (deps.getAIClient ?? getAIClient)();
   // Lazy-load the domain primitives so test files that mock
   // `@reading-advantage/domain/codecamp` resolve cleanly at the call
   // site rather than at module-load time.
   const domain = await import("@reading-advantage/domain/codecamp");
-  const generateReview = domain.aiClientToGenerateReview(
-    client as unknown as Parameters<typeof domain.aiClientToGenerateReview>[0],
-    domain.reviewResultSchema,
+  const rollout = (deps.resolveRollout ?? domain.resolvePrEvaluationRuntimeRollout)();
+  if (!rollout.runModel) return;
+  const shouldPublishFeedback = rollout.mayPublishFeedback && (
+    rollout.mode !== "canary" || domain.isPrEvaluationCanarySelected(job.id, rollout.canaryPercent)
   );
+  const githubClient = await import("./github-client");
+  const tokenFn = getToken ?? githubClient.getInstallationTokenForRepo;
+  const fetchDiffFn = fetchDiff ?? githubClient.fetchPrDiff;
+  const postCommentFn = postComment ?? githubClient.postPrComment;
+  const fetchCheckEvidenceFn = deps.fetchCheckEvidence ?? githubClient.fetchPrCheckEvidence;
+
+  const token = await tokenFn();
+  const diff = await fetchDiffFn(prInfo, token);
+  const headSha = readHeadSha(job.payloadJson);
+  const deterministicChecks = headSha
+    ? await fetchCheckEvidenceFn(prInfo, headSha, token)
+    : { availability: "unavailable" as const, reason: "missing_head_sha" as const, checkRuns: [] };
+
+  const client = (deps.getAIClient ?? getAIClient)();
+  let provenance: import("@reading-advantage/domain/codecamp").ReviewGenerationProvenance | null = null;
+  const generateReview = typeof client.generateObjectWithProvenance === "function"
+    ? async (system: string, prompt: string) => {
+      const generation = await domain.aiClientToGenerateReviewWithProvenance(
+        client as unknown as Parameters<typeof domain.aiClientToGenerateReviewWithProvenance>[0],
+        domain.reviewResultGenerationSchema,
+      )(system, prompt);
+      provenance = generation.provenance;
+      return generation.review;
+    }
+    : domain.aiClientToGenerateReview(
+      client as unknown as Parameters<typeof domain.aiClientToGenerateReview>[0],
+      domain.reviewResultGenerationSchema,
+    );
 
   const tenantDb = createTenantDB(deps.db, { schoolId: null });
+  const priorAttempts = job.reviewId
+    ? await domain.listPriorPrReviewAttempts({
+      db: tenantDb,
+      user: {
+        id: workerId ?? WORKER_ID, username: workerId ?? WORKER_ID, name: "Review Worker",
+        role: "SYSTEM" as const, schoolId: null, xp: 0, level: 1, cefrLevel: "A1" as const,
+      },
+      tenant: { schoolId: null },
+      input: { reviewId: job.reviewId, excludeHeadSha: headSha },
+    })
+    : [];
   const reviewResult = await domain.reviewExercise({
     db: tenantDb,
     user: {
@@ -672,6 +739,12 @@ export async function processJob(
     tenant: { schoolId: null },
     prDiff: diff,
     repoUrl: `https://github.com/${job.repoOwner}/${job.repoName}`,
+    trustedContext: {
+      schemaVersion: "codecamp.pr-review-context.v1",
+      pullRequest: { number: job.pullNumber, headSha },
+      deterministicChecks,
+      priorAttempts,
+    },
     generateReview,
   });
 
@@ -680,55 +753,34 @@ export async function processJob(
   // lessons-learned 2026-05-15).
   const updateFn = updatePrReview ?? domain.updatePrReview;
   if (job.reviewId) {
-    await updateFn({
-      db: tenantDb,
-      user: {
-        id: workerId ?? WORKER_ID,
-        username: workerId ?? WORKER_ID,
-        name: "Review Worker",
-        role: "SYSTEM" as const,
-        schoolId: null,
-        xp: 0,
-        level: 1,
-        cefrLevel: "A1" as const,
-      },
-      tenant: { schoolId: null },
-      input: {
-        reviewId: job.reviewId,
-        reviewStatus: reviewResult.passed ? "approved" : "needs_changes",
-        llmReviewSummary: reviewResult.summary,
-        rubricEvaluation: reviewResult.apkEvaluation,
-      },
-    });
-  }
-
-  // Post the PR comment (best-effort — failure to comment does not fail
-  // the job, since the DB write is the source of truth).
-if (token) {
-      const commentBody = `## 🤖 CodeCamp AI Review\n\n**Status:** ${
-      reviewResult.passed ? "✅ Passed" : "⚠️ Needs Changes"
-    }\n\n**Summary:** ${reviewResult.summary}\n\n${
-      reviewResult.comments.length > 0
-        ? "### Comments\n" +
-          reviewResult.comments
-            .map((c) => `- ${c.line ? `Line ${c.line}: ` : ""}${c.body}`)
-            .join("\n")
-        : ""
-    }`;
-    try {
-      await postCommentFn(prInfo, commentBody, token);
-    } catch (commentErr) {
-      console.error("[Review Worker] Failed to post PR comment:", commentErr);
+    if (headSha) {
+      await domain.recordAdvisoryPrReviewAttempt({
+        db: tenantDb,
+        user: {
+          id: workerId ?? WORKER_ID, username: workerId ?? WORKER_ID, name: "Review Worker",
+          role: "SYSTEM" as const, schoolId: null, xp: 0, level: 1, cefrLevel: "A1" as const,
+        },
+        tenant: { schoolId: null },
+        input: {
+          reviewId: job.reviewId,
+          headSha,
+          idempotencyKey: `codecamp-pr-review:${job.reviewId}:${headSha}:advisory-model.v1`,
+          provenance,
+          review: reviewResult,
+          trustedContext: {
+            schemaVersion: "codecamp.pr-review-context.v1",
+            reviewJobId: job.id,
+            repository: `${job.repoOwner}/${job.repoName}`,
+            pullRequest: { number: job.pullNumber, headSha },
+            deterministicChecks,
+            priorAttempts,
+            evidenceAuthority: "advisory_model",
+          },
+        },
+      });
     }
-  }
-
-  // Lesson completion is best-effort on `approved`.
-  if (reviewResult.passed && job.reviewId) {
-    const completeFn =
-      completeApprovedLesson ??
-      domain.completeApprovedPrReviewLesson;
-    try {
-      await completeFn({
+    if (shouldPublishFeedback) {
+      await updateFn({
         db: tenantDb,
         user: {
           id: workerId ?? WORKER_ID,
@@ -741,12 +793,45 @@ if (token) {
           cefrLevel: "A1" as const,
         },
         tenant: { schoolId: null },
-        input: { reviewId: job.reviewId },
+        input: {
+          reviewId: job.reviewId,
+          reviewStatus: "reviewed",
+          llmReviewSummary: reviewResult.summary,
+          rubricEvaluation: reviewResult.apkEvaluation,
+        },
       });
-    } catch (lessonErr) {
-      console.error("[Review Worker] Lesson completion failed (review still approved):", lessonErr);
     }
   }
+
+  // Post the PR comment (best-effort — failure to comment does not fail
+  // the job, since the DB write is the source of truth).
+  if (shouldPublishFeedback && token) {
+    const objectiveEvidence = renderAdvisoryObjectiveEvidence(reviewResult);
+    const commentBody = `## 🤖 CodeCamp AI Review\n\n**Status:** ℹ️ Advisory feedback — this review does not approve, block, or create mastery evidence.\n\n**Summary:** ${reviewResult.summary}\n\n${
+      reviewResult.comments.length > 0
+        ? "### Comments\n" +
+          reviewResult.comments
+            .map((c) => `- ${c.line ? `Line ${c.line}: ` : ""}${c.body}`)
+            .join("\n")
+        : ""
+    }${objectiveEvidence ? `\n\n${objectiveEvidence}` : ""}`;
+    try {
+      await postCommentFn(prInfo, commentBody, token);
+    } catch (commentErr) {
+      console.error("[Review Worker] Failed to post PR comment:", commentErr);
+    }
+  }
+}
+
+/** Extracts a validated GitHub pull-request head SHA from a durable webhook payload. */
+function readHeadSha(payload: unknown): string | null {
+  if (typeof payload !== "object" || payload === null) return null;
+  const pullRequest = (payload as { pull_request?: unknown }).pull_request;
+  if (typeof pullRequest !== "object" || pullRequest === null) return null;
+  const head = (pullRequest as { head?: unknown }).head;
+  if (typeof head !== "object" || head === null) return null;
+  const sha = (head as { sha?: unknown }).sha;
+  return typeof sha === "string" && /^[0-9a-f]{40}$/i.test(sha) ? sha : null;
 }
 
 // ─── Settle ───────────────────────────────────────────────────
@@ -910,6 +995,8 @@ export interface CreateReviewWorkerOptions {
   reclaim?: (db?: DB, opts?: ReclaimStuckJobsOptions | number) => Promise<string[]>;
   /** Override `settleJob` for tests. */
   settle?: (job: { id: string; attempts: number; maxAttempts: number }, err: Error | null, opts: SettleJobOptions) => SettleJobPayload;
+  /** Override the durable settlement write for isolated worker tests. */
+  applySettle?: (db: DB | undefined, jobId: string, payload: SettleJobPayload) => Promise<void>;
 }
 
 export interface ReviewWorker {
@@ -926,6 +1013,7 @@ export async function runWorkerTick(opts: CreateReviewWorkerOptions = {}): Promi
   const claim = opts.claim ?? claimDueJobs;
   const reclaim = opts.reclaim ?? reclaimStuckJobs;
   const settle = opts.settle ?? settleJob;
+  const applySettlement = opts.applySettle ?? applySettle;
 
   // Lazy import so test files can mock `@reading-advantage/db` and have the
   // worker use the mock instead of the privileged DB. In production this
@@ -957,11 +1045,11 @@ export async function runWorkerTick(opts: CreateReviewWorkerOptions = {}): Promi
           ...(opts.deps ?? {}),
         });
         const payload = settle({ id: job.id, attempts: job.attempts, maxAttempts: job.maxAttempts }, null, {});
-        await applySettle(undefined, job.id, payload);
+        await applySettlement(undefined, job.id, payload);
       } catch (err) {
         const e = err instanceof Error ? err : new Error(String(err));
         const payload = settle({ id: job.id, attempts: job.attempts, maxAttempts: job.maxAttempts }, e, {});
-        await applySettle(undefined, job.id, payload).catch(() => {
+        await applySettlement(undefined, job.id, payload).catch(() => {
           // Settle failure is non-fatal — log + move on.
           console.error("[Review Worker] Failed to settle job:", job.id, e);
         });

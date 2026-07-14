@@ -15,6 +15,7 @@ import {
   generateAppJWT,
   getInstallationTokenForRepo,
   fetchPrDiff,
+  fetchPrCheckEvidence,
   postPrComment,
   postReviewComment,
   isWebhookTimestampFresh,
@@ -250,6 +251,44 @@ describe("fetchPrDiff", () => {
     await expect(
       fetchPrDiff({ owner: "org", repo: "repo", pullNumber: 1 }, "token")
     ).rejects.toThrow("Failed to fetch PR diff");
+  });
+});
+
+// ─── fetchPrCheckEvidence ─────────────────────────────────────
+
+describe("fetchPrCheckEvidence", () => {
+  const originalFetch = global.fetch;
+
+  afterEach(() => {
+    global.fetch = originalFetch;
+  });
+
+  it("marks deterministic checks unavailable without an installation token", async () => {
+    await expect(fetchPrCheckEvidence({ owner: "org", repo: "repo", pullNumber: 1 }, "a".repeat(40)))
+      .resolves.toEqual({ availability: "unavailable", reason: "github_token_unavailable", checkRuns: [] });
+  });
+
+  it("returns a bounded, neutral projection of GitHub check runs", async () => {
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: vi.fn().mockResolvedValue({
+        check_runs: [
+          { name: "unit tests", status: "completed", conclusion: "success", details_url: "https://github.com/org/repo/runs/1" },
+          { name: "ignore me", status: 42, conclusion: "success", details_url: "javascript:alert(1)" },
+        ],
+      }),
+    } as unknown as Response);
+
+    await expect(fetchPrCheckEvidence({ owner: "org", repo: "repo", pullNumber: 1 }, "a".repeat(40), "token"))
+      .resolves.toEqual({
+        availability: "available",
+        reason: null,
+        checkRuns: [{ name: "unit tests", status: "completed", conclusion: "success", detailsUrl: "https://github.com/org/repo/runs/1" }],
+      });
+    expect(global.fetch).toHaveBeenCalledWith(
+      "https://api.github.com/repos/org/repo/commits/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/check-runs?per_page=100",
+      expect.objectContaining({ headers: expect.objectContaining({ Accept: "application/vnd.github+json" }) }),
+    );
   });
 });
 

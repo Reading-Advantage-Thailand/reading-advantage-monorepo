@@ -4,6 +4,9 @@ import githubApp, { waitForBackgroundReviews } from "../github.js";
 import { createReviewWorker } from "../review-worker.js";
 
 const WEBHOOK_SECRET = "phase-5-test-secret";
+const REVIEW_ID = "11111111-1111-4111-8111-111111111111";
+
+const mockRunWorkerTick = vi.hoisted(() => vi.fn().mockResolvedValue({ processed: 0 }));
 
 const mockHolder = vi.hoisted(() => ({
   generateObject: vi.fn().mockRejectedValue(new Error("[IntegrationFixture] always fails")),
@@ -16,6 +19,15 @@ vi.mock("@reading-advantage/ai", () => ({
   createAIClient: vi.fn(() => mockHolder),
 }));
 
+vi.mock("../review-worker.js", async () => {
+  const actual = await vi.importActual<typeof import("../review-worker.js")>("../review-worker.js");
+  return {
+    ...actual,
+    enqueueReviewJob: vi.fn().mockResolvedValue({ id: "job-1", enqueued: true }),
+    runWorkerTick: mockRunWorkerTick,
+  };
+});
+
 vi.mock("@reading-advantage/domain/codecamp", async () => {
   const actual = await vi.importActual<typeof import("@reading-advantage/domain/codecamp")>("@reading-advantage/domain/codecamp");
   return {
@@ -26,6 +38,13 @@ vi.mock("@reading-advantage/domain/codecamp", async () => {
     getExerciseRepoByUrl: vi.fn(),
     logWebhookEvent: vi.fn(),
     completeApprovedPrReviewLesson: vi.fn(),
+    listPriorPrReviewAttempts: vi.fn().mockResolvedValue([]),
+    reviewExercise: vi.fn().mockImplementation(async (args) => {
+      if (args.generateReview) {
+        return args.generateReview("system prompt", "review the supplied diff");
+      }
+      return { passed: false, summary: "unreachable", comments: [] };
+    }),
   };
 });
 
@@ -39,6 +58,7 @@ vi.mock("@reading-advantage/domain/users", async () => {
 
 vi.mock("../github-client", () => ({
   fetchPrDiff: vi.fn().mockResolvedValue("@@ -1,3 +1,4 @@\n+console.log('hello');\n"),
+  fetchPrCheckEvidence: vi.fn().mockResolvedValue({ availability: "unavailable", reason: "github_check_runs_unavailable", checkRuns: [] }),
   postPrComment: vi.fn().mockResolvedValue(undefined),
   parsePrUrl: vi.fn().mockReturnValue({ owner: "org", repo: "repo", pullNumber: 1 }),
   verifyWebhookSignature: vi.fn().mockReturnValue(true),
@@ -117,7 +137,7 @@ describe("Phase 5 — exhaust to dead", () => {
       updatedAt: new Date(),
     } as unknown as Awaited<ReturnType<typeof getUserByGithubUsername>>);
     vi.mocked(createPrReview).mockResolvedValue({
-      id: "pr1",
+      id: REVIEW_ID,
       exerciseRepoId: "r1",
       userId: "u1",
       prUrl: "https://github.com/org/repo/pull/1",
@@ -127,7 +147,7 @@ describe("Phase 5 — exhaust to dead", () => {
       createdAt: new Date(),
     });
     vi.mocked(updatePrReview).mockResolvedValue({
-      id: "pr1",
+      id: REVIEW_ID,
       exerciseRepoId: "r1",
       userId: "u1",
       prUrl: "https://github.com/org/repo/pull/1",
@@ -148,9 +168,8 @@ describe("Phase 5 — exhaust to dead", () => {
     const res = await githubApp.fetch(req);
     expect(res.status, "webhook response status").toBe(200);
 
-    // Drain the deferred inline review (it also throws) so we don't
-    // double-count the calls. The inline review would otherwise fire
-    // generateObject once before the worker starts.
+    // Drain the mocked post-ACK durable-worker dispatch before injecting the
+    // one seeded worker used by this test.
     await waitForBackgroundReviews();
     vi.mocked(postPrComment).mockClear();
     vi.mocked(updatePrReview).mockClear();
@@ -170,7 +189,7 @@ describe("Phase 5 — exhaust to dead", () => {
       createdAt: new Date(),
       updatedAt: new Date(),
       prUrl: "https://github.com/org/repo/pull/1",
-      reviewId: "pr1",
+      reviewId: REVIEW_ID,
       payloadJson: {},
     } as unknown as import("../review-worker.js").ReviewJob & {
       reviewId: string | null;
@@ -193,6 +212,7 @@ describe("Phase 5 — exhaust to dead", () => {
         claimedAt: null,
         claimedBy: null,
       }),
+      applySettle: vi.fn().mockResolvedValue(undefined),
     });
     await worker.run();
 

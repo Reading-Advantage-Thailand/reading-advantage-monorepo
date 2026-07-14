@@ -50,9 +50,11 @@ vi.mock("@reading-advantage/ai", () => ({
 }));
 
 const mockEnqueueReviewJob = vi.hoisted(() => vi.fn());
+const mockRunWorkerTick = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
 
 vi.mock("../review-worker.js", () => ({
   enqueueReviewJob: mockEnqueueReviewJob,
+  runWorkerTick: mockRunWorkerTick,
 }));
 
 vi.mock("@reading-advantage/domain/codecamp", async () => {

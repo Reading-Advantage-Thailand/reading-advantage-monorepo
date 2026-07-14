@@ -252,6 +252,7 @@ vi.mock("@reading-advantage/db", async (importOriginal) => {
 
 vi.mock("../github-client", () => ({
   fetchPrDiff: vi.fn().mockResolvedValue("@@ -1,3 +1,4 @@\n+console.log('hello');\n"),
+  fetchPrCheckEvidence: vi.fn().mockResolvedValue({ availability: "unavailable", reason: "github_check_runs_unavailable", checkRuns: [] }),
   postPrComment: vi.fn().mockResolvedValue(undefined),
   parsePrUrl: vi.fn().mockReturnValue({ owner: "org", repo: "repo", number: 1 }),
   verifyWebhookSignature: vi.fn().mockReturnValue(true),
@@ -264,9 +265,11 @@ const mockEnqueueReviewJob = vi.hoisted(() => vi.fn().mockResolvedValue({
   status: "pending",
   attempts: 0,
 }));
+const mockRunWorkerTick = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
 
 vi.mock("../review-worker.js", () => ({
   enqueueReviewJob: mockEnqueueReviewJob,
+  runWorkerTick: mockRunWorkerTick,
   claimDueJobs: vi.fn().mockResolvedValue([]),
   processJob: vi.fn().mockResolvedValue(undefined),
   settleJob: vi.fn().mockReturnValue({ status: "pending" }),
@@ -363,7 +366,7 @@ describe("Phase 6: codecamp PR-review path — integration + acceptance", () => 
 
   // ─── Task 1: Mock E2E — full webhook→domain→LLM→persist flow ───────────
 
-it("exercises the full webhook→domain→LLM→persist flow with the Mock provider and matches the documented unified output", async () => {
+it("dispatches the durable worker without running review or persistence inside the webhook", async () => {
     mockHolder.setResponse(UNIFIED_REVIEW_FIXTURE);
 
     const req = createRequest(synchronizePayload());
@@ -373,37 +376,16 @@ it("exercises the full webhook→domain→LLM→persist flow with the Mock provi
     // treats a non-200 as a failure to acknowledge.
     expect(res.status).toBe(200);
 
-    // Phase 3 ACK-latency fix: the LLM review runs as a tracked background
-    // job so the HTTP ACK is not blocked. Drain the job before asserting on
-    // AIClient call counts / persisted summary.
     await waitForBackgroundReviews();
 
-    // The AIClient seam was the call surface — proves the unified path is
-    // wired (AC #3: reviewExercise is the single seam).
-    const aiClientCalls = mockGetAIClient.mock.calls.length + mockCreateAIClient.mock.calls.length;
-    expect(aiClientCalls).toBeGreaterThanOrEqual(1);
-    expect(mockHolder.calls).toHaveLength(1);
-    expect(mockHolder.calls[0]!.method).toBe("generateObject");
-
-    // The schema passed to AIClient.generateObject must be the canonical
-    // reviewResultSchema — "schema as contract" rule from test-strategy.md.
-    const input = mockHolder.calls[0]!.input as { schema: z.ZodSchema<unknown>; prompt?: string };
-    expect(input.schema).toBe(reviewResultSchema);
-
-    // The prompt must include the diff — proves the flow is end-to-end
-    // (the diff was fetched by fetchPrDiff, passed to reviewExercise, and
-    // reached the AIClient).
-    expect(input.prompt).toContain("console.log('hello');");
-
-    // The PR review row was persisted with the unified summary and the
-    // correct terminal status. This is the SPEC's "documented unified
-    // version" (Phase 0 decision: A wins, byte-identical impls).
-    const updateCalls = vi.mocked(updatePrReview).mock.calls;
-    expect(updateCalls.length).toBeGreaterThanOrEqual(2);
-    const postReviewCall = updateCalls[updateCalls.length - 1]!;
-    const persisted = (postReviewCall[0] as { input: { reviewStatus: string; llmReviewSummary: string } }).input;
-    expect(persisted.llmReviewSummary).toBe(UNIFIED_REVIEW_FIXTURE.summary);
-    expect(persisted.reviewStatus).toBe("approved");
+    expect(mockEnqueueReviewJob).toHaveBeenCalledTimes(1);
+    expect(mockRunWorkerTick).toHaveBeenCalledTimes(1);
+    expect(mockHolder.calls).toHaveLength(0);
+    const reviewedCalls = vi.mocked(updatePrReview).mock.calls.filter((call) => {
+      const input = (call[0] as { input?: { reviewStatus?: string } }).input;
+      return input?.reviewStatus === "reviewed";
+    });
+    expect(reviewedCalls).toHaveLength(0);
   });
 
   it("webhook enqueues a review job and returns 200 without awaiting the review", async () => {

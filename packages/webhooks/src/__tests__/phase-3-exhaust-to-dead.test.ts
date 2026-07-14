@@ -36,6 +36,7 @@ vi.mock("@reading-advantage/domain/codecamp", async () => {
 vi.mock("../github-client", () => ({
   postPrComment: vi.fn().mockResolvedValue(undefined),
   fetchPrDiff: vi.fn().mockRejectedValue(new Error("diff unavailable")),
+  fetchPrCheckEvidence: vi.fn().mockResolvedValue({ availability: "unavailable", reason: "github_check_runs_unavailable", checkRuns: [] }),
   getInstallationTokenForRepo: vi.fn().mockResolvedValue("token"),
 }));
 
@@ -75,9 +76,9 @@ describe("Phase 3 — exhaust to dead", () => {
     const job = {
       id: "job-1",
       reviewId: "review-1",
-      prOwner: "org",
-      prRepo: "repo",
-      prPullNumber: 1,
+      repoOwner: "org",
+      repoName: "repo",
+      pullNumber: 1,
       status: "claimed",
       attempts: 5,
       maxAttempts: 5,

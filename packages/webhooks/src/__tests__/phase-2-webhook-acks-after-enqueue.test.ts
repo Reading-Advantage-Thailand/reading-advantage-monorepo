@@ -11,9 +11,11 @@ const { mockEnqueueReviewJob } = vi.hoisted(() => ({
     attempts: 0,
   }),
 }));
+const mockRunWorkerTick = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
 
 vi.mock("../review-worker.js", () => ({
   enqueueReviewJob: mockEnqueueReviewJob,
+  runWorkerTick: mockRunWorkerTick,
 }));
 
 vi.mock("@reading-advantage/domain/codecamp", async () => {
@@ -44,6 +46,7 @@ vi.mock("@reading-advantage/domain/users", async () => {
 
 vi.mock("../github-client", () => ({
   fetchPrDiff: vi.fn().mockResolvedValue("@@ -1,3 +1,4 @@\n+console.log('hello');\n"),
+  fetchPrCheckEvidence: vi.fn().mockResolvedValue({ availability: "unavailable", reason: "github_check_runs_unavailable", checkRuns: [] }),
   postPrComment: vi.fn().mockResolvedValue(undefined),
   parsePrUrl: vi.fn().mockReturnValue({ owner: "org", repo: "repo", pullNumber: 1 }),
   verifyWebhookSignature: vi.fn().mockReturnValue(true),
