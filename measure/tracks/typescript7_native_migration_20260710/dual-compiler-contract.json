@@ -7,7 +7,7 @@
     "typescript": "npm:@typescript/typescript6@6.0.2",
     "typescript7": "npm:typescript@7.0.2",
     "typescript6_alias_note": "The 'typescript' package name is aliased to @typescript/typescript6@6.0.2 so compiler-API consumers (typescript-eslint, ts-node, tsup, tsconfck) resolve the compatibility API. This alias is applied in pnpm-workspace.yaml overrides or catalog, NOT per-package, to avoid ambiguous resolution.",
-    "typescript7_alias_note": "TypeScript 7.0.2 is installed under a separate 'typescript7' alias that exposes the native tsc binary via a bin script or direct path. Workspace check-types scripts invoke the TS 7 binary explicitly.",
+    "typescript7_alias_note": "TypeScript 7.0.2 is installed under a separate 'typescript7' alias. The package retains its upstream bin name and does not create a typescript7-tsc executable, so workspace check-types scripts invoke node_modules/typescript7/bin/tsc explicitly.",
     "exact_versions": {
       "typescript7": "7.0.2",
       "typescript6": "6.0.2",
@@ -16,15 +16,15 @@
     "resolution_rule": "No floating major ranges. Both aliases are exact-pinned. pnpm-workspace.yaml overrides.typescript currently pins 5.9.3; Phase 3a replaces this with the typescript6 alias and adds the typescript7 alias."
   },
   "commands": {
-    "check-types:native": "pnpm exec typescript7-tsc --noEmit",
-    "check-types:compat": "pnpm exec tsc --noEmit",
-    "check-types:parity": "pnpm run check-types:compat && pnpm run check-types:native && <parity-harness-compare>",
-    "check-types:rollback": "pnpm exec tsc --noEmit",
+    "check-types:native": "node node_modules/typescript7/bin/tsc --noEmit",
+    "check-types:compat": "node node_modules/typescript/bin/tsc6 --noEmit",
+    "check-types:parity": "node node_modules/typescript/bin/tsc6 --noEmit && node node_modules/typescript7/bin/tsc --noEmit && <parity-harness-compare>",
+    "check-types:rollback": "node node_modules/typescript/bin/tsc6 --noEmit",
     "command_notes": {
-      "check-types:native": "Invokes the TypeScript 7 binary via the typescript7 alias. Used by required check-types gates after Phase 3d cutover.",
-      "check-types:compat": "Invokes the TypeScript 6 binary via the 'typescript' package (aliased to @typescript/typescript6). Used as the compatibility/fallback path.",
-      "check-types:parity": "Runs both compilers and compares normalized diagnostics modulo diagnostic-parity-ledger.json. Phase 2 implements the harness; Phase 3c reconciles.",
-      "check-types:rollback": "One-command fallback to TypeScript 6. Switches required checks back to TS 6 without reverting unrelated configuration correctness fixes."
+      "check-types:native": "Invokes the TypeScript 7 upstream tsc bin directly from the typescript7 alias path. Used by required check-types gates after Phase 3d cutover.",
+      "check-types:compat": "Invokes the TypeScript 6 upstream tsc6 bin directly from the 'typescript' package alias. Used as the compatibility/fallback path.",
+      "check-types:parity": "Invokes the TypeScript 6 tsc6 bin, then the TypeScript 7 tsc bin, then compares normalized diagnostics modulo diagnostic-parity-ledger.json. Phase 2 implements the harness; Phase 3c reconciles.",
+      "check-types:rollback": "One-command fallback that invokes the TypeScript 6 tsc6 bin directly. Switches required checks back to TS 6 without reverting unrelated configuration correctness fixes."
     },
     "turbo_cache_inputs": {
       "note": "turbo.json check-types task currently has no explicit inputs beyond dependsOn. Phase 3i requires adding inputs for compiler version hash, tsconfig path hash, and --checkers value so a TS 7 -> TS 6 -> TS 7 cycle busts the cache.",
