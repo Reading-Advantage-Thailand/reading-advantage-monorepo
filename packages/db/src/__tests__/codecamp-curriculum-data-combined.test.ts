@@ -1,4 +1,6 @@
 import { describe, it, expect } from "vitest";
+import { existsSync } from "node:fs";
+import { resolve } from "node:path";
 import {
   getPhaseACurriculumData,
   getPhaseBCurriculumData,
@@ -26,16 +28,29 @@ describe("codecamp combined curriculum data", () => {
     ...phaseD.exerciseRepos,
   ];
 
-  it("has exactly 18 modules across all phases", () => {
-    expect(allModules).toHaveLength(18);
+  it("has exactly 19 modules across all phases", () => {
+    expect(allModules).toHaveLength(19);
   });
 
-  it("has exactly 85 lessons across all phases", () => {
+  it("has exactly 88 lessons across all phases", () => {
     const totalLessons = allModules.reduce(
       (sum, m) => sum + m.lessons.length,
       0
     );
-    expect(totalLessons).toBe(85);
+    expect(totalLessons).toBe(88);
+  });
+
+  it("maps exactly 16 distinct diagram assets that exist in the Codecamp public directory", () => {
+    const imagePaths = allModules.flatMap((module) => module.lessons.flatMap((lesson) => {
+      const sections = (lesson.contentJson as { sections?: Array<{ imagePath?: string }> }).sections ?? [];
+      return sections.flatMap(({ imagePath }) => imagePath ? [imagePath] : []);
+    }));
+
+    expect(new Set(imagePaths).size).toBe(16);
+    for (const imagePath of imagePaths) {
+      expect(imagePath).toMatch(/^\/images\/diagrams\/[a-z0-9_.-]+$/);
+      expect(existsSync(resolve(process.cwd(), "../../apps/codecamp-advantage/public", imagePath.slice(1)))).toBe(true);
+    }
   });
 
   it("has unique slugs across all modules", () => {
@@ -44,22 +59,26 @@ describe("codecamp combined curriculum data", () => {
     expect(uniqueSlugs.size).toBe(slugs.length);
   });
 
-  it("has sequential orders from 1 to 18 with no gaps", () => {
+  it("has sequential orders from 1 to 19 with no gaps", () => {
     const orders = allModules.map((m) => m.order).sort((a, b) => a - b);
-    expect(orders).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]);
+    expect(orders).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]);
   });
 
   it("has exactly 16 repo rows (15 exercise + 1 capstone)", () => {
     expect(allRepos).toHaveLength(16);
   });
 
-  it("excludes M1 (dev-environment) and M16 (monorepo-packages)", () => {
+  it("excludes M1 (dev-environment), M16 (measure-ai-development), and M17 (monorepo-packages)", () => {
     const m1Repos = allRepos.filter((r) => r.moduleSlug === "dev-environment");
     expect(m1Repos).toHaveLength(0);
     const m16Repos = allRepos.filter(
-      (r) => r.moduleSlug === "monorepo-packages"
+      (r) => r.moduleSlug === "measure-ai-development"
     );
     expect(m16Repos).toHaveLength(0);
+    const m17Repos = allRepos.filter(
+      (r) => r.moduleSlug === "monorepo-packages"
+    );
+    expect(m17Repos).toHaveLength(0);
   });
 
   it("maps each repo to its module", () => {

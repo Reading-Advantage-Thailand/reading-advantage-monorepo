@@ -328,8 +328,75 @@ describe("codecamp curriculum fidelity", () => {
     });
   });
 
-  // ─── Unit 18 — Real-World Practice ─────────────────────────────────────
-  describe("Unit 18 - Real-World Practice", () => {
+  // ─── Unit 16 — Measure-Driven AI Development ───────────────────────────
+  describe("Unit 16 - Measure-Driven AI Development", () => {
+    const phaseDData = getPhaseDCurriculumData();
+    const mod = findModule(phaseDData.modules, "measure-ai-development");
+
+    it("module is in Phase D", () => {
+      expect(mod.phase).toBe("D");
+    });
+
+    it("module has order 16", () => {
+      expect(mod.order).toBe(16);
+    });
+
+    it("module has status published", () => {
+      expect(mod.status).toBe("published");
+    });
+
+    it("module has 3 lessons (one per class period)", () => {
+      expect(mod.lessons).toHaveLength(3);
+    });
+
+    it("has a lesson titled 'Measure Mental Model and Project Context' (Period 1)", () => {
+      expect(lessonTitles(mod)).toContain("Measure Mental Model and Project Context");
+    });
+
+    it("has a lesson titled 'Track, Spec, and Plan Workshop' (Period 2)", () => {
+      expect(lessonTitles(mod)).toContain("Track, Spec, and Plan Workshop");
+    });
+
+    it("has a lesson titled 'AI-Assisted Implementation, Review, and Closeout' (Period 3)", () => {
+      expect(lessonTitles(mod)).toContain("AI-Assisted Implementation, Review, and Closeout");
+    });
+
+    it("all 3 lessons are theory type (assessed via track artifacts + PR, no quiz)", () => {
+      mod.lessons.forEach((lesson) => {
+        expect(lesson.type).toBe("theory");
+      });
+    });
+
+    it("module has no quiz lesson (per unit overview: no quiz)", () => {
+      expect(hasQuiz(mod)).toBe(false);
+    });
+
+    it("Period 1 lesson covers the core Measure artifacts", () => {
+      const lesson = mod.lessons.find((l) => l.title.includes("Mental Model"));
+      const content = JSON.stringify(lesson?.contentJson ?? {});
+      expect(content).toContain("spec.md");
+      expect(content).toContain("plan.md");
+      expect(content).toContain("tech-debt.md");
+    });
+
+    it("Period 2 lesson covers acceptance criteria and Red/Green phases", () => {
+      const lesson = mod.lessons.find((l) => l.title.includes("Workshop"));
+      const content = JSON.stringify(lesson?.contentJson ?? {});
+      expect(content.toLowerCase()).toContain("acceptance criteria");
+      expect(content).toContain("Red");
+      expect(content).toContain("Green");
+    });
+
+    it("Period 3 lesson covers acceptance evidence and closeout", () => {
+      const lesson = mod.lessons.find((l) => l.title.includes("Closeout"));
+      const content = JSON.stringify(lesson?.contentJson ?? {});
+      expect(content).toContain("Acceptance Evidence");
+      expect(content).toContain("lessons-learned.md");
+    });
+  });
+
+  // ─── Unit 19 — Real-World Practice ─────────────────────────────────────
+  describe("Unit 19 - Real-World Practice", () => {
     const phaseDData = getPhaseDCurriculumData();
     const mod = findModule(phaseDData.modules, "real-world-practice");
 
@@ -341,8 +408,8 @@ describe("codecamp curriculum fidelity", () => {
       expect(mod.phase).toBe("D");
     });
 
-    it("module has order 18", () => {
-      expect(mod.order).toBe(18);
+    it("module has order 19", () => {
+      expect(mod.order).toBe(19);
     });
 
     it("module has status published", () => {

@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import {
   findStaleModuleSlugs,
   selectLessonsToInsert,
+  selectLessonUpdates,
   type ExistingLessonSnapshot,
 } from "../seed/codecamp-seed.js";
 import {
@@ -85,6 +86,21 @@ describe("findStaleModuleSlugs", () => {
 // -----------------------------------------------------------------------------
 
 describe("Wave 2 — codecamp seed idempotency for existing modules", () => {
+  it("re-seeding updates canonical lesson content by stable order without replacing lesson identity", () => {
+    const canonical = getPhaseACurriculumData().modules[0]!.lessons;
+    const existing: ExistingLessonSnapshot[] = canonical.map((lesson, index) => ({
+      id: `lesson-${index + 1}`,
+      type: lesson.type,
+      order: lesson.order,
+      title: `Old ${lesson.title}`,
+    }));
+
+    const updates = selectLessonUpdates(existing, canonical);
+
+    expect(updates).toHaveLength(canonical.length);
+    expect(updates[0]).toMatchObject({ existingId: "lesson-1", canonical: canonical[0] });
+  });
+
   it("re-seeding an existing module inserts every canonical lesson, not one-per-type", () => {
     const phases = [
       getPhaseACurriculumData(),

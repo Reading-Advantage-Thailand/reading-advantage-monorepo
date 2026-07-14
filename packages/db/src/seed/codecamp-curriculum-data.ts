@@ -1,4 +1,4 @@
-// Pure data module for the full codecamp curriculum (Phases A–D, 18 modules, 85 lessons).
+// Pure data module for the full codecamp curriculum (Phases A–D, 19 modules, 88 lessons).
 // Separated from the seed script so it can be tested independently.
 
 export interface CurriculumLesson {
@@ -67,8 +67,10 @@ export function getPhaseACurriculumData() {
             sections: [
               {
                 heading: "Terminal Basics",
+                imagePath: "/images/diagrams/dev_toolchain_flow.png",
                 body: "The terminal is where you type commands to control your computer. Every Reading Advantage developer uses the terminal daily. Key commands: pwd (where am I?), ls (what's here?), cd (change directory), mkdir (make directory), cat (show file contents).",
                 code: "# Navigation\npwd                          # Where am I?\nls                           # What's here?\ncd Desktop                   # Go to Desktop\ncd ..                        # Go back up\nmkdir codecamp               # Create workspace folder\ncd codecamp\n\n# File operations\necho \"Hello, codecamp!\" > hello.txt\ncat hello.txt\nmkdir projects\nmv hello.txt projects/\nls projects/\nrm projects/hello.txt\nrmdir projects",
+                youtubeId: "Ke90Tje7VS0",
               },
               {
                 heading: "Install Node.js 20",
@@ -174,6 +176,7 @@ export function getPhaseACurriculumData() {
                 heading: "Create Your First Repo",
                 body: "Git is a version control system that tracks changes to your code. It lets you undo mistakes, collaborate with others, and see the history of every change.",
                 code: "mkdir personal-portfolio\ncd personal-portfolio\ngit init\n\n# Create a file and commit it\necho \"Hello\" > index.html\ngit add index.html\ngit status              # See what's staged\ngit commit -m \"feat: add initial portfolio page\"",
+                youtubeId: "hwP7WQgm_DE",
               },
               {
                 heading: "The Git Cycle",
@@ -200,6 +203,8 @@ export function getPhaseACurriculumData() {
                 heading: "Push to GitHub",
                 body: "GitHub is a hosting service for Git repositories. After creating a repo on GitHub, you connect your local repo and push your commits.",
                 code: "git remote add origin https://github.com/<username>/personal-portfolio.git\ngit branch -M main\ngit push -u origin main\n\n# Daily workflow\ngit add .\ngit commit -m \"feat: add about section\"\ngit push",
+                youtubeId: "RGOj5nlwkvY",
+                imagePath: "/images/diagrams/git_github_flow.jpg",
               },
               {
                 heading: "Understanding Remotes",
@@ -376,6 +381,7 @@ export function getPhaseACurriculumData() {
               },
               {
                 heading: "The Box Model",
+                imagePath: "/images/diagrams/css_box_model_layout.png",
                 body: "Every HTML element is a box with four layers: content, padding, border, and margin. Understanding the box model is essential for layout. Use Chrome DevTools to inspect the box model of any element.",
                 code: "/* Box model visualization */\n.box {\n  width: 300px;        /* content width */\n  padding: 20px;       /* space inside the border */\n  border: 2px solid;   /* the border itself */\n  margin: 10px;        /* space outside the border */\n}",
               },
@@ -599,6 +605,7 @@ export function getPhaseACurriculumData() {
               },
               {
                 heading: "Scope and Closures",
+                imagePath: "/images/diagrams/javascript_execution_closures.png",
                 body: "Variables declared with `const` and `let` are block-scoped. A closure is a function that remembers its outer scope even after the outer function has returned.",
                 code: "// Block scope\nif (true) {\n  const block = \"I'm in the if block\";\n  console.log(block); // OK\n}\n// console.log(block); // ReferenceError!\n\n// Closure\nfunction createCounter() {\n  let count = 0;\n  return () => {\n    count += 1;\n    return count;\n  };\n}\nconst counter = createCounter();\ncounter(); // 1\ncounter(); // 2",
               },
@@ -833,6 +840,7 @@ export function getPhaseACurriculumData() {
             sections: [
               {
                 heading: "Basic Type Annotations",
+                imagePath: "/images/diagrams/typescript_type_safety.png",
                 body: "TypeScript adds types to JavaScript. Variables, function parameters, and return values can all be typed. The TypeScript compiler catches errors before runtime.",
                 code: "// Variables\nconst name: string = \"Alice\";\nconst age: number = 20;\nconst items: string[] = [\"HTML\", \"CSS\", \"JS\"];\n\n// Functions\nconst greet = (name: string): string => {\n  return `Hello, ${name}!`;\n};\n\n// Void — function doesn't return anything\nconst log = (message: string): void => {\n  console.log(message);\n};",
               },
@@ -1077,6 +1085,7 @@ export function getPhaseACurriculumData() {
               },
               {
                 heading: "TDD — Red, Green, Refactor",
+                imagePath: "/images/diagrams/vitest_red_green_refactor.png",
                 body: "TDD means writing the test first, then the minimum code to pass, then cleaning up. This produces better designs and acts as documentation.",
                 code: "// Step 1: RED — write a failing test\nexpect(validateEmail(\"user@example.com\")).toEqual({ valid: true });\nexpect(validateEmail(\"bad\")).toEqual({ valid: false, error: \"Missing @\" });\n\n// Step 2: GREEN — write minimum code\nexport const validateEmail = (email: string) => {\n  if (!email.includes(\"@\")) return { valid: false, error: \"Missing @\" };\n  return { valid: true };\n};\n\n// Step 3: REFACTOR — clean up while tests pass",
               },
@@ -1213,6 +1222,8 @@ export function getPhaseBCurriculumData() {
                 heading: "What is React?",
                 body: "React is a library for building user interfaces with reusable components. Components are functions that return JSX (HTML-like syntax). React 19.2.5 is the version used in the Reading Advantage monorepo.",
                 code: "// A simple component\nfunction Greeting({ name }: { name: string }) {\n  return <h1>Hello, {name}!</h1>;\n}\n\n// Usage\n<Greeting name=\"Alice\" />",
+                youtubeId: "k5E265ksDSI",
+                imagePath: "/images/diagrams/react_render_lifecycle.jpg",
               },
               {
                 heading: "JSX Rules",
@@ -1474,6 +1485,7 @@ export function getPhaseBCurriculumData() {
             sections: [
               {
                 heading: "HTTP Request/Response Anatomy",
+                imagePath: "/images/diagrams/api_request_response.png",
                 body: "APIs are how the frontend talks to the backend. The Reading Advantage frontend talks to the backend via tRPC — but underneath it is still HTTP. Every request has a method, URL, headers, and optional body. Every response has a status code and body.",
                 code: "REQUEST:\nPOST /api/modules HTTP/1.1\nHost: localhost:3000\nContent-Type: application/json\n\n{\"title\": \"React\", \"description\": \"Learn React\"}\n\nRESPONSE:\nHTTP/1.1 201 Created\nContent-Type: application/json\n\n{\"id\": \"7\", \"title\": \"React\", \"description\": \"Learn React\"}",
               },
@@ -1711,6 +1723,8 @@ export function getPhaseBCurriculumData() {
                 heading: "Server Components (default)",
                 body: "Server Components run on the server by default. They can do async/await, direct database access, and keep secrets safe. They cannot use hooks, events, or browser APIs.",
                 code: "// Server Component — no \"use client\" needed\nexport default async function ModuleList() {\n  const modules = await fetchModules(); // Server-side fetch!\n\n  return (\n    <div className=\"grid gap-6 md:grid-cols-2 lg:grid-cols-3\">\n      {modules.map((mod) => (\n        <ModuleCard key={mod.id} module={mod} />\n      ))}\n    </div>\n  );\n}\n\n// ✅ Can do: async/await, DB access, env vars\n// ❌ Cannot do: useState, useEffect, onClick, localStorage",
+                youtubeId: "S0T0R9h1vHk",
+                imagePath: "/images/diagrams/nextjs_rsc_client.jpg",
               },
               {
                 heading: "Client Components",
@@ -2209,6 +2223,7 @@ export function getPhaseCCurriculumData() {
               },
               {
                 heading: "Multi-Tenancy Pattern",
+                imagePath: "/images/diagrams/database_tenant_scope.png",
                 body: "The core pattern from Reading Advantage: every query MUST include schoolId. TenantDB enforces this automatically.",
                 code: "// ❌ WRONG — no schoolId filter\nconst allModules = await db.select().from(modules);\n\n// ✅ CORRECT — scoped to the tenant's school\nconst schoolModules = await db\n  .select()\n  .from(modules)\n  .where(eq(modules.schoolId, \"school-1\"));\n\n// The rule: Every query MUST include schoolId.\n// TenantDB injects it automatically in Reading Advantage.",
               },
@@ -2368,6 +2383,7 @@ export function getPhaseCCurriculumData() {
             sections: [
               {
                 heading: "Install and Configure tRPC",
+                imagePath: "/images/diagrams/trpc_type_safe_procedures.png",
                 body: "tRPC gives you end-to-end type safety — the frontend automatically knows the API types. No more writing fetch calls and manually typing responses.",
                 code: "pnpm add @trpc/server@11.17.0 @trpc/client@11.17.0 @trpc/react-query@11.17.0 @tanstack/react-query@5.90.10\n\n// src/server/trpc.ts\nimport { initTRPC } from \"@trpc/server\";\n\nexport interface Context {\n  db: DB;\n  user: User | null;\n  tenant: Tenant;\n}\n\nconst t = initTRPC.context<Context>().create();\n\nexport const router = t.router;\nexport const publicProcedure = t.procedure;\nexport const protectedProcedure = t.procedure.use(async ({ ctx, next }) => {\n  if (!ctx.user) throw new AuthError(\"Authentication required\");\n  return next({ ctx: { ...ctx, user: ctx.user } });\n});",
               },
@@ -2544,6 +2560,7 @@ export function getPhaseCCurriculumData() {
             sections: [
               {
                 heading: "Sessions and Password Hashing",
+                imagePath: "/images/diagrams/auth_session_security.png",
                 body: "Authentication proves who you are. Authorization decides what you can do. Sessions track logged-in users with secure cookies.",
                 code: "// Schema additions\nexport const sessions = pgTable(\"sessions\", {\n  id: uuid(\"id\").defaultRandom().primaryKey(),\n  userId: uuid(\"user_id\").notNull().references(() => students.id),\n  token: text(\"token\").notNull().unique(),\n  expiresAt: timestamp(\"expires_at\").notNull(),\n  createdAt: timestamp(\"created_at\").defaultNow().notNull(),\n});\n\n// Password hashing\nimport bcrypt from \"bcrypt\";\nexport async function hashPassword(password: string) {\n  return bcrypt.hash(password, 10);\n}\nexport async function verifyPassword(password: string, hash: string) {\n  return bcrypt.compare(password, hash);\n}",
               },
@@ -2858,7 +2875,7 @@ export const PORTFOLIO_PROJECTS: PortfolioProject[] = [
 ];
 
 /**
- * Returns the full Phase D curriculum data for codecamp modules 14–18.
+ * Returns the full Phase D curriculum data for codecamp modules 14–19.
  * @returns Object containing curriculum modules and exercise repos
  */
 export function getPhaseDCurriculumData() {
@@ -2888,6 +2905,7 @@ export function getPhaseDCurriculumData() {
               },
               {
                 heading: "Configure Locale Routing",
+                imagePath: "/images/diagrams/i18n_locale_routing.png",
                 body: "Define supported locales and default locale. Create routing.ts and navigation.ts for locale-aware links.",
                 code: "// src/i18n/routing.ts\nimport { defineRouting } from \"next-intl/routing\";\nexport const routing = defineRouting({\n  locales: [\"en\", \"th\"],\n  defaultLocale: \"en\",\n});\n\n// src/i18n/navigation.ts\nimport { createNavigation } from \"next-intl/navigation\";\nimport { routing } from \"./routing\";\nexport const { Link, redirect, usePathname, useRouter } =\n  createNavigation(routing);",
               },
@@ -3047,6 +3065,7 @@ export function getPhaseDCurriculumData() {
             sections: [
               {
                 heading: "Install AI SDK",
+                imagePath: "/images/diagrams/ai_adapter_boundary.png",
                 body: "The Vercel AI SDK is how Reading Advantage integrates LLMs. It provides generateText, streamText, generateObject, and useChat.",
                 code: "pnpm add ai@4.3.19 @ai-sdk/openai@1.3.24 @ai-sdk/react@1.2.12\n\n// src/lib/ai.ts\nimport { createOpenAI } from \"@ai-sdk/openai\";\nexport const openrouter = createOpenAI({\n  apiKey: process.env.OPENROUTER_API_KEY,\n  baseURL: \"https://openrouter.ai/api/v1\",\n});",
               },
@@ -3227,13 +3246,120 @@ export function getPhaseDCurriculumData() {
       ],
     },
 
-    // ─── Module 16: Monorepo & Package Management ─────────────
+    // ─── Module 16: Measure-Driven AI Development ─────────────
+    {
+      title: "Measure-Driven AI Development",
+      description:
+        "Control AI-assisted implementation with the Measure workflow: project context, track specs, phased plans, Red/Green evidence, review, and closeout on the Student Progress Tracker.",
+      slug: "measure-ai-development",
+      order: 16,
+      phase: "D",
+      status: "published",
+      lessons: [
+        {
+          title: "Measure Mental Model and Project Context",
+          description:
+            "Understand why AI coding agents need explicit context and learn the purpose of each core Measure artifact.",
+          order: 1,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "Why AI Coding Needs Structure",
+                body: "AI coding assistants are powerful, but they drift when context is vague: they implement more than you asked for, ignore project conventions, change the wrong layer, write tests after the fact that do not prove behavior, and forget decisions from previous sessions. Measure prevents these failure modes by making context and workflow explicit: context → spec → plan → implementation → review.",
+                code: "# Common AI coding failure modes\n- Implements more than you asked for (scope creep)\n- Ignores project conventions\n- Changes the wrong layer of the stack\n- Writes tests after the fact that do not prove behavior\n- Forgets decisions from previous sessions\n\n# Measure's answer: an explicit, controlled workflow\ncontext -> spec -> plan -> implementation -> review",
+              },
+              {
+                heading: "The Measure Artifact Tree",
+                imagePath: "/images/diagrams/measure_development_lifecycle.png",
+                body: "Measure keeps all project context in a small set of files inside the measure/ directory. Each file answers one question: why the product exists, which technologies were deliberately chosen, how work is executed, and what work is in flight.",
+                code: "measure/\n├── product.md              # Why the product exists\n├── tech-stack.md           # Deliberate technology choices\n├── workflow.md             # How work is executed and verified\n├── tracks.md               # Registry of active and archived work\n├── lessons-learned.md      # Project memory\n├── tech-debt.md            # Known shortcuts and deferred work\n└── tracks/<track_id>/\n    ├── spec.md             # What this track must accomplish\n    ├── plan.md             # How implementation proceeds\n    └── metadata.json       # Track identity and status",
+              },
+              {
+                heading: "Which File Answers Which Question",
+                body: "Before asking an AI assistant to write code, you should know where each kind of decision lives. The product vision lives in product.md. A new major dependency changes tech-stack.md first. While implementing a feature, plan.md is the source of truth. A known shortcut belongs in tech-debt.md — recorded, not hidden.",
+                code: "Q: Which file explains why the product exists?\nA: measure/product.md\n\nQ: Which file should change before introducing a new major dependency?\nA: measure/tech-stack.md\n\nQ: Which file is the source of truth while implementing a feature?\nA: measure/tracks/<track_id>/plan.md\n\nQ: Where should a known shortcut be recorded?\nA: measure/tech-debt.md",
+              },
+              {
+                heading: "Reading a Tiny Track",
+                body: "A track is one logical unit of work with a spec and plan. Given a small example track, practice identifying the requirements, non-goals, acceptance criteria, likely test cases, and files likely to change. Measure is not paperwork; it is control over AI-assisted work.",
+                code: "track_id: tracker_empty_state_YYYYMMDD\ngoal: Show a helpful dashboard empty state when a student has no progress\n\n# When reading a track, identify:\n- requirements\n- non-goals\n- acceptance criteria\n- likely test cases\n- files likely to change",
+              },
+            ],
+          },
+        },
+        {
+          title: "Track, Spec, and Plan Workshop",
+          description:
+            "Turn a small feature request into a scoped Measure track with a testable spec and a phased Red/Green plan.",
+          order: 2,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "Choosing a Mini-Feature",
+                body: "Pick one small feature for the Student Progress Tracker. The goal is not to learn a new framework API — it is to control AI-assisted implementation with clear context, scoped requirements, and tests.",
+                code: "# Mini-feature options for the Student Progress Tracker\n1. Dashboard empty state for students with no progress\n2. \"Last active\" label on student profile\n3. Quiz retake validation message\n4. Module completion status helper",
+              },
+              {
+                heading: "Writing spec.md",
+                body: "A spec states requirements, non-goals, and acceptance criteria before implementation. Every acceptance criterion must be testable or manually verifiable — if you cannot verify it, it is not a criterion.",
+                code: "# Specification: <Feature Name>\n\n## Summary\nOne paragraph describing the change.\n\n## Goals\n- Goal 1\n- Goal 2\n\n## Non-Goals\n- What this track will not do\n\n## Functional Requirements\n### FR-1: <Requirement>\nSpecific required behavior.\n\n## Acceptance Criteria\n- [ ] Observable outcome 1\n- [ ] Test or verification outcome 2",
+              },
+              {
+                heading: "Writing plan.md",
+                body: "The plan is the source of truth for phased execution: Red (a failing test that proves the requirement), Green (the minimum change to pass), then review and acceptance evidence. A good plan lets an AI assistant work safely.",
+                code: "# Implementation Plan: <Feature Name>\n\n## Phase 1: Red\n- [ ] Write a failing test for the expected behavior.\n- [ ] Run the targeted test and confirm it fails for the right reason.\n\n## Phase 2: Green\n- [ ] Implement the minimum code needed to pass the test.\n- [ ] Run the targeted test and confirm it passes.\n\n## Phase 3: Review and Acceptance\n- [ ] Run lint/type/test checks required for the changed files.\n- [ ] Write PR summary with what changed, why, and how it was tested.\n- [ ] Record any lesson learned or tech debt if applicable.",
+              },
+              {
+                heading: "Naming the Proof Command",
+                body: "Every Red and Green task must name the exact command that proves it. Vitest 4.1.5 runs targeted tests quickly, so the proof loop stays tight.",
+                code: "# Name the exact command you expect to run for Red and Green:\npnpm vitest run src/__tests__/module-completion.test.ts",
+              },
+            ],
+          },
+        },
+        {
+          title: "AI-Assisted Implementation, Review, and Closeout",
+          description:
+            "Use an AI assistant as the implementer against your plan, verify Red/Green evidence, and close out with a PR description and project memory.",
+          order: 3,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "Give the AI the Right Context",
+                body: "Use AI as an implementer, not as the planner — the intern remains responsible for verifying behavior and scope. Before asking for code, provide the track goal, spec.md, plan.md, relevant file paths, the exact task to perform, and the command that proves success.",
+                code: "Read this spec and plan. Implement only Phase 1 Red for the\ndashboard empty state. Write the failing test first. Do not\nimplement the UI yet. The test command is:\n\npnpm vitest run src/__tests__/empty-state.test.tsx",
+              },
+              {
+                heading: "Red Then Green",
+                body: "Execute the workflow one phase at a time. Confirm the test fails for the right reason before implementing, and confirm it passes after the minimum Green change. Never mark a task complete without running its proof command.",
+                code: "# The Red/Green execution loop\n1. Mark the current task in plan.md\n2. Ask AI to write the failing test only\n3. Run the targeted test and confirm Red\n4. Ask AI to implement the minimum Green change\n5. Run the targeted test again\n6. Run any broader checks required by the change",
+              },
+              {
+                heading: "Review Evidence and the PR Description",
+                body: "Review focuses on correctness, security, UX/API contract, and acceptance evidence. The PR description records what changed, which track it belongs to, and the evidence that acceptance criteria are met. The mini-feature is complete only when evidence matches the plan.",
+                code: "## Summary\nWhat changed and why.\n\n## Measure Track\nTrack: <track_id>\n\n## Acceptance Evidence\n- [x] Red test failed before implementation: <command>\n- [x] Green test passed after implementation: <command>\n- [x] Manual verification: <specific result>\n\n## Notes\nLessons learned or tech debt, if any.",
+              },
+              {
+                heading: "Closeout and Project Memory",
+                body: "Closeout is what prevents repeated mistakes. Record practical lessons in lessons-learned.md and known shortcuts in tech-debt.md instead of hiding them. This project memory is what the next track — and the next AI session — starts from.",
+                code: "# measure/lessons-learned.md\n- Targeted vitest runs keep the Red/Green loop under 5 seconds;\n  run the full suite only before opening the PR.\n\n# measure/tech-debt.md\n- Empty-state copy is hardcoded in English; extract to messages\n  when the dashboard is localized.",
+              },
+            ],
+          },
+        },
+      ],
+    },
+
+    // ─── Module 17: Monorepo & Package Management ─────────────
     {
       title: "Monorepo & Package Management",
       description:
         "Understand the Reading Advantage monorepo architecture: pnpm 8.15.8 workspaces, workspace:* dependencies, and Turborepo 2.9.8 pipeline and caching.",
       slug: "monorepo-packages",
-      order: 16,
+      order: 17,
       phase: "D",
       status: "published",
       lessons: [
@@ -3391,13 +3517,13 @@ export function getPhaseDCurriculumData() {
       ],
     },
 
-    // ─── Module 17: Cloud & Dockerization ─────────────────────
+    // ─── Module 18: Cloud & Dockerization ─────────────────────
     {
       title: "Cloud & Dockerization",
       description:
         "Containerize the Student Progress Tracker with Docker: images, containers, multi-stage builds, docker-compose, and cloud deployment overview.",
       slug: "cloud-docker",
-      order: 17,
+      order: 18,
       phase: "D",
       status: "published",
       lessons: [
@@ -3411,6 +3537,7 @@ export function getPhaseDCurriculumData() {
             sections: [
               {
                 heading: "Docker Concepts",
+                imagePath: "/images/diagrams/docker_container_isolation.png",
                 body: "Docker packages your app and all its dependencies into a container. The same container runs identically on every machine.",
                 code: "| Concept | What it is | Analogy |\n|---------|-----------|---------|\n| Image | Blueprint for a container | Recipe |\n| Container | Running instance of an image | Baked cake |\n| Volume | Persistent storage | USB drive |\n| Network | Communication between containers | WiFi |\n| Dockerfile | Instructions to build an image | Recipe card |",
               },
@@ -3572,13 +3699,13 @@ export function getPhaseDCurriculumData() {
       ],
     },
 
-    // ─── Module 18: Real-World Practice ───────────────────────
+    // ─── Module 19: Real-World Practice ───────────────────────
     {
       title: "Real-World Practice",
       description:
         "The capstone module: work through pre-filed GitHub Issues on the tracker repo, practicing the full feature delivery lifecycle from issue to merged PR.",
       slug: "real-world-practice",
-      order: 18,
+      order: 19,
       phase: "D",
       status: "published",
       lessons: [
@@ -3648,7 +3775,7 @@ export function getPhaseDCurriculumData() {
         {
           title: "Final Practice and Retrospective",
           description:
-            "Finish remaining Issues and reflect on the entire 85-lesson journey.",
+            "Finish remaining Issues and reflect on the entire 88-lesson journey.",
           order: 4,
           type: "theory",
           contentJson: {
@@ -3661,7 +3788,7 @@ export function getPhaseDCurriculumData() {
               {
                 heading: "What's Next",
                 body: "You are ready to build real software. Join the Reading Advantage codebase — the architecture is familiar now. The AI chat tutor is always available for questions.",
-                code: "🎉 Congratulations! You've completed the Full-Stack Web Development Intern Bootcamp.\n\n18 units. 85 class periods. 4 portfolio projects.\n1 complete full-stack application from database to deployment.\n\nYou're ready to build real software.",
+                code: "🎉 Congratulations! You've completed the Full-Stack Web Development Intern Bootcamp.\n\n19 units. 88 class periods. 4 portfolio projects.\n1 complete full-stack application from database to deployment.\n\nYou're ready to build real software.",
               },
             ],
           },

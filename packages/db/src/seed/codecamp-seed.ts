@@ -56,9 +56,27 @@ export function findStaleModuleSlugs(canonicalSlugs: Set<string>, dbSlugs: strin
  * rows so the helper can be unit-tested without a DB connection.
  */
 export interface ExistingLessonSnapshot {
+  id?: string;
   type: CurriculumLesson["type"];
   order: number;
   title: string;
+}
+
+/**
+ * Pairs existing lessons with canonical content using stable module-local order.
+ * @param existingLessons Existing database lesson snapshots whose IDs must be preserved.
+ * @param canonicalLessons Canonical curriculum lessons for the module.
+ * @returns Stable lesson IDs paired with their current canonical content.
+ */
+export function selectLessonUpdates(
+  existingLessons: ExistingLessonSnapshot[],
+  canonicalLessons: CurriculumLesson[],
+): Array<{ existingId: string; canonical: CurriculumLesson }> {
+  const canonicalByOrder = new Map(canonicalLessons.map((lesson) => [lesson.order, lesson]));
+  return existingLessons.flatMap((existing) => {
+    const canonical = canonicalByOrder.get(existing.order);
+    return existing.id && canonical ? [{ existingId: existing.id, canonical }] : [];
+  });
 }
 
 /**
@@ -152,12 +170,23 @@ async function seed() {
         // Existing lesson rows are preserved so we don't disrupt student progress.
         const existingLessons = await tx
           .select({
+            id: codecampLessons.id,
             type: codecampLessons.type,
             order: codecampLessons.order,
             title: codecampLessons.title,
           })
           .from(codecampLessons)
           .where(eq(codecampLessons.moduleId, insertedModule.id));
+
+        for (const { existingId, canonical } of selectLessonUpdates(existingLessons, mod.lessons)) {
+          await tx.update(codecampLessons).set({
+            title: canonical.title,
+            description: canonical.description,
+            order: canonical.order,
+            type: canonical.type,
+            contentJson: canonical.contentJson,
+          }).where(eq(codecampLessons.id, existingId));
+        }
 
         const lessonsToInsert = selectLessonsToInsert(existingLessons, mod.lessons);
 
