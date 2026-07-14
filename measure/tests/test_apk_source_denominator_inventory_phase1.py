@@ -454,6 +454,68 @@ class Phase1MechanicalDiscoveryContracts(unittest.TestCase):
             expected_state_occurrences,
         )
 
+    def test_initial_to_setter_transitions_use_the_declared_initializer(self) -> None:
+        """Rejects transitions whose from-state is fabricated from union literal order.
+
+        Returns:
+            Nothing.
+        """
+        scenes = self._artifact(SCENE_PATH, "apk-scene-state-denominator.v1")
+        state_records = {
+            row["state_occurrence_id"]: row
+            for row in scenes["state_records"]
+        }
+        initializer_pattern = re.compile(
+            r"(?:const|let)\s*\[\s*(\w+)\s*,\s*(set\w+)\s*\]\s*=\s*"
+            r"(?:React\.)?useState\s*<([^>]+)>\s*\(\s*(['\"])([^'\"]+)\4",
+            re.DOTALL,
+        )
+        checked = 0
+        seen_occurrences: set[str] = set()
+        for transition in scenes["transitions"]:
+            if transition.get("transition_evidence_kind") != "useState-initial-to-setter-call":
+                continue
+            from_occurrence = transition["from_state_occurrence_id"]
+            state_record = state_records[from_occurrence]
+            source_symbol = state_record["source_symbol"]
+            path = transition["evidence"]["path"]
+            text = _git_bytes(self.source_baseline, path).decode("utf-8", errors="replace")
+            initializers = {
+                match.group(1): match
+                for match in initializer_pattern.finditer(text)
+            }
+            self.assertIn(source_symbol, initializers, f"typed initializer must resolve for {from_occurrence}")
+            declaration = initializers[source_symbol]
+            initial_value = declaration.group(5)
+            self.assertEqual(
+                transition["from_state_id"],
+                initial_value,
+                f"transition from-state must match the frozen typed initializer for {from_occurrence}",
+            )
+            self.assertNotIn(
+                from_occurrence,
+                seen_occurrences,
+                f"an unguarded declaration may retain only its first initializer edge: {from_occurrence}",
+            )
+            seen_occurrences.add(from_occurrence)
+            literals = set(re.findall(r"['\"]([^'\"\n]+)['\"]", declaration.group(3)))
+            setter_pattern = re.compile(
+                rf"\b{re.escape(declaration.group(2))}\s*\(\s*['\"]([^'\"]+)['\"]"
+            )
+            first_setter = next(
+                match
+                for match in setter_pattern.finditer(text, declaration.end())
+                if match.group(1) in literals and match.group(1) != initial_value
+            )
+            self.assertEqual(transition["to_state_id"], first_setter.group(1))
+            self.assertEqual(
+                transition["evidence"]["range"]["start_line"],
+                text.count("\n", 0, first_setter.start()) + 1,
+                f"initializer edge must cite the first source-ordered setter for {from_occurrence}",
+            )
+            checked += 1
+        self.assertGreater(checked, 0, "the initializer transition contract must be non-vacuous")
+
     def test_current_page_and_catalog_withdrawn_states_remain_simultaneous(self) -> None:
         """Retains current page evidence separately from catalog withdrawal registration."""
         identities = self._artifact(IDENTITY_PATH, "apk-game-identity-ledger.v1")

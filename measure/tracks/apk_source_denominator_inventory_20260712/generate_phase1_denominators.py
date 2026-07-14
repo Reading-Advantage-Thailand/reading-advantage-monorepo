@@ -437,7 +437,7 @@ def build_scene_state_denominator(paths: list[str]) -> dict[str, Any]:
                 "discovery_method": "mechanical-syntax-traversal",
                 "evidence": line_locator(path, line, line),
             })
-        declarations: dict[str, tuple[str, set[str], str, int, int]] = {}
+        declarations: dict[str, tuple[str, set[str], str | None, int, int]] = {}
         for declaration in STATE_DECLARATION.finditer(text):
             state_name, setter_name, type_text = declaration.groups()
             if not STATE_NAME.search(state_name):
@@ -446,14 +446,15 @@ def build_scene_state_denominator(paths: list[str]) -> dict[str, Any]:
             if not literals:
                 continue
             line = source_line_number(text, declaration.start())
-            initial_value = next(iter(sorted(literals)))
-            init_match = re.search(
-                r"\b" + re.escape(state_name) + r"\s*[,)]\s*=\s*(?:React\.)?useState\s*<[^>]+>\(\s*([\"'])([^\"']+)\1",
-                text[: declaration.end() + 200],
-                re.DOTALL,
+            init_match = re.match(
+                r"\s*\(\s*([\"'])([^\"']+)\1",
+                text[declaration.end() :],
             )
-            if init_match:
-                initial_value = init_match.group(2)
+            initial_value = init_match.group(2) if init_match is not None else None
+            if initial_value is not None and initial_value not in literals:
+                raise RuntimeError(
+                    f"Typed state initializer is outside its literal union at {path}:{line}:{state_name}"
+                )
             declarations[setter_name] = (state_name, literals, initial_value, declaration.start(), line)
             for literal in literals:
                 state_records.append({
@@ -485,7 +486,7 @@ def build_scene_state_denominator(paths: list[str]) -> dict[str, Any]:
                     "discovery_method": "mechanical-syntax-traversal",
                     "evidence": line_locator(path, line, source_line_number(text, match.end())),
                 })
-            if not guarded_from_states:
+            if not guarded_from_states and initial_value is not None:
                 setter = re.compile(rf"\b{re.escape(setter_name)}\s*\(\s*['\"]([^'\"]+)['\"]")
                 for match in setter.finditer(text, declaration_offset):
                     to_state = match.group(1)
@@ -502,6 +503,7 @@ def build_scene_state_denominator(paths: list[str]) -> dict[str, Any]:
                         "discovery_method": "mechanical-syntax-traversal",
                         "evidence": line_locator(path, line, source_line_number(text, match.end())),
                     })
+                    break
     unique_transitions = {
         (record["from_state_occurrence_id"], record["to_state_occurrence_id"], record["evidence"]["range"]["start_line"]): record
         for record in transitions
@@ -726,8 +728,11 @@ line-range SHA-256.
 3. Extract declared component symbols ending in `Game`, `Screen`, or `Scene`, literal
    `useState` declarations whose variable names include a state vocabulary token, and
    source-local explicitly guarded setter pairs. Component and state occurrences remain
-   path-scoped even when symbols/literals repeat. Unguarded setters never imply a
-   from-state. This is syntax traversal, not runtime execution.
+   path-scoped even when symbols/literals repeat. For a declaration with no guarded
+   setter pair, only the first source-ordered setter target that differs from the exact
+   typed initializer is retained as an initializer-to-setter syntax edge; later
+   unguarded calls do not imply a from-state. This is syntax traversal, not runtime
+   execution.
 4. Enumerate media, audio, and data suffixes below the three public roots plus
    game-associated data files; hash every committed byte sequence and report basic
    encoded format metadata.

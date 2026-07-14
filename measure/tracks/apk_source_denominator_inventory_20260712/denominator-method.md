@@ -21,8 +21,11 @@ line-range SHA-256.
 3. Extract declared component symbols ending in `Game`, `Screen`, or `Scene`, literal
    `useState` declarations whose variable names include a state vocabulary token, and
    source-local explicitly guarded setter pairs. Component and state occurrences remain
-   path-scoped even when symbols/literals repeat. Unguarded setters never imply a
-   from-state. This is syntax traversal, not runtime execution.
+   path-scoped even when symbols/literals repeat. For a declaration with no guarded
+   setter pair, only the first source-ordered setter target that differs from the exact
+   typed initializer is retained as an initializer-to-setter syntax edge; later
+   unguarded calls do not imply a from-state. This is syntax traversal, not runtime
+   execution.
 4. Enumerate media, audio, and data suffixes below the three public roots plus
    game-associated data files; hash every committed byte sequence and report basic
    encoded format metadata.
