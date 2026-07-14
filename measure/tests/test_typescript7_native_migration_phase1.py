@@ -33,6 +33,7 @@ from __future__ import annotations
 
 import json
 import re
+import subprocess
 import unittest
 from pathlib import Path
 from typing import Any
@@ -49,12 +50,27 @@ DIAGNOSTIC_PARITY_LEDGER_PATH = TRACK_DIR / "diagnostic-parity-ledger.json"
 BENCHMARK_RECORD_SCHEMA_PATH = TRACK_DIR / "benchmark-record-schema.json"
 ROLLOUT_RECORD_SCHEMA_PATH = TRACK_DIR / "rollout-record-schema.json"
 TEST_STRATEGY_PATH = TRACK_DIR / "test-strategy.md"
+PHASE1_WORKSPACE_BASELINE_PATH = TRACK_DIR / "phase1-workspace-baseline.json"
 
 COMMIT_SHA_RE = re.compile(r"^[0-9a-f]{40}$")
-RESOURCE_LIMIT_KEYS: tuple[str, ...] = (
+RESOURCE_MAXIMUM_KEYS: tuple[str, ...] = (
     "max_process_group_rss_kib",
     "max_swap_delta_kib",
 )
+RESOURCE_STOP_LOSS_KEYS: tuple[str, ...] = (
+    "stop_loss_process_group_rss_kib",
+    "stop_loss_swap_delta_kib",
+)
+GENERATED_OR_IGNORED_DIR_NAMES: frozenset[str] = frozenset({
+    ".next",
+    ".turbo",
+    "build",
+    "coverage",
+    "dist",
+    "generated",
+    "node_modules",
+    "out",
+})
 
 
 def _load_json_object(path: Path) -> dict[str, Any]:
@@ -127,6 +143,105 @@ def _load_json_schema(path: Path) -> dict[str, Any]:
     return schema
 
 
+def _git_tracked_paths(*pathspecs: str) -> set[str]:
+    """Return tracked repository paths matching the supplied Git pathspecs.
+
+    Args:
+        pathspecs: Git pathspecs used to select repository files.
+
+    Returns:
+        Repository-relative tracked paths with generated and ignored directories removed.
+
+    Raises:
+        AssertionError: When Git cannot enumerate the requested paths.
+    """
+    completed = subprocess.run(
+        ["git", "ls-files", "-z", "--", *pathspecs],
+        cwd=REPO_ROOT,
+        check=False,
+        capture_output=True,
+    )
+    if completed.returncode != 0:
+        raise AssertionError(
+            f"git ls-files failed with exit {completed.returncode}: "
+            f"{completed.stderr.decode('utf-8', errors='replace')}"
+        )
+
+    paths = completed.stdout.decode("utf-8").split("\0")
+    return {
+        path
+        for path in paths
+        if path
+        and GENERATED_OR_IGNORED_DIR_NAMES.isdisjoint(Path(path).parts)
+    }
+
+
+def _tracked_tsconfig_paths() -> set[str]:
+    """Return the exact set of tracked, non-generated tsconfig files.
+
+    Returns:
+        Repository-relative paths for every tracked tsconfig*.json file.
+    """
+    return _git_tracked_paths(":(glob)**/tsconfig*.json")
+
+
+def _typescript_workspace_denominator() -> set[str]:
+    """Derive TypeScript workspaces independently from manifests and tsconfigs.
+
+    Returns:
+        Immediate apps, packages, and services workspaces with a tracked manifest
+        and at least one tracked tsconfig file in the same workspace directory.
+    """
+    manifests = _git_tracked_paths(
+        ":(glob)apps/*/package.json",
+        ":(glob)packages/*/package.json",
+        ":(glob)services/*/package.json",
+    )
+    tsconfigs = _tracked_tsconfig_paths()
+    tsconfig_parents = {str(Path(path).parent) for path in tsconfigs}
+    return {
+        str(Path(manifest).parent)
+        for manifest in manifests
+        if str(Path(manifest).parent) in tsconfig_parents
+    }
+
+
+def _assert_exact_path_set(declared: set[str], expected: set[str]) -> None:
+    """Require a declared path set to match an independent denominator exactly.
+
+    Args:
+        declared: Paths claimed by an inventory artifact.
+        expected: Repository-derived paths that must be inventoried.
+
+    Raises:
+        AssertionError: When paths are missing from or unexpectedly added to the inventory.
+    """
+    missing = expected - declared
+    unexpected = declared - expected
+    if missing or unexpected:
+        raise AssertionError(
+            f"path inventory mismatch; missing={sorted(missing)}, "
+            f"unexpected={sorted(unexpected)}"
+        )
+
+
+def _assert_workspace_coverage(captured: set[str], expected: set[str]) -> None:
+    """Require captured baselines to cover the repository-derived denominator.
+
+    Args:
+        captured: Workspace paths represented by captured baseline rows.
+        expected: Independently derived TypeScript workspace denominator.
+
+    Raises:
+        AssertionError: When at least one expected workspace has no baseline row.
+    """
+    missing = expected - captured
+    if missing:
+        raise AssertionError(
+            f"phase1 workspace baseline is missing workspaces: {sorted(missing)}"
+        )
+
+
 def _assert_resource_limits(record: dict[str, Any]) -> None:
     """Require explicit positive resource ceilings with auditable provenance.
 
@@ -141,15 +256,146 @@ def _assert_resource_limits(record: dict[str, Any]) -> None:
     if not isinstance(limits, dict):
         raise AssertionError("resource_limits must be a JSON object")
 
-    for key in RESOURCE_LIMIT_KEYS:
+    for key in (*RESOURCE_MAXIMUM_KEYS, *RESOURCE_STOP_LOSS_KEYS):
         value = limits.get(key)
-        if isinstance(value, bool) or not isinstance(value, (int, float)) or value <= 0:
-            raise AssertionError(f"resource_limits.{key} must be a positive number")
+        if isinstance(value, bool) or not isinstance(value, int) or value <= 0:
+            raise AssertionError(f"resource_limits.{key} must be a positive integer")
+
+    max_rss = limits["max_process_group_rss_kib"]
+    max_swap = limits["max_swap_delta_kib"]
+    stop_rss = limits["stop_loss_process_group_rss_kib"]
+    stop_swap = limits["stop_loss_swap_delta_kib"]
+    expected_stop_rss = (max_rss * 80) // 100
+    expected_stop_swap = (max_swap * 50) // 100
+    if stop_rss != expected_stop_rss or stop_rss >= max_rss:
+        raise AssertionError(
+            "stop_loss_process_group_rss_kib must equal 80% of and remain below "
+            "max_process_group_rss_kib"
+        )
+    if stop_swap != expected_stop_swap or stop_swap >= max_swap:
+        raise AssertionError(
+            "stop_loss_swap_delta_kib must equal 50% of and remain below "
+            "max_swap_delta_kib"
+        )
 
     for key in ("derivation", "source"):
         value = limits.get(key)
         if not isinstance(value, str) or not value.strip():
             raise AssertionError(f"resource_limits.{key} must be a non-empty string")
+
+
+def _assert_bounded_stop_loss_termination(strategy: str) -> None:
+    """Require bounded SIGTERM-to-SIGKILL escalation and reap verification.
+
+    Args:
+        strategy: TypeScript 7 migration test strategy text.
+
+    Raises:
+        AssertionError: When the resource section lacks an ordered, bounded
+            process-group termination and reap contract.
+    """
+    section_start = strategy.index(
+        "## 1. Hardware Posture, Resource Capture, and Fail-Closed Triggers"
+    )
+    section_end = strategy.index("## 2.", section_start)
+    section = strategy[section_start:section_end]
+    term_match = re.search(r"SIGTERM", section, re.IGNORECASE)
+    grace_match = re.search(
+        r"\b\d+\s*(?:ms|milliseconds?|s|seconds?)\b", section, re.IGNORECASE
+    )
+    kill_match = re.search(r"SIGKILL", section, re.IGNORECASE)
+    reap_match = re.search(r"\breap(?:ed|ing|s)?\b", section, re.IGNORECASE)
+    violations: list[str] = []
+    if term_match is None:
+        violations.append("resource stop-loss must send SIGTERM to the process group")
+    if grace_match is None:
+        violations.append("SIGTERM must have an explicit bounded numeric grace period")
+    if kill_match is None:
+        violations.append("a surviving process group must escalate to SIGKILL")
+    if reap_match is None:
+        violations.append("the strategy must verify all process-group children are reaped")
+    if term_match and grace_match and kill_match and reap_match:
+        positions = (
+            term_match.start(),
+            grace_match.start(),
+            kill_match.start(),
+            reap_match.start(),
+        )
+        if positions != tuple(sorted(positions)):
+            violations.append(
+                "termination must be ordered SIGTERM, bounded grace, SIGKILL, then reap"
+            )
+    if violations:
+        raise AssertionError("; ".join(violations))
+
+
+def _assert_dmesg_observability_schema(schema: dict[str, Any]) -> None:
+    """Require benchmark records to distinguish unavailable dmesg from zero OOMs.
+
+    Args:
+        schema: Benchmark record JSON Schema.
+
+    Raises:
+        AssertionError: When dmesg availability is absent, optional, or ambiguous.
+    """
+    properties = schema.get("properties")
+    if not isinstance(properties, dict):
+        raise AssertionError("benchmark schema properties must be an object")
+    status = properties.get("dmesg_status")
+    if not isinstance(status, dict):
+        raise AssertionError("benchmark schema must define dmesg_status")
+    if status.get("type") != "string":
+        raise AssertionError("dmesg_status must be a string")
+    values = status.get("enum")
+    if not isinstance(values, list) or not {"available", "unavailable"}.issubset(values):
+        raise AssertionError("dmesg_status must distinguish available from unavailable")
+    required = schema.get("required")
+    if not isinstance(required, list) or "dmesg_status" not in required:
+        raise AssertionError("dmesg_status must be required on every benchmark record")
+    oom = properties.get("oom_kill_count")
+    if not isinstance(oom, dict):
+        raise AssertionError("benchmark schema must define oom_kill_count")
+    description = str(oom.get("description", "")).lower()
+    if "recorded as 0 when dmesg is unavailable" in description:
+        raise AssertionError("unavailable dmesg must not be encoded as zero OOM kills")
+
+
+def _assert_signed_swap_delta_contract(
+    schema: dict[str, Any], strategy: str
+) -> None:
+    """Require signed swap delta to mean after minus before consistently.
+
+    Args:
+        schema: Benchmark record JSON Schema.
+        strategy: TypeScript 7 migration test strategy text.
+
+    Raises:
+        AssertionError: When the schema or strategy rejects valid negative deltas
+            or does not define the after-minus-before measurement direction.
+    """
+    properties = schema.get("properties")
+    if not isinstance(properties, dict):
+        raise AssertionError("benchmark schema properties must be an object")
+    swap_delta = properties.get("swap_delta_kib")
+    if not isinstance(swap_delta, dict):
+        raise AssertionError("benchmark schema must define swap_delta_kib")
+    violations: list[str] = []
+    if swap_delta.get("type") != "integer":
+        violations.append("swap_delta_kib must be an integer")
+    if "minimum" in swap_delta:
+        violations.append("swap_delta_kib must allow negative after-minus-before values")
+    schema_description = str(swap_delta.get("description", "")).lower()
+    strategy_lower = strategy.lower()
+    for source, text in (
+        ("schema", schema_description),
+        ("strategy", strategy_lower),
+    ):
+        if "after - before" not in text:
+            violations.append(f"{source} must define swap delta as after - before")
+        if "negative" not in text or "valid" not in text:
+            violations.append(f"{source} must state that negative swap deltas are valid")
+    if violations:
+        raise AssertionError("; ".join(violations))
 
 
 class CompilerBaselineContract(unittest.TestCase):
@@ -214,9 +460,29 @@ class CompilerBaselineContract(unittest.TestCase):
             {},
             {
                 "resource_limits": {
-                    "max_process_group_rss_kib": 0,
-                    "max_swap_delta_kib": "1024",
-                    "derivation": "",
+                    "max_process_group_rss_kib": 1000,
+                    "max_swap_delta_kib": 200,
+                    "derivation": "policy",
+                    "source": "phase1-baseline.json",
+                }
+            },
+            {
+                "resource_limits": {
+                    "max_process_group_rss_kib": 1000,
+                    "max_swap_delta_kib": 200,
+                    "stop_loss_process_group_rss_kib": "800",
+                    "stop_loss_swap_delta_kib": 0,
+                    "derivation": "policy",
+                    "source": "phase1-baseline.json",
+                }
+            },
+            {
+                "resource_limits": {
+                    "max_process_group_rss_kib": 1000,
+                    "max_swap_delta_kib": 200,
+                    "stop_loss_process_group_rss_kib": 801,
+                    "stop_loss_swap_delta_kib": 101,
+                    "derivation": "policy",
                     "source": "phase1-baseline.json",
                 }
             },
@@ -257,6 +523,11 @@ class TestStrategyPhaseBoundaryContract(unittest.TestCase):
             violations.append("Phase 3 must run the real installed TypeScript 7 compiler")
 
         self.assertFalse(violations, "\n".join(violations))
+
+    def test_resource_stop_loss_escalates_and_reaps_process_group(self) -> None:
+        """Requires bounded SIGTERM grace, SIGKILL escalation, and reap proof."""
+        strategy = TEST_STRATEGY_PATH.read_text(encoding="utf-8")
+        _assert_bounded_stop_loss_termination(strategy)
 
 
 class SurfaceInventoryContract(unittest.TestCase):
@@ -301,6 +572,27 @@ class SurfaceInventoryContract(unittest.TestCase):
             "tsconfig_count must equal the number of entries in tsconfigs",
         )
 
+    def test_surface_inventory_matches_all_tracked_tsconfigs_exactly(self) -> None:
+        """Requires inventory paths to equal the repository-derived tsconfig set."""
+        artifact = _load_json_object(SURFACE_INVENTORY_PATH)
+        tsconfigs = artifact.get("tsconfigs")
+        self.assertIsInstance(tsconfigs, list, "tsconfigs must be a list")
+        assert isinstance(tsconfigs, list)
+        declared_paths: list[str] = []
+        for index, row in enumerate(tsconfigs):
+            self.assertIsInstance(row, dict, f"tsconfigs[{index}] must be an object")
+            assert isinstance(row, dict)
+            path = row.get("path")
+            self.assertIsInstance(path, str, f"tsconfigs[{index}].path must be a string")
+            assert isinstance(path, str)
+            declared_paths.append(path)
+        self.assertEqual(
+            len(declared_paths),
+            len(set(declared_paths)),
+            "surface inventory must not contain duplicate tsconfig paths",
+        )
+        _assert_exact_path_set(set(declared_paths), _tracked_tsconfig_paths())
+
     def test_surface_inventory_rejects_mismatched_tsconfig_count(self) -> None:
         """Counterexample: a declared count different from the list length fails."""
         mismatched: dict[str, Any] = {
@@ -314,6 +606,15 @@ class SurfaceInventoryContract(unittest.TestCase):
                 "tsconfig_count must equal the number of entries in tsconfigs",
             )
 
+    def test_exact_tsconfig_contract_rejects_a_missing_config(self) -> None:
+        """Counterexample: dropping one tracked tsconfig fails exact-set coverage."""
+        expected = {"apps/example/tsconfig.json", "packages/example/tsconfig.test.json"}
+        with self.assertRaisesRegex(AssertionError, "missing"):
+            _assert_exact_path_set(
+                {"apps/example/tsconfig.json"},
+                expected,
+            )
+
     def test_surface_inventory_rejects_missing_ownership_matrix(self) -> None:
         """Counterexample: a record without ownership_matrix fails the required-key check."""
         incomplete: dict[str, Any] = {
@@ -325,6 +626,36 @@ class SurfaceInventoryContract(unittest.TestCase):
         }
         missing = self.REQUIRED_KEYS - set(incomplete.keys())
         self.assertIn("ownership_matrix", missing)
+
+
+class Phase1WorkspaceBaselineContract(unittest.TestCase):
+    """Repository-derived coverage contract for workspace baseline evidence."""
+
+    def test_baseline_covers_every_typescript_workspace_manifest(self) -> None:
+        """Requires baseline rows for all immediate workspaces with tsconfigs."""
+        artifact = _load_json_object(PHASE1_WORKSPACE_BASELINE_PATH)
+        rows = artifact.get("workspaces")
+        self.assertIsInstance(rows, list, "workspaces must be a list")
+        assert isinstance(rows, list)
+        captured: set[str] = set()
+        for index, row in enumerate(rows):
+            self.assertIsInstance(row, dict, f"workspaces[{index}] must be an object")
+            assert isinstance(row, dict)
+            workspace = row.get("workspace")
+            self.assertIsInstance(
+                workspace,
+                str,
+                f"workspaces[{index}].workspace must be a string",
+            )
+            assert isinstance(workspace, str)
+            captured.add(workspace)
+        _assert_workspace_coverage(captured, _typescript_workspace_denominator())
+
+    def test_workspace_denominator_rejects_a_missing_baseline_row(self) -> None:
+        """Counterexample: omitting a TypeScript workspace fails coverage."""
+        expected = {"apps/example", "packages/example"}
+        with self.assertRaisesRegex(AssertionError, "packages/example"):
+            _assert_workspace_coverage({"apps/example"}, expected)
 
 
 class DualCompilerContractArtifactContract(unittest.TestCase):
@@ -488,6 +819,31 @@ class BenchmarkRecordSchemaContract(unittest.TestCase):
             required,
             "benchmark-record-schema.json must declare a non-empty 'required' list",
         )
+
+    def test_benchmark_schema_distinguishes_unavailable_dmesg_from_zero_ooms(self) -> None:
+        """Requires explicit dmesg status rather than encoding unavailable as zero."""
+        schema = _load_json_schema(BENCHMARK_RECORD_SCHEMA_PATH)
+        _assert_dmesg_observability_schema(schema)
+
+    def test_dmesg_contract_rejects_missing_observability_status(self) -> None:
+        """Counterexample: OOM count alone cannot prove dmesg was observable."""
+        counterexample: dict[str, Any] = {
+            "properties": {
+                "oom_kill_count": {
+                    "type": "integer",
+                    "description": "Recorded as 0 when dmesg is unavailable",
+                }
+            },
+            "required": ["oom_kill_count"],
+        }
+        with self.assertRaises(AssertionError):
+            _assert_dmesg_observability_schema(counterexample)
+
+    def test_swap_delta_is_signed_after_minus_before_in_schema_and_strategy(self) -> None:
+        """Requires one signed swap-delta meaning across schema and strategy."""
+        schema = _load_json_schema(BENCHMARK_RECORD_SCHEMA_PATH)
+        strategy = TEST_STRATEGY_PATH.read_text(encoding="utf-8")
+        _assert_signed_swap_delta_contract(schema, strategy)
 
     def test_benchmark_record_schema_rejects_missing_properties(self) -> None:
         """Counterexample: a schema missing peak_rss_kib/diagnostic_count is incomplete."""
