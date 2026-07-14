@@ -15,6 +15,10 @@
       "types": "./dist/cn.d.ts",
       "import": "./dist/cn.js"
     },
+    "./ffmpeg-process": {
+      "types": "./dist/ffmpeg-process.d.ts",
+      "import": "./dist/ffmpeg-process.js"
+    },
     "./hooks": {
       "types": "./dist/hooks/index.d.ts",
       "import": "./dist/hooks/index.js"
@@ -24,8 +28,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup src/index.ts src/cn.ts src/hooks/index.ts --format esm --dts",
-    "dev": "tsup src/index.ts src/cn.ts src/hooks/index.ts --format esm --dts --watch",
+    "build": "tsup src/index.ts src/cn.ts src/ffmpeg-process.ts src/hooks/index.ts --format esm --dts",
+    "dev": "tsup src/index.ts src/cn.ts src/ffmpeg-process.ts src/hooks/index.ts --format esm --dts --watch",
     "test": "vitest run",
     "lint": "eslint src/"
   },

@@ -175,7 +175,7 @@ deps: {
     const pointsEarned = isCorrect ? question.points : 0;
     totalScore += pointsEarned;
     questionResponsesToCreate.push({ attemptId, questionId: question.id, studentAnswer: response.studentAnswer, isCorrect, timeSpentSeconds: response.timeSpentSeconds || 0, answeredAt: response.answeredAt ? new Date(response.answeredAt) : new Date(), order: response.order, schoolId: tenant.schoolId! });
-    breakdown.push({ questionId: question.id, questionText: question.text, studentAnswer: response.studentAnswer, correctAnswer: question.correctAnswer, isCorrect, pointsEarned, timeSpentSeconds: response.timeSpentSeconds || 0 });
+    breakdown.push({ questionId: question.id, questionText: question.text, studentAnswer: response.studentAnswer, correctAnswer: question.correctAnswer, isCorrect, points: pointsEarned, timeSpentSeconds: response.timeSpentSeconds || 0 });
   }
 
   const percentage = (totalScore / attempt.maxScore) * 100;

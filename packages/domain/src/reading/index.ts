@@ -17,3 +17,12 @@ export {
 } from "./get-school-segments.js";
 
 export { READING_PERMISSIONS } from "./permissions.js";
+
+export {
+  scheduleFsrsReview,
+  scheduleFsrsReviewNow,
+  type FsrsRating,
+  type FsrsCardState,
+  type FsrsReviewInput,
+  type FsrsReviewOutput,
+} from "./fsrs-scheduler.js";
