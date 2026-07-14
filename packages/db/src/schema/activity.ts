@@ -128,3 +128,20 @@ export const activityTutorialRepositoryStates = pgTable(
     uniqueIndex("activity_tutorial_repository_states_submission_idx").on(table.tenantKey, table.learnerId, table.sessionId, table.submissionId),
   ],
 );
+
+/** Fleet-wide leases and sliding-window counters for bounded repository capture. */
+export const activityTutorialCaptureLeases = pgTable(
+  "activity_tutorial_capture_leases",
+  {
+    leaseKey: text("lease_key").primaryKey(),
+    windowStartedAt: timestamp("window_started_at", { withTimezone: true }).notNull(),
+    attemptCount: integer("attempt_count").default(0).notNull(),
+    claimToken: text("claim_token"),
+    leaseUntil: timestamp("lease_until", { withTimezone: true }).notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [
+    check("activity_tutorial_capture_leases_attempt_count_check", sql`${table.attemptCount} >= 0`),
+    index("activity_tutorial_capture_leases_expiry_idx").on(table.leaseUntil),
+  ],
+);

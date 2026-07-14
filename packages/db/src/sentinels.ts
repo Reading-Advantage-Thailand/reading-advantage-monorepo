@@ -43,4 +43,12 @@ export const sentinelProbes: Record<string, SentinelProbe> = {
   "0026_game_completions": { tag: "0026_game_completions", kind: "table", target: "game_completions" },
   "0027_mastery_persistence": { tag: "0027_mastery_persistence", kind: "table", target: "mastery_commits" },
   "0028_mastery_tenant_hardening": { tag: "0028_mastery_tenant_hardening", kind: "table", target: "mastery_cards" },
+  "0029_activity_sessions": { tag: "0029_activity_sessions", kind: "table", target: "activity_sessions" },
+  "0030_activity_tutorial_reporting": { tag: "0030_activity_tutorial_reporting", kind: "table", target: "activity_tutorial_reports" },
+  "0031_tutorial_claim_fencing": { tag: "0031_tutorial_claim_fencing", kind: "column", target: "activity_tutorial_reports.claim_token" },
+  "0032_tutorial_snapshot_submission_binding": { tag: "0032_tutorial_snapshot_submission_binding", kind: "column", target: "activity_tutorial_repository_states.submission_id" },
+  "0033_codecamp_curriculum_assignments": { tag: "0033_codecamp_curriculum_assignments", kind: "table", target: "codecamp_curriculum_assignments" },
+  "0034_codecamp_pr_rubric_evaluation": { tag: "0034_codecamp_pr_rubric_evaluation", kind: "column", target: "codecamp_pr_reviews.rubric_evaluation_json" },
+  "0035_activity_tutorial_capture_leases": { tag: "0035_activity_tutorial_capture_leases", kind: "table", target: "activity_tutorial_capture_leases" },
+  "0036_codecamp_mastery_evidence": { tag: "0036_codecamp_mastery_evidence", kind: "table", target: "codecamp_pr_review_attempts" },
 };

@@ -138,7 +138,34 @@ describe("Phase 4 — Task 15: FR-4 codecamp deploy gate (cloudbuild.yaml)", () 
     ).toBeLessThan(deployIdx);
   });
 
-  it("doctor step targets DIRECT_DATABASE_URL (privileged connection, per test-strategy §2)", () => {
+  it("requires the Codecamp mastery-evidence migration before traffic shifts", () => {
+    const text = readFileSync(CLOUDBUILD_PATH, "utf8");
+    const steps = parseCloudBuildSteps(text);
+    const doctorStep = steps.find((step) =>
+      step.args.some((argument) => argument.includes("doctor") && argument.includes("--check")),
+    );
+    expect(doctorStep, "doctor --check step must exist").toBeDefined();
+    const block = text.split(/\n\s*-\s*name:/)[steps.indexOf(doctorStep!) + 1] ?? "";
+    expect(
+      block,
+      "Codecamp deployment must prove 0036_codecamp_mastery_evidence is in the Drizzle ledger before application traffic can use its tables",
+    ).toMatch(/--required-migration\s+0036_codecamp_mastery_evidence/);
+  });
+
+  it("deploys the unreleased PR-review model in explicit private shadow mode", () => {
+    const text = readFileSync(CLOUDBUILD_PATH, "utf8");
+    expect(
+      text,
+      "Codecamp deployment must set CODECAMP_PR_REVIEW_ROLLOUT_MODE=shadow until a human-approved evaluation promotes canary or active feedback",
+    ).toMatch(/CODECAMP_PR_REVIEW_ROLLOUT_MODE=shadow/);
+  });
+
+  // The deploy gate's "privileged direct connection" is CODECAMP_DATABASE_URL:
+  // a Cloud SQL unix-socket URL reached through the Cloud SQL Auth Proxy
+  // (session-mode, no transaction pooler) started inside the build step.
+  // The project has no DIRECT_DATABASE_URL secret; Cloud SQL replaced the
+  // pooled/direct URL split this contract was originally written against.
+  it("doctor step targets CODECAMP_DATABASE_URL (privileged connection, per test-strategy §2)", () => {
     const text = readFileSync(CLOUDBUILD_PATH, "utf8");
     const steps = parseCloudBuildSteps(text);
     const doctorStep = steps.find((s) =>
@@ -148,28 +175,32 @@ describe("Phase 4 — Task 15: FR-4 codecamp deploy gate (cloudbuild.yaml)", () 
     const wholeBlock = text.split(/\n\s*-\s*name:/)[steps.indexOf(doctorStep!) + 1] ?? "";
     expect(
       wholeBlock,
-      "doctor step block must reference DIRECT_DATABASE_URL (privileged connection for ledger reads)"
-    ).toMatch(/DIRECT_DATABASE_URL/);
+      "doctor step block must reference CODECAMP_DATABASE_URL (privileged connection for ledger reads)"
+    ).toMatch(/CODECAMP_DATABASE_URL/);
     expect(
       wholeBlock,
-      "doctor step must export DATABASE_URL from the Secret Manager-provided DIRECT_DATABASE_URL before running the db package command"
-    ).toMatch(/export\s+DATABASE_URL=\\?"?\$\$DIRECT_DATABASE_URL/);
+      "doctor step must export DATABASE_URL from the Secret Manager-provided CODECAMP_DATABASE_URL before running the db package command"
+    ).toMatch(/export\s+DATABASE_URL=\\?"?\$\$CODECAMP_DATABASE_URL/);
+    expect(
+      wholeBlock,
+      "doctor step must start the Cloud SQL Auth Proxy so the /cloudsql unix-socket URL is reachable inside Cloud Build"
+    ).toMatch(/cloud-sql-proxy/);
   });
 
-  it("wires DIRECT_DATABASE_URL through Cloud Build Secret Manager availableSecrets", () => {
+  it("wires CODECAMP_DATABASE_URL through Cloud Build Secret Manager availableSecrets", () => {
     const text = readFileSync(CLOUDBUILD_PATH, "utf8");
     expect(
       text,
-      "Cloud Build must use Secret Manager `availableSecrets`, not legacy KMS `secrets`, so secretEnv receives DIRECT_DATABASE_URL"
+      "Cloud Build must use Secret Manager `availableSecrets`, not legacy KMS `secrets`, so secretEnv receives CODECAMP_DATABASE_URL"
     ).toMatch(/availableSecrets:\s*\n\s*secretManager:/);
     expect(
       text,
-      "DIRECT_DATABASE_URL secret must be bound from Secret Manager to the DIRECT_DATABASE_URL env name"
-    ).toMatch(/versionName:\s*"?projects\/\$PROJECT_ID\/secrets\/DIRECT_DATABASE_URL\/versions\/latest"?[\s\S]*env:\s*"DIRECT_DATABASE_URL"/);
+      "CODECAMP_DATABASE_URL secret must be bound from Secret Manager to the CODECAMP_DATABASE_URL env name"
+    ).toMatch(/versionName:\s*"?projects\/\$PROJECT_ID\/secrets\/CODECAMP_DATABASE_URL\/versions\/latest"?[\s\S]*env:\s*"CODECAMP_DATABASE_URL"/);
     expect(
       text,
-      "legacy KMS `secrets:` block must not be used for DIRECT_DATABASE_URL deploy gate wiring"
-    ).not.toMatch(/\nsecrets:\s*\n[\s\S]*DIRECT_DATABASE_URL/);
+      "legacy KMS `secrets:` block must not be used for CODECAMP_DATABASE_URL deploy gate wiring"
+    ).not.toMatch(/\nsecrets:\s*\n[\s\S]*CODECAMP_DATABASE_URL/);
   });
 
   it("doctor step has no `allowFailure: true` — non-zero exit must fail the build (FR-4 acceptance #5)", () => {

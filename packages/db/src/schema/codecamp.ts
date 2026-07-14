@@ -1,4 +1,5 @@
-import { pgTable, uuid, text, timestamp, integer, jsonb, pgEnum, unique, index } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
+import { check, pgTable, uuid, text, timestamp, integer, jsonb, pgEnum, unique, index } from "drizzle-orm/pg-core";
 import { users } from "./users.js";
 
 // ─── Enums ────────────────────────────────────────────────
@@ -140,6 +141,62 @@ export const codecampChatMessages = pgTable("codecamp_chat_messages", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+/** Immutable, learner-visible intervention generated for an owned Codecamp activity. */
+export const codecampTutorInterventions = pgTable("codecamp_tutor_interventions", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  tenantKey: text("tenant_key").notNull(),
+  userId: text("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  conversationId: uuid("conversation_id").references(() => codecampChatConversations.id, { onDelete: "set null" }),
+  activitySessionId: uuid("activity_session_id"),
+  activityId: text("activity_id").notNull(),
+  activityVersion: text("activity_version").notNull(),
+  graphVersion: text("graph_version").notNull(),
+  objectiveId: text("objective_id").notNull(),
+  stepId: text("step_id"),
+  requestId: uuid("request_id").notNull(),
+  interventionLevel: integer("intervention_level").notNull(),
+  message: text("message").notNull(),
+  diagnosticQuestion: text("diagnostic_question"),
+  misconceptionTagsJson: jsonb("misconception_tags_json").$type<string[]>().default([]).notNull(),
+  recommendedResourceId: text("recommended_resource_id"),
+  modelAlias: text("model_alias").notNull(),
+  resolvedModel: text("resolved_model").notNull(),
+  promptPolicyVersion: text("prompt_policy_version").notNull(),
+  responseSchemaVersion: text("response_schema_version").notNull(),
+  resourceRegistryVersion: text("resource_registry_version").notNull(),
+  modelProvenanceJson: jsonb("model_provenance_json").$type<Record<string, unknown>>().notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+}, (table) => [
+  unique("codecamp_tutor_interventions_request_unique").on(table.requestId),
+  check("codecamp_tutor_interventions_level_check", sql`${table.interventionLevel} >= 0 AND ${table.interventionLevel} <= 4`),
+  index("codecamp_tutor_interventions_owner_session_created_idx").on(table.tenantKey, table.userId, table.activitySessionId, table.createdAt),
+]);
+
+/** Immutable audit of a learner opening, seeking, or highlighting a recommended resource. */
+export const codecampTutorResourceUses = pgTable("codecamp_tutor_resource_uses", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  interventionId: uuid("intervention_id").notNull().references(() => codecampTutorInterventions.id, { onDelete: "cascade" }),
+  resourceId: text("resource_id").notNull(),
+  actionType: text("action_type").notNull(),
+  occurredAt: timestamp("occurred_at", { withTimezone: true }).defaultNow().notNull(),
+}, (table) => [
+  unique("codecamp_tutor_resource_uses_intervention_resource_action_unique").on(table.interventionId, table.resourceId, table.actionType),
+  check("codecamp_tutor_resource_uses_action_check", sql`${table.actionType} IN ('open', 'seek', 'highlight')`),
+]);
+
+/** Join from intervention context to later, independently verified activity evidence. */
+export const codecampTutorEvidenceJoins = pgTable("codecamp_tutor_evidence_joins", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  interventionId: uuid("intervention_id").notNull().references(() => codecampTutorInterventions.id, { onDelete: "cascade" }),
+  activitySessionId: uuid("activity_session_id").notNull(),
+  verifiedEventId: text("verified_event_id").notNull(),
+  verifiedSubmissionId: text("verified_submission_id").notNull(),
+  joinedAt: timestamp("joined_at", { withTimezone: true }).defaultNow().notNull(),
+}, (table) => [
+  unique("codecamp_tutor_evidence_joins_intervention_event_unique").on(table.interventionId, table.verifiedEventId),
+  index("codecamp_tutor_evidence_joins_session_idx").on(table.activitySessionId),
+]);
+
 // ─── Exercise Repos ───────────────────────────────────────
 
 export const codecampExerciseRepos = pgTable("codecamp_exercise_repos", {
@@ -190,6 +247,61 @@ export const codecampWebhookEvents = pgTable("codecamp_webhook_events", {
   payloadJson: jsonb("payload_json"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
+
+/** Immutable AI or deterministic assessment attempt for one Codecamp pull request revision. */
+export const codecampPrReviewAttempts = pgTable("codecamp_pr_review_attempts", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  reviewId: uuid("review_id").notNull().references(() => codecampPrReviews.id, { onDelete: "cascade" }),
+  tenantKey: text("tenant_key").notNull(),
+  userId: text("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  headSha: text("head_sha").notNull(),
+  idempotencyKey: text("idempotency_key").notNull(),
+  attemptStatus: text("attempt_status").notNull(),
+  evidenceAuthority: text("evidence_authority").notNull(),
+  modelAlias: text("model_alias"),
+  resolvedModel: text("resolved_model"),
+  providerRequestId: text("provider_request_id"),
+  providerResponseId: text("provider_response_id"),
+  promptVersion: text("prompt_version").notNull(),
+  responseSchemaVersion: text("response_schema_version").notNull(),
+  rubricVersion: text("rubric_version").notNull(),
+  graphVersion: text("graph_version").notNull(),
+  usageJson: jsonb("usage_json").$type<Record<string, unknown>>(),
+  latencyMs: integer("latency_ms"),
+  trustedContextJson: jsonb("trusted_context_json").$type<Record<string, unknown>>().notNull(),
+  evidenceJson: jsonb("evidence_json").$type<Record<string, unknown>>(),
+  errorDiagnosticsJson: jsonb("error_diagnostics_json").$type<Record<string, unknown>>(),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+}, (table) => [
+  unique("codecamp_pr_review_attempts_review_head_unique").on(table.reviewId, table.headSha),
+  unique("codecamp_pr_review_attempts_idempotency_unique").on(table.idempotencyKey),
+  check("codecamp_pr_review_attempts_status_check", sql`${table.attemptStatus} IN ('advisory', 'validated', 'failed')`),
+  check("codecamp_pr_review_attempts_authority_check", sql`${table.evidenceAuthority} IN ('advisory_model', 'trusted_deterministic')`),
+  check("codecamp_pr_review_attempts_latency_check", sql`${table.latencyMs} IS NULL OR ${table.latencyMs} >= 0`),
+  index("codecamp_pr_review_attempts_owner_created_idx").on(table.tenantKey, table.userId, table.createdAt),
+]);
+
+/** Per-objective evidence emitted by one immutable Codecamp PR review attempt. */
+export const codecampPrReviewObjectiveEvidence = pgTable("codecamp_pr_review_objective_evidence", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  attemptId: uuid("attempt_id").notNull().references(() => codecampPrReviewAttempts.id, { onDelete: "cascade" }),
+  objectiveId: text("objective_id").notNull(),
+  variantKey: text("variant_key").notNull(),
+  score: integer("score").notNull(),
+  confidence: integer("confidence").notNull(),
+  rubricDimensionsJson: jsonb("rubric_dimensions_json").$type<Record<string, unknown>>().notNull(),
+  misconceptionTagsJson: jsonb("misconception_tags_json").$type<string[]>().default([]).notNull(),
+  evidenceReferencesJson: jsonb("evidence_references_json").$type<Record<string, unknown>>().notNull(),
+  supportHistoryJson: jsonb("support_history_json").$type<Record<string, unknown>>().notNull(),
+  evidenceState: text("evidence_state").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+}, (table) => [
+  unique("codecamp_pr_review_objective_evidence_attempt_objective_variant_unique").on(table.attemptId, table.objectiveId, table.variantKey),
+  check("codecamp_pr_review_objective_evidence_score_check", sql`${table.score} >= 0 AND ${table.score} <= 100`),
+  check("codecamp_pr_review_objective_evidence_confidence_check", sql`${table.confidence} >= 0 AND ${table.confidence} <= 100`),
+  check("codecamp_pr_review_objective_evidence_state_check", sql`${table.evidenceState} IN ('advisory', 'validated', 'rejected')`),
+  index("codecamp_pr_review_objective_evidence_objective_idx").on(table.objectiveId, table.variantKey),
+]);
 
 // ─── Review Jobs (Postgres-backed retry queue + DLQ) ─────
 

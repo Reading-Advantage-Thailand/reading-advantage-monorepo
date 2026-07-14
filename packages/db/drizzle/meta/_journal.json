@@ -246,6 +246,20 @@
       "when": 1783764000000,
       "tag": "0034_codecamp_pr_rubric_evaluation",
       "breakpoints": true
+    },
+    {
+      "idx": 35,
+      "version": "7",
+      "when": 1783766000000,
+      "tag": "0035_activity_tutorial_capture_leases",
+      "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "7",
+      "when": 1783817114207,
+      "tag": "0036_codecamp_mastery_evidence",
+      "breakpoints": true
     }
   ]
 }

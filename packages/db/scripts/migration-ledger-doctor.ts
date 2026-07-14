@@ -5,6 +5,10 @@ import { fileURLToPath } from "node:url";
 import { createHash } from "node:crypto";
 import postgres from "postgres";
 import { sentinelProbes, type SentinelProbe } from "../src/sentinels.js";
+import {
+  buildPostgresOptions,
+  normalizePostgresConnectionString,
+} from "../src/connection-options.js";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const PACKAGE_ROOT = resolve(HERE, "..");
@@ -53,12 +57,23 @@ async function checkSentinel(client: postgres.Sql, probe: SentinelProbe): Promis
 }
 
 async function main() {
-  const dbUrl = process.env.DIRECT_DATABASE_URL;
-  if (!dbUrl) { console.error("DIRECT_DATABASE_URL is not set"); process.exit(2); }
+  // Prefer DIRECT_DATABASE_URL (session-mode direct connection); fall back
+  // to DATABASE_URL with a warning, mirroring drizzle.config.ts and the
+  // codecamp seed. Environments like the Cloud Build deploy gate reach the
+  // DB through the Cloud SQL Auth Proxy, which is already a direct
+  // connection under either env name.
+  const dbUrl = process.env.DIRECT_DATABASE_URL ?? process.env.DATABASE_URL;
+  if (!dbUrl) { console.error("DIRECT_DATABASE_URL is not set (and no DATABASE_URL fallback)"); process.exit(2); }
+  if (!process.env.DIRECT_DATABASE_URL) {
+    console.warn("[doctor] DIRECT_DATABASE_URL is not set; falling back to DATABASE_URL.");
+  }
   let journal: Journal;
   try { journal = JSON.parse(readFileSync(JOURNAL_PATH, "utf8")) as Journal; } catch (err) { console.error("Failed to read journal:", err); process.exit(2); }
   let client: postgres.Sql;
-  try { client = postgres(dbUrl, { max: 1, connect_timeout: 10 }); await client.unsafe("SELECT 1"); } catch (err) { console.error("Failed to connect:", err); process.exit(2); }
+  // Normalize Cloud SQL unix-socket URLs (?host=/cloudsql/<instance>) the
+  // same way the runtime client and seed do — raw postgres() does not
+  // honor the `host` query param as a socket directory.
+  try { client = postgres(normalizePostgresConnectionString(dbUrl), { ...buildPostgresOptions(dbUrl), max: 1, connect_timeout: 10 }); await client.unsafe("SELECT 1"); } catch (err) { console.error("Failed to connect:", err); process.exit(2); }
   try {
     await client.unsafe("CREATE SCHEMA IF NOT EXISTS drizzle");
     await client.unsafe("CREATE TABLE IF NOT EXISTS drizzle.__drizzle_migrations (id SERIAL PRIMARY KEY, hash text NOT NULL, created_at bigint)");
