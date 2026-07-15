@@ -98,7 +98,11 @@ PHASE3D_CUTOVER_ORDER = (
     "packages/api",
     "packages/webhooks",
 )
-PHASE3E_ACCEPTED_EMIT_BUILD_WORKSPACES = ("packages/types", "packages/db")
+PHASE3E_ACCEPTED_EMIT_BUILD_WORKSPACES = (
+    "packages/types",
+    "packages/db",
+    "packages/game-cartridges",
+)
 
 
 def _load_runner() -> ModuleType:
@@ -653,6 +657,18 @@ class Phase3dCheckTypesCutoverContract(unittest.TestCase):
         self.assertEqual(
             scripts.get("build"),
             "node ../../node_modules/typescript7/bin/tsc --project tsconfig.build.json",
+        )
+
+    def test_game_cartridges_declaration_emit_routes_to_typescript7(self) -> None:
+        """Requires the leaf package's declaration-only compiler step to select the native alias."""
+        manifest_path = REPO_ROOT / "packages" / "game-cartridges" / "package.json"
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        scripts = manifest.get("scripts")
+        self.assertIsInstance(scripts, dict)
+        assert isinstance(scripts, dict)
+        self.assertEqual(
+            scripts.get("build"),
+            "tsup src/index.ts src/catalog.ts --format esm && node ../../node_modules/typescript7/bin/tsc -p tsconfig.build.json --emitDeclarationOnly",
         )
 
 

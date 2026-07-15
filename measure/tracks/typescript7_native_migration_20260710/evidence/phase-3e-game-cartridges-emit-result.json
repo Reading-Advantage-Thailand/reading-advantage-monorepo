@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "track": "typescript7_native_migration_20260710",
+  "phase": "Phase 3e: declaration-emit cutover",
+  "package": "packages/game-cartridges",
+  "status": "accepted_byte_identical",
+  "build_scripts": {
+    "before": "tsup src/index.ts src/catalog.ts --format esm && node ../../node_modules/typescript/bin/tsc -p tsconfig.build.json --emitDeclarationOnly",
+    "after": "tsup src/index.ts src/catalog.ts --format esm && node ../../node_modules/typescript7/bin/tsc -p tsconfig.build.json --emitDeclarationOnly"
+  },
+  "typescript6_capture": {"version":"6.0.2","exit_status":0,"output_file_count":7,"relative_tree_sha256":"e836c5ac217e158d42181d95e6b1fafba1ff64dc57bec952ccb50a06b4703b8c"},
+  "typescript7_capture": {"version":"7.0.2","command":"pnpm run build","exit_status":0,"output_file_count":7,"relative_tree_sha256":"e836c5ac217e158d42181d95e6b1fafba1ff64dc57bec952ccb50a06b4703b8c"},
+  "comparison": {"diff_exit_status":0,"declaration_difference_count":0,"javascript_difference_count":0,"disposition":"byte_identical"}
+}

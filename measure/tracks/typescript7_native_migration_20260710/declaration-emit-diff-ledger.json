@@ -62,6 +62,20 @@
       "javascript_differences": [],
       "disposition": "accepted_declaration_ordering_only",
       "rationale": "TypeScript 7 changes only declaration-printer presentation in Drizzle schema types: quote style plus deterministic object-property and union-member ordering. The emitted JavaScript files and the complete output file set are byte-identical."
+    },
+    {
+      "package": "packages/game-cartridges",
+      "typescript6": "6.0.2",
+      "typescript7": "7.0.2",
+      "typescript6_exit_status": 0,
+      "typescript7_exit_status": 0,
+      "output_file_count": 7,
+      "typescript6_relative_tree_sha256": "e836c5ac217e158d42181d95e6b1fafba1ff64dc57bec952ccb50a06b4703b8c",
+      "typescript7_relative_tree_sha256": "e836c5ac217e158d42181d95e6b1fafba1ff64dc57bec952ccb50a06b4703b8c",
+      "declaration_differences": [],
+      "javascript_differences": [],
+      "disposition": "byte_identical",
+      "rationale": "The unchanged tsup JavaScript stage and the TypeScript declaration-only stage produce a byte-identical dist tree under both compiler aliases."
     }
   ]
 }

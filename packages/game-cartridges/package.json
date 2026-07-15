@@ -17,7 +17,7 @@
   },
   "files": ["dist"],
   "scripts": {
-    "build": "tsup src/index.ts src/catalog.ts --format esm && node ../../node_modules/typescript/bin/tsc -p tsconfig.build.json --emitDeclarationOnly",
+    "build": "tsup src/index.ts src/catalog.ts --format esm && node ../../node_modules/typescript7/bin/tsc -p tsconfig.build.json --emitDeclarationOnly",
     "check-types": "node ../../node_modules/typescript7/bin/tsc --noEmit",
     "check-types:compat": "node ../../node_modules/typescript/bin/tsc --noEmit",
     "check-types:rollback": "node ../../node_modules/typescript/bin/tsc --noEmit",
