@@ -48,7 +48,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "node ../../node_modules/typescript/bin/tsc",
+    "build": "node ../../node_modules/typescript7/bin/tsc",
     "check-types": "node ../../node_modules/typescript7/bin/tsc --noEmit",
     "check-types:compat": "node ../../node_modules/typescript/bin/tsc --noEmit",
     "check-types:rollback": "node ../../node_modules/typescript/bin/tsc --noEmit",

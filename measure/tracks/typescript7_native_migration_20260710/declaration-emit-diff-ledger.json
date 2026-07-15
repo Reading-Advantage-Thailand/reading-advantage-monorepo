@@ -153,6 +153,21 @@
       "javascript_differences": ["react/apk-game-host.js"],
       "disposition": "accepted_printer_and_jsx_helper_ordering_only",
       "rationale": "Both compilers retain the same three pre-existing game-contract diagnostics. TS7 changes declaration ordering/maps and only swaps equivalent jsx/jsxs helper import specifier order in emitted JavaScript; runtime bindings and calls are unchanged."
+    },
+    {
+      "package": "packages/knowledge-space-core",
+      "typescript6": "6.0.2",
+      "typescript7": "7.0.2",
+      "typescript6_exit_status": 0,
+      "typescript7_exit_status": 0,
+      "output_file_count": 69,
+      "typescript6_relative_tree_sha256": "986c7ae07c713334c505db0091227de92fc806d3605fb3ef533441a10a7377b7",
+      "typescript7_relative_tree_sha256": "dc7c4e377259f186dd53b9271bb50ccaa802a41b53e8d81b4f44a2f6bb065f7e",
+      "diff_sha256": "6e7f9e39eeeee0d47598eebddff29c3a60adf9594d7af8e5aba5c7045f5aa856",
+      "declaration_differences": ["mastery-state.d.ts", "placement.d.ts", "placement.d.ts.map", "schemas.d.ts", "srs-bridge.d.ts.map"],
+      "javascript_differences": [],
+      "disposition": "accepted_declaration_ordering_and_map_only",
+      "rationale": "TypeScript 7 changes inferred declaration property ordering and derived maps only; emitted JavaScript is byte-identical."
     }
   ]
 }

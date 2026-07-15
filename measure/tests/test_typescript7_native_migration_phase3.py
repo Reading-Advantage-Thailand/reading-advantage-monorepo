@@ -107,6 +107,7 @@ PHASE3E_ACCEPTED_EMIT_BUILD_WORKSPACES = (
     "packages/activity-tutorial",
     "packages/practice-core",
     "packages/advantage-play-kit",
+    "packages/knowledge-space-core",
 )
 
 
@@ -711,6 +712,14 @@ class Phase3dCheckTypesCutoverContract(unittest.TestCase):
     def test_advantage_play_kit_emit_routes_to_typescript7(self) -> None:
         """Requires the Advantage Play Kit emitting build to select the native alias."""
         manifest = json.loads(ADVANTAGE_PLAY_KIT_PACKAGE_PATH.read_text(encoding="utf-8"))
+        scripts = manifest.get("scripts")
+        self.assertIsInstance(scripts, dict)
+        assert isinstance(scripts, dict)
+        self.assertEqual(scripts.get("build"), "node ../../node_modules/typescript7/bin/tsc")
+
+    def test_knowledge_space_core_emit_routes_to_typescript7(self) -> None:
+        """Requires the knowledge-space core emitting build to select the native alias."""
+        manifest = json.loads(KNOWLEDGE_SPACE_CORE_PACKAGE_PATH.read_text(encoding="utf-8"))
         scripts = manifest.get("scripts")
         self.assertIsInstance(scripts, dict)
         assert isinstance(scripts, dict)
