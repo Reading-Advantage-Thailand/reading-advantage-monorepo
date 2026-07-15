@@ -3,7 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "scripts": { "build": "vinext build", "check-types": "node ../../node_modules/typescript/bin/tsc --noEmit" },
+  "scripts": {
+    "build": "vinext build",
+    "check-types": "node ../../node_modules/typescript7/bin/tsc --noEmit",
+    "check-types:compat": "node ../../node_modules/typescript/bin/tsc --noEmit",
+    "check-types:rollback": "node ../../node_modules/typescript/bin/tsc --noEmit"
+  },
   "dependencies": {
     "@reading-advantage/activity-react": "workspace:*",
     "@reading-advantage/activity-runtime": "workspace:*",

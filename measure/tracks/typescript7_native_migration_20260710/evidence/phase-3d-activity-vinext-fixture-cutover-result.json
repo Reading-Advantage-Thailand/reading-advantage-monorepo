@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "track": "typescript7_native_migration_20260710",
+  "phase": "Phase 3d: check-types cutover",
+  "status": "accepted_pre_existing_debt",
+  "workspace": {
+    "name": "activity-vinext-fixture",
+    "path": "apps/activity-vinext-fixture",
+    "acceptance_order": 16
+  },
+  "scripts": {
+    "check-types": "node ../../node_modules/typescript7/bin/tsc --noEmit",
+    "check-types:compat": "node ../../node_modules/typescript/bin/tsc --noEmit",
+    "check-types:rollback": "node ../../node_modules/typescript/bin/tsc --noEmit"
+  },
+  "results": {
+    "native": {
+      "version": "7.0.2",
+      "exit_status": 1,
+      "stdout_line_count": 2,
+      "stdout_sha256": "30e1d6d345640c869e2cd17d3db4c70c8d4f35d6bf057726c65d4cde41f93580"
+    },
+    "compat": {
+      "version": "6.0.2",
+      "exit_status": 2,
+      "stdout_line_count": 2,
+      "stdout_sha256": "30e1d6d345640c869e2cd17d3db4c70c8d4f35d6bf057726c65d4cde41f93580"
+    },
+    "rollback": {
+      "version": "6.0.2",
+      "exit_status": 2,
+      "stdout_line_count": 2,
+      "stdout_sha256": "30e1d6d345640c869e2cd17d3db4c70c8d4f35d6bf057726c65d4cde41f93580"
+    }
+  },
+  "parity_disposition": {
+    "accepted_run": "evidence/phase-3c-parity/run-20260715T033929917664Z",
+    "record": "apps/activity-vinext-fixture/tsconfig.json",
+    "status": "parity",
+    "unexplained_differences": [],
+    "applied_ledger_entries": [],
+    "reason": "The TS6 and TS7 package-script diagnostics are byte-identical. The two pre-existing fixture diagnostics are not a TypeScript 7 regression."
+  }
+}
