@@ -1,0 +1,5 @@
+Task: Phase 3 requirements-mapper reconciliation remediation
+Summary: Repinned reconciliation to corrected Phase 1 commit 4979eaa50b85cb5951e9546bb6a672b9d0f16ecb, Phase 2 implementation 6dda411b54787db2b0e005c1097ecc008f424c62, and Phase 2 receipt 70e6059bcfbf23bdfbd449fd25b3ee4751ca6d86; added provenance and quarantine regression contracts; regenerated exact non-consumable reconciliation and Green report.
+Files: measure/tests/test_apk_source_denominator_inventory_phase3.py; measure/tracks/apk_source_denominator_inventory_20260712/generate_phase3_reconciliation.py; measure/tracks/apk_source_denominator_inventory_20260712/phase3-reconciliation.json; measure/tracks/apk_source_denominator_inventory_20260712/phase3-green-test-report.json
+Why: Phase 3 still consumed stale Phase 2 bytes and preserved failed-track search strings after the repaired Phase 1/2 lineage landed.
+Verification: Phase 3 12/12; Phase 0-3 admission 37/37; deterministic SHA-256 8838480634acce470430098b002b9c9468a7c53022a413ee24002c4e0c3e6c2c; zero unresolved sources; zero failed-track quarantine strings.
