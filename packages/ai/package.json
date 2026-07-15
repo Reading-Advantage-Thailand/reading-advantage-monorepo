@@ -20,7 +20,7 @@
     "build": "node ../../node_modules/typescript7/bin/tsc",
     "lint": "eslint .",
     "test": "vitest run",
-    "check-types": "node ../../node_modules/typescript7/bin/tsc --noEmit",
+    "check-types": "node ../../scripts/run-ts7-check-types.mjs --noEmit",
     "check-types:compat": "node ../../node_modules/typescript/bin/tsc --noEmit",
     "check-types:rollback": "node ../../node_modules/typescript/bin/tsc --noEmit"
   },

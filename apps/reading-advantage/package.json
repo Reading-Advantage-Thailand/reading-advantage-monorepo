@@ -7,7 +7,7 @@
     "build": "cross-env NODE_OPTIONS=--max-old-space-size=8192 next build",
     "start": "next start",
     "lint": "eslint .",
-    "check-types": "node ../../node_modules/typescript7/bin/tsc --noEmit",
+    "check-types": "node ../../scripts/run-ts7-check-types.mjs --noEmit",
     "check-types:compat": "node --max-old-space-size=3072 ../../node_modules/typescript/bin/tsc --noEmit",
     "check-types:rollback": "node --max-old-space-size=3072 ../../node_modules/typescript/bin/tsc --noEmit",
     "test": "jest",

@@ -264,7 +264,7 @@ class Phase3ParityRecorderContract(unittest.TestCase):
 class Phase3dCheckTypesCutoverContract(unittest.TestCase):
     """Verify the first workspace selects each compiler by its exact alias path."""
 
-    NATIVE_COMMAND = "node ../../node_modules/typescript7/bin/tsc --noEmit"
+    NATIVE_COMMAND = "node ../../scripts/run-ts7-check-types.mjs --noEmit"
     COMPAT_COMMAND = "node ../../node_modules/typescript/bin/tsc --noEmit"
 
     def _assert_standard_workspace_routing(self, manifest_path: Path) -> None:
@@ -348,6 +348,14 @@ class Phase3dCheckTypesCutoverContract(unittest.TestCase):
             f"TypeScript 7 emit migration is reserved for Phase 3e: {premature_emit_cutovers}",
         )
 
+    def test_native_checker_wrapper_selects_typescript7_and_rejects_unbounded_workers(self) -> None:
+        """Requires native check-types scripts to validate a one-or-two-checker budget."""
+        wrapper = REPO_ROOT / "scripts" / "run-ts7-check-types.mjs"
+        contents = wrapper.read_text(encoding="utf-8")
+        self.assertIn("node_modules/typescript7/bin/tsc", contents)
+        self.assertIn('checkers !== "1" && checkers !== "2"', contents)
+        self.assertIn("TS7_CHECKERS", contents)
+
     def test_db_workspace_check_types_routing_is_explicit_and_reversible(self) -> None:
         """Requires the second ordered workspace to preserve the direct dual-compiler paths."""
         manifest = json.loads(DB_PACKAGE_PATH.read_text(encoding="utf-8"))
@@ -400,7 +408,7 @@ class Phase3dCheckTypesCutoverContract(unittest.TestCase):
 
     def test_github_integration_check_types_routing_is_explicit_and_reversible(self) -> None:
         """Requires the nested shared workspace to use its own correct relative compiler paths."""
-        native = "node ../../../node_modules/typescript7/bin/tsc --noEmit"
+        native = "node ../../../scripts/run-ts7-check-types.mjs --noEmit"
         compat = "node ../../../node_modules/typescript/bin/tsc --noEmit"
         manifest = json.loads(GITHUB_INTEGRATION_PACKAGE_PATH.read_text(encoding="utf-8"))
         scripts = manifest.get("scripts")
@@ -515,7 +523,7 @@ class Phase3dCheckTypesCutoverContract(unittest.TestCase):
 
     def test_activity_tutorial_check_types_routing_is_explicit_and_reversible(self) -> None:
         """Requires the test-config workspace to route all source checking through the direct aliases."""
-        native = "node ../../node_modules/typescript7/bin/tsc --noEmit -p tsconfig.test.json"
+        native = "node ../../scripts/run-ts7-check-types.mjs --noEmit -p tsconfig.test.json"
         compat = "node ../../node_modules/typescript/bin/tsc --noEmit -p tsconfig.test.json"
         manifest = json.loads(ACTIVITY_TUTORIAL_PACKAGE_PATH.read_text(encoding="utf-8"))
         scripts = manifest.get("scripts")
@@ -548,8 +556,8 @@ class Phase3dCheckTypesCutoverContract(unittest.TestCase):
     def test_activity_runtime_check_types_routing_is_emit_free_and_reversible(self) -> None:
         """Requires the runtime package to typecheck source and tests without invoking its TS6 build."""
         native = (
-            "node ../../node_modules/typescript7/bin/tsc --noEmit && "
-            "node ../../node_modules/typescript7/bin/tsc --noEmit -p tsconfig.test.json"
+            "node ../../scripts/run-ts7-check-types.mjs --noEmit && "
+            "node ../../scripts/run-ts7-check-types.mjs --noEmit -p tsconfig.test.json"
         )
         compat = (
             "node ../../node_modules/typescript/bin/tsc --noEmit && "
@@ -566,8 +574,8 @@ class Phase3dCheckTypesCutoverContract(unittest.TestCase):
     def test_activity_react_check_types_routing_is_emit_free_and_reversible(self) -> None:
         """Requires the React package to typecheck source and tests without invoking its TS6 build."""
         native = (
-            "node ../../node_modules/typescript7/bin/tsc --noEmit && "
-            "node ../../node_modules/typescript7/bin/tsc --noEmit -p tsconfig.test.json"
+            "node ../../scripts/run-ts7-check-types.mjs --noEmit && "
+            "node ../../scripts/run-ts7-check-types.mjs --noEmit -p tsconfig.test.json"
         )
         compat = (
             "node ../../node_modules/typescript/bin/tsc --noEmit && "
@@ -584,8 +592,8 @@ class Phase3dCheckTypesCutoverContract(unittest.TestCase):
     def test_codecamp_knowledge_check_types_routing_is_explicit_and_reversible(self) -> None:
         """Requires both codecamp knowledge configs to use the direct reversible compiler aliases."""
         native = (
-            "node ../../node_modules/typescript7/bin/tsc --noEmit && "
-            "node ../../node_modules/typescript7/bin/tsc -p tsconfig.test.json"
+            "node ../../scripts/run-ts7-check-types.mjs --noEmit && "
+            "node ../../scripts/run-ts7-check-types.mjs -p tsconfig.test.json"
         )
         compat = (
             "node ../../node_modules/typescript/bin/tsc --noEmit && "
@@ -629,7 +637,7 @@ class Phase3dCheckTypesCutoverContract(unittest.TestCase):
             if not isinstance(scripts, dict):
                 continue
             check_types = scripts.get("check-types")
-            if isinstance(check_types, str) and "typescript7/bin/tsc" in check_types:
+            if isinstance(check_types, str) and "run-ts7-check-types.mjs" in check_types:
                 flipped.append(workspace)
         self.assertEqual(
             flipped,
