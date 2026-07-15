@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "track": "typescript7_native_migration_20260710",
+  "phase": "Phase 3d: check-types cutover",
+  "status": "accepted_pre_existing_debt",
+  "workspace": {
+    "name": "marketing",
+    "path": "apps/marketing",
+    "acceptance_order": 14
+  },
+  "scripts": {
+    "check-types": "node ../../node_modules/typescript7/bin/tsc --noEmit",
+    "check-types:compat": "node ../../node_modules/typescript/bin/tsc --noEmit",
+    "check-types:rollback": "node ../../node_modules/typescript/bin/tsc --noEmit"
+  },
+  "results": {
+    "native": { "version": "7.0.2", "exit_status": 1, "stdout_line_count": 122, "stdout_sha256": "841c7d18793a84b2c322f8647994d73c0cdc47be28524832d1a48c1cdd8c3ae8" },
+    "compat": { "version": "6.0.2", "exit_status": 2, "stdout_line_count": 122, "stdout_sha256": "841c7d18793a84b2c322f8647994d73c0cdc47be28524832d1a48c1cdd8c3ae8" },
+    "rollback": { "version": "6.0.2", "exit_status": 1, "stdout_line_count": 122, "stdout_sha256": "841c7d18793a84b2c322f8647994d73c0cdc47be28524832d1a48c1cdd8c3ae8" }
+  },
+  "parity_disposition": {
+    "accepted_run": "evidence/phase-3c-parity/run-20260715T033929917664Z",
+    "record": "apps/marketing/tsconfig.json",
+    "status": "parity",
+    "unexplained_differences": [],
+    "applied_ledger_entries": [],
+    "reason": "The native and compatibility package-script outputs are byte-identical. Existing marketing diagnostics are not a TypeScript 7 regression."
+  }
+}

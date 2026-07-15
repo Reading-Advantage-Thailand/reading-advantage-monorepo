@@ -86,7 +86,8 @@
     - [x] Cut over `apps/reading-advantage` with its compiler-proven 3 GiB TypeScript 6 fallback; retain six reviewed rendering ledger entries. [evidence: phase-3d-reading-cutover-result.json]
     - [x] Cut over `apps/codecamp-advantage` manifest only; rerun its scoped check after active Codecamp source integrates. [evidence: phase-3d-codecamp-cutover-result.json]
     - [x] Cut over `apps/sales-advantage`; preserve and classify its parity-proven pre-existing diagnostics. [evidence: phase-3d-sales-cutover-result.json]
-    - [ ] Continue the required workspace order through Marketing, WWW, and the Vinext fixture.
+    - [x] Cut over `apps/marketing`; preserve and classify its parity-proven pre-existing diagnostics. [evidence: phase-3d-marketing-cutover-result.json]
+    - [ ] Continue the required workspace order through WWW and the Vinext fixture.
   - [ ] Verify JavaScript and declaration emit before switching direct `tsc` builds.
   - [ ] Preserve explicit TypeScript 6 compatibility and rollback commands.
   - [ ] Bound TypeScript checker concurrency underneath Turbo parallelism.
