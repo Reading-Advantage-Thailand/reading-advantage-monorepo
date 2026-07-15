@@ -43,8 +43,9 @@ publishes another canonical location. The planned surfaces are:
 
 | Test file | Kind | Required proof |
 |---|---|---|
-| `contracts.test.ts` | Unit | Execute the exported Zod contracts with table-driven valid and invalid values for accounts, normalized usernames, statuses, credentials, organizations, memberships, company roles, application keys, app-role grants, sessions, OIDC clients/codes, audit metadata, and idempotency keys. |
-| `environment.test.ts` | Unit | Execute the exported environment parser and client-factory seam. Prove pooled, direct, and test-admin URLs are distinct, required in the appropriate runtime, and cannot silently fall back to product `DATABASE_URL`. Also prove canonical HTTPS issuer validation, host-only cookie naming, production `Secure`/`HttpOnly`/`SameSite` requirements, service-credential minimum strength, and secret-safe validation errors. |
+| DB `contracts.test.ts` | Unit | Execute only DB-owned persistence, identifier, normalization, stored OIDC row, global audit allowlist, and stored idempotency/hash Zod contracts. Capability inputs, raw-password policy, event-specific audit projectors, and protocol behavior remain in their backend/auth owners. |
+| DB `environment.test.ts` | Unit | Execute only the DB-owned runtime, direct, and test-admin parsers/client-factory seams. Prove URLs are distinct, required in the appropriate runtime, and cannot silently fall back to product `DATABASE_URL`. |
+| Auth `environment-contracts.test.ts` | Unit | Under `packages/auth`, execute the auth-owned security, issuer/signing/TTL, cookie, confidential/public service-client parsers. Prove canonical production/loopback issuers, bounded session TTLs, host-only `Secure`/`HttpOnly`/`SameSite` cookies, client-secret separation, exact callback/audience configuration, strict inputs, frozen results, and secret-safe errors. |
 | `schema-metadata.test.ts` | Unit | Inspect actual Drizzle table objects with Drizzle metadata APIs. Prove primary keys, foreign keys, unique constraints, status checks, expiry columns/checks, and indexes exist. Do not inspect schema source text. |
 | `migration-journal.test.ts` | Unit | Parse the dedicated identity journal as data. Prove indices are contiguous, `when` values are strictly increasing, SQL files exist exactly once, and the journal/directory are disjoint from `packages/db/drizzle/`. |
 | `migration-fresh.integration.test.ts` | PostgreSQL | Apply the identity migrator to an empty scratch database, query `pg_catalog`/`information_schema`, compare the exact identity-table allowlist, and prove no education, licensing, or product table exists. |
@@ -69,12 +70,17 @@ publishes another canonical location. The planned surfaces are:
 At minimum, contract tests reject empty/whitespace usernames, normalization
 collisions, overlength values, unknown statuses, school/customer organization
 types, unknown company roles, malformed application keys, wildcard redirect
-URIs, cross-application role keys, missing expirations, invalid time ordering,
-and audit metadata containing password/hash/token/code/secret fields. Audit
+URIs, missing expirations, invalid time ordering, and audit metadata containing
+password/hash/token/code/secret fields. Cross-application role mismatch is not
+a generic Zod rejection because application role keys are intentionally data:
+the Task 3 schema-metadata test requires the composite
+`(application_id, role_key)` foreign key, and the Task 4 PostgreSQL suite
+executes the cross-application counterexample. Audit
 metadata cases include nested objects, arrays, mixed casing, and compound keys
-such as `passwordHash` and `authorizationCode`; the contract accepts only an
-operation-specific allowlist rather than relying on a recursive denylist. Each
-row has a named expected issue path or stable error code;
+such as `passwordHash` and `authorizationCode`; the DB contract accepts only
+the strict global storage allowlist rather than relying on a recursive
+denylist, and Task 6 backend tests narrow it with operation-specific
+projectors. Each row has a named expected issue path or stable error code;
 `safeParse(...).success === false` without checking the intended issue is too
 weak.
 
@@ -169,6 +175,8 @@ CI=true pnpm --filter @reading-advantage/db exec vitest run \
   src/company-identity/__tests__/schema-metadata.test.ts \
   src/company-identity/__tests__/migration-journal.test.ts \
   src/company-identity/__tests__/boundary-exports.test.ts
+CI=true pnpm --filter @reading-advantage/auth --fail-if-no-match exec vitest run \
+  src/company-identity/__tests__/environment-contracts.test.ts
 ```
 
 Red must name absent/rejected contract or export behavior. Run the identical

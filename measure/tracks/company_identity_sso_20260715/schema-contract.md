@@ -116,6 +116,7 @@ does not merge accounts by username, display name, or email.
 | newCompanyPasswordSchema | Auth adapter | 12–1024 UTF-8 bytes, no NUL; never transformed or trimmed |
 | passwordHashAlgorithmSchema | Auth adapter and DB stored row | enum ARGON2ID, BCRYPT |
 | organizationStableKeySchema | DB | lowercase key matching ^[a-z0-9](?:[a-z0-9-]{0,62}[a-z0-9])?$ |
+| companyOrganizationTypeSchema | DB | literal INTERNAL_COMPANY; school, customer, and B2B organization kinds are outside this track |
 | applicationStableKeySchema | DB | lowercase key matching the same stable-key grammar |
 | companyRoleKeySchema | DB and backend policy | enum EMPLOYEE, COMPANY_ADMIN |
 | applicationRoleKeySchema | DB and backend policy | uppercase key matching ^[A-Z][A-Z0-9_]{0,63}$ |
