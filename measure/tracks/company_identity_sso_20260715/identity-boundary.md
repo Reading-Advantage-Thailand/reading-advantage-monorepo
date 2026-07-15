@@ -130,8 +130,9 @@ boundary.
 
 Requirements:
 
-- `docker/init-db.sh` will create `company_identity` and
-  `company_identity_test` for fresh local volumes.
+- `docker/init-db.sh` will create `company_identity` for fresh local volumes.
+  Integration suites create unique scratch databases from the `postgres`
+  admin database rather than sharing a persistent `company_identity_test`.
 - Existing volumes receive a documented idempotent database-creation command;
   implementation must not require deleting user data volumes.
 - The identity Drizzle config reads only the `COMPANY_AUTH_*` variables and
