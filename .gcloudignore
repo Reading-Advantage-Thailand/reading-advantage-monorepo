@@ -4,6 +4,8 @@
 apps/*
 !apps/codecamp-advantage/
 !apps/codecamp-advantage/**
+!apps/www-reading-advantage/
+!apps/www-reading-advantage/**
 **/.env
 **/.env.*
 **/.next
