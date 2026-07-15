@@ -1,0 +1,11 @@
+{
+  "track_id": "codecamp_live_product_page_20260715",
+  "type": "feature",
+  "status": "completed",
+  "created_at": "2026-07-15T08:55:00+07:00",
+  "updated_at": "2026-07-15T10:14:00+07:00",
+  "description": "Align the public CodeCamp Advantage page with the production curriculum, mastery, tutoring, media, APK, and guarded PR-review release, then deploy and verify the www site.",
+  "estimated_tasks": 8,
+  "actual_tasks": 8,
+  "deviation_notes": "The first two www Cloud Builds failed before Docker execution because the root .gcloudignore admitted only codecamp-advantage. Commit bd30da22 restored the www build context. The final Measure audit also added the promised cohort boundary and production toolchain before the successful immutable deployment."
+}
