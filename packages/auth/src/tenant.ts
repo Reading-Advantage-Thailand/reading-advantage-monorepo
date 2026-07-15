@@ -11,6 +11,7 @@ export interface UserContext {
   name: string | null;
   role: Role;
   schoolId: string | null;
+  license_id?: string | null;
   xp: number;
   level: number;
   cefrLevel: string;

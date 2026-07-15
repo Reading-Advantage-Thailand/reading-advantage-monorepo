@@ -106,6 +106,10 @@ export const PERMISSIONS = {
   "license:create": [ROLES.ADMIN, ROLES.SYSTEM],
   "license:manage": [ROLES.ADMIN, ROLES.SYSTEM],
   "license:read": [ROLES.STUDENT, ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
+  "admin:license:read": [ROLES.ADMIN, ROLES.SYSTEM],
+  "admin:license:read:own": [ROLES.STUDENT, ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
+  "admin:segments:read": [ROLES.ADMIN, ROLES.SYSTEM],
+  "system:dashboard:read": [ROLES.SYSTEM],
 
   // Stories
   "story:read": [ROLES.STUDENT, ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
