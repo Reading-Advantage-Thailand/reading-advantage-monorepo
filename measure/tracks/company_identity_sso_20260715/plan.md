@@ -39,7 +39,7 @@ _Story ref: spec.md#story-s1_
     - [x] Document why schools, licenses, customers, and product data remain
           excluded.
 
-- [ ] Task 2: Define Zod and Drizzle contracts for the identity database.
+- [~] Task 2: Define Zod and Drizzle contracts for the identity database.
     - [ ] Define account, normalized username, status, and credential contracts.
     - [ ] Define organizations, memberships, applications, app-role
           assignments, sessions, OIDC clients/codes, and immutable audit events.
