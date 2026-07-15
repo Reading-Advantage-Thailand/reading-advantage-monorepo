@@ -76,7 +76,7 @@ _Story ref: spec.md#story-s1_
 
 ### Implement
 
-- [ ] Task 5: Implement the separate identity database infrastructure.
+- [~] Task 5: Implement the separate identity database infrastructure.
     - [ ] Add the company-identity schema and dedicated Drizzle migration stream
           under the database package.
     - [ ] Add pooled and direct client factories without widening the existing
