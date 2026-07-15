@@ -3,84 +3,126 @@
   "track_id": "apk_source_denominator_inventory_20260712",
   "phase": "Phase 4 independent review",
   "review_role": "review-c-ux-api/contracts",
-  "baseline_sha": "93e1c3417b724c74ad857e71bf06ac7311f9fe81",
-  "status": "blocked",
+  "reviewed_head_sha": "32069ccd95b4f379211e845dee38f35dbaa45271",
+  "reviewed_commits": [
+    "b49dbe27a0f5bcc2da5ba60e5d68f2b62664559e",
+    "4979eaa50b85cb5951e9546bb6a672b9d0f16ecb",
+    "6dda411b54787db2b0e005c1097ecc008f424c62",
+    "70e6059bcfbf23bdfbd449fd25b3ee4751ca6d86",
+    "32069ccd95b4f379211e845dee38f35dbaa45271"
+  ],
+  "status": "fail",
   "acceptance_claimed": false,
   "ux_applicability": "not_applicable",
-  "scope": "Inventory contracts and Measure artifacts only; browser/UX acceptance, ontology synthesis, mechanics, capabilities, responsive strategy, asset suitability, semantic roles, and product disposition are outside this review.",
-  "checks": {
-    "schema_api_consistency": "pass",
-    "plan_truthfulness": "pass",
-    "marker_vocabulary": "pass for this track; repository-wide script is blocked only by unrelated uncommitted tracks",
-    "artifact_path_index_discoverability": "pass",
-    "candidate_accepted_semantics": "pass",
-    "forbidden_ontology_ux_semantic_conclusions": "pass",
-    "exhaustive_non_vacuous_tests": "pass",
-    "browser_ux_review": "not_applicable"
-  },
-  "remediated_blockers": [
-    {
-      "id": "C-01",
-      "severity": "high",
-      "summary": "Owner approval and accepted partition outputs were not byte-bound to the candidate partition.",
-      "resolution": "Phase-4 contract now requires the candidate-partition hash in approval and binds accepted partition assignments to the candidate partition."
-    },
-    {
-      "id": "C-02",
-      "severity": "high",
-      "summary": "The claimed Phase-3 rerun was not independently reproduced by the Phase-4 contract.",
-      "resolution": "The generator now supports an isolated output path and the Phase-4 contract reproduces and byte-compares the reconciliation."
-    },
-    {
-      "id": "C-03",
-      "severity": "medium",
-      "summary": "Phase-4 outputs were not indexed, and published reviewer outputs were not tied to completed plan markers.",
-      "resolution": "The track index lists every Phase-4 output and the contract requires reviewer-task completion markers with commit evidence while retaining the deferred product-owner gate."
-    },
-    {
-      "id": "C-04",
-      "severity": "medium",
-      "summary": "Phase-4 outputs were not contractually screened for forbidden inventory conclusions.",
-      "resolution": "The contract recursively rejects ontology, semantic, responsive, suitability, mechanic, intent, recommendation, and product-disposition fields."
-    }
-  ],
+  "scope": "Fresh exhaustive contract and test audit of the Phase 0-4 inventory boundary, generators, reports, receipts, and production Phase-4 validator. Browser UX, mechanics, capabilities, responsive strategy, asset suitability, semantic roles, product disposition, and Phase-4 artifact authorship are outside this review.",
+  "summary": "Phase 0-3 admission is green and deterministic at the reviewed head, and all 25 existing production-validator counterexamples are non-vacuous, but Phase 4 remains blocked by critical fail-open coordinated-input paths plus a validator-to-frozen-receipt schema mismatch; no live acceptance is claimed.",
   "blocking_findings": [
     {
-      "id": "APK-DEN-B-001",
+      "id": "APK-DEN-C-101",
       "severity": "critical",
-      "source": "review-b-security.json",
-      "summary": "Frozen role provenance and measured-usage requirements remain unproven."
+      "title": "The production validator trusts the untrusted bundle to define the required roles and resource ceilings",
+      "evidence": [
+        "measure/evidence_integrity_gates/apk_inventory_acceptance.py:121-128",
+        "measure/evidence_integrity_gates/apk_inventory_acceptance.py:174-191",
+        "measure/tests/test_apk_source_denominator_inventory_phase4.py:1158-1180"
+      ],
+      "detail": "The exact five frozen roles and their numeric ceilings are not constants or independently loaded freeze bytes. The validator merely checks receipts against bundle.required_roles and bundle.frozen_resource_ceilings. A coordinated mutation that removes discovery-auditor from both lists returned {ok: true}; a coordinated ceiling increase to 999999 with matching usage also returned {ok: true}. The existing tests mutate only one side, so both bypasses are uncovered.",
+      "required_remediation": "Bind the exact Phase-0 freeze and ownership bytes through a trusted committed manifest, enforce the exact five-role set and exact per-role ceiling maps, and add paired coordinated-mutation counterexamples."
     },
     {
-      "id": "APK-DEN-B-002",
+      "id": "APK-DEN-C-102",
       "severity": "critical",
-      "source": "review-b-security.json",
-      "summary": "Reviewer and owner authorization remain self-attested rather than provider-resolved."
+      "title": "Numeric stop-loss breaches are ignored by the production acceptance boundary",
+      "evidence": [
+        "measure/evidence_integrity_gates/apk_inventory_acceptance.py:172-216",
+        "measure/tests/test_apk_source_denominator_inventory_phase4.py:948-955"
+      ],
+      "detail": "The fixture supplies stop_loss_observations for every receipt, but validate_phase4_inventory_acceptance never reads them. Setting unsupported_factual_claims to 1 returned {ok: true}, despite the frozen stop-loss threshold of one unsupported claim requiring an immediate stop. No counterexample exercises nonzero numeric stop-loss observations.",
+      "required_remediation": "Validate the exact stop-loss key set, require non-boolean integers, enforce zero unsupported claims, denominator mismatches, and unresolved Critical/High/Medium findings, enforce the failed-cycle limit, and add one reason-coded mutation per stop-loss field."
     },
     {
-      "id": "APK-DEN-B-003",
-      "severity": "high",
-      "source": "review-b-security.json",
-      "summary": "Quarantined failed-track paths remain in claimed discovery and reconciliation records."
+      "id": "APK-DEN-C-103",
+      "severity": "critical",
+      "title": "Phase base, source baseline, predecessor gate, and quarantine authority are self-supplied rather than freeze-bound",
+      "evidence": [
+        "measure/evidence_integrity_gates/apk_inventory_acceptance.py:238-248",
+        "measure/evidence_integrity_gates/apk_inventory_acceptance.py:336-364",
+        "measure/tests/test_apk_source_denominator_inventory_phase4.py:1018-1027"
+      ],
+      "detail": "The validator compares review and candidate fields to values from the same untrusted bundle. It does not independently require source baseline 23bb5ad5, predecessor gate d9f5c477..., the frozen quarantined prefix, or a reachable reviewed phase base. A newly committed coordinated bundle can therefore redefine the trust anchor and still satisfy its internal equalities.",
+      "required_remediation": "Resolve the committed Phase-0 freeze through the trusted Git adapter, compare exact hashes and revisions to it, require artifact commits to descend from the admitted phase base, and add coordinated trust-anchor mutation tests."
     },
     {
-      "id": "APK-DEN-B-004",
+      "id": "APK-DEN-C-104",
       "severity": "high",
-      "source": "review-b-security.json",
-      "summary": "The human discovery path remains derived from an authored program inventory."
+      "title": "The production locator walker does not validate the live artifact locator schema",
+      "evidence": [
+        "measure/evidence_integrity_gates/apk_inventory_acceptance.py:241-260",
+        "measure/tests/test_apk_source_denominator_inventory_phase4.py:206-236"
+      ],
+      "detail": "Production validation recognizes only flat locator objects containing revision/path/line_start/line_end/cited_range_sha256. The live contracts and Phase 0-3 artifacts use revision/path/blob_sha256 plus nested range.start_line/range.end_line/range.sha256. Those live locators are skipped by _walk rather than resolved, so the production boundary does not deliver the locator/hash/reachability promise made by the strategy.",
+      "required_remediation": "Validate the actual frozen locator schema, including blob SHA-256, nested inclusive-range SHA-256, current-versus-ancestor reachability, allowed roots, and quarantine exclusion; reject unrecognized locator-shaped objects."
     },
     {
-      "id": "APK-DEN-B-005",
+      "id": "APK-DEN-C-105",
       "severity": "high",
-      "source": "review-b-security.json",
-      "summary": "Immutable commit binding remains incomplete beyond the candidate-partition binding remediated here."
+      "title": "The validator receipt API is incompatible with the frozen receipts it is supposed to accept",
+      "evidence": [
+        "measure/evidence_integrity_gates/apk_inventory_acceptance.py:192-207",
+        "measure/evidence_integrity_gates/apk_inventory_acceptance.py:456-470",
+        "measure/tracks/apk_source_denominator_inventory_20260712/phase0-role-ownership-manifest.json:31-37",
+        "measure/tracks/apk_source_denominator_inventory_20260712/role-receipts/evidence-collector.json"
+      ],
+      "detail": "The frozen contract requires spawn_id, parent_ancestry_ids, actual_context_manifest_sha256, start/end event IDs, final response hash, output_sha256, budget hash, and commit. The production validator instead requires event_id/session_id/parent_session_id/agent/context_sha256 and treats output_sha256 as a path-to-hash mapping. The current provider-attested receipt uses output_sha256 as an aggregate string and output_hashes as the mapping. Thus existing evidence cannot enter the production gate without an undocumented schema rewrite, while several frozen provenance fields are never enforced.",
+      "required_remediation": "Define and version one adapter contract from apk-role-receipt.v1 to trusted provider events, validate every frozen required provenance field and output hash, and add a control built from the committed receipt schema rather than a synthetic divergent schema."
+    },
+    {
+      "id": "APK-DEN-C-106",
+      "severity": "medium",
+      "title": "Plan and strategy command evidence is stale after the remediation commits",
+      "evidence": [
+        "measure/tracks/apk_source_denominator_inventory_20260712/plan.md:28-33",
+        "measure/tracks/apk_source_denominator_inventory_20260712/plan.md:47-50",
+        "measure/tracks/apk_source_denominator_inventory_20260712/test-strategy.md:214-229",
+        "measure/tracks/apk_source_denominator_inventory_20260712/test-strategy.md:283-294"
+      ],
+      "detail": "The live admission command now runs 37 tests, not the documented 32. The current deterministic Phase-3 hash is 88384806..., not cd72b34a..., and the current surface count is 102, not 118. The plan still says the production validator is absent and attributes 25 Phase-4 failures to a fail-open sentinel; at this head the 25 validator counterexamples pass and only ten live tests fail for the missing independent review.",
+      "required_remediation": "Refresh plan and strategy evidence in an owner-authorized non-review commit after the blocking validator defects are fixed; do not change Phase-4 task completion or claim acceptance."
     }
   ],
   "verification": {
-    "prior_phase_contracts": "passed: 31 tests",
-    "phase4_red_contract": "expected failure only because independent-review.json is absent",
-    "static_syntax": "passed",
-    "marker_vocabulary_gate": "track-local passed; repository-wide command reports deprecated [ ] markers only in unrelated uncommitted backend tracks"
+    "phase0_to_phase3_admission": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase0 measure.tests.test_apk_source_denominator_inventory_phase1 measure.tests.test_apk_source_denominator_inventory_phase2 measure.tests.test_apk_source_denominator_inventory_phase3",
+      "result": "pass",
+      "test_count": 37,
+      "elapsed_seconds": 407.98
+    },
+    "phase4_focused": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase4",
+      "result": "expected-red-not-acceptance",
+      "counterexample_tests_passed": 25,
+      "live_contract_failures": 10,
+      "sole_live_failure_cause": "missing measure/tracks/apk_source_denominator_inventory_20260712/independent-review.json"
+    },
+    "phase3_determinism": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 generate_phase3_reconciliation.py --output <temp> && cmp -s <temp> phase3-reconciliation.json",
+      "result": "pass",
+      "sha256": "8838480634acce470430098b002b9c9468a7c53022a413ee24002c4e0c3e6c2c"
+    },
+    "static_syntax": "pass for Phase 0-4 tests and production validator",
+    "detector_syntax_guard": "pass",
+    "role_receipt_integrity_guard": "pass as implemented; it does not cure the validator API mismatch above",
+    "direct_validator_counterexamples": {
+      "coordinated_role_omission": "unexpected pass",
+      "coordinated_ceiling_inflation": "unexpected pass",
+      "nonzero_unsupported_claim_stop_loss": "unexpected pass"
+    }
   },
-  "next_gate": "Resolve every blocking review-b security finding before publishing an adversarial review. Product-owner approval and accepted manifests remain deferred and are not claimed by this review."
+  "resolved_or_verified_previous_review_c_items": [
+    "Candidate partition and owner approval hash binding is covered by passing counterexamples.",
+    "Phase-3 deterministic regeneration is byte-identical at the reviewed head.",
+    "Forbidden interpretation-field screening remains present in the live Phase-4 contract.",
+    "The production validator now exists and its existing 25 paired-control counterexamples are non-vacuous."
+  ],
+  "next_gate": "Return APK-DEN-C-101 through APK-DEN-C-105 to the owning Green roles, add coordinated fail-closed counterexamples, rerun Review A/B/C against the same repaired head, and only then invoke the fresh fork_turns=none adversarial reviewer. Product-owner approval and accepted manifests remain absent and must not be claimed."
 }
