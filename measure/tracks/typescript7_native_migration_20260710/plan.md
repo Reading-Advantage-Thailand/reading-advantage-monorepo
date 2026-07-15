@@ -82,7 +82,8 @@
     - [x] Cut over shared UI, utility, and GitHub-integration checks; preserve and classify UI's parity-proven pre-existing diagnostics. [evidence: phase-3d-shared-cutover-result.json]
     - [x] Cut over `apps/advantage-games`; preserve and classify its parity-proven pre-existing diagnostics. [evidence: phase-3d-advantage-games-cutover-result.json]
     - [x] Cut over `apps/science-advantage`; retain the four Phase 3c-reviewed TypeScript 7 column-rendering ledger entries. [evidence: phase-3d-science-cutover-result.json]
-    - [ ] Continue the required workspace order from `apps/primary-advantage` through the remaining applications.
+    - [x] Cut over `apps/primary-advantage`; retain the 24 Phase 3c-reviewed TypeScript 7 diagnostic-rendering ledger entries. [evidence: phase-3d-primary-cutover-result.json]
+    - [ ] Continue the required workspace order from `apps/reading-advantage` through the remaining applications.
   - [ ] Verify JavaScript and declaration emit before switching direct `tsc` builds.
   - [ ] Preserve explicit TypeScript 6 compatibility and rollback commands.
   - [ ] Bound TypeScript checker concurrency underneath Turbo parallelism.
