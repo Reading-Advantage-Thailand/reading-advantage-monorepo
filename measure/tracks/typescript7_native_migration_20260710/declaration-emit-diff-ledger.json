@@ -303,6 +303,21 @@
       "javascript_differences": [],
       "disposition": "accepted_declaration_map_only",
       "rationale": "Generated declaration text and JavaScript are byte-identical; TypeScript 7 changes only declaration-map mapping offsets for default export positions."
+    },
+    {
+      "package": "packages/api",
+      "typescript6": "6.0.2",
+      "typescript7": "7.0.2",
+      "typescript6_exit_status": 0,
+      "typescript7_exit_status": 0,
+      "output_file_count": 192,
+      "typescript6_relative_tree_sha256": "17720844f8e8f4c01ac16e41d5d1f452d676d3fa49b024466ee834f1b91cc62d",
+      "typescript7_relative_tree_sha256": "9a56effaf102eaa7751b4a8c2c9d35919b9e19d8370490e1be1b264742f350a0",
+      "diff_sha256": "ec156761498a78d1349a352a0f8f2c20d33c91b672a628b6bb9410a00935cfd8",
+      "declaration_differences": ["root.d.ts", "root.d.ts.map", "routers/activity.d.ts", "routers/activity.d.ts.map", "routers/articles.d.ts", "routers/assignments.d.ts", "routers/codecamp.d.ts", "routers/codecamp.d.ts.map", "routers/progress.d.ts", "routers/progress.d.ts.map", "routers/reports.d.ts.map", "routers/users.d.ts", "routes/auth/impersonate.d.ts", "routes/auth/impersonate.d.ts.map", "routes/auth/register.d.ts", "routes/auth/register.d.ts.map", "routes/auth/session.d.ts.map", "trpc.d.ts"],
+      "javascript_differences": [],
+      "disposition": "accepted_declaration_printer_and_map_only",
+      "rationale": "TypeScript 7 changes inferred tRPC declaration property and union ordering plus derived declaration maps only; emitted JavaScript is byte-identical."
     }
   ]
 }
