@@ -168,6 +168,21 @@
       "javascript_differences": [],
       "disposition": "accepted_declaration_ordering_and_map_only",
       "rationale": "TypeScript 7 changes inferred declaration property ordering and derived maps only; emitted JavaScript is byte-identical."
+    },
+    {
+      "package": "packages/auth",
+      "typescript6": "6.0.2",
+      "typescript7": "7.0.2",
+      "typescript6_exit_status": 0,
+      "typescript7_exit_status": 0,
+      "output_file_count": 132,
+      "typescript6_relative_tree_sha256": "7ebbc6c0119aec8218a84a0d786070f04a15ecc6f64b9f483632f8ddb765df61",
+      "typescript7_relative_tree_sha256": "ceca21d294adc5be4855708fbb9fedc193f13d248a965c799db99f578de6866d",
+      "diff_sha256": "b4d603dd5472ec7419fdd5b2384c1a9305909c8c3f23b067e834d74f17e0695c",
+      "declaration_differences": ["assert.d.ts.map", "audit.d.ts.map", "password.d.ts.map", "rate-limit.d.ts.map", "roles.d.ts.map"],
+      "javascript_differences": [],
+      "disposition": "accepted_declaration_map_only",
+      "rationale": "Generated declarations and JavaScript are byte-identical; TypeScript 7 changes only source-map mapping offsets."
     }
   ]
 }
