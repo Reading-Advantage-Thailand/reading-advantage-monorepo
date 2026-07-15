@@ -30,6 +30,7 @@ describe("CodeCampAdvantage", () => {
     expect(screen.getByTestId("codecamp-curriculum")).toBeInTheDocument();
     expect(screen.getByTestId("measure-module")).toBeInTheDocument();
     expect(screen.getByTestId("apk-unit")).toBeInTheDocument();
+    expect(screen.getByTestId("tech-stack")).toBeInTheDocument();
     expect(screen.getByTestId("mastery-evidence")).toBeInTheDocument();
     expect(screen.getByTestId("targeted-tutor")).toBeInTheDocument();
     expect(screen.getByTestId("advisory-pr-review")).toBeInTheDocument();
@@ -58,6 +59,8 @@ describe("CodeCampAdvantage", () => {
     const english = JSON.stringify(codecampPageLocales.en);
     expect(english).toMatch(/Measure-Driven AI Development/);
     expect(english).toMatch(/Advantage Play Kit Game Creation/);
+    expect(english).toMatch(/Existing cohorts keep their assigned sequence/);
+    expect(english).toMatch(/PostgreSQL/);
     expect(english).toMatch(/advisory/i);
     expect(english).toMatch(/does not approve/i);
   });

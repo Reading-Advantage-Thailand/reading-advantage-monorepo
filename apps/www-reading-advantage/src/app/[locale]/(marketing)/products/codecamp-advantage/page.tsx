@@ -196,6 +196,9 @@ export default async function CodecampAdvantage({
             <p className="mt-5 text-lg leading-8 text-slate-600">
               {t("curriculum.description")}
             </p>
+            <p className="mt-5 border-l-4 border-amber-400 bg-amber-50 px-5 py-4 text-sm leading-6 text-slate-700">
+              {t("curriculum.cohortNote")}
+            </p>
           </div>
 
           <div className="mt-12 grid border-l border-t border-stone-300 md:grid-cols-2 xl:grid-cols-4">
@@ -285,6 +288,38 @@ export default async function CodecampAdvantage({
                 {t("curriculum.spotlights.apk.outcome")}
               </div>
             </article>
+          </div>
+
+          <div
+            data-testid="tech-stack"
+            className="mt-12 border border-slate-800 bg-slate-950 p-8 text-white sm:p-10"
+          >
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.22em] text-amber-400">
+              {t("toolchain.eyebrow")}
+            </p>
+            <div className="mt-4 grid gap-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
+              <div>
+                <h3 className="text-3xl font-black">
+                  {t("toolchain.heading")}
+                </h3>
+                <p className="mt-3 leading-7 text-slate-400">
+                  {t("toolchain.description")}
+                </p>
+              </div>
+              <ul className="flex flex-wrap gap-2 lg:justify-end">
+                {Array.from({ length: 8 }, (_, index) => {
+                  const tool = t(`toolchain.items.${index}`);
+                  return (
+                    <li
+                      key={tool}
+                      className="border border-slate-700 px-3 py-2 font-mono text-sm text-slate-200"
+                    >
+                      {tool}
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
           </div>
         </div>
       </section>

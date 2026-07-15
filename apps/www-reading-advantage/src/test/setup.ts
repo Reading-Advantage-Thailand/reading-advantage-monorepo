@@ -8,13 +8,13 @@ vi.mock("@/locales/navigation", () => ({
     Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "href"> & {
       href: string | { pathname: string };
     }
-  >(({ href, ...props }, ref) =>
-    React.createElement("a", {
+  >(function MockLocalizedLink({ href, ...props }, ref) {
+    return React.createElement("a", {
       ref,
       href: typeof href === "string" ? href : href.pathname,
       ...props,
-    }),
-  ),
+    });
+  }),
 }));
 
 vi.mock("next/navigation", () => ({

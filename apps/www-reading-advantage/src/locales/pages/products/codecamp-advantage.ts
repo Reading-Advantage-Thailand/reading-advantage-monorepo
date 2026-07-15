@@ -52,6 +52,8 @@ export const en = {
     heading: "20 modules. One coherent engineering journey.",
     description:
       "The pathway moves from development foundations through modern full-stack delivery, then applies the same disciplined workflow to AI development and game creation.",
+    cohortNote:
+      "Newly assigned cohorts receive this 20-module pathway. Existing cohorts keep their assigned sequence so their progress is never silently rewritten.",
     moduleLabel: "modules",
     phases: {
       A: {
@@ -122,6 +124,22 @@ export const en = {
         outcome: "SPEC → PLAN → BUILD → VERIFY → SHIP",
       },
     },
+  },
+  toolchain: {
+    eyebrow: "Production toolchain",
+    heading: "Learn the system we actually ship.",
+    description:
+      "One modern, typed stack carries learners from interface work to data, deployment, and measured delivery.",
+    items: [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "PostgreSQL + Drizzle",
+      "GitHub",
+      "Docker",
+      "Google Cloud Run",
+      "Measure",
+    ],
   },
   pedagogy: {
     heading: "I Do → We Do → You Do",
@@ -239,6 +257,8 @@ export const th = {
     heading: "20 โมดูล หนึ่งเส้นทางวิศวกรรมที่ต่อเนื่อง",
     description:
       "เส้นทางเริ่มจากพื้นฐานการพัฒนา ไปสู่การส่งมอบฟูลสแตกสมัยใหม่ แล้วใช้เวิร์กโฟลว์เดียวกันกับการพัฒนา AI และการสร้างเกม",
+    cohortNote:
+      "ผู้เรียนกลุ่มที่ได้รับมอบหมายใหม่จะใช้เส้นทาง 20 โมดูลนี้ ส่วนกลุ่มเดิมจะคงลำดับที่ได้รับมอบหมายไว้ เพื่อไม่ให้ความคืบหน้าถูกเขียนทับโดยไม่แจ้ง",
     moduleLabel: "โมดูล",
     phases: {
       A: {
@@ -302,6 +322,22 @@ export const th = {
         outcome: "สเปก → แผน → สร้าง → ตรวจสอบ → ส่งมอบ",
       },
     },
+  },
+  toolchain: {
+    eyebrow: "เครื่องมือระดับโปรดักชัน",
+    heading: "เรียนรู้ระบบเดียวกับที่เราส่งมอบจริง",
+    description:
+      "สแตกสมัยใหม่ที่มีชนิดข้อมูลชัดเจนพาผู้เรียนจากอินเทอร์เฟซไปสู่ข้อมูล การดีพลอย และการส่งมอบที่วัดผลได้",
+    items: [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "PostgreSQL + Drizzle",
+      "GitHub",
+      "Docker",
+      "Google Cloud Run",
+      "Measure",
+    ],
   },
   pedagogy: {
     heading: "ฉันทำ → เราทำ → คุณทำ",
@@ -411,6 +447,8 @@ export const zh = {
     heading: "20 个模块，一条连贯的工程成长路径",
     description:
       "课程从开发基础进入现代全栈交付，再将同一套严谨流程应用于 AI 开发和游戏创作。",
+    cohortNote:
+      "新分配的学习群体使用这条 20 模块路径；现有群体保留原有分配顺序，学习进度不会被静默改写。",
     moduleLabel: "个模块",
     phases: {
       A: {
@@ -469,6 +507,21 @@ export const zh = {
         outcome: "规格 → 计划 → 构建 → 验证 → 发布",
       },
     },
+  },
+  toolchain: {
+    eyebrow: "生产工具链",
+    heading: "学习我们真正交付的系统",
+    description: "同一套现代类型化技术栈，覆盖界面、数据、部署与可衡量交付。",
+    items: [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "PostgreSQL + Drizzle",
+      "GitHub",
+      "Docker",
+      "Google Cloud Run",
+      "Measure",
+    ],
   },
   pedagogy: {
     heading: "我示范 → 我们练 → 你独立完成",
