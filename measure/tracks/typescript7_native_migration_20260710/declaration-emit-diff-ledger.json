@@ -136,6 +136,23 @@
       "javascript_differences": [],
       "disposition": "accepted_declaration_ordering_and_map_only",
       "rationale": "TypeScript 7 changes inferred declaration ordering and its derived maps only; emitted JavaScript is byte-identical."
+    },
+    {
+      "package": "packages/advantage-play-kit",
+      "typescript6": "6.0.2",
+      "typescript7": "7.0.2",
+      "typescript6_exit_status": 2,
+      "typescript7_exit_status": 2,
+      "diagnostic_disposition": "accepted_pre_existing_baseline",
+      "diagnostic_sha256": "bcf51f9cc60f91ab2b2b44b29e79536c076879c4658f429b299bec5a32edd23d",
+      "output_file_count": 48,
+      "typescript6_relative_tree_sha256": "be8afb5d86b5834972ebb5c24d3c1724d8e9ebebe03cf7c30d2dac1bd4fc7d7d",
+      "typescript7_relative_tree_sha256": "54ed6ac91d6a95de47d949d4f6bffe38d941aea524893cb0ae4753d7aee1fda5",
+      "diff_sha256": "2b73f5869f7539f96379aea125eb3a93a02cdf34f4f05922b844727ec5ae27e5",
+      "declaration_differences": ["editions/editions.d.ts", "runtime/errors.d.ts.map", "testing/fixtures.d.ts.map"],
+      "javascript_differences": ["react/apk-game-host.js"],
+      "disposition": "accepted_printer_and_jsx_helper_ordering_only",
+      "rationale": "Both compilers retain the same three pre-existing game-contract diagnostics. TS7 changes declaration ordering/maps and only swaps equivalent jsx/jsxs helper import specifier order in emitted JavaScript; runtime bindings and calls are unchanged."
     }
   ]
 }
