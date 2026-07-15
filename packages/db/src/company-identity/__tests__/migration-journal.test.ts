@@ -4,25 +4,22 @@
  * The tests parse journal JSON and directory entries as data. They never
  * infer success from the product migration stream or inspect SQL bodies.
  */
-import {
-  existsSync,
-  readdirSync,
-  readFileSync,
-  realpathSync,
-} from "node:fs";
+import { existsSync, readdirSync, readFileSync, realpathSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { describe, expect, it } from "vitest";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const DB_ROOT = resolve(HERE, "../../..");
 const IDENTITY_DRIZZLE_DIR = join(DB_ROOT, "company-identity/drizzle");
-const IDENTITY_JOURNAL_PATH = join(
+const IDENTITY_JOURNAL_PATH = join(IDENTITY_DRIZZLE_DIR, "meta/_journal.json");
+const IDENTITY_SNAPSHOT_PATH = join(
   IDENTITY_DRIZZLE_DIR,
-  "meta/_journal.json",
+  "meta/0000_snapshot.json",
 );
 const PRODUCT_DRIZZLE_DIR = join(DB_ROOT, "drizzle");
 const PRODUCT_JOURNAL_PATH = join(PRODUCT_DRIZZLE_DIR, "meta/_journal.json");
+const PRODUCT_CONFIG_PATH = join(DB_ROOT, "drizzle.config.ts");
 
 type JournalEntry = {
   idx: number;
@@ -58,7 +55,7 @@ function migrationTags(directory: string): string[] {
 describe("company identity migration stream ownership", () => {
   it("keeps the existing product Drizzle config on the product schema and journal", async () => {
     const { default: productConfig } = (await import(
-      "../../../drizzle.config.ts"
+      /* @vite-ignore */ pathToFileURL(PRODUCT_CONFIG_PATH).href
     )) as {
       default: { out?: string; schema?: string | string[] };
     };
@@ -72,7 +69,10 @@ describe("company identity migration stream ownership", () => {
   it("uses a dedicated directory and journal disjoint from product migrations", () => {
     expect(existsSync(IDENTITY_DRIZZLE_DIR)).toBe(true);
     expect(existsSync(IDENTITY_JOURNAL_PATH)).toBe(true);
-    if (!existsSync(IDENTITY_DRIZZLE_DIR) || !existsSync(IDENTITY_JOURNAL_PATH)) {
+    if (
+      !existsSync(IDENTITY_DRIZZLE_DIR) ||
+      !existsSync(IDENTITY_JOURNAL_PATH)
+    ) {
       return;
     }
     const identityRoot = realpathSync(IDENTITY_DRIZZLE_DIR);
@@ -87,13 +87,24 @@ describe("company identity migration stream ownership", () => {
 
   it("shares no migration tag with the product stream", () => {
     const identityTags = migrationTags(IDENTITY_DRIZZLE_DIR);
-    expect(identityTags.length, "The identity migration stream must be non-empty").toBeGreaterThan(0);
+    expect(
+      identityTags.length,
+      "The identity migration stream must be non-empty",
+    ).toBeGreaterThan(0);
     const productTags = new Set(migrationTags(PRODUCT_DRIZZLE_DIR));
     expect(identityTags.filter((tag) => productTags.has(tag))).toEqual([]);
   });
 });
 
 describe("company identity migration journal data", () => {
+  it("keeps the base snapshot primary-key name aligned with schema and SQL", () => {
+    const snapshot = readFileSync(IDENTITY_SNAPSHOT_PATH, "utf8");
+    expect(snapshot).toContain('"company_role_assignments_pkey"');
+    expect(snapshot).not.toContain(
+      '"company_role_assignments_membership_id_role_key_pk"',
+    );
+  });
+
   it("declares a non-empty PostgreSQL journal with safe unique tags", () => {
     const journal = loadIdentityJournal();
     if (!journal) return;
@@ -134,7 +145,10 @@ describe("company identity migration journal data", () => {
       const matches = readdirSync(IDENTITY_DRIZZLE_DIR).filter(
         (name) => name === `${tag}.sql`,
       );
-      expect(matches, `${tag} must resolve to exactly one identity SQL file`).toHaveLength(1);
+      expect(
+        matches,
+        `${tag} must resolve to exactly one identity SQL file`,
+      ).toHaveLength(1);
     }
   });
 });

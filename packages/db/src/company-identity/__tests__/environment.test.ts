@@ -18,13 +18,13 @@ interface CompanyIdentityTestConfig {
 
 interface CompanyIdentityEnvironmentModule {
   createCompanyIdentityRuntimeConfig(
-    environment: RawEnvironment
+    environment: RawEnvironment,
   ): CompanyIdentityRuntimeConfig;
   createCompanyIdentityDirectConfig(
-    environment: RawEnvironment
+    environment: RawEnvironment,
   ): CompanyIdentityDirectConfig;
   createCompanyIdentityTestConfig(
-    environment: RawEnvironment
+    environment: RawEnvironment,
   ): CompanyIdentityTestConfig;
 }
 
@@ -45,7 +45,7 @@ async function loadEnvironmentModule(): Promise<CompanyIdentityEnvironmentModule
     throw new Error(
       "The dedicated company-identity environment module is absent; " +
         "implement src/company-identity/environment.ts with the three DB-owned config factories.",
-      { cause: error }
+      { cause: error },
     );
   }
 
@@ -56,7 +56,7 @@ async function loadEnvironmentModule(): Promise<CompanyIdentityEnvironmentModule
   ]) {
     if (typeof loaded[exportName] !== "function") {
       throw new Error(
-        `The dedicated company-identity environment module is missing export ${exportName}.`
+        `The dedicated company-identity environment module is missing export ${exportName}.`,
       );
     }
   }
@@ -77,7 +77,7 @@ function captureConfigError(action: () => unknown): string {
 function expectSecretSafeError(
   action: () => unknown,
   expectedRule: RegExp,
-  secrets: readonly string[]
+  secrets: readonly string[],
 ): void {
   const message = captureConfigError(action);
 
@@ -107,17 +107,17 @@ describe("company identity DB environment contracts", () => {
         COMPANY_AUTH_DATABASE_URL: RUNTIME_URL,
         COMPANY_AUTH_DATABASE_POOL_MAX: "7",
         NODE_ENV: "test",
-      })
+      }),
     ).toEqual({ databaseUrl: RUNTIME_URL, nodeEnv: "test", poolMax: 7 });
     expect(
       environment.createCompanyIdentityDirectConfig({
         COMPANY_AUTH_DIRECT_DATABASE_URL: DIRECT_URL,
-      })
+      }),
     ).toEqual({ directDatabaseUrl: DIRECT_URL });
     expect(
       environment.createCompanyIdentityTestConfig({
         COMPANY_IDENTITY_TEST_ADMIN_DATABASE_URL: TEST_ADMIN_URL,
-      })
+      }),
     ).toEqual({ adminDatabaseUrl: TEST_ADMIN_URL });
   });
 
@@ -133,7 +133,7 @@ describe("company identity DB environment contracts", () => {
           DIRECT_DATABASE_URL: productUrl,
         }),
       /COMPANY_AUTH_DATABASE_URL|required|unrecognized/i,
-      [productUrl, "PRODUCT_PASSWORD_MUST_NOT_LEAK"]
+      [productUrl, "PRODUCT_PASSWORD_MUST_NOT_LEAK"],
     );
     expectSecretSafeError(
       () =>
@@ -142,13 +142,15 @@ describe("company identity DB environment contracts", () => {
           DIRECT_DATABASE_URL: productUrl,
         }),
       /COMPANY_AUTH_DIRECT_DATABASE_URL|required|unrecognized/i,
-      [productUrl, "PRODUCT_PASSWORD_MUST_NOT_LEAK"]
+      [productUrl, "PRODUCT_PASSWORD_MUST_NOT_LEAK"],
     );
     expectSecretSafeError(
       () =>
-        environment.createCompanyIdentityTestConfig({ DATABASE_URL: productUrl }),
+        environment.createCompanyIdentityTestConfig({
+          DATABASE_URL: productUrl,
+        }),
       /COMPANY_IDENTITY_TEST_ADMIN_DATABASE_URL|required|unrecognized/i,
-      [productUrl, "PRODUCT_PASSWORD_MUST_NOT_LEAK"]
+      [productUrl, "PRODUCT_PASSWORD_MUST_NOT_LEAK"],
     );
   });
 
@@ -169,7 +171,7 @@ describe("company identity DB environment contracts", () => {
             COMPANY_AUTH_DATABASE_URL: runtimeUrl,
           }),
         /company_identity|database pathname/i,
-        [runtimeUrl, "RUNTIME_PATH_SECRET"]
+        [runtimeUrl, "RUNTIME_PATH_SECRET"],
       );
       expectSecretSafeError(
         () =>
@@ -177,9 +179,48 @@ describe("company identity DB environment contracts", () => {
             COMPANY_AUTH_DIRECT_DATABASE_URL: directUrl,
           }),
         /company_identity|database pathname/i,
-        [directUrl, "DIRECT_PATH_SECRET"]
+        [directUrl, "DIRECT_PATH_SECRET"],
       );
     }
+  });
+
+  it("keeps runtime and direct ports provider-neutral while preserving local defaults", async () => {
+    const environment = await loadEnvironmentModule();
+    const runtimeUrl =
+      "postgresql://runtime:secret@db.example.com:7443/company_identity";
+    const directUrl =
+      "postgresql://migrator:secret@db.example.com:7444/company_identity?sslmode=require";
+
+    expect(
+      environment.createCompanyIdentityRuntimeConfig({
+        COMPANY_AUTH_DATABASE_URL: runtimeUrl,
+      }).databaseUrl,
+    ).toBe(runtimeUrl);
+    expect(
+      environment.createCompanyIdentityDirectConfig({
+        COMPANY_AUTH_DIRECT_DATABASE_URL: directUrl,
+      }).directDatabaseUrl,
+    ).toBe(directUrl);
+  });
+
+  it("rejects whitespace-normalized database URLs instead of returning altered targets", async () => {
+    const environment = await loadEnvironmentModule();
+    expectSecretSafeError(
+      () =>
+        environment.createCompanyIdentityRuntimeConfig({
+          COMPANY_AUTH_DATABASE_URL: ` ${RUNTIME_URL} `,
+        }),
+      /whitespace|COMPANY_AUTH_DATABASE_URL/i,
+      [RUNTIME_URL],
+    );
+    expectSecretSafeError(
+      () =>
+        environment.createCompanyIdentityDirectConfig({
+          COMPANY_AUTH_DIRECT_DATABASE_URL: ` ${DIRECT_URL} `,
+        }),
+      /whitespace|COMPANY_AUTH_DIRECT_DATABASE_URL/i,
+      [DIRECT_URL],
+    );
   });
 
   it("requires PostgreSQL URLs rather than accepting arbitrary URL schemes", async () => {
@@ -191,7 +232,7 @@ describe("company identity DB environment contracts", () => {
           COMPANY_AUTH_DATABASE_URL: "https://db.example.com/company_identity",
         }),
       /postgresql|protocol/i,
-      []
+      [],
     );
     expectSecretSafeError(
       () =>
@@ -200,7 +241,7 @@ describe("company identity DB environment contracts", () => {
             "file:///tmp/company_identity?password=FILE_SECRET_MUST_NOT_LEAK",
         }),
       /postgresql|protocol/i,
-      ["FILE_SECRET_MUST_NOT_LEAK"]
+      ["FILE_SECRET_MUST_NOT_LEAK"],
     );
   });
 
@@ -210,7 +251,7 @@ describe("company identity DB environment contracts", () => {
     expect(
       environment.createCompanyIdentityRuntimeConfig({
         COMPANY_AUTH_DATABASE_URL: RUNTIME_URL,
-      }).poolMax
+      }).poolMax,
     ).toBe(3);
 
     for (const poolMax of ["1", "20"]) {
@@ -218,7 +259,7 @@ describe("company identity DB environment contracts", () => {
         environment.createCompanyIdentityRuntimeConfig({
           COMPANY_AUTH_DATABASE_URL: RUNTIME_URL,
           COMPANY_AUTH_DATABASE_POOL_MAX: poolMax,
-        }).poolMax
+        }).poolMax,
       ).toBe(Number(poolMax));
     }
 
@@ -230,7 +271,7 @@ describe("company identity DB environment contracts", () => {
             COMPANY_AUTH_DATABASE_POOL_MAX: poolMax,
           }),
         /COMPANY_AUTH_DATABASE_POOL_MAX|integer|1.*20/i,
-        []
+        [],
       );
     }
   });
@@ -243,7 +284,7 @@ describe("company identity DB environment contracts", () => {
       expect(
         environment.createCompanyIdentityTestConfig({
           COMPANY_IDENTITY_TEST_ADMIN_DATABASE_URL: adminDatabaseUrl,
-        }).adminDatabaseUrl
+        }).adminDatabaseUrl,
       ).toBe(adminDatabaseUrl);
     }
 
@@ -259,7 +300,7 @@ describe("company identity DB environment contracts", () => {
             COMPANY_IDENTITY_TEST_ADMIN_DATABASE_URL: adminDatabaseUrl,
           }),
         /loopback|5432|postgres|query/i,
-        [adminDatabaseUrl, new URL(adminDatabaseUrl).password]
+        [adminDatabaseUrl, new URL(adminDatabaseUrl).password],
       );
     }
   });
@@ -274,7 +315,7 @@ describe("company identity DB environment contracts", () => {
           COMPANY_AUTH_RUNTIME_UNREVIEWED: "true",
         }),
       /unrecognized|unknown|COMPANY_AUTH_RUNTIME_UNREVIEWED/i,
-      []
+      [],
     );
     expectSecretSafeError(
       () =>
@@ -283,7 +324,7 @@ describe("company identity DB environment contracts", () => {
           COMPANY_AUTH_DIRECT_UNREVIEWED: "true",
         }),
       /unrecognized|unknown|COMPANY_AUTH_DIRECT_UNREVIEWED/i,
-      []
+      [],
     );
     expectSecretSafeError(
       () =>
@@ -292,7 +333,7 @@ describe("company identity DB environment contracts", () => {
           COMPANY_IDENTITY_TEST_UNREVIEWED: "true",
         }),
       /unrecognized|unknown|COMPANY_IDENTITY_TEST_UNREVIEWED/i,
-      []
+      [],
     );
   });
 

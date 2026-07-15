@@ -16,6 +16,10 @@
       "types": "./dist/client.d.ts",
       "import": "./dist/client.js"
     },
+    "./company-identity": {
+      "types": "./dist/company-identity/index.d.ts",
+      "import": "./dist/company-identity/index.js"
+    },
     "./seed": {
       "types": "./dist/seed/index.d.ts",
       "import": "./dist/seed/index.js"
@@ -29,6 +33,11 @@
     "studio": "drizzle-kit studio",
     "seed:codecamp": "tsx src/seed/codecamp-seed.ts",
     "doctor": "tsx scripts/migration-ledger-doctor.ts",
+    "company-identity:generate": "drizzle-kit generate --config company-identity/drizzle.config.ts",
+    "company-identity:migrate": "tsx src/company-identity/commands/migrate.ts",
+    "company-identity:doctor": "tsx src/company-identity/commands/doctor.ts",
+    "company-identity:bootstrap": "tsx src/company-identity/commands/bootstrap.ts",
+    "company-identity:local-bootstrap": "tsx src/company-identity/commands/local-bootstrap.ts",
     "lint": "eslint .",
     "test": "vitest run",
     "check-types": "tsc --noEmit"
@@ -36,7 +45,8 @@
   "dependencies": {
     "drizzle-orm": "^0.45.0",
     "drizzle-zod": "^0.7.0",
-    "postgres": "catalog:"
+    "postgres": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@reading-advantage/config": "workspace:*",

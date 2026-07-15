@@ -45,7 +45,7 @@ async function loadIdentitySubpath(): Promise<Record<string, unknown>> {
     throw new Error(
       "The dedicated @reading-advantage/db/company-identity source entrypoint is absent; " +
         "implement src/company-identity/index.ts without widening the product barrels.",
-      { cause: error }
+      { cause: error },
     );
   }
 }
@@ -61,7 +61,7 @@ describe("company identity package boundary", () => {
         expect(
           moduleExports,
           `${entrypoint} must not expose identity-only export ${exportName}; ` +
-            "approved consumers use the dedicated company-identity subpath."
+            "approved consumers use the dedicated company-identity subpath.",
         ).not.toHaveProperty(exportName);
       }
     }
@@ -69,7 +69,7 @@ describe("company identity package boundary", () => {
 
   it("declares one dedicated package subpath instead of widening root, schema, or client exports", () => {
     const packageJson = JSON.parse(
-      readFileSync(join(PACKAGE_ROOT, "package.json"), "utf8")
+      readFileSync(join(PACKAGE_ROOT, "package.json"), "utf8"),
     ) as {
       exports?: Record<string, { import?: string; types?: string }>;
     };
@@ -86,7 +86,7 @@ describe("company identity package boundary", () => {
     for (const exportName of IDENTITY_ONLY_EXPORTS) {
       expect(
         identity,
-        `@reading-advantage/db/company-identity must expose ${exportName}.`
+        `@reading-advantage/db/company-identity must expose ${exportName}.`,
       ).toHaveProperty(exportName);
     }
   });

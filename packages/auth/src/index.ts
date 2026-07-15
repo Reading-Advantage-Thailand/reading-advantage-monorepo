@@ -1,5 +1,11 @@
 // Roles & Permissions
-export { ROLES, type Role, roleAtLeast, ROLE_HIERARCHY, ROLE_ROUTES } from "./roles.js";
+export {
+  ROLES,
+  type Role,
+  roleAtLeast,
+  ROLE_HIERARCHY,
+  ROLE_ROUTES,
+} from "./roles.js";
 export {
   PERMISSIONS,
   type Permission,
@@ -17,10 +23,20 @@ export { assertTenantAccess } from "./tenant.js";
 export { assertCan, AuthError } from "./assert.js";
 
 // Audit
-export { recordAuditEvent, type AuditContext, type AuditPayload, AuditEventError } from "./audit.js";
+export {
+  recordAuditEvent,
+  type AuditContext,
+  type AuditPayload,
+  AuditEventError,
+} from "./audit.js";
 
 // Password
-export { hashPassword, verifyPassword, rehashOnLogin, ARGON2ID_OPTS } from "./password.js";
+export {
+  hashPassword,
+  verifyPassword,
+  rehashOnLogin,
+  ARGON2ID_OPTS,
+} from "./password.js";
 
 // Sessions
 export {
@@ -53,6 +69,9 @@ export {
   _testkit,
 } from "./rate-limit.js";
 export { createPostgresRateLimitStore } from "./rate-limit-store.js";
+
+// Company employee identity configuration (provider-neutral auth boundary)
+export * from "./company-identity/environment.js";
 
 // Rate Limit Cleanup
 export {

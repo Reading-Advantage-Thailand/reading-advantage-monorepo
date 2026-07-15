@@ -2437,6 +2437,9 @@ importers:
       postgres:
         specifier: 'catalog:'
         version: 3.4.9
+      zod:
+        specifier: 'catalog:'
+        version: 3.25.76
     devDependencies:
       '@reading-advantage/config':
         specifier: workspace:*

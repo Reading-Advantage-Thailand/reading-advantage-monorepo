@@ -380,11 +380,14 @@ describe("company identity PostgreSQL constraints", () => {
         await sql`
         insert into company_application_sessions
           (id, token_hash, sso_session_id, organization_id, membership_id,
-           application_id, account_auth_version, expires_at)
+           application_id, account_auth_version, created_at, last_checked_at,
+           expires_at)
         values
           (${randomUUID()}, ${"b".repeat(64)}, ${ssoSessionId},
            ${graph.organizationId}, ${graph.membershipId},
            ${graph.salesApplicationId}, 1,
+           ${new Date("2026-07-15T00:00:00.000Z")},
+           ${new Date("2026-07-15T00:00:00.000Z")},
            ${new Date("2026-07-15T01:00:00.000Z")})
       `;
         const [counts] = await sql<{ sso_count: number; app_count: number }[]>`

@@ -1,3 +1,12 @@
+import {
+  cp,
+  mkdtemp,
+  readFile,
+  readdir,
+  rm,
+  writeFile,
+} from "node:fs/promises";
+import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { drizzle } from "drizzle-orm/postgres-js";
@@ -44,6 +53,50 @@ function productTableNames(): string[] {
 }
 
 const PRODUCT_TABLES = productTableNames();
+
+/**
+ * Removes parser directives that occur inside PostgreSQL dollar-quoted bodies.
+ * @param migrationSql The checked-in product migration SQL.
+ * @returns Semantically identical SQL with only invalid internal split markers removed.
+ */
+function removeInternalStatementBreakpoints(migrationSql: string): string {
+  let insideDollarQuotedBody = false;
+  const retainedLines: string[] = [];
+  for (const line of migrationSql.split("\n")) {
+    if (insideDollarQuotedBody && line.trim() === "--> statement-breakpoint") {
+      continue;
+    }
+    retainedLines.push(line);
+    const delimiterCount = line.match(/\$\$/g)?.length ?? 0;
+    if (delimiterCount % 2 === 1) {
+      insideDollarQuotedBody = !insideDollarQuotedBody;
+    }
+  }
+  return retainedLines.join("\n");
+}
+
+/**
+ * Stages legacy product migrations for a fresh-database isolation proof without rewriting history.
+ * @returns A temporary migration directory consumable by the real Drizzle migrator.
+ * @throws When migration files cannot be copied, read, normalized, or written.
+ */
+async function stageProductMigrationsForIsolationProof(): Promise<string> {
+  const stagedDirectory = await mkdtemp(
+    join(tmpdir(), "company-identity-product-isolation-"),
+  );
+  await cp(PRODUCT_MIGRATIONS, stagedDirectory, {
+    recursive: true,
+    force: true,
+  });
+  for (const fileName of await readdir(stagedDirectory)) {
+    if (!fileName.endsWith(".sql")) continue;
+    const migrationPath = join(stagedDirectory, fileName);
+    const original = await readFile(migrationPath, "utf8");
+    const staged = removeInternalStatementBreakpoints(original);
+    await writeFile(migrationPath, staged, "utf8");
+  }
+  return stagedDirectory;
+}
 
 interface MigrationModule {
   migrateCompanyIdentity(input: { directDatabaseUrl: string }): Promise<void>;
@@ -95,58 +148,69 @@ async function ledgerHashes(
 
 describe("product and company identity migration isolation", () => {
   it("runs real migrators against disjoint databases, catalogs, and ledgers", async () => {
-    await withCompanyIdentityScratchDatabase(async ({
-      adminSql,
-      directDatabaseUrl,
-    }) => {
-      expect(await adminSql`select current_database() as database`).toHaveLength(1);
-      const identityMigration = await loadMigrationModule();
-      await identityMigration.migrateCompanyIdentity({ directDatabaseUrl });
-      const identitySql = postgres(directDatabaseUrl, { max: 1 });
-      try {
-        const identityTablesBeforeProduct = await publicTables(identitySql);
-        const identityLedgerBeforeProduct = await ledgerHashes(identitySql);
-        expect(identityLedgerBeforeProduct.length).toBeGreaterThan(0);
-        expect(identityTablesBeforeProduct).toEqual([...IDENTITY_TABLES].sort());
-        for (const tableName of PRODUCT_TABLES) {
-          expect(identityTablesBeforeProduct).not.toContain(tableName);
-        }
+    await withCompanyIdentityScratchDatabase(
+      async ({ adminSql, directDatabaseUrl }) => {
+        expect(
+          await adminSql`select current_database() as database`,
+        ).toHaveLength(1);
+        const identityMigration = await loadMigrationModule();
+        await identityMigration.migrateCompanyIdentity({ directDatabaseUrl });
+        const identitySql = postgres(directDatabaseUrl, { max: 1 });
+        try {
+          const identityTablesBeforeProduct = await publicTables(identitySql);
+          const identityLedgerBeforeProduct = await ledgerHashes(identitySql);
+          expect(identityLedgerBeforeProduct.length).toBeGreaterThan(0);
+          expect(identityTablesBeforeProduct).toEqual(
+            [...IDENTITY_TABLES].sort(),
+          );
+          for (const tableName of PRODUCT_TABLES) {
+            expect(identityTablesBeforeProduct).not.toContain(tableName);
+          }
 
-        await withCompanyIdentityScratchDatabase(
-          async ({ directDatabaseUrl: productDatabaseUrl }) => {
-            const productSql = postgres(productDatabaseUrl, { max: 1 });
-            try {
-              await migrate(drizzle(productSql), {
-                migrationsFolder: PRODUCT_MIGRATIONS,
-              });
+          await withCompanyIdentityScratchDatabase(
+            async ({ directDatabaseUrl: productDatabaseUrl }) => {
+              const productSql = postgres(productDatabaseUrl, { max: 1 });
+              const stagedProductMigrations =
+                await stageProductMigrationsForIsolationProof();
+              try {
+                await migrate(drizzle(productSql), {
+                  migrationsFolder: stagedProductMigrations,
+                });
 
-              const productTablesAfterMigration = await publicTables(productSql);
-              const productLedgerAfterMigration = await ledgerHashes(productSql);
-              expect(productLedgerAfterMigration.length).toBeGreaterThan(0);
-              expect(productTablesAfterMigration).toEqual(PRODUCT_TABLES);
-              for (const tableName of IDENTITY_TABLES) {
-                expect(productTablesAfterMigration).not.toContain(tableName);
+                const productTablesAfterMigration =
+                  await publicTables(productSql);
+                const productLedgerAfterMigration =
+                  await ledgerHashes(productSql);
+                expect(productLedgerAfterMigration.length).toBeGreaterThan(0);
+                expect(productTablesAfterMigration).toEqual(PRODUCT_TABLES);
+                for (const tableName of IDENTITY_TABLES) {
+                  expect(productTablesAfterMigration).not.toContain(tableName);
+                }
+
+                expect(await publicTables(identitySql)).toEqual(
+                  identityTablesBeforeProduct,
+                );
+                expect(await ledgerHashes(identitySql)).toEqual(
+                  identityLedgerBeforeProduct,
+                );
+                expect(
+                  productLedgerAfterMigration.filter((hash) =>
+                    identityLedgerBeforeProduct.includes(hash),
+                  ),
+                ).toEqual([]);
+              } finally {
+                await productSql.end();
+                await rm(stagedProductMigrations, {
+                  recursive: true,
+                  force: true,
+                });
               }
-
-              expect(await publicTables(identitySql)).toEqual(
-                identityTablesBeforeProduct,
-              );
-              expect(await ledgerHashes(identitySql)).toEqual(
-                identityLedgerBeforeProduct,
-              );
-              expect(
-                productLedgerAfterMigration.filter((hash) =>
-                  identityLedgerBeforeProduct.includes(hash),
-                ),
-              ).toEqual([]);
-            } finally {
-              await productSql.end();
-            }
-          },
-        );
-      } finally {
-        await identitySql.end();
-      }
-    });
+            },
+          );
+        } finally {
+          await identitySql.end();
+        }
+      },
+    );
   }, 180_000);
 });

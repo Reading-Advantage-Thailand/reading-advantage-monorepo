@@ -38,15 +38,10 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const PACKAGE_ROOT = resolve(HERE, "../../..");
 const REPOSITORY_ROOT = resolve(PACKAGE_ROOT, "../..");
 const COMPOSE_FILE = join(REPOSITORY_ROOT, "docker-compose.yml");
-const MIGRATIONS_FOLDER = join(
-  PACKAGE_ROOT,
-  "company-identity",
-  "drizzle"
-);
+const MIGRATIONS_FOLDER = join(PACKAGE_ROOT, "company-identity", "drizzle");
 const MIGRATION_MODULE = new URL("../migration.js", import.meta.url).href;
 const ROLLBACK_SENTINEL_ID = "00000000-0000-4000-8000-000000000201";
-const ROLLBACK_ACCOUNT_SENTINEL_ID =
-  "00000000-0000-4000-8000-000000000202";
+const ROLLBACK_ACCOUNT_SENTINEL_ID = "00000000-0000-4000-8000-000000000202";
 
 async function loadMigrationModule(): Promise<CompanyIdentityMigrationModule> {
   let loaded: Record<string, unknown>;
@@ -56,13 +51,13 @@ async function loadMigrationModule(): Promise<CompanyIdentityMigrationModule> {
   } catch (error) {
     throw new Error(
       "The prior-prefix backup succeeded, but the current migrateCompanyIdentity module is absent.",
-      { cause: error }
+      { cause: error },
     );
   }
 
   if (typeof loaded.migrateCompanyIdentity !== "function") {
     throw new Error(
-      "The prior-prefix backup succeeded, but migration.ts does not export migrateCompanyIdentity."
+      "The prior-prefix backup succeeded, but migration.ts does not export migrateCompanyIdentity.",
     );
   }
   return loaded as unknown as CompanyIdentityMigrationModule;
@@ -72,12 +67,12 @@ async function readIdentityJournal(): Promise<DrizzleJournal> {
   try {
     const rawJournal = await readFile(
       join(MIGRATIONS_FOLDER, "meta", "_journal.json"),
-      "utf8"
+      "utf8",
     );
     const journal = JSON.parse(rawJournal) as DrizzleJournal;
     if (!Array.isArray(journal.entries) || journal.entries.length < 2) {
       throw new Error(
-        "Rollback proof requires at least two checked-in identity migrations."
+        "Rollback proof requires at least two checked-in identity migrations.",
       );
     }
     return journal;
@@ -87,16 +82,16 @@ async function readIdentityJournal(): Promise<DrizzleJournal> {
     }
     throw new Error(
       "PostgreSQL 16 scratch preflight passed, but the checked-in company-identity migration journal is absent.",
-      { cause: error }
+      { cause: error },
     );
   }
 }
 
 async function stagePriorMigrationPrefix(
-  journal: DrizzleJournal
+  journal: DrizzleJournal,
 ): Promise<string> {
   const stagedFolder = await mkdtemp(
-    join(tmpdir(), "company-identity-rollback-prefix-")
+    join(tmpdir(), "company-identity-rollback-prefix-"),
   );
   try {
     const stagedMeta = join(stagedFolder, "meta");
@@ -106,13 +101,13 @@ async function stagePriorMigrationPrefix(
     await writeFile(
       join(stagedMeta, "_journal.json"),
       `${JSON.stringify({ ...journal, entries: priorEntries }, null, 2)}\n`,
-      "utf8"
+      "utf8",
     );
     for (const entry of priorEntries) {
       const sqlFile = `${entry.tag}.sql`;
       await copyFile(
         join(MIGRATIONS_FOLDER, sqlFile),
-        join(stagedFolder, sqlFile)
+        join(stagedFolder, sqlFile),
       );
     }
     return stagedFolder;
@@ -123,7 +118,7 @@ async function stagePriorMigrationPrefix(
 }
 
 async function schemaFingerprint(
-  sql: ReturnType<typeof postgres>
+  sql: ReturnType<typeof postgres>,
 ): Promise<string> {
   const columns = await sql<
     {
@@ -141,20 +136,30 @@ async function schemaFingerprint(
     ORDER BY table_schema, table_name, ordinal_position
   `;
   const constraints = await sql<
-    { schema_name: string; table_name: string; constraint_name: string; definition: string }[]
+    {
+      schema_name: string;
+      table_name: string;
+      constraint_name: string;
+      definition: string;
+    }[]
   >`
     SELECT namespace.nspname AS schema_name,
            relation.relname AS table_name,
-           constraint.conname AS constraint_name,
-           pg_get_constraintdef(constraint.oid, true) AS definition
-    FROM pg_constraint AS constraint
-    JOIN pg_class AS relation ON relation.oid = constraint.conrelid
+           constraint_row.conname AS constraint_name,
+           pg_get_constraintdef(constraint_row.oid, true) AS definition
+    FROM pg_constraint AS constraint_row
+    JOIN pg_class AS relation ON relation.oid = constraint_row.conrelid
     JOIN pg_namespace AS namespace ON namespace.oid = relation.relnamespace
     WHERE namespace.nspname IN ('public', 'drizzle')
-    ORDER BY namespace.nspname, relation.relname, constraint.conname
+    ORDER BY namespace.nspname, relation.relname, constraint_row.conname
   `;
   const indexes = await sql<
-    { schema_name: string; table_name: string; index_name: string; definition: string }[]
+    {
+      schema_name: string;
+      table_name: string;
+      index_name: string;
+      definition: string;
+    }[]
   >`
     SELECT schemaname AS schema_name,
            tablename AS table_name,
@@ -165,7 +170,12 @@ async function schemaFingerprint(
     ORDER BY schemaname, tablename, indexname
   `;
   const enums = await sql<
-    { schema_name: string; enum_name: string; enum_value: string; sort_order: number }[]
+    {
+      schema_name: string;
+      enum_name: string;
+      enum_value: string;
+      sort_order: number;
+    }[]
   >`
     SELECT namespace.nspname AS schema_name,
            type.typname AS enum_name,
@@ -178,7 +188,12 @@ async function schemaFingerprint(
     ORDER BY namespace.nspname, type.typname, enum.enumsortorder
   `;
   const triggers = await sql<
-    { schema_name: string; table_name: string; trigger_name: string; definition: string }[]
+    {
+      schema_name: string;
+      table_name: string;
+      trigger_name: string;
+      definition: string;
+    }[]
   >`
     SELECT namespace.nspname AS schema_name,
            relation.relname AS table_name,
@@ -192,7 +207,12 @@ async function schemaFingerprint(
     ORDER BY namespace.nspname, relation.relname, trigger.tgname
   `;
   const privileges = await sql<
-    { object_type: string; object_name: string; owner_name: string; acl: string }[]
+    {
+      object_type: string;
+      object_name: string;
+      owner_name: string;
+      acl: string;
+    }[]
   >`
     SELECT 'schema' AS object_type,
            namespace.nspname AS object_name,
@@ -220,7 +240,7 @@ async function schemaFingerprint(
         enums,
         triggers,
         privileges,
-      })
+      }),
     )
     .digest("hex");
 }
@@ -233,33 +253,22 @@ async function readLedger(sql: ReturnType<typeof postgres>) {
   `;
 }
 
-function runPostgresTool(
-  args: readonly string[],
-  input?: Buffer
-): Buffer {
+function runPostgresTool(args: readonly string[], input?: Buffer): Buffer {
   const result = spawnSync(
     "docker",
-    [
-      "compose",
-      "-f",
-      COMPOSE_FILE,
-      "exec",
-      "-T",
-      "postgres",
-      ...args,
-    ],
+    ["compose", "-f", COMPOSE_FILE, "exec", "-T", "postgres", ...args],
     {
       cwd: REPOSITORY_ROOT,
       input,
       maxBuffer: 64 * 1024 * 1024,
-    }
+    },
   );
 
   if (result.error || result.status !== 0) {
     const stderr = result.stderr?.toString("utf8").trim();
     throw new Error(
       `PostgreSQL backup tool ${args[0] ?? "unknown"} failed with status ${result.status ?? "spawn-error"}: ${stderr ?? "no diagnostics"}`,
-      { cause: result.error }
+      { cause: result.error },
     );
   }
   return result.stdout;
@@ -278,7 +287,9 @@ describe("company identity rollback rehearsal", () => {
                  current_setting('server_version_num') AS server_version_num
         `;
         expect(probe?.database_name).toBe(source.databaseName);
-        expect(Number(probe?.server_version_num)).toBeGreaterThanOrEqual(160_000);
+        expect(Number(probe?.server_version_num)).toBeGreaterThanOrEqual(
+          160_000,
+        );
         expect(Number(probe?.server_version_num)).toBeLessThan(170_000);
 
         const journal = await readIdentityJournal();
@@ -339,10 +350,10 @@ describe("company identity rollback rehearsal", () => {
             directDatabaseUrl: source.directDatabaseUrl,
           });
           expect((await readLedger(source.adminSql)).length).toBeGreaterThan(
-            priorLedger.length
+            priorLedger.length,
           );
           expect(await schemaFingerprint(source.adminSql)).not.toBe(
-            priorFingerprint
+            priorFingerprint,
           );
 
           await withCompanyIdentityScratchDatabase(async (restored) => {
@@ -355,12 +366,12 @@ describe("company identity rollback rehearsal", () => {
                 "--dbname",
                 restored.databaseName,
               ],
-              backup
+              backup,
             );
 
             expect(await readLedger(restored.adminSql)).toEqual(priorLedger);
             expect(await schemaFingerprint(restored.adminSql)).toBe(
-              priorFingerprint
+              priorFingerprint,
             );
             const [sentinel] = await restored.adminSql<{ id: string }[]>`
               SELECT id
@@ -389,6 +400,6 @@ describe("company identity rollback rehearsal", () => {
           await rm(stagedPrefix, { recursive: true, force: true });
         }
       });
-    }
+    },
   );
 });

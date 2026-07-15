@@ -302,11 +302,11 @@ export async function withCompanyIdentityScratchDatabase<T>(
     process.once("SIGTERM", handleSigterm);
 
     await serverAdminSql.unsafe(
-      `CREATE ROLE ${quoteIdentifier(migrationRole)} LOGIN PASSWORD ${quoteLiteral(migrationPassword)}`,
+      `CREATE ROLE ${quoteIdentifier(migrationRole)} LOGIN NOINHERIT NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS PASSWORD ${quoteLiteral(migrationPassword)}`,
     );
     migrationRoleCreated = true;
     await serverAdminSql.unsafe(
-      `CREATE ROLE ${quoteIdentifier(runtimeRole)} LOGIN PASSWORD ${quoteLiteral(runtimePassword)}`,
+      `CREATE ROLE ${quoteIdentifier(runtimeRole)} LOGIN NOINHERIT NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS PASSWORD ${quoteLiteral(runtimePassword)}`,
     );
     runtimeRoleCreated = true;
     await serverAdminSql.unsafe(

@@ -8,11 +8,7 @@
 import { existsSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { pathToFileURL, fileURLToPath } from "node:url";
-import {
-  getTableConfig,
-  PgDialect,
-  type PgTable,
-} from "drizzle-orm/pg-core";
+import { getTableConfig, PgDialect, type PgTable } from "drizzle-orm/pg-core";
 import { describe, expect, it } from "vitest";
 import * as productSchema from "../../schema/index.js";
 
@@ -52,9 +48,16 @@ const TABLES: readonly TableContract[] = [
     exportName: "companyAccounts",
     sqlName: "company_accounts",
     columns: [
-      "id", "username", "normalized_username", "normalization_version",
-      "display_name", "status", "auth_version", "status_changed_at",
-      "created_at", "updated_at",
+      "id",
+      "username",
+      "normalized_username",
+      "normalization_version",
+      "display_name",
+      "status",
+      "auth_version",
+      "status_changed_at",
+      "created_at",
+      "updated_at",
     ],
     primaryColumns: ["id"],
     uniqueNames: ["company_accounts_normalized_username_unique"],
@@ -72,8 +75,14 @@ const TABLES: readonly TableContract[] = [
     exportName: "companyPasswordCredentials",
     sqlName: "company_password_credentials",
     columns: [
-      "account_id", "password_hash", "algorithm", "credential_version",
-      "legacy_imported_at", "last_verified_at", "created_at", "updated_at",
+      "account_id",
+      "password_hash",
+      "algorithm",
+      "credential_version",
+      "legacy_imported_at",
+      "last_verified_at",
+      "created_at",
+      "updated_at",
     ],
     primaryColumns: ["account_id"],
     uniqueNames: [],
@@ -96,8 +105,13 @@ const TABLES: readonly TableContract[] = [
     exportName: "companyOrganizations",
     sqlName: "company_organizations",
     columns: [
-      "id", "stable_key", "display_name", "organization_type", "status",
-      "created_at", "updated_at",
+      "id",
+      "stable_key",
+      "display_name",
+      "organization_type",
+      "status",
+      "created_at",
+      "updated_at",
     ],
     primaryColumns: ["id"],
     uniqueNames: ["company_organizations_stable_key_unique"],
@@ -112,8 +126,15 @@ const TABLES: readonly TableContract[] = [
     exportName: "companyOrganizationMemberships",
     sqlName: "company_organization_memberships",
     columns: [
-      "id", "organization_id", "account_id", "status", "joined_at",
-      "status_changed_at", "ended_at", "created_at", "updated_at",
+      "id",
+      "organization_id",
+      "account_id",
+      "status",
+      "joined_at",
+      "status_changed_at",
+      "ended_at",
+      "created_at",
+      "updated_at",
     ],
     primaryColumns: ["id"],
     uniqueNames: [
@@ -146,8 +167,11 @@ const TABLES: readonly TableContract[] = [
     exportName: "companyRoleAssignments",
     sqlName: "company_role_assignments",
     columns: [
-      "organization_id", "membership_id", "role_key",
-      "assigned_by_account_id", "assigned_at",
+      "organization_id",
+      "membership_id",
+      "role_key",
+      "assigned_by_account_id",
+      "assigned_at",
     ],
     primaryColumns: ["membership_id", "role_key"],
     uniqueNames: [],
@@ -174,7 +198,11 @@ const TABLES: readonly TableContract[] = [
     exportName: "companyApplications",
     sqlName: "company_applications",
     columns: [
-      "id", "stable_key", "display_name", "status", "created_at",
+      "id",
+      "stable_key",
+      "display_name",
+      "status",
+      "created_at",
       "updated_at",
     ],
     primaryColumns: ["id"],
@@ -190,8 +218,13 @@ const TABLES: readonly TableContract[] = [
     exportName: "companyApplicationRoleDefinitions",
     sqlName: "company_application_role_definitions",
     columns: [
-      "application_id", "role_key", "display_name", "description", "status",
-      "created_at", "updated_at",
+      "application_id",
+      "role_key",
+      "display_name",
+      "description",
+      "status",
+      "created_at",
+      "updated_at",
     ],
     primaryColumns: ["application_id", "role_key"],
     uniqueNames: [],
@@ -215,13 +248,17 @@ const TABLES: readonly TableContract[] = [
     exportName: "companyApplicationRoleAssignments",
     sqlName: "company_application_role_assignments",
     columns: [
-      "id", "organization_id", "membership_id", "application_id", "role_key",
-      "assigned_by_account_id", "assigned_at", "expires_at",
+      "id",
+      "organization_id",
+      "membership_id",
+      "application_id",
+      "role_key",
+      "assigned_by_account_id",
+      "assigned_at",
+      "expires_at",
     ],
     primaryColumns: ["id"],
-    uniqueNames: [
-      "company_app_role_assignments_membership_app_role_unique",
-    ],
+    uniqueNames: ["company_app_role_assignments_membership_app_role_unique"],
     checkNames: [
       "company_app_role_assignments_expiry_check",
       "company_app_role_assignments_role_key_format_check",
@@ -258,9 +295,18 @@ const TABLES: readonly TableContract[] = [
     exportName: "companySsoSessions",
     sqlName: "company_sso_sessions",
     columns: [
-      "id", "token_hash", "organization_id", "membership_id",
-      "account_auth_version", "created_at", "last_seen_at", "idle_expires_at",
-      "absolute_expires_at", "revoked_at", "revoke_reason", "ip_hash",
+      "id",
+      "token_hash",
+      "organization_id",
+      "membership_id",
+      "account_auth_version",
+      "created_at",
+      "last_seen_at",
+      "idle_expires_at",
+      "absolute_expires_at",
+      "revoked_at",
+      "revoke_reason",
+      "ip_hash",
       "user_agent",
     ],
     primaryColumns: ["id"],
@@ -294,9 +340,18 @@ const TABLES: readonly TableContract[] = [
     exportName: "companyApplicationSessions",
     sqlName: "company_application_sessions",
     columns: [
-      "id", "token_hash", "sso_session_id", "organization_id",
-      "membership_id", "application_id", "account_auth_version", "created_at",
-      "last_checked_at", "expires_at", "revoked_at", "revoke_reason",
+      "id",
+      "token_hash",
+      "sso_session_id",
+      "organization_id",
+      "membership_id",
+      "application_id",
+      "account_auth_version",
+      "created_at",
+      "last_checked_at",
+      "expires_at",
+      "revoked_at",
+      "revoke_reason",
     ],
     primaryColumns: ["id"],
     uniqueNames: [
@@ -334,9 +389,17 @@ const TABLES: readonly TableContract[] = [
     exportName: "companyOidcClients",
     sqlName: "company_oidc_clients",
     columns: [
-      "id", "application_id", "client_id", "client_type",
-      "token_auth_method", "client_secret_hash", "secret_version",
-      "pkce_required", "status", "created_at", "updated_at",
+      "id",
+      "application_id",
+      "client_id",
+      "client_type",
+      "token_auth_method",
+      "client_secret_hash",
+      "secret_version",
+      "pkce_required",
+      "status",
+      "created_at",
+      "updated_at",
     ],
     primaryColumns: ["id"],
     uniqueNames: [
@@ -385,9 +448,19 @@ const TABLES: readonly TableContract[] = [
     exportName: "companyOidcAuthorizationCodes",
     sqlName: "company_oidc_authorization_codes",
     columns: [
-      "id", "code_hash", "oidc_client_id", "redirect_uri_id",
-      "sso_session_id", "code_challenge", "code_challenge_method", "nonce",
-      "scope", "issued_at", "expires_at", "consumed_at", "revoked_at",
+      "id",
+      "code_hash",
+      "oidc_client_id",
+      "redirect_uri_id",
+      "sso_session_id",
+      "code_challenge",
+      "code_challenge_method",
+      "nonce",
+      "scope",
+      "issued_at",
+      "expires_at",
+      "consumed_at",
+      "revoked_at",
     ],
     primaryColumns: ["id"],
     uniqueNames: ["company_oidc_authorization_codes_code_hash_unique"],
@@ -431,10 +504,21 @@ const TABLES: readonly TableContract[] = [
     exportName: "companyIdentityAuditEvents",
     sqlName: "company_identity_audit_events",
     columns: [
-      "id", "occurred_at", "correlation_id", "actor_type",
-      "actor_account_id", "actor_service_key", "organization_id",
-      "application_id", "target_account_id", "operation", "outcome",
-      "reason_code", "ip_hash", "user_agent_family", "metadata",
+      "id",
+      "occurred_at",
+      "correlation_id",
+      "actor_type",
+      "actor_account_id",
+      "actor_service_key",
+      "organization_id",
+      "application_id",
+      "target_account_id",
+      "operation",
+      "outcome",
+      "reason_code",
+      "ip_hash",
+      "user_agent_family",
+      "metadata",
     ],
     primaryColumns: ["id"],
     uniqueNames: [],
@@ -489,8 +573,15 @@ const TABLES: readonly TableContract[] = [
     exportName: "companyLoginAttempts",
     sqlName: "company_login_attempts",
     columns: [
-      "id", "occurred_at", "correlation_id", "normalized_username_hash",
-      "ip_hash", "oidc_client_id", "outcome", "account_id", "latency_ms",
+      "id",
+      "occurred_at",
+      "correlation_id",
+      "normalized_username_hash",
+      "ip_hash",
+      "oidc_client_id",
+      "outcome",
+      "account_id",
+      "latency_ms",
     ],
     primaryColumns: ["id"],
     uniqueNames: [],
@@ -526,8 +617,15 @@ const TABLES: readonly TableContract[] = [
     exportName: "companyLoginRateLimitBuckets",
     sqlName: "company_login_rate_limit_buckets",
     columns: [
-      "id", "kind", "identifier_hash", "failed_count", "window_started_at",
-      "last_attempt_at", "blocked_until", "challenge_required_at", "updated_at",
+      "id",
+      "kind",
+      "identifier_hash",
+      "failed_count",
+      "window_started_at",
+      "last_attempt_at",
+      "blocked_until",
+      "challenge_required_at",
+      "updated_at",
     ],
     primaryColumns: ["id"],
     uniqueNames: ["company_rate_limit_buckets_kind_identifier_unique"],
@@ -545,9 +643,19 @@ const TABLES: readonly TableContract[] = [
     exportName: "companyIdentityIdempotencyRecords",
     sqlName: "company_identity_idempotency_records",
     columns: [
-      "id", "operation", "scope_key", "idempotency_key_hash", "request_hash",
-      "state", "owner_token_hash", "safe_result", "safe_error_code",
-      "created_at", "lease_expires_at", "completed_at", "expires_at",
+      "id",
+      "operation",
+      "scope_key",
+      "idempotency_key_hash",
+      "request_hash",
+      "state",
+      "owner_token_hash",
+      "safe_result",
+      "safe_error_code",
+      "created_at",
+      "lease_expires_at",
+      "completed_at",
+      "expires_at",
     ],
     primaryColumns: ["id"],
     uniqueNames: ["company_identity_idempotency_operation_scope_key_unique"],
@@ -577,9 +685,9 @@ async function loadIdentitySchema(): Promise<Record<string, unknown>> {
     "Missing dedicated schema entrypoint: packages/db/src/company-identity/schema/index.ts",
   ).toBe(true);
   if (!existsSync(IDENTITY_SCHEMA_INDEX)) return {};
-  return import(/* @vite-ignore */ pathToFileURL(IDENTITY_SCHEMA_INDEX).href) as Promise<
-    Record<string, unknown>
-  >;
+  return import(
+    /* @vite-ignore */ pathToFileURL(IDENTITY_SCHEMA_INDEX).href
+  ) as Promise<Record<string, unknown>>;
 }
 
 function asTable(value: unknown): PgTable | undefined {
@@ -605,7 +713,9 @@ function sorted(values: readonly string[]): string[] {
 function primaryColumns(table: PgTable): string[] {
   const config = getTableConfig(table);
   return sorted([
-    ...config.columns.filter((column) => column.primary).map(({ name }) => name),
+    ...config.columns
+      .filter((column) => column.primary)
+      .map(({ name }) => name),
     ...config.primaryKeys.flatMap((key) => key.columns.map(({ name }) => name)),
   ]);
 }
@@ -625,15 +735,17 @@ function uniqueNames(table: PgTable): string[] {
 
 function nonUniqueIndexNames(table: PgTable): string[] {
   return sorted(
-    getTableConfig(table).indexes
-      .filter(({ config }) => !config.unique)
+    getTableConfig(table)
+      .indexes.filter(({ config }) => !config.unique)
       .map(({ config }) => config.name)
       .filter((name): name is string => typeof name === "string"),
   );
 }
 
 function renderedCheck(table: PgTable, checkName: string): string {
-  const check = getTableConfig(table).checks.find(({ name }) => name === checkName);
+  const check = getTableConfig(table).checks.find(
+    ({ name }) => name === checkName,
+  );
   expect(check, `Missing Drizzle check ${checkName}`).toBeDefined();
   if (!check) return "";
   const query = dialect.sqlToQuery(check.value);
@@ -644,9 +756,24 @@ describe("company identity schema allowlist and product isolation", () => {
   it("exports exactly the reviewed seventeen identity tables", async () => {
     const identitySchema = await loadIdentitySchema();
     expect(
-      tablesIn(identitySchema).map((table) => getTableConfig(table).name).sort(),
+      tablesIn(identitySchema)
+        .map((table) => getTableConfig(table).name)
+        .sort(),
       "The dedicated schema must contain exactly the 17 reviewed identity tables",
     ).toEqual(EXPECTED_SQL_TABLES);
+  });
+
+  it("exports a named Drizzle relation graph for every reviewed identity table", async () => {
+    const identitySchema = await loadIdentitySchema();
+    const relationExports = TABLES.map(
+      ({ exportName }) => `${exportName}Relations`,
+    );
+    for (const exportName of relationExports) {
+      expect(
+        identitySchema[exportName],
+        `Missing reviewed Drizzle relation export ${exportName}`,
+      ).toBeDefined();
+    }
   });
 
   it("does not export identity tables from the product schema barrel", () => {
@@ -659,25 +786,32 @@ describe("company identity schema allowlist and product isolation", () => {
     ).toEqual([]);
   });
 
-  it("keeps every identity table outside the education TenantDB registry", async () => {
-    const identitySchema = await loadIdentitySchema();
-    const registry = await import(
-      /* @vite-ignore */ pathToFileURL(TENANT_REGISTRY).href
-    ) as { classifyTable(table: PgTable): unknown };
-    for (const table of tablesIn(identitySchema)) {
-      expect(
-        () => registry.classifyTable(table),
-        `${getTableConfig(table).name} must not be classified by education TenantDB`,
-      ).toThrow("is not classified in the tenant registry");
-    }
-  });
+  it(
+    "keeps every identity table outside the education TenantDB registry",
+    { timeout: 20_000 },
+    async () => {
+      const identitySchema = await loadIdentitySchema();
+      const registry = (await import(
+        /* @vite-ignore */ pathToFileURL(TENANT_REGISTRY).href
+      )) as { classifyTable(table: PgTable): unknown };
+      for (const table of tablesIn(identitySchema)) {
+        expect(
+          () => registry.classifyTable(table),
+          `${getTableConfig(table).name} must not be classified by education TenantDB`,
+        ).toThrow("is not classified in the tenant registry");
+      }
+    },
+  );
 });
 
 describe.each(TABLES)("$sqlName metadata contract", (contract) => {
   it("has the exact SQL columns and primary-key columns", async () => {
     const identitySchema = await loadIdentitySchema();
     const table = asTable(identitySchema[contract.exportName]);
-    expect(table, `Missing Drizzle export ${contract.exportName}`).toBeDefined();
+    expect(
+      table,
+      `Missing Drizzle export ${contract.exportName}`,
+    ).toBeDefined();
     if (!table) return;
     const config = getTableConfig(table);
     expect(config.name).toBe(contract.sqlName);
@@ -691,22 +825,28 @@ describe.each(TABLES)("$sqlName metadata contract", (contract) => {
   it("has the exact unique, check, and non-unique index names", async () => {
     const identitySchema = await loadIdentitySchema();
     const table = asTable(identitySchema[contract.exportName]);
-    expect(table, `Missing Drizzle export ${contract.exportName}`).toBeDefined();
+    expect(
+      table,
+      `Missing Drizzle export ${contract.exportName}`,
+    ).toBeDefined();
     if (!table) return;
     expect(uniqueNames(table)).toEqual(sorted(contract.uniqueNames));
-    expect(sorted(getTableConfig(table).checks.map(({ name }) => name))).toEqual(
-      sorted(contract.checkNames),
-    );
+    expect(
+      sorted(getTableConfig(table).checks.map(({ name }) => name)),
+    ).toEqual(sorted(contract.checkNames));
     expect(nonUniqueIndexNames(table)).toEqual(sorted(contract.indexNames));
   });
 
   it("has exact named foreign keys, referenced columns, and deletion rules", async () => {
     const identitySchema = await loadIdentitySchema();
     const table = asTable(identitySchema[contract.exportName]);
-    expect(table, `Missing Drizzle export ${contract.exportName}`).toBeDefined();
+    expect(
+      table,
+      `Missing Drizzle export ${contract.exportName}`,
+    ).toBeDefined();
     if (!table) return;
-    const actual = getTableConfig(table).foreignKeys
-      .map((foreignKey) => {
+    const actual = getTableConfig(table)
+      .foreignKeys.map((foreignKey) => {
         const reference = foreignKey.reference();
         return {
           name: foreignKey.getName(),
@@ -719,23 +859,79 @@ describe.each(TABLES)("$sqlName metadata contract", (contract) => {
       .sort((left, right) => left.name.localeCompare(right.name));
     expect(actual).toEqual(
       [...contract.foreignKeys].sort((left, right) =>
-        left.name.localeCompare(right.name)),
+        left.name.localeCompare(right.name),
+      ),
     );
   });
 });
 
 const HASH_COLUMNS = [
-  ["companySsoSessions", "token_hash", false, "company_sso_sessions_token_hash_hex_check"],
-  ["companySsoSessions", "ip_hash", true, "company_sso_sessions_ip_hash_hex_check"],
-  ["companyApplicationSessions", "token_hash", false, "company_application_sessions_token_hash_hex_check"],
-  ["companyOidcAuthorizationCodes", "code_hash", false, "company_oidc_authorization_codes_code_hash_hex_check"],
-  ["companyIdentityAuditEvents", "ip_hash", true, "company_identity_audit_events_ip_hash_hex_check"],
-  ["companyLoginAttempts", "normalized_username_hash", false, "company_login_attempts_username_hash_hex_check"],
-  ["companyLoginAttempts", "ip_hash", false, "company_login_attempts_ip_hash_hex_check"],
-  ["companyLoginRateLimitBuckets", "identifier_hash", false, "company_rate_limit_buckets_identifier_hash_hex_check"],
-  ["companyIdentityIdempotencyRecords", "idempotency_key_hash", false, "company_identity_idempotency_key_hash_hex_check"],
-  ["companyIdentityIdempotencyRecords", "request_hash", false, "company_identity_idempotency_request_hash_hex_check"],
-  ["companyIdentityIdempotencyRecords", "owner_token_hash", true, "company_identity_idempotency_owner_hash_hex_check"],
+  [
+    "companySsoSessions",
+    "token_hash",
+    false,
+    "company_sso_sessions_token_hash_hex_check",
+  ],
+  [
+    "companySsoSessions",
+    "ip_hash",
+    true,
+    "company_sso_sessions_ip_hash_hex_check",
+  ],
+  [
+    "companyApplicationSessions",
+    "token_hash",
+    false,
+    "company_application_sessions_token_hash_hex_check",
+  ],
+  [
+    "companyOidcAuthorizationCodes",
+    "code_hash",
+    false,
+    "company_oidc_authorization_codes_code_hash_hex_check",
+  ],
+  [
+    "companyIdentityAuditEvents",
+    "ip_hash",
+    true,
+    "company_identity_audit_events_ip_hash_hex_check",
+  ],
+  [
+    "companyLoginAttempts",
+    "normalized_username_hash",
+    false,
+    "company_login_attempts_username_hash_hex_check",
+  ],
+  [
+    "companyLoginAttempts",
+    "ip_hash",
+    false,
+    "company_login_attempts_ip_hash_hex_check",
+  ],
+  [
+    "companyLoginRateLimitBuckets",
+    "identifier_hash",
+    false,
+    "company_rate_limit_buckets_identifier_hash_hex_check",
+  ],
+  [
+    "companyIdentityIdempotencyRecords",
+    "idempotency_key_hash",
+    false,
+    "company_identity_idempotency_key_hash_hex_check",
+  ],
+  [
+    "companyIdentityIdempotencyRecords",
+    "request_hash",
+    false,
+    "company_identity_idempotency_request_hash_hex_check",
+  ],
+  [
+    "companyIdentityIdempotencyRecords",
+    "owner_token_hash",
+    true,
+    "company_identity_idempotency_owner_hash_hex_check",
+  ],
 ] as const;
 
 describe("hash-only secret persistence metadata", () => {
@@ -749,7 +945,10 @@ describe("hash-only secret persistence metadata", () => {
       const column = getTableConfig(table).columns.find(
         ({ name }) => name === columnName,
       );
-      expect(column, `Missing hash column ${exportName}.${columnName}`).toBeDefined();
+      expect(
+        column,
+        `Missing hash column ${exportName}.${columnName}`,
+      ).toBeDefined();
       expect(column?.getSQLType()).toMatch(/^(?:char|character)\(64\)$/);
       expect(column?.notNull).toBe(!nullable);
       expect(renderedCheck(table, checkName)).toContain("[0-9a-f]{64}");
@@ -759,12 +958,19 @@ describe("hash-only secret persistence metadata", () => {
   it("contains no raw secret, token, code, IP, or idempotency columns", async () => {
     const identitySchema = await loadIdentitySchema();
     const forbidden = new Set([
-      "password", "token", "authorization_code", "code", "client_secret",
-      "ip", "ip_address", "idempotency_key", "owner_token",
+      "password",
+      "token",
+      "authorization_code",
+      "code",
+      "client_secret",
+      "ip",
+      "ip_address",
+      "idempotency_key",
+      "owner_token",
     ]);
     const found = tablesIn(identitySchema).flatMap((table) =>
-      getTableConfig(table).columns
-        .map(({ name }) => name)
+      getTableConfig(table)
+        .columns.map(({ name }) => name)
         .filter((name) => forbidden.has(name))
         .map((name) => `${getTableConfig(table).name}.${name}`),
     );
@@ -774,13 +980,41 @@ describe("hash-only secret persistence metadata", () => {
 
 describe("grammar and expiry constraints are executable Drizzle metadata", () => {
   it.each([
-    ["companyAccounts", "company_accounts_normalized_username_format_check", "[a-z0-9]"],
-    ["companyOrganizations", "company_organizations_stable_key_format_check", "[a-z0-9-]"],
-    ["companyApplications", "company_applications_stable_key_format_check", "[a-z0-9-]"],
-    ["companyApplicationRoleDefinitions", "company_application_role_definitions_role_key_format_check", "[A-Z0-9_]"],
-    ["companyApplicationRoleAssignments", "company_app_role_assignments_role_key_format_check", "[A-Z0-9_]"],
-    ["companyOidcAuthorizationCodes", "company_oidc_codes_pkce_challenge_format_check", "[A-Za-z0-9_-]{43}"],
-    ["companyIdentityIdempotencyRecords", "company_identity_idempotency_scope_key_format_check", "organization:"],
+    [
+      "companyAccounts",
+      "company_accounts_normalized_username_format_check",
+      "[a-z0-9]",
+    ],
+    [
+      "companyOrganizations",
+      "company_organizations_stable_key_format_check",
+      "[a-z0-9-]",
+    ],
+    [
+      "companyApplications",
+      "company_applications_stable_key_format_check",
+      "[a-z0-9-]",
+    ],
+    [
+      "companyApplicationRoleDefinitions",
+      "company_application_role_definitions_role_key_format_check",
+      "[A-Z0-9_]",
+    ],
+    [
+      "companyApplicationRoleAssignments",
+      "company_app_role_assignments_role_key_format_check",
+      "[A-Z0-9_]",
+    ],
+    [
+      "companyOidcAuthorizationCodes",
+      "company_oidc_codes_pkce_challenge_format_check",
+      "[A-Za-z0-9_-]{43}",
+    ],
+    [
+      "companyIdentityIdempotencyRecords",
+      "company_identity_idempotency_scope_key_format_check",
+      "organization:",
+    ],
   ] as const)("%s enforces %s", async (exportName, checkName, token) => {
     const identitySchema = await loadIdentitySchema();
     const table = asTable(identitySchema[exportName]);
@@ -790,11 +1024,31 @@ describe("grammar and expiry constraints are executable Drizzle metadata", () =>
   });
 
   it.each([
-    ["companyApplicationRoleAssignments", "company_app_role_assignments_expiry_check", ["assigned_at", "expires_at"]],
-    ["companySsoSessions", "company_sso_sessions_expiry_order_check", ["created_at", "idle_expires_at", "absolute_expires_at"]],
-    ["companyApplicationSessions", "company_application_sessions_expiry_check", ["created_at", "expires_at"]],
-    ["companyOidcAuthorizationCodes", "company_oidc_codes_expiry_check", ["issued_at", "expires_at", "5 minutes"]],
-    ["companyIdentityIdempotencyRecords", "company_identity_idempotency_expiry_check", ["created_at", "expires_at"]],
+    [
+      "companyApplicationRoleAssignments",
+      "company_app_role_assignments_expiry_check",
+      ["assigned_at", "expires_at"],
+    ],
+    [
+      "companySsoSessions",
+      "company_sso_sessions_expiry_order_check",
+      ["created_at", "idle_expires_at", "absolute_expires_at"],
+    ],
+    [
+      "companyApplicationSessions",
+      "company_application_sessions_expiry_check",
+      ["created_at", "expires_at"],
+    ],
+    [
+      "companyOidcAuthorizationCodes",
+      "company_oidc_codes_expiry_check",
+      ["issued_at", "expires_at", "5 minutes"],
+    ],
+    [
+      "companyIdentityIdempotencyRecords",
+      "company_identity_idempotency_expiry_check",
+      ["created_at", "expires_at"],
+    ],
   ] as const)("%s enforces %s", async (exportName, checkName, tokens) => {
     const identitySchema = await loadIdentitySchema();
     const table = asTable(identitySchema[exportName]);

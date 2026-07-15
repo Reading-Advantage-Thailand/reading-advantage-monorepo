@@ -2,7 +2,9 @@ import { generateKeyPairSync } from "node:crypto";
 import { describe, expect, it } from "vitest";
 
 type RawEnvironment = Record<string, string | undefined>;
-type ConfigFactory = (environment: RawEnvironment) => Readonly<Record<string, unknown>>;
+type ConfigFactory = (
+  environment: RawEnvironment,
+) => Readonly<Record<string, unknown>>;
 
 interface CompanyIdentityAuthEnvironmentModule {
   createCompanyIdentitySecurityConfig: ConfigFactory;
@@ -69,7 +71,7 @@ async function loadEnvironmentModule(): Promise<CompanyIdentityAuthEnvironmentMo
     throw new Error(
       "The auth-owned company-identity environment module is absent; " +
         "implement packages/auth/src/company-identity/environment.ts.",
-      { cause: error }
+      { cause: error },
     );
   }
 
@@ -82,7 +84,7 @@ async function loadEnvironmentModule(): Promise<CompanyIdentityAuthEnvironmentMo
   ]) {
     if (typeof loaded[exportName] !== "function") {
       throw new Error(
-        `The auth-owned company-identity environment module is missing export ${exportName}.`
+        `The auth-owned company-identity environment module is missing export ${exportName}.`,
       );
     }
   }
@@ -97,13 +99,15 @@ function captureConfigError(action: () => unknown): string {
     return error instanceof Error ? error.message : String(error);
   }
 
-  throw new Error("Expected company-identity auth environment validation to fail.");
+  throw new Error(
+    "Expected company-identity auth environment validation to fail.",
+  );
 }
 
 function expectSecretSafeError(
   action: () => unknown,
   expectedRule: RegExp,
-  secrets: readonly string[] = []
+  secrets: readonly string[] = [],
 ): void {
   const message = captureConfigError(action);
 
@@ -136,10 +140,10 @@ describe("company identity auth environment contracts", () => {
       () =>
         environment.createCompanyIdentitySecurityConfig({
           COMPANY_AUTH_IDENTIFIER_HASH_KEY: Buffer.alloc(31, 9).toString(
-            "base64url"
+            "base64url",
           ),
         }),
-      /COMPANY_AUTH_IDENTIFIER_HASH_KEY|32|base64url/i
+      /COMPANY_AUTH_IDENTIFIER_HASH_KEY|32|base64url/i,
     );
     expectSecretSafeError(
       () =>
@@ -147,7 +151,7 @@ describe("company identity auth environment contracts", () => {
           COMPANY_AUTH_OIDC_CLIENT_SECRET: CLIENT_SECRET,
         }),
       /COMPANY_AUTH_IDENTIFIER_HASH_KEY|required|unrecognized/i,
-      [CLIENT_SECRET]
+      [CLIENT_SECRET],
     );
   });
 
@@ -186,7 +190,7 @@ describe("company identity auth environment contracts", () => {
       expectSecretSafeError(
         () => environment.createCompanyIdentityIssuerConfig(invalidEnvironment),
         /TTL|SECONDS|SIGNING_KEY_ID|idle|absolute|session|skew|60|300/i,
-        [SIGNING_PRIVATE_KEY]
+        [SIGNING_PRIVATE_KEY],
       );
     }
   });
@@ -199,7 +203,7 @@ describe("company identity auth environment contracts", () => {
         ...ISSUER_ENV,
         NODE_ENV: "development",
         COMPANY_AUTH_ISSUER_URL: "http://localhost:3000",
-      })
+      }),
     ).toHaveProperty("issuerUrl", "http://localhost:3000");
 
     for (const issuerUrl of [
@@ -209,6 +213,8 @@ describe("company identity auth environment contracts", () => {
       "https://accounts.example.com/",
       "https://accounts.example.com?tenant=other",
       "https://accounts.example.com#fragment",
+      " https://accounts.example.com",
+      "https://accounts.example.com ",
     ]) {
       expectSecretSafeError(
         () =>
@@ -217,7 +223,7 @@ describe("company identity auth environment contracts", () => {
             COMPANY_AUTH_ISSUER_URL: issuerUrl,
           }),
         /issuer|HTTPS|loopback|port|credentials|query|fragment|trailing/i,
-        [issuerUrl, "ISSUER_PASSWORD", SIGNING_PRIVATE_KEY]
+        [issuerUrl, "ISSUER_PASSWORD", SIGNING_PRIVATE_KEY],
       );
     }
   });
@@ -245,7 +251,7 @@ describe("company identity auth environment contracts", () => {
     ]) {
       expectSecretSafeError(
         () => environment.createCompanyIdentityCookieConfig(invalidEnvironment),
-        /cookie|__Host|Secure|SameSite|Path|Domain|HttpOnly|unrecognized/i
+        /cookie|__Host|Secure|SameSite|Path|Domain|HttpOnly|unrecognized/i,
       );
     }
   });
@@ -261,7 +267,7 @@ describe("company identity auth environment contracts", () => {
     };
 
     expect(
-      environment.createCompanyIdentityCookieConfig(developmentCookie)
+      environment.createCompanyIdentityCookieConfig(developmentCookie),
     ).toMatchObject({ name: "ra_company_sso", secure: false, httpOnly: true });
 
     expectSecretSafeError(
@@ -270,21 +276,23 @@ describe("company identity auth environment contracts", () => {
           ...developmentCookie,
           COMPANY_AUTH_ISSUER_URL: "http://accounts.example.com:3000",
         }),
-      /loopback|issuer|cookie/i
+      /loopback|issuer|cookie/i,
     );
   });
 
   it("separates confidential and public client contracts", async () => {
     const environment = await loadEnvironmentModule();
 
-    expect(environment.createCompanyIdentityServiceAuthConfig(SERVICE_ENV)).toMatchObject({
+    expect(
+      environment.createCompanyIdentityServiceAuthConfig(SERVICE_ENV),
+    ).toMatchObject({
       clientId: "marketing-server",
       clientSecret: CLIENT_SECRET,
       redirectUri: SERVICE_ENV.COMPANY_AUTH_OIDC_REDIRECT_URI,
       expectedAudience: "marketing",
     });
     expect(
-      environment.createCompanyIdentityPublicClientConfig(PUBLIC_CLIENT_ENV)
+      environment.createCompanyIdentityPublicClientConfig(PUBLIC_CLIENT_ENV),
     ).toMatchObject({
       clientId: "marketing-public",
       redirectUri: PUBLIC_CLIENT_ENV.COMPANY_AUTH_OIDC_REDIRECT_URI,
@@ -298,7 +306,7 @@ describe("company identity auth environment contracts", () => {
           COMPANY_AUTH_OIDC_CLIENT_SECRET: "too-short",
         }),
       /CLIENT_SECRET|32/i,
-      ["too-short"]
+      ["too-short"],
     );
     expectSecretSafeError(
       () =>
@@ -307,7 +315,7 @@ describe("company identity auth environment contracts", () => {
           COMPANY_AUTH_OIDC_CLIENT_SECRET: CLIENT_SECRET,
         }),
       /CLIENT_SECRET|unrecognized|public/i,
-      [CLIENT_SECRET]
+      [CLIENT_SECRET],
     );
   });
 
@@ -325,14 +333,21 @@ describe("company identity auth environment contracts", () => {
         COMPANY_AUTH_OIDC_REDIRECT_URI:
           "https://marketing.example.com/auth/company/callback#fragment",
       },
+      {
+        ...SERVICE_ENV,
+        COMPANY_AUTH_OIDC_REDIRECT_URI:
+          " https://marketing.example.com/auth/company/callback",
+      },
       { ...SERVICE_ENV, COMPANY_AUTH_EXPECTED_AUDIENCE: "Marketing" },
       { ...SERVICE_ENV, COMPANY_AUTH_EXPECTED_AUDIENCE: "sales/admin" },
     ]) {
       expectSecretSafeError(
         () =>
-          environment.createCompanyIdentityServiceAuthConfig(invalidEnvironment),
+          environment.createCompanyIdentityServiceAuthConfig(
+            invalidEnvironment,
+          ),
         /redirect|callback|audience|stable|wildcard|fragment/i,
-        [CLIENT_SECRET]
+        [CLIENT_SECRET],
       );
     }
   });
@@ -340,9 +355,12 @@ describe("company identity auth environment contracts", () => {
   it("rejects unknown keys in every auth-owned parser", async () => {
     const environment = await loadEnvironmentModule();
     const cases: readonly [ConfigFactory, RawEnvironment][] = [
-      [environment.createCompanyIdentitySecurityConfig, {
-        COMPANY_AUTH_IDENTIFIER_HASH_KEY: IDENTIFIER_HASH_KEY,
-      }],
+      [
+        environment.createCompanyIdentitySecurityConfig,
+        {
+          COMPANY_AUTH_IDENTIFIER_HASH_KEY: IDENTIFIER_HASH_KEY,
+        },
+      ],
       [environment.createCompanyIdentityIssuerConfig, ISSUER_ENV],
       [environment.createCompanyIdentityCookieConfig, COOKIE_ENV],
       [environment.createCompanyIdentityServiceAuthConfig, SERVICE_ENV],
@@ -353,7 +371,7 @@ describe("company identity auth environment contracts", () => {
       expectSecretSafeError(
         () => factory({ ...validEnvironment, COMPANY_AUTH_UNREVIEWED: "true" }),
         /unrecognized|unknown|COMPANY_AUTH_UNREVIEWED/i,
-        [SIGNING_PRIVATE_KEY, CLIENT_SECRET, IDENTIFIER_HASH_KEY]
+        [SIGNING_PRIVATE_KEY, CLIENT_SECRET, IDENTIFIER_HASH_KEY],
       );
     }
   });

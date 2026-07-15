@@ -43,6 +43,10 @@ interface CompanyIdentityClientModule {
     expectedDatabaseName: string;
     expectedRole: string;
   }): Promise<postgres.Sql>;
+  proveCompanyIdentityConnectionTopology(input: {
+    directDatabaseUrl: string;
+    runtimeDatabaseUrl: string;
+  }): Promise<void>;
 }
 
 async function proveScratchPostgres16(
@@ -98,16 +102,15 @@ async function prepareIdentityInfrastructure(
     "../privileged.js",
     ["configureCompanyIdentityDatabasePrivileges"],
   );
-  const adminUrl = new URL(context.adminDatabaseUrl);
-  adminUrl.pathname = `/${context.databaseName}`;
   await privileges.configureCompanyIdentityDatabasePrivileges({
-    databaseUrl: adminUrl.toString(),
+    databaseUrl: context.directDatabaseUrl,
     runtimeRole: context.runtimeRole,
     migrationRole: context.migrationRole,
   });
   return loadProductionModule<CompanyIdentityClientModule>("../client.js", [
     "createCompanyIdentityRuntimeClient",
     "createCompanyIdentityDirectClient",
+    "proveCompanyIdentityConnectionTopology",
   ]);
 }
 
@@ -174,6 +177,22 @@ describe("company identity pooled and direct topology prerequisites", () => {
 });
 
 describe("company identity production connection factories", () => {
+  it(
+    "proves direct PostgreSQL and pooled runtime URLs reach one cluster",
+    { timeout: 60_000 },
+    async () => {
+      await withCompanyIdentityScratchDatabase(async (context) => {
+        const clients = await prepareIdentityInfrastructure(context);
+        await expect(
+          clients.proveCompanyIdentityConnectionTopology({
+            directDatabaseUrl: context.directDatabaseUrl,
+            runtimeDatabaseUrl: context.runtimeDatabaseUrl,
+          }),
+        ).resolves.toBeUndefined();
+      });
+    },
+  );
+
   it(
     "uses the runtime factory through 6432 for allowed DML and denied DDL",
     { timeout: 60_000 },

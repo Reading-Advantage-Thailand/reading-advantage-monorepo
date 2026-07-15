@@ -99,12 +99,10 @@ async function preparePrivileges(
     "privileged.ts must export configureCompanyIdentityDatabasePrivileges",
   ).toBeTypeOf("function");
 
-  const adminUrl = new URL(context.adminDatabaseUrl);
-  adminUrl.pathname = `/${context.databaseName}`;
   await (
     privileged as unknown as CompanyIdentityPrivilegeModule
   ).configureCompanyIdentityDatabasePrivileges({
-    databaseUrl: adminUrl.toString(),
+    databaseUrl: context.directDatabaseUrl,
     runtimeRole: context.runtimeRole,
     migrationRole: context.migrationRole,
   });
@@ -145,6 +143,93 @@ describe("company identity runtime database privileges", () => {
           );
         } finally {
           await runtimeSql.end();
+        }
+      });
+    },
+  );
+
+  it(
+    "removes pre-existing runtime CREATE, TRUNCATE, REFERENCES, and TRIGGER grants",
+    { timeout: 60_000 },
+    async () => {
+      await withCompanyIdentityScratchDatabase(async (context) => {
+        await preparePrivileges(context);
+        await context.adminSql.unsafe(
+          `GRANT CREATE ON SCHEMA public TO "${context.runtimeRole}"`,
+        );
+        await context.adminSql.unsafe(
+          `GRANT TRUNCATE, REFERENCES, TRIGGER ON ALL TABLES IN SCHEMA public TO "${context.runtimeRole}"`,
+        );
+
+        const privileged = (await import(
+          /* @vite-ignore */ new URL("../privileged.js", import.meta.url).href
+        )) as unknown as CompanyIdentityPrivilegeModule;
+        await privileged.configureCompanyIdentityDatabasePrivileges({
+          databaseUrl: context.directDatabaseUrl,
+          runtimeRole: context.runtimeRole,
+          migrationRole: context.migrationRole,
+        });
+
+        const [grants] = await context.adminSql<
+          Array<{
+            can_create: boolean;
+            can_references: boolean;
+            can_trigger: boolean;
+            can_truncate: boolean;
+          }>
+        >`
+          select
+            has_schema_privilege(${context.runtimeRole}, 'public', 'CREATE') as can_create,
+            has_table_privilege(${context.runtimeRole}, 'company_accounts', 'REFERENCES') as can_references,
+            has_table_privilege(${context.runtimeRole}, 'company_accounts', 'TRIGGER') as can_trigger,
+            has_table_privilege(${context.runtimeRole}, 'company_accounts', 'TRUNCATE') as can_truncate
+        `;
+        expect(grants).toEqual({
+          can_create: false,
+          can_references: false,
+          can_trigger: false,
+          can_truncate: false,
+        });
+      });
+    },
+  );
+
+  it(
+    "fails closed when a runtime role can inherit or SET ROLE into a parent",
+    { timeout: 60_000 },
+    async () => {
+      await withCompanyIdentityScratchDatabase(async (context) => {
+        await preparePrivileges(context);
+        const parentRole = context.runtimeRole.replace(
+          "company_identity_rt_",
+          "company_identity_parent_",
+        );
+        await context.adminSql.unsafe(`create role "${parentRole}" noinherit`);
+        try {
+          await context.adminSql.unsafe(
+            `grant create on schema public to "${parentRole}"`,
+          );
+          await context.adminSql.unsafe(
+            `grant "${parentRole}" to "${context.runtimeRole}"`,
+          );
+          const privileged = (await import(
+            /* @vite-ignore */ new URL("../privileged.js", import.meta.url).href
+          )) as unknown as CompanyIdentityPrivilegeModule;
+          await expect(
+            privileged.configureCompanyIdentityDatabasePrivileges({
+              databaseUrl: context.directDatabaseUrl,
+              runtimeRole: context.runtimeRole,
+              migrationRole: context.migrationRole,
+            }),
+          ).rejects.toThrow(/membership|inherit|privilege/i);
+        } finally {
+          await context.adminSql.unsafe(
+            `revoke "${parentRole}" from "${context.runtimeRole}"`,
+          );
+          await context.adminSql.unsafe(
+            `revoke all privileges on schema public from "${parentRole}"`,
+          );
+          await context.adminSql.unsafe(`drop role "${parentRole}"`);
         }
       });
     },

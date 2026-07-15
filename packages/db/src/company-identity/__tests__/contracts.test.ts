@@ -45,12 +45,10 @@ interface AccountRow {
 }
 
 const ACCOUNT_ID = "10000000-0000-4000-8000-000000000001";
-const ORGANIZATION_ID = "20000000-0000-4000-8000-000000000001";
 const APPLICATION_ID = "30000000-0000-4000-8000-000000000001";
 const OIDC_CLIENT_ID = "40000000-0000-4000-8000-000000000001";
 const REDIRECT_URI_ID = "50000000-0000-4000-8000-000000000001";
 const SSO_SESSION_ID = "60000000-0000-4000-8000-000000000001";
-const CORRELATION_ID = "70000000-0000-4000-8000-000000000001";
 const MIGRATION_RUN_ID = "80000000-0000-4000-8000-000000000001";
 const RECORD_ID = "90000000-0000-4000-8000-000000000001";
 const LOWER_HEX_64 = "a".repeat(64);
@@ -60,7 +58,8 @@ const PKCE_S256_CHALLENGE = "A".repeat(43);
 const ARGON2ID_HASH =
   "$argon2id$v=19$m=65536,t=3,p=4$YWJjZGVmZ2hpamtsbW5vcA$" +
   "YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXo";
-const BCRYPT_HASH = "$2b$12$abcdefghijklmnopqrstuuABCDEFGHIJKLMNOPQRSTUVWXYZ01234";
+const BCRYPT_HASH =
+  "$2b$12$abcdefghijklmnopqrstuuABCDEFGHIJKLMNOPQRSTUVWXYZ01234";
 const ISSUED_AT = new Date("2026-07-15T12:00:00.000Z");
 const EXPIRES_AT = new Date("2026-07-15T12:05:00.000Z");
 
@@ -139,7 +138,7 @@ function expectInvalidAt(
 
 function expectUnknownKeyRejected(
   contractSchema: ContractSchema,
-  value: Record<string, unknown>,
+  value: object,
   unknownKey: string,
   caseLabel: string,
 ): void {
@@ -353,19 +352,22 @@ describe("deterministic username normalization Version 1", () => {
     );
   });
 
-  it.each(fixedVectors)("normalizes $label deterministically", ({ expected, input }) => {
-    const normalizeV1 = requireExport<(value: string) => string>(
-      normalizationSurface,
-      "normalizeCompanyUsernameV1",
-    );
-    const normalizeCurrent = requireExport<(value: string) => string>(
-      normalizationSurface,
-      "normalizeCompanyUsername",
-    );
+  it.each(fixedVectors)(
+    "normalizes $label deterministically",
+    ({ expected, input }) => {
+      const normalizeV1 = requireExport<(value: string) => string>(
+        normalizationSurface,
+        "normalizeCompanyUsernameV1",
+      );
+      const normalizeCurrent = requireExport<(value: string) => string>(
+        normalizationSurface,
+        "normalizeCompanyUsername",
+      );
 
-    expect(normalizeV1(input)).toBe(expected);
-    expect(normalizeCurrent(input)).toBe(expected);
-  });
+      expect(normalizeV1(input)).toBe(expected);
+      expect(normalizeCurrent(input)).toBe(expected);
+    },
+  );
 
   it.each(collisionVectors)(
     "maps the fixed collision pair $left and $right to $normalized",
@@ -396,12 +398,12 @@ describe("deterministic username normalization Version 1", () => {
   });
 
   it("keeps the account spelling NFKC-normalized and trimmed while equality is normalized", () => {
-    expect(schema<string>("companyUsernameInputSchema").parse(" \uFF21lice ")).toBe(
-      "Alice",
-    );
-    expect(schema<string>("normalizedCompanyUsernameSchema").parse("alice")).toBe(
-      "alice",
-    );
+    expect(
+      schema<string>("companyUsernameInputSchema").parse(" \uFF21lice "),
+    ).toBe("Alice");
+    expect(
+      schema<string>("normalizedCompanyUsernameSchema").parse("alice"),
+    ).toBe("alice");
     expectInvalidAt(
       schema("normalizedCompanyUsernameSchema"),
       "Alice",
@@ -429,13 +431,19 @@ describe("account, credential, and named-role persistence contracts", () => {
   );
 
   it("accepts the exact public-safe stored account shape", () => {
-    expect(schema<AccountRow>("companyAccountStoredRowSchema").parse(validAccountRow())).toEqual(
-      validAccountRow(),
-    );
+    expect(
+      schema<AccountRow>("companyAccountStoredRowSchema").parse(
+        validAccountRow(),
+      ),
+    ).toEqual(validAccountRow());
   });
 
   it.each([
-    { path: ["id"], patch: { id: "not-a-uuid" }, reason: "non-UUID account ID" },
+    {
+      path: ["id"],
+      patch: { id: "not-a-uuid" },
+      reason: "non-UUID account ID",
+    },
     {
       path: ["normalizedUsername"],
       patch: { normalizedUsername: "Alice.Example" },
@@ -446,7 +454,11 @@ describe("account, credential, and named-role persistence contracts", () => {
       patch: { normalizationVersion: 2 },
       reason: "unsupported normalization provenance",
     },
-    { path: ["authVersion"], patch: { authVersion: 0 }, reason: "zero auth version" },
+    {
+      path: ["authVersion"],
+      patch: { authVersion: 0 },
+      reason: "zero auth version",
+    },
   ])("rejects $reason", ({ patch, path, reason }) => {
     expectInvalidAt(
       schema("companyAccountStoredRowSchema"),
@@ -465,9 +477,14 @@ describe("account, credential, and named-role persistence contracts", () => {
     );
   });
 
-  it.each(["ARGON2ID", "BCRYPT"])("accepts password algorithm %s", (algorithm) => {
-    expect(schema("passwordHashAlgorithmSchema").parse(algorithm)).toBe(algorithm);
-  });
+  it.each(["ARGON2ID", "BCRYPT"])(
+    "accepts password algorithm %s",
+    (algorithm) => {
+      expect(schema("passwordHashAlgorithmSchema").parse(algorithm)).toBe(
+        algorithm,
+      );
+    },
+  );
 
   it.each(["ARGON2", "SCRYPT", "bcrypt", ""])(
     "rejects password algorithm %s",
@@ -557,9 +574,9 @@ describe("account, credential, and named-role persistence contracts", () => {
 
 describe("organization, application, and hash key formats", () => {
   it("accepts only the internal-company organization type", () => {
-    expect(schema("companyOrganizationTypeSchema").parse("INTERNAL_COMPANY")).toBe(
-      "INTERNAL_COMPANY",
-    );
+    expect(
+      schema("companyOrganizationTypeSchema").parse("INTERNAL_COMPANY"),
+    ).toBe("INTERNAL_COMPANY");
   });
 
   it.each(["SCHOOL", "CUSTOMER", "CUSTOMER_COMPANY", "B2B", ""])(
@@ -577,28 +594,36 @@ describe("organization, application, and hash key formats", () => {
   it.each(["a", "internal-company", "marketing", "sales-2"])(
     "accepts organization/application stable key %s",
     (stableKey) => {
-      expect(schema("organizationStableKeySchema").parse(stableKey)).toBe(stableKey);
-      expect(schema("applicationStableKeySchema").parse(stableKey)).toBe(stableKey);
+      expect(schema("organizationStableKeySchema").parse(stableKey)).toBe(
+        stableKey,
+      );
+      expect(schema("applicationStableKeySchema").parse(stableKey)).toBe(
+        stableKey,
+      );
     },
   );
 
-  it.each(["Internal-Company", "-sales", "sales-", "sales_app", "a".repeat(65), ""])(
-    "rejects malformed stable key %s",
-    (stableKey) => {
-      expectInvalidAt(
-        schema("organizationStableKeySchema"),
-        stableKey,
-        [],
-        `malformed organization key ${JSON.stringify(stableKey)}`,
-      );
-      expectInvalidAt(
-        schema("applicationStableKeySchema"),
-        stableKey,
-        [],
-        `malformed application key ${JSON.stringify(stableKey)}`,
-      );
-    },
-  );
+  it.each([
+    "Internal-Company",
+    "-sales",
+    "sales-",
+    "sales_app",
+    "a".repeat(65),
+    "",
+  ])("rejects malformed stable key %s", (stableKey) => {
+    expectInvalidAt(
+      schema("organizationStableKeySchema"),
+      stableKey,
+      [],
+      `malformed organization key ${JSON.stringify(stableKey)}`,
+    );
+    expectInvalidAt(
+      schema("applicationStableKeySchema"),
+      stableKey,
+      [],
+      `malformed application key ${JSON.stringify(stableKey)}`,
+    );
+  });
 
   it.each([LOWER_HEX_64, OTHER_LOWER_HEX_64, THIRD_LOWER_HEX_64])(
     "accepts a lowercase SHA-256/HMAC digest",
@@ -626,21 +651,27 @@ describe("organization, application, and hash key formats", () => {
   it.each(["account:create", "session:revoke", "migration:codecamp:import"])(
     "accepts audit operation key %s",
     (operation) => {
-      expect(schema("auditOperationKeySchema").parse(operation)).toBe(operation);
-    },
-  );
-
-  it.each(["Account:Create", ":create", "account:", "account create", "a".repeat(129), ""])(
-    "rejects malformed audit operation key %s",
-    (operation) => {
-      expectInvalidAt(
-        schema("auditOperationKeySchema"),
+      expect(schema("auditOperationKeySchema").parse(operation)).toBe(
         operation,
-        [],
-        `malformed audit operation ${JSON.stringify(operation)}`,
       );
     },
   );
+
+  it.each([
+    "Account:Create",
+    ":create",
+    "account:",
+    "account create",
+    "a".repeat(129),
+    "",
+  ])("rejects malformed audit operation key %s", (operation) => {
+    expectInvalidAt(
+      schema("auditOperationKeySchema"),
+      operation,
+      [],
+      `malformed audit operation ${JSON.stringify(operation)}`,
+    );
+  });
 });
 
 describe("stored OIDC client, redirect, PKCE, and authorization-code contracts", () => {
@@ -717,6 +748,8 @@ describe("stored OIDC client, redirect, PKCE, and authorization-code contracts",
     "https://marketing.example.com/*",
     "http://marketing.example.com/callback",
     "http://localhost/callback",
+    " https://marketing.example.com/callback",
+    "https://marketing.example.com/callback ",
   ])("rejects unsafe redirect URI %s", (redirectUri) => {
     expectInvalidAt(
       schema("companyOidcRedirectUriStoredRowSchema"),
@@ -859,8 +892,12 @@ describe("strict allowlisted audit metadata", () => {
 
 describe("strict idempotency persistence contract", () => {
   it("accepts correctly formatted in-progress, succeeded, and failed records", () => {
-    const idempotencySchema = schema("companyIdentityIdempotencyStoredRowSchema");
-    expect(idempotencySchema.safeParse(validIdempotencyRow()).success).toBe(true);
+    const idempotencySchema = schema(
+      "companyIdentityIdempotencyStoredRowSchema",
+    );
+    expect(idempotencySchema.safeParse(validIdempotencyRow()).success).toBe(
+      true,
+    );
     expect(
       idempotencySchema.safeParse({
         ...validIdempotencyRow(),
@@ -924,6 +961,11 @@ describe("strict idempotency persistence contract", () => {
       path: ["scopeKey"],
       reason: "school scope in company identity",
     },
+    {
+      patch: { scopeKey: "ORGANIZATION:20000000-0000-4000-8000-000000000001" },
+      path: ["scopeKey"],
+      reason: "uppercase idempotency scope",
+    },
   ])("rejects $reason", ({ patch, path, reason }) => {
     expectInvalidAt(
       schema("companyIdentityIdempotencyStoredRowSchema"),
@@ -967,6 +1009,11 @@ describe("strict unknown-key rejection across every stored object schema", () =>
       value: validIdempotencyRow(),
     },
   ])("rejects an unknown field on $label", ({ exportName, label, value }) => {
-    expectUnknownKeyRejected(schema(exportName), value, "unexpectedField", label);
+    expectUnknownKeyRejected(
+      schema(exportName),
+      value,
+      "unexpectedField",
+      label,
+    );
   });
 });
