@@ -6,7 +6,7 @@
 
 ## Phase 1: Contract & Schema Definition
 
-- [x] Task: Capture the compiler and repository baseline. [commits: f68897ac, 32346d6a, 47683590; Phase-1 remediation pending acceptance evidence]
+- [x] Task: Capture the compiler and repository baseline. [commits: f68897ac, 32346d6a, 47683590, 8f11c9b3; accepted in phase-1-acceptance-result.json]
   - [x] Record source SHA, `git status -sb`, Node/pnpm versions, CPU/memory, Turbo
     concurrency, and resolved TypeScript versions.
   - [x] Save TypeScript 5.9 diagnostic and timing evidence for all workspaces.

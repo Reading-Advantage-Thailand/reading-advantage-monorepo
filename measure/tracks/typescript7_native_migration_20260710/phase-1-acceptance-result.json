@@ -1,0 +1,44 @@
+{
+  "schema_version": 3,
+  "role": "phase-acceptance",
+  "track": "typescript7_native_migration_20260710",
+  "phase": "Phase 1: Contract & Schema Definition",
+  "baseline_sha": "879112353411912b80849037016cbd9ed2c1bf63",
+  "audited_head_sha": "8f11c9b3e8197761a4b93dfb0750bea666e8f096",
+  "status": "pass",
+  "summary": "Phase 1 contract and evidence acceptance passes. The inventory is repository-derived (39 tracked tsconfigs and 33 configured TypeScript workspaces), every baseline row is accounted for with verifiable evidence, the stop-loss contract is fail-closed, and the compiler contract uses direct exact TypeScript 6.0.2 alongside TypeScript 7.0.2 rather than the wrapper with a floating inner compiler.",
+  "blocking_findings": [],
+  "nonblocking_handoffs": [
+    "The Phase 1 baseline is intentionally an amended evidence cohort: 31 rows were captured in a dirty 2026-07-14 worktree and packages/ui plus packages/utils were captured cleanly in the 2026-07-15 repair worktree. This is sufficient Phase 1 inventory evidence, but not controlled performance evidence for Phase 3g.",
+    "apps/reading-advantage retains the recorded TypeScript 5.9 exit-134 baseline failure. A controlled successful baseline is required before Phase 3 parity and performance acceptance for that app.",
+    "packages/ui retains 16 recorded TypeScript 5.9 matcher-typing diagnostics. It is baseline debt, not a migration-caused result, and remains subject to Phase 3/4 reconciliation."
+  ],
+  "evidence": [
+    "Focused Phase 1 suite: 37 tests passed, including exact tsconfig inventory, 33-workspace denominator, raw-log SHA/line-count integrity, empty-output convention, direct TS6 compatibility mapping, installed-layout version probes, stop-loss formula, dmesg status, and bounded SIGTERM to SIGKILL reaping.",
+    "capture-phase1-baseline.py --check-completeness passed: 33 inventory workspaces, 33 captured workspaces, equal sets, all accounted.",
+    "Review A remediation result passed: repository-derived inventory and baseline evidence are complete and auditable.",
+    "Review B final result passed: a clean isolated package install executed direct TypeScript 6.0.2 and the separate TypeScript 7.0.2 alias with no @typescript/old floating compiler.",
+    "tests/orchestrator_catalog.sh, tests/orchestrator_marker_vocabulary.sh, tests/orchestrator_supervisor_invariants.sh, and measure/doctor.sh all passed at the audited commit.",
+    "JSON parsing, Python compilation, and git diff --check passed at the audited commit."
+  ],
+  "review_artifacts": [
+    "phase-1-review-a-result.json",
+    "phase-1-review-a-remediation-result.json",
+    "phase-1-review-b-result.json",
+    "phase-1-review-b-remediation-result.json",
+    "phase-1-review-b-final-result.json",
+    "phase-1-review-c-result.json"
+  ],
+  "commands": [
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase1 (PASS: 37/37)",
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile measure/tracks/typescript7_native_migration_20260710/capture-phase1-baseline.py (PASS)",
+    "PYTHONDONTWRITEBYTECODE=1 python3 measure/tracks/typescript7_native_migration_20260710/capture-phase1-baseline.py --check-completeness (PASS: 33/33)",
+    "bash tests/orchestrator_catalog.sh (PASS)",
+    "bash tests/orchestrator_marker_vocabulary.sh (PASS)",
+    "bash tests/orchestrator_supervisor_invariants.sh (PASS)",
+    "bash measure/doctor.sh (PASS)",
+    "clean isolated pnpm install: node node_modules/typescript/bin/tsc --version (PASS: Version 6.0.2)",
+    "clean isolated pnpm install: node node_modules/typescript7/bin/tsc --version (PASS: Version 7.0.2)"
+  ],
+  "next_phase_authorization": "Phase 2 test harness work is authorized. It remains restricted to deterministic subprocess fixtures, Measure test/harness files, and Phase 2 contract artifacts; it must not change aliases, manifests, lockfiles, tsconfigs, scripts, or production code."
+}
