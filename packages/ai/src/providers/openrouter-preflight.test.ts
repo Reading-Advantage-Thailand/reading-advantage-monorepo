@@ -15,26 +15,28 @@ const reviewResultSchema = z.object({
 
 describe("OpenRouter capability preflight", () => {
   it.skipIf(!process.env.OPENROUTER_API_KEY)(
-    "configured review model supports forced-tool structured output",
+    "production review alias supports forced-tool structured output",
     async () => {
+      const reviewModel = process.env.CODECAMP_PR_REVIEW_MODEL ?? "~x-ai/grok-latest";
       const provider = new OpenRouterProvider({
         apiKey: process.env.OPENROUTER_API_KEY!,
-        model: "x-ai/grok-build-0.1",
+        model: reviewModel,
       });
 
-      const result = await provider.generateObject({
+      const result = await provider.generateObjectWithProvenance({
         schema: reviewResultSchema,
         prompt:
           "Review this diff:\n```diff\n+console.log('hello')\n```",
         maxTokens: 2048,
       });
 
-      expect(result).toHaveProperty("passed");
-      expect(typeof result.passed).toBe("boolean");
-      expect(result).toHaveProperty("summary");
-      expect(typeof result.summary).toBe("string");
-      expect(result).toHaveProperty("comments");
-      expect(Array.isArray(result.comments)).toBe(true);
+      expect(result.provenance.requestedModel).toBe(reviewModel);
+      expect(result.object).toHaveProperty("passed");
+      expect(typeof result.object.passed).toBe("boolean");
+      expect(result.object).toHaveProperty("summary");
+      expect(typeof result.object.summary).toBe("string");
+      expect(result.object).toHaveProperty("comments");
+      expect(Array.isArray(result.object.comments)).toBe(true);
     },
     30_000
   );
