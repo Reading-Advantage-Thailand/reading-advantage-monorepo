@@ -1,0 +1,49 @@
+{
+  "checkers": 2,
+  "checkers_applicability": "applied_ts7",
+  "command": [
+    "/home/daniel-bo/Desktop/reading-advantage-monorepo-ts7/node_modules/typescript7/bin/tsc",
+    "--noEmit",
+    "--checkers",
+    "2",
+    "-p",
+    "apps/reading-advantage/tsconfig.json"
+  ],
+  "compiler": "ts7",
+  "compiler_version": "7.0.2",
+  "diagnostic_count": 107,
+  "dmesg_status": "unavailable",
+  "elapsed_ms": 8960,
+  "ended_at": "2026-07-15T14:59:46.781652+00:00",
+  "environment": {
+    "TURBO_CONCURRENCY": "1"
+  },
+  "exit_status": 1,
+  "host_idle_class": "contaminated",
+  "host_idle_override": true,
+  "host_idle_percent": 66,
+  "host_idle_reason": "user_override_below_idle_threshold",
+  "invalid_reasons": [],
+  "oom_kill_count": 0,
+  "peak_rss_kib": 1340220,
+  "process_count": 2,
+  "process_group_peak_rss_kib": 1334572,
+  "sample_id": "apps-reading-advantage-ts7-c2-cold-3",
+  "signal": null,
+  "started_at": "2026-07-15T14:59:37.622816+00:00",
+  "status": "completed",
+  "stderr_sha256": "60e1dbe29a2d4dd52ffd48d68a7add91f75c103e368fc4a377ffb1dadd6c641b",
+  "stdout_sha256": "1e20e4ae85a806152e931c7d9647d5fffc9caef4260056b6b6ce171df69ca397",
+  "stop_loss": {
+    "cleanup": null,
+    "trigger": null,
+    "triggered": false
+  },
+  "swap_delta_kib": -280,
+  "target": "apps-reading-advantage",
+  "temperature": "cold",
+  "tsconfig_path": "apps/reading-advantage/tsconfig.json",
+  "turbo_cache_state": "not_applicable_direct_tsc",
+  "turbo_summary_sha256": null,
+  "turbo_summary_state": "not_applicable_direct_tsc"
+}
