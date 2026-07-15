@@ -24,6 +24,7 @@ RUNNER_PATH = (
 TYPES_PACKAGE_PATH = REPO_ROOT / "packages" / "types" / "package.json"
 DB_PACKAGE_PATH = REPO_ROOT / "packages" / "db" / "package.json"
 DOMAIN_PACKAGE_PATH = REPO_ROOT / "packages" / "domain" / "package.json"
+AUTH_PACKAGE_PATH = REPO_ROOT / "packages" / "auth" / "package.json"
 PHASE3D_CUTOVER_ORDER = (
     "packages/types",
     "packages/db",
@@ -268,6 +269,16 @@ class Phase3dCheckTypesCutoverContract(unittest.TestCase):
     def test_domain_workspace_check_types_routing_is_explicit_and_reversible(self) -> None:
         """Requires the third ordered workspace to preserve the direct dual-compiler paths."""
         manifest = json.loads(DOMAIN_PACKAGE_PATH.read_text(encoding="utf-8"))
+        scripts = manifest.get("scripts")
+        self.assertIsInstance(scripts, dict)
+        assert isinstance(scripts, dict)
+        self.assertEqual(scripts.get("check-types"), self.NATIVE_COMMAND)
+        self.assertEqual(scripts.get("check-types:compat"), self.COMPAT_COMMAND)
+        self.assertEqual(scripts.get("check-types:rollback"), self.COMPAT_COMMAND)
+
+    def test_auth_workspace_check_types_routing_is_explicit_and_reversible(self) -> None:
+        """Requires the fourth ordered workspace to preserve the direct dual-compiler paths."""
+        manifest = json.loads(AUTH_PACKAGE_PATH.read_text(encoding="utf-8"))
         scripts = manifest.get("scripts")
         self.assertIsInstance(scripts, dict)
         assert isinstance(scripts, dict)
