@@ -226,9 +226,8 @@ def _run_turbo_sample(
     if checkers is not None:
         environment["TS7_CHECKERS"] = str(checkers)
     command = [
-        "pnpm",
-        "exec",
-        "turbo",
+        "node",
+        "node_modules/turbo/bin/turbo",
         "run",
         task,
         "--filter=@reading-advantage/types",
