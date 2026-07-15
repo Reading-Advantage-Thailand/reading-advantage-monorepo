@@ -13,11 +13,28 @@ from typing import Any
 
 
 BASELINE = "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-COMMITTED_REVISION = "803e1d8b5db94bccfaf79590f4290065a040d427"
+PHASE1_REVISION = "4979eaa50b85cb5951e9546bb6a672b9d0f16ecb"
+PHASE2_IMPLEMENTATION_REVISION = "6dda411b54787db2b0e005c1097ecc008f424c62"
+PHASE2_RECEIPT_REVISION = "70e6059bcfbf23bdfbd449fd25b3ee4751ca6d86"
 TRACK = "apk_source_denominator_inventory_20260712"
 TRACK_DIR = Path(__file__).resolve().parent
 REPO_ROOT = TRACK_DIR.parents[2]
 PROGRAM_PATH = "measure/apk-evidence-reconstruction-program.md"
+PHASE2_RECEIPT_PATH = f"measure/tracks/{TRACK}/role-receipts/evidence-collector.json"
+PHASE1_ARTIFACTS = (
+    "source-denominator.json",
+    "game-identity-ledger.json",
+    "scene-state-denominator.json",
+    "asset-file-denominator.json",
+    "historical-source-denominator.json",
+    "denominator-discrepancies.json",
+)
+PHASE2_ARTIFACTS = (
+    "independent-human-discovery.json",
+    "human-duplicate-drift-records.json",
+    "human-historical-deleted-records.json",
+    "human-discrepancy-records.json",
+)
 
 _GIT_BLOB_CACHE: dict[tuple[str, str], bytes] = {}
 
@@ -44,22 +61,17 @@ def git_bytes(revision: str, path: str) -> bytes:
     return blob
 
 
-def worktree_json(name: str) -> dict[str, Any]:
-    """Loads one Phase-1 or Phase-2 artifact from the current worktree.
-
-    The Phase-3 test compares worktree artifacts, so the generator must read
-    the same worktree bytes to produce a consistent reconciliation. Source
-    locators inside the artifacts are still revalidated against committed git
-    bytes by :func:`revalidate`, preserving the committed-only evidence
-    boundary for every cited path/range hash.
+def committed_json(revision: str, name: str) -> dict[str, Any]:
+    """Loads one Phase-1 or Phase-2 artifact from an exact predecessor commit.
 
     Args:
+        revision: Exact predecessor commit containing the artifact.
         name: Filename within the track directory.
 
     Returns:
         Parsed JSON object.
     """
-    value = json.loads((TRACK_DIR / name).read_text(encoding="utf-8"))
+    value = json.loads(git_bytes(revision, f"measure/tracks/{TRACK}/{name}"))
     if not isinstance(value, dict):
         raise TypeError(f"Expected JSON object: {name}")
     return value
@@ -226,30 +238,35 @@ def main(output_path: Path | None = None) -> None:
     Returns:
         Nothing.
     """
-    source = worktree_json("source-denominator.json")
-    ledger = worktree_json("game-identity-ledger.json")
-    scenes = worktree_json("scene-state-denominator.json")
-    assets = worktree_json("asset-file-denominator.json")
-    historical = worktree_json("historical-source-denominator.json")
-    mechanical_discrepancies = worktree_json("denominator-discrepancies.json")
-    human_discovery = worktree_json("independent-human-discovery.json")
-    human_duplicates = worktree_json("human-duplicate-drift-records.json")
-    human_historical = worktree_json("human-historical-deleted-records.json")
-    human_discrepancies = worktree_json("human-discrepancy-records.json")
+    source = committed_json(PHASE1_REVISION, "source-denominator.json")
+    ledger = committed_json(PHASE1_REVISION, "game-identity-ledger.json")
+    scenes = committed_json(PHASE1_REVISION, "scene-state-denominator.json")
+    assets = committed_json(PHASE1_REVISION, "asset-file-denominator.json")
+    historical = committed_json(PHASE1_REVISION, "historical-source-denominator.json")
+    mechanical_discrepancies = committed_json(PHASE1_REVISION, "denominator-discrepancies.json")
+    human_discovery = committed_json(PHASE2_IMPLEMENTATION_REVISION, "independent-human-discovery.json")
+    human_duplicates = committed_json(PHASE2_IMPLEMENTATION_REVISION, "human-duplicate-drift-records.json")
+    human_historical = committed_json(PHASE2_IMPLEMENTATION_REVISION, "human-historical-deleted-records.json")
+    human_discrepancies = committed_json(PHASE2_IMPLEMENTATION_REVISION, "human-discrepancy-records.json")
 
-    # The worktree Phase-2 artifacts include in-progress mechanical-source-record
-    # reviews that cover the five source-denominator paths added at e14ab11e.
-    # However, the worktree's replacement_program_identity_reviews currently
-    # carry disposition changes that have not been accepted (the Phase-2 test
-    # fails against them).  The committed Phase-2 at COMMITTED_REVISION retains
-    # the accepted 17-current / 12-historical disposition split.  Bind program
-    # dispositions from the committed artifact while keeping the worktree's
-    # mechanical-record, graph-edge, surface, asset, and group reviews so the
-    # five new files reconcile with independent human evidence.
-    committed_discovery = json.loads(
-        git_bytes(COMMITTED_REVISION, f"measure/tracks/{TRACK}/independent-human-discovery.json")
-    )
-    human_discovery["replacement_program_identity_reviews"] = committed_discovery["replacement_program_identity_reviews"]
+    phase1_hashes = {
+        f"measure/tracks/{TRACK}/{name}": hashlib.sha256(
+            git_bytes(PHASE1_REVISION, f"measure/tracks/{TRACK}/{name}")
+        ).hexdigest()
+        for name in PHASE1_ARTIFACTS
+    }
+    phase2_hashes = {
+        f"measure/tracks/{TRACK}/{name}": hashlib.sha256(
+            git_bytes(PHASE2_IMPLEMENTATION_REVISION, f"measure/tracks/{TRACK}/{name}")
+        ).hexdigest()
+        for name in PHASE2_ARTIFACTS
+    }
+    receipt_bytes = git_bytes(PHASE2_RECEIPT_REVISION, PHASE2_RECEIPT_PATH)
+    receipt = json.loads(receipt_bytes)
+    if receipt.get("commit_sha") != PHASE2_IMPLEMENTATION_REVISION:
+        raise ValueError("Phase-2 receipt does not bind the required implementation commit")
+    if receipt.get("output_hashes") != phase2_hashes:
+        raise ValueError("Phase-2 receipt hashes do not bind the required implementation outputs")
 
     identity_reviews = {row["canonical_identity_id"]: row for row in human_discrepancies["identity_comparison_records"]}
     human_claim_ids = {row["canonical_identity_id"] for row in human_discovery["current_source_claims"]}
@@ -448,6 +465,20 @@ def main(output_path: Path | None = None) -> None:
         "schema_version": "apk-source-denominator-phase3-reconciliation.v1",
         "track_id": TRACK,
         "source_baseline_revision": BASELINE,
+        "input_provenance": {
+            "phase1": {
+                "revision": PHASE1_REVISION,
+                "output_hashes": phase1_hashes,
+            },
+            "phase2": {
+                "implementation_revision": PHASE2_IMPLEMENTATION_REVISION,
+                "receipt_revision": PHASE2_RECEIPT_REVISION,
+                "receipt_path": PHASE2_RECEIPT_PATH,
+                "receipt_sha256": hashlib.sha256(receipt_bytes).hexdigest(),
+                "output_hashes": phase2_hashes,
+                "output_sha256": receipt["output_sha256"],
+            },
+        },
         "status": reconciliation_status,
         "replacement_program_identity_count": len(program_labels),
         "reviewed_program_identity_count": len(program_records),

@@ -28,6 +28,25 @@ HUMAN_DISCREPANCY_PATH = TRACK_DIR / "human-discrepancy-records.json"
 REPORT_PATH = TRACK_DIR / "phase3-reconciliation-contract-test-report.json"
 RECONCILIATION_PATH = TRACK_DIR / "phase3-reconciliation.json"
 REPLACEMENT_PROGRAM_PATH = "measure/apk-evidence-reconstruction-program.md"
+PHASE1_REVISION = "4979eaa50b85cb5951e9546bb6a672b9d0f16ecb"
+PHASE2_IMPLEMENTATION_REVISION = "6dda411b54787db2b0e005c1097ecc008f424c62"
+PHASE2_RECEIPT_REVISION = "70e6059bcfbf23bdfbd449fd25b3ee4751ca6d86"
+PHASE2_RECEIPT_PATH = f"measure/tracks/{TRACK}/role-receipts/evidence-collector.json"
+QUARANTINED_SOURCE_PREFIX = "measure/tracks/apk_cross_game_asset_ontology_20260712"
+PHASE1_ARTIFACTS = {
+    "source-denominator.json",
+    "game-identity-ledger.json",
+    "scene-state-denominator.json",
+    "asset-file-denominator.json",
+    "historical-source-denominator.json",
+    "denominator-discrepancies.json",
+}
+PHASE2_ARTIFACTS = {
+    "independent-human-discovery.json",
+    "human-duplicate-drift-records.json",
+    "human-historical-deleted-records.json",
+    "human-discrepancy-records.json",
+}
 SHA256 = re.compile(r"^[0-9a-f]{64}$")
 FORBIDDEN_INTERPRETATION_FIELDS = {
     "asset_suitability",
@@ -131,6 +150,26 @@ def _is_ancestor(revision: str, baseline: str) -> bool:
     ).returncode == 0
 
 
+def _load_git_json(revision: str, name: str) -> dict[str, Any]:
+    """Loads one committed predecessor artifact as a JSON object.
+
+    Args:
+        revision: Exact predecessor commit to read.
+        name: Filename within the active track directory.
+
+    Returns:
+        Parsed committed JSON object.
+
+    Raises:
+        AssertionError: If the committed object is not a JSON object.
+    """
+    path = f"measure/tracks/{TRACK}/{name}"
+    value = json.loads(_git_bytes(revision, path))
+    if not isinstance(value, dict):
+        raise AssertionError(f"{revision}:{path} must contain a JSON object")
+    return value
+
+
 def _key(value: object) -> str:
     """Returns a stable JSON key for one denominator item.
 
@@ -160,16 +199,16 @@ class Phase3ReconciliationContracts(unittest.TestCase):
         self.baseline = scope["current_revision"]
         self.assertIsInstance(self.baseline, str)
         assert isinstance(self.baseline, str)
-        self.source = _load_json(SOURCE_PATH)
-        self.ledger = _load_json(IDENTITY_PATH)
-        self.scenes = _load_json(SCENE_PATH)
-        self.assets = _load_json(ASSET_PATH)
-        self.historical = _load_json(HISTORICAL_PATH)
-        self.mechanical_discrepancies = _load_json(MECHANICAL_DISCREPANCY_PATH)
-        self.human_discovery = _load_json(HUMAN_DISCOVERY_PATH)
-        self.human_duplicates = _load_json(HUMAN_DUPLICATE_PATH)
-        self.human_historical = _load_json(HUMAN_HISTORICAL_PATH)
-        self.human_discrepancies = _load_json(HUMAN_DISCREPANCY_PATH)
+        self.source = _load_git_json(PHASE1_REVISION, SOURCE_PATH.name)
+        self.ledger = _load_git_json(PHASE1_REVISION, IDENTITY_PATH.name)
+        self.scenes = _load_git_json(PHASE1_REVISION, SCENE_PATH.name)
+        self.assets = _load_git_json(PHASE1_REVISION, ASSET_PATH.name)
+        self.historical = _load_git_json(PHASE1_REVISION, HISTORICAL_PATH.name)
+        self.mechanical_discrepancies = _load_git_json(PHASE1_REVISION, MECHANICAL_DISCREPANCY_PATH.name)
+        self.human_discovery = _load_git_json(PHASE2_IMPLEMENTATION_REVISION, HUMAN_DISCOVERY_PATH.name)
+        self.human_duplicates = _load_git_json(PHASE2_IMPLEMENTATION_REVISION, HUMAN_DUPLICATE_PATH.name)
+        self.human_historical = _load_git_json(PHASE2_IMPLEMENTATION_REVISION, HUMAN_HISTORICAL_PATH.name)
+        self.human_discrepancies = _load_git_json(PHASE2_IMPLEMENTATION_REVISION, HUMAN_DISCREPANCY_PATH.name)
 
     def _assert_locator(self, locator: object, *, historical: bool = False) -> dict[str, Any]:
         """Validates a committed exact path, blob, and inclusive range hash.
@@ -331,6 +370,54 @@ class Phase3ReconciliationContracts(unittest.TestCase):
             self.assertTrue(unresolved_ids, "blocked reconciliation requires explicit unresolved source records")
         else:
             self.assertFalse(unresolved_ids, "complete reconciliation cannot carry unresolved source records")
+
+    def test_reconciliation_binds_exact_repaired_predecessor_provenance(self) -> None:
+        """Rejects stale Phase-1 or Phase-2 pins and unverifiable receipt propagation.
+
+        Returns:
+            Nothing.
+        """
+        provenance = self.reconciliation.get("input_provenance")
+        self.assertIsInstance(provenance, dict)
+        assert isinstance(provenance, dict)
+        phase1 = provenance.get("phase1")
+        phase2 = provenance.get("phase2")
+        self.assertIsInstance(phase1, dict)
+        self.assertIsInstance(phase2, dict)
+        assert isinstance(phase1, dict) and isinstance(phase2, dict)
+        self.assertEqual(phase1.get("revision"), PHASE1_REVISION)
+        expected_phase1_hashes = {
+            f"measure/tracks/{TRACK}/{name}": hashlib.sha256(
+                _git_bytes(PHASE1_REVISION, f"measure/tracks/{TRACK}/{name}")
+            ).hexdigest()
+            for name in PHASE1_ARTIFACTS
+        }
+        self.assertEqual(phase1.get("output_hashes"), expected_phase1_hashes)
+
+        receipt_bytes = _git_bytes(PHASE2_RECEIPT_REVISION, PHASE2_RECEIPT_PATH)
+        receipt = json.loads(receipt_bytes)
+        self.assertEqual(receipt.get("commit_sha"), PHASE2_IMPLEMENTATION_REVISION)
+        expected_phase2_hashes = {
+            f"measure/tracks/{TRACK}/{name}": hashlib.sha256(
+                _git_bytes(PHASE2_IMPLEMENTATION_REVISION, f"measure/tracks/{TRACK}/{name}")
+            ).hexdigest()
+            for name in PHASE2_ARTIFACTS
+        }
+        self.assertEqual(receipt.get("output_hashes"), expected_phase2_hashes)
+        self.assertEqual(phase2.get("implementation_revision"), PHASE2_IMPLEMENTATION_REVISION)
+        self.assertEqual(phase2.get("receipt_revision"), PHASE2_RECEIPT_REVISION)
+        self.assertEqual(phase2.get("receipt_path"), PHASE2_RECEIPT_PATH)
+        self.assertEqual(phase2.get("receipt_sha256"), hashlib.sha256(receipt_bytes).hexdigest())
+        self.assertEqual(phase2.get("output_hashes"), expected_phase2_hashes)
+        self.assertEqual(phase2.get("output_sha256"), receipt.get("output_sha256"))
+
+    def test_reconciliation_excludes_failed_track_quarantine_strings(self) -> None:
+        """Rejects failed-track paths anywhere in the Phase-3 factual output.
+
+        Returns:
+            Nothing.
+        """
+        self.assertNotIn(QUARANTINED_SOURCE_PREFIX, json.dumps(self.reconciliation))
 
     def test_all_29_program_names_are_reviewed_without_forcing_29_current_identities(self) -> None:
         """Separates reviewed program names from the smaller source-backed current denominator.

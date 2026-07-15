@@ -3,10 +3,17 @@
   "status": "green-passed",
   "track_id": "apk_source_denominator_inventory_20260712",
   "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
-  "role": "reconciliation-integrator",
-  "verification_scope": "Reconciliation contract verification only; the reconciliation is complete but remains non-consumable and is not a candidate denominator, independent Phase-4 review, or product-owner acceptance.",
+  "role": "requirements-mapper",
+  "verification_scope": "Exact committed Phase-1 and Phase-2 reconciliation contract verification only; this is not a candidate denominator, independent Phase-4 review, role receipt, or product-owner acceptance.",
   "reconciliation_status": "reconciliation-complete",
   "unresolved_source_count": 0,
+  "quarantined_source_string_count": 0,
+  "input_provenance": {
+    "phase1_revision": "4979eaa50b85cb5951e9546bb6a672b9d0f16ecb",
+    "phase2_implementation_revision": "6dda411b54787db2b0e005c1097ecc008f424c62",
+    "phase2_receipt_revision": "70e6059bcfbf23bdfbd449fd25b3ee4751ca6d86"
+  },
+  "reconciliation_sha256": "8838480634acce470430098b002b9c9468a7c53022a413ee24002c4e0c3e6c2c",
   "reconciliation_metrics": {
     "replacement_program_identity_count": 29,
     "reviewed_program_identity_count": 29,
@@ -17,7 +24,7 @@
     "file_reconciliation_records": 579,
     "source_record_reconciliation_records": 1659,
     "graph_edge_reconciliation_records": 946,
-    "surface_reconciliation_records": 118,
+    "surface_reconciliation_records": 102,
     "asset_candidate_reconciliation_records": 353,
     "identical_hash_group_reconciliation_records": 153,
     "copy_reconciliation_records": 92,
@@ -25,34 +32,29 @@
   },
   "commands": [
     {
-      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase0",
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase3",
       "result": "passed",
-      "test_count": 5
+      "test_count": 12
     },
     {
       "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase0 measure.tests.test_apk_source_denominator_inventory_phase1 measure.tests.test_apk_source_denominator_inventory_phase2 measure.tests.test_apk_source_denominator_inventory_phase3",
       "result": "passed",
-      "test_count": 32
+      "test_count": 37
     },
     {
-      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase3 && PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile measure/tests/test_apk_source_denominator_inventory_phase3.py",
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 measure/tracks/apk_source_denominator_inventory_20260712/generate_phase3_reconciliation.py --output /tmp/p3det.json && cmp -s /tmp/p3det.json measure/tracks/apk_source_denominator_inventory_20260712/phase3-reconciliation.json",
       "result": "passed",
-      "test_count": 10
-    },
-    {
-      "command": "PYTHONDONTWRITEBYTECODE=1 python3 measure/tracks/apk_source_denominator_inventory_20260712/generate_phase3_reconciliation.py followed by SHA-256 comparison against the committed phase3-reconciliation.json and reachable historical locator/deletion-parent checks",
-      "result": "passed",
-      "evidence": "Deterministic SHA-256 cd72b34a77fce57c62a8976087fb029611a1c78429af7da485780aba5663d1d3; the generator reads worktree Phase-1 artifacts and worktree Phase-2 mechanical-record reviews (which cover the five paths added at e14ab11e) while binding replacement_program_identity_reviews dispositions from the committed Phase-2 at 803e1d8b (17 current, 12 historical/withdrawn). The Phase-2 generator and contract test were re-pinned to Phase-1 revision 3384f558 (matching the Phase-1 test and worktree) and Phase-2 artifacts were regenerated against that revision so the Phase-2 and Phase-3 contracts read the same Phase-1 denominator."
+      "sha256": "8838480634acce470430098b002b9c9468a7c53022a413ee24002c4e0c3e6c2c"
     }
   ],
   "owner_verification": {
-    "owner_role": "reconciliation-integrator",
-    "evidence": "The named role regenerated the exhaustive reconciliation from current worktree Phase-1 evidence (including the five paths added at e14ab11e and the scene/state restructure at 3384f558) and worktree Phase-2 mechanical-record reviews, while binding program dispositions from the committed Phase-2 at 803e1d8b. All 29 reviewed program identities are dispositioned (17 current and 12 historical/withdrawn), with zero unresolved sources; 17 identities, 1659 source records, 946 graph edges, 118 surfaces, 353 assets, 153 hash groups, 92 copies, and 361 discrepancy records are matched with paired raw evidence.",
-    "evidence_path": "role-logs/phase3-requirements-mapper-green.log",
+    "owner_role": "requirements-mapper",
+    "evidence": "The role regenerated the exhaustive reconciliation only from Phase-1 commit 4979eaa50b85cb5951e9546bb6a672b9d0f16ecb and Phase-2 implementation commit 6dda411b54787db2b0e005c1097ecc008f424c62, verified the Phase-2 output hashes through receipt commit 70e6059bcfbf23bdfbd449fd25b3ee4751ca6d86, propagated the corrected 102-surface transition set, and produced zero unresolved or failed-track quarantine strings.",
     "product_owner_acceptance": "not-claimed"
   },
   "limitations": [
-    "Platform event, context, prompt, final-response, and tool-usage exports were unavailable and are recorded as null with per-field limitations in role-receipts/requirements-mapper.json.",
+    "No new requirements-mapper role receipt is authored because immutable provider prompt, ancestry, event, final-response, and measured resource-usage facts were not directly available to this session.",
+    "The existing requirements-mapper receipt remains historical evidence for its earlier bound commit and is not claimed as provenance for this regeneration.",
     "This verification does not perform Phase 4 independent acceptance or product-owner acceptance."
   ]
 }
