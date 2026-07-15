@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "track": "typescript7_native_migration_20260710",
+  "phase": "Phase 3a: install and pin the side-by-side compiler architecture",
+  "baseline_sha": "aac15877",
+  "status": "pass",
+  "scope": [
+    "package.json",
+    "pnpm-workspace.yaml",
+    "pnpm-lock.yaml",
+    "Phase 3a Measure evidence and plan status"
+  ],
+  "contract": {
+    "compatibility_package": {
+      "name": "typescript",
+      "version": "6.0.2",
+      "purpose": "programmatic API consumers and explicit rollback path"
+    },
+    "native_compiler_package": {
+      "name": "typescript7",
+      "alias": "npm:typescript@7.0.2",
+      "version": "7.0.2",
+      "purpose": "native TypeScript 7 compiler command"
+    }
+  },
+  "commands": [
+    {
+      "command": "pnpm install --lockfile-only --ignore-scripts",
+      "result": "PASS: lockfile regenerated; supply-chain policy passed"
+    },
+    {
+      "command": "CI=1 pnpm install --frozen-lockfile --ignore-scripts --strict-peer-dependencies",
+      "result": "PASS: isolated TypeScript migration worktree; lockfile current; strict peer validation passed"
+    },
+    {
+      "command": "node node_modules/typescript/bin/tsc --version",
+      "result": "PASS: Version 6.0.2"
+    },
+    {
+      "command": "node node_modules/typescript7/bin/tsc --version",
+      "result": "PASS: Version 7.0.2"
+    },
+    {
+      "command": "node require-resolution probe",
+      "result": "PASS: typescript and typescript7 resolve from distinct local package paths"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase2",
+      "result": "PASS: 9 tests"
+    },
+    {
+      "command": "git diff --check",
+      "result": "PASS"
+    }
+  ],
+  "independent_reviews": [
+    "evidence/phase-3a-lock-review-result.json",
+    "evidence/phase-3a-contract-review-result.json"
+  ],
+  "isolation_note": "The worktree initially inherited a node_modules symlink to the active main worktree. The main worktree was restored with its own frozen lockfile, the isolated symlink was removed, and the accepted verification ran from a local isolated node_modules directory.",
+  "next_step": "Run the TypeScript 7 compatibility and diagnostic-parity work across every tracked tsconfig before changing required check-types scripts."
+}

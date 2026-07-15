@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "track": "typescript7_native_migration_20260710",
+  "phase": "Phase 3a: side-by-side compiler aliases",
+  "reviewer": {
+    "role": "independent lockfile and supply-chain review",
+    "identity": "Codex collaboration subagent /root/ts7_phase3_lock_review",
+    "independent": true
+  },
+  "status": "pass",
+  "summary": "The manifest, workspace override, and lockfile implement the exact dual-compiler contract without unrelated dependency resolution changes.",
+  "verified": [
+    "Root typescript is exact 6.0.2 and typescript7 is the exact npm alias typescript@7.0.2.",
+    "The workspace override pins typescript at 6.0.2.",
+    "The lockfile adds typescript 6.0.2, typescript 7.0.2, and TypeScript 7 platform packages while removing typescript 5.9.3.",
+    "All 19 changed package records alter only their TypeScript peer resolution from 5.9.3 to 6.0.2.",
+    "git diff --check passed."
+  ],
+  "scope": "package.json, pnpm-workspace.yaml, and pnpm-lock.yaml only",
+  "findings": []
+}

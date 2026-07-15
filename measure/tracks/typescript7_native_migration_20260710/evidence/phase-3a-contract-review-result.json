@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "track": "typescript7_native_migration_20260710",
+  "phase": "Phase 3a: side-by-side compiler aliases",
+  "reviewer": {
+    "role": "independent installed-layout contract review",
+    "identity": "Codex collaboration subagent /root/ts7_phase3_contract_review",
+    "independent": true
+  },
+  "status": "pass",
+  "summary": "The isolated frozen install exposes independent TypeScript 6 compatibility and TypeScript 7 native compiler roots with the required exact versions.",
+  "verified": [
+    "node_modules is a local directory in the isolated migration worktree, not a symlink to the active main worktree.",
+    "node_modules/typescript/bin/tsc reports Version 6.0.2.",
+    "node_modules/typescript7/bin/tsc reports Version 7.0.2.",
+    "require resolution identifies distinct local package paths for typescript and typescript7.",
+    "pnpm list reports the root alias pair and TypeScript 6 across all 36 projects.",
+    "The Phase 2 resolution contract uses the same TS6 compatibility and TS7 native ownership model."
+  ],
+  "separate_preexisting_observation": "packages/activity-tutorial declares tutorial-check -> ./dist/cli.js, but the dist CLI is absent. This is unrelated to the compiler aliases and did not make the frozen strict-peer install fail.",
+  "findings": []
+}

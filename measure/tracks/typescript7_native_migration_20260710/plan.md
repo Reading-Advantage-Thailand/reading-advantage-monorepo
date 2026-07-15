@@ -59,11 +59,11 @@
 
 ## Phase 3: Implement
 
-- [~] Task: Install and pin the side-by-side compiler architecture.
-  - [ ] Add the TypeScript 6 compatibility alias and TypeScript 7 native compiler
+- [x] Task: Install and pin the side-by-side compiler architecture. [accepted in phase-3a-acceptance-result.json]
+  - [x] Add the TypeScript 6 compatibility alias and TypeScript 7 native compiler
     alias through the workspace catalog.
-  - [ ] Regenerate and review the lockfile without unrelated dependency upgrades.
-  - [ ] Run frozen install and peer-dependency checks.
+  - [x] Regenerate and review the lockfile without unrelated dependency upgrades.
+  - [x] Run frozen install and peer-dependency checks. [accepted in phase-3a-acceptance-result.json]
 - [~] Task: Make all tsconfigs TypeScript 7-compatible.
   - [ ] Add minimal explicit Node/Jest/Vitest/Playwright/global type lists per project.
   - [ ] Remove marketing `baseUrl` and preserve path-alias resolution.
