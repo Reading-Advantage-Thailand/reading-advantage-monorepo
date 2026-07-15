@@ -29,14 +29,14 @@ _Story ref: spec.md#story-s1_
 
 ### Contract & Schema Definition
 
-- [~] Task 1: Define the company identity ownership and tenancy contracts.
-    - [ ] Record the identity/product database ownership boundary.
-    - [ ] Define the single-company organization and membership contract.
-    - [ ] Define how trusted company organization context reaches product apps
+- [x] Task 1: Define the company identity ownership and tenancy contracts. [commit: 7516c48b]
+    - [x] Record the identity/product database ownership boundary.
+    - [x] Define the single-company organization and membership contract.
+    - [x] Define how trusted company organization context reaches product apps
           without using `schoolId` as authority.
-    - [ ] Reconcile the organization context with the backend capability kernel
+    - [x] Reconcile the organization context with the backend capability kernel
           and update the canonical architecture specification if required.
-    - [ ] Document why schools, licenses, customers, and product data remain
+    - [x] Document why schools, licenses, customers, and product data remain
           excluded.
 
 - [ ] Task 2: Define Zod and Drizzle contracts for the identity database.
