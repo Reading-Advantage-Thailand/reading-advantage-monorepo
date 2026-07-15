@@ -258,6 +258,21 @@
       "javascript_differences": [],
       "disposition": "accepted_declaration_ordering_only",
       "rationale": "TypeScript 7 deterministically reorders inferred Zod enum generic members in generated declarations only; emitted JavaScript and declaration maps are byte-identical."
+    },
+    {
+      "package": "packages/codecamp-knowledge",
+      "typescript6": "6.0.2",
+      "typescript7": "7.0.2",
+      "typescript6_exit_status": 0,
+      "typescript7_exit_status": 0,
+      "output_file_count": 62,
+      "typescript6_relative_tree_sha256": "1b76d16151bdb3e42928dbb35f7ca7ba46a5270735249767512287770e9d828c",
+      "typescript7_relative_tree_sha256": "b922a7b2f3ca69116877548c55923c08181695c84946cde5c6f15bf8bd523114",
+      "diff_sha256": "fc28da5a1a5218736c3371222af94e6d74f817b862d66644d2c220480d44572e",
+      "declaration_differences": ["apk-blueprint-data.d.ts", "apk-blueprint.d.ts", "apk-unit.d.ts", "apk-unit.d.ts.map", "binding-data.d.ts", "bindings.d.ts", "contracts.d.ts", "contracts.d.ts.map", "data.d.ts"],
+      "javascript_differences": [],
+      "disposition": "accepted_declaration_printer_and_map_only",
+      "rationale": "TypeScript 7 changes inferred declaration property and union ordering, literal quote/template presentation, and derived declaration maps only; emitted JavaScript and copied JSON data are byte-identical."
     }
   ]
 }

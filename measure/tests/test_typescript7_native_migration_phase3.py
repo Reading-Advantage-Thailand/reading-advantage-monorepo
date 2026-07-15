@@ -114,6 +114,7 @@ PHASE3E_ACCEPTED_EMIT_BUILD_WORKSPACES = (
     "packages/srs-engine",
     "packages/activity-react",
     "packages/knowledge-space-practice",
+    "packages/codecamp-knowledge",
 )
 
 
@@ -784,6 +785,17 @@ class Phase3dCheckTypesCutoverContract(unittest.TestCase):
         self.assertIsInstance(scripts, dict)
         assert isinstance(scripts, dict)
         self.assertEqual(scripts.get("build"), "node ../../node_modules/typescript7/bin/tsc")
+
+    def test_codecamp_knowledge_emit_routes_to_typescript7(self) -> None:
+        """Requires the Codecamp knowledge build to select the native alias."""
+        manifest = json.loads(CODECAMP_KNOWLEDGE_PACKAGE_PATH.read_text(encoding="utf-8"))
+        scripts = manifest.get("scripts")
+        self.assertIsInstance(scripts, dict)
+        assert isinstance(scripts, dict)
+        self.assertEqual(
+            scripts.get("build"),
+            "node ../../node_modules/typescript7/bin/tsc && node scripts/copy-data.mjs",
+        )
 
 
 class Phase3eDeclarationEmitContract(unittest.TestCase):

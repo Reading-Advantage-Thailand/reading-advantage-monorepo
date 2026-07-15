@@ -22,7 +22,7 @@
   },
   "files": ["dist", "source-snapshots", "fixtures"],
   "scripts": {
-    "build": "node ../../node_modules/typescript/bin/tsc && node scripts/copy-data.mjs",
+    "build": "node ../../node_modules/typescript7/bin/tsc && node scripts/copy-data.mjs",
     "check-types": "node ../../node_modules/typescript7/bin/tsc --noEmit && node ../../node_modules/typescript7/bin/tsc -p tsconfig.test.json",
     "check-types:compat": "node ../../node_modules/typescript/bin/tsc --noEmit && node ../../node_modules/typescript/bin/tsc -p tsconfig.test.json",
     "check-types:rollback": "node ../../node_modules/typescript/bin/tsc --noEmit && node ../../node_modules/typescript/bin/tsc -p tsconfig.test.json",
