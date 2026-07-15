@@ -152,10 +152,10 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const APP_ROOT = resolve(HERE, "../../..");
 const MONOREPO_ROOT = resolve(APP_ROOT, "../..");
 
-const TRACK_DIR = resolve(MONOREPO_ROOT, "measure/tracks/codecamp_qa_prod_20260517");
+const TRACK_DIR = resolve(MONOREPO_ROOT, "measure/archive/codecamp_qa_prod_20260517");
 const REPORT_MD_PATH = resolve(TRACK_DIR, "report.md");
 const TRACK_METADATA_PATH = resolve(TRACK_DIR, "metadata.json");
-const TRACKS_ROOT = resolve(MONOREPO_ROOT, "measure/tracks");
+const TRACKS_ROOT = resolve(MONOREPO_ROOT, "measure");
 const REPORT_SUMMARY_PATH = resolve(HERE, "report-summary.json");
 const PARITY_MATRIX_PATH = resolve(HERE, "local-qa-parity-matrix.json");
 const TECH_DEBT_PATH = resolve(MONOREPO_ROOT, "measure/tech-debt.md");
@@ -501,23 +501,25 @@ export function extractReportSectionBody(markdown: string, heading: string): str
 // ─── Filesystem helpers (unit-tested in Suite 2) ────────────
 
 /**
- * Return the sorted list of `measure/tracks/<dir>` subdirectory
- * names that exist on disk. Pure-of-side-effects read used by the
- * follow-up-track existence checks. Skips dotfiles.
+ * Return the sorted union of active and archived Measure track names.
+ * @param root Measure directory containing `tracks` and `archive`.
+ * @returns Active and archived track directory names without duplicates.
  */
 export function listTrackDirs(root: string): string[] {
   if (!existsSync(root)) return [];
-  const entries = readdirSync(root);
-  return entries
-    .filter((name) => !name.startsWith("."))
-    .filter((name) => {
-      try {
-        return statSync(resolve(root, name)).isDirectory();
-      } catch {
-        return false;
-      }
-    })
-    .sort();
+  const roots = [resolve(root, "tracks"), resolve(root, "archive")];
+  return [...new Set(roots.flatMap((trackRoot) => {
+    if (!existsSync(trackRoot)) return [];
+    return readdirSync(trackRoot)
+      .filter((name) => !name.startsWith("."))
+      .filter((name) => {
+        try {
+          return statSync(resolve(trackRoot, name)).isDirectory();
+        } catch {
+          return false;
+        }
+      });
+  }))].sort();
 }
 
 // ─── Tests ─────────────────────────────────────────────────
@@ -891,7 +893,7 @@ Intro text.
   });
 
   describe("listTrackDirs()", () => {
-    it("returns the sorted list of subdirectory names in measure/tracks", () => {
+    it("returns the sorted union of active and archived Measure tracks", () => {
       const dirs = listTrackDirs(TRACKS_ROOT);
       expect(dirs).toContain("codecamp_qa_prod_20260517");
       expect(dirs).toContain("codecamp_qa_local_20260517");

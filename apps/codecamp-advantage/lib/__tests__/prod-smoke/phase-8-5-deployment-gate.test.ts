@@ -71,7 +71,10 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const APP_ROOT = resolve(HERE, "../../..");
 const MONOREPO_ROOT = resolve(APP_ROOT, "../..");
 const CLOUDBUILD_YAML = resolve(APP_ROOT, "cloudbuild.yaml");
-const TRACKS_DIR = resolve(MONOREPO_ROOT, "measure/tracks");
+const TRACKS_DIRS = [
+  resolve(MONOREPO_ROOT, "measure/tracks"),
+  resolve(MONOREPO_ROOT, "measure/archive"),
+] as const;
 const TECH_DEBT_MD = resolve(MONOREPO_ROOT, "measure/tech-debt.md");
 
 // ─── Follow-up track naming convention ────────────────────────────
@@ -207,20 +210,19 @@ const parseCacheControl = (header: string | null | undefined): Record<string, st
 // ─── Source/artifact helpers ────────────────────────────────────
 
 /**
- * Returns the list of `measure/tracks/<name>/` directory names under the
- * monorepo. Returns an empty array if the directory does not exist
- * (e.g. the test is run from a shallow checkout).
+ * Returns active and archived Measure track directory names.
  */
 const listTrackDirs = (): string[] => {
-  if (!existsSync(TRACKS_DIR)) return [];
-  return readdirSync(TRACKS_DIR).filter((name) => {
-    const full = resolve(TRACKS_DIR, name);
-    try {
-      return statSync(full).isDirectory();
-    } catch {
-      return false;
-    }
-  });
+  return [...new Set(TRACKS_DIRS.flatMap((root) => {
+    if (!existsSync(root)) return [];
+    return readdirSync(root).filter((name) => {
+      try {
+        return statSync(resolve(root, name)).isDirectory();
+      } catch {
+        return false;
+      }
+    });
+  }))];
 };
 
 /**
@@ -576,7 +578,7 @@ describe("Phase 8.5 — Follow-up tracks filed for deploy-fixed-only findings", 
       const match = dirs.find((d) => d.startsWith(prefix));
       expect(
         match,
-        `expected a follow-up track at measure/tracks/${prefix}_*/ — found ${dirs.length} track directories: ${dirs.join(", ")}`,
+        `expected an active or archived follow-up track with prefix ${prefix}_* — found ${dirs.length} track directories: ${dirs.join(", ")}`,
       ).toBeDefined();
     });
   }
