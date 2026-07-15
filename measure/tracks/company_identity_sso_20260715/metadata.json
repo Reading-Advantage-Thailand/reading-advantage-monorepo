@@ -1,0 +1,67 @@
+{
+  "track_id": "company_identity_sso_20260715",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-07-15T07:11:37Z",
+  "updated_at": "2026-07-15T07:11:37Z",
+  "description": "Create a separate employee identity database, first-party Accounts app, and shared SSO for Marketing, Sales Advantage, and Codecamp Advantage, including migration of existing Codecamp accounts.",
+  "estimated_tasks": 56,
+  "actual_tasks": null,
+  "deviation_notes": "",
+  "sprint": {
+    "goal": "Deliver one employee account and app-scoped role system for Marketing, Sales Advantage, and Codecamp Advantage, backed by a separate company identity database and shared SSO, while migrating existing Codecamp accounts without losing access, identity mappings, or product progress—and without introducing schools, licensing, or customer accounts.",
+    "stories": [
+      {
+        "id": "S1",
+        "title": "Establish Company Identity Boundary",
+        "size": "L",
+        "priority": "Must",
+        "status": "pending"
+      },
+      {
+        "id": "S2",
+        "title": "Provide Employee SSO",
+        "size": "XL",
+        "priority": "Must",
+        "status": "pending"
+      },
+      {
+        "id": "S3",
+        "title": "Manage Employees and App Roles",
+        "size": "L",
+        "priority": "Must",
+        "status": "pending"
+      },
+      {
+        "id": "S4",
+        "title": "Connect Marketing",
+        "size": "M",
+        "priority": "Must",
+        "status": "pending"
+      },
+      {
+        "id": "S5",
+        "title": "Connect Sales Advantage",
+        "size": "M",
+        "priority": "Must",
+        "status": "pending"
+      },
+      {
+        "id": "S6",
+        "title": "Migrate Codecamp Accounts",
+        "size": "XL",
+        "priority": "Must",
+        "status": "pending"
+      },
+      {
+        "id": "S7",
+        "title": "Cut Over and Verify Production",
+        "size": "L",
+        "priority": "Must",
+        "status": "pending"
+      }
+    ],
+    "demo_notes": null,
+    "retro_ref": null
+  }
+}
