@@ -76,15 +76,15 @@ _Story ref: spec.md#story-s1_
 
 ### Implement
 
-- [~] Task 5: Implement the separate identity database infrastructure.
-    - [ ] Add the company-identity schema and dedicated Drizzle migration stream
+- [x] Task 5: Implement the separate identity database infrastructure. [commit: 43c16457]
+    - [x] Add the company-identity schema and dedicated Drizzle migration stream
           under the database package.
-    - [ ] Add pooled and direct client factories without widening the existing
+    - [x] Add pooled and direct client factories without widening the existing
           global database singleton.
-    - [ ] Add database migration, ledger validation, and doctor commands.
-    - [ ] Add idempotent bootstrap records for the internal company and the
+    - [x] Add database migration, ledger validation, and doctor commands.
+    - [x] Add idempotent bootstrap records for the internal company and the
           three initial applications.
-    - [ ] Apply least-privilege database credentials for runtime and migration
+    - [x] Apply least-privilege database credentials for runtime and migration
           connections.
 
 - [ ] Task 6: Establish the backend identity module and adapter boundary.
