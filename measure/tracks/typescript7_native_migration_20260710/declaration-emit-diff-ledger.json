@@ -25,6 +25,43 @@
       "javascript_differences": [],
       "disposition": "accepted_declaration_ordering_only",
       "rationale": "TypeScript 7 deterministically reorders object properties and union members in generated Zod-inferred declarations. The declaration changes preserve the same property sets and union members; all emitted JavaScript is byte-identical. Declaration-map changes are derivatives of those declaration-text changes."
+    },
+    {
+      "package": "packages/db",
+      "typescript6": "6.0.2",
+      "typescript7": "7.0.2",
+      "typescript6_exit_status": 0,
+      "typescript7_exit_status": 0,
+      "diagnostic_disposition": "resolved_by_required_node_ambient_types",
+      "ambient_types_fix": "packages/db/tsconfig.build.json now explicitly declares types: [node], matching the Node APIs used by the production build and the package's regular tsconfig.",
+      "output_file_count": 62,
+      "typescript6_relative_tree_sha256": "1a3475ceab94ba4cb43afbd4803122a35c2f2df0f35917631d0b71d6378f305d",
+      "typescript7_relative_tree_sha256": "cb513820ac2ce5949a17fc20f9f4b60f69a29b33f9a011b4fcf416db55aa48d2",
+      "diff_sha256": "845deffc01910f929ae97cb6b0613c1dcc0a9dd5e61f6df071ca88a30f81b7c6",
+      "declaration_differences": [
+        "schema/activity.d.ts",
+        "schema/analytics.d.ts",
+        "schema/audit.d.ts",
+        "schema/auth.d.ts",
+        "schema/classrooms.d.ts",
+        "schema/codecamp.d.ts",
+        "schema/content.d.ts",
+        "schema/flashcards.d.ts",
+        "schema/licenses.d.ts",
+        "schema/marketing.d.ts",
+        "schema/mastery.d.ts",
+        "schema/primary.d.ts",
+        "schema/progress.d.ts",
+        "schema/questions.d.ts",
+        "schema/sales.d.ts",
+        "schema/science.d.ts",
+        "schema/stories.d.ts",
+        "schema/taxonomy.d.ts",
+        "schema/users.d.ts"
+      ],
+      "javascript_differences": [],
+      "disposition": "accepted_declaration_ordering_only",
+      "rationale": "TypeScript 7 changes only declaration-printer presentation in Drizzle schema types: quote style plus deterministic object-property and union-member ordering. The emitted JavaScript files and the complete output file set are byte-identical."
     }
   ]
 }

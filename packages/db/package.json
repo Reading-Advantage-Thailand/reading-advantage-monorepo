@@ -22,7 +22,7 @@
     }
   },
   "scripts": {
-    "build": "node ../../node_modules/typescript/bin/tsc --project tsconfig.build.json",
+    "build": "node ../../node_modules/typescript7/bin/tsc --project tsconfig.build.json",
     "generate": "drizzle-kit generate",
     "migrate": "drizzle-kit migrate",
     "push": "drizzle-kit push",

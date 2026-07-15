@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "track": "typescript7_native_migration_20260710",
+  "phase": "Phase 3e: declaration-emit cutover",
+  "package": "packages/db",
+  "status": "accepted_reviewed_declaration_diff",
+  "build_scripts": {
+    "before": "node ../../node_modules/typescript/bin/tsc --project tsconfig.build.json",
+    "after": "node ../../node_modules/typescript7/bin/tsc --project tsconfig.build.json"
+  },
+  "required_config_fix": {
+    "path": "packages/db/tsconfig.build.json",
+    "change": "types: [node]",
+    "reason": "The production build imports Node APIs. Both compiler versions had the same 29 missing-Node-ambient errors until the build-specific config declared its required ambient type package."
+  },
+  "typescript6_capture": {
+    "version": "6.0.2",
+    "exit_status": 0,
+    "output_file_count": 62,
+    "relative_tree_sha256": "1a3475ceab94ba4cb43afbd4803122a35c2f2df0f35917631d0b71d6378f305d"
+  },
+  "typescript7_capture": {
+    "version": "7.0.2",
+    "command": "pnpm run build",
+    "exit_status": 0,
+    "output_file_count": 62,
+    "relative_tree_sha256": "cb513820ac2ce5949a17fc20f9f4b60f69a29b33f9a011b4fcf416db55aa48d2"
+  },
+  "comparison": {
+    "diff_exit_status": 1,
+    "diff_sha256": "845deffc01910f929ae97cb6b0613c1dcc0a9dd5e61f6df071ca88a30f81b7c6",
+    "declaration_difference_count": 19,
+    "javascript_difference_count": 0,
+    "ledger": "declaration-emit-diff-ledger.json#packages/db",
+    "disposition": "accepted_declaration_ordering_only"
+  }
+}

@@ -98,7 +98,7 @@ PHASE3D_CUTOVER_ORDER = (
     "packages/api",
     "packages/webhooks",
 )
-PHASE3E_ACCEPTED_EMIT_BUILD_WORKSPACES = ("packages/types",)
+PHASE3E_ACCEPTED_EMIT_BUILD_WORKSPACES = ("packages/types", "packages/db")
 
 
 def _load_runner() -> ModuleType:
@@ -644,6 +644,17 @@ class Phase3dCheckTypesCutoverContract(unittest.TestCase):
         assert isinstance(scripts, dict)
         self.assertEqual(scripts.get("build"), "node ../../node_modules/typescript7/bin/tsc")
 
+    def test_db_build_routes_emit_to_typescript7_after_the_byte_diff_gate(self) -> None:
+        """Requires the second Phase 3e package build to select the native compiler explicitly."""
+        manifest = json.loads(DB_PACKAGE_PATH.read_text(encoding="utf-8"))
+        scripts = manifest.get("scripts")
+        self.assertIsInstance(scripts, dict)
+        assert isinstance(scripts, dict)
+        self.assertEqual(
+            scripts.get("build"),
+            "node ../../node_modules/typescript7/bin/tsc --project tsconfig.build.json",
+        )
+
 
 class Phase3eDeclarationEmitContract(unittest.TestCase):
     """Verify that intentional declaration emit differences remain explicit and bounded."""
@@ -678,6 +689,34 @@ class Phase3eDeclarationEmitContract(unittest.TestCase):
             types_entry.get("disposition"),
             "accepted_declaration_ordering_only",
         )
+
+    def test_typescript7_db_emit_diff_is_fully_accounted(self) -> None:
+        """Requires the DB emit delta and its matching baseline diagnostics to be ledgered."""
+        ledger = json.loads(DECLARATION_EMIT_LEDGER_PATH.read_text(encoding="utf-8"))
+        entries = ledger.get("entries")
+        self.assertIsInstance(entries, list)
+        assert isinstance(entries, list)
+        db_entry = next((entry for entry in entries if entry.get("package") == "packages/db"), None)
+        self.assertIsNotNone(db_entry)
+        assert isinstance(db_entry, dict)
+        self.assertEqual(len(db_entry.get("declaration_differences", [])), 19)
+        self.assertEqual(db_entry.get("javascript_differences"), [])
+        self.assertEqual(db_entry.get("typescript6_exit_status"), 0)
+        self.assertEqual(db_entry.get("typescript7_exit_status"), 0)
+        self.assertEqual(
+            db_entry.get("diagnostic_disposition"),
+            "resolved_by_required_node_ambient_types",
+        )
+        self.assertEqual(db_entry.get("disposition"), "accepted_declaration_ordering_only")
+
+    def test_db_build_config_includes_its_required_node_ambient_types(self) -> None:
+        """Requires the production DB compiler config to resolve the Node APIs used by emitted source."""
+        config_path = REPO_ROOT / "packages" / "db" / "tsconfig.build.json"
+        config = json.loads(config_path.read_text(encoding="utf-8"))
+        compiler_options = config.get("compilerOptions")
+        self.assertIsInstance(compiler_options, dict)
+        assert isinstance(compiler_options, dict)
+        self.assertEqual(compiler_options.get("types"), ["node"])
 
 
 if __name__ == "__main__":
