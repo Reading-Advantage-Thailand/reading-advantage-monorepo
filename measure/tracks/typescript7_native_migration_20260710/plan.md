@@ -92,6 +92,7 @@
   - [x] Verify JavaScript and declaration emit before switching every direct `tsc` build; all 20 emitting packages have TypeScript 6/7 byte-diff evidence, with every non-byte-equal file recorded in `declaration-emit-diff-ledger.json`. [evidence: phase-3e-*-emit-result.json]
   - [x] Preserve explicit TypeScript 6 compatibility and rollback commands.
   - [x] Run the bounded installed-tool smoke matrix and preserve all existing runners; no new TypeScript 6 pinning or Jest/Vitest/Playwright migration is required. [evidence: phase-3f-tool-smoke-result.json]
+  - [x] Prove scoped Turbo cache invalidation for native, compatibility, and rollback checks, including compiler identity, wrapper, local/shared tsconfig, and checker-count transitions. [evidence: phase-3i-cache-invalidation-result.json]
   - [ ] Bound TypeScript checker concurrency underneath Turbo parallelism.
 - [~] Task: Run controlled performance benchmarks.
   - [ ] Benchmark packages/types, packages/domain, packages/db,

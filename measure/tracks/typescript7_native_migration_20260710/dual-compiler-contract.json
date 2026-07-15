@@ -36,8 +36,11 @@
       "check-types:rollback": "One-command fallback that invokes the direct exact TypeScript 6 tsc bin. Switches required checks back to TS 6 without reverting unrelated configuration correctness fixes."
     },
     "turbo_cache_inputs": {
-      "note": "turbo.json check-types task currently has no explicit inputs beyond dependsOn. Phase 3i requires adding inputs for compiler version hash, tsconfig path hash, and --checkers value so a TS 7 -> TS 6 -> TS 7 cycle busts the cache.",
-      "proposed_inputs": ["$TURBO_DEFAULT$", "tsconfig*.json", "pnpm-workspace.yaml", "turbo.json"]
+      "note": "Phase 3i accepted run-20260715T103600Z proves scoped local Turbo MISS/HIT behavior in a disposable worktree. Native check-types hashes its wrapper, checked compiler identity, root manifest/lock/workspace/Turbo configuration, shared config, local task inputs, and TS7_CHECKERS. Compatibility and rollback hash the same relevant compiler/config inputs without the native wrapper or checker value. Every changed input missed and every exact restoration hit.",
+      "native_inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/scripts/run-ts7-check-types.mjs", "$TURBO_ROOT$/scripts/typescript-compiler-identity.json", "$TURBO_ROOT$/package.json", "$TURBO_ROOT$/pnpm-lock.yaml", "$TURBO_ROOT$/pnpm-workspace.yaml", "$TURBO_ROOT$/turbo.json", "$TURBO_ROOT$/packages/config/tsconfig/**"],
+      "compatibility_inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/scripts/typescript-compiler-identity.json", "$TURBO_ROOT$/package.json", "$TURBO_ROOT$/pnpm-lock.yaml", "$TURBO_ROOT$/pnpm-workspace.yaml", "$TURBO_ROOT$/turbo.json", "$TURBO_ROOT$/packages/config/tsconfig/**"],
+      "native_environment_inputs": ["TS7_CHECKERS"],
+      "evidence": "measure/tracks/typescript7_native_migration_20260710/phase-3i-cache-invalidation-result.json"
     }
   },
   "ownership_matrix": [

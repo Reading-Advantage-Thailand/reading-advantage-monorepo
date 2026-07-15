@@ -1,0 +1,150 @@
+{
+  "id": "3GXJEawcwaPwpuyJmY9u2qNdLrA",
+  "version": "1",
+  "turboVersion": "2.9.18",
+  "monorepo": true,
+  "globalCacheInputs": {
+    "rootKey": "I can’t see ya, but I know you’re here",
+    "files": {},
+    "hashOfExternalDependencies": "a338661bd835f129",
+    "hashOfInternalDependencies": "",
+    "environmentVariables": {
+      "specified": {
+        "env": [
+          "DATABASE_URL",
+          "NEXT_PUBLIC_*",
+          "NODE_ENV"
+        ],
+        "passThroughEnv": null
+      },
+      "configured": [],
+      "inferred": [],
+      "passthrough": null
+    },
+    "engines": null
+  },
+  "execution": {
+    "command": "turbo run check-types --filter=@reading-advantage/types",
+    "repoPath": "",
+    "success": 0,
+    "failed": 0,
+    "cached": 1,
+    "attempted": 1,
+    "startTime": 1784111868233,
+    "endTime": 1784111869130,
+    "exitCode": 0
+  },
+  "packages": [
+    "@reading-advantage/types"
+  ],
+  "envMode": "strict",
+  "frameworkInference": true,
+  "tasks": [
+    {
+      "taskId": "@reading-advantage/types#check-types",
+      "task": "check-types",
+      "package": "@reading-advantage/types",
+      "hash": "65d1811dd7fc2d6e",
+      "inputs": {
+        "../../package.json": "f149cfcc0d895a67198cf9bcb62098c6af07d518",
+        "../../pnpm-lock.yaml": "2e9d07ec3d2dbd327594268f6305bf4dfd0f1896",
+        "../../pnpm-workspace.yaml": "dc1a0301b62f3d623078297e0af3083963e1e0bb",
+        "../../scripts/run-ts7-check-types.mjs": "2a123b8aca5a683258099098944222d60e0cfb97",
+        "../../scripts/typescript-compiler-identity.json": "b6b57fdb61f5892e9f8fb8090424d73c2ff56238",
+        "../../turbo.json": "e1d6529aba8d93c19252cf8aede47271c775298a",
+        "../config/tsconfig/base.json": "2aead0949ff5b430664b42ba33878ac03db008d5",
+        "eslint.config.mjs": "8db99b6fa697d257b45282b8d0227956e9ad0571",
+        "package.json": "a119c123536eb629629afb489580af5d639b0b38",
+        "src/__tests__/auth-response-validation.test.ts": "58440c25f308ef75b5f451865bc8697736d2988d",
+        "src/__tests__/response-envelopes.test.ts": "087b542654f95aac85e1cb1209dddbf1d9748dd6",
+        "src/__tests__/role-parity.test.ts": "bd304fc49fc0edf702fcbbd4140908740e952504",
+        "src/__tests__/shared-contracts.test.ts": "6dae1f5e11c2495f3dbb396112795b0b24338b09",
+        "src/__tests__/wave2-types-regression-guard.test.ts": "1d3c0deecf1a76f0b00cd628c16bb2412c93ae5c",
+        "src/assignment-status.ts": "c62d1bbb50923f5ea48239979a7e332b7315914c",
+        "src/codecamp.ts": "aba23c77b9fb890e21c12139d3d36064eaadf493",
+        "src/contracts/class.ts": "e8ad4c6dc77287efe1880675e22f284cc1b14c35",
+        "src/contracts/envelopes.ts": "b12c2df4df75e9df43ee260125c040990c2271d1",
+        "src/contracts/sales.ts": "40f3eec789e643bb2d6942217258151fc6a46706",
+        "src/index.ts": "40e4bb2c4bce49e0323008c79f2ae446cce4cec4",
+        "tsconfig.json": "3e7dc6d439d59d1f7be0f2eafe328a601aaf35c1",
+        "vitest.config.ts": "c7949af7d04ace55bcacaa46ceca3fed12cbf77a"
+      },
+      "hashOfExternalDependencies": "4ddaa5645ca07582",
+      "cache": {
+        "local": true,
+        "remote": false,
+        "status": "HIT",
+        "source": "LOCAL",
+        "timeSaved": 3376,
+        "sha": "6c930010166e6a2ea4d88bbb296158ea9209a0ab"
+      },
+      "command": "node ../../scripts/run-ts7-check-types.mjs --noEmit",
+      "cliArguments": [],
+      "outputs": null,
+      "excludedOutputs": null,
+      "logFile": "packages/types/.turbo/turbo-check-types.log",
+      "directory": "packages/types",
+      "dependencies": [
+        "@reading-advantage/config#build",
+        "@reading-advantage/config#check-types"
+      ],
+      "dependents": [],
+      "with": [],
+      "resolvedTaskDefinition": {
+        "outputs": [],
+        "cache": true,
+        "dependsOn": [
+          "^build",
+          "^check-types"
+        ],
+        "inputs": [
+          "$TURBO_DEFAULT$",
+          "../../package.json",
+          "../../packages/config/tsconfig/**",
+          "../../pnpm-lock.yaml",
+          "../../pnpm-workspace.yaml",
+          "../../scripts/run-ts7-check-types.mjs",
+          "../../scripts/typescript-compiler-identity.json",
+          "../../turbo.json"
+        ],
+        "outputLogs": "full",
+        "persistent": false,
+        "interruptible": false,
+        "env": [
+          "TS7_CHECKERS"
+        ],
+        "passThroughEnv": null,
+        "interactive": false
+      },
+      "expandedOutputs": [
+        "packages/types/.turbo/turbo-check-types.log"
+      ],
+      "framework": "",
+      "envMode": "strict",
+      "environmentVariables": {
+        "specified": {
+          "env": [
+            "TS7_CHECKERS"
+          ],
+          "passThroughEnv": null
+        },
+        "configured": [
+          "TS7_CHECKERS=6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"
+        ],
+        "inferred": [],
+        "passthrough": null
+      },
+      "execution": {
+        "startTime": 1784111869123,
+        "endTime": 1784111869130,
+        "exitCode": 0
+      }
+    }
+  ],
+  "user": "",
+  "scm": {
+    "type": "git",
+    "sha": "6c930010166e6a2ea4d88bbb296158ea9209a0ab",
+    "branch": ""
+  }
+}
