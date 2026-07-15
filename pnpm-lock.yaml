@@ -332,6 +332,30 @@ pnpmfileChecksum: sha256-pU4HNGlvjxxBJ85dKrOi8k104qXNitGe+FYk2EN3ZKk=
 
 importers:
 
+  .:
+    devDependencies:
+      '@commitlint/cli':
+        specifier: ^19.8.1
+        version: 19.8.1(@types/node@20.19.43)(typescript@5.9.3)
+      '@commitlint/config-conventional':
+        specifier: ^19.8.1
+        version: 19.8.1
+      drizzle-orm:
+        specifier: 0.45.2
+        version: 0.45.2(@electric-sql/pglite@0.5.3)(@opentelemetry/api@1.9.1)(@types/pg@8.20.0)(pg@8.22.0)(postgres@3.4.9)
+      husky:
+        specifier: ^9.1.7
+        version: 9.1.7
+      prettier:
+        specifier: ^3.5.3
+        version: 3.8.4
+      turbo:
+        specifier: ^2.5.2
+        version: 2.9.18
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+
   apps/activity-vinext-fixture:
     dependencies:
       '@reading-advantage/activity-react':
@@ -363,30 +387,6 @@ importers:
         specifier: 8.1.0
         version: 8.1.0(@types/node@20.19.43)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0)
 
-  .:
-    devDependencies:
-      '@commitlint/cli':
-        specifier: ^19.8.1
-        version: 19.8.1(@types/node@20.19.43)(typescript@5.9.3)
-      '@commitlint/config-conventional':
-        specifier: ^19.8.1
-        version: 19.8.1
-      drizzle-orm:
-        specifier: 0.45.2
-        version: 0.45.2(@electric-sql/pglite@0.5.3)(@opentelemetry/api@1.9.1)(@types/pg@8.20.0)(pg@8.22.0)(postgres@3.4.9)
-      husky:
-        specifier: ^9.1.7
-        version: 9.1.7
-      prettier:
-        specifier: ^3.5.3
-        version: 3.8.4
-      turbo:
-        specifier: ^2.5.2
-        version: 2.9.18
-      typescript:
-        specifier: 5.9.3
-        version: 5.9.3
-
   apps/advantage-games:
     dependencies:
       '@radix-ui/react-avatar':
@@ -416,9 +416,6 @@ importers:
       '@react-three/postprocessing':
         specifier: 'catalog:'
         version: 3.0.4(@react-three/fiber@9.6.1(@types/react@19.2.2)(immer@11.1.8)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(three@0.185.1))(@types/three@0.185.0)(react@19.2.7)(three@0.185.1)
-      '@reading-advantage/advantage-play-kit':
-        specifier: workspace:*
-        version: link:../../packages/advantage-play-kit
       '@reading-advantage/api':
         specifier: workspace:*
         version: link:../../packages/api
@@ -431,9 +428,6 @@ importers:
       '@reading-advantage/domain':
         specifier: workspace:*
         version: link:../../packages/domain
-      '@reading-advantage/game-cartridges':
-        specifier: workspace:*
-        version: link:../../packages/game-cartridges
       '@reading-advantage/game-contracts':
         specifier: workspace:*
         version: link:../../packages/game-contracts
@@ -588,9 +582,6 @@ importers:
       '@reading-advantage/activity-runtime':
         specifier: workspace:*
         version: link:../../packages/activity-runtime
-      '@reading-advantage/codecamp-knowledge':
-        specifier: workspace:*
-        version: link:../../packages/codecamp-knowledge
       '@reading-advantage/ai':
         specifier: workspace:*
         version: link:../../packages/ai
@@ -603,6 +594,9 @@ importers:
       '@reading-advantage/auth-client':
         specifier: workspace:*
         version: link:../../packages/auth-client
+      '@reading-advantage/codecamp-knowledge':
+        specifier: workspace:*
+        version: link:../../packages/codecamp-knowledge
       '@reading-advantage/config':
         specifier: workspace:*
         version: link:../../packages/config
@@ -890,9 +884,6 @@ importers:
       '@reading-advantage/db':
         specifier: workspace:*
         version: link:../../packages/db
-      '@reading-advantage/game-cartridges':
-        specifier: workspace:*
-        version: link:../../packages/game-cartridges
       '@reading-advantage/game-contracts':
         specifier: workspace:*
         version: link:../../packages/game-contracts
@@ -1215,9 +1206,6 @@ importers:
       '@reading-advantage/domain':
         specifier: workspace:*
         version: link:../../packages/domain
-      '@reading-advantage/game-cartridges':
-        specifier: workspace:*
-        version: link:../../packages/game-cartridges
       '@reading-advantage/game-contracts':
         specifier: workspace:*
         version: link:../../packages/game-contracts
@@ -2370,15 +2358,15 @@ importers:
 
   packages/codecamp-knowledge:
     dependencies:
-      '@reading-advantage/advantage-play-kit':
-        specifier: workspace:*
-        version: link:../advantage-play-kit
       '@reading-advantage/activity-runtime':
         specifier: workspace:*
         version: link:../activity-runtime
       '@reading-advantage/activity-tutorial':
         specifier: workspace:*
         version: link:../activity-tutorial
+      '@reading-advantage/advantage-play-kit':
+        specifier: workspace:*
+        version: link:../advantage-play-kit
       '@reading-advantage/knowledge-space-core':
         specifier: workspace:*
         version: link:../knowledge-space-core
@@ -2520,15 +2508,9 @@ importers:
 
   packages/game-cartridges:
     dependencies:
-      '@reading-advantage/advantage-play-kit':
-        specifier: workspace:*
-        version: link:../advantage-play-kit
       '@reading-advantage/game-contracts':
         specifier: workspace:*
         version: link:../game-contracts
-      phaser:
-        specifier: 'catalog:'
-        version: 4.2.1
     devDependencies:
       '@reading-advantage/config':
         specifier: workspace:*
@@ -19892,7 +19874,7 @@ snapshots:
       '@next/eslint-plugin-next': 16.0.0
       eslint: 9.39.4(jiti@2.7.0)
       eslint-import-resolver-node: 0.3.10
-      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0)(eslint@9.39.4(jiti@2.7.0))
+      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.61.1(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(eslint@9.39.4(jiti@2.7.0)))(eslint@9.39.4(jiti@2.7.0))
       eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.61.1(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.4(jiti@2.7.0))
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.39.4(jiti@2.7.0))
       eslint-plugin-react: 7.37.5(eslint@9.39.4(jiti@2.7.0))
@@ -19935,7 +19917,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0)(eslint@9.39.4(jiti@2.7.0)):
+  eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.61.1(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(eslint@9.39.4(jiti@2.7.0)))(eslint@9.39.4(jiti@2.7.0)):
     dependencies:
       '@nolyfill/is-core-module': 1.0.39
       debug: 4.4.3
@@ -19950,11 +19932,36 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.13.0(@typescript-eslint/parser@8.61.1(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(eslint-import-resolver-node@0.3.10)(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.4(jiti@2.7.0)):
+  eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0)(eslint@9.39.4(jiti@2.7.0)):
+    dependencies:
+      '@nolyfill/is-core-module': 1.0.39
+      debug: 4.4.3
+      eslint: 9.39.4(jiti@2.7.0)
+      get-tsconfig: 4.14.0
+      is-bun-module: 2.0.0
+      stable-hash: 0.0.5
+      tinyglobby: 0.2.17
+      unrs-resolver: 1.12.2
+    optionalDependencies:
+      eslint-plugin-import: 2.32.0(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.4(jiti@2.7.0))
+    transitivePeerDependencies:
+      - supports-color
+
+  eslint-module-utils@2.13.0(@typescript-eslint/parser@8.61.1(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(eslint-import-resolver-node@0.3.10)(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.61.1(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(eslint@9.39.4(jiti@2.7.0)))(eslint@9.39.4(jiti@2.7.0)))(eslint@9.39.4(jiti@2.7.0)):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
       '@typescript-eslint/parser': 8.61.1(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3)
+      eslint: 9.39.4(jiti@2.7.0)
+      eslint-import-resolver-node: 0.3.10
+      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.61.1(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(eslint@9.39.4(jiti@2.7.0)))(eslint@9.39.4(jiti@2.7.0))
+    transitivePeerDependencies:
+      - supports-color
+
+  eslint-module-utils@2.13.0(eslint-import-resolver-node@0.3.10)(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.4(jiti@2.7.0)):
+    dependencies:
+      debug: 3.2.7
+    optionalDependencies:
       eslint: 9.39.4(jiti@2.7.0)
       eslint-import-resolver-node: 0.3.10
       eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0)(eslint@9.39.4(jiti@2.7.0))
@@ -19972,7 +19979,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 9.39.4(jiti@2.7.0)
       eslint-import-resolver-node: 0.3.10
-      eslint-module-utils: 2.13.0(@typescript-eslint/parser@8.61.1(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(eslint-import-resolver-node@0.3.10)(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.4(jiti@2.7.0))
+      eslint-module-utils: 2.13.0(@typescript-eslint/parser@8.61.1(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(eslint-import-resolver-node@0.3.10)(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.61.1(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(eslint@9.39.4(jiti@2.7.0)))(eslint@9.39.4(jiti@2.7.0)))(eslint@9.39.4(jiti@2.7.0))
       hasown: 2.0.4
       is-core-module: 2.16.2
       is-glob: 4.0.3
@@ -20001,7 +20008,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 9.39.4(jiti@2.7.0)
       eslint-import-resolver-node: 0.3.10
-      eslint-module-utils: 2.13.0(@typescript-eslint/parser@8.61.1(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(eslint-import-resolver-node@0.3.10)(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.4(jiti@2.7.0))
+      eslint-module-utils: 2.13.0(eslint-import-resolver-node@0.3.10)(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.4(jiti@2.7.0))
       hasown: 2.0.4
       is-core-module: 2.16.2
       is-glob: 4.0.3
