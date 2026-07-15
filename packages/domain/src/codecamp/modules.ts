@@ -13,8 +13,9 @@ export async function getModuleBySlug({
   db: TenantDB; user: UserContext; tenant: Tenant; input: { slug: string };
 }) {
   assertCan(user, "codecamp:read", tenant);
+  const rawDb = db.unscoped("Codecamp curriculum and learner progress are scoped by published module and userId");
 
-  const [module] = await db
+  const [module] = await rawDb
     .select().from(codecampModules)
     .where(eq(codecampModules.slug, input.slug)).limit(1);
 
@@ -22,10 +23,10 @@ export async function getModuleBySlug({
     throw new Error("Module not found");
   }
 
-  const lessons = await db.select().from(codecampLessons)
+  const lessons = await rawDb.select().from(codecampLessons)
     .where(eq(codecampLessons.moduleId, module.id)).orderBy(codecampLessons.order);
 
-  const progress = await db.select().from(codecampUserProgress)
+  const progress = await rawDb.select().from(codecampUserProgress)
     .where(and(eq(codecampUserProgress.userId, user.id), eq(codecampUserProgress.moduleId, module.id)));
 
   const completed = progress.filter((p) => p.status === "completed").length;
@@ -51,16 +52,17 @@ export async function getModulesWithProgress({
   db: TenantDB; user: UserContext; tenant: Tenant;
 }) {
   assertCan(user, "codecamp:read", tenant);
+  const rawDb = db.unscoped("Codecamp dashboard curriculum is global and learner progress is scoped by userId");
 
-  const modules = await db.select().from(codecampModules)
+  const modules = await rawDb.select().from(codecampModules)
     .where(eq(codecampModules.status, "published")).orderBy(codecampModules.order);
 
   const moduleIds = modules.map((m) => m.id);
   const lessons = moduleIds.length > 0
-    ? await db.select().from(codecampLessons).where(inArray(codecampLessons.moduleId, moduleIds)).orderBy(codecampLessons.order)
+    ? await rawDb.select().from(codecampLessons).where(inArray(codecampLessons.moduleId, moduleIds)).orderBy(codecampLessons.order)
     : [];
 
-  const progress = await db.select().from(codecampUserProgress)
+  const progress = await rawDb.select().from(codecampUserProgress)
     .where(eq(codecampUserProgress.userId, user.id));
 
   return modules.map((mod) => {
@@ -80,22 +82,23 @@ export async function getModulesByPhase({
   db: TenantDB; user: UserContext; tenant: Tenant; input: { phase: "A" | "B" | "C" | "D" };
 }) {
   assertCan(user, "codecamp:read", tenant);
+  const rawDb = db.unscoped("Codecamp phase curriculum is global and learner progress is scoped by userId");
 
   const validPhases = ["A", "B", "C", "D"];
   if (!validPhases.includes(input.phase)) {
     throw new Error("Invalid phase");
   }
 
-  const modules = await db.select().from(codecampModules)
+  const modules = await rawDb.select().from(codecampModules)
     .where(and(eq(codecampModules.status, "published"), eq(codecampModules.phase, input.phase)))
     .orderBy(codecampModules.order);
 
   const moduleIds = modules.map((m) => m.id);
   const lessons = moduleIds.length > 0
-    ? await db.select().from(codecampLessons).where(inArray(codecampLessons.moduleId, moduleIds)).orderBy(codecampLessons.order)
+    ? await rawDb.select().from(codecampLessons).where(inArray(codecampLessons.moduleId, moduleIds)).orderBy(codecampLessons.order)
     : [];
 
-  const progress = await db.select().from(codecampUserProgress)
+  const progress = await rawDb.select().from(codecampUserProgress)
     .where(eq(codecampUserProgress.userId, user.id));
 
   return modules.map((mod) => {
@@ -115,17 +118,18 @@ export async function getModuleWithExercises({
   db: TenantDB; user: UserContext; tenant: Tenant; input: { moduleId: string };
 }) {
   assertCan(user, "codecamp:read", tenant);
+  const rawDb = db.unscoped("Codecamp module detail is global and learner progress is scoped by userId");
 
-  const [module] = await db.select().from(codecampModules)
+  const [module] = await rawDb.select().from(codecampModules)
     .where(eq(codecampModules.id, input.moduleId)).limit(1);
 
   if (!module || module.status !== "published") throw new Error("Module not found");
 
-  const repos = await db.select().from(codecampExerciseRepos)
+  const repos = await rawDb.select().from(codecampExerciseRepos)
     .where(eq(codecampExerciseRepos.moduleId, input.moduleId)).orderBy(codecampExerciseRepos.order);
-  const lessons = await db.select().from(codecampLessons)
+  const lessons = await rawDb.select().from(codecampLessons)
     .where(eq(codecampLessons.moduleId, input.moduleId)).orderBy(codecampLessons.order);
-  const progress = await db.select().from(codecampUserProgress)
+  const progress = await rawDb.select().from(codecampUserProgress)
     .where(and(eq(codecampUserProgress.userId, user.id), eq(codecampUserProgress.moduleId, input.moduleId)));
   const completed = progress.filter((p) => p.status === "completed").length;
 

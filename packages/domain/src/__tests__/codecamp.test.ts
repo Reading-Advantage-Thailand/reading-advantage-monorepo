@@ -32,7 +32,7 @@ import { chatMessageInputSchema } from "@reading-advantage/types";
 import type { SQL } from "drizzle-orm";
 import { PgDialect } from "drizzle-orm/pg-core";
 import { createMockDb } from "./mock-db.js";
-import { createTenantDB } from "../db-contract.js";
+import { createTenantDB, type TenantDB } from "../db-contract.js";
 import type { DB } from "@reading-advantage/db";
 
 const student = {
@@ -776,6 +776,22 @@ describe("updateUserProgress", () => {
 // ─── getUserDashboard ─────────────────────────────────────
 
 describe("getUserDashboard", () => {
+  it("uses the audited unscoped path for referential Codecamp tables", async () => {
+    const rawDb = createMockDb({ selectResults: [] });
+    const unscoped = vi.fn(() => rawDb as unknown as DB);
+    const tenantDb = { unscoped } as unknown as TenantDB;
+
+    const result = await getUserDashboard({
+      db: tenantDb,
+      user: student,
+      tenant: globalTenant,
+    });
+
+    expect(result.totalLessons).toBe(0);
+    expect(unscoped).toHaveBeenCalledTimes(2);
+    expect(unscoped.mock.calls.every(([reason]) => reason.length > 0)).toBe(true);
+  });
+
   it("returns aggregated dashboard data with phase grouping", async () => {
     const modules = [
       { id: "m1", title: "Module 1", description: "Desc", slug: "mod1", order: 1, phase: "A", status: "published", createdAt: new Date(), updatedAt: new Date() },

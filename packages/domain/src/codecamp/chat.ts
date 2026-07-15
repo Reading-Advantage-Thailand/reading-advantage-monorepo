@@ -48,12 +48,13 @@ export async function getChatHistory({
   db: TenantDB; user: UserContext; tenant: Tenant; input: { conversationId: string };
 }) {
   assertCan(user, "codecamp:read", tenant);
+  const rawDb = db.unscoped("Codecamp chat history is learner-owned and scoped by conversation userId");
 
-  const [conversation] = await db.select().from(codecampChatConversations)
+  const [conversation] = await rawDb.select().from(codecampChatConversations)
     .where(and(eq(codecampChatConversations.id, input.conversationId), eq(codecampChatConversations.userId, user.id))).limit(1);
   if (!conversation) throw new Error("Conversation not found");
 
-  const messages = await db.select().from(codecampChatMessages)
+  const messages = await rawDb.select().from(codecampChatMessages)
     .where(eq(codecampChatMessages.conversationId, input.conversationId)).orderBy(codecampChatMessages.createdAt);
 
   return {
@@ -71,8 +72,9 @@ export async function getUserConversations({
   db: TenantDB; user: UserContext; tenant: Tenant;
 }) {
   assertCan(user, "codecamp:read", tenant);
+  const rawDb = db.unscoped("Codecamp conversation list is learner-owned and scoped by userId");
 
-  return db.select().from(codecampChatConversations)
+  return rawDb.select().from(codecampChatConversations)
     .where(eq(codecampChatConversations.userId, user.id))
     .orderBy(desc(codecampChatConversations.updatedAt));
 }
@@ -86,20 +88,21 @@ export async function getChatContext({
   db: TenantDB; user: UserContext; tenant: Tenant; input: { moduleId?: string; lessonId?: string };
 }) {
   assertCan(user, "codecamp:chat", tenant);
+  const rawDb = db.unscoped("Codecamp chat context reads published global curriculum rows");
 
   let context = "";
 
   if (input.moduleId) {
-    const [mod] = await db.select().from(codecampModules)
+    const [mod] = await rawDb.select().from(codecampModules)
       .where(and(eq(codecampModules.id, input.moduleId), eq(codecampModules.status, "published"))).limit(1);
     if (mod) context += `\n\nCurrent module: ${mod.title} — ${mod.description}`;
   }
 
   if (input.lessonId) {
-    const [lesson] = await db.select().from(codecampLessons)
+    const [lesson] = await rawDb.select().from(codecampLessons)
       .where(eq(codecampLessons.id, input.lessonId)).limit(1);
     if (lesson) {
-      const [mod] = await db.select({ status: codecampModules.status }).from(codecampModules)
+      const [mod] = await rawDb.select({ status: codecampModules.status }).from(codecampModules)
         .where(eq(codecampModules.id, lesson.moduleId)).limit(1);
       if (mod?.status === "published") context += `\nCurrent lesson: ${lesson.title} — ${lesson.description}`;
     }

@@ -15,8 +15,9 @@ export async function submitQuizAnswers({
   db: TenantDB; user: UserContext; tenant: Tenant; input: { lessonId: string; answers: { questionId: string; answer: string }[] };
 }) {
   assertCan(user, "codecamp:submit", tenant);
+  const rawDb = db.unscoped("Codecamp quiz questions are global curriculum rows scoped by lessonId");
 
-  const questions = await db.select().from(codecampQuizQuestions)
+  const questions = await rawDb.select().from(codecampQuizQuestions)
     .where(eq(codecampQuizQuestions.lessonId, input.lessonId)).orderBy(codecampQuizQuestions.order);
   if (questions.length === 0) throw new Error("No quiz questions found for this lesson");
 
@@ -45,8 +46,9 @@ export async function markTheoryComplete({
   db: TenantDB; user: UserContext; tenant: Tenant; input: { lessonId: string };
 }) {
   assertCan(user, "codecamp:submit", tenant);
+  const rawDb = db.unscoped("Codecamp theory lessons are global curriculum rows scoped by lessonId");
 
-  const [lesson] = await db.select().from(codecampLessons)
+  const [lesson] = await rawDb.select().from(codecampLessons)
     .where(eq(codecampLessons.id, input.lessonId)).limit(1);
   if (!lesson) throw new Error("Lesson not found");
   if (lesson.type !== "theory") throw new Error("Lesson is not a theory lesson");

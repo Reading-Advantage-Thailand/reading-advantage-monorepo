@@ -67,6 +67,7 @@ export async function getUserDashboard({
   db: TenantDB; user: UserContext; tenant: Tenant;
 }) {
   assertCan(user, "codecamp:read", tenant);
+  const rawDb = db.unscoped("Codecamp dashboard conversations are learner-owned rows scoped by userId");
 
   const modules = await getModulesWithProgress({ db, user, tenant });
   const totalLessons = modules.reduce((sum, m) => sum + m.lessonCount, 0);
@@ -83,7 +84,7 @@ export async function getUserDashboard({
     phases[phase] = { ...meta, modules: phaseModules, completedLessons: phaseCompleted, totalLessons: phaseTotal };
   }
 
-  const conversations = await db.select({ id: codecampChatConversations.id, title: codecampChatConversations.title, updatedAt: codecampChatConversations.updatedAt })
+  const conversations = await rawDb.select({ id: codecampChatConversations.id, title: codecampChatConversations.title, updatedAt: codecampChatConversations.updatedAt })
     .from(codecampChatConversations).where(eq(codecampChatConversations.userId, user.id))
     .orderBy(desc(codecampChatConversations.updatedAt)).limit(5);
 
