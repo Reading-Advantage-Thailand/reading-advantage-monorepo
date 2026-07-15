@@ -41,6 +41,13 @@ BENCHMARK_RUNNER_PATH = (
     / "typescript7_native_migration_20260710"
     / "run-phase3-benchmarks.py"
 )
+CACHE_PROOF_RUNNER_PATH = (
+    REPO_ROOT
+    / "measure"
+    / "tracks"
+    / "typescript7_native_migration_20260710"
+    / "run-phase3-cache-proof.py"
+)
 TYPES_PACKAGE_PATH = REPO_ROOT / "packages" / "types" / "package.json"
 DB_PACKAGE_PATH = REPO_ROOT / "packages" / "db" / "package.json"
 DOMAIN_PACKAGE_PATH = REPO_ROOT / "packages" / "domain" / "package.json"
@@ -1149,6 +1156,62 @@ class Phase3gBenchmarkRunnerContract(unittest.TestCase):
                 "ts7_repeat_forced": "0 cached, 3 total",
             },
         )
+
+    def test_cache_proof_runner_requires_disposable_worktree_and_relevant_task_inputs(self) -> None:
+        """Requires Phase 3i to live-prove scoped cache behavior without mutating source."""
+        source = CACHE_PROOF_RUNNER_PATH.read_text(encoding="utf-8")
+        self.assertIn('"git", "worktree", "add", "--detach"', source)
+        self.assertIn('"pnpm", "install", "--frozen-lockfile"', source)
+        self.assertIn('"native-ts7-alias-miss"', source)
+        self.assertIn('sample(f"native-{name}-miss"', source)
+        self.assertIn('"native-c2-miss"', source)
+        self.assertIn('"check-types:compat"', source)
+        self.assertIn('"check-types:rollback"', source)
+        self.assertIn('"compat-wrapper-unchanged-hit"', source)
+
+    def test_cache_proof_runner_binds_task_evidence_to_the_fresh_summary_path(self) -> None:
+        """Requires Phase 3i to reject stale or foreign Turbo summaries for the selected task."""
+        specification = importlib.util.spec_from_file_location(
+            "typescript7_phase3_cache_proof", CACHE_PROOF_RUNNER_PATH
+        )
+        self.assertIsNotNone(specification)
+        assert specification is not None and specification.loader is not None
+        module = importlib.util.module_from_spec(specification)
+        sys.modules[specification.name] = module
+        specification.loader.exec_module(module)
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            worktree = Path(temporary_directory)
+            summary_directory = worktree / ".turbo" / "runs"
+            summary_directory.mkdir(parents=True)
+            summary_path = summary_directory / "fresh.json"
+            summary_path.write_text(
+                json.dumps(
+                    {
+                        "tasks": [
+                            {
+                                "taskId": "@reading-advantage/types#check-types",
+                                "hash": "abc",
+                                "cache": {"status": "MISS"},
+                            }
+                        ]
+                    }
+                ),
+                encoding="utf-8",
+            )
+            selected, _, _ = module._summary_for_task(
+                f"Summary: {summary_path}\n",
+                worktree,
+                "check-types",
+                summary_path.stat().st_mtime_ns - 1,
+            )
+            self.assertEqual(selected["cache"]["status"], "MISS")
+            with self.assertRaisesRegex(AssertionError, "missing or stale"):
+                module._summary_for_task(
+                    f"Summary: {summary_path}\n",
+                    worktree,
+                    "check-types",
+                    time.time_ns(),
+                )
 
 
 class Phase3eDeclarationEmitContract(unittest.TestCase):
