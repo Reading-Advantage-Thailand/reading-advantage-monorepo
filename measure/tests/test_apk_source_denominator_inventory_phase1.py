@@ -31,6 +31,11 @@ REQUIRED_NON_GAME_SOURCES = {
     "packages/game-cartridges/src/catalog.ts",
     "packages/game-cartridges/src/index.ts",
 }
+CATALOG_PATH = "apps/advantage-games/src/lib/gameCards.ts"
+RUNTIME_STATE_NAME = re.compile(
+    r"(?:state|status|phase|mode|scene|screen|overlay|wave|floor|turn|pose|step)",
+    re.IGNORECASE,
+)
 FORBIDDEN_INTERPRETATION_FIELDS = {
     "asset_suitability",
     "capability",
@@ -368,7 +373,20 @@ class Phase1MechanicalDiscoveryContracts(unittest.TestCase):
             routes = record.get("routes")
             self.assertIsInstance(routes, list)
             assert isinstance(routes, list)
-            self.assertTrue(routes, "each identity requires source-evidenced routes")
+            source_states = record.get("source_states")
+            self.assertIsInstance(source_states, list)
+            assert isinstance(source_states, list)
+            source_classes = {state.get("source_class") for state in source_states if isinstance(state, dict)}
+            self.assertTrue(source_classes)
+            if "current-page-source" in source_classes:
+                self.assertTrue(routes, "current page identities require source-evidenced routes")
+            else:
+                self.assertEqual(
+                    source_classes,
+                    {"catalog-withdrawn-registration"},
+                    "route-less identities must be exact catalog-withdrawn identities, not synthetic pages",
+                )
+                self.assertEqual(routes, [], "catalog-withdrawn identities cannot acquire synthetic current routes")
             for route in routes:
                 self.assertIsInstance(route, dict)
                 assert isinstance(route, dict)
@@ -421,13 +439,24 @@ class Phase1MechanicalDiscoveryContracts(unittest.TestCase):
             self.assertIn(transition.get("to_state_occurrence_id"), state_occurrences)
             self.assertIn(transition.get("transition_kind"), {"scene", "mode", "overlay", "phase", "wave", "floor", "terminal", "presentation"})
             evidence_kind = transition.get("transition_evidence_kind")
-            self.assertIn(evidence_kind, {"explicit-state-guarded-setter", "useState-initial-to-setter-call"})
+            self.assertIn(evidence_kind, {
+                "explicit-state-guarded-setter",
+                "useState-initial-to-setter-call",
+                "runtime-store-initial-to-first-write",
+                "runtime-store-guarded-write",
+                "runtime-store-conditional-write",
+            })
             locator = self._assert_locator(transition.get("evidence"))
             lines = _git_bytes(locator["revision"], locator["path"]).decode("utf-8", errors="replace").splitlines()
             cited = "\n".join(lines[locator["range"]["start_line"] - 1 : locator["range"]["end_line"]])
             if evidence_kind == "explicit-state-guarded-setter":
                 self.assertRegex(cited, rf"if\s*\([^)]*{re.escape(str(transition['from_state_id']))}[^)]*\)")
-            self.assertRegex(cited, rf"set\w+\s*\(\s*['\"]{re.escape(str(transition['to_state_id']))}['\"]")
+                self.assertRegex(cited, rf"set\w+\s*\(\s*['\"]{re.escape(str(transition['to_state_id']))}['\"]")
+            elif evidence_kind == "useState-initial-to-setter-call":
+                self.assertRegex(cited, rf"set\w+\s*\(\s*['\"]{re.escape(str(transition['to_state_id']))}['\"]")
+            else:
+                self.assertIn(str(transition["from_state_id"]), cited)
+                self.assertIn(str(transition["to_state_id"]), cited)
 
         expected_scene_occurrences: set[tuple[str, int, str]] = set()
         expected_state_occurrences: set[tuple[str, int, str, str]] = set()
@@ -449,9 +478,164 @@ class Phase1MechanicalDiscoveryContracts(unittest.TestCase):
             {(row["evidence"]["path"], row["evidence"]["range"]["start_line"], row["scene_id"]) for row in scene_records},
             expected_scene_occurrences,
         )
-        self.assertEqual(
-            {(row["evidence"]["path"], row["evidence"]["range"]["start_line"], row["source_symbol"], row["state_id"]) for row in state_records},
-            expected_state_occurrences,
+        self.assertTrue(
+            expected_state_occurrences.issubset({
+                (row["evidence"]["path"], row["evidence"]["range"]["start_line"], row["source_symbol"], row["state_id"])
+                for row in state_records
+            })
+        )
+
+    def test_identity_ledger_exhausts_frozen_catalog_without_synthetic_pages(self) -> None:
+        """Requires every exact catalog ID while keeping withdrawn-only rows route-less.
+
+        Returns:
+            Nothing.
+        """
+        identities = self._artifact(IDENTITY_PATH, "apk-game-identity-ledger.v1")
+        records = identities["identity_records"]
+        catalog_text = _git_bytes(self.source_baseline, CATALOG_PATH).decode("utf-8", errors="replace")
+        catalog_block = re.search(r"const\s+catalogCards\s*:[^=]+\=\s*\[([\s\S]*?)\n\]", catalog_text)
+        withdrawn_block = re.search(r"const\s+withdrawnApkGameIds\s*=\s*new\s+Set\(\[([\s\S]*?)\]\);", catalog_text)
+        self.assertIsNotNone(catalog_block)
+        self.assertIsNotNone(withdrawn_block)
+        assert catalog_block is not None and withdrawn_block is not None
+        catalog_ids = set(re.findall(r"^\s*id:\s*['\"]([^'\"]+)['\"]", catalog_block.group(1), re.MULTILINE))
+        withdrawn_ids = set(re.findall(r"['\"]([^'\"]+)['\"]", withdrawn_block.group(1)))
+        self.assertEqual(len(catalog_ids), 27, "the frozen catalog denominator changed unexpectedly")
+
+        recorded_catalog_ids: set[str] = set()
+        for record in records:
+            catalog_identity_id = record.get("catalog_identity_id")
+            if catalog_identity_id is None:
+                continue
+            self.assertIsInstance(catalog_identity_id, str)
+            assert isinstance(catalog_identity_id, str)
+            self.assertNotIn(catalog_identity_id, recorded_catalog_ids)
+            recorded_catalog_ids.add(catalog_identity_id)
+            catalog_evidence = record.get("catalog_evidence")
+            locator = self._assert_locator(catalog_evidence)
+            self.assertEqual(locator["path"], CATALOG_PATH)
+            cited = "\n".join(
+                catalog_text.splitlines()[locator["range"]["start_line"] - 1 : locator["range"]["end_line"]]
+            )
+            self.assertRegex(cited, rf"\bid:\s*['\"]{re.escape(catalog_identity_id)}['\"]")
+
+        self.assertEqual(recorded_catalog_ids, catalog_ids)
+        page_slugs = {
+            str(record["canonical_identity_id"]).split("/", 1)[1]
+            for record in records
+            if "current-page-source" in {
+                state.get("source_class")
+                for state in record.get("source_states", [])
+                if isinstance(state, dict)
+            }
+        }
+        withdrawn_only = catalog_ids - page_slugs
+        self.assertEqual(withdrawn_only, withdrawn_ids - page_slugs)
+        for record in records:
+            if record.get("catalog_identity_id") not in withdrawn_only:
+                continue
+            self.assertEqual(record.get("routes"), [])
+            self.assertEqual(
+                {state.get("source_class") for state in record.get("source_states", [])},
+                {"catalog-withdrawn-registration"},
+            )
+
+    def test_runtime_store_state_domains_and_explicit_transitions_are_exhaustive(self) -> None:
+        """Requires general source-backed Zustand state domains and guarded transitions.
+
+        Returns:
+            Nothing.
+        """
+        scenes = self._artifact(SCENE_PATH, "apk-scene-state-denominator.v1")
+        state_keys = {
+            (row["evidence"]["path"], row["source_symbol"], row["state_id"])
+            for row in scenes["state_records"]
+        }
+        transition_keys = {
+            (
+                row["evidence"]["path"],
+                row.get("source_symbol"),
+                row["from_state_id"],
+                row["to_state_id"],
+            )
+            for row in scenes["transitions"]
+        }
+
+        expected_states = {
+            ("apps/advantage-games/src/store/usePotionRushStore.ts", "GameState", state)
+            for state in {"MENU", "PLAYING", "PAUSED", "GAME_OVER"}
+        } | {
+            ("apps/advantage-games/src/store/usePotionRushStore.ts", "CauldronState", state)
+            for state in {"IDLE", "BREWING", "WARNING", "COMPLETED"}
+        } | {
+            ("apps/advantage-games/src/store/usePotionRushStore.ts", "Customer.state", state)
+            for state in {"WAITING", "LEAVING_ANGRY", "LEAVING_HAPPY"}
+        } | {
+            ("apps/advantage-games/src/store/useRPGBattleStore.ts", "BattleStatus", state)
+            for state in {"idle", "playing", "victory", "defeat"}
+        } | {
+            ("apps/advantage-games/src/store/useRPGBattleStore.ts", "BattleTurn", state)
+            for state in {"player", "enemy"}
+        } | {
+            ("apps/advantage-games/src/store/useRPGBattleStore.ts", "BattlePose", state)
+            for state in {"idle", "casting", "basic-attack", "power-attack", "hurt", "miss", "defend", "victory", "defeat"}
+        } | {
+            ("apps/advantage-games/src/store/useRPGBattleStore.ts", "BattleSelectionStep", state)
+            for state in {"hero", "location", "enemy", "ready"}
+        }
+        self.assertTrue(expected_states.issubset(state_keys))
+
+        expected_typed_domains: set[tuple[str, str, str]] = set()
+        for record in _load_json(SOURCE_PATH)["records"]:
+            path = str(record.get("file_path", ""))
+            if record.get("record_type") != "file" or not path.endswith((".ts", ".tsx", ".js", ".jsx")):
+                continue
+            text = _git_bytes(self.source_baseline, path).decode("utf-8", errors="replace")
+            aliases: dict[str, set[str]] = {}
+            for match in re.finditer(
+                r"(?:export\s+)?type\s+(\w+)\s*=\s*([\s\S]*?)(?=\n\s*(?:export\s+)?(?:type|interface|const|function|class)\b|\Z)",
+                text,
+            ):
+                alias_name, body = match.groups()
+                residue = re.sub(r"[|;\s]", "", re.sub(r"['\"][^'\"\n]+['\"]", "", body))
+                literals = set(re.findall(r"['\"]([^'\"\n]+)['\"]", body))
+                if RUNTIME_STATE_NAME.search(alias_name) and literals and not residue:
+                    aliases[alias_name] = literals
+                    expected_typed_domains.update((path, alias_name, literal) for literal in literals)
+            for interface in re.finditer(r"(?:export\s+)?interface\s+(\w+)\s*\{([\s\S]*?)\n\}", text):
+                interface_name, body = interface.groups()
+                for prop in re.finditer(r"^\s*(\w+)\??:\s*([^\n]+)", body, re.MULTILINE):
+                    property_name, type_text = prop.groups()
+                    if any(re.search(rf"\b{re.escape(alias_name)}\b", type_text) for alias_name in aliases):
+                        continue
+                    literals = set(re.findall(r"['\"]([^'\"\n]+)['\"]", type_text))
+                    if RUNTIME_STATE_NAME.search(property_name) and literals:
+                        expected_typed_domains.update(
+                            (path, f"{interface_name}.{property_name}", literal)
+                            for literal in literals
+                        )
+        recorded_typed_domains = {
+            (row["evidence"]["path"], row["source_symbol"], row["state_id"])
+            for row in scenes["state_records"]
+            if row.get("source_symbol_kind") in {"literal-union-type-alias", "interface-literal-property"}
+        }
+        self.assertEqual(recorded_typed_domains, expected_typed_domains)
+
+        expected_transitions = {
+            ("apps/advantage-games/src/store/usePotionRushStore.ts", "gameState", "MENU", "PLAYING"),
+            ("apps/advantage-games/src/store/useRPGBattleStore.ts", "status", "idle", "playing"),
+            ("apps/advantage-games/src/store/useRPGBattleStore.ts", "selectionStep", "hero", "location"),
+            ("apps/advantage-games/src/store/useRPGBattleStore.ts", "selectionStep", "location", "enemy"),
+            ("apps/advantage-games/src/store/useRPGBattleStore.ts", "selectionStep", "enemy", "ready"),
+            ("apps/advantage-games/src/store/useRPGBattleStore.ts", "turn", "enemy", "player"),
+            ("apps/advantage-games/src/store/useRPGBattleStore.ts", "status", "playing", "victory"),
+            ("apps/advantage-games/src/store/useRPGBattleStore.ts", "status", "playing", "defeat"),
+        }
+        self.assertTrue(expected_transitions.issubset(transition_keys))
+        self.assertTrue(
+            all(RUNTIME_STATE_NAME.search(symbol) for _, symbol, _, _ in transition_keys),
+            "runtime transition symbols must use the general frozen state vocabulary",
         )
 
     def test_initial_to_setter_transitions_use_the_declared_initializer(self) -> None:

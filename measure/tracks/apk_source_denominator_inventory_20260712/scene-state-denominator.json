@@ -887,6 +887,176 @@
     {
       "discovery_method": "mechanical-syntax-traversal",
       "evidence": {
+        "blob_sha256": "da418b48d19b98069aa5b24987b31403cf71ebf12c2e1dddad0306a1fd945370",
+        "path": "apps/advantage-games/src/app/dev/game-screens/page.tsx",
+        "range": {
+          "end_line": 10,
+          "sha256": "8aafe4ffffd0fb2a3e91fd2816fdb7fdd2a9d83f35a0f4f3aa12fe14329297b9",
+          "start_line": 10
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "PreviewMode",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "start",
+      "state_occurrence_id": "apps/advantage-games/src/app/dev/game-screens/page.tsx:10:PreviewMode:start"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "da418b48d19b98069aa5b24987b31403cf71ebf12c2e1dddad0306a1fd945370",
+        "path": "apps/advantage-games/src/app/dev/game-screens/page.tsx",
+        "range": {
+          "end_line": 10,
+          "sha256": "8aafe4ffffd0fb2a3e91fd2816fdb7fdd2a9d83f35a0f4f3aa12fe14329297b9",
+          "start_line": 10
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "PreviewMode",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "victory",
+      "state_occurrence_id": "apps/advantage-games/src/app/dev/game-screens/page.tsx:10:PreviewMode:victory"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "da418b48d19b98069aa5b24987b31403cf71ebf12c2e1dddad0306a1fd945370",
+        "path": "apps/advantage-games/src/app/dev/game-screens/page.tsx",
+        "range": {
+          "end_line": 10,
+          "sha256": "8aafe4ffffd0fb2a3e91fd2816fdb7fdd2a9d83f35a0f4f3aa12fe14329297b9",
+          "start_line": 10
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "PreviewMode",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "defeat",
+      "state_occurrence_id": "apps/advantage-games/src/app/dev/game-screens/page.tsx:10:PreviewMode:defeat"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "da418b48d19b98069aa5b24987b31403cf71ebf12c2e1dddad0306a1fd945370",
+        "path": "apps/advantage-games/src/app/dev/game-screens/page.tsx",
+        "range": {
+          "end_line": 10,
+          "sha256": "8aafe4ffffd0fb2a3e91fd2816fdb7fdd2a9d83f35a0f4f3aa12fe14329297b9",
+          "start_line": 10
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "PreviewMode",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "complete",
+      "state_occurrence_id": "apps/advantage-games/src/app/dev/game-screens/page.tsx:10:PreviewMode:complete"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "5fb5eb0be8317d688b8d05b1d2a63db06db9e4129d5d9536d9504e06e4d6dee8",
+        "path": "apps/advantage-games/src/components/games/game/Enemy.tsx",
+        "range": {
+          "end_line": 25,
+          "sha256": "57e4ac31515d53ae9f9903a47c84d159c4d0992cf43f4d891ce4e9e1f77d3acc",
+          "start_line": 25
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "EnemyProps.state",
+      "source_symbol_kind": "interface-literal-property",
+      "state_id": "dying",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/game/Enemy.tsx:25:EnemyProps.state:dying"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "5fb5eb0be8317d688b8d05b1d2a63db06db9e4129d5d9536d9504e06e4d6dee8",
+        "path": "apps/advantage-games/src/components/games/game/Enemy.tsx",
+        "range": {
+          "end_line": 25,
+          "sha256": "57e4ac31515d53ae9f9903a47c84d159c4d0992cf43f4d891ce4e9e1f77d3acc",
+          "start_line": 25
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "EnemyProps.state",
+      "source_symbol_kind": "interface-literal-property",
+      "state_id": "falling",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/game/Enemy.tsx:25:EnemyProps.state:falling"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "5fb5eb0be8317d688b8d05b1d2a63db06db9e4129d5d9536d9504e06e4d6dee8",
+        "path": "apps/advantage-games/src/components/games/game/Enemy.tsx",
+        "range": {
+          "end_line": 25,
+          "sha256": "57e4ac31515d53ae9f9903a47c84d159c4d0992cf43f4d891ce4e9e1f77d3acc",
+          "start_line": 25
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "EnemyProps.state",
+      "source_symbol_kind": "interface-literal-property",
+      "state_id": "targeted",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/game/Enemy.tsx:25:EnemyProps.state:targeted"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "ff2f4b2afc709b78ae08775f73f178f81a66ecf3378dfc092ce78ed59d120d8f",
+        "path": "apps/advantage-games/src/components/games/game/GameEndScreen.tsx",
+        "range": {
+          "end_line": 18,
+          "sha256": "6282fc4473bd440b0363ec4bef831d47b8faea3bb3f0c38acad3864aa87a179c",
+          "start_line": 18
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "GameEndScreenProps.status",
+      "source_symbol_kind": "interface-literal-property",
+      "state_id": "complete",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/game/GameEndScreen.tsx:18:GameEndScreenProps.status:complete"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "ff2f4b2afc709b78ae08775f73f178f81a66ecf3378dfc092ce78ed59d120d8f",
+        "path": "apps/advantage-games/src/components/games/game/GameEndScreen.tsx",
+        "range": {
+          "end_line": 18,
+          "sha256": "6282fc4473bd440b0363ec4bef831d47b8faea3bb3f0c38acad3864aa87a179c",
+          "start_line": 18
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "GameEndScreenProps.status",
+      "source_symbol_kind": "interface-literal-property",
+      "state_id": "defeat",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/game/GameEndScreen.tsx:18:GameEndScreenProps.status:defeat"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "ff2f4b2afc709b78ae08775f73f178f81a66ecf3378dfc092ce78ed59d120d8f",
+        "path": "apps/advantage-games/src/components/games/game/GameEndScreen.tsx",
+        "range": {
+          "end_line": 18,
+          "sha256": "6282fc4473bd440b0363ec4bef831d47b8faea3bb3f0c38acad3864aa87a179c",
+          "start_line": 18
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "GameEndScreenProps.status",
+      "source_symbol_kind": "interface-literal-property",
+      "state_id": "victory",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/game/GameEndScreen.tsx:18:GameEndScreenProps.status:victory"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
         "blob_sha256": "42fa273465fd0f11c165c3fb60963f7c386b6c4cc126e9f3fbefde850bfedfdc",
         "path": "apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx",
         "range": {
@@ -897,6 +1067,7 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "source_symbol": "gamePhase",
+      "source_symbol_kind": "typed-useState-declaration",
       "state_id": "ended",
       "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx:35:gamePhase:ended"
     },
@@ -913,8 +1084,9 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "source_symbol": "gamePhase",
-      "state_id": "start",
-      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx:35:gamePhase:start"
+      "source_symbol_kind": "typed-useState-declaration",
+      "state_id": "playing",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx:35:gamePhase:playing"
     },
     {
       "discovery_method": "mechanical-syntax-traversal",
@@ -929,8 +1101,9 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "source_symbol": "gamePhase",
-      "state_id": "playing",
-      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx:35:gamePhase:playing"
+      "source_symbol_kind": "typed-useState-declaration",
+      "state_id": "start",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx:35:gamePhase:start"
     },
     {
       "discovery_method": "mechanical-syntax-traversal",
@@ -945,6 +1118,7 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "source_symbol": "gamePhase",
+      "source_symbol_kind": "typed-useState-declaration",
       "state_id": "ended",
       "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx:59:gamePhase:ended"
     },
@@ -961,8 +1135,9 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "source_symbol": "gamePhase",
-      "state_id": "start",
-      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx:59:gamePhase:start"
+      "source_symbol_kind": "typed-useState-declaration",
+      "state_id": "playing",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx:59:gamePhase:playing"
     },
     {
       "discovery_method": "mechanical-syntax-traversal",
@@ -977,8 +1152,9 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "source_symbol": "gamePhase",
-      "state_id": "playing",
-      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx:59:gamePhase:playing"
+      "source_symbol_kind": "typed-useState-declaration",
+      "state_id": "start",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx:59:gamePhase:start"
     },
     {
       "discovery_method": "mechanical-syntax-traversal",
@@ -993,6 +1169,7 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "source_symbol": "gamePhase",
+      "source_symbol_kind": "typed-useState-declaration",
       "state_id": "ended",
       "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx:90:gamePhase:ended"
     },
@@ -1009,8 +1186,9 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "source_symbol": "gamePhase",
-      "state_id": "start",
-      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx:90:gamePhase:start"
+      "source_symbol_kind": "typed-useState-declaration",
+      "state_id": "playing",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx:90:gamePhase:playing"
     },
     {
       "discovery_method": "mechanical-syntax-traversal",
@@ -1025,8 +1203,9 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "source_symbol": "gamePhase",
-      "state_id": "playing",
-      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx:90:gamePhase:playing"
+      "source_symbol_kind": "typed-useState-declaration",
+      "state_id": "start",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx:90:gamePhase:start"
     },
     {
       "discovery_method": "mechanical-syntax-traversal",
@@ -1041,6 +1220,7 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "source_symbol": "gamePhase",
+      "source_symbol_kind": "typed-useState-declaration",
       "state_id": "ended",
       "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx:39:gamePhase:ended"
     },
@@ -1057,8 +1237,9 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "source_symbol": "gamePhase",
-      "state_id": "start",
-      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx:39:gamePhase:start"
+      "source_symbol_kind": "typed-useState-declaration",
+      "state_id": "playing",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx:39:gamePhase:playing"
     },
     {
       "discovery_method": "mechanical-syntax-traversal",
@@ -1073,8 +1254,9 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "source_symbol": "gamePhase",
-      "state_id": "playing",
-      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx:39:gamePhase:playing"
+      "source_symbol_kind": "typed-useState-declaration",
+      "state_id": "start",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx:39:gamePhase:start"
     },
     {
       "discovery_method": "mechanical-syntax-traversal",
@@ -1089,6 +1271,7 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "source_symbol": "gamePhase",
+      "source_symbol_kind": "typed-useState-declaration",
       "state_id": "ended",
       "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx:35:gamePhase:ended"
     },
@@ -1105,8 +1288,9 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "source_symbol": "gamePhase",
-      "state_id": "start",
-      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx:35:gamePhase:start"
+      "source_symbol_kind": "typed-useState-declaration",
+      "state_id": "playing",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx:35:gamePhase:playing"
     },
     {
       "discovery_method": "mechanical-syntax-traversal",
@@ -1121,8 +1305,9 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "source_symbol": "gamePhase",
-      "state_id": "playing",
-      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx:35:gamePhase:playing"
+      "source_symbol_kind": "typed-useState-declaration",
+      "state_id": "start",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx:35:gamePhase:start"
     },
     {
       "discovery_method": "mechanical-syntax-traversal",
@@ -1137,6 +1322,7 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "source_symbol": "gamePhase",
+      "source_symbol_kind": "typed-useState-declaration",
       "state_id": "ended",
       "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx:40:gamePhase:ended"
     },
@@ -1153,8 +1339,9 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "source_symbol": "gamePhase",
-      "state_id": "start",
-      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx:40:gamePhase:start"
+      "source_symbol_kind": "typed-useState-declaration",
+      "state_id": "playing",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx:40:gamePhase:playing"
     },
     {
       "discovery_method": "mechanical-syntax-traversal",
@@ -1169,8 +1356,9 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "source_symbol": "gamePhase",
-      "state_id": "playing",
-      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx:40:gamePhase:playing"
+      "source_symbol_kind": "typed-useState-declaration",
+      "state_id": "start",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx:40:gamePhase:start"
     },
     {
       "discovery_method": "mechanical-syntax-traversal",
@@ -1185,6 +1373,7 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "source_symbol": "gamePhase",
+      "source_symbol_kind": "typed-useState-declaration",
       "state_id": "ended",
       "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx:37:gamePhase:ended"
     },
@@ -1201,8 +1390,9 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "source_symbol": "gamePhase",
-      "state_id": "start",
-      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx:37:gamePhase:start"
+      "source_symbol_kind": "typed-useState-declaration",
+      "state_id": "playing",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx:37:gamePhase:playing"
     },
     {
       "discovery_method": "mechanical-syntax-traversal",
@@ -1217,8 +1407,9 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "source_symbol": "gamePhase",
-      "state_id": "playing",
-      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx:37:gamePhase:playing"
+      "source_symbol_kind": "typed-useState-declaration",
+      "state_id": "start",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx:37:gamePhase:start"
     },
     {
       "discovery_method": "mechanical-syntax-traversal",
@@ -1233,6 +1424,7 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "source_symbol": "gamePhase",
+      "source_symbol_kind": "typed-useState-declaration",
       "state_id": "ended",
       "state_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:116:gamePhase:ended"
     },
@@ -1249,8 +1441,9 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "source_symbol": "gamePhase",
-      "state_id": "start",
-      "state_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:116:gamePhase:start"
+      "source_symbol_kind": "typed-useState-declaration",
+      "state_id": "playing",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:116:gamePhase:playing"
     },
     {
       "discovery_method": "mechanical-syntax-traversal",
@@ -1265,8 +1458,162 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "source_symbol": "gamePhase",
-      "state_id": "playing",
-      "state_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:116:gamePhase:playing"
+      "source_symbol_kind": "typed-useState-declaration",
+      "state_id": "start",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:116:gamePhase:start"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "1aacfc50d1e36d61b6a05e807e17e670b4c02a4ee3c1264dc593114988a5ac39",
+        "path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/Sprite.tsx",
+        "range": {
+          "end_line": 6,
+          "sha256": "eec247fb676f1a088f24d8c0ccf4136fa4b81d14767c01a3c1eca804b55434fe",
+          "start_line": 6
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "SpritePose",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "idle",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/Sprite.tsx:6:SpritePose:idle"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "1aacfc50d1e36d61b6a05e807e17e670b4c02a4ee3c1264dc593114988a5ac39",
+        "path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/Sprite.tsx",
+        "range": {
+          "end_line": 7,
+          "sha256": "c35a14b6f03b1abd9aada7241f25dd55b89688b1eb21ef8fec2bcbffeb13305e",
+          "start_line": 7
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "SpritePose",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "casting",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/Sprite.tsx:7:SpritePose:casting"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "1aacfc50d1e36d61b6a05e807e17e670b4c02a4ee3c1264dc593114988a5ac39",
+        "path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/Sprite.tsx",
+        "range": {
+          "end_line": 8,
+          "sha256": "4da3dbdb138c6b5f204d00517d19ed86c38e31e94ee8805da9c28e3a2671632d",
+          "start_line": 8
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "SpritePose",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "basic-attack",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/Sprite.tsx:8:SpritePose:basic-attack"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "1aacfc50d1e36d61b6a05e807e17e670b4c02a4ee3c1264dc593114988a5ac39",
+        "path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/Sprite.tsx",
+        "range": {
+          "end_line": 9,
+          "sha256": "1ce8979c2138c6ea25dc7c2f543a86c9a2236306253520c9778eb93e5f7b7519",
+          "start_line": 9
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "SpritePose",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "power-attack",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/Sprite.tsx:9:SpritePose:power-attack"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "1aacfc50d1e36d61b6a05e807e17e670b4c02a4ee3c1264dc593114988a5ac39",
+        "path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/Sprite.tsx",
+        "range": {
+          "end_line": 10,
+          "sha256": "c5dc32150d4fc1536d6049bc7da2cbc913d9cd6b02471e4d7709e6b716107a03",
+          "start_line": 10
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "SpritePose",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "hurt",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/Sprite.tsx:10:SpritePose:hurt"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "1aacfc50d1e36d61b6a05e807e17e670b4c02a4ee3c1264dc593114988a5ac39",
+        "path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/Sprite.tsx",
+        "range": {
+          "end_line": 11,
+          "sha256": "f98f5e929d3d839e5e4bd35946a6e59c27a7c162a982032f88688c6bde96a62b",
+          "start_line": 11
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "SpritePose",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "miss",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/Sprite.tsx:11:SpritePose:miss"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "1aacfc50d1e36d61b6a05e807e17e670b4c02a4ee3c1264dc593114988a5ac39",
+        "path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/Sprite.tsx",
+        "range": {
+          "end_line": 12,
+          "sha256": "986f8e9f6a850cd56333153d3fc076cb5809804d2d0a6f9e47b7e061ab12c6ef",
+          "start_line": 12
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "SpritePose",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "defend",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/Sprite.tsx:12:SpritePose:defend"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "1aacfc50d1e36d61b6a05e807e17e670b4c02a4ee3c1264dc593114988a5ac39",
+        "path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/Sprite.tsx",
+        "range": {
+          "end_line": 13,
+          "sha256": "f5ed67b9fd7aaa85c246cd5a5fa61788f0b4fe833bfc8ae83c19e42c2ecb479c",
+          "start_line": 13
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "SpritePose",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "victory",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/Sprite.tsx:13:SpritePose:victory"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "1aacfc50d1e36d61b6a05e807e17e670b4c02a4ee3c1264dc593114988a5ac39",
+        "path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/Sprite.tsx",
+        "range": {
+          "end_line": 14,
+          "sha256": "eb5857b96d8e9e9ecfaef2a67b40e87bf6f583839b7030f088245cb425eacc3e",
+          "start_line": 14
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "SpritePose",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "defeat",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/Sprite.tsx:14:SpritePose:defeat"
     },
     {
       "discovery_method": "mechanical-syntax-traversal",
@@ -1281,6 +1628,7 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "source_symbol": "gamePhase",
+      "source_symbol_kind": "typed-useState-declaration",
       "state_id": "ended",
       "state_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx:99:gamePhase:ended"
     },
@@ -1297,8 +1645,9 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "source_symbol": "gamePhase",
-      "state_id": "start",
-      "state_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx:99:gamePhase:start"
+      "source_symbol_kind": "typed-useState-declaration",
+      "state_id": "playing",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx:99:gamePhase:playing"
     },
     {
       "discovery_method": "mechanical-syntax-traversal",
@@ -1313,8 +1662,9 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "source_symbol": "gamePhase",
-      "state_id": "playing",
-      "state_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx:99:gamePhase:playing"
+      "source_symbol_kind": "typed-useState-declaration",
+      "state_id": "start",
+      "state_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx:99:gamePhase:start"
     },
     {
       "discovery_method": "mechanical-syntax-traversal",
@@ -1322,15 +1672,50 @@
         "blob_sha256": "d28b34f89e64bdfa039a55df5262e4256730045829b2b7ab5455b13d72069fcc",
         "path": "apps/advantage-games/src/components/multiplayer/LobbyScreen.tsx",
         "range": {
-          "end_line": 45,
-          "sha256": "af19cd529f0dd86f89dfe2d75e46fda94749bf40208aae7794e5b490d881ce20",
-          "start_line": 45
+          "end_line": 15,
+          "sha256": "94583387ff9c455fe7dab545adb849ab1b9e6ade2956f57472159f715efba18a",
+          "start_line": 15
         },
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
-      "source_symbol": "mode",
+      "source_symbol": "LobbyScreenProps.mode",
+      "source_symbol_kind": "interface-literal-property",
+      "state_id": "create",
+      "state_occurrence_id": "apps/advantage-games/src/components/multiplayer/LobbyScreen.tsx:15:LobbyScreenProps.mode:create"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "d28b34f89e64bdfa039a55df5262e4256730045829b2b7ab5455b13d72069fcc",
+        "path": "apps/advantage-games/src/components/multiplayer/LobbyScreen.tsx",
+        "range": {
+          "end_line": 15,
+          "sha256": "94583387ff9c455fe7dab545adb849ab1b9e6ade2956f57472159f715efba18a",
+          "start_line": 15
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "LobbyScreenProps.mode",
+      "source_symbol_kind": "interface-literal-property",
+      "state_id": "join",
+      "state_occurrence_id": "apps/advantage-games/src/components/multiplayer/LobbyScreen.tsx:15:LobbyScreenProps.mode:join"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "d28b34f89e64bdfa039a55df5262e4256730045829b2b7ab5455b13d72069fcc",
+        "path": "apps/advantage-games/src/components/multiplayer/LobbyScreen.tsx",
+        "range": {
+          "end_line": 15,
+          "sha256": "94583387ff9c455fe7dab545adb849ab1b9e6ade2956f57472159f715efba18a",
+          "start_line": 15
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "LobbyScreenProps.mode",
+      "source_symbol_kind": "interface-literal-property",
       "state_id": "lobby",
-      "state_occurrence_id": "apps/advantage-games/src/components/multiplayer/LobbyScreen.tsx:45:mode:lobby"
+      "state_occurrence_id": "apps/advantage-games/src/components/multiplayer/LobbyScreen.tsx:15:LobbyScreenProps.mode:lobby"
     },
     {
       "discovery_method": "mechanical-syntax-traversal",
@@ -1345,6 +1730,24 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "source_symbol": "mode",
+      "source_symbol_kind": "typed-useState-declaration",
+      "state_id": "create",
+      "state_occurrence_id": "apps/advantage-games/src/components/multiplayer/LobbyScreen.tsx:45:mode:create"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "d28b34f89e64bdfa039a55df5262e4256730045829b2b7ab5455b13d72069fcc",
+        "path": "apps/advantage-games/src/components/multiplayer/LobbyScreen.tsx",
+        "range": {
+          "end_line": 45,
+          "sha256": "af19cd529f0dd86f89dfe2d75e46fda94749bf40208aae7794e5b490d881ce20",
+          "start_line": 45
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "mode",
+      "source_symbol_kind": "typed-useState-declaration",
       "state_id": "join",
       "state_occurrence_id": "apps/advantage-games/src/components/multiplayer/LobbyScreen.tsx:45:mode:join"
     },
@@ -1361,8 +1764,1420 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "source_symbol": "mode",
-      "state_id": "create",
-      "state_occurrence_id": "apps/advantage-games/src/components/multiplayer/LobbyScreen.tsx:45:mode:create"
+      "source_symbol_kind": "typed-useState-declaration",
+      "state_id": "lobby",
+      "state_occurrence_id": "apps/advantage-games/src/components/multiplayer/LobbyScreen.tsx:45:mode:lobby"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "744d170a4d3c2ced8054da70c6be59a76123fd5cd910034775f2bb1d5b9fb98d",
+        "path": "apps/advantage-games/src/lib/games/dungeonLiberator.ts",
+        "range": {
+          "end_line": 42,
+          "sha256": "2f6417dbf0d2ebf23465ad8fa664814e05df9835517e460bfb2542137e2c09cb",
+          "start_line": 42
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "GamePhase",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "start",
+      "state_occurrence_id": "apps/advantage-games/src/lib/games/dungeonLiberator.ts:42:GamePhase:start"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "744d170a4d3c2ced8054da70c6be59a76123fd5cd910034775f2bb1d5b9fb98d",
+        "path": "apps/advantage-games/src/lib/games/dungeonLiberator.ts",
+        "range": {
+          "end_line": 42,
+          "sha256": "2f6417dbf0d2ebf23465ad8fa664814e05df9835517e460bfb2542137e2c09cb",
+          "start_line": 42
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "GamePhase",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "playing",
+      "state_occurrence_id": "apps/advantage-games/src/lib/games/dungeonLiberator.ts:42:GamePhase:playing"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "744d170a4d3c2ced8054da70c6be59a76123fd5cd910034775f2bb1d5b9fb98d",
+        "path": "apps/advantage-games/src/lib/games/dungeonLiberator.ts",
+        "range": {
+          "end_line": 42,
+          "sha256": "2f6417dbf0d2ebf23465ad8fa664814e05df9835517e460bfb2542137e2c09cb",
+          "start_line": 42
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "GamePhase",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "victory",
+      "state_occurrence_id": "apps/advantage-games/src/lib/games/dungeonLiberator.ts:42:GamePhase:victory"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "744d170a4d3c2ced8054da70c6be59a76123fd5cd910034775f2bb1d5b9fb98d",
+        "path": "apps/advantage-games/src/lib/games/dungeonLiberator.ts",
+        "range": {
+          "end_line": 42,
+          "sha256": "2f6417dbf0d2ebf23465ad8fa664814e05df9835517e460bfb2542137e2c09cb",
+          "start_line": 42
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "GamePhase",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "defeat",
+      "state_occurrence_id": "apps/advantage-games/src/lib/games/dungeonLiberator.ts:42:GamePhase:defeat"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "867a26a3562734106a2f7738d89bca257e306de1385aeddb247cf9bea2252f0d",
+        "path": "apps/advantage-games/src/lib/games/hauntedLibrary.ts",
+        "range": {
+          "end_line": 12,
+          "sha256": "01e999ecd67ce4a7af4057c023c759d1e90942ea7e040f18e9f11db0c8022e62",
+          "start_line": 12
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "Entity.state",
+      "source_symbol_kind": "interface-literal-property",
+      "state_id": "idle",
+      "state_occurrence_id": "apps/advantage-games/src/lib/games/hauntedLibrary.ts:12:Entity.state:idle"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "867a26a3562734106a2f7738d89bca257e306de1385aeddb247cf9bea2252f0d",
+        "path": "apps/advantage-games/src/lib/games/hauntedLibrary.ts",
+        "range": {
+          "end_line": 12,
+          "sha256": "01e999ecd67ce4a7af4057c023c759d1e90942ea7e040f18e9f11db0c8022e62",
+          "start_line": 12
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "Entity.state",
+      "source_symbol_kind": "interface-literal-property",
+      "state_id": "jumping",
+      "state_occurrence_id": "apps/advantage-games/src/lib/games/hauntedLibrary.ts:12:Entity.state:jumping"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "867a26a3562734106a2f7738d89bca257e306de1385aeddb247cf9bea2252f0d",
+        "path": "apps/advantage-games/src/lib/games/hauntedLibrary.ts",
+        "range": {
+          "end_line": 12,
+          "sha256": "01e999ecd67ce4a7af4057c023c759d1e90942ea7e040f18e9f11db0c8022e62",
+          "start_line": 12
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "Entity.state",
+      "source_symbol_kind": "interface-literal-property",
+      "state_id": "stunned",
+      "state_occurrence_id": "apps/advantage-games/src/lib/games/hauntedLibrary.ts:12:Entity.state:stunned"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "867a26a3562734106a2f7738d89bca257e306de1385aeddb247cf9bea2252f0d",
+        "path": "apps/advantage-games/src/lib/games/hauntedLibrary.ts",
+        "range": {
+          "end_line": 12,
+          "sha256": "01e999ecd67ce4a7af4057c023c759d1e90942ea7e040f18e9f11db0c8022e62",
+          "start_line": 12
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "Entity.state",
+      "source_symbol_kind": "interface-literal-property",
+      "state_id": "walking",
+      "state_occurrence_id": "apps/advantage-games/src/lib/games/hauntedLibrary.ts:12:Entity.state:walking"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "867a26a3562734106a2f7738d89bca257e306de1385aeddb247cf9bea2252f0d",
+        "path": "apps/advantage-games/src/lib/games/hauntedLibrary.ts",
+        "range": {
+          "end_line": 43,
+          "sha256": "9a1df9a682e5643a911d0d186eae6867f0500faa708b019a1331525c4e5002e2",
+          "start_line": 43
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "LibraryState.phase",
+      "source_symbol_kind": "interface-literal-property",
+      "state_id": "defeat",
+      "state_occurrence_id": "apps/advantage-games/src/lib/games/hauntedLibrary.ts:43:LibraryState.phase:defeat"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "867a26a3562734106a2f7738d89bca257e306de1385aeddb247cf9bea2252f0d",
+        "path": "apps/advantage-games/src/lib/games/hauntedLibrary.ts",
+        "range": {
+          "end_line": 43,
+          "sha256": "9a1df9a682e5643a911d0d186eae6867f0500faa708b019a1331525c4e5002e2",
+          "start_line": 43
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "LibraryState.phase",
+      "source_symbol_kind": "interface-literal-property",
+      "state_id": "playing",
+      "state_occurrence_id": "apps/advantage-games/src/lib/games/hauntedLibrary.ts:43:LibraryState.phase:playing"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "867a26a3562734106a2f7738d89bca257e306de1385aeddb247cf9bea2252f0d",
+        "path": "apps/advantage-games/src/lib/games/hauntedLibrary.ts",
+        "range": {
+          "end_line": 43,
+          "sha256": "9a1df9a682e5643a911d0d186eae6867f0500faa708b019a1331525c4e5002e2",
+          "start_line": 43
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "LibraryState.phase",
+      "source_symbol_kind": "interface-literal-property",
+      "state_id": "victory",
+      "state_occurrence_id": "apps/advantage-games/src/lib/games/hauntedLibrary.ts:43:LibraryState.phase:victory"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "750be3a0703afabb45872a195e443550905654bf1d4400443f6f186e16a0ac9c",
+        "path": "apps/advantage-games/src/lib/games/labyrinthGoblinKing.ts",
+        "range": {
+          "end_line": 12,
+          "sha256": "b28d8b95add1119cd0239542f8ff023a6314593f9dcd2beca27213eba21be438",
+          "start_line": 12
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "GameStatus",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "start",
+      "state_occurrence_id": "apps/advantage-games/src/lib/games/labyrinthGoblinKing.ts:12:GameStatus:start"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "750be3a0703afabb45872a195e443550905654bf1d4400443f6f186e16a0ac9c",
+        "path": "apps/advantage-games/src/lib/games/labyrinthGoblinKing.ts",
+        "range": {
+          "end_line": 12,
+          "sha256": "b28d8b95add1119cd0239542f8ff023a6314593f9dcd2beca27213eba21be438",
+          "start_line": 12
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "GameStatus",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "playing",
+      "state_occurrence_id": "apps/advantage-games/src/lib/games/labyrinthGoblinKing.ts:12:GameStatus:playing"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "750be3a0703afabb45872a195e443550905654bf1d4400443f6f186e16a0ac9c",
+        "path": "apps/advantage-games/src/lib/games/labyrinthGoblinKing.ts",
+        "range": {
+          "end_line": 12,
+          "sha256": "b28d8b95add1119cd0239542f8ff023a6314593f9dcd2beca27213eba21be438",
+          "start_line": 12
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "GameStatus",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "victory",
+      "state_occurrence_id": "apps/advantage-games/src/lib/games/labyrinthGoblinKing.ts:12:GameStatus:victory"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "750be3a0703afabb45872a195e443550905654bf1d4400443f6f186e16a0ac9c",
+        "path": "apps/advantage-games/src/lib/games/labyrinthGoblinKing.ts",
+        "range": {
+          "end_line": 12,
+          "sha256": "b28d8b95add1119cd0239542f8ff023a6314593f9dcd2beca27213eba21be438",
+          "start_line": 12
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "GameStatus",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "defeat",
+      "state_occurrence_id": "apps/advantage-games/src/lib/games/labyrinthGoblinKing.ts:12:GameStatus:defeat"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "13e9bbf18008248ab11d778d1f6407ce3e4591d8486a2097201fda6b9be994ff",
+        "path": "apps/advantage-games/src/lib/games/runeForgeChamber.ts",
+        "range": {
+          "end_line": 6,
+          "sha256": "bb2936015986afadd1e4800b345684333bb575b6bc479557eb2fb230220f084b",
+          "start_line": 6
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "GameStatus",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "start",
+      "state_occurrence_id": "apps/advantage-games/src/lib/games/runeForgeChamber.ts:6:GameStatus:start"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "13e9bbf18008248ab11d778d1f6407ce3e4591d8486a2097201fda6b9be994ff",
+        "path": "apps/advantage-games/src/lib/games/runeForgeChamber.ts",
+        "range": {
+          "end_line": 6,
+          "sha256": "bb2936015986afadd1e4800b345684333bb575b6bc479557eb2fb230220f084b",
+          "start_line": 6
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "GameStatus",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "playing",
+      "state_occurrence_id": "apps/advantage-games/src/lib/games/runeForgeChamber.ts:6:GameStatus:playing"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "13e9bbf18008248ab11d778d1f6407ce3e4591d8486a2097201fda6b9be994ff",
+        "path": "apps/advantage-games/src/lib/games/runeForgeChamber.ts",
+        "range": {
+          "end_line": 6,
+          "sha256": "bb2936015986afadd1e4800b345684333bb575b6bc479557eb2fb230220f084b",
+          "start_line": 6
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "GameStatus",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "defeat",
+      "state_occurrence_id": "apps/advantage-games/src/lib/games/runeForgeChamber.ts:6:GameStatus:defeat"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "47d3d4a0b10224591950a348d3ac4bcca82f9f5862a4932f590fa39edbc8f513",
+        "path": "apps/advantage-games/src/lib/games/shadowGateDungeon.ts",
+        "range": {
+          "end_line": 6,
+          "sha256": "b28d8b95add1119cd0239542f8ff023a6314593f9dcd2beca27213eba21be438",
+          "start_line": 6
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "GameStatus",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "start",
+      "state_occurrence_id": "apps/advantage-games/src/lib/games/shadowGateDungeon.ts:6:GameStatus:start"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "47d3d4a0b10224591950a348d3ac4bcca82f9f5862a4932f590fa39edbc8f513",
+        "path": "apps/advantage-games/src/lib/games/shadowGateDungeon.ts",
+        "range": {
+          "end_line": 6,
+          "sha256": "b28d8b95add1119cd0239542f8ff023a6314593f9dcd2beca27213eba21be438",
+          "start_line": 6
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "GameStatus",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "playing",
+      "state_occurrence_id": "apps/advantage-games/src/lib/games/shadowGateDungeon.ts:6:GameStatus:playing"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "47d3d4a0b10224591950a348d3ac4bcca82f9f5862a4932f590fa39edbc8f513",
+        "path": "apps/advantage-games/src/lib/games/shadowGateDungeon.ts",
+        "range": {
+          "end_line": 6,
+          "sha256": "b28d8b95add1119cd0239542f8ff023a6314593f9dcd2beca27213eba21be438",
+          "start_line": 6
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "GameStatus",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "victory",
+      "state_occurrence_id": "apps/advantage-games/src/lib/games/shadowGateDungeon.ts:6:GameStatus:victory"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "47d3d4a0b10224591950a348d3ac4bcca82f9f5862a4932f590fa39edbc8f513",
+        "path": "apps/advantage-games/src/lib/games/shadowGateDungeon.ts",
+        "range": {
+          "end_line": 6,
+          "sha256": "b28d8b95add1119cd0239542f8ff023a6314593f9dcd2beca27213eba21be438",
+          "start_line": 6
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "GameStatus",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "defeat",
+      "state_occurrence_id": "apps/advantage-games/src/lib/games/shadowGateDungeon.ts:6:GameStatus:defeat"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "47d3d4a0b10224591950a348d3ac4bcca82f9f5862a4932f590fa39edbc8f513",
+        "path": "apps/advantage-games/src/lib/games/shadowGateDungeon.ts",
+        "range": {
+          "end_line": 21,
+          "sha256": "c8b7ec4c1cc80473e39e7c64cf87ad2fea1a5c1221bbbee34494ad26b6f75376",
+          "start_line": 21
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "CreatureMode",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "patrol",
+      "state_occurrence_id": "apps/advantage-games/src/lib/games/shadowGateDungeon.ts:21:CreatureMode:patrol"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "47d3d4a0b10224591950a348d3ac4bcca82f9f5862a4932f590fa39edbc8f513",
+        "path": "apps/advantage-games/src/lib/games/shadowGateDungeon.ts",
+        "range": {
+          "end_line": 21,
+          "sha256": "c8b7ec4c1cc80473e39e7c64cf87ad2fea1a5c1221bbbee34494ad26b6f75376",
+          "start_line": 21
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "CreatureMode",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "chase",
+      "state_occurrence_id": "apps/advantage-games/src/lib/games/shadowGateDungeon.ts:21:CreatureMode:chase"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "ff01f8e4cb39deacef31c769d44c466cf462ea5168c0dceb1ea6fa803b93d028",
+        "path": "apps/advantage-games/src/lib/games/villageGuardian.ts",
+        "range": {
+          "end_line": 12,
+          "sha256": "bb2936015986afadd1e4800b345684333bb575b6bc479557eb2fb230220f084b",
+          "start_line": 12
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "GameStatus",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "start",
+      "state_occurrence_id": "apps/advantage-games/src/lib/games/villageGuardian.ts:12:GameStatus:start"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "ff01f8e4cb39deacef31c769d44c466cf462ea5168c0dceb1ea6fa803b93d028",
+        "path": "apps/advantage-games/src/lib/games/villageGuardian.ts",
+        "range": {
+          "end_line": 12,
+          "sha256": "bb2936015986afadd1e4800b345684333bb575b6bc479557eb2fb230220f084b",
+          "start_line": 12
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "GameStatus",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "playing",
+      "state_occurrence_id": "apps/advantage-games/src/lib/games/villageGuardian.ts:12:GameStatus:playing"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "ff01f8e4cb39deacef31c769d44c466cf462ea5168c0dceb1ea6fa803b93d028",
+        "path": "apps/advantage-games/src/lib/games/villageGuardian.ts",
+        "range": {
+          "end_line": 12,
+          "sha256": "bb2936015986afadd1e4800b345684333bb575b6bc479557eb2fb230220f084b",
+          "start_line": 12
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "GameStatus",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "defeat",
+      "state_occurrence_id": "apps/advantage-games/src/lib/games/villageGuardian.ts:12:GameStatus:defeat"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "909927868e7ef9da743cb54b73bca01e96dfbcb7a8b78c9c2acbe1d799942eaa",
+        "path": "apps/advantage-games/src/lib/multiplayer/game-session.ts",
+        "range": {
+          "end_line": 4,
+          "sha256": "e13ff6503029b29622e9ea6b6b58a3c1895944ab90d52be42c25808732981ff6",
+          "start_line": 4
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "GameSessionStatus",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "waiting",
+      "state_occurrence_id": "apps/advantage-games/src/lib/multiplayer/game-session.ts:4:GameSessionStatus:waiting"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "909927868e7ef9da743cb54b73bca01e96dfbcb7a8b78c9c2acbe1d799942eaa",
+        "path": "apps/advantage-games/src/lib/multiplayer/game-session.ts",
+        "range": {
+          "end_line": 4,
+          "sha256": "e13ff6503029b29622e9ea6b6b58a3c1895944ab90d52be42c25808732981ff6",
+          "start_line": 4
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "GameSessionStatus",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "playing",
+      "state_occurrence_id": "apps/advantage-games/src/lib/multiplayer/game-session.ts:4:GameSessionStatus:playing"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "909927868e7ef9da743cb54b73bca01e96dfbcb7a8b78c9c2acbe1d799942eaa",
+        "path": "apps/advantage-games/src/lib/multiplayer/game-session.ts",
+        "range": {
+          "end_line": 4,
+          "sha256": "e13ff6503029b29622e9ea6b6b58a3c1895944ab90d52be42c25808732981ff6",
+          "start_line": 4
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "GameSessionStatus",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "round_end",
+      "state_occurrence_id": "apps/advantage-games/src/lib/multiplayer/game-session.ts:4:GameSessionStatus:round_end"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "909927868e7ef9da743cb54b73bca01e96dfbcb7a8b78c9c2acbe1d799942eaa",
+        "path": "apps/advantage-games/src/lib/multiplayer/game-session.ts",
+        "range": {
+          "end_line": 4,
+          "sha256": "e13ff6503029b29622e9ea6b6b58a3c1895944ab90d52be42c25808732981ff6",
+          "start_line": 4
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "GameSessionStatus",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "game_over",
+      "state_occurrence_id": "apps/advantage-games/src/lib/multiplayer/game-session.ts:4:GameSessionStatus:game_over"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "16bb865527988095f91cef9705b1f315ef16603e741e0f003621aeb4e4075600",
+        "path": "apps/advantage-games/src/lib/multiplayer/room-manager.ts",
+        "range": {
+          "end_line": 1,
+          "sha256": "35833fe2ebe27abb19882f1ccd38b43cc9dc0e57bbf31114e01a51e92eba5226",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "RoomStatus",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "pending",
+      "state_occurrence_id": "apps/advantage-games/src/lib/multiplayer/room-manager.ts:1:RoomStatus:pending"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "16bb865527988095f91cef9705b1f315ef16603e741e0f003621aeb4e4075600",
+        "path": "apps/advantage-games/src/lib/multiplayer/room-manager.ts",
+        "range": {
+          "end_line": 1,
+          "sha256": "35833fe2ebe27abb19882f1ccd38b43cc9dc0e57bbf31114e01a51e92eba5226",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "RoomStatus",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "active",
+      "state_occurrence_id": "apps/advantage-games/src/lib/multiplayer/room-manager.ts:1:RoomStatus:active"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "16bb865527988095f91cef9705b1f315ef16603e741e0f003621aeb4e4075600",
+        "path": "apps/advantage-games/src/lib/multiplayer/room-manager.ts",
+        "range": {
+          "end_line": 1,
+          "sha256": "35833fe2ebe27abb19882f1ccd38b43cc9dc0e57bbf31114e01a51e92eba5226",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "RoomStatus",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "completed",
+      "state_occurrence_id": "apps/advantage-games/src/lib/multiplayer/room-manager.ts:1:RoomStatus:completed"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "16bb865527988095f91cef9705b1f315ef16603e741e0f003621aeb4e4075600",
+        "path": "apps/advantage-games/src/lib/multiplayer/room-manager.ts",
+        "range": {
+          "end_line": 1,
+          "sha256": "35833fe2ebe27abb19882f1ccd38b43cc9dc0e57bbf31114e01a51e92eba5226",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "RoomStatus",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "expired",
+      "state_occurrence_id": "apps/advantage-games/src/lib/multiplayer/room-manager.ts:1:RoomStatus:expired"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "860f00221096c3e9fd2b5b3d2c76c9df5fecff34411202d592f3c1fc7d35571f",
+        "path": "apps/advantage-games/src/lib/spriteAnimation.ts",
+        "range": {
+          "end_line": 1,
+          "sha256": "acbcdabcdd3c8df6c471a8c9b85d766ac367c70de7a87d4b7d2143a243085780",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "SpriteState",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "idle",
+      "state_occurrence_id": "apps/advantage-games/src/lib/spriteAnimation.ts:1:SpriteState:idle"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "860f00221096c3e9fd2b5b3d2c76c9df5fecff34411202d592f3c1fc7d35571f",
+        "path": "apps/advantage-games/src/lib/spriteAnimation.ts",
+        "range": {
+          "end_line": 1,
+          "sha256": "acbcdabcdd3c8df6c471a8c9b85d766ac367c70de7a87d4b7d2143a243085780",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "SpriteState",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "walk",
+      "state_occurrence_id": "apps/advantage-games/src/lib/spriteAnimation.ts:1:SpriteState:walk"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "860f00221096c3e9fd2b5b3d2c76c9df5fecff34411202d592f3c1fc7d35571f",
+        "path": "apps/advantage-games/src/lib/spriteAnimation.ts",
+        "range": {
+          "end_line": 1,
+          "sha256": "acbcdabcdd3c8df6c471a8c9b85d766ac367c70de7a87d4b7d2143a243085780",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "SpriteState",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "attack",
+      "state_occurrence_id": "apps/advantage-games/src/lib/spriteAnimation.ts:1:SpriteState:attack"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "860f00221096c3e9fd2b5b3d2c76c9df5fecff34411202d592f3c1fc7d35571f",
+        "path": "apps/advantage-games/src/lib/spriteAnimation.ts",
+        "range": {
+          "end_line": 1,
+          "sha256": "acbcdabcdd3c8df6c471a8c9b85d766ac367c70de7a87d4b7d2143a243085780",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "SpriteState",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "hit",
+      "state_occurrence_id": "apps/advantage-games/src/lib/spriteAnimation.ts:1:SpriteState:hit"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "860f00221096c3e9fd2b5b3d2c76c9df5fecff34411202d592f3c1fc7d35571f",
+        "path": "apps/advantage-games/src/lib/spriteAnimation.ts",
+        "range": {
+          "end_line": 1,
+          "sha256": "acbcdabcdd3c8df6c471a8c9b85d766ac367c70de7a87d4b7d2143a243085780",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "SpriteState",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "death",
+      "state_occurrence_id": "apps/advantage-games/src/lib/spriteAnimation.ts:1:SpriteState:death"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "32e457e1081da0e597c22366270aade75fbe87a7c905a36ffd75fcb7d2e16dd4",
+        "path": "apps/advantage-games/src/store/useGameStore.ts",
+        "range": {
+          "end_line": 24,
+          "sha256": "c55ccc622e6663a2586ee8964329d6e3f6914a4ef86b2e072140a7291d307dca",
+          "start_line": 24
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "GameState.status",
+      "source_symbol_kind": "interface-literal-property",
+      "state_id": "game-over",
+      "state_occurrence_id": "apps/advantage-games/src/store/useGameStore.ts:24:GameState.status:game-over"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "32e457e1081da0e597c22366270aade75fbe87a7c905a36ffd75fcb7d2e16dd4",
+        "path": "apps/advantage-games/src/store/useGameStore.ts",
+        "range": {
+          "end_line": 24,
+          "sha256": "c55ccc622e6663a2586ee8964329d6e3f6914a4ef86b2e072140a7291d307dca",
+          "start_line": 24
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "GameState.status",
+      "source_symbol_kind": "interface-literal-property",
+      "state_id": "idle",
+      "state_occurrence_id": "apps/advantage-games/src/store/useGameStore.ts:24:GameState.status:idle"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "32e457e1081da0e597c22366270aade75fbe87a7c905a36ffd75fcb7d2e16dd4",
+        "path": "apps/advantage-games/src/store/useGameStore.ts",
+        "range": {
+          "end_line": 24,
+          "sha256": "c55ccc622e6663a2586ee8964329d6e3f6914a4ef86b2e072140a7291d307dca",
+          "start_line": 24
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "GameState.status",
+      "source_symbol_kind": "interface-literal-property",
+      "state_id": "playing",
+      "state_occurrence_id": "apps/advantage-games/src/store/useGameStore.ts:24:GameState.status:playing"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "1dc51671435e17c6606bdfe68bc12dc44f8607016301f9cb1e738dd7467ccb02",
+        "path": "apps/advantage-games/src/store/usePotionRushStore.ts",
+        "range": {
+          "end_line": 11,
+          "sha256": "1a93e64507c84793179296c4d0894cf37606c9182d82ce39f41a980c60d85e27",
+          "start_line": 11
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "GameState",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "MENU",
+      "state_occurrence_id": "apps/advantage-games/src/store/usePotionRushStore.ts:11:GameState:MENU"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "1dc51671435e17c6606bdfe68bc12dc44f8607016301f9cb1e738dd7467ccb02",
+        "path": "apps/advantage-games/src/store/usePotionRushStore.ts",
+        "range": {
+          "end_line": 11,
+          "sha256": "1a93e64507c84793179296c4d0894cf37606c9182d82ce39f41a980c60d85e27",
+          "start_line": 11
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "GameState",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "PLAYING",
+      "state_occurrence_id": "apps/advantage-games/src/store/usePotionRushStore.ts:11:GameState:PLAYING"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "1dc51671435e17c6606bdfe68bc12dc44f8607016301f9cb1e738dd7467ccb02",
+        "path": "apps/advantage-games/src/store/usePotionRushStore.ts",
+        "range": {
+          "end_line": 11,
+          "sha256": "1a93e64507c84793179296c4d0894cf37606c9182d82ce39f41a980c60d85e27",
+          "start_line": 11
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "GameState",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "PAUSED",
+      "state_occurrence_id": "apps/advantage-games/src/store/usePotionRushStore.ts:11:GameState:PAUSED"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "1dc51671435e17c6606bdfe68bc12dc44f8607016301f9cb1e738dd7467ccb02",
+        "path": "apps/advantage-games/src/store/usePotionRushStore.ts",
+        "range": {
+          "end_line": 11,
+          "sha256": "1a93e64507c84793179296c4d0894cf37606c9182d82ce39f41a980c60d85e27",
+          "start_line": 11
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "GameState",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "GAME_OVER",
+      "state_occurrence_id": "apps/advantage-games/src/store/usePotionRushStore.ts:11:GameState:GAME_OVER"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "1dc51671435e17c6606bdfe68bc12dc44f8607016301f9cb1e738dd7467ccb02",
+        "path": "apps/advantage-games/src/store/usePotionRushStore.ts",
+        "range": {
+          "end_line": 13,
+          "sha256": "c34c4047bcbaaedd8b9baf84fab768f9e8db273ff09412670407a99a377cdc24",
+          "start_line": 13
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "CauldronState",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "IDLE",
+      "state_occurrence_id": "apps/advantage-games/src/store/usePotionRushStore.ts:13:CauldronState:IDLE"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "1dc51671435e17c6606bdfe68bc12dc44f8607016301f9cb1e738dd7467ccb02",
+        "path": "apps/advantage-games/src/store/usePotionRushStore.ts",
+        "range": {
+          "end_line": 13,
+          "sha256": "c34c4047bcbaaedd8b9baf84fab768f9e8db273ff09412670407a99a377cdc24",
+          "start_line": 13
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "CauldronState",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "BREWING",
+      "state_occurrence_id": "apps/advantage-games/src/store/usePotionRushStore.ts:13:CauldronState:BREWING"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "1dc51671435e17c6606bdfe68bc12dc44f8607016301f9cb1e738dd7467ccb02",
+        "path": "apps/advantage-games/src/store/usePotionRushStore.ts",
+        "range": {
+          "end_line": 13,
+          "sha256": "c34c4047bcbaaedd8b9baf84fab768f9e8db273ff09412670407a99a377cdc24",
+          "start_line": 13
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "CauldronState",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "WARNING",
+      "state_occurrence_id": "apps/advantage-games/src/store/usePotionRushStore.ts:13:CauldronState:WARNING"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "1dc51671435e17c6606bdfe68bc12dc44f8607016301f9cb1e738dd7467ccb02",
+        "path": "apps/advantage-games/src/store/usePotionRushStore.ts",
+        "range": {
+          "end_line": 13,
+          "sha256": "c34c4047bcbaaedd8b9baf84fab768f9e8db273ff09412670407a99a377cdc24",
+          "start_line": 13
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "CauldronState",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "COMPLETED",
+      "state_occurrence_id": "apps/advantage-games/src/store/usePotionRushStore.ts:13:CauldronState:COMPLETED"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "1dc51671435e17c6606bdfe68bc12dc44f8607016301f9cb1e738dd7467ccb02",
+        "path": "apps/advantage-games/src/store/usePotionRushStore.ts",
+        "range": {
+          "end_line": 32,
+          "sha256": "4a65d095cd1dfc4115c7a3683e97baf7fad8c95be33c8e50109015275fac4493",
+          "start_line": 32
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "Customer.state",
+      "source_symbol_kind": "interface-literal-property",
+      "state_id": "LEAVING_ANGRY",
+      "state_occurrence_id": "apps/advantage-games/src/store/usePotionRushStore.ts:32:Customer.state:LEAVING_ANGRY"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "1dc51671435e17c6606bdfe68bc12dc44f8607016301f9cb1e738dd7467ccb02",
+        "path": "apps/advantage-games/src/store/usePotionRushStore.ts",
+        "range": {
+          "end_line": 32,
+          "sha256": "4a65d095cd1dfc4115c7a3683e97baf7fad8c95be33c8e50109015275fac4493",
+          "start_line": 32
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "Customer.state",
+      "source_symbol_kind": "interface-literal-property",
+      "state_id": "LEAVING_HAPPY",
+      "state_occurrence_id": "apps/advantage-games/src/store/usePotionRushStore.ts:32:Customer.state:LEAVING_HAPPY"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "1dc51671435e17c6606bdfe68bc12dc44f8607016301f9cb1e738dd7467ccb02",
+        "path": "apps/advantage-games/src/store/usePotionRushStore.ts",
+        "range": {
+          "end_line": 32,
+          "sha256": "4a65d095cd1dfc4115c7a3683e97baf7fad8c95be33c8e50109015275fac4493",
+          "start_line": 32
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "Customer.state",
+      "source_symbol_kind": "interface-literal-property",
+      "state_id": "WAITING",
+      "state_occurrence_id": "apps/advantage-games/src/store/usePotionRushStore.ts:32:Customer.state:WAITING"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "range": {
+          "end_line": 4,
+          "sha256": "5b89146d7cdd81d4ba0ef4dc9fd89ea5c2df63dc087f7ceece1cfb72df7fe2a0",
+          "start_line": 4
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "BattleStatus",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "idle",
+      "state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:4:BattleStatus:idle"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "range": {
+          "end_line": 4,
+          "sha256": "5b89146d7cdd81d4ba0ef4dc9fd89ea5c2df63dc087f7ceece1cfb72df7fe2a0",
+          "start_line": 4
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "BattleStatus",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "playing",
+      "state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:4:BattleStatus:playing"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "range": {
+          "end_line": 4,
+          "sha256": "5b89146d7cdd81d4ba0ef4dc9fd89ea5c2df63dc087f7ceece1cfb72df7fe2a0",
+          "start_line": 4
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "BattleStatus",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "victory",
+      "state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:4:BattleStatus:victory"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "range": {
+          "end_line": 4,
+          "sha256": "5b89146d7cdd81d4ba0ef4dc9fd89ea5c2df63dc087f7ceece1cfb72df7fe2a0",
+          "start_line": 4
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "BattleStatus",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "defeat",
+      "state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:4:BattleStatus:defeat"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "range": {
+          "end_line": 5,
+          "sha256": "0934a36d4fdce4b0f4651e16355002ce43ee3086747ed8a91fa8d5f887779f63",
+          "start_line": 5
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "BattleTurn",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "player",
+      "state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:5:BattleTurn:player"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "range": {
+          "end_line": 5,
+          "sha256": "0934a36d4fdce4b0f4651e16355002ce43ee3086747ed8a91fa8d5f887779f63",
+          "start_line": 5
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "BattleTurn",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "enemy",
+      "state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:5:BattleTurn:enemy"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "range": {
+          "end_line": 7,
+          "sha256": "eec247fb676f1a088f24d8c0ccf4136fa4b81d14767c01a3c1eca804b55434fe",
+          "start_line": 7
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "BattlePose",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "idle",
+      "state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:7:BattlePose:idle"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "range": {
+          "end_line": 8,
+          "sha256": "c35a14b6f03b1abd9aada7241f25dd55b89688b1eb21ef8fec2bcbffeb13305e",
+          "start_line": 8
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "BattlePose",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "casting",
+      "state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:8:BattlePose:casting"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "range": {
+          "end_line": 9,
+          "sha256": "4da3dbdb138c6b5f204d00517d19ed86c38e31e94ee8805da9c28e3a2671632d",
+          "start_line": 9
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "BattlePose",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "basic-attack",
+      "state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:9:BattlePose:basic-attack"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "range": {
+          "end_line": 10,
+          "sha256": "1ce8979c2138c6ea25dc7c2f543a86c9a2236306253520c9778eb93e5f7b7519",
+          "start_line": 10
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "BattlePose",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "power-attack",
+      "state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:10:BattlePose:power-attack"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "range": {
+          "end_line": 11,
+          "sha256": "c5dc32150d4fc1536d6049bc7da2cbc913d9cd6b02471e4d7709e6b716107a03",
+          "start_line": 11
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "BattlePose",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "hurt",
+      "state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:11:BattlePose:hurt"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "range": {
+          "end_line": 12,
+          "sha256": "f98f5e929d3d839e5e4bd35946a6e59c27a7c162a982032f88688c6bde96a62b",
+          "start_line": 12
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "BattlePose",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "miss",
+      "state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:12:BattlePose:miss"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "range": {
+          "end_line": 13,
+          "sha256": "986f8e9f6a850cd56333153d3fc076cb5809804d2d0a6f9e47b7e061ab12c6ef",
+          "start_line": 13
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "BattlePose",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "defend",
+      "state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:13:BattlePose:defend"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "range": {
+          "end_line": 14,
+          "sha256": "f5ed67b9fd7aaa85c246cd5a5fa61788f0b4fe833bfc8ae83c19e42c2ecb479c",
+          "start_line": 14
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "BattlePose",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "victory",
+      "state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:14:BattlePose:victory"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "range": {
+          "end_line": 15,
+          "sha256": "eb5857b96d8e9e9ecfaef2a67b40e87bf6f583839b7030f088245cb425eacc3e",
+          "start_line": 15
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "BattlePose",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "defeat",
+      "state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:15:BattlePose:defeat"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "range": {
+          "end_line": 17,
+          "sha256": "f9384379844491592bd263fc3f32b1a742b440af8822c4e8f12dc54fb72f78f9",
+          "start_line": 17
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "BattleSelectionStep",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "hero",
+      "state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:17:BattleSelectionStep:hero"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "range": {
+          "end_line": 17,
+          "sha256": "f9384379844491592bd263fc3f32b1a742b440af8822c4e8f12dc54fb72f78f9",
+          "start_line": 17
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "BattleSelectionStep",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "location",
+      "state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:17:BattleSelectionStep:location"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "range": {
+          "end_line": 17,
+          "sha256": "f9384379844491592bd263fc3f32b1a742b440af8822c4e8f12dc54fb72f78f9",
+          "start_line": 17
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "BattleSelectionStep",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "enemy",
+      "state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:17:BattleSelectionStep:enemy"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "range": {
+          "end_line": 17,
+          "sha256": "f9384379844491592bd263fc3f32b1a742b440af8822c4e8f12dc54fb72f78f9",
+          "start_line": 17
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "BattleSelectionStep",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "ready",
+      "state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:17:BattleSelectionStep:ready"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "e82caa5a6c3542189364136f62b9298ed508a896bd68db319603fc6e986cd970",
+        "path": "apps/advantage-games/src/types/multiplayer.ts",
+        "range": {
+          "end_line": 20,
+          "sha256": "ae3c05c7b7b1c7051cf03ba628f81f60cc24633b854c72134c96338e0338cc72",
+          "start_line": 20
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "GameState.status",
+      "source_symbol_kind": "interface-literal-property",
+      "state_id": "game_over",
+      "state_occurrence_id": "apps/advantage-games/src/types/multiplayer.ts:20:GameState.status:game_over"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "e82caa5a6c3542189364136f62b9298ed508a896bd68db319603fc6e986cd970",
+        "path": "apps/advantage-games/src/types/multiplayer.ts",
+        "range": {
+          "end_line": 20,
+          "sha256": "ae3c05c7b7b1c7051cf03ba628f81f60cc24633b854c72134c96338e0338cc72",
+          "start_line": 20
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "GameState.status",
+      "source_symbol_kind": "interface-literal-property",
+      "state_id": "playing",
+      "state_occurrence_id": "apps/advantage-games/src/types/multiplayer.ts:20:GameState.status:playing"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "e82caa5a6c3542189364136f62b9298ed508a896bd68db319603fc6e986cd970",
+        "path": "apps/advantage-games/src/types/multiplayer.ts",
+        "range": {
+          "end_line": 20,
+          "sha256": "ae3c05c7b7b1c7051cf03ba628f81f60cc24633b854c72134c96338e0338cc72",
+          "start_line": 20
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "GameState.status",
+      "source_symbol_kind": "interface-literal-property",
+      "state_id": "round_end",
+      "state_occurrence_id": "apps/advantage-games/src/types/multiplayer.ts:20:GameState.status:round_end"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "e82caa5a6c3542189364136f62b9298ed508a896bd68db319603fc6e986cd970",
+        "path": "apps/advantage-games/src/types/multiplayer.ts",
+        "range": {
+          "end_line": 20,
+          "sha256": "ae3c05c7b7b1c7051cf03ba628f81f60cc24633b854c72134c96338e0338cc72",
+          "start_line": 20
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "GameState.status",
+      "source_symbol_kind": "interface-literal-property",
+      "state_id": "waiting",
+      "state_occurrence_id": "apps/advantage-games/src/types/multiplayer.ts:20:GameState.status:waiting"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "6f6306d68e9cf43be4765e5ee3b3619beb2c160a981f44ffc96e7c9f45dd4a33",
+        "path": "apps/reading-advantage/components/games/game/Enemy.tsx",
+        "range": {
+          "end_line": 25,
+          "sha256": "57e4ac31515d53ae9f9903a47c84d159c4d0992cf43f4d891ce4e9e1f77d3acc",
+          "start_line": 25
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "EnemyProps.state",
+      "source_symbol_kind": "interface-literal-property",
+      "state_id": "dying",
+      "state_occurrence_id": "apps/reading-advantage/components/games/game/Enemy.tsx:25:EnemyProps.state:dying"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "6f6306d68e9cf43be4765e5ee3b3619beb2c160a981f44ffc96e7c9f45dd4a33",
+        "path": "apps/reading-advantage/components/games/game/Enemy.tsx",
+        "range": {
+          "end_line": 25,
+          "sha256": "57e4ac31515d53ae9f9903a47c84d159c4d0992cf43f4d891ce4e9e1f77d3acc",
+          "start_line": 25
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "EnemyProps.state",
+      "source_symbol_kind": "interface-literal-property",
+      "state_id": "falling",
+      "state_occurrence_id": "apps/reading-advantage/components/games/game/Enemy.tsx:25:EnemyProps.state:falling"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "6f6306d68e9cf43be4765e5ee3b3619beb2c160a981f44ffc96e7c9f45dd4a33",
+        "path": "apps/reading-advantage/components/games/game/Enemy.tsx",
+        "range": {
+          "end_line": 25,
+          "sha256": "57e4ac31515d53ae9f9903a47c84d159c4d0992cf43f4d891ce4e9e1f77d3acc",
+          "start_line": 25
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "EnemyProps.state",
+      "source_symbol_kind": "interface-literal-property",
+      "state_id": "targeted",
+      "state_occurrence_id": "apps/reading-advantage/components/games/game/Enemy.tsx:25:EnemyProps.state:targeted"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "73178c39a5910e2ea1856770c32d062a7cec526ebefb092e4ce209e9fbde50c8",
+        "path": "apps/reading-advantage/components/games/game/GameEndScreen.tsx",
+        "range": {
+          "end_line": 15,
+          "sha256": "6282fc4473bd440b0363ec4bef831d47b8faea3bb3f0c38acad3864aa87a179c",
+          "start_line": 15
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "GameEndScreenProps.status",
+      "source_symbol_kind": "interface-literal-property",
+      "state_id": "complete",
+      "state_occurrence_id": "apps/reading-advantage/components/games/game/GameEndScreen.tsx:15:GameEndScreenProps.status:complete"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "73178c39a5910e2ea1856770c32d062a7cec526ebefb092e4ce209e9fbde50c8",
+        "path": "apps/reading-advantage/components/games/game/GameEndScreen.tsx",
+        "range": {
+          "end_line": 15,
+          "sha256": "6282fc4473bd440b0363ec4bef831d47b8faea3bb3f0c38acad3864aa87a179c",
+          "start_line": 15
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "GameEndScreenProps.status",
+      "source_symbol_kind": "interface-literal-property",
+      "state_id": "defeat",
+      "state_occurrence_id": "apps/reading-advantage/components/games/game/GameEndScreen.tsx:15:GameEndScreenProps.status:defeat"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "73178c39a5910e2ea1856770c32d062a7cec526ebefb092e4ce209e9fbde50c8",
+        "path": "apps/reading-advantage/components/games/game/GameEndScreen.tsx",
+        "range": {
+          "end_line": 15,
+          "sha256": "6282fc4473bd440b0363ec4bef831d47b8faea3bb3f0c38acad3864aa87a179c",
+          "start_line": 15
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "GameEndScreenProps.status",
+      "source_symbol_kind": "interface-literal-property",
+      "state_id": "victory",
+      "state_occurrence_id": "apps/reading-advantage/components/games/game/GameEndScreen.tsx:15:GameEndScreenProps.status:victory"
     },
     {
       "discovery_method": "mechanical-syntax-traversal",
@@ -1377,6 +3192,7 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "source_symbol": "gamePhase",
+      "source_symbol_kind": "typed-useState-declaration",
       "state_id": "ended",
       "state_occurrence_id": "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx:390:gamePhase:ended"
     },
@@ -1393,8 +3209,9 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "source_symbol": "gamePhase",
-      "state_id": "start",
-      "state_occurrence_id": "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx:390:gamePhase:start"
+      "source_symbol_kind": "typed-useState-declaration",
+      "state_id": "playing",
+      "state_occurrence_id": "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx:390:gamePhase:playing"
     },
     {
       "discovery_method": "mechanical-syntax-traversal",
@@ -1409,8 +3226,9 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "source_symbol": "gamePhase",
-      "state_id": "playing",
-      "state_occurrence_id": "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx:390:gamePhase:playing"
+      "source_symbol_kind": "typed-useState-declaration",
+      "state_id": "start",
+      "state_occurrence_id": "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx:390:gamePhase:start"
     },
     {
       "discovery_method": "mechanical-syntax-traversal",
@@ -1425,6 +3243,7 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "source_symbol": "gamePhase",
+      "source_symbol_kind": "typed-useState-declaration",
       "state_id": "ended",
       "state_occurrence_id": "apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:110:gamePhase:ended"
     },
@@ -1441,8 +3260,9 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "source_symbol": "gamePhase",
-      "state_id": "start",
-      "state_occurrence_id": "apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:110:gamePhase:start"
+      "source_symbol_kind": "typed-useState-declaration",
+      "state_id": "playing",
+      "state_occurrence_id": "apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:110:gamePhase:playing"
     },
     {
       "discovery_method": "mechanical-syntax-traversal",
@@ -1457,8 +3277,162 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "source_symbol": "gamePhase",
-      "state_id": "playing",
-      "state_occurrence_id": "apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:110:gamePhase:playing"
+      "source_symbol_kind": "typed-useState-declaration",
+      "state_id": "start",
+      "state_occurrence_id": "apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:110:gamePhase:start"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "1aacfc50d1e36d61b6a05e807e17e670b4c02a4ee3c1264dc593114988a5ac39",
+        "path": "apps/reading-advantage/components/games/vocabulary/rpg-battle/Sprite.tsx",
+        "range": {
+          "end_line": 6,
+          "sha256": "eec247fb676f1a088f24d8c0ccf4136fa4b81d14767c01a3c1eca804b55434fe",
+          "start_line": 6
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "SpritePose",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "idle",
+      "state_occurrence_id": "apps/reading-advantage/components/games/vocabulary/rpg-battle/Sprite.tsx:6:SpritePose:idle"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "1aacfc50d1e36d61b6a05e807e17e670b4c02a4ee3c1264dc593114988a5ac39",
+        "path": "apps/reading-advantage/components/games/vocabulary/rpg-battle/Sprite.tsx",
+        "range": {
+          "end_line": 7,
+          "sha256": "c35a14b6f03b1abd9aada7241f25dd55b89688b1eb21ef8fec2bcbffeb13305e",
+          "start_line": 7
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "SpritePose",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "casting",
+      "state_occurrence_id": "apps/reading-advantage/components/games/vocabulary/rpg-battle/Sprite.tsx:7:SpritePose:casting"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "1aacfc50d1e36d61b6a05e807e17e670b4c02a4ee3c1264dc593114988a5ac39",
+        "path": "apps/reading-advantage/components/games/vocabulary/rpg-battle/Sprite.tsx",
+        "range": {
+          "end_line": 8,
+          "sha256": "4da3dbdb138c6b5f204d00517d19ed86c38e31e94ee8805da9c28e3a2671632d",
+          "start_line": 8
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "SpritePose",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "basic-attack",
+      "state_occurrence_id": "apps/reading-advantage/components/games/vocabulary/rpg-battle/Sprite.tsx:8:SpritePose:basic-attack"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "1aacfc50d1e36d61b6a05e807e17e670b4c02a4ee3c1264dc593114988a5ac39",
+        "path": "apps/reading-advantage/components/games/vocabulary/rpg-battle/Sprite.tsx",
+        "range": {
+          "end_line": 9,
+          "sha256": "1ce8979c2138c6ea25dc7c2f543a86c9a2236306253520c9778eb93e5f7b7519",
+          "start_line": 9
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "SpritePose",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "power-attack",
+      "state_occurrence_id": "apps/reading-advantage/components/games/vocabulary/rpg-battle/Sprite.tsx:9:SpritePose:power-attack"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "1aacfc50d1e36d61b6a05e807e17e670b4c02a4ee3c1264dc593114988a5ac39",
+        "path": "apps/reading-advantage/components/games/vocabulary/rpg-battle/Sprite.tsx",
+        "range": {
+          "end_line": 10,
+          "sha256": "c5dc32150d4fc1536d6049bc7da2cbc913d9cd6b02471e4d7709e6b716107a03",
+          "start_line": 10
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "SpritePose",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "hurt",
+      "state_occurrence_id": "apps/reading-advantage/components/games/vocabulary/rpg-battle/Sprite.tsx:10:SpritePose:hurt"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "1aacfc50d1e36d61b6a05e807e17e670b4c02a4ee3c1264dc593114988a5ac39",
+        "path": "apps/reading-advantage/components/games/vocabulary/rpg-battle/Sprite.tsx",
+        "range": {
+          "end_line": 11,
+          "sha256": "f98f5e929d3d839e5e4bd35946a6e59c27a7c162a982032f88688c6bde96a62b",
+          "start_line": 11
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "SpritePose",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "miss",
+      "state_occurrence_id": "apps/reading-advantage/components/games/vocabulary/rpg-battle/Sprite.tsx:11:SpritePose:miss"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "1aacfc50d1e36d61b6a05e807e17e670b4c02a4ee3c1264dc593114988a5ac39",
+        "path": "apps/reading-advantage/components/games/vocabulary/rpg-battle/Sprite.tsx",
+        "range": {
+          "end_line": 12,
+          "sha256": "986f8e9f6a850cd56333153d3fc076cb5809804d2d0a6f9e47b7e061ab12c6ef",
+          "start_line": 12
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "SpritePose",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "defend",
+      "state_occurrence_id": "apps/reading-advantage/components/games/vocabulary/rpg-battle/Sprite.tsx:12:SpritePose:defend"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "1aacfc50d1e36d61b6a05e807e17e670b4c02a4ee3c1264dc593114988a5ac39",
+        "path": "apps/reading-advantage/components/games/vocabulary/rpg-battle/Sprite.tsx",
+        "range": {
+          "end_line": 13,
+          "sha256": "f5ed67b9fd7aaa85c246cd5a5fa61788f0b4fe833bfc8ae83c19e42c2ecb479c",
+          "start_line": 13
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "SpritePose",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "victory",
+      "state_occurrence_id": "apps/reading-advantage/components/games/vocabulary/rpg-battle/Sprite.tsx:13:SpritePose:victory"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "1aacfc50d1e36d61b6a05e807e17e670b4c02a4ee3c1264dc593114988a5ac39",
+        "path": "apps/reading-advantage/components/games/vocabulary/rpg-battle/Sprite.tsx",
+        "range": {
+          "end_line": 14,
+          "sha256": "eb5857b96d8e9e9ecfaef2a67b40e87bf6f583839b7030f088245cb425eacc3e",
+          "start_line": 14
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "source_symbol": "SpritePose",
+      "source_symbol_kind": "literal-union-type-alias",
+      "state_id": "defeat",
+      "state_occurrence_id": "apps/reading-advantage/components/games/vocabulary/rpg-battle/Sprite.tsx:14:SpritePose:defeat"
     }
   ],
   "status": "mechanical-discovery-complete",
@@ -1477,6 +3451,7 @@
       },
       "from_state_id": "start",
       "from_state_occurrence_id": "apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx:35:gamePhase:start",
+      "source_symbol": "gamePhase",
       "to_state_id": "playing",
       "to_state_occurrence_id": "apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx:35:gamePhase:playing",
       "transition_evidence_kind": "useState-initial-to-setter-call",
@@ -1496,6 +3471,7 @@
       },
       "from_state_id": "start",
       "from_state_occurrence_id": "apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx:59:gamePhase:start",
+      "source_symbol": "gamePhase",
       "to_state_id": "ended",
       "to_state_occurrence_id": "apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx:59:gamePhase:ended",
       "transition_evidence_kind": "useState-initial-to-setter-call",
@@ -1515,6 +3491,7 @@
       },
       "from_state_id": "start",
       "from_state_occurrence_id": "apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx:90:gamePhase:start",
+      "source_symbol": "gamePhase",
       "to_state_id": "playing",
       "to_state_occurrence_id": "apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx:90:gamePhase:playing",
       "transition_evidence_kind": "useState-initial-to-setter-call",
@@ -1534,6 +3511,7 @@
       },
       "from_state_id": "start",
       "from_state_occurrence_id": "apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx:39:gamePhase:start",
+      "source_symbol": "gamePhase",
       "to_state_id": "ended",
       "to_state_occurrence_id": "apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx:39:gamePhase:ended",
       "transition_evidence_kind": "useState-initial-to-setter-call",
@@ -1553,6 +3531,7 @@
       },
       "from_state_id": "start",
       "from_state_occurrence_id": "apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx:35:gamePhase:start",
+      "source_symbol": "gamePhase",
       "to_state_id": "ended",
       "to_state_occurrence_id": "apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx:35:gamePhase:ended",
       "transition_evidence_kind": "useState-initial-to-setter-call",
@@ -1572,6 +3551,7 @@
       },
       "from_state_id": "start",
       "from_state_occurrence_id": "apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx:40:gamePhase:start",
+      "source_symbol": "gamePhase",
       "to_state_id": "ended",
       "to_state_occurrence_id": "apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx:40:gamePhase:ended",
       "transition_evidence_kind": "useState-initial-to-setter-call",
@@ -1591,6 +3571,7 @@
       },
       "from_state_id": "start",
       "from_state_occurrence_id": "apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx:37:gamePhase:start",
+      "source_symbol": "gamePhase",
       "to_state_id": "ended",
       "to_state_occurrence_id": "apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx:37:gamePhase:ended",
       "transition_evidence_kind": "useState-initial-to-setter-call",
@@ -1610,6 +3591,7 @@
       },
       "from_state_id": "start",
       "from_state_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:116:gamePhase:start",
+      "source_symbol": "gamePhase",
       "to_state_id": "ended",
       "to_state_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:116:gamePhase:ended",
       "transition_evidence_kind": "useState-initial-to-setter-call",
@@ -1629,9 +3611,250 @@
       },
       "from_state_id": "start",
       "from_state_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx:99:gamePhase:start",
+      "source_symbol": "gamePhase",
       "to_state_id": "playing",
       "to_state_occurrence_id": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx:99:gamePhase:playing",
       "transition_evidence_kind": "useState-initial-to-setter-call",
+      "transition_kind": "phase"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "32e457e1081da0e597c22366270aade75fbe87a7c905a36ffd75fcb7d2e16dd4",
+        "path": "apps/advantage-games/src/store/useGameStore.ts",
+        "range": {
+          "end_line": 63,
+          "sha256": "2af73432f86b9df5471e28a7ea29664f92fc4266930f52071a2f538431cff8cc",
+          "start_line": 51
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "from_state_id": "idle",
+      "from_state_occurrence_id": "apps/advantage-games/src/store/useGameStore.ts:24:GameState.status:idle",
+      "source_symbol": "status",
+      "to_state_id": "playing",
+      "to_state_occurrence_id": "apps/advantage-games/src/store/useGameStore.ts:24:GameState.status:playing",
+      "transition_evidence_kind": "runtime-store-initial-to-first-write",
+      "transition_kind": "phase"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "1dc51671435e17c6606bdfe68bc12dc44f8607016301f9cb1e738dd7467ccb02",
+        "path": "apps/advantage-games/src/store/usePotionRushStore.ts",
+        "range": {
+          "end_line": 170,
+          "sha256": "4de3258f513a0a220e9feea46cd797e6e8e9fd1f60bc5534de97229c65e46c18",
+          "start_line": 132
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "from_state_id": "MENU",
+      "from_state_occurrence_id": "apps/advantage-games/src/store/usePotionRushStore.ts:11:GameState:MENU",
+      "source_symbol": "gameState",
+      "to_state_id": "PLAYING",
+      "to_state_occurrence_id": "apps/advantage-games/src/store/usePotionRushStore.ts:11:GameState:PLAYING",
+      "transition_evidence_kind": "runtime-store-initial-to-first-write",
+      "transition_kind": "phase"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "range": {
+          "end_line": 88,
+          "sha256": "06f2f32d9d62cd2c40365a34e594961e4db418ed26b4d83e3aa886b731cc75d0",
+          "start_line": 66
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "from_state_id": "idle",
+      "from_state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:4:BattleStatus:idle",
+      "source_symbol": "status",
+      "to_state_id": "playing",
+      "to_state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:4:BattleStatus:playing",
+      "transition_evidence_kind": "runtime-store-initial-to-first-write",
+      "transition_kind": "phase"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "range": {
+          "end_line": 157,
+          "sha256": "981959c4a68919c6698950c83ad7cf03ad731ab6e1e2190f1046d7e32f8b08cb",
+          "start_line": 72
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "from_state_id": "idle",
+      "from_state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:7:BattlePose:idle",
+      "source_symbol": "playerPose",
+      "to_state_id": "miss",
+      "to_state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:12:BattlePose:miss",
+      "transition_evidence_kind": "runtime-store-initial-to-first-write",
+      "transition_kind": "phase"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "range": {
+          "end_line": 129,
+          "sha256": "2aa78e019c67bfbc99736e0e235b3134321086a27ac021d06da287bc71047dce",
+          "start_line": 73
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "from_state_id": "idle",
+      "from_state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:7:BattlePose:idle",
+      "source_symbol": "enemyPose",
+      "to_state_id": "basic-attack",
+      "to_state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:9:BattlePose:basic-attack",
+      "transition_evidence_kind": "runtime-store-initial-to-first-write",
+      "transition_kind": "phase"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "range": {
+          "end_line": 176,
+          "sha256": "4cde724b0b0ed6989b4ba7462a6f39c273b44059ead2bc6a4049f3489e029a57",
+          "start_line": 74
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "from_state_id": "hero",
+      "from_state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:17:BattleSelectionStep:hero",
+      "source_symbol": "selectionStep",
+      "to_state_id": "location",
+      "to_state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:17:BattleSelectionStep:location",
+      "transition_evidence_kind": "runtime-store-initial-to-first-write",
+      "transition_kind": "phase"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "range": {
+          "end_line": 104,
+          "sha256": "81da26036b42e11ec069baeee834681f794000e49b0ff7158ae9c14ac320cd43",
+          "start_line": 104
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "from_state_id": "playing",
+      "from_state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:4:BattleStatus:playing",
+      "source_symbol": "status",
+      "to_state_id": "defeat",
+      "to_state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:4:BattleStatus:defeat",
+      "transition_evidence_kind": "runtime-store-conditional-write",
+      "transition_kind": "phase"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "range": {
+          "end_line": 115,
+          "sha256": "a5806e0cadc4b8c093a6eb6eea2061bc10956489eb62cccd6caa3b15b4d0c1cf",
+          "start_line": 115
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "from_state_id": "playing",
+      "from_state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:4:BattleStatus:playing",
+      "source_symbol": "status",
+      "to_state_id": "victory",
+      "to_state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:4:BattleStatus:victory",
+      "transition_evidence_kind": "runtime-store-conditional-write",
+      "transition_kind": "phase"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "range": {
+          "end_line": 129,
+          "sha256": "cb102c7fa9e2dcbc8a523eab30b18353d7f74a5575d7cf4521ea062b7bb6b157",
+          "start_line": 127
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "from_state_id": "enemy",
+      "from_state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:5:BattleTurn:enemy",
+      "source_symbol": "turn",
+      "to_state_id": "player",
+      "to_state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:5:BattleTurn:player",
+      "transition_evidence_kind": "runtime-store-guarded-write",
+      "transition_kind": "phase"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "range": {
+          "end_line": 176,
+          "sha256": "586922ab63b2d5ced54a328c5f98c2d284d7a3e77e7fc0405168c205d6c45fd8",
+          "start_line": 172
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "from_state_id": "hero",
+      "from_state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:17:BattleSelectionStep:hero",
+      "source_symbol": "selectionStep",
+      "to_state_id": "location",
+      "to_state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:17:BattleSelectionStep:location",
+      "transition_evidence_kind": "runtime-store-guarded-write",
+      "transition_kind": "phase"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "range": {
+          "end_line": 185,
+          "sha256": "b275cedcff8e474ec8620ec45ab644749a8493b18c33310aa782c4bc5132c674",
+          "start_line": 181
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "from_state_id": "location",
+      "from_state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:17:BattleSelectionStep:location",
+      "source_symbol": "selectionStep",
+      "to_state_id": "enemy",
+      "to_state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:17:BattleSelectionStep:enemy",
+      "transition_evidence_kind": "runtime-store-guarded-write",
+      "transition_kind": "phase"
+    },
+    {
+      "discovery_method": "mechanical-syntax-traversal",
+      "evidence": {
+        "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "range": {
+          "end_line": 194,
+          "sha256": "fc0420d1dcb7c441d70f53631290b972fe094336063a5bc40b8b22ec703581dc",
+          "start_line": 190
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "from_state_id": "enemy",
+      "from_state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:17:BattleSelectionStep:enemy",
+      "source_symbol": "selectionStep",
+      "to_state_id": "ready",
+      "to_state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:17:BattleSelectionStep:ready",
+      "transition_evidence_kind": "runtime-store-guarded-write",
       "transition_kind": "phase"
     },
     {
@@ -1648,6 +3871,7 @@
       },
       "from_state_id": "start",
       "from_state_occurrence_id": "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx:390:gamePhase:start",
+      "source_symbol": "gamePhase",
       "to_state_id": "ended",
       "to_state_occurrence_id": "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx:390:gamePhase:ended",
       "transition_evidence_kind": "useState-initial-to-setter-call",
@@ -1667,6 +3891,7 @@
       },
       "from_state_id": "start",
       "from_state_occurrence_id": "apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:110:gamePhase:start",
+      "source_symbol": "gamePhase",
       "to_state_id": "ended",
       "to_state_occurrence_id": "apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx:110:gamePhase:ended",
       "transition_evidence_kind": "useState-initial-to-setter-call",

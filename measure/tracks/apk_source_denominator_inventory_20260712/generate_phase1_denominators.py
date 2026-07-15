@@ -31,7 +31,10 @@ PUBLIC_GAME_ROOTS = (
     "apps/reading-advantage/public/games",
     "apps/primary-advantage/public/games",
 )
-STATE_NAME = re.compile(r"(?:state|phase|mode|scene|screen|overlay|wave|floor)", re.IGNORECASE)
+STATE_NAME = re.compile(
+    r"(?:state|status|phase|mode|scene|screen|overlay|wave|floor|turn|pose|step)",
+    re.IGNORECASE,
+)
 STATE_DECLARATION = re.compile(
     r"(?:const|let)\s*\[\s*(\w+)\s*,\s*(set\w+)\s*\]\s*=\s*(?:React\.)?useState\s*<([^>]+)>",
     re.DOTALL,
@@ -369,8 +372,28 @@ def catalog_withdrawals() -> dict[str, dict[str, Any]]:
     return result
 
 
+def catalog_identities() -> dict[str, dict[str, Any]]:
+    """Returns every exact ID declared in the frozen game-card catalog.
+
+    Returns:
+        Catalog card IDs mapped to their exact declaration locators.
+    """
+    text = blob(CATALOG_PATH).decode("utf-8", errors="replace")
+    block = re.search(r"const\s+catalogCards\s*:[^=]+=\s*\[([\s\S]*?)\n\]", text)
+    if block is None:
+        raise RuntimeError("Frozen catalog has no catalogCards array")
+    result: dict[str, dict[str, Any]] = {}
+    for match in re.finditer(r"^\s*id:\s*['\"]([^'\"]+)['\"]", block.group(1), re.MULTILINE):
+        offset = block.start(1) + match.start()
+        line = source_line_number(text, offset)
+        result[match.group(1)] = line_locator(CATALOG_PATH, line, line)
+    if not result:
+        raise RuntimeError("Frozen catalog has no exact game-card IDs")
+    return result
+
+
 def build_identity_ledger(pages: dict[str, list[dict[str, Any]]]) -> dict[str, Any]:
-    """Builds a route-ledger from page paths observed in the frozen tree.
+    """Builds a ledger from frozen page paths and the complete exact catalog.
 
     Args:
         pages: Page-path observations grouped by canonical identity.
@@ -380,6 +403,8 @@ def build_identity_ledger(pages: dict[str, list[dict[str, Any]]]) -> dict[str, A
     """
     records = []
     withdrawals = catalog_withdrawals()
+    catalog = catalog_identities()
+    pages_by_slug = {canonical_id.split("/", 1)[1]: canonical_id for canonical_id in pages}
     for canonical_id, observations in sorted(pages.items()):
         slug = canonical_id.split("/", 1)[1]
         source_states = [{
@@ -393,6 +418,8 @@ def build_identity_ledger(pages: dict[str, list[dict[str, Any]]]) -> dict[str, A
             })
         records.append({
             "canonical_identity_id": canonical_id,
+            "catalog_identity_id": slug if slug in catalog else None,
+            "catalog_evidence": catalog.get(slug),
             "aliases": [
                 {"alias": observation["path"], "evidence": full_locator(observation["path"])}
                 for observation in observations
@@ -404,6 +431,22 @@ def build_identity_ledger(pages: dict[str, list[dict[str, Any]]]) -> dict[str, A
             "discovery_method": "mechanical-filesystem",
             "source_states": source_states,
         })
+    for slug in sorted(set(catalog) - set(pages_by_slug)):
+        if slug not in withdrawals:
+            raise RuntimeError(f"Catalog identity has neither a current page nor withdrawal evidence: {slug}")
+        records.append({
+            "canonical_identity_id": f"catalog/{slug}",
+            "catalog_identity_id": slug,
+            "catalog_evidence": catalog[slug],
+            "aliases": [{"alias": slug, "evidence": catalog[slug]}],
+            "routes": [],
+            "discovery_method": "mechanical-catalog-enumeration",
+            "source_states": [{
+                "source_class": "catalog-withdrawn-registration",
+                "evidence": withdrawals[slug],
+            }],
+        })
+    records.sort(key=lambda record: record["canonical_identity_id"])
     return {
         "schema_version": "apk-game-identity-ledger.v1",
         "status": "mechanical-discovery-complete",
@@ -413,7 +456,7 @@ def build_identity_ledger(pages: dict[str, list[dict[str, Any]]]) -> dict[str, A
 
 
 def build_scene_state_denominator(paths: list[str]) -> dict[str, Any]:
-    """Extracts literal state declarations and direct guarded setter changes from source.
+    """Extracts explicit state domains and source-backed transitions from source.
 
     Args:
         paths: All frozen source-scope paths.
@@ -437,6 +480,79 @@ def build_scene_state_denominator(paths: list[str]) -> dict[str, Any]:
                 "discovery_method": "mechanical-syntax-traversal",
                 "evidence": line_locator(path, line, line),
             })
+        state_occurrences: dict[tuple[str, str], str] = {}
+        state_record_keys: set[tuple[str, int, str, str]] = set()
+
+        def add_state(symbol: str, literal: str, line: int, kind: str) -> str:
+            """Adds one path-scoped literal-domain occurrence if it is new."""
+            occurrence_id = f"{path}:{line}:{symbol}:{literal}"
+            key = (path, line, symbol, literal)
+            if key not in state_record_keys:
+                state_record_keys.add(key)
+                state_records.append({
+                    "state_occurrence_id": occurrence_id,
+                    "state_id": literal,
+                    "source_symbol": symbol,
+                    "source_symbol_kind": kind,
+                    "discovery_method": "mechanical-syntax-traversal",
+                    "evidence": line_locator(path, line, line),
+                })
+            state_occurrences[(symbol, literal)] = occurrence_id
+            return occurrence_id
+
+        alias_domains: dict[str, tuple[set[str], int]] = {}
+        alias_pattern = re.compile(
+            r"(?:export\s+)?type\s+(\w+)\s*=\s*([\s\S]*?)(?=\n\s*(?:export\s+)?(?:type|interface|const|function|class)\b|\Z)"
+        )
+        for alias in alias_pattern.finditer(text):
+            alias_name, alias_body = alias.groups()
+            if not STATE_NAME.search(alias_name):
+                continue
+            residue = re.sub(r"[|;\s]", "", STRING_LITERAL.sub("", alias_body))
+            if residue:
+                continue
+            literals = {literal.group(1) for literal in STRING_LITERAL.finditer(alias_body)}
+            if not literals:
+                continue
+            line = source_line_number(text, alias.start())
+            alias_domains[alias_name] = (literals, line)
+            for literal_match in STRING_LITERAL.finditer(alias_body):
+                literal_line = source_line_number(text, alias.start(2) + literal_match.start())
+                add_state(alias_name, literal_match.group(1), literal_line, "literal-union-type-alias")
+
+        property_domains: dict[str, tuple[str, set[str], int]] = {}
+        interface_pattern = re.compile(r"(?:export\s+)?interface\s+(\w+)\s*\{([\s\S]*?)\n\}")
+        for interface in interface_pattern.finditer(text):
+            interface_name, body = interface.groups()
+            body_offset = interface.start(2)
+            for prop in re.finditer(r"^\s*(\w+)\??:\s*([^\n]+)", body, re.MULTILINE):
+                property_name, type_text = prop.groups()
+                line = source_line_number(text, body_offset + prop.start(1))
+                alias_name = next((name for name in alias_domains if re.search(rf"\b{re.escape(name)}\b", type_text)), None)
+                if alias_name is not None:
+                    literals, alias_line = alias_domains[alias_name]
+                    previous = property_domains.get(property_name)
+                    property_domains[property_name] = (
+                        (alias_name, literals, alias_line)
+                        if previous is None or previous[0] == alias_name
+                        else ("", set(), 0)
+                    )
+                    continue
+                if not STATE_NAME.search(property_name):
+                    continue
+                literals = {literal.group(1) for literal in STRING_LITERAL.finditer(type_text)}
+                if not literals:
+                    continue
+                symbol = f"{interface_name}.{property_name}"
+                previous = property_domains.get(property_name)
+                property_domains[property_name] = (
+                    (symbol, literals, line)
+                    if previous is None or previous[0] == symbol
+                    else ("", set(), 0)
+                )
+                for literal in sorted(literals):
+                    add_state(symbol, literal, line, "interface-literal-property")
+
         declarations: dict[str, tuple[str, set[str], str | None, int, int]] = {}
         for declaration in STATE_DECLARATION.finditer(text):
             state_name, setter_name, type_text = declaration.groups()
@@ -456,14 +572,8 @@ def build_scene_state_denominator(paths: list[str]) -> dict[str, Any]:
                     f"Typed state initializer is outside its literal union at {path}:{line}:{state_name}"
                 )
             declarations[setter_name] = (state_name, literals, initial_value, declaration.start(), line)
-            for literal in literals:
-                state_records.append({
-                    "state_occurrence_id": f"{path}:{line}:{state_name}:{literal}",
-                    "state_id": literal,
-                    "source_symbol": state_name,
-                    "discovery_method": "mechanical-syntax-traversal",
-                    "evidence": line_locator(path, line, line),
-                })
+            for literal in sorted(literals):
+                add_state(state_name, literal, line, "typed-useState-declaration")
         for setter_name, (state_name, literals, initial_value, declaration_offset, declaration_line) in declarations.items():
             guard = re.compile(
                 rf"if\s*\([^)]*\b{re.escape(state_name)}\s*===?\s*['\"]([^'\"]+)['\"][^)]*\)\s*\{{?[^{{}}]{{0,500}}?\b{re.escape(setter_name)}\s*\(\s*['\"]([^'\"]+)['\"]",
@@ -481,6 +591,7 @@ def build_scene_state_denominator(paths: list[str]) -> dict[str, Any]:
                     "to_state_occurrence_id": f"{path}:{declaration_line}:{state_name}:{to_state}",
                     "from_state_id": from_state,
                     "to_state_id": to_state,
+                    "source_symbol": state_name,
                     "transition_kind": "phase",
                     "transition_evidence_kind": "explicit-state-guarded-setter",
                     "discovery_method": "mechanical-syntax-traversal",
@@ -498,12 +609,112 @@ def build_scene_state_denominator(paths: list[str]) -> dict[str, Any]:
                         "to_state_occurrence_id": f"{path}:{declaration_line}:{state_name}:{to_state}",
                         "from_state_id": initial_value,
                         "to_state_id": to_state,
+                        "source_symbol": state_name,
                         "transition_kind": "phase",
                         "transition_evidence_kind": "useState-initial-to-setter-call",
                         "discovery_method": "mechanical-syntax-traversal",
                         "evidence": line_locator(path, line, source_line_number(text, match.end())),
                     })
                     break
+
+        create_match = re.search(r"\bcreate\s*<\s*(\w+)\s*>\s*\(\s*\([^)]*\)\s*=>\s*\(\{", text)
+        if create_match is not None:
+            store_start = create_match.end()
+
+            def add_runtime_transition(
+                property_name: str,
+                from_state: str,
+                to_state: str,
+                start: int,
+                end: int,
+                evidence_kind: str,
+            ) -> None:
+                """Adds one exact runtime-store transition backed by a literal domain."""
+                domain = property_domains.get(property_name)
+                if domain is None:
+                    return
+                symbol, literals, declaration_line = domain
+                if not symbol:
+                    return
+                if from_state not in literals or to_state not in literals or from_state == to_state:
+                    return
+                from_occurrence = state_occurrences.get((symbol, from_state))
+                to_occurrence = state_occurrences.get((symbol, to_state))
+                if from_occurrence is None:
+                    from_occurrence = add_state(symbol, from_state, declaration_line, "literal-union-type-alias")
+                if to_occurrence is None:
+                    to_occurrence = add_state(symbol, to_state, declaration_line, "literal-union-type-alias")
+                transitions.append({
+                    "from_state_occurrence_id": from_occurrence,
+                    "to_state_occurrence_id": to_occurrence,
+                    "from_state_id": from_state,
+                    "to_state_id": to_state,
+                    "source_symbol": property_name,
+                    "transition_kind": "phase",
+                    "transition_evidence_kind": evidence_kind,
+                    "discovery_method": "mechanical-syntax-traversal",
+                    "evidence": line_locator(
+                        path,
+                        source_line_number(text, start),
+                        source_line_number(text, end),
+                    ),
+                })
+
+            for property_name, (_symbol, literals, _line) in property_domains.items():
+                write_pattern = re.compile(rf"\b{re.escape(property_name)}\s*:\s*['\"]([^'\"]+)['\"]")
+                writes = [match for match in write_pattern.finditer(text, store_start) if match.group(1) in literals]
+                if not writes:
+                    continue
+                initializer = writes[0]
+                first_change = next((match for match in writes[1:] if match.group(1) != initializer.group(1)), None)
+                if first_change is not None:
+                    add_runtime_transition(
+                        property_name,
+                        initializer.group(1),
+                        first_change.group(1),
+                        initializer.start(),
+                        first_change.end(),
+                        "runtime-store-initial-to-first-write",
+                    )
+
+                guarded = re.compile(
+                    rf"if\s*\([^)]*(?:state\.)?{re.escape(property_name)}\s*!==?\s*['\"]([^'\"]+)['\"][^)]*\)\s*return\s*\{{\}}([\s\S]{{0,350}}?)\b{re.escape(property_name)}\s*:\s*['\"]([^'\"]+)['\"]"
+                )
+                for match in guarded.finditer(text, store_start):
+                    add_runtime_transition(
+                        property_name,
+                        match.group(1),
+                        match.group(3),
+                        match.start(),
+                        match.end(),
+                        "runtime-store-guarded-write",
+                    )
+
+                guard_then_set = re.compile(
+                    rf"if\s*\([^)]*\b{re.escape(property_name)}\s*!==?\s*['\"]([^'\"]+)['\"][^)]*\)\s*return([\s\S]{{0,350}}?)\b{re.escape(property_name)}\s*:\s*['\"]([^'\"]+)['\"]"
+                )
+                for match in guard_then_set.finditer(text, store_start):
+                    add_runtime_transition(
+                        property_name,
+                        match.group(1),
+                        match.group(3),
+                        match.start(),
+                        match.end(),
+                        "runtime-store-guarded-write",
+                    )
+
+                ternary = re.compile(
+                    rf"state\.{re.escape(property_name)}\s*===?\s*['\"]([^'\"]+)['\"][^?\n]*\?\s*['\"]([^'\"]+)['\"]\s*:\s*state\.{re.escape(property_name)}"
+                )
+                for match in ternary.finditer(text, store_start):
+                    add_runtime_transition(
+                        property_name,
+                        match.group(1),
+                        match.group(2),
+                        match.start(),
+                        match.end(),
+                        "runtime-store-conditional-write",
+                    )
     unique_transitions = {
         (record["from_state_occurrence_id"], record["to_state_occurrence_id"], record["evidence"]["range"]["start_line"]): record
         for record in transitions
@@ -516,7 +727,15 @@ def build_scene_state_denominator(paths: list[str]) -> dict[str, Any]:
         "source_baseline_revision": BASELINE,
         "scene_records": scene_records,
         "state_records": state_records,
-        "transitions": list(unique_transitions.values()),
+        "transitions": sorted(
+            unique_transitions.values(),
+            key=lambda record: (
+                record["evidence"]["path"],
+                record["evidence"]["range"]["start_line"],
+                record["from_state_occurrence_id"],
+                record["to_state_occurrence_id"],
+            ),
+        ),
     }
 
 
@@ -719,20 +938,24 @@ line-range SHA-256.
 
 ## Mechanical passes
 
-1. Enumerate the frozen tree under the Phase-0 roots. Game-page identities are emitted
-   in deterministic batches of no more than three; a failed committed-locator resolution
-   raises an exception before later batch output is written.
+1. Enumerate the frozen tree under the Phase-0 roots. The identity ledger joins every
+   exact frozen catalog ID to page evidence by exact slug where a page exists and keeps
+   catalog-withdrawn-only identities route-less; it never synthesizes a current page.
+   Game-page identities are emitted in deterministic batches of no more than three; a
+   failed committed-locator resolution raises before later batch output is written.
 2. Select source files by the documented game-path predicate plus the frozen cartridge
    catalog/index/test and active APK program sources; record file, game-page identity,
    route, byte-identical copy, and every resolvable relative or `@/` import edge.
-3. Extract declared component symbols ending in `Game`, `Screen`, or `Scene`, literal
-   `useState` declarations whose variable names include a state vocabulary token, and
-   source-local explicitly guarded setter pairs. Component and state occurrences remain
-   path-scoped even when symbols/literals repeat. For a declaration with no guarded
-   setter pair, only the first source-ordered setter target that differs from the exact
-   typed initializer is retained as an initializer-to-setter syntax edge; later
-   unguarded calls do not imply a from-state. This is syntax traversal, not runtime
-   execution.
+3. Extract declared component symbols ending in `Game`, `Screen`, or `Scene`; pure
+   literal-union type aliases and inline interface properties whose names use the state
+   vocabulary; typed `useState` declarations; and explicit source-local transitions.
+   Runtime-store transitions are limited to an exact initializer-to-first-write edge,
+   guarded writes, and conditional writes whose from/to literals share a declared
+   domain. Ambiguous repeated property names are not joined. Component and state
+   occurrences remain path-scoped even when symbols/literals repeat. For a `useState`
+   declaration with no guarded setter pair, only the first source-ordered setter target
+   differing from the exact typed initializer is retained. This is syntax traversal,
+   not runtime execution.
 4. Enumerate media, audio, and data suffixes below the three public roots plus
    game-associated data files; hash every committed byte sequence and report basic
    encoded format metadata.

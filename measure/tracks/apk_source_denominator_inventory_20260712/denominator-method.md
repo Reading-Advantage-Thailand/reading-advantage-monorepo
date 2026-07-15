@@ -12,20 +12,24 @@ line-range SHA-256.
 
 ## Mechanical passes
 
-1. Enumerate the frozen tree under the Phase-0 roots. Game-page identities are emitted
-   in deterministic batches of no more than three; a failed committed-locator resolution
-   raises an exception before later batch output is written.
+1. Enumerate the frozen tree under the Phase-0 roots. The identity ledger joins every
+   exact frozen catalog ID to page evidence by exact slug where a page exists and keeps
+   catalog-withdrawn-only identities route-less; it never synthesizes a current page.
+   Game-page identities are emitted in deterministic batches of no more than three; a
+   failed committed-locator resolution raises before later batch output is written.
 2. Select source files by the documented game-path predicate plus the frozen cartridge
    catalog/index/test and active APK program sources; record file, game-page identity,
    route, byte-identical copy, and every resolvable relative or `@/` import edge.
-3. Extract declared component symbols ending in `Game`, `Screen`, or `Scene`, literal
-   `useState` declarations whose variable names include a state vocabulary token, and
-   source-local explicitly guarded setter pairs. Component and state occurrences remain
-   path-scoped even when symbols/literals repeat. For a declaration with no guarded
-   setter pair, only the first source-ordered setter target that differs from the exact
-   typed initializer is retained as an initializer-to-setter syntax edge; later
-   unguarded calls do not imply a from-state. This is syntax traversal, not runtime
-   execution.
+3. Extract declared component symbols ending in `Game`, `Screen`, or `Scene`; pure
+   literal-union type aliases and inline interface properties whose names use the state
+   vocabulary; typed `useState` declarations; and explicit source-local transitions.
+   Runtime-store transitions are limited to an exact initializer-to-first-write edge,
+   guarded writes, and conditional writes whose from/to literals share a declared
+   domain. Ambiguous repeated property names are not joined. Component and state
+   occurrences remain path-scoped even when symbols/literals repeat. For a `useState`
+   declaration with no guarded setter pair, only the first source-ordered setter target
+   differing from the exact typed initializer is retained. This is syntax traversal,
+   not runtime execution.
 4. Enumerate media, audio, and data suffixes below the three public roots plus
    game-associated data files; hash every committed byte sequence and report basic
    encoded format metadata.

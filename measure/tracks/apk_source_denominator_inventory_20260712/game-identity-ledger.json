@@ -3,6 +3,466 @@
     {
       "aliases": [
         {
+          "alias": "archers-revenge",
+          "evidence": {
+            "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+            "path": "apps/advantage-games/src/lib/gameCards.ts",
+            "range": {
+              "end_line": 154,
+              "sha256": "8ac12ade5fff141d2ba3c7f27a4f2fc67e80f6229319d16c1caa4c33c7764d5e",
+              "start_line": 154
+            },
+            "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+          }
+        }
+      ],
+      "canonical_identity_id": "catalog/archers-revenge",
+      "catalog_evidence": {
+        "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+        "path": "apps/advantage-games/src/lib/gameCards.ts",
+        "range": {
+          "end_line": 154,
+          "sha256": "8ac12ade5fff141d2ba3c7f27a4f2fc67e80f6229319d16c1caa4c33c7764d5e",
+          "start_line": 154
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "catalog_identity_id": "archers-revenge",
+      "discovery_method": "mechanical-catalog-enumeration",
+      "routes": [],
+      "source_states": [
+        {
+          "evidence": {
+            "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+            "path": "apps/advantage-games/src/lib/gameCards.ts",
+            "range": {
+              "end_line": 22,
+              "sha256": "a198e2e408083828619945e71608caf6b2a5a7a753b80330923063eeb975be2c",
+              "start_line": 22
+            },
+            "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+          },
+          "source_class": "catalog-withdrawn-registration"
+        }
+      ]
+    },
+    {
+      "aliases": [
+        {
+          "alias": "astral-mage",
+          "evidence": {
+            "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+            "path": "apps/advantage-games/src/lib/gameCards.ts",
+            "range": {
+              "end_line": 196,
+              "sha256": "2df13e1e15b44b3f9ae29f6acd665e55b5367d2de2f90313e6e2f05a7a9fb833",
+              "start_line": 196
+            },
+            "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+          }
+        }
+      ],
+      "canonical_identity_id": "catalog/astral-mage",
+      "catalog_evidence": {
+        "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+        "path": "apps/advantage-games/src/lib/gameCards.ts",
+        "range": {
+          "end_line": 196,
+          "sha256": "2df13e1e15b44b3f9ae29f6acd665e55b5367d2de2f90313e6e2f05a7a9fb833",
+          "start_line": 196
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "catalog_identity_id": "astral-mage",
+      "discovery_method": "mechanical-catalog-enumeration",
+      "routes": [],
+      "source_states": [
+        {
+          "evidence": {
+            "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+            "path": "apps/advantage-games/src/lib/gameCards.ts",
+            "range": {
+              "end_line": 16,
+              "sha256": "23f06997565284589d4fe823516342250065ddeb84c2ec7f8c85d62f963cfba2",
+              "start_line": 16
+            },
+            "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+          },
+          "source_class": "catalog-withdrawn-registration"
+        }
+      ]
+    },
+    {
+      "aliases": [
+        {
+          "alias": "griffin-riders-escape",
+          "evidence": {
+            "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+            "path": "apps/advantage-games/src/lib/gameCards.ts",
+            "range": {
+              "end_line": 189,
+              "sha256": "81c8c39eef5d67f141706663fdf98fe7a960b9b59838a39086000e71c45ffaa2",
+              "start_line": 189
+            },
+            "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+          }
+        }
+      ],
+      "canonical_identity_id": "catalog/griffin-riders-escape",
+      "catalog_evidence": {
+        "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+        "path": "apps/advantage-games/src/lib/gameCards.ts",
+        "range": {
+          "end_line": 189,
+          "sha256": "81c8c39eef5d67f141706663fdf98fe7a960b9b59838a39086000e71c45ffaa2",
+          "start_line": 189
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "catalog_identity_id": "griffin-riders-escape",
+      "discovery_method": "mechanical-catalog-enumeration",
+      "routes": [],
+      "source_states": [
+        {
+          "evidence": {
+            "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+            "path": "apps/advantage-games/src/lib/gameCards.ts",
+            "range": {
+              "end_line": 20,
+              "sha256": "92c5f557c11148bc6432b7b6e95e7c1d63eff296f730311f47eef61889e87d7e",
+              "start_line": 20
+            },
+            "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+          },
+          "source_class": "catalog-withdrawn-registration"
+        }
+      ]
+    },
+    {
+      "aliases": [
+        {
+          "alias": "griffin-sky-joust",
+          "evidence": {
+            "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+            "path": "apps/advantage-games/src/lib/gameCards.ts",
+            "range": {
+              "end_line": 168,
+              "sha256": "2c339a97aceb8e347decf28e3ff24ffb96c55c3046d56603e1c77ec9d4a1228b",
+              "start_line": 168
+            },
+            "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+          }
+        }
+      ],
+      "canonical_identity_id": "catalog/griffin-sky-joust",
+      "catalog_evidence": {
+        "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+        "path": "apps/advantage-games/src/lib/gameCards.ts",
+        "range": {
+          "end_line": 168,
+          "sha256": "2c339a97aceb8e347decf28e3ff24ffb96c55c3046d56603e1c77ec9d4a1228b",
+          "start_line": 168
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "catalog_identity_id": "griffin-sky-joust",
+      "discovery_method": "mechanical-catalog-enumeration",
+      "routes": [],
+      "source_states": [
+        {
+          "evidence": {
+            "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+            "path": "apps/advantage-games/src/lib/gameCards.ts",
+            "range": {
+              "end_line": 24,
+              "sha256": "ab3d55f0add4231d759efffef9dda99063277e4ff4801265b0e3cf1b14370467",
+              "start_line": 24
+            },
+            "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+          },
+          "source_class": "catalog-withdrawn-registration"
+        }
+      ]
+    },
+    {
+      "aliases": [
+        {
+          "alias": "gryphon-patrol",
+          "evidence": {
+            "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+            "path": "apps/advantage-games/src/lib/gameCards.ts",
+            "range": {
+              "end_line": 226,
+              "sha256": "e6b636ceb7a57b9f7bad2c9f1ef27d2ce2a48ef316cd164a088cfae662e8d25e",
+              "start_line": 226
+            },
+            "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+          }
+        }
+      ],
+      "canonical_identity_id": "catalog/gryphon-patrol",
+      "catalog_evidence": {
+        "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+        "path": "apps/advantage-games/src/lib/gameCards.ts",
+        "range": {
+          "end_line": 226,
+          "sha256": "e6b636ceb7a57b9f7bad2c9f1ef27d2ce2a48ef316cd164a088cfae662e8d25e",
+          "start_line": 226
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "catalog_identity_id": "gryphon-patrol",
+      "discovery_method": "mechanical-catalog-enumeration",
+      "routes": [],
+      "source_states": [
+        {
+          "evidence": {
+            "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+            "path": "apps/advantage-games/src/lib/gameCards.ts",
+            "range": {
+              "end_line": 25,
+              "sha256": "40e9ecf511e38baa9ffaaa82c617aac1116675fa715f5a95767a8b9043baf62c",
+              "start_line": 25
+            },
+            "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+          },
+          "source_class": "catalog-withdrawn-registration"
+        }
+      ]
+    },
+    {
+      "aliases": [
+        {
+          "alias": "paladins-twin-soul",
+          "evidence": {
+            "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+            "path": "apps/advantage-games/src/lib/gameCards.ts",
+            "range": {
+              "end_line": 182,
+              "sha256": "ef2bf8d071f64cd786b87607890a9dbc3a9bd4e8ea5cae906cddde47a5f8dc67",
+              "start_line": 182
+            },
+            "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+          }
+        }
+      ],
+      "canonical_identity_id": "catalog/paladins-twin-soul",
+      "catalog_evidence": {
+        "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+        "path": "apps/advantage-games/src/lib/gameCards.ts",
+        "range": {
+          "end_line": 182,
+          "sha256": "ef2bf8d071f64cd786b87607890a9dbc3a9bd4e8ea5cae906cddde47a5f8dc67",
+          "start_line": 182
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "catalog_identity_id": "paladins-twin-soul",
+      "discovery_method": "mechanical-catalog-enumeration",
+      "routes": [],
+      "source_states": [
+        {
+          "evidence": {
+            "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+            "path": "apps/advantage-games/src/lib/gameCards.ts",
+            "range": {
+              "end_line": 23,
+              "sha256": "dff44c5ae92c04614832a9bbf3cf23435bfd9d3e97285799d2fc6eb73a2af75d",
+              "start_line": 23
+            },
+            "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+          },
+          "source_class": "catalog-withdrawn-registration"
+        }
+      ]
+    },
+    {
+      "aliases": [
+        {
+          "alias": "realm-carver",
+          "evidence": {
+            "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+            "path": "apps/advantage-games/src/lib/gameCards.ts",
+            "range": {
+              "end_line": 175,
+              "sha256": "8283edfeaffa7a85035165f35dc2edbddc7712412dd520f2e62f1d5617051487",
+              "start_line": 175
+            },
+            "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+          }
+        }
+      ],
+      "canonical_identity_id": "catalog/realm-carver",
+      "catalog_evidence": {
+        "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+        "path": "apps/advantage-games/src/lib/gameCards.ts",
+        "range": {
+          "end_line": 175,
+          "sha256": "8283edfeaffa7a85035165f35dc2edbddc7712412dd520f2e62f1d5617051487",
+          "start_line": 175
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "catalog_identity_id": "realm-carver",
+      "discovery_method": "mechanical-catalog-enumeration",
+      "routes": [],
+      "source_states": [
+        {
+          "evidence": {
+            "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+            "path": "apps/advantage-games/src/lib/gameCards.ts",
+            "range": {
+              "end_line": 26,
+              "sha256": "a7486f707bafc941086aab32a4c3b6514cd5a40e0eacafede7cd7a7e119e5271",
+              "start_line": 26
+            },
+            "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+          },
+          "source_class": "catalog-withdrawn-registration"
+        }
+      ]
+    },
+    {
+      "aliases": [
+        {
+          "alias": "sorcerer-ziggurat",
+          "evidence": {
+            "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+            "path": "apps/advantage-games/src/lib/gameCards.ts",
+            "range": {
+              "end_line": 211,
+              "sha256": "13b032fe419f2b6b387ce7b1126fd7d1e12dae4fd0a527059208f0fd663d7be0",
+              "start_line": 211
+            },
+            "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+          }
+        }
+      ],
+      "canonical_identity_id": "catalog/sorcerer-ziggurat",
+      "catalog_evidence": {
+        "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+        "path": "apps/advantage-games/src/lib/gameCards.ts",
+        "range": {
+          "end_line": 211,
+          "sha256": "13b032fe419f2b6b387ce7b1126fd7d1e12dae4fd0a527059208f0fd663d7be0",
+          "start_line": 211
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "catalog_identity_id": "sorcerer-ziggurat",
+      "discovery_method": "mechanical-catalog-enumeration",
+      "routes": [],
+      "source_states": [
+        {
+          "evidence": {
+            "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+            "path": "apps/advantage-games/src/lib/gameCards.ts",
+            "range": {
+              "end_line": 17,
+              "sha256": "656521968d2e7b66b237d13aa9a4d13b3c1f6dd9bf575c0b3161efb33eb00aef",
+              "start_line": 17
+            },
+            "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+          },
+          "source_class": "catalog-withdrawn-registration"
+        }
+      ]
+    },
+    {
+      "aliases": [
+        {
+          "alias": "spellweavers-run",
+          "evidence": {
+            "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+            "path": "apps/advantage-games/src/lib/gameCards.ts",
+            "range": {
+              "end_line": 115,
+              "sha256": "67e99177cc077b7739b46f99e66f97e62ba2b567b1af55688c285440ef6de2d7",
+              "start_line": 115
+            },
+            "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+          }
+        }
+      ],
+      "canonical_identity_id": "catalog/spellweavers-run",
+      "catalog_evidence": {
+        "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+        "path": "apps/advantage-games/src/lib/gameCards.ts",
+        "range": {
+          "end_line": 115,
+          "sha256": "67e99177cc077b7739b46f99e66f97e62ba2b567b1af55688c285440ef6de2d7",
+          "start_line": 115
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "catalog_identity_id": "spellweavers-run",
+      "discovery_method": "mechanical-catalog-enumeration",
+      "routes": [],
+      "source_states": [
+        {
+          "evidence": {
+            "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+            "path": "apps/advantage-games/src/lib/gameCards.ts",
+            "range": {
+              "end_line": 19,
+              "sha256": "a720c50bee06a899bdf3a7e221ff9a3c624d32847ac77098784cbb549aa75b1a",
+              "start_line": 19
+            },
+            "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+          },
+          "source_class": "catalog-withdrawn-registration"
+        }
+      ]
+    },
+    {
+      "aliases": [
+        {
+          "alias": "storm-castle-tower",
+          "evidence": {
+            "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+            "path": "apps/advantage-games/src/lib/gameCards.ts",
+            "range": {
+              "end_line": 161,
+              "sha256": "553c98b7f1d8392adb0712f4c6e084b9211bfa5afc73c324dda7c66ab378e22c",
+              "start_line": 161
+            },
+            "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+          }
+        }
+      ],
+      "canonical_identity_id": "catalog/storm-castle-tower",
+      "catalog_evidence": {
+        "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+        "path": "apps/advantage-games/src/lib/gameCards.ts",
+        "range": {
+          "end_line": 161,
+          "sha256": "553c98b7f1d8392adb0712f4c6e084b9211bfa5afc73c324dda7c66ab378e22c",
+          "start_line": 161
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "catalog_identity_id": "storm-castle-tower",
+      "discovery_method": "mechanical-catalog-enumeration",
+      "routes": [],
+      "source_states": [
+        {
+          "evidence": {
+            "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+            "path": "apps/advantage-games/src/lib/gameCards.ts",
+            "range": {
+              "end_line": 21,
+              "sha256": "1bb87c651eb95259dd69e219178d99b1baa41858e62d4a95e9824d3386904d5a",
+              "start_line": 21
+            },
+            "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+          },
+          "source_class": "catalog-withdrawn-registration"
+        }
+      ]
+    },
+    {
+      "aliases": [
+        {
           "alias": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/castle-defense/page.tsx",
           "evidence": {
             "blob_sha256": "eb70ba245a4a7a1ee7637c679afe2a64dc94a883ed17d09d152687a2ad1f3a67",
@@ -30,6 +490,17 @@
         }
       ],
       "canonical_identity_id": "sentence/castle-defense",
+      "catalog_evidence": {
+        "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+        "path": "apps/advantage-games/src/lib/gameCards.ts",
+        "range": {
+          "end_line": 31,
+          "sha256": "f02edd0a072c8244d7f69922f5cae20d59dcdc62a0b859c050e04a12d8688b62",
+          "start_line": 31
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "catalog_identity_id": "castle-defense",
       "discovery_method": "mechanical-filesystem",
       "routes": [
         {
@@ -92,6 +563,17 @@
         }
       ],
       "canonical_identity_id": "sentence/devourer-slime",
+      "catalog_evidence": {
+        "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+        "path": "apps/advantage-games/src/lib/gameCards.ts",
+        "range": {
+          "end_line": 203,
+          "sha256": "bd2f12e0c91c87547b67d91eaccf9e96e984ed6773bb25287b6ba2bde782b6d0",
+          "start_line": 203
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "catalog_identity_id": "devourer-slime",
       "discovery_method": "mechanical-filesystem",
       "routes": [
         {
@@ -141,6 +623,17 @@
         }
       ],
       "canonical_identity_id": "sentence/dungeon-liberator",
+      "catalog_evidence": {
+        "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+        "path": "apps/advantage-games/src/lib/gameCards.ts",
+        "range": {
+          "end_line": 108,
+          "sha256": "b4420c6ee01a074129a7602e68d4b3c47114052aa4e14505d1931bbe83fa4f85",
+          "start_line": 108
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "catalog_identity_id": "dungeon-liberator",
       "discovery_method": "mechanical-filesystem",
       "routes": [
         {
@@ -203,6 +696,17 @@
         }
       ],
       "canonical_identity_id": "sentence/haunted-library",
+      "catalog_evidence": {
+        "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+        "path": "apps/advantage-games/src/lib/gameCards.ts",
+        "range": {
+          "end_line": 218,
+          "sha256": "3a131378818c02cab015f04def861ada533fad0f03ae448958e2c8829fa9fc62",
+          "start_line": 218
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "catalog_identity_id": "haunted-library",
       "discovery_method": "mechanical-filesystem",
       "routes": [
         {
@@ -252,6 +756,17 @@
         }
       ],
       "canonical_identity_id": "sentence/labyrinth-goblin-king",
+      "catalog_evidence": {
+        "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+        "path": "apps/advantage-games/src/lib/gameCards.ts",
+        "range": {
+          "end_line": 146,
+          "sha256": "f431937b685cca19fbf1502dc314327dff07179bfc279b524f86d960dc808a05",
+          "start_line": 146
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "catalog_identity_id": "labyrinth-goblin-king",
       "discovery_method": "mechanical-filesystem",
       "routes": [
         {
@@ -314,6 +829,17 @@
         }
       ],
       "canonical_identity_id": "sentence/potion-rush",
+      "catalog_evidence": {
+        "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+        "path": "apps/advantage-games/src/lib/gameCards.ts",
+        "range": {
+          "end_line": 100,
+          "sha256": "a8c4a2351024bbfdfde7bd93fd80a013a19f1e7e09b042c156341daa5c4e895e",
+          "start_line": 100
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "catalog_identity_id": "potion-rush",
       "discovery_method": "mechanical-filesystem",
       "routes": [
         {
@@ -376,6 +902,17 @@
         }
       ],
       "canonical_identity_id": "sentence/rune-forge-chamber",
+      "catalog_evidence": {
+        "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+        "path": "apps/advantage-games/src/lib/gameCards.ts",
+        "range": {
+          "end_line": 130,
+          "sha256": "febe9d3cb724d877258d7f36d24396b531f02424c53f8bdcf83c39fa04b7b1eb",
+          "start_line": 130
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "catalog_identity_id": "rune-forge-chamber",
       "discovery_method": "mechanical-filesystem",
       "routes": [
         {
@@ -425,6 +962,17 @@
         }
       ],
       "canonical_identity_id": "sentence/shadow-gate-dungeon",
+      "catalog_evidence": {
+        "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+        "path": "apps/advantage-games/src/lib/gameCards.ts",
+        "range": {
+          "end_line": 122,
+          "sha256": "557cc3adec6766432f63ccdb89d52b4319e6c19cccb42ee2b602061c96b236eb",
+          "start_line": 122
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "catalog_identity_id": "shadow-gate-dungeon",
       "discovery_method": "mechanical-filesystem",
       "routes": [
         {
@@ -474,6 +1022,17 @@
         }
       ],
       "canonical_identity_id": "sentence/village-guardian",
+      "catalog_evidence": {
+        "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+        "path": "apps/advantage-games/src/lib/gameCards.ts",
+        "range": {
+          "end_line": 138,
+          "sha256": "d0257773ecde4f820f1f559f88cb282b8526283becfa607464e294cef755fe84",
+          "start_line": 138
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "catalog_identity_id": "village-guardian",
       "discovery_method": "mechanical-filesystem",
       "routes": [
         {
@@ -523,6 +1082,17 @@
         }
       ],
       "canonical_identity_id": "vocabulary/alchemists-synthesis",
+      "catalog_evidence": {
+        "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+        "path": "apps/advantage-games/src/lib/gameCards.ts",
+        "range": {
+          "end_line": 92,
+          "sha256": "274dfffec3156aeeb6b23ee3b1edc7b41f5fc3a1b815d54e867b0476102d0de9",
+          "start_line": 92
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "catalog_identity_id": "alchemists-synthesis",
       "discovery_method": "mechanical-filesystem",
       "routes": [
         {
@@ -585,6 +1155,17 @@
         }
       ],
       "canonical_identity_id": "vocabulary/dragon-flight",
+      "catalog_evidence": {
+        "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+        "path": "apps/advantage-games/src/lib/gameCards.ts",
+        "range": {
+          "end_line": 61,
+          "sha256": "1ee49d4352c8d8b242040917364fdf5f5b0063ef89c4dccbb16ef5b19f0aa4a9",
+          "start_line": 61
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "catalog_identity_id": "dragon-flight",
       "discovery_method": "mechanical-filesystem",
       "routes": [
         {
@@ -660,6 +1241,17 @@
         }
       ],
       "canonical_identity_id": "vocabulary/dragon-rider",
+      "catalog_evidence": {
+        "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+        "path": "apps/advantage-games/src/lib/gameCards.ts",
+        "range": {
+          "end_line": 39,
+          "sha256": "c3dd93381812a04077a6fa018153e18cbf9054cdf7c5a6b5bb207d23f17c20c1",
+          "start_line": 39
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "catalog_identity_id": "dragon-rider",
       "discovery_method": "mechanical-filesystem",
       "routes": [
         {
@@ -735,6 +1327,17 @@
         }
       ],
       "canonical_identity_id": "vocabulary/enchanted-library",
+      "catalog_evidence": {
+        "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+        "path": "apps/advantage-games/src/lib/gameCards.ts",
+        "range": {
+          "end_line": 76,
+          "sha256": "f39292ae6c8c16d4ede0abdd7d4bb7d44423fd3436ccbd56724a1e1bad14e82c",
+          "start_line": 76
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "catalog_identity_id": "enchanted-library",
       "discovery_method": "mechanical-filesystem",
       "routes": [
         {
@@ -810,6 +1413,17 @@
         }
       ],
       "canonical_identity_id": "vocabulary/magic-defense",
+      "catalog_evidence": {
+        "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+        "path": "apps/advantage-games/src/lib/gameCards.ts",
+        "range": {
+          "end_line": 46,
+          "sha256": "78bc2e444eb9a67b88881f06088c88ccb783d52ec5c6f8ac51f18753904a2a71",
+          "start_line": 46
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "catalog_identity_id": "magic-defense",
       "discovery_method": "mechanical-filesystem",
       "routes": [
         {
@@ -898,6 +1512,17 @@
         }
       ],
       "canonical_identity_id": "vocabulary/rpg-battle",
+      "catalog_evidence": {
+        "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+        "path": "apps/advantage-games/src/lib/gameCards.ts",
+        "range": {
+          "end_line": 53,
+          "sha256": "f88aa087c2db918f6910ac613fa62716f7c8a47d406661edb1e82f5644450b42",
+          "start_line": 53
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "catalog_identity_id": "rpg-battle",
       "discovery_method": "mechanical-filesystem",
       "routes": [
         {
@@ -973,6 +1598,17 @@
         }
       ],
       "canonical_identity_id": "vocabulary/rune-match",
+      "catalog_evidence": {
+        "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+        "path": "apps/advantage-games/src/lib/gameCards.ts",
+        "range": {
+          "end_line": 84,
+          "sha256": "097647859ac02e9e33cc4b2ccb3a109cc85f8a470bb3200b15bc89cbab58dea5",
+          "start_line": 84
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "catalog_identity_id": "rune-match",
       "discovery_method": "mechanical-filesystem",
       "routes": [
         {
@@ -1048,6 +1684,17 @@
         }
       ],
       "canonical_identity_id": "vocabulary/wizard-vs-zombie",
+      "catalog_evidence": {
+        "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+        "path": "apps/advantage-games/src/lib/gameCards.ts",
+        "range": {
+          "end_line": 68,
+          "sha256": "c0a1d4a5fec476b2c20390adcfb29639e615df0943a3d850744e00866d03aee5",
+          "start_line": 68
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "catalog_identity_id": "wizard-vs-zombie",
       "discovery_method": "mechanical-filesystem",
       "routes": [
         {
