@@ -19,7 +19,7 @@
   "bin": { "tutorial-check": "./dist/cli.js" },
   "files": ["dist", "README.md"],
   "scripts": {
-    "build": "node ../../node_modules/typescript/bin/tsc",
+    "build": "node ../../node_modules/typescript7/bin/tsc",
     "check-types": "node ../../node_modules/typescript7/bin/tsc --noEmit -p tsconfig.test.json",
     "check-types:compat": "node ../../node_modules/typescript/bin/tsc --noEmit -p tsconfig.test.json",
     "check-types:rollback": "node ../../node_modules/typescript/bin/tsc --noEmit -p tsconfig.test.json",

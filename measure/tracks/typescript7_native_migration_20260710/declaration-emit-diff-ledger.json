@@ -106,6 +106,21 @@
       "javascript_differences": [],
       "disposition": "accepted_declaration_ordering_and_map_only",
       "rationale": "TypeScript 7 changes only the generated factory declaration's inferred property ordering and the derived declaration maps; JavaScript is byte-identical."
+    },
+    {
+      "package": "packages/activity-tutorial",
+      "typescript6": "6.0.2",
+      "typescript7": "7.0.2",
+      "typescript6_exit_status": 0,
+      "typescript7_exit_status": 0,
+      "output_file_count": 30,
+      "typescript6_relative_tree_sha256": "05f5b014c29f2d3059c514ed4934667ab2c301e11caa3a8e43285bf86415913b",
+      "typescript7_relative_tree_sha256": "f281d9d91662a955f9ae07bfb9798bb4a80be35095f0ef0ab4431b50ff1f1e15",
+      "diff_sha256": "7e76ff42f2b2325ea67103529cfadf19b498bff9633f9e68241fc99ff3320616",
+      "declaration_differences": ["contracts.d.ts", "credential-contracts.d.ts", "report-contracts.d.ts"],
+      "javascript_differences": [],
+      "disposition": "accepted_declaration_ordering_only",
+      "rationale": "The activity tutorial public declaration types retain the same property sets and union members; TypeScript 7 changes printer ordering only. JavaScript is byte-identical."
     }
   ]
 }
