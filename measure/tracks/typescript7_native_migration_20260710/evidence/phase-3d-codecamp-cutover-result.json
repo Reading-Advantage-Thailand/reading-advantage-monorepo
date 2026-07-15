@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "track": "typescript7_native_migration_20260710",
+  "phase": "Phase 3d: check-types cutover",
+  "status": "accepted_pre_existing_debt",
+  "workspace": {
+    "name": "codecamp-advantage",
+    "path": "apps/codecamp-advantage",
+    "acceptance_order": 12
+  },
+  "scope_boundary": "Only the package check-types routing changed. Concurrent Codecamp product-source changes remain out of this isolated migration worktree and require a post-integration scoped rerun.",
+  "scripts": {
+    "check-types": "node ../../node_modules/typescript7/bin/tsc --noEmit",
+    "check-types:compat": "node ../../node_modules/typescript/bin/tsc --noEmit",
+    "check-types:rollback": "node ../../node_modules/typescript/bin/tsc --noEmit"
+  },
+  "results": {
+    "native": { "version": "7.0.2", "exit_status": 1, "stdout_line_count": 219, "stdout_sha256": "9e2d64f65320c5aa844598ef34990605fd69a9d261970842267cb1b86dddfade" },
+    "compat": { "version": "6.0.2", "exit_status": 1, "stdout_line_count": 219, "stdout_sha256": "562642067ebe55064f1ec20818f7547d51ee06de46df73d7d65eda6e59b97982" },
+    "rollback": { "version": "6.0.2", "exit_status": 1, "stdout_line_count": 219, "stdout_sha256": "562642067ebe55064f1ec20818f7547d51ee06de46df73d7d65eda6e59b97982" }
+  },
+  "parity_disposition": {
+    "accepted_run": "evidence/phase-3c-parity/run-20260715T033929917664Z",
+    "record": "apps/codecamp-advantage/tsconfig.json",
+    "status": "parity",
+    "unexplained_differences": [],
+    "applied_ledger_entries": [],
+    "reason": "The migration-worktree source has the same normalized diagnostic set under both compilers. Existing Codecamp diagnostics are not a TypeScript 7 regression."
+  },
+  "follow_up": "Re-run apps/codecamp-advantage's native and compatibility checks against the active Codecamp source when its track lands before final migration acceptance."
+}
