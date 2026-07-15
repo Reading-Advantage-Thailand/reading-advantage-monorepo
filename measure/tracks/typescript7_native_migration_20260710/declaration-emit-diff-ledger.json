@@ -228,6 +228,21 @@
       "javascript_differences": [],
       "disposition": "accepted_declaration_ordering_and_map_only",
       "rationale": "TypeScript 7 changes inferred declaration property and Zod enum-member ordering, quote style, and derived declaration maps only; emitted JavaScript is byte-identical."
+    },
+    {
+      "package": "packages/activity-react",
+      "typescript6": "6.0.2",
+      "typescript7": "7.0.2",
+      "typescript6_exit_status": 0,
+      "typescript7_exit_status": 0,
+      "output_file_count": 15,
+      "typescript6_relative_tree_sha256": "cb1f9acbdd12b50bed460e3950ca85f5bf8d4c507379c4837257788ae8efcb15",
+      "typescript7_relative_tree_sha256": "14be0e920ea578e262ebe3b6b2c378c58721c68a5a5c179aaf33ba40fc7c9a60",
+      "diff_sha256": "2b8606cd052213a72e204135cbc28b91e1b8af6dac9b504618ba8a8fdc74fe28",
+      "declaration_differences": [],
+      "javascript_differences": ["interactive-activity-player.js"],
+      "disposition": "accepted_jsx_helper_import_ordering_only",
+      "rationale": "TypeScript 7 only swaps the equivalent jsx/jsxs helper import specifier order in the emitted React module; helper bindings and every emitted call are unchanged."
     }
   ]
 }

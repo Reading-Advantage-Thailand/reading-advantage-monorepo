@@ -112,6 +112,7 @@ PHASE3E_ACCEPTED_EMIT_BUILD_WORKSPACES = (
     "packages/ai",
     "packages/activity-runtime",
     "packages/srs-engine",
+    "packages/activity-react",
 )
 
 
@@ -763,6 +764,17 @@ class Phase3dCheckTypesCutoverContract(unittest.TestCase):
         self.assertIsInstance(scripts, dict)
         assert isinstance(scripts, dict)
         self.assertEqual(scripts.get("build"), "node ../../node_modules/typescript7/bin/tsc")
+
+    def test_activity_react_emit_routes_to_typescript7(self) -> None:
+        """Requires the React package's emitting build to select the native alias."""
+        manifest = json.loads(ACTIVITY_REACT_PACKAGE_PATH.read_text(encoding="utf-8"))
+        scripts = manifest.get("scripts")
+        self.assertIsInstance(scripts, dict)
+        assert isinstance(scripts, dict)
+        self.assertEqual(
+            scripts.get("build"),
+            "node scripts/clean-dist.mjs && node ../../node_modules/typescript7/bin/tsc",
+        )
 
 
 class Phase3eDeclarationEmitContract(unittest.TestCase):
