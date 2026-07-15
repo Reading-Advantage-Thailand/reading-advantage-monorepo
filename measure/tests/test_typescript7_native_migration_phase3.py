@@ -31,6 +31,7 @@ GITHUB_INTEGRATION_PACKAGE_PATH = REPO_ROOT / "packages" / "integrations" / "git
 ADVANTAGE_GAMES_PACKAGE_PATH = REPO_ROOT / "apps" / "advantage-games" / "package.json"
 SCIENCE_ADVANTAGE_PACKAGE_PATH = REPO_ROOT / "apps" / "science-advantage" / "package.json"
 PRIMARY_ADVANTAGE_PACKAGE_PATH = REPO_ROOT / "apps" / "primary-advantage" / "package.json"
+READING_ADVANTAGE_PACKAGE_PATH = REPO_ROOT / "apps" / "reading-advantage" / "package.json"
 PHASE3D_CUTOVER_ORDER = (
     "packages/types",
     "packages/db",
@@ -353,6 +354,17 @@ class Phase3dCheckTypesCutoverContract(unittest.TestCase):
         self.assertEqual(scripts.get("check-types"), self.NATIVE_COMMAND)
         self.assertEqual(scripts.get("check-types:compat"), self.COMPAT_COMMAND)
         self.assertEqual(scripts.get("check-types:rollback"), self.COMPAT_COMMAND)
+
+    def test_reading_advantage_check_types_routing_has_a_capacity_safe_rollback(self) -> None:
+        """Requires the benchmark keystone to use native TS7 and the proven TS6 heap budget."""
+        compat = "node --max-old-space-size=3072 ../../node_modules/typescript/bin/tsc --noEmit"
+        manifest = json.loads(READING_ADVANTAGE_PACKAGE_PATH.read_text(encoding="utf-8"))
+        scripts = manifest.get("scripts")
+        self.assertIsInstance(scripts, dict)
+        assert isinstance(scripts, dict)
+        self.assertEqual(scripts.get("check-types"), self.NATIVE_COMMAND)
+        self.assertEqual(scripts.get("check-types:compat"), compat)
+        self.assertEqual(scripts.get("check-types:rollback"), compat)
 
     def test_native_workspace_cutovers_follow_the_required_strict_prefix(self) -> None:
         """Rejects a native check-types switch that skips an earlier workspace in the acceptance order."""

@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "track": "typescript7_native_migration_20260710",
+  "phase": "Phase 3d: check-types cutover",
+  "status": "accepted_reviewed_rendering_difference",
+  "workspace": {
+    "name": "reading-advantage",
+    "path": "apps/reading-advantage",
+    "acceptance_order": 11
+  },
+  "scripts": {
+    "check-types": "node ../../node_modules/typescript7/bin/tsc --noEmit",
+    "check-types:compat": "node --max-old-space-size=3072 ../../node_modules/typescript/bin/tsc --noEmit",
+    "check-types:rollback": "node --max-old-space-size=3072 ../../node_modules/typescript/bin/tsc --noEmit"
+  },
+  "results": {
+    "native": { "version": "7.0.2", "exit_status": 1, "stdout_line_count": 1054, "stdout_sha256": "20fb460393d75e185a6b288b793b73efc366db7a3917731fcf05db513cc9560e" },
+    "compat": { "version": "6.0.2", "exit_status": 2, "stdout_line_count": 1054, "stdout_sha256": "20505087c1e4d27f3cc9cf61790810eb4e244eb11a96a0aa381bb792ac52b526" },
+    "rollback": { "version": "6.0.2", "exit_status": 1, "stdout_line_count": 1054, "stdout_sha256": "20505087c1e4d27f3cc9cf61790810eb4e244eb11a96a0aa381bb792ac52b526" }
+  },
+  "runtime_capacity": {
+    "prior_default_failure": "TypeScript 6 aborted at Node's default approximately 2 GiB heap before diagnostics.",
+    "required_fallback_budget": "3072 MiB",
+    "compatibility_elapsed_seconds": 237,
+    "rollback_elapsed_seconds": 56,
+    "disposition": "Both explicit TS6 compatibility routes completed their diagnostics under the compiler-proven 3072 MiB limit; the Next build command and tsconfig remain unchanged."
+  },
+  "parity_disposition": {
+    "accepted_run": "evidence/phase-3c-parity/run-20260715T033929917664Z",
+    "record": "apps/reading-advantage/tsconfig.json",
+    "status": "parity",
+    "unexplained_differences": [],
+    "applied_ledger_entries": 6,
+    "reason": "The six entries are three paired TS2345 mock-user assignment renderings at rbac.test.ts lines 261, 294, and 323. TypeScript 6 abbreviates object properties while TypeScript 7 prints more properties; both report the same source-span failure."
+  },
+  "non_goals": [
+    "Existing Reading diagnostics remain open technical debt.",
+    "The existing Next build memory setting, TypeScript configs, and emit behavior are not changed before Phase 3e."
+  ]
+}
