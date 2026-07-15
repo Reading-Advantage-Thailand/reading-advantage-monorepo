@@ -32,7 +32,9 @@ BASELINE_PATH = TRACK_DIR / "compiler-baseline.json"
 TS6_TSC = REPO_ROOT / "node_modules" / "typescript" / "bin" / "tsc"
 TS7_TSC = REPO_ROOT / "node_modules" / "typescript7" / "bin" / "tsc"
 TIME = Path("/usr/bin/time")
+TURBO_RUNS_DIR = REPO_ROOT / ".turbo" / "runs"
 DIAGNOSTIC_PATTERN = re.compile(r"\berror TS\d+:")
+TURBO_SUMMARY_PATTERN = re.compile(r"Summary:\s+(?P<path>[^\s\"]+\.json)")
 IDLE_THRESHOLD_PERCENT = 70
 TS6_MAX_OLD_SPACE_MIB = 3072
 MANDATED_SPEEDUP_THRESHOLDS = {
@@ -326,31 +328,31 @@ def _compiler_command(target: BenchmarkTarget, compiler: str, checkers: int) -> 
     return command, environment
 
 
-def _clear_turbo_summary(summary_path: Path) -> Path:
-    """Remove the previous Turbo summary before one graph sample starts.
-
-    Args:
-        summary_path: Run-global summary path that Turbo writes for a graph invocation.
-
-    Returns:
-        The cleared summary path for the caller to bind to this sample.
-    """
-    summary_path.unlink(missing_ok=True)
-    return summary_path
-
-
 def _read_turbo_summary(
-    summary_path: Path,
+    stdout: str,
     started_at_ns: int,
     exit_status: int,
 ) -> tuple[dict[str, Any] | None, str | None, str]:
-    """Load only a fresh Turbo summary produced by a successful graph sample.
+    """Load only the fresh Turbo run summary path emitted by a successful graph sample.
+
+    Args:
+        stdout: Turbo's captured output containing the run-specific summary path.
+        started_at_ns: Wall-clock timestamp immediately before the sample process started.
+        exit_status: Turbo process exit status for this sample.
 
     Returns:
         Parsed summary, its content digest, and a provenance state.
     """
     if exit_status != 0:
         return None, None, "command_failed"
+    matches = list(TURBO_SUMMARY_PATTERN.finditer(stdout))
+    if not matches:
+        return None, None, "missing"
+    summary_path = Path(matches[-1].group("path")).resolve()
+    try:
+        summary_path.relative_to(TURBO_RUNS_DIR.resolve())
+    except ValueError:
+        return None, None, "outside_turbo_runs_directory"
     if not summary_path.is_file():
         return None, None, "missing"
     if summary_path.stat().st_mtime_ns < started_at_ns:
@@ -464,11 +466,6 @@ def _run_sample(
     run_environment = {**os.environ, **environment}
     dmesg_status_before, dmesg_before = _dmesg_status()
     swap_before = _swap_used_kib()
-    turbo_summary_path = (
-        _clear_turbo_summary(REPO_ROOT / "turbo-summary.json")
-        if target.kind == "turbo"
-        else None
-    )
     started_at_ns = time.time_ns()
     started_monotonic = time.monotonic()
     process = subprocess.Popen(
@@ -515,9 +512,9 @@ def _run_sample(
     output_prefix = output_dir / sample_id
     output_prefix.with_suffix(".stdout.log").write_text(stdout, encoding="utf-8")
     output_prefix.with_suffix(".stderr.log").write_text(stderr, encoding="utf-8")
-    if turbo_summary_path is not None:
+    if target.kind == "turbo":
         turbo_summary, turbo_summary_sha, turbo_summary_state = _read_turbo_summary(
-            turbo_summary_path, started_at_ns, process.returncode
+            stdout, started_at_ns, process.returncode
         )
     else:
         turbo_summary, turbo_summary_sha, turbo_summary_state = None, None, "not_applicable_direct_tsc"

@@ -9,6 +9,7 @@ import re
 import subprocess
 import sys
 import tempfile
+import time
 import unittest
 from pathlib import Path
 from types import ModuleType
@@ -943,13 +944,23 @@ class Phase3gBenchmarkRunnerContract(unittest.TestCase):
             self.runner._require_complete_matrix([self.runner.TARGETS[0]])
         self.assertIsNone(self.runner._require_complete_matrix(list(self.runner.TARGETS)))
 
-    def test_turbo_summary_is_cleared_before_a_sample_can_read_it(self) -> None:
-        """Requires stale Turbo metadata to be removed before each graph benchmark sample."""
+    def test_turbo_summary_is_bound_to_the_fresh_run_emitted_path(self) -> None:
+        """Requires graph evidence to read only the summary path emitted by this Turbo run."""
         with tempfile.TemporaryDirectory() as temporary_directory:
-            summary_path = Path(temporary_directory) / "turbo-summary.json"
-            summary_path.write_text('{"cache":{"status":"HIT"}}\n', encoding="utf-8")
-            self.assertEqual(self.runner._clear_turbo_summary(summary_path), summary_path)
-            self.assertFalse(summary_path.exists())
+            summary_directory = Path(temporary_directory)
+            summary_path = summary_directory / "fresh.json"
+            with patch.object(self.runner, "TURBO_RUNS_DIR", summary_directory):
+                started_at_ns = time.time_ns()
+                summary_path.write_text('{"cache":{"status":"HIT"}}\n', encoding="utf-8")
+                summary, _, state = self.runner._read_turbo_summary(
+                    f"Summary: {summary_path}\n", started_at_ns, 0
+                )
+                self.assertEqual(state, "captured")
+                self.assertEqual(summary, {"cache": {"status": "HIT"}})
+                _, _, stale_state = self.runner._read_turbo_summary(
+                    f"Summary: {summary_path}\n", time.time_ns(), 0
+                )
+                self.assertEqual(stale_state, "stale")
 
     def test_threshold_status_requires_both_mandated_speedups(self) -> None:
         """Requires under-threshold critical surfaces to remain explicitly unaccepted."""
@@ -969,6 +980,15 @@ class Phase3gBenchmarkRunnerContract(unittest.TestCase):
         )
         self.assertEqual(status["status"], "threshold_not_met")
         self.assertEqual(status["failures"][0]["target"], "apps-reading-advantage")
+
+    def test_utils_tsup_declaration_path_declares_its_ts6_deprecation_compatibility(self) -> None:
+        """Requires the TS6-bound declaration bundler to read its explicit compatibility setting."""
+        config_path = REPO_ROOT / "packages" / "utils" / "tsconfig.json"
+        config = json.loads(config_path.read_text(encoding="utf-8"))
+        options = config.get("compilerOptions")
+        self.assertIsInstance(options, dict)
+        assert isinstance(options, dict)
+        self.assertEqual(options.get("ignoreDeprecations"), "6.0")
 
 
 class Phase3eDeclarationEmitContract(unittest.TestCase):
