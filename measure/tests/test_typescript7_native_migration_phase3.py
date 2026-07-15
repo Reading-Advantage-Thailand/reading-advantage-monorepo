@@ -915,6 +915,17 @@ class Phase3gBenchmarkRunnerContract(unittest.TestCase):
             graph_command, _ = self.runner._compiler_command(graph_target, "ts6", 1)
         self.assertEqual(graph_command[-2:], ["--", "--stableTypeOrdering"])
 
+    def test_cold_graph_force_remains_a_turbo_flag(self) -> None:
+        """Requires cold-cache forcing to precede Turbo's forwarded compiler arguments."""
+        graph_target = next(
+            target for target in self.runner.TARGETS if target.kind == "turbo"
+        )
+        with patch.dict("os.environ", {"TS7_BENCHMARK_CACHE_DIR": "/tmp/ts7-test-cache"}):
+            graph_command, _ = self.runner._compiler_command(graph_target, "ts6", 1)
+        cold_command = self.runner._with_temperature(graph_command, graph_target, "cold")
+        self.assertLess(cold_command.index("--force"), cold_command.index("--"))
+        self.assertEqual(cold_command[-2:], ["--", "--stableTypeOrdering"])
+
     def test_runner_executes_directly_from_the_repository_root(self) -> None:
         """Requires the tracked executable to resolve its repo-local harness imports unaided."""
         completed = subprocess.run(

@@ -328,6 +328,23 @@ def _compiler_command(target: BenchmarkTarget, compiler: str, checkers: int) -> 
     return command, environment
 
 
+def _with_temperature(command: list[str], target: BenchmarkTarget, temperature: str) -> list[str]:
+    """Apply the requested cache temperature without forwarding Turbo flags to task scripts.
+
+    Args:
+        command: Base direct or Turbo command for one compiler cohort.
+        target: Benchmark target that determines whether the command is Turbo-backed.
+        temperature: Requested cold or warm cache temperature.
+
+    Returns:
+        Command with Turbo's cold-cache force flag positioned before any forwarded arguments.
+    """
+    if target.kind != "turbo" or temperature != "cold":
+        return command
+    separator = command.index("--") if "--" in command else len(command)
+    return [*command[:separator], "--force", *command[separator:]]
+
+
 def _read_turbo_summary(
     stdout: str,
     started_at_ns: int,
@@ -460,8 +477,7 @@ def _run_sample(
         os.environ.pop("TS7_BENCHMARK_CACHE_DIR", None)
     else:
         os.environ["TS7_BENCHMARK_CACHE_DIR"] = old_cache_dir
-    if target.kind == "turbo" and temperature == "cold":
-        command.append("--force")
+    command = _with_temperature(command, target, temperature)
 
     run_environment = {**os.environ, **environment}
     dmesg_status_before, dmesg_before = _dmesg_status()
