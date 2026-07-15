@@ -76,6 +76,21 @@
       "javascript_differences": [],
       "disposition": "byte_identical",
       "rationale": "The unchanged tsup JavaScript stage and the TypeScript declaration-only stage produce a byte-identical dist tree under both compiler aliases."
+    },
+    {
+      "package": "packages/integrations/github",
+      "typescript6": "6.0.2",
+      "typescript7": "7.0.2",
+      "typescript6_exit_status": 0,
+      "typescript7_exit_status": 0,
+      "output_file_count": 18,
+      "typescript6_relative_tree_sha256": "114d9a6f3fea68f0566f69854827916b0d4fa03f5ce662b3450d2dc117d966c0",
+      "typescript7_relative_tree_sha256": "94aeeba5923ffa93d276ff2e1f59b5d13e43c8c78623a5b4b0cd1d3cae715c01",
+      "diff_sha256": "785e7c5565d722ac8bf721801504fa21d2cb93f73550c0f494223027d1e27a8f",
+      "declaration_differences": ["client.d.ts.map", "drivers/rest.d.ts.map", "factory.d.ts.map"],
+      "javascript_differences": [],
+      "disposition": "accepted_declaration_map_only",
+      "rationale": "Generated declaration text and JavaScript are byte-identical; TypeScript 7 changes only source-map mapping offsets for unchanged declaration files."
     }
   ]
 }

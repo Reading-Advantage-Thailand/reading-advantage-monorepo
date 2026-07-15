@@ -102,6 +102,7 @@ PHASE3E_ACCEPTED_EMIT_BUILD_WORKSPACES = (
     "packages/types",
     "packages/db",
     "packages/game-cartridges",
+    "packages/integrations/github",
 )
 
 
@@ -670,6 +671,14 @@ class Phase3dCheckTypesCutoverContract(unittest.TestCase):
             scripts.get("build"),
             "tsup src/index.ts src/catalog.ts --format esm && node ../../node_modules/typescript7/bin/tsc -p tsconfig.build.json --emitDeclarationOnly",
         )
+
+    def test_github_integration_emit_routes_to_typescript7(self) -> None:
+        """Requires the nested integration package to use its explicit native compiler route."""
+        manifest = json.loads(GITHUB_INTEGRATION_PACKAGE_PATH.read_text(encoding="utf-8"))
+        scripts = manifest.get("scripts")
+        self.assertIsInstance(scripts, dict)
+        assert isinstance(scripts, dict)
+        self.assertEqual(scripts.get("build"), "node ../../../node_modules/typescript7/bin/tsc")
 
 
 class Phase3eDeclarationEmitContract(unittest.TestCase):
