@@ -89,7 +89,7 @@
     - [x] Cut over `apps/marketing`; preserve and classify its parity-proven pre-existing diagnostics. [evidence: phase-3d-marketing-cutover-result.json]
     - [x] Cut over `apps/www-reading-advantage` cleanly and preserve the Vinext fixture's parity-proven pre-existing diagnostics. [evidence: phase-3d-www-cutover-result.json, phase-3d-activity-vinext-fixture-cutover-result.json]
     - [x] Complete the remaining binding workspace surface and root native/compat/parity/rollback routing discovered by the Phase 3d audit. [evidence: phase-3d-audited-remainder-cutover-result.json]
-  - [~] Verify JavaScript and declaration emit before switching direct `tsc` builds; `packages/types` and `packages/db` are accepted with reviewed declaration-ordering ledger entries, `packages/game-cartridges` is byte-identical, `packages/integrations/github` has declaration-map-only differences, and the remaining direct-build surface remains.
+  - [~] Verify JavaScript and declaration emit before switching direct `tsc` builds; `packages/types` and `packages/db` are accepted with reviewed declaration-ordering ledger entries, `packages/game-cartridges` is byte-identical, `packages/integrations/github` and `packages/storage` have declaration-only differences, and the remaining direct-build surface remains.
   - [x] Preserve explicit TypeScript 6 compatibility and rollback commands.
   - [ ] Bound TypeScript checker concurrency underneath Turbo parallelism.
 - [~] Task: Run controlled performance benchmarks.

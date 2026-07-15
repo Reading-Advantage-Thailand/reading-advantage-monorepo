@@ -103,6 +103,7 @@ PHASE3E_ACCEPTED_EMIT_BUILD_WORKSPACES = (
     "packages/db",
     "packages/game-cartridges",
     "packages/integrations/github",
+    "packages/storage",
 )
 
 
@@ -679,6 +680,14 @@ class Phase3dCheckTypesCutoverContract(unittest.TestCase):
         self.assertIsInstance(scripts, dict)
         assert isinstance(scripts, dict)
         self.assertEqual(scripts.get("build"), "node ../../../node_modules/typescript7/bin/tsc")
+
+    def test_storage_emit_routes_to_typescript7(self) -> None:
+        """Requires the storage package's emitting build to select the native alias."""
+        manifest = json.loads(STORAGE_PACKAGE_PATH.read_text(encoding="utf-8"))
+        scripts = manifest.get("scripts")
+        self.assertIsInstance(scripts, dict)
+        assert isinstance(scripts, dict)
+        self.assertEqual(scripts.get("build"), "node ../../node_modules/typescript7/bin/tsc")
 
 
 class Phase3eDeclarationEmitContract(unittest.TestCase):

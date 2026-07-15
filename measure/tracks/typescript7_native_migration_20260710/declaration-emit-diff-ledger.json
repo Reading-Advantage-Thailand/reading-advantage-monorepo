@@ -91,6 +91,21 @@
       "javascript_differences": [],
       "disposition": "accepted_declaration_map_only",
       "rationale": "Generated declaration text and JavaScript are byte-identical; TypeScript 7 changes only source-map mapping offsets for unchanged declaration files."
+    },
+    {
+      "package": "packages/storage",
+      "typescript6": "6.0.2",
+      "typescript7": "7.0.2",
+      "typescript6_exit_status": 0,
+      "typescript7_exit_status": 0,
+      "output_file_count": 27,
+      "typescript6_relative_tree_sha256": "000a426fc259e4265b4b558d84ace364bf0cb7af1fc710f44ee9edae215c1283",
+      "typescript7_relative_tree_sha256": "a43a6a24ef0863613676b5323bf9da2bf4d83119f22969a1d253035adfde86b3",
+      "diff_sha256": "4a8002ed6131375d7ee87a53e0924f102d526c8b6164b607beeec982eae47f08",
+      "declaration_differences": ["drivers/s3.d.ts.map", "factory.d.ts", "factory.d.ts.map"],
+      "javascript_differences": [],
+      "disposition": "accepted_declaration_ordering_and_map_only",
+      "rationale": "TypeScript 7 changes only the generated factory declaration's inferred property ordering and the derived declaration maps; JavaScript is byte-identical."
     }
   ]
 }
