@@ -77,7 +77,8 @@
     - [x] Remove ambiguous hoisted `tsc` routing from workspace scripts; pin pre-3e emit commands to TypeScript 6. [evidence: phase-3d-types-cutover-result.json]
     - [x] Cut over `@reading-advantage/types` with explicit TypeScript 6 compatibility and rollback scripts. [evidence: phase-3d-types-cutover-result.json]
     - [x] Cut over `@reading-advantage/db` with explicit TypeScript 6 compatibility and rollback scripts. [evidence: phase-3d-db-cutover-result.json]
-    - [ ] Continue the required workspace order from `@reading-advantage/domain` through the remaining applications.
+    - [x] Cut over `@reading-advantage/domain`; preserve and classify its parity-proven pre-existing diagnostics. [evidence: phase-3d-domain-cutover-result.json]
+    - [ ] Continue the required workspace order from `@reading-advantage/auth` through the remaining applications.
   - [ ] Verify JavaScript and declaration emit before switching direct `tsc` builds.
   - [ ] Preserve explicit TypeScript 6 compatibility and rollback commands.
   - [ ] Bound TypeScript checker concurrency underneath Turbo parallelism.

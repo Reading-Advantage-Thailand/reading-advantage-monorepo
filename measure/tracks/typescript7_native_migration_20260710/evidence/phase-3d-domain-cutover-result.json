@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "track": "typescript7_native_migration_20260710",
+  "phase": "Phase 3d: check-types cutover",
+  "status": "accepted_pre_existing_debt",
+  "workspace": {
+    "name": "@reading-advantage/domain",
+    "path": "packages/domain",
+    "acceptance_order": 3
+  },
+  "scripts": {
+    "check-types": "node ../../node_modules/typescript7/bin/tsc --noEmit",
+    "check-types:compat": "node ../../node_modules/typescript/bin/tsc --noEmit",
+    "check-types:rollback": "node ../../node_modules/typescript/bin/tsc --noEmit",
+    "build": "node ../../node_modules/typescript/bin/tsc"
+  },
+  "baseline_and_cutover": {
+    "native": {
+      "version": "7.0.2",
+      "exit_status": 1,
+      "stdout_line_count": 768,
+      "stdout_sha256": "84889d6256e982bb74bc63bd59c87fa9f40ca4b463b7797a05fc951e77932ae0"
+    },
+    "compat": {
+      "version": "6.0.2",
+      "exit_status": 2,
+      "stdout_line_count": 772,
+      "stdout_sha256": "0bd9ff23570f4b507aeeb7c1d95220ea178f3bace4af86946ff3499786694e68"
+    },
+    "rollback": {
+      "version": "6.0.2",
+      "exit_status": 2,
+      "stdout_line_count": 772,
+      "stdout_sha256": "0bd9ff23570f4b507aeeb7c1d95220ea178f3bace4af86946ff3499786694e68"
+    }
+  },
+  "parity_disposition": {
+    "accepted_run": "evidence/phase-3c-parity/run-20260715T033929917664Z",
+    "record": "packages/domain/tsconfig.json",
+    "status": "parity",
+    "unexplained_differences": [],
+    "applied_ledger_entries": [],
+    "reason": "The current domain source and tsconfig have not changed since the accepted parity run; differing TypeScript process exit codes and rendered line counts are pre-existing diagnostics, not a TypeScript 7 regression."
+  },
+  "non_goals": [
+    "The TypeScript 6 build remains unchanged until Phase 3e emit-byte comparison.",
+    "This result does not treat existing domain diagnostics as green; it only proves the TS7 cutover introduces no unexplained diagnostic difference."
+  ]
+}
