@@ -1,4 +1,5 @@
-import { createTRPCReact } from "@trpc/react-query";
+import { createTRPCReact, type CreateTRPCReact } from "@trpc/react-query";
 import type { AppRouter } from "@reading-advantage/api";
 
-export const trpc = createTRPCReact<AppRouter>();
+/** Client-side tRPC hooks bound to the shared application router. */
+export const trpc: CreateTRPCReact<AppRouter, unknown> = createTRPCReact<AppRouter>();

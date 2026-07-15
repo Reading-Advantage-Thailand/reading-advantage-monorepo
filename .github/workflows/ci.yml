@@ -136,3 +136,4 @@ jobs:
           name: ts7-ci-observation-${{ github.run_id }}
           path: .ci-observation/
           if-no-files-found: error
+          include-hidden-files: true

@@ -1089,6 +1089,7 @@ class Phase3gBenchmarkRunnerContract(unittest.TestCase):
         self.assertIn("pnpm turbo run check-types --concurrency=1 > .ci-observation/ts7.log", workflow)
         self.assertIn("pnpm turbo run check-types --concurrency=1 --force", workflow)
         self.assertIn("scripts/ci/capture-ts7-rollout-observation.mjs", workflow)
+        self.assertIn("include-hidden-files: true", workflow)
         self.assertIn("workflow_dispatch:", workflow)
         self.assertIn("scripts/**", workflow)
 
