@@ -1,0 +1,11 @@
+Task 4 PostgreSQL Red gate evidence.
+
+Environment: PostgreSQL server_version_num=160014. PgBouncer 1.23.1 reported pool_mode=transaction on 127.0.0.1:6432.
+
+Exact 10-file Vitest command: CI=true COMPANY_IDENTITY_TEST_ADMIN_DATABASE_URL=postgresql://postgres:postgres@127.0.0.1:5432/postgres pnpm --filter @reading-advantage/db exec vitest run src/company-identity/__tests__/migration-fresh.integration.test.ts src/company-identity/__tests__/migration-upgrade.integration.test.ts src/company-identity/__tests__/constraints.integration.test.ts src/company-identity/__tests__/privileges-audit.integration.test.ts src/company-identity/__tests__/connection-topology.integration.test.ts src/company-identity/__tests__/bootstrap.integration.test.ts src/company-identity/__tests__/local-bootstrap.integration.test.ts src/company-identity/__tests__/product-isolation.integration.test.ts src/company-identity/__tests__/secret-persistence.integration.test.ts src/company-identity/__tests__/rollback.integration.test.ts
+
+Expected Red result: exit 1; 10 test files; 28 tests; 27 failed and 1 passed. The pass is the live PgBouncer transaction-mode preflight. Failures name the intentionally absent production migration, migration journal, bootstrap, client, doctor, privilege, and persistence primitives. No skipped tests, setup errors, unhandled errors, scratch databases, scratch roles, or labeled fresh-volume containers remained.
+
+Quality gates: focused ESLint passed; git diff --check passed; build-graph update reported 11 files, 153 to 164 nodes, and 206 to 212 edges; independent read-only reviewer returned PASS with no actionable findings.
+
+Local image note: the repository-configured public.ecr.aws/bitnami/pgbouncer:1.23.1 reference is unavailable. Red verification used the locally pulled docker.io/bitnamilegacy/pgbouncer:1.23.1 image without modifying repository compose files; the checked-in image correction remains Task 5 implementation work.
