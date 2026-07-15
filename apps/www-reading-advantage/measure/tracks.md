@@ -4,6 +4,18 @@ This file tracks all major tracks for project. Each track has its own detailed p
 
 ---
 
+## [~] Track: CodeCamp Live Product Page Alignment
+
+**Status:** In Progress
+
+**Type:** feature | **Estimated Tasks:** 8
+
+**Description:** Replace the stale pre-launch CodeCamp landing page with a truthful production page for the live 20-module pathway, Measure curriculum, mastery evidence, targeted tutor, diagrams/media, APK game-creation unit, and guarded advisory PR-review pipeline, then deploy and browser-verify the www site.
+
+_Link: [./measure/tracks/codecamp_live_product_page_20260715/](./measure/tracks/codecamp_live_product_page_20260715/)_
+
+---
+
 ## [ ] Track: Complete Services and Blended Learning Page Development
 
 _Link: [./measure/tracks/services_development_20260114/](./measure/tracks/services_development_20260114/)_
