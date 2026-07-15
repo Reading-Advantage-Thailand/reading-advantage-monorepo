@@ -1,0 +1,17 @@
+Measure task: Phase S1 Task 2 — Define Zod and Drizzle contracts for the identity database
+
+Summary:
+- specified 17 identity-only tables, enums, exact FKs, constraints, indexes, expiration, and idempotency behavior
+- defined deterministic versioned username normalization and secret-safe credential/session/code storage
+- split contracts across DB persistence, backend capabilities, and auth/OIDC owners
+- defined fail-closed runtime/direct/test/issuer/cookie/service environment schemas
+- preserved active-membership-scoped roles and future employee-app expansion without schools, licensing, customers, or product data
+
+Review: independent schema/backend review passed with 0 findings after resolving 2 High and 3 Medium findings.
+
+File:
+- measure/tracks/company_identity_sso_20260715/schema-contract.md
+
+TDD: this task establishes the contract oracle only; executable failing contract and architecture tests are the immediately following Task 3, before Task 5 implementation.
+
+Graph: documentation-only change; no TypeScript exports changed.
