@@ -203,10 +203,11 @@ Two parallel programs are in flight; priority order when picking the next track:
   adds a **vinext-runtime** Dockerfile + cloudbuild, provisions the DB, deploys to Cloud Run,
     and runs manual QA. Successor to the deferred build/deploy remainder of `video_pipeline_20260613`.
 
-- [ ] **Track: CodeCamp Measure-Driven AI Development Curriculum Unit** *Link: [./tracks/codecamp_measure_curriculum_unit_20260709/](./tracks/codecamp_measure_curriculum_unit_20260709/)*
+- [x] **Track: CodeCamp Measure-Driven AI Development Curriculum Unit** *Link: [./archive/codecamp_measure_curriculum_unit_20260709/](./archive/codecamp_measure_curriculum_unit_20260709/)*
   Add a standalone Measure methodology unit after AI Integration, then shift Monorepo, Cloud/Docker, and Real-World Practice to later unit numbers without disrupting interns currently in Unit 10 or Unit 11.
+  Archived 2026-07-15 after production seed, Cloud Run deployment, authenticated curriculum/diagram acceptance, and the TenantDB production regression hotfix.
 
-- [ ] **Track: CodeCamp Interactive Media and Diagrams Integration** *Link: [./tracks/codecamp_interactive_media_diagrams_20260709/](./tracks/codecamp_interactive_media_diagrams_20260709/)*
+- [~] **Track: CodeCamp Interactive Media and Diagrams Integration** *Link: [./tracks/codecamp_interactive_media_diagrams_20260709/](./tracks/codecamp_interactive_media_diagrams_20260709/)*
   Introduce curated YouTube tutorial embeds and 16 unit-level visual diagrams/illustrations across the CodeCamp curriculum, adapting database seed data and frontend rendering components.
 
 ---
