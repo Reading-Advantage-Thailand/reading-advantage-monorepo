@@ -183,6 +183,21 @@
       "javascript_differences": [],
       "disposition": "accepted_declaration_map_only",
       "rationale": "Generated declarations and JavaScript are byte-identical; TypeScript 7 changes only source-map mapping offsets."
+    },
+    {
+      "package": "packages/ai",
+      "typescript6": "6.0.2",
+      "typescript7": "7.0.2",
+      "typescript6_exit_status": 0,
+      "typescript7_exit_status": 0,
+      "output_file_count": 135,
+      "typescript6_relative_tree_sha256": "8924d4a39ea0e5c0cd6decd43d6b9de1688fb391de1bab920e0ad1d39f952423",
+      "typescript7_relative_tree_sha256": "a705da0e450206348d681d35323b35d1692d2113e88dae90c7c50f055b829560",
+      "diff_sha256": "b9365bc354687f4ca5a829c5a9b7ba0ac098bf5759c0349279b493a837ff99eb",
+      "declaration_differences": ["__tests__/recommendations.fixture.d.ts", "errors.d.ts", "errors.d.ts.map", "providers/google.d.ts.map", "providers/mock.d.ts.map", "providers/openai.d.ts.map", "providers/openrouter.d.ts.map"],
+      "javascript_differences": [],
+      "disposition": "accepted_declaration_ordering_and_map_only",
+      "rationale": "TypeScript 7 changes inferred declaration ordering and derived declaration maps only; emitted JavaScript is byte-identical."
     }
   ]
 }
