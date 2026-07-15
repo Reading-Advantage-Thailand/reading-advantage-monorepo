@@ -526,7 +526,7 @@ Two parallel programs are in flight; priority order when picking the next track:
 
 - [ ] **Track: TypeScript 7 Native Compiler Migration** *(typescript7_native_migration_20260710)*
   *Link: [./tracks/typescript7_native_migration_20260710/](./tracks/typescript7_native_migration_20260710/)*
-  Adopt stable TypeScript 7 for native type-checking and eligible package builds while retaining `@typescript/typescript6` for tools that embed the legacy compiler API. Includes all-tsconfig compatibility, explicit ambient types, TypeScript 6/7 diagnostic parity, controlled performance benchmarks, bounded Turbo/CI concurrency, full toolchain gates, rollback, and a TypeScript 7.1+ compatibility-removal follow-up.
+  Adopt stable TypeScript 7 for native type-checking and eligible package builds while retaining direct `typescript@6.0.2` for tools that embed the legacy compiler API. TypeScript 7.0.2 is installed as the `typescript7` alias; `@typescript/typescript6` is deliberately not used because its inner compatibility dependency can float. All-tsconfig compatibility, diagnostic parity, emit evidence, tool smoke coverage, and scoped cache proof are complete. The controlled benchmark, CI observation window, and full gates remain open. **Follow-up:** after TypeScript 7.1+ supplies the supported programmatic API, open a dedicated compatibility-retirement track only after each recorded compiler-API consumer and Next.js's stable CLI path has passed its smoke/build matrix.
 
 - [ ] **Track: Zod 4 Major Migration** *(zod4_major_migration)*
   *Link: [./tracks/zod4_major_migration/](./tracks/zod4_major_migration/)*

@@ -100,6 +100,11 @@
   - [ ] Compare TypeScript 6 and 7 medians with equivalent semantics.
   - [ ] Tune checker concurrency once, rerun the complete benchmark matrix, and save
     the selected local and CI settings.
+  - 2026-07-15: Two user-authorized CPU-idle-override attempts were discarded rather
+    than accepted. Both retained the non-waivable resource guard; the second reached
+    `apps/reading-advantage` and stopped the TypeScript 6 baseline at a 140,572 KiB
+    swap delta (the 131,072 KiB stop-loss). No partial matrix or concurrency choice
+    may be cited as benchmark evidence.
 - [~] Task: Roll out TypeScript 7 through CI.
   - [ ] Add a temporary non-blocking parity lane.
   - [ ] Promote the TypeScript 7 lane only after parity and full gates pass.
