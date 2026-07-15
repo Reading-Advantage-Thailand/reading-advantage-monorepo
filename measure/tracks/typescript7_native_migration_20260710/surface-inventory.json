@@ -2,8 +2,8 @@
   "schema_version": "surface-inventory.v1",
   "status": "captured",
   "captured_at": "2026-07-14T00:00:00Z",
-  "tsconfig_count": 38,
-  "tsconfig_count_note": "Spec baseline audit (2026-07-10) reported 24; actual verified count at phase_base_sha is 38. Stale count not copied.",
+  "tsconfig_count": 39,
+  "tsconfig_count_note": "Spec baseline audit (2026-07-10) reported 24; exact tracked-file enumeration at the Phase 1 remediation head finds 39 non-generated tsconfig*.json files. Stale and self-referential counts are not copied.",
   "tsconfigs": [
     {"path": "apps/activity-vinext-fixture/tsconfig.json", "emit": false, "extends": "@reading-advantage/config/tsconfig"},
     {"path": "apps/advantage-games/tsconfig.json", "emit": false, "extends": "@reading-advantage/config/tsconfig"},
@@ -42,6 +42,7 @@
     {"path": "packages/storage/tsconfig.json", "emit": true, "extends": "@reading-advantage/config/tsconfig"},
     {"path": "packages/types/tsconfig.json", "emit": true, "extends": "@reading-advantage/config/tsconfig"},
     {"path": "packages/ui/tsconfig.json", "emit": true, "extends": "@reading-advantage/config/tsconfig"},
+    {"path": "packages/utils/tsconfig.json", "emit": true, "extends": "@reading-advantage/config/tsconfig"},
     {"path": "packages/webhooks/tsconfig.json", "emit": true, "extends": "@reading-advantage/config/tsconfig"}
   ],
   "shared_base_config": {
@@ -168,17 +169,17 @@
   "ownership_matrix": [
     {"consumer": "Root + workspace check-types (post-cutover target)", "hypothesized_compiler": "TypeScript 7", "proposed_alias": "TS 7 catalog alias", "binding": "binding", "binding_note": "target state; not yet installed", "programmatic_api": false, "phase1_verified": false},
     {"consumer": "tsc invocations in package build scripts that emit JS + .d.ts", "hypothesized_compiler": "TypeScript 7", "proposed_alias": "TS 7 catalog alias", "binding": "binding", "binding_note": "target state; emit byte-equivalence proven in Phase 3e", "programmatic_api": false, "phase1_verified": false},
-    {"consumer": "typescript-eslint", "hypothesized_compiler": "TypeScript 6", "proposed_alias": "typescript: npm:@typescript/typescript6@6.0.2", "binding": "hypothesis", "binding_note": "promoted if Phase 1 inventory confirms programmatic API", "programmatic_api": true, "phase1_verified": false, "evidence": "typescript-eslint peer-depends on typescript and uses the compiler programmatic API for type-aware linting"},
-    {"consumer": "ts-node", "hypothesized_compiler": "TypeScript 6", "proposed_alias": "typescript: npm:@typescript/typescript6@6.0.2", "binding": "hypothesis", "binding_note": "promoted if Phase 1 inventory confirms programmatic API", "programmatic_api": true, "phase1_verified": false, "evidence": "ts-node registers the TypeScript compiler via require('typescript') programmatic API"},
-    {"consumer": "tsup", "hypothesized_compiler": "TypeScript 6", "proposed_alias": "typescript: npm:@typescript/typescript6@6.0.2", "binding": "hypothesis", "binding_note": "promoted if Phase 1 inventory confirms programmatic API", "programmatic_api": true, "phase1_verified": false, "evidence": "tsup bundles via esbuild but uses TypeScript for declaration emit (tsc -p tsconfig.build.json --emitDeclarationOnly in game-cartridges)"},
-    {"consumer": "tsconfck", "hypothesized_compiler": "TypeScript 6", "proposed_alias": "typescript: npm:@typescript/typescript6@6.0.2", "binding": "hypothesis", "binding_note": "promoted if Phase 1 inventory confirms programmatic API", "programmatic_api": false, "phase1_verified": false, "evidence": "tsconfck resolves tsconfig files; does not embed the compiler API directly but may peer-depend on typescript"},
-    {"consumer": "commitlint (transitive peer)", "hypothesized_compiler": "TypeScript 6", "proposed_alias": "typescript: npm:@typescript/typescript6@6.0.2", "binding": "hypothesis", "binding_note": "promoted if Phase 1 inventory confirms programmatic API", "programmatic_api": false, "phase1_verified": false, "evidence": "@commitlint/cli in root devDependencies; transitive typescript peer"},
+    {"consumer": "typescript-eslint", "hypothesized_compiler": "TypeScript 6", "proposed_alias": "typescript@6.0.2 (direct)", "binding": "hypothesis", "binding_note": "promoted if Phase 1 inventory confirms programmatic API", "programmatic_api": true, "phase1_verified": false, "evidence": "typescript-eslint peer-depends on typescript and uses the compiler programmatic API for type-aware linting"},
+    {"consumer": "ts-node", "hypothesized_compiler": "TypeScript 6", "proposed_alias": "typescript@6.0.2 (direct)", "binding": "hypothesis", "binding_note": "promoted if Phase 1 inventory confirms programmatic API", "programmatic_api": true, "phase1_verified": false, "evidence": "ts-node registers the TypeScript compiler via require('typescript') programmatic API"},
+    {"consumer": "tsup", "hypothesized_compiler": "TypeScript 6", "proposed_alias": "typescript@6.0.2 (direct)", "binding": "hypothesis", "binding_note": "promoted if Phase 1 inventory confirms programmatic API", "programmatic_api": true, "phase1_verified": false, "evidence": "tsup bundles via esbuild but uses TypeScript for declaration emit (tsc -p tsconfig.build.json --emitDeclarationOnly in game-cartridges)"},
+    {"consumer": "tsconfck", "hypothesized_compiler": "TypeScript 6", "proposed_alias": "typescript@6.0.2 (direct)", "binding": "hypothesis", "binding_note": "promoted if Phase 1 inventory confirms programmatic API", "programmatic_api": false, "phase1_verified": false, "evidence": "tsconfck resolves tsconfig files; does not embed the compiler API directly but may peer-depend on typescript"},
+    {"consumer": "commitlint (transitive peer)", "hypothesized_compiler": "TypeScript 6", "proposed_alias": "typescript@6.0.2 (direct)", "binding": "hypothesis", "binding_note": "promoted if Phase 1 inventory confirms programmatic API", "programmatic_api": false, "phase1_verified": false, "evidence": "@commitlint/cli in root devDependencies; transitive typescript peer"},
     {"consumer": "vitest / @vitest/* runner", "hypothesized_compiler": "TypeScript 6 or TS 7", "proposed_alias": "same or TS 7 alias", "binding": "hypothesis", "binding_note": "Phase 2 smoke harness reclassifies", "programmatic_api": false, "phase1_verified": false},
     {"consumer": "jest / ts-jest runner", "hypothesized_compiler": "TypeScript 6 or TS 7", "proposed_alias": "same or TS 7 alias", "binding": "hypothesis", "binding_note": "Phase 2 smoke harness reclassifies", "programmatic_api": false, "phase1_verified": false},
     {"consumer": "@playwright/test runner", "hypothesized_compiler": "TypeScript 6 or TS 7", "proposed_alias": "same or TS 7 alias", "binding": "hypothesis", "binding_note": "preserved verbatim regardless", "programmatic_api": false, "phase1_verified": false},
     {"consumer": "Next.js next build / next typegen", "hypothesized_compiler": "Mixed", "proposed_alias": "documented per app", "binding": "hypothesis", "binding_note": "proven via pnpm why typescript and .next/types/ resolution", "programmatic_api": false, "phase1_verified": false},
     {"consumer": "Vinext/Vite vite build", "hypothesized_compiler": "Mixed", "proposed_alias": "documented per app", "binding": "hypothesis", "binding_note": "proven via pnpm why typescript", "programmatic_api": false, "phase1_verified": false},
-    {"consumer": "Drizzle Kit / drizzle-kit CLI", "hypothesized_compiler": "TypeScript 6", "proposed_alias": "typescript: npm:@typescript/typescript6@6.0.2", "binding": "hypothesis", "binding_note": "promoted if Phase 1 inventory confirms programmatic API", "programmatic_api": false, "phase1_verified": false},
-    {"consumer": "ESLint flat config loaders", "hypothesized_compiler": "TypeScript 6", "proposed_alias": "typescript: npm:@typescript/typescript6@6.0.2", "binding": "hypothesis", "binding_note": "promoted if Phase 1 inventory confirms programmatic API", "programmatic_api": false, "phase1_verified": false}
+    {"consumer": "Drizzle Kit / drizzle-kit CLI", "hypothesized_compiler": "TypeScript 6", "proposed_alias": "typescript@6.0.2 (direct)", "binding": "hypothesis", "binding_note": "promoted if Phase 1 inventory confirms programmatic API", "programmatic_api": false, "phase1_verified": false},
+    {"consumer": "ESLint flat config loaders", "hypothesized_compiler": "TypeScript 6", "proposed_alias": "typescript@6.0.2 (direct)", "binding": "hypothesis", "binding_note": "promoted if Phase 1 inventory confirms programmatic API", "programmatic_api": false, "phase1_verified": false}
   ]
 }

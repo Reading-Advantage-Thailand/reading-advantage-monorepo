@@ -31,6 +31,7 @@ of the six required Phase-1 artifacts.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 import subprocess
@@ -185,18 +186,46 @@ def _tracked_tsconfig_paths() -> set[str]:
     return _git_tracked_paths(":(glob)**/tsconfig*.json")
 
 
-def _typescript_workspace_denominator() -> set[str]:
-    """Derive TypeScript workspaces independently from manifests and tsconfigs.
+def _workspace_manifest_pathspecs() -> tuple[str, ...]:
+    """Derive package-manifest globs from the tracked pnpm workspace configuration.
 
     Returns:
-        Immediate apps, packages, and services workspaces with a tracked manifest
-        and at least one tracked tsconfig file in the same workspace directory.
+        Git pathspecs for each configured workspace package manifest.
+
+    Raises:
+        AssertionError: When the repository workspace configuration cannot be parsed.
     """
-    manifests = _git_tracked_paths(
-        ":(glob)apps/*/package.json",
-        ":(glob)packages/*/package.json",
-        ":(glob)services/*/package.json",
-    )
+    workspace_file = REPO_ROOT / "pnpm-workspace.yaml"
+    if not workspace_file.is_file():
+        raise AssertionError("pnpm-workspace.yaml is required for workspace discovery")
+
+    patterns: list[str] = []
+    in_packages = False
+    for line in workspace_file.read_text(encoding="utf-8").splitlines():
+        if line == "packages:":
+            in_packages = True
+            continue
+        if in_packages and line and not line.startswith((" ", "\t")):
+            break
+        if not in_packages:
+            continue
+        match = re.match(r"\s*-\s*\"([^\"]+)\"\s*$", line)
+        if match:
+            patterns.append(f":(glob){match.group(1)}/package.json")
+
+    if not patterns:
+        raise AssertionError("pnpm workspace package globs are required")
+    return tuple(patterns)
+
+
+def _typescript_workspace_denominator() -> set[str]:
+    """Derive TypeScript workspaces from pnpm configuration, manifests, and tsconfigs.
+
+    Returns:
+        Configured pnpm workspaces with a tracked manifest and a tracked tsconfig
+        file in the same workspace directory.
+    """
+    manifests = _git_tracked_paths(*_workspace_manifest_pathspecs())
     tsconfigs = _tracked_tsconfig_paths()
     tsconfig_parents = {str(Path(path).parent) for path in tsconfigs}
     return {
@@ -632,7 +661,7 @@ class Phase1WorkspaceBaselineContract(unittest.TestCase):
     """Repository-derived coverage contract for workspace baseline evidence."""
 
     def test_baseline_covers_every_typescript_workspace_manifest(self) -> None:
-        """Requires baseline rows for all immediate workspaces with tsconfigs."""
+        """Requires baseline rows for all configured TypeScript workspaces."""
         artifact = _load_json_object(PHASE1_WORKSPACE_BASELINE_PATH)
         rows = artifact.get("workspaces")
         self.assertIsInstance(rows, list, "workspaces must be a list")
@@ -657,12 +686,51 @@ class Phase1WorkspaceBaselineContract(unittest.TestCase):
         with self.assertRaisesRegex(AssertionError, "packages/example"):
             _assert_workspace_coverage({"apps/example"}, expected)
 
+    def test_raw_baseline_evidence_hashes_match_declared_output(self) -> None:
+        """Requires every captured output reference to have an auditable digest."""
+        artifact = _load_json_object(PHASE1_WORKSPACE_BASELINE_PATH)
+        rows = artifact.get("workspaces")
+        self.assertIsInstance(rows, list, "workspaces must be a list")
+        assert isinstance(rows, list)
+        empty_sha256 = hashlib.sha256(b"").hexdigest()
+
+        for index, row in enumerate(rows):
+            self.assertIsInstance(row, dict, f"workspaces[{index}] must be an object")
+            assert isinstance(row, dict)
+            declared_hash = row.get("raw_output_sha256")
+            self.assertRegex(
+                declared_hash if isinstance(declared_hash, str) else "",
+                r"^[0-9a-f]{64}$",
+                f"workspaces[{index}] must declare a SHA-256 digest",
+            )
+            raw_log_file = row.get("raw_log_file")
+            raw_lines = row.get("raw_output_lines")
+            self.assertIsInstance(raw_lines, int, f"workspaces[{index}] raw_output_lines")
+            assert isinstance(raw_lines, int)
+            if raw_log_file is None:
+                self.assertEqual(declared_hash, empty_sha256)
+                self.assertEqual(raw_lines, 0)
+                self.assertIsInstance(row.get("raw_output_note"), str)
+                continue
+
+            self.assertIsInstance(raw_log_file, str)
+            assert isinstance(raw_log_file, str)
+            self.assertFalse(Path(raw_log_file).is_absolute())
+            raw_log_path = TRACK_DIR / raw_log_file
+            self.assertTrue(raw_log_path.is_file(), f"missing raw log: {raw_log_file}")
+            output = raw_log_path.read_bytes()
+            self.assertEqual(hashlib.sha256(output).hexdigest(), declared_hash)
+            self.assertEqual(
+                len([line for line in output.decode("utf-8").split("\n") if line.strip()]),
+                raw_lines,
+            )
+
 
 class DualCompilerContractArtifactContract(unittest.TestCase):
     """Falsifiable shape contract for dual-compiler-contract.json."""
 
     EXPECTED_NATIVE_COMMAND = "node node_modules/typescript7/bin/tsc --noEmit"
-    EXPECTED_COMPAT_COMMAND = "node node_modules/typescript/bin/tsc6 --noEmit"
+    EXPECTED_COMPAT_COMMAND = "node node_modules/typescript/bin/tsc --noEmit"
 
     REQUIRED_COMMAND_KEYS: frozenset[str] = frozenset({
         "check-types:native",
@@ -713,8 +781,8 @@ class DualCompilerContractArtifactContract(unittest.TestCase):
             "the aliased package exposes 'tsc', not 'typescript7-tsc'",
         )
 
-    def test_compat_and_rollback_use_typescript6_exposed_executable_path(self) -> None:
-        """Requires compatibility commands to use TypeScript 6's actual tsc6 executable."""
+    def test_compat_and_rollback_use_direct_typescript6_executable_path(self) -> None:
+        """Requires compatibility commands to use the exact direct TypeScript 6 executable."""
         artifact = _load_json_object(DUAL_COMPILER_CONTRACT_PATH)
         commands = artifact.get("commands")
         self.assertIsInstance(commands, dict, "commands must be an object")
@@ -724,9 +792,54 @@ class DualCompilerContractArtifactContract(unittest.TestCase):
                 self.assertEqual(
                     commands.get(command_key),
                     self.EXPECTED_COMPAT_COMMAND,
-                    f"{command_key} must use the deterministic TypeScript 6 package "
-                    "path; @typescript/typescript6 exposes 'tsc6', not 'tsc'",
+                    f"{command_key} must use the deterministic direct TypeScript 6 "
+                    "package path; no wrapper executable is allowed",
                 )
+
+    def test_ts6_compatibility_is_direct_exact_and_phase3_verifies_versions(self) -> None:
+        """Rejects a floating TS6 wrapper and requires installed version checks."""
+        artifact = _load_json_object(DUAL_COMPILER_CONTRACT_PATH)
+        aliases = artifact.get("catalog_aliases")
+        commands = artifact.get("commands")
+        self.assertIsInstance(aliases, dict, "catalog_aliases must be an object")
+        self.assertIsInstance(commands, dict, "commands must be an object")
+        assert isinstance(aliases, dict)
+        assert isinstance(commands, dict)
+
+        strategy = TEST_STRATEGY_PATH.read_text(encoding="utf-8")
+        phase3_start = strategy.index("### Phase 3")
+        phase3 = strategy[phase3_start:]
+        expected_compat_alias = "6.0.2"
+        expected_compat_command = "node node_modules/typescript/bin/tsc --noEmit"
+        required_version_probes = {
+            "node node_modules/typescript/bin/tsc --version": "Version 6.0.2",
+            "node node_modules/typescript7/bin/tsc --version": "Version 7.0.2",
+        }
+        violations: list[str] = []
+
+        if aliases.get("typescript") != expected_compat_alias:
+            violations.append(
+                "catalog_aliases.typescript must directly pin typescript@6.0.2; "
+                "@typescript/typescript6 is a wrapper with a floating inner "
+                "typescript@^6 dependency"
+            )
+        for command_key in ("check-types:compat", "check-types:rollback"):
+            if commands.get(command_key) != expected_compat_command:
+                violations.append(
+                    f"{command_key} must use the direct exact TypeScript 6 path "
+                    "node_modules/typescript/bin/tsc"
+                )
+        for probe, expected_output in required_version_probes.items():
+            if probe not in phase3:
+                violations.append(
+                    f"Phase 3 installed-layout verification must run `{probe}`"
+                )
+            if expected_output not in phase3:
+                violations.append(
+                    f"Phase 3 installed-layout verification must require `{expected_output}`"
+                )
+
+        self.assertFalse(violations, "\n".join(violations))
 
     def test_dual_compiler_contract_rejects_missing_commands(self) -> None:
         """Counterexample: a commands object missing parity/rollback fails."""

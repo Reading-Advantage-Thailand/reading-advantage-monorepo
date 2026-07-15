@@ -5,7 +5,7 @@
 Adopt stable TypeScript 7 as the monorepo's command-line compiler and type-checker
 without breaking tools that still consume the legacy TypeScript programmatic API.
 Use the official side-by-side architecture: TypeScript 7 owns eligible `tsc`
-invocations, while `@typescript/typescript6` remains available through the
+invocations, while direct exact `typescript@6.0.2` remains available through the
 `typescript` package name for `typescript-eslint`, `ts-node`, configuration loaders,
 and other compiler-API consumers until TypeScript 7.1 or later provides a supported
 replacement API.
@@ -17,11 +17,13 @@ TypeScript 6 is a compatibility bridge in this track, not the final compiler tar
 
 The 2026-07-10 feasibility audit established the following live baseline:
 
-- Stable registry releases are `typescript@7.0.2` and
-  `@typescript/typescript6@6.0.2`.
+- Stable registry releases are `typescript@7.0.2` and `typescript@6.0.2`; the
+  `@typescript/typescript6@6.0.2` wrapper is not used because it floats its inner
+  `@typescript/old` dependency across 6.x patch versions.
 - The workspace currently resolves TypeScript 5.9.3.
-- 25 manifests declare TypeScript, 24 `tsconfig*.json` files exist, and 21
-  workspaces invoke `tsc` in build or `check-types` scripts.
+- 35 manifests declare TypeScript, 39 tracked `tsconfig*.json` files exist, and
+  31 workspaces expose `check-types` scripts (with two additional configured
+  TypeScript workspaces requiring direct no-emit fallback coverage).
 - The shared config already uses `strict`, `target: ES2022`, `module: ESNext`, and
   `moduleResolution: bundler`.
 - `apps/marketing/tsconfig.json` is the sole config using removed `baseUrl`.
@@ -55,9 +57,8 @@ The 2026-07-10 feasibility audit established the following live baseline:
 ### FR-2: Define and Test the Dual-Compiler Contract
 
 - Add contract tests for the intended package resolution and executable mapping.
-- Keep the legacy programmatic API available through
-  `typescript: npm:@typescript/typescript6@6.0.2` or an equivalent reviewed pnpm
-  alias compatible with workspace catalogs.
+- Keep the legacy programmatic API available through direct exact
+  `typescript@6.0.2`, enforced by the root dependency and pnpm override.
 - Install stable TypeScript 7.0.2 under a separate package alias that exposes the
   TypeScript 7 `tsc` binary without displacing the compatibility API required by
   tooling.
@@ -70,7 +71,7 @@ The 2026-07-10 feasibility audit established the following live baseline:
 
 ### FR-3: Make Every TypeScript Configuration 7-Compatible
 
-- Run TypeScript 7 against all 24 TypeScript configurations.
+- Run TypeScript 7 against all 39 tracked TypeScript configurations.
 - Add the narrowest explicit `types` list required by each project, including Node,
   Jest, Vitest, Playwright, or other globals only where consumed.
 - Do not restore the old implicit behavior with a monorepo-wide `types: ["*"]` unless
@@ -169,7 +170,7 @@ The 2026-07-10 feasibility audit established the following live baseline:
 1. TypeScript 7.0.2 is the compiler used by required monorepo `check-types` gates.
 2. TypeScript 6.0.2 remains available only as a documented compatibility API and
    fallback for tools that cannot consume TypeScript 7.
-3. All 24 TypeScript configurations parse and execute under TypeScript 7.
+3. All 39 tracked TypeScript configurations parse and execute under TypeScript 7.
 4. Every project has explicit, minimal global type configuration where required.
 5. Marketing no longer uses `baseUrl`, and its alias imports still resolve.
 6. TypeScript 6 and 7 diagnostics match, with every intentional exception recorded

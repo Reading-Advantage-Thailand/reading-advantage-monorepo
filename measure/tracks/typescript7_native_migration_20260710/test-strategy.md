@@ -49,13 +49,14 @@ escalating into swap thrashing or OOM kills.
 
 - wall-clock elapsed time (`/usr/bin/time -v`)
 - peak RSS (`Maximum resident set size` from `/usr/bin/time -v`)
-- swap delta (read once before and after; recorded as the integer difference)
+- signed swap delta (read once before and after; recorded as `after - before`;
+  negative values are valid when swap use decreases)
 - process count (`pgrep -fc tsc` + `pgrep -fc node` at sample points)
 - diagnostic count (normalized stdout+stderr)
 - Turbo cache state (`turbo run ... --summarize --json` parsed via `json.loads`)
 - exit status and signal (`WIFSIGNALED`, `WTERMSIG`)
 - spawned-process-group aggregate (sum of `VmRSS` across the `pgid` of the
-  spawned `tsc` process; sampled every 250 ms via `/proc/<pid>/status`)
+  spawned `tsc` process; sampled every quarter-second via `/proc/<pid>/status`)
 
 **Fail-closed triggers** (run is marked `invalid`, never silently passed):
 
@@ -72,12 +73,16 @@ escalating into swap thrashing or OOM kills.
   fail solely because `dmesg` is unavailable.
 
 Live benchmarks **abort** before swap/OOM thresholds: the harness samples the
-spawned-process-group aggregate `VmRSS` every 250 ms and sends `SIGTERM` to
-the spawned process group if aggregate RSS exceeds 80 % of the recorded
-RSS ceiling or swap delta exceeds 50 % of the recorded swap ceiling. **No live benchmark
-intentionally drives the host into OOM.** Synthetic fixtures are used to prove
-the parser / stop-loss paths (§5); OOM behavior itself is not exercised on
-the host.
+spawned-process-group aggregate `VmRSS` every quarter-second and sends `SIGTERM` to
+the entire spawned process group if aggregate RSS exceeds the exact
+`stop_loss_process_group_rss_kib` value (80 % of the recorded RSS ceiling) or
+positive swap growth exceeds the exact `stop_loss_swap_delta_kib` value (50 %
+of the recorded swap ceiling). It then waits a bounded **5 seconds** grace
+period, sends `SIGKILL` to any surviving process-group members, waits for every
+child, and verifies the process group is fully reaped before recording the run
+invalid. **No live benchmark intentionally drives the host into OOM.** Synthetic
+fixtures are used to prove the parser / stop-loss paths (§5); OOM behavior
+itself is not exercised on the host.
 
 ## 2. Surfaces the Strategy Distinguishes
 
@@ -117,7 +122,7 @@ re-classified as "TS 7 eligible" and re-tested.
 |---|---|---|---|
 | Root + workspace `check-types` (after cutover) | TypeScript 7 | TS 7 catalog alias | **binding** (target) |
 | `tsc` invocations in package `build` scripts that emit JS + `.d.ts` | TypeScript 7 (only after byte-equivalence or reviewed diff) | same | **binding** (target) |
-| `typescript-eslint` | TypeScript 6 (`typescript` package) — programmatic API consumer | `typescript: npm:@typescript/typescript6@6.0.2` | hypothesis; promoted if Phase 1 inventory confirms programmatic API |
+| `typescript-eslint` | TypeScript 6 (`typescript` package) — programmatic API consumer | direct `typescript@6.0.2` | hypothesis; promoted if Phase 1 inventory confirms programmatic API |
 | `ts-node` | TypeScript 6 — programmatic API consumer | same | hypothesis; promoted if Phase 1 inventory confirms programmatic API |
 | `tsup` | TypeScript 6 — programmatic API consumer (per spec) | same | hypothesis; promoted if Phase 1 inventory confirms programmatic API |
 | `tsconfck` | TypeScript 6 — programmatic API consumer | same | hypothesis; promoted if Phase 1 inventory confirms programmatic API |
@@ -386,10 +391,15 @@ After Sub-phase 3a installs the exact aliases, the parity and benchmark
 harnesses run the **real installed TypeScript 6** compiler and the **real installed TypeScript 7** compiler across the inventoried workspaces. Fixture
 executables remain only for the Phase 2 contract/refutation suite.
 
-**Sub-phase 3a — alias install.** Edit the workspace catalog (or per-package
-`pnpm.packageExtensions` where the catalog slot is unavailable). Run
-`pnpm install` to regenerate the lockfile. Re-run the already-green Phase 2
-§5.1 contract against the new resolution state. **No aggregate
+**Sub-phase 3a — alias install.** Change the direct root `typescript` dependency
+and `pnpm-workspace.yaml` override to exactly `6.0.2`, add the separate exact
+`typescript7: npm:typescript@7.0.2` alias, and do not use
+`@typescript/typescript6` because its wrapper depends on floating
+`@typescript/old: npm:typescript@^6`. Run `pnpm install` to regenerate the
+lockfile, then prove the installed layout with
+`node node_modules/typescript/bin/tsc --version` = `Version 6.0.2` and
+`node node_modules/typescript7/bin/tsc --version` = `Version 7.0.2`. Re-run
+the already-green Phase 2 §5.1 contract against the new resolution state. **No aggregate
 `pnpm turbo run check-types` is invoked in 3a.**
 
 **Sub-phase 3b — tsconfig fixes.** Update each tsconfig with the

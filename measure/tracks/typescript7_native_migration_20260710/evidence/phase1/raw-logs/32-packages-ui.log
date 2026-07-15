@@ -1,0 +1,16 @@
+packages/ui/src/__tests__/Button.test.tsx(8,63): error TS2339: Property 'toBeInTheDocument' does not exist on type 'Assertion<HTMLElement>'.
+packages/ui/src/__tests__/Button.test.tsx(14,17): error TS2339: Property 'toHaveClass' does not exist on type 'Assertion<HTMLElement>'.
+packages/ui/src/__tests__/Button.test.tsx(20,17): error TS2339: Property 'toHaveClass' does not exist on type 'Assertion<HTMLElement>'.
+packages/ui/src/__tests__/Button.test.tsx(35,57): error TS2339: Property 'toBeInTheDocument' does not exist on type 'Assertion<HTMLElement>'.
+packages/ui/src/__tests__/Card.test.tsx(17,40): error TS2339: Property 'toBeInTheDocument' does not exist on type 'Assertion<HTMLElement>'.
+packages/ui/src/__tests__/Card.test.tsx(18,39): error TS2339: Property 'toBeInTheDocument' does not exist on type 'Assertion<HTMLElement>'.
+packages/ui/src/__tests__/Card.test.tsx(19,45): error TS2339: Property 'toBeInTheDocument' does not exist on type 'Assertion<HTMLElement>'.
+packages/ui/src/__tests__/Card.test.tsx(20,41): error TS2339: Property 'toBeInTheDocument' does not exist on type 'Assertion<HTMLElement>'.
+packages/ui/src/__tests__/Card.test.tsx(21,40): error TS2339: Property 'toBeInTheDocument' does not exist on type 'Assertion<HTMLElement>'.
+packages/ui/src/__tests__/Dialog.test.tsx(25,46): error TS2339: Property 'toBeInTheDocument' does not exist on type 'Assertion<HTMLElement>'.
+packages/ui/src/__tests__/Dialog.test.tsx(26,52): error TS2339: Property 'toBeInTheDocument' does not exist on type 'Assertion<HTMLElement>'.
+packages/ui/src/__tests__/Input.test.tsx(8,55): error TS2339: Property 'toBeInTheDocument' does not exist on type 'Assertion<HTMLElement>'.
+packages/ui/src/__tests__/Input.test.tsx(13,47): error TS2339: Property 'toHaveAttribute' does not exist on type 'Assertion<HTMLElement>'.
+packages/ui/src/__tests__/Tabs.test.tsx(17,57): error TS2339: Property 'toBeInTheDocument' does not exist on type 'Assertion<HTMLElement>'.
+packages/ui/src/__tests__/Tabs.test.tsx(18,57): error TS2339: Property 'toBeInTheDocument' does not exist on type 'Assertion<HTMLElement>'.
+packages/ui/src/__tests__/Tabs.test.tsx(19,43): error TS2339: Property 'toBeInTheDocument' does not exist on type 'Assertion<HTMLElement>'.

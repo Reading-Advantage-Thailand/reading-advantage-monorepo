@@ -6,24 +6,24 @@
 
 ## Phase 1: Contract & Schema Definition
 
-- [x] Task: Capture the compiler and repository baseline. [commit: f68897ac]
+- [x] Task: Capture the compiler and repository baseline. [commits: f68897ac, 32346d6a, 47683590; Phase-1 remediation pending acceptance evidence]
   - [x] Record source SHA, `git status -sb`, Node/pnpm versions, CPU/memory, Turbo
     concurrency, and resolved TypeScript versions.
   - [x] Save TypeScript 5.9 diagnostic and timing evidence for all workspaces.
   - [x] Classify pre-existing failures separately from migration acceptance gates.
   - [x] Refresh `graph.db` if it is older than 24 hours and save graph statistics.
-- [x] Task: Inventory the complete TypeScript integration surface. [commit: f68897ac]
+- [x] Task: Inventory the complete TypeScript integration surface. [commits: f68897ac, f153654b, 8ed5ff73]
   - [x] Enumerate all manifests, catalogs, aliases, `tsc` scripts, tsconfigs, compiler
     plugins, API imports, and TypeScript peer dependencies.
   - [x] Map Next.js, Vinext/Vite, ESLint, Jest, Vitest, ts-node, tsx, tsup, Drizzle,
     commitlint, and config-loader compiler ownership.
   - [x] Identify emit/declaration builds separately from `--noEmit` checks.
-- [x] Task: Define the dual-compiler package contract. [commit: f68897ac]
+- [x] Task: Define the dual-compiler package contract. [commits: f68897ac, 2bd70b09]
   - [x] Specify exact TypeScript 7.0.2 and TypeScript 6.0.2 aliases in the workspace
     catalog without ambiguous executable resolution.
   - [x] Define native, compatibility, parity, and rollback commands.
   - [x] Define which tools must remain on the TypeScript 6 programmatic API.
-- [x] Task: Define diagnostic, benchmark, and rollout evidence schemas. [commit: f68897ac]
+- [x] Task: Define diagnostic, benchmark, and rollout evidence schemas. [commits: f68897ac, eff14a23]
   - [x] Specify normalized diagnostic records and reviewed-exception fields.
   - [x] Specify benchmark records for elapsed time, RSS, diagnostics, CPU/checkers,
     cache state, and exit status.

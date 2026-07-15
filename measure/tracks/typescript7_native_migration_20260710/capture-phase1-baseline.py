@@ -14,14 +14,14 @@ Usage:
 
 Output (full capture only):
     phase1-workspace-baseline.json  (machine-readable results)
-    evidence/phase1/raw-logs/<N>-<workspace>.log  (bounded raw output per workspace)
+    evidence/phase1/raw-logs/<N>-<workspace>.log  (bounded non-empty raw output)
 
 Resumable: if interrupted, re-run the script; already-captured workspaces are skipped.
 
-The --check-completeness mode reads existing surface-inventory.json and
-phase1-workspace-baseline.json, verifies exact workspace-set equality, count,
-and all_accounted, prints a concise result, and exits 0 or 1. It performs
-zero writes and zero live check-types commands.
+The --check-completeness mode derives the TypeScript-workspace denominator
+independently from tracked pnpm workspace manifests plus tracked tsconfigs,
+then verifies exact workspace-set equality, count, and all_accounted. It performs
+zero writes and zero live compiler commands.
 """
 
 from __future__ import annotations
@@ -51,27 +51,129 @@ ENV = {**os.environ, "TURBO_CONCURRENCY": "1"}
 PHASE_BASE_SHA = "879112353411912b80849037016cbd9ed2c1bf63"
 ROLE_BASE_SHA = "b0d013c838f7ea43d22bcabb3e8b7ff75775ab21"
 
+GENERATED_OR_IGNORED_DIR_NAMES = {
+    ".next", ".turbo", "build", "coverage", "dist", "generated",
+    "node_modules", "out",
+}
 
-def load_check_types_workspaces() -> list[dict[str, Any]]:
-    """Load the list of workspaces with check-types scripts from surface-inventory.json.
+
+def git_tracked_paths(*pathspecs: str) -> set[str]:
+    """Return tracked paths matching pathspecs, excluding generated directories.
+
+    Args:
+        pathspecs: Git pathspecs used to select repository files.
 
     Returns:
-        List of dicts with workspace path, command, and emit flag.
+        Repository-relative tracked paths.
+
+    Raises:
+        RuntimeError: When Git cannot enumerate the requested paths.
+    """
+    completed = subprocess.run(
+        ["git", "ls-files", "-z", "--", *pathspecs],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        check=False,
+    )
+    if completed.returncode != 0:
+        raise RuntimeError(
+            f"git ls-files failed with exit {completed.returncode}: "
+            f"{completed.stderr.decode('utf-8', errors='replace')}"
+        )
+    return {
+        path
+        for path in completed.stdout.decode("utf-8").split("\0")
+        if path
+        and GENERATED_OR_IGNORED_DIR_NAMES.isdisjoint(Path(path).parts)
+    }
+
+
+def workspace_manifest_pathspecs() -> tuple[str, ...]:
+    """Derive package-manifest globs from the repository pnpm workspace file.
+
+    Returns:
+        Git pathspecs for every configured workspace package manifest.
+
+    Raises:
+        RuntimeError: When the workspace configuration is absent or has no package globs.
+    """
+    workspace_file = REPO_ROOT / "pnpm-workspace.yaml"
+    if not workspace_file.is_file():
+        raise RuntimeError("pnpm-workspace.yaml is required for workspace discovery")
+
+    patterns: list[str] = []
+    in_packages = False
+    for line in workspace_file.read_text(encoding="utf-8").splitlines():
+        if line == "packages:":
+            in_packages = True
+            continue
+        if in_packages and line and not line.startswith((" ", "\t")):
+            break
+        if not in_packages:
+            continue
+        match = re.match(r'\s*-\s*"([^\"]+)"\s*$', line)
+        if match:
+            patterns.append(f":(glob){match.group(1)}/package.json")
+
+    if not patterns:
+        raise RuntimeError("pnpm workspace configuration has no package globs")
+    return tuple(patterns)
+
+
+def typescript_workspace_denominator() -> list[str]:
+    """Derive TypeScript workspaces from pnpm configuration and tracked files.
+
+    Returns:
+        Sorted configured pnpm workspaces that have both a tracked manifest and a
+        tracked tsconfig in the workspace root.
+    """
+    manifests = git_tracked_paths(*workspace_manifest_pathspecs())
+    tsconfigs = git_tracked_paths(":(glob)**/tsconfig*.json")
+    tsconfig_parents = {str(Path(path).parent) for path in tsconfigs}
+    return sorted(
+        str(Path(manifest).parent)
+        for manifest in manifests
+        if str(Path(manifest).parent) in tsconfig_parents
+    )
+
+
+def load_check_types_workspaces() -> list[dict[str, Any]]:
+    """Build commands for every independently derived TypeScript workspace.
+
+    Returns:
+        List of dicts with workspace path, command, and emit flag. Workspaces
+        without check-types use a direct TypeScript 5.9 no-emit fallback.
     """
     inventory = json.loads(SURFACE_INVENTORY.read_text(encoding="utf-8"))
-    workspaces = []
+    by_workspace: dict[str, dict[str, Any]] = {}
     for entry in inventory["tsc_scripts"]:
         if entry.get("script") == "check-types":
-            workspaces.append({
+            by_workspace[entry["workspace"]] = {
                 "workspace": entry["workspace"],
                 "check_types_command": entry["command"],
                 "emit": entry.get("emit", False),
-            })
+                "command_source": "workspace check-types script",
+            }
+
+    workspaces: list[dict[str, Any]] = []
+    for workspace in typescript_workspace_denominator():
+        if workspace in by_workspace:
+            workspaces.append(by_workspace[workspace])
+            continue
+        workspaces.append({
+            "workspace": workspace,
+            "check_types_command": (
+                "node node_modules/typescript/bin/tsc --noEmit "
+                f"-p {workspace}/tsconfig.json"
+            ),
+            "emit": False,
+            "command_source": "direct TypeScript 5.9 fallback (no check-types script)",
+        })
     return workspaces
 
 
 def check_completeness() -> int:
-    """Verify phase1-workspace-baseline.json covers all inventoried check-types workspaces.
+    """Verify phase1-workspace-baseline.json covers all TypeScript workspaces.
 
     Reads surface-inventory.json and phase1-workspace-baseline.json, then checks
     that the workspace sets are exactly equal, counts match, and every workspace
@@ -87,13 +189,9 @@ def check_completeness() -> int:
         print(f"ERROR: {OUTPUT_FILE.relative_to(REPO_ROOT)} not found", file=sys.stderr)
         return 1
 
-    inventory = json.loads(SURFACE_INVENTORY.read_text(encoding="utf-8"))
     baseline = json.loads(OUTPUT_FILE.read_text(encoding="utf-8"))
 
-    inv_workspaces = sorted(
-        e["workspace"] for e in inventory["tsc_scripts"]
-        if e.get("script") == "check-types"
-    )
+    inv_workspaces = typescript_workspace_denominator()
     cap_workspaces = sorted(r["workspace"] for r in baseline.get("workspaces", []))
 
     inv_count = len(inv_workspaces)
@@ -107,7 +205,7 @@ def check_completeness() -> int:
     missing = sorted(inv_set - cap_set)
     extra = sorted(cap_set - inv_set)
 
-    print(f"Inventory check-types workspaces: {inv_count}")
+    print(f"Inventory TypeScript workspaces:  {inv_count}")
     print(f"Captured workspaces:              {cap_count}")
     print(f"Counts match:                     {counts_match}")
     print(f"Workspace sets equal:             {sets_equal}")
@@ -223,9 +321,18 @@ def run_workspace(ws: dict[str, Any], index: int, total: int) -> dict[str, Any]:
     dirty_paths = get_dirty_paths(workspace_path)
     contaminated = len(dirty_paths) > 0
 
+    has_workspace_script = ws["command_source"] == "workspace check-types script"
+    if has_workspace_script:
+        command = ["pnpm", "--filter", package_name, "run", "check-types"]
+        rendered_command = f"pnpm --filter {package_name} run check-types"
+    else:
+        command = [
+            "node", "node_modules/typescript/bin/tsc", "--noEmit",
+            "-p", f"{workspace_path}/tsconfig.json",
+        ]
+        rendered_command = ws["check_types_command"]
     exact_command = (
-        f"TURBO_CONCURRENCY=1 timeout {TIMEOUT_SECONDS} "
-        f"pnpm --filter {package_name} run check-types"
+        f"TURBO_CONCURRENCY=1 timeout {TIMEOUT_SECONDS} {rendered_command}"
     )
     print(f"[{index}/{total}] {workspace_path} ({package_name})")
 
@@ -234,7 +341,7 @@ def run_workspace(ws: dict[str, Any], index: int, total: int) -> dict[str, Any]:
 
     try:
         result = subprocess.run(
-            ["timeout", str(TIMEOUT_SECONDS), "pnpm", "--filter", package_name, "run", "check-types"],
+            ["timeout", str(TIMEOUT_SECONDS), *command],
             capture_output=True, text=True,
             cwd=str(REPO_ROOT),
             env=ENV,
@@ -259,11 +366,15 @@ def run_workspace(ws: dict[str, Any], index: int, total: int) -> dict[str, Any]:
     diagnostic_count = count_diagnostics(raw_output)
     normalized_diags = normalize_diagnostics(raw_output)
 
-    # Save bounded raw log
+    # Save bounded raw log. Git cannot retain a meaningful zero-byte evidence file,
+    # so an empty compiler stream is represented by its SHA-256 and a null path.
     log_filename = f"{index:02d}-{workspace_path.replace('/', '-')}.log"
-    RAW_LOG_DIR.mkdir(parents=True, exist_ok=True)
-    log_path = RAW_LOG_DIR / log_filename
-    log_path.write_text(raw_output, encoding="utf-8")
+    raw_log_file: str | None = None
+    if raw_output:
+        RAW_LOG_DIR.mkdir(parents=True, exist_ok=True)
+        log_path = RAW_LOG_DIR / log_filename
+        log_path.write_text(raw_output, encoding="utf-8")
+        raw_log_file = f"evidence/phase1/raw-logs/{log_filename}"
 
     status_label = "TIMEOUT" if timed_out else ("PASS" if exit_status == 0 else "FAIL")
     print(f"  {status_label} exit={exit_status} elapsed={elapsed_ms}ms "
@@ -274,6 +385,7 @@ def run_workspace(ws: dict[str, Any], index: int, total: int) -> dict[str, Any]:
         "workspace": workspace_path,
         "package_name": package_name,
         "check_types_command": ws["check_types_command"],
+        "command_source": ws["command_source"],
         "exact_command": exact_command,
         "start_time": start_iso,
         "end_time": end_iso,
@@ -283,7 +395,11 @@ def run_workspace(ws: dict[str, Any], index: int, total: int) -> dict[str, Any]:
         "diagnostic_count": diagnostic_count,
         "raw_output_sha256": raw_output_sha256,
         "raw_output_lines": len([l for l in raw_output.split("\n") if l.strip()]),
-        "raw_log_file": f"evidence/phase1/raw-logs/{log_filename}",
+        "raw_log_file": raw_log_file,
+        "raw_output_note": (
+            None if raw_output else
+            "The compiler emitted no stdout or stderr; no zero-byte raw-log artifact is persisted."
+        ),
         "normalized_diagnostics": normalized_diags[:200],
         "normalized_diagnostics_truncated": len(normalized_diags) > 200,
         "normalized_diagnostics_total": len(normalized_diags),
@@ -305,7 +421,7 @@ def main() -> int:
     """
     workspaces = load_check_types_workspaces()
     total = len(workspaces)
-    print(f"Found {total} workspaces with check-types scripts")
+    print(f"Found {total} configured TypeScript workspaces")
 
     # Load existing progress for resumability
     existing: dict[str, dict[str, Any]] = {}

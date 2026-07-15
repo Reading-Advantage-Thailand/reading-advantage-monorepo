@@ -1,0 +1,40 @@
+{
+  "schema_version": 2,
+  "role": "review-c-ux-api",
+  "track": "typescript7_native_migration_20260710",
+  "phase": "Phase 1: Contract & Schema Definition",
+  "baseline_sha": "879112353411912b80849037016cbd9ed2c1bf63",
+  "audited_head_sha": "eff14a2355b793b99755f580b6b05fa54abaacc2",
+  "snapshot_path": "/tmp/ts7-phase1-final-snapshot.json",
+  "applicability": "not_applicable",
+  "status": "pass",
+  "summary": "Review C is not applicable to TypeScript 7 Phase 1 because the phase changes only Measure evidence, contracts, schemas, plans, a capture utility, and focused tests; it does not change any route, API, UI, user flow, domain function, package export, or public contract.",
+  "evidence": [
+    "The track test strategy Applicability Summary marks Review C as n/a for Phase 1 and triggers it only for a Phase 3 deferred Next.js regression requiring route-level reproof.",
+    "The scoped diff from baseline 879112353411912b80849037016cbd9ed2c1bf63 to audited HEAD eff14a2355b793b99755f580b6b05fa54abaacc2 changes only measure/tests/test_typescript7_native_migration_phase1.py and files under measure/tracks/typescript7_native_migration_20260710/.",
+    "No app source, route.ts files, page or layout components, tRPC routers, package exports, domain functions, transport adapters, forms, or browser-visible flows are present in the scoped diff.",
+    "The supplied snapshot records audited HEAD eff14a2355b793b99755f580b6b05fa54abaacc2 with empty diff, staged_diff, and status fields, proving it was captured from a clean isolated worktree before review outputs were written.",
+    "Phase 1 acceptance reports the contract suite passing 27 of 27 tests and lists only Measure test, JSON contract, and test-strategy files as changed implementation surfaces."
+  ],
+  "contract_surfaces_reviewed": {
+    "route_handlers_changed": 0,
+    "page_or_layout_components_changed": 0,
+    "ui_components_changed": 0,
+    "trpc_or_http_api_contracts_changed": 0,
+    "domain_functions_changed": 0,
+    "package_exports_changed": 0,
+    "public_contracts_changed": 0,
+    "browser_visible_flows_changed": 0
+  },
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "ux_api_violations": [],
+  "public_contract_violations": [],
+  "ui_flow_violations": [],
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}

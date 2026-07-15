@@ -1,0 +1,64 @@
+{
+  "schema_version": 2,
+  "role": "review-b-security-supply-chain",
+  "track": "typescript7_native_migration_20260710",
+  "phase": "Phase 1: Contract & Schema Definition",
+  "baseline_sha": "879112353411912b80849037016cbd9ed2c1bf63",
+  "audited_head_sha": "eff14a2355b793b99755f580b6b05fa54abaacc2",
+  "snapshot": {
+    "path": "/tmp/ts7-phase1-final-snapshot.json",
+    "sha256": "c72cd98ea48197a4521fbb2e4f7e38f6ac23baca34c010c9ee178a9f29680b7d",
+    "head": "eff14a2355b793b99755f580b6b05fa54abaacc2",
+    "clean": true
+  },
+  "applicability": "applicable",
+  "status": "fail",
+  "summary": "Exact aliases and executable paths match live registry metadata and the frozen-install intent is explicit, but the resource stop-loss contract is not fail-closed.",
+  "checks": {
+    "exact_pins": {
+      "status": "pass",
+      "evidence": "typescript is exactly npm:@typescript/typescript6@6.0.2 and typescript7 is exactly npm:typescript@7.0.2; no floating alias range is proposed."
+    },
+    "live_registry_bin_contract": {
+      "status": "pass",
+      "evidence": "Live npm metadata reports typescript@7.0.2 bin.tsc=bin/tsc and @typescript/typescript6@6.0.2 bin.tsc6=bin/tsc6, matching the contract."
+    },
+    "non_ambiguous_executable_resolution": {
+      "status": "pass",
+      "evidence": "Native, compatibility, and rollback commands use explicit alias-package paths rather than an environment-dependent bare tsc shim."
+    },
+    "frozen_install_intent": {
+      "status": "pass",
+      "evidence": "Phase 3a regenerates the lockfile with pnpm install; Phase 4 separately requires pnpm install --frozen-lockfile as a post-lockfile consistency gate and the plan requires peer-dependency validation."
+    },
+    "resource_stop_loss_safety": {
+      "status": "fail",
+      "evidence": "The Phase 1 validator accepts a resource_limits object that omits both stop_loss_process_group_rss_kib and stop_loss_swap_delta_kib. The strategy also specifies SIGTERM to the process group without a bounded grace period, SIGKILL escalation, and reap verification."
+    }
+  },
+  "blocking_findings": [
+    {
+      "id": "TS7-P1-RB-001",
+      "severity": "High",
+      "title": "Resource stop-loss thresholds are not enforced by the Phase 1 contract",
+      "files": [
+        "measure/tests/test_typescript7_native_migration_phase1.py",
+        "measure/tracks/typescript7_native_migration_20260710/test-strategy.md",
+        "measure/tracks/typescript7_native_migration_20260710/compiler-baseline.json"
+      ],
+      "evidence": "_assert_resource_limits checks only max_process_group_rss_kib, max_swap_delta_kib, derivation, and source. A live counterexample omitting both stop_loss_* fields was accepted even though those fields are the pre-OOM abort boundary. The written strategy promises SIGTERM but does not require escalation/reaping if the process group remains alive.",
+      "risk": "A malformed or deleted stop-loss threshold can remain Green, and a compiler process that ignores SIGTERM can continue consuming memory after the harness claims it aborted.",
+      "required_remediation": "Require positive numeric stop_loss_process_group_rss_kib and stop_loss_swap_delta_kib, verify they equal the documented 80 percent and 50 percent formulas and remain below their maxima, add malformed/missing counterexamples, and specify/test bounded SIGTERM-to-SIGKILL escalation plus process-group reap verification before Phase 2 begins."
+    }
+  ],
+  "nonblocking_findings": [],
+  "commands": [
+    "pnpm view typescript@7.0.2 version bin dist.tarball dist.integrity --json (PASS)",
+    "pnpm view @typescript/typescript6@6.0.2 version bin dist.tarball dist.integrity --json (PASS)",
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase1 (PASS: 27 tests)",
+    "PYTHONDONTWRITEBYTECODE=1 python3 measure/tracks/typescript7_native_migration_20260710/capture-phase1-baseline.py --check-completeness (PASS: 31/31)",
+    "Direct _assert_resource_limits counterexample without either stop_loss_* key (FAIL-CLOSED CHECK FAILED: counterexample accepted)"
+  ],
+  "retry_recommendation": "Remediate TS7-P1-RB-001 with a Red test and minimal contract/strategy correction, then rerun Review B before authorizing Phase 2.",
+  "confidence": "high"
+}

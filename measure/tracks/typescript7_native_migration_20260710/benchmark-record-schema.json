@@ -17,13 +17,17 @@
     },
     "swap_delta_kib": {
       "type": "integer",
-      "description": "Swap delta in KiB: integer difference read once before and after the run.",
-      "minimum": 0
+      "description": "Signed swap delta in KiB, defined as after - before. Negative values are valid when swap use decreases during the run."
     },
     "oom_kill_count": {
       "type": "integer",
-      "description": "Number of OOM kills for node/tsc workers since run start, from dmesg when available. Recorded as 0 when dmesg is unavailable (container without CAP_SYSLOG).",
+      "description": "Number of OOM kills for node/tsc workers since run start. Interpret zero only when dmesg_status is available; unavailable observability is represented separately.",
       "minimum": 0
+    },
+    "dmesg_status": {
+      "type": "string",
+      "enum": ["available", "unavailable"],
+      "description": "Whether dmesg was readable for this run; unavailable is not encoded as zero OOM kills."
     },
     "process_count": {
       "type": "integer",
@@ -72,6 +76,7 @@
     "peak_rss_kib",
     "swap_delta_kib",
     "oom_kill_count",
+    "dmesg_status",
     "process_count",
     "diagnostic_count",
     "exit_status",
