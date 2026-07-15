@@ -30,6 +30,12 @@ TS6_TSC = REPO_ROOT / "node_modules" / "typescript" / "bin" / "tsc"
 TS7_TSC = REPO_ROOT / "node_modules" / "typescript7" / "bin" / "tsc"
 TIME = Path("/usr/bin/time")
 DIAGNOSTIC_PATTERN = re.compile(r"\berror TS\d+:")
+IDLE_THRESHOLD_PERCENT = 70
+TS6_MAX_OLD_SPACE_MIB = 3072
+MANDATED_SPEEDUP_THRESHOLDS = {
+    "apps-reading-advantage": 3.0,
+    "full-check-types-graph": 2.0,
+}
 
 
 @dataclass(frozen=True)
@@ -163,6 +169,23 @@ def _idle_percent() -> int | None:
     return int(last[14])
 
 
+def _host_eligibility(idle_percent: int | None, allow_contaminated_host: bool) -> tuple[bool, str, str]:
+    """Classify whether one sample may proceed under the explicit host-load policy.
+
+    Args:
+        idle_percent: Final CPU-idle percentage from the required vmstat sample.
+        allow_contaminated_host: Whether an operator explicitly authorized a busy-host run.
+
+    Returns:
+        Whether execution may proceed, the evidence host class, and its reason.
+    """
+    if idle_percent is not None and idle_percent >= IDLE_THRESHOLD_PERCENT:
+        return True, "idle", "host_idle_threshold_met"
+    if allow_contaminated_host:
+        return True, "contaminated", "user_override_below_idle_threshold"
+    return False, "invalid", "host_idle_below_threshold"
+
+
 def _dmesg_status() -> tuple[str, str]:
     """Capture kernel OOM observability without treating denied access as zero events.
 
@@ -270,14 +293,15 @@ def _compiler_command(target: BenchmarkTarget, compiler: str, checkers: int) -> 
     environment = {"TURBO_CONCURRENCY": "1"}
     if target.kind == "direct":
         if compiler == "ts6":
-            command = [str(TS6_TSC), "--noEmit", "-p", target.tsconfig_path]
-            if target.ts6_heap_mib is not None:
-                command = [
-                    shutil.which("node") or "node",
-                    f"--max-old-space-size={target.ts6_heap_mib}",
-                    *command,
-                ]
-            return command, environment
+            return [
+                shutil.which("node") or "node",
+                f"--max-old-space-size={TS6_MAX_OLD_SPACE_MIB}",
+                str(TS6_TSC),
+                "--noEmit",
+                "--stableTypeOrdering",
+                "-p",
+                target.tsconfig_path,
+            ], environment
         return [str(TS7_TSC), "--noEmit", "--checkers", str(checkers), "-p", target.tsconfig_path], environment
 
     cache_dir = Path(os.environ["TS7_BENCHMARK_CACHE_DIR"])
@@ -294,24 +318,48 @@ def _compiler_command(target: BenchmarkTarget, compiler: str, checkers: int) -> 
         "--summarize",
         "--json",
     ]
+    if compiler == "ts6":
+        command.extend(["--", "--stableTypeOrdering"])
     return command, environment
 
 
-def _read_turbo_summary() -> tuple[dict[str, Any] | None, str | None]:
-    """Load Turbo's generated summary when a graph command produced one.
+def _clear_turbo_summary(summary_path: Path) -> Path:
+    """Remove the previous Turbo summary before one graph sample starts.
+
+    Args:
+        summary_path: Run-global summary path that Turbo writes for a graph invocation.
 
     Returns:
-        Parsed summary object and its content digest, or None values when absent.
+        The cleared summary path for the caller to bind to this sample.
     """
-    summary = REPO_ROOT / "turbo-summary.json"
-    if not summary.is_file():
-        return None, None
-    contents = summary.read_bytes()
+    summary_path.unlink(missing_ok=True)
+    return summary_path
+
+
+def _read_turbo_summary(
+    summary_path: Path,
+    started_at_ns: int,
+    exit_status: int,
+) -> tuple[dict[str, Any] | None, str | None, str]:
+    """Load only a fresh Turbo summary produced by a successful graph sample.
+
+    Returns:
+        Parsed summary, its content digest, and a provenance state.
+    """
+    if exit_status != 0:
+        return None, None, "command_failed"
+    if not summary_path.is_file():
+        return None, None, "missing"
+    if summary_path.stat().st_mtime_ns < started_at_ns:
+        return None, _sha256_file(summary_path), "stale"
+    contents = summary_path.read_bytes()
     try:
         parsed = json.loads(contents.decode("utf-8"))
     except json.JSONDecodeError:
-        return None, _sha256_bytes(contents)
-    return parsed if isinstance(parsed, dict) else None, _sha256_bytes(contents)
+        return None, _sha256_bytes(contents), "invalid_json"
+    if not isinstance(parsed, dict):
+        return None, _sha256_bytes(contents), "invalid_shape"
+    return parsed, _sha256_bytes(contents), "captured"
 
 
 def _cache_state(summary: dict[str, Any] | None, temperature: str, target: BenchmarkTarget) -> str:
@@ -343,6 +391,7 @@ def _run_sample(
     ordinal: int,
     output_dir: Path,
     limits: dict[str, int],
+    allow_contaminated_host: bool,
 ) -> dict[str, Any]:
     """Execute one live compiler sample with idle, resource, and diagnostic evidence.
 
@@ -354,12 +403,16 @@ def _run_sample(
         ordinal: One-based sample ordinal within the temperature cohort.
         output_dir: Directory that receives logs and JSON evidence.
         limits: Resource ceilings derived from the baseline artifact.
+        allow_contaminated_host: Whether an explicit operator override permits a busy host.
 
     Returns:
         One schema-compatible benchmark record.
     """
     sample_id = f"{target.identifier}-{compiler}-c{checkers}-{temperature}-{ordinal}"
     idle_percent = _idle_percent()
+    host_allowed, host_idle_class, host_reason = _host_eligibility(
+        idle_percent, allow_contaminated_host
+    )
     record: dict[str, Any] = {
         "sample_id": sample_id,
         "target": target.identifier,
@@ -381,11 +434,13 @@ def _run_sample(
         "checkers": checkers,
         "checkers_applicability": "not_applicable_ts6" if compiler == "ts6" else "applied_ts7",
         "host_idle_percent": idle_percent,
-        "host_idle_class": "invalid",
+        "host_idle_class": host_idle_class,
+        "host_idle_override": allow_contaminated_host and host_idle_class == "contaminated",
+        "host_idle_reason": host_reason,
         "status": "invalid_host_not_idle",
         "started_at": _now(),
     }
-    if idle_percent is None or idle_percent < 70:
+    if not host_allowed:
         record["ended_at"] = _now()
         return record
 
@@ -406,6 +461,12 @@ def _run_sample(
     run_environment = {**os.environ, **environment}
     dmesg_status_before, dmesg_before = _dmesg_status()
     swap_before = _swap_used_kib()
+    turbo_summary_path = (
+        _clear_turbo_summary(REPO_ROOT / "turbo-summary.json")
+        if target.kind == "turbo"
+        else None
+    )
+    started_at_ns = time.time_ns()
     started_monotonic = time.monotonic()
     process = subprocess.Popen(
         [str(TIME), "-v", *command],
@@ -451,7 +512,12 @@ def _run_sample(
     output_prefix = output_dir / sample_id
     output_prefix.with_suffix(".stdout.log").write_text(stdout, encoding="utf-8")
     output_prefix.with_suffix(".stderr.log").write_text(stderr, encoding="utf-8")
-    turbo_summary, turbo_summary_sha = _read_turbo_summary() if target.kind == "turbo" else (None, None)
+    if turbo_summary_path is not None:
+        turbo_summary, turbo_summary_sha, turbo_summary_state = _read_turbo_summary(
+            turbo_summary_path, started_at_ns, process.returncode
+        )
+    else:
+        turbo_summary, turbo_summary_sha, turbo_summary_state = None, None, "not_applicable_direct_tsc"
     if turbo_summary is not None:
         output_prefix.with_suffix(".turbo-summary.json").write_text(
             json.dumps(turbo_summary, indent=2, sort_keys=True) + "\n", encoding="utf-8"
@@ -468,6 +534,8 @@ def _run_sample(
         invalid_reasons.append("swap_delta_ceiling")
     if oom_count:
         invalid_reasons.append("oom_kill_observed")
+    if target.kind == "turbo" and turbo_summary_state != "captured":
+        invalid_reasons.append(f"turbo_summary_{turbo_summary_state}")
     record.update(
         {
             "command": command,
@@ -484,10 +552,11 @@ def _run_sample(
             "signal": -process.returncode if process.returncode < 0 else None,
             "turbo_cache_state": _cache_state(turbo_summary, temperature, target),
             "turbo_summary_sha256": turbo_summary_sha,
+            "turbo_summary_state": turbo_summary_state,
             "stdout_sha256": _sha256_bytes(stdout.encode("utf-8")),
             "stderr_sha256": _sha256_bytes(stderr.encode("utf-8")),
             "stop_loss": stop_loss,
-            "host_idle_class": "invalid" if invalid_reasons else "idle",
+            "host_idle_class": "invalid" if invalid_reasons else host_idle_class,
             "status": "invalid_resource" if invalid_reasons else "completed",
             "invalid_reasons": invalid_reasons,
             "ended_at": _now(),
@@ -602,6 +671,58 @@ def _select_targets(names: list[str]) -> list[BenchmarkTarget]:
     return [target for target in TARGETS if target.identifier in names]
 
 
+def _require_complete_matrix(targets: list[BenchmarkTarget]) -> None:
+    """Reject a partial benchmark target selection from producing Phase 3g evidence.
+
+    Args:
+        targets: Ordered targets requested for one benchmark invocation.
+
+    Raises:
+        AssertionError: When the request is not the exact five-target Phase 3g matrix.
+    """
+    expected = tuple(target.identifier for target in TARGETS)
+    actual = tuple(target.identifier for target in targets)
+    if actual != expected:
+        raise AssertionError("Phase 3g requires the complete five-target matrix")
+
+
+def _performance_threshold_status(target_summaries: list[dict[str, Any]]) -> dict[str, Any]:
+    """Evaluate the spec's required cold and warm speedup thresholds.
+
+    Args:
+        target_summaries: Per-target summary records emitted by the complete matrix.
+
+    Returns:
+        Threshold configuration, individual results, and whether acceptance may proceed.
+    """
+    by_target = {str(summary["target"]): summary for summary in target_summaries}
+    failures: list[dict[str, Any]] = []
+    results: list[dict[str, Any]] = []
+    for target, threshold in MANDATED_SPEEDUP_THRESHOLDS.items():
+        summary = by_target.get(target)
+        if summary is None:
+            failures.append({"target": target, "reason": "missing_required_target"})
+            continue
+        cold = float(summary["cold_speedup_vs_ts6"])
+        warm = float(summary["warm_speedup_vs_ts6"])
+        passed = cold >= threshold and warm >= threshold
+        result = {
+            "target": target,
+            "required_speedup": threshold,
+            "cold_speedup_vs_ts6": cold,
+            "warm_speedup_vs_ts6": warm,
+            "passed": passed,
+        }
+        results.append(result)
+        if not passed:
+            failures.append(result)
+    return {
+        "status": "passed" if not failures else "threshold_not_met",
+        "results": results,
+        "failures": failures,
+    }
+
+
 def main() -> int:
     """Execute the requested live matrix and save a provenance-bound summary.
 
@@ -610,6 +731,11 @@ def main() -> int:
     """
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--target", action="append", default=[], help="target identifier to run")
+    parser.add_argument(
+        "--allow-contaminated-host",
+        action="store_true",
+        help="record an explicit busy-host operator override without calling it controlled evidence",
+    )
     parser.add_argument("--samples-per-temperature", type=int, default=3)
     parser.add_argument("--run-id", default=datetime.now(timezone.utc).strftime("run-%Y%m%dT%H%M%SZ"))
     arguments = parser.parse_args()
@@ -625,6 +751,7 @@ def main() -> int:
     )):
         raise AssertionError("compiler baseline has no valid resource limits")
     selected_targets = _select_targets(arguments.target)
+    _require_complete_matrix(selected_targets)
     output_dir = EVIDENCE_ROOT / arguments.run_id
     if output_dir.exists():
         raise AssertionError(f"benchmark run directory already exists: {output_dir}")
@@ -644,6 +771,7 @@ def main() -> int:
                             ordinal,
                             output_dir,
                             limits,
+                            arguments.allow_contaminated_host,
                         )
                         samples.append(sample)
                         (output_dir / f"{sample['sample_id']}.json").write_text(
@@ -658,17 +786,25 @@ def main() -> int:
                 item["cohorts"][cohort]["warm_median_ms"] for item in summaries
             ),
         )
+        performance_thresholds = _performance_threshold_status(summaries)
+        if performance_thresholds["status"] != "passed":
+            raise AssertionError(
+                "required benchmark speedup threshold was not met; collect bottleneck evidence before acceptance"
+            )
+        host_override_used = any(sample["host_idle_class"] == "contaminated" for sample in samples)
         summary = {
             "schema_version": 1,
             "track": "typescript7_native_migration_20260710",
             "phase": "Phase 3g: controlled benchmark suite",
-            "status": "accepted",
+            "status": "accepted_with_user_host_override" if host_override_used else "accepted",
             "provenance_start": provenance_start,
             "provenance_end": _provenance(),
             "sample_count": len(samples),
             "samples_per_temperature": arguments.samples_per_temperature,
             "selected_ts7_cohort": selected_checkers,
             "selected_ts7_checkers": int(selected_checkers.rsplit("c", 1)[1]),
+            "host_load_override": host_override_used,
+            "performance_thresholds": performance_thresholds,
             "targets": summaries,
         }
         (output_dir / "summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")

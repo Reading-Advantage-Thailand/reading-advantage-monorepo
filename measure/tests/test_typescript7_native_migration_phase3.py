@@ -7,10 +7,12 @@ import importlib.util
 import json
 import re
 import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
 from types import ModuleType
+from unittest.mock import patch
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -29,6 +31,13 @@ RUNNER_PATH = (
     / "tracks"
     / "typescript7_native_migration_20260710"
     / "run-phase3-parity.py"
+)
+BENCHMARK_RUNNER_PATH = (
+    REPO_ROOT
+    / "measure"
+    / "tracks"
+    / "typescript7_native_migration_20260710"
+    / "run-phase3-benchmarks.py"
 )
 TYPES_PACKAGE_PATH = REPO_ROOT / "packages" / "types" / "package.json"
 DB_PACKAGE_PATH = REPO_ROOT / "packages" / "db" / "package.json"
@@ -135,6 +144,26 @@ def _load_runner() -> ModuleType:
     if specification is None or specification.loader is None:
         raise AssertionError("unable to load TypeScript 7 Phase 3 parity runner")
     module = importlib.util.module_from_spec(specification)
+    specification.loader.exec_module(module)
+    return module
+
+
+def _load_benchmark_runner() -> ModuleType:
+    """Load the Phase 3g benchmark runner from its track-local executable path.
+
+    Returns:
+        Imported benchmark-runner module.
+
+    Raises:
+        AssertionError: When the benchmark runner cannot be imported from the track.
+    """
+    specification = importlib.util.spec_from_file_location(
+        "typescript7_phase3_benchmarks", BENCHMARK_RUNNER_PATH
+    )
+    if specification is None or specification.loader is None:
+        raise AssertionError("unable to load TypeScript 7 Phase 3 benchmark runner")
+    module = importlib.util.module_from_spec(specification)
+    sys.modules[specification.name] = module
     specification.loader.exec_module(module)
     return module
 
@@ -862,6 +891,72 @@ class Phase3dCheckTypesCutoverContract(unittest.TestCase):
         self.assertIsInstance(scripts, dict)
         assert isinstance(scripts, dict)
         self.assertEqual(scripts.get("build"), "node ../../node_modules/typescript7/bin/tsc")
+
+
+class Phase3gBenchmarkRunnerContract(unittest.TestCase):
+    """Verify that Phase 3g evidence is comparable, complete, and honest about host load."""
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        """Load the live benchmark runner once for all focused contract checks."""
+        cls.runner = _load_benchmark_runner()
+
+    def test_ts6_uses_the_same_stable_ordering_oracle_as_diagnostic_parity(self) -> None:
+        """Requires standalone and graph TS6 samples to preserve the parity-oracle flag."""
+        direct_command, _ = self.runner._compiler_command(
+            self.runner.TARGETS[0], "ts6", 1
+        )
+        self.assertIn("--stableTypeOrdering", direct_command)
+        graph_target = next(
+            target for target in self.runner.TARGETS if target.kind == "turbo"
+        )
+        with patch.dict("os.environ", {"TS7_BENCHMARK_CACHE_DIR": "/tmp/ts7-test-cache"}):
+            graph_command, _ = self.runner._compiler_command(graph_target, "ts6", 1)
+        self.assertEqual(graph_command[-2:], ["--", "--stableTypeOrdering"])
+
+    def test_user_override_is_recorded_as_contaminated_not_idle(self) -> None:
+        """Requires an explicit host-load override to preserve its contaminated classification."""
+        allowed, idle_class, reason = self.runner._host_eligibility(57, True)
+        self.assertTrue(allowed)
+        self.assertEqual(idle_class, "contaminated")
+        self.assertEqual(reason, "user_override_below_idle_threshold")
+        self.assertEqual(
+            self.runner._host_eligibility(57, False),
+            (False, "invalid", "host_idle_below_threshold"),
+        )
+
+    def test_phase3g_rejects_partial_target_matrices(self) -> None:
+        """Requires a filtered target invocation to stay incapable of accepted full-matrix evidence."""
+        with self.assertRaisesRegex(AssertionError, "complete five-target matrix"):
+            self.runner._require_complete_matrix([self.runner.TARGETS[0]])
+        self.assertIsNone(self.runner._require_complete_matrix(list(self.runner.TARGETS)))
+
+    def test_turbo_summary_is_cleared_before_a_sample_can_read_it(self) -> None:
+        """Requires stale Turbo metadata to be removed before each graph benchmark sample."""
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            summary_path = Path(temporary_directory) / "turbo-summary.json"
+            summary_path.write_text('{"cache":{"status":"HIT"}}\n', encoding="utf-8")
+            self.assertEqual(self.runner._clear_turbo_summary(summary_path), summary_path)
+            self.assertFalse(summary_path.exists())
+
+    def test_threshold_status_requires_both_mandated_speedups(self) -> None:
+        """Requires under-threshold critical surfaces to remain explicitly unaccepted."""
+        status = self.runner._performance_threshold_status(
+            [
+                {
+                    "target": "apps-reading-advantage",
+                    "cold_speedup_vs_ts6": 3.2,
+                    "warm_speedup_vs_ts6": 2.9,
+                },
+                {
+                    "target": "full-check-types-graph",
+                    "cold_speedup_vs_ts6": 2.2,
+                    "warm_speedup_vs_ts6": 2.1,
+                },
+            ]
+        )
+        self.assertEqual(status["status"], "threshold_not_met")
+        self.assertEqual(status["failures"][0]["target"], "apps-reading-advantage")
 
 
 class Phase3eDeclarationEmitContract(unittest.TestCase):
