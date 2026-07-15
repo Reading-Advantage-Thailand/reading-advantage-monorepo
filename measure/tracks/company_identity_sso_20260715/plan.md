@@ -87,7 +87,7 @@ _Story ref: spec.md#story-s1_
     - [x] Apply least-privilege database credentials for runtime and migration
           connections.
 
-- [ ] Task 6: Establish the backend identity module and adapter boundary.
+- [~] Task 6: Establish the backend identity module and adapter boundary.
     - [ ] Add transport-independent identity repository interfaces and
           capability contracts.
     - [ ] Add the PostgreSQL identity adapter in the approved ownership root.
