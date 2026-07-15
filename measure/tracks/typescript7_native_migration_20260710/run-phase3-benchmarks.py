@@ -360,8 +360,6 @@ def _read_turbo_summary(
     Returns:
         Parsed summary, its content digest, and a provenance state.
     """
-    if exit_status != 0:
-        return None, None, "command_failed"
     matches = list(TURBO_SUMMARY_PATTERN.finditer(stdout))
     if not matches:
         return None, None, "missing"

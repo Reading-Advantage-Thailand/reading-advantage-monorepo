@@ -961,10 +961,10 @@ class Phase3gBenchmarkRunnerContract(unittest.TestCase):
             summary_directory = Path(temporary_directory)
             summary_path = summary_directory / "fresh.json"
             with patch.object(self.runner, "TURBO_RUNS_DIR", summary_directory):
-                started_at_ns = time.time_ns()
                 summary_path.write_text('{"cache":{"status":"HIT"}}\n', encoding="utf-8")
+                started_at_ns = summary_path.stat().st_mtime_ns - 1
                 summary, _, state = self.runner._read_turbo_summary(
-                    f"Summary: {summary_path}\n", started_at_ns, 0
+                    f"Summary: {summary_path}\n", started_at_ns, 1
                 )
                 self.assertEqual(state, "captured")
                 self.assertEqual(summary, {"cache": {"status": "HIT"}})
@@ -992,14 +992,15 @@ class Phase3gBenchmarkRunnerContract(unittest.TestCase):
         self.assertEqual(status["status"], "threshold_not_met")
         self.assertEqual(status["failures"][0]["target"], "apps-reading-advantage")
 
-    def test_utils_tsup_declaration_path_declares_its_ts6_deprecation_compatibility(self) -> None:
-        """Requires the TS6-bound declaration bundler to read its explicit compatibility setting."""
-        config_path = REPO_ROOT / "packages" / "utils" / "tsconfig.json"
-        config = json.loads(config_path.read_text(encoding="utf-8"))
-        options = config.get("compilerOptions")
-        self.assertIsInstance(options, dict)
-        assert isinstance(options, dict)
-        self.assertEqual(options.get("ignoreDeprecations"), "6.0")
+    def test_tsup_declaration_paths_declare_their_ts6_deprecation_compatibility(self) -> None:
+        """Requires every TS6-bound declaration bundler to read its local compatibility setting."""
+        for package in ("auth-client", "game-contracts", "ui", "utils"):
+            config_path = REPO_ROOT / "packages" / package / "tsconfig.json"
+            config = json.loads(config_path.read_text(encoding="utf-8"))
+            options = config.get("compilerOptions")
+            self.assertIsInstance(options, dict)
+            assert isinstance(options, dict)
+            self.assertEqual(options.get("ignoreDeprecations"), "6.0", package)
 
 
 class Phase3eDeclarationEmitContract(unittest.TestCase):
