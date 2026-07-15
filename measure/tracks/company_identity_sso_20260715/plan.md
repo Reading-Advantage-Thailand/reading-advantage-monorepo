@@ -53,13 +53,13 @@ _Story ref: spec.md#story-s1_
 
 ### Test
 
-- [~] Task 3: Write Red contract and architecture-boundary tests.
-    - [ ] Prove identity schemas reject malformed usernames, statuses, roles,
+- [x] Task 3: Write Red contract and architecture-boundary tests. [commit: 60ad9d28]
+    - [x] Prove identity schemas reject malformed usernames, statuses, roles,
           application identifiers, redirect URIs, and audit metadata.
-    - [ ] Prove product applications cannot import the identity database client
+    - [x] Prove product applications cannot import the identity database client
           or schema directly.
-    - [ ] Add positive and counterexample fixtures to the AST boundary guard.
-    - [ ] Prove company identity tables are not added to the education
+    - [x] Add positive and counterexample fixtures to the AST boundary guard.
+    - [x] Prove company identity tables are not added to the education
           `TenantDB` registry or product migration stream.
 
 - [ ] Task 4: Write Red PostgreSQL migration and constraint tests.
