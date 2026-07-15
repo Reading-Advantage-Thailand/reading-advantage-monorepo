@@ -117,6 +117,7 @@ def _provenance() -> dict[str, Any]:
         "pnpm_lock": REPO_ROOT / "pnpm-lock.yaml",
         "pnpm_workspace": REPO_ROOT / "pnpm-workspace.yaml",
         "turbo_json": REPO_ROOT / "turbo.json",
+        "compiler_identity": REPO_ROOT / "scripts" / "typescript-compiler-identity.json",
         "ts7_wrapper": REPO_ROOT / "scripts" / "run-ts7-check-types.mjs",
         "shared_tsconfig": REPO_ROOT / "packages" / "config" / "tsconfig" / "base.json",
         "target_tsconfig": REPO_ROOT / "packages" / "types" / "tsconfig.json",
@@ -305,22 +306,27 @@ def _run_matrix(worktree: Path, cache_dir: Path, output_dir: Path) -> list[dict[
     def sample(label: str, task: str, checkers: int | None, expected: str) -> None:
         records.append(_run_turbo_sample(worktree, cache_dir, output_dir, label, task, checkers, expected))
 
-    package_json = worktree / "package.json"
+    compiler_identity = worktree / "scripts" / "typescript-compiler-identity.json"
     wrapper = worktree / "scripts" / "run-ts7-check-types.mjs"
     target_config = worktree / "packages" / "types" / "tsconfig.json"
     shared_config = worktree / "packages" / "config" / "tsconfig" / "base.json"
-    originals = {path: path.read_bytes() for path in (package_json, wrapper, target_config, shared_config)}
+    originals = {path: path.read_bytes() for path in (compiler_identity, wrapper, target_config, shared_config)}
 
     sample("native-c1-baseline-miss", "check-types", 1, "MISS")
     sample("native-c1-baseline-hit", "check-types", 1, "HIT")
 
     _write_mutation(
-        package_json,
-        originals[package_json],
-        _replace_once(originals[package_json], b'"typescript7": "npm:typescript@7.0.2"', b'"typescript7": "npm:typescript@7.0.3"', package_json),
+        compiler_identity,
+        originals[compiler_identity],
+        _replace_once(
+            originals[compiler_identity],
+            b'"typescript7": "typescript7@npm:typescript@7.0.2"',
+            b'"typescript7": "typescript7@npm:typescript@7.0.3"',
+            compiler_identity,
+        ),
     )
     sample("native-ts7-alias-miss", "check-types", 1, "MISS")
-    _restore_mutation(package_json, originals[package_json])
+    _restore_mutation(compiler_identity, originals[compiler_identity])
     sample("native-ts7-alias-restored-hit", "check-types", 1, "HIT")
 
     for name, path, suffix in (
@@ -342,12 +348,17 @@ def _run_matrix(worktree: Path, cache_dir: Path, output_dir: Path) -> list[dict[
         sample(f"{prefix}-baseline-miss", task, None, "MISS")
         sample(f"{prefix}-baseline-hit", task, None, "HIT")
         _write_mutation(
-            package_json,
-            originals[package_json],
-            _replace_once(originals[package_json], b'"typescript": "6.0.2"', b'"typescript": "6.0.3"', package_json),
+            compiler_identity,
+            originals[compiler_identity],
+            _replace_once(
+                originals[compiler_identity],
+                b'"typescript6": "typescript@6.0.2"',
+                b'"typescript6": "typescript@6.0.3"',
+                compiler_identity,
+            ),
         )
         sample(f"{prefix}-ts6-alias-miss", task, None, "MISS")
-        _restore_mutation(package_json, originals[package_json])
+        _restore_mutation(compiler_identity, originals[compiler_identity])
         sample(f"{prefix}-ts6-alias-restored-hit", task, None, "HIT")
         for name, path in (("local-tsconfig", target_config), ("shared-tsconfig", shared_config)):
             _write_mutation(path, originals[path], originals[path] + b"\n")

@@ -733,6 +733,7 @@ class Phase3dCheckTypesCutoverContract(unittest.TestCase):
         native_inputs = [
             "$TURBO_DEFAULT$",
             "$TURBO_ROOT$/scripts/run-ts7-check-types.mjs",
+            "$TURBO_ROOT$/scripts/typescript-compiler-identity.json",
             "$TURBO_ROOT$/package.json",
             "$TURBO_ROOT$/pnpm-lock.yaml",
             "$TURBO_ROOT$/pnpm-workspace.yaml",
@@ -741,6 +742,7 @@ class Phase3dCheckTypesCutoverContract(unittest.TestCase):
         ]
         compat_inputs = [
             "$TURBO_DEFAULT$",
+            "$TURBO_ROOT$/scripts/typescript-compiler-identity.json",
             "$TURBO_ROOT$/package.json",
             "$TURBO_ROOT$/pnpm-lock.yaml",
             "$TURBO_ROOT$/pnpm-workspace.yaml",
@@ -755,6 +757,15 @@ class Phase3dCheckTypesCutoverContract(unittest.TestCase):
             turbo.get("globalDependencies"), ["**/.env.*local"],
         )
         self.assertNotIn("TS7_CHECKERS", turbo.get("globalEnv"))
+        identity = json.loads(
+            (REPO_ROOT / "scripts" / "typescript-compiler-identity.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        self.assertEqual(identity, {
+            "typescript6": "typescript@6.0.2",
+            "typescript7": "typescript7@npm:typescript@7.0.2",
+        })
 
     def test_types_build_routes_emit_to_typescript7_after_the_byte_diff_gate(self) -> None:
         """Requires the first Phase 3e package build to select the native compiler explicitly."""
