@@ -23,6 +23,24 @@ RUNNER_PATH = (
 )
 TYPES_PACKAGE_PATH = REPO_ROOT / "packages" / "types" / "package.json"
 DB_PACKAGE_PATH = REPO_ROOT / "packages" / "db" / "package.json"
+PHASE3D_CUTOVER_ORDER = (
+    "packages/types",
+    "packages/db",
+    "packages/domain",
+    "packages/auth",
+    "packages/ui",
+    "packages/utils",
+    "packages/integrations/github",
+    "apps/advantage-games",
+    "apps/science-advantage",
+    "apps/primary-advantage",
+    "apps/reading-advantage",
+    "apps/codecamp-advantage",
+    "apps/sales-advantage",
+    "apps/marketing",
+    "apps/www-reading-advantage",
+    "apps/activity-vinext-fixture",
+)
 
 
 def _load_runner() -> ModuleType:
@@ -245,6 +263,24 @@ class Phase3dCheckTypesCutoverContract(unittest.TestCase):
         self.assertEqual(scripts.get("check-types"), self.NATIVE_COMMAND)
         self.assertEqual(scripts.get("check-types:compat"), self.COMPAT_COMMAND)
         self.assertEqual(scripts.get("check-types:rollback"), self.COMPAT_COMMAND)
+
+    def test_native_workspace_cutovers_follow_the_required_strict_prefix(self) -> None:
+        """Rejects a native check-types switch that skips an earlier workspace in the acceptance order."""
+        flipped: list[str] = []
+        for workspace in PHASE3D_CUTOVER_ORDER:
+            manifest_path = REPO_ROOT / workspace / "package.json"
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            scripts = manifest.get("scripts", {})
+            if not isinstance(scripts, dict):
+                continue
+            check_types = scripts.get("check-types")
+            if isinstance(check_types, str) and "typescript7/bin/tsc" in check_types:
+                flipped.append(workspace)
+        self.assertEqual(
+            flipped,
+            list(PHASE3D_CUTOVER_ORDER[: len(flipped)]),
+            f"TypeScript 7 check-types cutovers must be a strict ordered prefix: {flipped}",
+        )
 
 
 if __name__ == "__main__":

@@ -156,7 +156,7 @@ step produces evidence the next step consumes.
 7. `apps/science-advantage`
 8. `apps/primary-advantage`
 9. `apps/reading-advantage` (benchmark keystone)
-10. Remaining apps (`codecamp-advantage`, `sales-advantage`, `marketing`, `www-reading-advantage`)
+10. Remaining apps (`codecamp-advantage`, `sales-advantage`, `marketing`, `www-reading-advantage`, `activity-vinext-fixture`)
 11. Full Turbo `check-types` graph (uncached, then warm)
 
 "Smallest shared package first" is a determinism guarantee, not a speed
