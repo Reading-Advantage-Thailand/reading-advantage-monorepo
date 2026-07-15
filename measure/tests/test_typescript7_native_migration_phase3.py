@@ -35,6 +35,7 @@ READING_ADVANTAGE_PACKAGE_PATH = REPO_ROOT / "apps" / "reading-advantage" / "pac
 CODECAMP_ADVANTAGE_PACKAGE_PATH = REPO_ROOT / "apps" / "codecamp-advantage" / "package.json"
 SALES_ADVANTAGE_PACKAGE_PATH = REPO_ROOT / "apps" / "sales-advantage" / "package.json"
 MARKETING_PACKAGE_PATH = REPO_ROOT / "apps" / "marketing" / "package.json"
+WWW_READING_ADVANTAGE_PACKAGE_PATH = REPO_ROOT / "apps" / "www-reading-advantage" / "package.json"
 PHASE3D_CUTOVER_ORDER = (
     "packages/types",
     "packages/db",
@@ -392,6 +393,16 @@ class Phase3dCheckTypesCutoverContract(unittest.TestCase):
     def test_marketing_check_types_routing_is_explicit_and_reversible(self) -> None:
         """Requires the third final-app cutover to preserve direct dual-compiler paths."""
         manifest = json.loads(MARKETING_PACKAGE_PATH.read_text(encoding="utf-8"))
+        scripts = manifest.get("scripts")
+        self.assertIsInstance(scripts, dict)
+        assert isinstance(scripts, dict)
+        self.assertEqual(scripts.get("check-types"), self.NATIVE_COMMAND)
+        self.assertEqual(scripts.get("check-types:compat"), self.COMPAT_COMMAND)
+        self.assertEqual(scripts.get("check-types:rollback"), self.COMPAT_COMMAND)
+
+    def test_www_reading_advantage_check_types_routing_is_explicit_and_reversible(self) -> None:
+        """Requires the fourth final-app cutover to preserve direct dual-compiler paths."""
+        manifest = json.loads(WWW_READING_ADVANTAGE_PACKAGE_PATH.read_text(encoding="utf-8"))
         scripts = manifest.get("scripts")
         self.assertIsInstance(scripts, dict)
         assert isinstance(scripts, dict)
