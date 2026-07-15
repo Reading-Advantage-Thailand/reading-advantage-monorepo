@@ -288,6 +288,21 @@
       "javascript_differences": [],
       "disposition": "accepted_declaration_printer_and_map_only",
       "rationale": "All 104 changed files are declarations or declaration maps: TypeScript 7 changes inferred property and union ordering plus declaration-map mapping offsets only. The 173 emitted JavaScript files are byte-identical."
+    },
+    {
+      "package": "packages/webhooks",
+      "typescript6": "6.0.2",
+      "typescript7": "7.0.2",
+      "typescript6_exit_status": 0,
+      "typescript7_exit_status": 0,
+      "output_file_count": 93,
+      "typescript6_relative_tree_sha256": "10ba7e5f4059cf2ca0e260cfc9366ead80a8953e1a84a524792cd6b20c2caa7e",
+      "typescript7_relative_tree_sha256": "684551d74cf0230593e01767b1bd3ae91a25ac5829430d33e3f90649bfe1590d",
+      "diff_sha256": "7b83290be325ed717b6205e92e46d2881ffa44057e27f235156a0fe6060d3bad",
+      "declaration_differences": ["github.d.ts.map", "health.d.ts.map", "index.d.ts.map"],
+      "javascript_differences": [],
+      "disposition": "accepted_declaration_map_only",
+      "rationale": "Generated declaration text and JavaScript are byte-identical; TypeScript 7 changes only declaration-map mapping offsets for default export positions."
     }
   ]
 }

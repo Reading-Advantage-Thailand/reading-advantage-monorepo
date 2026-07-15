@@ -116,6 +116,7 @@ PHASE3E_ACCEPTED_EMIT_BUILD_WORKSPACES = (
     "packages/knowledge-space-practice",
     "packages/codecamp-knowledge",
     "packages/domain",
+    "packages/webhooks",
 )
 
 
@@ -801,6 +802,14 @@ class Phase3dCheckTypesCutoverContract(unittest.TestCase):
     def test_domain_emit_routes_to_typescript7(self) -> None:
         """Requires the domain package's emitting build to select the native alias."""
         manifest = json.loads(DOMAIN_PACKAGE_PATH.read_text(encoding="utf-8"))
+        scripts = manifest.get("scripts")
+        self.assertIsInstance(scripts, dict)
+        assert isinstance(scripts, dict)
+        self.assertEqual(scripts.get("build"), "node ../../node_modules/typescript7/bin/tsc")
+
+    def test_webhooks_emit_routes_to_typescript7(self) -> None:
+        """Requires the webhooks package's emitting build to select the native alias."""
+        manifest = json.loads(WEBHOOKS_PACKAGE_PATH.read_text(encoding="utf-8"))
         scripts = manifest.get("scripts")
         self.assertIsInstance(scripts, dict)
         assert isinstance(scripts, dict)
