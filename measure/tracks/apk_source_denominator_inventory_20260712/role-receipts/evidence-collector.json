@@ -1,38 +1,56 @@
 {
   "schema_version": "apk-role-receipt.v1",
-  "status": "complete-with-platform-limitations",
+  "status": "complete-provider-attested",
   "track_id": "apk_source_denominator_inventory_20260712",
   "phase": "Phase 2: Independent human discovery",
   "role": "evidence-collector",
   "task_id": "evidence-collector:historical-program-identity-remediation",
   "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
-  "spawn_id": null,
-  "spawn_id_limitation": "No platform spawn-event export was supplied to this session.",
-  "parent_ancestry_ids": null,
-  "parent_ancestry_ids_limitation": "No platform ancestry export was supplied to this fresh session.",
-  "prompt_sha256": null,
-  "prompt_sha256_limitation": "The platform did not provide immutable prompt bytes from which to derive this digest.",
-  "actual_context_manifest_sha256": null,
-  "actual_context_manifest_sha256_limitation": "No raw provider context export or orchestrator context-manifest bytes were supplied.",
-  "start_event_id": null,
-  "start_event_id_limitation": "No platform start-event ID was supplied.",
-  "end_event_id": null,
-  "end_event_id_limitation": "No platform end-event ID was supplied.",
-  "final_response_sha256": null,
-  "final_response_sha256_limitation": "No immutable platform final-response export was supplied.",
+  "spawn_id": "ses_09d068f32ffeKEckY8WKPwt5rn",
+  "parent_ancestry_ids": [],
+  "prompt_sha256": "b66344a6be92f9d43ae5a359550c80fe81f0d8b28620a0c9dba2acb7bb20cbab",
+  "prompt_hash_basis": "SHA-256 of the canonical compact JSON array, in provider order, containing the exact text of both user prompt parts in the session ledger.",
+  "actual_context_manifest": {
+    "schema_version": "apk-provider-context-manifest.v1",
+    "provider": "opencode-local-ledger",
+    "session_id": "ses_09d068f32ffeKEckY8WKPwt5rn",
+    "parent_session_id": null,
+    "session_created_at_ms": 1784071942349,
+    "session_updated_at_ms": 1784073332231,
+    "message_count": 36,
+    "part_count": 212,
+    "user_prompt_count": 2,
+    "first_user_message_id": "msg_f62f97cfe001zLPAzlgJO7qIuo",
+    "first_user_part_id": "prt_f62f97d1b001b6wDpLvGKb4w85",
+    "final_assistant_message_id": "msg_f630e25e8001NHNhZDMBowrqYK",
+    "final_assistant_text_part_id": "prt_f630e7126001gqxth4pES6xjrm",
+    "message_ledger_sha256": "97854ca505848056f5c0d10268f4ec68829942d7ef32c106594672bc8fd4b6bb",
+    "part_ledger_sha256": "571fbf563da7d371c5b65cb18388e893332eaf8d3e4ab97ed960d720a4181e7f"
+  },
+  "actual_context_manifest_sha256": "850ccdc8baaf68769b87f157fccc03f2ba63a7fe4159377484b0686a76096835",
+  "actual_context_manifest_hash_basis": "SHA-256 of actual_context_manifest serialized as canonical compact JSON with sorted keys.",
+  "start_event_id": "prt_f62f9979d001qNSNE4KenXlVoU",
+  "end_event_id": "prt_f630ea35a001ner21qIReJ8SP3",
+  "final_response_sha256": "ff9bb4b844e5176a05adc216264590db6d0d482a5a0e615dbfd27ce8d3914ddf",
+  "final_response_hash_basis": "SHA-256 of the exact UTF-8 text bytes stored in provider part prt_f630e7126001gqxth4pES6xjrm.",
   "output_paths": [
     "measure/tracks/apk_source_denominator_inventory_20260712/independent-human-discovery.json",
     "measure/tracks/apk_source_denominator_inventory_20260712/human-duplicate-drift-records.json",
     "measure/tracks/apk_source_denominator_inventory_20260712/human-historical-deleted-records.json",
     "measure/tracks/apk_source_denominator_inventory_20260712/human-discrepancy-records.json"
   ],
-  "output_sha256": "74410e4375741b6f82a38d2135c94000f3dd8464fb2757cce9f39ac184ab5fe8",
+  "output_sha256": "70f500c7c1e18e751b95f43ba5909fdf0dd2206545c97b5f4848a162ce192e55",
   "output_hash_basis": "SHA-256 of canonical compact JSON with sorted keys mapping each output path to the SHA-256 of its committed bytes at commit_sha.",
   "output_hashes": {
-    "measure/tracks/apk_source_denominator_inventory_20260712/human-discrepancy-records.json": "7f241f99936c2b15eff1f2db79a7488de5a4ae693f822ccd27bb8f3f3778d442",
+    "measure/tracks/apk_source_denominator_inventory_20260712/human-discrepancy-records.json": "ad1192a23cf95bbf478a5a1d33e59a0a768f68a4551c6aa5e92229ea33a3cce5",
     "measure/tracks/apk_source_denominator_inventory_20260712/human-duplicate-drift-records.json": "3709e551cd84f2c13a355e8b7e664be8df0f528124573615110728f80d4e19f0",
     "measure/tracks/apk_source_denominator_inventory_20260712/human-historical-deleted-records.json": "c92bb55b9aac45666f352ad40a93f830f1e3f1d92ac03d1465dd07326b3d8f04",
-    "measure/tracks/apk_source_denominator_inventory_20260712/independent-human-discovery.json": "8197858ca790263194c245ef92eb16fcbe68174ccddcadbe1c16dedf35829439"
+    "measure/tracks/apk_source_denominator_inventory_20260712/independent-human-discovery.json": "aada8b9f7d543f435633088e70b09466c7e1d3711daf7b548639cf4c298919d3"
+  },
+  "actual_usage": {
+    "bytes_read": 580531,
+    "command_invocations": 74,
+    "source_files": 22
   },
   "budget_declaration": {
     "role": "evidence-collector",
@@ -41,16 +59,38 @@
       "command_invocations": 120,
       "source_files": 7500
     },
-    "actual_usage": null,
-    "actual_usage_limitation": "The platform does not expose a tool-usage ledger to this session."
+    "actual_usage": {
+      "bytes_read": 580531,
+      "command_invocations": 74,
+      "source_files": 22
+    },
+    "measurement_basis": {
+      "bytes_read": "Sum of UTF-8 byte lengths of all 74 immutable provider tool-result outputs in the OpenCode part ledger, including error parts as zero output bytes.",
+      "command_invocations": "Count of immutable OpenCode tool parts in the session ledger.",
+      "source_files": "Count of distinct filePath values on completed provider read-tool parts; internal subprocess I/O is excluded because it is not injected into provider context."
+    }
   },
-  "budget_declaration_sha256": "c27f6e60d6872e3c7852727f3307dee1dfcd43270121a9388d725aeb3390cae6",
-  "budget_hash_basis": "SHA-256 of canonical compact JSON with sorted keys for budget_declaration.",
-  "commit_sha": "412c022211ba7ee56cc031ff05d85c84a3a56548",
+  "budget_declaration_sha256": "54fe858e57ce6b38ac1b8522ec33a9e11d578b68bbf9f282799f6175853c406a",
+  "budget_hash_basis": "SHA-256 of budget_declaration serialized as canonical compact JSON with sorted keys.",
+  "provider_usage": {
+    "tokens_input": 355375,
+    "tokens_output": 9998,
+    "tokens_reasoning": 4676,
+    "tokens_cache_read": 4694016,
+    "model": "gpt-5.6-sol",
+    "provider": "openai"
+  },
+  "subprocess_observation": {
+    "source_objects_resolved": 1089,
+    "source_bytes_hashed_by_helper": 403402771,
+    "resource_usage_classification": "internal-subprocess-io-not-provider-context",
+    "note": "These helper observations are retained separately and are not substituted for the provider-context resource ceiling measurements."
+  },
+  "commit_sha": "6dda411b54787db2b0e005c1097ecc008f424c62",
   "commit_binding": {
     "status": "committed-output-binding",
-    "source": "git show 412c022211ba7ee56cc031ff05d85c84a3a56548:<output-path>",
-    "limitation": "This receipt is committed after the four attested Phase-2 outputs and proves only their committed byte binding, not platform event ordering."
+    "source": "git show 6dda411b54787db2b0e005c1097ecc008f424c62:<output-path>",
+    "receipt_commit_policy": "This separate receipt-binding commit intentionally points to the preceding atomic implementation commit so it can attest the final response and committed output bytes without a self-referential hash."
   },
   "findings": [],
   "disposition_summary": {
