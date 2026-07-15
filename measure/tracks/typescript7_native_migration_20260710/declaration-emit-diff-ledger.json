@@ -243,6 +243,21 @@
       "javascript_differences": ["interactive-activity-player.js"],
       "disposition": "accepted_jsx_helper_import_ordering_only",
       "rationale": "TypeScript 7 only swaps the equivalent jsx/jsxs helper import specifier order in the emitted React module; helper bindings and every emitted call are unchanged."
+    },
+    {
+      "package": "packages/knowledge-space-practice",
+      "typescript6": "6.0.2",
+      "typescript7": "7.0.2",
+      "typescript6_exit_status": 0,
+      "typescript7_exit_status": 0,
+      "output_file_count": 75,
+      "typescript6_relative_tree_sha256": "26008b627706b1e13d5d731f9f19dbc331691522b899e9c83412d1e8d1be8a85",
+      "typescript7_relative_tree_sha256": "7991a6c284b6df1e8fe304928d747dbd3d65a61d49c262a605af9deaea7678bd",
+      "diff_sha256": "db09dad60cc2a4e9bee73c6dde1086b3a6d8de06b92299ad4c294fb11309c433",
+      "declaration_differences": ["blueprints/schemas.d.ts", "projections/schemas.d.ts"],
+      "javascript_differences": [],
+      "disposition": "accepted_declaration_ordering_only",
+      "rationale": "TypeScript 7 deterministically reorders inferred Zod enum generic members in generated declarations only; emitted JavaScript and declaration maps are byte-identical."
     }
   ]
 }
