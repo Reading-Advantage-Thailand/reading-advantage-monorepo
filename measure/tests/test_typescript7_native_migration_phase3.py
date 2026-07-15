@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import os
 import re
 import subprocess
 import sys
@@ -703,8 +704,14 @@ class Phase3dCheckTypesCutoverContract(unittest.TestCase):
         scripts = manifest.get("scripts")
         self.assertIsInstance(scripts, dict)
         assert isinstance(scripts, dict)
-        self.assertEqual(scripts.get("check-types"), "turbo run check-types")
-        self.assertEqual(scripts.get("check-types:native"), "turbo run check-types")
+        self.assertEqual(
+            scripts.get("check-types"),
+            "TS7_CHECKERS=1 turbo run check-types",
+        )
+        self.assertEqual(
+            scripts.get("check-types:native"),
+            "TS7_CHECKERS=1 turbo run check-types",
+        )
         self.assertEqual(scripts.get("check-types:compat"), "turbo run check-types:compat")
         self.assertEqual(scripts.get("check-types:parity"), "python3 measure/tracks/typescript7_native_migration_20260710/run-phase3-parity.py")
         self.assertEqual(scripts.get("check-types:rollback"), "turbo run check-types:rollback")
@@ -716,6 +723,31 @@ class Phase3dCheckTypesCutoverContract(unittest.TestCase):
         self.assertEqual(tasks.get("check-types", {}).get("dependsOn"), ["^build", "^check-types"])
         self.assertEqual(tasks.get("check-types:compat", {}).get("dependsOn"), ["^build", "^check-types:compat"])
         self.assertEqual(tasks.get("check-types:rollback", {}).get("dependsOn"), ["^build", "^check-types:rollback"])
+        native_inputs = [
+            "$TURBO_DEFAULT$",
+            "$TURBO_ROOT$/scripts/run-ts7-check-types.mjs",
+            "$TURBO_ROOT$/package.json",
+            "$TURBO_ROOT$/pnpm-lock.yaml",
+            "$TURBO_ROOT$/pnpm-workspace.yaml",
+            "$TURBO_ROOT$/turbo.json",
+            "$TURBO_ROOT$/packages/config/tsconfig/**",
+        ]
+        compat_inputs = [
+            "$TURBO_DEFAULT$",
+            "$TURBO_ROOT$/package.json",
+            "$TURBO_ROOT$/pnpm-lock.yaml",
+            "$TURBO_ROOT$/pnpm-workspace.yaml",
+            "$TURBO_ROOT$/turbo.json",
+            "$TURBO_ROOT$/packages/config/tsconfig/**",
+        ]
+        self.assertEqual(tasks.get("check-types", {}).get("inputs"), native_inputs)
+        self.assertEqual(tasks.get("check-types", {}).get("env"), ["TS7_CHECKERS"])
+        self.assertEqual(tasks.get("check-types:compat", {}).get("inputs"), compat_inputs)
+        self.assertEqual(tasks.get("check-types:rollback", {}).get("inputs"), compat_inputs)
+        self.assertEqual(
+            turbo.get("globalDependencies"), ["**/.env.*local"],
+        )
+        self.assertNotIn("TS7_CHECKERS", turbo.get("globalEnv"))
 
     def test_types_build_routes_emit_to_typescript7_after_the_byte_diff_gate(self) -> None:
         """Requires the first Phase 3e package build to select the native compiler explicitly."""
@@ -1025,6 +1057,98 @@ class Phase3gBenchmarkRunnerContract(unittest.TestCase):
             self.assertIsInstance(options, dict)
             assert isinstance(options, dict)
             self.assertEqual(options.get("ignoreDeprecations"), "6.0", package)
+
+    def test_ci_starts_a_non_blocking_native_lane_while_retaining_the_ts6_gate(self) -> None:
+        """Requires CI to observe native checks before promoting them over the TS6 fallback."""
+        workflow = (REPO_ROOT / ".github" / "workflows" / "ci.yml").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("node-version: 22.22.2", workflow)
+        self.assertIn("typescript7-parity:", workflow)
+        self.assertIn("continue-on-error: true", workflow)
+        self.assertIn("TS7_CHECKERS: \"1\"", workflow)
+        self.assertIn("pnpm turbo run check-types:compat --concurrency=1", workflow)
+        self.assertIn("pnpm turbo run check-types --concurrency=1 > .ci-observation/ts7.log", workflow)
+        self.assertIn("pnpm turbo run check-types --concurrency=1 --force", workflow)
+        self.assertIn("scripts/ci/capture-ts7-rollout-observation.mjs", workflow)
+        self.assertIn("workflow_dispatch:", workflow)
+        self.assertIn("scripts/**", workflow)
+
+    def test_ci_observation_writer_preserves_exit_cache_and_diagnostic_evidence(self) -> None:
+        """Requires the CI artifact writer to emit real parity inputs instead of assumed success."""
+        script = REPO_ROOT / "scripts" / "ci" / "capture-ts7-rollout-observation.mjs"
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            directory = Path(temporary_directory)
+            fixtures = {
+                "ts6.exit": "2\n",
+                "ts7.exit": "2\n",
+                "ts7-repeat.exit": "2\n",
+                "ts6.log": (
+                    '{"text":"src/example.ts(1,1): error TS2322: incompatible"}\n'
+                    "Cached:    2 cached, 3 total\n"
+                ),
+                "ts7.log": (
+                    '{"text":"src/example.ts(1,1): error TS2322: incompatible"}\n'
+                    "Cached:    1 cached, 3 total\n"
+                ),
+                "ts7-repeat.log": (
+                    '{"text":"src/example.ts(1,1): error TS2322: incompatible"}\n'
+                    "Cached:    0 cached, 3 total\n"
+                ),
+                "ts6.time": "Maximum resident set size (kbytes): 100\n",
+                "ts7.time": "Maximum resident set size (kbytes): 125\n",
+                "ts7-repeat.time": "Maximum resident set size (kbytes): 150\n",
+            }
+            for name, content in fixtures.items():
+                (directory / name).write_text(content, encoding="utf-8")
+            output_path = directory / "observation.json"
+            completed = subprocess.run(
+                [
+                    "node",
+                    str(script),
+                    "--run-id",
+                    "123",
+                    "--output",
+                    str(output_path),
+                    "--ts6-exit",
+                    str(directory / "ts6.exit"),
+                    "--ts7-exit",
+                    str(directory / "ts7.exit"),
+                    "--ts6-log",
+                    str(directory / "ts6.log"),
+                    "--ts7-log",
+                    str(directory / "ts7.log"),
+                    "--ts7-repeat-exit",
+                    str(directory / "ts7-repeat.exit"),
+                    "--ts7-repeat-log",
+                    str(directory / "ts7-repeat.log"),
+                    "--ts6-time",
+                    str(directory / "ts6.time"),
+                    "--ts7-time",
+                    str(directory / "ts7.time"),
+                    "--ts7-repeat-time",
+                    str(directory / "ts7-repeat.time"),
+                ],
+                cwd=REPO_ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+                env={**os.environ, "TS7_CHECKERS": "1"},
+            )
+            self.assertEqual(completed.returncode, 0, completed.stderr)
+            observation = json.loads(output_path.read_text(encoding="utf-8"))
+        self.assertEqual(observation["ts6_parity_exit"], 2)
+        self.assertEqual(observation["ts7_gate_exit"], 2)
+        self.assertEqual(observation["order_dependent_diff_count"], 0)
+        self.assertEqual(observation["peak_rss_kib"], 150)
+        self.assertEqual(
+            observation["cache_state"],
+            {
+                "ts6": "2 cached, 3 total",
+                "ts7": "1 cached, 3 total",
+                "ts7_repeat_forced": "0 cached, 3 total",
+            },
+        )
 
 
 class Phase3eDeclarationEmitContract(unittest.TestCase):

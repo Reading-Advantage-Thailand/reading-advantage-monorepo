@@ -4,8 +4,7 @@
   "globalEnv": [
     "NODE_ENV",
     "NEXT_PUBLIC_*",
-    "DATABASE_URL",
-    "TS7_CHECKERS"
+    "DATABASE_URL"
   ],
   "tasks": {
     "build": {
@@ -24,13 +23,39 @@
       "persistent": true
     },
     "check-types": {
-      "dependsOn": ["^build", "^check-types"]
+      "dependsOn": ["^build", "^check-types"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/scripts/run-ts7-check-types.mjs",
+        "$TURBO_ROOT$/package.json",
+        "$TURBO_ROOT$/pnpm-lock.yaml",
+        "$TURBO_ROOT$/pnpm-workspace.yaml",
+        "$TURBO_ROOT$/turbo.json",
+        "$TURBO_ROOT$/packages/config/tsconfig/**"
+      ],
+      "env": ["TS7_CHECKERS"]
     },
     "check-types:compat": {
-      "dependsOn": ["^build", "^check-types:compat"]
+      "dependsOn": ["^build", "^check-types:compat"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/package.json",
+        "$TURBO_ROOT$/pnpm-lock.yaml",
+        "$TURBO_ROOT$/pnpm-workspace.yaml",
+        "$TURBO_ROOT$/turbo.json",
+        "$TURBO_ROOT$/packages/config/tsconfig/**"
+      ]
     },
     "check-types:rollback": {
-      "dependsOn": ["^build", "^check-types:rollback"]
+      "dependsOn": ["^build", "^check-types:rollback"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/package.json",
+        "$TURBO_ROOT$/pnpm-lock.yaml",
+        "$TURBO_ROOT$/pnpm-workspace.yaml",
+        "$TURBO_ROOT$/turbo.json",
+        "$TURBO_ROOT$/packages/config/tsconfig/**"
+      ]
     }
   }
 }

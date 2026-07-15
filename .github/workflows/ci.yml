@@ -8,11 +8,14 @@ on:
     paths:
       - 'apps/science-advantage/**'
       - 'packages/**'
+      - 'scripts/**'
       - '.github/workflows/**'
       - 'package.json'
       - 'pnpm-lock.yaml'
       - 'pnpm-workspace.yaml'
       - 'turbo.json'
+      - 'measure/tracks/typescript7_native_migration_20260710/**'
+  workflow_dispatch:
 
 jobs:
   build:
@@ -41,7 +44,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22.22.2
           cache: pnpm
 
       - name: Install dependencies
@@ -56,8 +59,80 @@ jobs:
       - name: Lint
         run: pnpm lint
 
-      - name: Type check
-        run: pnpm turbo run check-types
+      - name: Type check (TypeScript 6 compatibility API)
+        run: pnpm turbo run check-types:compat --concurrency=1
 
       - name: Test
         run: pnpm test
+
+  typescript7-parity:
+    name: TypeScript 7 parity (non-blocking)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    env:
+      TS7_CHECKERS: "1"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.22.2
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Config drift check
+        run: pnpm config-drift
+
+      - name: TypeScript 6 parity baseline
+        run: |
+          mkdir -p .ci-observation
+          set +e
+          /usr/bin/time -v -o .ci-observation/ts6.time pnpm turbo run check-types:compat --concurrency=1 > .ci-observation/ts6.log 2>&1
+          echo "$?" > .ci-observation/ts6.exit
+          exit 0
+
+      - name: TypeScript 7 native candidate
+        run: |
+          set +e
+          /usr/bin/time -v -o .ci-observation/ts7.time pnpm turbo run check-types --concurrency=1 > .ci-observation/ts7.log 2>&1
+          echo "$?" > .ci-observation/ts7.exit
+          exit 0
+
+      - name: TypeScript 7 native repeat (forced)
+        run: |
+          set +e
+          /usr/bin/time -v -o .ci-observation/ts7-repeat.time pnpm turbo run check-types --concurrency=1 --force > .ci-observation/ts7-repeat.log 2>&1
+          echo "$?" > .ci-observation/ts7-repeat.exit
+          exit 0
+
+      - name: Capture parity observation
+        if: always()
+        run: |
+          node scripts/ci/capture-ts7-rollout-observation.mjs \
+            --run-id "$GITHUB_RUN_ID" \
+            --output ".ci-observation/$GITHUB_RUN_ID.json" \
+            --ts6-exit .ci-observation/ts6.exit \
+            --ts7-exit .ci-observation/ts7.exit \
+            --ts6-log .ci-observation/ts6.log \
+            --ts7-log .ci-observation/ts7.log \
+            --ts7-repeat-exit .ci-observation/ts7-repeat.exit \
+            --ts7-repeat-log .ci-observation/ts7-repeat.log \
+            --ts6-time .ci-observation/ts6.time \
+            --ts7-time .ci-observation/ts7.time \
+            --ts7-repeat-time .ci-observation/ts7-repeat.time
+
+      - name: Upload TypeScript 7 observation
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ts7-ci-observation-${{ github.run_id }}
+          path: .ci-observation/
+          if-no-files-found: error
