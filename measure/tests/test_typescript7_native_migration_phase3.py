@@ -28,6 +28,7 @@ AUTH_PACKAGE_PATH = REPO_ROOT / "packages" / "auth" / "package.json"
 UI_PACKAGE_PATH = REPO_ROOT / "packages" / "ui" / "package.json"
 UTILS_PACKAGE_PATH = REPO_ROOT / "packages" / "utils" / "package.json"
 GITHUB_INTEGRATION_PACKAGE_PATH = REPO_ROOT / "packages" / "integrations" / "github" / "package.json"
+ADVANTAGE_GAMES_PACKAGE_PATH = REPO_ROOT / "apps" / "advantage-games" / "package.json"
 PHASE3D_CUTOVER_ORDER = (
     "packages/types",
     "packages/db",
@@ -320,6 +321,16 @@ class Phase3dCheckTypesCutoverContract(unittest.TestCase):
         self.assertEqual(scripts.get("check-types"), native)
         self.assertEqual(scripts.get("check-types:compat"), compat)
         self.assertEqual(scripts.get("check-types:rollback"), compat)
+
+    def test_advantage_games_check_types_routing_is_explicit_and_reversible(self) -> None:
+        """Requires the first application cutover to preserve direct dual-compiler paths."""
+        manifest = json.loads(ADVANTAGE_GAMES_PACKAGE_PATH.read_text(encoding="utf-8"))
+        scripts = manifest.get("scripts")
+        self.assertIsInstance(scripts, dict)
+        assert isinstance(scripts, dict)
+        self.assertEqual(scripts.get("check-types"), self.NATIVE_COMMAND)
+        self.assertEqual(scripts.get("check-types:compat"), self.COMPAT_COMMAND)
+        self.assertEqual(scripts.get("check-types:rollback"), self.COMPAT_COMMAND)
 
     def test_native_workspace_cutovers_follow_the_required_strict_prefix(self) -> None:
         """Rejects a native check-types switch that skips an earlier workspace in the acceptance order."""

@@ -80,7 +80,8 @@
     - [x] Cut over `@reading-advantage/domain`; preserve and classify its parity-proven pre-existing diagnostics. [evidence: phase-3d-domain-cutover-result.json]
     - [x] Cut over `@reading-advantage/auth`; preserve and classify its parity-proven pre-existing diagnostics. [evidence: phase-3d-auth-cutover-result.json]
     - [x] Cut over shared UI, utility, and GitHub-integration checks; preserve and classify UI's parity-proven pre-existing diagnostics. [evidence: phase-3d-shared-cutover-result.json]
-    - [ ] Continue the required workspace order from `apps/advantage-games` through the remaining applications.
+    - [x] Cut over `apps/advantage-games`; preserve and classify its parity-proven pre-existing diagnostics. [evidence: phase-3d-advantage-games-cutover-result.json]
+    - [ ] Continue the required workspace order from `apps/science-advantage` through the remaining applications.
   - [ ] Verify JavaScript and declaration emit before switching direct `tsc` builds.
   - [ ] Preserve explicit TypeScript 6 compatibility and rollback commands.
   - [ ] Bound TypeScript checker concurrency underneath Turbo parallelism.
