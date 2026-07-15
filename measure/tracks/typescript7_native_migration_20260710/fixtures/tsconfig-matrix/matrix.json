@@ -1,10 +1,13 @@
 {
   "cases": [
-    {"id": "narrow-node", "emit_mode": "emit", "types_posture": "narrow_explicit", "compilerOptions": {"types": ["node"]}},
-    {"id": "browser-empty", "emit_mode": "no_emit", "types_posture": "explicit_empty", "compilerOptions": {"types": []}},
-    {"id": "library-inherited", "emit_mode": "emit", "types_posture": "inherited_omission", "compilerOptions": {}},
-    {"id": "removed-baseUrl", "emit_mode": "no_emit", "types_posture": "narrow_explicit", "compilerOptions": {"baseUrl": ".", "types": ["node"]}},
-    {"id": "legacy-moduleResolution", "emit_mode": "no_emit", "types_posture": "explicit_empty", "compilerOptions": {"moduleResolution": "node", "types": []}},
-    {"id": "removed-suppressExcessPropertyErrors", "emit_mode": "emit", "types_posture": "inherited_omission", "compilerOptions": {"suppressExcessPropertyErrors": true}}
+    {"id": "narrow-node", "emit_mode": "emit", "types_posture": "narrow_explicit", "ambient_requirements": ["node"], "compilerOptions": {"types": ["node"]}},
+    {"id": "browser-empty", "emit_mode": "no_emit", "types_posture": "explicit_empty", "ambient_requirements": [], "compilerOptions": {"types": []}},
+    {"id": "library-inherited", "emit_mode": "emit", "types_posture": "inherited_omission", "ambient_requirements": [], "compilerOptions": {}},
+    {"id": "removed-baseUrl", "emit_mode": "no_emit", "types_posture": "narrow_explicit", "ambient_requirements": ["node"], "compilerOptions": {"baseUrl": ".", "types": ["node"]}},
+    {"id": "legacy-moduleResolution", "emit_mode": "no_emit", "types_posture": "explicit_empty", "ambient_requirements": [], "compilerOptions": {"moduleResolution": "node", "types": []}},
+    {"id": "removed-suppressExcessPropertyErrors", "emit_mode": "emit", "types_posture": "inherited_omission", "ambient_requirements": [], "compilerOptions": {"suppressExcessPropertyErrors": true}},
+    {"id": "missing-ambient-node", "emit_mode": "no_emit", "types_posture": "explicit_empty", "ambient_requirements": ["node"], "compilerOptions": {"types": []}},
+    {"id": "unnecessary-ambient-node", "emit_mode": "emit", "types_posture": "narrow_explicit", "ambient_requirements": [], "compilerOptions": {"types": ["node"]}},
+    {"id": "unsupported-commonjs-bundler-es5", "emit_mode": "emit", "types_posture": "explicit_empty", "ambient_requirements": [], "compilerOptions": {"module": "CommonJS", "moduleResolution": "bundler", "target": "ES5", "esModuleInterop": false, "types": []}}
   ]
 }

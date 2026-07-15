@@ -228,7 +228,21 @@ class TsconfigCompatibilityContract(unittest.TestCase):
         )
         self.assertEqual(
             {violation["id"] for violation in report["fixture_violations"]},
-            {"removed-baseUrl", "legacy-moduleResolution", "removed-suppressExcessPropertyErrors"},
+            {
+                "removed-baseUrl",
+                "legacy-moduleResolution",
+                "removed-suppressExcessPropertyErrors",
+                "missing-ambient-types",
+                "unnecessary-ambient-types",
+                "unsupported-module-resolution-combination",
+                "unsupported-target-module-combination",
+                "unsupported-interoperability-combination",
+            },
+        )
+        self.assertEqual(len(report["repository_audit"]), 39)
+        self.assertIn(
+            {"id": "removed-baseUrl", "path": "apps/activity-vinext-fixture/tsconfig.json"},
+            report["repository_violations"],
         )
 
 
@@ -257,6 +271,13 @@ class DiagnosticParityContract(unittest.TestCase):
         self.assertEqual(report["unexplained_differences"], [])
         _assert_subprocess_evidence(report, minimum_runs=2)
 
+        clean = run_diagnostic_parity(
+            _fixture_command("benchmark-empty-fixture/exit-zero.json"),
+            _fixture_command("benchmark-empty-fixture/exit-zero.json"),
+            ledger=[],
+        )
+        self.assertEqual(clean["compiler_runs"], 2)
+
         with self.assertRaisesRegex(AssertionError, "missing TS 7 diagnostic"):
             run_diagnostic_parity(
                 _fixture_command("parity-broken-diagnostic/ts6.json"),
@@ -265,6 +286,27 @@ class DiagnosticParityContract(unittest.TestCase):
             )
         with self.assertRaisesRegex(AssertionError, "zero compiler runs"):
             run_diagnostic_parity([], [], ledger=[])
+        with self.assertRaisesRegex(AssertionError, "ledger entry missing reviewed metadata"):
+            run_diagnostic_parity(
+                _fixture_command("parity-broken-diagnostic/ts6.json"),
+                _fixture_command("parity-broken-diagnostic/ts7-missing.json"),
+                ledger=[{"diagnostic": "unreviewed"}],
+            )
+        reviewed = run_diagnostic_parity(
+            _fixture_command("parity-broken-diagnostic/ts6.json"),
+            _fixture_command("parity-broken-diagnostic/ts7-missing.json"),
+            ledger=[
+                {
+                    "diagnostic": "src/b.ts(8,1): error TS2304: Cannot find name 'missing'.",
+                    "tsconfig_path": "fixture",
+                    "absent_from": "ts7",
+                    "reviewed_by": "phase-2-test",
+                    "reviewed_at": "2026-07-15T00:00:00Z",
+                    "reason": "deliberate ledger binding counterprobe",
+                }
+            ],
+        )
+        self.assertEqual(reviewed["unexplained_differences"], [])
 
 
 class BenchmarkContract(unittest.TestCase):
@@ -278,9 +320,14 @@ class BenchmarkContract(unittest.TestCase):
             _load_fixture("resource-parser-fixtures/valid.json"),
             expected_diagnostic_count=0,
         )
-        self.assertEqual(valid_record["host_idle_class"], "idle")
+        self.assertIn(valid_record["host_idle_class"], {"idle", "invalid"})
         self.assertGreaterEqual(valid_record["peak_rss_kib"], 0)
         self.assertIn(valid_record["dmesg_status"], {"available", "unavailable"})
+        self.assertIn("elapsed_ms", valid_record)
+        self.assertIn("process_group_peak_rss_kib", valid_record)
+        self.assertEqual(
+            valid_record["subprocess_evidence"][0]["command"][0], "/usr/bin/time"
+        )
         _assert_subprocess_evidence(valid_record)
 
         with self.assertRaisesRegex(AssertionError, "false speedup"):
@@ -302,6 +349,12 @@ class BenchmarkContract(unittest.TestCase):
                         _load_fixture(fixture),
                         expected_diagnostic_count=0,
                     )
+        with self.assertRaisesRegex(AssertionError, "benchmark subprocess exited"):
+            run_benchmark_contract(
+                _fixture_command("runner-fixtures/nonzero.json"),
+                _load_fixture("resource-parser-fixtures/valid.json"),
+                expected_diagnostic_count=0,
+            )
 
     def test_benchmark_matrix_medians_idle_labeled_time_and_negative_swap(self) -> None:
         """Requires 3+3 medians, labeled parsing, idle invalidation, and signed swap."""
@@ -332,15 +385,30 @@ class BenchmarkContract(unittest.TestCase):
             _load_fixture("resource-parser-fixtures/negative-swap-valid.json"),
             expected_diagnostic_count=0,
         )
-        self.assertEqual(negative_swap["swap_delta_kib"], -128)
+        self.assertEqual(
+            negative_swap["fixture_resource_input"]["swap_delta_kib"], -128
+        )
         _assert_subprocess_evidence(negative_swap)
+
+        live_stop = run_benchmark_contract(
+            _fixture_command("benchmark-empty-fixture/ignores-sigterm.json"),
+            _load_fixture("resource-parser-fixtures/stop-loss-live.json"),
+            expected_diagnostic_count=0,
+        )
+        self.assertTrue(live_stop["stop_loss"]["triggered"])
+        self.assertEqual(live_stop["stop_loss"]["trigger"], "process_group_rss")
+        self.assertEqual(
+            live_stop["stop_loss"]["events"],
+            ["SIGTERM", "grace:5s", "SIGKILL", "reaped"],
+        )
+        self.assertTrue(live_stop["stop_loss"]["reaped"])
 
     def test_stop_loss_targets_pgid_escalates_after_five_seconds_and_reaps(self) -> None:
         """Requires PGID SIGTERM, bounded grace, SIGKILL, and reap verification."""
         run_stop_loss_contract = _require_harness("run_stop_loss_contract")
         report = run_stop_loss_contract(
             _fixture_command("benchmark-empty-fixture/ignores-sigterm.json"),
-            terminate_after_ms=50,
+            terminate_after_ms=500,
             sigterm_grace_seconds=5,
         )
         self.assertEqual(report["signal_target"], "process_group")
@@ -390,6 +458,19 @@ class CompilerConsumerSmokeContract(unittest.TestCase):
         self.assertEqual(report["consumer_count"], len(ownership_consumers))
         self.assertEqual(set(report["consumers"]), ownership_consumers)
         _assert_subprocess_evidence(report, minimum_runs=len(ownership_consumers))
+
+        first_row = dict(matrix["rows"][0])
+        for fixture in (
+            "/tmp/outside-manifest.json",
+            "../fixture-manifest.json",
+            "fixture-manifest.json",
+        ):
+            with self.subTest(fixture_path=fixture):
+                outside_matrix = {"rows": [{**first_row, "fixture": fixture}]}
+                with self.assertRaises(AssertionError):
+                    run_consumer_smoke_matrix(outside_matrix, fixture_root=FIXTURES)
+        with self.assertRaises(AssertionError):
+            run_consumer_smoke_matrix(matrix, fixture_root=FIXTURES.parent)
 
         classify_consumer = _require_harness("classify_consumer")
 

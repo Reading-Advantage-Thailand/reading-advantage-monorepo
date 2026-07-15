@@ -32,29 +32,29 @@
 
 ## Phase 2: Test
 
-- [~] Task: Add package-resolution and executable contract tests.
-  - [ ] Assert TypeScript 7 owns the native compiler command.
-  - [ ] Assert TypeScript 6 remains importable by compiler-API consumers.
-  - [ ] Assert frozen install and workspace catalog resolution are deterministic.
-- [~] Task: Add tsconfig compatibility tests.
-  - [ ] Reject removed options including `baseUrl`, legacy module resolution, and
+- [x] Task: Add package-resolution and executable contract tests. [accepted in phase-2-acceptance-result.json]
+  - [x] Assert TypeScript 7 owns the native compiler command.
+  - [x] Assert TypeScript 6 remains importable by compiler-API consumers.
+  - [x] Assert frozen install and workspace catalog resolution are deterministic.
+- [x] Task: Add tsconfig compatibility tests. [accepted in phase-2-acceptance-result.json]
+  - [x] Reject removed options including `baseUrl`, legacy module resolution, and
     unsupported target/module combinations.
-  - [ ] Require explicit narrow `types` lists for projects consuming ambient globals.
-  - [ ] Cover emit/declaration configs separately from no-emit configs.
-- [~] Task: Build a TypeScript 6/7 diagnostic parity harness.
-  - [ ] Run each compiler against each tsconfig and capture normalized diagnostics.
-  - [ ] Fail on missing, additional, or changed actionable diagnostics unless present
+  - [x] Require explicit narrow `types` lists for projects consuming ambient globals.
+  - [x] Cover emit/declaration configs separately from no-emit configs.
+- [x] Task: Build a TypeScript 6/7 diagnostic parity harness. [accepted in phase-2-acceptance-result.json]
+  - [x] Run each compiler against each tsconfig and capture normalized diagnostics.
+  - [x] Fail on missing, additional, or changed actionable diagnostics unless present
     in the reviewed parity ledger.
-  - [ ] Prove the harness rejects a deliberately missing diagnostic.
-- [~] Task: Build a controlled benchmark harness.
-  - [ ] Require an idle-enough host or record the run invalid rather than publishing
+  - [x] Prove the harness rejects a deliberately missing diagnostic.
+- [x] Task: Build a controlled benchmark harness. [accepted in phase-2-acceptance-result.json]
+  - [x] Require an idle-enough host or record the run invalid rather than publishing
     contaminated results.
-  - [ ] Run at least three cold and warm samples and compute medians.
-  - [ ] Fail benchmark acceptance when exit status or diagnostic counts differ.
-- [~] Task: Add compiler-consumer smoke tests.
-  - [ ] Cover ESLint/typescript-eslint, ts-node, tsx, tsup, Next.js, Vinext/Vite,
+  - [x] Run at least three cold and warm samples and compute medians.
+  - [x] Fail benchmark acceptance when exit status or diagnostic counts differ.
+- [x] Task: Add compiler-consumer smoke tests. [accepted in phase-2-acceptance-result.json]
+  - [x] Cover ESLint/typescript-eslint, ts-node, tsx, tsup, Next.js, Vinext/Vite,
     Vitest, Jest, Drizzle tooling, and commitlint.
-  - [ ] Verify Turbo cache invalidation includes compiler identity and relevant flags.
+  - [x] Verify Turbo cache invalidation includes compiler identity and relevant flags.
 - [b] Task: Measure - User Manual Verification 'Phase 2: Test' (Protocol in workflow.md) — deferred:product-owner
 
 ## Phase 3: Implement

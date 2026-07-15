@@ -11,6 +11,9 @@ from pathlib import Path
 from typing import Any
 
 
+signal.signal(signal.SIGTERM, signal.SIG_IGN)
+
+
 def _load_record(path: Path) -> dict[str, Any]:
     """Load a deterministic subprocess fixture.
 
@@ -32,20 +35,27 @@ def main() -> int:
     Returns:
         Configured subprocess exit status.
     """
-    if len(sys.argv) != 2:
-        raise SystemExit("usage: fixture_executable.py FIXTURE.json")
+    if len(sys.argv) not in {2, 4} or (len(sys.argv) == 4 and sys.argv[2] != "--consumer"):
+        raise SystemExit("usage: fixture_executable.py FIXTURE.json [--consumer CONSUMER]")
     record = _load_record(Path(sys.argv[1]))
     stdout = record.get("stdout", "")
     stderr = record.get("stderr", "")
     if "stdout_json" in record:
-        stdout = json.dumps(record["stdout_json"], sort_keys=True) + "\n"
+        stdout_json = record["stdout_json"]
+        if not isinstance(stdout_json, dict):
+            raise ValueError("stdout_json must be an object")
+        if len(sys.argv) == 4:
+            stdout_json = {**stdout_json, "consumer": sys.argv[3]}
+        stdout = json.dumps(stdout_json, sort_keys=True) + "\n"
     if not isinstance(stdout, str) or not isinstance(stderr, str):
         raise ValueError("stdout and stderr must be strings")
     exit_status = record.get("exit_status", 0)
     if isinstance(exit_status, bool) or not isinstance(exit_status, int):
         raise ValueError("exit_status must be an integer")
-    if record.get("ignore_sigterm") is True:
-        signal.signal(signal.SIGTERM, signal.SIG_IGN)
+    signal.signal(
+        signal.SIGTERM,
+        signal.SIG_IGN if record.get("ignore_sigterm") is True else signal.SIG_DFL,
+    )
     sys.stdout.write(stdout)
     sys.stderr.write(stderr)
     sleep_seconds = record.get("sleep_seconds", 0)

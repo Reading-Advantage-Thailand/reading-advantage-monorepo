@@ -13,21 +13,22 @@
     "parity-broken-diagnostic/ts6.json": "13ec35b87638f3d99023a174ddaa78c05a6aa72de29870d1cb272bcc71302a31",
     "parity-broken-diagnostic/ts7-equivalent.json": "443bb3b18bf2de3f7b031f0d1861e37bc066fdec04725376f39c74ace21470fb",
     "parity-broken-diagnostic/ts7-missing.json": "6f4e009c62ef5ab82c9d3f3386a9bd2933676f401c93e602d059262f425cc69f",
-    "resource-parser-fixtures/above-ceiling.json": "6db4c8002aa2d7980d9d2e8e6e800ae5417d5530b0586bb804f3f2642dcf90f2",
+    "resource-parser-fixtures/above-ceiling.json": "8ecb557ac95b7b5f6e66a937e898c8781dd790c5928cb74bd3d1f15e9de426b3",
     "resource-parser-fixtures/boolean.json": "f0fa6ad685fcabab19fbf2a542a87ebcf9d52fd524f4d17367e817743933dad9",
-    "resource-parser-fixtures/idle-invalid.json": "40f19f0306b28bbbf3458bca88ba8b5034ecb9eaf329843b966389385cd578a2",
+    "resource-parser-fixtures/idle-invalid.json": "fcd9be974f4b875b32f97ce74360211cd5feee04241c595d591a5010d139a564",
     "resource-parser-fixtures/negative-rss.json": "96ba53c9a0a0fb0acaeb5c7efe64a1b8f2a612fa7896b162299b4e93a110b634",
-    "resource-parser-fixtures/negative-swap-valid.json": "05e2f6575381b7c6246b3d185d10b329361427ad2c6441a54de9a8bf923c622d",
+    "resource-parser-fixtures/negative-swap-valid.json": "87eb1a458fcda2968eb32120220d5f631c51c828ba610f51143316b2d52f7dfc",
     "resource-parser-fixtures/string.json": "1009295f3480ede35abcb807654328eab04f8ac129f99a0a0de6db0554b71542",
-    "resource-parser-fixtures/valid.json": "72a8f34ad64af91fe87cdf4f66f1301bec6d711b846f53c33d22ceacceb77248",
+    "resource-parser-fixtures/stop-loss-live.json": "075f766ebb8a4ef6583ac558ebacb32138e06ee59b4981107afbdadd5bc45729",
+    "resource-parser-fixtures/valid.json": "698d63c23ebffdaa78b4976d7921ec9a7199a2a04be8ca35554b4a146573c3e3",
     "runner-fixtures/ambiguous.json": "01ea73ce7d3c9e75587b98a6293155178c45e263233c71c1f949a956be95a2be",
     "runner-fixtures/binding-ts6.json": "d84c11067acba2042bc7ec4ff6352585f2cb00a53c5422fcb2f6e8a6def2fde5",
     "runner-fixtures/binding-ts7.json": "5db9c147c3d482f9d69e1d0242aca4fad6fd6bd4208a764bb3b1a498dc939a25",
     "runner-fixtures/consumer-matrix.json": "49cc53d124f9e192b643cf6a8963773c3636d1f91061834a16f08d9257710204",
-    "runner-fixtures/fixture_executable.py": "a497131f86274d7c7ae9c38e980cd2aa9196931afa1d5c4b5ba92b72d3cfd6ba",
+    "runner-fixtures/fixture_executable.py": "f648e07b2f3f26c9766f7be5882cb9318e5a13b2b7a281419c5a1e8021484854",
     "runner-fixtures/missing-resolution.json": "20513815ff69af9fd40549989eb2efba34b9cd8d066ec3b81e1cb50839d527c8",
     "runner-fixtures/no-api.json": "45114f6c52cb8cd5c53855bee8a5e9d476dedf511073b22c84b4b2e37dad9794",
     "runner-fixtures/nonzero.json": "28294bd83825f7155f7df35a34ad76108a80cc10dc126ba6e9d8d38d14916c35",
-    "tsconfig-matrix/matrix.json": "a18352dd4e9be4b8587133e2655b2b46aa89c1e79178245b3c25720418ea1757"
+    "tsconfig-matrix/matrix.json": "ddcdc0c2a4a03a92feda7967355b68cb0b9dda30d095eeacbfd3e221857d144a"
   }
 }
