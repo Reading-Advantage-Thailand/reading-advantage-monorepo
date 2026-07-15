@@ -3,10 +3,13 @@
 from __future__ import annotations
 
 import hashlib
+import importlib.util
 import json
 import re
 import subprocess
+import sys
 import unittest
+from unittest import mock
 from pathlib import Path
 from typing import Any
 
@@ -30,7 +33,7 @@ DISCREPANCY_PATH = TRACK_DIR / "human-discrepancy-records.json"
 EVIDENCE_RECEIPT_PATH = TRACK_DIR / "role-receipts" / "evidence-collector.json"
 SHA256 = re.compile(r"^[0-9a-f]{64}$")
 COMMIT_SHA = re.compile(r"^[0-9a-f]{40}$")
-PHASE1_REVISION = "4979eaa50b85cb5951e9546bb6a672b9d0f16ecb"
+PHASE1_REVISION = "03ad03c56911c762c1933775915364e725613f4b"
 PROGRAM_PATH = "measure/apk-evidence-reconstruction-program.md"
 GENERATOR_PATH = TRACK_DIR / "generate_phase2_human_discovery.py"
 QUARANTINED_SOURCE_PREFIX = "measure/tracks/apk_cross_game_asset_ontology_20260712"
@@ -56,6 +59,17 @@ PROGRAM_DISPOSITIONS = {
     "alias/copy",
     "unsupported program assumption",
 }
+
+
+def _load_generator_module() -> Any:
+    """Loads the Phase-2 generator for focused independence unit contracts."""
+    spec = importlib.util.spec_from_file_location("apk_phase2_generator", GENERATOR_PATH)
+    if spec is None or spec.loader is None:
+        raise AssertionError("Unable to load Phase-2 generator")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
 
 
 def _load_json(path: Path, *, phase2: bool = False) -> dict[str, Any]:
@@ -186,7 +200,15 @@ class Phase2IndependentHumanDiscoveryContracts(unittest.TestCase):
         records = self.ledger.get("identity_records")
         self.assertIsInstance(records, list)
         assert isinstance(records, list)
-        identities = {record.get("canonical_identity_id") for record in records if isinstance(record, dict)}
+        identities = {
+            record.get("canonical_identity_id")
+            for record in records
+            if isinstance(record, dict)
+            and any(
+                isinstance(state, dict) and state.get("source_class") == "current-page-source"
+                for state in record.get("source_states", [])
+            )
+        }
         self.assertNotIn(None, identities)
         self.assertTrue(identities, "Phase-1 identity ledger cannot be empty")
         return {identity for identity in identities if isinstance(identity, str)}
@@ -608,6 +630,86 @@ class Phase2IndependentHumanDiscoveryContracts(unittest.TestCase):
         self.assertNotRegex(source, r"(?m)^PROGRAM_IDENTITIES\s*=")
         self.assertIn("discover_program_identities", source)
 
+    def test_raw_discovery_precedes_and_survives_poisoned_phase1_loading(self) -> None:
+        """Requires a raw frozen-tree result before any Phase-1 artifact can be read."""
+        source = GENERATOR_PATH.read_text(encoding="utf-8")
+        generate_body = source.split("def generate()", 1)[1]
+        self.assertLess(
+            generate_body.index("discover_raw_frozen_sources("),
+            generate_body.index("git_json("),
+        )
+        module = _load_generator_module()
+        with mock.patch.object(module, "git_json", side_effect=AssertionError("poisoned Phase-1 input")):
+            raw = module.discover_raw_frozen_sources()
+        self.assertEqual(raw["source_baseline_revision"], self.baseline)
+        self.assertTrue(raw["raw_identity_records"])
+
+    def test_raw_catalog_route_and_store_discovery_finds_review_a_counterexamples(self) -> None:
+        """Requires raw identities and store domains that were absent from the replay path."""
+        raw = self.human_discovery.get("raw_frozen_source_discovery")
+        self.assertIsInstance(raw, dict)
+        assert isinstance(raw, dict)
+        catalog_ids = {row["catalog_id"] for row in raw["raw_identity_records"]}
+        self.assertEqual(len(catalog_ids), 27)
+        self.assertIn("potion-rush", catalog_ids)
+        self.assertIn("rpg-battle", catalog_ids)
+        self.assertTrue(all(1 <= len(batch["identity_ids"]) <= 3 for batch in raw["review_batches"]))
+        self.assertEqual(
+            {identity for batch in raw["review_batches"] for identity in batch["identity_ids"]},
+            catalog_ids,
+        )
+        states = {
+            (row["path"], row["source_symbol"], row["state_id"])
+            for row in raw["raw_state_records"]
+        }
+        self.assertIn(("apps/advantage-games/src/store/usePotionRushStore.ts", "GameState", "PLAYING"), states)
+        self.assertIn(("apps/advantage-games/src/store/useRPGBattleStore.ts", "BattleStatus", "victory"), states)
+        transitions = {
+            (row["path"], row["source_symbol"], row["from_state_id"], row["to_state_id"])
+            for row in raw["raw_transition_records"]
+        }
+        self.assertIn(("apps/advantage-games/src/store/usePotionRushStore.ts", "gameState", "MENU", "PLAYING"), transitions)
+        self.assertIn(("apps/advantage-games/src/store/useRPGBattleStore.ts", "status", "idle", "playing"), transitions)
+        self.assertIn(("apps/advantage-games/src/store/useRPGBattleStore.ts", "status", "playing", "victory"), transitions)
+        self.assertIn(("apps/advantage-games/src/store/useRPGBattleStore.ts", "status", "playing", "defeat"), transitions)
+
+    def test_raw_tree_asset_history_quarantine_and_resource_contracts_fail_closed(self) -> None:
+        """Requires tree-derived sets, quarantine-before-read, and numeric ceilings."""
+        module = _load_generator_module()
+        raw = self.human_discovery["raw_frozen_source_discovery"]
+        self.assertTrue(raw["raw_file_records"])
+        self.assertTrue(raw["raw_asset_records"])
+        self.assertTrue(raw["raw_history_records"])
+        usage = raw["resource_usage"]
+        ceilings = self.freeze["frozen_resource_ceilings"]["evidence-collector"]
+        for key in ("source_files", "command_invocations", "bytes_read"):
+            self.assertIs(type(usage[key]), int)
+            self.assertLessEqual(usage[key], ceilings[key])
+        reader = module.GitObjectReader.__new__(module.GitObjectReader)
+        reader.cache = {}
+        reader.bytes_read = 0
+        reader.files_read = 0
+        reader.process = None
+        with self.assertRaisesRegex(ValueError, "QUARANTINED_FACTUAL_SOURCE"):
+            reader.read(self.baseline, f"{QUARANTINED_SOURCE_PREFIX}/fabricated.json")
+        meter = module.BudgetMeter(source_files=ceilings["source_files"], command_invocations=0, bytes_read=0)
+        with self.assertRaisesRegex(RuntimeError, "RESOURCE_CEILING_EXCEEDED"):
+            meter.add(source_files=1)
+
+    def test_symmetric_reconciliation_retains_human_and_mechanical_only_blockers(self) -> None:
+        """Requires either side's omission to remain an explicit blocking discrepancy."""
+        module = _load_generator_module()
+        mechanical = {"a": [{"path": "mechanical"}], "mechanical-only": [{"path": "mechanical"}]}
+        human = {"a": [{"path": "human"}], "human-only": [{"path": "human"}]}
+        rows = module.symmetric_reconciliation_records("fixture", mechanical, human)
+        by_key = {row["record_key"]: row for row in rows}
+        self.assertEqual(by_key["a"]["comparison_status"], "matched")
+        self.assertFalse(by_key["a"]["blocking"])
+        self.assertEqual(by_key["mechanical-only"]["comparison_status"], "mechanical-only")
+        self.assertTrue(by_key["mechanical-only"]["blocking"])
+        self.assertEqual(by_key["human-only"]["comparison_status"], "human-only")
+        self.assertTrue(by_key["human-only"]["blocking"])
+
     def test_phase2_factual_outputs_exclude_quarantined_source_strings(self) -> None:
         """Rejects failed-track paths anywhere in Phase-2 factual outputs.
 
@@ -676,8 +778,8 @@ class Phase2IndependentHumanDiscoveryContracts(unittest.TestCase):
         expected_counts = {
             "asset_candidates": len(self.assets["candidate_files"]),
             "copy_records": sum(row.get("record_type") == "copy" for row in self.source["records"]),
-            "current_identities": len(self.ledger["identity_records"]),
-            "duplicate_family_records": 2 * len(self.ledger["identity_records"]),
+            "current_identities": len(self._identity_ids()),
+            "duplicate_family_records": 2 * len(self._identity_ids()),
             "graph_edges": len(self.source["graph_edges"]),
             "historical_locators": len(self.phase1_historical["records"]),
             "identical_hash_groups": len({row["identical_hash_group"] for row in self.assets["candidate_files"]}),

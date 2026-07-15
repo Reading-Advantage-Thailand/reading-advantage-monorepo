@@ -4,49 +4,41 @@
   "track_id": "apk_source_denominator_inventory_20260712",
   "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
   "role": "evidence-collector",
-  "verification_scope": "Independent human current-source, Reading/Primary mapping, historical/deleted locator, and discrepancy contract verification only; this is not a candidate denominator, independent Phase-4 review, or product-owner acceptance.",
+  "verification_scope": "Independent frozen-tree/raw-source discovery before Phase-1 loading, symmetric post-discovery reconciliation, current-source, Reading/Primary, historical/deleted, quarantine, batch, and resource-ceiling contracts only; this is not Phase-3 reconciliation, a candidate denominator, independent Phase-4 review, or product-owner acceptance.",
   "commands": [
     {
       "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase2",
       "result": "passed",
-      "test_count": 10
+      "test_count": 16
     },
     {
-      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile measure/tests/test_apk_source_denominator_inventory_phase2.py",
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile measure/tracks/apk_source_denominator_inventory_20260712/generate_phase2_human_discovery.py measure/tests/test_apk_source_denominator_inventory_phase2.py",
       "result": "passed"
     },
     {
-      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase0 measure.tests.test_apk_source_denominator_inventory_phase1",
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase0 measure.tests.test_apk_source_denominator_inventory_phase1 measure.tests.test_apk_source_denominator_inventory_phase2",
       "result": "passed",
-      "test_count": 11
+      "test_count": 31
     },
     {
-      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -v -s measure/tests/evidence_integrity_gates -p 'test_*.py'",
+      "command": "Run generate_phase2_human_discovery.py twice and compare SHA-256 for all four Phase-2 output artifacts",
       "result": "passed",
-      "test_count": 143
-    },
-    {
-      "command": "bash tests/orchestrator_supervisor_invariants.sh && bash tests/orchestrator_review_execution_truthfulness.sh && bash tests/orchestrator_catalog.sh && bash tests/orchestrator_marker_vocabulary.sh && bash tests/orchestrator_detector_syntax.sh && bash tests/orchestrator_role_receipt_integrity.sh",
-      "result": "passed"
-    },
-    {
-      "command": "bash measure/doctor.sh",
-      "result": "passed"
-    },
-    {
-      "command": "python3 ~/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py status --repo .",
-      "result": "passed",
-      "reported_incomplete_phases": 127
+      "output_sha256": {
+        "independent-human-discovery.json": "7e56c3a6fa0816af0b4ebc7225e624b7649ba99668db6191d88c9b22b8ef00b1",
+        "human-duplicate-drift-records.json": "3709e551cd84f2c13a355e8b7e664be8df0f528124573615110728f80d4e19f0",
+        "human-historical-deleted-records.json": "c92bb55b9aac45666f352ad40a93f830f1e3f1d92ac03d1465dd07326b3d8f04",
+        "human-discrepancy-records.json": "9ff4267cac9d3e90f5814b0ef07807ac61afe6658d154ecd3ad9604d2b46511b"
+      }
     }
   ],
   "owner_verification": {
     "owner_role": "evidence-collector",
-    "evidence": "The fresh evidence-collector source-review log records all 29 authored program names as reviewed/dispositioned rather than accepted current identities: 17 current and 12 historical/withdrawn. Every historical disposition records exact ancestor path/range hashes, deletion commit and parent, catalog evidence, and reproducible exact-name, slug, route/path, and specification searches; the focused 10-test contract passed afterward.",
-    "evidence_path": "role-logs/phase2-evidence-collector-green.log",
+    "evidence": "The independent pass completed before Phase-1 artifact loading and remained successful with the Phase-1 loader poisoned. It discovered 27 catalog identities in nine batches of at most three, 25 routes, 579 files, 150 states, 22 unique transition keys, 353 assets, and 139 deleted-history paths directly from the frozen tree/raw committed sources. Symmetric comparison against Phase 1 at 03ad03c5 has zero human-only or mechanical-only blockers. Measured raw-pass usage was 577 source files, 3 command invocations, and 3146923 bytes read, below every frozen evidence-collector ceiling. The focused 16-test contract and combined 31-test Phase 0-2 gate passed.",
+    "evidence_path": "independent-human-discovery.json and human-discrepancy-records.json",
     "product_owner_acceptance": "not-claimed"
   },
   "limitations": [
-    "Platform event, context, prompt, final-response, and tool-usage exports were unavailable and are recorded as null with per-field limitations in role-receipts/evidence-collector.json.",
-    "Per the frozen stop-loss contract, unavailable platform usage prevents a Phase-2 checkpoint or acceptance claim."
+    "The pre-existing role-receipts/evidence-collector.json remains historical and was not overwritten: truthful current provider event, context, prompt, and final-response provenance was not directly available to this implementation session.",
+    "Helper resource usage is measured in the raw discovery artifact; it does not substitute for missing current provider provenance or authorize a Phase-2 checkpoint, Phase-3 completion, or acceptance claim."
   ]
 }

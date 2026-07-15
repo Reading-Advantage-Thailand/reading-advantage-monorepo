@@ -8,12 +8,13 @@ import json
 import re
 import subprocess
 from collections import defaultdict
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 
 BASELINE = "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-PHASE1_REVISION = "4979eaa50b85cb5951e9546bb6a672b9d0f16ecb"
+PHASE1_REVISION = "03ad03c56911c762c1933775915364e725613f4b"
 ASTRAL_HISTORY_REVISION = "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
 TRACK = "apk_source_denominator_inventory_20260712"
 TRACK_DIR = Path(__file__).resolve().parent
@@ -23,6 +24,36 @@ CATALOG_PATH = "apps/advantage-games/src/lib/gameCards.ts"
 COLLECTOR_IDENTITY = "evidence-collector-remediation-20260713"
 QUARANTINED_SOURCE_PREFIX = "measure/tracks/apk_cross_game_asset_ontology_20260712"
 SOURCE_ROOTS = ("apps/advantage-games", "apps/reading-advantage", "apps/primary-advantage", "packages", "measure")
+SOURCE_SUFFIXES = {".ts", ".tsx", ".js", ".jsx", ".json"}
+TEXT_SUFFIXES = SOURCE_SUFFIXES | {".md"}
+ASSET_SUFFIXES = {".png", ".jpg", ".jpeg", ".gif", ".webp", ".svg", ".ico", ".webm", ".mp3", ".wav", ".ogg", ".m4a", ".json", ".csv", ".txt", ".xml", ".yaml", ".yml"}
+RAW_STATE_NAME = re.compile(r"(?:state|status|phase|mode|scene|screen|overlay|turn|pose|step|wave|floor)", re.IGNORECASE)
+RAW_REQUIRED_SOURCE_PATHS = {
+    "measure/apk-asset-system-program.md",
+    "measure/apk-evidence-reconstruction-program.md",
+    "packages/game-cartridges/src/catalog.test.ts",
+    "packages/game-cartridges/src/catalog.ts",
+    "packages/game-cartridges/src/index.ts",
+}
+
+
+@dataclass
+class BudgetMeter:
+    """Tracks evidence-collector resource use and fails closed at frozen ceilings."""
+
+    source_files: int = 0
+    command_invocations: int = 0
+    bytes_read: int = 0
+
+    def add(self, *, source_files: int = 0, command_invocations: int = 0, bytes_read: int = 0) -> None:
+        """Adds measured usage and rejects the first frozen-ceiling breach."""
+        self.source_files += source_files
+        self.command_invocations += command_invocations
+        self.bytes_read += bytes_read
+        ceilings = {"source_files": 7500, "command_invocations": 120, "bytes_read": 268435456}
+        for key, ceiling in ceilings.items():
+            if getattr(self, key) > ceiling:
+                raise RuntimeError(f"RESOURCE_CEILING_EXCEEDED:{key}:{getattr(self, key)}>{ceiling}")
 
 
 class GitObjectReader:
@@ -38,6 +69,7 @@ class GitObjectReader:
         )
         self.cache: dict[tuple[str, str], bytes] = {}
         self.bytes_read = 0
+        self.files_read = 0
 
     def read(self, revision: str, path: str) -> bytes:
         """Returns committed bytes for an exact revision and path.
@@ -49,6 +81,8 @@ class GitObjectReader:
         Returns:
             The exact committed bytes.
         """
+        if path == QUARANTINED_SOURCE_PREFIX or path.startswith(f"{QUARANTINED_SOURCE_PREFIX}/"):
+            raise ValueError(f"QUARANTINED_FACTUAL_SOURCE:{path}")
         key = (revision, path)
         if key in self.cache:
             return self.cache[key]
@@ -67,13 +101,273 @@ class GitObjectReader:
             raise ValueError(f"Malformed git cat-file response for {revision}:{path}")
         self.cache[key] = value
         self.bytes_read += len(value)
+        self.files_read += 1
         return value
 
     def close(self) -> None:
         """Closes the persistent batch process."""
+        if self.process is None:
+            return
         if self.process.stdin is not None:
             self.process.stdin.close()
         self.process.wait(timeout=10)
+        if self.process.stdout is not None:
+            self.process.stdout.close()
+
+
+def _tree_entries() -> list[dict[str, Any]]:
+    """Enumerates non-quarantined frozen tree entries with Git object metadata."""
+    output = subprocess.check_output(
+        ["git", "ls-tree", "-r", "-l", BASELINE, "--", *SOURCE_ROOTS],
+        cwd=REPO_ROOT,
+        text=True,
+    )
+    entries: list[dict[str, Any]] = []
+    for line in output.splitlines():
+        metadata, path = line.split("\t", 1)
+        mode, kind, object_id, size_text = metadata.split()
+        if path == QUARANTINED_SOURCE_PREFIX or path.startswith(f"{QUARANTINED_SOURCE_PREFIX}/"):
+            continue
+        entries.append({"path": path, "mode": mode, "object_type": kind, "git_object_id": object_id, "byte_size": int(size_text)})
+    return sorted(entries, key=lambda row: row["path"])
+
+
+def _raw_source_path(path: str) -> bool:
+    """Selects game-bearing source paths using only frozen path structure."""
+    if path == CATALOG_PATH or path in RAW_REQUIRED_SOURCE_PATHS:
+        return True
+    suffix = Path(path).suffix.lower()
+    if suffix not in SOURCE_SUFFIXES:
+        return False
+    if path.startswith("apps/advantage-games/src/"):
+        return True
+    return path.startswith(("apps/reading-advantage/", "apps/primary-advantage/")) and (
+        "/games/" in path or "/api/v1/games/" in path or "/lib/game" in path
+    )
+
+
+def _raw_asset_path(path: str) -> bool:
+    """Selects candidate asset paths independently from frozen tree entries."""
+    suffix = Path(path).suffix.lower()
+    public = path.startswith((
+        "apps/advantage-games/public/",
+        "apps/reading-advantage/public/games/",
+        "apps/primary-advantage/public/games/",
+    ))
+    return suffix in ASSET_SUFFIXES and (public or _raw_source_path(path))
+
+
+def _raw_store_surfaces(reader: GitObjectReader, source_paths: list[str]) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Discovers literal state domains and explicit store writes from raw source text."""
+    states: list[dict[str, Any]] = []
+    transitions: list[dict[str, Any]] = []
+    for path in source_paths:
+        if Path(path).suffix.lower() not in {".ts", ".tsx", ".js", ".jsx"}:
+            continue
+        text = reader.read(BASELINE, path).decode("utf-8", errors="replace")
+        domains: dict[str, set[str]] = {}
+        for match in re.finditer(
+            r"(?:export\s+)?type\s+(\w+)\s*=\s*([\s\S]*?)(?=\n\s*(?:export\s+)?(?:type|interface|const|function|class)\b|\Z)",
+            text,
+        ):
+            name, body = match.groups()
+            if not RAW_STATE_NAME.search(name):
+                continue
+            residue = re.sub(r"[|;\s]", "", re.sub(r"['\"][^'\"\n]+['\"]", "", body))
+            if residue:
+                continue
+            literals = set(re.findall(r"['\"]([^'\"\n]+)['\"]", body))
+            if not literals:
+                continue
+            domains[name] = literals
+            line = text.count("\n", 0, match.start()) + 1
+            for literal in sorted(literals):
+                states.append({"path": path, "source_symbol": name, "state_id": literal, "evidence": locator(reader, BASELINE, path, line, line)})
+        properties: dict[str, tuple[str, set[str]]] = {}
+        for interface in re.finditer(r"(?:export\s+)?interface\s+(\w+)\s*\{([\s\S]*?)\n\}", text):
+            interface_name, body = interface.groups()
+            for prop in re.finditer(r"^\s*(\w+)\??:\s*([^\n]+)", body, re.MULTILINE):
+                prop_name, type_text = prop.groups()
+                alias = next((name for name in domains if re.search(rf"\b{re.escape(name)}\b", type_text)), None)
+                inline = set(re.findall(r"['\"]([^'\"\n]+)['\"]", type_text))
+                if alias:
+                    properties[prop_name] = (alias, domains[alias])
+                elif RAW_STATE_NAME.search(prop_name) and inline:
+                    symbol = f"{interface_name}.{prop_name}"
+                    properties[prop_name] = (symbol, inline)
+                    line = text.count("\n", 0, interface.start(2) + prop.start()) + 1
+                    for literal in sorted(inline):
+                        states.append({"path": path, "source_symbol": symbol, "state_id": literal, "evidence": locator(reader, BASELINE, path, line, line)})
+        for declaration in re.finditer(
+            r"(?:const|let)\s*\[\s*(\w+)\s*,\s*(set\w+)\s*\]\s*=\s*(?:React\.)?useState\s*<([^>]+)>\s*\(\s*(['\"])([^'\"]+)\4",
+            text,
+            re.DOTALL,
+        ):
+            state_name, setter_name, type_text, _quote, initial_value = declaration.groups()
+            if not RAW_STATE_NAME.search(state_name):
+                continue
+            literals = set(re.findall(r"['\"]([^'\"\n]+)['\"]", type_text))
+            line = text.count("\n", 0, declaration.start()) + 1
+            for literal in sorted(literals):
+                states.append({"path": path, "source_symbol": state_name, "state_id": literal, "evidence": locator(reader, BASELINE, path, line, line)})
+            setter = re.compile(rf"\b{re.escape(setter_name)}\s*\(\s*['\"]([^'\"]+)['\"]")
+            first_change = next(
+                (match for match in setter.finditer(text, declaration.end()) if match.group(1) in literals and match.group(1) != initial_value),
+                None,
+            )
+            if first_change is not None:
+                transitions.append({
+                    "path": path, "source_symbol": state_name,
+                    "from_state_id": initial_value, "to_state_id": first_change.group(1),
+                    "evidence": locator(reader, BASELINE, path, text.count("\n", 0, first_change.start()) + 1, text.count("\n", 0, first_change.end()) + 1),
+                })
+        existing_state_keys = {(row["path"], row["source_symbol"], row["state_id"]) for row in states}
+        for declaration in re.finditer(
+            r"(?:const|let)\s*\[\s*(\w+)\s*,\s*set\w+\s*\]\s*=\s*(?:React\.)?useState\s*<([^>]+)>",
+            text,
+            re.DOTALL,
+        ):
+            state_name, type_text = declaration.groups()
+            if not RAW_STATE_NAME.search(state_name):
+                continue
+            line = text.count("\n", 0, declaration.start()) + 1
+            for literal in sorted(set(re.findall(r"['\"]([^'\"\n]+)['\"]", type_text))):
+                key = (path, state_name, literal)
+                if key not in existing_state_keys:
+                    states.append({"path": path, "source_symbol": state_name, "state_id": literal, "evidence": locator(reader, BASELINE, path, line, line)})
+                    existing_state_keys.add(key)
+        create_start = text.find("create<")
+        if create_start < 0:
+            continue
+        for property_name, (_domain_symbol, literals) in sorted(properties.items()):
+            if property_name == "state":
+                continue
+            writes = [
+                match for match in re.finditer(rf"\b{re.escape(property_name)}\s*:\s*['\"]([^'\"]+)['\"]", text[create_start:])
+                if match.group(1) in literals
+            ]
+            ordered: list[tuple[str, int, int]] = []
+            for match in writes:
+                value = match.group(1)
+                absolute_start = create_start + match.start()
+                absolute_end = create_start + match.end()
+                if not ordered or ordered[-1][0] != value:
+                    ordered.append((value, absolute_start, absolute_end))
+            changes = [item for item in ordered[1:] if item[0] != ordered[0][0]]
+            for previous, current in ([(ordered[0], changes[0])] if changes else []):
+                transitions.append({
+                    "path": path,
+                    "source_symbol": property_name,
+                    "from_state_id": previous[0],
+                    "to_state_id": current[0],
+                    "evidence": locator(reader, BASELINE, path, text.count("\n", 0, previous[1]) + 1, text.count("\n", 0, current[2]) + 1),
+                })
+            for conditional in re.finditer(
+                rf"state\.{re.escape(property_name)}\s*===?\s*['\"]([^'\"]+)['\"][\s\S]{{0,160}}?\?\s*['\"]([^'\"]+)['\"]\s*:\s*state\.{re.escape(property_name)}",
+                text[create_start:],
+            ):
+                if conditional.group(1) in literals and conditional.group(2) in literals:
+                    start = create_start + conditional.start()
+                    end = create_start + conditional.end()
+                    transitions.append({
+                        "path": path, "source_symbol": property_name,
+                        "from_state_id": conditional.group(1), "to_state_id": conditional.group(2),
+                        "evidence": locator(reader, BASELINE, path, text.count("\n", 0, start) + 1, text.count("\n", 0, end) + 1),
+                    })
+            for guarded in re.finditer(
+                rf"if\s*\([^)]*(?:state\.)?{re.escape(property_name)}\s*!==?\s*['\"]([^'\"]+)['\"][^)]*\)\s*return(?:\s*\{{\}})?([\s\S]{{0,350}}?)\b{re.escape(property_name)}\s*:\s*['\"]([^'\"]+)['\"]",
+                text[create_start:],
+            ):
+                if guarded.group(1) in literals and guarded.group(3) in literals:
+                    start = create_start + guarded.start()
+                    end = create_start + guarded.end()
+                    transitions.append({
+                        "path": path, "source_symbol": property_name,
+                        "from_state_id": guarded.group(1), "to_state_id": guarded.group(3),
+                        "evidence": locator(reader, BASELINE, path, text.count("\n", 0, start) + 1, text.count("\n", 0, end) + 1),
+                    })
+    state_map = {(row["path"], row["source_symbol"], row["state_id"]): row for row in states}
+    transition_map = {(row["path"], row["source_symbol"], row["from_state_id"], row["to_state_id"]): row for row in transitions}
+    return [state_map[key] for key in sorted(state_map)], [transition_map[key] for key in sorted(transition_map)]
+
+
+def discover_raw_frozen_sources() -> dict[str, Any]:
+    """Discovers identities, files, surfaces, assets, and history without Phase-1 inputs."""
+    entries = _tree_entries()
+    reader = GitObjectReader()
+    try:
+        catalog_text = reader.read(BASELINE, CATALOG_PATH).decode("utf-8")
+        catalog_records: list[dict[str, Any]] = []
+        for match in re.finditer(r"^\s*id:\s*['\"]([^'\"]+)['\"]", catalog_text, re.MULTILINE):
+            line = catalog_text.count("\n", 0, match.start()) + 1
+            slug = match.group(1)
+            catalog_records.append({"catalog_id": slug, "evidence": locator(reader, BASELINE, CATALOG_PATH, line, line)})
+        source_paths = [row["path"] for row in entries if _raw_source_path(row["path"])]
+        route_records = []
+        for path in source_paths:
+            match = re.search(r"/games/(sentence|vocabulary)/([^/]+)/page\.tsx$", path)
+            if match:
+                route_records.append({"source_kind": match.group(1), "catalog_id": match.group(2), "path": path, "evidence": locator(reader, BASELINE, path)})
+        states, transitions = _raw_store_surfaces(reader, source_paths)
+        asset_records = [
+            {"canonical_path": row["path"], "git_object_id": row["git_object_id"], "byte_size": row["byte_size"]}
+            for row in entries if _raw_asset_path(row["path"])
+        ]
+        history_output = subprocess.check_output(
+            ["git", "log", "--format=commit:%H", "--name-status", "--diff-filter=D", BASELINE, "--", *SOURCE_ROOTS],
+            cwd=REPO_ROOT,
+            text=True,
+        )
+        history_records: list[dict[str, Any]] = []
+        revision = ""
+        for line in history_output.splitlines():
+            if line.startswith("commit:"):
+                revision = line[7:]
+            elif line.startswith("D\t"):
+                path = line[2:]
+                if (
+                    path != QUARANTINED_SOURCE_PREFIX
+                    and not path.startswith(f"{QUARANTINED_SOURCE_PREFIX}/")
+                    and (_raw_source_path(path) or _raw_asset_path(path))
+                ):
+                    history_records.append({"deletion_revision": revision, "path": path})
+        batches = [
+            {"batch_id": f"raw-identity-{index // 3 + 1:02d}", "identity_ids": [row["catalog_id"] for row in catalog_records[index:index + 3]]}
+            for index in range(0, len(catalog_records), 3)
+        ]
+        meter = BudgetMeter(reader.files_read, 3, reader.bytes_read)
+        meter.add()
+        return {
+            "source_baseline_revision": BASELINE,
+            "discovery_method": "independent-frozen-tree-and-raw-source-scan",
+            "raw_identity_records": catalog_records,
+            "raw_route_records": route_records,
+            "raw_file_records": [{**row, "canonical_path": row["path"]} for row in entries if row["path"] in set(source_paths)],
+            "raw_state_records": states,
+            "raw_transition_records": transitions,
+            "raw_asset_records": asset_records,
+            "raw_history_records": history_records,
+            "review_batches": batches,
+            "resource_usage": {"source_files": meter.source_files, "command_invocations": meter.command_invocations, "bytes_read": meter.bytes_read},
+        }
+    finally:
+        reader.close()
+
+
+def symmetric_reconciliation_records(
+    category: str,
+    mechanical: dict[str, list[dict[str, Any]]],
+    human: dict[str, list[dict[str, Any]]],
+) -> list[dict[str, Any]]:
+    """Returns matched and either-side-only records over the union of keys."""
+    rows = []
+    for key in sorted(set(mechanical) | set(human)):
+        status = "matched" if key in mechanical and key in human else "mechanical-only" if key in mechanical else "human-only"
+        rows.append({
+            "category": category, "record_key": key, "comparison_status": status,
+            "blocking": status != "matched", "mechanical_evidence": mechanical.get(key, []), "human_evidence": human.get(key, []),
+        })
+    return rows
 
 
 def git_json(reader: GitObjectReader, revision: str, name: str) -> dict[str, Any]:
@@ -275,7 +569,11 @@ def discover_program_identities(
         if id_match is not None and title_match is not None:
             catalog_by_title[title_match.group(2)] = id_match.group(1)
 
-    ledger_ids = [row["canonical_identity_id"] for row in ledger["identity_records"]]
+    ledger_ids = [
+        row["canonical_identity_id"]
+        for row in ledger["identity_records"]
+        if any(state.get("source_class") == "current-page-source" for state in row.get("source_states", []))
+    ]
     history_paths = [row["evidence"]["path"] for row in historical["records"]]
     discovered: list[tuple[str, str, str | None, str]] = []
     for label in labels:
@@ -612,7 +910,11 @@ def check_coverage() -> dict[str, int]:
     actual_source = {row["mechanical_record_id"] for row in human["mechanical_source_record_reviews"]}
     expected_graph = {canonical_key(row) for row in source["graph_edges"]}
     actual_graph = {row["mechanical_graph_edge_key"] for row in human["mechanical_graph_edge_reviews"]}
-    expected_identities = {row["canonical_identity_id"] for row in ledger["identity_records"]}
+    expected_identities = {
+        row["canonical_identity_id"]
+        for row in ledger["identity_records"]
+        if any(state.get("source_class") == "current-page-source" for state in row.get("source_states", []))
+    }
     actual_identities = {row["canonical_identity_id"] for row in human_discrepancies["identity_comparison_records"]}
     expected_surfaces = {
         canonical_key(row)
@@ -691,6 +993,7 @@ def write_json(name: str, value: dict[str, Any]) -> None:
 
 def generate() -> None:
     """Generates exhaustive non-interpretive Phase-2 evidence artifacts."""
+    raw_frozen_source_discovery = discover_raw_frozen_sources()
     reader = GitObjectReader()
     try:
         source = git_json(reader, PHASE1_REVISION, "source-denominator.json")
@@ -711,12 +1014,72 @@ def generate() -> None:
             slug_batches,
             program_identities,
         )
+        raw_identity_map = {
+            row["catalog_id"]: [row["evidence"]]
+            for row in raw_frozen_source_discovery["raw_identity_records"]
+        }
+        mechanical_identity_map = {
+            row["catalog_identity_id"]: [row["catalog_evidence"]]
+            for row in ledger["identity_records"]
+        }
+        raw_file_map = {
+            row["canonical_path"]: [row]
+            for row in raw_frozen_source_discovery["raw_file_records"]
+        }
+        mechanical_file_map = {
+            row["file_path"]: [row["evidence"]]
+            for row in source["records"] if row["record_type"] == "file"
+        }
+        raw_state_map = {
+            canonical_key([row["path"], row["source_symbol"], row["state_id"]]): [row["evidence"]]
+            for row in raw_frozen_source_discovery["raw_state_records"]
+        }
+        mechanical_state_map = {
+            canonical_key([row["evidence"]["path"], row["source_symbol"], row["state_id"]]): [row["evidence"]]
+            for row in scenes["state_records"]
+        }
+        raw_transition_map = {
+            canonical_key([row["path"], row["source_symbol"], row["from_state_id"], row["to_state_id"]]): [row["evidence"]]
+            for row in raw_frozen_source_discovery["raw_transition_records"]
+        }
+        mechanical_transition_map = {
+            canonical_key([row["evidence"]["path"], row["source_symbol"], row["from_state_id"], row["to_state_id"]]): [row["evidence"]]
+            for row in scenes["transitions"]
+        }
+        raw_asset_map = {
+            row["canonical_path"]: [row]
+            for row in raw_frozen_source_discovery["raw_asset_records"]
+        }
+        mechanical_asset_map = {
+            row["canonical_path"]: [row]
+            for row in assets["candidate_files"]
+        }
+        raw_history_map = {
+            row["path"]: [row]
+            for row in raw_frozen_source_discovery["raw_history_records"]
+        }
+        mechanical_history_map = {
+            row["evidence"]["path"]: [row["evidence"]]
+            for row in historical["records"] if row["classification"] != "current"
+        }
+        symmetric_reconciliation = [
+            *symmetric_reconciliation_records("identities", mechanical_identity_map, raw_identity_map),
+            *symmetric_reconciliation_records("files", mechanical_file_map, raw_file_map),
+            *symmetric_reconciliation_records("states", mechanical_state_map, raw_state_map),
+            *symmetric_reconciliation_records("transitions", mechanical_transition_map, raw_transition_map),
+            *symmetric_reconciliation_records("assets", mechanical_asset_map, raw_asset_map),
+            *symmetric_reconciliation_records("history-paths", mechanical_history_map, raw_history_map),
+        ]
+        symmetric_blockers = [row for row in symmetric_reconciliation if row["blocking"]]
 
         current_batches: list[dict[str, Any]] = []
         current_claims: list[dict[str, Any]] = []
         duplicate_rows: list[dict[str, Any]] = []
         identity_comparisons: list[dict[str, Any]] = []
-        identities = ledger["identity_records"]
+        identities = [
+            row for row in ledger["identity_records"]
+            if any(state.get("source_class") == "current-page-source" for state in row.get("source_states", []))
+        ]
         for batch_number, start in enumerate(range(0, len(identities), 3), start=1):
             batch_records = identities[start : start + 3]
             batch_id = f"human-current-{batch_number:02d}"
@@ -931,6 +1294,7 @@ def generate() -> None:
             "schema_version": "apk-denominator-independent-human-discovery.v1",
             "status": "independent-human-discovery-complete", "track_id": TRACK,
             "source_baseline_revision": BASELINE, "collector_identity": COLLECTOR_IDENTITY,
+            "raw_frozen_source_discovery": raw_frozen_source_discovery,
             "review_batches": current_batches, "replacement_program_review_batches": program_batches,
             "global_review_batches": global_batches, "current_source_claims": current_claims,
             "replacement_program_identity_reviews": program,
@@ -961,7 +1325,9 @@ def generate() -> None:
             "identity_comparison_records": identity_comparisons,
             "mechanical_observation_records": mechanical_observations,
             "program_identity_disposition_records": program_dispositions,
-            "coverage_status": "complete", "uncovered_mechanical_records": [],
+            "independent_symmetric_reconciliation": symmetric_reconciliation,
+            "independent_symmetric_blocking_records": symmetric_blockers,
+            "coverage_status": "blocked" if symmetric_blockers else "complete", "uncovered_mechanical_records": [],
             "uncovered_replacement_program_identities": [], "interpretation": {},
         })
     finally:
