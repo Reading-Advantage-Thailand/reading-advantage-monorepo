@@ -62,16 +62,16 @@ _Story ref: spec.md#story-s1_
     - [x] Prove company identity tables are not added to the education
           `TenantDB` registry or product migration stream.
 
-- [~] Task 4: Write Red PostgreSQL migration and constraint tests.
-    - [ ] Create an isolated `company_identity_test` database using the local
+- [x] Task 4: Write Red PostgreSQL migration and constraint tests. [commit: ba033761]
+    - [x] Create isolated `company_identity_test_<pid>_<nonce>` databases using the local
           PostgreSQL 16 container.
-    - [ ] Test fresh migration, upgrade migration, rollback rehearsal, and
+    - [x] Test fresh migration, upgrade migration, rollback rehearsal, and
           migration-ledger monotonicity.
-    - [ ] Test normalized-username uniqueness, foreign keys, unique role
+    - [x] Test normalized-username uniqueness, foreign keys, unique role
           assignments, expiration, and immutable-audit constraints.
-    - [ ] Prove the identity migration creates no education, licensing, or
+    - [x] Prove the identity migration creates no education, licensing, or
           product tables.
-    - [ ] Prove rerunning application/organization bootstrap data is
+    - [x] Prove rerunning application/organization bootstrap data is
           idempotent.
 
 ### Implement
