@@ -62,7 +62,7 @@ _Story ref: spec.md#story-s1_
     - [x] Prove company identity tables are not added to the education
           `TenantDB` registry or product migration stream.
 
-- [ ] Task 4: Write Red PostgreSQL migration and constraint tests.
+- [~] Task 4: Write Red PostgreSQL migration and constraint tests.
     - [ ] Create an isolated `company_identity_test` database using the local
           PostgreSQL 16 container.
     - [ ] Test fresh migration, upgrade migration, rollback rehearsal, and
