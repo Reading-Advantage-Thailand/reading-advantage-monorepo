@@ -372,7 +372,7 @@ def _run_sample(
         "dmesg_status": "unavailable",
         "process_count": 0,
         "diagnostic_count": 0,
-        "exit_status": None,
+        "exit_status": -1,
         "signal": None,
         "turbo_cache_state": "not_run",
         "tsconfig_path": target.tsconfig_path,
@@ -650,7 +650,7 @@ def main() -> int:
                             json.dumps(sample, indent=2, sort_keys=True) + "\n", encoding="utf-8"
                         )
         summaries = [_summarize_target(target, [sample for sample in samples if sample["target"] == target.identifier]) for target in selected_targets]
-        selected_checkers = max(
+        selected_checkers = min(
             (
                 summary["selected_ts7_cohort"] for summary in summaries
             ),
