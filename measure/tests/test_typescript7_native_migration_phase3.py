@@ -105,6 +105,7 @@ PHASE3E_ACCEPTED_EMIT_BUILD_WORKSPACES = (
     "packages/integrations/github",
     "packages/storage",
     "packages/activity-tutorial",
+    "packages/practice-core",
 )
 
 
@@ -693,6 +694,14 @@ class Phase3dCheckTypesCutoverContract(unittest.TestCase):
     def test_activity_tutorial_emit_routes_to_typescript7(self) -> None:
         """Requires the tutorial package's emitting build to select the native alias."""
         manifest = json.loads(ACTIVITY_TUTORIAL_PACKAGE_PATH.read_text(encoding="utf-8"))
+        scripts = manifest.get("scripts")
+        self.assertIsInstance(scripts, dict)
+        assert isinstance(scripts, dict)
+        self.assertEqual(scripts.get("build"), "node ../../node_modules/typescript7/bin/tsc")
+
+    def test_practice_core_emit_routes_to_typescript7(self) -> None:
+        """Requires the practice-core emitting build to select the native alias."""
+        manifest = json.loads(PRACTICE_CORE_PACKAGE_PATH.read_text(encoding="utf-8"))
         scripts = manifest.get("scripts")
         self.assertIsInstance(scripts, dict)
         assert isinstance(scripts, dict)

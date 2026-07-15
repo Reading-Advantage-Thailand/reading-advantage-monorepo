@@ -121,6 +121,21 @@
       "javascript_differences": [],
       "disposition": "accepted_declaration_ordering_only",
       "rationale": "The activity tutorial public declaration types retain the same property sets and union members; TypeScript 7 changes printer ordering only. JavaScript is byte-identical."
+    },
+    {
+      "package": "packages/practice-core",
+      "typescript6": "6.0.2",
+      "typescript7": "7.0.2",
+      "typescript6_exit_status": 0,
+      "typescript7_exit_status": 0,
+      "output_file_count": 39,
+      "typescript6_relative_tree_sha256": "aa0e4f30e663820eaa38ad6c58b14df0390424e2dd4847cdf169e017329faab4",
+      "typescript7_relative_tree_sha256": "a271f39a80dda6a84c9288a1630c93dc9a8c8f6fc252690cbc5dd80613204dd2",
+      "diff_sha256": "1f580fa7f584884b8629f86f7fb4ce6d99b0840c1a2ecb9a9cd34c5d750ff8ef",
+      "declaration_differences": ["generator-qa/contract.d.ts", "practice/contract.d.ts", "practice/contract.d.ts.map", "practice/practice-item.d.ts", "practice/problem-family.d.ts", "practice/problem-family.d.ts.map", "practice/submission.schema.d.ts", "practice/timing-baseline.d.ts.map", "practice/timing.d.ts.map"],
+      "javascript_differences": [],
+      "disposition": "accepted_declaration_ordering_and_map_only",
+      "rationale": "TypeScript 7 changes inferred declaration ordering and its derived maps only; emitted JavaScript is byte-identical."
     }
   ]
 }
