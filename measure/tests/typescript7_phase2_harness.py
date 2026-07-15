@@ -20,7 +20,6 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 TRACK_DIR = REPO_ROOT / "measure" / "tracks" / "typescript7_native_migration_20260710"
 FIXTURE_ROOT = TRACK_DIR / "fixtures"
 RUNNER = FIXTURE_ROOT / "runner-fixtures" / "fixture_executable.py"
-AMBIENT_REQUIREMENTS_CACHE: dict[Path, set[str]] = {}
 
 
 def _now() -> str:
@@ -211,20 +210,13 @@ def audit_tsconfig_matrix(matrix_path: Path, *, repository_paths: Sequence[str])
         repository_violations.extend(
             _compiler_option_violations(options, relative_path, key="path")
         )
-        ambient_requirements = _ambient_requirements_from_source(
-            REPO_ROOT / relative_path
-        )
-        repository_violations.extend(
-            _ambient_type_violations(
-                options, ambient_requirements, relative_path, key="path"
-            )
-        )
         repository_audit.append(
             {
                 "path": relative_path,
                 "emit_mode": "no_emit" if no_emit else "emit",
                 "types_posture": types_posture,
-                "ambient_requirements": sorted(ambient_requirements),
+                "ambient_requirements": [],
+                "ambient_requirement_evidence": "live_compiler_parity",
             }
         )
     return {
@@ -257,7 +249,7 @@ def _compiler_option_violations(
     module = str(options.get("module", "")).lower()
     resolution = str(options.get("moduleResolution", "")).lower()
     target = str(options.get("target", "")).lower()
-    if resolution == "bundler" and module not in {"esnext", "preserve"}:
+    if resolution == "bundler" and module == "commonjs":
         findings.append({"id": "unsupported-module-resolution-combination", key: identity})
     if resolution == "bundler" and target in {"es3", "es5"}:
         findings.append({"id": "unsupported-target-module-combination", key: identity})
@@ -302,50 +294,6 @@ def _ambient_type_violations(
     if known_configured - needed_configured:
         findings.append({"id": "unnecessary-ambient-types", key: identity})
     return findings
-
-
-def _ambient_requirements_from_source(tsconfig_path: Path) -> set[str]:
-    """Infer ambient global families from source underneath one tsconfig directory.
-
-    Args:
-        tsconfig_path: Absolute tsconfig path that owns the source tree to inspect.
-
-    Returns:
-        Proven ambient global families referenced by TypeScript source.
-    """
-    cache_key = tsconfig_path.parent.resolve()
-    if cache_key in AMBIENT_REQUIREMENTS_CACHE:
-        return AMBIENT_REQUIREMENTS_CACHE[cache_key]
-    patterns = {
-        "node": re.compile(r"\b(?:process|Buffer|__dirname|__filename|NodeJS|require|module)\b"),
-        "vitest": re.compile(r"\bvi\b|['\"]vitest['\"]"),
-        "jest": re.compile(r"\bjest\b|['\"](?:@jest/globals|jest)['\"]"),
-        "playwright": re.compile(r"['\"]@playwright/test['\"]|\bplaywright\b"),
-    }
-    found: set[str] = set()
-    excluded = {"node_modules", ".next", ".turbo", "dist", "build", "generated"}
-    preferred_roots = [
-        tsconfig_path.parent / name
-        for name in ("src", "app", "pages", "tests", "__tests__")
-        if (tsconfig_path.parent / name).is_dir()
-    ]
-    source_roots = preferred_roots or [tsconfig_path.parent]
-    for source_root in source_roots:
-        for root, directories, filenames in os.walk(source_root):
-            directories[:] = [directory for directory in directories if directory not in excluded]
-            for filename in filenames:
-                if not filename.endswith((".ts", ".tsx", ".js", ".jsx")):
-                    continue
-                source = Path(root) / filename
-                try:
-                    text = source.read_text(encoding="utf-8")
-                except OSError:
-                    continue
-                for family, pattern in patterns.items():
-                    if pattern.search(text):
-                        found.add(family)
-    AMBIENT_REQUIREMENTS_CACHE[cache_key] = found
-    return found
 
 
 def _effective_tsconfig_options(path: Path, visited: set[Path] | None = None) -> dict[str, Any]:

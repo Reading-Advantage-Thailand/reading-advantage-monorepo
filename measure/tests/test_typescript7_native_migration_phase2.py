@@ -240,10 +240,7 @@ class TsconfigCompatibilityContract(unittest.TestCase):
             },
         )
         self.assertEqual(len(report["repository_audit"]), 39)
-        self.assertIn(
-            {"id": "removed-baseUrl", "path": "apps/activity-vinext-fixture/tsconfig.json"},
-            report["repository_violations"],
-        )
+        self.assertEqual(report["repository_violations"], [])
 
 
 class DiagnosticParityContract(unittest.TestCase):

@@ -5,6 +5,7 @@
     "declaration": false,
     "declarationMap": false,
     "incremental": true,
+    "types": ["node"],
     "plugins": [{ "name": "next" }],
     "paths": {
       "@/*": ["./*"]

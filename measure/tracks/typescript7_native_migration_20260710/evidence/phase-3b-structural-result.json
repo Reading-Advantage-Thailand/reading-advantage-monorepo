@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "track": "typescript7_native_migration_20260710",
+  "phase": "Phase 3b: tsconfig structural compatibility",
+  "status": "interim_pass_pending_live_parity",
+  "scope": [
+    "39 tracked tsconfig files",
+    "Phase 2 tsconfig compatibility contract and test",
+    "no application source, scripts, or emitted output"
+  ],
+  "pre_change_findings": {
+    "structural_violations": 40,
+    "breakdown": [
+      "two direct baseUrl settings",
+      "one static bundler-module rule that incorrectly rejected ES2022",
+      "ambient-type findings produced by a regex source scan"
+    ]
+  },
+  "remediations": [
+    "Removed the required marketing baseUrl and made @/* map explicitly to ./app/*.",
+    "Removed the activity Vinext fixture baseUrl so every tracked config satisfies the adopted no-baseUrl policy.",
+    "Kept packages/db tsconfig.build module at ES2022 after a real TypeScript 7 showConfig probe confirmed it is compatible with bundler resolution.",
+    "Removed scanner-only Jest, Vitest, and Playwright type additions; imported runner modules provide their own declarations and do not prove ambient-global use.",
+    "Retained or added Node types only where focused native-compiler probes found Node diagnostics, with app-level Node entries left for the all-config parity gate to confirm or remove.",
+    "Changed the live repository assertion from a baseline-specific expected baseUrl violation to an empty violation set; deliberately-invalid fixture cases remain unchanged.",
+    "Removed the repository regex ambient-type verdict because it could not distinguish imports, string content, and tsconfig include/exclude semantics. Actual compiler parity is the authoritative ambient-type gate."
+  ],
+  "commands": [
+    {
+      "command": "node node_modules/typescript7/bin/tsc --showConfig -p <each of 39 tracked configs>",
+      "result": "PASS: 39/39; showConfig_failures=0"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase2",
+      "result": "PASS: 9 tests in 33.417s"
+    },
+    {
+      "command": "rg -n '\"baseUrl\"' --glob 'tsconfig*.json' apps packages",
+      "result": "PASS: no tracked tsconfig occurrence"
+    },
+    {
+      "command": "git diff --check",
+      "result": "PASS"
+    }
+  ],
+  "review_input": "Independent Phase 3b audit identified the false-positive regex behavior and verified that ES2022 plus bundler is accepted by TypeScript 7.0.2. It also supplied focused Node-type probes for package configs.",
+  "remaining_gate": "Run the real TypeScript 6 and 7 diagnostics against all 39 configs, then retain only compiler-proven ambient types and record every diagnostic difference in diagnostic-parity-ledger.json."
+}
