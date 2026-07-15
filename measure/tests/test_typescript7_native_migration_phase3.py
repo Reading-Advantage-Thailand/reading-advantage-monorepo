@@ -356,6 +356,28 @@ class Phase3dCheckTypesCutoverContract(unittest.TestCase):
         self.assertIn('checkers !== "1" && checkers !== "2"', contents)
         self.assertIn("TS7_CHECKERS", contents)
 
+    def test_phase3g_runner_defines_the_complete_bounded_live_matrix(self) -> None:
+        """Requires Phase 3g to benchmark all specified surfaces with live resource guards."""
+        runner = (
+            REPO_ROOT
+            / "measure"
+            / "tracks"
+            / "typescript7_native_migration_20260710"
+            / "run-phase3-benchmarks.py"
+        )
+        contents = runner.read_text(encoding="utf-8")
+        for target in (
+            "packages-types",
+            "packages-db",
+            "packages-domain",
+            "apps-reading-advantage",
+            "full-check-types-graph",
+        ):
+            self.assertIn(target, contents)
+        self.assertIn("--checkers", contents)
+        self.assertIn("stop_loss_process_group_rss_kib", contents)
+        self.assertIn("summarize_benchmark_samples", contents)
+
     def test_db_workspace_check_types_routing_is_explicit_and_reversible(self) -> None:
         """Requires the second ordered workspace to preserve the direct dual-compiler paths."""
         manifest = json.loads(DB_PACKAGE_PATH.read_text(encoding="utf-8"))
