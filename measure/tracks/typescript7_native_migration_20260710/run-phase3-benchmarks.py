@@ -248,6 +248,21 @@ def _process_group_stats(pgid: int) -> tuple[int, int]:
     return rss_kib, members
 
 
+def _process_group_id(pid: int) -> int | None:
+    """Return a process group identifier without failing for an already-exited child.
+
+    Args:
+        pid: Process identifier returned by a successfully started child process.
+
+    Returns:
+        The process group identifier, or None when the child exited before it could be sampled.
+    """
+    try:
+        return os.getpgid(pid)
+    except ProcessLookupError:
+        return None
+
+
 def _terminate_process_group(pgid: int) -> dict[str, Any]:
     """Terminate an over-limit process group with the required bounded grace period.
 
@@ -491,11 +506,16 @@ def _run_sample(
         text=True,
         start_new_session=True,
     )
-    pgid = os.getpgid(process.pid)
+    pgid = _process_group_id(process.pid)
     peak_group_rss = 0
     peak_process_count = 0
     stop_loss: dict[str, Any] = {"triggered": False, "trigger": None, "cleanup": None}
     while process.poll() is None:
+        if pgid is None:
+            # A process group can disappear between Popen and getpgid when a command
+            # exits immediately. Its return code is still collected below; do not turn
+            # that normal child lifecycle race into a rejected matrix run.
+            break
         rss_kib, member_count = _process_group_stats(pgid)
         peak_group_rss = max(peak_group_rss, rss_kib)
         peak_process_count = max(peak_process_count, member_count)

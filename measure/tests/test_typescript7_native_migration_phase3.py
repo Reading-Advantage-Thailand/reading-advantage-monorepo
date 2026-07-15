@@ -968,6 +968,11 @@ class Phase3gBenchmarkRunnerContract(unittest.TestCase):
             (False, "invalid", "host_idle_below_threshold"),
         )
 
+    def test_process_group_lookup_tolerates_a_child_that_exited_before_sampling(self) -> None:
+        """Requires short-lived benchmark commands not to abort the whole matrix during setup."""
+        with patch.object(self.runner.os, "getpgid", side_effect=ProcessLookupError):
+            self.assertIsNone(self.runner._process_group_id(12345))
+
     def test_phase3g_rejects_partial_target_matrices(self) -> None:
         """Requires a filtered target invocation to stay incapable of accepted full-matrix evidence."""
         with self.assertRaisesRegex(AssertionError, "complete five-target matrix"):
