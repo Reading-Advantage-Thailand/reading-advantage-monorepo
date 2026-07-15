@@ -19,10 +19,13 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable
 
+REPO_ROOT = Path(__file__).resolve().parents[3]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
 from measure.tests.typescript7_phase2_harness import parse_time_output, summarize_benchmark_samples
 
 
-REPO_ROOT = Path(__file__).resolve().parents[3]
 TRACK_DIR = REPO_ROOT / "measure" / "tracks" / "typescript7_native_migration_20260710"
 EVIDENCE_ROOT = TRACK_DIR / "evidence" / "phase-3g"
 BASELINE_PATH = TRACK_DIR / "compiler-baseline.json"

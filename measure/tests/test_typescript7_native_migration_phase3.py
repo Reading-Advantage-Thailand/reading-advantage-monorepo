@@ -914,6 +914,18 @@ class Phase3gBenchmarkRunnerContract(unittest.TestCase):
             graph_command, _ = self.runner._compiler_command(graph_target, "ts6", 1)
         self.assertEqual(graph_command[-2:], ["--", "--stableTypeOrdering"])
 
+    def test_runner_executes_directly_from_the_repository_root(self) -> None:
+        """Requires the tracked executable to resolve its repo-local harness imports unaided."""
+        completed = subprocess.run(
+            ["python3", str(BENCHMARK_RUNNER_PATH), "--help"],
+            cwd=REPO_ROOT,
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+        self.assertIn("allow-contaminated-host", completed.stdout)
+
     def test_user_override_is_recorded_as_contaminated_not_idle(self) -> None:
         """Requires an explicit host-load override to preserve its contaminated classification."""
         allowed, idle_class, reason = self.runner._host_eligibility(57, True)
