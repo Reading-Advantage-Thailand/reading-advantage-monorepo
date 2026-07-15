@@ -27,11 +27,11 @@
   },
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "tsc",
+    "build": "node ../../node_modules/typescript/bin/tsc",
     "start": "node dist/server.js",
     "lint": "eslint .",
     "test": "vitest run",
-    "check-types": "tsc --noEmit"
+    "check-types": "node ../../node_modules/typescript/bin/tsc --noEmit"
   },
   "dependencies": {
     "@reading-advantage/activity-runtime": "workspace:*",

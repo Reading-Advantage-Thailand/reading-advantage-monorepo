@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "track": "typescript7_native_migration_20260710",
+  "phase": "Phase 3d: check-types cutover",
+  "status": "accepted_workspace",
+  "accepted_at": "2026-07-15T04:11:32Z",
+  "workspace": {
+    "name": "@reading-advantage/db",
+    "path": "packages/db",
+    "acceptance_order": 2
+  },
+  "baseline": {
+    "typescript6": {
+      "command": "node node_modules/typescript/bin/tsc --noEmit -p packages/db/tsconfig.json",
+      "version": "6.0.2",
+      "exit_status": 0
+    },
+    "typescript7": {
+      "command": "node node_modules/typescript7/bin/tsc --noEmit -p packages/db/tsconfig.json",
+      "version": "7.0.2",
+      "exit_status": 0
+    }
+  },
+  "scripts": {
+    "check-types": "node ../../node_modules/typescript7/bin/tsc --noEmit",
+    "check-types:compat": "node ../../node_modules/typescript/bin/tsc --noEmit",
+    "check-types:rollback": "node ../../node_modules/typescript/bin/tsc --noEmit",
+    "build": "node ../../node_modules/typescript/bin/tsc --project tsconfig.build.json"
+  },
+  "live_acceptance": {
+    "command": "pnpm --filter @reading-advantage/db run check-types && pnpm --filter @reading-advantage/db run check-types:compat && pnpm --filter @reading-advantage/db run check-types:rollback",
+    "exit_status": 0,
+    "native_and_compat_output": [
+      "node ../../node_modules/typescript7/bin/tsc --noEmit",
+      "node ../../node_modules/typescript/bin/tsc --noEmit"
+    ],
+    "rollback_command_matches_and_executes_the_exact_compatibility_command": true
+  },
+  "non_goals": [
+    "The tsconfig.build.json emit stays on TypeScript 6 pending Phase 3e byte comparison.",
+    "No Codecamp seed source from the main worktree is represented by this isolated-worktree evidence."
+  ]
+}

@@ -19,8 +19,8 @@
   "bin": { "tutorial-check": "./dist/cli.js" },
   "files": ["dist", "README.md"],
   "scripts": {
-    "build": "tsc",
-    "check-types": "tsc --noEmit -p tsconfig.test.json",
+    "build": "node ../../node_modules/typescript/bin/tsc",
+    "check-types": "node ../../node_modules/typescript/bin/tsc --noEmit -p tsconfig.test.json",
     "lint": "eslint src/",
     "test": "vitest run --maxWorkers=1"
   },

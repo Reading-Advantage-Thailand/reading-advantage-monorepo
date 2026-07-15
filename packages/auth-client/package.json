@@ -19,7 +19,7 @@
     "build": "tsup src/index.ts --format esm --dts",
     "lint": "eslint .",
     "test": "vitest run",
-    "check-types": "tsc --noEmit"
+    "check-types": "node ../../node_modules/typescript/bin/tsc --noEmit"
   },
   "dependencies": {
     "@reading-advantage/types": "workspace:*"

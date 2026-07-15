@@ -22,8 +22,8 @@
   },
   "files": ["dist", "source-snapshots", "fixtures"],
   "scripts": {
-    "build": "tsc && node scripts/copy-data.mjs",
-    "check-types": "tsc --noEmit && tsc -p tsconfig.test.json",
+    "build": "node ../../node_modules/typescript/bin/tsc && node scripts/copy-data.mjs",
+    "check-types": "node ../../node_modules/typescript/bin/tsc --noEmit && node ../../node_modules/typescript/bin/tsc -p tsconfig.test.json",
     "lint": "eslint src/",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage --exclude src/__tests__/release-artifact.test.ts",

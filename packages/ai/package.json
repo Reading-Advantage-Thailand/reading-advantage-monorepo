@@ -17,10 +17,10 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "node ../../node_modules/typescript/bin/tsc",
     "lint": "eslint .",
     "test": "vitest run",
-    "check-types": "tsc --noEmit"
+    "check-types": "node ../../node_modules/typescript/bin/tsc --noEmit"
   },
   "dependencies": {
     "@ai-sdk/google": "catalog:",

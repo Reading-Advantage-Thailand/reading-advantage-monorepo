@@ -20,8 +20,8 @@
   },
   "files": ["dist"],
   "scripts": {
-    "build": "tsc",
-    "check-types": "tsc --noEmit",
+    "build": "node ../../node_modules/typescript/bin/tsc",
+    "check-types": "node ../../node_modules/typescript/bin/tsc --noEmit",
     "lint": "eslint src/",
     "test": "pnpm build && vitest run",
     "test:generators": "vitest run src/generator-qa/__tests__/ci-gate.test.ts",

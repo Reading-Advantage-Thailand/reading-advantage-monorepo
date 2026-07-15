@@ -11,7 +11,7 @@
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,md}\"",
     "test": "vitest run",
     "test:watch": "vitest",
-    "check-types": "tsc --noEmit",
+    "check-types": "node ../../node_modules/typescript/bin/tsc --noEmit",
     "test:integration": "vitest run --config vitest.integration.config.ts",
     "test:e2e": "playwright test",
     "seed": "tsx scripts/seed.ts",

@@ -9,7 +9,7 @@
     "start": "vinext start",
     "test": "vitest run",
     "lint": "eslint .",
-    "check-types": "tsc --noEmit"
+    "check-types": "node ../../node_modules/typescript/bin/tsc --noEmit"
   },
   "dependencies": {
     "@reading-advantage/ai": "workspace:*",

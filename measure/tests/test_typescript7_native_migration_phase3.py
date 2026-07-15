@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import re
 import subprocess
 import tempfile
 import unittest
@@ -20,6 +21,8 @@ RUNNER_PATH = (
     / "typescript7_native_migration_20260710"
     / "run-phase3-parity.py"
 )
+TYPES_PACKAGE_PATH = REPO_ROOT / "packages" / "types" / "package.json"
+DB_PACKAGE_PATH = REPO_ROOT / "packages" / "db" / "package.json"
 
 
 def _load_runner() -> ModuleType:
@@ -159,6 +162,89 @@ class Phase3ParityRecorderContract(unittest.TestCase):
         self.assertEqual(record["status"], "compiler_runtime_failure")
         self.assertEqual(record["subprocess_evidence"][0]["exit_status"], -6)
         self.assertEqual(record["ts6"]["diagnostics"], [])
+
+
+class Phase3dCheckTypesCutoverContract(unittest.TestCase):
+    """Verify the first workspace selects each compiler by its exact alias path."""
+
+    NATIVE_COMMAND = "node ../../node_modules/typescript7/bin/tsc --noEmit"
+    COMPAT_COMMAND = "node ../../node_modules/typescript/bin/tsc --noEmit"
+
+    def test_types_workspace_check_types_routing_is_explicit_and_reversible(self) -> None:
+        """Requires the first cutover workspace to avoid the unstable hoisted `tsc` shim."""
+        manifest = json.loads(TYPES_PACKAGE_PATH.read_text(encoding="utf-8"))
+        scripts = manifest.get("scripts")
+        self.assertIsInstance(scripts, dict)
+        assert isinstance(scripts, dict)
+        self.assertEqual(scripts.get("check-types"), self.NATIVE_COMMAND)
+        self.assertEqual(scripts.get("check-types:compat"), self.COMPAT_COMMAND)
+        self.assertEqual(scripts.get("check-types:rollback"), self.COMPAT_COMMAND)
+
+    def test_workspace_scripts_do_not_use_the_ambiguous_hoisted_tsc_shim(self) -> None:
+        """Rejects a bare `tsc` invocation that can silently select the alias last linked by pnpm."""
+        bare_tsc = re.compile(r"(?:^|&&\s+)tsc(?:\s|$)")
+        offenders: list[str] = []
+        package_manifests = sorted(
+            package_json
+            for root in (REPO_ROOT / "apps", REPO_ROOT / "packages")
+            for package_json in root.rglob("package.json")
+        )
+        for package_json in package_manifests:
+            if "node_modules" in package_json.parts:
+                continue
+            manifest = json.loads(package_json.read_text(encoding="utf-8"))
+            scripts = manifest.get("scripts", {})
+            if not isinstance(scripts, dict):
+                continue
+            for name, command in scripts.items():
+                if isinstance(command, str) and bare_tsc.search(command):
+                    offenders.append(f"{package_json.relative_to(REPO_ROOT)}:{name}")
+        self.assertEqual(offenders, [], f"ambiguous bare tsc scripts: {offenders}")
+
+    def test_direct_compiler_script_paths_resolve_and_emit_stays_on_typescript6(self) -> None:
+        """Requires every direct compiler script to resolve from its workspace and defers emit migration."""
+        compiler_path = re.compile(
+            r"node\\s+(?P<path>\\S*node_modules/(?:typescript7|typescript)/bin/tsc)"
+        )
+        missing: list[str] = []
+        premature_emit_cutovers: list[str] = []
+        for root in (REPO_ROOT / "apps", REPO_ROOT / "packages"):
+            for package_json in root.rglob("package.json"):
+                if "node_modules" in package_json.parts:
+                    continue
+                manifest = json.loads(package_json.read_text(encoding="utf-8"))
+                scripts = manifest.get("scripts", {})
+                if not isinstance(scripts, dict):
+                    continue
+                for name, command in scripts.items():
+                    if not isinstance(command, str):
+                        continue
+                    for match in compiler_path.finditer(command):
+                        candidate = (package_json.parent / match.group("path")).resolve()
+                        if not candidate.is_file():
+                            missing.append(
+                                f"{package_json.relative_to(REPO_ROOT)}:{name}:{match.group('path')}"
+                            )
+                    if name == "build" and "typescript7/bin/tsc" in command:
+                        premature_emit_cutovers.append(
+                            f"{package_json.relative_to(REPO_ROOT)}:{name}"
+                        )
+        self.assertEqual(missing, [], f"unresolvable direct compiler paths: {missing}")
+        self.assertEqual(
+            premature_emit_cutovers,
+            [],
+            f"TypeScript 7 emit migration is reserved for Phase 3e: {premature_emit_cutovers}",
+        )
+
+    def test_db_workspace_check_types_routing_is_explicit_and_reversible(self) -> None:
+        """Requires the second ordered workspace to preserve the direct dual-compiler paths."""
+        manifest = json.loads(DB_PACKAGE_PATH.read_text(encoding="utf-8"))
+        scripts = manifest.get("scripts")
+        self.assertIsInstance(scripts, dict)
+        assert isinstance(scripts, dict)
+        self.assertEqual(scripts.get("check-types"), self.NATIVE_COMMAND)
+        self.assertEqual(scripts.get("check-types:compat"), self.COMPAT_COMMAND)
+        self.assertEqual(scripts.get("check-types:rollback"), self.COMPAT_COMMAND)
 
 
 if __name__ == "__main__":

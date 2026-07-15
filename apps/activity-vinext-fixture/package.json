@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "scripts": { "build": "vinext build", "check-types": "tsc --noEmit" },
+  "scripts": { "build": "vinext build", "check-types": "node ../../node_modules/typescript/bin/tsc --noEmit" },
   "dependencies": {
     "@reading-advantage/activity-react": "workspace:*",
     "@reading-advantage/activity-runtime": "workspace:*",

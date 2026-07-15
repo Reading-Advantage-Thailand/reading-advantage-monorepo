@@ -16,9 +16,9 @@
     "runtime-manifest.json"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "node ../../node_modules/typescript/bin/tsc",
     "check:consumer": "pnpm build && node dist/check-consumer.js",
-    "check-types": "tsc --noEmit",
+    "check-types": "node ../../node_modules/typescript/bin/tsc --noEmit",
     "lint": "eslint src/",
     "test": "vitest run --maxWorkers=1",
     "test:codecamp-proof": "vitest run src/__tests__/codecamp-proof.test.ts --maxWorkers=1",

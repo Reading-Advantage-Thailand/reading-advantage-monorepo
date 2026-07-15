@@ -12,8 +12,8 @@
   },
   "files": ["dist", "README.md"],
   "scripts": {
-    "build": "node scripts/clean-dist.mjs && tsc",
-    "check-types": "pnpm build && tsc --noEmit -p tsconfig.test.json",
+    "build": "node scripts/clean-dist.mjs && node ../../node_modules/typescript/bin/tsc",
+    "check-types": "pnpm build && node ../../node_modules/typescript/bin/tsc --noEmit -p tsconfig.test.json",
     "lint": "eslint src/",
     "test": "pnpm build && vitest run --maxWorkers=1",
     "test:coverage": "pnpm build && vitest run --coverage --maxWorkers=1"

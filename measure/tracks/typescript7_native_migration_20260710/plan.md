@@ -73,7 +73,11 @@
   - [x] Fix migration-caused errors in their owning workspace.
   - [x] Record and review every intentional diagnostic or semantic difference.
 - [~] Task: Migrate check-types and eligible build commands.
-  - [ ] Switch root and workspace `check-types` scripts to the native compiler.
+  - [~] Switch root and workspace `check-types` scripts to the native compiler.
+    - [x] Remove ambiguous hoisted `tsc` routing from workspace scripts; pin pre-3e emit commands to TypeScript 6. [evidence: phase-3d-types-cutover-result.json]
+    - [x] Cut over `@reading-advantage/types` with explicit TypeScript 6 compatibility and rollback scripts. [evidence: phase-3d-types-cutover-result.json]
+    - [x] Cut over `@reading-advantage/db` with explicit TypeScript 6 compatibility and rollback scripts. [evidence: phase-3d-db-cutover-result.json]
+    - [ ] Continue the required workspace order from `@reading-advantage/domain` through the remaining applications.
   - [ ] Verify JavaScript and declaration emit before switching direct `tsc` builds.
   - [ ] Preserve explicit TypeScript 6 compatibility and rollback commands.
   - [ ] Bound TypeScript checker concurrency underneath Turbo parallelism.

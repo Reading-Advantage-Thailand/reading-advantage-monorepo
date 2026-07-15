@@ -9,10 +9,10 @@
   },
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsc",
+    "build": "node ../../node_modules/typescript/bin/tsc",
     "start": "node dist/index.js",
     "lint": "eslint .",
-    "check-types": "tsc --noEmit",
+    "check-types": "node ../../node_modules/typescript/bin/tsc --noEmit",
     "test": "vitest run"
   },
   "dependencies": {

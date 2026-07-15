@@ -20,8 +20,8 @@
   },
   "files": ["dist"],
   "scripts": {
-    "build": "tsc",
-    "check-types": "tsc --noEmit",
+    "build": "node ../../node_modules/typescript/bin/tsc",
+    "check-types": "node ../../node_modules/typescript/bin/tsc --noEmit",
     "lint": "eslint src/",
     "test": "pnpm --filter @reading-advantage/knowledge-space-core build && pnpm --filter @reading-advantage/practice-core build && pnpm build && vitest run",
     "test:coverage": "pnpm --filter @reading-advantage/knowledge-space-core build && pnpm --filter @reading-advantage/practice-core build && pnpm build && vitest run --coverage"

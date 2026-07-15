@@ -10,7 +10,7 @@
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "check-types": "tsc --noEmit",
+    "check-types": "node ../../node_modules/typescript/bin/tsc --noEmit",
     "seed:curriculum": "tsx scripts/sales-curriculum-seed.ts"
   },
   "dependencies": {

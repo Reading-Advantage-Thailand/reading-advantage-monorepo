@@ -7,7 +7,7 @@
     "build": "cross-env NODE_OPTIONS=--max-old-space-size=8192 next build",
     "start": "next start",
     "lint": "eslint .",
-    "check-types": "tsc --noEmit",
+    "check-types": "node ../../node_modules/typescript/bin/tsc --noEmit",
     "test": "jest",
     "test:watch": "jest --watch",
     "db:migrate": "pnpm --filter @reading-advantage/db migrate",
