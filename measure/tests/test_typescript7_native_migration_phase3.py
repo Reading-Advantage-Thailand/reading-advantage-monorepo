@@ -14,6 +14,8 @@ from types import ModuleType
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+ROOT_PACKAGE_PATH = REPO_ROOT / "package.json"
+TURBO_CONFIG_PATH = REPO_ROOT / "turbo.json"
 RUNNER_PATH = (
     REPO_ROOT
     / "measure"
@@ -37,6 +39,23 @@ SALES_ADVANTAGE_PACKAGE_PATH = REPO_ROOT / "apps" / "sales-advantage" / "package
 MARKETING_PACKAGE_PATH = REPO_ROOT / "apps" / "marketing" / "package.json"
 WWW_READING_ADVANTAGE_PACKAGE_PATH = REPO_ROOT / "apps" / "www-reading-advantage" / "package.json"
 ACTIVITY_VINEXT_FIXTURE_PACKAGE_PATH = REPO_ROOT / "apps" / "activity-vinext-fixture" / "package.json"
+GAME_CONTRACTS_PACKAGE_PATH = REPO_ROOT / "packages" / "game-contracts" / "package.json"
+KNOWLEDGE_SPACE_CORE_PACKAGE_PATH = REPO_ROOT / "packages" / "knowledge-space-core" / "package.json"
+PRACTICE_CORE_PACKAGE_PATH = REPO_ROOT / "packages" / "practice-core" / "package.json"
+ACTIVITY_TUTORIAL_PACKAGE_PATH = REPO_ROOT / "packages" / "activity-tutorial" / "package.json"
+AI_PACKAGE_PATH = REPO_ROOT / "packages" / "ai" / "package.json"
+AUTH_CLIENT_PACKAGE_PATH = REPO_ROOT / "packages" / "auth-client" / "package.json"
+STORAGE_PACKAGE_PATH = REPO_ROOT / "packages" / "storage" / "package.json"
+ADVANTAGE_PLAY_KIT_PACKAGE_PATH = REPO_ROOT / "packages" / "advantage-play-kit" / "package.json"
+GAME_CARTRIDGES_PACKAGE_PATH = REPO_ROOT / "packages" / "game-cartridges" / "package.json"
+ACTIVITY_RUNTIME_PACKAGE_PATH = REPO_ROOT / "packages" / "activity-runtime" / "package.json"
+ACTIVITY_REACT_PACKAGE_PATH = REPO_ROOT / "packages" / "activity-react" / "package.json"
+CODECAMP_KNOWLEDGE_PACKAGE_PATH = REPO_ROOT / "packages" / "codecamp-knowledge" / "package.json"
+KNOWLEDGE_SPACE_PRACTICE_PACKAGE_PATH = REPO_ROOT / "packages" / "knowledge-space-practice" / "package.json"
+SRS_ENGINE_PACKAGE_PATH = REPO_ROOT / "packages" / "srs-engine" / "package.json"
+MASTERY_RUNTIME_COMPAT_PACKAGE_PATH = REPO_ROOT / "packages" / "mastery-runtime-compat" / "package.json"
+API_PACKAGE_PATH = REPO_ROOT / "packages" / "api" / "package.json"
+WEBHOOKS_PACKAGE_PATH = REPO_ROOT / "packages" / "webhooks" / "package.json"
 PHASE3D_CUTOVER_ORDER = (
     "packages/types",
     "packages/db",
@@ -54,6 +73,23 @@ PHASE3D_CUTOVER_ORDER = (
     "apps/marketing",
     "apps/www-reading-advantage",
     "apps/activity-vinext-fixture",
+    "packages/game-contracts",
+    "packages/knowledge-space-core",
+    "packages/practice-core",
+    "packages/activity-tutorial",
+    "packages/ai",
+    "packages/auth-client",
+    "packages/storage",
+    "packages/advantage-play-kit",
+    "packages/game-cartridges",
+    "packages/activity-runtime",
+    "packages/activity-react",
+    "packages/codecamp-knowledge",
+    "packages/knowledge-space-practice",
+    "packages/srs-engine",
+    "packages/mastery-runtime-compat",
+    "packages/api",
+    "packages/webhooks",
 )
 
 
@@ -201,6 +237,16 @@ class Phase3dCheckTypesCutoverContract(unittest.TestCase):
 
     NATIVE_COMMAND = "node ../../node_modules/typescript7/bin/tsc --noEmit"
     COMPAT_COMMAND = "node ../../node_modules/typescript/bin/tsc --noEmit"
+
+    def _assert_standard_workspace_routing(self, manifest_path: Path) -> None:
+        """Requires a standard-depth workspace to expose the exact reversible compiler routes."""
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        scripts = manifest.get("scripts")
+        self.assertIsInstance(scripts, dict)
+        assert isinstance(scripts, dict)
+        self.assertEqual(scripts.get("check-types"), self.NATIVE_COMMAND)
+        self.assertEqual(scripts.get("check-types:compat"), self.COMPAT_COMMAND)
+        self.assertEqual(scripts.get("check-types:rollback"), self.COMPAT_COMMAND)
 
     def test_types_workspace_check_types_routing_is_explicit_and_reversible(self) -> None:
         """Requires the first cutover workspace to avoid the unstable hoisted `tsc` shim."""
@@ -421,6 +467,124 @@ class Phase3dCheckTypesCutoverContract(unittest.TestCase):
         self.assertEqual(scripts.get("check-types:compat"), self.COMPAT_COMMAND)
         self.assertEqual(scripts.get("check-types:rollback"), self.COMPAT_COMMAND)
 
+    def test_game_contracts_check_types_routing_is_explicit_and_reversible(self) -> None:
+        """Requires the first audited remainder workspace to preserve direct dual-compiler paths."""
+        self._assert_standard_workspace_routing(GAME_CONTRACTS_PACKAGE_PATH)
+
+    def test_knowledge_space_core_check_types_routing_is_explicit_and_reversible(self) -> None:
+        """Requires the second audited remainder workspace to preserve direct dual-compiler paths."""
+        self._assert_standard_workspace_routing(KNOWLEDGE_SPACE_CORE_PACKAGE_PATH)
+
+    def test_practice_core_check_types_routing_is_explicit_and_reversible(self) -> None:
+        """Requires the third audited remainder workspace to preserve direct dual-compiler paths."""
+        self._assert_standard_workspace_routing(PRACTICE_CORE_PACKAGE_PATH)
+
+    def test_activity_tutorial_check_types_routing_is_explicit_and_reversible(self) -> None:
+        """Requires the test-config workspace to route all source checking through the direct aliases."""
+        native = "node ../../node_modules/typescript7/bin/tsc --noEmit -p tsconfig.test.json"
+        compat = "node ../../node_modules/typescript/bin/tsc --noEmit -p tsconfig.test.json"
+        manifest = json.loads(ACTIVITY_TUTORIAL_PACKAGE_PATH.read_text(encoding="utf-8"))
+        scripts = manifest.get("scripts")
+        self.assertIsInstance(scripts, dict)
+        assert isinstance(scripts, dict)
+        self.assertEqual(scripts.get("check-types"), native)
+        self.assertEqual(scripts.get("check-types:compat"), compat)
+        self.assertEqual(scripts.get("check-types:rollback"), compat)
+
+    def test_ai_check_types_routing_is_explicit_and_reversible(self) -> None:
+        """Requires the fifth audited remainder workspace to preserve direct dual-compiler paths."""
+        self._assert_standard_workspace_routing(AI_PACKAGE_PATH)
+
+    def test_auth_client_check_types_routing_is_explicit_and_reversible(self) -> None:
+        """Requires the sixth audited remainder workspace to preserve direct dual-compiler paths."""
+        self._assert_standard_workspace_routing(AUTH_CLIENT_PACKAGE_PATH)
+
+    def test_storage_check_types_routing_is_explicit_and_reversible(self) -> None:
+        """Requires the seventh audited remainder workspace to preserve direct dual-compiler paths."""
+        self._assert_standard_workspace_routing(STORAGE_PACKAGE_PATH)
+
+    def test_advantage_play_kit_check_types_routing_is_explicit_and_reversible(self) -> None:
+        """Requires the eighth audited remainder workspace to preserve direct dual-compiler paths."""
+        self._assert_standard_workspace_routing(ADVANTAGE_PLAY_KIT_PACKAGE_PATH)
+
+    def test_game_cartridges_check_types_routing_is_explicit_and_reversible(self) -> None:
+        """Requires the ninth audited remainder workspace to preserve direct dual-compiler paths."""
+        self._assert_standard_workspace_routing(GAME_CARTRIDGES_PACKAGE_PATH)
+
+    def test_activity_runtime_check_types_routing_is_emit_free_and_reversible(self) -> None:
+        """Requires the runtime package to typecheck source and tests without invoking its TS6 build."""
+        native = (
+            "node ../../node_modules/typescript7/bin/tsc --noEmit && "
+            "node ../../node_modules/typescript7/bin/tsc --noEmit -p tsconfig.test.json"
+        )
+        compat = (
+            "node ../../node_modules/typescript/bin/tsc --noEmit && "
+            "node ../../node_modules/typescript/bin/tsc --noEmit -p tsconfig.test.json"
+        )
+        manifest = json.loads(ACTIVITY_RUNTIME_PACKAGE_PATH.read_text(encoding="utf-8"))
+        scripts = manifest.get("scripts")
+        self.assertIsInstance(scripts, dict)
+        assert isinstance(scripts, dict)
+        self.assertEqual(scripts.get("check-types"), native)
+        self.assertEqual(scripts.get("check-types:compat"), compat)
+        self.assertEqual(scripts.get("check-types:rollback"), compat)
+
+    def test_activity_react_check_types_routing_is_emit_free_and_reversible(self) -> None:
+        """Requires the React package to typecheck source and tests without invoking its TS6 build."""
+        native = (
+            "node ../../node_modules/typescript7/bin/tsc --noEmit && "
+            "node ../../node_modules/typescript7/bin/tsc --noEmit -p tsconfig.test.json"
+        )
+        compat = (
+            "node ../../node_modules/typescript/bin/tsc --noEmit && "
+            "node ../../node_modules/typescript/bin/tsc --noEmit -p tsconfig.test.json"
+        )
+        manifest = json.loads(ACTIVITY_REACT_PACKAGE_PATH.read_text(encoding="utf-8"))
+        scripts = manifest.get("scripts")
+        self.assertIsInstance(scripts, dict)
+        assert isinstance(scripts, dict)
+        self.assertEqual(scripts.get("check-types"), native)
+        self.assertEqual(scripts.get("check-types:compat"), compat)
+        self.assertEqual(scripts.get("check-types:rollback"), compat)
+
+    def test_codecamp_knowledge_check_types_routing_is_explicit_and_reversible(self) -> None:
+        """Requires both codecamp knowledge configs to use the direct reversible compiler aliases."""
+        native = (
+            "node ../../node_modules/typescript7/bin/tsc --noEmit && "
+            "node ../../node_modules/typescript7/bin/tsc -p tsconfig.test.json"
+        )
+        compat = (
+            "node ../../node_modules/typescript/bin/tsc --noEmit && "
+            "node ../../node_modules/typescript/bin/tsc -p tsconfig.test.json"
+        )
+        manifest = json.loads(CODECAMP_KNOWLEDGE_PACKAGE_PATH.read_text(encoding="utf-8"))
+        scripts = manifest.get("scripts")
+        self.assertIsInstance(scripts, dict)
+        assert isinstance(scripts, dict)
+        self.assertEqual(scripts.get("check-types"), native)
+        self.assertEqual(scripts.get("check-types:compat"), compat)
+        self.assertEqual(scripts.get("check-types:rollback"), compat)
+
+    def test_knowledge_space_practice_check_types_routing_is_explicit_and_reversible(self) -> None:
+        """Requires the thirteenth audited remainder workspace to preserve direct dual-compiler paths."""
+        self._assert_standard_workspace_routing(KNOWLEDGE_SPACE_PRACTICE_PACKAGE_PATH)
+
+    def test_srs_engine_check_types_routing_is_explicit_and_reversible(self) -> None:
+        """Requires the fourteenth audited remainder workspace to preserve direct dual-compiler paths."""
+        self._assert_standard_workspace_routing(SRS_ENGINE_PACKAGE_PATH)
+
+    def test_mastery_runtime_compat_check_types_routing_is_explicit_and_reversible(self) -> None:
+        """Requires the fifteenth audited remainder workspace to preserve direct dual-compiler paths."""
+        self._assert_standard_workspace_routing(MASTERY_RUNTIME_COMPAT_PACKAGE_PATH)
+
+    def test_api_check_types_routing_is_explicit_and_reversible(self) -> None:
+        """Requires the sixteenth audited remainder workspace to preserve direct dual-compiler paths."""
+        self._assert_standard_workspace_routing(API_PACKAGE_PATH)
+
+    def test_webhooks_check_types_routing_is_explicit_and_reversible(self) -> None:
+        """Requires the seventeenth audited remainder workspace to preserve direct dual-compiler paths."""
+        self._assert_standard_workspace_routing(WEBHOOKS_PACKAGE_PATH)
+
     def test_native_workspace_cutovers_follow_the_required_strict_prefix(self) -> None:
         """Rejects a native check-types switch that skips an earlier workspace in the acceptance order."""
         flipped: list[str] = []
@@ -438,6 +602,26 @@ class Phase3dCheckTypesCutoverContract(unittest.TestCase):
             list(PHASE3D_CUTOVER_ORDER[: len(flipped)]),
             f"TypeScript 7 check-types cutovers must be a strict ordered prefix: {flipped}",
         )
+
+    def test_root_check_types_commands_and_turbo_dependencies_are_reversible(self) -> None:
+        """Requires root native, compatibility, parity, and rollback entrypoints after workspace cutover."""
+        manifest = json.loads(ROOT_PACKAGE_PATH.read_text(encoding="utf-8"))
+        scripts = manifest.get("scripts")
+        self.assertIsInstance(scripts, dict)
+        assert isinstance(scripts, dict)
+        self.assertEqual(scripts.get("check-types"), "turbo run check-types")
+        self.assertEqual(scripts.get("check-types:native"), "turbo run check-types")
+        self.assertEqual(scripts.get("check-types:compat"), "turbo run check-types:compat")
+        self.assertEqual(scripts.get("check-types:parity"), "python3 measure/tracks/typescript7_native_migration_20260710/run-phase3-parity.py")
+        self.assertEqual(scripts.get("check-types:rollback"), "turbo run check-types:rollback")
+
+        turbo = json.loads(TURBO_CONFIG_PATH.read_text(encoding="utf-8"))
+        tasks = turbo.get("tasks")
+        self.assertIsInstance(tasks, dict)
+        assert isinstance(tasks, dict)
+        self.assertEqual(tasks.get("check-types", {}).get("dependsOn"), ["^build", "^check-types"])
+        self.assertEqual(tasks.get("check-types:compat", {}).get("dependsOn"), ["^build", "^check-types:compat"])
+        self.assertEqual(tasks.get("check-types:rollback", {}).get("dependsOn"), ["^build", "^check-types:rollback"])
 
 
 if __name__ == "__main__":

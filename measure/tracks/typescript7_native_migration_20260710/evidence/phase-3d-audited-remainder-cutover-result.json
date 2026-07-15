@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "track": "typescript7_native_migration_20260710",
+  "phase": "Phase 3d: audited check-types remainder",
+  "status": "accepted_with_baseline_debt",
+  "accepted_parity_run": "evidence/phase-3c-parity/run-20260715T033929917664Z",
+  "audit_scope": {
+    "reason": "FR-5 and AC1 bind every root and workspace check-types gate to the TypeScript 7 alias; the original ordered list omitted active workspace scripts.",
+    "workspace_order": [
+      "packages/game-contracts",
+      "packages/knowledge-space-core",
+      "packages/practice-core",
+      "packages/activity-tutorial",
+      "packages/ai",
+      "packages/auth-client",
+      "packages/storage",
+      "packages/advantage-play-kit",
+      "packages/game-cartridges",
+      "packages/activity-runtime",
+      "packages/activity-react",
+      "packages/codecamp-knowledge",
+      "packages/knowledge-space-practice",
+      "packages/srs-engine",
+      "packages/mastery-runtime-compat",
+      "packages/api",
+      "packages/webhooks"
+    ],
+    "parity_disposition": "Each listed tracked tsconfig has Phase 3c status parity with no unexplained difference or applied ledger entry. Nonzero command output below is pre-existing baseline debt unless called out as a rendering-only difference."
+  },
+  "workspaces": [
+    {"path":"packages/game-contracts","status":"accepted_clean","results":{"native":["7.0.2",0,0,"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"],"compat":["6.0.2",0,0,"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"],"rollback":["6.0.2",0,0,"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"]}},
+    {"path":"packages/knowledge-space-core","status":"accepted_clean","results":{"native":["7.0.2",0,0,"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"],"compat":["6.0.2",0,0,"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"],"rollback":["6.0.2",0,0,"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"]}},
+    {"path":"packages/practice-core","status":"accepted_clean","results":{"native":["7.0.2",0,0,"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"],"compat":["6.0.2",0,0,"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"],"rollback":["6.0.2",0,0,"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"]}},
+    {"path":"packages/activity-tutorial","status":"accepted_clean","config":"tsconfig.test.json","results":{"native":["7.0.2",0,0,"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"],"compat":["6.0.2",0,0,"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"],"rollback":["6.0.2",0,0,"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"]}},
+    {"path":"packages/ai","status":"accepted_clean","results":{"native":["7.0.2",0,0,"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"],"compat":["6.0.2",0,0,"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"],"rollback":["6.0.2",0,0,"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"]}},
+    {"path":"packages/auth-client","status":"accepted_clean","results":{"native":["7.0.2",0,0,"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"],"compat":["6.0.2",0,0,"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"],"rollback":["6.0.2",0,0,"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"]}},
+    {"path":"packages/storage","status":"accepted_clean","results":{"native":["7.0.2",0,0,"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"],"compat":["6.0.2",0,0,"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"],"rollback":["6.0.2",0,0,"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"]}},
+    {"path":"packages/advantage-play-kit","status":"accepted_pre_existing_debt","results":{"native":["7.0.2",1,3,"23e54de935e7a064a8106df14376e9b8f54d225260ef9739406a31345a02e917"],"compat":["6.0.2",2,3,"23e54de935e7a064a8106df14376e9b8f54d225260ef9739406a31345a02e917"],"rollback":["6.0.2",2,3,"23e54de935e7a064a8106df14376e9b8f54d225260ef9739406a31345a02e917"]}},
+    {"path":"packages/game-cartridges","status":"accepted_clean","results":{"native":["7.0.2",0,0,"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"],"compat":["6.0.2",0,0,"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"],"rollback":["6.0.2",0,0,"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"]}},
+    {"path":"packages/activity-runtime","status":"accepted_pre_existing_debt","config":"tsconfig.json + tsconfig.test.json","results":{"native":["7.0.2",1,1,"e41e2cb1c0ff9a9f2a9c26c8b8f285f395972f31fd45d12bb5ff9fd4afa09330"],"compat":["6.0.2",2,1,"e41e2cb1c0ff9a9f2a9c26c8b8f285f395972f31fd45d12bb5ff9fd4afa09330"],"rollback":["6.0.2",2,1,"e41e2cb1c0ff9a9f2a9c26c8b8f285f395972f31fd45d12bb5ff9fd4afa09330"]},"routing_correction":"Removed pnpm build from the package script so source checking is genuinely no-emit; Turbo now prepares dependency builds through ^build."},
+    {"path":"packages/activity-react","status":"accepted_pre_existing_debt","config":"tsconfig.json + tsconfig.test.json","results":{"native":["7.0.2",1,24,"c08ef01c077d7df7115c3af0eec67790495345c6367085591b6f38289aff633b"],"compat":["6.0.2",2,24,"c08ef01c077d7df7115c3af0eec67790495345c6367085591b6f38289aff633b"],"rollback":["6.0.2",2,24,"c08ef01c077d7df7115c3af0eec67790495345c6367085591b6f38289aff633b"]},"routing_correction":"Removed pnpm build from the package script so source checking is genuinely no-emit; Turbo now prepares dependency builds through ^build."},
+    {"path":"packages/codecamp-knowledge","status":"accepted_pre_existing_debt","config":"tsconfig.json + tsconfig.test.json","results":{"native":["7.0.2",1,71,"a1900de23fb1e89a5bba132b1e4876685863b18b38780c56139c07cbfd2ad926"],"compat":["6.0.2",2,71,"a1900de23fb1e89a5bba132b1e4876685863b18b38780c56139c07cbfd2ad926"],"rollback":["6.0.2",2,71,"a1900de23fb1e89a5bba132b1e4876685863b18b38780c56139c07cbfd2ad926"]}},
+    {"path":"packages/knowledge-space-practice","status":"accepted_pre_existing_debt","results":{"native":["7.0.2",1,11,"4ea5ce18d2da195fc38c29c32e5d0dddb5cb38ac8014e4e337cc50f915c31108"],"compat":["6.0.2",2,11,"4ea5ce18d2da195fc38c29c32e5d0dddb5cb38ac8014e4e337cc50f915c31108"],"rollback":["6.0.2",2,11,"4ea5ce18d2da195fc38c29c32e5d0dddb5cb38ac8014e4e337cc50f915c31108"]}},
+    {"path":"packages/srs-engine","status":"accepted_pre_existing_debt","results":{"native":["7.0.2",1,36,"0261578a95f19d7093d51089e0b4901c8ef07fe699806cb6fce86692a79dd99d"],"compat":["6.0.2",2,36,"8214514f126f8faf9cc66638f26ae05b034efd3387476adc8755530205453c77"],"rollback":["6.0.2",2,36,"8214514f126f8faf9cc66638f26ae05b034efd3387476adc8755530205453c77"]},"reviewed_rendering_difference":"The sole direct-script text difference is TypeScript's ordering of the displayed SrsState union in an existing TS2322. Phase 3c's normalized stable-ordering comparison reports parity with no ledger entry."},
+    {"path":"packages/mastery-runtime-compat","status":"accepted_pre_existing_debt","results":{"native":["7.0.2",1,12,"3d9e99d70b24f8d6f8ef9d100626079a5cbe96709363e80dfa2dd36f31574c3a"],"compat":["6.0.2",2,12,"3d9e99d70b24f8d6f8ef9d100626079a5cbe96709363e80dfa2dd36f31574c3a"],"rollback":["6.0.2",2,12,"3d9e99d70b24f8d6f8ef9d100626079a5cbe96709363e80dfa2dd36f31574c3a"]}},
+    {"path":"packages/api","status":"accepted_pre_existing_debt","results":{"native":["7.0.2",1,146,"8fdb63a7fc8d734cfa611f35d71332376f043b0007f210456db0fc9ffebf0b21"],"compat":["6.0.2",2,146,"8fdb63a7fc8d734cfa611f35d71332376f043b0007f210456db0fc9ffebf0b21"],"rollback":["6.0.2",2,146,"8fdb63a7fc8d734cfa611f35d71332376f043b0007f210456db0fc9ffebf0b21"]}},
+    {"path":"packages/webhooks","status":"accepted_pre_existing_debt","results":{"native":["7.0.2",1,112,"cd5802270fbd9665c1360cf19700e6b73474ad6622da65849f50ed6e8e34f4ac"],"compat":["6.0.2",2,112,"cd5802270fbd9665c1360cf19700e6b73474ad6622da65849f50ed6e8e34f4ac"],"rollback":["6.0.2",2,112,"cd5802270fbd9665c1360cf19700e6b73474ad6622da65849f50ed6e8e34f4ac"]}}
+  ],
+  "root_routing": {
+    "check-types": "turbo run check-types",
+    "check-types:native": "turbo run check-types",
+    "check-types:compat": "turbo run check-types:compat",
+    "check-types:parity": "python3 measure/tracks/typescript7_native_migration_20260710/run-phase3-parity.py",
+    "check-types:rollback": "turbo run check-types:rollback",
+    "turbo_dependencies": {
+      "check-types": ["^build", "^check-types"],
+      "check-types:compat": ["^build", "^check-types:compat"],
+      "check-types:rollback": ["^build", "^check-types:rollback"]
+    },
+    "aggregate_execution": "Deferred to Phase 4 per the test strategy; this record proves static wiring and every underlying workspace script before the aggregate gates."
+  },
+  "result_tuple": "[compiler version, process exit status, stdout line count, stdout SHA-256]"
+}

@@ -16,7 +16,9 @@
   "scripts": {
     "build": "tsup src/index.ts --format esm --dts",
     "check:architecture": "pnpm build && node scripts/check-architecture.mjs",
-    "check-types": "node ../../node_modules/typescript/bin/tsc --noEmit",
+    "check-types": "node ../../node_modules/typescript7/bin/tsc --noEmit",
+    "check-types:compat": "node ../../node_modules/typescript/bin/tsc --noEmit",
+    "check-types:rollback": "node ../../node_modules/typescript/bin/tsc --noEmit",
     "lint": "eslint src/",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage"

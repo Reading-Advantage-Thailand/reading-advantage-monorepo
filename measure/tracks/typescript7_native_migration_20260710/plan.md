@@ -88,7 +88,7 @@
     - [x] Cut over `apps/sales-advantage`; preserve and classify its parity-proven pre-existing diagnostics. [evidence: phase-3d-sales-cutover-result.json]
     - [x] Cut over `apps/marketing`; preserve and classify its parity-proven pre-existing diagnostics. [evidence: phase-3d-marketing-cutover-result.json]
     - [x] Cut over `apps/www-reading-advantage` cleanly and preserve the Vinext fixture's parity-proven pre-existing diagnostics. [evidence: phase-3d-www-cutover-result.json, phase-3d-activity-vinext-fixture-cutover-result.json]
-    - [~] Complete the remaining binding workspace surface discovered by the Phase 3d audit before closing root check-types routing.
+    - [x] Complete the remaining binding workspace surface and root native/compat/parity/rollback routing discovered by the Phase 3d audit. [evidence: phase-3d-audited-remainder-cutover-result.json]
   - [ ] Verify JavaScript and declaration emit before switching direct `tsc` builds.
   - [ ] Preserve explicit TypeScript 6 compatibility and rollback commands.
   - [ ] Bound TypeScript checker concurrency underneath Turbo parallelism.

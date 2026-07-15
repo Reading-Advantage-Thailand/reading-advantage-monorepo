@@ -23,7 +23,13 @@
       "persistent": true
     },
     "check-types": {
-      "dependsOn": ["^check-types"]
+      "dependsOn": ["^build", "^check-types"]
+    },
+    "check-types:compat": {
+      "dependsOn": ["^build", "^check-types:compat"]
+    },
+    "check-types:rollback": {
+      "dependsOn": ["^build", "^check-types:rollback"]
     }
   }
 }
