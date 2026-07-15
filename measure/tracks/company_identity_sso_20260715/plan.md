@@ -39,16 +39,16 @@ _Story ref: spec.md#story-s1_
     - [x] Document why schools, licenses, customers, and product data remain
           excluded.
 
-- [~] Task 2: Define Zod and Drizzle contracts for the identity database.
-    - [ ] Define account, normalized username, status, and credential contracts.
-    - [ ] Define organizations, memberships, applications, app-role
+- [x] Task 2: Define Zod and Drizzle contracts for the identity database. [commit: b9d81557]
+    - [x] Define account, normalized username, status, and credential contracts.
+    - [x] Define organizations, memberships, applications, app-role
           assignments, sessions, OIDC clients/codes, and immutable audit events.
-    - [ ] Define foreign keys, uniqueness constraints, status enums, expiration
+    - [x] Define foreign keys, uniqueness constraints, status enums, expiration
           behavior, and idempotency keys.
-    - [ ] Define `COMPANY_AUTH_DATABASE_URL`,
+    - [x] Define `COMPANY_AUTH_DATABASE_URL`,
           `COMPANY_AUTH_DIRECT_DATABASE_URL`, issuer, cookie, and service
           authentication environment contracts.
-    - [ ] Add required JSDoc to every exported schema, type, adapter, and
+    - [x] Add required JSDoc to every exported schema, type, adapter, and
           capability contract.
 
 ### Test
