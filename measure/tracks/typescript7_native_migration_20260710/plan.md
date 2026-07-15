@@ -73,7 +73,7 @@
   - [x] Fix migration-caused errors in their owning workspace.
   - [x] Record and review every intentional diagnostic or semantic difference.
 - [~] Task: Migrate check-types and eligible build commands.
-  - [~] Switch root and workspace `check-types` scripts to the native compiler.
+  - [x] Switch root and workspace `check-types` scripts to the native compiler.
     - [x] Remove ambiguous hoisted `tsc` routing from workspace scripts; pin pre-3e emit commands to TypeScript 6. [evidence: phase-3d-types-cutover-result.json]
     - [x] Cut over `@reading-advantage/types` with explicit TypeScript 6 compatibility and rollback scripts. [evidence: phase-3d-types-cutover-result.json]
     - [x] Cut over `@reading-advantage/db` with explicit TypeScript 6 compatibility and rollback scripts. [evidence: phase-3d-db-cutover-result.json]
@@ -89,8 +89,8 @@
     - [x] Cut over `apps/marketing`; preserve and classify its parity-proven pre-existing diagnostics. [evidence: phase-3d-marketing-cutover-result.json]
     - [x] Cut over `apps/www-reading-advantage` cleanly and preserve the Vinext fixture's parity-proven pre-existing diagnostics. [evidence: phase-3d-www-cutover-result.json, phase-3d-activity-vinext-fixture-cutover-result.json]
     - [x] Complete the remaining binding workspace surface and root native/compat/parity/rollback routing discovered by the Phase 3d audit. [evidence: phase-3d-audited-remainder-cutover-result.json]
-  - [ ] Verify JavaScript and declaration emit before switching direct `tsc` builds.
-  - [ ] Preserve explicit TypeScript 6 compatibility and rollback commands.
+  - [~] Verify JavaScript and declaration emit before switching direct `tsc` builds; `packages/types` is accepted with its reviewed declaration-ordering ledger, and `packages/db` remains.
+  - [x] Preserve explicit TypeScript 6 compatibility and rollback commands.
   - [ ] Bound TypeScript checker concurrency underneath Turbo parallelism.
 - [~] Task: Run controlled performance benchmarks.
   - [ ] Benchmark packages/types, packages/domain, packages/db,

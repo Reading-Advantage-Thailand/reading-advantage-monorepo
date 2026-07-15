@@ -22,7 +22,7 @@
     }
   },
   "scripts": {
-    "build": "node ../../node_modules/typescript/bin/tsc",
+    "build": "node ../../node_modules/typescript7/bin/tsc",
     "lint": "eslint .",
     "check-types": "node ../../node_modules/typescript7/bin/tsc --noEmit",
     "check-types:compat": "node ../../node_modules/typescript/bin/tsc --noEmit",

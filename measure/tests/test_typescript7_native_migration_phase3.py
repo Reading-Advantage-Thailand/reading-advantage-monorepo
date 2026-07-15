@@ -16,6 +16,13 @@ from types import ModuleType
 REPO_ROOT = Path(__file__).resolve().parents[2]
 ROOT_PACKAGE_PATH = REPO_ROOT / "package.json"
 TURBO_CONFIG_PATH = REPO_ROOT / "turbo.json"
+DECLARATION_EMIT_LEDGER_PATH = (
+    REPO_ROOT
+    / "measure"
+    / "tracks"
+    / "typescript7_native_migration_20260710"
+    / "declaration-emit-diff-ledger.json"
+)
 RUNNER_PATH = (
     REPO_ROOT
     / "measure"
@@ -91,6 +98,7 @@ PHASE3D_CUTOVER_ORDER = (
     "packages/api",
     "packages/webhooks",
 )
+PHASE3E_ACCEPTED_EMIT_BUILD_WORKSPACES = ("packages/types",)
 
 
 def _load_runner() -> ModuleType:
@@ -303,7 +311,12 @@ class Phase3dCheckTypesCutoverContract(unittest.TestCase):
                             missing.append(
                                 f"{package_json.relative_to(REPO_ROOT)}:{name}:{match.group('path')}"
                             )
-                    if name == "build" and "typescript7/bin/tsc" in command:
+                    workspace = str(package_json.parent.relative_to(REPO_ROOT))
+                    if (
+                        name == "build"
+                        and "typescript7/bin/tsc" in command
+                        and workspace not in PHASE3E_ACCEPTED_EMIT_BUILD_WORKSPACES
+                    ):
                         premature_emit_cutovers.append(
                             f"{package_json.relative_to(REPO_ROOT)}:{name}"
                         )
@@ -622,6 +635,49 @@ class Phase3dCheckTypesCutoverContract(unittest.TestCase):
         self.assertEqual(tasks.get("check-types", {}).get("dependsOn"), ["^build", "^check-types"])
         self.assertEqual(tasks.get("check-types:compat", {}).get("dependsOn"), ["^build", "^check-types:compat"])
         self.assertEqual(tasks.get("check-types:rollback", {}).get("dependsOn"), ["^build", "^check-types:rollback"])
+
+    def test_types_build_routes_emit_to_typescript7_after_the_byte_diff_gate(self) -> None:
+        """Requires the first Phase 3e package build to select the native compiler explicitly."""
+        manifest = json.loads(TYPES_PACKAGE_PATH.read_text(encoding="utf-8"))
+        scripts = manifest.get("scripts")
+        self.assertIsInstance(scripts, dict)
+        assert isinstance(scripts, dict)
+        self.assertEqual(scripts.get("build"), "node ../../node_modules/typescript7/bin/tsc")
+
+
+class Phase3eDeclarationEmitContract(unittest.TestCase):
+    """Verify that intentional declaration emit differences remain explicit and bounded."""
+
+    def test_typescript7_types_emit_diff_is_fully_accounted(self) -> None:
+        """Requires every non-byte-equal types declaration file to have the reviewed rationale."""
+        ledger = json.loads(DECLARATION_EMIT_LEDGER_PATH.read_text(encoding="utf-8"))
+        entries = ledger.get("entries")
+        self.assertIsInstance(entries, list)
+        assert isinstance(entries, list)
+        types_entry = next(
+            (entry for entry in entries if entry.get("package") == "packages/types"), None
+        )
+        self.assertIsNotNone(types_entry)
+        assert isinstance(types_entry, dict)
+        self.assertEqual(
+            sorted(types_entry.get("declaration_differences", [])),
+            [
+                "assignment-status.d.ts.map",
+                "codecamp.d.ts",
+                "contracts/class.d.ts",
+                "contracts/class.d.ts.map",
+                "contracts/envelopes.d.ts",
+                "contracts/envelopes.d.ts.map",
+                "contracts/sales.d.ts",
+                "contracts/sales.d.ts.map",
+                "index.d.ts",
+            ],
+        )
+        self.assertEqual(types_entry.get("javascript_differences"), [])
+        self.assertEqual(
+            types_entry.get("disposition"),
+            "accepted_declaration_ordering_only",
+        )
 
 
 if __name__ == "__main__":

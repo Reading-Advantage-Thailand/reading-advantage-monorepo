@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "track": "typescript7_native_migration_20260710",
+  "purpose": "Reviewed non-byte-equal declaration emit differences observed during the one-package-at-a-time TypeScript 7 build cutover.",
+  "entries": [
+    {
+      "package": "packages/types",
+      "typescript6": "6.0.2",
+      "typescript7": "7.0.2",
+      "output_file_count": 33,
+      "typescript6_relative_tree_sha256": "dbf0d40689e87b8c7acfc962d769dbf96322247e5c4eb420a50834759d8bd76e",
+      "typescript7_relative_tree_sha256": "e6a272d97f729f22e1f4e01516aadc8297960b4c5779892239a650dcea714b2f",
+      "diff_sha256": "13e4aa11031c4bc9e3774ca914f8588e3b82ce64ed9c4d266bf1cc06e66936db",
+      "declaration_differences": [
+        "assignment-status.d.ts.map",
+        "codecamp.d.ts",
+        "contracts/class.d.ts",
+        "contracts/class.d.ts.map",
+        "contracts/envelopes.d.ts",
+        "contracts/envelopes.d.ts.map",
+        "contracts/sales.d.ts",
+        "contracts/sales.d.ts.map",
+        "index.d.ts"
+      ],
+      "javascript_differences": [],
+      "disposition": "accepted_declaration_ordering_only",
+      "rationale": "TypeScript 7 deterministically reorders object properties and union members in generated Zod-inferred declarations. The declaration changes preserve the same property sets and union members; all emitted JavaScript is byte-identical. Declaration-map changes are derivatives of those declaration-text changes."
+    }
+  ]
+}
