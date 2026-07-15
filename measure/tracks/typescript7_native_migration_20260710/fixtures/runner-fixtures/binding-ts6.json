@@ -1,0 +1,8 @@
+{
+  "stdout_json": {
+    "consumer": "typescript-eslint",
+    "programmatic_api_path": "/fixture/node_modules/typescript/lib/typescript.js",
+    "resolved_version": "6.0.2"
+  },
+  "exit_status": 0
+}

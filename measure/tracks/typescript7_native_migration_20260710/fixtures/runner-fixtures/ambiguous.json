@@ -1,0 +1,11 @@
+{
+  "stdout_json": {
+    "consumer": "tsup",
+    "programmatic_api_paths": [
+      "/fixture/node_modules/typescript/lib/typescript.js",
+      "/fixture/node_modules/typescript7/lib/typescript.js"
+    ],
+    "resolved_versions": ["6.0.2", "7.0.2"]
+  },
+  "exit_status": 0
+}

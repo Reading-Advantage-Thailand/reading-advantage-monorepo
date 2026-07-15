@@ -1,0 +1,10 @@
+{
+  "cases": [
+    {"id": "narrow-node", "emit_mode": "emit", "types_posture": "narrow_explicit", "compilerOptions": {"types": ["node"]}},
+    {"id": "browser-empty", "emit_mode": "no_emit", "types_posture": "explicit_empty", "compilerOptions": {"types": []}},
+    {"id": "library-inherited", "emit_mode": "emit", "types_posture": "inherited_omission", "compilerOptions": {}},
+    {"id": "removed-baseUrl", "emit_mode": "no_emit", "types_posture": "narrow_explicit", "compilerOptions": {"baseUrl": ".", "types": ["node"]}},
+    {"id": "legacy-moduleResolution", "emit_mode": "no_emit", "types_posture": "explicit_empty", "compilerOptions": {"moduleResolution": "node", "types": []}},
+    {"id": "removed-suppressExcessPropertyErrors", "emit_mode": "emit", "types_posture": "inherited_omission", "compilerOptions": {"suppressExcessPropertyErrors": true}}
+  ]
+}

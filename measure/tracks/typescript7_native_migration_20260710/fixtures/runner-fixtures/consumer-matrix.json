@@ -1,0 +1,18 @@
+{
+  "rows": [
+    {"consumer": "Root + workspace check-types (post-cutover target)", "fixture": "runner-fixtures/binding-ts7.json", "expected": "binding (TS 7)"},
+    {"consumer": "tsc emit builds (JS + .d.ts)", "fixture": "runner-fixtures/binding-ts7.json", "expected": "binding (TS 7)"},
+    {"consumer": "typescript-eslint", "fixture": "runner-fixtures/binding-ts6.json", "expected": "binding (TS 6)"},
+    {"consumer": "ts-node", "fixture": "runner-fixtures/binding-ts6.json", "expected": "binding (TS 6)"},
+    {"consumer": "tsup", "fixture": "runner-fixtures/binding-ts6.json", "expected": "binding (TS 6)"},
+    {"consumer": "tsconfck", "fixture": "runner-fixtures/no-api.json", "expected": "no programmatic API found"},
+    {"consumer": "commitlint (transitive peer)", "fixture": "runner-fixtures/no-api.json", "expected": "no programmatic API found"},
+    {"consumer": "vitest / @vitest/* runner", "fixture": "runner-fixtures/no-api.json", "expected": "no programmatic API found"},
+    {"consumer": "jest / ts-jest runner", "fixture": "runner-fixtures/no-api.json", "expected": "no programmatic API found"},
+    {"consumer": "@playwright/test runner", "fixture": "runner-fixtures/no-api.json", "expected": "no programmatic API found"},
+    {"consumer": "Next.js next build / next typegen", "fixture": "runner-fixtures/no-api.json", "expected": "no programmatic API found"},
+    {"consumer": "Vinext/Vite vite build", "fixture": "runner-fixtures/no-api.json", "expected": "no programmatic API found"},
+    {"consumer": "Drizzle Kit / drizzle-kit CLI", "fixture": "runner-fixtures/no-api.json", "expected": "no programmatic API found"},
+    {"consumer": "ESLint flat config loaders", "fixture": "runner-fixtures/no-api.json", "expected": "no programmatic API found"}
+  ]
+}
