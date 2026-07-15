@@ -1,0 +1,11 @@
+{
+  "track_id": "backend_architecture_enforcement_20260713",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-07-13T00:00:00Z",
+  "updated_at": "2026-07-13T00:00:00Z",
+  "description": "Establish AST-based database and provider boundary enforcement with reviewed counterexample fixtures and monotonic debt baselines before the backend capability and durable-worker platforms land.",
+  "estimated_tasks": 16,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}
