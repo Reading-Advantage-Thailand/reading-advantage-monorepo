@@ -19,7 +19,10 @@
     "build": "tsup src/index.ts --format esm --dts --external react --external react-dom",
     "dev": "tsup src/index.ts --format esm --dts --external react --external react-dom --watch",
     "test": "vitest run",
-    "lint": "eslint src/"
+    "lint": "eslint src/",
+    "check-types": "node ../../node_modules/typescript7/bin/tsc --noEmit",
+    "check-types:compat": "node ../../node_modules/typescript/bin/tsc --noEmit",
+    "check-types:rollback": "node ../../node_modules/typescript/bin/tsc --noEmit"
   },
   "dependencies": {
     "@reading-advantage/utils": "workspace:*",

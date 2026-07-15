@@ -25,6 +25,9 @@ TYPES_PACKAGE_PATH = REPO_ROOT / "packages" / "types" / "package.json"
 DB_PACKAGE_PATH = REPO_ROOT / "packages" / "db" / "package.json"
 DOMAIN_PACKAGE_PATH = REPO_ROOT / "packages" / "domain" / "package.json"
 AUTH_PACKAGE_PATH = REPO_ROOT / "packages" / "auth" / "package.json"
+UI_PACKAGE_PATH = REPO_ROOT / "packages" / "ui" / "package.json"
+UTILS_PACKAGE_PATH = REPO_ROOT / "packages" / "utils" / "package.json"
+GITHUB_INTEGRATION_PACKAGE_PATH = REPO_ROOT / "packages" / "integrations" / "github" / "package.json"
 PHASE3D_CUTOVER_ORDER = (
     "packages/types",
     "packages/db",
@@ -285,6 +288,38 @@ class Phase3dCheckTypesCutoverContract(unittest.TestCase):
         self.assertEqual(scripts.get("check-types"), self.NATIVE_COMMAND)
         self.assertEqual(scripts.get("check-types:compat"), self.COMPAT_COMMAND)
         self.assertEqual(scripts.get("check-types:rollback"), self.COMPAT_COMMAND)
+
+    def test_ui_workspace_check_types_routing_is_explicit_and_reversible(self) -> None:
+        """Requires the first shared workspace to declare native, compatibility, and rollback checks."""
+        manifest = json.loads(UI_PACKAGE_PATH.read_text(encoding="utf-8"))
+        scripts = manifest.get("scripts")
+        self.assertIsInstance(scripts, dict)
+        assert isinstance(scripts, dict)
+        self.assertEqual(scripts.get("check-types"), self.NATIVE_COMMAND)
+        self.assertEqual(scripts.get("check-types:compat"), self.COMPAT_COMMAND)
+        self.assertEqual(scripts.get("check-types:rollback"), self.COMPAT_COMMAND)
+
+    def test_utils_workspace_check_types_routing_is_explicit_and_reversible(self) -> None:
+        """Requires the second shared workspace to declare native, compatibility, and rollback checks."""
+        manifest = json.loads(UTILS_PACKAGE_PATH.read_text(encoding="utf-8"))
+        scripts = manifest.get("scripts")
+        self.assertIsInstance(scripts, dict)
+        assert isinstance(scripts, dict)
+        self.assertEqual(scripts.get("check-types"), self.NATIVE_COMMAND)
+        self.assertEqual(scripts.get("check-types:compat"), self.COMPAT_COMMAND)
+        self.assertEqual(scripts.get("check-types:rollback"), self.COMPAT_COMMAND)
+
+    def test_github_integration_check_types_routing_is_explicit_and_reversible(self) -> None:
+        """Requires the nested shared workspace to use its own correct relative compiler paths."""
+        native = "node ../../../node_modules/typescript7/bin/tsc --noEmit"
+        compat = "node ../../../node_modules/typescript/bin/tsc --noEmit"
+        manifest = json.loads(GITHUB_INTEGRATION_PACKAGE_PATH.read_text(encoding="utf-8"))
+        scripts = manifest.get("scripts")
+        self.assertIsInstance(scripts, dict)
+        assert isinstance(scripts, dict)
+        self.assertEqual(scripts.get("check-types"), native)
+        self.assertEqual(scripts.get("check-types:compat"), compat)
+        self.assertEqual(scripts.get("check-types:rollback"), compat)
 
     def test_native_workspace_cutovers_follow_the_required_strict_prefix(self) -> None:
         """Rejects a native check-types switch that skips an earlier workspace in the acceptance order."""

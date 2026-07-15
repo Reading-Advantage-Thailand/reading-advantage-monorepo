@@ -31,7 +31,10 @@
     "build": "tsup src/index.ts src/cn.ts src/ffmpeg-process.ts src/hooks/index.ts --format esm --dts",
     "dev": "tsup src/index.ts src/cn.ts src/ffmpeg-process.ts src/hooks/index.ts --format esm --dts --watch",
     "test": "vitest run",
-    "lint": "eslint src/"
+    "lint": "eslint src/",
+    "check-types": "node ../../node_modules/typescript7/bin/tsc --noEmit",
+    "check-types:compat": "node ../../node_modules/typescript/bin/tsc --noEmit",
+    "check-types:rollback": "node ../../node_modules/typescript/bin/tsc --noEmit"
   },
   "devDependencies": {
     "@reading-advantage/config": "workspace:*",
