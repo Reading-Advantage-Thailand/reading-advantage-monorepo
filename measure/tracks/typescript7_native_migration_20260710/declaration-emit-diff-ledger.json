@@ -213,6 +213,21 @@
       "javascript_differences": [],
       "disposition": "accepted_declaration_ordering_and_map_only",
       "rationale": "TypeScript 7 deterministically reorders inferred Zod declaration properties and union members, plus their derived declaration maps; emitted JavaScript is byte-identical."
+    },
+    {
+      "package": "packages/srs-engine",
+      "typescript6": "6.0.2",
+      "typescript7": "7.0.2",
+      "typescript6_exit_status": 0,
+      "typescript7_exit_status": 0,
+      "output_file_count": 48,
+      "typescript6_relative_tree_sha256": "e718062cc64e2a71bd81d4d521f14048ffbd122fd47d604d7156be5b04a0f11c",
+      "typescript7_relative_tree_sha256": "47feea24fc1d1cc913c70ae33804ad9ee7fa31e248cb17c958b71a3335b2b9be",
+      "diff_sha256": "26d5cb5e12214479a874695a62ece2d504fef11edf95347381946a43ff7c6358",
+      "declaration_differences": ["srs/adapters.d.ts.map", "srs/contract.d.ts.map", "srs/objective-policy.d.ts", "srs/objective-policy.d.ts.map", "srs/submission-srs-adapter.d.ts.map"],
+      "javascript_differences": [],
+      "disposition": "accepted_declaration_ordering_and_map_only",
+      "rationale": "TypeScript 7 changes inferred declaration property and Zod enum-member ordering, quote style, and derived declaration maps only; emitted JavaScript is byte-identical."
     }
   ]
 }

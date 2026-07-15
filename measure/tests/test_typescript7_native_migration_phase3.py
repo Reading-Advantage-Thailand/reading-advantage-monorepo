@@ -111,6 +111,7 @@ PHASE3E_ACCEPTED_EMIT_BUILD_WORKSPACES = (
     "packages/auth",
     "packages/ai",
     "packages/activity-runtime",
+    "packages/srs-engine",
 )
 
 
@@ -754,6 +755,14 @@ class Phase3dCheckTypesCutoverContract(unittest.TestCase):
             scripts.get("build"),
             "node scripts/clean-dist.mjs && node ../../node_modules/typescript7/bin/tsc",
         )
+
+    def test_srs_engine_emit_routes_to_typescript7(self) -> None:
+        """Requires the SRS engine's emitting build to select the native alias."""
+        manifest = json.loads(SRS_ENGINE_PACKAGE_PATH.read_text(encoding="utf-8"))
+        scripts = manifest.get("scripts")
+        self.assertIsInstance(scripts, dict)
+        assert isinstance(scripts, dict)
+        self.assertEqual(scripts.get("build"), "node ../../node_modules/typescript7/bin/tsc")
 
 
 class Phase3eDeclarationEmitContract(unittest.TestCase):
