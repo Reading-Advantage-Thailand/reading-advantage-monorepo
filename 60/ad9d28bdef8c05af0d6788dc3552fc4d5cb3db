@@ -1,0 +1,9 @@
+Track: company_identity_sso_20260715 — Phase S1 Task 3 Red contracts and architecture fixtures
+
+DB Red: CI=true pnpm --filter @reading-advantage/db exec vitest run src/company-identity/__tests__/contracts.test.ts src/company-identity/__tests__/environment.test.ts src/company-identity/__tests__/schema-metadata.test.ts src/company-identity/__tests__/migration-journal.test.ts src/company-identity/__tests__/boundary-exports.test.ts — exit 1; 5 files; 257 tests; 254 failed, 3 passed. Intended first failures: missing DB-owned company-identity contracts/normalization/environment/schema/journal/subpath; product Drizzle config and product-isolation controls pass.
+
+Auth Red: CI=true pnpm --filter @reading-advantage/auth --fail-if-no-match exec vitest run src/company-identity/__tests__/environment-contracts.test.ts — exit 1; 1 file; 9 tests failed. Intended failure: absent auth-owned company-identity environment module.
+
+Architecture: 10 positive and 3 negative AST fixtures independently reviewed. Execution remains owned by unaccepted backend_architecture_enforcement_20260713 Gate 1; no temporary analyzer created. Phase S1 cannot pass until the Gate 1 fixture API and pnpm architecture:check execute Green.
+
+Review: independent re-review PASS with no blocking findings. git diff --check PASS. build-graph update completed for all six new TypeScript test files.
