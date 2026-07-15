@@ -198,6 +198,21 @@
       "javascript_differences": [],
       "disposition": "accepted_declaration_ordering_and_map_only",
       "rationale": "TypeScript 7 changes inferred declaration ordering and derived declaration maps only; emitted JavaScript is byte-identical."
+    },
+    {
+      "package": "packages/activity-runtime",
+      "typescript6": "6.0.2",
+      "typescript7": "7.0.2",
+      "typescript6_exit_status": 0,
+      "typescript7_exit_status": 0,
+      "output_file_count": 27,
+      "typescript6_relative_tree_sha256": "060b0aee86b494d2a0f6c96b8dd53b8e0637ca0106e3ab6ea4bb4476c9e16c51",
+      "typescript7_relative_tree_sha256": "e038dea47f34236dd2f09c7954a52845701f01baa59c07f08dcda36f55ecf776",
+      "diff_sha256": "b84cb3177913419992b3b466abf61f8f0779318076041fd2f3e83bfb166354ed",
+      "declaration_differences": ["core.d.ts", "core.d.ts.map", "internal/practice-mapping.d.ts", "persistence.d.ts", "persistence.d.ts.map", "server.d.ts", "transport.d.ts"],
+      "javascript_differences": [],
+      "disposition": "accepted_declaration_ordering_and_map_only",
+      "rationale": "TypeScript 7 deterministically reorders inferred Zod declaration properties and union members, plus their derived declaration maps; emitted JavaScript is byte-identical."
     }
   ]
 }

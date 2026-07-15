@@ -110,6 +110,7 @@ PHASE3E_ACCEPTED_EMIT_BUILD_WORKSPACES = (
     "packages/knowledge-space-core",
     "packages/auth",
     "packages/ai",
+    "packages/activity-runtime",
 )
 
 
@@ -742,6 +743,17 @@ class Phase3dCheckTypesCutoverContract(unittest.TestCase):
         self.assertIsInstance(scripts, dict)
         assert isinstance(scripts, dict)
         self.assertEqual(scripts.get("build"), "node ../../node_modules/typescript7/bin/tsc")
+
+    def test_activity_runtime_emit_routes_to_typescript7(self) -> None:
+        """Requires the runtime package's emitting build to select the native alias."""
+        manifest = json.loads(ACTIVITY_RUNTIME_PACKAGE_PATH.read_text(encoding="utf-8"))
+        scripts = manifest.get("scripts")
+        self.assertIsInstance(scripts, dict)
+        assert isinstance(scripts, dict)
+        self.assertEqual(
+            scripts.get("build"),
+            "node scripts/clean-dist.mjs && node ../../node_modules/typescript7/bin/tsc",
+        )
 
 
 class Phase3eDeclarationEmitContract(unittest.TestCase):
