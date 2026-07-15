@@ -115,6 +115,7 @@ PHASE3E_ACCEPTED_EMIT_BUILD_WORKSPACES = (
     "packages/activity-react",
     "packages/knowledge-space-practice",
     "packages/codecamp-knowledge",
+    "packages/domain",
 )
 
 
@@ -796,6 +797,14 @@ class Phase3dCheckTypesCutoverContract(unittest.TestCase):
             scripts.get("build"),
             "node ../../node_modules/typescript7/bin/tsc && node scripts/copy-data.mjs",
         )
+
+    def test_domain_emit_routes_to_typescript7(self) -> None:
+        """Requires the domain package's emitting build to select the native alias."""
+        manifest = json.loads(DOMAIN_PACKAGE_PATH.read_text(encoding="utf-8"))
+        scripts = manifest.get("scripts")
+        self.assertIsInstance(scripts, dict)
+        assert isinstance(scripts, dict)
+        self.assertEqual(scripts.get("build"), "node ../../node_modules/typescript7/bin/tsc")
 
 
 class Phase3eDeclarationEmitContract(unittest.TestCase):
