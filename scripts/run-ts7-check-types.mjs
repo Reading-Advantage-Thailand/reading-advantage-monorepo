@@ -20,5 +20,5 @@ if (checkers !== "1" && checkers !== "2") {
     throw result.error;
   }
 
-  process.exitCode = result.status ?? 1;
+  process.exitCode = result.status === 1 ? 2 : (result.status ?? 1);
 }

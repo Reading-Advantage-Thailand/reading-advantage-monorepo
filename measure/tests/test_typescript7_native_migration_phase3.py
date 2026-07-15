@@ -926,6 +926,25 @@ class Phase3gBenchmarkRunnerContract(unittest.TestCase):
         self.assertLess(cold_command.index("--force"), cold_command.index("--"))
         self.assertEqual(cold_command[-2:], ["--", "--stableTypeOrdering"])
 
+    def test_native_wrapper_normalizes_compiler_diagnostic_failures_to_ts6_exit_code(self) -> None:
+        """Requires equivalent compiler diagnostic failures to retain the compatibility exit code."""
+        wrapper = REPO_ROOT / "scripts" / "run-ts7-check-types.mjs"
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            config_path = Path(temporary_directory) / "broken-tsconfig.json"
+            source_path = Path(temporary_directory) / "diagnostic-source.ts"
+            source_path.write_text("const value: string = 1;\n", encoding="utf-8")
+            config_path.write_text(
+                json.dumps({"files": [source_path.name]}) + "\n", encoding="utf-8"
+            )
+            completed = subprocess.run(
+                ["node", str(wrapper), "--noEmit", "-p", str(config_path)],
+                cwd=REPO_ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+        self.assertEqual(completed.returncode, 2, completed.stderr)
+
     def test_runner_executes_directly_from_the_repository_root(self) -> None:
         """Requires the tracked executable to resolve its repo-local harness imports unaided."""
         completed = subprocess.run(
