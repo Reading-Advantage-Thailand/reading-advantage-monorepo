@@ -16,7 +16,7 @@
     "runtime-manifest.json"
   ],
   "scripts": {
-    "build": "node ../../node_modules/typescript/bin/tsc",
+    "build": "node ../../node_modules/typescript7/bin/tsc",
     "check:consumer": "pnpm build && node dist/check-consumer.js",
     "check-types": "node ../../node_modules/typescript7/bin/tsc --noEmit",
     "check-types:compat": "node ../../node_modules/typescript/bin/tsc --noEmit",

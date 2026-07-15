@@ -118,6 +118,7 @@ PHASE3E_ACCEPTED_EMIT_BUILD_WORKSPACES = (
     "packages/domain",
     "packages/webhooks",
     "packages/api",
+    "packages/mastery-runtime-compat",
 )
 
 
@@ -819,6 +820,14 @@ class Phase3dCheckTypesCutoverContract(unittest.TestCase):
     def test_api_emit_routes_to_typescript7(self) -> None:
         """Requires the API package's emitting build to select the native alias."""
         manifest = json.loads(API_PACKAGE_PATH.read_text(encoding="utf-8"))
+        scripts = manifest.get("scripts")
+        self.assertIsInstance(scripts, dict)
+        assert isinstance(scripts, dict)
+        self.assertEqual(scripts.get("build"), "node ../../node_modules/typescript7/bin/tsc")
+
+    def test_mastery_runtime_compat_emit_routes_to_typescript7(self) -> None:
+        """Requires the mastery compatibility build to select the native alias."""
+        manifest = json.loads(MASTERY_RUNTIME_COMPAT_PACKAGE_PATH.read_text(encoding="utf-8"))
         scripts = manifest.get("scripts")
         self.assertIsInstance(scripts, dict)
         assert isinstance(scripts, dict)

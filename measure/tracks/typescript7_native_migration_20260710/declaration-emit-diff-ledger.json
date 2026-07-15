@@ -318,6 +318,21 @@
       "javascript_differences": [],
       "disposition": "accepted_declaration_printer_and_map_only",
       "rationale": "TypeScript 7 changes inferred tRPC declaration property and union ordering plus derived declaration maps only; emitted JavaScript is byte-identical."
+    },
+    {
+      "package": "packages/mastery-runtime-compat",
+      "typescript6": "6.0.2",
+      "typescript7": "7.0.2",
+      "typescript6_exit_status": 0,
+      "typescript7_exit_status": 0,
+      "output_file_count": 12,
+      "typescript6_relative_tree_sha256": "7cd10f03cb1a6acfa25522c30bf164c21a6170716cd44dd6f3f125f3be1504d9",
+      "typescript7_relative_tree_sha256": "a6dcd7007ef6fb92fb73fe8236a5e3fad6e65158802ae4d00fa6e219cf3c0ecd",
+      "diff_sha256": "92e1da9b02c5d0385084084b663eef0e18e4df7c8b8298fdceb0752894c165fa",
+      "declaration_differences": ["index.d.ts"],
+      "javascript_differences": [],
+      "disposition": "accepted_declaration_ordering_only",
+      "rationale": "TypeScript 7 deterministically reorders Zod-inferred string-union and object-property declarations only; emitted JavaScript and declaration maps are byte-identical."
     }
   ]
 }
