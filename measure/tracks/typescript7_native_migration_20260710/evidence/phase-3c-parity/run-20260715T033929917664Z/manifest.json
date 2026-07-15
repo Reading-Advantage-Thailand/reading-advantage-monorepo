@@ -1,0 +1,637 @@
+{
+  "schema_version": 1,
+  "files": [
+    {
+      "path": "apps__activity-vinext-fixture__tsconfig.ts6.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "apps__activity-vinext-fixture__tsconfig.ts6.stdout.txt",
+      "sha256": "063e0799ceba73cb35eb55e9e296a8ab06e44ac91881b31cd44672648f8ebddc"
+    },
+    {
+      "path": "apps__activity-vinext-fixture__tsconfig.ts7.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "apps__activity-vinext-fixture__tsconfig.ts7.stdout.txt",
+      "sha256": "063e0799ceba73cb35eb55e9e296a8ab06e44ac91881b31cd44672648f8ebddc"
+    },
+    {
+      "path": "apps__advantage-games__tsconfig.ts6.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "apps__advantage-games__tsconfig.ts6.stdout.txt",
+      "sha256": "a6983d0d7cf30cd7c45c3696108f7bd40ca99fb492bac67f9ed4e086df675a88"
+    },
+    {
+      "path": "apps__advantage-games__tsconfig.ts7.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "apps__advantage-games__tsconfig.ts7.stdout.txt",
+      "sha256": "a6983d0d7cf30cd7c45c3696108f7bd40ca99fb492bac67f9ed4e086df675a88"
+    },
+    {
+      "path": "apps__codecamp-advantage__tsconfig.ts6.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "apps__codecamp-advantage__tsconfig.ts6.stdout.txt",
+      "sha256": "986cc93f86a39300fb73aad27ee24dabfee63437914719467726730c16d441d6"
+    },
+    {
+      "path": "apps__codecamp-advantage__tsconfig.ts7.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "apps__codecamp-advantage__tsconfig.ts7.stdout.txt",
+      "sha256": "986cc93f86a39300fb73aad27ee24dabfee63437914719467726730c16d441d6"
+    },
+    {
+      "path": "apps__marketing__tsconfig.ts6.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "apps__marketing__tsconfig.ts6.stdout.txt",
+      "sha256": "883d2aa6da1fb1a4bcd77a36170d3ca7d495c8e47e0f89c22f62a7e79488d7cf"
+    },
+    {
+      "path": "apps__marketing__tsconfig.ts7.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "apps__marketing__tsconfig.ts7.stdout.txt",
+      "sha256": "883d2aa6da1fb1a4bcd77a36170d3ca7d495c8e47e0f89c22f62a7e79488d7cf"
+    },
+    {
+      "path": "apps__primary-advantage__tsconfig.ts6.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "apps__primary-advantage__tsconfig.ts6.stdout.txt",
+      "sha256": "e39d715d9541599b9215fc2f9a4b0303b56f167b5b8ac4b4e7bdef2a7d94faed"
+    },
+    {
+      "path": "apps__primary-advantage__tsconfig.ts7.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "apps__primary-advantage__tsconfig.ts7.stdout.txt",
+      "sha256": "b83487fa6a234e5a27446a270460c2cf0ff6c4b16d2e918edc7542d1b4c16a6f"
+    },
+    {
+      "path": "apps__reading-advantage__tsconfig.ts6.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "apps__reading-advantage__tsconfig.ts6.stdout.txt",
+      "sha256": "4c694264ae949f53fd5fb0795ae5a8db70bf2d1c49d38a5a3c3f40794df99356"
+    },
+    {
+      "path": "apps__reading-advantage__tsconfig.ts7.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "apps__reading-advantage__tsconfig.ts7.stdout.txt",
+      "sha256": "ae9060afa5223a53750fddb553fa48b695552afbba68729622773cb86b1d8e6f"
+    },
+    {
+      "path": "apps__sales-advantage__tsconfig.ts6.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "apps__sales-advantage__tsconfig.ts6.stdout.txt",
+      "sha256": "ed04cc07f832fa011d6db8571943efe3c584216bd1f18458d4e9b68087b04242"
+    },
+    {
+      "path": "apps__sales-advantage__tsconfig.ts7.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "apps__sales-advantage__tsconfig.ts7.stdout.txt",
+      "sha256": "ed04cc07f832fa011d6db8571943efe3c584216bd1f18458d4e9b68087b04242"
+    },
+    {
+      "path": "apps__science-advantage__tsconfig.ts6.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "apps__science-advantage__tsconfig.ts6.stdout.txt",
+      "sha256": "969755ec5e1d15d2f13e0844d27544a85857115ed2ec17ef9b9fcf7e82c301d0"
+    },
+    {
+      "path": "apps__science-advantage__tsconfig.ts7.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "apps__science-advantage__tsconfig.ts7.stdout.txt",
+      "sha256": "4b41742fa267326a10c123c9f319a88f2404247f394c859bca9538ed107b6d6d"
+    },
+    {
+      "path": "apps__www-reading-advantage__tsconfig.ts6.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "apps__www-reading-advantage__tsconfig.ts6.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "apps__www-reading-advantage__tsconfig.ts7.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "apps__www-reading-advantage__tsconfig.ts7.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "diagnostic-parity-ledger.snapshot.json",
+      "sha256": "2e355e16cecf7c5771cc9bd92a3c33c83a38af7c6fab773d330637b0e971fd21"
+    },
+    {
+      "path": "packages__activity-react__tsconfig.test.ts6.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__activity-react__tsconfig.test.ts6.stdout.txt",
+      "sha256": "72044e740ad9696701de1590751b86282a41f9e09d2a5387b5b7975212eef334"
+    },
+    {
+      "path": "packages__activity-react__tsconfig.test.ts7.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__activity-react__tsconfig.test.ts7.stdout.txt",
+      "sha256": "72044e740ad9696701de1590751b86282a41f9e09d2a5387b5b7975212eef334"
+    },
+    {
+      "path": "packages__activity-react__tsconfig.ts6.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__activity-react__tsconfig.ts6.stdout.txt",
+      "sha256": "705e44172b98636a038b2eb9999fd338df51c9f1fa26d2d8e40c691739087b16"
+    },
+    {
+      "path": "packages__activity-react__tsconfig.ts7.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__activity-react__tsconfig.ts7.stdout.txt",
+      "sha256": "705e44172b98636a038b2eb9999fd338df51c9f1fa26d2d8e40c691739087b16"
+    },
+    {
+      "path": "packages__activity-runtime__tsconfig.test.ts6.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__activity-runtime__tsconfig.test.ts6.stdout.txt",
+      "sha256": "f8e0812f5b921aec43d3da6926d8938b881e71b2a40b30031d4ef5127767445b"
+    },
+    {
+      "path": "packages__activity-runtime__tsconfig.test.ts7.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__activity-runtime__tsconfig.test.ts7.stdout.txt",
+      "sha256": "f8e0812f5b921aec43d3da6926d8938b881e71b2a40b30031d4ef5127767445b"
+    },
+    {
+      "path": "packages__activity-runtime__tsconfig.ts6.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__activity-runtime__tsconfig.ts6.stdout.txt",
+      "sha256": "278a12ae4b710d9643e200570446afd195577df9f4437f6aa31bbb144da35986"
+    },
+    {
+      "path": "packages__activity-runtime__tsconfig.ts7.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__activity-runtime__tsconfig.ts7.stdout.txt",
+      "sha256": "278a12ae4b710d9643e200570446afd195577df9f4437f6aa31bbb144da35986"
+    },
+    {
+      "path": "packages__activity-tutorial__tsconfig.test.ts6.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__activity-tutorial__tsconfig.test.ts6.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__activity-tutorial__tsconfig.test.ts7.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__activity-tutorial__tsconfig.test.ts7.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__activity-tutorial__tsconfig.ts6.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__activity-tutorial__tsconfig.ts6.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__activity-tutorial__tsconfig.ts7.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__activity-tutorial__tsconfig.ts7.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__advantage-play-kit__tsconfig.ts6.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__advantage-play-kit__tsconfig.ts6.stdout.txt",
+      "sha256": "ce96195b79377fd1f51b340c628e3ddcd18f839a4294dcc0fea2cfb4044249f0"
+    },
+    {
+      "path": "packages__advantage-play-kit__tsconfig.ts7.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__advantage-play-kit__tsconfig.ts7.stdout.txt",
+      "sha256": "ce96195b79377fd1f51b340c628e3ddcd18f839a4294dcc0fea2cfb4044249f0"
+    },
+    {
+      "path": "packages__ai__tsconfig.ts6.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__ai__tsconfig.ts6.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__ai__tsconfig.ts7.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__ai__tsconfig.ts7.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__api__tsconfig.ts6.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__api__tsconfig.ts6.stdout.txt",
+      "sha256": "9c4f38fc94adaca220ce2074aaef3b26810260a865223a8165e9859d619392da"
+    },
+    {
+      "path": "packages__api__tsconfig.ts7.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__api__tsconfig.ts7.stdout.txt",
+      "sha256": "9c4f38fc94adaca220ce2074aaef3b26810260a865223a8165e9859d619392da"
+    },
+    {
+      "path": "packages__auth-client__tsconfig.ts6.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__auth-client__tsconfig.ts6.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__auth-client__tsconfig.ts7.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__auth-client__tsconfig.ts7.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__auth__tsconfig.ts6.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__auth__tsconfig.ts6.stdout.txt",
+      "sha256": "1fafa687488ffef7463a0f92c231c96596d200bb9f39a439a845d734adfb1cce"
+    },
+    {
+      "path": "packages__auth__tsconfig.ts7.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__auth__tsconfig.ts7.stdout.txt",
+      "sha256": "1fafa687488ffef7463a0f92c231c96596d200bb9f39a439a845d734adfb1cce"
+    },
+    {
+      "path": "packages__codecamp-knowledge__tsconfig.test.ts6.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__codecamp-knowledge__tsconfig.test.ts6.stdout.txt",
+      "sha256": "bcd4e48b69d78c37da9fbe11f6a50aa383b7b0c1cb875d1f73842d3ce9211827"
+    },
+    {
+      "path": "packages__codecamp-knowledge__tsconfig.test.ts7.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__codecamp-knowledge__tsconfig.test.ts7.stdout.txt",
+      "sha256": "bcd4e48b69d78c37da9fbe11f6a50aa383b7b0c1cb875d1f73842d3ce9211827"
+    },
+    {
+      "path": "packages__codecamp-knowledge__tsconfig.ts6.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__codecamp-knowledge__tsconfig.ts6.stdout.txt",
+      "sha256": "be622c1d4c89758c1c413d7cdff417d290bf744256dbd90c017f2486f40d470c"
+    },
+    {
+      "path": "packages__codecamp-knowledge__tsconfig.ts7.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__codecamp-knowledge__tsconfig.ts7.stdout.txt",
+      "sha256": "be622c1d4c89758c1c413d7cdff417d290bf744256dbd90c017f2486f40d470c"
+    },
+    {
+      "path": "packages__db__tsconfig.build.ts6.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__db__tsconfig.build.ts6.stdout.txt",
+      "sha256": "0c176a970ee13e99c2def20a5d963d8b7532495216c6f875a131966767e9cc84"
+    },
+    {
+      "path": "packages__db__tsconfig.build.ts7.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__db__tsconfig.build.ts7.stdout.txt",
+      "sha256": "0c176a970ee13e99c2def20a5d963d8b7532495216c6f875a131966767e9cc84"
+    },
+    {
+      "path": "packages__db__tsconfig.ts6.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__db__tsconfig.ts6.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__db__tsconfig.ts7.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__db__tsconfig.ts7.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__domain__tsconfig.ts6.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__domain__tsconfig.ts6.stdout.txt",
+      "sha256": "946e3b1e81d2a17e94dc010255d398f86a2907408d44b584bf9eb926e4efc218"
+    },
+    {
+      "path": "packages__domain__tsconfig.ts7.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__domain__tsconfig.ts7.stdout.txt",
+      "sha256": "02dfec2b0f93166beeddd370edf72108b35e116d0084004b510be4e987b09be7"
+    },
+    {
+      "path": "packages__game-cartridges__tsconfig.build.ts6.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__game-cartridges__tsconfig.build.ts6.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__game-cartridges__tsconfig.build.ts7.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__game-cartridges__tsconfig.build.ts7.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__game-cartridges__tsconfig.ts6.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__game-cartridges__tsconfig.ts6.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__game-cartridges__tsconfig.ts7.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__game-cartridges__tsconfig.ts7.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__game-contracts__tsconfig.ts6.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__game-contracts__tsconfig.ts6.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__game-contracts__tsconfig.ts7.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__game-contracts__tsconfig.ts7.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__integrations__github__tsconfig.ts6.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__integrations__github__tsconfig.ts6.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__integrations__github__tsconfig.ts7.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__integrations__github__tsconfig.ts7.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__knowledge-space-core__tsconfig.ts6.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__knowledge-space-core__tsconfig.ts6.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__knowledge-space-core__tsconfig.ts7.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__knowledge-space-core__tsconfig.ts7.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__knowledge-space-practice__tsconfig.ts6.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__knowledge-space-practice__tsconfig.ts6.stdout.txt",
+      "sha256": "363ee3f919749561334ed1f7b53e8c61f63b2f7aa88709bb5eeccf8b2a1528f9"
+    },
+    {
+      "path": "packages__knowledge-space-practice__tsconfig.ts7.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__knowledge-space-practice__tsconfig.ts7.stdout.txt",
+      "sha256": "363ee3f919749561334ed1f7b53e8c61f63b2f7aa88709bb5eeccf8b2a1528f9"
+    },
+    {
+      "path": "packages__mastery-runtime-compat__tsconfig.ts6.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__mastery-runtime-compat__tsconfig.ts6.stdout.txt",
+      "sha256": "816daf68187dc47db089beabdd07cb0e2542a97587834fb2e7aab038f4dfb559"
+    },
+    {
+      "path": "packages__mastery-runtime-compat__tsconfig.ts7.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__mastery-runtime-compat__tsconfig.ts7.stdout.txt",
+      "sha256": "816daf68187dc47db089beabdd07cb0e2542a97587834fb2e7aab038f4dfb559"
+    },
+    {
+      "path": "packages__practice-core__tsconfig.ts6.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__practice-core__tsconfig.ts6.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__practice-core__tsconfig.ts7.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__practice-core__tsconfig.ts7.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__srs-engine__tsconfig.ts6.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__srs-engine__tsconfig.ts6.stdout.txt",
+      "sha256": "61609325d790e82575dd2360fae197636b47172e4a59bd3d2ac44cb32244e93a"
+    },
+    {
+      "path": "packages__srs-engine__tsconfig.ts7.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__srs-engine__tsconfig.ts7.stdout.txt",
+      "sha256": "61609325d790e82575dd2360fae197636b47172e4a59bd3d2ac44cb32244e93a"
+    },
+    {
+      "path": "packages__storage__tsconfig.ts6.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__storage__tsconfig.ts6.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__storage__tsconfig.ts7.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__storage__tsconfig.ts7.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__types__tsconfig.ts6.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__types__tsconfig.ts6.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__types__tsconfig.ts7.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__types__tsconfig.ts7.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__ui__tsconfig.ts6.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__ui__tsconfig.ts6.stdout.txt",
+      "sha256": "68722cd2ef0ff4073ca38e0298f47914e575c54619a84502b1d9aea626d33108"
+    },
+    {
+      "path": "packages__ui__tsconfig.ts7.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__ui__tsconfig.ts7.stdout.txt",
+      "sha256": "68722cd2ef0ff4073ca38e0298f47914e575c54619a84502b1d9aea626d33108"
+    },
+    {
+      "path": "packages__utils__tsconfig.ts6.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__utils__tsconfig.ts6.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__utils__tsconfig.ts7.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__utils__tsconfig.ts7.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__webhooks__tsconfig.ts6.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__webhooks__tsconfig.ts6.stdout.txt",
+      "sha256": "f3b69c9a2b2d2850871978433ec7fd5a2745071f8b49f792e0b800a103665ceb"
+    },
+    {
+      "path": "packages__webhooks__tsconfig.ts7.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "packages__webhooks__tsconfig.ts7.stdout.txt",
+      "sha256": "f3b69c9a2b2d2850871978433ec7fd5a2745071f8b49f792e0b800a103665ceb"
+    },
+    {
+      "path": "summary.json",
+      "sha256": "ece06b3fb404dd44da0a940e557784415de0bdc2012dea2d8ba1da92ecd85652"
+    }
+  ]
+}

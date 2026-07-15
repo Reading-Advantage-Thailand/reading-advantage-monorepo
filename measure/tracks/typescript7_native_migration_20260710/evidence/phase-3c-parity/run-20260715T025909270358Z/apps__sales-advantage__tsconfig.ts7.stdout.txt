@@ -1,0 +1,100 @@
+apps/sales-advantage/app/[locale]/admin/[repId]/page.tsx(6,58): error TS2307: Cannot find module '@reading-advantage/ui' or its corresponding type declarations.
+apps/sales-advantage/app/[locale]/admin/[repId]/page.tsx(14,33): error TS2339: Property 'sales' does not exist on type '"The property 'Provider' in your router collides with a built-in method, rename this router or procedure on your backend." | "The property 'createClient' in your router collides with a built-in method, rename this router or procedure on your backend." | "The property 'useContext' in your router collides with a built...'.
+  Property 'sales' does not exist on type '"The property 'Provider' in your router collides with a built-in method, rename this router or procedure on your backend."'.
+apps/sales-advantage/app/[locale]/admin/create-rep/page.tsx(7,58): error TS2307: Cannot find module '@reading-advantage/ui' or its corresponding type declarations.
+apps/sales-advantage/app/[locale]/admin/create-rep/page.tsx(8,23): error TS2307: Cannot find module '@reading-advantage/ui' or its corresponding type declarations.
+apps/sales-advantage/app/[locale]/admin/create-rep/page.tsx(9,24): error TS2307: Cannot find module '@reading-advantage/ui' or its corresponding type declarations.
+apps/sales-advantage/app/[locale]/admin/create-rep/page.tsx(19,26): error TS2339: Property 'sales' does not exist on type '"The property 'Provider' in your router collides with a built-in method, rename this router or procedure on your backend." | "The property 'createClient' in your router collides with a built-in method, rename this router or procedure on your backend." | "The property 'useContext' in your router collides with a built...'.
+  Property 'sales' does not exist on type '"The property 'Provider' in your router collides with a built-in method, rename this router or procedure on your backend."'.
+apps/sales-advantage/app/[locale]/admin/create-rep/page.tsx(47,80): error TS7006: Parameter 'e' implicitly has an 'any' type.
+apps/sales-advantage/app/[locale]/admin/create-rep/page.tsx(48,73): error TS7006: Parameter 'e' implicitly has an 'any' type.
+apps/sales-advantage/app/[locale]/admin/create-rep/page.tsx(49,97): error TS7006: Parameter 'e' implicitly has an 'any' type.
+apps/sales-advantage/app/[locale]/admin/curriculum/page.tsx(6,58): error TS2307: Cannot find module '@reading-advantage/ui' or its corresponding type declarations.
+apps/sales-advantage/app/[locale]/admin/curriculum/page.tsx(7,24): error TS2307: Cannot find module '@reading-advantage/ui' or its corresponding type declarations.
+apps/sales-advantage/app/[locale]/admin/curriculum/page.tsx(8,23): error TS2307: Cannot find module '@reading-advantage/ui' or its corresponding type declarations.
+apps/sales-advantage/app/[locale]/admin/curriculum/page.tsx(13,43): error TS2339: Property 'sales' does not exist on type '"The property 'Provider' in your router collides with a built-in method, rename this router or procedure on your backend." | "The property 'createClient' in your router collides with a built-in method, rename this router or procedure on your backend." | "The property 'useContext' in your router collides with a built...'.
+  Property 'sales' does not exist on type '"The property 'Provider' in your router collides with a built-in method, rename this router or procedure on your backend."'.
+apps/sales-advantage/app/[locale]/admin/curriculum/page.tsx(14,24): error TS2339: Property 'sales' does not exist on type '"The property 'Provider' in your router collides with a built-in method, rename this router or procedure on your backend." | "The property 'createClient' in your router collides with a built-in method, rename this router or procedure on your backend." | "The property 'useContext' in your router collides with a built...'.
+  Property 'sales' does not exist on type '"The property 'Provider' in your router collides with a built-in method, rename this router or procedure on your backend."'.
+apps/sales-advantage/app/[locale]/admin/curriculum/page.tsx(44,25): error TS2339: Property 'sales' does not exist on type '"The property 'Provider' in your router collides with a built-in method, rename this router or procedure on your backend." | "The property 'createClient' in your router collides with a built-in method, rename this router or procedure on your backend." | "The property 'useContext' in your router collides with a built...'.
+  Property 'sales' does not exist on type '"The property 'Provider' in your router collides with a built-in method, rename this router or procedure on your backend."'.
+apps/sales-advantage/app/[locale]/admin/page.tsx(5,58): error TS2307: Cannot find module '@reading-advantage/ui' or its corresponding type declarations.
+apps/sales-advantage/app/[locale]/admin/page.tsx(6,23): error TS2307: Cannot find module '@reading-advantage/ui' or its corresponding type declarations.
+apps/sales-advantage/app/[locale]/admin/page.tsx(12,36): error TS2339: Property 'sales' does not exist on type '"The property 'Provider' in your router collides with a built-in method, rename this router or procedure on your backend." | "The property 'createClient' in your router collides with a built-in method, rename this router or procedure on your backend." | "The property 'useContext' in your router collides with a built...'.
+  Property 'sales' does not exist on type '"The property 'Provider' in your router collides with a built-in method, rename this router or procedure on your backend."'.
+apps/sales-advantage/app/[locale]/lesson/[id]/page.tsx(5,75): error TS2307: Cannot find module '@reading-advantage/ui' or its corresponding type declarations.
+apps/sales-advantage/app/[locale]/lesson/[id]/page.tsx(6,24): error TS2307: Cannot find module '@reading-advantage/ui' or its corresponding type declarations.
+apps/sales-advantage/app/[locale]/lesson/[id]/page.tsx(15,53): error TS2339: Property 'sales' does not exist on type '"The property 'Provider' in your router collides with a built-in method, rename this router or procedure on your backend." | "The property 'createClient' in your router collides with a built-in method, rename this router or procedure on your backend." | "The property 'useContext' in your router collides with a built...'.
+  Property 'sales' does not exist on type '"The property 'Provider' in your router collides with a built-in method, rename this router or procedure on your backend."'.
+apps/sales-advantage/app/[locale]/module/[slug]/page.tsx(6,75): error TS2307: Cannot find module '@reading-advantage/ui' or its corresponding type declarations.
+apps/sales-advantage/app/[locale]/module/[slug]/page.tsx(7,23): error TS2307: Cannot find module '@reading-advantage/ui' or its corresponding type declarations.
+apps/sales-advantage/app/[locale]/module/[slug]/page.tsx(8,24): error TS2307: Cannot find module '@reading-advantage/ui' or its corresponding type declarations.
+apps/sales-advantage/app/[locale]/module/[slug]/page.tsx(15,41): error TS2339: Property 'sales' does not exist on type '"The property 'Provider' in your router collides with a built-in method, rename this router or procedure on your backend." | "The property 'createClient' in your router collides with a built-in method, rename this router or procedure on your backend." | "The property 'useContext' in your router collides with a built...'.
+  Property 'sales' does not exist on type '"The property 'Provider' in your router collides with a built-in method, rename this router or procedure on your backend."'.
+apps/sales-advantage/app/[locale]/page.tsx(4,25): error TS2307: Cannot find module '@reading-advantage/auth-client' or its corresponding type declarations.
+apps/sales-advantage/app/[locale]/page.tsx(8,75): error TS2307: Cannot find module '@reading-advantage/ui' or its corresponding type declarations.
+apps/sales-advantage/app/[locale]/page.tsx(9,23): error TS2307: Cannot find module '@reading-advantage/ui' or its corresponding type declarations.
+apps/sales-advantage/app/[locale]/page.tsx(15,36): error TS2339: Property 'sales' does not exist on type '"The property 'Provider' in your router collides with a built-in method, rename this router or procedure on your backend." | "The property 'createClient' in your router collides with a built-in method, rename this router or procedure on your backend." | "The property 'useContext' in your router collides with a built...'.
+  Property 'sales' does not exist on type '"The property 'Provider' in your router collides with a built-in method, rename this router or procedure on your backend."'.
+apps/sales-advantage/app/[locale]/page.tsx(55,23): error TS7006: Parameter 'mod' implicitly has an 'any' type.
+apps/sales-advantage/app/[locale]/page.tsx(55,28): error TS7006: Parameter 'idx' implicitly has an 'any' type.
+apps/sales-advantage/app/api/auth/login/route.ts(1,29): error TS2307: Cannot find module '@reading-advantage/api/routes/auth' or its corresponding type declarations.
+apps/sales-advantage/app/api/auth/logout/route.ts(1,30): error TS2307: Cannot find module '@reading-advantage/api/routes/auth' or its corresponding type declarations.
+apps/sales-advantage/app/api/auth/session/route.ts(1,31): error TS2307: Cannot find module '@reading-advantage/api/routes/auth' or its corresponding type declarations.
+apps/sales-advantage/app/api/chat/route.ts(2,65): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/sales-advantage/app/api/chat/route.ts(3,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/sales-advantage/app/api/chat/route.ts(4,29): error TS2307: Cannot find module '@reading-advantage/ai' or its corresponding type declarations.
+apps/sales-advantage/app/api/chat/route.ts(5,23): error TS2307: Cannot find module '@reading-advantage/domain' or its corresponding type declarations.
+apps/sales-advantage/app/api/lesson-complete/route.ts(2,54): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/sales-advantage/app/api/lesson-complete/route.ts(3,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/sales-advantage/app/api/lesson-complete/route.ts(4,42): error TS2307: Cannot find module '@reading-advantage/domain/sales' or its corresponding type declarations.
+apps/sales-advantage/app/api/roleplay-attempts/route.ts(2,54): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/sales-advantage/app/api/roleplay-attempts/route.ts(3,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/sales-advantage/app/api/roleplay-attempts/route.ts(8,8): error TS2307: Cannot find module '@reading-advantage/domain/sales' or its corresponding type declarations.
+apps/sales-advantage/app/api/roleplay-attempts/route.ts(13,8): error TS2307: Cannot find module '@reading-advantage/types' or its corresponding type declarations.
+apps/sales-advantage/app/api/roleplay-attempts/route.ts(14,34): error TS2307: Cannot find module '@reading-advantage/storage' or its corresponding type declarations.
+apps/sales-advantage/app/api/roleplay-attempts/route.ts(15,29): error TS2307: Cannot find module '@reading-advantage/ai' or its corresponding type declarations.
+apps/sales-advantage/app/api/trpc/[trpc]/route.ts(2,42): error TS2307: Cannot find module '@reading-advantage/api' or its corresponding type declarations.
+apps/sales-advantage/components/chat-tutor.tsx(5,58): error TS2307: Cannot find module '@reading-advantage/ui' or its corresponding type declarations.
+apps/sales-advantage/components/chat-tutor.tsx(6,23): error TS2307: Cannot find module '@reading-advantage/ui' or its corresponding type declarations.
+apps/sales-advantage/components/chat-tutor.tsx(7,24): error TS2307: Cannot find module '@reading-advantage/ui' or its corresponding type declarations.
+apps/sales-advantage/components/chat-tutor.tsx(99,24): error TS7006: Parameter 'e' implicitly has an 'any' type.
+apps/sales-advantage/components/chat-tutor.tsx(100,25): error TS7006: Parameter 'e' implicitly has an 'any' type.
+apps/sales-advantage/components/header.tsx(4,25): error TS2307: Cannot find module '@reading-advantage/auth-client' or its corresponding type declarations.
+apps/sales-advantage/components/header.tsx(5,24): error TS2307: Cannot find module '@reading-advantage/ui' or its corresponding type declarations.
+apps/sales-advantage/components/language-switcher.tsx(6,24): error TS2307: Cannot find module '@reading-advantage/ui' or its corresponding type declarations.
+apps/sales-advantage/components/login-form.tsx(3,25): error TS2307: Cannot find module '@reading-advantage/auth-client' or its corresponding type declarations.
+apps/sales-advantage/components/login-form.tsx(5,24): error TS2307: Cannot find module '@reading-advantage/ui' or its corresponding type declarations.
+apps/sales-advantage/components/login-form.tsx(6,23): error TS2307: Cannot find module '@reading-advantage/ui' or its corresponding type declarations.
+apps/sales-advantage/components/login-form.tsx(7,58): error TS2307: Cannot find module '@reading-advantage/ui' or its corresponding type declarations.
+apps/sales-advantage/components/login-form.tsx(47,28): error TS7006: Parameter 'e' implicitly has an 'any' type.
+apps/sales-advantage/components/login-form.tsx(57,28): error TS7006: Parameter 'e' implicitly has an 'any' type.
+apps/sales-advantage/components/providers.tsx(8,30): error TS2307: Cannot find module '@reading-advantage/auth-client' or its corresponding type declarations.
+apps/sales-advantage/components/providers.tsx(18,10): error TS2339: Property 'createClient' does not exist on type '"The property 'Provider' in your router collides with a built-in method, rename this router or procedure on your backend." | "The property 'createClient' in your router collides with a built-in method, rename this router or procedure on your backend." | "The property 'useContext' in your router collides with a built...'.
+  Property 'createClient' does not exist on type '"The property 'Provider' in your router collides with a built-in method, rename this router or procedure on your backend."'.
+apps/sales-advantage/components/providers.tsx(33,13): error TS2339: Property 'Provider' does not exist on type '"The property 'Provider' in your router collides with a built-in method, rename this router or procedure on your backend." | "The property 'createClient' in your router collides with a built-in method, rename this router or procedure on your backend." | "The property 'useContext' in your router collides with a built...'.
+  Property 'Provider' does not exist on type '"The property 'Provider' in your router collides with a built-in method, rename this router or procedure on your backend."'.
+apps/sales-advantage/components/providers.tsx(37,14): error TS2339: Property 'Provider' does not exist on type '"The property 'Provider' in your router collides with a built-in method, rename this router or procedure on your backend." | "The property 'createClient' in your router collides with a built-in method, rename this router or procedure on your backend." | "The property 'useContext' in your router collides with a built...'.
+  Property 'Provider' does not exist on type '"The property 'Provider' in your router collides with a built-in method, rename this router or procedure on your backend."'.
+apps/sales-advantage/components/quiz-component.tsx(5,24): error TS2307: Cannot find module '@reading-advantage/ui' or its corresponding type declarations.
+apps/sales-advantage/components/quiz-component.tsx(6,58): error TS2307: Cannot find module '@reading-advantage/ui' or its corresponding type declarations.
+apps/sales-advantage/components/quiz-component.tsx(7,23): error TS2307: Cannot find module '@reading-advantage/ui' or its corresponding type declarations.
+apps/sales-advantage/components/quiz-component.tsx(31,27): error TS2339: Property 'sales' does not exist on type '"The property 'Provider' in your router collides with a built-in method, rename this router or procedure on your backend." | "The property 'createClient' in your router collides with a built-in method, rename this router or procedure on your backend." | "The property 'useContext' in your router collides with a built...'.
+  Property 'sales' does not exist on type '"The property 'Provider' in your router collides with a built-in method, rename this router or procedure on your backend."'.
+apps/sales-advantage/components/quiz-component.tsx(32,17): error TS7006: Parameter 'data' implicitly has an 'any' type.
+apps/sales-advantage/components/roleplay-recorder.tsx(5,24): error TS2307: Cannot find module '@reading-advantage/ui' or its corresponding type declarations.
+apps/sales-advantage/components/roleplay-recorder.tsx(6,75): error TS2307: Cannot find module '@reading-advantage/ui' or its corresponding type declarations.
+apps/sales-advantage/components/roleplay-recorder.tsx(7,26): error TS2307: Cannot find module '@reading-advantage/ui' or its corresponding type declarations.
+apps/sales-advantage/components/roleplay-recorder.tsx(146,35): error TS7006: Parameter 'checked' implicitly has an 'any' type.
+apps/sales-advantage/components/roleplay-result.tsx(3,58): error TS2307: Cannot find module '@reading-advantage/ui' or its corresponding type declarations.
+apps/sales-advantage/components/roleplay-result.tsx(4,23): error TS2307: Cannot find module '@reading-advantage/ui' or its corresponding type declarations.
+apps/sales-advantage/lib/trpc.ts(2,32): error TS2307: Cannot find module '@reading-advantage/api' or its corresponding type declarations.
+apps/sales-advantage/proxy.ts(4,61): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/sales-advantage/proxy.ts(5,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/sales-advantage/proxy.ts(59,39): error TS18046: 'err' is of type 'unknown'.
+apps/sales-advantage/proxy.ts(65,39): error TS18046: 'err' is of type 'unknown'.
+apps/sales-advantage/scripts/sales-curriculum-seed.ts(23,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/sales-advantage/scripts/sales-curriculum-seed.ts(31,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/sales-advantage/scripts/sales-curriculum-seed.ts(32,29): error TS2307: Cannot find module '@reading-advantage/ai' or its corresponding type declarations.
+apps/sales-advantage/scripts/static-seed.ts(13,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/sales-advantage/scripts/static-seed.ts(20,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.

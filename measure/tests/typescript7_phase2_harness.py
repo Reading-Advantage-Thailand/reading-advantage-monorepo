@@ -354,6 +354,28 @@ def _normalized_diagnostics(stream: str) -> list[str]:
     return sorted(normalized)
 
 
+class DiagnosticParityError(AssertionError):
+    """Report a parity rejection together with the exact compiler streams that caused it."""
+
+    def __init__(
+        self,
+        message: str,
+        *,
+        raw_streams: dict[str, dict[str, str]],
+        subprocess_evidence: list[dict[str, Any]],
+    ) -> None:
+        """Initialize a parity failure with auditable raw compiler evidence.
+
+        Args:
+            message: Reason that the parity comparison rejected the runs.
+            raw_streams: Unmodified stdout and stderr from the compared compiler pair.
+            subprocess_evidence: Process evidence for that same compiler pair.
+        """
+        super().__init__(message)
+        self.raw_streams = raw_streams
+        self.subprocess_evidence = subprocess_evidence
+
+
 def run_diagnostic_parity(
     ts6_command: Sequence[str] | Sequence[object],
     ts7_command: Sequence[str] | Sequence[object],
@@ -370,7 +392,7 @@ def run_diagnostic_parity(
         tsconfig_path: Config identity that binds reviewed exception records.
 
     Returns:
-        Parity report with subprocess evidence.
+        Parity report with subprocess evidence and raw streams from the compared pair.
 
     Raises:
         AssertionError: When a diagnostic is missing, added, changed, or no runs occur.
@@ -379,23 +401,56 @@ def run_diagnostic_parity(
         raise AssertionError("zero compiler runs")
     ts6, evidence6 = _launch([str(item) for item in ts6_command])
     ts7, evidence7 = _launch([str(item) for item in ts7_command])
-    if ts6.returncode != ts7.returncode:
-        raise AssertionError("compiler exit semantics differ")
+    raw_streams = {
+        "ts6": {"stdout": ts6.stdout, "stderr": ts6.stderr},
+        "ts7": {"stdout": ts7.stdout, "stderr": ts7.stderr},
+    }
+    subprocess_evidence = [evidence6, evidence7]
+
+    def fail(message: str) -> None:
+        """Raise an auditable parity rejection for the already-run compiler pair.
+
+        Args:
+            message: Reason that the parity comparison rejected the pair.
+
+        Raises:
+            DiagnosticParityError: Always, with the original process evidence attached.
+        """
+        raise DiagnosticParityError(
+            message,
+            raw_streams=raw_streams,
+            subprocess_evidence=subprocess_evidence,
+        )
+
+    signaled_compilers = [
+        (name, completed.returncode)
+        for name, completed in (("ts6", ts6), ("ts7", ts7))
+        if completed.returncode < 0
+    ]
+    if signaled_compilers:
+        compiler, returncode = signaled_compilers[0]
+        fail(f"compiler runtime failure: {compiler} terminated by signal {-returncode}")
+    if (ts6.returncode == 0) != (ts7.returncode == 0):
+        fail("compiler success semantics differ")
     left = _normalized_diagnostics(ts6.stdout + ts6.stderr)
     right = _normalized_diagnostics(ts7.stdout + ts7.stderr)
-    reviewed: set[tuple[str, str]] = set()
+    reviewed_entries: list[dict[str, Any]] = []
     for item in ledger:
         if not isinstance(item, dict):
             raise AssertionError("ledger entry must be an object")
         required = {"diagnostic", "tsconfig_path", "absent_from", "reviewed_by", "reviewed_at", "reason"}
         if required - set(item):
-            raise AssertionError("ledger entry missing reviewed metadata")
+            fail("ledger entry missing reviewed metadata")
         if not all(isinstance(item[key], str) and item[key] for key in required):
-            raise AssertionError("ledger entry fields must be non-empty strings")
+            fail("ledger entry fields must be non-empty strings")
         if item["absent_from"] not in {"ts6", "ts7"}:
-            raise AssertionError("ledger entry has invalid compiler side")
+            fail("ledger entry has invalid compiler side")
         if item["tsconfig_path"] == tsconfig_path:
-            reviewed.add((item["diagnostic"], item["absent_from"]))
+            reviewed_entries.append(item)
+    reviewed = {
+        (item["diagnostic"], item["absent_from"])
+        for item in reviewed_entries
+    }
     missing = [
         diagnostic
         for diagnostic in left
@@ -407,14 +462,32 @@ def run_diagnostic_parity(
         if diagnostic not in left and (diagnostic, "ts6") not in reviewed
     ]
     if missing:
-        raise AssertionError(f"missing TS 7 diagnostic: {missing[0]}")
+        fail(f"missing TS 7 diagnostic: {missing[0]}")
     if added:
-        raise AssertionError(f"additional TS 7 diagnostic: {added[0]}")
+        fail(f"additional TS 7 diagnostic: {added[0]}")
+    applied_ledger_entries = [
+        item
+        for item in reviewed_entries
+        if (
+            item["absent_from"] == "ts7"
+            and item["diagnostic"] in left
+            and item["diagnostic"] not in right
+        )
+        or (
+            item["absent_from"] == "ts6"
+            and item["diagnostic"] in right
+            and item["diagnostic"] not in left
+        )
+    ]
+    if len(applied_ledger_entries) != len(reviewed_entries):
+        fail("unused reviewed parity ledger entry")
     return {
         "compiler_runs": 2,
         "tsconfig_path": tsconfig_path,
         "unexplained_differences": [],
-        "subprocess_evidence": [evidence6, evidence7],
+        "applied_ledger_entries": applied_ledger_entries,
+        "subprocess_evidence": subprocess_evidence,
+        "raw_streams": raw_streams,
     }
 
 

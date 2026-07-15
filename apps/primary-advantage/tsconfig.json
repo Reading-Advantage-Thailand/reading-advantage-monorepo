@@ -3,7 +3,8 @@
   "compilerOptions": {
     "noEmit": true,
     "incremental": true,
-    "types": ["node"],
+    "declaration": false,
+    "declarationMap": false,
     "plugins": [{ "name": "next" }],
     "paths": {
       "@/*": ["./*"]

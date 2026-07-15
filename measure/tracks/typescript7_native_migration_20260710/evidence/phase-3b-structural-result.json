@@ -2,7 +2,7 @@
   "schema_version": 1,
   "track": "typescript7_native_migration_20260710",
   "phase": "Phase 3b: tsconfig structural compatibility",
-  "status": "interim_pass_pending_live_parity",
+  "status": "accepted",
   "scope": [
     "39 tracked tsconfig files",
     "Phase 2 tsconfig compatibility contract and test",
@@ -21,7 +21,7 @@
     "Removed the activity Vinext fixture baseUrl so every tracked config satisfies the adopted no-baseUrl policy.",
     "Kept packages/db tsconfig.build module at ES2022 after a real TypeScript 7 showConfig probe confirmed it is compatible with bundler resolution.",
     "Removed scanner-only Jest, Vitest, and Playwright type additions; imported runner modules provide their own declarations and do not prove ambient-global use.",
-    "Retained or added Node types only where focused native-compiler probes found Node diagnostics, with app-level Node entries left for the all-config parity gate to confirm or remove.",
+    "Retained Node types only in package configs with compiler-proven Node diagnostics and removed unsupported app-level Node entries after the all-config parity gate.",
     "Changed the live repository assertion from a baseline-specific expected baseUrl violation to an empty violation set; deliberately-invalid fixture cases remain unchanged.",
     "Removed the repository regex ambient-type verdict because it could not distinguish imports, string content, and tsconfig include/exclude semantics. Actual compiler parity is the authoritative ambient-type gate."
   ],
@@ -44,5 +44,5 @@
     }
   ],
   "review_input": "Independent Phase 3b audit identified the false-positive regex behavior and verified that ES2022 plus bundler is accepted by TypeScript 7.0.2. It also supplied focused Node-type probes for package configs.",
-  "remaining_gate": "Run the real TypeScript 6 and 7 diagnostics against all 39 configs, then retain only compiler-proven ambient types and record every diagnostic difference in diagnostic-parity-ledger.json."
+  "acceptance": "The provenance-bound Phase 3c run completed all 39 TypeScript 6/7 compiler pairs with stable inputs, zero failures, and exact one-time application of every reviewed ledger entry."
 }

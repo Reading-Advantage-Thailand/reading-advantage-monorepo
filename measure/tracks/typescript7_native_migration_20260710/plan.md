@@ -64,14 +64,14 @@
     alias through the workspace catalog.
   - [x] Regenerate and review the lockfile without unrelated dependency upgrades.
   - [x] Run frozen install and peer-dependency checks. [accepted in phase-3a-acceptance-result.json]
-- [~] Task: Make all tsconfigs TypeScript 7-compatible.
-  - [ ] Add minimal explicit Node/Jest/Vitest/Playwright/global type lists per project.
-  - [ ] Remove marketing `baseUrl` and preserve path-alias resolution.
-  - [ ] Remove or replace other TypeScript 7-incompatible options and constructs.
-- [~] Task: Establish and reconcile TypeScript 6/7 diagnostic parity.
-  - [ ] Run the parity harness across all 24 configs.
-  - [ ] Fix migration-caused errors in their owning workspace.
-  - [ ] Record and review every intentional diagnostic or semantic difference.
+- [x] Task: Make all tsconfigs TypeScript 7-compatible. [accepted in phase-3b-structural-result.json and phase-3c-acceptance-result.json]
+  - [x] Add only compiler-proven Node/Jest/Vitest/Playwright/global type lists per project.
+  - [x] Remove marketing `baseUrl` and preserve path-alias resolution.
+  - [x] Remove or replace other TypeScript 7-incompatible options and constructs.
+- [x] Task: Establish and reconcile TypeScript 6/7 diagnostic parity. [accepted in phase-3c-acceptance-result.json]
+  - [x] Run the provenance-bound parity harness across all 39 configs.
+  - [x] Fix migration-caused errors in their owning workspace.
+  - [x] Record and review every intentional diagnostic or semantic difference.
 - [~] Task: Migrate check-types and eligible build commands.
   - [ ] Switch root and workspace `check-types` scripts to the native compiler.
   - [ ] Verify JavaScript and declaration emit before switching direct `tsc` builds.

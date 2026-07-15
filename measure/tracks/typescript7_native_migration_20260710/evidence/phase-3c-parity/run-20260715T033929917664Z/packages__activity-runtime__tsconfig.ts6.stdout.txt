@@ -1,0 +1,1 @@
+packages/activity-runtime/src/internal/practice-mapping.ts(1,49): error TS2307: Cannot find module '@reading-advantage/practice-core/contract' or its corresponding type declarations.

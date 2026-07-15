@@ -1,0 +1,39 @@
+packages/auth/src/__tests__/audit-retention-boundary.integration.test.ts(3,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/auth/src/__tests__/audit-retention-boundary.integration.test.ts(4,29): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/auth/src/__tests__/audit-retention-boundary.integration.test.ts(132,40): error TS7006: Parameter 'r' implicitly has an 'any' type.
+packages/auth/src/__tests__/audit-retention-boundary.integration.test.ts(188,40): error TS7006: Parameter 'r' implicitly has an 'any' type.
+packages/auth/src/__tests__/audit-retention-boundary.integration.test.ts(241,40): error TS7006: Parameter 'r' implicitly has an 'any' type.
+packages/auth/src/__tests__/audit-retention-job.integration.test.ts(3,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/auth/src/__tests__/audit-retention-job.integration.test.ts(4,29): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/auth/src/__tests__/audit-retention.integration.test.ts(3,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/auth/src/__tests__/audit-retention.integration.test.ts(4,29): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/auth/src/__tests__/audit-retention.integration.test.ts(121,41): error TS7006: Parameter 'r' implicitly has an 'any' type.
+packages/auth/src/__tests__/audit.test.ts(85,33): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/auth/src/__tests__/audit.test.ts(108,33): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/auth/src/__tests__/audit.test.ts(122,33): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/auth/src/__tests__/audit.test.ts(147,33): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/auth/src/__tests__/audit.test.ts(158,33): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/auth/src/__tests__/session.test.ts(272,33): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/auth/src/__tests__/session.test.ts(375,33): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/auth/src/__tests__/session.test.ts(455,33): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/auth/src/__tests__/session.test.ts(566,39): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/auth/src/audit-retention-job.ts(2,36): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/auth/src/audit-retention-job.ts(3,25): error TS2307: Cannot find module '@reading-advantage/db/client' or its corresponding type declarations.
+packages/auth/src/audit-retention.ts(2,36): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/auth/src/audit-retention.ts(3,25): error TS2307: Cannot find module '@reading-advantage/db/client' or its corresponding type declarations.
+packages/auth/src/audit.ts(1,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/auth/src/audit.ts(2,29): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/auth/src/password.ts(4,26): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/auth/src/password.ts(5,41): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/auth/src/password.ts(6,30): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/auth/src/rate-limit-cleanup.ts(14,36): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/auth/src/rate-limit-cleanup.ts(15,25): error TS2307: Cannot find module '@reading-advantage/db/client' or its corresponding type declarations.
+packages/auth/src/rate-limit-store.ts(11,31): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/auth/src/rate-limit-store.ts(12,30): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/auth/src/rate-limit.ts(18,30): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/auth/src/server.ts(1,41): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/auth/src/server.ts(2,30): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/auth/src/session.ts(3,61): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/auth/src/session.ts(4,33): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/auth/src/session.ts(5,30): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/auth/src/session.ts(46,47): error TS7006: Parameter 'tx' implicitly has an 'any' type.

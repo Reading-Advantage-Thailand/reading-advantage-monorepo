@@ -12,6 +12,7 @@
     "cache-invalidation-fixture/unchanged-compiler.json": "f3afac4fc80b38baa125581cdfc2efc63004d62470d392293596afa101643700",
     "parity-broken-diagnostic/ts6.json": "13ec35b87638f3d99023a174ddaa78c05a6aa72de29870d1cb272bcc71302a31",
     "parity-broken-diagnostic/ts7-equivalent.json": "443bb3b18bf2de3f7b031f0d1861e37bc066fdec04725376f39c74ace21470fb",
+    "parity-broken-diagnostic/ts7-equivalent-exit1.json": "bab6b8ba5e4814a26f6b0f003e723b24747ed9dde4bdbc4c465a45ede97ed220",
     "parity-broken-diagnostic/ts7-missing.json": "6f4e009c62ef5ab82c9d3f3386a9bd2933676f401c93e602d059262f425cc69f",
     "resource-parser-fixtures/above-ceiling.json": "8ecb557ac95b7b5f6e66a937e898c8781dd790c5928cb74bd3d1f15e9de426b3",
     "resource-parser-fixtures/boolean.json": "f0fa6ad685fcabab19fbf2a542a87ebcf9d52fd524f4d17367e817743933dad9",

@@ -1,0 +1,368 @@
+apps/primary-advantage/actions/article.ts(17,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/actions/article.ts(21,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/actions/article.ts(91,8): error TS7006: Parameter 'activity' implicitly has an 'any' type.
+apps/primary-advantage/actions/article.ts(100,8): error TS7006: Parameter 'activity' implicitly has an 'any' type.
+apps/primary-advantage/actions/article.ts(114,29): error TS7006: Parameter 'activity' implicitly has an 'any' type.
+apps/primary-advantage/actions/article.ts(119,40): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+apps/primary-advantage/actions/article.ts(119,45): error TS7006: Parameter 'log' implicitly has an 'any' type.
+apps/primary-advantage/actions/flashcard.ts(16,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/actions/flashcard.ts(27,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/actions/flashcard.ts(31,27): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/actions/flashcard.ts(264,8): error TS7006: Parameter 'card' implicitly has an 'any' type.
+apps/primary-advantage/actions/flashcard.ts(267,46): error TS7006: Parameter 'card' implicitly has an 'any' type.
+apps/primary-advantage/actions/flashcard.ts(352,27): error TS7006: Parameter 'deck' implicitly has an 'any' type.
+apps/primary-advantage/actions/flashcard.ts(367,24): error TS7006: Parameter 'deck' implicitly has an 'any' type.
+apps/primary-advantage/actions/flashcard.ts(416,27): error TS7006: Parameter 'deck' implicitly has an 'any' type.
+apps/primary-advantage/actions/flashcard.ts(420,39): error TS7006: Parameter 'row' implicitly has an 'any' type.
+apps/primary-advantage/actions/flashcard.ts(440,31): error TS7006: Parameter 'p' implicitly has an 'any' type.
+apps/primary-advantage/actions/flashcard.ts(448,25): error TS2339: Property 'nextReviewAt' does not exist on type '{}'.
+apps/primary-advantage/actions/flashcard.ts(449,24): error TS2339: Property 'nextReviewAt' does not exist on type '{}'.
+apps/primary-advantage/actions/flashcard.ts(513,10): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+apps/primary-advantage/actions/flashcard.ts(513,15): error TS7006: Parameter 'deck' implicitly has an 'any' type.
+apps/primary-advantage/actions/flashcard.ts(523,25): error TS7006: Parameter 'deck' implicitly has an 'any' type.
+apps/primary-advantage/actions/flashcard.ts(813,33): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+apps/primary-advantage/actions/flashcard.ts(888,8): error TS7006: Parameter 'word' implicitly has an 'any' type.
+apps/primary-advantage/actions/flashcard.ts(892,8): error TS7006: Parameter 'sentence' implicitly has an 'any' type.
+apps/primary-advantage/actions/flashcard.ts(895,24): error TS7006: Parameter 'word' implicitly has an 'any' type.
+apps/primary-advantage/actions/flashcard.ts(895,30): error TS7006: Parameter 'index' implicitly has an 'any' type.
+apps/primary-advantage/actions/flashcard.ts(911,24): error TS7006: Parameter 'sentence' implicitly has an 'any' type.
+apps/primary-advantage/actions/flashcard.ts(911,34): error TS7006: Parameter 'index' implicitly has an 'any' type.
+apps/primary-advantage/actions/flashcard.ts(1009,8): error TS7006: Parameter 'card' implicitly has an 'any' type.
+apps/primary-advantage/actions/flashcard.ts(1051,8): error TS7006: Parameter 'card' implicitly has an 'any' type.
+apps/primary-advantage/actions/flashcard.ts(1191,8): error TS7006: Parameter 'card' implicitly has an 'any' type.
+apps/primary-advantage/actions/flashcard.ts(1270,8): error TS7006: Parameter 'card' implicitly has an 'any' type.
+apps/primary-advantage/actions/pratice.ts(8,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/actions/pratice.ts(9,32): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/actions/question.ts(7,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/actions/question.ts(13,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/actions/question.ts(151,31): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+apps/primary-advantage/actions/test.ts(6,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/actions/test.ts(7,26): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/actions/test.ts(18,39): error TS2741: Property 'sentences' is missing in type '{ passage: any; articleId: string; }' but required in type 'GenerateAudioParams'.
+apps/primary-advantage/actions/test.ts(69,49): error TS7006: Parameter 'article' implicitly has an 'any' type.
+apps/primary-advantage/actions/test.ts(76,8): error TS7006: Parameter 'result' implicitly has an 'any' type.
+apps/primary-advantage/actions/test.ts(79,8): error TS7006: Parameter 'result' implicitly has an 'any' type.
+apps/primary-advantage/actions/test.ts(118,7): error TS2322: Type 'string[]' is not assignable to type 'string'.
+apps/primary-advantage/actions/user.ts(8,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/actions/user.ts(14,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/actions/user.ts(83,31): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+apps/primary-advantage/app/[locale]/(student)/student/lesson/[id]/page.tsx(7,37): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/[locale]/(student)/student/read/[articleId]/page.tsx(54,6): error TS7006: Parameter 'activity' implicitly has an 'any' type.
+apps/primary-advantage/app/[locale]/(student)/student/read/[articleId]/page.tsx(61,10): error TS7006: Parameter 'activity' implicitly has an 'any' type.
+apps/primary-advantage/app/[locale]/(student)/student/read/[articleId]/page.tsx(101,18): error TS7006: Parameter 'word' implicitly has an 'any' type.
+apps/primary-advantage/app/[locale]/(student)/student/read/[articleId]/page.tsx(109,18): error TS7006: Parameter 'sentence' implicitly has an 'any' type.
+apps/primary-advantage/app/api/assistant/lesson-chatbot/route.ts(5,28): error TS2307: Cannot find module '@reading-advantage/ai/internal-sdk' or its corresponding type declarations.
+apps/primary-advantage/app/api/auth/impersonate/route.ts(1,35): error TS2307: Cannot find module '@reading-advantage/api/routes/auth' or its corresponding type declarations.
+apps/primary-advantage/app/api/auth/login/route.ts(1,29): error TS2307: Cannot find module '@reading-advantage/api/routes/auth' or its corresponding type declarations.
+apps/primary-advantage/app/api/auth/logout/route.ts(1,30): error TS2307: Cannot find module '@reading-advantage/api/routes/auth' or its corresponding type declarations.
+apps/primary-advantage/app/api/auth/register/route.ts(1,32): error TS2307: Cannot find module '@reading-advantage/api/routes/auth' or its corresponding type declarations.
+apps/primary-advantage/app/api/auth/reset-password/route.ts(1,37): error TS2307: Cannot find module '@reading-advantage/api/routes/auth' or its corresponding type declarations.
+apps/primary-advantage/app/api/auth/session/route.ts(1,31): error TS2307: Cannot find module '@reading-advantage/api/routes/auth' or its corresponding type declarations.
+apps/primary-advantage/app/api/classrooms/route.ts(3,34): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/classrooms/route.ts(4,72): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/classrooms/route.ts(41,41): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/primary-advantage/app/api/classrooms/route.ts(47,37): error TS7006: Parameter 'n' implicitly has an 'any' type.
+apps/primary-advantage/app/api/classrooms/route.ts(76,32): error TS7006: Parameter 'classroom' implicitly has an 'any' type.
+apps/primary-advantage/app/api/classrooms/route.ts(83,45): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/primary-advantage/app/api/classrooms/route.ts(92,34): error TS7006: Parameter 'sid' implicitly has an 'any' type.
+apps/primary-advantage/app/api/classrooms/route.ts(99,66): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/primary-advantage/app/api/classrooms/route.ts(100,49): error TS7006: Parameter 'sid' implicitly has an 'any' type.
+apps/primary-advantage/app/api/debug/auth/route.ts(3,24): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/debug/auth/route.ts(4,64): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/debug/auth/route.ts(61,34): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/primary-advantage/app/api/debug/auth/route.ts(62,44): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/primary-advantage/app/api/debug/init-roles/route.ts(2,24): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/debug/init-roles/route.ts(3,41): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/debug/init-roles/route.ts(32,21): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/primary-advantage/app/api/debug/init-roles/route.ts(38,31): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/primary-advantage/app/api/debug/init-roles/route.ts(59,38): error TS7006: Parameter 'u' implicitly has an 'any' type.
+apps/primary-advantage/app/api/debug/init-roles/route.ts(79,37): error TS7006: Parameter 'user' implicitly has an 'any' type.
+apps/primary-advantage/app/api/debug/school/route.ts(3,24): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/debug/school/route.ts(4,56): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/flashcard/__tests__/flashcard-schema-contract.test.ts(31,32): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/flashcard/cards/[cardId]/review/route.ts(3,34): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/flashcard/cards/[cardId]/review/route.ts(4,90): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/flashcard/cards/[cardId]/review/route.ts(62,48): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+apps/primary-advantage/app/api/flashcard/deck-id/route.ts(3,39): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/flashcard/deck-id/route.ts(4,48): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/flashcard/decks/[deckId]/due/route.ts(3,35): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/flashcard/decks/[deckId]/due/route.ts(4,61): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/flashcard/decks/[deckId]/due/route.ts(45,32): error TS7006: Parameter 'c' implicitly has an 'any' type.
+apps/primary-advantage/app/api/flashcard/decks/[deckId]/due/route.ts(56,41): error TS7006: Parameter 'c' implicitly has an 'any' type.
+apps/primary-advantage/app/api/flashcard/decks/[deckId]/sentences-for-cloze/route.ts(2,40): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/flashcard/decks/[deckId]/sentences-for-cloze/route.ts(3,100): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/flashcard/decks/[deckId]/sentences-for-matching/route.ts(2,51): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/flashcard/decks/[deckId]/sentences-for-matching/route.ts(3,100): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/flashcard/decks/[deckId]/sentences-for-ordering/route.ts(2,51): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/flashcard/decks/[deckId]/sentences-for-ordering/route.ts(3,100): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/flashcard/decks/[deckId]/words-for-ordering/route.ts(2,40): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/flashcard/decks/[deckId]/words-for-ordering/route.ts(3,100): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/flashcard/save/[id]/route.ts(3,24): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/flashcard/save/[id]/route.ts(4,26): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/licenses/[id]/route.ts(3,24): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/licenses/[id]/route.ts(4,35): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/licenses/[id]/route.ts(6,34): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/licenses/route.ts(2,62): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/licenses/route.ts(3,35): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/licenses/route.ts(8,34): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/licenses/route.ts(155,13): error TS7006: Parameter 'l' implicitly has an 'any' type.
+apps/primary-advantage/app/api/licenses/route.ts(156,16): error TS7006: Parameter 'id' implicitly has an 'any' type.
+apps/primary-advantage/app/api/licenses/route.ts(170,48): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/primary-advantage/app/api/licenses/route.ts(172,49): error TS7006: Parameter 'l' implicitly has an 'any' type.
+apps/primary-advantage/app/api/schools/ranking/route.ts(7,24): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/schools/ranking/route.ts(8,23): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/schools/ranking/route.ts(64,57): error TS2345: Argument of type 'string | null' is not assignable to parameter of type 'string | undefined'.
+  Type 'null' is not assignable to type 'string | undefined'.
+apps/primary-advantage/app/api/schools/route.ts(3,46): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/schools/route.ts(4,35): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/schools/route.ts(94,39): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/primary-advantage/app/api/schools/route.ts(117,49): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/primary-advantage/app/api/students/leaderboard/route.ts(4,24): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/students/leaderboard/route.ts(5,23): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/upload/classes/route.ts(7,49): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/upload/classes/route.ts(8,91): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/upload/classes/route.ts(115,69): error TS7006: Parameter 'c' implicitly has an 'any' type.
+apps/primary-advantage/app/api/upload/classes/route.ts(189,48): error TS7006: Parameter 'ur' implicitly has an 'any' type.
+apps/primary-advantage/app/api/upload/classes/route.ts(191,50): error TS7006: Parameter 'role' implicitly has an 'any' type.
+apps/primary-advantage/app/api/upload/classes/route.ts(728,13): error TS7022: 'roles' implicitly has type 'any' because it does not have a type annotation and is referenced directly or indirectly in its own initializer.
+apps/primary-advantage/app/api/upload/classes/route.ts(728,44): error TS2448: Block-scoped variable 'roles' used before its declaration.
+apps/primary-advantage/app/api/upload/classes/route.ts(729,42): error TS7006: Parameter 'role' implicitly has an 'any' type.
+apps/primary-advantage/app/api/upload/classes/route.ts(923,33): error TS7006: Parameter 'et' implicitly has an 'any' type.
+apps/primary-advantage/app/api/upload/csv/route.ts(6,49): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/upload/csv/route.ts(7,91): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/upload/csv/route.ts(69,48): error TS7006: Parameter 'ur' implicitly has an 'any' type.
+apps/primary-advantage/app/api/upload/csv/route.ts(71,50): error TS7006: Parameter 'role' implicitly has an 'any' type.
+apps/primary-advantage/app/api/upload/csv/route.ts(209,43): error TS7006: Parameter 'role' implicitly has an 'any' type.
+apps/primary-advantage/app/api/upload/csv/route.ts(361,40): error TS2322: Type '{}' is not assignable to type 'string'.
+apps/primary-advantage/app/api/users/[id]/route.ts(2,24): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/users/[id]/route.ts(3,41): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/users/[id]/route.ts(48,53): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+apps/primary-advantage/app/api/users/me/school/admins/[adminId]/route.ts(3,24): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/users/me/school/admins/[adminId]/route.ts(4,64): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/users/me/school/admins/[adminId]/route.ts(106,10): error TS7006: Parameter 'ur' implicitly has an 'any' type.
+apps/primary-advantage/app/api/users/me/school/admins/[adminId]/route.ts(140,8): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/primary-advantage/app/api/users/me/school/admins/route.ts(3,29): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/users/me/school/admins/route.ts(4,64): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/users/me/school/admins/route.ts(101,8): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/primary-advantage/app/api/users/me/school/admins/route.ts(106,48): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/primary-advantage/app/api/users/me/school/admins/route.ts(145,12): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/primary-advantage/app/api/users/me/school/route.ts(3,44): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/users/me/school/route.ts(4,74): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/users/me/school/route.ts(54,35): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/primary-advantage/app/api/users/me/school/route.ts(95,18): error TS7006: Parameter 'rows' implicitly has an 'any' type.
+apps/primary-advantage/app/api/users/me/school/route.ts(161,8): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/primary-advantage/app/api/users/me/school/route.ts(170,53): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/primary-advantage/app/api/users/me/school/route.ts(225,35): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/primary-advantage/app/api/users/me/school/route.ts(353,35): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/primary-advantage/app/api/users/me/school/route.ts(388,18): error TS7006: Parameter 'rows' implicitly has an 'any' type.
+apps/primary-advantage/app/api/users/me/school/route.ts(467,8): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/primary-advantage/app/api/users/search/route.ts(3,65): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/users/search/route.ts(4,41): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/app/api/users/search/route.ts(41,39): error TS7006: Parameter 'u' implicitly has an 'any' type.
+apps/primary-advantage/app/api/users/search/route.ts(57,46): error TS7006: Parameter 'u' implicitly has an 'any' type.
+apps/primary-advantage/components/articles/questions/la-question-content.tsx(43,28): error TS2307: Cannot find module '@reading-advantage/auth-client' or its corresponding type declarations.
+apps/primary-advantage/components/articles/questions/mc-question-card.tsx(14,46): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/components/articles/questions/mc-question-content.tsx(15,28): error TS2307: Cannot find module '@reading-advantage/auth-client' or its corresponding type declarations.
+apps/primary-advantage/components/articles/questions/sa-question-content.tsx(41,28): error TS2307: Cannot find module '@reading-advantage/auth-client' or its corresponding type declarations.
+apps/primary-advantage/components/articles/questions/sa-question-content.tsx(114,13): error TS2552: Cannot find name 'update'. Did you mean 'Date'?
+apps/primary-advantage/components/articles/questions/sa-question-content.tsx(116,20): error TS2304: Cannot find name 'session'.
+apps/primary-advantage/components/auth/teacher-signin-form.tsx(20,25): error TS2307: Cannot find module '@reading-advantage/auth-client' or its corresponding type declarations.
+apps/primary-advantage/components/change-username-form.tsx(20,28): error TS2307: Cannot find module '@reading-advantage/auth-client' or its corresponding type declarations.
+apps/primary-advantage/components/dashboard/user-reading-chart.tsx(30,46): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/components/flashcards/flashcard-dashboard.tsx(106,36): error TS7006: Parameter 'deck' implicitly has an 'any' type.
+apps/primary-advantage/components/flashcards/flashcard-dashboard.tsx(121,38): error TS7006: Parameter 'deck' implicitly has an 'any' type.
+apps/primary-advantage/components/flashcards/flashcard-dashboard.tsx(122,36): error TS7006: Parameter 'deck' implicitly has an 'any' type.
+apps/primary-advantage/components/flashcards/flashcard-game.tsx(28,28): error TS2307: Cannot find module '@reading-advantage/auth-client' or its corresponding type declarations.
+apps/primary-advantage/components/lesson/games/lesson-sentence-cloze-test.tsx(42,28): error TS2307: Cannot find module '@reading-advantage/auth-client' or its corresponding type declarations.
+apps/primary-advantage/components/lesson/games/lesson-sentence-cloze-test.tsx(524,7): error TS2552: Cannot find name 'update'. Did you mean 'Date'?
+apps/primary-advantage/components/lesson/games/lesson-sentence-cloze-test.tsx(526,14): error TS2304: Cannot find name 'session'.
+apps/primary-advantage/components/lesson/games/lesson-sentence-flashcard.tsx(68,28): error TS2307: Cannot find module '@reading-advantage/auth-client' or its corresponding type declarations.
+apps/primary-advantage/components/lesson/games/lesson-sentence-flashcard.tsx(230,13): error TS2552: Cannot find name 'update'. Did you mean 'Date'?
+apps/primary-advantage/components/lesson/games/lesson-sentence-flashcard.tsx(232,20): error TS2304: Cannot find name 'session'.
+apps/primary-advantage/components/lesson/games/lesson-sentence-matching.tsx(42,28): error TS2307: Cannot find module '@reading-advantage/auth-client' or its corresponding type declarations.
+apps/primary-advantage/components/lesson/games/lesson-sentence-matching.tsx(217,7): error TS2552: Cannot find name 'update'. Did you mean 'Date'?
+apps/primary-advantage/components/lesson/games/lesson-sentence-matching.tsx(219,14): error TS2304: Cannot find name 'session'.
+apps/primary-advantage/components/lesson/games/lesson-sentence-order-word.tsx(42,28): error TS2307: Cannot find module '@reading-advantage/auth-client' or its corresponding type declarations.
+apps/primary-advantage/components/lesson/games/lesson-sentence-order.tsx(41,28): error TS2307: Cannot find module '@reading-advantage/auth-client' or its corresponding type declarations.
+apps/primary-advantage/components/lesson/games/lesson-sentence-order.tsx(304,7): error TS2552: Cannot find name 'update'. Did you mean 'Date'?
+apps/primary-advantage/components/lesson/games/lesson-sentence-order.tsx(306,14): error TS2304: Cannot find name 'session'.
+apps/primary-advantage/components/lesson/games/lesson-vocabulary-flashcard-card.tsx(67,28): error TS2307: Cannot find module '@reading-advantage/auth-client' or its corresponding type declarations.
+apps/primary-advantage/components/lesson/games/lesson-vocabulary-flashcard-card.tsx(236,13): error TS2552: Cannot find name 'update'. Did you mean 'Date'?
+apps/primary-advantage/components/lesson/games/lesson-vocabulary-flashcard-card.tsx(238,20): error TS2304: Cannot find name 'session'.
+apps/primary-advantage/components/lesson/games/lesson-vocabulary-matching.tsx(42,28): error TS2307: Cannot find module '@reading-advantage/auth-client' or its corresponding type declarations.
+apps/primary-advantage/components/lesson/games/lesson-vocabulary-matching.tsx(215,7): error TS2552: Cannot find name 'update'. Did you mean 'Date'?
+apps/primary-advantage/components/lesson/games/lesson-vocabulary-matching.tsx(217,14): error TS2304: Cannot find name 'session'.
+apps/primary-advantage/components/lesson/lesson-language-question.tsx(9,28): error TS2307: Cannot find module '@reading-advantage/auth-client' or its corresponding type declarations.
+apps/primary-advantage/components/lesson/pratice/lesson-task-mcq.tsx(24,28): error TS2307: Cannot find module '@reading-advantage/auth-client' or its corresponding type declarations.
+apps/primary-advantage/components/lesson/pratice/lesson-task-mcq.tsx(208,13): error TS2552: Cannot find name 'update'. Did you mean 'Date'?
+apps/primary-advantage/components/lesson/pratice/lesson-task-mcq.tsx(210,20): error TS2304: Cannot find name 'session'.
+apps/primary-advantage/components/lesson/pratice/lesson-task-saq.tsx(26,28): error TS2307: Cannot find module '@reading-advantage/auth-client' or its corresponding type declarations.
+apps/primary-advantage/components/lesson/pratice/lesson-task-saq.tsx(101,11): error TS2552: Cannot find name 'update'. Did you mean 'Date'?
+apps/primary-advantage/components/lesson/pratice/lesson-task-saq.tsx(103,18): error TS2304: Cannot find name 'session'.
+apps/primary-advantage/components/lesson/task/task-lesson-summary.tsx(25,28): error TS2307: Cannot find module '@reading-advantage/auth-client' or its corresponding type declarations.
+apps/primary-advantage/components/lesson/task/task-lesson-summary.tsx(80,11): error TS2552: Cannot find name 'update'. Did you mean 'Date'?
+apps/primary-advantage/components/lesson/task/task-lesson-summary.tsx(82,18): error TS2304: Cannot find name 'session'.
+apps/primary-advantage/components/nav/user-account-nav.tsx(4,25): error TS2307: Cannot find module '@reading-advantage/auth-client' or its corresponding type declarations.
+apps/primary-advantage/components/nav/user-account-nav.tsx(16,31): error TS2307: Cannot find module '@reading-advantage/auth-client' or its corresponding type declarations.
+apps/primary-advantage/components/pratice/cloze-test-game.tsx(39,28): error TS2307: Cannot find module '@reading-advantage/auth-client' or its corresponding type declarations.
+apps/primary-advantage/components/pratice/cloze-test-game.tsx(522,7): error TS2552: Cannot find name 'update'. Did you mean 'Date'?
+apps/primary-advantage/components/pratice/cloze-test-game.tsx(524,14): error TS2304: Cannot find name 'session'.
+apps/primary-advantage/components/pratice/matching-game.tsx(41,28): error TS2307: Cannot find module '@reading-advantage/auth-client' or its corresponding type declarations.
+apps/primary-advantage/components/pratice/matching-game.tsx(247,7): error TS2552: Cannot find name 'update'. Did you mean 'Date'?
+apps/primary-advantage/components/pratice/matching-game.tsx(249,14): error TS2304: Cannot find name 'session'.
+apps/primary-advantage/components/pratice/order-sentences-game.tsx(35,28): error TS2307: Cannot find module '@reading-advantage/auth-client' or its corresponding type declarations.
+apps/primary-advantage/components/pratice/order-sentences-game.tsx(298,7): error TS2552: Cannot find name 'update'. Did you mean 'Date'?
+apps/primary-advantage/components/pratice/order-sentences-game.tsx(300,14): error TS2304: Cannot find name 'session'.
+apps/primary-advantage/components/pratice/order-words-game.tsx(39,28): error TS2307: Cannot find module '@reading-advantage/auth-client' or its corresponding type declarations.
+apps/primary-advantage/components/providers/session-provider.tsx(3,30): error TS2307: Cannot find module '@reading-advantage/auth-client' or its corresponding type declarations.
+apps/primary-advantage/components/school/school-detail.tsx(44,28): error TS2307: Cannot find module '@reading-advantage/auth-client' or its corresponding type declarations.
+apps/primary-advantage/components/school/school-detail.tsx(124,15): error TS2552: Cannot find name 'update'. Did you mean 'Date'?
+apps/primary-advantage/components/school/school-detail.tsx(125,14): error TS2304: Cannot find name 'session'.
+apps/primary-advantage/components/school/school-detail.tsx(126,22): error TS2304: Cannot find name 'session'.
+apps/primary-advantage/components/school/school-profile-form.tsx(28,28): error TS2307: Cannot find module '@reading-advantage/auth-client' or its corresponding type declarations.
+apps/primary-advantage/components/school/school-profile-form.tsx(107,15): error TS2552: Cannot find name 'update'. Did you mean 'Date'?
+apps/primary-advantage/components/school/school-profile-form.tsx(108,14): error TS2304: Cannot find name 'session'.
+apps/primary-advantage/components/school/school-profile-form.tsx(109,22): error TS2304: Cannot find name 'session'.
+apps/primary-advantage/components/shared/change-role.tsx(15,28): error TS2307: Cannot find module '@reading-advantage/auth-client' or its corresponding type declarations.
+apps/primary-advantage/components/student-assignment-table.tsx(33,36): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/components/student-assignment-table.tsx(69,11): error TS2749: 'AssignmentStatus' refers to a value, but is being used as a type here. Did you mean 'typeof AssignmentStatus'?
+apps/primary-advantage/components/student-assignment-table.tsx(312,23): error TS2749: 'AssignmentStatus' refers to a value, but is being used as a type here. Did you mean 'typeof AssignmentStatus'?
+apps/primary-advantage/components/student-assignment-table.tsx(314,40): error TS2749: 'AssignmentStatus' refers to a value, but is being used as a type here. Did you mean 'typeof AssignmentStatus'?
+apps/primary-advantage/components/student-assignment-table.tsx(327,40): error TS2749: 'AssignmentStatus' refers to a value, but is being used as a type here. Did you mean 'typeof AssignmentStatus'?
+apps/primary-advantage/components/system/edit-license-form.tsx(39,26): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/components/system/license-table.tsx(48,26): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/components/teacher/teacher-progress-reports.tsx(24,31): error TS2307: Cannot find module '@reading-advantage/auth-client' or its corresponding type declarations.
+apps/primary-advantage/components/update-user-license.tsx(20,28): error TS2307: Cannot find module '@reading-advantage/auth-client' or its corresponding type declarations.
+apps/primary-advantage/hooks/use-current-role.ts(3,28): error TS2307: Cannot find module '@reading-advantage/auth-client' or its corresponding type declarations.
+apps/primary-advantage/hooks/use-current-user.ts(3,28): error TS2307: Cannot find module '@reading-advantage/auth-client' or its corresponding type declarations.
+apps/primary-advantage/lib/fsrs-service.ts(14,27): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/lib/session.ts(2,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/lib/session.ts(3,54): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/primary-advantage/lib/test.ts(6,18): error TS2339: Property 'exists' does not exist on type 'Storage'.
+apps/primary-advantage/lib/utils.ts(3,20): error TS2307: Cannot find module '@reading-advantage/utils' or its corresponding type declarations.
+apps/primary-advantage/server/controllers/assignmentController.ts(9,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/server/controllers/assignmentController.ts(15,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/server/controllers/assignmentController.ts(93,18): error TS7006: Parameter 'row' implicitly has an 'any' type.
+apps/primary-advantage/server/controllers/assignmentController.ts(94,15): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/primary-advantage/server/controllers/assignmentController.ts(154,47): error TS7006: Parameter 'row' implicitly has an 'any' type.
+apps/primary-advantage/server/models/__tests__/helpers/testDb.ts(34,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/server/models/__tests__/siblingModels.behavior.test.ts(14,53): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/server/models/__tests__/studentModel.pagination.test.ts(15,53): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/server/models/articleModel.ts(8,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/server/models/articleModel.ts(18,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/server/models/articleModel.ts(390,59): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/server/models/articleModel.ts(423,64): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/server/models/articleModel.ts(487,17): error TS7006: Parameter 'q' implicitly has an 'any' type.
+apps/primary-advantage/server/models/articleModel.ts(534,33): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+apps/primary-advantage/server/models/assignmentModel.ts(7,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/server/models/assignmentModel.ts(15,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/server/models/assignmentModel.ts(75,35): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+apps/primary-advantage/server/models/assignmentModel.ts(181,41): error TS7006: Parameter 'row' implicitly has an 'any' type.
+apps/primary-advantage/server/models/assignmentModel.ts(212,35): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/primary-advantage/server/models/assignmentModel.ts(224,35): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/primary-advantage/server/models/assignmentModel.ts(335,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/server/models/assignmentModel.ts(365,37): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+apps/primary-advantage/server/models/assignmentModel.ts(385,35): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+apps/primary-advantage/server/models/classroomModel.ts(8,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/server/models/classroomModel.ts(19,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/server/models/classroomModel.ts(66,33): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+apps/primary-advantage/server/models/classroomModel.ts(296,49): error TS7006: Parameter 'row' implicitly has an 'any' type.
+apps/primary-advantage/server/models/classroomModel.ts(355,44): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/server/models/classroomModel.ts(392,53): error TS7006: Parameter 'row' implicitly has an 'any' type.
+apps/primary-advantage/server/models/classroomModel.ts(422,33): error TS7006: Parameter 'classroom' implicitly has an 'any' type.
+apps/primary-advantage/server/models/classroomModel.ts(453,38): error TS7006: Parameter 't' implicitly has an 'any' type.
+apps/primary-advantage/server/models/classroomModel.ts(458,38): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/primary-advantage/server/models/classroomModel.ts(520,34): error TS7006: Parameter 't' implicitly has an 'any' type.
+apps/primary-advantage/server/models/classroomModel.ts(524,34): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/primary-advantage/server/models/classroomModel.ts(620,32): error TS7006: Parameter 'row' implicitly has an 'any' type.
+apps/primary-advantage/server/models/classroomModel.ts(686,30): error TS7006: Parameter 'row' implicitly has an 'any' type.
+apps/primary-advantage/server/models/classroomModel.ts(748,17): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/primary-advantage/server/models/classroomModel.ts(749,20): error TS7006: Parameter 'id' implicitly has an 'any' type.
+apps/primary-advantage/server/models/classroomModel.ts(847,41): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/primary-advantage/server/models/classroomModel.ts(864,45): error TS7006: Parameter 'cs' implicitly has an 'any' type.
+apps/primary-advantage/server/models/lessonModel.ts(1,37): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/server/models/lessonModel.ts(3,63): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/server/models/lessonModel.ts(67,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/server/models/lessonModel.ts(104,35): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+apps/primary-advantage/server/models/schoolModel.ts(10,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/server/models/schoolModel.ts(21,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/server/models/schoolModel.ts(72,30): error TS7006: Parameter 'school' implicitly has an 'any' type.
+apps/primary-advantage/server/models/schoolModel.ts(88,45): error TS7006: Parameter 'row' implicitly has an 'any' type.
+apps/primary-advantage/server/models/schoolModel.ts(177,45): error TS7006: Parameter 'student' implicitly has an 'any' type.
+apps/primary-advantage/server/models/schoolModel.ts(299,45): error TS7006: Parameter 'row' implicitly has an 'any' type.
+apps/primary-advantage/server/models/studentModel.ts(10,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/server/models/studentModel.ts(19,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/server/models/studentModel.ts(97,42): error TS7006: Parameter 'row' implicitly has an 'any' type.
+apps/primary-advantage/server/models/studentModel.ts(98,12): error TS18047: 'classroomFilterIds' is possibly 'null'.
+apps/primary-advantage/server/models/studentModel.ts(136,42): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/primary-advantage/server/models/studentModel.ts(158,55): error TS7006: Parameter 'student' implicitly has an 'any' type.
+apps/primary-advantage/server/models/studentModel.ts(314,54): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+apps/primary-advantage/server/models/studentModel.ts(468,33): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+apps/primary-advantage/server/models/studentModel.ts(624,41): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+apps/primary-advantage/server/models/studentModel.ts(624,46): error TS7006: Parameter 'student' implicitly has an 'any' type.
+apps/primary-advantage/server/models/studentModel.ts(631,8): error TS7006: Parameter 'acc' implicitly has an 'any' type.
+apps/primary-advantage/server/models/studentModel.ts(631,13): error TS7006: Parameter 'student' implicitly has an 'any' type.
+apps/primary-advantage/server/models/studentModel.ts(647,18): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/primary-advantage/server/models/studentModel.ts(648,15): error TS7006: Parameter 'student' implicitly has an 'any' type.
+apps/primary-advantage/server/models/teacherModel.ts(7,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/server/models/teacherModel.ts(16,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/server/models/teacherModel.ts(124,38): error TS7006: Parameter 't' implicitly has an 'any' type.
+apps/primary-advantage/server/models/teacherModel.ts(159,55): error TS7006: Parameter 'teacher' implicitly has an 'any' type.
+apps/primary-advantage/server/models/teacherModel.ts(192,71): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/server/models/teacherModel.ts(280,7): error TS2322: Type '{ id: string; name: string; grade: number | null; }[]' is not assignable to type '{ id: string; name: string; grade?: string | null | undefined; }[]'.
+  Type '{ id: string; name: string; grade: number | null; }' is not assignable to type '{ id: string; name: string; grade?: string | null | undefined; }'.
+    Types of property 'grade' are incompatible.
+      Type 'number | null' is not assignable to type 'string | null | undefined'.
+        Type 'number' is not assignable to type 'string'.
+apps/primary-advantage/server/models/teacherModel.ts(341,22): error TS7006: Parameter 'row' implicitly has an 'any' type.
+apps/primary-advantage/server/models/teacherModel.ts(342,19): error TS7006: Parameter 'row' implicitly has an 'any' type.
+apps/primary-advantage/server/models/teacherModel.ts(428,57): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+apps/primary-advantage/server/models/teacherModel.ts(483,14): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/primary-advantage/server/models/teacherModel.ts(484,11): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/primary-advantage/server/models/teacherModel.ts(531,5): error TS2322: Type '{ id: string; name: string; grade: number | null; }[]' is not assignable to type '{ id: string; name: string; grade?: string | null | undefined; }[]'.
+  Type '{ id: string; name: string; grade: number | null; }' is not assignable to type '{ id: string; name: string; grade?: string | null | undefined; }'.
+    Types of property 'grade' are incompatible.
+      Type 'number | null' is not assignable to type 'string | null | undefined'.
+        Type 'number' is not assignable to type 'string'.
+apps/primary-advantage/server/models/teacherModel.ts(598,33): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+apps/primary-advantage/server/models/teacherModel.ts(617,53): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/primary-advantage/server/models/teacherModel.ts(627,48): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/primary-advantage/server/models/teacherModel.ts(743,33): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+apps/primary-advantage/server/models/userModel.ts(9,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/server/models/userModel.ts(17,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/server/models/userModel.ts(50,49): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+apps/primary-advantage/server/models/userModel.ts(129,44): error TS7006: Parameter 'row' implicitly has an 'any' type.
+apps/primary-advantage/server/models/userModel.ts(139,42): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+apps/primary-advantage/server/models/userModel.ts(167,51): error TS7006: Parameter 'row' implicitly has an 'any' type.
+apps/primary-advantage/server/utils/assistant.ts(2,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/server/utils/assistant.ts(4,26): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/server/utils/assistant.ts(14,32): error TS2307: Cannot find module '@reading-advantage/ai/internal-sdk' or its corresponding type declarations.
+apps/primary-advantage/server/utils/auth.ts(1,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/server/utils/auth.ts(9,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/server/utils/auth.ts(64,43): error TS7006: Parameter 'row' implicitly has an 'any' type.
+apps/primary-advantage/server/utils/auth.ts(189,41): error TS7006: Parameter 'school' implicitly has an 'any' type.
+apps/primary-advantage/server/utils/auth.ts(249,24): error TS7006: Parameter 'row' implicitly has an 'any' type.
+apps/primary-advantage/server/utils/genaretors/article-generator.ts(3,32): error TS2307: Cannot find module '@reading-advantage/ai/internal-sdk' or its corresponding type declarations.
+apps/primary-advantage/server/utils/genaretors/audio-flashcard-generator.ts(1,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/server/utils/genaretors/audio-flashcard-generator.ts(2,47): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/server/utils/genaretors/audio-generator.ts(4,32): error TS2307: Cannot find module '@reading-advantage/ai/internal-sdk' or its corresponding type declarations.
+apps/primary-advantage/server/utils/genaretors/audio-generator.ts(14,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/server/utils/genaretors/audio-generator.ts(16,26): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/server/utils/genaretors/audio-word-generator.ts(1,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/server/utils/genaretors/audio-word-generator.ts(3,26): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/server/utils/genaretors/evaluate-rating-generator.ts(4,32): error TS2307: Cannot find module '@reading-advantage/ai/internal-sdk' or its corresponding type declarations.
+apps/primary-advantage/server/utils/genaretors/image-generator.ts(7,8): error TS2307: Cannot find module '@reading-advantage/ai/internal-sdk' or its corresponding type declarations.
+apps/primary-advantage/server/utils/genaretors/image-generator.ts(8,24): error TS2307: Cannot find module '@reading-advantage/ai/internal-sdk' or its corresponding type declarations.
+apps/primary-advantage/server/utils/genaretors/new-generator.ts(1,32): error TS2307: Cannot find module '@reading-advantage/ai/internal-sdk' or its corresponding type declarations.
+apps/primary-advantage/server/utils/genaretors/new-generator.ts(15,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/server/utils/genaretors/new-generator.ts(299,39): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+apps/primary-advantage/server/utils/genaretors/question-generator.ts(2,32): error TS2307: Cannot find module '@reading-advantage/ai/internal-sdk' or its corresponding type declarations.
+apps/primary-advantage/server/utils/genaretors/sentence-translator.ts(1,32): error TS2307: Cannot find module '@reading-advantage/ai/internal-sdk' or its corresponding type declarations.
+apps/primary-advantage/server/utils/genaretors/sentence-translator.ts(3,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/server/utils/genaretors/sentence-translator.ts(5,26): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/primary-advantage/server/utils/genaretors/story-generator.ts(1,32): error TS2307: Cannot find module '@reading-advantage/ai/internal-sdk' or its corresponding type declarations.
+apps/primary-advantage/server/utils/genaretors/topic-generator.ts(1,32): error TS2307: Cannot find module '@reading-advantage/ai/internal-sdk' or its corresponding type declarations.
+apps/primary-advantage/server/utils/genaretors/wordlist-generator.ts(2,32): error TS2307: Cannot find module '@reading-advantage/ai/internal-sdk' or its corresponding type declarations.
+apps/primary-advantage/utils/google.ts(1,42): error TS2307: Cannot find module '@reading-advantage/ai/internal-sdk' or its corresponding type declarations.
+apps/primary-advantage/utils/google.ts(2,30): error TS2307: Cannot find module '@reading-advantage/ai/internal-sdk' or its corresponding type declarations.
+apps/primary-advantage/utils/openai.ts(1,30): error TS2307: Cannot find module '@reading-advantage/ai/internal-sdk' or its corresponding type declarations.

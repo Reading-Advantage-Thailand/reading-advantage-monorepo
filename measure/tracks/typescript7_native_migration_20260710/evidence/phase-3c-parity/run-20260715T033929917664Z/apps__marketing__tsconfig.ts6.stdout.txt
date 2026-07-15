@@ -1,0 +1,122 @@
+apps/marketing/app/__tests__/helpers/auth-mock.ts(25,37): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/marketing/app/__tests__/helpers/auth-mock.ts(53,41): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/marketing/app/__tests__/helpers/testDb.ts(30,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-1-boot.test.ts(37,54): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-1-boot.test.ts(190,35): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-1-boot.test.ts(200,35): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-3-settings-adversarial.test.ts(76,54): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-3-settings-adversarial.test.ts(97,54): error TS2307: Cannot find module '@reading-advantage/ai' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-3-settings-adversarial.test.ts(211,35): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-3-settings-adversarial.test.ts(249,35): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-3-settings-adversarial.test.ts(289,9): error TS2307: Cannot find module '@reading-advantage/ai' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-3-settings-adversarial.test.ts(339,35): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-3-settings-adversarial.test.ts(400,35): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-3-settings.test.ts(81,54): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-3-settings.test.ts(105,54): error TS2307: Cannot find module '@reading-advantage/ai' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-3-settings.test.ts(278,33): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-3-settings.test.ts(313,33): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-3-settings.test.ts(344,33): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-3-settings.test.ts(374,33): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-3-settings.test.ts(414,7): error TS2307: Cannot find module '@reading-advantage/ai' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-3-settings.test.ts(438,45): error TS2307: Cannot find module '@reading-advantage/ai' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-3-settings.test.ts(448,7): error TS2307: Cannot find module '@reading-advantage/ai' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-4-campaigns.test.ts(50,54): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-4-campaigns.test.ts(165,33): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-4-campaigns.test.ts(180,33): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-4-campaigns.test.ts(213,33): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-4-campaigns.test.ts(228,33): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-4-campaigns.test.ts(241,33): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-4-campaigns.test.ts(333,33): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-4-campaigns.test.ts(362,33): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-5-topics.test.ts(54,54): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-5-topics.test.ts(76,54): error TS2307: Cannot find module '@reading-advantage/ai' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-5-topics.test.ts(260,33): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-5-topics.test.ts(261,46): error TS2307: Cannot find module '@reading-advantage/ai' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-5-topics.test.ts(292,33): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-5-topics.test.ts(293,46): error TS2307: Cannot find module '@reading-advantage/ai' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-5-topics.test.ts(324,33): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-5-topics.test.ts(353,33): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-5-topics.test.ts(381,33): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-6-script.test.ts(59,54): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-6-script.test.ts(82,54): error TS2307: Cannot find module '@reading-advantage/ai' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-6-script.test.ts(359,33): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-6-script.test.ts(360,46): error TS2307: Cannot find module '@reading-advantage/ai' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-6-script.test.ts(390,33): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-6-script.test.ts(391,46): error TS2307: Cannot find module '@reading-advantage/ai' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-6-script.test.ts(414,33): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-6-script.test.ts(450,33): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-8-projects-live.test.ts(34,40): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-8-projects.test.ts(31,54): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-8-projects.test.ts(129,33): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-8-projects.test.ts(173,33): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-8-projects.test.ts(213,33): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-w3-ai-adapter.test.ts(15,37): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-w3-ai-adapter.test.ts(16,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-w3-ai-adapter.test.ts(17,29): error TS2307: Cannot find module '@reading-advantage/ai' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-w3-ai-adapter.test.ts(21,38): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-w3-ai-adapter.test.ts(37,41): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-w3-ai-adapter.test.ts(85,54): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-w3-ai-adapter.test.ts(107,54): error TS2307: Cannot find module '@reading-advantage/ai' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-w3-ai-adapter.test.ts(194,3): error TS2593: Cannot find name 'beforeEach'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+apps/marketing/app/__tests__/phase-w3-ai-adapter.test.ts(202,45): error TS2307: Cannot find module '@reading-advantage/ai' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-w3-ai-adapter.test.ts(234,45): error TS2307: Cannot find module '@reading-advantage/ai' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-w3-ai-adapter.test.ts(279,3): error TS2593: Cannot find name 'beforeEach'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+apps/marketing/app/__tests__/phase-w3-campaigns-auth.test.ts(19,8): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-w3-campaigns-auth.test.ts(20,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-w3-campaigns-auth.test.ts(37,41): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-w3-campaigns-auth.test.ts(85,54): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-w3-campaigns-auth.test.ts(170,3): error TS2593: Cannot find name 'beforeEach'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+apps/marketing/app/__tests__/phase-w3-campaigns-auth.test.ts(243,3): error TS2593: Cannot find name 'beforeEach'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+apps/marketing/app/__tests__/phase-w3-input-validation.test.ts(20,37): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-w3-input-validation.test.ts(21,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-w3-input-validation.test.ts(22,29): error TS2307: Cannot find module '@reading-advantage/ai' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-w3-input-validation.test.ts(38,41): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-w3-input-validation.test.ts(86,54): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-w3-input-validation.test.ts(108,54): error TS2307: Cannot find module '@reading-advantage/ai' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-w3-input-validation.test.ts(311,3): error TS2593: Cannot find name 'beforeEach'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+apps/marketing/app/__tests__/phase-w3-input-validation.test.ts(420,45): error TS2307: Cannot find module '@reading-advantage/ai' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-w3-input-validation.test.ts(439,45): error TS2307: Cannot find module '@reading-advantage/ai' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-w3-input-validation.test.ts(465,45): error TS2307: Cannot find module '@reading-advantage/ai' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-w3-settings-auth.test.ts(18,8): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-w3-settings-auth.test.ts(19,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-w3-settings-auth.test.ts(42,41): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-w3-settings-auth.test.ts(93,54): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-w3-settings-auth.test.ts(146,3): error TS2593: Cannot find name 'beforeEach'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+apps/marketing/app/__tests__/phase-w3-settings-auth.test.ts(202,3): error TS2593: Cannot find name 'beforeEach'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+apps/marketing/app/__tests__/phase-w3-video-auth.test.ts(17,8): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-w3-video-auth.test.ts(18,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-w3-video-auth.test.ts(19,29): error TS2307: Cannot find module '@reading-advantage/ai' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-w3-video-auth.test.ts(20,38): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-w3-video-auth.test.ts(36,41): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-w3-video-auth.test.ts(84,54): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-w3-video-auth.test.ts(106,54): error TS2307: Cannot find module '@reading-advantage/ai' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-w3-video-auth.test.ts(206,3): error TS2593: Cannot find name 'beforeEach'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+apps/marketing/app/__tests__/phase-w3-video-auth.test.ts(233,45): error TS2307: Cannot find module '@reading-advantage/ai' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-w3-video-auth.test.ts(262,45): error TS2307: Cannot find module '@reading-advantage/ai' or its corresponding type declarations.
+apps/marketing/app/__tests__/phase-w3-video-auth.test.ts(323,3): error TS2593: Cannot find name 'beforeEach'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+apps/marketing/app/api/auth/login/route.ts(1,29): error TS2307: Cannot find module '@reading-advantage/api/routes/auth' or its corresponding type declarations.
+apps/marketing/app/api/auth/logout/route.ts(1,30): error TS2307: Cannot find module '@reading-advantage/api/routes/auth' or its corresponding type declarations.
+apps/marketing/app/api/auth/session/route.ts(1,31): error TS2307: Cannot find module '@reading-advantage/api/routes/auth' or its corresponding type declarations.
+apps/marketing/app/api/campaigns/[id]/route.ts(24,27): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/marketing/app/api/campaigns/route.ts(23,27): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/marketing/app/api/health/db/route.ts(1,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/api/settings/route.ts(21,26): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/marketing/app/api/settings/test-connection/route.ts(16,32): error TS2307: Cannot find module '@reading-advantage/ai' or its corresponding type declarations.
+apps/marketing/app/api/video/generate-script/route.ts(28,26): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/marketing/app/api/video/projects/route.ts(16,31): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/marketing/app/api/video/research-topics/route.ts(26,38): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/marketing/app/api/video/save-topics/route.ts(16,28): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/marketing/app/api/video/save-topics/route.ts(79,46): error TS7006: Parameter 'row' implicitly has an 'any' type.
+apps/marketing/app/layout.tsx(3,30): error TS2307: Cannot find module '@reading-advantage/auth-client' or its corresponding type declarations.
+apps/marketing/app/lib/ai.ts(1,45): error TS2307: Cannot find module '@reading-advantage/ai' or its corresponding type declarations.
+apps/marketing/app/lib/ai.ts(2,41): error TS2307: Cannot find module '@reading-advantage/ai' or its corresponding type declarations.
+apps/marketing/app/lib/auth.ts(24,8): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/marketing/app/lib/auth.ts(73,39): error TS18046: 'error' is of type 'unknown'.
+apps/marketing/app/lib/campaign-schema.ts(6,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/marketing/app/lib/db.ts(1,40): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/lib/db.ts(2,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/marketing/app/lib/db.ts(3,15): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/marketing/app/lib/script-request-schema.ts(2,25): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/marketing/app/lib/storage.ts(5,8): error TS2307: Cannot find module '@reading-advantage/storage' or its corresponding type declarations.
+apps/marketing/app/lib/topic-schema.ts(2,25): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/marketing/app/login/page.tsx(4,25): error TS2307: Cannot find module '@reading-advantage/auth-client' or its corresponding type declarations.

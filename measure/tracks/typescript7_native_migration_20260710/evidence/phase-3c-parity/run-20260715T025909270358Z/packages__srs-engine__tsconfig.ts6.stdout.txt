@@ -1,0 +1,36 @@
+packages/srs-engine/src/srs/contract.ts(81,8): error TS2307: Cannot find module '@reading-advantage/practice-core/srs-rating' or its corresponding type declarations.
+packages/srs-engine/src/srs/contract.ts(86,8): error TS2307: Cannot find module '@reading-advantage/practice-core/srs-rating' or its corresponding type declarations.
+packages/srs-engine/src/srs/contract.ts(92,45): error TS2307: Cannot find module '@reading-advantage/practice-core/timing-baseline' or its corresponding type declarations.
+packages/srs-engine/src/srs/contract.ts(93,38): error TS2307: Cannot find module '@reading-advantage/practice-core/timing-baseline' or its corresponding type declarations.
+packages/srs-engine/src/srs/contract.ts(94,45): error TS2307: Cannot find module '@reading-advantage/practice-core/timing-baseline' or its corresponding type declarations.
+packages/srs-engine/src/srs/contract.ts(104,8): error TS2307: Cannot find module '@reading-advantage/practice-core/contract' or its corresponding type declarations.
+packages/srs-engine/src/srs/review-processor.ts(17,8): error TS2307: Cannot find module '@reading-advantage/practice-core/srs-rating' or its corresponding type declarations.
+packages/srs-engine/src/srs/review-processor.ts(18,38): error TS2307: Cannot find module '@reading-advantage/practice-core/timing-baseline' or its corresponding type declarations.
+packages/srs-engine/src/srs/review-processor.ts(72,23): error TS7006: Parameter 'part' implicitly has an 'any' type.
+packages/srs-engine/src/srs/scheduler.ts(119,57): error TS2366: Function lacks ending return statement and return type does not include 'undefined'.
+packages/srs-engine/src/srs/srs-proficiency.ts(7,45): error TS2307: Cannot find module '@reading-advantage/practice-core' or its corresponding type declarations.
+packages/srs-engine/src/srs/submission-srs-adapter.ts(7,40): error TS2307: Cannot find module '@reading-advantage/practice-core/srs-rating' or its corresponding type declarations.
+packages/srs-engine/src/srs/submission-srs-adapter.ts(8,38): error TS2307: Cannot find module '@reading-advantage/practice-core/timing-baseline' or its corresponding type declarations.
+packages/srs-engine/src/srs/submission-srs-adapter.ts(170,41): error TS7006: Parameter 'part' implicitly has an 'any' type.
+packages/srs-engine/src/srs/submission-srs-adapter.ts(190,41): error TS7006: Parameter 'p' implicitly has an 'any' type.
+packages/srs-engine/src/srs/submission-srs-adapter.ts(231,162): error TS2345: Argument of type '{ reviewId: string; cardId: string; studentId: string; rating: any; submissionId: string; evidence: { baseRating: any; timingAdjusted: any; reasons: any; misconceptionTags: unknown[] | undefined; }; stateBefore: { ...; }; stateAfter: { ...; }; reviewedAt: string; }' is not assignable to parameter of type 'SrsReviewLogEntry'.
+  Types of property 'evidence' are incompatible.
+    Type '{ baseRating: any; timingAdjusted: any; reasons: any; misconceptionTags: unknown[] | undefined; }' is not assignable to type '{ action: "teacher_reset"; objectiveId: string; } | { baseRating: SrsRating; timingAdjusted: boolean; reasons: string[]; misconceptionTags?: string[] | undefined; }'.
+      Type '{ baseRating: any; timingAdjusted: any; reasons: any; misconceptionTags: unknown[] | undefined; }' is not assignable to type '{ baseRating: SrsRating; timingAdjusted: boolean; reasons: string[]; misconceptionTags?: string[] | undefined; }'.
+        Types of property 'misconceptionTags' are incompatible.
+          Type 'unknown[] | undefined' is not assignable to type 'string[] | undefined'.
+            Type 'unknown[]' is not assignable to type 'string[]'.
+              Type 'unknown' is not assignable to type 'string'.
+packages/srs-engine/src/srs/submission-srs-adapter.ts(234,44): error TS2345: Argument of type '{ reviewId: string; cardId: string; studentId: string; rating: any; submissionId: string; evidence: { baseRating: any; timingAdjusted: any; reasons: any; misconceptionTags: unknown[] | undefined; }; stateBefore: { ...; }; stateAfter: { ...; }; reviewedAt: string; }' is not assignable to parameter of type 'SrsReviewLogEntry'.
+  Types of property 'evidence' are incompatible.
+    Type '{ baseRating: any; timingAdjusted: any; reasons: any; misconceptionTags: unknown[] | undefined; }' is not assignable to type '{ action: "teacher_reset"; objectiveId: string; } | { baseRating: SrsRating; timingAdjusted: boolean; reasons: string[]; misconceptionTags?: string[] | undefined; }'.
+      Type '{ baseRating: any; timingAdjusted: any; reasons: any; misconceptionTags: unknown[] | undefined; }' is not assignable to type '{ baseRating: SrsRating; timingAdjusted: boolean; reasons: string[]; misconceptionTags?: string[] | undefined; }'.
+        Types of property 'misconceptionTags' are incompatible.
+          Type 'unknown[] | undefined' is not assignable to type 'string[] | undefined'.
+            Type 'unknown[]' is not assignable to type 'string[]'.
+              Type 'unknown' is not assignable to type 'string'.
+packages/srs-engine/src/srs/submission-srs-adapter.ts(241,7): error TS2322: Type '{ reviewId: string; cardId: string; studentId: string; rating: any; submissionId: string; evidence: { baseRating: any; timingAdjusted: any; reasons: any; misconceptionTags: unknown[] | undefined; }; stateBefore: { ...; }; stateAfter: { ...; }; reviewedAt: string; }' is not assignable to type '{ reviewId: string; rating: SrsRating; evidence: { baseRating: SrsRating; timingAdjusted: boolean; reasons: string[]; misconceptionTags?: string[] | undefined; }; stateBefore: { stability: number; difficulty: number; state: "learning" | ... 2 more ... | "review"; reps: number; lapses: number; }; stateAfter: { ...; }...'.
+  The types of 'evidence.misconceptionTags' are incompatible between these types.
+    Type 'unknown[] | undefined' is not assignable to type 'string[] | undefined'.
+      Type 'unknown[]' is not assignable to type 'string[]'.
+        Type 'unknown' is not assignable to type 'string'.

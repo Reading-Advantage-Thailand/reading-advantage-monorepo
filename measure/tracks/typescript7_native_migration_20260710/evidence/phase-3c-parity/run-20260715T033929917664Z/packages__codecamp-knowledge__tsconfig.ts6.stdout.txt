@@ -1,0 +1,71 @@
+packages/codecamp-knowledge/src/adapter.ts(1,56): error TS2307: Cannot find module '@reading-advantage/knowledge-space-core' or its corresponding type declarations.
+packages/codecamp-knowledge/src/apk-blueprint.ts(2,47): error TS2307: Cannot find module '@reading-advantage/advantage-play-kit/runtime' or its corresponding type declarations.
+packages/codecamp-knowledge/src/apk-blueprint.ts(148,7): error TS2322: Type 'true' is not assignable to type 'never'.
+packages/codecamp-knowledge/src/apk-blueprint.ts(202,6): error TS7006: Parameter 'node' implicitly has an 'any' type.
+packages/codecamp-knowledge/src/apk-blueprint.ts(204,53): error TS7006: Parameter 'node' implicitly has an 'any' type.
+packages/codecamp-knowledge/src/apk-blueprint.ts(206,88): error TS2345: Argument of type 'unknown[]' is not assignable to parameter of type 'readonly string[]'.
+  Type 'unknown' is not assignable to type 'string'.
+packages/codecamp-knowledge/src/apk-blueprint.ts(231,94): error TS2345: Argument of type 'Set<unknown>' is not assignable to parameter of type 'Set<string>'.
+  Type 'unknown' is not assignable to type 'string'.
+packages/codecamp-knowledge/src/apk-unit.ts(1,32): error TS2307: Cannot find module '@reading-advantage/activity-runtime/core' or its corresponding type declarations.
+packages/codecamp-knowledge/src/apk-unit.ts(2,63): error TS2307: Cannot find module '@reading-advantage/activity-tutorial/contracts' or its corresponding type declarations.
+packages/codecamp-knowledge/src/apk-unit.ts(132,40): error TS7006: Parameter 'step' implicitly has an 'any' type.
+packages/codecamp-knowledge/src/apk-unit.ts(135,43): error TS7006: Parameter 'resourceId' implicitly has an 'any' type.
+packages/codecamp-knowledge/src/apk-unit.ts(136,32): error TS7006: Parameter 'check' implicitly has an 'any' type.
+packages/codecamp-knowledge/src/bindings.ts(260,62): error TS7006: Parameter 'node' implicitly has an 'any' type.
+packages/codecamp-knowledge/src/bindings.ts(284,28): error TS2339: Property 'metadata' does not exist on type '{}'.
+packages/codecamp-knowledge/src/bindings.ts(286,28): error TS2339: Property 'metadata' does not exist on type '{}'.
+packages/codecamp-knowledge/src/contracts.ts(4,8): error TS2307: Cannot find module '@reading-advantage/knowledge-space-core' or its corresponding type declarations.
+packages/codecamp-knowledge/src/contracts.ts(110,26): error TS7006: Parameter 'node' implicitly has an 'any' type.
+packages/codecamp-knowledge/src/contracts.ts(110,32): error TS7006: Parameter 'index' implicitly has an 'any' type.
+packages/codecamp-knowledge/src/contracts.ts(120,26): error TS7006: Parameter 'edge' implicitly has an 'any' type.
+packages/codecamp-knowledge/src/contracts.ts(120,32): error TS7006: Parameter 'index' implicitly has an 'any' type.
+packages/codecamp-knowledge/src/contracts.ts(170,41): error TS7006: Parameter 'node' implicitly has an 'any' type.
+packages/codecamp-knowledge/src/contracts.ts(170,47): error TS7006: Parameter 'index' implicitly has an 'any' type.
+packages/codecamp-knowledge/src/contracts.ts(180,41): error TS7006: Parameter 'edge' implicitly has an 'any' type.
+packages/codecamp-knowledge/src/contracts.ts(180,47): error TS7006: Parameter 'index' implicitly has an 'any' type.
+packages/codecamp-knowledge/src/publication.ts(1,37): error TS2307: Cannot find module '@reading-advantage/knowledge-space-core' or its corresponding type declarations.
+packages/codecamp-knowledge/src/publication.ts(24,6): error TS7006: Parameter 'node' implicitly has an 'any' type.
+packages/codecamp-knowledge/src/publication.ts(26,38): error TS7006: Parameter 'node' implicitly has an 'any' type.
+packages/codecamp-knowledge/src/publication.ts(28,6): error TS7006: Parameter 'edge' implicitly has an 'any' type.
+packages/codecamp-knowledge/src/report.ts(51,51): error TS7006: Parameter 'edge' implicitly has an 'any' type.
+packages/codecamp-knowledge/src/report.ts(53,8): error TS7006: Parameter 'edge' implicitly has an 'any' type.
+packages/codecamp-knowledge/src/report.ts(55,62): error TS7006: Parameter 'node' implicitly has an 'any' type.
+packages/codecamp-knowledge/src/report.ts(60,39): error TS7006: Parameter 'node' implicitly has an 'any' type.
+packages/codecamp-knowledge/src/report.ts(62,59): error TS7006: Parameter 'node' implicitly has an 'any' type.
+packages/codecamp-knowledge/src/report.ts(64,39): error TS7006: Parameter 'node' implicitly has an 'any' type.
+packages/codecamp-knowledge/src/report.ts(82,64): error TS7006: Parameter 'node' implicitly has an 'any' type.
+packages/codecamp-knowledge/src/report.ts(83,62): error TS7006: Parameter 'node' implicitly has an 'any' type.
+packages/codecamp-knowledge/src/report.ts(84,64): error TS7006: Parameter 'edge' implicitly has an 'any' type.
+packages/codecamp-knowledge/src/report.ts(85,62): error TS7006: Parameter 'edge' implicitly has an 'any' type.
+packages/codecamp-knowledge/src/report.ts(86,66): error TS7006: Parameter 'edge' implicitly has an 'any' type.
+packages/codecamp-knowledge/src/report.ts(87,64): error TS7006: Parameter 'edge' implicitly has an 'any' type.
+packages/codecamp-knowledge/src/report.ts(97,36): error TS2345: Argument of type 'Set<unknown>' is not assignable to parameter of type 'Set<string>'.
+  Type 'unknown' is not assignable to type 'string'.
+packages/codecamp-knowledge/src/report.ts(98,38): error TS2345: Argument of type 'Set<unknown>' is not assignable to parameter of type 'Set<string>'.
+  Type 'unknown' is not assignable to type 'string'.
+packages/codecamp-knowledge/src/report.ts(99,5): error TS2322: Type 'unknown[]' is not assignable to type 'string[]'.
+  Type 'unknown' is not assignable to type 'string'.
+packages/codecamp-knowledge/src/report.ts(100,36): error TS2345: Argument of type 'Set<unknown>' is not assignable to parameter of type 'Set<string>'.
+  Type 'unknown' is not assignable to type 'string'.
+packages/codecamp-knowledge/src/report.ts(101,38): error TS2345: Argument of type 'Set<unknown>' is not assignable to parameter of type 'Set<string>'.
+  Type 'unknown' is not assignable to type 'string'.
+packages/codecamp-knowledge/src/report.ts(102,5): error TS2322: Type 'unknown[]' is not assignable to type 'string[]'.
+  Type 'unknown' is not assignable to type 'string'.
+packages/codecamp-knowledge/src/transition.ts(55,16): error TS7006: Parameter 'node' implicitly has an 'any' type.
+packages/codecamp-knowledge/src/transition.ts(56,13): error TS7006: Parameter 'node' implicitly has an 'any' type.
+packages/codecamp-knowledge/src/transition.ts(58,64): error TS7006: Parameter 'node' implicitly has an 'any' type.
+packages/codecamp-knowledge/src/transition.ts(59,62): error TS7006: Parameter 'node' implicitly has an 'any' type.
+packages/codecamp-knowledge/src/transition.ts(64,8): error TS18046: 'previous' is of type 'unknown'.
+packages/codecamp-knowledge/src/transition.ts(64,31): error TS2339: Property 'kind' does not exist on type '{}'.
+packages/codecamp-knowledge/src/transition.ts(65,9): error TS18046: 'previous' is of type 'unknown'.
+packages/codecamp-knowledge/src/transition.ts(65,34): error TS2339: Property 'domain' does not exist on type '{}'.
+packages/codecamp-knowledge/src/transition.ts(66,9): error TS18046: 'previous' is of type 'unknown'.
+packages/codecamp-knowledge/src/transition.ts(66,50): error TS2339: Property 'metadata' does not exist on type '{}'.
+packages/codecamp-knowledge/src/transition.ts(70,9): error TS2322: Type 'unknown' is not assignable to type 'string | undefined'.
+packages/codecamp-knowledge/src/tutorial-offline.ts(2,99): error TS2307: Cannot find module '@reading-advantage/activity-tutorial/offline' or its corresponding type declarations.
+packages/codecamp-knowledge/src/tutorial-offline.ts(3,64): error TS2307: Cannot find module '@reading-advantage/activity-tutorial/offline' or its corresponding type declarations.
+packages/codecamp-knowledge/src/validation.ts(7,8): error TS2307: Cannot find module '@reading-advantage/knowledge-space-core' or its corresponding type declarations.
+packages/codecamp-knowledge/src/validation.ts(128,6): error TS7006: Parameter 'issue' implicitly has an 'any' type.
+packages/codecamp-knowledge/src/validation.ts(166,18): error TS7006: Parameter 'node' implicitly has an 'any' type.
+packages/codecamp-knowledge/src/validation.ts(167,15): error TS7006: Parameter 'node' implicitly has an 'any' type.

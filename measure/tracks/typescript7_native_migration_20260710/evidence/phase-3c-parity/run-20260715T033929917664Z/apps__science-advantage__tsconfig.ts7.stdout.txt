@@ -1,0 +1,444 @@
+apps/science-advantage/app/(teacher)/teacher/classes/[classId]/analytics/page.tsx(3,32): error TS2307: Cannot find module '@reading-advantage/domain' or its corresponding type declarations.
+apps/science-advantage/app/(teacher)/teacher/classes/[classId]/analytics/page.tsx(4,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/app/(teacher)/teacher/classes/[classId]/page.tsx(3,32): error TS2307: Cannot find module '@reading-advantage/domain' or its corresponding type declarations.
+apps/science-advantage/app/(teacher)/teacher/classes/[classId]/page.tsx(4,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/app/(teacher)/teacher/classes/[classId]/roster/page.tsx(3,32): error TS2307: Cannot find module '@reading-advantage/domain' or its corresponding type declarations.
+apps/science-advantage/app/(teacher)/teacher/classes/[classId]/roster/page.tsx(4,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/app/(teacher)/teacher/classes/page.tsx(2,42): error TS2307: Cannot find module '@reading-advantage/domain' or its corresponding type declarations.
+apps/science-advantage/app/(teacher)/teacher/classes/page.tsx(3,34): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/app/(teacher)/teacher/classes/page.tsx(4,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/app/(teacher)/teacher/classes/page.tsx(53,30): error TS7006: Parameter 'cls' implicitly has an 'any' type.
+apps/science-advantage/app/(teacher)/teacher/page.tsx(1,42): error TS2307: Cannot find module '@reading-advantage/domain' or its corresponding type declarations.
+apps/science-advantage/app/(teacher)/teacher/page.tsx(2,34): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/app/(teacher)/teacher/page.tsx(3,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/app/api/admin/dsar/export/dsar-export-e2e.integration.test.ts(46,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/app/api/admin/dsar/export/dsar-export-e2e.integration.test.ts(52,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/app/api/admin/dsar/export/route.integration.test.ts(53,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/app/api/admin/dsar/export/route.integration.test.ts(60,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/app/api/admin/dsar/export/route.ts(5,32): error TS2307: Cannot find module '@reading-advantage/domain' or its corresponding type declarations.
+apps/science-advantage/app/api/admin/dsar/export/route.ts(10,8): error TS2307: Cannot find module '@reading-advantage/domain/audit/dsar' or its corresponding type declarations.
+apps/science-advantage/app/api/admin/dsar/export/route.ts(11,33): error TS2307: Cannot find module '@reading-advantage/domain/audit/dsar' or its corresponding type declarations.
+apps/science-advantage/app/api/admin/dsar/export/route.ts(12,34): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/app/api/admin/dsar/export/route.ts(179,41): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/app/api/ai/recommendations/otel-route-span.test.ts(120,24): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(importOriginal: <T extends typeof import("/home/daniel-bo/Desktop/reading-advantage-monorepo-ts7/node_modules/zod/index") = typeof import("/home/daniel-bo/Desktop/reading-advantage-monorepo-ts7/node_modules/zod/index")>() => Promise<T>) => Promise<{ util: typeof util; objectUtil: typeof objectUtil; ... 106 more ......' is not assignable to parameter of type 'ModuleMockFactoryWithHelper<typeof import("/home/daniel-bo/Desktop/reading-advantage-monorepo-ts7/node_modules/zod/index")> | ModuleMockOptions | undefined'.
+      Type '(importOriginal: <T extends typeof import("/home/daniel-bo/Desktop/reading-advantage-monorepo-ts7/node_modules/zod/index") = typeof import("/home/daniel-bo/Desktop/reading-advantage-monorepo-ts7/node_modules/zod/index")>() => Promise<T>) => Promise<{ util: typeof util; objectUtil: typeof objectUtil; ... 106 more ......' is not assignable to type 'ModuleMockFactoryWithHelper<typeof import("/home/daniel-bo/Desktop/reading-advantage-monorepo-ts7/node_modules/zod/index")>'.
+        Type 'Promise<{ util: typeof util; objectUtil: typeof objectUtil; ZodParsedType: { string: "string"; nan: "nan"; number: "number"; integer: "integer"; float: "float"; boolean: "boolean"; date: "date"; ... 12 more ...; set: "set"; }; ... 105 more ...; default: {}; }>' is not assignable to type 'Awaitable<Partial<typeof import("/home/daniel-bo/Desktop/reading-advantage-monorepo-ts7/node_modules/zod/index")>>'.
+          Type 'Promise<{ util: typeof util; objectUtil: typeof objectUtil; ZodParsedType: { string: "string"; nan: "nan"; number: "number"; integer: "integer"; float: "float"; boolean: "boolean"; date: "date"; ... 12 more ...; set: "set"; }; ... 105 more ...; default: {}; }>' is not assignable to type 'PromiseLike<Partial<typeof import("/home/daniel-bo/Desktop/reading-advantage-monorepo-ts7/node_modules/zod/index")>>'.
+            Types of property 'then' are incompatible.
+              Type '<TResult1 = { util: typeof util; objectUtil: typeof objectUtil; ZodParsedType: { string: "string"; nan: "nan"; number: "number"; integer: "integer"; float: "float"; boolean: "boolean"; date: "date"; ... 12 more ...; set: "set"; }; ... 105 more ...; default: {}; }, TResult2 = never>(onfulfilled?: ((value: { ...; }) =...' is not assignable to type '<TResult1 = Partial<typeof import("/home/daniel-bo/Desktop/reading-advantage-monorepo-ts7/node_modules/zod/index")>, TResult2 = never>(onfulfilled?: ((value: Partial<typeof import("/home/daniel-bo/Desktop/reading-advantage-monorepo-ts7/node_modules/zod/index")>) => TResult1 | PromiseLike<...>) | null | undefined, on...'.
+                Types of parameters 'onfulfilled' and 'onfulfilled' are incompatible.
+                  Types of parameters 'value' and 'value' are incompatible.
+                    Type '{ util: typeof util; objectUtil: typeof objectUtil; ZodParsedType: { string: "string"; nan: "nan"; number: "number"; integer: "integer"; float: "float"; boolean: "boolean"; date: "date"; bigint: "bigint"; symbol: "symbol"; function: "function"; undefined: "undefined"; null: "null"; array: "array"; object: "object"; ...' is not assignable to type 'Partial<typeof import("/home/daniel-bo/Desktop/reading-advantage-monorepo-ts7/node_modules/zod/index")>'.
+                      Types of property 'z' are incompatible.
+                        Type '{}' is missing the following properties from type 'typeof import("/home/daniel-bo/Desktop/reading-advantage-monorepo-ts7/node_modules/zod/v3/external")': util, objectUtil, ZodParsedType, getParsedType, and 103 more.
+apps/science-advantage/app/api/ai/recommendations/otel-route-span.test.ts(167,53): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/app/api/ai/recommendations/route.integration.test.ts(3,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/app/api/ai/recommendations/route.integration.test.ts(20,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/app/api/ai/recommendations/route.test.ts(109,53): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/app/api/ai/recommendations/route.ts(3,32): error TS2307: Cannot find module '@reading-advantage/domain' or its corresponding type declarations.
+apps/science-advantage/app/api/ai/recommendations/route.ts(4,33): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/app/api/ai/recommendations/route.ts(5,27): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/app/api/ai/recommendations/route.ts(15,35): error TS2307: Cannot find module '@reading-advantage/domain/ai' or its corresponding type declarations.
+apps/science-advantage/app/api/ai/recommendations/route.ts(62,87): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/ai/recommendations/route.ts(62,114): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/ai/recommendations/sentry-throw-in-route.test.ts(101,53): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/app/api/ai/update-mastery/route.integration.test.ts(3,29): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/app/api/ai/update-mastery/route.integration.test.ts(17,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/app/api/ai/update-mastery/route.ts(4,27): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/app/api/ai/update-mastery/route.ts(11,61): error TS2307: Cannot find module '@reading-advantage/domain/mastery' or its corresponding type declarations.
+apps/science-advantage/app/api/ai/update-mastery/route.ts(44,156): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/ai/update-mastery/route.ts(46,87): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/ai/update-mastery/route.ts(46,114): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/auth/impersonate/route.ts(1,35): error TS2307: Cannot find module '@reading-advantage/api/routes/auth' or its corresponding type declarations.
+apps/science-advantage/app/api/auth/login/route.ts(1,29): error TS2307: Cannot find module '@reading-advantage/api/routes/auth' or its corresponding type declarations.
+apps/science-advantage/app/api/auth/logout/route.ts(1,30): error TS2307: Cannot find module '@reading-advantage/api/routes/auth' or its corresponding type declarations.
+apps/science-advantage/app/api/auth/reset-password/route.ts(1,37): error TS2307: Cannot find module '@reading-advantage/api/routes/auth' or its corresponding type declarations.
+apps/science-advantage/app/api/auth/session/route.ts(1,31): error TS2307: Cannot find module '@reading-advantage/api/routes/auth' or its corresponding type declarations.
+apps/science-advantage/app/api/classes/[classId]/analytics/overview/route.integration.test.ts(2,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/app/api/classes/[classId]/analytics/overview/route.integration.test.ts(14,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/app/api/classes/[classId]/analytics/overview/route.ts(6,27): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/app/api/classes/[classId]/analytics/overview/route.ts(7,43): error TS2307: Cannot find module '@reading-advantage/domain/classes' or its corresponding type declarations.
+apps/science-advantage/app/api/classes/[classId]/analytics/overview/route.ts(33,73): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/classes/[classId]/analytics/overview/route.ts(33,100): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/classes/[classId]/assignments/route.integration.test.ts(3,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/app/api/classes/[classId]/assignments/route.integration.test.ts(13,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/app/api/classes/[classId]/assignments/route.ts(3,27): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/app/api/classes/[classId]/assignments/route.ts(5,69): error TS2307: Cannot find module '@reading-advantage/domain/classes' or its corresponding type declarations.
+apps/science-advantage/app/api/classes/[classId]/assignments/route.ts(34,87): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/classes/[classId]/assignments/route.ts(34,114): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/classes/[classId]/assignments/route.ts(66,87): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/classes/[classId]/assignments/route.ts(66,114): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/classes/[classId]/assignments/route.ts(98,87): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/classes/[classId]/assignments/route.ts(98,114): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/classes/[classId]/curriculum/route.integration.test.ts(3,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/app/api/classes/[classId]/curriculum/route.integration.test.ts(15,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/app/api/classes/[classId]/curriculum/route.ts(5,27): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/app/api/classes/[classId]/curriculum/route.ts(6,36): error TS2307: Cannot find module '@reading-advantage/domain/classes' or its corresponding type declarations.
+apps/science-advantage/app/api/classes/[classId]/curriculum/route.ts(33,73): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/classes/[classId]/curriculum/route.ts(33,100): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/classes/[classId]/lessons/[lessonId]/analytics/route.integration.test.ts(2,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/app/api/classes/[classId]/lessons/[lessonId]/analytics/route.integration.test.ts(20,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/app/api/classes/[classId]/lessons/[lessonId]/analytics/route.ts(4,27): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/app/api/classes/[classId]/lessons/[lessonId]/analytics/route.ts(5,41): error TS2307: Cannot find module '@reading-advantage/domain/classes' or its corresponding type declarations.
+apps/science-advantage/app/api/classes/[classId]/lessons/[lessonId]/analytics/route.ts(33,71): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/classes/[classId]/lessons/[lessonId]/analytics/route.ts(33,98): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/classes/[classId]/roster/route.integration.test.ts(3,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/app/api/classes/[classId]/roster/route.integration.test.ts(12,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/app/api/classes/[classId]/roster/route.ts(5,27): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/app/api/classes/[classId]/roster/route.ts(6,56): error TS2307: Cannot find module '@reading-advantage/domain/classes' or its corresponding type declarations.
+apps/science-advantage/app/api/classes/[classId]/roster/route.ts(32,89): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/classes/[classId]/roster/route.ts(32,116): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/classes/[classId]/roster/route.ts(66,89): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/classes/[classId]/roster/route.ts(66,116): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/classes/[classId]/route.integration.test.ts(3,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/app/api/classes/[classId]/route.integration.test.ts(15,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/app/api/classes/[classId]/route.ts(5,27): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/app/api/classes/[classId]/route.ts(6,59): error TS2307: Cannot find module '@reading-advantage/domain/classes' or its corresponding type declarations.
+apps/science-advantage/app/api/classes/[classId]/route.ts(42,89): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/classes/[classId]/route.ts(42,116): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/classes/[classId]/route.ts(78,89): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/classes/[classId]/route.ts(78,116): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/classes/[classId]/route.ts(113,89): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/classes/[classId]/route.ts(113,116): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/classes/join/route.integration.test.ts(3,34): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/app/api/classes/join/route.integration.test.ts(11,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/app/api/classes/join/route.ts(6,27): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/app/api/classes/join/route.ts(7,49): error TS2307: Cannot find module '@reading-advantage/domain/classes' or its corresponding type declarations.
+apps/science-advantage/app/api/classes/join/route.ts(48,59): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/classes/join/route.ts(48,86): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/classes/route.integration.test.ts(3,29): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/app/api/classes/route.integration.test.ts(16,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/app/api/classes/route.integration.test.ts(219,25): error TS7006: Parameter 'j' implicitly has an 'any' type.
+apps/science-advantage/app/api/classes/route.ts(7,27): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/app/api/classes/route.ts(8,59): error TS2307: Cannot find module '@reading-advantage/domain/classes' or its corresponding type declarations.
+apps/science-advantage/app/api/classes/route.ts(48,36): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/classes/route.ts(49,21): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/classes/route.ts(117,36): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/classes/route.ts(118,21): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/lessons/[lessonSlug]/quiz/route.integration.test.ts(3,34): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/app/api/lessons/[lessonSlug]/quiz/route.integration.test.ts(21,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/app/api/lessons/[lessonSlug]/quiz/route.ts(3,27): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/app/api/lessons/[lessonSlug]/quiz/route.ts(10,42): error TS2307: Cannot find module '@reading-advantage/domain/quiz' or its corresponding type declarations.
+apps/science-advantage/app/api/lessons/[lessonSlug]/quiz/route.ts(40,71): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/lessons/[lessonSlug]/quiz/route.ts(40,98): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/lessons/[lessonSlug]/quiz/route.ts(77,19): error TS7006: Parameter 'ctx' implicitly has an 'any' type.
+apps/science-advantage/app/api/lessons/[lessonSlug]/quiz/route.ts(84,34): error TS7006: Parameter 'ctx' implicitly has an 'any' type.
+apps/science-advantage/app/api/lessons/[lessonSlug]/quiz/route.ts(104,71): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/lessons/[lessonSlug]/quiz/route.ts(104,98): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/lessons/[lessonSlug]/route.integration.test.ts(3,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/app/api/lessons/[lessonSlug]/route.integration.test.ts(16,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/app/api/lessons/[lessonSlug]/route.ts(5,27): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/app/api/lessons/[lessonSlug]/route.ts(6,33): error TS2307: Cannot find module '@reading-advantage/domain/curriculum' or its corresponding type declarations.
+apps/science-advantage/app/api/lessons/[lessonSlug]/route.ts(36,73): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/lessons/[lessonSlug]/route.ts(36,100): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/student/classes/route.integration.test.ts(3,29): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/app/api/student/classes/route.integration.test.ts(11,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/app/api/student/classes/route.ts(5,38): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/app/api/student/classes/route.ts(6,34): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/app/api/student/classes/route.ts(7,32): error TS2307: Cannot find module '@reading-advantage/domain' or its corresponding type declarations.
+apps/science-advantage/app/api/student/classes/route.ts(8,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/app/api/student/classes/route.ts(56,20): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/student/classes/route.ts(57,21): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/students/[studentId]/achievements/route.integration.test.ts(3,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/app/api/students/[studentId]/achievements/route.integration.test.ts(11,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/app/api/students/[studentId]/achievements/route.ts(5,27): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/app/api/students/[studentId]/achievements/route.ts(6,40): error TS2307: Cannot find module '@reading-advantage/domain/students' or its corresponding type declarations.
+apps/science-advantage/app/api/students/[studentId]/achievements/route.ts(33,89): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/students/[studentId]/achievements/route.ts(33,116): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/students/[studentId]/assignments/route.integration.test.ts(3,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/app/api/students/[studentId]/assignments/route.integration.test.ts(13,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/app/api/students/[studentId]/assignments/route.ts(5,27): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/app/api/students/[studentId]/assignments/route.ts(6,39): error TS2307: Cannot find module '@reading-advantage/domain/students' or its corresponding type declarations.
+apps/science-advantage/app/api/students/[studentId]/assignments/route.ts(33,89): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/students/[studentId]/assignments/route.ts(33,116): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/students/[studentId]/classes/[classId]/analytics/route.ts(6,27): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/app/api/students/[studentId]/classes/[classId]/analytics/route.ts(7,42): error TS2307: Cannot find module '@reading-advantage/domain/students' or its corresponding type declarations.
+apps/science-advantage/app/api/students/[studentId]/classes/[classId]/analytics/route.ts(54,73): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/students/[studentId]/classes/[classId]/analytics/route.ts(54,100): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/students/[studentId]/gamification-profile/route.integration.test.ts(3,29): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/app/api/students/[studentId]/gamification-profile/route.integration.test.ts(11,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/app/api/students/[studentId]/gamification-profile/route.ts(5,27): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/app/api/students/[studentId]/gamification-profile/route.ts(6,47): error TS2307: Cannot find module '@reading-advantage/domain/students' or its corresponding type declarations.
+apps/science-advantage/app/api/students/[studentId]/gamification-profile/route.ts(33,89): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/students/[studentId]/gamification-profile/route.ts(33,116): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/students/[studentId]/lessons/[lessonId]/analytics/route.ts(6,27): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/app/api/students/[studentId]/lessons/[lessonId]/analytics/route.ts(7,43): error TS2307: Cannot find module '@reading-advantage/domain/students' or its corresponding type declarations.
+apps/science-advantage/app/api/students/[studentId]/lessons/[lessonId]/analytics/route.ts(33,73): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/students/[studentId]/lessons/[lessonId]/analytics/route.ts(33,100): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/students/[studentId]/lessons/[lessonId]/progress/route.integration.test.ts(3,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/app/api/students/[studentId]/lessons/[lessonId]/progress/route.integration.test.ts(15,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/app/api/students/[studentId]/lessons/[lessonId]/progress/route.ts(5,27): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/app/api/students/[studentId]/lessons/[lessonId]/progress/route.ts(6,42): error TS2307: Cannot find module '@reading-advantage/domain/students' or its corresponding type declarations.
+apps/science-advantage/app/api/students/[studentId]/lessons/[lessonId]/progress/route.ts(33,73): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/students/[studentId]/lessons/[lessonId]/progress/route.ts(33,100): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/students/[studentId]/mastery-profile/route.integration.test.ts(3,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/app/api/students/[studentId]/mastery-profile/route.integration.test.ts(14,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/app/api/students/[studentId]/mastery-profile/route.ts(5,27): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/app/api/students/[studentId]/mastery-profile/route.ts(6,42): error TS2307: Cannot find module '@reading-advantage/domain/students' or its corresponding type declarations.
+apps/science-advantage/app/api/students/[studentId]/mastery-profile/route.ts(76,89): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/students/[studentId]/mastery-profile/route.ts(76,116): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/students/me/gamification/route.integration.test.ts(2,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/app/api/students/me/gamification/route.integration.test.ts(10,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/app/api/students/me/gamification/route.ts(6,27): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/app/api/students/me/gamification/route.ts(7,35): error TS2307: Cannot find module '@reading-advantage/domain/students' or its corresponding type declarations.
+apps/science-advantage/app/api/students/me/gamification/route.ts(30,89): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/students/me/gamification/route.ts(30,116): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/teachers/classes/[classId]/intervention-alerts/route.integration.test.ts(3,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/app/api/teachers/classes/[classId]/intervention-alerts/route.integration.test.ts(13,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/app/api/teachers/classes/[classId]/intervention-alerts/route.ts(5,27): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/app/api/teachers/classes/[classId]/intervention-alerts/route.ts(13,28): error TS2307: Cannot find module '@reading-advantage/domain/interventions' or its corresponding type declarations.
+apps/science-advantage/app/api/teachers/classes/[classId]/intervention-alerts/route.ts(66,73): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/teachers/classes/[classId]/intervention-alerts/route.ts(66,100): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/teachers/dashboard/route.integration.test.ts(3,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/app/api/teachers/dashboard/route.integration.test.ts(15,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/app/api/teachers/dashboard/route.ts(5,27): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/app/api/teachers/dashboard/route.ts(6,37): error TS2307: Cannot find module '@reading-advantage/domain/teachers' or its corresponding type declarations.
+apps/science-advantage/app/api/teachers/dashboard/route.ts(28,73): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/api/teachers/dashboard/route.ts(28,100): error TS18046: 'error' is of type 'unknown'.
+apps/science-advantage/app/layout.tsx(3,30): error TS2307: Cannot find module '@reading-advantage/auth-client' or its corresponding type declarations.
+apps/science-advantage/components/features/auth/signin-form.tsx(6,25): error TS2307: Cannot find module '@reading-advantage/auth-client' or its corresponding type declarations.
+apps/science-advantage/components/features/auth/user-menu.tsx(5,25): error TS2307: Cannot find module '@reading-advantage/auth-client' or its corresponding type declarations.
+apps/science-advantage/components/features/student/join-class-form.tsx(163,20): error TS2322: Type '{ onBlur: Noop; name: string | number | symbol; ref: RefCallBack; type: "text"; placeholder: string | undefined; disabled: boolean; onChange: (event: ChangeEvent<HTMLInputElement>) => void; value: any; }' is not assignable to type 'InputHTMLAttributes<HTMLInputElement>'.
+  Types of property 'name' are incompatible.
+    Type 'string | number | symbol' is not assignable to type 'string | undefined'.
+      Type 'number' is not assignable to type 'string'.
+apps/science-advantage/instrumentation.ts(46,22): error TS2322: Type 'BatchSpanProcessor' is not assignable to type 'SpanProcessor'.
+  Types of property 'onStart' are incompatible.
+    Type '(_span: Span, _parentContext: Context) => void' is not assignable to type '(span: Span, parentContext: Context) => void'.
+      Types of parameters '_span' and 'span' are incompatible.
+        Type 'import("/home/daniel-bo/Desktop/reading-advantage-monorepo-ts7/node_modules/@opentelemetry/sdk-trace-base/build/src/Span").Span' is not assignable to type 'import("/home/daniel-bo/Desktop/reading-advantage-monorepo-ts7/apps/science-advantage/node_modules/@opentelemetry/sdk-trace-base/build/src/Span").Span'.
+          Property 'instrumentationScope' is missing in type 'Span' but required in type 'ReadableSpan'.
+apps/science-advantage/instrumentation.ts(46,45): error TS2345: Argument of type 'ConsoleSpanExporter | OTLPTraceExporter' is not assignable to parameter of type 'SpanExporter'.
+  Type 'OTLPTraceExporter' is not assignable to type 'SpanExporter'.
+    Types of property 'export' are incompatible.
+      Type '(items: ReadableSpan[], resultCallback: (result: ExportResult) => void) => void' is not assignable to type '(spans: ReadableSpan[], resultCallback: (result: ExportResult) => void) => void'.
+        Types of parameters 'items' and 'spans' are incompatible.
+          Type 'import("/home/daniel-bo/Desktop/reading-advantage-monorepo-ts7/apps/science-advantage/node_modules/@opentelemetry/sdk-trace-base/build/src/export/ReadableSpan").ReadableSpan[]' is not assignable to type 'import("/home/daniel-bo/Desktop/reading-advantage-monorepo-ts7/node_modules/@opentelemetry/sdk-trace-base/build/src/export/ReadableSpan").ReadableSpan[]'.
+            Property 'instrumentationLibrary' is missing in type 'import("/home/daniel-bo/Desktop/reading-advantage-monorepo-ts7/apps/science-advantage/node_modules/@opentelemetry/sdk-trace-base/build/src/export/ReadableSpan").ReadableSpan' but required in type 'import("/home/daniel-bo/Desktop/reading-advantage-monorepo-ts7/node_modules/@opentelemetry/sdk-trace-base/build/src/export/ReadableSpan").ReadableSpan'.
+apps/science-advantage/lib/__tests__/housekeeping-phase7-git-notes.test.ts(497,35): error TS2345: Argument of type 'string' is not assignable to parameter of type '"1f8c2a013723e717564bf780030f5603a28da025" | "3d3528e581547504cb55cbb0af19a92e0904e49f"'.
+apps/science-advantage/lib/__tests__/proxy-role.test.ts(9,54): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/lib/__tests__/proxy-role.test.ts(23,27): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/lib/__tests__/proxy.integration.test.ts(2,29): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/lib/__tests__/proxy.integration.test.ts(3,33): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/lib/__tests__/proxy.integration.test.ts(4,31): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/lib/__tests__/route-contract-correctness.test.ts(3,34): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/lib/__tests__/route-contract-correctness.test.ts(5,33): error TS2307: Cannot find module '@reading-advantage/domain/curriculum' or its corresponding type declarations.
+apps/science-advantage/lib/__tests__/route-contract-correctness.test.ts(27,53): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/lib/__tests__/route-contract-correctness.test.ts(60,53): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/lib/__tests__/route-contract-correctness.test.ts(172,7): error TS2307: Cannot find module '@reading-advantage/domain/students' or its corresponding type declarations.
+apps/science-advantage/lib/__tests__/route-contract-correctness.test.ts(197,7): error TS2307: Cannot find module '@reading-advantage/domain/students' or its corresponding type declarations.
+apps/science-advantage/lib/__tests__/route-contract-correctness.test.ts(235,40): error TS2307: Cannot find module '@reading-advantage/domain/mastery' or its corresponding type declarations.
+apps/science-advantage/lib/ai/__tests__/recommendation-service.otel.test.ts(115,24): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(importOriginal: <T extends typeof import("/home/daniel-bo/Desktop/reading-advantage-monorepo-ts7/node_modules/zod/index") = typeof import("/home/daniel-bo/Desktop/reading-advantage-monorepo-ts7/node_modules/zod/index")>() => Promise<T>) => Promise<{ util: typeof util; objectUtil: typeof objectUtil; ... 106 more ......' is not assignable to parameter of type 'ModuleMockFactoryWithHelper<typeof import("/home/daniel-bo/Desktop/reading-advantage-monorepo-ts7/node_modules/zod/index")> | ModuleMockOptions | undefined'.
+      Type '(importOriginal: <T extends typeof import("/home/daniel-bo/Desktop/reading-advantage-monorepo-ts7/node_modules/zod/index") = typeof import("/home/daniel-bo/Desktop/reading-advantage-monorepo-ts7/node_modules/zod/index")>() => Promise<T>) => Promise<{ util: typeof util; objectUtil: typeof objectUtil; ... 106 more ......' is not assignable to type 'ModuleMockFactoryWithHelper<typeof import("/home/daniel-bo/Desktop/reading-advantage-monorepo-ts7/node_modules/zod/index")>'.
+        Type 'Promise<{ util: typeof util; objectUtil: typeof objectUtil; ZodParsedType: { string: "string"; nan: "nan"; number: "number"; integer: "integer"; float: "float"; boolean: "boolean"; date: "date"; ... 12 more ...; set: "set"; }; ... 105 more ...; default: {}; }>' is not assignable to type 'Awaitable<Partial<typeof import("/home/daniel-bo/Desktop/reading-advantage-monorepo-ts7/node_modules/zod/index")>>'.
+          Type 'Promise<{ util: typeof util; objectUtil: typeof objectUtil; ZodParsedType: { string: "string"; nan: "nan"; number: "number"; integer: "integer"; float: "float"; boolean: "boolean"; date: "date"; ... 12 more ...; set: "set"; }; ... 105 more ...; default: {}; }>' is not assignable to type 'PromiseLike<Partial<typeof import("/home/daniel-bo/Desktop/reading-advantage-monorepo-ts7/node_modules/zod/index")>>'.
+            Types of property 'then' are incompatible.
+              Type '<TResult1 = { util: typeof util; objectUtil: typeof objectUtil; ZodParsedType: { string: "string"; nan: "nan"; number: "number"; integer: "integer"; float: "float"; boolean: "boolean"; date: "date"; ... 12 more ...; set: "set"; }; ... 105 more ...; default: {}; }, TResult2 = never>(onfulfilled?: ((value: { ...; }) =...' is not assignable to type '<TResult1 = Partial<typeof import("/home/daniel-bo/Desktop/reading-advantage-monorepo-ts7/node_modules/zod/index")>, TResult2 = never>(onfulfilled?: ((value: Partial<typeof import("/home/daniel-bo/Desktop/reading-advantage-monorepo-ts7/node_modules/zod/index")>) => TResult1 | PromiseLike<...>) | null | undefined, on...'.
+                Types of parameters 'onfulfilled' and 'onfulfilled' are incompatible.
+                  Types of parameters 'value' and 'value' are incompatible.
+                    Type '{ util: typeof util; objectUtil: typeof objectUtil; ZodParsedType: { string: "string"; nan: "nan"; number: "number"; integer: "integer"; float: "float"; boolean: "boolean"; date: "date"; bigint: "bigint"; symbol: "symbol"; function: "function"; undefined: "undefined"; null: "null"; array: "array"; object: "object"; ...' is not assignable to type 'Partial<typeof import("/home/daniel-bo/Desktop/reading-advantage-monorepo-ts7/node_modules/zod/index")>'.
+                      Types of property 'z' are incompatible.
+                        Type '{}' is missing the following properties from type 'typeof import("/home/daniel-bo/Desktop/reading-advantage-monorepo-ts7/node_modules/zod/v3/external")': util, objectUtil, ZodParsedType, getParsedType, and 103 more.
+apps/science-advantage/lib/ai/__tests__/recommendation-service.otel.test.ts(619,7): error TS2307: Cannot find module '../recommendation-service?fallback-test' or its corresponding type declarations.
+apps/science-advantage/lib/ai/__tests__/recommendation-service.otel.test.ts(675,7): error TS18046: 'result' is of type 'unknown'.
+apps/science-advantage/lib/ai/__tests__/recommendation-service.otel.test.ts(678,12): error TS18046: 'result' is of type 'unknown'.
+apps/science-advantage/lib/ai/recommendation-context.integration.test.ts(2,32): error TS2307: Cannot find module '@reading-advantage/domain' or its corresponding type declarations.
+apps/science-advantage/lib/ai/recommendation-context.integration.test.ts(3,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/lib/ai/recommendation-context.integration.test.ts(19,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/lib/ai/recommendation-context.ts(1,44): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/lib/ai/recommendation-context.ts(10,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/lib/ai/recommendation-context.ts(12,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/lib/ai/recommendation-context.ts(204,24): error TS7006: Parameter 'unit' implicitly has an 'any' type.
+apps/science-advantage/lib/ai/recommendation-context.ts(221,43): error TS7006: Parameter 'l' implicitly has an 'any' type.
+apps/science-advantage/lib/ai/recommendation-context.ts(254,61): error TS7006: Parameter 'l' implicitly has an 'any' type.
+apps/science-advantage/lib/ai/recommendation-context.ts(261,22): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/science-advantage/lib/ai/recommendation-context.ts(262,19): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/science-advantage/lib/ai/recommendation-context.ts(264,22): error TS7006: Parameter 'c' implicitly has an 'any' type.
+apps/science-advantage/lib/ai/recommendation-context.ts(265,19): error TS7006: Parameter 'c' implicitly has an 'any' type.
+apps/science-advantage/lib/ai/recommendation-context.ts(290,46): error TS7006: Parameter 'record' implicitly has an 'any' type.
+apps/science-advantage/lib/ai/recommendation-service.ts(3,31): error TS2307: Cannot find module '@reading-advantage/ai' or its corresponding type declarations.
+apps/science-advantage/lib/ai/recommendation-service.ts(185,40): error TS2307: Cannot find module '@reading-advantage/ai' or its corresponding type declarations.
+apps/science-advantage/lib/auth/constants.ts(1,45): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/lib/auth/constants.ts(2,39): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/lib/auth/server.integration.test.ts(2,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/lib/auth/server.integration.test.ts(3,43): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/lib/auth/server.ts(2,78): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/lib/auth/session.integration.test.ts(2,24): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/lib/auth/session.integration.test.ts(3,43): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/lib/auth/session.integration.test.ts(10,8): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/lib/auth/session.ts(2,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/lib/auth/session.ts(7,8): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/lib/auth/session.ts(8,51): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/lib/auth/types.ts(1,48): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/lib/ci-gates/ci-gates.test.ts(30,34): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/lib/enums.ts(15,8): error TS2307: Cannot find module '@reading-advantage/types/contracts/class' or its corresponding type declarations.
+apps/science-advantage/lib/enums.ts(16,67): error TS2307: Cannot find module '@reading-advantage/types/contracts/class' or its corresponding type declarations.
+apps/science-advantage/lib/gamification/badges.integration.test.ts(2,32): error TS2307: Cannot find module '@reading-advantage/domain' or its corresponding type declarations.
+apps/science-advantage/lib/gamification/badges.integration.test.ts(3,34): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/lib/gamification/badges.integration.test.ts(15,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/lib/gamification/badges.ts(3,56): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/lib/gamification/badges.ts(12,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/lib/gamification/badges.ts(18,8): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/lib/gamification/badges.ts(19,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/lib/gamification/badges.ts(97,43): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/science-advantage/lib/gamification/badges.ts(208,46): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/science-advantage/lib/gamification/badges.ts(291,31): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/science-advantage/lib/gamification/gamification-tenant-isolation.test.ts(2,42): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/lib/gamification/gamification-tenant-isolation.test.ts(3,27): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/lib/gamification/gamification-tenant-isolation.test.ts(4,32): error TS2307: Cannot find module '@reading-advantage/domain' or its corresponding type declarations.
+apps/science-advantage/lib/gamification/gamification-tenant-isolation.test.ts(69,53): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/lib/gamification/gamification-tenant-isolation.test.ts(79,53): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/lib/gamification/gamification-tenant-isolation.test.ts(95,27): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/lib/gamification/gamification-tenant-isolation.test.ts(101,3): error TS2593: Cannot find name 'beforeEach'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+apps/science-advantage/lib/gamification/streak.integration.test.ts(2,32): error TS2307: Cannot find module '@reading-advantage/domain' or its corresponding type declarations.
+apps/science-advantage/lib/gamification/streak.integration.test.ts(3,29): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/lib/gamification/streak.integration.test.ts(6,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/lib/gamification/streak.ts(6,8): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/lib/gamification/streak.ts(7,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/lib/gamification/streak.ts(8,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/lib/gamification/streak.ts(9,38): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/lib/gamification/xp.integration.test.ts(2,32): error TS2307: Cannot find module '@reading-advantage/domain' or its corresponding type declarations.
+apps/science-advantage/lib/gamification/xp.integration.test.ts(3,29): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/lib/gamification/xp.integration.test.ts(6,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/lib/gamification/xp.ts(3,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/lib/gamification/xp.ts(4,38): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/lib/gamification/xp.ts(10,8): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/lib/gamification/xp.ts(11,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/lib/instrumentation.node.ts(18,22): error TS2693: 'Resource' only refers to a type, but is being used as a value here.
+apps/science-advantage/lib/instrumentation.node.ts(26,20): error TS2322: Type 'BatchSpanProcessor' is not assignable to type 'SpanProcessor'.
+  Types of property 'onStart' are incompatible.
+    Type '(_span: Span, _parentContext: Context) => void' is not assignable to type '(span: Span, parentContext: Context) => void'.
+      Types of parameters '_span' and 'span' are incompatible.
+        Type 'import("/home/daniel-bo/Desktop/reading-advantage-monorepo-ts7/node_modules/@opentelemetry/sdk-trace-base/build/src/Span").Span' is not assignable to type 'import("/home/daniel-bo/Desktop/reading-advantage-monorepo-ts7/apps/science-advantage/node_modules/@opentelemetry/sdk-trace-base/build/src/Span").Span'.
+          Property 'instrumentationScope' is missing in type 'Span' but required in type 'ReadableSpan'.
+apps/science-advantage/lib/instrumentation.node.ts(26,43): error TS2345: Argument of type 'ConsoleSpanExporter | OTLPTraceExporter' is not assignable to parameter of type 'SpanExporter'.
+  Type 'OTLPTraceExporter' is not assignable to type 'SpanExporter'.
+    Types of property 'export' are incompatible.
+      Type '(items: ReadableSpan[], resultCallback: (result: ExportResult) => void) => void' is not assignable to type '(spans: ReadableSpan[], resultCallback: (result: ExportResult) => void) => void'.
+        Types of parameters 'items' and 'spans' are incompatible.
+          Type 'import("/home/daniel-bo/Desktop/reading-advantage-monorepo-ts7/apps/science-advantage/node_modules/@opentelemetry/sdk-trace-base/build/src/export/ReadableSpan").ReadableSpan[]' is not assignable to type 'import("/home/daniel-bo/Desktop/reading-advantage-monorepo-ts7/node_modules/@opentelemetry/sdk-trace-base/build/src/export/ReadableSpan").ReadableSpan[]'.
+            Property 'instrumentationLibrary' is missing in type 'import("/home/daniel-bo/Desktop/reading-advantage-monorepo-ts7/apps/science-advantage/node_modules/@opentelemetry/sdk-trace-base/build/src/export/ReadableSpan").ReadableSpan' but required in type 'import("/home/daniel-bo/Desktop/reading-advantage-monorepo-ts7/node_modules/@opentelemetry/sdk-trace-base/build/src/export/ReadableSpan").ReadableSpan'.
+apps/science-advantage/lib/interventions/detect-alerts.ts(7,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/lib/observability/__tests__/fixtures/eslint/good.ts(26,1): error TS2304: Cannot find name 'logger'.
+apps/science-advantage/lib/observability/__tests__/live-sentry-initialization.acceptance.test.ts(49,17): error TS2540: Cannot assign to 'NODE_ENV' because it is a read-only property.
+apps/science-advantage/lib/observability/__tests__/sentry-config.contract.test.ts(53,17): error TS2540: Cannot assign to 'NODE_ENV' because it is a read-only property.
+apps/science-advantage/lib/observability/__tests__/sentry-config.contract.test.ts(86,17): error TS2540: Cannot assign to 'NODE_ENV' because it is a read-only property.
+apps/science-advantage/lib/schemas/__tests__/curriculum-identifiers.integration.test.ts(2,29): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/lib/schemas/__tests__/curriculum-identifiers.integration.test.ts(12,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/lib/services/classes/get-class-detail.integration.test.ts(2,32): error TS2307: Cannot find module '@reading-advantage/domain' or its corresponding type declarations.
+apps/science-advantage/lib/services/classes/get-class-detail.integration.test.ts(3,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/lib/services/classes/get-class-detail.integration.test.ts(12,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/lib/services/classes/get-class-detail.integration.test.ts(310,32): error TS2304: Cannot find name 'teacherId'.
+apps/science-advantage/lib/services/classes/get-class-detail.ts(1,37): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/lib/services/classes/get-class-detail.ts(8,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/lib/services/classes/get-class-detail.ts(14,8): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/lib/services/classes/get-class-detail.ts(15,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/lib/services/classes/get-class-detail.ts(125,22): error TS7006: Parameter 'unit' implicitly has an 'any' type.
+apps/science-advantage/lib/services/classes/get-student-classes.integration.test.ts(2,32): error TS2307: Cannot find module '@reading-advantage/domain' or its corresponding type declarations.
+apps/science-advantage/lib/services/classes/get-student-classes.integration.test.ts(3,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/lib/services/classes/get-student-classes.integration.test.ts(9,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/lib/services/classes/get-student-classes.ts(1,26): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/lib/services/classes/get-student-classes.ts(6,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/lib/services/classes/get-student-classes.ts(12,8): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/lib/services/classes/get-student-classes.ts(13,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/lib/services/classes/get-student-classes.ts(101,20): error TS7006: Parameter 'cls' implicitly has an 'any' type.
+apps/science-advantage/lib/services/mastery/mastery-worker.integration.test.ts(2,32): error TS2307: Cannot find module '@reading-advantage/domain' or its corresponding type declarations.
+apps/science-advantage/lib/services/mastery/mastery-worker.integration.test.ts(3,43): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/lib/services/mastery/mastery-worker.integration.test.ts(18,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/lib/services/mastery/mastery-worker.integration.test.ts(310,8): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/science-advantage/lib/services/mastery/mastery-worker.integration.test.ts(310,11): error TS7006: Parameter 'b' implicitly has an 'any' type.
+apps/science-advantage/lib/services/mastery/mastery-worker.ts(1,34): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/lib/services/mastery/mastery-worker.ts(10,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/lib/services/mastery/mastery-worker.ts(16,8): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/lib/services/mastery/mastery-worker.ts(17,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/lib/services/mastery/mastery-worker.ts(150,47): error TS7006: Parameter 'q' implicitly has an 'any' type.
+apps/science-advantage/lib/services/mastery/mastery-worker.ts(249,14): error TS7006: Parameter 'latest' implicitly has an 'any' type.
+apps/science-advantage/lib/services/mastery/mastery-worker.ts(249,22): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/science-advantage/lib/services/mastery/standard-mastery.integration.test.ts(3,34): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/lib/services/mastery/standard-mastery.integration.test.ts(9,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/lib/services/mastery/standard-mastery.ts(1,21): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/lib/services/mastery/standard-mastery.ts(2,40): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/lib/services/mastery/standard-mastery.ts(3,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/lib/services/services-tenant-isolation.test.ts(2,42): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/lib/services/services-tenant-isolation.test.ts(3,27): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/lib/services/services-tenant-isolation.test.ts(4,32): error TS2307: Cannot find module '@reading-advantage/domain' or its corresponding type declarations.
+apps/science-advantage/lib/services/services-tenant-isolation.test.ts(43,53): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/lib/services/services-tenant-isolation.test.ts(59,3): error TS2593: Cannot find name 'beforeEach'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+apps/science-advantage/lib/utils.ts(1,20): error TS2307: Cannot find module '@reading-advantage/utils' or its corresponding type declarations.
+apps/science-advantage/lib/utils/generateJoinCode.integration.test.ts(2,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/lib/utils/generateJoinCode.integration.test.ts(7,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/lib/utils/generateJoinCode.ts(10,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/lib/utils/generateJoinCode.ts(11,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/lib/utils/generateJoinCode.ts(12,32): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/lib/utils/join-code-format.ts(14,8): error TS2307: Cannot find module '@reading-advantage/types/contracts/class' or its corresponding type declarations.
+apps/science-advantage/lib/utils/join-code-format.ts(16,53): error TS2307: Cannot find module '@reading-advantage/types/contracts/class' or its corresponding type declarations.
+apps/science-advantage/lib/validations/class.ts(12,8): error TS2307: Cannot find module '@reading-advantage/types/contracts/class' or its corresponding type declarations.
+apps/science-advantage/next.config.ts(54,3): error TS2353: Object literal may only specify known properties, and 'disable' does not exist in type 'SentryBuildOptions'.
+apps/science-advantage/proxy.ts(2,84): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/proxy.ts(3,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/proxy.ts(98,37): error TS18046: 'err' is of type 'unknown'.
+apps/science-advantage/proxy.ts(101,37): error TS18046: 'err' is of type 'unknown'.
+apps/science-advantage/scripts/__tests__/migrate-lesson-content.test.ts(15,41): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/scripts/backfill-mastery.ts(21,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/scripts/backfill-mastery.ts(30,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/scripts/backfill-mastery.ts(137,60): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/science-advantage/scripts/backfill-mastery.ts(155,39): error TS7006: Parameter 'response' implicitly has an 'any' type.
+apps/science-advantage/scripts/backfill-mastery.ts(191,45): error TS7006: Parameter 'record' implicitly has an 'any' type.
+apps/science-advantage/scripts/backfill-mastery.ts(213,12): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+apps/science-advantage/scripts/backfill-mastery.ts(261,47): error TS7006: Parameter 'record' implicitly has an 'any' type.
+apps/science-advantage/scripts/backfill-thai-titles.ts(10,24): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/scripts/backfill-thai-titles.ts(11,32): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/scripts/create-test-users.ts(2,30): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/scripts/create-test-users.ts(3,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/scripts/create-test-users.ts(4,33): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/scripts/dev-interventions.ts(11,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/scripts/dev-interventions.ts(18,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/scripts/dev-interventions.ts(58,36): error TS7006: Parameter 'student' implicitly has an 'any' type.
+apps/science-advantage/scripts/dev-interventions.ts(83,43): error TS7006: Parameter 'row' implicitly has an 'any' type.
+apps/science-advantage/scripts/dev-interventions.ts(93,46): error TS7006: Parameter 'student' implicitly has an 'any' type.
+apps/science-advantage/scripts/migrate-lesson-content.ts(28,29): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/scripts/migrate-lesson-content.ts(29,32): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/scripts/seed-demo-users.ts(2,30): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/scripts/seed-demo-users.ts(4,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/scripts/seed-demo-users.ts(5,33): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/scripts/seed/seed-activity-data.ts(2,30): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/scripts/seed/seed-activity-data.ts(4,38): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/scripts/seed/seed-activity-data.ts(16,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/scripts/seed/seed-activity-data.ts(169,34): error TS7006: Parameter 'l' implicitly has an 'any' type.
+apps/science-advantage/scripts/seed/seed-activity-data.ts(198,36): error TS7006: Parameter 'l' implicitly has an 'any' type.
+apps/science-advantage/scripts/seed/seed-activity-data.ts(204,36): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/science-advantage/scripts/seed/seed-curriculum-units.ts(6,33): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/scripts/seed/seed-curriculum-units.ts(12,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/scripts/seed/seed-curriculum-units.ts(83,35): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+apps/science-advantage/scripts/seed/seed-curriculum-units.ts(128,41): error TS7006: Parameter 'l' implicitly has an 'any' type.
+apps/science-advantage/scripts/seed/seed-curriculum-units.ts(136,31): error TS7006: Parameter 'l' implicitly has an 'any' type.
+apps/science-advantage/scripts/seed/seed-demo-data.ts(2,30): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/science-advantage/scripts/seed/seed-demo-data.ts(4,29): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/scripts/seed/seed-demo-data.ts(13,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/scripts/seed/seed-lessons.ts(6,38): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/scripts/seed/seed-lessons.ts(12,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/scripts/seed/seed-lessons.ts(120,35): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+apps/science-advantage/scripts/seed/seed-lessons.ts(177,33): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/science-advantage/scripts/seed/seed-lessons.ts(182,43): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/science-advantage/scripts/seed/seed-questions.ts(6,38): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/scripts/seed/seed-questions.ts(13,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/scripts/seed/seed-questions.ts(169,37): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+apps/science-advantage/scripts/seed/seed-questions.ts(192,36): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/science-advantage/scripts/seed/seed-standards.ts(6,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/scripts/seed/seed-standards.ts(7,43): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/scripts/test-curriculum-endpoint.ts(6,43): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/scripts/test-curriculum-endpoint.ts(14,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/scripts/test-curriculum-endpoint.ts(71,35): error TS7006: Parameter 'unit' implicitly has an 'any' type.
+apps/science-advantage/scripts/test-curriculum-endpoint.ts(99,33): error TS7006: Parameter 'unit' implicitly has an 'any' type.
+apps/science-advantage/scripts/test-curriculum-endpoint.ts(125,24): error TS7006: Parameter 'unit' implicitly has an 'any' type.
+apps/science-advantage/scripts/test-curriculum-endpoint.ts(130,35): error TS7006: Parameter 'lesson' implicitly has an 'any' type.
+apps/science-advantage/scripts/test-curriculum-endpoint.ts(145,61): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+apps/science-advantage/scripts/test-curriculum-endpoint.ts(145,66): error TS7006: Parameter 'u' implicitly has an 'any' type.
+apps/science-advantage/src/__tests__/rate-limit-login.integration.test.ts(3,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/science-advantage/src/__tests__/rate-limit-login.integration.test.ts(4,48): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/science-advantage/src/__tests__/rate-limit-login.integration.test.ts(5,29): error TS2307: Cannot find module '@reading-advantage/api/routes/auth' or its corresponding type declarations.
+apps/science-advantage/src/__tests__/rate-limit-login.integration.test.ts(6,30): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.

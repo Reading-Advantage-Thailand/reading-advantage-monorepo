@@ -1,0 +1,3 @@
+packages/advantage-play-kit/src/react/apk-game-host.tsx(10,34): error TS2307: Cannot find module '@reading-advantage/game-contracts' or its corresponding type declarations.
+packages/advantage-play-kit/src/runtime/runtime.ts(5,8): error TS2307: Cannot find module '@reading-advantage/game-contracts' or its corresponding type declarations.
+packages/advantage-play-kit/src/runtime/types.ts(5,8): error TS2307: Cannot find module '@reading-advantage/game-contracts' or its corresponding type declarations.

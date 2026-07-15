@@ -1,0 +1,12 @@
+packages/mastery-runtime-compat/src/codecamp-proof.ts(6,8): error TS2307: Cannot find module '@reading-advantage/knowledge-space-core' or its corresponding type declarations.
+packages/mastery-runtime-compat/src/codecamp-proof.ts(7,36): error TS2307: Cannot find module '@reading-advantage/knowledge-space-practice' or its corresponding type declarations.
+packages/mastery-runtime-compat/src/codecamp-proof.ts(8,40): error TS2307: Cannot find module '@reading-advantage/practice-core' or its corresponding type declarations.
+packages/mastery-runtime-compat/src/codecamp-proof.ts(9,47): error TS2307: Cannot find module '@reading-advantage/srs-engine' or its corresponding type declarations.
+packages/mastery-runtime-compat/src/codecamp-proof.ts(14,8): error TS2307: Cannot find module '@reading-advantage/domain/mastery/contracts' or its corresponding type declarations.
+packages/mastery-runtime-compat/src/codecamp-proof.ts(15,50): error TS2307: Cannot find module '@reading-advantage/domain/mastery/adapters/memory' or its corresponding type declarations.
+packages/mastery-runtime-compat/src/codecamp-proof.ts(16,39): error TS2307: Cannot find module '@reading-advantage/domain/mastery/service' or its corresponding type declarations.
+packages/mastery-runtime-compat/src/codecamp-proof.ts(284,15): error TS7006: Parameter 'error' implicitly has an 'any' type.
+packages/mastery-runtime-compat/src/codecamp-proof.ts(369,5): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ readonly Again: "again"; readonly Hard: "hard"; readonly Good: "good"; readonly Easy: "easy"; }'.
+packages/mastery-runtime-compat/src/codecamp-proof.ts(379,6): error TS7006: Parameter 'state' implicitly has an 'any' type.
+packages/mastery-runtime-compat/src/codecamp-proof.ts(385,6): error TS7006: Parameter 'review' implicitly has an 'any' type.
+packages/mastery-runtime-compat/src/codecamp-proof.ts(413,34): error TS7006: Parameter 'node' implicitly has an 'any' type.

@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "track": "typescript7_native_migration_20260710",
+  "phase": "Phase 3c: real TypeScript 6/7 diagnostic parity",
+  "status": "accepted",
+  "accepted_at": "2026-07-15T03:50:14Z",
+  "accepted_run": "measure/tracks/typescript7_native_migration_20260710/evidence/phase-3c-parity/run-20260715T033929917664Z",
+  "prior_rejected_run": "measure/tracks/typescript7_native_migration_20260710/evidence/phase-3c-parity/run-20260715T025909270358Z",
+  "result": {
+    "config_count": 39,
+    "passed_count": 39,
+    "failed_count": 0,
+    "gate_failures": [],
+    "provenance_stable": true,
+    "ledger_matches_start": true,
+    "compiler_runtime_failures": 0,
+    "manifest_records": 158,
+    "manifest_integrity": "exact"
+  },
+  "compiler_contract": {
+    "typescript6": "6.0.2 through Node 22.22.2 with --max-old-space-size=3072 and --stableTypeOrdering",
+    "typescript7": "7.0.2 native compiler alias"
+  },
+  "reconciliation": {
+    "primary_no_emit_declaration_override": "declaration and declarationMap explicitly false; no declaration output is produced for this app",
+    "reviewed_ledger_entries": 34,
+    "applied_ledger_entries": 34,
+    "application_cardinality": "each reviewed entry applied exactly once",
+    "reviewed_differences": [
+      "Primary: TypeScript 7's more specific missing-property and unresolved-identifier diagnostics",
+      "Science: TypeScript 7's narrower callback-expression columns for the same TS2769 diagnostics",
+      "Reading: TypeScript 6's shorter object-type rendering for the same TS2345 diagnostics"
+    ]
+  },
+  "runtime_capacity": {
+    "prior_failure": "TypeScript 6 Reading check aborted at Node's default approximately 2 GiB heap before diagnostics",
+    "validated_budget": "The isolated 3072 MiB probe completed Reading's 1,012 diagnostics with peak RSS 2385716 KiB; the accepted complete run then finished the same pair without runtime failure."
+  }
+}

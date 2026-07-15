@@ -12,6 +12,7 @@ from __future__ import annotations
 import importlib
 import hashlib
 import json
+import signal
 import subprocess
 import sys
 import unittest
@@ -267,6 +268,14 @@ class DiagnosticParityContract(unittest.TestCase):
         self.assertEqual(report["compiler_runs"], 2)
         self.assertEqual(report["unexplained_differences"], [])
         _assert_subprocess_evidence(report, minimum_runs=2)
+        self.assertIn("raw_streams", report)
+
+        equivalent_nonzero = run_diagnostic_parity(
+            _fixture_command("parity-broken-diagnostic/ts6.json"),
+            _fixture_command("parity-broken-diagnostic/ts7-equivalent-exit1.json"),
+            ledger=[],
+        )
+        self.assertEqual(equivalent_nonzero["unexplained_differences"], [])
 
         clean = run_diagnostic_parity(
             _fixture_command("benchmark-empty-fixture/exit-zero.json"),
@@ -275,14 +284,54 @@ class DiagnosticParityContract(unittest.TestCase):
         )
         self.assertEqual(clean["compiler_runs"], 2)
 
-        with self.assertRaisesRegex(AssertionError, "missing TS 7 diagnostic"):
+        DiagnosticParityError = _require_harness("DiagnosticParityError")
+        ts7_missing_process = _prove_fixture_is_a_real_subprocess(
+            "parity-broken-diagnostic/ts7-missing.json"
+        )
+        with self.assertRaisesRegex(DiagnosticParityError, "missing TS 7 diagnostic") as caught:
             run_diagnostic_parity(
                 _fixture_command("parity-broken-diagnostic/ts6.json"),
                 _fixture_command("parity-broken-diagnostic/ts7-missing.json"),
                 ledger=[],
             )
+        parity_error = caught.exception
+        self.assertEqual(parity_error.raw_streams["ts6"]["stdout"], ts6_process.stdout)
+        self.assertEqual(parity_error.raw_streams["ts7"]["stdout"], ts7_missing_process.stdout)
+        self.assertEqual(len(parity_error.subprocess_evidence), 2)
+        self.assertEqual(
+            parity_error.subprocess_evidence[0]["stdout_sha256"],
+            hashlib.sha256(ts6_process.stdout.encode("utf-8")).hexdigest(),
+        )
+        self.assertEqual(
+            parity_error.subprocess_evidence[1]["stdout_sha256"],
+            hashlib.sha256(ts7_missing_process.stdout.encode("utf-8")).hexdigest(),
+        )
         with self.assertRaisesRegex(AssertionError, "zero compiler runs"):
             run_diagnostic_parity([], [], ledger=[])
+        with self.assertRaisesRegex(AssertionError, "compiler success semantics differ"):
+            run_diagnostic_parity(
+                _fixture_command("parity-broken-diagnostic/ts6.json"),
+                _fixture_command("benchmark-empty-fixture/exit-zero.json"),
+                ledger=[],
+            )
+        with self.assertRaisesRegex(
+            DiagnosticParityError, "compiler runtime failure: ts6 terminated by signal 15"
+        ) as runtime_failure:
+            run_diagnostic_parity(
+                [
+                    sys.executable,
+                    "-B",
+                    "-c",
+                    "import os, signal; os.kill(os.getpid(), signal.SIGTERM)",
+                ],
+                _fixture_command("benchmark-empty-fixture/exit-zero.json"),
+                ledger=[],
+            )
+        self.assertEqual(
+            runtime_failure.exception.subprocess_evidence[0]["exit_status"],
+            -signal.SIGTERM,
+        )
+        self.assertEqual(runtime_failure.exception.raw_streams["ts6"], {"stdout": "", "stderr": ""})
         with self.assertRaisesRegex(AssertionError, "ledger entry missing reviewed metadata"):
             run_diagnostic_parity(
                 _fixture_command("parity-broken-diagnostic/ts6.json"),
@@ -304,6 +353,25 @@ class DiagnosticParityContract(unittest.TestCase):
             ],
         )
         self.assertEqual(reviewed["unexplained_differences"], [])
+        self.assertEqual(len(reviewed["applied_ledger_entries"]), 1)
+        self.assertEqual(
+            reviewed["applied_ledger_entries"][0]["reviewed_by"], "phase-2-test"
+        )
+        with self.assertRaisesRegex(AssertionError, "unused reviewed parity ledger entry"):
+            run_diagnostic_parity(
+                _fixture_command("benchmark-empty-fixture/exit-zero.json"),
+                _fixture_command("benchmark-empty-fixture/exit-zero.json"),
+                ledger=[
+                    {
+                        "diagnostic": "error TS9999: stale exception",
+                        "tsconfig_path": "fixture",
+                        "absent_from": "ts7",
+                        "reviewed_by": "phase-2-test",
+                        "reviewed_at": "2026-07-15T00:00:00Z",
+                        "reason": "deliberate stale ledger counterprobe",
+                    }
+                ],
+            )
 
 
 class BenchmarkContract(unittest.TestCase):
