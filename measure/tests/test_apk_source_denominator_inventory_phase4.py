@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Any
 
 from measure.evidence_integrity_gates.apk_inventory_acceptance import (
+    TrustedPhase4Authority,
     validate_phase4_inventory_acceptance,
 )
 from measure.evidence_integrity_gates.events import MappingEventResolver
@@ -727,6 +728,78 @@ class Phase4GreenBranchCounterexamples(unittest.TestCase):
         cls._git("commit", "-q", "-m", "fixture: raw source")
         cls.source_commit = cls._git("rev-parse", "HEAD").stdout.strip()
 
+        ceilings = {
+            "discovery-auditor": {"source_files": 10, "command_invocations": 10, "bytes_read": 10000},
+            "evidence-collector": {"source_files": 10, "command_invocations": 10, "bytes_read": 10000},
+            "requirements-mapper": {"claim_records": 100, "command_invocations": 10, "bytes_read": 10000},
+            "truth-test-author": {"test_cases": 100, "command_invocations": 10, "bytes_read": 10000},
+            "adversarial-reviewer": {"source_files": 10, "command_invocations": 10, "bytes_read": 10000},
+        }
+        cls.predecessor_gate_sha256 = "f" * 64
+        cls.quarantined_prefix = "quarantine/failed-track/"
+        cls.freeze_path = "authority/phase0-input-freeze.json"
+        cls.ownership_path = "authority/phase0-role-ownership-manifest.json"
+        freeze = {
+            "schema_version": "apk-source-denominator.phase0-input-freeze.v1",
+            "baseline_revision": cls.source_commit,
+            "accepted_predecessor": {
+                "manifest_sha256": cls.predecessor_gate_sha256,
+            },
+            "source_scope": {
+                "current_revision": cls.source_commit,
+                "roots": ["raw"],
+            },
+            "failed_track_quarantine": {
+                "path": cls.quarantined_prefix.rstrip("/"),
+            },
+            "frozen_resource_ceilings": ceilings,
+            "stop_loss": {
+                "unsupported_factual_claims_before_stop": 1,
+                "denominator_mismatches_before_stop": 1,
+                "failed_fix_review_cycles_before_block": 2,
+                "unresolved_blocking_severities": ["critical", "high", "medium"],
+                "unmeasured_resource_usage_blocks_checkpoint": True,
+            },
+        }
+        freeze_bytes = cls._json_bytes(freeze)
+        ownership = {
+            "schema_version": "apk-source-denominator.phase0-role-ownership.v1",
+            "allowed_input_manifest_path": cls.freeze_path,
+            "allowed_input_manifest_sha256": hashlib.sha256(freeze_bytes).hexdigest(),
+            "required_roles": list(cls.REQUIRED_ROLES),
+            "receipt_contract": {
+                "schema_version": "apk-role-receipt.v1",
+                "required_provenance": [
+                    "spawn_id",
+                    "parent_ancestry_ids",
+                    "prompt_sha256",
+                    "actual_context_manifest_sha256",
+                    "start_event_id",
+                    "end_event_id",
+                    "final_response_sha256",
+                    "output_sha256",
+                    "budget_declaration_sha256",
+                    "commit_sha",
+                ],
+            },
+        }
+        for relative, data in {
+            cls.freeze_path: freeze_bytes,
+            cls.ownership_path: cls._json_bytes(ownership),
+        }.items():
+            path = cls.fixture_repo / relative
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(data)
+        cls._git("add", ".")
+        cls._git("commit", "-q", "-m", "fixture: frozen Phase-0 authority")
+        cls.authority_commit = cls._git("rev-parse", "HEAD").stdout.strip()
+        cls.authority = TrustedPhase4Authority(
+            phase0_commit_sha=cls.authority_commit,
+            input_freeze_path=cls.freeze_path,
+            ownership_manifest_path=cls.ownership_path,
+            admitted_phase_base_sha=cls.authority_commit,
+        )
+
         lines = source_bytes.splitlines(keepends=True)
         transition_locator = cls._locator("raw/game.ts", 1, lines[0])
         scene_a_locator = cls._locator("raw/game.ts", 2, lines[1])
@@ -819,7 +892,7 @@ class Phase4GreenBranchCounterexamples(unittest.TestCase):
             "status": "independent-review-complete",
             "reviewer_event_id": "evt_adversarial_reviewer",
             "source_baseline_revision": cls.source_commit,
-            "phase_base_sha": "a" * 40,
+            "phase_base_sha": cls.authority_commit,
             "fork_turns": "none",
             "completed_ms": 100,
             "blocking_findings_by_severity": {"critical": 0, "high": 0, "medium": 0},
@@ -827,17 +900,16 @@ class Phase4GreenBranchCounterexamples(unittest.TestCase):
             "reconciliation_sha256": hashlib.sha256(artifacts[reconciliation_path]).hexdigest(),
         }
         artifacts[review_path] = cls._json_bytes(review)
-        predecessor_gate_sha256 = "f" * 64
         candidate = {
             "schema_version": "apk-denominator-candidate-fixture.v1",
             "status": "candidate-non-consumable",
             "consumable": False,
-            "phase_base_sha": "a" * 40,
+            "phase_base_sha": cls.authority_commit,
             "source_baseline_revision": cls.source_commit,
             "bound_hashes": {
                 "reconciliation": hashlib.sha256(artifacts[reconciliation_path]).hexdigest(),
                 "review": hashlib.sha256(artifacts[review_path]).hexdigest(),
-                "gate": predecessor_gate_sha256,
+                "gate": cls.predecessor_gate_sha256,
             },
         }
         artifacts[candidate_path] = cls._json_bytes(candidate)
@@ -857,7 +929,7 @@ class Phase4GreenBranchCounterexamples(unittest.TestCase):
             "candidate": hashlib.sha256(artifacts[candidate_path]).hexdigest(),
             "candidate_partition": hashlib.sha256(artifacts[partition_path]).hexdigest(),
             "review": hashlib.sha256(artifacts[review_path]).hexdigest(),
-            "gate": predecessor_gate_sha256,
+            "gate": cls.predecessor_gate_sha256,
         }
         owner_message = cls._json_bytes({"decision": "approve", "approved_hashes": approved_hashes})
         owner = {
@@ -877,7 +949,7 @@ class Phase4GreenBranchCounterexamples(unittest.TestCase):
             "candidate_sha256": approved_hashes["candidate"],
             "review_sha256": approved_hashes["review"],
             "owner_approval_sha256": hashlib.sha256(artifacts[owner_path]).hexdigest(),
-            "gate_sha256": predecessor_gate_sha256,
+            "gate_sha256": cls.predecessor_gate_sha256,
         }
         accepted_partition = {
             "schema_version": "apk-denominator-accepted-partition-fixture.v1",
@@ -897,13 +969,6 @@ class Phase4GreenBranchCounterexamples(unittest.TestCase):
         cls._git("commit", "-q", "-m", "fixture: accepted transition")
         cls.artifact_commit = cls._git("rev-parse", "HEAD").stdout.strip()
 
-        ceilings = {
-            "discovery-auditor": {"source_files": 10, "command_invocations": 10, "bytes_read": 10000},
-            "evidence-collector": {"source_files": 10, "command_invocations": 10, "bytes_read": 10000},
-            "requirements-mapper": {"claim_records": 100, "command_invocations": 10, "bytes_read": 10000},
-            "truth-test-author": {"test_cases": 100, "command_invocations": 10, "bytes_read": 10000},
-            "adversarial-reviewer": {"source_files": 10, "command_invocations": 10, "bytes_read": 10000},
-        }
         owned_outputs = {
             "discovery-auditor": [raw_path],
             "evidence-collector": [human_path],
@@ -923,17 +988,22 @@ class Phase4GreenBranchCounterexamples(unittest.TestCase):
             started_ms = 90 if role == "adversarial-reviewer" else index * 10 + 1
             completed_ms = 100 if role == "adversarial-reviewer" else index * 10 + 5
             receipt = {
+                "schema_version": "apk-role-receipt.v1",
                 "role": role,
-                "event_id": event_id,
-                "session_id": f"ses_{index}",
-                "parent_session_id": "ses_root",
-                "agent": f"agent-{index}",
+                "spawn_id": f"ses_{index}",
+                "parent_ancestry_ids": ["ses_root"],
                 "prompt_sha256": str(index) * 64,
-                "context_sha256": chr(ord("a") + index) * 64,
+                "actual_context_manifest_sha256": chr(ord("a") + index) * 64,
+                "start_event_id": f"evt_start_{index}",
+                "end_event_id": event_id,
                 "final_response_sha256": chr(ord("f") - index) * 64,
                 "commit_sha": cls.artifact_commit,
-                "output_sha256": output_hashes,
+                "output_sha256": hashlib.sha256(
+                    cls._json_bytes(output_hashes).rstrip(b"\n")
+                ).hexdigest(),
+                "output_hashes": output_hashes,
                 "actual_usage": usage,
+                "budget_declaration_sha256": chr(ord("1") + index) * 64,
                 "stop_loss_observations": {
                     "unsupported_factual_claims": 0,
                     "denominator_mismatches": 0,
@@ -946,16 +1016,18 @@ class Phase4GreenBranchCounterexamples(unittest.TestCase):
                 "id": event_id,
                 "role": "assistant",
                 "task_role": role,
-                "session_id": receipt["session_id"],
-                "parent_session_id": "ses_root",
-                "agent": receipt["agent"],
+                "spawn_id": receipt["spawn_id"],
+                "parent_ancestry_ids": receipt["parent_ancestry_ids"],
                 "prompt_sha256": receipt["prompt_sha256"],
-                "context_sha256": receipt["context_sha256"],
+                "actual_context_manifest_sha256": receipt["actual_context_manifest_sha256"],
+                "start_event_id": receipt["start_event_id"],
+                "end_event_id": receipt["end_event_id"],
                 "final_response_sha256": receipt["final_response_sha256"],
+                "budget_declaration_sha256": receipt["budget_declaration_sha256"],
                 "started_ms": started_ms,
                 "completed_ms": completed_ms,
                 "fork_turns": "none" if role == "adversarial-reviewer" else "all",
-                "output_sha256": output_hashes,
+                "output_hashes": output_hashes,
             }
         events["evt_owner_approval"] = {
             "id": "evt_owner_approval",
@@ -970,10 +1042,10 @@ class Phase4GreenBranchCounterexamples(unittest.TestCase):
         cls.control_events = events
         cls.control_bundle = {
             "schema_version": "apk-denominator-phase4-validation.v1",
-            "phase_base_sha": "a" * 40,
+            "phase_base_sha": cls.authority_commit,
             "source_baseline_revision": cls.source_commit,
-            "predecessor_gate_sha256": predecessor_gate_sha256,
-            "quarantined_prefix": "quarantine/failed-track/",
+            "predecessor_gate_sha256": cls.predecessor_gate_sha256,
+            "quarantined_prefix": cls.quarantined_prefix,
             "frozen_resource_ceilings": ceilings,
             "required_roles": list(cls.REQUIRED_ROLES),
             "role_receipts": receipts,
@@ -995,6 +1067,12 @@ class Phase4GreenBranchCounterexamples(unittest.TestCase):
             "artifact_commits": {path: cls.artifact_commit for path in artifacts},
         }
         cls.source_adapter = GitSourceAdapter(cls.fixture_repo)
+        cls.control_result = validate_phase4_inventory_acceptance(
+            copy.deepcopy(cls.control_bundle),
+            MappingEventResolver(copy.deepcopy(cls.control_events)),
+            cls.source_adapter,
+            cls.authority,
+        )
 
     @classmethod
     def tearDownClass(cls) -> None:
@@ -1038,9 +1116,14 @@ class Phase4GreenBranchCounterexamples(unittest.TestCase):
         return {
             "revision": cls.source_commit,
             "path": path,
-            "line_start": line_number,
-            "line_end": line_number,
-            "cited_range_sha256": hashlib.sha256(cited_bytes).hexdigest(),
+            "blob_sha256": hashlib.sha256(
+                (cls.fixture_repo / path).read_bytes()
+            ).hexdigest(),
+            "range": {
+                "start_line": line_number,
+                "end_line": line_number,
+                "sha256": hashlib.sha256(cited_bytes).hexdigest(),
+            },
         }
 
     @staticmethod
@@ -1084,6 +1167,7 @@ class Phase4GreenBranchCounterexamples(unittest.TestCase):
             bundle,
             resolver or MappingEventResolver(events),
             self.source_adapter,
+            self.authority,
         )
 
     def _assert_rejects(
@@ -1102,11 +1186,10 @@ class Phase4GreenBranchCounterexamples(unittest.TestCase):
         Returns:
             Nothing.
         """
-        control_bundle, control_events = self._fixture()
-        control = self._validate(control_bundle, control_events)
         self.assertTrue(
-            control.get("ok"),
-            f"paired Green control failed, so the mutation rejection is vacuous: {control}",
+            self.control_result.get("ok"),
+            "paired Green control failed, so the mutation rejection is vacuous: "
+            f"{self.control_result}",
         )
         result = self._validate(bundle, events)
         self.assertFalse(
@@ -1180,6 +1263,25 @@ class Phase4GreenBranchCounterexamples(unittest.TestCase):
         bundle["role_receipts"].pop()
         self._assert_rejects(bundle, events, "MISSING_REQUIRED_ROLE")
 
+    def test_coordinated_role_and_ceiling_mutations_cannot_redefine_phase0(self) -> None:
+        """Rejects coordinated bundle edits to frozen roles or numeric ceilings.
+
+        Returns:
+            Nothing.
+        """
+        bundle, events = self._fixture()
+        omitted = bundle["required_roles"].pop(0)
+        bundle["role_receipts"] = [
+            receipt for receipt in bundle["role_receipts"] if receipt["role"] != omitted
+        ]
+        bundle["frozen_resource_ceilings"].pop(omitted)
+        self._assert_rejects(bundle, events, "FROZEN_AUTHORITY_MISMATCH")
+
+        bundle, events = self._fixture()
+        bundle["frozen_resource_ceilings"]["discovery-auditor"]["source_files"] = 999999
+        bundle["role_receipts"][0]["actual_usage"]["source_files"] = 999998
+        self._assert_rejects(bundle, events, "FROZEN_AUTHORITY_MISMATCH")
+
     def test_every_role_budget_requires_measured_non_boolean_integers(self) -> None:
         """Rejects unmeasured or boolean resource usage under frozen ceilings.
 
@@ -1190,6 +1292,51 @@ class Phase4GreenBranchCounterexamples(unittest.TestCase):
         bundle["role_receipts"][0]["actual_usage"]["source_files"] = False
         self._assert_rejects(bundle, events, "INVALID_RESOURCE_USAGE")
 
+    def test_stop_loss_observations_are_exact_numeric_and_fail_closed(self) -> None:
+        """Rejects absent, malformed, negative, or threshold-reaching stop-loss data.
+
+        Returns:
+            Nothing.
+        """
+        mutations = (
+            ("missing", lambda receipt: receipt.pop("stop_loss_observations")),
+            ("null", lambda receipt: receipt.__setitem__("stop_loss_observations", None)),
+            (
+                "boolean",
+                lambda receipt: receipt["stop_loss_observations"].__setitem__(
+                    "unsupported_factual_claims", False
+                ),
+            ),
+            (
+                "negative",
+                lambda receipt: receipt["stop_loss_observations"].__setitem__(
+                    "denominator_mismatches", -1
+                ),
+            ),
+        )
+        for label, mutate in mutations:
+            with self.subTest(label=label):
+                bundle, events = self._fixture()
+                mutate(bundle["role_receipts"][0])
+                self._assert_rejects(bundle, events, "INVALID_STOP_LOSS_OBSERVATION")
+
+        threshold_mutations = (
+            ("unsupported_factual_claims", 1),
+            ("denominator_mismatches", 1),
+            ("failed_fix_review_cycles", 2),
+        )
+        for field, value in threshold_mutations:
+            with self.subTest(field=field):
+                bundle, events = self._fixture()
+                bundle["role_receipts"][0]["stop_loss_observations"][field] = value
+                self._assert_rejects(bundle, events, "STOP_LOSS_BREACHED")
+
+        bundle, events = self._fixture()
+        bundle["role_receipts"][0]["stop_loss_observations"][
+            "unresolved_blocking_findings"
+        ]["medium"] = 1
+        self._assert_rejects(bundle, events, "STOP_LOSS_BREACHED")
+
     def test_role_receipts_require_provider_resolved_event_identity(self) -> None:
         """Rejects a receipt whose self-attested event has no provider match.
 
@@ -1197,8 +1344,52 @@ class Phase4GreenBranchCounterexamples(unittest.TestCase):
             Nothing.
         """
         bundle, events = self._fixture()
-        bundle["role_receipts"][0]["event_id"] = "evt_self_attested"
+        bundle["role_receipts"][0]["end_event_id"] = "evt_self_attested"
         self._assert_rejects(bundle, events, "EVENT_UNREACHABLE")
+
+    def test_v1_receipt_adapter_requires_every_frozen_provenance_field(self) -> None:
+        """Rejects a v1 receipt with any frozen provenance field omitted.
+
+        Returns:
+            Nothing.
+        """
+        for field in (
+            "spawn_id",
+            "parent_ancestry_ids",
+            "prompt_sha256",
+            "actual_context_manifest_sha256",
+            "start_event_id",
+            "end_event_id",
+            "final_response_sha256",
+            "output_sha256",
+            "budget_declaration_sha256",
+            "commit_sha",
+        ):
+            with self.subTest(field=field):
+                bundle, events = self._fixture()
+                bundle["role_receipts"][0].pop(field)
+                self._assert_rejects(bundle, events, "INVALID_ROLE_RECEIPT_V1")
+
+    def test_provider_outputs_exactly_bind_receipt_outputs(self) -> None:
+        """Rejects omitted, extra, stale, and forged provider output maps.
+
+        Returns:
+            Nothing.
+        """
+        for label in ("omitted", "extra", "stale", "forged"):
+            with self.subTest(label=label):
+                bundle, events = self._fixture()
+                event = events["evt_discovery_auditor"]
+                outputs = event["output_hashes"]
+                if label == "omitted":
+                    event.pop("output_hashes")
+                elif label == "extra":
+                    outputs["evidence/unowned.json"] = "0" * 64
+                elif label == "stale":
+                    outputs[next(iter(outputs))] = "0" * 64
+                else:
+                    event["output_hashes"] = {"evidence/forged.json": "1" * 64}
+                self._assert_rejects(bundle, events, "PROVIDER_OUTPUT_MISMATCH")
 
     def test_reviewer_event_rejects_inherited_context_even_with_fork_none_text(self) -> None:
         """Rejects inherited reviewer history despite a self-asserted isolation field.
@@ -1236,6 +1427,59 @@ class Phase4GreenBranchCounterexamples(unittest.TestCase):
         )
         self._replace_artifact(bundle, "raw_inventory", raw)
         self._assert_rejects(bundle, events, "QUARANTINED_SOURCE")
+
+    def test_live_nested_locator_schema_validates_blob_range_roots_and_shape(self) -> None:
+        """Rejects tampered or unrecognized live nested locator records.
+
+        Returns:
+            Nothing.
+        """
+        bundle, events = self._fixture()
+        _, raw = self._artifact(bundle, "raw_inventory")
+        raw["record_sets"]["source_records"][0]["evidence"][0]["blob_sha256"] = "0" * 64
+        self._replace_artifact(bundle, "raw_inventory", raw)
+        self._assert_rejects(bundle, events, "SOURCE_LOCATOR_INVALID")
+
+        bundle, events = self._fixture()
+        _, raw = self._artifact(bundle, "raw_inventory")
+        locator = raw["record_sets"]["source_records"][0]["evidence"][0]
+        locator.pop("range")
+        locator["line_span"] = {"start": 1, "end": 1, "sha256": "0" * 64}
+        self._replace_artifact(bundle, "raw_inventory", raw)
+        self._assert_rejects(bundle, events, "UNRECOGNIZED_SOURCE_LOCATOR")
+
+        bundle, events = self._fixture()
+        _, raw = self._artifact(bundle, "raw_inventory")
+        locator = raw["record_sets"]["source_records"][0]["evidence"][0]
+        locator["path"] = "quarantine/failed-track/invented.json"
+        locator["blob_sha256"] = hashlib.sha256(
+            b'{"invented":"game"}\n'
+        ).hexdigest()
+        locator["range"]["sha256"] = locator["blob_sha256"]
+        self._replace_artifact(bundle, "raw_inventory", raw)
+        self._assert_rejects(bundle, events, "QUARANTINED_SOURCE")
+
+    def test_bundle_trust_anchors_and_artifact_ancestry_are_authority_bound(self) -> None:
+        """Rejects coordinated redefinition of every frozen trust anchor.
+
+        Returns:
+            Nothing.
+        """
+        for field, value in (
+            ("phase_base_sha", self.source_commit),
+            ("source_baseline_revision", self.authority_commit),
+            ("predecessor_gate_sha256", "0" * 64),
+            ("quarantined_prefix", "other/quarantine/"),
+        ):
+            with self.subTest(field=field):
+                bundle, events = self._fixture()
+                bundle[field] = value
+                self._assert_rejects(bundle, events, "FROZEN_AUTHORITY_MISMATCH")
+
+        bundle, events = self._fixture()
+        raw_path = bundle["artifact_paths"]["raw_inventory"]
+        bundle["artifact_commits"][raw_path] = self.source_commit
+        self._assert_rejects(bundle, events, "ARTIFACT_ANCESTRY_INVALID")
 
     def test_human_discovery_cannot_originate_from_authored_program_inventory(self) -> None:
         """Rejects generated human discovery derived from authored requirements.
