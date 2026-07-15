@@ -29,7 +29,7 @@ _Story ref: spec.md#story-s1_
 
 ### Contract & Schema Definition
 
-- [ ] Task 1: Define the company identity ownership and tenancy contracts.
+- [~] Task 1: Define the company identity ownership and tenancy contracts.
     - [ ] Record the identity/product database ownership boundary.
     - [ ] Define the single-company organization and membership contract.
     - [ ] Define how trusted company organization context reaches product apps
