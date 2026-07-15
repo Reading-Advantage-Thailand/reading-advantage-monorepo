@@ -1,125 +1,140 @@
+/** English copy for the Codecamp consumer product summary. */
 export const en = {
-    title: "AI-Accelerated Engineering Launchpad",
-    description: "Become a full-stack engineer in 15 weeks with AI tutors, project-based sprints, and human-reviewed code. New tracks debuting 2026.",
-    features: [
-        {
-            title: "Multiple Full-Stack Tracks",
-            description: "Choose from curated stacks like Next.js, Laravel/Vue, Django/React, Ruby on Rails/React, FastAPI/Svelte, and more",
-        },
-        {
-            title: "AI-Guided Lessons",
-            description: "Every module opens with AI tutors that drill fundamentals before you dive into mentor-led build weeks",
-        },
-        {
-            title: "Human Code Reviews",
-            description: "Practice AI-assisted coding workflows while personally validating every change before delivery",
-        },
-        {
-            title: "Bespoke Portfolios",
-            description: "Graduate with industry-themed capstones tailored to your stack and target companies",
-        },
+  title: "A Mastery-Driven Full-Stack Internship",
+  description:
+    "Build production software through 20 modules and 106 guided lessons, with targeted AI support and evidence-based mastery.",
+  features: [
+    {
+      title: "One Coherent Pathway",
+      description:
+        "Move from web foundations through production delivery, Measure, and Advantage Play Kit game creation",
+    },
+    {
+      title: "Mastery Advantage",
+      description:
+        "Connect versioned objectives, verified evidence, scaffold usage, confidence, and spaced follow-up",
+    },
+    {
+      title: "Targeted AI Support",
+      description:
+        "Get activity-bound tutoring grounded in trusted lesson resources",
+    },
+    {
+      title: "Production Practice",
+      description:
+        "Plan, build, test, review, and deploy real software with accountable engineering workflows",
+    },
+  ],
+  codecamp: {
+    title: "Codecamp Advantage",
+    highlightsTitle: "Program Highlights",
+    outcomesTitle: "What to Expect",
+    highlights: [
+      "4 curriculum phases, 20 modules, and 106 guided lessons",
+      "I Do, We Do, You Do instruction that reduces support deliberately",
+      "Measure-Driven AI Development and Advantage Play Kit Game Creation",
+      "The first Advantage app with Mastery Advantage implemented end to end",
     ],
-    codecamp: {
-        title: "Codecamp Advantage",
-        highlightsTitle: "Program Highlights",
-        outcomesTitle: "What to Expect",
-        highlights: [
-            "15-week, AI-accelerated full-stack journeys across multiple tech stacks",
-            "Stack rotations blend lecture, pair programming, and live debugging dojo sessions",
-            "Stack-specific playbooks for Next.js, Laravel/Vue, Django/React, RoR/React, FastAPI/Svelte, and more",
-            "Weekly build weeks wrap with peer showcases and self-guided deployment retrospectives",
-        ],
-        outcomes: [
-            "Personalized learning roadmaps tuned by AI tutors each sprint",
-            "Production-quality capstones aligned to target industry verticals",
-            "Career services beta launches alongside 2026 founding cohorts",
-            "Alumni network and hiring metrics will launch with the first graduating class",
-        ],
-        applyNow: "Apply Now",
-        viewCurriculum: "View Curriculum",
-    }
-}
+    outcomes: [
+      "A production-ready full-stack development workflow",
+      "Auditable evidence of objectives, activity, support, and confidence",
+      "Targeted tutoring during the current learning activity",
+      "Instructor-led review supported by advisory AI evidence",
+    ],
+    applyNow: "Open Live Platform",
+    viewCurriculum: "View Curriculum",
+  },
+};
 
+/** Thai copy for the Codecamp consumer product summary. */
 export const th = {
-    title: "เส้นทางวิศวกรรมเต็มสแตกเร่งด้วย AI",
-    description: "ก้าวสู่การเป็นวิศวกรเต็มสแตกภายใน 15 สัปดาห์ พร้อมผู้ช่วยสอน AI, สปรินต์แบบโครงการ และการรีวิวโค้ดโดยมนุษย์ โปรแกรมเปิดตัวปี 2026",
-    features: [
-        {
-            title: "หลายเส้นทางเทคโนโลยี",
-            description: "เลือกสแตกเต็มสแตก เช่น Next.js, Laravel/Vue, Django/React, Ruby on Rails/React, FastAPI/Svelte และอื่นๆ",
-        },
-        {
-            title: "บทเรียนมีผู้ช่วย AI",
-            description: "ทุกบทเริ่มด้วยผู้ช่วยสอน AI พื้นฐาน ก่อนเข้าสัปดาห์ลงมือจริงกับเมนเทอร์",
-        },
-        {
-            title: "รีวิวโดยวิศวกรมืออาชีพ",
-            description: "ฝึกเวิร์กโฟลว์ที่มี AI ช่วยเหลือพร้อมตรวจสอบความถูกต้องทุกขั้นด้วยตัวคุณเอง",
-        },
-        {
-            title: "พอร์ตโฟลิโอเฉพาะบุคคล",
-            description: "จบด้วยโครงการตามโจทย์อุตสาหกรรมที่ออกแบบสำหรับสแตกที่คุณเลือก",
-        },
+  title: "การฝึกงานฟูลสแตกที่ขับเคลื่อนด้วยความเชี่ยวชาญ",
+  description:
+    "สร้างซอฟต์แวร์ระดับโปรดักชันผ่าน 20 โมดูลและ 106 บทเรียน พร้อม AI ช่วยเหลือตรงจุดและหลักฐานความเชี่ยวชาญ",
+  features: [
+    {
+      title: "เส้นทางเดียวที่ต่อเนื่อง",
+      description:
+        "ก้าวจากพื้นฐานเว็บสู่การส่งมอบจริง Measure และการสร้างเกมด้วย Advantage Play Kit",
+    },
+    {
+      title: "Mastery Advantage",
+      description:
+        "เชื่อมวัตถุประสงค์ หลักฐาน การใช้ตัวช่วย ความมั่นใจ และการทบทวนแบบเว้นระยะ",
+    },
+    {
+      title: "AI ช่วยเหลือตรงจุด",
+      description:
+        "รับการติวที่ผูกกับกิจกรรมและอ้างอิงแหล่งข้อมูลบทเรียนที่เชื่อถือได้",
+    },
+    {
+      title: "การฝึกระดับโปรดักชัน",
+      description:
+        "วางแผน สร้าง ทดสอบ ทบทวน และดีพลอยซอฟต์แวร์จริงด้วยเวิร์กโฟลว์ที่รับผิดชอบ",
+    },
+  ],
+  codecamp: {
+    title: "Codecamp Advantage",
+    highlightsTitle: "จุดเด่นของโปรแกรม",
+    outcomesTitle: "สิ่งที่จะได้รับ",
+    highlights: [
+      "4 เฟสหลักสูตร 20 โมดูล และ 106 บทเรียนแบบมีแนวทาง",
+      "การสอนแบบ ฉันทำ เราทำ คุณทำ ที่ลดตัวช่วยอย่างมีเจตนา",
+      "การพัฒนา AI ด้วย Measure และการสร้างเกมด้วย Advantage Play Kit",
+      "แอป Advantage แรกที่ใช้ Mastery Advantage ครบตั้งแต่ต้นจนจบ",
     ],
-    codecamp: {
-        title: "Codecamp Advantage",
-        highlightsTitle: "จุดเด่นของโปรแกรม",
-        outcomesTitle: "สิ่งที่จะได้รับ",
-        highlights: [
-            "เส้นทางเต็มสแตก 15 สัปดาห์ที่ขับเคลื่อนโดย AI หลายเทคโนโลยี",
-            "หมุนเวียนสแตกผ่านการบรรยาย การจับคู่เขียนโปรแกรม และเวิร์กช็อปดีบักสด",
-            "มีสมุดปกขาวเฉพาะสแตกสำหรับ Next.js, Laravel/Vue, Django/React, RoR/React, FastAPI/Svelte และอื่นๆ",
-            "ทุกสัปดาห์จบด้วยการนำเสนอผลงานต่อเพื่อนและรีโทรสเปคการดีพลอยด้วยตนเอง",
-        ],
-        outcomes: [
-            "แผนการเรียนรู้ส่วนบุคคลที่ปรับโดยผู้ช่วย AI ทุกสปรินต์",
-            "สร้างแคปสโตนระดับโปรดักชันที่สอดคล้องกับอุตสาหกรรมเป้าหมาย",
-            "บริการด้านอาชีพรุ่นเบต้าเปิดพร้อมคณะรุ่นบุกเบิกปี 2026",
-            "เครือข่ายศิษย์เก่าและตัวชี้วัดอาชีพจะเปิดในวันรับปริญญารุ่นแรก",
-        ],
-        applyNow: "สมัครตอนนี้",
-        viewCurriculum: "ดูหลักสูตร",
-    }
-}
+    outcomes: [
+      "เวิร์กโฟลว์พัฒนาฟูลสแตกที่พร้อมใช้งานจริง",
+      "หลักฐานวัตถุประสงค์ กิจกรรม ตัวช่วย และความมั่นใจที่ตรวจสอบได้",
+      "การติวตรงจุดระหว่างกิจกรรมการเรียนปัจจุบัน",
+      "การทบทวนโดยผู้สอนพร้อมหลักฐานคำแนะนำจาก AI",
+    ],
+    applyNow: "เปิดแพลตฟอร์มจริง",
+    viewCurriculum: "ดูหลักสูตร",
+  },
+};
 
+/** Simplified Chinese copy for the Codecamp consumer product summary. */
 export const zh = {
-    title: "AI 加速的全栈工程起航",
-    description: "15 周成为全栈工程师，配备 AI 导师、项目冲刺与人工代码审查。2026 年全新开班。",
-    features: [
-        {
-            title: "多元全栈路线",
-            description: "可选 Next.js、Laravel/Vue、Django/React、RoR/React、FastAPI/Svelte 等技术栈",
-        },
-        {
-            title: "AI 辅导课程",
-            description: "每个模块由 AI 导师打牢基础，随后进入导师带领的实战周",
-        },
-        {
-            title: "人工代码审查",
-            description: "学习在 AI 辅助编程流程中自行核对与验证每一次改动",
-        },
-        {
-            title: "个性化作品集",
-            description: "打造面向行业场景的定制化毕业项目",
-        },
+  title: "掌握驱动的全栈实习课程",
+  description:
+    "通过 20 个模块和 106 节引导课程构建生产软件，并获得针对性 AI 支持与基于证据的掌握追踪。",
+  features: [
+    {
+      title: "一条连贯路径",
+      description:
+        "从 Web 基础进入生产交付、Measure 与 Advantage Play Kit 游戏创作",
+    },
+    {
+      title: "Mastery Advantage",
+      description: "连接版本化目标、可验证证据、支架使用、信心水平和间隔复习",
+    },
+    {
+      title: "针对性 AI 支持",
+      description: "获得与活动绑定并基于可信课程资源的辅导",
+    },
+    {
+      title: "生产实践",
+      description: "用负责任的工程流程规划、构建、测试、审查并部署真实软件",
+    },
+  ],
+  codecamp: {
+    title: "Codecamp Advantage",
+    highlightsTitle: "课程亮点",
+    outcomesTitle: "学习收获",
+    highlights: [
+      "4 个课程阶段、20 个模块和 106 节引导课程",
+      "我示范、我们练、你独立完成的渐进式教学",
+      "Measure 驱动的 AI 开发与 Advantage Play Kit 游戏创作",
+      "首个端到端完整实施 Mastery Advantage 的 Advantage 应用",
     ],
-    codecamp: {
-        title: "Codecamp Advantage",
-        highlightsTitle: "项目亮点",
-        outcomesTitle: "课程收获",
-        highlights: [
-            "15 周 AI 加速的全栈旅程，覆盖多种技术栈",
-            "技术栈轮换包含讲解、结对编程与实时调试工作坊",
-            "Next.js、Laravel/Vue、Django/React、RoR/React、FastAPI/Svelte 等栈均有专属路线图",
-            "每周项目冲刺以同伴展示与自主部署复盘收尾",
-        ],
-        outcomes: [
-            "AI 导师为每个冲刺提供个性化学习计划",
-            "面向目标行业的生产级 Capstone 项目",
-            "职涯服务测试版将随 2026 首批学员同步上线",
-            "校友网络与职业数据将随首届毕业生发布",
-        ],
-        applyNow: "立即申请",
-        viewCurriculum: "查看课程",
-    }
-}
+    outcomes: [
+      "可投入生产的全栈开发工作流",
+      "可审计的目标、活动、支持与信心证据",
+      "当前学习活动中的针对性辅导",
+      "由建议式 AI 证据支持的教师主导审查",
+    ],
+    applyNow: "打开线上平台",
+    viewCurriculum: "查看课程",
+  },
+};

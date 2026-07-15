@@ -1,185 +1,323 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import Image from "next/image";
-import { Link } from "@/locales/navigation";
 import {
-  Code2,
-  Terminal,
-  Cpu,
-  Braces,
   ArrowRight,
+  Bot,
   Check,
+  ChevronRight,
+  Code2,
+  GitPullRequest,
+  GraduationCap,
+  LayoutDashboard,
+  RefreshCw,
+  ShieldCheck,
   Sparkles,
-  GitBranch,
-  Container,
-  Rocket,
+  Target,
 } from "lucide-react";
 import { getScopedI18n } from "@/locales/server";
-import { OverlappingSection } from "@/components/ui/overlapping-section";
-import { HorizontalStrip } from "@/components/ui/horizontal-strip";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { MarketingSvg } from "@/components/marketing/marketing-svg";
-import type { Locale } from "@/config/locale-config";
 
+/** Metadata describing the live Codecamp Advantage product page. */
 export const metadata: Metadata = {
-  title: "CodeCamp Advantage - Reading Advantage Thailand",
+  title: "Codecamp Advantage | Full-Stack Internship with Mastery Advantage",
   description:
-    "AI-powered full-stack development learning platform with personalized instruction and project-based curriculum.",
+    "Explore the live 20-module Codecamp Advantage internship—the first Advantage app to implement Mastery Advantage end to end.",
   openGraph: {
-    title: "CodeCamp Advantage - Reading Advantage Thailand",
+    title: "Codecamp Advantage | Mastery-Driven Full-Stack Internship",
     description:
-      "Transform your development journey with our AI-powered learning platform with personalized instruction and project-based curriculum.",
+      "A live 20-module, 106-lesson development pathway with verified mastery evidence, targeted tutoring, and production projects.",
   },
 };
 
-export default async function CodeCampAdvantage({
+const PHASES = [
+  { key: "A", moduleCount: 6 },
+  { key: "B", moduleCount: 4 },
+  { key: "C", moduleCount: 3 },
+  { key: "D", moduleCount: 7 },
+] as const;
+
+const MASTERY_STEPS = [
+  "objectives",
+  "evidence",
+  "confidence",
+  "review",
+] as const;
+const PEDAGOGY_STEPS = ["iDo", "weDo", "youDo"] as const;
+
+/**
+ * Renders the production-aligned Codecamp Advantage marketing page.
+ * @param params Promise containing the active site locale.
+ * @returns The localized Codecamp Advantage page.
+ */
+export default async function CodecampAdvantage({
   params,
 }: {
   params: Promise<{ locale: string }>;
 }) {
-  const { locale } = await params;
-  const t = await getScopedI18n("pages.products.codecampAdvantage");
+  const [{ locale }, t] = await Promise.all([
+    params,
+    getScopedI18n("pages.products.codecampAdvantage"),
+  ]);
+  const appLocale = locale === "th" ? "th" : "en";
+  const liveHref = `https://codecamp.reading-advantage.com/${appLocale}`;
 
   return (
-    <main className="overflow-x-hidden">
-      {/* Hero Section - Inline with dark slate gradient */}
-      <section className="relative min-h-[70vh] flex items-center overflow-hidden">
-        <Image
-          src="/images/hero-codecamp-advantage.jpg"
-          alt={t("heroAlt")}
-          fill
-          sizes="100vw"
-          className="object-cover"
-          priority
-        />
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900 opacity-90" />
-        <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10" />
-        <div className="container relative z-10 px-4 sm:px-6 lg:px-8 mx-auto max-w-7xl py-24">
-          <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-            <div className="lg:col-span-7">
-              <div className="inline-flex items-center gap-2 bg-amber-100 text-amber-800 px-4 py-2 rounded-full text-sm font-bold mb-6">
-                <Sparkles className="w-4 h-4" />
-                {t("hero.comingSoon")}
-              </div>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-6 leading-tight tracking-tight">
-                {t("hero.title")}
-              </h1>
-              <p className="text-xl md:text-2xl lg:text-3xl leading-relaxed mb-4 text-slate-300">
-                {t("hero.subtitle")}
-              </p>
-              <p className="text-lg md:text-xl leading-relaxed mb-8 text-slate-400 max-w-2xl">
-                {t("hero.description")}
-              </p>
-              <Link
-                href="/contact"
-                className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl shadow-lg hover:shadow-amber-500/30"
+    <main className="overflow-x-hidden bg-[#f6f2e9] text-slate-950">
+      <section className="relative isolate overflow-hidden bg-slate-950 text-white">
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(251,191,36,0.07)_1px,transparent_1px),linear-gradient(90deg,rgba(251,191,36,0.07)_1px,transparent_1px)] bg-[size:42px_42px]" />
+        <div className="absolute -right-24 top-0 h-96 w-96 rounded-full bg-amber-500/20 blur-3xl" />
+        <div className="relative mx-auto grid max-w-7xl gap-14 px-5 py-20 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:py-28">
+          <div>
+            <div className="mb-7 inline-flex items-center gap-2 border border-emerald-400/30 bg-emerald-400/10 px-4 py-2 font-mono text-xs font-semibold uppercase tracking-[0.2em] text-emerald-300">
+              <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-400" />
+              {t("hero.badge")}
+            </div>
+            <p className="mb-4 font-mono text-sm uppercase tracking-[0.28em] text-amber-400">
+              {t("hero.eyebrow")}
+            </p>
+            <h1 className="max-w-3xl text-5xl font-black leading-[0.95] tracking-[-0.05em] sm:text-6xl lg:text-7xl">
+              {t("hero.title")}
+            </h1>
+            <p className="mt-7 max-w-2xl text-xl font-semibold text-slate-200 sm:text-2xl">
+              {t("hero.subtitle")}
+            </p>
+            <p className="mt-5 max-w-2xl text-base leading-7 text-slate-400 sm:text-lg">
+              {t("hero.description")}
+            </p>
+            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+              <a
+                data-testid="codecamp-live-cta"
+                href={liveHref}
+                className="inline-flex items-center justify-center gap-2 bg-amber-400 px-7 py-4 font-bold text-slate-950 transition hover:bg-amber-300"
               >
-                {t("cta.buttons.joinWaitlist")}
-                <ArrowRight className="w-5 h-5" />
-              </Link>
+                {t("hero.primaryCta")}
+                <ArrowRight className="h-5 w-5" />
+              </a>
+              <a
+                href="#curriculum"
+                className="inline-flex items-center justify-center gap-2 border border-slate-600 px-7 py-4 font-bold text-white transition hover:border-slate-300 hover:bg-white/5"
+              >
+                {t("hero.secondaryCta")}
+                <ChevronRight className="h-5 w-5" />
+              </a>
             </div>
-            <div className="lg:col-span-5 flex justify-center lg:justify-end">
-              <div className="relative w-full max-w-md aspect-square">
-                <Image
-                  src="/images/codecamp-advantage-hero.jpg"
-                  alt={t("workspaceAlt")}
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 40vw"
-                  className="object-cover rounded-3xl shadow-2xl"
-                  priority
-                />
+          </div>
+
+          <div className="relative">
+            <div className="absolute -inset-4 border border-amber-400/15" />
+            <div className="relative overflow-hidden border border-slate-700 bg-slate-900 shadow-2xl shadow-black/40">
+              <div className="flex items-center justify-between border-b border-slate-700 px-4 py-3 font-mono text-[11px] uppercase tracking-widest text-slate-400">
+                <span>{t("hero.previewLabel")}</span>
+                <span className="text-emerald-400">{t("hero.status")}</span>
               </div>
+              <Image
+                src="/images/codecamp/dashboard-20260715.png"
+                alt={t("hero.dashboardAlt")}
+                width={1440}
+                height={900}
+                className="h-auto w-full"
+                priority
+              />
             </div>
+          </div>
+        </div>
+
+        <div className="relative border-t border-slate-800 bg-slate-900/80">
+          <div className="mx-auto grid max-w-7xl grid-cols-3 divide-x divide-slate-800 px-5 sm:px-8">
+            {(["phases", "modules", "lessons"] as const).map((stat) => (
+              <div
+                data-testid="proof-point"
+                key={stat}
+                className="py-6 text-center sm:py-8"
+              >
+                <div className="font-mono text-3xl font-black text-amber-400 sm:text-5xl">
+                  {t(`hero.stats.${stat}.value`)}
+                </div>
+                <div className="mt-2 text-xs font-bold uppercase tracking-[0.16em] text-slate-400 sm:text-sm">
+                  {t(`hero.stats.${stat}.label`)}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Adaptive Learning Path — SVG Visualization */}
-      <section className="py-24 bg-white border-y border-[#dad4c8]">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-            <div className="lg:col-span-5">
-              <span className="uppercase tracking-widest text-xs font-semibold text-fuchsia-600 mb-4 block">
-                {t("adaptiveEngine.eyebrow")}
-              </span>
-              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-                {t("adaptiveEngine.heading")}
+      <section
+        data-testid="mastery-evidence"
+        className="border-b border-stone-300 bg-amber-400"
+      >
+        <div className="mx-auto max-w-7xl px-5 py-20 sm:px-8 lg:py-24">
+          <div className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr]">
+            <div>
+              <div className="mb-6 inline-flex h-14 w-14 items-center justify-center bg-slate-950 text-amber-400">
+                <Sparkles className="h-7 w-7" />
+              </div>
+              <p className="font-mono text-xs font-bold uppercase tracking-[0.24em] text-slate-700">
+                {t("mastery.eyebrow")}
+              </p>
+              <h2 className="mt-4 text-4xl font-black leading-tight tracking-[-0.04em] sm:text-5xl">
+                {t("mastery.heading")}
               </h2>
-              <p className="text-base md:text-lg leading-relaxed text-slate-600">
-                {t("adaptiveEngine.description")}
+              <p className="mt-6 text-lg leading-8 text-slate-800">
+                {t("mastery.description")}
               </p>
             </div>
-            <div className="lg:col-span-7">
-              <div className="relative rounded-3xl overflow-hidden border border-[#dad4c8] bg-white shadow-lg">
-                <MarketingSvg
-                  baseName="ra-marketing-codecamp-advantage"
-                  locale={locale as Locale}
-                  className="w-full h-auto"
-                  alt={t("adaptiveEngine.alt")}
-                />
-              </div>
-            </div>
+            <ol className="grid gap-px bg-slate-950/20 sm:grid-cols-2">
+              {MASTERY_STEPS.map((step, index) => (
+                <li key={step} className="bg-[#f7cc48] p-7">
+                  <span className="font-mono text-xs font-bold text-slate-600">
+                    0{index + 1}
+                  </span>
+                  <h3 className="mt-4 text-xl font-black">
+                    {t(`mastery.steps.${step}.title`)}
+                  </h3>
+                  <p className="mt-3 leading-7 text-slate-700">
+                    {t(`mastery.steps.${step}.description`)}
+                  </p>
+                </li>
+              ))}
+            </ol>
           </div>
         </div>
       </section>
 
-      {/* Technology Tracks — Full-Width Dark Room (Slate) */}
-      <section className="relative py-24 bg-gradient-to-br from-slate-800 via-slate-900 to-slate-950 text-white overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10" />
-        <div
-          className="absolute top-20 left-20 w-[500px] h-[500px] bg-slate-700/20 rounded-full blur-[150px]"
-          aria-hidden="true"
-        />
-        <div
-          className="absolute bottom-20 right-20 w-[400px] h-[400px] bg-amber-500/10 rounded-full blur-[120px]"
-          aria-hidden="true"
-        />
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-6xl mx-auto">
-            <span className="uppercase tracking-widest text-xs font-semibold text-amber-400 mb-4 block text-center font-mono">
-              [ TRACKS ]
-            </span>
-            <h2 className="text-4xl md:text-5xl font-bold text-center mb-16">
-              {t("technologyTracks.heading")}
+      <section
+        id="curriculum"
+        data-testid="codecamp-curriculum"
+        className="py-20 sm:py-24"
+      >
+        <div className="mx-auto max-w-7xl px-5 sm:px-8">
+          <div className="max-w-3xl">
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.24em] text-amber-700">
+              {t("curriculum.eyebrow")}
+            </p>
+            <h2 className="mt-4 text-4xl font-black tracking-[-0.04em] sm:text-5xl">
+              {t("curriculum.heading")}
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {[
-                {
-                  icon: Code2,
-                  title: t("technologyTracks.tracks.0.title"),
-                  description: t("technologyTracks.tracks.0.description"),
-                  bracket: "[ NEXT ]",
-                },
-                {
-                  icon: Terminal,
-                  title: t("technologyTracks.tracks.1.title"),
-                  description: t("technologyTracks.tracks.1.description"),
-                  bracket: "[ MERN ]",
-                },
-                {
-                  icon: Cpu,
-                  title: t("technologyTracks.tracks.2.title"),
-                  description: t("technologyTracks.tracks.2.description"),
-                  bracket: "[ DJANGO ]",
-                },
-              ].map((track) => (
-                <div
-                  key={track.title}
-                  data-testid="track-card"
-                  className="bg-white/5 backdrop-blur-sm rounded-3xl p-10 border border-white/10 hover:border-amber-500/30 transition-all duration-300 hover:-translate-y-3 shadow-xl"
-                >
-                  <div className="w-14 h-14 bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
-                    <track.icon className="w-7 h-7 text-white" strokeWidth={2} />
-                  </div>
-                  <span className="font-mono text-xs text-amber-400 uppercase tracking-wider mb-3 block">
-                    {track.bracket}
+            <p className="mt-5 text-lg leading-8 text-slate-600">
+              {t("curriculum.description")}
+            </p>
+          </div>
+
+          <div className="mt-12 grid border-l border-t border-stone-300 md:grid-cols-2 xl:grid-cols-4">
+            {PHASES.map((phase) => (
+              <article
+                key={phase.key}
+                className="border-b border-r border-stone-300 bg-white p-7"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="font-mono text-xs font-bold uppercase tracking-widest text-amber-700">
+                    {t(`curriculum.phases.${phase.key}.name`)}
                   </span>
-                  <h3 className="text-xl font-bold mb-4 text-white">
-                    {track.title}
-                  </h3>
-                  <p className="text-slate-300 leading-relaxed">
-                    {track.description}
-                  </p>
+                  <span className="font-mono text-xs text-slate-500">
+                    {phase.moduleCount} {t("curriculum.moduleLabel")}
+                  </span>
+                </div>
+                <h3 className="mt-4 text-2xl font-black">
+                  {t(`curriculum.phases.${phase.key}.title`)}
+                </h3>
+                <p className="mt-3 min-h-14 text-sm leading-6 text-slate-600">
+                  {t(`curriculum.phases.${phase.key}.description`)}
+                </p>
+                <ol className="mt-6 space-y-3 border-t border-stone-200 pt-5">
+                  {Array.from({ length: phase.moduleCount }, (_, index) => {
+                    const module = t(
+                      `curriculum.phases.${phase.key}.modules.${index}`,
+                    );
+                    return (
+                      <li
+                        key={module}
+                        className="flex gap-3 text-sm leading-5 text-slate-700"
+                      >
+                        <span className="font-mono text-amber-700">
+                          {String(index + 1).padStart(2, "0")}
+                        </span>
+                        {module}
+                      </li>
+                    );
+                  })}
+                </ol>
+              </article>
+            ))}
+          </div>
+
+          <div className="mt-12 grid gap-6 lg:grid-cols-2">
+            <article
+              data-testid="measure-module"
+              className="overflow-hidden bg-slate-950 text-white"
+            >
+              <div className="p-8 sm:p-10">
+                <div className="flex items-center gap-3 font-mono text-xs font-bold uppercase tracking-[0.2em] text-amber-400">
+                  <Target className="h-5 w-5" />
+                  {t("curriculum.spotlights.measure.label")}
+                </div>
+                <h3 className="mt-5 text-3xl font-black">
+                  {t("curriculum.spotlights.measure.title")}
+                </h3>
+                <p className="mt-4 leading-7 text-slate-300">
+                  {t("curriculum.spotlights.measure.description")}
+                </p>
+              </div>
+              <Image
+                src="/images/codecamp/measure-lesson-20260715.png"
+                alt={t("curriculum.spotlights.measure.alt")}
+                width={1440}
+                height={900}
+                className="h-auto w-full border-t border-slate-700"
+              />
+            </article>
+            <article
+              data-testid="apk-unit"
+              className="flex flex-col justify-between border-2 border-slate-950 bg-white p-8 sm:p-10"
+            >
+              <div>
+                <div className="flex items-center gap-3 font-mono text-xs font-bold uppercase tracking-[0.2em] text-amber-700">
+                  <Code2 className="h-5 w-5" />
+                  {t("curriculum.spotlights.apk.label")}
+                </div>
+                <h3 className="mt-5 text-3xl font-black">
+                  {t("curriculum.spotlights.apk.title")}
+                </h3>
+                <p className="mt-4 text-lg leading-8 text-slate-600">
+                  {t("curriculum.spotlights.apk.description")}
+                </p>
+              </div>
+              <div className="mt-12 border-l-4 border-amber-400 bg-amber-50 p-5 font-mono text-sm leading-6 text-slate-700">
+                {t("curriculum.spotlights.apk.outcome")}
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-white py-20 sm:py-24">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8">
+          <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr]">
+            <div>
+              <GraduationCap className="h-12 w-12 text-amber-600" />
+              <h2 className="mt-6 text-4xl font-black tracking-[-0.04em]">
+                {t("pedagogy.heading")}
+              </h2>
+              <p className="mt-5 text-lg leading-8 text-slate-600">
+                {t("pedagogy.description")}
+              </p>
+            </div>
+            <div className="divide-y divide-stone-200 border-y border-stone-200">
+              {PEDAGOGY_STEPS.map((step, index) => (
+                <div
+                  key={step}
+                  className="grid grid-cols-[52px_1fr] gap-5 py-7"
+                >
+                  <span className="flex h-11 w-11 items-center justify-center bg-slate-950 font-mono font-bold text-amber-400">
+                    {index + 1}
+                  </span>
+                  <div>
+                    <h3 className="text-xl font-black">
+                      {t(`pedagogy.steps.${step}.title`)}
+                    </h3>
+                    <p className="mt-2 leading-7 text-slate-600">
+                      {t(`pedagogy.steps.${step}.description`)}
+                    </p>
+                  </div>
                 </div>
               ))}
             </div>
@@ -187,230 +325,89 @@ export default async function CodeCampAdvantage({
         </div>
       </section>
 
-      {/* Project-Based Learning — Asymmetric 7/5 */}
-      <section className="bg-white py-24">
-        <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-12 gap-12 items-center max-w-6xl mx-auto">
-            <div className="lg:col-span-7">
-              <span className="uppercase tracking-widest text-xs font-semibold text-amber-600 mb-4 block">
-                {t("eyebrows.projectBasedLearning")}
-              </span>
-              <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-8 leading-tight">
-                {t("keyFeatures.projectBasedLearning.title")}
+      <section className="bg-slate-950 py-20 text-white sm:py-24">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8">
+          <div className="grid gap-6 lg:grid-cols-2">
+            <article
+              data-testid="targeted-tutor"
+              className="border border-slate-700 p-8 sm:p-10"
+            >
+              <Bot className="h-10 w-10 text-amber-400" />
+              <p className="mt-8 font-mono text-xs font-bold uppercase tracking-[0.2em] text-amber-400">
+                {t("evidence.tutor.label")}
+              </p>
+              <h2 className="mt-3 text-3xl font-black">
+                {t("evidence.tutor.title")}
               </h2>
-              <ul className="space-y-4 mb-8">
-                {[
-                  t("keyFeatures.projectBasedLearning.points.0"),
-                  t("keyFeatures.projectBasedLearning.points.1"),
-                  t("keyFeatures.projectBasedLearning.points.2"),
-                ].map((point, index) => (
-                  <li key={index} className="flex items-start gap-3">
-                    <div className="w-6 h-6 bg-gradient-to-br from-amber-500 to-orange-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 text-white" strokeWidth={3} />
-                    </div>
-                    <span className="text-slate-600 leading-relaxed">
-                      {point}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-              <div className="inline-flex items-center gap-2 font-mono text-sm text-amber-600 bg-amber-50 px-4 py-2 rounded-xl border border-amber-200">
-                <Code2 className="w-4 h-4" />
-                <span>code → build → deploy</span>
+              <p className="mt-5 leading-7 text-slate-300">
+                {t("evidence.tutor.description")}
+              </p>
+            </article>
+            <article
+              data-testid="advisory-pr-review"
+              className="border border-slate-700 p-8 sm:p-10"
+            >
+              <GitPullRequest className="h-10 w-10 text-amber-400" />
+              <p className="mt-8 font-mono text-xs font-bold uppercase tracking-[0.2em] text-amber-400">
+                {t("evidence.prReview.label")}
+              </p>
+              <h2 className="mt-3 text-3xl font-black">
+                {t("evidence.prReview.title")}
+              </h2>
+              <p className="mt-5 leading-7 text-slate-300">
+                {t("evidence.prReview.description")}
+              </p>
+              <div className="mt-6 flex gap-3 border border-amber-400/30 bg-amber-400/10 p-4 text-sm leading-6 text-amber-100">
+                <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-amber-400" />
+                {t("evidence.prReview.guardrail")}
               </div>
-            </div>
-            <div className="lg:col-span-5">
-              <div className="space-y-4">
-                <Card
-                  padding="p-6"
-                  className="border-slate-200 bg-gradient-to-br from-slate-50 to-white"
-                >
-                  <div className="font-mono text-xs text-slate-400 mb-2">
-                    $ git commit -m &quot;init&quot;
-                  </div>
-                  <div className="font-mono text-sm text-slate-700">
-                    <span className="text-amber-600">const</span> project ={" "}
-                    <span className="text-green-600">&quot;Portfolio Site&quot;</span>;
-                  </div>
-                  <div className="mt-3 text-slate-600 text-sm">
-                    {t("projectBenefits.startRealWorld")}
-                  </div>
-                </Card>
-                <Card
-                  padding="p-6"
-                  className="border-slate-200 bg-gradient-to-br from-slate-50 to-white"
-                >
-                  <div className="font-mono text-xs text-slate-400 mb-2">
-                    $ npm run deploy
-                  </div>
-                  <div className="font-mono text-sm text-slate-700">
-                    <span className="text-amber-600">export</span>{" "}
-                    <span className="text-blue-600">default</span>{" "}
-                    <span className="text-slate-900">ProductionApp</span>;
-                  </div>
-                  <div className="mt-3 text-slate-600 text-sm">
-                    {t("projectBenefits.shipToProduction")}
-                  </div>
-                </Card>
-              </div>
-            </div>
+            </article>
+          </div>
+
+          <div className="mt-6 grid gap-px bg-slate-700 sm:grid-cols-3">
+            {(["ledger", "scaffolds", "followUp"] as const).map((item) => {
+              const icons = {
+                ledger: LayoutDashboard,
+                scaffolds: Check,
+                followUp: RefreshCw,
+              };
+              const Icon = icons[item];
+              return (
+                <div key={item} className="bg-slate-900 p-6">
+                  <Icon className="h-6 w-6 text-amber-400" />
+                  <h3 className="mt-4 font-bold">
+                    {t(`evidence.signals.${item}.title`)}
+                  </h3>
+                  <p className="mt-2 text-sm leading-6 text-slate-400">
+                    {t(`evidence.signals.${item}.description`)}
+                  </p>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* Technology Stack Strip */}
-      <HorizontalStrip
-        background="bg-slate-900"
-        padding="py-16"
-        data-testid="tech-strip"
-      >
-        <div className="container mx-auto px-4 mb-8 w-full">
-          <span className="uppercase tracking-widest text-xs font-semibold text-amber-400 mb-2 block font-mono">
-            [ TECH STACK ]
-          </span>
-          <h2 className="text-3xl md:text-4xl font-bold text-white">
-            {t("professionalTools.heading")}
-          </h2>
-        </div>
-        {[
-          { name: "Next.js", icon: <Code2 className="w-8 h-8" /> },
-          { name: "React", icon: <Braces className="w-8 h-8" /> },
-          { name: "Node.js", icon: <Terminal className="w-8 h-8" /> },
-          { name: "GitHub", icon: <GitBranch className="w-8 h-8" /> },
-          { name: "Docker", icon: <Container className="w-8 h-8" /> },
-          { name: "Vercel", icon: <Rocket className="w-8 h-8" /> },
-        ].map((tech) => (
-          <div
-            key={tech.name}
-            className="snap-start flex-shrink-0 w-[200px] bg-slate-800/50 backdrop-blur-sm rounded-3xl p-6 border border-slate-700 hover:border-amber-500/30 transition-all duration-300 hover:-translate-y-2 text-center"
-          >
-            <div className="text-amber-400 mb-3 flex justify-center">
-              {tech.icon}
-            </div>
-            <span className="font-mono text-sm text-slate-200 font-semibold">
-              {tech.name}
-            </span>
-          </div>
-        ))}
-      </HorizontalStrip>
-
-      {/* Key Features — Overlapping Section */}
-      <OverlappingSection
-        background="bg-white"
-        data-testid="overlapping-section"
-      >
-        <div className="container mx-auto px-4 py-24">
-          <div className="max-w-5xl mx-auto">
-            <span className="uppercase tracking-widest text-xs font-semibold text-amber-600 mb-4 block">
-              {t("eyebrows.keyFeatures")}
-            </span>
-            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-16">
-              {t("keyFeatures.heading")}
-            </h2>
-            <div className="grid md:grid-cols-2 gap-8">
-              <Card
-                data-testid="feature-card"
-                padding="p-10"
-                className="border-slate-200 border-l-4 border-l-amber-500 bg-gradient-to-br from-slate-50 to-white"
-              >
-                <div className="font-mono text-xs text-slate-400 mb-4">
-                  [ FEATURE_01 ]
-                </div>
-                <h3 className="text-2xl font-bold mb-4 text-slate-900">
-                  {t("keyFeatures.personalizedAI.title")}
-                </h3>
-                <ul className="space-y-3">
-                  {[
-                    t("keyFeatures.personalizedAI.points.0"),
-                    t("keyFeatures.personalizedAI.points.1"),
-                    t("keyFeatures.personalizedAI.points.2"),
-                  ].map((point, index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <div className="w-1.5 h-1.5 bg-amber-500 rounded-full mt-2 flex-shrink-0" />
-                      <span className="text-slate-600 leading-relaxed">
-                        {point}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-                <div className="mt-6 font-mono text-xs text-slate-400 bg-slate-100 p-3 rounded-xl">
-                  <span className="text-amber-600">AI</span>.review(code) →{" "}
-                  <span className="text-green-600">feedback</span>
-                </div>
-              </Card>
-              <Card
-                data-testid="feature-card"
-                padding="p-10"
-                className="border-slate-200 border-l-4 border-l-amber-500 bg-gradient-to-br from-slate-50 to-white"
-              >
-                <div className="font-mono text-xs text-slate-400 mb-4">
-                  [ FEATURE_02 ]
-                </div>
-                <h3 className="text-2xl font-bold mb-4 text-slate-900">
-                  {t("keyFeatures.projectBasedLearning.title")}
-                </h3>
-                <ul className="space-y-3">
-                  {[
-                    t("keyFeatures.projectBasedLearning.points.0"),
-                    t("keyFeatures.projectBasedLearning.points.1"),
-                    t("keyFeatures.projectBasedLearning.points.2"),
-                  ].map((point, index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <div className="w-1.5 h-1.5 bg-amber-500 rounded-full mt-2 flex-shrink-0" />
-                      <span className="text-slate-600 leading-relaxed">
-                        {point}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-                <div className="mt-6 font-mono text-xs text-slate-400 bg-slate-100 p-3 rounded-xl">
-                  <span className="text-amber-600">git</span> push origin main
-                </div>
-              </Card>
-            </div>
-          </div>
-        </div>
-      </OverlappingSection>
-
-      {/* Final CTA — Dark slate with amber accent */}
-      <section className="relative py-24 bg-gradient-to-br from-slate-900 to-slate-800 text-white overflow-hidden">
-        <div
-          className="absolute top-20 left-20 w-[500px] h-[500px] bg-slate-700/20 rounded-full blur-[150px]"
-          aria-hidden="true"
-        />
-        <div
-          className="absolute bottom-20 right-20 w-[400px] h-[400px] bg-amber-500/10 rounded-full blur-[120px]"
-          aria-hidden="true"
-        />
-        <div className="container mx-auto px-4 relative z-10 text-center">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+      <section className="bg-amber-400 py-20">
+        <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-8 px-5 sm:px-8 lg:flex-row lg:items-end">
+          <div className="max-w-3xl">
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.24em] text-slate-700">
+              {t("cta.eyebrow")}
+            </p>
+            <h2 className="mt-4 text-4xl font-black tracking-[-0.04em] sm:text-5xl">
               {t("cta.heading")}
             </h2>
-            <p className="text-xl md:text-2xl mb-12 text-slate-400 max-w-2xl mx-auto">
+            <p className="mt-5 text-lg leading-8 text-slate-800">
               {t("cta.description")}
             </p>
-            <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <Button
-                asChild
-                className="px-10 py-5 rounded-2xl font-bold text-lg bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:shadow-xl hover:shadow-amber-500/30 hover:-translate-y-1"
-              >
-                <Link href="/contact" className="inline-flex items-center gap-2">
-                  {t("cta.buttons.joinWaitlist")}
-                  <ArrowRight className="w-5 h-5" />
-                </Link>
-              </Button>
-              <Button
-                asChild
-                variant="outline"
-                className="px-10 py-5 rounded-2xl font-bold text-lg border-2 border-slate-500 text-white hover:bg-slate-700 hover:border-slate-400"
-              >
-                <Link href="/contact">
-                  {t("cta.buttons.learnMore")}
-                </Link>
-              </Button>
-            </div>
           </div>
+          <a
+            href={liveHref}
+            className="inline-flex shrink-0 items-center gap-2 bg-slate-950 px-8 py-4 font-bold text-white transition hover:bg-slate-800"
+          >
+            {t("cta.button")}
+            <ArrowRight className="h-5 w-5" />
+          </a>
         </div>
       </section>
     </main>

@@ -1,5 +1,21 @@
 import "@testing-library/jest-dom/vitest";
+import React from "react";
 import { vi } from "vitest";
+
+vi.mock("@/locales/navigation", () => ({
+  Link: React.forwardRef<
+    HTMLAnchorElement,
+    Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "href"> & {
+      href: string | { pathname: string };
+    }
+  >(({ href, ...props }, ref) =>
+    React.createElement("a", {
+      ref,
+      href: typeof href === "string" ? href : href.pathname,
+      ...props,
+    }),
+  ),
+}));
 
 vi.mock("next/navigation", () => ({
   useRouter: vi.fn(() => ({
@@ -8,6 +24,9 @@ vi.mock("next/navigation", () => ({
     refresh: vi.fn(),
   })),
   usePathname: vi.fn(() => "/"),
+  redirect: vi.fn(),
+  permanentRedirect: vi.fn(),
+  notFound: vi.fn(),
 }));
 
 vi.mock("@/locales/client", () => ({

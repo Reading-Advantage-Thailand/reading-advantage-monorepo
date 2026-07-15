@@ -1,386 +1,527 @@
+/** English copy for the Codecamp Advantage product page. */
 export const en = {
-    hero: {
-        title: "CodeCamp Advantage",
-        subtitle: "Full-Stack Web Development Internship",
-        description: "An intensive 18-module bootcamp covering modern web development from fundamentals to production deployment. Learn by building real projects with AI-powered tutoring and automated code review.",
-        badge: "Now Enrolling",
-        status: "Active Bootcamp",
+  hero: {
+    badge: "Live learning platform",
+    eyebrow: "Full-stack development internship",
+    title: "Build software. Prove mastery.",
+    subtitle: "A production pathway from first commit to deployed application.",
+    description:
+      "Codecamp Advantage combines explicit instruction, real development work, targeted AI support, and durable evidence of what each learner can do.",
+    primaryCta: "Open Codecamp Advantage",
+    secondaryCta: "Explore the curriculum",
+    previewLabel: "Production dashboard",
+    status: "Live",
+    dashboardAlt: "Codecamp Advantage production curriculum dashboard",
+    stats: {
+      phases: { value: "4", label: "Curriculum phases" },
+      modules: { value: "20", label: "Learning modules" },
+      lessons: { value: "106", label: "Guided lessons" },
     },
-    heroAlt: "Abstract digital coding creation landscape",
-    workspaceAlt: "CodeCamp Advantage coding workspace",
-    projectBenefits: {
-        startRealWorld: "Start with real-world projects from day one.",
-        shipToProduction: "Ship to production with CI/CD pipelines.",
+  },
+  mastery: {
+    eyebrow: "Mastery Advantage — complete vertical slice",
+    heading:
+      "The first Advantage app to implement Mastery Advantage end to end.",
+    description:
+      "Codecamp Advantage turns learning activity into an auditable mastery loop. Objectives, evidence, support usage, confidence, and review history stay connected instead of disappearing into a completion percentage.",
+    steps: {
+      objectives: {
+        title: "Versioned objectives",
+        description:
+          "Every lesson maps to a defined objective and curriculum version.",
+      },
+      evidence: {
+        title: "Verified evidence",
+        description:
+          "Activities record what the learner produced and which variant they completed.",
+      },
+      confidence: {
+        title: "Scaffold-aware confidence",
+        description:
+          "Mastery signals account for hints and support instead of treating all completions as equal.",
+      },
+      review: {
+        title: "SRS follow-up",
+        description:
+          "Review scheduling and the instructor ledger keep mastery visible over time.",
+      },
     },
-    curriculum: {
-        heading: "18-Module Curriculum",
-        subtitle: "4 phases from fundamentals to production",
-        phases: {
-            A: {
-                name: "Phase A",
-                title: "Fundamentals",
-                description: "Master the building blocks of modern web development",
-                modules: [
-                    "Dev Environment Setup",
-                    "Git & GitHub Fundamentals",
-                    "HTML & CSS Crash Course",
-                    "JavaScript Fundamentals",
-                    "TypeScript",
-                    "Testing with Vitest",
-                ],
-            },
-            B: {
-                name: "Phase B",
-                title: "Frontend & APIs",
-                description: "Build interactive user interfaces and RESTful APIs",
-                modules: [
-                    "React",
-                    "API Fundamentals",
-                    "Next.js 16 — Basics",
-                    "Next.js 16 — Advanced",
-                ],
-            },
-            C: {
-                name: "Phase C",
-                title: "Backend & Data",
-                description: "Connect to databases and build secure backends",
-                modules: [
-                    "Databases & ORMs",
-                    "tRPC & Server Actions",
-                    "Authentication",
-                ],
-            },
-            D: {
-                name: "Phase D",
-                title: "Advanced & Production",
-                description: "Add AI, internationalization, and deploy to production",
-                modules: [
-                    "Internationalization",
-                    "AI Integration",
-                    "Monorepo & Package Management",
-                    "Cloud & Dockerization",
-                    "Real-World Practice",
-                ],
-            },
-        },
-        projects: {
-            heading: "Portfolio Projects",
-            items: [
-                { phase: "A", title: "Personal Portfolio Website" },
-                { phase: "B", title: "Learning Dashboard" },
-                { phase: "C", title: "Student Progress Tracker" },
-                { phase: "D", title: "Full-Stack Production App" },
-            ],
-        },
+  },
+  curriculum: {
+    eyebrow: "Production curriculum",
+    heading: "20 modules. One coherent engineering journey.",
+    description:
+      "The pathway moves from development foundations through modern full-stack delivery, then applies the same disciplined workflow to AI development and game creation.",
+    moduleLabel: "modules",
+    phases: {
+      A: {
+        name: "Phase A",
+        title: "Foundations",
+        description:
+          "Set up professional habits and learn the language of the web.",
+        modules: [
+          "Development environment",
+          "Git and GitHub",
+          "HTML and CSS",
+          "JavaScript fundamentals",
+          "TypeScript",
+          "Testing with Vitest",
+        ],
+      },
+      B: {
+        name: "Phase B",
+        title: "Frontend and APIs",
+        description:
+          "Build responsive interfaces and connect them to application data.",
+        modules: [
+          "React",
+          "API fundamentals",
+          "Next.js foundations",
+          "Advanced Next.js",
+        ],
+      },
+      C: {
+        name: "Phase C",
+        title: "Backend and data",
+        description: "Design persistent, secure, typed application behavior.",
+        modules: [
+          "Databases and ORMs",
+          "tRPC and server actions",
+          "Authentication",
+        ],
+      },
+      D: {
+        name: "Phase D",
+        title: "Production practice",
+        description:
+          "Ship, measure, and extend real systems with accountable AI workflows.",
+        modules: [
+          "Internationalization",
+          "AI integration",
+          "Monorepos and packages",
+          "Cloud and Docker",
+          "Measure-Driven AI Development",
+          "Real-world practice",
+          "Advantage Play Kit Game Creation",
+        ],
+      },
     },
-    features: {
-        heading: "Platform Features",
-        aiTutor: {
-            title: "AI Chat Tutor",
-            description: "24/7 coding assistant with streaming responses and conversation history. Get help with debugging, code review, and concept explanations instantly.",
-            points: [
-                "Real-time streaming responses",
-                "Persistent conversation history",
-                "Context-aware module assistance",
-                "Code snippet explanations",
-            ],
-        },
-        githubIntegration: {
-            title: "GitHub Integration",
-            description: "Fork-based exercise workflow with automated PR review via OpenRouter. Submit exercises as pull requests and receive AI-powered code reviews.",
-            points: [
-                "Fork exercise repositories",
-                "Automated LLM code review",
-                "Pass/fail with detailed feedback",
-                "PR review status tracking",
-            ],
-        },
-        progressTracking: {
-            title: "Progress Tracking",
-            description: "Visual progress bars, locked modules with prerequisites, and phase completion stats keep you motivated and on track.",
-            points: [
-                "Phase completion visualization",
-                "Locked module prerequisites",
-                "Lesson progress tracking",
-                "Exercise and quiz scores",
-            ],
-        },
+    spotlights: {
+      measure: {
+        label: "Module 16",
+        title: "Measure-Driven AI Development",
+        description:
+          "Learners move from a written specification to an implementation plan, atomic delivery, verification evidence, and honest closeout.",
+        alt: "Measure lesson inside the live Codecamp Advantage application",
+      },
+      apk: {
+        label: "Unit 20",
+        title: "Advantage Play Kit Game Creation",
+        description:
+          "The final unit applies the workflow to a complete browser game: define the learning contract, build the experience, test it, and package evidence for review.",
+        outcome: "SPEC → PLAN → BUILD → VERIFY → SHIP",
+      },
     },
-    cta: {
-        heading: "Ready to Start Your Development Journey?",
-        description: "Join our full-stack web development internship and build production-ready skills with AI-powered support.",
-        buttons: {
-            applyNow: "Apply Now",
-            viewCurriculum: "View Curriculum",
-            contactSales: "Contact Sales",
-        },
+  },
+  pedagogy: {
+    heading: "I Do → We Do → You Do",
+    description:
+      "Instruction deliberately reduces support as learners move from worked examples to guided practice and independent production work.",
+    steps: {
+      iDo: {
+        title: "I Do",
+        description:
+          "A focused lesson models the concept and makes expert decisions visible.",
+      },
+      weDo: {
+        title: "We Do",
+        description:
+          "Guided practice checks understanding while support is still available.",
+      },
+      youDo: {
+        title: "You Do",
+        description:
+          "Independent work produces the evidence used by the mastery system and instructor.",
+      },
     },
-    adaptiveEngine: {
-        eyebrow: "Adaptive Engine",
-        heading: "Coding paths, adapted to every student's pace",
-        description: "Powered by Mastery Advantage — the KST + SRS engine that maps every coding skill and schedules practice at the perfect moment.",
-        alt: "CodeCamp Advantage adaptive learning visualization",
+  },
+  evidence: {
+    tutor: {
+      label: "Targeted support",
+      title: "An activity-bound AI tutor",
+      description:
+        "The tutor works from trusted lesson resources and the learner's current activity. Its purpose is timely scaffolding—not unlimited answer generation or an unverified service-level promise.",
     },
-    eyebrows: {
-        projectBasedLearning: "PROJECT-BASED LEARNING",
-        keyFeatures: "KEY FEATURES",
+    prReview: {
+      label: "Controlled rollout",
+      title: "Advisory pull-request review",
+      description:
+        "AI review can surface evidence and corrections for instructors while the evaluator runs in shadow mode.",
+      guardrail:
+        "The advisory reviewer does not approve, block, pass, fail, or mutate learner mastery. Human review remains authoritative.",
     },
+    signals: {
+      ledger: {
+        title: "Instructor evidence ledger",
+        description:
+          "Review objective history, confidence, and supporting activity evidence.",
+      },
+      scaffolds: {
+        title: "Scaffold usage",
+        description:
+          "See when hints or tutor support contributed to a successful attempt.",
+      },
+      followUp: {
+        title: "Scheduled follow-up",
+        description:
+          "Use spaced review to check whether demonstrated mastery persists.",
+      },
+    },
+  },
+  cta: {
+    eyebrow: "The platform is live",
+    heading: "See the first complete Mastery Advantage implementation.",
+    description:
+      "Open Codecamp Advantage and explore the full-stack curriculum now running in production.",
+    button: "Visit Codecamp Advantage",
+  },
 };
 
+/** Thai copy for the Codecamp Advantage product page. */
 export const th = {
-    hero: {
-        title: "โค้ดแคมป์แอดแวนเทจ",
-        subtitle: "การฝึกงานพัฒนาเว็บฟูลสแตก",
-        description: "บูทแคมป์ 18 โมดูลเข้มข้นครอบคลุมการพัฒนาเว็บสมัยใหม่ตั้งแต่พื้นฐานจนถึงการปรับใช้งานจริง เรียนรู้โดยการสร้างโปรเจกต์จริงพร้อม AI ติวเตอร์และการตรวจสอบโค้ดอัตโนมัติ",
-        badge: "เปิดรับสมัครแล้ว",
-        status: "บูทแคมป์กำลังดำเนินการ",
+  hero: {
+    badge: "แพลตฟอร์มการเรียนรู้พร้อมใช้งาน",
+    eyebrow: "การฝึกงานพัฒนาฟูลสแตก",
+    title: "สร้างซอฟต์แวร์ พิสูจน์ความเชี่ยวชาญ",
+    subtitle: "เส้นทางจริงตั้งแต่คอมมิตแรกจนถึงแอปที่นำขึ้นใช้งาน",
+    description:
+      "Codecamp Advantage ผสานการสอนอย่างชัดเจน งานพัฒนาจริง การช่วยเหลือด้วย AI แบบตรงจุด และหลักฐานที่ตรวจสอบได้ว่าผู้เรียนทำอะไรได้",
+    primaryCta: "เปิด Codecamp Advantage",
+    secondaryCta: "ดูหลักสูตร",
+    previewLabel: "แดชบอร์ดระบบจริง",
+    status: "พร้อมใช้งาน",
+    dashboardAlt: "แดชบอร์ดหลักสูตรจริงของ Codecamp Advantage",
+    stats: {
+      phases: { value: "4", label: "เฟสหลักสูตร" },
+      modules: { value: "20", label: "โมดูลการเรียน" },
+      lessons: { value: "106", label: "บทเรียนแบบมีแนวทาง" },
     },
-    heroAlt: "ภูมิทัศน์การสร้างสรรค์โค้ดดิจิทัลแบบนามธรรม",
-    workspaceAlt: "พื้นที่ทำงานเขียนโค้ด CodeCamp Advantage",
-    projectBenefits: {
-        startRealWorld: "เริ่มต้นด้วยโปรเจกต์จริงตั้งแต่วันแรก",
-        shipToProduction: "ปรับใช้งานจริงด้วย CI/CD pipelines",
+  },
+  mastery: {
+    eyebrow: "Mastery Advantage — ระบบครบวงจร",
+    heading: "แอป Advantage แรกที่ใช้ Mastery Advantage ครบตั้งแต่ต้นจนจบ",
+    description:
+      "Codecamp Advantage เปลี่ยนกิจกรรมการเรียนให้เป็นวงจรความเชี่ยวชาญที่ตรวจสอบได้ โดยเชื่อมวัตถุประสงค์ หลักฐาน การใช้ตัวช่วย ความมั่นใจ และประวัติการทบทวนไว้ด้วยกัน",
+    steps: {
+      objectives: {
+        title: "วัตถุประสงค์มีเวอร์ชัน",
+        description:
+          "ทุกบทเรียนเชื่อมกับวัตถุประสงค์และเวอร์ชันหลักสูตรที่ชัดเจน",
+      },
+      evidence: {
+        title: "หลักฐานที่ตรวจสอบได้",
+        description: "กิจกรรมบันทึกผลงานและรูปแบบโจทย์ที่ผู้เรียนทำสำเร็จ",
+      },
+      confidence: {
+        title: "ความมั่นใจที่คำนึงถึงตัวช่วย",
+        description:
+          "สัญญาณความเชี่ยวชาญคำนึงถึงคำใบ้และการช่วยเหลือ ไม่ถือว่าทุกการทำเสร็จเท่ากัน",
+      },
+      review: {
+        title: "ทบทวนด้วย SRS",
+        description:
+          "กำหนดการทบทวนและบัญชีหลักฐานสำหรับผู้สอนทำให้เห็นความเชี่ยวชาญต่อเนื่อง",
+      },
     },
-    curriculum: {
-        heading: "หลักสูตร 18 โมดูล",
-        subtitle: "4 เฟสตั้งแต่พื้นฐานจนถึงการปรับใช้งาน",
-        phases: {
-            A: {
-                name: "เฟส A",
-                title: "พื้นฐาน",
-                description: "เชี่ยวชาญพื้นฐานของการพัฒนาเว็บสมัยใหม่",
-                modules: [
-                    "การตั้งค่าสภาพแวดล้อมการพัฒนา",
-                    "พื้นฐาน Git และ GitHub",
-                    "คอร์สเร่งรัด HTML และ CSS",
-                    "พื้นฐาน JavaScript",
-                    "TypeScript",
-                    "การทดสอบด้วย Vitest",
-                ],
-            },
-            B: {
-                name: "เฟส B",
-                title: "ฟรอนต์เอนด์และ API",
-                description: "สร้างอินเตอร์เฟซผู้ใช้แบบโต้ตอบและ RESTful APIs",
-                modules: [
-                    "React",
-                    "พื้นฐาน API",
-                    "Next.js 16 — พื้นฐาน",
-                    "Next.js 16 — ขั้นสูง",
-                ],
-            },
-            C: {
-                name: "เฟส C",
-                title: "แบ็คเอนด์และข้อมูล",
-                description: "เชื่อมต่อกับฐานข้อมูลและสร้างแบ็คเอนด์ที่ปลอดภัย",
-                modules: [
-                    "ฐานข้อมูลและ ORMs",
-                    "tRPC และ Server Actions",
-                    "การยืนยันตัวตน",
-                ],
-            },
-            D: {
-                name: "เฟส D",
-                title: "ขั้นสูงและการปรับใช้งาน",
-                description: "เพิ่ม AI, การรองรับหลายภาษา, และปรับใช้งานจริง",
-                modules: [
-                    "การรองรับหลายภาษา",
-                    "การผสานรวม AI",
-                    "การจัดการ Monorepo และแพคเกจ",
-                    "คลาวด์และ Docker",
-                    "การฝึกฝนสถานการณ์จริง",
-                ],
-            },
-        },
-        projects: {
-            heading: "โปรเจกต์พอร์ตโฟลิโอ",
-            items: [
-                { phase: "A", title: "เว็บไซต์พอร์ตโฟลิโอส่วนตัว" },
-                { phase: "B", title: "แดชบอร์ดการเรียนรู้" },
-                { phase: "C", title: "ตัวติดตามความคืบหน้านักเรียน" },
-                { phase: "D", title: "แอปฟูลสแตกสำหรับการใช้งานจริง" },
-            ],
-        },
+  },
+  curriculum: {
+    eyebrow: "หลักสูตรที่ใช้งานจริง",
+    heading: "20 โมดูล หนึ่งเส้นทางวิศวกรรมที่ต่อเนื่อง",
+    description:
+      "เส้นทางเริ่มจากพื้นฐานการพัฒนา ไปสู่การส่งมอบฟูลสแตกสมัยใหม่ แล้วใช้เวิร์กโฟลว์เดียวกันกับการพัฒนา AI และการสร้างเกม",
+    moduleLabel: "โมดูล",
+    phases: {
+      A: {
+        name: "เฟส A",
+        title: "พื้นฐาน",
+        description: "สร้างนิสัยการทำงานแบบมืออาชีพและเรียนรู้ภาษาของเว็บ",
+        modules: [
+          "สภาพแวดล้อมการพัฒนา",
+          "Git และ GitHub",
+          "HTML และ CSS",
+          "พื้นฐาน JavaScript",
+          "TypeScript",
+          "การทดสอบด้วย Vitest",
+        ],
+      },
+      B: {
+        name: "เฟส B",
+        title: "ฟรอนต์เอนด์และ API",
+        description: "สร้างอินเทอร์เฟซที่ตอบสนองและเชื่อมต่อข้อมูลแอป",
+        modules: ["React", "พื้นฐาน API", "พื้นฐาน Next.js", "Next.js ขั้นสูง"],
+      },
+      C: {
+        name: "เฟส C",
+        title: "แบ็กเอนด์และข้อมูล",
+        description: "ออกแบบพฤติกรรมแอปที่ถาวร ปลอดภัย และมีชนิดข้อมูล",
+        modules: [
+          "ฐานข้อมูลและ ORM",
+          "tRPC และ server actions",
+          "การยืนยันตัวตน",
+        ],
+      },
+      D: {
+        name: "เฟส D",
+        title: "การทำงานระดับโปรดักชัน",
+        description:
+          "ส่งมอบ วัดผล และต่อยอดระบบจริงด้วยเวิร์กโฟลว์ AI ที่รับผิดชอบ",
+        modules: [
+          "การรองรับหลายภาษา",
+          "การผสาน AI",
+          "Monorepo และแพ็กเกจ",
+          "คลาวด์และ Docker",
+          "การพัฒนา AI ด้วย Measure",
+          "การฝึกจากงานจริง",
+          "การสร้างเกมด้วย Advantage Play Kit",
+        ],
+      },
     },
-    features: {
-        heading: "คุณสมบัติของแพลตฟอร์ม",
-        aiTutor: {
-            title: "AI ติวเตอร์แชท",
-            description: "ผู้ช่วยเขียนโค้ดตลอด 24 ชั่วโมงพร้อมการตอบสนองแบบสตรีมมิ่งและประวัติการสนทนา รับความช่วยเหลือด้านการดีบั๊ก การตรวจสอบโค้ด และการอธิบายแนวคิดทันที",
-            points: [
-                "การตอบสนองแบบสตรีมมิ่งแบบเรียลไทม์",
-                "ประวัติการสนทนาที่คงทนของข้อมูล",
-                "การช่วยเหลือตามบริบทของโมดูล",
-                "คำอธิบายโค้ดสแน็ปเป็ต",
-            ],
-        },
-        githubIntegration: {
-            title: "การผสานรวม GitHub",
-            description: "เวิร์กโฟลว์การฝึกปฏิบัติแบบ Fork พร้อมการตรวจสอบ PR อัตโนมัติผ่าน OpenRouter ส่งแบบฝึกหัดเป็น pull request และรับการตรวจสอบโค้ดที่ขับเคลื่อนด้วย AI",
-            points: [
-                "Fork รีโป้แบบฝึกหัด",
-                "การตรวจสอบโค้ด LLM อัตโนมัติ",
-                "ผ่าน/ไม่ผ่านพร้อมข้อเสนอแนะโดยละเอียด",
-                "การติดตามสถานะการตรวจสอบ PR",
-            ],
-        },
-        progressTracking: {
-            title: "การติดตามความคืบหน้า",
-            description: "แถบความคืบหน้าแบบภาพ โมดูลที่ถูกล็อกพร้อมข้อกำหนดเบื้องต้น และสถิติการเสร็จสิ้นแต่ละเฟสช่วยให้คุณมีแรงจูงใจและอยู่ในเส้นทางที่ถูกต้อง",
-            points: [
-                "การแสดงภาพการเสร็จสิ้นเฟส",
-                "ข้อกำหนดเบื้องต้นของโมดูลที่ถูกล็อก",
-                "การติดตามความคืบหน้าบทเรียน",
-                "คะแนนแบบฝึกหัดและแบบทดสอบ",
-            ],
-        },
+    spotlights: {
+      measure: {
+        label: "โมดูล 16",
+        title: "การพัฒนา AI ด้วย Measure",
+        description:
+          "ผู้เรียนเริ่มจากสเปก เขียนแผน ส่งมอบเป็นส่วนย่อย ตรวจสอบหลักฐาน และปิดงานอย่างตรงไปตรงมา",
+        alt: "บทเรียน Measure ในแอป Codecamp Advantage ที่ใช้งานจริง",
+      },
+      apk: {
+        label: "หน่วย 20",
+        title: "การสร้างเกมด้วย Advantage Play Kit",
+        description:
+          "หน่วยสุดท้ายใช้เวิร์กโฟลว์กับเกมเบราว์เซอร์ที่สมบูรณ์ ตั้งแต่สัญญาการเรียนรู้ การสร้าง การทดสอบ จนถึงหลักฐานสำหรับการทบทวน",
+        outcome: "สเปก → แผน → สร้าง → ตรวจสอบ → ส่งมอบ",
+      },
     },
-    cta: {
-        heading: "พร้อมเริ่มต้นเส้นทางการพัฒนาของคุณแล้วหรือยัง?",
-        description: "เข้าร่วมการฝึกงานพัฒนาเว็บฟูลสแตกของเราและสร้างทักษะระดับการใช้งานจริงพร้อมการสนับสนุนจาก AI",
-        buttons: {
-            applyNow: "สมัครตอนนี้",
-            viewCurriculum: "ดูหลักสูตร",
-            contactSales: "ติดต่อฝ่ายขาย",
-        },
+  },
+  pedagogy: {
+    heading: "ฉันทำ → เราทำ → คุณทำ",
+    description:
+      "การสอนค่อย ๆ ลดตัวช่วยเมื่อผู้เรียนเปลี่ยนจากตัวอย่าง ไปสู่การฝึกแบบมีแนวทางและงานจริงด้วยตนเอง",
+    steps: {
+      iDo: {
+        title: "ฉันทำ",
+        description:
+          "บทเรียนเฉพาะจุดสาธิตแนวคิดและทำให้การตัดสินใจของผู้เชี่ยวชาญมองเห็นได้",
+      },
+      weDo: {
+        title: "เราทำ",
+        description: "การฝึกแบบมีแนวทางตรวจความเข้าใจขณะที่ยังมีตัวช่วย",
+      },
+      youDo: {
+        title: "คุณทำ",
+        description: "งานอิสระสร้างหลักฐานที่ระบบความเชี่ยวชาญและผู้สอนใช้",
+      },
     },
-    adaptiveEngine: {
-        eyebrow: "เครื่องยนต์ปรับตัว",
-        heading: "เส้นทางการเขียนโค้ด ปรับให้เข้ากับจังหวะของนักเรียนทุกคน",
-        description: "ขับเคลื่อนโดย Mastery Advantage — เครื่องยนต์ KST + SRS ที่จัดทำแผนที่ทักษะการเขียนโค้ดทุกอย่างและกำหนดเวลาฝึกฝนในช่วงเวลาที่เหมาะสมที่สุด",
-        alt: "ภาพจำลองการเรียนรู้แบบปรับตัวของ CodeCamp Advantage",
+  },
+  evidence: {
+    tutor: {
+      label: "ความช่วยเหลือตรงจุด",
+      title: "AI ติวเตอร์ที่ผูกกับกิจกรรม",
+      description:
+        "ติวเตอร์ทำงานจากแหล่งข้อมูลบทเรียนที่เชื่อถือได้และกิจกรรมปัจจุบัน เพื่อช่วยในเวลาที่เหมาะสม ไม่ใช่สร้างคำตอบไม่จำกัดหรืออ้าง SLA ที่ยังไม่ยืนยัน",
     },
-    eyebrows: {
-        projectBasedLearning: "การเรียนรู้แบบโครงการ",
-        keyFeatures: "คุณสมบัติหลัก",
+    prReview: {
+      label: "เปิดใช้งานแบบควบคุม",
+      title: "การรีวิว pull request แบบให้คำแนะนำ",
+      description:
+        "AI ช่วยชี้หลักฐานและจุดแก้ไขให้ผู้สอน ขณะที่ตัวประเมินทำงานในโหมดเงา",
+      guardrail:
+        "ผู้รีวิวแบบให้คำแนะนำจะไม่อนุมัติ บล็อก ตัดสินผ่านหรือไม่ผ่าน หรือแก้ค่าความเชี่ยวชาญของผู้เรียน การทบทวนโดยมนุษย์ยังเป็นข้อยุติ",
     },
+    signals: {
+      ledger: {
+        title: "บัญชีหลักฐานผู้สอน",
+        description: "ดูประวัติวัตถุประสงค์ ความมั่นใจ และหลักฐานกิจกรรม",
+      },
+      scaffolds: {
+        title: "การใช้ตัวช่วย",
+        description: "ดูว่าคำใบ้หรือติวเตอร์ช่วยให้การทำครั้งนั้นสำเร็จเมื่อใด",
+      },
+      followUp: {
+        title: "การทบทวนตามกำหนด",
+        description: "ใช้การทบทวนแบบเว้นระยะเพื่อตรวจว่าความเชี่ยวชาญยังคงอยู่",
+      },
+    },
+  },
+  cta: {
+    eyebrow: "แพลตฟอร์มพร้อมใช้งาน",
+    heading: "ดูการใช้ Mastery Advantage แบบครบวงจรครั้งแรก",
+    description:
+      "เปิด Codecamp Advantage และสำรวจหลักสูตรฟูลสแตกที่กำลังทำงานในระบบจริง",
+    button: "ไปที่ Codecamp Advantage",
+  },
 };
 
+/** Simplified Chinese copy for the Codecamp Advantage product page. */
 export const zh = {
-    hero: {
-        title: "代码营优势",
-        subtitle: "全栈网页开发实习",
-        description: "一个包含18个模块的强化训练营，涵盖从基础到生产部署的现代网页开发。通过构建真实项目来学习，配备AI辅导和自动代码审查。",
-        badge: "正在招生",
-        status: "活跃训练营",
+  hero: {
+    badge: "学习平台已上线",
+    eyebrow: "全栈开发实习课程",
+    title: "构建软件，证明掌握",
+    subtitle: "从第一次提交到应用上线的完整实战路径",
+    description:
+      "Codecamp Advantage 将明确教学、真实开发、针对性 AI 支持与可持续核验的能力证据结合在一起。",
+    primaryCta: "打开 Codecamp Advantage",
+    secondaryCta: "查看课程",
+    previewLabel: "生产环境仪表板",
+    status: "已上线",
+    dashboardAlt: "Codecamp Advantage 生产课程仪表板",
+    stats: {
+      phases: { value: "4", label: "课程阶段" },
+      modules: { value: "20", label: "学习模块" },
+      lessons: { value: "106", label: "引导式课程" },
     },
-    heroAlt: "抽象数字编码创作景观",
-    workspaceAlt: "CodeCamp Advantage 编程工作区",
-    projectBenefits: {
-        startRealWorld: "从第一天开始就参与真实项目。",
-        shipToProduction: "使用CI/CD管道部署到生产环境。",
+  },
+  mastery: {
+    eyebrow: "Mastery Advantage — 完整闭环",
+    heading: "首个端到端完整实施 Mastery Advantage 的 Advantage 应用",
+    description:
+      "Codecamp Advantage 将学习活动转化为可审计的掌握闭环，把目标、证据、支架使用、信心水平和复习历史持续连接。",
+    steps: {
+      objectives: {
+        title: "版本化目标",
+        description: "每节课都映射到明确的学习目标和课程版本。",
+      },
+      evidence: {
+        title: "可验证证据",
+        description: "活动记录学习者的产出以及完成的题目变体。",
+      },
+      confidence: {
+        title: "考虑支架的信心",
+        description: "掌握信号会计入提示和支持，不把所有完成情况视为相同。",
+      },
+      review: {
+        title: "SRS 后续复习",
+        description: "复习安排和教师证据账本让掌握情况随时间保持可见。",
+      },
     },
-    curriculum: {
-        heading: "18模块课程",
-        subtitle: "从基础到生产的4个阶段",
-        phases: {
-            A: {
-                name: "阶段 A",
-                title: "基础",
-                description: "掌握现代网页开发的构建模块",
-                modules: [
-                    "开发环境设置",
-                    "Git与GitHub基础",
-                    "HTML与CSS速成课程",
-                    "JavaScript基础",
-                    "TypeScript",
-                    "使用Vitest进行测试",
-                ],
-            },
-            B: {
-                name: "阶段 B",
-                title: "前端与API",
-                description: "构建交互式用户界面和RESTful API",
-                modules: [
-                    "React",
-                    "API基础",
-                    "Next.js 16 — 基础",
-                    "Next.js 16 — 高级",
-                ],
-            },
-            C: {
-                name: "阶段 C",
-                title: "后端与数据",
-                description: "连接数据库并构建安全后端",
-                modules: [
-                    "数据库与ORM",
-                    "tRPC与Server Actions",
-                    "身份验证",
-                ],
-            },
-            D: {
-                name: "阶段 D",
-                title: "高级与生产",
-                description: "添加AI、国际化并部署到生产环境",
-                modules: [
-                    "国际化",
-                    "AI集成",
-                    "Monorepo与包管理",
-                    "云与Docker化",
-                    "真实世界实践",
-                ],
-            },
-        },
-        projects: {
-            heading: "作品集项目",
-            items: [
-                { phase: "A", title: "个人作品集网站" },
-                { phase: "B", title: "学习仪表板" },
-                { phase: "C", title: "学生进度追踪器" },
-                { phase: "D", title: "全栈生产应用" },
-            ],
-        },
+  },
+  curriculum: {
+    eyebrow: "生产课程",
+    heading: "20 个模块，一条连贯的工程成长路径",
+    description:
+      "课程从开发基础进入现代全栈交付，再将同一套严谨流程应用于 AI 开发和游戏创作。",
+    moduleLabel: "个模块",
+    phases: {
+      A: {
+        name: "阶段 A",
+        title: "基础",
+        description: "建立专业习惯，掌握 Web 开发语言。",
+        modules: [
+          "开发环境",
+          "Git 与 GitHub",
+          "HTML 与 CSS",
+          "JavaScript 基础",
+          "TypeScript",
+          "使用 Vitest 测试",
+        ],
+      },
+      B: {
+        name: "阶段 B",
+        title: "前端与 API",
+        description: "构建响应式界面并连接应用数据。",
+        modules: ["React", "API 基础", "Next.js 基础", "高级 Next.js"],
+      },
+      C: {
+        name: "阶段 C",
+        title: "后端与数据",
+        description: "设计持久、安全、类型明确的应用行为。",
+        modules: ["数据库与 ORM", "tRPC 与 server actions", "身份验证"],
+      },
+      D: {
+        name: "阶段 D",
+        title: "生产实践",
+        description: "用负责任的 AI 工作流交付、衡量并扩展真实系统。",
+        modules: [
+          "国际化",
+          "AI 集成",
+          "Monorepo 与包管理",
+          "云与 Docker",
+          "Measure 驱动的 AI 开发",
+          "真实项目实践",
+          "Advantage Play Kit 游戏创作",
+        ],
+      },
     },
-    features: {
-        heading: "平台功能",
-        aiTutor: {
-            title: "AI聊天辅导",
-            description: "全天候编程助手，提供流式响应和对话历史记录。即时获取调试、代码审查和概念解释方面的帮助。",
-            points: [
-                "实时流式响应",
-                "持久对话历史",
-                "上下文感知模块辅助",
-                "代码片段解释",
-            ],
-        },
-        githubIntegration: {
-            title: "GitHub集成",
-            description: "基于Fork的练习工作流，通过OpenRouter进行自动PR审查。将练习作为拉取请求提交并接收AI驱动的代码审查。",
-            points: [
-                "Fork练习仓库",
-                "自动LLM代码审查",
-                "通过/失败并附带详细反馈",
-                "PR审查状态跟踪",
-            ],
-        },
-        progressTracking: {
-            title: "进度跟踪",
-            description: "可视化进度条、带先决条件的锁定模块以及阶段完成统计，让您保持动力并走在正轨上。",
-            points: [
-                "阶段完成可视化",
-                "锁定模块先决条件",
-                "课程进度跟踪",
-                "练习和测验分数",
-            ],
-        },
+    spotlights: {
+      measure: {
+        label: "模块 16",
+        title: "Measure 驱动的 AI 开发",
+        description:
+          "学习者从书面规格开始，制定计划、原子化交付、验证证据并如实收尾。",
+        alt: "Codecamp Advantage 生产应用中的 Measure 课程",
+      },
+      apk: {
+        label: "单元 20",
+        title: "Advantage Play Kit 游戏创作",
+        description:
+          "最终单元把这套流程用于完整的浏览器游戏：定义学习契约、构建体验、测试并整理评审证据。",
+        outcome: "规格 → 计划 → 构建 → 验证 → 发布",
+      },
     },
-    cta: {
-        heading: "准备好开始您的开发之旅了吗？",
-        description: "加入我们的全栈网页开发实习，借助AI支持构建可用于生产的技能。",
-        buttons: {
-            applyNow: "立即申请",
-            viewCurriculum: "查看课程",
-            contactSales: "联系销售",
-        },
+  },
+  pedagogy: {
+    heading: "我示范 → 我们练 → 你独立完成",
+    description:
+      "教学支持会逐步减少，让学习者从示例走向引导练习，最终完成独立生产任务。",
+    steps: {
+      iDo: {
+        title: "我示范",
+        description: "聚焦课程演示概念，并让专家决策过程清晰可见。",
+      },
+      weDo: {
+        title: "我们练",
+        description: "在仍有支持时，通过引导练习检查理解。",
+      },
+      youDo: {
+        title: "你独立完成",
+        description: "独立任务产出供掌握系统与教师使用的证据。",
+      },
     },
-    adaptiveEngine: {
-        eyebrow: "自适应引擎",
-        heading: "为每位学生节奏量身定制的编程路径",
-        description: "由 Mastery Advantage 驱动 — KST + SRS 引擎映射每项编程技能并在最佳时刻安排练习。",
-        alt: "CodeCamp Advantage 自适应学习可视化",
+  },
+  evidence: {
+    tutor: {
+      label: "针对性支持",
+      title: "与活动绑定的 AI 导师",
+      description:
+        "导师基于可信课程资源和学习者当前活动提供及时支架，而不是无限生成答案或承诺未经验证的服务等级。",
     },
-    eyebrows: {
-        projectBasedLearning: "项目制学习",
-        keyFeatures: "主要特点",
+    prReview: {
+      label: "受控上线",
+      title: "建议式拉取请求审查",
+      description: "当评估器运行在影子模式时，AI 可为教师提示证据和修正点。",
+      guardrail:
+        "建议式审查不会批准、阻止、判定通过或失败，也不会修改学习者掌握状态；人工审查仍具有最终权威。",
     },
+    signals: {
+      ledger: {
+        title: "教师证据账本",
+        description: "查看目标历史、信心水平和支持性活动证据。",
+      },
+      scaffolds: {
+        title: "支架使用情况",
+        description: "查看提示或导师支持何时促成成功尝试。",
+      },
+      followUp: {
+        title: "计划复习",
+        description: "通过间隔复习检查已证明的掌握是否持续。",
+      },
+    },
+  },
+  cta: {
+    eyebrow: "平台已上线",
+    heading: "查看首个完整 Mastery Advantage 实施",
+    description: "打开 Codecamp Advantage，探索正在生产环境运行的全栈课程。",
+    button: "访问 Codecamp Advantage",
+  },
 };

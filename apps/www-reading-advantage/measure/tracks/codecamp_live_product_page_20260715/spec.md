@@ -43,6 +43,8 @@ and the Advantage Play Kit game-creation unit.
 
 - No `Coming Soon`, waitlist, `18-module`, MERN-track, Django-track, or automated
   pass/fail PR-review claim remains on the CodeCamp page.
+- The Codecamp cards on `/products` no longer contradict the dedicated page with
+  `Coming 2027`, 15-week, cross-curricular, or multi-stack claims.
 - EN/TH/ZH contain the same required structural keys and curriculum denominators.
 - Page tests assert the live CTA, 20-module/106-lesson proof points, Measure/APK content,
   and guarded advisory semantics.
