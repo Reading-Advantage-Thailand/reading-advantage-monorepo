@@ -113,6 +113,16 @@ jobs:
           echo "$?" > .ci-observation/ts7-repeat.exit
           exit 0
 
+      - name: TypeScript 6/7 semantic parity oracle
+        run: |
+          set +e
+          /usr/bin/time -v -o .ci-observation/phase3-parity.time \
+            python3 measure/tracks/typescript7_native_migration_20260710/run-phase3-parity.py \
+            --output-dir .ci-observation/phase3-parity \
+            > .ci-observation/phase3-parity.log 2>&1
+          echo "$?" > .ci-observation/phase3-parity.exit
+          exit 0
+
       - name: Capture parity observation
         if: always()
         run: |
@@ -127,7 +137,10 @@ jobs:
             --ts7-repeat-log .ci-observation/ts7-repeat.log \
             --ts6-time .ci-observation/ts6.time \
             --ts7-time .ci-observation/ts7.time \
-            --ts7-repeat-time .ci-observation/ts7-repeat.time
+            --ts7-repeat-time .ci-observation/ts7-repeat.time \
+            --phase3-parity-exit .ci-observation/phase3-parity.exit \
+            --phase3-parity-summary .ci-observation/phase3-parity/summary.json \
+            --phase3-parity-time .ci-observation/phase3-parity.time
 
       - name: Upload TypeScript 7 observation
         if: always()
@@ -137,3 +150,50 @@ jobs:
           path: .ci-observation/
           if-no-files-found: error
           include-hidden-files: true
+
+  typescript7-benchmark:
+    name: TypeScript 7 controlled benchmark (manual)
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    env:
+      TS7_CHECKERS: "1"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.22.2
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run complete controlled benchmark matrix
+        run: |
+          set +e
+          run_id="ci-${GITHUB_RUN_ID}"
+          /usr/bin/time -v -o .ci-ts7-benchmark.time \
+            python3 measure/tracks/typescript7_native_migration_20260710/run-phase3-benchmarks.py \
+            --allow-contaminated-host \
+            --run-id "$run_id" \
+            > .ci-ts7-benchmark.log 2>&1
+          echo "$?" > .ci-ts7-benchmark.exit
+          exit 0
+
+      - name: Upload controlled benchmark evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ts7-phase3g-benchmark-${{ github.run_id }}
+          path: |
+            .ci-ts7-benchmark.exit
+            .ci-ts7-benchmark.log
+            .ci-ts7-benchmark.time
+            measure/tracks/typescript7_native_migration_20260710/evidence/phase-3g/ci-${{ github.run_id }}/
+          if-no-files-found: error

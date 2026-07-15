@@ -32,6 +32,9 @@ function parseArguments(argumentsList) {
     "--ts6-time",
     "--ts7-time",
     "--ts7-repeat-time",
+    "--phase3-parity-exit",
+    "--phase3-parity-summary",
+    "--phase3-parity-time",
   ]) {
     if (!values.has(name)) {
       throw new Error(`missing required ${name}`);
@@ -111,21 +114,72 @@ function peakRssKib(content) {
   return match ? Number.parseInt(match[1], 10) : 0;
 }
 
+/**
+ * Interprets the complete, ledger-aware Phase 3 parity result used for rollout promotion.
+ * @param {string} summaryPath Path to the Phase 3 parity runner summary.
+ * @param {number} exitStatus Exit status recorded for the parity runner.
+ * @returns {Promise<object>} Semantic-parity status that remains auditable when the summary is unavailable.
+ */
+async function semanticParity(summaryPath, exitStatus) {
+  try {
+    const summary = JSON.parse(await readFile(summaryPath, "utf8"));
+    const accepted = exitStatus === 0
+      && summary.config_count === 39
+      && summary.passed_count === 39
+      && summary.failed_count === 0
+      && Array.isArray(summary.gate_failures)
+      && summary.gate_failures.length === 0
+      && summary.input_provenance?.stable === true;
+    return {
+      accepted,
+      status: accepted ? "accepted" : "rejected",
+      reason: accepted
+        ? "all_39_configs_passed_with_reviewed_ledger"
+        : "phase3_summary_did_not_satisfy_rollout_contract",
+      exit_status: exitStatus,
+      config_count: summary.config_count ?? null,
+      passed_count: summary.passed_count ?? null,
+      failed_count: summary.failed_count ?? null,
+      gate_failures: Array.isArray(summary.gate_failures) ? summary.gate_failures : null,
+      input_provenance_stable: summary.input_provenance?.stable === true,
+      diagnostic_parity_ledger_sha256: summary.diagnostic_parity_ledger?.sha256 ?? null,
+      compiler_contract: summary.compiler_contract ?? null,
+    };
+  } catch (error) {
+    return {
+      accepted: false,
+      status: "incomplete",
+      reason: `phase3_summary_unavailable:${error instanceof Error ? error.message : String(error)}`,
+      exit_status: exitStatus,
+      config_count: null,
+      passed_count: null,
+      failed_count: null,
+      gate_failures: null,
+      input_provenance_stable: false,
+      diagnostic_parity_ledger_sha256: null,
+      compiler_contract: null,
+    };
+  }
+}
+
 const values = parseArguments(process.argv.slice(2));
-const [ts6Exit, ts7Exit, ts7RepeatExit, ts6Log, ts7Log, ts7RepeatLog, ts6Time, ts7Time, ts7RepeatTime] = await Promise.all([
+const [ts6Exit, ts7Exit, ts7RepeatExit, phase3ParityExit, ts6Log, ts7Log, ts7RepeatLog, ts6Time, ts7Time, ts7RepeatTime, phase3ParityTime] = await Promise.all([
   readExitStatus(values.get("--ts6-exit")),
   readExitStatus(values.get("--ts7-exit")),
   readExitStatus(values.get("--ts7-repeat-exit")),
+  readExitStatus(values.get("--phase3-parity-exit")),
   readFile(values.get("--ts6-log"), "utf8"),
   readFile(values.get("--ts7-log"), "utf8"),
   readFile(values.get("--ts7-repeat-log"), "utf8"),
   readFile(values.get("--ts6-time"), "utf8"),
   readFile(values.get("--ts7-time"), "utf8"),
   readFile(values.get("--ts7-repeat-time"), "utf8"),
+  readFile(values.get("--phase3-parity-time"), "utf8"),
 ]);
 const ts6Diagnostics = diagnostics(ts6Log);
 const ts7Diagnostics = diagnostics(ts7Log);
 const ts7RepeatDiagnostics = diagnostics(ts7RepeatLog);
+const parity = await semanticParity(values.get("--phase3-parity-summary"), phase3ParityExit);
 const output = values.get("--output");
 const observation = {
   schema_version: 1,
@@ -139,11 +193,23 @@ const observation = {
     ts7_repeat_forced: cacheState(ts7RepeatLog),
   },
   order_dependent_diff_count: symmetricDifferenceCount(ts7Diagnostics, ts7RepeatDiagnostics),
-  compiler_diagnostic_diff_count: symmetricDifferenceCount(ts6Diagnostics, ts7Diagnostics),
+  compiler_diagnostic_diff_count: parity.accepted ? 0 : null,
   ts7_repeat_exit: ts7RepeatExit,
-  peak_rss_kib: Math.max(peakRssKib(ts6Time), peakRssKib(ts7Time), peakRssKib(ts7RepeatTime)),
+  peak_rss_kib: Math.max(
+    peakRssKib(ts6Time),
+    peakRssKib(ts7Time),
+    peakRssKib(ts7RepeatTime),
+    peakRssKib(phase3ParityTime),
+  ),
   ts7_checkers: Number.parseInt(process.env.TS7_CHECKERS ?? "1", 10),
-  diagnostics: { ts6: ts6Diagnostics, ts7: ts7Diagnostics, ts7_repeat: ts7RepeatDiagnostics },
+  semantic_parity: parity,
+  turbo_execution_diagnostics: {
+    comparable: false,
+    reason: "turbo_short_circuits_after_different_failing_tasks; use_semantic_parity_for_promotion",
+    ts6: ts6Diagnostics,
+    ts7: ts7Diagnostics,
+    ts7_repeat: ts7RepeatDiagnostics,
+  },
   source_revision: process.env.GITHUB_SHA ?? "local",
 };
 await mkdir(dirname(output), { recursive: true });

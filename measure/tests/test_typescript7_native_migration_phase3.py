@@ -1088,6 +1088,13 @@ class Phase3gBenchmarkRunnerContract(unittest.TestCase):
         self.assertIn("pnpm turbo run check-types:compat --concurrency=1", workflow)
         self.assertIn("pnpm turbo run check-types --concurrency=1 > .ci-observation/ts7.log", workflow)
         self.assertIn("pnpm turbo run check-types --concurrency=1 --force", workflow)
+        self.assertIn("TypeScript 6/7 semantic parity oracle", workflow)
+        self.assertIn("run-phase3-parity.py", workflow)
+        self.assertIn("--output-dir .ci-observation/phase3-parity", workflow)
+        self.assertIn("typescript7-benchmark:", workflow)
+        self.assertIn("TypeScript 7 controlled benchmark (manual)", workflow)
+        self.assertIn("run-phase3-benchmarks.py", workflow)
+        self.assertIn("--allow-contaminated-host", workflow)
         self.assertIn("scripts/ci/capture-ts7-rollout-observation.mjs", workflow)
         self.assertIn("include-hidden-files: true", workflow)
         self.assertIn("workflow_dispatch:", workflow)
@@ -1117,9 +1124,27 @@ class Phase3gBenchmarkRunnerContract(unittest.TestCase):
                 "ts6.time": "Maximum resident set size (kbytes): 100\n",
                 "ts7.time": "Maximum resident set size (kbytes): 125\n",
                 "ts7-repeat.time": "Maximum resident set size (kbytes): 150\n",
+                "phase3-parity.exit": "0\n",
+                "phase3-parity.time": "Maximum resident set size (kbytes): 175\n",
             }
             for name, content in fixtures.items():
                 (directory / name).write_text(content, encoding="utf-8")
+            parity_directory = directory / "phase3-parity"
+            parity_directory.mkdir()
+            (parity_directory / "summary.json").write_text(
+                json.dumps(
+                    {
+                        "config_count": 39,
+                        "passed_count": 39,
+                        "failed_count": 0,
+                        "gate_failures": [],
+                        "input_provenance": {"stable": True},
+                        "diagnostic_parity_ledger": {"sha256": "ledger-sha"},
+                        "compiler_contract": {"typescript6": {"flags": ["--stableTypeOrdering"]}},
+                    }
+                ),
+                encoding="utf-8",
+            )
             output_path = directory / "observation.json"
             completed = subprocess.run(
                 [
@@ -1147,6 +1172,12 @@ class Phase3gBenchmarkRunnerContract(unittest.TestCase):
                     str(directory / "ts7.time"),
                     "--ts7-repeat-time",
                     str(directory / "ts7-repeat.time"),
+                    "--phase3-parity-exit",
+                    str(directory / "phase3-parity.exit"),
+                    "--phase3-parity-summary",
+                    str(parity_directory / "summary.json"),
+                    "--phase3-parity-time",
+                    str(directory / "phase3-parity.time"),
                 ],
                 cwd=REPO_ROOT,
                 check=False,
@@ -1159,7 +1190,10 @@ class Phase3gBenchmarkRunnerContract(unittest.TestCase):
         self.assertEqual(observation["ts6_parity_exit"], 2)
         self.assertEqual(observation["ts7_gate_exit"], 2)
         self.assertEqual(observation["order_dependent_diff_count"], 0)
-        self.assertEqual(observation["peak_rss_kib"], 150)
+        self.assertEqual(observation["compiler_diagnostic_diff_count"], 0)
+        self.assertEqual(observation["peak_rss_kib"], 175)
+        self.assertTrue(observation["semantic_parity"]["accepted"])
+        self.assertFalse(observation["turbo_execution_diagnostics"]["comparable"])
         self.assertEqual(
             observation["cache_state"],
             {
@@ -1168,6 +1202,71 @@ class Phase3gBenchmarkRunnerContract(unittest.TestCase):
                 "ts7_repeat_forced": "0 cached, 3 total",
             },
         )
+
+    def test_ci_observation_writer_marks_missing_parity_summary_incomplete(self) -> None:
+        """Requires a malformed Phase 3 artifact to remain non-promotable without losing CI evidence."""
+        script = REPO_ROOT / "scripts" / "ci" / "capture-ts7-rollout-observation.mjs"
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            directory = Path(temporary_directory)
+            fixtures = {
+                "ts6.exit": "2\n",
+                "ts7.exit": "2\n",
+                "ts7-repeat.exit": "2\n",
+                "phase3-parity.exit": "2\n",
+                "ts6.log": "reading-advantage#check-types:compat error TS2322: baseline\n",
+                "ts7.log": "primary-advantage#check-types error TS2322: candidate\n",
+                "ts7-repeat.log": "primary-advantage#check-types error TS2322: candidate\n",
+                "ts6.time": "Maximum resident set size (kbytes): 100\n",
+                "ts7.time": "Maximum resident set size (kbytes): 125\n",
+                "ts7-repeat.time": "Maximum resident set size (kbytes): 150\n",
+                "phase3-parity.time": "Maximum resident set size (kbytes): 175\n",
+            }
+            for name, content in fixtures.items():
+                (directory / name).write_text(content, encoding="utf-8")
+            output_path = directory / "observation.json"
+            completed = subprocess.run(
+                [
+                    "node",
+                    str(script),
+                    "--run-id",
+                    "456",
+                    "--output",
+                    str(output_path),
+                    "--ts6-exit",
+                    str(directory / "ts6.exit"),
+                    "--ts7-exit",
+                    str(directory / "ts7.exit"),
+                    "--ts6-log",
+                    str(directory / "ts6.log"),
+                    "--ts7-log",
+                    str(directory / "ts7.log"),
+                    "--ts7-repeat-exit",
+                    str(directory / "ts7-repeat.exit"),
+                    "--ts7-repeat-log",
+                    str(directory / "ts7-repeat.log"),
+                    "--ts6-time",
+                    str(directory / "ts6.time"),
+                    "--ts7-time",
+                    str(directory / "ts7.time"),
+                    "--ts7-repeat-time",
+                    str(directory / "ts7-repeat.time"),
+                    "--phase3-parity-exit",
+                    str(directory / "phase3-parity.exit"),
+                    "--phase3-parity-summary",
+                    str(directory / "missing-summary.json"),
+                    "--phase3-parity-time",
+                    str(directory / "phase3-parity.time"),
+                ],
+                cwd=REPO_ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(completed.returncode, 0, completed.stderr)
+            observation = json.loads(output_path.read_text(encoding="utf-8"))
+        self.assertIsNone(observation["compiler_diagnostic_diff_count"])
+        self.assertEqual(observation["semantic_parity"]["status"], "incomplete")
+        self.assertFalse(observation["turbo_execution_diagnostics"]["comparable"])
 
     def test_cache_proof_runner_requires_disposable_worktree_and_relevant_task_inputs(self) -> None:
         """Requires Phase 3i to live-prove scoped cache behavior without mutating source."""

@@ -105,8 +105,14 @@
     `apps/reading-advantage` and stopped the TypeScript 6 baseline at a 140,572 KiB
     swap delta (the 131,072 KiB stop-loss). No partial matrix or concurrency choice
     may be cited as benchmark evidence.
+  - 2026-07-16: A third local override completed 67 samples but the Reading Advantage
+    TypeScript 6 cohort breached the same 131,072 KiB swap stop-loss five times
+    (136,828–219,584 KiB). Its committed `run-20260715T214000Z` evidence is a rejected
+    resource-safety record, not a selection input. The manual GitHub-hosted CI matrix
+    must supply a complete accepted run before choosing checker concurrency.
 - [~] Task: Roll out TypeScript 7 through CI.
-  - [ ] Add a temporary non-blocking parity lane.
+  - [x] Add a temporary non-blocking parity lane. [implementation: d383b326, semantic
+    parity oracle and observation repair pending CI verification]
   - [ ] Promote the TypeScript 7 lane only after parity and full gates pass.
   - [ ] Observe and record at least three representative CI runs.
 - [b] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md) — deferred:product-owner

@@ -20,5 +20,6 @@ if (checkers !== "1" && checkers !== "2") {
     throw result.error;
   }
 
+  // TS6 reports diagnostic-only failures as 2; retain that compatibility contract for parity gates.
   process.exitCode = result.status === 1 ? 2 : (result.status ?? 1);
 }
