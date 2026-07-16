@@ -1,0 +1,1 @@
+Created primary_advantage_runtime_boundary_20260716 as the dedicated prerequisite for the pre-existing Primary Advantage proxy/client database-import build failure surfaced by TS7 aggregate CI. Scope preserves authoritative server session validation and excludes TypeScript, framework version, schema, provider, and deployment changes.
