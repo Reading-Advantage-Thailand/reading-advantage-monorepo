@@ -2,11 +2,11 @@
 
 ## Phase 1: Contract & Schema Definition
 
-- [~] Task: Capture the reproducible build failure and import denominator.
-  - [ ] Record the `proxy.ts` → `lib/session.ts` → `@reading-advantage/db` → `postgres` chain from a CI-compatible build.
-  - [ ] Freeze the four executable client-component imports and separately audit declaration-only database type leakage.
-  - [ ] Inventory all protected layouts, routes, and 64 API handlers; classify each as server-guarded, intentionally public, or separately owned remediation work.
-  - [ ] Record that a Primary-only pull request currently bypasses root CI and establish the required path-filter change.
+- [x] Task: Capture the reproducible build failure and import denominator. [commit: badffbee]
+  - [x] Record the `proxy.ts` → `lib/session.ts` → `@reading-advantage/db` → `postgres` chain from a CI-compatible build.
+  - [x] Freeze the four executable client-component imports and separately audit declaration-only database type leakage.
+  - [x] Inventory all protected layouts, routes, and 64 API handlers; classify each as server-guarded, intentionally public, or separately owned remediation work.
+  - [x] Record that a Primary-only pull request currently bypasses root CI and establish the required path-filter change.
 - [ ] Task: Define runtime-safe session and client contracts.
   - [ ] Define an Edge/browser-safe session-cookie-name contract with no database or server-session imports.
   - [ ] Define client DTO/runtime-constant contracts for activity values, assignment rows, and license rows.
