@@ -1,0 +1,1 @@
+Marked Phase 1 runtime-safe contract definition complete with commit 0d36dbea. The approved contract is recorded in runtime-contract.md and will drive red tests before any proxy, session, client DTO, or CI-path implementation.
