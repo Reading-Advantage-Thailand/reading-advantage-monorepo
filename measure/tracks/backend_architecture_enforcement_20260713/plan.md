@@ -8,7 +8,7 @@ implementation remain blocked until the final acceptance gate passes.
 ## Phase 1: Contract, Rule Schema, and Inventory
 
 - [x] Task 1: Define versioned Zod contracts for rules, findings, ownership roots, exact exceptions, and baseline entries. [commit: a3d07363]
-- [ ] Task 2: Define the database/provider ownership map, including the exact `packages/backend/src/jobs/adapters/postgres/` job-table query root and worker/webhook prohibition, and reconcile it with existing tenant/provider checks.
+- [~] Task 2: Define the database/provider ownership map, including the exact `packages/backend/src/jobs/adapters/postgres/` job-table query root and worker/webhook prohibition, and reconcile it with existing tenant/provider checks.
 - [ ] Task 3: Produce a deterministic read-only inventory and review each proposed baseline entry for owner, rationale, and false positives.
 - [ ] Task 4: Freeze v1 database and provider baselines without wildcard exemptions.
 
