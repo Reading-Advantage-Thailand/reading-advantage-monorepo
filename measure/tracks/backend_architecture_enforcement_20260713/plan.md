@@ -9,8 +9,8 @@ implementation remain blocked until the final acceptance gate passes.
 
 - [x] Task 1: Define versioned Zod contracts for rules, findings, ownership roots, exact exceptions, and baseline entries. [commit: a3d07363]
 - [x] Task 2: Define the database/provider ownership map, including the exact `packages/backend/src/jobs/adapters/postgres/` job-table query root and worker/webhook prohibition, and reconcile it with existing tenant/provider checks. [commits: 2acffc87, 78a96657]
-- [~] Task 3: Produce a deterministic read-only inventory and review each proposed baseline entry for owner, rationale, and false positives.
-- [ ] Task 4: Freeze v1 database and provider baselines without wildcard exemptions.
+- [x] Task 3: Produce a deterministic read-only inventory and review each proposed baseline entry for owner, rationale, and false positives. [commit: 815209d5]
+- [~] Task 4: Freeze v1 database and provider baselines without wildcard exemptions.
 
 **Verification:** `pnpm architecture:inventory --format json && pnpm architecture:baseline:validate`
 
