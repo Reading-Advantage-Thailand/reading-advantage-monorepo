@@ -215,6 +215,10 @@ Two parallel programs are in flight; priority order when picking the next track:
 - [~] **Track: CodeCamp Interactive Media and Diagrams Integration** *Link: [./tracks/codecamp_interactive_media_diagrams_20260709/](./tracks/codecamp_interactive_media_diagrams_20260709/)*
   Introduce curated YouTube tutorial embeds and 16 unit-level visual diagrams/illustrations across the CodeCamp curriculum, adapting database seed data and frontend rendering components.
 
+- [~] **Track: Primary Advantage Runtime Boundary Repair** *(primary_advantage_runtime_boundary_20260716)*
+  *Link: [./tracks/primary_advantage_runtime_boundary_20260716/](./tracks/primary_advantage_runtime_boundary_20260716/)*
+  Dedicated bug track for the pre-existing proxy/client database-import boundary that blocks the TypeScript 7 aggregate build gate. It preserves server-side session validation while removing Node-only Postgres reachability from proxy and browser bundles; no TypeScript, Next.js-version, schema, provider, or deployment change belongs here.
+
 ---
 
 ## Archived Tracks

@@ -1,0 +1,13 @@
+{
+  "id": "primary_advantage_runtime_boundary_20260716",
+  "title": "Primary Advantage Runtime Boundary Repair",
+  "type": "bug",
+  "status": "active",
+  "created": "2026-07-16",
+  "owner": "Codex",
+  "app": "primary-advantage",
+  "description": "Remove Node-only database access from Primary Advantage proxy and client import graphs while preserving authoritative server-side session validation.",
+  "estimated_tasks": 16,
+  "actual_tasks": null,
+  "deviation_notes": "Created as a separate prerequisite after the TypeScript 7 full-gate build exposed an existing Primary Advantage runtime-boundary defect. It does not change TypeScript 7 migration scope."
+}
