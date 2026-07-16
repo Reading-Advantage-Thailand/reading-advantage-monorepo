@@ -10,7 +10,7 @@ implementation remain blocked until the final acceptance gate passes.
 - [x] Task 1: Define versioned Zod contracts for rules, findings, ownership roots, exact exceptions, and baseline entries. [commit: a3d07363]
 - [x] Task 2: Define the database/provider ownership map, including the exact `packages/backend/src/jobs/adapters/postgres/` job-table query root and worker/webhook prohibition, and reconcile it with existing tenant/provider checks. [commits: 2acffc87, 78a96657]
 - [x] Task 3: Produce a deterministic read-only inventory and review each proposed baseline entry for owner, rationale, and false positives. [commit: 815209d5]
-- [~] Task 4: Freeze v1 database and provider baselines without wildcard exemptions.
+- [x] Task 4: Freeze v1 database and provider baselines without wildcard exemptions. [commit: 444306fc]
 
 **Verification:** `pnpm architecture:inventory --format json && pnpm architecture:baseline:validate`
 
@@ -19,7 +19,7 @@ all baseline entries are reviewed and no implementation package is newly exempte
 
 ## Phase 2: Red Tests and Counterexample Fixtures
 
-- [ ] Task 5: Add database-boundary positive fixtures for direct/aliased/barrel/dynamic imports, raw SQL/client calls, and worker/webhook job-table access, plus exact job-port/PostgreSQL-adapter negative fixtures.
+- [~] Task 5: Add database-boundary positive fixtures for direct/aliased/barrel/dynamic imports, raw SQL/client calls, and worker/webhook job-table access, plus exact job-port/PostgreSQL-adapter negative fixtures.
 - [ ] Task 6: Add provider-boundary positive fixtures for direct/aliased/barrel/dynamic imports and client construction, plus adapter negatives.
 - [ ] Task 7: Add ratchet tests for new debt, deletion, path rename, wildcard rejection, malformed config, and deterministic diagnostics.
 - [ ] Task 8: Run the focused suite and record the expected Red failures against the absent analyzer/ratchet implementation.
