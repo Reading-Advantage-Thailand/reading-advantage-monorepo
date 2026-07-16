@@ -112,6 +112,7 @@
       ],
       "ownershipRootIds": [
         "company-identity-database",
+        "company-identity-migrations",
         "company-identity-postgres-adapter"
       ]
     },
@@ -149,6 +150,7 @@
       "resolvedTargetRoots": ["packages/db/src/company-identity/"],
       "ownershipRootIds": [
         "company-identity-database",
+        "company-identity-migrations",
         "company-identity-postgres-adapter"
       ]
     },
@@ -353,6 +355,19 @@
       ],
       "owner": "identity-platform",
       "rationale": "The exact backend PostgreSQL adapter implements Company Identity ports without exposing persistence to product apps."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "company-identity-migrations",
+      "domain": "database",
+      "path": "packages/db/company-identity/",
+      "kind": "migration",
+      "ruleIds": [
+        "COMPANY_IDENTITY_DB_BOUNDARY",
+        "COMPANY_IDENTITY_PRODUCT_ISOLATION"
+      ],
+      "owner": "identity-platform",
+      "rationale": "The dedicated Company Identity migration directory owns Drizzle configuration and reviewed identity migration artifacts."
     },
     {
       "schemaVersion": 1,

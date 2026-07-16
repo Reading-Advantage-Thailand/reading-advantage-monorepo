@@ -149,6 +149,19 @@ describe("architecture ownership map", () => {
       status: "allowed",
       ownershipRootId: "company-identity-postgres-adapter",
     });
+    expect(
+      evaluateOwnership(loadOwnershipMap(), {
+        ...identityImport,
+        sourcePath: "packages/db/company-identity/drizzle.config.ts",
+        evidenceKind: "environment-read",
+        importSpecifier: undefined,
+        resource: "environment:COMPANY_AUTH_DIRECT_DATABASE_URL",
+        resolvedTarget: "external:process.env",
+      }),
+    ).toMatchObject({
+      status: "allowed",
+      ownershipRootId: "company-identity-migrations",
+    });
     expect(evaluateOwnership(loadOwnershipMap(), identityImport)).toEqual({
       status: "violation",
       reasonCode: "outside-approved-root",
