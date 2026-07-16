@@ -22,7 +22,7 @@ all baseline entries are reviewed and no implementation package is newly exempte
 - [x] Task 5: Add database-boundary positive fixtures for direct/aliased/barrel/dynamic imports, raw SQL/client calls, and worker/webhook job-table access, plus exact job-port/PostgreSQL-adapter negative fixtures. [commit: 60fcb320]
 - [x] Task 6: Add provider-boundary positive fixtures for direct/aliased/barrel/dynamic imports and client construction, plus adapter negatives. [commit: bad9da7c]
 - [x] Task 7: Add ratchet tests for new debt, deletion, path rename, wildcard rejection, malformed config, and deterministic diagnostics. [commit: c46c7519]
-- [~] Task 8: Run the focused suite and record the expected Red failures against the absent analyzer/ratchet implementation.
+- [x] Task 8: Run the focused suite and record the expected Red failures against the absent analyzer/ratchet implementation. [commit: ef7eea7d]
 
 **Verification:** `CI=true pnpm vitest run packages/architecture-enforcement/src/__tests__`
 
@@ -31,7 +31,7 @@ test setup; every FR-2–FR-5 counterexample has a named assertion.
 
 ## Phase 3: Analyzer and Ratchet Implementation
 
-- [ ] Task 9: Implement workspace-aware AST loading and import/re-export/dynamic-import resolution with fail-closed parser errors.
+- [~] Task 9: Implement workspace-aware AST loading and import/re-export/dynamic-import resolution with fail-closed parser errors.
 - [ ] Task 10: Implement database ownership and direct-query detection to satisfy its Red fixtures.
 - [ ] Task 11: Implement provider ownership and SDK/client-construction detection to satisfy its Red fixtures.
 - [ ] Task 12: Implement baseline comparison, explicit acknowledged update flow, stable JSON, and concise human diagnostics.
