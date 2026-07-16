@@ -20,6 +20,7 @@ const databaseRule = {
     { kind: "exact", value: "drizzle-orm" },
     { kind: "prefix", value: "@reading-advantage/db/" },
   ],
+  resourceMatchers: [{ kind: "exact", value: "database-table:review_jobs" }],
   resolvedTargetRoots: ["packages/db/src/"],
   ownershipRootIds: ["database-package"],
 } as const;
@@ -239,6 +240,7 @@ describe("architecture enforcement contracts", () => {
       architectureRuleSchema.parse({
         ...databaseRule,
         moduleMatchers: [],
+        resourceMatchers: [],
         resolvedTargetRoots: [],
       }),
     ).toThrow();
@@ -260,6 +262,21 @@ describe("architecture enforcement contracts", () => {
     expect(() =>
       architectureRuleSchema.parse({
         ...databaseRule,
+        resourceMatchers: [
+          databaseRule.resourceMatchers[0],
+          databaseRule.resourceMatchers[0],
+        ],
+      }),
+    ).toThrow();
+    expect(() =>
+      architectureRuleSchema.parse({
+        ...databaseRule,
+        resourceMatchers: [{ kind: "prefix", value: "environment:OPENAI_*" }],
+      }),
+    ).toThrow();
+    expect(() =>
+      architectureRuleSchema.parse({
+        ...databaseRule,
         resolvedTargetRoots: ["packages/db/src/", "packages/db/src/"],
       }),
     ).toThrow();
@@ -269,6 +286,27 @@ describe("architecture enforcement contracts", () => {
         ownershipRootIds: ["database-package", "database-package"],
       }),
     ).toThrow();
+  });
+
+  it("limits exact exceptions to exact test and fixture files", () => {
+    expect(() =>
+      exactExceptionSchema.parse({
+        ...databaseException,
+        sourcePath: "packages/ai/src/internal-sdk.ts",
+      }),
+    ).toThrow();
+    expect(() =>
+      exactExceptionSchema.parse({
+        ...databaseException,
+        sourcePath: "packages/storage/src/__tests__/provider.ts",
+      }),
+    ).not.toThrow();
+    expect(() =>
+      exactExceptionSchema.parse({
+        ...databaseException,
+        sourcePath: "packages/storage/src/fixtures/provider.ts",
+      }),
+    ).not.toThrow();
   });
 
   it("rejects mismatched ownership domains and one-sided rule/root references", () => {

@@ -93,6 +93,21 @@ const moduleSpecifierSchema = z
       !value.includes("://"),
     { message: "must be a stable single-line module specifier" },
   );
+
+/** Namespaced resource identifier used for table and credential policy matches. */
+export const policyResourceSchema = z
+  .string()
+  .trim()
+  .min(3)
+  .max(256)
+  .regex(/^[a-z][a-z0-9-]*:[A-Za-z0-9._/-]+$/)
+  .refine(
+    (value) =>
+      !hasControlCharacter(value) &&
+      !value.includes("\\") &&
+      ![...value].some((character) => GLOB_CHARACTERS.has(character)),
+    { message: "must be an exact namespaced resource without glob syntax" },
+  );
 const resolvedTargetSchema = z
   .string()
   .max(512)
@@ -144,6 +159,27 @@ const moduleMatcherSchema = z
     }
   });
 
+const resourceMatcherSchema = z
+  .object({
+    kind: z.enum(["exact", "prefix"]),
+    value: policyResourceSchema,
+  })
+  .strict()
+  .superRefine((matcher, context) => {
+    if (
+      matcher.kind === "prefix" &&
+      ![":", "/", "_", "-", "."].some((delimiter) =>
+        matcher.value.endsWith(delimiter),
+      )
+    ) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "resource prefixes must end at a namespace or token boundary",
+        path: ["value"],
+      });
+    }
+  });
+
 /** Strict version-one architecture rule contract. */
 export const architectureRuleSchema = z
   .object({
@@ -154,6 +190,7 @@ export const architectureRuleSchema = z
     severity: z.literal("error"),
     findingKinds: z.array(findingKindSchema).min(1),
     moduleMatchers: z.array(moduleMatcherSchema),
+    resourceMatchers: z.array(resourceMatcherSchema),
     resolvedTargetRoots: z.array(directoryPathSchema),
     ownershipRootIds: z.array(stableIdSchema),
   })
@@ -161,6 +198,7 @@ export const architectureRuleSchema = z
   .superRefine((rule, context) => {
     if (
       rule.moduleMatchers.length === 0 &&
+      rule.resourceMatchers.length === 0 &&
       rule.resolvedTargetRoots.length === 0
     ) {
       context.addIssue({
@@ -191,6 +229,16 @@ export const architectureRuleSchema = z
         code: z.ZodIssueCode.custom,
         message: "moduleMatchers must not contain duplicates",
         path: ["moduleMatchers"],
+      });
+    }
+    const resourceMatcherKeys = rule.resourceMatchers.map(
+      (matcher) => `${matcher.kind}:${matcher.value}`,
+    );
+    if (new Set(resourceMatcherKeys).size !== resourceMatcherKeys.length) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "resourceMatchers must not contain duplicates",
+        path: ["resourceMatchers"],
       });
     }
   });
@@ -235,7 +283,22 @@ export const exactExceptionSchema = z
     owner: ownerSchema,
     rationale: rationaleSchema,
   })
-  .strict();
+  .strict()
+  .superRefine((exception, context) => {
+    const segments = exception.sourcePath.split("/");
+    const filename = segments.at(-1) ?? "";
+    const isTestOrFixture =
+      segments.includes("__tests__") ||
+      segments.includes("fixtures") ||
+      /\.(?:test|spec)\.[cm]?[jt]sx?$/.test(filename);
+    if (!isTestOrFixture) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "exact exceptions are limited to test and fixture files",
+        path: ["sourcePath"],
+      });
+    }
+  });
 
 const findingIdentityShape = {
   schemaVersion: z.literal(1),
@@ -246,6 +309,7 @@ const findingIdentityShape = {
   column: z.number().int().positive(),
   evidenceKind: findingKindSchema,
   importSpecifier: moduleSpecifierSchema.optional(),
+  resource: policyResourceSchema.optional(),
   resolvedTarget: resolvedTargetSchema,
   semanticKey: sha256Schema,
   instanceKey: sha256Schema,

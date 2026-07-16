@@ -1,0 +1,410 @@
+{
+  "schemaVersion": 1,
+  "rules": [
+    {
+      "schemaVersion": 1,
+      "id": "DATABASE_BOUNDARY",
+      "domain": "database",
+      "description": "Database clients, schema, query builders, and raw SQL stay inside named backend ownership roots.",
+      "severity": "error",
+      "findingKinds": [
+        "static-import",
+        "namespace-import",
+        "dynamic-import",
+        "commonjs-require",
+        "re-export",
+        "client-construction",
+        "query-call",
+        "environment-read"
+      ],
+      "moduleMatchers": [
+        { "kind": "exact", "value": "@reading-advantage/db" },
+        { "kind": "prefix", "value": "@reading-advantage/db/" },
+        { "kind": "exact", "value": "drizzle-orm" },
+        { "kind": "prefix", "value": "drizzle-orm/" },
+        { "kind": "exact", "value": "postgres" },
+        { "kind": "exact", "value": "pg" }
+      ],
+      "resourceMatchers": [],
+      "resolvedTargetRoots": ["packages/db/src/"],
+      "ownershipRootIds": [
+        "database-source",
+        "database-migrations",
+        "domain-database-access",
+        "backend-database-access"
+      ]
+    },
+    {
+      "schemaVersion": 1,
+      "id": "DURABLE_JOB_DATABASE_BOUNDARY",
+      "domain": "database",
+      "description": "Durable job-table queries are limited to database definitions, migrations, and the exact PostgreSQL job adapter.",
+      "severity": "error",
+      "findingKinds": [
+        "static-import",
+        "namespace-import",
+        "dynamic-import",
+        "commonjs-require",
+        "re-export",
+        "client-construction",
+        "query-call"
+      ],
+      "moduleMatchers": [],
+      "resourceMatchers": [
+        { "kind": "exact", "value": "database-table:review_jobs" },
+        { "kind": "exact", "value": "database-table:jobs" },
+        { "kind": "exact", "value": "database-table:durable_jobs" }
+      ],
+      "resolvedTargetRoots": [],
+      "ownershipRootIds": [
+        "database-schema",
+        "database-migrations",
+        "postgres-job-adapter"
+      ]
+    },
+    {
+      "schemaVersion": 1,
+      "id": "COMPANY_IDENTITY_DB_BOUNDARY",
+      "domain": "database",
+      "description": "Dedicated Company Identity persistence is reachable only from its database module and backend PostgreSQL adapter.",
+      "severity": "error",
+      "findingKinds": [
+        "static-import",
+        "namespace-import",
+        "dynamic-import",
+        "commonjs-require",
+        "re-export",
+        "client-construction",
+        "query-call",
+        "environment-read"
+      ],
+      "moduleMatchers": [
+        {
+          "kind": "exact",
+          "value": "@reading-advantage/db/company-identity"
+        },
+        {
+          "kind": "prefix",
+          "value": "@reading-advantage/db/company-identity/"
+        },
+        {
+          "kind": "exact",
+          "value": "@reading-advantage/backend/modules/company-identity/adapters/postgres"
+        },
+        {
+          "kind": "prefix",
+          "value": "@reading-advantage/backend/modules/company-identity/adapters/postgres/"
+        }
+      ],
+      "resourceMatchers": [
+        {
+          "kind": "exact",
+          "value": "environment:COMPANY_AUTH_DATABASE_URL"
+        },
+        {
+          "kind": "exact",
+          "value": "environment:COMPANY_AUTH_DIRECT_DATABASE_URL"
+        }
+      ],
+      "resolvedTargetRoots": [
+        "packages/db/src/company-identity/",
+        "packages/backend/src/modules/company-identity/adapters/postgres/"
+      ],
+      "ownershipRootIds": [
+        "company-identity-database",
+        "company-identity-postgres-adapter"
+      ]
+    },
+    {
+      "schemaVersion": 1,
+      "id": "COMPANY_IDENTITY_PRODUCT_ISOLATION",
+      "domain": "database",
+      "description": "Company Identity tables and migrations remain outside education schemas, migrations, and tenant registries.",
+      "severity": "error",
+      "findingKinds": [
+        "static-import",
+        "namespace-import",
+        "dynamic-import",
+        "commonjs-require",
+        "re-export",
+        "policy-reference"
+      ],
+      "moduleMatchers": [
+        {
+          "kind": "exact",
+          "value": "@reading-advantage/db/company-identity"
+        },
+        {
+          "kind": "prefix",
+          "value": "@reading-advantage/db/company-identity/"
+        }
+      ],
+      "resourceMatchers": [
+        { "kind": "prefix", "value": "database-table:company_" },
+        {
+          "kind": "exact",
+          "value": "database-schema:company-identity"
+        }
+      ],
+      "resolvedTargetRoots": ["packages/db/src/company-identity/"],
+      "ownershipRootIds": [
+        "company-identity-database",
+        "company-identity-postgres-adapter"
+      ]
+    },
+    {
+      "schemaVersion": 1,
+      "id": "AI_PROVIDER_BOUNDARY",
+      "domain": "provider",
+      "description": "AI provider SDKs and client construction stay inside the AI provider adapter directory.",
+      "severity": "error",
+      "findingKinds": [
+        "static-import",
+        "namespace-import",
+        "dynamic-import",
+        "commonjs-require",
+        "re-export",
+        "client-construction",
+        "environment-read"
+      ],
+      "moduleMatchers": [
+        { "kind": "exact", "value": "ai" },
+        { "kind": "exact", "value": "openai" },
+        { "kind": "prefix", "value": "@ai-sdk/" },
+        { "kind": "exact", "value": "@google/generative-ai" }
+      ],
+      "resourceMatchers": [
+        { "kind": "exact", "value": "environment:OPENAI_API_KEY" },
+        { "kind": "exact", "value": "environment:OPENROUTER_API_KEY" },
+        { "kind": "exact", "value": "environment:GOOGLE_AI_API_KEY" },
+        {
+          "kind": "exact",
+          "value": "environment:GOOGLE_GENERATIVE_AI_API_KEY"
+        },
+        { "kind": "exact", "value": "environment:AI_GATEWAY_API_KEY" }
+      ],
+      "resolvedTargetRoots": ["packages/ai/src/providers/"],
+      "ownershipRootIds": ["ai-provider-adapters"]
+    },
+    {
+      "schemaVersion": 1,
+      "id": "STORAGE_PROVIDER_BOUNDARY",
+      "domain": "provider",
+      "description": "Object-storage provider SDKs and client construction stay inside the storage driver directory.",
+      "severity": "error",
+      "findingKinds": [
+        "static-import",
+        "namespace-import",
+        "dynamic-import",
+        "commonjs-require",
+        "re-export",
+        "client-construction",
+        "environment-read"
+      ],
+      "moduleMatchers": [
+        { "kind": "prefix", "value": "@aws-sdk/" },
+        { "kind": "exact", "value": "@google-cloud/storage" },
+        { "kind": "exact", "value": "firebase-admin/storage" }
+      ],
+      "resourceMatchers": [
+        { "kind": "exact", "value": "environment:AWS_ACCESS_KEY_ID" },
+        {
+          "kind": "exact",
+          "value": "environment:AWS_SECRET_ACCESS_KEY"
+        },
+        {
+          "kind": "exact",
+          "value": "environment:STORAGE_ACCESS_KEY_ID"
+        },
+        {
+          "kind": "exact",
+          "value": "environment:STORAGE_SECRET_ACCESS_KEY"
+        },
+        {
+          "kind": "exact",
+          "value": "environment:GOOGLE_APPLICATION_CREDENTIALS"
+        }
+      ],
+      "resolvedTargetRoots": ["packages/storage/src/drivers/"],
+      "ownershipRootIds": ["storage-provider-adapters"]
+    },
+    {
+      "schemaVersion": 1,
+      "id": "INTEGRATION_PROVIDER_BOUNDARY",
+      "domain": "provider",
+      "description": "External integration SDKs and direct clients stay inside explicitly named integration driver directories.",
+      "severity": "error",
+      "findingKinds": [
+        "static-import",
+        "namespace-import",
+        "dynamic-import",
+        "commonjs-require",
+        "re-export",
+        "client-construction",
+        "environment-read"
+      ],
+      "moduleMatchers": [
+        { "kind": "prefix", "value": "@octokit/" },
+        { "kind": "prefix", "value": "@slack/" },
+        { "kind": "exact", "value": "stripe" },
+        { "kind": "exact", "value": "twilio" }
+      ],
+      "resourceMatchers": [
+        { "kind": "exact", "value": "environment:GITHUB_TOKEN" },
+        { "kind": "exact", "value": "environment:GITHUB_APP_ID" },
+        {
+          "kind": "exact",
+          "value": "environment:GITHUB_APP_PRIVATE_KEY"
+        },
+        {
+          "kind": "exact",
+          "value": "environment:GITHUB_INSTALLATION_ID"
+        },
+        { "kind": "exact", "value": "environment:SLACK_BOT_TOKEN" },
+        { "kind": "exact", "value": "environment:STRIPE_SECRET_KEY" }
+      ],
+      "resolvedTargetRoots": ["packages/integrations/github/src/drivers/"],
+      "ownershipRootIds": ["github-provider-adapters"]
+    }
+  ],
+  "ownershipRoots": [
+    {
+      "schemaVersion": 1,
+      "id": "database-source",
+      "domain": "database",
+      "path": "packages/db/src/",
+      "kind": "database",
+      "ruleIds": ["DATABASE_BOUNDARY"],
+      "owner": "database-platform",
+      "rationale": "The database package owns schema definitions, clients, migrations helpers, and low-level persistence primitives."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "database-schema",
+      "domain": "database",
+      "path": "packages/db/src/schema/",
+      "kind": "database",
+      "ruleIds": ["DURABLE_JOB_DATABASE_BOUNDARY"],
+      "owner": "database-platform",
+      "rationale": "Database schema modules own durable job table definitions but do not run worker polling loops."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "database-migrations",
+      "domain": "database",
+      "path": "packages/db/drizzle/",
+      "kind": "migration",
+      "ruleIds": ["DATABASE_BOUNDARY", "DURABLE_JOB_DATABASE_BOUNDARY"],
+      "owner": "database-platform",
+      "rationale": "Reviewed Drizzle migrations may define and evolve PostgreSQL-owned tables, including durable job tables."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "domain-database-access",
+      "domain": "database",
+      "path": "packages/domain/src/",
+      "kind": "domain",
+      "ruleIds": ["DATABASE_BOUNDARY"],
+      "owner": "backend-platform",
+      "rationale": "Existing transport-independent domain functions are an approved database orchestration boundary during incremental migration."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "backend-database-access",
+      "domain": "database",
+      "path": "packages/backend/src/",
+      "kind": "domain",
+      "ruleIds": ["DATABASE_BOUNDARY"],
+      "owner": "backend-platform",
+      "rationale": "Capability handlers and backend modules may use scoped database ports under the canonical backend architecture."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "postgres-job-adapter",
+      "domain": "database",
+      "path": "packages/backend/src/jobs/adapters/postgres/",
+      "kind": "adapter",
+      "ruleIds": ["DURABLE_JOB_DATABASE_BOUNDARY"],
+      "owner": "backend-platform",
+      "rationale": "This exact PostgreSQL adapter is the only query root outside database definitions and migrations for durable job tables."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "company-identity-database",
+      "domain": "database",
+      "path": "packages/db/src/company-identity/",
+      "kind": "database",
+      "ruleIds": [
+        "COMPANY_IDENTITY_DB_BOUNDARY",
+        "COMPANY_IDENTITY_PRODUCT_ISOLATION"
+      ],
+      "owner": "identity-platform",
+      "rationale": "The dedicated Company Identity database module owns its schema, migration commands, and low-level client."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "company-identity-postgres-adapter",
+      "domain": "database",
+      "path": "packages/backend/src/modules/company-identity/adapters/postgres/",
+      "kind": "adapter",
+      "ruleIds": [
+        "COMPANY_IDENTITY_DB_BOUNDARY",
+        "COMPANY_IDENTITY_PRODUCT_ISOLATION"
+      ],
+      "owner": "identity-platform",
+      "rationale": "The exact backend PostgreSQL adapter implements Company Identity ports without exposing persistence to product apps."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "ai-provider-adapters",
+      "domain": "provider",
+      "path": "packages/ai/src/providers/",
+      "kind": "adapter",
+      "ruleIds": ["AI_PROVIDER_BOUNDARY"],
+      "owner": "ai-platform",
+      "rationale": "AI provider implementations normalize vendor calls behind the provider-neutral AI client interface."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "storage-provider-adapters",
+      "domain": "provider",
+      "path": "packages/storage/src/drivers/",
+      "kind": "adapter",
+      "ruleIds": ["STORAGE_PROVIDER_BOUNDARY"],
+      "owner": "storage-platform",
+      "rationale": "Storage drivers normalize S3-compatible provider behavior behind the provider-neutral storage client."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "github-provider-adapters",
+      "domain": "provider",
+      "path": "packages/integrations/github/src/drivers/",
+      "kind": "integration",
+      "ruleIds": ["INTEGRATION_PROVIDER_BOUNDARY"],
+      "owner": "integrations-platform",
+      "rationale": "GitHub driver implementations own direct provider calls behind the repository integration interface."
+    }
+  ],
+  "exactExceptions": [
+    {
+      "schemaVersion": 1,
+      "id": "storage-s3-driver-test",
+      "ruleId": "STORAGE_PROVIDER_BOUNDARY",
+      "sourcePath": "packages/storage/src/__tests__/s3-driver.test.ts",
+      "owner": "storage-platform",
+      "rationale": "This exact adapter test imports AWS command types to verify normalized S3 driver behavior."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "storage-wave2-contract-test",
+      "ruleId": "STORAGE_PROVIDER_BOUNDARY",
+      "sourcePath": "packages/storage/src/__tests__/wave2-storage-contract.test.ts",
+      "owner": "storage-platform",
+      "rationale": "This exact contract test injects AWS failures to prove provider errors do not cross the adapter boundary."
+    }
+  ],
+  "baselineFiles": {
+    "database": "packages/architecture-enforcement/src/config/baselines/database.v1.json",
+    "provider": "packages/architecture-enforcement/src/config/baselines/provider.v1.json"
+  }
+}
