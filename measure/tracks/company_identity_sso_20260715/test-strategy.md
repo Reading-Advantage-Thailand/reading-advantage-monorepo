@@ -36,13 +36,18 @@ baseline and substitutes the following truthful Phase S1 anchor:
   preceding the Task 5 implementation commit `43c16457`, which is
   `b54fb292` ("chore(measure): complete company identity Task 4"), itself the
   child of `ba033761`.
-- **Current HEAD:** `304e2029f13fe655913bfaad4c4b95b1ab16828a`
-  ("chore(repo): snapshot workspace state", 2026-07-16).
+- **Prior strategy-revision HEAD:** `304e2029f13fe655913bfaad4c4b95b1ab16828a`
+  (the snapshot reviewed by the previous strategy attempt).
+- **Retry entry HEAD and immutable role baseline:**
+  `c1408b20279441943726c4227144960dd7cb1130` (the valid prior strategy/result
+  receipt supplied for this remediation).
 - **Current Phase S1 task state:** Tasks 1–5 `[x]` (boundary 7516c48b, schema
   contract b9d81557, Red contracts 60ad9d28, Red PostgreSQL ba033761,
   implementation 43c16457). Task 6 `[~]` (only a `chore(measure): start`
   commit `6f661515`, no implementation, no Red cycle yet authored). Task 7
   `[ ]`. Manual verification `[ ]`.
+
+**Retry entry baseline:** The prior strategy/result commit `c1408b20279441943726c4227144960dd7cb1130` resolves as a real commit and is the immutable baseline supplied for this strategy remediation. It is also the correct baseline to use when revalidating the future Task 6 Red cycle from this role handoff; the earlier invalid `194dc6a8c5dfe54c2d0c68e916038d891dc3a795` must not be reused. The new strategy commit produced by this retry is a documentation receipt after that baseline; it does not authorize Task 6 implementation before the dependency gates in §5 are accepted.
 
 The strategy therefore (a) keeps the existing Task 3 / Task 4 Red command
 recipes that already produced commit evidence, (b) holds the Task 6 Red
@@ -345,8 +350,10 @@ Unimported production files remain in the denominator through the explicit
 
 ## 5. Hard dependency behavior
 
-At this strategy's revision (HEAD `304e2029`), neither dependency has published
-accepted gate evidence. The current task-level state is:
+At the prior strategy revision (HEAD `304e2029`), neither dependency had
+published accepted gate evidence. The retry entry baseline is the valid
+strategy/result receipt `c1408b20279441943726c4227144960dd7cb1130`; the
+following dependency state is unchanged by that documentation-only receipt:
 
 - `backend_architecture_enforcement_20260713`:
   - Phase 1 Tasks 1–4 `[x]` (contracts a3d07363, ownership 2acffc87+78a96657,
@@ -485,11 +492,11 @@ Phase acceptance requires all of the following:
 
 | Subagent / review track | Applicable to Phase S1 | Reason |
 |---|---|---|
-| Security review (Review A) | **YES — required** | S1 establishes credential storage, session/code persistence, RBAC, audit, and the import/export boundary that protects them. Secret-persistence and audit-redaction tests are security evidence; a security review must run against the new `packages/db/src/company-identity/` and `packages/auth/src/company-identity/` surfaces and the import-boundary fixtures. |
-| Architecture review (Review C) | **YES — required** | S1 is the first customer of `backend_architecture_enforcement_20260713` Gate 1 (the architecture fixtures under `measure/tracks/company_identity_sso_20260715/fixtures/architecture/` are owned by S1 but analyzed by the Gate 1 analyzer) and the first capability-kernel consumer. The architecture review must verify (a) the identity ownership map, (b) the rule IDs every S1 fixture expects, (c) the absence of new baselines introduced by S1, and (d) that no parallel analyzer or executor was created in this track. |
-| UX/API review (Review B) | **NO** at this revision | Phase S1 ships no UI and no API surface. `apps/accounts/` is S2 work. The boundary contract and schema contract are documented but not user-facing. Review B becomes applicable starting at S2 (sign-in UI, callback handler, role-management surfaces) and again at S4–S7 (product integrations). |
-| Adversarial testing | **YES — required** | Phase S1 must defend against the architecture-counterexample attacks (direct/aliased/barrel/dynamic identity imports, raw Postgres construction, schema re-exports), the credential-leak attacks (raw session token or authorization code persisted in any text/JSON column), the privilege-bleed attack (`COMPANY_ADMIN` reaching product data, `SALES_ADMIN` reaching identity authority, education `ADMIN` numeric-level bleed), and the audit-poisoning attack (UPDATE/DELETE on `audit_events` from the runtime role). The fixtures already enumerate these. |
-| Browser / UX review | **NO** at this revision | No user surface exists at S1. The first browser-affecting surface is `apps/accounts/` sign-in (S2 Task 12) and the first cross-application browser surface is the first successful callback (S2 Task 13). |
+| review-a-correctness | **YES — required** | S1 has correctness-critical identity ownership, schema, migration, bootstrap, persistence, and backend adapter/API contracts. The review must verify that the separate database boundary, stable organization context, idempotency, error behavior, and product-data exclusion are coherent across the Tasks 1–5 surface and the reserved Task 6 contracts. |
+| review-b-security | **YES — required** | S1 establishes credential storage, session/code persistence, RBAC, audit, and the import/export boundary that protects them. Secret-persistence and audit-redaction tests are security evidence; this review must inspect the new `packages/db/src/company-identity/` and `packages/auth/src/company-identity/` surfaces and the import-boundary fixtures. |
+| review-c-ux-api | **YES — required** | S1 has no browser UI, but it does define backend contracts and adapter/API contracts. This review must assess input/output/error semantics, stable forbidden behavior, transport-independent boundaries, and whether the public contract remains usable without exposing the identity database to product applications. |
+| adversarial-testing | **YES — required** | S1 must defend against architecture-counterexample attacks, raw-secret persistence, privilege bleed, cross-organization grants, and audit mutation. The fixture and PostgreSQL suites must exercise these as named refutations rather than relying on source-text claims. |
+| ux-browser-review | **NO at this revision** | S1 has no browser UI or browser workflow. The first browser-affecting surface is `apps/accounts/` sign-in in S2 Task 12; API-contract review remains applicable now through `review-c-ux-api`. |
 
 ### Risk classification per phase
 
@@ -516,10 +523,11 @@ authored for Task 6**. Concretely:
    The role must not speculate about a future base; the base is the HEAD after
    the strategy commit.
 
-Until the strategy commit lands, the closest truthful substitute base is the
-current HEAD `304e2029f13fe655913bfaad4c4b95b1ab16828a`, which already
-includes the Task 6 `chore(measure): start` commit but does not include this
-strategy revision.
+Until the strategy commit lands, the retry-entry immutable baseline is
+`c1408b20279441943726c4227144960dd7cb1130`. After this retry's strategy commit
+lands, the orchestrator must still capture the post-strategy HEAD as the
+truthful `phase_base_sha` for any subsequent Task 6 Red cycle, as described
+above; neither SHA authorizes Task 6 before both dependency gates are accepted.
 
 ## 10. Phase S1 closure declaration
 
