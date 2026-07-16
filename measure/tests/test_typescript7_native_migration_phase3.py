@@ -1144,7 +1144,7 @@ class Phase3gBenchmarkRunnerContract(unittest.TestCase):
                     "Cached:    1 cached, 3 total\n"
                 ),
                 "ts7-repeat.log": (
-                    '{"text":"src/example.ts(1,1): error TS2322: incompatible"}\n'
+                    '{"text":"src/example.ts(2,1): error TS9999: transient Turbo task output"}\n'
                     "Cached:    0 cached, 3 total\n"
                 ),
                 "ts6.time": "Maximum resident set size (kbytes): 100\n",
@@ -1221,6 +1221,10 @@ class Phase3gBenchmarkRunnerContract(unittest.TestCase):
         self.assertTrue(observation["semantic_parity"]["accepted"])
         self.assertFalse(observation["turbo_execution_diagnostics"]["comparable"])
         self.assertEqual(
+            observation["turbo_execution_diagnostics"]["raw_order_dependent_diff_count"],
+            2,
+        )
+        self.assertEqual(
             observation["cache_state"],
             {
                 "ts6": "2 cached, 3 total",
@@ -1291,6 +1295,7 @@ class Phase3gBenchmarkRunnerContract(unittest.TestCase):
             self.assertEqual(completed.returncode, 0, completed.stderr)
             observation = json.loads(output_path.read_text(encoding="utf-8"))
         self.assertIsNone(observation["compiler_diagnostic_diff_count"])
+        self.assertIsNone(observation["order_dependent_diff_count"])
         self.assertEqual(observation["semantic_parity"]["status"], "incomplete")
         self.assertFalse(observation["turbo_execution_diagnostics"]["comparable"])
 

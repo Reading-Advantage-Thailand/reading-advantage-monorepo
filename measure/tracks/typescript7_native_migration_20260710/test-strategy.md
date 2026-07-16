@@ -197,7 +197,11 @@ path, not by content.
   compiler_version, --checkers, host_idle_class).
 - `rollout-record-schema.json` — JSON Schema for CI observation rows
   (run_id, lane, ts7_gate_exit, ts6_parity_exit, cache_state,
-  order_dependent_diff_count, peak_rss_kib).
+  order_dependent_diff_count, peak_rss_kib). The two diagnostic-difference
+  fields are zero only after the complete ledger-aware Phase 3 parity oracle
+  accepts all 39 configs; `null` keeps a rejected or incomplete observation
+  non-promotable. Turbo's truncated task logs remain raw troubleshooting
+  evidence and never determine rollout parity.
 
 Validation uses the Python standard library only: `json.JSONDecodeError`,
 schema-shape tests (assert presence and types of required keys), and one

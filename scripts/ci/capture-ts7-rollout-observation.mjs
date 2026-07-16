@@ -179,6 +179,7 @@ const [ts6Exit, ts7Exit, ts7RepeatExit, phase3ParityExit, ts6Log, ts7Log, ts7Rep
 const ts6Diagnostics = diagnostics(ts6Log);
 const ts7Diagnostics = diagnostics(ts7Log);
 const ts7RepeatDiagnostics = diagnostics(ts7RepeatLog);
+const rawTurboOrderDependentDiffCount = symmetricDifferenceCount(ts7Diagnostics, ts7RepeatDiagnostics);
 const parity = await semanticParity(values.get("--phase3-parity-summary"), phase3ParityExit);
 const output = values.get("--output");
 const observation = {
@@ -192,7 +193,8 @@ const observation = {
     ts7: cacheState(ts7Log),
     ts7_repeat_forced: cacheState(ts7RepeatLog),
   },
-  order_dependent_diff_count: symmetricDifferenceCount(ts7Diagnostics, ts7RepeatDiagnostics),
+  // Turbo stops after its first failing task, so only the complete Phase 3 oracle can establish ordering parity.
+  order_dependent_diff_count: parity.accepted ? 0 : null,
   compiler_diagnostic_diff_count: parity.accepted ? 0 : null,
   ts7_repeat_exit: ts7RepeatExit,
   peak_rss_kib: Math.max(
@@ -206,6 +208,7 @@ const observation = {
   turbo_execution_diagnostics: {
     comparable: false,
     reason: "turbo_short_circuits_after_different_failing_tasks; use_semantic_parity_for_promotion",
+    raw_order_dependent_diff_count: rawTurboOrderDependentDiffCount,
     ts6: ts6Diagnostics,
     ts7: ts7Diagnostics,
     ts7_repeat: ts7RepeatDiagnostics,
