@@ -4,11 +4,13 @@
 
 - [~] Task: Capture the reproducible build failure and import denominator.
   - [ ] Record the `proxy.ts` → `lib/session.ts` → `@reading-advantage/db` → `postgres` chain from a CI-compatible build.
-  - [ ] Freeze the four-client-component denominator and distinguish executable imports from type-only contracts.
-  - [ ] Inventory protected layouts, routes, and APIs plus their current role policy.
+  - [ ] Freeze the four executable client-component imports and separately audit declaration-only database type leakage.
+  - [ ] Inventory all protected layouts, routes, and 64 API handlers; classify each as server-guarded, intentionally public, or separately owned remediation work.
+  - [ ] Record that a Primary-only pull request currently bypasses root CI and establish the required path-filter change.
 - [ ] Task: Define runtime-safe session and client contracts.
   - [ ] Define an Edge/browser-safe session-cookie-name contract with no database or server-session imports.
   - [ ] Define client DTO/runtime-constant contracts for activity values, assignment rows, and license rows.
+  - [ ] Select the canonical shared server-role representation and an explicit presentation mapping, including `INTERN`, `SALES_REP`, and `SALES_ADMIN` dispositions.
   - [ ] Define Node-only session and role guards that validate opaque tokens before any authorization decision.
 - [ ] Task: Measure - User Manual Verification 'Phase 1: Contract & Schema Definition' (Protocol in workflow.md).
 
@@ -19,7 +21,8 @@
   - [ ] Prove the replacement client contracts contain the values and row shapes each component needs.
 - [ ] Task: Write failing server authorization tests.
   - [ ] Cover missing, malformed, expired, and revoked session tokens.
-  - [ ] Cover the existing allowed and denied role groups and prove proxy cookie presence is not authorization.
+  - [ ] Cover every canonical-role disposition and prove proxy cookie presence is not authorization.
+  - [ ] Cover server layouts/routes and the protected API matrix without treating the proxy matcher as API authorization.
 - [ ] Task: Write focused UI/route regressions.
   - [ ] Cover article-read chart filtering, student assignment rendering, and license edit/list DTO consumption.
 - [ ] Task: Measure - User Manual Verification 'Phase 2: Test' (Protocol in workflow.md).
@@ -31,8 +34,8 @@
   - [ ] Retain `validateSession(db, token)` only in a Node-only server helper.
   - [ ] Move role-sensitive redirects and protected-surface decisions behind server validation.
 - [ ] Task: Preserve server-authoritative access control.
-  - [ ] Add or strengthen server guards for student, teacher, admin, system, and settings surfaces according to the Phase 1 inventory.
-  - [ ] Verify protected APIs validate sessions independently of proxy matching.
+  - [ ] Add or strengthen server guards for every Phase 1 protected layout/route surface using the selected canonical roles.
+  - [ ] Verify the protected API matrix validates sessions independently of proxy matching; file separately owned authorization findings without scope expansion.
 - [ ] Task: Remove browser database imports.
   - [ ] Replace the reading-chart enum import with a browser-safe activity contract.
   - [ ] Replace assignment and license schema-derived client types with DTOs and type-only contracts.
@@ -40,13 +43,15 @@
 - [ ] Task: Apply minimal server-only bundling configuration if required.
   - [ ] Externalize `postgres` only after the proxy/client paths are clean and only for Node server bundling.
   - [ ] Prove no middleware/browser fallback, shim, or ignored error was introduced.
+- [ ] Task: Make Primary source changes run hosted CI.
+  - [ ] Add `apps/primary-advantage/**` to the root pull-request path filter.
+  - [ ] Prove a Primary-only pull request runs the hosted graph and root build job.
 - [ ] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md).
 
 ## Phase 4: Generate Docs & Doctor
 
 - [ ] Task: Run and record focused automated gates.
   - [ ] `CI=true pnpm --filter primary-advantage test`
-  - [ ] `pnpm --filter primary-advantage check-types:compat`
   - [ ] `pnpm --filter primary-advantage check-types`
   - [ ] `pnpm turbo run lint --filter=primary-advantage`
   - [ ] `pnpm --filter primary-advantage build`
