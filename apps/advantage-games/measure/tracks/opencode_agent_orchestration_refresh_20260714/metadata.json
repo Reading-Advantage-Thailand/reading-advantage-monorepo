@@ -1,0 +1,11 @@
+{
+  "track_id": "opencode_agent_orchestration_refresh_20260714",
+  "type": "chore",
+  "status": "complete",
+  "created_at": "2026-07-14T00:00:00Z",
+  "updated_at": "2026-07-14T00:00:00Z",
+  "description": "Rebalance OpenCode Measure and coder agents across subscriptions and harden orchestration handoff contracts.",
+  "estimated_tasks": 5,
+  "actual_tasks": 5,
+  "deviation_notes": "Global OpenCode configuration and shared skill files are outside the monorepo, so validation evidence is recorded in the plan rather than commit SHA references."
+}

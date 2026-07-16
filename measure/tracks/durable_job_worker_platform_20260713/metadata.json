@@ -1,0 +1,11 @@
+{
+  "track_id": "durable_job_worker_platform_20260713",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-07-13T00:00:00Z",
+  "updated_at": "2026-07-13T00:00:00Z",
+  "description": "Generalize the proven Postgres review_jobs reliability model into a portable durable-job port and services/worker runtime while preserving Codecamp review behavior; bind handlers to capabilities only after the kernel is accepted.",
+  "estimated_tasks": 20,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}

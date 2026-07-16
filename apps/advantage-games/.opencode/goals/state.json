@@ -1,0 +1,157 @@
+{
+  "version": 1,
+  "goals": [
+    {
+      "goalId": "343a6fdc-3b2d-4b56-ac3e-1c50a4e29eb0",
+      "condition": "use the measure-orchestrator skill to complete the Advantage Play Kit (APK) measure tracks to 100%. You are the orchestrator so you are the ultimate approval. Do not stop until this platform is complete.",
+      "successCriteria": "",
+      "constraints": "",
+      "mode": "normal",
+      "sessionID": "ses_0a45f12c0ffez2qJB56EbrJiYh",
+      "turnCount": 2,
+      "startedAt": 1783993766428,
+      "totalTokens": 124893,
+      "options": {
+        "maxTurns": 10,
+        "maxDurationMs": 900000,
+        "maxTokens": 200000,
+        "minDelayMs": 1500,
+        "maxRecentMessages": 50,
+        "noProgressTokenThreshold": 50,
+        "noProgressTurnsBeforePause": 2,
+        "noToolCallTurnsBeforePause": 2,
+        "budgetWrapupRatio": 0.8,
+        "warnTurnsRemaining": 3,
+        "warnDurationMsRemaining": 60000,
+        "warnTokensRemaining": 25000,
+        "maxPromptFailures": 3,
+        "resultRetentionMs": 604800000,
+        "maxStoredResults": 200
+      },
+      "lastStatus": "Goal auto-continue paused after 2 low-progress turn(s); the latest turn produced 0 output token(s). Run /goal resume to continue.",
+      "lastAssistantText": "",
+      "lastAssistantMessageID": "msg_f5e50d523001R5KNTqKrinFAFT",
+      "lastContinueAt": 1783993783516,
+      "lastProgressAt": 1783993799783,
+      "noProgressTurns": 2,
+      "noToolCallTurns": 0,
+      "blockedReason": "",
+      "budgetWrapupSent": false,
+      "stopped": true,
+      "stopReason": "no progress",
+      "promptFailures": 0,
+      "formatFailures": 0,
+      "messageIDs": [
+        "msg_f5e50f4f9001G0QHaFdH7wrcZ6"
+      ],
+      "history": [
+        {
+          "type": "set",
+          "detail": "Goal created with limits: 10 auto-continues, 900s, 200,000 context tokens.",
+          "timestamp": 1783993766432
+        },
+        {
+          "type": "auto-continue",
+          "detail": "Sent auto-continue prompt 1/10.",
+          "timestamp": 1783993779442
+        },
+        {
+          "type": "warning",
+          "detail": "Observed a low-progress turn below 50 output tokens; grace count 1/2.",
+          "timestamp": 1783993783514
+        },
+        {
+          "type": "auto-continue",
+          "detail": "Sent auto-continue prompt 2/10.",
+          "timestamp": 1783993783558
+        },
+        {
+          "type": "paused",
+          "detail": "Paused after 2 low-progress turn(s) below 50 output tokens.",
+          "timestamp": 1783993784899
+        }
+      ],
+      "checkpoints": [
+        {
+          "summary": "I’m taking ownership of the remaining APK program frontier, beginning by reconciling the previously dirty T2 Phase 2 evidence under its existing contracts before retrying independent acceptance.",
+          "timestamp": 1783993779407
+        }
+      ],
+      "lastCheckpoint": {
+        "summary": "I’m taking ownership of the remaining APK program frontier, beginning by reconciling the previously dirty T2 Phase 2 evidence under its existing contracts before retrying independent acceptance.",
+        "timestamp": 1783993779407
+      },
+      "focused": true
+    },
+    {
+      "goalId": "b35bb8f7-ce94-4a62-a548-27a4eaa6affd",
+      "condition": "use the measure-orchestrator skill to complete the Advantage Play Kit (APK) measure tracks to 100%. You are the orchestrator so you are the ultimate approval. Do not stop until this platform is complete.",
+      "successCriteria": "",
+      "constraints": "",
+      "mode": "normal",
+      "sessionID": "ses_0a1ac3440ffe2aO6VNzob22uq1",
+      "turnCount": 0,
+      "startedAt": 1783993977851,
+      "totalTokens": 102362,
+      "options": {
+        "maxTurns": 10,
+        "maxDurationMs": 900000,
+        "maxTokens": 200000,
+        "minDelayMs": 1500,
+        "maxRecentMessages": 50,
+        "noProgressTokenThreshold": 50,
+        "noProgressTurnsBeforePause": 2,
+        "noToolCallTurnsBeforePause": 2,
+        "budgetWrapupRatio": 0.8,
+        "warnTurnsRemaining": 3,
+        "warnDurationMsRemaining": 60000,
+        "warnTokensRemaining": 25000,
+        "maxPromptFailures": 3,
+        "resultRetentionMs": 604800000,
+        "maxStoredResults": 200
+      },
+      "lastStatus": "max duration reached (900s); requested final handoff.",
+      "lastAssistantText": "",
+      "lastAssistantMessageID": "msg_f5e5b2c48001noOTZDSwLd4a3F",
+      "lastContinueAt": 0,
+      "lastProgressAt": 1783994460784,
+      "noProgressTurns": 0,
+      "noToolCallTurns": 0,
+      "blockedReason": "",
+      "budgetWrapupSent": true,
+      "stopped": true,
+      "stopReason": "max duration reached (900s)",
+      "promptFailures": 0,
+      "formatFailures": 0,
+      "messageIDs": [
+        "msg_f5e53cc8a0010SJhLCztoLZ52c",
+        "msg_f5e5403fa001AvXKVXa7N9iMCL",
+        "msg_f5e541a940013fnWYbcVGDIGO2",
+        "msg_f5e544163001UdiZJ2xd9ONCE4",
+        "msg_f5e5472bb001bBwljMd7gNQBa9",
+        "msg_f5e549f39001Mc88Ywtpm6XZF6",
+        "msg_f5e54f522001zLrk2rsobX89l0",
+        "msg_f5e5ace030016JkFbqgVo3FATC",
+        "msg_f5e5af3cc001fY8IgboKGNvxfd"
+      ],
+      "history": [
+        {
+          "type": "set",
+          "detail": "Goal created with limits: 10 auto-continues, 900s, 200,000 context tokens.",
+          "timestamp": 1783993977851
+        },
+        {
+          "type": "limit",
+          "detail": "max duration reached (900s); requested a final handoff.",
+          "timestamp": 1783999570196
+        }
+      ],
+      "checkpoints": [],
+      "lastCheckpoint": null,
+      "focused": true
+    }
+  ],
+  "results": [],
+  "archives": [],
+  "orderedSessions": []
+}

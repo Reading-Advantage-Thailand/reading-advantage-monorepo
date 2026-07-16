@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vibe-Coding Arena Poster</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@400;600;700;800&family=Outfit:wght@400;600;700;800&display=swap');
+
+    :root {
+      --cyan: #00f0ff;
+      --pink: #ff007f;
+      --white: #ffffff;
+      --bg-dark: rgba(5, 5, 5, 0.75);
+      --font-thai: 'Kanit', sans-serif;
+      --font-eng: 'Outfit', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #030303;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: var(--font-thai);
+      padding: 20px;
+    }
+
+    /* 3:4 Aspect Ratio Poster Canvas */
+    .poster-canvas {
+      width: 750px;
+      height: 1000px;
+      background-image: url('vibe-coding-bg.jpg');
+      background-size: cover;
+      background-position: center;
+      border: 2px solid #1f1f23;
+      border-radius: 20px;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.8), 0 0 40px rgba(0, 240, 255, 0.15);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 50px;
+    }
+
+    /* Top/Bottom Ambient Border Glow */
+    .poster-canvas::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, var(--cyan), var(--pink));
+    }
+
+    .header-zone {
+      text-align: center;
+      z-index: 10;
+    }
+
+    .badge {
+      display: inline-block;
+      font-family: var(--font-eng);
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: var(--cyan);
+      background: rgba(0, 240, 255, 0.1);
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      padding: 6px 20px;
+      border-radius: 9999px;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+    }
+
+    h1.title {
+      font-family: var(--font-eng);
+      font-size: 3.8rem;
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: 0.05em;
+      line-height: 1.1;
+      text-shadow: 0 0 20px rgba(0, 240, 255, 0.6), 0 0 40px rgba(255, 0, 127, 0.4);
+      margin-bottom: 5px;
+    }
+
+    .subtitle {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--cyan);
+      letter-spacing: 0.02em;
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+    }
+
+    /* Bottom Info Card */
+    .info-panel {
+      background: var(--bg-dark);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 35px;
+      z-index: 10;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 25px;
+      margin-bottom: 25px;
+    }
+
+    .info-section h3 {
+      font-size: 1.1rem;
+      color: var(--cyan);
+      border-bottom: 1px solid rgba(0, 240, 255, 0.2);
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .info-text {
+      color: #e2e8f0;
+      font-size: 1.05rem;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .info-text strong {
+      color: var(--white);
+    }
+
+    .prizes-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .prize-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 0, 127, 0.05);
+      border: 1px solid rgba(255, 0, 127, 0.15);
+      padding: 6px 12px;
+      border-radius: 6px;
+    }
+
+    .prize-item.first {
+      background: rgba(0, 240, 255, 0.05);
+      border-color: rgba(0, 240, 255, 0.25);
+    }
+
+    .prize-item span {
+      font-size: 0.95rem;
+      color: #e2e8f0;
+    }
+
+    .prize-item strong {
+      font-family: var(--font-eng);
+      color: var(--pink);
+      font-size: 1.1rem;
+    }
+
+    .prize-item.first strong {
+      color: var(--cyan);
+    }
+
+    .footer-note {
+      text-align: center;
+      font-size: 1rem;
+      color: var(--white);
+      font-weight: 600;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 20px;
+      letter-spacing: 0.05em;
+    }
+
+    /* Print settings - optimizes page size for standard letter/A4 printing */
+    @media print {
+      body {
+        background-color: #030303 !important;
+        padding: 0 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      .poster-canvas {
+        width: 100% !important;
+        height: 100vh !important;
+        border: none !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        padding: 40px !important;
+        background-image: url('vibe-coding-bg.jpg') !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="poster-canvas">
+    
+    <div class="header-zone">
+      <div class="badge">Next-Gen Game Jam</div>
+      <h1 class="title">VIBE-CODING</h1>
+      <div class="subtitle">การแข่งขันสร้างสรรค์เกมคำศัพท์และประโยคภาษาอังกฤษ</div>
+    </div>
+
+    <div class="info-panel">
+      <div class="detail-grid">
+        <div class="info-section">
+          <h3>⏱️ วันเวลาแข่งขัน</h3>
+          <div class="info-text">วันแข่งขัน: <strong>วันจันทร์นี้</strong></div>
+          <div class="info-text">เริ่มกวดโค้ด: <strong>09:00 น.</strong></div>
+          <div class="info-text">กำหนดส่งงาน: <strong>17:00 น. ตรง</strong></div>
+          <div class="info-text">รอบนำเสนอ (Pitch): <strong>คนละ 3 นาที</strong></div>
+        </div>
+
+        <div class="info-section">
+          <h3>💰 เงินรางวัลรวม 1,750 บาท</h3>
+          <div class="prizes-list">
+            <div class="prize-item first">
+              <span>🥇 ชนะเลิศอันดับ 1</span>
+              <strong>1,000 THB</strong>
+            </div>
+            <div class="prize-item">
+              <span>🥈 รองอันดับ 1</span>
+              <strong>500 THB</strong>
+            </div>
+            <div class="prize-item">
+              <span>🥉 รองอันดับ 2</span>
+              <strong>250 THB</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="detail-grid" style="grid-template-columns: 1fr; margin-bottom: 20px;">
+        <div class="info-section" style="margin-bottom: 0;">
+          <h3>👥 คณะกรรมการ</h3>
+          <div class="info-text" style="justify-content: flex-start; gap: 20px;">
+            <span><strong>พี่โอเลี้ยง (Oleang):</strong> Lead Developer</span>
+            <span><strong>คุณแดเนียล (Daniel):</strong> Project Manager</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-note">
+        ท้าดวลไอเดีย 8 ชั่วโมงจบ — เขียนเกมที่ดีที่สุดเพื่อแพลตฟอร์ม Reading Advantage!
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

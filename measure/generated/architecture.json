@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "measure.architecture.v1",
+  "generatedAt": "2026-07-12T10:51:02+07:00",
+  "sourceRevision": "1cc448aef3b0a3c371195121b4acffa7775781fe",
+  "projectType": "typescript-monorepo",
+  "workspaceRoots": {
+    "apps": [
+      "activity-vinext-fixture",
+      "advantage-games",
+      "codecamp-advantage",
+      "marketing",
+      "primary-advantage",
+      "reading-advantage",
+      "sales-advantage",
+      "science-advantage",
+      "www-reading-advantage"
+    ],
+    "packages": [
+      "__tests__",
+      "activity-react",
+      "activity-runtime",
+      "activity-tutorial",
+      "advantage-play-kit",
+      "ai",
+      "api",
+      "auth",
+      "auth-client",
+      "codecamp-knowledge",
+      "config",
+      "db",
+      "domain",
+      "game-cartridges",
+      "game-contracts",
+      "integrations",
+      "knowledge-space-core",
+      "knowledge-space-practice",
+      "mastery-runtime-compat",
+      "practice-core",
+      "reading-advantage-scripts",
+      "srs-engine",
+      "storage",
+      "types",
+      "ui",
+      "utils",
+      "webhooks"
+    ]
+  },
+  "routeCount": 594
+}

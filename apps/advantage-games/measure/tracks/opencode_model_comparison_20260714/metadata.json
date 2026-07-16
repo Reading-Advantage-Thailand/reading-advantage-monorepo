@@ -1,0 +1,11 @@
+{
+  "track_id": "opencode_model_comparison_20260714",
+  "type": "research",
+  "status": "complete",
+  "created_at": "2026-07-14T00:00:00Z",
+  "updated_at": "2026-07-14T00:00:00Z",
+  "description": "Inventory OpenCode subscription and low-cost API models and compare benchmark evidence across reasoning levels.",
+  "estimated_tasks": 4,
+  "actual_tasks": 4,
+  "deviation_notes": "Exact public benchmark and reasoning data were not available for every Volcengine alias; report marks family-level proxies and remaining gaps."
+}

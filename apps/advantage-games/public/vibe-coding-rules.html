@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vibe-Coding Arena — Official Rules</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&family=Sarabun:wght@300;400;500;600;700&display=swap');
+
+    :root {
+      --bg: #050505;
+      --card-bg: #0c0c0e;
+      --border: #1f1f23;
+      --text-primary: #f3f4f6;
+      --text-secondary: #9ca3af;
+      --cyan: #00f0ff;
+      --pink: #ff007f;
+      --yellow: #ffdf00;
+      --font-title: 'Kanit', sans-serif;
+      --font-body: 'Sarabun', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      line-height: 1.7;
+      padding: 60px 20px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      padding: 50px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 50px rgba(0, 240, 255, 0.03);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Decorative Top Neon Line */
+    .container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--cyan), var(--pink));
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 50px;
+      padding-bottom: 30px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .badge {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--cyan);
+      background: rgba(0, 240, 255, 0.08);
+      padding: 6px 16px;
+      border-radius: 9999px;
+      border: 1px solid rgba(0, 240, 255, 0.2);
+      margin-bottom: 16px;
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.1);
+    }
+
+    header h1 {
+      font-family: var(--font-title);
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 12px;
+      letter-spacing: -0.01em;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    }
+
+    header .subtitle {
+      font-size: 1.15rem;
+      color: var(--text-secondary);
+      font-weight: 300;
+    }
+
+    .section {
+      margin-bottom: 45px;
+    }
+
+    .section h2 {
+      font-family: var(--font-title);
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section h2::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 24px;
+      background: var(--cyan);
+      border-radius: 2px;
+    }
+
+    .section.prizes h2::before {
+      background: var(--pink);
+    }
+
+    p {
+      margin-bottom: 16px;
+      color: var(--text-secondary);
+      font-size: 1rem;
+    }
+
+    strong {
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    ul, ol {
+      margin-left: 24px;
+      margin-bottom: 20px;
+    }
+
+    li {
+      margin-bottom: 10px;
+      color: var(--text-secondary);
+      font-size: 0.98rem;
+    }
+
+    li strong {
+      color: #ffffff;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 25px;
+      margin-bottom: 40px;
+    }
+
+    @media (max-width: 768px) {
+      .card-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .dark-card {
+      background: #111115;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 25px;
+      transition: border-color 0.2s;
+    }
+
+    .dark-card:hover {
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .dark-card h3 {
+      font-family: var(--font-title);
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 15px;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dark-card.prizes-card {
+      border-left: 3px solid var(--pink);
+    }
+
+    .dark-card.judges-card {
+      border-left: 3px solid var(--cyan);
+    }
+
+    .prize-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .prize-row:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .prize-title {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+    }
+
+    .prize-value {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: var(--pink);
+      background: rgba(255, 0, 127, 0.05);
+      border: 1px solid rgba(255, 0, 127, 0.15);
+      padding: 2px 10px;
+      border-radius: 4px;
+    }
+
+    .sub-section {
+      margin-left: 15px;
+      margin-bottom: 25px;
+      padding-left: 15px;
+      border-left: 1px solid var(--border);
+    }
+
+    .sub-section h3 {
+      font-family: var(--font-title);
+      font-size: 1.15rem;
+      font-weight: 500;
+      color: var(--cyan);
+      margin-bottom: 12px;
+    }
+
+    code {
+      font-family: var(--font-mono);
+      background-color: #1c1c24;
+      color: #e06c75;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.88rem;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    pre {
+      background-color: #121216;
+      border: 1px solid var(--border);
+      padding: 20px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 15px 0;
+    }
+
+    pre code {
+      background-color: transparent;
+      padding: 0;
+      font-size: 0.85rem;
+      color: #abb2bf;
+      border: none;
+    }
+
+    .score-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      background: #111115;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 12px;
+    }
+
+    .score-label {
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .score-points {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: var(--cyan);
+      background: rgba(0, 240, 255, 0.05);
+      border: 1px solid rgba(0, 240, 255, 0.15);
+      padding: 2px 10px;
+      border-radius: 4px;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 50px;
+      padding-top: 30px;
+      border-top: 1px solid var(--border);
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    /* Print Styles: Force high-fidelity dark-mode layout matching the screen */
+    @media print {
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      body {
+        background-color: var(--bg) !important;
+        color: var(--text-primary) !important;
+        padding: 0 !important;
+      }
+      .container {
+        border: 1px solid var(--border) !important;
+        box-shadow: none !important;
+        padding: 40px !important;
+        background: var(--card-bg) !important;
+      }
+      .container::before {
+        display: block !important;
+        height: 4px !important;
+        background: linear-gradient(90deg, var(--cyan), var(--pink)) !important;
+      }
+      .dark-card, .score-row, pre, code {
+        background: #111115 !important;
+        color: var(--text-primary) !important;
+        border: 1px solid var(--border) !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .poster-print-section {
+        page-break-before: always !important;
+        display: block !important;
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+        border: none !important;
+      }
+      .poster-print-section h2 {
+        display: none !important;
+      }
+      .poster-print-section img {
+        max-width: 100% !important;
+        max-height: 100% !important;
+        height: auto !important;
+        box-shadow: none !important;
+        border: none !important;
+        border-radius: 0 !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <div class="badge">Next-Gen Game Jam</div>
+      <h1>VIBE-CODING ARENA</h1>
+      <div class="subtitle">การแข่งขันสร้างสรรค์เกมคำศัพท์และประโยค สำหรับนักศึกษาฝึกงาน</div>
+    </header>
+
+    <div class="section">
+      <h2>1. กำหนดการและเวลากิจกรรม</h2>
+      <p>การแข่งขันเขียนโค้ดแบบ Fast-paced จบในวันเดียว เพื่อค้นหาผู้สร้างเกมที่สามารถมอบประสบการณ์การเรียนรู้ที่ดีที่สุดสำหรับผู้ใช้งานแพลตฟอร์มของเรา</p>
+      <ul>
+        <li><strong>ระยะเวลาการพัฒนา:</strong> วันจันทร์ เวลา <strong>09:00 น. - 17:00 น.</strong> (มีเวลาเขียนโค้ดทั้งหมด 8 ชั่วโมง)</li>
+        <li><strong>กำหนดการส่งมอบงาน:</strong> <strong>17:00 น. ตรง</strong></li>
+        <li><strong>ระบบนำเสนอผลงาน (Pitch & Demo):</strong> คนละ 3 นาทีต่อหน้ากรรมการ โดยต้องแสดงศักยภาพของเกมให้เห็นจริงทั้งในมุมมองมือถือแนวตั้ง (Compact Portrait) และมุมมองหน้าจอคอมพิวเตอร์แนวนอน (Wide Landscape)</li>
+      </ul>
+    </div>
+
+    <div class="card-grid">
+      <div class="dark-card judges-card">
+        <h3>👥 คณะกรรมการ</h3>
+        <p>การแข่งขันนี้ได้รับเกียรติจากคณะกรรมการหลักสองท่านในการประเมินและรีวิวผลงาน:</p>
+        <div style="margin-top: 15px;">
+          <div class="prize-row"><span class="prize-title">Lead Developer</span><strong>พี่โอเลี้ยง (Oleang)</strong></div>
+          <div class="prize-row"><span class="prize-title">Project Manager</span><strong>คุณแดเนียล (Daniel)</strong></div>
+        </div>
+      </div>
+
+      <div class="dark-card prizes-card">
+        <h3>🏆 รางวัลการแข่งขัน</h3>
+        <p>ชิงรางวัลรวมมูลค่า 1,750 บาท สำหรับเกมที่มีคะแนนผลงานโดดเด่นสูงสุด 3 อันดับ:</p>
+        <div style="margin-top: 15px;">
+          <div class="prize-row"><span class="prize-title">🥇 รางวัลชนะเลิศ (อันดับ 1)</span><span class="prize-value">1,000 บาท</span></div>
+          <div class="prize-row"><span class="prize-title">🥈 รางวัลรองอันดับ 1 (อันดับ 2)</span><span class="prize-value">500 บาท</span></div>
+          <div class="prize-row"><span class="prize-title">🥉 รางวัลรองอันดับ 2 (อันดับ 3)</span><span class="prize-value">250 บาท</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>2. ข้อกำหนดทางโครงสร้างระบบ (Technical Mandates)</h2>
+      <p>เกมที่ส่งเข้าประกวดจะต้องปฏิบัติตามมาตรฐานระบบของแพลตฟอร์ม (Advantage Play Kit Rules) เพื่อให้ระบบส่วนกลางสามารถทำคอมไพล์และพอร์ตขึ้นโปรดักชันได้จริง:</p>
+      
+      <div class="sub-section">
+        <h3>3.1 การจัดสรรข้อมูล (Educational I/O Interface)</h3>
+        <ul>
+          <li><strong>อินพุตคำศัพท์ (Input):</strong> เกมต้องประมวลผลคำศัพท์โดยรองรับรูปแบบอาร์เรย์ของคำวัตถุตามโครงสร้างสัญญาอินเทอร์เฟซ:
+            <pre><code>type VocabularyItem = {
+  term: string;        // คำศัพท์ หรือ ประโยคต้นทางภาษาอังกฤษ
+  translation: string; // คำแปล หรือ คำตอบปลายทางภาษาไทย
+}</code></pre>
+          </li>
+          <li><strong>เอาต์พุตและคะแนน (Output):</strong> เมื่อผู้เล่นจบเกม ระบบต้องส่งยอดคะแนนสะสมจริงผ่านฟังก์ชัน <code>onComplete(xp)</code> โดยคำนวณตามหลักเกณฑ์กลาง:
+            <p style="margin: 15px 0; text-align: center; font-family: var(--font-mono); font-weight: bold; color: #ffffff;">
+              XP = Math.floor(correctAnswers * accuracy)
+            </p>
+            <p style="text-align: center; font-size: 0.85rem; color: var(--text-secondary);">
+              *หมายเหตุ: <code>accuracy</code> คำนวณจาก <code>correctAnswers / totalAttempts</code>
+            </p>
+          </li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <h3>3.2 โครงสร้างกราฟิกเฟรมเรตสูง (Canvas-First Canvas)</h3>
+        <ul>
+          <li><strong>รันบน Canvas เท่านั้น:</strong> ห้ามใช้ DOM Element หรือกล่อง HTML ธรรมดามาตกแต่งซ้อนทับบริเวณเล่นเกม (ยกเว้นคอมโพเนนต์ระดับโฮสต์) ทุกฉากและตัวละครต้องจัดการผ่านคลาสกราฟิก Phaser 4 เท่านั้น</li>
+          <li><strong>ต้องมีหน้า Preload โหลดตัวเกม:</strong> เพื่อป้องกันอาการสะดุดตอนฉากกำลังรัน ทุกผลงานต้องมีกระบวนการรอโหลด assets และไฟล์เสียงประกอบทั้งหมดให้เสร็จสิ้นก่อนเริ่มเกม</li>
+          <li><strong>จัดการ Memory Teardown:</strong> โค้ดคอมโพเนนต์ต้องทำความสะอาดทรัพยากรทุกครั้งเมื่อ unmount (สั่งปิด phaser instance, ดับเสียง, และยกเลิกการรออีเวนต์) เพื่อป้องกันปัญหาหน้าเว็บค้างจาก Memory Leak</li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <h3>3.3 รองรับขนาดสัดส่วนหน้าจอ (Responsive Viewports)</h3>
+        <ul>
+          <li><strong>Compact Profile (390x844):</strong> รูปแบบแนวตั้งสำหรับสมาร์ตโฟน ปุ่มควบคุมทิศทางต้องหลบมุม ไม่บดบังปุ่มตอบคำถามหรือประโยคโจทย์ที่ผู้เรียนจำเป็นต้องอ่าน</li>
+          <li><strong>Wide Profile (1440x900):</strong> รูปแบบแนวนอนสำหรับคอมพิวเตอร์ ขยายภาพพื้นหลังเพื่อใช้พื้นที่อย่างมีสไตล์และสัดส่วนคงที่ ห้ามสเกลยืดสัดส่วนหน้าจอมือถือขึ้นเดสก์ท็อปตรงๆ</li>
+          <li><strong>การสลับอุปกรณ์ควบคุม:</strong> ปรับเลย์เอาต์การควบคุมอัตโนมัติ (สัมผัสผ่าน Virtual Joystick หรือ D-pad บนจอมือถือ และปุ่มคีย์บอร์ด WASD บนเดสก์ท็อป)</li>
+          <li><strong>ล็อคหน้าจอไม่ให้หลุด:</strong> ใส่ CSS <code>touch-action: none</code> และ <code>user-select: none</code> บนตัวโฮสต์ เพื่อตัดปัญหาเบราว์เซอร์เผลอดึงหน้าจอลงเพื่อรีเฟรชขณะกำลังเลื่อนเล่นเกม</li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <h3>3.4 การพัฒนาบนระบบธีมคู่ (Dual-Theming System)</h3>
+        <ul>
+          <li>ตัวเกมต้องสนับสนุนการเปลี่ยนภาพสกินระหว่างสองธีมของระบบอย่างราบรื่น ได้แก่ <strong>Chibi Quest</strong> (การ์ตูนผจญภัยน่ารัก) และ <strong>Riven Lands</strong> (แฟนตาซีดาร์ก RPG) โดยห้ามไม่ให้ตัวเลขพิกัด ระยะกล่องชน (collider) หรือตำแหน่งฉากเคลื่อนที่คลาดเคลื่อนไปจากเดิม</li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <h3>3.5 ความง่ายและถูกต้องในการอ่านภาษาไทย (Text Legibility)</h3>
+        <ul>
+          <li>ตัวหนังสือประโยคไทยและคำถามต้องใช้ฟอนต์ที่ชัดเจน ไม่อัดแน่นกันเกินไปจนสระจมดินหรือซ้อนทับ และต้องไม่โดนย่อหรือถูกตัดทิ้งด้วยเครื่องหมายจุดไข่ปลา (<code>...</code>) กล่องข้อความควรมีพื้นหลังทึบเพื่อความชัดเจนในการอ่านข้อสอบสะกดคำ</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>3. เกณฑ์การประเมินคะแนน (100 คะแนนเต็ม)</h2>
+      <div class="score-row">
+        <span class="score-label">🕹️ ความสนุกและการดีไซน์ไอเดียระบบเกม (Gameplay & Fun)</span>
+        <span class="score-points">30 คะแนน</span>
+      </div>
+      <div class="score-row">
+        <span class="score-label">🎓 ความแนบเนียนในการเรียนรู้และการสะกดคำศัพท์ (Educational Integration)</span>
+        <span class="score-points">20 คะแนน</span>
+      </div>
+      <div class="score-row">
+        <span class="score-label">📱 ความลื่นไหลของระบบสัดส่วนจอและการควบคุม (Responsive & Polish)</span>
+        <span class="score-points">20 คะแนน</span>
+      </div>
+      <div class="score-row">
+        <span class="score-label">🎨 ความสมบูรณ์แบบในการสลับสกินธีมภาพสองขั้ว (Theme Swap Fidelity)</span>
+        <span class="score-points">15 คะแนน</span>
+      </div>
+      <div class="score-row">
+        <span class="score-label">🧹 ความเรียบร้อยสะอาดของโค้ดและการคืนระบบความจำ (Code Quality & Health)</span>
+        <span class="score-points">15 คะแนน</span>
+      </div>
+    </div>
+
+    <div class="section poster-print-section" style="text-align: center; margin-top: 30px; border-top: 1px solid var(--border); padding-top: 30px;">
+      <h2 style="justify-content: center;">🎨 โปสเตอร์ประชาสัมพันธ์กิจกรรม</h2>
+      <p class="no-print" style="margin-bottom: 20px;">
+        <a href="vibe-coding-poster.jpg" target="_blank" style="color: var(--cyan); text-decoration: underline; font-weight: 600;">เปิดไฟล์รูปภาพโปสเตอร์ (vibe-coding-poster.jpg)</a> | 
+        <a href="vibe-coding-poster.html" target="_blank" style="color: var(--cyan); text-decoration: underline; font-weight: 600;">เปิดไฟล์โปสเตอร์สไตล์เว็บสำหรับพิมพ์ (vibe-coding-poster.html)</a>
+      </p>
+      <img src="vibe-coding-poster.jpg" alt="Vibe-Coding Poster" style="max-width: 100%; max-height: 700px; object-fit: contain; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 8px 30px rgba(0,0,0,0.6);">
+    </div>
+
+    <footer class="no-print">
+      <p>จัดเตรียมโดยโครงการพัฒนาระบบการศึกษา Reading Advantage — โค้ดให้สนุก ปล่อยพลังให้เต็มที่ในสมรภูมินี้!</p>
+    </footer>
+  </div>
+
+</body>
+</html>

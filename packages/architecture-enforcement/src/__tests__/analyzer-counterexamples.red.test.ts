@@ -18,7 +18,6 @@ const fixtures = [
  * @returns Analyzer module once the Phase 3 implementation exists.
  */
 async function loadAnalyzer() {
-  // @ts-expect-error The absent analyzer is the intentional Phase 2 Red gate.
   return import("../analyzer.js");
 }
 
@@ -26,6 +25,7 @@ describe("architecture analyzer counterexamples (expected Red in Phase 2)", () =
   it.each(fixtures)(
     "$id produces its named ownership result",
     async (fixture) => {
+      // @ts-expect-error Rule detection is introduced by Tasks 10 and 11.
       const { analyzeArchitectureSources } = await loadAnalyzer();
       const result = await analyzeArchitectureSources({
         repoRoot: resolve(repositoryRoot, fixture.fixtureRoot),

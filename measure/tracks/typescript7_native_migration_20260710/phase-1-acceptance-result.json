@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "role": "phase-acceptance",
+  "track": "typescript7_native_migration_20260710",
+  "phase": "Phase 1: Contract & Schema Definition",
+  "baseline_sha": "879112353411912b80849037016cbd9ed2c1bf63",
+  "role_base_sha": "1539803df0d4681084e1e5e865a677da5863cafe",
+  "audited_head_sha": "1539803df0d4681084e1e5e865a677da5863cafe",
+  "applicability": "applicable",
+  "status": "fail",
+  "summary": "The prior packages/types-only blocker was partially remediated: the focused 20-test suite passes, 31 check-types captures and raw-log hashes validate, and the new read-only check reports equality against its filtered inventory. Phase 1 still fails because that inventory is not the complete TypeScript workspace/configuration surface claimed by the plan, and the strategy's required global closeout gate is red at the audited HEAD.",
+  "blocking_findings": [
+    "The claimed complete tsconfig inventory is internally and externally incomplete. surface-inventory.json declares tsconfig_count=39 but contains 38 tsconfigs rows plus a separately represented shared base config; git ls-files at audited HEAD finds 40 tracked *tsconfig*.json files. packages/utils/tsconfig.json is not represented anywhere in the tsconfigs list even though packages/utils/package.json declares TypeScript 5.9.3 and its tsup build emits declarations. This violates the Phase 1 plan requirement to enumerate every tsconfig and identify emit/declaration builds.",
+    "The all-workspace baseline remediation checks only the 31 workspaces selected from surface-inventory.json rows whose script equals check-types. The same inventory records 35 non-root manifests declaring TypeScript; packages/ui and packages/utils declare TypeScript and emit declarations through tsup but have no check-types script, so neither has diagnostic/timing evidence in phase1-workspace-baseline.json. packages/config also declares TypeScript but is excluded. --check-completeness proves equality only between the baseline and this same filtered 31-row list; it does not prove the plan/spec claim that every TypeScript workspace was measured.",
+    "The Phase 1 Green/closeout command required by test-strategy.md is not green at audited HEAD. tests/orchestrator_catalog.sh and tests/orchestrator_supervisor_invariants.sh pass, but tests/orchestrator_marker_vocabulary.sh fails on deprecated [ ] markers in backend_architecture_enforcement_20260713, backend_capability_kernel_20260713, and durable_job_worker_platform_20260713; measure/doctor.sh fails for the same reason. Those paths were already untracked in the supplied pre-role snapshot and are unrelated parallel work, but the explicitly required closeout gate still cannot be claimed as passing."
+  ],
+  "nonblocking_findings": [
+    "phase1-workspace-baseline.json honestly records 15/31 captures as contaminated and four non-zero results, including reading-advantage exit 134 with zero diagnostics. This evidence is useful, but Phase 3 parity and benchmarking will need a successful, controlled reading-advantage baseline before they can make diagnostic-parity or performance claims.",
+    "The spec still states 24 tsconfigs, 25 TypeScript declarations, and 21 tsc workspaces. The Phase 1 evidence reports larger counts, and those acceptance targets need a reviewed amendment after the inventory is corrected."
+  ],
+  "evidence": [
+    "git rev-parse HEAD remained 1539803df0d4681084e1e5e865a677da5863cafe throughout the audit, matching the supplied role-base/current audited HEAD. Baseline 879112353411912b80849037016cbd9ed2c1bf63 is an ancestor of audited HEAD.",
+    "Commits 32346d6a and 47683590 are present after the immutable baseline. 32346d6a added capture-phase1-baseline.py, phase1-workspace-baseline.json, and 31 raw logs; 47683590 added --check-completeness.",
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase1 exited 0: 20 tests ran in 0.021s.",
+    "python3 measure/tracks/typescript7_native_migration_20260710/capture-phase1-baseline.py --check-completeness exited 0 and reported 31 inventory workspaces, 31 captures, equal sets, and all accounted.",
+    "An independent read-only integrity check confirmed 31 unique filtered inventory rows, 31 unique baseline rows, set equality, valid non-negative timing/diagnostic fields, integer exit statuses, and matching SHA-256 for every referenced raw log. Summary is 27 pass, 4 fail, 0 timeout, 15 contaminated, 16 clean.",
+    "A current-HEAD tracked-file comparison found 40 *tsconfig*.json paths versus 38 surface-inventory tsconfigs rows; packages/config/tsconfig/base.json is separately represented, while packages/utils/tsconfig.json is absent. packages/utils has a tsup --dts build.",
+    "A manifest-to-baseline comparison found TypeScript-declaring packages/config, packages/ui, and packages/utils outside the 31 captured check-types workspaces. packages/ui and packages/utils both use tsup --dts build scripts.",
+    "Review A, Review B, Review C, adversarial testing, and UX browser review remain not applicable for Phase 1 under test-strategy.md section 14: Phase 1 is artifact-only, changes no package resolution or production/toolchain state, and its applicability matrix marks those roles n/a.",
+    "The supplied pre-role snapshot already contained the unrelated untracked backend_architecture_enforcement_20260713, backend_capability_kernel_20260713, and durable_job_worker_platform_20260713 paths; this audit did not modify them."
+  ],
+  "commands": [
+    "git rev-parse HEAD (pass: 1539803df0d4681084e1e5e865a677da5863cafe before, during, and after checks)",
+    "git merge-base --is-ancestor 879112353411912b80849037016cbd9ed2c1bf63 HEAD (pass)",
+    "git show --stat/--no-ext-diff 32346d6a and 47683590 (pass: remediation commits inspected)",
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase1 (pass: 20/20)",
+    "python3 measure/tracks/typescript7_native_migration_20260710/capture-phase1-baseline.py --check-completeness (pass: 31/31 filtered rows)",
+    "independent Python integrity check over inventory, baseline, raw-log SHA-256, timings, exit statuses, and diagnostic counts (pass)",
+    "git ls-files *tsconfig*.json compared with surface-inventory.json (fail: 40 tracked paths versus 38 list rows; packages/utils/tsconfig.json omitted)",
+    "TypeScript manifest workspace set compared with captured check-types workspace set (fail: packages/config, packages/ui, and packages/utils omitted from capture)",
+    "bash tests/orchestrator_catalog.sh (pass)",
+    "bash tests/orchestrator_marker_vocabulary.sh (fail: deprecated markers in three unrelated untracked tracks)",
+    "bash tests/orchestrator_supervisor_invariants.sh (pass)",
+    "bash measure/doctor.sh (fail: marker vocabulary gate)"
+  ],
+  "changed_files": [
+    "measure/tracks/typescript7_native_migration_20260710/phase-1-acceptance-result.json"
+  ],
+  "test_strategy_violations": [
+    "Phase 1 closeout gate is red because orchestrator_marker_vocabulary and measure/doctor fail at audited HEAD.",
+    "The completed Phase 1 integration-surface inventory does not enumerate every tracked tsconfig or every TypeScript declaration-emitting workspace."
+  ],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "retry_implementation",
+  "confidence": "high"
+}

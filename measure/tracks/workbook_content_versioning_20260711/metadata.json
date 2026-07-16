@@ -1,0 +1,39 @@
+{
+  "track_id": "workbook_content_versioning_20260711",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-07-11T07:26:37Z",
+  "updated_at": "2026-07-11T07:26:37Z",
+  "description": "Create versioned, reproducible workbook editions that reference Reading Advantage and Primary Advantage articles and storage assets without duplicating their mutable source content.",
+  "estimated_tasks": 15,
+  "actual_tasks": null,
+  "deviation_notes": "Planning only. The standalone advantage-workbooks dashboard import, a full canonical-content migration, and PDF rendering implementation are intentionally deferred until this edition contract is proven.",
+  "sprint": {
+    "goal": "Publish reproducible workbook editions from existing Reading Advantage and Primary Advantage content without creating a second mutable content corpus.",
+    "stories": [
+      {
+        "id": "S1",
+        "title": "Select source content",
+        "size": "M",
+        "priority": "Must",
+        "status": "pending"
+      },
+      {
+        "id": "S2",
+        "title": "Publish immutable editions",
+        "size": "L",
+        "priority": "Must",
+        "status": "pending"
+      },
+      {
+        "id": "S3",
+        "title": "Reproduce release artifacts",
+        "size": "M",
+        "priority": "Must",
+        "status": "pending"
+      }
+    ],
+    "demo_notes": null,
+    "retro_ref": null
+  }
+}

@@ -1,3 +1,4 @@
+export * from "./analyzer.js";
 export * from "./baseline.js";
 export * from "./baseline-validation.js";
 export * from "./contracts.js";
