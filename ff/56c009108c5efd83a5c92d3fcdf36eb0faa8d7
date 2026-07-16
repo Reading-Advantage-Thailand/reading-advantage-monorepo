@@ -1,0 +1,1 @@
+Phase 4 graph-evidence repair: CI now builds the pinned repo-graph revision with Bun before scanning graph.db, so hosted closeout cannot silently skip the graph gate. Added a Phase 3 contract test and verified 87 Phase 3 tests plus shell syntax.
