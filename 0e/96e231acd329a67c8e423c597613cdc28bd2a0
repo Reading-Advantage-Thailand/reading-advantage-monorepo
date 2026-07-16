@@ -1,0 +1,9 @@
+Track: typescript7_native_migration_20260710
+
+Recorded two GitHub Actions TypeScript 7 rollout observations as compact, artifact-linked evidence. Run 29460878641 is an explicit semantic rejection under the corrected observation writer. Run 29461114234 is semantic-parity clean: 39/39 configs, stable provenance, zero promoted compiler and ordering differences, checker count 1. The plan correctly treats it as observation 1/3 rather than promotion because the independent Primary Advantage build baseline still leaves the aggregate workflow red.
+
+Verification:
+- jq parse of both compact CI records and metadata
+- PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase3 (86 passed)
+- git diff --check
+- Read-only CI observation audit subagent: no contract contradiction found
