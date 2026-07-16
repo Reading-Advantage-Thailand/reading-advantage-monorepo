@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@reading-advantage/backend/jobs": ["packages/backend/src/jobs/index.ts"]
+    }
+  }
+}

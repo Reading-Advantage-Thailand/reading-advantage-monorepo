@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@fixture/db-alias": ["packages/db-alias/src/index.ts"]
+    }
+  }
+}

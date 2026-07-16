@@ -2,6 +2,7 @@ import { execFileSync, spawnSync } from "node:child_process";
 import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { tmpdir } from "node:os";
+import { fileURLToPath } from "node:url";
 import { afterEach, describe, expect, it } from "vitest";
 import {
   createArchitectureBaseline,
@@ -12,6 +13,8 @@ import type { DirectViolationCandidate } from "../inventory.js";
 import { loadOwnershipMap } from "../ownership-map.js";
 
 const temporaryRoots: string[] = [];
+const packageRoot = fileURLToPath(new URL("../../", import.meta.url));
+const repositoryRoot = fileURLToPath(new URL("../../../../", import.meta.url));
 
 /**
  * Creates an isolated tracked-source repository for baseline gate tests.
@@ -141,9 +144,9 @@ describe("committed architecture baseline validation", () => {
       "export const clean = true;\n",
     );
     const result = spawnSync(
-      resolve("../../node_modules/.bin/tsx"),
-      [resolve("src/baseline-cli.ts"), "--repo-root", root],
-      { cwd: resolve("."), encoding: "utf8", timeout: 30_000 },
+      resolve(repositoryRoot, "node_modules/.bin/tsx"),
+      [resolve(packageRoot, "src/baseline-cli.ts"), "--repo-root", root],
+      { cwd: packageRoot, encoding: "utf8", timeout: 30_000 },
     );
 
     expect(result.status).toBe(1);

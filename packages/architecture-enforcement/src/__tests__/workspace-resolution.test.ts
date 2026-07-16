@@ -1,10 +1,12 @@
-import { resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { loadWorkspaceModuleTargets } from "../workspace-resolution.js";
 
 describe("workspace package resolution", () => {
   it("maps exact package exports to tracked TypeScript source files", async () => {
-    const targets = await loadWorkspaceModuleTargets(resolve("../.."));
+    const targets = await loadWorkspaceModuleTargets(
+      fileURLToPath(new URL("../../../../", import.meta.url)),
+    );
 
     expect(targets.get("@reading-advantage/db")).toBe(
       "packages/db/src/index.ts",

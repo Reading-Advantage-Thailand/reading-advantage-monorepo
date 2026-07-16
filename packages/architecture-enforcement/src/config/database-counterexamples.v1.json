@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "schemaVersion": 1,
+      "id": "database-alias-import",
+      "ruleId": "DATABASE_BOUNDARY",
+      "expected": "violation",
+      "fixtureRoot": "test-fixtures/architecture-enforcement/database/alias",
+      "sourcePath": "apps/sales/src/alias-import.ts",
+      "supportPaths": ["packages/db-alias/src/index.ts"],
+      "resolverConfigPath": "tsconfig.json",
+      "expectedEvidenceKinds": ["static-import"],
+      "rationale": "A transport alias that resolves through a fixture package to the database package remains a database boundary violation."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "database-approved-postgres-job-adapter",
+      "ruleId": "DURABLE_JOB_DATABASE_BOUNDARY",
+      "expected": "allowed",
+      "fixtureRoot": "test-fixtures/architecture-enforcement/database/approved-adapter",
+      "sourcePath": "packages/backend/src/jobs/adapters/postgres/claim.ts",
+      "supportPaths": [],
+      "expectedEvidenceKinds": ["static-import", "query-call"],
+      "rationale": "The exact backend PostgreSQL job adapter is the approved direct query root for durable job tables."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "database-barrel-import",
+      "ruleId": "DATABASE_BOUNDARY",
+      "expected": "violation",
+      "fixtureRoot": "test-fixtures/architecture-enforcement/database/barrel",
+      "sourcePath": "apps/marketing/src/report.ts",
+      "supportPaths": ["apps/marketing/src/db-barrel.ts"],
+      "expectedEvidenceKinds": ["static-import", "re-export"],
+      "rationale": "A product app cannot hide a database package import behind a local re-export barrel."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "database-direct-import",
+      "ruleId": "DATABASE_BOUNDARY",
+      "expected": "violation",
+      "fixtureRoot": "test-fixtures/architecture-enforcement/database/direct",
+      "sourcePath": "apps/marketing/src/direct.ts",
+      "supportPaths": [],
+      "expectedEvidenceKinds": ["static-import"],
+      "rationale": "A direct product-app database package import violates the named backend ownership roots."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "database-dynamic-import",
+      "ruleId": "DATABASE_BOUNDARY",
+      "expected": "violation",
+      "fixtureRoot": "test-fixtures/architecture-enforcement/database/dynamic",
+      "sourcePath": "apps/sales/src/load-database.ts",
+      "supportPaths": [],
+      "expectedEvidenceKinds": ["dynamic-import"],
+      "rationale": "A static-string dynamic import is still direct database access from a product app."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "database-raw-client-route",
+      "ruleId": "DATABASE_BOUNDARY",
+      "expected": "violation",
+      "fixtureRoot": "test-fixtures/architecture-enforcement/database/raw-client",
+      "sourcePath": "apps/marketing/app/api/report/route.ts",
+      "supportPaths": [],
+      "expectedEvidenceKinds": ["client-construction", "query-call"],
+      "rationale": "A transport route constructing a raw PostgreSQL client and issuing SQL violates the backend database boundary."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "database-webhook-job-table",
+      "ruleId": "DURABLE_JOB_DATABASE_BOUNDARY",
+      "expected": "violation",
+      "fixtureRoot": "test-fixtures/architecture-enforcement/database/webhook-job-table",
+      "sourcePath": "packages/webhooks/src/claim-review-job.ts",
+      "supportPaths": [],
+      "expectedEvidenceKinds": ["static-import", "query-call"],
+      "rationale": "Webhook code must call the job port and cannot import or query the durable review job table."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "database-worker-job-port",
+      "ruleId": "DURABLE_JOB_DATABASE_BOUNDARY",
+      "expected": "allowed",
+      "fixtureRoot": "test-fixtures/architecture-enforcement/database/worker-job-port",
+      "sourcePath": "services/worker/src/poll.ts",
+      "supportPaths": ["packages/backend/src/jobs/index.ts"],
+      "resolverConfigPath": "tsconfig.json",
+      "expectedEvidenceKinds": ["static-import"],
+      "rationale": "Worker orchestration may call the provider-neutral job port without importing database clients or tables."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "database-worker-job-table",
+      "ruleId": "DURABLE_JOB_DATABASE_BOUNDARY",
+      "expected": "violation",
+      "fixtureRoot": "test-fixtures/architecture-enforcement/database/worker-job-table",
+      "sourcePath": "services/worker/src/poll.ts",
+      "supportPaths": [],
+      "expectedEvidenceKinds": ["static-import", "query-call"],
+      "rationale": "Worker orchestration cannot bypass the job port by importing and querying the durable review job table."
+    }
+  ]
+}
