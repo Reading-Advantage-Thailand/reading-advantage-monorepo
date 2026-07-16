@@ -270,5 +270,341 @@
     "reviewed_by": "typescript7-phase3c-reconciliation",
     "reviewed_at": "2026-07-15T00:00:00Z",
     "reason": "Both compilers report the same TS2345 mock-user assignment failure at this source span; TS 6 truncates the displayed object shape while TS 7 prints additional properties."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/server/models/articleModel.ts(182,54): error TS2769: No overload matches this call.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts7",
+    "reviewed_by": "typescript7-ci-reconciliation",
+    "reviewed_at": "2026-07-16T00:00:00Z",
+    "reason": "Both compilers report the same overload-resolution error for this call expression; TS 6 and native TS 7 select different source spans."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/server/models/articleModel.ts(183,5): error TS2769: No overload matches this call.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts6",
+    "reviewed_by": "typescript7-ci-reconciliation",
+    "reviewed_at": "2026-07-16T00:00:00Z",
+    "reason": "Both compilers report the same overload-resolution error for this call expression; TS 6 and native TS 7 select different source spans."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/server/models/articleModel.ts(228,42): error TS2769: No overload matches this call.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts7",
+    "reviewed_by": "typescript7-ci-reconciliation",
+    "reviewed_at": "2026-07-16T00:00:00Z",
+    "reason": "Both compilers report the same overload-resolution error for this call expression; TS 6 and native TS 7 select different source spans."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/server/models/articleModel.ts(229,9): error TS2769: No overload matches this call.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts6",
+    "reviewed_by": "typescript7-ci-reconciliation",
+    "reviewed_at": "2026-07-16T00:00:00Z",
+    "reason": "Both compilers report the same overload-resolution error for this call expression; TS 6 and native TS 7 select different source spans."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/server/models/articleModel.ts(643,31): error TS2769: No overload matches this call.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts7",
+    "reviewed_by": "typescript7-ci-reconciliation",
+    "reviewed_at": "2026-07-16T00:00:00Z",
+    "reason": "Both compilers report the same overload-resolution error for this call expression; TS 6 and native TS 7 select different source spans."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/server/models/articleModel.ts(644,7): error TS2769: No overload matches this call.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts6",
+    "reviewed_by": "typescript7-ci-reconciliation",
+    "reviewed_at": "2026-07-16T00:00:00Z",
+    "reason": "Both compilers report the same overload-resolution error for this call expression; TS 6 and native TS 7 select different source spans."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/server/models/articleModel.ts(774,44): error TS2769: No overload matches this call.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts7",
+    "reviewed_by": "typescript7-ci-reconciliation",
+    "reviewed_at": "2026-07-16T00:00:00Z",
+    "reason": "Both compilers report the same overload-resolution error for this call expression; TS 6 and native TS 7 select different source spans."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/server/models/articleModel.ts(775,11): error TS2769: No overload matches this call.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts6",
+    "reviewed_by": "typescript7-ci-reconciliation",
+    "reviewed_at": "2026-07-16T00:00:00Z",
+    "reason": "Both compilers report the same overload-resolution error for this call expression; TS 6 and native TS 7 select different source spans."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/server/models/assignmentModel.ts(386,41): error TS2769: No overload matches this call.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts7",
+    "reviewed_by": "typescript7-ci-reconciliation",
+    "reviewed_at": "2026-07-16T00:00:00Z",
+    "reason": "Both compilers report the same overload-resolution error for this call expression; TS 6 and native TS 7 select different source spans."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/server/models/assignmentModel.ts(387,11): error TS2769: No overload matches this call.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts6",
+    "reviewed_by": "typescript7-ci-reconciliation",
+    "reviewed_at": "2026-07-16T00:00:00Z",
+    "reason": "Both compilers report the same overload-resolution error for this call expression; TS 6 and native TS 7 select different source spans."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/server/models/assignmentModel.ts(76,59): error TS2769: No overload matches this call.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts7",
+    "reviewed_by": "typescript7-ci-reconciliation",
+    "reviewed_at": "2026-07-16T00:00:00Z",
+    "reason": "Both compilers report the same overload-resolution error for this call expression; TS 6 and native TS 7 select different source spans."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/server/models/assignmentModel.ts(77,11): error TS2769: No overload matches this call.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts6",
+    "reviewed_by": "typescript7-ci-reconciliation",
+    "reviewed_at": "2026-07-16T00:00:00Z",
+    "reason": "Both compilers report the same overload-resolution error for this call expression; TS 6 and native TS 7 select different source spans."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/server/models/classroomModel.ts(102,35): error TS2769: No overload matches this call.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts7",
+    "reviewed_by": "typescript7-ci-reconciliation",
+    "reviewed_at": "2026-07-16T00:00:00Z",
+    "reason": "Both compilers report the same overload-resolution error for this call expression; TS 6 and native TS 7 select different source spans."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/server/models/classroomModel.ts(103,9): error TS2769: No overload matches this call.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts6",
+    "reviewed_by": "typescript7-ci-reconciliation",
+    "reviewed_at": "2026-07-16T00:00:00Z",
+    "reason": "Both compilers report the same overload-resolution error for this call expression; TS 6 and native TS 7 select different source spans."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/server/models/classroomModel.ts(75,57): error TS2769: No overload matches this call.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts7",
+    "reviewed_by": "typescript7-ci-reconciliation",
+    "reviewed_at": "2026-07-16T00:00:00Z",
+    "reason": "Both compilers report the same overload-resolution error for this call expression; TS 6 and native TS 7 select different source spans."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/server/models/classroomModel.ts(76,11): error TS2769: No overload matches this call.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts6",
+    "reviewed_by": "typescript7-ci-reconciliation",
+    "reviewed_at": "2026-07-16T00:00:00Z",
+    "reason": "Both compilers report the same overload-resolution error for this call expression; TS 6 and native TS 7 select different source spans."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/server/models/classroomModel.ts(91,37): error TS2769: No overload matches this call.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts7",
+    "reviewed_by": "typescript7-ci-reconciliation",
+    "reviewed_at": "2026-07-16T00:00:00Z",
+    "reason": "Both compilers report the same overload-resolution error for this call expression; TS 6 and native TS 7 select different source spans."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/server/models/classroomModel.ts(92,11): error TS2769: No overload matches this call.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts6",
+    "reviewed_by": "typescript7-ci-reconciliation",
+    "reviewed_at": "2026-07-16T00:00:00Z",
+    "reason": "Both compilers report the same overload-resolution error for this call expression; TS 6 and native TS 7 select different source spans."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/server/models/lessonModel.ts(105,41): error TS2769: No overload matches this call.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts7",
+    "reviewed_by": "typescript7-ci-reconciliation",
+    "reviewed_at": "2026-07-16T00:00:00Z",
+    "reason": "Both compilers report the same overload-resolution error for this call expression; TS 6 and native TS 7 select different source spans."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/server/models/lessonModel.ts(106,11): error TS2769: No overload matches this call.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts6",
+    "reviewed_by": "typescript7-ci-reconciliation",
+    "reviewed_at": "2026-07-16T00:00:00Z",
+    "reason": "Both compilers report the same overload-resolution error for this call expression; TS 6 and native TS 7 select different source spans."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/server/models/studentModel.ts(199,28): error TS2769: No overload matches this call.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts7",
+    "reviewed_by": "typescript7-ci-reconciliation",
+    "reviewed_at": "2026-07-16T00:00:00Z",
+    "reason": "Both compilers report the same overload-resolution error for this call expression; TS 6 and native TS 7 select different source spans."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/server/models/studentModel.ts(199,31): error TS2769: No overload matches this call.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts6",
+    "reviewed_by": "typescript7-ci-reconciliation",
+    "reviewed_at": "2026-07-16T00:00:00Z",
+    "reason": "Both compilers report the same overload-resolution error for this call expression; TS 6 and native TS 7 select different source spans."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/server/models/studentModel.ts(315,48): error TS2769: No overload matches this call.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts7",
+    "reviewed_by": "typescript7-ci-reconciliation",
+    "reviewed_at": "2026-07-16T00:00:00Z",
+    "reason": "Both compilers report the same overload-resolution error for this call expression; TS 6 and native TS 7 select different source spans."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/server/models/studentModel.ts(316,9): error TS2769: No overload matches this call.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts6",
+    "reviewed_by": "typescript7-ci-reconciliation",
+    "reviewed_at": "2026-07-16T00:00:00Z",
+    "reason": "Both compilers report the same overload-resolution error for this call expression; TS 6 and native TS 7 select different source spans."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/server/models/studentModel.ts(401,28): error TS2769: No overload matches this call.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts7",
+    "reviewed_by": "typescript7-ci-reconciliation",
+    "reviewed_at": "2026-07-16T00:00:00Z",
+    "reason": "Both compilers report the same overload-resolution error for this call expression; TS 6 and native TS 7 select different source spans."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/server/models/studentModel.ts(401,31): error TS2769: No overload matches this call.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts6",
+    "reviewed_by": "typescript7-ci-reconciliation",
+    "reviewed_at": "2026-07-16T00:00:00Z",
+    "reason": "Both compilers report the same overload-resolution error for this call expression; TS 6 and native TS 7 select different source spans."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/server/models/studentModel.ts(552,28): error TS2769: No overload matches this call.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts7",
+    "reviewed_by": "typescript7-ci-reconciliation",
+    "reviewed_at": "2026-07-16T00:00:00Z",
+    "reason": "Both compilers report the same overload-resolution error for this call expression; TS 6 and native TS 7 select different source spans."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/server/models/studentModel.ts(552,31): error TS2769: No overload matches this call.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts6",
+    "reviewed_by": "typescript7-ci-reconciliation",
+    "reviewed_at": "2026-07-16T00:00:00Z",
+    "reason": "Both compilers report the same overload-resolution error for this call expression; TS 6 and native TS 7 select different source spans."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/server/models/studentModel.ts(596,28): error TS2769: No overload matches this call.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts7",
+    "reviewed_by": "typescript7-ci-reconciliation",
+    "reviewed_at": "2026-07-16T00:00:00Z",
+    "reason": "Both compilers report the same overload-resolution error for this call expression; TS 6 and native TS 7 select different source spans."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/server/models/studentModel.ts(596,31): error TS2769: No overload matches this call.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts6",
+    "reviewed_by": "typescript7-ci-reconciliation",
+    "reviewed_at": "2026-07-16T00:00:00Z",
+    "reason": "Both compilers report the same overload-resolution error for this call expression; TS 6 and native TS 7 select different source spans."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/server/models/studentModel.ts(74,28): error TS2769: No overload matches this call.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts7",
+    "reviewed_by": "typescript7-ci-reconciliation",
+    "reviewed_at": "2026-07-16T00:00:00Z",
+    "reason": "Both compilers report the same overload-resolution error for this call expression; TS 6 and native TS 7 select different source spans."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/server/models/studentModel.ts(74,31): error TS2769: No overload matches this call.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts6",
+    "reviewed_by": "typescript7-ci-reconciliation",
+    "reviewed_at": "2026-07-16T00:00:00Z",
+    "reason": "Both compilers report the same overload-resolution error for this call expression; TS 6 and native TS 7 select different source spans."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/server/models/teacherModel.ts(429,45): error TS2769: No overload matches this call.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts7",
+    "reviewed_by": "typescript7-ci-reconciliation",
+    "reviewed_at": "2026-07-16T00:00:00Z",
+    "reason": "Both compilers report the same overload-resolution error for this call expression; TS 6 and native TS 7 select different source spans."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/server/models/teacherModel.ts(430,9): error TS2769: No overload matches this call.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts6",
+    "reviewed_by": "typescript7-ci-reconciliation",
+    "reviewed_at": "2026-07-16T00:00:00Z",
+    "reason": "Both compilers report the same overload-resolution error for this call expression; TS 6 and native TS 7 select different source spans."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/server/models/userModel.ts(51,45): error TS2769: No overload matches this call.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts7",
+    "reviewed_by": "typescript7-ci-reconciliation",
+    "reviewed_at": "2026-07-16T00:00:00Z",
+    "reason": "Both compilers report the same overload-resolution error for this call expression; TS 6 and native TS 7 select different source spans."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/server/models/userModel.ts(52,9): error TS2769: No overload matches this call.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts6",
+    "reviewed_by": "typescript7-ci-reconciliation",
+    "reviewed_at": "2026-07-16T00:00:00Z",
+    "reason": "Both compilers report the same overload-resolution error for this call expression; TS 6 and native TS 7 select different source spans."
+  },
+  {
+    "diagnostic": "apps/reading-advantage/scripts/seed/demo-seed.ts(198,6): error TS2769: No overload matches this call.",
+    "tsconfig_path": "apps/reading-advantage/tsconfig.json",
+    "absent_from": "ts7",
+    "reviewed_by": "typescript7-ci-reconciliation",
+    "reviewed_at": "2026-07-16T00:00:00Z",
+    "reason": "Both compilers report the same overload-resolution error for this call expression; TS 6 and native TS 7 select different source spans."
+  },
+  {
+    "diagnostic": "apps/reading-advantage/scripts/seed/demo-seed.ts(199,7): error TS2769: No overload matches this call.",
+    "tsconfig_path": "apps/reading-advantage/tsconfig.json",
+    "absent_from": "ts6",
+    "reviewed_by": "typescript7-ci-reconciliation",
+    "reviewed_at": "2026-07-16T00:00:00Z",
+    "reason": "Both compilers report the same overload-resolution error for this call expression; TS 6 and native TS 7 select different source spans."
+  },
+  {
+    "diagnostic": "apps/reading-advantage/scripts/seed/seed.ts(461,10): error TS2769: No overload matches this call.",
+    "tsconfig_path": "apps/reading-advantage/tsconfig.json",
+    "absent_from": "ts7",
+    "reviewed_by": "typescript7-ci-reconciliation",
+    "reviewed_at": "2026-07-16T00:00:00Z",
+    "reason": "Both compilers report the same overload-resolution error for this call expression; TS 6 and native TS 7 select different source spans."
+  },
+  {
+    "diagnostic": "apps/reading-advantage/scripts/seed/seed.ts(462,11): error TS2769: No overload matches this call.",
+    "tsconfig_path": "apps/reading-advantage/tsconfig.json",
+    "absent_from": "ts6",
+    "reviewed_by": "typescript7-ci-reconciliation",
+    "reviewed_at": "2026-07-16T00:00:00Z",
+    "reason": "Both compilers report the same overload-resolution error for this call expression; TS 6 and native TS 7 select different source spans."
+  },
+  {
+    "diagnostic": "apps/reading-advantage/server/controllers/assignment-controller.ts(384,10): error TS2769: No overload matches this call.",
+    "tsconfig_path": "apps/reading-advantage/tsconfig.json",
+    "absent_from": "ts7",
+    "reviewed_by": "typescript7-ci-reconciliation",
+    "reviewed_at": "2026-07-16T00:00:00Z",
+    "reason": "Both compilers report the same overload-resolution error for this call expression; TS 6 and native TS 7 select different source spans."
+  },
+  {
+    "diagnostic": "apps/reading-advantage/server/controllers/assignment-controller.ts(385,11): error TS2769: No overload matches this call.",
+    "tsconfig_path": "apps/reading-advantage/tsconfig.json",
+    "absent_from": "ts6",
+    "reviewed_by": "typescript7-ci-reconciliation",
+    "reviewed_at": "2026-07-16T00:00:00Z",
+    "reason": "Both compilers report the same overload-resolution error for this call expression; TS 6 and native TS 7 select different source spans."
   }
 ]

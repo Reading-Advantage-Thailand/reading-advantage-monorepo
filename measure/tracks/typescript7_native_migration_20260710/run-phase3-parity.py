@@ -14,6 +14,10 @@ from pathlib import Path
 from typing import Any
 
 
+# The runner's provenance contract must not be invalidated by bytecode it creates itself.
+sys.dont_write_bytecode = True
+
+
 REPO_ROOT = Path(__file__).resolve().parents[3]
 TRACK_DIR = REPO_ROOT / "measure" / "tracks" / "typescript7_native_migration_20260710"
 SURFACE_INVENTORY = TRACK_DIR / "surface-inventory.json"

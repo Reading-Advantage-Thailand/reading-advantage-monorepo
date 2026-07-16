@@ -59,6 +59,7 @@ ADVANTAGE_GAMES_PACKAGE_PATH = REPO_ROOT / "apps" / "advantage-games" / "package
 SCIENCE_ADVANTAGE_PACKAGE_PATH = REPO_ROOT / "apps" / "science-advantage" / "package.json"
 PRIMARY_ADVANTAGE_PACKAGE_PATH = REPO_ROOT / "apps" / "primary-advantage" / "package.json"
 READING_ADVANTAGE_PACKAGE_PATH = REPO_ROOT / "apps" / "reading-advantage" / "package.json"
+READING_ADVANTAGE_TRPC_PATH = REPO_ROOT / "apps" / "reading-advantage" / "lib" / "trpc.ts"
 CODECAMP_ADVANTAGE_PACKAGE_PATH = REPO_ROOT / "apps" / "codecamp-advantage" / "package.json"
 SALES_ADVANTAGE_PACKAGE_PATH = REPO_ROOT / "apps" / "sales-advantage" / "package.json"
 MARKETING_PACKAGE_PATH = REPO_ROOT / "apps" / "marketing" / "package.json"
@@ -191,6 +192,29 @@ class Phase3ParityRecorderContract(unittest.TestCase):
         self.assertEqual(len(paths), 39)
         self.assertEqual(len(set(paths)), 39)
         self.assertTrue(all(path.startswith(("apps/", "packages/")) for path in paths))
+
+    def test_parity_runner_does_not_write_its_own_provenance_drift(self) -> None:
+        """Requires the parity runner to suppress Python bytecode before importing its harness."""
+        self.assertTrue(self.runner.sys.dont_write_bytecode)
+
+    def test_ci_reconciled_overload_spans_are_explicitly_ledgered(self) -> None:
+        """Requires each hosted-compiler overload span delta to remain an auditable reviewed pair."""
+        ledger_path = self.runner.PARITY_LEDGER
+        ledger = json.loads(ledger_path.read_text(encoding="utf-8"))
+        reconciled = [
+            entry
+            for entry in ledger
+            if entry.get("reviewed_by") == "typescript7-ci-reconciliation"
+        ]
+        self.assertEqual(len(reconciled), 42)
+        self.assertEqual(
+            {entry["tsconfig_path"] for entry in reconciled},
+            {
+                "apps/primary-advantage/tsconfig.json",
+                "apps/reading-advantage/tsconfig.json",
+            },
+        )
+        self.assertTrue(all(entry["diagnostic"].endswith("error TS2769: No overload matches this call.") for entry in reconciled))
 
     def test_exact_compiler_identities_are_observed_not_asserted(self) -> None:
         """Requires the live compiler executables to report the exact alias versions."""
@@ -516,6 +540,8 @@ class Phase3dCheckTypesCutoverContract(unittest.TestCase):
         self.assertIsInstance(scripts, dict)
         assert isinstance(scripts, dict)
         self.assertEqual(scripts.get("check-types"), self.NATIVE_COMMAND)
+        client = READING_ADVANTAGE_TRPC_PATH.read_text(encoding="utf-8")
+        self.assertIn("CreateTRPCReact<AppRouter, unknown>", client)
         self.assertEqual(scripts.get("check-types:compat"), compat)
         self.assertEqual(scripts.get("check-types:rollback"), compat)
 
