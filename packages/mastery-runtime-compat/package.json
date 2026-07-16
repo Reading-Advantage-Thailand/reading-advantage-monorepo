@@ -16,9 +16,11 @@
     "runtime-manifest.json"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "node ../../node_modules/typescript7/bin/tsc",
     "check:consumer": "pnpm build && node dist/check-consumer.js",
-    "check-types": "tsc --noEmit",
+    "check-types": "node ../../scripts/run-ts7-check-types.mjs --noEmit",
+    "check-types:compat": "node ../../node_modules/typescript/bin/tsc --noEmit",
+    "check-types:rollback": "node ../../node_modules/typescript/bin/tsc --noEmit",
     "lint": "eslint src/",
     "test": "vitest run --maxWorkers=1",
     "test:codecamp-proof": "vitest run src/__tests__/codecamp-proof.test.ts --maxWorkers=1",

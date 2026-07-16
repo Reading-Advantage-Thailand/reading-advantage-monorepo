@@ -15,6 +15,14 @@
   "memory_available_kib": 778696,
   "swap_total_kib": 8030208,
   "swap_used_kib": 5719040,
+  "resource_limits": {
+    "max_process_group_rss_kib": 4602784,
+    "max_swap_delta_kib": 262144,
+    "stop_loss_process_group_rss_kib": 3682227,
+    "stop_loss_swap_delta_kib": 131072,
+    "derivation": "Policy-derived ceilings, not empirical benchmark results: max process-group RSS is a conservative 60% of captured total_memory_kib (7671308 * 0.60, rounded down to 4602784 KiB); max swap delta is fixed at 256 MiB (262144 KiB). Stop loss is 80% of the RSS ceiling (3682227 KiB, rounded down) and 50% of the swap ceiling (131072 KiB).",
+    "source": "Captured host resources in this compiler-baseline.json plus the resource-safety policy in test-strategy.md section 1; no local performance benchmark was used to select these limits."
+  },
   "turbo_concurrency": 1,
   "turbo_concurrency_source": "TURBO_CONCURRENCY=1 env var per test-strategy.md section 1; turbo.json does not pin global concurrency",
   "graph_db_path": "graph.db",
@@ -35,18 +43,18 @@
     "note": "Worktree contains 254 unrelated modified/untracked entries preserved per test-strategy.md section 6; not stashed or reverted."
   },
   "ts59_workspace_baseline": {
-    "scope": "all 31 workspaces with check-types scripts (sequential, TURBO_CONCURRENCY=1, 300s per-workspace timeout)",
+    "scope": "all 33 configured TypeScript workspaces: 31 check-types scripts plus direct no-emit fallback commands for packages/ui and packages/utils",
     "evidence_file": "phase1-workspace-baseline.json",
     "capture_script": "capture-phase1-baseline.py",
     "raw_logs_dir": "evidence/phase1/raw-logs/",
     "compiler_version": "5.9.3",
-    "workspace_count": 31,
+    "workspace_count": 33,
     "summary": {
-      "pass": 27,
-      "fail": 4,
+      "pass": 28,
+      "fail": 5,
       "timeout": 0,
       "contaminated": 15,
-      "clean": 16
+      "clean": 18
     },
     "failures": [
       {
@@ -84,18 +92,27 @@
         "contaminated": false,
         "dirty_path_count": 0,
         "classification": "pre-existing; 31 type errors against clean workspace path"
+      },
+      {
+        "workspace": "packages/ui",
+        "exit_status": 2,
+        "diagnostic_count": 16,
+        "elapsed_ms": 18990,
+        "contaminated": false,
+        "dirty_path_count": 0,
+        "classification": "observed in the repair-worktree TypeScript 5.9 fallback capture; test files lack ambient matcher typings, so it remains a recorded baseline failure rather than migration work"
       }
     ],
     "completeness_check": {
-      "inventory_workspaces": 31,
-      "captured_workspaces": 31,
+      "inventory_workspaces": 33,
+      "captured_workspaces": 33,
       "match": true,
       "all_accounted": true
     },
-    "contamination_note": "15 of 31 workspaces have dirty paths in the worktree; all results are current-worktree snapshots, not clean committed-state baselines. Failures are preserved honestly and classified as pre-existing for Phase 4 reconciliation."
+    "contamination_note": "The original 31 workspace results were captured in the 2026-07-14 dirty worktree (15 contaminated paths); packages/ui and packages/utils were added from an equivalent TypeScript 5.9 direct-fallback capture in the 2026-07-15 repair worktree (both clean). This is an amended evidence cohort, not a single clean committed-state snapshot. Failures are preserved for Phase 4 reconciliation."
   },
   "ts59_scoped_packages_types_historical": {
-    "note": "Initial scoped measurement of packages/types only; superseded by the full 31-workspace baseline above. Retained as historical evidence of the first Phase 1 capture.",
+    "note": "Initial scoped measurement of packages/types only; superseded by the full 33-workspace baseline above. Retained as historical evidence of the first Phase 1 capture.",
     "command": "TURBO_CONCURRENCY=1 /usr/bin/time -v pnpm --filter @reading-advantage/types exec tsc --noEmit -p tsconfig.json",
     "exit_status": 0,
     "wall_clock_seconds": 15.84,
@@ -111,7 +128,7 @@
       "science-advantage: 31 type errors against clean workspace path; pre-existing",
       "sales-advantage: 2 type errors in dirty worktree state; pre-existing"
     ],
-    "phase1_classification": "Phase 1 check-types baseline captured for all 31 workspaces. 4 failures recorded honestly and classified as pre-existing for Phase 4 reconciliation. No aggregate Turbo gate is run in Phase 1.",
+    "phase1_classification": "Phase 1 check-types baseline covers all 33 configured TypeScript workspaces. Five failures are recorded without treating them as migration work; the first 31 were captured on 2026-07-14 and the two direct-fallback additions on 2026-07-15. No aggregate Turbo gate is run in Phase 1.",
     "workspace_baseline_file": "phase1-workspace-baseline.json",
     "full_evidence_file": "phase1-pre-existing-failures.json"
   }

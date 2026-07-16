@@ -1,0 +1,2 @@
+apps/activity-vinext-fixture/app/page.tsx(3,39): error TS2307: Cannot find module '@reading-advantage/activity-react' or its corresponding type declarations.
+apps/activity-vinext-fixture/app/page.tsx(4,32): error TS2307: Cannot find module '@reading-advantage/activity-runtime/core' or its corresponding type declarations.

@@ -1,0 +1,28 @@
+packages/activity-react/src/__tests__/interactive-player.test.tsx(3,32): error TS2307: Cannot find module '@reading-advantage/activity-runtime/core' or its corresponding type declarations.
+packages/activity-react/src/__tests__/interactive-player.test.tsx(97,42): error TS7006: Parameter 'resource' implicitly has an 'any' type.
+packages/activity-react/src/__tests__/interactive-player.test.tsx(104,46): error TS7006: Parameter 'checkpoint' implicitly has an 'any' type.
+packages/activity-react/src/__tests__/tutorial-activity-panel.test.tsx(1,32): error TS2307: Cannot find module '@reading-advantage/activity-runtime/core' or its corresponding type declarations.
+packages/activity-react/src/interactive-activity-player.tsx(1,31): error TS2307: Cannot find module '@reading-advantage/activity-runtime/core' or its corresponding type declarations.
+packages/activity-react/src/interactive-activity-player.tsx(110,42): error TS7006: Parameter 'resource' implicitly has an 'any' type.
+packages/activity-react/src/interactive-activity-player.tsx(111,49): error TS7006: Parameter 'candidate' implicitly has an 'any' type.
+packages/activity-react/src/interactive-activity-player.tsx(113,32): error TS7006: Parameter 'resource' implicitly has an 'any' type.
+packages/activity-react/src/interactive-activity-player.tsx(117,32): error TS7006: Parameter 'resource' implicitly has an 'any' type.
+packages/activity-react/src/interactive-activity-player.tsx(121,32): error TS7006: Parameter 'resource' implicitly has an 'any' type.
+packages/activity-react/src/interactive-activity-player.tsx(145,48): error TS7006: Parameter 'candidate' implicitly has an 'any' type.
+packages/activity-react/src/interactive-activity-player.tsx(146,47): error TS7006: Parameter 'resource' implicitly has an 'any' type.
+packages/activity-react/src/interactive-activity-player.tsx(147,72): error TS7006: Parameter 'item' implicitly has an 'any' type.
+packages/activity-react/src/interactive-activity-player.tsx(150,96): error TS7006: Parameter 'cue' implicitly has an 'any' type.
+packages/activity-react/src/interactive-activity-player.tsx(151,28): error TS7006: Parameter 'candidate' implicitly has an 'any' type.
+packages/activity-react/src/interactive-activity-player.tsx(196,45): error TS7006: Parameter 'resource' implicitly has an 'any' type.
+packages/activity-react/src/interactive-activity-player.tsx(197,70): error TS7006: Parameter 'item' implicitly has an 'any' type.
+packages/activity-react/src/interactive-activity-player.tsx(254,90): error TS7006: Parameter 'option' implicitly has an 'any' type.
+packages/activity-react/src/interactive-activity-player.tsx(277,41): error TS7006: Parameter 'resource' implicitly has an 'any' type.
+packages/activity-react/src/interactive-activity-player.tsx(279,70): error TS7006: Parameter 'segment' implicitly has an 'any' type.
+packages/activity-react/src/interactive-activity-player.tsx(279,172): error TS7006: Parameter 'segment' implicitly has an 'any' type.
+packages/activity-react/src/interactive-activity-player.tsx(283,42): error TS7006: Parameter 'reference' implicitly has an 'any' type.
+packages/activity-react/src/interactive-activity-player.tsx(285,57): error TS7006: Parameter 'candidate' implicitly has an 'any' type.
+packages/activity-react/src/tutorial-activity-panel.tsx(3,31): error TS2307: Cannot find module '@reading-advantage/activity-runtime/core' or its corresponding type declarations.
+packages/activity-react/src/tutorial-activity-panel.tsx(95,33): error TS7031: Binding element 'resourceId' implicitly has an 'any' type.
+packages/activity-react/src/tutorial-activity-panel.tsx(98,27): error TS7006: Parameter 'check' implicitly has an 'any' type.
+packages/activity-react/src/tutorial-activity-panel.tsx(110,44): error TS7006: Parameter 'hint' implicitly has an 'any' type.
+packages/activity-react/src/tutorial-activity-panel.tsx(111,48): error TS7006: Parameter 'reveal' implicitly has an 'any' type.

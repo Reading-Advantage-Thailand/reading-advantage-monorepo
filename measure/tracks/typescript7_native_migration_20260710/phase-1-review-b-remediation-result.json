@@ -1,0 +1,63 @@
+{
+  "schema_version": 2,
+  "role": "review-b-remediation",
+  "track": "typescript7_native_migration_20260710",
+  "phase": "Phase 1: Contract & Schema Definition",
+  "audited_head_sha": "905f0ba3dc397e7a5e7d59610544960ac17e6f49",
+  "audited_worktree_diff_sha256": "8b0e93ac00ee43e656a56263f9886c19a8b2fc2b171b18028df60b6cfc25eeee",
+  "status": "fail",
+  "verdict": "The resource-safety remediation is executable and the Phase 1/2/3 boundary is now truthful, but the TypeScript 6 compatibility compiler is not actually pinned to 6.0.2 and blocks acceptance.",
+  "checks": {
+    "registry_executable_paths": {
+      "status": "fail",
+      "evidence": [
+        "An isolated pnpm install of typescript7@npm:typescript@7.0.2 executes node_modules/typescript7/bin/tsc as Version 7.0.2.",
+        "The same install of typescript@npm:@typescript/typescript6@6.0.2 executes node_modules/typescript/bin/tsc6 as Version 6.0.3, not 6.0.2.",
+        "Live registry metadata shows @typescript/typescript6@6.0.2 depends on @typescript/old as npm:typescript@^6; pnpm resolves that floating dependency to typescript@6.0.3."
+      ]
+    },
+    "phase_boundaries": {
+      "status": "pass",
+      "evidence": "Phase 1 defines artifacts only, Phase 2 is limited to deterministic real subprocess fixtures, and Phase 3 explicitly installs and runs the real compiler packages. The 36-test contract suite enforces this distinction."
+    },
+    "resource_stop_loss": {
+      "status": "pass",
+      "evidence": "The contract now requires positive integer stop-loss thresholds, exact 80 percent RSS and 50 percent swap formulas below their maxima, ordered process-group SIGTERM, a 5-second grace period, SIGKILL escalation, child waits, and full reap verification. Counterexamples are present and the suite passes."
+    },
+    "compiler_baseline_truthfulness": {
+      "status": "pass_with_caveat",
+      "evidence": "The current repository compiler reports Version 5.9.3, the independently derived denominator and captured baseline both contain 33 workspaces, every raw evidence SHA and line count plus the null-path zero-output convention passes its integrity test, and the baseline explicitly discloses that the last two rows form an amended 2026-07-15 cohort rather than one clean capture. The top-level captured_at remains the original 2026-07-14 timestamp, so consumers must rely on per-row timestamps and the contamination note for provenance."
+    }
+  },
+  "blocking_findings": [
+    {
+      "id": "TS7-P1-RB-R1",
+      "severity": "High",
+      "title": "Exact TypeScript 6 wrapper pin resolves a floating 6.0.3 compiler",
+      "files": [
+        "measure/tracks/typescript7_native_migration_20260710/dual-compiler-contract.json",
+        "measure/tests/test_typescript7_native_migration_phase1.py"
+      ],
+      "evidence": "@typescript/typescript6@6.0.2 is exactly pinned only at the wrapper layer. Its published dependency @typescript/old=npm:typescript@^6 resolved to typescript@6.0.3 in a clean isolated pnpm install, and the promised compatibility command printed Version 6.0.3.",
+      "impact": "The compiler used for parity and rollback can drift without a contract change, invalidating diagnostic baselines, cache identity, reproducibility, and the claim that TypeScript 6.0.2 is the compatibility compiler.",
+      "required_remediation": "Pin the transitive @typescript/old compiler to npm:typescript@6.0.2 with a reviewed pnpm override or revise the contract to an exact currently supported compiler version. Add an installed-layout contract asserting both package metadata and each executable's --version output, then regenerate and frozen-install the lockfile in the owning phase."
+    }
+  ],
+  "resolved_findings": [
+    {
+      "id": "TS7-P1-RB-001",
+      "status": "resolved",
+      "evidence": "Stop-loss threshold formulas and bounded SIGTERM-to-SIGKILL process-group reaping are now required and tested."
+    }
+  ],
+  "commands": [
+    "isolated pnpm add --save-exact typescript7@npm:typescript@7.0.2 typescript@npm:@typescript/typescript6@6.0.2",
+    "node node_modules/typescript7/bin/tsc --version (Version 7.0.2)",
+    "node node_modules/typescript/bin/tsc6 --version (Version 6.0.3; blocker)",
+    "pnpm list --depth 3 (shows @typescript/old@npm:typescript@6.0.3 under @typescript/typescript6@6.0.2)",
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase1 (PASS: 36 tests, including raw evidence SHA/line-count and null-path integrity)",
+    "PYTHONDONTWRITEBYTECODE=1 python3 measure/tracks/typescript7_native_migration_20260710/capture-phase1-baseline.py --check-completeness (PASS: 33/33)"
+  ],
+  "retry_recommendation": "Remediate TS7-P1-RB-R1 and repeat the isolated installed-layout executable-version proof before Phase 2 authorization.",
+  "confidence": "high"
+}

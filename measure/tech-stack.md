@@ -28,13 +28,50 @@
 
 | Layer | Technology | Rationale |
 |-------|-----------|-----------|
-| Language | TypeScript 5.x | All apps already use TS; unified `tsconfig.json` in shared config package |
+| Language | TypeScript 7.0.2 native compiler + TypeScript 6.0.2 compatibility API | Native checks and verified direct emits use TypeScript 7; TypeScript 6 remains for legacy compiler-API consumers and rollback during the migration observation window |
 | Frontend Framework | React 19.2.7 | Consolidated target — aligned via pnpm.overrides (Batch A) |
 | Meta-Framework | Next.js 16.2.9 | All apps are Next.js; aligned via pnpm.overrides (Batch A) |
 | Styling | Tailwind CSS 3–4 | All apps use Tailwind; unified config in shared package |
 | UI Components | Radix UI + shadcn/ui | Common across all apps; extracted to `@reading-advantage/ui` |
 | State Management | Zustand (games), React Query (others) | App-specific; not forced into shared layer |
 | Animation | Framer Motion | Used by primary-advantage and games; available in shared UI |
+
+### TypeScript compiler ownership
+
+The root `typescript` package is pinned to **TypeScript 6.0.2** because the
+installed toolchain still has consumers of the legacy JavaScript compiler API.
+The separate `typescript7` alias is pinned to **TypeScript 7.0.2** and owns the
+native CLI:
+
+| Operator command | Compiler / purpose |
+|---|---|
+| `pnpm check-types` or `pnpm check-types:native` | TypeScript 7 native `tsc`, through `scripts/run-ts7-check-types.mjs` |
+| `pnpm check-types:compat` | TypeScript 6 compatibility check for compiler-API consumers |
+| `pnpm check-types:parity` | Provenance-bound TypeScript 6/7 diagnostic comparison |
+| `pnpm check-types:rollback` | TypeScript 6 rollback path; does not revert unrelated tsconfig fixes |
+
+The native wrapper accepts only `TS7_CHECKERS=1` or `2`; the CI observation lane
+currently pins `1`. The final selected local and CI value is not yet accepted:
+the full performance matrix remains open until the `reading-advantage` TypeScript
+6 baseline can run without the benchmark runner's swap stop-loss. Turbo hashes the
+native wrapper, compiler-identity manifest, compiler/config inputs, and
+`TS7_CHECKERS`; the compatibility and rollback tasks hash the same relevant
+compiler/config inputs without an irrelevant native-wrapper dependency.
+
+**Next.js boundary.** Apps stay on Next.js 16.2.9 and keep the TypeScript 6
+programmatic API available. That release's type-check path is not compatible with
+TypeScript 7's removed JavaScript compiler API. Next.js has an experimental
+`useTypeScriptCli` adaptation in its 16.3 development line, but this migration
+does not introduce a prerelease framework upgrade. Re-evaluate that switch only
+after a stable Next.js release and a dedicated compatibility smoke/build check;
+until then the TS6 compatibility package is intentional, not a rollback failure.
+
+**Editor setup.** Use the workspace TypeScript SDK supplied by the root
+`typescript@6.0.2` package for editor/plugin compatibility. Use the native
+`check-types` command to validate TypeScript 7 behavior; do not rely on a
+hoisted `tsc` binary. A future dedicated follow-up may retire TypeScript 6 only
+after TypeScript 7.1+ provides the supported programmatic API and every recorded
+compiler-API consumer has passed its upgrade smoke matrix.
 
 ### Advantage Play Kit
 

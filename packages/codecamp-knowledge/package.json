@@ -22,8 +22,10 @@
   },
   "files": ["dist", "source-snapshots", "fixtures"],
   "scripts": {
-    "build": "tsc && node scripts/copy-data.mjs",
-    "check-types": "tsc --noEmit && tsc -p tsconfig.test.json",
+    "build": "node ../../node_modules/typescript7/bin/tsc && node scripts/copy-data.mjs",
+    "check-types": "node ../../scripts/run-ts7-check-types.mjs --noEmit && node ../../scripts/run-ts7-check-types.mjs -p tsconfig.test.json",
+    "check-types:compat": "node ../../node_modules/typescript/bin/tsc --noEmit && node ../../node_modules/typescript/bin/tsc -p tsconfig.test.json",
+    "check-types:rollback": "node ../../node_modules/typescript/bin/tsc --noEmit && node ../../node_modules/typescript/bin/tsc -p tsconfig.test.json",
     "lint": "eslint src/",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage --exclude src/__tests__/release-artifact.test.ts",

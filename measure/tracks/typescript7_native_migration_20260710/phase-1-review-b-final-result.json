@@ -1,0 +1,43 @@
+{
+  "schema_version": 2,
+  "role": "review-b-final",
+  "track": "typescript7_native_migration_20260710",
+  "phase": "Phase 1: Contract & Schema Definition",
+  "audited_head_sha": "905f0ba3dc397e7a5e7d59610544960ac17e6f49",
+  "status": "pass",
+  "verdict": "TS7-P1-RB-R1 is resolved. The compatibility compiler is now a direct exact TypeScript 6.0.2 package with deterministic tsc commands and installed-layout version probes.",
+  "blocking_findings": [],
+  "resolved_findings": [
+    {
+      "id": "TS7-P1-RB-R1",
+      "severity": "High",
+      "status": "resolved",
+      "evidence": [
+        "dual-compiler-contract.json directly pins catalog_aliases.typescript to 6.0.2 and rejects the @typescript/typescript6 wrapper with its floating npm:typescript@^6 dependency.",
+        "Compatibility, parity, and rollback commands invoke node_modules/typescript/bin/tsc; the native command invokes node_modules/typescript7/bin/tsc.",
+        "A clean isolated pnpm install of typescript@6.0.2 and typescript7@npm:typescript@7.0.2 reports only those exact compiler packages in pnpm list --depth 2.",
+        "The installed compatibility executable prints Version 6.0.2 and the installed native executable prints Version 7.0.2.",
+        "The direct TypeScript 6.0.2 package has no floating compiler dependency.",
+        "Phase 3a explicitly requires both installed --version probes before resolution acceptance."
+      ]
+    }
+  ],
+  "checks": {
+    "direct_exact_compatibility_package": "pass",
+    "compatibility_executable_path": "pass",
+    "rollback_executable_path": "pass",
+    "native_executable_path": "pass",
+    "installed_version_probes": "pass",
+    "floating_inner_dependency_absent": "pass",
+    "regression_contract": "pass"
+  },
+  "commands": [
+    "pnpm add --save-exact typescript@6.0.2 typescript7@npm:typescript@7.0.2 in an isolated temporary project (PASS)",
+    "node node_modules/typescript/bin/tsc --version (PASS: Version 6.0.2)",
+    "node node_modules/typescript7/bin/tsc --version (PASS: Version 7.0.2)",
+    "pnpm list --depth 2 (PASS: direct typescript@6.0.2 and typescript7 alias to typescript@7.0.2; no @typescript/old compiler)",
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase1 (PASS: 37 tests)"
+  ],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}

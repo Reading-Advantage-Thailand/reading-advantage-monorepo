@@ -1,0 +1,1054 @@
+apps/reading-advantage/__test__/security/rbac.test.ts(77,44): error TS2345: Argument of type '{ id: string; role: "STUDENT"; email: string; display_name: string; level: number; email_verified: boolean; picture: string; xp: number; cefr_level: string; expired_date: string; expired: boolean; license_id: string; license_level: "BASIC"; onborda: boolean; }' is not assignable to parameter of type 'Promise<{ id: string; username: string; email?: string | undefined; display_name: string; role: "ADMIN" | "STUDENT" | "SYSTEM" | "TEACHER" | "USER"; level: number | null; email_verified: boolean; ... 10 more ...; student_class_ids?: string[] | undefined; } | null> | { ...; } | null'.
+  Property 'username' is missing in type '{ id: string; role: "STUDENT"; email: string; display_name: string; level: number; email_verified: boolean; picture: string; xp: number; cefr_level: string; expired_date: string; expired: boolean; license_id: string; license_level: "BASIC"; onborda: boolean; }' but required in type '{ id: string; username: string; email?: string | undefined; display_name: string; role: "ADMIN" | "STUDENT" | "SYSTEM" | "TEACHER" | "USER"; level: number | null; email_verified: boolean; ... 10 more ...; student_class_ids?: string[] | undefined; }'.
+apps/reading-advantage/__test__/security/rbac.test.ts(106,44): error TS2345: Argument of type '{ id: string; role: "STUDENT"; email: string; display_name: string; level: number; email_verified: boolean; picture: string; xp: number; cefr_level: string; expired_date: string; expired: boolean; license_id: string; license_level: "BASIC"; onborda: boolean; }' is not assignable to parameter of type 'Promise<{ id: string; username: string; email?: string | undefined; display_name: string; role: "ADMIN" | "STUDENT" | "SYSTEM" | "TEACHER" | "USER"; level: number | null; email_verified: boolean; ... 10 more ...; student_class_ids?: string[] | undefined; } | null> | { ...; } | null'.
+  Property 'username' is missing in type '{ id: string; role: "STUDENT"; email: string; display_name: string; level: number; email_verified: boolean; picture: string; xp: number; cefr_level: string; expired_date: string; expired: boolean; license_id: string; license_level: "BASIC"; onborda: boolean; }' but required in type '{ id: string; username: string; email?: string | undefined; display_name: string; role: "ADMIN" | "STUDENT" | "SYSTEM" | "TEACHER" | "USER"; level: number | null; email_verified: boolean; ... 10 more ...; student_class_ids?: string[] | undefined; }'.
+apps/reading-advantage/__test__/security/rbac.test.ts(139,44): error TS2345: Argument of type '{ id: string; role: "ADMIN"; email: string; display_name: string; level: number; email_verified: boolean; picture: string; xp: number; cefr_level: string; expired_date: string; expired: boolean; license_id: string; license_level: "ENTERPRISE"; onborda: boolean; school_id: string; }' is not assignable to parameter of type 'Promise<{ id: string; username: string; email?: string | undefined; display_name: string; role: "ADMIN" | "STUDENT" | "SYSTEM" | "TEACHER" | "USER"; level: number | null; email_verified: boolean; ... 10 more ...; student_class_ids?: string[] | undefined; } | null> | { ...; } | null'.
+  Property 'username' is missing in type '{ id: string; role: "ADMIN"; email: string; display_name: string; level: number; email_verified: boolean; picture: string; xp: number; cefr_level: string; expired_date: string; expired: boolean; license_id: string; license_level: "ENTERPRISE"; onborda: boolean; school_id: string; }' but required in type '{ id: string; username: string; email?: string | undefined; display_name: string; role: "ADMIN" | "STUDENT" | "SYSTEM" | "TEACHER" | "USER"; level: number | null; email_verified: boolean; ... 10 more ...; student_class_ids?: string[] | undefined; }'.
+apps/reading-advantage/__test__/security/rbac.test.ts(166,44): error TS2345: Argument of type '{ id: string; role: "SYSTEM"; email: string; display_name: string; level: number; email_verified: boolean; picture: string; xp: number; cefr_level: string; expired_date: string; expired: boolean; license_id: string; license_level: "ENTERPRISE"; onborda: boolean; }' is not assignable to parameter of type 'Promise<{ id: string; username: string; email?: string | undefined; display_name: string; role: "ADMIN" | "STUDENT" | "SYSTEM" | "TEACHER" | "USER"; level: number | null; email_verified: boolean; ... 10 more ...; student_class_ids?: string[] | undefined; } | null> | { ...; } | null'.
+  Property 'username' is missing in type '{ id: string; role: "SYSTEM"; email: string; display_name: string; level: number; email_verified: boolean; picture: string; xp: number; cefr_level: string; expired_date: string; expired: boolean; license_id: string; license_level: "ENTERPRISE"; onborda: boolean; }' but required in type '{ id: string; username: string; email?: string | undefined; display_name: string; role: "ADMIN" | "STUDENT" | "SYSTEM" | "TEACHER" | "USER"; level: number | null; email_verified: boolean; ... 10 more ...; student_class_ids?: string[] | undefined; }'.
+apps/reading-advantage/__test__/security/rbac.test.ts(199,44): error TS2345: Argument of type '{ id: string; role: "ADMIN"; email: string; display_name: string; level: number; email_verified: boolean; picture: string; xp: number; cefr_level: string; expired_date: string; expired: boolean; license_id: string; license_level: "ENTERPRISE"; onborda: boolean; school_id: string; }' is not assignable to parameter of type 'Promise<{ id: string; username: string; email?: string | undefined; display_name: string; role: "ADMIN" | "STUDENT" | "SYSTEM" | "TEACHER" | "USER"; level: number | null; email_verified: boolean; ... 10 more ...; student_class_ids?: string[] | undefined; } | null> | { ...; } | null'.
+  Property 'username' is missing in type '{ id: string; role: "ADMIN"; email: string; display_name: string; level: number; email_verified: boolean; picture: string; xp: number; cefr_level: string; expired_date: string; expired: boolean; license_id: string; license_level: "ENTERPRISE"; onborda: boolean; school_id: string; }' but required in type '{ id: string; username: string; email?: string | undefined; display_name: string; role: "ADMIN" | "STUDENT" | "SYSTEM" | "TEACHER" | "USER"; level: number | null; email_verified: boolean; ... 10 more ...; student_class_ids?: string[] | undefined; }'.
+apps/reading-advantage/__test__/security/rbac.test.ts(230,44): error TS2345: Argument of type '{ id: string; role: "SYSTEM"; email: string; display_name: string; level: number; email_verified: boolean; picture: string; xp: number; cefr_level: string; expired_date: string; expired: boolean; license_id: string; license_level: "ENTERPRISE"; onborda: boolean; }' is not assignable to parameter of type 'Promise<{ id: string; username: string; email?: string | undefined; display_name: string; role: "ADMIN" | "STUDENT" | "SYSTEM" | "TEACHER" | "USER"; level: number | null; email_verified: boolean; ... 10 more ...; student_class_ids?: string[] | undefined; } | null> | { ...; } | null'.
+  Property 'username' is missing in type '{ id: string; role: "SYSTEM"; email: string; display_name: string; level: number; email_verified: boolean; picture: string; xp: number; cefr_level: string; expired_date: string; expired: boolean; license_id: string; license_level: "ENTERPRISE"; onborda: boolean; }' but required in type '{ id: string; username: string; email?: string | undefined; display_name: string; role: "ADMIN" | "STUDENT" | "SYSTEM" | "TEACHER" | "USER"; level: number | null; email_verified: boolean; ... 10 more ...; student_class_ids?: string[] | undefined; }'.
+apps/reading-advantage/__test__/security/rbac.test.ts(261,44): error TS2345: Argument of type '{ id: string; role: "TEACHER"; email: string; display_name: string; level: number; email_verified: boolean; picture: string; xp: number; cefr_level: string; expired_date: string; expired: boolean; license_id: string; license_level: "BASIC"; onborda: boolean; school_id: string; teacher_class_ids: string[]; }' is not assignable to parameter of type 'Promise<{ id: string; username: string; email?: string | undefined; display_name: string; role: "ADMIN" | "STUDENT" | "SYSTEM" | "TEACHER" | "USER"; level: number | null; email_verified: boolean; ... 10 more ...; student_class_ids?: string[] | undefined; } | null> | { ...; } | null'.
+  Property 'username' is missing in type '{ id: string; role: "TEACHER"; email: string; display_name: string; level: number; email_verified: boolean; picture: string; xp: number; cefr_level: string; expired_date: string; expired: boolean; license_id: string; license_level: "BASIC"; onborda: boolean; school_id: string; teacher_class_ids: string[]; }' but required in type '{ id: string; username: string; email?: string | undefined; display_name: string; role: "ADMIN" | "STUDENT" | "SYSTEM" | "TEACHER" | "USER"; level: number | null; email_verified: boolean; ... 10 more ...; student_class_ids?: string[] | undefined; }'.
+apps/reading-advantage/__test__/security/rbac.test.ts(294,44): error TS2345: Argument of type '{ id: string; role: "TEACHER"; email: string; display_name: string; level: number; email_verified: boolean; picture: string; xp: number; cefr_level: string; expired_date: string; expired: boolean; license_id: string; license_level: "BASIC"; onborda: boolean; school_id: string; teacher_class_ids: string[]; }' is not assignable to parameter of type 'Promise<{ id: string; username: string; email?: string | undefined; display_name: string; role: "ADMIN" | "STUDENT" | "SYSTEM" | "TEACHER" | "USER"; level: number | null; email_verified: boolean; ... 10 more ...; student_class_ids?: string[] | undefined; } | null> | { ...; } | null'.
+  Property 'username' is missing in type '{ id: string; role: "TEACHER"; email: string; display_name: string; level: number; email_verified: boolean; picture: string; xp: number; cefr_level: string; expired_date: string; expired: boolean; license_id: string; license_level: "BASIC"; onborda: boolean; school_id: string; teacher_class_ids: string[]; }' but required in type '{ id: string; username: string; email?: string | undefined; display_name: string; role: "ADMIN" | "STUDENT" | "SYSTEM" | "TEACHER" | "USER"; level: number | null; email_verified: boolean; ... 10 more ...; student_class_ids?: string[] | undefined; }'.
+apps/reading-advantage/__test__/security/rbac.test.ts(323,44): error TS2345: Argument of type '{ id: string; role: "STUDENT"; email: string; display_name: string; level: number; email_verified: boolean; picture: string; xp: number; cefr_level: string; expired_date: string; expired: boolean; license_id: string; license_level: "BASIC"; onborda: boolean; school_id: string; student_class_ids: string[]; }' is not assignable to parameter of type 'Promise<{ id: string; username: string; email?: string | undefined; display_name: string; role: "ADMIN" | "STUDENT" | "SYSTEM" | "TEACHER" | "USER"; level: number | null; email_verified: boolean; ... 10 more ...; student_class_ids?: string[] | undefined; } | null> | { ...; } | null'.
+  Property 'username' is missing in type '{ id: string; role: "STUDENT"; email: string; display_name: string; level: number; email_verified: boolean; picture: string; xp: number; cefr_level: string; expired_date: string; expired: boolean; license_id: string; license_level: "BASIC"; onborda: boolean; school_id: string; student_class_ids: string[]; }' but required in type '{ id: string; username: string; email?: string | undefined; display_name: string; role: "ADMIN" | "STUDENT" | "SYSTEM" | "TEACHER" | "USER"; level: number | null; email_verified: boolean; ... 10 more ...; student_class_ids?: string[] | undefined; }'.
+apps/reading-advantage/__test__/security/rbac.test.ts(354,44): error TS2345: Argument of type '{ id: string; role: "STUDENT"; email: string; display_name: string; level: number; email_verified: boolean; picture: string; xp: number; cefr_level: string; expired_date: string; expired: boolean; license_id: string; license_level: "BASIC"; onborda: boolean; }' is not assignable to parameter of type 'Promise<{ id: string; username: string; email?: string | undefined; display_name: string; role: "ADMIN" | "STUDENT" | "SYSTEM" | "TEACHER" | "USER"; level: number | null; email_verified: boolean; ... 10 more ...; student_class_ids?: string[] | undefined; } | null> | { ...; } | null'.
+  Property 'username' is missing in type '{ id: string; role: "STUDENT"; email: string; display_name: string; level: number; email_verified: boolean; picture: string; xp: number; cefr_level: string; expired_date: string; expired: boolean; license_id: string; license_level: "BASIC"; onborda: boolean; }' but required in type '{ id: string; username: string; email?: string | undefined; display_name: string; role: "ADMIN" | "STUDENT" | "SYSTEM" | "TEACHER" | "USER"; level: number | null; email_verified: boolean; ... 10 more ...; student_class_ids?: string[] | undefined; }'.
+apps/reading-advantage/__test__/security/rbac.test.ts(385,44): error TS2345: Argument of type '{ id: string; role: "STUDENT"; email: string; display_name: string; level: number; email_verified: boolean; picture: string; xp: number; cefr_level: string; expired_date: string; expired: boolean; license_id: string; license_level: "BASIC"; onborda: boolean; }' is not assignable to parameter of type 'Promise<{ id: string; username: string; email?: string | undefined; display_name: string; role: "ADMIN" | "STUDENT" | "SYSTEM" | "TEACHER" | "USER"; level: number | null; email_verified: boolean; ... 10 more ...; student_class_ids?: string[] | undefined; } | null> | { ...; } | null'.
+  Property 'username' is missing in type '{ id: string; role: "STUDENT"; email: string; display_name: string; level: number; email_verified: boolean; picture: string; xp: number; cefr_level: string; expired_date: string; expired: boolean; license_id: string; license_level: "BASIC"; onborda: boolean; }' but required in type '{ id: string; username: string; email?: string | undefined; display_name: string; role: "ADMIN" | "STUDENT" | "SYSTEM" | "TEACHER" | "USER"; level: number | null; email_verified: boolean; ... 10 more ...; student_class_ids?: string[] | undefined; }'.
+apps/reading-advantage/__tests__/controllers/admin-license-scope-red.test.ts(92,34): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/reading-advantage/__tests__/controllers/admin-license-scope-red.test.ts(93,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/__tests__/controllers/admin-license-scope-red.test.ts(146,47): error TS7006: Parameter 'call' implicitly has an 'any' type.
+apps/reading-advantage/__tests__/controllers/domain-migration-red.test.ts(55,40): error TS2307: Cannot find module '@reading-advantage/domain' or its corresponding type declarations.
+apps/reading-advantage/__tests__/controllers/domain-migration-red.test.ts(56,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/__tests__/controllers/reporting-metrics-red.test.ts(75,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/__tests__/controllers/zod-validation-red.test.ts(86,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/__tests__/controllers/zod-validation-red.test.ts(103,31): error TS2345: Argument of type 'RequestInit | undefined' is not assignable to parameter of type 'import("/home/daniel-bo/Desktop/reading-advantage-monorepo-ts7/node_modules/next/dist/server/web/spec-extension/request").RequestInit | undefined'.
+  Type 'RequestInit' is not assignable to type 'import("/home/daniel-bo/Desktop/reading-advantage-monorepo-ts7/node_modules/next/dist/server/web/spec-extension/request").RequestInit'.
+    Types of property 'signal' are incompatible.
+      Type 'AbortSignal | null | undefined' is not assignable to type 'AbortSignal | undefined'.
+        Type 'null' is not assignable to type 'AbortSignal | undefined'.
+apps/reading-advantage/__tests__/controllers/zod-validation-red.test.ts(165,25): error TS2554: Expected 2 arguments, but got 1.
+apps/reading-advantage/__tests__/controllers/zod-validation-red.test.ts(193,25): error TS2554: Expected 2 arguments, but got 1.
+apps/reading-advantage/__tests__/learning-loop/assignment-lifecycle-red.test.ts(78,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/actions/flashcard.ts(4,30): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/actions/flashcard.ts(8,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/actions/pratice.ts(4,24): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/actions/pratice.ts(5,37): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/actions/rating.ts(3,29): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/actions/rating.ts(4,38): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/app/[locale]/(student)/student/dashboard/page.tsx(28,15): error TS2322: Type 'number | null' is not assignable to type 'number'.
+  Type 'null' is not assignable to type 'number'.
+apps/reading-advantage/app/[locale]/(student)/student/dashboard/page.tsx(30,15): error TS2322: Type 'number | null' is not assignable to type 'number'.
+  Type 'null' is not assignable to type 'number'.
+apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/wizard-vs-zombie/page.tsx(5,28): error TS2307: Cannot find module '@reading-advantage/auth-client' or its corresponding type declarations.
+apps/reading-advantage/app/[locale]/(student)/student/read/[articleId]/page.tsx(9,29): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/app/[locale]/(student)/student/read/[articleId]/page.tsx(10,30): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/app/[locale]/(student)/student/read/[articleId]/page.tsx(164,15): error TS2322: Type 'number | null' is not assignable to type 'number'.
+  Type 'null' is not assignable to type 'number'.
+apps/reading-advantage/app/[locale]/(student)/student/read/page.tsx(25,11): error TS2322: Type 'number | null' is not assignable to type 'number'.
+  Type 'null' is not assignable to type 'number'.
+apps/reading-advantage/app/[locale]/(student)/student/reports/page.tsx(26,26): error TS2339: Property 'name' does not exist on type '{ id: string; username: string; email?: string | undefined; display_name: string; role: "ADMIN" | "STUDENT" | "SYSTEM" | "TEACHER" | "USER"; level: number | null; email_verified: boolean; ... 10 more ...; student_class_ids?: string[] | undefined; }'.
+apps/reading-advantage/app/[locale]/(student)/student/reports/page.tsx(28,15): error TS2322: Type 'number | null' is not assignable to type 'number'.
+  Type 'null' is not assignable to type 'number'.
+apps/reading-advantage/app/[locale]/(student)/student/reports/page.tsx(30,15): error TS2322: Type 'number | null' is not assignable to type 'number'.
+  Type 'null' is not assignable to type 'number'.
+apps/reading-advantage/app/[locale]/(student)/student/stories/[storyId]/[chapterNumber]/page.tsx(81,13): error TS2322: Type 'number | null' is not assignable to type 'number'.
+  Type 'null' is not assignable to type 'number'.
+apps/reading-advantage/app/[locale]/(student)/student/stories/page.tsx(25,11): error TS2322: Type 'number | null' is not assignable to type 'number'.
+  Type 'null' is not assignable to type 'number'.
+apps/reading-advantage/app/[locale]/(system)/system/license/create-license-form.tsx(75,9): error TS2353: Object literal may only specify known properties, and 'total_licenses' does not exist in type 'Partial<License>'.
+apps/reading-advantage/app/[locale]/(teacher)/teacher/reports/[classroomId]/page.tsx(3,29): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/app/[locale]/(teacher)/teacher/reports/[classroomId]/page.tsx(4,47): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/app/[locale]/layout.tsx(12,30): error TS2307: Cannot find module '@reading-advantage/auth-client' or its corresponding type declarations.
+apps/reading-advantage/app/api/auth/check-password-set/route.ts(2,29): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/app/api/auth/check-password-set/route.ts(3,33): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/app/api/auth/impersonate/route.ts(1,35): error TS2307: Cannot find module '@reading-advantage/api/routes/auth' or its corresponding type declarations.
+apps/reading-advantage/app/api/auth/login/route.ts(1,29): error TS2307: Cannot find module '@reading-advantage/api/routes/auth' or its corresponding type declarations.
+apps/reading-advantage/app/api/auth/logout/route.ts(1,30): error TS2307: Cannot find module '@reading-advantage/api/routes/auth' or its corresponding type declarations.
+apps/reading-advantage/app/api/auth/register/route.ts(1,32): error TS2307: Cannot find module '@reading-advantage/api/routes/auth' or its corresponding type declarations.
+apps/reading-advantage/app/api/auth/reset-password/route.ts(1,29): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/app/api/auth/reset-password/route.ts(2,23): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/app/api/auth/session/route.ts(1,31): error TS2307: Cannot find module '@reading-advantage/api/routes/auth' or its corresponding type declarations.
+apps/reading-advantage/app/api/auth/signup/route.ts(3,24): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/app/api/auth/signup/route.ts(4,33): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/app/api/auth/signup/route.ts(24,33): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+apps/reading-advantage/app/api/trpc/[trpc]/route.ts(2,42): error TS2307: Cannot find module '@reading-advantage/api' or its corresponding type declarations.
+apps/reading-advantage/app/api/v1/articles/[article_id]/export-workbook/route.ts(2,24): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/app/api/v1/articles/[article_id]/export-workbook/route.ts(9,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/app/api/v1/classroom/oauth2/classroom/courses/[courseId]/route.ts(71,25): error TS2571: Object is of type 'unknown'.
+apps/reading-advantage/app/api/v1/classroom/oauth2/classroom/courses/[courseId]/route.ts(73,10): error TS18048: 'studentsInClass' is possibly 'undefined'.
+apps/reading-advantage/app/api/v1/classroom/oauth2/classroom/courses/[courseId]/route.ts(79,24): error TS18048: 'studentsInClass' is possibly 'undefined'.
+apps/reading-advantage/app/api/v1/classroom/oauth2/classroom/courses/[courseId]/route.ts(112,27): error TS2571: Object is of type 'unknown'.
+apps/reading-advantage/app/api/v1/classroom/oauth2/classroom/courses/[courseId]/route.ts(114,12): error TS18048: 'studentsInClass' is possibly 'undefined'.
+apps/reading-advantage/app/api/v1/classroom/oauth2/classroom/courses/[courseId]/route.ts(120,26): error TS18048: 'studentsInClass' is possibly 'undefined'.
+apps/reading-advantage/app/api/v1/demo/status/route.ts(2,37): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/app/api/v1/demo/status/route.ts(3,37): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/app/api/v1/demo/status/route.ts(69,12): error TS7006: Parameter 'acc' implicitly has an 'any' type.
+apps/reading-advantage/app/api/v1/demo/status/route.ts(69,17): error TS7006: Parameter 'item' implicitly has an 'any' type.
+apps/reading-advantage/app/api/v1/flashcard/deck-id/route.ts(3,24): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/app/api/v1/flashcard/deck-id/route.ts(4,37): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/app/api/v1/flashcard/progress/update/route.ts(3,24): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/app/api/v1/flashcard/progress/update/route.ts(7,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/app/api/v1/health/database/route.ts(12,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/app/api/v1/metrics/system/route.ts(7,47): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/app/api/v1/metrics/system/route.ts(8,56): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/app/api/v1/metrics/system/route.ts(37,22): error TS7006: Parameter 'activity' implicitly has an 'any' type.
+apps/reading-advantage/app/api/v1/system/lowest-rated-articles/route.ts(2,36): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/app/api/v1/system/lowest-rated-articles/route.ts(3,26): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/app/api/v1/system/lowest-rated-articles/route.ts(33,41): error TS7006: Parameter 'article' implicitly has an 'any' type.
+apps/reading-advantage/app/api/v1/system/school-classrooms/route.ts(3,52): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/app/api/v1/system/school-classrooms/route.ts(12,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/app/api/v1/system/school-classrooms/route.ts(57,42): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/app/api/v1/system/school-classrooms/route.ts(73,61): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/app/api/v1/system/school-classrooms/route.ts(89,45): error TS7006: Parameter 'c' implicitly has an 'any' type.
+apps/reading-advantage/app/api/v1/system/school-classrooms/route.ts(91,34): error TS7006: Parameter 'c' implicitly has an 'any' type.
+apps/reading-advantage/app/api/v1/system/school-classrooms/route.ts(91,61): error TS7006: Parameter 'v' implicitly has an 'any' type.
+apps/reading-advantage/app/api/v1/system/school-classrooms/route.ts(94,34): error TS7006: Parameter 'c' implicitly has an 'any' type.
+apps/reading-advantage/app/api/v1/system/school-classrooms/route.ts(94,61): error TS7006: Parameter 'v' implicitly has an 'any' type.
+apps/reading-advantage/app/api/v1/system/school-classrooms/route.ts(155,54): error TS7006: Parameter 'u' implicitly has an 'any' type.
+apps/reading-advantage/app/api/v1/system/school-classrooms/route.ts(156,62): error TS7006: Parameter 'u' implicitly has an 'any' type.
+apps/reading-advantage/app/api/v1/system/school-classrooms/route.ts(174,32): error TS7006: Parameter 'classroom' implicitly has an 'any' type.
+apps/reading-advantage/app/api/v1/system/school-classrooms/route.ts(204,74): error TS2339: Property 'id' does not exist on type '{}'.
+apps/reading-advantage/app/api/v1/system/school-classrooms/route.ts(206,32): error TS2339: Property 'id' does not exist on type '{}'.
+apps/reading-advantage/app/api/v1/system/school-classrooms/route.ts(207,27): error TS2339: Property 'name' does not exist on type '{}'.
+apps/reading-advantage/app/api/v1/system/school-classrooms/route.ts(216,65): error TS2339: Property 'id' does not exist on type '{}'.
+apps/reading-advantage/app/api/v1/system/school-classrooms/route.ts(219,36): error TS2339: Property 'id' does not exist on type '{}'.
+apps/reading-advantage/app/api/v1/system/school-classrooms/route.ts(220,31): error TS2339: Property 'name' does not exist on type '{}'.
+apps/reading-advantage/app/api/v1/system/school-classrooms/route.ts(228,17): error TS7006: Parameter 'sc' implicitly has an 'any' type.
+apps/reading-advantage/app/api/v1/system/school-classrooms/route.ts(314,46): error TS7006: Parameter 'sc' implicitly has an 'any' type.
+apps/reading-advantage/components/dashboard/teacher-effectiveness.tsx(189,38): error TS2345: Argument of type 'ScatterPointItem' is not assignable to parameter of type 'SetStateAction<TeacherMetrics | null>'.
+apps/reading-advantage/components/dashboard/teacher-effectiveness.tsx(190,41): error TS2339: Property 'teacherId' does not exist on type 'ScatterPointItem'.
+apps/reading-advantage/components/flash-card.tsx(9,30): error TS7016: Could not find a declaration file for module 'uuid'. '/home/daniel-bo/Desktop/reading-advantage-monorepo-ts7/apps/reading-advantage/node_modules/uuid/dist/esm-browser/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/uuid` if it exists or add a new declaration (.d.ts) file containing `declare module 'uuid';`
+apps/reading-advantage/components/index/book.tsx(3,19): error TS2307: Cannot find module '@/public/book-1.jpg' or its corresponding type declarations.
+apps/reading-advantage/components/index/book.tsx(4,28): error TS2307: Cannot find module '@/public/book1-original.jpg' or its corresponding type declarations.
+apps/reading-advantage/components/lesson/lesson-sentense-flash-card.tsx(8,30): error TS7016: Could not find a declaration file for module 'uuid'. '/home/daniel-bo/Desktop/reading-advantage-monorepo-ts7/apps/reading-advantage/node_modules/uuid/dist/esm-browser/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/uuid` if it exists or add a new declaration (.d.ts) file containing `declare module 'uuid';`
+apps/reading-advantage/components/lesson/lesson-vocabulary-flash-card.tsx(9,30): error TS7016: Could not find a declaration file for module 'uuid'. '/home/daniel-bo/Desktop/reading-advantage-monorepo-ts7/apps/reading-advantage/node_modules/uuid/dist/esm-browser/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/uuid` if it exists or add a new declaration (.d.ts) file containing `declare module 'uuid';`
+apps/reading-advantage/components/lesson/phases/phase1-introduction.tsx(37,9): error TS2322: Type 'string' is not assignable to type 'Locale'.
+apps/reading-advantage/components/practic/quote-item.tsx(147,7): error TS2322: Type 'DraggingStyle | NotDraggingStyle | { accentColor?: AccentColor | undefined; alignContent?: AlignContent | undefined; ... 854 more ...; glyphOrientationVertical?: GlyphOrientationVertical | undefined; } | undefined' is not assignable to type 'CSSProperties | undefined'.
+  Type 'DraggingStyle' is not assignable to type 'CSSProperties'.
+    Index signature for type '`--radix-${string}`' is missing in type 'DraggingStyle'.
+apps/reading-advantage/components/providers/trpc-provider.tsx(17,10): error TS2339: Property 'createClient' does not exist on type '"The property 'Provider' in your router collides with a built-in method, rename this router or procedure on your backend." | "The property 'createClient' in your router collides with a built-in method, rename this router or procedure on your backend." | "The property 'useContext' in your router collides with a built...'.
+  Property 'createClient' does not exist on type '"The property 'Provider' in your router collides with a built-in method, rename this router or procedure on your backend."'.
+apps/reading-advantage/components/providers/trpc-provider.tsx(31,11): error TS2339: Property 'Provider' does not exist on type '"The property 'Provider' in your router collides with a built-in method, rename this router or procedure on your backend." | "The property 'createClient' in your router collides with a built-in method, rename this router or procedure on your backend." | "The property 'useContext' in your router collides with a built...'.
+  Property 'Provider' does not exist on type '"The property 'Provider' in your router collides with a built-in method, rename this router or procedure on your backend."'.
+apps/reading-advantage/components/providers/trpc-provider.tsx(33,12): error TS2339: Property 'Provider' does not exist on type '"The property 'Provider' in your router collides with a built-in method, rename this router or procedure on your backend." | "The property 'createClient' in your router collides with a built-in method, rename this router or procedure on your backend." | "The property 'useContext' in your router collides with a built...'.
+  Property 'Provider' does not exist on type '"The property 'Provider' in your router collides with a built-in method, rename this router or procedure on your backend."'.
+apps/reading-advantage/components/questions/laq-question-card.tsx(363,32): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type 'Record<Locale, string>'.
+  No index signature with a parameter of type 'string' was found on type 'Record<Locale, string>'.
+apps/reading-advantage/components/select.tsx(133,13): error TS2322: Type 'Element' is not assignable to type 'string | number | Date'.
+apps/reading-advantage/components/select.tsx(138,13): error TS2322: Type 'Element' is not assignable to type 'string | number | Date'.
+apps/reading-advantage/components/select.tsx(139,13): error TS2322: Type 'Element' is not assignable to type 'string | number | Date'.
+apps/reading-advantage/components/shared/app-layout.tsx(88,26): error TS2322: Type 'number | null' is not assignable to type 'number'.
+  Type 'null' is not assignable to type 'number'.
+apps/reading-advantage/components/stories-chapter-question/laq-question-card.tsx(341,32): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type 'Record<Locale, string>'.
+  No index signature with a parameter of type 'string' was found on type 'Record<Locale, string>'.
+apps/reading-advantage/components/stories-select.tsx(223,13): error TS2322: Type 'Element' is not assignable to type 'string | number | Date'.
+apps/reading-advantage/components/stories-select.tsx(228,13): error TS2322: Type 'Element' is not assignable to type 'string | number | Date'.
+apps/reading-advantage/components/stories-select.tsx(229,13): error TS2322: Type 'Element' is not assignable to type 'string | number | Date'.
+apps/reading-advantage/components/tour/CustomCard.tsx(7,28): error TS2307: Cannot find module '@reading-advantage/auth-client' or its corresponding type declarations.
+apps/reading-advantage/components/ui/calendar-heatmap.tsx(148,9): error TS2353: Object literal may only specify known properties, and 'IconLeft' does not exist in type 'Partial<CustomComponents>'.
+apps/reading-advantage/components/ui/calendar.tsx(32,13): error TS2339: Property 'onSelect' does not exist on type '{ mode: "multiple"; required?: false | undefined; modifiersClassNames?: ModifiersClassNames | undefined; style?: CSSProperties | undefined; ... 74 more ...; max?: number | undefined; } | ... 5 more ... | { ...; }'.
+  Property 'onSelect' does not exist on type '{ mode?: undefined; required?: undefined; modifiersClassNames?: ModifiersClassNames | undefined; style?: CSSProperties | undefined; styles?: (Partial<...> & Partial<...>) | undefined; ... 69 more ...; onDayTouchStart?: DayEventHandler<...> | undefined; }'.
+apps/reading-advantage/components/ui/calendar.tsx(34,12): error TS2339: Property 'onSelect' does not exist on type '{ mode: "multiple"; required?: false | undefined; modifiersClassNames?: ModifiersClassNames | undefined; style?: CSSProperties | undefined; ... 74 more ...; max?: number | undefined; } | ... 5 more ... | { ...; }'.
+  Property 'onSelect' does not exist on type '{ mode?: undefined; required?: undefined; modifiersClassNames?: ModifiersClassNames | undefined; style?: CSSProperties | undefined; styles?: (Partial<...> & Partial<...>) | undefined; ... 69 more ...; onDayTouchStart?: DayEventHandler<...> | undefined; }'.
+apps/reading-advantage/components/ui/calendar.tsx(43,6): error TS2322: Type '{ mode: "multiple"; required?: false | undefined; modifiersClassNames?: ModifiersClassNames | undefined; style?: CSSProperties | undefined; ... 77 more ...; components: Partial<...>; } | ... 12 more ... | { ...; }' is not assignable to type 'IntrinsicAttributes & DayPickerProps'.
+  Type '{ mode: "multiple"; required?: false | undefined; modifiersClassNames?: ModifiersClassNames | undefined; style?: CSSProperties | undefined; ... 77 more ...; components: Partial<...>; }' is not assignable to type 'IntrinsicAttributes & DayPickerProps'.
+    Type '{ mode: "multiple"; required?: false | undefined; modifiersClassNames?: ModifiersClassNames | undefined; style?: CSSProperties | undefined; ... 77 more ...; components: Partial<...>; }' is not assignable to type 'PropsMulti'.
+      Types of property 'selected' are incompatible.
+        Type '{ from: Date | undefined; to: Date | undefined; } | undefined' is not assignable to type 'Date[] | undefined'.
+          Type '{ from: Date | undefined; to: Date | undefined; }' is missing the following properties from type 'Date[]': length, pop, push, concat, and 29 more.
+apps/reading-advantage/components/ui/toaster.tsx(13,20): error TS2307: Cannot find module '../../public/xpBox.webp' or its corresponding type declarations.
+apps/reading-advantage/components/ui/toaster.tsx(14,22): error TS2307: Cannot find module '../../public/ninja.svg' or its corresponding type declarations.
+apps/reading-advantage/components/ui/toaster.tsx(15,26): error TS2307: Cannot find module '../../public/ninja-star.svg' or its corresponding type declarations.
+apps/reading-advantage/components/ui/toaster.tsx(16,23): error TS2307: Cannot find module '../../public/knight-sword.svg' or its corresponding type declarations.
+apps/reading-advantage/components/ui/toaster.tsx(17,28): error TS2307: Cannot find module '../../public/knight.svg' or its corresponding type declarations.
+apps/reading-advantage/components/ui/toaster.tsx(18,26): error TS2307: Cannot find module '../../public/magic-wand-and-hat.svg' or its corresponding type declarations.
+apps/reading-advantage/components/ui/toaster.tsx(19,24): error TS2307: Cannot find module '../../public/man-mage-light.svg' or its corresponding type declarations.
+apps/reading-advantage/components/user-account-nav.tsx(4,25): error TS2307: Cannot find module '@reading-advantage/auth-client' or its corresponding type declarations.
+apps/reading-advantage/components/user-signin-form.tsx(11,25): error TS2307: Cannot find module '@reading-advantage/auth-client' or its corresponding type declarations.
+apps/reading-advantage/components/vocabulary/tab-flash-card.tsx(9,30): error TS7016: Could not find a declaration file for module 'uuid'. '/home/daniel-bo/Desktop/reading-advantage-monorepo-ts7/apps/reading-advantage/node_modules/uuid/dist/esm-browser/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/uuid` if it exists or add a new declaration (.d.ts) file containing `declare module 'uuid';`
+apps/reading-advantage/i18n/routing.ts(11,56): error TS2339: Property 'useLocale' does not exist on type '{ Link: ForwardRefExoticComponent<Omit<{ id?: string | undefined; target?: HTMLAttributeAnchorTarget | undefined; replace?: boolean | undefined; slot?: string | undefined; style?: CSSProperties | undefined; ... 292 more ...; onTransitionStartCapture?: TransitionEventHandler<...> | undefined; }, "ref"> & RefAttribute...'.
+apps/reading-advantage/lib/cache/advanced-cache.ts(6,32): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/lib/cache/advanced-cache.ts(7,37): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/lib/cache/connection-monitor.ts(6,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/lib/cache/fallback-queries.ts(8,51): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/lib/cache/fallback-queries.ts(16,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/lib/cache/fallback-queries.ts(166,17): error TS7006: Parameter 'log' implicitly has an 'any' type.
+apps/reading-advantage/lib/cache/fallback-queries.ts(167,18): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+apps/reading-advantage/lib/cache/fallback-queries.ts(167,23): error TS7006: Parameter 'log' implicitly has an 'any' type.
+apps/reading-advantage/lib/cache/fallback-queries.ts(169,46): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+apps/reading-advantage/lib/cache/fallback-queries.ts(169,51): error TS7006: Parameter 'log' implicitly has an 'any' type.
+apps/reading-advantage/lib/cache/fallback-queries.ts(173,19): error TS7006: Parameter 'log' implicitly has an 'any' type.
+apps/reading-advantage/lib/cache/fallback-queries.ts(174,16): error TS7006: Parameter 'log' implicitly has an 'any' type.
+apps/reading-advantage/lib/cache/fallback-queries.ts(178,26): error TS7006: Parameter 'log' implicitly has an 'any' type.
+apps/reading-advantage/lib/cache/fallback-queries.ts(182,32): error TS7006: Parameter 'latest' implicitly has an 'any' type.
+apps/reading-advantage/lib/cache/fallback-queries.ts(182,40): error TS7006: Parameter 'log' implicitly has an 'any' type.
+apps/reading-advantage/lib/cache/fallback-queries.ts(265,10): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/reading-advantage/lib/cache/fallback-queries.ts(268,10): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/reading-advantage/lib/cache/fallback-queries.ts(272,10): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/reading-advantage/lib/cache/fallback-queries.ts(277,42): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+apps/reading-advantage/lib/cache/fallback-queries.ts(277,47): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/reading-advantage/lib/cache/fallback-queries.ts(416,47): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+apps/reading-advantage/lib/cache/fallback-queries.ts(477,34): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/lib/cache/matview-manager.ts(6,37): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/lib/cache/matview-manager.ts(7,30): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/lib/cache/query-optimizer.ts(8,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/lib/games/utils.ts(1,20): error TS2307: Cannot find module '@reading-advantage/utils' or its corresponding type declarations.
+apps/reading-advantage/lib/pagination/smart-paginator.ts(23,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/lib/pagination/smart-paginator.ts(29,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/lib/session.ts(2,24): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/lib/session.ts(9,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/lib/session.ts(10,33): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/reading-advantage/lib/session.ts(153,55): error TS7006: Parameter 'tc' implicitly has an 'any' type.
+apps/reading-advantage/lib/session.ts(154,55): error TS7006: Parameter 'sc' implicitly has an 'any' type.
+apps/reading-advantage/lib/trpc.ts(4,32): error TS2307: Cannot find module '@reading-advantage/api' or its corresponding type declarations.
+apps/reading-advantage/lib/utils.ts(3,20): error TS2307: Cannot find module '@reading-advantage/utils' or its corresponding type declarations.
+apps/reading-advantage/scripts/backfill-schools.ts(36,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/scripts/check-alignment-data.ts(1,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/scripts/check-archived.ts(1,47): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/scripts/check-archived.ts(20,19): error TS7006: Parameter 'c' implicitly has an 'any' type.
+apps/reading-advantage/scripts/check-classroom-teachers.ts(1,62): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/scripts/check-classroom-teachers.ts(33,21): error TS7006: Parameter 'ct' implicitly has an 'any' type.
+apps/reading-advantage/scripts/check-demo-data.ts(13,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/scripts/check-demo-data.ts(84,32): error TS7006: Parameter 'type' implicitly has an 'any' type.
+apps/reading-advantage/scripts/check-teacher-classrooms.ts(10,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/scripts/check-teacher-classrooms.ts(48,34): error TS7006: Parameter 'classroom' implicitly has an 'any' type.
+apps/reading-advantage/scripts/refresh-activity-heatmap-matviews.ts(14,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/scripts/refresh-demo-data.ts(9,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/scripts/refresh-genre-metrics.ts(15,54): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/scripts/refresh-genre-metrics.ts(174,46): error TS7006: Parameter 'acc' implicitly has an 'any' type.
+apps/reading-advantage/scripts/refresh-genre-metrics.ts(174,51): error TS7006: Parameter 'adj' implicitly has an 'any' type.
+apps/reading-advantage/scripts/refresh-genre-metrics.ts(187,39): error TS18046: 'adjacents' is of type 'unknown'.
+apps/reading-advantage/scripts/refresh-genre-metrics.ts(188,7): error TS18046: 'adjacents' is of type 'unknown'.
+apps/reading-advantage/scripts/refresh-genre-metrics.ts(188,40): error TS7031: Binding element 'adjacent' implicitly has an 'any' type.
+apps/reading-advantage/scripts/refresh-genre-metrics.ts(188,50): error TS7031: Binding element 'weight' implicitly has an 'any' type.
+apps/reading-advantage/scripts/refresh-genre-metrics.ts(199,27): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/scripts/refresh-genre-metrics.ts(200,27): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/scripts/refresh-materialized-views.ts(1,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/scripts/refresh-velocity-matviews.ts(14,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/scripts/seed/demo-seed.ts(20,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/scripts/seed/demo-seed.ts(749,20): error TS2307: Cannot find module '../server/services/refresh-matviews-service' or its corresponding type declarations.
+apps/reading-advantage/scripts/seed/seed.ts(19,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/activity-controller.ts(2,59): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/activity-controller.ts(14,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/activity-controller.ts(231,34): error TS7006: Parameter 'u' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/activity-controller.ts(240,35): error TS7006: Parameter 'lu' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/activity-controller.ts(296,25): error TS7006: Parameter 'activity' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/activity-controller.ts(345,27): error TS7006: Parameter 'activity' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/activity-controller.ts(373,57): error TS7006: Parameter 't' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/activity-controller.ts(496,36): error TS7006: Parameter 'u' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/activity-controller.ts(503,36): error TS7006: Parameter 'u' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/activity-controller.ts(510,33): error TS7006: Parameter 'u' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/activity-controller.ts(517,35): error TS7006: Parameter 'lu' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/activity-controller.ts(629,29): error TS7006: Parameter 'row' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/activity-controller.ts(646,22): error TS7006: Parameter 'row' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/activity-controller.ts(662,26): error TS7006: Parameter 'row' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/activity-controller.ts(796,61): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/activity-controller.ts(797,49): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/activity-controller.ts(823,33): error TS7006: Parameter 'activity' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/activity-controller.ts(858,62): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/activity-controller.ts(861,16): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/activity-controller.ts(862,16): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/activity-controller.ts(862,21): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/activity-controller.ts(955,29): error TS7006: Parameter 'activity' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/activity-controller.ts(1051,31): error TS7006: Parameter 'activity' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/activity-controller.ts(1074,49): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/activity-controller.ts(1076,40): error TS7006: Parameter 'activity' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/activity-controller.ts(1082,31): error TS2339: Property 'cefrLevel' does not exist on type '{}'.
+apps/reading-advantage/server/controllers/activity-controller.ts(1083,26): error TS2339: Property 'title' does not exist on type '{}'.
+apps/reading-advantage/server/controllers/activity-controller.ts(1084,26): error TS2339: Property 'raLevel' does not exist on type '{}'.
+apps/reading-advantage/server/controllers/activity-controller.ts(1153,44): error TS7006: Parameter 'lu' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/activity-controller.ts(1169,27): error TS7006: Parameter 'activity' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/activity-controller.ts(1201,25): error TS7006: Parameter 'activity' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/activity-controller.ts(1263,43): error TS7006: Parameter 'lu' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/activity-controller.ts(1289,27): error TS7006: Parameter 'activity' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/activity-controller.ts(1387,29): error TS7006: Parameter 'activity' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(14,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/admin-controller.ts(15,34): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/admin-controller.ts(21,8): error TS2307: Cannot find module '@reading-advantage/domain' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/admin-controller.ts(36,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/admin-controller.ts(126,39): error TS7006: Parameter 'u' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(128,47): error TS7006: Parameter 'u' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(131,13): error TS7006: Parameter 'u' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(132,16): error TS7006: Parameter 'value' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(137,28): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(137,33): error TS7006: Parameter 'value' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(164,39): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(164,44): error TS7006: Parameter 'log' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(193,27): error TS7006: Parameter 'activity' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(216,49): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(218,51): error TS7006: Parameter 'activity' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(225,31): error TS2339: Property 'cefrLevel' does not exist on type '{}'.
+apps/reading-advantage/server/controllers/admin-controller.ts(226,26): error TS2339: Property 'title' does not exist on type '{}'.
+apps/reading-advantage/server/controllers/admin-controller.ts(227,26): error TS2339: Property 'raLevel' does not exist on type '{}'.
+apps/reading-advantage/server/controllers/admin-controller.ts(261,39): error TS7006: Parameter 'u' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(364,39): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(373,16): error TS7006: Parameter 'u' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(374,13): error TS7006: Parameter 'u' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(389,62): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(402,44): error TS7006: Parameter 'l' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(415,33): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(420,29): error TS7006: Parameter 'u' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(431,29): error TS7006: Parameter 'l' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(438,25): error TS7006: Parameter 'school' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(462,21): error TS7006: Parameter 'license' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(484,10): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(484,15): error TS7006: Parameter 'l' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(487,39): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(487,44): error TS7006: Parameter 'l' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(589,34): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(611,20): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(615,20): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(622,16): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(634,16): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(648,16): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(655,16): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(662,16): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(677,20): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(677,33): error TS7006: Parameter 'x' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(682,20): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(682,33): error TS7006: Parameter 'x' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(696,20): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(711,16): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(716,35): error TS7006: Parameter 'id' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(745,20): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(750,20): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(763,14): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(864,34): error TS7031: Binding element 'actorUserId' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(864,47): error TS7031: Binding element 'actorRole' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(864,58): error TS7031: Binding element 'licenseId' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(984,34): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(1019,41): error TS7006: Parameter 't' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(1030,50): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(1048,51): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(1063,61): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(1066,53): error TS7006: Parameter 'c' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(1068,21): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(1074,21): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(1079,62): error TS7006: Parameter 'teacher' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/admin-controller.ts(1089,28): error TS2339: Property 'name' does not exist on type '{}'.
+apps/reading-advantage/server/controllers/ai-insight-actions-controller.ts(3,28): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/ai-insight-actions-controller.ts(4,28): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/ai-insight-refresh-controller.ts(8,45): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/ai-insight-refresh-controller.ts(17,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/ai-insight-refresh-controller.ts(61,39): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/ai-insight-refresh-controller.ts(65,35): error TS7006: Parameter 'c' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/ai-insight-refresh-controller.ts(239,28): error TS7006: Parameter 'license' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/ai-insight-refresh-controller.ts(279,23): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/ai-insight-refresh-controller.ts(297,30): error TS7006: Parameter 'classroom' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/ai-insight-refresh-controller.ts(337,23): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/ai-insight-refresh-controller.ts(353,43): error TS7006: Parameter 'ct' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/ai-insight-refresh-controller.ts(358,27): error TS7006: Parameter 'teacherId' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/ai-insight-refresh-controller.ts(398,23): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/ai-insight-refresh-controller.ts(418,25): error TS7006: Parameter 'student' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/ai-insight-refresh-controller.ts(458,23): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/article-controller.ts(6,32): error TS2307: Cannot find module '@reading-advantage/ai/internal-sdk' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/article-controller.ts(22,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/article-controller.ts(23,47): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/article-controller.ts(173,25): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/article-controller.ts(537,43): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/article-controller.ts(555,54): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/article-controller.ts(557,28): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/article-controller.ts(557,52): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/article-controller.ts(560,40): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/article-controller.ts(662,29): error TS7006: Parameter 'item' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/assignment-classroom-controller.ts(2,44): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/assignment-classroom-controller.ts(3,100): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/assignment-classroom-controller.ts(62,46): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/assignment-classroom-controller.ts(63,39): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/assignment-classroom-controller.ts(114,41): error TS7006: Parameter 'cs' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/assignment-classroom-controller.ts(127,54): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/assignment-classroom-controller.ts(128,48): error TS7006: Parameter 'id' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/assignment-classroom-controller.ts(185,55): error TS7006: Parameter 'notif' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/assignment-controller.ts(19,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/assignment-controller.ts(28,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/assignment-controller.ts(165,36): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/assignment-controller.ts(212,49): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/assignment-controller.ts(229,23): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/assignment-controller.ts(235,42): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/assignment-controller.ts(245,57): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/assignment-controller.ts(400,58): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/assignment-controller.ts(712,30): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/assignment-controller.ts(725,28): error TS7006: Parameter 'row' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/assignment-controller.ts(732,67): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/assignment-controller.ts(939,47): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/assignment-controller.ts(953,21): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/assignment-controller.ts(959,72): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/assignment-controller.ts(962,37): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/assignment-controller.ts(963,38): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/assignment-controller.ts(964,38): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/assignment-controller.ts(967,18): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/assignment-controller.ts(968,15): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/assignment-controller.ts(972,28): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/assignment-controller.ts(972,33): error TS7006: Parameter 'score' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/assignment-funnel-controller.ts(21,51): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/assignment-funnel-controller.ts(22,87): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/assignment-funnel-controller.ts(132,57): error TS7006: Parameter 'tc' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/assignment-funnel-controller.ts(337,36): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/assignment-funnel-controller.ts(337,41): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/assignment-funnel-controller.ts(521,29): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/assignment-funnel-controller.ts(521,34): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/assignment-funnel-controller.ts(573,29): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/assignment-funnel-controller.ts(573,34): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/assignment-notification-controller.ts(3,44): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/assignment-notification-controller.ts(12,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/assignment-notification-controller.ts(57,39): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/assignment-notification-controller.ts(106,37): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/assignment-notification-controller.ts(122,56): error TS7006: Parameter 'acc' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/assignment-notification-controller.ts(122,61): error TS7006: Parameter 'notification' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/assignment-notification-controller.ts(168,58): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/assignment-notification-controller.ts(181,40): error TS7006: Parameter 'ct' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/assignment-notification-controller.ts(182,45): error TS7006: Parameter 'c' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/assignment-notification-controller.ts(185,25): error TS7006: Parameter 't' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/assignment-notification-controller.ts(191,54): error TS7006: Parameter 'cs' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/assignment-notification-controller.ts(191,109): error TS7006: Parameter 'cs' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/assignment-notification-controller.ts(292,56): error TS7006: Parameter 't' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/assignment-notification-controller.ts(316,37): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/assistant-controller.ts(2,46): error TS2307: Cannot find module '@reading-advantage/ai/internal-sdk' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/assistant-controller.ts(6,24): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/assistant-controller.ts(11,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/castle-defense-controller.ts(1,45): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/castle-defense-controller.ts(8,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/castle-defense-controller.ts(215,28): error TS7006: Parameter 'rank' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/castle-defense-controller.ts(307,15): error TS7006: Parameter 'record' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/castle-defense-controller.ts(334,18): error TS7006: Parameter 'item' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/class-accuracy-controller.ts(2,43): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/class-accuracy-controller.ts(3,75): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/class-accuracy-controller.ts(58,36): error TS7006: Parameter 'cs' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/class-accuracy-controller.ts(91,44): error TS7006: Parameter 'studentId' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/class-accuracy-controller.ts(92,31): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/class-accuracy-controller.ts(93,52): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/class-accuracy-controller.ts(95,55): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/class-accuracy-controller.ts(96,48): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/class-accuracy-controller.ts(103,10): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/class-accuracy-controller.ts(105,60): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/class-accuracy-controller.ts(132,50): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/class-accuracy-controller.ts(137,38): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/class-accuracy-controller.ts(137,43): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/class-accuracy-controller.ts(143,38): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/class-accuracy-controller.ts(143,43): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/class-accuracy-controller.ts(149,38): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/class-accuracy-controller.ts(149,43): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/class-accuracy-controller.ts(152,45): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/class-accuracy-controller.ts(152,50): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/class-dashboard-controller.ts(8,48): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/class-dashboard-controller.ts(18,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/class-dashboard-controller.ts(71,41): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/class-dashboard-controller.ts(79,47): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/class-dashboard-controller.ts(116,34): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/class-dashboard-controller.ts(117,36): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/class-dashboard-controller.ts(133,47): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/class-dashboard-controller.ts(133,52): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/class-dashboard-controller.ts(134,47): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/class-dashboard-controller.ts(134,52): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/class-dashboard-controller.ts(135,54): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/class-export-controller.ts(8,43): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/class-export-controller.ts(9,106): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/class-export-controller.ts(80,36): error TS7006: Parameter 'cs' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/class-export-controller.ts(96,47): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/class-export-controller.ts(111,41): error TS7006: Parameter 'student' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/class-export-controller.ts(112,37): error TS7006: Parameter 'cs' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/class-export-controller.ts(113,40): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/class-export-controller.ts(114,41): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(23,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/classroom-controller.ts(37,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/classroom-controller.ts(145,38): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(145,68): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(232,57): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(248,53): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(274,44): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(289,48): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(331,25): error TS7006: Parameter 'c' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(364,25): error TS7006: Parameter 'c' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(415,56): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(418,30): error TS7006: Parameter 'c' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(444,48): error TS7006: Parameter 'c' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(446,20): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(447,17): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(462,37): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(504,43): error TS7006: Parameter 'l' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(504,84): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(504,87): error TS7006: Parameter 'l' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(505,42): error TS7006: Parameter 'l' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(505,82): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(505,85): error TS7006: Parameter 'l' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(506,43): error TS7006: Parameter 'l' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(506,84): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(506,87): error TS7006: Parameter 'l' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(507,47): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(507,50): error TS7006: Parameter 'u' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(608,51): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(622,32): error TS7006: Parameter 'c' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(637,37): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(676,51): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(693,32): error TS7006: Parameter 'c' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(708,37): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(752,44): error TS7006: Parameter 'u' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1156,42): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1163,52): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1175,32): error TS7006: Parameter 'c' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1181,39): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1189,52): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1189,55): error TS7006: Parameter 'l' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1215,60): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1230,60): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1238,45): error TS7006: Parameter 'l' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1286,32): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1296,32): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1302,32): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1312,32): error TS7006: Parameter 'c' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1321,45): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1329,45): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1329,48): error TS7006: Parameter 'l' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1345,37): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1394,34): error TS7006: Parameter 'l' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1394,75): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1394,78): error TS7006: Parameter 'l' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1395,33): error TS7006: Parameter 'l' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1395,73): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1395,76): error TS7006: Parameter 'l' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1396,34): error TS7006: Parameter 'l' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1396,75): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1396,78): error TS7006: Parameter 'l' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1522,30): error TS7006: Parameter 't' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1555,41): error TS7006: Parameter 't' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1564,41): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1586,47): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1586,50): error TS7006: Parameter 'u' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1587,71): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1587,74): error TS7006: Parameter 'u' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1596,56): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1596,92): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1597,57): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1597,94): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1601,46): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1602,44): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1602,47): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1616,47): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1635,41): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1637,42): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1640,40): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1640,70): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1642,45): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1642,48): error TS7006: Parameter 'sc' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1710,41): error TS7006: Parameter 't' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1727,36): error TS7006: Parameter 'enroll' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1754,53): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1755,51): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1756,39): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1756,69): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1757,68): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-controller.ts(1757,71): error TS7006: Parameter 'sc' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-goals-controller.ts(3,38): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/classroom-goals-controller.ts(4,76): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/classroom-goals-controller.ts(46,47): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-goals-controller.ts(90,47): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/classroom-goals-controller.ts(172,53): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/dashboard-summary-controller.ts(10,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/dragon-flight-controller.ts(1,45): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/dragon-flight-controller.ts(8,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/dragon-flight-controller.ts(207,28): error TS7006: Parameter 'rank' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/dragon-flight-controller.ts(268,15): error TS7006: Parameter 'vocab' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/dragon-flight-controller.ts(291,18): error TS7006: Parameter 'item' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/dragon-rider-controller.ts(1,52): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/dragon-rider-controller.ts(8,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/dragon-rider-controller.ts(214,28): error TS7006: Parameter 'rank' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/dragon-rider-controller.ts(305,15): error TS7006: Parameter 'record' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/dragon-rider-controller.ts(364,18): error TS7006: Parameter 'item' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/enchanted-library-controller.ts(1,52): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/enchanted-library-controller.ts(8,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/enchanted-library-controller.ts(223,28): error TS7006: Parameter 'rank' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/enchanted-library-controller.ts(314,15): error TS7006: Parameter 'record' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/enchanted-library-controller.ts(373,18): error TS7006: Parameter 'item' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/enhanced-alignment-controller.ts(9,53): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/enhanced-alignment-controller.ts(10,60): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/flashcard-controller.ts(3,45): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/flashcard-controller.ts(10,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/flashcard-controller.ts(11,26): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/flashcard-controller.ts(874,57): error TS7006: Parameter 'word' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/flashcard-controller.ts(874,63): error TS7006: Parameter 'index' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/flashcard-controller.ts(874,70): error TS7006: Parameter 'array' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/flashcard-controller.ts(1252,18): error TS7006: Parameter 'word' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/flashcard-controller.ts(1255,15): error TS7006: Parameter 'word' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/flashcard-controller.ts(1256,18): error TS7006: Parameter 'word' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/flashcard-controller.ts(1261,15): error TS7006: Parameter 'word' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/flashcard-controller.ts(1261,21): error TS7006: Parameter 'index' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/flashcard-controller.ts(1275,18): error TS7006: Parameter 'word' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/flashcard-controller.ts(1277,45): error TS7006: Parameter 'word' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/generator-controller.ts(1,44): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/generator-controller.ts(10,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/generator-controller.ts(1156,42): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/generator-controller.ts(1179,22): error TS7006: Parameter 'q' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/generator-controller.ts(1184,22): error TS7006: Parameter 'q' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/generator-controller.ts(1189,22): error TS7006: Parameter 'q' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/generator-controller.ts(1196,51): error TS7006: Parameter 'article' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/generator-controller.ts(1539,25): error TS2307: Cannot find module '@reading-advantage/storage' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/generator-controller.ts(1541,49): error TS2307: Cannot find module '@reading-advantage/storage' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/generator-controller.ts(1576,25): error TS2307: Cannot find module '@reading-advantage/storage' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/generator-controller.ts(1578,49): error TS2307: Cannot find module '@reading-advantage/storage' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/generator-controller.ts(1633,33): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/genre-controller.ts(4,43): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/genre-controller.ts(13,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/genre-controller.ts(91,61): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/genre-controller.ts(92,44): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/genre-controller.ts(96,13): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/genre-controller.ts(97,16): error TS7006: Parameter 'id' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/genre-controller.ts(99,54): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/genre-controller.ts(124,55): error TS7006: Parameter 'act' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/genre-controller.ts(133,51): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/genre-controller.ts(151,23): error TS7006: Parameter 'row' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/genre-controller.ts(159,35): error TS7006: Parameter 'act' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/genre-controller.ts(178,30): error TS7006: Parameter 'record' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/genre-controller.ts(380,63): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/leaderboard-controller.ts(3,57): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/leaderboard-controller.ts(11,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/leaderboard-controller.ts(31,30): error TS7006: Parameter 'license' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/leaderboard-controller.ts(38,46): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/leaderboard-controller.ts(50,12): error TS7006: Parameter 'u' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/leaderboard-controller.ts(56,45): error TS7006: Parameter 'u' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/leaderboard-controller.ts(97,17): error TS7006: Parameter 'u' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/leaderboard-controller.ts(104,20): error TS7006: Parameter 'u' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/leaderboard-controller.ts(105,18): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/leaderboard-controller.ts(105,21): error TS7006: Parameter 'b' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/leaderboard-controller.ts(107,17): error TS7006: Parameter 'u' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/leaderboard-controller.ts(107,20): error TS7006: Parameter 'index' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/leaderboard-controller.ts(142,45): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/leaderboard-controller.ts(153,8): error TS7006: Parameter 'u' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/leaderboard-controller.ts(159,41): error TS7006: Parameter 'u' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/leaderboard-controller.ts(195,13): error TS7006: Parameter 'u' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/leaderboard-controller.ts(202,16): error TS7006: Parameter 'u' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/leaderboard-controller.ts(203,14): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/leaderboard-controller.ts(203,17): error TS7006: Parameter 'b' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/leaderboard-controller.ts(205,13): error TS7006: Parameter 'u' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/leaderboard-controller.ts(205,16): error TS7006: Parameter 'index' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/lesson-controller.ts(3,49): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/lesson-controller.ts(12,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/lesson-controller.ts(138,33): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/lesson-controller.ts(213,33): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/lesson-controller.ts(331,58): error TS7006: Parameter 'activity' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/lesson-controller.ts(340,49): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/lesson-controller.ts(352,39): error TS7006: Parameter 'log' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/lesson-controller.ts(353,39): error TS7006: Parameter 'log' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/lesson-controller.ts(356,8): error TS7006: Parameter 'total' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/lesson-controller.ts(356,15): error TS7006: Parameter 'log' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/lesson-controller.ts(360,38): error TS7006: Parameter 'total' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/lesson-controller.ts(360,45): error TS7006: Parameter 'log' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/lesson-controller.ts(424,41): error TS7006: Parameter 'record' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/lesson-controller.ts(643,10): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/lesson-controller.ts(643,15): error TS7006: Parameter 'log' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/lesson-controller.ts(684,45): error TS7006: Parameter 'record' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/level-test-controller.ts(4,28): error TS2307: Cannot find module '@reading-advantage/ai/internal-sdk' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/license-controller.ts(4,75): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/license-controller.ts(5,71): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/license-controller.ts(83,28): error TS7006: Parameter 'license' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/license-controller.ts(90,20): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/license-controller.ts(106,44): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/license-controller.ts(205,33): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/license-controller.ts(239,18): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/license-controller.ts(257,44): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/license-controller.ts(305,33): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/license-controller.ts(380,33): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/license-controller.ts(447,21): error TS7006: Parameter 'license' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/license-controller.ts(454,20): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/license-controller.ts(538,37): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/license-controller.ts(551,32): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/license-controller.ts(551,37): error TS7006: Parameter 'l' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/license-controller.ts(559,37): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/license-controller.ts(572,32): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/license-controller.ts(572,37): error TS7006: Parameter 'l' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/license-controller.ts(616,64): error TS7006: Parameter 'activity' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/license-controller.ts(635,49): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/license-controller.ts(638,49): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/license-controller.ts(686,39): error TS7006: Parameter 'total' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/license-controller.ts(686,46): error TS7006: Parameter 'log' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/license-controller.ts(689,8): error TS7006: Parameter 'acc' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/license-controller.ts(689,13): error TS7006: Parameter 'log' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/magic-defense-controller.ts(1,45): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/magic-defense-controller.ts(8,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/magic-defense-controller.ts(202,28): error TS7006: Parameter 'rank' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/magic-defense-controller.ts(264,15): error TS7006: Parameter 'vocab' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/magic-defense-controller.ts(287,18): error TS7006: Parameter 'item' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/metrics-controller.ts(15,49): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/metrics-controller.ts(16,101): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/metrics-controller.ts(65,40): error TS7006: Parameter 'activity' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/metrics-controller.ts(287,79): error TS7006: Parameter 'assignment' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/metrics-controller.ts(297,72): error TS7006: Parameter 'assignment' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/metrics-controller.ts(301,10): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/metrics-controller.ts(304,10): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/metrics-controller.ts(307,10): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/metrics-controller.ts(311,18): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/metrics-controller.ts(312,15): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/metrics-controller.ts(315,26): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/metrics-controller.ts(315,31): error TS7006: Parameter 'score' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/metrics-extended-controller.ts(11,34): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/metrics-extended-controller.ts(12,67): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/metrics-extended-controller.ts(87,44): error TS7006: Parameter 'record' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/metrics-extended-controller.ts(314,47): error TS7006: Parameter 'record' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/potion-rush-controller.ts(1,45): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/potion-rush-controller.ts(8,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/potion-rush-controller.ts(222,28): error TS7006: Parameter 'rank' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/potion-rush-controller.ts(302,15): error TS7006: Parameter 'record' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/potion-rush-controller.ts(329,18): error TS7006: Parameter 'item' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/question-controller.ts(5,43): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/question-controller.ts(15,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/question-controller.ts(84,57): error TS7006: Parameter 'activity' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/question-controller.ts(274,57): error TS7006: Parameter 'activity' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/question-controller.ts(280,48): error TS7006: Parameter 'activity' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/question-controller.ts(293,45): error TS7006: Parameter 'log' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/question-controller.ts(302,8): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/question-controller.ts(302,11): error TS7006: Parameter 'b' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/question-controller.ts(306,31): error TS7006: Parameter 'activity' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/question-controller.ts(319,28): error TS2339: Property 'xpEarned' does not exist on type '{}'.
+apps/reading-advantage/server/controllers/question-controller.ts(380,49): error TS7006: Parameter 'q' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/question-controller.ts(384,8): error TS7006: Parameter 'q' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/question-controller.ts(969,16): error TS7006: Parameter 'activity' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/question-controller.ts(973,13): error TS7006: Parameter 'activity' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/question-controller.ts(992,10): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/question-controller.ts(992,15): error TS7006: Parameter 'log' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/rpg-battle-controller.ts(1,45): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/rpg-battle-controller.ts(8,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/rpg-battle-controller.ts(209,28): error TS7006: Parameter 'rank' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/rpg-battle-controller.ts(270,15): error TS7006: Parameter 'vocab' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/rpg-battle-controller.ts(292,18): error TS7006: Parameter 'item' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/rune-match-controller.ts(1,45): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/rune-match-controller.ts(8,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/rune-match-controller.ts(193,15): error TS7006: Parameter 'vocab' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/rune-match-controller.ts(211,18): error TS7006: Parameter 'item' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/rune-match-controller.ts(290,41): error TS7006: Parameter 'rank' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/srs-health-controller.ts(27,38): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/srs-health-controller.ts(28,61): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/srs-health-controller.ts(125,59): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/srs-quick-actions-controller.ts(18,38): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/srs-quick-actions-controller.ts(19,61): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/srs-quick-actions-controller.ts(60,59): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/stories-assistant-controller.ts(2,44): error TS2307: Cannot find module '@reading-advantage/ai/internal-sdk' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/stories-assistant-controller.ts(13,29): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/stories-assistant-controller.ts(14,26): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/stories-controller.ts(5,58): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/stories-controller.ts(6,35): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/stories-controller.ts(7,30): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/stories-controller.ts(324,37): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/stories-controller.ts(338,48): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/stories-controller.ts(344,38): error TS7006: Parameter 'story' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/stories-controller.ts(362,37): error TS7006: Parameter 'chapter' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/stories-controller.ts(508,32): error TS7006: Parameter 'chapter' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/stories-controller.ts(698,26): error TS7006: Parameter 'ch' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/stories-question-controller.ts(6,65): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/stories-question-controller.ts(17,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/stories-question-controller.ts(172,44): error TS7006: Parameter 'q' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/stories-question-controller.ts(172,47): error TS7006: Parameter 'index' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/stories-question-controller.ts(192,54): error TS7006: Parameter 'activity' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/stories-question-controller.ts(207,48): error TS7006: Parameter 'activity' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/stories-question-controller.ts(220,49): error TS7006: Parameter 'log' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/stories-question-controller.ts(227,8): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/stories-question-controller.ts(227,11): error TS7006: Parameter 'b' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/stories-question-controller.ts(231,31): error TS7006: Parameter 'activity' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/stories-question-controller.ts(247,28): error TS2339: Property 'xpEarned' does not exist on type '{}'.
+apps/reading-advantage/server/controllers/stories-question-controller.ts(288,48): error TS7006: Parameter 'q' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/stories-question-controller.ts(289,49): error TS7006: Parameter 'q' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/stories-question-controller.ts(302,57): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/stories-question-controller.ts(302,60): error TS7006: Parameter 'b' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/stories-question-controller.ts(421,40): error TS7006: Parameter 'q' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/stories-question-controller.ts(846,44): error TS7006: Parameter 'q' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/stories-question-controller.ts(846,47): error TS7006: Parameter 'index' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/stories-question-controller.ts(852,8): error TS7006: Parameter 'q' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/stories-question-controller.ts(948,54): error TS7006: Parameter 'activity' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/stories-question-controller.ts(961,29): error TS7006: Parameter 'activity' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/stories-question-controller.ts(1132,16): error TS7006: Parameter 'activity' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/stories-question-controller.ts(1142,13): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/stories-question-controller.ts(1167,45): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/stories-question-controller.ts(1167,50): error TS7006: Parameter 'log' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/student-dashboard-controller.ts(4,48): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/student-dashboard-controller.ts(5,119): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/student-dashboard-controller.ts(51,39): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/student-dashboard-controller.ts(65,28): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/student-dashboard-controller.ts(65,60): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/student-dashboard-controller.ts(65,65): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/student-dashboard-controller.ts(74,25): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/student-dashboard-controller.ts(89,36): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/student-dashboard-controller.ts(90,38): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/student-dashboard-controller.ts(91,36): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/student-dashboard-controller.ts(96,35): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/student-dashboard-controller.ts(96,66): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/student-dashboard-controller.ts(98,42): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/student-dashboard-controller.ts(98,47): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/student-dashboard-controller.ts(104,39): error TS7006: Parameter 'l' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/student-dashboard-controller.ts(104,89): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/student-dashboard-controller.ts(104,94): error TS7006: Parameter 'l' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/student-dashboard-controller.ts(108,40): error TS7006: Parameter 'l' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/student-dashboard-controller.ts(108,91): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/student-dashboard-controller.ts(108,96): error TS7006: Parameter 'l' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/student-notification-controller.ts(2,35): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/student-notification-controller.ts(7,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/system-controller.ts(15,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/system-controller.ts(21,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/system-controller.ts(48,41): error TS7006: Parameter 'l' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/system-controller.ts(62,30): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/system-controller.ts(68,45): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/system-controller.ts(78,24): error TS7006: Parameter 'log' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/system-controller.ts(85,48): error TS7006: Parameter 'license' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/system-controller.ts(170,41): error TS7006: Parameter 'l' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/system-controller.ts(182,57): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/system-controller.ts(198,24): error TS7006: Parameter 'log' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/system-controller.ts(206,30): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/system-controller.ts(213,26): error TS7006: Parameter 'license' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/system-dashboard-controller.ts(5,40): error TS2307: Cannot find module '@reading-advantage/domain' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/teacher-assignment-controller.ts(2,44): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/teacher-assignment-controller.ts(3,116): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/teacher-assignment-controller.ts(56,39): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/teacher-assignment-controller.ts(94,62): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/teacher-assignment-controller.ts(95,51): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/teacher-assignment-controller.ts(110,64): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/teacher-assignment-controller.ts(134,63): error TS7006: Parameter 't' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/teacher-assignment-controller.ts(153,78): error TS2339: Property 'id' does not exist on type '{}'.
+apps/reading-advantage/server/controllers/teacher-assignment-controller.ts(154,47): error TS2339: Property 'id' does not exist on type '{}'.
+apps/reading-advantage/server/controllers/teacher-assignment-controller.ts(154,72): error TS2339: Property 'name' does not exist on type '{}'.
+apps/reading-advantage/server/controllers/teacher-assignment-controller.ts(154,100): error TS2339: Property 'email' does not exist on type '{}'.
+apps/reading-advantage/server/controllers/teacher-assignment-controller.ts(157,44): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/teacher-assignment-controller.ts(158,52): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/teacher-assignment-controller.ts(159,53): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/teacher-assignment-controller.ts(160,53): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/teacher-dashboard-controller.ts(4,54): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/teacher-dashboard-controller.ts(14,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/teacher-dashboard-controller.ts(72,38): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/teacher-dashboard-controller.ts(83,56): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/teacher-dashboard-controller.ts(93,63): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/teacher-dashboard-controller.ts(95,34): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/teacher-dashboard-controller.ts(95,82): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/teacher-dashboard-controller.ts(102,47): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/teacher-dashboard-controller.ts(112,54): error TS7006: Parameter 'aId' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/teacher-dashboard-controller.ts(113,34): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/teacher-dashboard-controller.ts(114,24): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/teacher-dashboard-controller.ts(118,8): error TS7006: Parameter 'sa' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/teacher-dashboard-controller.ts(124,29): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/teacher-dashboard-controller.ts(124,34): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/teacher-dashboard-controller.ts(181,38): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/teacher-dashboard-controller.ts(210,56): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/teacher-dashboard-controller.ts(219,18): error TS7006: Parameter 'r' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/teacher-dashboard-controller.ts(223,56): error TS7006: Parameter 'classroom' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/teacher-dashboard-controller.ts(224,44): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/teacher-dashboard-controller.ts(225,49): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/teacher-dashboard-controller.ts(226,63): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/teacher-dashboard-controller.ts(226,68): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/teacher-dashboard-controller.ts(227,40): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/teacher-dashboard-controller.ts(227,45): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/translation-controller.ts(1,34): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/translation-controller.ts(2,45): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/translation-controller.ts(5,32): error TS2307: Cannot find module '@reading-advantage/ai/internal-sdk' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/user-controller.ts(4,75): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/user-controller.ts(17,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/user-controller.ts(196,35): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/user-controller.ts(620,43): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/user-controller.ts(632,45): error TS7006: Parameter 'log' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/user-controller.ts(634,40): error TS7006: Parameter 'activity' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/user-controller.ts(634,80): error TS7006: Parameter 'id' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/user-controller.ts(651,49): error TS7006: Parameter 'article' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/user-controller.ts(656,24): error TS7006: Parameter 'xpLog' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/user-controller.ts(668,46): error TS7006: Parameter 'activity' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/user-controller.ts(685,27): error TS2339: Property 'title' does not exist on type '{}'.
+apps/reading-advantage/server/controllers/user-controller.ts(686,27): error TS2339: Property 'raLevel' does not exist on type '{}'.
+apps/reading-advantage/server/controllers/user-controller.ts(687,32): error TS2339: Property 'cefrLevel' does not exist on type '{}'.
+apps/reading-advantage/server/controllers/user-controller.ts(688,26): error TS2339: Property 'type' does not exist on type '{}'.
+apps/reading-advantage/server/controllers/user-controller.ts(689,27): error TS2339: Property 'genre' does not exist on type '{}'.
+apps/reading-advantage/server/controllers/user-controller.ts(690,30): error TS2339: Property 'subGenre' does not exist on type '{}'.
+apps/reading-advantage/server/controllers/user-controller.ts(691,30): error TS2339: Property 'subGenre' does not exist on type '{}'.
+apps/reading-advantage/server/controllers/user-controller.ts(710,8): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/user-controller.ts(710,11): error TS7006: Parameter 'b' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/user-controller.ts(754,25): error TS7006: Parameter 'activity' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/user-controller.ts(790,51): error TS7006: Parameter 'article' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/user-controller.ts(820,28): error TS2339: Property 'type' does not exist on type '{}'.
+apps/reading-advantage/server/controllers/user-controller.ts(821,29): error TS2339: Property 'genre' does not exist on type '{}'.
+apps/reading-advantage/server/controllers/user-controller.ts(823,24): error TS2339: Property 'subGenre' does not exist on type '{}'.
+apps/reading-advantage/server/controllers/user-controller.ts(827,24): error TS2339: Property 'raLevel' does not exist on type '{}'.
+apps/reading-advantage/server/controllers/user-controller.ts(829,24): error TS2339: Property 'cefrLevel' does not exist on type '{}'.
+apps/reading-advantage/server/controllers/user-controller.ts(833,24): error TS2339: Property 'title' does not exist on type '{}'.
+apps/reading-advantage/server/controllers/user-controller.ts(838,24): error TS2339: Property 'title' does not exist on type '{}'.
+apps/reading-advantage/server/controllers/user-controller.ts(887,25): error TS7006: Parameter 'activity' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/user-controller.ts(911,35): error TS7006: Parameter 'user' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/user-controller.ts(1030,45): error TS7006: Parameter 'log' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/user-controller.ts(1033,13): error TS7006: Parameter 'activity' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/user-controller.ts(1034,16): error TS7006: Parameter 'id' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/user-controller.ts(1051,49): error TS7006: Parameter 'article' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/user-controller.ts(1056,24): error TS7006: Parameter 'xpLog' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/user-controller.ts(1066,46): error TS7006: Parameter 'activity' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/user-controller.ts(1096,27): error TS2339: Property 'title' does not exist on type '{}'.
+apps/reading-advantage/server/controllers/user-controller.ts(1097,27): error TS2339: Property 'raLevel' does not exist on type '{}'.
+apps/reading-advantage/server/controllers/user-controller.ts(1098,32): error TS2339: Property 'cefrLevel' does not exist on type '{}'.
+apps/reading-advantage/server/controllers/user-controller.ts(1099,26): error TS2339: Property 'type' does not exist on type '{}'.
+apps/reading-advantage/server/controllers/user-controller.ts(1100,27): error TS2339: Property 'genre' does not exist on type '{}'.
+apps/reading-advantage/server/controllers/user-controller.ts(1101,30): error TS2339: Property 'subGenre' does not exist on type '{}'.
+apps/reading-advantage/server/controllers/user-controller.ts(1102,30): error TS2339: Property 'subGenre' does not exist on type '{}'.
+apps/reading-advantage/server/controllers/user-controller.ts(1111,8): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/user-controller.ts(1111,11): error TS7006: Parameter 'b' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/user-controller.ts(1188,33): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/user-controller.ts(1231,40): error TS7006: Parameter 'log' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/user-controller.ts(1236,49): error TS7006: Parameter 'activity' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/user-controller.ts(1238,45): error TS7006: Parameter 'xpLog' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/user-controller.ts(1245,29): error TS2339: Property 'targetId' does not exist on type '{}'.
+apps/reading-advantage/server/controllers/user-controller.ts(1246,26): error TS2339: Property 'timer' does not exist on type '{}'.
+apps/reading-advantage/server/controllers/user-controller.ts(1247,28): error TS2339: Property 'details' does not exist on type '{}'.
+apps/reading-advantage/server/controllers/user-controller.ts(1248,30): error TS2339: Property 'completed' does not exist on type '{}'.
+apps/reading-advantage/server/controllers/user-controller.ts(1250,30): error TS2339: Property 'timer' does not exist on type '{}'.
+apps/reading-advantage/server/controllers/user-controller.ts(1254,30): error TS2339: Property 'targetId' does not exist on type '{}'.
+apps/reading-advantage/server/controllers/user-controller.ts(1255,30): error TS2339: Property 'targetId' does not exist on type '{}'.
+apps/reading-advantage/server/controllers/user-controller.ts(1299,33): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/user-controller.ts(1345,52): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/user-controller.ts(1355,44): error TS7006: Parameter 'u' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/user-controller.ts(1399,64): error TS7006: Parameter 'activity' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/user-controller.ts(1414,51): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/user-controller.ts(1417,51): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/user-controller.ts(1483,23): error TS7006: Parameter 'log' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/user-controller.ts(1488,8): error TS7006: Parameter 'acc' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/user-controller.ts(1488,13): error TS7006: Parameter 'log' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/user-controller.ts(1536,48): error TS7006: Parameter 'l' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/user-controller.ts(1543,50): error TS7006: Parameter 'u' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/user-controller.ts(1547,24): error TS7006: Parameter 'log' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/user-controller.ts(1552,40): error TS2538: Type '{}' cannot be used as an index type.
+apps/reading-advantage/server/controllers/user-controller.ts(1552,80): error TS2538: Type '{}' cannot be used as an index type.
+apps/reading-advantage/server/controllers/user-controller.ts(1553,35): error TS2538: Type '{}' cannot be used as an index type.
+apps/reading-advantage/server/controllers/user-controller.ts(1586,37): error TS7006: Parameter 'u' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/user-controller.ts(1599,37): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/user-controller.ts(1599,42): error TS7006: Parameter 'log' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/user-controller.ts(1606,37): error TS7006: Parameter 'u' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/user-controller.ts(1619,37): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/user-controller.ts(1619,42): error TS7006: Parameter 'log' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/validator-controller.ts(22,61): error TS2307: Cannot find module '@reading-advantage/ai/internal-sdk' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/validator-controller.ts(112,59): error TS18046: 'doc' is of type 'unknown'.
+apps/reading-advantage/server/controllers/validator-controller.ts(231,35): error TS2339: Property 'passage' does not exist on type 'never'.
+apps/reading-advantage/server/controllers/validator-controller.ts(242,23): error TS2352: Conversion of type 'undefined' to type 'Article' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+apps/reading-advantage/server/controllers/velocity-controller.ts(22,38): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/velocity-controller.ts(23,61): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/velocity-controller.ts(240,44): error TS7006: Parameter 'tc' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/velocity-controller.ts(406,38): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/velocity-controller.ts(420,38): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/wizard-zombie-controller.ts(1,45): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/wizard-zombie-controller.ts(8,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/controllers/wizard-zombie-controller.ts(180,15): error TS7006: Parameter 'vocab' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/wizard-zombie-controller.ts(198,18): error TS7006: Parameter 'item' implicitly has an 'any' type.
+apps/reading-advantage/server/controllers/wizard-zombie-controller.ts(271,41): error TS7006: Parameter 'rank' implicitly has an 'any' type.
+apps/reading-advantage/server/models/license.ts(48,5): error TS2353: Object literal may only specify known properties, and 'total_licenses' does not exist in type 'Omit<License, "id">'.
+apps/reading-advantage/server/services/ai-insight-service.ts(1,30): error TS2307: Cannot find module '@reading-advantage/ai/internal-sdk' or its corresponding type declarations.
+apps/reading-advantage/server/services/ai-insight-service.ts(3,44): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/services/ai-insight-service.ts(19,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/services/ai-insight-service.ts(189,53): error TS7006: Parameter 'tc' implicitly has an 'any' type.
+apps/reading-advantage/server/services/ai-insight-service.ts(190,45): error TS7006: Parameter 'c' implicitly has an 'any' type.
+apps/reading-advantage/server/services/ai-insight-service.ts(194,32): error TS7006: Parameter 'classroom' implicitly has an 'any' type.
+apps/reading-advantage/server/services/ai-insight-service.ts(204,36): error TS7031: Binding element 'student' implicitly has an 'any' type.
+apps/reading-advantage/server/services/ai-insight-service.ts(236,43): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/services/ai-insight-service.ts(309,32): error TS7031: Binding element 'student' implicitly has an 'any' type.
+apps/reading-advantage/server/services/ai-insight-service.ts(347,39): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/services/ai-insight-service.ts(408,36): error TS7031: Binding element 'user' implicitly has an 'any' type.
+apps/reading-advantage/server/services/ai-insight-service.ts(998,30): error TS7006: Parameter 'lic' implicitly has an 'any' type.
+apps/reading-advantage/server/services/ai-insight-service.ts(1006,31): error TS7031: Binding element 'user' implicitly has an 'any' type.
+apps/reading-advantage/server/services/ai-insight-service.ts(1051,8): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+apps/reading-advantage/server/services/ai-insight-service.ts(1051,13): error TS7006: Parameter 'l' implicitly has an 'any' type.
+apps/reading-advantage/server/services/ai-insight-service.ts(1055,8): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+apps/reading-advantage/server/services/ai-insight-service.ts(1055,13): error TS7006: Parameter 'l' implicitly has an 'any' type.
+apps/reading-advantage/server/services/ai-insight-service.ts(1059,51): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+apps/reading-advantage/server/services/ai-insight-service.ts(1059,56): error TS7006: Parameter 'l' implicitly has an 'any' type.
+apps/reading-advantage/server/services/ai-insight-service.ts(1062,32): error TS7006: Parameter 'lu' implicitly has an 'any' type.
+apps/reading-advantage/server/services/ai-insight-service.ts(1066,47): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+apps/reading-advantage/server/services/ai-insight-service.ts(1066,52): error TS7006: Parameter 'l' implicitly has an 'any' type.
+apps/reading-advantage/server/services/ai-insight-service.ts(1069,32): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/services/ai-insight-service.ts(1069,35): error TS7006: Parameter 'lu' implicitly has an 'any' type.
+apps/reading-advantage/server/services/ai-insight-service.ts(1072,36): error TS7006: Parameter 'x' implicitly has an 'any' type.
+apps/reading-advantage/server/services/ai-insight-service.ts(1072,39): error TS7006: Parameter 'log' implicitly has an 'any' type.
+apps/reading-advantage/server/services/ai-insight-service.ts(1095,10): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/services/ai-insight-service.ts(1095,13): error TS7006: Parameter 'b' implicitly has an 'any' type.
+apps/reading-advantage/server/services/ai-insight-service.ts(1097,8): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/services/ai-insight-service.ts(1097,11): error TS7006: Parameter 'lu' implicitly has an 'any' type.
+apps/reading-advantage/server/services/ai-insight-service.ts(1097,45): error TS7006: Parameter 'x' implicitly has an 'any' type.
+apps/reading-advantage/server/services/ai-insight-service.ts(1097,48): error TS7006: Parameter 'log' implicitly has an 'any' type.
+apps/reading-advantage/server/services/ai-insight-service.ts(1101,8): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/services/ai-insight-service.ts(1101,11): error TS7006: Parameter 'lu' implicitly has an 'any' type.
+apps/reading-advantage/server/services/ai-insight-service.ts(1101,45): error TS7006: Parameter 'x' implicitly has an 'any' type.
+apps/reading-advantage/server/services/ai-insight-service.ts(1101,48): error TS7006: Parameter 'log' implicitly has an 'any' type.
+apps/reading-advantage/server/services/ai-insight-service.ts(1108,6): error TS7006: Parameter 'l' implicitly has an 'any' type.
+apps/reading-advantage/server/services/ai-insight-service.ts(1108,9): error TS7006: Parameter 'i' implicitly has an 'any' type.
+apps/reading-advantage/server/services/ai-insight-service.ts(1109,92): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/services/ai-insight-service.ts(1109,95): error TS7006: Parameter 'lu' implicitly has an 'any' type.
+apps/reading-advantage/server/services/ai-insight-service.ts(1109,129): error TS7006: Parameter 'x' implicitly has an 'any' type.
+apps/reading-advantage/server/services/ai-insight-service.ts(1109,132): error TS7006: Parameter 'log' implicitly has an 'any' type.
+apps/reading-advantage/server/services/demo-activity-generator.ts(1,34): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/services/demo-activity-generator.ts(7,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/services/demo-isolation-service.ts(1,58): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/services/demo-isolation-service.ts(10,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/services/demo-isolation-service.ts(193,112): error TS7006: Parameter 'u' implicitly has an 'any' type.
+apps/reading-advantage/server/services/demo-isolation-service.ts(207,115): error TS7006: Parameter 'u' implicitly has an 'any' type.
+apps/reading-advantage/server/services/demo-isolation-service.ts(234,38): error TS7006: Parameter 'u' implicitly has an 'any' type.
+apps/reading-advantage/server/services/goals-service.ts(1,71): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/services/goals-service.ts(10,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/services/goals-service.ts(75,34): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+apps/reading-advantage/server/services/goals-service.ts(133,32): error TS7006: Parameter 'g' implicitly has an 'any' type.
+apps/reading-advantage/server/services/goals-service.ts(140,28): error TS7006: Parameter 'id' implicitly has an 'any' type.
+apps/reading-advantage/server/services/goals-service.ts(147,23): error TS7006: Parameter 'g' implicitly has an 'any' type.
+apps/reading-advantage/server/services/goals-service.ts(222,34): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+apps/reading-advantage/server/services/goals-service.ts(365,39): error TS7006: Parameter 'g' implicitly has an 'any' type.
+apps/reading-advantage/server/services/goals-service.ts(366,42): error TS7006: Parameter 'g' implicitly has an 'any' type.
+apps/reading-advantage/server/services/goals-service.ts(367,39): error TS7006: Parameter 'g' implicitly has an 'any' type.
+apps/reading-advantage/server/services/goals-service.ts(373,38): error TS7006: Parameter 'g' implicitly has an 'any' type.
+apps/reading-advantage/server/services/goals-service.ts(429,29): error TS7006: Parameter 'log' implicitly has an 'any' type.
+apps/reading-advantage/server/services/localization/genre-localization-service.ts(8,24): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/services/localization/genre-localization-service.ts(9,32): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/services/metrics/assignment-prediction-service.ts(11,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/services/metrics/genre-engagement-service.ts(9,56): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/services/metrics/genre-engagement-service.ts(15,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/services/metrics/genre-engagement-service.ts(239,16): error TS7006: Parameter 'adj' implicitly has an 'any' type.
+apps/reading-advantage/server/services/metrics/genre-engagement-service.ts(240,16): error TS7006: Parameter 'adj' implicitly has an 'any' type.
+apps/reading-advantage/server/services/metrics/genre-engagement-service.ts(241,14): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/services/metrics/genre-engagement-service.ts(241,17): error TS7006: Parameter 'b' implicitly has an 'any' type.
+apps/reading-advantage/server/services/metrics/genre-engagement-service.ts(262,14): error TS7006: Parameter 'adj' implicitly has an 'any' type.
+apps/reading-advantage/server/services/metrics/genre-engagement-service.ts(263,14): error TS7006: Parameter 'adj' implicitly has an 'any' type.
+apps/reading-advantage/server/services/metrics/genre-engagement-service.ts(264,14): error TS7006: Parameter 'adj' implicitly has an 'any' type.
+apps/reading-advantage/server/services/metrics/genre-engagement-service.ts(265,12): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/services/metrics/genre-engagement-service.ts(265,15): error TS7006: Parameter 'b' implicitly has an 'any' type.
+apps/reading-advantage/server/services/metrics/genre-engagement-service.ts(383,27): error TS7006: Parameter 'a' implicitly has an 'any' type.
+apps/reading-advantage/server/services/metrics/genre-engagement-service.ts(383,50): error TS7006: Parameter 'g' implicitly has an 'any' type.
+apps/reading-advantage/server/services/metrics/genre-engagement-service.ts(384,27): error TS7006: Parameter 'c' implicitly has an 'any' type.
+apps/reading-advantage/server/services/metrics/genre-engagement-service.ts(384,50): error TS7006: Parameter 'g' implicitly has an 'any' type.
+apps/reading-advantage/server/services/metrics/srs-health-service.ts(12,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/services/metrics/velocity-service.ts(10,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/services/refresh-matviews-service.ts(1,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/services/srs-quick-actions-service.ts(11,58): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/services/srs-quick-actions-service.ts(19,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/services/srs-quick-actions-service.ts(242,44): error TS7006: Parameter 'user' implicitly has an 'any' type.
+apps/reading-advantage/server/services/srs-quick-actions-service.ts(374,59): error TS7006: Parameter 'tc' implicitly has an 'any' type.
+apps/reading-advantage/server/services/srs-quick-actions-service.ts(416,35): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/services/srs-quick-actions-service.ts(561,51): error TS7006: Parameter 'cs' implicitly has an 'any' type.
+apps/reading-advantage/server/services/srs-quick-actions-service.ts(567,45): error TS7006: Parameter 'u' implicitly has an 'any' type.
+apps/reading-advantage/server/services/srs-quick-actions-service.ts(601,29): error TS7006: Parameter 's' implicitly has an 'any' type.
+apps/reading-advantage/server/utils/audit-recorder.ts(47,37): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/reading-advantage/server/utils/authorization.ts(17,24): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/utils/authorization.ts(18,35): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/utils/generators/article-generator.ts(4,32): error TS2307: Cannot find module '@reading-advantage/ai/internal-sdk' or its corresponding type declarations.
+apps/reading-advantage/server/utils/generators/audio-generator.ts(13,32): error TS2307: Cannot find module '@reading-advantage/ai/internal-sdk' or its corresponding type declarations.
+apps/reading-advantage/server/utils/generators/audio-generator.ts(17,54): error TS2307: Cannot find module '@reading-advantage/utils' or its corresponding type declarations.
+apps/reading-advantage/server/utils/generators/audio-generator.ts(18,24): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/utils/generators/audio-generator.ts(19,26): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/utils/generators/audio-generator.ts(95,22): error TS7006: Parameter 'sentence' implicitly has an 'any' type.
+apps/reading-advantage/server/utils/generators/audio-generator.ts(95,32): error TS7006: Parameter 'index' implicitly has an 'any' type.
+apps/reading-advantage/server/utils/generators/audio-words-generator.ts(9,24): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/utils/generators/audio-words-generator.ts(10,26): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/utils/generators/evaluate-rating-generator.ts(4,32): error TS2307: Cannot find module '@reading-advantage/ai/internal-sdk' or its corresponding type declarations.
+apps/reading-advantage/server/utils/generators/image-generator.ts(1,62): error TS2307: Cannot find module '@reading-advantage/ai/internal-sdk' or its corresponding type declarations.
+apps/reading-advantage/server/utils/generators/question-generator.ts(4,32): error TS2307: Cannot find module '@reading-advantage/ai/internal-sdk' or its corresponding type declarations.
+apps/reading-advantage/server/utils/generators/stories-bible-generator.ts(1,32): error TS2307: Cannot find module '@reading-advantage/ai/internal-sdk' or its corresponding type declarations.
+apps/reading-advantage/server/utils/generators/stories-chapters-generator.ts(2,32): error TS2307: Cannot find module '@reading-advantage/ai/internal-sdk' or its corresponding type declarations.
+apps/reading-advantage/server/utils/generators/stories-generator.ts(2,29): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/reading-advantage/server/utils/generators/stories-generator.ts(3,52): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+apps/reading-advantage/server/utils/generators/stories-topic-generator.ts(1,32): error TS2307: Cannot find module '@reading-advantage/ai/internal-sdk' or its corresponding type declarations.
+apps/reading-advantage/server/utils/generators/topic-generator.ts(1,46): error TS2307: Cannot find module '@reading-advantage/ai/internal-sdk' or its corresponding type declarations.
+apps/reading-advantage/server/utils/generators/translation-generator.ts(1,32): error TS2307: Cannot find module '@reading-advantage/ai/internal-sdk' or its corresponding type declarations.
+apps/reading-advantage/server/utils/generators/word-list-generator.ts(2,32): error TS2307: Cannot find module '@reading-advantage/ai/internal-sdk' or its corresponding type declarations.
+apps/reading-advantage/utils/google.ts(1,42): error TS2307: Cannot find module '@reading-advantage/ai/internal-sdk' or its corresponding type declarations.
+apps/reading-advantage/utils/google.ts(2,30): error TS2307: Cannot find module '@reading-advantage/ai/internal-sdk' or its corresponding type declarations.
+apps/reading-advantage/utils/openai.ts(1,30): error TS2307: Cannot find module '@reading-advantage/ai/internal-sdk' or its corresponding type declarations.

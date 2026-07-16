@@ -49,19 +49,20 @@ escalating into swap thrashing or OOM kills.
 
 - wall-clock elapsed time (`/usr/bin/time -v`)
 - peak RSS (`Maximum resident set size` from `/usr/bin/time -v`)
-- swap delta (read once before and after; recorded as the integer difference)
+- signed swap delta (read once before and after; recorded as `after - before`;
+  negative values are valid when swap use decreases)
 - process count (`pgrep -fc tsc` + `pgrep -fc node` at sample points)
 - diagnostic count (normalized stdout+stderr)
 - Turbo cache state (`turbo run ... --summarize --json` parsed via `json.loads`)
 - exit status and signal (`WIFSIGNALED`, `WTERMSIG`)
 - spawned-process-group aggregate (sum of `VmRSS` across the `pgid` of the
-  spawned `tsc` process; sampled every 250 ms via `/proc/<pid>/status`)
+  spawned `tsc` process; sampled every quarter-second via `/proc/<pid>/status`)
 
 **Fail-closed triggers** (run is marked `invalid`, never silently passed):
 
-- swap delta exceeds the per-phase ceiling recorded in `phase1-baseline.json`.
+- swap delta exceeds the per-phase ceiling recorded in `compiler-baseline.json`.
 - spawned-process-group aggregate `VmRSS` exceeds the per-phase ceiling
-  recorded in `phase1-baseline.json`.
+  recorded in `compiler-baseline.json`.
 - a compiler run completes `exit 0` with a different diagnostic count than the
   parity ledger claims for the same tsconfig (false speedup).
 - `dmesg | tail -n 50` shows an OOM-kill for any node/tsc worker since the
@@ -72,12 +73,16 @@ escalating into swap thrashing or OOM kills.
   fail solely because `dmesg` is unavailable.
 
 Live benchmarks **abort** before swap/OOM thresholds: the harness samples the
-spawned-process-group aggregate `VmRSS` every 250 ms and sends `SIGTERM` to
-the spawned process group if aggregate RSS exceeds 80 % of the recorded
-ceiling or swap delta exceeds 50 % of the cold baseline. **No live benchmark
-intentionally drives the host into OOM.** Synthetic fixtures are used to prove
-the parser / stop-loss paths (§5); OOM behavior itself is not exercised on
-the host.
+spawned-process-group aggregate `VmRSS` every quarter-second and sends `SIGTERM` to
+the entire spawned process group if aggregate RSS exceeds the exact
+`stop_loss_process_group_rss_kib` value (80 % of the recorded RSS ceiling) or
+positive swap growth exceeds the exact `stop_loss_swap_delta_kib` value (50 %
+of the recorded swap ceiling). It then waits a bounded **5 seconds** grace
+period, sends `SIGKILL` to any surviving process-group members, waits for every
+child, and verifies the process group is fully reaped before recording the run
+invalid. **No live benchmark intentionally drives the host into OOM.** Synthetic
+fixtures are used to prove the parser / stop-loss paths (§5); OOM behavior
+itself is not exercised on the host.
 
 ## 2. Surfaces the Strategy Distinguishes
 
@@ -117,7 +122,7 @@ re-classified as "TS 7 eligible" and re-tested.
 |---|---|---|---|
 | Root + workspace `check-types` (after cutover) | TypeScript 7 | TS 7 catalog alias | **binding** (target) |
 | `tsc` invocations in package `build` scripts that emit JS + `.d.ts` | TypeScript 7 (only after byte-equivalence or reviewed diff) | same | **binding** (target) |
-| `typescript-eslint` | TypeScript 6 (`typescript` package) — programmatic API consumer | `typescript: npm:@typescript/typescript6@6.0.2` | hypothesis; promoted if Phase 1 inventory confirms programmatic API |
+| `typescript-eslint` | TypeScript 6 (`typescript` package) — programmatic API consumer | direct `typescript@6.0.2` | hypothesis; promoted if Phase 1 inventory confirms programmatic API |
 | `ts-node` | TypeScript 6 — programmatic API consumer | same | hypothesis; promoted if Phase 1 inventory confirms programmatic API |
 | `tsup` | TypeScript 6 — programmatic API consumer (per spec) | same | hypothesis; promoted if Phase 1 inventory confirms programmatic API |
 | `tsconfck` | TypeScript 6 — programmatic API consumer | same | hypothesis; promoted if Phase 1 inventory confirms programmatic API |
@@ -151,7 +156,7 @@ step produces evidence the next step consumes.
 7. `apps/science-advantage`
 8. `apps/primary-advantage`
 9. `apps/reading-advantage` (benchmark keystone)
-10. Remaining apps (`codecamp-advantage`, `sales-advantage`, `marketing`, `www-reading-advantage`)
+10. Remaining apps (`codecamp-advantage`, `sales-advantage`, `marketing`, `www-reading-advantage`, `activity-vinext-fixture`)
 11. Full Turbo `check-types` graph (uncached, then warm)
 
 "Smallest shared package first" is a determinism guarantee, not a speed
@@ -173,7 +178,8 @@ path, not by content.
 
 - `compiler-baseline.json` — resolved `typescript` versions, Node + pnpm versions,
   CPU count, total RAM, `free -m`, Turbo concurrency setting, role-base SHA,
-  `phase_base_sha`, `graph.db` mtime.
+  `phase_base_sha`, `graph.db` mtime, and policy-derived resource ceilings plus
+  their 80 % RSS / 50 % swap stop-loss thresholds.
 - `surface-inventory.json` — every `tsconfig*.json`, every `tsc` script, every
   peer dep on `typescript`, every catalog alias, plus the inventory hypothesis
   outcomes from §3 (programmatic-API usage verified or not).
@@ -191,7 +197,11 @@ path, not by content.
   compiler_version, --checkers, host_idle_class).
 - `rollout-record-schema.json` — JSON Schema for CI observation rows
   (run_id, lane, ts7_gate_exit, ts6_parity_exit, cache_state,
-  order_dependent_diff_count, peak_rss_kib).
+  order_dependent_diff_count, peak_rss_kib). The two diagnostic-difference
+  fields are zero only after the complete ledger-aware Phase 3 parity oracle
+  accepts all 39 configs; `null` keeps a rejected or incomplete observation
+  non-promotable. Turbo's truncated task logs remain raw troubleshooting
+  evidence and never determine rollout parity.
 
 Validation uses the Python standard library only: `json.JSONDecodeError`,
 schema-shape tests (assert presence and types of required keys), and one
@@ -261,6 +271,15 @@ that state is at `phase_base_sha`) plus a written assertion of what
 "two distinct physical installations" would look like. Phase 2 Green does
 not install or alias TypeScript 7 in the workspace.
 
+Phase 2 exercises process-launching, normalization, monitoring, and rejection
+logic with a **deterministic fixture executable** for each compiler/tool role.
+Each fixture executable runs as a **real subprocess** in its own OS process
+group; `node:child_process` and Python subprocess APIs are not mocked. These
+fixtures are compiler stand-ins with pinned stdout, stderr, exit status, signal,
+and resource-record inputs. They do not claim that TypeScript 6 or TypeScript 7
+is installed. Phase 3, after the exact aliases are installed, replaces those
+fixture command paths with the installed compiler and tool paths.
+
 Five contract harnesses:
 
 1. **Package-resolution contract.** Asserts that `pnpm why -r typescript`
@@ -270,8 +289,8 @@ Five contract harnesses:
    Green, this contract is implemented as a **pure-inspection harness** that
    captures the current resolution state and compares it against the
    expected post-cutover shape using a deterministic fixture resolver
-   module. The harness does not invoke `pnpm install`, edit the catalog, or
-   re-resolve; it inspects.
+   executable launched as a real subprocess. The harness does not invoke
+   `pnpm install`, edit the catalog, or re-resolve; it inspects.
 2. **tsconfig compatibility contract.** Loads each `tsconfig*.json` and asserts
    absence of removed options (`baseUrl` outside marketing's transition plan;
    legacy `moduleResolution: "node"` not under bundler; deprecated
@@ -282,36 +301,37 @@ Five contract harnesses:
    unchanged. Inherited omission of `types` (no `types` key at all) is
    valid under the same condition.
 3. **Diagnostic parity harness.** For each `(tsconfig, compiler-version)` pair,
-   spawns the real `tsc` binary (TS 6 and TS 7), normalizes output (strip
-   absolute paths, strip timing, normalize CRLF, sort by file→line→column→code),
-   and asserts TS 6 normalized set equals TS 7 normalized set modulo the
+   launches deterministic TS 6 and TS 7 fixture executables as real OS
+   subprocesses, normalizes their pinned output (strip absolute paths, strip
+   timing, normalize CRLF, sort by file→line→column→code), and asserts the
+   normalized sets are equal modulo the
    entries in `diagnostic-parity-ledger.json`. **An empty
    `diagnostic-parity-ledger.json` is a valid Phase 2 Green state** when the
    exact normalized TS 6 ∩ TS 7 diff for every tsconfig is empty. The harness
    rejects only: (i) an **unexplained non-empty diff** (TS 6 or TS 7 reports
    diagnostics the other does not, with no ledger entry justifying the
    difference), or (ii) a **vacuous comparison with no compiler runs** (the
-   harness exited 0 without invoking any `tsc` process for any tsconfig).
-4. **Benchmark harness.** Wraps `/usr/bin/time -v` around a real
-   `tsc --noEmit` invocation; parses `Maximum resident set size` and
+   harness exited 0 without invoking either fixture executable).
+4. **Benchmark harness.** Wraps `/usr/bin/time -v` around a deterministic
+   benchmark fixture executable launched as a real OS subprocess; parses
+   `Maximum resident set size` and
    `Elapsed (wall clock) time` via labeled keys (not regex); asserts the host
    was idle at start by sampling `vmstat 1 3` and requiring CPU idle ≥ 70 %.
    Otherwise the run is recorded as `invalid`, not passed. Resource
    monitoring observes the **spawned process group aggregate** (`pgid` of
-   the spawned `tsc`), not `/proc/$$`; if `dmesg` is unavailable the run
+   the spawned fixture executable), not `/proc/$$`; if `dmesg` is unavailable the run
    record notes it and the harness relies on exit/signal/process-group
    RSS/swap evidence.
 5. **Compiler-consumer smoke harness.** For each row in the §3 matrix,
-   executes the minimal real command: `eslint --print-config <fixture>`,
-   `ts-node -e '...'`, `tsx -e '...'`, `tsup --help`, `vitest <one unit file>`,
-   `jest <one unit file>`, `@playwright/test --list`, `drizzle-kit --help`,
-   `commitlint --from HEAD~1 --to HEAD --verbose`. Next.js and Vinext are
-   proven indirectly via `pnpm why typescript` and a `.next/types/` directory
-   resolution from a one-route workspace, **not** by full app build inside
-   this track's gate. Phase 2 Green re-classifies each §3 row from
-   "hypothesis" to "binding (TS 6)" or "binding (TS 7)" based on the smoke
-   harness outcome; the reclassification is written into
-   `surface-inventory.json`.
+   launches a deterministic fixture executable as a real OS subprocess and
+   verifies that the classifier maps its pinned resolution/output evidence to
+   `binding (TS 6)`, `binding (TS 7)`, or `no programmatic API found`.
+   Counterexamples cover non-zero exits, missing resolution evidence, and
+   ambiguous compiler ownership. Phase 2 proves the smoke/classification logic
+   only; it does not execute the workspace's actual ESLint, ts-node, tsx, tsup,
+   Vitest, Jest, Playwright, Drizzle Kit, commitlint, Next.js, or Vinext commands.
+   Phase 3f runs those installed commands and writes the resulting row
+   reclassification into `surface-inventory.json`.
 
 **Refutations (live adversarial probes):**
 
@@ -371,10 +391,19 @@ to confirm they remain green against the new state. Phase 3 may add new
 fixtures, new sample inputs, and new captured evidence; it does not edit
 the Phase 2 harness logic, contracts, or refutation shapes.
 
-**Sub-phase 3a — alias install.** Edit the workspace catalog (or per-package
-`pnpm.packageExtensions` where the catalog slot is unavailable). Run
-`pnpm install` to regenerate the lockfile. Re-run the already-green Phase 2
-§5.1 contract against the new resolution state. **No aggregate
+After Sub-phase 3a installs the exact aliases, the parity and benchmark
+harnesses run the **real installed TypeScript 6** compiler and the **real installed TypeScript 7** compiler across the inventoried workspaces. Fixture
+executables remain only for the Phase 2 contract/refutation suite.
+
+**Sub-phase 3a — alias install.** Change the direct root `typescript` dependency
+and `pnpm-workspace.yaml` override to exactly `6.0.2`, add the separate exact
+`typescript7: npm:typescript@7.0.2` alias, and do not use
+`@typescript/typescript6` because its wrapper depends on floating
+`@typescript/old: npm:typescript@^6`. Run `pnpm install` to regenerate the
+lockfile, then prove the installed layout with
+`node node_modules/typescript/bin/tsc --version` = `Version 6.0.2` and
+`node node_modules/typescript7/bin/tsc --version` = `Version 7.0.2`. Re-run
+the already-green Phase 2 §5.1 contract against the new resolution state. **No aggregate
 `pnpm turbo run check-types` is invoked in 3a.**
 
 **Sub-phase 3b — tsconfig fixes.** Update each tsconfig with the
@@ -387,8 +416,9 @@ Re-run the already-green Phase 2 §5.2 contract. **No aggregate
 `pnpm turbo run check-types` is invoked in 3b.**
 
 **Sub-phase 3c — parity reconciliation.** Run the already-green Phase 2
-§5.3 parity harness across all tsconfigs with TS 6 and TS 7. For every
-difference, either (i) fix in the owning workspace with no escape hatch (no
+§5.3 parity harness across all tsconfigs with the real installed compiler
+binaries from both exact aliases. For every difference, either (i) fix in the
+owning workspace with no escape hatch (no
 `skipLibCheck` expansion, no `ignoreBuildErrors`, no `@ts-ignore`/
 `@ts-nocheck` blanket), or (ii) record in `diagnostic-parity-ledger.json`
 with a review note. **An empty ledger is a valid Phase 3c state** when the
@@ -410,10 +440,18 @@ must be byte-equal (Green) or fully accounted for in
 **Sub-phase 3f — bounded test-runner rationalization.** Allowed only when a
 runner genuinely cannot load under TS 7 and the alternative is to pin it to
 TS 6 via the §3 matrix. The default is **no change**. A wholesale
-`jest → vitest` migration is rejected. Playwright is preserved.
+`jest → vitest` migration is rejected. Playwright is preserved. Run the
+minimal installed commands for the applicable §3 rows: `eslint
+--print-config <fixture>`, `ts-node -e '...'`, `tsx -e '...'`, `tsup --help`,
+`vitest <one unit file>`, `jest <one unit file>`, `@playwright/test --list`,
+`drizzle-kit --help`, and `commitlint --from HEAD~1 --to HEAD --verbose`.
+Next.js and Vinext are proven indirectly via installed resolution evidence and
+the one-route workspace, without a full app build in this sub-phase. Write the
+observed ownership classifications to `surface-inventory.json`.
 
 **Sub-phase 3g — benchmark suite.** Runs the already-green Phase 2 §5.4
-harness against the §4 order, each workspace with `--checkers 1` and
+harness against the §4 order using the installed TypeScript 6 and TypeScript
+7 compiler binaries, each workspace with `--checkers 1` and
 `--checkers 2`, three cold samples + three warm samples per setting. Medians
 are recorded. The acceptance threshold (spec §FR-6): ≥ 3× median speedup
 for `apps/reading-advantage` standalone, or ≥ 2× for the uncached full Turbo
@@ -520,11 +558,11 @@ makes the migration's blast radius explicit and auditable.
 | Phase | Targeted Red command (must fail before code) | Green / closeout gate (must pass) | Surface | Risk |
 |------:|:---|:---|:---|:---|
 | 1 | `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase1` | `bash tests/orchestrator_catalog.sh && bash tests/orchestrator_marker_vocabulary.sh && bash tests/orchestrator_supervisor_invariants.sh && bash measure/doctor.sh` and the same unittest exits 0 | Artifact | medium |
-| 2 | `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase2` | Same exits 0 + `PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile measure/tests/test_typescript7_native_migration_phase2.py` + four refutations (missing-diagnostic, false-speedup, alias-swap, resource-parser-stop-loss) exit 0 on deliberately broken fixtures. Phase 2 Green implements the reusable harness logic/contracts only; no package resolution, tsconfig, workspace script, lockfile, or production/toolchain changes are permitted in Phase 2. | Live | critical |
+| 2 | `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase2` | Same exits 0 + `PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile measure/tests/test_typescript7_native_migration_phase2.py` + four refutations (missing-diagnostic, false-speedup, alias-swap, resource-parser-stop-loss) exit 0 on deliberately broken fixtures. Phase 2 Green implements the reusable harness logic/contracts only; deterministic fixture executables run as real OS subprocesses, while no package resolution, tsconfig, workspace script, lockfile, or production/toolchain changes are permitted in Phase 2. | Live (fixture subprocesses) | critical |
 | 3a | `pnpm why -r typescript` shows only TS 5.9 | `pnpm why -r typescript` shows exactly two trees (TS 6 + TS 7); resolver refutation exits 0 | Live (resolver only) | medium |
 | 3b | tsconfig contract reports `baseUrl` present | Same contract exits 0; new contract for narrow `types` arrays exits 0 | Artifact | medium |
 | 3c | parity harness reports a difference for one tsconfig | `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase2.ParityContract` exits 0; `diagnostic-parity-ledger.json` validates as JSON with required keys. An empty ledger is a valid Green state when the normalized TS 6 ∩ TS 7 diff for every tsconfig is empty; the harness rejects only an unexplained non-empty diff or a vacuous comparison with zero compiler runs. | Live | high |
-| 3d | `pnpm --filter @reading-advantage/types exec tsc --noEmit -p tsconfig.json` exits non-zero (today) | Same exits 0; repeat per workspace in §4 order | Live (native source) | critical |
+| 3d | `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase3.Phase3dCheckTypesCutoverContract` fails while the first workspace uses bare `tsc`; record the direct TS 6 and TS 7 baseline exits without manufacturing a source failure | `pnpm --filter @reading-advantage/types run check-types` exits 0 with the exact TS 7 alias path; its `:compat` and `:rollback` scripts both exit 0 through the exact TS 6 path. Repeat the routing contract and native/compat evidence per workspace in §4 order. | Live (native source) | critical |
 | 3e | byte diff between TS 6 and TS 7 `.d.ts` output for one package is non-empty | Diff empty for `packages/types` and `packages/db`, or fully accounted for in `declaration-emit-diff-ledger.json` | Live (declaration emit) | high |
 | 3f | n/a (default is no change) | If a runner needs TS 6 pinning, the §3 row exists and the resolver contract still passes | Live | medium |
 | 3g | benchmark harness records `diagnostic_count == 0` against `apps/reading-advantage` (false-speedup refutation) | Medians recorded per workspace; chosen `--checkers` documented in `measure/tech-stack.md` | Live (benchmark) | critical |
@@ -551,11 +589,12 @@ actual HEAD is an A15 finding.
 **Fixtures** live under
 `measure/tracks/typescript7_native_migration_20260710/fixtures/`:
 
-- `parity-broken-diagnostic/` — a tsconfig and `index.ts` producing exactly
-  one diagnostic under TS 6 and zero under TS 7 (used by the missing-
-  diagnostic refutation).
-- `benchmark-empty-fixture/` — an empty tsconfig whose parity-known
-  diagnostic count is ≥ 1 (used by the false-speedup refutation).
+- `parity-broken-diagnostic/` — deterministic TS 6 and TS 7 fixture
+  executables whose pinned streams differ by exactly one diagnostic (used by
+  the missing-diagnostic refutation).
+- `benchmark-empty-fixture/` — a deterministic benchmark fixture executable
+  whose pinned exit is zero and diagnostic count is zero while its fixture
+  ledger expects at least one diagnostic (used by the false-speedup refutation).
 - `alias-swap-fixture/` — a temporary `package.json` whose `typescript`
   resolution is mutated mid-test (used by the alias-swap refutation).
 - `resource-parser-fixtures/` — synthetic JSON lines with malformed
@@ -564,8 +603,8 @@ actual HEAD is an A15 finding.
   refutation; no host stress required).
 - `tsconfig-matrix/` — the 24 tsconfig paths grouped by emit/no-emit and
   ambient-globals consumption.
-- `runner-fixtures/` — one ESLint printable-config fixture, one ts-node
-  `-e` expression, one tsup `--help` invocation shell.
+- `runner-fixtures/` — deterministic fixture executables and pinned output for
+  each compiler-consumer classification outcome.
 
 All fixtures are **committed in their phase by the Red role**, not
 retroactively at the pre-strategy role-base SHA. Phase 2 Red commits the
@@ -574,23 +613,29 @@ commit additional sample-input fixtures but does not move or rewrite the
 Phase 2 fixtures. Fixtures are pinned by path inside the strategy's commit
 allowlist (§6); a fixture whose path is missing or whose SHA-256 does not
 match the Phase 2 commit is treated as not-yet-committed. They are **not**
-mocks; they invoke the real TS 6 / TS 7 binaries on real source.
+in-process mocks: Phase 2 launches them as real OS subprocesses. They are also
+not the TypeScript compilers; the real installed binaries are reserved for
+Phase 3 after alias installation.
 
 **Mocks** of `node:child_process` are forbidden in the §5.3, §5.4, §5.5
 harnesses. Subprocesses are real. The only mocks used are: (i) the
 `pgrep`-based process-count assertion, tolerating transient churn; (ii) the
 `@commitlint/load` peer-resolution check.
 
-**Live-behavior proof** records real subprocess output to
-`evidence/<phase>/<workspace>/<compiler>/<run>.jsonl`. Phase 3 Green signals
-reference those files by SHA-256 via `hashlib.sha256`, a labeled-integer
-parse (anti-A3).
+**Live-behavior proof** records subprocess output to
+`evidence/<phase>/<workspace>/<compiler>/<run>.jsonl`. Phase 2 records real OS
+subprocess behavior from deterministic fixture executables. Phase 3 records
+the installed compiler/tool subprocesses against real workspaces. Phase 3
+Green signals reference those files by SHA-256 via `hashlib.sha256`, a
+labeled-integer parse (anti-A3).
 
 **Artifact vs live behavior:** the Phase 1 JSON Schemas are documentation;
 their JSON-Schema validators are artifact tests, not live behavior. The five
-Phase 2 contract harnesses are live behavior. The benchmark harness is live
-behavior. The CI observation records are live behavior (CI is the live
-system). The Phase 4 aggregate `pnpm turbo run …` calls are live behavior.
+Phase 2 contract harnesses are live process-behavior tests over fixture
+executables, not proof of installed compiler behavior. Phase 3 parity,
+benchmark, and smoke runs are live toolchain behavior. The CI observation
+records are live behavior (CI is the live system). The Phase 4 aggregate
+`pnpm turbo run …` calls are live behavior.
 
 ## 9. Architecture Guardrails
 

@@ -6,24 +6,24 @@
 
 ## Phase 1: Contract & Schema Definition
 
-- [x] Task: Capture the compiler and repository baseline. [commit: f68897ac]
+- [x] Task: Capture the compiler and repository baseline. [commits: f68897ac, 32346d6a, 47683590, 8f11c9b3; accepted in phase-1-acceptance-result.json]
   - [x] Record source SHA, `git status -sb`, Node/pnpm versions, CPU/memory, Turbo
     concurrency, and resolved TypeScript versions.
   - [x] Save TypeScript 5.9 diagnostic and timing evidence for all workspaces.
   - [x] Classify pre-existing failures separately from migration acceptance gates.
   - [x] Refresh `graph.db` if it is older than 24 hours and save graph statistics.
-- [x] Task: Inventory the complete TypeScript integration surface. [commit: f68897ac]
+- [x] Task: Inventory the complete TypeScript integration surface. [commits: f68897ac, f153654b, 8ed5ff73]
   - [x] Enumerate all manifests, catalogs, aliases, `tsc` scripts, tsconfigs, compiler
     plugins, API imports, and TypeScript peer dependencies.
   - [x] Map Next.js, Vinext/Vite, ESLint, Jest, Vitest, ts-node, tsx, tsup, Drizzle,
     commitlint, and config-loader compiler ownership.
   - [x] Identify emit/declaration builds separately from `--noEmit` checks.
-- [x] Task: Define the dual-compiler package contract. [commit: f68897ac]
+- [x] Task: Define the dual-compiler package contract. [commits: f68897ac, 2bd70b09]
   - [x] Specify exact TypeScript 7.0.2 and TypeScript 6.0.2 aliases in the workspace
     catalog without ambiguous executable resolution.
   - [x] Define native, compatibility, parity, and rollback commands.
   - [x] Define which tools must remain on the TypeScript 6 programmatic API.
-- [x] Task: Define diagnostic, benchmark, and rollout evidence schemas. [commit: f68897ac]
+- [x] Task: Define diagnostic, benchmark, and rollout evidence schemas. [commits: f68897ac, eff14a23]
   - [x] Specify normalized diagnostic records and reviewed-exception fields.
   - [x] Specify benchmark records for elapsed time, RSS, diagnostics, CPU/checkers,
     cache state, and exit status.
@@ -32,50 +32,67 @@
 
 ## Phase 2: Test
 
-- [~] Task: Add package-resolution and executable contract tests.
-  - [ ] Assert TypeScript 7 owns the native compiler command.
-  - [ ] Assert TypeScript 6 remains importable by compiler-API consumers.
-  - [ ] Assert frozen install and workspace catalog resolution are deterministic.
-- [~] Task: Add tsconfig compatibility tests.
-  - [ ] Reject removed options including `baseUrl`, legacy module resolution, and
+- [x] Task: Add package-resolution and executable contract tests. [accepted in phase-2-acceptance-result.json]
+  - [x] Assert TypeScript 7 owns the native compiler command.
+  - [x] Assert TypeScript 6 remains importable by compiler-API consumers.
+  - [x] Assert frozen install and workspace catalog resolution are deterministic.
+- [x] Task: Add tsconfig compatibility tests. [accepted in phase-2-acceptance-result.json]
+  - [x] Reject removed options including `baseUrl`, legacy module resolution, and
     unsupported target/module combinations.
-  - [ ] Require explicit narrow `types` lists for projects consuming ambient globals.
-  - [ ] Cover emit/declaration configs separately from no-emit configs.
-- [~] Task: Build a TypeScript 6/7 diagnostic parity harness.
-  - [ ] Run each compiler against each tsconfig and capture normalized diagnostics.
-  - [ ] Fail on missing, additional, or changed actionable diagnostics unless present
+  - [x] Require explicit narrow `types` lists for projects consuming ambient globals.
+  - [x] Cover emit/declaration configs separately from no-emit configs.
+- [x] Task: Build a TypeScript 6/7 diagnostic parity harness. [accepted in phase-2-acceptance-result.json]
+  - [x] Run each compiler against each tsconfig and capture normalized diagnostics.
+  - [x] Fail on missing, additional, or changed actionable diagnostics unless present
     in the reviewed parity ledger.
-  - [ ] Prove the harness rejects a deliberately missing diagnostic.
-- [~] Task: Build a controlled benchmark harness.
-  - [ ] Require an idle-enough host or record the run invalid rather than publishing
+  - [x] Prove the harness rejects a deliberately missing diagnostic.
+- [x] Task: Build a controlled benchmark harness. [accepted in phase-2-acceptance-result.json]
+  - [x] Require an idle-enough host or record the run invalid rather than publishing
     contaminated results.
-  - [ ] Run at least three cold and warm samples and compute medians.
-  - [ ] Fail benchmark acceptance when exit status or diagnostic counts differ.
-- [~] Task: Add compiler-consumer smoke tests.
-  - [ ] Cover ESLint/typescript-eslint, ts-node, tsx, tsup, Next.js, Vinext/Vite,
+  - [x] Run at least three cold and warm samples and compute medians.
+  - [x] Fail benchmark acceptance when exit status or diagnostic counts differ.
+- [x] Task: Add compiler-consumer smoke tests. [accepted in phase-2-acceptance-result.json]
+  - [x] Cover ESLint/typescript-eslint, ts-node, tsx, tsup, Next.js, Vinext/Vite,
     Vitest, Jest, Drizzle tooling, and commitlint.
-  - [ ] Verify Turbo cache invalidation includes compiler identity and relevant flags.
+  - [x] Verify Turbo cache invalidation includes compiler identity and relevant flags.
 - [b] Task: Measure - User Manual Verification 'Phase 2: Test' (Protocol in workflow.md) — deferred:product-owner
 
 ## Phase 3: Implement
 
-- [~] Task: Install and pin the side-by-side compiler architecture.
-  - [ ] Add the TypeScript 6 compatibility alias and TypeScript 7 native compiler
+- [x] Task: Install and pin the side-by-side compiler architecture. [accepted in phase-3a-acceptance-result.json]
+  - [x] Add the TypeScript 6 compatibility alias and TypeScript 7 native compiler
     alias through the workspace catalog.
-  - [ ] Regenerate and review the lockfile without unrelated dependency upgrades.
-  - [ ] Run frozen install and peer-dependency checks.
-- [~] Task: Make all tsconfigs TypeScript 7-compatible.
-  - [ ] Add minimal explicit Node/Jest/Vitest/Playwright/global type lists per project.
-  - [ ] Remove marketing `baseUrl` and preserve path-alias resolution.
-  - [ ] Remove or replace other TypeScript 7-incompatible options and constructs.
-- [~] Task: Establish and reconcile TypeScript 6/7 diagnostic parity.
-  - [ ] Run the parity harness across all 24 configs.
-  - [ ] Fix migration-caused errors in their owning workspace.
-  - [ ] Record and review every intentional diagnostic or semantic difference.
+  - [x] Regenerate and review the lockfile without unrelated dependency upgrades.
+  - [x] Run frozen install and peer-dependency checks. [accepted in phase-3a-acceptance-result.json]
+- [x] Task: Make all tsconfigs TypeScript 7-compatible. [accepted in phase-3b-structural-result.json and phase-3c-acceptance-result.json]
+  - [x] Add only compiler-proven Node/Jest/Vitest/Playwright/global type lists per project.
+  - [x] Remove marketing `baseUrl` and preserve path-alias resolution.
+  - [x] Remove or replace other TypeScript 7-incompatible options and constructs.
+- [x] Task: Establish and reconcile TypeScript 6/7 diagnostic parity. [accepted in phase-3c-acceptance-result.json]
+  - [x] Run the provenance-bound parity harness across all 39 configs.
+  - [x] Fix migration-caused errors in their owning workspace.
+  - [x] Record and review every intentional diagnostic or semantic difference.
 - [~] Task: Migrate check-types and eligible build commands.
-  - [ ] Switch root and workspace `check-types` scripts to the native compiler.
-  - [ ] Verify JavaScript and declaration emit before switching direct `tsc` builds.
-  - [ ] Preserve explicit TypeScript 6 compatibility and rollback commands.
+  - [x] Switch root and workspace `check-types` scripts to the native compiler.
+    - [x] Remove ambiguous hoisted `tsc` routing from workspace scripts; pin pre-3e emit commands to TypeScript 6. [evidence: phase-3d-types-cutover-result.json]
+    - [x] Cut over `@reading-advantage/types` with explicit TypeScript 6 compatibility and rollback scripts. [evidence: phase-3d-types-cutover-result.json]
+    - [x] Cut over `@reading-advantage/db` with explicit TypeScript 6 compatibility and rollback scripts. [evidence: phase-3d-db-cutover-result.json]
+    - [x] Cut over `@reading-advantage/domain`; preserve and classify its parity-proven pre-existing diagnostics. [evidence: phase-3d-domain-cutover-result.json]
+    - [x] Cut over `@reading-advantage/auth`; preserve and classify its parity-proven pre-existing diagnostics. [evidence: phase-3d-auth-cutover-result.json]
+    - [x] Cut over shared UI, utility, and GitHub-integration checks; preserve and classify UI's parity-proven pre-existing diagnostics. [evidence: phase-3d-shared-cutover-result.json]
+    - [x] Cut over `apps/advantage-games`; preserve and classify its parity-proven pre-existing diagnostics. [evidence: phase-3d-advantage-games-cutover-result.json]
+    - [x] Cut over `apps/science-advantage`; retain the four Phase 3c-reviewed TypeScript 7 column-rendering ledger entries. [evidence: phase-3d-science-cutover-result.json]
+    - [x] Cut over `apps/primary-advantage`; retain the 24 Phase 3c-reviewed TypeScript 7 diagnostic-rendering ledger entries. [evidence: phase-3d-primary-cutover-result.json]
+    - [x] Cut over `apps/reading-advantage` with its compiler-proven 3 GiB TypeScript 6 fallback; retain six reviewed rendering ledger entries. [evidence: phase-3d-reading-cutover-result.json]
+    - [x] Cut over `apps/codecamp-advantage` manifest only; rerun its scoped check after active Codecamp source integrates. [evidence: phase-3d-codecamp-cutover-result.json]
+    - [x] Cut over `apps/sales-advantage`; preserve and classify its parity-proven pre-existing diagnostics. [evidence: phase-3d-sales-cutover-result.json]
+    - [x] Cut over `apps/marketing`; preserve and classify its parity-proven pre-existing diagnostics. [evidence: phase-3d-marketing-cutover-result.json]
+    - [x] Cut over `apps/www-reading-advantage` cleanly and preserve the Vinext fixture's parity-proven pre-existing diagnostics. [evidence: phase-3d-www-cutover-result.json, phase-3d-activity-vinext-fixture-cutover-result.json]
+    - [x] Complete the remaining binding workspace surface and root native/compat/parity/rollback routing discovered by the Phase 3d audit. [evidence: phase-3d-audited-remainder-cutover-result.json]
+  - [x] Verify JavaScript and declaration emit before switching every direct `tsc` build; all 20 emitting packages have TypeScript 6/7 byte-diff evidence, with every non-byte-equal file recorded in `declaration-emit-diff-ledger.json`. [evidence: phase-3e-*-emit-result.json]
+  - [x] Preserve explicit TypeScript 6 compatibility and rollback commands.
+  - [x] Run the bounded installed-tool smoke matrix and preserve all existing runners; no new TypeScript 6 pinning or Jest/Vitest/Playwright migration is required. [evidence: phase-3f-tool-smoke-result.json]
+  - [x] Prove scoped Turbo cache invalidation for native, compatibility, and rollback checks, including compiler identity, wrapper, local/shared tsconfig, and checker-count transitions. [evidence: phase-3i-cache-invalidation-result.json]
   - [ ] Bound TypeScript checker concurrency underneath Turbo parallelism.
 - [~] Task: Run controlled performance benchmarks.
   - [ ] Benchmark packages/types, packages/domain, packages/db,
@@ -83,10 +100,45 @@
   - [ ] Compare TypeScript 6 and 7 medians with equivalent semantics.
   - [ ] Tune checker concurrency once, rerun the complete benchmark matrix, and save
     the selected local and CI settings.
+  - 2026-07-15: Two user-authorized CPU-idle-override attempts were discarded rather
+    than accepted. Both retained the non-waivable resource guard; the second reached
+    `apps/reading-advantage` and stopped the TypeScript 6 baseline at a 140,572 KiB
+    swap delta (the 131,072 KiB stop-loss). No partial matrix or concurrency choice
+    may be cited as benchmark evidence.
+  - 2026-07-16: A third local override completed 67 samples but the Reading Advantage
+    TypeScript 6 cohort breached the same 131,072 KiB swap stop-loss five times
+    (136,828–219,584 KiB). Its committed `run-20260715T214000Z` evidence is a rejected
+    resource-safety record, not a selection input. The manual GitHub-hosted CI matrix
+    must supply a complete accepted run before choosing checker concurrency.
 - [~] Task: Roll out TypeScript 7 through CI.
-  - [ ] Add a temporary non-blocking parity lane.
+  - [x] Add a temporary non-blocking parity lane. [implementation: d383b326, semantic
+    parity oracle and observation repair pending CI verification]
+  - 2026-07-16: Recorded rejected real CI observation `29460487973`: 39 configs ran
+    with stable provenance, but `apps/primary-advantage` failed because two reviewed
+    GenerateAudio diagnostics were no longer emitted by either compiler. The exact
+    artifact is retained by ID `8361069260`; the obsolete ledger pair was removed
+    before the next observation. This record predates the semantic-order correction
+    and is explicitly not promotion evidence.
+  - 2026-07-16: Recorded rejected observation `29460878641` (artifact `8361223620`),
+    the first run using the semantic-order writer. It correctly reported null
+    promotion counts for a 38/39 stale-ledger rejection; its raw Turbo difference of
+    42 remains non-comparable diagnostic context only.
+  - 2026-07-16: Recorded the first clean semantic-parity observation `29461114234`
+    (artifact `8361296852`): all 39 configs passed with stable provenance, the
+    semantic compiler and order-dependent counts are both zero, and `TS7_CHECKERS=1`.
+    This is observation 1/3, not promotion: the separate primary-advantage build
+    baseline still prevents the required full-gate verdict.
+  - 2026-07-16: Recorded the second consecutive clean semantic-parity observation
+    `29462009156` (artifact `8361644727`): 39/39 stable-provenance configs and zero
+    semantic compiler and ordering differences at `TS7_CHECKERS=1`. This is 2/3;
+    the raw Turbo difference of 140 is retained as non-comparable context only.
+  - 2026-07-16: Recorded `29462559289` (artifact `8361842861`), completing three
+    consecutive clean 39/39 semantic-parity observations at provisional
+    `TS7_CHECKERS=1`. This live-window evidence does not select final checker
+    concurrency or satisfy the independent full-build gate.
   - [ ] Promote the TypeScript 7 lane only after parity and full gates pass.
-  - [ ] Observe and record at least three representative CI runs.
+  - [x] Observe and record at least three representative CI runs. [evidence:
+    29461114234, 29462009156, 29462559289]
 - [b] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md) — deferred:product-owner
 
 ## Phase 4: Generate Docs & Doctor

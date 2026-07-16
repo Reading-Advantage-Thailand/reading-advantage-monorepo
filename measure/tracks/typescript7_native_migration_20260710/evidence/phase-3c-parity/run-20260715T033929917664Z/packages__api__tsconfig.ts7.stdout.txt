@@ -1,0 +1,146 @@
+packages/api/src/__tests__/adversarial-admin-jobs.test.ts(27,32): error TS2307: Cannot find module '@reading-advantage/domain' or its corresponding type declarations.
+packages/api/src/__tests__/adversarial-admin-jobs.test.ts(28,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/api/src/__tests__/adversarial-admin-jobs.test.ts(66,54): error TS2307: Cannot find module '@reading-advantage/domain/codecamp' or its corresponding type declarations.
+packages/api/src/__tests__/adversarial-admin-jobs.test.ts(266,11): error TS2578: Unused '@ts-expect-error' directive.
+packages/api/src/__tests__/articles-router.test.ts(5,32): error TS2307: Cannot find module '@reading-advantage/domain' or its corresponding type declarations.
+packages/api/src/__tests__/articles-router.test.ts(6,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/api/src/__tests__/articles-router.test.ts(20,8): error TS2307: Cannot find module '@reading-advantage/domain/articles' or its corresponding type declarations.
+packages/api/src/__tests__/assignments-router.test.ts(5,32): error TS2307: Cannot find module '@reading-advantage/domain' or its corresponding type declarations.
+packages/api/src/__tests__/assignments-router.test.ts(6,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/api/src/__tests__/assignments-router.test.ts(24,8): error TS2307: Cannot find module '@reading-advantage/domain/assignments' or its corresponding type declarations.
+packages/api/src/__tests__/auth-audit.test.ts(70,54): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/api/src/__tests__/auth-audit.test.ts(111,31): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/api/src/__tests__/auth-audit.test.ts(173,31): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/api/src/__tests__/auth-router.test.ts(5,32): error TS2307: Cannot find module '@reading-advantage/domain' or its corresponding type declarations.
+packages/api/src/__tests__/auth-router.test.ts(6,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/api/src/__tests__/auth-routes.test.ts(6,42): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/api/src/__tests__/auth-routes.test.ts(39,54): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/api/src/__tests__/auth-routes.test.ts(376,45): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/api/src/__tests__/auth-routes.test.ts(414,75): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/api/src/__tests__/auth-routes.test.ts(454,75): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/api/src/__tests__/auth-routes.test.ts(533,33): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/api/src/__tests__/auth-routes.test.ts(568,33): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/api/src/__tests__/auth-routes.test.ts(613,46): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/api/src/__tests__/auth-routes.test.ts(648,46): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/api/src/__tests__/auth-routes.test.ts(684,46): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/api/src/__tests__/auth-routes.test.ts(779,31): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/api/src/__tests__/auth-routes.test.ts(882,44): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/api/src/__tests__/auth.test.ts(5,34): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/api/src/__tests__/classes-router.test.ts(5,32): error TS2307: Cannot find module '@reading-advantage/domain' or its corresponding type declarations.
+packages/api/src/__tests__/classes-router.test.ts(6,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/api/src/__tests__/classes-router.test.ts(13,42): error TS2307: Cannot find module '@reading-advantage/domain/classes' or its corresponding type declarations.
+packages/api/src/__tests__/codecamp-review-router.test.ts(6,32): error TS2307: Cannot find module '@reading-advantage/domain' or its corresponding type declarations.
+packages/api/src/__tests__/codecamp-review-router.test.ts(7,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/api/src/__tests__/codecamp-review-router.test.ts(8,36): error TS2307: Cannot find module '@reading-advantage/domain/codecamp' or its corresponding type declarations.
+packages/api/src/__tests__/codecamp-router.test.ts(6,32): error TS2307: Cannot find module '@reading-advantage/domain' or its corresponding type declarations.
+packages/api/src/__tests__/codecamp-router.test.ts(7,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/api/src/__tests__/codecamp-router.test.ts(8,27): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/api/src/__tests__/codecamp-router.test.ts(74,8): error TS2307: Cannot find module '@reading-advantage/domain/codecamp' or its corresponding type declarations.
+packages/api/src/__tests__/phase-4-admin-list-dead-review-jobs.test.ts(5,32): error TS2307: Cannot find module '@reading-advantage/domain' or its corresponding type declarations.
+packages/api/src/__tests__/phase-4-admin-list-dead-review-jobs.test.ts(6,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/api/src/__tests__/phase-4-admin-list-dead-review-jobs.test.ts(44,36): error TS2307: Cannot find module '@reading-advantage/domain/codecamp' or its corresponding type declarations.
+packages/api/src/__tests__/phase-4-admin-requeue-review-job.test.ts(5,32): error TS2307: Cannot find module '@reading-advantage/domain' or its corresponding type declarations.
+packages/api/src/__tests__/phase-4-admin-requeue-review-job.test.ts(6,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/api/src/__tests__/phase-4-admin-requeue-review-job.test.ts(44,34): error TS2307: Cannot find module '@reading-advantage/domain/codecamp' or its corresponding type declarations.
+packages/api/src/__tests__/progress-router.test.ts(5,32): error TS2307: Cannot find module '@reading-advantage/domain' or its corresponding type declarations.
+packages/api/src/__tests__/progress-router.test.ts(6,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/api/src/__tests__/progress-router.test.ts(20,8): error TS2307: Cannot find module '@reading-advantage/domain/progress' or its corresponding type declarations.
+packages/api/src/__tests__/reports.test.ts(5,32): error TS2307: Cannot find module '@reading-advantage/domain' or its corresponding type declarations.
+packages/api/src/__tests__/reports.test.ts(6,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/api/src/__tests__/reports.test.ts(14,76): error TS2307: Cannot find module '@reading-advantage/domain/reports' or its corresponding type declarations.
+packages/api/src/__tests__/reports.test.ts(100,42): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/api/src/__tests__/reset-password.test.ts(31,90): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/api/src/__tests__/reset-password.test.ts(82,54): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/api/src/__tests__/sales-auth-context.test.ts(7,32): error TS2307: Cannot find module '@reading-advantage/domain' or its corresponding type declarations.
+packages/api/src/__tests__/sales-auth-context.test.ts(8,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/api/src/__tests__/sales-auth-context.test.ts(15,40): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/api/src/__tests__/sales-router-audio-contract.test.ts(6,32): error TS2307: Cannot find module '@reading-advantage/domain' or its corresponding type declarations.
+packages/api/src/__tests__/sales-router-audio-contract.test.ts(7,67): error TS2307: Cannot find module '@reading-advantage/types' or its corresponding type declarations.
+packages/api/src/__tests__/sales-router-audio-contract.test.ts(8,68): error TS2307: Cannot find module '@reading-advantage/domain/sales' or its corresponding type declarations.
+packages/api/src/__tests__/sales-router-audio-contract.test.ts(9,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/api/src/__tests__/sales-router-audio-contract.test.ts(123,39): error TS2307: Cannot find module '@reading-advantage/domain/sales' or its corresponding type declarations.
+packages/api/src/__tests__/sales-router-audio-contract.test.ts(124,38): error TS2307: Cannot find module '@reading-advantage/types' or its corresponding type declarations.
+packages/api/src/__tests__/sales-router.test.ts(6,32): error TS2307: Cannot find module '@reading-advantage/domain' or its corresponding type declarations.
+packages/api/src/__tests__/sales-router.test.ts(7,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/api/src/__tests__/sales-router.test.ts(58,8): error TS2307: Cannot find module '@reading-advantage/domain/sales' or its corresponding type declarations.
+packages/api/src/__tests__/students-router.test.ts(5,32): error TS2307: Cannot find module '@reading-advantage/domain' or its corresponding type declarations.
+packages/api/src/__tests__/students-router.test.ts(6,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/api/src/__tests__/students-router.test.ts(13,44): error TS2307: Cannot find module '@reading-advantage/domain/students' or its corresponding type declarations.
+packages/api/src/__tests__/users.test.ts(5,32): error TS2307: Cannot find module '@reading-advantage/domain' or its corresponding type declarations.
+packages/api/src/__tests__/users.test.ts(6,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/api/src/__tests__/wave0-phase3-contract-adoption.test.ts(51,34): error TS2307: Cannot find module '@reading-advantage/types' or its corresponding type declarations.
+packages/api/src/__tests__/wave0-phase3-typed-errors.test.ts(166,34): error TS2307: Cannot find module '@reading-advantage/domain/sales' or its corresponding type declarations.
+packages/api/src/__tests__/wave0-phase3-typed-errors.test.ts(167,34): error TS2307: Cannot find module '@reading-advantage/domain/users' or its corresponding type declarations.
+packages/api/src/__tests__/wave0-phase3-typed-errors.test.ts(265,34): error TS2307: Cannot find module '@reading-advantage/domain/sales' or its corresponding type declarations.
+packages/api/src/__tests__/wave2-api-contract-kit.test.ts(38,8): error TS2307: Cannot find module '@reading-advantage/types' or its corresponding type declarations.
+packages/api/src/context.ts(2,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/api/src/context.ts(3,82): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/api/src/context.ts(4,32): error TS2307: Cannot find module '@reading-advantage/domain' or its corresponding type declarations.
+packages/api/src/root.ts(13,48): error TS2307: Cannot find module '@reading-advantage/domain/activity' or its corresponding type declarations.
+packages/api/src/routers/activity.ts(8,8): error TS2307: Cannot find module '@reading-advantage/activity-runtime/transport' or its corresponding type declarations.
+packages/api/src/routers/activity.ts(9,36): error TS2307: Cannot find module '@reading-advantage/activity-runtime/server' or its corresponding type declarations.
+packages/api/src/routers/activity.ts(10,75): error TS2307: Cannot find module '@reading-advantage/activity-tutorial/reporting' or its corresponding type declarations.
+packages/api/src/routers/activity.ts(11,131): error TS2307: Cannot find module '@reading-advantage/domain/activity' or its corresponding type declarations.
+packages/api/src/routers/articles.ts(3,39): error TS2307: Cannot find module '@reading-advantage/types' or its corresponding type declarations.
+packages/api/src/routers/articles.ts(9,8): error TS2307: Cannot find module '@reading-advantage/domain/articles' or its corresponding type declarations.
+packages/api/src/routers/assignments.ts(3,42): error TS2307: Cannot find module '@reading-advantage/types' or its corresponding type declarations.
+packages/api/src/routers/assignments.ts(11,8): error TS2307: Cannot find module '@reading-advantage/domain/assignments' or its corresponding type declarations.
+packages/api/src/routers/auth.ts(2,39): error TS2307: Cannot find module '@reading-advantage/types' or its corresponding type declarations.
+packages/api/src/routers/classes.ts(6,8): error TS2307: Cannot find module '@reading-advantage/types' or its corresponding type declarations.
+packages/api/src/routers/classes.ts(7,42): error TS2307: Cannot find module '@reading-advantage/domain/classes' or its corresponding type declarations.
+packages/api/src/routers/codecamp.ts(4,29): error TS2307: Cannot find module '@reading-advantage/ai' or its corresponding type declarations.
+packages/api/src/routers/codecamp.ts(6,27): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/api/src/routers/codecamp.ts(7,27): error TS2307: Cannot find module '@reading-advantage/domain/codecamp' or its corresponding type declarations.
+packages/api/src/routers/codecamp.ts(8,108): error TS2307: Cannot find module '@reading-advantage/domain/codecamp' or its corresponding type declarations.
+packages/api/src/routers/codecamp.ts(36,8): error TS2307: Cannot find module '@reading-advantage/types' or its corresponding type declarations.
+packages/api/src/routers/codecamp.ts(48,55): error TS18046: 'err' is of type 'unknown'.
+packages/api/src/routers/progress.ts(8,8): error TS2307: Cannot find module '@reading-advantage/types' or its corresponding type declarations.
+packages/api/src/routers/progress.ts(14,8): error TS2307: Cannot find module '@reading-advantage/domain/progress' or its corresponding type declarations.
+packages/api/src/routers/reports.ts(3,91): error TS2307: Cannot find module '@reading-advantage/types' or its corresponding type declarations.
+packages/api/src/routers/reports.ts(4,25): error TS2307: Cannot find module '@reading-advantage/domain' or its corresponding type declarations.
+packages/api/src/routers/sales.ts(4,27): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/api/src/routers/sales.ts(5,24): error TS2307: Cannot find module '@reading-advantage/domain/sales' or its corresponding type declarations.
+packages/api/src/routers/sales.ts(25,8): error TS2307: Cannot find module '@reading-advantage/domain/sales' or its corresponding type declarations.
+packages/api/src/routers/sales.ts(40,55): error TS18046: 'err' is of type 'unknown'.
+packages/api/src/routers/sales.ts(43,55): error TS18046: 'err' is of type 'unknown'.
+packages/api/src/routers/sales.ts(50,57): error TS18046: 'err' is of type 'unknown'.
+packages/api/src/routers/sales.ts(53,67): error TS18046: 'err' is of type 'unknown'.
+packages/api/src/routers/sales.ts(56,57): error TS18046: 'err' is of type 'unknown'.
+packages/api/src/routers/students.ts(3,65): error TS2307: Cannot find module '@reading-advantage/types' or its corresponding type declarations.
+packages/api/src/routers/students.ts(4,44): error TS2307: Cannot find module '@reading-advantage/domain/students' or its corresponding type declarations.
+packages/api/src/routers/users.ts(4,36): error TS2307: Cannot find module '@reading-advantage/types' or its corresponding type declarations.
+packages/api/src/routers/users.ts(11,8): error TS2307: Cannot find module '@reading-advantage/domain/users' or its corresponding type declarations.
+packages/api/src/routers/users.ts(27,55): error TS18046: 'err' is of type 'unknown'.
+packages/api/src/routes/activity/index.ts(1,36): error TS2307: Cannot find module '@reading-advantage/activity-runtime/server' or its corresponding type declarations.
+packages/api/src/routes/activity/index.ts(2,48): error TS2307: Cannot find module '@reading-advantage/activity-runtime/transport' or its corresponding type declarations.
+packages/api/src/routes/auth/enrich.ts(2,23): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/api/src/routes/auth/enrich.ts(3,41): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/api/src/routes/auth/enrich.ts(4,30): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/api/src/routes/auth/impersonate.ts(3,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/api/src/routes/auth/impersonate.ts(4,42): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/api/src/routes/auth/impersonate.ts(9,8): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/api/src/routes/auth/impersonate.ts(101,42): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+packages/api/src/routes/auth/login.ts(3,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/api/src/routes/auth/login.ts(4,33): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/api/src/routes/auth/login.ts(16,8): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/api/src/routes/auth/login.ts(178,16): error TS7006: Parameter 'err' implicitly has an 'any' type.
+packages/api/src/routes/auth/login.ts(212,14): error TS7006: Parameter 'err' implicitly has an 'any' type.
+packages/api/src/routes/auth/logout.ts(1,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/api/src/routes/auth/logout.ts(2,52): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/api/src/routes/auth/register.ts(3,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/api/src/routes/auth/register.ts(4,42): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/api/src/routes/auth/register.ts(9,8): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/api/src/routes/auth/register.ts(91,46): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+packages/api/src/routes/auth/register.ts(127,11): error TS18046: 'error' is of type 'unknown'.
+packages/api/src/routes/auth/reset-password.ts(3,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/api/src/routes/auth/reset-password.ts(4,33): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/api/src/routes/auth/reset-password.ts(11,8): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/api/src/routes/auth/reset-password.ts(45,39): error TS18046: 'err' is of type 'unknown'.
+packages/api/src/routes/auth/reset-password.ts(119,14): error TS7006: Parameter 'err' implicitly has an 'any' type.
+packages/api/src/routes/auth/session.ts(1,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/api/src/routes/auth/session.ts(2,54): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/api/src/routes/auth/session.ts(3,23): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/api/src/testing/api-contract-kit.ts(36,8): error TS2307: Cannot find module '@reading-advantage/types' or its corresponding type declarations.
+packages/api/src/trpc.ts(3,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/api/src/trpc.ts(4,31): error TS2307: Cannot find module '@reading-advantage/domain' or its corresponding type declarations.
+packages/api/src/trpc.ts(5,34): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.

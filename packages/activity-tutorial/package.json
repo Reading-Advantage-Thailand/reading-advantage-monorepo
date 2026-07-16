@@ -19,8 +19,10 @@
   "bin": { "tutorial-check": "./dist/cli.js" },
   "files": ["dist", "README.md"],
   "scripts": {
-    "build": "tsc",
-    "check-types": "tsc --noEmit -p tsconfig.test.json",
+    "build": "node ../../node_modules/typescript7/bin/tsc",
+    "check-types": "node ../../scripts/run-ts7-check-types.mjs --noEmit -p tsconfig.test.json",
+    "check-types:compat": "node ../../node_modules/typescript/bin/tsc --noEmit -p tsconfig.test.json",
+    "check-types:rollback": "node ../../node_modules/typescript/bin/tsc --noEmit -p tsconfig.test.json",
     "lint": "eslint src/",
     "test": "vitest run --maxWorkers=1"
   },

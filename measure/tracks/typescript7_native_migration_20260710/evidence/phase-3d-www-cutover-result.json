@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "track": "typescript7_native_migration_20260710",
+  "phase": "Phase 3d: check-types cutover",
+  "status": "accepted_clean",
+  "workspace": {
+    "name": "www-reading-advantage",
+    "path": "apps/www-reading-advantage",
+    "acceptance_order": 15
+  },
+  "scripts": {
+    "check-types": "node ../../node_modules/typescript7/bin/tsc --noEmit",
+    "check-types:compat": "node ../../node_modules/typescript/bin/tsc --noEmit",
+    "check-types:rollback": "node ../../node_modules/typescript/bin/tsc --noEmit"
+  },
+  "results": {
+    "native": {
+      "version": "7.0.2",
+      "exit_status": 0,
+      "stdout_line_count": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "compat": {
+      "version": "6.0.2",
+      "exit_status": 0,
+      "stdout_line_count": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "rollback": {
+      "version": "6.0.2",
+      "exit_status": 0,
+      "stdout_line_count": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "parity_disposition": {
+    "accepted_run": "evidence/phase-3c-parity/run-20260715T033929917664Z",
+    "record": "apps/www-reading-advantage/tsconfig.json",
+    "status": "parity",
+    "unexplained_differences": [],
+    "applied_ledger_entries": [],
+    "reason": "The native, compatibility, and rollback package-script commands all completed without diagnostics; the accepted Phase 3c comparison is clean."
+  }
+}

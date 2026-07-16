@@ -1,0 +1,14 @@
+apps/advantage-games/src/lib/apk/completion-dependencies.ts(4,8): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/advantage-games/src/lib/apk/completion-dependencies.ts(5,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/advantage-games/src/lib/apk/completion-dependencies.ts(6,32): error TS2307: Cannot find module '@reading-advantage/domain' or its corresponding type declarations.
+apps/advantage-games/src/lib/apk/completion-dependencies.ts(7,38): error TS2307: Cannot find module '@reading-advantage/domain/games' or its corresponding type declarations.
+apps/advantage-games/src/lib/apk/completion-route.ts(6,8): error TS2307: Cannot find module '@reading-advantage/domain/games' or its corresponding type declarations.
+apps/advantage-games/src/lib/apk/completion-route.ts(241,40): error TS7031: Binding element 'code' implicitly has an 'any' type.
+apps/advantage-games/src/lib/apk/completion-route.ts(241,46): error TS7031: Binding element 'path' implicitly has an 'any' type.
+apps/advantage-games/src/lib/apk/completion-route.ts(241,52): error TS7031: Binding element 'message' implicitly has an 'any' type.
+apps/advantage-games/src/lib/auth/server.ts(5,8): error TS2307: Cannot find module '@reading-advantage/api/routes/auth' or its corresponding type declarations.
+apps/advantage-games/src/lib/auth/server.ts(9,8): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+apps/advantage-games/src/lib/auth/server.ts(10,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+apps/advantage-games/src/lib/games/api/completeRoute.ts(5,8): error TS2307: Cannot find module '@reading-advantage/domain/games' or its corresponding type declarations.
+apps/advantage-games/src/lib/games/api/rankingRoute.ts(2,43): error TS2307: Cannot find module '@reading-advantage/domain/games' or its corresponding type declarations.
+apps/advantage-games/src/lib/utils.ts(1,20): error TS2307: Cannot find module '@reading-advantage/utils/cn' or its corresponding type declarations.

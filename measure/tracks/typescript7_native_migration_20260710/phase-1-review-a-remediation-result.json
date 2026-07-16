@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "role": "review-a-correctness",
+  "track": "typescript7_native_migration_20260710",
+  "phase": "Phase 1: Contract & Schema Definition remediation",
+  "baseline_sha": "905f0ba3dc397e7a5e7d59610544960ac17e6f49",
+  "audited_head_sha": "905f0ba3dc397e7a5e7d59610544960ac17e6f49",
+  "applicability": "applicable",
+  "status": "pass",
+  "summary": "The Phase 1 remediation closes the inventory, baseline-denominator, evidence-integrity, resource-stop-loss, and benchmark-schema findings. Independent tracked-file enumeration matches 39 declared tsconfigs, configured TypeScript workspace discovery matches all 33 baseline rows, UI and utils evidence replay exactly, and the hardened 36-test suite plus completeness and syntax/JSON gates pass.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    {
+      "id": "RA-R-NB-1",
+      "severity": "Low",
+      "file": "measure/tracks/typescript7_native_migration_20260710/evidence/phase1/raw-logs/32-packages-ui.log",
+      "detail": "The repository-wide *.log ignore rule applies to the verified UI evidence file. The implementation/commit owner must force-stage this exact file so the matching b5836f... evidence remains durable; this review did not stage or commit by instruction."
+    },
+    {
+      "id": "RA-R-NB-2",
+      "severity": "Low",
+      "file": "measure/tracks/typescript7_native_migration_20260710/compiler-baseline.json",
+      "detail": "The baseline is truthfully documented as an amended evidence cohort: 31 earlier workspaces include 15 contaminated paths, while the two fallback captures are clean. Later controlled parity and performance conclusions must continue to distinguish this diagnostic baseline from a clean benchmark cohort."
+    }
+  ],
+  "evidence": [
+    "Independent `git ls-files ':(glob)**/tsconfig*.json'` enumeration, excluding generated/ignored directories, finds 39 tracked configs; surface-inventory.json declares and lists the exact same 39 paths, including packages/utils/tsconfig.json.",
+    "The denominator is derived from pnpm-workspace.yaml package globs plus tracked manifests and root tsconfigs, independently of surface-inventory.json tsc_scripts; it contains 33 configured TypeScript workspaces.",
+    "phase1-workspace-baseline.json contains 33 unique rows and reports 28 pass, 5 fail, 0 timeout, 15 contaminated, and 18 clean; capture-phase1-baseline.py --check-completeness independently reports exact 33/33 set equality.",
+    "packages/ui fallback evidence records exit 2 and 16 diagnostics. Its committed-content candidate has SHA-256 b5836fd7a91639b71790b938de7b1c5cc61da110d2352c2dcf0c299fc32761d6, exactly matching the baseline row; an independent replay produces the same 16 lines and identical hash.",
+    "packages/utils fallback evidence records exit 0, zero diagnostics, zero output, null raw_log_file, and SHA-256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855. The stale contradictory log was removed; two independent replays exited 0 with zero bytes and the same empty-content hash.",
+    "The added raw-evidence integrity test checks every referenced raw log's SHA and line count and enforces the null-path zero-output convention; the final focused suite passes 36/36.",
+    "compiler-baseline.json resource_limits use exact positive integer maxima and stop-losses: RSS 3682227 equals floor(4602784 * 80 / 100), and swap 131072 equals floor(262144 * 50 / 100).",
+    "test-strategy.md specifies process-group SIGTERM, a bounded 5-second grace period, SIGKILL for survivors, child waits, and full reap verification in that order.",
+    "benchmark-record-schema.json requires dmesg_status with available/unavailable enum and defines swap_delta_kib as signed after - before with negative values valid."
+  ],
+  "commands": [
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase1 (PASS: 36 tests)",
+    "PYTHONDONTWRITEBYTECODE=1 python3 measure/tracks/typescript7_native_migration_20260710/capture-phase1-baseline.py --check-completeness (PASS: 33/33 exact set equality)",
+    "python3 -m py_compile measure/tracks/typescript7_native_migration_20260710/capture-phase1-baseline.py (PASS)",
+    "jq empty surface-inventory.json phase1-workspace-baseline.json compiler-baseline.json benchmark-record-schema.json (PASS)",
+    "git diff --check (PASS)",
+    "node node_modules/typescript/bin/tsc --noEmit -p packages/ui/tsconfig.json (expected exit 2; 16 diagnostics; replay SHA b5836fd7a91639b71790b938de7b1c5cc61da110d2352c2dcf0c299fc32761d6)",
+    "node node_modules/typescript/bin/tsc --noEmit -p packages/utils/tsconfig.json (PASS: exit 0; zero bytes; SHA e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855)"
+  ],
+  "changed_files": [
+    "measure/tracks/typescript7_native_migration_20260710/phase-1-review-a-remediation-result.json"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}

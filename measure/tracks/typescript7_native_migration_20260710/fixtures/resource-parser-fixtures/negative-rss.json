@@ -1,0 +1,10 @@
+{
+  "elapsed_ms": 25,
+  "peak_rss_kib": -1,
+  "swap_delta_kib": 0,
+  "max_process_group_rss_kib": 8192,
+  "max_swap_delta_kib": 1024,
+  "diagnostic_count": 0,
+  "cpu_idle_percent": 95,
+  "dmesg_status": "unavailable"
+}

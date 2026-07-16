@@ -1,0 +1,274 @@
+[
+  {
+    "diagnostic": "apps/primary-advantage/actions/test.ts(18,39): error TS2345: Argument of type '{ passage: any; articleId: string; }' is not assignable to parameter of type 'GenerateAudioParams'.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts7",
+    "reviewed_by": "typescript7-phase3c-reconciliation",
+    "reviewed_at": "2026-07-15T00:00:00Z",
+    "reason": "Both compilers report the same missing GenerateAudioParams.sentences property at this source span; TS 7 selects TS2741 while TS 6 reports the broader TS2345 assignment error."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/actions/test.ts(18,39): error TS2741: Property 'sentences' is missing in type '{ passage: any; articleId: string; }' but required in type 'GenerateAudioParams'.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts6",
+    "reviewed_by": "typescript7-phase3c-reconciliation",
+    "reviewed_at": "2026-07-15T00:00:00Z",
+    "reason": "Both compilers report the same missing GenerateAudioParams.sentences property at this source span; TS 7 selects TS2741 while TS 6 reports the broader TS2345 assignment error."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/components/articles/questions/sa-question-content.tsx(114,13): error TS2304: Cannot find name 'update'.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts7",
+    "reviewed_by": "typescript7-phase3c-reconciliation",
+    "reviewed_at": "2026-07-15T00:00:00Z",
+    "reason": "Both compilers report the same unresolved update identifier at this source span; TS 7 adds a suggestion and uses TS2552 while TS 6 reports TS2304."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/components/articles/questions/sa-question-content.tsx(114,13): error TS2552: Cannot find name 'update'. Did you mean 'Date'?",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts6",
+    "reviewed_by": "typescript7-phase3c-reconciliation",
+    "reviewed_at": "2026-07-15T00:00:00Z",
+    "reason": "Both compilers report the same unresolved update identifier at this source span; TS 7 adds a suggestion and uses TS2552 while TS 6 reports TS2304."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/components/lesson/games/lesson-sentence-cloze-test.tsx(524,7): error TS2304: Cannot find name 'update'.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts7",
+    "reviewed_by": "typescript7-phase3c-reconciliation",
+    "reviewed_at": "2026-07-15T00:00:00Z",
+    "reason": "Both compilers report the same unresolved update identifier at this source span; TS 7 adds a suggestion and uses TS2552 while TS 6 reports TS2304."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/components/lesson/games/lesson-sentence-cloze-test.tsx(524,7): error TS2552: Cannot find name 'update'. Did you mean 'Date'?",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts6",
+    "reviewed_by": "typescript7-phase3c-reconciliation",
+    "reviewed_at": "2026-07-15T00:00:00Z",
+    "reason": "Both compilers report the same unresolved update identifier at this source span; TS 7 adds a suggestion and uses TS2552 while TS 6 reports TS2304."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/components/lesson/games/lesson-sentence-flashcard.tsx(230,13): error TS2304: Cannot find name 'update'.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts7",
+    "reviewed_by": "typescript7-phase3c-reconciliation",
+    "reviewed_at": "2026-07-15T00:00:00Z",
+    "reason": "Both compilers report the same unresolved update identifier at this source span; TS 7 adds a suggestion and uses TS2552 while TS 6 reports TS2304."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/components/lesson/games/lesson-sentence-flashcard.tsx(230,13): error TS2552: Cannot find name 'update'. Did you mean 'Date'?",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts6",
+    "reviewed_by": "typescript7-phase3c-reconciliation",
+    "reviewed_at": "2026-07-15T00:00:00Z",
+    "reason": "Both compilers report the same unresolved update identifier at this source span; TS 7 adds a suggestion and uses TS2552 while TS 6 reports TS2304."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/components/lesson/games/lesson-sentence-matching.tsx(217,7): error TS2304: Cannot find name 'update'.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts7",
+    "reviewed_by": "typescript7-phase3c-reconciliation",
+    "reviewed_at": "2026-07-15T00:00:00Z",
+    "reason": "Both compilers report the same unresolved update identifier at this source span; TS 7 adds a suggestion and uses TS2552 while TS 6 reports TS2304."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/components/lesson/games/lesson-sentence-matching.tsx(217,7): error TS2552: Cannot find name 'update'. Did you mean 'Date'?",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts6",
+    "reviewed_by": "typescript7-phase3c-reconciliation",
+    "reviewed_at": "2026-07-15T00:00:00Z",
+    "reason": "Both compilers report the same unresolved update identifier at this source span; TS 7 adds a suggestion and uses TS2552 while TS 6 reports TS2304."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/components/lesson/games/lesson-sentence-order.tsx(304,7): error TS2304: Cannot find name 'update'.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts7",
+    "reviewed_by": "typescript7-phase3c-reconciliation",
+    "reviewed_at": "2026-07-15T00:00:00Z",
+    "reason": "Both compilers report the same unresolved update identifier at this source span; TS 7 adds a suggestion and uses TS2552 while TS 6 reports TS2304."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/components/lesson/games/lesson-sentence-order.tsx(304,7): error TS2552: Cannot find name 'update'. Did you mean 'Date'?",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts6",
+    "reviewed_by": "typescript7-phase3c-reconciliation",
+    "reviewed_at": "2026-07-15T00:00:00Z",
+    "reason": "Both compilers report the same unresolved update identifier at this source span; TS 7 adds a suggestion and uses TS2552 while TS 6 reports TS2304."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/components/lesson/task/task-lesson-summary.tsx(80,11): error TS2304: Cannot find name 'update'.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts7",
+    "reviewed_by": "typescript7-phase3c-reconciliation",
+    "reviewed_at": "2026-07-15T00:00:00Z",
+    "reason": "Both compilers report the same unresolved update identifier at this source span; TS 7 adds a suggestion and uses TS2552 while TS 6 reports TS2304."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/components/lesson/task/task-lesson-summary.tsx(80,11): error TS2552: Cannot find name 'update'. Did you mean 'Date'?",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts6",
+    "reviewed_by": "typescript7-phase3c-reconciliation",
+    "reviewed_at": "2026-07-15T00:00:00Z",
+    "reason": "Both compilers report the same unresolved update identifier at this source span; TS 7 adds a suggestion and uses TS2552 while TS 6 reports TS2304."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/components/pratice/cloze-test-game.tsx(522,7): error TS2304: Cannot find name 'update'.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts7",
+    "reviewed_by": "typescript7-phase3c-reconciliation",
+    "reviewed_at": "2026-07-15T00:00:00Z",
+    "reason": "Both compilers report the same unresolved update identifier at this source span; TS 7 adds a suggestion and uses TS2552 while TS 6 reports TS2304."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/components/pratice/cloze-test-game.tsx(522,7): error TS2552: Cannot find name 'update'. Did you mean 'Date'?",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts6",
+    "reviewed_by": "typescript7-phase3c-reconciliation",
+    "reviewed_at": "2026-07-15T00:00:00Z",
+    "reason": "Both compilers report the same unresolved update identifier at this source span; TS 7 adds a suggestion and uses TS2552 while TS 6 reports TS2304."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/components/pratice/matching-game.tsx(247,7): error TS2304: Cannot find name 'update'.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts7",
+    "reviewed_by": "typescript7-phase3c-reconciliation",
+    "reviewed_at": "2026-07-15T00:00:00Z",
+    "reason": "Both compilers report the same unresolved update identifier at this source span; TS 7 adds a suggestion and uses TS2552 while TS 6 reports TS2304."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/components/pratice/matching-game.tsx(247,7): error TS2552: Cannot find name 'update'. Did you mean 'Date'?",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts6",
+    "reviewed_by": "typescript7-phase3c-reconciliation",
+    "reviewed_at": "2026-07-15T00:00:00Z",
+    "reason": "Both compilers report the same unresolved update identifier at this source span; TS 7 adds a suggestion and uses TS2552 while TS 6 reports TS2304."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/components/pratice/order-sentences-game.tsx(298,7): error TS2304: Cannot find name 'update'.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts7",
+    "reviewed_by": "typescript7-phase3c-reconciliation",
+    "reviewed_at": "2026-07-15T00:00:00Z",
+    "reason": "Both compilers report the same unresolved update identifier at this source span; TS 7 adds a suggestion and uses TS2552 while TS 6 reports TS2304."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/components/pratice/order-sentences-game.tsx(298,7): error TS2552: Cannot find name 'update'. Did you mean 'Date'?",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts6",
+    "reviewed_by": "typescript7-phase3c-reconciliation",
+    "reviewed_at": "2026-07-15T00:00:00Z",
+    "reason": "Both compilers report the same unresolved update identifier at this source span; TS 7 adds a suggestion and uses TS2552 while TS 6 reports TS2304."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/components/school/school-detail.tsx(124,15): error TS2304: Cannot find name 'update'.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts7",
+    "reviewed_by": "typescript7-phase3c-reconciliation",
+    "reviewed_at": "2026-07-15T00:00:00Z",
+    "reason": "Both compilers report the same unresolved update identifier at this source span; TS 7 adds a suggestion and uses TS2552 while TS 6 reports TS2304."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/components/school/school-detail.tsx(124,15): error TS2552: Cannot find name 'update'. Did you mean 'Date'?",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts6",
+    "reviewed_by": "typescript7-phase3c-reconciliation",
+    "reviewed_at": "2026-07-15T00:00:00Z",
+    "reason": "Both compilers report the same unresolved update identifier at this source span; TS 7 adds a suggestion and uses TS2552 while TS 6 reports TS2304."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/components/school/school-profile-form.tsx(107,15): error TS2304: Cannot find name 'update'.",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts7",
+    "reviewed_by": "typescript7-phase3c-reconciliation",
+    "reviewed_at": "2026-07-15T00:00:00Z",
+    "reason": "Both compilers report the same unresolved update identifier at this source span; TS 7 adds a suggestion and uses TS2552 while TS 6 reports TS2304."
+  },
+  {
+    "diagnostic": "apps/primary-advantage/components/school/school-profile-form.tsx(107,15): error TS2552: Cannot find name 'update'. Did you mean 'Date'?",
+    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
+    "absent_from": "ts6",
+    "reviewed_by": "typescript7-phase3c-reconciliation",
+    "reviewed_at": "2026-07-15T00:00:00Z",
+    "reason": "Both compilers report the same unresolved update identifier at this source span; TS 7 adds a suggestion and uses TS2552 while TS 6 reports TS2304."
+  },
+  {
+    "diagnostic": "apps/science-advantage/app/api/ai/recommendations/otel-route-span.test.ts(120,24): error TS2769: No overload matches this call.",
+    "tsconfig_path": "apps/science-advantage/tsconfig.json",
+    "absent_from": "ts6",
+    "reviewed_by": "typescript7-phase3c-reconciliation",
+    "reviewed_at": "2026-07-15T00:00:00Z",
+    "reason": "TS 7 reports the same TS2769 overload mismatch at a narrower callback-expression column; the source line and diagnostic message are unchanged."
+  },
+  {
+    "diagnostic": "apps/science-advantage/app/api/ai/recommendations/otel-route-span.test.ts(120,4): error TS2769: No overload matches this call.",
+    "tsconfig_path": "apps/science-advantage/tsconfig.json",
+    "absent_from": "ts7",
+    "reviewed_by": "typescript7-phase3c-reconciliation",
+    "reviewed_at": "2026-07-15T00:00:00Z",
+    "reason": "TS 7 reports the same TS2769 overload mismatch at a narrower callback-expression column; the source line and diagnostic message are unchanged."
+  },
+  {
+    "diagnostic": "apps/science-advantage/lib/ai/__tests__/recommendation-service.otel.test.ts(115,24): error TS2769: No overload matches this call.",
+    "tsconfig_path": "apps/science-advantage/tsconfig.json",
+    "absent_from": "ts6",
+    "reviewed_by": "typescript7-phase3c-reconciliation",
+    "reviewed_at": "2026-07-15T00:00:00Z",
+    "reason": "TS 7 reports the same TS2769 overload mismatch at a narrower callback-expression column; the source line and diagnostic message are unchanged."
+  },
+  {
+    "diagnostic": "apps/science-advantage/lib/ai/__tests__/recommendation-service.otel.test.ts(115,4): error TS2769: No overload matches this call.",
+    "tsconfig_path": "apps/science-advantage/tsconfig.json",
+    "absent_from": "ts7",
+    "reviewed_by": "typescript7-phase3c-reconciliation",
+    "reviewed_at": "2026-07-15T00:00:00Z",
+    "reason": "TS 7 reports the same TS2769 overload mismatch at a narrower callback-expression column; the source line and diagnostic message are unchanged."
+  },
+  {
+    "diagnostic": "apps/reading-advantage/__test__/security/rbac.test.ts(261,44): error TS2345: Argument of type '{ id: string; role: \"TEACHER\"; email: string; display_name: string; level: number; email_verified: boolean; picture: string; xp: number; cefr_level: string; expired_date: string; expired: boolean; ... 4 more ...; teacher_class_ids: string[]; }' is not assignable to parameter of type 'Promise<{ id: string; username: string; email?: string | undefined; display_name: string; role: \"ADMIN\" | \"STUDENT\" | \"SYSTEM\" | \"TEACHER\" | \"USER\"; level: number | null; email_verified: boolean; ... 10 more ...; student_class_ids?: string[] | undefined; } | null> | { ...; } | null'.",
+    "tsconfig_path": "apps/reading-advantage/tsconfig.json",
+    "absent_from": "ts7",
+    "reviewed_by": "typescript7-phase3c-reconciliation",
+    "reviewed_at": "2026-07-15T00:00:00Z",
+    "reason": "Both compilers report the same TS2345 mock-user assignment failure at this source span; TS 6 truncates the displayed object shape while TS 7 prints additional properties."
+  },
+  {
+    "diagnostic": "apps/reading-advantage/__test__/security/rbac.test.ts(261,44): error TS2345: Argument of type '{ id: string; role: \"TEACHER\"; email: string; display_name: string; level: number; email_verified: boolean; picture: string; xp: number; cefr_level: string; expired_date: string; expired: boolean; license_id: string; license_level: \"BASIC\"; onborda: boolean; school_id: string; teacher_class_ids: string[]; }' is not assignable to parameter of type 'Promise<{ id: string; username: string; email?: string | undefined; display_name: string; role: \"ADMIN\" | \"STUDENT\" | \"SYSTEM\" | \"TEACHER\" | \"USER\"; level: number | null; email_verified: boolean; ... 10 more ...; student_class_ids?: string[] | undefined; } | null> | { ...; } | null'.",
+    "tsconfig_path": "apps/reading-advantage/tsconfig.json",
+    "absent_from": "ts6",
+    "reviewed_by": "typescript7-phase3c-reconciliation",
+    "reviewed_at": "2026-07-15T00:00:00Z",
+    "reason": "Both compilers report the same TS2345 mock-user assignment failure at this source span; TS 6 truncates the displayed object shape while TS 7 prints additional properties."
+  },
+  {
+    "diagnostic": "apps/reading-advantage/__test__/security/rbac.test.ts(294,44): error TS2345: Argument of type '{ id: string; role: \"TEACHER\"; email: string; display_name: string; level: number; email_verified: boolean; picture: string; xp: number; cefr_level: string; expired_date: string; expired: boolean; ... 4 more ...; teacher_class_ids: string[]; }' is not assignable to parameter of type 'Promise<{ id: string; username: string; email?: string | undefined; display_name: string; role: \"ADMIN\" | \"STUDENT\" | \"SYSTEM\" | \"TEACHER\" | \"USER\"; level: number | null; email_verified: boolean; ... 10 more ...; student_class_ids?: string[] | undefined; } | null> | { ...; } | null'.",
+    "tsconfig_path": "apps/reading-advantage/tsconfig.json",
+    "absent_from": "ts7",
+    "reviewed_by": "typescript7-phase3c-reconciliation",
+    "reviewed_at": "2026-07-15T00:00:00Z",
+    "reason": "Both compilers report the same TS2345 mock-user assignment failure at this source span; TS 6 truncates the displayed object shape while TS 7 prints additional properties."
+  },
+  {
+    "diagnostic": "apps/reading-advantage/__test__/security/rbac.test.ts(294,44): error TS2345: Argument of type '{ id: string; role: \"TEACHER\"; email: string; display_name: string; level: number; email_verified: boolean; picture: string; xp: number; cefr_level: string; expired_date: string; expired: boolean; license_id: string; license_level: \"BASIC\"; onborda: boolean; school_id: string; teacher_class_ids: string[]; }' is not assignable to parameter of type 'Promise<{ id: string; username: string; email?: string | undefined; display_name: string; role: \"ADMIN\" | \"STUDENT\" | \"SYSTEM\" | \"TEACHER\" | \"USER\"; level: number | null; email_verified: boolean; ... 10 more ...; student_class_ids?: string[] | undefined; } | null> | { ...; } | null'.",
+    "tsconfig_path": "apps/reading-advantage/tsconfig.json",
+    "absent_from": "ts6",
+    "reviewed_by": "typescript7-phase3c-reconciliation",
+    "reviewed_at": "2026-07-15T00:00:00Z",
+    "reason": "Both compilers report the same TS2345 mock-user assignment failure at this source span; TS 6 truncates the displayed object shape while TS 7 prints additional properties."
+  },
+  {
+    "diagnostic": "apps/reading-advantage/__test__/security/rbac.test.ts(323,44): error TS2345: Argument of type '{ id: string; role: \"STUDENT\"; email: string; display_name: string; level: number; email_verified: boolean; picture: string; xp: number; cefr_level: string; expired_date: string; expired: boolean; ... 4 more ...; student_class_ids: string[]; }' is not assignable to parameter of type 'Promise<{ id: string; username: string; email?: string | undefined; display_name: string; role: \"ADMIN\" | \"STUDENT\" | \"SYSTEM\" | \"TEACHER\" | \"USER\"; level: number | null; email_verified: boolean; ... 10 more ...; student_class_ids?: string[] | undefined; } | null> | { ...; } | null'.",
+    "tsconfig_path": "apps/reading-advantage/tsconfig.json",
+    "absent_from": "ts7",
+    "reviewed_by": "typescript7-phase3c-reconciliation",
+    "reviewed_at": "2026-07-15T00:00:00Z",
+    "reason": "Both compilers report the same TS2345 mock-user assignment failure at this source span; TS 6 truncates the displayed object shape while TS 7 prints additional properties."
+  },
+  {
+    "diagnostic": "apps/reading-advantage/__test__/security/rbac.test.ts(323,44): error TS2345: Argument of type '{ id: string; role: \"STUDENT\"; email: string; display_name: string; level: number; email_verified: boolean; picture: string; xp: number; cefr_level: string; expired_date: string; expired: boolean; license_id: string; license_level: \"BASIC\"; onborda: boolean; school_id: string; student_class_ids: string[]; }' is not assignable to parameter of type 'Promise<{ id: string; username: string; email?: string | undefined; display_name: string; role: \"ADMIN\" | \"STUDENT\" | \"SYSTEM\" | \"TEACHER\" | \"USER\"; level: number | null; email_verified: boolean; ... 10 more ...; student_class_ids?: string[] | undefined; } | null> | { ...; } | null'.",
+    "tsconfig_path": "apps/reading-advantage/tsconfig.json",
+    "absent_from": "ts6",
+    "reviewed_by": "typescript7-phase3c-reconciliation",
+    "reviewed_at": "2026-07-15T00:00:00Z",
+    "reason": "Both compilers report the same TS2345 mock-user assignment failure at this source span; TS 6 truncates the displayed object shape while TS 7 prints additional properties."
+  }
+]

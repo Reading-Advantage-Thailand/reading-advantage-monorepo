@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "track": "typescript7_native_migration_20260710",
+  "phase": "Phase 3d: check-types cutover",
+  "status": "accepted_first_workspace",
+  "accepted_at": "2026-07-15T04:09:04Z",
+  "workspace": {
+    "name": "@reading-advantage/types",
+    "path": "packages/types",
+    "acceptance_order": 1
+  },
+  "strategy_correction": {
+    "superseded_red_gate": "pnpm --filter @reading-advantage/types exec tsc --noEmit -p tsconfig.json exits non-zero (today)",
+    "observed_direct_baseline": {
+      "typescript6": {
+        "command": "node node_modules/typescript/bin/tsc --noEmit -p packages/types/tsconfig.json",
+        "version": "6.0.2",
+        "exit_status": 0
+      },
+      "typescript7": {
+        "command": "node node_modules/typescript7/bin/tsc --noEmit -p packages/types/tsconfig.json",
+        "version": "7.0.2",
+        "exit_status": 0
+      }
+    },
+    "routing_red_proof": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase3.Phase3dCheckTypesCutoverContract",
+      "exit_status_before_cutover": 1,
+      "failure": "packages/types check-types used bare tsc instead of the required direct TypeScript 7 alias path"
+    }
+  },
+  "hoisted_resolution_hazard": {
+    "node_linker": "hoisted",
+    "root_tsc_link": "node_modules/.bin/tsc -> ../typescript7/bin/tsc",
+    "disposition": "all workspace scripts now name the direct compiler package path; emitting build scripts remain on TypeScript 6 until Phase 3e declaration/JavaScript byte evidence"
+  },
+  "scripts": {
+    "check-types": "node ../../node_modules/typescript7/bin/tsc --noEmit",
+    "check-types:compat": "node ../../node_modules/typescript/bin/tsc --noEmit",
+    "check-types:rollback": "node ../../node_modules/typescript/bin/tsc --noEmit",
+    "build": "node ../../node_modules/typescript/bin/tsc"
+  },
+  "live_acceptance": {
+    "command": "pnpm --filter @reading-advantage/types run check-types && pnpm --filter @reading-advantage/types run check-types:compat && pnpm --filter @reading-advantage/types run check-types:rollback",
+    "exit_status": 0,
+    "executed_scripts": [
+      "node ../../node_modules/typescript7/bin/tsc --noEmit",
+      "node ../../node_modules/typescript/bin/tsc --noEmit",
+      "node ../../node_modules/typescript/bin/tsc --noEmit"
+    ]
+  },
+  "non_goals": [
+    "No declaration or JavaScript emit command is migrated to TypeScript 7 in Phase 3d.",
+    "No aggregate Turbo check-types graph is run before its ordered workspace cutover and later Phase 4 acceptance."
+  ]
+}

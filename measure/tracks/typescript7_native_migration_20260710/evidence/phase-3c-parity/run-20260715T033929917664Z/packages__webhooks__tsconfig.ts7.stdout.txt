@@ -1,0 +1,112 @@
+packages/webhooks/src/__tests__/adversarial-claim-cas.test.ts(27,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/webhooks/src/__tests__/adversarial-enqueue.test.ts(33,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/webhooks/src/__tests__/adversarial-enqueue.test.ts(42,53): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/webhooks/src/__tests__/adversarial-webhook-flow.test.ts(61,54): error TS2307: Cannot find module '@reading-advantage/domain/codecamp' or its corresponding type declarations.
+packages/webhooks/src/__tests__/adversarial-webhook-flow.test.ts(79,54): error TS2307: Cannot find module '@reading-advantage/domain/users' or its corresponding type declarations.
+packages/webhooks/src/__tests__/adversarial-webhook-flow.test.ts(100,8): error TS2307: Cannot find module '@reading-advantage/domain/codecamp' or its corresponding type declarations.
+packages/webhooks/src/__tests__/adversarial-webhook-flow.test.ts(101,41): error TS2307: Cannot find module '@reading-advantage/domain/users' or its corresponding type declarations.
+packages/webhooks/src/__tests__/github-review.test.ts(82,54): error TS2307: Cannot find module '@reading-advantage/domain/codecamp' or its corresponding type declarations.
+packages/webhooks/src/__tests__/github-review.test.ts(94,54): error TS2307: Cannot find module '@reading-advantage/domain/users' or its corresponding type declarations.
+packages/webhooks/src/__tests__/github-review.test.ts(102,53): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/webhooks/src/__tests__/github-review.test.ts(192,8): error TS2307: Cannot find module '@reading-advantage/domain/codecamp' or its corresponding type declarations.
+packages/webhooks/src/__tests__/github-review.test.ts(193,41): error TS2307: Cannot find module '@reading-advantage/domain/users' or its corresponding type declarations.
+packages/webhooks/src/__tests__/github-review.test.ts(281,57): error TS7006: Parameter 'args' implicitly has an 'any' type.
+packages/webhooks/src/__tests__/github-review.test.ts(340,47): error TS7006: Parameter 'call' implicitly has an 'any' type.
+packages/webhooks/src/__tests__/github-review.test.ts(370,72): error TS7006: Parameter 'call' implicitly has an 'any' type.
+packages/webhooks/src/__tests__/github-webhook-ack-latency.test.ts(15,41): error TS2307: Cannot find module '@reading-advantage/domain/codecamp' or its corresponding type declarations.
+packages/webhooks/src/__tests__/github-webhook-ack-latency.test.ts(30,41): error TS2307: Cannot find module '@reading-advantage/domain/users' or its corresponding type declarations.
+packages/webhooks/src/__tests__/github-webhook-ack-latency.test.ts(44,8): error TS2307: Cannot find module '@reading-advantage/domain/codecamp' or its corresponding type declarations.
+packages/webhooks/src/__tests__/github-webhook-ack-latency.test.ts(45,41): error TS2307: Cannot find module '@reading-advantage/domain/users' or its corresponding type declarations.
+packages/webhooks/src/__tests__/github-webhook-idempotency.test.ts(15,41): error TS2307: Cannot find module '@reading-advantage/domain/codecamp' or its corresponding type declarations.
+packages/webhooks/src/__tests__/github-webhook-idempotency.test.ts(30,41): error TS2307: Cannot find module '@reading-advantage/domain/users' or its corresponding type declarations.
+packages/webhooks/src/__tests__/github-webhook-idempotency.test.ts(44,8): error TS2307: Cannot find module '@reading-advantage/domain/codecamp' or its corresponding type declarations.
+packages/webhooks/src/__tests__/github-webhook-idempotency.test.ts(45,41): error TS2307: Cannot find module '@reading-advantage/domain/users' or its corresponding type declarations.
+packages/webhooks/src/__tests__/github-webhook.test.ts(7,54): error TS2307: Cannot find module '@reading-advantage/domain/codecamp' or its corresponding type declarations.
+packages/webhooks/src/__tests__/github-webhook.test.ts(19,54): error TS2307: Cannot find module '@reading-advantage/domain/users' or its corresponding type declarations.
+packages/webhooks/src/__tests__/github-webhook.test.ts(32,8): error TS2307: Cannot find module '@reading-advantage/domain/codecamp' or its corresponding type declarations.
+packages/webhooks/src/__tests__/github-webhook.test.ts(34,41): error TS2307: Cannot find module '@reading-advantage/domain/users' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-2-enqueue-idempotent.test.ts(40,53): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-2-enqueue-idempotent.test.ts(64,39): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-2-enqueue-idempotent.test.ts(76,39): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-2-enqueue-idempotent.test.ts(82,39): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-2-enqueue-idempotent.test.ts(94,39): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-2-enqueue-url-normalization.test.ts(20,53): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-2-enqueue-url-normalization.test.ts(49,39): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-2-enqueue-url-normalization.test.ts(57,39): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-2-webhook-acks-after-enqueue.test.ts(22,54): error TS2307: Cannot find module '@reading-advantage/domain/codecamp' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-2-webhook-acks-after-enqueue.test.ts(40,54): error TS2307: Cannot find module '@reading-advantage/domain/users' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-2-webhook-acks-after-enqueue.test.ts(63,8): error TS2307: Cannot find module '@reading-advantage/domain/codecamp' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-2-webhook-acks-after-enqueue.test.ts(64,41): error TS2307: Cannot find module '@reading-advantage/domain/users' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-3-claim-skip-locked.test.ts(36,52): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-3-claim-skip-locked.test.ts(56,52): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-3-claim-skip-locked.test.ts(84,46): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-3-claim-skip-locked.test.ts(97,46): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-3-claim-skip-locked.test.ts(108,33): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-3-exhaust-to-dead.test.ts(29,54): error TS2307: Cannot find module '@reading-advantage/domain/codecamp' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-3-exhaust-to-dead.test.ts(49,32): error TS2307: Cannot find module '@reading-advantage/domain/codecamp' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-3-exhaust-to-dead.test.ts(90,41): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-3-exhaust-to-dead.test.ts(96,72): error TS7006: Parameter 'call' implicitly has an 'any' type.
+packages/webhooks/src/__tests__/phase-3-reclaim-stuck.test.ts(34,56): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-3-reclaim-stuck.test.ts(50,56): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-3-reclaim-stuck.test.ts(71,31): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-3-success-settle.test.ts(42,54): error TS2307: Cannot find module '@reading-advantage/domain/codecamp' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-3-success-settle.test.ts(72,90): error TS2307: Cannot find module '@reading-advantage/domain/codecamp' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-3-success-settle.test.ts(110,39): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-3-success-settle.test.ts(133,39): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-3-success-settle.test.ts(171,39): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-3-success-settle.test.ts(195,39): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-3-success-settle.test.ts(221,39): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-3-success-settle.test.ts(237,39): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-3-success-settle.test.ts(262,39): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-3-success-settle.test.ts(284,39): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-5-exhaust-to-dead.test.ts(32,54): error TS2307: Cannot find module '@reading-advantage/domain/codecamp' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-5-exhaust-to-dead.test.ts(52,54): error TS2307: Cannot find module '@reading-advantage/domain/users' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-5-exhaust-to-dead.test.ts(74,8): error TS2307: Cannot find module '@reading-advantage/domain/codecamp' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-5-exhaust-to-dead.test.ts(75,41): error TS2307: Cannot find module '@reading-advantage/domain/users' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-5-exhaust-to-dead.test.ts(219,72): error TS7006: Parameter 'call' implicitly has an 'any' type.
+packages/webhooks/src/__tests__/phase-5-happy-path.test.ts(39,54): error TS2307: Cannot find module '@reading-advantage/domain/codecamp' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-5-happy-path.test.ts(67,54): error TS2307: Cannot find module '@reading-advantage/domain/users' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-5-happy-path.test.ts(90,8): error TS2307: Cannot find module '@reading-advantage/domain/codecamp' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-5-happy-path.test.ts(91,41): error TS2307: Cannot find module '@reading-advantage/domain/users' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-5-happy-path.test.ts(250,72): error TS7006: Parameter 'call' implicitly has an 'any' type.
+packages/webhooks/src/__tests__/phase-5-idempotent-redelivery.test.ts(36,53): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-5-idempotent-redelivery.test.ts(106,54): error TS2307: Cannot find module '@reading-advantage/domain/codecamp' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-5-idempotent-redelivery.test.ts(127,54): error TS2307: Cannot find module '@reading-advantage/domain/users' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-5-idempotent-redelivery.test.ts(150,8): error TS2307: Cannot find module '@reading-advantage/domain/codecamp' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-5-idempotent-redelivery.test.ts(151,41): error TS2307: Cannot find module '@reading-advantage/domain/users' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-5-retry-then-succeed.test.ts(29,53): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-5-retry-then-succeed.test.ts(81,54): error TS2307: Cannot find module '@reading-advantage/domain/codecamp' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-5-retry-then-succeed.test.ts(103,54): error TS2307: Cannot find module '@reading-advantage/domain/users' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-5-retry-then-succeed.test.ts(126,8): error TS2307: Cannot find module '@reading-advantage/domain/codecamp' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-5-retry-then-succeed.test.ts(127,41): error TS2307: Cannot find module '@reading-advantage/domain/users' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-5-retry-then-succeed.test.ts(202,57): error TS7006: Parameter 'args' implicitly has an 'any' type.
+packages/webhooks/src/__tests__/phase-5-retry-then-succeed.test.ts(293,72): error TS7006: Parameter 'call' implicitly has an 'any' type.
+packages/webhooks/src/__tests__/phase-6-acceptance.test.ts(43,36): error TS2307: Cannot find module '@reading-advantage/domain/codecamp' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-6-acceptance.test.ts(157,54): error TS2307: Cannot find module '@reading-advantage/domain/codecamp' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-6-acceptance.test.ts(176,54): error TS2307: Cannot find module '@reading-advantage/domain/users' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-6-acceptance.test.ts(184,53): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-6-acceptance.test.ts(288,8): error TS2307: Cannot find module '@reading-advantage/domain/codecamp' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-6-acceptance.test.ts(289,41): error TS2307: Cannot find module '@reading-advantage/domain/users' or its corresponding type declarations.
+packages/webhooks/src/__tests__/phase-6-acceptance.test.ts(351,57): error TS7006: Parameter 'args' implicitly has an 'any' type.
+packages/webhooks/src/__tests__/phase-6-acceptance.test.ts(384,72): error TS7006: Parameter 'call' implicitly has an 'any' type.
+packages/webhooks/src/__tests__/phase-6-acceptance.test.ts(421,72): error TS7006: Parameter 'call' implicitly has an 'any' type.
+packages/webhooks/src/github.ts(2,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/webhooks/src/github.ts(3,32): error TS2307: Cannot find module '@reading-advantage/domain' or its corresponding type declarations.
+packages/webhooks/src/github.ts(4,27): error TS2307: Cannot find module '@reading-advantage/domain/codecamp' or its corresponding type declarations.
+packages/webhooks/src/github.ts(5,41): error TS2307: Cannot find module '@reading-advantage/domain/users' or its corresponding type declarations.
+packages/webhooks/src/github.ts(6,44): error TS2307: Cannot find module '@reading-advantage/types' or its corresponding type declarations.
+packages/webhooks/src/review-worker.ts(33,28): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/webhooks/src/review-worker.ts(34,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/webhooks/src/review-worker.ts(35,32): error TS2307: Cannot find module '@reading-advantage/domain' or its corresponding type declarations.
+packages/webhooks/src/review-worker.ts(36,29): error TS2307: Cannot find module '@reading-advantage/ai' or its corresponding type declarations.
+packages/webhooks/src/review-worker.ts(59,28): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/webhooks/src/review-worker.ts(623,34): error TS2307: Cannot find module '@reading-advantage/domain/codecamp' or its corresponding type declarations.
+packages/webhooks/src/review-worker.ts(625,33): error TS2307: Cannot find module '@reading-advantage/domain/codecamp' or its corresponding type declarations.
+packages/webhooks/src/review-worker.ts(636,18): error TS2307: Cannot find module '@reading-advantage/domain/codecamp' or its corresponding type declarations.
+packages/webhooks/src/review-worker.ts(640,73): error TS7006: Parameter 'objective' implicitly has an 'any' type.
+packages/webhooks/src/review-worker.ts(642,13): error TS7006: Parameter 'reference' implicitly has an 'any' type.
+packages/webhooks/src/review-worker.ts(680,31): error TS2307: Cannot find module '@reading-advantage/domain/codecamp' or its corresponding type declarations.
+packages/webhooks/src/review-worker.ts(700,26): error TS2307: Cannot find module '@reading-advantage/domain/codecamp' or its corresponding type declarations.
+packages/webhooks/src/review-worker.ts(814,19): error TS7006: Parameter 'c' implicitly has an 'any' type.
+packages/webhooks/src/review-worker.ts(959,42): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/webhooks/src/review-worker.ts(1022,33): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.

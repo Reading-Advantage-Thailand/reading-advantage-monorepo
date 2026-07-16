@@ -9,7 +9,9 @@
     "start": "vinext start",
     "test": "vitest run",
     "lint": "eslint .",
-    "check-types": "tsc --noEmit"
+    "check-types": "node ../../scripts/run-ts7-check-types.mjs --noEmit",
+    "check-types:compat": "node ../../node_modules/typescript/bin/tsc --noEmit",
+    "check-types:rollback": "node ../../node_modules/typescript/bin/tsc --noEmit"
   },
   "dependencies": {
     "@reading-advantage/ai": "workspace:*",

@@ -1,0 +1,1050 @@
+{
+  "phase": "Phase 3i: live Turbo cache invalidation",
+  "provenance_end": {
+    "revision": "6c930010166e6a2ea4d88bbb296158ea9209a0ab",
+    "sha256": {
+      "compiler_identity": "a2f523e79e1d1245f4cedbbe4a3688892650ce3f4106af106d6d8853d4ac7185",
+      "package_json": "ca85e7a81ade52d9737e6a0e218802dacffa814cf56e0589e29e5b9926cf8ada",
+      "pnpm_lock": "e3fee0f3b3e7638f74ddbfed7d7e5c2a51c22bac6d666ac26350f85ced60d68b",
+      "pnpm_workspace": "42e0bf8cc9c2f19d19ab9e360f4c0e67ae440ecf8481073b389d3d65e2d4fad5",
+      "shared_tsconfig": "609c4dcf887bb927df24e2571ad4562a48880a3f6131339175bfc0b1a6a29b67",
+      "target_tsconfig": "8b2ee0db7d45e03964021751329f6ed37422717f7c20105b3dbe0da8eeecda5e",
+      "ts6_tsc": "8d5fa5bd883fec0979fc2004f1fe1d99aef40570155d550eadc0b03b55513bf0",
+      "ts7_tsc": "2219f428a7e55aaf1f7ad85b9b0f0cf5078aeb76ccc9a7c6036c92d48f492ffd",
+      "ts7_wrapper": "8819195f5fbfd0ccf0fd09fa37f3506c984fcff182d7a3c104ffa244635b0b97",
+      "turbo_json": "0e41706bb7b8592d2667a3265a48700f79ffbe6b7920a7b110016787da5df080"
+    },
+    "typescript6": "Version 6.0.2",
+    "typescript7": "Version 7.0.2"
+  },
+  "provenance_start": {
+    "revision": "6c930010166e6a2ea4d88bbb296158ea9209a0ab",
+    "sha256": {
+      "compiler_identity": "a2f523e79e1d1245f4cedbbe4a3688892650ce3f4106af106d6d8853d4ac7185",
+      "package_json": "ca85e7a81ade52d9737e6a0e218802dacffa814cf56e0589e29e5b9926cf8ada",
+      "pnpm_lock": "e3fee0f3b3e7638f74ddbfed7d7e5c2a51c22bac6d666ac26350f85ced60d68b",
+      "pnpm_workspace": "42e0bf8cc9c2f19d19ab9e360f4c0e67ae440ecf8481073b389d3d65e2d4fad5",
+      "shared_tsconfig": "609c4dcf887bb927df24e2571ad4562a48880a3f6131339175bfc0b1a6a29b67",
+      "target_tsconfig": "8b2ee0db7d45e03964021751329f6ed37422717f7c20105b3dbe0da8eeecda5e",
+      "ts6_tsc": "8d5fa5bd883fec0979fc2004f1fe1d99aef40570155d550eadc0b03b55513bf0",
+      "ts7_tsc": "2219f428a7e55aaf1f7ad85b9b0f0cf5078aeb76ccc9a7c6036c92d48f492ffd",
+      "ts7_wrapper": "8819195f5fbfd0ccf0fd09fa37f3506c984fcff182d7a3c104ffa244635b0b97",
+      "turbo_json": "0e41706bb7b8592d2667a3265a48700f79ffbe6b7920a7b110016787da5df080"
+    },
+    "typescript6": "Version 6.0.2",
+    "typescript7": "Version 7.0.2"
+  },
+  "records": [
+    {
+      "cache": {
+        "local": false,
+        "remote": false,
+        "status": "MISS",
+        "timeSaved": 0
+      },
+      "checkers": 1,
+      "command": [
+        "node",
+        "node_modules/turbo/bin/turbo",
+        "run",
+        "check-types",
+        "--filter=@reading-advantage/types",
+        "--concurrency=1",
+        "--cache-dir",
+        "/tmp/ts7-cache-proof-ovjx75ox/turbo-cache",
+        "--summarize",
+        "--output-logs=full"
+      ],
+      "environment": {
+        "TS7_CHECKERS": "1",
+        "TURBO_CONCURRENCY": "1"
+      },
+      "exit_status": 0,
+      "label": "native-c1-baseline-miss",
+      "stderr_sha256": "a6052069f52915d75bf1cd6f441c4ea945b949f416a2eb62f2a69ce234408bd4",
+      "stdout_sha256": "c910b2c04e782c6c83ffcbffb950b43aad37390b473a09e21d1b5373ab93f9ce",
+      "summary_path": ".turbo/runs/3GXJ99edqR7RlU21Iop1bqJyEPk.json",
+      "summary_sha256": "77c533296c52d9baee79f6b5501b7550aa0f7b2c0f49a455a94cb262428e119d",
+      "task": "check-types",
+      "task_hash": "65d1811dd7fc2d6e"
+    },
+    {
+      "cache": {
+        "local": true,
+        "remote": false,
+        "sha": "6c930010166e6a2ea4d88bbb296158ea9209a0ab",
+        "source": "LOCAL",
+        "status": "HIT",
+        "timeSaved": 3376
+      },
+      "checkers": 1,
+      "command": [
+        "node",
+        "node_modules/turbo/bin/turbo",
+        "run",
+        "check-types",
+        "--filter=@reading-advantage/types",
+        "--concurrency=1",
+        "--cache-dir",
+        "/tmp/ts7-cache-proof-ovjx75ox/turbo-cache",
+        "--summarize",
+        "--output-logs=full"
+      ],
+      "environment": {
+        "TS7_CHECKERS": "1",
+        "TURBO_CONCURRENCY": "1"
+      },
+      "exit_status": 0,
+      "label": "native-c1-baseline-hit",
+      "stderr_sha256": "a6052069f52915d75bf1cd6f441c4ea945b949f416a2eb62f2a69ce234408bd4",
+      "stdout_sha256": "b2feb6f58a9776c0d2fcb0a7723b39588a4647e86fc52801107f38ca63050e5c",
+      "summary_path": ".turbo/runs/3GXJ9C5SSpIfmPJpRHbqOgGr5wd.json",
+      "summary_sha256": "70c0f3e50e1dbdbd5b22f4907054f33bf1e6e36c3dbe213fc8e8470bf9577f4b",
+      "task": "check-types",
+      "task_hash": "65d1811dd7fc2d6e"
+    },
+    {
+      "cache": {
+        "local": false,
+        "remote": false,
+        "status": "MISS",
+        "timeSaved": 0
+      },
+      "checkers": 1,
+      "command": [
+        "node",
+        "node_modules/turbo/bin/turbo",
+        "run",
+        "check-types",
+        "--filter=@reading-advantage/types",
+        "--concurrency=1",
+        "--cache-dir",
+        "/tmp/ts7-cache-proof-ovjx75ox/turbo-cache",
+        "--summarize",
+        "--output-logs=full"
+      ],
+      "environment": {
+        "TS7_CHECKERS": "1",
+        "TURBO_CONCURRENCY": "1"
+      },
+      "exit_status": 0,
+      "label": "native-ts7-alias-miss",
+      "stderr_sha256": "a6052069f52915d75bf1cd6f441c4ea945b949f416a2eb62f2a69ce234408bd4",
+      "stdout_sha256": "93fce3f16c5a5535dc082d04f1a4888e9fd33a5b48258aa4d8c853a5223d5f67",
+      "summary_path": ".turbo/runs/3GXJ9j6Ly8SC7OPChyjKa1avKWK.json",
+      "summary_sha256": "b7e5d3eebf2d98c9ad96121c610d2aaefb837d1adb7f868f9d0778691276369e",
+      "task": "check-types",
+      "task_hash": "9832b5b542df6a70"
+    },
+    {
+      "cache": {
+        "local": true,
+        "remote": false,
+        "sha": "6c930010166e6a2ea4d88bbb296158ea9209a0ab",
+        "source": "LOCAL",
+        "status": "HIT",
+        "timeSaved": 3376
+      },
+      "checkers": 1,
+      "command": [
+        "node",
+        "node_modules/turbo/bin/turbo",
+        "run",
+        "check-types",
+        "--filter=@reading-advantage/types",
+        "--concurrency=1",
+        "--cache-dir",
+        "/tmp/ts7-cache-proof-ovjx75ox/turbo-cache",
+        "--summarize",
+        "--output-logs=full"
+      ],
+      "environment": {
+        "TS7_CHECKERS": "1",
+        "TURBO_CONCURRENCY": "1"
+      },
+      "exit_status": 0,
+      "label": "native-ts7-alias-restored-hit",
+      "stderr_sha256": "a6052069f52915d75bf1cd6f441c4ea945b949f416a2eb62f2a69ce234408bd4",
+      "stdout_sha256": "f05241c7e6b26c969d1df451e72c5e2776c219bc22df2a1b97913a1518a339d4",
+      "summary_path": ".turbo/runs/3GXJ9yQjfK58uFo1ETBMxMynXtC.json",
+      "summary_sha256": "7da546d4e26b6c7865c7c958a0060a5248f191476ebd9d141783ee4c18a68107",
+      "task": "check-types",
+      "task_hash": "65d1811dd7fc2d6e"
+    },
+    {
+      "cache": {
+        "local": false,
+        "remote": false,
+        "status": "MISS",
+        "timeSaved": 0
+      },
+      "checkers": 1,
+      "command": [
+        "node",
+        "node_modules/turbo/bin/turbo",
+        "run",
+        "check-types",
+        "--filter=@reading-advantage/types",
+        "--concurrency=1",
+        "--cache-dir",
+        "/tmp/ts7-cache-proof-ovjx75ox/turbo-cache",
+        "--summarize",
+        "--output-logs=full"
+      ],
+      "environment": {
+        "TS7_CHECKERS": "1",
+        "TURBO_CONCURRENCY": "1"
+      },
+      "exit_status": 0,
+      "label": "native-wrapper-miss",
+      "stderr_sha256": "a6052069f52915d75bf1cd6f441c4ea945b949f416a2eb62f2a69ce234408bd4",
+      "stdout_sha256": "e651390262a6a01829c500ab69305dea01ffb257f624e5898151453dad63a426",
+      "summary_path": ".turbo/runs/3GXJArlvixL9Pjgj8Y7XmH8VZnZ.json",
+      "summary_sha256": "1f59d000288fa0e3566e8f964b1841e944ca859d7087090d1015957d3b36e88b",
+      "task": "check-types",
+      "task_hash": "ec8015e8156592e9"
+    },
+    {
+      "cache": {
+        "local": true,
+        "remote": false,
+        "sha": "6c930010166e6a2ea4d88bbb296158ea9209a0ab",
+        "source": "LOCAL",
+        "status": "HIT",
+        "timeSaved": 3376
+      },
+      "checkers": 1,
+      "command": [
+        "node",
+        "node_modules/turbo/bin/turbo",
+        "run",
+        "check-types",
+        "--filter=@reading-advantage/types",
+        "--concurrency=1",
+        "--cache-dir",
+        "/tmp/ts7-cache-proof-ovjx75ox/turbo-cache",
+        "--summarize",
+        "--output-logs=full"
+      ],
+      "environment": {
+        "TS7_CHECKERS": "1",
+        "TURBO_CONCURRENCY": "1"
+      },
+      "exit_status": 0,
+      "label": "native-wrapper-restored-hit",
+      "stderr_sha256": "a6052069f52915d75bf1cd6f441c4ea945b949f416a2eb62f2a69ce234408bd4",
+      "stdout_sha256": "afea243396277ba4cb311bb6ff81fd361c57770379f371626a31092cdda9b637",
+      "summary_path": ".turbo/runs/3GXJB9FYh1jbttBvfoH9bslu8dC.json",
+      "summary_sha256": "6d5364272cafde0c81dd393f47bdfb98387ddcbb0a0e8bc5c92dc3962ca0eea9",
+      "task": "check-types",
+      "task_hash": "65d1811dd7fc2d6e"
+    },
+    {
+      "cache": {
+        "local": false,
+        "remote": false,
+        "status": "MISS",
+        "timeSaved": 0
+      },
+      "checkers": 1,
+      "command": [
+        "node",
+        "node_modules/turbo/bin/turbo",
+        "run",
+        "check-types",
+        "--filter=@reading-advantage/types",
+        "--concurrency=1",
+        "--cache-dir",
+        "/tmp/ts7-cache-proof-ovjx75ox/turbo-cache",
+        "--summarize",
+        "--output-logs=full"
+      ],
+      "environment": {
+        "TS7_CHECKERS": "1",
+        "TURBO_CONCURRENCY": "1"
+      },
+      "exit_status": 0,
+      "label": "native-local-tsconfig-miss",
+      "stderr_sha256": "a6052069f52915d75bf1cd6f441c4ea945b949f416a2eb62f2a69ce234408bd4",
+      "stdout_sha256": "1eff561a8f637c0a55c7e983edb3b136203443107620e3514661ab5d80d5d34d",
+      "summary_path": ".turbo/runs/3GXJC8tasfv1lDIpZDsagmoF49u.json",
+      "summary_sha256": "b76cef67bd4436b5b71d425618c80d8f104bd6183bcef2b31e096bf5de3f9f04",
+      "task": "check-types",
+      "task_hash": "0fc23486cda9cce3"
+    },
+    {
+      "cache": {
+        "local": true,
+        "remote": false,
+        "sha": "6c930010166e6a2ea4d88bbb296158ea9209a0ab",
+        "source": "LOCAL",
+        "status": "HIT",
+        "timeSaved": 3376
+      },
+      "checkers": 1,
+      "command": [
+        "node",
+        "node_modules/turbo/bin/turbo",
+        "run",
+        "check-types",
+        "--filter=@reading-advantage/types",
+        "--concurrency=1",
+        "--cache-dir",
+        "/tmp/ts7-cache-proof-ovjx75ox/turbo-cache",
+        "--summarize",
+        "--output-logs=full"
+      ],
+      "environment": {
+        "TS7_CHECKERS": "1",
+        "TURBO_CONCURRENCY": "1"
+      },
+      "exit_status": 0,
+      "label": "native-local-tsconfig-restored-hit",
+      "stderr_sha256": "a6052069f52915d75bf1cd6f441c4ea945b949f416a2eb62f2a69ce234408bd4",
+      "stdout_sha256": "8b2e728816537c1652a9f9a1882c3d8b66cb3274eb08e088a32278a7a76aa3d3",
+      "summary_path": ".turbo/runs/3GXJCKJi77bU2oeRzA5IfSXNmfv.json",
+      "summary_sha256": "5023abeaac3d11006c06401f9149434c5fcd610d974b748f49d9b1bc5fce5e41",
+      "task": "check-types",
+      "task_hash": "65d1811dd7fc2d6e"
+    },
+    {
+      "cache": {
+        "local": false,
+        "remote": false,
+        "status": "MISS",
+        "timeSaved": 0
+      },
+      "checkers": 1,
+      "command": [
+        "node",
+        "node_modules/turbo/bin/turbo",
+        "run",
+        "check-types",
+        "--filter=@reading-advantage/types",
+        "--concurrency=1",
+        "--cache-dir",
+        "/tmp/ts7-cache-proof-ovjx75ox/turbo-cache",
+        "--summarize",
+        "--output-logs=full"
+      ],
+      "environment": {
+        "TS7_CHECKERS": "1",
+        "TURBO_CONCURRENCY": "1"
+      },
+      "exit_status": 0,
+      "label": "native-shared-tsconfig-miss",
+      "stderr_sha256": "a6052069f52915d75bf1cd6f441c4ea945b949f416a2eb62f2a69ce234408bd4",
+      "stdout_sha256": "59ab2051ebea228efe47520ed2aba128dc98711bd43292fd4cf8eda5cb756b16",
+      "summary_path": ".turbo/runs/3GXJDS0eQgWB4m46PxkRC9HS8bP.json",
+      "summary_sha256": "d6a98e0d052da167fe90f8056882daa2ca5aab6c50f4196730fd750a793bc587",
+      "task": "check-types",
+      "task_hash": "a6cd746445c2371d"
+    },
+    {
+      "cache": {
+        "local": true,
+        "remote": false,
+        "sha": "6c930010166e6a2ea4d88bbb296158ea9209a0ab",
+        "source": "LOCAL",
+        "status": "HIT",
+        "timeSaved": 3376
+      },
+      "checkers": 1,
+      "command": [
+        "node",
+        "node_modules/turbo/bin/turbo",
+        "run",
+        "check-types",
+        "--filter=@reading-advantage/types",
+        "--concurrency=1",
+        "--cache-dir",
+        "/tmp/ts7-cache-proof-ovjx75ox/turbo-cache",
+        "--summarize",
+        "--output-logs=full"
+      ],
+      "environment": {
+        "TS7_CHECKERS": "1",
+        "TURBO_CONCURRENCY": "1"
+      },
+      "exit_status": 0,
+      "label": "native-shared-tsconfig-restored-hit",
+      "stderr_sha256": "a6052069f52915d75bf1cd6f441c4ea945b949f416a2eb62f2a69ce234408bd4",
+      "stdout_sha256": "01ef342406d0c533ea5557fadaa3f28496846660eb646e643a28fd78ffa5fa4e",
+      "summary_path": ".turbo/runs/3GXJDeWZ0X1ALtlg4aCd9G3Ccqc.json",
+      "summary_sha256": "0678991ec3a659aac5b1226535fea6bce99bb635eb77c16b7f6bdcae30e8e8c8",
+      "task": "check-types",
+      "task_hash": "65d1811dd7fc2d6e"
+    },
+    {
+      "cache": {
+        "local": false,
+        "remote": false,
+        "status": "MISS",
+        "timeSaved": 0
+      },
+      "checkers": 2,
+      "command": [
+        "node",
+        "node_modules/turbo/bin/turbo",
+        "run",
+        "check-types",
+        "--filter=@reading-advantage/types",
+        "--concurrency=1",
+        "--cache-dir",
+        "/tmp/ts7-cache-proof-ovjx75ox/turbo-cache",
+        "--summarize",
+        "--output-logs=full"
+      ],
+      "environment": {
+        "TS7_CHECKERS": "2",
+        "TURBO_CONCURRENCY": "1"
+      },
+      "exit_status": 0,
+      "label": "native-c2-miss",
+      "stderr_sha256": "a6052069f52915d75bf1cd6f441c4ea945b949f416a2eb62f2a69ce234408bd4",
+      "stdout_sha256": "cd1732434eb14bff78a6dfa58a537c55e56ed2dd1684720e91ade53c8dea93dc",
+      "summary_path": ".turbo/runs/3GXJECRs3H4MsYcXcEfty83lWKN.json",
+      "summary_sha256": "b008351652a8cb93be806b3899fb0f9a7a82f7ba345e382a7580740f44dc0a86",
+      "task": "check-types",
+      "task_hash": "bf917799bfec8b22"
+    },
+    {
+      "cache": {
+        "local": true,
+        "remote": false,
+        "sha": "6c930010166e6a2ea4d88bbb296158ea9209a0ab",
+        "source": "LOCAL",
+        "status": "HIT",
+        "timeSaved": 4540
+      },
+      "checkers": 2,
+      "command": [
+        "node",
+        "node_modules/turbo/bin/turbo",
+        "run",
+        "check-types",
+        "--filter=@reading-advantage/types",
+        "--concurrency=1",
+        "--cache-dir",
+        "/tmp/ts7-cache-proof-ovjx75ox/turbo-cache",
+        "--summarize",
+        "--output-logs=full"
+      ],
+      "environment": {
+        "TS7_CHECKERS": "2",
+        "TURBO_CONCURRENCY": "1"
+      },
+      "exit_status": 0,
+      "label": "native-c2-hit",
+      "stderr_sha256": "a6052069f52915d75bf1cd6f441c4ea945b949f416a2eb62f2a69ce234408bd4",
+      "stdout_sha256": "d39afedba48c14bb96a2db12ebb532022ae10d0e854cfd1baa32e3b0d7fa3331",
+      "summary_path": ".turbo/runs/3GXJEMDcri9kMFrAFvsvEupZdnF.json",
+      "summary_sha256": "ba7e8adc7dfda3af5aa532ac45d8464abd2f3dbe50426cd80ec2e6913204e05d",
+      "task": "check-types",
+      "task_hash": "bf917799bfec8b22"
+    },
+    {
+      "cache": {
+        "local": true,
+        "remote": false,
+        "sha": "6c930010166e6a2ea4d88bbb296158ea9209a0ab",
+        "source": "LOCAL",
+        "status": "HIT",
+        "timeSaved": 3376
+      },
+      "checkers": 1,
+      "command": [
+        "node",
+        "node_modules/turbo/bin/turbo",
+        "run",
+        "check-types",
+        "--filter=@reading-advantage/types",
+        "--concurrency=1",
+        "--cache-dir",
+        "/tmp/ts7-cache-proof-ovjx75ox/turbo-cache",
+        "--summarize",
+        "--output-logs=full"
+      ],
+      "environment": {
+        "TS7_CHECKERS": "1",
+        "TURBO_CONCURRENCY": "1"
+      },
+      "exit_status": 0,
+      "label": "native-c1-return-hit",
+      "stderr_sha256": "a6052069f52915d75bf1cd6f441c4ea945b949f416a2eb62f2a69ce234408bd4",
+      "stdout_sha256": "f66c24c065d68deb041a4dd630c08ed9275c897113f64039ee56bdf2699a8a81",
+      "summary_path": ".turbo/runs/3GXJEawcwaPwpuyJmY9u2qNdLrA.json",
+      "summary_sha256": "c77e912f6cc395c61c7dcbdec75ad64195b128b83216f7bef0484f1adc3d9a9d",
+      "task": "check-types",
+      "task_hash": "65d1811dd7fc2d6e"
+    },
+    {
+      "cache": {
+        "local": false,
+        "remote": false,
+        "status": "MISS",
+        "timeSaved": 0
+      },
+      "checkers": null,
+      "command": [
+        "node",
+        "node_modules/turbo/bin/turbo",
+        "run",
+        "check-types:compat",
+        "--filter=@reading-advantage/types",
+        "--concurrency=1",
+        "--cache-dir",
+        "/tmp/ts7-cache-proof-ovjx75ox/turbo-cache",
+        "--summarize",
+        "--output-logs=full"
+      ],
+      "environment": {
+        "TURBO_CONCURRENCY": "1"
+      },
+      "exit_status": 0,
+      "label": "check-types-compat-baseline-miss",
+      "stderr_sha256": "a6052069f52915d75bf1cd6f441c4ea945b949f416a2eb62f2a69ce234408bd4",
+      "stdout_sha256": "b300249d2a96359f323103a8d9ccec0bf8a6e6799232a2485e77d0584dc90d18",
+      "summary_path": ".turbo/runs/3GXJHF2TAJYAN6jf30oUWYocdKy.json",
+      "summary_sha256": "ca956e4e9f4d5c98a311d0142464802b61e03f19389c7de9fefc732824fb12d9",
+      "task": "check-types:compat",
+      "task_hash": "e440ac834ee1683d"
+    },
+    {
+      "cache": {
+        "local": true,
+        "remote": false,
+        "sha": "6c930010166e6a2ea4d88bbb296158ea9209a0ab",
+        "source": "LOCAL",
+        "status": "HIT",
+        "timeSaved": 19835
+      },
+      "checkers": null,
+      "command": [
+        "node",
+        "node_modules/turbo/bin/turbo",
+        "run",
+        "check-types:compat",
+        "--filter=@reading-advantage/types",
+        "--concurrency=1",
+        "--cache-dir",
+        "/tmp/ts7-cache-proof-ovjx75ox/turbo-cache",
+        "--summarize",
+        "--output-logs=full"
+      ],
+      "environment": {
+        "TURBO_CONCURRENCY": "1"
+      },
+      "exit_status": 0,
+      "label": "check-types-compat-baseline-hit",
+      "stderr_sha256": "a6052069f52915d75bf1cd6f441c4ea945b949f416a2eb62f2a69ce234408bd4",
+      "stdout_sha256": "00dfb5c14aea0cf7b49b893dfe64bfa6df361f1f85921ecba4934abc22391d5d",
+      "summary_path": ".turbo/runs/3GXJHOh7kb0ISWXFBykPM1aCmyX.json",
+      "summary_sha256": "5ec0df10b15914f5f88231fe06e90f8de997ba4c91d0db331c6eb24edd1164b7",
+      "task": "check-types:compat",
+      "task_hash": "e440ac834ee1683d"
+    },
+    {
+      "cache": {
+        "local": false,
+        "remote": false,
+        "status": "MISS",
+        "timeSaved": 0
+      },
+      "checkers": null,
+      "command": [
+        "node",
+        "node_modules/turbo/bin/turbo",
+        "run",
+        "check-types:compat",
+        "--filter=@reading-advantage/types",
+        "--concurrency=1",
+        "--cache-dir",
+        "/tmp/ts7-cache-proof-ovjx75ox/turbo-cache",
+        "--summarize",
+        "--output-logs=full"
+      ],
+      "environment": {
+        "TURBO_CONCURRENCY": "1"
+      },
+      "exit_status": 0,
+      "label": "check-types-compat-ts6-alias-miss",
+      "stderr_sha256": "a6052069f52915d75bf1cd6f441c4ea945b949f416a2eb62f2a69ce234408bd4",
+      "stdout_sha256": "1648f9c2a1c87569699f8c023ea312fb57d3335af7cef530ffb6e290d7f77bf4",
+      "summary_path": ".turbo/runs/3GXJL6XJZ6irdGatkXN0t7v5dr1.json",
+      "summary_sha256": "7ae58372f47c9ae07a8e65750b98f24301661e653d354f7a5bb5abacb893f01d",
+      "task": "check-types:compat",
+      "task_hash": "dfca150044f0ad10"
+    },
+    {
+      "cache": {
+        "local": true,
+        "remote": false,
+        "sha": "6c930010166e6a2ea4d88bbb296158ea9209a0ab",
+        "source": "LOCAL",
+        "status": "HIT",
+        "timeSaved": 19835
+      },
+      "checkers": null,
+      "command": [
+        "node",
+        "node_modules/turbo/bin/turbo",
+        "run",
+        "check-types:compat",
+        "--filter=@reading-advantage/types",
+        "--concurrency=1",
+        "--cache-dir",
+        "/tmp/ts7-cache-proof-ovjx75ox/turbo-cache",
+        "--summarize",
+        "--output-logs=full"
+      ],
+      "environment": {
+        "TURBO_CONCURRENCY": "1"
+      },
+      "exit_status": 0,
+      "label": "check-types-compat-ts6-alias-restored-hit",
+      "stderr_sha256": "a6052069f52915d75bf1cd6f441c4ea945b949f416a2eb62f2a69ce234408bd4",
+      "stdout_sha256": "47cfa4fb7f4103e9dd4be60f0013f04541639d05c637e26b427cbf2150d26e44",
+      "summary_path": ".turbo/runs/3GXJLS1wcpxJTXvoUrCM3vSzCLN.json",
+      "summary_sha256": "30ebf1fd66b2975ffb54a47438f712be753f067c90a0bd4830ed35198ce504e4",
+      "task": "check-types:compat",
+      "task_hash": "e440ac834ee1683d"
+    },
+    {
+      "cache": {
+        "local": false,
+        "remote": false,
+        "status": "MISS",
+        "timeSaved": 0
+      },
+      "checkers": null,
+      "command": [
+        "node",
+        "node_modules/turbo/bin/turbo",
+        "run",
+        "check-types:compat",
+        "--filter=@reading-advantage/types",
+        "--concurrency=1",
+        "--cache-dir",
+        "/tmp/ts7-cache-proof-ovjx75ox/turbo-cache",
+        "--summarize",
+        "--output-logs=full"
+      ],
+      "environment": {
+        "TURBO_CONCURRENCY": "1"
+      },
+      "exit_status": 0,
+      "label": "check-types-compat-local-tsconfig-miss",
+      "stderr_sha256": "a6052069f52915d75bf1cd6f441c4ea945b949f416a2eb62f2a69ce234408bd4",
+      "stdout_sha256": "27501eabd916152d401696b8ad04c204570478bfde543b737c4aadca0f258554",
+      "summary_path": ".turbo/runs/3GXJQB8biJWktNuPCey5YCmfNkr.json",
+      "summary_sha256": "5358ba6127b224a0c5974a76744335f0aa21528ac4681b6f865d366ada9a4eab",
+      "task": "check-types:compat",
+      "task_hash": "3ce1055c70746872"
+    },
+    {
+      "cache": {
+        "local": true,
+        "remote": false,
+        "sha": "6c930010166e6a2ea4d88bbb296158ea9209a0ab",
+        "source": "LOCAL",
+        "status": "HIT",
+        "timeSaved": 19835
+      },
+      "checkers": null,
+      "command": [
+        "node",
+        "node_modules/turbo/bin/turbo",
+        "run",
+        "check-types:compat",
+        "--filter=@reading-advantage/types",
+        "--concurrency=1",
+        "--cache-dir",
+        "/tmp/ts7-cache-proof-ovjx75ox/turbo-cache",
+        "--summarize",
+        "--output-logs=full"
+      ],
+      "environment": {
+        "TURBO_CONCURRENCY": "1"
+      },
+      "exit_status": 0,
+      "label": "check-types-compat-local-tsconfig-restored-hit",
+      "stderr_sha256": "a6052069f52915d75bf1cd6f441c4ea945b949f416a2eb62f2a69ce234408bd4",
+      "stdout_sha256": "8a6ac4b82ebc3295e6fa946ba770b58cf88e810acd4d58ed44810b78a0a87357",
+      "summary_path": ".turbo/runs/3GXJQXU23moUJAkirrctSvbjV8t.json",
+      "summary_sha256": "1dd01ed5935ecd5847d2d81b179331596fe79aeff502e5ae76661170c7993b26",
+      "task": "check-types:compat",
+      "task_hash": "e440ac834ee1683d"
+    },
+    {
+      "cache": {
+        "local": false,
+        "remote": false,
+        "status": "MISS",
+        "timeSaved": 0
+      },
+      "checkers": null,
+      "command": [
+        "node",
+        "node_modules/turbo/bin/turbo",
+        "run",
+        "check-types:compat",
+        "--filter=@reading-advantage/types",
+        "--concurrency=1",
+        "--cache-dir",
+        "/tmp/ts7-cache-proof-ovjx75ox/turbo-cache",
+        "--summarize",
+        "--output-logs=full"
+      ],
+      "environment": {
+        "TURBO_CONCURRENCY": "1"
+      },
+      "exit_status": 0,
+      "label": "check-types-compat-shared-tsconfig-miss",
+      "stderr_sha256": "a6052069f52915d75bf1cd6f441c4ea945b949f416a2eb62f2a69ce234408bd4",
+      "stdout_sha256": "1cfb023a1b01336e86b4d5ec1b82ef724e3f0ed4793fffe0893888856215ef91",
+      "summary_path": ".turbo/runs/3GXJX1swsML7a4kr16lIp6AAFhX.json",
+      "summary_sha256": "05b835981aad96f0dc1a06c22bbd55770aabfb9b0ac44c60b2d1f4da61a072b9",
+      "task": "check-types:compat",
+      "task_hash": "6ccc0a9295667da6"
+    },
+    {
+      "cache": {
+        "local": true,
+        "remote": false,
+        "sha": "6c930010166e6a2ea4d88bbb296158ea9209a0ab",
+        "source": "LOCAL",
+        "status": "HIT",
+        "timeSaved": 19835
+      },
+      "checkers": null,
+      "command": [
+        "node",
+        "node_modules/turbo/bin/turbo",
+        "run",
+        "check-types:compat",
+        "--filter=@reading-advantage/types",
+        "--concurrency=1",
+        "--cache-dir",
+        "/tmp/ts7-cache-proof-ovjx75ox/turbo-cache",
+        "--summarize",
+        "--output-logs=full"
+      ],
+      "environment": {
+        "TURBO_CONCURRENCY": "1"
+      },
+      "exit_status": 0,
+      "label": "check-types-compat-shared-tsconfig-restored-hit",
+      "stderr_sha256": "a6052069f52915d75bf1cd6f441c4ea945b949f416a2eb62f2a69ce234408bd4",
+      "stdout_sha256": "b69e3a8b199069e44607670a54297bb93afa6d1192b7a9551156b4e2ca6d573b",
+      "summary_path": ".turbo/runs/3GXJXE7jjfqTBunUSWtFbZHUJOp.json",
+      "summary_sha256": "e520f7ab52e8d448ebb6103a1a79760fff1188ff77b5c63e7a2582729f1ee5c2",
+      "task": "check-types:compat",
+      "task_hash": "e440ac834ee1683d"
+    },
+    {
+      "cache": {
+        "local": false,
+        "remote": false,
+        "status": "MISS",
+        "timeSaved": 0
+      },
+      "checkers": null,
+      "command": [
+        "node",
+        "node_modules/turbo/bin/turbo",
+        "run",
+        "check-types:rollback",
+        "--filter=@reading-advantage/types",
+        "--concurrency=1",
+        "--cache-dir",
+        "/tmp/ts7-cache-proof-ovjx75ox/turbo-cache",
+        "--summarize",
+        "--output-logs=full"
+      ],
+      "environment": {
+        "TURBO_CONCURRENCY": "1"
+      },
+      "exit_status": 0,
+      "label": "check-types-rollback-baseline-miss",
+      "stderr_sha256": "a6052069f52915d75bf1cd6f441c4ea945b949f416a2eb62f2a69ce234408bd4",
+      "stdout_sha256": "43e2013f030ddd5f7b439d2e178addb632d043d4dcb8537d955bc91256e3d745",
+      "summary_path": ".turbo/runs/3GXJdYjMjvH8AhBtZOAhuXXdpV6.json",
+      "summary_sha256": "22ab82fcd790ea0ade0f052f439657c0021d1e0d6893e338d468ddbbba6a300d",
+      "task": "check-types:rollback",
+      "task_hash": "0a66ef2603f0d3e0"
+    },
+    {
+      "cache": {
+        "local": true,
+        "remote": false,
+        "sha": "6c930010166e6a2ea4d88bbb296158ea9209a0ab",
+        "source": "LOCAL",
+        "status": "HIT",
+        "timeSaved": 46778
+      },
+      "checkers": null,
+      "command": [
+        "node",
+        "node_modules/turbo/bin/turbo",
+        "run",
+        "check-types:rollback",
+        "--filter=@reading-advantage/types",
+        "--concurrency=1",
+        "--cache-dir",
+        "/tmp/ts7-cache-proof-ovjx75ox/turbo-cache",
+        "--summarize",
+        "--output-logs=full"
+      ],
+      "environment": {
+        "TURBO_CONCURRENCY": "1"
+      },
+      "exit_status": 0,
+      "label": "check-types-rollback-baseline-hit",
+      "stderr_sha256": "a6052069f52915d75bf1cd6f441c4ea945b949f416a2eb62f2a69ce234408bd4",
+      "stdout_sha256": "ef8095fd3e92dd871726e10cfba0587a1c0896e9d3060799e6a8cf4eed6382c4",
+      "summary_path": ".turbo/runs/3GXJdv7f1JywfI5MkPS84tPvUuw.json",
+      "summary_sha256": "064c1c3870c916e969a865e41fd5cd0dda5119d4afabcea76595ab5391a5feb9",
+      "task": "check-types:rollback",
+      "task_hash": "0a66ef2603f0d3e0"
+    },
+    {
+      "cache": {
+        "local": false,
+        "remote": false,
+        "status": "MISS",
+        "timeSaved": 0
+      },
+      "checkers": null,
+      "command": [
+        "node",
+        "node_modules/turbo/bin/turbo",
+        "run",
+        "check-types:rollback",
+        "--filter=@reading-advantage/types",
+        "--concurrency=1",
+        "--cache-dir",
+        "/tmp/ts7-cache-proof-ovjx75ox/turbo-cache",
+        "--summarize",
+        "--output-logs=full"
+      ],
+      "environment": {
+        "TURBO_CONCURRENCY": "1"
+      },
+      "exit_status": 0,
+      "label": "check-types-rollback-ts6-alias-miss",
+      "stderr_sha256": "a6052069f52915d75bf1cd6f441c4ea945b949f416a2eb62f2a69ce234408bd4",
+      "stdout_sha256": "40add36e107246b8f2a63d02ed005165d2fc83db0e927d42aabf7d1626f09c0e",
+      "summary_path": ".turbo/runs/3GXJjOOQDho4h2wM6CMLekN93il.json",
+      "summary_sha256": "ad8a76eec7d8cacafd611f398d05b7e94a8b55e8ac4bd8679f2062ec370ca6a8",
+      "task": "check-types:rollback",
+      "task_hash": "2cabb86facc83af7"
+    },
+    {
+      "cache": {
+        "local": true,
+        "remote": false,
+        "sha": "6c930010166e6a2ea4d88bbb296158ea9209a0ab",
+        "source": "LOCAL",
+        "status": "HIT",
+        "timeSaved": 46778
+      },
+      "checkers": null,
+      "command": [
+        "node",
+        "node_modules/turbo/bin/turbo",
+        "run",
+        "check-types:rollback",
+        "--filter=@reading-advantage/types",
+        "--concurrency=1",
+        "--cache-dir",
+        "/tmp/ts7-cache-proof-ovjx75ox/turbo-cache",
+        "--summarize",
+        "--output-logs=full"
+      ],
+      "environment": {
+        "TURBO_CONCURRENCY": "1"
+      },
+      "exit_status": 0,
+      "label": "check-types-rollback-ts6-alias-restored-hit",
+      "stderr_sha256": "a6052069f52915d75bf1cd6f441c4ea945b949f416a2eb62f2a69ce234408bd4",
+      "stdout_sha256": "9e22d4bae9c33fb7e56781b8a06678cb3667f731be9b278c56704befc604edc5",
+      "summary_path": ".turbo/runs/3GXJjlVR6gTeubZg4KWPMmMJph5.json",
+      "summary_sha256": "5c5cde9c932f6494281ceacf2d4c648eca3b33466ed10d603319a06bbe96b6bb",
+      "task": "check-types:rollback",
+      "task_hash": "0a66ef2603f0d3e0"
+    },
+    {
+      "cache": {
+        "local": false,
+        "remote": false,
+        "status": "MISS",
+        "timeSaved": 0
+      },
+      "checkers": null,
+      "command": [
+        "node",
+        "node_modules/turbo/bin/turbo",
+        "run",
+        "check-types:rollback",
+        "--filter=@reading-advantage/types",
+        "--concurrency=1",
+        "--cache-dir",
+        "/tmp/ts7-cache-proof-ovjx75ox/turbo-cache",
+        "--summarize",
+        "--output-logs=full"
+      ],
+      "environment": {
+        "TURBO_CONCURRENCY": "1"
+      },
+      "exit_status": 0,
+      "label": "check-types-rollback-local-tsconfig-miss",
+      "stderr_sha256": "a6052069f52915d75bf1cd6f441c4ea945b949f416a2eb62f2a69ce234408bd4",
+      "stdout_sha256": "7236ffdc486243ac346cb94d2a29f4744a63ee3550d7ce855c05575fe4005383",
+      "summary_path": ".turbo/runs/3GXJpKYL6RtGS0F5wRTnVZyGJ3N.json",
+      "summary_sha256": "175a0e3290137dbbfe63cd43c3e499e1bddef4ea915050b73dd2429c596958db",
+      "task": "check-types:rollback",
+      "task_hash": "2a3534f85660c23b"
+    },
+    {
+      "cache": {
+        "local": true,
+        "remote": false,
+        "sha": "6c930010166e6a2ea4d88bbb296158ea9209a0ab",
+        "source": "LOCAL",
+        "status": "HIT",
+        "timeSaved": 46778
+      },
+      "checkers": null,
+      "command": [
+        "node",
+        "node_modules/turbo/bin/turbo",
+        "run",
+        "check-types:rollback",
+        "--filter=@reading-advantage/types",
+        "--concurrency=1",
+        "--cache-dir",
+        "/tmp/ts7-cache-proof-ovjx75ox/turbo-cache",
+        "--summarize",
+        "--output-logs=full"
+      ],
+      "environment": {
+        "TURBO_CONCURRENCY": "1"
+      },
+      "exit_status": 0,
+      "label": "check-types-rollback-local-tsconfig-restored-hit",
+      "stderr_sha256": "a6052069f52915d75bf1cd6f441c4ea945b949f416a2eb62f2a69ce234408bd4",
+      "stdout_sha256": "c7cc381c20289b6efc065b98c31aa18fb81eb6f9e9e508a97a3900ca5b9f5c81",
+      "summary_path": ".turbo/runs/3GXJpudYdDjXbseebAwzOaq0ghh.json",
+      "summary_sha256": "166243a89fa36112308e27dfbd3199da83e4d8dc91d1addf42c5c48284dc1202",
+      "task": "check-types:rollback",
+      "task_hash": "0a66ef2603f0d3e0"
+    },
+    {
+      "cache": {
+        "local": false,
+        "remote": false,
+        "status": "MISS",
+        "timeSaved": 0
+      },
+      "checkers": null,
+      "command": [
+        "node",
+        "node_modules/turbo/bin/turbo",
+        "run",
+        "check-types:rollback",
+        "--filter=@reading-advantage/types",
+        "--concurrency=1",
+        "--cache-dir",
+        "/tmp/ts7-cache-proof-ovjx75ox/turbo-cache",
+        "--summarize",
+        "--output-logs=full"
+      ],
+      "environment": {
+        "TURBO_CONCURRENCY": "1"
+      },
+      "exit_status": 0,
+      "label": "check-types-rollback-shared-tsconfig-miss",
+      "stderr_sha256": "a6052069f52915d75bf1cd6f441c4ea945b949f416a2eb62f2a69ce234408bd4",
+      "stdout_sha256": "c4773f7843bfbbfbc75e13a926df5eb7089c0bc80a7fa1938a282da9a1a0fdff",
+      "summary_path": ".turbo/runs/3GXJw7qpttmWuAly67wz4cn7RfW.json",
+      "summary_sha256": "62b1f2d06e2df4ce333e8bcb9c1c9fabaa85cd69ec059241b80629e026a089b9",
+      "task": "check-types:rollback",
+      "task_hash": "8f5bf34818ce4117"
+    },
+    {
+      "cache": {
+        "local": true,
+        "remote": false,
+        "sha": "6c930010166e6a2ea4d88bbb296158ea9209a0ab",
+        "source": "LOCAL",
+        "status": "HIT",
+        "timeSaved": 46778
+      },
+      "checkers": null,
+      "command": [
+        "node",
+        "node_modules/turbo/bin/turbo",
+        "run",
+        "check-types:rollback",
+        "--filter=@reading-advantage/types",
+        "--concurrency=1",
+        "--cache-dir",
+        "/tmp/ts7-cache-proof-ovjx75ox/turbo-cache",
+        "--summarize",
+        "--output-logs=full"
+      ],
+      "environment": {
+        "TURBO_CONCURRENCY": "1"
+      },
+      "exit_status": 0,
+      "label": "check-types-rollback-shared-tsconfig-restored-hit",
+      "stderr_sha256": "a6052069f52915d75bf1cd6f441c4ea945b949f416a2eb62f2a69ce234408bd4",
+      "stdout_sha256": "a1f2a6ec726413319d55ecf558e3802442984c22fb8bb3104a20cd6295fdc082",
+      "summary_path": ".turbo/runs/3GXJwNZ9GZLr0AyJ8f2ZsJk1kDs.json",
+      "summary_sha256": "def3c642c9e935eb11457d7438bbea67c832ce5acd809678009a8b8acbd2f923",
+      "task": "check-types:rollback",
+      "task_hash": "0a66ef2603f0d3e0"
+    },
+    {
+      "cache": {
+        "local": true,
+        "remote": false,
+        "sha": "6c930010166e6a2ea4d88bbb296158ea9209a0ab",
+        "source": "LOCAL",
+        "status": "HIT",
+        "timeSaved": 19835
+      },
+      "checkers": null,
+      "command": [
+        "node",
+        "node_modules/turbo/bin/turbo",
+        "run",
+        "check-types:compat",
+        "--filter=@reading-advantage/types",
+        "--concurrency=1",
+        "--cache-dir",
+        "/tmp/ts7-cache-proof-ovjx75ox/turbo-cache",
+        "--summarize",
+        "--output-logs=full"
+      ],
+      "environment": {
+        "TURBO_CONCURRENCY": "1"
+      },
+      "exit_status": 0,
+      "label": "compat-wrapper-unchanged-hit",
+      "stderr_sha256": "a6052069f52915d75bf1cd6f441c4ea945b949f416a2eb62f2a69ce234408bd4",
+      "stdout_sha256": "a5a39589ca60916243ab0ba497dcb4a3d99ad1301f61b379bf4f934b20f7845b",
+      "summary_path": ".turbo/runs/3GXJwZoAIjrCCb2oDkpv2GoOrbx.json",
+      "summary_sha256": "d94b2f3ff8fa6ff9533274e9a5f57e94fa625df6f3715ff3acf734a2deaa3046",
+      "task": "check-types:compat",
+      "task_hash": "e440ac834ee1683d"
+    }
+  ],
+  "run_id": "run-20260715T103600Z",
+  "sample_count": 30,
+  "schema_version": 1,
+  "source_status_after": "?? measure/tracks/typescript7_native_migration_20260710/evidence/phase-3i-cache/\n",
+  "status": "accepted",
+  "track": "typescript7_native_migration_20260710"
+}

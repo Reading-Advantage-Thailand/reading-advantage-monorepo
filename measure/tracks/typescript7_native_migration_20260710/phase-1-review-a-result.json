@@ -1,0 +1,69 @@
+{
+  "schema_version": 2,
+  "role": "review-a-correctness",
+  "track": "typescript7_native_migration_20260710",
+  "phase": "Phase 1: Contract & Schema Definition",
+  "baseline_sha": "879112353411912b80849037016cbd9ed2c1bf63",
+  "audited_head_sha": "eff14a2355b793b99755f580b6b05fa54abaacc2",
+  "applicability": "applicable",
+  "status": "fail",
+  "summary": "The 27 focused tests and the declared 31/31 baseline completeness check pass, but Phase 1 is not correct or complete against the repository. The surface inventory omits packages/utils/tsconfig.json, and the baseline completeness gate is circular because it derives its denominator from the same incomplete tsc_scripts list rather than the pnpm workspace/configuration surface required by the spec and plan.",
+  "blocking_findings": [
+    {
+      "id": "RA-1",
+      "severity": "High",
+      "file": "measure/tracks/typescript7_native_migration_20260710/surface-inventory.json",
+      "detail": "FR-1 and the Phase 1 plan require a complete inventory of every tsconfig. An independent `rg --files -g 'tsconfig*.json'` finds 39 repository configs, while surface-inventory.json declares and lists 38. The missing config is packages/utils/tsconfig.json, which existed before the pinned Phase 1 baseline and belongs to a pnpm workspace that directly declares TypeScript. Commits f153654b/8ed5ff73 only made tsconfig_count equal the length of the incomplete list; the test therefore proves internal arithmetic, not repository completeness. Phase 2 would otherwise never run the required TypeScript 7 compatibility check against this config. Add the missing config and a repository-derived exact-set contract with a missing-config counterexample."
+    },
+    {
+      "id": "RA-2",
+      "severity": "High",
+      "file": "measure/tracks/typescript7_native_migration_20260710/capture-phase1-baseline.py",
+      "detail": "The `--check-completeness` gate loads its denominator exclusively from surface-inventory.json entries whose script is check-types, then compares the captured baseline back to that same list. It therefore passes 31/31 even though pnpm workspaces packages/ui and packages/utils have TypeScript configs and declaration-emitting tsup builds but no check-types script, and neither has TypeScript 5.9 diagnostic/timing evidence. This does not satisfy the plan item `Save TypeScript 5.9 diagnostic and timing evidence for all workspaces` or FR-1's requirement to capture each workspace before compiler resolution changes. Derive the denominator independently from pnpm-workspace.yaml plus manifests/configs, define an explicit justified exemption contract for non-TypeScript workspaces, and capture an appropriate compiler/build diagnostic baseline for every TypeScript workspace."
+    }
+  ],
+  "nonblocking_findings": [
+    {
+      "id": "RA-NB-1",
+      "severity": "Medium",
+      "file": "measure/tracks/typescript7_native_migration_20260710/benchmark-record-schema.json",
+      "detail": "The strategy says an unreadable dmesg must be recorded as `dmesg: unavailable`, but the schema has no availability field and instead says oom_kill_count is recorded as 0. That conflates `checked and none found` with `not observable`. Add an explicit dmesg availability/status field before Phase 2 benchmark records are accepted. Also review whether swap_delta_kib should permit a negative before/after difference instead of requiring minimum 0."
+    },
+    {
+      "id": "RA-NB-2",
+      "severity": "Low",
+      "file": "measure/tracks/typescript7_native_migration_20260710/compiler-baseline.json",
+      "detail": "The captured baseline honestly records a heavily dirty master worktree and labels 15 of 31 results contaminated. This is not attributed to TypeScript Phase 1 implementation, and the pinned final snapshot itself is clean, but later parity/benchmark decisions must not treat contaminated timings or diagnostics as controlled clean-state evidence."
+    }
+  ],
+  "evidence": [
+    "Focused Phase 1 suite passed 27/27 at audited HEAD eff14a2355b793b99755f580b6b05fa54abaacc2.",
+    "capture-phase1-baseline.py --check-completeness passed with 31 inventory entries and 31 captured entries, but both sets originate from surface-inventory.json tsc_scripts.",
+    "Independent repository enumeration found 39 tsconfig*.json files and identified packages/utils/tsconfig.json as the sole omission from the 38-entry inventory.",
+    "packages/utils/package.json is a pnpm workspace manifest, directly declares typescript 5.9.3, and has a tsup --dts build; packages/ui likewise has a TypeScript config and declaration-emitting tsup build but no check-types script.",
+    "Commit d7980795097820ce58d1670838d0bc5627a93e24 introduced packages/utils/tsconfig.json and is an ancestor of both the pinned baseline and audited HEAD, so the omission is not caused by interleaved Codecamp/APK commits.",
+    "The pinned /tmp/ts7-phase1-final-snapshot.json records audited HEAD eff14a2355b793b99755f580b6b05fa54abaacc2 with empty diff, staged_diff, and status. The current untracked phase-1-acceptance-result.json was created after that snapshot and is treated separately from the audited implementation."
+  ],
+  "commands": [
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase1 (PASS: 27 tests)",
+    "PYTHONDONTWRITEBYTECODE=1 python3 measure/tracks/typescript7_native_migration_20260710/capture-phase1-baseline.py --check-completeness (PASS: reported 31/31)",
+    "rg --files -g 'tsconfig*.json' | sort; jq -r '.tsconfigs[].path' surface-inventory.json | sort; diff -u ... (FAIL: repository 39, inventory 38; missing packages/utils/tsconfig.json)",
+    "git log --oneline --follow -- packages/utils/tsconfig.json; git merge-base --is-ancestor d7980795 879112353411912b80849037016cbd9ed2c1bf63 (PASS: omitted config predates baseline)",
+    "git status -sb; git rev-parse HEAD; jq . /tmp/ts7-phase1-final-snapshot.json (audited snapshot clean at expected HEAD; current acceptance result is post-snapshot untracked output)"
+  ],
+  "changed_files": [
+    "measure/tracks/typescript7_native_migration_20260710/phase-1-review-a-result.json"
+  ],
+  "test_strategy_violations": [
+    "The Phase 1 tests validate tsconfig_count against the artifact's own list length but do not compare the artifact to the repository-derived tsconfig set, allowing a non-vacuous-looking but incomplete inventory to pass.",
+    "The baseline completeness gate uses the artifact under review as its own denominator and excludes TypeScript workspaces without check-types scripts."
+  ],
+  "live_contract_violations": [
+    "FR-1 complete tsconfig inventory is violated: packages/utils/tsconfig.json is absent.",
+    "Phase 1 all-workspace TypeScript 5.9 diagnostic/timing evidence is incomplete for TypeScript workspaces without check-types scripts."
+  ],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "retry_implementation",
+  "confidence": "high"
+}

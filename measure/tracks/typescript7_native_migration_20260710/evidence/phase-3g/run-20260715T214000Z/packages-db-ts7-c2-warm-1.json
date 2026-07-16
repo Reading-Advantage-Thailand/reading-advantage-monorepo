@@ -1,0 +1,49 @@
+{
+  "checkers": 2,
+  "checkers_applicability": "applied_ts7",
+  "command": [
+    "/home/daniel-bo/Desktop/reading-advantage-monorepo-ts7/node_modules/typescript7/bin/tsc",
+    "--noEmit",
+    "--checkers",
+    "2",
+    "-p",
+    "packages/db/tsconfig.json"
+  ],
+  "compiler": "ts7",
+  "compiler_version": "7.0.2",
+  "diagnostic_count": 0,
+  "dmesg_status": "unavailable",
+  "elapsed_ms": 13060,
+  "ended_at": "2026-07-15T14:43:21.997225+00:00",
+  "environment": {
+    "TURBO_CONCURRENCY": "1"
+  },
+  "exit_status": 0,
+  "host_idle_class": "contaminated",
+  "host_idle_override": true,
+  "host_idle_percent": 57,
+  "host_idle_reason": "user_override_below_idle_threshold",
+  "invalid_reasons": [],
+  "oom_kill_count": 0,
+  "peak_rss_kib": 652392,
+  "process_count": 2,
+  "process_group_peak_rss_kib": 654644,
+  "sample_id": "packages-db-ts7-c2-warm-1",
+  "signal": null,
+  "started_at": "2026-07-15T14:43:08.890482+00:00",
+  "status": "completed",
+  "stderr_sha256": "ccfb97da7bdb0cfdb49701e13059b3ec828927d7eaf3268f7c8f923a7e82be00",
+  "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stop_loss": {
+    "cleanup": null,
+    "trigger": null,
+    "triggered": false
+  },
+  "swap_delta_kib": -64,
+  "target": "packages-db",
+  "temperature": "warm",
+  "tsconfig_path": "packages/db/tsconfig.json",
+  "turbo_cache_state": "not_applicable_direct_tsc",
+  "turbo_summary_sha256": null,
+  "turbo_summary_state": "not_applicable_direct_tsc"
+}

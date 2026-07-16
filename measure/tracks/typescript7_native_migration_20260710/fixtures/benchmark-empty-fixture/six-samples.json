@@ -1,0 +1,10 @@
+{
+  "samples": [
+    {"temperature": "cold", "elapsed_ms": 120},
+    {"temperature": "cold", "elapsed_ms": 100},
+    {"temperature": "cold", "elapsed_ms": 110},
+    {"temperature": "warm", "elapsed_ms": 60},
+    {"temperature": "warm", "elapsed_ms": 50},
+    {"temperature": "warm", "elapsed_ms": 55}
+  ]
+}

@@ -1,0 +1,11 @@
+packages/knowledge-space-practice/src/blueprints/types.ts(2,35): error TS2307: Cannot find module '@reading-advantage/knowledge-space-core' or its corresponding type declarations.
+packages/knowledge-space-practice/src/misconception-loop.ts(10,49): error TS2307: Cannot find module '@reading-advantage/practice-core/contract' or its corresponding type declarations.
+packages/knowledge-space-practice/src/projections/activity-map.ts(1,61): error TS2307: Cannot find module '@reading-advantage/knowledge-space-core' or its corresponding type declarations.
+packages/knowledge-space-practice/src/projections/fixtures.ts(4,66): error TS2307: Cannot find module '@reading-advantage/knowledge-space-core' or its corresponding type declarations.
+packages/knowledge-space-practice/src/projections/srs.ts(1,61): error TS2307: Cannot find module '@reading-advantage/knowledge-space-core' or its corresponding type declarations.
+packages/knowledge-space-practice/src/projections/teacher-evidence.ts(1,61): error TS2307: Cannot find module '@reading-advantage/knowledge-space-core' or its corresponding type declarations.
+packages/knowledge-space-practice/src/projections/visualization.ts(1,83): error TS2307: Cannot find module '@reading-advantage/knowledge-space-core' or its corresponding type declarations.
+packages/knowledge-space-practice/src/projections/visualization.ts(311,42): error TS7006: Parameter 's' implicitly has an 'any' type.
+packages/knowledge-space-practice/src/projections/visualization.ts(314,16): error TS7006: Parameter 's' implicitly has an 'any' type.
+packages/knowledge-space-practice/src/projections/visualization.ts(315,14): error TS7006: Parameter 'a' implicitly has an 'any' type.
+packages/knowledge-space-practice/src/projections/visualization.ts(315,17): error TS7006: Parameter 'b' implicitly has an 'any' type.

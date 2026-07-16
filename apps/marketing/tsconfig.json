@@ -4,9 +4,8 @@
     "noEmit": true,
     "incremental": true,
     "plugins": [{ "name": "vinext" }],
-    "baseUrl": ".",
     "paths": {
-      "@/*": ["app/*"]
+      "@/*": ["./app/*"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx"],

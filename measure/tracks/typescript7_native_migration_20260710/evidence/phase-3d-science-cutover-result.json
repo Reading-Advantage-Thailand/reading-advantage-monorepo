@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "track": "typescript7_native_migration_20260710",
+  "phase": "Phase 3d: check-types cutover",
+  "status": "accepted_reviewed_rendering_difference",
+  "workspace": {
+    "name": "science-advantage",
+    "path": "apps/science-advantage",
+    "acceptance_order": 9
+  },
+  "scripts": {
+    "check-types": "node ../../node_modules/typescript7/bin/tsc --noEmit",
+    "check-types:compat": "node ../../node_modules/typescript/bin/tsc --noEmit",
+    "check-types:rollback": "node ../../node_modules/typescript/bin/tsc --noEmit"
+  },
+  "results": {
+    "native": { "version": "7.0.2", "exit_status": 1, "stdout_line_count": 444, "stdout_sha256": "f0cf3bf6871569ed665874312c78bafe5cf3f34a64a5df40a7ac1e636efea8f8" },
+    "compat": { "version": "6.0.2", "exit_status": 1, "stdout_line_count": 448, "stdout_sha256": "7e1cb41f289eba8f8a0ef844c3d7ad2201b721ea6c4a1497b591dc68040c7853" },
+    "rollback": { "version": "6.0.2", "exit_status": 1, "stdout_line_count": 448, "stdout_sha256": "7e1cb41f289eba8f8a0ef844c3d7ad2201b721ea6c4a1497b591dc68040c7853" }
+  },
+  "parity_disposition": {
+    "accepted_run": "evidence/phase-3c-parity/run-20260715T033929917664Z",
+    "record": "apps/science-advantage/tsconfig.json",
+    "status": "parity",
+    "unexplained_differences": [],
+    "applied_ledger_entries": 4,
+    "reason": "All four reviewed differences are the same TS2769 overload mismatches at narrower TypeScript 7 callback-expression columns; source lines and diagnostic messages are unchanged."
+  },
+  "non_goals": [
+    "Existing Science diagnostics are not resolved by this compiler-routing change.",
+    "No emitting build command is moved to TypeScript 7 before Phase 3e."
+  ]
+}

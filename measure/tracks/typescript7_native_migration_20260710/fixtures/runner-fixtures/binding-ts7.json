@@ -1,0 +1,8 @@
+{
+  "stdout_json": {
+    "consumer": "native-check-types",
+    "programmatic_api_path": "/fixture/node_modules/typescript7/lib/typescript.js",
+    "resolved_version": "7.0.2"
+  },
+  "exit_status": 0
+}

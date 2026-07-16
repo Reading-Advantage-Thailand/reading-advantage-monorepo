@@ -1,5 +1,5 @@
 {
   "extends": "../../packages/config/tsconfig/base.json",
-  "compilerOptions": { "jsx": "react-jsx", "baseUrl": "." },
+  "compilerOptions": { "jsx": "react-jsx" },
   "include": ["app/**/*.ts", "app/**/*.tsx", "next-env.d.ts"]
 }

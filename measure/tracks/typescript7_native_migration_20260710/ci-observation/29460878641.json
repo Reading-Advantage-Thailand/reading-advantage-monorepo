@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "record_type": "compacted_ci_artifact_transcript",
+  "run_id": "29460878641",
+  "lane": "ts7-parity-non-blocking",
+  "ts7_gate_exit": 2,
+  "ts6_parity_exit": 2,
+  "cache_state": {
+    "ts6": "0 cached, 55 total",
+    "ts7": "22 cached, 55 total",
+    "ts7_repeat_forced": "0 cached, 55 total"
+  },
+  "order_dependent_diff_count": null,
+  "compiler_diagnostic_diff_count": null,
+  "ts7_repeat_exit": 2,
+  "peak_rss_kib": 2708496,
+  "ts7_checkers": 1,
+  "semantic_parity": {
+    "accepted": false,
+    "status": "rejected",
+    "reason": "phase3_summary_did_not_satisfy_rollout_contract",
+    "exit_status": 1,
+    "config_count": 39,
+    "passed_count": 38,
+    "failed_count": 1,
+    "gate_failures": [
+      "apps/primary-advantage/tsconfig.json"
+    ],
+    "input_provenance_stable": true,
+    "diagnostic_parity_ledger_sha256": "b96b869249226c9ec65e3b468f7d0ff4ea678e1f9f7adec9bae7972fe24d39b2"
+  },
+  "turbo_execution_diagnostics": {
+    "comparable": false,
+    "reason": "turbo_short_circuits_after_different_failing_tasks; use_semantic_parity_for_promotion",
+    "raw_order_dependent_diff_count": 42,
+    "ts6_diagnostic_count": 107,
+    "ts7_diagnostic_count": 9,
+    "ts7_repeat_diagnostic_count": 33
+  },
+  "source_revision": "2a286863a824e51ebfe055d24500256f59cf5c25",
+  "artifact": {
+    "github_actions_artifact_id": 8361223620,
+    "archive_download_url": "https://api.github.com/repos/Reading-Advantage-Thailand/reading-advantage-monorepo/actions/artifacts/8361223620/zip",
+    "source_observation_sha256": "4a77343908a6bad3c7092328e5233108818ea6c3dbc2f9e7d8c0041083b8c3e4",
+    "source_observation_size_bytes": 37612,
+    "compaction_note": "This is the first hosted observation produced by the semantic-order writer. It rejected the same stale GenerateAudio ledger pair as run 29460487973, but correctly withheld top-level compiler and order-difference counts because semantic parity did not accept. Raw Turbo counts remain non-comparable diagnostic context only."
+  }
+}

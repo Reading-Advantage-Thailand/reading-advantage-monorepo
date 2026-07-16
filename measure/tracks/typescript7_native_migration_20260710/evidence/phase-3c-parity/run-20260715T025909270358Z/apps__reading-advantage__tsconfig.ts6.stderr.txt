@@ -1,0 +1,20 @@
+
+<--- Last few GCs --->
+
+[4176034:0x2c2ec000]   103579 ms: Mark-Compact 2044.6 (2084.6) -> 2043.2 (2085.4) MB, pooled: 0 MB, 2211.23 / 0.00 ms  (average mu = 0.135, current mu = 0.037) allocation failure; scavenge might not succeed
+[4176034:0x2c2ec000]   106567 ms: Mark-Compact 2045.2 (2085.4) -> 2043.8 (2085.9) MB, pooled: 0 MB, 2964.04 / 0.00 ms  (average mu = 0.066, current mu = 0.008) allocation failure; scavenge might not succeed
+
+
+<--- JS stacktrace --->
+
+FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory
+----- Native stack trace -----
+
+ 1: 0xe42d60 node::OOMErrorHandler(char const*, v8::OOMDetails const&) [node]
+ 2: 0x121ded0 v8::Utils::ReportOOMFailure(v8::internal::Isolate*, char const*, v8::OOMDetails const&) [node]
+ 3: 0x121e1a7 v8::internal::V8::FatalProcessOutOfMemory(v8::internal::Isolate*, char const*, v8::OOMDetails const&) [node]
+ 4: 0x144d015  [node]
+ 5: 0x144d043  [node]
+ 6: 0x146611a  [node]
+ 7: 0x14692e8  [node]
+ 8: 0x1cd07a1  [node]

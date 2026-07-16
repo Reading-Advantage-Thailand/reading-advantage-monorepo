@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "track": "typescript7_native_migration_20260710",
+  "phase": "Phase 3d: check-types cutover",
+  "status": "accepted_shared_group",
+  "workspaces": [
+    {
+      "name": "@reading-advantage/ui",
+      "path": "packages/ui",
+      "acceptance_order": 5,
+      "status": "accepted_pre_existing_debt",
+      "scripts": {
+        "check-types": "node ../../node_modules/typescript7/bin/tsc --noEmit",
+        "check-types:compat": "node ../../node_modules/typescript/bin/tsc --noEmit",
+        "check-types:rollback": "node ../../node_modules/typescript/bin/tsc --noEmit"
+      },
+      "results": {
+        "native": { "version": "7.0.2", "exit_status": 1, "stdout_line_count": 31, "stdout_sha256": "250796c0ad04bd84348ffdb6389032e3b1be24fbab8f5257108b6cf07f5ed12c" },
+        "compat": { "version": "6.0.2", "exit_status": 2, "stdout_line_count": 31, "stdout_sha256": "250796c0ad04bd84348ffdb6389032e3b1be24fbab8f5257108b6cf07f5ed12c" },
+        "rollback": { "version": "6.0.2", "exit_status": 2, "stdout_line_count": 31, "stdout_sha256": "250796c0ad04bd84348ffdb6389032e3b1be24fbab8f5257108b6cf07f5ed12c" }
+      },
+      "parity_disposition": "packages/ui/tsconfig.json is parity with zero unexplained differences and zero ledger entries in the accepted provenance-bound Phase 3c run."
+    },
+    {
+      "name": "@reading-advantage/utils",
+      "path": "packages/utils",
+      "acceptance_order": 6,
+      "status": "accepted",
+      "scripts": {
+        "check-types": "node ../../node_modules/typescript7/bin/tsc --noEmit",
+        "check-types:compat": "node ../../node_modules/typescript/bin/tsc --noEmit",
+        "check-types:rollback": "node ../../node_modules/typescript/bin/tsc --noEmit"
+      },
+      "results": {
+        "native": { "version": "7.0.2", "exit_status": 0 },
+        "compat": { "version": "6.0.2", "exit_status": 0 },
+        "rollback": { "version": "6.0.2", "exit_status": 0 }
+      },
+      "parity_disposition": "packages/utils/tsconfig.json is parity with zero unexplained differences and zero ledger entries in the accepted provenance-bound Phase 3c run."
+    },
+    {
+      "name": "@reading-advantage/integrations-github",
+      "path": "packages/integrations/github",
+      "acceptance_order": 7,
+      "status": "accepted",
+      "scripts": {
+        "check-types": "node ../../../node_modules/typescript7/bin/tsc --noEmit",
+        "check-types:compat": "node ../../../node_modules/typescript/bin/tsc --noEmit",
+        "check-types:rollback": "node ../../../node_modules/typescript/bin/tsc --noEmit"
+      },
+      "results": {
+        "native": { "version": "7.0.2", "exit_status": 0 },
+        "compat": { "version": "6.0.2", "exit_status": 0 },
+        "rollback": { "version": "6.0.2", "exit_status": 0 }
+      },
+      "parity_disposition": "packages/integrations/github/tsconfig.json is parity with zero unexplained differences and zero ledger entries in the accepted provenance-bound Phase 3c run."
+    }
+  ],
+  "non_goals": [
+    "The UI and utility tsup declaration builds are not switched to TypeScript 7 before Phase 3e.",
+    "UI's existing errors remain technical debt; this routing change does not mark them resolved."
+  ]
+}

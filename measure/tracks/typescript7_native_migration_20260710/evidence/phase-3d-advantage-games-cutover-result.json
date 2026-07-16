@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "track": "typescript7_native_migration_20260710",
+  "phase": "Phase 3d: check-types cutover",
+  "status": "accepted_pre_existing_debt",
+  "workspace": {
+    "name": "vocabulary-games",
+    "path": "apps/advantage-games",
+    "acceptance_order": 8
+  },
+  "scripts": {
+    "check-types": "node ../../node_modules/typescript7/bin/tsc --noEmit",
+    "check-types:compat": "node ../../node_modules/typescript/bin/tsc --noEmit",
+    "check-types:rollback": "node ../../node_modules/typescript/bin/tsc --noEmit"
+  },
+  "results": {
+    "native": { "version": "7.0.2", "exit_status": 1, "stdout_line_count": 14, "stdout_sha256": "3ec0cd4296d148b09f8211349469dfb0f56042cf48bd2ef895e037b028a3130a" },
+    "compat": { "version": "6.0.2", "exit_status": 1, "stdout_line_count": 14, "stdout_sha256": "3ec0cd4296d148b09f8211349469dfb0f56042cf48bd2ef895e037b028a3130a" },
+    "rollback": { "version": "6.0.2", "exit_status": 1, "stdout_line_count": 14, "stdout_sha256": "3ec0cd4296d148b09f8211349469dfb0f56042cf48bd2ef895e037b028a3130a" }
+  },
+  "parity_disposition": {
+    "accepted_run": "evidence/phase-3c-parity/run-20260715T033929917664Z",
+    "record": "apps/advantage-games/tsconfig.json",
+    "status": "parity",
+    "unexplained_differences": [],
+    "applied_ledger_entries": [],
+    "reason": "The package-script outputs are byte-identical across the two compiler aliases. Existing unresolved internal package imports are not a TypeScript 7 regression."
+  },
+  "non_goals": [
+    "No Advantage Play Kit product source or build command is changed by this application check-types cutover.",
+    "The existing Advantage Games type errors remain outside this compiler-routing change."
+  ]
+}

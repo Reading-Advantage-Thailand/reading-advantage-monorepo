@@ -1,0 +1,772 @@
+packages/domain/src/__tests__/helpers/testDb.ts(31,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/__tests__/helpers/testDb.ts(32,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/__tests__/helpers/testDb.ts(33,29): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/activity/__tests__/activity-drizzle-integration.test.ts(1,61): error TS2307: Cannot find module '@reading-advantage/activity-runtime' or its corresponding type declarations.
+packages/domain/src/activity/__tests__/activity-drizzle-integration.test.ts(2,41): error TS2307: Cannot find module '@reading-advantage/activity-runtime/server' or its corresponding type declarations.
+packages/domain/src/activity/__tests__/activity-drizzle-integration.test.ts(3,33): error TS2307: Cannot find module '@reading-advantage/activity-tutorial' or its corresponding type declarations.
+packages/domain/src/activity/__tests__/activity-drizzle-integration.test.ts(4,68): error TS2307: Cannot find module '@reading-advantage/codecamp-knowledge/apk-unit' or its corresponding type declarations.
+packages/domain/src/activity/__tests__/activity-drizzle-integration.test.ts(5,230): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/activity/__tests__/activity-drizzle-integration.test.ts(21,61): error TS7006: Parameter 'check' implicitly has an 'any' type.
+packages/domain/src/activity/__tests__/activity-mastery-projection.test.ts(1,32): error TS2307: Cannot find module '@reading-advantage/activity-runtime' or its corresponding type declarations.
+packages/domain/src/activity/__tests__/activity-mastery-projection.test.ts(2,41): error TS2307: Cannot find module '@reading-advantage/activity-runtime/server' or its corresponding type declarations.
+packages/domain/src/activity/activity-mastery-projection.ts(2,57): error TS2307: Cannot find module '@reading-advantage/activity-runtime' or its corresponding type declarations.
+packages/domain/src/activity/activity-mastery-projection.ts(3,50): error TS2307: Cannot find module '@reading-advantage/srs-engine' or its corresponding type declarations.
+packages/domain/src/activity/activity-mastery-projection.ts(48,43): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+packages/domain/src/activity/activity-mastery-projection.ts(48,48): error TS7006: Parameter 'part' implicitly has an 'any' type.
+packages/domain/src/activity/activity-mastery-projection.ts(49,45): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+packages/domain/src/activity/activity-mastery-projection.ts(49,50): error TS7006: Parameter 'part' implicitly has an 'any' type.
+packages/domain/src/activity/activity-mastery-projection.ts(94,45): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+packages/domain/src/activity/activity-mastery-projection.ts(94,50): error TS7006: Parameter 'part' implicitly has an 'any' type.
+packages/domain/src/activity/activity-mastery-projection.ts(95,47): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+packages/domain/src/activity/activity-mastery-projection.ts(95,52): error TS7006: Parameter 'part' implicitly has an 'any' type.
+packages/domain/src/activity/codecamp-activity-service.ts(2,81): error TS2307: Cannot find module '@reading-advantage/activity-runtime/transport' or its corresponding type declarations.
+packages/domain/src/activity/codecamp-activity-service.ts(3,45): error TS2307: Cannot find module '@reading-advantage/activity-runtime' or its corresponding type declarations.
+packages/domain/src/activity/codecamp-activity-service.ts(4,36): error TS2307: Cannot find module '@reading-advantage/activity-runtime/server' or its corresponding type declarations.
+packages/domain/src/activity/codecamp-activity-service.ts(5,116): error TS2307: Cannot find module '@reading-advantage/codecamp-knowledge' or its corresponding type declarations.
+packages/domain/src/activity/codecamp-activity-service.ts(68,37): error TS7006: Parameter 'activityId' implicitly has an 'any' type.
+packages/domain/src/activity/codecamp-activity-service.ts(68,49): error TS7006: Parameter 'activityVersion' implicitly has an 'any' type.
+packages/domain/src/activity/codecamp-activity-service.ts(76,25): error TS7006: Parameter 'schoolId' implicitly has an 'any' type.
+packages/domain/src/activity/codecamp-activity-service.ts(76,35): error TS7006: Parameter 'learnerId' implicitly has an 'any' type.
+packages/domain/src/activity/codecamp-activity-service.ts(76,46): error TS7006: Parameter 'sessionId' implicitly has an 'any' type.
+packages/domain/src/activity/codecamp-activity-service.ts(77,80): error TS7031: Binding element 'checkpointId' implicitly has an 'any' type.
+packages/domain/src/activity/codecamp-activity-service.ts(79,33): error TS7006: Parameter 'learnerId' implicitly has an 'any' type.
+packages/domain/src/activity/codecamp-activity-service.ts(79,44): error TS7006: Parameter 'sessionId' implicitly has an 'any' type.
+packages/domain/src/activity/codecamp-activity-service.ts(80,70): error TS7031: Binding element 'checkpointId' implicitly has an 'any' type.
+packages/domain/src/activity/codecamp-activity-service.ts(82,22): error TS7006: Parameter 'actor' implicitly has an 'any' type.
+packages/domain/src/activity/codecamp-activity-service.ts(82,29): error TS7006: Parameter 'input' implicitly has an 'any' type.
+packages/domain/src/activity/codecamp-activity-service.ts(88,23): error TS7006: Parameter 'actor' implicitly has an 'any' type.
+packages/domain/src/activity/codecamp-activity-service.ts(88,30): error TS7006: Parameter 'input' implicitly has an 'any' type.
+packages/domain/src/activity/codecamp-activity-service.ts(92,33): error TS7006: Parameter 'actor' implicitly has an 'any' type.
+packages/domain/src/activity/codecamp-activity-service.ts(92,40): error TS7006: Parameter 'input' implicitly has an 'any' type.
+packages/domain/src/activity/drizzle-activity-persistence.ts(12,8): error TS2307: Cannot find module '@reading-advantage/activity-runtime' or its corresponding type declarations.
+packages/domain/src/activity/drizzle-activity-persistence.ts(13,36): error TS2307: Cannot find module '@reading-advantage/activity-runtime/server' or its corresponding type declarations.
+packages/domain/src/activity/drizzle-activity-persistence.ts(14,83): error TS2307: Cannot find module '@reading-advantage/activity-runtime/transport' or its corresponding type declarations.
+packages/domain/src/activity/drizzle-activity-persistence.ts(15,57): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/activity/drizzle-activity-persistence.ts(118,37): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+packages/domain/src/activity/drizzle-activity-persistence.ts(130,47): error TS7031: Binding element 'event' implicitly has an 'any' type.
+packages/domain/src/activity/drizzle-activity-persistence.ts(132,71): error TS7031: Binding element 'clientSequence' implicitly has an 'any' type.
+packages/domain/src/activity/drizzle-activity-persistence.ts(132,87): error TS7031: Binding element 'event' implicitly has an 'any' type.
+packages/domain/src/activity/drizzle-activity-persistence.ts(132,96): error TS7006: Parameter 'index' implicitly has an 'any' type.
+packages/domain/src/activity/drizzle-activity-persistence.ts(175,57): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+packages/domain/src/activity/tutorial-reporting.ts(2,42): error TS2307: Cannot find module '@reading-advantage/activity-runtime' or its corresponding type declarations.
+packages/domain/src/activity/tutorial-reporting.ts(3,56): error TS2307: Cannot find module '@reading-advantage/activity-runtime/server' or its corresponding type declarations.
+packages/domain/src/activity/tutorial-reporting.ts(4,252): error TS2307: Cannot find module '@reading-advantage/activity-tutorial' or its corresponding type declarations.
+packages/domain/src/activity/tutorial-reporting.ts(5,68): error TS2307: Cannot find module '@reading-advantage/codecamp-knowledge/apk-unit' or its corresponding type declarations.
+packages/domain/src/activity/tutorial-reporting.ts(6,75): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/activity/tutorial-reporting.ts(80,68): error TS1064: The return type of an async function or method must be the global Promise<T> type. Did you mean to write 'Promise<any>'?
+packages/domain/src/activity/tutorial-reporting.ts(81,68): error TS18046: 'input' is of type 'unknown'.
+packages/domain/src/activity/tutorial-reporting.ts(84,37): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+packages/domain/src/activity/tutorial-reporting.ts(86,129): error TS18046: 'input' is of type 'unknown'.
+packages/domain/src/activity/tutorial-reporting.ts(86,157): error TS18046: 'input' is of type 'unknown'.
+packages/domain/src/activity/tutorial-reporting.ts(86,233): error TS18046: 'input' is of type 'unknown'.
+packages/domain/src/activity/tutorial-reporting.ts(92,51): error TS18046: 'input' is of type 'unknown'.
+packages/domain/src/activity/tutorial-reporting.ts(96,83): error TS18046: 'input' is of type 'unknown'.
+packages/domain/src/activity/tutorial-reporting.ts(96,129): error TS18046: 'input' is of type 'unknown'.
+packages/domain/src/activity/tutorial-reporting.ts(159,31): error TS7006: Parameter 'filePath' implicitly has an 'any' type.
+packages/domain/src/activity/tutorial-reporting.ts(196,123): error TS7031: Binding element 'stepId' implicitly has an 'any' type.
+packages/domain/src/activity/tutorial-reporting.ts(202,88): error TS7006: Parameter 'filePath' implicitly has an 'any' type.
+packages/domain/src/activity/tutorial-reporting.ts(224,166): error TS7031: Binding element 'stepId' implicitly has an 'any' type.
+packages/domain/src/activity/tutorial-reporting.ts(253,26): error TS7006: Parameter 'activityId' implicitly has an 'any' type.
+packages/domain/src/activity/tutorial-reporting.ts(257,48): error TS7006: Parameter 'check' implicitly has an 'any' type.
+packages/domain/src/activity/tutorial-reporting.ts(274,7): error TS7006: Parameter 'check' implicitly has an 'any' type.
+packages/domain/src/ai/get-recommendation.ts(2,29): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/ai/get-recommendation.ts(14,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/ai/get-recommendation.ts(15,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/ai/get-recommendation.ts(140,49): error TS7006: Parameter 'r' implicitly has an 'any' type.
+packages/domain/src/ai/get-recommendation.ts(181,39): error TS7006: Parameter 's' implicitly has an 'any' type.
+packages/domain/src/ai/get-recommendation.ts(187,41): error TS7006: Parameter 'u' implicitly has an 'any' type.
+packages/domain/src/ai/get-recommendation.ts(198,42): error TS7006: Parameter 'r' implicitly has an 'any' type.
+packages/domain/src/articles/index.ts(1,26): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/articles/mutations.ts(2,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/articles/mutations.ts(4,26): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/articles/permissions.ts(1,56): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/articles/queries.ts(2,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/articles/queries.ts(4,26): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/articles/schema.ts(1,26): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/assignments/index.ts(6,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/assignments/mutations.ts(2,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/assignments/mutations.ts(9,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/assignments/mutations.ts(42,6): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/assignments/mutations.ts(51,13): error TS2339: Property 'transaction' does not exist on type 'TenantDB'.
+packages/domain/src/assignments/mutations.ts(51,32): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+packages/domain/src/assignments/mutations.ts(138,6): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/assignments/mutations.ts(192,6): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/assignments/mutations.ts(240,6): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/assignments/permissions.ts(1,56): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/assignments/queries.ts(2,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/assignments/queries.ts(4,41): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/assignments/queries.ts(28,6): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/assignments/queries.ts(77,6): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/assignments/schema.ts(6,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/audit/dsar.ts(2,45): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/audit/dsar.ts(3,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/audit/index.ts(2,38): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/audit/index.ts(3,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/classes/archive-class.ts(2,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/classes/archive-class.ts(3,32): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/classes/archive-class.ts(4,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/classes/archive-class.ts(27,6): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/classes/archive-class.ts(38,18): error TS2339: Property 'delete' does not exist on type 'TenantDB'.
+packages/domain/src/classes/create-assignment.ts(2,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/classes/create-assignment.ts(8,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/classes/create-assignment.ts(9,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/classes/create-assignment.ts(37,6): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/classes/create-assignment.ts(54,6): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/classes/create-assignment.ts(72,6): error TS2339: Property 'insert' does not exist on type 'TenantDB'.
+packages/domain/src/classes/create-assignment.ts(83,6): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/classes/create-assignment.ts(89,6): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/classes/create-science-class.ts(2,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/classes/create-science-class.ts(10,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/classes/create-science-class.ts(11,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/classes/create-science-class.ts(59,19): error TS2339: Property 'transaction' does not exist on type 'TenantDB'.
+packages/domain/src/classes/create-science-class.ts(59,38): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+packages/domain/src/classes/create-science-class.ts(112,30): error TS7006: Parameter 'lesson' implicitly has an 'any' type.
+packages/domain/src/classes/delete-assignment.ts(2,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/classes/delete-assignment.ts(6,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/classes/delete-assignment.ts(7,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/classes/delete-assignment.ts(35,6): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/classes/delete-assignment.ts(52,6): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/classes/delete-assignment.ts(67,6): error TS2339: Property 'delete' does not exist on type 'TenantDB'.
+packages/domain/src/classes/get-class-analytics-overview.ts(2,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/classes/get-class-analytics-overview.ts(10,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/classes/get-class-analytics-overview.ts(11,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/classes/get-class-analytics-overview.ts(40,40): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/classes/get-class-analytics-overview.ts(47,49): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/classes/get-class-analytics-overview.ts(49,46): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/classes/get-class-analytics-overview.ts(50,55): error TS7006: Parameter 'r' implicitly has an 'any' type.
+packages/domain/src/classes/get-class-analytics-overview.ts(53,6): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/classes/get-class-analytics-overview.ts(60,54): error TS7006: Parameter 'r' implicitly has an 'any' type.
+packages/domain/src/classes/get-class-analytics-overview.ts(60,111): error TS18046: 'a' is of type 'unknown'.
+packages/domain/src/classes/get-class-analytics-overview.ts(60,121): error TS18046: 'b' is of type 'unknown'.
+packages/domain/src/classes/get-class-analytics-overview.ts(61,40): error TS18046: 'l' is of type 'unknown'.
+packages/domain/src/classes/get-class-analytics-overview.ts(64,22): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/classes/get-class-analytics-overview.ts(75,55): error TS18046: 'lesson' is of type 'unknown'.
+packages/domain/src/classes/get-class-analytics-overview.ts(84,17): error TS18046: 'lesson' is of type 'unknown'.
+packages/domain/src/classes/get-class-analytics-overview.ts(84,41): error TS18046: 'lesson' is of type 'unknown'.
+packages/domain/src/classes/get-class-analytics-overview.ts(84,68): error TS18046: 'lesson' is of type 'unknown'.
+packages/domain/src/classes/get-class-curriculum.ts(2,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/classes/get-class-curriculum.ts(10,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/classes/get-class-curriculum.ts(11,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/classes/get-class-curriculum.ts(33,40): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/classes/get-class-curriculum.ts(40,8): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/classes/get-class-curriculum.ts(48,32): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/classes/get-class-curriculum.ts(50,30): error TS7006: Parameter 'u' implicitly has an 'any' type.
+packages/domain/src/classes/get-class-curriculum.ts(53,10): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/classes/get-class-curriculum.ts(67,44): error TS7006: Parameter 'r' implicitly has an 'any' type.
+packages/domain/src/classes/get-class-curriculum.ts(69,22): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/classes/get-class-curriculum.ts(71,55): error TS7006: Parameter 'c' implicitly has an 'any' type.
+packages/domain/src/classes/get-class-curriculum.ts(75,23): error TS7006: Parameter 'unit' implicitly has an 'any' type.
+packages/domain/src/classes/get-class-curriculum.ts(82,34): error TS2339: Property 'status' does not exist on type '{}'.
+packages/domain/src/classes/get-class-curriculum.ts(87,46): error TS2339: Property 'attemptsCount' does not exist on type '{}'.
+packages/domain/src/classes/get-class-curriculum.ts(88,40): error TS2339: Property 'mostRecentScore' does not exist on type '{}'.
+packages/domain/src/classes/get-class-curriculum.ts(88,102): error TS2339: Property 'mostRecentScorePercentage' does not exist on type '{}'.
+packages/domain/src/classes/get-class-curriculum.ts(89,34): error TS2339: Property 'bestScore' does not exist on type '{}'.
+packages/domain/src/classes/get-class-curriculum.ts(89,84): error TS2339: Property 'bestScorePercentage' does not exist on type '{}'.
+packages/domain/src/classes/get-class-curriculum.ts(90,38): error TS2339: Property 'lastAttemptAt' does not exist on type '{}'.
+packages/domain/src/classes/get-class-curriculum.ts(90,99): error TS2339: Property 'completedAt' does not exist on type '{}'.
+packages/domain/src/classes/get-class-detail-with-curriculum.ts(8,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/classes/get-class-detail-with-curriculum.ts(9,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/classes/get-class-detail-with-curriculum.ts(57,22): error TS7006: Parameter 'unit' implicitly has an 'any' type.
+packages/domain/src/classes/get-class-lesson-analytics.ts(2,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/classes/get-class-lesson-analytics.ts(8,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/classes/get-class-lesson-analytics.ts(9,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/classes/get-class-lesson-analytics.ts(26,40): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/classes/get-class-lesson-analytics.ts(30,38): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/classes/get-class-lesson-analytics.ts(32,35): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/classes/get-class-lesson-analytics.ts(32,130): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/classes/get-class-lesson-analytics.ts(35,42): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/classes/get-class-lesson-analytics.ts(36,40): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/classes/get-class-lesson-analytics.ts(37,42): error TS7006: Parameter 'q' implicitly has an 'any' type.
+packages/domain/src/classes/get-class-lesson-analytics.ts(38,69): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/classes/get-class-lesson-analytics.ts(42,39): error TS7006: Parameter 's' implicitly has an 'any' type.
+packages/domain/src/classes/get-class-lesson-analytics.ts(43,68): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/classes/get-class-lesson-analytics.ts(44,97): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/classes/get-class-lesson-analytics.ts(47,55): error TS7006: Parameter 'lc' implicitly has an 'any' type.
+packages/domain/src/classes/get-class-lesson-analytics.ts(49,51): error TS7006: Parameter 'lc' implicitly has an 'any' type.
+packages/domain/src/classes/get-class-lesson-analytics.ts(50,73): error TS7006: Parameter 's' implicitly has an 'any' type.
+packages/domain/src/classes/get-class-lesson-analytics.ts(50,76): error TS7006: Parameter 'lc' implicitly has an 'any' type.
+packages/domain/src/classes/get-class-lesson-analytics.ts(51,83): error TS7006: Parameter 's' implicitly has an 'any' type.
+packages/domain/src/classes/get-class-lesson-analytics.ts(51,86): error TS7006: Parameter 'lc' implicitly has an 'any' type.
+packages/domain/src/classes/get-class-lesson-analytics.ts(53,62): error TS7006: Parameter 'lc' implicitly has an 'any' type.
+packages/domain/src/classes/get-class-lesson-analytics.ts(54,41): error TS7006: Parameter 'student' implicitly has an 'any' type.
+packages/domain/src/classes/get-class-lesson-analytics.ts(56,85): error TS2339: Property 'status' does not exist on type '{}'.
+packages/domain/src/classes/get-class-lesson-analytics.ts(56,130): error TS2339: Property 'mostRecentScore' does not exist on type '{}'.
+packages/domain/src/classes/get-class-lesson-analytics.ts(56,185): error TS2339: Property 'mostRecentScorePercentage' does not exist on type '{}'.
+packages/domain/src/classes/get-class-lesson-analytics.ts(56,234): error TS2339: Property 'bestScore' does not exist on type '{}'.
+packages/domain/src/classes/get-class-lesson-analytics.ts(56,277): error TS2339: Property 'bestScorePercentage' does not exist on type '{}'.
+packages/domain/src/classes/get-class-lesson-analytics.ts(56,319): error TS2339: Property 'attemptsCount' does not exist on type '{}'.
+packages/domain/src/classes/get-class-lesson-analytics.ts(56,360): error TS2339: Property 'totalTimeSpentSeconds' does not exist on type '{}'.
+packages/domain/src/classes/get-class-lesson-analytics.ts(56,402): error TS2339: Property 'mostRecentScorePercentage' does not exist on type '{}'.
+packages/domain/src/classes/get-class-lesson-analytics.ts(56,453): error TS2339: Property 'mostRecentScorePercentage' does not exist on type '{}'.
+packages/domain/src/classes/get-class-lesson-analytics.ts(59,48): error TS7006: Parameter 'question' implicitly has an 'any' type.
+packages/domain/src/classes/get-class-lesson-analytics.ts(59,58): error TS7006: Parameter 'index' implicitly has an 'any' type.
+packages/domain/src/classes/get-class-lesson-analytics.ts(60,52): error TS7006: Parameter 'r' implicitly has an 'any' type.
+packages/domain/src/classes/get-class-lesson-analytics.ts(61,39): error TS7006: Parameter 'r' implicitly has an 'any' type.
+packages/domain/src/classes/get-class-lesson-analytics.ts(62,41): error TS7006: Parameter 'r' implicitly has an 'any' type.
+packages/domain/src/classes/get-class-lesson-analytics.ts(64,62): error TS7006: Parameter 's' implicitly has an 'any' type.
+packages/domain/src/classes/get-class-lesson-analytics.ts(64,65): error TS7006: Parameter 'r' implicitly has an 'any' type.
+packages/domain/src/classes/get-class-lesson-analytics.ts(65,65): error TS7006: Parameter 'r' implicitly has an 'any' type.
+packages/domain/src/classes/get-class-lesson-analytics.ts(65,123): error TS7006: Parameter 'r' implicitly has an 'any' type.
+packages/domain/src/classes/get-class-lesson-analytics.ts(67,12): error TS7006: Parameter 'a' implicitly has an 'any' type.
+packages/domain/src/classes/get-class-lesson-analytics.ts(67,15): error TS7006: Parameter 'b' implicitly has an 'any' type.
+packages/domain/src/classes/get-class-lesson-analytics.ts(74,52): error TS7006: Parameter 'r' implicitly has an 'any' type.
+packages/domain/src/classes/get-class-lesson-analytics.ts(89,37): error TS7006: Parameter 's' implicitly has an 'any' type.
+packages/domain/src/classes/get-class-roster.ts(2,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/classes/get-class-roster.ts(3,83): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/classes/get-class-roster.ts(4,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/classes/get-class-roster.ts(26,40): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/classes/get-class-roster.ts(33,35): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/classes/get-class-roster.ts(34,36): error TS7006: Parameter 'e' implicitly has an 'any' type.
+packages/domain/src/classes/get-class-roster.ts(38,10): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/classes/get-class-roster.ts(48,34): error TS7006: Parameter 's' implicitly has an 'any' type.
+packages/domain/src/classes/get-class-roster.ts(76,40): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/classes/get-class-roster.ts(83,18): error TS2339: Property 'delete' does not exist on type 'TenantDB'.
+packages/domain/src/classes/get-class.ts(2,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/classes/get-class.ts(3,32): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/classes/get-class.ts(4,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/classes/get-class.ts(32,56): error TS7006: Parameter 's' implicitly has an 'any' type.
+packages/domain/src/classes/index.ts(2,28): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/classes/index.ts(3,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/classes/index.ts(50,6): error TS2339: Property 'insert' does not exist on type 'TenantDB'.
+packages/domain/src/classes/index.ts(93,6): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/classes/join-class.ts(2,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/classes/join-class.ts(3,61): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/classes/join-class.ts(4,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/classes/join-class.ts(57,33): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+packages/domain/src/classes/list-assignment.ts(2,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/classes/list-assignment.ts(9,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/classes/list-assignment.ts(10,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/classes/list-assignment.ts(39,6): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/classes/list-assignment.ts(52,8): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/classes/list-assignment.ts(69,6): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/classes/list-assignment.ts(94,30): error TS7006: Parameter 'a' implicitly has an 'any' type.
+packages/domain/src/classes/list-classes-with-counts.ts(2,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/classes/list-classes-with-counts.ts(3,54): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/classes/list-classes-with-counts.ts(4,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/classes/list-classes-with-counts.ts(31,8): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/classes/list-classes-with-counts.ts(38,8): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/classes/list-classes-with-counts.ts(43,33): error TS7006: Parameter 'c' implicitly has an 'any' type.
+packages/domain/src/classes/list-classes-with-counts.ts(46,10): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/classes/list-classes-with-counts.ts(51,51): error TS7006: Parameter 'row' implicitly has an 'any' type.
+packages/domain/src/classes/list-classes-with-counts.ts(55,24): error TS7006: Parameter 'cls' implicitly has an 'any' type.
+packages/domain/src/classes/update-class.ts(2,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/classes/update-class.ts(3,32): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/classes/update-class.ts(4,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/classes/update-class.ts(27,6): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/classes/update-class.ts(49,6): error TS2339: Property 'update' does not exist on type 'TenantDB'.
+packages/domain/src/codecamp/chat.ts(2,99): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/codecamp/chat.ts(3,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/codecamp/chat.ts(21,35): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+packages/domain/src/codecamp/chat.ts(62,29): error TS7006: Parameter 'm' implicitly has an 'any' type.
+packages/domain/src/codecamp/curriculum-assignments.ts(1,64): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/codecamp/curriculum-assignments.ts(2,38): error TS2307: Cannot find module '@reading-advantage/codecamp-knowledge' or its corresponding type declarations.
+packages/domain/src/codecamp/curriculum-assignments.ts(11,60): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(predicate: (value: unknown, index: number, array: unknown[]) => value is unknown, thisArg?: any): this is S[]', gave the following error.
+    Argument of type '({ status, reviewedAt }: { reviewedAt: any; status: any; }) => boolean' is not assignable to parameter of type '(value: unknown, index: number, array: unknown[]) => value is unknown'.
+      Types of parameters '__0' and 'value' are incompatible.
+        Type 'unknown' is not assignable to type '{ reviewedAt: any; status: any; }'.
+  Overload 2 of 2, '(predicate: (value: unknown, index: number, array: unknown[]) => unknown, thisArg?: any): boolean', gave the following error.
+    Argument of type '({ status, reviewedAt }: { reviewedAt: any; status: any; }) => boolean' is not assignable to parameter of type '(value: unknown, index: number, array: unknown[]) => unknown'.
+      Types of parameters '__0' and 'value' are incompatible.
+        Type 'unknown' is not assignable to type '{ reviewedAt: any; status: any; }'.
+packages/domain/src/codecamp/exercises.ts(2,75): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/codecamp/exercises.ts(3,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/codecamp/exercises.ts(58,38): error TS7031: Binding element 'moduleId' implicitly has an 'any' type.
+packages/domain/src/codecamp/github-issues.ts(1,36): error TS2307: Cannot find module '@reading-advantage/integrations-github' or its corresponding type declarations.
+packages/domain/src/codecamp/github-issues.ts(13,19): error TS2307: Cannot find module '@reading-advantage/integrations-github' or its corresponding type declarations.
+packages/domain/src/codecamp/github-issues.ts(16,7): error TS2307: Cannot find module '@reading-advantage/integrations-github' or its corresponding type declarations.
+packages/domain/src/codecamp/index.ts(5,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/codecamp/index.ts(85,36): error TS2307: Cannot find module '@reading-advantage/integrations-github' or its corresponding type declarations.
+packages/domain/src/codecamp/intern-accounts.ts(8,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/codecamp/intern-accounts.ts(9,30): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/codecamp/intern-accounts.ts(10,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/codecamp/intern-accounts.ts(111,49): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(172,65): error TS7031: Binding element 'curriculumVersion' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(172,151): error TS7031: Binding element 'userId' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(173,34): error TS7006: Parameter 'm' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(174,34): error TS7006: Parameter 'i' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(193,23): error TS7006: Parameter 'intern' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(194,89): error TS7031: Binding element 'slug' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(195,64): error TS7031: Binding element 'id' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(196,51): error TS7031: Binding element 'moduleId' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(197,48): error TS7006: Parameter 'p' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(198,61): error TS7006: Parameter 'p' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(198,98): error TS7006: Parameter 'p' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(199,47): error TS7006: Parameter 'p' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(199,88): error TS7006: Parameter 'l' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(199,166): error TS7006: Parameter 'p' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(200,79): error TS7006: Parameter 'a' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(200,82): error TS7006: Parameter 'b' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(202,46): error TS7006: Parameter 'r' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(203,43): error TS7006: Parameter 'r' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(204,44): error TS7006: Parameter 'r' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(212,53): error TS7006: Parameter 'p' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(214,50): error TS7006: Parameter 'mod' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(215,54): error TS7006: Parameter 'lesson' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(217,57): error TS7006: Parameter 'p' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(220,67): error TS7006: Parameter 'repo' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(251,88): error TS7031: Binding element 'slug' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(252,34): error TS7006: Parameter 'm' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(266,58): error TS7031: Binding element 'id' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(286,54): error TS7031: Binding element 'id' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(335,58): error TS7006: Parameter 'attempt' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(343,54): error TS7006: Parameter 'objective' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(347,16): error TS7006: Parameter 'left' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(347,22): error TS7006: Parameter 'right' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(352,40): error TS7006: Parameter 'mod' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(353,40): error TS7006: Parameter 'l' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(354,42): error TS7006: Parameter 'p' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(355,43): error TS7006: Parameter 'p' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(356,78): error TS7006: Parameter 's' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(356,81): error TS7006: Parameter 'p' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(357,47): error TS7006: Parameter 'repo' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(358,52): error TS7006: Parameter 'repo' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(359,48): error TS7006: Parameter 'review' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(359,107): error TS7006: Parameter 'a' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(359,110): error TS7006: Parameter 'b' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(371,34): error TS7006: Parameter 'p' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(371,66): error TS7006: Parameter 'l' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(372,13): error TS7006: Parameter 'p' implicitly has an 'any' type.
+packages/domain/src/codecamp/intern-accounts.ts(372,71): error TS7006: Parameter 'l' implicitly has an 'any' type.
+packages/domain/src/codecamp/lessons.ts(2,114): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/codecamp/lessons.ts(3,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/codecamp/lessons.ts(27,23): error TS7006: Parameter 'lesson' implicitly has an 'any' type.
+packages/domain/src/codecamp/lessons.ts(28,31): error TS7006: Parameter 'p' implicitly has an 'any' type.
+packages/domain/src/codecamp/lessons.ts(67,31): error TS7006: Parameter 'e' implicitly has an 'any' type.
+packages/domain/src/codecamp/lessons.ts(68,39): error TS7006: Parameter 'q' implicitly has an 'any' type.
+packages/domain/src/codecamp/modules.ts(2,95): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/codecamp/modules.ts(3,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/codecamp/modules.ts(32,38): error TS7006: Parameter 'p' implicitly has an 'any' type.
+packages/domain/src/codecamp/modules.ts(36,27): error TS7006: Parameter 'lesson' implicitly has an 'any' type.
+packages/domain/src/codecamp/modules.ts(37,33): error TS7006: Parameter 'p' implicitly has an 'any' type.
+packages/domain/src/codecamp/modules.ts(60,34): error TS7006: Parameter 'm' implicitly has an 'any' type.
+packages/domain/src/codecamp/modules.ts(68,23): error TS7006: Parameter 'mod' implicitly has an 'any' type.
+packages/domain/src/codecamp/modules.ts(69,40): error TS7006: Parameter 'l' implicitly has an 'any' type.
+packages/domain/src/codecamp/modules.ts(70,42): error TS7006: Parameter 'p' implicitly has an 'any' type.
+packages/domain/src/codecamp/modules.ts(71,43): error TS7006: Parameter 'p' implicitly has an 'any' type.
+packages/domain/src/codecamp/modules.ts(96,34): error TS7006: Parameter 'm' implicitly has an 'any' type.
+packages/domain/src/codecamp/modules.ts(104,23): error TS7006: Parameter 'mod' implicitly has an 'any' type.
+packages/domain/src/codecamp/modules.ts(105,40): error TS7006: Parameter 'l' implicitly has an 'any' type.
+packages/domain/src/codecamp/modules.ts(106,42): error TS7006: Parameter 'p' implicitly has an 'any' type.
+packages/domain/src/codecamp/modules.ts(107,43): error TS7006: Parameter 'p' implicitly has an 'any' type.
+packages/domain/src/codecamp/modules.ts(134,38): error TS7006: Parameter 'p' implicitly has an 'any' type.
+packages/domain/src/codecamp/modules.ts(138,27): error TS7006: Parameter 'lesson' implicitly has an 'any' type.
+packages/domain/src/codecamp/modules.ts(139,33): error TS7006: Parameter 'p' implicitly has an 'any' type.
+packages/domain/src/codecamp/modules.ts(179,52): error TS7006: Parameter 'p' implicitly has an 'any' type.
+packages/domain/src/codecamp/modules.ts(180,41): error TS7006: Parameter 'lesson' implicitly has an 'any' type.
+packages/domain/src/codecamp/permissions.ts(1,56): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/codecamp/pr-review-attempts.ts(2,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/codecamp/pr-review-attempts.ts(9,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/codecamp/pr-review-attempts.ts(10,53): error TS2307: Cannot find module '@reading-advantage/codecamp-knowledge' or its corresponding type declarations.
+packages/domain/src/codecamp/pr-review-attempts.ts(11,32): error TS2307: Cannot find module '@reading-advantage/activity-runtime' or its corresponding type declarations.
+packages/domain/src/codecamp/pr-review-attempts.ts(12,41): error TS2307: Cannot find module '@reading-advantage/activity-runtime/server' or its corresponding type declarations.
+packages/domain/src/codecamp/pr-review-attempts.ts(128,14): error TS7006: Parameter 'binding' implicitly has an 'any' type.
+packages/domain/src/codecamp/pr-review-attempts.ts(135,15): error TS7006: Parameter 'binding' implicitly has an 'any' type.
+packages/domain/src/codecamp/pr-review-attempts.ts(135,53): error TS7006: Parameter 'objectiveId' implicitly has an 'any' type.
+packages/domain/src/codecamp/pr-review-attempts.ts(174,38): error TS7031: Binding element 'id' implicitly has an 'any' type.
+packages/domain/src/codecamp/pr-review-attempts.ts(188,28): error TS7006: Parameter 'attempt' implicitly has an 'any' type.
+packages/domain/src/codecamp/pr-review-attempts.ts(194,39): error TS7006: Parameter 'objective' implicitly has an 'any' type.
+packages/domain/src/codecamp/pr-review-attempts.ts(280,13): error TS2339: Property 'transaction' does not exist on type 'TenantDB'.
+packages/domain/src/codecamp/pr-review-attempts.ts(280,32): error TS7006: Parameter 'transactionDb' implicitly has an 'any' type.
+packages/domain/src/codecamp/pr-review-attempts.ts(375,25): error TS18048: 'review.apkEvaluation' is possibly 'undefined'.
+packages/domain/src/codecamp/pr-review-attempts.ts(404,13): error TS2339: Property 'transaction' does not exist on type 'TenantDB'.
+packages/domain/src/codecamp/pr-review-attempts.ts(404,32): error TS7006: Parameter 'transactionDb' implicitly has an 'any' type.
+packages/domain/src/codecamp/pr-review-overrides.ts(3,55): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/codecamp/pr-review-overrides.ts(4,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/codecamp/pr-reviews.ts(5,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/codecamp/pr-reviews.ts(6,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/codecamp/pr-reviews.ts(9,45): error TS2307: Cannot find module '@reading-advantage/activity-runtime' or its corresponding type declarations.
+packages/domain/src/codecamp/pr-reviews.ts(10,41): error TS2307: Cannot find module '@reading-advantage/activity-runtime/server' or its corresponding type declarations.
+packages/domain/src/codecamp/pr-reviews.ts(11,71): error TS2307: Cannot find module '@reading-advantage/codecamp-knowledge' or its corresponding type declarations.
+packages/domain/src/codecamp/pr-reviews.ts(12,30): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/codecamp/pr-reviews.ts(161,13): error TS2339: Property 'transaction' does not exist on type 'TenantDB'.
+packages/domain/src/codecamp/pr-reviews.ts(161,32): error TS7006: Parameter 'transactionDb' implicitly has an 'any' type.
+packages/domain/src/codecamp/pr-reviews.ts(246,79): error TS7031: Binding element 'objectiveId' implicitly has an 'any' type.
+packages/domain/src/codecamp/pr-reviews.ts(246,92): error TS7031: Binding element 'variantKey' implicitly has an 'any' type.
+packages/domain/src/codecamp/pr-reviews.ts(246,104): error TS7031: Binding element 'afterDays' implicitly has an 'any' type.
+packages/domain/src/codecamp/pr-reviews.ts(279,40): error TS7006: Parameter 'lesson' implicitly has an 'any' type.
+packages/domain/src/codecamp/pr-reviews.ts(390,20): error TS7006: Parameter 'row' implicitly has an 'any' type.
+packages/domain/src/codecamp/progress.ts(4,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/codecamp/progress.ts(5,36): error TS2307: Cannot find module '@reading-advantage/db/seed' or its corresponding type declarations.
+packages/domain/src/codecamp/progress.ts(6,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/codecamp/progress.ts(52,46): error TS7006: Parameter 'p' implicitly has an 'any' type.
+packages/domain/src/codecamp/progress.ts(73,40): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+packages/domain/src/codecamp/progress.ts(73,45): error TS7006: Parameter 'm' implicitly has an 'any' type.
+packages/domain/src/codecamp/progress.ts(74,44): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+packages/domain/src/codecamp/progress.ts(74,49): error TS7006: Parameter 'm' implicitly has an 'any' type.
+packages/domain/src/codecamp/progress.ts(81,42): error TS7006: Parameter 'm' implicitly has an 'any' type.
+packages/domain/src/codecamp/progress.ts(82,49): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+packages/domain/src/codecamp/progress.ts(82,54): error TS7006: Parameter 'm' implicitly has an 'any' type.
+packages/domain/src/codecamp/progress.ts(83,45): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+packages/domain/src/codecamp/progress.ts(83,50): error TS7006: Parameter 'm' implicitly has an 'any' type.
+packages/domain/src/codecamp/quizzes.ts(2,56): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/codecamp/quizzes.ts(3,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/codecamp/quizzes.ts(25,34): error TS7006: Parameter 'q' implicitly has an 'any' type.
+packages/domain/src/codecamp/review-exercise.ts(3,56): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/codecamp/review-exercise.ts(5,42): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/codecamp/review-exercise.ts(6,27): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/codecamp/review-exercise.ts(7,53): error TS2307: Cannot find module '@reading-advantage/codecamp-knowledge' or its corresponding type declarations.
+packages/domain/src/codecamp/review-exercise.ts(143,136): error TS7031: Binding element 'dimensionId' implicitly has an 'any' type.
+packages/domain/src/codecamp/review-exercise.ts(145,122): error TS7006: Parameter 'check' implicitly has an 'any' type.
+packages/domain/src/codecamp/review-exercise.ts(146,140): error TS7031: Binding element 'dimensionId' implicitly has an 'any' type.
+packages/domain/src/codecamp/review-exercise.ts(244,14): error TS7006: Parameter 'binding' implicitly has an 'any' type.
+packages/domain/src/codecamp/review-exercise.ts(250,15): error TS7006: Parameter 'binding' implicitly has an 'any' type.
+packages/domain/src/codecamp/review-exercise.ts(250,53): error TS7006: Parameter 'objectiveId' implicitly has an 'any' type.
+packages/domain/src/codecamp/review-exercise.ts(326,122): error TS7006: Parameter 'check' implicitly has an 'any' type.
+packages/domain/src/codecamp/review-jobs.ts(20,42): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/codecamp/review-jobs.ts(21,27): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/codecamp/review-jobs.ts(22,28): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/codecamp/review-jobs.ts(91,20): error TS7006: Parameter 'row' implicitly has an 'any' type.
+packages/domain/src/codecamp/tutor.ts(10,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/codecamp/tutor.ts(11,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/codecamp/tutor.ts(12,31): error TS2307: Cannot find module '@reading-advantage/activity-runtime' or its corresponding type declarations.
+packages/domain/src/codecamp/tutor.ts(17,8): error TS2307: Cannot find module '@reading-advantage/codecamp-knowledge' or its corresponding type declarations.
+packages/domain/src/codecamp/tutor.ts(256,127): error TS2366: Function lacks ending return statement and return type does not include 'undefined'.
+packages/domain/src/codecamp/tutor.ts(312,40): error TS7006: Parameter 'checkpoint' implicitly has an 'any' type.
+packages/domain/src/codecamp/tutor.ts(313,42): error TS7006: Parameter 'step' implicitly has an 'any' type.
+packages/domain/src/codecamp/tutor.ts(321,40): error TS7006: Parameter 'checkpoint' implicitly has an 'any' type.
+packages/domain/src/codecamp/tutor.ts(322,46): error TS7006: Parameter 'step' implicitly has an 'any' type.
+packages/domain/src/codecamp/tutor.ts(322,72): error TS7006: Parameter 'check' implicitly has an 'any' type.
+packages/domain/src/codecamp/tutor.ts(345,46): error TS7006: Parameter 'resource' implicitly has an 'any' type.
+packages/domain/src/codecamp/tutor.ts(390,46): error TS7031: Binding element 'interventionLevel' implicitly has an 'any' type.
+packages/domain/src/codecamp/tutor.ts(617,35): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+packages/domain/src/curriculum/get-lesson-by-slug.ts(2,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/curriculum/get-lesson-by-slug.ts(6,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/curriculum/get-lesson-by-slug.ts(7,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/curriculum/get-lesson-by-slug.ts(27,35): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/curriculum/get-lesson-by-slug.ts(30,36): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/curriculum/get-lesson-by-slug.ts(32,36): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/curriculum/get-lesson-by-slug.ts(42,25): error TS7006: Parameter 'c' implicitly has an 'any' type.
+packages/domain/src/curriculum/get-lesson-by-slug.ts(44,39): error TS7006: Parameter 'c' implicitly has an 'any' type.
+packages/domain/src/curriculum/get-lesson-by-slug.ts(45,44): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/curriculum/get-lesson-by-slug.ts(60,31): error TS7006: Parameter 's' implicitly has an 'any' type.
+packages/domain/src/curriculum/index.ts(1,32): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/curriculum/mutations.ts(1,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/curriculum/mutations.ts(3,32): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/curriculum/mutations.ts(35,6): error TS2339: Property 'insert' does not exist on type 'TenantDB'.
+packages/domain/src/curriculum/permissions.ts(1,56): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/curriculum/queries.ts(2,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/curriculum/queries.ts(4,32): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/curriculum/queries.ts(30,6): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/curriculum/queries.ts(63,20): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/curriculum/schema.ts(1,32): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/db-contract.ts(3,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/db-contract.ts(4,29): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/games/mutations.ts(6,8): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/games/mutations.ts(8,41): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/games/mutations.ts(111,6): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/games/mutations.ts(138,14): error TS2339: Property 'transaction' does not exist on type 'TenantDB'.
+packages/domain/src/games/mutations.ts(138,33): error TS7006: Parameter 'rawTx' implicitly has an 'any' type.
+packages/domain/src/games/mutations.ts(142,16): error TS2339: Property 'insert' does not exist on type 'TenantDB'.
+packages/domain/src/games/permissions.ts(1,56): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/games/queries.ts(2,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/games/queries.ts(4,33): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/games/queries.ts(82,6): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/games/queries.ts(146,6): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/games/queries.ts(160,20): error TS7006: Parameter 'row' implicitly has an 'any' type.
+packages/domain/src/gamification/index.ts(1,52): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/gamification/mutations.ts(2,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/gamification/mutations.ts(4,38): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/gamification/mutations.ts(30,6): error TS2339: Property 'update' does not exist on type 'TenantDB'.
+packages/domain/src/gamification/permissions.ts(1,56): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/gamification/queries.ts(2,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/gamification/queries.ts(4,38): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/gamification/queries.ts(31,6): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/gamification/schema.ts(5,52): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/interventions/list-alerts.ts(2,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/interventions/list-alerts.ts(9,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/interventions/list-alerts.ts(10,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/interventions/list-alerts.ts(95,6): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/interventions/list-alerts.ts(117,6): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/interventions/list-alerts.ts(149,40): error TS7006: Parameter 'student' implicitly has an 'any' type.
+packages/domain/src/interventions/list-alerts.ts(152,10): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/interventions/list-alerts.ts(174,47): error TS7006: Parameter 'row' implicitly has an 'any' type.
+packages/domain/src/interventions/list-alerts.ts(184,50): error TS7006: Parameter 'student' implicitly has an 'any' type.
+packages/domain/src/licenses/index.ts(1,42): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/licenses/mutations.ts(1,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/licenses/mutations.ts(3,42): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/licenses/mutations.ts(29,6): error TS2339: Property 'insert' does not exist on type 'TenantDB'.
+packages/domain/src/licenses/permissions.ts(1,56): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/licenses/queries.ts(2,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/licenses/queries.ts(4,32): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/licenses/schema.ts(1,42): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/mastery/drizzle-mastery-persistence.ts(2,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/mastery/drizzle-mastery-persistence.ts(34,31): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/mastery/drizzle-mastery-persistence.ts(44,17): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/mastery/drizzle-mastery-persistence.ts(345,8): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/mastery/drizzle-mastery-persistence.ts(389,14): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/mastery/drizzle-mastery-persistence.ts(394,14): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/mastery/drizzle-mastery-persistence.ts(399,14): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/mastery/drizzle-mastery-persistence.ts(404,14): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/mastery/drizzle-mastery-persistence.ts(409,14): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/mastery/drizzle-mastery-persistence.ts(414,14): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/mastery/drizzle-mastery-persistence.ts(419,14): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/mastery/drizzle-mastery-persistence.ts(456,29): error TS2339: Property 'transaction' does not exist on type 'TenantDB'.
+packages/domain/src/mastery/drizzle-mastery-persistence.ts(457,16): error TS7006: Parameter 'transaction' implicitly has an 'any' type.
+packages/domain/src/mastery/drizzle-mastery-persistence.ts(826,29): error TS2339: Property 'transaction' does not exist on type 'TenantDB'.
+packages/domain/src/mastery/drizzle-mastery-persistence.ts(827,16): error TS7006: Parameter 'transaction' implicitly has an 'any' type.
+packages/domain/src/mastery/record-run.ts(3,29): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/mastery/record-run.ts(12,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/mastery/record-run.ts(13,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/mastery/record-run.ts(83,41): error TS7006: Parameter 'r' implicitly has an 'any' type.
+packages/domain/src/mastery/record-run.ts(87,51): error TS7006: Parameter 'q' implicitly has an 'any' type.
+packages/domain/src/mastery/record-run.ts(103,42): error TS7006: Parameter 'r' implicitly has an 'any' type.
+packages/domain/src/mastery/record-run.ts(174,44): error TS7006: Parameter 'r' implicitly has an 'any' type.
+packages/domain/src/mastery/record-run.ts(190,54): error TS2339: Property 'transaction' does not exist on type 'TenantDB'.
+packages/domain/src/mastery/record-run.ts(190,73): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+packages/domain/src/mastery/record-run.ts(201,39): error TS7006: Parameter 'r' implicitly has an 'any' type.
+packages/domain/src/mastery/record-run.ts(221,45): error TS7006: Parameter 'r' implicitly has an 'any' type.
+packages/domain/src/progress/index.ts(10,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/progress/mutations.ts(1,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/progress/mutations.ts(3,46): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/progress/permissions.ts(1,56): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/progress/queries.ts(2,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/progress/queries.ts(13,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/progress/schema.ts(10,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/quiz/index.ts(1,33): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/quiz/mutations.ts(1,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/quiz/mutations.ts(3,33): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/quiz/mutations.ts(24,30): error TS2339: Property 'insert' does not exist on type 'TenantDB'.
+packages/domain/src/quiz/permissions.ts(1,56): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/quiz/queries.ts(2,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/quiz/queries.ts(4,33): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/quiz/queries.ts(28,13): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/quiz/schema.ts(1,33): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/quiz/submit-attempt.ts(2,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/quiz/submit-attempt.ts(16,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/quiz/submit-attempt.ts(17,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/quiz/submit-attempt.ts(46,35): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/quiz/submit-attempt.ts(50,36): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/quiz/submit-attempt.ts(56,35): error TS7006: Parameter 'c' implicitly has an 'any' type.
+packages/domain/src/quiz/submit-attempt.ts(58,37): error TS7006: Parameter 'c' implicitly has an 'any' type.
+packages/domain/src/quiz/submit-attempt.ts(59,40): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/quiz/submit-attempt.ts(65,40): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/quiz/submit-attempt.ts(76,52): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/quiz/submit-attempt.ts(81,36): error TS2339: Property 'insert' does not exist on type 'TenantDB'.
+packages/domain/src/quiz/submit-attempt.ts(85,47): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/quiz/submit-attempt.ts(89,20): error TS2339: Property 'insert' does not exist on type 'TenantDB'.
+packages/domain/src/quiz/submit-attempt.ts(91,20): error TS2339: Property 'update' does not exist on type 'TenantDB'.
+packages/domain/src/quiz/submit-attempt.ts(129,18): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/quiz/submit-attempt.ts(130,20): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/quiz/submit-attempt.ts(131,22): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/quiz/submit-attempt.ts(135,18): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/quiz/submit-attempt.ts(136,20): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/quiz/submit-attempt.ts(137,22): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/quiz/submit-attempt.ts(141,18): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/quiz/submit-attempt.ts(142,20): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/quiz/submit-attempt.ts(143,22): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/quiz/submit-attempt.ts(147,18): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/quiz/submit-attempt.ts(148,20): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/quiz/submit-attempt.ts(149,22): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/quiz/submit-attempt.ts(158,36): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/quiz/submit-attempt.ts(163,42): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/quiz/submit-attempt.ts(164,52): error TS7006: Parameter 'q' implicitly has an 'any' type.
+packages/domain/src/quiz/submit-attempt.ts(174,49): error TS2339: Property 'type' does not exist on type '{}'.
+packages/domain/src/quiz/submit-attempt.ts(174,88): error TS2339: Property 'correctAnswer' does not exist on type '{}'.
+packages/domain/src/quiz/submit-attempt.ts(175,47): error TS2339: Property 'points' does not exist on type '{}'.
+packages/domain/src/quiz/submit-attempt.ts(177,70): error TS2339: Property 'id' does not exist on type '{}'.
+packages/domain/src/quiz/submit-attempt.ts(178,43): error TS2339: Property 'id' does not exist on type '{}'.
+packages/domain/src/quiz/submit-attempt.ts(178,70): error TS2339: Property 'text' does not exist on type '{}'.
+packages/domain/src/quiz/submit-attempt.ts(178,139): error TS2339: Property 'correctAnswer' does not exist on type '{}'.
+packages/domain/src/quiz/submit-attempt.ts(184,18): error TS2339: Property 'transaction' does not exist on type 'TenantDB'.
+packages/domain/src/quiz/submit-attempt.ts(184,37): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+packages/domain/src/quiz/submit-attempt.ts(209,18): error TS2339: Property 'insert' does not exist on type 'TenantDB'.
+packages/domain/src/quiz/submit-attempt.ts(213,34): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/quiz/submit-attempt.ts(215,32): error TS2339: Property 'insert' does not exist on type 'TenantDB'.
+packages/domain/src/reading/get-school-segments.ts(2,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/reading/get-school-segments.ts(14,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/reading/get-school-segments.ts(186,37): error TS7006: Parameter 's' implicitly has an 'any' type.
+packages/domain/src/reading/get-school-segments.ts(206,42): error TS7006: Parameter 'u' implicitly has an 'any' type.
+packages/domain/src/reading/get-school-segments.ts(220,57): error TS7006: Parameter 'r' implicitly has an 'any' type.
+packages/domain/src/reading/get-school-segments.ts(231,42): error TS7006: Parameter 'l' implicitly has an 'any' type.
+packages/domain/src/reading/get-school-segments.ts(244,31): error TS7006: Parameter 'r' implicitly has an 'any' type.
+packages/domain/src/reading/get-school-segments.ts(248,27): error TS7006: Parameter 'u' implicitly has an 'any' type.
+packages/domain/src/reading/get-school-segments.ts(255,27): error TS7006: Parameter 'l' implicitly has an 'any' type.
+packages/domain/src/reading/get-school-segments.ts(262,36): error TS7006: Parameter 'school' implicitly has an 'any' type.
+packages/domain/src/reading/get-school-segments.ts(264,45): error TS7006: Parameter 'u' implicitly has an 'any' type.
+packages/domain/src/reading/get-school-segments.ts(266,8): error TS7006: Parameter 'u' implicitly has an 'any' type.
+packages/domain/src/reading/get-school-segments.ts(269,48): error TS7006: Parameter 'u' implicitly has an 'any' type.
+packages/domain/src/reading/get-school-segments.ts(278,28): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+packages/domain/src/reading/get-school-segments.ts(278,33): error TS7006: Parameter 's' implicitly has an 'any' type.
+packages/domain/src/reading/get-school-segments.ts(281,38): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+packages/domain/src/reading/get-school-segments.ts(281,43): error TS7006: Parameter 's' implicitly has an 'any' type.
+packages/domain/src/reading/get-school-segments.ts(285,8): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+packages/domain/src/reading/get-school-segments.ts(285,13): error TS7006: Parameter 'l' implicitly has an 'any' type.
+packages/domain/src/reading/get-school-segments.ts(289,8): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+packages/domain/src/reading/get-school-segments.ts(289,13): error TS7006: Parameter 'l' implicitly has an 'any' type.
+packages/domain/src/reading/get-school-segments.ts(311,30): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+packages/domain/src/reading/get-school-segments.ts(311,35): error TS7006: Parameter 's' implicitly has an 'any' type.
+packages/domain/src/reading/get-school-segments.ts(314,41): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+packages/domain/src/reading/get-school-segments.ts(314,46): error TS7006: Parameter 's' implicitly has an 'any' type.
+packages/domain/src/reading/get-system-dashboard.ts(2,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/reading/get-system-dashboard.ts(4,26): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/reading/get-system-dashboard.ts(6,29): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/reading/permissions.ts(1,56): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/reports/index.ts(9,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/reports/permissions.ts(1,56): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/reports/queries.ts(2,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/reports/queries.ts(12,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/reports/queries.ts(123,6): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/reports/queries.ts(137,36): error TS7006: Parameter 's' implicitly has an 'any' type.
+packages/domain/src/reports/queries.ts(144,27): error TS7006: Parameter 'studentId' implicitly has an 'any' type.
+packages/domain/src/reports/queries.ts(168,44): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+packages/domain/src/reports/queries.ts(168,49): error TS7006: Parameter 's' implicitly has an 'any' type.
+packages/domain/src/reports/queries.ts(203,6): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/reports/queries.ts(209,24): error TS7006: Parameter 'c' implicitly has an 'any' type.
+packages/domain/src/reports/schema.ts(9,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/sales/contracts.ts(1,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/sales/contracts.ts(2,42): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/sales/mutations.ts(12,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/sales/mutations.ts(13,27): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/sales/mutations.ts(14,25): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/sales/mutations.ts(339,34): error TS7006: Parameter 'q' implicitly has an 'any' type.
+packages/domain/src/sales/mutations.ts(344,40): error TS7006: Parameter 'r' implicitly has an 'any' type.
+packages/domain/src/sales/permissions.ts(1,56): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/sales/queries.ts(10,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/sales/queries.ts(11,23): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/sales/queries.ts(12,27): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/sales/queries.ts(227,27): error TS7006: Parameter 'best' implicitly has an 'any' type.
+packages/domain/src/sales/queries.ts(227,33): error TS7006: Parameter 'a' implicitly has an 'any' type.
+packages/domain/src/sales/queries.ts(258,34): error TS7006: Parameter 'm' implicitly has an 'any' type.
+packages/domain/src/sales/queries.ts(272,22): error TS7006: Parameter 'p' implicitly has an 'any' type.
+packages/domain/src/sales/queries.ts(272,59): error TS7006: Parameter 'p' implicitly has an 'any' type.
+packages/domain/src/sales/queries.ts(274,23): error TS7006: Parameter 'm' implicitly has an 'any' type.
+packages/domain/src/sales/queries.ts(275,43): error TS7006: Parameter 'l' implicitly has an 'any' type.
+packages/domain/src/sales/queries.ts(276,45): error TS7006: Parameter 'l' implicitly has an 'any' type.
+packages/domain/src/sales/queries.ts(338,16): error TS7006: Parameter 'r' implicitly has an 'any' type.
+packages/domain/src/sales/queries.ts(339,13): error TS7006: Parameter 'r' implicitly has an 'any' type.
+packages/domain/src/sales/queries.ts(342,30): error TS7006: Parameter 'p' implicitly has an 'any' type.
+packages/domain/src/stories/index.ts(1,39): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/stories/mutations.ts(1,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/stories/mutations.ts(3,30): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/stories/permissions.ts(1,56): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/stories/queries.ts(2,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/stories/queries.ts(4,25): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/stories/schema.ts(1,39): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/students/get-my-gamification.ts(2,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/students/get-my-gamification.ts(3,52): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/students/get-my-gamification.ts(4,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/students/get-my-gamification.ts(35,36): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/students/get-my-gamification.ts(40,45): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/students/get-my-gamification.ts(41,57): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/students/get-student-achievements.ts(2,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/students/get-student-achievements.ts(3,30): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/students/get-student-achievements.ts(4,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/students/get-student-achievements.ts(19,6): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/students/get-student-assignments.ts(2,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/students/get-student-assignments.ts(3,97): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/students/get-student-assignments.ts(4,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/students/get-student-assignments.ts(19,6): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/students/get-student-assignments.ts(35,30): error TS7006: Parameter 'a' implicitly has an 'any' type.
+packages/domain/src/students/get-student-class-analytics.ts(2,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/students/get-student-class-analytics.ts(7,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/students/get-student-class-analytics.ts(8,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/students/get-student-class-analytics.ts(24,40): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/students/get-student-class-analytics.ts(28,39): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/students/get-student-class-analytics.ts(31,37): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/students/get-student-class-analytics.ts(32,54): error TS7006: Parameter 'r' implicitly has an 'any' type.
+packages/domain/src/students/get-student-class-analytics.ts(32,111): error TS18046: 'a' is of type 'unknown'.
+packages/domain/src/students/get-student-class-analytics.ts(32,121): error TS18046: 'b' is of type 'unknown'.
+packages/domain/src/students/get-student-class-analytics.ts(33,40): error TS18046: 'l' is of type 'unknown'.
+packages/domain/src/students/get-student-class-analytics.ts(35,57): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/students/get-student-class-analytics.ts(36,55): error TS7006: Parameter 'c' implicitly has an 'any' type.
+packages/domain/src/students/get-student-class-analytics.ts(38,63): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/students/get-student-class-analytics.ts(43,72): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/students/get-student-class-analytics.ts(45,65): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/students/get-student-class-analytics.ts(46,52): error TS7006: Parameter 'r' implicitly has an 'any' type.
+packages/domain/src/students/get-student-class-analytics.ts(47,77): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/students/get-student-class-analytics.ts(52,47): error TS18046: 'lesson' is of type 'unknown'.
+packages/domain/src/students/get-student-class-analytics.ts(53,42): error TS2339: Property 'status' does not exist on type '{}'.
+packages/domain/src/students/get-student-class-analytics.ts(53,93): error TS2339: Property 'status' does not exist on type '{}'.
+packages/domain/src/students/get-student-class-analytics.ts(54,41): error TS2339: Property 'mostRecentScorePercentage' does not exist on type '{}'.
+packages/domain/src/students/get-student-class-analytics.ts(55,24): error TS18046: 'lesson' is of type 'unknown'.
+packages/domain/src/students/get-student-class-analytics.ts(55,48): error TS18046: 'lesson' is of type 'unknown'.
+packages/domain/src/students/get-student-class-analytics.ts(55,75): error TS18046: 'lesson' is of type 'unknown'.
+packages/domain/src/students/get-student-class-analytics.ts(55,195): error TS2339: Property 'attemptsCount' does not exist on type '{}'.
+packages/domain/src/students/get-student-class-analytics.ts(55,245): error TS2339: Property 'totalTimeSpentSeconds' does not exist on type '{}'.
+packages/domain/src/students/get-student-class-analytics.ts(64,49): error TS18046: 'lesson' is of type 'unknown'.
+packages/domain/src/students/get-student-class-analytics.ts(66,45): error TS7006: Parameter 'r' implicitly has an 'any' type.
+packages/domain/src/students/get-student-gamification-profile.ts(2,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/students/get-student-gamification-profile.ts(3,52): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/students/get-student-gamification-profile.ts(4,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/students/get-student-gamification-profile.ts(37,34): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/students/get-student-gamification-profile.ts(39,32): error TS2339: Property 'insert' does not exist on type 'TenantDB'.
+packages/domain/src/students/get-student-gamification-profile.ts(44,39): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/students/get-student-lesson-analytics.ts(2,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/students/get-student-lesson-analytics.ts(6,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/students/get-student-lesson-analytics.ts(7,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/students/get-student-lesson-analytics.ts(23,36): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/students/get-student-lesson-analytics.ts(28,36): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/students/get-student-lesson-analytics.ts(28,161): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/students/get-student-lesson-analytics.ts(32,35): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/students/get-student-lesson-analytics.ts(35,40): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/students/get-student-lesson-analytics.ts(36,42): error TS7006: Parameter 'q' implicitly has an 'any' type.
+packages/domain/src/students/get-student-lesson-analytics.ts(38,69): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/students/get-student-lesson-analytics.ts(42,35): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/students/get-student-lesson-analytics.ts(43,36): error TS7006: Parameter 'a' implicitly has an 'any' type.
+packages/domain/src/students/get-student-lesson-analytics.ts(44,56): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/students/get-student-lesson-analytics.ts(47,51): error TS7006: Parameter 'q' implicitly has an 'any' type.
+packages/domain/src/students/get-student-lesson-analytics.ts(49,40): error TS7006: Parameter 'attempt' implicitly has an 'any' type.
+packages/domain/src/students/get-student-lesson-analytics.ts(58,162): error TS2339: Property 'text' does not exist on type '{}'.
+packages/domain/src/students/get-student-lesson-analytics.ts(58,191): error TS2339: Property 'type' does not exist on type '{}'.
+packages/domain/src/students/get-student-lesson-analytics.ts(58,253): error TS2339: Property 'correctAnswer' does not exist on type '{}'.
+packages/domain/src/students/get-student-lesson-analytics.ts(58,349): error TS2339: Property 'points' does not exist on type '{}'.
+packages/domain/src/students/get-student-lesson-progress.ts(2,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/students/get-student-lesson-progress.ts(6,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/students/get-student-lesson-progress.ts(7,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/students/get-student-lesson-progress.ts(23,36): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/students/get-student-lesson-progress.ts(26,35): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/students/get-student-lesson-progress.ts(31,8): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/students/get-student-lesson-progress.ts(37,22): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/students/get-student-lesson-progress.ts(43,22): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/students/get-student-lesson-progress.ts(53,39): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/students/get-student-mastery-profile.ts(2,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/students/get-student-mastery-profile.ts(3,85): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/students/get-student-mastery-profile.ts(4,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/students/get-student-mastery-profile.ts(25,36): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/students/get-student-mastery-profile.ts(28,39): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/students/get-student-mastery-profile.ts(34,46): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/students/get-student-mastery-profile.ts(36,48): error TS7006: Parameter 's' implicitly has an 'any' type.
+packages/domain/src/students/get-student-mastery-profile.ts(44,6): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/students/index.ts(2,54): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/students/index.ts(3,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/students/index.ts(48,6): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/students/index.ts(97,6): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/students/index.ts(114,13): error TS2339: Property 'transaction' does not exist on type 'TenantDB'.
+packages/domain/src/students/index.ts(114,32): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+packages/domain/src/teachers/get-teacher-dashboard.ts(2,20): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/teachers/get-teacher-dashboard.ts(6,8): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/teachers/get-teacher-dashboard.ts(7,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/teachers/get-teacher-dashboard.ts(20,41): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/teachers/get-teacher-dashboard.ts(23,40): error TS7006: Parameter 'c' implicitly has an 'any' type.
+packages/domain/src/teachers/get-teacher-dashboard.ts(38,37): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/teachers/get-teacher-dashboard.ts(40,38): error TS7006: Parameter 's' implicitly has an 'any' type.
+packages/domain/src/teachers/get-teacher-dashboard.ts(41,40): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/teachers/get-teacher-dashboard.ts(42,45): error TS7006: Parameter 'c' implicitly has an 'any' type.
+packages/domain/src/teachers/get-teacher-dashboard.ts(44,40): error TS7006: Parameter 'c' implicitly has an 'any' type.
+packages/domain/src/teachers/get-teacher-dashboard.ts(45,73): error TS7006: Parameter 's' implicitly has an 'any' type.
+packages/domain/src/teachers/get-teacher-dashboard.ts(45,76): error TS7006: Parameter 'c' implicitly has an 'any' type.
+packages/domain/src/teachers/get-teacher-dashboard.ts(52,35): error TS2339: Property 'selectDistinct' does not exist on type 'TenantDB'.
+packages/domain/src/teachers/get-teacher-dashboard.ts(54,31): error TS2339: Property 'selectDistinct' does not exist on type 'TenantDB'.
+packages/domain/src/teachers/get-teacher-dashboard.ts(54,190): error TS7006: Parameter 'e' implicitly has an 'any' type.
+packages/domain/src/teachers/get-teacher-dashboard.ts(59,35): error TS2339: Property 'selectDistinct' does not exist on type 'TenantDB'.
+packages/domain/src/teachers/get-teacher-dashboard.ts(61,38): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/teachers/get-teacher-dashboard.ts(61,586): error TS7006: Parameter 'e' implicitly has an 'any' type.
+packages/domain/src/teachers/get-teacher-dashboard.ts(62,27): error TS7006: Parameter 'c' implicitly has an 'any' type.
+packages/domain/src/teachers/queries.ts(2,54): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/teachers/queries.ts(3,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/teachers/queries.ts(28,6): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/teachers/queries.ts(63,6): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/tenant-registry.ts(91,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/tenant-registry.ts(156,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/tenant-registry.ts(244,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+packages/domain/src/users/index.ts(1,23): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/users/mutations.ts(2,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/users/mutations.ts(4,23): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/users/mutations.ts(39,6): error TS2339: Property 'update' does not exist on type 'TenantDB'.
+packages/domain/src/users/permissions.ts(1,56): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/users/queries.ts(2,58): error TS2307: Cannot find module '@reading-advantage/auth' or its corresponding type declarations.
+packages/domain/src/users/queries.ts(4,23): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.
+packages/domain/src/users/queries.ts(75,6): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/users/queries.ts(131,6): error TS2339: Property 'select' does not exist on type 'TenantDB'.
+packages/domain/src/users/schema.ts(1,23): error TS2307: Cannot find module '@reading-advantage/db/schema' or its corresponding type declarations.

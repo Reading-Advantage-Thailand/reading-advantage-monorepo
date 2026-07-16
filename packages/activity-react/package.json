@@ -12,8 +12,10 @@
   },
   "files": ["dist", "README.md"],
   "scripts": {
-    "build": "node scripts/clean-dist.mjs && tsc",
-    "check-types": "pnpm build && tsc --noEmit -p tsconfig.test.json",
+    "build": "node scripts/clean-dist.mjs && node ../../node_modules/typescript7/bin/tsc",
+    "check-types": "node ../../scripts/run-ts7-check-types.mjs --noEmit && node ../../scripts/run-ts7-check-types.mjs --noEmit -p tsconfig.test.json",
+    "check-types:compat": "node ../../node_modules/typescript/bin/tsc --noEmit && node ../../node_modules/typescript/bin/tsc --noEmit -p tsconfig.test.json",
+    "check-types:rollback": "node ../../node_modules/typescript/bin/tsc --noEmit && node ../../node_modules/typescript/bin/tsc --noEmit -p tsconfig.test.json",
     "lint": "eslint src/",
     "test": "pnpm build && vitest run --maxWorkers=1",
     "test:coverage": "pnpm build && vitest run --coverage --maxWorkers=1"

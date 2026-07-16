@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "track": "typescript7_native_migration_20260710",
+  "phase": "Phase 3d: check-types cutover",
+  "status": "accepted_reviewed_rendering_difference",
+  "workspace": {
+    "name": "primary-advantage",
+    "path": "apps/primary-advantage",
+    "acceptance_order": 10
+  },
+  "scripts": {
+    "check-types": "node ../../node_modules/typescript7/bin/tsc --noEmit",
+    "check-types:compat": "node ../../node_modules/typescript/bin/tsc --noEmit",
+    "check-types:rollback": "node ../../node_modules/typescript/bin/tsc --noEmit"
+  },
+  "results": {
+    "native": { "version": "7.0.2", "exit_status": 1, "stdout_line_count": 368, "stdout_sha256": "c9cca07400a69c5ef76350cdf03e48dd3f0b3c6c21220856835cd414c25a37fe" },
+    "compat": { "version": "6.0.2", "exit_status": 1, "stdout_line_count": 369, "stdout_sha256": "bad057a87e2b2a5945479cbab5447aaf3a82f5d76c8a76cf42c38101e487010e" },
+    "rollback": { "same_exact_command_as": "check-types:compat", "execution": "command identity statically asserted; compatibility execution is the rollback execution proof" }
+  },
+  "resource_observation": {
+    "compatibility_elapsed_seconds": 74,
+    "method": "persistent scoped terminal session",
+    "disposition": "The TypeScript 6 fallback completed successfully under the existing package-script command. No memory flag or compiler configuration was changed."
+  },
+  "parity_disposition": {
+    "accepted_run": "evidence/phase-3c-parity/run-20260715T033929917664Z",
+    "record": "apps/primary-advantage/tsconfig.json",
+    "status": "parity",
+    "unexplained_differences": [],
+    "applied_ledger_entries": 24,
+    "reason": "The reviewed entries cover TypeScript 7's more specific rendering for existing primary diagnostics; there is no unreviewed source-level regression."
+  },
+  "non_goals": [
+    "Existing Primary diagnostics remain open technical debt.",
+    "No Primary emit or build compiler is switched before Phase 3e."
+  ]
+}

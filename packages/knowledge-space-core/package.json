@@ -48,8 +48,10 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc",
-    "check-types": "tsc --noEmit",
+    "build": "node ../../node_modules/typescript7/bin/tsc",
+    "check-types": "node ../../scripts/run-ts7-check-types.mjs --noEmit",
+    "check-types:compat": "node ../../node_modules/typescript/bin/tsc --noEmit",
+    "check-types:rollback": "node ../../node_modules/typescript/bin/tsc --noEmit",
     "lint": "eslint src/",
     "test": "pnpm build && vitest run",
     "test:coverage": "pnpm build && vitest run --coverage"

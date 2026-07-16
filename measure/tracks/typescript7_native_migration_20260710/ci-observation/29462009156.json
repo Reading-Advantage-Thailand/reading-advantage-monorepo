@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "record_type": "compacted_ci_artifact_transcript",
+  "run_id": "29462009156",
+  "lane": "ts7-parity-non-blocking",
+  "ts7_gate_exit": 2,
+  "ts6_parity_exit": 2,
+  "cache_state": {
+    "ts6": "0 cached, 55 total",
+    "ts7": "22 cached, 55 total",
+    "ts7_repeat_forced": "0 cached, 55 total"
+  },
+  "order_dependent_diff_count": 0,
+  "compiler_diagnostic_diff_count": 0,
+  "ts7_repeat_exit": 2,
+  "peak_rss_kib": 2704564,
+  "ts7_checkers": 1,
+  "semantic_parity": {
+    "accepted": true,
+    "status": "accepted",
+    "reason": "all_39_configs_passed_with_reviewed_ledger",
+    "exit_status": 0,
+    "config_count": 39,
+    "passed_count": 39,
+    "failed_count": 0,
+    "gate_failures": [],
+    "input_provenance_stable": true,
+    "diagnostic_parity_ledger_sha256": "dee83b9ccafd119b577a84d393fe4259c680324646eba12c4d6429fff75efb04"
+  },
+  "turbo_execution_diagnostics": {
+    "comparable": false,
+    "reason": "turbo_short_circuits_after_different_failing_tasks; use_semantic_parity_for_promotion",
+    "raw_order_dependent_diff_count": 140,
+    "ts6_diagnostic_count": 107,
+    "ts7_diagnostic_count": 9,
+    "ts7_repeat_diagnostic_count": 131
+  },
+  "github_actions_run": {
+    "event": "pull_request",
+    "head_revision": "0e96e231acd329a67c8e423c597613cdc28bd2a0",
+    "workflow_conclusion": "failure",
+    "parity_job_id": 87507304679,
+    "parity_job_conclusion": "success",
+    "parity_job_started_at": "2026-07-16T00:38:58Z",
+    "parity_job_completed_at": "2026-07-16T00:47:17Z"
+  },
+  "source_revision": "5264c1676cbbe1848d674c8218cba427222d3b6c",
+  "artifact": {
+    "github_actions_artifact_id": 8361644727,
+    "archive_download_url": "https://api.github.com/repos/Reading-Advantage-Thailand/reading-advantage-monorepo/actions/artifacts/8361644727/zip",
+    "source_observation_sha256": "f124214aaac7ac9f23865f9e62683d4afc442926dc20814e336b435313d3dec3",
+    "source_observation_size_bytes": 56521,
+    "compaction_note": "This is the second consecutive clean semantic-parity observation. The GitHub PR head and artifact source revision differ because GitHub Actions captured the synthetic merge SHA; both are retained. The raw Turbo count is non-comparable troubleshooting context, while the complete 39-config semantic oracle establishes the promoted zero counts. The independent Primary Advantage build baseline still makes the aggregate workflow red, so this record is not rollout promotion."
+  }
+}

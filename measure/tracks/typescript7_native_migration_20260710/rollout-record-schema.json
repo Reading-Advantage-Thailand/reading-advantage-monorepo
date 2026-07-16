@@ -27,9 +27,13 @@
       "description": "Turbo cache state for this run. HIT, MISS, BYPASSED, or the full parsed JSON object."
     },
     "order_dependent_diff_count": {
-      "type": "integer",
-      "description": "Count of order-dependent diagnostic differences observed in this run. Non-zero indicates nondeterminism that must be investigated.",
+      "type": ["integer", "null"],
+      "description": "Zero only when the complete Phase 3 ledger-aware parity oracle accepted every config and establishes deterministic ordering. Null when the semantic comparison is incomplete or rejected; raw Turbo ordering data remains non-comparable troubleshooting evidence.",
       "minimum": 0
+    },
+    "compiler_diagnostic_diff_count": {
+      "type": ["integer", "null"],
+      "description": "Zero only when the complete Phase 3 ledger-aware parity oracle accepted every config. Null when the semantic comparison is incomplete or rejected."
     },
     "peak_rss_kib": {
       "type": "integer",
