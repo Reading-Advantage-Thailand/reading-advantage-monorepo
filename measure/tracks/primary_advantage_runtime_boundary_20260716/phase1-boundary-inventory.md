@@ -89,6 +89,43 @@ or an endpoint may be intentionally public. `debug/init-roles` is a direct DB
 role-mutation endpoint without an evident session guard and is a separately
 owned security finding unless the API matrix demonstrates an existing boundary.
 
+### API disposition matrix
+
+The following source-level classification is an inventory, not an assertion
+that every endpoint is correctly authorized. Phase 2/3 must make protected
+endpoint behavior explicit and file separately owned findings where that would
+otherwise expand the runtime-boundary repair.
+
+| Classification | Files / behavior | Count |
+|---|---|---:|
+| Direct session guard | `classroom/[id]`, `classroom`, `classrooms`; `debug/auth`, `debug/school`; 12 flashcard route files; `lessons/[articleId]/activity`, `lessons/[articleId]/progress`, `lessons`; `licenses/[id]`, `licenses`; `schools/ranking`, `schools`, `students/leaderboard`; `upload/classes`, `upload/csv`; and seven `users/**` route files call `currentUser`/`getCurrentUser` and locally reject absent users. | 29 |
+| Direct session read without local decision | `users/[id]` PATCH reads `currentUser()` but does not use it for target or role authorization. | 1 |
+| Controller-mediated session guard | Article custom-generation/save/approve routes; assignment progress; classroom available-students/enroll/generate-code/unenroll/students; and student/teacher CRUD routes delegate to controller functions that call `currentUser`. | 14 |
+| Mixed controller behavior | `assignments/[id]`: POST delegates to guarded progress work, while GET calls `fetchAssignmentById` without an evident session check. | 1 |
+| Controller-mediated no local session in called function | Article fetch/generate/question routes, assignment fetch routes, student-assignment fetch, teacher-assignment fetch, and activity-log update delegate to functions without an evident session check. | 8 |
+| Inactive route file | `articles/questions/feedback/route.ts` has no active exported handler. | 1 |
+| Shared auth adapters | `auth/impersonate`, `login`, `logout`, `register`, `reset-password`, and `session` delegate to the shared auth adapter. | 6 |
+| No evident auth | `assistant/lesson-chatbot`, `debug/init-roles`, `send`, and `upload/csv/cleanup` have no evident route-source session guard. | 4 |
+
+Direct role checks are inconsistent:
+`licenses` and `schools` use uppercase values, while `classrooms`, uploads,
+and some school-admin handlers use lower-case role data. This is why the track
+cannot carry both representations into its server guards.
+
+### Protected page/layout disposition
+
+The admin, teacher, system, student, and settings layouts all delegate to
+`components/shared/app-layout.tsx`. That component validates only that a user
+exists; it does not apply a route role group. Consequently the proxy is the
+only current source of page-role enforcement, despite excluding all API routes.
+
+Individual pages have inconsistent checks: several student and teacher pages
+redirect or raise on an absent user, teacher reports has a commented role
+restriction, and the article-read page uses a lower-case substring role check.
+The final Phase 1 matrix must translate each protected group to the selected
+uppercase canonical roles and distinguish intentionally public index/auth
+surfaces from protected routes.
+
 ## Existing tests and gates
 
 Primary has no proxy/session/import-boundary test. Its Vitest configuration
