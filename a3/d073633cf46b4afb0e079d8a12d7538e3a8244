@@ -1,0 +1,11 @@
+Backend Architecture Enforcement Task 1: versioned contract package.
+
+Red evidence: the focused Vitest suite resolved the new workspace package and failed only because src/contracts.ts was absent.
+
+Green evidence: 25/25 contract tests passed; coverage 96.00% lines, 92.85% branches, 100% functions; TypeScript check, production build, Prettier, and focused ESLint all passed. pnpm workspace resolution returned exactly one @reading-advantage/architecture-enforcement package.
+
+Contracts enforce strict v1 schemas, non-vacuous exact/prefix selectors, normalized exact paths without globs/traversal/control characters, accountable owner/rationale, SHA-256 semantic and instance keys, canonical baseline ordering, unique IDs, resolved references, domain agreement, and bidirectional rule/root ownership.
+
+Independent review found and closed vacuous-rule, contradictory-map, unsafe-diagnostic, non-isolated-test, and control-character findings. Final result: PASS.
+
+Graph update was attempted as required; repo-graph detected divergent state and fell back to a full scan, but the long scan did not complete before the interrupted turn. Existing graph stats remain readable while search reports the pre-existing documentation-column compatibility issue.
