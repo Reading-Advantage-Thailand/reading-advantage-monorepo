@@ -1,0 +1,8 @@
+Task 2 ownership map evidence:
+- Red: ownership-map suite failed because ownership-map API was absent; adversarial review later exposed resource-selector fail-open cases.
+- Green: architecture-enforcement suite 33/33; 97.51% lines, 94.44% branches, 100% functions.
+- Static gates: Prettier, TypeScript check/build, and ESLint pass.
+- Compatibility: AI provider guards 13/13 and API boundary 4/4 pass.
+- Independent review: PASS after durable-job, Company Identity credential, provider credential, and exact-exception remediations.
+- Known Gate 1 issue: tenant-coverage has a pre-existing activitySessions REFERENTIAL/nullable-schoolId mismatch; not weakened here.
+- Graph update attempted; repo-graph reported divergent state and fell back to a resource-intensive full scan, which was terminated.
