@@ -8,7 +8,7 @@ import {
 } from "./contracts.js";
 
 const RULE_ID_PATTERN = /^[A-Z][A-Z0-9_]*$/;
-const GLOB_OR_PATH_CHARACTERS = new Set(["*", "?", "{", "}", "[", "]", "\\"]);
+const GLOB_OR_PATH_CHARACTERS = new Set(["*", "?", "{", "}", "\\"]);
 
 /**
  * Detects unsafe glob, path-separator, or control characters.

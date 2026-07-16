@@ -1,10 +1,11 @@
 import { z } from "zod";
+import { compareStableStrings } from "./stable-order.js";
 
 const SHA256_PATTERN = /^[a-f0-9]{64}$/;
 const RULE_ID_PATTERN = /^[A-Z][A-Z0-9_]*$/;
 const STABLE_ID_PATTERN = /^[a-z][a-z0-9-]*$/;
 const OWNER_PATTERN = /^[a-z0-9][a-z0-9_-]*$/;
-const GLOB_CHARACTERS = new Set(["*", "?", "[", "]", "{", "}", "!"]);
+const GLOB_CHARACTERS = new Set(["*", "?", "{", "}", "!"]);
 
 /** Architecture boundary domain supported by the first enforcement ruleset. */
 export const architectureDomainSchema = z.enum(["database", "provider"]);
@@ -347,9 +348,7 @@ export const architectureBaselineSchema = z
         path: ["entries"],
       });
     }
-    const sortedKeys = [...keys].sort((left, right) =>
-      left.localeCompare(right),
-    );
+    const sortedKeys = [...keys].sort(compareStableStrings);
     if (keys.some((key, index) => key !== sortedKeys[index])) {
       context.addIssue({
         code: z.ZodIssueCode.custom,
@@ -401,6 +400,16 @@ export const architectureConfigSchema = z
           path: [field],
         });
       }
+    }
+    const exceptionTargets = config.exactExceptions.map(
+      (exception) => `${exception.ruleId}:${exception.sourcePath}`,
+    );
+    if (new Set(exceptionTargets).size !== exceptionTargets.length) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "exact exception rule and source targets must be unique",
+        path: ["exactExceptions"],
+      });
     }
 
     const rulesById = new Map(config.rules.map((rule) => [rule.id, rule]));

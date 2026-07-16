@@ -32,10 +32,10 @@ describe("architecture ownership map", () => {
     expect(
       map.exactExceptions.every(
         (exception) =>
-          !/[*!?{}[\]]/.test(exception.sourcePath) &&
-          exception.sourcePath.endsWith(".ts") &&
+          !/[*!?{}]/.test(exception.sourcePath) &&
           (exception.sourcePath.includes("/__tests__/") ||
-            exception.sourcePath.includes("/fixtures/")),
+            exception.sourcePath.includes("/fixtures/") ||
+            /\.(?:test|spec)\.[cm]?[jt]sx?$/.test(exception.sourcePath)),
       ),
     ).toBe(true);
   });

@@ -4,6 +4,7 @@
   "private": true,
   "packageManager": "pnpm@11.8.0",
   "scripts": {
+    "architecture:baseline:validate": "pnpm --filter @reading-advantage/architecture-enforcement exec tsx src/baseline-cli.ts",
     "architecture:inventory": "pnpm --filter @reading-advantage/architecture-enforcement exec tsx src/cli.ts",
     "build": "turbo run build",
     "dev": "docker compose up -d && turbo run dev",

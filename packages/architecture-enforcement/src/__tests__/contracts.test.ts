@@ -147,6 +147,18 @@ describe("architecture enforcement contracts", () => {
     ).toThrow();
   });
 
+  it("accepts an exact Next.js dynamic-route test path without treating brackets as a wildcard", () => {
+    const dynamicRouteException = {
+      ...databaseException,
+      sourcePath:
+        "apps/science-advantage/app/api/classes/[classId]/route.integration.test.ts",
+    };
+
+    expect(exactExceptionSchema.parse(dynamicRouteException)).toEqual(
+      dynamicRouteException,
+    );
+  });
+
   it("rejects unversioned, future-version, malformed, and unknown contract fields", () => {
     expect(() =>
       architectureRuleSchema.parse({ ...databaseRule, schemaVersion: 2 }),
@@ -202,6 +214,15 @@ describe("architecture enforcement contracts", () => {
       architectureConfigSchema.parse({
         ...validConfig,
         exactExceptions: [databaseException, databaseException],
+      }),
+    ).toThrow();
+    expect(() =>
+      architectureConfigSchema.parse({
+        ...validConfig,
+        exactExceptions: [
+          databaseException,
+          { ...databaseException, id: "duplicate-target" },
+        ],
       }),
     ).toThrow();
   });

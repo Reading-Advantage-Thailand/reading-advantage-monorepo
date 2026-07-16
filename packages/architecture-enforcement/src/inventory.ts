@@ -10,6 +10,7 @@ import {
   type ArchitectureConfig,
   type ArchitectureRule,
 } from "./contracts.js";
+import { compareStableStrings } from "./stable-order.js";
 
 const SOURCE_FILE_PATTERN = /\.[cm]?[jt]sx?$/;
 const GENERATED_WORKSPACE_DIRECTORIES = new Set([
@@ -192,7 +193,7 @@ function selectSourceFiles(
         !isIgnoredPath(path) &&
         SOURCE_FILE_PATTERN.test(path),
     )
-    .sort((left, right) => left.localeCompare(right));
+    .sort(compareStableStrings);
 }
 
 /**
@@ -389,12 +390,15 @@ function extractFacts(
  */
 function compareFacts(left: InventoryFact, right: InventoryFact): number {
   return (
-    left.sourcePath.localeCompare(right.sourcePath) ||
+    compareStableStrings(left.sourcePath, right.sourcePath) ||
     left.line - right.line ||
     left.column - right.column ||
-    left.kind.localeCompare(right.kind) ||
-    (left.importSpecifier ?? "").localeCompare(right.importSpecifier ?? "") ||
-    (left.resource ?? "").localeCompare(right.resource ?? "")
+    compareStableStrings(left.kind, right.kind) ||
+    compareStableStrings(
+      left.importSpecifier ?? "",
+      right.importSpecifier ?? "",
+    ) ||
+    compareStableStrings(left.resource ?? "", right.resource ?? "")
   );
 }
 
@@ -471,13 +475,16 @@ function compareDirectViolationCandidates(
   right: DirectViolationCandidate,
 ): number {
   return (
-    left.ruleId.localeCompare(right.ruleId) ||
-    left.sourcePath.localeCompare(right.sourcePath) ||
+    compareStableStrings(left.ruleId, right.ruleId) ||
+    compareStableStrings(left.sourcePath, right.sourcePath) ||
     left.line - right.line ||
     left.column - right.column ||
-    left.evidenceKind.localeCompare(right.evidenceKind) ||
-    (left.importSpecifier ?? "").localeCompare(right.importSpecifier ?? "") ||
-    (left.resource ?? "").localeCompare(right.resource ?? "")
+    compareStableStrings(left.evidenceKind, right.evidenceKind) ||
+    compareStableStrings(
+      left.importSpecifier ?? "",
+      right.importSpecifier ?? "",
+    ) ||
+    compareStableStrings(left.resource ?? "", right.resource ?? "")
   );
 }
 
@@ -609,7 +616,7 @@ export async function inventoryRepository(
     filesScanned: sourcePaths.length,
     facts: facts.sort(compareFacts),
     parseErrors: parseErrors.sort((left, right) =>
-      left.sourcePath.localeCompare(right.sourcePath),
+      compareStableStrings(left.sourcePath, right.sourcePath),
     ),
   });
 }

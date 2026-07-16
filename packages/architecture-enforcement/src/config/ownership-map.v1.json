@@ -427,6 +427,806 @@
       "sourcePath": "packages/storage/src/__tests__/wave2-storage-contract.test.ts",
       "owner": "storage-platform",
       "rationale": "This exact contract test injects AWS failures to prove provider errors do not cross the adapter boundary."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-5b87e89bda6a54dd",
+      "ruleId": "AI_PROVIDER_BOUNDARY",
+      "sourcePath": "apps/codecamp-advantage/app/api/chat/__tests__/streaming-protocol.test.ts",
+      "owner": "codecamp-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for AI_PROVIDER_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-d7719f8a6b4938cc",
+      "ruleId": "AI_PROVIDER_BOUNDARY",
+      "sourcePath": "apps/science-advantage/lib/ai/image-generator.class.test.ts",
+      "owner": "science-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for AI_PROVIDER_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-f5b9b3692bd31685",
+      "ruleId": "AI_PROVIDER_BOUNDARY",
+      "sourcePath": "apps/science-advantage/lib/ai/image-generator.test.ts",
+      "owner": "science-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for AI_PROVIDER_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-ac1b73f90207d905",
+      "ruleId": "AI_PROVIDER_BOUNDARY",
+      "sourcePath": "packages/ai/src/__tests__/phase-3-openai-provider.test.ts",
+      "owner": "ai-platform",
+      "rationale": "Reviewed exact test or fixture exception for AI_PROVIDER_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-5819fbb9d2aa46ee",
+      "ruleId": "AI_PROVIDER_BOUNDARY",
+      "sourcePath": "packages/ai/src/__tests__/phase-5-provider-selector.test.ts",
+      "owner": "ai-platform",
+      "rationale": "Reviewed exact test or fixture exception for AI_PROVIDER_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-0415062dcd2b1df6",
+      "ruleId": "AI_PROVIDER_BOUNDARY",
+      "sourcePath": "packages/ai/src/__tests__/phase-multimodal-google.test.ts",
+      "owner": "ai-platform",
+      "rationale": "Reviewed exact test or fixture exception for AI_PROVIDER_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-ce993642a4b73573",
+      "ruleId": "AI_PROVIDER_BOUNDARY",
+      "sourcePath": "packages/ai/src/__tests__/phase-multimodal-openrouter.test.ts",
+      "owner": "ai-platform",
+      "rationale": "Reviewed exact test or fixture exception for AI_PROVIDER_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-706e4d9362249627",
+      "ruleId": "AI_PROVIDER_BOUNDARY",
+      "sourcePath": "packages/ai/src/client.test.ts",
+      "owner": "ai-platform",
+      "rationale": "Reviewed exact test or fixture exception for AI_PROVIDER_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-726dbdb511ed3b5f",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/codecamp-advantage/lib/__tests__/tutorial-capture-lease.test.ts",
+      "owner": "codecamp-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-3333fece7545e955",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/marketing/app/__tests__/helpers/testDb.ts",
+      "owner": "marketing-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-f17c00a43d9bcbe6",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/marketing/app/__tests__/phase-1-boot.test.ts",
+      "owner": "marketing-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-e5e601a7e04056ce",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/marketing/app/__tests__/phase-3-settings-adversarial.test.ts",
+      "owner": "marketing-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-8428a526ae7c96b8",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/marketing/app/__tests__/phase-3-settings.test.ts",
+      "owner": "marketing-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-6b85b10fdd19966f",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/marketing/app/__tests__/phase-4-campaigns.test.ts",
+      "owner": "marketing-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-da9234e51a914c6e",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/marketing/app/__tests__/phase-5-topics.test.ts",
+      "owner": "marketing-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-8e0cb0b332769ba3",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/marketing/app/__tests__/phase-6-script.test.ts",
+      "owner": "marketing-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-915d4224e49c1675",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/marketing/app/__tests__/phase-8-projects-live.test.ts",
+      "owner": "marketing-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-a73bd7f95e2b48ac",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/marketing/app/__tests__/phase-8-projects.test.ts",
+      "owner": "marketing-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-d75769cfb6a33933",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/marketing/app/__tests__/phase-w3-ai-adapter.test.ts",
+      "owner": "marketing-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-e6ef2396266ab3b7",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/marketing/app/__tests__/phase-w3-campaigns-auth.test.ts",
+      "owner": "marketing-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-d111f311b4592955",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/marketing/app/__tests__/phase-w3-input-validation.test.ts",
+      "owner": "marketing-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-5fd21615c4b6ea90",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/marketing/app/__tests__/phase-w3-settings-auth.test.ts",
+      "owner": "marketing-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-8150acb7529c4cb9",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/marketing/app/__tests__/phase-w3-video-auth.test.ts",
+      "owner": "marketing-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-d8f20fdf748e639d",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/primary-advantage/app/api/flashcard/__tests__/flashcard-schema-contract.test.ts",
+      "owner": "primary-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-d3ef271f262b7e9a",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/primary-advantage/server/models/__tests__/helpers/testDb.smoke.test.ts",
+      "owner": "primary-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-dc765412e3fc040b",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/primary-advantage/server/models/__tests__/helpers/testDb.ts",
+      "owner": "primary-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-cb38b53fe28e2add",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/primary-advantage/server/models/__tests__/siblingModels.behavior.test.ts",
+      "owner": "primary-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-e2793c9ae799979d",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/primary-advantage/server/models/__tests__/studentModel.pagination.test.ts",
+      "owner": "primary-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-d8a984a64b7547b7",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/reading-advantage/__test__/assignment-prediction-service.test.ts",
+      "owner": "reading-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-3dc29754632a2260",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/reading-advantage/__test__/dashboard-summary-controller.test.ts",
+      "owner": "reading-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-b8525862a8abb374",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/reading-advantage/__test__/query-optimizer.test.ts",
+      "owner": "reading-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-eca3f23661640d5e",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/reading-advantage/__tests__/controllers/admin-license-scope-red.test.ts",
+      "owner": "reading-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-b49cd618b534ddf2",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/reading-advantage/__tests__/controllers/domain-migration-red.test.ts",
+      "owner": "reading-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-53824abea36062c4",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/reading-advantage/__tests__/controllers/reporting-metrics-red.test.ts",
+      "owner": "reading-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-a1f2f1c68e19a8c0",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/reading-advantage/__tests__/controllers/zod-validation-red.test.ts",
+      "owner": "reading-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-3cf2d4e3b4ba779d",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/reading-advantage/__tests__/learning-loop/assignment-lifecycle-red.test.ts",
+      "owner": "reading-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-4165a09a8ea5c8d0",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/science-advantage/app/api/admin/dsar/export/dsar-export-e2e.integration.test.ts",
+      "owner": "science-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-85eb545f09e91d5e",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/science-advantage/app/api/admin/dsar/export/route.integration.test.ts",
+      "owner": "science-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-fe540a90ee0f4e0f",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/science-advantage/app/api/ai/recommendations/route.integration.test.ts",
+      "owner": "science-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-964d6576ff74159a",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/science-advantage/app/api/ai/update-mastery/route.integration.test.ts",
+      "owner": "science-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-d35b156ef41efa35",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/science-advantage/app/api/classes/[classId]/analytics/overview/route.integration.test.ts",
+      "owner": "science-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-5e21f90375252c08",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/science-advantage/app/api/classes/[classId]/assignments/route.integration.test.ts",
+      "owner": "science-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-915a54f0e28f24bd",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/science-advantage/app/api/classes/[classId]/curriculum/route.integration.test.ts",
+      "owner": "science-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-af6c8bb98da81307",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/science-advantage/app/api/classes/[classId]/lessons/[lessonId]/analytics/route.integration.test.ts",
+      "owner": "science-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-700a4c579f14b380",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/science-advantage/app/api/classes/[classId]/roster/route.integration.test.ts",
+      "owner": "science-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-50b4f731785d7a96",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/science-advantage/app/api/classes/[classId]/route.integration.test.ts",
+      "owner": "science-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-744284f6c77d66bb",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/science-advantage/app/api/classes/join/route.integration.test.ts",
+      "owner": "science-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-29116afc26e09030",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/science-advantage/app/api/classes/route.integration.test.ts",
+      "owner": "science-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-29fa8af3869fe50a",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/science-advantage/app/api/lessons/[lessonSlug]/quiz/route.integration.test.ts",
+      "owner": "science-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-63783d5c4ba334af",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/science-advantage/app/api/lessons/[lessonSlug]/route.integration.test.ts",
+      "owner": "science-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-8db60fcf16090ec0",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/science-advantage/app/api/student/classes/route.integration.test.ts",
+      "owner": "science-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-3dde08ae06772ca1",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/science-advantage/app/api/students/[studentId]/achievements/route.integration.test.ts",
+      "owner": "science-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-89597551ae30a01b",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/science-advantage/app/api/students/[studentId]/assignments/route.integration.test.ts",
+      "owner": "science-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-21b82fc92b55d833",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/science-advantage/app/api/students/[studentId]/classes/[classId]/analytics/route.integration.test.ts",
+      "owner": "science-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-6b55ef0567a89806",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/science-advantage/app/api/students/[studentId]/gamification-profile/route.integration.test.ts",
+      "owner": "science-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-8c1a5c9a988b72df",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/science-advantage/app/api/students/[studentId]/lessons/[lessonId]/analytics/route.integration.test.ts",
+      "owner": "science-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-ec14fc2fd6852f20",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/science-advantage/app/api/students/[studentId]/lessons/[lessonId]/progress/route.integration.test.ts",
+      "owner": "science-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-bf5269e2590370b6",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/science-advantage/app/api/students/[studentId]/mastery-profile/route.integration.test.ts",
+      "owner": "science-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-0692c9ed25f04f97",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/science-advantage/app/api/students/me/gamification/route.integration.test.ts",
+      "owner": "science-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-54022bb5daf981d8",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/science-advantage/app/api/teachers/classes/[classId]/intervention-alerts/route.integration.test.ts",
+      "owner": "science-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-68309fa0286c8cf9",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/science-advantage/app/api/teachers/dashboard/route.integration.test.ts",
+      "owner": "science-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-bcc1169a04637c6c",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/science-advantage/lib/__tests__/proxy.integration.test.ts",
+      "owner": "science-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-73a42360d0e1431a",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/science-advantage/lib/ai/recommendation-context.integration.test.ts",
+      "owner": "science-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-57d000347ce040ac",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/science-advantage/lib/auth/server.integration.test.ts",
+      "owner": "science-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-a526557470ad87e1",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/science-advantage/lib/auth/session.integration.test.ts",
+      "owner": "science-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-3ba6189f73a2eb78",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/science-advantage/lib/gamification/badges.integration.test.ts",
+      "owner": "science-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-83fe677fab246fb5",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/science-advantage/lib/gamification/streak.integration.test.ts",
+      "owner": "science-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-61a056754e34d11d",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/science-advantage/lib/gamification/xp.integration.test.ts",
+      "owner": "science-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-f00ee241ace40b4c",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/science-advantage/lib/schemas/__tests__/curriculum-identifiers.integration.test.ts",
+      "owner": "science-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-9b4ab291328d437b",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/science-advantage/lib/services/classes/get-class-detail.integration.test.ts",
+      "owner": "science-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-fee715791f31ffcf",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/science-advantage/lib/services/classes/get-student-classes.integration.test.ts",
+      "owner": "science-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-a1cacd697546c9f7",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/science-advantage/lib/services/mastery/mastery-worker.integration.test.ts",
+      "owner": "science-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-2fe721e2605f2697",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/science-advantage/lib/services/mastery/standard-mastery.integration.test.ts",
+      "owner": "science-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-2dee966be4105698",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/science-advantage/lib/utils/generateJoinCode.integration.test.ts",
+      "owner": "science-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-8dfe74101df7b01d",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "apps/science-advantage/src/__tests__/rate-limit-login.integration.test.ts",
+      "owner": "science-advantage-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-6c2d7a662b86fb1a",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "packages/api/src/__tests__/adversarial-admin-jobs.test.ts",
+      "owner": "api-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-b98d28920251fe37",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "packages/api/src/__tests__/articles-router.test.ts",
+      "owner": "api-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-3fe9585bd533545f",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "packages/api/src/__tests__/assignments-router.test.ts",
+      "owner": "api-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-da189aa5e1aac602",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "packages/api/src/__tests__/auth-router.test.ts",
+      "owner": "api-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-ef4db08ad0b9ac6a",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "packages/api/src/__tests__/classes-router.test.ts",
+      "owner": "api-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-8a85755274cebf21",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "packages/api/src/__tests__/codecamp-review-router.test.ts",
+      "owner": "api-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-9017b2940ee6c079",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "packages/api/src/__tests__/codecamp-router.test.ts",
+      "owner": "api-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-8e9fcaa95106a9a1",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "packages/api/src/__tests__/phase-4-admin-list-dead-review-jobs.test.ts",
+      "owner": "api-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-ad7c1cf7d85cc99a",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "packages/api/src/__tests__/phase-4-admin-requeue-review-job.test.ts",
+      "owner": "api-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-bf7ae40c1a34a680",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "packages/api/src/__tests__/progress-router.test.ts",
+      "owner": "api-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-1d9c9bfd15562d36",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "packages/api/src/__tests__/reports.test.ts",
+      "owner": "api-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-17f53521a084ce1f",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "packages/api/src/__tests__/sales-auth-context.test.ts",
+      "owner": "api-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-245ff48c7d94d7af",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "packages/api/src/__tests__/sales-router-audio-contract.test.ts",
+      "owner": "api-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-15e8e5d4ebd309f7",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "packages/api/src/__tests__/sales-router.test.ts",
+      "owner": "api-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-4651270433982e31",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "packages/api/src/__tests__/students-router.test.ts",
+      "owner": "api-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-bdb240f1b8f51048",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "packages/api/src/__tests__/users.test.ts",
+      "owner": "api-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-7080befc971b2cbf",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "packages/auth/src/__tests__/audit-retention-boundary.integration.test.ts",
+      "owner": "auth-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-2afb83477d547368",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "packages/auth/src/__tests__/audit-retention-job.integration.test.ts",
+      "owner": "auth-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-48eb2bc699789918",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "packages/auth/src/__tests__/audit-retention.integration.test.ts",
+      "owner": "auth-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-5b96f48aaf84888f",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "packages/auth/src/__tests__/audit.test.ts",
+      "owner": "auth-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-5d684a80985fd99e",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "packages/auth/src/__tests__/session.test.ts",
+      "owner": "auth-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-da51959c5d437c03",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "packages/webhooks/src/__tests__/adversarial-claim-cas.test.ts",
+      "owner": "webhooks-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-2a89a5d6b476fbc9",
+      "ruleId": "DATABASE_BOUNDARY",
+      "sourcePath": "packages/webhooks/src/__tests__/adversarial-enqueue.test.ts",
+      "owner": "webhooks-platform",
+      "rationale": "Reviewed exact test or fixture exception for DATABASE_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-bf09a271e7a2f9cc",
+      "ruleId": "INTEGRATION_PROVIDER_BOUNDARY",
+      "sourcePath": "packages/integrations/github/src/__tests__/factory.test.ts",
+      "owner": "github-integrations",
+      "rationale": "Reviewed exact test or fixture exception for INTEGRATION_PROVIDER_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reviewed-7310f010f6ac84ca",
+      "ruleId": "INTEGRATION_PROVIDER_BOUNDARY",
+      "sourcePath": "packages/webhooks/src/__tests__/github-client.test.ts",
+      "owner": "webhooks-platform",
+      "rationale": "Reviewed exact test or fixture exception for INTEGRATION_PROVIDER_BOUNDARY; production code remains subject to the rule."
     }
   ],
   "baselineFiles": {

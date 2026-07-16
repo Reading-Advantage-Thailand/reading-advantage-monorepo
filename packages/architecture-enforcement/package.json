@@ -17,6 +17,7 @@
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
     "check-types": "tsc --noEmit",
+    "baseline:validate": "tsx src/baseline-cli.ts",
     "inventory": "tsx src/cli.ts",
     "lint": "eslint src/",
     "test": "vitest run",
