@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_type": "compacted_ci_artifact_transcript",
+  "run_id": "29461114234",
+  "lane": "ts7-parity-non-blocking",
+  "ts7_gate_exit": 2,
+  "ts6_parity_exit": 2,
+  "cache_state": {
+    "ts6": "0 cached, 55 total",
+    "ts7": "22 cached, 55 total",
+    "ts7_repeat_forced": "0 cached, 55 total"
+  },
+  "order_dependent_diff_count": 0,
+  "compiler_diagnostic_diff_count": 0,
+  "ts7_repeat_exit": 2,
+  "peak_rss_kib": 2695400,
+  "ts7_checkers": 1,
+  "semantic_parity": {
+    "accepted": true,
+    "status": "accepted",
+    "reason": "all_39_configs_passed_with_reviewed_ledger",
+    "exit_status": 0,
+    "config_count": 39,
+    "passed_count": 39,
+    "failed_count": 0,
+    "gate_failures": [],
+    "input_provenance_stable": true,
+    "diagnostic_parity_ledger_sha256": "dee83b9ccafd119b577a84d393fe4259c680324646eba12c4d6429fff75efb04"
+  },
+  "turbo_execution_diagnostics": {
+    "comparable": false,
+    "reason": "turbo_short_circuits_after_different_failing_tasks; use_semantic_parity_for_promotion",
+    "raw_order_dependent_diff_count": 164,
+    "ts6_diagnostic_count": 33,
+    "ts7_diagnostic_count": 33,
+    "ts7_repeat_diagnostic_count": 131
+  },
+  "source_revision": "871e891c7fbb0418144461de3ac55d83a2a3cffb",
+  "artifact": {
+    "github_actions_artifact_id": 8361296852,
+    "archive_download_url": "https://api.github.com/repos/Reading-Advantage-Thailand/reading-advantage-monorepo/actions/artifacts/8361296852/zip",
+    "source_observation_sha256": "34e608d0ec9783088d18a9c306610c7317a014d0140f7be02228108136cb167c",
+    "source_observation_size_bytes": 43492,
+    "compaction_note": "This is the first clean semantic-parity observation after removing the stale ledger pair. All 39 configs passed with stable provenance. The raw Turbo diff is retained only as non-comparable execution context because Turbo short-circuits after different failing tasks. The separate primary-advantage build failure in this workflow remains a pre-existing full-gate baseline item, so this record is not promotion by itself."
+  }
+}

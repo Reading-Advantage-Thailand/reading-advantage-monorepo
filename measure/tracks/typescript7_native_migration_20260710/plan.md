@@ -119,6 +119,15 @@
     artifact is retained by ID `8361069260`; the obsolete ledger pair was removed
     before the next observation. This record predates the semantic-order correction
     and is explicitly not promotion evidence.
+  - 2026-07-16: Recorded rejected observation `29460878641` (artifact `8361223620`),
+    the first run using the semantic-order writer. It correctly reported null
+    promotion counts for a 38/39 stale-ledger rejection; its raw Turbo difference of
+    42 remains non-comparable diagnostic context only.
+  - 2026-07-16: Recorded the first clean semantic-parity observation `29461114234`
+    (artifact `8361296852`): all 39 configs passed with stable provenance, the
+    semantic compiler and order-dependent counts are both zero, and `TS7_CHECKERS=1`.
+    This is observation 1/3, not promotion: the separate primary-advantage build
+    baseline still prevents the required full-gate verdict.
   - [ ] Promote the TypeScript 7 lane only after parity and full gates pass.
   - [ ] Observe and record at least three representative CI runs.
 - [b] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md) — deferred:product-owner
