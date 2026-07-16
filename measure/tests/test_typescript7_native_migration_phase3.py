@@ -1145,6 +1145,7 @@ class Phase3gBenchmarkRunnerContract(unittest.TestCase):
         installer = REPO_ROOT / "scripts" / "ci" / "install-repo-graph.sh"
 
         self.assertIn("oven-sh/setup-bun", workflow)
+        self.assertIn("bun-version: 1.3.14", workflow)
         self.assertIn("bash scripts/ci/install-repo-graph.sh", workflow)
         self.assertNotIn("build-graph not found on PATH — skipping", workflow)
         self.assertTrue(installer.is_file())
