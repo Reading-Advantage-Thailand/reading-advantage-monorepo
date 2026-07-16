@@ -1,0 +1,114 @@
+Measure strategy role result for Phase S1 of company_identity_sso_20260715.
+
+Role: strategy
+Status: blocked (Phase S1 cannot be Green; Task 6 is hard-blocked on dependency gates)
+
+Inputs reviewed:
+- measure/index.md
+- measure/tracks.md
+- measure/anti-patterns.md (A1–A15)
+- measure/tracks/company_identity_sso_20260715/spec.md
+- measure/tracks/company_identity_sso_20260715/plan.md
+- measure/tracks/company_identity_sso_20260715/test-strategy.md (pre-revision)
+- measure/tracks/company_identity_sso_20260715/metadata.json
+- measure/tracks/company_identity_sso_20260715/identity-boundary.md
+- measure/tracks/company_identity_sso_20260715/schema-contract.md
+- measure/tracks/company_identity_sso_20260715/fixtures/architecture/README.md
+- measure/tracks/backend_architecture_enforcement_20260713/spec.md, plan.md, metadata.json, phase-1-baseline-freeze.md, phase-1-inventory-review.md, phase-2-red-verification.md
+- measure/tracks/backend_capability_kernel_20260713/spec.md, plan.md, metadata.json
+
+Git evidence reviewed:
+- HEAD: 304e2029f13fe655913bfaad4c4b95b1ab16828a ("chore(repo): snapshot workspace state")
+- Task 1 commit: 7516c48b (boundary contract)
+- Task 2 commit: b9d81557 (schema contract)
+- Task 3 commit: 60ad9d28 (Red contracts)
+- Task 4 commit: ba033761 (Red PostgreSQL)
+- Task 5 commit: 43c16457 (implementation)
+- Task 6 only "start" chore: 6f661515 (no implementation, no Red)
+- architecture enforcement Phase 3 "start" chore: dc4cb75c (no analyzer/ratchet yet)
+- capability kernel Phase 1 Task 1: not started; packages/backend/ does not exist
+
+Baseline SHA validation:
+- Provided: 194dc6a8c5dfe54c2d0c68e916038d891dc3a795
+- Verdict: NOT a real commit (git rev-parse --verify and git cat-file -t both fail).
+- Closest existing object by 7-char prefix: 194dc6a8e8cb879e8ce5ca12ec49277d0ab0e355
+  ("chore(measure): mark identity schema contract task complete"), which is the
+  mid-phase Task 2 close-out chore, NOT an immutable Red baseline.
+- The truthful Phase S1 anchors are recorded in §0 of the refreshed test-strategy.
+
+Dependency gate state at HEAD:
+- backend_architecture_enforcement_20260713: Phase 1 [x], Phase 2 [x],
+  Phase 3 Task 9 [~] (analyzer source present, ratchet.js absent),
+  Phase 3 Tasks 10–12 [ ], Phase 4 [ ]. Gate 1 NOT accepted.
+- backend_capability_kernel_20260713: Phase 1 Task 1 [ ] (packages/backend
+  does not exist), Tasks 2–5 [ ], all subsequent phases blocked.
+
+Refreshed artifacts:
+- measure/tracks/company_identity_sso_20260715/test-strategy.md
+  - Added §0 (baseline validation + truthful anchors + current task state)
+  - Added §1a (anti-pattern coverage per task, falsifiability)
+  - Refreshed §5 (explicit current dependency task-level state)
+  - Added §8 (review applicability matrix and risk classification)
+  - Added §9 (phase_base_sha capture point for orchestrator)
+  - Added §10 (Phase S1 closure declaration)
+
+Review applicability recorded in strategy:
+- Security review (A): YES, required
+- Architecture review (C): YES, required
+- UX/API review (B): NO at this revision (no UI/API surface until S2)
+- Adversarial testing: YES, required
+- Browser / UX review: NO at this revision (apps/accounts is S2)
+
+Red commands kept verbatim from existing strategy:
+- T3 Red: CI=true pnpm --filter @reading-advantage/db exec vitest run <5 files>;
+  CI=true pnpm --filter @reading-advantage/auth --fail-if-no-match exec vitest run
+  src/company-identity/__tests__/environment-contracts.test.ts
+- T4 Red: 10-file PostgreSQL suite under COMPANY_IDENTITY_TEST_ADMIN_DATABASE_URL
+- T6 Red: blocked until both dependency gates accepted
+- Phase gate: pnpm architecture:check, db company-identity:doctor,
+  bash measure/generate.sh + git diff --exit-code -- measure/generated,
+  bash measure/doctor.sh
+
+No invention or weakening:
+- No temporary analyzer authored
+- No parallel executor authored
+- No business logic added to packages/db, packages/domain, or apps/accounts
+- No fixture path widened into a global exemption
+- No coverage threshold lowered
+
+Commits produced by this role:
+- (refreshed strategy will be committed by the orchestrator via the standard
+  chore(measure) path; this role does not push the commit itself — it owns
+  the strategy file and the result file only)
+
+Known failures:
+- Task 6 backend test surface cannot run: packages/backend does not exist
+  (`--fail-if-no-match` makes the missing package a failure rather than a
+  vacuous filtered success, exactly as the original strategy requires).
+- pnpm architecture:check cannot run with company-identity fixtures:
+  packages/architecture-enforcement/src/ratchet.{ts,js} does not yet exist.
+- identity doctor, measure doctor, and graph.db integrity audit are blocked
+  on the same dependencies.
+
+Handoff to orchestrator:
+1. Commit the refreshed test-strategy.md as
+   `chore(measure): refresh Phase S1 test strategy (track_id: company_identity_sso_20260715)`
+   on the master branch.
+2. Capture the post-commit HEAD as the truthful Phase S1 base for any future
+   Task 6 Red cycle (per §9 of the strategy). Do not re-use the supplied
+   194dc6a8c5dfe54c2d0c68e916038d891dc3a795 SHA; it does not resolve.
+3. Do NOT advance Task 6 Red or Green work until BOTH dependency gates publish
+   accepted evidence (backend_architecture_enforcement_20260713 Gate 1 baseline
+   + accepted hash, backend_capability_kernel_20260713 Task 1 scaffold accepted).
+4. Do NOT mark Phase S1 [x] in plan.md, flip S1 status in metadata.json to
+   "complete", or amend measure/tracks.md to archive the track until Task 6
+   backend tests AND Task 7 docs/doctor both pass at HEAD.
+5. If the orchestrator chooses to run a security review now, it must be
+   scoped to the already-merged Tasks 1–5 surface (boundary contract, schema
+   contract, Red cycles, and the database implementation) and to the
+   architecture fixtures under measure/tracks/company_identity_sso_20260715/fixtures/architecture/.
+6. If the orchestrator chooses to run an architecture review now, it must
+   verify that no parallel analyzer/executor was introduced by this track
+   (it was not) and that the fixtures conform to the Gate 1 ownership map.
+
+End of strategy role result.
