@@ -20,8 +20,8 @@ all baseline entries are reviewed and no implementation package is newly exempte
 ## Phase 2: Red Tests and Counterexample Fixtures
 
 - [x] Task 5: Add database-boundary positive fixtures for direct/aliased/barrel/dynamic imports, raw SQL/client calls, and worker/webhook job-table access, plus exact job-port/PostgreSQL-adapter negative fixtures. [commit: 60fcb320]
-- [~] Task 6: Add provider-boundary positive fixtures for direct/aliased/barrel/dynamic imports and client construction, plus adapter negatives.
-- [ ] Task 7: Add ratchet tests for new debt, deletion, path rename, wildcard rejection, malformed config, and deterministic diagnostics.
+- [x] Task 6: Add provider-boundary positive fixtures for direct/aliased/barrel/dynamic imports and client construction, plus adapter negatives. [commit: bad9da7c]
+- [~] Task 7: Add ratchet tests for new debt, deletion, path rename, wildcard rejection, malformed config, and deterministic diagnostics.
 - [ ] Task 8: Run the focused suite and record the expected Red failures against the absent analyzer/ratchet implementation.
 
 **Verification:** `CI=true pnpm vitest run packages/architecture-enforcement/src/__tests__`
