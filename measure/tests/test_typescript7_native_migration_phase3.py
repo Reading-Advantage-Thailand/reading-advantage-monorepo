@@ -1137,6 +1137,28 @@ class Phase3gBenchmarkRunnerContract(unittest.TestCase):
         self.assertIn("workflow_dispatch:", workflow)
         self.assertIn("scripts/**", workflow)
 
+    def test_ci_provisions_a_pinned_graph_scanner_before_graph_validation(self) -> None:
+        """Requires CI graph evidence to use a reproducibly built scanner instead of a skip path."""
+        workflow = (REPO_ROOT / ".github" / "workflows" / "ci.yml").read_text(
+            encoding="utf-8"
+        )
+        installer = REPO_ROOT / "scripts" / "ci" / "install-repo-graph.sh"
+
+        self.assertIn("oven-sh/setup-bun", workflow)
+        self.assertIn("bash scripts/ci/install-repo-graph.sh", workflow)
+        self.assertNotIn("build-graph not found on PATH — skipping", workflow)
+        self.assertTrue(installer.is_file())
+
+        installer_source = installer.read_text(encoding="utf-8")
+        self.assertRegex(
+            installer_source,
+            r'REPO_GRAPH_REVISION="[0-9a-f]{40}"',
+        )
+        self.assertIn("bun install --frozen-lockfile", installer_source)
+        self.assertIn("bun run build", installer_source)
+        self.assertIn("bin/build-graph", installer_source)
+        self.assertIn("$GITHUB_PATH", installer_source)
+
     def test_ci_observation_writer_preserves_exit_cache_and_diagnostic_evidence(self) -> None:
         """Requires the CI artifact writer to emit real parity inputs instead of assumed success."""
         script = REPO_ROOT / "scripts" / "ci" / "capture-ts7-rollout-observation.mjs"

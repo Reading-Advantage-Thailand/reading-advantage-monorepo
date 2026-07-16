@@ -26,17 +26,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Bun for graph evidence
+        uses: oven-sh/setup-bun@v2
+
+      - name: Build pinned graph scanner
+        run: bash scripts/ci/install-repo-graph.sh
+
       - name: Check graph.db
         run: |
           # graph.db is gitignored — rebuild it before checking.
-          # Requires build-graph on the CI runner PATH.
-          if command -v build-graph &>/dev/null; then
-            build-graph scan . ./graph.db
-            ./scripts/ci/check-graph-db.sh
-          else
-            echo "::warning::build-graph not found on PATH — skipping graph.db check."
-            echo "Install build-graph or add it to the CI runner image."
-          fi
+          build-graph scan . ./graph.db
+          ./scripts/ci/check-graph-db.sh
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
