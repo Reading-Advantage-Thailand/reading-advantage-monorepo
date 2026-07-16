@@ -1,0 +1,1 @@
+Review remediation: pin Bun 1.3.14, matching the pinned repo-graph build dependency, so the hosted graph scanner build is reproducible across runner-image updates. Extended the CI graph contract; 87 Phase 3 tests and shell syntax passed.
