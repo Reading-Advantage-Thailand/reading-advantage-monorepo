@@ -59,6 +59,29 @@
     },
     {
       "schemaVersion": 1,
+      "id": "provider-ai-internal-interface",
+      "ruleId": "AI_PROVIDER_BOUNDARY",
+      "expected": "allowed",
+      "fixtureRoot": "test-fixtures/architecture-enforcement/provider/ai-internal-interface",
+      "sourcePath": "apps/marketing/src/generate-copy.ts",
+      "supportPaths": ["packages/ai/src/index.ts"],
+      "resolverConfigPath": "tsconfig.json",
+      "expectedEvidenceKinds": ["static-import"],
+      "rationale": "A product app may call the provider-neutral AI interface without importing a provider SDK."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "provider-exact-test-exception",
+      "ruleId": "STORAGE_PROVIDER_BOUNDARY",
+      "expected": "allowed",
+      "fixtureRoot": "test-fixtures/architecture-enforcement/provider/exact-test-exception",
+      "sourcePath": "packages/storage/src/__tests__/s3-driver.test.ts",
+      "supportPaths": [],
+      "expectedEvidenceKinds": ["static-import", "client-construction"],
+      "rationale": "The exact reviewed storage adapter test path may import provider types without exempting any directory."
+    },
+    {
+      "schemaVersion": 1,
       "id": "provider-integration-adapter",
       "ruleId": "INTEGRATION_PROVIDER_BOUNDARY",
       "expected": "allowed",
@@ -100,6 +123,18 @@
       "supportPaths": ["apps/marketing/src/storage-barrel.ts"],
       "expectedEvidenceKinds": ["static-import", "re-export"],
       "rationale": "A product app cannot hide a cloud storage provider import behind a local re-export barrel."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "provider-storage-internal-interface",
+      "ruleId": "STORAGE_PROVIDER_BOUNDARY",
+      "expected": "allowed",
+      "fixtureRoot": "test-fixtures/architecture-enforcement/provider/storage-internal-interface",
+      "sourcePath": "apps/marketing/src/assets.ts",
+      "supportPaths": ["packages/storage/src/index.ts"],
+      "resolverConfigPath": "tsconfig.json",
+      "expectedEvidenceKinds": ["static-import"],
+      "rationale": "A product app may call the provider-neutral storage interface without importing a provider SDK."
     }
   ]
 }

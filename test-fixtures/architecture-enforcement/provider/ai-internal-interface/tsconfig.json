@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@reading-advantage/ai": ["packages/ai/src/index.ts"]
+    }
+  }
+}

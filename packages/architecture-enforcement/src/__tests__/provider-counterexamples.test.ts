@@ -15,17 +15,20 @@ describe("provider architecture counterexample fixtures", () => {
       "provider-ai-client-construction",
       "provider-ai-credential-read",
       "provider-ai-direct-import",
+      "provider-ai-internal-interface",
+      "provider-exact-test-exception",
       "provider-integration-adapter",
       "provider-integration-dynamic-import",
       "provider-storage-adapter",
       "provider-storage-barrel-import",
+      "provider-storage-internal-interface",
     ]);
     expect(
       cases.filter((fixture) => fixture.expected === "violation"),
     ).toHaveLength(6);
     expect(
       cases.filter((fixture) => fixture.expected === "allowed"),
-    ).toHaveLength(3);
+    ).toHaveLength(6);
   });
 
   it("keeps every exact provider fixture readable and TypeScript-parseable", async () => {
@@ -34,6 +37,6 @@ describe("provider architecture counterexample fixtures", () => {
       loadProviderCounterexamples(),
     );
 
-    expect(result).toEqual({ filesChecked: 11, parseErrors: [] });
+    expect(result).toEqual({ filesChecked: 16, parseErrors: [] });
   });
 });

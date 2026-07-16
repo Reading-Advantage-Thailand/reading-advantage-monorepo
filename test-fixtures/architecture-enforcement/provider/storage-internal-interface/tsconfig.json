@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@reading-advantage/storage": ["packages/storage/src/index.ts"]
+    }
+  }
+}
