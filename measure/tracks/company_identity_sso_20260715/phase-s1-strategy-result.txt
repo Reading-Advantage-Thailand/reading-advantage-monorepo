@@ -1,114 +1,50 @@
-Measure strategy role result for Phase S1 of company_identity_sso_20260715.
+Measure strategy remediation result for Phase S1 of `company_identity_sso_20260715`.
 
-Role: strategy
-Status: blocked (Phase S1 cannot be Green; Task 6 is hard-blocked on dependency gates)
+Role scope was limited to the owned strategy and result artifacts. No production
+source, test source, plan, metadata, registry, fixture, or dependency-track file
+was edited.
 
-Inputs reviewed:
-- measure/index.md
-- measure/tracks.md
-- measure/anti-patterns.md (A1–A15)
-- measure/tracks/company_identity_sso_20260715/spec.md
-- measure/tracks/company_identity_sso_20260715/plan.md
-- measure/tracks/company_identity_sso_20260715/test-strategy.md (pre-revision)
-- measure/tracks/company_identity_sso_20260715/metadata.json
-- measure/tracks/company_identity_sso_20260715/identity-boundary.md
-- measure/tracks/company_identity_sso_20260715/schema-contract.md
-- measure/tracks/company_identity_sso_20260715/fixtures/architecture/README.md
-- measure/tracks/backend_architecture_enforcement_20260713/spec.md, plan.md, metadata.json, phase-1-baseline-freeze.md, phase-1-inventory-review.md, phase-2-red-verification.md
-- measure/tracks/backend_capability_kernel_20260713/spec.md, plan.md, metadata.json
+The supplied immutable baseline `c1408b20279441943726c4227144960dd7cb1130`
+resolves as a commit and is the correct baseline for this remediation and the
+future Task 6 Red revalidation requested from this role. The earlier invalid
+`194dc6a8c5dfe54c2d0c68e916038d891dc3a795` is not reused.
 
-Git evidence reviewed:
-- HEAD: 304e2029f13fe655913bfaad4c4b95b1ab16828a ("chore(repo): snapshot workspace state")
-- Task 1 commit: 7516c48b (boundary contract)
-- Task 2 commit: b9d81557 (schema contract)
-- Task 3 commit: 60ad9d28 (Red contracts)
-- Task 4 commit: ba033761 (Red PostgreSQL)
-- Task 5 commit: 43c16457 (implementation)
-- Task 6 only "start" chore: 6f661515 (no implementation, no Red)
-- architecture enforcement Phase 3 "start" chore: dc4cb75c (no analyzer/ratchet yet)
-- capability kernel Phase 1 Task 1: not started; packages/backend/ does not exist
+`test-strategy.md` was corrected so the five applicability decisions are assessed
+independently under canonical role names only:
 
-Baseline SHA validation:
-- Provided: 194dc6a8c5dfe54c2d0c68e916038d891dc3a795
-- Verdict: NOT a real commit (git rev-parse --verify and git cat-file -t both fail).
-- Closest existing object by 7-char prefix: 194dc6a8e8cb879e8ce5ca12ec49277d0ab0e355
-  ("chore(measure): mark identity schema contract task complete"), which is the
-  mid-phase Task 2 close-out chore, NOT an immutable Red baseline.
-- The truthful Phase S1 anchors are recorded in §0 of the refreshed test-strategy.
+- `review-a-correctness`: applicable; S1 has identity-boundary, schema,
+  migration, persistence, and backend adapter/API correctness contracts.
+- `review-b-security`: applicable; S1 has credential, session/code, RBAC,
+  audit, privilege, and import-boundary security surfaces.
+- `review-c-ux-api`: applicable; S1 has backend and adapter/API contracts even
+  though it has no browser UI. The review must assess input/output/error and
+  forbidden-response semantics.
+- `adversarial-testing`: applicable; architecture counterexamples,
+  secret-persistence, privilege-bleed, cross-organization, and audit-mutation
+  attacks are named falsification surfaces.
+- `ux-browser-review`: not applicable at S1 because no browser UI or browser
+  workflow exists; it becomes applicable when the Accounts UI lands in S2.
 
-Dependency gate state at HEAD:
-- backend_architecture_enforcement_20260713: Phase 1 [x], Phase 2 [x],
-  Phase 3 Task 9 [~] (analyzer source present, ratchet.js absent),
-  Phase 3 Tasks 10–12 [ ], Phase 4 [ ]. Gate 1 NOT accepted.
-- backend_capability_kernel_20260713: Phase 1 Task 1 [ ] (packages/backend
-  does not exist), Tasks 2–5 [ ], all subsequent phases blocked.
+The strategy also records `c1408b20279441943726c4227144960dd7cb1130` as the
+retry-entry baseline, preserves the anti-pattern falsifiability requirements,
+and keeps S1 blocked without inventing a temporary analyzer or backend
+executor. The strategy remediation commit is `8abb9973`.
 
-Refreshed artifacts:
-- measure/tracks/company_identity_sso_20260715/test-strategy.md
-  - Added §0 (baseline validation + truthful anchors + current task state)
-  - Added §1a (anti-pattern coverage per task, falsifiability)
-  - Refreshed §5 (explicit current dependency task-level state)
-  - Added §8 (review applicability matrix and risk classification)
-  - Added §9 (phase_base_sha capture point for orchestrator)
-  - Added §10 (Phase S1 closure declaration)
+The role result is complete even though Phase S1 remains incomplete. The exact
+result block below is the machine-readable handoff and is intentionally the
+last content in this artifact.
 
-Review applicability recorded in strategy:
-- Security review (A): YES, required
-- Architecture review (C): YES, required
-- UX/API review (B): NO at this revision (no UI/API surface until S2)
-- Adversarial testing: YES, required
-- Browser / UX review: NO at this revision (apps/accounts is S2)
-
-Red commands kept verbatim from existing strategy:
-- T3 Red: CI=true pnpm --filter @reading-advantage/db exec vitest run <5 files>;
-  CI=true pnpm --filter @reading-advantage/auth --fail-if-no-match exec vitest run
-  src/company-identity/__tests__/environment-contracts.test.ts
-- T4 Red: 10-file PostgreSQL suite under COMPANY_IDENTITY_TEST_ADMIN_DATABASE_URL
-- T6 Red: blocked until both dependency gates accepted
-- Phase gate: pnpm architecture:check, db company-identity:doctor,
-  bash measure/generate.sh + git diff --exit-code -- measure/generated,
-  bash measure/doctor.sh
-
-No invention or weakening:
-- No temporary analyzer authored
-- No parallel executor authored
-- No business logic added to packages/db, packages/domain, or apps/accounts
-- No fixture path widened into a global exemption
-- No coverage threshold lowered
-
-Commits produced by this role:
-- (refreshed strategy will be committed by the orchestrator via the standard
-  chore(measure) path; this role does not push the commit itself — it owns
-  the strategy file and the result file only)
-
-Known failures:
-- Task 6 backend test surface cannot run: packages/backend does not exist
-  (`--fail-if-no-match` makes the missing package a failure rather than a
-  vacuous filtered success, exactly as the original strategy requires).
-- pnpm architecture:check cannot run with company-identity fixtures:
-  packages/architecture-enforcement/src/ratchet.{ts,js} does not yet exist.
-- identity doctor, measure doctor, and graph.db integrity audit are blocked
-  on the same dependencies.
-
-Handoff to orchestrator:
-1. Commit the refreshed test-strategy.md as
-   `chore(measure): refresh Phase S1 test strategy (track_id: company_identity_sso_20260715)`
-   on the master branch.
-2. Capture the post-commit HEAD as the truthful Phase S1 base for any future
-   Task 6 Red cycle (per §9 of the strategy). Do not re-use the supplied
-   194dc6a8c5dfe54c2d0c68e916038d891dc3a795 SHA; it does not resolve.
-3. Do NOT advance Task 6 Red or Green work until BOTH dependency gates publish
-   accepted evidence (backend_architecture_enforcement_20260713 Gate 1 baseline
-   + accepted hash, backend_capability_kernel_20260713 Task 1 scaffold accepted).
-4. Do NOT mark Phase S1 [x] in plan.md, flip S1 status in metadata.json to
-   "complete", or amend measure/tracks.md to archive the track until Task 6
-   backend tests AND Task 7 docs/doctor both pass at HEAD.
-5. If the orchestrator chooses to run a security review now, it must be
-   scoped to the already-merged Tasks 1–5 surface (boundary contract, schema
-   contract, Red cycles, and the database implementation) and to the
-   architecture fixtures under measure/tracks/company_identity_sso_20260715/fixtures/architecture/.
-6. If the orchestrator chooses to run an architecture review now, it must
-   verify that no parallel analyzer/executor was introduced by this track
-   (it was not) and that the fixtures conform to the Gate 1 ownership map.
-
-End of strategy role result.
+MEASURE_AGENT_RESULT
+role: strategy
+status: complete
+track: company_identity_sso_20260715
+phase: Phase S1: Establish Company Identity Boundary
+baseline_sha: c1408b20279441943726c4227144960dd7cb1130
+audited_head_sha: 8abb99732d858fb90b7be6722985b1d2ec93cd2f
+commits: 8abb9973
+tests_run: git rev-parse --verify c1408b20279441943726c4227144960dd7cb1130^{commit} (PASS); repo-graph stats ./graph.db (PASS); git diff --check on the strategy remediation (PASS); canonical applicability-name check for review-a-correctness, review-b-security, review-c-ux-api, adversarial-testing, and ux-browser-review (PASS); deprecated non-canonical applicability-label absence check (PASS after correction); python3 /home/daniel-bo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py role-gate --repo . --role strategy --track company_identity_sso_20260715 --phase 'Phase S1: Establish Company Identity Boundary' --baseline c1408b20279441943726c4227144960dd7cb1130 --role-base c1408b20279441943726c4227144960dd7cb1130 --audited-head 8abb99732d858fb90b7be6722985b1d2ec93cd2f --log-file measure/tracks/company_identity_sso_20260715/phase-s1-strategy-result.txt (PASS before result-receipt commit); no production/test suites run (strategy-only role)
+files_changed: measure/tracks/company_identity_sso_20260715/test-strategy.md; measure/tracks/company_identity_sso_20260715/phase-s1-strategy-result.txt
+plan_updates: none; plan.md, metadata.json, and tracks.md remain unchanged; Phase S1 remains in progress and Task 6 remains blocked
+known_failures: Task 6 backend Red/Green commands cannot run because packages/backend does not exist; pnpm architecture:check cannot run because packages/architecture-enforcement/src/ratchet.ts and ratchet.js are absent; Task 7 identity doctor, Measure doctor, generated-facts closeout, and full graph structural revalidation remain blocked until those dependency gates are accepted
+handoff: Preserve the committed strategy/result remediation and do not advance Task 6 until backend_architecture_enforcement_20260713 Gate 1 and backend_capability_kernel_20260713's accepted scaffold/contracts are published. Schedule review-a-correctness, review-b-security, review-c-ux-api, and adversarial-testing independently against the S1 backend/database boundary; defer ux-browser-review until a browser UI exists. The orchestrator must keep the phase incomplete and use the valid supplied baseline above for this remediation/future Task 6 Red revalidation, subject to the post-strategy phase_base_sha capture rule in test-strategy.md §9.
+END_MEASURE_AGENT_RESULT
