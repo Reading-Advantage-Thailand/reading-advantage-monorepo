@@ -1,0 +1,1 @@
+Defined the Primary runtime contract before Phase 2 tests: uppercase shared roles are canonical; settings is authenticated-only; INTERN/SALES roles are denied restricted Primary groups; proxy is cookie-presence-only; Node guard validates via validateSession; auth browser subpath and client DTO boundaries are explicit; Primary CI path coverage is required.
