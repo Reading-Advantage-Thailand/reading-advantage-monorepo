@@ -7,7 +7,7 @@
   - [x] Freeze the four executable client-component imports and separately audit declaration-only database type leakage.
   - [x] Inventory all protected layouts, routes, and 64 API handlers; classify each as server-guarded, intentionally public, or separately owned remediation work.
   - [x] Record that a Primary-only pull request currently bypasses root CI and establish the required path-filter change.
-- [~] Task: Define runtime-safe session and client contracts.
+- [x] Task: Define runtime-safe session and client contracts. [commit: 0d36dbea]
   - [x] Define an Edge/browser-safe session-cookie-name contract with no database or server-session imports.
   - [x] Define client DTO/runtime-constant contracts for activity values, assignment rows, and license rows.
   - [x] Select the canonical shared server-role representation and an explicit presentation mapping, including `INTERN`, `SALES_REP`, and `SALES_ADMIN` dispositions.
