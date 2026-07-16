@@ -4,6 +4,50 @@
 **Story:** S1 — Establish Company Identity Boundary
 **Applies to:** Tasks 2–7; Task 1's approved boundary is the test oracle
 **Runtime under test:** local `postgres:16-alpine` on `127.0.0.1:5432`
+**Strategy revision:** 2026-07-16 (revalidation; tasks 1–5 complete, task 6 still `[~]`)
+
+## 0. Baseline validation and current phase state
+
+The orchestrator-supplied baseline SHA `194dc6a8c5dfe54c2d0c68e916038d891dc3a795`
+**is not a commit in this repository** — `git rev-parse --verify` and
+`git cat-file -t` both reject it. The only commit whose object name shares the
+`194dc6a8` prefix is `194dc6a8e8cb879e8ce5ca12ec49277d0ab0e355` ("chore(measure):
+mark identity schema contract task complete", 2026-07-15). That commit is the
+mid-phase Task 2 close-out chore and is **not** an immutable Red baseline; it
+lies between the Task 2 contract (b9d81557) and the Task 3 Red tests (60ad9d28).
+
+This strategy therefore rejects the supplied SHA as a non-truthful immutable
+baseline and substitutes the following truthful Phase S1 anchor:
+
+- **Phase S1 contract-tier Red baseline (truthful):** the tree immediately
+  preceding the Task 3 Red contracts commit `60ad9d28`. The parent of the
+  Red commit is the `chore(measure): start identity contract Red tests` chore
+  `8ae4999549b72ae1d90552cc643590b9aac10eb2`, whose own parent is the Task 2
+  schema contract commit `b9d81557`. The truthful Red baseline tree for the
+  contract-tier cycle is therefore `b9d81557` (post-contract, pre-Red).
+- **Phase S1 PostgreSQL-tier Red baseline (truthful):** the tree immediately
+  preceding the Task 4 Red PostgreSQL commit `ba033761`. The parent is the
+  `chore(measure): start identity PostgreSQL Red tests` chore
+  `92054332f162678882ea318ba0fdc820ed502efb`, whose own parent is the Task 3
+  Red contracts commit `60ad9d28`. The truthful Red baseline tree for the
+  PostgreSQL-tier cycle is therefore `60ad9d28` (post-Red-contracts, pre-Red-
+  PostgreSQL).
+- **Phase S1 implementation baseline (truthful):** the tree immediately
+  preceding the Task 5 implementation commit `43c16457`, which is
+  `b54fb292` ("chore(measure): complete company identity Task 4"), itself the
+  child of `ba033761`.
+- **Current HEAD:** `304e2029f13fe655913bfaad4c4b95b1ab16828a`
+  ("chore(repo): snapshot workspace state", 2026-07-16).
+- **Current Phase S1 task state:** Tasks 1–5 `[x]` (boundary 7516c48b, schema
+  contract b9d81557, Red contracts 60ad9d28, Red PostgreSQL ba033761,
+  implementation 43c16457). Task 6 `[~]` (only a `chore(measure): start`
+  commit `6f661515`, no implementation, no Red cycle yet authored). Task 7
+  `[ ]`. Manual verification `[ ]`.
+
+The strategy therefore (a) keeps the existing Task 3 / Task 4 Red command
+recipes that already produced commit evidence, (b) holds the Task 6 Red
+recipe in reserve pending the dependency gates recorded in §5, and (c)
+records the `phase_base_sha` capture point for the orchestrator in §9.
 
 ## 1. Purpose and proof standard
 
@@ -34,6 +78,25 @@ The following anti-patterns are explicit phase gates:
   generated diff before phase acceptance.
 - A14: every detector command must be executable and its exit code preserved;
   no `|| true`, ignored parser error, or invalid ripgrep option is allowed.
+
+### 1a. Anti-pattern coverage per phase (falsifiability)
+
+Every test in this strategy must have a falsification condition (a named
+assertion that fails on a named regression). The defensive surface for each
+S1 task follows:
+
+| Task | Defends against | Defense |
+|------|-----------------|---------|
+| T3 contracts (Red) | A4 (vacuous pass), A7 (over-broad filter) | Each named issue path is asserted; `safeParse(...).success === false` alone is rejected. Counterexample matrix in §2 is exhaustive (empty/whitespace, normalization, status, role key, redirect URI, audit metadata). |
+| T3 architecture fixtures | A1 (substring-as-signal), A7 (broad filter), A14 (invalid ripgrep) | Fixtures are inputs to the accepted Gate 1 analyzer; the analyzer fixture API must report rule ID + fixture-relative path + resolved target. No broad path or "test" exclusion may hide a real architecture violation. The fixture tree is not globally exempt; the analyzer must analyze fixture contents through its explicit fixture API. |
+| T4 PostgreSQL Red | A4 (vacuous), A5 (false claim), A6 (registry overstatement) | Each integration command records exit code, test count, assertion count, scratch database name, journal max, schema fingerprint, and cleanup result. A zero-test result or skipped integration file fails acceptance. |
+| T5 implementation | A6 (registry overstatement), A10 (generated-facts drift) | The exact identity-table allowlist is queried from `pg_catalog`/`information_schema`. The separate product-isolation suite runs the real product and identity migrators into different scratch databases and proves both catalogs and ledgers are disjoint. Generated `measure/generated/` must diff clean after `measure/generate.sh`. |
+| T6 adapter/capability | A4, A5, A6, A14 | Backend tests run through `--fail-if-no-match` so a missing package is a failure, not a vacuous filtered success. Capability contracts assert every named declared error. Audit metadata cases include nested objects, arrays, mixed casing, and compound keys. The recursive denylist is rejected; the contract accepts only the strict global storage allowlist. |
+| T7 docs/doctor | A5, A6, A10 | `pnpm architecture:check`, `pnpm --filter @reading-advantage/db company-identity:doctor`, `bash measure/doctor.sh`, and the `git diff --exit-code -- measure/generated` commands all gate closeout. Any non-zero exit is a hard failure. |
+
+Every test listed in §2–§6 must be falsifiable by reading the assertion, the
+command, and the expected exit code. A test that "would have caught the
+regression" without a named command is not accepted.
 
 ## 2. Test surfaces
 
@@ -282,28 +345,58 @@ Unimported production files remain in the denominator through the explicit
 
 ## 5. Hard dependency behavior
 
-At this strategy's baseline, neither dependency has published accepted gate
-evidence. This is not permission to create a temporary analyzer, a parallel
-backend executor, or business logic in `packages/db`, `packages/domain`, or an
-app route.
+At this strategy's revision (HEAD `304e2029`), neither dependency has published
+accepted gate evidence. The current task-level state is:
+
+- `backend_architecture_enforcement_20260713`:
+  - Phase 1 Tasks 1–4 `[x]` (contracts a3d07363, ownership 2acffc87+78a96657,
+    inventory 815209d5, baselines 444306fc); frozen artifacts and hashes
+    recorded in `phase-1-baseline-freeze.md`.
+  - Phase 2 Tasks 5–8 `[x]` (database counterexamples 60fcb320, provider
+    counterexamples bad9da7c, ratchet Red c46c7519, expected Red ef7eea7d);
+    recorded in `phase-2-red-verification.md`.
+  - Phase 3 Task 9 `[~]` (only `chore(measure): start architecture analyzer`
+    dc4cb75c; the analyzer source exists at
+    `packages/architecture-enforcement/src/analyzer.ts` but the ratchet
+    source `ratchet.js` is absent and
+    `git cat-file -t packages/architecture-enforcement/src/ratchet.ts`
+    confirms it is not yet implemented). Tasks 10–12 `[ ]`. Phase 4
+    `[ ]`. **Gate 1 is therefore NOT accepted at this strategy's baseline.**
+- `backend_capability_kernel_20260713`:
+  - Phase 1 Task 1 `[ ]` — `packages/backend/` does not exist
+    (`ls packages/backend` fails). No scaffold, no manifest, no exports,
+    no public descriptor/executor contracts. **Phase 1 Task 1 has not
+    started.** All subsequent phases are blocked.
+
+The §5 rules remain:
 
 - Tasks 2–5 may implement the approved identity contracts, dedicated schema,
   migrations, scratch harness, clients, doctor, bootstrap primitive, and
   repository port/database primitives within `@reading-advantage/db`.
 - Task 6's production PostgreSQL adapter cannot start until
-  `backend_architecture_enforcement_20260713` publishes its accepted Gate 1
-  baseline/hash and `pnpm architecture:check` is Green with the identity
-  positive/negative fixtures.
+  `backend_architecture_enforcement_20260713` Phase 3 (analyzer + ratchet) and
+  Phase 4 (CI + doctor + accepted Gate 1 hash) are complete and
+  `pnpm architecture:check` is Green with the identity positive/negative
+  fixtures at `measure/tracks/company_identity_sso_20260715/fixtures/architecture/`.
 - Task 6's capability descriptors/executor integration cannot start until
-  `backend_capability_kernel_20260713` Task 1 scaffold is explicitly accepted
-  and its stable public descriptor/executor contracts are published.
+  `backend_capability_kernel_20260713` Phase 1 Task 1 (package scaffold) and
+  Phase 1 Tasks 2–5 (descriptor/executor contracts) are explicitly accepted
+  and published.
 - Use `--fail-if-no-match` for every backend test, coverage, lint, typecheck,
   and build command so a missing package is a failure, not a vacuous filtered
   success.
 - If a dependency is absent or unaccepted, record Task 6 as blocked with the
   missing gate and continue only independent Tasks 2–5. Do not skip Task 6
-  tests and report the phase Green. Phase S1 itself remains incomplete until
-  both gates and the Task 6 tests pass.
+  tests and report the phase Green. **Phase S1 itself remains incomplete
+  until both gates AND the Task 6 backend tests AND Task 7 docs/doctor all
+  pass.**
+- This strategy does **not** authorize a temporary analyzer, a parallel
+  backend executor, or business logic in `packages/db`, `packages/domain`,
+  or an app route. Existing implementation in `packages/db/src/company-identity/`
+  is restricted to the contract, schema, migration, environment, client,
+  bootstrap, doctor, and low-level persistence primitives already enumerated
+  in Tasks 2–5; no new business logic is to be added at this strategy
+  revision.
 - Any required organization-tenancy change to the canonical kernel stops S1
   implementation for explicit architecture approval; tests must not encode a
   speculative generic company tenancy mode.
@@ -387,3 +480,74 @@ Phase acceptance requires all of the following:
    Measure doctor are Green.
 10. Claims in `plan.md`, registry notes, and phase verification match the
    recorded command evidence exactly.
+
+## 8. Review applicability and risk classification
+
+| Subagent / review track | Applicable to Phase S1 | Reason |
+|---|---|---|
+| Security review (Review A) | **YES — required** | S1 establishes credential storage, session/code persistence, RBAC, audit, and the import/export boundary that protects them. Secret-persistence and audit-redaction tests are security evidence; a security review must run against the new `packages/db/src/company-identity/` and `packages/auth/src/company-identity/` surfaces and the import-boundary fixtures. |
+| Architecture review (Review C) | **YES — required** | S1 is the first customer of `backend_architecture_enforcement_20260713` Gate 1 (the architecture fixtures under `measure/tracks/company_identity_sso_20260715/fixtures/architecture/` are owned by S1 but analyzed by the Gate 1 analyzer) and the first capability-kernel consumer. The architecture review must verify (a) the identity ownership map, (b) the rule IDs every S1 fixture expects, (c) the absence of new baselines introduced by S1, and (d) that no parallel analyzer or executor was created in this track. |
+| UX/API review (Review B) | **NO** at this revision | Phase S1 ships no UI and no API surface. `apps/accounts/` is S2 work. The boundary contract and schema contract are documented but not user-facing. Review B becomes applicable starting at S2 (sign-in UI, callback handler, role-management surfaces) and again at S4–S7 (product integrations). |
+| Adversarial testing | **YES — required** | Phase S1 must defend against the architecture-counterexample attacks (direct/aliased/barrel/dynamic identity imports, raw Postgres construction, schema re-exports), the credential-leak attacks (raw session token or authorization code persisted in any text/JSON column), the privilege-bleed attack (`COMPANY_ADMIN` reaching product data, `SALES_ADMIN` reaching identity authority, education `ADMIN` numeric-level bleed), and the audit-poisoning attack (UPDATE/DELETE on `audit_events` from the runtime role). The fixtures already enumerate these. |
+| Browser / UX review | **NO** at this revision | No user surface exists at S1. The first browser-affecting surface is `apps/accounts/` sign-in (S2 Task 12) and the first cross-application browser surface is the first successful callback (S2 Task 13). |
+
+### Risk classification per phase
+
+| Phase | Risk | Why |
+|---|---|---|
+| T3 contract Red | **high** | Defines every public contract that downstream S2–S7 consume. Weakening here breaks audit/secret/role guarantees for the entire track. |
+| T3 architecture Red | **critical** | The import boundary is the load-bearing defense for identity isolation. A7-style broad filters or A14-style ripgrep failures silently defeat the boundary. |
+| T4 PostgreSQL Red | **critical** | Constraints, FKs, immutability, and privileges are enforced by the database itself; failing to exercise them against real PostgreSQL is A4 vacuous-pass. |
+| T5 implementation | **high** | First contact between the contracts and the migrator. Schema drift, baseline debt increase, or a non-idempotent bootstrap are caught only by the catalog and bootstrap assertions. |
+| T6 adapter/capability | **critical** | Joins two unaccepted dependencies (architecture enforcement Gate 1 and capability kernel Task 1 scaffold). The strategy refuses to start this until both gates are accepted; attempting it earlier would require a forbidden temporary analyzer/executor. |
+| T7 docs/doctor | **medium** | Operational closeout; failure here does not change correctness but it does block Phase S1 closeout and S2 hand-off. |
+
+## 9. `phase_base_sha` capture point
+
+The orchestrator must capture the immutable `phase_base_sha` for Phase S1
+**after this strategy commit lands** and **before any new Red commit is
+authored for Task 6**. Concretely:
+
+1. Commit this strategy update as `chore(measure): refresh Phase S1 test strategy`
+   on the master branch (the role-owned change).
+2. `git rev-parse HEAD` immediately after the commit succeeds. That SHA is the
+   truthful Phase S1 base for the next Task 6 Red cycle.
+3. **Do not embed a SHA in this strategy that predates the strategy commit.**
+   The role must not speculate about a future base; the base is the HEAD after
+   the strategy commit.
+
+Until the strategy commit lands, the closest truthful substitute base is the
+current HEAD `304e2029f13fe655913bfaad4c4b95b1ab16828a`, which already
+includes the Task 6 `chore(measure): start` commit but does not include this
+strategy revision.
+
+## 10. Phase S1 closure declaration
+
+Phase S1 is **not closed** at this strategy revision. The phase closes only
+after all of the following are true at HEAD:
+
+- The committed Red and Green evidence for Tasks 3, 4, and 5 (already on disk
+  through `60ad9d28`, `ba033761`, and `43c16457`) remains valid against the
+  current HEAD and has not been weakened, filtered, or skipped.
+- Task 6's Red contracts are authored against the **post-strategy** HEAD, fail
+  for the named absent adapter/policy/audit/transaction behavior, and produce
+  per-commit evidence identical in shape to the Task 3 and Task 4 evidence.
+- Task 6's Green commits use the accepted backend architecture enforcement
+  Gate 1 analyzer and the accepted capability kernel Task 1 scaffold; no
+  parallel analyzer, executor, or temporary `packages/backend/` stub exists at
+  HEAD.
+- Task 7 (docs/doctor) commits run `pnpm architecture:check`,
+  `pnpm --filter @reading-advantage/db company-identity:doctor`,
+  `bash measure/generate.sh` + `git diff --exit-code -- measure/generated`,
+  and `bash measure/doctor.sh`, all exit zero, and update `graph.db` for every
+  structural change.
+- The strategy-revision receipt under
+  `measure/tests/role-receipts/phase-s1-strategy.json` enumerates this
+  strategy file, this strategy's parent HEAD, the committed strategy SHA, and
+  the audited HEAD SHA — refreshed by every accepted strategy refresh.
+- Manual verification per `workflow.md` Step 6 is recorded against this phase.
+
+Until then, Task 6 remains `[~]` and Phase S1 remains **in-progress**; the
+phase must not be marked `[x]` in `plan.md`, the S1 story in `metadata.json`
+must not flip to `"complete"`, and `measure/tracks.md` must not be amended to
+mark this track as archived.
