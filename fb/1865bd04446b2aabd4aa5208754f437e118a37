@@ -1,0 +1,9 @@
+Track: typescript7_native_migration_20260710
+
+Corrected rollout observation semantics so promotion-facing ordering and compiler diagnostic fields derive only from the complete 39-config ledger-aware parity oracle. Retained the raw, non-comparable Turbo ordering difference strictly as troubleshooting evidence. Added regression coverage for divergent Turbo logs and incomplete parity summaries.
+
+Verification:
+- PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase3 (85 passed)
+- node --check scripts/ci/capture-ts7-rollout-observation.mjs
+- JSON parse of rollout-record-schema.json
+- git diff --check
