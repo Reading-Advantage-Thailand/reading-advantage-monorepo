@@ -30,6 +30,7 @@
       "ownershipRootIds": [
         "database-source",
         "database-migrations",
+        "database-maintenance-scripts",
         "domain-database-access",
         "backend-database-access"
       ]
@@ -299,6 +300,16 @@
       "ruleIds": ["DATABASE_BOUNDARY", "DURABLE_JOB_DATABASE_BOUNDARY"],
       "owner": "database-platform",
       "rationale": "Reviewed Drizzle migrations may define and evolve PostgreSQL-owned tables, including durable job tables."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "database-maintenance-scripts",
+      "domain": "database",
+      "path": "packages/db/scripts/",
+      "kind": "migration",
+      "ruleIds": ["DATABASE_BOUNDARY"],
+      "owner": "database-platform",
+      "rationale": "Database-owned maintenance commands may inspect migration state through low-level PostgreSQL connections."
     },
     {
       "schemaVersion": 1,

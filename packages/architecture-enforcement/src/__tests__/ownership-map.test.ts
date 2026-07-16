@@ -51,6 +51,18 @@ describe("architecture ownership map", () => {
       reasonCode: "approved-ownership-root",
       ownershipRootId: "domain-database-access",
     });
+    expect(
+      evaluateOwnership(loadOwnershipMap(), {
+        ...databaseImport,
+        sourcePath: "packages/db/scripts/migration-ledger-doctor.ts",
+        importSpecifier: "postgres",
+        resolvedTarget: "external:postgres",
+      }),
+    ).toMatchObject({
+      status: "allowed",
+      reasonCode: "approved-ownership-root",
+      ownershipRootId: "database-maintenance-scripts",
+    });
 
     expect(evaluateOwnership(loadOwnershipMap(), databaseImport)).toEqual({
       status: "violation",
