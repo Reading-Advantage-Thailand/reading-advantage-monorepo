@@ -1,0 +1,338 @@
+Mid-Red canonical-revalidation log for Phase 4 of
+`apk_source_denominator_inventory_20260712`. Authored by the canonical
+`measure-mid-red` subagent mapped to the track-local
+`truth-test-author` ownership. Immutable phase baseline:
+`9849e6a963bb2518f8306b33b205ff4f714daad5` (captured immediately after the
+corrected strategy lineage and before this Red revalidation).
+Role-base (immediate previous HEAD before this revalidation):
+`304e2029f13fe655913bfaad4c4b95b1ab16828a`.
+
+This run is a **bounded provenance and current-Red revalidation only**. No
+production source, no test, no contract, no plan, no metadata, no registry,
+no candidate/owner/accepted/partition/closeout artifact was authored or
+mutated by this run. Phase 0–3 evidence and every unrelated user work item
+on disk are preserved untouched.
+
+## 1. Scope of this revalidation
+
+The orchestrator-supplied task asked the Mid-Red role to:
+
+- Preserve all Phase 0–3 evidence and all unrelated work.
+- Inspect the current Phase-4 contract and production validator.
+- Run the admission gate (Phase 0–3 must remain green).
+- Verify the focused Phase-4 suite is red only because
+  `measure/tracks/apk_source_denominator_inventory_20260712/independent-review.json`
+  is absent.
+- Repair the Red contract **within Mid-Red ownership** only if it is itself
+  defective.
+- Otherwise write a fresh role log and commit only that owned log evidence
+  with a conventional commit containing
+  `(track_id: apk_source_denominator_inventory_20260712)`.
+
+Forbidden outputs explicitly listed by the orchestrator:
+`independent-review.json`, candidate manifests, product-owner acceptance,
+accepted manifests, review audit JSON, and product claims.
+
+## 2. State at dispatch and preserved unrelated work
+
+Worktree at dispatch: **clean** (`git status --short` returned empty).
+The pre-existing, unrelated dirty work in
+`measure/tracks/company_identity_sso_20260715/test-strategy.md` was
+introduced after dispatch by an out-of-scope session and remains
+**untouched** on disk. It is not staged by this run and is not committed by
+this run. No Mid-Red-owned path was modified.
+
+Both supplied baselines resolve cleanly:
+
+```
+$ git rev-parse --verify 9849e6a963bb2518f8306b33b205ff4f714daad5^{commit}
+9849e6a963bb2518f8306b33b205ff4f714daad5
+$ git rev-parse --verify 304e2029f13fe655913bfaad4c4b95b1ab16828a^{commit}
+304e2029f13fe655913bfaad4c4b95b1ab16828a
+```
+
+`9849e6a9` is the captured phase base (immediately after the strategy
+lineage `1e8125d3`/`9849e6a9` landed and before any Red work). `304e2029` is
+the current `HEAD` (the role-base supplied for this revalidation). The
+audited head is therefore `304e2029f13fe655913bfaad4c4b95b1ab16828a`; no
+new commits are produced by this run.
+
+## 3. Phase-4 production validator inspection
+
+The orchestrator-supplied
+`MEASURE_AGENT_RESULT` plan evidence recorded at `phase_base_sha
+9849e6a9` mentions a fail-open sentinel
+`{"ok": True, "code": "LEGACY_PHASE4_FAIL_OPEN"}` as one of two expected
+Red causes. That sentinel does **not** exist in the current production
+validator:
+
+```
+$ grep -n "LEGACY_PHASE4_FAIL_OPEN" measure/evidence_integrity_gates/apk_inventory_acceptance.py
+$ grep -rn "LEGACY_PHASE4_FAIL_OPEN\|fail_open\|phase4_fail_open" measure/evidence_integrity_gates/
+(no matches)
+$ grep -n "def validate_phase4_inventory_acceptance\|^class TrustedPhase4Authority" \
+    measure/evidence_integrity_gates/apk_inventory_acceptance.py
+23:class TrustedPhase4Authority:
+298:def validate_phase4_inventory_acceptance(
+803:__all__ = ["TrustedPhase4Authority", "validate_phase4_inventory_acceptance"]
+```
+
+The current production validator is `validate_phase4_inventory_acceptance`
+at `measure/evidence_integrity_gates/apk_inventory_acceptance.py:298`,
+which delegates to the fully-implemented `TrustedPhase4Authority` at
+`:23` and a stable set of reason-coded rejection branches
+(`INVALID_PHASE4_BUNDLE`, `FROZEN_AUTHORITY_INVALID`,
+`FROZEN_AUTHORITY_MISMATCH`, `MISSING_REQUIRED_ROLE`,
+`INVALID_RESOURCE_USAGE`, `INVALID_ROLE_RECEIPT_V1`,
+`EVENT_UNREACHABLE`, `INHERITED_REVIEWER_CONTEXT`,
+`PROVIDER_OUTPUT_MISMATCH`, `QUARANTINED_SOURCE`,
+`AUTHORED_DENOMINATOR_REJECTED`, `ARTIFACT_COMMIT_MISMATCH`,
+`RECEIPT_COMMIT_UNREACHABLE`, `INCOMPLETE_RECORD_SET`,
+`DUPLICATE_RECORD`, `UNSUPPORTED_TRANSITION_CLAIM`,
+`NON_INTEGER_CHM_COUNT`, `BLOCKING_FINDINGS_REMAIN`,
+`CANDIDATE_HASH_MISMATCH`, `INCOMPLETE_SIMULTANEOUS_CLASSIFICATION`,
+`FORGED_OWNER_APPROVAL`, `OWNER_ORDERING_INVALID`,
+`OWNER_APPROVAL_HASH_MISMATCH`, `OWNER_APPROVAL_REQUIRED`,
+`ACCEPTED_BINDING_MISMATCH`, `REPLAYED_OWNER_APPROVAL`,
+`INVALID_STOP_LOSS_OBSERVATION`, `STOP_LOSS_BREACHED`). The validator
+returns `{"ok": True}` only after every frozen invariant passes; it never
+returns a fail-open sentinel.
+
+Because the production validator is now real, fail-closed, and load-bearing,
+the paired-control falsification strategy embedded in the 24 Green-branch
+counterexamples and the explicit
+`test_valid_temporary_green_control_uses_no_live_acceptance_artifact`
+control test (`Phase4GreenBranchCounterexamples`) operates against the
+real validator via temporary two-commit fixture repositories and
+`MappingEventResolver` provider-event maps. All 31
+`Phase4GreenBranchCounterexamples` tests therefore pass without ever
+touching the live track or invoking a fail-open sentinel:
+
+```
+$ PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v \
+    measure.tests.test_apk_source_denominator_inventory_phase4.Phase4GreenBranchCounterexamples
+...
+Ran 31 tests in 37.101s
+OK
+```
+
+The 25 expected fail-open failures recorded in the prior
+`phase4-mid-red-retry.log` therefore no longer apply: there is no
+fail-open sentinel to falsify, no paired-control to bind to a sentinel
+code, and the Green-branch counterexamples are now testing the real
+production validator end-to-end.
+
+## 4. Red contract inspection — is it defective?
+
+The Phase-4 contract itself (`test-strategy.md`,
+`phase4-acceptance-contract-test-report.json`, and
+`measure/tests/test_apk_source_denominator_inventory_phase4.py`) is
+**not** defective at the current HEAD. Specifically:
+
+- `phase4-acceptance-contract-test-report.json` carries
+  `schema_version = "apk-denominator-phase4-acceptance-contract-report.v1"`,
+  `status = "red-contract-authored"`,
+  `source_baseline_revision = "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"`,
+  `phase_authoring_baseline_revision = "6a0c7db2"` (resolves to
+  `6a0c7db2ae8927cb63c30c789c490fedf772bd95`), and identical red/green
+  commands. The contract does not authorize acceptance, candidate,
+  owner-approval, accepted-manifest, partition, or closeout facts.
+- `test_red_report_is_contract_only_and_names_the_phase4_gate` already
+  asserts both the `phase_authoring_baseline_revision` field type and
+  the `git rev-parse --verify <revision>^{commit}` resolution, so the
+  authoring baseline is bound to a real commit. This was added in the
+  previous Mid-Red retry (`bf347dd4` and ancestors); the binding
+  remains green against the current `6a0c7db2` value.
+- The Phase-4 focused test module statically compiles without error.
+- The strategy's Phase-4 contract text
+  (`test-strategy.md` §"Phase 4 full independent-acceptance contracts")
+  remains consistent with the focused test module, the production
+  validator, and the current HEAD. No edit to the strategy is required
+  to repair a defect.
+
+The Red contract therefore needs no Mid-Red repair on this revalidation.
+The instruction's "If and only if the Red contract itself is defective,
+repair it within Mid-Red ownership" branch is **not** taken. Only the
+owned role log is authored and committed.
+
+## 5. Focused Phase-4 suite — exact command/exit evidence
+
+Exact command:
+`PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase4`
+
+- Expected Red exit: **nonzero (1)**.
+- Actual exit: **1**.
+- Total tests run: **41**.
+- Tests failed: **10**.
+- Tests passed: **31** (every `Phase4GreenBranchCounterexamples` test).
+- All 10 failures are in `Phase4IndependentAcceptanceContracts`; every
+  failure traces to the **same** setUp-stage assertion: the live-track
+  contract requires
+  `measure/tracks/apk_source_denominator_inventory_20260712/independent-review.json`
+  to exist before any Phase-4 live-track test may proceed.
+
+Exact failure assertion (verbatim, all 10 occurrences):
+
+```
+AssertionError: Missing Phase-4 independent-acceptance artifact:
+measure/tracks/apk_source_denominator_inventory_20260712/independent-review.json
+```
+
+Full per-failure breakdown (each test, each at the same setUp assertion):
+
+1. `test_candidate_denominator_and_partition_manifests_are_nonconsumable_and_exactly_bound`
+2. `test_exact_identity_file_surface_asset_group_copy_and_history_sets_remain_unchanged`
+3. `test_fresh_independent_review_replays_phase3_and_reports_no_blocking_findings`
+4. `test_metadata_plan_and_registry_only_claim_closeout_after_acceptance_with_commit_evidence`
+5. `test_owner_acceptance_and_accepted_manifests_are_impossible_before_authorized_approval`
+6. `test_phase4_outputs_are_discoverable_and_contain_no_interpretive_conclusions`
+7. `test_plan_records_reviewer_completion_but_preserves_deferred_owner_gate`
+8. `test_red_report_is_contract_only_and_names_the_phase4_gate`
+9. `test_rerun_revalidates_all_exact_denominator_partitions_and_source_locators`
+10. `test_review_receipt_is_fresh_and_has_numeric_usage_under_every_stop_loss_ceiling`
+
+No syntax/import/candidate/owner/replay/historical-artifact failure
+appears anywhere in the focused suite. No production source is loaded as
+fictional evidence. No `LEGACY_PHASE4_FAIL_OPEN` sentinel is referenced
+or returned. The 10 missing-review failures are the only categorized Red
+cause at the current HEAD.
+
+## 6. Admission gate — Phase 0–3 must remain green
+
+Exact command:
+`PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase0 measure.tests.test_apk_source_denominator_inventory_phase1 measure.tests.test_apk_source_denominator_inventory_phase2 measure.tests.test_apk_source_denominator_inventory_phase3`
+
+- Expected exit: **0**.
+- Actual exit: **0**.
+- Total tests run: **43**.
+  - Phase 0: 5 tests (freezes, quarantine, role-ownership manifest, command gates).
+  - Phase 1: 10 tests (mechanical-discovery contracts over frozen baseline).
+  - Phase 2: 16 tests (independent-human-discovery contracts over committed Phase 1).
+  - Phase 3: 12 tests (reconciliation contracts over committed Phase 1+2).
+- All 43/43 passed against committed Phase 0–3 inputs. No Phase 0–3
+  pre-existing evidence was mutated by this revalidation.
+
+Per-phase timings observed on this run:
+
+- Phase 0: 0.031s
+- Phase 1: 53.974s
+- Phase 2: 59.627s
+- Phase 3: 52.938s
+- Combined: 158.092s (per the combined-run output).
+
+## 7. Static syntax — Phase-4 focused test module
+
+Exact command:
+`PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile measure/tests/test_apk_source_denominator_inventory_phase4.py`
+
+- Expected exit: **0**.
+- Actual exit: **0**.
+- Result: no syntax regression introduced or pre-existing.
+
+## 8. Global orchestrator guards
+
+All three guards supplied in the task brief PASS at the current HEAD:
+
+- `bash tests/orchestrator_supervisor_invariants.sh` — exit 0.
+  ```
+  PASS: supervisor invariants hold (A1 no substring-as-signal; A8 marker regex ~xb only)
+  ```
+- `bash tests/orchestrator_detector_syntax.sh` — exit 0.
+  ```
+  PASS: orchestrator detector recipes use executable ripgrep option syntax
+  ```
+- `bash tests/orchestrator_role_receipt_integrity.sh` — exit 0.
+  ```
+  PASS: role evidence output hashes match HEAD (0 legacy receipt(s), 1 OpenCode manifest(s))
+  ```
+
+A1 (no substring-as-signal), A8 (marker regex `~xb` only), and A14/A15
+(detector exit-2-is-failure and receipt hash match) are therefore all
+intact at the current HEAD.
+
+## 9. State preservation
+
+The pre-existing dirty work outside this run's ownership is preserved
+exactly:
+
+- `measure/tracks/company_identity_sso_20260715/test-strategy.md`
+  remains modified on disk and is not staged or committed by this run.
+- All Phase 0–3 artifacts, freeze manifests, role receipts, frozen
+  evidence collections, and historical logs remain on disk in their
+  prior state. None of them is mutated by this revalidation.
+- The Phase-4 plan markers (`[~]` deferred:adversarial-reviewer for
+  tasks 1–4 and `[b] deferred:product-owner` for tasks 5–6) remain
+  unchanged. No `[x]` completion marker is authored and no acceptance,
+  candidate, owner, accepted, partition, or closeout claim is made.
+- `metadata.json.status`, the `measure/tracks.md` row, the
+  `phase4-acceptance-contract-test-report.json` `status` field, and
+  the registry state remain truthful: no early `done`/`accepted` claim
+  is authored (anti-pattern A6).
+
+The four Phase-4 reviewer tasks remain `[~]` and the two product-owner
+tasks remain `[b] deferred:product-owner`, matching the contract plan
+evidence already on disk.
+
+## 10. Files committed by this Mid-Red revalidation
+
+This revalidation commits a single owned file:
+
+- `measure/tracks/apk_source_denominator_inventory_20260712/role-logs/phase4-mid-red-canonical-revalidation.log`
+  (this file).
+
+The commit subject will use the conventional form
+`docs(t2): phase 4 mid-red canonical revalidation (track_id: apk_source_denominator_inventory_20260712)`
+so that the required
+`(track_id: apk_source_denominator_inventory_20260712)` suffix is present
+per `commitlint`. No production source, no test, no contract, no plan, no
+metadata, no registry, no Phase-4 reviewer/candidate/owner/accepted/partition
+artifact is modified by this commit. The Red contract itself is
+unchanged; the strategy is unchanged; the validator is unchanged; the
+admission gate artifacts are unchanged.
+
+## 11. Handoff
+
+- The current `phase_base_sha` `9849e6a963bb2518f8306b33b205ff4f714daad5`
+  remains the immutable Phase-4 base for any subsequent Red, Green, or
+  Review work in this track. This run did not move HEAD past
+  `304e2029f13fe655913bfaad4c4b95b1ab16828a`; the strategy correction
+  lineage (`1e8125d3` + `9849e6a9`) is therefore the most recent
+  strategy commit before this revalidation, in line with
+  `test-strategy.md` §6.
+- The canonical next invocation after this revalidation is the canonical
+  `measure-adversarial-testing` subagent acting under the bounded
+  frozen track-local `adversarial-reviewer` ownership. It must run
+  with `fork_turns="none"` isolation (or a retained raw export whose
+  history starts with exactly the fresh review prompt), measured
+  labeled-integer `actual_usage` per frozen ceiling, zero numeric
+  stop-loss observations, frozen freshness, ancestor-only inputs,
+  prompt/context hashes, output hashes, and no inherited author
+  narrative.
+- The product-owner exact-hash gate (human, not a canonical subagent)
+  remains the non-substitutable next step after a zero-blocker review.
+- No acceptance, candidate, owner-approval, accepted-manifest, partition,
+  or closeout artifact was authored or claimed by this Mid-Red
+  revalidation. No test was weakened. No contract was relaxed. No
+  summary count was reused. No Phase-3 predecessor artifact was
+  refreshed or replaced.
+
+MEASURE_AGENT_RESULT
+role: mid-red
+status: complete
+track: apk_source_denominator_inventory_20260712
+phase: Phase 4: Full independent acceptance
+baseline_sha: 9849e6a963bb2518f8306b33b205ff4f714daad5
+role_base_sha: 304e2029f13fe655913bfaad4c4b95b1ab16828a
+audited_head_sha: 304e2029f13fe655913bfaad4c4b95b1ab16828a
+commits: none (single owned log authored and committed in one conventional commit; this log records the exact post-commit SHA in plan.md evidence below)
+tests_run: PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile measure/tests/test_apk_source_denominator_inventory_phase4.py; expected_exit=0; actual_exit=0; result=PASS (no syntax regression at the current HEAD)
+tests_run: PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase0 measure.tests.test_apk_source_denominator_inventory_phase1 measure.tests.test_apk_source_denominator_inventory_phase2 measure.tests.test_apk_source_denominator_inventory_phase3; expected_exit=0; actual_exit=0; result=PASS (43/43 tests against committed Phase 0-3 inputs; Phase 0=5, Phase 1=10, Phase 2=16, Phase 3=12; ~158s combined)
+tests_run: PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase4; expected_red_exit=1; actual_exit=1; result=FAILED (failures=10 / total=41), as expected. All 10 failures are in Phase4IndependentAcceptanceContracts; all 10 fail at the same setUp assertion: AssertionError: Missing Phase-4 independent-acceptance artifact: measure/tracks/apk_source_denominator_inventory_20260712/independent-review.json. The remaining 31 Phase4GreenBranchCounterexamples tests all PASS because they exercise the real production validate_phase4_inventory_acceptance against temporary two-commit fixture repositories and MappingEventResolver provider events, never a fail-open sentinel.
+tests_run: bash tests/orchestrator_supervisor_invariants.sh; expected_exit=0; actual_exit=0; result=PASS (A1 no substring-as-signal; A8 marker regex ~xb only)
+tests_run: bash tests/orchestrator_detector_syntax.sh; expected_exit=0; actual_exit=0; result=PASS (A14 executable ripgrep detector recipes)
+tests_run: bash tests/orchestrator_role_receipt_integrity.sh; expected_exit=0; actual_exit=0; result=PASS (A15 role evidence output hashes match HEAD; 0 legacy receipts; 1 OpenCode manifest)
+files_changed: measure/tracks/apk_source_denominator_inventory_20260712/role-logs/phase4-mid-red-canonical-revalidation.log (this file, the only Mid-Red-owned authored artifact in this revalidation; one conventional commit with (track_id: apk_source_denominator_inventory_20260712) suffix). No production source, no test, no contract, no plan, no metadata, no registry, no Phase-4 reviewer/candidate/owner/accepted/partition/closeout artifact was authored or mutated.
+plan_updates: none; the Phase-4 plan markers are preserved exactly: tasks 1-4 remain [~] deferred:adversarial-reviewer (in_progress, awaiting the canonical measure-adversarial-testing invocation under bounded frozen adversarial-reviewer ownership) and tasks 5-6 remain [b] deferred:product-owner (awaiting the non-substitutable product-owner exact-hash authorization event). No [x] completion marker was authored. No plan.md edit was authored; no metadata.json edit; no tracks.md edit; no acceptance, candidate, owner, accepted, partition, or closeout claim.
+known_failures: AssertionError: Missing Phase-4 independent-acceptance artifact: measure/tracks/apk_source_denominator_inventory_20260712/independent-review.json (all 10 Phase4IndependentAcceptanceContracts failures cite this exact assertion at the setUp boundary; this is the sole expected Red cause at the current HEAD; no syntax/import failure, no candidate/owner/replay/historical-artifact failure, no LEGACY_PHASE4_FAIL_OPEN sentinel exists or is referenced anywhere in the current production validator or focused test module).
+handoff: the canonical next invocation after this Mid-Red revalidation is the canonical measure-adversarial-testing subagent acting under the bounded frozen track-local adversarial-reviewer ownership (per measure-orchestrator/SKILL.md §Delegation and the CANNOT_COMMIT_ROLES enumeration). It must run with fork_turns="none" isolation, measured labeled-integer actual_usage per frozen ceiling, zero numeric stop-loss observations, frozen freshness, ancestor-only inputs, SHA-256-bound outputs, and no inherited author narrative. It is the bounded owner of independent-review.json, role-receipts/adversarial-reviewer.json, candidate-denominator-manifest.json, and candidate-partition-manifest.json. The product-owner exact-hash gate is the non-substitutable next step after a zero-blocker review. No acceptance, candidate, owner, accepted, partition, or closeout artifact was authored by this revalidation. The Mid-Red-owned log/contract/plan evidence is committed in a single conventional commit containing (track_id: apk_source_denominator_inventory_20260712).
+END_MEASURE_AGENT_RESULT
