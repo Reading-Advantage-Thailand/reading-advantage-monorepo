@@ -113,6 +113,12 @@
 - [~] Task: Roll out TypeScript 7 through CI.
   - [x] Add a temporary non-blocking parity lane. [implementation: d383b326, semantic
     parity oracle and observation repair pending CI verification]
+  - 2026-07-16: Recorded rejected real CI observation `29460487973`: 39 configs ran
+    with stable provenance, but `apps/primary-advantage` failed because two reviewed
+    GenerateAudio diagnostics were no longer emitted by either compiler. The exact
+    artifact is retained by ID `8361069260`; the obsolete ledger pair was removed
+    before the next observation. This record predates the semantic-order correction
+    and is explicitly not promotion evidence.
   - [ ] Promote the TypeScript 7 lane only after parity and full gates pass.
   - [ ] Observe and record at least three representative CI runs.
 - [b] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md) — deferred:product-owner

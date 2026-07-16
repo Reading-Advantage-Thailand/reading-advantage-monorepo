@@ -1,21 +1,5 @@
 [
   {
-    "diagnostic": "apps/primary-advantage/actions/test.ts(18,39): error TS2345: Argument of type '{ passage: any; articleId: string; }' is not assignable to parameter of type 'GenerateAudioParams'.",
-    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
-    "absent_from": "ts7",
-    "reviewed_by": "typescript7-phase3c-reconciliation",
-    "reviewed_at": "2026-07-15T00:00:00Z",
-    "reason": "Both compilers report the same missing GenerateAudioParams.sentences property at this source span; TS 7 selects TS2741 while TS 6 reports the broader TS2345 assignment error."
-  },
-  {
-    "diagnostic": "apps/primary-advantage/actions/test.ts(18,39): error TS2741: Property 'sentences' is missing in type '{ passage: any; articleId: string; }' but required in type 'GenerateAudioParams'.",
-    "tsconfig_path": "apps/primary-advantage/tsconfig.json",
-    "absent_from": "ts6",
-    "reviewed_by": "typescript7-phase3c-reconciliation",
-    "reviewed_at": "2026-07-15T00:00:00Z",
-    "reason": "Both compilers report the same missing GenerateAudioParams.sentences property at this source span; TS 7 selects TS2741 while TS 6 reports the broader TS2345 assignment error."
-  },
-  {
     "diagnostic": "apps/primary-advantage/components/articles/questions/sa-question-content.tsx(114,13): error TS2304: Cannot find name 'update'.",
     "tsconfig_path": "apps/primary-advantage/tsconfig.json",
     "absent_from": "ts7",

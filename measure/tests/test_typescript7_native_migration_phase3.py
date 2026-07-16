@@ -216,6 +216,17 @@ class Phase3ParityRecorderContract(unittest.TestCase):
         )
         self.assertTrue(all(entry["diagnostic"].endswith("error TS2769: No overload matches this call.") for entry in reconciled))
 
+    def test_parity_ledger_excludes_the_obsolete_generate_audio_pair(self) -> None:
+        """Rejects stale ledger entries after the hosted compiler no longer emits their diagnostic pair."""
+        ledger = json.loads(self.runner.PARITY_LEDGER.read_text(encoding="utf-8"))
+        stale_entries = [
+            entry
+            for entry in ledger
+            if entry["tsconfig_path"] == "apps/primary-advantage/tsconfig.json"
+            and entry["diagnostic"].startswith("apps/primary-advantage/actions/test.ts(18,39):")
+        ]
+        self.assertEqual(stale_entries, [])
+
     def test_exact_compiler_identities_are_observed_not_asserted(self) -> None:
         """Requires the live compiler executables to report the exact alias versions."""
         ts6 = self.runner._compiler_identity(self.runner.TS6_TSC, "6.0.2")
