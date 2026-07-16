@@ -128,6 +128,10 @@
     semantic compiler and order-dependent counts are both zero, and `TS7_CHECKERS=1`.
     This is observation 1/3, not promotion: the separate primary-advantage build
     baseline still prevents the required full-gate verdict.
+  - 2026-07-16: Recorded the second consecutive clean semantic-parity observation
+    `29462009156` (artifact `8361644727`): 39/39 stable-provenance configs and zero
+    semantic compiler and ordering differences at `TS7_CHECKERS=1`. This is 2/3;
+    the raw Turbo difference of 140 is retained as non-comparable context only.
   - [ ] Promote the TypeScript 7 lane only after parity and full gates pass.
   - [ ] Observe and record at least three representative CI runs.
 - [b] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md) — deferred:product-owner
