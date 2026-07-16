@@ -132,8 +132,13 @@
     `29462009156` (artifact `8361644727`): 39/39 stable-provenance configs and zero
     semantic compiler and ordering differences at `TS7_CHECKERS=1`. This is 2/3;
     the raw Turbo difference of 140 is retained as non-comparable context only.
+  - 2026-07-16: Recorded `29462559289` (artifact `8361842861`), completing three
+    consecutive clean 39/39 semantic-parity observations at provisional
+    `TS7_CHECKERS=1`. This live-window evidence does not select final checker
+    concurrency or satisfy the independent full-build gate.
   - [ ] Promote the TypeScript 7 lane only after parity and full gates pass.
-  - [ ] Observe and record at least three representative CI runs.
+  - [x] Observe and record at least three representative CI runs. [evidence:
+    29461114234, 29462009156, 29462559289]
 - [b] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md) — deferred:product-owner
 
 ## Phase 4: Generate Docs & Doctor

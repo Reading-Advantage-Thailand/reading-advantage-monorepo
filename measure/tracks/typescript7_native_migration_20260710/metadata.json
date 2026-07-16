@@ -3,7 +3,7 @@
   "type": "chore",
   "status": "in_progress",
   "created_at": "2026-07-10T07:46:30Z",
-  "updated_at": "2026-07-16T00:48:50Z",
+  "updated_at": "2026-07-16T01:00:30Z",
   "description": "Adopt the native TypeScript 7 compiler for monorepo type-checking and eligible builds while retaining the TypeScript 6 compatibility API for tools that embed TypeScript.",
   "estimated_tasks": 23,
   "actual_tasks": null,

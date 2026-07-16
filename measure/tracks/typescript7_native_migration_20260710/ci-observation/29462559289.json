@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "record_type": "compacted_ci_artifact_transcript",
+  "run_id": "29462559289",
+  "lane": "ts7-parity-non-blocking",
+  "ts7_gate_exit": 2,
+  "ts6_parity_exit": 2,
+  "cache_state": {
+    "ts6": "0 cached, 55 total",
+    "ts7": "22 cached, 55 total",
+    "ts7_repeat_forced": "0 cached, 55 total"
+  },
+  "order_dependent_diff_count": 0,
+  "compiler_diagnostic_diff_count": 0,
+  "ts7_repeat_exit": 2,
+  "peak_rss_kib": 2706892,
+  "ts7_checkers": 1,
+  "semantic_parity": {
+    "accepted": true,
+    "status": "accepted",
+    "reason": "all_39_configs_passed_with_reviewed_ledger",
+    "exit_status": 0,
+    "config_count": 39,
+    "passed_count": 39,
+    "failed_count": 0,
+    "gate_failures": [],
+    "input_provenance_stable": true,
+    "diagnostic_parity_ledger_sha256": "dee83b9ccafd119b577a84d393fe4259c680324646eba12c4d6429fff75efb04"
+  },
+  "turbo_execution_diagnostics": {
+    "comparable": false,
+    "reason": "turbo_short_circuits_after_different_failing_tasks; use_semantic_parity_for_promotion",
+    "raw_order_dependent_diff_count": 0,
+    "ts6_diagnostic_count": 131,
+    "ts7_diagnostic_count": 131,
+    "ts7_repeat_diagnostic_count": 131
+  },
+  "github_actions_run": {
+    "event": "pull_request",
+    "head_revision": "92d26f4d1b5df17cdc54d5e792e2cf929d8e9966",
+    "workflow_conclusion": "failure",
+    "parity_job_id": 87508963384,
+    "parity_job_conclusion": "success",
+    "parity_job_started_at": "2026-07-16T00:50:51Z",
+    "parity_job_completed_at": "2026-07-16T00:59:00Z"
+  },
+  "source_revision": "772fc7f3467ddcb5feb9a43aba34d7fba9a0657b",
+  "artifact": {
+    "github_actions_artifact_id": 8361842861,
+    "archive_download_url": "https://api.github.com/repos/Reading-Advantage-Thailand/reading-advantage-monorepo/actions/artifacts/8361842861/zip",
+    "source_observation_sha256": "f37c7a6deeba96f6d944238ea15dacf36179abfa50f196ef146404a7650ea48f",
+    "source_observation_size_bytes": 81305,
+    "compaction_note": "This completes three consecutive clean semantic-parity observations at the provisional TS7_CHECKERS=1 setting. Raw Turbo output happens to agree here but remains non-comparable by contract; the 39-config semantic oracle establishes promotion-relevant parity. This observation window does not choose final concurrency: an accepted controlled benchmark matrix is still required. The independent Primary Advantage build baseline also keeps the aggregate workflow red."
+  }
+}
