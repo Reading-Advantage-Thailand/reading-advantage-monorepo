@@ -34,12 +34,12 @@
 
 ## Phase 4: Full independent acceptance
 
-- [~] Task: Spawn a `fork_turns="none"`, tool-attested reviewer to re-run full denominator reconciliation - deferred:adversarial-reviewer; the root/Green agent is forbidden from the adversarial-reviewer role per `phase0-role-ownership-manifest.json` (`root_agent.forbidden_roles` includes `adversarial-reviewer`); the Phase-3 file-reconciliation gap from `e14ab11e` has been repaired (phase3-reconciliation.json regenerated, Phase-3 focused contract passes), but the Admission gate still requires the committed Phase 0-3 predecessor contracts to pass together against committed inputs before the reviewer may begin
-- [~] Task: Run claim hash, revision reachability, denominator, role-receipt, and stop-loss validators - deferred:adversarial-reviewer
-- [~] Task: Remediate every Critical, High, and Medium finding - deferred:adversarial-reviewer
-- [~] Task: Publish non-consumable candidate denominator and partition manifests plus complete review report - deferred:adversarial-reviewer
-- [b] Task: Obtain product-owner acceptance bound to exact candidate/review hashes, then publish accepted denominator and partition manifests - deferred:product-owner
-- [b] Task: Measure - User Manual Verification 'Phase 4' (Protocol in workflow.md) - deferred:product-owner
+- [b] Task: Spawn a `fork_turns="none"`, tool-attested reviewer to re-run full denominator reconciliation; the root/Green agent is forbidden from the adversarial-reviewer role per `phase0-role-ownership-manifest.json` (`root_agent.forbidden_roles` includes `adversarial-reviewer`); the Phase-3 file-reconciliation gap from `e14ab11e` has been repaired (phase3-reconciliation.json regenerated, Phase-3 focused contract passes), but the Admission gate still requires the committed Phase 0-3 predecessor contracts to pass together against committed inputs before the reviewer may begin (deferred:adversarial-reviewer)
+- [b] Task: Run claim hash, revision reachability, denominator, role-receipt, and stop-loss validators (deferred:adversarial-reviewer)
+- [b] Task: Remediate every Critical, High, and Medium finding (deferred:adversarial-reviewer)
+- [b] Task: Publish non-consumable candidate denominator and partition manifests plus complete review report (deferred:adversarial-reviewer)
+- [b] Task: Obtain product-owner acceptance bound to exact candidate/review hashes, then publish accepted denominator and partition manifests (deferred:product-owner)
+- [b] Task: Measure - User Manual Verification 'Phase 4' (Protocol in workflow.md) (deferred:product-owner)
 
 ### Phase-4 Red command evidence (mid-red run, role-base 9849e6a963bb2518f8306b33b205ff4f714daad5)
 
