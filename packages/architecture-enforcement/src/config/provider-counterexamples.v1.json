@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "schemaVersion": 1,
+      "id": "provider-ai-adapter",
+      "ruleId": "AI_PROVIDER_BOUNDARY",
+      "expected": "allowed",
+      "fixtureRoot": "test-fixtures/architecture-enforcement/provider/ai-adapter",
+      "sourcePath": "packages/ai/src/providers/openai.ts",
+      "supportPaths": [],
+      "expectedEvidenceKinds": ["static-import", "client-construction"],
+      "rationale": "The exact AI provider directory may construct a vendor client behind the provider-neutral AI interface."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "provider-ai-alias-import",
+      "ruleId": "AI_PROVIDER_BOUNDARY",
+      "expected": "violation",
+      "fixtureRoot": "test-fixtures/architecture-enforcement/provider/ai-alias",
+      "sourcePath": "apps/marketing/src/generate-copy.ts",
+      "supportPaths": ["packages/ai-alias/src/index.ts"],
+      "resolverConfigPath": "tsconfig.json",
+      "expectedEvidenceKinds": ["static-import"],
+      "rationale": "A product app cannot hide a direct AI provider import behind a TypeScript path alias."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "provider-ai-client-construction",
+      "ruleId": "AI_PROVIDER_BOUNDARY",
+      "expected": "violation",
+      "fixtureRoot": "test-fixtures/architecture-enforcement/provider/ai-client",
+      "sourcePath": "apps/sales/src/provider-client.ts",
+      "supportPaths": [],
+      "expectedEvidenceKinds": ["static-import", "client-construction"],
+      "rationale": "A product app constructing an OpenAI client directly violates the provider-neutral AI boundary."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "provider-ai-credential-read",
+      "ruleId": "AI_PROVIDER_BOUNDARY",
+      "expected": "violation",
+      "fixtureRoot": "test-fixtures/architecture-enforcement/provider/ai-credential",
+      "sourcePath": "apps/marketing/src/provider-environment.ts",
+      "supportPaths": [],
+      "expectedEvidenceKinds": ["environment-read"],
+      "rationale": "A product app reading an AI provider credential bypasses the provider adapter boundary."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "provider-ai-direct-import",
+      "ruleId": "AI_PROVIDER_BOUNDARY",
+      "expected": "violation",
+      "fixtureRoot": "test-fixtures/architecture-enforcement/provider/ai-direct",
+      "sourcePath": "apps/marketing/src/provider-sdk.ts",
+      "supportPaths": [],
+      "expectedEvidenceKinds": ["static-import"],
+      "rationale": "A direct OpenAI SDK import from a product app violates the named AI adapter ownership root."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "provider-integration-adapter",
+      "ruleId": "INTEGRATION_PROVIDER_BOUNDARY",
+      "expected": "allowed",
+      "fixtureRoot": "test-fixtures/architecture-enforcement/provider/integration-adapter",
+      "sourcePath": "packages/integrations/github/src/drivers/client.ts",
+      "supportPaths": [],
+      "expectedEvidenceKinds": ["static-import", "client-construction"],
+      "rationale": "The exact GitHub integration driver may construct an Octokit client behind the integration interface."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "provider-integration-dynamic-import",
+      "ruleId": "INTEGRATION_PROVIDER_BOUNDARY",
+      "expected": "violation",
+      "fixtureRoot": "test-fixtures/architecture-enforcement/provider/integration-dynamic",
+      "sourcePath": "apps/sales/src/load-stripe.ts",
+      "supportPaths": [],
+      "expectedEvidenceKinds": ["dynamic-import"],
+      "rationale": "A static-string dynamic Stripe SDK import from a product app violates the integration boundary."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "provider-storage-adapter",
+      "ruleId": "STORAGE_PROVIDER_BOUNDARY",
+      "expected": "allowed",
+      "fixtureRoot": "test-fixtures/architecture-enforcement/provider/storage-adapter",
+      "sourcePath": "packages/storage/src/drivers/gcs.ts",
+      "supportPaths": [],
+      "expectedEvidenceKinds": ["static-import", "client-construction"],
+      "rationale": "The exact storage driver directory may construct a cloud storage client behind the storage interface."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "provider-storage-barrel-import",
+      "ruleId": "STORAGE_PROVIDER_BOUNDARY",
+      "expected": "violation",
+      "fixtureRoot": "test-fixtures/architecture-enforcement/provider/storage-barrel",
+      "sourcePath": "apps/marketing/src/assets.ts",
+      "supportPaths": ["apps/marketing/src/storage-barrel.ts"],
+      "expectedEvidenceKinds": ["static-import", "re-export"],
+      "rationale": "A product app cannot hide a cloud storage provider import behind a local re-export barrel."
+    }
+  ]
+}

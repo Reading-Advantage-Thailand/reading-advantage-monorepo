@@ -3,6 +3,7 @@ import { posix, resolve } from "node:path";
 import ts from "typescript";
 import { z } from "zod";
 import databaseCounterexampleData from "./config/database-counterexamples.v1.json";
+import providerCounterexampleData from "./config/provider-counterexamples.v1.json";
 import { findingKindSchema } from "./contracts.js";
 import { compareStableStrings } from "./stable-order.js";
 
@@ -105,9 +106,26 @@ export interface CounterexampleSourceValidation {
  * @returns Fresh strictly validated cases in stable identifier order.
  */
 export function loadDatabaseCounterexamples(): ArchitectureCounterexample[] {
+  return loadCounterexamples(databaseCounterexampleData);
+}
+
+/**
+ * Loads one strict counterexample manifest in stable identifier order.
+ * @param data Untrusted versioned manifest data.
+ * @returns Fresh strictly validated counterexample cases.
+ */
+function loadCounterexamples(data: unknown): ArchitectureCounterexample[] {
   return counterexampleManifestSchema
-    .parse(databaseCounterexampleData)
+    .parse(data)
     .cases.sort((left, right) => compareStableStrings(left.id, right.id));
+}
+
+/**
+ * Loads the canonical provider positive and negative fixture matrix.
+ * @returns Fresh strictly validated cases in stable identifier order.
+ */
+export function loadProviderCounterexamples(): ArchitectureCounterexample[] {
+  return loadCounterexamples(providerCounterexampleData);
 }
 
 /**
