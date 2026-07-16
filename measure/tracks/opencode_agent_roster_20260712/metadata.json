@@ -1,0 +1,10 @@
+{
+  "track_id": "opencode_agent_roster_20260712",
+  "type": "chore",
+  "status": "in_progress",
+  "created_at": "2026-07-12T00:00:00Z",
+  "updated_at": "2026-07-12T00:00:00Z",
+  "description": "Refresh the global OpenCode coding and Measure agent roster for GPT-5.6, remove unavailable Moonshot routing, and prioritize subscription-backed models.",
+  "estimated_tasks": 6,
+  "actual_tasks": null
+}
