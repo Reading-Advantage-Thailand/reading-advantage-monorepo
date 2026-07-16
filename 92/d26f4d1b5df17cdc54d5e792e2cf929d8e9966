@@ -1,0 +1,9 @@
+Track: typescript7_native_migration_20260710
+
+Recorded GitHub Actions run 29462009156 as the second consecutive clean TypeScript 7 semantic-parity observation. The artifact records 39/39 configs, stable provenance, zero semantic compiler and order differences, checker count 1, raw non-comparable Turbo evidence, and both PR-head and synthetic-merge revisions. This advances the external observation window to 2/3 without claiming promotion: the independent Primary Advantage build boundary defect still blocks an aggregate green run, and the complete current-source benchmark remains pending.
+
+Verification:
+- jq parse of the compact record and metadata
+- PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -q measure.tests.test_typescript7_native_migration_phase3 (86 passed)
+- git diff --check
+- Read-only CI artifact audit subagent confirmed semantic acceptance
