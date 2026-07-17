@@ -3,7 +3,7 @@
   "status": "frozen-not-executed",
   "track_id": "apk_source_denominator_inventory_20260712",
   "allowed_input_manifest_path": "measure/tracks/apk_source_denominator_inventory_20260712/phase0-input-freeze.json",
-  "allowed_input_manifest_sha256": "e4bba6919b9b60992a388a9cf4f37c7885400b96bec7b31898f59eaa80d12a9f",
+  "allowed_input_manifest_sha256": "f8d68f17453e87ba9fb155420e91fcaccaf7c1942b4e02ad372c66dc6ad31129",
   "root_agent": {
     "permitted_actions": ["coordinate", "apply reviewed patches", "commit", "report"],
     "forbidden_roles": ["discovery-auditor", "evidence-collector", "requirements-mapper", "truth-test-author", "adversarial-reviewer"]
@@ -34,6 +34,14 @@
     "required_provenance": ["spawn_id", "parent_ancestry_ids", "prompt_sha256", "actual_context_manifest_sha256", "start_event_id", "end_event_id", "final_response_sha256", "output_sha256", "budget_declaration_sha256", "commit_sha"],
     "reviewer_isolation": "fork_turns=none or a retained raw export whose history starts with exactly the fresh review prompt; no inherited author narrative is allowed."
   },
+  "authority_correction": {
+    "prior_manifest_sha256": "12dd3dd5c36df0f42b73482fb4764d7ea5785e993fe7f17578eed36996418289",
+    "prior_input_sha256": "e4bba6919b9b60992a388a9cf4f37c7885400b96bec7b31898f59eaa80d12a9f",
+    "red_commit": "0e1241359b5467a52b63517accc93703a6e614c3",
+    "reason": "old map omitted Phase2 and Phase3 handoffs",
+    "product_owner_acceptance_claimed": false,
+    "external_run_authorized": true
+  },
   "tasks": [
     {
       "task_id": "discovery-auditor:mechanical-denominator",
@@ -47,14 +55,14 @@
       "owner_role": "evidence-collector",
       "forbidden_roles": ["discovery-auditor", "requirements-mapper", "truth-test-author", "adversarial-reviewer"],
       "reviewer_role": "adversarial-reviewer",
-      "expected_outputs": ["asset-file-denominator.json", "historical-source-denominator.json"]
+      "expected_outputs": ["asset-file-denominator.json", "historical-source-denominator.json", "independent-human-discovery.json", "human-duplicate-drift-records.json", "human-historical-deleted-records.json", "human-discrepancy-records.json"]
     },
     {
       "task_id": "requirements-mapper:reconciliation-records",
       "owner_role": "requirements-mapper",
       "forbidden_roles": ["discovery-auditor", "evidence-collector", "truth-test-author", "adversarial-reviewer"],
       "reviewer_role": "adversarial-reviewer",
-      "expected_outputs": ["denominator-discrepancies.json", "denominator-method.md"]
+      "expected_outputs": ["denominator-discrepancies.json", "denominator-method.md", "phase3-reconciliation.json"]
     },
     {
       "task_id": "truth-test-author:denominator-contract-tests",
