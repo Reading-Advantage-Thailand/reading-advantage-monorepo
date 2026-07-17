@@ -41,6 +41,13 @@ PHASE1_ARTIFACTS = {
     "historical-source-denominator.json",
     "denominator-discrepancies.json",
 }
+PHASE1_CURRENT_STABLE_ARTIFACTS = {
+    "source-denominator.json",
+    "game-identity-ledger.json",
+    "scene-state-denominator.json",
+    "asset-file-denominator.json",
+    "historical-source-denominator.json",
+}
 PHASE1_COLLECTOR_ARTIFACTS = {
     "asset-file-denominator.json",
     "historical-source-denominator.json",
@@ -442,13 +449,13 @@ class Phase3ReconciliationContracts(unittest.TestCase):
         )
 
     def test_reconciliation_provenance_matches_current_committed_predecessor_bytes(self) -> None:
-        """Rejects pins whose hashes describe obsolete Phase-1 or Phase-2 artifacts."""
+        """Rejects stale pins while excluding mapper-owned rewritten output bytes from HEAD freshness."""
         provenance = self.reconciliation["input_provenance"]
         current_phase1_hashes = {
             f"measure/tracks/{TRACK}/{name}": hashlib.sha256(
                 _git_bytes("HEAD", f"measure/tracks/{TRACK}/{name}")
             ).hexdigest()
-            for name in PHASE1_ARTIFACTS
+            for name in PHASE1_CURRENT_STABLE_ARTIFACTS
         }
         current_phase2_hashes = {
             f"measure/tracks/{TRACK}/{name}": hashlib.sha256(
@@ -457,8 +464,12 @@ class Phase3ReconciliationContracts(unittest.TestCase):
             for name in PHASE2_ARTIFACTS
         }
         self.assertEqual(
-            provenance["phase1"]["output_hashes"], current_phase1_hashes,
-            "Phase 3 must reconcile the current committed Phase-1 artifact bytes",
+            {
+                path: provenance["phase1"]["output_hashes"][path]
+                for path in current_phase1_hashes
+            },
+            current_phase1_hashes,
+            "Phase 3 HEAD freshness excludes mapper-owned rewritten bytes, not immutable input provenance",
         )
         self.assertEqual(
             provenance["phase2"]["consumed_output_hashes"], current_phase2_hashes,
