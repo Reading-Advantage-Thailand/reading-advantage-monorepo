@@ -7,6 +7,7 @@ for that revision even when other agents have dirty work in the checkout.
 
 from __future__ import annotations
 
+import argparse
 import hashlib
 import json
 import mimetypes
@@ -50,6 +51,26 @@ REQUIRED_SOURCE_PATHS = {
     "packages/game-cartridges/src/index.ts",
 }
 CATALOG_PATH = "apps/advantage-games/src/lib/gameCards.ts"
+SHARED_PACKAGE_ROOTS = (
+    "packages/advantage-play-kit/",
+    "packages/game-contracts/",
+    "packages/game-cartridges/",
+)
+ROLE_OUTPUTS = {
+    "discovery-auditor": (
+        "source-denominator.json",
+        "game-identity-ledger.json",
+        "scene-state-denominator.json",
+    ),
+    "evidence-collector": (
+        "asset-file-denominator.json",
+        "historical-source-denominator.json",
+    ),
+    "requirements-mapper": (
+        "denominator-discrepancies.json",
+        "denominator-method.md",
+    ),
+}
 
 
 def run_git(*arguments: str) -> bytes:
@@ -152,6 +173,8 @@ def source_path(path: str) -> bool:
     if path.startswith(f"{QUARANTINE_PATH}/"):
         return False
     if path in REQUIRED_SOURCE_PATHS:
+        return True
+    if path.startswith(SHARED_PACKAGE_ROOTS):
         return True
     suffix = PurePosixPath(path).suffix.lower()
     if suffix not in SOURCE_SUFFIXES:
@@ -521,6 +544,26 @@ def build_scene_state_denominator(paths: list[str]) -> dict[str, Any]:
                 add_state(alias_name, literal_match.group(1), literal_line, "literal-union-type-alias")
 
         property_domains: dict[str, tuple[str, set[str], int]] = {}
+        object_type_pattern = re.compile(
+            r"export\s+type\s+(\w+)\s*=\s*\{([\s\S]*?)\n\}\s*;?"
+        )
+        for object_type in object_type_pattern.finditer(text):
+            type_name, body = object_type.groups()
+            body_offset = object_type.start(2)
+            for prop in re.finditer(r"^\s*(\w+)\??:\s*([^;\n]+);?", body, re.MULTILINE):
+                property_name, type_text = prop.groups()
+                if not STATE_NAME.search(property_name):
+                    continue
+                literals = {literal.group(1) for literal in STRING_LITERAL.finditer(type_text)}
+                if not literals:
+                    continue
+                symbol = f"{type_name}.{property_name}"
+                line = source_line_number(text, body_offset + prop.start(1))
+                property_domains[property_name] = (symbol, literals, line)
+                for literal in sorted(literals):
+                    literal_line = source_line_number(text, body_offset + prop.start(2))
+                    add_state(symbol, literal, literal_line, "object-type-literal-property")
+
         interface_pattern = re.compile(r"(?:export\s+)?interface\s+(\w+)\s*\{([\s\S]*?)\n\}")
         for interface in interface_pattern.finditer(text):
             interface_name, body = interface.groups()
@@ -917,13 +960,16 @@ def write_json(path: Path, value: dict[str, Any]) -> None:
     path.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
-def write_method() -> None:
+def write_method(output_dir: Path) -> None:
     """Writes the non-interpretive method and exclusion record for the artifacts.
+
+    Args:
+        output_dir: Directory receiving the method artifact.
 
     Returns:
         Nothing.
     """
-    (TRACK_DIR / "denominator-method.md").write_text(
+    (output_dir / "denominator-method.md").write_text(
         f"""# Denominator Method
 
 Schema version: `apk-denominator-method.v1`
@@ -974,22 +1020,51 @@ product outcome.
     )
 
 
-def main() -> None:
+def main(output_dir: Path = TRACK_DIR, role: str | None = None) -> None:
     """Generates every Phase-1 denominator artifact required by the Red contract.
+
+    Args:
+        output_dir: Directory receiving selected artifacts.
+        role: Optional role whose owned artifacts alone are written.
 
     Returns:
         Nothing.
     """
+    output_dir.mkdir(parents=True, exist_ok=True)
+    selected_outputs = set(
+        ROLE_OUTPUTS[role] if role is not None else (
+            "source-denominator.json",
+            "game-identity-ledger.json",
+            "scene-state-denominator.json",
+            "asset-file-denominator.json",
+            "historical-source-denominator.json",
+            "denominator-discrepancies.json",
+            "denominator-method.md",
+        )
+    )
     paths = baseline_paths()
     source, pages = build_source_denominator(paths)
-    write_json(TRACK_DIR / "source-denominator.json", source)
-    write_json(TRACK_DIR / "game-identity-ledger.json", build_identity_ledger(pages))
-    write_json(TRACK_DIR / "scene-state-denominator.json", build_scene_state_denominator(paths))
-    write_json(TRACK_DIR / "asset-file-denominator.json", build_asset_denominator(paths))
-    write_json(TRACK_DIR / "historical-source-denominator.json", build_historical_denominator(pages))
-    write_json(TRACK_DIR / "denominator-discrepancies.json", build_discrepancies(pages))
-    write_method()
+    artifacts = {
+        "source-denominator.json": source,
+        "game-identity-ledger.json": build_identity_ledger(pages),
+        "scene-state-denominator.json": build_scene_state_denominator(paths),
+        "asset-file-denominator.json": build_asset_denominator(paths),
+        "historical-source-denominator.json": build_historical_denominator(pages),
+        "denominator-discrepancies.json": build_discrepancies(pages),
+    }
+    for name, value in artifacts.items():
+        if name in selected_outputs:
+            write_json(output_dir / name, value)
+    if "denominator-method.md" in selected_outputs:
+        write_method(output_dir)
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output-dir", type=Path, default=TRACK_DIR)
+    parser.add_argument(
+        "--role",
+        choices=("discovery-auditor", "evidence-collector", "requirements-mapper"),
+    )
+    arguments = parser.parse_args()
+    main(output_dir=arguments.output_dir, role=arguments.role)
