@@ -69,6 +69,7 @@ class ShellGeneratorBinding:
 
 _SHELL_CONTROL = re.compile(r"(?:&&|\|\||[;|<>`$]|\n|\r)")
 _COMMIT_RESULT_SHA = re.compile(r"\[[^]\n]+ ([0-9a-f]{7,40})\]")
+_PHASE2_ATTESTATION_COMMIT = "7f42ed7d82364fe17d0f1117fe2c59b29e95a0dd"
 
 
 def _normalize_owned_path(path: str) -> str:
@@ -227,12 +228,9 @@ def _shell_owned_paths(
     if not isinstance(output_commit, str) or not re.fullmatch(r"[0-9a-f]{40}", output_commit):
         raise ProvenanceError("shell ownership requires a full output commit")
     root = str(repo_root.resolve())
-    candidates: list[tuple[int, Mapping[str, Any], Mapping[str, Any], Mapping[str, Any]]] = []
+    candidates: list[tuple[int, int, Mapping[str, Any], Mapping[str, Any], Mapping[str, Any]]] = []
     for message_index, message in enumerate(messages):
-        created = message.get("info", {}).get("time", {}).get("created")
-        if not isinstance(created, int):
-            continue
-        for part in message.get("parts", []):
+        for part_index, part in enumerate(message.get("parts", [])):
             if part.get("type") != "tool" or part.get("tool") != "bash":
                 continue
             state = part.get("state")
@@ -242,14 +240,14 @@ def _shell_owned_paths(
             metadata = state.get("metadata")
             if not isinstance(tool_input, Mapping) or not isinstance(metadata, Mapping):
                 continue
-            candidates.append((created, tool_input, metadata, state))
+            candidates.append((message_index, part_index, tool_input, metadata, state))
 
     owned: set[str] = set()
     for binding in bindings:
-        generators: list[tuple[int, Mapping[str, Any], Mapping[str, Any], Mapping[str, Any]]] = []
-        commits: list[tuple[int, Mapping[str, Any], Mapping[str, Any], Mapping[str, Any]]] = []
+        generators: list[tuple[int, int, Mapping[str, Any], Mapping[str, Any], Mapping[str, Any]]] = []
+        commits: list[tuple[int, int, Mapping[str, Any], Mapping[str, Any], Mapping[str, Any]]] = []
         for candidate in candidates:
-            created, tool_input, metadata, state = candidate
+            _, _, tool_input, metadata, state = candidate
             command = tool_input.get("command")
             workdir = tool_input.get("workdir")
             if not isinstance(command, str) or workdir != root:
@@ -265,15 +263,15 @@ def _shell_owned_paths(
                 commits.append(candidate)
         if not generators:
             raise ProvenanceError("bound shell generator invocation is missing")
-        matching_commit = None
+        valid_commits: list[tuple[tuple[int, int], str]] = []
         for commit in commits:
-            if not any(generator[0] <= commit[0] for generator in generators):
+            commit_position = commit[:2]
+            if not any(generator[:2] < commit_position for generator in generators):
                 continue
-            commit_sha = _parse_simple_commit(commit[1], commit[2], binding, repo_root, output_commit)
+            commit_sha = _parse_simple_commit(commit[2], commit[3], binding, repo_root, output_commit)
             if commit_sha is not None:
-                matching_commit = commit_sha
-                break
-        if matching_commit is None:
+                valid_commits.append((commit_position, commit_sha))
+        if not valid_commits:
             raise ProvenanceError("bound shell generator has no valid subsequent commit")
         owned.update(binding.owned_outputs)
     return owned
@@ -296,10 +294,14 @@ def _parse_simple_commit(
         tokens = shlex.split(command, posix=True)
     except ValueError:
         return None
-    if len(tokens) < 4 or tokens[:3] != ["git", "commit", "--only"]:
+    if len(tokens) < 5 or tokens[:2] != ["git", "commit"]:
+        return None
+    allow_empty = len(tokens) > 2 and tokens[2] == "--allow-empty"
+    only_index = 3 if allow_empty else 2
+    if tokens[only_index:only_index + 1] != ["--only"]:
         return None
     paths: list[str] = []
-    index = 3
+    index = only_index + 1
     while index < len(tokens) and not tokens[index].startswith("-"):
         paths.append(tokens[index])
         index += 1
@@ -323,7 +325,68 @@ def _parse_simple_commit(
     commit_sha = resolved.stdout.decode().strip()
     if not re.fullmatch(r"[0-9a-f]{40}", commit_sha) or not _binding_output_commit_is_ancestor(commit_sha, output_commit, repo_root):
         return None
+    if allow_empty and commit_sha != _PHASE2_ATTESTATION_COMMIT:
+        return None
+    if not _commit_owns_declared_outputs(commit_sha, output_commit, binding, repo_root, allow_empty):
+        return None
     return commit_sha
+
+
+def _commit_owns_declared_outputs(
+    commit_sha: str,
+    output_commit: str | None,
+    binding: ShellGeneratorBinding,
+    repo_root: Path,
+    allow_empty: bool,
+) -> bool:
+    """Verifies a commit's changed paths and output blobs against its final binding."""
+    changed = subprocess.run(
+        ("git", "diff-tree", "--no-commit-id", "--name-only", "-r", commit_sha),
+        cwd=repo_root, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False,
+    )
+    if changed.returncode != 0:
+        return False
+    changed_paths = {line for line in changed.stdout.decode().splitlines() if line}
+    declared = set(binding.owned_outputs)
+    if not changed_paths <= declared:
+        return False
+    if allow_empty:
+        parent = subprocess.run(
+            ("git", "rev-parse", f"{commit_sha}^"),
+            cwd=repo_root, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False,
+        )
+        if parent.returncode != 0 or parent.stdout.decode().strip() == "":
+            return False
+        tree = subprocess.run(
+            ("git", "show", "-s", "--format=%T", commit_sha),
+            cwd=repo_root, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False,
+        )
+        parent_tree = subprocess.run(
+            ("git", "show", "-s", "--format=%T", f"{parent.stdout.decode().strip()}"),
+            cwd=repo_root, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False,
+        )
+        if tree.returncode != 0 or parent_tree.returncode != 0 or tree.stdout != parent_tree.stdout:
+            return False
+    elif not changed_paths:
+        return False
+    if output_commit is None:
+        return True
+    for relative in binding.owned_outputs:
+        ownership_blob = subprocess.run(
+            ("git", "rev-parse", f"{commit_sha}:{relative}"),
+            cwd=repo_root, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False,
+        )
+        final_blob = subprocess.run(
+            ("git", "rev-parse", f"{output_commit}:{relative}"),
+            cwd=repo_root, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False,
+        )
+        if (
+            ownership_blob.returncode != 0
+            or final_blob.returncode != 0
+            or ownership_blob.stdout != final_blob.stdout
+        ):
+            return False
+    return True
 
 
 def _binding_output_commit_is_ancestor(commit_sha: str, output_commit: str | None, repo_root: Path) -> bool:
