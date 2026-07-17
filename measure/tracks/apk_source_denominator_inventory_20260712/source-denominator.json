@@ -22530,6 +22530,470 @@
     {
       "discovery_method": "mechanical-filesystem",
       "evidence": {
+        "blob_sha256": "8f189bac787e05cd3cb4164767b501662fb78f949176433745f28f326768c90a",
+        "path": "packages/advantage-play-kit/eslint.config.mjs",
+        "range": {
+          "end_line": 3,
+          "sha256": "8f189bac787e05cd3cb4164767b501662fb78f949176433745f28f326768c90a",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "file_path": "packages/advantage-play-kit/eslint.config.mjs",
+      "record_id": "file:packages/advantage-play-kit/eslint.config.mjs",
+      "record_type": "file"
+    },
+    {
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "da612ecbbca77f6b204adc96b4fa02bbf9347fe4fd9838848dbc38fa99a603ab",
+        "path": "packages/advantage-play-kit/package.json",
+        "range": {
+          "end_line": 61,
+          "sha256": "da612ecbbca77f6b204adc96b4fa02bbf9347fe4fd9838848dbc38fa99a603ab",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "file_path": "packages/advantage-play-kit/package.json",
+      "record_id": "file:packages/advantage-play-kit/package.json",
+      "record_type": "file"
+    },
+    {
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "d076ad59529933397653dc29851ba5f2d32a9a4164d3c2889982306015546b12",
+        "path": "packages/advantage-play-kit/src/editions/asset-contract.ts",
+        "range": {
+          "end_line": 128,
+          "sha256": "d076ad59529933397653dc29851ba5f2d32a9a4164d3c2889982306015546b12",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "file_path": "packages/advantage-play-kit/src/editions/asset-contract.ts",
+      "record_id": "file:packages/advantage-play-kit/src/editions/asset-contract.ts",
+      "record_type": "file"
+    },
+    {
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "f550dda2beb25c046d1104c13aa5d62a43814d15ace17f73dec1ef522d84229d",
+        "path": "packages/advantage-play-kit/src/editions/editions.test.ts",
+        "range": {
+          "end_line": 171,
+          "sha256": "f550dda2beb25c046d1104c13aa5d62a43814d15ace17f73dec1ef522d84229d",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "file_path": "packages/advantage-play-kit/src/editions/editions.test.ts",
+      "record_id": "file:packages/advantage-play-kit/src/editions/editions.test.ts",
+      "record_type": "file"
+    },
+    {
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "b98edac5fc5171dba09002f6ec0fcd1878f61f23bbea705adc37768ebeb469fa",
+        "path": "packages/advantage-play-kit/src/editions/editions.ts",
+        "range": {
+          "end_line": 446,
+          "sha256": "b98edac5fc5171dba09002f6ec0fcd1878f61f23bbea705adc37768ebeb469fa",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "file_path": "packages/advantage-play-kit/src/editions/editions.ts",
+      "record_id": "file:packages/advantage-play-kit/src/editions/editions.ts",
+      "record_type": "file"
+    },
+    {
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "082ab7d74957ee0e52ff58a8a596f3064a323861a62f833d8480cf486dbc045c",
+        "path": "packages/advantage-play-kit/src/editions/index.ts",
+        "range": {
+          "end_line": 61,
+          "sha256": "082ab7d74957ee0e52ff58a8a596f3064a323861a62f833d8480cf486dbc045c",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "file_path": "packages/advantage-play-kit/src/editions/index.ts",
+      "record_id": "file:packages/advantage-play-kit/src/editions/index.ts",
+      "record_type": "file"
+    },
+    {
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "7016155cf9b398b796b71caf05a36845b0adfe4eda4878a379401e15b624939b",
+        "path": "packages/advantage-play-kit/src/editions/required-pack.test.ts",
+        "range": {
+          "end_line": 104,
+          "sha256": "7016155cf9b398b796b71caf05a36845b0adfe4eda4878a379401e15b624939b",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "file_path": "packages/advantage-play-kit/src/editions/required-pack.test.ts",
+      "record_id": "file:packages/advantage-play-kit/src/editions/required-pack.test.ts",
+      "record_type": "file"
+    },
+    {
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "3cbccd9ee540d8a3d43c1bd48a92137e50b4a3dc90a294e40adc40edf8bcc91b",
+        "path": "packages/advantage-play-kit/src/editions/required-pack.ts",
+        "range": {
+          "end_line": 298,
+          "sha256": "3cbccd9ee540d8a3d43c1bd48a92137e50b4a3dc90a294e40adc40edf8bcc91b",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "file_path": "packages/advantage-play-kit/src/editions/required-pack.ts",
+      "record_id": "file:packages/advantage-play-kit/src/editions/required-pack.ts",
+      "record_type": "file"
+    },
+    {
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "138043f417dde09d1d69e4aaf4ee5f1e29a425be34ca0b732627078523067d9b",
+        "path": "packages/advantage-play-kit/src/index.ts",
+        "range": {
+          "end_line": 5,
+          "sha256": "138043f417dde09d1d69e4aaf4ee5f1e29a425be34ca0b732627078523067d9b",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "file_path": "packages/advantage-play-kit/src/index.ts",
+      "record_id": "file:packages/advantage-play-kit/src/index.ts",
+      "record_type": "file"
+    },
+    {
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "98e4dc3e4d5498a6a67b3e565dc0c8cd8d1ae99f25c515b5066aa37976e0cf15",
+        "path": "packages/advantage-play-kit/src/react/apk-game-host.test.tsx",
+        "range": {
+          "end_line": 100,
+          "sha256": "98e4dc3e4d5498a6a67b3e565dc0c8cd8d1ae99f25c515b5066aa37976e0cf15",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "file_path": "packages/advantage-play-kit/src/react/apk-game-host.test.tsx",
+      "record_id": "file:packages/advantage-play-kit/src/react/apk-game-host.test.tsx",
+      "record_type": "file"
+    },
+    {
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "fc1adacb37c0ac790deaa71504cb560031c8662d4ba39b8ac71bcaef273a7b77",
+        "path": "packages/advantage-play-kit/src/react/apk-game-host.tsx",
+        "range": {
+          "end_line": 187,
+          "sha256": "fc1adacb37c0ac790deaa71504cb560031c8662d4ba39b8ac71bcaef273a7b77",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "file_path": "packages/advantage-play-kit/src/react/apk-game-host.tsx",
+      "record_id": "file:packages/advantage-play-kit/src/react/apk-game-host.tsx",
+      "record_type": "file"
+    },
+    {
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "760f4c8a735cdda395ea007604750653c265d362d18ee7a1090431bae27dedb8",
+        "path": "packages/advantage-play-kit/src/react/index.ts",
+        "range": {
+          "end_line": 5,
+          "sha256": "760f4c8a735cdda395ea007604750653c265d362d18ee7a1090431bae27dedb8",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "file_path": "packages/advantage-play-kit/src/react/index.ts",
+      "record_id": "file:packages/advantage-play-kit/src/react/index.ts",
+      "record_type": "file"
+    },
+    {
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "72c70c3be8888540018a95cee7b515f7c4fcb4a61c8f3b3b9768494eeb5e1a1f",
+        "path": "packages/advantage-play-kit/src/runtime/errors.ts",
+        "range": {
+          "end_line": 53,
+          "sha256": "72c70c3be8888540018a95cee7b515f7c4fcb4a61c8f3b3b9768494eeb5e1a1f",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "file_path": "packages/advantage-play-kit/src/runtime/errors.ts",
+      "record_id": "file:packages/advantage-play-kit/src/runtime/errors.ts",
+      "record_type": "file"
+    },
+    {
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "006b5dc8db44ee15d26401c7e4a53e0149638b46a98b62b4332cbf996f94de0a",
+        "path": "packages/advantage-play-kit/src/runtime/index.ts",
+        "range": {
+          "end_line": 56,
+          "sha256": "006b5dc8db44ee15d26401c7e4a53e0149638b46a98b62b4332cbf996f94de0a",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "file_path": "packages/advantage-play-kit/src/runtime/index.ts",
+      "record_id": "file:packages/advantage-play-kit/src/runtime/index.ts",
+      "record_type": "file"
+    },
+    {
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "4c160d76256b8bc7b032fcf41d9e9738c805ee2351e4a8f7047e729bc452565d",
+        "path": "packages/advantage-play-kit/src/runtime/input.test.ts",
+        "range": {
+          "end_line": 152,
+          "sha256": "4c160d76256b8bc7b032fcf41d9e9738c805ee2351e4a8f7047e729bc452565d",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "file_path": "packages/advantage-play-kit/src/runtime/input.test.ts",
+      "record_id": "file:packages/advantage-play-kit/src/runtime/input.test.ts",
+      "record_type": "file"
+    },
+    {
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "4e74cd7d1f3fe2934e89f5dc3536810511402ba78e858e28378b382d00d4137f",
+        "path": "packages/advantage-play-kit/src/runtime/input.ts",
+        "range": {
+          "end_line": 152,
+          "sha256": "4e74cd7d1f3fe2934e89f5dc3536810511402ba78e858e28378b382d00d4137f",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "file_path": "packages/advantage-play-kit/src/runtime/input.ts",
+      "record_id": "file:packages/advantage-play-kit/src/runtime/input.ts",
+      "record_type": "file"
+    },
+    {
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "09549d064dfc05920ba366d52f1118c4a46fc64fb6dd402e9f3e8d92a0add4d1",
+        "path": "packages/advantage-play-kit/src/runtime/phaser-factory.test.ts",
+        "range": {
+          "end_line": 49,
+          "sha256": "09549d064dfc05920ba366d52f1118c4a46fc64fb6dd402e9f3e8d92a0add4d1",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "file_path": "packages/advantage-play-kit/src/runtime/phaser-factory.test.ts",
+      "record_id": "file:packages/advantage-play-kit/src/runtime/phaser-factory.test.ts",
+      "record_type": "file"
+    },
+    {
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "8e9fa124703d2a18b39d13138991d4ae9fad2d327e466ea6c0518da4f42178c5",
+        "path": "packages/advantage-play-kit/src/runtime/phaser-factory.ts",
+        "range": {
+          "end_line": 74,
+          "sha256": "8e9fa124703d2a18b39d13138991d4ae9fad2d327e466ea6c0518da4f42178c5",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "file_path": "packages/advantage-play-kit/src/runtime/phaser-factory.ts",
+      "record_id": "file:packages/advantage-play-kit/src/runtime/phaser-factory.ts",
+      "record_type": "file"
+    },
+    {
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "ff6e65dcefcfdd66a45c6012dfe944eb187767e07def5e24275fbeeb7db8b0f1",
+        "path": "packages/advantage-play-kit/src/runtime/runtime.test.ts",
+        "range": {
+          "end_line": 155,
+          "sha256": "ff6e65dcefcfdd66a45c6012dfe944eb187767e07def5e24275fbeeb7db8b0f1",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "file_path": "packages/advantage-play-kit/src/runtime/runtime.test.ts",
+      "record_id": "file:packages/advantage-play-kit/src/runtime/runtime.test.ts",
+      "record_type": "file"
+    },
+    {
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "78a3370f7c40265bc6651886d99bfc15ea93b041ae1e2f14232b27e72f59d6c0",
+        "path": "packages/advantage-play-kit/src/runtime/runtime.ts",
+        "range": {
+          "end_line": 236,
+          "sha256": "78a3370f7c40265bc6651886d99bfc15ea93b041ae1e2f14232b27e72f59d6c0",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "file_path": "packages/advantage-play-kit/src/runtime/runtime.ts",
+      "record_id": "file:packages/advantage-play-kit/src/runtime/runtime.ts",
+      "record_type": "file"
+    },
+    {
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "9960138d8b78c76a6e9c5e81e6e45ed70223a3d8105516e3ffa8596915777ce1",
+        "path": "packages/advantage-play-kit/src/runtime/types.ts",
+        "range": {
+          "end_line": 377,
+          "sha256": "9960138d8b78c76a6e9c5e81e6e45ed70223a3d8105516e3ffa8596915777ce1",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "file_path": "packages/advantage-play-kit/src/runtime/types.ts",
+      "record_id": "file:packages/advantage-play-kit/src/runtime/types.ts",
+      "record_type": "file"
+    },
+    {
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "1db544a6980971be21f86cf0eec6d19a5e0968628eaee9c5edd484a22ad487bf",
+        "path": "packages/advantage-play-kit/src/testing/fixtures.ts",
+        "range": {
+          "end_line": 90,
+          "sha256": "1db544a6980971be21f86cf0eec6d19a5e0968628eaee9c5edd484a22ad487bf",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "file_path": "packages/advantage-play-kit/src/testing/fixtures.ts",
+      "record_id": "file:packages/advantage-play-kit/src/testing/fixtures.ts",
+      "record_type": "file"
+    },
+    {
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "0ec4677670c81c6e4029773fb9ede1b95e49ddd87574a1604b0cadc90e9dd7a7",
+        "path": "packages/advantage-play-kit/src/testing/index.ts",
+        "range": {
+          "end_line": 9,
+          "sha256": "0ec4677670c81c6e4029773fb9ede1b95e49ddd87574a1604b0cadc90e9dd7a7",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "file_path": "packages/advantage-play-kit/src/testing/index.ts",
+      "record_id": "file:packages/advantage-play-kit/src/testing/index.ts",
+      "record_type": "file"
+    },
+    {
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "1f90bd50a0571214b365e47c10f6cea490b6cb8e1c1772fe1af0864f38acf28d",
+        "path": "packages/advantage-play-kit/src/testing/test-kit.test.ts",
+        "range": {
+          "end_line": 33,
+          "sha256": "1f90bd50a0571214b365e47c10f6cea490b6cb8e1c1772fe1af0864f38acf28d",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "file_path": "packages/advantage-play-kit/src/testing/test-kit.test.ts",
+      "record_id": "file:packages/advantage-play-kit/src/testing/test-kit.test.ts",
+      "record_type": "file"
+    },
+    {
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "2967fe398a0f4a969dddb3993dc7aa0c46f5cd3623f5a8556023efc9bbb30cbd",
+        "path": "packages/advantage-play-kit/src/testing/test-kit.ts",
+        "range": {
+          "end_line": 90,
+          "sha256": "2967fe398a0f4a969dddb3993dc7aa0c46f5cd3623f5a8556023efc9bbb30cbd",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "file_path": "packages/advantage-play-kit/src/testing/test-kit.ts",
+      "record_id": "file:packages/advantage-play-kit/src/testing/test-kit.ts",
+      "record_type": "file"
+    },
+    {
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "03b0c7e4dede5dfc50d4390d0faf0bad735495f7d5e6846934c31d01abe96367",
+        "path": "packages/advantage-play-kit/tsconfig.json",
+        "range": {
+          "end_line": 10,
+          "sha256": "03b0c7e4dede5dfc50d4390d0faf0bad735495f7d5e6846934c31d01abe96367",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "file_path": "packages/advantage-play-kit/tsconfig.json",
+      "record_id": "file:packages/advantage-play-kit/tsconfig.json",
+      "record_type": "file"
+    },
+    {
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "b7f32ad3dfa72c5081e8f939f9ca3024a6246920bc91c230862fe469ea4c45e5",
+        "path": "packages/advantage-play-kit/vitest.config.ts",
+        "range": {
+          "end_line": 21,
+          "sha256": "b7f32ad3dfa72c5081e8f939f9ca3024a6246920bc91c230862fe469ea4c45e5",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "file_path": "packages/advantage-play-kit/vitest.config.ts",
+      "record_id": "file:packages/advantage-play-kit/vitest.config.ts",
+      "record_type": "file"
+    },
+    {
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "8f189bac787e05cd3cb4164767b501662fb78f949176433745f28f326768c90a",
+        "path": "packages/game-cartridges/eslint.config.mjs",
+        "range": {
+          "end_line": 3,
+          "sha256": "8f189bac787e05cd3cb4164767b501662fb78f949176433745f28f326768c90a",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "file_path": "packages/game-cartridges/eslint.config.mjs",
+      "record_id": "file:packages/game-cartridges/eslint.config.mjs",
+      "record_type": "file"
+    },
+    {
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "61eace40b79b1711930fe4af552376cf8a13f46d7d21383bbe1f1fb9ee6c3e17",
+        "path": "packages/game-cartridges/package.json",
+        "range": {
+          "end_line": 36,
+          "sha256": "61eace40b79b1711930fe4af552376cf8a13f46d7d21383bbe1f1fb9ee6c3e17",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "file_path": "packages/game-cartridges/package.json",
+      "record_id": "file:packages/game-cartridges/package.json",
+      "record_type": "file"
+    },
+    {
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
         "blob_sha256": "ecb59a2d2cb7935e3c09dfc3deb4b5c75e773df4d45ca140f0c90bb70062e224",
         "path": "packages/game-cartridges/src/catalog.test.ts",
         "range": {
@@ -22573,6 +23037,262 @@
       },
       "file_path": "packages/game-cartridges/src/index.ts",
       "record_id": "file:packages/game-cartridges/src/index.ts",
+      "record_type": "file"
+    },
+    {
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "4575e3a929b4fbf40b431de57a22c54ac7247e160fb4a2392df676e0dfde1c00",
+        "path": "packages/game-cartridges/tsconfig.build.json",
+        "range": {
+          "end_line": 4,
+          "sha256": "4575e3a929b4fbf40b431de57a22c54ac7247e160fb4a2392df676e0dfde1c00",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "file_path": "packages/game-cartridges/tsconfig.build.json",
+      "record_id": "file:packages/game-cartridges/tsconfig.build.json",
+      "record_type": "file"
+    },
+    {
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "b9fb8b7fd761cf4aedd45979aa08c5d158f06ab1aca2883e94c12b05e64c561d",
+        "path": "packages/game-cartridges/tsconfig.json",
+        "range": {
+          "end_line": 9,
+          "sha256": "b9fb8b7fd761cf4aedd45979aa08c5d158f06ab1aca2883e94c12b05e64c561d",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "file_path": "packages/game-cartridges/tsconfig.json",
+      "record_id": "file:packages/game-cartridges/tsconfig.json",
+      "record_type": "file"
+    },
+    {
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "55c718ffb3cf093079211b0dc304f1a99e8bb13ed3b927ce99aa899cf4f3a204",
+        "path": "packages/game-cartridges/vitest.config.ts",
+        "range": {
+          "end_line": 16,
+          "sha256": "55c718ffb3cf093079211b0dc304f1a99e8bb13ed3b927ce99aa899cf4f3a204",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "file_path": "packages/game-cartridges/vitest.config.ts",
+      "record_id": "file:packages/game-cartridges/vitest.config.ts",
+      "record_type": "file"
+    },
+    {
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "8f189bac787e05cd3cb4164767b501662fb78f949176433745f28f326768c90a",
+        "path": "packages/game-contracts/eslint.config.mjs",
+        "range": {
+          "end_line": 3,
+          "sha256": "8f189bac787e05cd3cb4164767b501662fb78f949176433745f28f326768c90a",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "file_path": "packages/game-contracts/eslint.config.mjs",
+      "record_id": "file:packages/game-contracts/eslint.config.mjs",
+      "record_type": "file"
+    },
+    {
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "1d447e15c3471f9e1f1789158b13fcd31343dad023d4ddb272cf4067e257efb5",
+        "path": "packages/game-contracts/package.json",
+        "range": {
+          "end_line": 34,
+          "sha256": "1d447e15c3471f9e1f1789158b13fcd31343dad023d4ddb272cf4067e257efb5",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "file_path": "packages/game-contracts/package.json",
+      "record_id": "file:packages/game-contracts/package.json",
+      "record_type": "file"
+    },
+    {
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "ed8a19502141f043cf5590706eca2ffde19a1cdbb6eefc6599fbf867d68c6312",
+        "path": "packages/game-contracts/scripts/check-architecture.mjs",
+        "range": {
+          "end_line": 41,
+          "sha256": "ed8a19502141f043cf5590706eca2ffde19a1cdbb6eefc6599fbf867d68c6312",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "file_path": "packages/game-contracts/scripts/check-architecture.mjs",
+      "record_id": "file:packages/game-contracts/scripts/check-architecture.mjs",
+      "record_type": "file"
+    },
+    {
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "75823a55cdc84790bce07801758a3854ff379114ad156b82e191376469f49f5d",
+        "path": "packages/game-contracts/src/__tests__/architecture-policy.test.ts",
+        "range": {
+          "end_line": 94,
+          "sha256": "75823a55cdc84790bce07801758a3854ff379114ad156b82e191376469f49f5d",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "file_path": "packages/game-contracts/src/__tests__/architecture-policy.test.ts",
+      "record_id": "file:packages/game-contracts/src/__tests__/architecture-policy.test.ts",
+      "record_type": "file"
+    },
+    {
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "c2f92e8d5e1d46c42f84ce965c5fb1884f322daa75df1e3e06849d0b9a78a527",
+        "path": "packages/game-contracts/src/__tests__/contracts.types.test.ts",
+        "range": {
+          "end_line": 45,
+          "sha256": "c2f92e8d5e1d46c42f84ce965c5fb1884f322daa75df1e3e06849d0b9a78a527",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "file_path": "packages/game-contracts/src/__tests__/contracts.types.test.ts",
+      "record_id": "file:packages/game-contracts/src/__tests__/contracts.types.test.ts",
+      "record_type": "file"
+    },
+    {
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "9741d92bc75eb5ed22461b0404be5d8ffd1e65870fbc55d01f47e2365a5e0e89",
+        "path": "packages/game-contracts/src/__tests__/educational-io.test.ts",
+        "range": {
+          "end_line": 141,
+          "sha256": "9741d92bc75eb5ed22461b0404be5d8ffd1e65870fbc55d01f47e2365a5e0e89",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "file_path": "packages/game-contracts/src/__tests__/educational-io.test.ts",
+      "record_id": "file:packages/game-contracts/src/__tests__/educational-io.test.ts",
+      "record_type": "file"
+    },
+    {
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "055b268d64aa82bd3bff393d28c32d2d87e937ee7feed1a44d2864d0cfd0d648",
+        "path": "packages/game-contracts/src/__tests__/phaser-version.test.ts",
+        "range": {
+          "end_line": 13,
+          "sha256": "055b268d64aa82bd3bff393d28c32d2d87e937ee7feed1a44d2864d0cfd0d648",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "file_path": "packages/game-contracts/src/__tests__/phaser-version.test.ts",
+      "record_id": "file:packages/game-contracts/src/__tests__/phaser-version.test.ts",
+      "record_type": "file"
+    },
+    {
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "d084b3a06e86c8dddf4cce1e9811319f564f7794770673f67316c40dd86a8091",
+        "path": "packages/game-contracts/src/architecture.ts",
+        "range": {
+          "end_line": 130,
+          "sha256": "d084b3a06e86c8dddf4cce1e9811319f564f7794770673f67316c40dd86a8091",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "file_path": "packages/game-contracts/src/architecture.ts",
+      "record_id": "file:packages/game-contracts/src/architecture.ts",
+      "record_type": "file"
+    },
+    {
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "9850e5ff9f2085a742c0e829000244c7e74d3e66a94f1c4e905dbb7310fc80be",
+        "path": "packages/game-contracts/src/completion.ts",
+        "range": {
+          "end_line": 78,
+          "sha256": "9850e5ff9f2085a742c0e829000244c7e74d3e66a94f1c4e905dbb7310fc80be",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "file_path": "packages/game-contracts/src/completion.ts",
+      "record_id": "file:packages/game-contracts/src/completion.ts",
+      "record_type": "file"
+    },
+    {
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "2550d5b167e21b02901a43e12c41fc16f7bd23d9a639b3290ccb03321ff78318",
+        "path": "packages/game-contracts/src/educational-io.ts",
+        "range": {
+          "end_line": 71,
+          "sha256": "2550d5b167e21b02901a43e12c41fc16f7bd23d9a639b3290ccb03321ff78318",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "file_path": "packages/game-contracts/src/educational-io.ts",
+      "record_id": "file:packages/game-contracts/src/educational-io.ts",
+      "record_type": "file"
+    },
+    {
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "8b6b83f76442e6a4b92ed8a4f1ac407fabf1e28d17be9e6525fc9bf164607990",
+        "path": "packages/game-contracts/src/index.ts",
+        "range": {
+          "end_line": 43,
+          "sha256": "8b6b83f76442e6a4b92ed8a4f1ac407fabf1e28d17be9e6525fc9bf164607990",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "file_path": "packages/game-contracts/src/index.ts",
+      "record_id": "file:packages/game-contracts/src/index.ts",
+      "record_type": "file"
+    },
+    {
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "8376dfe908f1a050254c6caba6946ea25a2708beececfdc6bd5ff11414b8e86e",
+        "path": "packages/game-contracts/tsconfig.json",
+        "range": {
+          "end_line": 9,
+          "sha256": "8376dfe908f1a050254c6caba6946ea25a2708beececfdc6bd5ff11414b8e86e",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "file_path": "packages/game-contracts/tsconfig.json",
+      "record_id": "file:packages/game-contracts/tsconfig.json",
+      "record_type": "file"
+    },
+    {
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "55c718ffb3cf093079211b0dc304f1a99e8bb13ed3b927ce99aa899cf4f3a204",
+        "path": "packages/game-contracts/vitest.config.ts",
+        "range": {
+          "end_line": 16,
+          "sha256": "55c718ffb3cf093079211b0dc304f1a99e8bb13ed3b927ce99aa899cf4f3a204",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "file_path": "packages/game-contracts/vitest.config.ts",
+      "record_id": "file:packages/game-contracts/vitest.config.ts",
       "record_type": "file"
     },
     {
@@ -23696,6 +24416,22 @@
       "record_type": "copy"
     },
     {
+      "copy_source_record_id": "file:packages/game-cartridges/vitest.config.ts",
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "55c718ffb3cf093079211b0dc304f1a99e8bb13ed3b927ce99aa899cf4f3a204",
+        "path": "packages/game-contracts/vitest.config.ts",
+        "range": {
+          "end_line": 16,
+          "sha256": "55c718ffb3cf093079211b0dc304f1a99e8bb13ed3b927ce99aa899cf4f3a204",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "record_id": "copy:packages/game-contracts/vitest.config.ts",
+      "record_type": "copy"
+    },
+    {
       "copy_source_record_id": "file:apps/advantage-games/src/app/api/v1/games/rune-forge-chamber/sentences/route.ts",
       "discovery_method": "mechanical-filesystem",
       "evidence": {
@@ -24029,6 +24765,38 @@
         "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
       },
       "record_id": "copy:apps/reading-advantage/components/games/game/MagicBolt.tsx",
+      "record_type": "copy"
+    },
+    {
+      "copy_source_record_id": "file:packages/advantage-play-kit/eslint.config.mjs",
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "8f189bac787e05cd3cb4164767b501662fb78f949176433745f28f326768c90a",
+        "path": "packages/game-cartridges/eslint.config.mjs",
+        "range": {
+          "end_line": 3,
+          "sha256": "8f189bac787e05cd3cb4164767b501662fb78f949176433745f28f326768c90a",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "record_id": "copy:packages/game-cartridges/eslint.config.mjs",
+      "record_type": "copy"
+    },
+    {
+      "copy_source_record_id": "file:packages/advantage-play-kit/eslint.config.mjs",
+      "discovery_method": "mechanical-filesystem",
+      "evidence": {
+        "blob_sha256": "8f189bac787e05cd3cb4164767b501662fb78f949176433745f28f326768c90a",
+        "path": "packages/game-contracts/eslint.config.mjs",
+        "range": {
+          "end_line": 3,
+          "sha256": "8f189bac787e05cd3cb4164767b501662fb78f949176433745f28f326768c90a",
+          "start_line": 1
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "record_id": "copy:packages/game-contracts/eslint.config.mjs",
       "record_type": "copy"
     },
     {
