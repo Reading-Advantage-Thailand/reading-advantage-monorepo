@@ -1,131 +1,91 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
+  "role": "measure-review-b",
+  "track": "apk_source_denominator_inventory_20260712",
+  "phase": "Phase 4: Full independent acceptance",
+  "baseline_sha": "fe505b34a4c6034742b26092c85d1023c7522809",
+  "audited_head_sha": "fe505b34a4c6034742b26092c85d1023c7522809",
+  "applicability": "applicable",
   "status": "fail",
-  "review_role": "measure-review-b-security",
-  "reviewed_head": "32069ccd95b4f379211e845dee38f35dbaa45271",
-  "reviewed_commits": [
-    "4979eaa50b85cb5951e9546bb6a672b9d0f16ecb",
-    "6dda411b54787db2b0e005c1097ecc008f424c62",
-    "70e6059bcfbf23bdfbd449fd25b3ee4751ca6d86",
-    "32069ccd95b4f379211e845dee38f35dbaa45271"
-  ],
-  "summary": "Phase 1-3 admission and the repaired quarantine, authored-inventory, reachability, and Phase-2 receipt bindings pass at HEAD. Phase 4 remains security-blocked because the production acceptance validator ignores stop-loss observations and does not bind provider-resolved output hashes to receipt outputs; predecessor role evidence is also not yet a complete current five-role provenance set.",
-  "confidence": "high",
+  "summary": "Phase 0-3 admission is green and the repaired validator now rejects numeric stop-loss, provider-output, locator, coordinated-input, and candidate/review/owner lifecycle mutations. Phase 4 still fails because production acceptance permits inherited predecessor context and ignores frozen task ownership, while committed role evidence is incomplete, stale, and not a current provider-resolved five-role set.",
   "blocking_findings": [
-    "RB-SEC-006",
-    "RB-SEC-007",
-    "RB-SEC-008"
-  ],
-  "blocking_findings_by_severity": {
-    "critical": 0,
-    "high": 3,
-    "medium": 0
-  },
-  "finding_details": [
     {
-      "id": "RB-SEC-006",
+      "id": "RB2-001",
       "severity": "high",
-      "title": "Production Phase-4 validation ignores measured stop-loss observations",
+      "title": "Frozen fresh-context and task ownership are not enforced",
+      "detail": "The frozen strategy requires five pairwise-isolated fork_turns=none roles with role-owned tasks and outputs. Production checks fork_turns only for adversarial-reviewer and does not validate ownership.incompatible_roles, ownership.tasks, or receipt task_id. The committed Green fixture uses fork_turns=all for four predecessor roles. Changing every receipt task_id to forged-unowned-task still returned {\"ok\": true}.",
       "evidence": [
-        "measure/evidence_integrity_gates/apk_inventory_acceptance.py:137-177",
-        "measure/tracks/apk_source_denominator_inventory_20260712/phase0-input-freeze.json:39-51",
-        "measure/tracks/apk_source_denominator_inventory_20260712/test-strategy.md:428-438"
+        "measure/tracks/apk_source_denominator_inventory_20260712/phase0-role-ownership-manifest.json",
+        "measure/tracks/apk_source_denominator_inventory_20260712/test-strategy.md",
+        "measure/evidence_integrity_gates/apk_inventory_acceptance.py:428",
+        "measure/evidence_integrity_gates/apk_inventory_acceptance.py:552",
+        "measure/tests/test_apk_source_denominator_inventory_phase4.py:1029"
       ],
-      "detail": "The validator checks actual_usage against ceilings but never reads or validates stop_loss_observations. A paired-control mutation with unsupported_factual_claims=1 returned {'ok': True}; replacing the entire stop_loss_observations object with null also returned {'ok': True}. This violates the frozen one-claim/one-mismatch stop contract and allows a breached or unmeasured role to reach acceptance.",
-      "required_remediation": "Validate the exact stop-loss key set and non-boolean integer values for every required role, reject any unsupported claim or denominator mismatch at or above the frozen threshold, enforce the two-cycle block and zero unresolved Critical/High/Medium findings, and add paired negative tests for missing, null, boolean, negative, and nonzero observations."
+      "required_remediation": "Bind receipts and provider events to frozen task_id and expected outputs; enforce distinct fresh fork_turns=none sessions for every incompatible role; add task/output substitution, shared-session, and inherited-predecessor negative controls."
     },
     {
-      "id": "RB-SEC-007",
+      "id": "RB2-002",
       "severity": "high",
-      "title": "Provider event output hashes are not bound to receipt outputs",
+      "title": "Committed receipts are incomplete and stale",
+      "detail": "Required roles are discovery-auditor, evidence-collector, requirements-mapper, truth-test-author, and adversarial-reviewer. Only three receipt files exist; requirements-mapper.json declares reconciliation-integrator, leaving requirements-mapper, truth-test-author, and adversarial-reviewer missing and reconciliation-integrator unexpected. Discovery lacks required event/context provenance, measured usage, numeric stop-loss, and canonical aggregate output hash; evidence-collector lacks stop-loss; mapper lacks exact role, most provenance, measured usage, and stop-loss. HEAD output mismatches are discovery 3/3, evidence 2/4, mapper 1/1. No committed provider event map binds current outputs, and all Phase-4 review/candidate/owner/accepted artifacts are absent.",
       "evidence": [
-        "measure/evidence_integrity_gates/apk_inventory_acceptance.py:155-177",
-        "measure/evidence_integrity_gates/apk_inventory_acceptance.py:439-458",
-        "measure/tracks/apk_source_denominator_inventory_20260712/phase0-role-ownership-manifest.json:31-36"
+        "measure/tracks/apk_source_denominator_inventory_20260712/role-receipts/discovery-auditor.json",
+        "measure/tracks/apk_source_denominator_inventory_20260712/role-receipts/evidence-collector.json",
+        "measure/tracks/apk_source_denominator_inventory_20260712/role-receipts/requirements-mapper.json",
+        "measure/tracks/apk_source_denominator_inventory_20260712/phase0-role-ownership-manifest.json"
       ],
-      "detail": "The trusted-event comparison binds role/session/agent/prompt/context/final-response fields but omits the event's output_sha256. The later Git check proves receipt-declared bytes exist, not that the provider-resolved role event declared those outputs. A paired-control mutation replacing the provider event output map with a forged path/hash still returned {'ok': True}, permitting retrospective output attribution.",
-      "required_remediation": "Require exact equality between provider-resolved output_sha256 and the receipt output map before accepting the event, and add paired mutations for omitted, extra, stale, and forged provider output bindings."
-    },
-    {
-      "id": "RB-SEC-008",
-      "severity": "high",
-      "title": "Current predecessor receipts do not prove the frozen five-role separation at the repaired HEAD",
-      "evidence": [
-        "measure/tracks/apk_source_denominator_inventory_20260712/phase0-role-ownership-manifest.json:8-36",
-        "measure/tracks/apk_source_denominator_inventory_20260712/role-receipts/discovery-auditor.json:1-62",
-        "measure/tracks/apk_source_denominator_inventory_20260712/role-receipts/requirements-mapper.json:1-50",
-        "measure/tracks/apk_source_denominator_inventory_20260712/phase3-green-test-report.json:43-48"
-      ],
-      "detail": "The evidence-collector receipt is now provider-attested and commit-bound, but discovery-auditor remains a retrospective handoff without measured actual_usage/stop-loss evidence, requirements-mapper attests an earlier reconciliation under role reconciliation-integrator and explicitly does not attest commit 32069ccd, and no truth-test-author receipt exists. The shell receipt-integrity guard reports only current output-hash coverage and one OpenCode manifest; it does not prove this track's complete current role provenance.",
-      "required_remediation": "Before adversarial review, obtain truthful provider-resolved receipts for every applicable predecessor role, including exact role identity, prompt/context/final-response events, measured ceilings and stop-loss observations, and output hashes at their actual owning commits. Do not retrofit unavailable event facts."
+      "required_remediation": "Truthfully rerun every missing or stale predecessor role with provider-resolved fresh context, exact current-output hashes, numeric usage and stop-loss fields; then run adversarial review, publish non-consumable candidates, and request exact-hash owner approval."
     }
   ],
-  "nonblocking_findings": [],
-  "nonblocking_finding_details": [],
-  "resolved_prior_findings": [
+  "nonblocking_findings": [
     {
-      "id": "RB-SEC-003",
-      "resolution": "Commit 6dda411b filters the failed-track prefix from historical searches and Phase-2 factual outputs. Live Phase-2 and Phase-3 quarantine tests pass."
+      "id": "RB2-NB-001",
+      "severity": "info",
+      "title": "Earlier stop-loss and provider-output bugs are repaired",
+      "detail": "Exact numeric stop-loss keys/thresholds and provider-to-receipt output-map equality are now enforced; missing, null, boolean, negative, threshold, omitted, extra, stale, and forged controls reject."
     },
     {
-      "id": "RB-SEC-004",
-      "resolution": "Commit 6dda411b derives program identities from frozen source/ledger/history evidence rather than the prior authored PROGRAM_IDENTITIES constant. The dedicated anti-hard-coding test passes."
-    },
-    {
-      "id": "RB-SEC-005",
-      "resolution": "The production Phase-4 validator now exists and its paired Green-branch counterexamples execute against a temporary committed fixture; 25/25 counterexamples passed."
+      "id": "RB2-NB-002",
+      "severity": "info",
+      "title": "Authority, locator, coordinated-input, and hash lifecycle controls are non-vacuous",
+      "detail": "Controls reject frozen authority/ceiling redefinition, malformed nested locators, quarantine/root/revision/hash violations, worktree-only bytes, stale candidate/review/owner bindings, early owner approval, and replay."
     }
+  ],
+  "evidence": [
+    "Audit ran in an isolated local clone at exact HEAD fe505b34a4c6034742b26092c85d1023c7522809.",
+    "Frozen input SHA-256 e4bba6919b9b60992a388a9cf4f37c7885400b96bec7b31898f59eaa80d12a9f exactly matches ownership authority.",
+    "Exact Phase 0-3 admission passed 43/43 in 466.822 seconds.",
+    "Phase-4 suite ran 41 tests: 31 Green-branch controls passed; ten live contracts failed solely at missing independent-review.json.",
+    "Historical review-b was hypotheses only; its stop-loss/provider-output findings were independently rerun and resolved.",
+    "Generic receipt guard passed only its narrow 0-legacy/1-OpenCode-manifest scope; direct exact-role/current-output checks found the blocking drift."
   ],
   "commands": [
-    "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase0 measure.tests.test_apk_source_denominator_inventory_phase1 measure.tests.test_apk_source_denominator_inventory_phase2 measure.tests.test_apk_source_denominator_inventory_phase3 — PASS: 37 tests in 446.114s",
-    "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase4 — EXPECTED RED: 25 production counterexamples passed; 10 live-contract tests failed only because independent-review.json is absent",
-    "bash tests/orchestrator_role_receipt_integrity.sh — PASS with stated scope: output hashes match HEAD, 0 legacy receipts, 1 OpenCode manifest",
-    "custom paired-control Phase-4 mutation probe — FAIL-OPEN: nonzero stop loss, null stop loss, and provider output-hash mismatch each returned {'ok': True}"
+    "git rev-parse HEAD - PASS fe505b34a4c6034742b26092c85d1023c7522809",
+    "python3 -B -m py_compile measure/evidence_integrity_gates/apk_inventory_acceptance.py measure/tests/test_apk_source_denominator_inventory_phase4.py - PASS",
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase0 measure.tests.test_apk_source_denominator_inventory_phase1 measure.tests.test_apk_source_denominator_inventory_phase2 measure.tests.test_apk_source_denominator_inventory_phase3 - PASS 43/43",
+    "python3 -B -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase4 - EXPECTED RED 31 controls pass, 10 missing independent-review failures",
+    "bash tests/orchestrator_role_receipt_integrity.sh - PASS with narrow scope",
+    "Direct frozen-role/current-output audit - FAIL missing exact roles, stale outputs, incomplete provenance/usage/stop-loss",
+    "Targeted all-task_id forgery with four predecessor fork_turns=all - FAIL-OPEN {\"ok\": true}"
   ],
-  "command_results": {
-    "phase0_3_admission": "pass-37-of-37",
-    "phase4_green_branch_counterexamples": "pass-25-of-25",
-    "phase4_live_contract": "expected-red-10-missing-independent-review",
-    "receipt_output_hash_guard": "pass-with-provenance-scope-limitation",
-    "targeted_security_falsification": "fail-open-3-of-3"
-  },
-  "anti_pattern_checks": {
-    "A3_numeric_counts": "fail-stop-loss-fields-not-validated",
-    "A4_vacuous_pass": "pass-paired-control-counterexamples-execute",
-    "A5_claim_truth": "pass-live-command-results-recorded",
-    "A7_overbroad_filter": "pass-quarantine-string-tests-and-exact-prefix-filter",
-    "A15_receipt_hash_drift": "partial-output-hashes-pass-but-complete-provider-provenance-remains-blocked"
-  },
-  "test_strategy_violations": [
-    "Frozen measured stop-loss enforcement is absent from the production validator.",
-    "Provider-resolved role output hashes are not compared with receipt output hashes.",
-    "The current predecessor evidence set does not contain truthful current receipts for every applicable frozen role."
-  ],
-  "prod_wiring_violations": [
-    "validate_phase4_inventory_acceptance can return Green for missing/nonzero stop-loss observations.",
-    "validate_phase4_inventory_acceptance can return Green for provider-event/receipt output-hash disagreement."
-  ],
-  "live_contract_violations": [
-    "No independent-review.json exists yet; live Phase-4 remains correctly Red.",
-    "The three High security/provenance findings must be remediated and independently rerun before candidate publication."
-  ],
-  "route_parity_violations": [],
-  "evidence": [
-    "phase0-input-freeze.json",
-    "phase0-role-ownership-manifest.json",
-    "Phase 1-4 generators, artifacts, tests, and role receipts",
-    "commits 4979eaa5, 6dda411b, 70e6059b, and 32069ccd"
-  ],
-  "evidence_details": {
-    "source_and_history_reachability": "pass-live Phase 0-3 locator and ancestor checks",
-    "failed_track_quarantine": "pass-live Phase 1-3 exclusions and exact-string checks",
-    "hard_coded_inventory": "resolved-derived from frozen program/ledger/history evidence",
-    "receipt_output_hash_binding": "Phase-2 and Phase-3 committed input hashes pass; provider-event output binding remains fail-open",
-    "measured_stop_loss": "fail-open in production validator",
-    "unresolved_blocking_findings": 3
-  },
   "changed_files": [
     "measure/tracks/apk_source_denominator_inventory_20260712/review-b-security.json"
   ],
-  "retry_recommendation": "Route RB-SEC-006 and RB-SEC-007 to the Phase-4 validator owner and RB-SEC-008 to the owning predecessor roles. Rerun Review B from a fresh HEAD after truthful remediation; do not dispatch adversarial acceptance while any High finding remains."
+  "test_strategy_violations": [
+    "All five frozen roles are not required to use fork_turns=none.",
+    "Receipt task_id and output ownership are not bound to the ownership manifest.",
+    "Committed receipts are incomplete by exact role, omit numeric stop-loss data, and are stale against HEAD."
+  ],
+  "live_contract_violations": [
+    "independent-review, adversarial receipt, candidate, owner, and accepted artifacts are absent.",
+    "Ten live Phase-4 contracts remain Red at missing independent-review.json.",
+    "Current receipts cannot supply complete provider-resolved measured fresh-context provenance."
+  ],
+  "prod_wiring_violations": [
+    "Production accepts inherited predecessor provider contexts.",
+    "Production accepts forged or unowned task_id values."
+  ],
+  "route_parity_violations": [],
+  "retry_recommendation": "retry_implementation",
+  "confidence": "high"
 }
