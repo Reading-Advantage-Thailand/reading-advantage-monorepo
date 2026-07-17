@@ -9,7 +9,9 @@ const operation = process.argv[3];
 const boundary = Number(process.argv[4]);
 if (
   !repoRoot ||
-  !["copy", "rename", "write"].includes(operation ?? "") ||
+  !["copy", "journal-cleanup", "lock", "rename", "write"].includes(
+    operation ?? "",
+  ) ||
   !Number.isInteger(boundary) ||
   boundary < 1
 ) {
@@ -23,6 +25,10 @@ const killAtBoundary = (): void => {
 };
 const fileOperations = {
   ...baseOperations,
+  acquireExclusiveLock: async (path: string, recoveryRecord: string) => {
+    await baseOperations.acquireExclusiveLock(path, recoveryRecord);
+    if (operation === "lock") killAtBoundary();
+  },
   copyFileExclusive: async (source: string, destination: string) => {
     await baseOperations.copyFileExclusive(source, destination);
     if (operation === "copy" && destination.endsWith(".bak")) killAtBoundary();
@@ -30,6 +36,12 @@ const fileOperations = {
   rename: async (source: string, destination: string) => {
     await baseOperations.rename(source, destination);
     if (operation === "rename" && source.endsWith(".tmp")) killAtBoundary();
+  },
+  unlink: async (path: string) => {
+    await baseOperations.unlink(path);
+    if (operation === "journal-cleanup" && path.endsWith(".journal.json")) {
+      killAtBoundary();
+    }
   },
   writeFileExclusive: async (path: string, contents: string) => {
     await baseOperations.writeFileExclusive(path, contents);

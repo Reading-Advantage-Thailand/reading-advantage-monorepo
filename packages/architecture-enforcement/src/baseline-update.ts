@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import {
   checkArchitectureRepository,
   readArchitectureBaselines,
@@ -216,10 +217,18 @@ function serializeBaseline(baseline: ArchitectureBaseline): string {
   return `${JSON.stringify(architectureBaselineSchema.parse(baseline), null, 2)}\n`;
 }
 
+/** Computes the exact UTF-8 SHA-256 used by repository transaction plans. */
+function baselineSourceHash(baseline: ArchitectureBaseline): string {
+  return createHash("sha256")
+    .update(serializeBaseline(baseline), "utf8")
+    .digest("hex");
+}
+
 /**
  * Replaces both baselines through the shared locked repository transaction.
  * @param repoRoot Absolute repository root containing configured baselines.
  * @param config Validated policy containing distinct baseline paths.
+ * @param currentBaselines Exact baselines from which replacements were derived.
  * @param baselines Complete database and provider replacements.
  * @param fileOperations Filesystem adapter used for staging and rollback.
  * @returns A promise resolved only after both replacements complete.
@@ -228,6 +237,7 @@ function serializeBaseline(baseline: ArchitectureBaseline): string {
 async function writeArchitectureBaselines(
   repoRoot: string,
   config: ArchitectureConfig,
+  currentBaselines: ArchitectureBaselines,
   baselines: ArchitectureBaselines,
   fileOperations: ArchitectureBaselineFileOperations,
 ): Promise<void> {
@@ -240,6 +250,16 @@ async function writeArchitectureBaselines(
     })),
     fileOperations,
   });
+  for (const [index, domain] of (["database", "provider"] as const).entries()) {
+    if (
+      plan.replacements[index]?.beforeHash !==
+      baselineSourceHash(currentBaselines[domain])
+    ) {
+      throw new Error(
+        `Architecture ${domain} baseline changed after analysis; rerun the update preview`,
+      );
+    }
+  }
   const outcome = await applyRepositoryFileTransaction({
     plan,
     acknowledge: true,
@@ -287,6 +307,7 @@ export async function updateArchitectureBaselines(
   await writeArchitectureBaselines(
     options.repoRoot,
     config,
+    baselines,
     replacements,
     options.fileOperations ?? createNodeRepositoryFileTransactionOperations(),
   );

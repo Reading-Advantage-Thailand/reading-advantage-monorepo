@@ -22,7 +22,10 @@ import {
   type ArchitectureFinding,
 } from "../contracts.js";
 import { createNodeRepositoryFileTransactionOperations } from "../node-file-transaction.js";
-import { RepositoryFileTransactionFailure } from "../policy-update-transaction.js";
+import {
+  ARCHITECTURE_WRITE_LOCK_PATH,
+  RepositoryFileTransactionFailure,
+} from "../policy-update-transaction.js";
 
 const hash = (character: string): string => character.repeat(64);
 const fixtureRoots: string[] = [];
@@ -340,6 +343,46 @@ describe("explicit architecture baseline updates", () => {
     expect(provider.entries).toHaveLength(1);
     expect(provider.entries[0]?.owner).toBe("architecture-platform");
     expect(provider.entries[0]?.rationale).toContain("provider adapter");
+  });
+
+  it("preserves a baseline changed after analysis instead of overwriting it", async () => {
+    const fixture = await createLiveBaselineFixture();
+    const nodeOperations = createNodeRepositoryFileTransactionOperations();
+    const concurrentDatabase = `${fixture.databaseOriginal}\n`;
+    let injected = false;
+    const fileOperations: ArchitectureBaselineFileOperations = {
+      ...nodeOperations,
+      readFile: async (path) => {
+        if (!injected && path === fixture.databaseBaselinePath) {
+          await writeFile(path, concurrentDatabase, "utf8");
+          injected = true;
+        }
+        return nodeOperations.readFile(path);
+      },
+    };
+
+    await expect(
+      updateArchitectureBaselines({
+        ...liveUpdateOptions(fixture),
+        acknowledge: true,
+        newDebtMetadata: {
+          owner: "architecture-platform",
+          rationale:
+            "Reviewed temporary debt pending the provider adapter migration.",
+        },
+        fileOperations,
+      }),
+    ).rejects.toThrow(/baseline changed after analysis/i);
+    expect(injected).toBe(true);
+    await expect(readFile(fixture.databaseBaselinePath, "utf8")).resolves.toBe(
+      concurrentDatabase,
+    );
+    await expect(readFile(fixture.providerBaselinePath, "utf8")).resolves.toBe(
+      fixture.providerOriginal,
+    );
+    await expect(
+      readFile(resolve(fixture.repoRoot, ARCHITECTURE_WRITE_LOCK_PATH), "utf8"),
+    ).rejects.toMatchObject({ code: "ENOENT" });
   });
 
   it("requires owner and rationale before an acknowledged live addition", async () => {

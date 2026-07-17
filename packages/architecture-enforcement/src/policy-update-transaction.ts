@@ -32,8 +32,8 @@ export interface RepositoryFileInspection {
 
 /** Injected filesystem boundary used by preview, commit, rollback, and tests. */
 export interface RepositoryFileTransactionOperations {
-  /** Acquires the repository-wide lock honored by every supported architecture writer. */
-  acquireExclusiveLock(path: string, owner: string): Promise<void>;
+  /** Acquires the repository-wide lock with its complete durable recovery record. */
+  acquireExclusiveLock(path: string, recoveryRecord: string): Promise<void>;
   /** Asserts that a path's parent still names its bound directory handle. */
   assertTransactionPath(path: string): Promise<void>;
   /** Opens stable no-follow parent-directory handles for every transaction path. */
@@ -392,9 +392,6 @@ function computePlanHash(
       replacements: replacements.map((replacement) => ({
         id: replacement.id,
         repositoryPath: replacement.repositoryPath,
-        canonicalDestination: replacement.canonicalDestination,
-        device: replacement.device,
-        inode: replacement.inode,
         beforeHash: replacement.beforeHash,
         afterHash: replacement.afterHash,
       })),
@@ -433,6 +430,43 @@ export async function previewRepositoryFileTransaction(
     replacements,
     planHash: computePlanHash(replacements),
   };
+}
+
+/** Revalidates every destination's reviewed containment and file identity. */
+async function assertPlanDestinationBindings(
+  plan: RepositoryFileTransactionPlan,
+  fileOperations: RepositoryFileTransactionOperations,
+): Promise<void> {
+  const destinations = await validatedDestinations(
+    plan.repoRoot,
+    plan.replacements,
+    fileOperations,
+  );
+  for (const [index, replacement] of plan.replacements.entries()) {
+    const binding = destinations[index]!;
+    if (
+      binding.destination !== replacement.destination ||
+      binding.canonicalDestination !== replacement.canonicalDestination ||
+      binding.device !== replacement.device ||
+      binding.inode !== replacement.inode ||
+      sha256(replacement.contents) !== replacement.afterHash
+    ) {
+      throw new Error(
+        `Transaction destination changed after preview: ${replacement.repositoryPath}`,
+      );
+    }
+  }
+}
+
+/** Revalidates every destination's reviewed identity and original bytes. */
+async function assertPlanDestinationsAreCurrent(
+  plan: RepositoryFileTransactionPlan,
+  fileOperations: RepositoryFileTransactionOperations,
+): Promise<void> {
+  await assertPlanDestinationBindings(plan, fileOperations);
+  for (const replacement of plan.replacements) {
+    await validateDestinationBeforeRename(replacement, fileOperations);
+  }
 }
 
 /** Converts a filesystem error into a stable missing-path decision. */
@@ -538,7 +572,7 @@ async function validateRecoveryBackups(
 
 /** Revalidates each destination immediately before its committed replacement. */
 async function validateDestinationBeforeRename(
-  replacement: TransactionReplacement,
+  replacement: RepositoryFileTransactionPlanReplacement,
   fileOperations: RepositoryFileTransactionOperations,
 ): Promise<void> {
   await fileOperations.assertTransactionPath(replacement.destination);
@@ -668,7 +702,6 @@ export async function applyRepositoryFileTransaction(
     options.plan.repoRoot,
     transactionId,
   );
-  await options.fileOperations.acquireExclusiveLock(lockPath, transactionId);
   const replacements: TransactionReplacement[] = options.plan.replacements.map(
     (replacement) => ({
       ...replacement,
@@ -676,40 +709,41 @@ export async function applyRepositoryFileTransaction(
       backup: `${replacement.destination}.architecture-transaction-${transactionId}.bak`,
     }),
   );
-  let commitStarted = false;
+  const journalSource = serializeTransactionJournal(
+    transactionId,
+    options.plan,
+  );
   try {
     await options.fileOperations.bindTransactionPaths([
       ...replacements.map((replacement) => replacement.destination),
       lockPath,
       journalPath,
     ]);
-    const destinations = await validatedDestinations(
-      options.plan.repoRoot,
-      options.plan.replacements,
+    await assertPlanDestinationsAreCurrent(
+      options.plan,
       options.fileOperations,
     );
-    for (const [index, replacement] of replacements.entries()) {
-      const binding = destinations[index]!;
-      if (
-        binding.destination !== replacement.destination ||
-        binding.canonicalDestination !== replacement.canonicalDestination ||
-        binding.device !== replacement.device ||
-        binding.inode !== replacement.inode ||
-        sha256(replacement.contents) !== replacement.afterHash
-      ) {
-        throw new Error(
-          `Transaction destination changed after preview: ${replacement.repositoryPath}`,
-        );
-      }
-      await validateDestinationBeforeRename(
-        replacement,
-        options.fileOperations,
+    await options.fileOperations.acquireExclusiveLock(lockPath, journalSource);
+  } catch (error) {
+    const pathReleaseErrors = await releaseTransactionPaths(
+      options.plan.repoRoot,
+      options.fileOperations,
+    );
+    if (pathReleaseErrors.length > 0) {
+      throw new AggregateError(
+        [error, ...pathReleaseErrors.map((failure) => failure.error)],
+        "Repository transaction preparation and handle cleanup failed",
       );
     }
-    await options.fileOperations.writeFileExclusive(
-      journalPath,
-      serializeTransactionJournal(transactionId, options.plan),
+    throw error;
+  }
+  let commitStarted = false;
+  try {
+    await assertPlanDestinationsAreCurrent(
+      options.plan,
+      options.fileOperations,
     );
+    await options.fileOperations.writeFileExclusive(journalPath, journalSource);
     for (const replacement of replacements) {
       await validateDestinationBeforeRename(
         replacement,
@@ -773,13 +807,13 @@ export async function applyRepositoryFileTransaction(
       ...(recovered
         ? await cleanupOptionalArtifact(journalPath, options.fileOperations)
         : []),
+      ...(recovered
+        ? await releaseTransactionLock(lockPath, options.fileOperations)
+        : []),
       ...(await releaseTransactionPaths(
         options.plan.repoRoot,
         options.fileOperations,
       )),
-      ...(recovered
-        ? await releaseTransactionLock(lockPath, options.fileOperations)
-        : []),
     ];
     throw new RepositoryFileTransactionFailure(
       primaryError,
@@ -792,11 +826,11 @@ export async function applyRepositoryFileTransaction(
   const cleanupErrors = [
     ...(await cleanupArtifacts(replacements, options.fileOperations, true)),
     ...(await cleanupOptionalArtifact(journalPath, options.fileOperations)),
+    ...(await releaseTransactionLock(lockPath, options.fileOperations)),
     ...(await releaseTransactionPaths(
       options.plan.repoRoot,
       options.fileOperations,
     )),
-    ...(await releaseTransactionLock(lockPath, options.fileOperations)),
   ];
   if (cleanupErrors.length > 0) {
     return {
@@ -823,20 +857,15 @@ export async function recoverRepositoryFileTransaction(
   const transactionId = validatedTransactionId(options.transactionId);
   const lockPath = resolve(options.repoRoot, ARCHITECTURE_WRITE_LOCK_PATH);
   const journalPath = transactionJournalPath(options.repoRoot, transactionId);
-  const lockOwner = (await options.fileOperations.readFile(lockPath)).trim();
-  if (lockOwner !== transactionId) {
-    throw new Error("Retained transaction lock does not match recovery id");
-  }
-  const journal = transactionJournalSchema.parse(
-    JSON.parse(await options.fileOperations.readFile(journalPath)),
-  );
-  const plan = journal.plan as RepositoryFileTransactionPlan;
+  const lockSource = await options.fileOperations.readFile(lockPath);
+  const lockRecord = transactionJournalSchema.parse(JSON.parse(lockSource));
+  const plan = lockRecord.plan as RepositoryFileTransactionPlan;
   if (
-    journal.transactionId !== transactionId ||
+    lockRecord.transactionId !== transactionId ||
     plan.repoRoot !== options.repoRoot ||
     computePlanHash(plan.replacements) !== plan.planHash
   ) {
-    throw new Error("Retained transaction journal does not match recovery id");
+    throw new Error("Retained transaction lock does not match recovery id");
   }
   const replacements: TransactionReplacement[] = plan.replacements.map(
     (replacement) => ({
@@ -851,11 +880,38 @@ export async function recoverRepositoryFileTransaction(
     journalPath,
   ]);
   try {
-    await validatedDestinations(
+    if ((await options.fileOperations.readFile(lockPath)) !== lockSource) {
+      throw new Error("Retained transaction lock changed during recovery");
+    }
+    try {
+      const journalSource = await options.fileOperations.readFile(journalPath);
+      transactionJournalSchema.parse(JSON.parse(journalSource));
+      if (journalSource !== lockSource) {
+        throw new Error(
+          "Retained transaction journal does not match durable lock record",
+        );
+      }
+    } catch (error) {
+      if (!isMissingPath(error)) throw error;
+    }
+    const recoveryBindings = await validatedDestinations(
       options.repoRoot,
       plan.replacements,
       options.fileOperations,
     );
+    for (const [index, replacement] of replacements.entries()) {
+      const binding = recoveryBindings[index]!;
+      if (
+        binding.destination !== replacement.destination ||
+        binding.canonicalDestination !== replacement.canonicalDestination ||
+        binding.device !== replacement.device ||
+        sha256(replacement.contents) !== replacement.afterHash
+      ) {
+        throw new Error(
+          `Transaction destination changed after preview: ${replacement.repositoryPath}`,
+        );
+      }
+    }
     const hashes = await Promise.all(
       replacements.map(async (replacement) =>
         sha256(await options.fileOperations.readFile(replacement.destination)),
@@ -867,6 +923,16 @@ export async function recoverRepositoryFileTransaction(
     const allBefore = hashes.every(
       (hash, index) => hash === replacements[index]!.beforeHash,
     );
+    for (const [index, hash] of hashes.entries()) {
+      if (
+        hash === replacements[index]!.beforeHash &&
+        recoveryBindings[index]!.inode !== replacements[index]!.inode
+      ) {
+        throw new Error(
+          `Transaction original identity changed after preview: ${replacements[index]!.repositoryPath}`,
+        );
+      }
+    }
     let state: RepositoryFileTransactionRecoveryOutcome["state"];
     if (allAfter) {
       await validateCommittedFiles(
@@ -921,6 +987,7 @@ export async function recoverRepositoryFileTransaction(
         "Recovered transaction cleanup is incomplete; lock retained",
       );
     }
+    await options.fileOperations.releaseExclusiveLock(lockPath);
     const pathReleaseErrors = await releaseTransactionPaths(
       options.repoRoot,
       options.fileOperations,
@@ -928,10 +995,9 @@ export async function recoverRepositoryFileTransaction(
     if (pathReleaseErrors.length > 0) {
       throw new AggregateError(
         pathReleaseErrors.map((failure) => failure.error),
-        "Recovered transaction handle cleanup is incomplete; lock retained",
+        "Recovered transaction handle cleanup is incomplete after lock release",
       );
     }
-    await options.fileOperations.releaseExclusiveLock(lockPath);
     return { state, planHash: plan.planHash };
   } catch (error) {
     await options.fileOperations.releaseTransactionPaths().catch(() => {});

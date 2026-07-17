@@ -48,8 +48,8 @@ export function createNodeRepositoryFileTransactionOperations(): RepositoryFileT
     await syncDirectory(path);
   };
   return {
-    acquireExclusiveLock: async (path, owner) => {
-      await writeDurableExclusive(path, `${owner}\n`);
+    acquireExclusiveLock: async (path, recoveryRecord) => {
+      await writeDurableExclusive(path, recoveryRecord);
     },
     assertTransactionPath: async (path) => {
       const directory = dirname(path);

@@ -191,21 +191,29 @@ async function planWith(
 async function interruptedState(
   operations: FakeFileOperations,
   committedCount: number,
+  includeJournal = true,
 ): Promise<{ plan: RepositoryFileTransactionPlan; transactionId: string }> {
   const plan = await planWith(operations);
   const transactionId = "interrupted";
+  const recoveryRecord = `${JSON.stringify(
+    { schemaVersion: 1, transactionId, plan },
+    null,
+    2,
+  )}\n`;
   operations.lockHeld = true;
   operations.files.set(
     posix.join(ROOT, ARCHITECTURE_WRITE_LOCK_PATH),
-    transactionId,
+    recoveryRecord,
   );
-  operations.files.set(
-    posix.join(
-      ROOT,
-      `${ARCHITECTURE_WRITE_JOURNAL_PREFIX}${transactionId}.journal.json`,
-    ),
-    `${JSON.stringify({ schemaVersion: 1, transactionId, plan }, null, 2)}\n`,
-  );
+  if (includeJournal) {
+    operations.files.set(
+      posix.join(
+        ROOT,
+        `${ARCHITECTURE_WRITE_JOURNAL_PREFIX}${transactionId}.journal.json`,
+      ),
+      recoveryRecord,
+    );
+  }
   for (const [index, replacement] of plan.replacements.entries()) {
     const staged = `${replacement.destination}.architecture-transaction-${transactionId}.tmp`;
     const backup = `${replacement.destination}.architecture-transaction-${transactionId}.bak`;
@@ -288,10 +296,7 @@ describe("repository policy update transaction", () => {
       fileOperations: operations,
       transactionId: "test",
     }).catch((caught: unknown) => caught);
-    expect(error).toBeInstanceOf(RepositoryFileTransactionFailure);
-    expect(
-      (error as RepositoryFileTransactionFailure).primaryError,
-    ).toHaveProperty(
+    expect(error).toHaveProperty(
       "message",
       expect.stringMatching(/raced after (?:preview|recovery capture)/i),
     );
@@ -394,6 +399,29 @@ describe("repository policy update transaction", () => {
         `replacement-${index + 1}\n`,
       );
     }
+    expectNoArtifacts(operations);
+  });
+
+  it("recovers from the durable lock record when the journal is absent", async () => {
+    const operations = new FakeFileOperations();
+    const { plan, transactionId } = await interruptedState(
+      operations,
+      0,
+      false,
+    );
+
+    await expect(
+      recoverRepositoryFileTransaction({
+        repoRoot: ROOT,
+        transactionId,
+        acknowledge: true,
+        fileOperations: operations,
+      }),
+    ).resolves.toEqual({
+      state: "recovered-originals",
+      planHash: plan.planHash,
+    });
+    expectOriginals(operations);
     expectNoArtifacts(operations);
   });
 
