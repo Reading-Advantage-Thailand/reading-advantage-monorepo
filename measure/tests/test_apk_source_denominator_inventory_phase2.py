@@ -673,6 +673,79 @@ class Phase2IndependentHumanDiscoveryContracts(unittest.TestCase):
         self.assertIn(("apps/advantage-games/src/store/useRPGBattleStore.ts", "status", "playing", "victory"), transitions)
         self.assertIn(("apps/advantage-games/src/store/useRPGBattleStore.ts", "status", "playing", "defeat"), transitions)
 
+    def test_raw_discovery_independently_covers_exact_shared_package_files(self) -> None:
+        """Requires raw Phase-2 file discovery to cover the full source-derived package set."""
+        raw = self.human_discovery["raw_frozen_source_discovery"]
+        result = subprocess.run(
+            [
+                "git", "ls-tree", "-r", "--name-only", self.baseline, "--",
+                "packages/advantage-play-kit", "packages/game-contracts", "packages/game-cartridges",
+            ],
+            cwd=REPO_ROOT,
+            capture_output=True,
+            check=True,
+            text=True,
+        )
+        expected_package_paths = set(result.stdout.splitlines())
+        self.assertEqual(len(expected_package_paths), 48)
+        raw_package_paths = {
+            row["canonical_path"]
+            for row in raw["raw_file_records"]
+            if isinstance(row.get("canonical_path"), str)
+            and row["canonical_path"].startswith(
+                ("packages/advantage-play-kit/", "packages/game-contracts/", "packages/game-cartridges/")
+            )
+        }
+        self.assertEqual(
+            raw_package_paths,
+            expected_package_paths,
+            "independent raw discovery must not reuse Phase-1's three-file package filter",
+        )
+
+    def test_raw_discovery_independently_covers_object_shaped_state_domains(self) -> None:
+        """Requires raw Phase-2 state discovery to cover source-derived object state domains."""
+        raw = self.human_discovery["raw_frozen_source_discovery"]
+
+        specifications = (
+            ("apps/advantage-games/src/lib/games/alchemistsSynthesis.ts", "AlchemistsSynthesisState", "status"),
+            ("apps/advantage-games/src/lib/games/castleDefense.ts", "CastleDefenseState", "status"),
+            ("apps/advantage-games/src/lib/games/dragonFlight.ts", "DragonFlightState", "status"),
+            ("apps/advantage-games/src/lib/games/devourerSlime.ts", "SlimeState", "phase"),
+            ("apps/advantage-games/src/lib/games/enchantedLibrary.ts", "EnchantedLibraryState", "status"),
+            ("apps/advantage-games/src/lib/games/runeMatch.ts", "RuneMatchState", "status"),
+            ("apps/advantage-games/src/lib/games/wizardZombie.ts", "WizardZombieState", "status"),
+        )
+        expected_states: set[tuple[str, str, str]] = set()
+        for path, type_name, property_name in specifications:
+            text = _git_bytes(self.baseline, path).decode("utf-8", errors="replace")
+            declaration = re.search(
+                rf"export\s+type\s+{re.escape(type_name)}\s*=\s*\{{([\s\S]*?)\n\}};?",
+                text,
+            )
+            self.assertIsNotNone(declaration)
+            assert declaration is not None
+            property_declaration = re.search(
+                rf"^\s*{re.escape(property_name)}\??:\s*([^;]+);",
+                declaration.group(1),
+                re.MULTILINE,
+            )
+            self.assertIsNotNone(property_declaration)
+            assert property_declaration is not None
+            expected_states.update(
+                (path, f"{type_name}.{property_name}", literal)
+                for literal in re.findall(r"['\"]([^'\"\n]+)['\"]", property_declaration.group(1))
+            )
+        self.assertEqual(len(expected_states), 22)
+        raw_states = {
+            (row["path"], row["source_symbol"], row["state_id"])
+            for row in raw["raw_state_records"]
+        }
+        self.assertEqual(
+            expected_states & raw_states,
+            expected_states,
+            "the independent path must discover all seven object-shaped state domains",
+        )
+
     def test_raw_tree_asset_history_quarantine_and_resource_contracts_fail_closed(self) -> None:
         """Requires tree-derived sets, quarantine-before-read, and numeric ceilings."""
         module = _load_generator_module()

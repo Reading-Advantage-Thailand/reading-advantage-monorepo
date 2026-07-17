@@ -541,6 +541,78 @@ class Phase1MechanicalDiscoveryContracts(unittest.TestCase):
                 {"catalog-withdrawn-registration"},
             )
 
+    def test_shared_apk_package_file_denominator_is_exact_and_complete(self) -> None:
+        """Requires every frozen file in the three shared APK packages."""
+        result = subprocess.run(
+            [
+                "git", "ls-tree", "-r", "--name-only", self.source_baseline, "--",
+                "packages/advantage-play-kit", "packages/game-contracts", "packages/game-cartridges",
+            ],
+            cwd=REPO_ROOT,
+            capture_output=True,
+            check=True,
+            text=True,
+        )
+        expected_paths = set(result.stdout.splitlines())
+        self.assertEqual(
+            len(expected_paths), 48,
+            "the frozen three-package file denominator changed unexpectedly",
+        )
+        source = self._artifact(SOURCE_PATH, "apk-source-denominator.v1")
+        recorded_paths = {
+            row["file_path"]
+            for row in source["records"]
+            if row.get("record_type") == "file" and isinstance(row.get("file_path"), str)
+        }
+        self.assertEqual(
+            expected_paths & recorded_paths,
+            expected_paths,
+            "all 48 frozen shared-package files must be present; filtering to three "
+            "game-cartridge source files is not an exhaustive denominator",
+        )
+
+    def test_object_shaped_game_state_domains_are_exhaustively_enumerated(self) -> None:
+        """Requires literal state fields declared inside object-shaped state types."""
+        specifications = (
+            ("apps/advantage-games/src/lib/games/alchemistsSynthesis.ts", "AlchemistsSynthesisState", "status"),
+            ("apps/advantage-games/src/lib/games/castleDefense.ts", "CastleDefenseState", "status"),
+            ("apps/advantage-games/src/lib/games/dragonFlight.ts", "DragonFlightState", "status"),
+            ("apps/advantage-games/src/lib/games/devourerSlime.ts", "SlimeState", "phase"),
+            ("apps/advantage-games/src/lib/games/enchantedLibrary.ts", "EnchantedLibraryState", "status"),
+            ("apps/advantage-games/src/lib/games/runeMatch.ts", "RuneMatchState", "status"),
+            ("apps/advantage-games/src/lib/games/wizardZombie.ts", "WizardZombieState", "status"),
+        )
+        expected: set[tuple[str, str, str]] = set()
+        for path, type_name, property_name in specifications:
+            text = _git_bytes(self.source_baseline, path).decode("utf-8", errors="replace")
+            declaration = re.search(
+                rf"export\s+type\s+{re.escape(type_name)}\s*=\s*\{{([\s\S]*?)\n\}};?",
+                text,
+            )
+            self.assertIsNotNone(declaration, f"frozen object-state type must resolve: {type_name}")
+            assert declaration is not None
+            property_declaration = re.search(
+                rf"^\s*{re.escape(property_name)}\??:\s*([^;]+);",
+                declaration.group(1),
+                re.MULTILINE,
+            )
+            self.assertIsNotNone(property_declaration, f"frozen state property must resolve: {type_name}.{property_name}")
+            assert property_declaration is not None
+            literals = set(re.findall(r"['\"]([^'\"\n]+)['\"]", property_declaration.group(1)))
+            self.assertTrue(literals, f"state domain cannot be empty: {type_name}.{property_name}")
+            expected.update((path, f"{type_name}.{property_name}", literal) for literal in literals)
+        self.assertEqual(len(expected), 22, "the seven frozen object-state domains changed unexpectedly")
+        scenes = self._artifact(SCENE_PATH, "apk-scene-state-denominator.v1")
+        recorded = {
+            (row["evidence"]["path"], row["source_symbol"], row["state_id"])
+            for row in scenes["state_records"]
+        }
+        self.assertEqual(
+            expected & recorded,
+            expected,
+            "object-shaped state declarations must not be omitted by a literal-union/interface-only parser",
+        )
+
     def test_runtime_store_state_domains_and_explicit_transitions_are_exhaustive(self) -> None:
         """Requires general source-backed Zustand state domains and guarded transitions.
 

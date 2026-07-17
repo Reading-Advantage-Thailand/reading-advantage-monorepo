@@ -767,6 +767,47 @@ class Phase4GreenBranchCounterexamples(unittest.TestCase):
             "allowed_input_manifest_path": cls.freeze_path,
             "allowed_input_manifest_sha256": hashlib.sha256(freeze_bytes).hexdigest(),
             "required_roles": list(cls.REQUIRED_ROLES),
+            "incompatible_roles": [
+                [left, right]
+                for index, left in enumerate(cls.REQUIRED_ROLES)
+                for right in cls.REQUIRED_ROLES[index + 1 :]
+            ],
+            "tasks": [
+                {
+                    "task_id": "discovery-auditor:fixture-owned-task",
+                    "owner_role": "discovery-auditor",
+                    "forbidden_roles": list(cls.REQUIRED_ROLES[1:]),
+                    "expected_outputs": ["evidence/raw-inventory.json"],
+                },
+                {
+                    "task_id": "evidence-collector:fixture-owned-task",
+                    "owner_role": "evidence-collector",
+                    "forbidden_roles": [role for role in cls.REQUIRED_ROLES if role != "evidence-collector"],
+                    "expected_outputs": ["evidence/human-discovery.json"],
+                },
+                {
+                    "task_id": "requirements-mapper:fixture-owned-task",
+                    "owner_role": "requirements-mapper",
+                    "forbidden_roles": [role for role in cls.REQUIRED_ROLES if role != "requirements-mapper"],
+                    "expected_outputs": ["evidence/reconciliation.json"],
+                },
+                {
+                    "task_id": "truth-test-author:fixture-owned-task",
+                    "owner_role": "truth-test-author",
+                    "forbidden_roles": [role for role in cls.REQUIRED_ROLES if role != "truth-test-author"],
+                    "expected_outputs": ["evidence/contract-report.json"],
+                },
+                {
+                    "task_id": "adversarial-reviewer:fixture-owned-task",
+                    "owner_role": "adversarial-reviewer",
+                    "forbidden_roles": list(cls.REQUIRED_ROLES[:-1]),
+                    "expected_outputs": [
+                        "evidence/independent-review.json",
+                        "evidence/candidate.json",
+                        "evidence/candidate-partition.json",
+                    ],
+                },
+            ],
             "receipt_contract": {
                 "schema_version": "apk-role-receipt.v1",
                 "required_provenance": [
@@ -990,6 +1031,7 @@ class Phase4GreenBranchCounterexamples(unittest.TestCase):
             receipt = {
                 "schema_version": "apk-role-receipt.v1",
                 "role": role,
+                "task_id": f"{role}:fixture-owned-task",
                 "spawn_id": f"ses_{index}",
                 "parent_ancestry_ids": ["ses_root"],
                 "prompt_sha256": str(index) * 64,
@@ -1016,6 +1058,7 @@ class Phase4GreenBranchCounterexamples(unittest.TestCase):
                 "id": event_id,
                 "role": "assistant",
                 "task_role": role,
+                "task_id": receipt["task_id"],
                 "spawn_id": receipt["spawn_id"],
                 "parent_ancestry_ids": receipt["parent_ancestry_ids"],
                 "prompt_sha256": receipt["prompt_sha256"],
@@ -1026,7 +1069,8 @@ class Phase4GreenBranchCounterexamples(unittest.TestCase):
                 "budget_declaration_sha256": receipt["budget_declaration_sha256"],
                 "started_ms": started_ms,
                 "completed_ms": completed_ms,
-                "fork_turns": "none" if role == "adversarial-reviewer" else "all",
+                "fork_turns": "none",
+                "inherited_turn_count": 0,
                 "output_hashes": output_hashes,
             }
         events["evt_owner_approval"] = {
@@ -1400,6 +1444,48 @@ class Phase4GreenBranchCounterexamples(unittest.TestCase):
         bundle, events = self._fixture()
         events["evt_adversarial_reviewer"]["inherited_turn_count"] = 1
         self._assert_rejects(bundle, events, "INHERITED_REVIEWER_CONTEXT")
+
+    def test_every_frozen_role_rejects_inherited_predecessor_context(self) -> None:
+        """Rejects inherited context for every pairwise-incompatible frozen role."""
+        for role in self.REQUIRED_ROLES[:-1]:
+            with self.subTest(role=role):
+                bundle, events = self._fixture()
+                event = events["evt_" + role.replace("-", "_")]
+                event["fork_turns"] = "all"
+                event["inherited_turn_count"] = 4
+                self._assert_rejects(bundle, events, "INHERITED_ROLE_CONTEXT")
+
+    def test_receipt_and_provider_event_must_bind_the_frozen_task_id(self) -> None:
+        """Rejects coordinated receipt/event task substitution outside frozen ownership."""
+        bundle, events = self._fixture()
+        for receipt in bundle["role_receipts"]:
+            receipt["task_id"] = "forged-unowned-task"
+            events[receipt["end_event_id"]]["task_id"] = "forged-unowned-task"
+        self._assert_rejects(bundle, events, "TASK_OWNERSHIP_MISMATCH")
+
+    def test_provider_outputs_must_remain_with_their_frozen_task_owner(self) -> None:
+        """Rejects coordinated output-map swaps between incompatible frozen roles."""
+        bundle, events = self._fixture()
+        discovery = next(
+            row for row in bundle["role_receipts"]
+            if row["role"] == "discovery-auditor"
+        )
+        truth = next(
+            row for row in bundle["role_receipts"]
+            if row["role"] == "truth-test-author"
+        )
+        discovery["output_hashes"], truth["output_hashes"] = (
+            truth["output_hashes"],
+            discovery["output_hashes"],
+        )
+        for receipt in (discovery, truth):
+            receipt["output_sha256"] = hashlib.sha256(
+                self._json_bytes(receipt["output_hashes"]).rstrip(b"\n")
+            ).hexdigest()
+            events[receipt["end_event_id"]]["output_hashes"] = copy.deepcopy(
+                receipt["output_hashes"]
+            )
+        self._assert_rejects(bundle, events, "OUTPUT_OWNERSHIP_MISMATCH")
 
     def test_review_artifact_cannot_self_attest_an_unresolved_reviewer_event(self) -> None:
         """Rejects a forged review that names no trusted provider event.

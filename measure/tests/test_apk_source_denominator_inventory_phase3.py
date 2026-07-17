@@ -411,6 +411,64 @@ class Phase3ReconciliationContracts(unittest.TestCase):
         self.assertEqual(phase2.get("output_hashes"), expected_phase2_hashes)
         self.assertEqual(phase2.get("output_sha256"), receipt.get("output_sha256"))
 
+    def test_reconciliation_provenance_matches_current_committed_predecessor_bytes(self) -> None:
+        """Rejects pins whose hashes describe obsolete Phase-1 or Phase-2 artifacts."""
+        provenance = self.reconciliation["input_provenance"]
+        current_phase1_hashes = {
+            f"measure/tracks/{TRACK}/{name}": hashlib.sha256(
+                _git_bytes("HEAD", f"measure/tracks/{TRACK}/{name}")
+            ).hexdigest()
+            for name in PHASE1_ARTIFACTS
+        }
+        current_phase2_hashes = {
+            f"measure/tracks/{TRACK}/{name}": hashlib.sha256(
+                _git_bytes("HEAD", f"measure/tracks/{TRACK}/{name}")
+            ).hexdigest()
+            for name in PHASE2_ARTIFACTS
+        }
+        self.assertEqual(
+            provenance["phase1"]["output_hashes"], current_phase1_hashes,
+            "Phase 3 must reconcile the current committed Phase-1 artifact bytes",
+        )
+        self.assertEqual(
+            provenance["phase2"]["output_hashes"], current_phase2_hashes,
+            "Phase 3 must reconcile the current committed Phase-2 artifact bytes",
+        )
+
+    def test_reconciliation_covers_current_complete_identity_ledger(self) -> None:
+        """Requires all current ledger identities instead of the obsolete 17-row pin."""
+        current_ledger = _load_json(IDENTITY_PATH)
+        expected = {row["canonical_identity_id"] for row in current_ledger["identity_records"]}
+        self.assertEqual(len(expected), 27, "the current frozen catalog ledger must contain 27 identities")
+        actual = {
+            row.get("canonical_identity_id")
+            for row in self._records("identity_reconciliation_records")
+        }
+        self.assertEqual(
+            actual,
+            expected,
+            "Phase 3 must not retain the obsolete 17-identity Phase-1 snapshot",
+        )
+
+    def test_reconciliation_covers_current_complete_surface_denominator(self) -> None:
+        """Requires all current scene/state/transition rows instead of 102 stale rows."""
+        current_scenes = _load_json(SCENE_PATH)
+        expected = {
+            _key(row)
+            for field in ("scene_records", "state_records", "transitions")
+            for row in current_scenes[field]
+        }
+        self.assertEqual(len(expected), 228, "the current frozen surface denominator must contain 228 rows")
+        actual = {
+            _key(row.get("mechanical_surface"))
+            for row in self._records("surface_reconciliation_records")
+        }
+        self.assertEqual(
+            actual,
+            expected,
+            "Phase 3 must not retain the obsolete 102-surface Phase-1 snapshot",
+        )
+
     def test_reconciliation_excludes_failed_track_quarantine_strings(self) -> None:
         """Rejects failed-track paths anywhere in the Phase-3 factual output.
 
