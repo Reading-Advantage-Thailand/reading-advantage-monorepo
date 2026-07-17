@@ -290,7 +290,7 @@ def _raw_store_surfaces(reader: GitObjectReader, source_paths: list[str]) -> tup
             for previous, current in ([(ordered[0], changes[0])] if changes else []):
                 transitions.append({
                     "path": path,
-                    "source_symbol": domain_symbol,
+                    "source_symbol": property_name,
                     "from_state_id": previous[0],
                     "to_state_id": current[0],
                     "evidence": locator(reader, BASELINE, path, text.count("\n", 0, previous[1]) + 1, text.count("\n", 0, current[2]) + 1),
@@ -303,7 +303,7 @@ def _raw_store_surfaces(reader: GitObjectReader, source_paths: list[str]) -> tup
                     start = create_start + conditional.start()
                     end = create_start + conditional.end()
                     transitions.append({
-                        "path": path, "source_symbol": domain_symbol,
+                        "path": path, "source_symbol": property_name,
                         "from_state_id": conditional.group(1), "to_state_id": conditional.group(2),
                         "evidence": locator(reader, BASELINE, path, text.count("\n", 0, start) + 1, text.count("\n", 0, end) + 1),
                     })
@@ -315,7 +315,7 @@ def _raw_store_surfaces(reader: GitObjectReader, source_paths: list[str]) -> tup
                     start = create_start + guarded.start()
                     end = create_start + guarded.end()
                     transitions.append({
-                        "path": path, "source_symbol": domain_symbol,
+                        "path": path, "source_symbol": property_name,
                         "from_state_id": guarded.group(1), "to_state_id": guarded.group(3),
                         "evidence": locator(reader, BASELINE, path, text.count("\n", 0, start) + 1, text.count("\n", 0, end) + 1),
                     })
@@ -1059,8 +1059,12 @@ def write_json(name: str, value: dict[str, Any]) -> None:
     (TRACK_DIR / name).write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
-# Compatibility marker for the source-order contract: def generate()
-def generate(phase1_revision: str = PHASE1_REVISION) -> None:
+def generate() -> None:
+    """Generates Phase-2 evidence using the frozen default Phase-1 revision."""
+    _generate_phase2(PHASE1_REVISION)
+
+
+def _generate_phase2(phase1_revision: str) -> None:
     """Generates exhaustive non-interpretive Phase-2 evidence artifacts."""
     phase1_revision = validate_phase1_revision(phase1_revision)
     raw_frozen_source_discovery = discover_raw_frozen_sources()
@@ -1420,7 +1424,7 @@ def main() -> None:
     if args.check_only:
         print(json.dumps({"status": "passed", "uncovered_count": 0, "counts": check_coverage(args.phase1_revision)}, sort_keys=True))
     else:
-        generate(args.phase1_revision)
+        _generate_phase2(args.phase1_revision)
 
 
 if __name__ == "__main__":
