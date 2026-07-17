@@ -272,6 +272,8 @@ def _shell_owned_paths(
             next_metadata = next_state.get("metadata")
             if not isinstance(next_input, Mapping) or not isinstance(next_metadata, Mapping):
                 continue
+            if next_input.get("workdir") != root:
+                continue
             commit_sha = _parse_simple_commit(next_input, next_metadata, binding, repo_root, output_commit)
             if commit_sha is not None:
                 valid_commits.append(commit_sha)

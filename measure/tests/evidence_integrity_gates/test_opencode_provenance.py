@@ -235,6 +235,19 @@ class OpenCodeProvenanceTests(unittest.TestCase):
             with self.assertRaisesRegex(ProvenanceError, "no valid subsequent commit"):
                 _shell_owned_paths(messages, root, (binding,), commit_sha)
 
+    def test_shell_commit_requires_repository_root_workdir(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            binding, tool_input, metadata, commit_sha = self._shell_commit_fixture(root)
+            generator_part = {"type": "tool", "tool": "bash", "state": {"status": "completed", "input": {"command": binding.command, "workdir": str(root)}, "metadata": {"output": "(no output)", "exit": 0, "truncated": False}}}
+            commit_part = {"type": "tool", "tool": "bash", "state": {"status": "completed", "input": tool_input, "metadata": metadata}}
+            messages = [{"parts": [generator_part, commit_part]}]
+
+            self.assertEqual(_shell_owned_paths(messages, root, (binding,), commit_sha), {"out.md"})
+            tool_input["workdir"] = "/tmp"
+            with self.assertRaisesRegex(ProvenanceError, "no valid subsequent commit"):
+                _shell_owned_paths(messages, root, (binding,), commit_sha)
+
     def test_shell_commit_rejects_forged_result_and_missing_output_blob(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
