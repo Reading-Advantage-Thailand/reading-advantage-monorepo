@@ -28,9 +28,9 @@ HUMAN_DISCREPANCY_PATH = TRACK_DIR / "human-discrepancy-records.json"
 REPORT_PATH = TRACK_DIR / "phase3-reconciliation-contract-test-report.json"
 RECONCILIATION_PATH = TRACK_DIR / "phase3-reconciliation.json"
 REPLACEMENT_PROGRAM_PATH = "measure/apk-evidence-reconstruction-program.md"
-PHASE1_REVISION = "4979eaa50b85cb5951e9546bb6a672b9d0f16ecb"
-PHASE2_IMPLEMENTATION_REVISION = "6dda411b54787db2b0e005c1097ecc008f424c62"
-PHASE2_RECEIPT_REVISION = "70e6059bcfbf23bdfbd449fd25b3ee4751ca6d86"
+PHASE1_REVISION = "990dd9c060ca844ad16d141b1eb4086b310369a4"
+PHASE2_IMPLEMENTATION_REVISION = "4f5dde0a04c70c57f123a72eded84836325743da"
+PHASE2_RECEIPT_REVISION = "7eef639674e927f2d56107866d385e0df812aa66"
 PHASE2_RECEIPT_PATH = f"measure/tracks/{TRACK}/role-receipts/evidence-collector.json"
 QUARANTINED_SOURCE_PREFIX = "measure/tracks/apk_cross_game_asset_ontology_20260712"
 PHASE1_ARTIFACTS = {
@@ -40,6 +40,10 @@ PHASE1_ARTIFACTS = {
     "asset-file-denominator.json",
     "historical-source-denominator.json",
     "denominator-discrepancies.json",
+}
+PHASE1_COLLECTOR_ARTIFACTS = {
+    "asset-file-denominator.json",
+    "historical-source-denominator.json",
 }
 PHASE2_ARTIFACTS = {
     "independent-human-discovery.json",
@@ -403,13 +407,39 @@ class Phase3ReconciliationContracts(unittest.TestCase):
             ).hexdigest()
             for name in PHASE2_ARTIFACTS
         }
-        self.assertEqual(receipt.get("output_hashes"), expected_phase2_hashes)
+        expected_receipt_owned_hashes = {
+            **{
+                f"measure/tracks/{TRACK}/{name}": hashlib.sha256(
+                    _git_bytes(PHASE1_REVISION, f"measure/tracks/{TRACK}/{name}")
+                ).hexdigest()
+                for name in PHASE1_COLLECTOR_ARTIFACTS
+            },
+            **expected_phase2_hashes,
+        }
+        self.assertEqual(receipt.get("output_hashes"), expected_receipt_owned_hashes)
         self.assertEqual(phase2.get("implementation_revision"), PHASE2_IMPLEMENTATION_REVISION)
         self.assertEqual(phase2.get("receipt_revision"), PHASE2_RECEIPT_REVISION)
         self.assertEqual(phase2.get("receipt_path"), PHASE2_RECEIPT_PATH)
         self.assertEqual(phase2.get("receipt_sha256"), hashlib.sha256(receipt_bytes).hexdigest())
-        self.assertEqual(phase2.get("output_hashes"), expected_phase2_hashes)
-        self.assertEqual(phase2.get("output_sha256"), receipt.get("output_sha256"))
+        self.assertEqual(phase2.get("consumed_output_hashes"), expected_phase2_hashes)
+        self.assertEqual(phase2.get("receipt_owned_output_hashes"), expected_receipt_owned_hashes)
+        expected_receipt_output_sha256 = hashlib.sha256(
+            json.dumps(expected_receipt_owned_hashes, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        ).hexdigest()
+        self.assertEqual(receipt.get("output_sha256"), expected_receipt_output_sha256)
+        self.assertEqual(phase2.get("receipt_output_sha256"), expected_receipt_output_sha256)
+        self.assertEqual(
+            set(phase2),
+            {
+                "implementation_revision",
+                "receipt_revision",
+                "receipt_path",
+                "receipt_sha256",
+                "consumed_output_hashes",
+                "receipt_owned_output_hashes",
+                "receipt_output_sha256",
+            },
+        )
 
     def test_reconciliation_provenance_matches_current_committed_predecessor_bytes(self) -> None:
         """Rejects pins whose hashes describe obsolete Phase-1 or Phase-2 artifacts."""
@@ -431,7 +461,7 @@ class Phase3ReconciliationContracts(unittest.TestCase):
             "Phase 3 must reconcile the current committed Phase-1 artifact bytes",
         )
         self.assertEqual(
-            provenance["phase2"]["output_hashes"], current_phase2_hashes,
+            provenance["phase2"]["consumed_output_hashes"], current_phase2_hashes,
             "Phase 3 must reconcile the current committed Phase-2 artifact bytes",
         )
 
@@ -458,7 +488,7 @@ class Phase3ReconciliationContracts(unittest.TestCase):
             for field in ("scene_records", "state_records", "transitions")
             for row in current_scenes[field]
         }
-        self.assertEqual(len(expected), 228, "the current frozen surface denominator must contain 228 rows")
+        self.assertEqual(len(expected), 283, "the current frozen surface denominator must contain 283 rows")
         actual = {
             _key(row.get("mechanical_surface"))
             for row in self._records("surface_reconciliation_records")
@@ -523,18 +553,19 @@ class Phase3ReconciliationContracts(unittest.TestCase):
         self.assertEqual(set(mapped_human), human_ids)
         self.assertEqual(len(mapped_human), len(set(mapped_human)))
         self.assertEqual(len(dispositions), 29)
-        self.assertEqual(sum(value == "current" for value in dispositions.values()), len(mechanical_ids))
+        self.assertEqual(sum(value == "current" for value in dispositions.values()), 17)
         self.assertEqual(sum(value == "historical/withdrawn" for value in dispositions.values()), 12)
         self.assertEqual(self.reconciliation.get("reviewed_program_identity_count"), 29)
-        self.assertEqual(self.reconciliation.get("current_identity_denominator_count"), len(mechanical_ids))
+        self.assertEqual(self.reconciliation.get("current_identity_denominator_count"), 17)
         for record in records:
             included = record.get("current_source_denominator_included")
             if record.get("disposition") == "current":
                 self.assertTrue(included)
                 self.assertEqual(len(record["mechanical_identity_ids"]), 1)
+                self.assertEqual(len(record["human_identity_ids"]), 1)
             else:
                 self.assertFalse(included)
-                self.assertEqual(record["mechanical_identity_ids"], [])
+                self.assertLessEqual(len(record["mechanical_identity_ids"]), 1)
                 self.assertEqual(record["human_identity_ids"], [])
 
     def test_identity_and_file_denominators_are_exhaustively_compared(self) -> None:
@@ -553,11 +584,23 @@ class Phase3ReconciliationContracts(unittest.TestCase):
         expected_identities = {row["canonical_identity_id"] for row in mechanical_identities if isinstance(row, dict)}
         expected_human_identities = {row["canonical_identity_id"] for row in human_claims if isinstance(row, dict)}
         identity_records = self._records("identity_reconciliation_records")
+        self.assertEqual(len(identity_records), 27)
         identity_ids = {row.get("canonical_identity_id") for row in identity_records}
         self.assertEqual(identity_ids, expected_identities)
-        self.assertEqual(expected_human_identities, expected_identities, "human and mechanical identity inputs must be compared, not independently counted")
+        current_mechanical_identities = {
+            row["canonical_identity_id"]
+            for row in mechanical_identities
+            if any(state["source_class"] == "current-page-source" for state in row["source_states"])
+        }
+        withdrawn_mechanical_identities = expected_identities - current_mechanical_identities
+        self.assertEqual(len(current_mechanical_identities), 17)
+        self.assertEqual(len(withdrawn_mechanical_identities), 10)
+        self.assertEqual(expected_human_identities, current_mechanical_identities)
         for record in identity_records:
             self._assert_resolution(record)
+            if record["canonical_identity_id"] in withdrawn_mechanical_identities:
+                self.assertTrue(record["human_evidence"])
+                self.assertTrue(all(locator.get("revision") != self.baseline for locator in record["human_evidence"]))
 
         expected_files = {row["record_id"] for row in source_records if isinstance(row, dict) and row.get("record_type") == "file"}
         file_records = self._records("file_reconciliation_records")

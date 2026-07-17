@@ -13,9 +13,9 @@ from typing import Any
 
 
 BASELINE = "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-PHASE1_REVISION = "4979eaa50b85cb5951e9546bb6a672b9d0f16ecb"
-PHASE2_IMPLEMENTATION_REVISION = "6dda411b54787db2b0e005c1097ecc008f424c62"
-PHASE2_RECEIPT_REVISION = "70e6059bcfbf23bdfbd449fd25b3ee4751ca6d86"
+PHASE1_REVISION = "990dd9c060ca844ad16d141b1eb4086b310369a4"
+PHASE2_IMPLEMENTATION_REVISION = "4f5dde0a04c70c57f123a72eded84836325743da"
+PHASE2_RECEIPT_REVISION = "7eef639674e927f2d56107866d385e0df812aa66"
 TRACK = "apk_source_denominator_inventory_20260712"
 TRACK_DIR = Path(__file__).resolve().parent
 REPO_ROOT = TRACK_DIR.parents[2]
@@ -28,6 +28,10 @@ PHASE1_ARTIFACTS = (
     "asset-file-denominator.json",
     "historical-source-denominator.json",
     "denominator-discrepancies.json",
+)
+PHASE1_COLLECTOR_ARTIFACTS = (
+    "asset-file-denominator.json",
+    "historical-source-denominator.json",
 )
 PHASE2_ARTIFACTS = (
     "independent-human-discovery.json",
@@ -261,14 +265,30 @@ def main(output_path: Path | None = None) -> None:
         ).hexdigest()
         for name in PHASE2_ARTIFACTS
     }
+    receipt_owned_hashes = {
+        **{
+            f"measure/tracks/{TRACK}/{name}": hashlib.sha256(
+                git_bytes(PHASE1_REVISION, f"measure/tracks/{TRACK}/{name}")
+            ).hexdigest()
+            for name in PHASE1_COLLECTOR_ARTIFACTS
+        },
+        **phase2_hashes,
+    }
     receipt_bytes = git_bytes(PHASE2_RECEIPT_REVISION, PHASE2_RECEIPT_PATH)
     receipt = json.loads(receipt_bytes)
     if receipt.get("commit_sha") != PHASE2_IMPLEMENTATION_REVISION:
         raise ValueError("Phase-2 receipt does not bind the required implementation commit")
-    if receipt.get("output_hashes") != phase2_hashes:
-        raise ValueError("Phase-2 receipt hashes do not bind the required implementation outputs")
+    if receipt.get("output_hashes") != receipt_owned_hashes:
+        raise ValueError("Phase-2 receipt hashes do not bind the exact collector-owned outputs")
+    canonical_receipt_output_sha256 = hashlib.sha256(
+        json.dumps(receipt_owned_hashes, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    ).hexdigest()
+    if receipt.get("output_sha256") != canonical_receipt_output_sha256:
+        raise ValueError("Phase-2 receipt output_sha256 does not match its canonical output-hash aggregate")
 
-    identity_reviews = {row["canonical_identity_id"]: row for row in human_discrepancies["identity_comparison_records"]}
+    identity_reviews: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in human_discrepancies["identity_comparison_records"]:
+        identity_reviews[row["canonical_identity_id"]].append(row)
     human_claim_ids = {row["canonical_identity_id"] for row in human_discovery["current_source_claims"]}
     source_reviews = {row["mechanical_record_id"]: row for row in human_discovery["mechanical_source_record_reviews"]}
     graph_reviews = {row["mechanical_graph_edge_key"]: row for row in human_discovery["mechanical_graph_edge_reviews"]}
@@ -280,14 +300,53 @@ def main(output_path: Path | None = None) -> None:
     historical_reviews = {row["mechanical_locator_key"]: row for row in human_historical["mechanical_historical_locator_reviews"]}
     program_reviews = {row["program_identity_label"]: row for row in human_discovery["replacement_program_identity_reviews"]}
 
-    identity_records = [
-        matched_record(
-            canonical_identity_id=row["canonical_identity_id"],
-            mechanical_evidence=[alias["evidence"] for alias in row["aliases"]],
-            human_evidence=identity_reviews[row["canonical_identity_id"]]["evidence"],
-        )
-        for row in ledger["identity_records"]
-    ]
+    unresolved_sources: list[dict[str, Any]] = []
+    ledger_by_alias: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in ledger["identity_records"]:
+        for alias in {row["catalog_identity_id"], *(item["alias"] for item in row["aliases"])}:
+            ledger_by_alias[alias].append(row)
+    ledger_by_catalog_id = {
+        catalog_id: rows[0]
+        for catalog_id, rows in ledger_by_alias.items()
+        if len(rows) == 1
+    }
+
+    identity_records: list[dict[str, Any]] = []
+    for row in ledger["identity_records"]:
+        identity_id = row["canonical_identity_id"]
+        is_current = any(state["source_class"] == "current-page-source" for state in row["source_states"])
+        human_evidence: list[dict[str, Any]] | None = None
+        if is_current:
+            matching_reviews = identity_reviews.get(identity_id, [])
+            if len(matching_reviews) == 1:
+                human_evidence = matching_reviews[0]["evidence"]
+        else:
+            matching_reviews = [
+                review
+                for review in program_reviews.values()
+                if review.get("catalog_id") == row["catalog_identity_id"]
+                and review.get("disposition") == "historical/withdrawn"
+                and review.get("historical_source_evidence")
+            ]
+            if len(matching_reviews) == 1:
+                human_evidence = matching_reviews[0]["historical_source_evidence"]
+        if human_evidence is None:
+            unresolved_id = f"identity:{identity_id}"
+            identity_records.append(unresolved_record(
+                canonical_identity_id=identity_id,
+                mechanical_evidence=[alias["evidence"] for alias in row["aliases"]],
+                unresolved_source_id=unresolved_id,
+            ))
+            unresolved_sources.append({
+                "unresolved_source_id": unresolved_id,
+                "canonical_identity_id": identity_id,
+            })
+        else:
+            identity_records.append(matched_record(
+                canonical_identity_id=identity_id,
+                mechanical_evidence=[alias["evidence"] for alias in row["aliases"]],
+                human_evidence=human_evidence,
+            ))
 
     source_record_records = [
         matched_record(
@@ -328,11 +387,11 @@ def main(output_path: Path | None = None) -> None:
         raise ValueError("Raw replacement-program identity list is not exactly 29 unique labels")
     label_line = {line.decode("utf-8").rstrip("\r\n")[2:]: number for number, line in enumerate(lines, start=1) if line.startswith(b"- ")}
     program_records: list[dict[str, Any]] = []
-    unresolved_sources: list[dict[str, Any]] = []
     for label in program_labels:
         review = program_reviews[label]
         identity_id = review.get("canonical_identity_id")
         disposition = review.get("disposition")
+        withdrawn_identity = ledger_by_catalog_id.get(review.get("catalog_id"))
         evidence = locator(BASELINE, PROGRAM_PATH, label_line[label], label_line[label])
         common_fields = {
             "program_identity_label": label,
@@ -353,7 +412,14 @@ def main(output_path: Path | None = None) -> None:
         elif disposition == "historical/withdrawn" and review.get("historical_source_evidence"):
             program_records.append(matched_record(
                 **common_fields,
-                mechanical_identity_ids=[],
+                mechanical_identity_ids=(
+                    [withdrawn_identity["canonical_identity_id"]]
+                    if withdrawn_identity is not None and not any(
+                        state["source_class"] == "current-page-source"
+                        for state in withdrawn_identity["source_states"]
+                    )
+                    else []
+                ),
                 human_identity_ids=[],
                 mechanical_evidence=[evidence],
                 human_evidence=review["historical_source_evidence"],
@@ -475,8 +541,9 @@ def main(output_path: Path | None = None) -> None:
                 "receipt_revision": PHASE2_RECEIPT_REVISION,
                 "receipt_path": PHASE2_RECEIPT_PATH,
                 "receipt_sha256": hashlib.sha256(receipt_bytes).hexdigest(),
-                "output_hashes": phase2_hashes,
-                "output_sha256": receipt["output_sha256"],
+                "consumed_output_hashes": phase2_hashes,
+                "receipt_owned_output_hashes": receipt_owned_hashes,
+                "receipt_output_sha256": canonical_receipt_output_sha256,
             },
         },
         "status": reconciliation_status,
