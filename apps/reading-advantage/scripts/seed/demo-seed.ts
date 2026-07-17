@@ -746,7 +746,7 @@ async function refreshMaterializedViews() {
 
   try {
     const { refreshAllMaterializedViews } =
-      await import("../server/services/refresh-matviews-service");
+      await import("../../server/services/refresh-matviews-service");
 
     const result = await refreshAllMaterializedViews();
 
