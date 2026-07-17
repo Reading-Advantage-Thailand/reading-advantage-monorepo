@@ -67,8 +67,13 @@ this track authorizes exactly one analyzer-complete reconciliation after the
 Phase 3 analyzer is stable. Every proposed addition must be reproduced by the
 final analyzer against the immutable pre-analyzer source revision, reviewed
 individually for rule correctness, owner, rationale, and false positives, and
-accepted without changing a rule, ownership root, or exact exception. The
-reconciliation is not permission to accept a finding introduced after that
+accepted without changing a rule or ownership root. Analyzer-discovered
+production findings remain baseline candidates. Analyzer-discovered findings in
+tests or fixtures may instead produce an exact test exception only during this
+reconciliation, after independent review of every covered instance and its
+immutable-base provenance. Each exception must be one exact rule and one exact
+test/fixture file; wildcards, directories, and production paths remain invalid.
+The reconciliation is not permission to accept a finding introduced after that
 source revision. Normal checks remain read-only before and after the one-time
 transaction, and every post-base unreviewed finding fails as new debt.
 
@@ -76,6 +81,11 @@ The reconciliation source revision is exactly
 `3a109c879438fd50b369eb2905ddccfb56722d2b`. It contains only the two
 fail-closed source-resolution prerequisites needed for a zero-error analyzer
 run; the commit introduces no analyzer or ratchet implementation change.
+
+Adding the independently accepted exact test exceptions necessarily changes the
+final domain ruleset hashes. The Phase 1 hashes remain historical evidence; the
+reconciled hashes must be independently reviewed and recorded with the final
+baseline counts and bytes.
 
 ### FR-6: CI, doctor, and evidence
 
@@ -108,9 +118,10 @@ fixing a finding and ratcheting a removed entry down.
    immutable source revision
    `3a109c879438fd50b369eb2905ddccfb56722d2b`, receives independent
    per-addition review, preserves exact metadata and no-wildcard invariants,
-   records the final accepted counts and hashes, and leaves the normal checker
-   clean. A synthetic finding introduced after the base revision still exits
-   non-zero.
+   permits only independently reviewed exact rule/test-file exceptions for
+   test-only evidence, records the final accepted counts and changed ruleset
+   hashes, and leaves the normal checker clean. A synthetic finding introduced
+   after the base revision still exits non-zero.
 
 ## Out of Scope
 
@@ -119,5 +130,7 @@ fixing a finding and ratcheting a removed entry down.
 - Implementing capability descriptors, executor, route generation, or jobs.
 - General-purpose lint replacement or formatting enforcement.
 - Editing application behavior to make the baseline smaller in this track.
-- Routine baseline growth, accepting post-base findings, weakening rules or
-  exact exceptions, or repeating the reconciliation after its accepted write.
+- Routine baseline growth, accepting post-base findings, weakening rules, adding
+  wildcard/directory/production exceptions, adding any exact exception outside
+  the one-time reviewed test-only set, or repeating the reconciliation after its
+  accepted write.

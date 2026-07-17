@@ -221,17 +221,29 @@ source-resolution prerequisites required for a zero-error run; its commit
 introduces no analyzer or ratchet implementation change. Current-HEAD additions
 that do not exist as the same instance at that source revision are post-base
 debt and cannot be accepted.
-Rules, ownership roots, exact exceptions, ruleset hashes, wildcard validation,
-and existing owner/rationale metadata remain unchanged. New entries require
-independently accepted owner/rationale metadata under the same strict contracts.
-The update command remains preview-first and may perform one successful
-acknowledged write only after the review manifest passes.
+Rules, ownership roots, wildcard validation, and existing owner/rationale
+metadata remain unchanged. Exact exceptions may change only for one narrowly
+authorized set of analyzer-discovered test-only dispositions. Each such
+exception must bind one exact rule to one exact test/fixture file, cover only
+instances reproduced at the immutable source base, and receive independent
+review. Wildcards, directories, and production paths are forbidden. Production
+additions remain baseline candidates with independently accepted owner/rationale
+metadata under the same strict contracts.
+
+Because the accepted exact test exceptions become policy input, the final
+ruleset hashes necessarily change. The Phase 1 hashes remain historical
+evidence; final ruleset and baseline hashes are reviewed and recorded. The
+update remains preview-first and may perform one successful coordinated
+policy/baseline write only after the review manifest passes.
 
 The currently observed 614-total / 123-addition output is only a reconciliation
-candidate. It is not an expected final count while analyzer instrumentation,
-resolver behavior, the immutable-base reproduction, and independent review are
-unfinished. Final database/provider counts and baseline file hashes are recorded
-only in the accepted reconciliation artifact and then become the Phase 3/4 gate.
+candidate. Its diagnostic disposition is 9 exact rule/test-file exception
+candidates covering 54 test-only findings and 69 production baseline additions.
+None of those counts or dispositions is final while analyzer instrumentation,
+resolver behavior, immutable-base reproduction, and independent review are
+unfinished. Final exception pairs, domain counts, ruleset hashes, and baseline
+file hashes are recorded only in the accepted reconciliation artifact and then
+become the Phase 3/4 gate.
 
 ## 4. Phase 3 aggregate Green and closeout gate
 
@@ -253,10 +265,11 @@ The focused log must show all test files executed, all tests passed, and no
 skips. Before Task 12a, `architecture:baseline:validate` must still report the
 historical 464 database entries, 27 provider entries, and accepted ruleset
 hashes. After Task 12a, the same command must validate the accepted
-analyzer-complete counts, unchanged policy hashes, exact finding identities,
-owner/rationale metadata, and reconciliation provenance rather than requiring
-equality with the superseded direct-only projection. `architecture:check` must
-fail closed for parser/config errors and must not mutate either baseline.
+analyzer-complete counts, independently reviewed final policy hashes, exact
+finding identities, exact rule/test-file exceptions, owner/rationale metadata,
+and reconciliation provenance rather than requiring equality with the
+superseded direct-only projection. `architecture:check` must fail closed for
+parser/config errors and must not mutate either baseline.
 
 The package coverage command is mandatory for newly introduced analyzer and
 ratchet code:
@@ -336,8 +349,10 @@ strategy role does not edit generated artifacts.
   required for every accepted entry.
 - Task 12a is the only authorized analyzer-complete reconciliation. Every new
   entry must exist at the immutable pre-analyzer source revision, and any
-  post-base finding remains `new-debt`. No rule, ownership root, exact exception,
-  or wildcard rule may change as part of reconciliation.
+  post-base finding remains `new-debt`. No rule or ownership root may change.
+  The only permitted exception changes are independently reviewed exact
+  rule/test-file pairs covering test-only base-proven evidence. Wildcards,
+  directories, production paths, and any unreviewed exception remain forbidden.
 - No live PostgreSQL, provider credential, network call, or browser session is
   required for this phase. The fixtures are isolated filesystem/AST behavior;
   using a live provider or database would add no acceptance evidence.
@@ -411,8 +426,10 @@ and `pnpm architecture:check` all pass; the temporary post-base command fails as
 designed; generated JSON is deterministic and secret-safe; all required review
 roles have fresh results; and Task 12a has recorded the immutable source base,
 final analyzer SHA, independently reviewed addition manifest, final accepted
-counts, and final hashes. The historical 464/27 direct freeze remains audit
-evidence, but it is not restated as the final expected count before review.
-No routine baseline growth or broad exception is permitted. Phase 4 remains
-responsible for wiring the same command into CI and `measure/doctor.sh`,
-documenting the remediation workflow, and checking `measure/generated/` drift.
+production counts, exact test exception pairs, changed ruleset hashes, and final
+baseline hashes. The historical 464/27 direct freeze and Phase 1 ruleset hashes
+remain audit evidence, but they are not restated as final expectations before
+review. No routine baseline growth or broad exception is permitted. Phase 4
+remains responsible for wiring the same command into CI and
+`measure/doctor.sh`, documenting the remediation workflow, and checking
+`measure/generated/` drift.

@@ -35,22 +35,24 @@ test setup; every FR-2–FR-5 counterexample has a named assertion.
 - [~] Task 10: Implement database ownership and direct-query detection to satisfy its Red fixtures.
 - [~] Task 11: Implement provider ownership and SDK/client-construction detection to satisfy its Red fixtures.
 - [~] Task 12: Implement baseline comparison, explicit acknowledged update flow, stable JSON, and concise human diagnostics.
-- [ ] Task 12a: Execute the one-time analyzer-complete baseline reconciliation defined in `analyzer-baseline-reconciliation-strategy.md`: bind every proposed addition to immutable source revision `3a109c879438fd50b369eb2905ddccfb56722d2b`, whose commit introduces only the two fail-closed source-resolution prerequisites and no analyzer or ratchet implementation change; independently review every addition and its owner/rationale; preserve rules/roots/exceptions and wildcard prohibitions; perform one preview-first acknowledged transaction; and record the accepted final counts and hashes. The current 614-total / 123-addition result is a diagnostic candidate only and must not be copied into acceptance evidence until analyzer instrumentation and resolver behavior are final.
+- [ ] Task 12a: Execute the one-time analyzer-complete baseline reconciliation defined in `analyzer-baseline-reconciliation-strategy.md`: bind every proposed addition to immutable source revision `3a109c879438fd50b369eb2905ddccfb56722d2b`, whose commit introduces only the two fail-closed source-resolution prerequisites and no analyzer or ratchet implementation change; independently review every production baseline addition and its owner/rationale; independently review every test-only finding proposed for an exact rule/test-file exception; preserve rules, ownership roots, and wildcard/directory/production-path prohibitions; perform one preview-first coordinated policy/baseline transaction; and record the accepted final counts, exception pairs, and changed ruleset/baseline hashes. The current diagnostic split is 9 exact test exception candidates covering 54 findings plus 69 production additions; all 123 additions remain non-final until analyzer instrumentation, resolver behavior, and immutable-base reproduction are accepted.
 
 **Verification:** `CI=true pnpm vitest run packages/architecture-enforcement/src/__tests__ && pnpm architecture:check`
 
 **Acceptance gate:** All focused tests are Green. Before Task 12a, the only
 permitted debt change is the exact independently reviewed set reproduced at the
-immutable pre-analyzer source revision. After the one-time reconciliation the
-normal checker is clean, baseline validation targets the analyzer-complete
-snapshot, and a temporary post-base counterexample exits non-zero.
+immutable pre-analyzer source revision, partitioned into production baseline
+entries and exact rule/test-file exceptions for test-only evidence. After the
+one-time reconciliation the normal checker is clean, baseline validation targets
+the analyzer-complete snapshot and reviewed final ruleset hashes, and a temporary
+post-base counterexample exits non-zero.
 
 ## Phase 4: CI, Documentation, and Doctor
 
 - [~] Task 13: Add the root non-interactive command and CI gate without weakening existing tenant/provider checks.
 - [~] Task 14: Integrate the same command into `measure/doctor.sh` and document remediation/baseline-reduction workflow.
 - [ ] Task 15: Run package lint, type-check, tests, architecture check, and Measure doctor; capture deterministic evidence.
-- [ ] Task 16: Perform independent review of rules, fixtures, exclusions, the complete Task 12a reconciliation manifest, and final baselines; close all Critical/High findings and publish the Gate 1 result with accepted counts and hashes.
+- [ ] Task 16: Perform independent review of rules, fixtures, every proposed exact rule/test-file exception and its covered findings, the complete Task 12a reconciliation manifest, final baselines, and changed ruleset hashes; close all Critical/High findings and publish the Gate 1 result with accepted counts and hashes.
 
 **Verification:** `pnpm --filter @reading-advantage/architecture-enforcement lint && pnpm --filter @reading-advantage/architecture-enforcement check-types && CI=true pnpm --filter @reading-advantage/architecture-enforcement test && pnpm architecture:check && bash measure/doctor.sh`
 
@@ -66,4 +68,7 @@ expected final count asserted before Task 12a review completes.
 - Capability/kernel, generated route, or durable-job implementation.
 - Broad source-code refactors unrelated to proving the checks.
 - Any second reconciliation, acceptance of a post-base finding, or change to a
-  rule, ownership root, or exact exception to make the checker pass.
+  rule or ownership root to make the checker pass.
+- Any wildcard, directory-wide, production-path, or non-reconciled exact
+  exception; only the independently reviewed Task 12a test-only pairs are in
+  scope.
