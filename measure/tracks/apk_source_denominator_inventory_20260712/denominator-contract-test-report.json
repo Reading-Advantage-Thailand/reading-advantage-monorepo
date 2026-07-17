@@ -16,5 +16,128 @@
     "negative fixtures that reject failed-track factual sources",
     "absence of mechanic, capability, responsive, suitability, semantic-role, and product-disposition conclusions"
   ],
-  "green_handoff": "discovery-auditor"
+  "green_handoff": "discovery-auditor",
+  "current_head_revision": "2f1f2180742ce0997f9a02e58aa820e6509864e2",
+  "phase0_3_admission_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase0 measure.tests.test_apk_source_denominator_inventory_phase1 measure.tests.test_apk_source_denominator_inventory_phase2 measure.tests.test_apk_source_denominator_inventory_phase3",
+  "phase0_3_admission_result": {
+    "total_tests": 54,
+    "passed": 53,
+    "failed": 1,
+    "exit_code": 1,
+    "status": "blocked"
+  },
+  "test_inventory": [
+    {
+      "phase": 0,
+      "module": "measure.tests.test_apk_source_denominator_inventory_phase0",
+      "tests": 9,
+      "passed": 9,
+      "failed": 0,
+      "exit_code": 0
+    },
+    {
+      "phase": 1,
+      "module": "measure.tests.test_apk_source_denominator_inventory_phase1",
+      "tests": 12,
+      "passed": 12,
+      "failed": 0,
+      "exit_code": 0
+    },
+    {
+      "phase": 2,
+      "module": "measure.tests.test_apk_source_denominator_inventory_phase2",
+      "tests": 18,
+      "passed": 18,
+      "failed": 0,
+      "exit_code": 0
+    },
+    {
+      "phase": 3,
+      "module": "measure.tests.test_apk_source_denominator_inventory_phase3",
+      "tests": 15,
+      "passed": 14,
+      "failed": 1,
+      "exit_code": 1
+    }
+  ],
+  "failing_tests": [
+    {
+      "phase": 3,
+      "test": "measure.tests.test_apk_source_denominator_inventory_phase3.Phase3ReconciliationContracts.test_reconciliation_provenance_matches_current_committed_predecessor_bytes",
+      "failure_reason": "Phase 3 input_provenance.phase1.output_hashes for denominator-discrepancies.json matches the pinned Phase1 revision 990dd9c060ca844ad16d141b1eb4086b310369a4 bytes, not current HEAD bytes, because denominator-discrepancies.json is a requirements-mapper-owned Phase3 output and was rewritten after Phase1.",
+      "blocker_type": "contract-semantics"
+    }
+  ],
+  "immutable_hashes": {
+    "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "current_head_revision": "2f1f2180742ce0997f9a02e58aa820e6509864e2",
+    "phase1_revision_pinned_in_phase3": "990dd9c060ca844ad16d141b1eb4086b310369a4",
+    "phase2_implementation_revision": "4f5dde0a04c70c57f123a72eded84836325743da",
+    "phase2_receipt_revision": "7eef639674e927f2d56107866d385e0df812aa66",
+    "denominator_discrepancies": {
+      "phase1_pinned_sha256": "a531598c2d8a313f99c2a11539fee1de7fa9e96886a7fe8fafb90c5d94866747",
+      "head_sha256": "e9bf40693560d5d79bc15753eaf3867bc90e7e1845761b7fa1f5bf6e89b997a6"
+    },
+    "phase1_artifact_output_hashes_at_head": {
+      "measure/tracks/apk_source_denominator_inventory_20260712/source-denominator.json": "5be6a1266f1c42cf13fbf38f93c25ee5037057c12815051def3f0320a8edbc0c",
+      "measure/tracks/apk_source_denominator_inventory_20260712/game-identity-ledger.json": "a31c99650bf1abd6623e64b2e9a23c4c481ce970036b52cfbe08c74b1c09c407",
+      "measure/tracks/apk_source_denominator_inventory_20260712/scene-state-denominator.json": "0beb71bb0662e54e023c0efa5528a385e8b26a1fbd0443bd89d0c8be196760ba",
+      "measure/tracks/apk_source_denominator_inventory_20260712/asset-file-denominator.json": "a5724f41cce7fafbfaaeccbfe0f1b92f497f1c8643dd85f2ecad42a8f8ef937b",
+      "measure/tracks/apk_source_denominator_inventory_20260712/historical-source-denominator.json": "efd6e1787a6289a88c9e6575d7eb8bdaa74d681b68f7acad3bddfee46ba38bfb"
+    },
+    "phase2_artifact_output_hashes_at_head": {
+      "measure/tracks/apk_source_denominator_inventory_20260712/independent-human-discovery.json": "11267074a5e1978b15b0448946726209cbb999c938ed9632cac53353db59017c",
+      "measure/tracks/apk_source_denominator_inventory_20260712/human-duplicate-drift-records.json": "4af9b9a75f103df43dc962bd704a7e10134676c979c874a2dce3fb39ba41450d",
+      "measure/tracks/apk_source_denominator_inventory_20260712/human-historical-deleted-records.json": "c92bb55b9aac45666f352ad40a93f830f1e3f1d92ac03d1465dd07326b3d8f04",
+      "measure/tracks/apk_source_denominator_inventory_20260712/human-discrepancy-records.json": "18d933986158642fe1cf938c05f7daa45455ce6e71cef8063ddec6421494e4f4"
+    }
+  },
+  "blocker_analysis": {
+    "summary": "The Phase3 test contract incorrectly treats denominator-discrepancies.json as a Phase1 artifact whose current HEAD bytes must match the Phase1 pin. The frozen phase0-role-ownership-manifest.json assigns denominator-discrepancies.json to the requirements-mapper role as a Phase3 output. The file was legitimately rewritten by requirements-mapper during Phase3 reconciliation, adding input_provenance and reconciliation_summary fields. Therefore the test contract, not the artifact or generator, is the source of the admission failure.",
+    "ownership_manifest_evidence": {
+      "task_id": "requirements-mapper:reconciliation-records",
+      "expected_outputs": [
+        "denominator-discrepancies.json",
+        "denominator-method.md",
+        "phase3-reconciliation.json"
+      ]
+    },
+    "phase0_test_evidence": "measure.tests.test_apk_source_denominator_inventory_phase0.Phase0FreezeTests.test_requirements_mapper_owns_discrepancy_method_and_reconciliation_outputs",
+    "contract_conflict": "measure.tests.test_apk_source_denominator_inventory_phase3.Phase3ReconciliationContracts.PHASE1_ARTIFACTS includes denominator-discrepancies.json, contradicting the frozen ownership manifest."
+  },
+  "proposed_patch": {
+    "file": "measure/tests/test_apk_source_denominator_inventory_phase3.py",
+    "change": "Remove 'denominator-discrepancies.json' from PHASE1_ARTIFACTS so the Phase3 provenance check reconciles only true Phase1 artifacts (source-denominator.json, game-identity-ledger.json, scene-state-denominator.json, asset-file-denominator.json, historical-source-denominator.json) against current HEAD bytes. If the generator currently records denominator-discrepancies.json in input_provenance.phase1.output_hashes, move that entry to a separate mechanical_discrepancy_input_revision field or omit it, because the file is a requirements-mapper-owned Phase3 output.",
+    "diff": "--- a/measure/tests/test_apk_source_denominator_inventory_phase3.py\n+++ b/measure/tests/test_apk_source_denominator_inventory_phase3.py\n@@ -42,7 +42,6 @@ PHASE1_ARTIFACTS = {\n     \"game-identity-ledger.json\",\n     \"scene-state-denominator.json\",\n     \"asset-file-denominator.json\",\n     \"historical-source-denominator.json\",\n-    \"denominator-discrepancies.json\",\n }\n PHASE1_COLLECTOR_ARTIFACTS = {"
+  },
+  "measured_usage": {
+    "test_cases_executed": 54,
+    "command_invocations": 24,
+    "bytes_read": 346090,
+    "ceiling_check": {
+      "test_cases": {"actual": 54, "ceiling": 180, "status": "under"},
+      "command_invocations": {"actual": 24, "ceiling": 80, "status": "under"},
+      "bytes_read": {"actual": 346090, "ceiling": 67108864, "status": "under"}
+    }
+  },
+  "stop_loss_counters": {
+    "unsupported_factual_claims": 0,
+    "denominator_mismatches": 1,
+    "failed_fix_review_cycles": 0,
+    "unresolved_blocking_findings": {
+      "critical": 0,
+      "high": 0,
+      "medium": 1
+    }
+  },
+  "findings": [
+    {
+      "severity": "medium",
+      "category": "contract-semantics",
+      "location": "measure/tests/test_apk_source_denominator_inventory_phase3.py:PHASE1_ARTIFACTS",
+      "description": "denominator-discrepancies.json is listed as a Phase1 artifact but is owned by requirements-mapper as a Phase3 output, causing test_reconciliation_provenance_matches_current_committed_predecessor_bytes to fail against current HEAD bytes.",
+      "blocking": true,
+      "proposed_fix": "Remove denominator-discrepancies.json from PHASE1_ARTIFACTS and adjust the Phase3 generator provenance to record it as a requirements-mapper Phase3 output rather than a Phase1 artifact."
+    }
+  ]
 }
