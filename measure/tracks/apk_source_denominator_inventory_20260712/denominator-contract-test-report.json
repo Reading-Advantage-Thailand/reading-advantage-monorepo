@@ -17,14 +17,15 @@
     "absence of mechanic, capability, responsive, suitability, semantic-role, and product-disposition conclusions"
   ],
   "green_handoff": "discovery-auditor",
-  "current_head_revision": "2f1f2180742ce0997f9a02e58aa820e6509864e2",
+  "current_head_revision": "cea7b5d426b34531693ff957a5b234a08704ff29",
+  "admission_head_revision": "cea7b5d426b34531693ff957a5b234a08704ff29",
   "phase0_3_admission_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase0 measure.tests.test_apk_source_denominator_inventory_phase1 measure.tests.test_apk_source_denominator_inventory_phase2 measure.tests.test_apk_source_denominator_inventory_phase3",
   "phase0_3_admission_result": {
     "total_tests": 54,
-    "passed": 53,
-    "failed": 1,
-    "exit_code": 1,
-    "status": "blocked"
+    "passed": 54,
+    "failed": 0,
+    "exit_code": 0,
+    "status": "passed"
   },
   "test_inventory": [
     {
@@ -55,22 +56,44 @@
       "phase": 3,
       "module": "measure.tests.test_apk_source_denominator_inventory_phase3",
       "tests": 15,
-      "passed": 14,
-      "failed": 1,
-      "exit_code": 1
+      "passed": 15,
+      "failed": 0,
+      "exit_code": 0
     }
   ],
-  "failing_tests": [
-    {
-      "phase": 3,
-      "test": "measure.tests.test_apk_source_denominator_inventory_phase3.Phase3ReconciliationContracts.test_reconciliation_provenance_matches_current_committed_predecessor_bytes",
-      "failure_reason": "Phase 3 input_provenance.phase1.output_hashes for denominator-discrepancies.json matches the pinned Phase1 revision 990dd9c060ca844ad16d141b1eb4086b310369a4 bytes, not current HEAD bytes, because denominator-discrepancies.json is a requirements-mapper-owned Phase3 output and was rewritten after Phase1.",
-      "blocker_type": "contract-semantics"
-    }
-  ],
+  "corrected_contract_semantics": {
+    "correction_commit": "cea7b5d426b34531693ff957a5b234a08704ff29",
+    "correction_reason": "The Phase-3 provenance freshness check previously compared every entry in PHASE1_ARTIFACTS, including denominator-discrepancies.json, against current HEAD bytes. denominator-discrepancies.json is a requirements-mapper-owned Phase-3 output per phase0-role-ownership-manifest.json and is legitimately rewritten during Phase-3 reconciliation; its committed HEAD bytes therefore differ from the immutable Phase-1 pin preserved in input_provenance.phase1.output_hashes.",
+    "contract_change": "The freshness assertion now validates only PHASE1_CURRENT_STABLE_ARTIFACTS (source-denominator.json, game-identity-ledger.json, scene-state-denominator.json, asset-file-denominator.json, historical-source-denominator.json) against HEAD bytes, while still requiring the full PHASE1_ARTIFACTS set to be present in the immutable input provenance. This excludes mapper-owned rewritten output bytes from HEAD freshness without weakening the historical pin.",
+    "phase1_current_stable_artifacts": [
+      "source-denominator.json",
+      "game-identity-ledger.json",
+      "scene-state-denominator.json",
+      "asset-file-denominator.json",
+      "historical-source-denominator.json"
+    ],
+    "phase1_artifact_set_includes_phase3_outputs": [
+      "source-denominator.json",
+      "game-identity-ledger.json",
+      "scene-state-denominator.json",
+      "asset-file-denominator.json",
+      "historical-source-denominator.json",
+      "denominator-discrepancies.json"
+    ],
+    "ownership_manifest_evidence": {
+      "task_id": "requirements-mapper:reconciliation-records",
+      "expected_outputs": [
+        "denominator-discrepancies.json",
+        "denominator-method.md",
+        "phase3-reconciliation.json"
+      ]
+    },
+    "phase0_test_evidence": "measure.tests.test_apk_source_denominator_inventory_phase0.Phase0FreezeTests.test_requirements_mapper_owns_discrepancy_method_and_reconciliation_outputs"
+  },
   "immutable_hashes": {
     "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
-    "current_head_revision": "2f1f2180742ce0997f9a02e58aa820e6509864e2",
+    "admission_head_revision": "cea7b5d426b34531693ff957a5b234a08704ff29",
+    "phase_authoring_baseline_revision": "6c860c5a49144beaf489a938d992425259765a1c",
     "phase1_revision_pinned_in_phase3": "990dd9c060ca844ad16d141b1eb4086b310369a4",
     "phase2_implementation_revision": "4f5dde0a04c70c57f123a72eded84836325743da",
     "phase2_receipt_revision": "7eef639674e927f2d56107866d385e0df812aa66",
@@ -92,52 +115,16 @@
       "measure/tracks/apk_source_denominator_inventory_20260712/human-discrepancy-records.json": "18d933986158642fe1cf938c05f7daa45455ce6e71cef8063ddec6421494e4f4"
     }
   },
-  "blocker_analysis": {
-    "summary": "The Phase3 test contract incorrectly treats denominator-discrepancies.json as a Phase1 artifact whose current HEAD bytes must match the Phase1 pin. The frozen phase0-role-ownership-manifest.json assigns denominator-discrepancies.json to the requirements-mapper role as a Phase3 output. The file was legitimately rewritten by requirements-mapper during Phase3 reconciliation, adding input_provenance and reconciliation_summary fields. Therefore the test contract, not the artifact or generator, is the source of the admission failure.",
-    "ownership_manifest_evidence": {
-      "task_id": "requirements-mapper:reconciliation-records",
-      "expected_outputs": [
-        "denominator-discrepancies.json",
-        "denominator-method.md",
-        "phase3-reconciliation.json"
-      ]
-    },
-    "phase0_test_evidence": "measure.tests.test_apk_source_denominator_inventory_phase0.Phase0FreezeTests.test_requirements_mapper_owns_discrepancy_method_and_reconciliation_outputs",
-    "contract_conflict": "measure.tests.test_apk_source_denominator_inventory_phase3.Phase3ReconciliationContracts.PHASE1_ARTIFACTS includes denominator-discrepancies.json, contradicting the frozen ownership manifest."
-  },
-  "proposed_patch": {
-    "file": "measure/tests/test_apk_source_denominator_inventory_phase3.py",
-    "change": "Remove 'denominator-discrepancies.json' from PHASE1_ARTIFACTS so the Phase3 provenance check reconciles only true Phase1 artifacts (source-denominator.json, game-identity-ledger.json, scene-state-denominator.json, asset-file-denominator.json, historical-source-denominator.json) against current HEAD bytes. If the generator currently records denominator-discrepancies.json in input_provenance.phase1.output_hashes, move that entry to a separate mechanical_discrepancy_input_revision field or omit it, because the file is a requirements-mapper-owned Phase3 output.",
-    "diff": "--- a/measure/tests/test_apk_source_denominator_inventory_phase3.py\n+++ b/measure/tests/test_apk_source_denominator_inventory_phase3.py\n@@ -42,7 +42,6 @@ PHASE1_ARTIFACTS = {\n     \"game-identity-ledger.json\",\n     \"scene-state-denominator.json\",\n     \"asset-file-denominator.json\",\n     \"historical-source-denominator.json\",\n-    \"denominator-discrepancies.json\",\n }\n PHASE1_COLLECTOR_ARTIFACTS = {"
-  },
-  "measured_usage": {
-    "test_cases_executed": 54,
-    "command_invocations": 24,
-    "bytes_read": 346090,
-    "ceiling_check": {
-      "test_cases": {"actual": 54, "ceiling": 180, "status": "under"},
-      "command_invocations": {"actual": 24, "ceiling": 80, "status": "under"},
-      "bytes_read": {"actual": 346090, "ceiling": 67108864, "status": "under"}
-    }
-  },
   "stop_loss_counters": {
     "unsupported_factual_claims": 0,
-    "denominator_mismatches": 1,
+    "denominator_mismatches": 0,
     "failed_fix_review_cycles": 0,
+    "failed_correction_review_cycles": 0,
     "unresolved_blocking_findings": {
       "critical": 0,
       "high": 0,
-      "medium": 1
+      "medium": 0
     }
   },
-  "findings": [
-    {
-      "severity": "medium",
-      "category": "contract-semantics",
-      "location": "measure/tests/test_apk_source_denominator_inventory_phase3.py:PHASE1_ARTIFACTS",
-      "description": "denominator-discrepancies.json is listed as a Phase1 artifact but is owned by requirements-mapper as a Phase3 output, causing test_reconciliation_provenance_matches_current_committed_predecessor_bytes to fail against current HEAD bytes.",
-      "blocking": true,
-      "proposed_fix": "Remove denominator-discrepancies.json from PHASE1_ARTIFACTS and adjust the Phase3 generator provenance to record it as a requirements-mapper Phase3 output rather than a Phase1 artifact."
-    }
-  ]
+  "unsupported_claims_count": 0
 }
