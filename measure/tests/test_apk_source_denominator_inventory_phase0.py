@@ -169,6 +169,103 @@ class Phase0FreezeTests(unittest.TestCase):
         owned = [output for task in tasks for output in task["expected_outputs"]]
         self.assertEqual(len(owned), len(set(owned)))
 
+    def test_evidence_collector_owns_all_asset_history_and_human_discovery_outputs(self) -> None:
+        """Binds all raw evidence artifacts to the isolated evidence collector.
+
+        Returns:
+            Nothing.
+        """
+        tasks = self.roles["tasks"]
+        self.assertIsInstance(tasks, list)
+        assert isinstance(tasks, list)
+        evidence_task = next(task for task in tasks if task["owner_role"] == "evidence-collector")
+        self.assertEqual(
+            set(evidence_task["expected_outputs"]),
+            {
+                "asset-file-denominator.json",
+                "historical-source-denominator.json",
+                "independent-human-discovery.json",
+                "human-duplicate-drift-records.json",
+                "human-historical-deleted-records.json",
+                "human-discrepancy-records.json",
+            },
+        )
+
+    def test_requirements_mapper_owns_discrepancy_method_and_reconciliation_outputs(self) -> None:
+        """Binds derived reconciliation artifacts to the isolated requirements mapper.
+
+        Returns:
+            Nothing.
+        """
+        tasks = self.roles["tasks"]
+        self.assertIsInstance(tasks, list)
+        assert isinstance(tasks, list)
+        mapper_task = next(task for task in tasks if task["owner_role"] == "requirements-mapper")
+        self.assertEqual(
+            set(mapper_task["expected_outputs"]),
+            {
+                "denominator-discrepancies.json",
+                "denominator-method.md",
+                "phase3-reconciliation.json",
+            },
+        )
+
+    def test_input_freeze_declares_phase2_and_phase3_artifact_schemas(self) -> None:
+        """Requires exact v1 schemas for every Phase-2 and Phase-3 handoff artifact.
+
+        Returns:
+            Nothing.
+        """
+        artifacts = self.freeze["expected_artifacts"]
+        self.assertIsInstance(artifacts, list)
+        assert isinstance(artifacts, list)
+        schemas_by_path = {artifact["path"]: artifact["schema_version"] for artifact in artifacts}
+        required_schemas = {
+            f"measure/tracks/{TRACK}/independent-human-discovery.json":
+                "apk-denominator-independent-human-discovery.v1",
+            f"measure/tracks/{TRACK}/human-duplicate-drift-records.json":
+                "apk-denominator-human-duplicate-drift.v1",
+            f"measure/tracks/{TRACK}/human-historical-deleted-records.json":
+                "apk-denominator-human-historical-deleted.v1",
+            f"measure/tracks/{TRACK}/human-discrepancy-records.json":
+                "apk-denominator-human-discrepancies.v1",
+            f"measure/tracks/{TRACK}/phase3-reconciliation.json":
+                "apk-source-denominator-phase3-reconciliation.v1",
+        }
+        self.assertEqual(
+            {path: schemas_by_path.get(path) for path in required_schemas},
+            required_schemas,
+        )
+
+    def test_frozen_task_outputs_are_unique_and_complete(self) -> None:
+        """Rejects duplicated, omitted, or extra outputs in the frozen task contract.
+
+        Returns:
+            Nothing.
+        """
+        tasks = self.roles["tasks"]
+        self.assertIsInstance(tasks, list)
+        assert isinstance(tasks, list)
+        owned = [output for task in tasks for output in task["expected_outputs"]]
+        expected_outputs = {
+            "source-denominator.json",
+            "game-identity-ledger.json",
+            "scene-state-denominator.json",
+            "asset-file-denominator.json",
+            "historical-source-denominator.json",
+            "independent-human-discovery.json",
+            "human-duplicate-drift-records.json",
+            "human-historical-deleted-records.json",
+            "human-discrepancy-records.json",
+            "denominator-discrepancies.json",
+            "denominator-method.md",
+            "phase3-reconciliation.json",
+            "denominator-contract-test-report.json",
+            "independent-review.json",
+        }
+        self.assertEqual(len(owned), len(set(owned)))
+        self.assertEqual(set(owned), expected_outputs)
+
     def test_phase_zero_records_freeze_gate_owner_verification_without_acceptance(self) -> None:
         """Requires evidence-backed freeze tasks and verification without product-owner acceptance.
 
