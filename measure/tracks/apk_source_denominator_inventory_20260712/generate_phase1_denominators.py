@@ -256,20 +256,40 @@ def resolve_import(path: str, specifier: str, sources: set[str]) -> tuple[str, s
     return (target, resolution_kind) if target is not None else None
 
 
-def build_source_denominator(paths: list[str]) -> tuple[dict[str, Any], dict[str, list[dict[str, Any]]]]:
+def discover_pages(paths: list[str]) -> dict[str, list[dict[str, str]]]:
+    """Discovers ordered canonical page identities without reading page contents.
+
+    Args:
+        paths: Candidate baseline paths in their deterministic input order.
+
+    Returns:
+        Canonical identities mapped to ordered path and route observations.
+    """
+    pages: dict[str, list[dict[str, str]]] = {}
+    for path in paths:
+        if not source_path(path):
+            continue
+        identity = page_identity(path)
+        if identity is None:
+            continue
+        canonical_id, route = identity
+        pages.setdefault(canonical_id, []).append({"path": path, "route": route})
+    return pages
+
+
+def build_source_denominator(paths: list[str]) -> dict[str, Any]:
     """Builds mechanically pinned source, route, copy, and import-graph records.
 
     Args:
         paths: All frozen source-scope paths.
 
     Returns:
-        Source denominator plus page observations grouped by canonical identity.
+        Source denominator artifact object.
     """
     sources = [path for path in paths if source_path(path)]
     source_set = set(sources)
     records: list[dict[str, Any]] = []
     file_ids: dict[str, str] = {}
-    pages: dict[str, list[dict[str, Any]]] = defaultdict(list)
     digest_paths: dict[str, list[str]] = defaultdict(list)
     for path in sources:
         record_id = f"file:{path}"
@@ -283,11 +303,7 @@ def build_source_denominator(paths: list[str]) -> tuple[dict[str, Any], dict[str
             "discovery_method": "mechanical-filesystem",
             "evidence": full_locator(path),
         })
-        identity = page_identity(path)
-        if identity:
-            canonical_id, route = identity
-            pages[canonical_id].append({"path": path, "route": route})
-
+    pages = discover_pages(sources)
     for canonical_id, observations in sorted(pages.items()):
         first = observations[0]
         records.append({
@@ -357,7 +373,7 @@ def build_source_denominator(paths: list[str]) -> tuple[dict[str, Any], dict[str
         }
         for index in range(0, len(identity_ids), 3)
     ]
-    return ({
+    return {
         "schema_version": "apk-source-denominator.v1",
         "status": "mechanical-discovery-complete",
         "source_baseline_revision": BASELINE,
@@ -374,7 +390,7 @@ def build_source_denominator(paths: list[str]) -> tuple[dict[str, Any], dict[str
                 f"{QUARANTINE_PATH}/generated-ontology.json\0QUARANTINED_FACTUAL_SOURCE".encode()
             ).hexdigest(),
         }],
-    }, pages)
+    }
 
 
 def catalog_withdrawals() -> dict[str, dict[str, Any]]:
@@ -415,15 +431,16 @@ def catalog_identities() -> dict[str, dict[str, Any]]:
     return result
 
 
-def build_identity_ledger(pages: dict[str, list[dict[str, Any]]]) -> dict[str, Any]:
+def build_identity_ledger(paths: list[str]) -> dict[str, Any]:
     """Builds a ledger from frozen page paths and the complete exact catalog.
 
     Args:
-        pages: Page-path observations grouped by canonical identity.
+        paths: All frozen source-scope paths.
 
     Returns:
         The identity ledger artifact object.
     """
+    pages = discover_pages(paths)
     records = []
     withdrawals = catalog_withdrawals()
     catalog = catalog_identities()
@@ -544,6 +561,21 @@ def build_scene_state_denominator(paths: list[str]) -> dict[str, Any]:
                 add_state(alias_name, literal_match.group(1), literal_line, "literal-union-type-alias")
 
         property_domains: dict[str, tuple[str, set[str], int]] = {}
+        ambiguous_property_names: set[str] = set()
+
+        def register_property_domain(
+            property_name: str, symbol: str, literals: set[str], line: int
+        ) -> None:
+            """Registers a property domain without allowing collisions to drive edges."""
+            if property_name in ambiguous_property_names:
+                return
+            previous = property_domains.get(property_name)
+            if previous is not None and previous[0] != symbol:
+                property_domains[property_name] = ("", set(), 0)
+                ambiguous_property_names.add(property_name)
+                return
+            property_domains[property_name] = (symbol, literals, line)
+
         object_type_pattern = re.compile(
             r"export\s+type\s+(\w+)\s*=\s*\{([\s\S]*?)\n\}\s*;?"
         )
@@ -552,14 +584,14 @@ def build_scene_state_denominator(paths: list[str]) -> dict[str, Any]:
             body_offset = object_type.start(2)
             for prop in re.finditer(r"^\s*(\w+)\??:\s*([^;\n]+);?", body, re.MULTILINE):
                 property_name, type_text = prop.groups()
-                if not STATE_NAME.search(property_name):
+                if not STATE_NAME.search(type_name) or not STATE_NAME.search(property_name):
                     continue
                 literals = {literal.group(1) for literal in STRING_LITERAL.finditer(type_text)}
                 if not literals:
                     continue
                 symbol = f"{type_name}.{property_name}"
                 line = source_line_number(text, body_offset + prop.start(1))
-                property_domains[property_name] = (symbol, literals, line)
+                register_property_domain(property_name, symbol, literals, line)
                 for literal in sorted(literals):
                     literal_line = source_line_number(text, body_offset + prop.start(2))
                     add_state(symbol, literal, literal_line, "object-type-literal-property")
@@ -574,12 +606,7 @@ def build_scene_state_denominator(paths: list[str]) -> dict[str, Any]:
                 alias_name = next((name for name in alias_domains if re.search(rf"\b{re.escape(name)}\b", type_text)), None)
                 if alias_name is not None:
                     literals, alias_line = alias_domains[alias_name]
-                    previous = property_domains.get(property_name)
-                    property_domains[property_name] = (
-                        (alias_name, literals, alias_line)
-                        if previous is None or previous[0] == alias_name
-                        else ("", set(), 0)
-                    )
+                    register_property_domain(property_name, alias_name, literals, alias_line)
                     continue
                 if not STATE_NAME.search(property_name):
                     continue
@@ -587,12 +614,7 @@ def build_scene_state_denominator(paths: list[str]) -> dict[str, Any]:
                 if not literals:
                     continue
                 symbol = f"{interface_name}.{property_name}"
-                previous = property_domains.get(property_name)
-                property_domains[property_name] = (
-                    (symbol, literals, line)
-                    if previous is None or previous[0] == symbol
-                    else ("", set(), 0)
-                )
+                register_property_domain(property_name, symbol, literals, line)
                 for literal in sorted(literals):
                     add_state(symbol, literal, line, "interface-literal-property")
 
@@ -885,15 +907,16 @@ def historical_deletions() -> Iterable[tuple[str, str]]:
             yield pair
 
 
-def build_historical_denominator(pages: dict[str, list[dict[str, Any]]]) -> dict[str, Any]:
+def build_historical_denominator(paths: list[str]) -> dict[str, Any]:
     """Builds current page and reachable deleted-path historical locators.
 
     Args:
-        pages: Current game page observations grouped by canonical identity.
+        paths: All frozen source-scope paths.
 
     Returns:
         Historical source locator records bounded by the frozen revision ancestry.
     """
+    pages = discover_pages(paths)
     records = []
     for observations in pages.values():
         for observation in observations:
@@ -909,15 +932,16 @@ def build_historical_denominator(pages: dict[str, list[dict[str, Any]]]) -> dict
     }
 
 
-def build_discrepancies(pages: dict[str, list[dict[str, Any]]]) -> dict[str, Any]:
+def build_discrepancies(paths: list[str]) -> dict[str, Any]:
     """Records non-interpretive repeated identity observations for later reconciliation.
 
     Args:
-        pages: Current game page observations grouped by canonical identity.
+        paths: All frozen source-scope paths.
 
     Returns:
         A mechanical observation list without reconciliation conclusions.
     """
+    pages = discover_pages(paths)
     records = []
     for canonical_id, observations in sorted(pages.items()):
         if len(observations) > 1:
@@ -1029,33 +1053,23 @@ def main(output_dir: Path = TRACK_DIR, role: str | None = None) -> None:
 
     Returns:
         Nothing.
+
+    Raises:
+        ValueError: If role is not one of the supported Phase-1 roles.
     """
+    if role is not None and role not in ROLE_OUTPUTS:
+        raise ValueError(f"Unsupported Phase-1 role: {role}")
     output_dir.mkdir(parents=True, exist_ok=True)
-    selected_outputs = set(
-        ROLE_OUTPUTS[role] if role is not None else (
-            "source-denominator.json",
-            "game-identity-ledger.json",
-            "scene-state-denominator.json",
-            "asset-file-denominator.json",
-            "historical-source-denominator.json",
-            "denominator-discrepancies.json",
-            "denominator-method.md",
-        )
-    )
     paths = baseline_paths()
-    source, pages = build_source_denominator(paths)
-    artifacts = {
-        "source-denominator.json": source,
-        "game-identity-ledger.json": build_identity_ledger(pages),
-        "scene-state-denominator.json": build_scene_state_denominator(paths),
-        "asset-file-denominator.json": build_asset_denominator(paths),
-        "historical-source-denominator.json": build_historical_denominator(pages),
-        "denominator-discrepancies.json": build_discrepancies(pages),
-    }
-    for name, value in artifacts.items():
-        if name in selected_outputs:
-            write_json(output_dir / name, value)
-    if "denominator-method.md" in selected_outputs:
+    if role is None or role == "discovery-auditor":
+        write_json(output_dir / "source-denominator.json", build_source_denominator(paths))
+        write_json(output_dir / "game-identity-ledger.json", build_identity_ledger(paths))
+        write_json(output_dir / "scene-state-denominator.json", build_scene_state_denominator(paths))
+    if role is None or role == "evidence-collector":
+        write_json(output_dir / "asset-file-denominator.json", build_asset_denominator(paths))
+        write_json(output_dir / "historical-source-denominator.json", build_historical_denominator(paths))
+    if role is None or role == "requirements-mapper":
+        write_json(output_dir / "denominator-discrepancies.json", build_discrepancies(paths))
         write_method(output_dir)
 
 
