@@ -425,6 +425,32 @@ describe("repository policy update transaction", () => {
     expectNoArtifacts(operations);
   });
 
+  it("recovers from the durable lock record when the journal is partial", async () => {
+    const operations = new FakeFileOperations();
+    const { plan, transactionId } = await interruptedState(operations, 0);
+    operations.files.set(
+      posix.join(
+        ROOT,
+        `${ARCHITECTURE_WRITE_JOURNAL_PREFIX}${transactionId}.journal.json`,
+      ),
+      '{"schemaVersion":1',
+    );
+
+    await expect(
+      recoverRepositoryFileTransaction({
+        repoRoot: ROOT,
+        transactionId,
+        acknowledge: true,
+        fileOperations: operations,
+      }),
+    ).resolves.toEqual({
+      state: "recovered-originals",
+      planHash: plan.planHash,
+    });
+    expectOriginals(operations);
+    expectNoArtifacts(operations);
+  });
+
   it("retains the lock and artifacts when crash recovery bytes are corrupt", async () => {
     const operations = new FakeFileOperations();
     const { transactionId } = await interruptedState(operations, 1);

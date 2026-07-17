@@ -884,13 +884,7 @@ export async function recoverRepositoryFileTransaction(
       throw new Error("Retained transaction lock changed during recovery");
     }
     try {
-      const journalSource = await options.fileOperations.readFile(journalPath);
-      transactionJournalSchema.parse(JSON.parse(journalSource));
-      if (journalSource !== lockSource) {
-        throw new Error(
-          "Retained transaction journal does not match durable lock record",
-        );
-      }
+      await options.fileOperations.readFile(journalPath);
     } catch (error) {
       if (!isMissingPath(error)) throw error;
     }

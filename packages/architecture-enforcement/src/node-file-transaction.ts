@@ -1,6 +1,8 @@
+import { createHash } from "node:crypto";
 import {
   constants as fsConstants,
   copyFile,
+  link,
   lstat,
   open,
   readFile,
@@ -47,9 +49,27 @@ export function createNodeRepositoryFileTransactionOperations(): RepositoryFileT
     await unlink(translated(path));
     await syncDirectory(path);
   };
+  const lockCandidatePath = (path: string, recoveryRecord: string): string =>
+    `${path}.${createHash("sha256").update(recoveryRecord).digest("hex")}.candidate`;
+  const isMissingPath = (error: unknown): boolean =>
+    typeof error === "object" &&
+    error !== null &&
+    "code" in error &&
+    error.code === "ENOENT";
   return {
     acquireExclusiveLock: async (path, recoveryRecord) => {
-      await writeDurableExclusive(path, recoveryRecord);
+      const candidate = lockCandidatePath(path, recoveryRecord);
+      await writeDurableExclusive(candidate, recoveryRecord);
+      let linked = false;
+      try {
+        await link(translated(candidate), translated(path));
+        linked = true;
+        await syncDirectory(path);
+        await unlinkDurable(candidate);
+      } catch (error) {
+        if (!linked) await unlinkDurable(candidate).catch(() => {});
+        throw error;
+      }
     },
     assertTransactionPath: async (path) => {
       const directory = dirname(path);
@@ -122,7 +142,16 @@ export function createNodeRepositoryFileTransactionOperations(): RepositoryFileT
         await syncDirectory(destination);
       }
     },
-    releaseExclusiveLock: unlinkDurable,
+    releaseExclusiveLock: async (path) => {
+      const recoveryRecord = await readFile(translated(path), "utf8");
+      const candidate = lockCandidatePath(path, recoveryRecord);
+      try {
+        await unlinkDurable(candidate);
+      } catch (error) {
+        if (!isMissingPath(error)) throw error;
+      }
+      await unlinkDurable(path);
+    },
     releaseTransactionPaths: async () => {
       const results = await Promise.allSettled(
         [...directoryHandles.values()].map((handle) => handle.close()),

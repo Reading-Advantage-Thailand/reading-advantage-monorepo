@@ -50,6 +50,23 @@ describe("Node repository file transaction adapter", () => {
     await fileOperations.releaseTransactionPaths();
   });
 
+  it("durably renames a bound file across two repository directories", async () => {
+    const repoRoot = await mkdtemp(join(tmpdir(), "architecture-rename-"));
+    temporaryRoots.push(repoRoot);
+    const source = resolve(repoRoot, "source/document.json");
+    const destination = resolve(repoRoot, "destination/document.json");
+    await mkdir(dirname(source), { recursive: true });
+    await mkdir(dirname(destination), { recursive: true });
+    await writeFile(source, "reviewed\n");
+    const fileOperations = createNodeRepositoryFileTransactionOperations();
+    await fileOperations.bindTransactionPaths([source, destination]);
+
+    await fileOperations.rename(source, destination);
+
+    await expect(readFile(destination, "utf8")).resolves.toBe("reviewed\n");
+    await fileOperations.releaseTransactionPaths();
+  });
+
   it("previews and commits three regular files without artifacts", async () => {
     const repoRoot = await mkdtemp(join(tmpdir(), "architecture-transaction-"));
     temporaryRoots.push(repoRoot);
