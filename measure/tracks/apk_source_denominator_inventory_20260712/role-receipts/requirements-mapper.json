@@ -1,32 +1,66 @@
 {
   "schema_version": "apk-role-receipt.v1",
-  "status": "complete-with-platform-limitations",
+  "status": "complete-provider-attested",
   "track_id": "apk_source_denominator_inventory_20260712",
   "phase": "Phase 3: Reconciliation",
-  "role": "reconciliation-integrator",
-  "task_id": "reconciliation-integrator:phase3-closeout",
+  "role": "requirements-mapper",
+  "task_id": "requirements-mapper:reconciliation-records",
   "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
-  "spawn_id": null,
-  "spawn_id_limitation": "No platform spawn-event export was supplied to this fresh session.",
-  "parent_ancestry_ids": null,
-  "parent_ancestry_ids_limitation": "No platform ancestry export was supplied to this fresh session.",
-  "prompt_sha256": null,
-  "prompt_sha256_limitation": "The platform did not provide immutable prompt bytes from which to derive this digest.",
-  "actual_context_manifest_sha256": null,
-  "actual_context_manifest_sha256_limitation": "No raw provider context export or orchestrator context-manifest bytes were supplied.",
-  "start_event_id": null,
-  "start_event_id_limitation": "No platform start-event ID was supplied.",
-  "end_event_id": null,
-  "end_event_id_limitation": "No platform end-event ID was supplied.",
-  "final_response_sha256": null,
-  "final_response_sha256_limitation": "No immutable platform final-response export was supplied.",
-  "allowed_input_manifest_sha256": "e4bba6919b9b60992a388a9cf4f37c7885400b96bec7b31898f59eaa80d12a9f",
-  "output_paths": ["measure/tracks/apk_source_denominator_inventory_20260712/phase3-reconciliation.json"],
-  "output_hashes": {
-    "measure/tracks/apk_source_denominator_inventory_20260712/phase3-reconciliation.json": "60a5a77ede93982e1b51053fca246b2dfc4774cc02d0db27d50dd6012d06fd14"
+  "spawn_id": "ses_08fa1b7c2ffehUG9yASFtSN13Q",
+  "parent_ancestry_ids": [],
+  "prompt_sha256": "036d238a1afdda54ac943f07c7a4f9c27efbc3ed2c6800a3cd2067a6db5e0813",
+  "prompt_hash_basis": "SHA-256 of exact UTF-8 text bytes in provider message msg_f705e4b28001xt0WQ4eHJxSUWo.",
+  "actual_context_manifest": {
+    "schema_version": "apk-provider-context-manifest.v2",
+    "provider": "opencode-export",
+    "raw_export_sha256": "cfa3fef9b91024eee851b6a26915a9383afe8d830a32e9e8320a261c23a72500",
+    "raw_export_bytes": 8278102,
+    "session_id": "ses_08fa1b7c2ffehUG9yASFtSN13Q",
+    "parent_session_id": null,
+    "session_created_at_ms": 1784296654909,
+    "session_updated_at_ms": 1784297841280,
+    "message_count": 40,
+    "part_count": 183,
+    "user_prompt_count": 4,
+    "first_user_message_id": "msg_f705e4b28001xt0WQ4eHJxSUWo",
+    "final_assistant_message_id": "msg_f707045cc001jtNmiCpV4Bx3Qc",
+    "message_ledger_sha256": "41d5b6b4cce7d8add01e9992069466773a7680cbcd363ee538de80456e0189e8",
+    "message_ledger_hash_basis": "SHA-256 of the raw export messages array serialized as canonical compact JSON with sorted keys and UTF-8 encoding.",
+    "part_ledger_sha256": "2a51e187d5830086e8fc12054109c6b37ccb39298d3e17f3e8f950209f475e5c",
+    "part_ledger_hash_basis": "SHA-256 of all raw export message parts flattened in provider message order and serialized as canonical compact JSON with sorted keys and UTF-8 encoding.",
+    "raw_write_inventory": [
+      "measure/tracks/apk_source_denominator_inventory_20260712/denominator-discrepancies.json",
+      "measure/tracks/apk_source_denominator_inventory_20260712/denominator-method.md",
+      "measure/tracks/apk_source_denominator_inventory_20260712/phase3-reconciliation.json"
+    ],
+    "schema_omissions": [
+      "fork_turns"
+    ]
   },
-  "output_sha256": "ba8d11b899ebdfab2db714db4653e51ac4d46c75fd9152a3e51e62d252fbbae6",
-  "output_hash_basis": "SHA-256 of canonical compact JSON with sorted keys mapping the output path to the SHA-256 of its committed bytes at commit_sha.",
+  "actual_context_manifest_sha256": "824bd7ca145e06a26b957a1049354ade7691c074aeec664022e5bb2215462d10",
+  "actual_context_manifest_hash_basis": "SHA-256 of actual_context_manifest serialized as canonical compact JSON with sorted keys.",
+  "start_event_id": "msg_f705e4b28001xt0WQ4eHJxSUWo",
+  "end_event_id": "msg_f707045cc001jtNmiCpV4Bx3Qc",
+  "final_response_sha256": "2138420df7671608cf5ce24b32e15ae82c697726d1707e8756436449fc11909a",
+  "final_response_hash_basis": "SHA-256 of exact UTF-8 text bytes in provider message msg_f707045cc001jtNmiCpV4Bx3Qc.",
+  "allowed_input_manifest_sha256": "f8d68f17453e87ba9fb155420e91fcaccaf7c1942b4e02ad372c66dc6ad31129",
+  "output_paths": [
+    "measure/tracks/apk_source_denominator_inventory_20260712/denominator-discrepancies.json",
+    "measure/tracks/apk_source_denominator_inventory_20260712/denominator-method.md",
+    "measure/tracks/apk_source_denominator_inventory_20260712/phase3-reconciliation.json"
+  ],
+  "output_hashes": {
+    "measure/tracks/apk_source_denominator_inventory_20260712/denominator-discrepancies.json": "e9bf40693560d5d79bc15753eaf3867bc90e7e1845761b7fa1f5bf6e89b997a6",
+    "measure/tracks/apk_source_denominator_inventory_20260712/denominator-method.md": "3fd838fc9eadb045cffa10cffa816b445f14d4cbde27026974c17a60ca448c54",
+    "measure/tracks/apk_source_denominator_inventory_20260712/phase3-reconciliation.json": "5e7aa4c14be7795daa955501de9a4d55fa0c779b86280bab24d2e4159b1d0023"
+  },
+  "output_sha256": "307e6908e6d46b03149d995ccaf9f6fc9d43b8d8e4082013dc281303697ffe84",
+  "output_hash_basis": "SHA-256 of canonical compact JSON with sorted keys mapping each output path to the SHA-256 of its committed bytes at commit_sha.",
+  "actual_usage": {
+    "bytes_read": 210001,
+    "claim_records": 4611,
+    "command_invocations": 58
+  },
   "budget_declaration": {
     "role": "requirements-mapper",
     "frozen_resource_ceiling": {
@@ -34,24 +68,62 @@
       "claim_records": 12000,
       "command_invocations": 60
     },
-    "actual_usage": null,
-    "actual_usage_limitation": "The platform does not expose a tool-usage ledger to this session."
+    "actual_usage": {
+      "bytes_read": 210001,
+      "claim_records": 4611,
+      "command_invocations": 58
+    },
+    "measurement_basis": {
+      "bytes_read": "Sum of UTF-8 byte lengths of output and error strings on all provider tool parts in the retained raw export.",
+      "claim_records": "Sum of all top-level record collections in the three committed owned outputs, including zero unresolved-source records.",
+      "command_invocations": "Count of all provider tool parts in the retained raw export."
+    }
   },
-  "budget_declaration_sha256": "e2495cfef4f852ecb318f5a5f59fde86aa0fd19922ec1abb0e3688c015f3588a",
-  "budget_hash_basis": "SHA-256 of canonical compact JSON with sorted keys for budget_declaration.",
-  "commit_sha": "7b595ae2ae7c126d75771c71b57078d683bb394c",
+  "budget_declaration_sha256": "b8f6786151b478e46bb4265f4719dc71004da39a6120df24a4c793202dc05501",
+  "budget_hash_basis": "SHA-256 of budget_declaration serialized as canonical compact JSON with sorted keys.",
+  "stop_loss_observations": {
+    "unsupported_factual_claims": 0,
+    "denominator_mismatches": 0,
+    "failed_fix_review_cycles": 0,
+    "unresolved_blocking_findings": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0
+    }
+  },
+  "provider_usage": {
+    "tokens_input": 356548,
+    "tokens_output": 8076,
+    "tokens_reasoning": 2053,
+    "tokens_cache_read": 2252288,
+    "models": [
+      "gpt-5.6-luna"
+    ],
+    "providers": [
+      "openai"
+    ]
+  },
+  "commit_sha": "622aec55491441cb9b617b37f3d9ce05d5cc69e0",
   "commit_binding": {
     "status": "committed-output-binding",
-    "source": "git show 7b595ae2ae7c126d75771c71b57078d683bb394c:<output-path>",
-    "limitation": "This receipt was written after the output commit and proves only the output bytes at that commit, not platform event ordering."
+    "output_commit": "61f1152008d0e8c09e0d281c197bf4e5f3b9d7b3",
+    "full_output_attestation_commit": "0e83fe84459ce459dc5c2a5e159f2e701fdbeacb",
+    "phase3_attestation_commit": "622aec55491441cb9b617b37f3d9ce05d5cc69e0",
+    "raw_export_sha256": "cfa3fef9b91024eee851b6a26915a9383afe8d830a32e9e8320a261c23a72500",
+    "adapter_acceptance_commit": "47f9966716ea527be576e24a352b386ca3f26ae2",
+    "source": "git show 622aec55491441cb9b617b37f3d9ce05d5cc69e0:<output-path>"
   },
   "findings": [],
   "reconciliation_summary": {
     "status": "reconciliation-complete",
-    "reviewed_program_identities": 29,
-    "current": 17,
-    "historical_withdrawn": 12,
-    "unresolved_sources": 0
+    "identity_records": 27,
+    "current_identities": 17,
+    "withdrawn_identities": 10,
+    "programs": 29,
+    "current_programs": 17,
+    "historical_withdrawn_programs": 12,
+    "unresolved_sources": 0,
+    "admission_tests_passed": 54
   },
   "acceptance": "not-claimed"
 }
