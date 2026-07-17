@@ -231,7 +231,7 @@ class OpenCodeProvenanceTests(unittest.TestCase):
             generator_part = {"type": "tool", "tool": "bash", "state": {"status": "completed", "input": {"command": "python3 generate.py", "workdir": str(root)}, "metadata": {"output": "(no output)", "exit": 0, "truncated": False}}}
             messages = [{"parts": [generator_part, commit_part]}]
             self.assertEqual(_shell_owned_paths(messages, root, (binding,), commit_sha), {"out.md"})
-            messages[0]["parts"].insert(1, {"type": "tool", "tool": "read", "state": {"status": "completed", "input": {}, "metadata": {}}})
+            messages[0]["parts"].insert(1, {"type": "tool", "tool": "read", "state": {"status": "completed", "input": tool_input, "metadata": metadata}})
             with self.assertRaisesRegex(ProvenanceError, "no valid subsequent commit"):
                 _shell_owned_paths(messages, root, (binding,), commit_sha)
 
@@ -268,6 +268,13 @@ class OpenCodeProvenanceTests(unittest.TestCase):
             metadata["output"] = f"[master {commit_sha}] generator"
             tool_input["command"] = "git commit --allow-empty --only out.md -m 'generator'"
             self.assertIsNone(_parse_simple_commit(tool_input, metadata, binding, root, commit_sha))
+
+    def test_shell_binding_attestation_requires_allow_empty_command(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            _, tool_input, metadata, ownership = self._shell_commit_fixture(root)
+            binding = ShellGeneratorBinding("python3 generate.py", ("out.md",), attestation_commit=ownership)
+            self.assertIsNone(_parse_simple_commit(tool_input, metadata, binding, root, ownership))
 
     def test_shell_commit_rejects_extra_valid_prior_sha_result_line(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

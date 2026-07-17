@@ -263,6 +263,8 @@ def _shell_owned_paths(
             if index + 1 >= len(tool_parts):
                 continue
             next_part = tool_parts[index + 1][2]
+            if next_part.get("tool") != "bash":
+                continue
             next_state = next_part.get("state")
             if not isinstance(next_state, Mapping) or next_state.get("status") != "completed":
                 continue
@@ -336,7 +338,10 @@ def _parse_simple_commit(
     commit_sha = resolved.stdout.decode().strip()
     if not re.fullmatch(r"[0-9a-f]{40}", commit_sha) or not _binding_output_commit_is_ancestor(commit_sha, output_commit, repo_root):
         return None
-    if allow_empty and commit_sha != binding.attestation_commit:
+    if binding.attestation_commit is not None:
+        if not allow_empty or commit_sha != binding.attestation_commit:
+            return None
+    elif allow_empty:
         return None
     if not _commit_owns_declared_outputs(commit_sha, output_commit, binding, repo_root, allow_empty):
         return None
