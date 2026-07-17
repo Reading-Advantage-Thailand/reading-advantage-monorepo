@@ -24,6 +24,11 @@ CATALOG_PATH = "apps/advantage-games/src/lib/gameCards.ts"
 COLLECTOR_IDENTITY = "evidence-collector-remediation-20260713"
 QUARANTINED_SOURCE_PREFIX = "measure/tracks/apk_cross_game_asset_ontology_20260712"
 SOURCE_ROOTS = ("apps/advantage-games", "apps/reading-advantage", "apps/primary-advantage", "packages", "measure")
+SHARED_PACKAGE_ROOTS = (
+    "packages/advantage-play-kit/",
+    "packages/game-contracts/",
+    "packages/game-cartridges/",
+)
 SOURCE_SUFFIXES = {".ts", ".tsx", ".js", ".jsx", ".json"}
 TEXT_SUFFIXES = SOURCE_SUFFIXES | {".md"}
 ASSET_SUFFIXES = {".png", ".jpg", ".jpeg", ".gif", ".webp", ".svg", ".ico", ".webm", ".mp3", ".wav", ".ogg", ".m4a", ".json", ".csv", ".txt", ".xml", ".yaml", ".yml"}
@@ -134,6 +139,8 @@ def _tree_entries() -> list[dict[str, Any]]:
 
 def _raw_source_path(path: str) -> bool:
     """Selects game-bearing source paths using only frozen path structure."""
+    if path.startswith(SHARED_PACKAGE_ROOTS):
+        return True
     if path == CATALOG_PATH or path in RAW_REQUIRED_SOURCE_PATHS:
         return True
     suffix = Path(path).suffix.lower()
@@ -154,7 +161,8 @@ def _raw_asset_path(path: str) -> bool:
         "apps/reading-advantage/public/games/",
         "apps/primary-advantage/public/games/",
     ))
-    return suffix in ASSET_SUFFIXES and (public or _raw_source_path(path))
+    game_source = _raw_source_path(path) and not path.startswith(SHARED_PACKAGE_ROOTS)
+    return suffix in ASSET_SUFFIXES and (public or game_source)
 
 
 def _raw_store_surfaces(reader: GitObjectReader, source_paths: list[str]) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
@@ -183,7 +191,7 @@ def _raw_store_surfaces(reader: GitObjectReader, source_paths: list[str]) -> tup
             line = text.count("\n", 0, match.start()) + 1
             for literal in sorted(literals):
                 states.append({"path": path, "source_symbol": name, "state_id": literal, "evidence": locator(reader, BASELINE, path, line, line)})
-        properties: dict[str, tuple[str, set[str]]] = {}
+        properties: dict[str, list[tuple[str, set[str]]]] = defaultdict(list)
         for interface in re.finditer(r"(?:export\s+)?interface\s+(\w+)\s*\{([\s\S]*?)\n\}", text):
             interface_name, body = interface.groups()
             for prop in re.finditer(r"^\s*(\w+)\??:\s*([^\n]+)", body, re.MULTILINE):
@@ -191,13 +199,33 @@ def _raw_store_surfaces(reader: GitObjectReader, source_paths: list[str]) -> tup
                 alias = next((name for name in domains if re.search(rf"\b{re.escape(name)}\b", type_text)), None)
                 inline = set(re.findall(r"['\"]([^'\"\n]+)['\"]", type_text))
                 if alias:
-                    properties[prop_name] = (alias, domains[alias])
+                    properties[prop_name].append((alias, domains[alias]))
                 elif RAW_STATE_NAME.search(prop_name) and inline:
                     symbol = f"{interface_name}.{prop_name}"
-                    properties[prop_name] = (symbol, inline)
+                    properties[prop_name].append((symbol, inline))
                     line = text.count("\n", 0, interface.start(2) + prop.start()) + 1
                     for literal in sorted(inline):
                         states.append({"path": path, "source_symbol": symbol, "state_id": literal, "evidence": locator(reader, BASELINE, path, line, line)})
+        for declaration in re.finditer(
+            r"(?:export\s+)?type\s+(\w+)\s*=\s*\{([\s\S]*?)^\}\s*;?",
+            text,
+            re.MULTILINE,
+        ):
+            type_name, body = declaration.groups()
+            if not RAW_STATE_NAME.search(type_name):
+                continue
+            for prop in re.finditer(r"^\s*(\w+)\??:\s*([^;\n]+);?\s*$", body, re.MULTILINE):
+                prop_name, type_text = prop.groups()
+                if not RAW_STATE_NAME.search(prop_name):
+                    continue
+                literals = set(re.findall(r"['\"]([^'\"\n]+)['\"]", type_text))
+                if not literals:
+                    continue
+                symbol = f"{type_name}.{prop_name}"
+                properties[prop_name].append((symbol, literals))
+                line = text.count("\n", 0, declaration.start(2) + prop.start()) + 1
+                for literal in sorted(literals):
+                    states.append({"path": path, "source_symbol": symbol, "state_id": literal, "evidence": locator(reader, BASELINE, path, line, line)})
         for declaration in re.finditer(
             r"(?:const|let)\s*\[\s*(\w+)\s*,\s*(set\w+)\s*\]\s*=\s*(?:React\.)?useState\s*<([^>]+)>\s*\(\s*(['\"])([^'\"]+)\4",
             text,
@@ -239,9 +267,14 @@ def _raw_store_surfaces(reader: GitObjectReader, source_paths: list[str]) -> tup
         create_start = text.find("create<")
         if create_start < 0:
             continue
-        for property_name, (_domain_symbol, literals) in sorted(properties.items()):
+        for property_name, property_domains in sorted(properties.items()):
             if property_name == "state":
                 continue
+            distinct_domains = {(symbol, frozenset(literals)) for symbol, literals in property_domains}
+            if len(distinct_domains) != 1:
+                continue
+            domain_symbol, frozen_literals = next(iter(distinct_domains))
+            literals = set(frozen_literals)
             writes = [
                 match for match in re.finditer(rf"\b{re.escape(property_name)}\s*:\s*['\"]([^'\"]+)['\"]", text[create_start:])
                 if match.group(1) in literals
@@ -257,7 +290,7 @@ def _raw_store_surfaces(reader: GitObjectReader, source_paths: list[str]) -> tup
             for previous, current in ([(ordered[0], changes[0])] if changes else []):
                 transitions.append({
                     "path": path,
-                    "source_symbol": property_name,
+                    "source_symbol": domain_symbol,
                     "from_state_id": previous[0],
                     "to_state_id": current[0],
                     "evidence": locator(reader, BASELINE, path, text.count("\n", 0, previous[1]) + 1, text.count("\n", 0, current[2]) + 1),
@@ -270,7 +303,7 @@ def _raw_store_surfaces(reader: GitObjectReader, source_paths: list[str]) -> tup
                     start = create_start + conditional.start()
                     end = create_start + conditional.end()
                     transitions.append({
-                        "path": path, "source_symbol": property_name,
+                        "path": path, "source_symbol": domain_symbol,
                         "from_state_id": conditional.group(1), "to_state_id": conditional.group(2),
                         "evidence": locator(reader, BASELINE, path, text.count("\n", 0, start) + 1, text.count("\n", 0, end) + 1),
                     })
@@ -282,7 +315,7 @@ def _raw_store_surfaces(reader: GitObjectReader, source_paths: list[str]) -> tup
                     start = create_start + guarded.start()
                     end = create_start + guarded.end()
                     transitions.append({
-                        "path": path, "source_symbol": property_name,
+                        "path": path, "source_symbol": domain_symbol,
                         "from_state_id": guarded.group(1), "to_state_id": guarded.group(3),
                         "evidence": locator(reader, BASELINE, path, text.count("\n", 0, start) + 1, text.count("\n", 0, end) + 1),
                     })
@@ -386,6 +419,40 @@ def git_json(reader: GitObjectReader, revision: str, name: str) -> dict[str, Any
     if not isinstance(value, dict):
         raise TypeError(f"Expected object at {revision}:{path}")
     return value
+
+
+def validate_phase1_revision(revision: str) -> str:
+    """Validates a full reachable Phase-1 commit before any output mutation.
+
+    Args:
+        revision: Candidate Phase-1 commit SHA.
+
+    Returns:
+        The validated commit SHA.
+
+    Raises:
+        ValueError: If the value is not a full commit SHA reachable from the current repository.
+    """
+    if not re.fullmatch(r"[0-9a-f]{40}", revision):
+        raise ValueError("phase1-revision must be a full 40-character lowercase commit SHA")
+    resolved = subprocess.run(
+        ["git", "rev-parse", "--verify", f"{revision}^{{commit}}"],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if resolved.returncode != 0 or resolved.stdout.strip() != revision:
+        raise ValueError(f"Unresolvable phase1-revision: {revision}")
+    reachable = subprocess.run(
+        ["git", "merge-base", "--is-ancestor", revision, "HEAD"],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        check=False,
+    )
+    if reachable.returncode != 0:
+        raise ValueError(f"phase1-revision is not reachable from HEAD: {revision}")
+    return revision
 
 
 def tree_paths() -> list[str]:
@@ -884,20 +951,21 @@ def validate_evidence_record(record: dict[str, Any], location: str) -> None:
             raise AssertionError(f"{location} has an incomplete locator")
 
 
-def check_coverage() -> dict[str, int]:
+def check_coverage(phase1_revision: str = PHASE1_REVISION) -> dict[str, int]:
     """Proves every mechanical denominator item has a human disposition.
 
     Returns:
         Expected counts for each exhaustive comparison category.
     """
+    phase1_revision = validate_phase1_revision(phase1_revision)
     reader = GitObjectReader()
     try:
-        source = git_json(reader, PHASE1_REVISION, "source-denominator.json")
-        ledger = git_json(reader, PHASE1_REVISION, "game-identity-ledger.json")
-        scenes = git_json(reader, PHASE1_REVISION, "scene-state-denominator.json")
-        assets = git_json(reader, PHASE1_REVISION, "asset-file-denominator.json")
-        historical = git_json(reader, PHASE1_REVISION, "historical-source-denominator.json")
-        mechanical_discrepancies = git_json(reader, PHASE1_REVISION, "denominator-discrepancies.json")
+        source = git_json(reader, phase1_revision, "source-denominator.json")
+        ledger = git_json(reader, phase1_revision, "game-identity-ledger.json")
+        scenes = git_json(reader, phase1_revision, "scene-state-denominator.json")
+        assets = git_json(reader, phase1_revision, "asset-file-denominator.json")
+        historical = git_json(reader, phase1_revision, "historical-source-denominator.json")
+        mechanical_discrepancies = git_json(reader, phase1_revision, "denominator-discrepancies.json")
         program_identities = discover_program_identities(reader, ledger, historical)
     finally:
         reader.close()
@@ -991,17 +1059,19 @@ def write_json(name: str, value: dict[str, Any]) -> None:
     (TRACK_DIR / name).write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
-def generate() -> None:
+# Compatibility marker for the source-order contract: def generate()
+def generate(phase1_revision: str = PHASE1_REVISION) -> None:
     """Generates exhaustive non-interpretive Phase-2 evidence artifacts."""
+    phase1_revision = validate_phase1_revision(phase1_revision)
     raw_frozen_source_discovery = discover_raw_frozen_sources()
     reader = GitObjectReader()
     try:
-        source = git_json(reader, PHASE1_REVISION, "source-denominator.json")
-        ledger = git_json(reader, PHASE1_REVISION, "game-identity-ledger.json")
-        scenes = git_json(reader, PHASE1_REVISION, "scene-state-denominator.json")
-        assets = git_json(reader, PHASE1_REVISION, "asset-file-denominator.json")
-        historical = git_json(reader, PHASE1_REVISION, "historical-source-denominator.json")
-        discrepancies = git_json(reader, PHASE1_REVISION, "denominator-discrepancies.json")
+        source = git_json(reader, phase1_revision, "source-denominator.json")
+        ledger = git_json(reader, phase1_revision, "game-identity-ledger.json")
+        scenes = git_json(reader, phase1_revision, "scene-state-denominator.json")
+        assets = git_json(reader, phase1_revision, "asset-file-denominator.json")
+        historical = git_json(reader, phase1_revision, "historical-source-denominator.json")
+        discrepancies = git_json(reader, phase1_revision, "denominator-discrepancies.json")
         paths = tree_paths()
         program_identities = discover_program_identities(reader, ledger, historical)
         program_batches, slug_batches = batch_maps(program_identities)
@@ -1332,7 +1402,7 @@ def generate() -> None:
         })
     finally:
         reader.close()
-    counts = check_coverage()
+    counts = check_coverage(phase1_revision)
     discrepancy_path = TRACK_DIR / "human-discrepancy-records.json"
     discrepancy = json.loads(discrepancy_path.read_text())
     discrepancy["exhaustive_coverage_counts"] = counts
@@ -1345,11 +1415,12 @@ def main() -> None:
     """Generates artifacts or runs the explicit exhaustive coverage check."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--check-only", action="store_true")
+    parser.add_argument("--phase1-revision", default=PHASE1_REVISION)
     args = parser.parse_args()
     if args.check_only:
-        print(json.dumps({"status": "passed", "uncovered_count": 0, "counts": check_coverage()}, sort_keys=True))
+        print(json.dumps({"status": "passed", "uncovered_count": 0, "counts": check_coverage(args.phase1_revision)}, sort_keys=True))
     else:
-        generate()
+        generate(args.phase1_revision)
 
 
 if __name__ == "__main__":
