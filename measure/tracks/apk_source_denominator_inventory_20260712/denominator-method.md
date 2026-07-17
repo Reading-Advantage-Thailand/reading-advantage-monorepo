@@ -42,4 +42,16 @@ The `measure/tracks/apk_cross_game_asset_ontology_20260712` prefix is rejected b
 negative fixture records that prefix rejection only and contains no failed-track
 factual input. The output is a mechanical inventory: it makes no conclusion about
 runtime intent, layout behavior, source suitability, semantic classification, or
-product outcome.
+ product outcome.
+
+## Phase 3 reconciliation
+
+The reconciliation consumes Phase-1 revision `990dd9c060ca844ad16d141b1eb4086b310369a4`, Phase-2 implementation
+revision `4f5dde0a04c70c57f123a72eded84836325743da`, and the Phase-2 receipt revision
+`7eef639674e927f2d56107866d385e0df812aa66`. Independent evidence is mapped by comparing current mechanical and
+human records directly, while historical records are matched only by unique `catalog_id` against the historical
+catalog evidence. Six provenance records are receipt-owned; four provenance records are consumed from the
+independent evidence outputs. Canonical aggregate validation checks the 27 identity records, 17 current identities,
+10 withdrawn identities, 29 programs, 17 current programs, and 12 historical/withdrawn programs. Missing or
+ambiguous evidence remains unresolved and fails closed rather than being inferred; this reconciliation has zero
+unresolved sources.

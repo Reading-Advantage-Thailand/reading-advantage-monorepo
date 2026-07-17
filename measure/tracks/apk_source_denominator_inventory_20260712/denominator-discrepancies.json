@@ -343,5 +343,19 @@
   ],
   "schema_version": "apk-denominator-discrepancies.v1",
   "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
-  "status": "mechanical-discovery-complete"
+  "status": "reconciliation-complete",
+  "input_provenance": {
+    "phase1_revision": "990dd9c060ca844ad16d141b1eb4086b310369a4",
+    "phase2_implementation_revision": "4f5dde0a04c70c57f123a72eded84836325743da",
+    "phase2_receipt_revision": "7eef639674e927f2d56107866d385e0df812aa66"
+  },
+  "reconciliation_summary": {
+    "identity_records": 27,
+    "current_identity_records": 17,
+    "withdrawn_identity_records": 10,
+    "programs": 29,
+    "current_programs": 17,
+    "historical_withdrawn_programs": 12,
+    "unresolved_sources": 0
+  }
 }
