@@ -60,6 +60,23 @@ deletions. A renamed path cannot evade a finding when its resolved violation is
 unchanged. Baseline update is a separate explicit command that prints additions
 and exits non-zero unless an acknowledgement flag is supplied.
 
+The Phase 1 freeze of 464 database and 27 provider entries is the accepted
+historical direct-fact snapshot. Because Phase 1 explicitly deferred alias,
+barrel, resolved-target, client-construction, and binding-aware query propagation,
+this track authorizes exactly one analyzer-complete reconciliation after the
+Phase 3 analyzer is stable. Every proposed addition must be reproduced by the
+final analyzer against the immutable pre-analyzer source revision, reviewed
+individually for rule correctness, owner, rationale, and false positives, and
+accepted without changing a rule, ownership root, or exact exception. The
+reconciliation is not permission to accept a finding introduced after that
+source revision. Normal checks remain read-only before and after the one-time
+transaction, and every post-base unreviewed finding fails as new debt.
+
+The reconciliation source revision is exactly
+`3a109c879438fd50b369eb2905ddccfb56722d2b`. It contains only the two
+fail-closed source-resolution prerequisites needed for a zero-error analyzer
+run; the commit introduces no analyzer or ratchet implementation change.
+
 ### FR-6: CI, doctor, and evidence
 
 Expose a non-interactive root command, wire it into CI and `measure/doctor.sh`,
@@ -87,10 +104,20 @@ fixing a finding and ratcheting a removed entry down.
 7. Generated diagnostics are deterministic across two consecutive runs.
 8. Direct job-table access is accepted only in DB schema/migrations and the
    exact backend PostgreSQL job-adapter root; worker/webhook direct access fails.
+9. The one-time analyzer-complete reconciliation proves every added instance at
+   immutable source revision
+   `3a109c879438fd50b369eb2905ddccfb56722d2b`, receives independent
+   per-addition review, preserves exact metadata and no-wildcard invariants,
+   records the final accepted counts and hashes, and leaves the normal checker
+   clean. A synthetic finding introduced after the base revision still exits
+   non-zero.
 
 ## Out of Scope
 
-- Migrating existing violations.
+- Migrating existing violations, except for the explicitly authorized one-time
+  direct-fact-to-analyzer-complete baseline reconciliation in FR-5.
 - Implementing capability descriptors, executor, route generation, or jobs.
 - General-purpose lint replacement or formatting enforcement.
 - Editing application behavior to make the baseline smaller in this track.
+- Routine baseline growth, accepting post-base findings, weakening rules or
+  exact exceptions, or repeating the reconciliation after its accepted write.

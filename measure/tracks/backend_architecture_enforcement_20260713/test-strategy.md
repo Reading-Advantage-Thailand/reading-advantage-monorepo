@@ -54,8 +54,9 @@ This phase proves executable AST behavior, not source-text claims. Green means:
 - all 21 named analyzer cases and all five ratchet assertions execute;
 - parser, resolver, and policy failures fail closed with a non-zero command exit;
 - JSON and human diagnostics contain only stable, secret-safe facts; and
-- the reviewed 464 database plus 27 provider baseline findings are not silently
-  removed, reclassified, or broadened.
+- the reviewed 464 database plus 27 provider findings remain the immutable
+  historical direct-fact input until the one-time analyzer-complete
+  reconciliation; no entry is silently removed, reclassified, or broadened.
 
 No `--passWithNoTests`, broad `-t` filter, `|| true`, ignored pipeline exit, or
 renamed `.red.test.ts` file is allowed. A broader aggregate suite may have
@@ -205,10 +206,37 @@ after Task 12, Phase 3 remains incomplete; the missing root command is not
 papered over with a package-local alias or `|| true`. Phase 4 owns CI/doctor
 wiring, but it must invoke this same checker rather than a second implementation.
 
+#### One-time analyzer-complete reconciliation
+
+Phase 1 intentionally froze direct facts before alias, barrel, resolved-target,
+client-construction, and binding-aware query propagation existed. Once those
+behaviors are final, Task 12a may execute exactly one reconciliation under
+`analyzer-baseline-reconciliation-strategy.md`. This is a migration of evidence
+models, not permission for new architecture debt.
+
+The accepted addition set must be reproduced by the final analyzer against
+immutable source revision `3a109c879438fd50b369eb2905ddccfb56722d2b` and
+reviewed addition by addition. That anchor contains only the two fail-closed
+source-resolution prerequisites required for a zero-error run; its commit
+introduces no analyzer or ratchet implementation change. Current-HEAD additions
+that do not exist as the same instance at that source revision are post-base
+debt and cannot be accepted.
+Rules, ownership roots, exact exceptions, ruleset hashes, wildcard validation,
+and existing owner/rationale metadata remain unchanged. New entries require
+independently accepted owner/rationale metadata under the same strict contracts.
+The update command remains preview-first and may perform one successful
+acknowledged write only after the review manifest passes.
+
+The currently observed 614-total / 123-addition output is only a reconciliation
+candidate. It is not an expected final count while analyzer instrumentation,
+resolver behavior, the immutable-base reproduction, and independent review are
+unfinished. Final database/provider counts and baseline file hashes are recorded
+only in the accepted reconciliation artifact and then become the Phase 3/4 gate.
+
 ## 4. Phase 3 aggregate Green and closeout gate
 
-After the four task slices pass, run the complete package-focused gate with no
-file filter that could omit a named case:
+After Tasks 9–12 pass and Task 12a completes, run the complete package-focused
+gate with no file filter that could omit a named case:
 
 ```bash
 set -o pipefail
@@ -222,8 +250,12 @@ pnpm architecture:check
 ```
 
 The focused log must show all test files executed, all tests passed, and no
-skips. `architecture:baseline:validate` must still report 464 database entries,
-27 provider entries, and the accepted ruleset hashes. `architecture:check` must
+skips. Before Task 12a, `architecture:baseline:validate` must still report the
+historical 464 database entries, 27 provider entries, and accepted ruleset
+hashes. After Task 12a, the same command must validate the accepted
+analyzer-complete counts, unchanged policy hashes, exact finding identities,
+owner/rationale metadata, and reconciliation provenance rather than requiring
+equality with the superseded direct-only projection. `architecture:check` must
 fail closed for parser/config errors and must not mutate either baseline.
 
 The package coverage command is mandatory for newly introduced analyzer and
@@ -296,11 +328,16 @@ strategy role does not edit generated artifacts.
 - Durable job tables are queryable outside DB schema/migrations only in the exact
   PostgreSQL adapter root. Worker, webhook, transport, and handler direct access
   remains a finding even when the current baseline contains debt.
-- Preserve existing tenant coverage and provider-boundary tests. No current
-  production baseline entry may be deleted merely to make analyzer output Green.
+- Preserve existing tenant coverage and provider-boundary tests. No historical
+  direct baseline entry may be deleted merely to make analyzer output Green;
+  any legitimate reduction is separately labeled and reviewed during Task 12a.
 - A normal check is read-only. Baseline updates require explicit acknowledgement
   and show additions/removals/renames before writing. Owner and rationale are
   required for every accepted entry.
+- Task 12a is the only authorized analyzer-complete reconciliation. Every new
+  entry must exist at the immutable pre-analyzer source revision, and any
+  post-base finding remains `new-debt`. No rule, ownership root, exact exception,
+  or wildcard rule may change as part of reconciliation.
 - No live PostgreSQL, provider credential, network call, or browser session is
   required for this phase. The fixtures are isolated filesystem/AST behavior;
   using a live provider or database would add no acceptance evidence.
@@ -369,10 +406,13 @@ byte-for-byte and must commit only its explicitly owned Phase 3 files.
 ## 10. Phase 3 closeout criteria
 
 Phase 3 is accepted only when the focused analyzer/resolution/fixture/ratchet
-suite, coverage, type-check, lint, build, baseline validation, and
-`pnpm architecture:check` all pass; the temporary-above-baseline command fails
-as designed; generated JSON is deterministic and secret-safe; all required
-review roles have fresh results; and no baseline growth or broad exception was
-introduced. Phase 4 remains responsible for wiring the same command into CI and
-`measure/doctor.sh`, documenting the remediation workflow, and checking
-`measure/generated/` drift.
+suite, coverage, type-check, lint, build, analyzer-complete baseline validation,
+and `pnpm architecture:check` all pass; the temporary post-base command fails as
+designed; generated JSON is deterministic and secret-safe; all required review
+roles have fresh results; and Task 12a has recorded the immutable source base,
+final analyzer SHA, independently reviewed addition manifest, final accepted
+counts, and final hashes. The historical 464/27 direct freeze remains audit
+evidence, but it is not restated as the final expected count before review.
+No routine baseline growth or broad exception is permitted. Phase 4 remains
+responsible for wiring the same command into CI and `measure/doctor.sh`,
+documenting the remediation workflow, and checking `measure/generated/` drift.
