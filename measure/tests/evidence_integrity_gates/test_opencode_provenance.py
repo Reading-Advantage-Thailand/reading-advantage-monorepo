@@ -250,6 +250,21 @@ class OpenCodeProvenanceTests(unittest.TestCase):
             metadata["output"] = f"[master {commit_sha}] generator"
             self.assertIsNone(_parse_simple_commit(tool_input, metadata, binding, root, final))
 
+    def test_shell_commit_rejects_matching_forged_subject_for_resolved_commit(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            binding, tool_input, metadata, commit_sha = self._shell_commit_fixture(root)
+            tool_input["command"] = "git commit --only out.md -m 'forged'"
+            metadata["output"] = f"[master {commit_sha}] forged"
+            self.assertIsNone(_parse_simple_commit(tool_input, metadata, binding, root, commit_sha))
+
+    def test_shell_commit_accepts_statistics_after_single_summary(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            binding, tool_input, metadata, commit_sha = self._shell_commit_fixture(root)
+            metadata["output"] = f"[master {commit_sha}] generator\n 1 file changed, 1 insertion(+)\n"
+            self.assertEqual(_parse_simple_commit(tool_input, metadata, binding, root, commit_sha), commit_sha)
+
     def test_shell_commit_rejects_actual_extra_path_inventory(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

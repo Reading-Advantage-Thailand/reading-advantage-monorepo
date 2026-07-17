@@ -338,6 +338,12 @@ def _parse_simple_commit(
     commit_sha = resolved.stdout.decode().strip()
     if not re.fullmatch(r"[0-9a-f]{40}", commit_sha) or not _binding_output_commit_is_ancestor(commit_sha, output_commit, repo_root):
         return None
+    stored_subject = subprocess.run(
+        ("git", "show", "-s", "--format=%s", commit_sha),
+        cwd=repo_root, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False,
+    )
+    if stored_subject.returncode != 0 or stored_subject.stdout.decode(errors="replace") != f"{message}\n":
+        return None
     if binding.attestation_commit is not None:
         if not allow_empty or commit_sha != binding.attestation_commit:
             return None
