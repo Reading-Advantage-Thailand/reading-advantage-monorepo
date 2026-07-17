@@ -177,7 +177,7 @@ function listTrackedFiles(
  * @param repoRoot Absolute normalized repository root.
  * @returns Deduplicated, filtered, lexically sorted repository paths.
  */
-function selectSourceFiles(
+export function selectArchitectureSourceFiles(
   options: InventoryRepositoryOptions,
   repoRoot: string,
 ): string[] {
@@ -565,7 +565,7 @@ export async function inventoryRepository(
   options: InventoryRepositoryOptions,
 ): Promise<ArchitectureInventory> {
   const repoRoot = resolve(options.repoRoot);
-  const sourcePaths = selectSourceFiles(options, repoRoot);
+  const sourcePaths = selectArchitectureSourceFiles(options, repoRoot);
   const facts: InventoryFact[] = [];
   const parseErrors: InventoryParseError[] = [];
 

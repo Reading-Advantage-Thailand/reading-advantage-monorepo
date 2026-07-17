@@ -12,6 +12,7 @@ import {
   directViolationCandidateSchema,
   type DirectViolationCandidate,
 } from "./inventory.js";
+import { createFindingIdentity } from "./finding-identity.js";
 import type { WorkspaceModuleTargets } from "./workspace-resolution.js";
 import { compareStableStrings } from "./stable-order.js";
 
@@ -153,19 +154,15 @@ function createBaselineEntry(
     );
   }
   const resolvedTarget = directResolvedTarget(candidate, workspaceTargets);
-  const semanticKey = sha256({
-    schemaVersion: 1,
+  const { semanticKey, instanceKey } = createFindingIdentity({
     ruleId: candidate.ruleId,
     domain: candidate.domain,
-    evidenceKind: candidate.evidenceKind,
-    resource: candidate.resource ?? null,
-    resolvedTarget,
-  });
-  const instanceKey = sha256({
-    semanticKey,
     sourcePath: candidate.sourcePath,
     line: candidate.line,
     column: candidate.column,
+    evidenceKind: candidate.evidenceKind,
+    ...(candidate.resource ? { resource: candidate.resource } : {}),
+    resolvedTarget,
   });
   return {
     schemaVersion: 1,

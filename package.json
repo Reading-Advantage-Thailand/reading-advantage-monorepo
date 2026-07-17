@@ -4,6 +4,8 @@
   "private": true,
   "packageManager": "pnpm@11.8.0",
   "scripts": {
+    "architecture:check": "pnpm --filter @reading-advantage/architecture-enforcement exec tsx src/architecture-check-cli.ts",
+    "architecture:baseline:update": "pnpm --filter @reading-advantage/architecture-enforcement exec tsx src/baseline-update-cli.ts",
     "architecture:baseline:validate": "pnpm --filter @reading-advantage/architecture-enforcement exec tsx src/baseline-cli.ts",
     "architecture:inventory": "pnpm --filter @reading-advantage/architecture-enforcement exec tsx src/cli.ts",
     "build": "turbo run build",

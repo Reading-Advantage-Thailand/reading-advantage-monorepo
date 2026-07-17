@@ -45,7 +45,6 @@ const providerBaseline: ArchitectureBaseline = {
  * @returns Ratchet module once the Phase 3 implementation exists.
  */
 async function loadRatchet() {
-  // @ts-expect-error The absent ratchet is the intentional Phase 2 Red gate.
   return import("../ratchet.js");
 }
 

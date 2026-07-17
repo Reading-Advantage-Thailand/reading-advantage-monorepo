@@ -5,7 +5,8 @@
  * verifies real scoping by:
  * 1. Every exported Drizzle table is classified in the tenant registry.
  * 2. FLAT entries actually have a `schoolId` column in the schema.
- * 3. Non-FLAT entries do NOT have a `schoolId` column.
+ * 3. Non-FLAT entries do not have `schoolId` unless an exact reviewed hybrid
+ *    table is manually scoped by its canonical tenant key.
  * 4. REFERENTIAL tables in domain code are reached via `unscoped(...)`, not bare TenantDB.
  * 5. Classification distribution is non-zero for each category (A4 guard).
  *
@@ -45,6 +46,11 @@ function getAllSchemaTables(): Record<string, unknown> {
 
 const allTables = getAllSchemaTables();
 const totalTableCount = Object.keys(allTables).length;
+const REVIEWED_MANUAL_SCHOOL_ID_TABLES = new Set(["activitySessions"]);
+const ACTIVITY_SESSION_QUERY_SOURCES = [
+  join(__dirname, "..", "activity", "drizzle-activity-persistence.ts"),
+  join(__dirname, "..", "codecamp", "tutor.ts"),
+] as const;
 
 describe("FR-6: table classification registry completeness", () => {
   it("every exported Drizzle table is classified in the registry", () => {
@@ -123,8 +129,9 @@ describe("FR-6: table classification registry completeness", () => {
     ).toBe(0);
   });
 
-  it("non-FLAT tables do NOT have a schoolId column", () => {
-    const nonFlatWithSchoolId: string[] = [];
+  it("non-FLAT schoolId columns require an exact reviewed manual-scope contract", () => {
+    const unexpectedNonFlatWithSchoolId: string[] = [];
+    const observedReviewedTables = new Set<string>();
     for (const [name, table] of Object.entries(allTables)) {
       let cls: TableClassification;
       try {
@@ -136,17 +143,69 @@ describe("FR-6: table classification registry completeness", () => {
       if (cls !== "FLAT") {
         const tableObj = table as Record<string, unknown>;
         if ("schoolId" in tableObj) {
-          nonFlatWithSchoolId.push(name);
+          if (REVIEWED_MANUAL_SCHOOL_ID_TABLES.has(name)) {
+            expect(
+              cls,
+              `Reviewed manual schoolId table ${name} must remain REFERENTIAL so TenantDB fails closed and domain adapters scope tenantKey + learnerId explicitly.`,
+            ).toBe("REFERENTIAL");
+            observedReviewedTables.add(name);
+          } else {
+            unexpectedNonFlatWithSchoolId.push(name);
+          }
         }
       }
     }
+    expect(
+      [...REVIEWED_MANUAL_SCHOOL_ID_TABLES].filter(
+        (name) => !observedReviewedTables.has(name),
+      ),
+      "Every exact manual-schoolId exception must still exist and exercise the reviewed REFERENTIAL contract.",
+    ).toEqual([]);
     // A3: labeled count
-    const count = nonFlatWithSchoolId.length;
+    const count = unexpectedNonFlatWithSchoolId.length;
     expect(
       count,
-      `Non-flat-with-schoolId count: ${count}. ` +
-        `These non-FLAT tables unexpectedly have schoolId: ${nonFlatWithSchoolId.join(", ")}.`,
+      `Unreviewed non-flat-with-schoolId count: ${count}. ` +
+        `These non-FLAT tables unexpectedly have schoolId: ${unexpectedNonFlatWithSchoolId.join(", ")}.`,
     ).toBe(0);
+  });
+
+  it("activitySessions manual queries retain tenantKey and learnerId scope", () => {
+    let queryCount = 0;
+    for (const sourcePath of ACTIVITY_SESSION_QUERY_SOURCES) {
+      const content = readFileSync(sourcePath, "utf8");
+      const queryStarts = [
+        ...content.matchAll(
+          /\.(?:from|insert|update|delete)\(activitySessions\)/g,
+        ),
+      ];
+      expect(
+        queryStarts.length,
+        `${sourcePath} must contain at least one activitySessions query so this guard is non-vacuous.`,
+      ).toBeGreaterThan(0);
+      for (const queryStart of queryStarts) {
+        const start = queryStart.index ?? 0;
+        const statementEnd = content.indexOf(";", start);
+        expect(
+          statementEnd,
+          `${sourcePath}:${start} activitySessions query must end in a semicolon for bounded contract inspection.`,
+        ).toBeGreaterThan(start);
+        const statement = content.slice(start, statementEnd);
+        expect(
+          statement,
+          `${sourcePath}:${start} activitySessions query must explicitly scope the canonical tenant key.`,
+        ).toMatch(/(?:activitySessions\.tenantKey|tenantKey:)/);
+        expect(
+          statement,
+          `${sourcePath}:${start} activitySessions query must explicitly scope the learner owner.`,
+        ).toMatch(/(?:activitySessions\.learnerId|learnerId:)/);
+        queryCount += 1;
+      }
+    }
+    expect(
+      queryCount,
+      "Reviewed activitySessions manual-query count must remain non-zero.",
+    ).toBeGreaterThan(0);
   });
 });
 

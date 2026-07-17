@@ -4,3 +4,4 @@
 - [Implementation Plan](./plan.md)
 - [Metadata](./metadata.json)
 - [Canonical Backend Platform Specification](../../backend-platform-spec.md)
+- [Architecture Enforcement Operator Guide](../../../docs/architecture-enforcement.md)

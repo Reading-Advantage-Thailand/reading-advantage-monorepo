@@ -2,7 +2,16 @@ import { access, readFile } from "node:fs/promises";
 import { dirname, isAbsolute, relative, resolve, sep } from "node:path";
 import ts from "typescript";
 import { z } from "zod";
-import { findingKindSchema } from "./contracts.js";
+import {
+  architectureConfigSchema,
+  architectureFindingSchema,
+  findingKindSchema,
+  type ArchitectureConfig,
+  type ArchitectureFinding,
+  type ArchitectureRule,
+} from "./contracts.js";
+import { createFindingIdentity } from "./finding-identity.js";
+import { evaluateOwnership } from "./ownership-map.js";
 import { compareStableStrings } from "./stable-order.js";
 import {
   loadWorkspaceModuleTargets,
@@ -93,9 +102,46 @@ export interface LoadArchitectureSourcesOptions {
   workspaceTargets?: WorkspaceModuleTargets;
 }
 
+/** Options for policy-driven architecture source analysis. */
+export interface AnalyzeArchitectureSourcesOptions
+  extends LoadArchitectureSourcesOptions {
+  /** Strict ownership map used to select and authorize evidence. */
+  config: ArchitectureConfig;
+}
+
+/** Deterministic policy findings plus fail-closed analyzer diagnostics. */
+export interface ArchitectureAnalysisResult {
+  /** Version of the analysis result contract. */
+  schemaVersion: 1;
+  /** Exact source paths considered in canonical order. */
+  sourcePaths: string[];
+  /** Canonically sorted, validated, secret-safe architecture violations. */
+  findings: ArchitectureFinding[];
+  /** Canonically sorted fail-closed diagnostics. */
+  parseErrors: ArchitectureAnalyzerError[];
+}
+
 interface ResolverConfiguration {
   baseDirectory: string;
   paths: Array<{ pattern: string; targets: string[] }>;
+}
+
+type ResolverConfigurationResult =
+  | { configuration?: ResolverConfiguration; error?: never }
+  | { configuration?: never; error: ArchitectureAnalyzerError };
+
+interface ArchitectureSourceLoadDetails extends ArchitectureSourceLoadResult {
+  sourceFiles: ReadonlyMap<string, ts.SourceFile>;
+  evidenceNodes: ReadonlyMap<string, ts.Node>;
+  environmentNodes: readonly {
+    sourcePath: string;
+    node: ts.Node;
+    resource: string;
+  }[];
+  executableNodesBySource: ReadonlyMap<
+    string,
+    readonly (ts.CallExpression | ts.NewExpression)[]
+  >;
 }
 
 interface ResolvedModule {
@@ -117,13 +163,22 @@ function toPosixPath(path: string): string {
  * @param path Absolute file path to inspect.
  * @returns True when the file can be accessed.
  */
-async function fileExists(path: string): Promise<boolean> {
-  try {
-    await access(path);
-    return true;
-  } catch {
-    return false;
-  }
+async function fileExists(
+  path: string,
+  cache?: Map<string, Promise<boolean>>,
+): Promise<boolean> {
+  const cached = cache?.get(path);
+  if (cached) return cached;
+  const pending = (async () => {
+    try {
+      await access(path);
+      return true;
+    } catch {
+      return false;
+    }
+  })();
+  cache?.set(path, pending);
+  return pending;
 }
 
 /**
@@ -132,15 +187,26 @@ async function fileExists(path: string): Promise<boolean> {
  * @returns Candidate file paths in deterministic resolver order.
  */
 function moduleFileCandidates(path: string): string[] {
-  if (/\.[cm]?[jt]sx?$/.test(path)) return [path];
+  if (path.endsWith(".mjs")) return [`${path.slice(0, -4)}.mts`, path];
+  if (path.endsWith(".cjs")) return [`${path.slice(0, -4)}.cts`, path];
+  if (path.endsWith(".jsx")) {
+    return [`${path.slice(0, -4)}.tsx`, `${path.slice(0, -4)}.ts`, path];
+  }
+  if (path.endsWith(".js")) {
+    return [`${path.slice(0, -3)}.ts`, `${path.slice(0, -3)}.tsx`, path];
+  }
+  if (/\.[cm]?tsx?$/.test(path) || /\.[^/]+$/.test(path)) return [path];
   return [
     path,
     `${path}.ts`,
     `${path}.tsx`,
     `${path}.mts`,
     `${path}.cts`,
+    `${path}.d.ts`,
     `${path}.js`,
     `${path}.jsx`,
+    resolve(path, "index.mts"),
+    resolve(path, "index.cts"),
     resolve(path, "index.ts"),
     resolve(path, "index.tsx"),
     resolve(path, "index.js"),
@@ -156,13 +222,21 @@ function moduleFileCandidates(path: string): string[] {
 async function resolveSourceCandidate(
   repoRoot: string,
   absoluteBase: string,
+  fileExistenceCache?: Map<string, Promise<boolean>>,
+  candidateCache?: Map<string, Promise<string | undefined>>,
 ): Promise<string | undefined> {
-  for (const candidate of moduleFileCandidates(absoluteBase)) {
-    if (await fileExists(candidate)) {
-      return toPosixPath(relative(repoRoot, candidate));
+  const cached = candidateCache?.get(absoluteBase);
+  if (cached) return cached;
+  const pending = (async () => {
+    for (const candidate of moduleFileCandidates(absoluteBase)) {
+      if (await fileExists(candidate, fileExistenceCache)) {
+        return toPosixPath(relative(repoRoot, candidate));
+      }
     }
-  }
-  return undefined;
+    return undefined;
+  })();
+  candidateCache?.set(absoluteBase, pending);
+  return pending;
 }
 
 /**
@@ -174,48 +248,49 @@ async function resolveSourceCandidate(
 async function loadResolverConfiguration(
   repoRoot: string,
   configPath: string | undefined,
-): Promise<
-  | { configuration?: ResolverConfiguration; error?: never }
-  | { configuration?: never; error: ArchitectureAnalyzerError }
-> {
+): Promise<ResolverConfigurationResult> {
   if (!configPath) return {};
   const validatedPath = sourcePathSchema.parse(configPath);
   try {
-    const source = await readFile(resolve(repoRoot, validatedPath), "utf8");
-    const parsed = ts.parseConfigFileTextToJson(validatedPath, source);
-    if (parsed.error || !parsed.config || typeof parsed.config !== "object") {
+    const absoluteConfigPath = resolve(repoRoot, validatedPath);
+    const source = await readFile(absoluteConfigPath, "utf8");
+    const syntax = ts.parseConfigFileTextToJson(validatedPath, source);
+    if (syntax.error || !syntax.config || typeof syntax.config !== "object") {
       throw new Error("invalid resolver config");
     }
-    const compilerOptions = (
-      parsed.config as {
-        compilerOptions?: {
-          baseUrl?: unknown;
-          paths?: unknown;
-        };
-      }
-    ).compilerOptions;
-    const baseUrl =
-      typeof compilerOptions?.baseUrl === "string"
-        ? compilerOptions.baseUrl
-        : ".";
-    const rawPaths =
-      compilerOptions?.paths && typeof compilerOptions.paths === "object"
-        ? (compilerOptions.paths as Record<string, unknown>)
-        : {};
+    const parsed = ts.parseJsonConfigFileContent(
+      syntax.config,
+      {
+        useCaseSensitiveFileNames: ts.sys.useCaseSensitiveFileNames,
+        fileExists: ts.sys.fileExists,
+        readFile: ts.sys.readFile,
+        readDirectory: () => [],
+      },
+      dirname(absoluteConfigPath),
+      {},
+      absoluteConfigPath,
+    );
+    if (
+      parsed.errors.some(
+        (diagnostic) =>
+          diagnostic.category === ts.DiagnosticCategory.Error &&
+          diagnostic.code !== 18003,
+      )
+    ) {
+      throw new Error("invalid resolver config");
+    }
+    const rawPaths = parsed.options.paths ?? {};
     const paths = Object.entries(rawPaths)
       .map(([pattern, targets]) => ({
         pattern,
-        targets: Array.isArray(targets)
-          ? targets.filter(
-              (target): target is string => typeof target === "string",
-            )
-          : [],
+        targets: [...targets],
       }))
       .filter((entry) => entry.targets.length > 0)
       .sort((left, right) => compareStableStrings(left.pattern, right.pattern));
     return {
       configuration: {
-        baseDirectory: resolve(repoRoot, dirname(validatedPath), baseUrl),
+        baseDirectory:
+          parsed.options.baseUrl ?? dirname(absoluteConfigPath),
         paths,
       },
     };
@@ -230,6 +305,53 @@ async function loadResolverConfiguration(
       },
     };
   }
+}
+
+/** Returns whether an unresolved internal specifier denotes executable source. */
+function requiresInternalCodeResolution(specifier: string): boolean {
+  const path = specifier.split(/[?#]/, 1)[0] ?? specifier;
+  const fileName = path.slice(path.lastIndexOf("/") + 1);
+  const dot = fileName.lastIndexOf(".");
+  if (dot < 0) return true;
+  return /\.[cm]?[jt]sx?$/.test(fileName.slice(dot));
+}
+
+/** Finds the nearest tsconfig at or above one source directory. */
+async function nearestResolverConfiguration(
+  repoRoot: string,
+  sourcePath: string,
+  fileExistenceCache: Map<string, Promise<boolean>>,
+  nearestConfigCache: Map<string, Promise<string | undefined>>,
+  resolverConfigCache: Map<string, Promise<ResolverConfigurationResult>>,
+): Promise<ResolverConfigurationResult> {
+  const sourceDirectory = dirname(sourcePath);
+  let nearest = nearestConfigCache.get(sourceDirectory);
+  if (!nearest) {
+    nearest = (async () => {
+      let directory = sourceDirectory;
+      while (true) {
+        const configPath =
+          directory === "." ? "tsconfig.json" : `${directory}/tsconfig.json`;
+        if (
+          await fileExists(resolve(repoRoot, configPath), fileExistenceCache)
+        ) {
+          return configPath;
+        }
+        const parent = dirname(directory);
+        if (parent === directory || directory === ".") return undefined;
+        directory = parent;
+      }
+    })();
+    nearestConfigCache.set(sourceDirectory, nearest);
+  }
+  const configPath = await nearest;
+  if (!configPath) return {};
+  let loaded = resolverConfigCache.get(configPath);
+  if (!loaded) {
+    loaded = loadResolverConfiguration(repoRoot, configPath);
+    resolverConfigCache.set(configPath, loaded);
+  }
+  return loaded;
 }
 
 /**
@@ -267,30 +389,49 @@ async function resolveModule(
   specifier: string,
   resolver: ResolverConfiguration | undefined,
   workspaceTargets: WorkspaceModuleTargets,
+  fileExistenceCache: Map<string, Promise<boolean>>,
+  candidateCache: Map<string, Promise<string | undefined>>,
 ): Promise<ResolvedModule> {
-  if (specifier.startsWith(".")) {
+  const resolutionSpecifier = specifier.replace(/[?#].*$/, "");
+  if (resolutionSpecifier.startsWith(".")) {
     const target = await resolveSourceCandidate(
       repoRoot,
-      resolve(repoRoot, dirname(sourcePath), specifier),
+      resolve(repoRoot, dirname(sourcePath), resolutionSpecifier),
+      fileExistenceCache,
+      candidateCache,
     );
     return target
       ? { target, failed: false }
-      : { target: `external:${specifier}`, failed: true };
+      : {
+          target: `external:${specifier}`,
+          failed: requiresInternalCodeResolution(specifier),
+        };
   }
   for (const mapping of resolver?.paths ?? []) {
-    const substitution = pathPatternSubstitution(mapping.pattern, specifier);
+    const substitution = pathPatternSubstitution(
+      mapping.pattern,
+      resolutionSpecifier,
+    );
     if (substitution === undefined) continue;
     for (const targetPattern of mapping.targets) {
       const absoluteTarget = resolve(
         resolver!.baseDirectory,
         targetPattern.replaceAll("*", substitution),
       );
-      const target = await resolveSourceCandidate(repoRoot, absoluteTarget);
+      const target = await resolveSourceCandidate(
+        repoRoot,
+        absoluteTarget,
+        fileExistenceCache,
+        candidateCache,
+      );
       if (target) return { target, failed: false };
     }
-    return { target: `external:${specifier}`, failed: true };
+    return {
+      target: `external:${specifier}`,
+      failed: requiresInternalCodeResolution(specifier),
+    };
   }
-  const workspaceTarget = workspaceTargets.get(specifier);
+  const workspaceTarget = workspaceTargets.get(resolutionSpecifier);
   return workspaceTarget
     ? { target: workspaceTarget, failed: false }
     : { target: `external:${specifier}`, failed: false };
@@ -363,20 +504,40 @@ function compareEvidence(
  * @param options Repository root, exact source set, and optional resolver configuration.
  * @returns Deterministic evidence plus fail-closed parser and resolver diagnostics.
  */
-export async function loadArchitectureSources(
+async function loadArchitectureSourceDetails(
   options: LoadArchitectureSourcesOptions,
-): Promise<ArchitectureSourceLoadResult> {
+): Promise<ArchitectureSourceLoadDetails> {
   const repoRoot = resolve(options.repoRoot);
   const sourcePaths = [
     ...new Set(options.sourcePaths.map((path) => sourcePathSchema.parse(path))),
   ].sort(compareStableStrings);
   const evidence: ArchitectureImportEvidence[] = [];
   const parseErrors: ArchitectureAnalyzerError[] = [];
-  const resolverResult = await loadResolverConfiguration(
-    repoRoot,
-    options.resolverConfigPath,
-  );
-  if (resolverResult.error) parseErrors.push(resolverResult.error);
+  const sourceFiles = new Map<string, ts.SourceFile>();
+  const evidenceNodes = new Map<string, ts.Node>();
+  const environmentNodes: Array<{
+    sourcePath: string;
+    node: ts.Node;
+    resource: string;
+  }> = [];
+  const executableNodesBySource = new Map<
+    string,
+    Array<ts.CallExpression | ts.NewExpression>
+  >();
+  const fileExistenceCache = new Map<string, Promise<boolean>>();
+  const candidateCache = new Map<string, Promise<string | undefined>>();
+  const nearestConfigCache = new Map<
+    string,
+    Promise<string | undefined>
+  >();
+  const resolverConfigCache = new Map<
+    string,
+    Promise<ResolverConfigurationResult>
+  >();
+  const explicitResolver = options.resolverConfigPath
+    ? await loadResolverConfiguration(repoRoot, options.resolverConfigPath)
+    : undefined;
+  if (explicitResolver?.error) parseErrors.push(explicitResolver.error);
 
   let workspaceTargets: WorkspaceModuleTargets =
     options.workspaceTargets ?? new Map();
@@ -394,7 +555,18 @@ export async function loadArchitectureSources(
     }
   }
 
-  for (const sourcePath of sourcePaths) {
+  /** Reads, parses, and resolves one exact source without mutating shared order. */
+  const processSource = async (sourcePath: string): Promise<void> => {
+    const resolverResult =
+      explicitResolver ??
+      (await nearestResolverConfiguration(
+        repoRoot,
+        sourcePath,
+        fileExistenceCache,
+        nearestConfigCache,
+        resolverConfigCache,
+      ));
+    if (resolverResult.error) parseErrors.push(resolverResult.error);
     let source: string;
     try {
       source = await readFile(resolve(repoRoot, sourcePath), "utf8");
@@ -406,7 +578,7 @@ export async function loadArchitectureSources(
         column: 1,
         code: "FILE_READ_ERROR",
       });
-      continue;
+      return;
     }
     const sourceFile = ts.createSourceFile(
       sourcePath,
@@ -430,8 +602,9 @@ export async function loadArchitectureSources(
         column: location.character + 1,
         code: "TYPESCRIPT_PARSE_ERROR",
       });
-      continue;
+      return;
     }
+    sourceFiles.set(sourcePath, sourceFile);
 
     /** Resolves and records one import-like syntax fact. */
     const record = async (
@@ -446,15 +619,19 @@ export async function loadArchitectureSources(
         importSpecifier,
         resolverResult.configuration,
         workspaceTargets,
+        fileExistenceCache,
+        candidateCache,
       );
-      evidence.push({
+      const resolvedEvidence: ArchitectureImportEvidence = {
         schemaVersion: 1,
         sourcePath,
         ...location,
         evidenceKind,
         importSpecifier,
         resolvedTarget: resolvedModule.target,
-      });
+      };
+      evidence.push(resolvedEvidence);
+      evidenceNodes.set(evidenceKey(resolvedEvidence), node);
       if (resolvedModule.failed) {
         parseErrors.push({
           schemaVersion: 1,
@@ -466,8 +643,14 @@ export async function loadArchitectureSources(
     };
 
     const pending: Promise<void>[] = [];
+    const executableNodes: Array<ts.CallExpression | ts.NewExpression> = [];
     /** Visits a syntax subtree and queues import-like evidence resolution. */
     const visit = (node: ts.Node): void => {
+      const resource = environmentResource(node);
+      if (resource) environmentNodes.push({ sourcePath, node, resource });
+      if (ts.isNewExpression(node) || ts.isCallExpression(node)) {
+        executableNodes.push(node);
+      }
       if (
         ts.isImportDeclaration(node) &&
         ts.isStringLiteralLike(node.moduleSpecifier)
@@ -503,19 +686,958 @@ export async function loadArchitectureSources(
       ts.forEachChild(node, visit);
     };
     visit(sourceFile);
+    if (executableNodes.length > 0) {
+      executableNodesBySource.set(sourcePath, executableNodes);
+    }
     await Promise.all(pending);
+  };
+
+  const concurrency = 64;
+  for (let offset = 0; offset < sourcePaths.length; offset += concurrency) {
+    await Promise.all(
+      sourcePaths.slice(offset, offset + concurrency).map(processSource),
+    );
+  }
+
+  const uniqueErrors = new Map<string, ArchitectureAnalyzerError>();
+  for (const error of parseErrors) {
+    uniqueErrors.set(
+      [error.sourcePath, error.line, error.column, error.code].join("\0"),
+      error,
+    );
   }
 
   return {
     schemaVersion: 1,
     sourcePaths,
     evidence: evidence.sort(compareEvidence),
-    parseErrors: parseErrors.sort(
+    parseErrors: [...uniqueErrors.values()].sort(
       (left, right) =>
         compareStableStrings(left.sourcePath, right.sourcePath) ||
         left.line - right.line ||
         left.column - right.column ||
         compareStableStrings(left.code, right.code),
     ),
+    sourceFiles,
+    evidenceNodes,
+    environmentNodes,
+    executableNodesBySource,
   };
+}
+
+/**
+ * Loads and resolves exact TypeScript/JavaScript sources without running rule detection.
+ * @param options Repository root, exact source set, and optional resolver configuration.
+ * @returns Deterministic evidence plus fail-closed parser and resolver diagnostics.
+ */
+export async function loadArchitectureSources(
+  options: LoadArchitectureSourcesOptions,
+): Promise<ArchitectureSourceLoadResult> {
+  const details = await loadArchitectureSourceDetails(options);
+  return {
+    schemaVersion: details.schemaVersion,
+    sourcePaths: details.sourcePaths,
+    evidence: details.evidence,
+    parseErrors: details.parseErrors,
+  };
+}
+
+interface RuleOrigin {
+  ruleId: string;
+  importSpecifier?: string;
+  resource?: string;
+  resolvedTarget: string;
+}
+
+interface ImportBinding {
+  evidence: ArchitectureImportEvidence;
+  node: ts.ImportDeclaration;
+  localName?: string;
+  importedName: string;
+  inferredResource?: string;
+}
+
+interface ReexportBinding {
+  evidence: ArchitectureImportEvidence;
+  node: ts.ExportDeclaration;
+  exportedName: string;
+  importedName: string;
+  inferredResource?: string;
+}
+
+interface LocalExportBinding { exportedName: string; localName: string }
+interface ParsedArchitectureModule {
+  sourcePath: string;
+  sourceFile: ts.SourceFile;
+  imports: ImportBinding[];
+  reexports: ReexportBinding[];
+  localExports: LocalExportBinding[];
+}
+
+const QUERY_METHODS = new Set(["delete", "execute", "from", "insert", "query", "select", "unsafe", "update"]);
+
+/** Converts a TypeScript identifier into a stable PostgreSQL table name. */
+function identifierToTableName(identifier: string): string {
+  return identifier.replace(/([a-z0-9])([A-Z])/g, "$1_$2").replace(/([A-Z])([A-Z][a-z])/g, "$1_$2").toLowerCase();
+}
+
+/** Returns whether one exact or prefix policy matcher selects a value. */
+function matchesPolicyValue(matcher: { kind: "exact" | "prefix"; value: string }, value: string): boolean {
+  return matcher.kind === "exact" ? matcher.value === value : value.startsWith(matcher.value);
+}
+
+/** Returns whether direct import evidence selects one rule. */
+function directlySelectsImport(rule: ArchitectureRule, evidence: ArchitectureImportEvidence): boolean {
+  return rule.moduleMatchers.some((matcher) => matchesPolicyValue(matcher, evidence.importSpecifier)) ||
+    (!evidence.resolvedTarget.startsWith("external:") && rule.resolvedTargetRoots.some((root) => evidence.resolvedTarget.startsWith(root)));
+}
+
+/** Returns whether one namespaced resource selects a rule. */
+function directlySelectsResource(rule: ArchitectureRule, resource: string): boolean {
+  return rule.resourceMatchers.some((matcher) => matchesPolicyValue(matcher, resource));
+}
+
+/** Infers an exact configured table resource from one named import. */
+function configuredTableResource(config: ArchitectureConfig, importedName: string): string | undefined {
+  if (importedName === "*" || importedName === "default") return undefined;
+  const resource = `database-table:${identifierToTableName(importedName)}`;
+  return config.rules.some((rule) => rule.domain === "database" && directlySelectsResource(rule, resource)) ? resource : undefined;
+}
+
+/** Builds a stable key for resolved import evidence. */
+function evidenceKey(evidence: ArchitectureImportEvidence): string {
+  return [evidence.sourcePath, evidence.line, evidence.column, evidence.evidenceKind, evidence.importSpecifier].join("\0");
+}
+
+/** Looks up loader evidence corresponding to one parsed syntax node. */
+function resolvedEvidenceFor(sourceFile: ts.SourceFile, sourcePath: string, node: ts.Node, kind: ImportEvidenceKind, specifier: string, evidenceByKey: ReadonlyMap<string, ArchitectureImportEvidence>): ArchitectureImportEvidence | undefined {
+  const location = sourceLocation(sourceFile, node);
+  return evidenceByKey.get([sourcePath, location.line, location.column, kind, specifier].join("\0"));
+}
+
+/** Parses import, re-export, and local-export bindings for taint propagation. */
+function parseArchitectureModule(sourcePath: string, sourceFile: ts.SourceFile, evidenceByKey: ReadonlyMap<string, ArchitectureImportEvidence>, config: ArchitectureConfig): ParsedArchitectureModule {
+  const imports: ImportBinding[] = [];
+  const reexports: ReexportBinding[] = [];
+  const localExports: LocalExportBinding[] = [];
+  for (const statement of sourceFile.statements) {
+    if (ts.isImportDeclaration(statement) && ts.isStringLiteralLike(statement.moduleSpecifier)) {
+      const namedBindings = statement.importClause?.namedBindings;
+      const kind: ImportEvidenceKind = namedBindings && ts.isNamespaceImport(namedBindings) ? "namespace-import" : "static-import";
+      const evidence = resolvedEvidenceFor(sourceFile, sourcePath, statement, kind, statement.moduleSpecifier.text, evidenceByKey);
+      if (!evidence) continue;
+      const defaultName = statement.importClause?.name?.text;
+      if (defaultName) imports.push({ evidence, node: statement, localName: defaultName, importedName: "default" });
+      if (namedBindings && ts.isNamespaceImport(namedBindings)) {
+        imports.push({ evidence, node: statement, localName: namedBindings.name.text, importedName: "*" });
+      } else if (namedBindings) {
+        for (const element of namedBindings.elements) {
+          const importedName = element.propertyName?.text ?? element.name.text;
+          const inferredResource = configuredTableResource(config, importedName);
+          imports.push({ evidence, node: statement, localName: element.name.text, importedName, ...(inferredResource ? { inferredResource } : {}) });
+        }
+      }
+      if (!statement.importClause) imports.push({ evidence, node: statement, importedName: "*" });
+      continue;
+    }
+    if (ts.isExportDeclaration(statement)) {
+      if (statement.moduleSpecifier && ts.isStringLiteralLike(statement.moduleSpecifier)) {
+        const evidence = resolvedEvidenceFor(sourceFile, sourcePath, statement, "re-export", statement.moduleSpecifier.text, evidenceByKey);
+        if (!evidence) continue;
+        if (statement.exportClause && ts.isNamedExports(statement.exportClause)) {
+          for (const element of statement.exportClause.elements) {
+            const importedName = element.propertyName?.text ?? element.name.text;
+            const inferredResource = configuredTableResource(config, importedName);
+            reexports.push({ evidence, node: statement, exportedName: element.name.text, importedName, ...(inferredResource ? { inferredResource } : {}) });
+          }
+        } else reexports.push({ evidence, node: statement, exportedName: "*", importedName: "*" });
+      } else if (statement.exportClause && ts.isNamedExports(statement.exportClause)) {
+        for (const element of statement.exportClause.elements) localExports.push({ exportedName: element.name.text, localName: element.propertyName?.text ?? element.name.text });
+      }
+      continue;
+    }
+    if (ts.isVariableStatement(statement) && statement.modifiers?.some((modifier) => modifier.kind === ts.SyntaxKind.ExportKeyword)) {
+      for (const declaration of statement.declarationList.declarations) {
+        if (ts.isIdentifier(declaration.name) && declaration.initializer && ts.isIdentifier(declaration.initializer)) localExports.push({ exportedName: declaration.name.text, localName: declaration.initializer.text });
+      }
+    }
+  }
+  return { sourcePath, sourceFile, imports, reexports, localExports };
+}
+
+/** Adds one rule origin to a binding-origin map. */
+function addOrigin(origins: Map<string, RuleOrigin>, origin: RuleOrigin): boolean {
+  const identity = [
+    origin.ruleId,
+    origin.importSpecifier ?? "",
+    origin.resource ?? "",
+    origin.resolvedTarget,
+  ].join("\0");
+  if (origins.has(identity)) return false;
+  origins.set(identity, origin);
+  return true;
+}
+
+/** Returns binding-specific origins exported by an internal module. */
+function targetExportOrigins(
+  exportsByModule: ReadonlyMap<
+    string,
+    ReadonlyMap<string, ReadonlyMap<string, RuleOrigin>>
+  >,
+  target: string,
+  importedName: string,
+): RuleOrigin[] {
+  const targetExports = exportsByModule.get(target);
+  if (!targetExports) return [];
+  const selected = new Map<string, RuleOrigin>();
+  const collect = (
+    origins: ReadonlyMap<string, RuleOrigin> | undefined,
+  ): void => {
+    for (const origin of origins?.values() ?? []) addOrigin(selected, origin);
+  };
+  collect(targetExports.get("*"));
+  if (importedName === "*") {
+    for (const origins of targetExports.values()) collect(origins);
+  } else {
+    collect(targetExports.get(importedName));
+  }
+  return [...selected.values()];
+}
+
+/** Derives direct module, root, and resource origins for one binding. */
+function directBindingOrigins(
+  binding: ImportBinding | ReexportBinding,
+  rules: readonly ArchitectureRule[],
+): RuleOrigin[] {
+  const origins: RuleOrigin[] = [];
+  for (const rule of rules) {
+    if (!rule.findingKinds.includes(binding.evidence.evidenceKind)) continue;
+    if (directlySelectsImport(rule, binding.evidence)) {
+      origins.push({
+        ruleId: rule.id,
+        importSpecifier: binding.evidence.importSpecifier,
+        resolvedTarget: binding.evidence.resolvedTarget,
+      });
+    }
+    if (
+      binding.inferredResource &&
+      directlySelectsResource(rule, binding.inferredResource)
+    ) {
+      origins.push({
+        ruleId: rule.id,
+        resource: binding.inferredResource,
+        resolvedTarget: "external:database-table",
+      });
+    }
+  }
+  return origins;
+}
+
+/** Computes local and exported policy origins to a binding-aware fixed point. */
+function computeBindingOrigins(
+  modules: readonly ParsedArchitectureModule[],
+  config: ArchitectureConfig,
+): {
+  localsByModule: Map<string, Map<string, Map<string, RuleOrigin>>>;
+  exportsByModule: Map<string, Map<string, Map<string, RuleOrigin>>>;
+} {
+  const localsByModule = new Map<
+    string,
+    Map<string, Map<string, RuleOrigin>>
+  >();
+  const exportsByModule = new Map<
+    string,
+    Map<string, Map<string, RuleOrigin>>
+  >();
+  for (const module of modules) {
+    localsByModule.set(module.sourcePath, new Map());
+    exportsByModule.set(module.sourcePath, new Map());
+  }
+
+  const edges = new Map<
+    Map<string, RuleOrigin>,
+    Set<Map<string, RuleOrigin>>
+  >();
+  const connect = (
+    source: Map<string, RuleOrigin> | undefined,
+    target: Map<string, RuleOrigin>,
+  ): void => {
+    if (!source || source === target) return;
+    const targets = edges.get(source) ?? new Set<Map<string, RuleOrigin>>();
+    targets.add(target);
+    edges.set(source, targets);
+  };
+  const exportSources = (
+    target: string,
+    importedName: string,
+  ): Map<string, RuleOrigin>[] => {
+    const targetExports = exportsByModule.get(target);
+    if (!targetExports) return [];
+    const sources = new Set<Map<string, RuleOrigin>>();
+    const wildcard = targetExports.get("*");
+    if (wildcard) sources.add(wildcard);
+    if (importedName === "*") {
+      for (const origins of targetExports.values()) sources.add(origins);
+    } else {
+      const named = targetExports.get(importedName);
+      if (named) sources.add(named);
+    }
+    return [...sources];
+  };
+
+  for (const module of modules) {
+    const locals = localsByModule.get(module.sourcePath)!;
+    const exports = exportsByModule.get(module.sourcePath)!;
+    for (const binding of module.imports) {
+      if (!binding.localName) continue;
+      const origins = locals.get(binding.localName) ?? new Map();
+      locals.set(binding.localName, origins);
+      for (const origin of directBindingOrigins(binding, config.rules)) {
+        addOrigin(origins, origin);
+      }
+    }
+    for (const binding of module.reexports) {
+      const origins = exports.get(binding.exportedName) ?? new Map();
+      exports.set(binding.exportedName, origins);
+      for (const origin of directBindingOrigins(binding, config.rules)) {
+        if (
+          binding.evidence.resolvedTarget.startsWith("external:") ||
+          origin.resource
+        ) {
+          addOrigin(origins, origin);
+        }
+      }
+    }
+    for (const binding of module.localExports) {
+      if (!locals.has(binding.localName)) {
+        locals.set(binding.localName, new Map());
+      }
+      if (!exports.has(binding.exportedName)) {
+        exports.set(binding.exportedName, new Map());
+      }
+    }
+  }
+
+  let exportNamesChanged = true;
+  while (exportNamesChanged) {
+    exportNamesChanged = false;
+    for (const module of modules) {
+      const exports = exportsByModule.get(module.sourcePath)!;
+      for (const binding of module.reexports) {
+        if (
+          binding.exportedName !== "*" ||
+          binding.evidence.resolvedTarget.startsWith("external:")
+        ) {
+          continue;
+        }
+        const targetExports = exportsByModule.get(
+          binding.evidence.resolvedTarget,
+        );
+        for (const exportName of targetExports?.keys() ?? []) {
+          if (!exports.has(exportName)) {
+            exports.set(exportName, new Map());
+            exportNamesChanged = true;
+          }
+        }
+      }
+    }
+  }
+
+  for (const module of modules) {
+    const locals = localsByModule.get(module.sourcePath)!;
+    const exports = exportsByModule.get(module.sourcePath)!;
+    for (const binding of module.imports) {
+      if (
+        !binding.localName ||
+        binding.evidence.resolvedTarget.startsWith("external:")
+      ) {
+        continue;
+      }
+      const target = locals.get(binding.localName)!;
+      for (const source of exportSources(
+        binding.evidence.resolvedTarget,
+        binding.importedName,
+      )) {
+        connect(source, target);
+      }
+    }
+    for (const binding of module.reexports) {
+      if (binding.evidence.resolvedTarget.startsWith("external:")) continue;
+      if (binding.exportedName === "*") {
+        const targetExports = exportsByModule.get(
+          binding.evidence.resolvedTarget,
+        );
+        for (const [exportName, source] of targetExports ?? []) {
+          connect(source, exports.get(exportName)!);
+        }
+        continue;
+      }
+      const target = exports.get(binding.exportedName)!;
+      for (const source of exportSources(
+        binding.evidence.resolvedTarget,
+        binding.importedName,
+      )) {
+        connect(source, target);
+      }
+    }
+    for (const binding of module.localExports) {
+      connect(
+        locals.get(binding.localName),
+        exports.get(binding.exportedName)!,
+      );
+    }
+  }
+
+  const allOriginMaps = new Set<Map<string, RuleOrigin>>();
+  for (const bindings of [...localsByModule.values(), ...exportsByModule.values()]) {
+    for (const origins of bindings.values()) allOriginMaps.add(origins);
+  }
+  const queue = [...allOriginMaps].filter((origins) => origins.size > 0);
+  const queued = new Set(queue);
+  let queueIndex = 0;
+  while (queueIndex < queue.length) {
+    const source = queue[queueIndex++]!;
+    queued.delete(source);
+    for (const target of edges.get(source) ?? []) {
+      let changed = false;
+      for (const origin of source.values()) {
+        changed = addOrigin(target, origin) || changed;
+      }
+      if (changed && !queued.has(target)) {
+        queue.push(target);
+        queued.add(target);
+      }
+    }
+  }
+
+  for (const bindings of [...localsByModule.values(), ...exportsByModule.values()]) {
+    for (const [name, origins] of bindings) {
+      if (origins.size === 0) bindings.delete(name);
+    }
+  }
+  return { localsByModule, exportsByModule };
+}
+
+/** Returns the left-most identifier owning a call or property chain. */
+function rootIdentifier(
+  expression: ts.Expression,
+): ts.Identifier | undefined {
+  if (ts.isIdentifier(expression)) return expression;
+  if (
+    ts.isPropertyAccessExpression(expression) ||
+    ts.isElementAccessExpression(expression)
+  ) {
+    return rootIdentifier(expression.expression);
+  }
+  if (ts.isCallExpression(expression) || ts.isNewExpression(expression)) {
+    return rootIdentifier(expression.expression);
+  }
+  if (
+    ts.isParenthesizedExpression(expression) ||
+    ts.isAsExpression(expression) ||
+    ts.isNonNullExpression(expression) ||
+    ts.isAwaitExpression(expression)
+  ) {
+    return rootIdentifier(expression.expression);
+  }
+  return undefined;
+}
+
+interface LexicalScope {
+  id: number;
+  parent?: LexicalScope;
+  functionBoundary: boolean;
+  bindings: Map<string, string>;
+}
+
+interface LexicalBindingAnalysis {
+  originsByBinding: Map<string, Map<string, RuleOrigin>>;
+  importBindings: ReadonlyMap<string, string>;
+  clientFactoryBindings: ReadonlySet<string>;
+  queryClientBindings: ReadonlySet<string>;
+  resolveIdentifier(identifier: ts.Identifier): string | undefined;
+}
+
+type BindingInitializerKind = "alias" | "call" | "new";
+
+/** Classifies a simple binding initializer without conflating arbitrary calls with client construction. */
+function bindingInitializer(
+  expression: ts.Expression,
+): { source: ts.Identifier; kind: BindingInitializerKind } | undefined {
+  if (ts.isIdentifier(expression)) return { source: expression, kind: "alias" };
+  if (
+    ts.isParenthesizedExpression(expression) ||
+    ts.isAsExpression(expression) ||
+    ts.isNonNullExpression(expression) ||
+    ts.isAwaitExpression(expression)
+  ) {
+    return bindingInitializer(expression.expression);
+  }
+  if (ts.isCallExpression(expression) && ts.isIdentifier(expression.expression)) {
+    return { source: expression.expression, kind: "call" };
+  }
+  if (ts.isNewExpression(expression) && ts.isIdentifier(expression.expression)) {
+    return { source: expression.expression, kind: "new" };
+  }
+  return undefined;
+}
+
+/** Builds scope-aware binding origins for imports, aliases, and client factories. */
+function analyzeLexicalBindings(
+  module: ParsedArchitectureModule,
+  importedOrigins: ReadonlyMap<string, Map<string, RuleOrigin>>,
+): LexicalBindingAnalysis {
+  let nextScopeId = 1;
+  const sourceScope: LexicalScope = {
+    id: 0,
+    functionBoundary: true,
+    bindings: new Map(),
+  };
+  const scopeByNode = new WeakMap<ts.Node, LexicalScope>();
+
+  const bindingKey = (scope: LexicalScope, name: string): string =>
+    `${scope.id}\0${name}`;
+  const register = (scope: LexicalScope, name: string): string => {
+    const existing = scope.bindings.get(name);
+    if (existing) return existing;
+    const key = bindingKey(scope, name);
+    scope.bindings.set(name, key);
+    return key;
+  };
+  const nearestFunctionScope = (scope: LexicalScope): LexicalScope => {
+    let current = scope;
+    while (!current.functionBoundary && current.parent) {
+      current = current.parent;
+    }
+    return current;
+  };
+  const createsScope = (node: ts.Node): boolean =>
+    ts.isFunctionLike(node) ||
+    ts.isBlock(node) ||
+    ts.isCatchClause(node) ||
+    ts.isForStatement(node) ||
+    ts.isForInStatement(node) ||
+    ts.isForOfStatement(node) ||
+    ts.isClassLike(node);
+
+  const buildScopes = (node: ts.Node, parentScope: LexicalScope): void => {
+    if (
+      (ts.isFunctionDeclaration(node) || ts.isClassDeclaration(node)) &&
+      node.name
+    ) {
+      register(parentScope, node.name.text);
+    }
+    let scope = parentScope;
+    if (node !== module.sourceFile && createsScope(node)) {
+      scope = {
+        id: nextScopeId++,
+        parent: parentScope,
+        functionBoundary: ts.isFunctionLike(node),
+        bindings: new Map(),
+      };
+      if (
+        (ts.isFunctionExpression(node) || ts.isClassExpression(node)) &&
+        node.name
+      ) {
+        register(scope, node.name.text);
+      }
+    }
+    scopeByNode.set(node, scope);
+
+    if (ts.isImportDeclaration(node) && node.importClause) {
+      if (node.importClause.name) register(sourceScope, node.importClause.name.text);
+      const named = node.importClause.namedBindings;
+      if (named && ts.isNamespaceImport(named)) {
+        register(sourceScope, named.name.text);
+      } else if (named) {
+        for (const element of named.elements) {
+          register(sourceScope, element.name.text);
+        }
+      }
+    }
+    if (ts.isParameter(node) && ts.isIdentifier(node.name)) {
+      register(scope, node.name.text);
+    }
+    if (
+      ts.isCatchClause(node) &&
+      node.variableDeclaration &&
+      ts.isIdentifier(node.variableDeclaration.name)
+    ) {
+      register(scope, node.variableDeclaration.name.text);
+    }
+    if (ts.isVariableDeclaration(node) && ts.isIdentifier(node.name)) {
+      const declarationList = node.parent;
+      const blockScoped =
+        ts.isVariableDeclarationList(declarationList) &&
+        (declarationList.flags & ts.NodeFlags.BlockScoped) !== 0;
+      register(blockScoped ? scope : nearestFunctionScope(scope), node.name.text);
+    }
+    ts.forEachChild(node, (child) => buildScopes(child, scope));
+  };
+  buildScopes(module.sourceFile, sourceScope);
+
+  const resolveIdentifier = (
+    identifier: ts.Identifier,
+  ): string | undefined => {
+    let scope = scopeByNode.get(identifier);
+    while (scope) {
+      const key = scope.bindings.get(identifier.text);
+      if (key) return key;
+      scope = scope.parent;
+    }
+    return undefined;
+  };
+
+  const originsByBinding = new Map<string, Map<string, RuleOrigin>>();
+  const importBindings = new Map<string, string>();
+  for (const [name, origins] of importedOrigins) {
+    const key = sourceScope.bindings.get(name);
+    if (!key) continue;
+    originsByBinding.set(key, new Map(origins));
+    importBindings.set(name, key);
+  }
+
+  const clientFactoryBindings = new Set<string>();
+  for (const binding of module.imports) {
+    if (!binding.localName || binding.evidence.importSpecifier !== "postgres") {
+      continue;
+    }
+    const key = importBindings.get(binding.localName);
+    if (key) clientFactoryBindings.add(key);
+  }
+
+  const aliasConsumers = new Map<string, Set<string>>();
+  const initializers: Array<{
+    sourceKey: string;
+    targetKey: string;
+    kind: BindingInitializerKind;
+  }> = [];
+  const collectAliases = (node: ts.Node): void => {
+    if (
+      ts.isVariableDeclaration(node) &&
+      ts.isIdentifier(node.name) &&
+      node.initializer
+    ) {
+      const initializer = bindingInitializer(node.initializer);
+      const sourceKey = initializer
+        ? resolveIdentifier(initializer.source)
+        : undefined;
+      const targetKey = resolveIdentifier(node.name);
+      if (sourceKey && targetKey && sourceKey !== targetKey && initializer) {
+        const consumers = aliasConsumers.get(sourceKey) ?? new Set<string>();
+        consumers.add(targetKey);
+        aliasConsumers.set(sourceKey, consumers);
+        initializers.push({ sourceKey, targetKey, kind: initializer.kind });
+      }
+    }
+    ts.forEachChild(node, collectAliases);
+  };
+  collectAliases(module.sourceFile);
+
+  const queue = [...originsByBinding.keys()];
+  const queued = new Set(queue);
+  let queueIndex = 0;
+  while (queueIndex < queue.length) {
+    const sourceKey = queue[queueIndex++]!;
+    queued.delete(sourceKey);
+    const sourceOrigins = originsByBinding.get(sourceKey);
+    if (!sourceOrigins) continue;
+    for (const targetKey of aliasConsumers.get(sourceKey) ?? []) {
+      const targetOrigins =
+        originsByBinding.get(targetKey) ?? new Map<string, RuleOrigin>();
+      let changed = false;
+      for (const origin of sourceOrigins.values()) {
+        changed = addOrigin(targetOrigins, origin) || changed;
+      }
+      originsByBinding.set(targetKey, targetOrigins);
+      if (changed && !queued.has(targetKey)) {
+        queue.push(targetKey);
+        queued.add(targetKey);
+      }
+    }
+  }
+
+  const queryClientBindings = new Set<string>();
+  let bindingKindsChanged = true;
+  while (bindingKindsChanged) {
+    bindingKindsChanged = false;
+    for (const initializer of initializers) {
+      if (
+        initializer.kind === "alias" &&
+        clientFactoryBindings.has(initializer.sourceKey) &&
+        !clientFactoryBindings.has(initializer.targetKey)
+      ) {
+        clientFactoryBindings.add(initializer.targetKey);
+        bindingKindsChanged = true;
+      }
+      const createsClient =
+        (initializer.kind === "alias" &&
+          queryClientBindings.has(initializer.sourceKey)) ||
+        (initializer.kind === "new" &&
+          originsByBinding.has(initializer.sourceKey)) ||
+        (initializer.kind === "call" &&
+          clientFactoryBindings.has(initializer.sourceKey));
+      if (createsClient && !queryClientBindings.has(initializer.targetKey)) {
+        queryClientBindings.add(initializer.targetKey);
+        bindingKindsChanged = true;
+      }
+    }
+  }
+
+  return {
+    originsByBinding,
+    importBindings,
+    clientFactoryBindings,
+    queryClientBindings,
+    resolveIdentifier,
+  };
+}
+
+/** Extracts one static process environment resource. */
+function environmentResource(node: ts.Node): string | undefined {
+  const isProcessEnv = (expression: ts.Expression): boolean =>
+    (ts.isPropertyAccessExpression(expression) &&
+      ts.isIdentifier(expression.expression) &&
+      expression.expression.text === "process" &&
+      expression.name.text === "env") ||
+    (ts.isElementAccessExpression(expression) &&
+      ts.isIdentifier(expression.expression) &&
+      expression.expression.text === "process" &&
+      expression.argumentExpression !== undefined &&
+      ts.isStringLiteralLike(expression.argumentExpression) &&
+      expression.argumentExpression.text === "env");
+  if (ts.isPropertyAccessExpression(node) && isProcessEnv(node.expression)) {
+    return `environment:${node.name.text}`;
+  }
+  if (
+    ts.isElementAccessExpression(node) &&
+    isProcessEnv(node.expression) &&
+    node.argumentExpression &&
+    ts.isStringLiteralLike(node.argumentExpression)
+  ) {
+    return `environment:${node.argumentExpression.text}`;
+  }
+  return undefined;
+}
+
+/** Compares findings by frozen source-instance identity. */
+function compareFindings(
+  left: ArchitectureFinding,
+  right: ArchitectureFinding,
+): number {
+  return compareStableStrings(left.instanceKey, right.instanceKey);
+}
+
+/** Analyzes exact sources using resolved, binding-aware architecture policy evidence. */
+export async function analyzeArchitectureSources(options: AnalyzeArchitectureSourcesOptions): Promise<ArchitectureAnalysisResult> {
+  const config = architectureConfigSchema.parse(options.config);
+  const loaded = await loadArchitectureSourceDetails(options);
+  const evidenceByKey = new Map(loaded.evidence.map((evidence) => [evidenceKey(evidence), evidence]));
+  const executableEvidenceBySource = new Map<
+    string,
+    ArchitectureImportEvidence[]
+  >();
+  for (const evidence of loaded.evidence) {
+    if (
+      evidence.evidenceKind !== "dynamic-import" &&
+      evidence.evidenceKind !== "commonjs-require"
+    ) {
+      continue;
+    }
+    const sourceEvidence = executableEvidenceBySource.get(evidence.sourcePath);
+    if (sourceEvidence) sourceEvidence.push(evidence);
+    else executableEvidenceBySource.set(evidence.sourcePath, [evidence]);
+  }
+  const environmentNodesBySource = new Map<
+    string,
+    Array<{ node: ts.Node; resource: string }>
+  >();
+  for (const evidence of loaded.environmentNodes) {
+    const sourceEvidence = environmentNodesBySource.get(evidence.sourcePath);
+    const entry = { node: evidence.node, resource: evidence.resource };
+    if (sourceEvidence) sourceEvidence.push(entry);
+    else environmentNodesBySource.set(evidence.sourcePath, [entry]);
+  }
+  const modules: ParsedArchitectureModule[] = [];
+  for (const sourcePath of loaded.sourcePaths) {
+    const sourceFile = loaded.sourceFiles.get(sourcePath);
+    if (!sourceFile) continue;
+    modules.push(parseArchitectureModule(sourcePath, sourceFile, evidenceByKey, config));
+  }
+  const { localsByModule, exportsByModule } = computeBindingOrigins(modules, config);
+  const findingsByKey = new Map<string, ArchitectureFinding>();
+  const rulesById = new Map(config.rules.map((rule) => [rule.id, rule]));
+  const ownershipDecisionCache = new Map<string, boolean>();
+  const rawFindingKeys = new Set<string>();
+
+  /** Adds one selected origin only when exact ownership policy denies it. */
+  const addFinding = (sourcePath: string, node: ts.Node, sourceFile: ts.SourceFile, evidenceKind: ArchitectureFinding["evidenceKind"], origin: RuleOrigin, immediateImportSpecifier?: string): void => {
+    const rule = rulesById.get(origin.ruleId);
+    if (!rule || !rule.findingKinds.includes(evidenceKind)) return;
+    const importSpecifier = immediateImportSpecifier ?? origin.importSpecifier;
+    const policyImportSpecifier = origin.importSpecifier ?? immediateImportSpecifier;
+    const decisionKey = [
+      sourcePath,
+      rule.id,
+      evidenceKind,
+      policyImportSpecifier ?? "",
+      origin.resource ?? "",
+      origin.resolvedTarget,
+    ].join("\0");
+    let violates = ownershipDecisionCache.get(decisionKey);
+    if (violates === undefined) {
+      violates =
+        evaluateOwnership(config, {
+          ruleId: rule.id,
+          sourcePath,
+          evidenceKind,
+          ...(policyImportSpecifier
+            ? { importSpecifier: policyImportSpecifier }
+            : {}),
+          ...(origin.resource ? { resource: origin.resource } : {}),
+          resolvedTarget: origin.resolvedTarget,
+        }).status === "violation";
+      ownershipDecisionCache.set(decisionKey, violates);
+    }
+    if (!violates) return;
+    const location = sourceLocation(sourceFile, node);
+    const rawFindingKey = [
+      rule.id,
+      rule.domain,
+      sourcePath,
+      location.line,
+      location.column,
+      evidenceKind,
+      origin.resource ?? "",
+      origin.resolvedTarget,
+    ].join("\0");
+    if (rawFindingKeys.has(rawFindingKey)) return;
+    rawFindingKeys.add(rawFindingKey);
+    const identityInput = {
+      ruleId: rule.id,
+      domain: rule.domain,
+      sourcePath,
+      ...location,
+      evidenceKind,
+      ...(origin.resource ? { resource: origin.resource } : {}),
+      resolvedTarget: origin.resolvedTarget,
+    };
+    const finding = architectureFindingSchema.parse({
+      schemaVersion: 1,
+      ...identityInput,
+      ...(importSpecifier ? { importSpecifier } : {}),
+      ...createFindingIdentity(identityInput),
+    });
+    findingsByKey.set(finding.instanceKey, finding);
+  };
+
+  for (const module of modules) {
+    const locals = localsByModule.get(module.sourcePath) ?? new Map<string, Map<string, RuleOrigin>>();
+    const lexicalBindings = analyzeLexicalBindings(module, locals);
+    for (const binding of module.imports) {
+      const origins = new Map<string, RuleOrigin>();
+      for (const origin of directBindingOrigins(binding, config.rules)) addOrigin(origins, origin);
+      if (
+        origins.size === 0 &&
+        !binding.evidence.resolvedTarget.startsWith("external:")
+      ) {
+        for (const origin of targetExportOrigins(exportsByModule, binding.evidence.resolvedTarget, binding.importedName)) addOrigin(origins, origin);
+      }
+      if (origins.size === 0) continue;
+      for (const origin of origins.values()) addFinding(module.sourcePath, binding.node, module.sourceFile, binding.evidence.evidenceKind, origin, binding.evidence.importSpecifier);
+    }
+    for (const binding of module.reexports) {
+      const origins = new Map<string, RuleOrigin>();
+      for (const origin of directBindingOrigins(binding, config.rules)) addOrigin(origins, origin);
+      if (
+        origins.size === 0 &&
+        !binding.evidence.resolvedTarget.startsWith("external:")
+      ) {
+        for (const origin of targetExportOrigins(exportsByModule, binding.evidence.resolvedTarget, binding.importedName)) addOrigin(origins, origin);
+      }
+      if (origins.size === 0) continue;
+      for (const origin of origins.values()) addFinding(module.sourcePath, binding.node, module.sourceFile, "re-export", origin, binding.evidence.importSpecifier);
+    }
+
+    for (const evidence of executableEvidenceBySource.get(module.sourcePath) ?? []) {
+      const origins = new Map<string, RuleOrigin>();
+      for (const rule of config.rules) if (rule.findingKinds.includes(evidence.evidenceKind) && directlySelectsImport(rule, evidence)) addOrigin(origins, { ruleId: rule.id, importSpecifier: evidence.importSpecifier, resolvedTarget: evidence.resolvedTarget });
+      if (origins.size === 0 && !evidence.resolvedTarget.startsWith("external:")) for (const origin of targetExportOrigins(exportsByModule, evidence.resolvedTarget, "*")) addOrigin(origins, origin);
+      if (origins.size === 0) continue;
+      const node = loaded.evidenceNodes.get(evidenceKey(evidence));
+      if (!node) {
+        throw new Error(
+          `Architecture evidence node not found at ${evidence.sourcePath}:${evidence.line}:${evidence.column}`,
+        );
+      }
+      for (const origin of origins.values()) addFinding(module.sourcePath, node, module.sourceFile, evidence.evidenceKind, origin, evidence.importSpecifier);
+    }
+
+    for (const evidence of environmentNodesBySource.get(module.sourcePath) ?? []) {
+      for (const rule of config.rules) {
+        if (
+          rule.findingKinds.includes("environment-read") &&
+          directlySelectsResource(rule, evidence.resource)
+        ) {
+          addFinding(
+            module.sourcePath,
+            evidence.node,
+            module.sourceFile,
+            "environment-read",
+            {
+              ruleId: rule.id,
+              resource: evidence.resource,
+              resolvedTarget: "external:environment",
+            },
+          );
+        }
+      }
+    }
+
+    if (locals.size > 0) {
+      for (const node of
+        loaded.executableNodesBySource.get(module.sourcePath) ?? []) {
+        const root = rootIdentifier(node.expression);
+        const rootBinding = root
+          ? lexicalBindings.resolveIdentifier(root)
+          : undefined;
+        const origins = rootBinding
+          ? lexicalBindings.originsByBinding.get(rootBinding)
+          : undefined;
+        const isConstruction =
+          ts.isNewExpression(node) ||
+          (ts.isCallExpression(node) &&
+            ts.isIdentifier(node.expression) &&
+            rootBinding !== undefined &&
+            lexicalBindings.clientFactoryBindings.has(rootBinding));
+        if (isConstruction) for (const origin of origins?.values() ?? []) addFinding(module.sourcePath, node, module.sourceFile, "client-construction", origin);
+        if (ts.isCallExpression(node) && ts.isPropertyAccessExpression(node.expression) && QUERY_METHODS.has(node.expression.name.text)) {
+          if (
+            rootBinding !== undefined &&
+            lexicalBindings.queryClientBindings.has(rootBinding)
+          ) {
+            for (const origin of origins?.values() ?? []) {
+              if (rulesById.get(origin.ruleId)?.domain === "database") addFinding(module.sourcePath, node, module.sourceFile, "query-call", origin);
+            }
+          }
+          const argument = node.arguments[0];
+          if (argument && ts.isIdentifier(argument)) {
+            const argumentBinding =
+              lexicalBindings.resolveIdentifier(argument);
+            const importedBinding =
+              lexicalBindings.importBindings.get(argument.text);
+            if (argumentBinding && argumentBinding === importedBinding) {
+              const imported = module.imports.find(
+                (binding) => binding.localName === argument.text,
+              );
+              if (imported?.inferredResource) {
+                for (const rule of config.rules) if (rule.findingKinds.includes("query-call") && directlySelectsResource(rule, imported.inferredResource)) addFinding(module.sourcePath, node, module.sourceFile, "query-call", { ruleId: rule.id, resource: imported.inferredResource, resolvedTarget: "external:database-table" });
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  return { schemaVersion: 1, sourcePaths: loaded.sourcePaths, findings: [...findingsByKey.values()].sort(compareFindings), parseErrors: loaded.parseErrors };
 }

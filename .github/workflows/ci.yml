@@ -6,12 +6,17 @@ on:
   pull_request:
     branches: [master]
     paths:
-      - 'apps/science-advantage/**'
+      - 'apps/**'
+      - 'integrations/**'
       - 'packages/**'
+      - 'services/**'
+      - 'test-fixtures/architecture-enforcement/**'
       - '.github/workflows/**'
+      - 'measure/doctor.sh'
       - 'package.json'
       - 'pnpm-lock.yaml'
       - 'pnpm-workspace.yaml'
+      - 'tsconfig*.json'
       - 'turbo.json'
 
 jobs:
@@ -49,6 +54,17 @@ jobs:
 
       - name: Config drift check
         run: pnpm config-drift
+
+      - name: Architecture boundary check
+        run: pnpm architecture:check
+
+      - name: Tenant and provider architecture guards
+        run: |
+          CI=true pnpm exec vitest run \
+            packages/domain/src/__tests__/tenant-coverage.test.ts \
+            packages/ai/src/__tests__/wave2-provider-architecture-guard.test.ts \
+            packages/config/src/__tests__/wave2-observability-provider-guard.test.ts \
+            packages/api/src/__tests__/api-architecture-boundary.test.ts
 
       - name: Build
         run: pnpm build
