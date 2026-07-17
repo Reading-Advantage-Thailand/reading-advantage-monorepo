@@ -2049,6 +2049,41 @@
       "collector_identity": "evidence-collector-remediation-20260713",
       "collector_role": "evidence-collector",
       "confidence": "high",
+      "copy_source_record_id": "file:packages/game-cartridges/vitest.config.ts",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "55c718ffb3cf093079211b0dc304f1a99e8bb13ed3b927ce99aa899cf4f3a204",
+          "path": "packages/game-cartridges/vitest.config.ts",
+          "range": {
+            "end_line": 16,
+            "sha256": "55c718ffb3cf093079211b0dc304f1a99e8bb13ed3b927ce99aa899cf4f3a204",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "55c718ffb3cf093079211b0dc304f1a99e8bb13ed3b927ce99aa899cf4f3a204",
+          "path": "packages/game-contracts/vitest.config.ts",
+          "range": {
+            "end_line": 16,
+            "sha256": "55c718ffb3cf093079211b0dc304f1a99e8bb13ed3b927ce99aa899cf4f3a204",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:packages/game-contracts/vitest.config.ts",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-global-shared-01",
+      "review_id": "copy-review:029",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
       "copy_source_record_id": "file:apps/advantage-games/src/app/api/v1/games/rune-forge-chamber/sentences/route.ts",
       "disposition": "byte-identical-copy-reviewed",
       "evidence": [
@@ -2077,7 +2112,7 @@
       "mechanical_copy_record_id": "copy:apps/advantage-games/src/app/api/v1/games/village-guardian/sentences/route.ts",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-03",
-      "review_id": "copy-review:029",
+      "review_id": "copy-review:030",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -2112,7 +2147,7 @@
       "mechanical_copy_record_id": "copy:apps/reading-advantage/lib/games/rpgBattleXp.ts",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-01",
-      "review_id": "copy-review:030",
+      "review_id": "copy-review:031",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -2147,7 +2182,7 @@
       "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/rune-match/MonsterSelection.test.tsx",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-07",
-      "review_id": "copy-review:031",
+      "review_id": "copy-review:032",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -2182,7 +2217,7 @@
       "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/game/ResultsScreen.test.tsx",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-global-shared-01",
-      "review_id": "copy-review:032",
+      "review_id": "copy-review:033",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -2217,7 +2252,7 @@
       "mechanical_copy_record_id": "copy:apps/reading-advantage/lib/games/rpgBattleSelection.ts",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-01",
-      "review_id": "copy-review:033",
+      "review_id": "copy-review:034",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -2252,7 +2287,7 @@
       "mechanical_copy_record_id": "copy:apps/advantage-games/src/app/api/v1/games/haunted-library/sentences/route.ts",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-10",
-      "review_id": "copy-review:034",
+      "review_id": "copy-review:035",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -2287,7 +2322,7 @@
       "mechanical_copy_record_id": "copy:apps/advantage-games/src/app/api/v1/games/labyrinth-goblin-king/sentences/route.ts",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-06",
-      "review_id": "copy-review:035",
+      "review_id": "copy-review:036",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -2322,7 +2357,7 @@
       "mechanical_copy_record_id": "copy:apps/reading-advantage/lib/games/potionRushEffects.ts",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-08",
-      "review_id": "copy-review:036",
+      "review_id": "copy-review:037",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -2357,7 +2392,7 @@
       "mechanical_copy_record_id": "copy:apps/reading-advantage/lib/games/utils.test.ts",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-global-shared-01",
-      "review_id": "copy-review:037",
+      "review_id": "copy-review:038",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -2392,7 +2427,7 @@
       "mechanical_copy_record_id": "copy:apps/reading-advantage/lib/games/rpgBattleSprites.ts",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-01",
-      "review_id": "copy-review:038",
+      "review_id": "copy-review:039",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -2427,7 +2462,7 @@
       "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/rpg-battle/EnemySprite.tsx",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-01",
-      "review_id": "copy-review:039",
+      "review_id": "copy-review:040",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -2462,7 +2497,7 @@
       "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/rpg-battle/BattleResults.tsx",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-01",
-      "review_id": "copy-review:040",
+      "review_id": "copy-review:041",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -2497,7 +2532,7 @@
       "mechanical_copy_record_id": "copy:apps/reading-advantage/lib/games/wizardZombieIndicators.ts",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-global-shared-01",
-      "review_id": "copy-review:041",
+      "review_id": "copy-review:042",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -2532,7 +2567,7 @@
       "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/rpg-battle/HealthBar.test.tsx",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-01",
-      "review_id": "copy-review:042",
+      "review_id": "copy-review:043",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -2567,7 +2602,7 @@
       "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/rpg-battle/BattleSelectionModal.tsx",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-01",
-      "review_id": "copy-review:043",
+      "review_id": "copy-review:044",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -2602,7 +2637,7 @@
       "mechanical_copy_record_id": "copy:apps/reading-advantage/lib/games/wizardZombie.test.ts",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-global-shared-01",
-      "review_id": "copy-review:044",
+      "review_id": "copy-review:045",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -2637,7 +2672,7 @@
       "mechanical_copy_record_id": "copy:apps/advantage-games/src/app/api/v1/games/haunted-library/complete/route.ts",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-10",
-      "review_id": "copy-review:045",
+      "review_id": "copy-review:046",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -2672,7 +2707,7 @@
       "mechanical_copy_record_id": "copy:apps/advantage-games/src/app/api/v1/games/labyrinth-goblin-king/complete/route.ts",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-06",
-      "review_id": "copy-review:046",
+      "review_id": "copy-review:047",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -2707,7 +2742,7 @@
       "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/enchanted-library/VocabularyProgress.tsx",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-07",
-      "review_id": "copy-review:047",
+      "review_id": "copy-review:048",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -2742,7 +2777,7 @@
       "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/rpg-battle/BattleSelectionModal.test.tsx",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-01",
-      "review_id": "copy-review:048",
+      "review_id": "copy-review:049",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -2777,7 +2812,77 @@
       "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/game/MagicBolt.tsx",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-global-shared-01",
-      "review_id": "copy-review:049",
+      "review_id": "copy-review:050",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:packages/advantage-play-kit/eslint.config.mjs",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "8f189bac787e05cd3cb4164767b501662fb78f949176433745f28f326768c90a",
+          "path": "packages/advantage-play-kit/eslint.config.mjs",
+          "range": {
+            "end_line": 3,
+            "sha256": "8f189bac787e05cd3cb4164767b501662fb78f949176433745f28f326768c90a",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "8f189bac787e05cd3cb4164767b501662fb78f949176433745f28f326768c90a",
+          "path": "packages/game-cartridges/eslint.config.mjs",
+          "range": {
+            "end_line": 3,
+            "sha256": "8f189bac787e05cd3cb4164767b501662fb78f949176433745f28f326768c90a",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:packages/game-cartridges/eslint.config.mjs",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-global-shared-01",
+      "review_id": "copy-review:051",
+      "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "copy_source_record_id": "file:packages/advantage-play-kit/eslint.config.mjs",
+      "disposition": "byte-identical-copy-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "8f189bac787e05cd3cb4164767b501662fb78f949176433745f28f326768c90a",
+          "path": "packages/advantage-play-kit/eslint.config.mjs",
+          "range": {
+            "end_line": 3,
+            "sha256": "8f189bac787e05cd3cb4164767b501662fb78f949176433745f28f326768c90a",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        {
+          "blob_sha256": "8f189bac787e05cd3cb4164767b501662fb78f949176433745f28f326768c90a",
+          "path": "packages/game-contracts/eslint.config.mjs",
+          "range": {
+            "end_line": 3,
+            "sha256": "8f189bac787e05cd3cb4164767b501662fb78f949176433745f28f326768c90a",
+            "start_line": 1
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_copy_record_id": "copy:packages/game-contracts/eslint.config.mjs",
+      "method": "human-raw-copy-review",
+      "review_batch_id": "human-global-shared-01",
+      "review_id": "copy-review:052",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -2812,7 +2917,7 @@
       "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/sentence/potion-rush/PotionRushEffectsLayer.tsx",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-08",
-      "review_id": "copy-review:050",
+      "review_id": "copy-review:053",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -2847,7 +2952,7 @@
       "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/ui/input.test.tsx",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-global-shared-01",
-      "review_id": "copy-review:051",
+      "review_id": "copy-review:054",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -2882,7 +2987,7 @@
       "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/game/Explosion.test.tsx",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-global-shared-01",
-      "review_id": "copy-review:052",
+      "review_id": "copy-review:055",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -2917,7 +3022,7 @@
       "mechanical_copy_record_id": "copy:apps/advantage-games/src/app/api/v1/games/dungeon-liberator/sentences/route.ts",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-05",
-      "review_id": "copy-review:053",
+      "review_id": "copy-review:056",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -2952,7 +3057,7 @@
       "mechanical_copy_record_id": "copy:apps/advantage-games/src/app/api/v1/games/potion-rush/sentences/route.ts",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-08",
-      "review_id": "copy-review:054",
+      "review_id": "copy-review:057",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -2987,7 +3092,7 @@
       "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/enchanted-library/DifficultySelector.tsx",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-07",
-      "review_id": "copy-review:055",
+      "review_id": "copy-review:058",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -3022,7 +3127,7 @@
       "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/enchanted-library/RankingDisplay.tsx",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-07",
-      "review_id": "copy-review:056",
+      "review_id": "copy-review:059",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -3057,7 +3162,7 @@
       "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/game/ResultsScreen.tsx",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-global-shared-01",
-      "review_id": "copy-review:057",
+      "review_id": "copy-review:060",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -3092,7 +3197,7 @@
       "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/game/HUD.test.tsx",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-global-shared-01",
-      "review_id": "copy-review:058",
+      "review_id": "copy-review:061",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -3127,7 +3232,7 @@
       "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/enchanted-library/enchantedLibraryInput.test.ts",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-07",
-      "review_id": "copy-review:059",
+      "review_id": "copy-review:062",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -3162,7 +3267,7 @@
       "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/enchanted-library/BookPickupBurst.tsx",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-07",
-      "review_id": "copy-review:060",
+      "review_id": "copy-review:063",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -3197,7 +3302,7 @@
       "mechanical_copy_record_id": "copy:apps/reading-advantage/lib/games/rpgBattleWordSelection.test.ts",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-01",
-      "review_id": "copy-review:061",
+      "review_id": "copy-review:064",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -3232,7 +3337,7 @@
       "mechanical_copy_record_id": "copy:apps/advantage-games/src/app/api/v1/games/dungeon-liberator/ranking/route.ts",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-05",
-      "review_id": "copy-review:062",
+      "review_id": "copy-review:065",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -3267,7 +3372,7 @@
       "mechanical_copy_record_id": "copy:apps/advantage-games/src/app/api/v1/games/potion-rush/ranking/route.ts",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-08",
-      "review_id": "copy-review:063",
+      "review_id": "copy-review:066",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -3302,7 +3407,7 @@
       "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/rpg-battle/ActionMenu.tsx",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-01",
-      "review_id": "copy-review:064",
+      "review_id": "copy-review:067",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -3337,7 +3442,7 @@
       "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/enchanted-library/SparkleBurst.test.tsx",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-07",
-      "review_id": "copy-review:065",
+      "review_id": "copy-review:068",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -3372,7 +3477,7 @@
       "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/game/Explosion.tsx",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-global-shared-01",
-      "review_id": "copy-review:066",
+      "review_id": "copy-review:069",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -3407,7 +3512,7 @@
       "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/rpg-battle/BattleResults.test.tsx",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-01",
-      "review_id": "copy-review:067",
+      "review_id": "copy-review:070",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -3442,7 +3547,7 @@
       "mechanical_copy_record_id": "copy:apps/reading-advantage/lib/games/dragonFlight.ts",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-01",
-      "review_id": "copy-review:068",
+      "review_id": "copy-review:071",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -3477,7 +3582,7 @@
       "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/rpg-battle/BattleEffects.tsx",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-01",
-      "review_id": "copy-review:069",
+      "review_id": "copy-review:072",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -3512,7 +3617,7 @@
       "mechanical_copy_record_id": "copy:apps/reading-advantage/lib/games/dragonFlight.test.ts",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-01",
-      "review_id": "copy-review:070",
+      "review_id": "copy-review:073",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -3547,7 +3652,7 @@
       "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/rpg-battle/PlayerSprite.tsx",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-01",
-      "review_id": "copy-review:071",
+      "review_id": "copy-review:074",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -3582,7 +3687,7 @@
       "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/rpg-battle/ActionMenu.test.tsx",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-01",
-      "review_id": "copy-review:072",
+      "review_id": "copy-review:075",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -3617,7 +3722,7 @@
       "mechanical_copy_record_id": "copy:apps/reading-advantage/lib/games/wizardZombieIndicators.test.ts",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-global-shared-01",
-      "review_id": "copy-review:073",
+      "review_id": "copy-review:076",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -3652,7 +3757,7 @@
       "mechanical_copy_record_id": "copy:apps/advantage-games/src/app/api/v1/games/castle-defense/complete/route.ts",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-02",
-      "review_id": "copy-review:074",
+      "review_id": "copy-review:077",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -3687,7 +3792,7 @@
       "mechanical_copy_record_id": "copy:apps/advantage-games/src/app/api/v1/games/dragon-flight/complete/route.ts",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-01",
-      "review_id": "copy-review:075",
+      "review_id": "copy-review:078",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -3722,7 +3827,7 @@
       "mechanical_copy_record_id": "copy:apps/advantage-games/src/app/api/v1/games/dungeon-liberator/complete/route.ts",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-05",
-      "review_id": "copy-review:076",
+      "review_id": "copy-review:079",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -3757,7 +3862,7 @@
       "mechanical_copy_record_id": "copy:apps/advantage-games/src/app/api/v1/games/enchanted-library/complete/route.ts",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-07",
-      "review_id": "copy-review:077",
+      "review_id": "copy-review:080",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -3792,7 +3897,7 @@
       "mechanical_copy_record_id": "copy:apps/advantage-games/src/app/api/v1/games/magic-defense/complete/route.ts",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-02",
-      "review_id": "copy-review:078",
+      "review_id": "copy-review:081",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -3827,7 +3932,7 @@
       "mechanical_copy_record_id": "copy:apps/advantage-games/src/app/api/v1/games/potion-rush/complete/route.ts",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-08",
-      "review_id": "copy-review:079",
+      "review_id": "copy-review:082",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -3862,7 +3967,7 @@
       "mechanical_copy_record_id": "copy:apps/advantage-games/src/app/api/v1/games/rpg-battle/complete/route.ts",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-01",
-      "review_id": "copy-review:080",
+      "review_id": "copy-review:083",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -3897,7 +4002,7 @@
       "mechanical_copy_record_id": "copy:apps/advantage-games/src/app/api/v1/games/rune-match/complete/route.ts",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-07",
-      "review_id": "copy-review:081",
+      "review_id": "copy-review:084",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -3932,7 +4037,7 @@
       "mechanical_copy_record_id": "copy:apps/advantage-games/src/app/api/v1/games/wizard-vs-zombie/complete/route.ts",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-02",
-      "review_id": "copy-review:082",
+      "review_id": "copy-review:085",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -3967,7 +4072,7 @@
       "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/rpg-battle/PlayerSprite.test.tsx",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-01",
-      "review_id": "copy-review:083",
+      "review_id": "copy-review:086",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -4002,7 +4107,7 @@
       "mechanical_copy_record_id": "copy:apps/reading-advantage/lib/games/rpgBattleSelection.test.ts",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-01",
-      "review_id": "copy-review:084",
+      "review_id": "copy-review:087",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -4037,7 +4142,7 @@
       "mechanical_copy_record_id": "copy:apps/reading-advantage/lib/games/rpgBattleScaling.test.ts",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-01",
-      "review_id": "copy-review:085",
+      "review_id": "copy-review:088",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -4072,7 +4177,7 @@
       "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/rpg-battle/FloatingText.tsx",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-01",
-      "review_id": "copy-review:086",
+      "review_id": "copy-review:089",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -4107,7 +4212,7 @@
       "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/rpg-battle/BattleScene.tsx",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-01",
-      "review_id": "copy-review:087",
+      "review_id": "copy-review:090",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -4142,7 +4247,7 @@
       "mechanical_copy_record_id": "copy:apps/reading-advantage/lib/games/potionRushEffects.test.ts",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-08",
-      "review_id": "copy-review:088",
+      "review_id": "copy-review:091",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -4177,7 +4282,7 @@
       "mechanical_copy_record_id": "copy:apps/reading-advantage/lib/games/rpgBattleWordSelection.ts",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-01",
-      "review_id": "copy-review:089",
+      "review_id": "copy-review:092",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -4212,7 +4317,7 @@
       "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/enchanted-library/SparkleBurst.tsx",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-07",
-      "review_id": "copy-review:090",
+      "review_id": "copy-review:093",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -4247,7 +4352,7 @@
       "mechanical_copy_record_id": "copy:apps/reading-advantage/lib/games/wizardZombieLogic.test.ts",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-global-shared-01",
-      "review_id": "copy-review:091",
+      "review_id": "copy-review:094",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     },
     {
@@ -4282,7 +4387,7 @@
       "mechanical_copy_record_id": "copy:apps/reading-advantage/components/games/vocabulary/rpg-battle/BattleLog.test.tsx",
       "method": "human-raw-copy-review",
       "review_batch_id": "human-program-01",
-      "review_id": "copy-review:092",
+      "review_id": "copy-review:095",
       "source_fact": "The cited source and copy committed blobs have the same whole-file SHA-256 while their paths remain separate."
     }
   ],
