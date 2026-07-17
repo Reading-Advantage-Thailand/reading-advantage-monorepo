@@ -1,0 +1,124 @@
+{
+  "schema_version": "apk-role-receipt.v1",
+  "status": "complete-provider-attested",
+  "track_id": "apk_source_denominator_inventory_20260712",
+  "phase": "Phase 3: Contract validation",
+  "role": "truth-test-author",
+  "task_id": "truth-test-author:denominator-contract-tests",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "spawn_id": "ses_08f5ca0e5ffe3nE51UVMy3eOFT",
+  "parent_ancestry_ids": [
+    "ses_08f5d0cbbffezzt5wsY55PxqST"
+  ],
+  "prompt_sha256": "63523c4b94edd069a75b9d1e60b46639dfdca40dbfee189564477edb5215ad81",
+  "prompt_hash_basis": "SHA-256 of exact UTF-8 text bytes in provider message msg_f70a35f73001qVhtQDgjg9Hdc2.",
+  "actual_context_manifest": {
+    "schema_version": "apk-provider-context-manifest.v2",
+    "provider": "opencode-export",
+    "raw_export_sha256": "9e938a7938d7b3e8cb032ef3637990ff8c667df2719b3ea6a44f9854f46a2415",
+    "raw_export_bytes": 1085026,
+    "session_id": "ses_08f5ca0e5ffe3nE51UVMy3eOFT",
+    "parent_session_id": "ses_08f5d0cbbffezzt5wsY55PxqST",
+    "session_created_at_ms": 1784301182748,
+    "session_updated_at_ms": 1784301834105,
+    "message_count": 40,
+    "part_count": 169,
+    "user_prompt_count": 1,
+    "first_user_message_id": "msg_f70a35f73001qVhtQDgjg9Hdc2",
+    "final_assistant_message_id": "msg_f70ad22490014oAzZwO7eN182Y",
+    "message_ledger_sha256": "96e22f5e11ff167886f14c4db5f7b0ad8e2ed36451ff94c65bc31ca9051da953",
+    "message_ledger_hash_basis": "SHA-256 of the raw export messages array serialized as canonical compact JSON with sorted keys and UTF-8 encoding.",
+    "part_ledger_sha256": "c220b9435a4637bc5cc76f69de5d335fb30b6c3943c5d604cf96fb0767d4eb4c",
+    "part_ledger_hash_basis": "SHA-256 of all raw export message parts flattened in provider message order and serialized as canonical compact JSON with sorted keys and UTF-8 encoding.",
+    "raw_write_inventory": [
+      "measure/tracks/apk_source_denominator_inventory_20260712/denominator-contract-test-report.json"
+    ],
+    "schema_omissions": [
+      "fork_turns"
+    ]
+  },
+  "actual_context_manifest_sha256": "fa5ff75152f27ccdbc5aa5b22912f9358a870d3d4c1473d8c4d5bf07a83be1e2",
+  "actual_context_manifest_hash_basis": "SHA-256 of actual_context_manifest serialized as canonical compact JSON with sorted keys.",
+  "start_event_id": "msg_f70a35f73001qVhtQDgjg9Hdc2",
+  "end_event_id": "msg_f70ad22490014oAzZwO7eN182Y",
+  "final_response_sha256": "a38f2b5dbf09b33ef7ad140d6dda9839adcfe18f23902bdbff407c40f7a97a9e",
+  "final_response_hash_basis": "SHA-256 of exact UTF-8 text bytes in provider message msg_f70ad22490014oAzZwO7eN182Y.",
+  "allowed_input_manifest_sha256": "f8d68f17453e87ba9fb155420e91fcaccaf7c1942b4e02ad372c66dc6ad31129",
+  "role_ownership_manifest_sha256": "38bc8c4a57f45c91869dcd76f845017c0e1a6913e16e7f001188f6b7079d2bb2",
+  "output_paths": [
+    "measure/tracks/apk_source_denominator_inventory_20260712/denominator-contract-test-report.json"
+  ],
+  "output_hashes": {
+    "measure/tracks/apk_source_denominator_inventory_20260712/denominator-contract-test-report.json": "48b16266c6c7cb6ddff9529d9180abe0790aaf992eca783232c68cacb0723bb1"
+  },
+  "output_sha256": "11ff76c70c6931bf8d2cce554733458dc412fe4c431d047a5570112c4ac45f4f",
+  "output_hash_basis": "SHA-256 of canonical compact JSON with sorted keys mapping each output path to the SHA-256 of its committed bytes at commit_sha.",
+  "actual_usage": {
+    "bytes_read": 176084,
+    "command_invocations": 46,
+    "test_cases": 80
+  },
+  "budget_declaration": {
+    "role": "truth-test-author",
+    "frozen_resource_ceiling": {
+      "bytes_read": 67108864,
+      "command_invocations": 80,
+      "test_cases": 180
+    },
+    "actual_usage": {
+      "bytes_read": 176084,
+      "command_invocations": 46,
+      "test_cases": 80
+    },
+    "measurement_basis": {
+      "bytes_read": "Sum of UTF-8 byte lengths of output and error strings on all provider tool parts in the retained raw export.",
+      "command_invocations": "Count of all provider tool parts in the retained raw export.",
+      "test_cases": "Count of completed unittest result lines comprising 24 before initial timeout plus 54 successful admission plus two focused validations."
+    }
+  },
+  "budget_declaration_sha256": "7b6849138f6e1a932ec7f53a182a45c49fed005c39f07a8b0ffeda7199fb0b66",
+  "budget_hash_basis": "SHA-256 of budget_declaration serialized as canonical compact JSON with sorted keys.",
+  "stop_loss_observations": {
+    "unsupported_factual_claims": 0,
+    "denominator_mismatches": 0,
+    "failed_fix_review_cycles": 0,
+    "unresolved_blocking_findings": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0
+    }
+  },
+  "provider_usage": {
+    "tokens_input": 74396,
+    "tokens_output": 14544,
+    "tokens_reasoning": 0,
+    "tokens_cache_read": 2442752,
+    "models": [
+      "kimi-for-coding-highspeed"
+    ],
+    "providers": [
+      "kimi-for-coding"
+    ]
+  },
+  "commit_sha": "eee9cdac7d1fe534836c9e7b7f201d9dea70c9b7",
+  "commit_binding": {
+    "status": "committed-output-binding",
+    "output_commit": "97c48b7732262c5fb215b85cd1e6cd4f5cb343a1",
+    "full_output_attestation_commit": "eee9cdac7d1fe534836c9e7b7f201d9dea70c9b7",
+    "correction_commit": "cea7b5d426b34531693ff957a5b234a08704ff29",
+    "raw_export_sha256": "9e938a7938d7b3e8cb032ef3637990ff8c667df2719b3ea6a44f9854f46a2415",
+    "adapter_acceptance_commit": "47f9966716ea527be576e24a352b386ca3f26ae2",
+    "source": "git show eee9cdac7d1fe534836c9e7b7f201d9dea70c9b7:<output-path>"
+  },
+  "findings": [],
+  "admission_summary": {
+    "status": "passed",
+    "total": 54,
+    "passed": 54,
+    "failed": 0,
+    "admission_head": "cea7b5d426b34531693ff957a5b234a08704ff29",
+    "focused_report_contract_validations": 2,
+    "output_report_sha256": "48b16266c6c7cb6ddff9529d9180abe0790aaf992eca783232c68cacb0723bb1"
+  },
+  "acceptance": "not-claimed"
+}
