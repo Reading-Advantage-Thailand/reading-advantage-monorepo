@@ -52,6 +52,7 @@ class ShellGeneratorBinding:
     command: str
     owned_outputs: tuple[str, ...]
     command_sha256: str | None = None
+    attestation_commit: str | None = None
 
     def __post_init__(self) -> None:
         """Normalizes the command and binds its immutable digest."""
@@ -59,6 +60,8 @@ class ShellGeneratorBinding:
         digest = _sha256(normalized.encode())
         if self.command_sha256 is not None and self.command_sha256 != digest:
             raise ValueError("shell generator command hash does not match command")
+        if self.attestation_commit is not None and not re.fullmatch(r"[0-9a-f]{40}", self.attestation_commit):
+            raise ValueError("shell generator attestation commit must be a full lowercase SHA")
         object.__setattr__(self, "command", normalized)
         object.__setattr__(self, "command_sha256", digest)
         outputs = tuple(_normalize_owned_path(path) for path in self.owned_outputs)
@@ -68,8 +71,7 @@ class ShellGeneratorBinding:
 
 
 _SHELL_CONTROL = re.compile(r"(?:&&|\|\||[;|<>`$]|\n|\r)")
-_COMMIT_RESULT_SHA = re.compile(r"\[[^]\n]+ ([0-9a-f]{7,40})\]")
-_PHASE2_ATTESTATION_COMMIT = "7f42ed7d82364fe17d0f1117fe2c59b29e95a0dd"
+_COMMIT_RESULT_LINE = re.compile(r"^\[[^]\n]+ ([0-9a-f]{7,40})\] (.+)$", re.MULTILINE)
 
 
 def _normalize_owned_path(path: str) -> str:
@@ -228,26 +230,25 @@ def _shell_owned_paths(
     if not isinstance(output_commit, str) or not re.fullmatch(r"[0-9a-f]{40}", output_commit):
         raise ProvenanceError("shell ownership requires a full output commit")
     root = str(repo_root.resolve())
-    candidates: list[tuple[int, int, Mapping[str, Any], Mapping[str, Any], Mapping[str, Any]]] = []
+    tool_parts: list[tuple[int, int, Mapping[str, Any]]] = []
     for message_index, message in enumerate(messages):
         for part_index, part in enumerate(message.get("parts", [])):
-            if part.get("type") != "tool" or part.get("tool") != "bash":
+            if part.get("type") != "tool":
                 continue
+            tool_parts.append((message_index, part_index, part))
+
+    owned: set[str] = set()
+    for binding in bindings:
+        valid_commits: list[str] = []
+        generator_seen = False
+        for index, (_, _, part) in enumerate(tool_parts):
             state = part.get("state")
-            if not isinstance(state, Mapping) or state.get("status") != "completed":
+            if part.get("tool") != "bash" or not isinstance(state, Mapping) or state.get("status") != "completed":
                 continue
             tool_input = state.get("input")
             metadata = state.get("metadata")
             if not isinstance(tool_input, Mapping) or not isinstance(metadata, Mapping):
                 continue
-            candidates.append((message_index, part_index, tool_input, metadata, state))
-
-    owned: set[str] = set()
-    for binding in bindings:
-        generators: list[tuple[int, int, Mapping[str, Any], Mapping[str, Any], Mapping[str, Any]]] = []
-        commits: list[tuple[int, int, Mapping[str, Any], Mapping[str, Any], Mapping[str, Any]]] = []
-        for candidate in candidates:
-            _, _, tool_input, metadata, state = candidate
             command = tool_input.get("command")
             workdir = tool_input.get("workdir")
             if not isinstance(command, str) or workdir != root:
@@ -256,23 +257,26 @@ def _shell_owned_paths(
                 normalized = _normalize_shell_command(command)
             except ValueError:
                 continue
-            if normalized == binding.command:
-                if metadata.get("exit") == 0 and metadata.get("truncated") is False:
-                    generators.append(candidate)
-            elif normalized.startswith("git commit"):
-                commits.append(candidate)
-        if not generators:
-            raise ProvenanceError("bound shell generator invocation is missing")
-        valid_commits: list[tuple[tuple[int, int], str]] = []
-        for commit in commits:
-            commit_position = commit[:2]
-            if not any(generator[:2] < commit_position for generator in generators):
+            if normalized != binding.command or metadata.get("exit") != 0 or metadata.get("truncated") is not False:
                 continue
-            commit_sha = _parse_simple_commit(commit[2], commit[3], binding, repo_root, output_commit)
+            generator_seen = True
+            if index + 1 >= len(tool_parts):
+                continue
+            next_part = tool_parts[index + 1][2]
+            next_state = next_part.get("state")
+            if not isinstance(next_state, Mapping) or next_state.get("status") != "completed":
+                continue
+            next_input = next_state.get("input")
+            next_metadata = next_state.get("metadata")
+            if not isinstance(next_input, Mapping) or not isinstance(next_metadata, Mapping):
+                continue
+            commit_sha = _parse_simple_commit(next_input, next_metadata, binding, repo_root, output_commit)
             if commit_sha is not None:
-                valid_commits.append((commit_position, commit_sha))
+                valid_commits.append(commit_sha)
         if not valid_commits:
-            raise ProvenanceError("bound shell generator has no valid subsequent commit")
+            if generator_seen:
+                raise ProvenanceError("bound shell generator has no valid subsequent commit")
+            raise ProvenanceError("bound shell generator invocation is missing")
         owned.update(binding.owned_outputs)
     return owned
 
@@ -309,13 +313,20 @@ def _parse_simple_commit(
         return None
     if index == len(tokens) or tokens[index] not in {"-m", "--message"} or index + 1 >= len(tokens) or index + 2 != len(tokens):
         return None
+    message = tokens[index + 1]
     output = metadata.get("output")
     if not isinstance(output, str) or metadata.get("truncated") is not False:
         return None
-    match = _COMMIT_RESULT_SHA.search(output)
-    if match is None:
+    lines = output.splitlines()
+    if not lines:
         return None
-    abbreviated = match.group(1)
+    summaries = _COMMIT_RESULT_LINE.findall(output)
+    first = _COMMIT_RESULT_LINE.fullmatch(lines[0])
+    if first is None or len(summaries) != 1:
+        return None
+    abbreviated, subject = first.groups()
+    if subject != message:
+        return None
     resolved = subprocess.run(
         ("git", "rev-parse", f"{abbreviated}^{{commit}}"),
         cwd=repo_root, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False,
@@ -325,7 +336,7 @@ def _parse_simple_commit(
     commit_sha = resolved.stdout.decode().strip()
     if not re.fullmatch(r"[0-9a-f]{40}", commit_sha) or not _binding_output_commit_is_ancestor(commit_sha, output_commit, repo_root):
         return None
-    if allow_empty and commit_sha != _PHASE2_ATTESTATION_COMMIT:
+    if allow_empty and commit_sha != binding.attestation_commit:
         return None
     if not _commit_owns_declared_outputs(commit_sha, output_commit, binding, repo_root, allow_empty):
         return None

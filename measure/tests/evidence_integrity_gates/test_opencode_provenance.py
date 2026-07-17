@@ -52,10 +52,13 @@ class OpenCodeProvenanceTests(unittest.TestCase):
         self._git(root, "init", "-q")
         self._git(root, "config", "user.email", "test@example.com")
         self._git(root, "config", "user.name", "Test")
+        (root / "base.md").write_text("base\n", encoding="utf-8")
+        self._git(root, "add", "base.md")
+        self._git(root, "commit", "-qm", "base")
         (root / "out.md").write_text("owned\n", encoding="utf-8")
         if extra_path:
             (root / "extra.md").write_text("extra\n", encoding="utf-8")
-        self._git(root, "add", ".")
+        self._git(root, "add", "out.md", "extra.md" if extra_path else "out.md")
         self._git(root, "commit", "-qm", "generator")
         commit_sha = self._git(root, "rev-parse", "HEAD")
         binding = ShellGeneratorBinding("python3 generate.py", ("out.md",))
@@ -136,6 +139,8 @@ class OpenCodeProvenanceTests(unittest.TestCase):
             ShellGeneratorBinding("python3 ./generate.py", ("out.md",), "0" * 64)
         with self.assertRaises(ValueError):
             ShellGeneratorBinding("python3 ./generate.py; touch forged", ("out.md",))
+        with self.assertRaises(ValueError):
+            ShellGeneratorBinding("python3 ./generate.py", ("out.md",), attestation_commit="A" * 40)
 
     def test_shell_generator_supports_real_completed_session_and_multiple_groups(self) -> None:
         raw_path = Path("/tmp/ses_09139202dffeKqUGwSzgAxk69z.json")
@@ -161,20 +166,23 @@ class OpenCodeProvenanceTests(unittest.TestCase):
         binding = RoleBinding(
             "evidence-collector", "ses_09139202dffeKqUGwSzgAxk69z", "build",
             phase1.owned_outputs + phase2.owned_outputs,
-            output_commit="7f42ed7d82364fe17d0f1117fe2c59b29e95a0dd",
-            shell_generators=(phase1, phase2),
+            output_commit="4f5dde0a04c70c57f123a72eded84836325743da",
+            shell_generators=(
+                ShellGeneratorBinding(phase1.command, phase1.owned_outputs, attestation_commit="990dd9c060ca844ad16d141b1eb4086b310369a4"),
+                ShellGeneratorBinding(phase2.command, phase2.owned_outputs, attestation_commit="4f5dde0a04c70c57f123a72eded84836325743da"),
+            ),
         )
         event = build_resolved_event(raw_path.read_bytes(), binding, repo_root)
         self.assertEqual(set(event["raw_write_inventory"]), set(binding.owned_outputs))
         self.assertEqual(set(event["output_sha256"]), set(binding.owned_outputs))
 
-    def test_shell_generator_rejects_timeout_and_tampered_commit(self) -> None:
+    def test_shell_generator_rejects_incomplete_generator(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
+            shell, commit_input, commit_metadata, commit_sha = self._shell_commit_fixture(root)
+            self.assertEqual(_parse_simple_commit(commit_input, commit_metadata, shell, root, commit_sha), commit_sha)
             path = root / "out.md"
-            path.write_text("owned\n", encoding="utf-8")
-            command = "python3 generate.py"
-            shell = ShellGeneratorBinding(command, ("out.md",))
+            command = shell.command
             raw = json.loads(self._export(root, "ses_a1", "measure-strategy", "out.md"))
             raw["messages"][-1]["parts"] = [
                 {"type": "tool", "tool": "bash", "state": {
@@ -184,11 +192,11 @@ class OpenCodeProvenanceTests(unittest.TestCase):
                 }},
                 {"type": "text", "id": "prt_final", "text": "final"},
             ]
-            binding = RoleBinding("strategy", "ses_a1", "measure-strategy", ("out.md",), output_commit="0" * 40, shell_generators=(shell,))
+            binding = RoleBinding("strategy", "ses_a1", "measure-strategy", ("out.md",), output_commit=commit_sha, shell_generators=(shell,))
             with self.assertRaisesRegex(ProvenanceError, "missing"):
                 build_evidence(json.dumps(raw).encode(), binding, root)
 
-    def test_shell_commit_parser_rejects_extra_path_and_chaining(self) -> None:
+    def test_shell_generator_rejects_chaining(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             binding = ShellGeneratorBinding("python3 generate.py", ("out.md",))
@@ -199,13 +207,15 @@ class OpenCodeProvenanceTests(unittest.TestCase):
     def test_shell_commit_rejects_nonancestor_result(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            binding, tool_input, metadata, _ = self._shell_commit_fixture(root)
+            binding, tool_input, metadata, ownership = self._shell_commit_fixture(root)
+            self.assertEqual(_parse_simple_commit(tool_input, metadata, binding, root, ownership), ownership)
             self.assertIsNone(_parse_simple_commit(tool_input, metadata, binding, root, "0" * 40))
 
     def test_shell_commit_rejects_output_changed_after_ownership(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             binding, tool_input, metadata, ownership = self._shell_commit_fixture(root)
+            self.assertEqual(_parse_simple_commit(tool_input, metadata, binding, root, ownership), ownership)
             (root / "out.md").write_text("changed\n", encoding="utf-8")
             self._git(root, "add", "out.md")
             self._git(root, "commit", "-qm", "later")
@@ -213,20 +223,15 @@ class OpenCodeProvenanceTests(unittest.TestCase):
             self.assertNotEqual(ownership, final)
             self.assertIsNone(_parse_simple_commit(tool_input, metadata, binding, root, final))
 
-    def test_shell_commit_rejects_reversed_same_message_chronology(self) -> None:
+    def test_shell_commit_requires_adjacent_tool_part(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             binding, tool_input, metadata, commit_sha = self._shell_commit_fixture(root)
-            messages = [{"parts": [
-                {"type": "tool", "tool": "bash", "state": {
-                    "status": "completed", "input": {"command": tool_input["command"], "workdir": str(root)},
-                    "metadata": metadata,
-                }},
-                {"type": "tool", "tool": "bash", "state": {
-                    "status": "completed", "input": {"command": "python3 generate.py", "workdir": str(root)},
-                    "metadata": {"output": "(no output)", "exit": 0, "truncated": False},
-                }},
-            ]}]
+            commit_part = {"type": "tool", "tool": "bash", "state": {"status": "completed", "input": tool_input, "metadata": metadata}}
+            generator_part = {"type": "tool", "tool": "bash", "state": {"status": "completed", "input": {"command": "python3 generate.py", "workdir": str(root)}, "metadata": {"output": "(no output)", "exit": 0, "truncated": False}}}
+            messages = [{"parts": [generator_part, commit_part]}]
+            self.assertEqual(_shell_owned_paths(messages, root, (binding,), commit_sha), {"out.md"})
+            messages[0]["parts"].insert(1, {"type": "tool", "tool": "read", "state": {"status": "completed", "input": {}, "metadata": {}}})
             with self.assertRaisesRegex(ProvenanceError, "no valid subsequent commit"):
                 _shell_owned_paths(messages, root, (binding,), commit_sha)
 
@@ -234,6 +239,7 @@ class OpenCodeProvenanceTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             binding, tool_input, metadata, commit_sha = self._shell_commit_fixture(root)
+            self.assertEqual(_parse_simple_commit(tool_input, metadata, binding, root, commit_sha), commit_sha)
             metadata["output"] = "[master deadbeef] forged"
             self.assertIsNone(_parse_simple_commit(tool_input, metadata, binding, root, commit_sha))
 
@@ -247,21 +253,46 @@ class OpenCodeProvenanceTests(unittest.TestCase):
     def test_shell_commit_rejects_actual_extra_path_inventory(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
+            positive_binding, positive_input, positive_metadata, positive_sha = self._shell_commit_fixture(root)
+            self.assertEqual(_parse_simple_commit(positive_input, positive_metadata, positive_binding, root, positive_sha), positive_sha)
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
             binding, tool_input, metadata, commit_sha = self._shell_commit_fixture(root, extra_path=True)
             self.assertIsNone(_parse_simple_commit(tool_input, metadata, binding, root, commit_sha))
 
-    def test_shell_commit_rejects_tampered_commit_and_nonempty_allow_empty(self) -> None:
+    def test_shell_commit_rejects_nonempty_allow_empty(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             binding, tool_input, metadata, commit_sha = self._shell_commit_fixture(root)
+            self.assertEqual(_parse_simple_commit(tool_input, metadata, binding, root, commit_sha), commit_sha)
             metadata["output"] = f"[master {commit_sha}] generator"
             tool_input["command"] = "git commit --allow-empty --only out.md -m 'generator'"
             self.assertIsNone(_parse_simple_commit(tool_input, metadata, binding, root, commit_sha))
+
+    def test_shell_commit_rejects_extra_valid_prior_sha_result_line(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            binding, tool_input, metadata, commit_sha = self._shell_commit_fixture(root)
+            self.assertEqual(_parse_simple_commit(tool_input, metadata, binding, root, commit_sha), commit_sha)
+            metadata["output"] += f"\n[master {commit_sha}] generator"
+            self.assertIsNone(_parse_simple_commit(tool_input, metadata, binding, root, commit_sha))
+
+    def test_shell_commit_accepts_matching_empty_attestation_only(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            binding, tool_input, metadata, ownership = self._shell_commit_fixture(root)
+            self._git(root, "commit", "--allow-empty", "-qm", "generator")
+            attestation = self._git(root, "rev-parse", "HEAD")
+            binding = ShellGeneratorBinding("python3 generate.py", ("out.md",), attestation_commit=attestation)
+            tool_input["command"] = "git commit --allow-empty --only out.md -m 'generator'"
+            metadata["output"] = f"[master {attestation}] generator"
+            self.assertEqual(_parse_simple_commit(tool_input, metadata, binding, root, attestation), attestation)
 
     def test_shell_commit_rejects_chained_command(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             binding, tool_input, metadata, commit_sha = self._shell_commit_fixture(root)
+            self.assertEqual(_parse_simple_commit(tool_input, metadata, binding, root, commit_sha), commit_sha)
             tool_input["command"] += " && touch forged.md"
             self.assertIsNone(_parse_simple_commit(tool_input, metadata, binding, root, commit_sha))
 
