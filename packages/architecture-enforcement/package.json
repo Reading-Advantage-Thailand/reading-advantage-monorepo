@@ -18,6 +18,7 @@
     "build": "tsc --project tsconfig.build.json",
     "check": "tsx src/architecture-check-cli.ts",
     "check-types": "tsc --noEmit",
+    "reconcile": "tsx src/architecture-reconciliation-cli.ts",
     "baseline:update": "tsx src/baseline-update-cli.ts",
     "baseline:validate": "tsx src/baseline-cli.ts",
     "inventory": "tsx src/cli.ts",

@@ -214,18 +214,33 @@ behaviors are final, Task 12a may execute exactly one reconciliation under
 `analyzer-baseline-reconciliation-strategy.md`. This is a migration of evidence
 models, not permission for new architecture debt.
 
-The accepted addition set must be reproduced by the final analyzer against
-immutable source revision `3a109c879438fd50b369eb2905ddccfb56722d2b` and
-reviewed addition by addition. That anchor contains only the two fail-closed
-source-resolution prerequisites required for a zero-error run; its commit
-introduces no analyzer or ratchet implementation change. Current-HEAD additions
-that do not exist as the same instance at that source revision are post-base
-debt and cannot be accepted.
+The final analyzer SHA is
+`19af018669873e59bb8b721017d3d91fc1096f83`. The accepted addition set
+must be reproduced under an honest dual-anchor contract and reviewed addition
+by addition.
+
+The immutable pre-analyzer provenance anchor is
+`3a109c879438fd50b369eb2905ddccfb56722d2b`. It must reproduce 614 finding
+identities plus exactly one named self-hosting `MODULE_RESOLUTION_ERROR` at
+`packages/architecture-enforcement/src/__tests__/ratchet.red.test.ts:49:10`.
+Because fail-closed analysis omits comparison, compare those findings manually
+with the historical baselines to derive the 3a addition set.
+
+The separate zero-error execution denominator is
+`d7238d09551e3961cd7234cc25a412a821c68611`. Independently audit the
+complete 3a..d723 diff as enforcement, documentation, CI, and tenant-guard work
+only, with no product architecture debt. Two runs against d723 must be
+byte-identical and report zero errors with exactly 123 additions, zero removals,
+and zero renames. The d723 set must equal the manually derived 3a set, and the
+current-HEAD addition set must equal both. Any set difference is post-anchor
+debt or an unexplained denominator mismatch and cannot be accepted. This
+discovery is a hard-validation correction, not a weakening of fail-closed
+behavior.
 Rules, ownership roots, wildcard validation, and existing owner/rationale
 metadata remain unchanged. Exact exceptions may change only for one narrowly
 authorized set of analyzer-discovered test-only dispositions. Each such
 exception must bind one exact rule to one exact test/fixture file, cover only
-instances reproduced at the immutable source base, and receive independent
+instances reproduced in both anchor-derived sets, and receive independent
 review. Wildcards, directories, and production paths are forbidden. Production
 additions remain baseline candidates with independently accepted owner/rationale
 metadata under the same strict contracts.
@@ -240,7 +255,7 @@ The currently observed 614-total / 123-addition output is only a reconciliation
 candidate. Its diagnostic disposition is 9 exact rule/test-file exception
 candidates covering 54 test-only findings and 69 production baseline additions.
 None of those counts or dispositions is final while analyzer instrumentation,
-resolver behavior, immutable-base reproduction, and independent review are
+resolver behavior, dual-anchor reproduction, and independent review are
 unfinished. Final exception pairs, domain counts, ruleset hashes, and baseline
 file hashes are recorded only in the accepted reconciliation artifact and then
 become the Phase 3/4 gate.
@@ -348,11 +363,13 @@ strategy role does not edit generated artifacts.
   and show additions/removals/renames before writing. Owner and rationale are
   required for every accepted entry.
 - Task 12a is the only authorized analyzer-complete reconciliation. Every new
-  entry must exist at the immutable pre-analyzer source revision, and any
-  post-base finding remains `new-debt`. No rule or ownership root may change.
+  entry must exist in both the manually derived 3a provenance set and the
+  zero-error d723 execution set, and current HEAD must equal both. Any
+  post-anchor finding remains `new-debt`. No rule or ownership root may change.
   The only permitted exception changes are independently reviewed exact
-  rule/test-file pairs covering test-only base-proven evidence. Wildcards,
-  directories, production paths, and any unreviewed exception remain forbidden.
+  rule/test-file pairs covering test-only dual-anchor-proven evidence.
+  Wildcards, directories, production paths, and any unreviewed exception remain
+  forbidden.
 - No live PostgreSQL, provider credential, network call, or browser session is
   required for this phase. The fixtures are isolated filesystem/AST behavior;
   using a live provider or database would add no acceptance evidence.
@@ -361,12 +378,12 @@ strategy role does not edit generated artifacts.
 
 The Phase 3 tests must defend against these catalog entries:
 
-| Workstream | Anti-patterns | Required defense and falsification condition |
-|---|---|---|
-| Task 9 loader | A4, A5, A7, A14 | Explicit loader test paths assert non-empty evidence, named parse errors, and reversed-input byte identity. A missing fixture, malformed parser, or invalid detector command makes the command fail; no broad exclusion can turn a real import into an empty pass. |
-| Tasks 10–11 analyzer rules | A3, A4, A5, A6, A7, A12, A14 | Every 21 named fixtures has an individual assertion for rule/source/evidence or an empty-all-rules result. Counts in logs are labeled (`Test Files`, `Tests`, `database entries`, `provider entries`), never digit-only. Catalog guard references must resolve, invalid `rg -nE`-style detectors are not accepted, and no broad `apps/**`/`packages/**` filter may be added. A synthetic direct import, provider credential read, or worker job-table query must fail the checker. |
-| Task 12 ratchet | A3, A4, A5, A6, A7, A10, A12, A14, A15 | The five named ratchet assertions falsify growth, deletion, rename evasion, malformed/wildcard policy, and reordered diagnostics. The temporary counterexample must produce non-zero `new-debt`; a removed finding must produce `baseline-reduction-required`; generated output and any role receipt are refreshed after structural changes. |
-| Phase closeout | A5, A6, A10, A15 | Do not write “all checks pass” while `architecture:check` is missing or focused tests are Red. Do not update `tracks.md`, baselines, or generated facts in this strategy role. The post-strategy result receipt must bind the exact committed strategy HEAD and current output hash. |
+| Workstream                 | Anti-patterns                          | Required defense and falsification condition                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| -------------------------- | -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Task 9 loader              | A4, A5, A7, A14                        | Explicit loader test paths assert non-empty evidence, named parse errors, and reversed-input byte identity. A missing fixture, malformed parser, or invalid detector command makes the command fail; no broad exclusion can turn a real import into an empty pass.                                                                                                                                                                                                                 |
+| Tasks 10–11 analyzer rules | A3, A4, A5, A6, A7, A12, A14           | Every 21 named fixtures has an individual assertion for rule/source/evidence or an empty-all-rules result. Counts in logs are labeled (`Test Files`, `Tests`, `database entries`, `provider entries`), never digit-only. Catalog guard references must resolve, invalid `rg -nE`-style detectors are not accepted, and no broad `apps/**`/`packages/**` filter may be added. A synthetic direct import, provider credential read, or worker job-table query must fail the checker. |
+| Task 12 ratchet            | A3, A4, A5, A6, A7, A10, A12, A14, A15 | The five named ratchet assertions falsify growth, deletion, rename evasion, malformed/wildcard policy, and reordered diagnostics. The temporary counterexample must produce non-zero `new-debt`; a removed finding must produce `baseline-reduction-required`; generated output and any role receipt are refreshed after structural changes.                                                                                                                                       |
+| Phase closeout             | A5, A6, A10, A15                       | Do not write “all checks pass” while `architecture:check` is missing or focused tests are Red. Do not update `tracks.md`, baselines, or generated facts in this strategy role. The post-strategy result receipt must bind the exact committed strategy HEAD and current output hash.                                                                                                                                                                                               |
 
 A1 (substring signal), A2 (consent-blind publish), A8 (marker vocabulary),
 A9 (archived track path), A11 (executed review left blocked), and A13 (stale
@@ -385,13 +402,13 @@ Gate 1; no temporary analyzer is authorized in another track.
 
 The canonical review applicability for this phase is:
 
-| Canonical role | Applicability | Required focus |
-|---|---|---|
-| `review-a-correctness` | **YES — required** | AST resolution completeness, finding identity/rename semantics, rule/ownership decisions, baseline comparison, deterministic output, and preservation of accepted baseline counts. |
-| `review-b-security` | **YES — required** | Fail-closed parser/config behavior, provider/database boundary bypasses, credential/source-body redaction, exact-exception scope, and worker/webhook job-table isolation. |
-| `review-c-ux-api` | **YES — required** | The CLI/JSON/human diagnostic contract, stable exit codes, explicit acknowledged update flow, safe remediation messages, and transport-independent package exports. There is no browser UI, but this is still a public developer/API surface. |
-| `adversarial-testing` | **YES — required** | Synthetic direct/aliased/barrel/dynamic imports, client/query/environment construction, malformed config, wildcard attempts, path rename, baseline growth/deletion, and reordered output. |
-| `ux-browser-review` | **NO — not applicable at this revision** | Phase 3 changes only a package AST analyzer, ratchet, and CLI diagnostics. No route, screen, browser interaction, or responsive behavior changes. Reassess only if Phase 4 adds a browser-facing surface. |
+| Canonical role         | Applicability                            | Required focus                                                                                                                                                                                                                                |
+| ---------------------- | ---------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `review-a-correctness` | **YES — required**                       | AST resolution completeness, finding identity/rename semantics, rule/ownership decisions, baseline comparison, deterministic output, and preservation of accepted baseline counts.                                                            |
+| `review-b-security`    | **YES — required**                       | Fail-closed parser/config behavior, provider/database boundary bypasses, credential/source-body redaction, exact-exception scope, and worker/webhook job-table isolation.                                                                     |
+| `review-c-ux-api`      | **YES — required**                       | The CLI/JSON/human diagnostic contract, stable exit codes, explicit acknowledged update flow, safe remediation messages, and transport-independent package exports. There is no browser UI, but this is still a public developer/API surface. |
+| `adversarial-testing`  | **YES — required**                       | Synthetic direct/aliased/barrel/dynamic imports, client/query/environment construction, malformed config, wildcard attempts, path rename, baseline growth/deletion, and reordered output.                                                     |
+| `ux-browser-review`    | **NO — not applicable at this revision** | Phase 3 changes only a package AST analyzer, ratchet, and CLI diagnostics. No route, screen, browser interaction, or responsive behavior changes. Reassess only if Phase 4 adds a browser-facing surface.                                     |
 
 Review A/B/C and adversarial results must target the same post-Green HEAD.
 Browser review must not be fabricated or marked passed when it is not applicable.
@@ -424,10 +441,13 @@ Phase 3 is accepted only when the focused analyzer/resolution/fixture/ratchet
 suite, coverage, type-check, lint, build, analyzer-complete baseline validation,
 and `pnpm architecture:check` all pass; the temporary post-base command fails as
 designed; generated JSON is deterministic and secret-safe; all required review
-roles have fresh results; and Task 12a has recorded the immutable source base,
-final analyzer SHA, independently reviewed addition manifest, final accepted
-production counts, exact test exception pairs, changed ruleset hashes, and final
-baseline hashes. The historical 464/27 direct freeze and Phase 1 ruleset hashes
+roles have fresh results; and Task 12a has recorded both immutable anchors,
+final analyzer SHA, the named 3a self-hosting diagnostic and manual comparison,
+the independent 3a..d723 diff audit, byte-identical d723 123/0/0 proof,
+current-HEAD equality with both anchor sets, the independently reviewed addition
+manifest, final accepted production counts, exact test exception pairs, changed
+ruleset hashes, and final baseline hashes. The historical 464/27 direct freeze
+and Phase 1 ruleset hashes
 remain audit evidence, but they are not restated as final expectations before
 review. No routine baseline growth or broad exception is permitted. Phase 4
 remains responsible for wiring the same command into CI and

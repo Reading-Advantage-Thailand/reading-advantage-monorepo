@@ -18,7 +18,7 @@ The current diagnostic result of 614 total findings and 123 additions is a
 candidate only. Its present disposition is 9 exact rule/test-file exception
 candidates covering 54 test-only findings and 69 production baseline additions.
 Neither the split nor any individual disposition is accepted while analyzer
-instrumentation, resolver behavior, immutable-base reproduction, and
+instrumentation, resolver behavior, dual-anchor reproduction, and
 addition-by-addition review are incomplete.
 
 ## Immutable anchors
@@ -32,12 +32,18 @@ addition-by-addition review are incomplete.
   independently accepted exact test exceptions.**
 - Final provider ruleset hash: **PENDING — expected to change only because of
   independently accepted exact test exceptions.**
-- Reconciliation source base:
+- Pre-analyzer provenance anchor:
   `3a109c879438fd50b369eb2905ddccfb56722d2b`, the immutable source
   revision containing only the two fail-closed source-resolution prerequisites
   in its commit delta and no analyzer or ratchet implementation change.
-- Final analyzer SHA: **PENDING — record only after instrumentation is removed,
-  focused/full tests pass, and analyzer behavior is frozen.**
+- Zero-error execution denominator:
+  `d7238d09551e3961cd7234cc25a412a821c68611`. The complete
+  `3a109c879438fd50b369eb2905ddccfb56722d2b..d7238d09551e3961cd7234cc25a412a821c68611`
+  diff must receive an independent audit proving it contains only enforcement,
+  documentation, CI, and tenant-guard changes and introduces no product
+  architecture debt.
+- Final analyzer SHA:
+  `19af018669873e59bb8b721017d3d91fc1096f83`.
 
 The earlier `dc4cb75c8e7a4a41d9e4eb451566dba40dcdbd81` remains the
 historical pre-Green marker for Red/Green ancestry. It is not the reconciliation
@@ -47,12 +53,25 @@ errors against that tree. Commit `3a109c879438fd50b369eb2905ddccfb56722d2b`
 repairs exactly those references, changes only
 `apps/reading-advantage/scripts/seed/demo-seed.ts` and
 `apps/science-advantage/lib/auth/rate-limit.test.ts`, and introduces no analyzer
-code. It is therefore the earliest immutable source tree that can satisfy both
-pre-analyzer provenance and zero-error reproduction.
+code. It remains the immutable pre-analyzer provenance anchor, but it is not a
+zero-error execution denominator: the final analyzer must reproduce 614 finding
+identities plus exactly one self-hosting `MODULE_RESOLUTION_ERROR` at
+`packages/architecture-enforcement/src/__tests__/ratchet.red.test.ts:49:10`
+because that historical Red test imports the intentionally absent
+`../ratchet.js`. Since fail-closed analysis omits comparison when any resolver
+error exists, the 3a finding set must be compared manually with the historical
+baselines to derive its addition set.
 
-Changing the source-base SHA requires a new strategy review before any baseline
-write. The final analyzer SHA must be a committed immutable revision and must be
-the exact implementation used for every reproduction and review result.
+Commit `d7238d09551e3961cd7234cc25a412a821c68611` is the separate
+zero-error execution denominator. This dual-anchor requirement is a
+hard-validation correction, not a weakening: 3a preserves honest pre-analyzer
+provenance, while d723 permits deterministic ratchet comparison only after its
+complete delta from 3a is independently proven to contain no product
+architecture debt.
+
+Changing either anchor SHA requires a new strategy review before any baseline
+write. The final analyzer SHA must be a committed immutable revision and must
+be the exact implementation used for every reproduction and review result.
 
 ## Authorization constraints
 
@@ -63,10 +82,10 @@ The reconciliation is permitted only when all of these remain true:
    the result pass. The sole policy change allowed is the independently reviewed
    exact test-exception set defined below.
 2. Every newly baselined production instance and every test-only instance
-   covered by a proposed exact exception is present in the final analyzer output
-   when that analyzer runs against the immutable source base.
-3. A finding present only after the source base is post-base debt and is never a
-   reconciliation candidate.
+   covered by a proposed exact exception is present in both the manually
+   derived 3a addition set and the zero-error d723 addition set.
+3. A finding absent from either anchor set is post-anchor debt or an unexplained
+   denominator difference and is never a reconciliation candidate.
 4. Every addition receives an explicit independent disposition. Production
    additions require accountable baseline owner/rationale. Each test-only
    disposition requires an exception owner/rationale and one exact rule plus one
@@ -90,21 +109,34 @@ Commit that exact implementation and record its full SHA above. Any subsequent
 analyzer, resolver, identity, rule-selection, or finding-cardinality change
 invalidates all reconciliation evidence and restarts this workflow.
 
-### 2. Reproduce against the immutable source base
+### 2. Reproduce against both immutable anchors
 
-Materialize a detached, read-only worktree at the reconciliation source base.
-Run the finalized analyzer executable from the final analyzer revision with the
-detached worktree supplied as `--repo-root`. Run JSON output twice.
+Materialize detached, read-only worktrees at both the 3a pre-analyzer
+provenance anchor and the d723 zero-error execution denominator. Run the exact
+final analyzer executable at
+`19af018669873e59bb8b721017d3d91fc1096f83` with each detached worktree
+supplied as `--repo-root`.
+
+Against 3a, require 614 finding identities and exactly one
+`MODULE_RESOLUTION_ERROR` at
+`packages/architecture-enforcement/src/__tests__/ratchet.red.test.ts:49:10`.
+The comparison must be absent by fail-closed contract. Compare the 614 findings
+manually to the historical baselines and record the derived addition instance
+set and its SHA-256.
+
+Independently audit the full 3a..d723 diff as enforcement, documentation, CI,
+and tenant-guard work only, with no product architecture debt. Then run JSON
+output against d723 twice.
 
 Required results:
 
-- both runs use the same analyzer SHA, source-base SHA, policy files, and source
-  selector;
-- both JSON outputs are byte-identical and secret-safe;
-- parse/resolver error count is zero;
-- historical baseline removals and renames are zero unless each is separately
-  explained and independently accepted as a genuine reduction or move;
-- the exact addition instance-key set is recorded with a SHA-256 digest; and
+- both d723 runs use the same final analyzer SHA, execution-denominator SHA,
+  policy files, and source selector;
+- both d723 JSON outputs are byte-identical and secret-safe;
+- d723 parse/resolver error count is zero and its delta is exactly 123 additions,
+  zero removals, and zero renames;
+- the d723 addition instance-key set exactly equals the manually derived 3a
+  addition set, and both set digests are recorded; and
 - no output or baseline file in either worktree is mutated by the normal check.
 
 The expected pre-reconciliation status is `debt-change` / `new-debt` with exit
@@ -114,13 +146,12 @@ to suppress with `|| true`.
 ### 3. Exclude post-base debt
 
 Run the same finalized analyzer at the proposed reconciliation HEAD. Every
-proposed new baseline instance must appear in the immutable-base addition set.
-Any current-only instance is post-base debt and blocks reconciliation until it
-is removed or handled in a separately authorized track. A base-only addition
-that has since disappeared is not added; it is recorded as an analyzer-complete
-debt reduction.
+proposed new baseline instance must appear in both the manually derived 3a set
+and the zero-error d723 addition set. The current-HEAD addition set must equal
+both anchor sets; any current-only, 3a-only, or d723-only instance blocks
+reconciliation until the discrepancy is independently resolved.
 
-Partition the remaining base-proven additions by disposition:
+Partition the remaining dual-anchor-proven additions by disposition:
 
 - production findings remain production baseline candidates;
 - a test-only finding may be covered only by an exact exception whose key is the
@@ -129,16 +160,18 @@ Partition the remaining base-proven additions by disposition:
   a single pair cannot hide unreviewed evidence.
 
 The current 9 pairs / 54 test-only findings / 69 production additions are
-diagnostic values only. Recompute the partition from the immutable-base result.
+diagnostic values only. Recompute the partition from the matching dual-anchor
+sets.
 
 ### 4. Produce the review manifest
 
 Create a deterministic reconciliation manifest containing:
 
-- schema version, source-base SHA, final analyzer SHA, policy hashes, original
-  baseline counts/hashes, and the hashes of both immutable-base analyzer runs;
+- schema version, both anchor SHAs, final analyzer SHA, policy hashes, original
+  baseline counts/hashes, the 3a finding/diagnostic proof, the independent
+  3a..d723 diff audit, and the hashes of both d723 analyzer runs;
 - every proposed addition with its complete secret-safe finding identity,
-  immutable-base instance proof and disposition;
+  matching 3a-derived and d723 instance proof and disposition;
 - every proposed exact test exception with its exact rule/path key, owner,
   rationale, complete covered-instance list, and proof that the path satisfies
   the strict test/fixture contract;
@@ -156,7 +189,7 @@ manifest expectations.
 ### 5. Perform independent review
 
 Correctness, security, developer/API, and adversarial reviewers must examine the
-same analyzer SHA, source-base SHA, manifest hash, and proposed baseline bytes.
+same analyzer SHA, both anchor SHAs, manifest hash, and proposed baseline bytes.
 Review is addition-by-addition, not count-only sampling. Reviewers must verify:
 
 - the rule really selects the resolved module/resource;
@@ -165,7 +198,7 @@ Review is addition-by-addition, not count-only sampling. Reviewers must verify:
 - client-construction/query evidence is concrete and not a helper-call false
   positive;
 - the source path is outside approved roots and exact exceptions;
-- the exact instance exists at the immutable source base;
+- the exact instance exists in both anchor-derived addition sets;
 - production baseline owner/rationale or exact-exception owner/rationale is
   truthful and actionable;
 - every exception path is an exact test/fixture file and is not a wildcard,
@@ -227,7 +260,8 @@ After the write:
 
 These fields remain deliberately unset until the complete workflow passes:
 
-- Final analyzer SHA: **PENDING**
+- Final analyzer SHA:
+  `19af018669873e59bb8b721017d3d91fc1096f83`
 - Reconciliation manifest SHA-256: **PENDING**
 - Accepted database entry count: **PENDING**
 - Accepted provider entry count: **PENDING**

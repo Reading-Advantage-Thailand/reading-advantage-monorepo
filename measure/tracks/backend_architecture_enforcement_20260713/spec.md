@@ -64,23 +64,36 @@ The Phase 1 freeze of 464 database and 27 provider entries is the accepted
 historical direct-fact snapshot. Because Phase 1 explicitly deferred alias,
 barrel, resolved-target, client-construction, and binding-aware query propagation,
 this track authorizes exactly one analyzer-complete reconciliation after the
-Phase 3 analyzer is stable. Every proposed addition must be reproduced by the
-final analyzer against the immutable pre-analyzer source revision, reviewed
-individually for rule correctness, owner, rationale, and false positives, and
-accepted without changing a rule or ownership root. Analyzer-discovered
+Phase 3 analyzer is stable. Every proposed addition must be reproduced under
+the dual-anchor contract below, reviewed individually for rule correctness,
+owner, rationale, and false positives, and accepted without changing a rule or
+ownership root. Analyzer-discovered
 production findings remain baseline candidates. Analyzer-discovered findings in
 tests or fixtures may instead produce an exact test exception only during this
 reconciliation, after independent review of every covered instance and its
-immutable-base provenance. Each exception must be one exact rule and one exact
+matching dual-anchor provenance. Each exception must be one exact rule and one exact
 test/fixture file; wildcards, directories, and production paths remain invalid.
 The reconciliation is not permission to accept a finding introduced after that
 source revision. Normal checks remain read-only before and after the one-time
 transaction, and every post-base unreviewed finding fails as new debt.
 
-The reconciliation source revision is exactly
-`3a109c879438fd50b369eb2905ddccfb56722d2b`. It contains only the two
-fail-closed source-resolution prerequisites needed for a zero-error analyzer
-run; the commit introduces no analyzer or ratchet implementation change.
+The immutable pre-analyzer provenance anchor is exactly
+`3a109c879438fd50b369eb2905ddccfb56722d2b`. The final analyzer at
+`19af018669873e59bb8b721017d3d91fc1096f83` must reproduce 614 finding
+identities there plus exactly one named self-hosting
+`MODULE_RESOLUTION_ERROR` at
+`packages/architecture-enforcement/src/__tests__/ratchet.red.test.ts:49:10`.
+Because fail-closed analysis omits comparison, those findings are compared
+manually with the historical baselines to derive the 3a addition set.
+
+The separate zero-error execution denominator is
+`d7238d09551e3961cd7234cc25a412a821c68611`. The complete 3a..d723 diff
+must be independently audited as enforcement, documentation, CI, and
+tenant-guard work only, with no product architecture debt. Two analyzer runs
+against d723 must be byte-identical with zero errors and exactly 123 additions,
+zero removals, and zero renames. The d723 addition set, manually derived 3a set,
+and current-HEAD addition set must be equal. This correction strengthens
+hard-validation provenance; it does not weaken fail-closed behavior.
 
 Adding the independently accepted exact test exceptions necessarily changes the
 final domain ruleset hashes. The Phase 1 hashes remain historical evidence; the
@@ -114,14 +127,16 @@ fixing a finding and ratcheting a removed entry down.
 7. Generated diagnostics are deterministic across two consecutive runs.
 8. Direct job-table access is accepted only in DB schema/migrations and the
    exact backend PostgreSQL job-adapter root; worker/webhook direct access fails.
-9. The one-time analyzer-complete reconciliation proves every added instance at
-   immutable source revision
-   `3a109c879438fd50b369eb2905ddccfb56722d2b`, receives independent
-   per-addition review, preserves exact metadata and no-wildcard invariants,
-   permits only independently reviewed exact rule/test-file exceptions for
-   test-only evidence, records the final accepted counts and changed ruleset
-   hashes, and leaves the normal checker clean. A synthetic finding introduced
-   after the base revision still exits non-zero.
+9. The one-time analyzer-complete reconciliation proves every added instance in
+   both the manually derived 3a provenance set and the zero-error d723 execution
+   set; independently audits the complete 3a..d723 diff as non-product
+   enforcement/docs/CI/tenant-guard work; proves current-HEAD additions equal
+   both anchor sets; receives independent per-addition review; preserves exact
+   metadata and no-wildcard invariants; permits only independently reviewed
+   exact rule/test-file exceptions for test-only evidence; records the final
+   accepted counts and changed ruleset hashes; and leaves the normal checker
+   clean. A synthetic finding introduced after either anchor still exits
+   non-zero.
 
 ## Out of Scope
 

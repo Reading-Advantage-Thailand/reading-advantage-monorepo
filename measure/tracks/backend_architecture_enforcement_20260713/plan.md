@@ -35,15 +35,16 @@ test setup; every FR-2–FR-5 counterexample has a named assertion.
 - [~] Task 10: Implement database ownership and direct-query detection to satisfy its Red fixtures.
 - [~] Task 11: Implement provider ownership and SDK/client-construction detection to satisfy its Red fixtures.
 - [~] Task 12: Implement baseline comparison, explicit acknowledged update flow, stable JSON, and concise human diagnostics.
-- [ ] Task 12a: Execute the one-time analyzer-complete baseline reconciliation defined in `analyzer-baseline-reconciliation-strategy.md`: bind every proposed addition to immutable source revision `3a109c879438fd50b369eb2905ddccfb56722d2b`, whose commit introduces only the two fail-closed source-resolution prerequisites and no analyzer or ratchet implementation change; independently review every production baseline addition and its owner/rationale; independently review every test-only finding proposed for an exact rule/test-file exception; preserve rules, ownership roots, and wildcard/directory/production-path prohibitions; perform one preview-first coordinated policy/baseline transaction; and record the accepted final counts, exception pairs, and changed ruleset/baseline hashes. The current diagnostic split is 9 exact test exception candidates covering 54 findings plus 69 production additions; all 123 additions remain non-final until analyzer instrumentation, resolver behavior, and immutable-base reproduction are accepted.
+- [ ] Task 12a: Execute the one-time analyzer-complete baseline reconciliation defined in `analyzer-baseline-reconciliation-strategy.md` with final analyzer SHA `19af018669873e59bb8b721017d3d91fc1096f83`: preserve `3a109c879438fd50b369eb2905ddccfb56722d2b` as the immutable pre-analyzer provenance anchor, reproduce 614 finding identities there plus exactly one self-hosting `MODULE_RESOLUTION_ERROR` at `packages/architecture-enforcement/src/__tests__/ratchet.red.test.ts:49:10`, and manually compare those findings to the historical baselines because fail-closed analysis omits comparison; use `d7238d09551e3961cd7234cc25a412a821c68611` as the separate zero-error execution denominator only after independently auditing the complete 3a..d723 diff as enforcement, documentation, CI, and tenant-guard work with no product architecture debt; require two byte-identical d723 runs with exactly 123 additions, zero removals, zero renames, and zero errors; prove current-HEAD additions equal both anchor-derived sets; independently review every production baseline addition and every test-only exact rule/file exception; preserve rules, ownership roots, and wildcard/directory/production-path prohibitions; perform one preview-first coordinated policy/baseline transaction; and record the accepted final counts, exception pairs, and changed ruleset/baseline hashes. This dual-anchor correction strengthens hard validation and does not mark the task complete. The current diagnostic split remains 9 exact test exception candidates covering 54 findings plus 69 production additions; all 123 additions remain non-final until the full reconciliation and reviews are accepted.
 
 **Verification:** `CI=true pnpm vitest run packages/architecture-enforcement/src/__tests__ && pnpm architecture:check`
 
 **Acceptance gate:** All focused tests are Green. Before Task 12a, the only
-permitted debt change is the exact independently reviewed set reproduced at the
-immutable pre-analyzer source revision, partitioned into production baseline
-entries and exact rule/test-file exceptions for test-only evidence. After the
-one-time reconciliation the normal checker is clean, baseline validation targets
+permitted debt change is the exact independently reviewed set present in both
+the manually derived 3a provenance result and the zero-error d723 execution
+result, with the current-HEAD set equal to both, partitioned into production
+baseline entries and exact rule/test-file exceptions for test-only evidence.
+After the one-time reconciliation the normal checker is clean, baseline validation targets
 the analyzer-complete snapshot and reviewed final ruleset hashes, and a temporary
 post-base counterexample exits non-zero.
 

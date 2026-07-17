@@ -79,10 +79,16 @@ export async function runBaselineValidationCli(
     process.stdout.write(
       [
         `Architecture baseline files scanned: ${summary.filesScanned}`,
+        `Architecture baseline evidence mode: ${summary.mode}`,
         `Architecture database baseline entries: ${summary.databaseEntries}`,
         `Architecture provider baseline entries: ${summary.providerEntries}`,
         `Architecture database ruleset hash: ${summary.databaseRulesetHash}`,
         `Architecture provider ruleset hash: ${summary.providerRulesetHash}`,
+        ...(summary.reconciliationManifestHash
+          ? [
+              `Architecture reconciliation manifest hash: ${summary.reconciliationManifestHash}`,
+            ]
+          : []),
         "",
       ].join("\n"),
     );
