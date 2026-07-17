@@ -6249,10 +6249,122 @@
       },
       "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
       "sha256": "6db52058942ff1c334806e577eb2fb7fed288f7b4ea810eb066914933c3c51dc"
+    },
+    {
+      "canonical_path": "packages/advantage-play-kit/package.json",
+      "file_kind": "data",
+      "format_metadata": {
+        "byte_size": 1550,
+        "format": "json",
+        "mime_type": "application/json"
+      },
+      "identical_hash_group": "sha256:da612ecbbca77f6b204adc96b4fa02bbf9347fe4fd9838848dbc38fa99a603ab",
+      "provenance": {
+        "enumerated_from": "git-ls-tree",
+        "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "da612ecbbca77f6b204adc96b4fa02bbf9347fe4fd9838848dbc38fa99a603ab"
+    },
+    {
+      "canonical_path": "packages/advantage-play-kit/tsconfig.json",
+      "file_kind": "data",
+      "format_metadata": {
+        "byte_size": 260,
+        "format": "json",
+        "mime_type": "application/json"
+      },
+      "identical_hash_group": "sha256:03b0c7e4dede5dfc50d4390d0faf0bad735495f7d5e6846934c31d01abe96367",
+      "provenance": {
+        "enumerated_from": "git-ls-tree",
+        "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "03b0c7e4dede5dfc50d4390d0faf0bad735495f7d5e6846934c31d01abe96367"
+    },
+    {
+      "canonical_path": "packages/game-cartridges/package.json",
+      "file_kind": "data",
+      "format_metadata": {
+        "byte_size": 949,
+        "format": "json",
+        "mime_type": "application/json"
+      },
+      "identical_hash_group": "sha256:61eace40b79b1711930fe4af552376cf8a13f46d7d21383bbe1f1fb9ee6c3e17",
+      "provenance": {
+        "enumerated_from": "git-ls-tree",
+        "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "61eace40b79b1711930fe4af552376cf8a13f46d7d21383bbe1f1fb9ee6c3e17"
+    },
+    {
+      "canonical_path": "packages/game-cartridges/tsconfig.build.json",
+      "file_kind": "data",
+      "format_metadata": {
+        "byte_size": 117,
+        "format": "json",
+        "mime_type": "application/json"
+      },
+      "identical_hash_group": "sha256:4575e3a929b4fbf40b431de57a22c54ac7247e160fb4a2392df676e0dfde1c00",
+      "provenance": {
+        "enumerated_from": "git-ls-tree",
+        "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "4575e3a929b4fbf40b431de57a22c54ac7247e160fb4a2392df676e0dfde1c00"
+    },
+    {
+      "canonical_path": "packages/game-cartridges/tsconfig.json",
+      "file_kind": "data",
+      "format_metadata": {
+        "byte_size": 190,
+        "format": "json",
+        "mime_type": "application/json"
+      },
+      "identical_hash_group": "sha256:b9fb8b7fd761cf4aedd45979aa08c5d158f06ab1aca2883e94c12b05e64c561d",
+      "provenance": {
+        "enumerated_from": "git-ls-tree",
+        "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "b9fb8b7fd761cf4aedd45979aa08c5d158f06ab1aca2883e94c12b05e64c561d"
+    },
+    {
+      "canonical_path": "packages/game-contracts/package.json",
+      "file_kind": "data",
+      "format_metadata": {
+        "byte_size": 851,
+        "format": "json",
+        "mime_type": "application/json"
+      },
+      "identical_hash_group": "sha256:1d447e15c3471f9e1f1789158b13fcd31343dad023d4ddb272cf4067e257efb5",
+      "provenance": {
+        "enumerated_from": "git-ls-tree",
+        "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "1d447e15c3471f9e1f1789158b13fcd31343dad023d4ddb272cf4067e257efb5"
+    },
+    {
+      "canonical_path": "packages/game-contracts/tsconfig.json",
+      "file_kind": "data",
+      "format_metadata": {
+        "byte_size": 184,
+        "format": "json",
+        "mime_type": "application/json"
+      },
+      "identical_hash_group": "sha256:8376dfe908f1a050254c6caba6946ea25a2708beececfdc6bd5ff11414b8e86e",
+      "provenance": {
+        "enumerated_from": "git-ls-tree",
+        "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "8376dfe908f1a050254c6caba6946ea25a2708beececfdc6bd5ff11414b8e86e"
     }
   ],
   "enumeration": {
-    "candidate_count": 353,
+    "candidate_count": 360,
     "method": "mechanical-filesystem-and-hash",
     "roots": [
       "apps/advantage-games/public",
