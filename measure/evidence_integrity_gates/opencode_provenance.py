@@ -7,6 +7,7 @@ import hashlib
 import json
 import os
 import re
+import shlex
 import subprocess
 import tempfile
 from dataclasses import dataclass
@@ -41,6 +42,56 @@ class RoleBinding:
     owned_outputs: tuple[str, ...]
     reviewer: bool = False
     output_commit: str | None = None
+    shell_generators: tuple[ShellGeneratorBinding, ...] = ()
+
+
+@dataclass(frozen=True)
+class ShellGeneratorBinding:
+    """Declares one exact shell generator and the outputs it owns."""
+
+    command: str
+    owned_outputs: tuple[str, ...]
+    command_sha256: str | None = None
+
+    def __post_init__(self) -> None:
+        """Normalizes the command and binds its immutable digest."""
+        normalized = _normalize_shell_command(self.command)
+        digest = _sha256(normalized.encode())
+        if self.command_sha256 is not None and self.command_sha256 != digest:
+            raise ValueError("shell generator command hash does not match command")
+        object.__setattr__(self, "command", normalized)
+        object.__setattr__(self, "command_sha256", digest)
+        outputs = tuple(_normalize_owned_path(path) for path in self.owned_outputs)
+        if len(outputs) != len(set(outputs)):
+            raise ValueError("shell generator outputs must be distinct")
+        object.__setattr__(self, "owned_outputs", outputs)
+
+
+_SHELL_CONTROL = re.compile(r"(?:&&|\|\||[;|<>`$]|\n|\r)")
+_COMMIT_RESULT_SHA = re.compile(r"\[[^]\n]+ ([0-9a-f]{7,40})\]")
+
+
+def _normalize_owned_path(path: str) -> str:
+    """Returns a safe repository-relative output path."""
+    if not isinstance(path, str) or not path or Path(path).is_absolute():
+        raise ValueError("owned output must be a relative path")
+    normalized = Path(path).as_posix()
+    if normalized != path or normalized in {".", ".."} or normalized.startswith("../") or "/../" in normalized:
+        raise ValueError("owned output path is not normalized")
+    return normalized
+
+
+def _normalize_shell_command(command: str) -> str:
+    """Returns a shell command's exact safe token normalization."""
+    if not isinstance(command, str) or _SHELL_CONTROL.search(command):
+        raise ValueError("shell command contains control syntax")
+    try:
+        tokens = shlex.split(command, posix=True)
+    except ValueError as error:
+        raise ValueError("shell command cannot be parsed") from error
+    if not tokens:
+        raise ValueError("shell command is empty")
+    return shlex.join(tokens)
 
 
 def _sha256(data: bytes) -> str:
@@ -132,10 +183,12 @@ def _message_identity(message: Mapping[str, Any], session_id: str) -> dict[str, 
     }
 
 
-def _tool_owned_paths(messages: Sequence[Mapping[str, Any]]) -> set[str]:
-    """Extracts repository-relative paths named by completed write tools.
+def _tool_owned_paths(messages: Sequence[Mapping[str, Any]], repo_root: Path, shell_generators: Sequence[ShellGeneratorBinding] = (), output_commit: str | None = None) -> set[str]:
+    """Extracts paths attributable to direct writes and bound shell generators.
 
     @param messages Exported OpenCode messages.
+    @param repo_root Repository root used to validate shell workdirs and commits.
+    @param shell_generators Immutable explicit shell ownership declarations.
     @returns Paths conservatively attributable to tool calls in the session.
     """
     paths: set[str] = set()
@@ -159,7 +212,131 @@ def _tool_owned_paths(messages: Sequence[Mapping[str, Any]]) -> set[str]:
                 patch = tool_input.get("patchText")
                 if isinstance(patch, str):
                     paths.update(patch_header.findall(patch))
-    return paths
+    return paths | _shell_owned_paths(messages, repo_root, shell_generators, output_commit)
+
+
+def _shell_owned_paths(
+    messages: Sequence[Mapping[str, Any]],
+    repo_root: Path,
+    bindings: Sequence[ShellGeneratorBinding],
+    output_commit: str | None,
+) -> set[str]:
+    """Resolves only explicitly bound, committed shell-generator outputs."""
+    if not bindings:
+        return set()
+    if not isinstance(output_commit, str) or not re.fullmatch(r"[0-9a-f]{40}", output_commit):
+        raise ProvenanceError("shell ownership requires a full output commit")
+    root = str(repo_root.resolve())
+    candidates: list[tuple[int, Mapping[str, Any], Mapping[str, Any], Mapping[str, Any]]] = []
+    for message_index, message in enumerate(messages):
+        created = message.get("info", {}).get("time", {}).get("created")
+        if not isinstance(created, int):
+            continue
+        for part in message.get("parts", []):
+            if part.get("type") != "tool" or part.get("tool") != "bash":
+                continue
+            state = part.get("state")
+            if not isinstance(state, Mapping) or state.get("status") != "completed":
+                continue
+            tool_input = state.get("input")
+            metadata = state.get("metadata")
+            if not isinstance(tool_input, Mapping) or not isinstance(metadata, Mapping):
+                continue
+            candidates.append((created, tool_input, metadata, state))
+
+    owned: set[str] = set()
+    for binding in bindings:
+        generators: list[tuple[int, Mapping[str, Any], Mapping[str, Any], Mapping[str, Any]]] = []
+        commits: list[tuple[int, Mapping[str, Any], Mapping[str, Any], Mapping[str, Any]]] = []
+        for candidate in candidates:
+            created, tool_input, metadata, state = candidate
+            command = tool_input.get("command")
+            workdir = tool_input.get("workdir")
+            if not isinstance(command, str) or workdir != root:
+                continue
+            try:
+                normalized = _normalize_shell_command(command)
+            except ValueError:
+                continue
+            if normalized == binding.command:
+                if metadata.get("exit") == 0 and metadata.get("truncated") is False:
+                    generators.append(candidate)
+            elif normalized.startswith("git commit"):
+                commits.append(candidate)
+        if not generators:
+            raise ProvenanceError("bound shell generator invocation is missing")
+        matching_commit = None
+        for commit in commits:
+            if not any(generator[0] <= commit[0] for generator in generators):
+                continue
+            commit_sha = _parse_simple_commit(commit[1], commit[2], binding, repo_root, output_commit)
+            if commit_sha is not None:
+                matching_commit = commit_sha
+                break
+        if matching_commit is None:
+            raise ProvenanceError("bound shell generator has no valid subsequent commit")
+        owned.update(binding.owned_outputs)
+    return owned
+
+
+def _parse_simple_commit(
+    tool_input: Mapping[str, Any],
+    metadata: Mapping[str, Any],
+    binding: ShellGeneratorBinding,
+    repo_root: Path,
+    output_commit: str | None,
+) -> str | None:
+    """Parses and verifies one simple exact-path git commit command."""
+    if metadata.get("exit") != 0 or metadata.get("truncated") is not False:
+        return None
+    command = tool_input.get("command")
+    if not isinstance(command, str) or _SHELL_CONTROL.search(command):
+        return None
+    try:
+        tokens = shlex.split(command, posix=True)
+    except ValueError:
+        return None
+    if len(tokens) < 4 or tokens[:3] != ["git", "commit", "--only"]:
+        return None
+    paths: list[str] = []
+    index = 3
+    while index < len(tokens) and not tokens[index].startswith("-"):
+        paths.append(tokens[index])
+        index += 1
+    if set(paths) != set(binding.owned_outputs) or len(paths) != len(set(paths)):
+        return None
+    if index == len(tokens) or tokens[index] not in {"-m", "--message"} or index + 1 >= len(tokens) or index + 2 != len(tokens):
+        return None
+    output = metadata.get("output")
+    if not isinstance(output, str) or metadata.get("truncated") is not False:
+        return None
+    match = _COMMIT_RESULT_SHA.search(output)
+    if match is None:
+        return None
+    abbreviated = match.group(1)
+    resolved = subprocess.run(
+        ("git", "rev-parse", f"{abbreviated}^{{commit}}"),
+        cwd=repo_root, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False,
+    )
+    if resolved.returncode != 0 or not re.fullmatch(r"[0-9a-f]{40}\n?", resolved.stdout.decode(errors="replace")):
+        return None
+    commit_sha = resolved.stdout.decode().strip()
+    if not re.fullmatch(r"[0-9a-f]{40}", commit_sha) or not _binding_output_commit_is_ancestor(commit_sha, output_commit, repo_root):
+        return None
+    return commit_sha
+
+
+def _binding_output_commit_is_ancestor(commit_sha: str, output_commit: str | None, repo_root: Path) -> bool:
+    """Returns whether a resolved generator commit is an ancestor of its binding commit."""
+    if output_commit is None:
+        return True
+    if not re.fullmatch(r"[0-9a-f]{40}", output_commit):
+        return False
+    result = subprocess.run(
+        ("git", "merge-base", "--is-ancestor", commit_sha, output_commit),
+        cwd=repo_root, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False,
+    )
+    return result.returncode == 0
 
 
 class OpenCodeExportAdapter:
@@ -274,7 +451,7 @@ def build_evidence(raw: bytes, binding: RoleBinding, repo_root: Path) -> dict[st
     if _text_bytes(users[0]) == _canonical_json([]) or _text_bytes(final) == _canonical_json([]):
         raise ProvenanceError(f"{binding.role} lacks hashable prompt or final-response text")
 
-    tool_paths = _tool_owned_paths(messages)
+    tool_paths = _tool_owned_paths(messages, repo_root, binding.shell_generators, binding.output_commit)
     output_hashes: dict[str, str] = {}
     for relative in binding.owned_outputs:
         path = (repo_root / relative).resolve()
@@ -351,7 +528,7 @@ def build_resolved_event(
     assistants = [message for message in messages if message.get("info", {}).get("role") == "assistant"]
     resolved_tool_paths: set[str] = set()
     root = repo_root.resolve()
-    for tool_path in _tool_owned_paths(messages):
+    for tool_path in _tool_owned_paths(messages, repo_root, binding.shell_generators, binding.output_commit):
         candidate = Path(tool_path)
         if candidate.is_absolute():
             try:
