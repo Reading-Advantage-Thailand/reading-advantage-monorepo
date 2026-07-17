@@ -14,5 +14,6 @@ export * from "./policy-update-transaction.js";
 export * from "./ratchet.js";
 export * from "./reconciliation-manifest.js";
 export * from "./reconciliation-manifest-builder.js";
+export * from "./repository-transaction-recovery-cli.js";
 export * from "./stable-order.js";
 export * from "./workspace-resolution.js";

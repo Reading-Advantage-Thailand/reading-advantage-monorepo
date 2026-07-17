@@ -1,12 +1,3 @@
-import { randomUUID } from "node:crypto";
-import {
-  constants as fsConstants,
-  copyFile,
-  rename,
-  unlink,
-  writeFile,
-} from "node:fs/promises";
-import { resolve } from "node:path";
 import {
   checkArchitectureRepository,
   readArchitectureBaselines,
@@ -23,6 +14,12 @@ import {
   type BaselineEntry,
 } from "./contracts.js";
 import { loadOwnershipMap } from "./ownership-map.js";
+import { createNodeRepositoryFileTransactionOperations } from "./node-file-transaction.js";
+import {
+  applyRepositoryFileTransaction,
+  previewRepositoryFileTransaction,
+  type RepositoryFileTransactionOperations,
+} from "./policy-update-transaction.js";
 import {
   compareArchitectureDebt,
   type ArchitectureBaselines,
@@ -71,50 +68,8 @@ export interface UpdateArchitectureBaselinesOptions extends CheckArchitectureRep
 }
 
 /** Minimal filesystem operations required by the two-baseline replacement transaction. */
-export interface ArchitectureBaselineFileOperations {
-  /**
-   * Copies one existing file without overwriting the destination.
-   * @param source Existing file whose exact bytes are copied.
-   * @param destination Exclusive backup path created by the transaction.
-   * @returns A promise resolved after the backup is complete.
-   */
-  copyFile(source: string, destination: string): Promise<void>;
-  /**
-   * Atomically renames one staged file over its destination.
-   * @param source Staged replacement or backup file.
-   * @param destination Configured baseline destination.
-   * @returns A promise resolved after the atomic rename completes.
-   */
-  rename(source: string, destination: string): Promise<void>;
-  /**
-   * Removes one transaction artifact.
-   * @param path Staged or backup artifact to remove.
-   * @returns A promise resolved after the path is removed.
-   */
-  unlink(path: string): Promise<void>;
-  /**
-   * Creates one private transaction artifact without overwriting a file.
-   * @param path Exclusive staged-replacement path.
-   * @param contents Canonically serialized baseline contents.
-   * @returns A promise resolved after the staged file is written.
-   */
-  writeFile(path: string, contents: string): Promise<void>;
-}
-
-const nodeBaselineFileOperations: ArchitectureBaselineFileOperations = {
-  copyFile: async (source, destination) => {
-    await copyFile(source, destination, fsConstants.COPYFILE_EXCL);
-  },
-  rename,
-  unlink,
-  writeFile: async (path, contents) => {
-    await writeFile(path, contents, {
-      encoding: "utf8",
-      mode: 0o600,
-      flag: "wx",
-    });
-  },
-};
+export type ArchitectureBaselineFileOperations =
+  RepositoryFileTransactionOperations;
 
 /**
  * Finds one reviewed entry across both domain baselines.
@@ -261,67 +216,8 @@ function serializeBaseline(baseline: ArchitectureBaseline): string {
   return `${JSON.stringify(architectureBaselineSchema.parse(baseline), null, 2)}\n`;
 }
 
-interface BaselineReplacement {
-  backup: string;
-  destination: string;
-  staged: string;
-  contents: string;
-}
-
 /**
- * Removes a transaction artifact while tolerating an already-consumed path.
- * @param fileOperations Filesystem adapter used by the transaction.
- * @param path Staged or backup path to remove.
- * @returns A promise resolved after removal or an absent-path result.
- * @throws When removal fails for a reason other than a missing path.
- */
-async function removeTransactionArtifact(
-  fileOperations: ArchitectureBaselineFileOperations,
-  path: string,
-): Promise<void> {
-  try {
-    await fileOperations.unlink(path);
-  } catch (error) {
-    if (
-      typeof error !== "object" ||
-      error === null ||
-      !("code" in error) ||
-      error.code !== "ENOENT"
-    ) {
-      throw error;
-    }
-  }
-}
-
-/**
- * Restores both original baseline bytes after a replacement failure.
- * @param replacements Complete domain replacement descriptors with backups.
- * @param fileOperations Filesystem adapter used by the transaction.
- * @returns A promise resolved only when both originals are restored.
- * @throws When either original baseline cannot be restored.
- */
-async function restoreArchitectureBaselines(
-  replacements: readonly BaselineReplacement[],
-  fileOperations: ArchitectureBaselineFileOperations,
-): Promise<void> {
-  const failures: unknown[] = [];
-  for (const replacement of [...replacements].reverse()) {
-    try {
-      await fileOperations.rename(replacement.backup, replacement.destination);
-    } catch (error) {
-      failures.push(error);
-    }
-  }
-  if (failures.length > 0) {
-    throw new AggregateError(
-      failures,
-      "Architecture baseline replacement failed and rollback was incomplete",
-    );
-  }
-}
-
-/**
- * Replaces both domain baselines as one recoverable filesystem transaction.
+ * Replaces both baselines through the shared locked repository transaction.
  * @param repoRoot Absolute repository root containing configured baselines.
  * @param config Validated policy containing distinct baseline paths.
  * @param baselines Complete database and provider replacements.
@@ -335,58 +231,29 @@ async function writeArchitectureBaselines(
   baselines: ArchitectureBaselines,
   fileOperations: ArchitectureBaselineFileOperations,
 ): Promise<void> {
-  const transactionId = `${process.pid}-${randomUUID()}`;
-  const replacements = (["database", "provider"] as const).map(
-    (domain): BaselineReplacement => {
-      const destination = resolve(repoRoot, config.baselineFiles[domain]);
-      return {
-        destination,
-        staged: `${destination}.architecture-update-${transactionId}.tmp`,
-        backup: `${destination}.architecture-update-${transactionId}.bak`,
-        contents: serializeBaseline(baselines[domain]),
-      };
+  const plan = await previewRepositoryFileTransaction({
+    repoRoot,
+    replacements: (["database", "provider"] as const).map((domain) => ({
+      id: `${domain}-baseline`,
+      repositoryPath: config.baselineFiles[domain],
+      contents: serializeBaseline(baselines[domain]),
+    })),
+    fileOperations,
+  });
+  const outcome = await applyRepositoryFileTransaction({
+    plan,
+    acknowledge: true,
+    expectedPlanHash: plan.planHash,
+    fileOperations,
+    validate: (_replacement, contents) => {
+      architectureBaselineSchema.parse(JSON.parse(contents));
     },
-  );
-
-  if (replacements[0].destination === replacements[1].destination) {
-    throw new Error("Database and provider baselines must use distinct files");
-  }
-
-  let preserveBackups = false;
-  try {
-    for (const replacement of replacements) {
-      await fileOperations.writeFile(replacement.staged, replacement.contents);
-      await fileOperations.copyFile(
-        replacement.destination,
-        replacement.backup,
-      );
-    }
-    try {
-      for (const replacement of replacements) {
-        await fileOperations.rename(
-          replacement.staged,
-          replacement.destination,
-        );
-      }
-    } catch (replacementError) {
-      try {
-        await restoreArchitectureBaselines(replacements, fileOperations);
-      } catch (rollbackError) {
-        preserveBackups = true;
-        throw new AggregateError(
-          [replacementError, rollbackError],
-          "Architecture baseline replacement and rollback both failed; recovery backup artifacts remain beside the configured baseline files",
-        );
-      }
-      throw replacementError;
-    }
-  } finally {
-    for (const replacement of replacements) {
-      await removeTransactionArtifact(fileOperations, replacement.staged);
-      if (!preserveBackups) {
-        await removeTransactionArtifact(fileOperations, replacement.backup);
-      }
-    }
+  });
+  if (outcome.state !== "committed") {
+    throw new Error(
+      "Architecture baselines committed, but transaction cleanup is incomplete; do not retry",
+      { cause: outcome },
+    );
   }
 }
 
@@ -421,7 +288,7 @@ export async function updateArchitectureBaselines(
     options.repoRoot,
     config,
     replacements,
-    options.fileOperations ?? nodeBaselineFileOperations,
+    options.fileOperations ?? createNodeRepositoryFileTransactionOperations(),
   );
   return { schemaVersion: 1, report, wroteBaselines: true };
 }

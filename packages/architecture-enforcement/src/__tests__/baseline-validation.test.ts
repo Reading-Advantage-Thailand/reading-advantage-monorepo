@@ -90,7 +90,7 @@ describe("committed architecture baseline validation", () => {
     );
     await writeBaselines(root, [
       {
-        schemaVersion: 1,
+        schemaVersion: 1 as const,
         ruleId: "DATABASE_BOUNDARY",
         domain: "database",
         sourcePath,
@@ -172,7 +172,7 @@ describe("committed architecture baseline validation", () => {
     );
     await writeBaselines(root, [
       {
-        schemaVersion: 1,
+        schemaVersion: 1 as const,
         ruleId: "DATABASE_BOUNDARY",
         domain: "database",
         sourcePath: "apps/gate/src/legacy-database.ts",
@@ -240,7 +240,7 @@ describe("committed architecture baseline validation", () => {
       computeReconciliationTree: async () => "b".repeat(64),
       parseManifest: () => manifest,
       validateReconciliation: vi.fn(() => ({
-        schemaVersion: 1,
+        schemaVersion: 1 as const,
         manifestSha256: "c".repeat(64),
         sourceBaseSha: "source-base",
         analyzerCommitSha: "analyzer-commit",

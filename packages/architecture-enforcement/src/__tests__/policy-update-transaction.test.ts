@@ -1,9 +1,12 @@
 import { posix } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
+  ARCHITECTURE_WRITE_JOURNAL_PREFIX,
+  ARCHITECTURE_WRITE_LOCK_PATH,
   RepositoryFileTransactionFailure,
   applyRepositoryFileTransaction,
   previewRepositoryFileTransaction,
+  recoverRepositoryFileTransaction,
   type RepositoryFileInspection,
   type RepositoryFileTransactionOperations,
   type RepositoryFileTransactionPlan,
@@ -27,14 +30,28 @@ class FakeFileOperations implements RepositoryFileTransactionOperations {
   readonly mutationCalls: string[] = [];
   failure?: InjectedFailure;
   corruptAfterCommit = false;
+  raceAfterBackupValidation = false;
+  lockHeld = false;
   private readonly occurrences = new Map<string, number>();
   private commitCount = 0;
+  private backupReadCount = 0;
 
   constructor() {
     for (const [index, path] of PATHS.entries()) {
       this.files.set(posix.join(ROOT, path), `original-${index + 1}\n`);
     }
   }
+
+  async acquireExclusiveLock(path: string, owner: string): Promise<void> {
+    if (this.lockHeld || this.files.has(path)) throw exists(path);
+    this.lockHeld = true;
+    this.files.set(path, owner);
+    this.mutationCalls.push(`lock:${path}`);
+  }
+
+  async assertTransactionPath(_path: string): Promise<void> {}
+
+  async bindTransactionPaths(_paths: readonly string[]): Promise<void> {}
 
   async copyFileExclusive(source: string, destination: string): Promise<void> {
     const occurrence = this.next("copy");
@@ -49,12 +66,29 @@ class FakeFileOperations implements RepositoryFileTransactionOperations {
 
   async inspect(path: string): Promise<RepositoryFileInspection> {
     if (!this.files.has(path)) throw missing(path);
-    return { isFile: true, isSymbolicLink: false };
+    return {
+      device: "fake-device",
+      inode: path,
+      isFile: true,
+      isSymbolicLink: false,
+    };
   }
 
   async readFile(path: string): Promise<string> {
     const contents = this.files.get(path);
     if (contents === undefined) throw missing(path);
+    if (path.endsWith(".bak")) {
+      this.backupReadCount += 1;
+      if (
+        this.raceAfterBackupValidation &&
+        this.backupReadCount === PATHS.length
+      ) {
+        this.files.set(
+          posix.join(ROOT, PATHS[0]!),
+          "concurrent-after-backup-validation\n",
+        );
+      }
+    }
     return contents;
   }
 
@@ -81,6 +115,14 @@ class FakeFileOperations implements RepositoryFileTransactionOperations {
       this.maybeFail("rename-commit", occurrence, "after");
     }
   }
+
+  async releaseExclusiveLock(path: string): Promise<void> {
+    if (!this.lockHeld || !this.files.delete(path)) throw missing(path);
+    this.lockHeld = false;
+    this.mutationCalls.push(`unlock:${path}`);
+  }
+
+  async releaseTransactionPaths(): Promise<void> {}
 
   async unlink(path: string): Promise<void> {
     const occurrence = this.next("unlink");
@@ -146,6 +188,37 @@ async function planWith(
   });
 }
 
+async function interruptedState(
+  operations: FakeFileOperations,
+  committedCount: number,
+): Promise<{ plan: RepositoryFileTransactionPlan; transactionId: string }> {
+  const plan = await planWith(operations);
+  const transactionId = "interrupted";
+  operations.lockHeld = true;
+  operations.files.set(
+    posix.join(ROOT, ARCHITECTURE_WRITE_LOCK_PATH),
+    transactionId,
+  );
+  operations.files.set(
+    posix.join(
+      ROOT,
+      `${ARCHITECTURE_WRITE_JOURNAL_PREFIX}${transactionId}.journal.json`,
+    ),
+    `${JSON.stringify({ schemaVersion: 1, transactionId, plan }, null, 2)}\n`,
+  );
+  for (const [index, replacement] of plan.replacements.entries()) {
+    const staged = `${replacement.destination}.architecture-transaction-${transactionId}.tmp`;
+    const backup = `${replacement.destination}.architecture-transaction-${transactionId}.bak`;
+    operations.files.set(staged, replacement.contents);
+    operations.files.set(backup, `original-${index + 1}\n`);
+    if (index < committedCount) {
+      operations.files.delete(staged);
+      operations.files.set(replacement.destination, replacement.contents);
+    }
+  }
+  return { plan, transactionId };
+}
+
 function expectOriginals(operations: FakeFileOperations): void {
   for (const [index, path] of PATHS.entries()) {
     expect(operations.files.get(posix.join(ROOT, path))).toBe(
@@ -157,9 +230,10 @@ function expectOriginals(operations: FakeFileOperations): void {
 function expectNoArtifacts(operations: FakeFileOperations): void {
   expect(
     [...operations.files.keys()].filter((path) =>
-      path.includes("architecture-transaction"),
+      /architecture-(?:transaction|enforcement-write-)/.test(path),
     ),
   ).toEqual([]);
+  expect(operations.lockHeld).toBe(false);
 }
 
 describe("repository policy update transaction", () => {
@@ -207,16 +281,142 @@ describe("repository policy update transaction", () => {
     const plan = await planWith(operations);
     operations.files.set(posix.join(ROOT, PATHS[1]!), "changed\n");
 
+    const error = await applyRepositoryFileTransaction({
+      plan,
+      acknowledge: true,
+      expectedPlanHash: plan.planHash,
+      fileOperations: operations,
+      transactionId: "test",
+    }).catch((caught: unknown) => caught);
+    expect(error).toBeInstanceOf(RepositoryFileTransactionFailure);
+    expect(
+      (error as RepositoryFileTransactionFailure).primaryError,
+    ).toHaveProperty(
+      "message",
+      expect.stringMatching(/raced after (?:preview|recovery capture)/i),
+    );
+    expect(
+      operations.mutationCalls.filter((call) =>
+        /^(?:copy|rename|write):/.test(call),
+      ),
+    ).toEqual([]);
+  });
+
+  it("preserves a destination raced after backup validation", async () => {
+    const operations = new FakeFileOperations();
+    const plan = await planWith(operations);
+    operations.raceAfterBackupValidation = true;
+
     await expect(
       applyRepositoryFileTransaction({
         plan,
         acknowledge: true,
         expectedPlanHash: plan.planHash,
         fileOperations: operations,
-        transactionId: "test",
+        transactionId: "race",
       }),
-    ).rejects.toThrow(/changed after preview/i);
-    expect(operations.mutationCalls).toEqual([]);
+    ).rejects.toBeInstanceOf(RepositoryFileTransactionFailure);
+
+    expect(operations.files.get(posix.join(ROOT, PATHS[0]!))).toBe(
+      "concurrent-after-backup-validation\n",
+    );
+    for (const [index, path] of PATHS.slice(1).entries()) {
+      expect(operations.files.get(posix.join(ROOT, path))).toBe(
+        `original-${index + 2}\n`,
+      );
+    }
+    expectNoArtifacts(operations);
+  });
+
+  it("fails before staging when another supported writer holds the lock", async () => {
+    const operations = new FakeFileOperations();
+    const plan = await planWith(operations);
+    operations.lockHeld = true;
+
+    await expect(
+      applyRepositoryFileTransaction({
+        plan,
+        acknowledge: true,
+        expectedPlanHash: plan.planHash,
+        fileOperations: operations,
+        transactionId: "locked",
+      }),
+    ).rejects.toMatchObject({ code: "EEXIST" });
+    expect(
+      operations.mutationCalls.filter((call) =>
+        /^(?:copy|rename|write):/.test(call),
+      ),
+    ).toEqual([]);
+  });
+
+  it("recovers exact originals from a mixed interrupted commit", async () => {
+    const operations = new FakeFileOperations();
+    const { plan, transactionId } = await interruptedState(operations, 1);
+
+    const outcome = await recoverRepositoryFileTransaction({
+      repoRoot: ROOT,
+      transactionId,
+      acknowledge: true,
+      fileOperations: operations,
+    });
+
+    expect(outcome).toEqual({
+      state: "recovered-originals",
+      planHash: plan.planHash,
+    });
+    expectOriginals(operations);
+    expectNoArtifacts(operations);
+  });
+
+  it("finalizes an all-new interrupted commit without retrying writes", async () => {
+    const operations = new FakeFileOperations();
+    const { plan, transactionId } = await interruptedState(
+      operations,
+      PATHS.length,
+    );
+
+    const outcome = await recoverRepositoryFileTransaction({
+      repoRoot: ROOT,
+      transactionId,
+      acknowledge: true,
+      fileOperations: operations,
+      validate: (_replacement, contents) => {
+        expect(contents).toMatch(/^replacement-/);
+      },
+    });
+
+    expect(outcome).toEqual({
+      state: "finalized-committed",
+      planHash: plan.planHash,
+    });
+    for (const [index, path] of PATHS.entries()) {
+      expect(operations.files.get(posix.join(ROOT, path))).toBe(
+        `replacement-${index + 1}\n`,
+      );
+    }
+    expectNoArtifacts(operations);
+  });
+
+  it("retains the lock and artifacts when crash recovery bytes are corrupt", async () => {
+    const operations = new FakeFileOperations();
+    const { transactionId } = await interruptedState(operations, 1);
+    operations.files.set(
+      `${posix.join(ROOT, PATHS[0]!)}.architecture-transaction-${transactionId}.bak`,
+      "corrupt-backup\n",
+    );
+
+    await expect(
+      recoverRepositoryFileTransaction({
+        repoRoot: ROOT,
+        transactionId,
+        acknowledge: true,
+        fileOperations: operations,
+      }),
+    ).rejects.toThrow(/raced after preview/i);
+    expect(operations.lockHeld).toBe(true);
+    expect(
+      [...operations.files.keys()].some((path) => path.endsWith(".bak")),
+    ).toBe(true);
   });
 
   it("detects a destination race in recovery bytes before the first commit", async () => {
@@ -246,7 +446,10 @@ describe("repository policy update transaction", () => {
     expect(error).toBeInstanceOf(RepositoryFileTransactionFailure);
     expect(
       (error as RepositoryFileTransactionFailure).primaryError,
-    ).toHaveProperty("message", expect.stringMatching(/raced after preview/i));
+    ).toHaveProperty(
+      "message",
+      expect.stringMatching(/raced after (?:preview|recovery capture)/i),
+    );
     expect(
       operations.mutationCalls.some((call) => call.startsWith("rename:")),
     ).toBe(false);
@@ -255,7 +458,8 @@ describe("repository policy update transaction", () => {
   });
 
   for (const operation of ["write", "copy", "rename-commit"] as const) {
-    for (const occurrence of [1, 2, 3]) {
+    const occurrences = operation === "write" ? [1, 2, 3, 4] : [1, 2, 3];
+    for (const occurrence of occurrences) {
       for (const timing of ["before", "after"] as const) {
         it(`restores originals after ${operation} ${occurrence} ${timing}`, async () => {
           const operations = new FakeFileOperations();
@@ -513,6 +717,8 @@ describe("repository policy update transaction", () => {
 
     const symlinkOperations = new FakeFileOperations();
     symlinkOperations.inspect = async () => ({
+      device: "fake-device",
+      inode: "symlink",
       isFile: false,
       isSymbolicLink: true,
     });

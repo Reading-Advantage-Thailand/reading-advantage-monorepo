@@ -6,6 +6,7 @@
   "scripts": {
     "architecture:check": "pnpm --filter @reading-advantage/architecture-enforcement exec tsx src/architecture-check-cli.ts",
     "architecture:reconcile": "pnpm --filter @reading-advantage/architecture-enforcement exec tsx src/architecture-reconciliation-cli.ts",
+    "architecture:transaction:recover": "pnpm --filter @reading-advantage/architecture-enforcement exec tsx src/repository-transaction-recovery-cli.ts",
     "architecture:baseline:update": "pnpm --filter @reading-advantage/architecture-enforcement exec tsx src/baseline-update-cli.ts",
     "architecture:baseline:validate": "pnpm --filter @reading-advantage/architecture-enforcement exec tsx src/baseline-cli.ts",
     "architecture:inventory": "pnpm --filter @reading-advantage/architecture-enforcement exec tsx src/cli.ts",

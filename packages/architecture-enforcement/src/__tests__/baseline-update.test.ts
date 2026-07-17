@@ -1,13 +1,9 @@
-import { constants as fsConstants } from "node:fs";
 import {
-  copyFile,
   mkdir,
   mkdtemp,
   readFile,
   readdir,
-  rename,
   rm,
-  unlink,
   writeFile,
 } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -25,6 +21,8 @@ import {
   type ArchitectureConfig,
   type ArchitectureFinding,
 } from "../contracts.js";
+import { createNodeRepositoryFileTransactionOperations } from "../node-file-transaction.js";
+import { RepositoryFileTransactionFailure } from "../policy-update-transaction.js";
 
 const hash = (character: string): string => character.repeat(64);
 const fixtureRoots: string[] = [];
@@ -193,27 +191,18 @@ function liveUpdateOptions(fixture: LiveBaselineFixture) {
  * @returns Filesystem adapter that injects one post-rename provider failure.
  */
 function secondReplacementFailureOperations(): ArchitectureBaselineFileOperations {
+  const operations = createNodeRepositoryFileTransactionOperations();
   let stagedReplacementCount = 0;
   return {
-    copyFile: async (source, destination) => {
-      await copyFile(source, destination, fsConstants.COPYFILE_EXCL);
-    },
+    ...operations,
     rename: async (source, destination) => {
-      await rename(source, destination);
+      await operations.rename(source, destination);
       if (source.endsWith(".tmp")) {
         stagedReplacementCount += 1;
         if (stagedReplacementCount === 2) {
           throw new Error("forced second baseline replacement failure");
         }
       }
-    },
-    unlink,
-    writeFile: async (path, contents) => {
-      await writeFile(path, contents, {
-        encoding: "utf8",
-        mode: 0o600,
-        flag: "wx",
-      });
     },
   };
 }
@@ -402,18 +391,20 @@ describe("explicit architecture baseline updates", () => {
   it("restores both original files when the second replacement fails", async () => {
     const fixture = await createLiveBaselineFixture();
 
-    await expect(
-      updateArchitectureBaselines({
-        ...liveUpdateOptions(fixture),
-        acknowledge: true,
-        newDebtMetadata: {
-          owner: "architecture-platform",
-          rationale:
-            "Reviewed temporary debt pending the provider adapter migration.",
-        },
-        fileOperations: secondReplacementFailureOperations(),
-      }),
-    ).rejects.toThrow("forced second baseline replacement failure");
+    const error = await updateArchitectureBaselines({
+      ...liveUpdateOptions(fixture),
+      acknowledge: true,
+      newDebtMetadata: {
+        owner: "architecture-platform",
+        rationale:
+          "Reviewed temporary debt pending the provider adapter migration.",
+      },
+      fileOperations: secondReplacementFailureOperations(),
+    }).catch((caught: unknown) => caught);
+    expect(error).toBeInstanceOf(RepositoryFileTransactionFailure);
+    expect(
+      (error as RepositoryFileTransactionFailure).primaryError,
+    ).toHaveProperty("message", "forced second baseline replacement failure");
 
     await expect(readFile(fixture.databaseBaselinePath, "utf8")).resolves.toBe(
       fixture.databaseOriginal,
@@ -423,7 +414,7 @@ describe("explicit architecture baseline updates", () => {
     );
     const artifacts = (
       await readdir(resolve(fixture.repoRoot, "config/baselines"))
-    ).filter((path) => path.includes("architecture-update"));
+    ).filter((path) => path.includes("architecture-transaction"));
     expect(artifacts).toEqual([]);
   });
 });

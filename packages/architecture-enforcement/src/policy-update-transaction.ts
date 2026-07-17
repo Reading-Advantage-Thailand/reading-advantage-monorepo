@@ -6,6 +6,7 @@ import {
   sep,
   posix as posixPath,
 } from "node:path";
+import { z } from "zod";
 
 /** One proposed repository file replacement in transaction order. */
 export interface RepositoryFileReplacementProposal {
@@ -19,6 +20,10 @@ export interface RepositoryFileReplacementProposal {
 
 /** Minimal regular-file and symbolic-link facts required by the transaction. */
 export interface RepositoryFileInspection {
+  /** Filesystem device identity captured without following the final link. */
+  device: string;
+  /** Filesystem inode identity captured without following the final link. */
+  inode: string;
   /** Whether the inspected path is a regular file. */
   isFile: boolean;
   /** Whether the inspected path itself is a symbolic link. */
@@ -27,6 +32,12 @@ export interface RepositoryFileInspection {
 
 /** Injected filesystem boundary used by preview, commit, rollback, and tests. */
 export interface RepositoryFileTransactionOperations {
+  /** Acquires the repository-wide lock honored by every supported architecture writer. */
+  acquireExclusiveLock(path: string, owner: string): Promise<void>;
+  /** Asserts that a path's parent still names its bound directory handle. */
+  assertTransactionPath(path: string): Promise<void>;
+  /** Opens stable no-follow parent-directory handles for every transaction path. */
+  bindTransactionPaths(paths: readonly string[]): Promise<void>;
   /** Copies an existing file to a destination that must not already exist. */
   copyFileExclusive(source: string, destination: string): Promise<void>;
   /** Returns regular-file and symbolic-link facts without following the final link. */
@@ -37,6 +48,10 @@ export interface RepositoryFileTransactionOperations {
   realpath(path: string): Promise<string>;
   /** Atomically renames one path over another path on the same filesystem. */
   rename(source: string, destination: string): Promise<void>;
+  /** Releases the repository-wide architecture-writer lock. */
+  releaseExclusiveLock(path: string): Promise<void>;
+  /** Closes every stable transaction directory handle. */
+  releaseTransactionPaths(): Promise<void>;
   /** Removes one transaction artifact. */
   unlink(path: string): Promise<void>;
   /** Creates a private staged file without replacing an existing path. */
@@ -47,6 +62,12 @@ export interface RepositoryFileTransactionOperations {
 export interface RepositoryFileTransactionPlanReplacement extends RepositoryFileReplacementProposal {
   /** Absolute destination validated as contained by the repository. */
   destination: string;
+  /** Canonical destination resolved during preview. */
+  canonicalDestination: string;
+  /** Previewed filesystem device identity of the destination. */
+  device: string;
+  /** Previewed filesystem inode identity of the destination. */
+  inode: string;
   /** SHA-256 of the destination bytes observed during preview. */
   beforeHash: string;
   /** SHA-256 of the proposed replacement bytes. */
@@ -69,7 +90,7 @@ export interface RepositoryFileTransactionPlan {
 export interface PreviewRepositoryFileTransactionOptions {
   /** Absolute repository root containing every destination. */
   repoRoot: string;
-  /** Three or four ordered repository file replacements. */
+  /** Two through four ordered repository file replacements. */
   replacements: readonly RepositoryFileReplacementProposal[];
   /** Injected read-only filesystem boundary. */
   fileOperations: RepositoryFileTransactionOperations;
@@ -134,6 +155,28 @@ export interface ApplyRepositoryFileTransactionOptions {
   ) => void | Promise<void>;
 }
 
+/** Inputs required to recover one acknowledged transaction after interruption. */
+export interface RecoverRepositoryFileTransactionOptions {
+  /** Repository root recorded by the interrupted transaction. */
+  repoRoot: string;
+  /** Exact transaction identifier read from the retained lock. */
+  transactionId: string;
+  /** Explicit recovery consent required before any rollback or cleanup. */
+  acknowledge: boolean;
+  /** Fresh filesystem adapter used by the recovery process. */
+  fileOperations: RepositoryFileTransactionOperations;
+  /** Optional semantic validator used when recovery finds an all-new state. */
+  validate?: ApplyRepositoryFileTransactionOptions["validate"];
+}
+
+/** Deterministic state recovered from a durable prepared transaction. */
+export interface RepositoryFileTransactionRecoveryOutcome {
+  /** Stable outcome discriminator for a finalized or rolled-back transaction. */
+  state: "finalized-committed" | "recovered-originals";
+  /** Exact acknowledged plan hash recovered from the journal. */
+  planHash: string;
+}
+
 /** Aggregated primary, rollback, verification, and cleanup transaction failure. */
 export class RepositoryFileTransactionFailure extends AggregateError {
   /** Original staging, backup, commit, or post-write validation failure. */
@@ -180,6 +223,43 @@ interface TransactionReplacement extends RepositoryFileTransactionPlanReplacemen
   backup: string;
 }
 
+/** Repository-relative lock used by every supported architecture policy writer. */
+export const ARCHITECTURE_WRITE_LOCK_PATH =
+  ".architecture-enforcement-write.lock";
+
+/** Prefix of durable prepared-transaction journals retained after a crash. */
+export const ARCHITECTURE_WRITE_JOURNAL_PREFIX =
+  ".architecture-enforcement-write-";
+
+const sha256Schema = z.string().regex(/^[a-f0-9]{64}$/);
+const journalReplacementSchema = z
+  .object({
+    id: z.string().min(1),
+    repositoryPath: z.string().min(1),
+    contents: z.string(),
+    destination: z.string().min(1),
+    canonicalDestination: z.string().min(1),
+    device: z.string().min(1),
+    inode: z.string().min(1),
+    beforeHash: sha256Schema,
+    afterHash: sha256Schema,
+  })
+  .strict();
+const transactionJournalSchema = z
+  .object({
+    schemaVersion: z.literal(1),
+    transactionId: z.string().min(1),
+    plan: z
+      .object({
+        schemaVersion: z.literal(1),
+        repoRoot: z.string().min(1),
+        replacements: z.array(journalReplacementSchema).min(2).max(4),
+        planHash: sha256Schema,
+      })
+      .strict(),
+  })
+  .strict();
+
 /** Computes a lowercase hexadecimal SHA-256 digest for exact text bytes. */
 function sha256(contents: string): string {
   return createHash("sha256").update(contents, "utf8").digest("hex");
@@ -219,9 +299,9 @@ function validateRepositoryPath(repositoryPath: string): void {
 function validateProposals(
   replacements: readonly RepositoryFileReplacementProposal[],
 ): void {
-  if (replacements.length < 3 || replacements.length > 4) {
+  if (replacements.length < 2 || replacements.length > 4) {
     throw new Error(
-      "Repository file transactions require exactly three or four replacements",
+      "Repository file transactions require two through four replacements",
     );
   }
   const ids = new Set<string>();
@@ -243,18 +323,25 @@ function validateProposals(
   }
 }
 
-/** Validates regular-file containment and returns exact absolute destinations. */
+interface ValidatedDestination {
+  destination: string;
+  canonicalDestination: string;
+  device: string;
+  inode: string;
+}
+
+/** Validates regular-file containment and returns exact bound destinations. */
 async function validatedDestinations(
   repoRoot: string,
   replacements: readonly RepositoryFileReplacementProposal[],
   fileOperations: RepositoryFileTransactionOperations,
-): Promise<string[]> {
+): Promise<ValidatedDestination[]> {
   if (!isAbsolute(repoRoot)) {
     throw new Error("Repository file transaction root must be absolute");
   }
   validateProposals(replacements);
   const canonicalRoot = await fileOperations.realpath(repoRoot);
-  const destinations: string[] = [];
+  const destinations: ValidatedDestination[] = [];
   for (const replacement of replacements) {
     const destination = resolve(repoRoot, replacement.repositoryPath);
     if (!isContained(repoRoot, destination)) {
@@ -279,9 +366,17 @@ async function validatedDestinations(
         `Transaction destination resolves outside repository root: ${replacement.repositoryPath}`,
       );
     }
-    destinations.push(destination);
+    destinations.push({
+      destination,
+      canonicalDestination,
+      device: inspection.device,
+      inode: inspection.inode,
+    });
   }
-  if (new Set(destinations).size !== destinations.length) {
+  if (
+    new Set(destinations.map((entry) => entry.canonicalDestination)).size !==
+    destinations.length
+  ) {
     throw new Error("Transaction destinations must resolve to distinct files");
   }
   return destinations;
@@ -297,6 +392,9 @@ function computePlanHash(
       replacements: replacements.map((replacement) => ({
         id: replacement.id,
         repositoryPath: replacement.repositoryPath,
+        canonicalDestination: replacement.canonicalDestination,
+        device: replacement.device,
+        inode: replacement.inode,
         beforeHash: replacement.beforeHash,
         afterHash: replacement.afterHash,
       })),
@@ -319,11 +417,11 @@ export async function previewRepositoryFileTransaction(
   );
   const replacements = await Promise.all(
     options.replacements.map(async (replacement, index) => {
-      const destination = destinations[index]!;
-      const before = await options.fileOperations.readFile(destination);
+      const binding = destinations[index]!;
+      const before = await options.fileOperations.readFile(binding.destination);
       return {
         ...replacement,
-        destination,
+        ...binding,
         beforeHash: sha256(before),
         afterHash: sha256(replacement.contents),
       };
@@ -438,6 +536,101 @@ async function validateRecoveryBackups(
   }
 }
 
+/** Revalidates each destination immediately before its committed replacement. */
+async function validateDestinationBeforeRename(
+  replacement: TransactionReplacement,
+  fileOperations: RepositoryFileTransactionOperations,
+): Promise<void> {
+  await fileOperations.assertTransactionPath(replacement.destination);
+  const inspection = await fileOperations.inspect(replacement.destination);
+  const canonicalDestination = await fileOperations.realpath(
+    replacement.destination,
+  );
+  if (
+    !inspection.isFile ||
+    inspection.isSymbolicLink ||
+    inspection.device !== replacement.device ||
+    inspection.inode !== replacement.inode ||
+    canonicalDestination !== replacement.canonicalDestination
+  ) {
+    throw new Error(
+      `Transaction destination identity changed after preview: ${replacement.repositoryPath}`,
+    );
+  }
+  const contents = await fileOperations.readFile(replacement.destination);
+  if (sha256(contents) !== replacement.beforeHash) {
+    throw new Error(
+      `Transaction destination raced after recovery capture: ${replacement.repositoryPath}`,
+    );
+  }
+}
+
+/** Releases the supported-writer lock and reports, rather than masks, failure. */
+async function releaseTransactionLock(
+  lockPath: string,
+  fileOperations: RepositoryFileTransactionOperations,
+): Promise<RepositoryTransactionArtifactError[]> {
+  try {
+    await fileOperations.releaseExclusiveLock(lockPath);
+    return [];
+  } catch (error) {
+    return [{ path: lockPath, error }];
+  }
+}
+
+/** Releases stable directory handles and reports, rather than masks, failure. */
+async function releaseTransactionPaths(
+  repoRoot: string,
+  fileOperations: RepositoryFileTransactionOperations,
+): Promise<RepositoryTransactionArtifactError[]> {
+  try {
+    await fileOperations.releaseTransactionPaths();
+    return [];
+  } catch (error) {
+    return [{ path: repoRoot, error }];
+  }
+}
+
+/** Returns the fixed durable journal path for one validated transaction id. */
+function transactionJournalPath(
+  repoRoot: string,
+  transactionId: string,
+): string {
+  return resolve(
+    repoRoot,
+    `${ARCHITECTURE_WRITE_JOURNAL_PREFIX}${transactionId}.journal.json`,
+  );
+}
+
+/** Serializes a strict prepared journal containing the complete reviewed plan. */
+function serializeTransactionJournal(
+  transactionId: string,
+  plan: RepositoryFileTransactionPlan,
+): string {
+  return `${JSON.stringify(
+    transactionJournalSchema.parse({
+      schemaVersion: 1,
+      transactionId,
+      plan,
+    }),
+    null,
+    2,
+  )}\n`;
+}
+
+/** Removes one optional transaction artifact while retaining real failures. */
+async function cleanupOptionalArtifact(
+  path: string,
+  fileOperations: RepositoryFileTransactionOperations,
+): Promise<RepositoryTransactionArtifactError[]> {
+  try {
+    await fileOperations.unlink(path);
+    return [];
+  } catch (error) {
+    return isMissingPath(error) ? [] : [{ path, error }];
+  }
+}
+
 /** Validates an injected transaction identifier used only in artifact names. */
 function validatedTransactionId(transactionId: string | undefined): string {
   const value = transactionId ?? randomUUID();
@@ -469,33 +662,13 @@ export async function applyRepositoryFileTransaction(
     );
   }
 
-  const destinations = await validatedDestinations(
-    options.plan.repoRoot,
-    options.plan.replacements,
-    options.fileOperations,
-  );
-  for (const [index, replacement] of options.plan.replacements.entries()) {
-    if (destinations[index] !== replacement.destination) {
-      throw new Error(
-        `Transaction destination changed after preview: ${replacement.repositoryPath}`,
-      );
-    }
-    const current = await options.fileOperations.readFile(
-      replacement.destination,
-    );
-    if (sha256(current) !== replacement.beforeHash) {
-      throw new Error(
-        `Transaction destination changed after preview: ${replacement.repositoryPath}`,
-      );
-    }
-    if (sha256(replacement.contents) !== replacement.afterHash) {
-      throw new Error(
-        `Transaction replacement bytes changed after preview: ${replacement.repositoryPath}`,
-      );
-    }
-  }
-
   const transactionId = validatedTransactionId(options.transactionId);
+  const lockPath = resolve(options.plan.repoRoot, ARCHITECTURE_WRITE_LOCK_PATH);
+  const journalPath = transactionJournalPath(
+    options.plan.repoRoot,
+    transactionId,
+  );
+  await options.fileOperations.acquireExclusiveLock(lockPath, transactionId);
   const replacements: TransactionReplacement[] = options.plan.replacements.map(
     (replacement) => ({
       ...replacement,
@@ -505,21 +678,71 @@ export async function applyRepositoryFileTransaction(
   );
   let commitStarted = false;
   try {
+    await options.fileOperations.bindTransactionPaths([
+      ...replacements.map((replacement) => replacement.destination),
+      lockPath,
+      journalPath,
+    ]);
+    const destinations = await validatedDestinations(
+      options.plan.repoRoot,
+      options.plan.replacements,
+      options.fileOperations,
+    );
+    for (const [index, replacement] of replacements.entries()) {
+      const binding = destinations[index]!;
+      if (
+        binding.destination !== replacement.destination ||
+        binding.canonicalDestination !== replacement.canonicalDestination ||
+        binding.device !== replacement.device ||
+        binding.inode !== replacement.inode ||
+        sha256(replacement.contents) !== replacement.afterHash
+      ) {
+        throw new Error(
+          `Transaction destination changed after preview: ${replacement.repositoryPath}`,
+        );
+      }
+      await validateDestinationBeforeRename(
+        replacement,
+        options.fileOperations,
+      );
+    }
+    await options.fileOperations.writeFileExclusive(
+      journalPath,
+      serializeTransactionJournal(transactionId, options.plan),
+    );
     for (const replacement of replacements) {
+      await validateDestinationBeforeRename(
+        replacement,
+        options.fileOperations,
+      );
       await options.fileOperations.writeFileExclusive(
         replacement.staged,
         replacement.contents,
       );
     }
     for (const replacement of replacements) {
+      await validateDestinationBeforeRename(
+        replacement,
+        options.fileOperations,
+      );
       await options.fileOperations.copyFileExclusive(
         replacement.destination,
         replacement.backup,
       );
     }
     await validateRecoveryBackups(replacements, options.fileOperations);
-    commitStarted = true;
     for (const replacement of replacements) {
+      await validateDestinationBeforeRename(
+        replacement,
+        options.fileOperations,
+      );
+    }
+    for (const replacement of replacements) {
+      await validateDestinationBeforeRename(
+        replacement,
+        options.fileOperations,
+      );
+      commitStarted = true;
       await options.fileOperations.rename(
         replacement.staged,
         replacement.destination,
@@ -538,11 +761,26 @@ export async function applyRepositoryFileTransaction(
       replacements,
       options.fileOperations,
     );
-    const cleanupErrors = await cleanupArtifacts(
-      replacements,
-      options.fileOperations,
-      !commitStarted || verificationErrors.length === 0,
-    );
+    const recovered =
+      !commitStarted ||
+      (rollbackErrors.length === 0 && verificationErrors.length === 0);
+    const cleanupErrors = [
+      ...(await cleanupArtifacts(
+        replacements,
+        options.fileOperations,
+        recovered,
+      )),
+      ...(recovered
+        ? await cleanupOptionalArtifact(journalPath, options.fileOperations)
+        : []),
+      ...(await releaseTransactionPaths(
+        options.plan.repoRoot,
+        options.fileOperations,
+      )),
+      ...(recovered
+        ? await releaseTransactionLock(lockPath, options.fileOperations)
+        : []),
+    ];
     throw new RepositoryFileTransactionFailure(
       primaryError,
       rollbackErrors,
@@ -551,11 +789,15 @@ export async function applyRepositoryFileTransaction(
     );
   }
 
-  const cleanupErrors = await cleanupArtifacts(
-    replacements,
-    options.fileOperations,
-    true,
-  );
+  const cleanupErrors = [
+    ...(await cleanupArtifacts(replacements, options.fileOperations, true)),
+    ...(await cleanupOptionalArtifact(journalPath, options.fileOperations)),
+    ...(await releaseTransactionPaths(
+      options.plan.repoRoot,
+      options.fileOperations,
+    )),
+    ...(await releaseTransactionLock(lockPath, options.fileOperations)),
+  ];
   if (cleanupErrors.length > 0) {
     return {
       state: "committed-cleanup-incomplete",
@@ -564,4 +806,135 @@ export async function applyRepositoryFileTransaction(
     };
   }
   return { state: "committed", planHash: options.plan.planHash };
+}
+
+/**
+ * Recovers one prepared transaction retained after process or host interruption.
+ * @param options Exact repository, retained transaction id, consent, and fresh adapter.
+ * @returns Whether recovery finalized the reviewed commit or restored all originals.
+ * @throws When the lock, journal, path binding, hashes, or cleanup cannot be proven.
+ */
+export async function recoverRepositoryFileTransaction(
+  options: RecoverRepositoryFileTransactionOptions,
+): Promise<RepositoryFileTransactionRecoveryOutcome> {
+  if (!options.acknowledge) {
+    throw new Error("Repository transaction recovery requires acknowledgement");
+  }
+  const transactionId = validatedTransactionId(options.transactionId);
+  const lockPath = resolve(options.repoRoot, ARCHITECTURE_WRITE_LOCK_PATH);
+  const journalPath = transactionJournalPath(options.repoRoot, transactionId);
+  const lockOwner = (await options.fileOperations.readFile(lockPath)).trim();
+  if (lockOwner !== transactionId) {
+    throw new Error("Retained transaction lock does not match recovery id");
+  }
+  const journal = transactionJournalSchema.parse(
+    JSON.parse(await options.fileOperations.readFile(journalPath)),
+  );
+  const plan = journal.plan as RepositoryFileTransactionPlan;
+  if (
+    journal.transactionId !== transactionId ||
+    plan.repoRoot !== options.repoRoot ||
+    computePlanHash(plan.replacements) !== plan.planHash
+  ) {
+    throw new Error("Retained transaction journal does not match recovery id");
+  }
+  const replacements: TransactionReplacement[] = plan.replacements.map(
+    (replacement) => ({
+      ...replacement,
+      staged: `${replacement.destination}.architecture-transaction-${transactionId}.tmp`,
+      backup: `${replacement.destination}.architecture-transaction-${transactionId}.bak`,
+    }),
+  );
+  await options.fileOperations.bindTransactionPaths([
+    ...replacements.map((replacement) => replacement.destination),
+    lockPath,
+    journalPath,
+  ]);
+  try {
+    await validatedDestinations(
+      options.repoRoot,
+      plan.replacements,
+      options.fileOperations,
+    );
+    const hashes = await Promise.all(
+      replacements.map(async (replacement) =>
+        sha256(await options.fileOperations.readFile(replacement.destination)),
+      ),
+    );
+    const allAfter = hashes.every(
+      (hash, index) => hash === replacements[index]!.afterHash,
+    );
+    const allBefore = hashes.every(
+      (hash, index) => hash === replacements[index]!.beforeHash,
+    );
+    let state: RepositoryFileTransactionRecoveryOutcome["state"];
+    if (allAfter) {
+      await validateCommittedFiles(
+        replacements,
+        options.fileOperations,
+        options.validate,
+      );
+      state = "finalized-committed";
+    } else {
+      const knownState = hashes.every(
+        (hash, index) =>
+          hash === replacements[index]!.beforeHash ||
+          hash === replacements[index]!.afterHash,
+      );
+      if (!knownState) {
+        throw new Error(
+          "Interrupted transaction contains bytes outside the reviewed plan",
+        );
+      }
+      if (!allBefore) {
+        await validateRecoveryBackups(replacements, options.fileOperations);
+        const rollbackErrors = await restoreOriginals(
+          replacements,
+          options.fileOperations,
+        );
+        if (rollbackErrors.length > 0) {
+          throw new AggregateError(
+            rollbackErrors,
+            "Interrupted transaction rollback was incomplete",
+          );
+        }
+      }
+      const verificationErrors = await verifyOriginals(
+        replacements,
+        options.fileOperations,
+      );
+      if (verificationErrors.length > 0) {
+        throw new AggregateError(
+          verificationErrors,
+          "Interrupted transaction originals could not be verified",
+        );
+      }
+      state = "recovered-originals";
+    }
+    const cleanupErrors = [
+      ...(await cleanupArtifacts(replacements, options.fileOperations, true)),
+      ...(await cleanupOptionalArtifact(journalPath, options.fileOperations)),
+    ];
+    if (cleanupErrors.length > 0) {
+      throw new AggregateError(
+        cleanupErrors.map((failure) => failure.error),
+        "Recovered transaction cleanup is incomplete; lock retained",
+      );
+    }
+    const pathReleaseErrors = await releaseTransactionPaths(
+      options.repoRoot,
+      options.fileOperations,
+    );
+    if (pathReleaseErrors.length > 0) {
+      throw new AggregateError(
+        pathReleaseErrors.map((failure) => failure.error),
+        "Recovered transaction handle cleanup is incomplete; lock retained",
+      );
+    }
+    await options.fileOperations.releaseExclusiveLock(lockPath);
+    return { state, planHash: plan.planHash };
+  } catch (error) {
+    await options.fileOperations.releaseTransactionPaths().catch(() => {});
+    throw error;
+  }
 }

@@ -71,6 +71,7 @@ const ANALYZER_IMPLEMENTATION_PATHS = [
   "packages/architecture-enforcement/src/workspace-resolution.ts",
 ] as const;
 const RECONCILIATION_IMPLEMENTATION_PATHS = [
+  "packages/architecture-enforcement/src/baseline-update.ts",
   "packages/architecture-enforcement/src/architecture-reconciliation.ts",
   "packages/architecture-enforcement/src/architecture-reconciliation-cli.ts",
   "packages/architecture-enforcement/src/baseline-validation.ts",
@@ -78,10 +79,14 @@ const RECONCILIATION_IMPLEMENTATION_PATHS = [
   "packages/architecture-enforcement/src/policy-update-transaction.ts",
   "packages/architecture-enforcement/src/reconciliation-manifest-builder.ts",
   "packages/architecture-enforcement/src/reconciliation-manifest.ts",
+  "packages/architecture-enforcement/src/repository-transaction-recovery-cli.ts",
   "packages/architecture-enforcement/src/__tests__/architecture-reconciliation.test.ts",
+  "packages/architecture-enforcement/src/__tests__/baseline-update.test.ts",
+  "packages/architecture-enforcement/src/__tests__/fixtures/transaction-crash-child.ts",
   "packages/architecture-enforcement/src/__tests__/architecture-reconciliation-cli.test.ts",
   "packages/architecture-enforcement/src/__tests__/baseline-validation.test.ts",
   "packages/architecture-enforcement/src/__tests__/node-file-transaction.test.ts",
+  "packages/architecture-enforcement/src/__tests__/repository-transaction-recovery-cli.test.ts",
   "packages/architecture-enforcement/src/__tests__/policy-update-transaction.test.ts",
   "packages/architecture-enforcement/src/__tests__/reconciliation-manifest-builder.test.ts",
   "packages/architecture-enforcement/src/__tests__/reconciliation-manifest.test.ts",

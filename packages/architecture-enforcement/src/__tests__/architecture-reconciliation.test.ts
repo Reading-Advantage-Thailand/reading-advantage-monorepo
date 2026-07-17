@@ -208,10 +208,24 @@ function createFixture(): Fixture {
     [posix.join(ROOT, productionFinding.sourcePath), "production source\n"],
   ]);
   const fileOperations: RepositoryFileTransactionOperations = {
+    acquireExclusiveLock: vi.fn(async () => {
+      throw new Error("preview must not lock");
+    }),
+    assertTransactionPath: vi.fn(async () => {
+      throw new Error("preview must not assert paths");
+    }),
+    bindTransactionPaths: vi.fn(async () => {
+      throw new Error("preview must not bind paths");
+    }),
     copyFileExclusive: vi.fn(async () => {
       throw new Error("preview must not copy");
     }),
-    inspect: vi.fn(async () => ({ isFile: true, isSymbolicLink: false })),
+    inspect: vi.fn(async (path) => ({
+      device: "fake-device",
+      inode: path,
+      isFile: true,
+      isSymbolicLink: false,
+    })),
     readFile: vi.fn(async (path) => {
       const contents = files.get(path);
       if (contents === undefined) throw new Error(`missing ${path}`);
@@ -220,6 +234,12 @@ function createFixture(): Fixture {
     realpath: vi.fn(async (path) => path),
     rename: vi.fn(async () => {
       throw new Error("preview must not rename");
+    }),
+    releaseExclusiveLock: vi.fn(async () => {
+      throw new Error("preview must not unlock");
+    }),
+    releaseTransactionPaths: vi.fn(async () => {
+      throw new Error("preview must not release paths");
     }),
     unlink: vi.fn(async () => {
       throw new Error("preview must not unlink");
@@ -233,11 +253,17 @@ function createFixture(): Fixture {
       repoRoot: string;
       replacements: readonly RepositoryFileReplacementProposal[];
     }): Promise<RepositoryFileTransactionPlan> => ({
-      schemaVersion: 1,
+      schemaVersion: 1 as const,
       repoRoot: options.repoRoot,
       replacements: options.replacements.map((replacement) => ({
         ...replacement,
         destination: posix.join(options.repoRoot, replacement.repositoryPath),
+        canonicalDestination: posix.join(
+          options.repoRoot,
+          replacement.repositoryPath,
+        ),
+        device: "fake-device",
+        inode: posix.join(options.repoRoot, replacement.repositoryPath),
         beforeHash: sha256(
           files.get(posix.join(ROOT, replacement.repositoryPath))!,
         ),
@@ -366,7 +392,7 @@ describe("architecture reconciliation orchestration", () => {
   it("fails closed on analyzer errors or a non-exact current finding set", async () => {
     const parserFixture = createFixture();
     parserFixture.dependencies.analyzeSources = async () => ({
-      schemaVersion: 1,
+      schemaVersion: 1 as const,
       sourcePaths: [],
       findings: [],
       parseErrors: [
@@ -481,7 +507,7 @@ describe("architecture reconciliation orchestration", () => {
 
     const validatorFixture = createFixture();
     validatorFixture.dependencies.validateReconciliation = vi.fn(() => ({
-      schemaVersion: 1,
+      schemaVersion: 1 as const,
       manifestSha256: "0".repeat(64),
       sourceBaseSha: "source-base",
       analyzerCommitSha: "analyzer-commit",
