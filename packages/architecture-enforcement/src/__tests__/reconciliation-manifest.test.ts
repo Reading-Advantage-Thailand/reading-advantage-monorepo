@@ -350,6 +350,12 @@ function fixture(): ReconciliationFixture {
         reportSha256s: ["f".repeat(64), "f".repeat(64)],
         parseErrorCount: 0,
       },
+      current: {
+        sourceCommitSha: "7".repeat(40),
+        sourcePathSetSha256: "8".repeat(64),
+        reportSha256s: ["9".repeat(64), "9".repeat(64)],
+        parseErrorCount: 0,
+      },
       denominatorDiffAudit: {
         path: RECONCILIATION_DENOMINATOR_DIFF_AUDIT_PATH,
         sha256: textSha256(denominatorDiffAuditSource),

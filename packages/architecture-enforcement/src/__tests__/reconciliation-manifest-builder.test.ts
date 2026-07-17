@@ -275,6 +275,7 @@ function fixture(): BuilderFixture {
     input: {
       provenanceReports: [provenanceReport, structuredClone(provenanceReport)],
       executionReports: [immutableReport, structuredClone(immutableReport)],
+      currentReports: [immutableReport, structuredClone(immutableReport)],
       historicalConfigSource: `${JSON.stringify(config, null, 2)}\n`,
       historicalDatabaseBaselineSource: serializeArchitectureBaseline(
         historicalBaselines.database,
@@ -287,6 +288,8 @@ function fixture(): BuilderFixture {
         "Verdict: ACCEPTED\nProduct architecture debt changes: 0\n",
       provenanceSourcePathSetSha256: "a".repeat(64),
       executionSourcePathSetSha256: "c".repeat(64),
+      currentSourceCommitSha: "7".repeat(40),
+      currentSourcePathSetSha256: "8".repeat(64),
       analyzerImplementationTreeSha256: "b".repeat(64),
       reconciliationImplementationTreeSha256: "9".repeat(64),
       productionReviews: [
@@ -359,6 +362,7 @@ function withFindings(
     ...current.input,
     provenanceReports: [provenanceReport, structuredClone(provenanceReport)],
     executionReports: [executionReport, structuredClone(executionReport)],
+    currentReports: [executionReport, structuredClone(executionReport)],
   };
 }
 
@@ -372,6 +376,7 @@ describe("reconciliation manifest builder", () => {
     expect(built.manifest.finalState.addedExactExceptionCount).toBe(1);
     expect(built.manifest.reproduction.provenance.parseErrors).toHaveLength(1);
     expect(built.manifest.reproduction.execution.parseErrorCount).toBe(0);
+    expect(built.manifest.reproduction.current.parseErrorCount).toBe(0);
     expect(built.manifest.exactExceptionAdditions[0]?.coveredFindings).toEqual(
       current.testFindings,
     );

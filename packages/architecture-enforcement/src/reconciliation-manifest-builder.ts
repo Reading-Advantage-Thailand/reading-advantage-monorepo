@@ -158,6 +158,11 @@ export interface BuildAnalyzerReconciliationManifestInput {
     ImmutableReconciliationReport,
     ImmutableReconciliationReport,
   ];
+  /** Two zero-error current-HEAD reports that must be byte-identical. */
+  currentReports: readonly [
+    ImmutableReconciliationReport,
+    ImmutableReconciliationReport,
+  ];
   /** Exact historical architecture policy JSON bytes. */
   historicalConfigSource: string;
   /** Exact historical database baseline JSON bytes. */
@@ -172,6 +177,10 @@ export interface BuildAnalyzerReconciliationManifestInput {
   provenanceSourcePathSetSha256: string;
   /** SHA-256 of the zero-error execution-base source path set. */
   executionSourcePathSetSha256: string;
+  /** Exact committed revision used for the current-HEAD proof. */
+  currentSourceCommitSha: string;
+  /** SHA-256 of the current-HEAD tracked source path set. */
+  currentSourcePathSetSha256: string;
   /** Independently computed hash of the frozen analyzer implementation tree. */
   analyzerImplementationTreeSha256: string;
   /** Independently computed hash of reconciliation implementation and tests. */
@@ -507,6 +516,12 @@ export function buildAnalyzerReconciliationManifest(
   const executionSourcePathSetSha256 = sha256Schema.parse(
     input.executionSourcePathSetSha256,
   );
+  const currentSourcePathSetSha256 = sha256Schema.parse(
+    input.currentSourcePathSetSha256,
+  );
+  if (!/^[a-f0-9]{40}$/.test(input.currentSourceCommitSha)) {
+    throw new Error("Current reconciliation source commit must be a full SHA");
+  }
   const analyzerImplementationTreeSha256 = sha256Schema.parse(
     input.analyzerImplementationTreeSha256,
   );
@@ -523,11 +538,18 @@ export function buildAnalyzerReconciliationManifest(
     z.infer<typeof immutableReportSchema>,
     z.infer<typeof immutableReportSchema>,
   ];
+  const currentReports = input.currentReports.map(parseImmutableReport) as [
+    z.infer<typeof immutableReportSchema>,
+    z.infer<typeof immutableReportSchema>,
+  ];
   if (input.provenanceReports[0].source !== input.provenanceReports[1].source) {
     throw new Error("Provenance analyzer reports are not byte-identical");
   }
   if (input.executionReports[0].source !== input.executionReports[1].source) {
     throw new Error("Execution analyzer reports are not byte-identical");
+  }
+  if (input.currentReports[0].source !== input.currentReports[1].source) {
+    throw new Error("Current-HEAD analyzer reports are not byte-identical");
   }
 
   const historicalConfig = architectureConfigSchema.parse(
@@ -547,13 +569,21 @@ export function buildAnalyzerReconciliationManifest(
     historicalBaselines,
   );
   assertExecutionReport(executionReports[1], historicalBaselines);
+  const currentComparison = assertExecutionReport(
+    currentReports[0],
+    historicalBaselines,
+  );
+  assertExecutionReport(currentReports[1], historicalBaselines);
   if (
     canonicalJson(provenanceReports[0].findings) !==
       canonicalJson(executionReports[0].findings) ||
-    canonicalJson(provenanceComparison) !== canonicalJson(comparison)
+    canonicalJson(provenanceComparison) !== canonicalJson(comparison) ||
+    canonicalJson(currentReports[0].findings) !==
+      canonicalJson(executionReports[0].findings) ||
+    canonicalJson(currentComparison) !== canonicalJson(comparison)
   ) {
     throw new Error(
-      "Provenance and execution finding/addition sets do not match exactly",
+      "Provenance, execution, and current finding/addition sets do not match exactly",
     );
   }
 
@@ -717,6 +747,14 @@ export function buildAnalyzerReconciliationManifest(
         sourceBaseSha: RECONCILIATION_EXECUTION_BASE_SHA,
         sourcePathSetSha256: executionSourcePathSetSha256,
         reportSha256s: input.executionReports.map((report) =>
+          textSha256(report.source),
+        ),
+        parseErrorCount: 0,
+      },
+      current: {
+        sourceCommitSha: input.currentSourceCommitSha,
+        sourcePathSetSha256: currentSourcePathSetSha256,
+        reportSha256s: input.currentReports.map((report) =>
           textSha256(report.source),
         ),
         parseErrorCount: 0,

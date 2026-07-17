@@ -241,6 +241,14 @@ export const analyzerReconciliationManifestSchema = z
             parseErrorCount: z.literal(0),
           })
           .strict(),
+        current: z
+          .object({
+            sourceCommitSha: z.string().regex(/^[a-f0-9]{40}$/),
+            sourcePathSetSha256: sha256Schema,
+            reportSha256s: z.tuple([sha256Schema, sha256Schema]),
+            parseErrorCount: z.literal(0),
+          })
+          .strict(),
         denominatorDiffAudit: z
           .object({
             path: z.literal(RECONCILIATION_DENOMINATOR_DIFF_AUDIT_PATH),
@@ -271,6 +279,16 @@ export const analyzerReconciliationManifestSchema = z
             code: z.ZodIssueCode.custom,
             message: "execution-base report hashes must be byte-identical",
             path: ["execution", "reportSha256s"],
+          });
+        }
+        if (
+          reproduction.current.reportSha256s[0] !==
+          reproduction.current.reportSha256s[1]
+        ) {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "current-HEAD report hashes must be byte-identical",
+            path: ["current", "reportSha256s"],
           });
         }
       }),
