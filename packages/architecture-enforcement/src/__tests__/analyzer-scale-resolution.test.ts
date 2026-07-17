@@ -153,6 +153,50 @@ describe("architecture source loading at repository scale", () => {
     ]);
   });
 
+  it("resolves exact framework route types and package build output to source", async () => {
+    const repoRoot = await createWorkspaceRoot();
+    await mkdir(resolve(repoRoot, "apps/example"), { recursive: true });
+    await mkdir(resolve(repoRoot, "packages/example/scripts"), {
+      recursive: true,
+    });
+    await mkdir(resolve(repoRoot, "packages/example/src"), { recursive: true });
+    await writeFile(
+      resolve(repoRoot, "apps/example/next-env.d.ts"),
+      'import "./.next/dev/types/routes.d.ts";\n',
+    );
+    await writeFile(
+      resolve(repoRoot, "packages/example/scripts/check.mjs"),
+      'import { value } from "../dist/index.js";\nvoid value;\n',
+    );
+    await writeFile(
+      resolve(repoRoot, "packages/example/src/index.ts"),
+      "export const value = 1;\n",
+    );
+
+    const result = await loadArchitectureSources({
+      repoRoot,
+      sourcePaths: [
+        "packages/example/scripts/check.mjs",
+        "apps/example/next-env.d.ts",
+      ],
+      workspaceTargets: new Map(),
+    });
+
+    expect(result.parseErrors).toEqual([]);
+    expect(result.evidence).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          sourcePath: "apps/example/next-env.d.ts",
+          resolvedTarget: "apps/example/.next/dev/types/routes.d.ts",
+        }),
+        expect.objectContaining({
+          sourcePath: "packages/example/scripts/check.mjs",
+          resolvedTarget: "packages/example/src/index.ts",
+        }),
+      ]),
+    );
+  });
+
   it("processes a shared-config source batch deterministically within a bounded interval", async () => {
     const repoRoot = await createWorkspaceRoot();
     const sourcePaths = Array.from(

@@ -1,5 +1,5 @@
 import { access, readFile } from "node:fs/promises";
-import { dirname, isAbsolute, relative, resolve, sep } from "node:path";
+import { dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import ts from "typescript";
 import { z } from "zod";
 import {
@@ -240,6 +240,66 @@ async function resolveSourceCandidate(
 }
 
 /**
+ * Resolves a package-local emitted JavaScript import back to its TypeScript source.
+ * @param repoRoot Absolute repository root used for safe package projection.
+ * @param sourcePath Repository-relative source containing the emitted-code import.
+ * @param resolutionSpecifier Relative module specifier with query fragments removed.
+ * @param fileExistenceCache Shared exact-path existence cache.
+ * @param candidateCache Shared source-candidate resolution cache.
+ * @returns Exact source target when the import stays in one package, otherwise undefined.
+ */
+async function resolvePackageBuildSource(
+  repoRoot: string,
+  sourcePath: string,
+  resolutionSpecifier: string,
+  fileExistenceCache: Map<string, Promise<boolean>>,
+  candidateCache: Map<string, Promise<string | undefined>>,
+): Promise<string | undefined> {
+  const sourceSegments = sourcePath.split("/");
+  if (sourceSegments[0] !== "packages" || sourceSegments.length < 3) {
+    return undefined;
+  }
+  const packageRoot = sourceSegments.slice(0, 2).join("/");
+  const emittedTarget = toPosixPath(
+    relative(
+      repoRoot,
+      resolve(repoRoot, dirname(sourcePath), resolutionSpecifier),
+    ),
+  );
+  if (!emittedTarget.startsWith(`${packageRoot}/dist/`)) return undefined;
+  const sourceTarget = `${packageRoot}/src/${emittedTarget.slice(
+    `${packageRoot}/dist/`.length,
+  )}`;
+  return resolveSourceCandidate(
+    repoRoot,
+    resolve(repoRoot, sourceTarget),
+    fileExistenceCache,
+    candidateCache,
+  );
+}
+
+/**
+ * Recognizes the exact generated route-type import emitted by Next.js.
+ * @param sourcePath Repository-relative source containing the import.
+ * @param resolutionSpecifier Relative module specifier with fragments removed.
+ * @returns Stable logical generated target, or undefined for every other import.
+ */
+function nextGeneratedRouteTypeTarget(
+  sourcePath: string,
+  resolutionSpecifier: string,
+): string | undefined {
+  if (
+    !sourcePath.endsWith("/next-env.d.ts") ||
+    !/^\.\/\.next\/(?:dev\/)?types\/routes\.d\.ts$/.test(
+      resolutionSpecifier,
+    )
+  ) {
+    return undefined;
+  }
+  return toPosixPath(join(dirname(sourcePath), resolutionSpecifier));
+}
+
+/**
  * Parses an optional tsconfig into deterministic baseUrl and path mappings.
  * @param repoRoot Absolute repository or fixture root.
  * @param configPath Exact resolver-config path relative to repoRoot.
@@ -400,8 +460,22 @@ async function resolveModule(
       fileExistenceCache,
       candidateCache,
     );
-    return target
-      ? { target, failed: false }
+    const generatedTypeTarget = nextGeneratedRouteTypeTarget(
+      sourcePath,
+      resolutionSpecifier,
+    );
+    const packageBuildSource = target
+      ? undefined
+      : await resolvePackageBuildSource(
+          repoRoot,
+          sourcePath,
+          resolutionSpecifier,
+          fileExistenceCache,
+          candidateCache,
+        );
+    const resolvedTarget = target ?? generatedTypeTarget ?? packageBuildSource;
+    return resolvedTarget
+      ? { target: resolvedTarget, failed: false }
       : {
           target: `external:${specifier}`,
           failed: requiresInternalCodeResolution(specifier),
