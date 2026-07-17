@@ -1,6 +1,6 @@
 {
   "collector_identity": "evidence-collector-remediation-20260713",
-  "coverage_status": "blocked",
+  "coverage_status": "complete",
   "exhaustive_coverage_counts": {
     "asset_candidates": 360,
     "copy_records": 95,
