@@ -4,53 +4,70 @@
   "track_id": "apk_source_denominator_inventory_20260712",
   "phase": "Phase 2: Independent human discovery",
   "role": "evidence-collector",
-  "task_id": "evidence-collector:historical-program-identity-remediation",
+  "task_id": "evidence-collector:asset-history-denominator",
   "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
-  "spawn_id": "ses_09d068f32ffeKEckY8WKPwt5rn",
+  "spawn_id": "ses_09139202dffeKqUGwSzgAxk69z",
   "parent_ancestry_ids": [],
-  "prompt_sha256": "b66344a6be92f9d43ae5a359550c80fe81f0d8b28620a0c9dba2acb7bb20cbab",
-  "prompt_hash_basis": "SHA-256 of the canonical compact JSON array, in provider order, containing the exact text of both user prompt parts in the session ledger.",
+  "prompt_sha256": "25bb34209bf14c590e95ff9900746518f4748731320e4192dd9965d0663fbca3",
+  "prompt_hash_basis": "SHA-256 of exact UTF-8 text bytes in provider message msg_f6ec6e511001HIuZzEP99hlJMF.",
   "actual_context_manifest": {
-    "schema_version": "apk-provider-context-manifest.v1",
-    "provider": "opencode-local-ledger",
-    "session_id": "ses_09d068f32ffeKEckY8WKPwt5rn",
+    "schema_version": "apk-provider-context-manifest.v2",
+    "provider": "opencode-export",
+    "raw_export_sha256": "a316077e2ad5def4d1651aa979c9a73bacf9909499fa48338f4e276103887a08",
+    "raw_export_bytes": 11753065,
+    "session_id": "ses_09139202dffeKqUGwSzgAxk69z",
     "parent_session_id": null,
-    "session_created_at_ms": 1784071942349,
-    "session_updated_at_ms": 1784073332231,
-    "message_count": 36,
-    "part_count": 212,
-    "user_prompt_count": 2,
-    "first_user_message_id": "msg_f62f97cfe001zLPAzlgJO7qIuo",
-    "first_user_part_id": "prt_f62f97d1b001b6wDpLvGKb4w85",
-    "final_assistant_message_id": "msg_f630e25e8001NHNhZDMBowrqYK",
-    "final_assistant_text_part_id": "prt_f630e7126001gqxth4pES6xjrm",
-    "message_ledger_sha256": "97854ca505848056f5c0d10268f4ec68829942d7ef32c106594672bc8fd4b6bb",
-    "part_ledger_sha256": "571fbf563da7d371c5b65cb18388e893332eaf8d3e4ab97ed960d720a4181e7f"
+    "session_created_at_ms": 1784269955026,
+    "session_updated_at_ms": 1784277404668,
+    "message_count": 65,
+    "part_count": 269,
+    "user_prompt_count": 8,
+    "first_user_message_id": "msg_f6ec6e511001HIuZzEP99hlJMF",
+    "final_assistant_message_id": "msg_f6f38493a001kt5UCzQBg2yuiV",
+    "message_ledger_sha256": "d05fa8ff1d86f90a9e633c17f2127371bcddf80034e82c0fd4aea30403b4bf90",
+    "message_ledger_hash_basis": "SHA-256 of the raw export messages array serialized as canonical compact JSON with sorted keys and UTF-8 encoding.",
+    "part_ledger_sha256": "1b5afb5b6d0dc1844bd6784f6407388595f1ba301c45d830be01a3a1d22cd341",
+    "part_ledger_hash_basis": "SHA-256 of all raw export message parts flattened in provider message order and serialized as canonical compact JSON with sorted keys and UTF-8 encoding.",
+    "raw_write_inventory": [
+      "measure/tracks/apk_source_denominator_inventory_20260712/asset-file-denominator.json",
+      "measure/tracks/apk_source_denominator_inventory_20260712/historical-source-denominator.json",
+      "measure/tracks/apk_source_denominator_inventory_20260712/independent-human-discovery.json",
+      "measure/tracks/apk_source_denominator_inventory_20260712/human-duplicate-drift-records.json",
+      "measure/tracks/apk_source_denominator_inventory_20260712/human-historical-deleted-records.json",
+      "measure/tracks/apk_source_denominator_inventory_20260712/human-discrepancy-records.json"
+    ],
+    "schema_omissions": [
+      "fork_turns"
+    ]
   },
-  "actual_context_manifest_sha256": "850ccdc8baaf68769b87f157fccc03f2ba63a7fe4159377484b0686a76096835",
+  "actual_context_manifest_sha256": "8712ddcbfe1de57062e4a0dfd194b616eac1ce522e2fb403da73b266d38daab2",
   "actual_context_manifest_hash_basis": "SHA-256 of actual_context_manifest serialized as canonical compact JSON with sorted keys.",
-  "start_event_id": "prt_f62f9979d001qNSNE4KenXlVoU",
-  "end_event_id": "prt_f630ea35a001ner21qIReJ8SP3",
-  "final_response_sha256": "ff9bb4b844e5176a05adc216264590db6d0d482a5a0e615dbfd27ce8d3914ddf",
-  "final_response_hash_basis": "SHA-256 of the exact UTF-8 text bytes stored in provider part prt_f630e7126001gqxth4pES6xjrm.",
+  "start_event_id": "msg_f6ec6e511001HIuZzEP99hlJMF",
+  "end_event_id": "msg_f6f38493a001kt5UCzQBg2yuiV",
+  "final_response_sha256": "f818783faa2e2df996742788fecc8fa893f367423d00dbf6e4be2cf16e9c87bd",
+  "final_response_hash_basis": "SHA-256 of exact UTF-8 text bytes in provider message msg_f6f38493a001kt5UCzQBg2yuiV.",
   "output_paths": [
+    "measure/tracks/apk_source_denominator_inventory_20260712/asset-file-denominator.json",
+    "measure/tracks/apk_source_denominator_inventory_20260712/historical-source-denominator.json",
     "measure/tracks/apk_source_denominator_inventory_20260712/independent-human-discovery.json",
     "measure/tracks/apk_source_denominator_inventory_20260712/human-duplicate-drift-records.json",
     "measure/tracks/apk_source_denominator_inventory_20260712/human-historical-deleted-records.json",
     "measure/tracks/apk_source_denominator_inventory_20260712/human-discrepancy-records.json"
   ],
-  "output_sha256": "70f500c7c1e18e751b95f43ba5909fdf0dd2206545c97b5f4848a162ce192e55",
-  "output_hash_basis": "SHA-256 of canonical compact JSON with sorted keys mapping each output path to the SHA-256 of its committed bytes at commit_sha.",
+  "output_sha256": "3e9160454d8fea652430136db291c2c20c6bf0f9ce324358f2f7645578b218b1",
+  "output_hash_basis": "SHA-256 of canonical compact JSON with sorted keys mapping each output path to committed-byte SHA-256 at commit_sha.",
   "output_hashes": {
-    "measure/tracks/apk_source_denominator_inventory_20260712/human-discrepancy-records.json": "ad1192a23cf95bbf478a5a1d33e59a0a768f68a4551c6aa5e92229ea33a3cce5",
-    "measure/tracks/apk_source_denominator_inventory_20260712/human-duplicate-drift-records.json": "3709e551cd84f2c13a355e8b7e664be8df0f528124573615110728f80d4e19f0",
+    "measure/tracks/apk_source_denominator_inventory_20260712/asset-file-denominator.json": "a5724f41cce7fafbfaaeccbfe0f1b92f497f1c8643dd85f2ecad42a8f8ef937b",
+    "measure/tracks/apk_source_denominator_inventory_20260712/historical-source-denominator.json": "efd6e1787a6289a88c9e6575d7eb8bdaa74d681b68f7acad3bddfee46ba38bfb",
+    "measure/tracks/apk_source_denominator_inventory_20260712/independent-human-discovery.json": "11267074a5e1978b15b0448946726209cbb999c938ed9632cac53353db59017c",
+    "measure/tracks/apk_source_denominator_inventory_20260712/human-duplicate-drift-records.json": "4af9b9a75f103df43dc962bd704a7e10134676c979c874a2dce3fb39ba41450d",
     "measure/tracks/apk_source_denominator_inventory_20260712/human-historical-deleted-records.json": "c92bb55b9aac45666f352ad40a93f830f1e3f1d92ac03d1465dd07326b3d8f04",
-    "measure/tracks/apk_source_denominator_inventory_20260712/independent-human-discovery.json": "aada8b9f7d543f435633088e70b09466c7e1d3711daf7b548639cf4c298919d3"
+    "measure/tracks/apk_source_denominator_inventory_20260712/human-discrepancy-records.json": "18d933986158642fe1cf938c05f7daa45455ce6e71cef8063ddec6421494e4f4"
   },
   "actual_usage": {
-    "bytes_read": 580531,
-    "command_invocations": 74,
-    "source_files": 22
+    "bytes_read": 237359,
+    "command_invocations": 61,
+    "source_files": 9
   },
   "budget_declaration": {
     "role": "evidence-collector",
@@ -60,45 +77,54 @@
       "source_files": 7500
     },
     "actual_usage": {
-      "bytes_read": 580531,
-      "command_invocations": 74,
-      "source_files": 22
+      "bytes_read": 237359,
+      "command_invocations": 61,
+      "source_files": 9
     },
     "measurement_basis": {
-      "bytes_read": "Sum of UTF-8 byte lengths of all 74 immutable provider tool-result outputs in the OpenCode part ledger, including error parts as zero output bytes.",
-      "command_invocations": "Count of immutable OpenCode tool parts in the session ledger.",
-      "source_files": "Count of distinct filePath values on completed provider read-tool parts; internal subprocess I/O is excluded because it is not injected into provider context."
+      "bytes_read": "Sum of UTF-8 byte lengths of all provider tool-result outputs in the retained raw export.",
+      "command_invocations": "Count of all provider tool parts in the retained raw export.",
+      "source_files": "Count of distinct filePath values on completed provider read-tool parts."
     }
   },
-  "budget_declaration_sha256": "54fe858e57ce6b38ac1b8522ec33a9e11d578b68bbf9f282799f6175853c406a",
+  "budget_declaration_sha256": "254ea503422c510922095b567f02fb032f4f9cc0047313b0a85a8f0587c97f13",
   "budget_hash_basis": "SHA-256 of budget_declaration serialized as canonical compact JSON with sorted keys.",
+  "stop_loss_observations": {
+    "unsupported_factual_claims": 0,
+    "denominator_mismatches": 0,
+    "failed_fix_review_cycles": 0,
+    "unresolved_blocking_findings": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0
+    }
+  },
   "provider_usage": {
-    "tokens_input": 355375,
-    "tokens_output": 9998,
-    "tokens_reasoning": 4676,
-    "tokens_cache_read": 4694016,
-    "model": "gpt-5.6-sol",
-    "provider": "openai"
+    "tokens_input": 728160,
+    "tokens_output": 14435,
+    "tokens_reasoning": 3718,
+    "tokens_cache_read": 3558400,
+    "models": [
+      "gpt-5.6-luna"
+    ],
+    "providers": [
+      "openai"
+    ]
   },
-  "subprocess_observation": {
-    "source_objects_resolved": 1089,
-    "source_bytes_hashed_by_helper": 403402771,
-    "resource_usage_classification": "internal-subprocess-io-not-provider-context",
-    "note": "These helper observations are retained separately and are not substituted for the provider-context resource ceiling measurements."
-  },
-  "commit_sha": "6dda411b54787db2b0e005c1097ecc008f424c62",
+  "commit_sha": "4f5dde0a04c70c57f123a72eded84836325743da",
   "commit_binding": {
     "status": "committed-output-binding",
-    "source": "git show 6dda411b54787db2b0e005c1097ecc008f424c62:<output-path>",
-    "receipt_commit_policy": "This separate receipt-binding commit intentionally points to the preceding atomic implementation commit so it can attest the final response and committed output bytes without a self-referential hash."
+    "phase1_attestation_commit": "990dd9c060ca844ad16d141b1eb4086b310369a4",
+    "phase2_attestation_commit": "4f5dde0a04c70c57f123a72eded84836325743da",
+    "raw_export_sha256": "a316077e2ad5def4d1651aa979c9a73bacf9909499fa48338f4e276103887a08",
+    "adapter_acceptance_commit": "47f99667",
+    "source": "git show 4f5dde0a04c70c57f123a72eded84836325743da:<output-path>"
   },
   "findings": [],
   "disposition_summary": {
     "reviewed_program_names": 29,
     "current": 17,
     "historical/withdrawn": 12,
-    "alias/copy": 0,
-    "unsupported program assumption": 0,
     "unresolved": 0
   },
   "acceptance": "not-claimed"
