@@ -38,7 +38,7 @@ T2_INPUT_FREEZE_PATH = f"{TRACK_DIRECTORY}/phase0-input-freeze.json"
 T2_OWNERSHIP_MANIFEST_PATH = f"{TRACK_DIRECTORY}/phase0-role-ownership-manifest.json"
 # Bind this to the full SHA of the final Phase-0 authority commit in the
 # immediately following commit. The unbound bootstrap state fails closed.
-T2_PHASE0_AUTHORITY_COMMIT: str | None = "107fd1a4803093de2f62922bcd40daa6952adbfa"
+T2_PHASE0_AUTHORITY_COMMIT: str | None = "6dd43aa834b7193017230843c658d32c19ecd1a9"
 ROLE_PHASES = {
     "discovery-auditor": "Phase 1: Mechanical discovery",
     "evidence-collector": "Phase 2: Independent human discovery",
