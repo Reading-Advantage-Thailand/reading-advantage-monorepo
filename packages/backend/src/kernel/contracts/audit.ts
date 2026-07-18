@@ -77,13 +77,16 @@ export interface AuditMetadataProjectorRegistryReadHandle {
   ): AuditMetadataProjectorDefinition<unknown> | undefined;
 }
 
+/** Runtime contract for a durable immutable-audit append receipt. */
+export const auditAppendReceiptSchema = z.strictObject({
+  eventId: z.string().min(1).max(200),
+  persistedAt: z.string().datetime({ offset: true }),
+});
+
 /** Receipt proving that an immutable audit event was appended. */
-export interface AuditAppendReceipt {
-  /** Stable identifier of the persisted event. */
-  readonly eventId: string;
-  /** Time at which the append-only adapter durably stored the event. */
-  readonly persistedAt: string;
-}
+export type AuditAppendReceipt = Readonly<
+  z.infer<typeof auditAppendReceiptSchema>
+>;
 
 /** Append-only internal adapter used for immutable capability audit evidence. */
 export interface ImmutableAuditPort {

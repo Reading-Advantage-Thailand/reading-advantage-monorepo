@@ -181,7 +181,7 @@ describe("catalog and route-binding contracts", () => {
 
     expect(ids).toEqual([...ids].sort());
     expect(new Set(ids).size).toBe(ids.length);
-    expect(INVALID_CAPABILITY_COMBINATIONS).toHaveLength(42);
+    expect(INVALID_CAPABILITY_COMBINATIONS).toHaveLength(48);
     for (const rule of INVALID_CAPABILITY_COMBINATIONS) {
       expect(invalidCombinationRuleSchema.safeParse(rule).success).toBe(true);
     }
@@ -195,11 +195,17 @@ describe("catalog and route-binding contracts", () => {
         "descriptor.input-not-zod",
         "descriptor.output-not-zod",
         "errors.details-projection-required",
+        "authorization.parameter-projection-mismatch",
+        "idempotency.audited-mutation-required",
         "idempotency.query-forbidden",
         "idempotency.retryable-mutation-required",
         "observability.projection-mismatch",
         "registry.duplicate-capability-id",
+        "registry.reference-identity-mismatch",
         "tenancy.client-selected-tenant-forbidden",
+        "tenancy.global-policy-owner-mismatch",
+        "transaction.external-call-protocol-contradiction",
+        "transaction.external-call-protocol-unresolved",
         "transaction.query-must-be-none",
       ]),
     );

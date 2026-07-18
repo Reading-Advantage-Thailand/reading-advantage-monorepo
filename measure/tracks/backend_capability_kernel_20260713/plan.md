@@ -31,10 +31,10 @@ baseline increases.
 
 ## Phase 2: Red Executor and Registry Tests
 
-- [~] Task 6: Add registration counterexamples for duplicate IDs, invalid schemas, contradictory auth/tenant/transaction/audit/idempotency policies, and direct handler exposure.
-- [~] Task 7: Add ordered-executor Red tests for validation, auth, trusted tenancy, authorization, transaction, handler, output validation, audit, and settlement.
-- [~] Task 8: Add Red tests for rollback, safe declared/unexpected errors, audit redaction/failure, and durable idempotency ownership/replay/conflict.
-- [~] Task 9: Run focused tests and record expected Red failures against missing kernel behavior.
+- [x] Task 6: Add registration counterexamples for duplicate IDs, invalid schemas, contradictory auth/tenant/transaction/audit/idempotency policies, and direct handler exposure. [evidence: phase-2-red-verification.md]
+- [x] Task 7: Add ordered-executor Red tests for validation, auth, trusted tenancy, authorization, transaction, handler, output validation, audit, and settlement. [evidence: phase-2-red-verification.md]
+- [x] Task 8: Add Red tests for rollback, safe declared/unexpected errors, audit redaction/failure, and durable idempotency ownership/replay/conflict. [evidence: phase-2-red-verification.md]
+- [x] Task 9: Run focused tests and record expected Red failures against missing kernel behavior. [evidence: phase-2-red-verification.md]
 
 **Verification:** `CI=true pnpm vitest run packages/backend/src/kernel/__tests__`
 
