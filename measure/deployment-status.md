@@ -1,10 +1,10 @@
 # Deployment Status — GCP Cloud Run
 
-> **Verified 2026-07-01** via `gcloud` (account `bodangren@gmail.com`). Timestamps and revisions go stale — **re-run the commands at the bottom; don't trust the dates blind.**
+> **Verified 2026-07-18** via `gcloud` (account `bodangren@gmail.com`). Timestamps and revisions go stale — **re-run the commands at the bottom; don't trust the dates blind.**
 
 ## The one-line answer
 
-The monorepo (`bodangren/reading-advantage-monorepo`) is **not** the deploy source for most live apps. The live Cloud Run services are fed by the **original standalone `Reading-Advantage-Thailand/*` GitHub repos** via Cloud Build triggers. The monorepo holds copies of the app code + `cloudbuild.yaml`, but with one exception nothing in GCP invokes them.
+The monorepo (`bodangren/reading-advantage-monorepo`) is **not** the deploy source for most legacy live apps. Those services are fed by the **original standalone `Reading-Advantage-Thailand/*` GitHub repos** via Cloud Build triggers. Codecamp and Marketing are verified manual monorepo Cloud Build deployments; they do not yet have repository triggers.
 
 ## Per-app deployment map
 
@@ -16,15 +16,15 @@ The monorepo (`bodangren/reading-advantage-monorepo`) is **not** the deploy sour
 | **codecamp-advantage** | Dockerfile + cloudbuild, no CD | ✅ yes | `codecamp-advantage` / `codecamp-advantage` (rev 00017) | 2026-06-11 | **Manual `gcloud builds submit`** — no trigger in any region; every build has an empty `buildTriggerId`; builds run in the `global` region. See tech-debt 2026-05-18. |
 | **science-advantage** | none | ❌ Cloud Run API not enabled on the project | never | — | Not deployed. |
 | **advantage-games** | none | ❌ | never | — | Not deployed. |
-| **marketing** | none | ❌ | never | — | Not deployed. |
+| **marketing** | vinext Dockerfile + cloudbuild, no CD | ✅ yes | `reading-advantage` / `marketing` (rev `00001-l4x`) | 2026-07-18 | **Manual monorepo `gcloud builds submit`**, build `d34c4d07-b8cc-4787-9f44-d4256dde7c8f`; Cloud Run URL live. Custom-domain mapping created, awaiting DNS/certificate. |
 | **sales-advantage** | none | ❌ | never | — | Not deployed. |
 
 ## Deploy-source taxonomy
 
 - **Standalone-repo Cloud Build triggers:** `reading-advantage`, `primary-advantage` (+ a parallel trigger for `www-reading-advantage`).
 - **Monorepo GitHub Actions CD:** `www-reading-advantage` only — **currently broken** (fails at the Cloud Build submit step since ~2026-06-18; live rev is therefore stale).
-- **Manual `gcloud` only:** `codecamp-advantage`.
-- **Not deployed at all:** `advantage-games`, `marketing`, `sales-advantage`, `science-advantage`.
+- **Manual `gcloud` only:** `codecamp-advantage`, `marketing`.
+- **Not deployed at all:** `advantage-games`, `sales-advantage`, `science-advantage`.
 
 ## Not part of this monorepo (but live in GCP)
 
