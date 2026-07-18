@@ -23,7 +23,8 @@ DECLARE
   target_role text;
   mapping_count integer;
   expected_mapping_count integer;
-  current_role text;
+  observed_source_role text;
+  completed_audit_count integer;
   affected integer;
 BEGIN
   IF jsonb_typeof(manifest) <> 'object'
@@ -60,17 +61,36 @@ BEGIN
   END IF;
 
   SELECT role::text
-    INTO current_role
+    INTO observed_source_role
     FROM users
    WHERE id = account_id::text
    FOR UPDATE;
-  IF current_role IS NULL THEN
+  IF observed_source_role IS NULL THEN
     RAISE EXCEPTION 'Sales source-role repair source row is absent';
   END IF;
-  IF current_role = target_role THEN
-    RETURN;
+  IF observed_source_role = target_role THEN
+    SELECT count(*)::integer
+      INTO completed_audit_count
+      FROM audit_events
+     WHERE id = 'sales-source-role-repair:' || account_id::text
+       AND actor_user_id IS NULL
+       AND actor_role = 'SYSTEM'
+       AND action = 'sales:legacy_source_role_repaired'
+       AND target_type = 'user'
+       AND target_id = account_id::text
+       AND metadata = jsonb_build_object(
+         'applicationKey', 'sales',
+         'expectedCurrentRole', expected_current_role,
+         'targetRole', target_role,
+         'source', 'cloud-build-repair-manifest'
+       );
+    IF completed_audit_count = 1 THEN
+      RETURN;
+    END IF;
+    RAISE EXCEPTION
+      'Sales source-role repair completed evidence mismatch';
   END IF;
-  IF current_role <> expected_current_role THEN
+  IF observed_source_role <> expected_current_role THEN
     RAISE EXCEPTION 'Sales source-role repair current role mismatch';
   END IF;
 

@@ -116,6 +116,18 @@ describeRealPostgres(
           ('10000000-0000-4000-8000-000000000002', ${unrelatedAccountId}, 'sales', ${unrelatedLocalId})
       `;
 
+        await client`UPDATE users SET role = 'ADMIN' WHERE id = ${accountId}`;
+        expect(() => runRepair(databaseUrl, manifest)).toThrow();
+        expect(await readRole(client, accountId)).toBe("ADMIN");
+        const prematureAuditRows = await client<{ count: number }[]>`
+          SELECT count(*)::integer AS count
+          FROM audit_events
+          WHERE id = ${`sales-source-role-repair:${accountId}`}
+        `;
+        expect(prematureAuditRows[0]?.count).toBe(0);
+        await client`UPDATE users SET role = 'SALES_ADMIN' WHERE id = ${accountId}`;
+        expect(await readRole(client, accountId)).toBe("SALES_ADMIN");
+
         runRepair(databaseUrl, manifest);
         runRepair(databaseUrl, manifest);
         expect(await readRole(client, accountId)).toBe("ADMIN");
@@ -145,6 +157,19 @@ describeRealPostgres(
             },
           },
         ]);
+
+        await client`
+          UPDATE audit_events
+          SET metadata = metadata || '{"source":"unexpected"}'::jsonb
+          WHERE id = ${`sales-source-role-repair:${accountId}`}
+        `;
+        expect(() => runRepair(databaseUrl, manifest)).toThrow();
+        await client`
+          UPDATE audit_events
+          SET metadata =
+            metadata || '{"source":"cloud-build-repair-manifest"}'::jsonb
+          WHERE id = ${`sales-source-role-repair:${accountId}`}
+        `;
 
         await client`UPDATE users SET role = 'TEACHER' WHERE id = ${accountId}`;
         expect(() => runRepair(databaseUrl, manifest)).toThrow();
