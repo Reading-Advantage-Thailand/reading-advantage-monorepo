@@ -7,6 +7,7 @@ import json
 import re
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
+from pathlib import PurePosixPath
 from typing import Any
 
 from measure.evidence_integrity_gates.events import EventResolutionError, EventResolver
@@ -119,6 +120,153 @@ def _canonical_hash(value: object) -> str:
         Lowercase SHA-256 digest of compact, sorted-key JSON bytes.
     """
     return _hash(json.dumps(value, sort_keys=True, separators=(",", ":")).encode())
+
+
+def _frozen_role_tasks(
+    ownership: Mapping[str, Any], trusted_roles: list[Any]
+) -> dict[str, Mapping[str, Any]] | None:
+    """Validates frozen task and incompatibility authority for every role.
+
+    Args:
+        ownership: Trusted Phase-0 ownership manifest.
+        trusted_roles: Frozen ordered role names.
+
+    Returns:
+        Tasks keyed by owner role, or None when authority is malformed.
+    """
+    if not all(isinstance(role, str) and role for role in trusted_roles):
+        return None
+    role_set = set(trusted_roles)
+    tasks = ownership.get("tasks")
+    incompatible = ownership.get("incompatible_roles")
+    if not isinstance(tasks, list) or not isinstance(incompatible, list):
+        return None
+    by_role: dict[str, Mapping[str, Any]] = {}
+    task_ids: set[str] = set()
+    for task in tasks:
+        if not isinstance(task, Mapping):
+            return None
+        role = task.get("owner_role")
+        task_id = task.get("task_id")
+        outputs = task.get("expected_outputs")
+        forbidden = task.get("forbidden_roles")
+        if (
+            role not in role_set
+            or role in by_role
+            or not isinstance(task_id, str)
+            or not task_id
+            or task_id in task_ids
+            or not isinstance(outputs, list)
+            or not outputs
+            or not all(isinstance(path, str) and path for path in outputs)
+            or len(outputs) != len(set(outputs))
+            or not isinstance(forbidden, list)
+            or not all(isinstance(value, str) and value for value in forbidden)
+            or len(forbidden) != len(set(forbidden))
+            or set(forbidden) != role_set - {role}
+        ):
+            return None
+        by_role[role] = task
+        task_ids.add(task_id)
+    expected_pairs = {
+        frozenset((left, right))
+        for index, left in enumerate(trusted_roles)
+        for right in trusted_roles[index + 1 :]
+    }
+    actual_pairs: set[frozenset[str]] = set()
+    for pair in incompatible:
+        if (
+            not isinstance(pair, list)
+            or len(pair) != 2
+            or not all(isinstance(role, str) and role in role_set for role in pair)
+            or pair[0] == pair[1]
+        ):
+            return None
+        actual_pairs.add(frozenset(pair))
+    input_manifest_path = ownership.get("allowed_input_manifest_path")
+    if (
+        set(by_role) != role_set
+        or actual_pairs != expected_pairs
+        or len(incompatible) != len(expected_pairs)
+        or not isinstance(input_manifest_path, str)
+        or not _safe_relative_path(input_manifest_path)
+    ):
+        return None
+    return by_role, str(PurePosixPath(input_manifest_path).parent)
+
+
+def _safe_relative_path(path: str) -> bool:
+    """Checks that a repository path is normalized and cannot escape.
+
+    Args:
+        path: Candidate repository-relative path.
+
+    Returns:
+        Whether the path is normalized, relative, and traversal-free.
+    """
+    parsed = PurePosixPath(path)
+    return (
+        bool(path)
+        and path != "."
+        and bool(parsed.parts)
+        and "\\" not in path
+        and not parsed.is_absolute()
+        and parsed.as_posix() == path
+        and "." not in parsed.parts
+        and ".." not in parsed.parts
+    )
+
+
+def _outputs_match_frozen_task(
+    expected: object, actual: Mapping[str, Any], output_prefix: str
+) -> bool:
+    """Checks receipt output paths against one frozen task declaration.
+
+    Args:
+        expected: Frozen expected-output list.
+        actual: Receipt output hash mapping.
+        output_prefix: Trusted directory containing basename-only declarations.
+
+    Returns:
+        Whether normalized exact paths match the frozen declaration.
+    """
+    if (
+        not isinstance(expected, list)
+        or not all(isinstance(path, str) and _safe_relative_path(path) for path in expected)
+        or not all(isinstance(path, str) and _safe_relative_path(path) for path in actual)
+        or not _safe_relative_path(output_prefix)
+    ):
+        return False
+    if any("/" in path for path in expected):
+        expected_paths = set(expected)
+    else:
+        expected_paths = {f"{output_prefix}/{path}" for path in expected}
+    return set(actual) == expected_paths and len(actual) == len(expected_paths)
+
+
+def _event_has_fresh_context(event: Mapping[str, Any]) -> bool:
+    """Checks explicit or retained-raw proof of a fresh role context.
+
+    Args:
+        event: Trusted provider-resolved role event.
+
+    Returns:
+        Whether the event proves zero inherited turns and fresh context.
+    """
+    inherited = event.get("inherited_turn_count", 0)
+    if not isinstance(inherited, int) or isinstance(inherited, bool) or inherited != 0:
+        return False
+    if event.get("fork_turns") == "none":
+        return True
+    if "fork_turns" in event:
+        return False
+    omissions = event.get("schema_omissions")
+    return (
+        isinstance(omissions, list)
+        and "fork_turns" in omissions
+        and event.get("reviewer_isolation_proof")
+        == "raw-history-begins-with-fresh-prompt"
+    )
 
 
 def _is_ancestor(source_adapter: GitSourceAdapter, ancestor: str, descendant: str) -> bool:
@@ -376,6 +524,10 @@ def validate_phase4_inventory_acceptance(
     receipt_roles = [receipt.get("role") for receipt in receipts if isinstance(receipt, Mapping)]
     if len(receipt_roles) != len(receipts) or len(set(receipt_roles)) != len(receipt_roles) or set(receipt_roles) != set(required_roles):
         return _reject("MISSING_REQUIRED_ROLE")
+    role_contract = _frozen_role_tasks(ownership, trusted_roles)
+    if role_contract is None:
+        return _reject("FROZEN_AUTHORITY_INVALID")
+    role_tasks, frozen_output_prefix = role_contract
 
     paths = bundle.get("artifact_paths")
     artifact_bytes = bundle.get("artifact_bytes")
@@ -490,6 +642,13 @@ def validate_phase4_inventory_acceptance(
             or receipt_value.get("output_sha256") != _canonical_hash(outputs)
         ):
             return _reject("INVALID_ROLE_RECEIPT_V1")
+        task = role_tasks[role]
+        if receipt_value.get("task_id") != task.get("task_id"):
+            return _reject("TASK_OWNERSHIP_MISMATCH")
+        if not _outputs_match_frozen_task(
+            task.get("expected_outputs"), outputs, frozen_output_prefix
+        ):
+            return _reject("OUTPUT_OWNERSHIP_MISMATCH")
         observations = receipt_value.get("stop_loss_observations")
         expected_observation_keys = {
             "unsupported_factual_claims",
@@ -531,6 +690,8 @@ def validate_phase4_inventory_acceptance(
             event = resolver.resolve(event_id)
         except EventResolutionError:
             return _reject("EVENT_UNREACHABLE")
+        if event.get("task_id") != task.get("task_id"):
+            return _reject("TASK_OWNERSHIP_MISMATCH")
         expected_event_fields = {
             "task_role": role,
             "spawn_id": receipt_value.get("spawn_id"),
@@ -546,13 +707,17 @@ def validate_phase4_inventory_acceptance(
             return _reject("EVENT_IDENTITY_MISMATCH")
         if event.get("output_hashes") != outputs:
             return _reject("PROVIDER_OUTPUT_MISMATCH")
+        if not _event_has_fresh_context(event):
+            return _reject(
+                "INHERITED_REVIEWER_CONTEXT"
+                if role == "adversarial-reviewer"
+                else "INHERITED_ROLE_CONTEXT"
+            )
         resolved_events[role] = event
 
     reviewer_event = resolved_events.get("adversarial-reviewer")
     if reviewer_event is None:
         return _reject("MISSING_REQUIRED_ROLE")
-    if reviewer_event.get("fork_turns") != "none" or reviewer_event.get("inherited_turn_count", 0) != 0:
-        return _reject("INHERITED_REVIEWER_CONTEXT")
 
     raw = artifacts["raw_inventory"]
     human = artifacts["human_discovery"]

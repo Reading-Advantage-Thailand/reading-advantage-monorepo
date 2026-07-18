@@ -15,6 +15,8 @@ from typing import Any
 
 from measure.evidence_integrity_gates.apk_inventory_acceptance import (
     TrustedPhase4Authority,
+    _frozen_role_tasks,
+    _outputs_match_frozen_task,
     validate_phase4_inventory_acceptance,
 )
 from measure.evidence_integrity_gates.events import MappingEventResolver
@@ -803,8 +805,6 @@ class Phase4GreenBranchCounterexamples(unittest.TestCase):
                     "forbidden_roles": list(cls.REQUIRED_ROLES[:-1]),
                     "expected_outputs": [
                         "evidence/independent-review.json",
-                        "evidence/candidate.json",
-                        "evidence/candidate-partition.json",
                     ],
                 },
             ],
@@ -1015,7 +1015,7 @@ class Phase4GreenBranchCounterexamples(unittest.TestCase):
             "evidence-collector": [human_path],
             "requirements-mapper": [reconciliation_path],
             "truth-test-author": [contract_path],
-            "adversarial-reviewer": [review_path, candidate_path, partition_path],
+            "adversarial-reviewer": [review_path],
         }
         receipts = []
         events: dict[str, dict[str, Any]] = {}
@@ -1325,6 +1325,39 @@ class Phase4GreenBranchCounterexamples(unittest.TestCase):
         bundle["frozen_resource_ceilings"]["discovery-auditor"]["source_files"] = 999999
         bundle["role_receipts"][0]["actual_usage"]["source_files"] = 999998
         self._assert_rejects(bundle, events, "FROZEN_AUTHORITY_MISMATCH")
+
+    def test_basename_task_outputs_are_confined_to_the_frozen_track_directory(self) -> None:
+        """Rejects cross-track, traversal, and absolute basename substitutions."""
+        prefix = "measure/tracks/apk_source_denominator_inventory_20260712"
+        expected = ["source-denominator.json"]
+        self.assertTrue(
+            _outputs_match_frozen_task(
+                expected, {f"{prefix}/source-denominator.json": "0" * 64}, prefix
+            )
+        )
+        for path in (
+            "measure/tracks/other/source-denominator.json",
+            f"{prefix}/../other/source-denominator.json",
+            "/tmp/source-denominator.json",
+        ):
+            with self.subTest(path=path):
+                self.assertFalse(
+                    _outputs_match_frozen_task(expected, {path: "0" * 64}, prefix)
+                )
+
+    def test_frozen_task_parser_rejects_malformed_outputs_and_duplicate_forbidden_roles(self) -> None:
+        """Rejects malformed trusted authority without raising parser errors."""
+        ownership = json.loads(
+            (self.fixture_repo / self.ownership_path).read_text(encoding="utf-8")
+        )
+        malformed = copy.deepcopy(ownership)
+        malformed["tasks"][0]["expected_outputs"] = [{}]
+        self.assertIsNone(_frozen_role_tasks(malformed, list(self.REQUIRED_ROLES)))
+
+        duplicated = copy.deepcopy(ownership)
+        forbidden = duplicated["tasks"][0]["forbidden_roles"]
+        forbidden.append(forbidden[0])
+        self.assertIsNone(_frozen_role_tasks(duplicated, list(self.REQUIRED_ROLES)))
 
     def test_every_role_budget_requires_measured_non_boolean_integers(self) -> None:
         """Rejects unmeasured or boolean resource usage under frozen ceilings.
