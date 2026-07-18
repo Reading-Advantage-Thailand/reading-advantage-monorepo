@@ -28,10 +28,10 @@ addition-by-addition review are incomplete.
   `6945a684543588722a283872b14b69aa8efbfb1c91c322a1a156916dfef93ea7`.
 - Historical provider ruleset hash:
   `9c540cfa4e07aa51ac190ac58b9e3df7a3042f07990d1f888789108b0c73ccd3`.
-- Final database ruleset hash: **PENDING — expected to change only because of
-  independently accepted exact test exceptions.**
-- Final provider ruleset hash: **PENDING — expected to change only because of
-  independently accepted exact test exceptions.**
+- Final database ruleset hash:
+  `44425a89f8db3b6394e4a3c4117ede1154656abea8d0ccaf0f9eb5807e6acbdc`.
+- Final provider ruleset hash:
+  `1f26b6b7bd73ab2ce7ca38f182206dd8d41995f566733bd2ef4059d950ad9e67`.
 - Pre-analyzer provenance anchor:
   `3a109c879438fd50b369eb2905ddccfb56722d2b`, the immutable source
   revision containing only the two fail-closed source-resolution prerequisites
@@ -258,23 +258,34 @@ After the write:
 
 ## Final acceptance record
 
-These fields remain deliberately unset until the complete workflow passes:
+These fields were populated from the accepted live transaction and post-write
+verification on 2026-07-18:
 
 - Final analyzer SHA:
   `19af018669873e59bb8b721017d3d91fc1096f83`
-- Reconciliation manifest SHA-256: **PENDING**
-- Accepted database entry count: **PENDING**
-- Accepted provider entry count: **PENDING**
-- Accepted exact rule/test-file exception count: **PENDING**
-- Accepted covered test-only finding count: **PENDING**
-- Accepted production addition count: **PENDING**
-- Accepted final database ruleset SHA-256: **PENDING**
-- Accepted final provider ruleset SHA-256: **PENDING**
-- Accepted database baseline SHA-256: **PENDING**
-- Accepted provider baseline SHA-256: **PENDING**
-- Independent review result set: **PENDING**
-- Two-run normal-check JSON SHA-256: **PENDING**
-- Gate 1 result: **PENDING**
+- Reconciliation manifest SHA-256:
+  `4c95113cfff50d9e92f0770e1f18ef7d195dd50b5201f108e90990771ca46ec0`
+- Accepted database entry count: **467**
+- Accepted provider entry count: **93**
+- Accepted exact rule/test-file exception count: **111 total; 9 added by this reconciliation**
+- Accepted covered test-only finding count: **54**
+- Accepted production addition count: **69**
+- Accepted final database ruleset SHA-256:
+  `44425a89f8db3b6394e4a3c4117ede1154656abea8d0ccaf0f9eb5807e6acbdc`
+- Accepted final provider ruleset SHA-256:
+  `1f26b6b7bd73ab2ce7ca38f182206dd8d41995f566733bd2ef4059d950ad9e67`
+- Accepted canonical database baseline SHA-256:
+  `6b0446b90c1c8e92c9dcbd5b1b1df37a476642d6c16c960e7b0aee2221312160`
+- Accepted canonical provider baseline SHA-256:
+  `2dac620f09f61b97c4460e5d872b7d2f5c4589bcd321bae83a285cd4a3532a11`
+- Accepted raw database baseline file SHA-256:
+  `8de5a20f36bd81fc492cd4e99676a439d4e2545dea927ed8389f186d08f4fe73`
+- Accepted raw provider baseline file SHA-256:
+  `7137e81c662f25073e233144a585178fdd19ec324630f58cc5a807de42b4ace5`
+- Independent review result set: **ACCEPTED by all four required reconciliation reviewers; mandatory Phase 3–4 change-quality review found no Critical or High findings.**
+- Two-run normal-check JSON SHA-256:
+  `ab141ad10de20f76f45698b853ad394551093ac226f0fd54be880cfe29d162d0`
+- Gate 1 result: **ACCEPTED. Automated evidence passed and the user explicitly confirmed the manual verification on 2026-07-18. Checkpoint recording is in progress.**
 
-Until every field is populated from reviewed live evidence, the historical
-464/27 freeze remains the active baseline and Gate 1 remains incomplete.
+The analyzer-complete 467/93 baseline is now the active reviewed state. The
+historical 464/27 freeze remains immutable provenance evidence.

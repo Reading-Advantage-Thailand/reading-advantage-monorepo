@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "domain": "database",
-  "rulesetHash": "6945a684543588722a283872b14b69aa8efbfb1c91c322a1a156916dfef93ea7",
+  "rulesetHash": "44425a89f8db3b6394e4a3c4117ede1154656abea8d0ccaf0f9eb5807e6acbdc",
   "entries": [
     {
       "schemaVersion": 1,
@@ -227,6 +227,22 @@
       "instanceKey": "08cd525237cd159f0c13e597283a870e2349c21d2471cc66739a0886c21ca70c",
       "owner": "science-advantage-platform",
       "rationale": "Reviewed direct database match selected by DATABASE_BOUNDARY; migrate it into an approved ownership root."
+    },
+    {
+      "schemaVersion": 1,
+      "ruleId": "DURABLE_JOB_DATABASE_BOUNDARY",
+      "domain": "database",
+      "sourcePath": "packages/webhooks/src/review-worker.ts",
+      "line": 33,
+      "column": 1,
+      "evidenceKind": "static-import",
+      "importSpecifier": "@reading-advantage/db",
+      "resource": "database-table:review_jobs",
+      "resolvedTarget": "external:database-table",
+      "semanticKey": "a0430f6fab4d2ea5eb47dc7939fc42585c55d693d4e88d65f4678afa207e139c",
+      "instanceKey": "0a16dc911f17f3038e36576563a582c8787e49273e5ce31b7060c113c2c070f1",
+      "owner": "webhooks-platform",
+      "rationale": "Immutable-base analyzer evidence confirms legacy durable-job table access; webhooks-platform owns migration to the exact PostgreSQL durable-job adapter."
     },
     {
       "schemaVersion": 1,
@@ -962,6 +978,22 @@
       "instanceKey": "2314f48a3ebbe4bc41187fbc151be30017281caec185c96474b38a862b6e8309",
       "owner": "reading-advantage-platform",
       "rationale": "Reviewed direct database match selected by DATABASE_BOUNDARY; migrate it into an approved ownership root."
+    },
+    {
+      "schemaVersion": 1,
+      "ruleId": "DURABLE_JOB_DATABASE_BOUNDARY",
+      "domain": "database",
+      "sourcePath": "packages/domain/src/tenant-registry.ts",
+      "line": 173,
+      "column": 1,
+      "evidenceKind": "static-import",
+      "importSpecifier": "@reading-advantage/db",
+      "resource": "database-table:review_jobs",
+      "resolvedTarget": "external:database-table",
+      "semanticKey": "a0430f6fab4d2ea5eb47dc7939fc42585c55d693d4e88d65f4678afa207e139c",
+      "instanceKey": "237255dc07eae9e938c856ebaa3c8d075feb995be01800b1bdabd81d3e59d1b7",
+      "owner": "domain-platform",
+      "rationale": "Immutable-base analyzer evidence confirms legacy durable-job table access; domain-platform owns migration to the exact PostgreSQL durable-job adapter."
     },
     {
       "schemaVersion": 1,
@@ -4367,6 +4399,22 @@
       "instanceKey": "a2da11a3e6d8bd3574c06076662314100a47553d1a0e8e87785701ef156910ae",
       "owner": "primary-advantage-platform",
       "rationale": "Reviewed direct database match selected by DATABASE_BOUNDARY; migrate it into an approved ownership root."
+    },
+    {
+      "schemaVersion": 1,
+      "ruleId": "DURABLE_JOB_DATABASE_BOUNDARY",
+      "domain": "database",
+      "sourcePath": "packages/domain/src/codecamp/review-jobs.ts",
+      "line": 22,
+      "column": 1,
+      "evidenceKind": "static-import",
+      "importSpecifier": "@reading-advantage/db/schema",
+      "resource": "database-table:review_jobs",
+      "resolvedTarget": "external:database-table",
+      "semanticKey": "a0430f6fab4d2ea5eb47dc7939fc42585c55d693d4e88d65f4678afa207e139c",
+      "instanceKey": "a3153a059907235a2ad61229ac51598c9383d033abbaed2589a353f28c3f4517",
+      "owner": "domain-platform",
+      "rationale": "Immutable-base analyzer evidence confirms legacy durable-job table access; domain-platform owns migration to the exact PostgreSQL durable-job adapter."
     },
     {
       "schemaVersion": 1,

@@ -18,15 +18,35 @@
         "environment-read"
       ],
       "moduleMatchers": [
-        { "kind": "exact", "value": "@reading-advantage/db" },
-        { "kind": "prefix", "value": "@reading-advantage/db/" },
-        { "kind": "exact", "value": "drizzle-orm" },
-        { "kind": "prefix", "value": "drizzle-orm/" },
-        { "kind": "exact", "value": "postgres" },
-        { "kind": "exact", "value": "pg" }
+        {
+          "kind": "exact",
+          "value": "@reading-advantage/db"
+        },
+        {
+          "kind": "prefix",
+          "value": "@reading-advantage/db/"
+        },
+        {
+          "kind": "exact",
+          "value": "drizzle-orm"
+        },
+        {
+          "kind": "prefix",
+          "value": "drizzle-orm/"
+        },
+        {
+          "kind": "exact",
+          "value": "postgres"
+        },
+        {
+          "kind": "exact",
+          "value": "pg"
+        }
       ],
       "resourceMatchers": [],
-      "resolvedTargetRoots": ["packages/db/src/"],
+      "resolvedTargetRoots": [
+        "packages/db/src/"
+      ],
       "ownershipRootIds": [
         "database-source",
         "database-migrations",
@@ -52,9 +72,18 @@
       ],
       "moduleMatchers": [],
       "resourceMatchers": [
-        { "kind": "exact", "value": "database-table:review_jobs" },
-        { "kind": "exact", "value": "database-table:jobs" },
-        { "kind": "exact", "value": "database-table:durable_jobs" }
+        {
+          "kind": "exact",
+          "value": "database-table:review_jobs"
+        },
+        {
+          "kind": "exact",
+          "value": "database-table:jobs"
+        },
+        {
+          "kind": "exact",
+          "value": "database-table:durable_jobs"
+        }
       ],
       "resolvedTargetRoots": [],
       "ownershipRootIds": [
@@ -142,13 +171,18 @@
         }
       ],
       "resourceMatchers": [
-        { "kind": "prefix", "value": "database-table:company_" },
+        {
+          "kind": "prefix",
+          "value": "database-table:company_"
+        },
         {
           "kind": "exact",
           "value": "database-schema:company-identity"
         }
       ],
-      "resolvedTargetRoots": ["packages/db/src/company-identity/"],
+      "resolvedTargetRoots": [
+        "packages/db/src/company-identity/"
+      ],
       "ownershipRootIds": [
         "company-identity-database",
         "company-identity-migrations",
@@ -171,23 +205,51 @@
         "environment-read"
       ],
       "moduleMatchers": [
-        { "kind": "exact", "value": "ai" },
-        { "kind": "exact", "value": "openai" },
-        { "kind": "prefix", "value": "@ai-sdk/" },
-        { "kind": "exact", "value": "@google/generative-ai" }
+        {
+          "kind": "exact",
+          "value": "ai"
+        },
+        {
+          "kind": "exact",
+          "value": "openai"
+        },
+        {
+          "kind": "prefix",
+          "value": "@ai-sdk/"
+        },
+        {
+          "kind": "exact",
+          "value": "@google/generative-ai"
+        }
       ],
       "resourceMatchers": [
-        { "kind": "exact", "value": "environment:OPENAI_API_KEY" },
-        { "kind": "exact", "value": "environment:OPENROUTER_API_KEY" },
-        { "kind": "exact", "value": "environment:GOOGLE_AI_API_KEY" },
+        {
+          "kind": "exact",
+          "value": "environment:OPENAI_API_KEY"
+        },
+        {
+          "kind": "exact",
+          "value": "environment:OPENROUTER_API_KEY"
+        },
+        {
+          "kind": "exact",
+          "value": "environment:GOOGLE_AI_API_KEY"
+        },
         {
           "kind": "exact",
           "value": "environment:GOOGLE_GENERATIVE_AI_API_KEY"
         },
-        { "kind": "exact", "value": "environment:AI_GATEWAY_API_KEY" }
+        {
+          "kind": "exact",
+          "value": "environment:AI_GATEWAY_API_KEY"
+        }
       ],
-      "resolvedTargetRoots": ["packages/ai/src/providers/"],
-      "ownershipRootIds": ["ai-provider-adapters"]
+      "resolvedTargetRoots": [
+        "packages/ai/src/providers/"
+      ],
+      "ownershipRootIds": [
+        "ai-provider-adapters"
+      ]
     },
     {
       "schemaVersion": 1,
@@ -205,12 +267,24 @@
         "environment-read"
       ],
       "moduleMatchers": [
-        { "kind": "prefix", "value": "@aws-sdk/" },
-        { "kind": "exact", "value": "@google-cloud/storage" },
-        { "kind": "exact", "value": "firebase-admin/storage" }
+        {
+          "kind": "prefix",
+          "value": "@aws-sdk/"
+        },
+        {
+          "kind": "exact",
+          "value": "@google-cloud/storage"
+        },
+        {
+          "kind": "exact",
+          "value": "firebase-admin/storage"
+        }
       ],
       "resourceMatchers": [
-        { "kind": "exact", "value": "environment:AWS_ACCESS_KEY_ID" },
+        {
+          "kind": "exact",
+          "value": "environment:AWS_ACCESS_KEY_ID"
+        },
         {
           "kind": "exact",
           "value": "environment:AWS_SECRET_ACCESS_KEY"
@@ -228,8 +302,12 @@
           "value": "environment:GOOGLE_APPLICATION_CREDENTIALS"
         }
       ],
-      "resolvedTargetRoots": ["packages/storage/src/drivers/"],
-      "ownershipRootIds": ["storage-provider-adapters"]
+      "resolvedTargetRoots": [
+        "packages/storage/src/drivers/"
+      ],
+      "ownershipRootIds": [
+        "storage-provider-adapters"
+      ]
     },
     {
       "schemaVersion": 1,
@@ -247,14 +325,32 @@
         "environment-read"
       ],
       "moduleMatchers": [
-        { "kind": "prefix", "value": "@octokit/" },
-        { "kind": "prefix", "value": "@slack/" },
-        { "kind": "exact", "value": "stripe" },
-        { "kind": "exact", "value": "twilio" }
+        {
+          "kind": "prefix",
+          "value": "@octokit/"
+        },
+        {
+          "kind": "prefix",
+          "value": "@slack/"
+        },
+        {
+          "kind": "exact",
+          "value": "stripe"
+        },
+        {
+          "kind": "exact",
+          "value": "twilio"
+        }
       ],
       "resourceMatchers": [
-        { "kind": "exact", "value": "environment:GITHUB_TOKEN" },
-        { "kind": "exact", "value": "environment:GITHUB_APP_ID" },
+        {
+          "kind": "exact",
+          "value": "environment:GITHUB_TOKEN"
+        },
+        {
+          "kind": "exact",
+          "value": "environment:GITHUB_APP_ID"
+        },
         {
           "kind": "exact",
           "value": "environment:GITHUB_APP_PRIVATE_KEY"
@@ -263,11 +359,21 @@
           "kind": "exact",
           "value": "environment:GITHUB_INSTALLATION_ID"
         },
-        { "kind": "exact", "value": "environment:SLACK_BOT_TOKEN" },
-        { "kind": "exact", "value": "environment:STRIPE_SECRET_KEY" }
+        {
+          "kind": "exact",
+          "value": "environment:SLACK_BOT_TOKEN"
+        },
+        {
+          "kind": "exact",
+          "value": "environment:STRIPE_SECRET_KEY"
+        }
       ],
-      "resolvedTargetRoots": ["packages/integrations/github/src/drivers/"],
-      "ownershipRootIds": ["github-provider-adapters"]
+      "resolvedTargetRoots": [
+        "packages/integrations/github/src/drivers/"
+      ],
+      "ownershipRootIds": [
+        "github-provider-adapters"
+      ]
     }
   ],
   "ownershipRoots": [
@@ -277,7 +383,9 @@
       "domain": "database",
       "path": "packages/db/src/",
       "kind": "database",
-      "ruleIds": ["DATABASE_BOUNDARY"],
+      "ruleIds": [
+        "DATABASE_BOUNDARY"
+      ],
       "owner": "database-platform",
       "rationale": "The database package owns schema definitions, clients, migrations helpers, and low-level persistence primitives."
     },
@@ -287,7 +395,9 @@
       "domain": "database",
       "path": "packages/db/src/schema/",
       "kind": "database",
-      "ruleIds": ["DURABLE_JOB_DATABASE_BOUNDARY"],
+      "ruleIds": [
+        "DURABLE_JOB_DATABASE_BOUNDARY"
+      ],
       "owner": "database-platform",
       "rationale": "Database schema modules own durable job table definitions but do not run worker polling loops."
     },
@@ -297,7 +407,10 @@
       "domain": "database",
       "path": "packages/db/drizzle/",
       "kind": "migration",
-      "ruleIds": ["DATABASE_BOUNDARY", "DURABLE_JOB_DATABASE_BOUNDARY"],
+      "ruleIds": [
+        "DATABASE_BOUNDARY",
+        "DURABLE_JOB_DATABASE_BOUNDARY"
+      ],
       "owner": "database-platform",
       "rationale": "Reviewed Drizzle migrations may define and evolve PostgreSQL-owned tables, including durable job tables."
     },
@@ -307,7 +420,9 @@
       "domain": "database",
       "path": "packages/db/scripts/",
       "kind": "migration",
-      "ruleIds": ["DATABASE_BOUNDARY"],
+      "ruleIds": [
+        "DATABASE_BOUNDARY"
+      ],
       "owner": "database-platform",
       "rationale": "Database-owned maintenance commands may inspect migration state through low-level PostgreSQL connections."
     },
@@ -317,7 +432,9 @@
       "domain": "database",
       "path": "packages/domain/src/",
       "kind": "domain",
-      "ruleIds": ["DATABASE_BOUNDARY"],
+      "ruleIds": [
+        "DATABASE_BOUNDARY"
+      ],
       "owner": "backend-platform",
       "rationale": "Existing transport-independent domain functions are an approved database orchestration boundary during incremental migration."
     },
@@ -327,7 +444,9 @@
       "domain": "database",
       "path": "packages/backend/src/",
       "kind": "domain",
-      "ruleIds": ["DATABASE_BOUNDARY"],
+      "ruleIds": [
+        "DATABASE_BOUNDARY"
+      ],
       "owner": "backend-platform",
       "rationale": "Capability handlers and backend modules may use scoped database ports under the canonical backend architecture."
     },
@@ -337,7 +456,9 @@
       "domain": "database",
       "path": "packages/backend/src/jobs/adapters/postgres/",
       "kind": "adapter",
-      "ruleIds": ["DURABLE_JOB_DATABASE_BOUNDARY"],
+      "ruleIds": [
+        "DURABLE_JOB_DATABASE_BOUNDARY"
+      ],
       "owner": "backend-platform",
       "rationale": "This exact PostgreSQL adapter is the only query root outside database definitions and migrations for durable job tables."
     },
@@ -386,7 +507,9 @@
       "domain": "provider",
       "path": "packages/ai/src/providers/",
       "kind": "adapter",
-      "ruleIds": ["AI_PROVIDER_BOUNDARY"],
+      "ruleIds": [
+        "AI_PROVIDER_BOUNDARY"
+      ],
       "owner": "ai-platform",
       "rationale": "AI provider implementations normalize vendor calls behind the provider-neutral AI client interface."
     },
@@ -396,7 +519,9 @@
       "domain": "provider",
       "path": "packages/storage/src/drivers/",
       "kind": "adapter",
-      "ruleIds": ["STORAGE_PROVIDER_BOUNDARY"],
+      "ruleIds": [
+        "STORAGE_PROVIDER_BOUNDARY"
+      ],
       "owner": "storage-platform",
       "rationale": "Storage drivers normalize S3-compatible provider behavior behind the provider-neutral storage client."
     },
@@ -406,7 +531,9 @@
       "domain": "provider",
       "path": "packages/integrations/github/src/drivers/",
       "kind": "integration",
-      "ruleIds": ["INTEGRATION_PROVIDER_BOUNDARY"],
+      "ruleIds": [
+        "INTEGRATION_PROVIDER_BOUNDARY"
+      ],
       "owner": "integrations-platform",
       "rationale": "GitHub driver implementations own direct provider calls behind the repository integration interface."
     }
@@ -1227,6 +1354,78 @@
       "sourcePath": "packages/webhooks/src/__tests__/github-client.test.ts",
       "owner": "webhooks-platform",
       "rationale": "Reviewed exact test or fixture exception for INTEGRATION_PROVIDER_BOUNDARY; production code remains subject to the rule."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reconciliation-ai-sdk-v2-call-shape",
+      "ruleId": "AI_PROVIDER_BOUNDARY",
+      "sourcePath": "packages/ai/src/__tests__/phase-11-sdk-v2-call-shape.test.ts",
+      "owner": "ai-platform",
+      "rationale": "This exact AI adapter test exercises SDK v2 call shapes; all base-proven findings were enumerated and production paths remain enforced."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reconciliation-ai-streamtext-await",
+      "ruleId": "AI_PROVIDER_BOUNDARY",
+      "sourcePath": "packages/ai/src/__tests__/phase-13-adversarial-streamText-await.test.ts",
+      "owner": "ai-platform",
+      "rationale": "This exact adversarial AI adapter test exercises awaited streamText behavior; all covered findings are enumerated and production paths remain enforced."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reconciliation-ai-mock-provider",
+      "ruleId": "AI_PROVIDER_BOUNDARY",
+      "sourcePath": "packages/ai/src/__tests__/phase-2-mock-provider.test.ts",
+      "owner": "ai-platform",
+      "rationale": "This exact AI adapter test constructs mock provider call shapes; all covered findings are enumerated and production paths remain enforced."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reconciliation-ai-google-provider",
+      "ruleId": "AI_PROVIDER_BOUNDARY",
+      "sourcePath": "packages/ai/src/__tests__/phase-4-google-provider.test.ts",
+      "owner": "ai-platform",
+      "rationale": "This exact AI adapter test exercises Google provider construction and calls; all covered findings are enumerated and production paths remain enforced."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reconciliation-ai-multimodal-contract",
+      "ruleId": "AI_PROVIDER_BOUNDARY",
+      "sourcePath": "packages/ai/src/__tests__/phase-multimodal-contract.test.ts",
+      "owner": "ai-platform",
+      "rationale": "This exact AI adapter contract test exercises multimodal provider calls; all covered findings are enumerated and production paths remain enforced."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reconciliation-ai-multimodal-unsupported",
+      "ruleId": "AI_PROVIDER_BOUNDARY",
+      "sourcePath": "packages/ai/src/__tests__/phase-multimodal-unsupported.test.ts",
+      "owner": "ai-platform",
+      "rationale": "This exact AI adapter test exercises unsupported multimodal provider behavior; all covered findings are enumerated and production paths remain enforced."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reconciliation-ai-stream-text-contract",
+      "ruleId": "AI_PROVIDER_BOUNDARY",
+      "sourcePath": "packages/ai/src/__tests__/phase-stream-text-contract.test.ts",
+      "owner": "ai-platform",
+      "rationale": "This exact AI adapter contract test exercises stream text provider calls; all covered findings are enumerated and production paths remain enforced."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reconciliation-review-jobs-schema",
+      "ruleId": "DURABLE_JOB_DATABASE_BOUNDARY",
+      "sourcePath": "packages/db/src/__tests__/phase-1-review-jobs-schema.test.ts",
+      "owner": "database-platform",
+      "rationale": "This exact database schema test imports the durable review-jobs table to verify its contract; the covered finding is enumerated and production paths remain enforced."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reconciliation-storage-factory-test",
+      "ruleId": "STORAGE_PROVIDER_BOUNDARY",
+      "sourcePath": "packages/storage/src/__tests__/factory.test.ts",
+      "owner": "storage-platform",
+      "rationale": "This exact storage adapter test imports the provider factory contract; the covered finding is enumerated and production paths remain enforced."
     }
   ],
   "baselineFiles": {
