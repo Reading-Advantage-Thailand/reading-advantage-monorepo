@@ -1,5 +1,9 @@
 import { randomBytes } from "node:crypto";
 import postgres from "postgres";
+import {
+  buildPostgresOptions,
+  normalizePostgresConnectionString,
+} from "../connection-options.js";
 
 const COMPANY_IDENTITY_DATABASE = "company_identity";
 const COMPANY_IDENTITY_TEST_DATABASE_PATTERN =
@@ -208,7 +212,8 @@ async function createValidatedClient(
   onnotice?: (notice: postgres.Notice) => void,
 ): Promise<postgres.Sql> {
   const target = connectionTargetFromUrl(databaseUrl);
-  const sql = postgres(databaseUrl, {
+  const sql = postgres(normalizePostgresConnectionString(databaseUrl), {
+    ...buildPostgresOptions(databaseUrl),
     max: poolMax,
     onnotice,
     prepare: false,
