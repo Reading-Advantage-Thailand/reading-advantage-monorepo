@@ -283,7 +283,10 @@ class SuccessorAuthorityTests(unittest.TestCase):
                 ["/usr/bin/git", "-C", str(repo), "rev-parse", "HEAD"], text=True
             ).strip()
             self.assertEqual(
-                _validate_admission_revision(repo, authority, mapper), mapper
+                _validate_admission_revision(
+                    repo, authority, mapper, "truth-test-author"
+                ),
+                mapper,
             )
             self.assertNotEqual(
                 stale_phase3,
@@ -292,9 +295,30 @@ class SuccessorAuthorityTests(unittest.TestCase):
                 ),
             )
             with self.assertRaisesRegex(
-                T2EvidenceVerificationError, "explicit admission revision differs"
+                T2EvidenceVerificationError, "chronology is invalid"
             ):
-                _validate_admission_revision(repo, authority, authority)
+                _validate_admission_revision(
+                    repo, authority, authority, "truth-test-author"
+                )
+
+            truth_paths = (
+                f"measure/tracks/{TRACK}/denominator-contract-test-report.json",
+                f"measure/tracks/{TRACK}/role-receipts/truth-test-author.json",
+            )
+            for index, path in enumerate(truth_paths):
+                target = repo / path
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_text(f"truth-{index}\n", encoding="utf-8")
+                subprocess.run(
+                    ["/usr/bin/git", "-C", str(repo), "add", path], check=True
+                )
+                subprocess.run([*commit, f"truth-{index}"], check=True)
+            self.assertEqual(
+                _validate_admission_revision(
+                    repo, authority, mapper, "adversarial-reviewer"
+                ),
+                mapper,
+            )
 
     def test_reviewer_rejects_boolean_counters_and_whitespace_severity(self) -> None:
         """Falsifies Python equality coercion and untrimmed blocking severity bypasses."""

@@ -183,7 +183,7 @@ def _resolve_admission_revision(root: Path, phase0_revision: str) -> str:
 
 
 def _validate_admission_revision(
-    root: Path, phase0_revision: str, admission_revision: str
+    root: Path, phase0_revision: str, admission_revision: str, role: str
 ) -> str:
     """Validates an explicit admission revision against current mapper HEAD.
 
@@ -191,6 +191,7 @@ def _validate_admission_revision(
         root: Repository containing the commits.
         phase0_revision: Exact Phase-0 authority commit.
         admission_revision: Explicit mapper-output revision selected for admission.
+        role: Final role whose allowed post-mapper chronology is checked.
 
     Returns:
         Validated admission revision.
@@ -198,12 +199,65 @@ def _validate_admission_revision(
     Raises:
         T2EvidenceVerificationError: When the explicit revision is not mapper HEAD.
     """
-    resolved = _resolve_admission_revision(root, phase0_revision)
-    if admission_revision != resolved:
+    head = subprocess.check_output(
+        ("/usr/bin/git", "rev-parse", "HEAD"), cwd=root, text=True
+    ).strip()
+    latest_phase3 = subprocess.check_output(
+        ("/usr/bin/git", "log", "-1", "--format=%H", head, "--", PHASE3_PATH),
+        cwd=root,
+        text=True,
+    ).strip()
+    authority_ancestor = subprocess.run(
+        ("/usr/bin/git", "merge-base", "--is-ancestor", phase0_revision, admission_revision),
+        cwd=root,
+        check=False,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+    admission_ancestor = subprocess.run(
+        ("/usr/bin/git", "merge-base", "--is-ancestor", admission_revision, head),
+        cwd=root,
+        check=False,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+    mapper_changes = subprocess.check_output(
+        ("/usr/bin/git", "diff-tree", "--no-commit-id", "--name-only", "-r", admission_revision),
+        cwd=root,
+        text=True,
+    ).splitlines()
+    later_changes = subprocess.check_output(
+        ("/usr/bin/git", "diff", "--name-only", f"{admission_revision}..{head}"),
+        cwd=root,
+        text=True,
+    ).splitlines()
+    t2_test_paths = {module.replace(".", "/") + ".py" for module in ADMISSION_MODULES}
+    relevant_later = {
+        path
+        for path in later_changes
+        if path.startswith(f"{TRACK_DIRECTORY}/") or path in t2_test_paths
+    }
+    reviewer_allowed = {
+        f"{TRACK_DIRECTORY}/denominator-contract-test-report.json",
+        f"{TRACK_DIRECTORY}/role-receipts/truth-test-author.json",
+    }
+    allowed_later = set() if role == "truth-test-author" else reviewer_allowed
+    if (
+        role not in {"truth-test-author", "adversarial-reviewer"}
+        or _COMMIT.fullmatch(admission_revision) is None
+        or latest_phase3 != admission_revision
+        or authority_ancestor.returncode != 0
+        or admission_ancestor.returncode != 0
+        or set(mapper_changes) != set(MAPPER_OUTPUT_PATHS)
+        or len(mapper_changes) != len(MAPPER_OUTPUT_PATHS)
+        or not relevant_later.issubset(allowed_later)
+        or (role == "truth-test-author" and head != admission_revision)
+        or (role == "adversarial-reviewer" and relevant_later != reviewer_allowed)
+    ):
         raise T2EvidenceVerificationError(
-            "explicit admission revision differs from current mapper HEAD"
+            "explicit admission revision or final-role chronology is invalid"
         )
-    return resolved
+    return admission_revision
 
 
 def _json_object(path: Path) -> dict[str, Any]:
@@ -529,7 +583,7 @@ def validate_independent_review(
         T2EvidenceVerificationError: When any review assertion is unsupported.
     """
     admission_revision = _validate_admission_revision(
-        REPO_ROOT, phase0_revision, admission_revision
+        REPO_ROOT, phase0_revision, admission_revision, "adversarial-reviewer"
     )
     run_phase0_3_admission(admission_revision)
     review = _json_object(path)
@@ -636,6 +690,7 @@ def main(arguments: Sequence[str] | None = None) -> None:
             REPO_ROOT,
             values.phase0_authority_revision,
             values.admission_revision,
+            "truth-test-author",
         )
         inventory = run_phase0_3_admission(admission_revision)
         validate_truth_report(
