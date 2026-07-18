@@ -7,6 +7,7 @@ import hashlib
 import json
 import re
 import subprocess
+import tempfile
 from collections import defaultdict
 from dataclasses import dataclass
 from pathlib import Path
@@ -74,9 +75,15 @@ PHASE2_ARTIFACTS = (
     "human-historical-deleted-records.json",
     "human-discrepancy-records.json",
 )
-TRANSITION_HELPER_PATH = (
-    "measure/tracks/apk_source_denominator_inventory_20260712/transition_ast_helper.ts"
+TRANSITION_BUNDLE_PATH = (
+    "measure/tracks/apk_source_denominator_inventory_20260712/transition_ast_helper.bundle.cjs"
 )
+GIT_EXECUTABLE = "/usr/bin/git"
+NODE_EXECUTABLE = "/opt/codex-desktop/resources/node-runtime/bin/node"
+RUNTIME_ENV = {
+    "LANG": "C",
+    "PATH": "/opt/codex-desktop/resources/node-runtime/bin:/usr/bin:/bin",
+}
 
 
 @dataclass
@@ -104,7 +111,7 @@ class GitObjectReader:
     def __init__(self) -> None:
         """Starts the batch reader and initializes auditable usage counters."""
         self.process = subprocess.Popen(
-            ["git", "cat-file", "--batch"],
+            [GIT_EXECUTABLE, "cat-file", "--batch"],
             cwd=REPO_ROOT,
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
@@ -160,7 +167,7 @@ class GitObjectReader:
 def _tree_entries() -> list[dict[str, Any]]:
     """Enumerates non-quarantined frozen tree entries with Git object metadata."""
     output = subprocess.check_output(
-        ["git", "ls-tree", "-r", "-l", BASELINE, "--", *SOURCE_ROOTS],
+        [GIT_EXECUTABLE, "ls-tree", "-r", "-l", BASELINE, "--", *SOURCE_ROOTS],
         cwd=REPO_ROOT,
         text=True,
     )
@@ -257,26 +264,26 @@ def _raw_asset_path(path: str) -> bool:
     return _raw_asset_relevance_rule(path) is not None
 
 
-def _transition_helper_source(code_revision: str | None) -> str:
-    """Returns commit-bound TypeScript helper source for Phase-2 traversal.
+def _transition_helper_bundle(code_revision: str | None) -> bytes:
+    """Returns commit-bound self-contained helper bytes for Phase-2 traversal.
 
     Args:
         code_revision: Full immutable code commit, or ``None`` only for focused
             in-process unit tests.
 
     Returns:
-        TypeScript compiler helper source.
+        Self-contained CommonJS bundle bytes.
 
     Raises:
         ValueError: If a supplied revision is not a full lowercase commit SHA.
         RuntimeError: If Git cannot resolve the helper at the supplied revision.
     """
     if code_revision is None:
-        return (TRACK_DIR / "transition_ast_helper.ts").read_text(encoding="utf-8")
+        return (TRACK_DIR / "transition_ast_helper.bundle.cjs").read_bytes()
     if re.fullmatch(r"[0-9a-f]{40}", code_revision) is None:
         raise ValueError("code-revision must be a full 40-character lowercase commit SHA")
     result = subprocess.run(
-        ["git", "show", f"{code_revision}:{TRANSITION_HELPER_PATH}"],
+        [GIT_EXECUTABLE, "show", f"{code_revision}:{TRANSITION_BUNDLE_PATH}"],
         cwd=REPO_ROOT,
         capture_output=True,
         check=False,
@@ -286,22 +293,33 @@ def _transition_helper_source(code_revision: str | None) -> str:
             "Unable to load immutable Phase-2 transition helper: "
             + result.stderr.decode("utf-8", errors="replace").strip()
         )
-    return result.stdout.decode("utf-8")
+    return result.stdout
+
+
+def _run_transition_bundle(bundle: bytes, request: bytes) -> subprocess.CompletedProcess[bytes]:
+    """Executes exact bundle bytes with the frozen Node runtime and clean environment."""
+    with tempfile.NamedTemporaryFile(suffix=".cjs") as helper:
+        helper.write(bundle)
+        helper.flush()
+        return subprocess.run(
+            [NODE_EXECUTABLE, helper.name],
+            cwd=REPO_ROOT,
+            input=request,
+            capture_output=True,
+            check=False,
+            env=RUNTIME_ENV,
+        )
 
 
 def _enumerate_raw_transition_facts(
     source_texts: dict[str, str], *, code_revision: str | None = None
 ) -> list[dict[str, Any]]:
     """Enumerates Phase-2 raw writes through its independent compiler traversal."""
-    helper_source = _transition_helper_source(code_revision)
-    result = subprocess.run(
-        [str(REPO_ROOT / "node_modules" / ".bin" / "tsx"), "--eval", helper_source],
-        cwd=REPO_ROOT,
-        input=json.dumps(
+    result = _run_transition_bundle(
+        _transition_helper_bundle(code_revision),
+        json.dumps(
             {"mode": "phase2", "sources": source_texts}, sort_keys=True
         ).encode(),
-        capture_output=True,
-        check=False,
     )
     if result.returncode:
         raise RuntimeError(
@@ -556,7 +574,7 @@ def discover_raw_frozen_sources(*, code_revision: str | None = None) -> dict[str
             for row in entries if _raw_asset_path(row["path"])
         ]
         history_output = subprocess.check_output(
-            ["git", "log", "--first-parent", "--format=commit:%H", "--name-status", "--diff-filter=D", BASELINE, "--", *SOURCE_ROOTS],
+            [GIT_EXECUTABLE, "log", "--first-parent", "--format=commit:%H", "--name-status", "--diff-filter=D", BASELINE, "--", *SOURCE_ROOTS],
             cwd=REPO_ROOT,
             text=True,
         )
@@ -832,7 +850,7 @@ def validate_phase1_revision(revision: str) -> str:
     if not re.fullmatch(r"[0-9a-f]{40}", revision):
         raise ValueError("phase1-revision must be a full 40-character lowercase commit SHA")
     resolved = subprocess.run(
-        ["git", "rev-parse", "--verify", f"{revision}^{{commit}}"],
+        [GIT_EXECUTABLE, "rev-parse", "--verify", f"{revision}^{{commit}}"],
         cwd=REPO_ROOT,
         capture_output=True,
         text=True,
@@ -841,7 +859,7 @@ def validate_phase1_revision(revision: str) -> str:
     if resolved.returncode != 0 or resolved.stdout.strip() != revision:
         raise ValueError(f"Unresolvable phase1-revision: {revision}")
     reachable = subprocess.run(
-        ["git", "merge-base", "--is-ancestor", revision, "HEAD"],
+        [GIT_EXECUTABLE, "merge-base", "--is-ancestor", revision, "HEAD"],
         cwd=REPO_ROOT,
         capture_output=True,
         check=False,
@@ -1221,7 +1239,7 @@ def program_reviews(
     for slug in ("astral-mage", "sorcerer-ziggurat"):
         prefix = f"packages/game-cartridges/src/cartridges/{slug}/"
         supplemental = [path for path in subprocess.check_output(
-            ["git", "ls-tree", "-r", "--name-only", ASTRAL_HISTORY_REVISION, "--", prefix],
+            [GIT_EXECUTABLE, "ls-tree", "-r", "--name-only", ASTRAL_HISTORY_REVISION, "--", prefix],
             cwd=REPO_ROOT,
             text=True,
         ).splitlines() if path]
@@ -1265,10 +1283,10 @@ def program_reviews(
                 disposition = "unsupported program assumption"
                 source_fact = "No current or ancestor implementation evidence was found by the recorded exhaustive searches; the authored program name is reviewed but excluded from the current source denominator."
 
-            exact_name_command = ["git", "log", "--first-parent", "--format=%H", "-S", display_name, BASELINE, "--", *SOURCE_ROOTS]
-            slug_command = ["git", "log", "--first-parent", "--format=%H", "-S", catalog_id, BASELINE, "--", *SOURCE_ROOTS]
-            current_name_command = ["git", "grep", "-l", "-F", display_name, BASELINE, "--", *SOURCE_ROOTS]
-            spec_command = ["git", "grep", "-l", "-F", display_name, BASELINE, "--", "measure"]
+            exact_name_command = [GIT_EXECUTABLE, "log", "--first-parent", "--format=%H", "-S", display_name, BASELINE, "--", *SOURCE_ROOTS]
+            slug_command = [GIT_EXECUTABLE, "log", "--first-parent", "--format=%H", "-S", catalog_id, BASELINE, "--", *SOURCE_ROOTS]
+            current_name_command = [GIT_EXECUTABLE, "grep", "-l", "-F", display_name, BASELINE, "--", *SOURCE_ROOTS]
+            spec_command = [GIT_EXECUTABLE, "grep", "-l", "-F", display_name, BASELINE, "--", "measure"]
 
             def command_lines(command: list[str]) -> list[str]:
                 result = subprocess.run(command, cwd=REPO_ROOT, capture_output=True, text=True, check=False)
@@ -1309,8 +1327,8 @@ def program_reviews(
                 ]
                 path_history_events = command_lines(path_history_command)
             else:
-                deletion_command = ["git", "log", "--first-parent", "--format=%H%x09%P%x09%s", "--diff-filter=D", BASELINE, "--", f"*{catalog_id}*"]
-                path_history_command = ["git", "log", "--first-parent", "--format=commit:%H", "--name-status", BASELINE, "--", f"*{catalog_id}*"]
+                deletion_command = [GIT_EXECUTABLE, "log", "--first-parent", "--format=%H%x09%P%x09%s", "--diff-filter=D", BASELINE, "--", f"*{catalog_id}*"]
+                path_history_command = [GIT_EXECUTABLE, "log", "--first-parent", "--format=commit:%H", "--name-status", BASELINE, "--", f"*{catalog_id}*"]
 
             history_search = {
                 "baseline_revision": BASELINE,

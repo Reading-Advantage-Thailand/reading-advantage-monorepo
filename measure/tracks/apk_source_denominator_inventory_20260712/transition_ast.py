@@ -5,38 +5,45 @@ from __future__ import annotations
 import json
 import re
 import subprocess
+import tempfile
 from pathlib import Path
 from typing import Any, Mapping
 
 
 TRACK_DIR = Path(__file__).resolve().parent
 REPO_ROOT = TRACK_DIR.parents[2]
-AST_HELPER = TRACK_DIR / "transition_ast_helper.ts"
-AST_HELPER_PATH = (
-    "measure/tracks/apk_source_denominator_inventory_20260712/transition_ast_helper.ts"
+AST_BUNDLE = TRACK_DIR / "transition_ast_helper.bundle.cjs"
+AST_BUNDLE_PATH = (
+    "measure/tracks/apk_source_denominator_inventory_20260712/transition_ast_helper.bundle.cjs"
 )
+GIT_EXECUTABLE = "/usr/bin/git"
+NODE_EXECUTABLE = "/opt/codex-desktop/resources/node-runtime/bin/node"
+RUNTIME_ENV = {
+    "LANG": "C",
+    "PATH": "/opt/codex-desktop/resources/node-runtime/bin:/usr/bin:/bin",
+}
 
 
-def _helper_source(code_revision: str | None) -> str:
-    """Returns exact TypeScript helper source from a commit-bound locator.
+def _helper_bundle(code_revision: str | None) -> bytes:
+    """Returns exact self-contained helper bytes from a commit-bound locator.
 
     Args:
         code_revision: Full immutable code commit, or ``None`` only for focused
             in-process unit tests.
 
     Returns:
-        TypeScript compiler helper source.
+        Self-contained CommonJS bundle bytes.
 
     Raises:
         ValueError: If a supplied revision is not a full lowercase commit SHA.
         RuntimeError: If Git cannot resolve the helper at the supplied revision.
     """
     if code_revision is None:
-        return AST_HELPER.read_text(encoding="utf-8")
+        return AST_BUNDLE.read_bytes()
     if re.fullmatch(r"[0-9a-f]{40}", code_revision) is None:
         raise ValueError("code-revision must be a full 40-character lowercase commit SHA")
     result = subprocess.run(
-        ["git", "show", f"{code_revision}:{AST_HELPER_PATH}"],
+        [GIT_EXECUTABLE, "show", f"{code_revision}:{AST_BUNDLE_PATH}"],
         cwd=REPO_ROOT,
         capture_output=True,
         check=False,
@@ -46,7 +53,22 @@ def _helper_source(code_revision: str | None) -> str:
             "Unable to load immutable TypeScript transition helper: "
             + result.stderr.decode("utf-8", errors="replace").strip()
         )
-    return result.stdout.decode("utf-8")
+    return result.stdout
+
+
+def _run_bundle(bundle: bytes, request: bytes) -> subprocess.CompletedProcess[bytes]:
+    """Executes exact bundle bytes with the frozen Node runtime and clean environment."""
+    with tempfile.NamedTemporaryFile(suffix=".cjs") as helper:
+        helper.write(bundle)
+        helper.flush()
+        return subprocess.run(
+            [NODE_EXECUTABLE, helper.name],
+            cwd=REPO_ROOT,
+            input=request,
+            capture_output=True,
+            check=False,
+            env=RUNTIME_ENV,
+        )
 
 
 def enumerate_typescript_transition_facts(
@@ -67,13 +89,9 @@ def enumerate_typescript_transition_facts(
     """
     if mode not in {"phase1", "phase2"}:
         raise ValueError(f"Unsupported transition extraction mode: {mode}")
-    helper_source = _helper_source(code_revision)
-    result = subprocess.run(
-        [str(REPO_ROOT / "node_modules" / ".bin" / "tsx"), "--eval", helper_source],
-        cwd=REPO_ROOT,
-        input=json.dumps({"mode": mode, "sources": dict(sources)}, sort_keys=True).encode(),
-        capture_output=True,
-        check=False,
+    result = _run_bundle(
+        _helper_bundle(code_revision),
+        json.dumps({"mode": mode, "sources": dict(sources)}, sort_keys=True).encode(),
     )
     if result.returncode:
         raise RuntimeError(

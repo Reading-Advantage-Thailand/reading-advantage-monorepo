@@ -109,7 +109,7 @@ def run_git(*arguments: str) -> bytes:
         RuntimeError: If Git cannot resolve the requested committed object.
     """
     result = subprocess.run(
-        ["git", *arguments], cwd=REPO_ROOT, capture_output=True, check=False
+        ["/usr/bin/git", *arguments], cwd=REPO_ROOT, capture_output=True, check=False
     )
     if result.returncode:
         raise RuntimeError(result.stderr.decode("utf-8", errors="replace").strip())

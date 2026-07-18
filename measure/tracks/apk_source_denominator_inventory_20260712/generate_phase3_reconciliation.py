@@ -58,7 +58,7 @@ def git_bytes(revision: str, path: str) -> bytes:
     cached = _GIT_BLOB_CACHE.get(key)
     if cached is not None:
         return cached
-    blob = subprocess.check_output(["git", "show", f"{revision}:{path}"], cwd=REPO_ROOT)
+    blob = subprocess.check_output(["/usr/bin/git", "show", f"{revision}:{path}"], cwd=REPO_ROOT)
     _GIT_BLOB_CACHE[key] = blob
     return blob
 
@@ -95,7 +95,7 @@ def is_ancestor(revision: str) -> bool:
     if cached is not None:
         return cached
     result = subprocess.run(
-        ["git", "merge-base", "--is-ancestor", revision, BASELINE],
+        ["/usr/bin/git", "merge-base", "--is-ancestor", revision, BASELINE],
         cwd=REPO_ROOT,
         check=False,
     ).returncode == 0
@@ -365,7 +365,7 @@ def validate_symmetric_evidence(evidence: list[dict[str, Any]]) -> list[dict[str
             ):
                 raise ValueError("INVALID_SYMMETRIC_DELETION_EVIDENCE")
             deletion = subprocess.check_output(
-                ["git", "diff-tree", "--no-commit-id", "--name-status", "-r", revision, "--", path],
+                ["/usr/bin/git", "diff-tree", "--no-commit-id", "--name-status", "-r", revision, "--", path],
                 cwd=REPO_ROOT,
                 text=True,
             ).splitlines()
