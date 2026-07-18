@@ -61,20 +61,19 @@ Do not start Phase 2 until the security gate is green.
 
 ## Phase 1: Production curriculum seed + human approval
 
-- [~] Task: Dry-run the seed with `AI_PROVIDER=mock` against a local DB; confirm rows land as `reviewStatus: 'draft'` and the script is idempotent
-- [~] Task: Run `pnpm --filter sales-advantage seed:curriculum` with `AI_PROVIDER=openrouter` (real generation)
-  - [ ] 6 modules / ~26 lessons / ~17 scenarios+rubrics / quiz questions inserted as `draft`
-- [~] Task: Human review — spot-check 2–3 scenarios for rubric quality and source traceability (`sourceRef` back to `advantage-pr/09-sales-enablement/`); verify honest-claims/banned-phrase governance survived generation
-- [~] Task: Approve the launch cohort — flip `reviewStatus` to `approved` via the admin curriculum page (or a reviewed SQL statement); confirm draft content stays invisible to reps
-- [~] Task: Measure — User Manual Verification 'Production curriculum'
+- [b] superseded:not-used — the mock/draft database path was exploratory; the chosen release architecture seeds only the immutable deterministic graph after its release gate passes.
+- [b] superseded:not-used — OpenRouter generation was not approved or run, and it is not required for the reviewed deterministic candidate.
+  - [b] superseded:not-used — no AI-generated draft rows are part of the selected release path.
+- [~] Task: Human review — review the exact deterministic graph (`ccba5498f453f1e2982307ca29d9d56c8bf17aeb26e1d586de232b44416b8717`), all eight scenarios/rubrics, source traceability, pedagogy, and claims; then create the graph-bound track-local JSON approval and provision its reviewer-controlled SHA-256 trust anchor — [b] deferred:human-gated
+- [b] superseded:not-used — the admin draft-to-approved flip is replaced by fail-closed seeding of the exact graph only after manifest evidence and the external trust anchor match.
+- [b] superseded:merged-into-human-review — production-curriculum manual verification is the exact graph review and trust-anchor step above; it remains incomplete.
 
 ---
 
 > **2026-07-18 production curriculum checkpoint:** the release pipeline loaded
 > and independently verified 6 modules, 27 lessons, 8 rubrics, 8 scenarios, and
 > 14 quiz questions. Deterministic graph digest:
-> `ccba5498f453f1e2982307ca29d9d56c8bf17aeb26e1d586de232b44416b8717`. The broader human content review and AI-generation tasks above
-> remain open and are not represented as complete.
+> `ccba5498f453f1e2982307ca29d9d56c8bf17aeb26e1d586de232b44416b8717`. The exact-graph human review and reviewer-controlled trust anchor remain open. The former AI-generation and draft-seed paths are superseded and were not used.
 
 > **2026-07-18 curriculum release-contract checkpoint:** the deterministic graph
 > is now labeled as a release candidate rather than local-dev seed data. Its
@@ -88,8 +87,10 @@ Do not start Phase 2 until the security gate is green.
 > False product, claims, availability, and flat-price content identified in hard
 > review was replaced with the pinned corpus language. The production seed still
 > fails closed with SALES_CURRICULUM_HUMAN_APPROVAL_REQUIRED while the approval
-> record is pending. OpenRouter generation also requires a provider-specific
-> sharing-approval value and was not run. No AI or human approval is claimed.
+> record is pending. The optional OpenRouter generator now requires both
+> `AI_PROVIDER=openrouter` and its exact provider-specific sharing approval
+> before any source read or AI-client creation, but generation was not approved,
+> was not run, and is not the chosen release path. No AI or human approval is claimed.
 
 ## Phase 2: Deploy infrastructure
 

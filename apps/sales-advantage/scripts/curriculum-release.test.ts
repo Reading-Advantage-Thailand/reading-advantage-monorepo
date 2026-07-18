@@ -11,9 +11,12 @@ import {
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { assertOpenRouterCurriculumSharingApproved } from "./generate-curriculum-review-artifact";
+import {
+  assertOpenRouterCurriculumSharingApproved,
+  generateCurriculumReviewArtifact,
+} from "./generate-curriculum-review-artifact";
 import {
   buildStaticSalesCurriculumRows,
   rejectDirectStaticSeedInvocation,
@@ -201,6 +204,74 @@ describe("Sales curriculum release contract", () => {
     );
   });
 
+  it("rejects false claims in module metadata", () => {
+    const rows = structuredClone(buildStaticSalesCurriculumRows());
+    rows.modules[0]!.description += " Managed Service is available now.";
+
+    expect(() => buildCurriculumAutomatedReview(rows)).toThrow(
+      "SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID",
+    );
+  });
+
+  it("rejects an altered launch state in the canonical suite", () => {
+    const rows = structuredClone(buildStaticSalesCurriculumRows());
+    const productLesson = rows.lessons.find((lesson) =>
+      lesson.title === "The 9-Product Suite and 3 Service Tiers"
+    )!;
+    productLesson.content = productLesson.content.replace(
+      "3. **Storytime Advantage** — coming early 2027",
+      "3. **Storytime Advantage** — live",
+    );
+
+    expect(() => buildCurriculumAutomatedReview(rows)).toThrow(
+      "SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID",
+    );
+  });
+
+  it("rejects an extra product in scenario text", () => {
+    const rows = structuredClone(buildStaticSalesCurriculumRows());
+    rows.scenarios[0]!.situation += " Robotics Advantage is also live.";
+
+    expect(() => buildCurriculumAutomatedReview(rows)).toThrow(
+      "SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID",
+    );
+  });
+
+  it("rejects an altered canonical price band", () => {
+    const rows = structuredClone(buildStaticSalesCurriculumRows());
+    const productLesson = rows.lessons.find((lesson) =>
+      lesson.title === "The 9-Product Suite and 3 Service Tiers"
+    )!;
+    productLesson.content = productLesson.content.replace(
+      "| **App-Only** | Digital platform access | ~1,000 THB/student/year |",
+      "| **App-Only** | Digital platform access | ~1,100 THB/student/year |",
+    );
+
+    expect(() => buildCurriculumAutomatedReview(rows)).toThrow(
+      "SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID",
+    );
+  });
+
+  it("rejects altered price and availability claims in rubric and quiz text", () => {
+    const priceRows = structuredClone(buildStaticSalesCurriculumRows());
+    const criteria = priceRows.rubrics[0]!.criteriaJson as Array<{
+      criterion: string;
+    }>;
+    criteria[0]!.criterion += " App-Only: 50,000 baht.";
+
+    expect(() => buildCurriculumAutomatedReview(priceRows)).toThrow(
+      "SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID",
+    );
+
+    const availabilityRows = structuredClone(buildStaticSalesCurriculumRows());
+    availabilityRows.quizQuestions[0]!.explanation +=
+      " Managed Service is available now.";
+
+    expect(() => buildCurriculumAutomatedReview(availabilityRows)).toThrow(
+      "SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID",
+    );
+  });
+
   it("rejects a noncanonical product substituted into the nine-product suite", () => {
     const rows = structuredClone(buildStaticSalesCurriculumRows());
     const productLesson = rows.lessons.find((lesson) =>
@@ -350,6 +421,36 @@ describe("Sales curriculum release contract", () => {
     )).rejects.toThrow("SALES_CURRICULUM_APPROVAL_EVIDENCE_HASH_MISMATCH");
   });
 
+  it("rejects a traversal-shaped approval evidence reference", async () => {
+    const approved = await approvedManifest();
+    if (approved.approval.status !== "approved") {
+      throw new Error("fixture approval must be approved");
+    }
+    approved.approval.evidenceRef =
+      "measure/tracks/sales_advantage_golive_20260701/../forged.json";
+
+    await expect(assertCurriculumReleaseReady(
+      approved,
+      buildStaticSalesCurriculumRows(),
+      gatePaths(approved),
+    )).rejects.toThrow("SALES_CURRICULUM_EVIDENCE_PATH_INVALID");
+  });
+
+  it("rejects a different JSON file inside the Sales track", async () => {
+    const approved = await approvedManifest();
+    if (approved.approval.status !== "approved") {
+      throw new Error("fixture approval must be approved");
+    }
+    approved.approval.evidenceRef =
+      "measure/tracks/sales_advantage_golive_20260701/other-review.json";
+
+    await expect(assertCurriculumReleaseReady(
+      approved,
+      buildStaticSalesCurriculumRows(),
+      gatePaths(approved),
+    )).rejects.toThrow("SALES_CURRICULUM_EVIDENCE_PATH_INVALID");
+  });
+
   it("refuses the direct static seed entrypoint", () => {
     expect(() => rejectDirectStaticSeedInvocation()).toThrow(
       "SALES_CURRICULUM_DIRECT_SEED_FORBIDDEN_USE_REVIEWED_ENTRYPOINT",
@@ -358,13 +459,49 @@ describe("Sales curriculum release contract", () => {
 
   it("requires an explicit OpenRouter-specific sharing approval", () => {
     expect(() => assertOpenRouterCurriculumSharingApproved({})).toThrow(
-      "SALES_CURRICULUM_OPENROUTER_SHARING_APPROVAL_REQUIRED",
+      "SALES_CURRICULUM_OPENROUTER_PROVIDER_REQUIRED",
     );
     expect(() => assertOpenRouterCurriculumSharingApproved({
+      AI_PROVIDER: "openrouter",
       SALES_CURRICULUM_EXTERNAL_SHARING_APPROVED: "another-provider",
     })).toThrow("SALES_CURRICULUM_OPENROUTER_SHARING_APPROVAL_REQUIRED");
-    expect(() => assertOpenRouterCurriculumSharingApproved({
+    expect(assertOpenRouterCurriculumSharingApproved({
+      AI_PROVIDER: "openrouter",
       SALES_CURRICULUM_EXTERNAL_SHARING_APPROVED: "advantage-pr-to-openrouter",
-    })).not.toThrow();
+    })).toBe("openrouter");
   });
+
+  it.each(["openai", "google"])(
+    "rejects %s before reading private sources or creating an AI client",
+    async (provider) => {
+      const readUtf8File = vi.fn(async () => "private source");
+      const readSourceCommit = vi.fn(async () => "a".repeat(40));
+      const createAIClient = vi.fn(() => {
+        throw new Error("AI client must not be created");
+      });
+      const writeUtf8File = vi.fn(async () => undefined);
+
+      await expect(generateCurriculumReviewArtifact({
+        environment: {
+          AI_PROVIDER: provider,
+          SALES_CURRICULUM_EXTERNAL_SHARING_APPROVED:
+            "advantage-pr-to-openrouter",
+        },
+        model: "test-model",
+        output: join(temporaryRoot, "draft.json"),
+        sourceRoot,
+      }, {
+        createAIClient,
+        now: () => new Date("2026-07-19T00:00:00.000Z"),
+        readSourceCommit,
+        readUtf8File,
+        writeUtf8File,
+      })).rejects.toThrow("SALES_CURRICULUM_OPENROUTER_PROVIDER_REQUIRED");
+
+      expect(readUtf8File).not.toHaveBeenCalled();
+      expect(readSourceCommit).not.toHaveBeenCalled();
+      expect(createAIClient).not.toHaveBeenCalled();
+      expect(writeUtf8File).not.toHaveBeenCalled();
+    },
+  );
 });

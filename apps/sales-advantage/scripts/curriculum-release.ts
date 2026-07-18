@@ -2,7 +2,7 @@ import { execFile } from "node:child_process";
 import { createHash } from "node:crypto";
 import { readFile, writeFile } from "node:fs/promises";
 import { homedir } from "node:os";
-import { dirname, join, relative, resolve, sep } from "node:path";
+import { dirname, join, normalize, relative, resolve, sep } from "node:path";
 import { pathToFileURL } from "node:url";
 import { promisify } from "node:util";
 
@@ -191,6 +191,48 @@ const forbiddenCurriculumClaims = [
   "# The 5 Canonical Objections",
 ];
 
+const canonicalSuiteLaunchClaims = Object.freeze([
+  "1. **Reading Advantage** — live",
+  "2. **Primary Advantage** — live",
+  "3. **Storytime Advantage** — coming early 2027",
+  "4. **Math Advantage** — coming late 2026",
+  "5. **Science Advantage** — slipped while Tutor is prioritized",
+  "6. **STEM Advantage** — coming mid 2027",
+  "7. **Zhongwen Advantage** — coming late 2026",
+  "8. **Tutor Advantage** — beta 2026",
+  "9. **CodeCamp Advantage** — coming 2026",
+]);
+
+const canonicalTierClaims = Object.freeze([
+  "| **App-Only** | Digital platform access | ~1,000 THB/student/year |",
+  "| **Blended Learning** | App + physical workbooks + 2-day teacher training + quarterly fidelity reports | ~1,500 THB/student/year |",
+  "| **Managed Service / The Teaching Advantage** | Future tier with certified facilitators | Planned for May 2027 at the earliest; do not pre-sell availability, staffing, or price |",
+]);
+
+const allowedAdvantageNames = new Set([
+  "reading advantage",
+  "primary advantage",
+  "storytime advantage",
+  "math advantage",
+  "science advantage",
+  "stem advantage",
+  "zhongwen advantage",
+  "tutor advantage",
+  "codecamp advantage",
+  "mastery advantage",
+  "teaching advantage",
+]);
+
+const futureProductNames = [
+  "Storytime Advantage",
+  "Math Advantage",
+  "Science Advantage",
+  "STEM Advantage",
+  "Zhongwen Advantage",
+  "Tutor Advantage",
+  "CodeCamp Advantage",
+];
+
 /** Converts a Markdown heading into the fragment form used by source refs. */
 function markdownHeadingSlug(value: string): string {
   return value
@@ -210,6 +252,28 @@ function pathInside(root: string, child: string): string {
     throw new Error("SALES_CURRICULUM_EVIDENCE_PATH_INVALID");
   }
   return absoluteChild;
+}
+
+/**
+ * Resolves the designated normalized approval JSON inside the Sales track.
+ * @param workspaceRoot Repository root containing Measure evidence.
+ * @param evidenceRef Manifest-supplied evidence reference.
+ * @returns Absolute path to the designated approval evidence file.
+ * @throws When the reference differs from the designated normalized path.
+ */
+function trackLocalApprovalEvidencePath(
+  workspaceRoot: string,
+  evidenceRef: string,
+): string {
+  const designatedEvidenceRef =
+    "measure/tracks/sales_advantage_golive_20260701/curriculum-approval.json";
+  if (
+    evidenceRef !== designatedEvidenceRef ||
+    normalize(evidenceRef) !== evidenceRef
+  ) {
+    throw new Error("SALES_CURRICULUM_EVIDENCE_PATH_INVALID");
+  }
+  return pathInside(workspaceRoot, evidenceRef);
 }
 
 /** Verifies all canonical source files against both working bytes and pinned Git bytes. */
@@ -285,11 +349,6 @@ async function assertCurriculumApprovalEvidence(
     approval: Extract<CurriculumReleaseManifest["approval"], { status: "approved" }>;
   },
 ): Promise<void> {
-  if (!manifest.approval.evidenceRef.startsWith(
-    "measure/tracks/sales_advantage_golive_20260701/",
-  ) || !manifest.approval.evidenceRef.endsWith(".json")) {
-    throw new Error("SALES_CURRICULUM_EVIDENCE_PATH_INVALID");
-  }
   if (!approvalSha256) {
     throw new Error("SALES_CURRICULUM_APPROVAL_TRUST_ANCHOR_REQUIRED");
   }
@@ -299,7 +358,10 @@ async function assertCurriculumApprovalEvidence(
   } catch {
     throw new Error("SALES_CURRICULUM_APPROVAL_TRUST_ANCHOR_INVALID");
   }
-  const evidencePath = pathInside(workspaceRoot, manifest.approval.evidenceRef);
+  const evidencePath = trackLocalApprovalEvidencePath(
+    workspaceRoot,
+    manifest.approval.evidenceRef,
+  );
   let evidenceBytes: Buffer;
   try {
     evidenceBytes = await readFile(evidencePath);
@@ -331,6 +393,53 @@ async function assertCurriculumApprovalEvidence(
   ) {
     throw new Error("SALES_CURRICULUM_APPROVAL_EVIDENCE_MISMATCH");
   }
+}
+
+/**
+ * Collects every string in nested curriculum JSON without trusting row shape.
+ * @param value Curriculum value or nested JSON structure.
+ * @returns All string values reachable from the input.
+ */
+function collectCurriculumText(value: unknown): string[] {
+  if (typeof value === "string") return [value];
+  if (Array.isArray(value)) return value.flatMap(collectCurriculumText);
+  if (value && typeof value === "object") {
+    return Object.values(value).flatMap(collectCurriculumText);
+  }
+  return [];
+}
+
+/**
+ * Builds the complete curriculum text surface used by claim validation.
+ * @param rows Complete deterministic curriculum graph.
+ * @returns Module, lesson, scenario, rubric, and quiz text joined for review.
+ */
+function curriculumClaimSurface(rows: CurriculumRows): string {
+  return [
+    ...rows.modules.flatMap((module) => [
+      module.title,
+      module.description,
+      module.phase,
+    ]),
+    ...rows.lessons.flatMap((lesson) => [lesson.title, lesson.content]),
+    ...rows.scenarios.flatMap((scenario) => [
+      scenario.personaName,
+      scenario.personaRole,
+      scenario.situation,
+      scenario.objective,
+      ...collectCurriculumText(scenario.prospectContextJson),
+    ]),
+    ...rows.rubrics.flatMap((rubric) => [
+      rubric.name,
+      ...collectCurriculumText(rubric.criteriaJson),
+    ]),
+    ...rows.quizQuestions.flatMap((question) => [
+      question.question,
+      ...collectCurriculumText(question.optionsJson),
+      question.correctAnswer,
+      question.explanation,
+    ]),
+  ].join("\n");
 }
 
 /** Builds the machine-verifiable portion of the curriculum release review. */
@@ -405,28 +514,29 @@ export function buildCurriculumAutomatedReview(
     }
   }
 
-  const allContent = rows.lessons.map((lesson) => lesson.content).join("\n");
+  const allContent = curriculumClaimSurface(rows);
+  const unexpectedAdvantageName = [...allContent.matchAll(
+    /\b((?!The Advantage\b)[A-Z][A-Za-z-]* Advantage)\b/g,
+  )].some((match) => !allowedAdvantageNames.has(match[1]!.toLowerCase()));
+  const falseFutureLaunchClaim = futureProductNames.some((product) =>
+    new RegExp(
+      `${product}(?:\\*\\*)?\\s*(?:—|-|:|is)?\\s*(?:currently\\s+)?live\\b`,
+      "i",
+    ).test(allContent)
+  );
   if (
     forbiddenCurriculumClaims.some((claim) =>
       allContent.toLowerCase().includes(claim.toLowerCase())
     ) ||
+    unexpectedAdvantageName ||
+    falseFutureLaunchClaim ||
+    !canonicalSuiteLaunchClaims.every((claim) => allContent.includes(claim)) ||
+    !canonicalTierClaims.every((claim) => allContent.includes(claim)) ||
     !allContent.includes(
       "Research shows extensive reading outperforms traditional grammar instruction (Aka, 2019).",
     ) ||
-    !allContent.includes("Managed Service as planned for May 2027 at the earliest") ||
     !allContent.includes("# The 6 Canonical Objections") ||
-    !allContent.includes("## Objection 6:") ||
-    !allContent.includes("approximately **1,000 THB/student/year for App-Only**") ||
-    !allContent.includes("**1,500 THB/student/year for Blended Learning**") ||
-    ![
-      "Storytime Advantage",
-      "Math Advantage",
-      "Science Advantage",
-      "STEM Advantage",
-      "Zhongwen Advantage",
-      "Tutor Advantage",
-      "CodeCamp Advantage",
-    ].every((product) => allContent.includes(product))
+    !allContent.includes("## Objection 6:")
   ) {
     throw new Error("SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID");
   }

@@ -53,20 +53,42 @@ const curriculumSchema = z.object({
   })).length(6),
 });
 
+/** Inputs required to produce a human-review curriculum artifact. */
+export interface CurriculumReviewArtifactOptions {
+  environment: Readonly<Record<string, string | undefined>>;
+  model: string;
+  output: string;
+  sourceRoot: string;
+}
+
+/** Injectable boundaries used to prove provider validation precedes private I/O. */
+export interface CurriculumReviewArtifactDependencies {
+  createAIClient: typeof getAIClient;
+  now: () => Date;
+  readSourceCommit: (sourceRoot: string) => Promise<string>;
+  readUtf8File: (path: string) => Promise<string>;
+  writeUtf8File: (path: string, content: string) => Promise<void>;
+}
+
 /**
- * Requires an explicit, provider-specific approval before source text is shared.
- * @param environment Process environment carrying the recorded approval value.
- * @throws When OpenRouter sharing has not been explicitly approved.
+ * Requires the OpenRouter provider and its exact source-sharing approval.
+ * @param environment Process environment carrying provider and approval values.
+ * @returns The validated provider identifier used in artifact provenance.
+ * @throws When the provider or its source-sharing approval is not exact.
  */
 export function assertOpenRouterCurriculumSharingApproved(
   environment: Readonly<Record<string, string | undefined>>,
-): void {
+): "openrouter" {
+  if (environment.AI_PROVIDER !== "openrouter") {
+    throw new Error("SALES_CURRICULUM_OPENROUTER_PROVIDER_REQUIRED");
+  }
   if (
     environment.SALES_CURRICULUM_EXTERNAL_SHARING_APPROVED !==
       "advantage-pr-to-openrouter"
   ) {
     throw new Error("SALES_CURRICULUM_OPENROUTER_SHARING_APPROVAL_REQUIRED");
   }
+  return environment.AI_PROVIDER;
 }
 
 const prompt = `Create a six-module Sales Advantage curriculum using the attached canonical sources.
@@ -77,46 +99,54 @@ Every roleplay lesson must include non-empty teaching content before its scenari
 
 The outcome-claims policy is binding. Teach approved Aka (2019) phrasing and explicitly reject unsourced percentages, guarantees, market-leadership language, and improvised claims. Produce draft content only; a human reviewer decides release approval.`;
 
-/** Generates one non-secret OpenRouter draft artifact for human curriculum review. */
-async function main(): Promise<void> {
-  assertOpenRouterCurriculumSharingApproved(process.env);
-  const argument = (name: string): string | undefined => {
-    const prefix = `--${name}=`;
-    return process.argv.find((value) => value.startsWith(prefix))?.slice(
-      prefix.length,
+const defaultDependencies: CurriculumReviewArtifactDependencies = {
+  createAIClient: getAIClient,
+  now: () => new Date(),
+  readSourceCommit: async (sourceRoot) => {
+    const { stdout } = await execFileAsync(
+      "git",
+      ["-C", sourceRoot, "rev-parse", "HEAD"],
     );
-  };
-  const sourceRoot = resolve(
-    argument("source-root") ?? join(homedir(), "Desktop", "advantage-pr"),
+    return stdout.trim();
+  },
+  readUtf8File: async (path) => readFile(path, "utf8"),
+  writeUtf8File: async (path, content) => writeFile(path, content),
+};
+
+/**
+ * Generates one OpenRouter draft artifact after validating provider-bound consent.
+ * @param options Source, output, model, and environment configuration.
+ * @param dependencies Private-I/O and AI boundaries, injectable for verification.
+ * @returns A promise which resolves after the review artifact is written.
+ * @throws When provider consent, source access, generation, or validation fails.
+ */
+export async function generateCurriculumReviewArtifact(
+  options: CurriculumReviewArtifactOptions,
+  dependencies: CurriculumReviewArtifactDependencies = defaultDependencies,
+): Promise<void> {
+  const provider = assertOpenRouterCurriculumSharingApproved(
+    options.environment,
   );
-  const output = resolve(
-    argument("output") ??
-      "measure/tracks/sales_advantage_golive_20260701/openrouter-curriculum-draft.json",
-  );
-  const model = process.env.SALES_CURRICULUM_MODEL ??
-    "google/gemini-2.5-flash-lite";
   const sources = await Promise.all(CURRICULUM_SOURCE_PATHS.map(async (path) => {
-    const content = await readFile(join(sourceRoot, path), "utf8");
+    const content = await dependencies.readUtf8File(join(options.sourceRoot, path));
     return {
       path,
       sha256: createHash("sha256").update(content).digest("hex"),
       content,
     };
   }));
-  const { stdout: sourceCommit } = await execFileAsync(
-    "git",
-    ["-C", sourceRoot, "rev-parse", "HEAD"],
-  );
+  const sourceCommit = await dependencies.readSourceCommit(options.sourceRoot);
   const sourceText = sources
     .map((source) => `[${source.path}]\n${source.content.slice(0, 6000)}`)
     .join("\n\n---\n\n");
-  const result = await getAIClient().generateObjectWithProvenance({
-    schema: curriculumSchema,
-    model,
-    prompt: `${prompt}\n\nCANONICAL SOURCES\n${sourceText}`,
-    temperature: 0.3,
-    maxTokens: 16_384,
-  });
+  const result = await dependencies.createAIClient()
+    .generateObjectWithProvenance({
+      schema: curriculumSchema,
+      model: options.model,
+      prompt: `${prompt}\n\nCANONICAL SOURCES\n${sourceText}`,
+      temperature: 0.3,
+      maxTokens: 16_384,
+    });
   for (const module of result.object.modules) {
     for (const lesson of module.lessons) {
       if (lesson.type === "roleplay" && !lesson.scenarios?.length) {
@@ -134,21 +164,49 @@ async function main(): Promise<void> {
   const artifact = {
     schemaVersion: 1,
     status: "awaiting_human_review",
-    generatedAt: new Date().toISOString(),
+    generatedAt: dependencies.now().toISOString(),
     promptVersion: "sales-curriculum-v2",
     source: {
       repository: "advantage-pr",
-      commit: sourceCommit.trim(),
+      commit: sourceCommit,
       documents: sources.map(({ path, sha256 }) => ({ path, sha256 })),
     },
     generation: {
-      provider: "openrouter",
-      requestedModel: model,
+      provider,
+      requestedModel: options.model,
       provenance: result.provenance,
     },
     curriculum: result.object,
   };
-  await writeFile(output, `${JSON.stringify(artifact, null, 2)}\n`);
+  await dependencies.writeUtf8File(
+    options.output,
+    `${JSON.stringify(artifact, null, 2)}\n`,
+  );
+}
+
+/** Generates one non-secret OpenRouter draft artifact for human curriculum review. */
+async function main(): Promise<void> {
+  const argument = (name: string): string | undefined => {
+    const prefix = `--${name}=`;
+    return process.argv.find((value) => value.startsWith(prefix))?.slice(
+      prefix.length,
+    );
+  };
+  const sourceRoot = resolve(
+    argument("source-root") ?? join(homedir(), "Desktop", "advantage-pr"),
+  );
+  const output = resolve(
+    argument("output") ??
+      "measure/tracks/sales_advantage_golive_20260701/openrouter-curriculum-draft.json",
+  );
+  const model = process.env.SALES_CURRICULUM_MODEL ??
+    "google/gemini-2.5-flash-lite";
+  await generateCurriculumReviewArtifact({
+    environment: process.env,
+    model,
+    output,
+    sourceRoot,
+  });
   process.stdout.write(`OpenRouter curriculum draft written: ${output}\n`);
 }
 
