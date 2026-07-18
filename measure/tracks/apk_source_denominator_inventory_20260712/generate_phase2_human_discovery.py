@@ -1861,7 +1861,11 @@ def _generate_phase2(
     discrepancy = json.loads(discrepancy_path.read_text())
     discrepancy["exhaustive_coverage_counts"] = counts
     discrepancy["uncovered_count"] = symmetric_summary["uncovered_count"]
-    discrepancy["uncovered_by_category"] = symmetric_summary["uncovered_by_category"]
+    discrepancy["uncovered_by_category"] = (
+        symmetric_summary["uncovered_by_category"]
+        if symmetric_summary["uncovered_count"]
+        else {category: 0 for category in counts}
+    )
     write_json("human-discrepancy-records.json", discrepancy)
 
 
