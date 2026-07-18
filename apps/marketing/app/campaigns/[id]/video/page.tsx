@@ -8,12 +8,22 @@ import {
   reorderScenes as reorderScenesFn,
   type Scene,
 } from "@/lib/scene-editor";
+import { scriptSchema } from "@/lib/script-schema";
 
 interface Topic {
   id: string;
   text: string;
   approved: boolean;
   editing: boolean;
+}
+
+interface VideoProject {
+  id: string;
+  campaignId: string;
+  topic: string;
+  script: Scene[];
+  status: "draft" | "in-progress" | "complete";
+  createdAt?: string;
 }
 
 const appNames: Record<string, string> = {
@@ -45,10 +55,17 @@ export default function VideoProductionPage() {
   const [generating, setGenerating] = useState(false);
   const [saving, setSaving] = useState(false);
   const [savedProjectId, setSavedProjectId] = useState<string | null>(null);
+  const [projects, setProjects] = useState<VideoProject[]>([]);
+  const [projectsLoading, setProjectsLoading] = useState(false);
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
+  const [projectMessage, setProjectMessage] = useState<string | null>(null);
+  const [projectError, setProjectError] = useState<string | null>(null);
 
   useEffect(() => {
     if (params?.id) {
-      fetchCampaign(params.id as string);
+      const campaignId = params.id as string;
+      void fetchCampaign(campaignId);
+      void fetchProjects(campaignId);
     }
   }, [params?.id]);
 
@@ -65,6 +82,77 @@ export default function VideoProductionPage() {
     } catch {
       console.error("Failed to load campaign");
     }
+  };
+
+  const fetchProjects = async (campaignId: string) => {
+    setProjectsLoading(true);
+    setProjectError(null);
+    try {
+      const res = await fetch(
+        `/api/video/projects?campaignId=${encodeURIComponent(campaignId)}`,
+      );
+      if (res.status === 401) {
+        window.location.href = "/login";
+        return;
+      }
+      if (res.status === 403) {
+        setProjectError("You do not have access to this campaign's projects.");
+        return;
+      }
+      if (!res.ok) {
+        setProjectError("Failed to load saved projects. Please try again.");
+        return;
+      }
+
+      const data: unknown = await res.json();
+      if (!Array.isArray(data)) {
+        setProjectError("Saved projects returned an invalid response.");
+        return;
+      }
+
+      const validProjects = data.filter((value): value is VideoProject => {
+        if (!value || typeof value !== "object") return false;
+        const candidate = value as Partial<VideoProject>;
+        return (
+          typeof candidate.id === "string" &&
+          typeof candidate.campaignId === "string" &&
+          typeof candidate.topic === "string" &&
+          scriptSchema.safeParse(candidate.script).success
+        );
+      });
+      setProjects(validProjects);
+    } catch {
+      setProjectError("Failed to load saved projects. Please try again.");
+    } finally {
+      setProjectsLoading(false);
+    }
+  };
+
+  const handleSelectProject = (projectId: string) => {
+    setSelectedProjectId(projectId || null);
+    setProjectError(null);
+    setProjectMessage(null);
+    if (!projectId) return;
+
+    const project = projects.find((candidate) => candidate.id === projectId);
+    if (!project) {
+      setProjectError("The selected project is no longer available.");
+      return;
+    }
+
+    const topicId = `project-topic-${project.id}`;
+    setTopics([
+      {
+        id: topicId,
+        text: project.topic,
+        approved: true,
+        editing: false,
+      },
+    ]);
+    setActiveTopicId(topicId);
+    setScript(project.script.map((scene) => ({ ...scene })));
+    setSavedProjectId(project.id);
+    setProjectMessage(`Loaded project ${project.id}`);
   };
 
   const handleResearchTopics = async () => {
@@ -146,6 +234,9 @@ export default function VideoProductionPage() {
     if (!topic) return;
     setGenerating(true);
     setSavedProjectId(null);
+    setSelectedProjectId(null);
+    setProjectMessage(null);
+    setProjectError(null);
     try {
       const res = await fetch("/api/video/generate-script", {
         method: "POST",
@@ -190,12 +281,17 @@ export default function VideoProductionPage() {
     if (!campaign?.id || !activeTopicId) return;
     const topic = topics.find((t) => t.id === activeTopicId);
     if (!topic) return;
+
+    const method = selectedProjectId ? "PATCH" : "POST";
     setSaving(true);
+    setProjectError(null);
+    setProjectMessage(null);
     try {
       const res = await fetch("/api/video/projects", {
-        method: "POST",
+        method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          ...(selectedProjectId ? { id: selectedProjectId } : {}),
           campaignId: campaign.id,
           topic: topic.text,
           script,
@@ -205,12 +301,43 @@ export default function VideoProductionPage() {
         window.location.href = "/login";
         return;
       }
-      const data = await res.json();
-      if (data?.id) {
-        setSavedProjectId(data.id);
+      if (res.status === 403) {
+        setProjectError("You do not have access to save this project.");
+        return;
       }
+      if (!res.ok) {
+        setProjectError(
+          method === "PATCH"
+            ? "Failed to update the project. Please try again."
+            : "Failed to save the project. Please try again.",
+        );
+        return;
+      }
+
+      const data: unknown = await res.json();
+      if (!data || typeof data !== "object" || typeof (data as { id?: unknown }).id !== "string") {
+        setProjectError("The project was saved but returned an invalid response.");
+        return;
+      }
+
+      const project = data as VideoProject;
+      setSavedProjectId(project.id);
+      setSelectedProjectId(project.id);
+      setProjects((current) => {
+        const withoutSaved = current.filter((item) => item.id !== project.id);
+        return [...withoutSaved, { ...project, topic: topic.text, script }];
+      });
+      setProjectMessage(
+        method === "PATCH"
+          ? `Updated project ${project.id}`
+          : `Saved as project ${project.id}`,
+      );
     } catch {
-      console.error("Failed to save script");
+      setProjectError(
+        method === "PATCH"
+          ? "Failed to update the project. Please try again."
+          : "Failed to save the project. Please try again.",
+      );
     } finally {
       setSaving(false);
     }
@@ -226,6 +353,54 @@ export default function VideoProductionPage() {
   return (
     <div>
       <h1>Video Production: {campaign.name}</h1>
+
+      <section
+        aria-labelledby="existing-projects-heading"
+        style={{
+          marginTop: "24px",
+          padding: "24px",
+          backgroundColor: "#fff",
+          borderRadius: "8px",
+          boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+        }}
+      >
+        <h2 id="existing-projects-heading">Existing Projects</h2>
+        <label htmlFor="existing-project-select" style={{ display: "block" }}>
+          Existing projects
+        </label>
+        <select
+          id="existing-project-select"
+          value={selectedProjectId ?? ""}
+          onChange={(event) => handleSelectProject(event.target.value)}
+          disabled={projectsLoading}
+          style={{
+            padding: "8px",
+            borderRadius: "4px",
+            border: "1px solid #ccc",
+            marginTop: "8px",
+            minWidth: "240px",
+          }}
+        >
+          <option value="">
+            {projectsLoading ? "Loading projects..." : "Choose a saved project"}
+          </option>
+          {projects.map((project) => (
+            <option key={project.id} value={project.id}>
+              {project.topic}
+            </option>
+          ))}
+        </select>
+        {projectError && (
+          <p role="alert" style={{ color: "#b91c1c", marginTop: "8px" }}>
+            {projectError}
+          </p>
+        )}
+        {projectMessage && (
+          <p aria-live="polite" style={{ color: "#15803d", marginTop: "8px" }}>
+            {projectMessage}
+          </p>
+        )}
+      </section>
 
       <div
         style={{
@@ -453,13 +628,19 @@ export default function VideoProductionPage() {
                     cursor: saving ? "not-allowed" : "pointer",
                   }}
                 >
-                  {saving ? "Saving..." : "Save Script"}
+                  {saving
+                    ? selectedProjectId
+                      ? "Updating..."
+                      : "Saving..."
+                    : selectedProjectId
+                      ? "Update Script"
+                      : "Save Script"}
                 </button>
               )}
             </div>
-            {savedProjectId && (
+            {savedProjectId && !projectMessage && (
               <p style={{ color: "#4CAF50", marginTop: "8px" }}>
-                Saved as project {savedProjectId}
+                Project {savedProjectId} is ready to update.
               </p>
             )}
 

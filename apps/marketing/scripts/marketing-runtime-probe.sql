@@ -15,8 +15,8 @@ BEGIN
   IF NOT has_table_privilege(current_user, 'settings', 'SELECT,INSERT,UPDATE') THEN
     missing := array_append(missing, 'settings:SELECT,INSERT,UPDATE');
   END IF;
-  IF NOT has_table_privilege(current_user, 'video_projects', 'SELECT,INSERT') THEN
-    missing := array_append(missing, 'video_projects:SELECT,INSERT');
+  IF NOT has_table_privilege(current_user, 'video_projects', 'SELECT,INSERT,UPDATE') THEN
+    missing := array_append(missing, 'video_projects:SELECT,INSERT,UPDATE');
   END IF;
 
   FOREACH retired_table IN ARRAY ARRAY[
@@ -61,4 +61,6 @@ INSERT INTO video_projects (id, campaign_id, topic)
     '00000000-0000-0000-0000-000000000041',
     '__runtime_probe__'
   );
+UPDATE video_projects SET script = script
+  WHERE id = '00000000-0000-0000-0000-000000000043';
 ROLLBACK;

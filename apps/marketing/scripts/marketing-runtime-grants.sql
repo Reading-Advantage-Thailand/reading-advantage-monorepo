@@ -15,7 +15,7 @@ REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public FROM marketing_runtime;
 GRANT SELECT, INSERT, UPDATE ON TABLE campaigns TO marketing_runtime;
 GRANT SELECT, INSERT ON TABLE past_topics TO marketing_runtime;
 GRANT SELECT, INSERT, UPDATE ON TABLE settings TO marketing_runtime;
-GRANT SELECT, INSERT ON TABLE video_projects TO marketing_runtime;
+GRANT SELECT, INSERT, UPDATE ON TABLE video_projects TO marketing_runtime;
 
 -- Do not let future migrations silently broaden runtime access. New tables
 -- require an explicit reviewed grant above before the runtime probe will pass.
