@@ -33,4 +33,19 @@ describe("LessonContent", () => {
     expect(screen.getByRole("list")).toBeTruthy();
     expect(screen.getAllByRole("listitem")).toHaveLength(2);
   });
+
+  it("renders curriculum comparison tables as semantic tables", () => {
+    render(
+      <LessonContent
+        content={
+          "| Rep type | What they do |\n| --- | --- |\n| Beginner | Pitches features |\n| Top performer | Runs discovery |"
+        }
+      />,
+    );
+
+    expect(screen.getByRole("table")).toBeTruthy();
+    expect(screen.getAllByRole("columnheader")).toHaveLength(2);
+    expect(screen.getAllByRole("row")).toHaveLength(3);
+    expect(screen.getByRole("cell", { name: "Runs discovery" })).toBeTruthy();
+  });
 });

@@ -49,6 +49,7 @@
     "react-dom": "19.2.7",
     "react-hook-form": "catalog:",
     "react-markdown": "^10.1.0",
+    "remark-gfm": "catalog:",
     "sonner": "catalog:",
     "superjson": "catalog:",
     "tailwind-merge": "catalog:",
