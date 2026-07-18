@@ -96,6 +96,10 @@ vi.mock("@reading-advantage/ai", async () => {
 // Auth mock: marketing routes now require authentication (Phase 2 of
 // wave3_product_alignment_20260628).
 import { authedRequest } from "./helpers/auth-mock";
+import { encrypt } from "@/lib/encryption";
+
+process.env.ENCRYPTION_KEY ??=
+  "a1b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef123456";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -114,7 +118,7 @@ interface Scene {
 const mockSettingsRows = [
   { key: "llm.provider", value: "google" },
   { key: "llm.model", value: "gemini-pro" },
-  { key: "llm.apiKey", value: "sk-test-key" },
+  { key: "llm.apiKey", value: encrypt("sk-test-key") },
 ];
 
 function makeSelectChainMock() {

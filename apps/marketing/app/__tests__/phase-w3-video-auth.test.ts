@@ -18,6 +18,7 @@ import {
 import { db } from "@reading-advantage/db";
 import { getAIClient } from "@reading-advantage/ai";
 import { settings, pastTopics } from "@reading-advantage/db/schema";
+import { encrypt } from "@/lib/encryption";
 
 const fakeAIClient = getAIClient() as unknown as { generateText: Mock };
 
@@ -169,7 +170,7 @@ function stubLLMSettings() {
   const { selectMock } = makeSelectChainMock([
     { key: "llm.provider", value: "google" },
     { key: "llm.model", value: "gemini-pro" },
-    { key: "llm.apiKey", value: "sk-w3-video-test-key" },
+    { key: "llm.apiKey", value: encrypt("sk-w3-video-test-key") },
   ]);
   (db.select as Mock).mockImplementation(selectMock);
 }
@@ -251,7 +252,10 @@ describe("Phase 2B: Video routes — unauthenticated boundary (RED at baseline)"
       settings: [
         { key: "llm.provider", value: "google" },
         { key: "llm.model", value: "gemini-pro" },
-        { key: "llm.apiKey", value: "sk-w3-video-test-key" },
+        {
+          key: "llm.apiKey",
+          value: encrypt("sk-w3-video-test-key"),
+        },
       ],
       pastTopics: [],
     });
@@ -372,7 +376,10 @@ describe("Phase 2B: Video routes — authenticated positive controls", () => {
       settings: [
         { key: "llm.provider", value: "google" },
         { key: "llm.model", value: "gemini-pro" },
-        { key: "llm.apiKey", value: "sk-w3-video-test-key" },
+        {
+          key: "llm.apiKey",
+          value: encrypt("sk-w3-video-test-key"),
+        },
       ],
       pastTopics: [],
     });

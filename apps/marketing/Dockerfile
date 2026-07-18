@@ -20,11 +20,11 @@ WORKDIR /app
 # ── Deps (cached unless lockfile changes) ──────────────────────────────
 FROM base AS deps
 
-COPY pnpm-lock.yaml pnpm-workspace.yaml package.json turbo.json ./
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json turbo.json .pnpmfile.cjs ./
 COPY apps/marketing/package.json apps/marketing/
 COPY packages/ ./packages
 
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --filter marketing... --frozen-lockfile
 
 # ── Builder ────────────────────────────────────────────────────────────
 FROM deps AS builder

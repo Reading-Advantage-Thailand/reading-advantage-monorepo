@@ -19,6 +19,7 @@ import { readFileSync, readdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { settings, pastTopics } from "@reading-advantage/db/schema";
+import { encrypt } from "@/lib/encryption";
 
 const fakeAIClient = getAIClient() as unknown as { generateText: Mock };
 
@@ -157,7 +158,7 @@ function stubLLMSettings() {
   const { selectMock } = makeSelectChainMock([
     { key: "llm.provider", value: "google" },
     { key: "llm.model", value: "gemini-pro" },
-    { key: "llm.apiKey", value: API_KEY },
+    { key: "llm.apiKey", value: encrypt(API_KEY) },
   ]);
   (db.select as Mock).mockImplementation(selectMock);
 }
@@ -223,7 +224,7 @@ describe("Phase 2E: AI adapter routing — regression guards", () => {
       settings: [
         { key: "llm.provider", value: "google" },
         { key: "llm.model", value: "gemini-pro" },
-        { key: "llm.apiKey", value: API_KEY },
+        { key: "llm.apiKey", value: encrypt(API_KEY) },
       ],
       pastTopics: [],
     });
@@ -306,7 +307,7 @@ describe("Phase 2E: AI adapter error redaction — RED at baseline", () => {
       settings: [
         { key: "llm.provider", value: "google" },
         { key: "llm.model", value: "gemini-pro" },
-        { key: "llm.apiKey", value: API_KEY },
+        { key: "llm.apiKey", value: encrypt(API_KEY) },
       ],
       pastTopics: [],
     });

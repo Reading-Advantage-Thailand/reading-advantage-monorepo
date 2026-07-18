@@ -17,8 +17,8 @@
  * not Vitest imports.") and §7 ("Phase 3 row ... drizzle-kit generate
  * zero-diff. drizzle-kit migrate fresh-DB apply."), this file pins
  * the Phase 3 integration-gate contract by asserting the COMMAND
- * PATH and the PRECONDITIONS required for `drizzle-kit generate` /
- * `drizzle-kit migrate` to behave correctly under drizzle-orm 0.45.
+ * PATH and the PRECONDITIONS required for `drizzle-kit generate` and the
+ * reviewed PostgreSQL-aware migration runner to behave correctly.
  *
  * It does NOT shell out to `drizzle-kit` against a real database —
  * that requires Docker Postgres and is owned by the Green phase
@@ -52,16 +52,14 @@
  *      generate` (per packages/db/package.json script section and
  *      test-strategy §5). regression guard.
  *
- *   3. "drizzle-kit migrate command path (Task 5)" — packages/db
- *      must expose a `migrate` script that invokes `drizzle-kit
- *      migrate`. The script must use DIRECT_DATABASE_URL when set
- *      (per drizzle.config.ts and connection_pooling_20260522 FR-3).
- *      regression guard.
+ *   3. "reviewed migrate command path (Task 5)" — packages/db must expose a
+ *      `migrate` script that invokes the PostgreSQL-aware runner. The runner
+ *      must preserve exact ledger hashes and use DIRECT_DATABASE_URL when set.
  *
  *   4. "Journal entries for full migration apply (Task 5)" — the
  *      `_journal.json` must expose 21 entries in idx order 0..20
  *      with `tag` values that map 1:1 to on-disk migration SQL
- *      files. This is the precondition for `drizzle-kit migrate`
+ *      files. This is the precondition for the migration runner
  *      to apply all 21 migrations on a fresh DB.
  *
  *   5. "Root pnpm.overrides resolves every workspace to the same
@@ -249,14 +247,14 @@ describe("drizzle045-phase3-integration-gates — drizzle-kit generate command p
   });
 });
 
-describe("drizzle045-phase3-integration-gates — drizzle-kit migrate command path (Task 5)", () => {
+describe("drizzle045-phase3-integration-gates — reviewed migrate command path (Task 5)", () => {
   let dbPkg: PkgJson;
 
   beforeAll(() => {
     dbPkg = JSON.parse(readFileSync(PACKAGE_JSON_PATH, "utf8")) as PkgJson;
   });
 
-  it("packages/db exposes a `migrate` script that invokes drizzle-kit", () => {
+  it("packages/db exposes a `migrate` script that invokes the PostgreSQL-aware runner", () => {
     const script = dbPkg.scripts?.["migrate"];
     expect(
       script,
@@ -264,8 +262,8 @@ describe("drizzle045-phase3-integration-gates — drizzle-kit migrate command pa
     ).toBeDefined();
     expect(
       script,
-      "`migrate` must invoke drizzle-kit migrate.",
-    ).toMatch(/drizzle-kit\s+migrate/);
+      "`migrate` must invoke the reviewed PostgreSQL-aware runner.",
+    ).toMatch(/tsx\s+scripts\/migrate\.ts/);
   });
 
   it("drizzle.config.ts prefers DIRECT_DATABASE_URL (connection_pooling FR-3)", () => {
@@ -284,7 +282,7 @@ describe("drizzle045-phase3-integration-gates — drizzle-kit migrate command pa
 
 // ---------------------------------------------------------------------------
 // Task 5 — the journal must expose all committed entries in idx order; this is
-// the precondition for `drizzle-kit migrate` to apply all migrations
+// the precondition for the reviewed runner to apply all migrations
 // against a fresh DB. GREEN today (regression guard).
 // ---------------------------------------------------------------------------
 

@@ -28,7 +28,7 @@
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
     "generate": "drizzle-kit generate",
-    "migrate": "drizzle-kit migrate",
+    "migrate": "tsx scripts/migrate.ts",
     "push": "drizzle-kit push",
     "studio": "drizzle-kit studio",
     "seed:codecamp": "tsx src/seed/codecamp-seed.ts",

@@ -14,7 +14,7 @@
  * (`researchTopicsSchema`) BEFORE the prompt builder is called.
  *
  * **Tenant/owner policy:** marketing tables are global-internal and are
- * not scoped by `schoolId`. Auth + role floor is the access boundary.
+ * not scoped by `schoolId`. Auth + the exact role allow-list is the boundary.
  *
  * @see apps/marketing/app/lib/auth.ts
  * @see apps/marketing/app/lib/topic-schema.ts
@@ -30,6 +30,7 @@ import { deduplicateTopics } from "@/lib/topic-dedup";
 import { requireMarketingSession } from "@/lib/auth";
 import { researchTopicsSchema } from "@/lib/topic-schema";
 import { redactSecrets } from "@/lib/redact";
+import { resolveMarketingAIConfig } from "@/lib/ai-credentials";
 
 /**
  * POST /api/video/research-topics — read LLM settings + past topics,
@@ -85,9 +86,9 @@ export async function POST(request: Request) {
       llmSettings.map((s: { key: string; value: string }) => [s.key, s.value]),
     );
 
-    apiKey = settingsMap["llm.apiKey"];
-
-    if (!apiKey) {
+    const aiConfig = resolveMarketingAIConfig(settingsMap);
+    apiKey = aiConfig?.apiKey;
+    if (!aiConfig) {
       return NextResponse.json(
         { message: "LLM not configured. Please set up API key in Settings." },
         { status: 400 },
@@ -118,11 +119,7 @@ export async function POST(request: Request) {
 
     const prompt = buildTopicResearchPrompt(app, pastTopicsList);
 
-    const aiClient = createAIClient({
-      provider: (settingsMap["llm.provider"] as "google" | "openai") || "google",
-      model: settingsMap["llm.model"] || "gemini-pro",
-      apiKey,
-    });
+    const aiClient = createAIClient(aiConfig);
 
     const result = await aiClient.generateText({
       prompt,

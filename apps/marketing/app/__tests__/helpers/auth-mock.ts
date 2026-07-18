@@ -87,8 +87,9 @@ vi.mock("@reading-advantage/auth", async () => {
 });
 
 /**
- * Attach a synthetic session cookie to an existing `RequestInit` so the
- * request satisfies the auth guard.
+ * Attaches a synthetic administrator session cookie to request options.
+ * @param init The request options to extend.
+ * @returns Request options containing the known test session cookie.
  */
 export function authedInit(init: RequestInit = {}): RequestInit {
   return {
@@ -101,7 +102,10 @@ export function authedInit(init: RequestInit = {}): RequestInit {
 }
 
 /**
- * Build an `authed` `Request` directly.
+ * Builds a request carrying the synthetic administrator session cookie.
+ * @param url The request URL.
+ * @param init Optional request configuration.
+ * @returns A request accepted by the Marketing compatibility guard.
  */
 export function authedRequest(url: string, init: RequestInit = {}): Request {
   return new Request(url, authedInit(init));

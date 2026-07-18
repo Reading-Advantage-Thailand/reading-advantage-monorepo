@@ -7,11 +7,11 @@
  * `videoAssets`, `pastTopics`, `settings`) are classified REFERENTIAL in
  * `packages/domain/src/tenant-registry.ts` and have no `schoolId` column.
  *
- * Authentication policy: every protected route requires a valid session via
- * the `session_token` cookie. Role floor (any authenticated staff vs. an
- * ADMIN-equivalent floor) is `[NEEDS-PO]`. The current contract accepts any
- * authenticated session; tighten to a role floor when the product owner
- * confirms the floor.
+ * Compatibility authentication policy: every protected route requires a valid
+ * session via the `session_token` cookie and an exact legacy `ADMIN` allow-list.
+ * The company-identity cutover replaces this compatibility policy with
+ * Marketing `MEMBER`/`ADMIN` application roles through the internal SSO
+ * adapter; product routes must never query the identity database directly.
  *
  * Tenant/owner scoping: not applicable at the data layer today. The plan
  * defers per-row scoping to a follow-up cycle if `schoolId`/`ownerId`
@@ -21,14 +21,28 @@ import {
   AuthError,
   requireAuth as authRequireAuth,
   SESSION_COOKIE_NAME,
+  type Role,
 } from "@reading-advantage/auth";
 import { db } from "@/lib/db";
+
+const LEGACY_MARKETING_ROLES: ReadonlySet<Role> = new Set(["ADMIN"]);
+
+/**
+ * Reports whether a shared-auth role may use the interim Marketing boundary.
+ * @param role The authenticated shared role to evaluate.
+ * @returns Whether the role is explicitly admitted before company-identity cutover.
+ */
+export function hasLegacyMarketingAccess(role: Role): boolean {
+  return LEGACY_MARKETING_ROLES.has(role);
+}
 
 /**
  * Resolves the session token from a `Request` cookie header. Falls back to
  * `request.cookies.get(...)` when the request is a `NextRequest`. Handles
  * both shapes so route handlers can stay framework-agnostic and the test
  * harness can drive them with raw `Request` objects.
+ * @param request The route request carrying the application session cookie.
+ * @returns The raw session token, or undefined when the cookie is absent.
  */
 function readSessionToken(request: Request): string | undefined {
   // NextRequest exposes `.cookies.get(name)`. Standard Request does not.
@@ -52,12 +66,10 @@ function readSessionToken(request: Request): string | undefined {
 }
 
 /**
- * Require an authenticated session for a marketing route. Returns the
- * resolved `Session` on success; on failure returns a 401 `Response` that
- * the route should return directly. The two-valued return avoids forcing
- * every route to wrap `requireAuth` in a try/catch while keeping the
- * "guard short-circuits before any side effect" contract enforced by the
- * Phase 2A/2B/2C tests.
+ * Requires a legacy administrator session for a protected Marketing route.
+ * @param request The route request carrying the application session cookie.
+ * @returns The resolved session or a response that the route must return.
+ * @throws Unexpected authentication or database failures.
  */
 export async function requireMarketingSession(
   request: Request,
@@ -68,6 +80,9 @@ export async function requireMarketingSession(
   const token = readSessionToken(request);
   try {
     const session = await authRequireAuth(db, token);
+    if (!hasLegacyMarketingAccess(session.user.role)) {
+      throw new AuthError("Marketing access required", "FORBIDDEN");
+    }
     return { ok: true, session };
   } catch (error) {
     if (error instanceof AuthError && error.code === "UNAUTHORIZED") {
@@ -77,6 +92,18 @@ export async function requireMarketingSession(
           JSON.stringify({ message: "Authentication required" }),
           {
             status: 401,
+            headers: { "content-type": "application/json" },
+          },
+        ),
+      };
+    }
+    if (error instanceof AuthError && error.code === "FORBIDDEN") {
+      return {
+        ok: false,
+        response: new Response(
+          JSON.stringify({ message: "Marketing access required" }),
+          {
+            status: 403,
             headers: { "content-type": "application/json" },
           },
         ),

@@ -7,7 +7,7 @@ steps:
       - "-f"
       - "apps/marketing/Dockerfile"
       - "-t"
-      - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/containers/marketing:$BUILD_ID"
+      - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/marketing/marketing:$BUILD_ID"
       - "."
 
   # ── Push image ───────────────────────────────────────────────────────
@@ -15,25 +15,20 @@ steps:
     id: "push-image"
     args:
       - "push"
-      - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/containers/marketing:$BUILD_ID"
+      - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/marketing/marketing:$BUILD_ID"
 
   # ── Migrate database ─────────────────────────────────────────────────
-  # Runs ALL pending Drizzle migrations against the production Cloud SQL
-  # instance. Marketing tables are defined in migration 0021_sales_advantage
-  # and schema/marketing.ts.
+  # The build worker does not receive a Cloud Run /cloudsql mount. Start the
+  # pinned Cloud SQL Auth Proxy on the same Unix-socket path used by the
+  # production URL, then run migrations through the direct connection secret.
   - name: "node:22-slim"
     id: "migrate-db"
     entrypoint: "bash"
     args:
       - "-c"
-      - >-
-        corepack enable &&
-        corepack prepare pnpm@11.8.0 --activate &&
-        pnpm install --frozen-lockfile &&
-        export DATABASE_URL="$$DIRECT_DATABASE_URL" &&
-        pnpm --filter @reading-advantage/db migrate
+      - "set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export DATABASE_URL=\"$$MARKETING_DIRECT_DATABASE_URL\" && export DIRECT_DATABASE_URL=\"$$MARKETING_DIRECT_DATABASE_URL\" && pnpm --filter @reading-advantage/db migrate"
     secretEnv:
-      - "DIRECT_DATABASE_URL"
+      - "MARKETING_DIRECT_DATABASE_URL"
 
   # ── Doctor check ─────────────────────────────────────────────────────
   # Validates migration ledger integrity before the new code is deployed.
@@ -42,14 +37,21 @@ steps:
     entrypoint: "bash"
     args:
       - "-c"
-      - >-
-        corepack enable &&
-        corepack prepare pnpm@11.8.0 --activate &&
-        pnpm install --frozen-lockfile &&
-        export DATABASE_URL="$$DIRECT_DATABASE_URL" &&
-        pnpm --filter @reading-advantage/db doctor --check
+      - "set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export DATABASE_URL=\"$$MARKETING_DIRECT_DATABASE_URL\" && export DIRECT_DATABASE_URL=\"$$MARKETING_DIRECT_DATABASE_URL\" && pnpm --filter @reading-advantage/db doctor --check --required-migration 0021_sales_advantage"
     secretEnv:
-      - "DIRECT_DATABASE_URL"
+      - "MARKETING_DIRECT_DATABASE_URL"
+
+  # Apply the reviewed, table-specific runtime grants and prove the runtime
+  # credential can use every auth/Marketing relation before traffic moves.
+  - name: "node:22-slim"
+    id: "runtime-db-contract"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - "set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates postgresql-client >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && psql \"$$MARKETING_DIRECT_DATABASE_URL\" -f apps/marketing/scripts/marketing-runtime-grants.sql && psql \"$$MARKETING_DATABASE_URL\" -f apps/marketing/scripts/marketing-runtime-probe.sql"
+    secretEnv:
+      - "MARKETING_DIRECT_DATABASE_URL"
+      - "MARKETING_DATABASE_URL"
 
   # ── Deploy to Cloud Run ──────────────────────────────────────────────
   - name: "gcr.io/cloud-builders/gcloud"
@@ -58,17 +60,17 @@ steps:
       - "run"
       - "deploy"
       - "marketing"
-      - "--image=asia-southeast1-docker.pkg.dev/$PROJECT_ID/containers/marketing:$BUILD_ID"
+      - "--image=asia-southeast1-docker.pkg.dev/$PROJECT_ID/marketing/marketing:$BUILD_ID"
       - "--region=asia-southeast1"
       - "--platform=managed"
       - "--allow-unauthenticated"
-      # Cloud SQL instance — TBD; see plan.md provisioning task
-      - "--add-cloudsql-instances=$PROJECT_ID:asia-southeast1:cloud-sql"
-      - "--set-env-vars=NODE_ENV=production"
+      - "--service-account=marketing-cloud-run@$PROJECT_ID.iam.gserviceaccount.com"
+      - "--add-cloudsql-instances=reading-advantage:asia-southeast1:cloud-sql"
+      - "--set-env-vars=NODE_ENV=production,NEXT_PUBLIC_API_URL=https://marketing.reading-advantage.com,AI_PROVIDER=openai"
       - "--min-instances=0"
       - "--max-instances=10"
       - "--concurrency=80"
-      - "--set-secrets=DATABASE_URL=DATABASE_URL:latest,AUTH_SECRET=AUTH_SECRET:latest,ENCRYPTION_KEY=ENCRYPTION_KEY:latest,AI_PROVIDER=AI_PROVIDER:latest,OPENAI_API_KEY=OPENAI_API_KEY:latest,GOOGLE_API_KEY=GOOGLE_API_KEY:latest,OPENROUTER_API_KEY=OPENROUTER_API_KEY:latest"
+      - "--set-secrets=DATABASE_URL=MARKETING_DATABASE_URL:latest,AUTH_SECRET=MARKETING_AUTH_SECRET:latest,ENCRYPTION_KEY=MARKETING_ENCRYPTION_KEY:latest,OPENAI_API_KEY=MARKETING_OPENAI_API_KEY:latest,GOOGLE_API_KEY=MARKETING_GOOGLE_API_KEY:latest,OPENROUTER_API_KEY=MARKETING_OPENROUTER_API_KEY:latest"
 
   # ── Allow public access ──────────────────────────────────────────────
   # The Cloud Run service is unauthenticated (login page must load before
@@ -85,12 +87,14 @@ steps:
       - "--role=roles/run.invoker"
 
 images:
-  - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/containers/marketing:$BUILD_ID"
+  - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/marketing/marketing:$BUILD_ID"
 
 availableSecrets:
   secretManager:
-    - versionName: "projects/$PROJECT_ID/secrets/DIRECT_DATABASE_URL/versions/latest"
-      env: "DIRECT_DATABASE_URL"
+    - versionName: "projects/$PROJECT_ID/secrets/MARKETING_DIRECT_DATABASE_URL/versions/latest"
+      env: "MARKETING_DIRECT_DATABASE_URL"
+    - versionName: "projects/$PROJECT_ID/secrets/MARKETING_DATABASE_URL/versions/latest"
+      env: "MARKETING_DATABASE_URL"
 
 options:
   logging: CLOUD_LOGGING_ONLY

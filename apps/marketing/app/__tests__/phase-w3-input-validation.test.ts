@@ -20,6 +20,7 @@ import { describe, expect, it, vi, type Mock } from "vitest";
 import { SESSION_COOKIE_NAME } from "@reading-advantage/auth";
 import { db } from "@reading-advantage/db";
 import { getAIClient } from "@reading-advantage/ai";
+import { encrypt } from "@/lib/encryption";
 
 const fakeAIClient = getAIClient() as unknown as { generateText: Mock };
 
@@ -160,7 +161,7 @@ function stubLLMSettings() {
   const { selectMock } = makeSelectChainMock([
     { key: "llm.provider", value: "google" },
     { key: "llm.model", value: "gemini-pro" },
-    { key: "llm.apiKey", value: "sk-w3-video-test-key" },
+    { key: "llm.apiKey", value: encrypt("sk-w3-video-test-key") },
   ]);
   (db.select as Mock).mockImplementation(selectMock);
 }
