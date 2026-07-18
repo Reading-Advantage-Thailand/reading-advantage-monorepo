@@ -85,7 +85,9 @@ describeRealDatabase(
           ...identity,
           organizationId: randomUUID(),
         }),
-      ).rejects.toThrow("mapping is required");
+      ).rejects.toThrowError(
+        /^Sales principal mapping manifest is required for an existing username or local principal\.$/,
+      );
       const [mappingCountAfterOrganizationIdMismatch] = await db
         .select({ value: count() })
         .from(companyProductPrincipals);
