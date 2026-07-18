@@ -31,6 +31,16 @@ describe("Accounts production readiness", () => {
     );
     expect(staticBootstrap).toContain("COMPANY_AUTH_DIRECT_DATABASE_URL");
     expect(staticBootstrap).toContain("COMPANY_AUTH_DATABASE_URL");
+    const productionBootstrap = cloudbuild.slice(
+      cloudbuild.indexOf('id: "bootstrap-production-identity"'),
+      cloudbuild.indexOf('id: "runtime-db-contract"'),
+    );
+    const dbBuild = productionBootstrap.indexOf("pnpm --filter @reading-advantage/db build");
+    const authBuild = productionBootstrap.indexOf("pnpm --filter @reading-advantage/auth build");
+    const bootstrap = productionBootstrap.indexOf("pnpm --filter accounts bootstrap:production");
+    expect(dbBuild).toBeGreaterThanOrEqual(0);
+    expect(authBuild).toBeGreaterThan(dbBuild);
+    expect(bootstrap).toBeGreaterThan(authBuild);
     expect(cloudbuild.match(/cloud-sql-proxy\/v2\.15\.1/g)).toHaveLength(5);
     expect(cloudbuild).toContain("https://accounts.reading-advantage.com");
     expect(cloudbuild).toContain("__Host-ra_company_sso");
