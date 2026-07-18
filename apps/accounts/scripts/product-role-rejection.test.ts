@@ -30,20 +30,16 @@ describe("product role projections", () => {
   ];
 
   it.each(rejectedRoles)(
-    "rejects empty or unknown Marketing roles: %j",
+    "returns no Marketing principal for empty or unknown roles: %j",
     ({ roles }) => {
-      expect(() => marketingSessionUser(identity("marketing", roles))).toThrow(
-        "no recognized Marketing role",
-      );
+      expect(marketingSessionUser(identity("marketing", roles))).toBeNull();
     },
   );
 
   it.each(rejectedRoles)(
-    "rejects empty or unknown Sales roles: %j",
+    "returns no Sales principal for empty or unknown roles: %j",
     async ({ roles }) => {
-      await expect(salesSessionUser(identity("sales", roles))).rejects.toThrow(
-        "no recognized Sales role",
-      );
+      await expect(salesSessionUser(identity("sales", roles))).resolves.toBeNull();
     },
   );
 
