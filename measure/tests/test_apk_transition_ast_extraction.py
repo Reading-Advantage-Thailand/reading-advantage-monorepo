@@ -615,65 +615,7 @@ class TransitionFullCorpusContracts(unittest.TestCase):
             )
             for row in raw_transitions
         }
-        self.assertFalse(
-            mechanical_proven - raw_proven,
-            "independent raw discovery must retain every mechanically proven transition",
-        )
-        self.assertEqual(
-            raw_proven - mechanical_proven,
-            {
-                (
-                    "apps/advantage-games/src/store/usePotionRushStore.ts",
-                    "gameState",
-                    "PLAYING",
-                    "GAME_OVER",
-                    453,
-                ),
-                (
-                    "apps/advantage-games/src/store/useRPGBattleStore.ts",
-                    "selectionStep",
-                    "enemy",
-                    "ready",
-                    194,
-                ),
-                (
-                    "apps/advantage-games/src/store/useRPGBattleStore.ts",
-                    "selectionStep",
-                    "hero",
-                    "location",
-                    176,
-                ),
-                (
-                    "apps/advantage-games/src/store/useRPGBattleStore.ts",
-                    "selectionStep",
-                    "location",
-                    "enemy",
-                    185,
-                ),
-                (
-                    "apps/advantage-games/src/store/useRPGBattleStore.ts",
-                    "status",
-                    "playing",
-                    "defeat",
-                    104,
-                ),
-                (
-                    "apps/advantage-games/src/store/useRPGBattleStore.ts",
-                    "status",
-                    "playing",
-                    "victory",
-                    115,
-                ),
-                (
-                    "apps/advantage-games/src/store/useRPGBattleStore.ts",
-                    "turn",
-                    "enemy",
-                    "player",
-                    129,
-                ),
-            },
-            "independent raw discovery must preserve the exact mechanical counterexamples",
-        )
+        self.assertEqual(mechanical_proven, raw_proven)
 
 
 if __name__ == "__main__":

@@ -625,6 +625,7 @@ def build_scene_state_denominator(
     scene_records: list[dict[str, Any]] = []
     state_records: list[dict[str, Any]] = []
     transitions: list[dict[str, Any]] = []
+    property_domain_symbols: dict[tuple[str, str], set[str]] = defaultdict(set)
     for path in game_sources:
         text = source_texts[path]
         for match in COMPONENT.finditer(text):
@@ -690,8 +691,10 @@ def build_scene_state_denominator(
             if previous is not None and previous[0] != symbol:
                 property_domains[property_name] = ("", set(), 0)
                 ambiguous_property_names.add(property_name)
+                property_domain_symbols[(path, property_name)].add(symbol)
                 return
             property_domains[property_name] = (symbol, literals, line)
+            property_domain_symbols[(path, property_name)].add(symbol)
 
         object_type_pattern = re.compile(
             r"export\s+type\s+(\w+)\s*=\s*\{([\s\S]*?)\n\}\s*;?"
@@ -762,7 +765,12 @@ def build_scene_state_denominator(
 
     def resolve_occurrence(symbol: str, state_id: str, evidence_path: str) -> str | None:
         """Resolves one exact state occurrence without path-global silent merging."""
-        choices = occurrences.get((symbol, state_id), [])
+        domain_symbols = {symbol, *property_domain_symbols.get((evidence_path, symbol), set())}
+        choices = [
+            row
+            for domain_symbol in domain_symbols
+            for row in occurrences.get((domain_symbol, state_id), [])
+        ]
         local = [row for row in choices if row["evidence"]["path"] == evidence_path]
         resolved = local if len(local) == 1 else choices
         return resolved[0]["state_occurrence_id"] if len(resolved) == 1 else None
