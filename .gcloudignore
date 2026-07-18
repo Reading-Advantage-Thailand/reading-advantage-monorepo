@@ -2,9 +2,15 @@
 .gitignore
 .gcloudignore
 apps/*
-!apps/codecamp-advantage/
+!apps/codecamp-advantage
 !apps/codecamp-advantage/**
-!apps/www-reading-advantage/
+!apps/marketing
+!apps/marketing/**
+!apps/sales-advantage
+!apps/sales-advantage/**
+!apps/accounts
+!apps/accounts/**
+!apps/www-reading-advantage
 !apps/www-reading-advantage/**
 **/.env
 **/.env.*
