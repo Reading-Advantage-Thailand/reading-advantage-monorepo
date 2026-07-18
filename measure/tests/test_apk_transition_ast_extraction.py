@@ -235,8 +235,8 @@ function chronological(state: DemoState): DemoState {
             "comments, string contents, and unrelated display objects are not executable transition writes",
         )
 
-    def test_zustand_writes_are_exactly_enumerated_and_guard_proven(self) -> None:
-        """Requires the eight frozen runtime-store writes in both independent modes."""
+    def test_zustand_writes_are_exactly_enumerated_and_source_proven(self) -> None:
+        """Requires frozen store writes to bind guards or exact initializing actions."""
         phase1 = _load_module("apk_phase1_zustand_sources", PHASE1_GENERATOR)
         paths = [
             "apps/advantage-games/src/store/usePotionRushStore.ts",
@@ -270,8 +270,8 @@ function chronological(state: DemoState): DemoState {
         phase2_by_key = keyed(phase2_facts)
         self.assertEqual(set(phase1_by_key), set(phase2_by_key))
         required = {
-            (paths[0], "gameState", "PLAYING", 170): None,
-            (paths[1], "status", "playing", 88): None,
+            (paths[0], "gameState", "PLAYING", 170): "MENU",
+            (paths[1], "status", "playing", 88): "idle",
             (paths[1], "status", "defeat", 104): "playing",
             (paths[1], "status", "victory", 115): "playing",
             (paths[1], "turn", "player", 129): "enemy",
@@ -288,6 +288,12 @@ function chronological(state: DemoState): DemoState {
             {key: phase2_by_key[key]["proven_from_state_id"] for key in required},
             required,
         )
+        initializing = {key for key in required if key[2] in {"PLAYING", "playing"}}
+        for rows in (phase1_by_key, phase2_by_key):
+            self.assertEqual(
+                {rows[key]["proof_kind"] for key in initializing},
+                {"ast-zustand-initial-action-write"},
+            )
         adjudicated = transition_module.extract_transition_writes(sources)
         classified = {
             (
@@ -615,7 +621,79 @@ class TransitionFullCorpusContracts(unittest.TestCase):
             )
             for row in raw_transitions
         }
-        self.assertEqual(mechanical_proven, raw_proven)
+        self.assertFalse(
+            mechanical_proven - raw_proven,
+            "independent raw discovery must retain every mechanically proven transition",
+        )
+        self.assertEqual(
+            raw_proven - mechanical_proven,
+            {
+                (
+                    "apps/advantage-games/src/store/usePotionRushStore.ts",
+                    "gameState",
+                    "MENU",
+                    "PLAYING",
+                    170,
+                ),
+                (
+                    "apps/advantage-games/src/store/usePotionRushStore.ts",
+                    "gameState",
+                    "PLAYING",
+                    "GAME_OVER",
+                    453,
+                ),
+                (
+                    "apps/advantage-games/src/store/useRPGBattleStore.ts",
+                    "selectionStep",
+                    "enemy",
+                    "ready",
+                    194,
+                ),
+                (
+                    "apps/advantage-games/src/store/useRPGBattleStore.ts",
+                    "selectionStep",
+                    "hero",
+                    "location",
+                    176,
+                ),
+                (
+                    "apps/advantage-games/src/store/useRPGBattleStore.ts",
+                    "selectionStep",
+                    "location",
+                    "enemy",
+                    185,
+                ),
+                (
+                    "apps/advantage-games/src/store/useRPGBattleStore.ts",
+                    "status",
+                    "idle",
+                    "playing",
+                    88,
+                ),
+                (
+                    "apps/advantage-games/src/store/useRPGBattleStore.ts",
+                    "status",
+                    "playing",
+                    "defeat",
+                    104,
+                ),
+                (
+                    "apps/advantage-games/src/store/useRPGBattleStore.ts",
+                    "status",
+                    "playing",
+                    "victory",
+                    115,
+                ),
+                (
+                    "apps/advantage-games/src/store/useRPGBattleStore.ts",
+                    "turn",
+                    "enemy",
+                    "player",
+                    129,
+                ),
+            },
+            "independent raw discovery must preserve the exact mechanical counterexamples",
+        )
 
 
 if __name__ == "__main__":

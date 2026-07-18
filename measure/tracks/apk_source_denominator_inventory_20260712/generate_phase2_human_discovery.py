@@ -344,6 +344,7 @@ def _raw_store_surfaces(
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
     """Discovers literal domains and independently adjudicates raw AST writes."""
     states: list[dict[str, Any]] = []
+    property_domain_symbols: dict[tuple[str, str], set[str]] = defaultdict(set)
     source_texts = {
         path: reader.read(BASELINE, path).decode("utf-8", errors="replace")
         for path in source_paths
@@ -380,9 +381,11 @@ def _raw_store_surfaces(
                 inline = set(re.findall(r"['\"]([^'\"\n]+)['\"]", type_text))
                 if alias:
                     properties[prop_name].append((alias, domains[alias]))
+                    property_domain_symbols[(path, prop_name)].add(alias)
                 elif RAW_STATE_NAME.search(prop_name) and inline:
                     symbol = f"{interface_name}.{prop_name}"
                     properties[prop_name].append((symbol, inline))
+                    property_domain_symbols[(path, prop_name)].add(symbol)
                     line = text.count("\n", 0, interface.start(2) + prop.start()) + 1
                     for literal in sorted(inline):
                         states.append({"path": path, "source_symbol": symbol, "state_id": literal, "evidence": locator(reader, BASELINE, path, line, line)})
@@ -403,6 +406,7 @@ def _raw_store_surfaces(
                     continue
                 symbol = f"{type_name}.{prop_name}"
                 properties[prop_name].append((symbol, literals))
+                property_domain_symbols[(path, prop_name)].add(symbol)
                 line = text.count("\n", 0, declaration.start(2) + prop.start()) + 1
                 for literal in sorted(literals):
                     states.append({"path": path, "source_symbol": symbol, "state_id": literal, "evidence": locator(reader, BASELINE, path, line, line)})
@@ -439,7 +443,12 @@ def _raw_store_surfaces(
 
     def resolves_raw_state(symbol: str, state_id: str, evidence_path: str) -> bool:
         """Checks that Phase-2 independently found one exact state occurrence."""
-        choices = state_occurrences.get((symbol, state_id), [])
+        domain_symbols = {symbol, *property_domain_symbols.get((evidence_path, symbol), set())}
+        choices = [
+            row
+            for domain_symbol in domain_symbols
+            for row in state_occurrences.get((domain_symbol, state_id), [])
+        ]
         local = [row for row in choices if row["path"] == evidence_path]
         resolved = local if len(local) == 1 else choices
         return len(resolved) == 1
