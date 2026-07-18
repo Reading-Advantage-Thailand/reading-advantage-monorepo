@@ -702,21 +702,6 @@ function owningStore(
   );
 }
 
-/** Returns the exact start/initialize action that contains one store write. */
-function initializingStoreAction(call: ts.CallExpression, store: StoreInfo): string | undefined {
-  let current: ts.Node | undefined = call.parent;
-  while (current && current !== store.owner) {
-    if (
-      ts.isPropertyAssignment(current)
-      && isBodyFunction(current.initializer)
-      && (ts.isIdentifier(current.name) || ts.isStringLiteralLike(current.name))
-      && /^(?:start|initialize)/i.test(current.name.text)
-    ) return current.name.text;
-    current = current.parent;
-  }
-  return undefined;
-}
-
 /** Maps local destructuring names back to properties read from one store getter. */
 function storeReadAliases(owner: BodyFunction, store: StoreInfo): Map<string, string> {
   const aliases = new Map<string, string>();
@@ -928,16 +913,7 @@ function enumerateStoreSetFacts(
       if (!property) continue;
       const domain = storeDomain(context, store, property);
       if (!domain) continue;
-      const guardedFrom = guardedStoreFrom(propertyNode, store, property, callback);
-      const initialFrom = initializingStoreAction(call, store)
-        ? store.initialValues.get(property)
-        : undefined;
-      const from = guardedFrom ?? initialFrom;
-      const proof = guardedFrom
-        ? "ast-zustand-guarded-write"
-        : initialFrom
-          ? "ast-zustand-initial-action-write"
-          : undefined;
+      const from = guardedStoreFrom(propertyNode, store, property, callback);
       for (const target of expressionLiterals(propertyNode.initializer)) {
         const fact = makeFact(
           source,
@@ -946,7 +922,7 @@ function enumerateStoreSetFacts(
           target,
           propertyNode,
           from,
-          proof,
+          from ? "ast-zustand-guarded-write" : undefined,
           callback ? "zustand-functional-set-property" : "zustand-object-set-property",
         );
         if (fact) facts.push(fact);

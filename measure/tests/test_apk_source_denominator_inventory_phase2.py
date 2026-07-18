@@ -849,10 +849,38 @@ class Phase2IndependentHumanDiscoveryContracts(unittest.TestCase):
             (row["path"], row["source_symbol"], row["from_state_id"], row["to_state_id"])
             for row in raw["raw_transition_records"]
         }
-        self.assertIn(("apps/advantage-games/src/store/usePotionRushStore.ts", "gameState", "MENU", "PLAYING"), transitions)
-        self.assertIn(("apps/advantage-games/src/store/useRPGBattleStore.ts", "status", "idle", "playing"), transitions)
         self.assertIn(("apps/advantage-games/src/store/useRPGBattleStore.ts", "status", "playing", "victory"), transitions)
         self.assertIn(("apps/advantage-games/src/store/useRPGBattleStore.ts", "status", "playing", "defeat"), transitions)
+        candidates = {
+            (
+                row["path"],
+                row["source_symbol"],
+                row.get("from_state_id"),
+                row["to_state_id"],
+                row["reason"],
+            )
+            for row in raw["raw_transition_write_candidates"]
+        }
+        self.assertIn(
+            (
+                "apps/advantage-games/src/store/usePotionRushStore.ts",
+                "gameState",
+                None,
+                "PLAYING",
+                "no-single-proven-from-state",
+            ),
+            candidates,
+        )
+        self.assertIn(
+            (
+                "apps/advantage-games/src/store/useRPGBattleStore.ts",
+                "status",
+                None,
+                "playing",
+                "no-single-proven-from-state",
+            ),
+            candidates,
+        )
 
     def test_raw_discovery_independently_covers_exact_shared_package_files(self) -> None:
         """Requires raw Phase-2 file discovery to cover the full source-derived package set."""
