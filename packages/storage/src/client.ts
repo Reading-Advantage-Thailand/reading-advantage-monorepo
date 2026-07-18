@@ -22,7 +22,10 @@ export type StorageConfig = z.infer<typeof storageConfigSchema>;
 export interface PutOptions {
   /** MIME type of the object. */
   contentType?: string;
-  /** Whether the object should be publicly readable. Defaults to true. */
+  /**
+   * Whether to opt in to a public-read object ACL. Defaults to no ACL header.
+   * Prefer bucket-level public access because some providers reject object ACLs.
+   */
   public?: boolean;
 }
 
@@ -35,7 +38,9 @@ export interface StorageClient {
    * Upload an object to storage.
    * @param key The object key (path).
    * @param body The object content.
-   * @param opts Optional put options (content type, public ACL).
+   * @param opts Optional content type and explicit public-ACL opt-in.
+   * @returns A promise that resolves after the object is stored.
+   * @throws StorageOperationError when the provider rejects the upload.
    */
   put(
     key: string,

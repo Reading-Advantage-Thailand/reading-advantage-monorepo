@@ -44,6 +44,7 @@ export class S3StorageDriver implements StorageClient {
    * @param key The object key.
    * @param body The object content.
    * @param opts Optional put options.
+   * @returns A promise that resolves after the object is stored.
    * @throws {StorageOperationError} When the S3 client rejects the request.
    */
   async put(
@@ -56,7 +57,7 @@ export class S3StorageDriver implements StorageClient {
       Key: key,
       Body: body,
       ContentType: opts?.contentType,
-      ACL: opts?.public !== false ? "public-read" : "private",
+      ...(opts?.public === true ? { ACL: "public-read" as const } : {}),
     });
     try {
       await this.client.send(command);

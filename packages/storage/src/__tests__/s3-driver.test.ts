@@ -45,13 +45,22 @@ describe("S3StorageDriver", () => {
       });
     });
 
-    it("sets private ACL when public is false", async () => {
+    it("omits the ACL when public is false", async () => {
       s3Mock.on(PutObjectCommand).resolves({});
       const driver = new S3StorageDriver(testConfig);
       await driver.put("k", Buffer.from("x"), { public: false });
 
       const calls = s3Mock.commandCalls(PutObjectCommand);
-      expect(calls[0].args[0].input.ACL).toBe("private");
+      expect(calls[0].args[0].input).not.toHaveProperty("ACL");
+    });
+
+    it("omits the ACL by default", async () => {
+      s3Mock.on(PutObjectCommand).resolves({});
+      const driver = new S3StorageDriver(testConfig);
+      await driver.put("k", Buffer.from("x"));
+
+      const calls = s3Mock.commandCalls(PutObjectCommand);
+      expect(calls[0].args[0].input).not.toHaveProperty("ACL");
     });
   });
 

@@ -7,7 +7,7 @@ _Blast radius: `getStorageClient` (0 callers — package currently unconsumed; g
 - [~] Task 1: Extend `StorageClient` contract in `packages/storage/src/client.ts`
     - [ ] Add `getSignedUploadUrl(key: string, opts?: { expiresIn?: number; contentType?: string }): Promise<string>` to the interface
     - [ ] Update `getSignedUrl` JSDoc: "temporary **read** access"
-    - [ ] Update `PutOptions.public` JSDoc: "Opt in to a `public-read` object ACL. Default: no ACL header. Prefer bucket-level public access."
+    - [x] Update `PutOptions.public` JSDoc: "Opt in to a `public-read` object ACL. Default: no ACL header. Prefer bucket-level public access." [evidence: acl-compatibility-verification.md]
 
 - [~] Task 2: Harden `storageConfigSchema`
     - [ ] `.transform` trailing-slash trim on `endpoint` and `publicBaseUrl`
@@ -24,10 +24,10 @@ _Blast radius: `getStorageClient` (0 callers — package currently unconsumed; g
     - [ ] `getSignedUploadUrl` signs a `PutObjectCommand` (and carries `ContentType` when given)
     - [ ] Confirm fail (Red)
 
-- [~] Task 4: Failing tests — FR-2 ACL default (`s3-driver.test.ts`)
-    - [ ] `put(key, body)` → command input has **no** `ACL` property
-    - [ ] `put(key, body, { public: true })` → `ACL: "public-read"`
-    - [ ] Confirm fail (Red)
+- [x] Task 4: Failing tests — FR-2 ACL default (`s3-driver.test.ts`) [evidence: acl-compatibility-verification.md]
+    - [x] `put(key, body)` → command input has **no** `ACL` property
+    - [x] `put(key, body, { public: true })` → `ACL: "public-read"`
+    - [x] Confirm fail (Red)
 
 - [~] Task 5: Failing tests — FR-3 & FR-4 (`s3-driver.test.ts`)
     - [ ] `exists()` rethrows when HeadObject rejects with `$metadata.httpStatusCode: 403`
@@ -47,13 +47,13 @@ _Blast radius: `getStorageClient` (0 callers — package currently unconsumed; g
 ## Phase 3: Implement (Green Phase)
 
 - [~] Task 7: Implement FR-1 in `packages/storage/src/drivers/s3.ts`
-    - [ ] `getSignedUrl` → `GetObjectCommand`
+    - [x] `getSignedUrl` → `GetObjectCommand` [evidence: existing implementation verified in acl-compatibility-verification.md]
     - [ ] New `getSignedUploadUrl` → `PutObjectCommand` (+ `ContentType`)
     - [ ] Verify Task 3 tests pass (Green)
 
-- [~] Task 8: Implement FR-2 — opt-in ACL
-    - [ ] `put`: include `ACL: "public-read"` only when `opts?.public === true`
-    - [ ] Verify Task 4 tests pass (Green)
+- [x] Task 8: Implement FR-2 — opt-in ACL [evidence: acl-compatibility-verification.md]
+    - [x] `put`: include `ACL: "public-read"` only when `opts?.public === true`
+    - [x] Verify Task 4 tests pass (Green)
 
 - [~] Task 9: Implement FR-3 & FR-4
     - [ ] `exists`: narrow catch to 404/NotFound, rethrow otherwise
