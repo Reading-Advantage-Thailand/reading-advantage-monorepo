@@ -50,8 +50,21 @@ INSERT INTO campaigns (id, type, app, name)
   VALUES ('00000000-0000-0000-0000-000000000041', 'video', 'reading-advantage', '__runtime_probe__');
 UPDATE campaigns SET updated_at = updated_at
   WHERE id = '00000000-0000-0000-0000-000000000041';
-INSERT INTO past_topics (id, app, topic, normalized_key)
-  VALUES ('00000000-0000-0000-0000-000000000042', 'reading-advantage', '__runtime_probe__', '__runtime_probe__');
+-- Exercise the predecessor writer shape: migration 0041 must derive
+-- normalized_key even when the serving revision does not send the column.
+INSERT INTO past_topics (id, app, topic)
+  VALUES ('00000000-0000-0000-0000-000000000042', 'reading-advantage', '__runtime_probe__');
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT id FROM past_topics
+    WHERE id = '00000000-0000-0000-0000-000000000042'
+      AND normalized_key = marketing_normalize_topic(topic)
+  ) THEN
+    RAISE EXCEPTION 'Marketing predecessor-writer normalization probe failed';
+  END IF;
+END
+$$;
 INSERT INTO settings (key, value)
   VALUES ('__marketing_runtime_probe__', 'probe')
   ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value;

@@ -10,16 +10,17 @@ export function useAuth(): AuthContextValue {
 }
 
 /**
- * Returns a subset of auth state: user, isAuthenticated, and isLoading.
- * @returns An object containing user, isAuthenticated, and isLoading values.
+ * Returns auth state for the current application session.
+ * @returns The user, authentication, application-forbidden, and loading states.
  */
 export function useSession(): {
   user: AuthUser | null;
   isAuthenticated: boolean;
+  isForbidden: boolean;
   isLoading: boolean;
 } {
-  const { user, isAuthenticated, isLoading } = useAuthContext();
-  return { user, isAuthenticated, isLoading };
+  const { user, isAuthenticated, isForbidden, isLoading } = useAuthContext();
+  return { user, isAuthenticated, isForbidden, isLoading };
 }
 
 /**

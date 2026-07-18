@@ -40,7 +40,7 @@
  */
 
 import { describe, expect, it, vi, type Mock } from "vitest";
-import { existsSync, readFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -137,7 +137,7 @@ function makeInsertChainMock(returningRows: unknown[]) {
 
 const scriptFixture: Scene[] = [
   {
-    narration: "ยินดีต้อนรับสู่ Reading Advantage",
+    narration: "ยินดีต้อนรับสู่แพลตฟอร์ม Reading Advantage สำหรับการเรียนรู้",
     imagePrompt: "A bright Thai classroom with students reading tablets",
     motionDirection: "Slow zoom in from the back of the classroom",
   },
@@ -323,7 +323,7 @@ describe("Phase 6: Script Generation — scene editor (task 3, RED)", () => {
     expect(reordered[0]).toEqual(scriptFixture[1]);
     expect(reordered[1]).toEqual(scriptFixture[2]);
     // Original array must remain unchanged.
-    expect(scriptFixture[0].narration).toBe("ยินดีต้อนรับสู่ Reading Advantage");
+    expect(scriptFixture[0].narration).toBe("ยินดีต้อนรับสู่แพลตฟอร์ม Reading Advantage สำหรับการเรียนรู้");
   });
 
   it("addScene appends a new scene to the script", async () => {

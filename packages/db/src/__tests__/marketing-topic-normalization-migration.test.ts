@@ -10,20 +10,48 @@ const migration = readFileSync(
 );
 
 describe("Marketing past-topic normalized-key migration", () => {
-  it("adds, backfills, deduplicates, and requires normalized_key before uniqueness", () => {
+  it("derives normalized keys for predecessor writers and rejects duplicates without deleting data", () => {
     expect(migration).toContain(
-      'ALTER TABLE "past_topics" ADD COLUMN "normalized_key" text',
+      `ALTER TABLE "past_topics" ADD COLUMN "normalized_key" text`,
+    );
+    expect(migration).toContain(
+      "CREATE OR REPLACE FUNCTION marketing_normalize_topic",
+    );
+    expect(migration).toMatch(/IMMUTABLE[\s\S]+STRICT/i);
+    expect(migration).toContain(
+      "CREATE TRIGGER past_topics_derive_normalized_key",
+    );
+    expect(migration).toMatch(
+      /BEFORE INSERT OR UPDATE ON "past_topics"/i,
     );
     expect(migration).toMatch(/UPDATE "past_topics"[\s\S]+normalized_key/i);
-    expect(migration).toMatch(/DELETE FROM "past_topics"[\s\S]+normalized_key/i);
+    expect(migration).toMatch(/RAISE EXCEPTION[\s\S]+duplicate/i);
+    expect(migration).not.toMatch(/DELETE\s+FROM\s+"past_topics"/i);
     expect(migration).toContain(
-      'ALTER TABLE "past_topics" ALTER COLUMN "normalized_key" SET NOT NULL',
+      `ALTER TABLE "past_topics" ALTER COLUMN "normalized_key" SET NOT NULL`,
     );
-    expect(migration.indexOf("UPDATE \"past_topics\"")).toBeLessThan(
+    expect(migration.indexOf(`UPDATE "past_topics"`)).toBeLessThan(
       migration.indexOf("SET NOT NULL"),
     );
     expect(migration.indexOf("SET NOT NULL")).toBeLessThan(
       migration.indexOf("CREATE UNIQUE INDEX"),
+    );
+  });
+
+  it("keeps the runtime probe compatible with the predecessor insert shape", () => {
+    const runtimeProbe = readFileSync(
+      join(
+        process.cwd(),
+        "../../apps/marketing/scripts/marketing-runtime-probe.sql",
+      ),
+      "utf8",
+    );
+
+    expect(runtimeProbe).toMatch(
+      /INSERT INTO past_topics \(id, app, topic\)[\s\S]+__runtime_probe__/i,
+    );
+    expect(runtimeProbe).not.toMatch(
+      /INSERT INTO past_topics \(id, app, topic, normalized_key\)/i,
     );
   });
 

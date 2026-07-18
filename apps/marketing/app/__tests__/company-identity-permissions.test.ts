@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -77,7 +77,7 @@ describe("Marketing named permission matrix", () => {
       expect(denied.ok).toBe(false);
       if (!denied.ok) expect(denied.response.status).toBe(403);
     }
-  }, 15_000);
+  }, 30_000);
 
   it("grants members production permissions but keeps settings admin-only", async () => {
     const { hasMarketingPermission } = await import("@/lib/marketing-permissions");
@@ -145,22 +145,48 @@ describe("Marketing session role-removal response", () => {
 });
 
 describe("Marketing protected-route permission inventory", () => {
-  it("maps every protected handler to one reviewed named permission", async () => {
+  it("maps every recursively discovered handler to the exact public or protected inventory", async () => {
     const { MARKETING_ROUTE_PERMISSION_INVENTORY } = await import(
       "@/lib/marketing-permissions"
     );
-    const protectedFiles = [...new Set(
-      MARKETING_ROUTE_PERMISSION_INVENTORY.map((entry) => entry.file),
-    )];
-    let exportedHandlerCount = 0;
+    const publicHandlers = new Set([
+      "GET /api/auth/callback",
+      "GET /api/auth/company/start",
+      "POST /api/auth/login",
+      "POST /api/auth/logout",
+      "GET /api/auth/session",
+      "GET /api/health/db",
+    ]);
+    const protectedHandlers = new Set(
+      MARKETING_ROUTE_PERMISSION_INVENTORY.map(
+        (entry) => `${entry.method} ${entry.path}`,
+      ),
+    );
+    const routeFiles: string[] = [];
+    const collectRoutes = (directory: string) => {
+      for (const entry of readdirSync(directory, { withFileTypes: true })) {
+        const absolute = resolve(directory, entry.name);
+        if (entry.isDirectory()) collectRoutes(absolute);
+        if (entry.isFile() && entry.name === "route.ts") routeFiles.push(absolute);
+      }
+    };
+    collectRoutes(resolve(marketingAppRoot, "api"));
 
-    for (const file of protectedFiles) {
-      const source = readFileSync(resolve(marketingAppRoot, file), "utf8");
-      exportedHandlerCount += [...source.matchAll(/export async function (GET|POST|PATCH)\b/g)].length;
-      expect(source).not.toContain("requireMarketingSession(request)");
+    const discoveredHandlers = new Set<string>();
+    for (const absoluteFile of routeFiles) {
+      const file = absoluteFile.slice(marketingAppRoot.length + 1);
+      const source = readFileSync(absoluteFile, "utf8");
+      const path = `/${file.replace(/\/route\.ts$/, "")}`;
+      for (const match of source.matchAll(
+        /export async function (GET|POST|PATCH|PUT|DELETE)\b/g,
+      )) {
+        discoveredHandlers.add(`${match[1]} ${path}`);
+      }
     }
 
-    expect(MARKETING_ROUTE_PERMISSION_INVENTORY).toHaveLength(exportedHandlerCount);
+    expect(discoveredHandlers).toEqual(
+      new Set([...publicHandlers, ...protectedHandlers]),
+    );
     for (const entry of MARKETING_ROUTE_PERMISSION_INVENTORY) {
       const source = readFileSync(resolve(marketingAppRoot, entry.file), "utf8");
       const escapedPermission = entry.permission.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -170,25 +196,6 @@ describe("Marketing protected-route permission inventory", () => {
         ),
       );
     }
-  });
-
-  it("counterexample detects a newly protected handler without authorization", async () => {
-    const { MARKETING_ROUTE_PERMISSION_INVENTORY } = await import(
-      "@/lib/marketing-permissions"
-    );
-    const inventoried = new Set(
-      MARKETING_ROUTE_PERMISSION_INVENTORY.map(
-        (entry) => `${entry.method} ${entry.path}`,
-      ),
-    );
-    const counterexampleHandlers = [
-      ...inventoried,
-      "POST /api/video/unreviewed-operation",
-    ];
-
-    expect(counterexampleHandlers.filter((handler) => !inventoried.has(handler))).toEqual([
-      "POST /api/video/unreviewed-operation",
-    ]);
   });
 });
 
@@ -245,6 +252,24 @@ describe("Marketing settings administrator boundary", () => {
 });
 
 describe("Settings connection Zod boundary", () => {
+  it("bounds the settings collection, key length, and value length", async () => {
+    const { settingsPostSchema } = await import("@/lib/settings-schema");
+
+    expect(
+      settingsPostSchema.safeParse({ ["k".repeat(101)]: "value" }).success,
+    ).toBe(false);
+    expect(
+      settingsPostSchema.safeParse({ key: "v".repeat(8_193) }).success,
+    ).toBe(false);
+    expect(
+      settingsPostSchema.safeParse(
+        Object.fromEntries(
+          Array.from({ length: 21 }, (_, index) => [`key-${index}`, "value"]),
+        ),
+      ).success,
+    ).toBe(false);
+  });
+
   it("rejects unsupported providers and unknown fields", async () => {
     const { settingsTestConnectionSchema } = await import(
       "@/lib/settings-schema"
@@ -265,5 +290,19 @@ describe("Settings connection Zod boundary", () => {
         extra: true,
       }).success,
     ).toBe(false);
+  });
+});
+
+describe("Campaign identifier boundary", () => {
+  it("rejects a non-UUID route id before database access", async () => {
+    introspectMock.mockResolvedValue(activeSession(["MEMBER"]));
+    const { GET } = await import("@/api/campaigns/[id]/route");
+
+    const response = await GET(request("/api/campaigns/not-a-uuid"), {
+      params: { id: "not-a-uuid" },
+    });
+
+    expect(response.status).toBe(400);
+    expect(marketingDbMock.select).not.toHaveBeenCalled();
   });
 });

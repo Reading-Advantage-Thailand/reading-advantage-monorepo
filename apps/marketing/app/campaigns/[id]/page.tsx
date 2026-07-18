@@ -24,6 +24,8 @@ const statusTransitions: Record<string, string[]> = {
 export default function CampaignDetailPage() {
   const params = useParams();
   const [campaign, setCampaign] = useState<Campaign | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
 
   useEffect(() => {
     if (params?.id) {
@@ -32,32 +34,68 @@ export default function CampaignDetailPage() {
   }, [params?.id]);
 
   const fetchCampaign = async (id: string) => {
+    setError(null);
     try {
       const res = await fetch(`/api/campaigns/${id}`);
-      const data = await res.json();
-      setCampaign(data);
+      if (res.status === 401) {
+        window.location.href = "/login";
+        return;
+      }
+      if (res.status === 403) {
+        setError("You do not have access to this campaign.");
+        return;
+      }
+      if (!res.ok) {
+        setError("Failed to load campaign. Please return to Campaigns and try again.");
+        return;
+      }
+      const data: unknown = await res.json();
+      if (!data || typeof data !== "object" || typeof (data as { id?: unknown }).id !== "string") {
+        setError("Campaign returned an invalid response.");
+        return;
+      }
+      setCampaign(data as Campaign);
     } catch {
-      console.error("Failed to load campaign");
+      setError("Failed to load campaign. Please return to Campaigns and try again.");
     }
   };
 
   const handleStatusChange = async (newStatus: string) => {
     if (!campaign) return;
+    setError(null);
+    setMessage(null);
     try {
       const res = await fetch(`/api/campaigns/${campaign.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: newStatus }),
       });
-      const data = await res.json();
-      setCampaign(data);
+      if (res.status === 401) {
+        window.location.href = "/login";
+        return;
+      }
+      if (res.status === 403) {
+        setError("You do not have permission to update this campaign.");
+        return;
+      }
+      if (!res.ok) {
+        setError("Failed to update campaign status. Please try again.");
+        return;
+      }
+      const data: unknown = await res.json();
+      if (!data || typeof data !== "object" || typeof (data as { id?: unknown }).id !== "string") {
+        setError("Campaign update returned an invalid response.");
+        return;
+      }
+      setCampaign(data as Campaign);
+      setMessage(`Campaign moved to ${newStatus}.`);
     } catch {
-      console.error("Failed to update status");
+      setError("Failed to update campaign status. Please try again.");
     }
   };
 
   if (!campaign) {
-    return <div>Loading...</div>;
+    return error ? <p role="alert">{error}</p> : <p role="status">Loading...</p>;
   }
 
   const availableTransitions = statusTransitions[campaign.status] || [];
@@ -78,6 +116,8 @@ export default function CampaignDetailPage() {
         }}
       >
         <h1>{campaign.name}</h1>
+        {error && <p role="alert" style={{ color: "#b91c1c" }}>{error}</p>}
+        {message && <p aria-live="polite" style={{ color: "#15803d" }}>{message}</p>}
         <div style={{ color: "#666", marginTop: "8px" }}>
           Type: {campaign.type} • App: {campaign.app.replace(/-/g, " ")}
         </div>

@@ -27,7 +27,7 @@
  */
 
 import { describe, expect, it, vi, type Mock } from "vitest";
-import { existsSync, readFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -135,10 +135,11 @@ describe("Phase 1: Vinext Scaffold + Monorepo Integration boot smoke", () => {
       expect(layout).toMatch(/<AuthProvider>/);
     });
 
-    it("sidebar exposes links to /settings and /campaigns", () => {
-      const layout = readText(resolve(APP_ROOT, "app/layout.tsx"));
-      expect(layout).toMatch(/href\s*=\s*["']\/settings["']/);
-      expect(layout).toMatch(/href\s*=\s*["']\/campaigns["']/);
+    it("sidebar exposes Campaigns and administrator-only Settings links", () => {
+      const shell = readText(resolve(APP_ROOT, "app/marketing-app-shell.tsx"));
+      expect(shell).toMatch(/href\s*=\s*["']\/settings["']/);
+      expect(shell).toMatch(/user\?\.role\s*===\s*["']ADMIN["']/);
+      expect(shell).toMatch(/href\s*=\s*["']\/campaigns["']/);
     });
   });
 

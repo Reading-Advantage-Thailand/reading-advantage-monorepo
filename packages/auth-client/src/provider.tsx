@@ -17,6 +17,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [state, setState] = useState<AuthState>({
     user: null,
     isAuthenticated: false,
+    isForbidden: false,
     isLoading: true,
   });
 
@@ -30,6 +31,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
     async function checkSession() {
       try {
         const res = await fetch("/api/auth/session");
+        if (res.status === 403) {
+          if (!cancelled && !authActionCompletedRef.current) {
+            setState({
+              user: null,
+              isAuthenticated: true,
+              isForbidden: true,
+              isLoading: false,
+            });
+          }
+          return;
+        }
         if (!res.ok) {
           throw new Error("Session check failed");
         }
@@ -40,6 +52,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
           setState({
             user: sessionUser,
             isAuthenticated: !!sessionUser,
+            isForbidden: false,
             isLoading: false,
           });
         }
@@ -48,6 +61,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
           setState({
             user: null,
             isAuthenticated: false,
+            isForbidden: false,
             isLoading: false,
           });
         }
@@ -78,6 +92,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setState({
       user: data.user,
       isAuthenticated: true,
+      isForbidden: false,
       isLoading: false,
     });
   }, []);
@@ -89,6 +104,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setState({
       user: null,
       isAuthenticated: false,
+      isForbidden: false,
       isLoading: false,
     });
 
@@ -97,7 +113,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       if (!res.ok) {
         throw new Error("Logout may not have completed on the server");
       }
-    } catch (err) {
+    } catch {
       // FR-14: throw so the UI can warn
       throw new Error("Logout may not have completed on the server");
     }

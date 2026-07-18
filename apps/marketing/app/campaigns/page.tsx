@@ -26,6 +26,8 @@ const appColors: Record<string, string> = {
 export default function CampaignsPage() {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [showCreate, setShowCreate] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
   const [newCampaign, setNewCampaign] = useState<{
     type: "video" | "infocard";
     app: string;
@@ -41,20 +43,35 @@ export default function CampaignsPage() {
   }, []);
 
   const fetchCampaigns = async () => {
+    setError(null);
     try {
       const res = await fetch("/api/campaigns");
       if (res.status === 401) {
         window.location.href = "/login";
         return;
       }
-      const data = await res.json();
-      setCampaigns(data);
+      if (res.status === 403) {
+        setError("You do not have access to Marketing campaigns.");
+        return;
+      }
+      if (!res.ok) {
+        setError("Failed to load campaigns. Please try again.");
+        return;
+      }
+      const data: unknown = await res.json();
+      if (!Array.isArray(data)) {
+        setError("Campaigns returned an invalid response.");
+        return;
+      }
+      setCampaigns(data as Campaign[]);
     } catch {
-      console.error("Failed to load campaigns");
+      setError("Failed to load campaigns. Please try again.");
     }
   };
 
   const handleCreate = async () => {
+    setError(null);
+    setMessage(null);
     try {
       const res = await fetch("/api/campaigns", {
         method: "POST",
@@ -65,11 +82,20 @@ export default function CampaignsPage() {
         window.location.href = "/login";
         return;
       }
+      if (res.status === 403) {
+        setError("You do not have permission to create campaigns.");
+        return;
+      }
+      if (!res.ok) {
+        setError("Failed to create campaign. Check the form and try again.");
+        return;
+      }
       setShowCreate(false);
       setNewCampaign({ type: "video", app: "reading-advantage", name: "" });
-      fetchCampaigns();
+      setMessage("Campaign created.");
+      await fetchCampaigns();
     } catch {
-      console.error("Failed to create campaign");
+      setError("Failed to create campaign. Please try again.");
     }
   };
 
@@ -91,6 +117,17 @@ export default function CampaignsPage() {
           Create Campaign
         </button>
       </div>
+
+      {error && (
+        <p role="alert" style={{ color: "#b91c1c", marginTop: "16px" }}>
+          {error}
+        </p>
+      )}
+      {message && (
+        <p aria-live="polite" style={{ color: "#15803d", marginTop: "16px" }}>
+          {message}
+        </p>
+      )}
 
       {showCreate && (
         <div

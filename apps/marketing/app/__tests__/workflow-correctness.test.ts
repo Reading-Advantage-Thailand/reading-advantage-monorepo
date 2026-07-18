@@ -78,6 +78,11 @@ const englishScript = thaiScript.map((scene, index) => ({
   narration: `English narration scene ${index + 1}`,
 }));
 
+const tokenThaiScript = thaiScript.map((scene, index) => ({
+  ...scene,
+  narration: `English narration with กขค token ${index + 1}`,
+}));
+
 function post(url: string, body: unknown): Request {
   return new Request(url, {
     method: "POST",
@@ -128,6 +133,22 @@ describe("Marketing generated-script Thai narration contract", () => {
       message: "Generated script narration must be Thai in every scene",
       repairAttempts: 1,
     });
+    expect(mocks.generateText).toHaveBeenCalledTimes(2);
+  });
+
+  it("repairs narration when Thai letters are only a token minority", async () => {
+    mocks.generateText
+      .mockResolvedValueOnce(JSON.stringify(tokenThaiScript))
+      .mockResolvedValueOnce(JSON.stringify(thaiScript));
+
+    const response = await generateScript(
+      post("http://localhost/api/video/generate-script", {
+        app: "reading-advantage",
+        topic: "การอ่าน",
+      }),
+    );
+
+    expect(response.status).toBe(200);
     expect(mocks.generateText).toHaveBeenCalledTimes(2);
   });
 

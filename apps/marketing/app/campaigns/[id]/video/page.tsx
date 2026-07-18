@@ -60,6 +60,8 @@ export default function VideoProductionPage() {
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
   const [projectMessage, setProjectMessage] = useState<string | null>(null);
   const [projectError, setProjectError] = useState<string | null>(null);
+  const [workflowError, setWorkflowError] = useState<string | null>(null);
+  const [workflowMessage, setWorkflowMessage] = useState<string | null>(null);
 
   useEffect(() => {
     if (params?.id) {
@@ -70,17 +72,30 @@ export default function VideoProductionPage() {
   }, [params?.id]);
 
   const fetchCampaign = async (id: string) => {
+    setWorkflowError(null);
     try {
       const res = await fetch(`/api/campaigns/${id}`);
       if (res.status === 401) {
         window.location.href = "/login";
         return;
       }
-      const data = await res.json();
+      if (res.status === 403) {
+        setWorkflowError("You do not have access to this campaign.");
+        return;
+      }
+      if (!res.ok) {
+        setWorkflowError("Failed to load campaign. Please try again.");
+        return;
+      }
+      const data: unknown = await res.json();
+      if (!data || typeof data !== "object" || typeof (data as { app?: unknown }).app !== "string") {
+        setWorkflowError("Campaign returned an invalid response.");
+        return;
+      }
       setCampaign(data);
-      setSelectedApp(data.app);
+      setSelectedApp((data as { app: string }).app);
     } catch {
-      console.error("Failed to load campaign");
+      setWorkflowError("Failed to load campaign. Please try again.");
     }
   };
 
@@ -157,6 +172,8 @@ export default function VideoProductionPage() {
 
   const handleResearchTopics = async () => {
     setLoading(true);
+    setWorkflowError(null);
+    setWorkflowMessage(null);
     try {
       const res = await fetch("/api/video/research-topics", {
         method: "POST",
@@ -167,18 +184,34 @@ export default function VideoProductionPage() {
         window.location.href = "/login";
         return;
       }
-      const data = await res.json();
-      if (res.status === 401) { window.location.href = "/login"; return; }
+      if (res.status === 403) {
+        setWorkflowError("You do not have permission to research topics.");
+        return;
+      }
+      if (!res.ok) {
+        setWorkflowError("Topic research did not produce five new topics. Please try again.");
+        return;
+      }
+      const data: unknown = await res.json();
+      if (!data || typeof data !== "object" || !Array.isArray((data as { topics?: unknown }).topics)) {
+        setWorkflowError("Topic research returned an invalid response.");
+        return;
+      }
+      const researchedTopics = (data as { topics: unknown[] }).topics;
+      if (!researchedTopics.every((topic) => typeof topic === "string")) {
+        setWorkflowError("Topic research returned an invalid response.");
+        return;
+      }
       setTopics(
-        data.topics.map((text: string, i: number) => ({
+        researchedTopics.map((text, i) => ({
           id: `topic-${i}`,
-          text,
+          text: text as string,
           approved: false,
           editing: false,
-        }))
+        })),
       );
     } catch {
-      console.error("Failed to research topics");
+      setWorkflowError("Failed to research topics. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -209,6 +242,8 @@ export default function VideoProductionPage() {
   };
 
   const handleSaveTopics = async () => {
+    setWorkflowError(null);
+    setWorkflowMessage(null);
     try {
       const approvedTopics = topics.filter((t) => t.approved);
       const res = await fetch("/api/video/save-topics", {
@@ -223,9 +258,17 @@ export default function VideoProductionPage() {
         window.location.href = "/login";
         return;
       }
-      alert("Topics saved!");
+      if (res.status === 403) {
+        setWorkflowError("You do not have permission to save topics.");
+        return;
+      }
+      if (!res.ok) {
+        setWorkflowError("Failed to save approved topics. Please try again.");
+        return;
+      }
+      setWorkflowMessage("Approved topics saved.");
     } catch {
-      console.error("Failed to save topics");
+      setWorkflowError("Failed to save approved topics. Please try again.");
     }
   };
 
@@ -233,6 +276,8 @@ export default function VideoProductionPage() {
     const topic = topics.find((t) => t.id === activeTopicId);
     if (!topic) return;
     setGenerating(true);
+    setWorkflowError(null);
+    setWorkflowMessage(null);
     setSavedProjectId(null);
     setSelectedProjectId(null);
     setProjectMessage(null);
@@ -247,12 +292,25 @@ export default function VideoProductionPage() {
         window.location.href = "/login";
         return;
       }
-      const data = await res.json();
-      if (Array.isArray(data.script)) {
-        setScript(data.script);
+      if (res.status === 403) {
+        setWorkflowError("You do not have permission to generate scripts.");
+        return;
       }
+      if (!res.ok) {
+        setWorkflowError("Script generation did not return a valid Thai script. Please try again.");
+        return;
+      }
+      const data: unknown = await res.json();
+      const parsedScript = scriptSchema.safeParse(
+        data && typeof data === "object" ? (data as { script?: unknown }).script : undefined,
+      );
+      if (!parsedScript.success) {
+        setWorkflowError("Script generation returned an invalid response.");
+        return;
+      }
+      setScript(parsedScript.data);
     } catch {
-      console.error("Failed to generate script");
+      setWorkflowError("Failed to generate a script. Please try again.");
     } finally {
       setGenerating(false);
     }
@@ -344,7 +402,11 @@ export default function VideoProductionPage() {
   };
 
   if (!campaign) {
-    return <div>Loading...</div>;
+    return workflowError ? (
+      <p role="alert">{workflowError}</p>
+    ) : (
+      <p role="status">Loading...</p>
+    );
   }
 
   const approvedTopics = topics.filter((t) => t.approved);
@@ -353,6 +415,16 @@ export default function VideoProductionPage() {
   return (
     <div>
       <h1>Video Production: {campaign.name}</h1>
+      {workflowError && (
+        <p role="alert" style={{ color: "#b91c1c", marginTop: "8px" }}>
+          {workflowError}
+        </p>
+      )}
+      {workflowMessage && (
+        <p aria-live="polite" style={{ color: "#15803d", marginTop: "8px" }}>
+          {workflowMessage}
+        </p>
+      )}
 
       <section
         aria-labelledby="existing-projects-heading"

@@ -9,9 +9,12 @@ import { z } from "zod";
  * non-string values are rejected before any DB insert.
  */
 export const settingsPostSchema = z
-  .record(z.string(), z.string())
+  .record(z.string().min(1).max(100), z.string().max(8_192))
   .refine((obj) => Object.keys(obj).length > 0, {
     message: "At least one setting entry is required",
+  })
+  .refine((obj) => Object.keys(obj).length <= 20, {
+    message: "At most 20 setting entries are allowed",
   });
 
 export type SettingsPostBody = z.infer<typeof settingsPostSchema>;

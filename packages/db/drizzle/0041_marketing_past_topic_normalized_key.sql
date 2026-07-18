@@ -1,28 +1,62 @@
 ALTER TABLE "past_topics" ADD COLUMN "normalized_key" text;
 --> statement-breakpoint
-UPDATE "past_topics"
-SET "normalized_key" = lower(
-  btrim(
-    regexp_replace(
-      regexp_replace(normalize("topic", NFC), '[[:space:]]+', ' ', 'g'),
-      ' ([ก-๛])',
-      '\1',
-      'g'
-    )
-  )
-);
---> statement-breakpoint
-DELETE FROM "past_topics" AS duplicate
-USING "past_topics" AS keeper
-WHERE duplicate."app" = keeper."app"
-  AND duplicate."normalized_key" = keeper."normalized_key"
-  AND (
-    duplicate."created_at" > keeper."created_at"
-    OR (
-      duplicate."created_at" = keeper."created_at"
-      AND duplicate."id"::text > keeper."id"::text
+CREATE OR REPLACE FUNCTION marketing_normalize_topic(input_topic text)
+RETURNS text
+LANGUAGE sql
+IMMUTABLE
+STRICT
+PARALLEL SAFE
+AS $$
+  SELECT lower(
+    btrim(
+      regexp_replace(
+        regexp_replace(normalize(input_topic, NFC), '[[:space:]]+', ' ', 'g'),
+        ' ([ก-๛])',
+        '\1',
+        'g'
+      )
     )
   );
+$$;
+--> statement-breakpoint
+CREATE OR REPLACE FUNCTION marketing_derive_past_topic_normalized_key()
+RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  NEW.normalized_key := marketing_normalize_topic(NEW.topic);
+  RETURN NEW;
+END;
+$$;
+--> statement-breakpoint
+CREATE TRIGGER past_topics_derive_normalized_key
+BEFORE INSERT OR UPDATE ON "past_topics"
+FOR EACH ROW
+EXECUTE FUNCTION marketing_derive_past_topic_normalized_key();
+--> statement-breakpoint
+UPDATE "past_topics"
+SET "normalized_key" = marketing_normalize_topic("topic");
+--> statement-breakpoint
+DO $$
+DECLARE
+  duplicate_count bigint;
+BEGIN
+  SELECT count(*)
+  INTO duplicate_count
+  FROM (
+    SELECT "app"
+    FROM "past_topics"
+    GROUP BY "app", "normalized_key"
+    HAVING count(*) > 1
+  ) AS duplicate_groups;
+
+  IF duplicate_count > 0 THEN
+    RAISE EXCEPTION
+      'Marketing normalized-topic migration found % duplicate app/topic groups; resolve them explicitly before retrying',
+      duplicate_count;
+  END IF;
+END;
+$$;
 --> statement-breakpoint
 ALTER TABLE "past_topics" ALTER COLUMN "normalized_key" SET NOT NULL;
 --> statement-breakpoint

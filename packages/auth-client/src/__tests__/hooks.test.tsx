@@ -12,6 +12,24 @@ beforeEach(() => {
 });
 
 describe("useAuth", () => {
+  it("preserves an authenticated forbidden session as a distinct state", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValueOnce({
+      ok: false,
+      status: 403,
+      json: () => Promise.resolve({ session: null }),
+    } as Response);
+
+    const { result } = renderHook(() => useAuth(), { wrapper });
+
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+    });
+
+    expect(result.current.user).toBeNull();
+    expect(result.current.isAuthenticated).toBe(true);
+    expect(result.current.isForbidden).toBe(true);
+  });
+
   it("returns auth context when used within AuthProvider", () => {
     // Mock the initial session check to return no session
     vi.spyOn(globalThis, "fetch").mockResolvedValueOnce({
@@ -65,6 +83,7 @@ describe("useAuth", () => {
 
     expect(result.current.isAuthenticated).toBe(true);
     expect(result.current.user?.username).toBe("testuser");
+    expect(result.current.isForbidden).toBe(false);
   });
 
   it("calls logout and clears state", async () => {
@@ -92,6 +111,7 @@ describe("useAuth", () => {
 
     expect(result.current.isAuthenticated).toBe(false);
     expect(result.current.user).toBeNull();
+    expect(result.current.isForbidden).toBe(false);
   });
 
   it("restores session from cookie on mount", async () => {
@@ -120,6 +140,7 @@ describe("useAuth", () => {
 
     expect(result.current.isAuthenticated).toBe(true);
     expect(result.current.user?.role).toBe("TEACHER");
+    expect(result.current.isForbidden).toBe(false);
   });
 });
 

@@ -12,12 +12,16 @@ const scriptSceneSchema = z
 export const scriptSchema = z.array(scriptSceneSchema).min(5).max(7);
 
 /**
- * Reports whether narration contains at least one Thai code point.
+ * Reports whether Thai letters form a meaningful majority of narration.
  * @param narration The scene narration to inspect.
- * @returns Whether the narration contains Thai-language characters.
+ * @returns Whether at least three Thai letters make up half of all letters.
  */
 export function containsThaiNarration(narration: string): boolean {
-  return /[\u0E00-\u0E7F]/u.test(narration);
+  const letters = [...narration].filter((character) => /\p{L}/u.test(character));
+  const thaiLetters = letters.filter((character) =>
+    /\p{Script=Thai}/u.test(character),
+  );
+  return thaiLetters.length >= 3 && thaiLetters.length / letters.length >= 0.5;
 }
 
 /**

@@ -28,7 +28,7 @@ import {
   isValidCampaignStatusTransition,
 } from "@/lib/campaign-status";
 import { requireMarketingPermission } from "@/lib/auth";
-import { updateCampaignSchema } from "@/lib/campaign-schema";
+import { campaignIdSchema, updateCampaignSchema } from "@/lib/campaign-schema";
 
 /**
  * GET /api/campaigns/[id] — fetch a single campaign by id.
@@ -44,11 +44,19 @@ export async function GET(
     return guard.response;
   }
 
+  const campaignId = campaignIdSchema.safeParse(params.id);
+  if (!campaignId.success) {
+    return NextResponse.json(
+      { message: "Invalid campaign identifier" },
+      { status: 400 },
+    );
+  }
+
   try {
     const [campaign] = await db
       .select()
       .from(campaigns)
-      .where(eq(campaigns.id, params.id));
+      .where(eq(campaigns.id, campaignId.data));
 
     if (!campaign) {
       return NextResponse.json(
@@ -58,7 +66,7 @@ export async function GET(
     }
 
     return NextResponse.json(campaign);
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { message: "Failed to load campaign" },
       { status: 500 },
@@ -82,6 +90,14 @@ export async function PATCH(
   const guard = await requireMarketingPermission(request, "campaign:update");
   if (!guard.ok) {
     return guard.response;
+  }
+
+  const campaignId = campaignIdSchema.safeParse(params.id);
+  if (!campaignId.success) {
+    return NextResponse.json(
+      { message: "Invalid campaign identifier" },
+      { status: 400 },
+    );
   }
 
   let body: unknown;
@@ -111,7 +127,7 @@ export async function PATCH(
     const [existing] = await db
       .select()
       .from(campaigns)
-      .where(eq(campaigns.id, params.id));
+      .where(eq(campaigns.id, campaignId.data));
 
     if (!existing) {
       return NextResponse.json(
@@ -135,7 +151,7 @@ export async function PATCH(
         status: nextStatus,
         updatedAt: new Date(),
       })
-      .where(eq(campaigns.id, params.id))
+      .where(eq(campaigns.id, campaignId.data))
       .returning();
 
     if (!updated) {
@@ -146,7 +162,7 @@ export async function PATCH(
     }
 
     return NextResponse.json(updated);
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { message: "Failed to update campaign" },
       { status: 500 },

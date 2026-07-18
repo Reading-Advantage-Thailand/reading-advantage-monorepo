@@ -19,6 +19,8 @@ export default function SettingsPage() {
   const [testing, setTesting] = useState(false);
   const [testResult, setTestResult] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [pageError, setPageError] = useState<string | null>(null);
+  const [saveMessage, setSaveMessage] = useState<string | null>(null);
 
   /**
    * Load existing settings on mount. Secret keys (llm.apiKey) are returned
@@ -33,15 +35,26 @@ export default function SettingsPage() {
           window.location.href = "/login";
           return;
         }
-        if (res.ok) {
-          const data: Record<string, string> = await res.json();
-          if (data["llm.provider"]) setProvider(data["llm.provider"]);
-          if (data["llm.model"]) setModelName(data["llm.model"]);
-          if (data["llm.apiKey"]) setApiKey(data["llm.apiKey"]);
-          if (data["tools.mmxPath"]) setMmxPath(data["tools.mmxPath"]);
+        if (res.status === 403) {
+          setPageError("Administrator access is required to view Marketing settings.");
+          return;
         }
+        if (!res.ok) {
+          setPageError("Failed to load Marketing settings. Please try again.");
+          return;
+        }
+        const data: unknown = await res.json();
+        if (!data || typeof data !== "object" || Array.isArray(data)) {
+          setPageError("Settings returned an invalid response.");
+          return;
+        }
+        const settingValues = data as Record<string, unknown>;
+        if (typeof settingValues["llm.provider"] === "string") setProvider(settingValues["llm.provider"]);
+        if (typeof settingValues["llm.model"] === "string") setModelName(settingValues["llm.model"]);
+        if (typeof settingValues["llm.apiKey"] === "string") setApiKey(settingValues["llm.apiKey"]);
+        if (typeof settingValues["tools.mmxPath"] === "string") setMmxPath(settingValues["tools.mmxPath"]);
       } catch {
-        // Settings load is best-effort; form stays at defaults on failure.
+        setPageError("Failed to load Marketing settings. Please try again.");
       } finally {
         setLoading(false);
       }
@@ -71,12 +84,15 @@ export default function SettingsPage() {
         window.location.href = "/login";
         return;
       }
-      const data = await res.json();
-      if (res.ok) {
-        setTestResult("Connection successful!");
-      } else {
-        setTestResult(`Error: ${data.message}`);
+      if (res.status === 403) {
+        setTestResult("Error: administrator access is required to test connections.");
+        return;
       }
+      if (!res.ok) {
+        setTestResult("Error: connection test failed. Check the provider settings and try again.");
+        return;
+      }
+      setTestResult("Connection successful!");
     } catch {
       setTestResult("Connection failed");
     } finally {
@@ -85,6 +101,8 @@ export default function SettingsPage() {
   };
 
   const handleSave = async () => {
+    setPageError(null);
+    setSaveMessage(null);
     try {
       const settingsUpdate = prepareMarketingSettingsUpdate({
         "llm.provider": provider,
@@ -101,14 +119,17 @@ export default function SettingsPage() {
         window.location.href = "/login";
         return;
       }
-      if (res.ok) {
-        alert("Settings saved!");
-      } else {
-        const data = await res.json();
-        alert(`Failed to save settings: ${data.message}`);
+      if (res.status === 403) {
+        setPageError("Administrator access is required to save Marketing settings.");
+        return;
       }
+      if (!res.ok) {
+        setPageError("Failed to save Marketing settings. Check the values and try again.");
+        return;
+      }
+      setSaveMessage("Settings saved.");
     } catch {
-      alert("Failed to save settings");
+      setPageError("Failed to save Marketing settings. Please try again.");
     }
   };
 
@@ -130,6 +151,12 @@ export default function SettingsPage() {
     <div>
       <h1>Settings</h1>
       <p>Configure LLM provider, API keys, and tool paths.</p>
+      {pageError && (
+        <p role="alert" style={{ color: "#b91c1c" }}>{pageError}</p>
+      )}
+      {saveMessage && (
+        <p aria-live="polite" style={{ color: "#15803d" }}>{saveMessage}</p>
+      )}
 
       <div
         style={{
@@ -260,6 +287,8 @@ export default function SettingsPage() {
 
         {testResult && (
           <div
+            role={testResult.startsWith("Error") ? "alert" : "status"}
+            aria-live="polite"
             style={{
               marginTop: "16px",
               padding: "12px",

@@ -18,6 +18,9 @@ const appEnumValues = appEnum.enumValues;
 const campaignTypeValues = campaignTypeEnum.enumValues;
 const campaignStatusValues = campaignStatusEnum.enumValues;
 
+/** Schema for a campaign UUID supplied as a route parameter. */
+export const campaignIdSchema = z.string().uuid();
+
 /**
  * Schema for creating a campaign. `type`, `app`, and `name` are required;
  * `status` defaults to `draft` at the DB layer and is omitted from the
