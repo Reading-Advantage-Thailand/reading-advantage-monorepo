@@ -132,6 +132,34 @@ describeRealPostgres(
           client,
           "0041_marketing_past_topic_normalized_key",
         );
+        await client`
+          INSERT INTO past_topics (id, app, topic)
+          VALUES ('40000000-0000-4000-8000-000000000001', 'marketing', '  Mixed   Topic  ')
+        `;
+        const normalizedInsert = await client<{ normalized_key: string }[]>`
+          SELECT normalized_key FROM past_topics
+          WHERE id = '40000000-0000-4000-8000-000000000001'
+        `;
+        expect(normalizedInsert).toEqual([{ normalized_key: "mixed topic" }]);
+        await client`
+          UPDATE past_topics SET topic = 'Updated   Topic'
+          WHERE id = '40000000-0000-4000-8000-000000000001'
+        `;
+        const normalizedUpdate = await client<{ normalized_key: string }[]>`
+          SELECT normalized_key FROM past_topics
+          WHERE id = '40000000-0000-4000-8000-000000000001'
+        `;
+        expect(normalizedUpdate).toEqual([{ normalized_key: "updated topic" }]);
+        const normalizedIndex = await client<{ indexdef: string }[]>`
+          SELECT indexdef FROM pg_indexes
+          WHERE schemaname = 'public'
+            AND indexname = 'past_topics_app_normalized_key_unique'
+        `;
+        expect(normalizedIndex).toHaveLength(1);
+        expect(normalizedIndex[0]?.indexdef).toContain(
+          "UNIQUE INDEX past_topics_app_normalized_key_unique",
+        );
+
         await executeMigration(
           client,
           "0042_company_product_principal_local_unique",
@@ -193,6 +221,109 @@ describeRealPostgres(
             columns: ["application_key", "local_user_id"],
           },
         ]);
+      } finally {
+        await client.end();
+        await admin.unsafe(`DROP DATABASE IF EXISTS "${databaseName}"`);
+        await admin.end();
+      }
+    }, 60_000);
+
+    it("fails before mutation for duplicate mappings and occupied app-local targets", async () => {
+      const databaseName = `sales_0042_preflight_${randomUUID().replaceAll("-", "")}`;
+      const admin = postgres(pgTestUrl!, { max: 1 });
+      const scratchUrl = new URL(pgTestUrl!);
+      scratchUrl.pathname = `/${databaseName}`;
+      await admin.unsafe(`CREATE DATABASE "${databaseName}"`);
+      const client = postgres(scratchUrl.toString(), { max: 1 });
+      const sub = "00000000-0000-4000-8000-000000000011";
+
+      try {
+        await client.unsafe(`
+          CREATE TYPE role AS ENUM (
+            'INTERN', 'STUDENT', 'TEACHER', 'ADMIN', 'SYSTEM',
+            'SALES_REP', 'SALES_ADMIN'
+          );
+          CREATE TABLE users (
+            id text PRIMARY KEY,
+            username text NOT NULL UNIQUE,
+            display_username text NOT NULL UNIQUE,
+            name text,
+            image text,
+            role role NOT NULL,
+            school_id uuid,
+            xp integer NOT NULL DEFAULT 0,
+            level integer NOT NULL DEFAULT 1,
+            cefr_level text NOT NULL DEFAULT 'A1-',
+            grade_level integer,
+            created_at timestamp NOT NULL DEFAULT now(),
+            updated_at timestamp NOT NULL DEFAULT now()
+          );
+          CREATE TABLE company_product_principals (
+            organization_id uuid NOT NULL,
+            organization_key text NOT NULL,
+            company_account_id uuid NOT NULL,
+            application_key text NOT NULL,
+            local_user_id text NOT NULL REFERENCES users(id) ON DELETE RESTRICT,
+            role_key text NOT NULL,
+            created_at timestamptz NOT NULL DEFAULT now(),
+            updated_at timestamptz NOT NULL DEFAULT now(),
+            PRIMARY KEY (organization_id, company_account_id, application_key),
+            CONSTRAINT company_product_principals_application_local_unique
+              UNIQUE (organization_id, application_key, local_user_id)
+          );
+        `);
+        await client`
+          INSERT INTO users (id, username, display_username, role)
+          VALUES (${sub}, 'duplicate.source', 'duplicate.source', 'ADMIN')
+        `;
+        await client`
+          INSERT INTO company_product_principals (
+            organization_id, organization_key, company_account_id,
+            application_key, local_user_id, role_key
+          ) VALUES
+            ('20000000-0000-4000-8000-000000000011', 'internal-company',
+             ${sub}, 'sales', ${sub}, 'SALES_REP'),
+            ('20000000-0000-4000-8000-000000000012', 'internal-company',
+             ${sub}, 'sales', ${sub}, 'SALES_REP')
+        `;
+        await expect(
+          executeMigration(
+            client,
+            "0042_company_product_principal_local_unique",
+          ),
+        ).rejects.toThrow(
+          /duplicate application\/local|multiple product mappings/,
+        );
+        await expect(
+          client`SELECT count(*)::int AS count FROM users`,
+        ).resolves.toEqual([{ count: 1 }]);
+
+        await client`DELETE FROM company_product_principals`;
+        await client`
+          INSERT INTO users (id, username, display_username, role)
+          VALUES (
+            ${`sales:${sub}`}, ${`sales:${sub}`},
+            ${`sales:${sub}`}, 'SALES_REP'
+          )
+        `;
+        await client`
+          INSERT INTO company_product_principals (
+            organization_id, organization_key, company_account_id,
+            application_key, local_user_id, role_key
+          ) VALUES (
+            '20000000-0000-4000-8000-000000000011', 'internal-company',
+            ${sub}, 'sales', ${sub}, 'SALES_REP'
+          )
+        `;
+        await expect(
+          executeMigration(
+            client,
+            "0042_company_product_principal_local_unique",
+          ),
+        ).rejects.toThrow("Sales app-local principal target already exists");
+        await expect(
+          client`SELECT role::text AS role FROM users WHERE id = ${sub}`,
+        ).resolves.toEqual([{ role: "ADMIN" }]);
       } finally {
         await client.end();
         await admin.unsafe(`DROP DATABASE IF EXISTS "${databaseName}"`);

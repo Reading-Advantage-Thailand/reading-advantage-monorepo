@@ -84,6 +84,16 @@ describeRealPostgres(
           CONSTRAINT company_product_principals_application_local_unique
             UNIQUE (application_key, local_user_id)
         );
+        CREATE TABLE audit_events (
+          id text PRIMARY KEY,
+          actor_user_id text,
+          actor_role text,
+          action text NOT NULL,
+          target_type text,
+          target_id text,
+          metadata jsonb,
+          created_at timestamptz NOT NULL DEFAULT now()
+        );
       `);
 
         await client`INSERT INTO users (id, role) VALUES (${accountId}, 'SALES_ADMIN')`;
@@ -112,6 +122,29 @@ describeRealPostgres(
         expect(await readRole(client, salesLocalId)).toBe("SALES_ADMIN");
         expect(await readRole(client, unrelatedAccountId)).toBe("TEACHER");
         expect(await readRole(client, unrelatedLocalId)).toBe("SALES_REP");
+        const auditRows = await client<
+          {
+            action: string;
+            actor_role: string;
+            metadata: Record<string, unknown>;
+          }[]
+        >`
+          SELECT action, actor_role, metadata
+          FROM audit_events
+          WHERE action = 'sales:legacy_source_role_repaired'
+        `;
+        expect(auditRows).toEqual([
+          {
+            action: "sales:legacy_source_role_repaired",
+            actor_role: "SYSTEM",
+            metadata: {
+              applicationKey: "sales",
+              expectedCurrentRole: "SALES_ADMIN",
+              targetRole: "ADMIN",
+              source: "cloud-build-repair-manifest",
+            },
+          },
+        ]);
 
         await client`UPDATE users SET role = 'TEACHER' WHERE id = ${accountId}`;
         expect(() => runRepair(databaseUrl, manifest)).toThrow();

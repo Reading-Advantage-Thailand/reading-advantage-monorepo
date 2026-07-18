@@ -47,6 +47,20 @@ describe("Sales company session projection", () => {
     expect(mocks.resolve).toHaveBeenCalledTimes(1);
   });
 
+  it("retries failed best-effort deauthorization on a later no-role request", async () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    mocks.resolve
+      .mockRejectedValueOnce(new Error("database unavailable"))
+      .mockResolvedValueOnce(null);
+
+    await expect(salesSessionUser(identity)).resolves.toBeNull();
+    await vi.waitFor(() => expect(warn).toHaveBeenCalledTimes(1));
+    await expect(salesSessionUser(identity)).resolves.toBeNull();
+    await vi.waitFor(() => expect(mocks.resolve).toHaveBeenCalledTimes(2));
+
+    warn.mockRestore();
+  });
+
   it("awaits durable principal resolution when a Sales role is present", async () => {
     const principal = {
       user: { id: "sales:subject" },

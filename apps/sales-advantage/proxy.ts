@@ -2,8 +2,10 @@ import createIntlMiddleware from "next-intl/middleware";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { routing } from "./i18n/routing";
+import { isLegacySalesAuthEnabled } from "./lib/auth-mode";
 
 const SALES_SESSION_COOKIE = "__Host-ra_sales_session";
+const LEGACY_SESSION_COOKIE = "session_token";
 const intlMiddleware = createIntlMiddleware(routing);
 
 function getPublicUrl(request: NextRequest, pathname: string) {
@@ -22,12 +24,8 @@ function getPublicUrl(request: NextRequest, pathname: string) {
   return url;
 }
 
-function isAdminPath(lowerPath: string): boolean {
-  return (
-    lowerPath === "/admin" ||
-    lowerPath.startsWith("/admin/") ||
-    /^\/(th|en)\/admin(\/|$)/.test(lowerPath)
-  );
+function isProtectedPath(lowerPath: string): boolean {
+  return /^\/(?:th|en)?\/?(?:admin|module|lesson)(?:\/|$)/.test(lowerPath);
 }
 
 export async function proxy(request: NextRequest) {
@@ -42,8 +40,11 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  if (isAdminPath(lowerPath)) {
-    const sessionToken = request.cookies.get(SALES_SESSION_COOKIE)?.value;
+  if (isProtectedPath(lowerPath)) {
+    const sessionCookie = isLegacySalesAuthEnabled()
+      ? LEGACY_SESSION_COOKIE
+      : SALES_SESSION_COOKIE;
+    const sessionToken = request.cookies.get(sessionCookie)?.value;
     const redirectTarget = pathname + search;
 
     if (!sessionToken) {

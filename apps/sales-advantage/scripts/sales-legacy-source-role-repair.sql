@@ -83,6 +83,23 @@ BEGIN
   IF affected <> 1 THEN
     RAISE EXCEPTION 'Sales source-role repair did not update exactly one row';
   END IF;
+
+  INSERT INTO audit_events (
+    id, actor_user_id, actor_role, action, target_type, target_id, metadata
+  ) VALUES (
+    'sales-source-role-repair:' || account_id::text,
+    NULL,
+    'SYSTEM',
+    'sales:legacy_source_role_repaired',
+    'user',
+    account_id::text,
+    jsonb_build_object(
+      'applicationKey', 'sales',
+      'expectedCurrentRole', expected_current_role,
+      'targetRole', target_role,
+      'source', 'cloud-build-repair-manifest'
+    )
+  );
 END
 $$;
 

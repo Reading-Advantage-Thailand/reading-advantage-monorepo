@@ -146,6 +146,8 @@ describe("Sales production readiness", () => {
     expect(sourceRoleRepair).toContain("expected_mapping_count <> 1");
     expect(sourceRoleRepair).toContain("current_role = target_role");
     expect(sourceRoleRepair).toContain("current_role <> expected_current_role");
+    expect(sourceRoleRepair).toContain("INSERT INTO audit_events");
+    expect(sourceRoleRepair).toContain("sales:legacy_source_role_repaired");
     expect(sourceRoleRepair).not.toContain("00000000-0000-4000");
   });
 

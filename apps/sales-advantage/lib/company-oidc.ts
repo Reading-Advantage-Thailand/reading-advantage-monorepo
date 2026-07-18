@@ -49,6 +49,7 @@ function hasSalesRole(identity: CompanyOidcIdentity): boolean {
 /**
  * Attempts durable role removal without making anonymous access depend on PostgreSQL.
  * @param identity Verified Accounts identity whose Sales role is absent.
+ * Each later no-role request schedules another best-effort attempt; no durable queue is used.
  * @returns Nothing; completion or failure is handled asynchronously.
  */
 function scheduleSalesDeauthorization(identity: CompanyOidcIdentity): void {
