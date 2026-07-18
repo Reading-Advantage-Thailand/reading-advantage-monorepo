@@ -11082,7 +11082,7 @@
     "agent_resource_usage_limitation": "The platform does not expose agent-context bytes or tool-command accounting; helper-internal Git bytes are reported separately and are not represented as frozen role-budget usage.",
     "command_basis": "one persistent committed-object reader, one frozen-tree listing, one ancestor-only revision listing, and two historical package-tree listings",
     "git_process_invocations": 5,
-    "source_bytes_hashed_by_helper": 405431681,
+    "source_bytes_hashed_by_helper": 405432119,
     "source_objects_resolved": 1502
   },
   "collector_identity": "evidence-collector-remediation-20260713",
@@ -19954,10 +19954,10 @@
       "measure/tracks/apk_source_denominator_inventory_20260712/denominator-discrepancies.json": "a531598c2d8a313f99c2a11539fee1de7fa9e96886a7fe8fafb90c5d94866747",
       "measure/tracks/apk_source_denominator_inventory_20260712/game-identity-ledger.json": "a31c99650bf1abd6623e64b2e9a23c4c481ce970036b52cfbe08c74b1c09c407",
       "measure/tracks/apk_source_denominator_inventory_20260712/historical-source-denominator.json": "6e313be829b414e7c85f4f20d4cb7e33283f15d743740b8784b589d0de2c7e6f",
-      "measure/tracks/apk_source_denominator_inventory_20260712/scene-state-denominator.json": "b3626f7ccb02ae34225b95fcc3693b6d149bfff0da94605db2deda6e8b2ac270",
+      "measure/tracks/apk_source_denominator_inventory_20260712/scene-state-denominator.json": "6308836ca24f1cac5bf4ded5f7e72c5ba06c08f4a5c6648620818b720190bf8b",
       "measure/tracks/apk_source_denominator_inventory_20260712/source-denominator.json": "0dbf97dac93ba2056228e79433fb91e6f2ef1898b6f09eff62fe0755082ba21d"
     },
-    "revision": "ad02fb34764a961107f9d963430a7b27f8ff4dae"
+    "revision": "77cd4e716becc6ae2e21bc625d64222256bf9555"
   },
   "interpretation": {},
   "mechanical_graph_edge_reviews": [
@@ -108663,6 +108663,132 @@
       {
         "discovery_method": "independent-raw-typescript-compiler-ast",
         "evidence": {
+          "blob_sha256": "1dc51671435e17c6606bdfe68bc12dc44f8607016301f9cb1e738dd7467ccb02",
+          "path": "apps/advantage-games/src/store/usePotionRushStore.ts",
+          "range": {
+            "end_line": 453,
+            "sha256": "a7de7d9168ea25a71928472668f3581a7540d77c5838a628ec56ff0c93700cb6",
+            "start_line": 453
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        "from_state_id": "PLAYING",
+        "path": "apps/advantage-games/src/store/usePotionRushStore.ts",
+        "source_symbol": "gameState",
+        "to_state_id": "GAME_OVER",
+        "transition_evidence_kind": "ast-zustand-guarded-write"
+      },
+      {
+        "discovery_method": "independent-raw-typescript-compiler-ast",
+        "evidence": {
+          "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+          "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+          "range": {
+            "end_line": 194,
+            "sha256": "9713e1734236d46c381beb941a12d70191ba0db547da28f4f0ce3163147aeb2b",
+            "start_line": 194
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        "from_state_id": "enemy",
+        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "source_symbol": "selectionStep",
+        "to_state_id": "ready",
+        "transition_evidence_kind": "ast-zustand-guarded-write"
+      },
+      {
+        "discovery_method": "independent-raw-typescript-compiler-ast",
+        "evidence": {
+          "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+          "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+          "range": {
+            "end_line": 176,
+            "sha256": "7daf13b5681a9e6ef45d7050e4b78810fb7c4a7de1f6ef929afff8ce01cbe91e",
+            "start_line": 176
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        "from_state_id": "hero",
+        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "source_symbol": "selectionStep",
+        "to_state_id": "location",
+        "transition_evidence_kind": "ast-zustand-guarded-write"
+      },
+      {
+        "discovery_method": "independent-raw-typescript-compiler-ast",
+        "evidence": {
+          "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+          "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+          "range": {
+            "end_line": 185,
+            "sha256": "e0ba5d48a7f9846f08c22b0a974bcfc9a18025974beb624e0e3b82a71418cfbd",
+            "start_line": 185
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        "from_state_id": "location",
+        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "source_symbol": "selectionStep",
+        "to_state_id": "enemy",
+        "transition_evidence_kind": "ast-zustand-guarded-write"
+      },
+      {
+        "discovery_method": "independent-raw-typescript-compiler-ast",
+        "evidence": {
+          "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+          "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+          "range": {
+            "end_line": 104,
+            "sha256": "81da26036b42e11ec069baeee834681f794000e49b0ff7158ae9c14ac320cd43",
+            "start_line": 104
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        "from_state_id": "playing",
+        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "source_symbol": "status",
+        "to_state_id": "defeat",
+        "transition_evidence_kind": "ast-zustand-conditional-guarded-write"
+      },
+      {
+        "discovery_method": "independent-raw-typescript-compiler-ast",
+        "evidence": {
+          "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+          "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+          "range": {
+            "end_line": 115,
+            "sha256": "a5806e0cadc4b8c093a6eb6eea2061bc10956489eb62cccd6caa3b15b4d0c1cf",
+            "start_line": 115
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        "from_state_id": "playing",
+        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "source_symbol": "status",
+        "to_state_id": "victory",
+        "transition_evidence_kind": "ast-zustand-conditional-guarded-write"
+      },
+      {
+        "discovery_method": "independent-raw-typescript-compiler-ast",
+        "evidence": {
+          "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+          "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+          "range": {
+            "end_line": 129,
+            "sha256": "39bf43ac8cc68fb15705baa4259c47bbbc493e208f4efb95d3176f8aaaf7baaa",
+            "start_line": 129
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        },
+        "from_state_id": "enemy",
+        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "source_symbol": "turn",
+        "to_state_id": "player",
+        "transition_evidence_kind": "ast-zustand-guarded-write"
+      },
+      {
+        "discovery_method": "independent-raw-typescript-compiler-ast",
+        "evidence": {
           "blob_sha256": "b65466676c461d96c067672911903466c7eed86a78a7a6fbc1556a6c680f9a0c",
           "path": "apps/reading-advantage/lib/games/castleDefense.ts",
           "range": {
@@ -110291,27 +110417,6 @@
           "blob_sha256": "1dc51671435e17c6606bdfe68bc12dc44f8607016301f9cb1e738dd7467ccb02",
           "path": "apps/advantage-games/src/store/usePotionRushStore.ts",
           "range": {
-            "end_line": 453,
-            "sha256": "a7de7d9168ea25a71928472668f3581a7540d77c5838a628ec56ff0c93700cb6",
-            "start_line": 453
-          },
-          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-        },
-        "from_state_id": "PLAYING",
-        "path": "apps/advantage-games/src/store/usePotionRushStore.ts",
-        "reason": "state-domain-occurrence-ambiguous",
-        "record_kind": "transition_write_candidate",
-        "resolution_status": "unresolved",
-        "source_symbol": "gameState",
-        "to_state_id": "GAME_OVER",
-        "transition_evidence_kind": "ast-zustand-guarded-write"
-      },
-      {
-        "discovery_method": "independent-raw-typescript-compiler-ast",
-        "evidence": {
-          "blob_sha256": "1dc51671435e17c6606bdfe68bc12dc44f8607016301f9cb1e738dd7467ccb02",
-          "path": "apps/advantage-games/src/store/usePotionRushStore.ts",
-          "range": {
             "end_line": 203,
             "sha256": "55d474b6a360b6843ee6f3f063f1a34d8a499a9a44c555c275b01ece3fc53368",
             "start_line": 203
@@ -110597,27 +110702,6 @@
           "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
           "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
           "range": {
-            "end_line": 185,
-            "sha256": "e0ba5d48a7f9846f08c22b0a974bcfc9a18025974beb624e0e3b82a71418cfbd",
-            "start_line": 185
-          },
-          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-        },
-        "from_state_id": "location",
-        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
-        "reason": "state-domain-occurrence-ambiguous",
-        "record_kind": "transition_write_candidate",
-        "resolution_status": "unresolved",
-        "source_symbol": "selectionStep",
-        "to_state_id": "enemy",
-        "transition_evidence_kind": "ast-zustand-guarded-write"
-      },
-      {
-        "discovery_method": "independent-raw-typescript-compiler-ast",
-        "evidence": {
-          "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
-          "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
-          "range": {
             "end_line": 199,
             "sha256": "bb92733643cbd2d5427da91e33cf3453ff8e9b18a146b7aefabe1eddd2963757",
             "start_line": 199
@@ -110630,69 +110714,6 @@
         "resolution_status": "unresolved",
         "source_symbol": "selectionStep",
         "to_state_id": "hero"
-      },
-      {
-        "discovery_method": "independent-raw-typescript-compiler-ast",
-        "evidence": {
-          "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
-          "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
-          "range": {
-            "end_line": 176,
-            "sha256": "7daf13b5681a9e6ef45d7050e4b78810fb7c4a7de1f6ef929afff8ce01cbe91e",
-            "start_line": 176
-          },
-          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-        },
-        "from_state_id": "hero",
-        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
-        "reason": "state-domain-occurrence-ambiguous",
-        "record_kind": "transition_write_candidate",
-        "resolution_status": "unresolved",
-        "source_symbol": "selectionStep",
-        "to_state_id": "location",
-        "transition_evidence_kind": "ast-zustand-guarded-write"
-      },
-      {
-        "discovery_method": "independent-raw-typescript-compiler-ast",
-        "evidence": {
-          "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
-          "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
-          "range": {
-            "end_line": 194,
-            "sha256": "9713e1734236d46c381beb941a12d70191ba0db547da28f4f0ce3163147aeb2b",
-            "start_line": 194
-          },
-          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-        },
-        "from_state_id": "enemy",
-        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
-        "reason": "state-domain-occurrence-ambiguous",
-        "record_kind": "transition_write_candidate",
-        "resolution_status": "unresolved",
-        "source_symbol": "selectionStep",
-        "to_state_id": "ready",
-        "transition_evidence_kind": "ast-zustand-guarded-write"
-      },
-      {
-        "discovery_method": "independent-raw-typescript-compiler-ast",
-        "evidence": {
-          "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
-          "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
-          "range": {
-            "end_line": 104,
-            "sha256": "81da26036b42e11ec069baeee834681f794000e49b0ff7158ae9c14ac320cd43",
-            "start_line": 104
-          },
-          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-        },
-        "from_state_id": "playing",
-        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
-        "reason": "state-domain-occurrence-ambiguous",
-        "record_kind": "transition_write_candidate",
-        "resolution_status": "unresolved",
-        "source_symbol": "status",
-        "to_state_id": "defeat",
-        "transition_evidence_kind": "ast-zustand-conditional-guarded-write"
       },
       {
         "discovery_method": "independent-raw-typescript-compiler-ast",
@@ -110719,27 +110740,6 @@
           "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
           "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
           "range": {
-            "end_line": 115,
-            "sha256": "a5806e0cadc4b8c093a6eb6eea2061bc10956489eb62cccd6caa3b15b4d0c1cf",
-            "start_line": 115
-          },
-          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-        },
-        "from_state_id": "playing",
-        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
-        "reason": "state-domain-occurrence-ambiguous",
-        "record_kind": "transition_write_candidate",
-        "resolution_status": "unresolved",
-        "source_symbol": "status",
-        "to_state_id": "victory",
-        "transition_evidence_kind": "ast-zustand-conditional-guarded-write"
-      },
-      {
-        "discovery_method": "independent-raw-typescript-compiler-ast",
-        "evidence": {
-          "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
-          "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
-          "range": {
             "end_line": 87,
             "sha256": "19a1abc211d48b78cef5e5b0cd657ea33a3ba23cdbace49d38d4681cf20b93de",
             "start_line": 87
@@ -110752,27 +110752,6 @@
         "resolution_status": "unresolved",
         "source_symbol": "turn",
         "to_state_id": "player"
-      },
-      {
-        "discovery_method": "independent-raw-typescript-compiler-ast",
-        "evidence": {
-          "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
-          "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
-          "range": {
-            "end_line": 129,
-            "sha256": "39bf43ac8cc68fb15705baa4259c47bbbc493e208f4efb95d3176f8aaaf7baaa",
-            "start_line": 129
-          },
-          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-        },
-        "from_state_id": "enemy",
-        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
-        "reason": "state-domain-occurrence-ambiguous",
-        "record_kind": "transition_write_candidate",
-        "resolution_status": "unresolved",
-        "source_symbol": "turn",
-        "to_state_id": "player",
-        "transition_evidence_kind": "ast-zustand-guarded-write"
       },
       {
         "discovery_method": "independent-raw-typescript-compiler-ast",
@@ -126800,6 +126779,195 @@
       "disposition": "raw-surface-range-reviewed",
       "evidence": [
         {
+          "blob_sha256": "1dc51671435e17c6606bdfe68bc12dc44f8607016301f9cb1e738dd7467ccb02",
+          "path": "apps/advantage-games/src/store/usePotionRushStore.ts",
+          "range": {
+            "end_line": 453,
+            "sha256": "a7de7d9168ea25a71928472668f3581a7540d77c5838a628ec56ff0c93700cb6",
+            "start_line": 453
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-typescript-compiler-ast\",\"evidence\":{\"blob_sha256\":\"1dc51671435e17c6606bdfe68bc12dc44f8607016301f9cb1e738dd7467ccb02\",\"path\":\"apps/advantage-games/src/store/usePotionRushStore.ts\",\"range\":{\"end_line\":453,\"sha256\":\"a7de7d9168ea25a71928472668f3581a7540d77c5838a628ec56ff0c93700cb6\",\"start_line\":453},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"PLAYING\",\"from_state_occurrence_id\":\"apps/advantage-games/src/store/usePotionRushStore.ts:11:GameState:PLAYING\",\"source_symbol\":\"gameState\",\"to_state_id\":\"GAME_OVER\",\"to_state_occurrence_id\":\"apps/advantage-games/src/store/usePotionRushStore.ts:11:GameState:GAME_OVER\",\"transition_evidence_kind\":\"ast-zustand-guarded-write\",\"transition_kind\":\"phase\"}",
+      "method": "human-raw-surface-review",
+      "resolution_status": "reviewed",
+      "review_batch_id": "human-program-08",
+      "review_id": "surface-review:276",
+      "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
+      "source_kind": "transition",
+      "surface_kind": "phase"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "disposition": "raw-surface-range-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+          "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+          "range": {
+            "end_line": 104,
+            "sha256": "81da26036b42e11ec069baeee834681f794000e49b0ff7158ae9c14ac320cd43",
+            "start_line": 104
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-typescript-compiler-ast\",\"evidence\":{\"blob_sha256\":\"3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018\",\"path\":\"apps/advantage-games/src/store/useRPGBattleStore.ts\",\"range\":{\"end_line\":104,\"sha256\":\"81da26036b42e11ec069baeee834681f794000e49b0ff7158ae9c14ac320cd43\",\"start_line\":104},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"playing\",\"from_state_occurrence_id\":\"apps/advantage-games/src/store/useRPGBattleStore.ts:4:BattleStatus:playing\",\"source_symbol\":\"status\",\"to_state_id\":\"defeat\",\"to_state_occurrence_id\":\"apps/advantage-games/src/store/useRPGBattleStore.ts:4:BattleStatus:defeat\",\"transition_evidence_kind\":\"ast-zustand-conditional-guarded-write\",\"transition_kind\":\"phase\"}",
+      "method": "human-raw-surface-review",
+      "resolution_status": "reviewed",
+      "review_batch_id": "human-program-01",
+      "review_id": "surface-review:277",
+      "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
+      "source_kind": "transition",
+      "surface_kind": "phase"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "disposition": "raw-surface-range-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+          "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+          "range": {
+            "end_line": 115,
+            "sha256": "a5806e0cadc4b8c093a6eb6eea2061bc10956489eb62cccd6caa3b15b4d0c1cf",
+            "start_line": 115
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-typescript-compiler-ast\",\"evidence\":{\"blob_sha256\":\"3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018\",\"path\":\"apps/advantage-games/src/store/useRPGBattleStore.ts\",\"range\":{\"end_line\":115,\"sha256\":\"a5806e0cadc4b8c093a6eb6eea2061bc10956489eb62cccd6caa3b15b4d0c1cf\",\"start_line\":115},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"playing\",\"from_state_occurrence_id\":\"apps/advantage-games/src/store/useRPGBattleStore.ts:4:BattleStatus:playing\",\"source_symbol\":\"status\",\"to_state_id\":\"victory\",\"to_state_occurrence_id\":\"apps/advantage-games/src/store/useRPGBattleStore.ts:4:BattleStatus:victory\",\"transition_evidence_kind\":\"ast-zustand-conditional-guarded-write\",\"transition_kind\":\"phase\"}",
+      "method": "human-raw-surface-review",
+      "resolution_status": "reviewed",
+      "review_batch_id": "human-program-01",
+      "review_id": "surface-review:278",
+      "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
+      "source_kind": "transition",
+      "surface_kind": "phase"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "disposition": "raw-surface-range-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+          "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+          "range": {
+            "end_line": 129,
+            "sha256": "39bf43ac8cc68fb15705baa4259c47bbbc493e208f4efb95d3176f8aaaf7baaa",
+            "start_line": 129
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-typescript-compiler-ast\",\"evidence\":{\"blob_sha256\":\"3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018\",\"path\":\"apps/advantage-games/src/store/useRPGBattleStore.ts\",\"range\":{\"end_line\":129,\"sha256\":\"39bf43ac8cc68fb15705baa4259c47bbbc493e208f4efb95d3176f8aaaf7baaa\",\"start_line\":129},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"enemy\",\"from_state_occurrence_id\":\"apps/advantage-games/src/store/useRPGBattleStore.ts:5:BattleTurn:enemy\",\"source_symbol\":\"turn\",\"to_state_id\":\"player\",\"to_state_occurrence_id\":\"apps/advantage-games/src/store/useRPGBattleStore.ts:5:BattleTurn:player\",\"transition_evidence_kind\":\"ast-zustand-guarded-write\",\"transition_kind\":\"phase\"}",
+      "method": "human-raw-surface-review",
+      "resolution_status": "reviewed",
+      "review_batch_id": "human-program-01",
+      "review_id": "surface-review:279",
+      "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
+      "source_kind": "transition",
+      "surface_kind": "phase"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "disposition": "raw-surface-range-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+          "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+          "range": {
+            "end_line": 176,
+            "sha256": "7daf13b5681a9e6ef45d7050e4b78810fb7c4a7de1f6ef929afff8ce01cbe91e",
+            "start_line": 176
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-typescript-compiler-ast\",\"evidence\":{\"blob_sha256\":\"3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018\",\"path\":\"apps/advantage-games/src/store/useRPGBattleStore.ts\",\"range\":{\"end_line\":176,\"sha256\":\"7daf13b5681a9e6ef45d7050e4b78810fb7c4a7de1f6ef929afff8ce01cbe91e\",\"start_line\":176},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"hero\",\"from_state_occurrence_id\":\"apps/advantage-games/src/store/useRPGBattleStore.ts:17:BattleSelectionStep:hero\",\"source_symbol\":\"selectionStep\",\"to_state_id\":\"location\",\"to_state_occurrence_id\":\"apps/advantage-games/src/store/useRPGBattleStore.ts:17:BattleSelectionStep:location\",\"transition_evidence_kind\":\"ast-zustand-guarded-write\",\"transition_kind\":\"phase\"}",
+      "method": "human-raw-surface-review",
+      "resolution_status": "reviewed",
+      "review_batch_id": "human-program-01",
+      "review_id": "surface-review:280",
+      "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
+      "source_kind": "transition",
+      "surface_kind": "phase"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "disposition": "raw-surface-range-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+          "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+          "range": {
+            "end_line": 185,
+            "sha256": "e0ba5d48a7f9846f08c22b0a974bcfc9a18025974beb624e0e3b82a71418cfbd",
+            "start_line": 185
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-typescript-compiler-ast\",\"evidence\":{\"blob_sha256\":\"3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018\",\"path\":\"apps/advantage-games/src/store/useRPGBattleStore.ts\",\"range\":{\"end_line\":185,\"sha256\":\"e0ba5d48a7f9846f08c22b0a974bcfc9a18025974beb624e0e3b82a71418cfbd\",\"start_line\":185},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"location\",\"from_state_occurrence_id\":\"apps/advantage-games/src/store/useRPGBattleStore.ts:17:BattleSelectionStep:location\",\"source_symbol\":\"selectionStep\",\"to_state_id\":\"enemy\",\"to_state_occurrence_id\":\"apps/advantage-games/src/store/useRPGBattleStore.ts:17:BattleSelectionStep:enemy\",\"transition_evidence_kind\":\"ast-zustand-guarded-write\",\"transition_kind\":\"phase\"}",
+      "method": "human-raw-surface-review",
+      "resolution_status": "reviewed",
+      "review_batch_id": "human-program-01",
+      "review_id": "surface-review:281",
+      "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
+      "source_kind": "transition",
+      "surface_kind": "phase"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "disposition": "raw-surface-range-reviewed",
+      "evidence": [
+        {
+          "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+          "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+          "range": {
+            "end_line": 194,
+            "sha256": "9713e1734236d46c381beb941a12d70191ba0db547da28f4f0ce3163147aeb2b",
+            "start_line": 194
+          },
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+        }
+      ],
+      "interpretation": {},
+      "mechanical_surface_key": "{\"discovery_method\":\"mechanical-typescript-compiler-ast\",\"evidence\":{\"blob_sha256\":\"3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018\",\"path\":\"apps/advantage-games/src/store/useRPGBattleStore.ts\",\"range\":{\"end_line\":194,\"sha256\":\"9713e1734236d46c381beb941a12d70191ba0db547da28f4f0ce3163147aeb2b\",\"start_line\":194},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"enemy\",\"from_state_occurrence_id\":\"apps/advantage-games/src/store/useRPGBattleStore.ts:17:BattleSelectionStep:enemy\",\"source_symbol\":\"selectionStep\",\"to_state_id\":\"ready\",\"to_state_occurrence_id\":\"apps/advantage-games/src/store/useRPGBattleStore.ts:17:BattleSelectionStep:ready\",\"transition_evidence_kind\":\"ast-zustand-guarded-write\",\"transition_kind\":\"phase\"}",
+      "method": "human-raw-surface-review",
+      "resolution_status": "reviewed",
+      "review_batch_id": "human-program-01",
+      "review_id": "surface-review:282",
+      "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
+      "source_kind": "transition",
+      "surface_kind": "phase"
+    },
+    {
+      "collector_identity": "evidence-collector-remediation-20260713",
+      "collector_role": "evidence-collector",
+      "confidence": "high",
+      "disposition": "raw-surface-range-reviewed",
+      "evidence": [
+        {
           "blob_sha256": "b65466676c461d96c067672911903466c7eed86a78a7a6fbc1556a6c680f9a0c",
           "path": "apps/reading-advantage/lib/games/castleDefense.ts",
           "range": {
@@ -126815,7 +126983,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "reviewed",
       "review_batch_id": "human-program-02",
-      "review_id": "surface-review:276",
+      "review_id": "surface-review:283",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition",
       "surface_kind": "phase"
@@ -126842,7 +127010,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "reviewed",
       "review_batch_id": "human-program-07",
-      "review_id": "surface-review:277",
+      "review_id": "surface-review:284",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition",
       "surface_kind": "phase"
@@ -126869,7 +127037,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "reviewed",
       "review_batch_id": "human-program-07",
-      "review_id": "surface-review:278",
+      "review_id": "surface-review:285",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition",
       "surface_kind": "phase"
@@ -126896,7 +127064,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "reviewed",
       "review_batch_id": "human-program-07",
-      "review_id": "surface-review:279",
+      "review_id": "surface-review:286",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition",
       "surface_kind": "phase"
@@ -126923,7 +127091,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "reviewed",
       "review_batch_id": "human-global-shared-01",
-      "review_id": "surface-review:280",
+      "review_id": "surface-review:287",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition",
       "surface_kind": "phase"
@@ -126950,7 +127118,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "reviewed",
       "review_batch_id": "human-global-shared-01",
-      "review_id": "surface-review:281",
+      "review_id": "surface-review:288",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition",
       "surface_kind": "phase"
@@ -126977,7 +127145,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-global-shared-01",
-      "review_id": "surface-review:282",
+      "review_id": "surface-review:289",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -127004,7 +127172,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-08",
-      "review_id": "surface-review:283",
+      "review_id": "surface-review:290",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -127031,7 +127199,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-08",
-      "review_id": "surface-review:284",
+      "review_id": "surface-review:291",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -127058,7 +127226,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-07",
-      "review_id": "surface-review:285",
+      "review_id": "surface-review:292",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -127085,7 +127253,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-07",
-      "review_id": "surface-review:286",
+      "review_id": "surface-review:293",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -127112,7 +127280,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-01",
-      "review_id": "surface-review:287",
+      "review_id": "surface-review:294",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -127139,7 +127307,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-01",
-      "review_id": "surface-review:288",
+      "review_id": "surface-review:295",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -127166,7 +127334,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-01",
-      "review_id": "surface-review:289",
+      "review_id": "surface-review:296",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -127193,7 +127361,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-global-shared-01",
-      "review_id": "surface-review:290",
+      "review_id": "surface-review:297",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -127220,7 +127388,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-global-shared-01",
-      "review_id": "surface-review:291",
+      "review_id": "surface-review:298",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -127247,7 +127415,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-global-shared-01",
-      "review_id": "surface-review:292",
+      "review_id": "surface-review:299",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -127274,7 +127442,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-global-shared-01",
-      "review_id": "surface-review:293",
+      "review_id": "surface-review:300",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -127301,7 +127469,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-global-shared-01",
-      "review_id": "surface-review:294",
+      "review_id": "surface-review:301",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -127328,7 +127496,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-global-shared-01",
-      "review_id": "surface-review:295",
+      "review_id": "surface-review:302",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -127355,7 +127523,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-global-shared-01",
-      "review_id": "surface-review:296",
+      "review_id": "surface-review:303",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -127382,7 +127550,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-global-shared-01",
-      "review_id": "surface-review:297",
+      "review_id": "surface-review:304",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -127409,7 +127577,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-global-shared-01",
-      "review_id": "surface-review:298",
+      "review_id": "surface-review:305",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -127436,7 +127604,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-09",
-      "review_id": "surface-review:299",
+      "review_id": "surface-review:306",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -127463,7 +127631,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-09",
-      "review_id": "surface-review:300",
+      "review_id": "surface-review:307",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -127490,7 +127658,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-09",
-      "review_id": "surface-review:301",
+      "review_id": "surface-review:308",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -127517,7 +127685,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-05",
-      "review_id": "surface-review:302",
+      "review_id": "surface-review:309",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -127544,7 +127712,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-05",
-      "review_id": "surface-review:303",
+      "review_id": "surface-review:310",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -127571,7 +127739,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-10",
-      "review_id": "surface-review:304",
+      "review_id": "surface-review:311",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -127598,7 +127766,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-10",
-      "review_id": "surface-review:305",
+      "review_id": "surface-review:312",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -127625,7 +127793,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-10",
-      "review_id": "surface-review:306",
+      "review_id": "surface-review:313",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -127652,7 +127820,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-06",
-      "review_id": "surface-review:307",
+      "review_id": "surface-review:314",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -127679,7 +127847,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-06",
-      "review_id": "surface-review:308",
+      "review_id": "surface-review:315",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -127706,7 +127874,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-08",
-      "review_id": "surface-review:309",
+      "review_id": "surface-review:316",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -127733,7 +127901,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-08",
-      "review_id": "surface-review:310",
+      "review_id": "surface-review:317",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -127760,7 +127928,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-05",
-      "review_id": "surface-review:311",
+      "review_id": "surface-review:318",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -127787,7 +127955,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-05",
-      "review_id": "surface-review:312",
+      "review_id": "surface-review:319",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -127814,7 +127982,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-03",
-      "review_id": "surface-review:313",
+      "review_id": "surface-review:320",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -127841,7 +128009,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-03",
-      "review_id": "surface-review:314",
+      "review_id": "surface-review:321",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -127868,7 +128036,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-07",
-      "review_id": "surface-review:315",
+      "review_id": "surface-review:322",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -127895,7 +128063,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-07",
-      "review_id": "surface-review:316",
+      "review_id": "surface-review:323",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -127922,7 +128090,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-07",
-      "review_id": "surface-review:317",
+      "review_id": "surface-review:324",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -127949,7 +128117,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-07",
-      "review_id": "surface-review:318",
+      "review_id": "surface-review:325",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -127976,7 +128144,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-07",
-      "review_id": "surface-review:319",
+      "review_id": "surface-review:326",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -128003,7 +128171,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-02",
-      "review_id": "surface-review:320",
+      "review_id": "surface-review:327",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -128030,7 +128198,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-02",
-      "review_id": "surface-review:321",
+      "review_id": "surface-review:328",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -128057,7 +128225,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-02",
-      "review_id": "surface-review:322",
+      "review_id": "surface-review:329",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -128084,7 +128252,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-02",
-      "review_id": "surface-review:323",
+      "review_id": "surface-review:330",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -128111,7 +128279,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-global-shared-01",
-      "review_id": "surface-review:324",
+      "review_id": "surface-review:331",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -128138,7 +128306,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-global-shared-01",
-      "review_id": "surface-review:325",
+      "review_id": "surface-review:332",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -128165,7 +128333,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-05",
-      "review_id": "surface-review:326",
+      "review_id": "surface-review:333",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -128192,7 +128360,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-05",
-      "review_id": "surface-review:327",
+      "review_id": "surface-review:334",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -128219,7 +128387,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-05",
-      "review_id": "surface-review:328",
+      "review_id": "surface-review:335",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -128246,7 +128414,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-10",
-      "review_id": "surface-review:329",
+      "review_id": "surface-review:336",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -128273,7 +128441,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-06",
-      "review_id": "surface-review:330",
+      "review_id": "surface-review:337",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -128300,7 +128468,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-06",
-      "review_id": "surface-review:331",
+      "review_id": "surface-review:338",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -128327,7 +128495,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-08",
-      "review_id": "surface-review:332",
+      "review_id": "surface-review:339",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -128354,7 +128522,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-08",
-      "review_id": "surface-review:333",
+      "review_id": "surface-review:340",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -128381,7 +128549,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-08",
-      "review_id": "surface-review:334",
+      "review_id": "surface-review:341",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -128408,7 +128576,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-08",
-      "review_id": "surface-review:335",
+      "review_id": "surface-review:342",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -128435,7 +128603,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-08",
-      "review_id": "surface-review:336",
+      "review_id": "surface-review:343",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -128462,7 +128630,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-07",
-      "review_id": "surface-review:337",
+      "review_id": "surface-review:344",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -128489,7 +128657,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-07",
-      "review_id": "surface-review:338",
+      "review_id": "surface-review:345",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -128516,7 +128684,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-07",
-      "review_id": "surface-review:339",
+      "review_id": "surface-review:346",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -128543,7 +128711,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-07",
-      "review_id": "surface-review:340",
+      "review_id": "surface-review:347",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -128570,7 +128738,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-07",
-      "review_id": "surface-review:341",
+      "review_id": "surface-review:348",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -128597,7 +128765,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-07",
-      "review_id": "surface-review:342",
+      "review_id": "surface-review:349",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -128624,7 +128792,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-07",
-      "review_id": "surface-review:343",
+      "review_id": "surface-review:350",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -128651,7 +128819,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-07",
-      "review_id": "surface-review:344",
+      "review_id": "surface-review:351",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -128678,7 +128846,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-07",
-      "review_id": "surface-review:345",
+      "review_id": "surface-review:352",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -128705,7 +128873,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-07",
-      "review_id": "surface-review:346",
+      "review_id": "surface-review:353",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -128732,7 +128900,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-07",
-      "review_id": "surface-review:347",
+      "review_id": "surface-review:354",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -128759,7 +128927,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-07",
-      "review_id": "surface-review:348",
+      "review_id": "surface-review:355",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -128786,7 +128954,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-07",
-      "review_id": "surface-review:349",
+      "review_id": "surface-review:356",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -128813,7 +128981,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-07",
-      "review_id": "surface-review:350",
+      "review_id": "surface-review:357",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -128840,7 +129008,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-07",
-      "review_id": "surface-review:351",
+      "review_id": "surface-review:358",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -128867,7 +129035,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-07",
-      "review_id": "surface-review:352",
+      "review_id": "surface-review:359",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -128894,7 +129062,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-07",
-      "review_id": "surface-review:353",
+      "review_id": "surface-review:360",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -128921,7 +129089,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-07",
-      "review_id": "surface-review:354",
+      "review_id": "surface-review:361",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -128948,7 +129116,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-05",
-      "review_id": "surface-review:355",
+      "review_id": "surface-review:362",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -128975,7 +129143,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-05",
-      "review_id": "surface-review:356",
+      "review_id": "surface-review:363",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -129002,7 +129170,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-03",
-      "review_id": "surface-review:357",
+      "review_id": "surface-review:364",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -129029,7 +129197,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-03",
-      "review_id": "surface-review:358",
+      "review_id": "surface-review:365",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -129056,7 +129224,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-global-shared-01",
-      "review_id": "surface-review:359",
+      "review_id": "surface-review:366",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -129083,7 +129251,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-08",
-      "review_id": "surface-review:360",
+      "review_id": "surface-review:367",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -129110,7 +129278,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-08",
-      "review_id": "surface-review:361",
+      "review_id": "surface-review:368",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -129137,7 +129305,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-08",
-      "review_id": "surface-review:362",
+      "review_id": "surface-review:369",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -129164,7 +129332,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-08",
-      "review_id": "surface-review:363",
+      "review_id": "surface-review:370",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -129191,34 +129359,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-08",
-      "review_id": "surface-review:364",
-      "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
-      "source_kind": "transition-write-candidate",
-      "surface_kind": "transition-write-candidate"
-    },
-    {
-      "collector_identity": "evidence-collector-remediation-20260713",
-      "collector_role": "evidence-collector",
-      "confidence": "high",
-      "disposition": "raw-surface-range-reviewed",
-      "evidence": [
-        {
-          "blob_sha256": "1dc51671435e17c6606bdfe68bc12dc44f8607016301f9cb1e738dd7467ccb02",
-          "path": "apps/advantage-games/src/store/usePotionRushStore.ts",
-          "range": {
-            "end_line": 453,
-            "sha256": "a7de7d9168ea25a71928472668f3581a7540d77c5838a628ec56ff0c93700cb6",
-            "start_line": 453
-          },
-          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-        }
-      ],
-      "interpretation": {},
-      "mechanical_surface_key": "{\"end_line\":453,\"evidence\":{\"blob_sha256\":\"1dc51671435e17c6606bdfe68bc12dc44f8607016301f9cb1e738dd7467ccb02\",\"path\":\"apps/advantage-games/src/store/usePotionRushStore.ts\",\"range\":{\"end_line\":453,\"sha256\":\"a7de7d9168ea25a71928472668f3581a7540d77c5838a628ec56ff0c93700cb6\",\"start_line\":453},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"PLAYING\",\"path\":\"apps/advantage-games/src/store/usePotionRushStore.ts\",\"reason\":\"state-domain-occurrence-ambiguous\",\"record_kind\":\"transition_write_candidate\",\"resolution_status\":\"unresolved\",\"source_symbol\":\"gameState\",\"start_line\":453,\"to_state_id\":\"GAME_OVER\",\"transition_evidence_kind\":\"ast-zustand-guarded-write\"}",
-      "method": "human-raw-surface-review",
-      "resolution_status": "unresolved-candidate",
-      "review_batch_id": "human-program-08",
-      "review_id": "surface-review:365",
+      "review_id": "surface-review:371",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -129245,7 +129386,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-01",
-      "review_id": "surface-review:366",
+      "review_id": "surface-review:372",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -129272,7 +129413,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-01",
-      "review_id": "surface-review:367",
+      "review_id": "surface-review:373",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -129299,7 +129440,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-01",
-      "review_id": "surface-review:368",
+      "review_id": "surface-review:374",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -129326,34 +129467,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-01",
-      "review_id": "surface-review:369",
-      "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
-      "source_kind": "transition-write-candidate",
-      "surface_kind": "transition-write-candidate"
-    },
-    {
-      "collector_identity": "evidence-collector-remediation-20260713",
-      "collector_role": "evidence-collector",
-      "confidence": "high",
-      "disposition": "raw-surface-range-reviewed",
-      "evidence": [
-        {
-          "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
-          "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
-          "range": {
-            "end_line": 104,
-            "sha256": "81da26036b42e11ec069baeee834681f794000e49b0ff7158ae9c14ac320cd43",
-            "start_line": 104
-          },
-          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-        }
-      ],
-      "interpretation": {},
-      "mechanical_surface_key": "{\"end_line\":104,\"evidence\":{\"blob_sha256\":\"3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018\",\"path\":\"apps/advantage-games/src/store/useRPGBattleStore.ts\",\"range\":{\"end_line\":104,\"sha256\":\"81da26036b42e11ec069baeee834681f794000e49b0ff7158ae9c14ac320cd43\",\"start_line\":104},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"playing\",\"path\":\"apps/advantage-games/src/store/useRPGBattleStore.ts\",\"reason\":\"state-domain-occurrence-ambiguous\",\"record_kind\":\"transition_write_candidate\",\"resolution_status\":\"unresolved\",\"source_symbol\":\"status\",\"start_line\":104,\"to_state_id\":\"defeat\",\"transition_evidence_kind\":\"ast-zustand-conditional-guarded-write\"}",
-      "method": "human-raw-surface-review",
-      "resolution_status": "unresolved-candidate",
-      "review_batch_id": "human-program-01",
-      "review_id": "surface-review:370",
+      "review_id": "surface-review:375",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -129380,7 +129494,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-01",
-      "review_id": "surface-review:371",
+      "review_id": "surface-review:376",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -129407,34 +129521,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-01",
-      "review_id": "surface-review:372",
-      "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
-      "source_kind": "transition-write-candidate",
-      "surface_kind": "transition-write-candidate"
-    },
-    {
-      "collector_identity": "evidence-collector-remediation-20260713",
-      "collector_role": "evidence-collector",
-      "confidence": "high",
-      "disposition": "raw-surface-range-reviewed",
-      "evidence": [
-        {
-          "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
-          "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
-          "range": {
-            "end_line": 115,
-            "sha256": "a5806e0cadc4b8c093a6eb6eea2061bc10956489eb62cccd6caa3b15b4d0c1cf",
-            "start_line": 115
-          },
-          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-        }
-      ],
-      "interpretation": {},
-      "mechanical_surface_key": "{\"end_line\":115,\"evidence\":{\"blob_sha256\":\"3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018\",\"path\":\"apps/advantage-games/src/store/useRPGBattleStore.ts\",\"range\":{\"end_line\":115,\"sha256\":\"a5806e0cadc4b8c093a6eb6eea2061bc10956489eb62cccd6caa3b15b4d0c1cf\",\"start_line\":115},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"playing\",\"path\":\"apps/advantage-games/src/store/useRPGBattleStore.ts\",\"reason\":\"state-domain-occurrence-ambiguous\",\"record_kind\":\"transition_write_candidate\",\"resolution_status\":\"unresolved\",\"source_symbol\":\"status\",\"start_line\":115,\"to_state_id\":\"victory\",\"transition_evidence_kind\":\"ast-zustand-conditional-guarded-write\"}",
-      "method": "human-raw-surface-review",
-      "resolution_status": "unresolved-candidate",
-      "review_batch_id": "human-program-01",
-      "review_id": "surface-review:373",
+      "review_id": "surface-review:377",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -129461,7 +129548,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-01",
-      "review_id": "surface-review:374",
+      "review_id": "surface-review:378",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -129488,7 +129575,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-01",
-      "review_id": "surface-review:375",
+      "review_id": "surface-review:379",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -129515,7 +129602,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-01",
-      "review_id": "surface-review:376",
+      "review_id": "surface-review:380",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -129542,34 +129629,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-01",
-      "review_id": "surface-review:377",
-      "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
-      "source_kind": "transition-write-candidate",
-      "surface_kind": "transition-write-candidate"
-    },
-    {
-      "collector_identity": "evidence-collector-remediation-20260713",
-      "collector_role": "evidence-collector",
-      "confidence": "high",
-      "disposition": "raw-surface-range-reviewed",
-      "evidence": [
-        {
-          "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
-          "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
-          "range": {
-            "end_line": 129,
-            "sha256": "39bf43ac8cc68fb15705baa4259c47bbbc493e208f4efb95d3176f8aaaf7baaa",
-            "start_line": 129
-          },
-          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-        }
-      ],
-      "interpretation": {},
-      "mechanical_surface_key": "{\"end_line\":129,\"evidence\":{\"blob_sha256\":\"3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018\",\"path\":\"apps/advantage-games/src/store/useRPGBattleStore.ts\",\"range\":{\"end_line\":129,\"sha256\":\"39bf43ac8cc68fb15705baa4259c47bbbc493e208f4efb95d3176f8aaaf7baaa\",\"start_line\":129},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"enemy\",\"path\":\"apps/advantage-games/src/store/useRPGBattleStore.ts\",\"reason\":\"state-domain-occurrence-ambiguous\",\"record_kind\":\"transition_write_candidate\",\"resolution_status\":\"unresolved\",\"source_symbol\":\"turn\",\"start_line\":129,\"to_state_id\":\"player\",\"transition_evidence_kind\":\"ast-zustand-guarded-write\"}",
-      "method": "human-raw-surface-review",
-      "resolution_status": "unresolved-candidate",
-      "review_batch_id": "human-program-01",
-      "review_id": "surface-review:378",
+      "review_id": "surface-review:381",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -129596,7 +129656,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-01",
-      "review_id": "surface-review:379",
+      "review_id": "surface-review:382",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -129623,7 +129683,7 @@
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-01",
-      "review_id": "surface-review:380",
+      "review_id": "surface-review:383",
       "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
       "source_kind": "transition-write-candidate",
       "surface_kind": "transition-write-candidate"
@@ -129647,87 +129707,6 @@
       ],
       "interpretation": {},
       "mechanical_surface_key": "{\"discovery_method\":\"mechanical-typescript-compiler-ast\",\"end_line\":157,\"evidence\":{\"blob_sha256\":\"3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018\",\"path\":\"apps/advantage-games/src/store/useRPGBattleStore.ts\",\"range\":{\"end_line\":157,\"sha256\":\"c9f913f5213ce7a30cf36a4aaa3f94872d4415419d98a0ea0047229f5508af30\",\"start_line\":157},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"path\":\"apps/advantage-games/src/store/useRPGBattleStore.ts\",\"reason\":\"no-single-proven-from-state\",\"record_kind\":\"transition_write_candidate\",\"resolution_status\":\"unresolved\",\"source_symbol\":\"playerPose\",\"start_line\":157,\"to_state_id\":\"miss\"}",
-      "method": "human-raw-surface-review",
-      "resolution_status": "unresolved-candidate",
-      "review_batch_id": "human-program-01",
-      "review_id": "surface-review:381",
-      "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
-      "source_kind": "transition-write-candidate",
-      "surface_kind": "transition-write-candidate"
-    },
-    {
-      "collector_identity": "evidence-collector-remediation-20260713",
-      "collector_role": "evidence-collector",
-      "confidence": "high",
-      "disposition": "raw-surface-range-reviewed",
-      "evidence": [
-        {
-          "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
-          "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
-          "range": {
-            "end_line": 176,
-            "sha256": "7daf13b5681a9e6ef45d7050e4b78810fb7c4a7de1f6ef929afff8ce01cbe91e",
-            "start_line": 176
-          },
-          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-        }
-      ],
-      "interpretation": {},
-      "mechanical_surface_key": "{\"end_line\":176,\"evidence\":{\"blob_sha256\":\"3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018\",\"path\":\"apps/advantage-games/src/store/useRPGBattleStore.ts\",\"range\":{\"end_line\":176,\"sha256\":\"7daf13b5681a9e6ef45d7050e4b78810fb7c4a7de1f6ef929afff8ce01cbe91e\",\"start_line\":176},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"hero\",\"path\":\"apps/advantage-games/src/store/useRPGBattleStore.ts\",\"reason\":\"state-domain-occurrence-ambiguous\",\"record_kind\":\"transition_write_candidate\",\"resolution_status\":\"unresolved\",\"source_symbol\":\"selectionStep\",\"start_line\":176,\"to_state_id\":\"location\",\"transition_evidence_kind\":\"ast-zustand-guarded-write\"}",
-      "method": "human-raw-surface-review",
-      "resolution_status": "unresolved-candidate",
-      "review_batch_id": "human-program-01",
-      "review_id": "surface-review:382",
-      "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
-      "source_kind": "transition-write-candidate",
-      "surface_kind": "transition-write-candidate"
-    },
-    {
-      "collector_identity": "evidence-collector-remediation-20260713",
-      "collector_role": "evidence-collector",
-      "confidence": "high",
-      "disposition": "raw-surface-range-reviewed",
-      "evidence": [
-        {
-          "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
-          "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
-          "range": {
-            "end_line": 185,
-            "sha256": "e0ba5d48a7f9846f08c22b0a974bcfc9a18025974beb624e0e3b82a71418cfbd",
-            "start_line": 185
-          },
-          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-        }
-      ],
-      "interpretation": {},
-      "mechanical_surface_key": "{\"end_line\":185,\"evidence\":{\"blob_sha256\":\"3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018\",\"path\":\"apps/advantage-games/src/store/useRPGBattleStore.ts\",\"range\":{\"end_line\":185,\"sha256\":\"e0ba5d48a7f9846f08c22b0a974bcfc9a18025974beb624e0e3b82a71418cfbd\",\"start_line\":185},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"location\",\"path\":\"apps/advantage-games/src/store/useRPGBattleStore.ts\",\"reason\":\"state-domain-occurrence-ambiguous\",\"record_kind\":\"transition_write_candidate\",\"resolution_status\":\"unresolved\",\"source_symbol\":\"selectionStep\",\"start_line\":185,\"to_state_id\":\"enemy\",\"transition_evidence_kind\":\"ast-zustand-guarded-write\"}",
-      "method": "human-raw-surface-review",
-      "resolution_status": "unresolved-candidate",
-      "review_batch_id": "human-program-01",
-      "review_id": "surface-review:383",
-      "source_fact": "The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
-      "source_kind": "transition-write-candidate",
-      "surface_kind": "transition-write-candidate"
-    },
-    {
-      "collector_identity": "evidence-collector-remediation-20260713",
-      "collector_role": "evidence-collector",
-      "confidence": "high",
-      "disposition": "raw-surface-range-reviewed",
-      "evidence": [
-        {
-          "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
-          "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
-          "range": {
-            "end_line": 194,
-            "sha256": "9713e1734236d46c381beb941a12d70191ba0db547da28f4f0ce3163147aeb2b",
-            "start_line": 194
-          },
-          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-        }
-      ],
-      "interpretation": {},
-      "mechanical_surface_key": "{\"end_line\":194,\"evidence\":{\"blob_sha256\":\"3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018\",\"path\":\"apps/advantage-games/src/store/useRPGBattleStore.ts\",\"range\":{\"end_line\":194,\"sha256\":\"9713e1734236d46c381beb941a12d70191ba0db547da28f4f0ce3163147aeb2b\",\"start_line\":194},\"revision\":\"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286\"},\"from_state_id\":\"enemy\",\"path\":\"apps/advantage-games/src/store/useRPGBattleStore.ts\",\"reason\":\"state-domain-occurrence-ambiguous\",\"record_kind\":\"transition_write_candidate\",\"resolution_status\":\"unresolved\",\"source_symbol\":\"selectionStep\",\"start_line\":194,\"to_state_id\":\"ready\",\"transition_evidence_kind\":\"ast-zustand-guarded-write\"}",
       "method": "human-raw-surface-review",
       "resolution_status": "unresolved-candidate",
       "review_batch_id": "human-program-01",

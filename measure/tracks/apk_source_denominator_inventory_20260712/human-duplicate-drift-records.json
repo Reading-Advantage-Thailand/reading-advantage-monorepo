@@ -1069,10 +1069,10 @@
       "measure/tracks/apk_source_denominator_inventory_20260712/denominator-discrepancies.json": "a531598c2d8a313f99c2a11539fee1de7fa9e96886a7fe8fafb90c5d94866747",
       "measure/tracks/apk_source_denominator_inventory_20260712/game-identity-ledger.json": "a31c99650bf1abd6623e64b2e9a23c4c481ce970036b52cfbe08c74b1c09c407",
       "measure/tracks/apk_source_denominator_inventory_20260712/historical-source-denominator.json": "6e313be829b414e7c85f4f20d4cb7e33283f15d743740b8784b589d0de2c7e6f",
-      "measure/tracks/apk_source_denominator_inventory_20260712/scene-state-denominator.json": "b3626f7ccb02ae34225b95fcc3693b6d149bfff0da94605db2deda6e8b2ac270",
+      "measure/tracks/apk_source_denominator_inventory_20260712/scene-state-denominator.json": "6308836ca24f1cac5bf4ded5f7e72c5ba06c08f4a5c6648620818b720190bf8b",
       "measure/tracks/apk_source_denominator_inventory_20260712/source-denominator.json": "0dbf97dac93ba2056228e79433fb91e6f2ef1898b6f09eff62fe0755082ba21d"
     },
-    "revision": "ad02fb34764a961107f9d963430a7b27f8ff4dae"
+    "revision": "77cd4e716becc6ae2e21bc625d64222256bf9555"
   },
   "interpretation": {},
   "mechanical_copy_record_reviews": [

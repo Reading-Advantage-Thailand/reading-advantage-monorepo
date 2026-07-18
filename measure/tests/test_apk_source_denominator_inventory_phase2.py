@@ -1237,8 +1237,8 @@ class Phase2IndependentHumanDiscoveryContracts(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, "PHASE1_INPUT_PROVENANCE_MISMATCH"):
                     module.check_only_result(revision)
 
-    def test_committed_symmetric_blockers_drive_phase2_status_and_counts(self) -> None:
-        """Rejects the current hard-coded complete/zero summary when blockers exist."""
+    def test_committed_symmetric_summary_drives_phase2_status_and_counts(self) -> None:
+        """Requires exact blocker derivation while permitting explicit zero categories."""
         discrepancies = _load_json(DISCREPANCY_PATH, phase2=True)
         module = _load_generator_module()
         rows = discrepancies.get("independent_symmetric_reconciliation")
@@ -1250,7 +1250,17 @@ class Phase2IndependentHumanDiscoveryContracts(unittest.TestCase):
         self.assertEqual(discrepancies.get("status"), summary["status"])
         self.assertEqual(discrepancies.get("coverage_status"), summary["coverage_status"])
         self.assertEqual(discrepancies.get("uncovered_count"), summary["uncovered_count"])
-        self.assertEqual(discrepancies.get("uncovered_by_category"), summary["uncovered_by_category"])
+        uncovered_by_category = discrepancies.get("uncovered_by_category")
+        self.assertIsInstance(uncovered_by_category, dict)
+        assert isinstance(uncovered_by_category, dict)
+        self.assertEqual(
+            {
+                category: count
+                for category, count in uncovered_by_category.items()
+                if count
+            },
+            summary["uncovered_by_category"],
+        )
 
     def test_phase1_revision_is_mandatory_and_has_no_generator_default(self) -> None:
         """Prevents a stale embedded Phase-1 commit from silently rewriting Phase-2."""
