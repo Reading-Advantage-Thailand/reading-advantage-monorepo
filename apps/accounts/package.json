@@ -9,7 +9,7 @@
     "start": "next start --port 3007",
     "lint": "eslint .",
     "test": "vitest run",
-    "check-types": "tsc --noEmit",
+    "check-types": "tsc --noEmit && tsc --noEmit -p tsconfig.test.json",
     "bootstrap:production": "tsx scripts/bootstrap-production.ts"
   },
   "dependencies": {
