@@ -7,6 +7,10 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./company-identity": {
+      "types": "./dist/company-identity/index.d.ts",
+      "import": "./dist/company-identity/index.js"
     }
   },
   "scripts": {
@@ -25,7 +29,6 @@
   },
   "devDependencies": {
     "@reading-advantage/config": "workspace:*",
-
     "@types/node": "catalog:",
     "@types/bcryptjs": "^2.4.6",
     "typescript": "5.9.3",

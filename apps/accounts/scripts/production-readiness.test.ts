@@ -11,6 +11,11 @@ const codecampCloudbuild = readFileSync(
 );
 const probe = readFileSync(resolve(root, "scripts/accounts-runtime-probe.sql"), "utf8");
 const smoke = readFileSync(resolve(root, "scripts/accounts-smoke.sh"), "utf8");
+const identityComposition = readFileSync(resolve(root, "lib/server/identity.ts"), "utf8");
+const productionBootstrapSource = readFileSync(
+  resolve(root, "scripts/bootstrap-production.ts"),
+  "utf8",
+);
 
 describe("Accounts production readiness", () => {
   it("orders migration, exact static bootstrap, doctor, owner/client bootstrap, and runtime proof", () => {
@@ -44,6 +49,13 @@ describe("Accounts production readiness", () => {
     expect(cloudbuild.match(/cloud-sql-proxy\/v2\.15\.1/g)).toHaveLength(5);
     expect(cloudbuild).toContain("https://accounts.reading-advantage.com");
     expect(cloudbuild).toContain("__Host-ra_company_sso");
+  });
+
+  it("uses the side-effect-free company identity auth boundary at runtime and bootstrap", () => {
+    for (const source of [identityComposition, productionBootstrapSource]) {
+      expect(source).toContain("@reading-advantage/auth/company-identity");
+      expect(source).not.toMatch(/from ["']@reading-advantage\/auth["']/);
+    }
   });
 
   it("keeps bootstrap credentials off Accounts runtime and pins Codecamp to one central secret", () => {

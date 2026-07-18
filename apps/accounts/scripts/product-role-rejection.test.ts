@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import type { CompanyOidcIdentity } from "@reading-advantage/auth";
+import type { CompanyOidcIdentity } from "@reading-advantage/auth/company-identity";
 import { codecampSessionUser } from "../../codecamp-advantage/lib/company-oidc";
 import { marketingSessionUser } from "../../marketing/app/lib/company-oidc";
 import { salesSessionUser } from "../../sales-advantage/lib/company-oidc";

@@ -1,6 +1,6 @@
 import { createHash, randomUUID } from "node:crypto";
 
-import { hashPassword, verifyPassword } from "@reading-advantage/auth";
+import { hashPassword, verifyPassword } from "@reading-advantage/auth/company-identity";
 import { createCompanyIdentityDirectClient } from "@reading-advantage/db/company-identity";
 
 import { createProductionBootstrapInput } from "./bootstrap-contract";

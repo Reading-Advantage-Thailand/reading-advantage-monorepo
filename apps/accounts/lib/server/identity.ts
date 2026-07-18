@@ -20,7 +20,7 @@ import {
   createCompanyIdentitySecurityConfig,
   hashPassword,
   verifyPassword,
-} from "@reading-advantage/auth";
+} from "@reading-advantage/auth/company-identity";
 import { createCompanyIdentityRuntimeClient } from "@reading-advantage/db/company-identity/runtime";
 
 interface IdentityComposition {
