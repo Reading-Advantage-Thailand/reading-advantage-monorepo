@@ -22,17 +22,16 @@ line-range SHA-256.
    route, byte-identical copy, and every resolvable relative or `@/` import edge.
 3. Extract declared component symbols ending in `Game`, `Screen`, or `Scene`; pure
    literal-union type aliases and inline interface properties whose names use the state
-   vocabulary; typed `useState` declarations; and explicit source-local transitions.
-   Runtime-store transitions are limited to an exact initializer-to-first-write edge,
-   guarded writes, and conditional writes whose from/to literals share a declared
-   domain. Ambiguous repeated property names are not joined. Component and state
-   occurrences remain path-scoped even when symbols/literals repeat. For a `useState`
-   declaration with no guarded setter pair, only the first source-ordered setter target
-   differing from the exact typed initializer is retained. This is syntax traversal,
-   not runtime execution.
-4. Enumerate media, audio, and data suffixes below the three public roots plus
-   game-associated data files; hash every committed byte sequence and report basic
-   encoded format metadata.
+   vocabulary; typed `useState` declarations; and executable literal-domain writes
+   through the TypeScript compiler AST. Emit a proven transition only when the AST
+   establishes one source state; retain every other executable write as an explicit
+   unresolved transition candidate. The proven and unresolved partitions exactly cover
+   the compiler-enumerated writes without source-order or union-order inference.
+4. Enumerate media, audio, and data suffixes below the five frozen roots:
+   `apps/advantage-games/public`, `apps/reading-advantage/public/games`,
+   `apps/primary-advantage/public/games`, `apps/advantage-games/measure`, and
+   `packages/codecamp-knowledge/fixtures/apk-guided`; hash every committed byte sequence
+   and report basic encoded format metadata.
 5. Walk reachable deletion commits and retain only a parent locator when the deleted
    path resolves in that parent.
 
@@ -42,16 +41,4 @@ The `measure/tracks/apk_cross_game_asset_ontology_20260712` prefix is rejected b
 negative fixture records that prefix rejection only and contains no failed-track
 factual input. The output is a mechanical inventory: it makes no conclusion about
 runtime intent, layout behavior, source suitability, semantic classification, or
- product outcome.
-
-## Phase 3 reconciliation
-
-The reconciliation consumes Phase-1 revision `990dd9c060ca844ad16d141b1eb4086b310369a4`, Phase-2 implementation
-revision `4f5dde0a04c70c57f123a72eded84836325743da`, and the Phase-2 receipt revision
-`7eef639674e927f2d56107866d385e0df812aa66`. Independent evidence is mapped by comparing current mechanical and
-human records directly, while historical records are matched only by unique `catalog_id` against the historical
-catalog evidence. Six provenance records are receipt-owned; four provenance records are consumed from the
-independent evidence outputs. Canonical aggregate validation checks the 27 identity records, 17 current identities,
-10 withdrawn identities, 29 programs, 17 current programs, and 12 historical/withdrawn programs. Missing or
-ambiguous evidence remains unresolved and fails closed rather than being inferred; this reconciliation has zero
-unresolved sources.
+product outcome.

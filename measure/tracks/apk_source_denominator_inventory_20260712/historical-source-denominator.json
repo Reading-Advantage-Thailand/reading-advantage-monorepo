@@ -1,5 +1,5 @@
 {
-  "history_method": "git-log deletion walk bounded by reachable baseline ancestors",
+  "history_method": "git-log first-parent deletion walk retaining the first deletion per path",
   "records": [
     {
       "classification": "current",
@@ -558,6 +558,1059 @@
           "start_line": 1
         },
         "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "d050c5d54dc73ebee63ae7299663c9096dc05b9cd2498bb573223a583d365872",
+        "path": "packages/game-cartridges/src/__tests__/arena-wave-cartridges.test.ts",
+        "range": {
+          "end_line": 17,
+          "sha256": "d050c5d54dc73ebee63ae7299663c9096dc05b9cd2498bb573223a583d365872",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "768c370e96ea56b6156232f61319b8615e692fcc613d5610258016f4c90627c0",
+        "path": "packages/game-cartridges/src/__tests__/arena-wave-contract.test.ts",
+        "range": {
+          "end_line": 90,
+          "sha256": "768c370e96ea56b6156232f61319b8615e692fcc613d5610258016f4c90627c0",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "889766b89cfd4e01259a1223c353433dfa830398447f296c783b10be687474d0",
+        "path": "packages/game-cartridges/src/__tests__/catalog.test.ts",
+        "range": {
+          "end_line": 156,
+          "sha256": "889766b89cfd4e01259a1223c353433dfa830398447f296c783b10be687474d0",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "ce91d54934afbc87d375b628926dff3ae619a01eb278e12e7eeadbd7d6cb412d",
+        "path": "packages/game-cartridges/src/__tests__/editions.test.ts",
+        "range": {
+          "end_line": 85,
+          "sha256": "ce91d54934afbc87d375b628926dff3ae619a01eb278e12e7eeadbd7d6cb412d",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "3bd0f6aaf0957906ce7552b93babcd93caf6fb85258c9e82cc3a4a4f16c77f9e",
+        "path": "packages/game-cartridges/src/__tests__/gate-runner.test.ts",
+        "range": {
+          "end_line": 100,
+          "sha256": "3bd0f6aaf0957906ce7552b93babcd93caf6fb85258c9e82cc3a4a4f16c77f9e",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "07f09edecc427afafad685b0eb291796e9df5050179171bc654962a74035355e",
+        "path": "packages/game-cartridges/src/__tests__/runner-wave-contract.test.ts",
+        "range": {
+          "end_line": 290,
+          "sha256": "07f09edecc427afafad685b0eb291796e9df5050179171bc654962a74035355e",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "a26ae794844c175943056a6781ec1e8db27283a8a421afc87e289f2e3c2c1c14",
+        "path": "packages/game-cartridges/src/__tests__/runner-wave-scenes.test.ts",
+        "range": {
+          "end_line": 390,
+          "sha256": "a26ae794844c175943056a6781ec1e8db27283a8a421afc87e289f2e3c2c1c14",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "6d9190e728e69438cb48d7c89da0f87f68ec63a44e14bbb3604c12952289d835",
+        "path": "packages/game-cartridges/src/__tests__/sentence-collector.test.ts",
+        "range": {
+          "end_line": 86,
+          "sha256": "6d9190e728e69438cb48d7c89da0f87f68ec63a44e14bbb3604c12952289d835",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "b671807f3c42388618b25cafd71964e1b24d91856117b8b4537f2c42868216b4",
+        "path": "packages/game-cartridges/src/__tests__/typing-defense.test.ts",
+        "range": {
+          "end_line": 74,
+          "sha256": "b671807f3c42388618b25cafd71964e1b24d91856117b8b4537f2c42868216b4",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "1696dfed8e07ecf4417c74c937ca77c122e3e22a0d3a0d209fa6f49d56a56f73",
+        "path": "packages/game-cartridges/src/arena-wave-blueprints.ts",
+        "range": {
+          "end_line": 50,
+          "sha256": "1696dfed8e07ecf4417c74c937ca77c122e3e22a0d3a0d209fa6f49d56a56f73",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "3c6119180969ee7ed7261352b41c867d31906ff046d42feb54417731f69e7904",
+        "path": "packages/game-cartridges/src/cartridges/archers-revenge/index.ts",
+        "range": {
+          "end_line": 4,
+          "sha256": "3c6119180969ee7ed7261352b41c867d31906ff046d42feb54417731f69e7904",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "885a63968666748e41fd8188e76abd36a3414a0c8dda9edb9ccd601c736246aa",
+        "path": "packages/game-cartridges/src/cartridges/astral-mage/blueprint.md",
+        "range": {
+          "end_line": 25,
+          "sha256": "885a63968666748e41fd8188e76abd36a3414a0c8dda9edb9ccd601c736246aa",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "68d7ebc779e5092d9d6073e22abfa43ded65fcbe474b1a70faaec42effb099da",
+        "path": "packages/game-cartridges/src/cartridges/astral-mage/definition.test.ts",
+        "range": {
+          "end_line": 108,
+          "sha256": "68d7ebc779e5092d9d6073e22abfa43ded65fcbe474b1a70faaec42effb099da",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "e5242078cc070554949d40853fcb0768eb429fe39691bddbcf87372312725c54",
+        "path": "packages/game-cartridges/src/cartridges/astral-mage/definition.ts",
+        "range": {
+          "end_line": 42,
+          "sha256": "e5242078cc070554949d40853fcb0768eb429fe39691bddbcf87372312725c54",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "e651e33a800e6322c758a7dabf8af28b726878ae077783d351c7359ea9d4c819",
+        "path": "packages/game-cartridges/src/cartridges/astral-mage/index.ts",
+        "range": {
+          "end_line": 3,
+          "sha256": "e651e33a800e6322c758a7dabf8af28b726878ae077783d351c7359ea9d4c819",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "243a7005991ca40a04c08a247c526370a5533066a3df22c9e3f254051d632f8d",
+        "path": "packages/game-cartridges/src/cartridges/astral-mage/scene.ts",
+        "range": {
+          "end_line": 597,
+          "sha256": "243a7005991ca40a04c08a247c526370a5533066a3df22c9e3f254051d632f8d",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "9ef4de87e54467741702f569f57e280ae0d1803697f6305c03f163bf164d427b",
+        "path": "packages/game-cartridges/src/cartridges/dragon-rider/blueprint.md",
+        "range": {
+          "end_line": 9,
+          "sha256": "9ef4de87e54467741702f569f57e280ae0d1803697f6305c03f163bf164d427b",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "dad099e1cd8d21050e5ce040da0ab72d99217359703fb63827b3762d8f90f92a",
+        "path": "packages/game-cartridges/src/cartridges/dragon-rider/definition.test.ts",
+        "range": {
+          "end_line": 72,
+          "sha256": "dad099e1cd8d21050e5ce040da0ab72d99217359703fb63827b3762d8f90f92a",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "f0707497af4afa10b4931b4ca3ffbdee5bc4b7ebce64c04f64058d8f531dd4a0",
+        "path": "packages/game-cartridges/src/cartridges/dragon-rider/definition.ts",
+        "range": {
+          "end_line": 34,
+          "sha256": "f0707497af4afa10b4931b4ca3ffbdee5bc4b7ebce64c04f64058d8f531dd4a0",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "5cadbd91f44fcd2af8335a58d63a2f2cf3d15dd0c5e01dc9825079c9ce56d08f",
+        "path": "packages/game-cartridges/src/cartridges/dragon-rider/index.ts",
+        "range": {
+          "end_line": 4,
+          "sha256": "5cadbd91f44fcd2af8335a58d63a2f2cf3d15dd0c5e01dc9825079c9ce56d08f",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "15d5f2d44e5d13d8393a3580553092b7e7f4361d8182fce9235e09973ee3ee0b",
+        "path": "packages/game-cartridges/src/cartridges/dragon-rider/scene.ts",
+        "range": {
+          "end_line": 232,
+          "sha256": "15d5f2d44e5d13d8393a3580553092b7e7f4361d8182fce9235e09973ee3ee0b",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "dfd02c8a5fea31a8c3c0f2f05604441ab8d924013a1b4938accec6c411fd01df",
+        "path": "packages/game-cartridges/src/cartridges/dragon-rider/systems.test.ts",
+        "range": {
+          "end_line": 93,
+          "sha256": "dfd02c8a5fea31a8c3c0f2f05604441ab8d924013a1b4938accec6c411fd01df",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "0b1882b0fa12517b6780b31bf5bdc933477bb4861c2c624e1594f837981e6307",
+        "path": "packages/game-cartridges/src/cartridges/dragon-rider/systems.ts",
+        "range": {
+          "end_line": 198,
+          "sha256": "0b1882b0fa12517b6780b31bf5bdc933477bb4861c2c624e1594f837981e6307",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "c6b260ae337b491f6630f0c2d80ce3dc2596abb8ae2652d263c217db9d778c5f",
+        "path": "packages/game-cartridges/src/cartridges/griffin-riders-escape/blueprint.md",
+        "range": {
+          "end_line": 9,
+          "sha256": "c6b260ae337b491f6630f0c2d80ce3dc2596abb8ae2652d263c217db9d778c5f",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "4a4797aaf53bdf67b1b7233e833182b66d6055d015e669da324340e69339fe9b",
+        "path": "packages/game-cartridges/src/cartridges/griffin-riders-escape/definition.test.ts",
+        "range": {
+          "end_line": 62,
+          "sha256": "4a4797aaf53bdf67b1b7233e833182b66d6055d015e669da324340e69339fe9b",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "fca7b82b1abe0f123d6704e84f1353925e3d48251068e99d18659f99c34044b8",
+        "path": "packages/game-cartridges/src/cartridges/griffin-riders-escape/definition.ts",
+        "range": {
+          "end_line": 33,
+          "sha256": "fca7b82b1abe0f123d6704e84f1353925e3d48251068e99d18659f99c34044b8",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "e345b0389eb95e14d750f38a437173f4a9cbc9f7691ac71dfc41d0697ad27fde",
+        "path": "packages/game-cartridges/src/cartridges/griffin-riders-escape/index.ts",
+        "range": {
+          "end_line": 4,
+          "sha256": "e345b0389eb95e14d750f38a437173f4a9cbc9f7691ac71dfc41d0697ad27fde",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "e870af139e0d6295a17664c18ff4eca78271f539760da6e24c873456a3602633",
+        "path": "packages/game-cartridges/src/cartridges/griffin-riders-escape/scene.ts",
+        "range": {
+          "end_line": 229,
+          "sha256": "e870af139e0d6295a17664c18ff4eca78271f539760da6e24c873456a3602633",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "d1cb4687d0bf9eaaef3e1412f7f63d93fcc1bbce8268f8d0f3de8df3e20b0003",
+        "path": "packages/game-cartridges/src/cartridges/griffin-riders-escape/systems.test.ts",
+        "range": {
+          "end_line": 79,
+          "sha256": "d1cb4687d0bf9eaaef3e1412f7f63d93fcc1bbce8268f8d0f3de8df3e20b0003",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "5614c48e172278131d44e23dacea983ae0876bbfbaef8c411f6aadacda1620d4",
+        "path": "packages/game-cartridges/src/cartridges/griffin-riders-escape/systems.ts",
+        "range": {
+          "end_line": 269,
+          "sha256": "5614c48e172278131d44e23dacea983ae0876bbfbaef8c411f6aadacda1620d4",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "f595db27be949054697d3f788a3bddf8a55a4f96536f1b348b1de70fdf31b7c2",
+        "path": "packages/game-cartridges/src/cartridges/griffin-sky-joust/index.ts",
+        "range": {
+          "end_line": 4,
+          "sha256": "f595db27be949054697d3f788a3bddf8a55a4f96536f1b348b1de70fdf31b7c2",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "5501d6358a56d96cd86eb559324224ee21f808bb274513d7dfa43d9c33dac363",
+        "path": "packages/game-cartridges/src/cartridges/gryphon-patrol/index.ts",
+        "range": {
+          "end_line": 4,
+          "sha256": "5501d6358a56d96cd86eb559324224ee21f808bb274513d7dfa43d9c33dac363",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "b7729a0b8774d572915fab187c2311b63f511b33417fa13d814aa23fb28846c8",
+        "path": "packages/game-cartridges/src/cartridges/paladins-twin-soul/index.ts",
+        "range": {
+          "end_line": 4,
+          "sha256": "b7729a0b8774d572915fab187c2311b63f511b33417fa13d814aa23fb28846c8",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "011a67105d3877b39db1f9da3e9142474aee6f56192c7f623a0106468005527b",
+        "path": "packages/game-cartridges/src/cartridges/realm-carver/index.ts",
+        "range": {
+          "end_line": 4,
+          "sha256": "011a67105d3877b39db1f9da3e9142474aee6f56192c7f623a0106468005527b",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "b7905fa26874a5b6636dc4e9f5f85db1c4b37fd6ef066a92bd6ee491d7eb7be8",
+        "path": "packages/game-cartridges/src/cartridges/sorcerer-ziggurat/blueprint.md",
+        "range": {
+          "end_line": 32,
+          "sha256": "b7905fa26874a5b6636dc4e9f5f85db1c4b37fd6ef066a92bd6ee491d7eb7be8",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "c20367bfbb4729984ff846ee529a2da10396b9726485fee99501e1975a170c8a",
+        "path": "packages/game-cartridges/src/cartridges/sorcerer-ziggurat/definition.test.ts",
+        "range": {
+          "end_line": 98,
+          "sha256": "c20367bfbb4729984ff846ee529a2da10396b9726485fee99501e1975a170c8a",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "ef4842a143682dbf9a90c0050d5ea280dd00d28730c08ae29505b3d5f6c905a9",
+        "path": "packages/game-cartridges/src/cartridges/sorcerer-ziggurat/definition.ts",
+        "range": {
+          "end_line": 41,
+          "sha256": "ef4842a143682dbf9a90c0050d5ea280dd00d28730c08ae29505b3d5f6c905a9",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "581845c5a7b54e9d83971a68e0934707182def980e6cd91394b9a9abe96d7e8b",
+        "path": "packages/game-cartridges/src/cartridges/sorcerer-ziggurat/index.ts",
+        "range": {
+          "end_line": 4,
+          "sha256": "581845c5a7b54e9d83971a68e0934707182def980e6cd91394b9a9abe96d7e8b",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "f570e348baeec5bfd0dcbe3cf99bed246a891a626d56e3d80ec5882d3983635a",
+        "path": "packages/game-cartridges/src/cartridges/sorcerer-ziggurat/scene.ts",
+        "range": {
+          "end_line": 443,
+          "sha256": "f570e348baeec5bfd0dcbe3cf99bed246a891a626d56e3d80ec5882d3983635a",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "5b05d7b33514b952f8931b97156663b01594b2836a94896efee1bf0b62380fa9",
+        "path": "packages/game-cartridges/src/cartridges/sorcerer-ziggurat/systems.test.ts",
+        "range": {
+          "end_line": 85,
+          "sha256": "5b05d7b33514b952f8931b97156663b01594b2836a94896efee1bf0b62380fa9",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "374d8d42c1fded5fd5508dc7755d463d82dbe71881ba7ea004ae9de0b962dd8f",
+        "path": "packages/game-cartridges/src/cartridges/sorcerer-ziggurat/systems.ts",
+        "range": {
+          "end_line": 213,
+          "sha256": "374d8d42c1fded5fd5508dc7755d463d82dbe71881ba7ea004ae9de0b962dd8f",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "6e8fb18b79fd8c099e4c914549ca4f4030ae51a10d9502a79defe28c86e2064b",
+        "path": "packages/game-cartridges/src/cartridges/spellweavers-run/blueprint.md",
+        "range": {
+          "end_line": 9,
+          "sha256": "6e8fb18b79fd8c099e4c914549ca4f4030ae51a10d9502a79defe28c86e2064b",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "4cd34d10b8c1172f0fd6b28823df59c6a7ef2781eac8d2aa731545413475105b",
+        "path": "packages/game-cartridges/src/cartridges/spellweavers-run/definition.test.ts",
+        "range": {
+          "end_line": 64,
+          "sha256": "4cd34d10b8c1172f0fd6b28823df59c6a7ef2781eac8d2aa731545413475105b",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "b93242be1e2ba4f02b19a585ba2260382bf17ac975f57124934fd65bd3983392",
+        "path": "packages/game-cartridges/src/cartridges/spellweavers-run/definition.ts",
+        "range": {
+          "end_line": 33,
+          "sha256": "b93242be1e2ba4f02b19a585ba2260382bf17ac975f57124934fd65bd3983392",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "be2acf5a9c03b3a6e79fed91eaf46f603465ccbdf7135ab7d859199715db907a",
+        "path": "packages/game-cartridges/src/cartridges/spellweavers-run/index.ts",
+        "range": {
+          "end_line": 4,
+          "sha256": "be2acf5a9c03b3a6e79fed91eaf46f603465ccbdf7135ab7d859199715db907a",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "e7a0be57f262fe5aca31155b40ce6397e2b26c0f3a00b7da959bb392f9545c19",
+        "path": "packages/game-cartridges/src/cartridges/spellweavers-run/scene.ts",
+        "range": {
+          "end_line": 217,
+          "sha256": "e7a0be57f262fe5aca31155b40ce6397e2b26c0f3a00b7da959bb392f9545c19",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "e4935482277302da993d32befa89a0fb960cd8bd1fc6cf32d6c951b840c811ea",
+        "path": "packages/game-cartridges/src/cartridges/spellweavers-run/systems.test.ts",
+        "range": {
+          "end_line": 92,
+          "sha256": "e4935482277302da993d32befa89a0fb960cd8bd1fc6cf32d6c951b840c811ea",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "45e1b6a5b4eafe65100b91fee2ede15b6bbba6dd4336cc11103e427253c8fc07",
+        "path": "packages/game-cartridges/src/cartridges/spellweavers-run/systems.ts",
+        "range": {
+          "end_line": 283,
+          "sha256": "45e1b6a5b4eafe65100b91fee2ede15b6bbba6dd4336cc11103e427253c8fc07",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "c2cd6453cbc67c5f1d545eaa74a8933c4a2dd9285c47c98498be465df67be583",
+        "path": "packages/game-cartridges/src/cartridges/storm-castle-tower/blueprint.md",
+        "range": {
+          "end_line": 9,
+          "sha256": "c2cd6453cbc67c5f1d545eaa74a8933c4a2dd9285c47c98498be465df67be583",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "f6f5cf57ad198d4062a6a57a7ea9f8ed40edfbee26b2b89670a76f26af0c10a1",
+        "path": "packages/game-cartridges/src/cartridges/storm-castle-tower/definition.test.ts",
+        "range": {
+          "end_line": 64,
+          "sha256": "f6f5cf57ad198d4062a6a57a7ea9f8ed40edfbee26b2b89670a76f26af0c10a1",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "88ff1e7cee331c1b1b0de51596df6ee3d2043f257968ad26b632e52aa25a5c7e",
+        "path": "packages/game-cartridges/src/cartridges/storm-castle-tower/definition.ts",
+        "range": {
+          "end_line": 33,
+          "sha256": "88ff1e7cee331c1b1b0de51596df6ee3d2043f257968ad26b632e52aa25a5c7e",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "771b8bc5ab6685970ed9af68c490b79c351bb78e7ecf67c9d85e973d60158e80",
+        "path": "packages/game-cartridges/src/cartridges/storm-castle-tower/index.ts",
+        "range": {
+          "end_line": 4,
+          "sha256": "771b8bc5ab6685970ed9af68c490b79c351bb78e7ecf67c9d85e973d60158e80",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "8eb00290312db4448ccf16a299ac16c32f1a51cb484726ec53341b2a86e013d9",
+        "path": "packages/game-cartridges/src/cartridges/storm-castle-tower/scene.ts",
+        "range": {
+          "end_line": 252,
+          "sha256": "8eb00290312db4448ccf16a299ac16c32f1a51cb484726ec53341b2a86e013d9",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "c5124ccc4ce02018dfdb599611718ff1c55ea76bdd30e8953d4d49c0f5d0d938",
+        "path": "packages/game-cartridges/src/cartridges/storm-castle-tower/systems.test.ts",
+        "range": {
+          "end_line": 109,
+          "sha256": "c5124ccc4ce02018dfdb599611718ff1c55ea76bdd30e8953d4d49c0f5d0d938",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "dea6cee4b7fcb90ca336e67044f8cb5b6d10d55560753533e854b08744faff9e",
+        "path": "packages/game-cartridges/src/cartridges/storm-castle-tower/systems.ts",
+        "range": {
+          "end_line": 318,
+          "sha256": "dea6cee4b7fcb90ca336e67044f8cb5b6d10d55560753533e854b08744faff9e",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "b54940dc5c28cab5cafb9d1d7bf8f9a7d15da8b98e6a9bd6f60b95927f231892",
+        "path": "packages/game-cartridges/src/editions.ts",
+        "range": {
+          "end_line": 140,
+          "sha256": "b54940dc5c28cab5cafb9d1d7bf8f9a7d15da8b98e6a9bd6f60b95927f231892",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "8fa4c639fef98e54ec84578e9a5a13489eca94c290ba28674630fec99ba42820",
+        "path": "packages/game-cartridges/src/families/arena/arena.test.ts",
+        "range": {
+          "end_line": 43,
+          "sha256": "8fa4c639fef98e54ec84578e9a5a13489eca94c290ba28674630fec99ba42820",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "3ce62a72f44c3717338eb9136d4b7bcddadd5cba17ea3bf2cfece2d5da49c355",
+        "path": "packages/game-cartridges/src/families/arena/cartridge.ts",
+        "range": {
+          "end_line": 218,
+          "sha256": "3ce62a72f44c3717338eb9136d4b7bcddadd5cba17ea3bf2cfece2d5da49c355",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "4ea2de44360adb7ac7d5f2f41191d488699f170a072eed38493024b8af2b060f",
+        "path": "packages/game-cartridges/src/families/arena/index.ts",
+        "range": {
+          "end_line": 141,
+          "sha256": "4ea2de44360adb7ac7d5f2f41191d488699f170a072eed38493024b8af2b060f",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "09f98c37e7aaf10ebac38019951a69e74b5288c7b4b7f768b33d4943ffb63b68",
+        "path": "packages/game-cartridges/src/families/isometric-step-graph/index.ts",
+        "range": {
+          "end_line": 4,
+          "sha256": "09f98c37e7aaf10ebac38019951a69e74b5288c7b4b7f768b33d4943ffb63b68",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "033b2a3090bd29f802dc3986dd22ecc16acb5e671695d877dca43859580163bc",
+        "path": "packages/game-cartridges/src/families/isometric-step-graph/projection.test.ts",
+        "range": {
+          "end_line": 35,
+          "sha256": "033b2a3090bd29f802dc3986dd22ecc16acb5e671695d877dca43859580163bc",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "a137bcf6365fd8346fb643e055aabc16037fde4551e89dc49d636bbc4555bfae",
+        "path": "packages/game-cartridges/src/families/isometric-step-graph/projection.ts",
+        "range": {
+          "end_line": 49,
+          "sha256": "a137bcf6365fd8346fb643e055aabc16037fde4551e89dc49d636bbc4555bfae",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "d56078559c764e0913531bd38508370dcd04052c3b5896307cfa26af949266b8",
+        "path": "packages/game-cartridges/src/families/isometric-step-graph/step-graph.test.ts",
+        "range": {
+          "end_line": 88,
+          "sha256": "d56078559c764e0913531bd38508370dcd04052c3b5896307cfa26af949266b8",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "ce9137f5dd39c5e7a4e57a28915012f5480c794b32b22105fa35d6c4e8780448",
+        "path": "packages/game-cartridges/src/families/isometric-step-graph/step-graph.ts",
+        "range": {
+          "end_line": 163,
+          "sha256": "ce9137f5dd39c5e7a4e57a28915012f5480c794b32b22105fa35d6c4e8780448",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "f5c41fd3b3848c71f9d444e29471e7d9713c3c78f6b950ca08a167a526015a3b",
+        "path": "packages/game-cartridges/src/families/target-action/index.ts",
+        "range": {
+          "end_line": 2,
+          "sha256": "f5c41fd3b3848c71f9d444e29471e7d9713c3c78f6b950ca08a167a526015a3b",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "d4beb950c2eae20a1cea171df9a2f7aa36f759feffdb589c6de1c66833751791",
+        "path": "packages/game-cartridges/src/families/target-action/state.test.ts",
+        "range": {
+          "end_line": 101,
+          "sha256": "d4beb950c2eae20a1cea171df9a2f7aa36f759feffdb589c6de1c66833751791",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "b93b879fff337ce89a6740523a733043cac1dac1c71682e88491f5a3e0a2df5f",
+        "path": "packages/game-cartridges/src/families/target-action/state.ts",
+        "range": {
+          "end_line": 206,
+          "sha256": "b93b879fff337ce89a6740523a733043cac1dac1c71682e88491f5a3e0a2df5f",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "1518b8c7070fad32000e45c0296ab408055ddc694bd110932c5cb351b0750341",
+        "path": "packages/game-cartridges/src/families/traversal/completion.test.ts",
+        "range": {
+          "end_line": 14,
+          "sha256": "1518b8c7070fad32000e45c0296ab408055ddc694bd110932c5cb351b0750341",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "4c35ee6187f9b76a93b97cb3734aa9b6145531c092f26021a1b59d704518ac93",
+        "path": "packages/game-cartridges/src/families/traversal/completion.ts",
+        "range": {
+          "end_line": 16,
+          "sha256": "4c35ee6187f9b76a93b97cb3734aa9b6145531c092f26021a1b59d704518ac93",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "72367dab9ba1e87cff58bdc8f294d796ce8a58d432e1ccd6ca33eb0a18c32c74",
+        "path": "packages/game-cartridges/src/families/traversal/index.ts",
+        "range": {
+          "end_line": 267,
+          "sha256": "72367dab9ba1e87cff58bdc8f294d796ce8a58d432e1ccd6ca33eb0a18c32c74",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "948f05af1ea7b316e4da5e574a73683eedac5fe53fa9ea88a109c1785347948e",
+        "path": "packages/game-cartridges/src/families/traversal/input.test.ts",
+        "range": {
+          "end_line": 159,
+          "sha256": "948f05af1ea7b316e4da5e574a73683eedac5fe53fa9ea88a109c1785347948e",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "2f5ed4d42406950cd35ab3ddfdc51cd04575119bf3e30ad3d4e274f06d3aa0c4",
+        "path": "packages/game-cartridges/src/families/traversal/input.ts",
+        "range": {
+          "end_line": 163,
+          "sha256": "2f5ed4d42406950cd35ab3ddfdc51cd04575119bf3e30ad3d4e274f06d3aa0c4",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "569ac1fc0c626d19257c5e50b2d87cacadab111a74adedefadfc3e619fb9e1d0",
+        "path": "packages/game-cartridges/src/families/traversal/traversal.test.ts",
+        "range": {
+          "end_line": 161,
+          "sha256": "569ac1fc0c626d19257c5e50b2d87cacadab111a74adedefadfc3e619fb9e1d0",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "f6ebf969b836bb0890f13d31b884fa597c8151a4db7ac0b68b973c37cd76ac78",
+        "path": "packages/game-cartridges/src/gate-runner.ts",
+        "range": {
+          "end_line": 293,
+          "sha256": "f6ebf969b836bb0890f13d31b884fa597c8151a4db7ac0b68b973c37cd76ac78",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "0ff669485bebb60981ced6dd1a8c572a6909975d3b9aea21dc1791494f41d2be",
+        "path": "packages/game-cartridges/src/internal/random.ts",
+        "range": {
+          "end_line": 31,
+          "sha256": "0ff669485bebb60981ced6dd1a8c572a6909975d3b9aea21dc1791494f41d2be",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "cca21b098749adcd0de53c63ee5d0cd05e1a695b650a753362defe5c21ca57d0",
+        "path": "packages/game-cartridges/src/internal/results.ts",
+        "range": {
+          "end_line": 21,
+          "sha256": "cca21b098749adcd0de53c63ee5d0cd05e1a695b650a753362defe5c21ca57d0",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "5676b042bcc8c362fcc75b5333806b131ea94e92e4850997550a6aa4fa26346c",
+        "path": "packages/game-cartridges/src/internal/types.ts",
+        "range": {
+          "end_line": 135,
+          "sha256": "5676b042bcc8c362fcc75b5333806b131ea94e92e4850997550a6aa4fa26346c",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "a33e4d1600830e57fb554a1a465fe8ffc346d6cf2c53d2b6300e49d1dce1c7c7",
+        "path": "packages/game-cartridges/src/runner-wave-blueprints.ts",
+        "range": {
+          "end_line": 193,
+          "sha256": "a33e4d1600830e57fb554a1a465fe8ffc346d6cf2c53d2b6300e49d1dce1c7c7",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "2fdfc1dea2dc35cc3ce7c9afabd184e51f159175e9cc702d194b69ddcbc7b89b",
+        "path": "packages/game-cartridges/src/sentence-collector.ts",
+        "range": {
+          "end_line": 348,
+          "sha256": "2fdfc1dea2dc35cc3ce7c9afabd184e51f159175e9cc702d194b69ddcbc7b89b",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "50d607222551cdb0aa623fe8fe94650905e15c4f112fc0e3950439afe059819f",
+        "path": "packages/game-cartridges/src/typing-defense.ts",
+        "range": {
+          "end_line": 367,
+          "sha256": "50d607222551cdb0aa623fe8fe94650905e15c4f112fc0e3950439afe059819f",
+          "start_line": 1
+        },
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      }
+    },
+    {
+      "classification": "deleted",
+      "evidence": {
+        "blob_sha256": "2e2dc89b7f9ca8c5b9543e4a9d17efe9624745956ba24859c6308dcb33b49efa",
+        "path": "packages/game-cartridges/src/__tests__/production-asset-packs.test.ts",
+        "range": {
+          "end_line": 90,
+          "sha256": "2e2dc89b7f9ca8c5b9543e4a9d17efe9624745956ba24859c6308dcb33b49efa",
+          "start_line": 1
+        },
+        "revision": "81d42745ce120f505e0fa553cc083409fba6d721"
       }
     },
     {
