@@ -39,6 +39,27 @@ describe("Sales Cloud Build secret isolation", () => {
     );
   });
 
+  it("isolates company and compatibility revisions behind distinct credentials", () => {
+    expect(cloudBuild).toContain(
+      "projects/$PROJECT_ID/secrets/SALES_LEGACY_DATABASE_URL/versions/latest",
+    );
+    const compatibilityDeploy = cloudBuild.slice(
+      cloudBuild.indexOf('id: "deploy-legacy-rollback"'),
+      cloudBuild.indexOf('id: "repair-source-role"'),
+    );
+    const companyDeploy = cloudBuild.slice(
+      cloudBuild.indexOf('id: "deploy-cloudrun"'),
+      cloudBuild.indexOf('id: "allow-public-invoker"'),
+    );
+    expect(compatibilityDeploy).toContain(
+      "DATABASE_URL=SALES_LEGACY_DATABASE_URL:latest",
+    );
+    expect(compatibilityDeploy).not.toContain("SALES_DATABASE_URL:latest");
+    expect(compatibilityDeploy).toContain("--no-traffic");
+    expect(companyDeploy).toContain("DATABASE_URL=SALES_DATABASE_URL:latest");
+    expect(companyDeploy).not.toContain("SALES_LEGACY_DATABASE_URL:latest");
+  });
+
   it("does not reference generic cross-service database or auth secrets", () => {
     expect(cloudBuild).not.toContain("DATABASE_URL=DATABASE_URL:latest");
     expect(cloudBuild).not.toContain("AUTH_SECRET=AUTH_SECRET:latest");

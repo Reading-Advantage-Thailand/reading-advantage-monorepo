@@ -83,9 +83,19 @@ All three domain mappings reported `Ready=True`,
 | Marketing | `marketing-00004-czf` | `sha256:10cbe3936e2f5cd0445592dfd65f8a997ddd7aba3f312c19114b477e1d53fa63` |
 | Sales | `sales-advantage-00002-7ch` | `sha256:99acd2182e1f0a6d4e8d46dd9e27a6d152555adbfad6de5b35cd3891061a8384` |
 
-These revisions remain Ready. A rollback must move Cloud Run traffic to the
-recorded prior revision and then repeat the public-domain health and sign-in
-checks. No rollback was required during this release.
+The Accounts and Marketing revisions remain valid rollback anchors for this
+recorded release. The historical Sales revision is retained as evidence only:
+it must not receive traffic after the source-role repair because it was not
+created with the split compatibility credential contract.
+
+For the next Sales company-auth cutover, Cloud Build must first create a tagged,
+no-traffic `legacy-school` revision from the exact candidate image using
+`SALES_LEGACY_DATABASE_URL`. Only after that revision is Ready may the build
+apply the manifest-bound source-role repair and deploy the same image in
+`company` mode with `SALES_DATABASE_URL`. Any rollback after repair must target
+that newly created compatibility revision, followed by the public-domain health
+and sign-in checks. This paragraph defines a required future gate; it does not
+claim that the compatibility revision has already been deployed.
 
 ## Open gates
 
@@ -93,6 +103,9 @@ checks. No rollback was required during this release.
   open in Phase S6/S7.
 - Marketing company-admin-without-app-role denial returned 403; the equivalent
   final Sales proof remains open until the reviewed Sales revision is deployed.
+- The next Sales build must create and verify its no-traffic compatibility
+  revision before source-role repair. The historical `sales-advantage-00002-7ch`
+  revision is not a post-repair rollback target.
 - The full Sales audio, AI roleplay, streaming chat, rate-limit, and manual
   curriculum-quality journeys remain open.
 - The full Marketing campaign research, Thai script generation/edit/persist

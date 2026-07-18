@@ -8,6 +8,10 @@ const grants = readFileSync(
   resolve(appRoot, "scripts/sales-runtime-grants.sql"),
   "utf8",
 );
+const legacyGrants = readFileSync(
+  resolve(appRoot, "scripts/sales-legacy-runtime-grants.sql"),
+  "utf8",
+);
 const roleProvisioning = readFileSync(
   resolve(appRoot, "scripts/sales-runtime-role-provision.sql"),
   "utf8",
@@ -18,6 +22,18 @@ const roleRunbook = readFileSync(
 );
 const probe = readFileSync(
   resolve(appRoot, "scripts/sales-runtime-probe.sql"),
+  "utf8",
+);
+const legacyProbe = readFileSync(
+  resolve(appRoot, "scripts/sales-legacy-runtime-probe.sql"),
+  "utf8",
+);
+const probeSetup = readFileSync(
+  resolve(appRoot, "scripts/sales-runtime-probe-setup.sql"),
+  "utf8",
+);
+const probeCleanup = readFileSync(
+  resolve(appRoot, "scripts/sales-runtime-probe-cleanup.sql"),
   "utf8",
 );
 const migrationProof = readFileSync(
@@ -62,9 +78,9 @@ describe("Sales production readiness", () => {
     expect(oidcCallback).not.toContain("session.returnTo, url.origin");
   });
 
-  it("uses the pinned proxy and toolchain before migration, doctor, and runtime probe", () => {
-    expect(cloudbuild.match(/node:22-slim/g)).toHaveLength(6);
-    expect(cloudbuild.match(/cloud-sql-proxy\/v2\.15\.1/g)).toHaveLength(5);
+  it("builds a compatibility revision before evidence-bound repair and company cutover", () => {
+    expect(cloudbuild.match(/node:22-slim/g)).toHaveLength(7);
+    expect(cloudbuild.match(/cloud-sql-proxy\/v2\.15\.1/g)).toHaveLength(6);
     expect(cloudbuild.match(/pnpm@11\.8\.0/g)).toHaveLength(5);
     const ordered = [
       "migrate-db",
@@ -73,6 +89,8 @@ describe("Sales production readiness", () => {
       "seed-production-curriculum",
       "verify-production-curriculum",
       "runtime-db-contract",
+      "deploy-legacy-rollback",
+      "repair-source-role",
       "deploy-cloudrun",
     ].map((id) => cloudbuild.indexOf(`id: "${id}"`));
     expect(ordered.every((position) => position >= 0)).toBe(true);
@@ -82,10 +100,13 @@ describe("Sales production readiness", () => {
     );
     expect(cloudbuild).toContain("SALES_DIRECT_DATABASE_URL");
     expect(cloudbuild).toContain("SALES_DATABASE_URL");
+    expect(cloudbuild).toContain("SALES_LEGACY_DATABASE_URL");
     expect(cloudbuild).not.toContain("SALES_PRIVILEGED_ADMIN_DATABASE_URL");
     expect(cloudbuild).not.toContain("sales-runtime-role-provision.sql");
     expect(cloudbuild).toContain("sales-runtime-probe-setup.sql");
     expect(cloudbuild).toContain("sales-runtime-probe-cleanup.sql");
+    expect(cloudbuild).toContain("sales-legacy-runtime-grants.sql");
+    expect(cloudbuild).toContain("sales-legacy-runtime-probe.sql");
     expect(cloudbuild).toContain("trap cleanup EXIT");
     expect(cloudbuild).toContain(
       "doctor --check --required-migration 0042_company_product_principal_local_unique",
@@ -93,11 +114,17 @@ describe("Sales production readiness", () => {
     expect(cloudbuild).toContain(
       'psql "$$SALES_DIRECT_DATABASE_URL" -f apps/sales-advantage/scripts/sales-migration-0042-probe.sql',
     );
+    expect(cloudbuild).toContain("SALES_AUTH_MODE=legacy-school");
     expect(cloudbuild).toContain("SALES_AUTH_MODE=company");
     expect(migrationProof).toContain("constraint_record.contype = 'u'");
     expect(migrationProof).toContain(
       "ARRAY['application_key', 'local_user_id']::text[]",
     );
+    expect(migrationProof).toContain(
+      "ARRAY['application_key', 'company_account_id']::text[]",
+    );
+    expect(migrationProof).toContain("prosecdef");
+    expect(migrationProof).toContain("search_path=pg_catalog");
     expect(migrationProof).toContain(
       "0042 Sales app-local principal split is incomplete",
     );
@@ -105,40 +132,51 @@ describe("Sales production readiness", () => {
       "NEXT_PUBLIC_API_URL=https://sales.reading-advantage.com",
     );
 
-    const doctorStep = cloudbuild.slice(
-      cloudbuild.indexOf('id: "doctor-check"'),
-      cloudbuild.indexOf('id: "build-curriculum-workspace-deps"'),
+    const legacyDeployStep = cloudbuild.slice(
+      cloudbuild.indexOf('id: "deploy-legacy-rollback"'),
+      cloudbuild.indexOf('id: "repair-source-role"'),
+    );
+    const repairStep = cloudbuild.slice(
+      cloudbuild.indexOf('id: "repair-source-role"'),
+      cloudbuild.indexOf('id: "deploy-cloudrun"'),
     );
     const deployStep = cloudbuild.slice(
       cloudbuild.indexOf('id: "deploy-cloudrun"'),
       cloudbuild.indexOf('id: "allow-public-invoker"'),
     );
-    const repairPosition = doctorStep.indexOf(
-      "sales-legacy-source-role-repair.sql",
-    );
-    const doctorPosition = doctorStep.indexOf(
-      "doctor --check --required-migration 0042_company_product_principal_local_unique",
-    );
-    const proofPosition = doctorStep.indexOf("sales-migration-0042-probe.sql");
     expect(cloudbuild.indexOf('id: "migrate-db"')).toBeLessThan(
       cloudbuild.indexOf('id: "doctor-check"'),
     );
-    expect(repairPosition).toBeGreaterThanOrEqual(0);
-    expect(repairPosition).toBeLessThan(doctorPosition);
-    expect(doctorPosition).toBeLessThan(proofPosition);
-    expect(doctorStep).toContain(
+    expect(legacyDeployStep).toContain("--no-traffic");
+    expect(legacyDeployStep).toContain("--tag=legacy-rollback");
+    expect(legacyDeployStep).toContain(
+      "DATABASE_URL=SALES_LEGACY_DATABASE_URL:latest",
+    );
+    expect(legacyDeployStep).not.toContain("SALES_DATABASE_URL:latest");
+    expect(repairStep).toContain("sales-legacy-source-role-repair.sql");
+    expect(repairStep).toContain(
       '--set=repair_manifest="$$SALES_LEGACY_SOURCE_ROLE_REPAIR_MANIFEST"',
     );
-    expect(doctorStep).toContain(
+    expect(repairStep).toContain("repair_manifest_sha256");
+    expect(repairStep).toContain('--set=release_build_id="$BUILD_ID"');
+    expect(repairStep).toContain(
+      '--set=release_commit_sha="$_RELEASE_COMMIT_SHA"',
+    );
+    expect(repairStep).toContain(
       '      - "SALES_LEGACY_SOURCE_ROLE_REPAIR_MANIFEST"',
     );
     expect(deployStep).not.toContain(
       "SALES_LEGACY_SOURCE_ROLE_REPAIR_MANIFEST",
     );
+    expect(deployStep).toContain("DATABASE_URL=SALES_DATABASE_URL:latest");
+    expect(deployStep).not.toContain("SALES_LEGACY_DATABASE_URL:latest");
     expect(cloudbuild).toContain(
       "projects/$PROJECT_ID/secrets/SALES_LEGACY_SOURCE_ROLE_REPAIR_MANIFEST/versions/latest",
     );
     expect(sourceRoleRepair).toContain("repair_manifest is required");
+    expect(sourceRoleRepair).toContain("repair_manifest_sha256 is required");
+    expect(sourceRoleRepair).toContain("release_build_id is required");
+    expect(sourceRoleRepair).toContain("release_commit_sha is required");
     expect(sourceRoleRepair).toContain(
       "'accountId', 'expectedCurrentRole', 'targetRole'",
     );
@@ -149,6 +187,9 @@ describe("Sales production readiness", () => {
       "observed_source_role <> expected_current_role",
     );
     expect(sourceRoleRepair).toContain("completed_audit_count = 1");
+    expect(sourceRoleRepair).toContain("'manifestSha256', manifest_sha256");
+    expect(sourceRoleRepair).toContain("'releaseBuildId', release_build_id");
+    expect(sourceRoleRepair).toContain("'releaseCommitSha', release_commit_sha");
     expect(sourceRoleRepair).toContain(
       "'sales-source-role-repair:' || account_id::text",
     );
@@ -213,97 +254,66 @@ describe("Sales production readiness", () => {
     expect(releaseCandidate).not.toContain('"status": "approved"');
   });
 
-  it("keeps runtime access relation-specific and probes real writes in rollback", () => {
-    expect(grants).not.toMatch(/GRANT\s+ALL\s+PRIVILEGES/i);
-    expect(grants).not.toMatch(/GRANT[^;]+ON\s+ALL\s+TABLES/i);
-    for (const relation of [
-      "users",
-      "company_product_principals",
-      "accounts",
-      "sessions",
-      "login_attempts",
-      "audit_events",
-      "sales_modules",
-      "sales_lessons",
-      "sales_rubrics",
-      "sales_roleplay_scenarios",
-      "sales_quiz_questions",
-      "sales_roleplay_attempts",
-      "sales_progress",
-      "sales_conversations",
-      "sales_chat_messages",
-    ]) {
-      expect(grants).toContain(`TABLE ${relation}`);
-      expect(probe).toContain(relation);
+  it("separates company runtime access from the compatibility credential", () => {
+    for (const contract of [grants, legacyGrants]) {
+      expect(contract).not.toMatch(/GRANT\s+ALL\s+PRIVILEGES/i);
+      expect(contract).not.toMatch(/GRANT[^;]+ON\s+ALL\s+TABLES/i);
     }
-    const transactionStart = probe.indexOf("BEGIN;");
-    const mappingInsert = probe.indexOf(
-      "INSERT INTO company_product_principals",
+    expect(grants).toContain("GRANT SELECT ON TABLE users TO sales_runtime;");
+    expect(grants).toContain(
+      "GRANT SELECT ON TABLE company_product_principals TO sales_runtime;",
     );
-    const mappingUpdate = probe.indexOf("UPDATE company_product_principals");
-    const transactionRollback = probe.indexOf("ROLLBACK;");
-    expect(transactionStart).toBeGreaterThanOrEqual(0);
-    expect(transactionStart).toBeLessThan(mappingInsert);
-    expect(mappingInsert).toBeLessThan(mappingUpdate);
-    expect(mappingUpdate).toBeLessThan(transactionRollback);
+    expect(grants).toMatch(
+      /GRANT EXECUTE ON FUNCTION\s+sync_sales_company_principal\(uuid, text, uuid, text, text\)\s+TO sales_runtime;/,
+    );
+    for (const relation of ["accounts", "sessions", "login_attempts"]) {
+      expect(grants).not.toMatch(new RegExp(`GRANT[^;]+TABLE ${relation}`, "i"));
+      expect(probe).toMatch(
+        new RegExp(
+          `has_table_privilege\\(\\s*current_user, '${relation}', 'SELECT,INSERT,UPDATE,DELETE,TRUNCATE'`,
+        ),
+      );
+    }
+    expect(grants).not.toMatch(/GRANT[^;]+UPDATE[^;]+TABLE users/i);
+    expect(grants).not.toMatch(
+      /GRANT[^;]+(?:INSERT|UPDATE|DELETE)[^;]+TABLE company_product_principals/i,
+    );
+    expect(probe).toContain("sync_sales_company_principal");
     expect(probe).toMatch(/INSERT INTO sales_roleplay_attempts/);
     expect(probe).toMatch(/UPDATE sales_progress/);
-    expect(grants).toContain(
-      "GRANT SELECT, INSERT ON TABLE users TO sales_runtime;",
+    expect(legacyGrants).toContain(
+      "GRANT SELECT ON TABLE accounts TO sales_legacy_runtime;",
     );
-    expect(grants).toContain(
-      "GRANT UPDATE (role) ON TABLE users TO sales_runtime;",
+    expect(legacyGrants).toMatch(
+      /GRANT UPDATE \(password, updated_at\) ON TABLE accounts\s+TO sales_legacy_runtime;/,
     );
-    expect(grants).toContain(
-      "GRANT SELECT, INSERT ON TABLE company_product_principals TO sales_runtime;",
+    expect(legacyGrants).toContain(
+      "GRANT SELECT, INSERT, DELETE ON TABLE sessions TO sales_legacy_runtime;",
     );
-    expect(grants).toContain(
-      "GRANT UPDATE (role_key, updated_at) ON TABLE company_product_principals TO sales_runtime;",
+    expect(legacyGrants).toMatch(
+      /GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE login_attempts\s+TO sales_legacy_runtime;/,
     );
-    expect(grants).not.toMatch(/GRANT[^;]*UPDATE\s+ON TABLE users/i);
-    expect(grants).not.toMatch(
-      /GRANT[^;]*UPDATE\s+ON TABLE company_product_principals/i,
+    expect(legacyGrants).not.toMatch(
+      /GRANT[^;]+(?:INSERT|UPDATE|DELETE)[^;]+TABLE users/i,
     );
-    expect(grants).not.toMatch(
-      /GRANT[^;]*(?:DELETE|TRUNCATE)[^;]*ON TABLE (?:users|company_product_principals)/i,
+    expect(legacyGrants).not.toMatch(
+      /GRANT[^;]+(?:INSERT|UPDATE|DELETE)[^;]+TABLE company_product_principals/i,
     );
-    expect(probe).toMatch(/INSERT INTO company_product_principals/);
-    expect(probe).toMatch(
-      /SELECT local_user_id, role_key[\s\S]+FROM company_product_principals/,
-    );
-    expect(probe).toMatch(/UPDATE users[\s\S]+SET role = 'SALES_ADMIN'/);
-    expect(probe).toMatch(
-      /UPDATE company_product_principals[\s\S]+SET role_key = 'SALES_ADMIN'/,
-    );
-    for (const relation of ["users", "company_product_principals"]) {
-      for (const privilege of [
-        "SELECT",
-        "INSERT",
-        "UPDATE",
-        "DELETE",
-        "TRUNCATE",
-      ]) {
-        expect(probe).toContain(
-          `has_table_privilege(current_user, '${relation}', '${privilege}')`,
-        );
-      }
+    expect(legacyGrants).not.toContain("sync_sales_company_principal");
+    expect(legacyProbe).toContain("forbidden provisioning privileges");
+    expect(legacyProbe).toContain("INSERT INTO sessions");
+    expect(legacyProbe).toContain("INSERT INTO login_attempts");
+    expect(legacyProbe).toContain("UPDATE accounts");
+    for (const contract of [probe, legacyProbe]) {
+      expect(contract).toContain("BEGIN;");
+      expect(contract).toContain("ROLLBACK;");
+      expect(contract).toContain("probe_owner");
     }
-    for (const allowed of [
-      "has_column_privilege(current_user, 'users', 'role', 'UPDATE')",
-      "has_column_privilege(current_user, 'company_product_principals', 'role_key', 'UPDATE')",
-      "has_column_privilege(current_user, 'company_product_principals', 'updated_at', 'UPDATE')",
-    ]) {
-      expect(probe).toContain(allowed);
-    }
-    for (const denied of [
-      "has_column_privilege(current_user, 'users', 'id', 'UPDATE')",
-      "has_column_privilege(current_user, 'users', 'username', 'UPDATE')",
-      "has_column_privilege(current_user, 'users', 'school_id', 'UPDATE')",
-      "has_column_privilege(current_user, 'company_product_principals', 'organization_id', 'UPDATE')",
-      "has_column_privilege(current_user, 'company_product_principals', 'company_account_id', 'UPDATE')",
-      "has_column_privilege(current_user, 'company_product_principals', 'local_user_id', 'UPDATE')",
-    ]) {
-      expect(probe).toContain(denied);
+    for (const contract of [probeSetup, probeCleanup]) {
+      expect(contract).toContain("probe_owner");
+      expect(contract).toContain("md5(");
+      expect(contract).not.toContain("00000000-0000-0000-0000-000000000051");
+      expect(contract).not.toContain("00000000-0000-0000-0000-000000000053");
     }
     expect(probe).toContain("rolsuper");
     expect(probe).toContain("rolcreaterole");
@@ -315,8 +325,13 @@ describe("Sales production readiness", () => {
     expect(roleProvisioning).toMatch(
       /ALTER ROLE sales_runtime[\s\S]+NOINHERIT NOREPLICATION/,
     );
+    expect(roleProvisioning).toMatch(
+      /ALTER ROLE sales_legacy_runtime[\s\S]+NOINHERIT NOREPLICATION/,
+    );
     expect(roleRunbook).toContain("SALES_PRIVILEGED_ADMIN_DATABASE_URL");
     expect(roleRunbook).toContain("sales_migration");
+    expect(roleRunbook).toContain("sales_legacy_runtime");
+    expect(roleRunbook).toContain("SALES_LEGACY_DATABASE_URL");
     expect(roleRunbook).toContain("NOCREATEROLE");
     expect(probe).toContain("pg_auth_members");
     expect(probe).toContain(

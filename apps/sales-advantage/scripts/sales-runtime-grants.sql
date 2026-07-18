@@ -10,14 +10,13 @@ REVOKE CREATE ON SCHEMA public FROM PUBLIC;
 
 REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA public FROM sales_runtime;
 REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public FROM sales_runtime;
+REVOKE ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public FROM sales_runtime;
 
-GRANT SELECT, INSERT ON TABLE users TO sales_runtime;
-GRANT UPDATE (role) ON TABLE users TO sales_runtime;
-GRANT SELECT, INSERT ON TABLE company_product_principals TO sales_runtime;
-GRANT UPDATE (role_key, updated_at) ON TABLE company_product_principals TO sales_runtime;
-GRANT SELECT, INSERT, UPDATE ON TABLE accounts TO sales_runtime;
-GRANT SELECT, INSERT, DELETE ON TABLE sessions TO sales_runtime;
-GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE login_attempts TO sales_runtime;
+GRANT SELECT ON TABLE users TO sales_runtime;
+GRANT SELECT ON TABLE company_product_principals TO sales_runtime;
+GRANT EXECUTE ON FUNCTION
+  sync_sales_company_principal(uuid, text, uuid, text, text)
+  TO sales_runtime;
 GRANT INSERT ON TABLE audit_events TO sales_runtime;
 
 GRANT SELECT ON TABLE sales_modules TO sales_runtime;
@@ -36,3 +35,5 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA public
   REVOKE ALL PRIVILEGES ON TABLES FROM sales_runtime;
 ALTER DEFAULT PRIVILEGES IN SCHEMA public
   REVOKE ALL PRIVILEGES ON SEQUENCES FROM sales_runtime;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public
+  REVOKE ALL PRIVILEGES ON FUNCTIONS FROM sales_runtime;

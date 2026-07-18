@@ -4,11 +4,41 @@
   \echo 'repair_manifest is required'
   \quit 3
 \endif
+\if :{?repair_manifest_sha256}
+\else
+  \echo 'repair_manifest_sha256 is required'
+  \quit 3
+\endif
+\if :{?release_build_id}
+\else
+  \echo 'release_build_id is required'
+  \quit 3
+\endif
+\if :{?release_commit_sha}
+\else
+  \echo 'release_commit_sha is required'
+  \quit 3
+\endif
 
 BEGIN;
 SELECT set_config(
   'reading_advantage.sales_source_role_repair_manifest',
   :'repair_manifest',
+  true
+);
+SELECT set_config(
+  'reading_advantage.sales_source_role_repair_manifest_sha256',
+  :'repair_manifest_sha256',
+  true
+);
+SELECT set_config(
+  'reading_advantage.sales_source_role_repair_build_id',
+  :'release_build_id',
+  true
+);
+SELECT set_config(
+  'reading_advantage.sales_source_role_repair_commit_sha',
+  :'release_commit_sha',
   true
 );
 
@@ -18,6 +48,15 @@ DECLARE
     current_setting(
       'reading_advantage.sales_source_role_repair_manifest'
     )::jsonb;
+  manifest_sha256 text := current_setting(
+    'reading_advantage.sales_source_role_repair_manifest_sha256'
+  );
+  release_build_id text := current_setting(
+    'reading_advantage.sales_source_role_repair_build_id'
+  );
+  release_commit_sha text := current_setting(
+    'reading_advantage.sales_source_role_repair_commit_sha'
+  );
   account_id uuid;
   expected_current_role text;
   target_role text;
@@ -27,6 +66,16 @@ DECLARE
   completed_audit_count integer;
   affected integer;
 BEGIN
+  IF manifest_sha256 !~ '^[0-9a-f]{64}$' THEN
+    RAISE EXCEPTION 'Sales source-role repair manifest digest is invalid';
+  END IF;
+  IF release_build_id !~
+    '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$' THEN
+    RAISE EXCEPTION 'Sales source-role repair build id is invalid';
+  END IF;
+  IF release_commit_sha !~ '^[0-9a-f]{40}$' THEN
+    RAISE EXCEPTION 'Sales source-role repair commit SHA is invalid';
+  END IF;
   IF jsonb_typeof(manifest) <> 'object'
     OR manifest - ARRAY[
       'accountId', 'expectedCurrentRole', 'targetRole'
@@ -82,8 +131,14 @@ BEGIN
          'applicationKey', 'sales',
          'expectedCurrentRole', expected_current_role,
          'targetRole', target_role,
-         'source', 'cloud-build-repair-manifest'
-       );
+         'source', 'cloud-build-repair-manifest',
+         'manifestSha256', manifest_sha256,
+         'releaseBuildId', metadata->>'releaseBuildId',
+         'releaseCommitSha', metadata->>'releaseCommitSha'
+       )
+       AND metadata->>'releaseBuildId' ~
+         '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
+       AND metadata->>'releaseCommitSha' ~ '^[0-9a-f]{40}$';
     IF completed_audit_count = 1 THEN
       RETURN;
     END IF;
@@ -117,7 +172,10 @@ BEGIN
       'applicationKey', 'sales',
       'expectedCurrentRole', expected_current_role,
       'targetRole', target_role,
-      'source', 'cloud-build-repair-manifest'
+      'source', 'cloud-build-repair-manifest',
+      'manifestSha256', manifest_sha256,
+      'releaseBuildId', release_build_id,
+      'releaseCommitSha', release_commit_sha
     )
   );
 END

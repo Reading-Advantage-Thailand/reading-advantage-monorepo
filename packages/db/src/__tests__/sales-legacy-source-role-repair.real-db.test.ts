@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { execFileSync } from "node:child_process";
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { resolve } from "node:path";
 
 import postgres from "postgres";
@@ -19,14 +19,30 @@ interface RepairManifest {
   readonly targetRole: "ADMIN";
 }
 
+interface RepairProvenance {
+  readonly buildId: string;
+  readonly commitSha: string;
+}
+
 /** Runs the exact committed repair script through psql without a shell. */
-function runRepair(databaseUrl: string, manifest: RepairManifest): void {
+function runRepair(
+  databaseUrl: string,
+  manifest: RepairManifest,
+  provenance: RepairProvenance,
+): void {
+  const serializedManifest = JSON.stringify(manifest);
+  const manifestSha256 = createHash("sha256")
+    .update(serializedManifest)
+    .digest("hex");
   execFileSync(
     "psql",
     [
       databaseUrl,
       "--no-psqlrc",
-      `--set=repair_manifest=${JSON.stringify(manifest)}`,
+      `--set=repair_manifest=${serializedManifest}`,
+      `--set=repair_manifest_sha256=${manifestSha256}`,
+      `--set=release_build_id=${provenance.buildId}`,
+      `--set=release_commit_sha=${provenance.commitSha}`,
       "-f",
       repairScript,
     ],
@@ -63,6 +79,10 @@ describeRealPostgres(
         expectedCurrentRole: "SALES_ADMIN",
         targetRole: "ADMIN",
       };
+      const provenance: RepairProvenance = {
+        buildId: "30000000-0000-4000-8000-000000000001",
+        commitSha: "a".repeat(40),
+      };
 
       try {
         await client.unsafe(`
@@ -97,7 +117,7 @@ describeRealPostgres(
       `);
 
         await client`INSERT INTO users (id, role) VALUES (${accountId}, 'SALES_ADMIN')`;
-        expect(() => runRepair(databaseUrl, manifest)).toThrow();
+        expect(() => runRepair(databaseUrl, manifest, provenance)).toThrow();
         expect(await readRole(client, accountId)).toBe("SALES_ADMIN");
 
         const salesLocalId = `sales:${accountId}`;
@@ -117,7 +137,7 @@ describeRealPostgres(
       `;
 
         await client`UPDATE users SET role = 'ADMIN' WHERE id = ${accountId}`;
-        expect(() => runRepair(databaseUrl, manifest)).toThrow();
+        expect(() => runRepair(databaseUrl, manifest, provenance)).toThrow();
         expect(await readRole(client, accountId)).toBe("ADMIN");
         const prematureAuditRows = await client<{ count: number }[]>`
           SELECT count(*)::integer AS count
@@ -128,8 +148,11 @@ describeRealPostgres(
         await client`UPDATE users SET role = 'SALES_ADMIN' WHERE id = ${accountId}`;
         expect(await readRole(client, accountId)).toBe("SALES_ADMIN");
 
-        runRepair(databaseUrl, manifest);
-        runRepair(databaseUrl, manifest);
+        runRepair(databaseUrl, manifest, provenance);
+        runRepair(databaseUrl, manifest, {
+          buildId: "30000000-0000-4000-8000-000000000002",
+          commitSha: "b".repeat(40),
+        });
         expect(await readRole(client, accountId)).toBe("ADMIN");
         expect(await readRole(client, salesLocalId)).toBe("SALES_ADMIN");
         expect(await readRole(client, unrelatedAccountId)).toBe("TEACHER");
@@ -154,6 +177,11 @@ describeRealPostgres(
               expectedCurrentRole: "SALES_ADMIN",
               targetRole: "ADMIN",
               source: "cloud-build-repair-manifest",
+              manifestSha256: createHash("sha256")
+                .update(JSON.stringify(manifest))
+                .digest("hex"),
+              releaseBuildId: provenance.buildId,
+              releaseCommitSha: provenance.commitSha,
             },
           },
         ]);
@@ -163,7 +191,7 @@ describeRealPostgres(
           SET metadata = metadata || '{"source":"unexpected"}'::jsonb
           WHERE id = ${`sales-source-role-repair:${accountId}`}
         `;
-        expect(() => runRepair(databaseUrl, manifest)).toThrow();
+        expect(() => runRepair(databaseUrl, manifest, provenance)).toThrow();
         await client`
           UPDATE audit_events
           SET metadata =
@@ -172,7 +200,7 @@ describeRealPostgres(
         `;
 
         await client`UPDATE users SET role = 'TEACHER' WHERE id = ${accountId}`;
-        expect(() => runRepair(databaseUrl, manifest)).toThrow();
+        expect(() => runRepair(databaseUrl, manifest, provenance)).toThrow();
         expect(await readRole(client, accountId)).toBe("TEACHER");
 
         const duplicateLocalId = `${salesLocalId}:duplicate`;
@@ -186,7 +214,7 @@ describeRealPostgres(
           'sales', ${duplicateLocalId}
         )
       `;
-        expect(() => runRepair(databaseUrl, manifest)).toThrow();
+        expect(() => runRepair(databaseUrl, manifest, provenance)).toThrow();
         expect(await readRole(client, accountId)).toBe("SALES_ADMIN");
         expect(await readRole(client, duplicateLocalId)).toBe("SALES_REP");
       } finally {
