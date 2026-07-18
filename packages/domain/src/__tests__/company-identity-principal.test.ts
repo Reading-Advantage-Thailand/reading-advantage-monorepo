@@ -33,10 +33,12 @@ const mappedUser = {
   cefrLevel: "N/A",
 };
 
-function principalDatabase(options: {
-  mapped?: typeof mappedUser | null;
-  executeError?: Error;
-} = {}) {
+function principalDatabase(
+  options: {
+    mapped?: typeof mappedUser | null;
+    executeError?: Error;
+  } = {},
+) {
   const mapped = options.mapped === undefined ? mappedUser : options.mapped;
   const execute = vi.fn(async () => {
     if (options.executeError) throw options.executeError;
@@ -101,8 +103,7 @@ describe("resolveSalesCompanyPrincipal", () => {
     expect({
       mapping: classifyTable(companyProductPrincipals),
       infrastructure: classifyTable(capabilityIdempotencyRecords),
-      distinctTables:
-        companyProductPrincipals !== capabilityIdempotencyRecords,
+      distinctTables: companyProductPrincipals !== capabilityIdempotencyRecords,
     }).toEqual({
       mapping: "REFERENTIAL",
       infrastructure: "EXEMPT",
@@ -150,13 +151,28 @@ describe("resolveSalesCompanyPrincipal", () => {
 
   it("surfaces explicit mapping-manifest conflicts from PostgreSQL", async () => {
     const { database } = principalDatabase({
-      executeError: new Error(
-        "Sales organization change requires an explicit mapping manifest",
-      ),
+      executeError: new Error("database adapter wrapper", {
+        cause: Object.assign(
+          new Error("database contract message may change"),
+          {
+            code: "RA001",
+          },
+        ),
+      }),
     });
     await expect(
       resolveSalesCompanyPrincipal(database, baseIdentity),
     ).rejects.toThrow("mapping manifest is required");
+  });
+
+  it("does not classify a message-only database error as a manifest conflict", async () => {
+    const databaseError = new Error(
+      "Sales organization change requires an explicit mapping manifest",
+    );
+    const { database } = principalDatabase({ executeError: databaseError });
+    await expect(
+      resolveSalesCompanyPrincipal(database, baseIdentity),
+    ).rejects.toBe(databaseError);
   });
 
   it("durably revokes through the constrained function without projecting a user", async () => {
@@ -232,12 +248,15 @@ describe("resolveLegacySalesCompanyPrincipal", () => {
     [{ ...mappedLegacy, mappingRole: "REVOKED" }],
     [{ ...mappedLegacy, schoolId: "30000000-0000-4000-8000-000000000007" }],
     [mappedLegacy, { ...mappedLegacy }],
-  ])("denies revoked, school-scoped, or duplicate mappings", async (...rows) => {
-    const { database } = legacyDatabase(rows);
-    await expect(
-      resolveLegacySalesCompanyPrincipal(database, baseIdentity.sub),
-    ).resolves.toBeNull();
-  });
+  ])(
+    "denies revoked, school-scoped, or duplicate mappings",
+    async (...rows) => {
+      const { database } = legacyDatabase(rows);
+      await expect(
+        resolveLegacySalesCompanyPrincipal(database, baseIdentity.sub),
+      ).resolves.toBeNull();
+    },
+  );
 
   it("rejects invalid source IDs before database access", async () => {
     const database = { select: vi.fn() } as unknown as DB;

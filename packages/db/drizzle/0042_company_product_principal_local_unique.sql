@@ -155,8 +155,10 @@ BEGIN
   IF FOUND THEN
     IF existing_mapping.organization_id <> p_organization_id
       OR existing_mapping.organization_key <> p_organization_key THEN
-      RAISE EXCEPTION
-        'Sales organization change requires an explicit mapping manifest';
+      RAISE EXCEPTION USING
+        ERRCODE = 'RA001',
+        MESSAGE =
+          'Sales organization change requires an explicit mapping manifest';
     END IF;
     IF existing_mapping.local_user_id <> target_local_user_id THEN
       RAISE EXCEPTION 'Sales principal mapping local user is invalid';

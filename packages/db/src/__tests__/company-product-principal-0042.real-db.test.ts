@@ -175,7 +175,12 @@ describeRealPostgres(
         ]);
 
         const sales = await client<
-          { id: string; username: string; role: string; school_id: string | null }[]
+          {
+            id: string;
+            username: string;
+            role: string;
+            school_id: string | null;
+          }[]
         >`SELECT id, username, role::text AS role, school_id
           FROM users WHERE id = ${localUserId}`;
         expect(sales).toEqual([
@@ -209,9 +214,7 @@ describeRealPostgres(
           expect(rows).toEqual([{ user_id: localUserId }]);
         }
 
-        const constraints = await client<
-          { name: string; columns: string[] }[]
-        >`
+        const constraints = await client<{ name: string; columns: string[] }[]>`
         SELECT constraint_record.conname AS name,
                array_agg(attribute.attname ORDER BY key.ordinality) AS columns
         FROM pg_constraint constraint_record
@@ -240,7 +243,11 @@ describeRealPostgres(
         ]);
 
         const synchronized = await client<
-          { local_user_id: string; user_role: string; mapping_role_key: string }[]
+          {
+            local_user_id: string;
+            user_role: string;
+            mapping_role_key: string;
+          }[]
         >`
           SELECT local_user_id, user_role::text, mapping_role_key
           FROM sync_sales_company_principal(
@@ -262,9 +269,11 @@ describeRealPostgres(
               'internal-company', ${sub}, 'Moved Sales User', 'SALES_REP'
             )
           `,
-        ).rejects.toThrow(
-          "Sales organization change requires an explicit mapping manifest",
-        );
+        ).rejects.toMatchObject({
+          code: "RA001",
+          message:
+            "Sales organization change requires an explicit mapping manifest",
+        });
         await expect(
           client`SELECT role::text AS role, school_id FROM users WHERE id = ${sub}`,
         ).resolves.toEqual([{ role: "TEACHER", school_id: sourceSchoolId }]);
@@ -516,16 +525,18 @@ describeRealPostgres(
           );
         `,
       },
-    ])("fails before mutation for $name", async ({ expected, seed }) => {
-      const databaseName = `sales_0042_case_${randomUUID().replaceAll("-", "")}`;
-      const admin = postgres(pgTestUrl!, { max: 1 });
-      const scratchUrl = new URL(pgTestUrl!);
-      scratchUrl.pathname = `/${databaseName}`;
-      await admin.unsafe(`CREATE DATABASE "${databaseName}"`);
-      const client = postgres(scratchUrl.toString(), { max: 1 });
+    ])(
+      "fails before mutation for $name",
+      async ({ expected, seed }) => {
+        const databaseName = `sales_0042_case_${randomUUID().replaceAll("-", "")}`;
+        const admin = postgres(pgTestUrl!, { max: 1 });
+        const scratchUrl = new URL(pgTestUrl!);
+        scratchUrl.pathname = `/${databaseName}`;
+        await admin.unsafe(`CREATE DATABASE "${databaseName}"`);
+        const client = postgres(scratchUrl.toString(), { max: 1 });
 
-      try {
-        await client.unsafe(`
+        try {
+          await client.unsafe(`
           CREATE TYPE role AS ENUM (
             'INTERN', 'STUDENT', 'TEACHER', 'ADMIN', 'SYSTEM',
             'SALES_REP', 'SALES_ADMIN'
@@ -560,27 +571,29 @@ describeRealPostgres(
           );
           ${seed}
         `);
-        const usersBefore = await client`SELECT * FROM users ORDER BY id`;
-        const mappingsBefore =
-          await client`SELECT * FROM company_product_principals ORDER BY organization_id`;
+          const usersBefore = await client`SELECT * FROM users ORDER BY id`;
+          const mappingsBefore =
+            await client`SELECT * FROM company_product_principals ORDER BY organization_id`;
 
-        await expect(
-          executeMigration(
-            client,
-            "0042_company_product_principal_local_unique",
-          ),
-        ).rejects.toThrow(expected);
-        await expect(client`SELECT * FROM users ORDER BY id`).resolves.toEqual(
-          usersBefore,
-        );
-        await expect(
-          client`SELECT * FROM company_product_principals ORDER BY organization_id`,
-        ).resolves.toEqual(mappingsBefore);
-      } finally {
-        await client.end();
-        await admin.unsafe(`DROP DATABASE IF EXISTS "${databaseName}"`);
-        await admin.end();
-      }
-    }, 60_000);
+          await expect(
+            executeMigration(
+              client,
+              "0042_company_product_principal_local_unique",
+            ),
+          ).rejects.toThrow(expected);
+          await expect(
+            client`SELECT * FROM users ORDER BY id`,
+          ).resolves.toEqual(usersBefore);
+          await expect(
+            client`SELECT * FROM company_product_principals ORDER BY organization_id`,
+          ).resolves.toEqual(mappingsBefore);
+        } finally {
+          await client.end();
+          await admin.unsafe(`DROP DATABASE IF EXISTS "${databaseName}"`);
+          await admin.end();
+        }
+      },
+      60_000,
+    );
   },
 );

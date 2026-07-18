@@ -135,17 +135,19 @@ export async function resolveLegacySalesCompanyPrincipal(
 }
 
 /**
- * Finds one message through bounded database-adapter error wrappers.
+ * Finds one SQLSTATE through bounded database-adapter error wrappers.
  * @param error Database error or adapter wrapper.
- * @param expected Message fragment owned by the Sales mapping contract.
- * @returns Whether the fragment appears in the bounded cause chain.
+ * @param expected SQLSTATE owned by the Sales mapping contract.
+ * @returns Whether the code appears in the bounded cause chain.
  */
-function errorChainIncludes(error: unknown, expected: string): boolean {
+function errorChainHasCode(error: unknown, expected: string): boolean {
   let current: unknown = error;
   for (let depth = 0; depth < 5 && current; depth += 1) {
     if (
-      current instanceof Error &&
-      current.message.includes(expected)
+      typeof current === "object" &&
+      current !== null &&
+      "code" in current &&
+      current.code === expected
     ) {
       return true;
     }
@@ -184,12 +186,7 @@ export async function resolveSalesCompanyPrincipal(
         )
       `);
     } catch (error) {
-      if (
-        errorChainIncludes(
-          error,
-          "Sales organization change requires an explicit mapping manifest",
-        )
-      ) {
+      if (errorChainHasCode(error, "RA001")) {
         throw new Error(
           "Sales principal mapping manifest is required for an existing username or local principal.",
           { cause: error },
