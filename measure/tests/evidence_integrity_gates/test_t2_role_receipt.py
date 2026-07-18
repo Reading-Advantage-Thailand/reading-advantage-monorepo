@@ -1095,11 +1095,15 @@ class T2RoleReceiptTests(unittest.TestCase):
         self._git(root, "commit", "-qm", "fixture reviewer phase3")
         output_commit = self._git(root, "rev-parse", "HEAD")
         binding = {"phase2_receipt_commit": receipt_commit}
+        expected_binding = {
+            **binding,
+            "admission_commit": output_commit,
+        }
         self.assertEqual(
             receipt_module._validated_commit_binding(
                 root, "adversarial-reviewer", output_commit, binding
             ),
-            binding,
+            expected_binding,
         )
         self.assertEqual(
             receipt_module._expanded_command_template(

@@ -319,6 +319,7 @@ class Phase0FreezeTests(unittest.TestCase):
                     final_role_verifier
                     + " --role truth-test-author"
                     + " --phase0-authority-revision {phase0_commit}"
+                    + " --admission-revision {admission_commit}"
                     + " --output measure/tracks/apk_source_denominator_inventory_20260712/denominator-contract-test-report.json",
                     "normal-only",
                     "chore(measure): attest T2 truth tests (track_id: apk_source_denominator_inventory_20260712)",
@@ -330,6 +331,7 @@ class Phase0FreezeTests(unittest.TestCase):
                     final_role_verifier
                     + " --role adversarial-reviewer"
                     + " --phase0-authority-revision {phase0_commit}"
+                    + " --admission-revision {admission_commit}"
                     + " --phase2-receipt-revision {phase2_receipt_commit}"
                     + " --output measure/tracks/apk_source_denominator_inventory_20260712/independent-review.json",
                     "normal-only",

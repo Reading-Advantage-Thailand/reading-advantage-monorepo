@@ -17,8 +17,10 @@ from measure.tracks.apk_source_denominator_inventory_20260712.run_phase0_3_admis
     _validate_inventory_row,
 )
 from measure.tracks.apk_source_denominator_inventory_20260712.verify_phase4_role_evidence import (
+    MAPPER_OUTPUT_PATHS,
     T2EvidenceVerificationError,
     _admission_command_argv,
+    _validate_admission_revision,
     _strict_nonblocking_findings,
     _strict_zero_counts,
     build_reviewed_input_ledger,
@@ -83,6 +85,7 @@ class SuccessorAuthorityTests(unittest.TestCase):
             self.assertIn("verify_phase4_role_evidence.py", command)
             self.assertIn(f"--role {role}", command)
             self.assertIn("--phase0-authority-revision {phase0_commit}", command)
+            self.assertIn("--admission-revision {admission_commit}", command)
             self.assertNotIn(";", command)
             self.assertNotIn("&&", command)
             self.assertNotIn("||", command)
@@ -137,6 +140,7 @@ class SuccessorAuthorityTests(unittest.TestCase):
             "track_id": TRACK,
             "source_baseline_revision": BASELINE,
             "role": "truth-test-author",
+            "admission_revision": "a" * 40,
             "phase0_3_admission_command": "frozen-command",
             "phase0_3_admission_result": {
                 "total_tests": 2,
@@ -162,7 +166,9 @@ class SuccessorAuthorityTests(unittest.TestCase):
             with self.assertRaisesRegex(
                 T2EvidenceVerificationError, "admission summary differs"
             ):
-                validate_truth_report(path, report["test_inventory"], "frozen-command")
+                validate_truth_report(
+                    path, report["test_inventory"], "frozen-command", "a" * 40
+                )
 
     def test_admission_rejects_zero_test_modules_and_stale_12_18_counts(self) -> None:
         """Falsifies zero-suite and superseded 12/18 Phase1/2 false Greens."""
@@ -246,6 +252,49 @@ class SuccessorAuthorityTests(unittest.TestCase):
         self.assertIn('argv[1]+":', launcher)
         self.assertNotIn("argv.pop", launcher)
         self.assertEqual(command[-(len(ADMISSION_MODULES) + 1)], revision)
+
+    def test_admission_uses_fresh_descendant_mapper_commit(self) -> None:
+        """Proves stale authority artifacts cannot replace the explicit mapper HEAD."""
+        with tempfile.TemporaryDirectory() as directory:
+            repo = Path(directory) / "repo"
+            repo.mkdir()
+            subprocess.run(["/usr/bin/git", "init", "--quiet", str(repo)], check=True)
+            for path in MAPPER_OUTPUT_PATHS:
+                target = repo / path
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_text("stale\n", encoding="utf-8")
+            subprocess.run(["/usr/bin/git", "-C", str(repo), "add", "."], check=True)
+            commit = [
+                "/usr/bin/git", "-C", str(repo), "-c", "user.name=T2 Test", "-c",
+                "user.email=t2@example.invalid", "commit", "--quiet", "--no-gpg-sign", "-m",
+            ]
+            subprocess.run([*commit, "authority"], check=True)
+            authority = subprocess.check_output(
+                ["/usr/bin/git", "-C", str(repo), "rev-parse", "HEAD"], text=True
+            ).strip()
+            stale_phase3 = subprocess.check_output(
+                ["/usr/bin/git", "-C", str(repo), "show", f"{authority}:{MAPPER_OUTPUT_PATHS[-1]}"]
+            )
+            for path in MAPPER_OUTPUT_PATHS:
+                (repo / path).write_text("fresh\n", encoding="utf-8")
+            subprocess.run(["/usr/bin/git", "-C", str(repo), "add", "."], check=True)
+            subprocess.run([*commit, "mapper"], check=True)
+            mapper = subprocess.check_output(
+                ["/usr/bin/git", "-C", str(repo), "rev-parse", "HEAD"], text=True
+            ).strip()
+            self.assertEqual(
+                _validate_admission_revision(repo, authority, mapper), mapper
+            )
+            self.assertNotEqual(
+                stale_phase3,
+                subprocess.check_output(
+                    ["/usr/bin/git", "-C", str(repo), "show", f"{mapper}:{MAPPER_OUTPUT_PATHS[-1]}"]
+                ),
+            )
+            with self.assertRaisesRegex(
+                T2EvidenceVerificationError, "explicit admission revision differs"
+            ):
+                _validate_admission_revision(repo, authority, authority)
 
     def test_reviewer_rejects_boolean_counters_and_whitespace_severity(self) -> None:
         """Falsifies Python equality coercion and untrimmed blocking severity bypasses."""

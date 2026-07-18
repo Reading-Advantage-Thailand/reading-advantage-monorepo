@@ -362,6 +362,23 @@ def _validated_commit_binding(
     binding: Mapping[str, Any] | None,
 ) -> dict[str, Any] | None:
     """Validates optional phase handoff commits against the receipt output commit."""
+    if role in {"truth-test-author", "adversarial-reviewer"}:
+        mapper_path = f"{TRACK_DIRECTORY}/phase3-reconciliation.json"
+        latest_mapper = subprocess.run(
+            ("/usr/bin/git", "log", "-1", "--format=%H", output_commit, "--", mapper_path),
+            cwd=root,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            check=False,
+            text=True,
+        )
+        admission_commit = latest_mapper.stdout.strip()
+        if latest_mapper.returncode != 0 or _COMMIT_SHA.fullmatch(admission_commit) is None:
+            if binding is not None:
+                raise T2RoleReceiptError("final role has no committed mapper admission revision")
+        else:
+            binding = dict(binding or {})
+            binding["admission_commit"] = admission_commit
     if binding is None:
         if role in {"evidence-collector", "requirements-mapper"}:
             raise T2RoleReceiptError(f"{role} requires an immutable commit binding")
@@ -448,12 +465,19 @@ def _validated_commit_binding(
             raise T2RoleReceiptError(
                 "mapper Phase-2 receipt binding is not the latest committed evidence receipt"
             )
-    if role == "adversarial-reviewer":
-        if set(binding) != {"phase2_receipt_commit"} or set(commit_fields) != {
-            "phase2_receipt_commit"
+    if role == "truth-test-author":
+        if set(binding) != {"admission_commit"} or set(commit_fields) != {
+            "admission_commit"
         }:
             raise T2RoleReceiptError(
-                "reviewer commit binding must select exactly one Phase-2 receipt"
+                "truth-test commit binding must select exactly one mapper admission commit"
+            )
+    if role == "adversarial-reviewer":
+        if set(binding) != {"phase2_receipt_commit", "admission_commit"} or set(commit_fields) != {
+            "phase2_receipt_commit", "admission_commit"
+        }:
+            raise T2RoleReceiptError(
+                "reviewer commit binding must select one Phase-2 receipt and mapper admission commit"
             )
         phase3_path = f"{TRACK_DIRECTORY}/phase3-reconciliation.json"
         try:
@@ -665,6 +689,13 @@ def _expanded_command_template(
         elif (
             field == "phase2_receipt_commit"
             and role in {"requirements-mapper", "adversarial-reviewer"}
+            and isinstance(commit_binding, Mapping)
+            and isinstance(commit_binding.get(field), str)
+        ):
+            values[field] = commit_binding[field]
+        elif (
+            field == "admission_commit"
+            and role in {"truth-test-author", "adversarial-reviewer"}
             and isinstance(commit_binding, Mapping)
             and isinstance(commit_binding.get(field), str)
         ):

@@ -19,6 +19,11 @@ TRACK_DIRECTORY = f"measure/tracks/{TRACK}"
 BASELINE = "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
 REPO_ROOT = Path(__file__).resolve().parents[3]
 PHASE3_PATH = f"{TRACK_DIRECTORY}/phase3-reconciliation.json"
+MAPPER_OUTPUT_PATHS = (
+    f"{TRACK_DIRECTORY}/denominator-discrepancies.json",
+    f"{TRACK_DIRECTORY}/denominator-method.md",
+    PHASE3_PATH,
+)
 PHASE2_RECEIPT_PATH = f"{TRACK_DIRECTORY}/role-receipts/evidence-collector.json"
 ADMISSION_MODULES = (
     "measure.tests.test_apk_source_denominator_inventory_phase0",
@@ -136,6 +141,71 @@ def _git_bytes(root: Path, revision: str, path: str) -> bytes:
     return result.stdout
 
 
+def _resolve_admission_revision(root: Path, phase0_revision: str) -> str:
+    """Resolves the strict descendant commit owning the fresh mapper outputs.
+
+    Args:
+        root: Repository containing the authority and mapper commits.
+        phase0_revision: Exact predecessor authority commit.
+
+    Returns:
+        Current committed mapper-output revision.
+
+    Raises:
+        T2EvidenceVerificationError: When HEAD is not the exact mapper commit lineage.
+    """
+    head = subprocess.check_output(
+        ("/usr/bin/git", "rev-parse", "HEAD"), cwd=root, text=True
+    ).strip()
+    ancestor = subprocess.run(
+        ("/usr/bin/git", "merge-base", "--is-ancestor", phase0_revision, head),
+        cwd=root,
+        check=False,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+    changed = subprocess.check_output(
+        ("/usr/bin/git", "diff-tree", "--no-commit-id", "--name-only", "-r", head),
+        cwd=root,
+        text=True,
+    ).splitlines()
+    if (
+        _COMMIT.fullmatch(head) is None
+        or head == phase0_revision
+        or ancestor.returncode != 0
+        or set(changed) != set(MAPPER_OUTPUT_PATHS)
+        or len(changed) != len(MAPPER_OUTPUT_PATHS)
+    ):
+        raise T2EvidenceVerificationError(
+            "admission HEAD must be the strict descendant commit owning exactly the mapper outputs"
+        )
+    return head
+
+
+def _validate_admission_revision(
+    root: Path, phase0_revision: str, admission_revision: str
+) -> str:
+    """Validates an explicit admission revision against current mapper HEAD.
+
+    Args:
+        root: Repository containing the commits.
+        phase0_revision: Exact Phase-0 authority commit.
+        admission_revision: Explicit mapper-output revision selected for admission.
+
+    Returns:
+        Validated admission revision.
+
+    Raises:
+        T2EvidenceVerificationError: When the explicit revision is not mapper HEAD.
+    """
+    resolved = _resolve_admission_revision(root, phase0_revision)
+    if admission_revision != resolved:
+        raise T2EvidenceVerificationError(
+            "explicit admission revision differs from current mapper HEAD"
+        )
+    return resolved
+
+
 def _json_object(path: Path) -> dict[str, Any]:
     """Loads one JSON object from a regular non-symlink file.
 
@@ -250,6 +320,7 @@ def validate_truth_report(
     path: Path,
     inventory: Sequence[Mapping[str, Any]],
     admission_command: str,
+    admission_revision: str,
 ) -> None:
     """Validates a provider-authored truth report against actual admission results.
 
@@ -257,6 +328,7 @@ def validate_truth_report(
         path: Worktree report path awaiting its adjacent commit.
         inventory: Independently derived Phase0-3 test inventory.
         admission_command: Exact sanitized command the report must record.
+        admission_revision: Exact descendant mapper commit whose tests executed.
 
     Returns:
         Nothing.
@@ -282,6 +354,7 @@ def validate_truth_report(
         or report.get("track_id") != TRACK
         or report.get("source_baseline_revision") != BASELINE
         or report.get("role") != "truth-test-author"
+        or report.get("admission_revision") != admission_revision
         or report.get("phase0_3_admission_command") != admission_command
         or _canonical_json(report.get("test_inventory"))
         != _canonical_json(expected_inventory)
@@ -436,6 +509,7 @@ def _regenerate_phase3(
 def validate_independent_review(
     path: Path,
     phase0_revision: str,
+    admission_revision: str,
     phase2_receipt_revision: str,
     required_paths: Sequence[str],
 ) -> None:
@@ -444,6 +518,7 @@ def validate_independent_review(
     Args:
         path: Worktree review path awaiting its adjacent commit.
         phase0_revision: Successor authority commit.
+        admission_revision: Exact descendant mapper-output commit.
         phase2_receipt_revision: Exact selected evidence receipt commit.
         required_paths: Frozen ordered reviewed-input set.
 
@@ -453,7 +528,10 @@ def validate_independent_review(
     Raises:
         T2EvidenceVerificationError: When any review assertion is unsupported.
     """
-    run_phase0_3_admission(phase0_revision)
+    admission_revision = _validate_admission_revision(
+        REPO_ROOT, phase0_revision, admission_revision
+    )
+    run_phase0_3_admission(admission_revision)
     review = _json_object(path)
     head = subprocess.check_output(("/usr/bin/git", "rev-parse", "HEAD"), cwd=REPO_ROOT, text=True).strip()
     ledger = build_reviewed_input_ledger(REPO_ROOT, head, required_paths)
@@ -479,6 +557,7 @@ def validate_independent_review(
         or review.get("status") != "independent-review-complete"
         or review.get("source_baseline_revision") != BASELINE
         or review.get("reviewer_role") != "adversarial-reviewer"
+        or review.get("admission_revision") != admission_revision
         or not isinstance(isolation, Mapping)
         or isolation.get("fork_turns") != "none"
         or _SHA256.fullmatch(str(isolation.get("fresh_prompt_sha256", ""))) is None
@@ -515,11 +594,14 @@ def _parse_args(arguments: Sequence[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--role", choices=("truth-test-author", "adversarial-reviewer"), required=True)
     parser.add_argument("--phase0-authority-revision", required=True)
+    parser.add_argument("--admission-revision", required=True)
     parser.add_argument("--phase2-receipt-revision")
     parser.add_argument("--output", type=Path, required=True)
     values = parser.parse_args(arguments)
     if _COMMIT.fullmatch(values.phase0_authority_revision) is None:
         parser.error("--phase0-authority-revision must be a full lowercase commit SHA")
+    if _COMMIT.fullmatch(values.admission_revision) is None:
+        parser.error("--admission-revision must be a full lowercase commit SHA")
     if values.role == "adversarial-reviewer":
         if _COMMIT.fullmatch(str(values.phase2_receipt_revision)) is None:
             parser.error("reviewer requires a full --phase2-receipt-revision")
@@ -550,11 +632,17 @@ def main(arguments: Sequence[str] | None = None) -> None:
     """
     values = _parse_args(sys.argv[1:] if arguments is None else arguments)
     if values.role == "truth-test-author":
-        inventory = run_phase0_3_admission(values.phase0_authority_revision)
+        admission_revision = _validate_admission_revision(
+            REPO_ROOT,
+            values.phase0_authority_revision,
+            values.admission_revision,
+        )
+        inventory = run_phase0_3_admission(admission_revision)
         validate_truth_report(
             values.output,
             inventory,
-            canonical_admission_command(values.phase0_authority_revision),
+            canonical_admission_command(admission_revision),
+            admission_revision,
         )
         return
     freeze = json.loads(_git_bytes(REPO_ROOT, values.phase0_authority_revision, f"{TRACK_DIRECTORY}/phase0-input-freeze.json"))
@@ -566,6 +654,7 @@ def main(arguments: Sequence[str] | None = None) -> None:
     validate_independent_review(
         values.output,
         values.phase0_authority_revision,
+        values.admission_revision,
         values.phase2_receipt_revision,
         required_paths,
     )
