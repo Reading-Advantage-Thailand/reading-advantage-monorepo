@@ -3,7 +3,7 @@ import { createPrivateKey, randomUUID } from "node:crypto";
 import {
   createPostgresCompanyIdentityRepository,
   createPostgresCompanyLoginRateLimit,
-  createPostgresDurableIdempotencyPort,
+  createCompanyIdentityDurableIdempotencyPort,
   createRs256IdentityTokenSigner,
   createCapabilityExecutor,
   createCompanyIdentityCapabilityReferences,
@@ -130,7 +130,7 @@ export async function getIdentityComposition(): Promise<IdentityComposition> {
           throw new Error("Company identity capability transactions are repository-owned.");
         },
       },
-      idempotency: createPostgresDurableIdempotencyPort(sql),
+      idempotency: createCompanyIdentityDurableIdempotencyPort(sql),
       audit: {
         append: async (event) => {
           await repository.appendAudit({
