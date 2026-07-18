@@ -16,7 +16,7 @@ import { db } from "@/lib/db";
 import { pastTopics } from "@reading-advantage/db/schema";
 import { eq } from "drizzle-orm";
 import { deduplicateTopics } from "@/lib/topic-dedup";
-import { requireMarketingSession } from "@/lib/auth";
+import { requireMarketingPermission } from "@/lib/auth";
 import { saveTopicsSchema } from "@/lib/topic-schema";
 
 /**
@@ -28,7 +28,7 @@ import { saveTopicsSchema } from "@/lib/topic-schema";
  * persistence.
  */
 export async function POST(request: Request) {
-  const guard = await requireMarketingSession(request);
+  const guard = await requireMarketingPermission(request, "video:topics:save");
   if (!guard.ok) {
     return guard.response;
   }

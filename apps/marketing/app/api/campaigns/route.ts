@@ -22,7 +22,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { campaigns } from "@reading-advantage/db/schema";
 import { desc } from "drizzle-orm";
-import { requireMarketingSession } from "@/lib/auth";
+import { requireMarketingPermission } from "@/lib/auth";
 import { createCampaignSchema } from "@/lib/campaign-schema";
 
 /**
@@ -31,7 +31,7 @@ import { createCampaignSchema } from "@/lib/campaign-schema";
  * Guard contract: 401 without a valid session, before any DB read.
  */
 export async function GET(request: Request) {
-  const guard = await requireMarketingSession(request);
+  const guard = await requireMarketingPermission(request, "campaign:list");
   if (!guard.ok) {
     return guard.response;
   }
@@ -59,7 +59,7 @@ export async function GET(request: Request) {
  * values from `packages/db/src/schema/marketing.ts`).
  */
 export async function POST(request: Request) {
-  const guard = await requireMarketingSession(request);
+  const guard = await requireMarketingPermission(request, "campaign:create");
   if (!guard.ok) {
     return guard.response;
   }

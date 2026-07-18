@@ -14,8 +14,9 @@
  */
 import { NextResponse } from "next/server";
 import { createAIClient } from "@reading-advantage/ai";
-import { requireMarketingSession } from "@/lib/auth";
+import { requireMarketingPermission } from "@/lib/auth";
 import { redactSecrets } from "@/lib/redact";
+import { settingsTestConnectionSchema } from "@/lib/settings-schema";
 
 /**
  * POST /api/settings/test-connection — validate an LLM connection.
@@ -23,23 +24,37 @@ import { redactSecrets } from "@/lib/redact";
  * Guard contract: 401 without a valid session, before any AI call.
  */
 export async function POST(request: Request) {
-  const guard = await requireMarketingSession(request);
+  const guard = await requireMarketingPermission(request, "settings:test-connection");
   if (!guard.ok) {
     return guard.response;
   }
 
-  let apiKey: string | undefined;
+  let body: unknown;
   try {
-    const body = (await request.json()) as {
-      provider?: string;
-      modelName?: string;
-      apiKey?: string;
-    };
-    apiKey = body.apiKey;
+    body = await request.json();
+  } catch {
+    return NextResponse.json(
+      { message: "Invalid JSON body" },
+      { status: 400 },
+    );
+  }
 
+  const parsed = settingsTestConnectionSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json(
+      {
+        message: "Invalid connection test payload",
+        error: parsed.error.message,
+      },
+      { status: 400 },
+    );
+  }
+
+  const apiKey = parsed.data.apiKey;
+  try {
     const client = createAIClient({
-      provider: body.provider as "google" | "openai",
-      model: body.modelName,
+      provider: parsed.data.provider,
+      model: parsed.data.modelName,
       apiKey,
     });
 

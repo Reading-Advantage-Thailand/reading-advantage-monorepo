@@ -27,7 +27,7 @@ import { pastTopics, settings } from "@reading-advantage/db/schema";
 import { eq, or } from "drizzle-orm";
 import { buildTopicResearchPrompt } from "@/lib/topic-research";
 import { deduplicateTopics } from "@/lib/topic-dedup";
-import { requireMarketingSession } from "@/lib/auth";
+import { requireMarketingPermission } from "@/lib/auth";
 import { researchTopicsSchema } from "@/lib/topic-schema";
 import { redactSecrets } from "@/lib/redact";
 import { resolveMarketingAIConfig } from "@/lib/ai-credentials";
@@ -41,7 +41,7 @@ import { resolveMarketingAIConfig } from "@/lib/ai-credentials";
  * prompt is built.
  */
 export async function POST(request: Request) {
-  const guard = await requireMarketingSession(request);
+  const guard = await requireMarketingPermission(request, "video:topics:research");
   if (!guard.ok) {
     return guard.response;
   }

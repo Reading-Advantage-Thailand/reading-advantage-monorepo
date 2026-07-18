@@ -23,6 +23,10 @@ import {
   marketingSessionUser,
   readMarketingCookie,
 } from "@/lib/company-oidc";
+import {
+  hasMarketingPermission,
+  type MarketingPermission,
+} from "./marketing-permissions";
 
 const LEGACY_MARKETING_ROLES: ReadonlySet<Role> = new Set(["ADMIN"]);
 
@@ -44,7 +48,7 @@ export function hasLegacyMarketingAccess(role: Role): boolean {
 export async function requireMarketingSession(
   request: Request,
 ): Promise<
-  | { ok: true; session: { user: ReturnType<typeof marketingSessionUser> } }
+  | { ok: true; session: { user: NonNullable<ReturnType<typeof marketingSessionUser>> } }
   | { ok: false; response: Response }
 > {
   const token = readMarketingCookie(request, MARKETING_SESSION_COOKIE);
@@ -68,7 +72,8 @@ export async function requireMarketingSession(
         }),
       };
     }
-    if (!session.identity.roles.some((role) => role === "MEMBER" || role === "ADMIN")) {
+    const user = marketingSessionUser(session.identity);
+    if (!user) {
       return {
         ok: false,
         response: new Response(JSON.stringify({ message: "Marketing access required" }), {
@@ -77,7 +82,7 @@ export async function requireMarketingSession(
         }),
       };
     }
-    return { ok: true, session: { user: marketingSessionUser(session.identity) } };
+    return { ok: true, session: { user } };
   } catch {
     return {
       ok: false,
@@ -87,4 +92,32 @@ export async function requireMarketingSession(
       }),
     };
   }
+}
+
+/**
+ * Requires an active Marketing session authorized for one named operation.
+ * @param request The route request carrying the application session cookie.
+ * @param permission The reviewed Marketing permission required by the route.
+ * @returns The authorized session or a response that the route must return.
+ * @throws Unexpected authentication or database failures.
+ */
+export async function requireMarketingPermission(
+  request: Request,
+  permission: MarketingPermission,
+): ReturnType<typeof requireMarketingSession> {
+  const guard = await requireMarketingSession(request);
+  if (!guard.ok) return guard;
+  if (!hasMarketingPermission(guard.session.user.role, permission)) {
+    return {
+      ok: false,
+      response: new Response(
+        JSON.stringify({ message: "Marketing permission required" }),
+        {
+          status: 403,
+          headers: { "content-type": "application/json" },
+        },
+      ),
+    };
+  }
+  return guard;
 }

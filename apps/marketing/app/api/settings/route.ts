@@ -20,7 +20,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { settings } from "@reading-advantage/db/schema";
 import { encrypt } from "@/lib/encryption";
-import { requireMarketingSession } from "@/lib/auth";
+import { requireMarketingPermission } from "@/lib/auth";
 import { settingsPostSchema } from "@/lib/settings-schema";
 import {
   isMarketingSecretSetting,
@@ -39,7 +39,7 @@ import {
  * @returns A masked settings response or an authentication/load error.
  */
 export async function GET(request: Request) {
-  const guard = await requireMarketingSession(request);
+  const guard = await requireMarketingPermission(request, "settings:read");
   if (!guard.ok) {
     return guard.response;
   }
@@ -75,7 +75,7 @@ export async function GET(request: Request) {
  * @returns A success response or a validation/authentication/save error.
  */
 export async function POST(request: Request) {
-  const guard = await requireMarketingSession(request);
+  const guard = await requireMarketingPermission(request, "settings:write");
   if (!guard.ok) {
     return guard.response;
   }

@@ -4,6 +4,8 @@ import {
   type CompanyOidcIdentity,
 } from "@reading-advantage/auth";
 
+import { resolveMarketingRole } from "./marketing-permissions";
+
 /** Host-only opaque Marketing application-session cookie. */
 export const MARKETING_SESSION_COOKIE = "__Host-ra_marketing_session";
 /** Host-only short-lived Marketing authorization transaction cookie. */
@@ -68,23 +70,20 @@ export function readMarketingCookie(request: Request, name: string): string | un
 /**
  * Produces the compatibility user projection consumed by the current UI provider.
  * @param identity Verified Marketing audience identity.
- * @returns Secret-free application-local user projection.
+ * @returns Secret-free application-local user projection, or null without a Marketing role.
  */
 export function marketingSessionUser(identity: CompanyOidcIdentity) {
-  const companyRole = (["ADMIN", "MEMBER"] as const)
-    .find((candidate) => identity.roles.includes(candidate));
-  if (!companyRole) {
-    throw new Error("Accounts session has no recognized Marketing role.");
-  }
+  const marketingRole = resolveMarketingRole(identity.roles);
+  if (!marketingRole) return null;
   return {
     id: identity.sub,
-    username: identity.sub,
-    name: null,
-    role: companyRole === "ADMIN" ? "ADMIN" : "SYSTEM",
+    username: identity.username,
+    name: identity.displayName,
+    role: marketingRole,
     schoolId: null,
     xp: 0,
     level: 1,
     cefrLevel: "N/A",
-    companyRoles: identity.roles,
+    applicationRoles: identity.roles,
   };
 }

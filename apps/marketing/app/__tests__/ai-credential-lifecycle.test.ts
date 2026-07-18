@@ -10,12 +10,16 @@ const { aiConfigs, createAIClientMock, databaseState, generateTextMock } =
     generateTextMock: vi.fn(),
   }));
 
-vi.mock("@/lib/auth", () => ({
-  requireMarketingSession: vi.fn().mockResolvedValue({
+vi.mock("@/lib/auth", () => {
+  const allowMarketingRequest = vi.fn().mockResolvedValue({
     ok: true,
     session: { user: { id: "marketing-admin", role: "ADMIN" } },
-  }),
-}));
+  });
+  return {
+    requireMarketingPermission: allowMarketingRequest,
+    requireMarketingSession: allowMarketingRequest,
+  };
+});
 
 vi.mock("@/lib/ai", () => ({
   createAIClient: createAIClientMock,

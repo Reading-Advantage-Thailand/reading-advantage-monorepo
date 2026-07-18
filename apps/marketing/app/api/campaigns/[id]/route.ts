@@ -27,7 +27,7 @@ import {
   type CampaignStatus,
   isValidCampaignStatusTransition,
 } from "@/lib/campaign-status";
-import { requireMarketingSession } from "@/lib/auth";
+import { requireMarketingPermission } from "@/lib/auth";
 import { updateCampaignSchema } from "@/lib/campaign-schema";
 
 /**
@@ -39,7 +39,7 @@ export async function GET(
   request: Request,
   { params }: { params: { id: string } },
 ) {
-  const guard = await requireMarketingSession(request);
+  const guard = await requireMarketingPermission(request, "campaign:read");
   if (!guard.ok) {
     return guard.response;
   }
@@ -79,7 +79,7 @@ export async function PATCH(
   request: Request,
   { params }: { params: { id: string } },
 ) {
-  const guard = await requireMarketingSession(request);
+  const guard = await requireMarketingPermission(request, "campaign:update");
   if (!guard.ok) {
     return guard.response;
   }

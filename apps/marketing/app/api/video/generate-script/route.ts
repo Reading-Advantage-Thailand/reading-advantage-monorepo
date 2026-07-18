@@ -29,7 +29,7 @@ import { settings } from "@reading-advantage/db/schema";
 import { or, eq } from "drizzle-orm";
 import { buildScriptGenerationPrompt } from "@/lib/script-generation";
 import { scriptSchema } from "@/lib/script-schema";
-import { requireMarketingSession } from "@/lib/auth";
+import { requireMarketingPermission } from "@/lib/auth";
 import { generateScriptSchema } from "@/lib/script-request-schema";
 import { redactSecrets } from "@/lib/redact";
 import { resolveMarketingAIConfig } from "@/lib/ai-credentials";
@@ -43,7 +43,7 @@ import { resolveMarketingAIConfig } from "@/lib/ai-credentials";
  * prompt is built.
  */
 export async function POST(request: Request) {
-  const guard = await requireMarketingSession(request);
+  const guard = await requireMarketingPermission(request, "video:script:generate");
   if (!guard.ok) {
     return guard.response;
   }
