@@ -51,7 +51,7 @@ echo "── Public routes ──"
 
 check "Homepage loads"           GET  "/"               200
 check "Login page loads"         GET  "/login"           200
-check "Settings page redirects"  GET  "/settings"        302
+check "Settings auth shell loads" GET  "/settings"        200
 
 # ── API health ─────────────────────────────────────────────────────────
 echo ""
@@ -59,6 +59,7 @@ echo "── API health ──"
 
 check "Auth session (no cookie)" GET  "/api/auth/session"  200
 check "DB health"                GET  "/api/health/db"     200
+check "Settings (no auth)"       GET  "/api/settings"      401
 check "Campaigns list (no auth)" GET  "/api/campaigns"     401
 
 # ── Summary ────────────────────────────────────────────────────────────
