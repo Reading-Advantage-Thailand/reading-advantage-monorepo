@@ -1,4 +1,4 @@
-import { and, eq, sql } from "drizzle-orm";
+import { and, eq, inArray, sql } from "drizzle-orm";
 import {
   salesProgress,
   salesRoleplayAttempts,
@@ -7,6 +7,7 @@ import {
   salesChatMessages,
   salesRubrics,
   salesQuizQuestions,
+  companyProductPrincipals,
   users,
 } from "@reading-advantage/db/schema";
 import { assertCan } from "@reading-advantage/auth";
@@ -238,7 +239,8 @@ export async function createRoleplayAttempt(
  * Phase 4 IDOR guard: the attempt is SELECTed BEFORE any UPDATE so a caller
  * cannot mutate an attempt owned by another user. Attempt ownership is
  * `user.id === attempt.userId`, or a `SALES_ADMIN` whose tenant scoping is
- * satisfied by a users.schoolId lookup. A failed check throws `SalesAuthError`
+ * satisfied by a durable company mapping or the legacy school boundary. A failed
+ * check throws `SalesAuthError`
  * (FORBIDDEN envelope at the API layer) and `db.update` is never invoked.
  * @param ctx - The domain context
  * @param input - The attempt id + evaluation result
@@ -272,31 +274,83 @@ export async function saveAttemptEvaluation(
     if (user.role !== "SALES_ADMIN") {
       throw new SalesAuthError();
     }
-    // Tenant-scoped admin override: verify the attempt owner belongs to the
-    // admin's tenant before mutating the row. The users table is FLAT, so
-    // querying through the tenant-scoped db auto-injects eq(users.schoolId,
-    // tenant.schoolId); an explicit second check defends against a bypass.
-    if (!tenant.schoolId) {
-      throw new SalesAuthError("attempt not found");
+    const companyScope =
+      tenant.organizationId && tenant.organizationKey
+        ? {
+            organizationId: tenant.organizationId,
+            organizationKey: tenant.organizationKey,
+          }
+        : null;
+    if (companyScope) {
+      const [owner] = await rawDb
+        .select({
+          id: users.id,
+          username: users.username,
+          name: users.name,
+          role: users.role,
+          schoolId: users.schoolId,
+          xp: users.xp,
+          level: users.level,
+          cefrLevel: users.cefrLevel,
+          organizationId: companyProductPrincipals.organizationId,
+          organizationKey: companyProductPrincipals.organizationKey,
+        })
+        .from(companyProductPrincipals)
+        .innerJoin(users, eq(users.id, companyProductPrincipals.localUserId))
+        .where(
+          and(
+            eq(
+              companyProductPrincipals.organizationId,
+              companyScope.organizationId,
+            ),
+            eq(
+              companyProductPrincipals.organizationKey,
+              companyScope.organizationKey,
+            ),
+            eq(companyProductPrincipals.applicationKey, "sales"),
+            eq(companyProductPrincipals.localUserId, existing.userId),
+            inArray(companyProductPrincipals.roleKey, [
+              "SALES_REP",
+              "SALES_ADMIN",
+            ]),
+          ),
+        )
+        .limit(1);
+      if (
+        !owner ||
+        owner.organizationId !== companyScope.organizationId ||
+        owner.organizationKey !== companyScope.organizationKey
+      ) {
+        throw new SalesAuthError("attempt not found");
+      }
+      ownerUser = {
+        ...owner,
+        organizationId: owner.organizationId,
+        organizationKey: owner.organizationKey,
+      } as SalesDomainContext["user"];
+    } else {
+      if (!tenant.schoolId) {
+        throw new SalesAuthError("attempt not found");
+      }
+      const [owner] = await db
+        .select({
+          id: users.id,
+          username: users.username,
+          name: users.name,
+          role: users.role,
+          schoolId: users.schoolId,
+          xp: users.xp,
+          level: users.level,
+          cefrLevel: users.cefrLevel,
+        })
+        .from(users)
+        .where(eq(users.id, existing.userId))
+        .limit(1);
+      if (!owner || owner.schoolId !== tenant.schoolId) {
+        throw new SalesAuthError("attempt not found");
+      }
+      ownerUser = owner as SalesDomainContext["user"];
     }
-    const [owner] = await db
-      .select({
-        id: users.id,
-        username: users.username,
-        name: users.name,
-        role: users.role,
-        schoolId: users.schoolId,
-        xp: users.xp,
-        level: users.level,
-        cefrLevel: users.cefrLevel,
-      })
-      .from(users)
-      .where(eq(users.id, existing.userId))
-      .limit(1);
-    if (!owner || owner.schoolId !== tenant.schoolId) {
-      throw new SalesAuthError("attempt not found");
-    }
-    ownerUser = owner as unknown as SalesDomainContext["user"];
   }
   const progressUser = ownerUser ?? user;
   const accessibleScenario = await requireAccessibleScenario(

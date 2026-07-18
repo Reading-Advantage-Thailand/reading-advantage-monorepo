@@ -198,13 +198,22 @@ describe("resolveSalesCompanyPrincipal", () => {
       .toThrow("mapping manifest is required");
   });
 
-  it("rejects removed Sales roles before opening a transaction", async () => {
+  it("returns no principal for removed Sales roles before opening a transaction", async () => {
     const { database } = mappedDatabase();
     await expect(resolveSalesCompanyPrincipal(database, {
       ...baseIdentity,
       roles: [],
-    })).rejects.toThrow("no recognized Sales role");
+    })).resolves.toBeNull();
     expect(database.transaction).not.toHaveBeenCalled();
+  });
+
+  it("projects the trusted company organization onto an existing Sales principal", async () => {
+    const { database } = mappedDatabase();
+    await expect(resolveSalesCompanyPrincipal(database, baseIdentity)).resolves
+      .toMatchObject({
+        organizationId: baseIdentity.organizationId,
+        organizationKey: baseIdentity.organizationKey,
+      });
   });
 
   it("rolls back first-login provisioning when mapping persistence fails", async () => {

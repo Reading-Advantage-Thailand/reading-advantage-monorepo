@@ -79,7 +79,14 @@ export async function createContext(
           ...opts.principal,
           role: roleSchema.parse(opts.principal.role),
         };
-        auth = { user, tenant: { schoolId: user.schoolId } };
+        auth = {
+          user,
+          tenant: {
+            schoolId: user.schoolId,
+            organizationId: user.organizationId ?? null,
+            organizationKey: user.organizationKey ?? null,
+          },
+        };
       }
     } else {
       const token = await getAuthToken(opts);

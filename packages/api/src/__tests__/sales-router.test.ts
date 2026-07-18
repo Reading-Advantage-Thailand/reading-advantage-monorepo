@@ -126,6 +126,13 @@ beforeEach(() => {
 });
 
 describe("salesRouter", () => {
+  it("rejects an anonymous Sales caller with UNAUTHORIZED", async () => {
+    const caller = createCaller(null);
+    await expect(caller.sales.modules()).rejects.toMatchObject({
+      code: "UNAUTHORIZED",
+    });
+  });
+
   it("modules calls getModules domain function", async () => {
     vi.mocked(getModules).mockResolvedValue([
       {

@@ -196,6 +196,127 @@ describe("Sales authorization / IDOR hardening", () => {
     ).toBe(1);
   });
 
+  it("saveAttemptEvaluation allows same-company SALES_ADMIN oversight without a school", async () => {
+    const organizationId = "20000000-0000-4000-8000-000000000003";
+    const repAttempt = {
+      id: "attempt-rep-a",
+      scenarioId: "scenario-1",
+      userId: "rep-a",
+      audioStorageKey: null,
+      durationMs: 5000,
+      transcriptExcerpt: null,
+      llmScoreJson: null,
+      overallScore: null,
+      passed: null,
+      llmFeedback: null,
+      attemptNumber: 1,
+      createdAt: new Date(),
+    };
+    const db = createMockDb({
+      selectSequence: [
+        [repAttempt],
+        [
+          {
+            ...ownerRecordRepA,
+            schoolId: null,
+            organizationId,
+            organizationKey: "internal-company",
+          },
+        ],
+        [approvedScenario],
+        [approvedRoleplayLesson],
+        [approvedModule],
+        [approvedRoleplayLesson],
+        [],
+        [approvedRubric],
+      ],
+      updateReturning: [repAttempt],
+    });
+
+    const result = await saveAttemptEvaluation(
+      {
+        db: wrapDb(db, { schoolId: null }),
+        user: {
+          ...salesAdminA,
+          schoolId: null,
+          organizationId,
+          organizationKey: "internal-company",
+        },
+        tenant: {
+          schoolId: null,
+          organizationId,
+          organizationKey: "internal-company",
+        },
+      },
+      {
+        attemptId: "attempt-rep-a",
+        evaluation: baseEvaluation,
+        rubricId: "rubric-1",
+      },
+    );
+
+    expect(result.id).toBe("attempt-rep-a");
+    expect(db.update as ReturnType<typeof vi.fn>).toHaveBeenCalledTimes(1);
+  });
+
+  it("saveAttemptEvaluation rejects different-company SALES_ADMIN oversight", async () => {
+    const organizationId = "20000000-0000-4000-8000-000000000003";
+    const repAttempt = {
+      id: "attempt-rep-b",
+      scenarioId: "scenario-1",
+      userId: "rep-b",
+      audioStorageKey: null,
+      durationMs: 5000,
+      transcriptExcerpt: null,
+      llmScoreJson: null,
+      overallScore: null,
+      passed: null,
+      llmFeedback: null,
+      attemptNumber: 1,
+      createdAt: new Date(),
+    };
+    const db = createMockDb({
+      selectSequence: [
+        [repAttempt],
+        [
+          {
+            ...ownerRecordRepA,
+            id: "rep-b",
+            schoolId: null,
+            organizationId: "20000000-0000-4000-8000-000000000004",
+            organizationKey: "future-company",
+          },
+        ],
+      ],
+      updateReturning: [repAttempt],
+    });
+
+    await expect(
+      saveAttemptEvaluation(
+        {
+          db: wrapDb(db, { schoolId: null }),
+          user: {
+            ...salesAdminA,
+            schoolId: null,
+            organizationId,
+            organizationKey: "internal-company",
+          },
+          tenant: {
+            schoolId: null,
+            organizationId,
+            organizationKey: "internal-company",
+          },
+        },
+        {
+          attemptId: "attempt-rep-b",
+          evaluation: baseEvaluation,
+          rubricId: "rubric-1",
+        },
+      ),
+    ).rejects.toThrow("attempt not found");
+    expect(db.update as ReturnType<typeof vi.fn>).not.toHaveBeenCalled();
+  });
+
   it("saveAttemptEvaluation rejects cross-tenant SALES_ADMIN update", async () => {
     const repAttempt = {
       id: "attempt-rep-a",

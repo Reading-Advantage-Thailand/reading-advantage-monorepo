@@ -71,6 +71,17 @@ describe("POST /api/chat — FR-1 authorization gate", () => {
     vi.clearAllMocks();
   });
 
+  it("returns 401 when the Sales role was removed", async () => {
+    mockAuthenticateSalesRequest.mockResolvedValue(null);
+
+    const response = await POST(
+      makeRequest({ messages: [{ role: "user", content: "hi" }] }),
+    );
+
+    expect(response.status).toBe(401);
+    expect(mockGetAIClient).not.toHaveBeenCalled();
+  });
+
   it("rejects authenticated non-sales user (STUDENT) with 401 or 403", async () => {
     mockAuthenticateSalesRequest.mockResolvedValue(studentSession());
 

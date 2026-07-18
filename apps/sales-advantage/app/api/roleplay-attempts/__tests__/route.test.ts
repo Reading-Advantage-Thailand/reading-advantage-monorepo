@@ -133,6 +133,16 @@ describe("POST /api/roleplay-attempts — FR-4 grounding + storage integrity", (
     });
   });
 
+  it("returns 401 before product work when the Sales role was removed", async () => {
+    mockAuthenticateSalesRequest.mockResolvedValue(null);
+
+    const response = await POST(makeRequest(buildAudioFormData()));
+
+    expect(response.status).toBe(401);
+    expect(mockCheckRoleplayRateLimit).not.toHaveBeenCalled();
+    expect(mockGetRoleplayEvaluationContext).not.toHaveBeenCalled();
+  });
+
   it("returns an exact shared-limit 429 before reading the upload", async () => {
     mockCheckRoleplayRateLimit.mockResolvedValue({
       allowed: false,

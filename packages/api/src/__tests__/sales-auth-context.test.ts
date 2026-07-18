@@ -107,6 +107,30 @@ describe("Sales auth context integration", () => {
     expect(mockValidateSession).not.toHaveBeenCalled();
   });
 
+  it("preserves the verified company organization without requiring a school", async () => {
+    const ctx = await createContext({
+      mode: "verified-principal",
+      principal: {
+        id: "sales-company-admin",
+        username: "sales.admin",
+        name: "Sales Admin",
+        role: "SALES_ADMIN",
+        schoolId: null,
+        organizationId: "20000000-0000-4000-8000-000000000003",
+        organizationKey: "internal-company",
+        xp: 0,
+        level: 1,
+        cefrLevel: "N/A",
+      },
+    });
+
+    expect(ctx.auth?.tenant).toEqual({
+      schoolId: null,
+      organizationId: "20000000-0000-4000-8000-000000000003",
+      organizationKey: "internal-company",
+    });
+  });
+
   it("SALES_REP session produces a non-null auth context", async () => {
     mockValidateSession.mockResolvedValue(salesSession("SALES_REP"));
     const ctx = await createContext();

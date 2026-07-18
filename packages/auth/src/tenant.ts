@@ -3,6 +3,10 @@ import { AuthError } from "./assert.js";
 
 export interface Tenant {
   schoolId: string | null;
+  /** Verified company organization used by internal employee applications. */
+  organizationId?: string | null;
+  /** Canonical company organization key paired with organizationId. */
+  organizationKey?: string | null;
 }
 
 export interface UserContext {
@@ -11,6 +15,10 @@ export interface UserContext {
   name: string | null;
   role: Role;
   schoolId: string | null;
+  /** Verified company organization used by internal employee applications. */
+  organizationId?: string | null;
+  /** Canonical company organization key paired with organizationId. */
+  organizationKey?: string | null;
   license_id?: string | null;
   xp: number;
   level: number;

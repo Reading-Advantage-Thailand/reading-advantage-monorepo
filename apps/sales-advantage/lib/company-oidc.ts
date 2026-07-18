@@ -75,7 +75,7 @@ export function readSalesCookie(request: Request, name: string): string | undefi
  */
 export async function salesSessionUser(
   identity: CompanyOidcIdentity,
-): Promise<UserContext> {
+): Promise<UserContext | null> {
   return resolveSalesCompanyPrincipal(db, identity);
 }
 

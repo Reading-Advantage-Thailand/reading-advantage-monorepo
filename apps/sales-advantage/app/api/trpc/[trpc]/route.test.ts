@@ -57,6 +57,23 @@ describe("Sales tRPC company-principal boundary", () => {
     );
   });
 
+  it("uses anonymous verified-principal context when the Sales role was removed", async () => {
+    mocks.readSalesCookie.mockReturnValue("opaque-sales-session");
+    mocks.introspect.mockResolvedValue({ identity: { roles: [] } });
+    mocks.salesSessionUser.mockResolvedValue(null);
+
+    const response = await POST(new Request(
+      "https://sales.reading-advantage.com/api/trpc",
+      { method: "POST" },
+    ));
+
+    expect(response.status).toBe(204);
+    expect(mocks.createContext).toHaveBeenCalledWith({
+      mode: "verified-principal",
+      principal: null,
+    });
+  });
+
   it("passes only a principal resolved from the Sales application session", async () => {
     const principal = { id: "local-sales-principal", role: "SALES_REP" };
     mocks.readSalesCookie.mockReturnValue("opaque-sales-session");

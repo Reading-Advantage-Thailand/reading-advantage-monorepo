@@ -25,14 +25,14 @@ export interface SalesCompanyIdentity {
   readonly roles: readonly string[];
 }
 
-function salesRole(identity: SalesCompanyIdentity): "SALES_ADMIN" | "SALES_REP" {
+function salesRole(identity: SalesCompanyIdentity): "SALES_ADMIN" | "SALES_REP" | null {
   if (identity.aud !== "sales") throw new Error("Sales identity audience is invalid.");
   if (identity.organizationKey !== "internal-company") {
     throw new Error("Sales identity organization is invalid.");
   }
   if (identity.roles.includes("SALES_ADMIN")) return "SALES_ADMIN";
   if (identity.roles.includes("SALES_REP")) return "SALES_REP";
-  throw new Error("Accounts session has no recognized Sales role.");
+  return null;
 }
 
 /**
@@ -57,14 +57,15 @@ function isUniqueViolation(error: unknown): boolean {
  * Resolves an explicit Sales company-account mapping without heuristic merging.
  * @param database Product database containing local users and durable mappings.
  * @param identity Verified Accounts Sales identity.
- * @returns Existing mapped principal or a newly provisioned unclaimed principal.
+ * @returns Existing mapped principal, a newly provisioned principal, or null without a Sales role.
  * @throws When an existing local ID or username requires an operator mapping manifest.
  */
 export async function resolveSalesCompanyPrincipal(
   database: DB,
   identity: SalesCompanyIdentity,
-): Promise<UserContext> {
+): Promise<UserContext | null> {
   const role = salesRole(identity);
+  if (!role) return null;
   return database.transaction(async (tx) => {
     await tx.execute(sql`select pg_advisory_xact_lock(hashtextextended(${`sales:${identity.organizationId}:${identity.sub}`}, 0))`);
     const [mapped] = await tx
@@ -98,7 +99,12 @@ export async function resolveSalesCompanyPrincipal(
           eq(companyProductPrincipals.companyAccountId, identity.sub),
           eq(companyProductPrincipals.applicationKey, "sales"),
         ));
-      return { ...mapped, role };
+      return {
+        ...mapped,
+        role,
+        organizationId: identity.organizationId,
+        organizationKey: identity.organizationKey,
+      };
     }
 
     const [occupiedId] = await tx.select({ id: users.id }).from(users)
@@ -135,7 +141,12 @@ export async function resolveSalesCompanyPrincipal(
         localUserId: created.id,
         roleKey: role,
       });
-      return { ...created, role };
+      return {
+        ...created,
+        role,
+        organizationId: identity.organizationId,
+        organizationKey: identity.organizationKey,
+      };
     } catch (error) {
       if (isUniqueViolation(error)) {
         throw new Error(
