@@ -56,13 +56,13 @@ Do not start Phase 2 until this is green — the app currently leaks decrypted A
   - [x] If `vinext start` is unsuitable for a slim container, document the chosen alternative (e.g. copy full app + prod `node_modules`) as a tech-debt note
     - **Decision:** runner stage copies full `node_modules` from builder. Vinext has no standalone output; copying only `dist/` + re-installing prod deps would require re-resolving pnpm workspaces, which is fragile. The full-`node_modules` approach is reliable and well-understood. Tech-debt note added to `measure/tech-debt.md` row.
 - [x] Task: Write `apps/marketing/Dockerfile` per the above; `docker build -f apps/marketing/Dockerfile .` succeeds and the container boots and serves `/`
-  - Written at `apps/marketing/Dockerfile`. The exact clean release snapshot passed all 18 dependency-aware build tasks locally and Cloud Build produced image digest `sha256:45706a7b5f893b5e288302bb517a2717c8cee48ec03cf6bc48ca8c589522ef9e`.
+  - Written at `apps/marketing/Dockerfile`. The exact clean release snapshot passed all 18 dependency-aware build tasks locally and Cloud Build produced image digest `sha256:e9f0e5c456b05d4d2b0586964e11d5db57b890f9ad93c27af92f0bc8e50533fc`.
 - [x] Task: Write `apps/marketing/cloudbuild.yaml`
   - [x] build-image → push-image → migrate-db (`@reading-advantage/db migrate`, marketing tables / migration `0021`) → doctor-check → deploy-cloudrun → allow-public-invoker
   - [x] service name `marketing`, region `asia-southeast1`, Cloud SQL attach, `--set-secrets` for `DATABASE_URL`, `AUTH_SECRET`, the LLM provider keys, and the settings-encryption key
   - Written at `apps/marketing/cloudbuild.yaml`. Uses `$PROJECT_ID` for AR path (`asia-southeast1-docker.pkg.dev/$PROJECT_ID/containers/marketing`). Migrate step references `0021_sales_advantage.sql` which creates the marketing tables.
 - [x] Task: Provision Cloud SQL marketing runtime DB (or schema) with migration `0021` applied; wire `DATABASE_URL`/`DIRECT_DATABASE_URL`
-  - Production database `marketing` uses separate non-inheriting migration/runtime roles. Build `d34c4d07-b8cc-4787-9f44-d4256dde7c8f` passed migrate, doctor, grants, and runtime privilege probes.
+  - Production database `marketing` uses separate non-inheriting migration/runtime roles. Final build `7a6597f5-5a51-406e-98c5-5e264b8358bf` passed migrate, doctor, grants, and runtime privilege probes.
 - [x] Task: Provision Secret Manager entries for every secret referenced by cloudbuild
   - Runtime identity `marketing-cloud-run@reading-advantage.iam.gserviceaccount.com` has access only to the runtime URL and Marketing runtime secrets; Cloud Build holds migration URL access.
 - [x] Task: Complete `apps/marketing/.env.example` — full runtime surface with comments (currently only 230 bytes)
@@ -70,7 +70,7 @@ Do not start Phase 2 until this is green — the app currently leaks decrypted A
 - [x] Task: Write a post-deploy smoke script (hit `/`, `GET /api/health/db`, an authenticated campaigns fetch)
   - Written at `apps/marketing/scripts/marketing-smoke.sh`. Live Cloud Run run passed 7/7: public shell routes 200, session and DB health 200, settings/campaign APIs 401 without auth. Playwright separately verified `/settings` receives the API 401 and redirects to `/login` after hydration.
 - [x] Task: Docker build verification
-  - Cloud Build `d34c4d07-b8cc-4787-9f44-d4256dde7c8f` completed all image, database, deploy, and invoker steps successfully on 2026-07-18.
+  - Cloud Build `7a6597f5-5a51-406e-98c5-5e264b8358bf` completed all image, database, deploy, and invoker steps successfully on 2026-07-18. Final startup logs contain no module-format warning.
 - [b] Task: Measure — User Manual Verification 'Deploy infrastructure'
 
 ---
@@ -78,9 +78,9 @@ Do not start Phase 2 until this is green — the app currently leaks decrypted A
 ## Phase 3: Deploy + manual QA
 
 - [x] Task: `gcloud builds submit --config apps/marketing/cloudbuild.yaml`; confirm migrate + doctor + deploy steps pass
-  - Build `d34c4d07-b8cc-4787-9f44-d4256dde7c8f`: SUCCESS. Ready revision: `marketing-00001-l4x`; service URL: `https://marketing-hxamzdhgwa-as.a.run.app`.
+  - Build `7a6597f5-5a51-406e-98c5-5e264b8358bf`: SUCCESS. Ready revision: `marketing-00002-xxb`; service URL: `https://marketing-hxamzdhgwa-as.a.run.app`.
 - [x] Task: Run the smoke script against the live Cloud Run URL; confirm `GET /api/health/db` green
-  - Live smoke: 7/7 passed, including DB health 200 and unauthenticated protected APIs 401.
+  - Live custom-domain smoke at `https://marketing.reading-advantage.com`: 7/7 passed, including DB health 200 and unauthenticated protected APIs 401. Cloud Run reports route and certificate ready.
 - [~] Task: Manual end-to-end QA (Phikul) — login → create campaign → research topics → dedup → generate Thai script (5–7 scenes) → edit scenes → persist project → reload; record the result
 - [x] Task: Confirm no route exposes decrypted secrets in production (re-check `GET /api/settings` against the live service)
   - Live `GET /api/settings` returned 401 without a session; browser redirect landed on `/login`.

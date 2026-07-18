@@ -16,7 +16,7 @@ The monorepo (`bodangren/reading-advantage-monorepo`) is **not** the deploy sour
 | **codecamp-advantage** | Dockerfile + cloudbuild, no CD | ✅ yes | `codecamp-advantage` / `codecamp-advantage` (rev 00017) | 2026-06-11 | **Manual `gcloud builds submit`** — no trigger in any region; every build has an empty `buildTriggerId`; builds run in the `global` region. See tech-debt 2026-05-18. |
 | **science-advantage** | none | ❌ Cloud Run API not enabled on the project | never | — | Not deployed. |
 | **advantage-games** | none | ❌ | never | — | Not deployed. |
-| **marketing** | vinext Dockerfile + cloudbuild, no CD | ✅ yes | `reading-advantage` / `marketing` (rev `00001-l4x`) | 2026-07-18 | **Manual monorepo `gcloud builds submit`**, build `d34c4d07-b8cc-4787-9f44-d4256dde7c8f`; Cloud Run URL live. Custom-domain mapping created, awaiting DNS/certificate. |
+| **marketing** | vinext Dockerfile + cloudbuild, no CD | ✅ yes | `reading-advantage` / `marketing` (rev `00002-xxb`) | 2026-07-18 | **Manual monorepo `gcloud builds submit`**, build `7a6597f5-5a51-406e-98c5-5e264b8358bf`; `https://marketing.reading-advantage.com` is live with managed HTTPS. |
 | **sales-advantage** | none | ❌ | never | — | Not deployed. |
 
 ## Deploy-source taxonomy
