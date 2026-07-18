@@ -105,27 +105,27 @@ function stubLLMSettings() {
 
 const validScriptJson = JSON.stringify([
   {
-    narration: "Welcome to Reading Advantage.",
+    narration: "ยินดีต้อนรับสู่รีดดิ้งแอดแวนเทจ",
     imagePrompt: "A child reading a book",
     motionDirection: "Slow zoom in",
   },
   {
-    narration: "Our platform adapts to every learner.",
+    narration: "แพลตฟอร์มของเราปรับให้เหมาะกับผู้เรียนทุกคน",
     imagePrompt: "A tablet showing a quiz",
     motionDirection: "Pan right",
   },
   {
-    narration: "Teachers track progress in real time.",
+    narration: "ครูติดตามความก้าวหน้าได้แบบเรียลไทม์",
     imagePrompt: "A teacher dashboard",
     motionDirection: "Static",
   },
   {
-    narration: "Students stay motivated with games.",
+    narration: "นักเรียนมีแรงจูงใจด้วยเกมการเรียนรู้",
     imagePrompt: "A game screen",
     motionDirection: "Bounce",
   },
   {
-    narration: "Join us today.",
+    narration: "เริ่มต้นเรียนรู้กับเราวันนี้",
     imagePrompt: "A school logo",
     motionDirection: "Fade in",
   },
@@ -170,7 +170,13 @@ describe("Phase 2E: AI adapter routing — regression guards", () => {
     });
     (db.select as Mock).mockImplementation(selectMock);
     fakeAIClient.generateText.mockResolvedValueOnce(
-      JSON.stringify(["Machine Learning", "Neural Networks"]),
+      JSON.stringify([
+        "Machine Learning",
+        "Neural Networks",
+        "Adaptive Learning",
+        "Classroom Analytics",
+        "Student Motivation",
+      ]),
     );
     const { createAIClient } = await import("@reading-advantage/ai");
 

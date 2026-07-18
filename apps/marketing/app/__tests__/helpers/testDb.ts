@@ -62,9 +62,20 @@ CREATE TABLE IF NOT EXISTS video_projects (
   status video_project_status NOT NULL DEFAULT 'draft',
   created_at timestamp NOT NULL DEFAULT now()
 );
+
+CREATE TABLE IF NOT EXISTS past_topics (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  app app NOT NULL,
+  topic text NOT NULL,
+  normalized_key text NOT NULL,
+  created_at timestamp NOT NULL DEFAULT now()
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS past_topics_app_normalized_key_unique
+  ON past_topics (app, normalized_key);
 `;
 
-const TABLES = ["video_projects", "campaigns"];
+const TABLES = ["video_projects", "past_topics", "campaigns"];
 
 export interface TestDb {
   /** Drizzle instance bound to the in-process PGlite database. */

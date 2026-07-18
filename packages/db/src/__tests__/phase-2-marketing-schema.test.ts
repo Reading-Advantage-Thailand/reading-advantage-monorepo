@@ -299,11 +299,11 @@ describe("Phase 2 marketing: Drizzle schema exports (packages/db/src/schema/mark
     }
   });
 
-  it("pastTopics table has id/app/topic/createdAt columns", () => {
+  it("pastTopics table has id/app/topic/normalizedKey/createdAt columns", () => {
     const cols = Object.keys(schema.pastTopics).filter(
       (k) => !k.startsWith("_") && !k.startsWith("["),
     );
-    for (const col of ["id", "app", "topic", "createdAt"]) {
+    for (const col of ["id", "app", "topic", "normalizedKey", "createdAt"]) {
       expect(cols, `pastTopics missing column ${col}`).toContain(col);
     }
   });

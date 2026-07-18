@@ -219,4 +219,9 @@ export const sentinelProbes: Record<string, SentinelProbe> = {
     kind: "table",
     target: "company_product_principals",
   },
+  "0041_marketing_past_topic_normalized_key": {
+    tag: "0041_marketing_past_topic_normalized_key",
+    kind: "column",
+    target: "past_topics.normalized_key",
+  },
 };

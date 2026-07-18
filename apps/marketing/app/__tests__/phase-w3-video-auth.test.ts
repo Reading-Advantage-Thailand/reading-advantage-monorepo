@@ -37,6 +37,7 @@ vi.mock("@reading-advantage/db", async () => {
   const actual = await vi.importActual<typeof import("@reading-advantage/db")>(
     "@reading-advantage/db",
   );
+  const insert = vi.fn();
   return {
     ...actual,
     sql: Object.assign(
@@ -48,8 +49,9 @@ vi.mock("@reading-advantage/db", async () => {
     ),
     db: {
       execute: vi.fn(),
-      insert: vi.fn(),
+      insert,
       select: vi.fn(),
+      transaction: vi.fn(async (callback) => callback({ insert })),
       update: vi.fn(),
     },
   };
@@ -87,6 +89,14 @@ function makeInsertChainMock(returningRows: unknown[]) {
   return { insertMock, valuesMock, returningMock };
 }
 
+function makeConflictInsertChainMock(returningRows: unknown[]) {
+  const returningMock = vi.fn().mockResolvedValue(returningRows);
+  const onConflictDoNothingMock = vi.fn().mockReturnValue({ returning: returningMock });
+  const valuesMock = vi.fn().mockReturnValue({ onConflictDoNothing: onConflictDoNothingMock });
+  const insertMock = vi.fn().mockReturnValue({ values: valuesMock });
+  return { insertMock, onConflictDoNothingMock, returningMock, valuesMock };
+}
+
 /**
  * Build a Drizzle select mock that returns different rows depending on which
  * table is queried. This is needed for routes that read both settings and
@@ -117,27 +127,27 @@ function stubLLMSettings() {
 
 const validScriptJson = JSON.stringify([
   {
-    narration: "Welcome to Reading Advantage.",
+    narration: "ยินดีต้อนรับสู่รีดดิ้งแอดแวนเทจ",
     imagePrompt: "A child reading a book",
     motionDirection: "Slow zoom in",
   },
   {
-    narration: "Our platform adapts to every learner.",
+    narration: "แพลตฟอร์มของเราปรับให้เหมาะกับผู้เรียนทุกคน",
     imagePrompt: "A tablet showing a quiz",
     motionDirection: "Pan right",
   },
   {
-    narration: "Teachers track progress in real time.",
+    narration: "ครูติดตามความก้าวหน้าได้แบบเรียลไทม์",
     imagePrompt: "A teacher dashboard",
     motionDirection: "Static",
   },
   {
-    narration: "Students stay motivated with games.",
+    narration: "นักเรียนมีแรงจูงใจด้วยเกมการเรียนรู้",
     imagePrompt: "A game screen",
     motionDirection: "Bounce",
   },
   {
-    narration: "Join us today.",
+    narration: "เริ่มต้นเรียนรู้กับเราวันนี้",
     imagePrompt: "A school logo",
     motionDirection: "Fade in",
   },
@@ -201,7 +211,13 @@ describe("Phase 2B: Video routes — unauthenticated boundary (RED at baseline)"
     });
     (db.select as Mock).mockImplementation(selectMock);
     fakeAIClient.generateText.mockResolvedValueOnce(
-      JSON.stringify(["Machine Learning", "Neural Networks"]),
+      JSON.stringify([
+        "Machine Learning",
+        "Neural Networks",
+        "Adaptive Learning",
+        "Classroom Analytics",
+        "Student Motivation",
+      ]),
     );
     const { createAIClient } = await import("@reading-advantage/ai");
 
@@ -272,7 +288,7 @@ describe("Phase 2B: Video routes — authenticated positive controls", () => {
     const { POST } = await import("@/api/video/save-topics/route");
     const { selectMock } = makeSelectChainMock([]);
     (db.select as Mock).mockImplementation(selectMock);
-    const { insertMock } = makeInsertChainMock([]);
+    const { insertMock } = makeConflictInsertChainMock([]);
     (db.insert as Mock).mockImplementation(insertMock);
 
     const response = await POST(
@@ -319,7 +335,13 @@ describe("Phase 2B: Video routes — authenticated positive controls", () => {
     });
     (db.select as Mock).mockImplementation(selectMock);
     fakeAIClient.generateText.mockResolvedValueOnce(
-      JSON.stringify(["Machine Learning", "Neural Networks"]),
+      JSON.stringify([
+        "Machine Learning",
+        "Neural Networks",
+        "Adaptive Learning",
+        "Classroom Analytics",
+        "Student Motivation",
+      ]),
     );
 
     const response = await POST(

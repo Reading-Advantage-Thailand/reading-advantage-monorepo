@@ -1,11 +1,23 @@
+/**
+ * Produces the canonical persisted comparison key for a Marketing topic.
+ * @param topic The user- or AI-supplied topic.
+ * @returns An NFC, lowercase, whitespace-normalized comparison key.
+ */
 export function normalizeTopic(topic: string): string {
   return topic
     .normalize("NFC")
     .toLowerCase()
-    .replace(/\s+(?=[\u0E00-\u0E7F])/g, "")
-    .trim();
+    .trim()
+    .replace(/\s+/gu, " ")
+    .replace(/\s+(?=[\u0E00-\u0E7F])/gu, "");
 }
 
+/**
+ * Removes topics already represented by existing or earlier proposed values.
+ * @param proposed Candidate topics in preferred display order.
+ * @param existing Previously persisted topics.
+ * @returns Display topics whose normalized keys are distinct.
+ */
 export function deduplicateTopics(
   proposed: string[],
   existing: string[],

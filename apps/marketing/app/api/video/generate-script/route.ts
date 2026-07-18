@@ -27,12 +27,35 @@ import { createAIClient } from "@/lib/ai";
 import { db } from "@/lib/db";
 import { settings } from "@reading-advantage/db/schema";
 import { or, eq } from "drizzle-orm";
-import { buildScriptGenerationPrompt } from "@/lib/script-generation";
-import { scriptSchema } from "@/lib/script-schema";
+import {
+  buildScriptGenerationPrompt,
+  buildThaiNarrationRepairPrompt,
+} from "@/lib/script-generation";
+import {
+  scriptSchema,
+  thaiNarrationScriptSchema,
+  type Script,
+} from "@/lib/script-schema";
 import { requireMarketingPermission } from "@/lib/auth";
 import { generateScriptSchema } from "@/lib/script-request-schema";
 import { redactSecrets } from "@/lib/redact";
 import { resolveMarketingAIConfig } from "@/lib/ai-credentials";
+
+
+/**
+ * Parses an AI response against the persisted structural script contract.
+ * @param response The raw provider text response.
+ * @returns The validated script, or null for invalid JSON or structure.
+ */
+function parseScriptResponse(response: string): Script | null {
+  try {
+    const parsed: unknown = JSON.parse(response);
+    const validation = scriptSchema.safeParse(parsed);
+    return validation.success ? validation.data : null;
+  } catch {
+    return null;
+  }
+}
 
 /**
  * POST /api/video/generate-script — read LLM settings, build a prompt,
@@ -41,6 +64,8 @@ import { resolveMarketingAIConfig } from "@/lib/ai-credentials";
  * Guard contract: 401 without a valid session, before any DB read or AI
  * call. Validation contract: 400 with a structured Zod error before the
  * prompt is built.
+ * @param request The authenticated script-generation request.
+ * @returns A generated Thai script or a typed validation or repair response.
  */
 export async function POST(request: Request) {
   const guard = await requireMarketingPermission(request, "video:script:generate");
@@ -106,20 +131,41 @@ export async function POST(request: Request) {
       maxTokens: 1500,
     });
 
-    const resultJson = JSON.parse(result);
-    const validation = scriptSchema.safeParse(resultJson);
-
-    if (!validation.success) {
+    const initialScript = parseScriptResponse(result);
+    if (!initialScript) {
       return NextResponse.json(
-        {
-          message: "LLM response failed script schema validation",
-          error: validation.error.message,
-        },
+        { message: "LLM response failed script schema validation" },
         { status: 500 },
       );
     }
 
-    return NextResponse.json({ script: validation.data });
+    const thaiValidation = thaiNarrationScriptSchema.safeParse(initialScript);
+    if (thaiValidation.success) {
+      return NextResponse.json({ script: thaiValidation.data });
+    }
+
+    const repairedResult = await aiClient.generateText({
+      prompt: buildThaiNarrationRepairPrompt(app, topic, initialScript),
+      maxTokens: 1500,
+    });
+    const repairedScript = parseScriptResponse(repairedResult);
+    if (repairedScript) {
+      const repairedValidation = thaiNarrationScriptSchema.safeParse(
+        repairedScript,
+      );
+      if (repairedValidation.success) {
+        return NextResponse.json({ script: repairedValidation.data });
+      }
+    }
+
+    return NextResponse.json(
+      {
+        code: "THAI_NARRATION_REQUIRED",
+        message: "Generated script narration must be Thai in every scene",
+        repairAttempts: 1,
+      },
+      { status: 422 },
+    );
   } catch (error) {
     const rawMessage =
       error instanceof Error ? error.message : "Failed to generate script";

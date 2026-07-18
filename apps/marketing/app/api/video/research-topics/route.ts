@@ -28,7 +28,10 @@ import { eq, or } from "drizzle-orm";
 import { buildTopicResearchPrompt } from "@/lib/topic-research";
 import { deduplicateTopics } from "@/lib/topic-dedup";
 import { requireMarketingPermission } from "@/lib/auth";
-import { researchTopicsSchema } from "@/lib/topic-schema";
+import {
+  researchedTopicListSchema,
+  researchTopicsSchema,
+} from "@/lib/topic-schema";
 import { redactSecrets } from "@/lib/redact";
 import { resolveMarketingAIConfig } from "@/lib/ai-credentials";
 
@@ -39,6 +42,8 @@ import { resolveMarketingAIConfig } from "@/lib/ai-credentials";
  * Guard contract: 401 without a valid session, before any DB read or AI
  * call. Validation contract: 400 with a structured Zod error before the
  * prompt is built.
+ * @param request The authenticated topic-research request.
+ * @returns Five distinct new topics or a typed validation or shortfall response.
  */
 export async function POST(request: Request) {
   const guard = await requireMarketingPermission(request, "video:topics:research");
@@ -126,16 +131,30 @@ export async function POST(request: Request) {
       maxTokens: 500,
     });
 
-    const resultJson = JSON.parse(result);
-    if (!Array.isArray(resultJson)) {
+    const resultJson: unknown = JSON.parse(result);
+    const topicValidation = researchedTopicListSchema.safeParse(resultJson);
+    if (!topicValidation.success) {
       return NextResponse.json(
         { message: "LLM did not return a valid topic list" },
         { status: 500 },
       );
     }
 
-    const capped = resultJson.slice(0, 5).map(String);
-    const filtered = deduplicateTopics(capped, pastTopicsList);
+    const filtered = deduplicateTopics(
+      topicValidation.data,
+      pastTopicsList,
+    ).slice(0, 5);
+    if (filtered.length < 5) {
+      return NextResponse.json(
+        {
+          code: "TOPIC_RESEARCH_SHORTFALL",
+          message: "Topic research produced fewer than five distinct new topics",
+          expectedCount: 5,
+          actualCount: filtered.length,
+        },
+        { status: 422 },
+      );
+    }
 
     return NextResponse.json({ topics: filtered });
   } catch (error) {

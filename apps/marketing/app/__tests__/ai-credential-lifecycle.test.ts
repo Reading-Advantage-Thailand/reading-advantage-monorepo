@@ -64,7 +64,7 @@ vi.mock("@/lib/db", async () => {
 });
 
 const scriptFixture = Array.from({ length: 5 }, (_, index) => ({
-  narration: `Narration ${index}`,
+  narration: `คำบรรยายฉากที่ ${index + 1}`,
   imagePrompt: `Image ${index}`,
   motionDirection: `Motion ${index}`,
 }));
@@ -85,7 +85,13 @@ describe("Marketing AI credential lifecycle", () => {
     });
     generateTextMock.mockImplementation(async (input: { maxTokens: number }) =>
       input.maxTokens === 500
-        ? JSON.stringify(["Topic one", "Topic two"])
+        ? JSON.stringify([
+            "Topic one",
+            "Topic two",
+            "Topic three",
+            "Topic four",
+            "Topic five",
+          ])
         : JSON.stringify(scriptFixture),
     );
   });

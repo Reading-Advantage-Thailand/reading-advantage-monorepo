@@ -54,6 +54,7 @@ vi.mock("@reading-advantage/db", async () => {
   const actual = await vi.importActual<typeof import("@reading-advantage/db")>(
     "@reading-advantage/db",
   );
+  const insert = vi.fn();
   return {
     ...actual,
     sql: Object.assign(
@@ -65,8 +66,9 @@ vi.mock("@reading-advantage/db", async () => {
     ),
     db: {
       execute: vi.fn(),
-      insert: vi.fn(),
+      insert,
       select: vi.fn(),
+      transaction: vi.fn(async (callback) => callback({ insert })),
     },
   };
 });
@@ -117,9 +119,11 @@ function makeSelectChainMock() {
 }
 
 function makeInsertChainMock() {
-  const valuesMock = vi.fn();
+  const returningMock = vi.fn().mockResolvedValue([]);
+  const onConflictDoNothingMock = vi.fn(() => ({ returning: returningMock }));
+  const valuesMock = vi.fn(() => ({ onConflictDoNothing: onConflictDoNothingMock }));
   const insertMock = vi.fn(() => ({ values: valuesMock }));
-  return { insertMock, valuesMock };
+  return { insertMock, onConflictDoNothingMock, valuesMock };
 }
 
 // ─────────────────────────────────────────────────────────────────────
@@ -305,7 +309,14 @@ describe("Phase 5: Topic Research — API integration (task 6: verify, RED)", ()
     (db.select as Mock).mockImplementation(selectMock);
 
     __fakeAIClient.generateText.mockResolvedValueOnce(
-      JSON.stringify(["Old Topic", "New Topic 1", "New Topic 2"]),
+      JSON.stringify([
+        "Old Topic",
+        "New Topic 1",
+        "New Topic 2",
+        "New Topic 3",
+        "New Topic 4",
+        "New Topic 5",
+      ]),
     );
 
     const { POST } = await import("@/api/video/research-topics/route");
@@ -346,9 +357,9 @@ describe("Phase 5: Topic Research — API integration (task 6: verify, RED)", ()
     );
 
     expect(response.status).toBe(200);
-    const insertedTopics = valuesMock.mock.calls.map(
-      (call) => (call[0] as { topic: string }).topic,
-    );
+    const insertedTopics = (
+      (valuesMock as Mock).mock.calls[0][0] as Array<{ topic: string }>
+    ).map((row) => row.topic);
     expect(insertedTopics).toContain("Unique Topic");
     expect(insertedTopics.filter((t) => t === "Duplicate Topic")).toHaveLength(1);
   });
@@ -375,9 +386,9 @@ describe("Phase 5: Topic Research — API integration (task 6: verify, RED)", ()
     );
 
     expect(response.status).toBe(200);
-    const insertedTopics = valuesMock.mock.calls.map(
-      (call) => (call[0] as { topic: string }).topic,
-    );
+    const insertedTopics = (
+      (valuesMock as Mock).mock.calls[0][0] as Array<{ topic: string }>
+    ).map((row) => row.topic);
     expect(insertedTopics).toHaveLength(1);
   });
 
@@ -387,7 +398,8 @@ describe("Phase 5: Topic Research — API integration (task 6: verify, RED)", ()
     whereMock.mockResolvedValueOnce([{ topic: "Existing Topic" }]);
     (db.select as Mock).mockImplementation(selectMock);
 
-    const { insertMock, valuesMock } = makeInsertChainMock();
+    const { insertMock, onConflictDoNothingMock, valuesMock } =
+      makeInsertChainMock();
     (db.insert as Mock).mockImplementation(insertMock);
 
     const { POST } = await import("@/api/video/save-topics/route");
@@ -403,11 +415,12 @@ describe("Phase 5: Topic Research — API integration (task 6: verify, RED)", ()
     );
 
     expect(response.status).toBe(200);
-    const insertedTopics = valuesMock.mock.calls.map(
-      (call) => (call[0] as { topic: string }).topic,
-    );
-    expect(insertedTopics).not.toContain("Existing Topic");
+    const insertedTopics = (
+      (valuesMock as Mock).mock.calls[0][0] as Array<{ topic: string }>
+    ).map((row) => row.topic);
+    expect(insertedTopics).toContain("Existing Topic");
     expect(insertedTopics).toContain("Brand New Topic");
-    expect(insertedTopics).toHaveLength(1);
+    expect(insertedTopics).toHaveLength(2);
+    expect(onConflictDoNothingMock).toHaveBeenCalledOnce();
   });
 });

@@ -1,4 +1,4 @@
-import { pgTable, uuid, text, timestamp, jsonb, pgEnum, index } from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, timestamp, jsonb, pgEnum, index, uniqueIndex } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 
 // ─── Enums ──────────────────────────────────────────────
@@ -72,9 +72,14 @@ export const pastTopics = pgTable("past_topics", {
   id: uuid("id").primaryKey().defaultRandom(),
   app: appEnum("app").notNull(),
   topic: text("topic").notNull(),
+  normalizedKey: text("normalized_key").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 }, (table) => [
   index("past_topics_app_idx").on(table.app),
+  uniqueIndex("past_topics_app_normalized_key_unique").on(
+    table.app,
+    table.normalizedKey,
+  ),
 ]);
 
 // ─── Settings ───────────────────────────────────────────
