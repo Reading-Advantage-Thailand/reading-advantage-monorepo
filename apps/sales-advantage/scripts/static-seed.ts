@@ -1,13 +1,12 @@
 /**
- * Static seed for local dev — hand-authored curriculum focused on teaching
- * sales effectiveness as a universal skill, with Reading Advantage as the
- * applied context.
+ * Deterministic Sales curriculum release candidate focused on teaching sales
+ * effectiveness as a universal skill, with Reading Advantage as the applied
+ * context and Codecamp-like learn → practice → evaluate → reflect progression.
  *
- * This is the "minimum viable curriculum" used when the AI seed isn't run.
- * Every row lands as reviewStatus='approved' so the dev environment has
- * something to show immediately.
+ * The graph is immutable and machine-reviewed, but it may be seeded in a release
+ * only after curriculum/release-candidate.json carries explicit human approval.
  *
- * Run: pnpm --filter sales-advantage tsx scripts/static-seed.ts
+ * Run through: pnpm --filter sales-advantage seed:production-curriculum
  */
 
 import { createHash } from "node:crypto";
@@ -322,7 +321,11 @@ Trial closes give you signal without pressure.`,
       {
         title: "Discovery Roleplay: First Call with a Skeptical Director",
         type: "roleplay" as const,
-        content: "",
+        content: `**Method:** Open with an up-front contract, then use SPIN in sequence: establish only the situation facts you need, surface the operational problem, explore its impact, and let the director state the value of solving it.
+
+**Listening standard:** Mirror or label the director's concern before the next question. Do not pitch Reading Advantage until the buyer's pain and desired outcome are explicit.
+
+**Success standard:** Earn a specific next meeting whose agenda is tied to the concern the director named.`,
         order: 5,
         scenarios: [
           {
@@ -513,7 +516,11 @@ The buyer just learned something. You just stopped competing on price.`,
       {
         title: "Value-Framing Roleplay: Parents Don't See Results",
         type: "roleplay" as const,
-        content: "",
+        content: `**Method:** Translate features into the buyer's observable outcome. Anchor the conversation on family retention and visible evidence of progress, then ask a need-payoff question in the director's own language.
+
+**Claims guardrail:** Do not promise a percentage improvement or guaranteed outcome. Describe transparent reporting and use only approved research phrasing when evidence is requested.
+
+**Success standard:** Secure agreement on a scoped pilot and the evidence the director will use to judge it.`,
         order: 4,
         scenarios: [
           {
@@ -736,7 +743,11 @@ A deal that loses money is worse than no deal. It anchors your future pipeline a
       {
         title: "Objection Roleplay: 'We Tried Something Similar and It Failed'",
         type: "roleplay" as const,
-        content: "",
+        content: `**Method:** Acknowledge the prior loss, clarify what failed, and isolate the real objection before responding. Use a Sandler reverse instead of defending the product.
+
+**Adoption guardrail:** Do not imply software alone fixes teacher adoption. Match the recommendation to the school's training and implementation capacity.
+
+**Success standard:** Confirm the isolated risk and agree on one adoption-focused next step.`,
         order: 4,
         scenarios: [
           {
@@ -913,7 +924,11 @@ This response builds MORE trust, not less. Sophisticated buyers know nothing is 
       {
         title: "Roleplay: Choosing the Right Tier",
         type: "roleplay" as const,
-        content: "",
+        content: `**Method:** Diagnose staffing consistency, implementation capacity, and the outcome the school is buying before discussing product breadth. Recommend the smallest tier that can credibly solve the diagnosed problem.
+
+**Fit guardrail:** Do not maximize initial deal size at the expense of adoption. Explain the trade-off between App-Only, Blended, and Managed Service in operational terms.
+
+**Success standard:** The buyer can explain why the chosen tier fits the school's constraints and agrees to the next implementation-planning step.`,
         order: 4,
         scenarios: [
           {
@@ -1057,7 +1072,11 @@ That recovery move saves more deals than any feature in our product.`,
       {
         title: "Applied Objection Roleplay: Teachers Won't Adopt",
         type: "roleplay" as const,
-        content: "",
+        content: `**Method:** Label the adoption concern, ask what teachers rejected before, and isolate whether the issue is time, confidence, language, or implementation support. Only then map the concern to Blended or Managed Service support.
+
+**Claims guardrail:** Never promise universal teacher adoption. State the training and service commitments precisely and distinguish them from outcomes outside our control.
+
+**Success standard:** Agree on an adoption-risk test, responsible owner, and follow-up date.`,
         order: 3,
         scenarios: [
           {
@@ -1076,7 +1095,11 @@ That recovery move saves more deals than any feature in our product.`,
       {
         title: "Applied Roleplay: '15-Minute Discovery Call'",
         type: "roleplay" as const,
-        content: "",
+        content: `**Method:** Contract for the short agenda, ask a compact SPIN sequence, teach one relevant insight, and reserve product demonstration for a later meeting earned through discovery.
+
+**Time guardrail:** Do not compress a full demo into fifteen minutes. Protect enough time to summarize the director's concern and confirm it accurately.
+
+**Success standard:** Book a longer meeting with the decision participants, problem, and agenda explicitly named.`,
         order: 4,
         scenarios: [
           {
@@ -1252,7 +1275,11 @@ Move them off the sales call and into the implementation calendar. The deal isn'
       {
         title: "Closing Roleplay: The Final Pricing Conversation",
         type: "roleplay" as const,
-        content: "",
+        content: `**Method:** Restate the agreed outcome and scope before responding to price pressure. Hold the unit economics; adjust scope, sequence, or timing instead of granting an unsupported discount.
+
+**Negotiation guardrail:** Do not invent urgency, savings, or guaranteed ROI. Any business-case estimate must expose its assumptions and remain the buyer's estimate.
+
+**Success standard:** Reach a clear yes, no, or dated decision step with implementation ownership identified.`,
         order: 3,
         scenarios: [
           {

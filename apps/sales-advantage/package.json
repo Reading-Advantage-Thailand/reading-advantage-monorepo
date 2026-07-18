@@ -12,7 +12,9 @@
     "test:watch": "vitest",
     "check-types": "tsc --noEmit",
     "seed:curriculum": "tsx scripts/sales-curriculum-seed.ts",
-    "seed:production-curriculum": "tsx scripts/static-seed.ts",
+    "curriculum:generate-openrouter-draft": "tsx scripts/generate-curriculum-review-artifact.ts",
+    "curriculum:release-candidate": "tsx scripts/curriculum-release.ts",
+    "seed:production-curriculum": "tsx scripts/seed-reviewed-curriculum.ts",
     "verify:production-curriculum": "tsx scripts/verify-sales-curriculum.ts"
   },
   "dependencies": {

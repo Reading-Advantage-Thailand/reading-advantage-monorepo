@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "curriculumId": "reading-advantage-sales-curriculum-v1",
+  "graphSha256": "b7582eb44adc176327f483147043fdb4aa6f02a292aeea189b7774483db25963",
+  "source": {
+    "repository": "advantage-pr",
+    "commit": "8dd78171f1d57dd775fad2295d60e86fb267dad8",
+    "documents": [
+      {
+        "path": "02-brand/messaging-house.md",
+        "sha256": "73938bd4a65eb561a1daee651e60b3fd6b80a06e50f799a0b70835f328025200"
+      },
+      {
+        "path": "06-research-and-evidence/outcome-claims-policy.md",
+        "sha256": "9be845b53f34d601892ec3f45cb3dca4fb5ecb4e3d88df44cc7193d1012f25a2"
+      },
+      {
+        "path": "09-sales-enablement/README.md",
+        "sha256": "ea6dc7b55fa4e754566b07cd19d526aa9de7c80033d33844c1a2a29c0852d5c0"
+      },
+      {
+        "path": "09-sales-enablement/advantage-suite-at-a-glance.md",
+        "sha256": "1db1eba0c88cea063a2129e67a90dd2c8c71f91a794006840cdd0da907425548"
+      },
+      {
+        "path": "09-sales-enablement/demo-scripts.md",
+        "sha256": "abaade8020082bd8227ccb49fbc73e415481600f48b514b73d9d8cdbc64b5676"
+      },
+      {
+        "path": "09-sales-enablement/roi-calculator.md",
+        "sha256": "5f4c0b844f77edfcebdc7b5e43d460bb18cfd9a4848f2d4ee5da023360d96105"
+      },
+      {
+        "path": "09-sales-enablement/distributor-rep-onboarding/README.md",
+        "sha256": "58b3dfbb918d5860d1bd48b68100f7b34280c9646a1bee11f21332bf0f810e42"
+      },
+      {
+        "path": "09-sales-enablement/distributor-rep-onboarding/objection-handling-guide.md",
+        "sha256": "7088a6afcae699b59ca8ccda9bc55d362e99620c4ab78ee2bd25b1f9c82a78d5"
+      },
+      {
+        "path": "09-sales-enablement/distributor-rep-onboarding/rep-certification-checklist.md",
+        "sha256": "45ac153986c87afa9d9f0a5ebabd0971b404d9fce5950be94f76e799d5c5cda6"
+      },
+      {
+        "path": "09-sales-enablement/distributor-rep-onboarding/role-play-scenarios.md",
+        "sha256": "c0979f847d3a9f58e3e3f92ee7b96145ea34d7b4d71623ddfb5eed5eb5625f6a"
+      }
+    ]
+  },
+  "pedagogy": {
+    "reference": "apps/codecamp-advantage/measure/curriculum/course-spec.md",
+    "progression": [
+      "learn",
+      "practice",
+      "evaluate",
+      "reflect"
+    ],
+    "moduleOrder": [
+      "foundations-discovery",
+      "framing-value",
+      "objections",
+      "ra-product-applied",
+      "ra-objections-demo",
+      "pricing-closing"
+    ]
+  },
+  "generation": {
+    "method": "hand-authored-reviewed-candidate",
+    "provider": null,
+    "requestedModel": null,
+    "promptVersion": "sales-curriculum-v2",
+    "artifactRef": "apps/sales-advantage/scripts/static-seed.ts"
+  },
+  "automatedReview": {
+    "exactGraphVerified": true,
+    "progressiveModuleOrderVerified": true,
+    "honestClaimsLanguageReviewedByAutomation": true,
+    "rubricSourceRefsVerified": true,
+    "roleplayCanonicalExcerptsVerified": true
+  },
+  "approval": {
+    "status": "awaiting_human_review",
+    "reviewer": null,
+    "reviewedAt": null,
+    "evidenceRef": null,
+    "checks": {
+      "pedagogy": false,
+      "sourceTraceability": false,
+      "honestClaims": false,
+      "roleplayRubrics": false
+    }
+  }
+}

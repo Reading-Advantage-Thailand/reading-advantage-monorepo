@@ -21,7 +21,7 @@ export const PINNED_SALES_CURRICULUM_COUNTS = Object.freeze({
 
 /** SHA-256 of the reviewed canonical production curriculum graph. */
 export const PINNED_SALES_CURRICULUM_GRAPH_SHA256 =
-  "f8b1391302650874154066d5a21189a71d3cbaf78b528f579642fc9fc696f0e7";
+  "b7582eb44adc176327f483147043fdb4aa6f02a292aeea189b7774483db25963";
 
 type SalesTransaction = Parameters<Parameters<DB["transaction"]>[0]>[0];
 

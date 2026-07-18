@@ -25,6 +25,15 @@ const staticSeed = readFileSync(
   resolve(appRoot, "scripts/static-seed.ts"),
   "utf8",
 );
+const reviewedSeed = readFileSync(
+  resolve(appRoot, "scripts/seed-reviewed-curriculum.ts"),
+  "utf8",
+);
+const packageJson = readFileSync(resolve(appRoot, "package.json"), "utf8");
+const releaseCandidate = readFileSync(
+  resolve(appRoot, "curriculum/release-candidate.json"),
+  "utf8",
+);
 const curriculumVerifier = readFileSync(
   resolve(appRoot, "scripts/verify-sales-curriculum.ts"),
   "utf8",
@@ -112,6 +121,13 @@ describe("Sales production readiness", () => {
     expect(curriculumVerifier).not.toContain('from "./static-seed"');
     expect(staticSeed).toContain("client.end({ timeout: 5 })");
     expect(curriculumVerifier).toContain("client.end({ timeout: 5 })");
+    expect(packageJson).toContain(
+      '"seed:production-curriculum": "tsx scripts/seed-reviewed-curriculum.ts"',
+    );
+    expect(reviewedSeed).toContain("assertCurriculumReleaseReady");
+    expect(reviewedSeed).toContain("release-candidate.json");
+    expect(releaseCandidate).toContain('"status": "awaiting_human_review"');
+    expect(releaseCandidate).not.toContain('"status": "approved"');
   });
 
   it("keeps runtime access relation-specific and probes real writes in rollback", () => {
