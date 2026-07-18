@@ -36,7 +36,17 @@ export async function GET(request: Request): Promise<NextResponse> {
     });
     response.cookies.delete(SALES_TRANSACTION_COOKIE);
     return response;
-  } catch {
+  } catch (error) {
+    console.error(
+      JSON.stringify({
+        level: "error",
+        event: "sales_oidc_callback_failed",
+        requestId: request.headers.get("x-request-id") ?? null,
+        method: request.method,
+        route: url.pathname,
+        errorName: error instanceof Error ? error.name : "UnknownError",
+      }),
+    );
     const response = NextResponse.redirect(new URL("/?error=sso", publicOrigin));
     response.cookies.delete(SALES_TRANSACTION_COOKIE);
     return response;

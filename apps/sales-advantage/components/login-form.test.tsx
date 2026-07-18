@@ -27,7 +27,7 @@ describe("Sales LoginForm auth mode", () => {
     );
     render(<LoginForm />);
 
-    expect(screen.getByRole("status").textContent).toContain(
+    expect(screen.getByRole("status").textContent).toBe(
       "Checking sign-in mode",
     );
     expect(screen.queryByRole("link")).toBeNull();

@@ -66,7 +66,7 @@ export function LoginForm() {
         <CardContent>
           {legacyMode === null ? (
             <p role="status" className="text-sm text-muted-foreground">
-              Checking sign-in mode&
+              Checking sign-in mode
             </p>
           ) : legacyMode ? (
             <form className="space-y-4" onSubmit={submitLegacy}>

@@ -8,6 +8,7 @@ import {
 } from "@reading-advantage/auth";
 import { db } from "@reading-advantage/db";
 import {
+  resolveLegacySalesCompanyPrincipal,
   resolveSalesCompanyPrincipal,
   type ResolvedSalesCompanyPrincipal,
 } from "@reading-advantage/domain";
@@ -144,9 +145,9 @@ function readLegacySalesToken(request: Request): string | undefined {
 }
 
 /**
- * Resolves a legacy school principal through the internal first-party auth adapter.
+ * Resolves a legacy credential session through its exact app-local Sales mapping.
  * @param request Request carrying legacy session evidence.
- * @returns School-scoped Sales principal or null.
+ * @returns Company-scoped Sales principal or null.
  */
 async function authenticateLegacySalesRequest(
   request: Request,
@@ -154,31 +155,8 @@ async function authenticateLegacySalesRequest(
   const token = readLegacySalesToken(request);
   if (!token) return null;
   const session = await validateSession(db, token);
-  if (
-    !session ||
-    !session.user.schoolId ||
-    (session.user.role !== "SALES_REP" && session.user.role !== "SALES_ADMIN")
-  ) {
-    return null;
-  }
-  const user: UserContext = {
-    id: session.user.id,
-    username: session.user.username,
-    name: session.user.name,
-    role: session.user.role,
-    schoolId: session.user.schoolId,
-    xp: session.user.xp,
-    level: session.user.level,
-    cefrLevel: session.user.cefrLevel,
-  };
-  return {
-    user,
-    scope: {
-      kind: "legacy-school",
-      applicationKey: "sales",
-      schoolId: session.user.schoolId,
-    },
-  };
+  if (!session) return null;
+  return resolveLegacySalesCompanyPrincipal(db, session.user.id);
 }
 
 /**

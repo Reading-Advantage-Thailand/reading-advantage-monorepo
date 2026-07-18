@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
   resolve: vi.fn(),
+  resolveLegacy: vi.fn(),
   validateSession: vi.fn(),
   legacyMode: vi.fn(),
 }));
@@ -10,6 +11,7 @@ const mocks = vi.hoisted(() => ({
 vi.mock("@reading-advantage/db", () => ({ db: { kind: "database" } }));
 vi.mock("@reading-advantage/domain", () => ({
   resolveSalesCompanyPrincipal: mocks.resolve,
+  resolveLegacySalesCompanyPrincipal: mocks.resolveLegacy,
 }));
 vi.mock("@reading-advantage/auth", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@reading-advantage/auth")>()),
@@ -32,6 +34,25 @@ const identity = {
   roles: [] as string[],
   sid: "company-session",
   authVersion: 1,
+};
+
+const mappedLegacyPrincipal = {
+  user: {
+    id: `sales:${identity.sub}`,
+    username: `sales:${identity.sub}`,
+    name: "Dual Product User",
+    role: "SALES_REP" as const,
+    schoolId: null,
+    xp: 0,
+    level: 1,
+    cefrLevel: "N/A",
+  },
+  scope: {
+    kind: "company" as const,
+    applicationKey: "sales" as const,
+    organizationId: identity.organizationId,
+    organizationKey: identity.organizationKey,
+  },
 };
 
 describe("Sales company session projection", () => {
@@ -73,21 +94,22 @@ describe("Sales company session projection", () => {
     ).resolves.toBe(principal);
   });
 
-  it("uses a legacy session cookie only when rollback mode is explicit", async () => {
-    const schoolId = "00000000-0000-4000-8000-000000000099";
+  it("authenticates repaired legacy credentials but authorizes only the exact mapped Sales principal", async () => {
+    const sourceSchoolId = "00000000-0000-4000-8000-000000000099";
     mocks.legacyMode.mockReturnValue(true);
     mocks.validateSession.mockResolvedValue({
       user: {
-        id: "legacy-sales-rep",
-        username: "legacy-sales-rep",
-        name: "Legacy Sales Rep",
-        role: "SALES_REP",
-        schoolId,
-        xp: 0,
-        level: 1,
-        cefrLevel: "A1-",
+        id: identity.sub,
+        username: "dual.product.user",
+        name: "Dual Product User",
+        role: "ADMIN",
+        schoolId: sourceSchoolId,
+        xp: 99,
+        level: 9,
+        cefrLevel: "C1",
       },
     });
+    mocks.resolveLegacy.mockResolvedValue(mappedLegacyPrincipal);
     const request = new Request(
       "https://sales.reading-advantage.com/api/trpc",
       {
@@ -98,13 +120,39 @@ describe("Sales company session projection", () => {
       },
     );
 
-    await expect(authenticateSalesRequest(request)).resolves.toEqual({
-      user: expect.objectContaining({ id: "legacy-sales-rep" }),
-      scope: { kind: "legacy-school", applicationKey: "sales", schoolId },
-    });
+    await expect(authenticateSalesRequest(request)).resolves.toEqual(
+      mappedLegacyPrincipal,
+    );
     expect(mocks.validateSession).toHaveBeenCalledWith(
       { kind: "database" },
       "legacy-cookie-token",
     );
+    expect(mocks.resolveLegacy).toHaveBeenCalledWith(
+      { kind: "database" },
+      identity.sub,
+    );
+  });
+
+  it("denies arbitrary global admins and revoked mapped roles in legacy mode", async () => {
+    mocks.legacyMode.mockReturnValue(true);
+    mocks.validateSession.mockResolvedValue({
+      user: {
+        id: identity.sub,
+        username: "global-admin",
+        name: "Global Admin",
+        role: "ADMIN",
+        schoolId: null,
+        xp: 0,
+        level: 1,
+        cefrLevel: "N/A",
+      },
+    });
+    mocks.resolveLegacy.mockResolvedValue(null);
+    const request = new Request(
+      "https://sales.reading-advantage.com/api/auth/session",
+      { headers: { cookie: "session_token=legacy-cookie-token" } },
+    );
+
+    await expect(authenticateSalesRequest(request)).resolves.toBeNull();
   });
 });

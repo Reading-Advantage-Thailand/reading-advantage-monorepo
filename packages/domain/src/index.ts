@@ -26,6 +26,7 @@ export {
 } from "./db-contract.js";
 export { classifyTable, type TableClassification } from "./tenant-registry.js";
 export {
+  resolveLegacySalesCompanyPrincipal,
   resolveSalesCompanyPrincipal,
   type SalesCompanyIdentity,
   type ResolvedSalesCompanyPrincipal,

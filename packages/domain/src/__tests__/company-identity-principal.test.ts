@@ -4,22 +4,14 @@ vi.unmock("../tenant-registry.js");
 import {
   capabilityIdempotencyRecords,
   companyProductPrincipals,
-  users,
   type DB,
 } from "@reading-advantage/db";
 
-import { resolveSalesCompanyPrincipal } from "../company-identity-principal.js";
+import {
+  resolveLegacySalesCompanyPrincipal,
+  resolveSalesCompanyPrincipal,
+} from "../company-identity-principal.js";
 import { classifyTable } from "../tenant-registry.js";
-
-const mappedUser = {
-  id: "sales-local-user",
-  username: "sales.rep",
-  name: "Sales Rep",
-  schoolId: null,
-  xp: 12,
-  level: 2,
-  cefrLevel: "N/A",
-};
 
 const baseIdentity = {
   sub: "00000000-0000-4000-8000-000000000001",
@@ -31,133 +23,77 @@ const baseIdentity = {
   roles: ["SALES_REP"],
 } as const;
 
-function mappedDatabase() {
-  const updates: Array<{ table: unknown; values: unknown }> = [];
-  const tx = {
-    execute: vi.fn().mockResolvedValue(undefined),
-    select: vi.fn(() => ({
-      from: vi.fn(() => ({
-        innerJoin: vi.fn(() => ({
-          where: vi.fn(() => ({
-            limit: vi.fn().mockResolvedValue([mappedUser]),
-          })),
-        })),
-      })),
+const mappedUser = {
+  id: "sales:" + baseIdentity.sub,
+  username: "sales:" + baseIdentity.sub,
+  name: "Company Sales Rep",
+  schoolId: null,
+  xp: 12,
+  level: 2,
+  cefrLevel: "N/A",
+};
+
+function principalDatabase(options: {
+  mapped?: typeof mappedUser | null;
+  executeError?: Error;
+} = {}) {
+  const mapped = options.mapped === undefined ? mappedUser : options.mapped;
+  const execute = vi.fn(async () => {
+    if (options.executeError) throw options.executeError;
+  });
+  const limit = vi.fn().mockResolvedValue(mapped ? [mapped] : []);
+  const select = vi.fn(() => ({
+    from: vi.fn(() => ({
+      where: vi.fn(() => ({ limit })),
     })),
-    update: vi.fn((table: unknown) => ({
-      set: vi.fn((values: unknown) => ({
-        where: vi.fn(async () => {
-          updates.push({ table, values });
-        }),
-      })),
-    })),
-  };
+  }));
+  const tx = { execute, select };
+  const transaction = vi.fn(
+    async (callback: (transaction: typeof tx) => unknown) => callback(tx),
+  );
   return {
-    database: {
-      transaction: vi.fn(
-        async (callback: (transaction: typeof tx) => unknown) => callback(tx),
-      ),
-    } as unknown as DB,
-    updates,
+    database: { transaction } as unknown as DB,
+    execute,
+    select,
+    transaction,
   };
 }
 
-function firstLoginDatabase(
-  options: {
-    occupiedId?: boolean;
-    userInsertError?: unknown;
-    mappingInsertError?: unknown;
-  } = {},
-) {
-  let selectCount = 0;
-  const inserts: Array<{ table: unknown; values: unknown }> = [];
-  let rolledBack = false;
-  const localUserId = `sales:${baseIdentity.sub}`;
-  const created = { ...mappedUser, id: localUserId, username: localUserId };
-  const tx = {
-    execute: vi.fn().mockResolvedValue(undefined),
-    select: vi.fn(() => {
-      selectCount += 1;
-      if (selectCount === 1) {
-        return {
-          from: vi.fn(() => ({
-            innerJoin: vi.fn(() => ({
-              where: vi.fn(() => ({ limit: vi.fn().mockResolvedValue([]) })),
-            })),
-          })),
-        };
-      }
-      return {
-        from: vi.fn(() => ({
-          where: vi.fn(() => ({
-            limit: vi
-              .fn()
-              .mockResolvedValue(
-                options.occupiedId ? [{ id: baseIdentity.sub }] : [],
-              ),
-          })),
-        })),
-      };
-    }),
-    insert: vi.fn((table: unknown) => ({
-      values: vi.fn((values: unknown) => {
-        inserts.push({ table, values });
-        if (table === users) {
-          return {
-            returning: vi.fn(async () => {
-              if (options.userInsertError) throw options.userInsertError;
-              return [created];
-            }),
-          };
-        }
-        if (options.mappingInsertError)
-          return Promise.reject(options.mappingInsertError);
-        return Promise.resolve(undefined);
-      }),
+function legacyDatabase(rows: readonly Record<string, unknown>[]) {
+  const limit = vi.fn().mockResolvedValue(rows);
+  const select = vi.fn(() => ({
+    from: vi.fn(() => ({
+      innerJoin: vi.fn(() => ({
+        where: vi.fn(() => ({ limit })),
+      })),
     })),
-  };
+  }));
   return {
-    database: {
-      transaction: vi.fn(
-        async (callback: (transaction: typeof tx) => unknown) => {
-          try {
-            return await callback(tx);
-          } catch (error) {
-            rolledBack = true;
-            throw error;
-          }
-        },
-      ),
-    } as unknown as DB,
-    inserts,
-    wasRolledBack: () => rolledBack,
+    database: { select } as unknown as DB,
+    limit,
+    select,
   };
 }
 
 describe("resolveSalesCompanyPrincipal", () => {
   it.each(["SALES_ADMIN", "SALES_REP"] as const)(
-    "synchronizes mapped users.role when Accounts resolves %s",
+    "synchronizes an exact product-local principal when Accounts resolves %s",
     async (role) => {
-      const { database, updates } = mappedDatabase();
-      const principal = await resolveSalesCompanyPrincipal(database, {
-        sub: "00000000-0000-4000-8000-000000000001",
-        aud: "sales",
-        organizationId: "20000000-0000-4000-8000-000000000003",
-        organizationKey: "internal-company",
-        username: "company.sales.rep",
-        displayName: "Company Sales Rep",
-        roles: [role],
+      const { database, execute } = principalDatabase();
+      await expect(
+        resolveSalesCompanyPrincipal(database, {
+          ...baseIdentity,
+          roles: [role],
+        }),
+      ).resolves.toMatchObject({
+        user: {
+          id: mappedUser.id,
+          username: baseIdentity.username,
+          role,
+          schoolId: null,
+        },
       });
-
-      expect(principal?.user).toMatchObject({ id: mappedUser.id, role });
-      expect(updates).toContainEqual({
-        table: users,
-        values: { role, name: "Company Sales Rep" },
-      });
-      expect(updates).toContainEqual({
-        table: companyProductPrincipals,
-        values: expect.objectContaining({ roleKey: role }),
-      });
+      expect(execute).toHaveBeenCalledTimes(1);
     },
   );
 
@@ -165,7 +101,8 @@ describe("resolveSalesCompanyPrincipal", () => {
     expect({
       mapping: classifyTable(companyProductPrincipals),
       infrastructure: classifyTable(capabilityIdempotencyRecords),
-      distinctTables: companyProductPrincipals !== capabilityIdempotencyRecords,
+      distinctTables:
+        companyProductPrincipals !== capabilityIdempotencyRecords,
     }).toEqual({
       mapping: "REFERENTIAL",
       infrastructure: "EXEMPT",
@@ -174,40 +111,32 @@ describe("resolveSalesCompanyPrincipal", () => {
   });
 
   it("rejects a Sales claim outside the internal company before database access", async () => {
-    const { database } = mappedDatabase();
+    const { database, transaction } = principalDatabase();
     await expect(
       resolveSalesCompanyPrincipal(database, {
-        sub: "00000000-0000-4000-8000-000000000001",
-        aud: "sales",
-        organizationId: "20000000-0000-4000-8000-000000000004",
+        ...baseIdentity,
         organizationKey: "other-company",
-        username: "outside.rep",
-        displayName: "Outside Rep",
-        roles: ["SALES_REP"],
       }),
     ).rejects.toThrow("Sales identity organization is invalid");
+    expect(transaction).not.toHaveBeenCalled();
   });
 
-  it("provisions and maps an unclaimed principal on first login", async () => {
-    const { database, inserts } = firstLoginDatabase();
+  it("returns the product-local row created by the constrained function", async () => {
+    const { database } = principalDatabase();
     await expect(
       resolveSalesCompanyPrincipal(database, baseIdentity),
     ).resolves.toMatchObject({
-      user: { id: `sales:${baseIdentity.sub}`, role: "SALES_REP" },
-    });
-    expect(inserts).toContainEqual({
-      table: companyProductPrincipals,
-      values: expect.objectContaining({
-        organizationId: baseIdentity.organizationId,
-        organizationKey: baseIdentity.organizationKey,
-        companyAccountId: baseIdentity.sub,
-        localUserId: `sales:${baseIdentity.sub}`,
-      }),
+      user: {
+        id: "sales:" + baseIdentity.sub,
+        username: baseIdentity.username,
+        role: "SALES_REP",
+        schoolId: null,
+      },
     });
   });
 
-  it("serializes concurrent mapped resolutions and returns one stable local ID", async () => {
-    const { database } = mappedDatabase();
+  it("serializes concurrent resolutions inside the constrained function", async () => {
+    const { database, execute } = principalDatabase();
     const results = await Promise.all([
       resolveSalesCompanyPrincipal(database, baseIdentity),
       resolveSalesCompanyPrincipal(database, baseIdentity),
@@ -216,48 +145,46 @@ describe("resolveSalesCompanyPrincipal", () => {
       mappedUser.id,
       mappedUser.id,
     ]);
+    expect(execute).toHaveBeenCalledTimes(2);
   });
 
-  it("does not reuse an existing Codecamp-compatible company ID", async () => {
-    const { database, inserts } = firstLoginDatabase({ occupiedId: true });
-    await expect(
-      resolveSalesCompanyPrincipal(database, baseIdentity),
-    ).resolves.toMatchObject({ user: { id: `sales:${baseIdentity.sub}` } });
-    expect(inserts).toContainEqual({
-      table: users,
-      values: expect.objectContaining({ id: `sales:${baseIdentity.sub}` }),
-    });
-  });
-
-  it("fails closed on an existing username instead of heuristic linking", async () => {
-    const { database } = firstLoginDatabase({
-      userInsertError: { code: "23505" },
+  it("surfaces explicit mapping-manifest conflicts from PostgreSQL", async () => {
+    const { database } = principalDatabase({
+      executeError: new Error(
+        "Sales organization change requires an explicit mapping manifest",
+      ),
     });
     await expect(
       resolveSalesCompanyPrincipal(database, baseIdentity),
     ).rejects.toThrow("mapping manifest is required");
   });
 
-  it("durably revokes the mapped principal when Sales roles are removed", async () => {
-    const { database, updates } = mappedDatabase();
+  it("durably revokes through the constrained function without projecting a user", async () => {
+    const { database, execute, select } = principalDatabase();
     await expect(
       resolveSalesCompanyPrincipal(database, {
         ...baseIdentity,
         roles: [],
       }),
     ).resolves.toBeNull();
-    expect(updates).toContainEqual({
-      table: users,
-      values: { role: "INTERN" },
-    });
-    expect(updates).toContainEqual({
-      table: companyProductPrincipals,
-      values: expect.objectContaining({ roleKey: "REVOKED" }),
-    });
+    expect(execute).toHaveBeenCalledTimes(1);
+    expect(select).not.toHaveBeenCalled();
   });
 
-  it("projects the trusted company organization onto an existing Sales principal", async () => {
-    const { database } = mappedDatabase();
+  it("never projects a school-scoped row into the company boundary", async () => {
+    const { database } = principalDatabase({
+      mapped: {
+        ...mappedUser,
+        schoolId: "30000000-0000-4000-8000-000000000007",
+      },
+    });
+    await expect(
+      resolveSalesCompanyPrincipal(database, baseIdentity),
+    ).rejects.toThrow("product-local principal synchronization failed");
+  });
+
+  it("projects the trusted company organization", async () => {
+    const { database } = principalDatabase();
     await expect(
       resolveSalesCompanyPrincipal(database, baseIdentity),
     ).resolves.toMatchObject({
@@ -269,14 +196,54 @@ describe("resolveSalesCompanyPrincipal", () => {
       },
     });
   });
+});
 
-  it("rolls back first-login provisioning when mapping persistence fails", async () => {
-    const { database, wasRolledBack } = firstLoginDatabase({
-      mappingInsertError: new Error("mapping write failed"),
-    });
+describe("resolveLegacySalesCompanyPrincipal", () => {
+  const mappedLegacy = {
+    organizationId: baseIdentity.organizationId,
+    organizationKey: baseIdentity.organizationKey,
+    mappingRole: "SALES_REP",
+    id: "sales:" + baseIdentity.sub,
+    username: "sales:" + baseIdentity.sub,
+    name: "Sales Rep",
+    role: "SALES_REP",
+    schoolId: null,
+    xp: 0,
+    level: 1,
+    cefrLevel: "N/A",
+  };
+
+  it("returns only one exact namespaced active Sales mapping", async () => {
+    const { database, limit } = legacyDatabase([mappedLegacy]);
     await expect(
-      resolveSalesCompanyPrincipal(database, baseIdentity),
-    ).rejects.toThrow("mapping write failed");
-    expect(wasRolledBack()).toBe(true);
+      resolveLegacySalesCompanyPrincipal(database, baseIdentity.sub),
+    ).resolves.toMatchObject({
+      user: {
+        id: "sales:" + baseIdentity.sub,
+        role: "SALES_REP",
+        schoolId: null,
+      },
+      scope: { kind: "company", applicationKey: "sales" },
+    });
+    expect(limit).toHaveBeenCalledWith(2);
+  });
+
+  it.each([
+    [{ ...mappedLegacy, mappingRole: "REVOKED" }],
+    [{ ...mappedLegacy, schoolId: "30000000-0000-4000-8000-000000000007" }],
+    [mappedLegacy, { ...mappedLegacy }],
+  ])("denies revoked, school-scoped, or duplicate mappings", async (...rows) => {
+    const { database } = legacyDatabase(rows);
+    await expect(
+      resolveLegacySalesCompanyPrincipal(database, baseIdentity.sub),
+    ).resolves.toBeNull();
+  });
+
+  it("rejects invalid source IDs before database access", async () => {
+    const database = { select: vi.fn() } as unknown as DB;
+    await expect(
+      resolveLegacySalesCompanyPrincipal(database, "global-admin"),
+    ).resolves.toBeNull();
+    expect(database.select).not.toHaveBeenCalled();
   });
 });
