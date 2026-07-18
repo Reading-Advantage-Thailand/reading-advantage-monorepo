@@ -61,6 +61,12 @@ function harness(
     end_session_endpoint: `${issuer}/api/oidc/logout`,
     jwks_uri: `${issuer}/api/oidc/jwks`,
     code_challenge_methods_supported: ["S256"],
+    response_types_supported: ["code"],
+    grant_types_supported: ["authorization_code"],
+    subject_types_supported: ["public"],
+    id_token_signing_alg_values_supported: ["RS256"],
+    scopes_supported: ["openid", "profile", "roles"],
+    token_endpoint_auth_methods_supported: ["client_secret_basic"],
   };
   const request = vi.fn(async (url: string | URL | Request, init?: RequestInit) => {
     const target = String(url);

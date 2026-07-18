@@ -11,7 +11,8 @@ import { z } from "zod";
 
 import type { CompanyIdentityServiceAuthConfig } from "./environment.js";
 
-const discoverySchema = z.strictObject({
+// OIDC providers may advertise additional standard capabilities; validate required fields and ignore extensions.
+const discoverySchema = z.object({
   issuer: z.string().url(),
   authorization_endpoint: z.string().url(),
   token_endpoint: z.string().url(),
