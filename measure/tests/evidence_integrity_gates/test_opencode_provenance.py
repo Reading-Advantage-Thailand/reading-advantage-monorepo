@@ -234,6 +234,26 @@ class OpenCodeProvenanceTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 ReadOnlyShellBinding("python3 forge.py")
 
+    def test_read_only_shell_rejects_executable_and_output_capabilities(self) -> None:
+        """Rejects sed, rg preprocessors, and Git external conversion/output flags."""
+        commands = (
+            "sed -n --in-place 1p file.txt",
+            "sed -n '1e id' file.txt",
+            "rg --pre python3 needle .",
+            "rg --pre-glob '*.py' needle .",
+            "git show --textconv HEAD:file.txt",
+            "git diff --ext-diff HEAD",
+            "git diff --output=forged.patch HEAD",
+        )
+        for command in commands:
+            with self.subTest(command=command):
+                with self.assertRaisesRegex(ValueError, "outside the allowed command family"):
+                    ReadOnlyShellBinding(command)
+        self.assertEqual(
+            ReadOnlyShellBinding("git rev-parse HEAD").command,
+            "git rev-parse HEAD",
+        )
+
     def test_role_binding_rejects_path_collisions_and_nonhex_commits(self) -> None:
         with self.assertRaises(ValueError):
             RoleBinding("strategy", "ses_a1", "measure-strategy", ("a//b", "a/b"))

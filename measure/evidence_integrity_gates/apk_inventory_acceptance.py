@@ -22,10 +22,23 @@ from measure.evidence_integrity_gates.events import EventResolutionError, EventR
 from measure.evidence_integrity_gates.git_source import GitSourceAdapter, GitSourceError
 from measure.evidence_integrity_gates.opencode_provenance import (
     ProvenanceError,
-    ReadOnlyShellBinding,
     RoleBinding,
-    ShellGeneratorBinding,
     build_resolved_event,
+)
+from measure.evidence_integrity_gates.t2_role_accounting import (
+    T2RoleAccountingError,
+    derive_t2_actual_usage,
+)
+from measure.evidence_integrity_gates.t2_role_receipt import (
+    T2RoleReceiptError,
+    _canonical_json as _receipt_canonical_json,
+    _context_manifest_bytes,
+    _derived_execution_contract,
+    _trusted_authority,
+    _validate_direct_write_content,
+    _validate_execution_trace,
+    _validated_commit_binding,
+    _validated_stop_loss,
 )
 
 
@@ -151,10 +164,12 @@ def _rebuild_production_role_event(
     source_adapter: GitSourceAdapter,
     authority: TrustedPhase4Authority,
 ) -> Mapping[str, Any]:
-    """Rebuilds one production role event from exact raw provider-export bytes."""
+    """Rebuilds one role event solely from raw bytes and committed Phase-0 authority."""
     try:
         repository_root = source_adapter._root
         raw = event.get("raw_export_bytes")
+        role = receipt.get("role")
+        session_id = receipt.get("spawn_id")
         provider_agent = receipt.get("provider_agent")
         raw_hash = receipt.get("raw_export_sha256")
         commit = receipt.get("commit_sha")
@@ -162,6 +177,10 @@ def _rebuild_production_role_event(
         if (
             not isinstance(repository_root, Path)
             or not isinstance(raw, bytes)
+            or not isinstance(role, str)
+            or not role
+            or not isinstance(session_id, str)
+            or not session_id
             or not isinstance(provider_agent, str)
             or not provider_agent
             or not isinstance(raw_hash, str)
@@ -183,44 +202,71 @@ def _rebuild_production_role_event(
         output_paths = tuple(outputs)
         if len(output_paths) != len(set(output_paths)):
             raise ValueError("production role output paths collide")
-        shell_generator_values = receipt.get("shell_generators", [])
-        if not isinstance(shell_generator_values, list):
-            raise ValueError("shell generator declarations are invalid")
-        shell_generators: list[ShellGeneratorBinding] = []
-        for declaration in shell_generator_values:
-            if not isinstance(declaration, Mapping):
-                raise ValueError("shell generator declaration is invalid")
-            generator_outputs = declaration.get("owned_outputs")
-            if not isinstance(generator_outputs, list):
-                raise ValueError("shell generator outputs are invalid")
-            shell_generators.append(
-                ShellGeneratorBinding(
-                    declaration.get("command"),
-                    tuple(generator_outputs),
-                    declaration.get("command_sha256"),
-                    declaration.get("attestation_commit"),
-                )
-            )
-        read_only_values = receipt.get("read_only_shell_commands", [])
-        if not isinstance(read_only_values, list):
-            raise ValueError("read-only shell declarations are invalid")
-        read_only_shell_commands: list[ReadOnlyShellBinding] = []
-        for declaration in read_only_values:
-            if not isinstance(declaration, Mapping):
-                raise ValueError("read-only shell declaration is invalid")
-            read_only_shell_commands.append(
-                ReadOnlyShellBinding(
-                    declaration.get("command"), declaration.get("command_sha256")
-                )
-            )
+        freeze_bytes, freeze, frozen_task, trusted_runtime = _trusted_authority(
+            repository_root,
+            authority.phase0_commit_sha,
+            authority.input_freeze_path,
+            authority.ownership_manifest_path,
+            role,
+            commit,
+        )
+        if frozen_task != task:
+            raise ValueError("acceptance task differs from committed Phase-0 authority")
+        declared = frozen_task.get("expected_outputs")
+        if not isinstance(declared, list):
+            raise ValueError("frozen role outputs are absent")
+        frozen_outputs = tuple(
+            path if str(path).startswith(f"{TRACK_DIRECTORY}/") else f"{TRACK_DIRECTORY}/{path}"
+            for path in declared
+        )
+        if frozen_outputs != output_paths:
+            raise ValueError("receipt output order differs from committed Phase-0 authority")
+        commit_binding = _validated_commit_binding(
+            repository_root, role, commit, receipt.get("commit_binding")
+        )
+        generators, read_only, operations, allowed_tools = _derived_execution_contract(
+            repository_root,
+            authority.phase0_commit_sha,
+            role,
+            frozen_task,
+            frozen_outputs,
+            commit,
+            commit_binding,
+        )
+        shell_generators = tuple(item.binding for item in generators)
+        read_only_shell_commands = tuple(item.binding for item in read_only)
+        expected_generators = [
+            {
+                "command": item.command,
+                "owned_outputs": list(item.owned_outputs),
+                "command_sha256": item.command_sha256,
+                "attestation_commit": item.attestation_commit,
+            }
+            for item in shell_generators
+        ]
+        expected_read_only = [
+            {"command": item.command, "command_sha256": item.command_sha256}
+            for item in read_only_shell_commands
+        ]
+        if (
+            receipt.get("phase0_authority_commit") != authority.phase0_commit_sha
+            or receipt.get("shell_generators") != expected_generators
+            or receipt.get("read_only_shell_commands") != expected_read_only
+            or receipt.get("trusted_runtime_sha256")
+            != _hash(_receipt_canonical_json(trusted_runtime))
+        ):
+            raise ValueError("receipt execution authority differs from committed Phase 0")
+        _validate_execution_trace(
+            raw, repository_root, allowed_tools, generators, read_only, operations
+        )
         binding = RoleBinding(
-            str(receipt.get("role")),
-            str(receipt.get("spawn_id")),
+            role,
+            session_id,
             provider_agent,
             output_paths,
             output_commit=commit,
-            shell_generators=tuple(shell_generators),
-            read_only_shell_commands=tuple(read_only_shell_commands),
+            shell_generators=shell_generators,
+            read_only_shell_commands=read_only_shell_commands,
         )
         attested = event.get("attested_manifest_bytes")
         required_attestations = {
@@ -236,31 +282,66 @@ def _rebuild_production_role_event(
             or not all(isinstance(value, bytes) for value in attested.values())
         ):
             raise ValueError("provider attested manifests are absent")
-        stop_loss_bytes = attested.get("stop_loss_observations_sha256")
-        stop_loss_hash = receipt.get("stop_loss_observations_sha256")
-        try:
-            stop_loss_observations = json.loads(stop_loss_bytes)
-        except (TypeError, UnicodeDecodeError, json.JSONDecodeError) as error:
-            raise APKInventoryLiveError(
-                "INVALID_STOP_LOSS_OBSERVATION", "provider stop-loss attestation is malformed"
-            ) from error
+        _validate_direct_write_content(
+            raw, repository_root, commit, frozen_outputs, shell_generators
+        )
+        context_bytes = _context_manifest_bytes(
+            build_resolved_event(raw, binding, repository_root)
+        )
+        usage = derive_t2_actual_usage(
+            repository_root=repository_root,
+            freeze=freeze,
+            role=role,
+            output_commit=commit,
+            raw_export=raw,
+            generator_commands=tuple(item.command for item in shell_generators),
+            commit_binding=commit_binding,
+        )
+        budget = {
+            "schema_version": "apk-role-budget-declaration.v1",
+            "actual_usage": usage,
+        }
+        budget_bytes = _receipt_canonical_json(budget)
+        observations = _validated_stop_loss(receipt.get("stop_loss_observations"), freeze)
+        stop_loss_bytes = _receipt_canonical_json(observations)
         if (
-            not isinstance(stop_loss_bytes, bytes)
-            or not isinstance(stop_loss_hash, str)
-            or stop_loss_hash != _hash(stop_loss_bytes)
-            or stop_loss_bytes != json.dumps(
-                stop_loss_observations, sort_keys=True, separators=(",", ":")
-            ).encode()
-            or stop_loss_observations != receipt.get("stop_loss_observations")
+            attested.get("actual_context_manifest_sha256") != context_bytes
+            or receipt.get("actual_context_manifest") != json.loads(context_bytes)
+            or receipt.get("actual_context_manifest_sha256") != _hash(context_bytes)
         ):
             raise APKInventoryLiveError(
-                "INVALID_STOP_LOSS_OBSERVATION", "receipt stop-loss counters lack provider attestation"
+                "CONTEXT_BINDING_MISMATCH",
+                "receipt context differs from the exact provider export",
+            )
+        if (
+            attested.get("budget_declaration_sha256") != budget_bytes
+            or receipt.get("actual_usage") != usage
+            or receipt.get("budget_declaration") != budget
+            or receipt.get("budget_declaration_sha256") != _hash(budget_bytes)
+        ):
+            raise APKInventoryLiveError(
+                "BUDGET_BINDING_MISMATCH",
+                "receipt usage differs from trusted logical-input accounting",
+            )
+        if (
+            attested.get("allowed_input_manifest_sha256") != freeze_bytes
+            or attested.get("task_authority_sha256") != canonical_task_prompt(frozen_task)
+            or receipt.get("allowed_input_manifest_sha256") != _hash(freeze_bytes)
+            or receipt.get("task_authority_sha256")
+            != _hash(canonical_task_prompt(frozen_task))
+        ):
+            raise ValueError("receipt input or task authority differs from committed Phase 0")
+        if (
+            attested.get("stop_loss_observations_sha256") != stop_loss_bytes
+            or receipt.get("stop_loss_observations") != observations
+            or receipt.get("stop_loss_observations_sha256") != _hash(stop_loss_bytes)
+        ):
+            raise APKInventoryLiveError(
+                "INVALID_STOP_LOSS_OBSERVATION",
+                "receipt stop-loss values differ from trusted validation",
             )
         rebuilt = build_resolved_event(raw, binding, repository_root, attested)
         normalized = normalize_resolved_event(rebuilt, task, receipt)
-        freeze_bytes = source_adapter.resolve_blob_bytes(
-            authority.phase0_commit_sha, authority.input_freeze_path
-        )
         if (
             attested.get("allowed_input_manifest_sha256") != freeze_bytes
             or attested.get("task_authority_sha256") != canonical_task_prompt(task)
@@ -273,10 +354,59 @@ def _rebuild_production_role_event(
         ):
             raise ValueError("production role event differs from its immutable bindings")
         return normalized
-    except (ValueError, ProvenanceError) as error:
+    except (
+        ValueError,
+        ProvenanceError,
+        T2RoleAccountingError,
+        T2RoleReceiptError,
+    ) as error:
         raise APKInventoryLiveError("PROVIDER_EVENT_INVALID", str(error)) from error
     except GitSourceError as error:
         raise APKInventoryLiveError("PROVIDER_EVENT_INVALID", str(error)) from error
+
+
+def _derive_production_stop_loss(
+    source_adapter: GitSourceAdapter,
+    authority: TrustedPhase4Authority,
+) -> Mapping[str, Any]:
+    """Derives final stop-loss observations from the admitted committed test report."""
+    report_path = f"{TRACK_DIRECTORY}/denominator-contract-test-report.json"
+    try:
+        report_bytes = source_adapter.resolve_blob_bytes(
+            authority.admitted_phase_base_sha, report_path
+        )
+        report = json.loads(report_bytes)
+    except (GitSourceError, UnicodeDecodeError, json.JSONDecodeError) as error:
+        raise APKInventoryLiveError(
+            "INVALID_STOP_LOSS_OBSERVATION",
+            "admitted committed stop-loss report is absent or malformed",
+        ) from error
+    counters = report.get("stop_loss_counters") if isinstance(report, Mapping) else None
+    unsupported = report.get("unsupported_claims_count") if isinstance(report, Mapping) else None
+    if not isinstance(counters, Mapping):
+        raise APKInventoryLiveError(
+            "INVALID_STOP_LOSS_OBSERVATION",
+            "admitted committed stop-loss counters are absent",
+        )
+    observations = {
+        "unsupported_factual_claims": unsupported,
+        "denominator_mismatches": counters.get("denominator_mismatches"),
+        "failed_fix_review_cycles": counters.get("failed_fix_review_cycles"),
+        "unresolved_blocking_findings": counters.get("unresolved_blocking_findings"),
+    }
+    if (
+        any(
+            not isinstance(value, int) or isinstance(value, bool) or value < 0
+            for key, value in observations.items()
+            if key != "unresolved_blocking_findings"
+        )
+        or not isinstance(observations["unresolved_blocking_findings"], Mapping)
+    ):
+        raise APKInventoryLiveError(
+            "INVALID_STOP_LOSS_OBSERVATION",
+            "admitted committed stop-loss observations are invalid",
+        )
+    return observations
 
 
 def _exact_artifact_reference(path: str, data: bytes) -> dict[str, str]:
@@ -1137,6 +1267,12 @@ def _validate_phase4_inventory_acceptance(
         or not all(isinstance(field, str) for field in required_provenance)
     ):
         return _reject("FROZEN_AUTHORITY_INVALID")
+    trusted_stop_loss: Mapping[str, Any] | None = None
+    if production_contract:
+        try:
+            trusted_stop_loss = _derive_production_stop_loss(source_adapter, authority)
+        except APKInventoryLiveError as error:
+            return _reject(error.code)
     for receipt_value in receipts:
         assert isinstance(receipt_value, Mapping)
         role = receipt_value["role"]
@@ -1211,6 +1347,8 @@ def _validate_phase4_inventory_acceptance(
             "unresolved_blocking_findings",
         }
         if not isinstance(observations, Mapping) or set(observations) != expected_observation_keys:
+            return _reject("INVALID_STOP_LOSS_OBSERVATION")
+        if trusted_stop_loss is not None and observations != trusted_stop_loss:
             return _reject("INVALID_STOP_LOSS_OBSERVATION")
         for field in expected_observation_keys - {"unresolved_blocking_findings"}:
             value = observations.get(field)

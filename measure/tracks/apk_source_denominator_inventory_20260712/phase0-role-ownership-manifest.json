@@ -3,7 +3,21 @@
   "status": "frozen-not-executed",
   "track_id": "apk_source_denominator_inventory_20260712",
   "allowed_input_manifest_path": "measure/tracks/apk_source_denominator_inventory_20260712/phase0-input-freeze.json",
-  "allowed_input_manifest_sha256": "8552355462861a9fe27f39e9b8d0020ad142492858bd29896a45fa6c765d0509",
+  "allowed_input_manifest_sha256": "8d989f6b30e5b525540004ddc21edc94b23f431a4ff38920e2121c4ea25b17b4",
+  "trusted_runtime": {
+    "schema_version": "apk-trusted-runtime.v1",
+    "sanitized_environment": {
+      "PATH": "/opt/codex-desktop/resources/node-runtime/bin:/usr/bin:/bin",
+      "LANG": "C",
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "executables": [
+      {"entry_path": "/usr/bin/env", "resolved_path": "/usr/bin/env", "sha256": "0aefff8f912fb75716c5d4de3b6acde93edbe8fa280fc8ee895c1226d3e373ef"},
+      {"entry_path": "/usr/bin/python3", "resolved_path": "/usr/bin/python3.12", "sha256": "1643dacd9feaedc58f3cc581e4d22577dfe25c09b10282936186ccf0f2e61118"},
+      {"entry_path": "/usr/bin/git", "resolved_path": "/usr/bin/git", "sha256": "2a8c18fbf43da9f692d75474c72bea9dfd796c260b0f3dfe456376abc3bbd668"},
+      {"entry_path": "/opt/codex-desktop/resources/node-runtime/bin/node", "resolved_path": "/opt/codex-desktop/resources/node-runtime/bin/node", "sha256": "81925c0995b5c1427b5d538e6a90ca2fdc4daffb786b09af749beaf7369d4e90"}
+    ]
+  },
   "source_classifier_binding": {
     "source_rule_ids": [
       "active-apk-program-sources",
@@ -78,35 +92,111 @@
       "owner_role": "discovery-auditor",
       "forbidden_roles": ["evidence-collector", "requirements-mapper", "truth-test-author", "adversarial-reviewer"],
       "reviewer_role": "adversarial-reviewer",
-      "expected_outputs": ["source-denominator.json", "game-identity-ledger.json", "scene-state-denominator.json"]
+      "expected_outputs": ["source-denominator.json", "game-identity-ledger.json", "scene-state-denominator.json"],
+      "execution_contract": {
+        "schema_version": "apk-role-execution-contract.v1",
+        "allowed_provider_tools": ["bash", "read"],
+        "direct_write_only": false,
+        "direct_write_outputs": [],
+        "ordered_operations": ["generator:0"],
+        "read_only_shell_commands": [],
+        "shell_generators": [{
+          "command_template": "/usr/bin/env -i PATH=/opt/codex-desktop/resources/node-runtime/bin:/usr/bin:/bin LANG=C PYTHONDONTWRITEBYTECODE=1 /usr/bin/python3 -I -S -c 'exec(compile(__import__(\"subprocess\").check_output((\"/usr/bin/git\",\"show\",__import__(\"sys\").argv.pop(1)+\":measure/tracks/apk_source_denominator_inventory_20260712/generate_phase1_denominators.py\")),\"measure/tracks/apk_source_denominator_inventory_20260712/generate_phase1_denominators.py\",\"exec\"),dict(__file__=\"measure/tracks/apk_source_denominator_inventory_20260712/generate_phase1_denominators.py\",__name__=\"__main__\"))' {phase0_commit} --role discovery-auditor --code-revision {phase0_commit}",
+          "dependency_blobs": [{"path": "measure/tracks/apk_source_denominator_inventory_20260712/generate_phase1_denominators.py", "revision": "f23fea71d335a9b86c95c022d1c980e527a3d320", "sha256": "4ba6125f9f846715312b66cc8fa4a26f0d1d4bc2d893f98ead28224e9c626b7c"}, {"path": "measure/tracks/apk_source_denominator_inventory_20260712/transition_ast.py", "revision": "f23fea71d335a9b86c95c022d1c980e527a3d320", "sha256": "3b345d24086aaa34f4ddef055ff8f5c0b77c89abf122788aa186eed4b954eee2"}, {"path": "measure/tracks/apk_source_denominator_inventory_20260712/transition_ast_helper.bundle.cjs", "revision": "f23fea71d335a9b86c95c022d1c980e527a3d320", "sha256": "3d4eda9b6faa181e34d50a221d924e21dd3a6f0e517d50721bccb5b1fae2c8e6"}],
+          "owned_outputs": ["measure/tracks/apk_source_denominator_inventory_20260712/source-denominator.json", "measure/tracks/apk_source_denominator_inventory_20260712/game-identity-ledger.json", "measure/tracks/apk_source_denominator_inventory_20260712/scene-state-denominator.json"],
+          "commit": {"mode": "allow-empty-only", "subject": "chore(measure): attest T2 discovery (track_id: apk_source_denominator_inventory_20260712)", "immediate_adjacency": true, "attestation_commit_source": "output_commit"}
+        }]
+      }
     },
     {
       "task_id": "evidence-collector:asset-history-denominator",
       "owner_role": "evidence-collector",
       "forbidden_roles": ["discovery-auditor", "requirements-mapper", "truth-test-author", "adversarial-reviewer"],
       "reviewer_role": "adversarial-reviewer",
-      "expected_outputs": ["asset-file-denominator.json", "historical-source-denominator.json", "independent-human-discovery.json", "human-duplicate-drift-records.json", "human-historical-deleted-records.json", "human-discrepancy-records.json"]
+      "expected_outputs": ["asset-file-denominator.json", "historical-source-denominator.json", "independent-human-discovery.json", "human-duplicate-drift-records.json", "human-historical-deleted-records.json", "human-discrepancy-records.json"],
+      "execution_contract": {
+        "schema_version": "apk-role-execution-contract.v1",
+        "allowed_provider_tools": ["bash", "read"],
+        "direct_write_only": false,
+        "direct_write_outputs": [],
+        "ordered_operations": ["generator:0", "read-only:0", "generator:1"],
+        "read_only_shell_commands": [{"command": "git rev-parse HEAD", "expected_stdout_source": "phase1_attestation_commit"}],
+        "shell_generators": [
+          {
+            "command_template": "/usr/bin/env -i PATH=/opt/codex-desktop/resources/node-runtime/bin:/usr/bin:/bin LANG=C PYTHONDONTWRITEBYTECODE=1 /usr/bin/python3 -I -S -c 'exec(compile(__import__(\"subprocess\").check_output((\"/usr/bin/git\",\"show\",__import__(\"sys\").argv.pop(1)+\":measure/tracks/apk_source_denominator_inventory_20260712/generate_phase1_denominators.py\")),\"measure/tracks/apk_source_denominator_inventory_20260712/generate_phase1_denominators.py\",\"exec\"),dict(__file__=\"measure/tracks/apk_source_denominator_inventory_20260712/generate_phase1_denominators.py\",__name__=\"__main__\"))' {phase0_commit} --role evidence-collector --code-revision {phase0_commit}",
+            "dependency_blobs": [{"path": "measure/tracks/apk_source_denominator_inventory_20260712/generate_phase1_denominators.py", "revision": "f23fea71d335a9b86c95c022d1c980e527a3d320", "sha256": "4ba6125f9f846715312b66cc8fa4a26f0d1d4bc2d893f98ead28224e9c626b7c"}, {"path": "measure/tracks/apk_source_denominator_inventory_20260712/transition_ast.py", "revision": "f23fea71d335a9b86c95c022d1c980e527a3d320", "sha256": "3b345d24086aaa34f4ddef055ff8f5c0b77c89abf122788aa186eed4b954eee2"}, {"path": "measure/tracks/apk_source_denominator_inventory_20260712/transition_ast_helper.bundle.cjs", "revision": "f23fea71d335a9b86c95c022d1c980e527a3d320", "sha256": "3d4eda9b6faa181e34d50a221d924e21dd3a6f0e517d50721bccb5b1fae2c8e6"}],
+            "owned_outputs": ["measure/tracks/apk_source_denominator_inventory_20260712/asset-file-denominator.json", "measure/tracks/apk_source_denominator_inventory_20260712/historical-source-denominator.json"],
+            "commit": {"mode": "allow-empty-only", "subject": "chore(measure): attest T2 Phase 1 evidence (track_id: apk_source_denominator_inventory_20260712)", "immediate_adjacency": true, "attestation_commit_source": "phase1_attestation_commit"}
+          },
+          {
+            "command_template": "/usr/bin/env -i PATH=/opt/codex-desktop/resources/node-runtime/bin:/usr/bin:/bin LANG=C PYTHONDONTWRITEBYTECODE=1 /usr/bin/python3 -I -S -c 'exec(compile(__import__(\"subprocess\").check_output((\"/usr/bin/git\",\"show\",__import__(\"sys\").argv.pop(1)+\":measure/tracks/apk_source_denominator_inventory_20260712/generate_phase2_human_discovery.py\")),\"measure/tracks/apk_source_denominator_inventory_20260712/generate_phase2_human_discovery.py\",\"exec\"),dict(__file__=\"measure/tracks/apk_source_denominator_inventory_20260712/generate_phase2_human_discovery.py\",__name__=\"__main__\"))' {phase0_commit} --phase1-revision {phase1_attestation_commit} --code-revision {phase0_commit}",
+            "dependency_blobs": [{"path": "measure/tracks/apk_source_denominator_inventory_20260712/generate_phase2_human_discovery.py", "revision": "f23fea71d335a9b86c95c022d1c980e527a3d320", "sha256": "4c379ecdfc7227e30544a3e8c47961833a78ccc03301ba7de2f35ecbeed43dd5"}, {"path": "measure/tracks/apk_source_denominator_inventory_20260712/transition_ast_helper.bundle.cjs", "revision": "f23fea71d335a9b86c95c022d1c980e527a3d320", "sha256": "3d4eda9b6faa181e34d50a221d924e21dd3a6f0e517d50721bccb5b1fae2c8e6"}],
+            "owned_outputs": ["measure/tracks/apk_source_denominator_inventory_20260712/independent-human-discovery.json", "measure/tracks/apk_source_denominator_inventory_20260712/human-duplicate-drift-records.json", "measure/tracks/apk_source_denominator_inventory_20260712/human-historical-deleted-records.json", "measure/tracks/apk_source_denominator_inventory_20260712/human-discrepancy-records.json"],
+            "commit": {"mode": "normal-only", "subject": "chore(measure): refresh T2 Phase 2 evidence (track_id: apk_source_denominator_inventory_20260712)", "immediate_adjacency": true, "attestation_commit_source": "output_commit"}
+          }
+        ]
+      }
     },
     {
       "task_id": "requirements-mapper:reconciliation-records",
       "owner_role": "requirements-mapper",
       "forbidden_roles": ["discovery-auditor", "evidence-collector", "truth-test-author", "adversarial-reviewer"],
       "reviewer_role": "adversarial-reviewer",
-      "expected_outputs": ["denominator-discrepancies.json", "denominator-method.md", "phase3-reconciliation.json"]
+      "expected_outputs": ["denominator-discrepancies.json", "denominator-method.md", "phase3-reconciliation.json"],
+      "execution_contract": {
+        "schema_version": "apk-role-execution-contract.v1",
+        "allowed_provider_tools": ["bash", "read"],
+        "direct_write_only": false,
+        "direct_write_outputs": [],
+        "ordered_operations": ["generator:0", "generator:1"],
+        "read_only_shell_commands": [],
+        "shell_generators": [
+          {
+            "command_template": "/usr/bin/env -i PATH=/opt/codex-desktop/resources/node-runtime/bin:/usr/bin:/bin LANG=C PYTHONDONTWRITEBYTECODE=1 /usr/bin/python3 -I -S -c 'exec(compile(__import__(\"subprocess\").check_output((\"/usr/bin/git\",\"show\",__import__(\"sys\").argv.pop(1)+\":measure/tracks/apk_source_denominator_inventory_20260712/generate_phase1_denominators.py\")),\"measure/tracks/apk_source_denominator_inventory_20260712/generate_phase1_denominators.py\",\"exec\"),dict(__file__=\"measure/tracks/apk_source_denominator_inventory_20260712/generate_phase1_denominators.py\",__name__=\"__main__\"))' {phase0_commit} --role requirements-mapper --code-revision {phase0_commit}",
+            "dependency_blobs": [{"path": "measure/tracks/apk_source_denominator_inventory_20260712/generate_phase1_denominators.py", "revision": "f23fea71d335a9b86c95c022d1c980e527a3d320", "sha256": "4ba6125f9f846715312b66cc8fa4a26f0d1d4bc2d893f98ead28224e9c626b7c"}, {"path": "measure/tracks/apk_source_denominator_inventory_20260712/transition_ast.py", "revision": "f23fea71d335a9b86c95c022d1c980e527a3d320", "sha256": "3b345d24086aaa34f4ddef055ff8f5c0b77c89abf122788aa186eed4b954eee2"}, {"path": "measure/tracks/apk_source_denominator_inventory_20260712/transition_ast_helper.bundle.cjs", "revision": "f23fea71d335a9b86c95c022d1c980e527a3d320", "sha256": "3d4eda9b6faa181e34d50a221d924e21dd3a6f0e517d50721bccb5b1fae2c8e6"}],
+            "owned_outputs": ["measure/tracks/apk_source_denominator_inventory_20260712/denominator-discrepancies.json", "measure/tracks/apk_source_denominator_inventory_20260712/denominator-method.md"],
+            "commit": {"mode": "allow-empty-only", "subject": "chore(measure): attest reconciliation evidence (track_id: apk_source_denominator_inventory_20260712)", "immediate_adjacency": true, "attestation_commit_source": "mapper_phase1_attestation_commit"}
+          },
+          {
+            "command_template": "/usr/bin/env -i PATH=/opt/codex-desktop/resources/node-runtime/bin:/usr/bin:/bin LANG=C PYTHONDONTWRITEBYTECODE=1 /usr/bin/python3 -I -S -c 'exec(compile(__import__(\"subprocess\").check_output((\"/usr/bin/git\",\"show\",__import__(\"sys\").argv.pop(1)+\":measure/tracks/apk_source_denominator_inventory_20260712/generate_phase3_reconciliation.py\")),\"measure/tracks/apk_source_denominator_inventory_20260712/generate_phase3_reconciliation.py\",\"exec\"),dict(__file__=\"measure/tracks/apk_source_denominator_inventory_20260712/generate_phase3_reconciliation.py\",__name__=\"__main__\"))' {phase0_commit}",
+            "dependency_blobs": [{"path": "measure/tracks/apk_source_denominator_inventory_20260712/generate_phase3_reconciliation.py", "revision": "f23fea71d335a9b86c95c022d1c980e527a3d320", "sha256": "62ebfa7ca7cecc4befbeff62320cfe06f62a672e972738f32fff9f3c6c23485a"}],
+            "owned_outputs": ["measure/tracks/apk_source_denominator_inventory_20260712/phase3-reconciliation.json"],
+            "commit": {"mode": "normal-only", "subject": "chore(measure): attest phase3 (track_id: apk_source_denominator_inventory_20260712)", "immediate_adjacency": true, "attestation_commit_source": "output_commit"}
+          }
+        ]
+      }
     },
     {
       "task_id": "truth-test-author:denominator-contract-tests",
       "owner_role": "truth-test-author",
       "forbidden_roles": ["discovery-auditor", "evidence-collector", "requirements-mapper", "adversarial-reviewer"],
       "reviewer_role": "adversarial-reviewer",
-      "expected_outputs": ["denominator-contract-test-report.json"]
+      "expected_outputs": ["denominator-contract-test-report.json"],
+      "execution_contract": {
+        "schema_version": "apk-role-execution-contract.v1",
+        "allowed_provider_tools": ["read", "write"],
+        "direct_write_only": true,
+        "direct_write_outputs": ["measure/tracks/apk_source_denominator_inventory_20260712/denominator-contract-test-report.json"],
+        "ordered_operations": [],
+        "read_only_shell_commands": [],
+        "shell_generators": []
+      }
     },
     {
       "task_id": "adversarial-reviewer:independent-reconciliation-review",
       "owner_role": "adversarial-reviewer",
       "forbidden_roles": ["discovery-auditor", "evidence-collector", "requirements-mapper", "truth-test-author"],
       "reviewer_role": "product-owner",
-      "expected_outputs": ["independent-review.json"]
+      "expected_outputs": ["independent-review.json"],
+      "execution_contract": {
+        "schema_version": "apk-role-execution-contract.v1",
+        "allowed_provider_tools": ["read", "write"],
+        "direct_write_only": true,
+        "direct_write_outputs": ["measure/tracks/apk_source_denominator_inventory_20260712/independent-review.json"],
+        "ordered_operations": [],
+        "read_only_shell_commands": [],
+        "shell_generators": []
+      }
     }
   ],
   "execution_note": "This is a role plan, not a receipt. No discovery, evidence collection, mapping, test authoring, or review session has been launched or represented as complete by this artifact."

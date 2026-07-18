@@ -1227,9 +1227,15 @@ class Phase2IndependentHumanDiscoveryContracts(unittest.TestCase):
     def test_phase1_revision_is_mandatory_and_has_no_generator_default(self) -> None:
         """Prevents a stale embedded Phase-1 commit from silently rewriting Phase-2."""
         module = _load_generator_module()
-        self.assertEqual(list(inspect.signature(module.generate).parameters), ["phase1_revision"])
+        self.assertEqual(
+            list(inspect.signature(module.generate).parameters),
+            ["phase1_revision", "code_revision"],
+        )
         self.assertEqual(list(inspect.signature(module.check_coverage).parameters), ["phase1_revision"])
-        self.assertEqual(list(inspect.signature(module.check_only_result).parameters), ["phase1_revision"])
+        self.assertEqual(
+            list(inspect.signature(module.check_only_result).parameters),
+            ["phase1_revision", "code_revision"],
+        )
         with self.assertRaises(TypeError):
             module.generate()
         with self.assertRaises(TypeError):
@@ -1237,6 +1243,7 @@ class Phase2IndependentHumanDiscoveryContracts(unittest.TestCase):
         source = GENERATOR_PATH.read_text(encoding="utf-8")
         self.assertNotRegex(source, r"(?m)^PHASE1_REVISION\s*=")
         self.assertIn('parser.add_argument("--phase1-revision", required=True)', source)
+        self.assertIn('parser.add_argument("--code-revision", required=True)', source)
         self.assertIn("PHASE1_INPUT_PROVENANCE_MISMATCH", source)
 
     def test_phase2_factual_outputs_exclude_quarantined_source_strings(self) -> None:

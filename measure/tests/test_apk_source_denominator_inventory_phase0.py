@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import subprocess
+import tempfile
 import unittest
 from itertools import combinations
 from pathlib import Path
@@ -13,6 +15,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[2]
 TRACK = "apk_source_denominator_inventory_20260712"
 BASELINE = "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+CODE_GATE = "f23fea71d335a9b86c95c022d1c980e527a3d320"
 TRACK_DIR = REPO_ROOT / "measure" / "tracks" / TRACK
 FREEZE_PATH = TRACK_DIR / "phase0-input-freeze.json"
 ROLE_PATH = TRACK_DIR / "phase0-role-ownership-manifest.json"
@@ -245,6 +248,205 @@ class Phase0FreezeTests(unittest.TestCase):
         self.assertEqual({task["owner_role"] for task in tasks}, set(self.roles["required_roles"]))
         owned = [output for task in tasks for output in task["expected_outputs"]]
         self.assertEqual(len(owned), len(set(owned)))
+
+    def test_role_execution_contracts_freeze_exact_tools_generators_and_commits(self) -> None:
+        """Binds every role to exact provider tools, commands, outputs, and code blobs."""
+        tasks = {task["owner_role"]: task for task in self.roles["tasks"]}
+        track_prefix = f"measure/tracks/{TRACK}/"
+        def immutable_generator(script: str) -> str:
+            """Builds the exact semicolon-free commit-bound Python launcher."""
+            path = track_prefix + script
+            return (
+                "/usr/bin/env -i "
+                "PATH=/opt/codex-desktop/resources/node-runtime/bin:/usr/bin:/bin "
+                "LANG=C PYTHONDONTWRITEBYTECODE=1 /usr/bin/python3 -I -S -c "
+                f"'exec(compile(__import__(\"subprocess\").check_output((\"/usr/bin/git\",\"show\",__import__(\"sys\").argv.pop(1)+\":{path}\")),\"{path}\",\"exec\"),"
+                f"dict(__file__=\"{path}\",__name__=\"__main__\"))' "
+                "{phase0_commit}"
+            )
+
+        phase1_generator = immutable_generator("generate_phase1_denominators.py")
+        phase2_generator = immutable_generator("generate_phase2_human_discovery.py")
+        phase3_generator = immutable_generator("generate_phase3_reconciliation.py")
+        expected_generators = {
+            "discovery-auditor": [
+                (
+                    phase1_generator
+                    + " --role discovery-auditor --code-revision {phase0_commit}",
+                    "allow-empty-only",
+                    "chore(measure): attest T2 discovery (track_id: apk_source_denominator_inventory_20260712)",
+                    "output_commit",
+                )
+            ],
+            "evidence-collector": [
+                (
+                    phase1_generator
+                    + " --role evidence-collector --code-revision {phase0_commit}",
+                    "allow-empty-only",
+                    "chore(measure): attest T2 Phase 1 evidence (track_id: apk_source_denominator_inventory_20260712)",
+                    "phase1_attestation_commit",
+                ),
+                (
+                    phase2_generator
+                    + " --phase1-revision {phase1_attestation_commit}"
+                    + " --code-revision {phase0_commit}",
+                    "normal-only",
+                    "chore(measure): refresh T2 Phase 2 evidence (track_id: apk_source_denominator_inventory_20260712)",
+                    "output_commit",
+                ),
+            ],
+            "requirements-mapper": [
+                (
+                    phase1_generator
+                    + " --role requirements-mapper --code-revision {phase0_commit}",
+                    "allow-empty-only",
+                    "chore(measure): attest reconciliation evidence (track_id: apk_source_denominator_inventory_20260712)",
+                    "mapper_phase1_attestation_commit",
+                ),
+                (
+                    phase3_generator,
+                    "normal-only",
+                    "chore(measure): attest phase3 (track_id: apk_source_denominator_inventory_20260712)",
+                    "output_commit",
+                ),
+            ],
+        }
+        expected_order = {
+            "discovery-auditor": ["generator:0"],
+            "evidence-collector": ["generator:0", "read-only:0", "generator:1"],
+            "requirements-mapper": ["generator:0", "generator:1"],
+        }
+        expected_dependencies_by_command = {
+            command: (
+                (
+                    track_prefix + "generate_phase2_human_discovery.py",
+                    track_prefix + "transition_ast_helper.bundle.cjs",
+                )
+                if "generate_phase2_human_discovery.py" in command
+                else (track_prefix + "generate_phase3_reconciliation.py",)
+                if "generate_phase3_reconciliation.py" in command
+                else (
+                    track_prefix + "generate_phase1_denominators.py",
+                    track_prefix + "transition_ast.py",
+                    track_prefix + "transition_ast_helper.bundle.cjs",
+                )
+            )
+            for generators in expected_generators.values()
+            for command, _mode, _subject, _source in generators
+        }
+        for role, task in tasks.items():
+            contract = task["execution_contract"]
+            self.assertEqual(contract["schema_version"], "apk-role-execution-contract.v1")
+            expected_outputs = {track_prefix + output for output in task["expected_outputs"]}
+            generated_outputs = {
+                output
+                for generator in contract["shell_generators"]
+                for output in generator["owned_outputs"]
+            }
+            self.assertEqual(
+                generated_outputs | set(contract["direct_write_outputs"]), expected_outputs
+            )
+            if role in {"truth-test-author", "adversarial-reviewer"}:
+                self.assertTrue(contract["direct_write_only"])
+                self.assertEqual(contract["allowed_provider_tools"], ["read", "write"])
+                self.assertEqual(contract["ordered_operations"], [])
+                self.assertEqual(contract["read_only_shell_commands"], [])
+                self.assertEqual(contract["shell_generators"], [])
+                continue
+            self.assertFalse(contract["direct_write_only"])
+            self.assertEqual(contract["allowed_provider_tools"], ["bash", "read"])
+            self.assertEqual(contract["direct_write_outputs"], [])
+            self.assertEqual(contract["ordered_operations"], expected_order[role])
+            actual_generators = []
+            for generator in contract["shell_generators"]:
+                commit = generator["commit"]
+                self.assertIs(commit["immediate_adjacency"], True)
+                actual_generators.append(
+                    (
+                        generator["command_template"],
+                        commit["mode"],
+                        commit["subject"],
+                        commit["attestation_commit_source"],
+                    )
+                )
+                dependencies = generator["dependency_blobs"]
+                self.assertEqual(
+                    tuple(dependency["path"] for dependency in dependencies),
+                    expected_dependencies_by_command[generator["command_template"]],
+                )
+                for dependency in dependencies:
+                    self.assertEqual(dependency["revision"], CODE_GATE)
+                    blob = _git("show", f"{CODE_GATE}:{dependency['path']}").encode()
+                    self.assertEqual(hashlib.sha256(blob).hexdigest(), dependency["sha256"])
+            self.assertEqual(actual_generators, expected_generators[role])
+        runtime = self.roles["trusted_runtime"]
+        self.assertEqual(runtime["schema_version"], "apk-trusted-runtime.v1")
+        self.assertEqual(
+            runtime["sanitized_environment"],
+            {
+                "PATH": "/opt/codex-desktop/resources/node-runtime/bin:/usr/bin:/bin",
+                "LANG": "C",
+                "PYTHONDONTWRITEBYTECODE": "1",
+            },
+        )
+        self.assertEqual(
+            {item["entry_path"] for item in runtime["executables"]},
+            {
+                "/usr/bin/env",
+                "/usr/bin/python3",
+                "/usr/bin/git",
+                "/opt/codex-desktop/resources/node-runtime/bin/node",
+            },
+        )
+        for executable in runtime["executables"]:
+            entry = Path(executable["entry_path"])
+            resolved = Path(executable["resolved_path"])
+            self.assertEqual(entry.resolve(strict=True), resolved.resolve(strict=True))
+            self.assertEqual(
+                hashlib.sha256(resolved.read_bytes()).hexdigest(),
+                executable["sha256"],
+            )
+        self.assertEqual(
+            tasks["evidence-collector"]["execution_contract"]["read_only_shell_commands"],
+            [{
+                "command": "git rev-parse HEAD",
+                "expected_stdout_source": "phase1_attestation_commit",
+            }],
+        )
+
+    def test_sanitized_python_launcher_ignores_pythonpath_and_sitecustomize(self) -> None:
+        """Proves the frozen env, isolated mode, and no-site mode reject ambient Python."""
+        with tempfile.TemporaryDirectory() as directory:
+            poison = Path(directory)
+            marker = poison / "sitecustomize-loaded"
+            (poison / "sitecustomize.py").write_text(
+                f"from pathlib import Path\nPath({str(marker)!r}).write_text('loaded')\n",
+                encoding="utf-8",
+            )
+            ambient = dict(os.environ)
+            ambient["PYTHONPATH"] = directory
+            result = subprocess.run(
+                [
+                    "/usr/bin/env",
+                    "-i",
+                    "PATH=/opt/codex-desktop/resources/node-runtime/bin:/usr/bin:/bin",
+                    "LANG=C",
+                    "PYTHONDONTWRITEBYTECODE=1",
+                    "/usr/bin/python3",
+                    "-I",
+                    "-S",
+                    "-c",
+                    "import sys;print(int('sitecustomize' in sys.modules))",
+                ],
+                cwd=poison,
+                env=ambient,
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(result.stdout, "0\n")
+            self.assertFalse(marker.exists())
+
 
     def test_relevance_corpus_rules_are_frozen_with_exact_program_slugs(self) -> None:
         """Freezes every ordered classifier predicate before discovery."""

@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import importlib.util
+import subprocess
 import sys
+import tempfile
 import unittest
 from unittest import mock
 from pathlib import Path
@@ -38,6 +40,122 @@ def _load_module(name: str, path: Path) -> Any:
 
 class TransitionAstUnitContracts(unittest.TestCase):
     """Falsifies regex-order inference with compiler-AST counterexamples."""
+
+    def test_phase1_loads_python_and_typescript_helpers_from_exact_code_revision(self) -> None:
+        """Rejects worktree helper execution when a production code revision is bound."""
+        revision = "a" * 40
+        phase1 = _load_module("apk_phase1_immutable_loader", PHASE1_GENERATOR)
+        module_source = b"def extract_transition_writes(sources, *, code_revision=None):\n    return {'code_revision': code_revision}\n"
+        with mock.patch.object(phase1, "run_git", return_value=module_source) as run_git:
+            transition = phase1._load_transition_module(revision)
+        run_git.assert_called_once_with(
+            "show", f"{revision}:{phase1.TRANSITION_MODULE_PATH}"
+        )
+        self.assertEqual(
+            transition.extract_transition_writes({}, code_revision=revision),
+            {"code_revision": revision},
+        )
+
+        transition_module = _load_module(
+            "apk_transition_ast_immutable_helper", TRANSITION_MODULE
+        )
+        immutable_bundle = b"const immutable = true;\n"
+        git_result = subprocess.CompletedProcess(
+            args=[], returncode=0, stdout=immutable_bundle, stderr=b""
+        )
+        compiler_result = subprocess.CompletedProcess(
+            args=[],
+            returncode=0,
+            stdout=b'{"literal_domain_writes":[]}',
+            stderr=b"",
+        )
+        with mock.patch.object(
+            transition_module.subprocess,
+            "run",
+            side_effect=(git_result, compiler_result),
+        ) as run:
+            self.assertEqual(
+                transition_module.enumerate_typescript_transition_facts(
+                    {}, mode="phase1", code_revision=revision
+                ),
+                [],
+            )
+        self.assertEqual(
+            run.call_args_list[0].args[0],
+            [
+                "/usr/bin/git",
+                "show",
+                f"{revision}:{transition_module.AST_BUNDLE_PATH}",
+            ],
+        )
+        self.assertEqual(
+            run.call_args_list[1].args[0][0],
+            "/opt/codex-desktop/resources/node-runtime/bin/node",
+        )
+        self.assertEqual(
+            run.call_args_list[1].kwargs["input"],
+            b'{"mode": "phase1", "sources": {}}',
+        )
+        self.assertEqual(run.call_args_list[1].kwargs["env"], transition_module.RUNTIME_ENV)
+
+    def test_phase2_loads_typescript_helper_from_exact_code_revision(self) -> None:
+        """Rejects Phase-2 worktree helper execution under a bound code revision."""
+        revision = "b" * 40
+        phase2 = _load_module("apk_phase2_immutable_helper", PHASE2_GENERATOR)
+        immutable_bundle = b"const phase2 = true;\n"
+        git_result = subprocess.CompletedProcess(
+            args=[], returncode=0, stdout=immutable_bundle, stderr=b""
+        )
+        compiler_result = subprocess.CompletedProcess(
+            args=[],
+            returncode=0,
+            stdout=b'{"literal_domain_writes":[]}',
+            stderr=b"",
+        )
+        with mock.patch.object(
+            phase2.subprocess, "run", side_effect=(git_result, compiler_result)
+        ) as run:
+            self.assertEqual(
+                phase2._enumerate_raw_transition_facts(
+                    {}, code_revision=revision
+                ),
+                [],
+            )
+        self.assertEqual(
+            run.call_args_list[0].args[0],
+            ["/usr/bin/git", "show", f"{revision}:{phase2.TRANSITION_BUNDLE_PATH}"],
+        )
+        self.assertEqual(
+            run.call_args_list[1].args[0][0],
+            "/opt/codex-desktop/resources/node-runtime/bin/node",
+        )
+        self.assertEqual(
+            run.call_args_list[1].kwargs["input"],
+            b'{"mode": "phase2", "sources": {}}',
+        )
+        self.assertEqual(run.call_args_list[1].kwargs["env"], phase2.RUNTIME_ENV)
+
+    def test_self_contained_bundle_ignores_poisoned_node_modules(self) -> None:
+        """Proves runtime extraction never resolves TypeScript or tsx from node_modules."""
+        transition = _load_module("apk_transition_ast_bundle_isolation", TRANSITION_MODULE)
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            poison = root / "node_modules" / "typescript"
+            poison.mkdir(parents=True)
+            (poison / "package.json").write_text(
+                '{"name":"typescript","main":"index.js"}',
+                encoding="utf-8",
+            )
+            (poison / "index.js").write_text(
+                "throw new Error('ambient typescript loaded');",
+                encoding="utf-8",
+            )
+            with mock.patch.object(transition, "REPO_ROOT", root):
+                facts = transition.enumerate_typescript_transition_facts(
+                    {"fixture.ts": 'type State = "idle" | "done";'},
+                    mode="phase1",
+                )
+        self.assertEqual(facts, [])
 
     def test_ast_extracts_only_single_source_state_edges_and_retains_candidates(self) -> None:
         """Requires proven guards/data flow and quarantines ambiguous writes."""

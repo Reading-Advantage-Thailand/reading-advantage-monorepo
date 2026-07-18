@@ -155,16 +155,23 @@ def _is_structurally_read_only_command(command: str) -> bool:
     if not tokens:
         return False
     if tokens[0] == "git" and len(tokens) >= 2:
+        forbidden_git_flags = {
+            "--config-env", "--exec-path", "--ext-diff", "--external-diff",
+            "--output", "--paginate", "--no-pager", "--textconv",
+        }
+        if any(
+            token in forbidden_git_flags
+            or token == "-o"
+            or any(token.startswith(f"{flag}=") for flag in forbidden_git_flags)
+            for token in tokens[2:]
+        ):
+            return False
         return tokens[1] in {
             "diff", "diff-tree", "log", "ls-files", "ls-tree", "merge-base",
             "rev-parse", "show", "status",
         }
     if tokens[0] in {"head", "tail", "sha256sum", "wc"}:
         return True
-    if tokens[0] == "rg":
-        return "--replace" not in tokens
-    if tokens[0] == "sed":
-        return "-n" in tokens and not any(token == "-i" or token.startswith("-i") for token in tokens)
     return False
 
 

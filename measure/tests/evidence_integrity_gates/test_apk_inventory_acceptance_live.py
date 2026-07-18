@@ -21,6 +21,7 @@ from measure.evidence_integrity_gates.apk_inventory_live import (
 )
 from measure.evidence_integrity_gates.events import MappingEventResolver
 from measure.evidence_integrity_gates.git_source import GitSourceAdapter
+from measure.evidence_integrity_gates.t2_role_receipt import _EXPECTED_RUNTIME_ENVIRONMENT
 from measure.tests import test_apk_source_denominator_inventory_phase4 as legacy_phase4
 
 
@@ -32,6 +33,29 @@ def _canonical_bytes(value: object) -> bytes:
 def _digest(value: bytes) -> str:
     """Returns one lowercase SHA-256 digest."""
     return hashlib.sha256(value).hexdigest()
+
+
+def _trusted_runtime() -> dict[str, Any]:
+    """Builds exact live executable authority for the isolated production fixture."""
+    entries = (
+        "/usr/bin/env",
+        "/usr/bin/python3",
+        "/usr/bin/git",
+        "/opt/codex-desktop/resources/node-runtime/bin/node",
+    )
+    executables = []
+    for entry in entries:
+        resolved = Path(entry).resolve(strict=True)
+        executables.append({
+            "entry_path": entry,
+            "resolved_path": str(resolved),
+            "sha256": _digest(resolved.read_bytes()),
+        })
+    return {
+        "schema_version": "apk-trusted-runtime.v1",
+        "sanitized_environment": dict(_EXPECTED_RUNTIME_ENVIRONMENT),
+        "executables": executables,
+    }
 
 
 class APKInventoryProductionAcceptanceWiringTests(unittest.TestCase):
@@ -77,6 +101,18 @@ class APKInventoryProductionAcceptanceWiringTests(unittest.TestCase):
                 if task["owner_role"] == "adversarial-reviewer"
                 else "adversarial-reviewer"
             )
+            task["execution_contract"] = {
+                "schema_version": "apk-role-execution-contract.v1",
+                "allowed_provider_tools": ["read", "write"],
+                "direct_write_only": True,
+                "direct_write_outputs": [
+                    f"{TRACK_DIRECTORY}/{name}" for name in task["expected_outputs"]
+                ],
+                "ordered_operations": [],
+                "read_only_shell_commands": [],
+                "shell_generators": [],
+            }
+        ownership["trusted_runtime"] = _trusted_runtime()
         expected_names = {
             name for names in PHASE_ARTIFACT_PATHS.values() for name in names
         } | {
@@ -92,6 +128,27 @@ class APKInventoryProductionAcceptanceWiringTests(unittest.TestCase):
         freeze["expected_artifacts"] = [
             {"path": f"{TRACK_DIRECTORY}/{name}"} for name in sorted(expected_names)
         ]
+        report_path = f"{TRACK_DIRECTORY}/denominator-contract-test-report.json"
+        freeze["resource_accounting"] = {
+            "schema_version": "apk-logical-input-accounting.v1",
+            "roles": {
+                role: {
+                    "formula": "structured-committed-test-report-only",
+                    "report_path": report_path,
+                    "admission_pointer": "/phase0_3_admission_result",
+                    "inventory_pointer": "/test_inventory",
+                    "test_count_field": "tests",
+                    "passed_field": "passed",
+                    "failed_field": "failed",
+                    "exit_code_field": "exit_code",
+                }
+                for role in cls.legacy.REQUIRED_ROLES
+            },
+        }
+        freeze["frozen_resource_ceilings"] = {
+            role: {"bytes_read": 1024, "command_invocations": 20, "test_cases": 54}
+            for role in cls.legacy.REQUIRED_ROLES
+        }
         freeze_bytes = cls.legacy._json_bytes(freeze)
         freeze_file.write_bytes(freeze_bytes)
         ownership["allowed_input_manifest_sha256"] = _digest(freeze_bytes)
@@ -99,6 +156,9 @@ class APKInventoryProductionAcceptanceWiringTests(unittest.TestCase):
         cls.legacy._git("add", cls.freeze_path, cls.ownership_path)
         cls.legacy._git("commit", "-q", "-m", "fixture: production phase0")
         phase0_commit = cls.legacy._git("rev-parse", "HEAD").stdout.strip()
+        cls.phase0_commit = phase0_commit
+        cls.freeze = freeze
+        cls.trusted_runtime = ownership["trusted_runtime"]
         cls.tasks = {task["owner_role"]: task for task in ownership["tasks"]}
         docs = live_fixtures._documents()
         for document in docs.values():
@@ -158,6 +218,9 @@ class APKInventoryProductionAcceptanceWiringTests(unittest.TestCase):
                         "exit_code": 0,
                         "status": "passed",
                     },
+                    "test_inventory": [
+                        {"tests": 54, "passed": 54, "failed": 0, "exit_code": 0}
+                    ],
                     "stop_loss_counters": {
                         "unsupported_factual_claims": 0,
                         "denominator_mismatches": 0,
@@ -403,7 +466,10 @@ class APKInventoryProductionAcceptanceWiringTests(unittest.TestCase):
                     "tool": "write",
                     "state": {
                         "status": "completed",
-                        "input": {"filePath": path},
+                        "input": {
+                            "filePath": path,
+                            "content": bundle["artifact_bytes"][path].decode(),
+                        },
                     },
                 }
                 for path in receipt["output_hashes"]
@@ -468,8 +534,13 @@ class APKInventoryProductionAcceptanceWiringTests(unittest.TestCase):
             })
             budget = _canonical_bytes({
                 "schema_version": "apk-role-budget-declaration.v1",
-                "actual_usage": receipt["actual_usage"],
+                "actual_usage": {
+                    "bytes_read": 0,
+                    "command_invocations": len(write_parts),
+                    "test_cases": 54,
+                },
             })
+            receipt["actual_usage"] = json.loads(budget)["actual_usage"]
             attestations = {
                 "allowed_input_manifest_sha256": freeze_bytes,
                 "actual_context_manifest_sha256": context,
@@ -495,6 +566,8 @@ class APKInventoryProductionAcceptanceWiringTests(unittest.TestCase):
                         )
                     ),
                     "actual_context_manifest_sha256": _digest(context),
+                    "actual_context_manifest": json.loads(context),
+                    "budget_declaration": json.loads(budget),
                     "budget_declaration_sha256": _digest(budget),
                     "start_event_id": start_id,
                     "end_event_id": end_id,
@@ -502,6 +575,12 @@ class APKInventoryProductionAcceptanceWiringTests(unittest.TestCase):
                     "stop_loss_observations_sha256": _digest(
                         attestations["stop_loss_observations_sha256"]
                     ),
+                    "phase0_authority_commit": cls.phase0_commit,
+                    "allowed_input_manifest_sha256": _digest(freeze_bytes),
+                    "task_authority_sha256": _digest(prompt),
+                    "trusted_runtime_sha256": _digest(_canonical_bytes(cls.trusted_runtime)),
+                    "shell_generators": [],
+                    "read_only_shell_commands": [],
                 }
             )
             events[end_id] = {
@@ -586,6 +665,7 @@ class APKInventoryProductionAcceptanceWiringTests(unittest.TestCase):
             context["schema_omissions"] = ["fork_turns"]
         context_bytes = _canonical_bytes(context)
         event["attested_manifest_bytes"]["actual_context_manifest_sha256"] = context_bytes
+        receipt["actual_context_manifest"] = context
         receipt["actual_context_manifest_sha256"] = _digest(context_bytes)
 
     def _assert_code(
@@ -819,6 +899,56 @@ class APKInventoryProductionAcceptanceWiringTests(unittest.TestCase):
         path = next(iter(bundle["artifact_commits"]))
         bundle["artifact_commits"][path] = self.authority.admitted_phase_base_sha
         self._assert_code(bundle, events, "ARTIFACT_ANCESTRY_INVALID")
+
+    def test_receipt_cannot_authorize_arbitrary_read_only_shell(self) -> None:
+        """Rejects a real raw command even when a hand-authored receipt declares it safe."""
+        bundle, events = self._fixture()
+        receipt, event = self._receipt_event(bundle, events)
+        raw = json.loads(event["raw_export_bytes"])
+        command = "git rev-parse HEAD"
+        raw["messages"][1]["parts"].insert(0, {
+            "type": "tool",
+            "tool": "bash",
+            "state": {
+                "status": "completed",
+                "input": {"command": command, "workdir": str(self.fixture_repo)},
+                "metadata": {
+                    "output": f"{receipt['commit_sha']}\n",
+                    "exit": 0,
+                    "truncated": False,
+                },
+            },
+        })
+        receipt["read_only_shell_commands"] = [{
+            "command": command,
+            "command_sha256": _digest(command.encode()),
+        }]
+        self._replace_raw(receipt, event, raw)
+        self._assert_code(bundle, events, "PROVIDER_EVENT_INVALID")
+
+    def test_receipt_cannot_replace_frozen_runtime_identity(self) -> None:
+        """Rejects a hand-authored runtime digest absent from committed Phase-0 authority."""
+        bundle, events = self._fixture()
+        receipt, _ = self._receipt_event(bundle, events)
+        receipt["trusted_runtime_sha256"] = "f" * 64
+        self._assert_code(bundle, events, "PROVIDER_EVENT_INVALID")
+
+    def test_receipt_cannot_rehash_forged_actual_usage(self) -> None:
+        """Rejects coordinated receipt and provider budget counters below the ceiling."""
+        bundle, events = self._fixture()
+        receipt, event = self._receipt_event(bundle, events)
+        forged = dict(receipt["actual_usage"])
+        forged["test_cases"] = 0
+        budget = {
+            "schema_version": "apk-role-budget-declaration.v1",
+            "actual_usage": forged,
+        }
+        budget_bytes = _canonical_bytes(budget)
+        receipt["actual_usage"] = forged
+        receipt["budget_declaration"] = budget
+        receipt["budget_declaration_sha256"] = _digest(budget_bytes)
+        event["attested_manifest_bytes"]["budget_declaration_sha256"] = budget_bytes
+        self._assert_code(bundle, events, "BUDGET_BINDING_MISMATCH")
 
     def test_production_cannot_downgrade_to_legacy_contract(self) -> None:
         """Rejects a valid historical synthetic bundle at the production entry point."""

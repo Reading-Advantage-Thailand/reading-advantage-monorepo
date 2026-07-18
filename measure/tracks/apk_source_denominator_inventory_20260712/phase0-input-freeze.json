@@ -134,10 +134,109 @@
   },
   "frozen_resource_ceilings": {
     "discovery-auditor": {"source_files": 7500, "command_invocations": 120, "bytes_read": 268435456},
-    "evidence-collector": {"source_files": 7500, "command_invocations": 120, "bytes_read": 268435456},
+    "evidence-collector": {"source_files": 7500, "command_invocations": 120, "bytes_read": 536870912},
     "requirements-mapper": {"claim_records": 12000, "command_invocations": 60, "bytes_read": 134217728},
     "truth-test-author": {"test_cases": 180, "command_invocations": 80, "bytes_read": 67108864},
     "adversarial-reviewer": {"source_files": 7500, "command_invocations": 120, "bytes_read": 268435456}
+  },
+  "resource_accounting": {
+    "schema_version": "apk-logical-input-accounting.v1",
+    "roles": {
+      "discovery-auditor": {
+        "formula": "unique-baseline-source-record-blobs",
+        "artifact_path": "measure/tracks/apk_source_denominator_inventory_20260712/source-denominator.json",
+        "collection_pointer": "/records",
+        "required_record_type": "file",
+        "path_field": "file_path",
+        "locator_pointer": "/evidence",
+        "required_revision_field": "baseline_revision"
+      },
+      "evidence-collector": {
+        "formula": "phase1-source-assets-history-and-artifact-union",
+        "phase1_commit_binding_field": "phase1_attestation_commit",
+        "phase2_commit_binding_field": "phase2_attestation_commit",
+        "phase1_artifact_paths": [
+          "measure/tracks/apk_source_denominator_inventory_20260712/source-denominator.json",
+          "measure/tracks/apk_source_denominator_inventory_20260712/game-identity-ledger.json",
+          "measure/tracks/apk_source_denominator_inventory_20260712/scene-state-denominator.json",
+          "measure/tracks/apk_source_denominator_inventory_20260712/asset-file-denominator.json",
+          "measure/tracks/apk_source_denominator_inventory_20260712/historical-source-denominator.json",
+          "measure/tracks/apk_source_denominator_inventory_20260712/denominator-discrepancies.json"
+        ],
+        "source_records": {
+          "artifact_path": "measure/tracks/apk_source_denominator_inventory_20260712/source-denominator.json",
+          "collection_pointer": "/records",
+          "required_record_type": "file",
+          "path_field": "file_path",
+          "locator_pointer": "/evidence"
+        },
+        "asset_records": {
+          "artifact_path": "measure/tracks/apk_source_denominator_inventory_20260712/asset-file-denominator.json",
+          "collection_pointer": "/candidate_files",
+          "revision_field": "revision",
+          "path_field": "canonical_path",
+          "sha256_field": "sha256"
+        },
+        "historical_records": {
+          "artifact_path": "measure/tracks/apk_source_denominator_inventory_20260712/historical-source-denominator.json",
+          "collection_pointer": "/records",
+          "locator_pointer": "/evidence"
+        }
+      },
+      "requirements-mapper": {
+        "formula": "phase3-exact-predecessor-artifacts-and-frozen-claim-pointers",
+        "phase3_artifact_path": "measure/tracks/apk_source_denominator_inventory_20260712/phase3-reconciliation.json",
+        "phase1_revision_pointer": "/input_provenance/phase1/revision",
+        "phase1_hashes_pointer": "/input_provenance/phase1/output_hashes",
+        "phase2_revision_pointer": "/input_provenance/phase2/implementation_revision",
+        "phase2_hashes_pointer": "/input_provenance/phase2/consumed_output_hashes",
+        "claim_record_pointers": {
+          "measure/tracks/apk_source_denominator_inventory_20260712/denominator-discrepancies.json": ["/records"],
+          "measure/tracks/apk_source_denominator_inventory_20260712/phase3-reconciliation.json": [
+            "/asset_candidate_reconciliation_records",
+            "/copy_reconciliation_records",
+            "/discrepancy_reconciliation_records",
+            "/file_reconciliation_records",
+            "/graph_edge_reconciliation_records",
+            "/identical_hash_group_reconciliation_records",
+            "/identity_reconciliation_records",
+            "/replacement_program_identity_records",
+            "/source_record_reconciliation_records",
+            "/surface_category_coverage",
+            "/surface_reconciliation_records",
+            "/unresolved_sources"
+          ]
+        }
+      },
+      "truth-test-author": {
+        "formula": "structured-committed-test-report-only",
+        "report_path": "measure/tracks/apk_source_denominator_inventory_20260712/denominator-contract-test-report.json",
+        "admission_pointer": "/phase0_3_admission_result",
+        "inventory_pointer": "/test_inventory",
+        "test_count_field": "tests",
+        "passed_field": "passed",
+        "failed_field": "failed",
+        "exit_code_field": "exit_code"
+      },
+      "adversarial-reviewer": {
+        "formula": "exact-reviewed-input-artifact-ledger",
+        "review_path": "measure/tracks/apk_source_denominator_inventory_20260712/independent-review.json",
+        "ledger_pointer": "/reviewed_input_ledger/artifact_refs",
+        "required_artifact_paths": [
+          "measure/tracks/apk_source_denominator_inventory_20260712/source-denominator.json",
+          "measure/tracks/apk_source_denominator_inventory_20260712/game-identity-ledger.json",
+          "measure/tracks/apk_source_denominator_inventory_20260712/scene-state-denominator.json",
+          "measure/tracks/apk_source_denominator_inventory_20260712/asset-file-denominator.json",
+          "measure/tracks/apk_source_denominator_inventory_20260712/historical-source-denominator.json",
+          "measure/tracks/apk_source_denominator_inventory_20260712/denominator-discrepancies.json",
+          "measure/tracks/apk_source_denominator_inventory_20260712/independent-human-discovery.json",
+          "measure/tracks/apk_source_denominator_inventory_20260712/human-duplicate-drift-records.json",
+          "measure/tracks/apk_source_denominator_inventory_20260712/human-historical-deleted-records.json",
+          "measure/tracks/apk_source_denominator_inventory_20260712/human-discrepancy-records.json",
+          "measure/tracks/apk_source_denominator_inventory_20260712/phase3-reconciliation.json"
+        ]
+      }
+    }
   },
   "stop_loss": {
     "max_games_per_batch": 3,
