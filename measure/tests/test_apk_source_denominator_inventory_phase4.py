@@ -30,7 +30,7 @@ FREEZE_PATH = TRACK_DIR / "phase0-input-freeze.json"
 OWNERSHIP_PATH = TRACK_DIR / "phase0-role-ownership-manifest.json"
 PHASE3_PATH = TRACK_DIR / "phase3-reconciliation.json"
 PHASE3_GENERATOR_PATH = TRACK_DIR / "generate_phase3_reconciliation.py"
-REPORT_PATH = TRACK_DIR / "phase4-acceptance-contract-test-report.json"
+REPORT_PATH = TRACK_DIR / "denominator-contract-test-report.json"
 REVIEW_PATH = TRACK_DIR / "independent-review.json"
 CANDIDATE_PATH = TRACK_DIR / "candidate-denominator-manifest.json"
 CANDIDATE_PARTITION_PATH = TRACK_DIR / "candidate-partition-manifest.json"
@@ -65,6 +65,15 @@ FORBIDDEN_INTERPRETATION_FIELDS = {
     "suitability",
 }
 SURFACE_KINDS = {"scene", "state", "phase", "overlay", "transition", "terminal", "presentation"}
+REQUIRED_PHASE4_ARTIFACTS = (
+    "independent-review.json",
+    "role-receipts/adversarial-reviewer.json",
+    "candidate-denominator-manifest.json",
+    "candidate-partition-manifest.json",
+    "product-owner-acceptance.json",
+    "accepted-denominator-manifest.json",
+    "accepted-partition-manifest.json",
+)
 
 
 def _load_json(path: Path, *, phase4: bool = False) -> dict[str, Any]:
@@ -281,27 +290,57 @@ class Phase4IndependentAcceptanceContracts(unittest.TestCase):
             for index, nested in enumerate(value):
                 self._assert_no_interpretation_fields(nested, f"{location}[{index}]")
 
-    def test_red_report_is_contract_only_and_names_the_phase4_gate(self) -> None:
-        """Keeps this RED report separate from review and acceptance evidence.
+    def test_contract_report_is_canonical_truth_test_author_evidence(self) -> None:
+        """Requires the canonical truth-test report and passed predecessor admission.
 
         Returns:
             Nothing.
         """
         report = _load_json(REPORT_PATH)
-        self.assertEqual(report.get("schema_version"), "apk-denominator-phase4-acceptance-contract-report.v1")
+        self.assertEqual(report.get("schema_version"), "apk-denominator-contract-test-report.v1")
         self.assertEqual(report.get("status"), "red-contract-authored")
+        self.assertEqual(report.get("track_id"), TRACK)
         self.assertEqual(report.get("source_baseline_revision"), self.baseline)
-        self.assertEqual(report.get("red_command"), report.get("green_command"))
-        self.assertIn("test_apk_source_denominator_inventory_phase4", str(report.get("red_command")))
+        self.assertEqual(report.get("role"), "truth-test-author")
+        admission_command = report.get("phase0_3_admission_command")
+        self.assertIsInstance(admission_command, str)
+        for phase in range(4):
+            self.assertIn(f"test_apk_source_denominator_inventory_phase{phase}", str(admission_command))
+        admission_result = report.get("phase0_3_admission_result")
+        self.assertIsInstance(admission_result, dict)
+        assert isinstance(admission_result, dict)
+        self.assertEqual(admission_result.get("status"), "passed")
+        self.assertEqual(admission_result.get("exit_code"), 0)
+        self.assertEqual(admission_result.get("failed"), 0)
+        self.assertEqual(admission_result.get("passed"), admission_result.get("total_tests"))
+        inventory = report.get("test_inventory")
+        self.assertIsInstance(inventory, list)
+        assert isinstance(inventory, list)
+        self.assertEqual(len(inventory), 4)
+        self.assertTrue(all(isinstance(entry, dict) for entry in inventory))
+        typed_inventory = [entry for entry in inventory if isinstance(entry, dict)]
+        self.assertEqual([entry.get("phase") for entry in typed_inventory], list(range(4)))
+        for phase, entry in enumerate(typed_inventory):
+            self.assertEqual(entry.get("module"), f"measure.tests.test_apk_source_denominator_inventory_phase{phase}")
+            self.assertIsInstance(entry.get("tests"), int)
+            self.assertNotIsInstance(entry.get("tests"), bool)
+            self.assertGreater(int(entry["tests"]), 0)
+            self.assertEqual(entry.get("passed"), entry.get("tests"))
+            self.assertEqual(entry.get("failed"), 0)
+            self.assertEqual(entry.get("exit_code"), 0)
+        self.assertEqual(
+            sum(int(entry["tests"]) for entry in typed_inventory),
+            admission_result.get("total_tests"),
+        )
         self.assertNotIn("accepted", str(report.get("status")).lower())
-        # Phase-4 contract report must pin its authoring baseline to a real,
-        # abbreviated commit reference that resolves through `git rev-parse`.
+        # The canonical contract report must pin its authoring baseline to a real,
+        # full commit reference that resolves through `git rev-parse`.
         # This mirrors the resolver used for plan-task commit evidence and
         # prevents a future author from re-authoring the contract at an
         # unresolvable revision without detection.
         authoring_baseline = report.get("phase_authoring_baseline_revision")
         self.assertIsInstance(authoring_baseline, str)
-        self.assertRegex(str(authoring_baseline), COMMIT_EVIDENCE)
+        self.assertRegex(str(authoring_baseline), COMMIT_SHA)
         assert isinstance(authoring_baseline, str)
         self.assertEqual(
             subprocess.run(
@@ -376,10 +415,26 @@ class Phase4IndependentAcceptanceContracts(unittest.TestCase):
         self.assertEqual(coverage, expected)
         self.assertEqual(self.phase3.get("unresolved_sources"), [])
         self.assertEqual(self.phase3.get("status"), "reconciliation-complete")
+        provenance = self.phase3.get("input_provenance")
+        self.assertIsInstance(provenance, dict)
+        assert isinstance(provenance, dict)
+        phase2_provenance = provenance.get("phase2")
+        self.assertIsInstance(phase2_provenance, dict)
+        assert isinstance(phase2_provenance, dict)
+        phase2_receipt_revision = phase2_provenance.get("receipt_revision")
+        self.assertIsInstance(phase2_receipt_revision, str)
+        self.assertRegex(str(phase2_receipt_revision), COMMIT_SHA)
         with tempfile.TemporaryDirectory() as directory:
             reproduced_path = Path(directory) / "phase3-reconciliation.json"
             result = subprocess.run(
-                [sys.executable, str(PHASE3_GENERATOR_PATH), "--output", str(reproduced_path)],
+                [
+                    sys.executable,
+                    str(PHASE3_GENERATOR_PATH),
+                    "--phase2-receipt-revision",
+                    str(phase2_receipt_revision),
+                    "--output",
+                    str(reproduced_path),
+                ],
                 cwd=REPO_ROOT,
                 capture_output=True,
                 check=False,
@@ -624,13 +679,16 @@ class Phase4IndependentAcceptanceContracts(unittest.TestCase):
             Nothing.
         """
         index = (TRACK_DIR / "index.md").read_text(encoding="utf-8")
-        report = _load_json(REPORT_PATH)
-        required_paths = report.get("required_phase4_artifacts")
-        self.assertIsInstance(required_paths, list)
-        assert isinstance(required_paths, list)
-        for name in required_paths:
-            self.assertIsInstance(name, str)
-            assert isinstance(name, str)
+        expected_artifacts = self.freeze.get("expected_artifacts")
+        self.assertIsInstance(expected_artifacts, list)
+        assert isinstance(expected_artifacts, list)
+        frozen_paths = {
+            str(record.get("path"))
+            for record in expected_artifacts
+            if isinstance(record, dict)
+        }
+        for name in REQUIRED_PHASE4_ARTIFACTS:
+            self.assertIn(str((TRACK_DIR / name).relative_to(REPO_ROOT)), frozen_paths)
             self.assertIn(f"./{name}", index)
 
         outputs = [self.review, self._candidate(), _load_json(CANDIDATE_PARTITION_PATH, phase4=True)]
@@ -651,7 +709,7 @@ class Phase4IndependentAcceptanceContracts(unittest.TestCase):
             "Spawn a `fork_turns=\"none\"`, tool-attested reviewer to re-run full denominator reconciliation",
             "Run claim hash, revision reachability, denominator, role-receipt, and stop-loss validators",
             "Remediate every Critical, High, and Medium finding",
-            "Publish non-consumable candidate denominator and partition manifests plus complete review report",
+            "Root coordinator publishes the non-consumable candidate denominator and partition manifests only after the independent review is complete",
         ]
         for task in reviewer_tasks:
             line = next((item for item in phase_four.splitlines() if task in item), None)
@@ -659,8 +717,16 @@ class Phase4IndependentAcceptanceContracts(unittest.TestCase):
             assert line is not None
             self.assertTrue(line.startswith("- [x] Task:"), line)
             self.assertIsNotNone(COMMIT_EVIDENCE.search(line), f"completed Phase-4 reviewer task lacks commit evidence: {line}")
-        self.assertIn("- [b] Task: Obtain product-owner acceptance", phase_four)
-        self.assertIn("deferred:product-owner", phase_four)
+        owner_tasks = [
+            "External human product owner authors acceptance bound to exact candidate/review hashes; only then may the root coordinator publish accepted denominator and partition manifests",
+            "Measure - User Manual Verification 'Phase 4' (Protocol in workflow.md)",
+        ]
+        for task in owner_tasks:
+            line = next((item for item in phase_four.splitlines() if task in item), None)
+            self.assertIsNotNone(line)
+            assert line is not None
+            self.assertTrue(line.startswith("- [b] Task:"), line)
+            self.assertIn("deferred:product-owner", line)
 
     def test_metadata_plan_and_registry_only_claim_closeout_after_acceptance_with_commit_evidence(self) -> None:
         """Makes terminal track status contingent on approved accepted manifests.
