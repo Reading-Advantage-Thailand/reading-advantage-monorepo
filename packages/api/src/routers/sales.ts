@@ -96,6 +96,29 @@ function mapSalesError(err: unknown): never {
   throw err;
 }
 
+/**
+ * Validates a complete Sales scope against the authenticated tenant model.
+ * @param scope Candidate product scope.
+ * @param schoolId Authenticated legacy school ID, or null for company mode.
+ * @returns Parsed compatible Sales scope.
+ * @throws When the scope is absent, partial, or mixed with another tenant model.
+ */
+function requireCompatibleSalesScope(scope: unknown, schoolId: string | null) {
+  const parsed = salesAccessScopeSchema.safeParse(scope);
+  const compatible =
+    parsed.success &&
+    ((parsed.data.kind === "company" && schoolId === null) ||
+      (parsed.data.kind === "legacy-school" &&
+        schoolId === parsed.data.schoolId));
+  if (!compatible) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "Verified Sales scope required",
+    });
+  }
+  return parsed.data;
+}
+
 /** Middleware that requires the SALES_REP or SALES_ADMIN role. */
 const salesRepOrAdmin = middleware(async ({ ctx, next }) => {
   if (!ctx.auth) {
@@ -110,17 +133,10 @@ const salesRepOrAdmin = middleware(async ({ ctx, next }) => {
       message: "Sales access required",
     });
   }
-  const parsedScope = salesAccessScopeSchema.safeParse(ctx.auth.productScope);
-  if (
-    !parsedScope.success ||
-    parsedScope.data.kind !== "company" ||
-    ctx.auth.tenant.schoolId !== null
-  ) {
-    throw new TRPCError({
-      code: "FORBIDDEN",
-      message: "Verified Sales company scope required",
-    });
-  }
+  const parsedScope = requireCompatibleSalesScope(
+    ctx.auth.productScope,
+    ctx.auth.tenant.schoolId,
+  );
   return next({
     ctx: {
       ...ctx,
@@ -140,17 +156,10 @@ const salesAdminOnly = middleware(async ({ ctx, next }) => {
       message: "Sales admin access required",
     });
   }
-  const parsedScope = salesAccessScopeSchema.safeParse(ctx.auth.productScope);
-  if (
-    !parsedScope.success ||
-    parsedScope.data.kind !== "company" ||
-    ctx.auth.tenant.schoolId !== null
-  ) {
-    throw new TRPCError({
-      code: "FORBIDDEN",
-      message: "Verified Sales company scope required",
-    });
-  }
+  const parsedScope = requireCompatibleSalesScope(
+    ctx.auth.productScope,
+    ctx.auth.tenant.schoolId,
+  );
   return next({
     ctx: {
       ...ctx,
@@ -184,7 +193,12 @@ export const salesRouter = router({
     .query(async ({ ctx, input }) => {
       try {
         return await sales.getModuleBySlug(
-          { db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant, scope: ctx.auth.productScope },
+          {
+            db: ctx.tenantDb,
+            user: ctx.auth.user,
+            tenant: ctx.auth.tenant,
+            scope: ctx.auth.productScope,
+          },
           input,
         );
       } catch (err) {
@@ -198,7 +212,12 @@ export const salesRouter = router({
     .query(async ({ ctx, input }) => {
       try {
         return await sales.getLesson(
-          { db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant, scope: ctx.auth.productScope },
+          {
+            db: ctx.tenantDb,
+            user: ctx.auth.user,
+            tenant: ctx.auth.tenant,
+            scope: ctx.auth.productScope,
+          },
           input,
         );
       } catch (err) {
@@ -212,7 +231,12 @@ export const salesRouter = router({
     .query(async ({ ctx, input }) => {
       try {
         return await sales.getScenario(
-          { db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant, scope: ctx.auth.productScope },
+          {
+            db: ctx.tenantDb,
+            user: ctx.auth.user,
+            tenant: ctx.auth.tenant,
+            scope: ctx.auth.productScope,
+          },
           input,
         );
       } catch (err) {
@@ -226,7 +250,12 @@ export const salesRouter = router({
     .query(async ({ ctx, input }) => {
       try {
         return await sales.getAttemptsForScenario(
-          { db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant, scope: ctx.auth.productScope },
+          {
+            db: ctx.tenantDb,
+            user: ctx.auth.user,
+            tenant: ctx.auth.tenant,
+            scope: ctx.auth.productScope,
+          },
           input,
         );
       } catch (err) {
@@ -270,7 +299,12 @@ export const salesRouter = router({
     .mutation(async ({ ctx, input }) => {
       try {
         return await sales.markTheoryLessonComplete(
-          { db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant, scope: ctx.auth.productScope },
+          {
+            db: ctx.tenantDb,
+            user: ctx.auth.user,
+            tenant: ctx.auth.tenant,
+            scope: ctx.auth.productScope,
+          },
           input,
         );
       } catch (err) {
@@ -284,7 +318,12 @@ export const salesRouter = router({
     .mutation(async ({ ctx, input }) => {
       try {
         return await sales.submitQuiz(
-          { db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant, scope: ctx.auth.productScope },
+          {
+            db: ctx.tenantDb,
+            user: ctx.auth.user,
+            tenant: ctx.auth.tenant,
+            scope: ctx.auth.productScope,
+          },
           input,
         );
       } catch (err) {
@@ -303,7 +342,12 @@ export const salesRouter = router({
     .mutation(async ({ ctx, input }) => {
       try {
         return await sales.saveChatMessage(
-          { db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant, scope: ctx.auth.productScope },
+          {
+            db: ctx.tenantDb,
+            user: ctx.auth.user,
+            tenant: ctx.auth.tenant,
+            scope: ctx.auth.productScope,
+          },
           input,
         );
       } catch (err) {
@@ -320,7 +364,7 @@ export const salesRouter = router({
             db: ctx.tenantDb,
             user: ctx.auth.user,
             tenant: ctx.auth.tenant,
-          scope: ctx.auth.productScope,
+            scope: ctx.auth.productScope,
           });
         } catch (err) {
           throw mapSalesError(err);
@@ -335,7 +379,7 @@ export const salesRouter = router({
             db: ctx.tenantDb,
             user: ctx.auth.user,
             tenant: ctx.auth.tenant,
-          scope: ctx.auth.productScope,
+            scope: ctx.auth.productScope,
           });
         } catch (err) {
           throw mapSalesError(err);
@@ -348,7 +392,12 @@ export const salesRouter = router({
       .query(async ({ ctx, input }) => {
         try {
           return await sales.getSalesRepDetail(
-            { db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant, scope: ctx.auth.productScope },
+            {
+              db: ctx.tenantDb,
+              user: ctx.auth.user,
+              tenant: ctx.auth.tenant,
+              scope: ctx.auth.productScope,
+            },
             input,
           );
         } catch (err) {
@@ -362,7 +411,12 @@ export const salesRouter = router({
       .mutation(async ({ ctx, input }) => {
         try {
           return await sales.approveCurriculumContent(
-            { db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant, scope: ctx.auth.productScope },
+            {
+              db: ctx.tenantDb,
+              user: ctx.auth.user,
+              tenant: ctx.auth.tenant,
+              scope: ctx.auth.productScope,
+            },
             input,
           );
         } catch (err) {

@@ -29,9 +29,10 @@ steps:
     entrypoint: "bash"
     args:
       - "-c"
-      - 'set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export DATABASE_URL="$$SALES_DIRECT_DATABASE_URL" && export DIRECT_DATABASE_URL="$$SALES_DIRECT_DATABASE_URL" && pnpm --filter @reading-advantage/db doctor --check --required-migration 0040_company_product_principals'
+      - 'set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates postgresql-client >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export DATABASE_URL="$$SALES_DIRECT_DATABASE_URL" && export DIRECT_DATABASE_URL="$$SALES_DIRECT_DATABASE_URL" && psql "$$SALES_DIRECT_DATABASE_URL" --set=repair_manifest="$$SALES_LEGACY_SOURCE_ROLE_REPAIR_MANIFEST" -f apps/sales-advantage/scripts/sales-legacy-source-role-repair.sql && pnpm --filter @reading-advantage/db doctor --check --required-migration 0042_company_product_principal_local_unique && psql "$$SALES_DIRECT_DATABASE_URL" -f apps/sales-advantage/scripts/sales-migration-0042-probe.sql'
     secretEnv:
       - "SALES_DIRECT_DATABASE_URL"
+      - "SALES_LEGACY_SOURCE_ROLE_REPAIR_MANIFEST"
 
   - name: "node:22-slim"
     id: "build-curriculum-workspace-deps"
@@ -45,9 +46,10 @@ steps:
     entrypoint: "bash"
     args:
       - "-c"
-      - 'set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export DATABASE_URL="$$SALES_DIRECT_DATABASE_URL" && export DIRECT_DATABASE_URL="$$SALES_DIRECT_DATABASE_URL" && pnpm --filter sales-advantage seed:production-curriculum'
+      - 'set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export DATABASE_URL="$$SALES_DIRECT_DATABASE_URL" && export DIRECT_DATABASE_URL="$$SALES_DIRECT_DATABASE_URL" && export SALES_CURRICULUM_APPROVAL_SHA256="$$SALES_CURRICULUM_APPROVAL_SHA256" && pnpm --filter sales-advantage seed:production-curriculum'
     secretEnv:
       - "SALES_DIRECT_DATABASE_URL"
+      - "SALES_CURRICULUM_APPROVAL_SHA256"
 
   - name: "node:22-slim"
     id: "verify-production-curriculum"
@@ -80,7 +82,7 @@ steps:
       - "--allow-unauthenticated"
       - "--service-account=sales-cloud-run@$PROJECT_ID.iam.gserviceaccount.com"
       - "--add-cloudsql-instances=reading-advantage:asia-southeast1:cloud-sql"
-      - "--set-env-vars=NODE_ENV=production,NEXT_PUBLIC_API_URL=https://sales.reading-advantage.com,COMPANY_AUTH_ISSUER_URL=https://accounts.reading-advantage.com,COMPANY_AUTH_OIDC_CLIENT_ID=sales-web,COMPANY_AUTH_OIDC_REDIRECT_URI=https://sales.reading-advantage.com/api/auth/callback,COMPANY_AUTH_EXPECTED_AUDIENCE=sales,COMPANY_AUTH_CLOCK_SKEW_SECONDS=30"
+      - "--set-env-vars=NODE_ENV=production,SALES_AUTH_MODE=company,NEXT_PUBLIC_API_URL=https://sales.reading-advantage.com,COMPANY_AUTH_ISSUER_URL=https://accounts.reading-advantage.com,COMPANY_AUTH_OIDC_CLIENT_ID=sales-web,COMPANY_AUTH_OIDC_REDIRECT_URI=https://sales.reading-advantage.com/api/auth/callback,COMPANY_AUTH_EXPECTED_AUDIENCE=sales,COMPANY_AUTH_CLOCK_SKEW_SECONDS=30"
       - "--min-instances=1"
       - "--max-instances=100"
       - "--concurrency=80"
@@ -106,6 +108,10 @@ availableSecrets:
       env: "SALES_DIRECT_DATABASE_URL"
     - versionName: "projects/$PROJECT_ID/secrets/SALES_DATABASE_URL/versions/latest"
       env: "SALES_DATABASE_URL"
+    - versionName: "projects/$PROJECT_ID/secrets/SALES_CURRICULUM_APPROVAL_SHA256/versions/latest"
+      env: "SALES_CURRICULUM_APPROVAL_SHA256"
+    - versionName: "projects/$PROJECT_ID/secrets/SALES_LEGACY_SOURCE_ROLE_REPAIR_MANIFEST/versions/latest"
+      env: "SALES_LEGACY_SOURCE_ROLE_REPAIR_MANIFEST"
 
 options:
   logging: CLOUD_LOGGING_ONLY

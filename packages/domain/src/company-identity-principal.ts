@@ -1,12 +1,14 @@
 import { and, eq, sql } from "drizzle-orm";
 
-import type { ProductAuthorizationScope, UserContext } from "@reading-advantage/auth";
+import type {
+  ProductAuthorizationScope,
+  UserContext,
+} from "@reading-advantage/auth";
 import {
   companyProductPrincipals,
   users,
   type DB,
 } from "@reading-advantage/db";
-
 
 /** Sales principal paired with its complete verified company boundary. */
 export interface ResolvedSalesCompanyPrincipal {
@@ -37,8 +39,20 @@ export interface SalesCompanyIdentity {
   readonly roles: readonly string[];
 }
 
-function salesRole(identity: SalesCompanyIdentity): "SALES_ADMIN" | "SALES_REP" | null {
-  if (identity.aud !== "sales") throw new Error("Sales identity audience is invalid.");
+/**
+ * Builds the product-local compatibility user ID for a Sales account.
+ * @param companyAccountId Stable Accounts subject.
+ * @returns Namespaced Sales-local principal ID.
+ */
+export function salesPrincipalLocalId(companyAccountId: string): string {
+  return `sales:${companyAccountId}`;
+}
+
+function salesRole(
+  identity: SalesCompanyIdentity,
+): "SALES_ADMIN" | "SALES_REP" | null {
+  if (identity.aud !== "sales")
+    throw new Error("Sales identity audience is invalid.");
   if (identity.organizationKey !== "internal-company") {
     throw new Error("Sales identity organization is invalid.");
   }
@@ -55,12 +69,17 @@ function salesRole(identity: SalesCompanyIdentity): "SALES_ADMIN" | "SALES_REP" 
 function isUniqueViolation(error: unknown): boolean {
   let current: unknown = error;
   for (let depth = 0; depth < 4 && current; depth += 1) {
-    if (typeof current === "object" && "code" in current && current.code === "23505") {
+    if (
+      typeof current === "object" &&
+      "code" in current &&
+      current.code === "23505"
+    ) {
       return true;
     }
-    current = typeof current === "object" && "cause" in current
-      ? current.cause
-      : undefined;
+    current =
+      typeof current === "object" && "cause" in current
+        ? current.cause
+        : undefined;
   }
   return false;
 }
@@ -78,7 +97,9 @@ export async function resolveSalesCompanyPrincipal(
 ): Promise<ResolvedSalesCompanyPrincipal | null> {
   const role = salesRole(identity);
   return database.transaction(async (tx) => {
-    await tx.execute(sql`select pg_advisory_xact_lock(hashtextextended(${`sales:${identity.sub}`}, 0))`);
+    await tx.execute(
+      sql`select pg_advisory_xact_lock(hashtextextended(${`sales:${identity.sub}`}, 0))`,
+    );
     const [mapped] = await tx
       .select({
         id: users.id,
@@ -91,28 +112,51 @@ export async function resolveSalesCompanyPrincipal(
       })
       .from(companyProductPrincipals)
       .innerJoin(users, eq(users.id, companyProductPrincipals.localUserId))
-      .where(and(
-        eq(companyProductPrincipals.organizationId, identity.organizationId),
-        eq(companyProductPrincipals.organizationKey, identity.organizationKey),
-        eq(companyProductPrincipals.companyAccountId, identity.sub),
-        eq(companyProductPrincipals.applicationKey, "sales"),
-      ))
-      .limit(1);
-    if (mapped) {
-      await tx.update(users)
-        .set({ role: role ?? "INTERN" })
-        .where(eq(users.id, mapped.id));
-      await tx.update(companyProductPrincipals)
-        .set({ roleKey: role ?? "REVOKED", updatedAt: new Date() })
-        .where(and(
+      .where(
+        and(
           eq(companyProductPrincipals.organizationId, identity.organizationId),
-          eq(companyProductPrincipals.organizationKey, identity.organizationKey),
+          eq(
+            companyProductPrincipals.organizationKey,
+            identity.organizationKey,
+          ),
           eq(companyProductPrincipals.companyAccountId, identity.sub),
           eq(companyProductPrincipals.applicationKey, "sales"),
-        ));
+        ),
+      )
+      .limit(1);
+    if (mapped) {
+      await tx
+        .update(users)
+        .set({
+          role: role ?? "INTERN",
+          ...(role ? { name: identity.displayName } : {}),
+        })
+        .where(eq(users.id, mapped.id));
+      await tx
+        .update(companyProductPrincipals)
+        .set({ roleKey: role ?? "REVOKED", updatedAt: new Date() })
+        .where(
+          and(
+            eq(
+              companyProductPrincipals.organizationId,
+              identity.organizationId,
+            ),
+            eq(
+              companyProductPrincipals.organizationKey,
+              identity.organizationKey,
+            ),
+            eq(companyProductPrincipals.companyAccountId, identity.sub),
+            eq(companyProductPrincipals.applicationKey, "sales"),
+          ),
+        );
       if (!role) return null;
       return {
-        user: { ...mapped, role },
+        user: {
+          ...mapped,
+          username: identity.username,
+          name: identity.displayName,
+          role,
+        },
         scope: {
           kind: "company",
           applicationKey: "sales",
@@ -123,31 +167,30 @@ export async function resolveSalesCompanyPrincipal(
     }
     if (!role) return null;
 
-    const [occupiedId] = await tx.select({ id: users.id }).from(users)
-      .where(eq(users.id, identity.sub)).limit(1);
-    if (occupiedId) {
-      throw new Error("Sales principal mapping is required for this existing local user.");
-    }
+    const localUserId = salesPrincipalLocalId(identity.sub);
     try {
-      const [created] = await tx.insert(users).values({
-        id: identity.sub,
-        username: identity.username,
-        displayUsername: identity.username,
-        name: identity.displayName,
-        role,
-        schoolId: null,
-        xp: 0,
-        level: 1,
-        cefrLevel: "N/A",
-      }).returning({
-        id: users.id,
-        username: users.username,
-        name: users.name,
-        schoolId: users.schoolId,
-        xp: users.xp,
-        level: users.level,
-        cefrLevel: users.cefrLevel,
-      });
+      const [created] = await tx
+        .insert(users)
+        .values({
+          id: localUserId,
+          username: localUserId,
+          displayUsername: localUserId,
+          name: identity.displayName,
+          role,
+          schoolId: null,
+          xp: 0,
+          level: 1,
+          cefrLevel: "N/A",
+        })
+        .returning({
+          id: users.id,
+          username: users.username,
+          name: users.name,
+          schoolId: users.schoolId,
+          xp: users.xp,
+          level: users.level,
+          cefrLevel: users.cefrLevel,
+        });
       if (!created) throw new Error("Sales principal provisioning failed.");
       await tx.insert(companyProductPrincipals).values({
         organizationId: identity.organizationId,
@@ -158,7 +201,12 @@ export async function resolveSalesCompanyPrincipal(
         roleKey: role,
       });
       return {
-        user: { ...created, role },
+        user: {
+          ...created,
+          username: identity.username,
+          name: identity.displayName,
+          role,
+        },
         scope: {
           kind: "company",
           applicationKey: "sales",

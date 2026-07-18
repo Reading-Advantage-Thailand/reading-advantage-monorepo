@@ -20,6 +20,14 @@ const probe = readFileSync(
   resolve(appRoot, "scripts/sales-runtime-probe.sql"),
   "utf8",
 );
+const migrationProof = readFileSync(
+  resolve(appRoot, "scripts/sales-migration-0042-probe.sql"),
+  "utf8",
+);
+const sourceRoleRepair = readFileSync(
+  resolve(appRoot, "scripts/sales-legacy-source-role-repair.sql"),
+  "utf8",
+);
 const smoke = readFileSync(resolve(appRoot, "scripts/sales-smoke.sh"), "utf8");
 const staticSeed = readFileSync(
   resolve(appRoot, "scripts/static-seed.ts"),
@@ -38,7 +46,10 @@ const curriculumVerifier = readFileSync(
   resolve(appRoot, "scripts/verify-sales-curriculum.ts"),
   "utf8",
 );
-const cloudIgnore = readFileSync(resolve(appRoot, "../../.gcloudignore"), "utf8");
+const cloudIgnore = readFileSync(
+  resolve(appRoot, "../../.gcloudignore"),
+  "utf8",
+);
 const oidcCallback = readFileSync(
   resolve(appRoot, "app/api/auth/callback/route.ts"),
   "utf8",
@@ -77,8 +88,65 @@ describe("Sales production readiness", () => {
     expect(cloudbuild).toContain("sales-runtime-probe-cleanup.sql");
     expect(cloudbuild).toContain("trap cleanup EXIT");
     expect(cloudbuild).toContain(
+      "doctor --check --required-migration 0042_company_product_principal_local_unique",
+    );
+    expect(cloudbuild).toContain(
+      'psql "$$SALES_DIRECT_DATABASE_URL" -f apps/sales-advantage/scripts/sales-migration-0042-probe.sql',
+    );
+    expect(cloudbuild).toContain("SALES_AUTH_MODE=company");
+    expect(migrationProof).toContain("constraint_record.contype = 'u'");
+    expect(migrationProof).toContain(
+      "ARRAY['application_key', 'local_user_id']::text[]",
+    );
+    expect(migrationProof).toContain(
+      "0042 Sales app-local principal split is incomplete",
+    );
+    expect(cloudbuild).toContain(
       "NEXT_PUBLIC_API_URL=https://sales.reading-advantage.com",
     );
+
+    const doctorStep = cloudbuild.slice(
+      cloudbuild.indexOf('id: "doctor-check"'),
+      cloudbuild.indexOf('id: "build-curriculum-workspace-deps"'),
+    );
+    const deployStep = cloudbuild.slice(
+      cloudbuild.indexOf('id: "deploy-cloudrun"'),
+      cloudbuild.indexOf('id: "allow-public-invoker"'),
+    );
+    const repairPosition = doctorStep.indexOf(
+      "sales-legacy-source-role-repair.sql",
+    );
+    const doctorPosition = doctorStep.indexOf(
+      "doctor --check --required-migration 0042_company_product_principal_local_unique",
+    );
+    const proofPosition = doctorStep.indexOf("sales-migration-0042-probe.sql");
+    expect(cloudbuild.indexOf('id: "migrate-db"')).toBeLessThan(
+      cloudbuild.indexOf('id: "doctor-check"'),
+    );
+    expect(repairPosition).toBeGreaterThanOrEqual(0);
+    expect(repairPosition).toBeLessThan(doctorPosition);
+    expect(doctorPosition).toBeLessThan(proofPosition);
+    expect(doctorStep).toContain(
+      '--set=repair_manifest="$$SALES_LEGACY_SOURCE_ROLE_REPAIR_MANIFEST"',
+    );
+    expect(doctorStep).toContain(
+      '      - "SALES_LEGACY_SOURCE_ROLE_REPAIR_MANIFEST"',
+    );
+    expect(deployStep).not.toContain(
+      "SALES_LEGACY_SOURCE_ROLE_REPAIR_MANIFEST",
+    );
+    expect(cloudbuild).toContain(
+      "projects/$PROJECT_ID/secrets/SALES_LEGACY_SOURCE_ROLE_REPAIR_MANIFEST/versions/latest",
+    );
+    expect(sourceRoleRepair).toContain("repair_manifest is required");
+    expect(sourceRoleRepair).toContain(
+      "'accountId', 'expectedCurrentRole', 'targetRole'",
+    );
+    expect(sourceRoleRepair).toContain("mapping_count <> 1");
+    expect(sourceRoleRepair).toContain("expected_mapping_count <> 1");
+    expect(sourceRoleRepair).toContain("current_role = target_role");
+    expect(sourceRoleRepair).toContain("current_role <> expected_current_role");
+    expect(sourceRoleRepair).not.toContain("00000000-0000-4000");
   });
 
   it("seeds only deterministic approved curriculum and gates exact completeness", () => {
@@ -120,7 +188,9 @@ describe("Sales production readiness", () => {
     );
     expect(curriculumVerifier).toContain("verifyProductionSalesCurriculum");
     expect(curriculumVerifier).toContain("PINNED_SALES_CURRICULUM_COUNTS");
-    expect(curriculumVerifier).toContain("PINNED_SALES_CURRICULUM_GRAPH_SHA256");
+    expect(curriculumVerifier).toContain(
+      "PINNED_SALES_CURRICULUM_GRAPH_SHA256",
+    );
     expect(curriculumVerifier).not.toContain('from "./static-seed"');
     expect(staticSeed).not.toContain("client.end({ timeout: 5 })");
     expect(reviewedSeed).toContain("client.end({ timeout: 5 })");

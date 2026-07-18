@@ -2,16 +2,11 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
-  introspect: vi.fn(),
-  readSalesCookie: vi.fn(),
-  salesSessionUser: vi.fn(),
+  authenticateSalesRequest: vi.fn(),
 }));
 
 vi.mock("@/lib/company-oidc", () => ({
-  SALES_SESSION_COOKIE: "__Host-ra_sales_session",
-  getSalesOidcClient: () => ({ introspect: mocks.introspect }),
-  readSalesCookie: mocks.readSalesCookie,
-  salesSessionUser: mocks.salesSessionUser,
+  authenticateSalesRequest: mocks.authenticateSalesRequest,
 }));
 
 import { GET } from "./route";
@@ -19,29 +14,31 @@ import { GET } from "./route";
 describe("GET /api/auth/session", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mocks.readSalesCookie.mockReturnValue("opaque-session");
-    mocks.introspect.mockResolvedValue({ identity: { roles: [] } });
+    mocks.authenticateSalesRequest.mockResolvedValue(null);
   });
 
-  it("returns an anonymous session when Accounts reports suspension", async () => {
-    mocks.introspect.mockResolvedValue(null);
-
-    const response = await GET(
-      new Request("https://sales.reading-advantage.com/api/auth/session"),
+  it("returns an anonymous session when the selected adapter denies access", async () => {
+    const request = new Request(
+      "https://sales.reading-advantage.com/api/auth/session",
     );
+    const response = await GET(request);
 
-    expect(mocks.salesSessionUser).not.toHaveBeenCalled();
-    await expect(response.json()).resolves.toEqual({ session: null });
-  });
-
-  it("returns an anonymous session when the Sales role was removed", async () => {
-    mocks.salesSessionUser.mockResolvedValue(null);
-
-    const response = await GET(
-      new Request("https://sales.reading-advantage.com/api/auth/session"),
-    );
-
+    expect(mocks.authenticateSalesRequest).toHaveBeenCalledWith(request);
     expect(response.status).toBe(200);
     await expect(response.json()).resolves.toEqual({ session: null });
+  });
+
+  it("returns the principal from the explicitly selected auth adapter", async () => {
+    const user = { id: "sales:subject", role: "SALES_REP" };
+    mocks.authenticateSalesRequest.mockResolvedValue({
+      user,
+      scope: { kind: "company", applicationKey: "sales" },
+    });
+
+    const response = await GET(
+      new Request("https://sales.reading-advantage.com/api/auth/session"),
+    );
+
+    await expect(response.json()).resolves.toEqual({ session: { user } });
   });
 });

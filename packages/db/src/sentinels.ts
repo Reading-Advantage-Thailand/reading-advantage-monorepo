@@ -9,8 +9,10 @@
  */
 export interface SentinelProbe {
   tag: string;
-  kind: "table" | "column";
+  kind: "table" | "column" | "unique_constraint";
   target: string;
+  table?: string;
+  columns?: readonly string[];
 }
 
 export const sentinelProbes: Record<string, SentinelProbe> = {
@@ -226,7 +228,9 @@ export const sentinelProbes: Record<string, SentinelProbe> = {
   },
   "0042_company_product_principal_local_unique": {
     tag: "0042_company_product_principal_local_unique",
-    kind: "table",
-    target: "company_product_principals",
+    kind: "unique_constraint",
+    target: "company_product_principals_application_local_unique",
+    table: "company_product_principals",
+    columns: ["application_key", "local_user_id"],
   },
 };

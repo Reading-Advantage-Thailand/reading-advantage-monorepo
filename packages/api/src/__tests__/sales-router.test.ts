@@ -114,6 +114,12 @@ const companyScope = {
   organizationId: "20000000-0000-4000-8000-000000000003",
   organizationKey: "internal-company",
 };
+const legacySchoolId = "00000000-0000-4000-8000-000000000099";
+const legacyScope = {
+  kind: "legacy-school" as const,
+  applicationKey: "sales" as const,
+  schoolId: legacySchoolId,
+};
 
 const t = initTRPC
   .context<{
@@ -121,7 +127,7 @@ const t = initTRPC
     auth: {
       user: { id: string; role: string; schoolId?: string | null };
       tenant: { schoolId: string | null };
-      productScope?: typeof companyScope;
+      productScope?: typeof companyScope | typeof legacyScope;
     } | null;
   }>()
   .create({ transformer: superjson });
@@ -132,7 +138,7 @@ function createCaller(
   auth: {
     user: { id: string; role: string; schoolId?: string | null };
     tenant: { schoolId: string | null };
-    productScope?: typeof companyScope;
+    productScope?: typeof companyScope | typeof legacyScope;
   } | null,
 ) {
   const tenantDb = createTenantDB(
@@ -166,7 +172,11 @@ describe("salesRouter", () => {
         createdAt: new Date(),
       },
     ] as unknown as Awaited<ReturnType<typeof getModules>>);
-    const caller = createCaller({ user: salesRep, tenant: globalTenant, productScope: companyScope });
+    const caller = createCaller({
+      user: salesRep,
+      tenant: globalTenant,
+      productScope: companyScope,
+    });
     const result = await caller.sales.modules();
     expect(getModules).toHaveBeenCalled();
     expect(result).toHaveLength(1);
@@ -183,7 +193,11 @@ describe("salesRouter", () => {
       createdAt: new Date(),
       lessons: [],
     } as unknown as Awaited<ReturnType<typeof getModuleBySlug>>);
-    const caller = createCaller({ user: salesRep, tenant: globalTenant, productScope: companyScope });
+    const caller = createCaller({
+      user: salesRep,
+      tenant: globalTenant,
+      productScope: companyScope,
+    });
     await caller.sales.moduleBySlug({ slug: "onboarding" });
     expect(getModuleBySlug).toHaveBeenCalled();
     const input = vi.mocked(getModuleBySlug).mock.calls[0][1] as {
@@ -196,7 +210,11 @@ describe("salesRouter", () => {
     vi.mocked(getModuleBySlug).mockRejectedValue(
       new ModulePrerequisiteNotMetError("advanced", "foundations"),
     );
-    const caller = createCaller({ user: salesRep, tenant: globalTenant, productScope: companyScope });
+    const caller = createCaller({
+      user: salesRep,
+      tenant: globalTenant,
+      productScope: companyScope,
+    });
 
     await expect(
       caller.sales.moduleBySlug({ slug: "advanced" }),
@@ -210,7 +228,11 @@ describe("salesRouter", () => {
       passed: true,
       results: [],
     } as unknown as Awaited<ReturnType<typeof submitQuiz>>);
-    const caller = createCaller({ user: salesRep, tenant: globalTenant, productScope: companyScope });
+    const caller = createCaller({
+      user: salesRep,
+      tenant: globalTenant,
+      productScope: companyScope,
+    });
     await caller.sales.submitQuiz({ lessonId: "l1", answers: {} });
     expect(submitQuiz).toHaveBeenCalled();
   });
@@ -219,7 +241,11 @@ describe("salesRouter", () => {
     vi.mocked(markTheoryLessonComplete).mockResolvedValue({
       id: "p1",
     } as unknown as Awaited<ReturnType<typeof markTheoryLessonComplete>>);
-    const caller = createCaller({ user: salesRep, tenant: globalTenant, productScope: companyScope });
+    const caller = createCaller({
+      user: salesRep,
+      tenant: globalTenant,
+      productScope: companyScope,
+    });
 
     const result = await caller.sales.markTheoryLessonComplete({
       lessonId: "00000000-0000-4000-8000-000000000001",
@@ -240,7 +266,11 @@ describe("salesRouter", () => {
       },
       conversationId: "c1",
     } as unknown as Awaited<ReturnType<typeof saveChatMessage>>);
-    const caller = createCaller({ user: salesRep, tenant: globalTenant, productScope: companyScope });
+    const caller = createCaller({
+      user: salesRep,
+      tenant: globalTenant,
+      productScope: companyScope,
+    });
     const result = await caller.sales.saveChatMessage({
       role: "user",
       content: "hi",
@@ -249,7 +279,11 @@ describe("salesRouter", () => {
   });
 
   it("does not expose a Sales credential-creation procedure", () => {
-    const caller = createCaller({ user: salesAdmin, tenant: globalTenant, productScope: companyScope });
+    const caller = createCaller({
+      user: salesAdmin,
+      tenant: globalTenant,
+      productScope: companyScope,
+    });
     expect(
       Object.prototype.hasOwnProperty.call(caller.sales.admin, "createRep"),
     ).toBe(false);
@@ -259,7 +293,11 @@ describe("salesRouter", () => {
     vi.mocked(getCohortOverview).mockResolvedValue(
       [] as unknown as Awaited<ReturnType<typeof getCohortOverview>>,
     );
-    const repCaller = createCaller({ user: salesRep, tenant: globalTenant, productScope: companyScope });
+    const repCaller = createCaller({
+      user: salesRep,
+      tenant: globalTenant,
+      productScope: companyScope,
+    });
     await expect(repCaller.sales.admin.cohortOverview()).rejects.toThrow(
       /Sales admin access required/,
     );
@@ -270,6 +308,28 @@ describe("salesRouter", () => {
     });
     const result = await adminCaller.sales.admin.cohortOverview();
     expect(result).toEqual([]);
+  });
+
+  it("allows explicit legacy-school admins and rejects mismatched schools", async () => {
+    vi.mocked(getCohortOverview).mockResolvedValue(
+      [] as unknown as Awaited<ReturnType<typeof getCohortOverview>>,
+    );
+    const legacyAdmin = { ...salesAdmin, schoolId: legacySchoolId };
+    const allowed = createCaller({
+      user: legacyAdmin,
+      tenant: { schoolId: legacySchoolId },
+      productScope: legacyScope,
+    });
+    await expect(allowed.sales.admin.cohortOverview()).resolves.toEqual([]);
+
+    const mismatched = createCaller({
+      user: legacyAdmin,
+      tenant: { schoolId: "00000000-0000-4000-8000-000000000098" },
+      productScope: legacyScope,
+    });
+    await expect(mismatched.sales.admin.cohortOverview()).rejects.toThrow(
+      /Verified Sales scope required/,
+    );
   });
 
   it("admin.repDetail returns the exact typed reporting contract", async () => {
@@ -291,7 +351,11 @@ describe("salesRouter", () => {
       modules: [{ id: "m1" }],
       rubrics: [{ id: "r1" }],
     } as unknown as Awaited<ReturnType<typeof getAdminCurriculum>>);
-    const repCaller = createCaller({ user: salesRep, tenant: globalTenant, productScope: companyScope });
+    const repCaller = createCaller({
+      user: salesRep,
+      tenant: globalTenant,
+      productScope: companyScope,
+    });
     await expect(repCaller.sales.admin.curriculum()).rejects.toThrow(
       /Sales admin access required/,
     );

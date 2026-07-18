@@ -24,13 +24,14 @@ describe("company product principal schema", () => {
     );
   });
 
-
   it("globally binds one local principal to one application", () => {
-    const constraint = getTableConfig(companyProductPrincipals).uniqueConstraints
-      .find((candidate) =>
+    const constraint = getTableConfig(
+      companyProductPrincipals,
+    ).uniqueConstraints.find(
+      (candidate) =>
         candidate.name ===
-        "company_product_principals_application_local_unique"
-      );
+        "company_product_principals_application_local_unique",
+    );
     expect(constraint?.columns.map((column) => column.name)).toEqual([
       "application_key",
       "local_user_id",
@@ -39,7 +40,10 @@ describe("company product principal schema", () => {
 
   it("keeps migration constraints and the migration-doctor sentinel aligned", () => {
     const migration = readFileSync(
-      resolve(import.meta.dirname, "../../drizzle/0040_company_product_principals.sql"),
+      resolve(
+        import.meta.dirname,
+        "../../drizzle/0040_company_product_principals.sql",
+      ),
       "utf8",
     );
     expect(migration).toContain('CREATE TABLE "company_product_principals"');
@@ -47,8 +51,12 @@ describe("company product principal schema", () => {
     expect(migration).toContain(
       'UNIQUE("organization_id","application_key","local_user_id")',
     );
-    expect(migration).toContain("company_product_principals_organization_key_check");
-    expect(migration).toContain('REFERENCES "public"."users"("id") ON DELETE restrict');
+    expect(migration).toContain(
+      "company_product_principals_organization_key_check",
+    );
+    expect(migration).toContain(
+      'REFERENCES "public"."users"("id") ON DELETE restrict',
+    );
     expect(sentinelProbes["0040_company_product_principals"]).toEqual({
       tag: "0040_company_product_principals",
       kind: "table",
@@ -70,12 +78,16 @@ describe("company product principal schema", () => {
     expect(preflight).toBeGreaterThanOrEqual(0);
     expect(constraintDrop).toBeGreaterThan(preflight);
     expect(globalConstraint).toBeGreaterThan(constraintDrop);
-    expect(sentinelProbes[
-      "0042_company_product_principal_local_unique"
-    ]).toEqual({
+    expect(
+      sentinelProbes["0042_company_product_principal_local_unique"],
+    ).toEqual({
       tag: "0042_company_product_principal_local_unique",
-      kind: "table",
-      target: "company_product_principals",
+      kind: "unique_constraint",
+      target: "company_product_principals_application_local_unique",
+      table: "company_product_principals",
+      columns: ["application_key", "local_user_id"],
     });
+    expect(hardeningMigration).toContain("sales:");
+    expect(hardeningMigration).toContain("UPDATE sales_progress");
   });
 });
