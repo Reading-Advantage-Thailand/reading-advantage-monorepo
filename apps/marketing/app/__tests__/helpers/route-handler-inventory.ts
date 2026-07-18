@@ -51,7 +51,8 @@ function isRouteHandlerMethod(name: string): name is RouteHandlerMethod {
 /**
  * Extracts directly exported route-handler methods from TypeScript source.
  * @param source TypeScript source for one Next or vinext route module.
- * @returns The supported HTTP methods exported as functions or const handlers.
+ * @returns The supported HTTP methods exported by the route module.
+ * @throws When a non-type-only wildcard re-export prevents exact inventory.
  */
 export function extractExportedRouteMethods(
   source: string,
@@ -66,6 +67,23 @@ export function extractExportedRouteMethods(
   const methods = new Set<RouteHandlerMethod>();
 
   for (const statement of sourceFile.statements) {
+    if (ts.isExportDeclaration(statement)) {
+      if (statement.isTypeOnly) continue;
+      if (!statement.exportClause) {
+        throw new Error(
+          "Wildcard route re-exports are not inventory-safe; use named HTTP method exports.",
+        );
+      }
+      if (ts.isNamedExports(statement.exportClause)) {
+        for (const element of statement.exportClause.elements) {
+          if (!element.isTypeOnly && isRouteHandlerMethod(element.name.text)) {
+            methods.add(element.name.text);
+          }
+        }
+      }
+      continue;
+    }
+
     if (
       ts.isFunctionDeclaration(statement) &&
       isExported(statement) &&

@@ -32,11 +32,30 @@ describe("Marketing route-handler inventory discovery", () => {
     `;
 
     expect(extractExportedRouteMethods(source)).toEqual(
-      new Set(["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"]),
+      new Set(["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS", "HEAD"]),
     );
   });
 
-  it("recursively discovers a nested route and fails the gate when it is unprotected", () => {
+  it("recognizes named aliases and named re-exports by their exported method", () => {
+    const source = `
+      const HEAD = () => new Response(null);
+      const optionsHandler = () => new Response(null);
+      export { HEAD, optionsHandler as OPTIONS };
+      export { loader as GET } from "./loader";
+    `;
+
+    expect(extractExportedRouteMethods(source)).toEqual(
+      new Set(["HEAD", "OPTIONS", "GET"]),
+    );
+  });
+
+  it("fails closed when a route module uses a wildcard re-export", () => {
+    expect(() =>
+      extractExportedRouteMethods('export * from "./handlers";'),
+    ).toThrow(/wildcard route re-exports are not inventory-safe/i);
+  });
+
+  it("recursively discovers named and aliased handlers and fails the gate when they are unprotected", () => {
     const fixtureRoot = mkdtempSync(
       resolve(tmpdir(), "marketing-route-inventory-"),
     );
@@ -46,15 +65,27 @@ describe("Marketing route-handler inventory discovery", () => {
     mkdirSync(resolve(nestedRoute, ".."), { recursive: true });
     writeFileSync(
       nestedRoute,
-      "export const GET = async () => new Response('unprotected');\n",
+      [
+        "const HEAD = () => new Response('unprotected');",
+        "const optionsHandler = () => new Response('unprotected');",
+        "export { HEAD, optionsHandler as OPTIONS };",
+        "",
+      ].join("\n"),
       "utf8",
     );
 
     const discovered = discoverRouteHandlers(appRoot);
 
-    expect(discovered).toEqual(new Set(["GET /api/reports/daily"]));
+    expect(discovered).toEqual(
+      new Set([
+        "HEAD /api/reports/daily",
+        "OPTIONS /api/reports/daily",
+      ]),
+    );
     expect(() =>
       assertExactRouteHandlerInventory(discovered, new Set()),
-    ).toThrow(/Uninventoried route handlers: GET \/api\/reports\/daily/);
+    ).toThrow(
+      /Uninventoried route handlers: HEAD \/api\/reports\/daily, OPTIONS \/api\/reports\/daily/,
+    );
   });
 });
