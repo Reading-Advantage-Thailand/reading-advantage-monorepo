@@ -511,26 +511,31 @@ zero numeric stop-loss, and SHA-256-bound outputs as described above.
 ## Successor evidence-production authority
 
 The final successor Phase-0 authority supersedes the rejected successor commit
-`1092da6e56af39c0e392ff9330db5e276f55d5a7`; the original authority was
-`6dd43aa834b7193017230843c658d32c19ecd1a9`. The old direct-write-only
+`70b77977e7d67d2bb7a6cc29a5edb9d125fab637`. The old direct-write-only
 `truth-test-author` and `adversarial-reviewer` contracts could author JSON but
 could not execute the exact admission, temporary regeneration, or reviewed-input
 hash checks required to prove that JSON. Each final role now retains one owned
 output and fresh pairwise-isolated provenance, but is limited to `bash`, `read`,
 and `write` and exactly one authority-derived verifier command followed
 immediately by the frozen `git commit --only <owned-output> -m <subject>` command.
-The verifier is loaded from immutable commit
-`c4b5a5c80a4b8b69c87a871b05271c566caf9400` under `/usr/bin/env -i`,
+The verifier and every transitive generator, helper, and Phase0-3 test dependency
+are loaded from the single immutable gate commit
+`454604c373c0b25039c60a9ecf66bcb1b7341cb2` under `/usr/bin/env -i`,
 `/usr/bin/python3 -I -S`, the frozen PATH/LANG, and the frozen runtime hashes.
 No additional Bash operation is admissible.
 
 The truth verifier executes the recorded sanitized Phase0-3 admission command in
 a unique detached local clone of the explicit mapper admission revision, not the
 older Phase-0 authority. The admission commit must strictly descend from Phase 0,
-own exactly the three mapper outputs, and remain the latest Phase-3 commit. Truth
-runs at that HEAD; review may follow only the truth report and truth receipt commits.
-This pins the four test modules, every transitive import, Git locator, and committed artifact. It requires
-exact nonzero module counts `13/17/31/24` (85 total), rejects any failure or skip,
+own exactly the `phase3-reconciliation.json` output with the frozen Phase-3
+subject, have an immediate parent that owns exactly
+`denominator-discrepancies.json` and `denominator-method.md` with the frozen
+reconciliation-evidence subject, bind the latest evidence receipt through
+committed Phase-3 provenance, and remain the latest Phase-3 commit. Truth runs at
+that HEAD; review may follow only the truth report and truth receipt commits.
+This pins the four test modules, every transitive import, Git locator, and
+committed artifact. It requires exact nonzero module counts `13/18/31/24` (86
+total), rejects any failure or skip,
 derives per-phase test counts, and requires
 `denominator-contract-test-report.json` to match those results exactly. The
 reviewer verifier repeats that admission, resolves the replacement
@@ -541,6 +546,14 @@ a temporary directory, compares exact bytes, derives the eleven reviewed-input
 `revision`/`path`/`sha256` entries from Git, and requires zero unresolved
 Critical, High, or Medium findings. Captured regeneration output is bounded to
 1 MiB per stream and a 900-second timeout; a bound breach fails closed.
+
+Receipt files do not have a separate commit-adjacency requirement: each receipt
+is instead bound to its role's immutable output commit and exact execution trace.
+The legal final sequence is therefore mapper evidence parent, mapper Phase-3
+admission, truth report, truth receipt, reviewer report, and then the deferred
+mapper and reviewer receipt commits. Deferring those two receipt files preserves
+the verifier's exact post-admission chronology without weakening output-commit,
+authority, provider-export, or execution-trace validation.
 
 This correction necessarily invalidates **all five** earlier role receipts, not
 only the two final roles. Production acceptance admits one Phase-0 authority
