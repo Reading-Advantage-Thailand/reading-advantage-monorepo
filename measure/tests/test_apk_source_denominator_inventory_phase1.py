@@ -478,6 +478,8 @@ class Phase1MechanicalDiscoveryContracts(unittest.TestCase):
                 "ast-lifecycle-reset-callback-write",
                 "ast-object-spread-state-write",
                 "ast-propagated-entry-guarded-write",
+                "ast-zustand-conditional-guarded-write",
+                "ast-zustand-guarded-write",
             })
             self.assertEqual(
                 transition.get("discovery_method"),
@@ -499,6 +501,8 @@ class Phase1MechanicalDiscoveryContracts(unittest.TestCase):
                 "ast-lifecycle-reset-callback-write",
                 "ast-object-spread-state-write",
                 "ast-propagated-entry-guarded-write",
+                "ast-zustand-conditional-guarded-write",
+                "ast-zustand-guarded-write",
             },
             "the frozen corpus must exercise every accepted compiler-AST proof kind",
         )

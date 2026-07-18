@@ -6105,28 +6105,6 @@
       "to_state_id": "MENU"
     },
     {
-      "end_line": 453,
-      "evidence": {
-        "blob_sha256": "1dc51671435e17c6606bdfe68bc12dc44f8607016301f9cb1e738dd7467ccb02",
-        "path": "apps/advantage-games/src/store/usePotionRushStore.ts",
-        "range": {
-          "end_line": 453,
-          "sha256": "a7de7d9168ea25a71928472668f3581a7540d77c5838a628ec56ff0c93700cb6",
-          "start_line": 453
-        },
-        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-      },
-      "from_state_id": "PLAYING",
-      "path": "apps/advantage-games/src/store/usePotionRushStore.ts",
-      "reason": "state-domain-occurrence-ambiguous",
-      "record_kind": "transition_write_candidate",
-      "resolution_status": "unresolved",
-      "source_symbol": "gameState",
-      "start_line": 453,
-      "to_state_id": "GAME_OVER",
-      "transition_evidence_kind": "ast-zustand-guarded-write"
-    },
-    {
       "discovery_method": "mechanical-typescript-compiler-ast",
       "end_line": 87,
       "evidence": {
@@ -6211,28 +6189,6 @@
       "to_state_id": "idle"
     },
     {
-      "end_line": 104,
-      "evidence": {
-        "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
-        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
-        "range": {
-          "end_line": 104,
-          "sha256": "81da26036b42e11ec069baeee834681f794000e49b0ff7158ae9c14ac320cd43",
-          "start_line": 104
-        },
-        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-      },
-      "from_state_id": "playing",
-      "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
-      "reason": "state-domain-occurrence-ambiguous",
-      "record_kind": "transition_write_candidate",
-      "resolution_status": "unresolved",
-      "source_symbol": "status",
-      "start_line": 104,
-      "to_state_id": "defeat",
-      "transition_evidence_kind": "ast-zustand-conditional-guarded-write"
-    },
-    {
       "discovery_method": "mechanical-typescript-compiler-ast",
       "end_line": 109,
       "evidence": {
@@ -6273,28 +6229,6 @@
       "source_symbol": "playerPose",
       "start_line": 109,
       "to_state_id": "hurt"
-    },
-    {
-      "end_line": 115,
-      "evidence": {
-        "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
-        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
-        "range": {
-          "end_line": 115,
-          "sha256": "a5806e0cadc4b8c093a6eb6eea2061bc10956489eb62cccd6caa3b15b4d0c1cf",
-          "start_line": 115
-        },
-        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-      },
-      "from_state_id": "playing",
-      "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
-      "reason": "state-domain-occurrence-ambiguous",
-      "record_kind": "transition_write_candidate",
-      "resolution_status": "unresolved",
-      "source_symbol": "status",
-      "start_line": 115,
-      "to_state_id": "victory",
-      "transition_evidence_kind": "ast-zustand-conditional-guarded-write"
     },
     {
       "discovery_method": "mechanical-typescript-compiler-ast",
@@ -6381,28 +6315,6 @@
       "to_state_id": "basic-attack"
     },
     {
-      "end_line": 129,
-      "evidence": {
-        "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
-        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
-        "range": {
-          "end_line": 129,
-          "sha256": "39bf43ac8cc68fb15705baa4259c47bbbc493e208f4efb95d3176f8aaaf7baaa",
-          "start_line": 129
-        },
-        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-      },
-      "from_state_id": "enemy",
-      "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
-      "reason": "state-domain-occurrence-ambiguous",
-      "record_kind": "transition_write_candidate",
-      "resolution_status": "unresolved",
-      "source_symbol": "turn",
-      "start_line": 129,
-      "to_state_id": "player",
-      "transition_evidence_kind": "ast-zustand-guarded-write"
-    },
-    {
       "discovery_method": "mechanical-typescript-compiler-ast",
       "end_line": 148,
       "evidence": {
@@ -6464,72 +6376,6 @@
       "source_symbol": "playerPose",
       "start_line": 157,
       "to_state_id": "miss"
-    },
-    {
-      "end_line": 176,
-      "evidence": {
-        "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
-        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
-        "range": {
-          "end_line": 176,
-          "sha256": "7daf13b5681a9e6ef45d7050e4b78810fb7c4a7de1f6ef929afff8ce01cbe91e",
-          "start_line": 176
-        },
-        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-      },
-      "from_state_id": "hero",
-      "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
-      "reason": "state-domain-occurrence-ambiguous",
-      "record_kind": "transition_write_candidate",
-      "resolution_status": "unresolved",
-      "source_symbol": "selectionStep",
-      "start_line": 176,
-      "to_state_id": "location",
-      "transition_evidence_kind": "ast-zustand-guarded-write"
-    },
-    {
-      "end_line": 185,
-      "evidence": {
-        "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
-        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
-        "range": {
-          "end_line": 185,
-          "sha256": "e0ba5d48a7f9846f08c22b0a974bcfc9a18025974beb624e0e3b82a71418cfbd",
-          "start_line": 185
-        },
-        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-      },
-      "from_state_id": "location",
-      "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
-      "reason": "state-domain-occurrence-ambiguous",
-      "record_kind": "transition_write_candidate",
-      "resolution_status": "unresolved",
-      "source_symbol": "selectionStep",
-      "start_line": 185,
-      "to_state_id": "enemy",
-      "transition_evidence_kind": "ast-zustand-guarded-write"
-    },
-    {
-      "end_line": 194,
-      "evidence": {
-        "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
-        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
-        "range": {
-          "end_line": 194,
-          "sha256": "9713e1734236d46c381beb941a12d70191ba0db547da28f4f0ce3163147aeb2b",
-          "start_line": 194
-        },
-        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-      },
-      "from_state_id": "enemy",
-      "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
-      "reason": "state-domain-occurrence-ambiguous",
-      "record_kind": "transition_write_candidate",
-      "resolution_status": "unresolved",
-      "source_symbol": "selectionStep",
-      "start_line": 194,
-      "to_state_id": "ready",
-      "transition_evidence_kind": "ast-zustand-guarded-write"
     },
     {
       "discovery_method": "mechanical-typescript-compiler-ast",
@@ -7565,6 +7411,146 @@
       "to_state_id": "defeat",
       "to_state_occurrence_id": "apps/advantage-games/src/lib/games/runeMatch.ts:52:RuneMatchState.status:defeat",
       "transition_evidence_kind": "ast-propagated-entry-guarded-write",
+      "transition_kind": "phase"
+    },
+    {
+      "discovery_method": "mechanical-typescript-compiler-ast",
+      "evidence": {
+        "blob_sha256": "1dc51671435e17c6606bdfe68bc12dc44f8607016301f9cb1e738dd7467ccb02",
+        "path": "apps/advantage-games/src/store/usePotionRushStore.ts",
+        "range": {
+          "end_line": 453,
+          "sha256": "a7de7d9168ea25a71928472668f3581a7540d77c5838a628ec56ff0c93700cb6",
+          "start_line": 453
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "from_state_id": "PLAYING",
+      "from_state_occurrence_id": "apps/advantage-games/src/store/usePotionRushStore.ts:11:GameState:PLAYING",
+      "source_symbol": "gameState",
+      "to_state_id": "GAME_OVER",
+      "to_state_occurrence_id": "apps/advantage-games/src/store/usePotionRushStore.ts:11:GameState:GAME_OVER",
+      "transition_evidence_kind": "ast-zustand-guarded-write",
+      "transition_kind": "phase"
+    },
+    {
+      "discovery_method": "mechanical-typescript-compiler-ast",
+      "evidence": {
+        "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "range": {
+          "end_line": 104,
+          "sha256": "81da26036b42e11ec069baeee834681f794000e49b0ff7158ae9c14ac320cd43",
+          "start_line": 104
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "from_state_id": "playing",
+      "from_state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:4:BattleStatus:playing",
+      "source_symbol": "status",
+      "to_state_id": "defeat",
+      "to_state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:4:BattleStatus:defeat",
+      "transition_evidence_kind": "ast-zustand-conditional-guarded-write",
+      "transition_kind": "phase"
+    },
+    {
+      "discovery_method": "mechanical-typescript-compiler-ast",
+      "evidence": {
+        "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "range": {
+          "end_line": 115,
+          "sha256": "a5806e0cadc4b8c093a6eb6eea2061bc10956489eb62cccd6caa3b15b4d0c1cf",
+          "start_line": 115
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "from_state_id": "playing",
+      "from_state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:4:BattleStatus:playing",
+      "source_symbol": "status",
+      "to_state_id": "victory",
+      "to_state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:4:BattleStatus:victory",
+      "transition_evidence_kind": "ast-zustand-conditional-guarded-write",
+      "transition_kind": "phase"
+    },
+    {
+      "discovery_method": "mechanical-typescript-compiler-ast",
+      "evidence": {
+        "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "range": {
+          "end_line": 129,
+          "sha256": "39bf43ac8cc68fb15705baa4259c47bbbc493e208f4efb95d3176f8aaaf7baaa",
+          "start_line": 129
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "from_state_id": "enemy",
+      "from_state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:5:BattleTurn:enemy",
+      "source_symbol": "turn",
+      "to_state_id": "player",
+      "to_state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:5:BattleTurn:player",
+      "transition_evidence_kind": "ast-zustand-guarded-write",
+      "transition_kind": "phase"
+    },
+    {
+      "discovery_method": "mechanical-typescript-compiler-ast",
+      "evidence": {
+        "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "range": {
+          "end_line": 176,
+          "sha256": "7daf13b5681a9e6ef45d7050e4b78810fb7c4a7de1f6ef929afff8ce01cbe91e",
+          "start_line": 176
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "from_state_id": "hero",
+      "from_state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:17:BattleSelectionStep:hero",
+      "source_symbol": "selectionStep",
+      "to_state_id": "location",
+      "to_state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:17:BattleSelectionStep:location",
+      "transition_evidence_kind": "ast-zustand-guarded-write",
+      "transition_kind": "phase"
+    },
+    {
+      "discovery_method": "mechanical-typescript-compiler-ast",
+      "evidence": {
+        "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "range": {
+          "end_line": 185,
+          "sha256": "e0ba5d48a7f9846f08c22b0a974bcfc9a18025974beb624e0e3b82a71418cfbd",
+          "start_line": 185
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "from_state_id": "location",
+      "from_state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:17:BattleSelectionStep:location",
+      "source_symbol": "selectionStep",
+      "to_state_id": "enemy",
+      "to_state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:17:BattleSelectionStep:enemy",
+      "transition_evidence_kind": "ast-zustand-guarded-write",
+      "transition_kind": "phase"
+    },
+    {
+      "discovery_method": "mechanical-typescript-compiler-ast",
+      "evidence": {
+        "blob_sha256": "3f76cb2aba65098ed17d6bdcc59b6e332ce082dc409202d8cf78d0df713c1018",
+        "path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "range": {
+          "end_line": 194,
+          "sha256": "9713e1734236d46c381beb941a12d70191ba0db547da28f4f0ce3163147aeb2b",
+          "start_line": 194
+        },
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "from_state_id": "enemy",
+      "from_state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:17:BattleSelectionStep:enemy",
+      "source_symbol": "selectionStep",
+      "to_state_id": "ready",
+      "to_state_occurrence_id": "apps/advantage-games/src/store/useRPGBattleStore.ts:17:BattleSelectionStep:ready",
+      "transition_evidence_kind": "ast-zustand-guarded-write",
       "transition_kind": "phase"
     },
     {
