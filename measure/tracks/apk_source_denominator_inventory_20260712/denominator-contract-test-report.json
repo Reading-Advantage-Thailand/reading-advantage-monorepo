@@ -3,128 +3,21 @@
   "status": "red-contract-authored",
   "track_id": "apk_source_denominator_inventory_20260712",
   "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
-  "phase_authoring_baseline_revision": "6c860c5a49144beaf489a938d992425259765a1c",
   "role": "truth-test-author",
-  "scope": "Contract only; this report contains no discovered source, asset, route, scene, state, or historical facts and is not a usable denominator.",
-  "red_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase1",
-  "green_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase1",
-  "required_contracts": [
-    "source identity, file, route, copy, and graph records",
-    "real source-evidenced scenes, states, and transitions without synthetic fallback IDs",
-    "asset, audio, and data candidate hashes, format metadata, and identical-hash groups",
-    "reachable committed revisions with exact path, blob, line range, and range hashes",
-    "negative fixtures that reject failed-track factual sources",
-    "absence of mechanic, capability, responsive, suitability, semantic-role, and product-disposition conclusions"
-  ],
-  "green_handoff": "discovery-auditor",
-  "current_head_revision": "cea7b5d426b34531693ff957a5b234a08704ff29",
-  "admission_head_revision": "cea7b5d426b34531693ff957a5b234a08704ff29",
-  "phase0_3_admission_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase0 measure.tests.test_apk_source_denominator_inventory_phase1 measure.tests.test_apk_source_denominator_inventory_phase2 measure.tests.test_apk_source_denominator_inventory_phase3",
-  "phase0_3_admission_result": {
-    "total_tests": 54,
-    "passed": 54,
-    "failed": 0,
-    "exit_code": 0,
-    "status": "passed"
-  },
+  "admission_revision": "996450f0084b76b78650f7c060eb83f728be1504",
+  "phase0_3_admission_command": "/usr/bin/env -i PATH=/opt/codex-desktop/resources/node-runtime/bin:/usr/bin:/bin LANG=C PYTHONDONTWRITEBYTECODE=1 /usr/bin/python3 -I -S -c 'exec(compile(__import__(\"subprocess\").check_output((\"/usr/bin/git\",\"show\",__import__(\"sys\").argv[1]+\":measure/tracks/apk_source_denominator_inventory_20260712/run_phase0_3_admission.py\")),\"measure/tracks/apk_source_denominator_inventory_20260712/run_phase0_3_admission.py\",\"exec\"),dict(__file__=\"measure/tracks/apk_source_denominator_inventory_20260712/run_phase0_3_admission.py\",__name__=\"__main__\"))' 996450f0084b76b78650f7c060eb83f728be1504 measure.tests.test_apk_source_denominator_inventory_phase0 measure.tests.test_apk_source_denominator_inventory_phase1 measure.tests.test_apk_source_denominator_inventory_phase2 measure.tests.test_apk_source_denominator_inventory_phase3",
+  "phase0_3_admission_result": {"total_tests": 86, "passed": 86, "failed": 0, "exit_code": 0, "status": "passed"},
   "test_inventory": [
-    {
-      "phase": 0,
-      "module": "measure.tests.test_apk_source_denominator_inventory_phase0",
-      "tests": 9,
-      "passed": 9,
-      "failed": 0,
-      "exit_code": 0
-    },
-    {
-      "phase": 1,
-      "module": "measure.tests.test_apk_source_denominator_inventory_phase1",
-      "tests": 12,
-      "passed": 12,
-      "failed": 0,
-      "exit_code": 0
-    },
-    {
-      "phase": 2,
-      "module": "measure.tests.test_apk_source_denominator_inventory_phase2",
-      "tests": 18,
-      "passed": 18,
-      "failed": 0,
-      "exit_code": 0
-    },
-    {
-      "phase": 3,
-      "module": "measure.tests.test_apk_source_denominator_inventory_phase3",
-      "tests": 15,
-      "passed": 15,
-      "failed": 0,
-      "exit_code": 0
-    }
+    {"phase": 0, "module": "measure.tests.test_apk_source_denominator_inventory_phase0", "tests": 13, "passed": 13, "failed": 0, "exit_code": 0},
+    {"phase": 1, "module": "measure.tests.test_apk_source_denominator_inventory_phase1", "tests": 18, "passed": 18, "failed": 0, "exit_code": 0},
+    {"phase": 2, "module": "measure.tests.test_apk_source_denominator_inventory_phase2", "tests": 31, "passed": 31, "failed": 0, "exit_code": 0},
+    {"phase": 3, "module": "measure.tests.test_apk_source_denominator_inventory_phase3", "tests": 24, "passed": 24, "failed": 0, "exit_code": 0}
   ],
-  "corrected_contract_semantics": {
-    "correction_commit": "cea7b5d426b34531693ff957a5b234a08704ff29",
-    "correction_reason": "The Phase-3 provenance freshness check previously compared every entry in PHASE1_ARTIFACTS, including denominator-discrepancies.json, against current HEAD bytes. denominator-discrepancies.json is a requirements-mapper-owned Phase-3 output per phase0-role-ownership-manifest.json and is legitimately rewritten during Phase-3 reconciliation; its committed HEAD bytes therefore differ from the immutable Phase-1 pin preserved in input_provenance.phase1.output_hashes.",
-    "contract_change": "The freshness assertion now validates only PHASE1_CURRENT_STABLE_ARTIFACTS (source-denominator.json, game-identity-ledger.json, scene-state-denominator.json, asset-file-denominator.json, historical-source-denominator.json) against HEAD bytes, while still requiring the full PHASE1_ARTIFACTS set to be present in the immutable input provenance. This excludes mapper-owned rewritten output bytes from HEAD freshness without weakening the historical pin.",
-    "phase1_current_stable_artifacts": [
-      "source-denominator.json",
-      "game-identity-ledger.json",
-      "scene-state-denominator.json",
-      "asset-file-denominator.json",
-      "historical-source-denominator.json"
-    ],
-    "phase1_artifact_set_includes_phase3_outputs": [
-      "source-denominator.json",
-      "game-identity-ledger.json",
-      "scene-state-denominator.json",
-      "asset-file-denominator.json",
-      "historical-source-denominator.json",
-      "denominator-discrepancies.json"
-    ],
-    "ownership_manifest_evidence": {
-      "task_id": "requirements-mapper:reconciliation-records",
-      "expected_outputs": [
-        "denominator-discrepancies.json",
-        "denominator-method.md",
-        "phase3-reconciliation.json"
-      ]
-    },
-    "phase0_test_evidence": "measure.tests.test_apk_source_denominator_inventory_phase0.Phase0FreezeTests.test_requirements_mapper_owns_discrepancy_method_and_reconciliation_outputs"
-  },
-  "immutable_hashes": {
-    "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
-    "admission_head_revision": "cea7b5d426b34531693ff957a5b234a08704ff29",
-    "phase_authoring_baseline_revision": "6c860c5a49144beaf489a938d992425259765a1c",
-    "phase1_revision_pinned_in_phase3": "990dd9c060ca844ad16d141b1eb4086b310369a4",
-    "phase2_implementation_revision": "4f5dde0a04c70c57f123a72eded84836325743da",
-    "phase2_receipt_revision": "7eef639674e927f2d56107866d385e0df812aa66",
-    "denominator_discrepancies": {
-      "phase1_pinned_sha256": "a531598c2d8a313f99c2a11539fee1de7fa9e96886a7fe8fafb90c5d94866747",
-      "head_sha256": "e9bf40693560d5d79bc15753eaf3867bc90e7e1845761b7fa1f5bf6e89b997a6"
-    },
-    "phase1_artifact_output_hashes_at_head": {
-      "measure/tracks/apk_source_denominator_inventory_20260712/source-denominator.json": "5be6a1266f1c42cf13fbf38f93c25ee5037057c12815051def3f0320a8edbc0c",
-      "measure/tracks/apk_source_denominator_inventory_20260712/game-identity-ledger.json": "a31c99650bf1abd6623e64b2e9a23c4c481ce970036b52cfbe08c74b1c09c407",
-      "measure/tracks/apk_source_denominator_inventory_20260712/scene-state-denominator.json": "0beb71bb0662e54e023c0efa5528a385e8b26a1fbd0443bd89d0c8be196760ba",
-      "measure/tracks/apk_source_denominator_inventory_20260712/asset-file-denominator.json": "a5724f41cce7fafbfaaeccbfe0f1b92f497f1c8643dd85f2ecad42a8f8ef937b",
-      "measure/tracks/apk_source_denominator_inventory_20260712/historical-source-denominator.json": "efd6e1787a6289a88c9e6575d7eb8bdaa74d681b68f7acad3bddfee46ba38bfb"
-    },
-    "phase2_artifact_output_hashes_at_head": {
-      "measure/tracks/apk_source_denominator_inventory_20260712/independent-human-discovery.json": "11267074a5e1978b15b0448946726209cbb999c938ed9632cac53353db59017c",
-      "measure/tracks/apk_source_denominator_inventory_20260712/human-duplicate-drift-records.json": "4af9b9a75f103df43dc962bd704a7e10134676c979c874a2dce3fb39ba41450d",
-      "measure/tracks/apk_source_denominator_inventory_20260712/human-historical-deleted-records.json": "c92bb55b9aac45666f352ad40a93f830f1e3f1d92ac03d1465dd07326b3d8f04",
-      "measure/tracks/apk_source_denominator_inventory_20260712/human-discrepancy-records.json": "18d933986158642fe1cf938c05f7daa45455ce6e71cef8063ddec6421494e4f4"
-    }
-  },
   "stop_loss_counters": {
     "unsupported_factual_claims": 0,
     "denominator_mismatches": 0,
     "failed_fix_review_cycles": 0,
-    "failed_correction_review_cycles": 0,
-    "unresolved_blocking_findings": {
-      "critical": 0,
-      "high": 0,
-      "medium": 0
-    }
+    "unresolved_blocking_findings": {"critical": 0, "high": 0, "medium": 0}
   },
   "unsupported_claims_count": 0
 }
