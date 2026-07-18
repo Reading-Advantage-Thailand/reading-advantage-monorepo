@@ -271,6 +271,48 @@ describe("Sales curriculum release contract", () => {
     );
   });
 
+  it("rejects a monthly App-Only price in module text", () => {
+    const rows = structuredClone(buildStaticSalesCurriculumRows());
+    rows.modules[0]!.description +=
+      " App-Only costs 1,000 THB/student/month.";
+
+    expect(() => buildCurriculumAutomatedReview(rows)).toThrow(
+      "SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID",
+    );
+  });
+
+  it("rejects a per-school Blended price in scenario text", () => {
+    const rows = structuredClone(buildStaticSalesCurriculumRows());
+    rows.scenarios[0]!.objective +=
+      " Blended Learning costs 1,500 THB/school/year.";
+
+    expect(() => buildCurriculumAutomatedReview(rows)).toThrow(
+      "SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID",
+    );
+  });
+
+  it("rejects a one-time App-Only price in rubric text", () => {
+    const rows = structuredClone(buildStaticSalesCurriculumRows());
+    const criteria = rows.rubrics[0]!.criteriaJson as Array<{
+      criterion: string;
+    }>;
+    criteria[0]!.criterion += " App-Only costs 1,000 THB one-time.";
+
+    expect(() => buildCurriculumAutomatedReview(rows)).toThrow(
+      "SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID",
+    );
+  });
+
+  it("rejects a monthly Blended price in quiz text", () => {
+    const rows = structuredClone(buildStaticSalesCurriculumRows());
+    rows.quizQuestions[0]!.explanation +=
+      " Blended Learning costs 1,500 THB per student per month.";
+
+    expect(() => buildCurriculumAutomatedReview(rows)).toThrow(
+      "SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID",
+    );
+  });
+
   it("rejects an altered canonical price band", () => {
     const rows = structuredClone(buildStaticSalesCurriculumRows());
     const productLesson = rows.lessons.find((lesson) =>
@@ -506,7 +548,7 @@ describe("Sales curriculum release contract", () => {
   });
 
   it("rejects an options/runtime provider mismatch before private I/O", async () => {
-    const readUtf8File = vi.fn(async () => "private source");
+    const readCommittedSource = vi.fn(async () => "private source");
     const readSourceCommit = vi.fn(async () => "a".repeat(40));
     const createAIClient = vi.fn(() => {
       throw new Error("AI client must not be created");
@@ -526,7 +568,7 @@ describe("Sales curriculum release contract", () => {
       createAIClient,
       now: () => new Date("2026-07-19T00:00:00.000Z"),
       readSourceCommit,
-      readUtf8File,
+      readCommittedSource,
       runtimeEnvironment: {
         AI_PROVIDER: "openai",
         OPENAI_API_KEY: "different-provider-key",
@@ -536,13 +578,124 @@ describe("Sales curriculum release contract", () => {
       writeUtf8File,
     })).rejects.toThrow("SALES_CURRICULUM_PROVIDER_CONTEXT_MISMATCH");
 
-    expect(readUtf8File).not.toHaveBeenCalled();
+    expect(readCommittedSource).not.toHaveBeenCalled();
     expect(readSourceCommit).not.toHaveBeenCalled();
     expect(createAIClient).not.toHaveBeenCalled();
     expect(writeUtf8File).not.toHaveBeenCalled();
   });
 
-  it("rejects mismatched generation provenance before artifact write", async () => {
+  it("uses only commit-pinned source bytes when the working tree is dirty", async () => {
+    const selectedPath = CURRICULUM_SOURCE_PATHS[0]!;
+    const dirtyText = "DIRTY WORKING SOURCE MUST NOT BE SHARED";
+    await writeFile(join(sourceRoot, selectedPath), dirtyText);
+    const sourceCommit = candidate.source.commit;
+    const curriculum = {
+      modules: Array.from({ length: 6 }, (_, index) => ({
+        slug: `module-${index + 1}`,
+        title: `Module ${index + 1}`,
+        description: "Review candidate",
+        phase: "Learn",
+        order: index + 1,
+        lessons: [{
+          title: "Theory",
+          type: "theory" as const,
+          content: "Source-grounded content",
+          order: 1,
+        }],
+      })),
+    };
+    const generateObjectWithProvenance = vi.fn(async (_input: { prompt: string }) => ({
+      object: curriculum,
+      provenance: {
+        provider: "openrouter" as const,
+        requestedModel: "test-model",
+        resolvedModel: "test-model",
+        responseId: "response-1",
+        requestId: "request-1",
+        usage: {
+          inputTokens: 10,
+          outputTokens: 20,
+          totalTokens: 30,
+          reasoningTokens: null,
+          cachedInputTokens: null,
+        },
+        latencyMs: 5,
+      },
+    }));
+    const client = {
+      generateObjectWithProvenance,
+    } as unknown as AIClientWithProvenance;
+    const readSourceCommit = vi.fn(async () => sourceCommit);
+    const readCommittedSource = vi.fn(async (
+      root: string,
+      commit: string,
+      path: string,
+    ) => execFileSync("git", ["-C", root, "show", `${commit}:${path}`], {
+      encoding: "utf8",
+    }));
+    const writeUtf8File = vi.fn(async (_path: string, _content: string) => undefined);
+
+    await generateCurriculumReviewArtifact({
+      environment: {
+        AI_PROVIDER: "openrouter",
+        SALES_CURRICULUM_EXTERNAL_SHARING_APPROVED:
+          "advantage-pr-to-openrouter",
+      },
+      model: "test-model",
+      output: join(temporaryRoot, "draft.json"),
+      sourceRoot,
+    }, {
+      createAIClient: vi.fn(() => client),
+      now: () => new Date("2026-07-19T00:00:00.000Z"),
+      readCommittedSource,
+      readSourceCommit,
+      runtimeEnvironment: {
+        AI_PROVIDER: "openrouter",
+        OPENROUTER_API_KEY: "openrouter-key",
+        SALES_CURRICULUM_EXTERNAL_SHARING_APPROVED:
+          "advantage-pr-to-openrouter",
+      },
+      writeUtf8File,
+    });
+
+    expect(readSourceCommit.mock.invocationCallOrder[0]).toBeLessThan(
+      readCommittedSource.mock.invocationCallOrder[0]!,
+    );
+    expect(readCommittedSource).toHaveBeenCalledWith(
+      sourceRoot,
+      sourceCommit,
+      selectedPath,
+    );
+    const request = generateObjectWithProvenance.mock.calls[0]![0];
+    expect(request.prompt).toContain(sourceContent(selectedPath));
+    expect(request.prompt).not.toContain(dirtyText);
+    const artifact = JSON.parse(writeUtf8File.mock.calls[0]![1]);
+    expect(artifact.source.commit).toBe(sourceCommit);
+    expect(artifact.source.documents[0].sha256).toBe(
+      createHash("sha256").update(sourceContent(selectedPath)).digest("hex"),
+    );
+  });
+
+  it.each([
+    {
+      name: "provider mismatch",
+      provider: "openai" as const,
+      resolvedModel: "test-model",
+    },
+    {
+      name: "null resolved model",
+      provider: "openrouter" as const,
+      resolvedModel: null,
+    },
+    {
+      name: "resolved model alias",
+      provider: "openrouter" as const,
+      resolvedModel: "provider/model-alias",
+    },
+  ])("rejects $name provenance before artifact write", async ({
+    provider,
+    resolvedModel,
+  }) => {
     const curriculum = {
       modules: Array.from({ length: 6 }, (_, index) => ({
         slug: `module-${index + 1}`,
@@ -561,9 +714,9 @@ describe("Sales curriculum release contract", () => {
     const generateObjectWithProvenance = vi.fn(async () => ({
       object: curriculum,
       provenance: {
-        provider: "openai" as const,
+        provider,
         requestedModel: "test-model",
-        resolvedModel: "test-model",
+        resolvedModel,
         responseId: "response-1",
         requestId: "request-1",
         usage: {
@@ -595,7 +748,7 @@ describe("Sales curriculum release contract", () => {
       createAIClient,
       now: () => new Date("2026-07-19T00:00:00.000Z"),
       readSourceCommit: vi.fn(async () => "a".repeat(40)),
-      readUtf8File: vi.fn(async () => "private source"),
+      readCommittedSource: vi.fn(async () => "private source"),
       runtimeEnvironment: {
         AI_PROVIDER: "openrouter",
         OPENROUTER_API_KEY: "openrouter-key",
@@ -617,7 +770,7 @@ describe("Sales curriculum release contract", () => {
   it.each(["openai", "google"])(
     "rejects %s before reading private sources or creating an AI client",
     async (provider) => {
-      const readUtf8File = vi.fn(async () => "private source");
+      const readCommittedSource = vi.fn(async () => "private source");
       const readSourceCommit = vi.fn(async () => "a".repeat(40));
       const createAIClient = vi.fn(() => {
         throw new Error("AI client must not be created");
@@ -642,11 +795,11 @@ describe("Sales curriculum release contract", () => {
             "advantage-pr-to-openrouter",
         },
         readSourceCommit,
-        readUtf8File,
+        readCommittedSource,
         writeUtf8File,
       })).rejects.toThrow("SALES_CURRICULUM_OPENROUTER_PROVIDER_REQUIRED");
 
-      expect(readUtf8File).not.toHaveBeenCalled();
+      expect(readCommittedSource).not.toHaveBeenCalled();
       expect(readSourceCommit).not.toHaveBeenCalled();
       expect(createAIClient).not.toHaveBeenCalled();
       expect(writeUtf8File).not.toHaveBeenCalled();

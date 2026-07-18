@@ -90,9 +90,11 @@ Do not start Phase 2 until the security gate is green.
 > record is pending. The optional OpenRouter generator now requires matching
 > caller/runtime `AI_PROVIDER=openrouter` values, the exact provider-specific
 > sharing approval, and an explicit runtime OpenRouter key before it constructs
-> the client or reads sources. Returned provider/model provenance must also match
-> before artifact write. Generation was not approved, was not run, and is not the
-> chosen release path. No AI or human approval is claimed.
+> the client or reads sources. It pins the source commit first and reads only
+> `git show <commit>:<path>` bytes, so dirty working files cannot be shared or
+> mislabeled. Returned provider, requested-model, and resolved-model provenance
+> must exactly match before artifact write. Generation was not approved, was not
+> run, and is not the chosen release path. No AI or human approval is claimed.
 
 ## Phase 2: Deploy infrastructure
 

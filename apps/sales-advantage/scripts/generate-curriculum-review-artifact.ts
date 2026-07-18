@@ -1,6 +1,6 @@
 import { execFile } from "node:child_process";
 import { createHash } from "node:crypto";
-import { readFile, writeFile } from "node:fs/promises";
+import { writeFile } from "node:fs/promises";
 import { homedir } from "node:os";
 import { join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -72,8 +72,12 @@ export interface CurriculumReviewArtifactDependencies {
     provider: "openrouter";
   }) => AIClientWithProvenance;
   now: () => Date;
+  readCommittedSource: (
+    sourceRoot: string,
+    commit: string,
+    path: string,
+  ) => Promise<string>;
   readSourceCommit: (sourceRoot: string) => Promise<string>;
-  readUtf8File: (path: string) => Promise<string>;
   runtimeEnvironment: Readonly<Record<string, string | undefined>>;
   writeUtf8File: (path: string, content: string) => Promise<void>;
 }
@@ -155,7 +159,14 @@ const defaultDependencies: CurriculumReviewArtifactDependencies = {
     );
     return stdout.trim();
   },
-  readUtf8File: async (path) => readFile(path, "utf8"),
+  readCommittedSource: async (sourceRoot, commit, path) => {
+    const { stdout } = await execFileAsync(
+      "git",
+      ["-C", sourceRoot, "show", `${commit}:${path}`],
+      { maxBuffer: 4 * 1024 * 1024 },
+    );
+    return stdout;
+  },
   runtimeEnvironment: process.env,
   writeUtf8File: async (path, content) => writeFile(path, content),
 };
@@ -176,15 +187,19 @@ export async function generateCurriculumReviewArtifact(
     dependencies.runtimeEnvironment,
   );
   const client = dependencies.createAIClient(configuration);
+  const sourceCommit = await dependencies.readSourceCommit(options.sourceRoot);
   const sources = await Promise.all(CURRICULUM_SOURCE_PATHS.map(async (path) => {
-    const content = await dependencies.readUtf8File(join(options.sourceRoot, path));
+    const content = await dependencies.readCommittedSource(
+      options.sourceRoot,
+      sourceCommit,
+      path,
+    );
     return {
       path,
       sha256: createHash("sha256").update(content).digest("hex"),
       content,
     };
   }));
-  const sourceCommit = await dependencies.readSourceCommit(options.sourceRoot);
   const sourceText = sources
     .map((source) => `[${source.path}]\n${source.content.slice(0, 6000)}`)
     .join("\n\n---\n\n");
@@ -197,7 +212,8 @@ export async function generateCurriculumReviewArtifact(
   });
   if (
     result.provenance.provider !== configuration.provider ||
-    result.provenance.requestedModel !== configuration.model
+    result.provenance.requestedModel !== configuration.model ||
+    result.provenance.resolvedModel !== configuration.model
   ) {
     throw new Error("SALES_CURRICULUM_GENERATION_PROVENANCE_MISMATCH");
   }

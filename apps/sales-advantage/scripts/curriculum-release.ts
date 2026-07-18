@@ -501,12 +501,20 @@ function hasConflictingProductStatus(statements: readonly string[]): boolean {
  */
 function currencyAmounts(
   statement: string,
-): Array<{ amount: number; index: number }> {
-  return [...statement.matchAll(/(\d[\d,]*(?:\.\d+)?)\s*(?:thb|baht)\b/g)]
-    .map((match) => ({
+): Array<{ amount: number; canonicalUnit: boolean; index: number }> {
+  return [...statement.matchAll(
+    /(\d[\d,]*(?:\.\d+)?)\s*(thb|baht)\b/g,
+  )].map((match) => {
+    const suffix = statement.slice(match.index + match[0].length);
+    const canonicalUnit = match[2] === "thb" &&
+      /^(?:\s*\/\s*student\s*\/\s*year\b|\s+per\s+student\s+per\s+year\b)/
+        .test(suffix);
+    return {
       amount: Number(match[1]!.replaceAll(",", "")),
+      canonicalUnit,
       index: match.index,
-    }));
+    };
+  });
 }
 
 /**
@@ -555,7 +563,10 @@ function hasConflictingTierClaim(statements: readonly string[]): boolean {
 
     const amounts = currencyAmounts(statement);
     if (amounts.length === 0 || statement === allowedWorkedTotal) continue;
-    for (const { amount, index } of amounts) {
+    const conflictingBillingSemantics =
+      /(?:\/|per\s+)(?:day|month|school|semester|term|week)\b|\bone[- ]time\b|\bmonthly\b/
+        .test(statement);
+    for (const { amount, canonicalUnit, index } of amounts) {
       const followingTier = tierMatches.find((match) => match.index > index);
       const amountIntroducesFollowingTier = followingTier !== undefined &&
         /\bfor\s*$/.test(statement.slice(index, followingTier.index));
@@ -570,7 +581,11 @@ function hasConflictingTierClaim(statements: readonly string[]): boolean {
       const tier = nearestTier?.[0];
       if (
         tier === "managed service" ||
-        (tier && expectedPrices.get(tier) !== amount)
+        (tier && (
+          expectedPrices.get(tier) !== amount ||
+          !canonicalUnit ||
+          conflictingBillingSemantics
+        ))
       ) {
         return true;
       }
