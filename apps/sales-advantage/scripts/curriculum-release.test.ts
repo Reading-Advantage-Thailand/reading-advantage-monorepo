@@ -313,6 +313,33 @@ describe("Sales curriculum release contract", () => {
     );
   });
 
+  it("allowlists only the exact canonical worked annual-total sentence", () => {
+    const canonicalRows = buildStaticSalesCurriculumRows();
+    expect(() => buildCurriculumAutomatedReview(canonicalRows)).not.toThrow();
+
+    const canonicalWorkedTotal =
+      "For example, 500 students at the Blended Learning reference price is 750,000 THB/year.";
+    const nearVariants = [
+      "For example, 500 students at the Blended Learning reference price is 750,001 THB/year.",
+      "For example, 500 students at the Blended Learning reference price is 750,000 THB/month.",
+      "For instance, 500 students at the Blended Learning reference price is 750,000 THB/year.",
+    ];
+    for (const nearVariant of nearVariants) {
+      const rows = structuredClone(canonicalRows);
+      const pricingLesson = rows.lessons.find((lesson) =>
+        lesson.title === "The Total-Cost-of-English Frame"
+      )!;
+      pricingLesson.content = pricingLesson.content.replace(
+        canonicalWorkedTotal,
+        nearVariant,
+      );
+
+      expect(() => buildCurriculumAutomatedReview(rows)).toThrow(
+        "SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID",
+      );
+    }
+  });
+
   it("rejects an altered canonical price band", () => {
     const rows = structuredClone(buildStaticSalesCurriculumRows());
     const productLesson = rows.lessons.find((lesson) =>
@@ -680,20 +707,30 @@ describe("Sales curriculum release contract", () => {
     {
       name: "provider mismatch",
       provider: "openai" as const,
+      requestedModel: "test-model",
       resolvedModel: "test-model",
     },
     {
       name: "null resolved model",
       provider: "openrouter" as const,
+      requestedModel: "test-model",
       resolvedModel: null,
     },
     {
       name: "resolved model alias",
       provider: "openrouter" as const,
+      requestedModel: "test-model",
       resolvedModel: "provider/model-alias",
+    },
+    {
+      name: "requested model mismatch",
+      provider: "openrouter" as const,
+      requestedModel: "different/requested-model",
+      resolvedModel: "test-model",
     },
   ])("rejects $name provenance before artifact write", async ({
     provider,
+    requestedModel,
     resolvedModel,
   }) => {
     const curriculum = {
@@ -715,7 +752,7 @@ describe("Sales curriculum release contract", () => {
       object: curriculum,
       provenance: {
         provider,
-        requestedModel: "test-model",
+        requestedModel,
         resolvedModel,
         responseId: "response-1",
         requestId: "request-1",
