@@ -519,12 +519,14 @@ output and fresh pairwise-isolated provenance, but is limited to `bash`, `read`,
 and `write` and exactly one authority-derived verifier command followed
 immediately by the frozen `git commit --only <owned-output> -m <subject>` command.
 The verifier is loaded from immutable commit
-`59260bafa231873a2ec0aba18ed65f57e7269d1b` under `/usr/bin/env -i`,
+`7dcbcbd3f7f8277dc6f0be11eab77946faf77898` under `/usr/bin/env -i`,
 `/usr/bin/python3 -I -S`, the frozen PATH/LANG, and the frozen runtime hashes.
 No additional Bash operation is admissible.
 
-The truth verifier executes the exact Phase0-3 module set, rejects any failure or
-skip, derives per-phase test counts, and requires
+The truth verifier executes the recorded sanitized Phase0-3 admission command in
+an isolated subprocess, pins the runner plus all four test-module blobs, requires
+exact nonzero module counts `13/17/31/24` (85 total), rejects any failure or skip,
+derives per-phase test counts, and requires
 `denominator-contract-test-report.json` to match those results exactly. The
 reviewer verifier repeats that admission, resolves the replacement
 `{phase2_receipt_commit}` through the receipt renderer's immutable commit

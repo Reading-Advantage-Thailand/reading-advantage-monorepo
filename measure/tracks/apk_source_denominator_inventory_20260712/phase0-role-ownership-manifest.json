@@ -3,7 +3,7 @@
   "status": "frozen-not-executed",
   "track_id": "apk_source_denominator_inventory_20260712",
   "allowed_input_manifest_path": "measure/tracks/apk_source_denominator_inventory_20260712/phase0-input-freeze.json",
-  "allowed_input_manifest_sha256": "c436f0ba931fec0549afca3aec249f85690266755353f1b5dcf6cc37580bb80f",
+  "allowed_input_manifest_sha256": "5954ced79cb2a30dd249b62764c28cd7f3ae3bfa59be2b86b9b945bd132861dc",
   "trusted_runtime": {
     "schema_version": "apk-trusted-runtime.v1",
     "sanitized_environment": {
@@ -79,11 +79,11 @@
     }
   ],
   "authority_correction": {
-    "prior_authority_commit": "6dd43aa834b7193017230843c658d32c19ecd1a9",
-    "prior_manifest_sha256": "1b7adb030491a0a8cf175fef242173b823ea8dd408055cf71fd72957855e3af8",
-    "prior_input_sha256": "8d989f6b30e5b525540004ddc21edc94b23f431a4ff38920e2121c4ea25b17b4",
-    "red_commit": "59260bafa231873a2ec0aba18ed65f57e7269d1b",
-    "reason": "direct-write-only final roles could not execute the admission, regeneration, and ledger checks required by their evidence contracts",
+    "prior_authority_commit": "eb965247a2917316e6da01544db8aee38beed209",
+    "prior_manifest_sha256": "f4d0b13167253fedb24bb78fbd0e642980d64f29fac139f2105829f14bc02565",
+    "prior_input_sha256": "c436f0ba931fec0549afca3aec249f85690266755353f1b5dcf6cc37580bb80f",
+    "red_commit": "7dcbcbd3f7f8277dc6f0be11eab77946faf77898",
+    "reason": "the first successor imported mutable test suites, admitted zero-test suites, and accepted boolean counters or whitespace-mutated blocking severities",
     "requires_all_role_reruns": true,
     "product_owner_acceptance_claimed": false,
     "external_run_authorized": true
@@ -185,7 +185,12 @@
           {
             "command_template": "/usr/bin/env -i PATH=/opt/codex-desktop/resources/node-runtime/bin:/usr/bin:/bin LANG=C PYTHONDONTWRITEBYTECODE=1 /usr/bin/python3 -I -S -c 'exec(compile(__import__(\"subprocess\").check_output((\"/usr/bin/git\",\"show\",__import__(\"sys\").argv.pop(1)+\":measure/tracks/apk_source_denominator_inventory_20260712/verify_phase4_role_evidence.py\")),\"measure/tracks/apk_source_denominator_inventory_20260712/verify_phase4_role_evidence.py\",\"exec\"),dict(__file__=\"measure/tracks/apk_source_denominator_inventory_20260712/verify_phase4_role_evidence.py\",__name__=\"__main__\"))' {phase0_commit} --role truth-test-author --phase0-authority-revision {phase0_commit} --output measure/tracks/apk_source_denominator_inventory_20260712/denominator-contract-test-report.json",
             "dependency_blobs": [
-              {"path": "measure/tracks/apk_source_denominator_inventory_20260712/verify_phase4_role_evidence.py", "revision": "59260bafa231873a2ec0aba18ed65f57e7269d1b", "sha256": "0d86f0e7923731fb9d58618c9f4edafb3784f94ec5148f398d7fa41262fdc56e"}
+              {"path": "measure/tracks/apk_source_denominator_inventory_20260712/verify_phase4_role_evidence.py", "revision": "7dcbcbd3f7f8277dc6f0be11eab77946faf77898", "sha256": "4c07f401c0dca91a81df3474a7cb36a75ca74af9b8e4fcf18b35ff960a3b5d1e"},
+              {"path": "measure/tracks/apk_source_denominator_inventory_20260712/run_phase0_3_admission.py", "revision": "7dcbcbd3f7f8277dc6f0be11eab77946faf77898", "sha256": "1955323d9f65d3a5ff94ed11c1fe808a55391630c3845dc64dc132a794d4463e"},
+              {"path": "measure/tests/test_apk_source_denominator_inventory_phase0.py", "revision": "7dcbcbd3f7f8277dc6f0be11eab77946faf77898", "sha256": "55cb6981c3c542633c8a42449e7d4cde87fe9867a17b91c1b6c60402c2cd6551"},
+              {"path": "measure/tests/test_apk_source_denominator_inventory_phase1.py", "revision": "7dcbcbd3f7f8277dc6f0be11eab77946faf77898", "sha256": "236c9bda94b264022fd523efda941b5496de96bf8168bb1520f87881211a35bb"},
+              {"path": "measure/tests/test_apk_source_denominator_inventory_phase2.py", "revision": "7dcbcbd3f7f8277dc6f0be11eab77946faf77898", "sha256": "be7df523d7d5a0cab356f27e921099b9156e192c60daf7ead4a90de37270c90f"},
+              {"path": "measure/tests/test_apk_source_denominator_inventory_phase3.py", "revision": "7dcbcbd3f7f8277dc6f0be11eab77946faf77898", "sha256": "0820a5bd79d825c0bd4ce48f9d241d1bc7364a53df777126d88f6433b8e5499a"}
             ],
             "owned_outputs": ["measure/tracks/apk_source_denominator_inventory_20260712/denominator-contract-test-report.json"],
             "commit": {"mode": "normal-only", "subject": "chore(measure): attest T2 truth tests (track_id: apk_source_denominator_inventory_20260712)", "immediate_adjacency": true, "attestation_commit_source": "output_commit"}
@@ -210,7 +215,12 @@
           {
             "command_template": "/usr/bin/env -i PATH=/opt/codex-desktop/resources/node-runtime/bin:/usr/bin:/bin LANG=C PYTHONDONTWRITEBYTECODE=1 /usr/bin/python3 -I -S -c 'exec(compile(__import__(\"subprocess\").check_output((\"/usr/bin/git\",\"show\",__import__(\"sys\").argv.pop(1)+\":measure/tracks/apk_source_denominator_inventory_20260712/verify_phase4_role_evidence.py\")),\"measure/tracks/apk_source_denominator_inventory_20260712/verify_phase4_role_evidence.py\",\"exec\"),dict(__file__=\"measure/tracks/apk_source_denominator_inventory_20260712/verify_phase4_role_evidence.py\",__name__=\"__main__\"))' {phase0_commit} --role adversarial-reviewer --phase0-authority-revision {phase0_commit} --phase2-receipt-revision {phase2_receipt_commit} --output measure/tracks/apk_source_denominator_inventory_20260712/independent-review.json",
             "dependency_blobs": [
-              {"path": "measure/tracks/apk_source_denominator_inventory_20260712/verify_phase4_role_evidence.py", "revision": "59260bafa231873a2ec0aba18ed65f57e7269d1b", "sha256": "0d86f0e7923731fb9d58618c9f4edafb3784f94ec5148f398d7fa41262fdc56e"},
+              {"path": "measure/tracks/apk_source_denominator_inventory_20260712/verify_phase4_role_evidence.py", "revision": "7dcbcbd3f7f8277dc6f0be11eab77946faf77898", "sha256": "4c07f401c0dca91a81df3474a7cb36a75ca74af9b8e4fcf18b35ff960a3b5d1e"},
+              {"path": "measure/tracks/apk_source_denominator_inventory_20260712/run_phase0_3_admission.py", "revision": "7dcbcbd3f7f8277dc6f0be11eab77946faf77898", "sha256": "1955323d9f65d3a5ff94ed11c1fe808a55391630c3845dc64dc132a794d4463e"},
+              {"path": "measure/tests/test_apk_source_denominator_inventory_phase0.py", "revision": "7dcbcbd3f7f8277dc6f0be11eab77946faf77898", "sha256": "55cb6981c3c542633c8a42449e7d4cde87fe9867a17b91c1b6c60402c2cd6551"},
+              {"path": "measure/tests/test_apk_source_denominator_inventory_phase1.py", "revision": "7dcbcbd3f7f8277dc6f0be11eab77946faf77898", "sha256": "236c9bda94b264022fd523efda941b5496de96bf8168bb1520f87881211a35bb"},
+              {"path": "measure/tests/test_apk_source_denominator_inventory_phase2.py", "revision": "7dcbcbd3f7f8277dc6f0be11eab77946faf77898", "sha256": "be7df523d7d5a0cab356f27e921099b9156e192c60daf7ead4a90de37270c90f"},
+              {"path": "measure/tests/test_apk_source_denominator_inventory_phase3.py", "revision": "7dcbcbd3f7f8277dc6f0be11eab77946faf77898", "sha256": "0820a5bd79d825c0bd4ce48f9d241d1bc7364a53df777126d88f6433b8e5499a"},
               {"path": "measure/tracks/apk_source_denominator_inventory_20260712/generate_phase3_reconciliation.py", "revision": "f27e93b27c956baa54b3ccb4c862c09e82cc746f", "sha256": "ade7ad3b7e4fe1f4ca3df2325edc83c0f99b75d68fe61fb22c7ffd5125b13847"}
             ],
             "owned_outputs": ["measure/tracks/apk_source_denominator_inventory_20260712/independent-review.json"],
