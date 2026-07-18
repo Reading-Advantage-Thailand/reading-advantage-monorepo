@@ -520,13 +520,16 @@ output and fresh pairwise-isolated provenance, but is limited to `bash`, `read`,
 and `write` and exactly one authority-derived verifier command followed
 immediately by the frozen `git commit --only <owned-output> -m <subject>` command.
 The verifier is loaded from immutable commit
-`0e2cbb1ec42ba51a3e59e0c3b2a58077d1bb427b` under `/usr/bin/env -i`,
+`c4b5a5c80a4b8b69c87a871b05271c566caf9400` under `/usr/bin/env -i`,
 `/usr/bin/python3 -I -S`, the frozen PATH/LANG, and the frozen runtime hashes.
 No additional Bash operation is admissible.
 
 The truth verifier executes the recorded sanitized Phase0-3 admission command in
-a unique detached local clone of the exact authority revision, pinning the four
-test modules, every transitive import, Git locator, and committed artifact. It requires
+a unique detached local clone of the explicit mapper admission revision, not the
+older Phase-0 authority. The admission commit must strictly descend from Phase 0,
+own exactly the three mapper outputs, and remain the latest Phase-3 commit. Truth
+runs at that HEAD; review may follow only the truth report and truth receipt commits.
+This pins the four test modules, every transitive import, Git locator, and committed artifact. It requires
 exact nonzero module counts `13/17/31/24` (85 total), rejects any failure or skip,
 derives per-phase test counts, and requires
 `denominator-contract-test-report.json` to match those results exactly. The
