@@ -1,4 +1,4 @@
-import { eq, and } from "drizzle-orm";
+import { eq, and, sql } from "drizzle-orm";
 import {
   salesProgress,
   salesRoleplayAttempts,
@@ -347,34 +347,39 @@ export async function submitQuiz(
       ? Math.round((correctCount / questions.length) * 100)
       : 0;
   const passed = score >= 70;
-  const [existing] = await rawDb
-    .select()
-    .from(salesProgress)
-    .where(
-      and(
-        eq(salesProgress.userId, user.id),
-        eq(salesProgress.lessonId, input.lessonId),
-      ),
-    )
-    .limit(1);
-  if (existing) {
-    await rawDb
-      .update(salesProgress)
-      .set({
-        status: "completed",
-        score: String(score),
-        completedAt: new Date(),
-      })
-      .where(eq(salesProgress.id, existing.id));
-  } else {
-    await rawDb.insert(salesProgress).values({
+  const status: "completed" | "in_progress" = passed
+    ? "completed"
+    : "in_progress";
+  const completedAt = passed ? new Date() : null;
+
+  await rawDb
+    .insert(salesProgress)
+    .values({
       userId: user.id,
       lessonId: input.lessonId,
-      status: "completed",
+      status,
       score: String(score),
-      completedAt: new Date(),
+      completedAt,
+    })
+    .onConflictDoUpdate({
+      target: [salesProgress.userId, salesProgress.lessonId],
+      set: {
+        status: sql`CASE
+          WHEN ${salesProgress.status} = 'completed'::sales_progress_status
+            OR excluded.status = 'completed'::sales_progress_status
+          THEN 'completed'::sales_progress_status
+          ELSE 'in_progress'::sales_progress_status
+        END`,
+        score: sql`GREATEST(
+          COALESCE(${salesProgress.score}, excluded.score),
+          excluded.score
+        )`,
+        completedAt: sql`COALESCE(
+          ${salesProgress.completedAt},
+          excluded.completed_at
+        )`,
+      },
     });
-  }
   return { lessonId: input.lessonId, score, passed, results };
 }
 

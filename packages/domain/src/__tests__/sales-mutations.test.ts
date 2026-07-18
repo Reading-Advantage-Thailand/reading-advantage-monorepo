@@ -1,4 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
+import type { SQL } from "drizzle-orm";
+import { PgDialect } from "drizzle-orm/pg-core";
+import { salesProgress } from "@reading-advantage/db/schema";
 import {
   markTheoryLessonComplete,
   createRoleplayAttempt,
@@ -35,6 +38,28 @@ const globalTenant = { schoolId: null };
 
 function wrapDb(db: ReturnType<typeof createMockDb>) {
   return createTenantDB(db as unknown as DB, globalTenant);
+}
+
+function quizQuestions(count: number) {
+  return Array.from({ length: count }, (_, index) => ({
+    id: `q${index + 1}`,
+    lessonId: "l1",
+    question: `Question ${index + 1}`,
+    optionsJson: ["correct", "incorrect"],
+    correctAnswer: "correct",
+    explanation: "Explanation",
+    order: index + 1,
+    createdAt: new Date(),
+  }));
+}
+
+function answersWithCorrectCount(count: number, correctCount: number) {
+  return Object.fromEntries(
+    Array.from({ length: count }, (_, index) => [
+      `q${index + 1}`,
+      index < correctCount ? "correct" : "incorrect",
+    ]),
+  );
 }
 
 describe("sales mutations", () => {
@@ -77,29 +102,99 @@ describe("sales mutations", () => {
     expect(result.passed).toBe(true);
   });
 
-  it("submitQuiz grades answers with 70% pass threshold", async () => {
-    const questions = [
-      { id: "q1", lessonId: "l1", question: "Q1", optionsJson: ["a", "b"], correctAnswer: "a", explanation: "ex", order: 1, createdAt: new Date() },
-      { id: "q2", lessonId: "l1", question: "Q2", optionsJson: ["c", "d"], correctAnswer: "c", explanation: "ex", order: 2, createdAt: new Date() },
-    ];
-    const db = createMockDb({ selectSequence: [questions, []], insertReturning: [{ id: "p1", status: "completed" }] });
+  it("submitQuiz keeps progress in progress just below the 70% pass threshold", async () => {
+    const questions = quizQuestions(100);
+    const db = createMockDb({ selectSequence: [questions, []] });
     const result = await submitQuiz(
       { db: wrapDb(db), user: salesRep, tenant: globalTenant },
-      { lessonId: "l1", answers: { q1: "a", q2: "d" } },
+      { lessonId: "l1", answers: answersWithCorrectCount(100, 69) },
     );
-    expect(result.score).toBe(50);
+    expect(result.score).toBe(69);
     expect(result.passed).toBe(false);
-    expect(result.results).toHaveLength(2);
+    expect(result.results).toHaveLength(100);
     expect(result.results[0].correct).toBe(true);
-    expect(result.results[1].correct).toBe(false);
+    expect(result.results[99].correct).toBe(false);
+    const values = db.insert.mock.results[0]?.value.values;
+    expect(values).toHaveBeenCalledWith(expect.objectContaining({
+      status: "in_progress",
+      score: "69",
+      completedAt: null,
+    }));
   });
 
-  it("submitQuiz passes at 100%", async () => {
-    const questions = [{ id: "q1", lessonId: "l1", question: "Q1", optionsJson: ["a", "b"], correctAnswer: "a", explanation: "ex", order: 1, createdAt: new Date() }];
-    const db = createMockDb({ selectSequence: [questions, []], insertReturning: [{ id: "p1", status: "completed" }] });
-    const result = await submitQuiz({ db: wrapDb(db), user: salesRep, tenant: globalTenant }, { lessonId: "l1", answers: { q1: "a" } });
-    expect(result.score).toBe(100);
+  it.each([
+    { correctCount: 7, expectedScore: 70 },
+    { correctCount: 8, expectedScore: 80 },
+  ])("submitQuiz completes progress at and above the threshold ($expectedScore%)", async ({ correctCount, expectedScore }) => {
+    const questions = quizQuestions(10);
+    const db = createMockDb({ selectSequence: [questions, []] });
+    const result = await submitQuiz(
+      { db: wrapDb(db), user: salesRep, tenant: globalTenant },
+      { lessonId: "l1", answers: answersWithCorrectCount(10, correctCount) },
+    );
+    expect(result.score).toBe(expectedScore);
     expect(result.passed).toBe(true);
+    const values = db.insert.mock.results[0]?.value.values;
+    expect(values).toHaveBeenCalledWith(expect.objectContaining({
+      status: "completed",
+      score: String(expectedScore),
+      completedAt: expect.any(Date),
+    }));
+  });
+
+  it("submitQuiz uses one atomic monotonic upsert for overlapping attempts", async () => {
+    const questions = quizQuestions(10);
+    const db = createMockDb({ selectResults: questions });
+    const onConflictDoUpdate = vi.fn().mockResolvedValue(undefined);
+    const values = vi.fn().mockReturnValue({ onConflictDoUpdate });
+    db.insert = vi.fn().mockReturnValue({ values });
+
+    const result = await submitQuiz(
+      { db: wrapDb(db), user: salesRep, tenant: globalTenant },
+      { lessonId: "l1", answers: answersWithCorrectCount(10, 6) },
+    );
+
+    expect(result).toMatchObject({ score: 60, passed: false });
+    expect(db.select).toHaveBeenCalledTimes(1);
+    expect(db.update).not.toHaveBeenCalled();
+    expect(values).toHaveBeenCalledWith(expect.objectContaining({
+      userId: salesRep.id,
+      lessonId: "l1",
+      status: "in_progress",
+      score: "60",
+      completedAt: null,
+    }));
+    expect(onConflictDoUpdate).toHaveBeenCalledTimes(1);
+
+    const config = onConflictDoUpdate.mock.calls[0]?.[0] as {
+      target: unknown[];
+      set: {
+        status: SQL;
+        score: SQL;
+        completedAt: SQL;
+      };
+    };
+    const dialect = new PgDialect();
+    const render = (expression: SQL) =>
+      dialect.sqlToQuery(expression).sql.replace(/\s+/g, " ").toLowerCase();
+    const statusSql = render(config.set.status);
+    const scoreSql = render(config.set.score);
+    const completedAtSql = render(config.set.completedAt);
+
+    expect(config.target).toEqual([
+      salesProgress.userId,
+      salesProgress.lessonId,
+    ]);
+    expect(statusSql).toContain('"sales_progress"."status"');
+    expect(statusSql).toContain("excluded.status");
+    expect(statusSql).toContain("completed");
+    expect(statusSql).toContain("in_progress");
+    expect(scoreSql).toContain("greatest");
+    expect(scoreSql).toContain('"sales_progress"."score"');
+    expect(scoreSql).toContain("excluded.score");
+    expect(completedAtSql).toContain("coalesce");
+    expect(completedAtSql).toContain('"sales_progress"."completed_at"');
+    expect(completedAtSql).toContain("excluded.completed_at");
   });
 
   it("saveChatMessage creates a conversation when none provided", async () => {
