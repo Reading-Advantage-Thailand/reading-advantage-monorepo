@@ -18,10 +18,10 @@ configuration, and Turbo task are valid. This gate must be explicitly accepted
 before Task 2 or durable-job contract/test work writes under
 `packages/backend/src/jobs/`.
 
-- [~] Task 2: Define Zod-backed descriptor schemas/types for query, command, and job capabilities with JSDoc.
-- [~] Task 3: Define executor context, auth/tenant/authorization policy ports, scoped adapter access, and transaction contract.
-- [~] Task 4: Define stable platform error, audit declaration, and durable idempotency contracts with safe serialization rules.
-- [~] Task 5: Define registry, generated catalog schema, route-binding schema, and invalid-combination matrix.
+- [x] Task 2: Define Zod-backed descriptor schemas/types for query, command, and job capabilities with JSDoc. [evidence: phase-1-contract-verification.md]
+- [x] Task 3: Define executor context, auth/tenant/authorization policy ports, scoped adapter access, and transaction contract. [evidence: phase-1-contract-verification.md]
+- [x] Task 4: Define stable platform error, audit declaration, and durable idempotency contracts with safe serialization rules. [evidence: phase-1-contract-verification.md]
+- [x] Task 5: Define registry, generated catalog schema, route-binding schema, and invalid-combination matrix. [evidence: phase-1-contract-verification.md]
 
 **Verification:** `pnpm --filter @reading-advantage/backend check-types && pnpm architecture:check`
 
@@ -46,12 +46,15 @@ setup; handler non-execution is asserted for every failed precondition.
 - [~] Task 10: Implement descriptor builders and fail-closed registry validation.
 - [~] Task 11: Implement executor context creation plus input/auth/tenant/authorization ordering using existing adapters.
 - [~] Task 12: Implement transaction, output validation, typed error normalization, and secret-safe observability.
-- [~] Task 13: Implement audit and durable idempotency orchestration and make all Phase 2 tests Green.
+- [~] Task 13: Implement audit and durable idempotency orchestration; add the reviewed Drizzle capability-idempotency schema/migration, tenant-registry classification, PostgreSQL adapter, and isolated two-connection atomic acquisition/settlement/rollback evidence; then make all Phase 2 tests Green.
 
-**Verification:** `CI=true pnpm vitest run packages/backend/src/kernel/__tests__ && pnpm --filter @reading-advantage/backend check-types`
+**Verification:** `CI=true pnpm vitest run packages/backend/src/kernel/__tests__ && pnpm --filter @reading-advantage/backend check-types && pnpm --filter @reading-advantage/db test && pnpm --filter @reading-advantage/domain test`
 
 **Acceptance gate:** AC-1–AC-4 pass, coverage for new kernel code is at least
-80%, and architecture baselines do not grow.
+80%, the durable idempotency adapter proves atomic owner/replay/conflict and
+rollback behavior on isolated PostgreSQL connections without production URL
+fallback, migration/tenant governance passes, and architecture baselines do
+not grow.
 
 ## Phase 4: Catalog and Route Bindings (Red to Green)
 

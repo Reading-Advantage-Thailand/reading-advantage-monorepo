@@ -1,0 +1,6 @@
+/**
+ * Public entry point for backend capability-kernel contracts.
+ * @packageDocumentation
+ */
+
+export * from "./contracts/index.js";
