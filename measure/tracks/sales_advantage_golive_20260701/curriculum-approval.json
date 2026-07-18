@@ -1,6 +1,9 @@
 {
   "schemaVersion": 1,
   "curriculumId": "reading-advantage-sales-curriculum-v1",
+  "decision": "awaiting_human_review",
+  "reviewer": null,
+  "reviewedAt": null,
   "graphSha256": "ccba5498f453f1e2982307ca29d9d56c8bf17aeb26e1d586de232b44416b8717",
   "source": {
     "repository": "advantage-pr",
@@ -52,48 +55,11 @@
       }
     ]
   },
-  "pedagogy": {
-    "reference": "apps/codecamp-advantage/measure/curriculum/course-spec.md",
-    "progression": [
-      "learn",
-      "practice",
-      "evaluate",
-      "reflect"
-    ],
-    "moduleOrder": [
-      "foundations-discovery",
-      "framing-value",
-      "objections",
-      "ra-product-applied",
-      "ra-objections-demo",
-      "pricing-closing"
-    ]
+  "checks": {
+    "pedagogy": false,
+    "sourceTraceability": false,
+    "honestClaims": false,
+    "roleplayRubrics": false
   },
-  "generation": {
-    "method": "hand-authored-reviewed-candidate",
-    "provider": null,
-    "requestedModel": null,
-    "promptVersion": "sales-curriculum-v3",
-    "artifactRef": "apps/sales-advantage/scripts/static-seed.ts"
-  },
-  "automatedReview": {
-    "exactGraphVerified": true,
-    "progressiveModuleOrderVerified": true,
-    "honestClaimsLanguageReviewedByAutomation": true,
-    "rubricSourceRefsVerified": true,
-    "roleplayCanonicalExcerptsVerified": true
-  },
-  "approval": {
-    "status": "awaiting_human_review",
-    "reviewer": null,
-    "reviewedAt": null,
-    "evidenceRef": null,
-    "evidenceSha256": null,
-    "checks": {
-      "pedagogy": false,
-      "sourceTraceability": false,
-      "honestClaims": false,
-      "roleplayRubrics": false
-    }
-  }
+  "notes": "Pending human review. Only the human reviewer may approve this exact graph and source snapshot."
 }

@@ -71,22 +71,25 @@ Do not start Phase 2 until the security gate is green.
 ---
 
 > **2026-07-18 production curriculum checkpoint:** the release pipeline loaded
-> and independently verified 6 modules, 26 lessons, 8 rubrics, 8 scenarios, and
-> 13 quiz questions. Deterministic graph digest:
-> `b7582eb44adc176327f483147043fdb4aa6f02a292aeea189b7774483db25963`. The broader human content review and AI-generation tasks above
+> and independently verified 6 modules, 27 lessons, 8 rubrics, 8 scenarios, and
+> 14 quiz questions. Deterministic graph digest:
+> `ccba5498f453f1e2982307ca29d9d56c8bf17aeb26e1d586de232b44416b8717`. The broader human content review and AI-generation tasks above
 > remain open and are not represented as complete.
 
 > **2026-07-18 curriculum release-contract checkpoint:** the deterministic graph
 > is now labeled as a release candidate rather than local-dev seed data. Its
 > manifest pins advantage-pr@8dd78171f1d57dd775fad2295d60e86fb267dad8,
-> SHA-256 hashes for ten canonical source documents, Codecamp-like learn →
-> practice → evaluate → reflect progression, automated honest-claims/rubric
-> checks, and non-empty canonical excerpts for every roleplay. The production
-> seed fails closed with SALES_CURRICULUM_HUMAN_APPROVAL_REQUIRED while the
-> approval record is pending. A real OpenRouter draft command was implemented,
-> but execution stopped before sending data because private-corpus sharing with
-> OpenRouter is not covered by the current external-sharing approval. No AI or
-> human approval is claimed.
+> SHA-256 hashes for eleven canonical source documents, structurally enforced
+> Codecamp-like learn → practice/rubric evaluation → reflection quiz progression,
+> a closed rubric-source registry, and non-empty canonical excerpts for every
+> roleplay. The seed gate verifies selected working files and committed Git bytes,
+> plus graph-bound JSON human evidence and a reviewer-controlled Secret Manager
+> SHA-256 trust anchor; direct static seed execution is refused.
+> False product, claims, availability, and flat-price content identified in hard
+> review was replaced with the pinned corpus language. The production seed still
+> fails closed with SALES_CURRICULUM_HUMAN_APPROVAL_REQUIRED while the approval
+> record is pending. OpenRouter generation also requires a provider-specific
+> sharing-approval value and was not run. No AI or human approval is claimed.
 
 ## Phase 2: Deploy infrastructure
 

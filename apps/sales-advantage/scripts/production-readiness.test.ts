@@ -114,17 +114,22 @@ describe("Sales production readiness", () => {
     expect(staticSeed).toContain("already-complete");
     expect(staticSeed).toContain("SALES_CURRICULUM_INCOMPLETE_OR_INCONSISTENT");
     expect(staticSeed).toContain('reviewStatus: "approved"');
-    expect(staticSeed).toContain("SALES_CURRICULUM_FORCE_RESEED_FORBIDDEN");
+    expect(reviewedSeed).toContain("SALES_CURRICULUM_FORCE_RESEED_FORBIDDEN");
+    expect(staticSeed).toContain(
+      "SALES_CURRICULUM_DIRECT_SEED_FORBIDDEN_USE_REVIEWED_ENTRYPOINT",
+    );
     expect(curriculumVerifier).toContain("verifyProductionSalesCurriculum");
     expect(curriculumVerifier).toContain("PINNED_SALES_CURRICULUM_COUNTS");
     expect(curriculumVerifier).toContain("PINNED_SALES_CURRICULUM_GRAPH_SHA256");
     expect(curriculumVerifier).not.toContain('from "./static-seed"');
-    expect(staticSeed).toContain("client.end({ timeout: 5 })");
+    expect(staticSeed).not.toContain("client.end({ timeout: 5 })");
+    expect(reviewedSeed).toContain("client.end({ timeout: 5 })");
     expect(curriculumVerifier).toContain("client.end({ timeout: 5 })");
     expect(packageJson).toContain(
       '"seed:production-curriculum": "tsx scripts/seed-reviewed-curriculum.ts"',
     );
     expect(reviewedSeed).toContain("assertCurriculumReleaseReady");
+    expect(reviewedSeed).toContain("SALES_CURRICULUM_APPROVAL_SHA256");
     expect(reviewedSeed).toContain("release-candidate.json");
     expect(releaseCandidate).toContain('"status": "awaiting_human_review"');
     expect(releaseCandidate).not.toContain('"status": "approved"');

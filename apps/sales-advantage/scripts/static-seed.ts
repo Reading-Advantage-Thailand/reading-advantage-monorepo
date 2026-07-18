@@ -12,7 +12,7 @@
 import { createHash } from "node:crypto";
 import { pathToFileURL } from "node:url";
 
-import { client, db, type DB } from "@reading-advantage/db/client";
+import { db, type DB } from "@reading-advantage/db/client";
 import {
   salesModules,
   salesLessons,
@@ -33,25 +33,25 @@ const universalDiscoveryRubric: RubricCriterion[] = [
     criterion: "Asked at least 2 open-ended discovery questions (Situation/Problem)",
     weight: 0.3,
     passingScore: 70,
-    sourceRef: "SPIN Selling — Rackham, 1988",
+    sourceRef: "general-sales://spin-selling-rackham-1988#question-sequence",
   },
   {
     criterion: "Demonstrated active listening (mirrored, labeled, or used silence)",
     weight: 0.25,
     passingScore: 70,
-    sourceRef: "Never Split the Difference — Voss, 2016",
+    sourceRef: "general-sales://never-split-the-difference-voss-2016#tactical-empathy",
   },
   {
     criterion: "Did NOT pitch product before establishing buyer pain",
     weight: 0.25,
     passingScore: 80,
-    sourceRef: "SPIN Selling — discovery before solution",
+    sourceRef: "general-sales://spin-selling-rackham-1988#discovery-before-solution",
   },
   {
     criterion: "Ended with a clear next-step ask",
     weight: 0.2,
     passingScore: 70,
-    sourceRef: "Sandler — Up-front contract for next meeting",
+    sourceRef: "general-sales://sandler-selling-system#up-front-contract",
   },
 ];
 
@@ -60,25 +60,25 @@ const objectionRubric: RubricCriterion[] = [
     criterion: "Acknowledged the objection without immediate counter-attack",
     weight: 0.25,
     passingScore: 70,
-    sourceRef: "Feel-felt-found pattern",
+    sourceRef: "general-sales://feel-felt-found#acknowledge-before-response",
   },
   {
     criterion: "Asked a clarifying question to isolate the REAL objection",
     weight: 0.3,
     passingScore: 70,
-    sourceRef: "Sandler reverse — the stated objection is rarely the real one",
+    sourceRef: "general-sales://sandler-selling-system#reverse-and-isolate",
   },
   {
     criterion: "Reframed using the buyer's own words (not generic sales-speak)",
     weight: 0.25,
     passingScore: 70,
-    sourceRef: "Challenger Sale — Tailor",
+    sourceRef: "general-sales://challenger-sale-dixon-adamson-2011#tailor",
   },
   {
     criterion: "Closed with a trial-close question, not a monologue",
     weight: 0.2,
     passingScore: 70,
-    sourceRef: "SPIN Need-payoff questions",
+    sourceRef: "general-sales://spin-selling-rackham-1988#need-payoff",
   },
 ];
 
@@ -87,25 +87,25 @@ const closingRubric: RubricCriterion[] = [
     criterion: "Framed price in terms of buyer's outcome, not absolute cost",
     weight: 0.3,
     passingScore: 70,
-    sourceRef: "Value framing — anchoring buyer to outcome not price",
+    sourceRef: "09-sales-enablement/roi-calculator.md#methodology",
   },
   {
     criterion: "Did NOT discount when pushed; offered scope reduction instead",
     weight: 0.3,
     passingScore: 70,
-    sourceRef: "Negotiation — protect margin, adjust scope",
+    sourceRef: "09-sales-enablement/distributor-rep-onboarding/faq.md#q11-what-if-a-school-asks-for-a-discount-or-a-special-price",
   },
   {
     criterion: "Asked for the commitment with a clear yes/no question",
     weight: 0.25,
     passingScore: 70,
-    sourceRef: "Direct close — ask for the order",
+    sourceRef: "09-sales-enablement/distributor-rep-onboarding/role-play-scenarios.md#scenario-3-the-price-conversation-close",
   },
   {
     criterion: "Confirmed implementation next steps before ending the call",
     weight: 0.15,
     passingScore: 70,
-    sourceRef: "Sandler Post-Sell",
+    sourceRef: "general-sales://sandler-selling-system#post-sell",
   },
 ];
 
@@ -274,7 +274,7 @@ Trial closes give you signal without pressure.`,
         title: "Universal Discovery Quiz",
         type: "quiz" as const,
         content: "",
-        order: 4,
+        order: 5,
         quizQuestions: [
           {
             question:
@@ -326,7 +326,7 @@ Trial closes give you signal without pressure.`,
 **Listening standard:** Mirror or label the director's concern before the next question. Do not pitch Reading Advantage until the buyer's pain and desired outcome are explicit.
 
 **Success standard:** Earn a specific next meeting whose agenda is tied to the concern the director named.`,
-        order: 5,
+        order: 4,
         scenarios: [
           {
             personaName: "Director Pim",
@@ -356,53 +356,29 @@ Trial closes give you signal without pressure.`,
         type: "theory" as const,
         content: `# Features → Benefits → Outcomes
 
-**TL;DR:** Buyers don't buy features. They buy what those features do for the metric their boss cares about.
+**TL;DR:** Translate capabilities into observable buyer value without inventing an outcome.
 
 ## The Three-Layer Translation
 
-Every product has features. Few reps can translate them.
-
-| Layer | Example (RA App-Only) | Who cares? |
+| Layer | Reading Advantage example | Who uses it? |
 |---|---|---|
-| **Feature** | "Adaptive Lexile-based reading engine" | Engineering only |
-| **Benefit** | "Each student gets text at their exact level" | Teachers |
-| **Outcome** | "Average reading level rises 1.2 years in 9 months" | Director, Parents |
+| **Feature** | Leveled extensive-reading content | Product evaluator |
+| **Benefit** | Students can read material selected for their level | Teacher |
+| **Observable value** | The school receives per-school reporting of benchmark deltas, reading volume, and Big 4 fidelity | Director and families |
 
-**Buyers buy outcomes.** Teachers like benefits. Engineers like features. Match your language to your audience.
+The final layer must remain measurable and honest. It is not permission to promise a score gain.
 
-## The Director's Scorecard
+## Evidence-safe translation
 
-A school director is measured on:
-1. **Enrollment growth** (parent satisfaction → referrals)
-2. **Teacher retention** (low turnover = less recruiting cost)
-3. **Visible outcomes** (test scores, certifications, parent-facing reports)
-4. **Operational simplicity** (less admin overhead)
-
-Every feature you mention should ladder up to one of these four. If it doesn't, drop it.
-
-## The Outcome Pyramid Exercise
-
-For each Reading Advantage feature, write out three layers:
-
-\`\`\`
-Feature: [adaptive Lexile reading engine]
-  ↓
-Benefit: [students always read at their level]
-  ↓
-Outcome: [measurable reading-level gain → director can show parents progress reports]
-\`\`\`
-
-If you can't get to the third layer, you don't understand the feature well enough to sell it.
-
-## In Practice
-
-> ❌ "We have an adaptive Lexile reading engine that uses NLP."
+> ❌ "Every student will gain a grade level."
 >
-> ❌ "Our adaptive engine means each student reads at their level."
->
-> ✅ "When you walk into the next parent meeting, you'll have data showing each student's reading-level gain — by name, by month. That's what makes parents recommend you."
+> ✅ "We measure and report outcomes per school (benchmark deltas + reading volume + fidelity scores), because results vary by implementation quality and reading volume."
 
-The third version skipped the feature entirely. The director still bought.`,
+Use the approved statement exactly. If a buyer asks for a result the evidence does not support, explain what will be measured instead of improvising a number.
+
+## Practice
+
+For each feature, write the feature, the operational benefit, and the evidence the school can inspect. Label assumptions and never turn a planned capability into a current promise.`,
         order: 1,
       },
       {
@@ -410,49 +386,27 @@ The third version skipped the feature entirely. The director still bought.`,
         type: "theory" as const,
         content: `# Anchoring, Loss-Aversion, and Buyer Psychology
 
-**TL;DR:** Buyers are not rational. Understanding three biases — anchoring, loss-aversion, and status-quo bias — lets you frame price and decision in ways that align with how brains actually work.
+**TL;DR:** Anchor price to the buyer's verified current costs and keep every assumption visible.
 
-## Anchoring
+## Evidence-based anchoring
 
-The first number the buyer hears becomes the reference point for everything that follows.
+Start with the school's own student count and current English-program costs. The canonical price bands are approximately **1,000 THB/student/year for App-Only** and **1,500 THB/student/year for Blended Learning**.
 
-> ❌ "Our App-Only is 50,000 baht per year."
->
-> ✅ "Most schools your size invest 200,000-400,000 baht annually on English programming, between teacher salaries, materials, and parent communications. Our App-Only handles all three for 50,000."
+> "How many students are in scope, and what do you currently spend on teachers, materials, recruitment, and lesson planning?"
 
-You haven't lied. You've reframed the anchor. Now 50,000 feels like a steal, not a stretch.
+Then calculate annual cost as student count × the applicable per-student price. Do not invent a flat package price or imply that an estimate is a quote.
 
-## Loss-Aversion
+## Loss aversion without invented outcomes
 
-People feel losses **2x more strongly than equivalent gains** (Kahneman & Tversky, 1979).
+Discuss operational costs the buyer confirms: delayed procurement, teacher turnover, duplicated materials, or lack of reporting. Never convert delay into an unsupported reading-gain number.
 
-> ❌ "You'll gain 1.2 grade levels of reading improvement."
->
-> ✅ "Right now, every month you wait costs roughly 0.13 grade levels of student progress that you can never recover. By the time these students graduate, that's nearly a full year of reading ability lost."
+## Reduce status-quo friction
 
-Same data. Loss framing creates urgency.
+1. Quantify only buyer-supplied or canonical inputs.
+2. Offer a smaller grade-level or semester scope instead of an ad-hoc discount.
+3. Tie timing to the buyer's real training and procurement calendar.
 
-## Status-Quo Bias
-
-The biggest competitor isn't another vendor. It's **doing nothing**.
-
-Most "no decisions" aren't rejections — they're indefinite postponements. To beat status-quo bias:
-
-1. **Quantify the cost of inaction.** Use Implication questions from SPIN.
-2. **Make the next step trivially small.** Not "buy our 3-year contract" — "do a 30-day scoped pilot with 1 classroom."
-3. **Use a deadline anchored in the buyer's calendar.** "If we start by April 15, you'll have data to share at the parent meeting in June." Not "this offer expires Friday."
-
-## Putting It Together
-
-Combined frame for a closing conversation:
-
-> "Schools like yours typically spend 200K+ on English programs **(anchor)**.
->
-> If you wait another semester to act, each student loses about 6 weeks of reading-level progress **(loss-aversion)**.
->
-> Let's start with one classroom for 30 days. If by June you don't have data worth sharing with parents, we walk away **(reduce status-quo friction)**."
-
-Three lines. Three biases addressed. One small-step ask.`,
+The goal is a transparent decision model, not artificial urgency.`,
         order: 2,
       },
       {
@@ -531,33 +485,55 @@ The buyer just learned something. You just stopped competing on price.`,
             objective:
               "Reframe the problem: this isn't about more English content — it's about visible, parent-facing evidence of progress. Use anchoring + loss-aversion. Do NOT discount. Move toward a scoped-pilot ask, not a full-contract pitch.",
             prospectContext:
-              "Wisanu is the decision-maker AND the budget owner. Loses 5-8 families per year over the 'no visible progress' complaint. He measures success in renewals.",
+              "Wisanu is the decision-maker AND the budget owner. Measures success in family renewals but has not supplied a verified churn figure.",
             rubric: [
               {
                 criterion: "Reframed 'parents don't see results' as a visibility/reporting problem, not a curriculum problem",
                 weight: 0.3,
                 passingScore: 70,
-                sourceRef: "Challenger Sale — Reframe",
+                sourceRef: "general-sales://challenger-sale-dixon-adamson-2011#reframe",
               },
               {
                 criterion: "Translated at least one feature into a parent-visible outcome (e.g., monthly progress report)",
                 weight: 0.25,
                 passingScore: 70,
-                sourceRef: "Features → Benefits → Outcomes",
+                sourceRef: "general-sales://challenger-sale-dixon-adamson-2011#commercial-teaching",
               },
               {
                 criterion: "Used loss-aversion framing on retained families (cost of inaction)",
                 weight: 0.2,
                 passingScore: 70,
-                sourceRef: "Kahneman & Tversky 1979",
+                sourceRef: "general-sales://prospect-theory-kahneman-tversky-1979#loss-aversion",
               },
               {
                 criterion: "Ended with a small-step ask (pilot, demo, data review) — not a contract pitch",
                 weight: 0.25,
                 passingScore: 70,
-                sourceRef: "Status-quo bias reduction",
+                sourceRef: "general-sales://prospect-theory-kahneman-tversky-1979#status-quo-bias",
               },
             ],
+          },
+        ],
+      },
+      {
+        title: "Value-Framing Reflection Quiz",
+        type: "quiz" as const,
+        content: "",
+        order: 5,
+        quizQuestions: [
+          {
+            question:
+              "A director asks what result Reading Advantage will guarantee. What is the best response?",
+            options: [
+              "Promise one grade level if the school follows the implementation plan.",
+              "Use the approved research phrasing and explain the transparent per-school measures the school will inspect.",
+              "Quote an adoption percentage from another school.",
+              "Avoid the question and return to product features.",
+            ],
+            correctAnswer:
+              "Use the approved research phrasing and explain the transparent per-school measures the school will inspect.",
+            explanation:
+              "The claims policy allows approved research language and transparent per-school reporting; it does not allow product outcome guarantees.",
           },
         ],
       },
@@ -637,64 +613,30 @@ You haven't pitched anything. You've turned an objection into a diagnostic conve
         type: "theory" as const,
         content: `# Negotiating Without Discounting
 
-**TL;DR:** Every time you discount, you train the buyer that your price is fake. The pros adjust scope, terms, or timing — never the per-unit price.
+**TL;DR:** Use the approved per-student price and adjust scope when the buyer's budget is smaller than the proposed total.
 
-## Why Discounting Destroys Your Pipeline
+## Canonical price discipline
 
-When you give a 10% discount, three things happen:
+The current reference bands are approximately 1,000 THB/student/year for App-Only and 1,500 THB/student/year for Blended Learning. Treat these as reference bands subject to an approved quote, not permission to invent a flat package price.
 
-1. **This deal**: You lost 10% of revenue.
-2. **Next deal**: This buyer tells one peer "they discount." Your next deal starts with a 10% expectation.
-3. **All deals**: Your reps learn discounting is acceptable. The whole sales team's margin erodes.
+## Adjust scope, not the per-student rate
 
-The math is unforgiving. A 10% discount on a 30% margin business cuts profit by 33%.
-
-## The Pro Move: Adjust Scope, Not Price
-
-The buyer's budget is real. The full deal might not fit. **Reduce the deal**, not the rate.
-
-> Buyer: "We just don't have 50,000 baht for this. Can you come down?"
+> Buyer: "The total is above our approved budget. Can you lower the rate?"
 >
-> ❌ Amateur: "Let me see what I can do… how about 45,000?"
->
-> ✅ Pro: "I can't move the per-student rate without changing what we're delivering. But — if we start with 50 students instead of 100, you're at 25,000 for the first year. That gives you the data to make the case for expanding next year. Would that work for the budget?"
+> Rep: "The flexibility lever is scope. We can begin with one grade level or a semester pilot at the approved per-student rate, then review the evidence before expanding."
 
-You held price. You found a path. The buyer got something workable.
+Keep the student count, rate, and term visible. Escalate any request for a special price or contract term to an authorized approver.
 
-## Three Trade Levers
+## Observable success
 
-When pushed, trade — don't give.
-
-| Lever | What you trade | What you ask for in return |
-|---|---|---|
-| **Scope** | Fewer students / classrooms | Same rate per unit |
-| **Timing** | 6-month pilot then renew | Locked-in 2-year rate after |
-| **Payment terms** | Annual upfront → quarterly | 3% premium on quarterly |
-
-Every trade should be **symmetric**: if you give something, you ask for something.
-
-## The "How am I supposed to do that?" Question
-
-When the buyer pushes hard for a discount, deflect with a calibrated question (from Voss):
-
-> Buyer: "Look, I need this for 30,000 or we can't move forward."
->
-> You: "How am I supposed to do that? Honestly — walk me through it. What would I tell my colleague back at the office about the unique factors that justified the lower price?"
-
-You haven't said no. You've made the buyer justify their request. 7 times out of 10, they back down or find more budget. The other 3 times, you learn something true about the deal you didn't know.
-
-## The Walk-Away Number
-
-Decide BEFORE the call: what's the minimum I'll accept? If the buyer goes below that, you must be willing to walk. If you can't walk, you have no leverage.
-
-A deal that loses money is worse than no deal. It anchors your future pipeline at unsustainable prices.`,
+A good response confirms the real budget constraint, proposes a smaller auditable scope, and records a concrete next decision step. It does not improvise discounts, urgency, or savings.`,
         order: 2,
       },
       {
         title: "Universal Objection Quiz",
         type: "quiz" as const,
         content: "",
-        order: 3,
+        order: 4,
         quizQuestions: [
           {
             question:
@@ -748,7 +690,7 @@ A deal that loses money is worse than no deal. It anchors your future pipeline a
 **Adoption guardrail:** Do not imply software alone fixes teacher adoption. Match the recommendation to the school's training and implementation capacity.
 
 **Success standard:** Confirm the isolated risk and agree on one adoption-focused next step.`,
-        order: 4,
+        order: 3,
         scenarios: [
           {
             personaName: "Director Pranom",
@@ -778,61 +720,35 @@ A deal that loses money is worse than no deal. It anchors your future pipeline a
         type: "theory" as const,
         content: `# The 9-Product Suite and 3 Service Tiers
 
-**TL;DR:** Reading Advantage isn't one product — it's nine, packaged into three tiers. Match the tier to the school's situation, not the price they hope for.
+**TL;DR:** The Advantage Suite has nine named products with different launch states. Never describe a planned product or service as live.
 
-## The Suite at a Glance
+## The canonical suite
 
-1. **Reading Advantage** (core adaptive reading platform)
-2. **Primary Advantage** (K-3 phonics + early reading)
-3. **Science Advantage** (English-medium science curriculum)
-4. **Mastery Advantage** (math with English-medium delivery)
-5. **CodeCamp Advantage** (coding in English for grades 4+)
-6. **Speaking Advantage** (speech evaluation, pronunciation)
-7. **Listening Advantage** (audio comprehension)
-8. **Writing Advantage** (guided writing with AI feedback)
-9. **Test Advantage** (placement, progress, exit assessments)
+1. **Reading Advantage** — live
+2. **Primary Advantage** — live
+3. **Storytime Advantage** — coming early 2027
+4. **Math Advantage** — coming late 2026
+5. **Science Advantage** — slipped while Tutor is prioritized
+6. **STEM Advantage** — coming mid 2027
+7. **Zhongwen Advantage** — coming late 2026
+8. **Tutor Advantage** — beta 2026
+9. **CodeCamp Advantage** — coming 2026
 
-## The 3 Service Tiers
+Mastery Advantage is a planned shared adaptive engine; it is not one of the nine products and is not currently integrated into production products.
 
-| Tier | What's included | Best for |
+## Current service tiers
+
+| Tier | Current positioning | Canonical price |
 |---|---|---|
-| **App-Only** | All 9 products. Teacher uses on their own. | Schools with strong, English-confident teachers who just need a curriculum to follow. |
-| **Blended** | App + monthly teacher training + quarterly observation. | Schools where teachers WANT the platform but need coaching to use it well. |
-| **Managed Service** | App + on-site Reading Advantage staff delivering instruction 2-5 days/week. | Schools that can't keep qualified English teachers and need outsourcing. |
+| **App-Only** | Digital platform access | ~1,000 THB/student/year |
+| **Blended Learning** | App + physical workbooks + 2-day teacher training + quarterly fidelity reports | ~1,500 THB/student/year |
+| **Managed Service / The Teaching Advantage** | Future tier with certified facilitators | Planned for May 2027 at the earliest; do not pre-sell availability, staffing, or price |
 
-## How to Choose the Tier
+For a school with current staffing challenges, recommend Blended Learning now and explain Managed Service only as a future option.
 
-The discovery question that picks the tier:
+## Claims rule
 
-> "Tell me about your current English teachers. How long has the team been together? What's their English level?"
-
-- Teachers stable, fluent → App-Only
-- Teachers stable, not fluent → Blended (training fills the gap)
-- High turnover, hard to recruit → Managed Service (outsource the problem)
-
-**Critical**: Don't sell App-Only to a school that needs Managed Service. They'll fail and churn, and you'll lose the renewal.
-
-## The Big 4 Protocol
-
-Every demo and discovery touches the "Big 4":
-
-1. **Curriculum quality** — what we teach
-2. **Teacher consistency** — same lesson, same way, every classroom
-3. **Parent visibility** — monthly reports parents can read
-4. **Adoption risk** — what we do to make sure it actually gets used
-
-Skip any of these and the deal will surface that objection later. Address all four proactively.
-
-## What NEVER to Claim (Outcome Claims Policy)
-
-- Never promise specific score gains ("scores will go up X points")
-- Never claim "every student" will improve
-- Never compare without an approved short-form citation
-- Never use the word "guaranteed"
-
-Use approved citations from the outcome-claims policy: "In peer-reviewed evaluation (Aka et al., 2019), schools using Reading Advantage saw an average reading-level gain of 1.2 years over 9 months. Results vary by implementation quality."
-
-The full sentence — including the variance disclaimer — is non-negotiable.`,
+Never promise a score gain, guarantee an outcome, or improvise evidence. In a sales conversation, the approved research form is: "Research shows extensive reading outperforms traditional grammar instruction (Aka, 2019)." Pair it with transparent per-school reporting and the statement that results vary by implementation quality and reading volume.`,
         order: 1,
       },
       {
@@ -840,84 +756,66 @@ The full sentence — including the variance disclaimer — is non-negotiable.`,
         type: "theory" as const,
         content: `# Honest Claims, Approved Citations
 
-**TL;DR:** The fastest way to lose a sophisticated buyer is to over-claim. The fastest way to win them is to under-claim with rigorous evidence.
+**TL;DR:** Every learning-outcome claim must use an approved research form or named, verifiable per-school reporting.
 
-## Why Honesty Wins in B2B Education
+## Approved sales-conversation language
 
-School directors talk to each other. If you promise outcomes that don't materialize, your next 10 deals in that district are dead before they start. Education is a small world.
+Use this exact short form:
 
-## The Three Tiers of Claims
+> "Research shows extensive reading outperforms traditional grammar instruction (Aka, 2019)."
 
-1. **Hard claim** (cite-able, defensible) — peer-reviewed study, internal data with N>50
-2. **Soft claim** (anecdotal but specific) — "Pim's school at PSP saw…"
-3. **Aspirational** (forward-looking) — "Your students could…"
+For product application, say:
 
-Use hard claims when challenged. Use soft claims to make hard claims feel real. Use aspirational claims for vision-setting, never as a substitute for evidence.
+> "Our platform leverages the same extensive-reading methodology shown to be effective in controlled research."
 
-## The Approved Short-Form Citations
+For Reading Advantage results, say:
 
-The only outcome claims you may make verbally:
+> "We measure and report outcomes per school (benchmark deltas + reading volume + fidelity scores), because results vary by implementation quality and reading volume."
 
-✅ "In a peer-reviewed evaluation (Aka et al., 2019), schools using Reading Advantage saw an average reading-level gain of 1.2 years over 9 months. Results vary by implementation quality."
+## Not approved
 
-✅ "Schools that follow our recommended teacher-training protocol report 85%+ teacher adoption at 6 months. Schools that skip training see lower numbers."
+- specific improvement percentages or grade-level gains not tied to an approved source
+- guarantees or "every student" promises
+- teacher-adoption percentages without named, verifiable school data
+- NPS or satisfaction figures without named, verifiable school data
+- market-leadership claims
 
-✅ "Across our managed-service schools, average parent satisfaction (NPS) is +42. The school-by-school range is +15 to +68."
-
-## The Banned Phrases
-
-❌ "Guaranteed results"
-❌ "Every student will improve"
-❌ "Better than [competitor]" (without citation)
-❌ "100% of our schools"
-❌ "Your scores will go up X%"
-
-## Handling Pressure to Over-Claim
-
-Directors will sometimes push you to make stronger claims. Hold the line:
-
-> Director: "Look, just tell me — will my students' English scores go up?"
->
-> ❌ Weak: "Yes, definitely!"
->
-> ✅ Strong: "I can't promise that — and you shouldn't trust any vendor who does. What I CAN show you is the data from schools most like yours: their range, their average, their worst cases. That's the honest answer. Want to see it?"
-
-This response builds MORE trust, not less. Sophisticated buyers know nothing is guaranteed. They want a vendor who's truthful about variance.`,
+When asked for a stronger promise, state what the school will be able to inspect and offer the canonical research material. Never turn anecdote, aspiration, or a planned case study into evidence.`,
         order: 2,
       },
       {
         title: "Product Knowledge Quiz",
         type: "quiz" as const,
         content: "",
-        order: 3,
+        order: 4,
         quizQuestions: [
           {
             question:
-              "A school has 6 turnover-prone non-native English teachers. Which tier fits?",
+              "A school needs implementation support now and asks for Managed Service. What is the accurate response?",
             options: [
-              "App-Only — let teachers use the platform on their own.",
-              "Blended — give them monthly training.",
-              "Managed Service — Reading Advantage staff delivers instruction.",
-              "App-Only with a steep discount.",
+              "Sell Managed Service now at a custom flat price.",
+              "Recommend Blended Learning now and describe Managed Service as planned for May 2027 at the earliest.",
+              "Promise on-site staffing as soon as the contract is signed.",
+              "Sell all nine products as a live bundle.",
             ],
             correctAnswer:
-              "Managed Service — Reading Advantage staff delivers instruction.",
+              "Recommend Blended Learning now and describe Managed Service as planned for May 2027 at the earliest.",
             explanation:
-              "High turnover is the textbook signal for Managed Service. Selling App-Only here will fail at implementation. The renewal will be lost and the rep loses the LTV.",
+              "The canonical source treats Managed Service as a future option. Reps must not pre-sell its availability, staffing, or price.",
           },
           {
             question:
-              "Which claim is approved per Reading Advantage's outcome-claims policy?",
+              "Which claim is approved for a sales conversation?",
             options: [
               "Every student improves by at least one grade level.",
-              "In peer-reviewed evaluation (Aka et al., 2019), schools saw an average reading-level gain of 1.2 years over 9 months. Results vary.",
-              "Better English scores guaranteed.",
-              "100% of our schools see results.",
+              "Research shows extensive reading outperforms traditional grammar instruction (Aka, 2019).",
+              "Teacher adoption exceeds 85% at every trained school.",
+              "Managed-service schools average an NPS of +42.",
             ],
             correctAnswer:
-              "In peer-reviewed evaluation (Aka et al., 2019), schools saw an average reading-level gain of 1.2 years over 9 months. Results vary.",
+              "Research shows extensive reading outperforms traditional grammar instruction (Aka, 2019).",
             explanation:
-              "The full sentence — including 'Results vary' — is the only approved short-form citation. Drop the disclaimer and you're over-claiming.",
+              "The outcome-claims policy requires this exact short form in sales conversations and prohibits improvised outcome statistics.",
           },
         ],
       },
@@ -926,20 +824,20 @@ This response builds MORE trust, not less. Sophisticated buyers know nothing is 
         type: "roleplay" as const,
         content: `**Method:** Diagnose staffing consistency, implementation capacity, and the outcome the school is buying before discussing product breadth. Recommend the smallest tier that can credibly solve the diagnosed problem.
 
-**Fit guardrail:** Do not maximize initial deal size at the expense of adoption. Explain the trade-off between App-Only, Blended, and Managed Service in operational terms.
+**Fit guardrail:** Do not maximize initial deal size at the expense of adoption. Explain current App-Only and Blended Learning in operational terms; identify Managed Service as a future May 2027 option.
 
 **Success standard:** The buyer can explain why the chosen tier fits the school's constraints and agrees to the next implementation-planning step.`,
-        order: 4,
+        order: 3,
         scenarios: [
           {
             personaName: "Owner-Director Nakorn",
             personaRole: "Owner of a small 5-classroom English program",
             situation:
-              "Nakorn says: 'I want all 9 products and I have 200,000 baht to spend.' He's enthusiastic but doesn't understand the tier difference. His teachers are part-time and rotate frequently.",
+              "Nakorn asks for the full suite as if every product were live. He has a defined budget but does not understand product launch states or tier differences. His teachers are part-time and rotate frequently.",
             objective:
-              "Use discovery (SPIN) to surface that his real problem is teacher inconsistency, not product breadth. Steer him from App-Only toward Blended or Managed Service even though it's a smaller initial product scope. Demonstrate that you'll sacrifice deal size to fit the right solution.",
+              "Use discovery (SPIN) to surface that his real problem is teacher inconsistency, not product breadth. Steer him toward a correctly scoped current offering, likely Blended Learning, and describe Managed Service only as a future May 2027 option. Demonstrate that you'll sacrifice deal size to fit the right solution.",
             prospectContext:
-              "Nakorn is the sole decision-maker. Has cash. Will say yes to anything in his price range — which is the problem. He'll cancel in 6 months if the fit is wrong.",
+              "Nakorn is the sole decision-maker. Has budget authority and may accept an over-broad proposal unless the rep carefully explains current availability and implementation fit.",
             rubric: universalDiscoveryRubric,
           },
         ],
@@ -955,18 +853,18 @@ This response builds MORE trust, not less. Sophisticated buyers know nothing is 
     order: 5,
     lessons: [
       {
-        title: "The 5 Canonical Objections (And the Real Concern Behind Each)",
+        title: "The 6 Canonical Objections (And the Real Concern Behind Each)",
         type: "theory" as const,
-        content: `# The 5 Canonical Objections
+        content: `# The 6 Canonical Objections
 
-**TL;DR:** Every Reading Advantage deal will hit one or more of these five. The stated objection is rarely the real concern.
+**TL;DR:** Prepare for these six recurring objections from the canonical onboarding guide. The stated objection may not be the underlying concern.
 
 ## Objection 1: "Our teachers won't be able to use this"
 
 **Stated**: capability concern
 **Real**: adoption-risk concern (rep has been burned by ed-tech before)
 
-**Response pattern**: Surface their past experience (Sandler reverse). Offer the Blended tier specifically to address training. Show data on adoption rates at schools with comparable teacher profiles.
+**Response pattern**: Surface their past experience (Sandler reverse). Explain the defined Blended Learning training and fidelity commitments. Do not cite adoption rates without named, verifiable school data.
 
 ---
 
@@ -975,7 +873,7 @@ This response builds MORE trust, not less. Sophisticated buyers know nothing is 
 **Stated**: skepticism of category
 **Real**: distrust of vendor accountability
 
-**Response pattern**: Ask exactly what failed. Was it adoption (Managed Service fixes this), curriculum quality (let them compare), or parent communication (show our monthly reports)? Don't defend — diagnose.
+**Response pattern**: Ask exactly what failed. Was it adoption (Blended Learning addresses implementation support now), curriculum quality (let them compare), or parent communication (show the reporting commitment)? Don't defend — diagnose.
 
 ---
 
@@ -1004,9 +902,16 @@ This response builds MORE trust, not less. Sophisticated buyers know nothing is 
 
 **Response pattern**: Use the Challenger reframe. "One excellent teacher gives 30 students one excellent year. Then they leave, and the next teacher is different. The platform gives every student the same quality every year — regardless of which teacher is in front of them." That's not anti-teacher; it's pro-consistency.
 
+## Objection 6: "We are waiting to see if the government changes the English curriculum"
+
+**Stated**: policy uncertainty
+**Real**: timing or decision-risk concern
+
+**Response pattern**: Ask what decision or date the school is waiting for. Offer to prepare an accurately scoped proposal or pilot contingent on that real milestone. Do not invent urgency or claim policy certainty.
+
 ## The Underlying Pattern
 
-Notice that none of these objections respond well to a feature pitch. All five respond well to:
+These objections respond to a consistent diagnostic pattern:
 
 1. **Acknowledge** (label the concern)
 2. **Reverse** (ask a question to find the real issue)
@@ -1072,7 +977,7 @@ That recovery move saves more deals than any feature in our product.`,
       {
         title: "Applied Objection Roleplay: Teachers Won't Adopt",
         type: "roleplay" as const,
-        content: `**Method:** Label the adoption concern, ask what teachers rejected before, and isolate whether the issue is time, confidence, language, or implementation support. Only then map the concern to Blended or Managed Service support.
+        content: `**Method:** Label the adoption concern, ask what teachers rejected before, and isolate whether the issue is time, confidence, language, or implementation support. Only then map the concern to current Blended Learning support and, if relevant, explain Managed Service as planned for May 2027 at the earliest.
 
 **Claims guardrail:** Never promise universal teacher adoption. State the training and service commitments precisely and distinguish them from outcomes outside our control.
 
@@ -1085,9 +990,9 @@ That recovery move saves more deals than any feature in our product.`,
             situation:
               "Suchada is in the 45-min demo. She's nodding politely, but at minute 30 she says: 'Look, the platform looks great. But my teachers… they're 50+, they don't speak English, and they hate technology. They will never use this.'",
             objective:
-              "Recognize this as Canonical Objection #1 (adoption risk). Don't defend the platform. Reverse to find the real concern. Steer toward Managed Service tier or Blended with extensive training — and explicitly address the teacher-buy-in concern.",
+              "Recognize this as Canonical Objection #1 (adoption risk). Don't defend the platform. Reverse to find the real concern. Recommend Blended Learning with its defined training and fidelity support now; mention Managed Service only as a future May 2027 option.",
             prospectContext:
-              "Suchada has 18 teachers averaging 52 years old. She's heard the teachers say 'no more new platforms' multiple times. Her budget can afford Managed Service but she's never considered it.",
+              "Suchada has 18 teachers averaging 52 years old. She's heard the teachers say 'no more new platforms' multiple times. She has budget authority but needs a currently available, accurately scoped implementation plan.",
             rubric: objectionRubric,
           },
         ],
@@ -1166,48 +1071,27 @@ That recovery move saves more deals than any feature in our product.`,
         type: "theory" as const,
         content: `# The Total-Cost-of-English Frame
 
-**TL;DR:** Don't compare your price to textbooks. Compare it to the total cost of running an English program — teacher salaries, materials, recruiting, parent satisfaction, churn — and you'll win every time.
+**TL;DR:** Compare the per-student offer with the buyer's verified total English-program costs, using transparent formulas.
 
-## Why Single-Line Price Comparison Loses
+## Start with canonical inputs
 
-When a director says "this costs more than textbooks", they're comparing apples to oranges. Textbooks are part of the cost. Teacher salaries are 70% of the cost. Don't take the bait.
+- App-Only: approximately **1,000 THB/student/year**.
+- Blended Learning: approximately **1,500 THB/student/year**.
+- Managed Service: planned for **May 2027 at the earliest**; do not pre-sell a price or staffing commitment.
 
-## The Total Cost Math (per 100 students/year)
+Annual cost = students in scope × price per student. For example, 500 students at the Blended Learning reference price is 750,000 THB/year. Label that as a worked estimate, not a quote.
 
-| Line item | Annual cost |
-|---|---|
-| 2 English teachers (salary, benefits) | 720,000 baht |
-| Textbooks + materials | 60,000 baht |
-| Parent meetings + reports prep | 40,000 baht |
-| Teacher recruitment when one leaves | 30,000-80,000 baht |
-| Parent churn (1 family / 100K of revenue lost annually) | 100,000+ baht |
-| **Total realistic baseline** | **~950,000 baht** |
+## Ask for the buyer's current costs
 
-Now position Reading Advantage:
+Invite the director to supply teacher salaries, recruitment, textbooks, grading time, and lesson-planning assumptions. Keep each input visible. Do not invent churn, savings, or outcome values.
 
-- App-Only: 50,000 baht. Reduces materials cost, increases parent visibility. Net: ~900K, but with measurable outcomes.
-- Blended: 120,000 baht. Same plus monthly teacher training. Net: ~870K with much better retention.
-- Managed Service: 400,000 baht. Replaces ONE teacher salary entirely. Net: ~630K with full consistency.
+## Compare like with like
 
-**You haven't made the school spend more. You've redirected spend they were already making.**
+The canonical calculator compares Blended Learning with alternatives such as a foreign teacher, textbook plus teacher, and private tutoring. It also names non-monetary factors such as continuity, QA, and teacher workload without pretending those factors are guaranteed savings.
 
-## The Anchor Sentence
+## Handle budget pressure
 
-Memorize this opening for every pricing conversation:
-
-> "Most schools your size spend somewhere between 800K and 1.2M baht annually on the full English program — teachers, materials, parent communications, churn. Where does your school sit on that range?"
-
-You've anchored to a 6-figure number. Now your 50K-400K offer feels like a portion of an existing budget, not a new line item.
-
-## The "We Can't Afford It" Counter
-
-When the director still says they can't afford it, use Implication questions:
-
-> "Got it. Can I ask — if you do nothing for another year, what does the cost of parent churn look like?"
-
-> "How much did you spend on teacher recruiting in the last 12 months?"
-
-You're not arguing. You're making them calculate the cost of inaction themselves.`,
+If the approved per-student price does not fit, reduce the pilot scope or sequence the rollout. Do not create an ad-hoc flat price or unapproved discount.`,
         order: 1,
       },
       {
@@ -1229,7 +1113,7 @@ After the demo, after the objections, after the pricing — there comes a moment
 
 The direct close is one sentence:
 
-> "Based on everything we've discussed, the Blended tier at 120,000 baht starting in April fits your school. Can we move forward?"
+> "Based on the agreed student count, the Blended Learning reference price is approximately 1,500 THB per student per year, subject to an approved quote. Does that scope and start window work for you?"
 
 That's it. Specific tier. Specific price. Specific start date. Yes-or-no question. Then **shut up**.
 
@@ -1286,7 +1170,7 @@ Move them off the sales call and into the implementation calendar. The deal isn'
             personaName: "Director Wirat",
             personaRole: "Director, 800-student integrated K-9 school",
             situation:
-              "You're on the closing call. The director is interested in the Blended tier (120,000 baht). He says: 'Look, my board approved 80,000 — that's all I have. Can you do it at 80 or no?'",
+              "You're on the closing call. The director is interested in Blended Learning at the approved per-student reference price. He says: 'My board approved less than that total — can you lower the per-student price?'",
             objective:
               "Hold price (do NOT discount the per-unit rate). Adjust scope — propose starting with fewer grade levels at the same rate, or offer a 6-month phased approach. Use 'how am I supposed to do that?' if the buyer pushes hard. Close with a specific next step.",
             prospectContext:
@@ -1344,14 +1228,14 @@ Move them off the sales call and into the implementation calendar. The deal isn'
               "What does the Total-Cost-of-English frame anchor the buyer to?",
             options: [
               "The textbook budget line item.",
-              "The 6-figure annual cost of running an English program including teachers, materials, and churn.",
+              "The buyer's verified total English-program costs and the transparent per-student formula.",
               "The cheapest competitor's price.",
               "A free pilot.",
             ],
             correctAnswer:
-              "The 6-figure annual cost of running an English program including teachers, materials, and churn.",
+              "The buyer's verified total English-program costs and the transparent per-student formula.",
             explanation:
-              "Anchoring to total program cost (800K-1.2M) makes your 50K-400K offer feel like a portion of existing spend, not a new line item. This is anchoring psychology applied to pricing.",
+              "The canonical ROI method uses buyer-supplied costs and student count × approved per-student price. It does not authorize invented flat package prices.",
           },
         ],
       },
@@ -1622,27 +1506,22 @@ export async function seedStaticSalesCurriculum(
   });
 }
 
-/** Executes the production curriculum seed command. */
-async function main(): Promise<void> {
-  if (process.argv.includes("--force")) {
-    throw new Error("SALES_CURRICULUM_FORCE_RESEED_FORBIDDEN");
-  }
-  const result = await seedStaticSalesCurriculum();
-  process.stdout.write(
-    `Sales curriculum ${result}: ${JSON.stringify(SALES_CURRICULUM_EXPECTED_COUNTS)}\n`,
-  );
+/**
+ * Rejects execution of the library-only seed module outside the reviewed gate.
+ * @throws Always, because production seeding must use seed-reviewed-curriculum.
+ */
+export function rejectDirectStaticSeedInvocation(): never {
+  throw new Error("SALES_CURRICULUM_DIRECT_SEED_FORBIDDEN_USE_REVIEWED_ENTRYPOINT");
 }
 
 const invokedPath = process.argv[1];
 if (invokedPath && import.meta.url === pathToFileURL(invokedPath).href) {
-  main()
-    .catch((error: unknown) => {
-      process.stderr.write(
-        `Sales curriculum seed failed: ${error instanceof Error ? error.message : String(error)}\n`,
-      );
-      process.exitCode = 1;
-    })
-    .finally(async () => {
-      await client.end({ timeout: 5 });
-    });
+  try {
+    rejectDirectStaticSeedInvocation();
+  } catch (error: unknown) {
+    process.stderr.write(
+      `Sales curriculum seed failed: ${error instanceof Error ? error.message : String(error)}\n`,
+    );
+    process.exitCode = 1;
+  }
 }

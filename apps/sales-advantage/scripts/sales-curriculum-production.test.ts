@@ -15,10 +15,10 @@ describe("Sales production curriculum contract", () => {
   it("has exact stable cardinalities and unique deterministic IDs", () => {
     expect(SALES_CURRICULUM_EXPECTED_COUNTS).toEqual({
       modules: 6,
-      lessons: 26,
+      lessons: 27,
       rubrics: 8,
       scenarios: 8,
-      quizQuestions: 13,
+      quizQuestions: 14,
     });
     const first = buildStaticSalesCurriculumRows();
     const second = buildStaticSalesCurriculumRows();

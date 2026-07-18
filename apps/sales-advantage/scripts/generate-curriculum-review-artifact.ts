@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 import { readFile, writeFile } from "node:fs/promises";
 import { homedir } from "node:os";
 import { join, resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 import { promisify } from "node:util";
 
 import { getAIClient } from "@reading-advantage/ai";
@@ -52,6 +53,22 @@ const curriculumSchema = z.object({
   })).length(6),
 });
 
+/**
+ * Requires an explicit, provider-specific approval before source text is shared.
+ * @param environment Process environment carrying the recorded approval value.
+ * @throws When OpenRouter sharing has not been explicitly approved.
+ */
+export function assertOpenRouterCurriculumSharingApproved(
+  environment: Readonly<Record<string, string | undefined>>,
+): void {
+  if (
+    environment.SALES_CURRICULUM_EXTERNAL_SHARING_APPROVED !==
+      "advantage-pr-to-openrouter"
+  ) {
+    throw new Error("SALES_CURRICULUM_OPENROUTER_SHARING_APPROVAL_REQUIRED");
+  }
+}
+
 const prompt = `Create a six-module Sales Advantage curriculum using the attached canonical sources.
 
 Follow the Codecamp pedagogy: learn a concept, practice it in a realistic task, evaluate against a source-grounded rubric, then reflect or check understanding before progression. Modules must progress from discovery and listening, to value framing, objection handling, Reading Advantage product application, demos, then negotiation and closing.
@@ -62,6 +79,7 @@ The outcome-claims policy is binding. Teach approved Aka (2019) phrasing and exp
 
 /** Generates one non-secret OpenRouter draft artifact for human curriculum review. */
 async function main(): Promise<void> {
+  assertOpenRouterCurriculumSharingApproved(process.env);
   const argument = (name: string): string | undefined => {
     const prefix = `--${name}=`;
     return process.argv.find((value) => value.startsWith(prefix))?.slice(
@@ -134,9 +152,12 @@ async function main(): Promise<void> {
   process.stdout.write(`OpenRouter curriculum draft written: ${output}\n`);
 }
 
-main().catch((error: unknown) => {
-  process.stderr.write(
-    `OpenRouter curriculum generation failed: ${error instanceof Error ? error.message : String(error)}\n`,
-  );
-  process.exitCode = 1;
-});
+const invokedPath = process.argv[1];
+if (invokedPath && import.meta.url === pathToFileURL(invokedPath).href) {
+  main().catch((error: unknown) => {
+    process.stderr.write(
+      `OpenRouter curriculum generation failed: ${error instanceof Error ? error.message : String(error)}\n`,
+    );
+    process.exitCode = 1;
+  });
+}

@@ -2,7 +2,7 @@
 
 > Status: awaiting human review
 >
-> Curriculum graph: `b7582eb44adc176327f483147043fdb4aa6f02a292aeea189b7774483db25963`
+> Curriculum graph: `ccba5498f453f1e2982307ca29d9d56c8bf17aeb26e1d586de232b44416b8717`
 >
 > Source corpus: `advantage-pr@8dd78171f1d57dd775fad2295d60e86fb267dad8`
 
@@ -14,8 +14,9 @@ The reviewer must inspect the immutable graph represented by
 
 - [ ] Pedagogy: progression is learn → practice → evaluate → reflect, with
       prerequisites increasing from discovery through closing.
-- [ ] Source traceability: every source hash matches the pinned `advantage-pr`
-      commit and every rubric criterion has a meaningful `sourceRef`.
+- [ ] Source traceability: every selected source file matches both the working
+      bytes and committed bytes at the pinned `advantage-pr` commit; every rubric
+      criterion uses a registered named source or a verified corpus path + section.
 - [ ] Honest claims: the Aka (2019) phrasing and prohibited-claim guidance match
       `06-research-and-evidence/outcome-claims-policy.md`; negative examples are
       clearly taught as statements reps must not use.
@@ -30,3 +31,8 @@ The reviewer must inspect the immutable graph represented by
 - Notes: _pending_
 
 Only the human reviewer may replace the pending values and check the boxes.
+After review, the same reviewer must update `curriculum-approval.json` with the
+exact graph, source manifest, UTC time, checks, and notes. Its SHA-256 is then
+recorded in `curriculum/release-candidate.json`; the reviewer must independently
+store that same hash in Secret Manager as `SALES_CURRICULUM_APPROVAL_SHA256`.
+The seed gate requires the external trust anchor and verifies both files.

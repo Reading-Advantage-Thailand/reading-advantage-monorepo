@@ -13,15 +13,15 @@ import {
 /** Immutable reviewed production curriculum counts, independent of seed code. */
 export const PINNED_SALES_CURRICULUM_COUNTS = Object.freeze({
   modules: 6,
-  lessons: 26,
+  lessons: 27,
   rubrics: 8,
   scenarios: 8,
-  quizQuestions: 13,
+  quizQuestions: 14,
 });
 
 /** SHA-256 of the reviewed canonical production curriculum graph. */
 export const PINNED_SALES_CURRICULUM_GRAPH_SHA256 =
-  "b7582eb44adc176327f483147043fdb4aa6f02a292aeea189b7774483db25963";
+  "ccba5498f453f1e2982307ca29d9d56c8bf17aeb26e1d586de232b44416b8717";
 
 type SalesTransaction = Parameters<Parameters<DB["transaction"]>[0]>[0];
 
