@@ -154,6 +154,39 @@ describe("company OIDC client", () => {
     await expect(client.logout(session.accessToken)).resolves.toBe(true);
   }, 15_000);
 
+  it("rejects return paths that URL parsing can normalize onto another origin", async () => {
+    const { client } = harness();
+    for (const returnTo of [
+      "//outside.example",
+      "/\\outside.example",
+      "/\u0000outside.example",
+      "/\noutside.example",
+      "https://outside.example",
+    ]) {
+      await expect(client.start(returnTo)).rejects.toThrow();
+    }
+  });
+
+  it("keeps encoded slash variants on the registered product origin", async () => {
+    const productOrigin = new URL(clientConfig.redirectUri).origin;
+    for (const returnTo of [
+      "/en",
+      "/%5C%5Coutside.example",
+      "/%2F%2Foutside.example",
+      "/en?next=%2F%2Foutside.example",
+    ]) {
+      const { client } = harness();
+      const started = await client.start(returnTo);
+      const state = new URL(started.authorizationUrl).searchParams.get("state")!;
+      const session = await client.exchange({
+        code: "c".repeat(43),
+        state,
+        sealedTransaction: started.sealedTransaction,
+      });
+      expect(new URL(session.returnTo, productOrigin).origin).toBe(productOrigin);
+    }
+  }, 30_000);
+
   it("rejects a signed callback token whose nonce does not match the transaction", async () => {
     const { client } = harness("wrong-nonce-with-sufficient-entropy-000000");
     const started = await client.start();

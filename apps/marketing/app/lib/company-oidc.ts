@@ -9,24 +9,40 @@ export const MARKETING_SESSION_COOKIE = "__Host-ra_marketing_session";
 /** Host-only short-lived Marketing authorization transaction cookie. */
 export const MARKETING_TRANSACTION_COOKIE = "__Host-ra_marketing_oidc_tx";
 
+let config: ReturnType<typeof createCompanyIdentityServiceAuthConfig> | undefined;
 let client: ReturnType<typeof createCompanyOidcClient> | undefined;
+
+/**
+ * Returns the validated Marketing OIDC configuration for this process.
+ * @returns Confidential client configuration derived from the runtime environment.
+ */
+function getMarketingOidcConfig(): ReturnType<typeof createCompanyIdentityServiceAuthConfig> {
+  config ??= createCompanyIdentityServiceAuthConfig({
+    NODE_ENV: process.env.NODE_ENV,
+    COMPANY_AUTH_ISSUER_URL: process.env.COMPANY_AUTH_ISSUER_URL,
+    COMPANY_AUTH_OIDC_CLIENT_ID: process.env.COMPANY_AUTH_OIDC_CLIENT_ID,
+    COMPANY_AUTH_OIDC_CLIENT_SECRET: process.env.COMPANY_AUTH_OIDC_CLIENT_SECRET,
+    COMPANY_AUTH_OIDC_REDIRECT_URI: process.env.COMPANY_AUTH_OIDC_REDIRECT_URI,
+    COMPANY_AUTH_EXPECTED_AUDIENCE: process.env.COMPANY_AUTH_EXPECTED_AUDIENCE,
+    COMPANY_AUTH_CLOCK_SKEW_SECONDS: process.env.COMPANY_AUTH_CLOCK_SKEW_SECONDS,
+  });
+  return config;
+}
+
+/**
+ * Returns the trusted public Marketing origin from the registered callback URI.
+ * @returns Public origin used for post-callback browser redirects.
+ */
+export function getMarketingPublicOrigin(): string {
+  return new URL(getMarketingOidcConfig().redirectUri).origin;
+}
 
 /**
  * Returns the process-local Marketing OIDC client backed only by Accounts endpoints.
  * @returns Validated confidential OIDC client.
  */
 export function getMarketingOidcClient(): ReturnType<typeof createCompanyOidcClient> {
-  client ??= createCompanyOidcClient({
-    config: createCompanyIdentityServiceAuthConfig({
-      NODE_ENV: process.env.NODE_ENV,
-      COMPANY_AUTH_ISSUER_URL: process.env.COMPANY_AUTH_ISSUER_URL,
-      COMPANY_AUTH_OIDC_CLIENT_ID: process.env.COMPANY_AUTH_OIDC_CLIENT_ID,
-      COMPANY_AUTH_OIDC_CLIENT_SECRET: process.env.COMPANY_AUTH_OIDC_CLIENT_SECRET,
-      COMPANY_AUTH_OIDC_REDIRECT_URI: process.env.COMPANY_AUTH_OIDC_REDIRECT_URI,
-      COMPANY_AUTH_EXPECTED_AUDIENCE: process.env.COMPANY_AUTH_EXPECTED_AUDIENCE,
-      COMPANY_AUTH_CLOCK_SKEW_SECONDS: process.env.COMPANY_AUTH_CLOCK_SKEW_SECONDS,
-    }),
-  });
+  client ??= createCompanyOidcClient({ config: getMarketingOidcConfig() });
   return client;
 }
 

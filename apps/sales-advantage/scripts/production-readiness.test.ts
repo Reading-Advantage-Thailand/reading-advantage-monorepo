@@ -30,8 +30,18 @@ const curriculumVerifier = readFileSync(
   "utf8",
 );
 const cloudIgnore = readFileSync(resolve(appRoot, "../../.gcloudignore"), "utf8");
+const oidcCallback = readFileSync(
+  resolve(appRoot, "app/api/auth/callback/route.ts"),
+  "utf8",
+);
 
 describe("Sales production readiness", () => {
+  it("redirects callbacks through the registered public Sales origin", () => {
+    expect(oidcCallback).toContain("getSalesPublicOrigin");
+    expect(oidcCallback).toContain("new URL(session.returnTo, publicOrigin)");
+    expect(oidcCallback).not.toContain("session.returnTo, url.origin");
+  });
+
   it("uses the pinned proxy and toolchain before migration, doctor, and runtime probe", () => {
     expect(cloudbuild.match(/node:22-slim/g)).toHaveLength(6);
     expect(cloudbuild.match(/cloud-sql-proxy\/v2\.15\.1/g)).toHaveLength(5);

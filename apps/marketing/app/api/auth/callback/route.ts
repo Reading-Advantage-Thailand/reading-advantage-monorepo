@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import {
   getMarketingOidcClient,
+  getMarketingPublicOrigin,
   MARKETING_SESSION_COOKIE,
   MARKETING_TRANSACTION_COOKIE,
   readMarketingCookie,
@@ -10,11 +11,12 @@ import {
 /** Exchanges one exact Accounts callback for a Marketing-local opaque session. */
 export async function GET(request: Request): Promise<NextResponse> {
   const url = new URL(request.url);
+  const publicOrigin = getMarketingPublicOrigin();
   const transaction = readMarketingCookie(request, MARKETING_TRANSACTION_COOKIE);
   const code = url.searchParams.get("code");
   const state = url.searchParams.get("state");
   if (!transaction || !code || !state) {
-    return NextResponse.redirect(new URL("/login?error=sso", url.origin));
+    return NextResponse.redirect(new URL("/login?error=sso", publicOrigin));
   }
   try {
     const session = await getMarketingOidcClient().exchange({
@@ -22,7 +24,7 @@ export async function GET(request: Request): Promise<NextResponse> {
       state,
       sealedTransaction: transaction,
     });
-    const response = NextResponse.redirect(new URL(session.returnTo, url.origin));
+    const response = NextResponse.redirect(new URL(session.returnTo, publicOrigin));
     response.cookies.set(MARKETING_SESSION_COOKIE, session.accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -35,7 +37,7 @@ export async function GET(request: Request): Promise<NextResponse> {
     response.cookies.delete(MARKETING_TRANSACTION_COOKIE);
     return response;
   } catch {
-    const response = NextResponse.redirect(new URL("/login?error=sso", url.origin));
+    const response = NextResponse.redirect(new URL("/login?error=sso", publicOrigin));
     response.cookies.delete(MARKETING_TRANSACTION_COOKIE);
     return response;
   }

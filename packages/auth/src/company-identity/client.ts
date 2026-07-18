@@ -66,11 +66,25 @@ const jwksSchema = z.strictObject({
   })),
 });
 
+/**
+ * Checks that a post-login path is host-relative and free of URL control characters.
+ * @param value Candidate return path received from the product application.
+ * @returns True when URL resolution cannot reinterpret the value as another origin.
+ */
+function isSafeRelativeReturnPath(value: string): boolean {
+  if (!/^\/(?!\/)[^\\]*$/.test(value)) return false;
+  for (let index = 0; index < value.length; index += 1) {
+    const codeUnit = value.charCodeAt(index);
+    if (codeUnit <= 0x1f || codeUnit === 0x7f) return false;
+  }
+  return true;
+}
+
 const transactionSchema = z.strictObject({
   state: z.string().min(32),
   nonce: z.string().min(32),
   codeVerifier: z.string().regex(/^[A-Za-z0-9._~-]{43,128}$/),
-  returnTo: z.string().regex(/^\/(?!\/)/),
+  returnTo: z.string().max(2_048).refine(isSafeRelativeReturnPath),
   createdAt: z.number().int().positive(),
 });
 

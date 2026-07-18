@@ -132,6 +132,16 @@ describe("Marketing Cloud Run production contract", () => {
     resolve(marketingRoot, "scripts/marketing-runtime-probe.sql"),
     "utf8",
   );
+  const oidcCallback = readFileSync(
+    resolve(marketingRoot, "app/api/auth/callback/route.ts"),
+    "utf8",
+  );
+
+  it("redirects callbacks through the registered public Marketing origin", () => {
+    expect(oidcCallback).toContain("getMarketingPublicOrigin");
+    expect(oidcCallback).toContain("new URL(session.returnTo, publicOrigin)");
+    expect(oidcCallback).not.toContain("session.returnTo, url.origin");
+  });
 
   it("parses the canonical image, service account, database, and domain", () => {
     const build = requireBuildStep(cloudbuild, "build-image");
