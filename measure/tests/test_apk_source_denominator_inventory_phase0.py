@@ -15,7 +15,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[2]
 TRACK = "apk_source_denominator_inventory_20260712"
 BASELINE = "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-CODE_GATE = "f23fea71d335a9b86c95c022d1c980e527a3d320"
+CODE_GATE = "f27e93b27c956baa54b3ccb4c862c09e82cc746f"
 TRACK_DIR = REPO_ROOT / "measure" / "tracks" / TRACK
 FREEZE_PATH = TRACK_DIR / "phase0-input-freeze.json"
 ROLE_PATH = TRACK_DIR / "phase0-role-ownership-manifest.json"
@@ -304,7 +304,8 @@ class Phase0FreezeTests(unittest.TestCase):
                     "mapper_phase1_attestation_commit",
                 ),
                 (
-                    phase3_generator,
+                    phase3_generator
+                    + " --phase2-receipt-revision {phase2_receipt_commit}",
                     "normal-only",
                     "chore(measure): attest phase3 (track_id: apk_source_denominator_inventory_20260712)",
                     "output_commit",
