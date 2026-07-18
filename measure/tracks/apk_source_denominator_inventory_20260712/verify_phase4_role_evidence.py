@@ -141,47 +141,6 @@ def _git_bytes(root: Path, revision: str, path: str) -> bytes:
     return result.stdout
 
 
-def _resolve_admission_revision(root: Path, phase0_revision: str) -> str:
-    """Resolves the strict descendant commit owning the fresh mapper outputs.
-
-    Args:
-        root: Repository containing the authority and mapper commits.
-        phase0_revision: Exact predecessor authority commit.
-
-    Returns:
-        Current committed mapper-output revision.
-
-    Raises:
-        T2EvidenceVerificationError: When HEAD is not the exact mapper commit lineage.
-    """
-    head = subprocess.check_output(
-        ("/usr/bin/git", "rev-parse", "HEAD"), cwd=root, text=True
-    ).strip()
-    ancestor = subprocess.run(
-        ("/usr/bin/git", "merge-base", "--is-ancestor", phase0_revision, head),
-        cwd=root,
-        check=False,
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
-    )
-    changed = subprocess.check_output(
-        ("/usr/bin/git", "diff-tree", "--no-commit-id", "--name-only", "-r", head),
-        cwd=root,
-        text=True,
-    ).splitlines()
-    if (
-        _COMMIT.fullmatch(head) is None
-        or head == phase0_revision
-        or ancestor.returncode != 0
-        or set(changed) != set(MAPPER_OUTPUT_PATHS)
-        or len(changed) != len(MAPPER_OUTPUT_PATHS)
-    ):
-        raise T2EvidenceVerificationError(
-            "admission HEAD must be the strict descendant commit owning exactly the mapper outputs"
-        )
-    return head
-
-
 def _validate_admission_revision(
     root: Path, phase0_revision: str, admission_revision: str, role: str
 ) -> str:
@@ -202,6 +161,14 @@ def _validate_admission_revision(
     head = subprocess.check_output(
         ("/usr/bin/git", "rev-parse", "HEAD"), cwd=root, text=True
     ).strip()
+    if (
+        role not in {"truth-test-author", "adversarial-reviewer"}
+        or _COMMIT.fullmatch(admission_revision) is None
+        or admission_revision == phase0_revision
+    ):
+        raise T2EvidenceVerificationError(
+            "explicit admission revision or final-role chronology is invalid"
+        )
     latest_phase3 = subprocess.check_output(
         ("/usr/bin/git", "log", "-1", "--format=%H", head, "--", PHASE3_PATH),
         cwd=root,
@@ -226,6 +193,38 @@ def _validate_admission_revision(
         cwd=root,
         text=True,
     ).splitlines()
+    mapper_parent = subprocess.check_output(
+        ("/usr/bin/git", "rev-parse", f"{admission_revision}^"),
+        cwd=root,
+        text=True,
+    ).strip()
+    parent_changes = subprocess.check_output(
+        ("/usr/bin/git", "diff-tree", "--no-commit-id", "--name-only", "-r", mapper_parent),
+        cwd=root,
+        text=True,
+    ).splitlines()
+    admission_subject = subprocess.check_output(
+        ("/usr/bin/git", "show", "-s", "--format=%s", admission_revision),
+        cwd=root,
+        text=True,
+    ).strip()
+    parent_subject = subprocess.check_output(
+        ("/usr/bin/git", "show", "-s", "--format=%s", mapper_parent),
+        cwd=root,
+        text=True,
+    ).strip()
+    try:
+        phase3 = json.loads(_git_bytes(root, admission_revision, PHASE3_PATH))
+    except (UnicodeDecodeError, json.JSONDecodeError) as error:
+        raise T2EvidenceVerificationError("admission Phase3 provenance is malformed") from error
+    phase2_receipt = phase3.get("input_provenance", {}).get("phase2", {}).get(
+        "receipt_revision"
+    )
+    latest_receipt = subprocess.check_output(
+        ("/usr/bin/git", "log", "-1", "--format=%H", admission_revision, "--", PHASE2_RECEIPT_PATH),
+        cwd=root,
+        text=True,
+    ).strip()
     later_changes = subprocess.check_output(
         ("/usr/bin/git", "diff", "--name-only", f"{admission_revision}..{head}"),
         cwd=root,
@@ -243,13 +242,18 @@ def _validate_admission_revision(
     }
     allowed_later = set() if role == "truth-test-author" else reviewer_allowed
     if (
-        role not in {"truth-test-author", "adversarial-reviewer"}
-        or _COMMIT.fullmatch(admission_revision) is None
-        or latest_phase3 != admission_revision
+        latest_phase3 != admission_revision
         or authority_ancestor.returncode != 0
         or admission_ancestor.returncode != 0
-        or set(mapper_changes) != set(MAPPER_OUTPUT_PATHS)
-        or len(mapper_changes) != len(MAPPER_OUTPUT_PATHS)
+        or mapper_changes != [PHASE3_PATH]
+        or set(parent_changes) != set(MAPPER_OUTPUT_PATHS[:-1])
+        or len(parent_changes) != len(MAPPER_OUTPUT_PATHS[:-1])
+        or admission_subject
+        != "chore(measure): attest phase3 (track_id: apk_source_denominator_inventory_20260712)"
+        or parent_subject
+        != "chore(measure): attest reconciliation evidence (track_id: apk_source_denominator_inventory_20260712)"
+        or _COMMIT.fullmatch(str(phase2_receipt)) is None
+        or latest_receipt != phase2_receipt
         or not relevant_later.issubset(allowed_later)
         or (role == "truth-test-author" and head != admission_revision)
         or (role == "adversarial-reviewer" and relevant_later != reviewer_allowed)
@@ -351,7 +355,7 @@ def run_phase0_3_admission(phase0_revision: str) -> list[dict[str, Any]]:
         inventory = json.loads(result.stdout)
     except (UnicodeDecodeError, json.JSONDecodeError) as error:
         raise T2EvidenceVerificationError("pinned admission output is not JSON") from error
-    expected_counts = (13, 17, 31, 24)
+    expected_counts = (13, 18, 31, 24)
     if (
         not isinstance(inventory, list)
         or len(inventory) != len(ADMISSION_MODULES)

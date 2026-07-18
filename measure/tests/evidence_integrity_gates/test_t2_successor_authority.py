@@ -172,7 +172,7 @@ class SuccessorAuthorityTests(unittest.TestCase):
 
     def test_admission_rejects_zero_test_modules_and_stale_12_18_counts(self) -> None:
         """Falsifies zero-suite and superseded 12/18 Phase1/2 false Greens."""
-        self.assertEqual(EXPECTED_TEST_COUNTS, (13, 17, 31, 24))
+        self.assertEqual(EXPECTED_TEST_COUNTS, (13, 18, 31, 24))
         for phase, actual in ((0, 0), (1, 12), (2, 18)):
             expected = EXPECTED_TEST_COUNTS[phase]
             row = {
@@ -275,10 +275,51 @@ class SuccessorAuthorityTests(unittest.TestCase):
             stale_phase3 = subprocess.check_output(
                 ["/usr/bin/git", "-C", str(repo), "show", f"{authority}:{MAPPER_OUTPUT_PATHS[-1]}"]
             )
-            for path in MAPPER_OUTPUT_PATHS:
+            receipt_path = (
+                repo
+                / f"measure/tracks/{TRACK}/role-receipts/evidence-collector.json"
+            )
+            receipt_path.parent.mkdir(parents=True, exist_ok=True)
+            receipt_path.write_text("{}\n", encoding="utf-8")
+            subprocess.run(
+                ["/usr/bin/git", "-C", str(repo), "add", str(receipt_path.relative_to(repo))],
+                check=True,
+            )
+            subprocess.run([*commit, "evidence receipt"], check=True)
+            receipt = subprocess.check_output(
+                ["/usr/bin/git", "-C", str(repo), "rev-parse", "HEAD"], text=True
+            ).strip()
+            for path in MAPPER_OUTPUT_PATHS[:-1]:
                 (repo / path).write_text("fresh\n", encoding="utf-8")
-            subprocess.run(["/usr/bin/git", "-C", str(repo), "add", "."], check=True)
-            subprocess.run([*commit, "mapper"], check=True)
+            subprocess.run(
+                ["/usr/bin/git", "-C", str(repo), "add", *MAPPER_OUTPUT_PATHS[:-1]],
+                check=True,
+            )
+            subprocess.run(
+                [
+                    *commit,
+                    "chore(measure): attest reconciliation evidence (track_id: apk_source_denominator_inventory_20260712)",
+                ],
+                check=True,
+            )
+            (repo / MAPPER_OUTPUT_PATHS[-1]).write_text(
+                json.dumps(
+                    {"input_provenance": {"phase2": {"receipt_revision": receipt}}}
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+            subprocess.run(
+                ["/usr/bin/git", "-C", str(repo), "add", MAPPER_OUTPUT_PATHS[-1]],
+                check=True,
+            )
+            subprocess.run(
+                [
+                    *commit,
+                    "chore(measure): attest phase3 (track_id: apk_source_denominator_inventory_20260712)",
+                ],
+                check=True,
+            )
             mapper = subprocess.check_output(
                 ["/usr/bin/git", "-C", str(repo), "rev-parse", "HEAD"], text=True
             ).strip()
@@ -319,6 +360,50 @@ class SuccessorAuthorityTests(unittest.TestCase):
                 ),
                 mapper,
             )
+
+            subprocess.run(
+                ["/usr/bin/git", "-C", str(repo), "checkout", "--quiet", "-b", "bad-mapper", receipt],
+                check=True,
+            )
+            (repo / MAPPER_OUTPUT_PATHS[0]).write_text("bad-only-one\n", encoding="utf-8")
+            subprocess.run(
+                ["/usr/bin/git", "-C", str(repo), "add", MAPPER_OUTPUT_PATHS[0]],
+                check=True,
+            )
+            subprocess.run(
+                [
+                    *commit,
+                    "chore(measure): attest reconciliation evidence (track_id: apk_source_denominator_inventory_20260712)",
+                ],
+                check=True,
+            )
+            (repo / MAPPER_OUTPUT_PATHS[-1]).write_text(
+                json.dumps(
+                    {"input_provenance": {"phase2": {"receipt_revision": receipt}}}
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+            subprocess.run(
+                ["/usr/bin/git", "-C", str(repo), "add", MAPPER_OUTPUT_PATHS[-1]],
+                check=True,
+            )
+            subprocess.run(
+                [
+                    *commit,
+                    "chore(measure): attest phase3 (track_id: apk_source_denominator_inventory_20260712)",
+                ],
+                check=True,
+            )
+            bad_mapper = subprocess.check_output(
+                ["/usr/bin/git", "-C", str(repo), "rev-parse", "HEAD"], text=True
+            ).strip()
+            with self.assertRaisesRegex(
+                T2EvidenceVerificationError, "chronology is invalid"
+            ):
+                _validate_admission_revision(
+                    repo, authority, bad_mapper, "truth-test-author"
+                )
 
     def test_reviewer_rejects_boolean_counters_and_whitespace_severity(self) -> None:
         """Falsifies Python equality coercion and untrimmed blocking severity bypasses."""

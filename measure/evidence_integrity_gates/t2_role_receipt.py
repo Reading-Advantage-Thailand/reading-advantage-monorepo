@@ -36,9 +36,6 @@ from .t2_role_accounting import (
 TRACK_DIRECTORY = "measure/tracks/apk_source_denominator_inventory_20260712"
 T2_INPUT_FREEZE_PATH = f"{TRACK_DIRECTORY}/phase0-input-freeze.json"
 T2_OWNERSHIP_MANIFEST_PATH = f"{TRACK_DIRECTORY}/phase0-role-ownership-manifest.json"
-# Bind this to the full SHA of the final Phase-0 authority commit in the
-# immediately following commit. The unbound bootstrap state fails closed.
-T2_PHASE0_AUTHORITY_COMMIT: str | None = "6dd43aa834b7193017230843c658d32c19ecd1a9"
 ROLE_PHASES = {
     "discovery-auditor": "Phase 1: Mechanical discovery",
     "evidence-collector": "Phase 2: Independent human discovery",
@@ -572,6 +569,73 @@ def _trusted_authority(
     runtime = ownership.get("trusted_runtime")
     _validate_trusted_runtime(runtime)
     return freeze_bytes, freeze, role_tasks[0], runtime
+
+
+def _validate_successor_authority(
+    root: Path, phase0_commit: str, output_commit: str
+) -> None:
+    """Validates an explicit latest successor authority before provider export.
+
+    Args:
+        root: Repository containing authority and role output commits.
+        phase0_commit: Explicit successor authority revision.
+        output_commit: Role output commit selecting the latest authority ancestor.
+
+    Returns:
+        Nothing.
+
+    Raises:
+        T2RoleReceiptError: When successor hashes or ancestry are invalid.
+    """
+    if _COMMIT_SHA.fullmatch(phase0_commit) is None:
+        raise T2RoleReceiptError("production Phase-0 authority must be one full SHA")
+    latest = subprocess.run(
+        ("/usr/bin/git", "log", "-1", "--format=%H", output_commit, "--", T2_OWNERSHIP_MANIFEST_PATH),
+        cwd=root,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+        text=True,
+    )
+    if latest.returncode != 0 or latest.stdout.strip() != phase0_commit:
+        raise T2RoleReceiptError("explicit Phase-0 authority is not the latest output ancestor")
+    try:
+        freeze = json.loads(_committed_bytes(root, phase0_commit, T2_INPUT_FREEZE_PATH))
+        ownership = json.loads(
+            _committed_bytes(root, phase0_commit, T2_OWNERSHIP_MANIFEST_PATH)
+        )
+    except (UnicodeDecodeError, json.JSONDecodeError) as error:
+        raise T2RoleReceiptError("successor authority manifests are malformed") from error
+    successor = freeze.get("authority_successor") if isinstance(freeze, Mapping) else None
+    correction = ownership.get("authority_correction") if isinstance(ownership, Mapping) else None
+    if not isinstance(successor, Mapping) or not isinstance(correction, Mapping):
+        raise T2RoleReceiptError("explicit Phase-0 authority is not a successor authority")
+    prior = successor.get("supersedes_authority_commit")
+    red = correction.get("red_commit")
+    if (
+        _COMMIT_SHA.fullmatch(str(prior)) is None
+        or correction.get("prior_authority_commit") != prior
+        or _COMMIT_SHA.fullmatch(str(red)) is None
+        or successor.get("requires_all_role_reruns") is not True
+        or correction.get("requires_all_role_reruns") is not True
+        or successor.get("product_owner_acceptance_claimed") is not False
+        or correction.get("product_owner_acceptance_claimed") is not False
+        or successor.get("superseded_input_sha256")
+        != _sha256(_committed_bytes(root, str(prior), T2_INPUT_FREEZE_PATH))
+        or successor.get("superseded_ownership_sha256")
+        != _sha256(_committed_bytes(root, str(prior), T2_OWNERSHIP_MANIFEST_PATH))
+    ):
+        raise T2RoleReceiptError("successor authority chain differs from prior committed bytes")
+    for ancestor in (str(prior), str(red)):
+        result = subprocess.run(
+            ("/usr/bin/git", "merge-base", "--is-ancestor", ancestor, phase0_commit),
+            cwd=root,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            check=False,
+        )
+        if result.returncode != 0:
+            raise T2RoleReceiptError("successor authority chain is not ancestral")
 
 
 def _validate_trusted_runtime(runtime: object) -> None:
@@ -1266,6 +1330,7 @@ def render_t2_role_receipt(
     role: str,
     provider_agent: str,
     output_commit: str,
+    phase0_authority_revision: str,
     stop_loss_observations: Mapping[str, Any],
     commit_binding: Mapping[str, Any] | None = None,
 ) -> Mapping[str, Any]:
@@ -1279,6 +1344,7 @@ def render_t2_role_receipt(
         role: Frozen T2 role owned by the session.
         provider_agent: Exact expected assistant-agent identity.
         output_commit: Full commit immutably owning every task output.
+        phase0_authority_revision: Explicit latest successor authority commit.
         stop_loss_observations: Numeric observations under frozen thresholds.
         commit_binding: Optional exact predecessor and phase-attestation commit metadata.
     Returns:
@@ -1286,9 +1352,8 @@ def render_t2_role_receipt(
     Raises:
         T2RoleReceiptError: If the production authority is unbound or validation fails.
     """
-    phase0_commit = T2_PHASE0_AUTHORITY_COMMIT
-    if phase0_commit is None or _COMMIT_SHA.fullmatch(phase0_commit) is None:
-        raise T2RoleReceiptError("production Phase-0 authority commit is unbound")
+    phase0_commit = phase0_authority_revision
+    _validate_successor_authority(repository_root, phase0_commit, output_commit)
     try:
         raw = _verified_live_export(
             session_id,

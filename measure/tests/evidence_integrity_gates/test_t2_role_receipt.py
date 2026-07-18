@@ -31,6 +31,7 @@ from measure.evidence_integrity_gates.t2_role_accounting import derive_t2_actual
 
 
 TRACK = "measure/tracks/apk_source_denominator_inventory_20260712"
+REPO_ROOT = Path(__file__).resolve().parents[3]
 
 
 class _RetainedExportAdapter:
@@ -469,11 +470,12 @@ class T2RoleReceiptTests(unittest.TestCase):
         self.assertEqual(receipt["output_paths"], [f"{TRACK}/source-denominator.json"])
         self.assertTrue((root / "receipt.json").is_file())
 
-    def test_public_renderer_has_no_authority_or_adapter_injection_surface(self) -> None:
-        """Exposes no caller-controlled provider adapter, authority SHA, or authority path."""
+    def test_public_renderer_requires_authority_without_adapter_or_path_injection(self) -> None:
+        """Requires one authority SHA but exposes no provider adapter or authority path."""
         parameters = inspect.signature(render_t2_role_receipt).parameters
         self.assertNotIn("export_adapter", parameters)
         self.assertNotIn("phase0_commit", parameters)
+        self.assertIn("phase0_authority_revision", parameters)
         self.assertNotIn("input_freeze_path", parameters)
         self.assertNotIn("ownership_manifest_path", parameters)
         with self.assertRaises(TypeError):
@@ -485,18 +487,16 @@ class T2RoleReceiptTests(unittest.TestCase):
                 role="discovery-auditor",
                 provider_agent="build",
                 output_commit="0" * 40,
+                phase0_authority_revision="1" * 40,
                 stop_loss_observations={},
                 export_adapter=object(),
                 phase0_commit="1" * 40,
             )
 
-    def test_public_renderer_fails_closed_before_authority_binding(self) -> None:
-        """Refuses production rendering before the bootstrap authority SHA is committed."""
-        with mock.patch.object(receipt_module, "T2_PHASE0_AUTHORITY_COMMIT", None), mock.patch.object(
-            receipt_module.OpenCodeExportAdapter,
-            "export",
-        ) as export:
-            with self.assertRaisesRegex(T2RoleReceiptError, "authority commit is unbound"):
+    def test_public_renderer_fails_closed_without_full_authority_revision(self) -> None:
+        """Refuses production rendering before a full authority SHA is supplied."""
+        with mock.patch.object(receipt_module.OpenCodeExportAdapter, "export") as export:
+            with self.assertRaisesRegex(T2RoleReceiptError, "must be one full SHA"):
                 render_t2_role_receipt(
                     repository_root=Path("."),
                     raw_export_path=Path("raw.json"),
@@ -505,12 +505,35 @@ class T2RoleReceiptTests(unittest.TestCase):
                     role="discovery-auditor",
                     provider_agent="build",
                     output_commit="0" * 40,
+                    phase0_authority_revision="not-a-sha",
                     stop_loss_observations={},
                 )
         export.assert_not_called()
 
-    def test_public_renderer_uses_live_adapter_and_canonical_authority_only(self) -> None:
-        """Routes exact live bytes and repository-pinned authority values into the core."""
+    def test_successor_authority_rejects_stale_6dd_and_accepts_latest(self) -> None:
+        """Proves production receipt routing cannot fall back to the old authority."""
+        head = self._git(REPO_ROOT, "rev-parse", "HEAD")
+        latest = self._git(
+            REPO_ROOT,
+            "log",
+            "-1",
+            "--format=%H",
+            head,
+            "--",
+            receipt_module.T2_OWNERSHIP_MANIFEST_PATH,
+        )
+        receipt_module._validate_successor_authority(REPO_ROOT, latest, head)
+        with self.assertRaisesRegex(
+            T2RoleReceiptError, "not the latest output ancestor"
+        ):
+            receipt_module._validate_successor_authority(
+                REPO_ROOT,
+                "6dd43aa834b7193017230843c658d32c19ecd1a9",
+                head,
+            )
+
+    def test_public_renderer_uses_live_adapter_and_validated_explicit_authority(self) -> None:
+        """Routes live bytes and one validated explicit authority into the core."""
         retained = b'{"info":{"id":"ses_child1"},"messages":[]}'
 
         class LiveAdapter:
@@ -528,10 +551,10 @@ class T2RoleReceiptTests(unittest.TestCase):
             raw_path.write_bytes(retained)
             core_result = {"status": "core-called"}
             with mock.patch.object(
-                receipt_module, "T2_PHASE0_AUTHORITY_COMMIT", "a" * 40
-            ), mock.patch.object(
                 receipt_module, "OpenCodeExportAdapter", LiveAdapter
             ), mock.patch.object(
+                receipt_module, "_validate_successor_authority"
+            ) as validate_authority, mock.patch.object(
                 receipt_module,
                 "_render_t2_role_receipt_core",
                 return_value=core_result,
@@ -544,9 +567,13 @@ class T2RoleReceiptTests(unittest.TestCase):
                     role="discovery-auditor",
                     provider_agent="build",
                     output_commit="b" * 40,
+                    phase0_authority_revision="a" * 40,
                     stop_loss_observations={"unsupported_factual_claims": 0},
                 )
         self.assertIs(result, core_result)
+        validate_authority.assert_called_once_with(
+            Path(directory), "a" * 40, "b" * 40
+        )
         keywords = core.call_args.kwargs
         self.assertEqual(keywords["raw_export"], retained)
         self.assertEqual(keywords["phase0_commit"], "a" * 40)

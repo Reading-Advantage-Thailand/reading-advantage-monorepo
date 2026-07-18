@@ -15,7 +15,6 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[2]
 TRACK = "apk_source_denominator_inventory_20260712"
 BASELINE = "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-CODE_GATE = "f27e93b27c956baa54b3ccb4c862c09e82cc746f"
 TRACK_DIR = REPO_ROOT / "measure" / "tracks" / TRACK
 FREEZE_PATH = TRACK_DIR / "phase0-input-freeze.json"
 ROLE_PATH = TRACK_DIR / "phase0-role-ownership-manifest.json"
@@ -255,6 +254,9 @@ class Phase0FreezeTests(unittest.TestCase):
         track_prefix = f"measure/tracks/{TRACK}/"
         final_role_verifier_gate = self.roles["authority_correction"]["red_commit"]
         self.assertRegex(final_role_verifier_gate, r"[0-9a-f]{40}\Z")
+        authority_revision = _git(
+            "log", "-1", "--format=%H", "HEAD", "--", str(ROLE_PATH.relative_to(REPO_ROOT))
+        ).strip()
         def immutable_generator(script: str) -> str:
             """Builds the exact semicolon-free commit-bound Python launcher."""
             path = track_prefix + script
@@ -418,14 +420,16 @@ class Phase0FreezeTests(unittest.TestCase):
                     expected_dependencies_by_command[generator["command_template"]],
                 )
                 for dependency in dependencies:
-                    expected_gate = (
-                        final_role_verifier_gate
-                        if dependency["path"] in final_role_dependencies
-                        else CODE_GATE
-                    )
+                    expected_gate = final_role_verifier_gate
                     self.assertEqual(dependency["revision"], expected_gate)
                     blob = _git("show", f"{expected_gate}:{dependency['path']}").encode()
                     self.assertEqual(hashlib.sha256(blob).hexdigest(), dependency["sha256"])
+                    authority_blob = _git(
+                        "show", f"{authority_revision}:{dependency['path']}"
+                    ).encode()
+                    self.assertEqual(
+                        hashlib.sha256(authority_blob).hexdigest(), dependency["sha256"]
+                    )
             self.assertEqual(actual_generators, expected_generators[role])
         runtime = self.roles["trusted_runtime"]
         self.assertEqual(runtime["schema_version"], "apk-trusted-runtime.v1")

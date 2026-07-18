@@ -18,7 +18,7 @@ ADMISSION_MODULES = (
     "measure.tests.test_apk_source_denominator_inventory_phase2",
     "measure.tests.test_apk_source_denominator_inventory_phase3",
 )
-EXPECTED_TEST_COUNTS = (13, 17, 31, 24)
+EXPECTED_TEST_COUNTS = (13, 18, 31, 24)
 _COMMIT_SHA = re.compile(r"[0-9a-f]{40}\Z")
 _MAX_DIAGNOSTIC_BYTES = 1_048_576
 _SANITIZED_ENV = {
