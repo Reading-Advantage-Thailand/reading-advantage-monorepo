@@ -208,7 +208,14 @@ describe("company identity service", () => {
 
   it.each([
     ["missing", null],
-    ["suspended", { ...employee, status: "SUSPENDED" as const }],
+    [
+      "suspended",
+      {
+        ...employee,
+        status: "SUSPENDED" as const,
+        companyRoles: [...employee.companyRoles],
+      },
+    ],
   ])("rejects a %s employee during code exchange without creating an application session", async (_case, resolvedEmployee) => {
     const repo = repository();
     const sign = vi.fn(async () => "signed.identity.token.with.required.length");

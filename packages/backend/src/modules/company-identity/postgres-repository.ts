@@ -30,6 +30,20 @@ function digest(value: string): string {
   return createHash("sha256").update(value).digest("hex");
 }
 
+/**
+ * Converts a PostgreSQL bigint result into the bounded numeric auth-version contract.
+ * @param value Driver result for an account auth-version column.
+ * @returns Positive safe integer used by identity claims and session comparisons.
+ * @throws When the database value is not a positive safe integer.
+ */
+function parseAuthVersion(value: string | number | bigint): number {
+  const parsed = typeof value === "number" ? value : Number(value);
+  if (!Number.isSafeInteger(parsed) || parsed < 1) {
+    throw new Error("COMPANY_IDENTITY_AUTH_VERSION_INVALID");
+  }
+  return parsed;
+}
+
 function stableJson(value: unknown): string {
   if (Array.isArray(value)) return `[${value.map(stableJson).join(",")}]`;
   if (typeof value === "object" && value !== null) {
@@ -223,7 +237,7 @@ export function createPostgresCompanyIdentityRepository(sql: Sql): CompanyIdenti
       try { normalized = normalizeUsername(username); } catch { return null; }
       const [row] = await sql<Array<{
         account_id: string; membership_id: string; organization_id: string;
-        organization_key: string; auth_version: number; password_hash: string;
+        organization_key: string; auth_version: string | number; password_hash: string;
         algorithm: "ARGON2ID" | "BCRYPT";
       }>>`
         select account.id as account_id, membership.id as membership_id,
@@ -245,7 +259,7 @@ export function createPostgresCompanyIdentityRepository(sql: Sql): CompanyIdenti
         membershipId: row.membership_id,
         organizationId: row.organization_id,
         organizationKey: row.organization_key,
-        authVersion: row.auth_version,
+        authVersion: parseAuthVersion(row.auth_version),
         passwordHash: row.password_hash,
         passwordAlgorithm: row.algorithm,
       } : null;
@@ -277,7 +291,7 @@ export function createPostgresCompanyIdentityRepository(sql: Sql): CompanyIdenti
     async findSsoSession(tokenHash, now, nextIdleExpiresAt) {
       const [row] = await sql<Array<{
         id: string; account_id: string; membership_id: string; organization_id: string;
-        organization_key: string; auth_version: number; absolute_expires_at: Date;
+        organization_key: string; auth_version: string | number; absolute_expires_at: Date;
       }>>`
         update company_sso_sessions session
            set last_seen_at = ${now},
@@ -303,14 +317,14 @@ export function createPostgresCompanyIdentityRepository(sql: Sql): CompanyIdenti
       return row ? {
         id: row.id, accountId: row.account_id, membershipId: row.membership_id,
         organizationId: row.organization_id, organizationKey: row.organization_key,
-        authVersion: row.auth_version, expiresAt: row.absolute_expires_at,
+        authVersion: parseAuthVersion(row.auth_version), expiresAt: row.absolute_expires_at,
       } satisfies SsoSessionRecord : null;
     },
 
     async findSsoSessionById(sessionId, now, nextIdleExpiresAt) {
       const [row] = await sql<Array<{
         id: string; account_id: string; membership_id: string; organization_id: string;
-        organization_key: string; auth_version: number; absolute_expires_at: Date;
+        organization_key: string; auth_version: string | number; absolute_expires_at: Date;
       }>>`
         update company_sso_sessions session
            set last_seen_at = ${now},
@@ -336,7 +350,7 @@ export function createPostgresCompanyIdentityRepository(sql: Sql): CompanyIdenti
       return row ? {
         id: row.id, accountId: row.account_id, membershipId: row.membership_id,
         organizationId: row.organization_id, organizationKey: row.organization_key,
-        authVersion: row.auth_version, expiresAt: row.absolute_expires_at,
+        authVersion: parseAuthVersion(row.auth_version), expiresAt: row.absolute_expires_at,
       } : null;
     },
 
@@ -474,7 +488,7 @@ export function createPostgresCompanyIdentityRepository(sql: Sql): CompanyIdenti
       const [row] = await sql<Array<{
         session_id: string; account_id: string; organization_id: string;
         organization_key: string; application_id: string; application_key: string;
-        auth_version: number; expires_at: Date; membership_id: string;
+        auth_version: string | number; expires_at: Date; membership_id: string;
       }>>`
         with refreshed_sso as (
           update company_sso_sessions sso
@@ -523,7 +537,7 @@ export function createPostgresCompanyIdentityRepository(sql: Sql): CompanyIdenti
       return employee ? {
         sessionId: row.session_id, employee, organizationId: row.organization_id,
         organizationKey: row.organization_key, applicationKey: row.application_key,
-        roles, authVersion: row.auth_version, expiresAt: row.expires_at,
+        roles, authVersion: parseAuthVersion(row.auth_version), expiresAt: row.expires_at,
       } : null;
     },
 
