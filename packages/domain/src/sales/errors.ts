@@ -25,7 +25,10 @@ export class RubricNotApprovedError extends SalesError {
 
 /** Thrown when audio storage upload/retrieval fails. */
 export class AudioStorageError extends SalesError {
-  constructor(detail: string, public readonly cause?: unknown) {
+  constructor(
+    detail: string,
+    public readonly cause?: unknown,
+  ) {
     super(`Audio storage failure: ${detail}`, "AUDIO_STORAGE_ERROR");
     this.name = "AudioStorageError";
   }
@@ -47,6 +50,28 @@ export class ModulePrerequisiteNotMetError extends SalesError {
       "MODULE_PREREQUISITE_NOT_MET",
     );
     this.name = "ModulePrerequisiteNotMetError";
+  }
+}
+
+/** Thrown when a learner tries to open a lesson before earlier lessons are complete. */
+export class LessonPrerequisiteNotMetError extends SalesError {
+  constructor(lessonId: string, prerequisiteLessonId: string) {
+    super(
+      `Cannot start lesson '${lessonId}' — prerequisite lesson '${prerequisiteLessonId}' is not complete`,
+      "LESSON_PREREQUISITE_NOT_MET",
+    );
+    this.name = "LessonPrerequisiteNotMetError";
+  }
+}
+
+/** Thrown when a completion operation targets the wrong lesson category. */
+export class LessonTypeMismatchError extends SalesError {
+  constructor(lessonId: string, expectedType: string, actualType: string) {
+    super(
+      `Lesson '${lessonId}' is '${actualType}', not '${expectedType}'`,
+      "LESSON_TYPE_MISMATCH",
+    );
+    this.name = "LessonTypeMismatchError";
   }
 }
 
@@ -81,7 +106,10 @@ export class SalesAuthError extends SalesError {
  * layer so transports can map to their respective error envelopes.
  */
 export class RoleplayAudioValidationError extends SalesError {
-  constructor(detail: string, public readonly field: string) {
+  constructor(
+    detail: string,
+    public readonly field: string,
+  ) {
     super(detail, "ROLEPLAY_AUDIO_INVALID");
     this.name = "RoleplayAudioValidationError";
   }

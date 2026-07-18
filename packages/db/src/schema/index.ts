@@ -17,3 +17,5 @@ export * from "./sales.js";
 export * from "./primary.js";
 export * from "./mastery.js";
 export * from "./activity.js";
+export * from "./capability-idempotency.js";
+export * from "./company-product-principals.js";

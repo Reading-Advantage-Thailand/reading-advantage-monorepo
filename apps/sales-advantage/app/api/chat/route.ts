@@ -1,9 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { validateSession, SESSION_COOKIE_NAME, AuthError } from "@reading-advantage/auth";
+import {
+  AuthError,
+} from "@reading-advantage/auth";
 import { db } from "@reading-advantage/db";
 import { getAIClient } from "@reading-advantage/ai";
-import { sales } from "@reading-advantage/domain";
+import { authorizeSalesChat } from "@reading-advantage/domain/sales";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { authenticateSalesRequest } from "@/lib/company-oidc";
 import { z } from "zod";
 
 export const runtime = "nodejs";
@@ -29,7 +32,9 @@ const BRACKETED_MARKER_SPOOF = /\[(?:REP|COACH)\]:/gi;
  * bracket-prefixed branch matches.
  */
 function sanitizeRoleMarkers(content: string): string {
-  return content.replace(BARE_MARKER_SPOOF, "$1").replace(BRACKETED_MARKER_SPOOF, "");
+  return content
+    .replace(BARE_MARKER_SPOOF, "$1")
+    .replace(BRACKETED_MARKER_SPOOF, "");
 }
 
 /**
@@ -43,15 +48,10 @@ function sanitizeContextId(value: string): string {
 
 export async function POST(request: NextRequest) {
   try {
-    const sessionToken = request.cookies.get(SESSION_COOKIE_NAME)?.value;
-    if (!sessionToken) {
+    const user = await authenticateSalesRequest(request);
+    if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    const session = await validateSession(db, sessionToken);
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    const user = session.user;
 
     const rateLimit = checkRateLimit(`sales:chat:${user.id}`, 30, 60_000);
     if (!rateLimit.allowed) {
@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
     }
 
     try {
-      sales.authorizeSalesChat({ user });
+      authorizeSalesChat({ user });
     } catch (error) {
       if (error instanceof AuthError) {
         return NextResponse.json({ error: "Forbidden" }, { status: 403 });
@@ -95,18 +95,24 @@ export async function POST(request: NextRequest) {
       "Be concise (under 200 words) and give practical examples.",
       lessonId ? `Lesson context: ${sanitizeContextId(lessonId)}.` : "",
       moduleId ? `Module context: ${sanitizeContextId(moduleId)}.` : "",
-    ].filter(Boolean).join(" ");
+    ]
+      .filter(Boolean)
+      .join(" ");
 
     const fullPrompt =
       systemPrompt +
       "\n\n" +
       messages
-        .map((m) => `[${m.role === "user" ? "REP" : "COACH"}] ${sanitizeRoleMarkers(m.content)}`)
+        .map(
+          (m) =>
+            `[${m.role === "user" ? "REP" : "COACH"}] ${sanitizeRoleMarkers(m.content)}`,
+        )
         .join("\n\n") +
       "\n\n[COACH]:";
 
     const aiClient = getAIClient();
-    const chatModel = process.env.SALES_CHAT_MODEL ?? "nvidia/nemotron-3-nano-30b-a3b:free";
+    const chatModel =
+      process.env.SALES_CHAT_MODEL ?? "nvidia/nemotron-3-nano-30b-a3b:free";
 
     const stream = await aiClient.streamText({
       prompt: fullPrompt,

@@ -12,7 +12,116 @@ import { users } from "@reading-advantage/db/schema";
 import { assertCan } from "@reading-advantage/auth";
 import type { SalesDomainContext } from "./contracts.js";
 import { salesRawDb } from "./contracts.js";
-import { ScenarioNotFoundError, CurriculumNotApprovedError } from "./errors.js";
+import { ModulePrerequisiteNotMetError, SalesAuthError } from "./errors.js";
+import {
+  loadSalesLearningPath,
+  requireAccessibleLesson,
+  requireAccessibleScenario,
+} from "./learning-path.js";
+import {
+  adminCurriculumOutputSchema,
+  lessonDetailOutputSchema,
+  scenarioDetailOutputSchema,
+  salesCohortRepOutputSchema,
+  salesRepDetailOutputSchema,
+} from "./schema.js";
+
+/** Returns a rounded arithmetic mean, or null for an empty collection. */
+function averageScore(values: number[]): number | null {
+  return values.length === 0
+    ? null
+    : Math.round(values.reduce((sum, value) => sum + value, 0) / values.length);
+}
+
+/** Returns the latest valid activity date from the supplied candidates. */
+function latestActivity(values: Array<Date | null | undefined>): Date | null {
+  return values.reduce<Date | null>(
+    (latest, value) => (value && (!latest || value > latest) ? value : latest),
+    null,
+  );
+}
+
+/** Selects only curriculum that a learner can open in the approved path. */
+function learnerVisibleCurriculum(
+  modules: Array<typeof salesModules.$inferSelect>,
+  lessons: Array<typeof salesLessons.$inferSelect>,
+  rubrics: Array<typeof salesRubrics.$inferSelect>,
+  scenarios: Array<typeof salesRoleplayScenarios.$inferSelect>,
+) {
+  const visibleLessons = lessons.filter(
+    (lesson) => lesson.reviewStatus === "approved",
+  );
+  const visibleLessonIds = new Set(visibleLessons.map((lesson) => lesson.id));
+  const visibleModuleIds = new Set(
+    visibleLessons.map((lesson) => lesson.moduleId),
+  );
+  const approvedRubricIds = new Set(
+    rubrics
+      .filter((rubric) => rubric.reviewStatus === "approved")
+      .map((rubric) => rubric.id),
+  );
+  const visibleScenarios = scenarios.filter(
+    (scenario) =>
+      visibleLessonIds.has(scenario.lessonId) &&
+      approvedRubricIds.has(scenario.rubricId),
+  );
+  return {
+    modules: modules.filter((module) => visibleModuleIds.has(module.id)),
+    lessons: visibleLessons,
+    scenarios: visibleScenarios,
+  };
+}
+
+/** Builds the stable administrator aggregate for one representative. */
+function buildRepAggregate(
+  rep: { id: string; username: string; name: string | null },
+  modules: Array<typeof salesModules.$inferSelect>,
+  lessons: Array<typeof salesLessons.$inferSelect>,
+  progress: Array<typeof salesProgress.$inferSelect>,
+  attempts: Array<typeof salesRoleplayAttempts.$inferSelect>,
+) {
+  const completedLessonIds = new Set(
+    progress
+      .filter((row) => row.status === "completed")
+      .map((row) => row.lessonId),
+  );
+  const quizLessonIds = new Set(
+    lessons
+      .filter((lesson) => lesson.type === "quiz")
+      .map((lesson) => lesson.id),
+  );
+  const modulesCompleted = modules.filter((module) => {
+    const moduleLessons = lessons.filter(
+      (lesson) => lesson.moduleId === module.id,
+    );
+    return (
+      moduleLessons.length > 0 &&
+      moduleLessons.every((lesson) => completedLessonIds.has(lesson.id))
+    );
+  }).length;
+  const roleplayScores = attempts.flatMap((attempt) =>
+    attempt.overallScore === null ? [] : [Number(attempt.overallScore)],
+  );
+  const quizScores = progress.flatMap((row) =>
+    quizLessonIds.has(row.lessonId) && row.score !== null
+      ? [Number(row.score)]
+      : [],
+  );
+  return salesCohortRepOutputSchema.parse({
+    userId: rep.id,
+    username: rep.username,
+    displayName: rep.name ?? rep.username,
+    modulesCompleted,
+    totalModules: modules.length,
+    avgRoleplayScore: averageScore(roleplayScores),
+    avgQuizScore: averageScore(quizScores),
+    roleplayAttemptCount: attempts.length,
+    lastActive: latestActivity([
+      ...progress.map((row) => row.updatedAt),
+      ...attempts.map((attempt) => attempt.createdAt),
+    ]),
+  });
+}
 
 /**
  * Retrieves all approved sales modules ordered by their curriculum order.
@@ -22,10 +131,47 @@ import { ScenarioNotFoundError, CurriculumNotApprovedError } from "./errors.js";
 export async function getModules({ db, user, tenant }: SalesDomainContext) {
   assertCan(user, "sales:read", tenant);
   const rawDb = salesRawDb(db);
-  return rawDb
+  return rawDb.select().from(salesModules).orderBy(salesModules.order);
+}
+
+/**
+ * Retrieves the complete curriculum review model for a Sales administrator.
+ * @param ctx The authenticated Sales administrator domain context.
+ * @returns All modules, lessons, and rubrics without learner progression filters.
+ */
+export async function getAdminCurriculum({
+  db,
+  user,
+  tenant,
+}: SalesDomainContext) {
+  assertCan(user, "sales:curriculum:approve", tenant);
+  const rawDb = salesRawDb(db);
+  const modules = await rawDb
     .select()
     .from(salesModules)
     .orderBy(salesModules.order);
+  const lessons = await rawDb
+    .select()
+    .from(salesLessons)
+    .orderBy(salesLessons.order);
+  const rubrics = await rawDb
+    .select()
+    .from(salesRubrics)
+    .orderBy(salesRubrics.createdAt);
+  const lessonsByModule = new Map<string, typeof lessons>();
+  for (const lesson of lessons) {
+    const moduleLessons = lessonsByModule.get(lesson.moduleId) ?? [];
+    moduleLessons.push(lesson);
+    lessonsByModule.set(lesson.moduleId, moduleLessons);
+  }
+
+  return adminCurriculumOutputSchema.parse({
+    modules: modules.map((module) => ({
+      ...module,
+      lessons: lessonsByModule.get(module.id) ?? [],
+    })),
+    rubrics,
+  });
 }
 
 /**
@@ -40,17 +186,34 @@ export async function getModuleBySlug(
 ) {
   assertCan(user, "sales:read", tenant);
   const rawDb = salesRawDb(db);
-  const [module] = await rawDb
-    .select()
-    .from(salesModules)
-    .where(eq(salesModules.slug, input.slug))
-    .limit(1);
+  const learningPath = await loadSalesLearningPath(rawDb, user.id);
+  const module = learningPath.modules.find(
+    (candidate) => candidate.slug === input.slug,
+  );
   if (!module) throw new Error("Module not found");
-  const lessons = await rawDb
-    .select()
-    .from(salesLessons)
-    .where(eq(salesLessons.moduleId, module.id))
-    .orderBy(salesLessons.order);
+  const moduleAccess = learningPath.access.moduleAccessById[module.id];
+  if (moduleAccess?.isLocked && moduleAccess.prerequisiteModuleSlug) {
+    throw new ModulePrerequisiteNotMetError(
+      module.slug,
+      moduleAccess.prerequisiteModuleSlug,
+    );
+  }
+  const progressByLessonId = new Map(
+    learningPath.progress.map((row) => [row.lessonId, row]),
+  );
+  const lessons = learningPath.lessons
+    .filter((lesson) => lesson.moduleId === module.id)
+    .map((lesson) => {
+      const progress = progressByLessonId.get(lesson.id);
+      const lessonAccess = learningPath.access.lessonAccessById[lesson.id];
+      return {
+        ...lesson,
+        completed: progress?.status === "completed",
+        bestScore: progress?.score ?? null,
+        isLocked: lessonAccess?.isLocked ?? true,
+        prerequisiteLessonId: lessonAccess?.prerequisiteLessonId ?? null,
+      };
+    });
   return { ...module, lessons };
 }
 
@@ -67,32 +230,67 @@ export async function getLesson(
 ) {
   assertCan(user, "sales:read", tenant);
   const rawDb = salesRawDb(db);
-  const [lesson] = await rawDb
-    .select()
-    .from(salesLessons)
-    .where(eq(salesLessons.id, input.lessonId))
-    .limit(1);
-  if (!lesson) throw new Error("Lesson not found");
-  if (lesson.reviewStatus !== "approved") {
-    throw new CurriculumNotApprovedError(lesson.id);
-  }
+  const { lesson, module, learningPath } = await requireAccessibleLesson(
+    rawDb,
+    user.id,
+    input,
+  );
+  const lessonProgress = learningPath.progress.find(
+    (row) => row.lessonId === lesson.id,
+  );
   const result: Record<string, unknown> = { ...lesson };
+  result.completed = lessonProgress?.status === "completed";
+  result.bestScore = lessonProgress?.score ?? null;
+  result.moduleSlug = module.slug;
   if (lesson.type === "roleplay") {
     const scenarios = await rawDb
       .select()
       .from(salesRoleplayScenarios)
       .where(eq(salesRoleplayScenarios.lessonId, lesson.id))
       .orderBy(salesRoleplayScenarios.order);
-    result.scenarios = scenarios;
+    const rubricIds = [
+      ...new Set(scenarios.map((scenario) => scenario.rubricId)),
+    ];
+    const approvedRubrics =
+      rubricIds.length > 0
+        ? await rawDb
+            .select({ id: salesRubrics.id })
+            .from(salesRubrics)
+            .where(
+              and(
+                inArray(salesRubrics.id, rubricIds),
+                eq(salesRubrics.reviewStatus, "approved"),
+              ),
+            )
+        : [];
+    const approvedRubricIds = new Set(
+      approvedRubrics.map((rubric) => rubric.id),
+    );
+    result.scenarios = scenarios.filter((scenario) =>
+      approvedRubricIds.has(scenario.rubricId),
+    );
   } else if (lesson.type === "quiz") {
     const questions = await rawDb
-      .select()
+      .select({
+        id: salesQuizQuestions.id,
+        lessonId: salesQuizQuestions.lessonId,
+        question: salesQuizQuestions.question,
+        optionsJson: salesQuizQuestions.optionsJson,
+        order: salesQuizQuestions.order,
+      })
       .from(salesQuizQuestions)
       .where(eq(salesQuizQuestions.lessonId, lesson.id))
       .orderBy(salesQuizQuestions.order);
-    result.quizQuestions = questions;
+    result.quizQuestions = questions.map((question) => ({
+      ...question,
+      optionsJson: Array.isArray(question.optionsJson)
+        ? question.optionsJson.filter(
+            (option): option is string => typeof option === "string",
+          )
+        : [],
+    }));
   }
-  return result;
+  return lessonDetailOutputSchema.parse(result);
 }
 
 /**
@@ -107,18 +305,12 @@ export async function getScenario(
 ) {
   assertCan(user, "sales:read", tenant);
   const rawDb = salesRawDb(db);
-  const [scenario] = await rawDb
-    .select()
-    .from(salesRoleplayScenarios)
-    .where(eq(salesRoleplayScenarios.id, input.scenarioId))
-    .limit(1);
-  if (!scenario) throw new ScenarioNotFoundError(input.scenarioId);
-  const [rubric] = await rawDb
-    .select()
-    .from(salesRubrics)
-    .where(eq(salesRubrics.id, scenario.rubricId))
-    .limit(1);
-  return { ...scenario, rubric };
+  const { scenario, rubric } = await requireAccessibleScenario(
+    rawDb,
+    user.id,
+    input.scenarioId,
+  );
+  return scenarioDetailOutputSchema.parse({ ...scenario, rubric });
 }
 
 /**
@@ -160,29 +352,18 @@ export async function getRoleplayEvaluationContext(
   input: { scenarioId: string },
 ): Promise<{
   scenario: typeof salesRoleplayScenarios.$inferSelect;
-  rubric: typeof salesRubrics.$inferSelect | undefined;
+  rubric: typeof salesRubrics.$inferSelect;
   canonicalSourceExcerpts: string[];
 }> {
   assertCan(user, "sales:read", tenant);
   const rawDb = salesRawDb(db);
-  const [scenario] = await rawDb
-    .select()
-    .from(salesRoleplayScenarios)
-    .where(eq(salesRoleplayScenarios.id, input.scenarioId))
-    .limit(1);
-  if (!scenario) throw new ScenarioNotFoundError(input.scenarioId);
-  const [rubric] = await rawDb
-    .select()
-    .from(salesRubrics)
-    .where(eq(salesRubrics.id, scenario.rubricId))
-    .limit(1);
-  const [lesson] = await rawDb
-    .select({ content: salesLessons.content })
-    .from(salesLessons)
-    .where(eq(salesLessons.id, scenario.lessonId))
-    .limit(1);
+  const { scenario, rubric, lesson } = await requireAccessibleScenario(
+    rawDb,
+    user.id,
+    input.scenarioId,
+  );
   const canonicalSourceExcerpts = extractCanonicalSourceExcerpts(
-    lesson?.content ?? "",
+    lesson.content,
   );
   return { scenario, rubric, canonicalSourceExcerpts };
 }
@@ -199,6 +380,7 @@ export async function getAttemptsForScenario(
 ) {
   assertCan(user, "sales:read", tenant);
   const rawDb = salesRawDb(db);
+  await requireAccessibleScenario(rawDb, user.id, input.scenarioId);
   return rawDb
     .select()
     .from(salesRoleplayAttempts)
@@ -234,7 +416,11 @@ export async function getBestAttemptForScenario(
  * @param ctx - The domain context
  * @returns The user's progress rows
  */
-export async function getProgressForUser({ db, user, tenant }: SalesDomainContext) {
+export async function getProgressForUser({
+  db,
+  user,
+  tenant,
+}: SalesDomainContext) {
   assertCan(user, "sales:progress:read", tenant);
   const rawDb = salesRawDb(db);
   return rawDb
@@ -248,34 +434,22 @@ export async function getProgressForUser({ db, user, tenant }: SalesDomainContex
  * @param ctx - The domain context
  * @returns The dashboard data
  */
-export async function getDashboardData({ db, user, tenant }: SalesDomainContext) {
+export async function getDashboardData({
+  db,
+  user,
+  tenant,
+}: SalesDomainContext) {
   assertCan(user, "sales:read", tenant);
   const rawDb = salesRawDb(db);
-  const modules = await rawDb
-    .select()
-    .from(salesModules)
-    .orderBy(salesModules.order);
-  const moduleIds = modules.map((m) => m.id);
-  const lessons =
-    moduleIds.length > 0
-      ? await rawDb
-          .select()
-          .from(salesLessons)
-          .where(inArray(salesLessons.moduleId, moduleIds))
-          .orderBy(salesLessons.order)
-      : [];
-  const progress = await rawDb
-    .select()
-    .from(salesProgress)
-    .where(eq(salesProgress.userId, user.id));
-  const completedLessonIds = new Set(
-    progress.filter((p) => p.status === "completed").map((p) => p.lessonId),
-  );
-  return modules.map((m) => {
-    const moduleLessons = lessons.filter((l) => l.moduleId === m.id);
+  const learningPath = await loadSalesLearningPath(rawDb, user.id);
+  return learningPath.modules.map((m) => {
+    const moduleLessons = learningPath.lessons.filter(
+      (l) => l.moduleId === m.id,
+    );
     const completed = moduleLessons.filter((l) =>
-      completedLessonIds.has(l.id),
+      learningPath.completedLessonIds.has(l.id),
     ).length;
+    const moduleAccess = learningPath.access.moduleAccessById[m.id];
     return {
       ...m,
       lessonCount: moduleLessons.length,
@@ -284,6 +458,8 @@ export async function getDashboardData({ db, user, tenant }: SalesDomainContext)
         moduleLessons.length > 0
           ? Math.round((completed / moduleLessons.length) * 100)
           : 0,
+      isLocked: moduleAccess?.isLocked ?? true,
+      prerequisiteModuleSlug: moduleAccess?.prerequisiteModuleSlug ?? null,
     };
   });
 }
@@ -311,7 +487,11 @@ export async function getDashboardData({ db, user, tenant }: SalesDomainContext)
  *              SALES_ADMIN only)
  * @returns The cohort overview rows scoped to the admin's tenant
  */
-export async function getCohortOverview({ db, user, tenant }: SalesDomainContext) {
+export async function getCohortOverview({
+  db,
+  user,
+  tenant,
+}: SalesDomainContext) {
   assertCan(user, "sales:admin:cohort", tenant);
   if (!tenant.schoolId) {
     return [];
@@ -321,23 +501,220 @@ export async function getCohortOverview({ db, user, tenant }: SalesDomainContext
   // We need an explicit join via `users.schoolId` to scope admin cohorts.
   const rawDb = salesRawDb(db);
   const repsInTenant = await rawDb
-    .select({ id: users.id, schoolId: users.schoolId })
+    .select({
+      id: users.id,
+      username: users.username,
+      name: users.name,
+      schoolId: users.schoolId,
+    })
     .from(users)
     .where(
-      and(
-        inArray(users.role, ["SALES_REP", "SALES_ADMIN"] as const),
-        eq(users.schoolId, tenant.schoolId),
-      ),
+      and(eq(users.role, "SALES_REP"), eq(users.schoolId, tenant.schoolId)),
     );
   // Defensive in-memory scope filter — rejects any row whose author is
   // not in the admin's tenant. In production this is redundant with the
   // FLAT auto-scope on `users`, but it makes the cohort output provably
   // tenant-scoped even when the underlying DB layer is bypassed.
   const allowedRepIds = new Set(
-    repsInTenant
-      .filter((r) => r.schoolId === tenant.schoolId)
-      .map((r) => r.id),
+    repsInTenant.filter((r) => r.schoolId === tenant.schoolId).map((r) => r.id),
   );
-  const allProgress = await rawDb.select().from(salesProgress);
-  return allProgress.filter((p) => allowedRepIds.has(p.userId));
+  const modules = await rawDb
+    .select()
+    .from(salesModules)
+    .orderBy(salesModules.order);
+  const lessons = await rawDb
+    .select()
+    .from(salesLessons)
+    .orderBy(salesLessons.order);
+  const rubrics = await rawDb.select().from(salesRubrics);
+  const scenarios = await rawDb
+    .select()
+    .from(salesRoleplayScenarios)
+    .orderBy(salesRoleplayScenarios.order);
+  const visible = learnerVisibleCurriculum(
+    modules,
+    lessons,
+    rubrics,
+    scenarios,
+  );
+  const allProgress =
+    allowedRepIds.size > 0
+      ? await rawDb
+          .select()
+          .from(salesProgress)
+          .where(inArray(salesProgress.userId, [...allowedRepIds]))
+      : [];
+  const allAttempts =
+    allowedRepIds.size > 0
+      ? await rawDb
+          .select()
+          .from(salesRoleplayAttempts)
+          .where(inArray(salesRoleplayAttempts.userId, [...allowedRepIds]))
+      : [];
+  const visibleLessonIds = new Set(visible.lessons.map((lesson) => lesson.id));
+  const visibleScenarioIds = new Set(
+    visible.scenarios.map((scenario) => scenario.id),
+  );
+  return repsInTenant
+    .filter((rep) => allowedRepIds.has(rep.id))
+    .map((rep) =>
+      buildRepAggregate(
+        rep,
+        visible.modules,
+        visible.lessons,
+        allProgress.filter(
+          (row) => row.userId === rep.id && visibleLessonIds.has(row.lessonId),
+        ),
+        allAttempts.filter(
+          (row) =>
+            row.userId === rep.id && visibleScenarioIds.has(row.scenarioId),
+        ),
+      ),
+    );
+}
+
+/**
+ * Retrieves complete progress, score, retry, and best-attempt detail for one rep.
+ * @param ctx Administrator domain context scoped to a verified school tenant.
+ * @param input Tenant-owned representative identifier.
+ * @returns Typed rep reporting detail including zero-progress module rows.
+ */
+export async function getSalesRepDetail(
+  { db, user, tenant }: SalesDomainContext,
+  input: { repId: string },
+) {
+  assertCan(user, "sales:admin:cohort", tenant);
+  if (!tenant.schoolId)
+    throw new SalesAuthError("Representative is unavailable");
+  const rawDb = salesRawDb(db);
+  const [rep] = await rawDb
+    .select({
+      id: users.id,
+      username: users.username,
+      name: users.name,
+    })
+    .from(users)
+    .where(
+      and(
+        eq(users.id, input.repId),
+        eq(users.role, "SALES_REP"),
+        eq(users.schoolId, tenant.schoolId),
+      ),
+    )
+    .limit(1);
+  if (!rep) throw new SalesAuthError("Representative is unavailable");
+
+  const modules = await rawDb
+    .select()
+    .from(salesModules)
+    .orderBy(salesModules.order);
+  const lessons = await rawDb
+    .select()
+    .from(salesLessons)
+    .orderBy(salesLessons.order);
+  const rubrics = await rawDb.select().from(salesRubrics);
+  const progress = await rawDb
+    .select()
+    .from(salesProgress)
+    .where(eq(salesProgress.userId, rep.id));
+  const scenarios = await rawDb
+    .select()
+    .from(salesRoleplayScenarios)
+    .orderBy(salesRoleplayScenarios.order);
+  const attempts = await rawDb
+    .select()
+    .from(salesRoleplayAttempts)
+    .where(eq(salesRoleplayAttempts.userId, rep.id))
+    .orderBy(desc(salesRoleplayAttempts.createdAt));
+  const visible = learnerVisibleCurriculum(
+    modules,
+    lessons,
+    rubrics,
+    scenarios,
+  );
+  const visibleLessonIds = new Set(visible.lessons.map((lesson) => lesson.id));
+  const visibleScenarioIds = new Set(
+    visible.scenarios.map((scenario) => scenario.id),
+  );
+  const visibleProgress = progress.filter((row) =>
+    visibleLessonIds.has(row.lessonId),
+  );
+  const visibleAttempts = attempts.filter((attempt) =>
+    visibleScenarioIds.has(attempt.scenarioId),
+  );
+  const summary = buildRepAggregate(
+    rep,
+    visible.modules,
+    visible.lessons,
+    visibleProgress,
+    visibleAttempts,
+  );
+  const completedLessonIds = new Set(
+    visibleProgress
+      .filter((row) => row.status === "completed")
+      .map((row) => row.lessonId),
+  );
+
+  return salesRepDetailOutputSchema.parse({
+    rep: {
+      userId: rep.id,
+      username: rep.username,
+      displayName: rep.name ?? rep.username,
+    },
+    summary,
+    modules: visible.modules.map((module) => {
+      const moduleLessons = visible.lessons.filter(
+        (lesson) => lesson.moduleId === module.id,
+      );
+      const quizLessonIds = new Set(
+        moduleLessons
+          .filter((lesson) => lesson.type === "quiz")
+          .map((lesson) => lesson.id),
+      );
+      const quizScores = visibleProgress.flatMap((row) =>
+        quizLessonIds.has(row.lessonId) && row.score !== null
+          ? [Number(row.score)]
+          : [],
+      );
+      const lessonsCompleted = moduleLessons.filter((lesson) =>
+        completedLessonIds.has(lesson.id),
+      ).length;
+      return {
+        moduleId: module.id,
+        slug: module.slug,
+        title: module.title,
+        lessonsCompleted,
+        totalLessons: moduleLessons.length,
+        completed:
+          moduleLessons.length > 0 && lessonsCompleted === moduleLessons.length,
+        avgQuizScore: averageScore(quizScores),
+      };
+    }),
+    scenarios: visible.scenarios.map((scenario) => {
+      const scenarioAttempts = visibleAttempts.filter(
+        (attempt) => attempt.scenarioId === scenario.id,
+      );
+      const bestAttempt = scenarioAttempts.reduce<
+        typeof salesRoleplayAttempts.$inferSelect | null
+      >(
+        (best, attempt) =>
+          !best ||
+          Number(attempt.overallScore ?? -1) > Number(best.overallScore ?? -1)
+            ? attempt
+            : best,
+        null,
+      );
+      return {
+        scenarioId: scenario.id,
+        lessonTitle:
+          visible.lessons.find((lesson) => lesson.id === scenario.lessonId)
+            ?.title ?? "Roleplay",
+        personaName: scenario.personaName,
+        attemptCount: scenarioAttempts.length,
+        retryCount: Math.max(0, scenarioAttempts.length - 1),
+        bestAttempt,
+        attempts: scenarioAttempts,
+      };
+    }),
+  });
 }

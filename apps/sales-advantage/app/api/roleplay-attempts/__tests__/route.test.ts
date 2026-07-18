@@ -3,28 +3,25 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { NextRequest } from "next/server";
 
 const {
-  mockValidateSession,
+  mockAuthenticateSalesRequest,
   mockGetAIClient,
   mockGetStorageClient,
   mockSubmitRoleplayAttempt,
   mockGetRoleplayEvaluationContext,
   mockEvaluateRaw,
+  mockCheckRoleplayRateLimit,
 } = vi.hoisted(() => ({
-  mockValidateSession: vi.fn(),
+  mockAuthenticateSalesRequest: vi.fn(),
   mockGetAIClient: vi.fn(),
   mockGetStorageClient: vi.fn(),
   mockSubmitRoleplayAttempt: vi.fn(),
   mockGetRoleplayEvaluationContext: vi.fn(),
   mockEvaluateRaw: vi.fn(),
+  mockCheckRoleplayRateLimit: vi.fn(),
 }));
 
-vi.mock("@reading-advantage/auth", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@reading-advantage/auth")>();
-  return {
-    ...actual,
-    validateSession: mockValidateSession,
-    SESSION_COOKIE_NAME: "session_token",
-  };
+vi.mock("@/lib/company-oidc", () => {
+  return { authenticateSalesRequest: mockAuthenticateSalesRequest };
 });
 
 vi.mock("@reading-advantage/db", async (importOriginal) => {
@@ -51,7 +48,7 @@ vi.mock("@reading-advantage/domain/sales", () => ({
 }));
 
 vi.mock("@/lib/rate-limit", () => ({
-  checkRateLimit: vi.fn().mockReturnValue({ allowed: true }),
+  checkRoleplayRateLimit: mockCheckRoleplayRateLimit,
 }));
 
 import { POST } from "../route";
@@ -60,7 +57,7 @@ function makeRequest(form: FormData) {
   return new NextRequest("http://localhost:3000/api/roleplay-attempts", {
     method: "POST",
     headers: {
-      cookie: "session_token=test-token",
+      cookie: "__Host-ra_sales_session=test-token",
     },
     body: form,
   });
@@ -68,19 +65,14 @@ function makeRequest(form: FormData) {
 
 function salesRepSession() {
   return {
-    id: "session-rep",
-    userId: "rep-1",
-    expiresAt: new Date(Date.now() + 86_400_000),
-    user: {
-      id: "rep-1",
-      username: "salesrep1",
-      name: "Test Rep",
-      role: "SALES_REP",
-      schoolId: "school-1",
-      xp: 0,
-      level: 1,
-      cefrLevel: "B1",
-    },
+    id: "rep-1",
+    username: "salesrep1",
+    name: "Test Rep",
+    role: "SALES_REP",
+    schoolId: "school-1",
+    xp: 0,
+    level: 1,
+    cefrLevel: "B1",
   };
 }
 
@@ -132,7 +124,8 @@ describe("POST /api/roleplay-attempts — FR-4 grounding + storage integrity", (
   beforeEach(() => {
     vi.clearAllMocks();
     mockEvaluateRaw.mockResolvedValue({ overallScore: 85, passed: true });
-    mockValidateSession.mockResolvedValue(salesRepSession());
+    mockAuthenticateSalesRequest.mockResolvedValue(salesRepSession());
+    mockCheckRoleplayRateLimit.mockResolvedValue({ allowed: true });
     mockGetAIClient.mockReturnValue({
       streamText: vi.fn(),
       generateObject: vi.fn(),
@@ -140,20 +133,43 @@ describe("POST /api/roleplay-attempts — FR-4 grounding + storage integrity", (
     });
   });
 
+  it("returns an exact shared-limit 429 before reading the upload", async () => {
+    mockCheckRoleplayRateLimit.mockResolvedValue({
+      allowed: false,
+      retryAfter: 120,
+    });
+    const response = await POST(makeRequest(buildAudioFormData()));
+    expect(response.status).toBe(429);
+    expect(response.headers.get("retry-after")).toBe("120");
+    await expect(response.json()).resolves.toEqual({
+      error: "ROLEPLAY_RATE_LIMITED",
+      message: "Too many roleplay submissions. Please try again later.",
+      retryAfter: 120,
+    });
+    expect(mockGetRoleplayEvaluationContext).not.toHaveBeenCalled();
+  });
+
   it("FR-4: passes the lesson's canonical source excerpts to the evaluator (not an empty array)", async () => {
     const excerpts = [
       "SPIN Selling: Use situation questions to establish context.",
       "Sandler: Negative reverse selling — be upfront about cost.",
     ];
-    mockGetRoleplayEvaluationContext.mockResolvedValue(makeEvaluationCtx(excerpts));
+    mockGetRoleplayEvaluationContext.mockResolvedValue(
+      makeEvaluationCtx(excerpts),
+    );
 
-    let capturedEvaluate: ((a: { buffer: Buffer; mimeType: string }) => Promise<unknown>) | undefined;
+    let capturedEvaluate:
+      | ((a: { buffer: Buffer; mimeType: string }) => Promise<unknown>)
+      | undefined;
     let capturedStorageKey: string | null | undefined;
     mockSubmitRoleplayAttempt.mockImplementation(
       async (
         _ctx: unknown,
         input: {
-          evaluate: (a: { buffer: Buffer; mimeType: string }) => Promise<unknown>;
+          evaluate: (a: {
+            buffer: Buffer;
+            mimeType: string;
+          }) => Promise<unknown>;
           audioStorageKey: string | null;
         },
       ) => {
@@ -176,11 +192,17 @@ describe("POST /api/roleplay-attempts — FR-4 grounding + storage integrity", (
     expect(typeof capturedEvaluate).toBe("function");
     expect(capturedStorageKey).toMatch(/^sales-advantage\/attempts\/rep-1\//);
 
-    await capturedEvaluate!({ buffer: Buffer.from(""), mimeType: "audio/webm" });
+    await capturedEvaluate!({
+      buffer: Buffer.from(""),
+      mimeType: "audio/webm",
+    });
 
     expect(mockEvaluateRaw).toHaveBeenCalledTimes(1);
     expect(mockEvaluateRaw).toHaveBeenLastCalledWith(
-      expect.objectContaining({ buffer: expect.any(Buffer), mimeType: "audio/webm" }),
+      expect.objectContaining({
+        buffer: expect.any(Buffer),
+        mimeType: "audio/webm",
+      }),
       expect.objectContaining({
         id: "scenario-123",
         lessonId: "lesson-abc",
@@ -209,10 +231,7 @@ describe("POST /api/roleplay-attempts — FR-4 grounding + storage integrity", (
 
     let persistedKey: string | null | undefined;
     mockSubmitRoleplayAttempt.mockImplementation(
-      async (
-        _ctx: unknown,
-        input: { audioStorageKey: string | null },
-      ) => {
+      async (_ctx: unknown, input: { audioStorageKey: string | null }) => {
         persistedKey = input.audioStorageKey;
         return {
           attempt: { id: "attempt-1" },
@@ -237,15 +256,14 @@ describe("POST /api/roleplay-attempts — FR-4 grounding + storage integrity", (
   it("FR-4: persists audioStorageKey=<key> when storage.put succeeds", async () => {
     mockGetRoleplayEvaluationContext.mockResolvedValue(makeEvaluationCtx([]));
     mockGetStorageClient.mockReturnValue({
-      put: vi.fn().mockResolvedValue({ key: "sales-advantage/attempts/rep-1/123.webm" }),
+      put: vi
+        .fn()
+        .mockResolvedValue({ key: "sales-advantage/attempts/rep-1/123.webm" }),
     });
 
     let persistedKey: string | null | undefined;
     mockSubmitRoleplayAttempt.mockImplementation(
-      async (
-        _ctx: unknown,
-        input: { audioStorageKey: string | null },
-      ) => {
+      async (_ctx: unknown, input: { audioStorageKey: string | null }) => {
         persistedKey = input.audioStorageKey;
         return {
           attempt: { id: "attempt-1" },
@@ -259,9 +277,34 @@ describe("POST /api/roleplay-attempts — FR-4 grounding + storage integrity", (
     const response = await POST(request);
     expect(response.status).toBe(200);
 
-    expect(persistedKey, "FR-4: on successful upload, the storage key is persisted.").toMatch(
-      /^sales-advantage\/attempts\/rep-1\//,
+    expect(
+      persistedKey,
+      "FR-4: on successful upload, the storage key is persisted.",
+    ).toMatch(/^sales-advantage\/attempts\/rep-1\//);
+  });
+
+  it("deletes an uploaded object when the later attempt lifecycle fails", async () => {
+    mockGetRoleplayEvaluationContext.mockResolvedValue(makeEvaluationCtx([]));
+    const storageDelete = vi.fn().mockResolvedValue(undefined);
+    const storagePut = vi.fn().mockResolvedValue(undefined);
+    mockGetStorageClient.mockReturnValue({
+      put: storagePut,
+      delete: storageDelete,
+    });
+    mockSubmitRoleplayAttempt.mockRejectedValue(
+      new Error("simulated evaluation failure"),
     );
+
+    const response = await POST(makeRequest(buildAudioFormData()));
+
+    expect(response.status).toBe(500);
+    expect(storagePut).toHaveBeenCalledTimes(1);
+    expect(storageDelete).toHaveBeenCalledTimes(1);
+    expect(storageDelete).toHaveBeenCalledWith(storagePut.mock.calls[0][0]);
+    await expect(response.json()).resolves.toEqual({
+      error: "ROLEPLAY_EVALUATION_FAILED",
+      message: "Roleplay evaluation is temporarily unavailable.",
+    });
   });
 
   it("FR-4: returns 404 when the scenario is not found (no orphan attempt is created)", async () => {

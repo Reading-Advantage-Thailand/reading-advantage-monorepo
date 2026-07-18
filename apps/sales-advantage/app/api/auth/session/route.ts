@@ -1,18 +1,22 @@
-import { handleSession } from "@reading-advantage/api/routes/auth";
-import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-export async function GET(request: NextRequest) {
-  try {
-    return await handleSession(request);
-  } catch (error) {
-    console.error(
-      JSON.stringify({
-        level: "error",
-        event: "session_error",
-        message: error instanceof Error ? error.message : String(error),
-      }),
-    );
-    return NextResponse.json({ user: null }, { status: 200 });
-  }
+import {
+  SALES_SESSION_COOKIE,
+  getSalesOidcClient,
+  readSalesCookie,
+  salesSessionUser,
+} from "@/lib/company-oidc";
+
+/** Returns the current revocation-aware Sales application session. */
+export async function GET(request: Request): Promise<NextResponse> {
+  const token = readSalesCookie(request, SALES_SESSION_COOKIE);
+  const session = token ? await getSalesOidcClient().introspect(token) : null;
+  return NextResponse.json(
+    {
+      session: session
+        ? { user: await salesSessionUser(session.identity) }
+        : null,
+    },
+    { headers: { "Cache-Control": "no-store, private" } },
+  );
 }

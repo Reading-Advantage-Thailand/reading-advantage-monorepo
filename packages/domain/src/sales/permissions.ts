@@ -15,7 +15,6 @@ export const SALES_PERMISSIONS = {
   "sales:chat": [ROLES.SALES_REP, ROLES.SALES_ADMIN],
   "sales:quiz:submit": [ROLES.SALES_REP, ROLES.SALES_ADMIN],
   "sales:admin:cohort": [ROLES.SALES_ADMIN],
-  "sales:admin:create-rep": [ROLES.SALES_ADMIN],
   "sales:admin:reps": [ROLES.SALES_ADMIN],
   "sales:curriculum:approve": [ROLES.SALES_ADMIN],
 } as const;

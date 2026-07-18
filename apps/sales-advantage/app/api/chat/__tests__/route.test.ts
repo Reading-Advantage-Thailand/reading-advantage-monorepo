@@ -2,18 +2,13 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { NextRequest } from "next/server";
 
-const { mockValidateSession, mockGetAIClient } = vi.hoisted(() => ({
-  mockValidateSession: vi.fn(),
+const { mockAuthenticateSalesRequest, mockGetAIClient } = vi.hoisted(() => ({
+  mockAuthenticateSalesRequest: vi.fn(),
   mockGetAIClient: vi.fn(),
 }));
 
-vi.mock("@reading-advantage/auth", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@reading-advantage/auth")>();
-  return {
-    ...actual,
-    validateSession: mockValidateSession,
-    SESSION_COOKIE_NAME: "session_token",
-  };
+vi.mock("@/lib/company-oidc", () => {
+  return { authenticateSalesRequest: mockAuthenticateSalesRequest };
 });
 
 vi.mock("@reading-advantage/db", async (importOriginal) => {
@@ -39,7 +34,7 @@ function makeRequest(body: Record<string, unknown>) {
     method: "POST",
     headers: {
       "content-type": "application/json",
-      cookie: "session_token=test-token",
+      cookie: "__Host-ra_sales_session=test-token",
     },
     body: JSON.stringify(body),
   });
@@ -47,37 +42,27 @@ function makeRequest(body: Record<string, unknown>) {
 
 function salesRepSession() {
   return {
-    id: "session-rep",
-    userId: "rep-1",
-    expiresAt: new Date(Date.now() + 86_400_000),
-    user: {
-      id: "rep-1",
-      username: "salesrep1",
-      name: "Test Rep",
-      role: "SALES_REP",
-      schoolId: "school-1",
-      xp: 0,
-      level: 1,
-      cefrLevel: "B1",
-    },
+    id: "rep-1",
+    username: "salesrep1",
+    name: "Test Rep",
+    role: "SALES_REP",
+    schoolId: "school-1",
+    xp: 0,
+    level: 1,
+    cefrLevel: "B1",
   };
 }
 
 function studentSession() {
   return {
-    id: "session-student",
-    userId: "student-1",
-    expiresAt: new Date(Date.now() + 86_400_000),
-    user: {
-      id: "student-1",
-      username: "student1",
-      name: "Test Student",
-      role: "STUDENT",
-      schoolId: "school-1",
-      xp: 0,
-      level: 1,
-      cefrLevel: "A1",
-    },
+    id: "student-1",
+    username: "student1",
+    name: "Test Student",
+    role: "STUDENT",
+    schoolId: "school-1",
+    xp: 0,
+    level: 1,
+    cefrLevel: "A1",
   };
 }
 
@@ -87,7 +72,7 @@ describe("POST /api/chat — FR-1 authorization gate", () => {
   });
 
   it("rejects authenticated non-sales user (STUDENT) with 401 or 403", async () => {
-    mockValidateSession.mockResolvedValue(studentSession());
+    mockAuthenticateSalesRequest.mockResolvedValue(studentSession());
 
     const mockStreamText = vi.fn().mockResolvedValue({
       toDataStreamResponse: () => new Response("stream", { status: 200 }),
@@ -103,20 +88,15 @@ describe("POST /api/chat — FR-1 authorization gate", () => {
   });
 
   it("rejects authenticated non-sales user (TEACHER) with 401 or 403", async () => {
-    mockValidateSession.mockResolvedValue({
-      id: "session-teacher",
-      userId: "teacher-1",
-      expiresAt: new Date(Date.now() + 86_400_000),
-      user: {
-        id: "teacher-1",
-        username: "teacher1",
-        name: "Test Teacher",
-        role: "TEACHER",
-        schoolId: "school-1",
-        xp: 0,
-        level: 1,
-        cefrLevel: "B2",
-      },
+    mockAuthenticateSalesRequest.mockResolvedValue({
+      id: "teacher-1",
+      username: "teacher1",
+      name: "Test Teacher",
+      role: "TEACHER",
+      schoolId: "school-1",
+      xp: 0,
+      level: 1,
+      cefrLevel: "B2",
     });
 
     const mockStreamText = vi.fn().mockResolvedValue({
@@ -133,7 +113,7 @@ describe("POST /api/chat — FR-1 authorization gate", () => {
   });
 
   it("allows SALES_REP user with 200 streaming response", async () => {
-    mockValidateSession.mockResolvedValue(salesRepSession());
+    mockAuthenticateSalesRequest.mockResolvedValue(salesRepSession());
 
     const mockStreamText = vi.fn().mockResolvedValue({
       toDataStreamResponse: () => new Response("stream", { status: 200 }),
@@ -154,7 +134,7 @@ describe("POST /api/chat — FR-8 input hardening (Zod + role-marker escape)", (
 
   beforeEach(() => {
     vi.clearAllMocks();
-    mockValidateSession.mockResolvedValue(salesRepSession());
+    mockAuthenticateSalesRequest.mockResolvedValue(salesRepSession());
     mockStreamText = vi.fn().mockResolvedValue({
       toDataStreamResponse: () => new Response("stream", { status: 200 }),
     });

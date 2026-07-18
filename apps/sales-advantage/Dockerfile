@@ -12,7 +12,7 @@ WORKDIR /app
 
 FROM base AS deps
 
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json .pnpmfile.cjs ./
 COPY apps ./apps
 COPY packages ./packages
 

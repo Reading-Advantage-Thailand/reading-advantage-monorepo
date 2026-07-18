@@ -3,16 +3,27 @@
 import { useState, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@reading-advantage/ui";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@reading-advantage/ui";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@reading-advantage/ui";
 import { Checkbox } from "@reading-advantage/ui";
 import { Mic, Square, Send, RotateCcw, Loader2 } from "lucide-react";
 import { RoleplayResult } from "./roleplay-result";
 
-type State = "idle" | "recording" | "recorded" | "uploading" | "evaluated" | "error";
+type State =
+  | "idle"
+  | "recording"
+  | "recorded"
+  | "uploading"
+  | "evaluated"
+  | "error";
 
 export function RoleplayRecorder({
   scenario,
-  rubric: _rubric,
 }: {
   scenario: {
     id: string;
@@ -22,14 +33,15 @@ export function RoleplayRecorder({
     objective: string;
     prospectContextJson?: unknown;
   };
-  rubric: { name: string; criteriaJson: unknown };
 }) {
   const t = useTranslations("roleplay");
   const [state, setState] = useState<State>("idle");
   const [error, setError] = useState<string | null>(null);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
-  const [result, setResult] = useState<Parameters<typeof RoleplayResult>[0]["result"] | null>(null);
+  const [result, setResult] = useState<
+    Parameters<typeof RoleplayResult>[0]["result"] | null
+  >(null);
   const [duration, setDuration] = useState(0);
   const [consentGiven, setConsentGiven] = useState(false);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -91,7 +103,9 @@ export function RoleplayRecorder({
       setResult(data.evaluation);
       setState("evaluated");
     } catch (err) {
-      setError(err instanceof Error ? err.message : t("errors.evaluationFailed"));
+      setError(
+        err instanceof Error ? err.message : t("errors.evaluationFailed"),
+      );
       setState("error");
     }
   }
@@ -109,7 +123,10 @@ export function RoleplayRecorder({
     <Card>
       <CardHeader>
         <CardTitle className="text-lg">
-          {scenario.personaName} <span className="text-sm font-normal text-muted-foreground">({scenario.personaRole})</span>
+          {scenario.personaName}{" "}
+          <span className="text-sm font-normal text-muted-foreground">
+            ({scenario.personaRole})
+          </span>
         </CardTitle>
         <CardDescription>{scenario.situation}</CardDescription>
       </CardHeader>
@@ -129,9 +146,16 @@ export function RoleplayRecorder({
           <div className="space-y-3">
             <div className="flex items-center justify-center gap-2 rounded-lg border-2 border-destructive bg-destructive/10 p-4">
               <div className="h-3 w-3 animate-pulse rounded-full bg-destructive" />
-              <span className="font-medium text-destructive">{t("recording")}</span>
+              <span className="font-medium text-destructive">
+                {t("recording")}
+              </span>
             </div>
-            <Button onClick={stopRecording} variant="destructive" size="lg" className="w-full gap-2">
+            <Button
+              onClick={stopRecording}
+              variant="destructive"
+              size="lg"
+              className="w-full gap-2"
+            >
               <Square className="h-4 w-4" /> {t("stop")}
             </Button>
           </div>
@@ -139,7 +163,12 @@ export function RoleplayRecorder({
 
         {state === "recorded" && audioUrl && (
           <div className="space-y-3">
-            <audio src={audioUrl} controls className="w-full" aria-label={t("listen")} />
+            <audio
+              src={audioUrl}
+              controls
+              className="w-full"
+              aria-label={t("listen")}
+            />
             <label className="flex items-start gap-2 text-sm text-muted-foreground cursor-pointer">
               <Checkbox
                 checked={consentGiven}
@@ -152,7 +181,11 @@ export function RoleplayRecorder({
               <Button onClick={reset} variant="outline" className="gap-2">
                 <RotateCcw className="h-4 w-4" /> {t("retry")}
               </Button>
-              <Button onClick={submit} disabled={!consentGiven} className="flex-1 gap-2">
+              <Button
+                onClick={submit}
+                disabled={!consentGiven}
+                className="flex-1 gap-2"
+              >
                 <Send className="h-4 w-4" /> {t("submit")}
               </Button>
             </div>

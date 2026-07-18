@@ -4,3 +4,4 @@
  */
 
 export * from "./kernel/index.js";
+export * from "./modules/company-identity/index.js";

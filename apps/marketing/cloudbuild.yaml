@@ -66,11 +66,11 @@ steps:
       - "--allow-unauthenticated"
       - "--service-account=marketing-cloud-run@$PROJECT_ID.iam.gserviceaccount.com"
       - "--add-cloudsql-instances=reading-advantage:asia-southeast1:cloud-sql"
-      - "--set-env-vars=NODE_ENV=production,NEXT_PUBLIC_API_URL=https://marketing.reading-advantage.com,AI_PROVIDER=openai"
+      - "--set-env-vars=NODE_ENV=production,NEXT_PUBLIC_API_URL=https://marketing.reading-advantage.com,AI_PROVIDER=openai,COMPANY_AUTH_ISSUER_URL=https://accounts.reading-advantage.com,COMPANY_AUTH_OIDC_CLIENT_ID=marketing-web,COMPANY_AUTH_OIDC_REDIRECT_URI=https://marketing.reading-advantage.com/api/auth/callback,COMPANY_AUTH_EXPECTED_AUDIENCE=marketing,COMPANY_AUTH_CLOCK_SKEW_SECONDS=30"
       - "--min-instances=0"
       - "--max-instances=10"
       - "--concurrency=80"
-      - "--set-secrets=DATABASE_URL=MARKETING_DATABASE_URL:latest,AUTH_SECRET=MARKETING_AUTH_SECRET:latest,ENCRYPTION_KEY=MARKETING_ENCRYPTION_KEY:latest,OPENAI_API_KEY=MARKETING_OPENAI_API_KEY:latest,GOOGLE_API_KEY=MARKETING_GOOGLE_API_KEY:latest,OPENROUTER_API_KEY=MARKETING_OPENROUTER_API_KEY:latest"
+      - "--set-secrets=DATABASE_URL=MARKETING_DATABASE_URL:latest,AUTH_SECRET=MARKETING_AUTH_SECRET:latest,ENCRYPTION_KEY=MARKETING_ENCRYPTION_KEY:latest,OPENAI_API_KEY=MARKETING_OPENAI_API_KEY:latest,GOOGLE_API_KEY=MARKETING_GOOGLE_API_KEY:latest,OPENROUTER_API_KEY=MARKETING_OPENROUTER_API_KEY:latest,COMPANY_AUTH_OIDC_CLIENT_SECRET=MARKETING_COMPANY_AUTH_OIDC_CLIENT_SECRET:latest"
 
   # ── Allow public access ──────────────────────────────────────────────
   # The Cloud Run service is unauthenticated (login page must load before

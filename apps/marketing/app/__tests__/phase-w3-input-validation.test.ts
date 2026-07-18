@@ -17,10 +17,10 @@
  */
 
 import { describe, expect, it, vi, type Mock } from "vitest";
-import { SESSION_COOKIE_NAME } from "@reading-advantage/auth";
 import { db } from "@reading-advantage/db";
 import { getAIClient } from "@reading-advantage/ai";
 import { encrypt } from "@/lib/encryption";
+import { authedRequest } from "./helpers/auth-mock";
 
 const fakeAIClient = getAIClient() as unknown as { generateText: Mock };
 
@@ -33,55 +33,6 @@ vi.mock("next/server", () => ({
       new Response(JSON.stringify(body), init),
   },
 }));
-
-vi.mock("@reading-advantage/auth", async () => {
-  const actual =
-    await vi.importActual<typeof import("@reading-advantage/auth")>(
-      "@reading-advantage/auth",
-    );
-  const validateSession = vi.fn(
-    async (_db: unknown, token: string): Promise<unknown | null> => {
-      if (token === "w3-known-session-token") {
-        return {
-          id: "00000000-0000-0000-0000-000000000001",
-          userId: "00000000-0000-0000-0000-000000000002",
-          expiresAt: new Date(Date.now() + 60 * 60 * 1000),
-          user: {
-            id: "00000000-0000-0000-0000-000000000002",
-            username: "staff",
-            name: "Staff User",
-            role: "ADMIN",
-            schoolId: "00000000-0000-0000-0000-000000000003",
-            xp: 0,
-            level: 1,
-            cefrLevel: "B2",
-          },
-        };
-      }
-      return null;
-    },
-  );
-  const getSession = async (dbArg: unknown, token: string | undefined) => {
-    if (!token) return null;
-    return validateSession(dbArg, token);
-  };
-  const requireAuthImpl = async (
-    dbArg: unknown,
-    token: string | undefined,
-  ) => {
-    const session = await getSession(dbArg, token);
-    if (!session) {
-      throw new actual.AuthError("Authentication required", "UNAUTHORIZED");
-    }
-    return session;
-  };
-  return {
-    ...actual,
-    validateSession,
-    getSession,
-    requireAuth: requireAuthImpl,
-  };
-});
 
 vi.mock("@reading-advantage/db", async () => {
   const actual = await vi.importActual<typeof import("@reading-advantage/db")>(
@@ -119,18 +70,7 @@ vi.mock("@reading-advantage/ai", async () => {
   };
 });
 
-const KNOWN_TOKEN = "w3-known-session-token";
 const CAMPAIGN_ID = "00000000-0000-0000-0000-000000000004";
-
-function authedRequest(url: string, init: RequestInit = {}): Request {
-  return new Request(url, {
-    ...init,
-    headers: {
-      ...init.headers,
-      Cookie: `${SESSION_COOKIE_NAME}=${KNOWN_TOKEN}`,
-    },
-  });
-}
 
 function makeSelectChainMock(rows: unknown[]) {
   const whereMock = vi.fn().mockResolvedValue(rows);

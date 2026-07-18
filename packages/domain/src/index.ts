@@ -25,6 +25,10 @@ export {
   TenantScopeError,
 } from "./db-contract.js";
 export { classifyTable, type TableClassification } from "./tenant-registry.js";
+export {
+  resolveSalesCompanyPrincipal,
+  type SalesCompanyIdentity,
+} from "./company-identity-principal.js";
 
 // Reading-specific direct exports (used by reading-advantage controllers/tests)
 export {

@@ -260,6 +260,34 @@
       "when": 1783817114207,
       "tag": "0036_codecamp_mastery_evidence",
       "breakpoints": true
+    },
+    {
+      "idx": 37,
+      "version": "7",
+      "when": 1784361600000,
+      "tag": "0037_sales_roleplay_attempt_number_unique",
+      "breakpoints": true
+    },
+    {
+      "idx": 38,
+      "version": "7",
+      "when": 1784365200000,
+      "tag": "0038_capability_idempotency_records",
+      "breakpoints": true
+    },
+    {
+      "idx": 39,
+      "version": "7",
+      "when": 1784368800000,
+      "tag": "0039_sales_progress_activity_timestamp",
+      "breakpoints": true
+    },
+    {
+      "idx": 40,
+      "version": "7",
+      "when": 1784372400000,
+      "tag": "0040_company_product_principals",
+      "breakpoints": true
     }
   ]
 }

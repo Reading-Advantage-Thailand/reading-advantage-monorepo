@@ -41,6 +41,35 @@ const scenario = {
   createdAt: new Date(),
 };
 
+const moduleRow = {
+  id: "module-1",
+  slug: "foundation",
+  title: "Foundation",
+  description: "Foundation",
+  phase: "Foundations",
+  order: 1,
+  createdAt: new Date(),
+};
+
+const lesson = {
+  id: "lesson-1",
+  moduleId: moduleRow.id,
+  title: "Roleplay",
+  type: "roleplay",
+  content: "Practice",
+  order: 1,
+  reviewStatus: "approved",
+  createdAt: new Date(),
+};
+
+const rubric = {
+  id: "rubric-1",
+  name: "Discovery",
+  criteriaJson: [],
+  reviewStatus: "approved",
+  createdAt: new Date(),
+};
+
 describe("Sales audioStorageKey nullability contract", () => {
   it("domain input schema accepts null audioStorageKey", () => {
     const result = roleplayAttemptInputSchema.safeParse({
@@ -111,7 +140,14 @@ describe("Sales audioStorageKey nullability contract", () => {
       createdAt: new Date(),
     };
     const db = createMockDb({
-      selectSequence: [[scenario], []],
+      selectSequence: [
+        [scenario],
+        [lesson],
+        [moduleRow],
+        [lesson],
+        [],
+        [rubric],
+      ],
       insertReturning: [row],
     });
     const result = await createRoleplayAttempt(

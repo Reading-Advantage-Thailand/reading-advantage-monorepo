@@ -3,14 +3,14 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { NextRequest } from "next/server";
 
 const {
-  mockValidateSession,
+  mockAuthenticateSalesRequest,
   mockGetAIClient,
   mockGetStorageClient,
   mockSubmitRoleplayAttempt,
   mockGetRoleplayEvaluationContext,
   mockEvaluateRaw,
 } = vi.hoisted(() => ({
-  mockValidateSession: vi.fn(),
+  mockAuthenticateSalesRequest: vi.fn(),
   mockGetAIClient: vi.fn(),
   mockGetStorageClient: vi.fn(),
   mockSubmitRoleplayAttempt: vi.fn(),
@@ -18,14 +18,8 @@ const {
   mockEvaluateRaw: vi.fn(),
 }));
 
-vi.mock("@reading-advantage/auth", async (importOriginal) => {
-  const actual =
-    await importOriginal<typeof import("@reading-advantage/auth")>();
-  return {
-    ...actual,
-    validateSession: mockValidateSession,
-    SESSION_COOKIE_NAME: "session_token",
-  };
+vi.mock("@/lib/company-oidc", () => {
+  return { authenticateSalesRequest: mockAuthenticateSalesRequest };
 });
 
 vi.mock("@reading-advantage/db", async (importOriginal) => {
@@ -50,7 +44,7 @@ vi.mock("@reading-advantage/domain/sales", () => ({
 }));
 
 vi.mock("@/lib/rate-limit", () => ({
-  checkRateLimit: vi.fn().mockReturnValue({ allowed: true }),
+  checkRoleplayRateLimit: vi.fn().mockResolvedValue({ allowed: true }),
 }));
 
 import { POST } from "../route";
@@ -60,26 +54,21 @@ const MAX_AUDIO_DURATION_MS = 5 * 60 * 1000;
 
 function salesRepSession() {
   return {
-    id: "session-rep",
-    userId: "rep-1",
-    expiresAt: new Date(Date.now() + 86_400_000),
-    user: {
-      id: "rep-1",
-      username: "salesrep1",
-      name: "Test Rep",
-      role: "SALES_REP",
-      schoolId: "school-1",
-      xp: 0,
-      level: 1,
-      cefrLevel: "B1",
-    },
+    id: "rep-1",
+    username: "salesrep1",
+    name: "Test Rep",
+    role: "SALES_REP",
+    schoolId: "school-1",
+    xp: 0,
+    level: 1,
+    cefrLevel: "B1",
   };
 }
 
 function makeRequest(form: FormData) {
   return new NextRequest("http://localhost:3000/api/roleplay-attempts", {
     method: "POST",
-    headers: { cookie: "session_token=test-token" },
+    headers: { cookie: "__Host-ra_sales_session=test-token" },
     body: form,
   });
 }
@@ -139,7 +128,7 @@ function makeEvaluationCtx() {
 describe("POST /api/roleplay-attempts audio upload boundary", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockValidateSession.mockResolvedValue(salesRepSession());
+    mockAuthenticateSalesRequest.mockResolvedValue(salesRepSession());
     mockGetRoleplayEvaluationContext.mockResolvedValue(makeEvaluationCtx());
     mockSubmitRoleplayAttempt.mockResolvedValue({
       attempt: { id: "attempt-1" },

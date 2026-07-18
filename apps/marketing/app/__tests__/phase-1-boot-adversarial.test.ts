@@ -103,21 +103,17 @@ describe("Phase 1 Adversarial: Vinext Scaffold hardening", () => {
     });
   });
 
-  describe("Login route delegation (raw-request pass-through)", () => {
-    it("login route handler delegates to handleLogin without parsing the body", async () => {
-      // Adversarial: the route must NOT call request.json() / zod parse itself.
-      // handleLogin in @reading-advantage/api owns that contract; duplicating
-      // it would split schema validation across two layers.
+  describe("Retired product-local login boundary", () => {
+    it("login route refuses local credentials and points only to Accounts", async () => {
       const src = stripComments(
         readText("app/api/auth/login/route.ts"),
       );
       expect(src).not.toMatch(/request\.json\(\)/);
       expect(src).not.toMatch(/z\.object\(/);
       expect(src).not.toMatch(/safeParse/);
-      // Must still delegate to handleLogin.
-      expect(src).toMatch(/handleLogin\s*\(/);
-      // Must return its result directly.
-      expect(src).toMatch(/return\s+await\s+handleLogin\s*\(/);
+      expect(src).not.toMatch(/handleLogin|password|username/);
+      expect(src).toContain("/api/auth/company/start");
+      expect(src).toMatch(/status:\s*409/);
     });
   });
 
@@ -187,22 +183,14 @@ describe("Phase 1 Adversarial: Vinext Scaffold hardening", () => {
     });
   });
 
-  describe("Login page form integrity (HTML contract)", () => {
-    it("login page form has type=text username input and type=password password input", async () => {
+  describe("Accounts handoff integrity", () => {
+    it("login page has one Accounts handoff and no product-local credential form", async () => {
       const { default: LoginPage } = await import("@/login/page");
-      // Import the source text — the page uses useAuth() which requires a
-      // Provider; we can't render it directly. Instead, verify the source
-      // contains the required input contracts that the original test can't
-      // catch (the original only verifies it imports as a React component).
       const src = readText("app/login/page.tsx");
-      expect(src).toMatch(/type\s*=\s*["']text["']/);
-      expect(src).toMatch(/type\s*=\s*["']password["']/);
-      expect(src).toMatch(/required/);
-      expect(src).toMatch(/onSubmit\s*=\s*\{handleSubmit\}/);
-      // handleSubmit must call login() with username and password.
-      const handlerMatch = src.match(/await\s+login\s*\(\s*username\s*,\s*password\s*\)/);
-      expect(handlerMatch).not.toBeNull();
-      // Suppress unused-import warning for the module reference.
+      expect(src).toMatch(/href\s*=\s*["']\/api\/auth\/company\/start["']/);
+      expect(src.match(/\/api\/auth\/company\/start/g)).toHaveLength(1);
+      expect(src).not.toMatch(/type\s*=\s*["']password["']/);
+      expect(src).not.toMatch(/onSubmit|handleSubmit|useAuth|await\s+login/);
       expect(LoginPage).toBeDefined();
     });
   });

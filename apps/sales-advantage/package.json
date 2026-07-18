@@ -44,6 +44,7 @@
     "react": "19.2.7",
     "react-dom": "19.2.7",
     "react-hook-form": "catalog:",
+    "react-markdown": "^10.1.0",
     "sonner": "catalog:",
     "superjson": "catalog:",
     "tailwind-merge": "catalog:",

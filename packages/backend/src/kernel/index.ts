@@ -5,3 +5,4 @@
 
 export * from "./contracts/index.js";
 export * from "./runtime.js";
+export * from "./postgres-idempotency.js";

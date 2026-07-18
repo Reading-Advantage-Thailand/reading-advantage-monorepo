@@ -38,6 +38,14 @@ export {
   ARGON2ID_OPTS,
 } from "./password.js";
 
+// Interim first-party credential compatibility adapter
+export {
+  createCredentialAccount,
+  CredentialUsernameConflictError,
+  type CreateCredentialAccountInput,
+  type CreatedCredentialAccount,
+} from "./credential-account.js";
+
 // Sessions
 export {
   createSession,
@@ -52,6 +60,7 @@ export {
 export {
   checkRateLimit,
   checkRateLimitByIp,
+  consumeRateLimit,
   recordFailure,
   resetLimit,
   configureRateLimiter,
@@ -72,6 +81,7 @@ export { createPostgresRateLimitStore } from "./rate-limit-store.js";
 
 // Company employee identity configuration (provider-neutral auth boundary)
 export * from "./company-identity/environment.js";
+export * from "./company-identity/client.js";
 
 // Rate Limit Cleanup
 export {

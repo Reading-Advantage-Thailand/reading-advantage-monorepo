@@ -81,7 +81,9 @@ function createMockDb(rows: MockRow[] = []) {
       if (!values) return;
       const identifier = values.identifier as string;
       const kind = values.kind as "username" | "ip";
-      const existing = rows.find((r) => r.identifier === identifier && r.kind === kind);
+      const existing = rows.find(
+        (r) => r.identifier === identifier && r.kind === kind,
+      );
       if (existing) {
         existing.failedCount = values.failedCount as number;
         existing.windowStart = values.windowStart as Date;
@@ -100,13 +102,14 @@ function createMockDb(rows: MockRow[] = []) {
     execute: vi.fn(async (query: unknown) => {
       const q = query as { type: "sql"; strings: string[]; values: unknown[] };
       // Best-effort simulation of the atomic increment statement.
-      const text = q.strings.join(" ? ");
       const identifier = q.values[0] as string;
       const kind = q.values[1] as "username" | "ip";
-      const windowStart = q.values[3] as Date;
-      const lastAttemptAt = q.values[4] as Date;
-      const cutoff = q.values[5] as Date;
-      const existing = rows.find((r) => r.identifier === identifier && r.kind === kind);
+      const windowStart = new Date(q.values[3] as string | Date);
+      const lastAttemptAt = new Date(q.values[4] as string | Date);
+      const cutoff = new Date(q.values[5] as string | Date);
+      const existing = rows.find(
+        (r) => r.identifier === identifier && r.kind === kind,
+      );
       if (!existing) {
         rows.push({
           identifier,
@@ -123,7 +126,15 @@ function createMockDb(rows: MockRow[] = []) {
         existing.failedCount += 1;
         existing.lastAttemptAt = lastAttemptAt;
       }
-      return [];
+      const result = rows.find(
+        (r) => r.identifier === identifier && r.kind === kind,
+      )!;
+      return [
+        {
+          failed_count: result.failedCount,
+          window_start: result.windowStart,
+        },
+      ];
     }),
   };
 
@@ -253,5 +264,30 @@ describe("Wave 0 Phase 2 — Postgres-backed rate-limit store", () => {
 
     await store.increment!("username:alice", now, 15 * 60 * 1000);
     expect(mockDb.rows[0].failedCount).toBe(1);
+  });
+
+  it("atomically consumes and returns the post-increment bucket", async () => {
+    const mockDb = createMockDb();
+    const store = createPostgresRateLimitStore(mockDb as unknown as never);
+    const now = Date.now();
+
+    const first = await store.consume!(
+      "username:sales:roleplay:user-1",
+      now,
+      60_000,
+    );
+    const second = await store.consume!(
+      "username:sales:roleplay:user-1",
+      now + 1,
+      60_000,
+    );
+
+    expect(first.failedCount).toBe(1);
+    expect(second.failedCount).toBe(2);
+    expect(mockDb.rows[0]).toMatchObject({
+      identifier: "sales:roleplay:user-1",
+      kind: "username",
+      failedCount: 2,
+    });
   });
 });

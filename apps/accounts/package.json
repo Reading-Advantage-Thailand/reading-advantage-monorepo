@@ -1,0 +1,37 @@
+{
+  "name": "accounts",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev --port 3007",
+    "build": "next build",
+    "start": "next start --port 3007",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "check-types": "tsc --noEmit",
+    "bootstrap:production": "tsx scripts/bootstrap-production.ts"
+  },
+  "dependencies": {
+    "@reading-advantage/auth": "workspace:*",
+    "@reading-advantage/backend": "workspace:*",
+    "@reading-advantage/db": "workspace:*",
+    "next": "16.2.9",
+    "postgres": "catalog:",
+    "react": "19.2.7",
+    "react-dom": "19.2.7",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@reading-advantage/config": "workspace:*",
+    "@testing-library/jest-dom": "catalog:",
+    "@testing-library/react": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
+    "jsdom": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "5.9.3",
+    "vitest": "4.1.8"
+  }
+}

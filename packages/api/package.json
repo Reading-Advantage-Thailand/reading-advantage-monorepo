@@ -23,6 +23,10 @@
     "./context": {
       "types": "./dist/context.d.ts",
       "import": "./dist/context.js"
+    },
+    "./sales": {
+      "types": "./dist/sales-root.d.ts",
+      "import": "./dist/sales-root.js"
     }
   },
   "scripts": {
@@ -50,7 +54,6 @@
   },
   "devDependencies": {
     "@reading-advantage/config": "workspace:*",
-
     "@types/node": "catalog:",
     "next": "16.2.9",
     "typescript": "5.9.3",

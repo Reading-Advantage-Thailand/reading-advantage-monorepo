@@ -8,6 +8,14 @@ import {
 } from "./primitives.js";
 
 /** Runtime contract for durable idempotency declarations. */
+export const idempotencyConflictBehaviorSchema = z.enum(["reject", "replay"]);
+
+/** Descriptor-declared behavior when a completed result already exists. */
+export type IdempotencyConflictBehavior = z.infer<
+  typeof idempotencyConflictBehaviorSchema
+>;
+
+/** Runtime contract for durable idempotency declarations. */
 export const idempotencyPolicySchema = z.discriminatedUnion("mode", [
   z.strictObject({ mode: z.literal("none") }),
   z.strictObject({
@@ -15,7 +23,7 @@ export const idempotencyPolicySchema = z.discriminatedUnion("mode", [
     keySchema: zodSchemaContractSchema,
     scope: z.enum(["tenant-capability", "global-capability"]),
     retentionSeconds: z.number().int().positive().max(31_536_000),
-    conflict: z.enum(["reject", "replay"]),
+    conflict: idempotencyConflictBehaviorSchema,
   }),
 ]);
 
@@ -113,6 +121,17 @@ export interface DurableIdempotencyPort {
    */
   acquire<TOutput>(
     request: Readonly<IdempotencyAcquireRequest>,
+  ): Promise<IdempotencyAcquireResult<TOutput>>;
+
+  /**
+   * Atomically acquires a key with explicit completed-result behavior.
+   * @param request Namespaced, validated acquisition request.
+   * @param conflict Descriptor-declared reject or replay behavior.
+   * @returns Ownership, permitted replay, or deterministic conflict.
+   */
+  acquireWithPolicy?<TOutput>(
+    request: Readonly<IdempotencyAcquireRequest>,
+    conflict: IdempotencyConflictBehavior,
   ): Promise<IdempotencyAcquireResult<TOutput>>;
 
   /**

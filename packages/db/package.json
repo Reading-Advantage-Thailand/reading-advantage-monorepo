@@ -20,6 +20,10 @@
       "types": "./dist/company-identity/index.d.ts",
       "import": "./dist/company-identity/index.js"
     },
+    "./company-identity/runtime": {
+      "types": "./dist/company-identity/runtime.d.ts",
+      "import": "./dist/company-identity/runtime.js"
+    },
     "./seed": {
       "types": "./dist/seed/index.d.ts",
       "import": "./dist/seed/index.js"

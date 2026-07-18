@@ -1,45 +1,5 @@
-"use client";
-
-import { useState, type FormEvent } from "react";
-import { useAuth } from "@reading-advantage/auth-client";
-
+/** Renders the single company-account handoff for Marketing. */
 export default function LoginPage() {
-  const { login, isAuthenticated, isLoading } = useAuth();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [pending, setPending] = useState(false);
-
-  if (isLoading) {
-    return (
-      <div style={{ padding: "24px", textAlign: "center" }}>
-        <p>Loading...</p>
-      </div>
-    );
-  }
-
-  if (isAuthenticated) {
-    return (
-      <div style={{ padding: "24px", textAlign: "center" }}>
-        <p>You are already logged in.</p>
-        <a href="/" style={{ color: "#1a1a2e" }}>Go to dashboard</a>
-      </div>
-    );
-  }
-
-  async function handleSubmit(e: FormEvent) {
-    e.preventDefault();
-    setError(null);
-    setPending(true);
-    try {
-      await login(username, password);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Login failed");
-    } finally {
-      setPending(false);
-    }
-  }
-
   return (
     <div
       style={{
@@ -49,8 +9,7 @@ export default function LoginPage() {
         minHeight: "80vh",
       }}
     >
-      <form
-        onSubmit={handleSubmit}
+      <section
         style={{
           width: "100%",
           maxWidth: "400px",
@@ -60,88 +19,32 @@ export default function LoginPage() {
           boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
         }}
       >
-        <h1 style={{ marginBottom: "24px", textAlign: "center" }}>
-          Login
-        </h1>
-
-        {error && (
-          <div
-            style={{
-              padding: "12px",
-              marginBottom: "16px",
-              backgroundColor: "#fee2e2",
-              color: "#dc2626",
-              borderRadius: "6px",
-            }}
-          >
-            {error}
-          </div>
-        )}
-
-        <div style={{ marginBottom: "16px" }}>
-          <label
-            htmlFor="username"
-            style={{ display: "block", marginBottom: "6px", fontWeight: 500 }}
-          >
-            Username
-          </label>
-          <input
-            id="username"
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-            style={{
-              width: "100%",
-              padding: "10px 12px",
-              border: "1px solid #d1d5db",
-              borderRadius: "6px",
-              fontSize: "14px",
-            }}
-          />
-        </div>
-
-        <div style={{ marginBottom: "24px" }}>
-          <label
-            htmlFor="password"
-            style={{ display: "block", marginBottom: "6px", fontWeight: 500 }}
-          >
-            Password
-          </label>
-          <input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            style={{
-              width: "100%",
-              padding: "10px 12px",
-              border: "1px solid #d1d5db",
-              borderRadius: "6px",
-              fontSize: "14px",
-            }}
-          />
-        </div>
-
-        <button
-          type="submit"
-          disabled={pending}
+        <p style={{ marginBottom: "8px", color: "#6b7280", textAlign: "center" }}>
+          READING ADVANTAGE / COMPANY ACCESS
+        </p>
+        <h1 style={{ marginBottom: "12px", textAlign: "center" }}>Marketing sign in</h1>
+        <p style={{ marginBottom: "24px", textAlign: "center" }}>
+          Continue to Accounts with your company username and password.
+        </p>
+        <a
+          href="/api/auth/company/start"
           style={{
             width: "100%",
             padding: "12px",
-            backgroundColor: pending ? "#6b7280" : "#1a1a2e",
+            backgroundColor: "#1a1a2e",
             color: "#fff",
             border: "none",
             borderRadius: "6px",
             fontSize: "16px",
             fontWeight: 600,
-            cursor: pending ? "not-allowed" : "pointer",
+            display: "block",
+            textAlign: "center",
+            textDecoration: "none",
           }}
         >
-          {pending ? "Logging in..." : "Login"}
-        </button>
-      </form>
+          CONTINUE WITH ACCOUNTS
+        </a>
+      </section>
     </div>
   );
 }

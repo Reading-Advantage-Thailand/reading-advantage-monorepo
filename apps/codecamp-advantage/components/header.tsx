@@ -1,18 +1,8 @@
 "use client";
 
 import { Link } from "@/i18n/navigation";
-import { useState } from "react";
 import { useAuth } from "@reading-advantage/auth-client";
 import { Button } from "@reading-advantage/ui";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@reading-advantage/ui";
-import { Input } from "@reading-advantage/ui";
-import { Label } from "@reading-advantage/ui";
 import { BookOpen, MessageCircle, LogOut, User, Shield, Languages } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { LanguageSwitcher } from "./language-switcher";
@@ -24,24 +14,7 @@ import { LanguageSwitcher } from "./language-switcher";
 export function Header() {
   const t = useTranslations("navigation");
   const tl = useTranslations("login");
-  const { user, isAuthenticated, isLoading, login, logout } = useAuth();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [loginError, setLoginError] = useState<string | null>(null);
-  const [open, setOpen] = useState(false);
-
-  async function handleLogin(e: React.FormEvent) {
-    e.preventDefault();
-    setLoginError(null);
-    try {
-      await login(username, password);
-      setOpen(false);
-      setUsername("");
-      setPassword("");
-    } catch (err) {
-      setLoginError(err instanceof Error ? err.message : "Login failed");
-    }
-  }
+  const { user, isAuthenticated, isLoading, logout } = useAuth();
 
   async function handleLogout() {
     await logout();
@@ -104,47 +77,9 @@ export function Header() {
               </Button>
             </div>
           ) : (
-            <Dialog open={open} onOpenChange={setOpen}>
-              <DialogTrigger asChild>
-                <Button variant="outline" size="sm">
-                  {tl("login")}
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-md">
-                <DialogHeader>
-                  <DialogTitle>{tl("loginTitle")}</DialogTitle>
-                </DialogHeader>
-                <form onSubmit={handleLogin} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="username">{tl("username")}</Label>
-                    <Input
-                      id="username"
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value)}
-                      placeholder="intern1"
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="password">{tl("password")}</Label>
-                    <Input
-                      id="password"
-                      type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="••••••••"
-                      required
-                    />
-                  </div>
-                  {loginError && (
-                    <p className="text-sm text-destructive">{loginError}</p>
-                  )}
-                  <Button type="submit" className="w-full">
-                    {tl("login")}
-                  </Button>
-                </form>
-              </DialogContent>
-            </Dialog>
+            <Button variant="outline" size="sm" asChild>
+              <a href="/api/auth/company/start">{tl("login")}</a>
+            </Button>
           )}
         </div>
       </div>

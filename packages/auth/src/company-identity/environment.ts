@@ -482,6 +482,11 @@ const confidentialClientEnvironmentBase = z.object({
     ),
   COMPANY_AUTH_OIDC_REDIRECT_URI: z.string().min(1).max(2048),
   COMPANY_AUTH_EXPECTED_AUDIENCE: z.string().regex(STABLE_KEY_PATTERN),
+  COMPANY_AUTH_CLOCK_SKEW_SECONDS: boundedIntegerString(
+    0,
+    120,
+    "clock skew must be an integer from 0 through 120 seconds",
+  ).default("30"),
 });
 
 /** Strict parser for a confidential company application OIDC client. */
@@ -509,6 +514,7 @@ export const companyIdentityServiceAuthEnvSchema =
         clientSecret: environment.COMPANY_AUTH_OIDC_CLIENT_SECRET,
         redirectUri: environment.COMPANY_AUTH_OIDC_REDIRECT_URI,
         expectedAudience: environment.COMPANY_AUTH_EXPECTED_AUDIENCE,
+        clockSkewSeconds: environment.COMPANY_AUTH_CLOCK_SKEW_SECONDS,
       }),
     );
 

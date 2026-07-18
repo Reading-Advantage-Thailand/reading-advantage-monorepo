@@ -129,6 +129,7 @@ describe("sales-advantage schema", () => {
         "completedAt",
         "score",
         "createdAt",
+        "updatedAt",
       ]),
     );
   });

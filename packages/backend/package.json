@@ -23,6 +23,7 @@
     "check-types": "tsc --noEmit && tsc --noEmit -p tsconfig.test.json"
   },
   "dependencies": {
+    "postgres": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {

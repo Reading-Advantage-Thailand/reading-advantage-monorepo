@@ -50,11 +50,11 @@ steps:
       - "--allow-unauthenticated"
       - "--service-account=codecamp-cloud-run@$PROJECT_ID.iam.gserviceaccount.com"
       - "--add-cloudsql-instances=reading-advantage:asia-southeast1:cloud-sql"
-      - "--set-env-vars=NODE_ENV=production,NEXT_PUBLIC_API_URL=https://codecamp.reading-advantage.com,TUTORIAL_REPOSITORY_WORKER_URL=https://codecamp.reading-advantage.com/api/internal/tutorial-repository-capture,TUTORIAL_REPOSITORY_BASE_URL=https://github.com,CODECAMP_PR_REVIEW_ROLLOUT_MODE=shadow"
+      - "--set-env-vars=NODE_ENV=production,NEXT_PUBLIC_API_URL=https://codecamp.reading-advantage.com,TUTORIAL_REPOSITORY_WORKER_URL=https://codecamp.reading-advantage.com/api/internal/tutorial-repository-capture,TUTORIAL_REPOSITORY_BASE_URL=https://github.com,CODECAMP_PR_REVIEW_ROLLOUT_MODE=shadow,COMPANY_AUTH_ISSUER_URL=https://accounts.reading-advantage.com,COMPANY_AUTH_OIDC_CLIENT_ID=codecamp-web,COMPANY_AUTH_OIDC_REDIRECT_URI=https://codecamp.reading-advantage.com/api/auth/callback,COMPANY_AUTH_EXPECTED_AUDIENCE=codecamp,COMPANY_AUTH_CLOCK_SKEW_SECONDS=30"
       - "--min-instances=1"
       - "--max-instances=100"
       - "--concurrency=80"
-      - "--set-secrets=DATABASE_URL=CODECAMP_DATABASE_URL:latest,AUTH_SECRET=CODECAMP_AUTH_SECRET:latest,GITHUB_APP_ID=CODECAMP_GITHUB_APP_ID:latest,GITHUB_PRIVATE_KEY=CODECAMP_GITHUB_PRIVATE_KEY:latest,GITHUB_WEBHOOK_SECRET=CODECAMP_GITHUB_WEBHOOK_SECRET:latest,GITHUB_INSTALLATION_ID=CODECAMP_GITHUB_INSTALLATION_ID:latest,OPENROUTER_API_KEY=CODECAMP_OPENROUTER_API_KEY:latest,OPENAI_API_KEY=OPENAI_API_KEY:latest,GOOGLE_AI_API_KEY=GOOGLE_AI_API_KEY:latest,TUTORIAL_REPORT_SECRET=CODECAMP_TUTORIAL_REPORT_SECRET:latest,TUTORIAL_REPOSITORY_WORKER_TOKEN=CODECAMP_TUTORIAL_REPOSITORY_WORKER_TOKEN:latest"
+      - "--set-secrets=DATABASE_URL=CODECAMP_DATABASE_URL:latest,AUTH_SECRET=CODECAMP_AUTH_SECRET:latest,GITHUB_APP_ID=CODECAMP_GITHUB_APP_ID:latest,GITHUB_PRIVATE_KEY=CODECAMP_GITHUB_PRIVATE_KEY:latest,GITHUB_WEBHOOK_SECRET=CODECAMP_GITHUB_WEBHOOK_SECRET:latest,GITHUB_INSTALLATION_ID=CODECAMP_GITHUB_INSTALLATION_ID:latest,OPENROUTER_API_KEY=CODECAMP_OPENROUTER_API_KEY:latest,OPENAI_API_KEY=OPENAI_API_KEY:latest,GOOGLE_AI_API_KEY=GOOGLE_AI_API_KEY:latest,TUTORIAL_REPORT_SECRET=CODECAMP_TUTORIAL_REPORT_SECRET:latest,TUTORIAL_REPOSITORY_WORKER_TOKEN=CODECAMP_TUTORIAL_REPOSITORY_WORKER_TOKEN:latest,COMPANY_AUTH_OIDC_CLIENT_SECRET=projects/reading-advantage/secrets/CODECAMP_COMPANY_AUTH_OIDC_CLIENT_SECRET:latest"
 
   - name: "gcr.io/cloud-builders/gcloud"
     id: "allow-public-invoker"

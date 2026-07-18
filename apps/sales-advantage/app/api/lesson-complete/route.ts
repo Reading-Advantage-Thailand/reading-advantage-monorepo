@@ -1,21 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
-import { validateSession, SESSION_COOKIE_NAME } from "@reading-advantage/auth";
 import { db } from "@reading-advantage/db";
 import { markTheoryLessonComplete } from "@reading-advantage/domain/sales";
+import { authenticateSalesRequest } from "@/lib/company-oidc";
 
 export const runtime = "nodejs";
 
 export async function POST(request: NextRequest) {
   try {
-    const sessionToken = request.cookies.get(SESSION_COOKIE_NAME)?.value;
-    if (!sessionToken) {
+    const user = await authenticateSalesRequest(request);
+    if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    const session = await validateSession(db, sessionToken);
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    const user = session.user;
     const tenant = { schoolId: user.schoolId };
 
     const body = await request.json();

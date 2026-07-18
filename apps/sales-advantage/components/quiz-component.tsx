@@ -3,7 +3,12 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@reading-advantage/ui";
-import { Card, CardContent, CardHeader, CardTitle } from "@reading-advantage/ui";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@reading-advantage/ui";
 import { Badge } from "@reading-advantage/ui";
 import { trpc } from "@/lib/trpc";
 import { CheckCircle2, XCircle } from "lucide-react";
@@ -17,8 +22,6 @@ export function QuizComponent({
     id: string;
     question: string;
     optionsJson: string[];
-    correctAnswer?: string;
-    explanation?: string;
   }>;
 }) {
   const t = useTranslations("quiz");
@@ -26,10 +29,14 @@ export function QuizComponent({
   const [result, setResult] = useState<{
     score: number;
     passed: boolean;
-    answers?: Record<string, { correct: boolean }>;
+    results: Array<{
+      questionId: string;
+      correct: boolean;
+      explanation: string;
+    }>;
   } | null>(null);
   const submitQuiz = trpc.sales.submitQuiz.useMutation({
-    onSuccess: (data) => setResult(data as unknown as { score: number; passed: boolean; answers?: Record<string, { correct: boolean }> }),
+    onSuccess: (data) => setResult(data),
   });
 
   function submit() {
@@ -50,7 +57,10 @@ export function QuizComponent({
         </CardHeader>
         <CardContent className="space-y-3">
           {questions.map((q) => {
-            const correct = result.answers?.[q.id]?.correct;
+            const questionResult = result.results.find(
+              (candidate) => candidate.questionId === q.id,
+            );
+            const correct = questionResult?.correct === true;
             return (
               <div key={q.id} className="rounded-lg border p-3 text-sm">
                 <div className="flex items-start gap-2">
@@ -61,9 +71,10 @@ export function QuizComponent({
                   )}
                   <div>
                     <p className="font-medium">{q.question}</p>
-                    {q.explanation && (
+                    {questionResult?.explanation && (
                       <p className="mt-1 text-xs text-muted-foreground">
-                        <strong>{t("explanation")}:</strong> {q.explanation}
+                        <strong>{t("explanation")}:</strong>{" "}
+                        {questionResult.explanation}
                       </p>
                     )}
                   </div>
@@ -72,7 +83,13 @@ export function QuizComponent({
             );
           })}
           {!result.passed && (
-            <Button onClick={() => { setResult(null); setAnswers({}); }} variant="outline">
+            <Button
+              onClick={() => {
+                setResult(null);
+                setAnswers({});
+              }}
+              variant="outline"
+            >
               {t("submit")}
             </Button>
           )}
@@ -113,7 +130,10 @@ export function QuizComponent({
         ))}
         <Button
           onClick={submit}
-          disabled={Object.keys(answers).length !== questions.length || submitQuiz.isPending}
+          disabled={
+            Object.keys(answers).length !== questions.length ||
+            submitQuiz.isPending
+          }
           className="w-full"
         >
           {t("submit")}

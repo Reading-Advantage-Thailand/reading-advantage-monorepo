@@ -8,7 +8,7 @@
 # (replace XXXX with the actual Cloud Run hash).
 #
 # This smoke test checks basic unauthenticated endpoints:
-#   - GET / -> 200 (landing page loads)
+#   - GET /en -> 200 (localized landing page loads)
 #   - GET /api/auth/session -> 200 (may return {user:null} for unauth)
 #
 # Authenticated smoke tests (login, dashboard, roleplay, etc.)
@@ -27,9 +27,9 @@ echo ""
 
 failures=0
 
-# ── Test 1: Root page ───────────────────────────────────────
-echo "--- Test 1: GET / -> 200 ---"
-HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$BASE_URL/" 2>/dev/null || echo "000")
+# ── Test 1: Localized landing page ──────────────────────────
+echo "--- Test 1: GET /en -> 200 ---"
+HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$BASE_URL/en" 2>/dev/null || echo "000")
 if [ "$HTTP_STATUS" = "200" ]; then
   echo "  PASS (HTTP $HTTP_STATUS)"
 else
@@ -51,15 +51,13 @@ fi
 # ── Test 3: tRPC endpoint ───────────────────────────────────
 echo "--- Test 3: POST /api/trpc -> 401 (unauth) ---"
 HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
-  -X POST "$BASE_URL/api/trpc" \
-  -H "Content-Type: application/json" \
-  -d '{}' 2>/dev/null || echo "000")
+  "$BASE_URL/api/trpc/sales.dashboard?input=%7B%22json%22%3Anull%7D" \
+  2>/dev/null || echo "000")
 if [ "$HTTP_STATUS" = "401" ]; then
   echo "  PASS (HTTP $HTTP_STATUS — expected 401 for unauth tRPC call)"
-elif [ "$HTTP_STATUS" = "200" ]; then
-  echo "  INFO (HTTP $HTTP_STATUS — tRPC returned 200; may be a public endpoint)"
 else
-  echo "  INFO (HTTP $HTTP_STATUS — unexpected but not blocking)"
+  echo "  FAIL (HTTP $HTTP_STATUS — expected exact unauthenticated 401)"
+  failures=$((failures + 1))
 fi
 
 echo ""

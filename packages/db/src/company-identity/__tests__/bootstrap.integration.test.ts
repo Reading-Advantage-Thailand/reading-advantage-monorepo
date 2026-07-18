@@ -134,6 +134,10 @@ describe("company identity deterministic bootstrap", () => {
                 `${stableKey}:${roleKey}`,
             ),
           ).toEqual([
+            "codecamp:ADMIN",
+            "codecamp:INTERN",
+            "codecamp:STUDENT",
+            "codecamp:TEACHER",
             "marketing:ADMIN",
             "marketing:MEMBER",
             "sales:SALES_ADMIN",

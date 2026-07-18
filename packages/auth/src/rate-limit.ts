@@ -50,6 +50,12 @@ export interface RateLimitStore {
    * implement this method fall back to a non-atomic get/set cycle.
    */
   increment?(key: string, now: number, windowMs: number): Promise<void>;
+  /** Atomically consumes one request and returns the resulting bucket. */
+  consume?(
+    key: string,
+    now: number,
+    windowMs: number,
+  ): Promise<RateLimitStoreEntry>;
 }
 
 /**
@@ -115,7 +121,9 @@ export const DEFAULT_IP_RATE_LIMIT_CONFIG: RateLimitConfig = {
 const inMemoryStore = new Map<string, RateLimitStoreEntry>();
 
 let configuredStore: RateLimitStore = createInMemoryRateLimitStore();
-let configuredUsernameConfig: RateLimitConfig = { ...DEFAULT_RATE_LIMIT_CONFIG };
+let configuredUsernameConfig: RateLimitConfig = {
+  ...DEFAULT_RATE_LIMIT_CONFIG,
+};
 let configuredIpConfig: RateLimitConfig = { ...DEFAULT_IP_RATE_LIMIT_CONFIG };
 
 // ───────────────────────────────────────────────────────────────────
@@ -144,6 +152,48 @@ export function createInMemoryRateLimitStore(): RateLimitStore {
         entry.failedCount++;
       }
     },
+    consume: async (key, now, windowMs) => {
+      const entry = inMemoryStore.get(key);
+      const next =
+        !entry || now - entry.windowStart > windowMs
+          ? { failedCount: 1, windowStart: now }
+          : {
+              failedCount: entry.failedCount + 1,
+              windowStart: entry.windowStart,
+            };
+      inMemoryStore.set(key, next);
+      return next;
+    },
+  };
+}
+
+/**
+ * Atomically consumes one generic rate-limit allowance from an injected store.
+ * @param store Shared durable store used by every application instance.
+ * @param key Namespaced bucket key.
+ * @param config Window size and maximum request count.
+ * @returns Whether this request is allowed and any retry delay.
+ */
+export async function consumeRateLimit(
+  store: RateLimitStore,
+  key: string,
+  config: RateLimitConfig,
+): Promise<RateLimitCheckResult> {
+  const now = Date.now();
+  let entry: RateLimitStoreEntry;
+  if (store.consume) {
+    entry = await store.consume(key, now, config.windowMs);
+  } else {
+    await store.increment?.(key, now, config.windowMs);
+    entry = (await store.get(key)) ?? { failedCount: 1, windowStart: now };
+  }
+  if (entry.failedCount <= config.maxAttempts) return { allowed: true };
+  return {
+    allowed: false,
+    retriesAfter: Math.max(
+      1,
+      Math.ceil((config.windowMs - (now - entry.windowStart)) / 1000),
+    ),
   };
 }
 
@@ -401,11 +451,7 @@ export async function recordFailure(
   username: string,
   ip?: string,
 ): Promise<void> {
-  await recordIdentifierFailure(
-    username,
-    "username",
-    configuredUsernameConfig,
-  );
+  await recordIdentifierFailure(username, "username", configuredUsernameConfig);
   if (ip) {
     await recordIdentifierFailure(ip, "ip", configuredIpConfig);
   }
@@ -417,10 +463,7 @@ export async function recordFailure(
  * @param username - Account username/identifier.
  * @param ip - Optional client IP address.
  */
-export async function resetLimit(
-  username: string,
-  ip?: string,
-): Promise<void> {
+export async function resetLimit(username: string, ip?: string): Promise<void> {
   await resetIdentifier(username, "username");
   if (ip) {
     await resetIdentifier(ip, "ip");

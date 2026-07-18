@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { validateSession, SESSION_COOKIE_NAME } from "@reading-advantage/auth";
 import { db } from "@reading-advantage/db";
 import {
   submitRoleplayAttempt,
@@ -13,37 +12,46 @@ import {
 } from "@reading-advantage/types";
 import { getStorageClient } from "@reading-advantage/storage";
 import { getAIClient } from "@reading-advantage/ai";
-import { checkRateLimit } from "@/lib/rate-limit";
+import { checkRoleplayRateLimit } from "@/lib/rate-limit";
+import type { StorageClient } from "@reading-advantage/storage";
+import { randomUUID } from "node:crypto";
+import { authenticateSalesRequest } from "@/lib/company-oidc";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
 export async function POST(request: NextRequest) {
+  let uploadedObject: { storage: StorageClient; key: string } | undefined;
   try {
-    const sessionToken = request.cookies.get(SESSION_COOKIE_NAME)?.value;
-    if (!sessionToken) {
+    const user = await authenticateSalesRequest(request);
+    if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    const session = await validateSession(db, sessionToken);
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    const user = session.user;
     const tenant = { schoolId: user.schoolId };
 
     // Rate limit: 10 attempts per user per hour
-    const rateLimit = checkRateLimit(`sales:roleplay:${user.id}`, 10, 60 * 60_000);
+    const rateLimit = await checkRoleplayRateLimit(user.id);
     if (!rateLimit.allowed) {
       return NextResponse.json(
-        { error: "Rate limit exceeded", retryAfter: rateLimit.retryAfter },
-        { status: 429 },
+        {
+          error: "ROLEPLAY_RATE_LIMITED",
+          message: "Too many roleplay submissions. Please try again later.",
+          retryAfter: rateLimit.retryAfter,
+        },
+        {
+          status: 429,
+          headers: { "Retry-After": String(rateLimit.retryAfter ?? 3600) },
+        },
       );
     }
 
     const formData = await request.formData();
     const scenarioId = formData.get("scenarioId") as string;
     const audioFile = formData.get("audio") as File;
-    const durationMs = parseInt((formData.get("durationMs") as string) ?? "0", 10);
+    const durationMs = parseInt(
+      (formData.get("durationMs") as string) ?? "0",
+      10,
+    );
     const consentGivenRaw = formData.get("consentGiven");
     const retentionDaysRaw = formData.get("retentionDays");
 
@@ -52,7 +60,9 @@ export async function POST(request: NextRequest) {
         {
           error: "INVALID_AUDIO",
           field: !scenarioId ? "scenarioId" : "audio",
-          message: !scenarioId ? "scenarioId is required" : "audio file is required",
+          message: !scenarioId
+            ? "scenarioId is required"
+            : "audio file is required",
         },
         { status: 400 },
       );
@@ -65,9 +75,11 @@ export async function POST(request: NextRequest) {
     // adapter is invoked. Rejected media returns a structured 400 envelope
     // and never reaches `getStorageClient`, `getAIClient`,
     // `getRoleplayEvaluationContext`, or `submitRoleplayAttempt`.
-    if (!ROLEPLAY_ALLOWED_AUDIO_MIME_TYPES.includes(
-      mimeType as (typeof ROLEPLAY_ALLOWED_AUDIO_MIME_TYPES)[number],
-    )) {
+    if (
+      !ROLEPLAY_ALLOWED_AUDIO_MIME_TYPES.includes(
+        mimeType as (typeof ROLEPLAY_ALLOWED_AUDIO_MIME_TYPES)[number],
+      )
+    ) {
       return NextResponse.json(
         {
           error: "INVALID_AUDIO",
@@ -117,7 +129,9 @@ export async function POST(request: NextRequest) {
       );
     }
     const retentionDays =
-      typeof retentionDaysRaw === "string" ? parseInt(retentionDaysRaw, 10) : NaN;
+      typeof retentionDaysRaw === "string"
+        ? parseInt(retentionDaysRaw, 10)
+        : NaN;
     if (
       !Number.isFinite(retentionDays) ||
       retentionDays < 1 ||
@@ -144,13 +158,16 @@ export async function POST(request: NextRequest) {
       { scenarioId },
     );
     if (!evaluationContext.scenario) {
-      return NextResponse.json({ error: "Scenario not found" }, { status: 404 });
+      return NextResponse.json(
+        { error: "Scenario not found" },
+        { status: 404 },
+      );
     }
 
     // FR-4: upload audio to storage and only persist the key on success. The
     // previous catch block swallowed the error but kept the key — the attempt
     // row would then reference a non-existent object.
-    const storageKey = `sales-advantage/attempts/${user.id}/${Date.now()}.webm`;
+    const storageKey = `sales-advantage/attempts/${user.id}/${randomUUID()}.webm`;
     let audioUploadSucceeded = false;
     try {
       const storage = getStorageClient();
@@ -159,21 +176,36 @@ export async function POST(request: NextRequest) {
         public: false,
       });
       audioUploadSucceeded = true;
+      uploadedObject = { storage, key: storageKey };
     } catch (storageErr) {
-      console.error("Storage error (FR-4): proceeding without audio storage key:", storageErr);
+      console.error(
+        JSON.stringify({
+          level: "error",
+          event: "sales_roleplay_storage_failed",
+          detail:
+            storageErr instanceof Error
+              ? storageErr.message
+              : String(storageErr),
+        }),
+      );
     }
 
     // Build the AI evaluator with scenario/rubric/canonical-excerpts closure.
     const aiClient = getAIClient();
     const evaluateRaw = aiClientToEvaluateRoleplay(aiClient);
-    const wrappedEvaluate = async (audio: { buffer: Buffer; mimeType: string }) => {
+    const wrappedEvaluate = async (audio: {
+      buffer: Buffer;
+      mimeType: string;
+    }) => {
       return evaluateRaw(
         audio,
         {
           ...evaluationContext.scenario,
           prospectContextJson:
-            (evaluationContext.scenario?.prospectContextJson as Record<string, unknown> | null) ??
-            {},
+            (evaluationContext.scenario?.prospectContextJson as Record<
+              string,
+              unknown
+            > | null) ?? {},
         },
         evaluationContext.rubric
           ? {
@@ -192,8 +224,8 @@ export async function POST(request: NextRequest) {
               name: "Default",
               criteriaJson: [],
               reviewStatus: "approved",
-          createdAt: new Date(),
-        },
+              createdAt: new Date(),
+            },
         evaluationContext.canonicalSourceExcerpts,
       );
     };
@@ -210,17 +242,41 @@ export async function POST(request: NextRequest) {
         evaluate: wrappedEvaluate,
       },
     );
+    uploadedObject = undefined;
 
     return NextResponse.json({
       attemptId: result.attempt?.id ?? null,
       evaluation: result.evaluation ?? null,
     });
   } catch (error) {
-    console.error("Roleplay submit error:", error);
+    if (uploadedObject) {
+      try {
+        await uploadedObject.storage.delete(uploadedObject.key);
+      } catch (cleanupError) {
+        console.error(
+          JSON.stringify({
+            level: "error",
+            event: "sales_roleplay_audio_cleanup_failed",
+            detail:
+              cleanupError instanceof Error
+                ? cleanupError.message
+                : String(cleanupError),
+          }),
+        );
+      }
+    }
+    console.error(
+      JSON.stringify({
+        level: "error",
+        event: "sales_roleplay_submit_failed",
+        errorName: error instanceof Error ? error.name : "UnknownError",
+        detail: error instanceof Error ? error.message : String(error),
+      }),
+    );
     return NextResponse.json(
       {
-        error: "Evaluation failed",
-        message: error instanceof Error ? error.message : String(error),
+        error: "ROLEPLAY_EVALUATION_FAILED",
+        message: "Roleplay evaluation is temporarily unavailable.",
       },
       { status: 500 },
     );

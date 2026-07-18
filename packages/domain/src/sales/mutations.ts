@@ -1,8 +1,7 @@
-import { eq, and, sql } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import {
   salesProgress,
   salesRoleplayAttempts,
-  salesRoleplayScenarios,
   salesLessons,
   salesConversations,
   salesChatMessages,
@@ -17,24 +16,171 @@ import type { SalesDomainContext } from "./contracts.js";
 // — all sales_* tables are REFERENTIAL (no schoolId column, scoped by userId).
 import { salesRawDb } from "./contracts.js";
 import type {
-  RoleplayAttemptInput,
   RoleplayEvaluationResult,
   QuizSubmissionInput,
   ChatMessageInput,
-  CreateRepInput,
   ApproveContentInput,
 } from "./schema.js";
 import {
   roleplayAudioInputSchema,
   ROLEPLAY_MAX_AUDIO_BYTES,
   ROLEPLAY_MAX_AUDIO_DURATION_MS,
+  approveContentOutputSchema,
 } from "./schema.js";
 import {
-  ScenarioNotFoundError,
   RubricNotApprovedError,
   SalesAuthError,
   RoleplayAudioValidationError,
 } from "./errors.js";
+import {
+  requireAccessibleLesson,
+  requireAccessibleScenario,
+} from "./learning-path.js";
+
+/**
+ * Atomically records first completion while preserving the original timestamp.
+ * @param rawDb Raw database adapter for the REFERENTIAL Sales tables.
+ * @param userId Learner whose progress is being recorded.
+ * @param lessonId Approved accessible lesson being completed.
+ * @returns The inserted or updated progress row.
+ */
+async function upsertCompletedProgress(
+  rawDb: DB,
+  userId: string,
+  lessonId: string,
+) {
+  const activityAt = new Date();
+  const [row] = await rawDb
+    .insert(salesProgress)
+    .values({
+      userId,
+      lessonId,
+      status: "completed",
+      completedAt: activityAt,
+      updatedAt: activityAt,
+    })
+    .onConflictDoUpdate({
+      target: [salesProgress.userId, salesProgress.lessonId],
+      set: {
+        status: "completed",
+        completedAt: sql`COALESCE(
+          ${salesProgress.completedAt},
+          excluded.completed_at
+        )`,
+        updatedAt: sql`excluded.updated_at`,
+      },
+    })
+    .returning();
+  return row;
+}
+
+/**
+ * Inserts a roleplay attempt after its scenario access has been validated.
+ * @param rawDb Raw database adapter for the REFERENTIAL Sales tables.
+ * @param userId Learner creating the attempt.
+ * @param input Validated scenario and audio metadata.
+ * @returns The inserted roleplay attempt.
+ */
+async function insertRoleplayAttempt(
+  rawDb: DB,
+  userId: string,
+  input: {
+    scenarioId: string;
+    audioStorageKey: string | null;
+    durationMs: number;
+  },
+) {
+  const [row] = await rawDb
+    .insert(salesRoleplayAttempts)
+    .values({
+      scenarioId: input.scenarioId,
+      userId,
+      ...(input.audioStorageKey
+        ? { audioStorageKey: input.audioStorageKey }
+        : {}),
+      durationMs: input.durationMs,
+      attemptNumber: sql<number>`(
+        SELECT COALESCE(MAX(existing_attempt."attempt_number"), 0) + 1
+        FROM "sales_roleplay_attempts" AS existing_attempt
+        WHERE existing_attempt."user_id" = ${userId}
+          AND existing_attempt."scenario_id" = ${input.scenarioId}
+      )`,
+    })
+    .returning();
+  return row;
+}
+
+const ATTEMPT_NUMBER_CONSTRAINT =
+  "sales_roleplay_attempts_user_scenario_number_unique";
+const MAX_ATTEMPT_NUMBER_RETRIES = 8;
+
+/**
+ * Detects the reviewed attempt-number uniqueness conflict from PostgreSQL.
+ * @param error Candidate database error.
+ * @returns Whether the error is the retryable attempt-number collision.
+ */
+function isAttemptNumberConflict(error: unknown): boolean {
+  if (!error || typeof error !== "object") return false;
+  const candidate = error as {
+    code?: unknown;
+    constraint?: unknown;
+    constraint_name?: unknown;
+    cause?: unknown;
+  };
+  const isDirectConflict =
+    candidate.code === "23505" &&
+    (candidate.constraint === ATTEMPT_NUMBER_CONSTRAINT ||
+      candidate.constraint_name === ATTEMPT_NUMBER_CONSTRAINT);
+  return (
+    isDirectConflict ||
+    (candidate.cause !== error && isAttemptNumberConflict(candidate.cause))
+  );
+}
+
+/**
+ * Allocates one attempt number and completes its database lifecycle atomically.
+ * @param rawDb Raw database adapter for the Sales relations.
+ * @param userId Learner creating the attempt.
+ * @param input Validated attempt metadata.
+ * @param complete Work that must commit with the new attempt.
+ * @returns The completed operation result.
+ * @throws The final database error after bounded uniqueness retries.
+ */
+async function withAllocatedRoleplayAttempt<T>(
+  rawDb: DB,
+  userId: string,
+  input: {
+    scenarioId: string;
+    audioStorageKey: string | null;
+    durationMs: number;
+  },
+  complete: (
+    tx: DB,
+    attempt: typeof salesRoleplayAttempts.$inferSelect,
+  ) => Promise<T>,
+): Promise<T> {
+  for (let retry = 0; retry <= MAX_ATTEMPT_NUMBER_RETRIES; retry += 1) {
+    try {
+      return await rawDb.transaction(async (tx) => {
+        const transactionDb = tx as unknown as DB;
+        const attempt = await insertRoleplayAttempt(
+          transactionDb,
+          userId,
+          input,
+        );
+        return complete(transactionDb, attempt);
+      });
+    } catch (error) {
+      if (
+        retry === MAX_ATTEMPT_NUMBER_RETRIES ||
+        !isAttemptNumberConflict(error)
+      ) {
+        throw error;
+      }
+    }
+  }
+  throw new Error("Roleplay attempt allocation exhausted");
+}
 
 /**
  * Marks a theory lesson complete for the current user (upserts progress).
@@ -48,34 +194,11 @@ export async function markTheoryLessonComplete(
 ) {
   assertCan(user, "sales:read", tenant);
   const rawDb = salesRawDb(db);
-  const [existing] = await rawDb
-    .select()
-    .from(salesProgress)
-    .where(
-      and(
-        eq(salesProgress.userId, user.id),
-        eq(salesProgress.lessonId, input.lessonId),
-      ),
-    )
-    .limit(1);
-  if (existing) {
-    const [updated] = await rawDb
-      .update(salesProgress)
-      .set({ status: "completed", completedAt: new Date() })
-      .where(eq(salesProgress.id, existing.id))
-      .returning();
-    return updated;
-  }
-  const [row] = await rawDb
-    .insert(salesProgress)
-    .values({
-      userId: user.id,
-      lessonId: input.lessonId,
-      status: "completed",
-      completedAt: new Date(),
-    })
-    .returning();
-  return row;
+  await requireAccessibleLesson(rawDb, user.id, {
+    lessonId: input.lessonId,
+    expectedType: "theory",
+  });
+  return upsertCompletedProgress(rawDb, user.id, input.lessonId);
 }
 
 /**
@@ -91,37 +214,21 @@ export async function markTheoryLessonComplete(
  */
 export async function createRoleplayAttempt(
   { db, user, tenant }: SalesDomainContext,
-  input: { scenarioId: string; audioStorageKey: string | null; durationMs: number },
+  input: {
+    scenarioId: string;
+    audioStorageKey: string | null;
+    durationMs: number;
+  },
 ) {
   assertCan(user, "sales:attempt:create", tenant);
   const rawDb = salesRawDb(db);
-  const [scenario] = await rawDb
-    .select()
-    .from(salesRoleplayScenarios)
-    .where(eq(salesRoleplayScenarios.id, input.scenarioId))
-    .limit(1);
-  if (!scenario) throw new ScenarioNotFoundError(input.scenarioId);
-  const prior = await rawDb
-    .select()
-    .from(salesRoleplayAttempts)
-    .where(
-      and(
-        eq(salesRoleplayAttempts.scenarioId, input.scenarioId),
-        eq(salesRoleplayAttempts.userId, user.id),
-      ),
-    );
-  const attemptNumber = prior.length + 1;
-  const [row] = await rawDb
-    .insert(salesRoleplayAttempts)
-    .values({
-      scenarioId: input.scenarioId,
-      userId: user.id,
-      ...(input.audioStorageKey ? { audioStorageKey: input.audioStorageKey } : {}),
-      durationMs: input.durationMs,
-      attemptNumber,
-    })
-    .returning();
-  return row;
+  await requireAccessibleScenario(rawDb, user.id, input.scenarioId);
+  return withAllocatedRoleplayAttempt(
+    rawDb,
+    user.id,
+    input,
+    async (_tx, attempt) => attempt,
+  );
 }
 
 /**
@@ -149,7 +256,11 @@ export async function saveAttemptEvaluation(
   const rawDb = salesRawDb(db);
   // IDOR guard — select first, fail closed, never call db.update on miss.
   const [existing] = await rawDb
-    .select({ id: salesRoleplayAttempts.id, userId: salesRoleplayAttempts.userId })
+    .select({
+      id: salesRoleplayAttempts.id,
+      userId: salesRoleplayAttempts.userId,
+      scenarioId: salesRoleplayAttempts.scenarioId,
+    })
     .from(salesRoleplayAttempts)
     .where(eq(salesRoleplayAttempts.id, input.attemptId))
     .limit(1);
@@ -187,6 +298,15 @@ export async function saveAttemptEvaluation(
     }
     ownerUser = owner as unknown as SalesDomainContext["user"];
   }
+  const progressUser = ownerUser ?? user;
+  const accessibleScenario = await requireAccessibleScenario(
+    rawDb,
+    progressUser.id,
+    existing.scenarioId,
+  );
+  if (accessibleScenario.rubric.id !== input.rubricId) {
+    throw new RubricNotApprovedError(input.rubricId);
+  }
   const [updated] = await rawDb
     .update(salesRoleplayAttempts)
     .set({
@@ -199,25 +319,11 @@ export async function saveAttemptEvaluation(
     .where(eq(salesRoleplayAttempts.id, input.attemptId))
     .returning();
   if (input.evaluation.passed) {
-    const [attempt] = await rawDb
-      .select()
-      .from(salesRoleplayAttempts)
-      .where(eq(salesRoleplayAttempts.id, input.attemptId))
-      .limit(1);
-    if (attempt) {
-      const [scenario] = await rawDb
-        .select()
-        .from(salesRoleplayScenarios)
-        .where(eq(salesRoleplayScenarios.id, attempt.scenarioId))
-        .limit(1);
-      if (scenario) {
-        const progressUser = ownerUser ?? user;
-        await markTheoryLessonComplete(
-          { db: rawDb as unknown as SalesDomainContext["db"], user: progressUser, tenant },
-          { lessonId: scenario.lessonId },
-        );
-      }
-    }
+    await upsertCompletedProgress(
+      rawDb,
+      progressUser.id,
+      accessibleScenario.lesson.id,
+    );
   }
   return updated;
 }
@@ -288,32 +394,29 @@ export async function submitRoleplayAttempt(
   }
 
   const rawDb = salesRawDb(db) as unknown as DB;
-  const attempt = await createRoleplayAttempt(
-    { db: rawDb as unknown as SalesDomainContext["db"], user, tenant },
+  const accessibleScenario = await requireAccessibleScenario(
+    rawDb,
+    user.id,
+    input.scenarioId,
+  );
+  const evaluation = await input.evaluate(input.audio, input.scenarioId);
+  const saved = await withAllocatedRoleplayAttempt(
+    rawDb,
+    user.id,
     {
       scenarioId: input.scenarioId,
       audioStorageKey: input.audioStorageKey,
       durationMs: input.durationMs,
     },
-  );
-  const [scenario] = await rawDb
-    .select()
-    .from(salesRoleplayScenarios)
-    .where(eq(salesRoleplayScenarios.id, input.scenarioId))
-    .limit(1);
-  if (!scenario) throw new ScenarioNotFoundError(input.scenarioId);
-  const [rubric] = await rawDb
-    .select()
-    .from(salesRubrics)
-    .where(eq(salesRubrics.id, scenario.rubricId))
-    .limit(1);
-  if (!rubric || rubric.reviewStatus !== "approved") {
-    throw new RubricNotApprovedError(scenario.rubricId);
-  }
-  const evaluation = await input.evaluate(input.audio, input.scenarioId);
-  const saved = await saveAttemptEvaluation(
-    { db: rawDb as unknown as SalesDomainContext["db"], user, tenant },
-    { attemptId: attempt.id, evaluation, rubricId: rubric.id },
+    async (tx, attempt) =>
+      saveAttemptEvaluation(
+        { db: tx, user, tenant },
+        {
+          attemptId: attempt.id,
+          evaluation,
+          rubricId: accessibleScenario.rubric.id,
+        },
+      ),
   );
   return { attempt: saved, evaluation };
 }
@@ -331,6 +434,10 @@ export async function submitQuiz(
 ) {
   assertCan(user, "sales:quiz:submit", tenant);
   const rawDb = salesRawDb(db);
+  await requireAccessibleLesson(rawDb, user.id, {
+    lessonId: input.lessonId,
+    expectedType: "quiz",
+  });
   const questions = await rawDb
     .select()
     .from(salesQuizQuestions)
@@ -351,6 +458,7 @@ export async function submitQuiz(
     ? "completed"
     : "in_progress";
   const completedAt = passed ? new Date() : null;
+  const activityAt = new Date();
 
   await rawDb
     .insert(salesProgress)
@@ -360,6 +468,7 @@ export async function submitQuiz(
       status,
       score: String(score),
       completedAt,
+      updatedAt: activityAt,
     })
     .onConflictDoUpdate({
       target: [salesProgress.userId, salesProgress.lessonId],
@@ -378,6 +487,7 @@ export async function submitQuiz(
           ${salesProgress.completedAt},
           excluded.completed_at
         )`,
+        updatedAt: sql`excluded.updated_at`,
       },
     });
   return { lessonId: input.lessonId, score, passed, results };
@@ -409,6 +519,21 @@ export async function saveChatMessage(
   assertCan(user, "sales:chat", tenant);
   const rawDb = salesRawDb(db);
   let conversationId = input.conversationId;
+  if (conversationId) {
+    const [conversation] = await rawDb
+      .select({ id: salesConversations.id, userId: salesConversations.userId })
+      .from(salesConversations)
+      .where(
+        and(
+          eq(salesConversations.id, conversationId),
+          eq(salesConversations.userId, user.id),
+        ),
+      )
+      .limit(1);
+    if (!conversation) {
+      throw new SalesAuthError("Conversation is unavailable");
+    }
+  }
   if (!conversationId) {
     const [conv] = await rawDb
       .insert(salesConversations)
@@ -432,22 +557,6 @@ export async function saveChatMessage(
 }
 
 /**
- * Creates a new rep account (admin only). The caller is responsible for hashing
- * the password and inserting the user row; this function returns the input
- * validated so the API layer can call the auth package.
- * @param ctx - The domain context (user must hold sales:admin:create-rep)
- * @param input - The rep account fields
- * @returns The validated input
- */
-export async function createRepAccount(
-  { db, user, tenant }: SalesDomainContext,
-  input: CreateRepInput,
-) {
-  assertCan(user, "sales:admin:create-rep", tenant);
-  return input;
-}
-
-/**
  * Flips the reviewStatus of a lesson or rubric from draft to approved (admin only).
  * @param ctx - The domain context (user must hold sales:curriculum:approve)
  * @param input - The lesson or rubric id to approve
@@ -465,7 +574,7 @@ export async function approveCurriculumContent(
       .set({ reviewStatus: "approved" })
       .where(eq(salesLessons.id, input.lessonId))
       .returning();
-    return updated;
+    return approveContentOutputSchema.parse(updated);
   }
   if (input.rubricId) {
     const [updated] = await rawDb
@@ -473,7 +582,7 @@ export async function approveCurriculumContent(
       .set({ reviewStatus: "approved" })
       .where(eq(salesRubrics.id, input.rubricId))
       .returning();
-    return updated;
+    return approveContentOutputSchema.parse(updated);
   }
   throw new Error("Either lessonId or rubricId is required");
 }

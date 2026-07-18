@@ -1,0 +1,148 @@
+import { and, eq, sql } from "drizzle-orm";
+
+import type { UserContext } from "@reading-advantage/auth";
+import {
+  companyProductPrincipals,
+  users,
+  type DB,
+} from "@reading-advantage/db";
+
+/** Minimal verified Accounts identity required to resolve a Sales principal. */
+export interface SalesCompanyIdentity {
+  /** Stable company account identifier. */
+  readonly sub: string;
+  /** Exact product audience. */
+  readonly aud: string;
+  /** Stable verified company organization identifier. */
+  readonly organizationId: string;
+  /** Canonical verified company organization key. */
+  readonly organizationKey: string;
+  /** First-party company username used only when provisioning a new local row. */
+  readonly username: string;
+  /** First-party display name used only when provisioning a new local row. */
+  readonly displayName: string;
+  /** Audience-scoped role claims. */
+  readonly roles: readonly string[];
+}
+
+function salesRole(identity: SalesCompanyIdentity): "SALES_ADMIN" | "SALES_REP" {
+  if (identity.aud !== "sales") throw new Error("Sales identity audience is invalid.");
+  if (identity.organizationKey !== "internal-company") {
+    throw new Error("Sales identity organization is invalid.");
+  }
+  if (identity.roles.includes("SALES_ADMIN")) return "SALES_ADMIN";
+  if (identity.roles.includes("SALES_REP")) return "SALES_REP";
+  throw new Error("Accounts session has no recognized Sales role.");
+}
+
+/**
+ * Detects a PostgreSQL unique violation through bounded adapter error wrappers.
+ * @param error Database error or wrapper returned by Drizzle.
+ * @returns Whether the error chain contains SQLSTATE 23505.
+ */
+function isUniqueViolation(error: unknown): boolean {
+  let current: unknown = error;
+  for (let depth = 0; depth < 4 && current; depth += 1) {
+    if (typeof current === "object" && "code" in current && current.code === "23505") {
+      return true;
+    }
+    current = typeof current === "object" && "cause" in current
+      ? current.cause
+      : undefined;
+  }
+  return false;
+}
+
+/**
+ * Resolves an explicit Sales company-account mapping without heuristic merging.
+ * @param database Product database containing local users and durable mappings.
+ * @param identity Verified Accounts Sales identity.
+ * @returns Existing mapped principal or a newly provisioned unclaimed principal.
+ * @throws When an existing local ID or username requires an operator mapping manifest.
+ */
+export async function resolveSalesCompanyPrincipal(
+  database: DB,
+  identity: SalesCompanyIdentity,
+): Promise<UserContext> {
+  const role = salesRole(identity);
+  return database.transaction(async (tx) => {
+    await tx.execute(sql`select pg_advisory_xact_lock(hashtextextended(${`sales:${identity.organizationId}:${identity.sub}`}, 0))`);
+    const [mapped] = await tx
+      .select({
+        id: users.id,
+        username: users.username,
+        name: users.name,
+        schoolId: users.schoolId,
+        xp: users.xp,
+        level: users.level,
+        cefrLevel: users.cefrLevel,
+      })
+      .from(companyProductPrincipals)
+      .innerJoin(users, eq(users.id, companyProductPrincipals.localUserId))
+      .where(and(
+        eq(companyProductPrincipals.organizationId, identity.organizationId),
+        eq(companyProductPrincipals.organizationKey, identity.organizationKey),
+        eq(companyProductPrincipals.companyAccountId, identity.sub),
+        eq(companyProductPrincipals.applicationKey, "sales"),
+      ))
+      .limit(1);
+    if (mapped) {
+      await tx.update(users)
+        .set({ role })
+        .where(eq(users.id, mapped.id));
+      await tx.update(companyProductPrincipals)
+        .set({ roleKey: role, updatedAt: new Date() })
+        .where(and(
+          eq(companyProductPrincipals.organizationId, identity.organizationId),
+          eq(companyProductPrincipals.organizationKey, identity.organizationKey),
+          eq(companyProductPrincipals.companyAccountId, identity.sub),
+          eq(companyProductPrincipals.applicationKey, "sales"),
+        ));
+      return { ...mapped, role };
+    }
+
+    const [occupiedId] = await tx.select({ id: users.id }).from(users)
+      .where(eq(users.id, identity.sub)).limit(1);
+    if (occupiedId) {
+      throw new Error("Sales principal mapping is required for this existing local user.");
+    }
+    try {
+      const [created] = await tx.insert(users).values({
+        id: identity.sub,
+        username: identity.username,
+        displayUsername: identity.username,
+        name: identity.displayName,
+        role,
+        schoolId: null,
+        xp: 0,
+        level: 1,
+        cefrLevel: "N/A",
+      }).returning({
+        id: users.id,
+        username: users.username,
+        name: users.name,
+        schoolId: users.schoolId,
+        xp: users.xp,
+        level: users.level,
+        cefrLevel: users.cefrLevel,
+      });
+      if (!created) throw new Error("Sales principal provisioning failed.");
+      await tx.insert(companyProductPrincipals).values({
+        organizationId: identity.organizationId,
+        organizationKey: identity.organizationKey,
+        companyAccountId: identity.sub,
+        applicationKey: "sales",
+        localUserId: created.id,
+        roleKey: role,
+      });
+      return { ...created, role };
+    } catch (error) {
+      if (isUniqueViolation(error)) {
+        throw new Error(
+          "Sales principal mapping manifest is required for an existing username or local principal.",
+        );
+      }
+      throw error;
+    }
+  });
+}

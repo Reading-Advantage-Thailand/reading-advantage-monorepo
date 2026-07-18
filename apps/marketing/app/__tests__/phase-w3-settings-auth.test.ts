@@ -12,11 +12,12 @@
  */
 
 import { describe, expect, it, vi, type Mock } from "vitest";
-import {
-  SESSION_COOKIE_NAME,
-  validateSession,
-} from "@reading-advantage/auth";
 import { db } from "@reading-advantage/db";
+import {
+  KNOWN_TOKEN,
+  authedRequest,
+  introspectMarketingSession,
+} from "./helpers/auth-mock";
 
 // Encryption key fallback matching the Phase 3 settings tests.
 process.env.ENCRYPTION_KEY ??=
@@ -31,60 +32,6 @@ vi.mock("next/server", () => ({
       new Response(JSON.stringify(body), init),
   },
 }));
-
-// ─────────────────────────────────────────────────────────────────────
-// Auth seam: only validateSession is a spy; getSession/requireAuth mirror
-// the real implementations but drive the spy, so the test exercises the
-// full guard chain without requiring a live Postgres session table.
-// ─────────────────────────────────────────────────────────────────────
-vi.mock("@reading-advantage/auth", async () => {
-  const actual =
-    await vi.importActual<typeof import("@reading-advantage/auth")>(
-      "@reading-advantage/auth",
-    );
-  const validateSession = vi.fn(
-    async (_db: unknown, token: string): Promise<unknown | null> => {
-      if (token === "w3-known-session-token") {
-        return {
-          id: "00000000-0000-0000-0000-000000000001",
-          userId: "00000000-0000-0000-0000-000000000002",
-          expiresAt: new Date(Date.now() + 60 * 60 * 1000),
-          user: {
-            id: "00000000-0000-0000-0000-000000000002",
-            username: "staff",
-            name: "Staff User",
-            role: "ADMIN",
-            schoolId: "00000000-0000-0000-0000-000000000003",
-            xp: 0,
-            level: 1,
-            cefrLevel: "B2",
-          },
-        };
-      }
-      return null;
-    },
-  );
-  const getSession = async (dbArg: unknown, token: string | undefined) => {
-    if (!token) return null;
-    return validateSession(dbArg, token);
-  };
-  const requireAuthImpl = async (
-    dbArg: unknown,
-    token: string | undefined,
-  ) => {
-    const session = await getSession(dbArg, token);
-    if (!session) {
-      throw new actual.AuthError("Authentication required", "UNAUTHORIZED");
-    }
-    return session;
-  };
-  return {
-    ...actual,
-    validateSession,
-    getSession,
-    requireAuth: requireAuthImpl,
-  };
-});
 
 // ─────────────────────────────────────────────────────────────────────
 // Mock Drizzle client so tests are deterministic and DB-less.
@@ -111,20 +58,8 @@ vi.mock("@reading-advantage/db", async () => {
   };
 });
 
-const KNOWN_TOKEN = "w3-known-session-token";
-
 // Future auth contract: GET will accept a Request to read the session cookie.
 type RouteGET = (request: Request) => Promise<Response>;
-
-function authedRequest(url: string, init: RequestInit = {}): Request {
-  return new Request(url, {
-    ...init,
-    headers: {
-      ...init.headers,
-      Cookie: `${SESSION_COOKIE_NAME}=${KNOWN_TOKEN}`,
-    },
-  });
-}
 
 function unauthedRequest(url: string, init: RequestInit = {}): Request {
   return new Request(url, init);
@@ -220,11 +155,7 @@ describe("Phase 2A: Settings auth — authenticated positive controls", () => {
     const response = await GET(authedRequest("http://localhost/api/settings"));
 
     expect(response.status).toBe(200);
-    // The guard must have driven the real auth chain.
-    expect(validateSession).toHaveBeenCalledWith(
-      expect.anything(),
-      KNOWN_TOKEN,
-    );
+    expect(introspectMarketingSession).toHaveBeenCalledWith(KNOWN_TOKEN);
   });
 
   // [NEEDS-PO] This hardening assertion is pending product-owner confirmation

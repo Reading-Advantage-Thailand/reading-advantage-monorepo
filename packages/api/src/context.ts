@@ -1,7 +1,12 @@
 import { z } from "zod";
 import { db } from "@reading-advantage/db";
-import { validateSession, type AuthContext, type UserContext, type Tenant } from "@reading-advantage/auth";
-import { createTenantDB } from "@reading-advantage/domain";
+import {
+  validateSession,
+  type AuthContext,
+  type UserContext,
+  type Tenant,
+} from "@reading-advantage/auth";
+import { createTenantDB } from "@reading-advantage/domain/db-contract";
 import type { Context } from "./trpc.js";
 import { cookies } from "next/headers";
 
@@ -15,9 +20,26 @@ export const roleSchema = z.enum([
   "SALES_ADMIN",
 ]);
 
-interface CreateContextOptions {
-  authorization?: string | null;
+/** Legacy cookie or bearer evidence resolved by the shared auth database adapter. */
+export interface LegacyContextOptions {
+  /** Selects the legacy session adapter; omitted for backward compatibility. */
+  readonly mode?: "legacy";
+  /** Legacy bearer/session evidence resolved by the shared auth database adapter. */
+  readonly authorization?: string | null;
 }
+
+/** A principal already verified by a product's provider-neutral auth adapter. */
+export interface VerifiedPrincipalContextOptions {
+  /** Prevents all legacy cookie and bearer fallback. */
+  readonly mode: "verified-principal";
+  /** Already verified provider-neutral principal from an application auth adapter. */
+  readonly principal: UserContext | null;
+}
+
+/** Discriminated authentication evidence accepted by shared tRPC context. */
+export type CreateContextOptions =
+  | LegacyContextOptions
+  | VerifiedPrincipalContextOptions;
 
 /**
  * Extracts the auth session token from request headers or cookies.
@@ -26,7 +48,9 @@ interface CreateContextOptions {
  * @param opts.authorization - Optional Authorization header value (e.g., "Bearer <token>")
  * @returns The auth token string, or undefined if not found
  */
-export async function getAuthToken(opts: CreateContextOptions = {}): Promise<string | undefined> {
+export async function getAuthToken(
+  opts: LegacyContextOptions = {},
+): Promise<string | undefined> {
   const cookieStore = await cookies();
   let token = cookieStore.get("session_token")?.value;
 
@@ -40,35 +64,47 @@ export async function getAuthToken(opts: CreateContextOptions = {}): Promise<str
 /**
  * Creates the tRPC request context with database access and auth state.
  *
- * @param opts - Options containing optional authorization header
- * @param opts.authorization - Optional Authorization header value (e.g., "Bearer <token>")
+ * @param opts Authentication evidence and its explicit resolution mode.
  * @returns The tRPC context object with db, tenantDb, and auth properties
  */
-export async function createContext(opts: CreateContextOptions = {}): Promise<Context> {
+export async function createContext(
+  opts: CreateContextOptions = {},
+): Promise<Context> {
   let auth: AuthContext | null = null;
 
   try {
-    const token = await getAuthToken(opts);
-
-    if (token) {
-      const session = await validateSession(db, token);
-      if (session) {
+    if (opts.mode === "verified-principal") {
+      if (opts.principal) {
         const user: UserContext = {
-          id: session.user.id,
-          username: session.user.username,
-          name: session.user.name,
-          role: roleSchema.parse(session.user.role),
-          schoolId: session.user.schoolId,
-          xp: session.user.xp,
-          level: session.user.level,
-          cefrLevel: session.user.cefrLevel,
+          ...opts.principal,
+          role: roleSchema.parse(opts.principal.role),
         };
+        auth = { user, tenant: { schoolId: user.schoolId } };
+      }
+    } else {
+      const token = await getAuthToken(opts);
+      if (!token) {
+        auth = null;
+      } else {
+        const session = await validateSession(db, token);
+        if (session) {
+          const user: UserContext = {
+            id: session.user.id,
+            username: session.user.username,
+            name: session.user.name,
+            role: roleSchema.parse(session.user.role),
+            schoolId: session.user.schoolId,
+            xp: session.user.xp,
+            level: session.user.level,
+            cefrLevel: session.user.cefrLevel,
+          };
 
-        const tenant: Tenant = {
-          schoolId: session.user.schoolId,
-        };
+          const tenant: Tenant = {
+            schoolId: session.user.schoolId,
+          };
 
-        auth = { user, tenant };
+          auth = { user, tenant };
+        }
       }
     }
   } catch {

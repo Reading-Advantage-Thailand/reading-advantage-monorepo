@@ -9,7 +9,8 @@ import { roleplayAttemptOutputSchema as domainAttemptSchema } from "@reading-adv
 import type { DB } from "@reading-advantage/db";
 import type { Context } from "../trpc.js";
 
-function createMinimalMockDb(selectResults: unknown[] = []) {
+function createMinimalMockDb(selectSequence: unknown[][] = []) {
+  let selectIndex = 0;
   const builder = (val: unknown) => ({
     where: vi.fn().mockReturnThis(),
     orderBy: vi.fn().mockReturnThis(),
@@ -24,7 +25,11 @@ function createMinimalMockDb(selectResults: unknown[] = []) {
   });
 
   const mockDb = {
-    select: vi.fn(() => ({ from: vi.fn(() => builder(selectResults)) })),
+    select: vi.fn(() => {
+      const result = selectSequence[selectIndex] ?? [];
+      selectIndex += 1;
+      return { from: vi.fn(() => builder(result)) };
+    }),
     insert: vi.fn(() => ({
       values: vi.fn(() => ({ returning: vi.fn(() => Promise.resolve([])) })),
     })),
@@ -110,12 +115,59 @@ describe("Sales router audio contract", () => {
         createdAt: new Date(),
       },
     ];
-    const mockDb = createMinimalMockDb(attempts);
+    const scenarioId = "d7f0fc0c-1111-1111-1111-111111111111";
+    const moduleRow = {
+      id: "d7f0fc0c-2222-2222-2222-222222222222",
+      slug: "discovery",
+      title: "Discovery",
+      description: "Discovery",
+      phase: "Foundations",
+      order: 1,
+      createdAt: new Date(),
+    };
+    const lesson = {
+      id: "d7f0fc0c-3333-3333-3333-333333333333",
+      moduleId: moduleRow.id,
+      title: "Roleplay",
+      type: "roleplay",
+      content: "Practice",
+      order: 1,
+      reviewStatus: "approved",
+      createdAt: new Date(),
+    };
+    const scenario = {
+      id: scenarioId,
+      lessonId: lesson.id,
+      personaName: "Prospect",
+      personaRole: "Director",
+      situation: "Discovery",
+      objective: "Qualify",
+      prospectContextJson: {},
+      rubricId: "d7f0fc0c-4444-4444-4444-444444444444",
+      order: 1,
+      createdAt: new Date(),
+    };
+    const rubric = {
+      id: scenario.rubricId,
+      name: "Discovery",
+      criteriaJson: [],
+      reviewStatus: "approved",
+      createdAt: new Date(),
+    };
+    const mockDb = createMinimalMockDb([
+      [scenario],
+      [lesson],
+      [moduleRow],
+      [lesson],
+      [],
+      [rubric],
+      attempts,
+    ]);
     const caller = createCaller(
       { user: salesRep, tenant: globalTenant },
       mockDb,
     );
-    const result = await caller.sales.attemptHistory({ scenarioId: "d7f0fc0c-1111-1111-1111-111111111111" });
+    const result = await caller.sales.attemptHistory({ scenarioId });
     expect(result[0].audioStorageKey).toBeNull();
   });
 

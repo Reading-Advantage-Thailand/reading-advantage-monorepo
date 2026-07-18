@@ -8,7 +8,10 @@ import { createTenantDB } from "@reading-advantage/domain";
 import type { DB } from "@reading-advantage/db";
 import type { Context } from "../trpc.js";
 
-const mockValidateSession = vi.hoisted(() => vi.fn());
+const { mockValidateSession, mockCookies } = vi.hoisted(() => ({
+  mockValidateSession: vi.fn(),
+  mockCookies: vi.fn(),
+}));
 
 vi.mock("@reading-advantage/auth", async (importOriginal) => {
   const actual =
@@ -17,12 +20,7 @@ vi.mock("@reading-advantage/auth", async (importOriginal) => {
 });
 
 vi.mock("next/headers", () => ({
-  cookies: vi.fn(() =>
-    Promise.resolve({
-      get: (name: string) =>
-        name === "session_token" ? { value: "test-session-token" } : undefined,
-    })
-  ),
+  cookies: mockCookies,
 }));
 
 function salesSession(role: "SALES_REP" | "SALES_ADMIN") {
@@ -91,9 +89,24 @@ function createCaller(
 
 beforeEach(() => {
   vi.clearAllMocks();
+  mockCookies.mockResolvedValue({
+    get: (name: string) =>
+      name === "session_token" ? { value: "test-session-token" } : undefined,
+  });
 });
 
 describe("Sales auth context integration", () => {
+  it("verified-principal mode stays anonymous without consulting legacy auth", async () => {
+    const ctx = await createContext({
+      mode: "verified-principal",
+      principal: null,
+    });
+
+    expect(ctx.auth).toBeNull();
+    expect(mockCookies).not.toHaveBeenCalled();
+    expect(mockValidateSession).not.toHaveBeenCalled();
+  });
+
   it("SALES_REP session produces a non-null auth context", async () => {
     mockValidateSession.mockResolvedValue(salesSession("SALES_REP"));
     const ctx = await createContext();

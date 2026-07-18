@@ -7,23 +7,22 @@
  * `videoAssets`, `pastTopics`, `settings`) are classified REFERENTIAL in
  * `packages/domain/src/tenant-registry.ts` and have no `schoolId` column.
  *
- * Compatibility authentication policy: every protected route requires a valid
- * session via the `session_token` cookie and an exact legacy `ADMIN` allow-list.
- * The company-identity cutover replaces this compatibility policy with
- * Marketing `MEMBER`/`ADMIN` application roles through the internal SSO
- * adapter; product routes must never query the identity database directly.
+ * Every protected route requires a live Accounts-issued Marketing application
+ * session with an exact `MEMBER` or `ADMIN` role. Product routes never query
+ * the identity database directly.
  *
  * Tenant/owner scoping: not applicable at the data layer today. The plan
  * defers per-row scoping to a follow-up cycle if `schoolId`/`ownerId`
  * columns are added to the marketing tables.
  */
+import type { Role } from "@reading-advantage/auth";
+
 import {
-  AuthError,
-  requireAuth as authRequireAuth,
-  SESSION_COOKIE_NAME,
-  type Role,
-} from "@reading-advantage/auth";
-import { db } from "@/lib/db";
+  getMarketingOidcClient,
+  MARKETING_SESSION_COOKIE,
+  marketingSessionUser,
+  readMarketingCookie,
+} from "@/lib/company-oidc";
 
 const LEGACY_MARKETING_ROLES: ReadonlySet<Role> = new Set(["ADMIN"]);
 
@@ -37,36 +36,7 @@ export function hasLegacyMarketingAccess(role: Role): boolean {
 }
 
 /**
- * Resolves the session token from a `Request` cookie header. Falls back to
- * `request.cookies.get(...)` when the request is a `NextRequest`. Handles
- * both shapes so route handlers can stay framework-agnostic and the test
- * harness can drive them with raw `Request` objects.
- * @param request The route request carrying the application session cookie.
- * @returns The raw session token, or undefined when the cookie is absent.
- */
-function readSessionToken(request: Request): string | undefined {
-  // NextRequest exposes `.cookies.get(name)`. Standard Request does not.
-  const cookies = (
-    request as Request & {
-      cookies?: { get: (name: string) => { value: string } | undefined };
-    }
-  ).cookies;
-  if (cookies?.get) {
-    return cookies.get(SESSION_COOKIE_NAME)?.value;
-  }
-  const cookieHeader = request.headers.get("cookie");
-  if (!cookieHeader) return undefined;
-  for (const part of cookieHeader.split(";")) {
-    const [name, ...rest] = part.trim().split("=");
-    if (name === SESSION_COOKIE_NAME) {
-      return rest.join("=");
-    }
-  }
-  return undefined;
-}
-
-/**
- * Requires a legacy administrator session for a protected Marketing route.
+ * Requires an active Accounts-issued Marketing MEMBER or ADMIN session.
  * @param request The route request carrying the application session cookie.
  * @returns The resolved session or a response that the route must return.
  * @throws Unexpected authentication or database failures.
@@ -74,41 +44,47 @@ function readSessionToken(request: Request): string | undefined {
 export async function requireMarketingSession(
   request: Request,
 ): Promise<
-  | { ok: true; session: Awaited<ReturnType<typeof authRequireAuth>> }
+  | { ok: true; session: { user: ReturnType<typeof marketingSessionUser> } }
   | { ok: false; response: Response }
 > {
-  const token = readSessionToken(request);
+  const token = readMarketingCookie(request, MARKETING_SESSION_COOKIE);
   try {
-    const session = await authRequireAuth(db, token);
-    if (!hasLegacyMarketingAccess(session.user.role)) {
-      throw new AuthError("Marketing access required", "FORBIDDEN");
-    }
-    return { ok: true, session };
-  } catch (error) {
-    if (error instanceof AuthError && error.code === "UNAUTHORIZED") {
+    if (!token) {
       return {
         ok: false,
-        response: new Response(
-          JSON.stringify({ message: "Authentication required" }),
-          {
-            status: 401,
-            headers: { "content-type": "application/json" },
-          },
-        ),
+        response: new Response(JSON.stringify({ message: "Authentication required" }), {
+          status: 401,
+          headers: { "content-type": "application/json" },
+        }),
       };
     }
-    if (error instanceof AuthError && error.code === "FORBIDDEN") {
+    const session = await getMarketingOidcClient().introspect(token);
+    if (!session) {
       return {
         ok: false,
-        response: new Response(
-          JSON.stringify({ message: "Marketing access required" }),
-          {
-            status: 403,
-            headers: { "content-type": "application/json" },
-          },
-        ),
+        response: new Response(JSON.stringify({ message: "Authentication required" }), {
+          status: 401,
+          headers: { "content-type": "application/json" },
+        }),
       };
     }
-    throw error;
+    if (!session.identity.roles.some((role) => role === "MEMBER" || role === "ADMIN")) {
+      return {
+        ok: false,
+        response: new Response(JSON.stringify({ message: "Marketing access required" }), {
+          status: 403,
+          headers: { "content-type": "application/json" },
+        }),
+      };
+    }
+    return { ok: true, session: { user: marketingSessionUser(session.identity) } };
+  } catch {
+    return {
+      ok: false,
+      response: new Response(JSON.stringify({ message: "Authentication unavailable" }), {
+        status: 503,
+        headers: { "content-type": "application/json" },
+      }),
+    };
   }
 }

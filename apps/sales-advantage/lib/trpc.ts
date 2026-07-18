@@ -1,5 +1,6 @@
 import { createTRPCReact, type CreateTRPCReact } from "@trpc/react-query";
-import type { AppRouter } from "@reading-advantage/api";
+import type { SalesAppRouter } from "@reading-advantage/api/sales";
 
 /** Provides the typed tRPC React client for the Sales application. */
-export const trpc: CreateTRPCReact<AppRouter, unknown> = createTRPCReact<AppRouter>();
+export const trpc: CreateTRPCReact<SalesAppRouter, unknown> =
+  createTRPCReact<SalesAppRouter>();

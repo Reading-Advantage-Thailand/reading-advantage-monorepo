@@ -153,6 +153,8 @@ import {
   verificationTokens,
   roles,
   loginAttempts,
+  capabilityIdempotencyRecords,
+  companyProductPrincipals,
 } from "@reading-advantage/db";
 
 // auth infrastructure — identifier/token/expires; not scoped to a school.
@@ -167,8 +169,15 @@ register(accounts, "EXEMPT");
 register(sessions, "EXEMPT");
 register(loginAttempts, "EXEMPT");
 register(activityTutorialCaptureLeases, "EXEMPT");
+// Kernel infrastructure validates its trusted namespace before every access.
+// Global rows and school-scoped rows share this table, so TenantDB must not
+// infer scope from the nullable/global namespace representation.
+register(capabilityIdempotencyRecords, "EXEMPT");
+// Explicit product identity links are global authentication infrastructure;
+// application and local-user keys are validated by the mapping adapter.
 
 // ─── REFERENTIAL tables (tenant data via owner FK, no schoolId) ──
+register(companyProductPrincipals, "REFERENTIAL");
 
 import {
   xpLogs,

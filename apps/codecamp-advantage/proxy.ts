@@ -1,10 +1,9 @@
 import createIntlMiddleware from "next-intl/middleware";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { AuthError, SESSION_COOKIE_NAME, requireRole } from "@reading-advantage/auth";
-import { db } from "@reading-advantage/db";
 import { routing } from "./i18n/routing";
 
+const CODECAMP_SESSION_COOKIE = "__Host-ra_codecamp_session";
 const intlMiddleware = createIntlMiddleware(routing);
 
 function getPublicUrl(request: NextRequest, pathname: string) {
@@ -44,7 +43,7 @@ export async function proxy(request: NextRequest) {
   }
 
   if (isAdminPath(lowerPath)) {
-    const sessionToken = request.cookies.get(SESSION_COOKIE_NAME)?.value;
+    const sessionToken = request.cookies.get(CODECAMP_SESSION_COOKIE)?.value;
     const redirectTarget = pathname + search;
 
     if (!sessionToken) {
@@ -53,39 +52,8 @@ export async function proxy(request: NextRequest) {
       return NextResponse.redirect(homeUrl);
     }
 
-    try {
-      await requireRole(db, sessionToken, "ADMIN");
-    } catch (err) {
-      if (err instanceof AuthError && err.code === "FORBIDDEN") {
-        const homeUrl = getPublicUrl(request, "/");
-        homeUrl.searchParams.set("error", "forbidden");
-        return NextResponse.redirect(homeUrl);
-      }
-
-      if (err instanceof AuthError && err.code === "UNAUTHORIZED") {
-        const homeUrl = getPublicUrl(request, "/");
-        homeUrl.searchParams.set("redirectTo", redirectTarget);
-        const response = NextResponse.redirect(homeUrl);
-        response.cookies.set(SESSION_COOKIE_NAME, "", {
-          path: "/",
-          maxAge: 0,
-          sameSite: "lax",
-        });
-        return response;
-      }
-
-      console.error(
-        JSON.stringify({
-          level: "error",
-          event: "proxy_session_check_failed",
-          message: err instanceof Error ? err.message : String(err),
-          stack: err instanceof Error ? err.stack : undefined,
-        }),
-      );
-      const homeUrl = getPublicUrl(request, "/");
-      homeUrl.searchParams.set("error", "session_check_failed");
-      return NextResponse.redirect(homeUrl);
-    }
+    // The proxy performs only a routing hint from cookie presence. Exact ADMIN
+    // authorization is enforced by the revocation-aware tRPC/backend context.
   }
 
   const hasLocalePrefix = routing.locales.some((locale) => pathname === `/${locale}` || pathname.startsWith(`/${locale}/`));

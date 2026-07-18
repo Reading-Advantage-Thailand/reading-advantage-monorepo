@@ -4,22 +4,19 @@ import { fileURLToPath } from "node:url";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { parse } from "yaml";
 
-const { requireAuthMock } = vi.hoisted(() => ({
-  requireAuthMock: vi.fn(),
+const { introspectMock } = vi.hoisted(() => ({
+  introspectMock: vi.fn(),
 }));
 
-vi.mock("@reading-advantage/auth", async () => {
-  const actual =
-    await vi.importActual<typeof import("@reading-advantage/auth")>(
-      "@reading-advantage/auth",
-    );
+vi.mock("@/lib/company-oidc", async () => {
+  const actual = await vi.importActual<typeof import("@/lib/company-oidc")>(
+    "@/lib/company-oidc",
+  );
   return {
     ...actual,
-    requireAuth: requireAuthMock,
+    getMarketingOidcClient: () => ({ introspect: introspectMock }),
   };
 });
-
-vi.mock("@/lib/db", () => ({ db: { marker: "marketing-db" } }));
 
 interface CloudBuildStep {
   id?: string;
@@ -56,43 +53,53 @@ describe("Marketing production access boundary", () => {
     vi.clearAllMocks();
   });
 
-  it("admits only the explicit legacy ADMIN compatibility role", async () => {
-    const session = {
-      id: "session-id",
-      userId: "user-id",
-      expiresAt: new Date("2030-01-01T00:00:00.000Z"),
-      user: { role: "ADMIN" },
-    };
-    requireAuthMock.mockResolvedValue(session);
+  it.each(["MEMBER", "ADMIN"])("admits the exact Marketing role %s", async (role) => {
+    introspectMock.mockResolvedValue({
+      identity: {
+        sub: "11111111-1111-4111-8111-111111111111",
+        aud: "marketing",
+        sid: "22222222-2222-4222-8222-222222222222",
+        organizationId: "33333333-3333-4333-8333-333333333333",
+        organizationKey: "reading-advantage",
+        status: "ACTIVE",
+        roles: [role],
+        authVersion: 1,
+      },
+      expiresAt: "2030-01-01T00:00:00.000Z",
+    });
 
     const { requireMarketingSession } = await import("@/lib/auth");
     const result = await requireMarketingSession(
       new Request("https://marketing.reading-advantage.com/api/campaigns", {
-        headers: { cookie: "session_token=valid-token" },
+        headers: { cookie: "__Host-ra_marketing_session=valid-token" },
       }),
     );
 
-    expect(result).toEqual({ ok: true, session });
-    expect(requireAuthMock).toHaveBeenCalledWith(
-      expect.objectContaining({ marker: "marketing-db" }),
-      "valid-token",
-    );
+    expect(result.ok).toBe(true);
+    expect(introspectMock).toHaveBeenCalledWith("valid-token");
   }, 15_000);
 
-  it.each(["SYSTEM", "SALES_ADMIN", "SALES_REP", "TEACHER", "STUDENT", "INTERN"])(
-    "returns 403 for the non-Marketing legacy role %s",
+  it.each(["SALES_ADMIN", "SALES_REP", "TEACHER", "STUDENT", "INTERN"])(
+    "returns 403 for the non-Marketing role %s",
     async (role) => {
-      requireAuthMock.mockResolvedValue({
-        id: "session-id",
-        userId: "user-id",
-        expiresAt: new Date("2030-01-01T00:00:00.000Z"),
-        user: { role },
+      introspectMock.mockResolvedValue({
+        identity: {
+          sub: "11111111-1111-4111-8111-111111111111",
+          aud: "marketing",
+          sid: "22222222-2222-4222-8222-222222222222",
+          organizationId: "33333333-3333-4333-8333-333333333333",
+          organizationKey: "reading-advantage",
+          status: "ACTIVE",
+          roles: [role],
+          authVersion: 1,
+        },
+        expiresAt: "2030-01-01T00:00:00.000Z",
       });
 
       const { requireMarketingSession } = await import("@/lib/auth");
       const result = await requireMarketingSession(
         new Request("https://marketing.reading-advantage.com/api/campaigns", {
-          headers: { cookie: "session_token=non-marketing-token" },
+          headers: { cookie: "__Host-ra_marketing_session=non-marketing-token" },
         }),
       );
 
@@ -142,8 +149,14 @@ describe("Marketing Cloud Run production contract", () => {
     expect(deploy.args).toContain(
       "--service-account=marketing-cloud-run@$PROJECT_ID.iam.gserviceaccount.com",
     );
-    expect(deploy.args).toContain(
-      "--set-env-vars=NODE_ENV=production,NEXT_PUBLIC_API_URL=https://marketing.reading-advantage.com,AI_PROVIDER=openai",
+    expect(deploy.args?.find((arg) => arg.startsWith("--set-env-vars="))).toContain(
+      "NEXT_PUBLIC_API_URL=https://marketing.reading-advantage.com,AI_PROVIDER=openai",
+    );
+    expect(deploy.args?.join(" ")).toContain(
+      "COMPANY_AUTH_ISSUER_URL=https://accounts.reading-advantage.com",
+    );
+    expect(deploy.args?.join(" ")).toContain(
+      "COMPANY_AUTH_OIDC_CLIENT_ID=marketing-web",
     );
   });
 

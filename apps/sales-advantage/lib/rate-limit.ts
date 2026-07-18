@@ -1,19 +1,11 @@
-// ─── FR-7: rate-limiter durability decision ────────────────────────────────
-//
-// Decision: best-effort in-memory limiter (option b in the
-// `review_findings_remediation_20260624` test-strategy § "FR-7 Decision").
-// Limits are NOT durable across serverless/horizontally-scaled instances
-// because the backing `Map` is per-process. This module is a soft guard
-// against a single misbehaving client, not a security boundary.
-//
-// For a durable, cross-instance limit, see the Postgres-backed limiter
-// shipped in `rate_limiter_v2_20260603` (`packages/auth/src/rate-limit.ts`,
-// the `login_attempts` table). If/when sales-advantage scales beyond a
-// single instance per region, this module should delegate to the shared
-// limiter and this banner updated accordingly.
-//
-// AC-7: AC allows either outcome provided it is documented and approved.
-// ────────────────────────────────────────────────────────────────────────────
+import {
+  consumeRateLimit,
+  createPostgresRateLimitStore,
+} from "@reading-advantage/auth";
+import { db } from "@reading-advantage/db";
+
+// Chat remains a best-effort UX throttle. Roleplay submissions use the shared
+// PostgreSQL adapter below and are enforced across Cloud Run instances.
 
 interface RateLimitEntry {
   count: number;
@@ -82,6 +74,13 @@ export function checkChatRateLimit(userId: string) {
 }
 
 /** Roleplay submission rate limit: 10 audio uploads per user per hour. */
-export function checkRoleplayRateLimit(userId: string) {
-  return checkRateLimit(`roleplay:${userId}`, 10, 60 * 60_000);
+export async function checkRoleplayRateLimit(userId: string) {
+  const config = { maxAttempts: 10, windowMs: 60 * 60_000 };
+  const store = createPostgresRateLimitStore(db, config);
+  const result = await consumeRateLimit(
+    store,
+    `username:sales:roleplay:${userId}`,
+    config,
+  );
+  return { allowed: result.allowed, retryAfter: result.retriesAfter };
 }

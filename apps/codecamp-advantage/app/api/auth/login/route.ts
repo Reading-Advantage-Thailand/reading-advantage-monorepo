@@ -1,23 +1,9 @@
-import { handleLogin } from "@reading-advantage/api/routes/auth";
-import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-export async function POST(request: NextRequest) {
-  try {
-    return await handleLogin(request);
-  } catch (error) {
-    console.error(
-      JSON.stringify({
-        level: "error",
-        event: "login_error",
-        message: error instanceof Error ? error.message : String(error),
-        stack: error instanceof Error ? error.stack : undefined,
-        cause: error instanceof Error && "cause" in error ? String(error.cause) : undefined,
-      }),
-    );
-    return NextResponse.json(
-      { message: "Internal server error" },
-      { status: 500 },
-    );
-  }
+/** Retires product-local credentials in favor of the Accounts handoff. */
+export async function POST(): Promise<NextResponse> {
+  return NextResponse.json(
+    { message: "Continue with Accounts.", authorizationUrl: "/api/auth/company/start" },
+    { status: 409 },
+  );
 }

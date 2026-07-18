@@ -74,6 +74,30 @@ const APPLICATION_ROLES = [
     displayName: "Sales administrator",
     description: "Administers Sales Advantage.",
   },
+  {
+    applicationKey: "codecamp",
+    roleKey: "STUDENT",
+    displayName: "Student",
+    description: "Uses assigned Codecamp learning activities.",
+  },
+  {
+    applicationKey: "codecamp",
+    roleKey: "INTERN",
+    displayName: "Intern",
+    description: "Uses the Codecamp internship curriculum.",
+  },
+  {
+    applicationKey: "codecamp",
+    roleKey: "TEACHER",
+    displayName: "Teacher",
+    description: "Supports Codecamp learners and reviews progress.",
+  },
+  {
+    applicationKey: "codecamp",
+    roleKey: "ADMIN",
+    displayName: "Administrator",
+    description: "Administers Codecamp users and curriculum.",
+  },
 ] as const;
 
 /**

@@ -101,24 +101,34 @@ export const salesQuizQuestions = pgTable("sales_quiz_questions", {
 
 // ─── Roleplay Attempts (the practice artifact) ────────────
 
-export const salesRoleplayAttempts = pgTable("sales_roleplay_attempts", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  scenarioId: uuid("scenario_id")
-    .notNull()
-    .references(() => salesRoleplayScenarios.id, { onDelete: "cascade" }),
-  userId: text("user_id")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  audioStorageKey: text("audio_storage_key"),
-  durationMs: integer("duration_ms").notNull().default(0),
-  transcriptExcerpt: text("transcript_excerpt"),
-  llmScoreJson: jsonb("llm_score_json"),
-  overallScore: numeric("overall_score", { precision: 5, scale: 2 }),
-  passed: boolean("passed"),
-  llmFeedback: text("llm_feedback"),
-  attemptNumber: integer("attempt_number").notNull().default(1),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-});
+export const salesRoleplayAttempts = pgTable(
+  "sales_roleplay_attempts",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    scenarioId: uuid("scenario_id")
+      .notNull()
+      .references(() => salesRoleplayScenarios.id, { onDelete: "cascade" }),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    audioStorageKey: text("audio_storage_key"),
+    durationMs: integer("duration_ms").notNull().default(0),
+    transcriptExcerpt: text("transcript_excerpt"),
+    llmScoreJson: jsonb("llm_score_json"),
+    overallScore: numeric("overall_score", { precision: 5, scale: 2 }),
+    passed: boolean("passed"),
+    llmFeedback: text("llm_feedback"),
+    attemptNumber: integer("attempt_number").notNull().default(1),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => [
+    unique("sales_roleplay_attempts_user_scenario_number_unique").on(
+      table.userId,
+      table.scenarioId,
+      table.attemptNumber,
+    ),
+  ],
+);
 
 // ─── Progress ─────────────────────────────────────────────
 
@@ -132,19 +142,18 @@ export const salesProgress = pgTable(
     lessonId: uuid("lesson_id")
       .notNull()
       .references(() => salesLessons.id, { onDelete: "cascade" }),
-    status: salesProgressStatusEnum("status")
-      .default("not_started")
-      .notNull(),
+    status: salesProgressStatusEnum("status").default("not_started").notNull(),
     completedAt: timestamp("completed_at"),
     score: numeric("score", { precision: 5, scale: 2 }),
     createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
   },
   (table) => [
     unique("sales_progress_user_lesson_unique").on(
       table.userId,
-      table.lessonId
+      table.lessonId,
     ),
-  ]
+  ],
 );
 
 // ─── Chat Tutor ───────────────────────────────────────────

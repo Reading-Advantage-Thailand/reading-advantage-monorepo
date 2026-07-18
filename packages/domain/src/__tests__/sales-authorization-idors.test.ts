@@ -1,9 +1,6 @@
 // @vitest-environment node
 import { describe, it, expect, vi } from "vitest";
-import {
-  saveAttemptEvaluation,
-  getCohortOverview,
-} from "../sales/index.js";
+import { saveAttemptEvaluation, getCohortOverview } from "../sales/index.js";
 import { createMockDb } from "./mock-db.js";
 import { createTenantDB } from "../db-contract.js";
 import type { DB } from "@reading-advantage/db";
@@ -63,6 +60,48 @@ const baseEvaluation = {
   weaknesses: [],
   suggestedNextAction: "practice",
   transcriptExcerpt: "hello",
+};
+
+const approvedModule = {
+  id: "module-1",
+  slug: "foundation",
+  title: "Foundation",
+  description: "Foundation",
+  phase: "Foundations",
+  order: 1,
+  createdAt: new Date(),
+};
+
+const approvedRoleplayLesson = {
+  id: "lesson-1",
+  moduleId: approvedModule.id,
+  title: "Roleplay",
+  type: "roleplay",
+  content: "Practice",
+  order: 1,
+  reviewStatus: "approved",
+  createdAt: new Date(),
+};
+
+const approvedScenario = {
+  id: "scenario-1",
+  lessonId: approvedRoleplayLesson.id,
+  personaName: "Prospect",
+  personaRole: "Director",
+  situation: "Discovery",
+  objective: "Qualify",
+  prospectContextJson: {},
+  rubricId: "rubric-1",
+  order: 1,
+  createdAt: new Date(),
+};
+
+const approvedRubric = {
+  id: "rubric-1",
+  name: "Discovery",
+  criteriaJson: [],
+  reviewStatus: "approved",
+  createdAt: new Date(),
 };
 
 describe("Sales authorization / IDOR hardening", () => {
@@ -126,7 +165,16 @@ describe("Sales authorization / IDOR hardening", () => {
       createdAt: new Date(),
     };
     const db = createMockDb({
-      selectSequence: [[repAttempt], [ownerRecordRepA]],
+      selectSequence: [
+        [repAttempt],
+        [ownerRecordRepA],
+        [approvedScenario],
+        [approvedRoleplayLesson],
+        [approvedModule],
+        [approvedRoleplayLesson],
+        [],
+        [approvedRubric],
+      ],
       updateReturning: [repAttempt],
     });
 
@@ -139,7 +187,9 @@ describe("Sales authorization / IDOR hardening", () => {
       },
     );
 
-    expect(result.id, "same-tenant admin update must succeed").toBe("attempt-rep-a");
+    expect(result.id, "same-tenant admin update must succeed").toBe(
+      "attempt-rep-a",
+    );
     expect(
       (db.update as ReturnType<typeof vi.fn>).mock.calls.length,
       "update call count must be 1 for authorized admin update",
@@ -219,7 +269,9 @@ describe("Sales authorization / IDOR hardening", () => {
       tenant: tenantA,
     });
 
-    const crossTenantRowCount = result.filter((r) => r.userId !== "rep-a").length;
+    const crossTenantRowCount = result.filter(
+      (r) => r.userId !== "rep-a",
+    ).length;
     expect(
       crossTenantRowCount,
       `cross-tenant row count: ${crossTenantRowCount} (expected 0)`,

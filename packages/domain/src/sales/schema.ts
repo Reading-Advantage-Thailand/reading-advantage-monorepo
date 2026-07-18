@@ -61,6 +61,59 @@ export const quizQuestionOutputSchema = z.object({
   order: z.number(),
 });
 
+/** Learner-safe quiz question projection without grading material. */
+export const learnerQuizQuestionOutputSchema = z.object({
+  id: z.string(),
+  lessonId: z.string(),
+  question: z.string(),
+  optionsJson: z.array(z.string()),
+  order: z.number(),
+});
+
+/** Approved lesson summary with learner-specific progression state. */
+export const learnerModuleLessonOutputSchema = lessonOutputSchema.extend({
+  completed: z.boolean(),
+  bestScore: z.string().nullable(),
+  isLocked: z.boolean(),
+  prerequisiteLessonId: z.string().nullable(),
+});
+
+/** Learner-facing module detail and sequential lesson access projection. */
+export const moduleBySlugOutputSchema = moduleOutputSchema.extend({
+  lessons: z.array(learnerModuleLessonOutputSchema),
+});
+
+/** Learner-facing lesson detail with safe type-specific child content. */
+export const lessonDetailOutputSchema = lessonOutputSchema.extend({
+  completed: z.boolean(),
+  bestScore: z.string().nullable(),
+  moduleSlug: z.string(),
+  scenarios: z.array(roleplayScenarioOutputSchema).optional(),
+  quizQuestions: z.array(learnerQuizQuestionOutputSchema).optional(),
+});
+
+/** Approved learner-facing scenario and rubric projection. */
+export const scenarioDetailOutputSchema = roleplayScenarioOutputSchema.extend({
+  rubric: rubricOutputSchema,
+});
+
+/** Dashboard module projection with learner completion and lock state. */
+export const dashboardModuleOutputSchema = moduleOutputSchema.extend({
+  lessonCount: z.number().int().nonnegative(),
+  completedLessons: z.number().int().nonnegative(),
+  progress: z.number().int().min(0).max(100),
+  isLocked: z.boolean(),
+  prerequisiteModuleSlug: z.string().nullable(),
+});
+
+/** Complete administrator curriculum model without learner progression filters. */
+export const adminCurriculumOutputSchema = z.object({
+  modules: z.array(
+    moduleOutputSchema.extend({ lessons: z.array(lessonOutputSchema) }),
+  ),
+  rubrics: z.array(rubricOutputSchema),
+});
+
 // ─── Attempt + evaluation contracts ───────────────────────
 
 export const roleplayAttemptInputSchema = z.object({
@@ -208,16 +261,67 @@ export const conversationOutputSchema = z.object({
 
 // ─── Admin contracts ──────────────────────────────────────
 
-export const createRepInputSchema = z.object({
-  username: z.string().min(1),
-  password: z.string().min(8),
-  displayName: z.string().min(1),
+/** Aggregate administrator view for one Sales representative. */
+export const salesCohortRepOutputSchema = z.object({
+  userId: z.string(),
+  username: z.string(),
+  displayName: z.string(),
+  modulesCompleted: z.number().int().nonnegative(),
+  totalModules: z.number().int().nonnegative(),
+  avgRoleplayScore: z.number().min(0).max(100).nullable(),
+  avgQuizScore: z.number().min(0).max(100).nullable(),
+  roleplayAttemptCount: z.number().int().nonnegative(),
+  lastActive: z.coerce.date().nullable(),
+});
+
+/** Per-module completion summary in the administrator rep detail view. */
+export const salesRepModuleDetailOutputSchema = z.object({
+  moduleId: z.string(),
+  slug: z.string(),
+  title: z.string(),
+  lessonsCompleted: z.number().int().nonnegative(),
+  totalLessons: z.number().int().nonnegative(),
+  completed: z.boolean(),
+  avgQuizScore: z.number().min(0).max(100).nullable(),
+});
+
+/** Retry and best-attempt summary for one roleplay scenario. */
+export const salesRepScenarioDetailOutputSchema = z.object({
+  scenarioId: z.string(),
+  lessonTitle: z.string(),
+  personaName: z.string(),
+  attemptCount: z.number().int().nonnegative(),
+  retryCount: z.number().int().nonnegative(),
+  bestAttempt: roleplayAttemptOutputSchema.nullable(),
+  attempts: z.array(roleplayAttemptOutputSchema),
+});
+
+/** Complete typed administrator detail for one tenant-owned Sales rep. */
+export const salesRepDetailOutputSchema = z.object({
+  rep: z.object({
+    userId: z.string(),
+    username: z.string(),
+    displayName: z.string(),
+  }),
+  summary: salesCohortRepOutputSchema.omit({
+    userId: true,
+    username: true,
+    displayName: true,
+  }),
+  modules: z.array(salesRepModuleDetailOutputSchema),
+  scenarios: z.array(salesRepScenarioDetailOutputSchema),
 });
 
 export const approveContentInputSchema = z.object({
   lessonId: z.string().uuid().optional(),
   rubricId: z.string().uuid().optional(),
 });
+
+/** Approved curriculum record returned to the administrator. */
+export const approveContentOutputSchema = z.union([
+  lessonOutputSchema,
+  rubricOutputSchema,
+]);
 
 // ─── Inferred types ───────────────────────────────────────
 
@@ -229,6 +333,17 @@ export type RoleplayScenarioOutput = z.infer<
   typeof roleplayScenarioOutputSchema
 >;
 export type QuizQuestionOutput = z.infer<typeof quizQuestionOutputSchema>;
+export type LearnerQuizQuestionOutput = z.infer<
+  typeof learnerQuizQuestionOutputSchema
+>;
+export type LearnerModuleLessonOutput = z.infer<
+  typeof learnerModuleLessonOutputSchema
+>;
+export type ModuleBySlugOutput = z.infer<typeof moduleBySlugOutputSchema>;
+export type LessonDetailOutput = z.infer<typeof lessonDetailOutputSchema>;
+export type ScenarioDetailOutput = z.infer<typeof scenarioDetailOutputSchema>;
+export type DashboardModuleOutput = z.infer<typeof dashboardModuleOutputSchema>;
+export type AdminCurriculumOutput = z.infer<typeof adminCurriculumOutputSchema>;
 export type RoleplayAttemptInput = z.infer<typeof roleplayAttemptInputSchema>;
 export type RoleplayEvaluationResult = z.infer<
   typeof roleplayEvaluationResultSchema
@@ -240,5 +355,7 @@ export type ProgressOutput = z.infer<typeof progressOutputSchema>;
 export type ChatMessageInput = z.infer<typeof chatMessageInputSchema>;
 export type ChatMessageOutput = z.infer<typeof chatMessageOutputSchema>;
 export type ConversationOutput = z.infer<typeof conversationOutputSchema>;
-export type CreateRepInput = z.infer<typeof createRepInputSchema>;
+export type SalesCohortRepOutput = z.infer<typeof salesCohortRepOutputSchema>;
+export type SalesRepDetailOutput = z.infer<typeof salesRepDetailOutputSchema>;
 export type ApproveContentInput = z.infer<typeof approveContentInputSchema>;
+export type ApproveContentOutput = z.infer<typeof approveContentOutputSchema>;

@@ -5,23 +5,29 @@ import { AuthError } from "@reading-advantage/auth";
 import * as sales from "@reading-advantage/domain/sales";
 import {
   moduleOutputSchema,
-  lessonOutputSchema,
-  roleplayScenarioOutputSchema,
-  rubricOutputSchema,
+  moduleBySlugOutputSchema,
+  lessonDetailOutputSchema,
+  scenarioDetailOutputSchema,
+  dashboardModuleOutputSchema,
+  adminCurriculumOutputSchema,
   roleplayAttemptOutputSchema,
   quizSubmissionInputSchema,
   quizResultOutputSchema,
   progressOutputSchema,
   chatMessageInputSchema,
   chatMessageOutputSchema,
-  createRepInputSchema,
   approveContentInputSchema,
+  approveContentOutputSchema,
+  salesCohortRepOutputSchema,
+  salesRepDetailOutputSchema,
   ScenarioNotFoundError,
   RubricNotApprovedError,
   CurriculumNotApprovedError,
+  LessonPrerequisiteNotMetError,
   ModulePrerequisiteNotMetError,
   AudioStorageError,
   SalesError,
+  SalesAuthError,
 } from "@reading-advantage/domain/sales";
 
 /**
@@ -36,27 +42,55 @@ import {
  * @returns Never; always throws a TRPCError
  */
 function mapSalesError(err: unknown): never {
+  console.error(
+    JSON.stringify({
+      level: "error",
+      event: "sales_operation_failed",
+      errorName: err instanceof Error ? err.name : "UnknownError",
+      salesCode: err instanceof SalesError ? err.code : undefined,
+      detail: err instanceof Error ? err.message : String(err),
+    }),
+  );
   if (err instanceof AuthError) {
-    throw new TRPCError({ code: "FORBIDDEN", message: err.message });
+    throw new TRPCError({ code: "FORBIDDEN", message: "Sales access denied" });
+  }
+  if (err instanceof SalesAuthError) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "Sales resource unavailable",
+    });
   }
   if (err instanceof ScenarioNotFoundError) {
-    throw new TRPCError({ code: "NOT_FOUND", message: err.message });
+    throw new TRPCError({ code: "NOT_FOUND", message: "Scenario not found" });
   }
   if (
     err instanceof RubricNotApprovedError ||
     err instanceof CurriculumNotApprovedError ||
+    err instanceof LessonPrerequisiteNotMetError ||
     err instanceof ModulePrerequisiteNotMetError
   ) {
-    throw new TRPCError({ code: "BAD_REQUEST", message: err.message });
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "Sales curriculum prerequisite not met",
+    });
   }
   if (err instanceof AudioStorageError) {
-    throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: err.message });
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Sales service temporarily unavailable",
+    });
   }
   if (err instanceof SalesError) {
-    throw new TRPCError({ code: "BAD_REQUEST", message: err.message });
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "Sales request could not be completed",
+    });
   }
   if (err instanceof Error) {
-    throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: err.message });
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Sales service temporarily unavailable",
+    });
   }
   throw err;
 }
@@ -66,8 +100,14 @@ const salesRepOrAdmin = middleware(async ({ ctx, next }) => {
   if (!ctx.auth) {
     throw new TRPCError({ code: "UNAUTHORIZED", message: "Not authenticated" });
   }
-  if (ctx.auth.user.role !== "SALES_REP" && ctx.auth.user.role !== "SALES_ADMIN") {
-    throw new TRPCError({ code: "FORBIDDEN", message: "Sales access required" });
+  if (
+    ctx.auth.user.role !== "SALES_REP" &&
+    ctx.auth.user.role !== "SALES_ADMIN"
+  ) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "Sales access required",
+    });
   }
   return next({ ctx: { ...ctx, auth: ctx.auth } });
 });
@@ -78,7 +118,10 @@ const salesAdminOnly = middleware(async ({ ctx, next }) => {
     throw new TRPCError({ code: "UNAUTHORIZED", message: "Not authenticated" });
   }
   if (ctx.auth.user.role !== "SALES_ADMIN") {
-    throw new TRPCError({ code: "FORBIDDEN", message: "Sales admin access required" });
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "Sales admin access required",
+    });
   }
   return next({ ctx: { ...ctx, auth: ctx.auth } });
 });
@@ -103,6 +146,7 @@ export const salesRouter = router({
 
   moduleBySlug: salesProcedure
     .input(z.object({ slug: z.string() }))
+    .output(moduleBySlugOutputSchema)
     .query(async ({ ctx, input }) => {
       try {
         return await sales.getModuleBySlug(
@@ -116,6 +160,7 @@ export const salesRouter = router({
 
   lesson: salesProcedure
     .input(z.object({ lessonId: z.string().uuid() }))
+    .output(lessonDetailOutputSchema)
     .query(async ({ ctx, input }) => {
       try {
         return await sales.getLesson(
@@ -129,6 +174,7 @@ export const salesRouter = router({
 
   scenario: salesProcedure
     .input(z.object({ scenarioId: z.string().uuid() }))
+    .output(scenarioDetailOutputSchema)
     .query(async ({ ctx, input }) => {
       try {
         return await sales.getScenario(
@@ -168,17 +214,33 @@ export const salesRouter = router({
       }
     }),
 
-  dashboard: salesProcedure.query(async ({ ctx }) => {
-    try {
-      return await sales.getDashboardData({
-        db: ctx.tenantDb,
-        user: ctx.auth.user,
-        tenant: ctx.auth.tenant,
-      });
-    } catch (err) {
-      throw mapSalesError(err);
-    }
-  }),
+  dashboard: salesProcedure
+    .output(z.array(dashboardModuleOutputSchema))
+    .query(async ({ ctx }) => {
+      try {
+        return await sales.getDashboardData({
+          db: ctx.tenantDb,
+          user: ctx.auth.user,
+          tenant: ctx.auth.tenant,
+        });
+      } catch (err) {
+        throw mapSalesError(err);
+      }
+    }),
+
+  markTheoryLessonComplete: salesProcedure
+    .input(z.object({ lessonId: z.string().uuid() }))
+    .output(progressOutputSchema)
+    .mutation(async ({ ctx, input }) => {
+      try {
+        return await sales.markTheoryLessonComplete(
+          { db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant },
+          input,
+        );
+      } catch (err) {
+        throw mapSalesError(err);
+      }
+    }),
 
   submitQuiz: salesProcedure
     .input(quizSubmissionInputSchema)
@@ -196,7 +258,12 @@ export const salesRouter = router({
 
   saveChatMessage: salesProcedure
     .input(chatMessageInputSchema)
-    .output(z.object({ message: chatMessageOutputSchema, conversationId: z.string() }))
+    .output(
+      z.object({
+        message: chatMessageOutputSchema,
+        conversationId: z.string(),
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
       try {
         return await sales.saveChatMessage(
@@ -209,21 +276,22 @@ export const salesRouter = router({
     }),
 
   admin: router({
-    createRep: salesAdminProcedure
-      .input(createRepInputSchema)
-      .mutation(async ({ ctx, input }) => {
+    curriculum: salesAdminProcedure
+      .output(adminCurriculumOutputSchema)
+      .query(async ({ ctx }) => {
         try {
-          return await sales.createRepAccount(
-            { db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant },
-            input,
-          );
+          return await sales.getAdminCurriculum({
+            db: ctx.tenantDb,
+            user: ctx.auth.user,
+            tenant: ctx.auth.tenant,
+          });
         } catch (err) {
           throw mapSalesError(err);
         }
       }),
 
     cohortOverview: salesAdminProcedure
-      .output(z.array(progressOutputSchema))
+      .output(z.array(salesCohortRepOutputSchema))
       .query(async ({ ctx }) => {
         try {
           return await sales.getCohortOverview({
@@ -236,8 +304,23 @@ export const salesRouter = router({
         }
       }),
 
+    repDetail: salesAdminProcedure
+      .input(z.object({ repId: z.string().min(1) }))
+      .output(salesRepDetailOutputSchema)
+      .query(async ({ ctx, input }) => {
+        try {
+          return await sales.getSalesRepDetail(
+            { db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant },
+            input,
+          );
+        } catch (err) {
+          throw mapSalesError(err);
+        }
+      }),
+
     approveContent: salesAdminProcedure
       .input(approveContentInputSchema)
+      .output(approveContentOutputSchema)
       .mutation(async ({ ctx, input }) => {
         try {
           return await sales.approveCurriculumContent(
