@@ -797,9 +797,17 @@ def validate_symmetric_reconciliation_document(
         raise ValueError("SYMMETRIC_BLOCKER_SET_MISMATCH")
     if document.get("status") != summary["status"] or document.get("coverage_status") != summary["coverage_status"]:
         raise ValueError("SYMMETRIC_STATUS_MISMATCH")
+    coverage_counts = document.get("exhaustive_coverage_counts")
+    if not isinstance(coverage_counts, dict) or not coverage_counts:
+        raise ValueError("SYMMETRIC_ACCOUNTING_MISMATCH")
+    expected_uncovered_by_category = (
+        summary["uncovered_by_category"]
+        if summary["uncovered_count"]
+        else {category: 0 for category in coverage_counts}
+    )
     if (
         document.get("uncovered_count") != summary["uncovered_count"]
-        or document.get("uncovered_by_category") != summary["uncovered_by_category"]
+        or document.get("uncovered_by_category") != expected_uncovered_by_category
     ):
         raise ValueError("SYMMETRIC_ACCOUNTING_MISMATCH")
     return summary

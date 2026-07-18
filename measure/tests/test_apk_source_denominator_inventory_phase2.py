@@ -1122,6 +1122,7 @@ class Phase2IndependentHumanDiscoveryContracts(unittest.TestCase):
             "independent_symmetric_blocking_records": summary["blocking_records"],
             "status": summary["status"],
             "coverage_status": summary["coverage_status"],
+            "exhaustive_coverage_counts": {"assets": 1, "files": 1},
             "uncovered_count": summary["uncovered_count"],
             "uncovered_by_category": summary["uncovered_by_category"],
         }
@@ -1179,8 +1180,8 @@ class Phase2IndependentHumanDiscoveryContracts(unittest.TestCase):
                 hashlib.sha256(f"{revision}:{path}".encode()).hexdigest(),
             )
 
-    def test_check_only_rejects_committed_output_provenance_drift(self) -> None:
-        """Requires check-only to compare every output against requested revision hashes."""
+    def test_check_only_accepts_explicit_zero_accounting_and_rejects_provenance_drift(self) -> None:
+        """Requires valid explicit-zero output and rejects requested-revision drift."""
         module = _load_generator_module()
         revision = "a" * 40
 
@@ -1210,8 +1211,9 @@ class Phase2IndependentHumanDiscoveryContracts(unittest.TestCase):
             "independent_symmetric_blocking_records": [],
             "status": "independent-human-discovery-complete",
             "coverage_status": "complete",
+            "exhaustive_coverage_counts": {"files": 1},
             "uncovered_count": 0,
-            "uncovered_by_category": {},
+            "uncovered_by_category": {"files": 0},
         }
         with tempfile.TemporaryDirectory() as directory:
             track_dir = Path(directory)
