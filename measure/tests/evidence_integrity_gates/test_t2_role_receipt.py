@@ -82,7 +82,11 @@ class T2RoleReceiptTests(unittest.TestCase):
 
         logical_input = root / "input.ts"
         logical_input.write_text("fixture logical input\n", encoding="utf-8")
+        evidence_receipt = root / TRACK / "role-receipts" / "evidence-collector.json"
+        evidence_receipt.parent.mkdir(parents=True, exist_ok=True)
+        evidence_receipt.write_text("{}\n", encoding="utf-8")
         self._git(root, "add", "input.ts")
+        self._git(root, "add", str(evidence_receipt.relative_to(root)))
         self._git(root, "commit", "-qm", "fixture baseline")
         baseline_commit = self._git(root, "rev-parse", "HEAD")
         logical_hash = hashlib.sha256(logical_input.read_bytes()).hexdigest()
@@ -103,24 +107,29 @@ class T2RoleReceiptTests(unittest.TestCase):
             "discovery-auditor": "discovery-auditor:mechanical-denominator",
             "evidence-collector": "evidence-collector:asset-history-denominator",
         }
+        output_name = (
+            "phase3-reconciliation.json"
+            if role == "requirements-mapper"
+            else "source-denominator.json"
+        )
         task = {
             "task_id": task_ids.get(role, f"{role}:fixture-task"),
             "owner_role": role,
             "forbidden_roles": [value for value in roles if value != role],
             "reviewer_role": "adversarial-reviewer" if role != "adversarial-reviewer" else "product-owner",
-            "expected_outputs": ["source-denominator.json"],
+            "expected_outputs": [output_name],
             "execution_contract": {
                 "schema_version": "apk-role-execution-contract.v1",
                 "allowed_provider_tools": ["read", "write"],
                 "direct_write_only": True,
-                "direct_write_outputs": [f"{TRACK}/source-denominator.json"],
+                "direct_write_outputs": [f"{TRACK}/{output_name}"],
                 "ordered_operations": [],
                 "read_only_shell_commands": [],
                 "shell_generators": [],
             },
         }
-        output = root / TRACK / "source-denominator.json"
-        output.parent.mkdir(parents=True)
+        output = root / TRACK / output_name
+        output.parent.mkdir(parents=True, exist_ok=True)
         output_values = {
             "discovery-auditor": {
                 "records": [{
@@ -150,6 +159,7 @@ class T2RoleReceiptTests(unittest.TestCase):
                     },
                     "phase2": {
                         "implementation_revision": baseline_commit,
+                        "receipt_revision": baseline_commit,
                         "consumed_output_hashes": {"input.ts": logical_hash},
                     },
                 },
@@ -223,13 +233,13 @@ class T2RoleReceiptTests(unittest.TestCase):
             },
             "requirements-mapper": {
                 "formula": "phase3-exact-predecessor-artifacts-and-frozen-claim-pointers",
-                "phase3_artifact_path": f"{TRACK}/source-denominator.json",
+                "phase3_artifact_path": f"{TRACK}/phase3-reconciliation.json",
                 "phase1_revision_pointer": "/input_provenance/phase1/revision",
                 "phase1_hashes_pointer": "/input_provenance/phase1/output_hashes",
                 "phase2_revision_pointer": "/input_provenance/phase2/implementation_revision",
                 "phase2_hashes_pointer": "/input_provenance/phase2/consumed_output_hashes",
                 "claim_record_pointers": {
-                    f"{TRACK}/source-denominator.json": ["/records"],
+                    f"{TRACK}/phase3-reconciliation.json": ["/records"],
                 },
             },
             "truth-test-author": {
@@ -372,6 +382,25 @@ class T2RoleReceiptTests(unittest.TestCase):
         raw_path = root / "raw-export.json"
         raw_path.write_bytes(json.dumps(raw, sort_keys=True).encode())
         return root, temporary, task, raw_path, commit
+
+    def _role_commit_binding(
+        self, root: Path, role: str, output_commit: str
+    ) -> dict[str, str] | None:
+        """Builds the exact immutable handoff binding required by one fixture role."""
+        if role == "evidence-collector":
+            return {
+                "phase1_attestation_commit": output_commit,
+                "phase2_attestation_commit": output_commit,
+            }
+        if role == "requirements-mapper":
+            phase3 = json.loads((root / TRACK / "phase3-reconciliation.json").read_bytes())
+            return {
+                "mapper_phase1_attestation_commit": output_commit,
+                "phase2_receipt_commit": phase3["input_provenance"]["phase2"][
+                    "receipt_revision"
+                ],
+            }
+        return None
 
     def _render(
         self,
@@ -540,13 +569,7 @@ class T2RoleReceiptTests(unittest.TestCase):
             with self.subTest(role=role):
                 root, temporary, task, raw_path, commit = self._fixture(role)
                 try:
-                    binding = None
-                    if role == "evidence-collector":
-                        binding = {
-                            "status": "committed-output-binding",
-                            "phase1_attestation_commit": commit,
-                            "phase2_attestation_commit": commit,
-                        }
+                    binding = self._role_commit_binding(root, role, commit)
                     receipt = self._render(
                         root,
                         task,
@@ -781,7 +804,13 @@ class T2RoleReceiptTests(unittest.TestCase):
             with self.subTest(role=role):
                 root, temporary, task, raw_path, commit = self._fixture(role)
                 try:
-                    receipt = self._render(root, task, raw_path, commit)
+                    receipt = self._render(
+                        root,
+                        task,
+                        raw_path,
+                        commit,
+                        commit_binding=self._role_commit_binding(root, role, commit),
+                    )
                     self.assertEqual(receipt["actual_usage"][counter], expected)
                     self.assertEqual(set(receipt["actual_usage"]), {
                         counter,
@@ -993,6 +1022,53 @@ class T2RoleReceiptTests(unittest.TestCase):
             self.assertNotIn("}", command)
             self.assertIn(phase0_commit, command)
         self.assertIn(phase1_commit, generators[1].binding.command)
+
+    def test_mapper_receipt_placeholder_is_authority_bound_to_phase3(self) -> None:
+        """Requires the mapper receipt commit to match committed Phase-3 provenance."""
+        root, temporary, _task, _raw_path, output_commit = self._fixture(
+            "requirements-mapper"
+        )
+        self.addCleanup(temporary.cleanup)
+        binding = self._role_commit_binding(root, "requirements-mapper", output_commit)
+        assert binding is not None
+        self.assertEqual(
+            receipt_module._validated_commit_binding(
+                root, "requirements-mapper", output_commit, binding
+            ),
+            binding,
+        )
+        command = receipt_module._expanded_command_template(
+            "python3 phase3.py --phase2-receipt-revision {phase2_receipt_commit}",
+            output_commit,
+            "requirements-mapper",
+            binding,
+        )
+        self.assertEqual(
+            command,
+            "python3 phase3.py --phase2-receipt-revision "
+            + binding["phase2_receipt_commit"],
+        )
+        forged = {**binding, "phase2_receipt_commit": output_commit}
+        with self.assertRaisesRegex(T2RoleReceiptError, "differs from committed Phase-3"):
+            receipt_module._validated_commit_binding(
+                root, "requirements-mapper", output_commit, forged
+            )
+        evidence_receipt = root / TRACK / "role-receipts" / "evidence-collector.json"
+        evidence_receipt.write_text('{"newer":true}\n', encoding="utf-8")
+        self._git(root, "add", str(evidence_receipt.relative_to(root)))
+        self._git(root, "commit", "-qm", "newer evidence receipt")
+        later_output = self._git(root, "rev-parse", "HEAD")
+        with self.assertRaisesRegex(T2RoleReceiptError, "latest committed evidence receipt"):
+            receipt_module._validated_commit_binding(
+                root, "requirements-mapper", later_output, binding
+            )
+        with self.assertRaisesRegex(T2RoleReceiptError, "unauthorized placeholder"):
+            receipt_module._expanded_command_template(
+                "python3 phase3.py {phase2_receipt_commit}",
+                output_commit,
+                "evidence-collector",
+                binding,
+            )
 
     def test_rejects_live_trusted_runtime_hash_drift(self) -> None:
         """Fails closed when one frozen executable digest differs from live bytes."""

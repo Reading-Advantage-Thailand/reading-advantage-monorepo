@@ -363,6 +363,8 @@ def _validated_commit_binding(
 ) -> dict[str, Any] | None:
     """Validates optional phase handoff commits against the receipt output commit."""
     if binding is None:
+        if role in {"evidence-collector", "requirements-mapper"}:
+            raise T2RoleReceiptError(f"{role} requires an immutable commit binding")
         return None
     if not isinstance(binding, Mapping) or not binding:
         raise T2RoleReceiptError("commit binding must be a nonempty object")
@@ -387,10 +389,65 @@ def _validated_commit_binding(
             raise T2RoleReceiptError(f"commit binding is not an output ancestor: {field}")
     if role == "evidence-collector":
         required = {"phase1_attestation_commit", "phase2_attestation_commit"}
-        if not required.issubset(commit_fields):
+        allowed = required | {"status"}
+        if not required.issubset(binding) or not set(binding).issubset(allowed):
             raise T2RoleReceiptError("evidence commit binding lacks Phase-1 or Phase-2 attestation")
+        if set(commit_fields) != required:
+            raise T2RoleReceiptError("evidence commit binding contains unexpected commit fields")
+        if binding.get("status", "committed-output-binding") != "committed-output-binding":
+            raise T2RoleReceiptError("evidence commit binding status is invalid")
         if commit_fields["phase2_attestation_commit"] != output_commit:
             raise T2RoleReceiptError("Phase-2 attestation must equal the receipt commit")
+    if role == "requirements-mapper":
+        required = {"mapper_phase1_attestation_commit", "phase2_receipt_commit"}
+        if set(binding) != required or set(commit_fields) != required:
+            raise T2RoleReceiptError(
+                "mapper commit binding lacks Phase-1 attestation or Phase-2 receipt"
+            )
+        phase3_path = f"{TRACK_DIRECTORY}/phase3-reconciliation.json"
+        try:
+            phase3 = json.loads(_committed_bytes(root, output_commit, phase3_path))
+        except (UnicodeDecodeError, json.JSONDecodeError) as error:
+            raise T2RoleReceiptError("mapper Phase-3 output is malformed") from error
+        phase2 = (
+            phase3.get("input_provenance", {}).get("phase2")
+            if isinstance(phase3, Mapping)
+            else None
+        )
+        if (
+            not isinstance(phase2, Mapping)
+            or phase2.get("receipt_revision") != commit_fields["phase2_receipt_commit"]
+        ):
+            raise T2RoleReceiptError(
+                "mapper Phase-2 receipt binding differs from committed Phase-3 provenance"
+            )
+        evidence_receipt_path = (
+            f"{TRACK_DIRECTORY}/role-receipts/evidence-collector.json"
+        )
+        latest_receipt = subprocess.run(
+            (
+                "/usr/bin/git",
+                "log",
+                "-1",
+                "--format=%H",
+                output_commit,
+                "--",
+                evidence_receipt_path,
+            ),
+            cwd=root,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            check=False,
+            text=True,
+        )
+        if (
+            latest_receipt.returncode != 0
+            or latest_receipt.stdout.strip()
+            != commit_fields["phase2_receipt_commit"]
+        ):
+            raise T2RoleReceiptError(
+                "mapper Phase-2 receipt binding is not the latest committed evidence receipt"
+            )
     return json.loads(_canonical_json(binding))
 
 
@@ -549,6 +606,13 @@ def _expanded_command_template(
         elif (
             field == "phase1_attestation_commit"
             and role == "evidence-collector"
+            and isinstance(commit_binding, Mapping)
+            and isinstance(commit_binding.get(field), str)
+        ):
+            values[field] = commit_binding[field]
+        elif (
+            field == "phase2_receipt_commit"
+            and role == "requirements-mapper"
             and isinstance(commit_binding, Mapping)
             and isinstance(commit_binding.get(field), str)
         ):

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import importlib.util
+import inspect
 import json
 import re
 import subprocess
@@ -31,9 +32,6 @@ HUMAN_DISCREPANCY_PATH = TRACK_DIR / "human-discrepancy-records.json"
 REPORT_PATH = TRACK_DIR / "phase3-reconciliation-contract-test-report.json"
 RECONCILIATION_PATH = TRACK_DIR / "phase3-reconciliation.json"
 REPLACEMENT_PROGRAM_PATH = "measure/apk-evidence-reconstruction-program.md"
-PHASE1_REVISION = "990dd9c060ca844ad16d141b1eb4086b310369a4"
-PHASE2_IMPLEMENTATION_REVISION = "4f5dde0a04c70c57f123a72eded84836325743da"
-PHASE2_RECEIPT_REVISION = "7eef639674e927f2d56107866d385e0df812aa66"
 PHASE2_RECEIPT_PATH = f"measure/tracks/{TRACK}/role-receipts/evidence-collector.json"
 QUARANTINED_SOURCE_PREFIX = "measure/tracks/apk_cross_game_asset_ontology_20260712"
 PHASE1_ARTIFACTS = {
@@ -228,16 +226,54 @@ class Phase3ReconciliationContracts(unittest.TestCase):
         self.baseline = scope["current_revision"]
         self.assertIsInstance(self.baseline, str)
         assert isinstance(self.baseline, str)
-        self.source = _load_git_json(PHASE1_REVISION, SOURCE_PATH.name)
-        self.ledger = _load_git_json(PHASE1_REVISION, IDENTITY_PATH.name)
-        self.scenes = _load_git_json(PHASE1_REVISION, SCENE_PATH.name)
-        self.assets = _load_git_json(PHASE1_REVISION, ASSET_PATH.name)
-        self.historical = _load_git_json(PHASE1_REVISION, HISTORICAL_PATH.name)
-        self.mechanical_discrepancies = _load_git_json(PHASE1_REVISION, MECHANICAL_DISCREPANCY_PATH.name)
-        self.human_discovery = _load_git_json(PHASE2_IMPLEMENTATION_REVISION, HUMAN_DISCOVERY_PATH.name)
-        self.human_duplicates = _load_git_json(PHASE2_IMPLEMENTATION_REVISION, HUMAN_DUPLICATE_PATH.name)
-        self.human_historical = _load_git_json(PHASE2_IMPLEMENTATION_REVISION, HUMAN_HISTORICAL_PATH.name)
-        self.human_discrepancies = _load_git_json(PHASE2_IMPLEMENTATION_REVISION, HUMAN_DISCREPANCY_PATH.name)
+        provenance = self.reconciliation.get("input_provenance")
+        self.assertIsInstance(provenance, dict)
+        assert isinstance(provenance, dict)
+        phase2 = provenance.get("phase2")
+        self.assertIsInstance(phase2, dict)
+        assert isinstance(phase2, dict)
+        self.phase2_receipt_revision = phase2.get("receipt_revision")
+        self.assertRegex(str(self.phase2_receipt_revision), r"^[0-9a-f]{40}$")
+        assert isinstance(self.phase2_receipt_revision, str)
+        self.phase2_receipt_bytes = _git_bytes(
+            self.phase2_receipt_revision, PHASE2_RECEIPT_PATH
+        )
+        self.phase2_receipt = json.loads(self.phase2_receipt_bytes)
+        self.assertIsInstance(self.phase2_receipt, dict)
+        assert isinstance(self.phase2_receipt, dict)
+        commit_binding = self.phase2_receipt.get("commit_binding")
+        self.assertIsInstance(commit_binding, dict)
+        assert isinstance(commit_binding, dict)
+        self.phase1_revision = commit_binding.get("phase1_attestation_commit")
+        self.phase2_implementation_revision = self.phase2_receipt.get("commit_sha")
+        self.assertRegex(str(self.phase1_revision), r"^[0-9a-f]{40}$")
+        self.assertRegex(str(self.phase2_implementation_revision), r"^[0-9a-f]{40}$")
+        assert isinstance(self.phase1_revision, str)
+        assert isinstance(self.phase2_implementation_revision, str)
+        self.assertEqual(
+            commit_binding.get("phase2_attestation_commit"),
+            self.phase2_implementation_revision,
+        )
+        self.source = _load_git_json(self.phase1_revision, SOURCE_PATH.name)
+        self.ledger = _load_git_json(self.phase1_revision, IDENTITY_PATH.name)
+        self.scenes = _load_git_json(self.phase1_revision, SCENE_PATH.name)
+        self.assets = _load_git_json(self.phase1_revision, ASSET_PATH.name)
+        self.historical = _load_git_json(self.phase1_revision, HISTORICAL_PATH.name)
+        self.mechanical_discrepancies = _load_git_json(
+            self.phase1_revision, MECHANICAL_DISCREPANCY_PATH.name
+        )
+        self.human_discovery = _load_git_json(
+            self.phase2_implementation_revision, HUMAN_DISCOVERY_PATH.name
+        )
+        self.human_duplicates = _load_git_json(
+            self.phase2_implementation_revision, HUMAN_DUPLICATE_PATH.name
+        )
+        self.human_historical = _load_git_json(
+            self.phase2_implementation_revision, HUMAN_HISTORICAL_PATH.name
+        )
+        self.human_discrepancies = _load_git_json(
+            self.phase2_implementation_revision, HUMAN_DISCREPANCY_PATH.name
+        )
 
     def _assert_locator(self, locator: object, *, historical: bool = False) -> dict[str, Any]:
         """Validates a committed exact path, blob, and inclusive range hash.
@@ -414,36 +450,36 @@ class Phase3ReconciliationContracts(unittest.TestCase):
         self.assertIsInstance(phase1, dict)
         self.assertIsInstance(phase2, dict)
         assert isinstance(phase1, dict) and isinstance(phase2, dict)
-        self.assertEqual(phase1.get("revision"), PHASE1_REVISION)
+        self.assertEqual(phase1.get("revision"), self.phase1_revision)
         expected_phase1_hashes = {
             f"measure/tracks/{TRACK}/{name}": hashlib.sha256(
-                _git_bytes(PHASE1_REVISION, f"measure/tracks/{TRACK}/{name}")
+                _git_bytes(self.phase1_revision, f"measure/tracks/{TRACK}/{name}")
             ).hexdigest()
             for name in PHASE1_ARTIFACTS
         }
         self.assertEqual(phase1.get("output_hashes"), expected_phase1_hashes)
 
-        receipt_bytes = _git_bytes(PHASE2_RECEIPT_REVISION, PHASE2_RECEIPT_PATH)
-        receipt = json.loads(receipt_bytes)
-        self.assertEqual(receipt.get("commit_sha"), PHASE2_IMPLEMENTATION_REVISION)
+        receipt_bytes = self.phase2_receipt_bytes
+        receipt = self.phase2_receipt
+        self.assertEqual(receipt.get("commit_sha"), self.phase2_implementation_revision)
         expected_phase2_hashes = {
             f"measure/tracks/{TRACK}/{name}": hashlib.sha256(
-                _git_bytes(PHASE2_IMPLEMENTATION_REVISION, f"measure/tracks/{TRACK}/{name}")
+                _git_bytes(self.phase2_implementation_revision, f"measure/tracks/{TRACK}/{name}")
             ).hexdigest()
             for name in PHASE2_ARTIFACTS
         }
         expected_receipt_owned_hashes = {
             **{
                 f"measure/tracks/{TRACK}/{name}": hashlib.sha256(
-                    _git_bytes(PHASE1_REVISION, f"measure/tracks/{TRACK}/{name}")
+                    _git_bytes(self.phase1_revision, f"measure/tracks/{TRACK}/{name}")
                 ).hexdigest()
                 for name in PHASE1_COLLECTOR_ARTIFACTS
             },
             **expected_phase2_hashes,
         }
         self.assertEqual(receipt.get("output_hashes"), expected_receipt_owned_hashes)
-        self.assertEqual(phase2.get("implementation_revision"), PHASE2_IMPLEMENTATION_REVISION)
-        self.assertEqual(phase2.get("receipt_revision"), PHASE2_RECEIPT_REVISION)
+        self.assertEqual(phase2.get("implementation_revision"), self.phase2_implementation_revision)
+        self.assertEqual(phase2.get("receipt_revision"), self.phase2_receipt_revision)
         self.assertEqual(phase2.get("receipt_path"), PHASE2_RECEIPT_PATH)
         self.assertEqual(phase2.get("receipt_sha256"), hashlib.sha256(receipt_bytes).hexdigest())
         self.assertEqual(phase2.get("consumed_output_hashes"), expected_phase2_hashes)
@@ -972,11 +1008,27 @@ class Phase3ReconciliationContracts(unittest.TestCase):
 
     def test_phase3_derives_predecessor_revisions_from_the_receipt(self) -> None:
         """Prevents stale embedded Phase-1 and Phase-2 implementation revisions."""
+        module = _load_phase3_generator_module()
         source = (TRACK_DIR / "generate_phase3_reconciliation.py").read_text(encoding="utf-8")
         self.assertNotRegex(source, r"(?m)^PHASE1_REVISION\s*=")
         self.assertNotRegex(source, r"(?m)^PHASE2_IMPLEMENTATION_REVISION\s*=")
+        self.assertNotRegex(source, r"(?m)^PHASE2_RECEIPT_REVISION\s*=")
         self.assertIn('commit_binding.get("phase1_attestation_commit")', source)
         self.assertIn('receipt.get("commit_sha")', source)
+        self.assertEqual(
+            list(inspect.signature(module.main).parameters),
+            ["phase2_receipt_revision", "output_path"],
+        )
+        with self.assertRaises(SystemExit):
+            module._parse_cli([])
+        with self.assertRaises(SystemExit):
+            module._parse_cli(["--phase2-receipt-revision", "not-a-full-sha"])
+        self.assertEqual(
+            module._parse_cli(
+                ["--phase2-receipt-revision", self.phase2_receipt_revision]
+            ),
+            (self.phase2_receipt_revision, None),
+        )
 
     def test_phase3_contains_no_interpretation_or_vacuous_completion(self) -> None:
         """Rejects semantic conclusions and empty comparison collections.

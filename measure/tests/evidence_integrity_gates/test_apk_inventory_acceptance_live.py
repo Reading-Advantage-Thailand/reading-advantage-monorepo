@@ -176,6 +176,7 @@ class APKInventoryProductionAcceptanceWiringTests(unittest.TestCase):
         cls.legacy._git("add", TRACK_DIRECTORY)
         cls.legacy._git("commit", "-q", "-m", "fixture: production phase1")
         phase1_commit = cls.legacy._git("rev-parse", "HEAD").stdout.strip()
+        cls.phase1_commit = phase1_commit
         phase1_hashes = {
             f"{TRACK_DIRECTORY}/{name}": _digest((track / name).read_bytes())
             for name in phase1
@@ -186,17 +187,60 @@ class APKInventoryProductionAcceptanceWiringTests(unittest.TestCase):
                 "artifact_sha256": phase1_hashes,
             }
             write_doc(name, docs[name])
+        write_doc(
+            "denominator-contract-test-report.json",
+            {
+                "phase0_3_admission_result": {
+                    "total_tests": 54,
+                    "passed": 54,
+                    "failed": 0,
+                    "exit_code": 0,
+                    "status": "passed",
+                },
+                "test_inventory": [
+                    {"tests": 54, "passed": 54, "failed": 0, "exit_code": 0}
+                ],
+            },
+        )
         cls.legacy._git("add", TRACK_DIRECTORY)
         cls.legacy._git("commit", "-q", "-m", "fixture: production phase2")
         phase2_commit = cls.legacy._git("rev-parse", "HEAD").stdout.strip()
+        cls.phase2_commit = phase2_commit
         phase2_hashes = {
             f"{TRACK_DIRECTORY}/{name}": _digest((track / name).read_bytes())
             for name in phase2
         }
+        evidence_outputs = {
+            f"{TRACK_DIRECTORY}/{name}": _digest((track / name).read_bytes())
+            for name in role_outputs["evidence-collector"]
+        }
+        evidence_lineage = {
+            "schema_version": "apk-role-receipt.v1",
+            "track_id": "apk_source_denominator_inventory_20260712",
+            "task_id": cls.tasks["evidence-collector"]["task_id"],
+            "role": "evidence-collector",
+            "phase0_authority_commit": cls.phase0_commit,
+            "commit_sha": phase2_commit,
+            "output_hashes": evidence_outputs,
+            "output_sha256": _digest(_canonical_bytes(evidence_outputs)),
+            "commit_binding": {
+                "phase1_attestation_commit": phase1_commit,
+                "phase2_attestation_commit": phase2_commit,
+            },
+        }
+        receipt_path = track / "role-receipts" / "evidence-collector.json"
+        receipt_path.parent.mkdir(parents=True, exist_ok=True)
+        receipt_path.write_bytes(cls.legacy._json_bytes(evidence_lineage))
+        cls.legacy._git("add", str(receipt_path.relative_to(cls.fixture_repo)))
+        cls.legacy._git("commit", "-q", "-m", "fixture: production phase2 receipt")
+        phase2_receipt_commit = cls.legacy._git(
+            "rev-parse", "HEAD"
+        ).stdout.strip()
+        cls.phase2_receipt_commit = phase2_receipt_commit
         docs["phase3-reconciliation.json"]["input_provenance"] = {
             "phase1": {"revision": phase1_commit, "output_hashes": phase1_hashes},
             "phase2": {
-                "receipt_revision": phase2_commit,
+                "receipt_revision": phase2_receipt_commit,
                 "consumed_output_hashes": phase2_hashes,
             },
         }
@@ -387,8 +431,9 @@ class APKInventoryProductionAcceptanceWiringTests(unittest.TestCase):
             }
             receipt.update(
                 {
+                    "track_id": "apk_source_denominator_inventory_20260712",
                     "task_id": cls.tasks[role]["task_id"],
-                    "commit_sha": closeout,
+                    "commit_sha": phase2_commit if role == "evidence-collector" else closeout,
                     "output_hashes": outputs,
                     "output_sha256": _digest(_canonical_bytes(outputs)),
                 }
@@ -583,6 +628,16 @@ class APKInventoryProductionAcceptanceWiringTests(unittest.TestCase):
                     "read_only_shell_commands": [],
                 }
             )
+            if role == "requirements-mapper":
+                receipt["commit_binding"] = {
+                    "mapper_phase1_attestation_commit": cls.authority.admitted_phase_base_sha,
+                    "phase2_receipt_commit": cls.phase2_receipt_commit,
+                }
+            elif role == "evidence-collector":
+                receipt["commit_binding"] = {
+                    "phase1_attestation_commit": cls.phase1_commit,
+                    "phase2_attestation_commit": receipt["commit_sha"],
+                }
             events[end_id] = {
                 "raw_export_bytes": raw,
                 "attested_manifest_bytes": attestations,
@@ -949,6 +1004,99 @@ class APKInventoryProductionAcceptanceWiringTests(unittest.TestCase):
         receipt["budget_declaration_sha256"] = _digest(budget_bytes)
         event["attested_manifest_bytes"]["budget_declaration_sha256"] = budget_bytes
         self._assert_code(bundle, events, "BUDGET_BINDING_MISMATCH")
+
+    def test_mapper_receipt_binding_must_match_committed_phase3_provenance(self) -> None:
+        """Rejects an ancestor receipt SHA selected only by a hand-authored mapper receipt."""
+        bundle, events = self._fixture()
+        mapper = next(
+            receipt
+            for receipt in bundle["role_receipts"]
+            if receipt["role"] == "requirements-mapper"
+        )
+        mapper["commit_binding"]["phase2_receipt_commit"] = (
+            self.authority.admitted_phase_base_sha
+        )
+        self._assert_code(bundle, events, "PROVIDER_EVENT_INVALID")
+
+    def test_mapper_cannot_select_stale_receipt_before_latest_committed_evidence(self) -> None:
+        """Rejects internally consistent Phase-3 lineage after a newer receipt commit."""
+        receipt_path = (
+            self.fixture_repo
+            / TRACK_DIRECTORY
+            / "role-receipts"
+            / "evidence-collector.json"
+        )
+        receipt_path.write_text('{"newer":true}\n', encoding="utf-8")
+        self.legacy._git(
+            "add", str(receipt_path.relative_to(self.fixture_repo))
+        )
+        self.legacy._git("commit", "-q", "-m", "fixture: newer evidence receipt")
+        later_commit = self.legacy._git(
+            "rev-parse", "HEAD"
+        ).stdout.strip()
+        bundle, events = self._fixture()
+        mapper = next(
+            receipt
+            for receipt in bundle["role_receipts"]
+            if receipt["role"] == "requirements-mapper"
+        )
+        mapper["commit_sha"] = later_commit
+        self._assert_code(bundle, events, "PROVIDER_EVENT_INVALID")
+
+    def test_mapper_latest_receipt_must_match_admitted_provider_lineage(self) -> None:
+        """Rejects the latest receipt when its lineage differs from provider evidence."""
+        bundle, events = self._fixture()
+        admitted = next(
+            receipt
+            for receipt in bundle["role_receipts"]
+            if receipt["role"] == "evidence-collector"
+        )
+        forged = {
+            field: admitted[field]
+            for field in (
+                "schema_version",
+                "track_id",
+                "task_id",
+                "role",
+                "phase0_authority_commit",
+                "commit_sha",
+                "output_hashes",
+                "output_sha256",
+                "commit_binding",
+            )
+        }
+        forged["output_sha256"] = "0" * 64
+        receipt_path = (
+            self.fixture_repo
+            / TRACK_DIRECTORY
+            / "role-receipts"
+            / "evidence-collector.json"
+        )
+        receipt_path.write_bytes(self.legacy._json_bytes(forged))
+        self.legacy._git(
+            "add", str(receipt_path.relative_to(self.fixture_repo))
+        )
+        self.legacy._git("commit", "-q", "-m", "fixture: forged latest evidence receipt")
+        receipt_commit = self.legacy._git(
+            "rev-parse", "HEAD"
+        ).stdout.strip()
+        phase3_path = self.fixture_repo / TRACK_DIRECTORY / "phase3-reconciliation.json"
+        phase3 = json.loads(phase3_path.read_bytes())
+        phase3["input_provenance"]["phase2"]["receipt_revision"] = receipt_commit
+        phase3_path.write_bytes(self.legacy._json_bytes(phase3))
+        self.legacy._git("add", str(phase3_path.relative_to(self.fixture_repo)))
+        self.legacy._git("commit", "-q", "-m", "fixture: mapper selects forged receipt")
+        mapper_commit = self.legacy._git(
+            "rev-parse", "HEAD"
+        ).stdout.strip()
+        mapper = next(
+            receipt
+            for receipt in bundle["role_receipts"]
+            if receipt["role"] == "requirements-mapper"
+        )
+        mapper["commit_sha"] = mapper_commit
+        mapper["commit_binding"]["phase2_receipt_commit"] = receipt_commit
+        self._assert_code(bundle, events, "PROVIDER_EVENT_INVALID")
 
     def test_production_cannot_downgrade_to_legacy_contract(self) -> None:
         """Rejects a valid historical synthetic bundle at the production entry point."""

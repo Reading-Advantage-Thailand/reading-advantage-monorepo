@@ -46,6 +46,17 @@ _COMMIT_SHA = re.compile(r"[0-9a-f]{40}\Z")
 _SHA256 = re.compile(r"[0-9a-f]{64}\Z")
 _BLOCKING_SEVERITIES = ("critical", "high", "medium")
 _ROLE_RECEIPT_SCHEMA = "apk-role-receipt.v1"
+_EVIDENCE_LINEAGE_FIELDS = (
+    "schema_version",
+    "track_id",
+    "task_id",
+    "role",
+    "phase0_authority_commit",
+    "commit_sha",
+    "output_hashes",
+    "output_sha256",
+    "commit_binding",
+)
 
 
 @dataclass(frozen=True)
@@ -163,6 +174,7 @@ def _rebuild_production_role_event(
     event: Mapping[str, Any],
     source_adapter: GitSourceAdapter,
     authority: TrustedPhase4Authority,
+    admitted_evidence_receipt: Mapping[str, Any],
 ) -> Mapping[str, Any]:
     """Rebuilds one role event solely from raw bytes and committed Phase-0 authority."""
     try:
@@ -224,6 +236,35 @@ def _rebuild_production_role_event(
         commit_binding = _validated_commit_binding(
             repository_root, role, commit, receipt.get("commit_binding")
         )
+        if role == "requirements-mapper":
+            if not isinstance(commit_binding, Mapping):
+                raise ValueError("mapper commit binding is absent")
+            selected_receipt_commit = commit_binding.get("phase2_receipt_commit")
+            if not isinstance(selected_receipt_commit, str):
+                raise ValueError("mapper selected receipt commit is absent")
+            selected_receipt_bytes = source_adapter.resolve_blob_bytes(
+                selected_receipt_commit,
+                f"{TRACK_DIRECTORY}/role-receipts/evidence-collector.json",
+            )
+            selected_receipt = json.loads(selected_receipt_bytes)
+            if not isinstance(selected_receipt, Mapping):
+                raise ValueError("mapper selected evidence receipt is malformed")
+            selected_identity = {
+                field: selected_receipt.get(field)
+                for field in _EVIDENCE_LINEAGE_FIELDS
+            }
+            admitted_identity = {
+                field: admitted_evidence_receipt.get(field)
+                for field in _EVIDENCE_LINEAGE_FIELDS
+            }
+            if (
+                any(value is None for value in selected_identity.values())
+                or _receipt_canonical_json(selected_identity)
+                != _receipt_canonical_json(admitted_identity)
+            ):
+                raise ValueError(
+                    "mapper selected receipt lineage differs from admitted provider evidence"
+                )
         generators, read_only, operations, allowed_tools = _derived_execution_contract(
             repository_root,
             authority.phase0_commit_sha,
@@ -737,7 +778,7 @@ def _validate_committed_output_bindings(
         if not isinstance(commit, str) or _COMMIT_SHA.fullmatch(commit) is None:
             return "RECEIPT_COMMIT_UNREACHABLE"
         if (
-            not _is_ancestor(source_adapter, authority.admitted_phase_base_sha, commit)
+            not _is_ancestor(source_adapter, authority.phase0_commit_sha, commit)
             or not _is_ancestor(source_adapter, commit, closeout)
         ):
             return "RECEIPT_COMMIT_UNREACHABLE"
@@ -1208,6 +1249,11 @@ def _validate_phase4_inventory_acceptance(
     receipt_roles = [receipt.get("role") for receipt in receipts if isinstance(receipt, Mapping)]
     if len(receipt_roles) != len(receipts) or len(set(receipt_roles)) != len(receipt_roles) or set(receipt_roles) != set(required_roles):
         return _reject("MISSING_REQUIRED_ROLE")
+    admitted_evidence_receipt = next(
+        receipt
+        for receipt in receipts
+        if isinstance(receipt, Mapping) and receipt.get("role") == "evidence-collector"
+    )
     role_contract = _frozen_role_tasks(ownership, trusted_roles)
     if role_contract is None:
         return _reject("FROZEN_AUTHORITY_INVALID")
@@ -1385,7 +1431,12 @@ def _validate_phase4_inventory_acceptance(
         if production_contract:
             try:
                 event = _rebuild_production_role_event(
-                    receipt_value, task, event, source_adapter, authority
+                    receipt_value,
+                    task,
+                    event,
+                    source_adapter,
+                    authority,
+                    admitted_evidence_receipt,
                 )
             except APKInventoryLiveError as error:
                 return _reject(error.code)

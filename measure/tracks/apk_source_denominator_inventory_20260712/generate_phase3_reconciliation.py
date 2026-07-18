@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import argparse
 import hashlib
 import json
 import re
@@ -13,7 +14,6 @@ from typing import Any
 
 
 BASELINE = "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-PHASE2_RECEIPT_REVISION = "7eef639674e927f2d56107866d385e0df812aa66"
 TRACK = "apk_source_denominator_inventory_20260712"
 TRACK_DIR = Path(__file__).resolve().parent
 REPO_ROOT = TRACK_DIR.parents[2]
@@ -443,16 +443,19 @@ def propagate_symmetric_blockers(
     return records, unresolved
 
 
-def main(output_path: Path | None = None) -> None:
+def main(phase2_receipt_revision: str, output_path: Path | None = None) -> None:
     """Writes the exhaustive, non-consumable Phase-3 reconciliation artifact.
 
     Args:
+        phase2_receipt_revision: Full commit SHA containing the selected Phase-2 receipt.
         output_path: Optional destination for a reproducibility check.
 
     Returns:
         Nothing.
     """
-    receipt_bytes = git_bytes(PHASE2_RECEIPT_REVISION, PHASE2_RECEIPT_PATH)
+    if re.fullmatch(r"[0-9a-f]{40}", phase2_receipt_revision) is None:
+        raise ValueError("Phase-2 receipt revision must be a full lowercase commit SHA")
+    receipt_bytes = git_bytes(phase2_receipt_revision, PHASE2_RECEIPT_PATH)
     receipt = json.loads(receipt_bytes)
     phase2_implementation_revision = receipt.get("commit_sha")
     commit_binding = receipt.get("commit_binding")
@@ -465,6 +468,18 @@ def main(output_path: Path | None = None) -> None:
         raise ValueError("Phase-2 receipt lacks a full Phase-1 attestation commit")
     if commit_binding.get("phase2_attestation_commit") != phase2_implementation_revision:
         raise ValueError("Phase-2 receipt commit bindings disagree")
+    for ancestor, descendant, label in (
+        (phase1_revision, phase2_implementation_revision, "Phase-1 attestation"),
+        (phase2_implementation_revision, phase2_receipt_revision, "Phase-2 implementation"),
+    ):
+        result = subprocess.run(
+            ["/usr/bin/git", "merge-base", "--is-ancestor", ancestor, descendant],
+            cwd=REPO_ROOT,
+            capture_output=True,
+            check=False,
+        )
+        if result.returncode != 0:
+            raise ValueError(f"{label} is not an ancestor of the selected receipt")
 
     source = committed_json(phase1_revision, "source-denominator.json")
     ledger = committed_json(phase1_revision, "game-identity-ledger.json")
@@ -826,7 +841,7 @@ def main(output_path: Path | None = None) -> None:
             },
             "phase2": {
                 "implementation_revision": phase2_implementation_revision,
-                "receipt_revision": PHASE2_RECEIPT_REVISION,
+                "receipt_revision": phase2_receipt_revision,
                 "receipt_path": PHASE2_RECEIPT_PATH,
                 "receipt_sha256": hashlib.sha256(receipt_bytes).hexdigest(),
                 "consumed_output_hashes": phase2_hashes,
@@ -877,10 +892,24 @@ def main(output_path: Path | None = None) -> None:
     )
 
 
+def _parse_cli(argv: list[str]) -> tuple[str, Path | None]:
+    """Parses the mandatory selected receipt revision and optional output path.
+
+    Args:
+        argv: Command-line arguments excluding the executable name.
+
+    Returns:
+        The selected receipt commit and optional reproducibility output path.
+    """
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--phase2-receipt-revision", required=True)
+    parser.add_argument("--output", type=Path)
+    values = parser.parse_args(argv)
+    if re.fullmatch(r"[0-9a-f]{40}", values.phase2_receipt_revision) is None:
+        parser.error("--phase2-receipt-revision must be a full lowercase commit SHA")
+    return values.phase2_receipt_revision, values.output
+
+
 if __name__ == "__main__":
-    if len(sys.argv) == 1:
-        main()
-    elif len(sys.argv) == 3 and sys.argv[1] == "--output":
-        main(Path(sys.argv[2]))
-    else:
-        raise SystemExit("usage: generate_phase3_reconciliation.py [--output <path>]")
+    selected_receipt_revision, selected_output_path = _parse_cli(sys.argv[1:])
+    main(selected_receipt_revision, selected_output_path)
