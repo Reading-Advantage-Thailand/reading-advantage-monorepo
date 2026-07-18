@@ -66,6 +66,19 @@ class OpenCodeProvenanceTests(unittest.TestCase):
         metadata = {"output": f"[master {commit_sha}] generator", "exit": 0, "truncated": False}
         return binding, tool_input, metadata, commit_sha
 
+    def _shell_raw(self, root: Path, binding: ShellGeneratorBinding, commit_input: dict, commit_metadata: dict, *, session_directory=None, generator_workdir="present") -> bytes:
+        raw = json.loads(self._export(root, "ses_a1", "measure-strategy", "out.md"))
+        raw["info"]["directory"] = session_directory
+        generator_input = {"command": binding.command}
+        if generator_workdir == "present":
+            generator_input["workdir"] = str(root)
+        elif generator_workdir != "omitted":
+            generator_input["workdir"] = generator_workdir
+        generator_part = {"type": "tool", "tool": "bash", "state": {"status": "completed", "input": generator_input, "metadata": {"output": "(no output)", "exit": 0, "truncated": False}}}
+        commit_part = {"type": "tool", "tool": "bash", "state": {"status": "completed", "input": dict(commit_input), "metadata": dict(commit_metadata)}}
+        raw["messages"][-1]["parts"] = [generator_part, commit_part, {"type": "text", "id": "prt_final", "text": "final"}]
+        return json.dumps(raw).encode()
+
     def test_build_evidence_binds_ids_hashes_and_output(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -247,6 +260,64 @@ class OpenCodeProvenanceTests(unittest.TestCase):
             tool_input["workdir"] = "/tmp"
             with self.assertRaisesRegex(ProvenanceError, "no valid subsequent commit"):
                 _shell_owned_paths(messages, root, (binding,), commit_sha)
+
+    def test_shell_workdir_can_use_exact_session_directory_when_omitted(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            binding, commit_input, commit_metadata, commit_sha = self._shell_commit_fixture(root)
+            raw_object = json.loads(self._shell_raw(root, binding, commit_input, commit_metadata, session_directory=str(root), generator_workdir="omitted"))
+            del raw_object["messages"][-1]["parts"][1]["state"]["input"]["workdir"]
+            binding_role = RoleBinding("strategy", "ses_a1", "measure-strategy", ("out.md",), output_commit=commit_sha, shell_generators=(binding,))
+            self.assertEqual(build_evidence(json.dumps(raw_object).encode(), binding_role, root)["output_sha256"].keys(), {"out.md"})
+            event = build_resolved_event(json.dumps(raw_object).encode(), binding_role, root)
+            self.assertEqual(event["raw_write_inventory"], ["out.md"])
+
+    def test_shell_workdir_rejects_invalid_session_fallbacks(self) -> None:
+        invalid_directories = (None, "", "relative", str(Path(tempfile.gettempdir()) / "missing-opencode-dir"), 7)
+        for session_directory in invalid_directories:
+            with self.subTest(session_directory=session_directory), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                binding, commit_input, commit_metadata, commit_sha = self._shell_commit_fixture(root)
+                raw = json.loads(self._shell_raw(root, binding, commit_input, commit_metadata, session_directory=session_directory, generator_workdir="omitted"))
+                del raw["messages"][-1]["parts"][1]["state"]["input"]["workdir"]
+                declared = RoleBinding("strategy", "ses_a1", "measure-strategy", ("out.md",), output_commit=commit_sha, shell_generators=(binding,))
+                with self.assertRaises(ProvenanceError):
+                    build_evidence(json.dumps(raw).encode(), declared, root)
+
+    def test_explicit_workdir_rejects_even_with_valid_session_fallback(self) -> None:
+        for generator_workdir in ("/tmp", None, ""):
+            with self.subTest(generator_workdir=generator_workdir), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                binding, commit_input, commit_metadata, commit_sha = self._shell_commit_fixture(root)
+                commit_input["workdir"] = str(root)
+                raw = json.loads(self._shell_raw(root, binding, commit_input, commit_metadata, session_directory=str(root), generator_workdir=generator_workdir))
+                declared = RoleBinding("strategy", "ses_a1", "measure-strategy", ("out.md",), output_commit=commit_sha, shell_generators=(binding,))
+                with self.assertRaises(ProvenanceError):
+                    build_evidence(json.dumps(raw).encode(), declared, root)
+
+        for commit_workdir in ("/tmp", None, ""):
+            with self.subTest(commit_workdir=commit_workdir), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                binding, commit_input, commit_metadata, commit_sha = self._shell_commit_fixture(root)
+                commit_input["workdir"] = commit_workdir
+                raw = json.loads(self._shell_raw(root, binding, commit_input, commit_metadata, session_directory=str(root), generator_workdir="present"))
+                if commit_workdir is None:
+                    raw["messages"][-1]["parts"][1]["state"]["input"]["workdir"] = None
+                declared = RoleBinding("strategy", "ses_a1", "measure-strategy", ("out.md",), output_commit=commit_sha, shell_generators=(binding,))
+                with self.assertRaises(ProvenanceError):
+                    build_evidence(json.dumps(raw).encode(), declared, root)
+
+    def test_each_bash_part_may_independently_use_session_fallback(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            binding, commit_input, commit_metadata, commit_sha = self._shell_commit_fixture(root)
+            declared = RoleBinding("strategy", "ses_a1", "measure-strategy", ("out.md",), output_commit=commit_sha, shell_generators=(binding,))
+            for omit_generator, omit_commit in ((True, False), (False, True)):
+                raw = json.loads(self._shell_raw(root, binding, commit_input, commit_metadata, session_directory=str(root), generator_workdir="omitted" if omit_generator else "present"))
+                if omit_commit:
+                    del raw["messages"][-1]["parts"][1]["state"]["input"]["workdir"]
+                with self.subTest(omit_generator=omit_generator, omit_commit=omit_commit):
+                    self.assertEqual(build_evidence(json.dumps(raw).encode(), declared, root)["output_sha256"].keys(), {"out.md"})
 
     def test_shell_commit_rejects_forged_result_and_missing_output_blob(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

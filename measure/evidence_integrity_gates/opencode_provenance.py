@@ -186,12 +186,19 @@ def _message_identity(message: Mapping[str, Any], session_id: str) -> dict[str, 
     }
 
 
-def _tool_owned_paths(messages: Sequence[Mapping[str, Any]], repo_root: Path, shell_generators: Sequence[ShellGeneratorBinding] = (), output_commit: str | None = None) -> set[str]:
+def _tool_owned_paths(
+    messages: Sequence[Mapping[str, Any]],
+    repo_root: Path,
+    shell_generators: Sequence[ShellGeneratorBinding] = (),
+    output_commit: str | None = None,
+    session_directory: Any = None,
+) -> set[str]:
     """Extracts paths attributable to direct writes and bound shell generators.
 
     @param messages Exported OpenCode messages.
     @param repo_root Repository root used to validate shell workdirs and commits.
     @param shell_generators Immutable explicit shell ownership declarations.
+    @param session_directory Immutable export session directory fallback.
     @returns Paths conservatively attributable to tool calls in the session.
     """
     paths: set[str] = set()
@@ -215,7 +222,29 @@ def _tool_owned_paths(messages: Sequence[Mapping[str, Any]], repo_root: Path, sh
                 patch = tool_input.get("patchText")
                 if isinstance(patch, str):
                     paths.update(patch_header.findall(patch))
-    return paths | _shell_owned_paths(messages, repo_root, shell_generators, output_commit)
+    return paths | _shell_owned_paths(messages, repo_root, shell_generators, output_commit, session_directory)
+
+
+def _bash_workdir_is_repo_root(
+    tool_input: Mapping[str, Any], repo_root: Path, session_directory: Any = None
+) -> bool:
+    """Validates Bash workdir provenance against the repository root.
+
+    @param tool_input Completed Bash tool input.
+    @param repo_root Repository root to validate.
+    @param session_directory Immutable export session directory fallback.
+    @returns Whether the tool is proven to have run at the repository root.
+    """
+    try:
+        expected_root = repo_root.resolve(strict=True)
+        if "workdir" in tool_input:
+            workdir = tool_input.get("workdir")
+            return isinstance(workdir, str) and workdir == str(expected_root)
+        if not isinstance(session_directory, str) or not session_directory or not Path(session_directory).is_absolute():
+            return False
+        return Path(session_directory).resolve(strict=True) == expected_root and Path(session_directory).is_dir()
+    except OSError:
+        return False
 
 
 def _shell_owned_paths(
@@ -223,13 +252,13 @@ def _shell_owned_paths(
     repo_root: Path,
     bindings: Sequence[ShellGeneratorBinding],
     output_commit: str | None,
+    session_directory: Any = None,
 ) -> set[str]:
     """Resolves only explicitly bound, committed shell-generator outputs."""
     if not bindings:
         return set()
     if not isinstance(output_commit, str) or not re.fullmatch(r"[0-9a-f]{40}", output_commit):
         raise ProvenanceError("shell ownership requires a full output commit")
-    root = str(repo_root.resolve())
     tool_parts: list[tuple[int, int, Mapping[str, Any]]] = []
     for message_index, message in enumerate(messages):
         for part_index, part in enumerate(message.get("parts", [])):
@@ -250,8 +279,7 @@ def _shell_owned_paths(
             if not isinstance(tool_input, Mapping) or not isinstance(metadata, Mapping):
                 continue
             command = tool_input.get("command")
-            workdir = tool_input.get("workdir")
-            if not isinstance(command, str) or workdir != root:
+            if not isinstance(command, str) or not _bash_workdir_is_repo_root(tool_input, repo_root, session_directory):
                 continue
             try:
                 normalized = _normalize_shell_command(command)
@@ -272,7 +300,7 @@ def _shell_owned_paths(
             next_metadata = next_state.get("metadata")
             if not isinstance(next_input, Mapping) or not isinstance(next_metadata, Mapping):
                 continue
-            if next_input.get("workdir") != root:
+            if not _bash_workdir_is_repo_root(next_input, repo_root, session_directory):
                 continue
             commit_sha = _parse_simple_commit(next_input, next_metadata, binding, repo_root, output_commit)
             if commit_sha is not None:
@@ -538,7 +566,9 @@ def build_evidence(raw: bytes, binding: RoleBinding, repo_root: Path) -> dict[st
     if _text_bytes(users[0]) == _canonical_json([]) or _text_bytes(final) == _canonical_json([]):
         raise ProvenanceError(f"{binding.role} lacks hashable prompt or final-response text")
 
-    tool_paths = _tool_owned_paths(messages, repo_root, binding.shell_generators, binding.output_commit)
+    tool_paths = _tool_owned_paths(
+        messages, repo_root, binding.shell_generators, binding.output_commit, info.get("directory")
+    )
     output_hashes: dict[str, str] = {}
     for relative in binding.owned_outputs:
         path = (repo_root / relative).resolve()
@@ -615,7 +645,9 @@ def build_resolved_event(
     assistants = [message for message in messages if message.get("info", {}).get("role") == "assistant"]
     resolved_tool_paths: set[str] = set()
     root = repo_root.resolve()
-    for tool_path in _tool_owned_paths(messages, repo_root, binding.shell_generators, binding.output_commit):
+    for tool_path in _tool_owned_paths(
+        messages, repo_root, binding.shell_generators, binding.output_commit, export.get("info", {}).get("directory")
+    ):
         candidate = Path(tool_path)
         if candidate.is_absolute():
             try:
