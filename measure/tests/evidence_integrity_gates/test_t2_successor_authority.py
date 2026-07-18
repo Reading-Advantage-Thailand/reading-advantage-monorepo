@@ -8,8 +8,16 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from measure.tracks.apk_source_denominator_inventory_20260712.run_phase0_3_admission import (
+    ADMISSION_MODULES,
+    EXPECTED_TEST_COUNTS,
+    T2AdmissionError,
+    run_admission,
+)
 from measure.tracks.apk_source_denominator_inventory_20260712.verify_phase4_role_evidence import (
     T2EvidenceVerificationError,
+    _strict_nonblocking_findings,
+    _strict_zero_counts,
     build_reviewed_input_ledger,
     validate_truth_report,
 )
@@ -152,6 +160,62 @@ class SuccessorAuthorityTests(unittest.TestCase):
                 T2EvidenceVerificationError, "admission summary differs"
             ):
                 validate_truth_report(path, report["test_inventory"], "frozen-command")
+
+    def test_admission_rejects_zero_test_modules_and_stale_12_18_counts(self) -> None:
+        """Falsifies zero-suite and superseded 12/18 Phase1/2 false Greens."""
+
+        class CountLoader(unittest.TestLoader):
+            """Returns synthetic suites with caller-selected discovery counts."""
+
+            def __init__(self, counts: tuple[int, ...]) -> None:
+                """Stores one synthetic count per admission module.
+
+                Args:
+                    counts: Ordered synthetic test counts.
+                """
+                super().__init__()
+                self.counts = dict(zip(ADMISSION_MODULES, counts, strict=True))
+
+            def loadTestsFromName(
+                self, name: str, module: object | None = None
+            ) -> unittest.TestSuite:
+                """Builds a passing suite with the configured count.
+
+                Args:
+                    name: Admission module name.
+                    module: Unused unittest compatibility input.
+
+                Returns:
+                    Synthetic passing suite.
+                """
+                del module
+                return unittest.TestSuite(
+                    unittest.FunctionTestCase(lambda: None)
+                    for _ in range(self.counts[name])
+                )
+
+        self.assertEqual(EXPECTED_TEST_COUNTS, (13, 17, 31, 24))
+        with self.assertRaisesRegex(T2AdmissionError, "discovered 0 tests"):
+            run_admission(CountLoader((0, 0, 0, 0)))
+        with self.assertRaisesRegex(T2AdmissionError, "discovered 12 tests; expected 17"):
+            run_admission(CountLoader((13, 12, 18, 24)))
+
+    def test_reviewer_rejects_boolean_counters_and_whitespace_severity(self) -> None:
+        """Falsifies Python equality coercion and untrimmed blocking severity bypasses."""
+        self.assertTrue(
+            _strict_zero_counts(
+                {"critical": 0, "high": 0, "medium": 0},
+                ("critical", "high", "medium"),
+            )
+        )
+        self.assertFalse(
+            _strict_zero_counts(
+                {"critical": False, "high": 0, "medium": 0},
+                ("critical", "high", "medium"),
+            )
+        )
+        self.assertTrue(_strict_nonblocking_findings([{"severity": "low"}]))
+        self.assertFalse(_strict_nonblocking_findings([{"severity": "HIGH "}]))
 
 
 if __name__ == "__main__":

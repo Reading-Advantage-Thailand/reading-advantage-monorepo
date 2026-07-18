@@ -4,13 +4,12 @@ from __future__ import annotations
 
 import argparse
 import hashlib
-import io
 import json
 import re
+import shlex
 import subprocess
 import sys
 import tempfile
-import unittest
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
@@ -27,6 +26,7 @@ ADMISSION_MODULES = (
     "measure.tests.test_apk_source_denominator_inventory_phase2",
     "measure.tests.test_apk_source_denominator_inventory_phase3",
 )
+ADMISSION_RUNNER_PATH = f"{TRACK_DIRECTORY}/run_phase0_3_admission.py"
 REVIEW_COVERAGE_FIELDS = {
     "identities": "identity_reconciliation_records",
     "files": "file_reconciliation_records",
@@ -45,6 +45,57 @@ _MAX_COMMAND_OUTPUT_BYTES = 1_048_576
 
 class T2EvidenceVerificationError(RuntimeError):
     """Raised when final-role evidence differs from independently derived facts."""
+
+
+def _canonical_json(value: object) -> bytes:
+    """Serializes one value for type-exact structural comparison.
+
+    Args:
+        value: JSON-compatible value.
+
+    Returns:
+        Canonical compact JSON bytes.
+    """
+    return json.dumps(value, sort_keys=True, separators=(",", ":")).encode()
+
+
+def _strict_zero_counts(value: object, keys: Sequence[str]) -> bool:
+    """Checks an exact key set of real integer zero counters.
+
+    Args:
+        value: Candidate counter mapping.
+        keys: Exact required counter keys.
+
+    Returns:
+        Whether all counters are integer zero and none are booleans.
+    """
+    return (
+        isinstance(value, Mapping)
+        and set(value) == set(keys)
+        and all(
+            isinstance(value.get(key), int)
+            and not isinstance(value.get(key), bool)
+            and value.get(key) == 0
+            for key in keys
+        )
+    )
+
+
+def _strict_nonblocking_findings(value: object) -> bool:
+    """Checks that every finding has one exact nonblocking severity.
+
+    Args:
+        value: Candidate findings collection.
+
+    Returns:
+        Whether all findings are mappings labeled exactly low or informational.
+    """
+    return isinstance(value, list) and all(
+        isinstance(finding, Mapping)
+        and isinstance(finding.get("severity"), str)
+        and finding.get("severity") in {"low", "informational"}
+        for finding in value
+    )
 
 
 def _sha256(value: bytes) -> str:
@@ -108,59 +159,91 @@ def _json_object(path: Path) -> dict[str, Any]:
     return value
 
 
-def canonical_admission_command() -> str:
-    """Builds the exact Phase0-3 admission command recorded in the truth report.
+def _admission_command_argv(phase0_revision: str) -> tuple[str, ...]:
+    """Builds the exact sanitized pinned admission subprocess arguments.
+
+    Args:
+        phase0_revision: Successor authority commit containing the runner and tests.
 
     Returns:
-        Canonical sanitized admission command.
+        Exact immutable admission command arguments.
     """
+    launcher = (
+        "exec(compile(__import__(\"subprocess\").check_output((\"/usr/bin/git\",\"show\","
+        f"__import__(\"sys\").argv.pop(1)+\":{ADMISSION_RUNNER_PATH}\")),"
+        f"\"{ADMISSION_RUNNER_PATH}\",\"exec\"),dict(__file__=\"{ADMISSION_RUNNER_PATH}\",__name__=\"__main__\"))"
+    )
     return (
-        "/usr/bin/env -i "
-        "PATH=/opt/codex-desktop/resources/node-runtime/bin:/usr/bin:/bin "
-        "LANG=C PYTHONDONTWRITEBYTECODE=1 /usr/bin/python3 -I -S -m unittest -v "
-        + " ".join(ADMISSION_MODULES)
+        "/usr/bin/env",
+        "-i",
+        "PATH=/opt/codex-desktop/resources/node-runtime/bin:/usr/bin:/bin",
+        "LANG=C",
+        "PYTHONDONTWRITEBYTECODE=1",
+        "/usr/bin/python3",
+        "-I",
+        "-S",
+        "-c",
+        launcher,
+        phase0_revision,
+        *ADMISSION_MODULES,
     )
 
 
-def run_phase0_3_admission() -> list[dict[str, Any]]:
+def canonical_admission_command(phase0_revision: str) -> str:
+    """Builds the exact Phase0-3 admission command recorded in the truth report.
+
+    Returns:
+        Canonical sanitized pinned admission command.
+    """
+    return shlex.join(_admission_command_argv(phase0_revision))
+
+
+def run_phase0_3_admission(phase0_revision: str) -> list[dict[str, Any]]:
     """Runs every frozen predecessor module and derives exact per-phase counts.
 
     Returns:
-        Ordered structured inventory for Phase0 through Phase3.
+        Exact subprocess-produced inventory for Phase0 through Phase3.
 
     Raises:
         T2EvidenceVerificationError: When any test fails, errors, or skips.
     """
-    if str(REPO_ROOT) not in sys.path:
-        sys.path.insert(0, str(REPO_ROOT))
-    inventory: list[dict[str, Any]] = []
-    for phase, module in enumerate(ADMISSION_MODULES):
-        suite = unittest.defaultTestLoader.loadTestsFromName(module)
-        stream = io.StringIO()
-        result = unittest.TextTestRunner(stream=stream, verbosity=2).run(suite)
-        failed = len(result.failures) + len(result.errors) + len(result.unexpectedSuccesses)
-        skipped = len(result.skipped) + len(result.expectedFailures)
-        passed = result.testsRun - failed - skipped
-        if not result.wasSuccessful() or skipped != 0:
-            diagnostic = stream.getvalue()
-            if len(diagnostic.encode()) > _MAX_COMMAND_OUTPUT_BYTES:
-                diagnostic = diagnostic.encode()[:_MAX_COMMAND_OUTPUT_BYTES].decode(
-                    "utf-8", errors="replace"
-                )
-            raise T2EvidenceVerificationError(
-                f"Phase{phase} admission failed or skipped tests: {diagnostic}"
-            )
-        inventory.append(
-            {
-                "phase": phase,
-                "module": module,
-                "tests": result.testsRun,
-                "passed": passed,
-                "failed": failed,
-                "exit_code": 0,
-            }
+    result = subprocess.run(
+        _admission_command_argv(phase0_revision),
+        cwd=REPO_ROOT,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+        timeout=1800,
+    )
+    if (
+        result.returncode != 0
+        or len(result.stdout) > _MAX_COMMAND_OUTPUT_BYTES
+        or len(result.stderr) > _MAX_COMMAND_OUTPUT_BYTES
+    ):
+        raise T2EvidenceVerificationError(
+            "exact pinned Phase0-3 admission failed or exceeded its output bound"
         )
-    return inventory
+    try:
+        inventory = json.loads(result.stdout)
+    except (UnicodeDecodeError, json.JSONDecodeError) as error:
+        raise T2EvidenceVerificationError("pinned admission output is not JSON") from error
+    expected_counts = (13, 17, 31, 24)
+    if (
+        not isinstance(inventory, list)
+        or len(inventory) != len(ADMISSION_MODULES)
+        or any(
+            not isinstance(row, Mapping)
+            or row.get("phase") != phase
+            or row.get("module") != module
+            or row.get("tests") != expected_counts[phase]
+            or row.get("passed") != expected_counts[phase]
+            or row.get("failed") != 0
+            or row.get("exit_code") != 0
+            for phase, (module, row) in enumerate(zip(ADMISSION_MODULES, inventory, strict=True))
+        )
+    ):
+        raise T2EvidenceVerificationError("pinned admission inventory differs from exact nonzero counts")
+    return [dict(row) for row in inventory]
 
 
 def validate_truth_report(
@@ -200,16 +283,29 @@ def validate_truth_report(
         or report.get("source_baseline_revision") != BASELINE
         or report.get("role") != "truth-test-author"
         or report.get("phase0_3_admission_command") != admission_command
-        or report.get("test_inventory") != expected_inventory
-        or report.get("phase0_3_admission_result") != expected_result
+        or _canonical_json(report.get("test_inventory"))
+        != _canonical_json(expected_inventory)
+        or _canonical_json(report.get("phase0_3_admission_result"))
+        != _canonical_json(expected_result)
     ):
         raise T2EvidenceVerificationError("truth report admission summary differs from executed tests")
     if (
         not isinstance(stop_loss, Mapping)
-        or stop_loss.get("unsupported_factual_claims") != 0
-        or stop_loss.get("denominator_mismatches") != 0
-        or stop_loss.get("failed_fix_review_cycles") != 0
-        or unresolved != {severity: 0 for severity in BLOCKING_SEVERITIES}
+        or not _strict_zero_counts(
+            {key: stop_loss.get(key) for key in (
+                "unsupported_factual_claims",
+                "denominator_mismatches",
+                "failed_fix_review_cycles",
+            )},
+            (
+                "unsupported_factual_claims",
+                "denominator_mismatches",
+                "failed_fix_review_cycles",
+            ),
+        )
+        or not _strict_zero_counts(unresolved, BLOCKING_SEVERITIES)
+        or not isinstance(report.get("unsupported_claims_count"), int)
+        or isinstance(report.get("unsupported_claims_count"), bool)
         or report.get("unsupported_claims_count") != 0
     ):
         raise T2EvidenceVerificationError("truth report stop-loss counters are nonzero or malformed")
@@ -357,7 +453,7 @@ def validate_independent_review(
     Raises:
         T2EvidenceVerificationError: When any review assertion is unsupported.
     """
-    run_phase0_3_admission()
+    run_phase0_3_admission(phase0_revision)
     review = _json_object(path)
     head = subprocess.check_output(("/usr/bin/git", "rev-parse", "HEAD"), cwd=REPO_ROOT, text=True).strip()
     ledger = build_reviewed_input_ledger(REPO_ROOT, head, required_paths)
@@ -394,17 +490,15 @@ def validate_independent_review(
         or rerun.get("source_baseline_revision") != BASELINE
         or rerun.get("phase2_receipt_revision") != phase2_receipt_revision
         or rerun.get("phase3_output_sha256") != phase3_ref["sha256"]
+        or not isinstance(rerun.get("unresolved_source_count"), int)
+        or isinstance(rerun.get("unresolved_source_count"), bool)
         or rerun.get("unresolved_source_count") != 0
         or rerun.get("reconciliation_status") != "reconciliation-complete"
-        or rerun.get("coverage") != coverage
-        or review.get("blocking_findings_by_severity")
-        != {severity: 0 for severity in BLOCKING_SEVERITIES}
-        or not isinstance(findings, list)
-        or any(
-            not isinstance(finding, Mapping)
-            or str(finding.get("severity", "")).lower() in BLOCKING_SEVERITIES
-            for finding in findings
+        or _canonical_json(rerun.get("coverage")) != _canonical_json(coverage)
+        or not _strict_zero_counts(
+            review.get("blocking_findings_by_severity"), BLOCKING_SEVERITIES
         )
+        or not _strict_nonblocking_findings(findings)
     ):
         raise T2EvidenceVerificationError("independent review differs from regenerated evidence")
 
@@ -456,8 +550,12 @@ def main(arguments: Sequence[str] | None = None) -> None:
     """
     values = _parse_args(sys.argv[1:] if arguments is None else arguments)
     if values.role == "truth-test-author":
-        inventory = run_phase0_3_admission()
-        validate_truth_report(values.output, inventory, canonical_admission_command())
+        inventory = run_phase0_3_admission(values.phase0_authority_revision)
+        validate_truth_report(
+            values.output,
+            inventory,
+            canonical_admission_command(values.phase0_authority_revision),
+        )
         return
     freeze = json.loads(_git_bytes(REPO_ROOT, values.phase0_authority_revision, f"{TRACK_DIRECTORY}/phase0-input-freeze.json"))
     required_paths = freeze.get("resource_accounting", {}).get("roles", {}).get(
