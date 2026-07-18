@@ -5071,7 +5071,7 @@
       "measure/tracks/apk_source_denominator_inventory_20260712/scene-state-denominator.json": "b3626f7ccb02ae34225b95fcc3693b6d149bfff0da94605db2deda6e8b2ac270",
       "measure/tracks/apk_source_denominator_inventory_20260712/source-denominator.json": "0dbf97dac93ba2056228e79433fb91e6f2ef1898b6f09eff62fe0755082ba21d"
     },
-    "revision": "f499b1c5b44255f6928b63f8a45c9efefecb4964"
+    "revision": "9d0899171549d9b2276eb8d3f6a934bb1bf43d79"
   },
   "interpretation": {},
   "mechanical_historical_locator_reviews": [
@@ -11220,7 +11220,7 @@
         }
       ],
       "history_search": {
-        "exact_name_command": "git log --first-parent --format=%H -S The Abyssal Well 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "exact_name_command": "/usr/bin/git log --first-parent --format=%H -S The Abyssal Well 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
         "path_history_command": "git log --first-parent --format=commit:%H --name-status 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/abyssal-well/page.tsx",
         "primary_deletion": {
           "command": "git log --first-parent --format=%H%x09%P%x09%s --diff-filter=D 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/abyssal-well/page.tsx",
@@ -11237,8 +11237,8 @@
           "ancestor path history and deletion-parent resolution",
           "frozen-revision exact-name specification search"
         ],
-        "slug_command": "git log --first-parent --format=%H -S abyssal-well 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
-        "specification_command": "git grep -l -F The Abyssal Well 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- measure"
+        "slug_command": "/usr/bin/git log --first-parent --format=%H -S abyssal-well 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "specification_command": "/usr/bin/git grep -l -F The Abyssal Well 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- measure"
       },
       "interpretation": {},
       "method": "human-exhaustive-ancestor-history-review",
@@ -11276,7 +11276,7 @@
         }
       ],
       "history_search": {
-        "exact_name_command": "git log --first-parent --format=%H -S Archer's Revenge 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "exact_name_command": "/usr/bin/git log --first-parent --format=%H -S Archer's Revenge 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
         "path_history_command": "git log --first-parent --format=commit:%H --name-status 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/archers-revenge/page.tsx",
         "primary_deletion": {
           "command": "git log --first-parent --format=%H%x09%P%x09%s --diff-filter=D 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/archers-revenge/page.tsx",
@@ -11293,8 +11293,8 @@
           "ancestor path history and deletion-parent resolution",
           "frozen-revision exact-name specification search"
         ],
-        "slug_command": "git log --first-parent --format=%H -S archers-revenge 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
-        "specification_command": "git grep -l -F Archer's Revenge 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- measure"
+        "slug_command": "/usr/bin/git log --first-parent --format=%H -S archers-revenge 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "specification_command": "/usr/bin/git grep -l -F Archer's Revenge 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- measure"
       },
       "interpretation": {},
       "method": "human-exhaustive-ancestor-history-review",
@@ -11332,7 +11332,7 @@
         }
       ],
       "history_search": {
-        "exact_name_command": "git log --first-parent --format=%H -S Storm the Castle Tower 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "exact_name_command": "/usr/bin/git log --first-parent --format=%H -S Storm the Castle Tower 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
         "path_history_command": "git log --first-parent --format=commit:%H --name-status 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/storm-castle-tower/page.tsx",
         "primary_deletion": {
           "command": "git log --first-parent --format=%H%x09%P%x09%s --diff-filter=D 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/storm-castle-tower/page.tsx",
@@ -11349,8 +11349,8 @@
           "ancestor path history and deletion-parent resolution",
           "frozen-revision exact-name specification search"
         ],
-        "slug_command": "git log --first-parent --format=%H -S storm-castle-tower 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
-        "specification_command": "git grep -l -F Storm the Castle Tower 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- measure"
+        "slug_command": "/usr/bin/git log --first-parent --format=%H -S storm-castle-tower 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "specification_command": "/usr/bin/git grep -l -F Storm the Castle Tower 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- measure"
       },
       "interpretation": {},
       "method": "human-exhaustive-ancestor-history-review",
@@ -11388,7 +11388,7 @@
         }
       ],
       "history_search": {
-        "exact_name_command": "git log --first-parent --format=%H -S Paladin's Twin-Soul 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "exact_name_command": "/usr/bin/git log --first-parent --format=%H -S Paladin's Twin-Soul 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
         "path_history_command": "git log --first-parent --format=commit:%H --name-status 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/paladins-twin-soul/page.tsx",
         "primary_deletion": {
           "command": "git log --first-parent --format=%H%x09%P%x09%s --diff-filter=D 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/paladins-twin-soul/page.tsx",
@@ -11405,8 +11405,8 @@
           "ancestor path history and deletion-parent resolution",
           "frozen-revision exact-name specification search"
         ],
-        "slug_command": "git log --first-parent --format=%H -S paladins-twin-soul 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
-        "specification_command": "git grep -l -F Paladin's Twin-Soul 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- measure"
+        "slug_command": "/usr/bin/git log --first-parent --format=%H -S paladins-twin-soul 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "specification_command": "/usr/bin/git grep -l -F Paladin's Twin-Soul 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- measure"
       },
       "interpretation": {},
       "method": "human-exhaustive-ancestor-history-review",
@@ -11444,7 +11444,7 @@
         }
       ],
       "history_search": {
-        "exact_name_command": "git log --first-parent --format=%H -S Gryphon Patrol 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "exact_name_command": "/usr/bin/git log --first-parent --format=%H -S Gryphon Patrol 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
         "path_history_command": "git log --first-parent --format=commit:%H --name-status 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/gryphon-patrol/page.tsx",
         "primary_deletion": {
           "command": "git log --first-parent --format=%H%x09%P%x09%s --diff-filter=D 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/gryphon-patrol/page.tsx",
@@ -11461,8 +11461,8 @@
           "ancestor path history and deletion-parent resolution",
           "frozen-revision exact-name specification search"
         ],
-        "slug_command": "git log --first-parent --format=%H -S gryphon-patrol 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
-        "specification_command": "git grep -l -F Gryphon Patrol 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- measure"
+        "slug_command": "/usr/bin/git log --first-parent --format=%H -S gryphon-patrol 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "specification_command": "/usr/bin/git grep -l -F Gryphon Patrol 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- measure"
       },
       "interpretation": {},
       "method": "human-exhaustive-ancestor-history-review",
@@ -11500,7 +11500,7 @@
         }
       ],
       "history_search": {
-        "exact_name_command": "git log --first-parent --format=%H -S Spellweaver's Run 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "exact_name_command": "/usr/bin/git log --first-parent --format=%H -S Spellweaver's Run 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
         "path_history_command": "git log --first-parent --format=commit:%H --name-status 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/spellweavers-run/page.tsx",
         "primary_deletion": {
           "command": "git log --first-parent --format=%H%x09%P%x09%s --diff-filter=D 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/spellweavers-run/page.tsx",
@@ -11517,8 +11517,8 @@
           "ancestor path history and deletion-parent resolution",
           "frozen-revision exact-name specification search"
         ],
-        "slug_command": "git log --first-parent --format=%H -S spellweavers-run 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
-        "specification_command": "git grep -l -F Spellweaver's Run 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- measure"
+        "slug_command": "/usr/bin/git log --first-parent --format=%H -S spellweavers-run 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "specification_command": "/usr/bin/git grep -l -F Spellweaver's Run 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- measure"
       },
       "interpretation": {},
       "method": "human-exhaustive-ancestor-history-review",
@@ -11556,7 +11556,7 @@
         }
       ],
       "history_search": {
-        "exact_name_command": "git log --first-parent --format=%H -S Griffin Rider's Escape 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "exact_name_command": "/usr/bin/git log --first-parent --format=%H -S Griffin Rider's Escape 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
         "path_history_command": "git log --first-parent --format=commit:%H --name-status 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/griffin-riders-escape/page.tsx",
         "primary_deletion": {
           "command": "git log --first-parent --format=%H%x09%P%x09%s --diff-filter=D 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/griffin-riders-escape/page.tsx",
@@ -11573,8 +11573,8 @@
           "ancestor path history and deletion-parent resolution",
           "frozen-revision exact-name specification search"
         ],
-        "slug_command": "git log --first-parent --format=%H -S griffin-riders-escape 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
-        "specification_command": "git grep -l -F Griffin Rider's Escape 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- measure"
+        "slug_command": "/usr/bin/git log --first-parent --format=%H -S griffin-riders-escape 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "specification_command": "/usr/bin/git grep -l -F Griffin Rider's Escape 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- measure"
       },
       "interpretation": {},
       "method": "human-exhaustive-ancestor-history-review",
@@ -11612,7 +11612,7 @@
         }
       ],
       "history_search": {
-        "exact_name_command": "git log --first-parent --format=%H -S The Sorcerer's Ziggurat 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "exact_name_command": "/usr/bin/git log --first-parent --format=%H -S The Sorcerer's Ziggurat 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
         "path_history_command": "git log --first-parent --format=commit:%H --name-status 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- packages/game-cartridges/src/cartridges/sorcerer-ziggurat/definition.ts",
         "primary_deletion": {
           "command": "git log --first-parent --format=%H%x09%P%x09%s --diff-filter=D 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- packages/game-cartridges/src/cartridges/sorcerer-ziggurat/definition.ts",
@@ -11629,8 +11629,8 @@
           "ancestor path history and deletion-parent resolution",
           "frozen-revision exact-name specification search"
         ],
-        "slug_command": "git log --first-parent --format=%H -S sorcerer-ziggurat 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
-        "specification_command": "git grep -l -F The Sorcerer's Ziggurat 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- measure"
+        "slug_command": "/usr/bin/git log --first-parent --format=%H -S sorcerer-ziggurat 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "specification_command": "/usr/bin/git grep -l -F The Sorcerer's Ziggurat 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- measure"
       },
       "interpretation": {},
       "method": "human-exhaustive-ancestor-history-review",
@@ -11668,7 +11668,7 @@
         }
       ],
       "history_search": {
-        "exact_name_command": "git log --first-parent --format=%H -S Astral Mage 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "exact_name_command": "/usr/bin/git log --first-parent --format=%H -S Astral Mage 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
         "path_history_command": "git log --first-parent --format=commit:%H --name-status 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- packages/game-cartridges/src/cartridges/astral-mage/definition.ts",
         "primary_deletion": {
           "command": "git log --first-parent --format=%H%x09%P%x09%s --diff-filter=D 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- packages/game-cartridges/src/cartridges/astral-mage/definition.ts",
@@ -11685,8 +11685,8 @@
           "ancestor path history and deletion-parent resolution",
           "frozen-revision exact-name specification search"
         ],
-        "slug_command": "git log --first-parent --format=%H -S astral-mage 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
-        "specification_command": "git grep -l -F Astral Mage 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- measure"
+        "slug_command": "/usr/bin/git log --first-parent --format=%H -S astral-mage 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "specification_command": "/usr/bin/git grep -l -F Astral Mage 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- measure"
       },
       "interpretation": {},
       "method": "human-exhaustive-ancestor-history-review",
@@ -11724,7 +11724,7 @@
         }
       ],
       "history_search": {
-        "exact_name_command": "git log --first-parent --format=%H -S Griffin Sky-Joust 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "exact_name_command": "/usr/bin/git log --first-parent --format=%H -S Griffin Sky-Joust 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
         "path_history_command": "git log --first-parent --format=commit:%H --name-status 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/griffin-sky-joust/page.tsx",
         "primary_deletion": {
           "command": "git log --first-parent --format=%H%x09%P%x09%s --diff-filter=D 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/griffin-sky-joust/page.tsx",
@@ -11741,8 +11741,8 @@
           "ancestor path history and deletion-parent resolution",
           "frozen-revision exact-name specification search"
         ],
-        "slug_command": "git log --first-parent --format=%H -S griffin-sky-joust 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
-        "specification_command": "git grep -l -F Griffin Sky-Joust 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- measure"
+        "slug_command": "/usr/bin/git log --first-parent --format=%H -S griffin-sky-joust 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "specification_command": "/usr/bin/git grep -l -F Griffin Sky-Joust 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- measure"
       },
       "interpretation": {},
       "method": "human-exhaustive-ancestor-history-review",
@@ -11780,7 +11780,7 @@
         }
       ],
       "history_search": {
-        "exact_name_command": "git log --first-parent --format=%H -S Realm Carver 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "exact_name_command": "/usr/bin/git log --first-parent --format=%H -S Realm Carver 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
         "path_history_command": "git log --first-parent --format=commit:%H --name-status 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/realm-carver/page.tsx",
         "primary_deletion": {
           "command": "git log --first-parent --format=%H%x09%P%x09%s --diff-filter=D 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/realm-carver/page.tsx",
@@ -11797,8 +11797,8 @@
           "ancestor path history and deletion-parent resolution",
           "frozen-revision exact-name specification search"
         ],
-        "slug_command": "git log --first-parent --format=%H -S realm-carver 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
-        "specification_command": "git grep -l -F Realm Carver 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- measure"
+        "slug_command": "/usr/bin/git log --first-parent --format=%H -S realm-carver 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "specification_command": "/usr/bin/git grep -l -F Realm Carver 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- measure"
       },
       "interpretation": {},
       "method": "human-exhaustive-ancestor-history-review",
@@ -11836,7 +11836,7 @@
         }
       ],
       "history_search": {
-        "exact_name_command": "git log --first-parent --format=%H -S Babel Architect 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "exact_name_command": "/usr/bin/git log --first-parent --format=%H -S Babel Architect 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
         "path_history_command": "git log --first-parent --format=commit:%H --name-status 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/babel-architect/page.tsx",
         "primary_deletion": {
           "command": "git log --first-parent --format=%H%x09%P%x09%s --diff-filter=D 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/babel-architect/page.tsx",
@@ -11853,8 +11853,8 @@
           "ancestor path history and deletion-parent resolution",
           "frozen-revision exact-name specification search"
         ],
-        "slug_command": "git log --first-parent --format=%H -S babel-architect 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
-        "specification_command": "git grep -l -F Babel Architect 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- measure"
+        "slug_command": "/usr/bin/git log --first-parent --format=%H -S babel-architect 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games apps/reading-advantage apps/primary-advantage packages measure",
+        "specification_command": "/usr/bin/git grep -l -F Babel Architect 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- measure"
       },
       "interpretation": {},
       "method": "human-exhaustive-ancestor-history-review",
