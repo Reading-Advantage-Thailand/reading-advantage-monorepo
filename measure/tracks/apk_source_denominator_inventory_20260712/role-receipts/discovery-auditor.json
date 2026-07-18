@@ -1,25 +1,76 @@
 {
   "schema_version": "apk-role-receipt.v1",
-  "status": "candidate-retrospective-handoff",
+  "status": "complete-provider-attested",
   "track_id": "apk_source_denominator_inventory_20260712",
   "phase": "Phase 1: Mechanical discovery",
   "role": "discovery-auditor",
   "task_id": "discovery-auditor:mechanical-denominator",
-  "spawn_id": "ses_0a73854b3ffea1l0aDqq8uAa4o",
-  "session_id": "ses_0a73854b3ffea1l0aDqq8uAa4o",
-  "parent_ancestry_ids": null,
-  "parent_ancestry_ids_limitation": "The orchestrator supplied only the spawn/session ID; no parent-ancestry export was supplied.",
-  "prompt_sha256": "acb4674433e40e4edade8a37da97a016790e3eb438be9a3d295c3ff9b6cb2cbf",
-  "prompt_hash_basis": "UTF-8 bytes of the complete handoff request in this session, without a terminal newline.",
-  "actual_context_manifest_sha256": null,
-  "actual_context_manifest_sha256_limitation": "No raw provider context export or orchestrator context-manifest bytes were supplied, so this receipt cannot truthfully hash the actual context.",
-  "start_event_id": null,
-  "start_event_id_limitation": "No platform start-event ID was supplied.",
-  "end_event_id": null,
-  "end_event_id_limitation": "No platform end-event ID was supplied.",
-  "final_response_sha256": "f2273632cd3871c1129898fbe6f08cf37da60acb90e2b46fd33e8ea2f550671c",
-  "final_response_hash_basis": "UTF-8 bytes of role-logs/phase1-jr-green.log from MEASURE_AGENT_RESULT through END_MEASURE_AGENT_RESULT, excluding its terminal newline.",
-  "allowed_input_manifest_sha256": "e4bba6919b9b60992a388a9cf4f37c7885400b96bec7b31898f59eaa80d12a9f",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "spawn_id": "ses_08d8387d0ffeNFZIo2Q3xyNr2L",
+  "session_id": "ses_08d8387d0ffeNFZIo2Q3xyNr2L",
+  "agent": "measure-jr-green",
+  "parent_ancestry_ids": [
+    "ses_08f18fa0cffe6YtPoIl6SraYxb"
+  ],
+  "prompt_message_id": "msg_f727c78a0001PFHeCUgYEJ5OIU",
+  "prompt_sha256": "e763d6ad8334072c13c6b3caee420958a7e09026dda9aa251e2be77e71c6174a",
+  "prompt_hash_basis": "SHA-256 of exact UTF-8 text bytes in provider message msg_f727c78a0001PFHeCUgYEJ5OIU.",
+  "actual_context_manifest": {
+    "schema_version": "apk-provider-context-manifest.v2",
+    "provider": "opencode-export",
+    "raw_export_sha256": "3c49752af104ac58e717801cf403313421de801f339891d7ee6e56cddc263aea",
+    "raw_export_bytes": 734001,
+    "session_id": "ses_08d8387d0ffeNFZIo2Q3xyNr2L",
+    "parent_session_id": "ses_08f18fa0cffe6YtPoIl6SraYxb",
+    "session_created_at_ms": 1784332187696,
+    "session_updated_at_ms": 1784332654928,
+    "message_count": 12,
+    "part_count": 64,
+    "user_prompt_count": 1,
+    "first_user_message_id": "msg_f727c78a0001PFHeCUgYEJ5OIU",
+    "final_assistant_message_id": "msg_f728302a6001hR2mPcPq5eKnqh",
+    "message_ledger_sha256": "966eea1b507ac0e4d908356d8836c3f6faf2d7ffb4698f39905dc1506d76eae7",
+    "message_ledger_hash_basis": "SHA-256 of the raw export messages array serialized as canonical compact JSON with sorted keys and UTF-8 encoding.",
+    "part_ledger_sha256": "20df082c4076dd278f00268b4cf007d483c46d8f3a0f35e626149f4e7c565cfe",
+    "part_ledger_hash_basis": "SHA-256 of all raw export message parts flattened in provider message order and serialized as canonical compact JSON with sorted keys and UTF-8 encoding.",
+    "raw_write_inventory": [
+      "measure/tracks/apk_source_denominator_inventory_20260712/source-denominator.json",
+      "measure/tracks/apk_source_denominator_inventory_20260712/game-identity-ledger.json",
+      "measure/tracks/apk_source_denominator_inventory_20260712/scene-state-denominator.json"
+    ],
+    "schema_omissions": [
+      "fork_turns"
+    ]
+  },
+  "actual_context_manifest_sha256": "f4f4da3655ba1c5867017891d7ab8386eda66a88c4e5b791f761353efb78fc85",
+  "actual_context_manifest_hash_basis": "SHA-256 of actual_context_manifest serialized as canonical compact JSON with sorted keys.",
+  "start_event_id": "msg_f727c78a0001PFHeCUgYEJ5OIU",
+  "start_timestamp_ms": 1784332187814,
+  "end_event_id": "msg_f728302a6001hR2mPcPq5eKnqh",
+  "event_id": "msg_f728302a6001hR2mPcPq5eKnqh",
+  "final_response_message_id": "msg_f728302a6001hR2mPcPq5eKnqh",
+  "end_timestamp_ms": 1784332654763,
+  "final_response_sha256": "e133522f831509f8b4ba69e317ec079238a5e2e3f9efd4100f5e0c2ba4b81fde",
+  "final_response_hash_basis": "SHA-256 of exact UTF-8 text bytes in provider message msg_f728302a6001hR2mPcPq5eKnqh.",
+  "allowed_input_manifest_sha256": "f8d68f17453e87ba9fb155420e91fcaccaf7c1942b4e02ad372c66dc6ad31129",
+  "role_ownership_manifest_sha256": "38bc8c4a57f45c91869dcd76f845017c0e1a6913e16e7f001188f6b7079d2bb2",
+  "output_paths": [
+    "measure/tracks/apk_source_denominator_inventory_20260712/source-denominator.json",
+    "measure/tracks/apk_source_denominator_inventory_20260712/game-identity-ledger.json",
+    "measure/tracks/apk_source_denominator_inventory_20260712/scene-state-denominator.json"
+  ],
+  "output_hashes": {
+    "measure/tracks/apk_source_denominator_inventory_20260712/source-denominator.json": "5be6a1266f1c42cf13fbf38f93c25ee5037057c12815051def3f0320a8edbc0c",
+    "measure/tracks/apk_source_denominator_inventory_20260712/game-identity-ledger.json": "a31c99650bf1abd6623e64b2e9a23c4c481ce970036b52cfbe08c74b1c09c407",
+    "measure/tracks/apk_source_denominator_inventory_20260712/scene-state-denominator.json": "0beb71bb0662e54e023c0efa5528a385e8b26a1fbd0443bd89d0c8be196760ba"
+  },
+  "output_sha256": "338aee673f7392d9b0d24c68243cf93bc2dc02ddf06f45082cca52192c388789",
+  "output_hash_basis": "SHA-256 of canonical compact JSON with sorted keys mapping each output path to the SHA-256 of its committed bytes at commit_sha.",
+  "actual_usage": {
+    "bytes_read": 3298693,
+    "command_invocations": 17,
+    "source_files": 624
+  },
   "budget_declaration": {
     "role": "discovery-auditor",
     "frozen_resource_ceiling": {
@@ -27,43 +78,63 @@
       "command_invocations": 120,
       "source_files": 7500
     },
-    "actual_usage": "unavailable: platform does not expose a tool-usage ledger to this session"
-  },
-  "budget_declaration_sha256": "d98a99e6ea2058fe982d5b23591a480ee86eb908cd1f553cbe01a194969f9da0",
-  "budget_hash_basis": "Canonical compact JSON with sorted keys for budget_declaration.",
-  "commit_sha": "f17fa78b36453e4aba36bc90f32bf25cd5b65ddb",
-  "commit_binding": {
-    "status": "candidate-retrospective",
-    "limitation": "This receipt is created after f17fa78b. It can rederive the listed output hashes from that commit, but cannot prove that this supplied session authored those earlier bytes or establish event ordering before the commit.",
-    "commit_tree_sha": "8e040f207cc7512f6b6a9156841d679b4ccc43c3"
-  },
-  "outputs": [
-    {
-      "path": "measure/tracks/apk_source_denominator_inventory_20260712/source-denominator.json",
-      "sha256": "91154a4eded1a500cad360c5d1c94f928bc12385916e5f0a32066580b6eb104e"
+    "actual_usage": {
+      "bytes_read": 3298693,
+      "command_invocations": 17,
+      "source_files": 624
     },
-    {
-      "path": "measure/tracks/apk_source_denominator_inventory_20260712/game-identity-ledger.json",
-      "sha256": "bc8e216e0f00d2fecbb9e74df0a491cc14e419e28f633a1409d31a6ef933a36f"
-    },
-    {
-      "path": "measure/tracks/apk_source_denominator_inventory_20260712/scene-state-denominator.json",
-      "sha256": "ebb53d3fde7d3316a5cb6b7f6da5452eb4f93ba0537c4f5617c5313faf021d49"
+    "measurement_basis": {
+      "bytes_read": "Sum of committed baseline blob byte lengths for the 624 mechanically enumerated source files read by the frozen generator.",
+      "command_invocations": "Count of all provider tool parts in the retained raw export.",
+      "source_files": "Count of committed baseline files mechanically selected by source_path() from the frozen roots."
     }
-  ],
-  "output_sha256": {
-    "measure/tracks/apk_source_denominator_inventory_20260712/source-denominator.json": "91154a4eded1a500cad360c5d1c94f928bc12385916e5f0a32066580b6eb104e",
-    "measure/tracks/apk_source_denominator_inventory_20260712/game-identity-ledger.json": "bc8e216e0f00d2fecbb9e74df0a491cc14e419e28f633a1409d31a6ef933a36f",
-    "measure/tracks/apk_source_denominator_inventory_20260712/scene-state-denominator.json": "ebb53d3fde7d3316a5cb6b7f6da5452eb4f93ba0537c4f5617c5313faf021d49"
   },
-  "output_hash_basis": "git show f17fa78b:<path> bytes for only the frozen discovery-auditor task outputs.",
-  "unowned_files_in_bound_commit": [
-    "asset-file-denominator.json",
-    "historical-source-denominator.json",
-    "denominator-discrepancies.json",
-    "denominator-method.md"
-  ],
-  "unowned_files_limitation": "These files were also present in f17fa78b but are assigned to other frozen roles and are intentionally not claimed by this receipt.",
+  "budget_declaration_sha256": "1c005002bd57d5a21348363541cb59eb07973a94e1ffd15533411ce9b43ada34",
+  "budget_hash_basis": "SHA-256 of budget_declaration serialized as canonical compact JSON with sorted keys.",
+  "stop_loss_observations": {
+    "unsupported_factual_claims": 0,
+    "denominator_mismatches": 0,
+    "failed_fix_review_cycles": 0,
+    "unresolved_blocking_findings": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0
+    }
+  },
+  "provider_usage": {
+    "tokens_input": 67589,
+    "tokens_output": 13923,
+    "tokens_reasoning": 0,
+    "tokens_cache_read": 532096,
+    "models": [
+      "glm-5.2"
+    ],
+    "providers": [
+      "vocengine-coding"
+    ]
+  },
+  "commit_sha": "1eeb512ff53b20ab96e07dea31aa5dcd978504ec",
+  "commit_binding": {
+    "status": "committed-output-binding",
+    "output_commit": "1eeb512ff53b20ab96e07dea31aa5dcd978504ec",
+    "full_output_attestation_commit": "1eeb512ff53b20ab96e07dea31aa5dcd978504ec",
+    "raw_export_sha256": "3c49752af104ac58e717801cf403313421de801f339891d7ee6e56cddc263aea",
+    "adapter_acceptance_commit": "3933ad39ea848fdf093fb16fb0c1091f4d71b94e",
+    "source": "git show 1eeb512ff53b20ab96e07dea31aa5dcd978504ec:<output-path>"
+  },
   "findings": [],
+  "admission_summary": {
+    "status": "passed",
+    "total": 21,
+    "passed": 21,
+    "failed": 0,
+    "phase0_tests": 9,
+    "phase1_tests": 12,
+    "output_hashes": {
+      "measure/tracks/apk_source_denominator_inventory_20260712/source-denominator.json": "5be6a1266f1c42cf13fbf38f93c25ee5037057c12815051def3f0320a8edbc0c",
+      "measure/tracks/apk_source_denominator_inventory_20260712/game-identity-ledger.json": "a31c99650bf1abd6623e64b2e9a23c4c481ce970036b52cfbe08c74b1c09c407",
+      "measure/tracks/apk_source_denominator_inventory_20260712/scene-state-denominator.json": "0beb71bb0662e54e023c0efa5528a385e8b26a1fbd0443bd89d0c8be196760ba"
+    }
+  },
   "acceptance": "not-claimed"
 }
