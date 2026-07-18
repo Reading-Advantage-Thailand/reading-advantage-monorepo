@@ -13329,6 +13329,14 @@
             "application_key",
             "local_user_id"
           ]
+        },
+        "company_product_principals_application_account_unique": {
+          "name": "company_product_principals_application_account_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "application_key",
+            "company_account_id"
+          ]
         }
       },
       "policies": {},

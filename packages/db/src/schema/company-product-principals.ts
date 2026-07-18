@@ -34,6 +34,10 @@ export const companyProductPrincipals = pgTable(
       table.applicationKey,
       table.localUserId,
     ),
+    unique("company_product_principals_application_account_unique").on(
+      table.applicationKey,
+      table.companyAccountId,
+    ),
     check(
       "company_product_principals_organization_key_check",
       sql`${table.organizationKey} ~ '^[a-z0-9](?:[a-z0-9-]{0,62}[a-z0-9])?$'`,

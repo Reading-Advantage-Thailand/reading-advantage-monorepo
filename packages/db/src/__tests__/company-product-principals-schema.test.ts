@@ -25,9 +25,10 @@ describe("company product principal schema", () => {
   });
 
   it("globally binds one local principal to one application", () => {
-    const constraint = getTableConfig(
+    const constraints = getTableConfig(
       companyProductPrincipals,
-    ).uniqueConstraints.find(
+    ).uniqueConstraints;
+    const constraint = constraints.find(
       (candidate) =>
         candidate.name ===
         "company_product_principals_application_local_unique",
@@ -35,6 +36,15 @@ describe("company product principal schema", () => {
     expect(constraint?.columns.map((column) => column.name)).toEqual([
       "application_key",
       "local_user_id",
+    ]);
+    const accountConstraint = constraints.find(
+      (candidate) =>
+        candidate.name ===
+        "company_product_principals_application_account_unique",
+    );
+    expect(accountConstraint?.columns.map((column) => column.name)).toEqual([
+      "application_key",
+      "company_account_id",
     ]);
   });
 
@@ -89,5 +99,14 @@ describe("company product principal schema", () => {
     });
     expect(hardeningMigration).toContain("sales:");
     expect(hardeningMigration).toContain("UPDATE sales_progress");
+    expect(hardeningMigration).toContain(
+      "company_product_principals_application_account_unique",
+    );
+    expect(hardeningMigration).toContain("sync_sales_company_principal");
+    expect(hardeningMigration).toContain("source.school_id");
+    expect(hardeningMigration).toContain("mapping.local_user_id NOT IN");
+    expect(hardeningMigration).toContain(
+      "Sales organization change requires an explicit mapping manifest",
+    );
   });
 });
