@@ -141,9 +141,7 @@ export async function getIdentityComposition(): Promise<IdentityComposition> {
               : event.outcome === "denied" ? "DENIED" : "FAILED",
             reasonCode: event.outcome === "success" ? undefined : event.outcome.toUpperCase(),
             metadata: {
-              eventId: event.eventId,
-              eventType: event.eventType,
-              resourceType: "company-employee",
+              source: "accounts-capability-kernel",
             },
           });
           return { eventId: event.eventId, persistedAt: new Date().toISOString() };

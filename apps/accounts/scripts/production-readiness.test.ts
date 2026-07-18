@@ -58,6 +58,14 @@ describe("Accounts production readiness", () => {
     }
   });
 
+  it("projects capability audit metadata into the immutable database allowlist", () => {
+    const metadata = identityComposition.match(/metadata:\s*\{([\s\S]*?)\n\s*\},/);
+    expect(metadata?.[1]).toContain('source: "accounts-capability-kernel"');
+    expect(metadata?.[1]).not.toContain("eventId");
+    expect(metadata?.[1]).not.toContain("eventType");
+    expect(metadata?.[1]).not.toContain("resourceType");
+  });
+
   it("keeps bootstrap credentials off Accounts runtime and pins Codecamp to one central secret", () => {
     const deploy = cloudbuild.slice(
       cloudbuild.indexOf('id: "deploy-cloudrun"'),
