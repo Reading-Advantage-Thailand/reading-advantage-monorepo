@@ -279,7 +279,8 @@ _Blast radius: `requireMarketingSession` has 9 source references but 0 graph-res
 ### Contract & Schema Definition
 
 - [ ] Task 21: Define Marketing SSO and permission contracts.
-    - [ ] Define Marketing member and administrator permissions.
+    - [ ] Define Marketing `MEMBER` shared campaign/project permissions and
+          `ADMIN`-only settings permissions.
     - [ ] Inventory protected Marketing routes and map each to a named
           permission.
     - [ ] Define Marketing client registration, callback, session, logout, and
@@ -316,7 +317,8 @@ _Blast radius: `requireMarketingSession` has 9 source references but 0 graph-res
 
 - [ ] Task 24: Complete Marketing route migration and regression verification.
     - [ ] Migrate every inventoried protected Marketing route.
-    - [ ] Verify member/admin permission separation.
+    - [ ] Verify the shared campaign/project workspace for `MEMBER` and `ADMIN`,
+          with settings restricted to `ADMIN`.
     - [ ] Verify company administrators without Marketing roles are denied.
     - [ ] Run browser-level login, SSO reuse, logout, suspension, and
           unauthorized-route tests.

@@ -143,9 +143,11 @@ Advantage without maintaining separate credentials
   the permissions associated with that Marketing role.
 - Given an authenticated employee without a Marketing role, When they open a
   protected Marketing route, Then access is denied.
-- Given Marketing member and administrator roles, When authorization is
-  evaluated, Then administrative Marketing operations remain inaccessible to
-  ordinary Marketing members.
+- Given a Marketing `MEMBER`, When campaign or video-project authorization is
+  evaluated, Then the employee can collaborate across the single-company shared
+  Marketing workspace.
+- Given a Marketing `ADMIN`, When authorization is evaluated, Then the employee
+  retains shared campaign/project access and alone may manage Marketing settings.
 - Given a company administrator without a Marketing role, When they open
   Marketing, Then company-administrator status alone grants no Marketing
   access.

@@ -238,7 +238,7 @@ describe("Phase 3 Adversarial: encryption-at-rest hardening", () => {
       const freshParts = fresh.split(":");
       expect(freshParts).toHaveLength(3);
       expect(apiKeyRow!.value.split(":")).toHaveLength(3);
-    });
+    }, 15_000); // Cold CI imports the real DB adapter before the route mock resolves.
   });
 
   // ─────────────────────────────────────────────────────────────────

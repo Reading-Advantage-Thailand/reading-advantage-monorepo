@@ -27,8 +27,9 @@ Independently, the 2026-06-27 line review found **Critical** security defects th
 make deploying the current code irresponsible: `GET /api/settings` returns
 **decrypted LLM API keys to anyone** (`LR-marketing-app-003-005`); all
 `/api/video/*` routes are public and spend LLM tokens unauthenticated
-(`LR-004-002`); campaign list/detail/PATCH have no auth or tenant scoping. These
-are owned by **Wave 3** (`marketing_api_authz`, `marketing_zod_boundaries`,
+(`LR-004-002`); campaign list/detail/PATCH have no auth or documented
+application-role boundary. These are owned by **Wave 3**
+(`marketing_api_authz`, `marketing_zod_boundaries`,
 `marketing_ai_adapter`), not by this track.
 
 This track owns **build verification + deployment + QA** and **consumes Wave 3 as
@@ -77,7 +78,9 @@ and is called out as its own task.
       records the blocker as resolved with that version.
 - [ ] Wave 3 marketing security merged to `master`; `GET /api/settings` no longer
       returns decrypted secrets and every `/api/video/*` and campaign route is
-      authenticated — verified against HEAD before any deploy step runs.
+      authenticated. Marketing `MEMBER` users share campaign/project production
+      access, while only Marketing `ADMIN` users manage settings — verified
+      against HEAD before any deploy step runs.
 - [ ] `apps/marketing/Dockerfile` builds a production image that serves the app via
       the vinext runtime and boots locally.
 - [ ] `apps/marketing/cloudbuild.yaml` builds, runs marketing DB migrate + doctor,

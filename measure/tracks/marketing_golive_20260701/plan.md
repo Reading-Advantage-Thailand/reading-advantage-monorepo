@@ -33,8 +33,8 @@ Do not start Phase 2 until this is green — the app currently leaks decrypted A
     - `app/lib/redact.ts` exports `redactSecrets()`; `app/api/settings/route.ts` masks secret values as `••••` and never calls `decrypt` for GET responses. Verified at `bd32fba5`.
   - [x] Every `/api/video/*` route requires an authenticated session — `LR-004-002`
     - All 4 video route files import and call `requireMarketingSession` before handler logic: `research-topics/route.ts`, `save-topics/route.ts`, `generate-script/route.ts`, `projects/route.ts`. Verified at `bd32fba5`.
-  - [x] Campaign list/detail/PATCH are auth- and owner/tenant-scoped — `LR-marketing-app-003-001/003`
-    - `campaigns/route.ts` and `campaigns/[id]/route.ts` both call `requireMarketingSession`. Owner/tenant scope is TB-scoped per the auth module comment (REFERENTIAL tables, no `schoolId` column). Verified at `bd32fba5`.
+  - [x] Campaign list/detail/PATCH enforce the Marketing application-role boundary — `LR-marketing-app-003-001/003`
+    - Marketing is a single-company shared workspace: authenticated `MEMBER` users collaborate on all campaigns and projects; `ADMIN` users retain those production permissions and alone manage settings. The Marketing tables intentionally have no `schoolId` or `ownerId` row scope. Verified against the current permission inventory and route guards.
 - [x] Task: Verify `marketing_zod_boundaries` (Wave 3) — Zod validation on campaigns POST/PATCH, settings POST, and all video routes; `generate-script` no longer feeds unvalidated `request.json()` to the prompt — `LR-004-001`
   - All routes use `z.safeParse()` on request bodies: `campaigns/route.ts` (`createCampaignSchema`), `campaigns/[id]/route.ts` (`updateCampaignSchema`), `settings/route.ts` (`settingsPostSchema`), `research-topics/route.ts` (`researchTopicsSchema`), `save-topics/route.ts` (`saveTopicsSchema`), `generate-script/route.ts` (`generateScriptSchema` + `scriptSchema`), `projects/route.ts` (`scriptSchema`). Verified at `bd32fba5`.
 - [x] Task: Verify `marketing_ai_adapter` (Wave 3) — AI calls route through `ai.generateText()` rather than per-request provider clients — `LR-004-003`
