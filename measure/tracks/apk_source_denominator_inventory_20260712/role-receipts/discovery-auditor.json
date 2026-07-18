@@ -6,26 +6,26 @@
   "role": "discovery-auditor",
   "task_id": "discovery-auditor:mechanical-denominator",
   "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
-  "phase0_authority_commit": "6dd43aa834b7193017230843c658d32c19ecd1a9",
+  "phase0_authority_commit": "e3b1a56ae17933ed5dbf3aacd0ab87f46f866681",
   "provider_agent": "t2-discovery-auditor",
-  "spawn_id": "ses_08aa7e66bffeuCukwlmt87efQV",
+  "spawn_id": "ses_089af1d37ffezrold5tQtZOpQe",
   "parent_ancestry_ids": [
-    "ses_08aa82221ffeu4OlRG6MurFLvk"
+    "ses_089af6600ffeyyhNUCMpREbacs"
   ],
-  "prompt_sha256": "3b3dd5e670348fde4dc8e8f15700d822fda851c94efb4a834311e073184ee256",
+  "prompt_sha256": "88a1a71f1ab58d6156eae5d93259f70dc20a7ae64657dae22d4f98ba461722a8",
   "actual_context_manifest": {
-    "final_assistant_message_id": "msg_f755972e4001LfVsgSJjAK3gTY",
-    "first_user_message_id": "msg_f755819dd001AH1grZ3Me2YAac",
-    "message_count": 6,
+    "final_assistant_message_id": "msg_f76528e27001FnzbGhX3ekMasE",
+    "first_user_message_id": "msg_f7650e2f0001tsRqYpzl1KmuhH",
+    "message_count": 4,
     "message_ledger_hash_basis": "SHA-256 of the raw export messages array serialized as canonical compact JSON with sorted keys and UTF-8 encoding.",
-    "message_ledger_sha256": "7accfd36df37e18f4922cb5192219504b0c3662f4996265336386954cf230ad7",
-    "parent_session_id": "ses_08aa82221ffeu4OlRG6MurFLvk",
-    "part_count": 23,
+    "message_ledger_sha256": "93aca497a6665ec6da6d987e1a3d6a9587dcc172bbdd6ee3524f47f87e02edf5",
+    "parent_session_id": "ses_089af6600ffeyyhNUCMpREbacs",
+    "part_count": 13,
     "part_ledger_hash_basis": "SHA-256 of all raw export message parts flattened in provider message order and serialized as canonical compact JSON with sorted keys and UTF-8 encoding.",
-    "part_ledger_sha256": "eb849543b77f04fbf66b545efb26bf4b68e3466e2bf33f73f24e7fd8d225548c",
+    "part_ledger_sha256": "1e99d6f6587903b913f82697cda8c4fba38f23b407959f1ef02d8148f7d067a7",
     "provider": "opencode-export",
-    "raw_export_bytes": 215433,
-    "raw_export_sha256": "4f24de34bfb31a36d7d9eaad03d0053ac15ebcefd6bd83e444888600d97b5580",
+    "raw_export_bytes": 28083,
+    "raw_export_sha256": "4572ee326a8854d90c566ba8618bd1b5fc9185dae6d417edd7cbb72a2834c7f7",
     "raw_write_inventory": [
       "measure/tracks/apk_source_denominator_inventory_20260712/game-identity-ledger.json",
       "measure/tracks/apk_source_denominator_inventory_20260712/scene-state-denominator.json",
@@ -35,15 +35,15 @@
       "fork_turns"
     ],
     "schema_version": "apk-provider-context-manifest.v2",
-    "session_created_at_ms": 1784380135828,
-    "session_id": "ses_08aa7e66bffeuCukwlmt87efQV",
-    "session_updated_at_ms": 1784380228110,
+    "session_created_at_ms": 1784396440264,
+    "session_id": "ses_089af1d37ffezrold5tQtZOpQe",
+    "session_updated_at_ms": 1784396558465,
     "user_prompt_count": 1
   },
-  "actual_context_manifest_sha256": "6b3867da4a554cf0a9e9796ef94a2dc061e82eebb572f9d88946f08548a9a01b",
-  "start_event_id": "msg_f755819dd001AH1grZ3Me2YAac",
-  "end_event_id": "msg_f755972e4001LfVsgSJjAK3gTY",
-  "final_response_sha256": "60e0f20f6ad6c0767961f25a391e2d312727c604f9fd1ffeae569d9cbaa09589",
+  "actual_context_manifest_sha256": "0e87eadfc151d0ce3396a178d4c797778feeb3813a26bd9f211b469379f3532d",
+  "start_event_id": "msg_f7650e2f0001tsRqYpzl1KmuhH",
+  "end_event_id": "msg_f76528e27001FnzbGhX3ekMasE",
+  "final_response_sha256": "56f60d39c424d1472022e51967b890fd4edb51858bcfd0468d2132b9bf774a03",
   "output_paths": [
     "measure/tracks/apk_source_denominator_inventory_20260712/source-denominator.json",
     "measure/tracks/apk_source_denominator_inventory_20260712/game-identity-ledger.json",
@@ -52,23 +52,23 @@
   "output_hashes": {
     "measure/tracks/apk_source_denominator_inventory_20260712/source-denominator.json": "0dbf97dac93ba2056228e79433fb91e6f2ef1898b6f09eff62fe0755082ba21d",
     "measure/tracks/apk_source_denominator_inventory_20260712/game-identity-ledger.json": "a31c99650bf1abd6623e64b2e9a23c4c481ce970036b52cfbe08c74b1c09c407",
-    "measure/tracks/apk_source_denominator_inventory_20260712/scene-state-denominator.json": "b3626f7ccb02ae34225b95fcc3693b6d149bfff0da94605db2deda6e8b2ac270"
+    "measure/tracks/apk_source_denominator_inventory_20260712/scene-state-denominator.json": "6308836ca24f1cac5bf4ded5f7e72c5ba06c08f4a5c6648620818b720190bf8b"
   },
-  "output_sha256": "f4e379d40cc2ddeeddf4b098402f4943653474f5d5aff3dcd2545bab25354b35",
+  "output_sha256": "2a32ec67e6b57989a27ca261b686ea2734d987858b8593a7aac1f327ebfc4bb2",
   "actual_usage": {
-    "bytes_read": 4291017,
-    "command_invocations": 6,
+    "bytes_read": 4208634,
+    "command_invocations": 2,
     "source_files": 923
   },
   "budget_declaration": {
     "schema_version": "apk-role-budget-declaration.v1",
     "actual_usage": {
-      "bytes_read": 4291017,
-      "command_invocations": 6,
+      "bytes_read": 4208634,
+      "command_invocations": 2,
       "source_files": 923
     }
   },
-  "budget_declaration_sha256": "921fe23cf0b92d1c94282e9269977acb3847a4c0c5520e34f7d19a8c2ee1d751",
+  "budget_declaration_sha256": "09b5f69a4dad5f2dcff7c8628bf7a87b3370a9b527ec4fdf5440afd6963522bb",
   "stop_loss_observations": {
     "denominator_mismatches": 0,
     "failed_fix_review_cycles": 0,
@@ -80,21 +80,21 @@
     "unsupported_factual_claims": 0
   },
   "stop_loss_observations_sha256": "6afd40285b26b8b7707fc8b6784b8bd538eecbe77eb9e5caeda857455b26cba0",
-  "allowed_input_manifest_sha256": "8d989f6b30e5b525540004ddc21edc94b23f431a4ff38920e2121c4ea25b17b4",
+  "allowed_input_manifest_sha256": "5aee062774115b5925878b45309c9f615402d2c25737e82fc55429df66d9e06f",
   "task_authority_sha256": "85f9165c79cb88a3dcbd632ecf6459030c263c61946c2280bf330998edb41e1a",
   "trusted_runtime_sha256": "d06492f8328859ed0ee71d72dfe6c476305aa54881f15b27e228e7bd5f41c2b1",
-  "raw_export_sha256": "4f24de34bfb31a36d7d9eaad03d0053ac15ebcefd6bd83e444888600d97b5580",
-  "commit_sha": "ca734a5346172647d776ce03888a6418e57b9694",
+  "raw_export_sha256": "4572ee326a8854d90c566ba8618bd1b5fc9185dae6d417edd7cbb72a2834c7f7",
+  "commit_sha": "ced876270c09fc833e490afe0b1e075fe05f8db4",
   "shell_generators": [
     {
-      "command": "/usr/bin/env -i PATH=/opt/codex-desktop/resources/node-runtime/bin:/usr/bin:/bin LANG=C PYTHONDONTWRITEBYTECODE=1 /usr/bin/python3 -I -S -c 'exec(compile(__import__(\"subprocess\").check_output((\"/usr/bin/git\",\"show\",__import__(\"sys\").argv.pop(1)+\":measure/tracks/apk_source_denominator_inventory_20260712/generate_phase1_denominators.py\")),\"measure/tracks/apk_source_denominator_inventory_20260712/generate_phase1_denominators.py\",\"exec\"),dict(__file__=\"measure/tracks/apk_source_denominator_inventory_20260712/generate_phase1_denominators.py\",__name__=\"__main__\"))' 6dd43aa834b7193017230843c658d32c19ecd1a9 --role discovery-auditor --code-revision 6dd43aa834b7193017230843c658d32c19ecd1a9",
+      "command": "/usr/bin/env -i PATH=/opt/codex-desktop/resources/node-runtime/bin:/usr/bin:/bin LANG=C PYTHONDONTWRITEBYTECODE=1 /usr/bin/python3 -I -S -c 'exec(compile(__import__(\"subprocess\").check_output((\"/usr/bin/git\",\"show\",__import__(\"sys\").argv.pop(1)+\":measure/tracks/apk_source_denominator_inventory_20260712/generate_phase1_denominators.py\")),\"measure/tracks/apk_source_denominator_inventory_20260712/generate_phase1_denominators.py\",\"exec\"),dict(__file__=\"measure/tracks/apk_source_denominator_inventory_20260712/generate_phase1_denominators.py\",__name__=\"__main__\"))' e3b1a56ae17933ed5dbf3aacd0ab87f46f866681 --role discovery-auditor --code-revision e3b1a56ae17933ed5dbf3aacd0ab87f46f866681",
       "owned_outputs": [
         "measure/tracks/apk_source_denominator_inventory_20260712/source-denominator.json",
         "measure/tracks/apk_source_denominator_inventory_20260712/game-identity-ledger.json",
         "measure/tracks/apk_source_denominator_inventory_20260712/scene-state-denominator.json"
       ],
-      "command_sha256": "120335e06039825816c9b282d2c4b8c050fc54f142001c62562eeb47f044fce1",
-      "attestation_commit": "ca734a5346172647d776ce03888a6418e57b9694"
+      "command_sha256": "92e1af7439a16dd785622c2cae17c526ae67cc68ae3a318b28fbbeacd79906a9",
+      "attestation_commit": "ced876270c09fc833e490afe0b1e075fe05f8db4"
     }
   ],
   "read_only_shell_commands": [],
