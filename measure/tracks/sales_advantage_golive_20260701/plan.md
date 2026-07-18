@@ -87,10 +87,12 @@ Do not start Phase 2 until the security gate is green.
 > False product, claims, availability, and flat-price content identified in hard
 > review was replaced with the pinned corpus language. The production seed still
 > fails closed with SALES_CURRICULUM_HUMAN_APPROVAL_REQUIRED while the approval
-> record is pending. The optional OpenRouter generator now requires both
-> `AI_PROVIDER=openrouter` and its exact provider-specific sharing approval
-> before any source read or AI-client creation, but generation was not approved,
-> was not run, and is not the chosen release path. No AI or human approval is claimed.
+> record is pending. The optional OpenRouter generator now requires matching
+> caller/runtime `AI_PROVIDER=openrouter` values, the exact provider-specific
+> sharing approval, and an explicit runtime OpenRouter key before it constructs
+> the client or reads sources. Returned provider/model provenance must also match
+> before artifact write. Generation was not approved, was not run, and is not the
+> chosen release path. No AI or human approval is claimed.
 
 ## Phase 2: Deploy infrastructure
 

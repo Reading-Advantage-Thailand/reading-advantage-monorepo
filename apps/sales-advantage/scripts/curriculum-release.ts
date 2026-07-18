@@ -203,6 +203,21 @@ const canonicalSuiteLaunchClaims = Object.freeze([
   "9. **CodeCamp Advantage** — coming 2026",
 ]);
 
+const canonicalProductStatuses = Object.freeze([
+  { product: "Reading Advantage", status: "live" },
+  { product: "Primary Advantage", status: "live" },
+  { product: "Storytime Advantage", status: "coming early 2027" },
+  { product: "Math Advantage", status: "coming late 2026" },
+  {
+    product: "Science Advantage",
+    status: "slipped while Tutor is prioritized",
+  },
+  { product: "STEM Advantage", status: "coming mid 2027" },
+  { product: "Zhongwen Advantage", status: "coming late 2026" },
+  { product: "Tutor Advantage", status: "beta 2026" },
+  { product: "CodeCamp Advantage", status: "coming 2026" },
+]);
+
 const canonicalTierClaims = Object.freeze([
   "| **App-Only** | Digital platform access | ~1,000 THB/student/year |",
   "| **Blended Learning** | App + physical workbooks + 2-day teacher training + quarterly fidelity reports | ~1,500 THB/student/year |",
@@ -223,15 +238,7 @@ const allowedAdvantageNames = new Set([
   "teaching advantage",
 ]);
 
-const futureProductNames = [
-  "Storytime Advantage",
-  "Math Advantage",
-  "Science Advantage",
-  "STEM Advantage",
-  "Zhongwen Advantage",
-  "Tutor Advantage",
-  "CodeCamp Advantage",
-];
+
 
 /** Converts a Markdown heading into the fragment form used by source refs. */
 function markdownHeadingSlug(value: string): string {
@@ -442,6 +449,136 @@ function curriculumClaimSurface(rows: CurriculumRows): string {
   ].join("\n");
 }
 
+/**
+ * Normalizes Markdown claim text for exact semantic-phrase comparison.
+ * @param value Curriculum text containing Markdown or prose.
+ * @returns Lowercase text without Markdown punctuation or repeated whitespace.
+ */
+function normalizeCurriculumClaim(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(/[*~|#>]/g, " ")
+    .replace(/[—–]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/**
+ * Splits the complete graph text into independently evaluated claim statements.
+ * @param allContent Complete curriculum text surface.
+ * @returns Normalized non-empty statements.
+ */
+function curriculumClaimStatements(allContent: string): string[] {
+  return allContent
+    .split(/[\n.!?;]+/)
+    .map(normalizeCurriculumClaim)
+    .filter(Boolean);
+}
+
+/**
+ * Detects any product lifecycle statement that differs from the canonical state.
+ * @param statements Normalized curriculum claim statements.
+ * @returns Whether a product has a conflicting launch or availability statement.
+ */
+function hasConflictingProductStatus(statements: readonly string[]): boolean {
+  const lifecyclePattern =
+    /\b(?:available|beta|coming|launch(?:es|ed|ing)?|live|planned|release(?:s|d)?|slipped|unavailable)\b/;
+  return canonicalProductStatuses.some(({ product, status }) => {
+    const normalizedProduct = normalizeCurriculumClaim(product);
+    const canonicalClaim = normalizeCurriculumClaim(`${product} ${status}`);
+    return statements.some((statement) =>
+      statement.includes(normalizedProduct) &&
+      lifecyclePattern.test(statement) &&
+      statement.replace(/^\d+\s+/, "") !== canonicalClaim
+    );
+  });
+}
+
+/**
+ * Parses a THB or baht amount from one normalized claim statement.
+ * @param statement Normalized curriculum statement.
+ * @returns Currency amounts and their character positions.
+ */
+function currencyAmounts(
+  statement: string,
+): Array<{ amount: number; index: number }> {
+  return [...statement.matchAll(/(\d[\d,]*(?:\.\d+)?)\s*(?:thb|baht)\b/g)]
+    .map((match) => ({
+      amount: Number(match[1]!.replaceAll(",", "")),
+      index: match.index,
+    }));
+}
+
+/**
+ * Detects conflicting tier prices and service-availability statements.
+ * @param statements Normalized curriculum claim statements.
+ * @returns Whether a tier claim conflicts with the canonical corpus.
+ */
+function hasConflictingTierClaim(statements: readonly string[]): boolean {
+  const expectedPrices = new Map([
+    ["app-only", 1_000],
+    ["blended learning", 1_500],
+  ]);
+  const allowedWorkedTotal = normalizeCurriculumClaim(
+    "For example, 500 students at the Blended Learning reference price is 750,000 THB/year",
+  );
+
+  for (const statement of statements) {
+    const tierMatches = [...statement.matchAll(
+      /app-only|blended learning|managed service/g,
+    )];
+    if (tierMatches.length === 0) continue;
+
+    if (
+      statement.includes("managed service") &&
+      (
+        /\b(?:available|launch(?:es|ed|ing)?|live|release(?:s|d)?)\b/
+          .test(statement) ||
+        /\b(?:planned|future)\b[^\n]*\b20(?!27)\d{2}\b/
+          .test(statement)
+      )
+    ) {
+      return true;
+    }
+    const unavailableCurrentTier = tierMatches.some((match, index) => {
+      if (match[0] === "managed service") return false;
+      const nextTierIndex = tierMatches[index + 1]?.index ?? statement.length;
+      const tierClause = statement.slice(match.index, nextTierIndex);
+      return /\b(?:beta|coming|future|launch(?:es|ed|ing)?|planned|slipped|unavailable)\b/
+        .test(tierClause);
+    }) ||
+      /\b(?:beta|coming|future|planned|slipped|unavailable)\s+(?:for\s+)?(?:app-only|blended learning)\b/
+        .test(statement);
+    if (unavailableCurrentTier) {
+      return true;
+    }
+
+    const amounts = currencyAmounts(statement);
+    if (amounts.length === 0 || statement === allowedWorkedTotal) continue;
+    for (const { amount, index } of amounts) {
+      const followingTier = tierMatches.find((match) => match.index > index);
+      const amountIntroducesFollowingTier = followingTier !== undefined &&
+        /\bfor\s*$/.test(statement.slice(index, followingTier.index));
+      const nearestTier = amountIntroducesFollowingTier
+        ? followingTier
+        : tierMatches.reduce((nearest, match) => {
+          if (nearest === undefined) return match;
+          return Math.abs(match.index! - index) < Math.abs(nearest.index! - index)
+            ? match
+            : nearest;
+        }, undefined as RegExpMatchArray | undefined);
+      const tier = nearestTier?.[0];
+      if (
+        tier === "managed service" ||
+        (tier && expectedPrices.get(tier) !== amount)
+      ) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
 /** Builds the machine-verifiable portion of the curriculum release review. */
 export function buildCurriculumAutomatedReview(
   rows: CurriculumRows,
@@ -515,21 +652,19 @@ export function buildCurriculumAutomatedReview(
   }
 
   const allContent = curriculumClaimSurface(rows);
+  const statements = curriculumClaimStatements(allContent);
   const unexpectedAdvantageName = [...allContent.matchAll(
     /\b((?!The Advantage\b)[A-Z][A-Za-z-]* Advantage)\b/g,
   )].some((match) => !allowedAdvantageNames.has(match[1]!.toLowerCase()));
-  const falseFutureLaunchClaim = futureProductNames.some((product) =>
-    new RegExp(
-      `${product}(?:\\*\\*)?\\s*(?:—|-|:|is)?\\s*(?:currently\\s+)?live\\b`,
-      "i",
-    ).test(allContent)
-  );
+  const conflictingProductStatus = hasConflictingProductStatus(statements);
+  const conflictingTierClaim = hasConflictingTierClaim(statements);
   if (
     forbiddenCurriculumClaims.some((claim) =>
       allContent.toLowerCase().includes(claim.toLowerCase())
     ) ||
     unexpectedAdvantageName ||
-    falseFutureLaunchClaim ||
+    conflictingProductStatus ||
+    conflictingTierClaim ||
     !canonicalSuiteLaunchClaims.every((claim) => allContent.includes(claim)) ||
     !canonicalTierClaims.every((claim) => allContent.includes(claim)) ||
     !allContent.includes(
@@ -538,7 +673,14 @@ export function buildCurriculumAutomatedReview(
     !allContent.includes("# The 6 Canonical Objections") ||
     !allContent.includes("## Objection 6:")
   ) {
-    throw new Error("SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID");
+    const reason = conflictingProductStatus
+      ? "product-status"
+      : conflictingTierClaim
+      ? "tier-claim"
+      : unexpectedAdvantageName
+      ? "product-name"
+      : "required-claim";
+    throw new Error(`SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID ${reason}`);
   }
 
   return {

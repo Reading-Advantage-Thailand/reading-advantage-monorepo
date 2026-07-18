@@ -6,7 +6,10 @@ import { join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { promisify } from "node:util";
 
-import { getAIClient } from "@reading-advantage/ai";
+import {
+  createAIClient,
+  type AIClientWithProvenance,
+} from "@reading-advantage/ai";
 import { z } from "zod";
 
 import { CURRICULUM_SOURCE_PATHS } from "./curriculum-release";
@@ -63,10 +66,15 @@ export interface CurriculumReviewArtifactOptions {
 
 /** Injectable boundaries used to prove provider validation precedes private I/O. */
 export interface CurriculumReviewArtifactDependencies {
-  createAIClient: typeof getAIClient;
+  createAIClient: (config: {
+    apiKey: string;
+    model: string;
+    provider: "openrouter";
+  }) => AIClientWithProvenance;
   now: () => Date;
   readSourceCommit: (sourceRoot: string) => Promise<string>;
   readUtf8File: (path: string) => Promise<string>;
+  runtimeEnvironment: Readonly<Record<string, string | undefined>>;
   writeUtf8File: (path: string, content: string) => Promise<void>;
 }
 
@@ -91,6 +99,44 @@ export function assertOpenRouterCurriculumSharingApproved(
   return environment.AI_PROVIDER;
 }
 
+interface ApprovedOpenRouterConfiguration {
+  apiKey: string;
+  model: string;
+  provider: "openrouter";
+}
+
+/**
+ * Binds caller consent, runtime provider, runtime credentials, and model.
+ * @param options Caller-supplied generation options and approval environment.
+ * @param runtimeEnvironment Environment used by the actual client factory.
+ * @returns Exact OpenRouter configuration used to construct the AI client.
+ * @throws Before source access when caller and runtime provider context diverge.
+ */
+function approvedOpenRouterConfiguration(
+  options: CurriculumReviewArtifactOptions,
+  runtimeEnvironment: Readonly<Record<string, string | undefined>>,
+): ApprovedOpenRouterConfiguration {
+  const provider = assertOpenRouterCurriculumSharingApproved(
+    options.environment,
+  );
+  if (
+    runtimeEnvironment.AI_PROVIDER !== provider ||
+    runtimeEnvironment.SALES_CURRICULUM_EXTERNAL_SHARING_APPROVED !==
+      options.environment.SALES_CURRICULUM_EXTERNAL_SHARING_APPROVED
+  ) {
+    throw new Error("SALES_CURRICULUM_PROVIDER_CONTEXT_MISMATCH");
+  }
+  const apiKey = runtimeEnvironment.OPENROUTER_API_KEY;
+  if (!apiKey) {
+    throw new Error("SALES_CURRICULUM_OPENROUTER_API_KEY_REQUIRED");
+  }
+  return {
+    apiKey,
+    model: options.model,
+    provider,
+  };
+}
+
 const prompt = `Create a six-module Sales Advantage curriculum using the attached canonical sources.
 
 Follow the Codecamp pedagogy: learn a concept, practice it in a realistic task, evaluate against a source-grounded rubric, then reflect or check understanding before progression. Modules must progress from discovery and listening, to value framing, objection handling, Reading Advantage product application, demos, then negotiation and closing.
@@ -100,7 +146,7 @@ Every roleplay lesson must include non-empty teaching content before its scenari
 The outcome-claims policy is binding. Teach approved Aka (2019) phrasing and explicitly reject unsourced percentages, guarantees, market-leadership language, and improvised claims. Produce draft content only; a human reviewer decides release approval.`;
 
 const defaultDependencies: CurriculumReviewArtifactDependencies = {
-  createAIClient: getAIClient,
+  createAIClient,
   now: () => new Date(),
   readSourceCommit: async (sourceRoot) => {
     const { stdout } = await execFileAsync(
@@ -110,6 +156,7 @@ const defaultDependencies: CurriculumReviewArtifactDependencies = {
     return stdout.trim();
   },
   readUtf8File: async (path) => readFile(path, "utf8"),
+  runtimeEnvironment: process.env,
   writeUtf8File: async (path, content) => writeFile(path, content),
 };
 
@@ -124,9 +171,11 @@ export async function generateCurriculumReviewArtifact(
   options: CurriculumReviewArtifactOptions,
   dependencies: CurriculumReviewArtifactDependencies = defaultDependencies,
 ): Promise<void> {
-  const provider = assertOpenRouterCurriculumSharingApproved(
-    options.environment,
+  const configuration = approvedOpenRouterConfiguration(
+    options,
+    dependencies.runtimeEnvironment,
   );
+  const client = dependencies.createAIClient(configuration);
   const sources = await Promise.all(CURRICULUM_SOURCE_PATHS.map(async (path) => {
     const content = await dependencies.readUtf8File(join(options.sourceRoot, path));
     return {
@@ -139,14 +188,19 @@ export async function generateCurriculumReviewArtifact(
   const sourceText = sources
     .map((source) => `[${source.path}]\n${source.content.slice(0, 6000)}`)
     .join("\n\n---\n\n");
-  const result = await dependencies.createAIClient()
-    .generateObjectWithProvenance({
-      schema: curriculumSchema,
-      model: options.model,
-      prompt: `${prompt}\n\nCANONICAL SOURCES\n${sourceText}`,
-      temperature: 0.3,
-      maxTokens: 16_384,
-    });
+  const result = await client.generateObjectWithProvenance({
+    schema: curriculumSchema,
+    model: options.model,
+    prompt: `${prompt}\n\nCANONICAL SOURCES\n${sourceText}`,
+    temperature: 0.3,
+    maxTokens: 16_384,
+  });
+  if (
+    result.provenance.provider !== configuration.provider ||
+    result.provenance.requestedModel !== configuration.model
+  ) {
+    throw new Error("SALES_CURRICULUM_GENERATION_PROVENANCE_MISMATCH");
+  }
   for (const module of result.object.modules) {
     for (const lesson of module.lessons) {
       if (lesson.type === "roleplay" && !lesson.scenarios?.length) {
@@ -172,8 +226,8 @@ export async function generateCurriculumReviewArtifact(
       documents: sources.map(({ path, sha256 }) => ({ path, sha256 })),
     },
     generation: {
-      provider,
-      requestedModel: options.model,
+      provider: result.provenance.provider,
+      requestedModel: result.provenance.requestedModel,
       provenance: result.provenance,
     },
     curriculum: result.object,

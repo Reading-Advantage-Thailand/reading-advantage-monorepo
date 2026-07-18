@@ -13,6 +13,8 @@ import { dirname, join } from "node:path";
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+import type { AIClientWithProvenance } from "@reading-advantage/ai";
+
 import {
   assertOpenRouterCurriculumSharingApproved,
   generateCurriculumReviewArtifact,
@@ -206,7 +208,7 @@ describe("Sales curriculum release contract", () => {
 
   it("rejects false claims in module metadata", () => {
     const rows = structuredClone(buildStaticSalesCurriculumRows());
-    rows.modules[0]!.description += " Managed Service is available now.";
+    rows.modules[0]!.description += " Reading Advantage launches in 2028.";
 
     expect(() => buildCurriculumAutomatedReview(rows)).toThrow(
       "SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID",
@@ -231,6 +233,38 @@ describe("Sales curriculum release contract", () => {
   it("rejects an extra product in scenario text", () => {
     const rows = structuredClone(buildStaticSalesCurriculumRows());
     rows.scenarios[0]!.situation += " Robotics Advantage is also live.";
+
+    expect(() => buildCurriculumAutomatedReview(rows)).toThrow(
+      "SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID",
+    );
+  });
+
+  it("rejects a contradictory tier price in scenario text", () => {
+    const rows = structuredClone(buildStaticSalesCurriculumRows());
+    rows.scenarios[0]!.objective +=
+      " App-Only costs 1 THB per student per year.";
+
+    expect(() => buildCurriculumAutomatedReview(rows)).toThrow(
+      "SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID",
+    );
+  });
+
+  it("rejects a contradictory launch status in rubric text", () => {
+    const rows = structuredClone(buildStaticSalesCurriculumRows());
+    const criteria = rows.rubrics[0]!.criteriaJson as Array<{
+      criterion: string;
+    }>;
+    criteria[0]!.criterion += " Storytime Advantage is live now.";
+
+    expect(() => buildCurriculumAutomatedReview(rows)).toThrow(
+      "SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID",
+    );
+  });
+
+  it("rejects contradictory Managed Service claims in quiz text", () => {
+    const rows = structuredClone(buildStaticSalesCurriculumRows());
+    rows.quizQuestions[0]!.explanation +=
+      " Managed Service launches in 2026 and costs 1 THB.";
 
     expect(() => buildCurriculumAutomatedReview(rows)).toThrow(
       "SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID",
@@ -471,6 +505,115 @@ describe("Sales curriculum release contract", () => {
     })).toBe("openrouter");
   });
 
+  it("rejects an options/runtime provider mismatch before private I/O", async () => {
+    const readUtf8File = vi.fn(async () => "private source");
+    const readSourceCommit = vi.fn(async () => "a".repeat(40));
+    const createAIClient = vi.fn(() => {
+      throw new Error("AI client must not be created");
+    });
+    const writeUtf8File = vi.fn(async () => undefined);
+
+    await expect(generateCurriculumReviewArtifact({
+      environment: {
+        AI_PROVIDER: "openrouter",
+        SALES_CURRICULUM_EXTERNAL_SHARING_APPROVED:
+          "advantage-pr-to-openrouter",
+      },
+      model: "test-model",
+      output: join(temporaryRoot, "draft.json"),
+      sourceRoot,
+    }, {
+      createAIClient,
+      now: () => new Date("2026-07-19T00:00:00.000Z"),
+      readSourceCommit,
+      readUtf8File,
+      runtimeEnvironment: {
+        AI_PROVIDER: "openai",
+        OPENAI_API_KEY: "different-provider-key",
+        SALES_CURRICULUM_EXTERNAL_SHARING_APPROVED:
+          "advantage-pr-to-openrouter",
+      },
+      writeUtf8File,
+    })).rejects.toThrow("SALES_CURRICULUM_PROVIDER_CONTEXT_MISMATCH");
+
+    expect(readUtf8File).not.toHaveBeenCalled();
+    expect(readSourceCommit).not.toHaveBeenCalled();
+    expect(createAIClient).not.toHaveBeenCalled();
+    expect(writeUtf8File).not.toHaveBeenCalled();
+  });
+
+  it("rejects mismatched generation provenance before artifact write", async () => {
+    const curriculum = {
+      modules: Array.from({ length: 6 }, (_, index) => ({
+        slug: `module-${index + 1}`,
+        title: `Module ${index + 1}`,
+        description: "Review candidate",
+        phase: "Learn",
+        order: index + 1,
+        lessons: [{
+          title: "Theory",
+          type: "theory" as const,
+          content: "Source-grounded content",
+          order: 1,
+        }],
+      })),
+    };
+    const generateObjectWithProvenance = vi.fn(async () => ({
+      object: curriculum,
+      provenance: {
+        provider: "openai" as const,
+        requestedModel: "test-model",
+        resolvedModel: "test-model",
+        responseId: "response-1",
+        requestId: "request-1",
+        usage: {
+          inputTokens: 10,
+          outputTokens: 20,
+          totalTokens: 30,
+          reasoningTokens: null,
+          cachedInputTokens: null,
+        },
+        latencyMs: 5,
+      },
+    }));
+    const client = {
+      generateObjectWithProvenance,
+    } as unknown as AIClientWithProvenance;
+    const createAIClient = vi.fn(() => client);
+    const writeUtf8File = vi.fn(async () => undefined);
+
+    await expect(generateCurriculumReviewArtifact({
+      environment: {
+        AI_PROVIDER: "openrouter",
+        SALES_CURRICULUM_EXTERNAL_SHARING_APPROVED:
+          "advantage-pr-to-openrouter",
+      },
+      model: "test-model",
+      output: join(temporaryRoot, "draft.json"),
+      sourceRoot,
+    }, {
+      createAIClient,
+      now: () => new Date("2026-07-19T00:00:00.000Z"),
+      readSourceCommit: vi.fn(async () => "a".repeat(40)),
+      readUtf8File: vi.fn(async () => "private source"),
+      runtimeEnvironment: {
+        AI_PROVIDER: "openrouter",
+        OPENROUTER_API_KEY: "openrouter-key",
+        SALES_CURRICULUM_EXTERNAL_SHARING_APPROVED:
+          "advantage-pr-to-openrouter",
+      },
+      writeUtf8File,
+    })).rejects.toThrow("SALES_CURRICULUM_GENERATION_PROVENANCE_MISMATCH");
+
+    expect(createAIClient).toHaveBeenCalledWith({
+      apiKey: "openrouter-key",
+      model: "test-model",
+      provider: "openrouter",
+    });
+    expect(generateObjectWithProvenance).toHaveBeenCalledOnce();
+    expect(writeUtf8File).not.toHaveBeenCalled();
+  });
+
   it.each(["openai", "google"])(
     "rejects %s before reading private sources or creating an AI client",
     async (provider) => {
@@ -493,6 +636,11 @@ describe("Sales curriculum release contract", () => {
       }, {
         createAIClient,
         now: () => new Date("2026-07-19T00:00:00.000Z"),
+        runtimeEnvironment: {
+          AI_PROVIDER: provider,
+          SALES_CURRICULUM_EXTERNAL_SHARING_APPROVED:
+            "advantage-pr-to-openrouter",
+        },
         readSourceCommit,
         readUtf8File,
         writeUtf8File,
