@@ -43,6 +43,30 @@ INSERT INTO company_identity_audit_events (
   '10000000-0000-4000-8000-000000000002', 'SYSTEM',
   'identity:runtime-probe', 'SUCCEEDED', '{"source":"cloud-build"}'::jsonb
 );
+INSERT INTO company_identity_idempotency_records (
+  operation, scope_key, idempotency_key_hash, request_hash, state,
+  owner_token_hash, lease_expires_at, expires_at
+) VALUES (
+  'identity:runtime-probe-complete', 'global', repeat('c', 64), repeat('d', 64),
+  'IN_PROGRESS', repeat('e', 64), now() + interval '60 seconds',
+  now() + interval '5 minutes'
+);
+UPDATE company_identity_idempotency_records
+   SET state = 'SUCCEEDED', owner_token_hash = NULL, lease_expires_at = NULL,
+       safe_result = '{"ok":true}'::jsonb, completed_at = now()
+ WHERE operation = 'identity:runtime-probe-complete'
+   AND scope_key = 'global' AND idempotency_key_hash = repeat('c', 64);
+INSERT INTO company_identity_idempotency_records (
+  operation, scope_key, idempotency_key_hash, request_hash, state,
+  owner_token_hash, lease_expires_at, expires_at
+) VALUES (
+  'identity:runtime-probe-release', 'global', repeat('f', 64), repeat('0', 64),
+  'IN_PROGRESS', repeat('1', 64), now() + interval '60 seconds',
+  now() + interval '5 minutes'
+);
+DELETE FROM company_identity_idempotency_records
+ WHERE operation = 'identity:runtime-probe-release'
+   AND scope_key = 'global' AND idempotency_key_hash = repeat('f', 64);
 DO $$
 BEGIN
   BEGIN

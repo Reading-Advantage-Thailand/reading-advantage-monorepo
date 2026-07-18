@@ -58,6 +58,15 @@ describe("Accounts production readiness", () => {
     }
   });
 
+  it("composes capability idempotency through the identity-owned store", () => {
+    expect(identityComposition).toContain(
+      "createCompanyIdentityDurableIdempotencyPort(sql)",
+    );
+    expect(identityComposition).not.toContain(
+      "createPostgresDurableIdempotencyPort(sql)",
+    );
+  });
+
   it("projects capability audit metadata into the immutable database allowlist", () => {
     const metadata = identityComposition.match(/metadata:\s*\{([\s\S]*?)\n\s*\},/);
     expect(metadata?.[1]).toContain('source: "accounts-capability-kernel"');
@@ -96,6 +105,9 @@ describe("Accounts production readiness", () => {
     }
     expect(probe).toContain("INSERT INTO company_login_attempts");
     expect(probe).toContain("INSERT INTO company_identity_audit_events");
+    expect(probe).toContain("INSERT INTO company_identity_idempotency_records");
+    expect(probe).toContain("UPDATE company_identity_idempotency_records");
+    expect(probe).toContain("DELETE FROM company_identity_idempotency_records");
     expect(probe).toContain("UPDATE company_identity_audit_events");
     expect(probe).toContain("ROLLBACK;");
   });
