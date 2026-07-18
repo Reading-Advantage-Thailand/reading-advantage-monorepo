@@ -967,17 +967,28 @@ class Phase3ReconciliationContracts(unittest.TestCase):
             )
 
     def test_symmetric_blocker_empty_sides_survive_real_revalidation(self) -> None:
-        """Uses committed locators to prove empty evidence sides are preserved without mocking."""
+        """Uses committed matched locators to test one-sided blockers without mocking."""
         module = _load_phase3_generator_module()
         phase2 = _load_json(HUMAN_DISCREPANCY_PATH)
-        blockers = phase2["independent_symmetric_blocking_records"]
+        transitions = [
+            row
+            for row in phase2["independent_symmetric_reconciliation"]
+            if row["category"] == "transitions"
+        ]
         rows = [
             {
-                **next(row for row in blockers if row["category"] == "transitions" and row["comparison_status"] == status),
+                **transitions[index],
+                "comparison_status": status,
+                "blocking": True,
                 "resolution_status": "compared",
+                empty_side: [],
             }
-            for status in ("human-only", "mechanical-only")
+            for index, (status, empty_side) in enumerate(
+                (("human-only", "mechanical_evidence"), ("mechanical-only", "human_evidence"))
+            )
         ]
+        self.assertTrue(rows[0]["human_evidence"])
+        self.assertTrue(rows[1]["mechanical_evidence"])
 
         records, unresolved = module.propagate_symmetric_blockers(rows)
 
