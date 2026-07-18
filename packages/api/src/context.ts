@@ -5,6 +5,8 @@ import {
   type AuthContext,
   type UserContext,
   type Tenant,
+  type ProductAuthorizationScope,
+  productAuthorizationScopeSchema,
 } from "@reading-advantage/auth";
 import { createTenantDB } from "@reading-advantage/domain/db-contract";
 import type { Context } from "./trpc.js";
@@ -34,6 +36,8 @@ export interface VerifiedPrincipalContextOptions {
   readonly mode: "verified-principal";
   /** Already verified provider-neutral principal from an application auth adapter. */
   readonly principal: UserContext | null;
+  /** Explicit verified product boundary, null exactly when principal is null. */
+  readonly productScope: ProductAuthorizationScope | null;
 }
 
 /** Discriminated authentication evidence accepted by shared tRPC context. */
@@ -74,18 +78,18 @@ export async function createContext(
 
   try {
     if (opts.mode === "verified-principal") {
-      if (opts.principal) {
+      if (Boolean(opts.principal) !== Boolean(opts.productScope)) {
+        throw new Error("Verified principal and product scope must be provided together.");
+      }
+      if (opts.principal && opts.productScope) {
         const user: UserContext = {
           ...opts.principal,
           role: roleSchema.parse(opts.principal.role),
         };
         auth = {
           user,
-          tenant: {
-            schoolId: user.schoolId,
-            organizationId: user.organizationId ?? null,
-            organizationKey: user.organizationKey ?? null,
-          },
+          tenant: { schoolId: user.schoolId },
+          productScope: productAuthorizationScopeSchema.parse(opts.productScope),
         };
       }
     } else {

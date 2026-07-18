@@ -42,27 +42,36 @@ function makeRequest(body: Record<string, unknown>) {
 
 function salesRepSession() {
   return {
-    id: "rep-1",
-    username: "salesrep1",
-    name: "Test Rep",
-    role: "SALES_REP",
-    schoolId: "school-1",
-    xp: 0,
-    level: 1,
-    cefrLevel: "B1",
+    user: {
+      id: "rep-1",
+      username: "salesrep1",
+      name: "Test Rep",
+      role: "SALES_REP" as const,
+      schoolId: null,
+      xp: 0,
+      level: 1,
+      cefrLevel: "A1",
+    },
+    scope: {
+      kind: "company" as const,
+      applicationKey: "sales" as const,
+      organizationId: "20000000-0000-4000-8000-000000000003",
+      organizationKey: "internal-company",
+    },
   };
 }
 
 function studentSession() {
+  const principal = salesRepSession();
   return {
-    id: "student-1",
-    username: "student1",
-    name: "Test Student",
-    role: "STUDENT",
-    schoolId: "school-1",
-    xp: 0,
-    level: 1,
-    cefrLevel: "A1",
+    ...principal,
+    user: {
+      ...principal.user,
+      id: "student-1",
+      username: "student1",
+      name: "Test Student",
+      role: "STUDENT" as const,
+    },
   };
 }
 
@@ -99,15 +108,17 @@ describe("POST /api/chat — FR-1 authorization gate", () => {
   });
 
   it("rejects authenticated non-sales user (TEACHER) with 401 or 403", async () => {
+    const teacher = salesRepSession();
     mockAuthenticateSalesRequest.mockResolvedValue({
-      id: "teacher-1",
-      username: "teacher1",
-      name: "Test Teacher",
-      role: "TEACHER",
-      schoolId: "school-1",
-      xp: 0,
-      level: 1,
-      cefrLevel: "B2",
+      ...teacher,
+      user: {
+        ...teacher.user,
+        id: "teacher-1",
+        username: "teacher1",
+        name: "Test Teacher",
+        role: "TEACHER",
+        cefrLevel: "B2",
+      },
     });
 
     const mockStreamText = vi.fn().mockResolvedValue({

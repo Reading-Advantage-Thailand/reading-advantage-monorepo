@@ -146,6 +146,11 @@ describeRealDatabase("Sales release contract (real PostgreSQL)", () => {
         db: createTenantDB(db, tenant),
         user,
         tenant,
+        scope: {
+          kind: "legacy-school" as const,
+          applicationKey: "sales" as const,
+          schoolId,
+        },
       };
       await submitQuiz(context, {
         lessonId,

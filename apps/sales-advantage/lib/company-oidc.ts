@@ -2,10 +2,12 @@ import {
   createCompanyIdentityServiceAuthConfig,
   createCompanyOidcClient,
   type CompanyOidcIdentity,
-  type UserContext,
 } from "@reading-advantage/auth";
 import { db } from "@reading-advantage/db";
-import { resolveSalesCompanyPrincipal } from "@reading-advantage/domain";
+import {
+  resolveSalesCompanyPrincipal,
+  type ResolvedSalesCompanyPrincipal,
+} from "@reading-advantage/domain";
 
 /** Host-only opaque Sales application-session cookie. */
 export const SALES_SESSION_COOKIE = "__Host-ra_sales_session";
@@ -75,7 +77,7 @@ export function readSalesCookie(request: Request, name: string): string | undefi
  */
 export async function salesSessionUser(
   identity: CompanyOidcIdentity,
-): Promise<UserContext | null> {
+): Promise<ResolvedSalesCompanyPrincipal | null> {
   return resolveSalesCompanyPrincipal(db, identity);
 }
 
@@ -86,7 +88,7 @@ export async function salesSessionUser(
  */
 export async function authenticateSalesRequest(
   request: Request,
-): Promise<UserContext | null> {
+): Promise<ResolvedSalesCompanyPrincipal | null> {
   const token = readSalesCookie(request, SALES_SESSION_COOKIE);
   if (!token) return null;
   const session = await getSalesOidcClient().introspect(token);

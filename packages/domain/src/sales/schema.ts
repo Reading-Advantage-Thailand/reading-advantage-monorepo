@@ -1,5 +1,23 @@
 import { z } from "zod";
 
+/** Explicit Sales authorization boundary accepted by domain operations. */
+export const salesAccessScopeSchema = z.discriminatedUnion("kind", [
+  z.strictObject({
+    kind: z.literal("company"),
+    applicationKey: z.literal("sales"),
+    organizationId: z.string().uuid(),
+    organizationKey: z.string().min(1),
+  }),
+  z.strictObject({
+    kind: z.literal("legacy-school"),
+    applicationKey: z.literal("sales"),
+    schoolId: z.string().min(1),
+  }),
+]);
+
+/** Complete Sales company or explicit legacy-school scope. */
+export type SalesAccessScope = z.infer<typeof salesAccessScopeSchema>;
+
 // ─── Curriculum contracts ─────────────────────────────────
 
 export const moduleOutputSchema = z.object({

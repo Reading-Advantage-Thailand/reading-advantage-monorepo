@@ -11,10 +11,10 @@ import {
 export async function GET(request: Request): Promise<NextResponse> {
   const token = readSalesCookie(request, SALES_SESSION_COOKIE);
   const session = token ? await getSalesOidcClient().introspect(token) : null;
-  const user = session ? await salesSessionUser(session.identity) : null;
+  const principal = session ? await salesSessionUser(session.identity) : null;
   return NextResponse.json(
     {
-      session: user ? { user } : null,
+      session: principal ? { user: principal.user } : null,
     },
     { headers: { "Cache-Control": "no-store, private" } },
   );

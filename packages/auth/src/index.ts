@@ -18,6 +18,10 @@ export {
 // Tenant & Auth Context
 export type { Tenant, UserContext, AuthContext } from "./tenant.js";
 export { assertTenantAccess } from "./tenant.js";
+export {
+  productAuthorizationScopeSchema,
+  type ProductAuthorizationScope,
+} from "./product-scope.js";
 
 // Authorization
 export { assertCan, AuthError } from "./assert.js";

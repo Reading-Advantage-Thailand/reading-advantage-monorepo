@@ -58,6 +58,11 @@ const salesUser = {
   schoolId: "school-1",
 } as never;
 const tenant = { schoolId: "school-1" } as never;
+const scope = {
+  kind: "legacy-school",
+  applicationKey: "sales",
+  schoolId: "school-1",
+} as const;
 const moduleRow = { id: "md-1", slug: "foundations", order: 1 };
 const roleplayLesson = {
   id: "ls-1",
@@ -86,7 +91,7 @@ describe("getRoleplayEvaluationContext", () => {
     });
 
     const result = await getRoleplayEvaluationContext(
-      { db: db as never, user: salesUser, tenant },
+      { db: db as never, user: salesUser, tenant, scope },
       { scenarioId: "sc-1" },
     );
 
@@ -109,7 +114,7 @@ describe("getRoleplayEvaluationContext", () => {
     });
 
     const result = await getRoleplayEvaluationContext(
-      { db: db as never, user: salesUser, tenant },
+      { db: db as never, user: salesUser, tenant, scope },
       { scenarioId: "sc-1" },
     );
     expect(result.canonicalSourceExcerpts).toEqual([]);
@@ -120,7 +125,7 @@ describe("getRoleplayEvaluationContext", () => {
 
     await expect(
       getRoleplayEvaluationContext(
-        { db: db as never, user: salesUser, tenant },
+        { db: db as never, user: salesUser, tenant, scope },
         { scenarioId: "missing" },
       ),
     ).rejects.toBeInstanceOf(ScenarioNotFoundError);

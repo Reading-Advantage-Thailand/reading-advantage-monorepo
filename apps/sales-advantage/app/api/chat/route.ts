@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import {
   AuthError,
 } from "@reading-advantage/auth";
-import { db } from "@reading-advantage/db";
 import { getAIClient } from "@reading-advantage/ai";
 import { authorizeSalesChat } from "@reading-advantage/domain/sales";
 import { checkRateLimit } from "@/lib/rate-limit";
@@ -48,11 +47,12 @@ function sanitizeContextId(value: string): string {
 
 export async function POST(request: NextRequest) {
   try {
-    const user = await authenticateSalesRequest(request);
-    if (!user) {
+    const principal = await authenticateSalesRequest(request);
+    if (!principal) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    const { user } = principal;
     const rateLimit = checkRateLimit(`sales:chat:${user.id}`, 30, 60_000);
     if (!rateLimit.allowed) {
       return NextResponse.json(

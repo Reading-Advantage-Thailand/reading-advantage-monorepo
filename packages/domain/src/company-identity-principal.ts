@@ -1,11 +1,23 @@
 import { and, eq, sql } from "drizzle-orm";
 
-import type { UserContext } from "@reading-advantage/auth";
+import type { ProductAuthorizationScope, UserContext } from "@reading-advantage/auth";
 import {
   companyProductPrincipals,
   users,
   type DB,
 } from "@reading-advantage/db";
+
+
+/** Sales principal paired with its complete verified company boundary. */
+export interface ResolvedSalesCompanyPrincipal {
+  /** Compatibility user projected into the Sales application. */
+  readonly user: UserContext;
+  /** Complete company boundary accepted by Sales authorization. */
+  readonly scope: ProductAuthorizationScope & {
+    readonly kind: "company";
+    readonly applicationKey: "sales";
+  };
+}
 
 /** Minimal verified Accounts identity required to resolve a Sales principal. */
 export interface SalesCompanyIdentity {
@@ -63,11 +75,10 @@ function isUniqueViolation(error: unknown): boolean {
 export async function resolveSalesCompanyPrincipal(
   database: DB,
   identity: SalesCompanyIdentity,
-): Promise<UserContext | null> {
+): Promise<ResolvedSalesCompanyPrincipal | null> {
   const role = salesRole(identity);
-  if (!role) return null;
   return database.transaction(async (tx) => {
-    await tx.execute(sql`select pg_advisory_xact_lock(hashtextextended(${`sales:${identity.organizationId}:${identity.sub}`}, 0))`);
+    await tx.execute(sql`select pg_advisory_xact_lock(hashtextextended(${`sales:${identity.sub}`}, 0))`);
     const [mapped] = await tx
       .select({
         id: users.id,
@@ -89,23 +100,28 @@ export async function resolveSalesCompanyPrincipal(
       .limit(1);
     if (mapped) {
       await tx.update(users)
-        .set({ role })
+        .set({ role: role ?? "INTERN" })
         .where(eq(users.id, mapped.id));
       await tx.update(companyProductPrincipals)
-        .set({ roleKey: role, updatedAt: new Date() })
+        .set({ roleKey: role ?? "REVOKED", updatedAt: new Date() })
         .where(and(
           eq(companyProductPrincipals.organizationId, identity.organizationId),
           eq(companyProductPrincipals.organizationKey, identity.organizationKey),
           eq(companyProductPrincipals.companyAccountId, identity.sub),
           eq(companyProductPrincipals.applicationKey, "sales"),
         ));
+      if (!role) return null;
       return {
-        ...mapped,
-        role,
-        organizationId: identity.organizationId,
-        organizationKey: identity.organizationKey,
+        user: { ...mapped, role },
+        scope: {
+          kind: "company",
+          applicationKey: "sales",
+          organizationId: identity.organizationId,
+          organizationKey: identity.organizationKey,
+        },
       };
     }
+    if (!role) return null;
 
     const [occupiedId] = await tx.select({ id: users.id }).from(users)
       .where(eq(users.id, identity.sub)).limit(1);
@@ -142,10 +158,13 @@ export async function resolveSalesCompanyPrincipal(
         roleKey: role,
       });
       return {
-        ...created,
-        role,
-        organizationId: identity.organizationId,
-        organizationKey: identity.organizationKey,
+        user: { ...created, role },
+        scope: {
+          kind: "company",
+          applicationKey: "sales",
+          organizationId: identity.organizationId,
+          organizationKey: identity.organizationKey,
+        },
       };
     } catch (error) {
       if (isUniqueViolation(error)) {

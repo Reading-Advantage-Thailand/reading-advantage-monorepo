@@ -23,6 +23,17 @@ describe("GET /api/auth/session", () => {
     mocks.introspect.mockResolvedValue({ identity: { roles: [] } });
   });
 
+  it("returns an anonymous session when Accounts reports suspension", async () => {
+    mocks.introspect.mockResolvedValue(null);
+
+    const response = await GET(
+      new Request("https://sales.reading-advantage.com/api/auth/session"),
+    );
+
+    expect(mocks.salesSessionUser).not.toHaveBeenCalled();
+    await expect(response.json()).resolves.toEqual({ session: null });
+  });
+
   it("returns an anonymous session when the Sales role was removed", async () => {
     mocks.salesSessionUser.mockResolvedValue(null);
 

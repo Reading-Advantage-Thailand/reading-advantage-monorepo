@@ -36,6 +36,12 @@ const salesAdmin = {
 };
 
 const globalTenant = { schoolId: null };
+const companyScope = {
+  kind: "company" as const,
+  applicationKey: "sales" as const,
+  organizationId: "20000000-0000-4000-8000-000000000003",
+  organizationKey: "internal-company",
+};
 
 function wrapDb(db: ReturnType<typeof createMockDb>) {
   return createTenantDB(db as unknown as DB, globalTenant);
@@ -479,12 +485,14 @@ describe("sales queries", () => {
         db: wrapDb(db),
         user: salesRep,
         tenant: globalTenant,
+        scope: companyScope,
       }),
     ).rejects.toThrow(/lacks permission/);
     const result = await getCohortOverview({
       db: wrapDb(db),
       user: salesAdmin,
       tenant: globalTenant,
+      scope: companyScope,
     });
     expect(result).toEqual([]);
   });
@@ -524,6 +532,7 @@ describe("sales queries", () => {
       db: createTenantDB(db as unknown as DB, { schoolId }),
       user: admin,
       tenant: { schoolId },
+      scope: { kind: "legacy-school", applicationKey: "sales", schoolId },
     });
     expect(result).toEqual([
       expect.objectContaining({
@@ -615,6 +624,7 @@ describe("sales queries", () => {
       db: createTenantDB(db as unknown as DB, { schoolId }),
       user: admin,
       tenant: { schoolId },
+      scope: { kind: "legacy-school", applicationKey: "sales", schoolId },
     });
 
     expect(result[0]).toMatchObject({
@@ -713,6 +723,7 @@ describe("sales queries", () => {
         db: createTenantDB(db as unknown as DB, { schoolId }),
         user: admin,
         tenant: { schoolId },
+      scope: { kind: "legacy-school", applicationKey: "sales", schoolId },
       },
       { repId: rep.id },
     );
@@ -800,6 +811,7 @@ describe("sales queries", () => {
         db: createTenantDB(db as unknown as DB, { schoolId }),
         user: admin,
         tenant: { schoolId },
+      scope: { kind: "legacy-school", applicationKey: "sales", schoolId },
       },
       { repId: rep.id },
     );

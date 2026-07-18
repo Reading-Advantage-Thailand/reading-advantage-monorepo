@@ -41,41 +41,6 @@ function salesSession(role: "SALES_REP" | "SALES_ADMIN") {
   };
 }
 
-function createMinimalMockDb(selectResults: unknown[] = []) {
-  const builder = (val: unknown) => ({
-    where: vi.fn().mockReturnThis(),
-    orderBy: vi.fn().mockReturnThis(),
-    limit: vi.fn().mockReturnThis(),
-    offset: vi.fn().mockReturnThis(),
-    then(
-      onFulfilled?: (value: unknown) => unknown,
-      onRejected?: (reason: unknown) => unknown,
-    ) {
-      return Promise.resolve(val).then(onFulfilled, onRejected);
-    },
-  });
-
-  const mockDb = {
-    select: vi.fn(() => ({ from: vi.fn(() => builder(selectResults)) })),
-    insert: vi.fn(() => ({
-      values: vi.fn(() => ({ returning: vi.fn(() => Promise.resolve([])) })),
-    })),
-    update: vi.fn(() => ({
-      set: vi.fn(() => ({
-        where: vi.fn(() => ({
-          returning: vi.fn(() => Promise.resolve([])),
-        })),
-      })),
-    })),
-    delete: vi.fn(() => ({
-      where: vi.fn(() => ({ returning: vi.fn(() => Promise.resolve([])) })),
-    })),
-    transaction: vi.fn((fn: (tx: unknown) => Promise<unknown>) => fn({})),
-  } as unknown as DB & { unscoped: (reason: string) => DB };
-  (mockDb as { unscoped: unknown }).unscoped = vi.fn(() => mockDb);
-  return mockDb;
-}
-
 const t = initTRPC.context<Context>().create({ transformer: superjson });
 const appRouter = t.router({ sales: salesRouter });
 
@@ -100,11 +65,48 @@ describe("Sales auth context integration", () => {
     const ctx = await createContext({
       mode: "verified-principal",
       principal: null,
+      productScope: null,
     });
 
     expect(ctx.auth).toBeNull();
     expect(mockCookies).not.toHaveBeenCalled();
     expect(mockValidateSession).not.toHaveBeenCalled();
+  });
+
+  it("rejects partial or mixed verified company scope as anonymous", async () => {
+    const principal = {
+      id: "sales-company-admin",
+      username: "sales.admin",
+      name: "Sales Admin",
+      role: "SALES_ADMIN" as const,
+      schoolId: null,
+      xp: 0,
+      level: 1,
+      cefrLevel: "N/A",
+    };
+    const partial = await createContext({
+      mode: "verified-principal",
+      principal,
+      productScope: {
+        kind: "company",
+        applicationKey: "sales",
+        organizationId: "20000000-0000-4000-8000-000000000003",
+      } as never,
+    });
+    const mixed = await createContext({
+      mode: "verified-principal",
+      principal,
+      productScope: {
+        kind: "company",
+        applicationKey: "sales",
+        organizationId: "20000000-0000-4000-8000-000000000003",
+        organizationKey: "internal-company",
+        schoolId: "school-a",
+      } as never,
+    });
+
+    expect(partial.auth).toBeNull();
+    expect(mixed.auth).toBeNull();
   });
 
   it("preserves the verified company organization without requiring a school", async () => {
@@ -116,16 +118,22 @@ describe("Sales auth context integration", () => {
         name: "Sales Admin",
         role: "SALES_ADMIN",
         schoolId: null,
-        organizationId: "20000000-0000-4000-8000-000000000003",
-        organizationKey: "internal-company",
         xp: 0,
         level: 1,
         cefrLevel: "N/A",
       },
+      productScope: {
+        kind: "company",
+        applicationKey: "sales",
+        organizationId: "20000000-0000-4000-8000-000000000003",
+        organizationKey: "internal-company",
+      },
     });
 
-    expect(ctx.auth?.tenant).toEqual({
-      schoolId: null,
+    expect(ctx.auth?.tenant).toEqual({ schoolId: null });
+    expect(ctx.auth?.productScope).toEqual({
+      kind: "company",
+      applicationKey: "sales",
       organizationId: "20000000-0000-4000-8000-000000000003",
       organizationKey: "internal-company",
     });
@@ -164,50 +172,23 @@ describe("Sales auth context integration", () => {
     ).rejects.toThrow(/Sales admin access required/);
   });
 
-  it("SALES_ADMIN cohort overview excludes cross-tenant progress rows", async () => {
-    const cohortRows = [
-      {
-        id: "progress-a",
-        userId: "rep-a",
-        lessonId: "lesson-1",
-        status: "completed",
-        completedAt: new Date(),
-        score: "90",
-        createdAt: new Date(),
+  it("legacy shared Sales roles cannot enter the Sales API root", async () => {
+    const legacyCaller = createCaller({
+      user: {
+        id: "admin-a",
+        username: "admina",
+        name: "Admin A",
+        role: "SALES_ADMIN",
+        schoolId: "school-a",
+        xp: 0,
+        level: 1,
+        cefrLevel: "A1",
       },
-      {
-        id: "progress-b",
-        userId: "rep-b",
-        lessonId: "lesson-1",
-        status: "completed",
-        completedAt: new Date(),
-        score: "80",
-        createdAt: new Date(),
-      },
-    ];
-    const mockDb = createMinimalMockDb(cohortRows);
-    const adminCaller = createCaller(
-      {
-        user: {
-          id: "admin-a",
-          username: "admina",
-          name: "Admin A",
-          role: "SALES_ADMIN",
-          schoolId: "school-a",
-          xp: 0,
-          level: 1,
-          cefrLevel: "A1",
-        },
-        tenant: { schoolId: "school-a" },
-      },
-      mockDb,
-    );
+      tenant: { schoolId: "school-a" },
+    });
 
-    const result = await adminCaller.sales.admin.cohortOverview();
-    const crossTenantRowCount = result.filter((r) => r.userId !== "rep-a").length;
-    expect(
-      crossTenantRowCount,
-      `cross-tenant row count: ${crossTenantRowCount} (expected 0)`,
-    ).toBe(0);
+    await expect(legacyCaller.sales.admin.cohortOverview()).rejects.toMatchObject({
+      code: "FORBIDDEN",
+    });
   });
 });

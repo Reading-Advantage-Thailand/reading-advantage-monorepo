@@ -17,15 +17,15 @@ const salesAdmin = {
   name: "Admin A",
   role: "SALES_ADMIN" as const,
   schoolId: null,
-  organizationId: organizationA,
-  organizationKey,
   xp: 0,
   level: 1,
   cefrLevel: "N/A",
 };
 
-const companyTenant = {
-  schoolId: null,
+const companyTenant = { schoolId: null };
+const companyScope = {
+  kind: "company" as const,
+  applicationKey: "sales" as const,
   organizationId: organizationA,
   organizationKey,
 };
@@ -70,6 +70,7 @@ describe("Sales company organization oversight", () => {
       db: scoped,
       user: salesAdmin,
       tenant: companyTenant,
+      scope: companyScope,
     });
 
     expect(result.map((rep) => rep.userId)).toEqual(["rep-a"]);
@@ -96,7 +97,7 @@ describe("Sales company organization oversight", () => {
 
     await expect(
       getSalesRepDetail(
-        { db: scoped, user: salesAdmin, tenant: companyTenant },
+        { db: scoped, user: salesAdmin, tenant: companyTenant, scope: companyScope },
         { repId: "rep-a" },
       ),
     ).resolves.toMatchObject({ rep: { userId: "rep-a" } });
@@ -117,7 +118,7 @@ describe("Sales company organization oversight", () => {
 
     await expect(
       getSalesRepDetail(
-        { db: scoped, user: salesAdmin, tenant: companyTenant },
+        { db: scoped, user: salesAdmin, tenant: companyTenant, scope: companyScope },
         { repId: "rep-b" },
       ),
     ).rejects.toThrow("Representative is unavailable");

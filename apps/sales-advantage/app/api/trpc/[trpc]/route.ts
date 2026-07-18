@@ -19,7 +19,11 @@ async function handler(req: Request) {
     req,
     router: salesAppRouter,
     createContext: () =>
-      createContext({ mode: "verified-principal", principal }),
+      createContext({
+        mode: "verified-principal",
+        principal: principal?.user ?? null,
+        productScope: principal?.scope ?? null,
+      }),
   });
 }
 

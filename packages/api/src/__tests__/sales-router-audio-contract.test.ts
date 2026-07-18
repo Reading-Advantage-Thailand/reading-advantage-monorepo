@@ -164,7 +164,16 @@ describe("Sales router audio contract", () => {
       attempts,
     ]);
     const caller = createCaller(
-      { user: salesRep, tenant: globalTenant },
+      {
+        user: { ...salesRep, schoolId: null },
+        tenant: globalTenant,
+        productScope: {
+          kind: "company",
+          applicationKey: "sales",
+          organizationId: "20000000-0000-4000-8000-000000000003",
+          organizationKey: "internal-company",
+        },
+      },
       mockDb,
     );
     const result = await caller.sales.attemptHistory({ scenarioId });

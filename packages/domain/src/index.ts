@@ -28,6 +28,7 @@ export { classifyTable, type TableClassification } from "./tenant-registry.js";
 export {
   resolveSalesCompanyPrincipal,
   type SalesCompanyIdentity,
+  type ResolvedSalesCompanyPrincipal,
 } from "./company-identity-principal.js";
 
 // Reading-specific direct exports (used by reading-advantage controllers/tests)

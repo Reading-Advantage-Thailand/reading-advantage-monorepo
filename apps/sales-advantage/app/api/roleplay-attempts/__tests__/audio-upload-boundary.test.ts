@@ -54,14 +54,22 @@ const MAX_AUDIO_DURATION_MS = 5 * 60 * 1000;
 
 function salesRepSession() {
   return {
-    id: "rep-1",
-    username: "salesrep1",
-    name: "Test Rep",
-    role: "SALES_REP",
-    schoolId: "school-1",
-    xp: 0,
-    level: 1,
-    cefrLevel: "B1",
+    user: {
+      id: "rep-1",
+      username: "salesrep1",
+      name: "Test Rep",
+      role: "SALES_REP" as const,
+      schoolId: null,
+      xp: 0,
+      level: 1,
+      cefrLevel: "A1",
+    },
+    scope: {
+      kind: "company" as const,
+      applicationKey: "sales" as const,
+      organizationId: "20000000-0000-4000-8000-000000000003",
+      organizationKey: "internal-company",
+    },
   };
 }
 

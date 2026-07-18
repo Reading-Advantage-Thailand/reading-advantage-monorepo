@@ -124,7 +124,7 @@ describe("resolveSalesCompanyPrincipal", () => {
         roles: [role],
       });
 
-      expect(principal).toMatchObject({ id: mappedUser.id, role });
+      expect(principal?.user).toMatchObject({ id: mappedUser.id, role });
       expect(updates).toContainEqual({ table: users, values: { role } });
       expect(updates).toContainEqual({
         table: companyProductPrincipals,
@@ -161,7 +161,7 @@ describe("resolveSalesCompanyPrincipal", () => {
   it("provisions and maps an unclaimed principal on first login", async () => {
     const { database, inserts } = firstLoginDatabase();
     await expect(resolveSalesCompanyPrincipal(database, baseIdentity)).resolves
-      .toMatchObject({ id: baseIdentity.sub, role: "SALES_REP" });
+      .toMatchObject({ user: { id: baseIdentity.sub, role: "SALES_REP" } });
     expect(inserts).toContainEqual({
       table: companyProductPrincipals,
       values: expect.objectContaining({
@@ -179,7 +179,7 @@ describe("resolveSalesCompanyPrincipal", () => {
       resolveSalesCompanyPrincipal(database, baseIdentity),
       resolveSalesCompanyPrincipal(database, baseIdentity),
     ]);
-    expect(results.map((result) => result.id)).toEqual([
+    expect(results.map((result) => result?.user.id)).toEqual([
       mappedUser.id,
       mappedUser.id,
     ]);
@@ -198,21 +198,29 @@ describe("resolveSalesCompanyPrincipal", () => {
       .toThrow("mapping manifest is required");
   });
 
-  it("returns no principal for removed Sales roles before opening a transaction", async () => {
-    const { database } = mappedDatabase();
+  it("durably revokes the mapped principal when Sales roles are removed", async () => {
+    const { database, updates } = mappedDatabase();
     await expect(resolveSalesCompanyPrincipal(database, {
       ...baseIdentity,
       roles: [],
     })).resolves.toBeNull();
-    expect(database.transaction).not.toHaveBeenCalled();
+    expect(updates).toContainEqual({ table: users, values: { role: "INTERN" } });
+    expect(updates).toContainEqual({
+      table: companyProductPrincipals,
+      values: expect.objectContaining({ roleKey: "REVOKED" }),
+    });
   });
 
   it("projects the trusted company organization onto an existing Sales principal", async () => {
     const { database } = mappedDatabase();
     await expect(resolveSalesCompanyPrincipal(database, baseIdentity)).resolves
       .toMatchObject({
-        organizationId: baseIdentity.organizationId,
-        organizationKey: baseIdentity.organizationKey,
+        scope: {
+          kind: "company",
+          applicationKey: "sales",
+          organizationId: baseIdentity.organizationId,
+          organizationKey: baseIdentity.organizationKey,
+        },
       });
   });
 

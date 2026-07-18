@@ -16,6 +16,19 @@ const describeRealDatabase = process.env.RUN_SALES_MAPPING_REAL_DB_TESTS === "tr
   ? describe
   : describe.skip;
 
+function hasSqlState(error: unknown, code: string): boolean {
+  let current = error;
+  for (let depth = 0; depth < 5 && current; depth += 1) {
+    if (typeof current === "object" && "code" in current && current.code === code) {
+      return true;
+    }
+    current = typeof current === "object" && "cause" in current
+      ? current.cause
+      : undefined;
+  }
+  return false;
+}
+
 describeRealDatabase("Sales company principal mapping (real PostgreSQL)", () => {
   it("proves concurrent first login, conflicts, org/role denial, and role synchronization", async () => {
     const organizationId = randomUUID();
@@ -35,9 +48,9 @@ describeRealDatabase("Sales company principal mapping (real PostgreSQL)", () => 
       resolveSalesCompanyPrincipal(db, identity),
       resolveSalesCompanyPrincipal(db, identity),
     ]);
-    expect(concurrent.map((principal) => principal.id)).toEqual([sub, sub]);
+    expect(concurrent.map((principal) => principal?.user.id)).toEqual([sub, sub]);
     await expect(resolveSalesCompanyPrincipal(db, identity)).resolves
-      .toMatchObject({ id: sub, role: "SALES_REP" });
+      .toMatchObject({ user: { id: sub, role: "SALES_REP" } });
 
     const [userCount] = await db.select({ value: count() }).from(users)
       .where(eq(users.id, sub));
@@ -100,9 +113,9 @@ describeRealDatabase("Sales company principal mapping (real PostgreSQL)", () => 
     await expect(resolveSalesCompanyPrincipal(db, {
       ...identity,
       roles: ["SALES_ADMIN"],
-    })).resolves.toMatchObject({ role: "SALES_ADMIN" });
+    })).resolves.toMatchObject({ user: { role: "SALES_ADMIN" } });
     await expect(resolveSalesCompanyPrincipal(db, identity)).resolves
-      .toMatchObject({ role: "SALES_REP" });
+      .toMatchObject({ user: { role: "SALES_REP" } });
     const [synchronized] = await db.select({
       userRole: users.role,
       mappingRole: companyProductPrincipals.roleKey,
@@ -120,9 +133,37 @@ describeRealDatabase("Sales company principal mapping (real PostgreSQL)", () => 
     await expect(resolveSalesCompanyPrincipal(db, {
       ...identity,
       roles: [],
-    })).rejects.toThrow("no recognized Sales role");
-    const [afterRemoval] = await db.select({ role: users.role }).from(users)
-      .where(eq(users.id, sub));
-    expect(afterRemoval?.role).toBe("SALES_REP");
+    })).resolves.toBeNull();
+    const [afterRemoval] = await db.select({
+      userRole: users.role,
+      mappingRole: companyProductPrincipals.roleKey,
+    }).from(companyProductPrincipals)
+      .innerJoin(users, eq(users.id, companyProductPrincipals.localUserId))
+      .where(and(
+        eq(companyProductPrincipals.organizationId, organizationId),
+        eq(companyProductPrincipals.companyAccountId, sub),
+      ));
+    expect(afterRemoval).toEqual({
+      userRole: "INTERN",
+      mappingRole: "REVOKED",
+    });
+
+    await expect(resolveSalesCompanyPrincipal(db, identity)).resolves
+      .toMatchObject({ user: { role: "SALES_REP" } });
+
+    let duplicateError: unknown;
+    try {
+      await db.insert(companyProductPrincipals).values({
+        organizationId: randomUUID(),
+        organizationKey: "internal-company",
+        companyAccountId: randomUUID(),
+        applicationKey: "sales",
+        localUserId: sub,
+        roleKey: "SALES_REP",
+      });
+    } catch (error) {
+      duplicateError = error;
+    }
+    expect(hasSqlState(duplicateError, "23505")).toBe(true);
   });
 });

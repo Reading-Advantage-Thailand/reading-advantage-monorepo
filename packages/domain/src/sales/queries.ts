@@ -11,7 +11,7 @@ import {
 import { companyProductPrincipals, users } from "@reading-advantage/db/schema";
 import { assertCan } from "@reading-advantage/auth";
 import type { SalesDomainContext } from "./contracts.js";
-import { salesRawDb } from "./contracts.js";
+import { requireSalesAccessScope, salesRawDb } from "./contracts.js";
 import { ModulePrerequisiteNotMetError, SalesAuthError } from "./errors.js";
 import {
   loadSalesLearningPath,
@@ -400,11 +400,11 @@ export async function getAttemptsForScenario(
  * @returns The best attempt, or null if none
  */
 export async function getBestAttemptForScenario(
-  { db, user, tenant }: SalesDomainContext,
+  { db, user, tenant, scope }: SalesDomainContext,
   input: { scenarioId: string },
 ) {
   assertCan(user, "sales:read", tenant);
-  const attempts = await getAttemptsForScenario({ db, user, tenant }, input);
+  const attempts = await getAttemptsForScenario({ db, user, tenant, scope }, input);
   if (attempts.length === 0) return null;
   return attempts.reduce((best, a) =>
     Number(a.overallScore) > Number(best.overallScore) ? a : best,
@@ -477,17 +477,14 @@ export async function getCohortOverview({
   db,
   user,
   tenant,
+  scope,
 }: SalesDomainContext) {
   assertCan(user, "sales:admin:cohort", tenant);
   const rawDb = salesRawDb(db);
-  const companyScope =
-    tenant.organizationId && tenant.organizationKey
-      ? {
-          organizationId: tenant.organizationId,
-          organizationKey: tenant.organizationKey,
-        }
-      : null;
-  if (!companyScope && !tenant.schoolId) return [];
+  const accessScope = requireSalesAccessScope(scope, tenant);
+  const companyScope = accessScope.kind === "company" ? accessScope : null;
+  const legacySchoolId =
+    accessScope.kind === "legacy-school" ? accessScope.schoolId : null;
 
   const repsInScope = companyScope
     ? await rawDb
@@ -527,7 +524,7 @@ export async function getCohortOverview({
           .where(
             and(
               eq(users.role, "SALES_REP"),
-              eq(users.schoolId, tenant.schoolId!),
+              eq(users.schoolId, legacySchoolId!),
             ),
           )
       ).map((rep) => ({
@@ -542,7 +539,7 @@ export async function getCohortOverview({
         companyScope
           ? rep.organizationId === companyScope.organizationId &&
             rep.organizationKey === companyScope.organizationKey
-          : rep.schoolId === tenant.schoolId,
+          : rep.schoolId === legacySchoolId,
       )
       .map((rep) => rep.id),
   );
@@ -609,21 +606,15 @@ export async function getCohortOverview({
  * @throws When the representative is outside the administrator scope.
  */
 export async function getSalesRepDetail(
-  { db, user, tenant }: SalesDomainContext,
+  { db, user, tenant, scope }: SalesDomainContext,
   input: { repId: string },
 ) {
   assertCan(user, "sales:admin:cohort", tenant);
   const rawDb = salesRawDb(db);
-  const companyScope =
-    tenant.organizationId && tenant.organizationKey
-      ? {
-          organizationId: tenant.organizationId,
-          organizationKey: tenant.organizationKey,
-        }
-      : null;
-  if (!companyScope && !tenant.schoolId) {
-    throw new SalesAuthError("Representative is unavailable");
-  }
+  const accessScope = requireSalesAccessScope(scope, tenant);
+  const companyScope = accessScope.kind === "company" ? accessScope : null;
+  const legacySchoolId =
+    accessScope.kind === "legacy-school" ? accessScope.schoolId : null;
 
   const [rep] = companyScope
     ? await rawDb
@@ -664,7 +655,7 @@ export async function getSalesRepDetail(
             and(
               eq(users.id, input.repId),
               eq(users.role, "SALES_REP"),
-              eq(users.schoolId, tenant.schoolId!),
+              eq(users.schoolId, legacySchoolId!),
             ),
           )
           .limit(1)

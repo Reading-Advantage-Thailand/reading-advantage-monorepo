@@ -15,7 +15,7 @@ import type { DB } from "@reading-advantage/db";
 import type { SalesDomainContext } from "./contracts.js";
 // salesRawDb() wraps TenantDB.unscoped("sales-advantage tables have no schoolId")
 // — all sales_* tables are REFERENTIAL (no schoolId column, scoped by userId).
-import { salesRawDb } from "./contracts.js";
+import { requireSalesAccessScope, salesRawDb } from "./contracts.js";
 import type {
   RoleplayEvaluationResult,
   QuizSubmissionInput,
@@ -247,7 +247,7 @@ export async function createRoleplayAttempt(
  * @returns The updated attempt row
  */
 export async function saveAttemptEvaluation(
-  { db, user, tenant }: SalesDomainContext,
+  { db, user, tenant, scope }: SalesDomainContext,
   input: {
     attemptId: string;
     evaluation: RoleplayEvaluationResult;
@@ -274,13 +274,10 @@ export async function saveAttemptEvaluation(
     if (user.role !== "SALES_ADMIN") {
       throw new SalesAuthError();
     }
-    const companyScope =
-      tenant.organizationId && tenant.organizationKey
-        ? {
-            organizationId: tenant.organizationId,
-            organizationKey: tenant.organizationKey,
-          }
-        : null;
+    const accessScope = requireSalesAccessScope(scope, tenant);
+    const companyScope = accessScope.kind === "company" ? accessScope : null;
+    const legacySchoolId =
+      accessScope.kind === "legacy-school" ? accessScope.schoolId : null;
     if (companyScope) {
       const [owner] = await rawDb
         .select({
@@ -323,13 +320,9 @@ export async function saveAttemptEvaluation(
       ) {
         throw new SalesAuthError("attempt not found");
       }
-      ownerUser = {
-        ...owner,
-        organizationId: owner.organizationId,
-        organizationKey: owner.organizationKey,
-      } as SalesDomainContext["user"];
+      ownerUser = owner as SalesDomainContext["user"];
     } else {
-      if (!tenant.schoolId) {
+      if (!legacySchoolId) {
         throw new SalesAuthError("attempt not found");
       }
       const [owner] = await db
@@ -346,7 +339,7 @@ export async function saveAttemptEvaluation(
         .from(users)
         .where(eq(users.id, existing.userId))
         .limit(1);
-      if (!owner || owner.schoolId !== tenant.schoolId) {
+      if (!owner || owner.schoolId !== legacySchoolId) {
         throw new SalesAuthError("attempt not found");
       }
       ownerUser = owner as SalesDomainContext["user"];
@@ -415,7 +408,7 @@ export async function submitRoleplayAttempt(
     ) => Promise<RoleplayEvaluationResult>;
   },
 ) {
-  const { db, user, tenant } = ctx;
+  const { db, user, tenant, scope } = ctx;
   assertCan(user, "sales:attempt:create", tenant);
 
   // Audio + privacy validation gate — must run before any DB INSERT and
@@ -464,7 +457,7 @@ export async function submitRoleplayAttempt(
     },
     async (tx, attempt) =>
       saveAttemptEvaluation(
-        { db: tx, user, tenant },
+        { db: tx, user, tenant, scope },
         {
           attemptId: attempt.id,
           evaluation,

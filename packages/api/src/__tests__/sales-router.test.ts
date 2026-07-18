@@ -27,6 +27,19 @@ vi.mock("@reading-advantage/domain/sales", () => ({
   approveCurriculumContent: vi.fn(),
   aiClientToEvaluateRoleplay: vi.fn(() => vi.fn()),
   buildEvaluationPrompt: vi.fn(),
+  salesAccessScopeSchema: z.discriminatedUnion("kind", [
+    z.strictObject({
+      kind: z.literal("company"),
+      applicationKey: z.literal("sales"),
+      organizationId: z.string().uuid(),
+      organizationKey: z.string(),
+    }),
+    z.strictObject({
+      kind: z.literal("legacy-school"),
+      applicationKey: z.literal("sales"),
+      schoolId: z.string(),
+    }),
+  ]),
   moduleOutputSchema: z.object({ id: z.string() }),
   moduleBySlugOutputSchema: z.object({ id: z.string() }),
   lessonDetailOutputSchema: z.object({ id: z.string() }),
@@ -95,6 +108,12 @@ const salesAdmin = {
 };
 
 const globalTenant = { schoolId: null as string | null };
+const companyScope = {
+  kind: "company" as const,
+  applicationKey: "sales" as const,
+  organizationId: "20000000-0000-4000-8000-000000000003",
+  organizationKey: "internal-company",
+};
 
 const t = initTRPC
   .context<{
@@ -102,6 +121,7 @@ const t = initTRPC
     auth: {
       user: { id: string; role: string; schoolId?: string | null };
       tenant: { schoolId: string | null };
+      productScope?: typeof companyScope;
     } | null;
   }>()
   .create({ transformer: superjson });
@@ -112,6 +132,7 @@ function createCaller(
   auth: {
     user: { id: string; role: string; schoolId?: string | null };
     tenant: { schoolId: string | null };
+    productScope?: typeof companyScope;
   } | null,
 ) {
   const tenantDb = createTenantDB(
@@ -145,7 +166,7 @@ describe("salesRouter", () => {
         createdAt: new Date(),
       },
     ] as unknown as Awaited<ReturnType<typeof getModules>>);
-    const caller = createCaller({ user: salesRep, tenant: globalTenant });
+    const caller = createCaller({ user: salesRep, tenant: globalTenant, productScope: companyScope });
     const result = await caller.sales.modules();
     expect(getModules).toHaveBeenCalled();
     expect(result).toHaveLength(1);
@@ -162,7 +183,7 @@ describe("salesRouter", () => {
       createdAt: new Date(),
       lessons: [],
     } as unknown as Awaited<ReturnType<typeof getModuleBySlug>>);
-    const caller = createCaller({ user: salesRep, tenant: globalTenant });
+    const caller = createCaller({ user: salesRep, tenant: globalTenant, productScope: companyScope });
     await caller.sales.moduleBySlug({ slug: "onboarding" });
     expect(getModuleBySlug).toHaveBeenCalled();
     const input = vi.mocked(getModuleBySlug).mock.calls[0][1] as {
@@ -175,7 +196,7 @@ describe("salesRouter", () => {
     vi.mocked(getModuleBySlug).mockRejectedValue(
       new ModulePrerequisiteNotMetError("advanced", "foundations"),
     );
-    const caller = createCaller({ user: salesRep, tenant: globalTenant });
+    const caller = createCaller({ user: salesRep, tenant: globalTenant, productScope: companyScope });
 
     await expect(
       caller.sales.moduleBySlug({ slug: "advanced" }),
@@ -189,7 +210,7 @@ describe("salesRouter", () => {
       passed: true,
       results: [],
     } as unknown as Awaited<ReturnType<typeof submitQuiz>>);
-    const caller = createCaller({ user: salesRep, tenant: globalTenant });
+    const caller = createCaller({ user: salesRep, tenant: globalTenant, productScope: companyScope });
     await caller.sales.submitQuiz({ lessonId: "l1", answers: {} });
     expect(submitQuiz).toHaveBeenCalled();
   });
@@ -198,7 +219,7 @@ describe("salesRouter", () => {
     vi.mocked(markTheoryLessonComplete).mockResolvedValue({
       id: "p1",
     } as unknown as Awaited<ReturnType<typeof markTheoryLessonComplete>>);
-    const caller = createCaller({ user: salesRep, tenant: globalTenant });
+    const caller = createCaller({ user: salesRep, tenant: globalTenant, productScope: companyScope });
 
     const result = await caller.sales.markTheoryLessonComplete({
       lessonId: "00000000-0000-4000-8000-000000000001",
@@ -219,7 +240,7 @@ describe("salesRouter", () => {
       },
       conversationId: "c1",
     } as unknown as Awaited<ReturnType<typeof saveChatMessage>>);
-    const caller = createCaller({ user: salesRep, tenant: globalTenant });
+    const caller = createCaller({ user: salesRep, tenant: globalTenant, productScope: companyScope });
     const result = await caller.sales.saveChatMessage({
       role: "user",
       content: "hi",
@@ -228,7 +249,7 @@ describe("salesRouter", () => {
   });
 
   it("does not expose a Sales credential-creation procedure", () => {
-    const caller = createCaller({ user: salesAdmin, tenant: globalTenant });
+    const caller = createCaller({ user: salesAdmin, tenant: globalTenant, productScope: companyScope });
     expect(
       Object.prototype.hasOwnProperty.call(caller.sales.admin, "createRep"),
     ).toBe(false);
@@ -238,13 +259,14 @@ describe("salesRouter", () => {
     vi.mocked(getCohortOverview).mockResolvedValue(
       [] as unknown as Awaited<ReturnType<typeof getCohortOverview>>,
     );
-    const repCaller = createCaller({ user: salesRep, tenant: globalTenant });
+    const repCaller = createCaller({ user: salesRep, tenant: globalTenant, productScope: companyScope });
     await expect(repCaller.sales.admin.cohortOverview()).rejects.toThrow(
       /Sales admin access required/,
     );
     const adminCaller = createCaller({
       user: salesAdmin,
       tenant: globalTenant,
+      productScope: companyScope,
     });
     const result = await adminCaller.sales.admin.cohortOverview();
     expect(result).toEqual([]);
@@ -257,6 +279,7 @@ describe("salesRouter", () => {
     const adminCaller = createCaller({
       user: salesAdmin,
       tenant: globalTenant,
+      productScope: companyScope,
     });
     await expect(
       adminCaller.sales.admin.repDetail({ repId: "rep-1" }),
@@ -268,7 +291,7 @@ describe("salesRouter", () => {
       modules: [{ id: "m1" }],
       rubrics: [{ id: "r1" }],
     } as unknown as Awaited<ReturnType<typeof getAdminCurriculum>>);
-    const repCaller = createCaller({ user: salesRep, tenant: globalTenant });
+    const repCaller = createCaller({ user: salesRep, tenant: globalTenant, productScope: companyScope });
     await expect(repCaller.sales.admin.curriculum()).rejects.toThrow(
       /Sales admin access required/,
     );
@@ -276,6 +299,7 @@ describe("salesRouter", () => {
     const adminCaller = createCaller({
       user: salesAdmin,
       tenant: globalTenant,
+      productScope: companyScope,
     });
     await expect(adminCaller.sales.admin.curriculum()).resolves.toEqual({
       modules: [{ id: "m1" }],

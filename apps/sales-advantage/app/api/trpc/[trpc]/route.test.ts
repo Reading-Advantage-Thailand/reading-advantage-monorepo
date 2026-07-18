@@ -51,6 +51,7 @@ describe("Sales tRPC company-principal boundary", () => {
     expect(mocks.createContext).toHaveBeenCalledWith({
       mode: "verified-principal",
       principal: null,
+      productScope: null,
     });
     expect(mocks.createContext.mock.calls[0]?.[0]).not.toHaveProperty(
       "authorization",
@@ -71,11 +72,36 @@ describe("Sales tRPC company-principal boundary", () => {
     expect(mocks.createContext).toHaveBeenCalledWith({
       mode: "verified-principal",
       principal: null,
+      productScope: null,
+    });
+  });
+
+  it("stays anonymous when Accounts reports a suspended application session", async () => {
+    mocks.readSalesCookie.mockReturnValue("opaque-sales-session");
+    mocks.introspect.mockResolvedValue(null);
+
+    await POST(new Request(
+      "https://sales.reading-advantage.com/api/trpc",
+      { method: "POST" },
+    ));
+
+    expect(mocks.salesSessionUser).not.toHaveBeenCalled();
+    expect(mocks.createContext).toHaveBeenCalledWith({
+      mode: "verified-principal",
+      principal: null,
+      productScope: null,
     });
   });
 
   it("passes only a principal resolved from the Sales application session", async () => {
-    const principal = { id: "local-sales-principal", role: "SALES_REP" };
+    const user = { id: "local-sales-principal", role: "SALES_REP" };
+    const scope = {
+      kind: "company",
+      applicationKey: "sales",
+      organizationId: "20000000-0000-4000-8000-000000000003",
+      organizationKey: "internal-company",
+    };
+    const principal = { user, scope };
     mocks.readSalesCookie.mockReturnValue("opaque-sales-session");
     mocks.introspect.mockResolvedValue({ identity: { sub: "company-account" } });
     mocks.salesSessionUser.mockResolvedValue(principal);
@@ -90,7 +116,8 @@ describe("Sales tRPC company-principal boundary", () => {
     expect(mocks.introspect).toHaveBeenCalledWith("opaque-sales-session");
     expect(mocks.createContext).toHaveBeenCalledWith({
       mode: "verified-principal",
-      principal,
+      principal: user,
+      productScope: scope,
     });
     expect(mocks.createContext.mock.calls[0]?.[0]).not.toHaveProperty(
       "authorization",

@@ -28,6 +28,7 @@ import {
   AudioStorageError,
   SalesError,
   SalesAuthError,
+  salesAccessScopeSchema,
 } from "@reading-advantage/domain/sales";
 
 /**
@@ -109,7 +110,23 @@ const salesRepOrAdmin = middleware(async ({ ctx, next }) => {
       message: "Sales access required",
     });
   }
-  return next({ ctx: { ...ctx, auth: ctx.auth } });
+  const parsedScope = salesAccessScopeSchema.safeParse(ctx.auth.productScope);
+  if (
+    !parsedScope.success ||
+    parsedScope.data.kind !== "company" ||
+    ctx.auth.tenant.schoolId !== null
+  ) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "Verified Sales company scope required",
+    });
+  }
+  return next({
+    ctx: {
+      ...ctx,
+      auth: { ...ctx.auth, productScope: parsedScope.data },
+    },
+  });
 });
 
 /** Middleware that requires the SALES_ADMIN role. */
@@ -123,7 +140,23 @@ const salesAdminOnly = middleware(async ({ ctx, next }) => {
       message: "Sales admin access required",
     });
   }
-  return next({ ctx: { ...ctx, auth: ctx.auth } });
+  const parsedScope = salesAccessScopeSchema.safeParse(ctx.auth.productScope);
+  if (
+    !parsedScope.success ||
+    parsedScope.data.kind !== "company" ||
+    ctx.auth.tenant.schoolId !== null
+  ) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "Verified Sales company scope required",
+    });
+  }
+  return next({
+    ctx: {
+      ...ctx,
+      auth: { ...ctx.auth, productScope: parsedScope.data },
+    },
+  });
 });
 
 const salesProcedure = protectedProcedure.use(salesRepOrAdmin);
@@ -138,6 +171,7 @@ export const salesRouter = router({
           db: ctx.tenantDb,
           user: ctx.auth.user,
           tenant: ctx.auth.tenant,
+          scope: ctx.auth.productScope,
         });
       } catch (err) {
         throw mapSalesError(err);
@@ -150,7 +184,7 @@ export const salesRouter = router({
     .query(async ({ ctx, input }) => {
       try {
         return await sales.getModuleBySlug(
-          { db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant },
+          { db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant, scope: ctx.auth.productScope },
           input,
         );
       } catch (err) {
@@ -164,7 +198,7 @@ export const salesRouter = router({
     .query(async ({ ctx, input }) => {
       try {
         return await sales.getLesson(
-          { db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant },
+          { db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant, scope: ctx.auth.productScope },
           input,
         );
       } catch (err) {
@@ -178,7 +212,7 @@ export const salesRouter = router({
     .query(async ({ ctx, input }) => {
       try {
         return await sales.getScenario(
-          { db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant },
+          { db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant, scope: ctx.auth.productScope },
           input,
         );
       } catch (err) {
@@ -192,7 +226,7 @@ export const salesRouter = router({
     .query(async ({ ctx, input }) => {
       try {
         return await sales.getAttemptsForScenario(
-          { db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant },
+          { db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant, scope: ctx.auth.productScope },
           input,
         );
       } catch (err) {
@@ -208,6 +242,7 @@ export const salesRouter = router({
           db: ctx.tenantDb,
           user: ctx.auth.user,
           tenant: ctx.auth.tenant,
+          scope: ctx.auth.productScope,
         });
       } catch (err) {
         throw mapSalesError(err);
@@ -222,6 +257,7 @@ export const salesRouter = router({
           db: ctx.tenantDb,
           user: ctx.auth.user,
           tenant: ctx.auth.tenant,
+          scope: ctx.auth.productScope,
         });
       } catch (err) {
         throw mapSalesError(err);
@@ -234,7 +270,7 @@ export const salesRouter = router({
     .mutation(async ({ ctx, input }) => {
       try {
         return await sales.markTheoryLessonComplete(
-          { db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant },
+          { db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant, scope: ctx.auth.productScope },
           input,
         );
       } catch (err) {
@@ -248,7 +284,7 @@ export const salesRouter = router({
     .mutation(async ({ ctx, input }) => {
       try {
         return await sales.submitQuiz(
-          { db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant },
+          { db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant, scope: ctx.auth.productScope },
           input,
         );
       } catch (err) {
@@ -267,7 +303,7 @@ export const salesRouter = router({
     .mutation(async ({ ctx, input }) => {
       try {
         return await sales.saveChatMessage(
-          { db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant },
+          { db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant, scope: ctx.auth.productScope },
           input,
         );
       } catch (err) {
@@ -284,6 +320,7 @@ export const salesRouter = router({
             db: ctx.tenantDb,
             user: ctx.auth.user,
             tenant: ctx.auth.tenant,
+          scope: ctx.auth.productScope,
           });
         } catch (err) {
           throw mapSalesError(err);
@@ -298,6 +335,7 @@ export const salesRouter = router({
             db: ctx.tenantDb,
             user: ctx.auth.user,
             tenant: ctx.auth.tenant,
+          scope: ctx.auth.productScope,
           });
         } catch (err) {
           throw mapSalesError(err);
@@ -310,7 +348,7 @@ export const salesRouter = router({
       .query(async ({ ctx, input }) => {
         try {
           return await sales.getSalesRepDetail(
-            { db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant },
+            { db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant, scope: ctx.auth.productScope },
             input,
           );
         } catch (err) {
@@ -324,7 +362,7 @@ export const salesRouter = router({
       .mutation(async ({ ctx, input }) => {
         try {
           return await sales.approveCurriculumContent(
-            { db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant },
+            { db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant, scope: ctx.auth.productScope },
             input,
           );
         } catch (err) {

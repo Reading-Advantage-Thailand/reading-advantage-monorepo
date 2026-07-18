@@ -31,7 +31,6 @@ export const companyProductPrincipals = pgTable(
       columns: [table.organizationId, table.companyAccountId, table.applicationKey],
     }),
     unique("company_product_principals_application_local_unique").on(
-      table.organizationId,
       table.applicationKey,
       table.localUserId,
     ),

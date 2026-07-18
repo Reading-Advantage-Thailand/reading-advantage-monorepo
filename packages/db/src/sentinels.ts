@@ -224,4 +224,9 @@ export const sentinelProbes: Record<string, SentinelProbe> = {
     kind: "column",
     target: "past_topics.normalized_key",
   },
+  "0042_company_product_principal_local_unique": {
+    tag: "0042_company_product_principal_local_unique",
+    kind: "table",
+    target: "company_product_principals",
+  },
 };

@@ -35,6 +35,16 @@ const salesAdminB = {
 
 const tenantA = { schoolId: "school-a" };
 const tenantB = { schoolId: "school-b" };
+const scopeA = {
+  kind: "legacy-school" as const,
+  applicationKey: "sales" as const,
+  schoolId: "school-a",
+};
+const scopeB = {
+  kind: "legacy-school" as const,
+  applicationKey: "sales" as const,
+  schoolId: "school-b",
+};
 
 function wrapDb(db: ReturnType<typeof createMockDb>, tenant = tenantA) {
   return createTenantDB(db as unknown as DB, tenant);
@@ -128,7 +138,7 @@ describe("Sales authorization / IDOR hardening", () => {
     let threw = false;
     try {
       await saveAttemptEvaluation(
-        { db: wrapDb(db), user: salesRepA, tenant: tenantA },
+        { db: wrapDb(db), user: salesRepA, tenant: tenantA, scope: scopeA },
         {
           attemptId: "attempt-other",
           evaluation: baseEvaluation,
@@ -179,7 +189,7 @@ describe("Sales authorization / IDOR hardening", () => {
     });
 
     const result = await saveAttemptEvaluation(
-      { db: wrapDb(db), user: salesAdminA, tenant: tenantA },
+      { db: wrapDb(db), user: salesAdminA, tenant: tenantA, scope: scopeA },
       {
         attemptId: "attempt-rep-a",
         evaluation: baseEvaluation,
@@ -236,14 +246,11 @@ describe("Sales authorization / IDOR hardening", () => {
     const result = await saveAttemptEvaluation(
       {
         db: wrapDb(db, { schoolId: null }),
-        user: {
-          ...salesAdminA,
-          schoolId: null,
-          organizationId,
-          organizationKey: "internal-company",
-        },
-        tenant: {
-          schoolId: null,
+        user: { ...salesAdminA, schoolId: null },
+        tenant: { schoolId: null },
+        scope: {
+          kind: "company",
+          applicationKey: "sales",
           organizationId,
           organizationKey: "internal-company",
         },
@@ -295,14 +302,11 @@ describe("Sales authorization / IDOR hardening", () => {
       saveAttemptEvaluation(
         {
           db: wrapDb(db, { schoolId: null }),
-          user: {
-            ...salesAdminA,
-            schoolId: null,
-            organizationId,
-            organizationKey: "internal-company",
-          },
-          tenant: {
-            schoolId: null,
+          user: { ...salesAdminA, schoolId: null },
+          tenant: { schoolId: null },
+          scope: {
+            kind: "company",
+            applicationKey: "sales",
             organizationId,
             organizationKey: "internal-company",
           },
@@ -340,7 +344,7 @@ describe("Sales authorization / IDOR hardening", () => {
     let threw = false;
     try {
       await saveAttemptEvaluation(
-        { db: wrapDb(db, tenantB), user: salesAdminB, tenant: tenantB },
+        { db: wrapDb(db, tenantB), user: salesAdminB, tenant: tenantB, scope: scopeB },
         {
           attemptId: "attempt-rep-a",
           evaluation: baseEvaluation,
@@ -388,6 +392,7 @@ describe("Sales authorization / IDOR hardening", () => {
       db: wrapDb(db),
       user: salesAdminA,
       tenant: tenantA,
+      scope: scopeA,
     });
 
     const crossTenantRowCount = result.filter(

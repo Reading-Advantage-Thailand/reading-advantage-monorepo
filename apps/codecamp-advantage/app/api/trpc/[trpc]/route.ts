@@ -20,6 +20,14 @@ async function handler(req: Request) {
       return createContext({
         mode: "verified-principal",
         principal: session ? codecampSessionUser(session.identity) : null,
+        productScope: session
+          ? {
+              kind: "company",
+              applicationKey: "codecamp",
+              organizationId: session.identity.organizationId,
+              organizationKey: session.identity.organizationKey,
+            }
+          : null,
       });
     },
   });

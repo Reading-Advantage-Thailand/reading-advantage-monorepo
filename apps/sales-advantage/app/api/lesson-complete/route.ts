@@ -7,10 +7,11 @@ export const runtime = "nodejs";
 
 export async function POST(request: NextRequest) {
   try {
-    const user = await authenticateSalesRequest(request);
-    if (!user) {
+    const principal = await authenticateSalesRequest(request);
+    if (!principal) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+    const { user, scope } = principal;
     const tenant = { schoolId: user.schoolId };
 
     const body = await request.json();
@@ -19,7 +20,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Invalid input" }, { status: 400 });
     }
 
-    await markTheoryLessonComplete({ db: db as never, user, tenant }, { lessonId });
+    await markTheoryLessonComplete({ db: db as never, user, tenant, scope }, { lessonId });
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Mark complete error:", error);

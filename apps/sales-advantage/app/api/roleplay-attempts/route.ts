@@ -23,10 +23,11 @@ export const maxDuration = 60;
 export async function POST(request: NextRequest) {
   let uploadedObject: { storage: StorageClient; key: string } | undefined;
   try {
-    const user = await authenticateSalesRequest(request);
-    if (!user) {
+    const principal = await authenticateSalesRequest(request);
+    if (!principal) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+    const { user, scope } = principal;
     const tenant = { schoolId: user.schoolId };
 
     // Rate limit: 10 attempts per user per hour
@@ -154,7 +155,7 @@ export async function POST(request: NextRequest) {
     // evaluator receives the grounding material (FR-4 closes the empty-excerpts
     // bug — the previous code passed `excerpts: []`).
     const evaluationContext = await getRoleplayEvaluationContext(
-      { db, user, tenant },
+      { db, user, tenant, scope },
       { scenarioId },
     );
     if (!evaluationContext.scenario) {
@@ -231,7 +232,7 @@ export async function POST(request: NextRequest) {
     };
 
     const result = await submitRoleplayAttempt(
-      { db, user, tenant },
+      { db, user, tenant, scope },
       {
         scenarioId,
         audioStorageKey: audioUploadSucceeded ? storageKey : null,
