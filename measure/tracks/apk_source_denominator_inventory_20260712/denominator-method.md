@@ -1,7 +1,5 @@
 # Denominator Method
 
-<!-- regeneration preparation: removed by the canonical generator -->
-
 Schema version: `apk-denominator-method.v1`
 
 ## Frozen input
