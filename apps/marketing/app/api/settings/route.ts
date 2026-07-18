@@ -22,18 +22,11 @@ import { settings } from "@reading-advantage/db/schema";
 import { encrypt } from "@/lib/encryption";
 import { requireMarketingSession } from "@/lib/auth";
 import { settingsPostSchema } from "@/lib/settings-schema";
-
-const SECRET_KEY_PATTERNS = [/apiKey/i, /secret/i, /token/i];
-
-function isSecretKey(key: string): boolean {
-  return SECRET_KEY_PATTERNS.some((pattern) => pattern.test(key));
-}
-
-/**
- * Masked placeholder returned for secret keys. The settings UI only needs
- * to know a key is configured; it never needs the plaintext.
- */
-const MASKED_SECRET = "••••";
+import {
+  isMarketingSecretSetting,
+  MARKETING_MASKED_SECRET,
+  prepareMarketingSettingsUpdate,
+} from "@/lib/settings-update";
 
 /**
  * GET /api/settings — list all settings with secret values masked.
@@ -42,6 +35,8 @@ const MASKED_SECRET = "••••";
  * Masking contract: secret keys (`apiKey`, `secret`, `token`) are returned
  * as a `••••` placeholder; the route never invokes `decrypt` so the
  * plaintext never enters the response.
+ * @param request The authenticated settings request.
+ * @returns A masked settings response or an authentication/load error.
  */
 export async function GET(request: Request) {
   const guard = await requireMarketingSession(request);
@@ -57,7 +52,7 @@ export async function GET(request: Request) {
         // Never return decrypted plaintext over the wire; return a
         // masked placeholder for any secret-shaped key. Non-secret keys
         // are returned as-is.
-        isSecretKey(s.key) ? MASKED_SECRET : s.value,
+        isMarketingSecretSetting(s.key) ? MARKETING_MASKED_SECRET : s.value,
       ]),
     );
     return NextResponse.json(settingsMap);
@@ -74,7 +69,10 @@ export async function GET(request: Request) {
  *
  * Guard contract: 401 without a valid session, before any DB write. The
  * body is validated with a Zod schema (object of string values) before
- * any insert is issued.
+ * any insert is issued. Masked or blank secret values mean "unchanged" and
+ * are omitted so an unrelated settings save cannot replace a stored secret.
+ * @param request The authenticated settings update request.
+ * @returns A success response or a validation/authentication/save error.
  */
 export async function POST(request: Request) {
   const guard = await requireMarketingSession(request);
@@ -104,8 +102,11 @@ export async function POST(request: Request) {
   }
 
   try {
-    for (const [key, value] of Object.entries(parsed.data)) {
-      const storedValue = isSecretKey(key) ? encrypt(value) : value;
+    const settingsToWrite = prepareMarketingSettingsUpdate(parsed.data);
+    for (const [key, value] of Object.entries(settingsToWrite)) {
+      const storedValue = isMarketingSecretSetting(key)
+        ? encrypt(value)
+        : value;
       await db
         .insert(settings)
         .values({ key, value: storedValue })

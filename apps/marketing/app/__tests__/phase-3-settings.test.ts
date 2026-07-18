@@ -340,6 +340,69 @@ describe("Phase 3: Settings Page — POST /api/settings encryption (tasks 3 + 6,
     expect(valuesMock).toBeDefined();
   });
 
+  it("preserves an existing apiKey when the masked placeholder is submitted", async () => {
+    const { db } = await import("@reading-advantage/db");
+    const { insertMock, valuesMock, onConflictDoUpdateMock } =
+      makeInsertChainMock();
+    (db.insert as Mock).mockImplementation(insertMock);
+
+    const { POST } = await import("@/api/settings/route");
+    const response = await POST(
+      authedRequest("http://localhost/api/settings", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ "llm.apiKey": "••••" }),
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(valuesMock).not.toHaveBeenCalled();
+    expect(onConflictDoUpdateMock).not.toHaveBeenCalled();
+  });
+
+  it("saves unrelated settings without replacing the masked apiKey", async () => {
+    const { db } = await import("@reading-advantage/db");
+    const { insertMock, valuesMock } = makeInsertChainMock();
+    (db.insert as Mock).mockImplementation(insertMock);
+
+    const { POST } = await import("@/api/settings/route");
+    const response = await POST(
+      authedRequest("http://localhost/api/settings", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          "llm.model": "gemini-2.5-flash",
+          "llm.apiKey": "••••",
+        }),
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(valuesMock).toHaveBeenCalledTimes(1);
+    expect(valuesMock).toHaveBeenCalledWith({
+      key: "llm.model",
+      value: "gemini-2.5-flash",
+    });
+  });
+
+  it("preserves an existing apiKey when a blank value is submitted", async () => {
+    const { db } = await import("@reading-advantage/db");
+    const { insertMock, valuesMock } = makeInsertChainMock();
+    (db.insert as Mock).mockImplementation(insertMock);
+
+    const { POST } = await import("@/api/settings/route");
+    const response = await POST(
+      authedRequest("http://localhost/api/settings", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ "llm.apiKey": "   " }),
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(valuesMock).not.toHaveBeenCalled();
+  });
+
   it("uses ON CONFLICT DO UPDATE on the settings.key for idempotent re-save", async () => {
     const { db } = await import("@reading-advantage/db");
     const { insertMock, valuesMock, onConflictDoUpdateMock } =

@@ -1,10 +1,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import {
+  MARKETING_MASKED_SECRET,
+  prepareMarketingSettingsUpdate,
+  preservesExistingMarketingSecret,
+} from "@/lib/settings-update";
 
-/** Placeholder for masked secret values returned by GET /api/settings. */
-const MASKED_SECRET = "\u2022\u2022\u2022\u2022";
-
+/**
+ * Renders the authenticated Marketing settings editor.
+ * @returns The settings form and connection status controls.
+ */
 export default function SettingsPage() {
   const [provider, setProvider] = useState("google");
   const [modelName, setModelName] = useState("");
@@ -43,7 +49,16 @@ export default function SettingsPage() {
     loadSettings();
   }, []);
 
+  const requiresExplicitApiKey = preservesExistingMarketingSecret(
+    "llm.apiKey",
+    apiKey,
+  );
+
   const handleTestConnection = async () => {
+    if (requiresExplicitApiKey) {
+      setTestResult("Enter a new API key to test the connection.");
+      return;
+    }
     setTesting(true);
     setTestResult(null);
     try {
@@ -71,15 +86,16 @@ export default function SettingsPage() {
 
   const handleSave = async () => {
     try {
+      const settingsUpdate = prepareMarketingSettingsUpdate({
+        "llm.provider": provider,
+        "llm.model": modelName,
+        "llm.apiKey": apiKey,
+        "tools.mmxPath": mmxPath,
+      });
       const res = await fetch("/api/settings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          "llm.provider": provider,
-          "llm.model": modelName,
-          "llm.apiKey": apiKey,
-          "tools.mmxPath": mmxPath,
-        }),
+        body: JSON.stringify(settingsUpdate),
       });
       if (res.status === 401) {
         window.location.href = "/login";
@@ -108,7 +124,7 @@ export default function SettingsPage() {
    * When the API returns a masked placeholder for a secret key, the input
    * shows the placeholder and the user must provide a new value to update.
    */
-  const isApiKeyMasked = apiKey === MASKED_SECRET;
+  const isApiKeyMasked = apiKey === MARKETING_MASKED_SECRET;
 
   return (
     <div>
@@ -176,7 +192,9 @@ export default function SettingsPage() {
             type="password"
             value={apiKey}
             onChange={(e) => setApiKey(e.target.value)}
-            placeholder={isApiKeyMasked ? MASKED_SECRET : "Enter API key"}
+            placeholder={
+              isApiKeyMasked ? MARKETING_MASKED_SECRET : "Enter API key"
+            }
             style={{
               width: "100%",
               padding: "8px",
@@ -184,6 +202,11 @@ export default function SettingsPage() {
               border: "1px solid #ccc",
             }}
           />
+          {requiresExplicitApiKey && (
+            <p style={{ margin: "6px 0 0", fontSize: "12px", color: "#666" }}>
+              Enter a new API key to test the connection.
+            </p>
+          )}
         </div>
 
         <div style={{ marginBottom: "16px" }}>
@@ -207,14 +230,15 @@ export default function SettingsPage() {
         <div style={{ display: "flex", gap: "12px" }}>
           <button
             onClick={handleTestConnection}
-            disabled={testing}
+            disabled={testing || requiresExplicitApiKey}
             style={{
               padding: "8px 16px",
               backgroundColor: "#1a1a2e",
               color: "#fff",
               border: "none",
               borderRadius: "4px",
-              cursor: testing ? "not-allowed" : "pointer",
+              cursor:
+                testing || requiresExplicitApiKey ? "not-allowed" : "pointer",
             }}
           >
             {testing ? "Testing..." : "Test Connection"}
