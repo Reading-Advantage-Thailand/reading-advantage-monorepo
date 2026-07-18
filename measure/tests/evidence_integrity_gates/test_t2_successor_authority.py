@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
@@ -12,7 +13,8 @@ from measure.tracks.apk_source_denominator_inventory_20260712.run_phase0_3_admis
     ADMISSION_MODULES,
     EXPECTED_TEST_COUNTS,
     T2AdmissionError,
-    run_admission,
+    _run_admission_at,
+    _validate_inventory_row,
 )
 from measure.tracks.apk_source_denominator_inventory_20260712.verify_phase4_role_evidence import (
     T2EvidenceVerificationError,
@@ -163,42 +165,77 @@ class SuccessorAuthorityTests(unittest.TestCase):
 
     def test_admission_rejects_zero_test_modules_and_stale_12_18_counts(self) -> None:
         """Falsifies zero-suite and superseded 12/18 Phase1/2 false Greens."""
-
-        class CountLoader(unittest.TestLoader):
-            """Returns synthetic suites with caller-selected discovery counts."""
-
-            def __init__(self, counts: tuple[int, ...]) -> None:
-                """Stores one synthetic count per admission module.
-
-                Args:
-                    counts: Ordered synthetic test counts.
-                """
-                super().__init__()
-                self.counts = dict(zip(ADMISSION_MODULES, counts, strict=True))
-
-            def loadTestsFromName(
-                self, name: str, module: object | None = None
-            ) -> unittest.TestSuite:
-                """Builds a passing suite with the configured count.
-
-                Args:
-                    name: Admission module name.
-                    module: Unused unittest compatibility input.
-
-                Returns:
-                    Synthetic passing suite.
-                """
-                del module
-                return unittest.TestSuite(
-                    unittest.FunctionTestCase(lambda: None)
-                    for _ in range(self.counts[name])
-                )
-
         self.assertEqual(EXPECTED_TEST_COUNTS, (13, 17, 31, 24))
-        with self.assertRaisesRegex(T2AdmissionError, "discovered 0 tests"):
-            run_admission(CountLoader((0, 0, 0, 0)))
-        with self.assertRaisesRegex(T2AdmissionError, "discovered 12 tests; expected 17"):
-            run_admission(CountLoader((13, 12, 18, 24)))
+        for phase, actual in ((0, 0), (1, 12), (2, 18)):
+            expected = EXPECTED_TEST_COUNTS[phase]
+            row = {
+                "phase": phase,
+                "module": ADMISSION_MODULES[phase],
+                "tests": actual,
+                "passed": actual,
+                "failed": 0,
+                "exit_code": 0,
+            }
+            with self.assertRaisesRegex(T2AdmissionError, "inventory differs"):
+                _validate_inventory_row(phase, ADMISSION_MODULES[phase], expected, row)
+
+    def test_detached_admission_ignores_mutated_transitive_worktree_dependency(self) -> None:
+        """Proves admission imports committed transitive bytes, not mutable source bytes."""
+        with tempfile.TemporaryDirectory() as directory:
+            repo = Path(directory) / "source"
+            tests = repo / "measure" / "tests"
+            tests.mkdir(parents=True)
+            (repo / "measure" / "__init__.py").write_text("", encoding="utf-8")
+            (tests / "__init__.py").write_text("", encoding="utf-8")
+            probe = repo / "measure" / "transitive_probe.py"
+            probe.write_text('VALUE = "committed"\n', encoding="utf-8")
+            for module, count in zip(ADMISSION_MODULES, EXPECTED_TEST_COUNTS, strict=True):
+                methods = "\n".join(
+                    f"    def test_{index:02d}(self): self.assertEqual(VALUE, 'committed')"
+                    for index in range(count)
+                )
+                source = (
+                    "import unittest\n"
+                    "from measure.transitive_probe import VALUE\n"
+                    "class PinnedTests(unittest.TestCase):\n"
+                    f"{methods}\n"
+                )
+                (repo / f"{module.replace('.', '/')}.py").write_text(
+                    source, encoding="utf-8"
+                )
+            subprocess.run(["/usr/bin/git", "init", "--quiet", str(repo)], check=True)
+            subprocess.run(
+                ["/usr/bin/git", "-C", str(repo), "add", "measure"], check=True
+            )
+            subprocess.run(
+                [
+                    "/usr/bin/git",
+                    "-C",
+                    str(repo),
+                    "-c",
+                    "user.name=T2 Test",
+                    "-c",
+                    "user.email=t2@example.invalid",
+                    "commit",
+                    "--quiet",
+                    "--no-gpg-sign",
+                    "-m",
+                    "test fixture",
+                ],
+                check=True,
+            )
+            revision = subprocess.check_output(
+                ["/usr/bin/git", "-C", str(repo), "rev-parse", "HEAD"], text=True
+            ).strip()
+
+            probe.write_text(
+                'raise RuntimeError("mutable worktree dependency was imported")\n',
+                encoding="utf-8",
+            )
+            inventory = _run_admission_at(repo, revision)
+            self.assertEqual(
+                [row["tests"] for row in inventory], list(EXPECTED_TEST_COUNTS)
+            )
 
     def test_reviewer_rejects_boolean_counters_and_whitespace_severity(self) -> None:
         """Falsifies Python equality coercion and untrimmed blocking severity bypasses."""
