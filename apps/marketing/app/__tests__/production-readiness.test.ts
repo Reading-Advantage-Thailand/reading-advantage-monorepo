@@ -222,6 +222,9 @@ describe("Marketing Cloud Run production contract", () => {
     expect(dockerfile).toContain("ENV PORT=8080");
     expect(dockerfile).toContain("USER appuser");
     expect(dockerfile).toContain(
+      "/app/apps/marketing/package.json ./package.json",
+    );
+    expect(dockerfile).toContain(
       'CMD ["node", "./node_modules/vinext/dist/cli.js", "start"]',
     );
   });

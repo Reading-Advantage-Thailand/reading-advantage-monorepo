@@ -54,7 +54,7 @@ COPY --from=builder --chown=appuser:appgroup /app/apps/marketing/dist ./dist
 
 # Copy the minimal monorepo structure needed for pnpm's symlinked
 # node_modules to resolve correctly at runtime
-COPY --from=builder --chown=appuser:appgroup /app/package.json ./package.json
+COPY --from=builder --chown=appuser:appgroup /app/apps/marketing/package.json ./package.json
 COPY --from=builder --chown=appuser:appgroup /app/pnpm-lock.yaml ./pnpm-lock.yaml
 COPY --from=builder --chown=appuser:appgroup /app/pnpm-workspace.yaml ./pnpm-workspace.yaml
 COPY --from=builder --chown=appuser:appgroup /app/apps/marketing/package.json ./apps/marketing/package.json
