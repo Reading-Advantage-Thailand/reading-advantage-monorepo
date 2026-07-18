@@ -78,9 +78,9 @@ Do not start Phase 2 until this is green — the app currently leaks decrypted A
 ## Phase 3: Deploy + manual QA
 
 - [x] Task: `gcloud builds submit --config apps/marketing/cloudbuild.yaml`; confirm migrate + doctor + deploy steps pass
-  - Build `7a6597f5-5a51-406e-98c5-5e264b8358bf`: SUCCESS. Ready revision: `marketing-00002-xxb`; service URL: `https://marketing-hxamzdhgwa-as.a.run.app`.
+  - Final accepted build `2e1d5b73-4118-480f-aeea-fe8f50db14b2`: SUCCESS. Ready revision: `marketing-00005-fzp`; image digest `sha256:72f4e1cc9529b8c656d3843a77354e9ddc3ac3b38fc6d4dd1540da0217cc42b7`; service URL: `https://marketing-hxamzdhgwa-as.a.run.app`; 100% traffic.
 - [x] Task: Run the smoke script against the live Cloud Run URL; confirm `GET /api/health/db` green
-  - Live custom-domain smoke at `https://marketing.reading-advantage.com`: 7/7 passed, including DB health 200 and unauthenticated protected APIs 401. Cloud Run reports route and certificate ready.
+  - Live custom-domain smoke at `https://marketing.reading-advantage.com`: 7/7 passed, including DB health 200 and unauthenticated protected APIs 401. Cloud Run reports route and certificate ready. Browser SSO through Accounts lands on the authenticated Marketing home, and the protected `/api/settings` request returns 200.
 - [~] Task: Manual end-to-end QA (Phikul) — login → create campaign → research topics → dedup → generate Thai script (5–7 scenes) → edit scenes → persist project → reload; record the result
 - [x] Task: Confirm no route exposes decrypted secrets in production (re-check `GET /api/settings` against the live service)
   - Live `GET /api/settings` returned 401 without a session; browser redirect landed on `/login`.

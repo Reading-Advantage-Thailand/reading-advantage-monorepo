@@ -525,6 +525,14 @@ _Blast radius: `validateSession` has 31 source references and shared `requireRol
 ## Phase S7: Cut Over and Verify Production
 _Story ref: spec.md#story-s7_
 
+> **2026-07-18 release checkpoint:** Accounts, Marketing, and Sales are deployed on
+> Cloud Run and their public-domain SSO paths are verified. Immutable build,
+> revision, domain, browser, protected-API, and rollback evidence is recorded in
+> [`production-rollout-20260718.md`](./production-rollout-20260718.md). This is a
+> partial Phase S7 checkpoint: Codecamp migration/cutover, negative role-isolation
+> probes, the observation window, legacy-auth retirement, and final documentation
+> remain open.
+
 ### Contract & Schema Definition
 
 - [ ] Task 42: Define the production rollout, evidence, and rollback contract.

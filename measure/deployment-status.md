@@ -4,7 +4,7 @@
 
 ## The one-line answer
 
-The monorepo (`bodangren/reading-advantage-monorepo`) is **not** the deploy source for most legacy live apps. Those services are fed by the **original standalone `Reading-Advantage-Thailand/*` GitHub repos** via Cloud Build triggers. Codecamp and Marketing are verified manual monorepo Cloud Build deployments; they do not yet have repository triggers.
+The monorepo (`bodangren/reading-advantage-monorepo`) is **not** the deploy source for most legacy live apps. Those services are fed by the **original standalone `Reading-Advantage-Thailand/*` GitHub repos** via Cloud Build triggers. Codecamp, Accounts, Marketing, and Sales are verified manual monorepo Cloud Build deployments; they do not yet have repository triggers.
 
 ## Per-app deployment map
 
@@ -16,15 +16,16 @@ The monorepo (`bodangren/reading-advantage-monorepo`) is **not** the deploy sour
 | **codecamp-advantage** | Dockerfile + cloudbuild, no CD | ✅ yes | `codecamp-advantage` / `codecamp-advantage` (rev 00017) | 2026-06-11 | **Manual `gcloud builds submit`** — no trigger in any region; every build has an empty `buildTriggerId`; builds run in the `global` region. See tech-debt 2026-05-18. |
 | **science-advantage** | none | ❌ Cloud Run API not enabled on the project | never | — | Not deployed. |
 | **advantage-games** | none | ❌ | never | — | Not deployed. |
-| **marketing** | vinext Dockerfile + cloudbuild, no CD | ✅ yes | `reading-advantage` / `marketing` (rev `00002-xxb`) | 2026-07-18 | **Manual monorepo `gcloud builds submit`**, build `7a6597f5-5a51-406e-98c5-5e264b8358bf`; `https://marketing.reading-advantage.com` is live with managed HTTPS. |
-| **sales-advantage** | none | ❌ | never | — | Not deployed. |
+| **accounts** | Dockerfile + cloudbuild, no CD | ✅ yes | `reading-advantage` / `accounts` (rev `00004-b9g`) | 2026-07-18 | **Manual monorepo `gcloud builds submit`**, build `a2ccbd4d-5059-4e37-8452-0ec124bc284d`; `https://accounts.reading-advantage.com` is live with managed HTTPS. |
+| **marketing** | vinext Dockerfile + cloudbuild, no CD | ✅ yes | `reading-advantage` / `marketing` (rev `00005-fzp`) | 2026-07-18 | **Manual monorepo `gcloud builds submit`**, build `2e1d5b73-4118-480f-aeea-fe8f50db14b2`; `https://marketing.reading-advantage.com` is live with managed HTTPS and Accounts SSO. |
+| **sales-advantage** | Next.js standalone Dockerfile + cloudbuild, no CD | ✅ yes | `reading-advantage` / `sales-advantage` (rev `00003-v4d`) | 2026-07-18 | **Manual monorepo `gcloud builds submit`**, build `b45acc2f-9694-4962-95b9-4477209799d2`; `https://sales.reading-advantage.com` is live with managed HTTPS and Accounts SSO. |
 
 ## Deploy-source taxonomy
 
 - **Standalone-repo Cloud Build triggers:** `reading-advantage`, `primary-advantage` (+ a parallel trigger for `www-reading-advantage`).
 - **Monorepo GitHub Actions CD:** `www-reading-advantage` only — **currently broken** (fails at the Cloud Build submit step since ~2026-06-18; live rev is therefore stale).
-- **Manual `gcloud` only:** `codecamp-advantage`, `marketing`.
-- **Not deployed at all:** `advantage-games`, `sales-advantage`, `science-advantage`.
+- **Manual `gcloud` only:** `codecamp-advantage`, `accounts`, `marketing`, `sales-advantage`.
+- **Not deployed at all:** `advantage-games`, `science-advantage`.
 
 ## Not part of this monorepo (but live in GCP)
 

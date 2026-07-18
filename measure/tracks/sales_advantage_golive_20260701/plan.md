@@ -70,6 +70,12 @@ Do not start Phase 2 until the security gate is green.
 
 ---
 
+> **2026-07-18 production curriculum checkpoint:** the release pipeline loaded
+> and independently verified 6 modules, 26 lessons, 8 rubrics, 8 scenarios, and
+> 13 quiz questions. Deterministic graph digest:
+> `f8b1391302650874154066d5a21189a71d3cbaf78b528f579642fc9fc696f0e7`. The broader human content review and AI-generation tasks above
+> remain open and are not represented as complete.
+
 ## Phase 2: Deploy infrastructure
 
 - [x] Task: Write `apps/sales-advantage/Dockerfile` mirroring `apps/codecamp-advantage/Dockerfile`
@@ -97,8 +103,10 @@ Do not start Phase 2 until the security gate is green.
 
 ## Phase 3: Deploy + end-to-end QA
 
-- [~] Task: `gcloud builds submit --config apps/sales-advantage/cloudbuild.yaml` to the `reading-advantage` project; confirm migrate + doctor + deploy steps pass
-- [~] Task: Run `sales-smoke.sh` against the live Cloud Run URL
+- [x] Task: `gcloud builds submit --config apps/sales-advantage/cloudbuild.yaml` to the `reading-advantage` project; confirm migrate + doctor + deploy steps pass
+  - Build `b45acc2f-9694-4962-95b9-4477209799d2`: SUCCESS; revision `sales-advantage-00003-v4d`; image digest `sha256:9cab345f7f070e0d42488c3357ff492471758d0d17dcb85c86e6eac61b5738d0`; 100% traffic.
+- [x] Task: Run `sales-smoke.sh` against the live Cloud Run URL
+  - `https://sales.reading-advantage.com` serves over managed HTTPS; Accounts SSO lands on the authenticated curriculum dashboard and `/api/auth/session` returns 200 with `authenticated: true` and role `SALES_ADMIN`.
 - [~] Task: End-to-end QA pass (from `sales_advantage_mvp_20260622/plan.md` Phase 8)
   - [ ] Auth: admin login → create rep → rep login
   - [ ] Dashboard modules + progress; theory lesson mark-complete
@@ -113,7 +121,7 @@ Do not start Phase 2 until the security gate is green.
 
 ## Phase 4: Closeout
 
-- [~] Task: Update `measure/deployment-status.md` — sales-advantage now deployed (service, project, deploy source)
+- [x] Task: Update `measure/deployment-status.md` — sales-advantage now deployed (service, project, deploy source)
 - [~] Task: Update `measure/tech-debt.md` — go-live shortcuts (audio retention policy, no auto CI/CD trigger, free-tier eval-model reliability + fallback monitoring)
 - [~] Task: Update `measure/lessons-learned.md` if any reusable lesson emerged
 - [~] Task: Archive this track and the reconciled `sales_advantage_mvp_20260622`; update `measure/tracks.md` rows to `[x]`
