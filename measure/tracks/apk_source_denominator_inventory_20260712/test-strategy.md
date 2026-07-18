@@ -510,7 +510,8 @@ zero numeric stop-loss, and SHA-256-bound outputs as described above.
 
 ## Successor evidence-production authority
 
-The successor Phase-0 authority supersedes commit
+The final successor Phase-0 authority supersedes the rejected successor commit
+`1092da6e56af39c0e392ff9330db5e276f55d5a7`; the original authority was
 `6dd43aa834b7193017230843c658d32c19ecd1a9`. The old direct-write-only
 `truth-test-author` and `adversarial-reviewer` contracts could author JSON but
 could not execute the exact admission, temporary regeneration, or reviewed-input
@@ -519,12 +520,13 @@ output and fresh pairwise-isolated provenance, but is limited to `bash`, `read`,
 and `write` and exactly one authority-derived verifier command followed
 immediately by the frozen `git commit --only <owned-output> -m <subject>` command.
 The verifier is loaded from immutable commit
-`7dcbcbd3f7f8277dc6f0be11eab77946faf77898` under `/usr/bin/env -i`,
+`0e2cbb1ec42ba51a3e59e0c3b2a58077d1bb427b` under `/usr/bin/env -i`,
 `/usr/bin/python3 -I -S`, the frozen PATH/LANG, and the frozen runtime hashes.
 No additional Bash operation is admissible.
 
 The truth verifier executes the recorded sanitized Phase0-3 admission command in
-an isolated subprocess, pins the runner plus all four test-module blobs, requires
+a unique detached local clone of the exact authority revision, pinning the four
+test modules, every transitive import, Git locator, and committed artifact. It requires
 exact nonzero module counts `13/17/31/24` (85 total), rejects any failure or skip,
 derives per-phase test counts, and requires
 `denominator-contract-test-report.json` to match those results exactly. The
