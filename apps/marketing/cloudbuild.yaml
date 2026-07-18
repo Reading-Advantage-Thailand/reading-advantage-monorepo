@@ -42,7 +42,8 @@ steps:
       - "MARKETING_DIRECT_DATABASE_URL"
 
   # Apply the reviewed, table-specific runtime grants and prove the runtime
-  # credential can use every auth/Marketing relation before traffic moves.
+  # credential can use only Marketing application relations before traffic
+  # moves. Employee authentication and sessions are owned by Accounts over OIDC.
   - name: "node:22-slim"
     id: "runtime-db-contract"
     entrypoint: "bash"
@@ -70,7 +71,7 @@ steps:
       - "--min-instances=0"
       - "--max-instances=10"
       - "--concurrency=80"
-      - "--set-secrets=DATABASE_URL=MARKETING_DATABASE_URL:latest,AUTH_SECRET=MARKETING_AUTH_SECRET:latest,ENCRYPTION_KEY=MARKETING_ENCRYPTION_KEY:latest,OPENAI_API_KEY=MARKETING_OPENAI_API_KEY:latest,GOOGLE_API_KEY=MARKETING_GOOGLE_API_KEY:latest,OPENROUTER_API_KEY=MARKETING_OPENROUTER_API_KEY:latest,COMPANY_AUTH_OIDC_CLIENT_SECRET=MARKETING_COMPANY_AUTH_OIDC_CLIENT_SECRET:latest"
+      - "--set-secrets=DATABASE_URL=MARKETING_DATABASE_URL:latest,ENCRYPTION_KEY=MARKETING_ENCRYPTION_KEY:latest,OPENAI_API_KEY=MARKETING_OPENAI_API_KEY:latest,GOOGLE_API_KEY=MARKETING_GOOGLE_API_KEY:latest,OPENROUTER_API_KEY=MARKETING_OPENROUTER_API_KEY:latest,COMPANY_AUTH_OIDC_CLIENT_SECRET=MARKETING_COMPANY_AUTH_OIDC_CLIENT_SECRET:latest"
 
   # ── Allow public access ──────────────────────────────────────────────
   # The Cloud Run service is unauthenticated (login page must load before

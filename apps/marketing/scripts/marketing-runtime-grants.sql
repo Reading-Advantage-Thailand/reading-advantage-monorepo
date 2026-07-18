@@ -1,8 +1,7 @@
 \set ON_ERROR_STOP on
 
 -- The migration credential owns the dedicated Marketing database. Keep the
--- runtime role non-owning and grant only the operations exercised by auth and
--- the current Marketing API surface.
+-- OIDC-only runtime role non-owning and grant only the current API operations.
 SELECT format(
   'GRANT CONNECT ON DATABASE %I TO marketing_runtime',
   current_database()
@@ -12,12 +11,6 @@ GRANT USAGE ON SCHEMA public TO marketing_runtime;
 
 REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA public FROM marketing_runtime;
 REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public FROM marketing_runtime;
-
-GRANT SELECT ON TABLE users TO marketing_runtime;
-GRANT SELECT, UPDATE ON TABLE accounts TO marketing_runtime;
-GRANT SELECT, INSERT, DELETE ON TABLE sessions TO marketing_runtime;
-GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE login_attempts TO marketing_runtime;
-GRANT INSERT ON TABLE audit_events TO marketing_runtime;
 
 GRANT SELECT, INSERT, UPDATE ON TABLE campaigns TO marketing_runtime;
 GRANT SELECT, INSERT ON TABLE past_topics TO marketing_runtime;

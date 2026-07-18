@@ -158,6 +158,13 @@ describe("Marketing Cloud Run production contract", () => {
     expect(deploy.args?.join(" ")).toContain(
       "COMPANY_AUTH_OIDC_CLIENT_ID=marketing-web",
     );
+    const runtimeSecrets = deploy.args?.find((argument) =>
+      argument.startsWith("--set-secrets="),
+    );
+    expect(runtimeSecrets).toContain(
+      "COMPANY_AUTH_OIDC_CLIENT_SECRET=MARKETING_COMPANY_AUTH_OIDC_CLIENT_SECRET:latest",
+    );
+    expect(runtimeSecrets).not.toContain("AUTH_SECRET=");
   });
 
   it("orders migration, doctor, runtime privilege proof, and deployment", () => {
@@ -176,7 +183,7 @@ describe("Marketing Cloud Run production contract", () => {
     );
   });
 
-  it("uses both credentials to apply exact grants and probe required tables", () => {
+  it("grants only Marketing tables and rejects retired local-auth privileges", () => {
     const runtimeContract = requireBuildStep(
       cloudbuild,
       "runtime-db-contract",
@@ -193,11 +200,6 @@ describe("Marketing Cloud Run production contract", () => {
     );
 
     for (const table of [
-      "users",
-      "accounts",
-      "sessions",
-      "login_attempts",
-      "audit_events",
       "campaigns",
       "past_topics",
       "settings",
@@ -206,6 +208,32 @@ describe("Marketing Cloud Run production contract", () => {
       expect(grantsSql).toContain(`TABLE ${table}`);
       expect(probeSql).toContain(`'${table}'`);
     }
+    for (const table of [
+      "users",
+      "accounts",
+      "sessions",
+      "login_attempts",
+      "audit_events",
+    ]) {
+      expect(grantsSql).not.toMatch(
+        new RegExp(`GRANT[^;]+ON TABLE ${table}\\b`, "i"),
+      );
+      expect(probeSql).toContain(`'${table}'`);
+    }
+    for (const privilege of [
+      "SELECT",
+      "INSERT",
+      "UPDATE",
+      "DELETE",
+      "TRUNCATE",
+      "REFERENCES",
+      "TRIGGER",
+    ]) {
+      expect(probeSql).toContain(`'${privilege}'`);
+    }
+    expect(probeSql).toContain(
+      "Marketing runtime retains retired local-auth privilege",
+    );
     expect(probeSql).not.toMatch(/SELECT\s+1\b/i);
   });
 
