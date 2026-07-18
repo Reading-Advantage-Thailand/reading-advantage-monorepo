@@ -170,7 +170,7 @@ def _admission_command_argv(phase0_revision: str) -> tuple[str, ...]:
     """
     launcher = (
         "exec(compile(__import__(\"subprocess\").check_output((\"/usr/bin/git\",\"show\","
-        f"__import__(\"sys\").argv.pop(1)+\":{ADMISSION_RUNNER_PATH}\")),"
+        f"__import__(\"sys\").argv[1]+\":{ADMISSION_RUNNER_PATH}\")),"
         f"\"{ADMISSION_RUNNER_PATH}\",\"exec\"),dict(__file__=\"{ADMISSION_RUNNER_PATH}\",__name__=\"__main__\"))"
     )
     return (

@@ -18,6 +18,7 @@ from measure.tracks.apk_source_denominator_inventory_20260712.run_phase0_3_admis
 )
 from measure.tracks.apk_source_denominator_inventory_20260712.verify_phase4_role_evidence import (
     T2EvidenceVerificationError,
+    _admission_command_argv,
     _strict_nonblocking_findings,
     _strict_zero_counts,
     build_reviewed_input_ledger,
@@ -236,6 +237,15 @@ class SuccessorAuthorityTests(unittest.TestCase):
             self.assertEqual(
                 [row["tests"] for row in inventory], list(EXPECTED_TEST_COUNTS)
             )
+
+    def test_sanitized_launcher_preserves_authority_argument_for_runner(self) -> None:
+        """Proves the Git loader does not consume the runner's authority revision."""
+        revision = "f" * 40
+        command = _admission_command_argv(revision)
+        launcher = command[command.index("-c") + 1]
+        self.assertIn('argv[1]+":', launcher)
+        self.assertNotIn("argv.pop", launcher)
+        self.assertEqual(command[-(len(ADMISSION_MODULES) + 1)], revision)
 
     def test_reviewer_rejects_boolean_counters_and_whitespace_severity(self) -> None:
         """Falsifies Python equality coercion and untrimmed blocking severity bypasses."""
