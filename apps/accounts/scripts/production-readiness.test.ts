@@ -12,6 +12,7 @@ const codecampCloudbuild = readFileSync(
 const probe = readFileSync(resolve(root, "scripts/accounts-runtime-probe.sql"), "utf8");
 const smoke = readFileSync(resolve(root, "scripts/accounts-smoke.sh"), "utf8");
 const identityComposition = readFileSync(resolve(root, "lib/server/identity.ts"), "utf8");
+const readinessRoute = readFileSync(resolve(root, "app/api/ready/route.ts"), "utf8");
 const productionBootstrapSource = readFileSync(
   resolve(root, "scripts/bootstrap-production.ts"),
   "utf8",
@@ -56,6 +57,11 @@ describe("Accounts production readiness", () => {
       expect(source).toContain("@reading-advantage/auth/company-identity");
       expect(source).not.toMatch(/from ["']@reading-advantage\/auth["']/);
     }
+  });
+
+  it("executes a current database probe for every readiness request", () => {
+    expect(identityComposition).toContain("probeDatabase:");
+    expect(readinessRoute).toContain("probeDatabase()");
   });
 
   it("composes capability idempotency through the identity-owned store", () => {

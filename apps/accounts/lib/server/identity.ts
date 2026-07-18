@@ -29,6 +29,7 @@ interface IdentityComposition {
   readonly cookie: ReturnType<typeof createCompanyIdentityCookieConfig>;
   readonly issuerUrl: string;
   readonly jwk: IdentityPublicJwk;
+  readonly probeDatabase: () => Promise<void>;
   readonly close: () => Promise<void>;
 }
 
@@ -164,6 +165,12 @@ export async function getIdentityComposition(): Promise<IdentityComposition> {
       cookie,
       issuerUrl: issuer.issuerUrl,
       jwk: signer.jwk(),
+      probeDatabase: async () => {
+        const rows = await sql<Array<{ ready: number }>>`SELECT 1::int AS ready`;
+        if (rows[0]?.ready !== 1) {
+          throw new Error("COMPANY_IDENTITY_DATABASE_NOT_READY");
+        }
+      },
       close: () => sql.end({ timeout: 5 }),
     };
   })();
