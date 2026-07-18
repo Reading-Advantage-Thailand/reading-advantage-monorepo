@@ -34,6 +34,31 @@ steps:
       - "SALES_DIRECT_DATABASE_URL"
 
   - name: "node:22-slim"
+    id: "build-curriculum-workspace-deps"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - "set -euo pipefail && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && pnpm --filter @reading-advantage/db build"
+
+  - name: "node:22-slim"
+    id: "seed-production-curriculum"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - 'set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export DATABASE_URL="$$SALES_DIRECT_DATABASE_URL" && export DIRECT_DATABASE_URL="$$SALES_DIRECT_DATABASE_URL" && pnpm --filter sales-advantage seed:production-curriculum'
+    secretEnv:
+      - "SALES_DIRECT_DATABASE_URL"
+
+  - name: "node:22-slim"
+    id: "verify-production-curriculum"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - 'set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export DATABASE_URL="$$SALES_DIRECT_DATABASE_URL" && export DIRECT_DATABASE_URL="$$SALES_DIRECT_DATABASE_URL" && pnpm --filter sales-advantage verify:production-curriculum'
+    secretEnv:
+      - "SALES_DIRECT_DATABASE_URL"
+
+  - name: "node:22-slim"
     id: "runtime-db-contract"
     entrypoint: "bash"
     args:

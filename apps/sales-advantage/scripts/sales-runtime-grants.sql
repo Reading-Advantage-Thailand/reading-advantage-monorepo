@@ -12,6 +12,9 @@ REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA public FROM sales_runtime;
 REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public FROM sales_runtime;
 
 GRANT SELECT, INSERT ON TABLE users TO sales_runtime;
+GRANT UPDATE (role) ON TABLE users TO sales_runtime;
+GRANT SELECT, INSERT ON TABLE company_product_principals TO sales_runtime;
+GRANT UPDATE (role_key, updated_at) ON TABLE company_product_principals TO sales_runtime;
 GRANT SELECT, INSERT, UPDATE ON TABLE accounts TO sales_runtime;
 GRANT SELECT, INSERT, DELETE ON TABLE sessions TO sales_runtime;
 GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE login_attempts TO sales_runtime;

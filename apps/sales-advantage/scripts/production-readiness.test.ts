@@ -21,12 +21,32 @@ const probe = readFileSync(
   "utf8",
 );
 const smoke = readFileSync(resolve(appRoot, "scripts/sales-smoke.sh"), "utf8");
+const staticSeed = readFileSync(
+  resolve(appRoot, "scripts/static-seed.ts"),
+  "utf8",
+);
+const curriculumVerifier = readFileSync(
+  resolve(appRoot, "scripts/verify-sales-curriculum.ts"),
+  "utf8",
+);
+const cloudIgnore = readFileSync(resolve(appRoot, "../../.gcloudignore"), "utf8");
 
 describe("Sales production readiness", () => {
   it("uses the pinned proxy and toolchain before migration, doctor, and runtime probe", () => {
-    expect(cloudbuild.match(/node:22-slim/g)).toHaveLength(3);
-    expect(cloudbuild.match(/cloud-sql-proxy\/v2\.15\.1/g)).toHaveLength(3);
-    expect(cloudbuild.match(/pnpm@11\.8\.0/g)).toHaveLength(2);
+    expect(cloudbuild.match(/node:22-slim/g)).toHaveLength(6);
+    expect(cloudbuild.match(/cloud-sql-proxy\/v2\.15\.1/g)).toHaveLength(5);
+    expect(cloudbuild.match(/pnpm@11\.8\.0/g)).toHaveLength(5);
+    const ordered = [
+      "migrate-db",
+      "doctor-check",
+      "build-curriculum-workspace-deps",
+      "seed-production-curriculum",
+      "verify-production-curriculum",
+      "runtime-db-contract",
+      "deploy-cloudrun",
+    ].map((id) => cloudbuild.indexOf(`id: "${id}"`));
+    expect(ordered.every((position) => position >= 0)).toBe(true);
+    expect(ordered).toEqual([...ordered].sort((left, right) => left - right));
     expect(cloudbuild.indexOf('id: "runtime-db-contract"')).toBeLessThan(
       cloudbuild.indexOf('id: "deploy-cloudrun"'),
     );
@@ -42,11 +62,54 @@ describe("Sales production readiness", () => {
     );
   });
 
+  it("seeds only deterministic approved curriculum and gates exact completeness", () => {
+    const seedStep = cloudbuild.slice(
+      cloudbuild.indexOf('id: "seed-production-curriculum"'),
+      cloudbuild.indexOf('id: "verify-production-curriculum"'),
+    );
+    const verifyStep = cloudbuild.slice(
+      cloudbuild.indexOf('id: "verify-production-curriculum"'),
+      cloudbuild.indexOf('id: "runtime-db-contract"'),
+    );
+    expect(seedStep).toContain("seed:production-curriculum");
+    expect(verifyStep).toContain("verify:production-curriculum");
+    expect(seedStep).toContain(
+      'secretEnv:\n      - "SALES_DIRECT_DATABASE_URL"',
+    );
+    expect(verifyStep).toContain(
+      'secretEnv:\n      - "SALES_DIRECT_DATABASE_URL"',
+    );
+    expect(seedStep).not.toContain("SALES_DATABASE_URL");
+    expect(verifyStep).not.toContain("SALES_DATABASE_URL");
+    const dependencyBuild = cloudbuild.slice(
+      cloudbuild.indexOf('id: "build-curriculum-workspace-deps"'),
+      cloudbuild.indexOf('id: "seed-production-curriculum"'),
+    );
+    expect(cloudIgnore).toContain("**/dist");
+    expect(dependencyBuild).toContain(
+      "pnpm --filter @reading-advantage/db build",
+    );
+    expect(dependencyBuild).not.toContain("DATABASE_URL");
+    expect(staticSeed).toContain("reading-advantage-sales-curriculum-v1");
+    expect(staticSeed).toContain("database.transaction");
+    expect(staticSeed).toContain("already-complete");
+    expect(staticSeed).toContain("SALES_CURRICULUM_INCOMPLETE_OR_INCONSISTENT");
+    expect(staticSeed).toContain('reviewStatus: "approved"');
+    expect(staticSeed).toContain("SALES_CURRICULUM_FORCE_RESEED_FORBIDDEN");
+    expect(curriculumVerifier).toContain("verifyProductionSalesCurriculum");
+    expect(curriculumVerifier).toContain("PINNED_SALES_CURRICULUM_COUNTS");
+    expect(curriculumVerifier).toContain("PINNED_SALES_CURRICULUM_GRAPH_SHA256");
+    expect(curriculumVerifier).not.toContain('from "./static-seed"');
+    expect(staticSeed).toContain("client.end({ timeout: 5 })");
+    expect(curriculumVerifier).toContain("client.end({ timeout: 5 })");
+  });
+
   it("keeps runtime access relation-specific and probes real writes in rollback", () => {
     expect(grants).not.toMatch(/GRANT\s+ALL\s+PRIVILEGES/i);
     expect(grants).not.toMatch(/GRANT[^;]+ON\s+ALL\s+TABLES/i);
     for (const relation of [
       "users",
+      "company_product_principals",
       "accounts",
       "sessions",
       "login_attempts",
@@ -64,10 +127,75 @@ describe("Sales production readiness", () => {
       expect(grants).toContain(`TABLE ${relation}`);
       expect(probe).toContain(relation);
     }
-    expect(probe).toContain("BEGIN;");
-    expect(probe).toContain("ROLLBACK;");
+    const transactionStart = probe.indexOf("BEGIN;");
+    const mappingInsert = probe.indexOf(
+      "INSERT INTO company_product_principals",
+    );
+    const mappingUpdate = probe.indexOf("UPDATE company_product_principals");
+    const transactionRollback = probe.indexOf("ROLLBACK;");
+    expect(transactionStart).toBeGreaterThanOrEqual(0);
+    expect(transactionStart).toBeLessThan(mappingInsert);
+    expect(mappingInsert).toBeLessThan(mappingUpdate);
+    expect(mappingUpdate).toBeLessThan(transactionRollback);
     expect(probe).toMatch(/INSERT INTO sales_roleplay_attempts/);
     expect(probe).toMatch(/UPDATE sales_progress/);
+    expect(grants).toContain(
+      "GRANT SELECT, INSERT ON TABLE users TO sales_runtime;",
+    );
+    expect(grants).toContain(
+      "GRANT UPDATE (role) ON TABLE users TO sales_runtime;",
+    );
+    expect(grants).toContain(
+      "GRANT SELECT, INSERT ON TABLE company_product_principals TO sales_runtime;",
+    );
+    expect(grants).toContain(
+      "GRANT UPDATE (role_key, updated_at) ON TABLE company_product_principals TO sales_runtime;",
+    );
+    expect(grants).not.toMatch(/GRANT[^;]*UPDATE\s+ON TABLE users/i);
+    expect(grants).not.toMatch(
+      /GRANT[^;]*UPDATE\s+ON TABLE company_product_principals/i,
+    );
+    expect(grants).not.toMatch(
+      /GRANT[^;]*(?:DELETE|TRUNCATE)[^;]*ON TABLE (?:users|company_product_principals)/i,
+    );
+    expect(probe).toMatch(/INSERT INTO company_product_principals/);
+    expect(probe).toMatch(
+      /SELECT local_user_id, role_key[\s\S]+FROM company_product_principals/,
+    );
+    expect(probe).toMatch(/UPDATE users[\s\S]+SET role = 'SALES_ADMIN'/);
+    expect(probe).toMatch(
+      /UPDATE company_product_principals[\s\S]+SET role_key = 'SALES_ADMIN'/,
+    );
+    for (const relation of ["users", "company_product_principals"]) {
+      for (const privilege of [
+        "SELECT",
+        "INSERT",
+        "UPDATE",
+        "DELETE",
+        "TRUNCATE",
+      ]) {
+        expect(probe).toContain(
+          `has_table_privilege(current_user, '${relation}', '${privilege}')`,
+        );
+      }
+    }
+    for (const allowed of [
+      "has_column_privilege(current_user, 'users', 'role', 'UPDATE')",
+      "has_column_privilege(current_user, 'company_product_principals', 'role_key', 'UPDATE')",
+      "has_column_privilege(current_user, 'company_product_principals', 'updated_at', 'UPDATE')",
+    ]) {
+      expect(probe).toContain(allowed);
+    }
+    for (const denied of [
+      "has_column_privilege(current_user, 'users', 'id', 'UPDATE')",
+      "has_column_privilege(current_user, 'users', 'username', 'UPDATE')",
+      "has_column_privilege(current_user, 'users', 'school_id', 'UPDATE')",
+      "has_column_privilege(current_user, 'company_product_principals', 'organization_id', 'UPDATE')",
+      "has_column_privilege(current_user, 'company_product_principals', 'company_account_id', 'UPDATE')",
+      "has_column_privilege(current_user, 'company_product_principals', 'local_user_id', 'UPDATE')",
+    ]) {
+      expect(probe).toContain(denied);
+    }
     expect(probe).toContain("rolsuper");
     expect(probe).toContain("rolcreaterole");
     expect(probe).toContain("rolcreatedb");

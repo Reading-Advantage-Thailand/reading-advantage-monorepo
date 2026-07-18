@@ -10,7 +10,10 @@
  * Run: pnpm --filter sales-advantage tsx scripts/static-seed.ts
  */
 
-import { db } from "@reading-advantage/db";
+import { createHash } from "node:crypto";
+import { pathToFileURL } from "node:url";
+
+import { client, db, type DB } from "@reading-advantage/db/client";
 import {
   salesModules,
   salesLessons,
@@ -107,7 +110,7 @@ const closingRubric: RubricCriterion[] = [
   },
 ];
 
-const modules = [
+export const staticSalesCurriculumModules = [
   {
     slug: "foundations-discovery",
     title: "Sales Foundations: Discovery & Listening",
@@ -1329,44 +1332,71 @@ Move them off the sales call and into the implementation calendar. The deal isn'
   },
 ];
 
-async function staticSeed(): Promise<void> {
-  console.log("Static curriculum seed — focused on teaching sales effectiveness");
+type ModuleRow = Pick<typeof salesModules.$inferSelect,
+  "id" | "slug" | "title" | "description" | "phase" | "order">;
+type LessonRow = Pick<typeof salesLessons.$inferSelect,
+  "id" | "moduleId" | "title" | "type" | "content" | "order" | "reviewStatus">;
+type RubricRow = Pick<typeof salesRubrics.$inferSelect,
+  "id" | "name" | "criteriaJson" | "reviewStatus">;
+type ScenarioRow = Pick<typeof salesRoleplayScenarios.$inferSelect,
+  "id" | "lessonId" | "personaName" | "personaRole" | "situation" |
+  "objective" | "prospectContextJson" | "rubricId" | "order">;
+type QuizRow = Pick<typeof salesQuizQuestions.$inferSelect,
+  "id" | "lessonId" | "question" | "optionsJson" | "correctAnswer" |
+  "explanation" | "order">;
 
-  // Clear existing if forced
-  const force = process.argv.includes("--force");
-  if (force) {
-    console.log("Force flag: clearing existing curriculum...");
-    await db.delete(salesQuizQuestions);
-    await db.delete(salesRoleplayScenarios);
-    await db.delete(salesLessons);
-    await db.delete(salesRubrics);
-    await db.delete(salesModules);
-  }
+interface CurriculumRows {
+  modules: ModuleRow[];
+  lessons: LessonRow[];
+  rubrics: RubricRow[];
+  scenarios: ScenarioRow[];
+  quizQuestions: QuizRow[];
+}
 
-  const existing = await db.select().from(salesModules).limit(1);
-  if (existing.length > 0 && !force) {
-    console.log("Modules already exist. Use --force to re-seed.");
-    return;
-  }
+type SalesTransaction = Parameters<Parameters<DB["transaction"]>[0]>[0];
 
-  let totalLessons = 0;
-  let totalScenarios = 0;
-  let totalQuizQuestions = 0;
+/**
+ * Derives a stable UUID-shaped identifier from one reviewed curriculum key.
+ * @param key Canonical curriculum row key.
+ * @returns Deterministic RFC 4122 variant identifier.
+ */
+function curriculumId(key: string): string {
+  const bytes = createHash("sha256")
+    .update("reading-advantage-sales-curriculum-v1\0")
+    .update(key)
+    .digest()
+    .subarray(0, 16);
+  bytes[6] = (bytes[6]! & 0x0f) | 0x50;
+  bytes[8] = (bytes[8]! & 0x3f) | 0x80;
+  const hex = bytes.toString("hex");
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
+}
 
-  for (const mod of modules) {
-    const moduleId = crypto.randomUUID();
-    await db.insert(salesModules).values({
+/**
+ * Builds the exact hand-authored production curriculum rows and stable keys.
+ * @returns Complete deterministic curriculum graph in foreign-key order.
+ */
+export function buildStaticSalesCurriculumRows(): CurriculumRows {
+  const rows: CurriculumRows = {
+    modules: [],
+    lessons: [],
+    rubrics: [],
+    scenarios: [],
+    quizQuestions: [],
+  };
+  for (const module of staticSalesCurriculumModules) {
+    const moduleId = curriculumId(`module:${module.slug}`);
+    rows.modules.push({
       id: moduleId,
-      slug: mod.slug,
-      title: mod.title,
-      description: mod.description,
-      phase: mod.phase,
-      order: mod.order,
+      slug: module.slug,
+      title: module.title,
+      description: module.description,
+      phase: module.phase,
+      order: module.order,
     });
-
-    for (const lesson of mod.lessons) {
-      const lessonId = crypto.randomUUID();
-      await db.insert(salesLessons).values({
+    for (const lesson of module.lessons) {
+      const lessonId = curriculumId(`lesson:${module.slug}:${lesson.order}`);
+      rows.lessons.push({
         id: lessonId,
         moduleId,
         title: lesson.title,
@@ -1375,75 +1405,217 @@ async function staticSeed(): Promise<void> {
         order: lesson.order,
         reviewStatus: "approved",
       });
-      totalLessons++;
-
       if ("scenarios" in lesson && lesson.scenarios) {
-        for (let si = 0; si < lesson.scenarios.length; si++) {
-          const sc = lesson.scenarios[si];
-          const rubricId = crypto.randomUUID();
-          await db.insert(salesRubrics).values({
+        lesson.scenarios.forEach((scenario, index) => {
+          const rubricId = curriculumId(
+            `rubric:${module.slug}:${lesson.order}:${index + 1}`,
+          );
+          rows.rubrics.push({
             id: rubricId,
             name: `${lesson.title} Rubric`,
-            criteriaJson: sc.rubric,
+            criteriaJson: scenario.rubric,
             reviewStatus: "approved",
           });
-
-          await db.insert(salesRoleplayScenarios).values({
-            id: crypto.randomUUID(),
+          rows.scenarios.push({
+            id: curriculumId(
+              `scenario:${module.slug}:${lesson.order}:${index + 1}`,
+            ),
             lessonId,
-            personaName: sc.personaName,
-            personaRole: sc.personaRole,
-            situation: sc.situation,
-            objective: sc.objective,
-            prospectContextJson: { context: sc.prospectContext },
+            personaName: scenario.personaName,
+            personaRole: scenario.personaRole,
+            situation: scenario.situation,
+            objective: scenario.objective,
+            prospectContextJson: { context: scenario.prospectContext },
             rubricId,
-            order: si + 1,
+            order: index + 1,
           });
-          totalScenarios++;
-        }
+        });
       }
-
       if ("quizQuestions" in lesson && lesson.quizQuestions) {
-        for (let qi = 0; qi < lesson.quizQuestions.length; qi++) {
-          const q = lesson.quizQuestions[qi];
-          await db.insert(salesQuizQuestions).values({
-            id: crypto.randomUUID(),
+        lesson.quizQuestions.forEach((question, index) => {
+          rows.quizQuestions.push({
+            id: curriculumId(
+              `quiz:${module.slug}:${lesson.order}:${index + 1}`,
+            ),
             lessonId,
-            question: q.question,
-            optionsJson: q.options,
-            correctAnswer: q.correctAnswer,
-            explanation: q.explanation,
-            order: qi + 1,
+            question: question.question,
+            optionsJson: question.options,
+            correctAnswer: question.correctAnswer,
+            explanation: question.explanation,
+            order: index + 1,
           });
-          totalQuizQuestions++;
-        }
+        });
       }
     }
   }
-
-  console.log("\n=== Curriculum Seeded ===");
-  console.log(`Modules:        ${modules.length}`);
-  console.log(`Lessons:        ${totalLessons}`);
-  console.log(`Roleplay Scenarios: ${totalScenarios}`);
-  console.log(`Quiz Questions: ${totalQuizQuestions}`);
-  console.log(`\nAll content is reviewStatus='approved' (hand-authored static seed).`);
-  console.log("\nCurriculum focus:");
-  console.log("  Modules 1-3: HOW to sell effectively (universal skills)");
-  console.log("    • Discovery, listening, SPIN/Sandler/Challenger/Voss");
-  console.log("    • Value framing, anchoring, loss-aversion");
-  console.log("    • Objection handling, isolating, negotiating without discounting");
-  console.log("  Modules 4-6: APPLYING those skills to Reading Advantage");
-  console.log("    • Product knowledge");
-  console.log("    • RA-specific objections + demo flows");
-  console.log("    • Pricing, closing, holding margin");
+  return rows;
 }
 
-staticSeed()
-  .then(() => {
-    console.log("\nDone.");
-    process.exit(0);
-  })
-  .catch((err) => {
-    console.error("Seed failed:", err);
-    process.exit(1);
+const expectedRows = buildStaticSalesCurriculumRows();
+
+/** Exact production curriculum cardinalities used by deployment verification. */
+export const SALES_CURRICULUM_EXPECTED_COUNTS = Object.freeze({
+  modules: expectedRows.modules.length,
+  lessons: expectedRows.lessons.length,
+  rubrics: expectedRows.rubrics.length,
+  scenarios: expectedRows.scenarios.length,
+  quizQuestions: expectedRows.quizQuestions.length,
+});
+
+/** Reads the complete curriculum graph inside one database transaction. */
+async function readCurriculumRows(
+  transaction: SalesTransaction,
+): Promise<CurriculumRows> {
+  const [modules, lessons, rubrics, scenarios, quizQuestions] =
+    await Promise.all([
+      transaction.select({
+        id: salesModules.id,
+        slug: salesModules.slug,
+        title: salesModules.title,
+        description: salesModules.description,
+        phase: salesModules.phase,
+        order: salesModules.order,
+      }).from(salesModules),
+      transaction.select({
+        id: salesLessons.id,
+        moduleId: salesLessons.moduleId,
+        title: salesLessons.title,
+        type: salesLessons.type,
+        content: salesLessons.content,
+        order: salesLessons.order,
+        reviewStatus: salesLessons.reviewStatus,
+      }).from(salesLessons),
+      transaction.select({
+        id: salesRubrics.id,
+        name: salesRubrics.name,
+        criteriaJson: salesRubrics.criteriaJson,
+        reviewStatus: salesRubrics.reviewStatus,
+      }).from(salesRubrics),
+      transaction.select({
+        id: salesRoleplayScenarios.id,
+        lessonId: salesRoleplayScenarios.lessonId,
+        personaName: salesRoleplayScenarios.personaName,
+        personaRole: salesRoleplayScenarios.personaRole,
+        situation: salesRoleplayScenarios.situation,
+        objective: salesRoleplayScenarios.objective,
+        prospectContextJson: salesRoleplayScenarios.prospectContextJson,
+        rubricId: salesRoleplayScenarios.rubricId,
+        order: salesRoleplayScenarios.order,
+      }).from(salesRoleplayScenarios),
+      transaction.select({
+        id: salesQuizQuestions.id,
+        lessonId: salesQuizQuestions.lessonId,
+        question: salesQuizQuestions.question,
+        optionsJson: salesQuizQuestions.optionsJson,
+        correctAnswer: salesQuizQuestions.correctAnswer,
+        explanation: salesQuizQuestions.explanation,
+        order: salesQuizQuestions.order,
+      }).from(salesQuizQuestions),
+    ]);
+  return { modules, lessons, rubrics, scenarios, quizQuestions };
+}
+
+/** Recursively sorts JSON object keys while preserving array order. */
+function stableJsonValue(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(stableJsonValue);
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value)
+        .sort(([left], [right]) => left.localeCompare(right))
+        .map(([key, child]) => [key, stableJsonValue(child)]),
+    );
+  }
+  return value;
+}
+
+/** Returns a stable serialization for exact graph comparison. */
+function canonicalRows(rows: CurriculumRows): string {
+  const sort = <T extends { id: string }>(values: T[]): T[] =>
+    [...values].sort((left, right) => left.id.localeCompare(right.id));
+  return JSON.stringify(stableJsonValue({
+    modules: sort(rows.modules),
+    lessons: sort(rows.lessons),
+    rubrics: sort(rows.rubrics),
+    scenarios: sort(rows.scenarios),
+    quizQuestions: sort(rows.quizQuestions),
+  }));
+}
+
+/** Fails unless the database graph exactly matches the reviewed static graph. */
+function assertCompleteCurriculum(rows: CurriculumRows): void {
+  if (canonicalRows(rows) !== canonicalRows(expectedRows)) {
+    const counts = Object.fromEntries(
+      Object.entries(rows).map(([key, values]) => [key, values.length]),
+    );
+    throw new Error(
+      `SALES_CURRICULUM_INCOMPLETE_OR_INCONSISTENT ${JSON.stringify(counts)}`,
+    );
+  }
+}
+
+/**
+ * Verifies exact counts, approved statuses, row content, types, and foreign keys.
+ * @param database Sales database connection to inspect.
+ * @returns Exact verified production curriculum counts.
+ * @throws When any curriculum row is missing, extra, draft, or inconsistent.
+ */
+export async function verifyStaticSalesCurriculum(
+  database: DB = db,
+): Promise<typeof SALES_CURRICULUM_EXPECTED_COUNTS> {
+  return database.transaction(async (transaction) => {
+    assertCompleteCurriculum(await readCurriculumRows(transaction));
+    return SALES_CURRICULUM_EXPECTED_COUNTS;
   });
+}
+
+/**
+ * Inserts the exact curriculum atomically or verifies an already-complete seed.
+ * @param database Migration-credential database connection.
+ * @returns Whether this invocation inserted rows or verified an idempotent replay.
+ * @throws When any nonempty curriculum state is incomplete or inconsistent.
+ */
+export async function seedStaticSalesCurriculum(
+  database: DB = db,
+): Promise<"inserted" | "already-complete"> {
+  return database.transaction(async (transaction) => {
+    const current = await readCurriculumRows(transaction);
+    const currentCount = Object.values(current)
+      .reduce((sum, values) => sum + values.length, 0);
+    if (currentCount > 0) {
+      assertCompleteCurriculum(current);
+      return "already-complete";
+    }
+    await transaction.insert(salesModules).values(expectedRows.modules);
+    await transaction.insert(salesLessons).values(expectedRows.lessons);
+    await transaction.insert(salesRubrics).values(expectedRows.rubrics);
+    await transaction.insert(salesRoleplayScenarios).values(expectedRows.scenarios);
+    await transaction.insert(salesQuizQuestions).values(expectedRows.quizQuestions);
+    assertCompleteCurriculum(await readCurriculumRows(transaction));
+    return "inserted";
+  });
+}
+
+/** Executes the production curriculum seed command. */
+async function main(): Promise<void> {
+  if (process.argv.includes("--force")) {
+    throw new Error("SALES_CURRICULUM_FORCE_RESEED_FORBIDDEN");
+  }
+  const result = await seedStaticSalesCurriculum();
+  process.stdout.write(
+    `Sales curriculum ${result}: ${JSON.stringify(SALES_CURRICULUM_EXPECTED_COUNTS)}\n`,
+  );
+}
+
+const invokedPath = process.argv[1];
+if (invokedPath && import.meta.url === pathToFileURL(invokedPath).href) {
+  main()
+    .catch((error: unknown) => {
+      process.stderr.write(
+        `Sales curriculum seed failed: ${error instanceof Error ? error.message : String(error)}\n`,
+      );
+      process.exitCode = 1;
+    })
+    .finally(async () => {
+      await client.end({ timeout: 5 });
+    });
+}

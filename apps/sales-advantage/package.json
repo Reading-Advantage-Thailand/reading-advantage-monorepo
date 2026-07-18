@@ -11,7 +11,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "check-types": "tsc --noEmit",
-    "seed:curriculum": "tsx scripts/sales-curriculum-seed.ts"
+    "seed:curriculum": "tsx scripts/sales-curriculum-seed.ts",
+    "seed:production-curriculum": "tsx scripts/static-seed.ts",
+    "verify:production-curriculum": "tsx scripts/verify-sales-curriculum.ts"
   },
   "dependencies": {
     "@ai-sdk/google": "catalog:",

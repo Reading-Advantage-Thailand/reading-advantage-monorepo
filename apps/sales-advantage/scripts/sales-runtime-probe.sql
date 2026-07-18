@@ -40,6 +40,7 @@ BEGIN
      AND c.relowner = (SELECT oid FROM pg_roles WHERE rolname = current_user)
      AND c.relname IN (
        'users', 'accounts', 'sessions', 'login_attempts', 'audit_events',
+       'company_product_principals',
        'sales_modules', 'sales_lessons', 'sales_rubrics',
        'sales_roleplay_scenarios', 'sales_quiz_questions',
        'sales_roleplay_attempts', 'sales_progress',
@@ -48,7 +49,17 @@ BEGIN
   IF owned_relations <> 0 THEN
     RAISE EXCEPTION 'Sales runtime role must not own application relations';
   END IF;
-  IF NOT has_table_privilege(current_user, 'users', 'SELECT,INSERT') THEN missing := array_append(missing, 'users'); END IF;
+  IF NOT (
+    has_table_privilege(current_user, 'users', 'SELECT')
+    AND has_table_privilege(current_user, 'users', 'INSERT')
+    AND has_column_privilege(current_user, 'users', 'role', 'UPDATE')
+  ) THEN missing := array_append(missing, 'users'); END IF;
+  IF NOT (
+    has_table_privilege(current_user, 'company_product_principals', 'SELECT')
+    AND has_table_privilege(current_user, 'company_product_principals', 'INSERT')
+    AND has_column_privilege(current_user, 'company_product_principals', 'role_key', 'UPDATE')
+    AND has_column_privilege(current_user, 'company_product_principals', 'updated_at', 'UPDATE')
+  ) THEN missing := array_append(missing, 'company_product_principals'); END IF;
   IF NOT has_table_privilege(current_user, 'accounts', 'SELECT,INSERT,UPDATE') THEN missing := array_append(missing, 'accounts'); END IF;
   IF NOT has_table_privilege(current_user, 'sessions', 'SELECT,INSERT,DELETE') THEN missing := array_append(missing, 'sessions'); END IF;
   IF NOT has_table_privilege(current_user, 'login_attempts', 'SELECT,INSERT,UPDATE,DELETE') THEN missing := array_append(missing, 'login_attempts'); END IF;
@@ -65,7 +76,18 @@ BEGIN
   IF cardinality(missing) > 0 THEN
     RAISE EXCEPTION 'Sales runtime privilege probe failed: %', array_to_string(missing, ', ');
   END IF;
-  IF has_table_privilege(current_user, 'users', 'UPDATE,DELETE,TRUNCATE')
+  IF has_table_privilege(current_user, 'users', 'UPDATE')
+    OR has_table_privilege(current_user, 'company_product_principals', 'UPDATE')
+    OR has_column_privilege(current_user, 'users', 'id', 'UPDATE')
+    OR has_column_privilege(current_user, 'users', 'username', 'UPDATE')
+    OR has_column_privilege(current_user, 'users', 'school_id', 'UPDATE')
+    OR has_column_privilege(current_user, 'company_product_principals', 'organization_id', 'UPDATE')
+    OR has_column_privilege(current_user, 'company_product_principals', 'company_account_id', 'UPDATE')
+    OR has_column_privilege(current_user, 'company_product_principals', 'local_user_id', 'UPDATE')
+    OR has_table_privilege(current_user, 'users', 'DELETE')
+    OR has_table_privilege(current_user, 'users', 'TRUNCATE')
+    OR has_table_privilege(current_user, 'company_product_principals', 'DELETE')
+    OR has_table_privilege(current_user, 'company_product_principals', 'TRUNCATE')
     OR has_table_privilege(current_user, 'audit_events', 'SELECT,UPDATE,DELETE,TRUNCATE')
     OR has_table_privilege(current_user, 'sales_modules', 'INSERT,UPDATE,DELETE,TRUNCATE')
     OR has_table_privilege(current_user, 'sales_roleplay_scenarios', 'INSERT,UPDATE,DELETE,TRUNCATE')
@@ -78,6 +100,25 @@ $$;
 BEGIN;
 INSERT INTO users (id, username, display_username, name, role)
   VALUES ('__sales_runtime_probe_user__', '__sales_runtime_probe__', '__sales_runtime_probe__', 'Runtime Probe', 'SALES_REP');
+INSERT INTO company_product_principals (
+  organization_id, organization_key, company_account_id, application_key,
+  local_user_id, role_key
+)
+  VALUES (
+    '00000000-0000-0000-0000-000000000059', 'internal-company',
+    '00000000-0000-0000-0000-000000000060', 'sales',
+    '__sales_runtime_probe_user__', 'SALES_REP'
+  );
+SELECT local_user_id, role_key
+  FROM company_product_principals
+ WHERE organization_id = '00000000-0000-0000-0000-000000000059'
+   AND company_account_id = '00000000-0000-0000-0000-000000000060'
+   AND application_key = 'sales';
+UPDATE users SET role = 'SALES_ADMIN' WHERE id = '__sales_runtime_probe_user__';
+UPDATE company_product_principals SET role_key = 'SALES_ADMIN', updated_at = now()
+ WHERE organization_id = '00000000-0000-0000-0000-000000000059'
+   AND company_account_id = '00000000-0000-0000-0000-000000000060'
+   AND application_key = 'sales';
 INSERT INTO accounts (id, user_id, provider_id, password)
   VALUES ('__sales_runtime_probe_account__', '__sales_runtime_probe_user__', 'credential', 'probe-not-a-real-hash');
 UPDATE accounts SET updated_at = updated_at WHERE id = '__sales_runtime_probe_account__';
