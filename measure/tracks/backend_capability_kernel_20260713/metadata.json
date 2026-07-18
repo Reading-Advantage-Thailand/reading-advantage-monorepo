@@ -1,9 +1,9 @@
 {
   "track_id": "backend_capability_kernel_20260713",
   "type": "feature",
-  "status": "new",
+  "status": "in_progress",
   "created_at": "2026-07-13T00:00:00Z",
-  "updated_at": "2026-07-13T00:00:00Z",
+  "updated_at": "2026-07-18T00:41:38Z",
   "description": "Build the portable capability descriptor, policy executor, deterministic catalog, and generated transport binding kernel, then prove it on a bounded small/new-app slice.",
   "estimated_tasks": 19,
   "actual_tasks": null,

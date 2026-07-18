@@ -38,7 +38,7 @@ Two parallel programs are in flight; priority order when picking the next track:
 - [x] **Track: Backend Architecture Enforcement** *Link: [./tracks/backend_architecture_enforcement_20260713/](./tracks/backend_architecture_enforcement_20260713/)*
   Add AST database/provider boundary rules, counterexample fixtures, reviewed
   ratcheting baselines, and shared CI/doctor enforcement. **Program Gate 1.**
-- [ ] **Track: Backend Capability Kernel** *Link: [./tracks/backend_capability_kernel_20260713/](./tracks/backend_capability_kernel_20260713/)*
+- [~] **Track: Backend Capability Kernel** *Link: [./tracks/backend_capability_kernel_20260713/](./tracks/backend_capability_kernel_20260713/)*
   Build capability descriptors, the policy executor, deterministic catalog and
   generated route bindings, then prove one bounded small/new-app slice. **Depends
   on Backend Architecture Enforcement.**
