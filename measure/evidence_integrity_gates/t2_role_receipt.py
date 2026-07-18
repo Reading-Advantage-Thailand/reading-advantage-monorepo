@@ -448,6 +448,58 @@ def _validated_commit_binding(
             raise T2RoleReceiptError(
                 "mapper Phase-2 receipt binding is not the latest committed evidence receipt"
             )
+    if role == "adversarial-reviewer":
+        if set(binding) != {"phase2_receipt_commit"} or set(commit_fields) != {
+            "phase2_receipt_commit"
+        }:
+            raise T2RoleReceiptError(
+                "reviewer commit binding must select exactly one Phase-2 receipt"
+            )
+        phase3_path = f"{TRACK_DIRECTORY}/phase3-reconciliation.json"
+        try:
+            phase3 = json.loads(_committed_bytes(root, output_commit, phase3_path))
+        except (UnicodeDecodeError, json.JSONDecodeError) as error:
+            raise T2RoleReceiptError("reviewer Phase-3 input is malformed") from error
+        phase2 = (
+            phase3.get("input_provenance", {}).get("phase2")
+            if isinstance(phase3, Mapping)
+            else None
+        )
+        if (
+            not isinstance(phase2, Mapping)
+            or phase2.get("receipt_revision")
+            != commit_fields["phase2_receipt_commit"]
+        ):
+            raise T2RoleReceiptError(
+                "reviewer Phase-2 receipt binding differs from committed Phase-3 provenance"
+            )
+        evidence_receipt_path = (
+            f"{TRACK_DIRECTORY}/role-receipts/evidence-collector.json"
+        )
+        latest_receipt = subprocess.run(
+            (
+                "/usr/bin/git",
+                "log",
+                "-1",
+                "--format=%H",
+                output_commit,
+                "--",
+                evidence_receipt_path,
+            ),
+            cwd=root,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            check=False,
+            text=True,
+        )
+        if (
+            latest_receipt.returncode != 0
+            or latest_receipt.stdout.strip()
+            != commit_fields["phase2_receipt_commit"]
+        ):
+            raise T2RoleReceiptError(
+                "reviewer Phase-2 receipt binding is not the latest committed evidence receipt"
+            )
     return json.loads(_canonical_json(binding))
 
 
@@ -612,7 +664,7 @@ def _expanded_command_template(
             values[field] = commit_binding[field]
         elif (
             field == "phase2_receipt_commit"
-            and role == "requirements-mapper"
+            and role in {"requirements-mapper", "adversarial-reviewer"}
             and isinstance(commit_binding, Mapping)
             and isinstance(commit_binding.get(field), str)
         ):

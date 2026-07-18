@@ -16,6 +16,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 TRACK = "apk_source_denominator_inventory_20260712"
 BASELINE = "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
 CODE_GATE = "f27e93b27c956baa54b3ccb4c862c09e82cc746f"
+FINAL_ROLE_VERIFIER_GATE = "59260bafa231873a2ec0aba18ed65f57e7269d1b"
 TRACK_DIR = REPO_ROOT / "measure" / "tracks" / TRACK
 FREEZE_PATH = TRACK_DIR / "phase0-input-freeze.json"
 ROLE_PATH = TRACK_DIR / "phase0-role-ownership-manifest.json"
@@ -268,6 +269,7 @@ class Phase0FreezeTests(unittest.TestCase):
         phase1_generator = immutable_generator("generate_phase1_denominators.py")
         phase2_generator = immutable_generator("generate_phase2_human_discovery.py")
         phase3_generator = immutable_generator("generate_phase3_reconciliation.py")
+        final_role_verifier = immutable_generator("verify_phase4_role_evidence.py")
         expected_generators = {
             "discovery-auditor": [
                 (
@@ -311,14 +313,48 @@ class Phase0FreezeTests(unittest.TestCase):
                     "output_commit",
                 ),
             ],
+            "truth-test-author": [
+                (
+                    final_role_verifier
+                    + " --role truth-test-author"
+                    + " --phase0-authority-revision {phase0_commit}"
+                    + " --output measure/tracks/apk_source_denominator_inventory_20260712/denominator-contract-test-report.json",
+                    "normal-only",
+                    "chore(measure): attest T2 truth tests (track_id: apk_source_denominator_inventory_20260712)",
+                    "output_commit",
+                ),
+            ],
+            "adversarial-reviewer": [
+                (
+                    final_role_verifier
+                    + " --role adversarial-reviewer"
+                    + " --phase0-authority-revision {phase0_commit}"
+                    + " --phase2-receipt-revision {phase2_receipt_commit}"
+                    + " --output measure/tracks/apk_source_denominator_inventory_20260712/independent-review.json",
+                    "normal-only",
+                    "chore(measure): attest T2 independent review (track_id: apk_source_denominator_inventory_20260712)",
+                    "output_commit",
+                ),
+            ],
         }
         expected_order = {
             "discovery-auditor": ["generator:0"],
             "evidence-collector": ["generator:0", "read-only:0", "generator:1"],
             "requirements-mapper": ["generator:0", "generator:1"],
+            "truth-test-author": ["generator:0"],
+            "adversarial-reviewer": ["generator:0"],
         }
         expected_dependencies_by_command = {
             command: (
+                (
+                    track_prefix + "verify_phase4_role_evidence.py",
+                    track_prefix + "generate_phase3_reconciliation.py",
+                )
+                if "verify_phase4_role_evidence.py" in command
+                and "adversarial-reviewer" in command
+                else (track_prefix + "verify_phase4_role_evidence.py",)
+                if "verify_phase4_role_evidence.py" in command
+                else
                 (
                     track_prefix + "generate_phase2_human_discovery.py",
                     track_prefix + "transition_ast_helper.bundle.cjs",
@@ -347,15 +383,13 @@ class Phase0FreezeTests(unittest.TestCase):
             self.assertEqual(
                 generated_outputs | set(contract["direct_write_outputs"]), expected_outputs
             )
-            if role in {"truth-test-author", "adversarial-reviewer"}:
-                self.assertTrue(contract["direct_write_only"])
-                self.assertEqual(contract["allowed_provider_tools"], ["read", "write"])
-                self.assertEqual(contract["ordered_operations"], [])
-                self.assertEqual(contract["read_only_shell_commands"], [])
-                self.assertEqual(contract["shell_generators"], [])
-                continue
             self.assertFalse(contract["direct_write_only"])
-            self.assertEqual(contract["allowed_provider_tools"], ["bash", "read"])
+            self.assertEqual(
+                contract["allowed_provider_tools"],
+                ["bash", "read", "write"]
+                if role in {"truth-test-author", "adversarial-reviewer"}
+                else ["bash", "read"],
+            )
             self.assertEqual(contract["direct_write_outputs"], [])
             self.assertEqual(contract["ordered_operations"], expected_order[role])
             actual_generators = []
@@ -376,8 +410,13 @@ class Phase0FreezeTests(unittest.TestCase):
                     expected_dependencies_by_command[generator["command_template"]],
                 )
                 for dependency in dependencies:
-                    self.assertEqual(dependency["revision"], CODE_GATE)
-                    blob = _git("show", f"{CODE_GATE}:{dependency['path']}").encode()
+                    expected_gate = (
+                        FINAL_ROLE_VERIFIER_GATE
+                        if dependency["path"].endswith("verify_phase4_role_evidence.py")
+                        else CODE_GATE
+                    )
+                    self.assertEqual(dependency["revision"], expected_gate)
+                    blob = _git("show", f"{expected_gate}:{dependency['path']}").encode()
                     self.assertEqual(hashlib.sha256(blob).hexdigest(), dependency["sha256"])
             self.assertEqual(actual_generators, expected_generators[role])
         runtime = self.roles["trusted_runtime"]

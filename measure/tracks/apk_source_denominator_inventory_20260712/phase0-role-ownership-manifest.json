@@ -3,7 +3,7 @@
   "status": "frozen-not-executed",
   "track_id": "apk_source_denominator_inventory_20260712",
   "allowed_input_manifest_path": "measure/tracks/apk_source_denominator_inventory_20260712/phase0-input-freeze.json",
-  "allowed_input_manifest_sha256": "8d989f6b30e5b525540004ddc21edc94b23f431a4ff38920e2121c4ea25b17b4",
+  "allowed_input_manifest_sha256": "c436f0ba931fec0549afca3aec249f85690266755353f1b5dcf6cc37580bb80f",
   "trusted_runtime": {
     "schema_version": "apk-trusted-runtime.v1",
     "sanitized_environment": {
@@ -79,10 +79,12 @@
     }
   ],
   "authority_correction": {
-    "prior_manifest_sha256": "12dd3dd5c36df0f42b73482fb4764d7ea5785e993fe7f17578eed36996418289",
-    "prior_input_sha256": "e4bba6919b9b60992a388a9cf4f37c7885400b96bec7b31898f59eaa80d12a9f",
-    "red_commit": "0e1241359b5467a52b63517accc93703a6e614c3",
-    "reason": "old map omitted Phase2 and Phase3 handoffs",
+    "prior_authority_commit": "6dd43aa834b7193017230843c658d32c19ecd1a9",
+    "prior_manifest_sha256": "1b7adb030491a0a8cf175fef242173b823ea8dd408055cf71fd72957855e3af8",
+    "prior_input_sha256": "8d989f6b30e5b525540004ddc21edc94b23f431a4ff38920e2121c4ea25b17b4",
+    "red_commit": "59260bafa231873a2ec0aba18ed65f57e7269d1b",
+    "reason": "direct-write-only final roles could not execute the admission, regeneration, and ledger checks required by their evidence contracts",
+    "requires_all_role_reruns": true,
     "product_owner_acceptance_claimed": false,
     "external_run_authorized": true
   },
@@ -174,12 +176,21 @@
       "expected_outputs": ["denominator-contract-test-report.json"],
       "execution_contract": {
         "schema_version": "apk-role-execution-contract.v1",
-        "allowed_provider_tools": ["read", "write"],
-        "direct_write_only": true,
-        "direct_write_outputs": ["measure/tracks/apk_source_denominator_inventory_20260712/denominator-contract-test-report.json"],
-        "ordered_operations": [],
+        "allowed_provider_tools": ["bash", "read", "write"],
+        "direct_write_only": false,
+        "direct_write_outputs": [],
+        "ordered_operations": ["generator:0"],
         "read_only_shell_commands": [],
-        "shell_generators": []
+        "shell_generators": [
+          {
+            "command_template": "/usr/bin/env -i PATH=/opt/codex-desktop/resources/node-runtime/bin:/usr/bin:/bin LANG=C PYTHONDONTWRITEBYTECODE=1 /usr/bin/python3 -I -S -c 'exec(compile(__import__(\"subprocess\").check_output((\"/usr/bin/git\",\"show\",__import__(\"sys\").argv.pop(1)+\":measure/tracks/apk_source_denominator_inventory_20260712/verify_phase4_role_evidence.py\")),\"measure/tracks/apk_source_denominator_inventory_20260712/verify_phase4_role_evidence.py\",\"exec\"),dict(__file__=\"measure/tracks/apk_source_denominator_inventory_20260712/verify_phase4_role_evidence.py\",__name__=\"__main__\"))' {phase0_commit} --role truth-test-author --phase0-authority-revision {phase0_commit} --output measure/tracks/apk_source_denominator_inventory_20260712/denominator-contract-test-report.json",
+            "dependency_blobs": [
+              {"path": "measure/tracks/apk_source_denominator_inventory_20260712/verify_phase4_role_evidence.py", "revision": "59260bafa231873a2ec0aba18ed65f57e7269d1b", "sha256": "0d86f0e7923731fb9d58618c9f4edafb3784f94ec5148f398d7fa41262fdc56e"}
+            ],
+            "owned_outputs": ["measure/tracks/apk_source_denominator_inventory_20260712/denominator-contract-test-report.json"],
+            "commit": {"mode": "normal-only", "subject": "chore(measure): attest T2 truth tests (track_id: apk_source_denominator_inventory_20260712)", "immediate_adjacency": true, "attestation_commit_source": "output_commit"}
+          }
+        ]
       }
     },
     {
@@ -190,12 +201,22 @@
       "expected_outputs": ["independent-review.json"],
       "execution_contract": {
         "schema_version": "apk-role-execution-contract.v1",
-        "allowed_provider_tools": ["read", "write"],
-        "direct_write_only": true,
-        "direct_write_outputs": ["measure/tracks/apk_source_denominator_inventory_20260712/independent-review.json"],
-        "ordered_operations": [],
+        "allowed_provider_tools": ["bash", "read", "write"],
+        "direct_write_only": false,
+        "direct_write_outputs": [],
+        "ordered_operations": ["generator:0"],
         "read_only_shell_commands": [],
-        "shell_generators": []
+        "shell_generators": [
+          {
+            "command_template": "/usr/bin/env -i PATH=/opt/codex-desktop/resources/node-runtime/bin:/usr/bin:/bin LANG=C PYTHONDONTWRITEBYTECODE=1 /usr/bin/python3 -I -S -c 'exec(compile(__import__(\"subprocess\").check_output((\"/usr/bin/git\",\"show\",__import__(\"sys\").argv.pop(1)+\":measure/tracks/apk_source_denominator_inventory_20260712/verify_phase4_role_evidence.py\")),\"measure/tracks/apk_source_denominator_inventory_20260712/verify_phase4_role_evidence.py\",\"exec\"),dict(__file__=\"measure/tracks/apk_source_denominator_inventory_20260712/verify_phase4_role_evidence.py\",__name__=\"__main__\"))' {phase0_commit} --role adversarial-reviewer --phase0-authority-revision {phase0_commit} --phase2-receipt-revision {phase2_receipt_commit} --output measure/tracks/apk_source_denominator_inventory_20260712/independent-review.json",
+            "dependency_blobs": [
+              {"path": "measure/tracks/apk_source_denominator_inventory_20260712/verify_phase4_role_evidence.py", "revision": "59260bafa231873a2ec0aba18ed65f57e7269d1b", "sha256": "0d86f0e7923731fb9d58618c9f4edafb3784f94ec5148f398d7fa41262fdc56e"},
+              {"path": "measure/tracks/apk_source_denominator_inventory_20260712/generate_phase3_reconciliation.py", "revision": "f27e93b27c956baa54b3ccb4c862c09e82cc746f", "sha256": "ade7ad3b7e4fe1f4ca3df2325edc83c0f99b75d68fe61fb22c7ffd5125b13847"}
+            ],
+            "owned_outputs": ["measure/tracks/apk_source_denominator_inventory_20260712/independent-review.json"],
+            "commit": {"mode": "normal-only", "subject": "chore(measure): attest T2 independent review (track_id: apk_source_denominator_inventory_20260712)", "immediate_adjacency": true, "attestation_commit_source": "output_commit"}
+          }
+        ]
       }
     }
   ],

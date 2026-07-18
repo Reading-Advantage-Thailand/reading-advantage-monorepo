@@ -1070,6 +1070,62 @@ class T2RoleReceiptTests(unittest.TestCase):
                 binding,
             )
 
+    def test_reviewer_receipt_placeholder_selects_latest_phase2_receipt(self) -> None:
+        """Requires reviewer regeneration to select the Phase3-bound latest receipt."""
+        root, temporary, _task, _raw_path, _fixture_commit = self._fixture(
+            "adversarial-reviewer"
+        )
+        self.addCleanup(temporary.cleanup)
+        receipt_path = root / TRACK / "role-receipts" / "evidence-collector.json"
+        receipt_path.parent.mkdir(parents=True, exist_ok=True)
+        receipt_path.write_text('{"status":"complete-provider-attested"}\n', encoding="utf-8")
+        self._git(root, "add", str(receipt_path.relative_to(root)))
+        self._git(root, "commit", "-qm", "fixture evidence receipt")
+        receipt_commit = self._git(root, "rev-parse", "HEAD")
+        phase3_path = root / TRACK / "phase3-reconciliation.json"
+        phase3_path.write_text(
+            json.dumps({
+                "input_provenance": {
+                    "phase2": {"receipt_revision": receipt_commit}
+                }
+            }) + "\n",
+            encoding="utf-8",
+        )
+        self._git(root, "add", str(phase3_path.relative_to(root)))
+        self._git(root, "commit", "-qm", "fixture reviewer phase3")
+        output_commit = self._git(root, "rev-parse", "HEAD")
+        binding = {"phase2_receipt_commit": receipt_commit}
+        self.assertEqual(
+            receipt_module._validated_commit_binding(
+                root, "adversarial-reviewer", output_commit, binding
+            ),
+            binding,
+        )
+        self.assertEqual(
+            receipt_module._expanded_command_template(
+                "python3 verify.py --phase2-receipt-revision {phase2_receipt_commit}",
+                output_commit,
+                "adversarial-reviewer",
+                binding,
+            ),
+            f"python3 verify.py --phase2-receipt-revision {receipt_commit}",
+        )
+        receipt_path.write_text('{"status":"newer"}\n', encoding="utf-8")
+        self._git(root, "add", str(receipt_path.relative_to(root)))
+        self._git(root, "commit", "-qm", "newer reviewer evidence receipt")
+        later_output = self._git(root, "rev-parse", "HEAD")
+        with self.assertRaisesRegex(T2RoleReceiptError, "latest committed evidence receipt"):
+            receipt_module._validated_commit_binding(
+                root, "adversarial-reviewer", later_output, binding
+            )
+        with self.assertRaisesRegex(T2RoleReceiptError, "unauthorized placeholder"):
+            receipt_module._expanded_command_template(
+                "python3 verify.py {phase2_receipt_commit}",
+                output_commit,
+                "adversarial-reviewer",
+                None,
+            )
+
     def test_rejects_live_trusted_runtime_hash_drift(self) -> None:
         """Fails closed when one frozen executable digest differs from live bytes."""
         repository_root = Path(__file__).resolve().parents[3]

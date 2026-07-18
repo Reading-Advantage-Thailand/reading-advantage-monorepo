@@ -507,3 +507,42 @@ remediated any blocking findings, the canonical `measure-adversarial-testing`
 subagent may be invoked under the bounded frozen track-local `adversarial-reviewer`
 ownership, with `fork_turns="none"` isolation, measured labeled-integer budget,
 zero numeric stop-loss, and SHA-256-bound outputs as described above.
+
+## Successor evidence-production authority
+
+The successor Phase-0 authority supersedes commit
+`6dd43aa834b7193017230843c658d32c19ecd1a9`. The old direct-write-only
+`truth-test-author` and `adversarial-reviewer` contracts could author JSON but
+could not execute the exact admission, temporary regeneration, or reviewed-input
+hash checks required to prove that JSON. Each final role now retains one owned
+output and fresh pairwise-isolated provenance, but is limited to `bash`, `read`,
+and `write` and exactly one authority-derived verifier command followed
+immediately by the frozen `git commit --only <owned-output> -m <subject>` command.
+The verifier is loaded from immutable commit
+`59260bafa231873a2ec0aba18ed65f57e7269d1b` under `/usr/bin/env -i`,
+`/usr/bin/python3 -I -S`, the frozen PATH/LANG, and the frozen runtime hashes.
+No additional Bash operation is admissible.
+
+The truth verifier executes the exact Phase0-3 module set, rejects any failure or
+skip, derives per-phase test counts, and requires
+`denominator-contract-test-report.json` to match those results exactly. The
+reviewer verifier repeats that admission, resolves the replacement
+`{phase2_receipt_commit}` through the receipt renderer's immutable commit
+binding, requires that receipt to be the latest evidence-collector receipt and
+the receipt selected by committed Phase3 provenance, regenerates Phase3 only to
+a temporary directory, compares exact bytes, derives the eleven reviewed-input
+`revision`/`path`/`sha256` entries from Git, and requires zero unresolved
+Critical, High, or Medium findings. Captured regeneration output is bounded to
+1 MiB per stream and a 900-second timeout; a bound breach fails closed.
+
+This correction necessarily invalidates **all five** earlier role receipts, not
+only the two final roles. Production acceptance admits one Phase-0 authority
+commit for the entire role set; every receipt must name that commit, bind the
+same exact input-freeze hash, and have an output commit descending from it. The
+replacement execution order is therefore discovery-auditor, evidence-collector
+(including its newly committed receipt), requirements-mapper using that exact
+receipt revision, truth-test-author, then adversarial-reviewer using the same
+exact receipt revision. No prior candidate, review, owner approval, or accepted
+manifest remains admissible after this successor authority. This section
+supersedes the earlier retry statement that prior predecessor receipts need not
+be refreshed.

@@ -2,6 +2,22 @@
   "schema_version": "apk-source-denominator.phase0-input-freeze.v1",
   "status": "frozen-not-discovered",
   "track_id": "apk_source_denominator_inventory_20260712",
+  "authority_successor": {
+    "supersedes_authority_commit": "6dd43aa834b7193017230843c658d32c19ecd1a9",
+    "superseded_input_sha256": "8d989f6b30e5b525540004ddc21edc94b23f431a4ff38920e2121c4ea25b17b4",
+    "superseded_ownership_sha256": "1b7adb030491a0a8cf175fef242173b823ea8dd408055cf71fd72957855e3af8",
+    "correction": "Replace unverifiable direct-write-only final roles with exact sanitized verifier commands, temporary Phase3 regeneration, and a Git-derived reviewed-input ledger while retaining single-output ownership and pairwise role isolation.",
+    "requires_all_role_reruns": true,
+    "invalidated_roles": ["discovery-auditor", "evidence-collector", "requirements-mapper", "truth-test-author", "adversarial-reviewer"],
+    "reason": "Every admitted receipt must name one authority commit, bind its exact input-freeze hash, and descend from that authority commit.",
+    "binding_consequences": [
+      "The successor authority commit must precede every replacement role output commit.",
+      "The replacement evidence-collector receipt commit becomes the requirements-mapper and adversarial-reviewer phase2_receipt_commit binding.",
+      "Phase3 must be regenerated with that exact replacement receipt revision before truth-test and adversarial-review evidence is authored.",
+      "No receipt, candidate, review, owner approval, or accepted manifest from the superseded authority remains admissible."
+    ],
+    "product_owner_acceptance_claimed": false
+  },
   "baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
   "accepted_predecessor": {
     "track_id": "measure_apk_evidence_integrity_gates_20260712",
