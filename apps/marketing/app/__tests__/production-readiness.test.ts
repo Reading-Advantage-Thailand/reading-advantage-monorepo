@@ -189,7 +189,10 @@ describe("Marketing Cloud Run production contract", () => {
 
     const doctor = requireBuildStep(cloudbuild, "doctor-check");
     expect(doctor.args?.join(" ")).toContain(
-      "doctor --check --required-migration 0041_marketing_past_topic_normalized_key",
+      "doctor --check --required-migration 0042_company_product_principal_local_unique",
+    );
+    expect(doctor.args?.join(" ")).not.toContain(
+      "--required-migration 0041_marketing_past_topic_normalized_key",
     );
   });
 
