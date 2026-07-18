@@ -843,6 +843,73 @@ class Phase1MechanicalDiscoveryContracts(unittest.TestCase):
             "unresolved occurrence-bound writes must remain explicit candidates",
         )
 
+    def test_third_colliding_property_domain_cannot_bind_to_the_first_domain(self) -> None:
+        """Keeps a third same-named state property fail-closed during edge resolution."""
+        generator = _load_generator_module()
+        path = "apps/advantage-games/src/store/threeDomainAliasCollision.ts"
+        source = b'''import { create } from "zustand";
+
+export type AState = {
+  status: "ready" | "done";
+}
+
+export type BState = {
+  status: "waiting" | "closed";
+}
+
+export type CState = {
+  status: "ready" | "done";
+  finish: () => void;
+}
+
+export type DState = {
+  phase: "idle" | "complete";
+  advance: () => void;
+}
+
+export const AliasCollisionScene = () => null;
+
+export const useCState = create<CState>((set) => ({
+  status: "ready",
+  finish: () => set((state) => {
+    if (state.status !== "ready") return state;
+    return { ...state, status: "done" };
+  }),
+}));
+
+export const useDState = create<DState>((set) => ({
+  phase: "idle",
+  advance: () => set((state) => {
+    if (state.phase !== "idle") return state;
+    return { ...state, phase: "complete" };
+  }),
+}));
+'''
+        with mock.patch.object(generator, "blob", return_value=source):
+            document = generator.build_scene_state_denominator([path])
+
+        false_edges = [
+            row
+            for row in document["transitions"]
+            if row["source_symbol"] == "status"
+            and row["from_state_id"] == "ready"
+            and row["to_state_id"] == "done"
+        ]
+        self.assertEqual(
+            false_edges,
+            [],
+            "CState.status must not bind to AState.status when both domains contain the guarded states",
+        )
+        candidates = [
+            row
+            for row in document["transition_write_candidates"]
+            if row["source_symbol"] == "status"
+            and row.get("from_state_id") == "ready"
+            and row["to_state_id"] == "done"
+        ]
+        self.assertEqual(len(candidates), 1)
+        self.assertEqual(candidates[0]["reason"], "state-domain-occurrence-ambiguous")
+
     def test_current_page_and_catalog_withdrawn_states_remain_simultaneous(self) -> None:
         """Retains current page evidence separately from catalog withdrawal registration."""
         identities = self._artifact(IDENTITY_PATH, "apk-game-identity-ledger.v1")

@@ -685,16 +685,15 @@ def build_scene_state_denominator(
             property_name: str, symbol: str, literals: set[str], line: int
         ) -> None:
             """Registers a property domain without allowing collisions to drive edges."""
+            property_domain_symbols[(path, property_name)].add(symbol)
             if property_name in ambiguous_property_names:
                 return
             previous = property_domains.get(property_name)
             if previous is not None and previous[0] != symbol:
                 property_domains[property_name] = ("", set(), 0)
                 ambiguous_property_names.add(property_name)
-                property_domain_symbols[(path, property_name)].add(symbol)
                 return
             property_domains[property_name] = (symbol, literals, line)
-            property_domain_symbols[(path, property_name)].add(symbol)
 
         object_type_pattern = re.compile(
             r"export\s+type\s+(\w+)\s*=\s*\{([\s\S]*?)\n\}\s*;?"
