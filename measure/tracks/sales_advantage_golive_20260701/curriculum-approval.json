@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "curriculumId": "reading-advantage-sales-curriculum-v1",
-  "decision": "awaiting_human_review",
-  "reviewer": null,
-  "reviewedAt": null,
+  "decision": "approved",
+  "reviewer": "Project owner",
+  "reviewedAt": "2026-07-18T23:11:09Z",
   "graphSha256": "ccba5498f453f1e2982307ca29d9d56c8bf17aeb26e1d586de232b44416b8717",
   "source": {
     "repository": "advantage-pr",
@@ -56,10 +56,10 @@
     ]
   },
   "checks": {
-    "pedagogy": false,
-    "sourceTraceability": false,
-    "honestClaims": false,
-    "roleplayRubrics": false
+    "pedagogy": true,
+    "sourceTraceability": true,
+    "honestClaims": true,
+    "roleplayRubrics": true
   },
-  "notes": "Pending human review. Only the human reviewer may approve this exact graph and source snapshot."
+  "notes": "The project owner explicitly approved publishing this exact six-module, 27-lesson Sales curriculum package with its quizzes, eight roleplay scenarios, scoring rubrics, and linked learning progression. Approval is bound to this graph and source snapshot."
 }

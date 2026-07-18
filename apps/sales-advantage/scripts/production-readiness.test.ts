@@ -54,10 +54,16 @@ const reviewedSeed = readFileSync(
   "utf8",
 );
 const packageJson = readFileSync(resolve(appRoot, "package.json"), "utf8");
-const releaseCandidate = readFileSync(
-  resolve(appRoot, "curriculum/release-candidate.json"),
-  "utf8",
-);
+const releaseCandidate = JSON.parse(
+  readFileSync(resolve(appRoot, "curriculum/release-candidate.json"), "utf8"),
+) as {
+  approval: {
+    status: string;
+    reviewer: string | null;
+    evidenceSha256: string | null;
+    checks: Record<string, boolean>;
+  };
+};
 const curriculumVerifier = readFileSync(
   resolve(appRoot, "scripts/verify-sales-curriculum.ts"),
   "utf8",
@@ -189,7 +195,9 @@ describe("Sales production readiness", () => {
     expect(sourceRoleRepair).toContain("completed_audit_count = 1");
     expect(sourceRoleRepair).toContain("'manifestSha256', manifest_sha256");
     expect(sourceRoleRepair).toContain("'releaseBuildId', release_build_id");
-    expect(sourceRoleRepair).toContain("'releaseCommitSha', release_commit_sha");
+    expect(sourceRoleRepair).toContain(
+      "'releaseCommitSha', release_commit_sha",
+    );
     expect(sourceRoleRepair).toContain(
       "'sales-source-role-repair:' || account_id::text",
     );
@@ -250,8 +258,18 @@ describe("Sales production readiness", () => {
     expect(reviewedSeed).toContain("assertCurriculumReleaseReady");
     expect(reviewedSeed).toContain("SALES_CURRICULUM_APPROVAL_SHA256");
     expect(reviewedSeed).toContain("release-candidate.json");
-    expect(releaseCandidate).toContain('"status": "awaiting_human_review"');
-    expect(releaseCandidate).not.toContain('"status": "approved"');
+    expect(releaseCandidate.approval).toMatchObject({
+      status: "approved",
+      reviewer: "Project owner",
+      evidenceSha256:
+        "8b058a5b66631bbffe662a131eed5330bb0c12fa10134a096378e9a4c8bff404",
+    });
+    expect(Object.values(releaseCandidate.approval.checks)).toEqual([
+      true,
+      true,
+      true,
+      true,
+    ]);
   });
 
   it("separates company runtime access from the compatibility credential", () => {
@@ -267,7 +285,9 @@ describe("Sales production readiness", () => {
       /GRANT EXECUTE ON FUNCTION\s+sync_sales_company_principal\(uuid, text, uuid, text, text\)\s+TO sales_runtime;/,
     );
     for (const relation of ["accounts", "sessions", "login_attempts"]) {
-      expect(grants).not.toMatch(new RegExp(`GRANT[^;]+TABLE ${relation}`, "i"));
+      expect(grants).not.toMatch(
+        new RegExp(`GRANT[^;]+TABLE ${relation}`, "i"),
+      );
       expect(probe).toMatch(
         new RegExp(
           `has_table_privilege\\(\\s*current_user, '${relation}', 'SELECT,INSERT,UPDATE,DELETE,TRUNCATE'`,

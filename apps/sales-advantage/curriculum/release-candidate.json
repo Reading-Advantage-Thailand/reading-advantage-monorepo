@@ -84,16 +84,16 @@
     "roleplayCanonicalExcerptsVerified": true
   },
   "approval": {
-    "status": "awaiting_human_review",
-    "reviewer": null,
-    "reviewedAt": null,
-    "evidenceRef": null,
-    "evidenceSha256": null,
+    "status": "approved",
+    "reviewer": "Project owner",
+    "reviewedAt": "2026-07-18T23:11:09Z",
+    "evidenceRef": "measure/tracks/sales_advantage_golive_20260701/curriculum-approval.json",
+    "evidenceSha256": "8b058a5b66631bbffe662a131eed5330bb0c12fa10134a096378e9a4c8bff404",
     "checks": {
-      "pedagogy": false,
-      "sourceTraceability": false,
-      "honestClaims": false,
-      "roleplayRubrics": false
+      "pedagogy": true,
+      "sourceTraceability": true,
+      "honestClaims": true,
+      "roleplayRubrics": true
     }
   }
 }

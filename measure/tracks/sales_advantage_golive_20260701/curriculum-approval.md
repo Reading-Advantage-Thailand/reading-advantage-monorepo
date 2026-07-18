@@ -1,6 +1,6 @@
 # Sales curriculum approval evidence
 
-> Status: awaiting human review
+> Status: approved for production publication
 >
 > Curriculum graph: `ccba5498f453f1e2982307ca29d9d56c8bf17aeb26e1d586de232b44416b8717`
 >
@@ -12,23 +12,26 @@ The reviewer must inspect the immutable graph represented by
 
 ## Required review
 
-- [ ] Pedagogy: progression is learn → practice → evaluate → reflect, with
+- [x] Pedagogy: progression is learn → practice → evaluate → reflect, with
       prerequisites increasing from discovery through closing.
-- [ ] Source traceability: every selected source file matches both the working
+- [x] Source traceability: every selected source file matches both the working
       bytes and committed bytes at the pinned `advantage-pr` commit; every rubric
       criterion uses a registered named source or a verified corpus path + section.
-- [ ] Honest claims: the Aka (2019) phrasing and prohibited-claim guidance match
+- [x] Honest claims: the Aka (2019) phrasing and prohibited-claim guidance match
       `06-research-and-evidence/outcome-claims-policy.md`; negative examples are
       clearly taught as statements reps must not use.
-- [ ] Roleplay quality: every launch scenario is realistic, has a useful rubric,
+- [x] Roleplay quality: every launch scenario is realistic, has a useful rubric,
       and is grounded by non-empty canonical lesson excerpts.
 
 ## Approval record
 
-- Reviewer: _pending_
-- Reviewed at (UTC): _pending_
-- Decision: _pending_
-- Notes: _pending_
+- Reviewer: Project owner
+- Reviewed at (UTC): 2026-07-18T23:11:09Z
+- Decision: Approved for production publication
+- Notes: The project owner explicitly approved publishing this exact curriculum
+  package after it was identified as the six-module, 27-lesson Sales course with
+  its quizzes, eight roleplay scenarios, scoring rubrics, and linked learning
+  progression. The approval is bound to the graph and source fingerprints above.
 
 Only the human reviewer may replace the pending values and check the boxes.
 After review, the same reviewer must update `curriculum-approval.json` with the
