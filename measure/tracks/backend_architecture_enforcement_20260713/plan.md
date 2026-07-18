@@ -29,7 +29,7 @@ all baseline entries are reviewed and no implementation package is newly exempte
 **Acceptance gate:** Tests fail for missing behavior, not fixture syntax or broken
 test setup; every FR-2–FR-5 counterexample has a named assertion.
 
-## Phase 3: Analyzer and Ratchet Implementation
+## Phase 3: Analyzer and Ratchet Implementation [checkpoint: 4ff2cae]
 
 - [x] Task 9: Implement workspace-aware AST loading and import/re-export/dynamic-import resolution with fail-closed parser errors. [commits: d7238d09, 19af0186]
 - [x] Task 10: Implement database ownership and direct-query detection to satisfy its Red fixtures. [commits: d7238d09, 19af0186]
@@ -48,7 +48,7 @@ After the one-time reconciliation the normal checker is clean, baseline validati
 the analyzer-complete snapshot and reviewed final ruleset hashes, and a temporary
 post-base counterexample exits non-zero.
 
-## Phase 4: CI, Documentation, and Doctor
+## Phase 4: CI, Documentation, and Doctor [checkpoint: 251f108]
 
 - [x] Task 13: Add the root non-interactive command and CI gate without weakening existing tenant/provider checks. [commit: d7238d09]
 - [x] Task 14: Integrate the same command into `measure/doctor.sh` and document remediation/baseline-reduction workflow. [commit: d7238d09]

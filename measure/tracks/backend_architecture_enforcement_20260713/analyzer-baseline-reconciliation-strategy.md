@@ -285,7 +285,7 @@ verification on 2026-07-18:
 - Independent review result set: **ACCEPTED by all four required reconciliation reviewers; mandatory Phase 3–4 change-quality review found no Critical or High findings.**
 - Two-run normal-check JSON SHA-256:
   `ab141ad10de20f76f45698b853ad394551093ac226f0fd54be880cfe29d162d0`
-- Gate 1 result: **ACCEPTED. Automated evidence passed and the user explicitly confirmed the manual verification on 2026-07-18. Checkpoint recording is in progress.**
+- Gate 1 result: **ACCEPTED. Automated evidence passed, the user explicitly confirmed the manual verification on 2026-07-18, and checkpoints `4ff2cae` / `251f108` carry the verification notes.**
 
 The analyzer-complete 467/93 baseline is now the active reviewed state. The
 historical 464/27 freeze remains immutable provenance evidence.

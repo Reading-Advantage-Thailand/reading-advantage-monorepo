@@ -35,7 +35,7 @@ Two parallel programs are in flight; priority order when picking the next track:
 > program does not authorize a big-bang rewrite or Cloudflare Workers as a
 > backend runtime.
 
-- [~] **Track: Backend Architecture Enforcement** *Link: [./tracks/backend_architecture_enforcement_20260713/](./tracks/backend_architecture_enforcement_20260713/)*
+- [x] **Track: Backend Architecture Enforcement** *Link: [./tracks/backend_architecture_enforcement_20260713/](./tracks/backend_architecture_enforcement_20260713/)*
   Add AST database/provider boundary rules, counterexample fixtures, reviewed
   ratcheting baselines, and shared CI/doctor enforcement. **Program Gate 1.**
 - [ ] **Track: Backend Capability Kernel** *Link: [./tracks/backend_capability_kernel_20260713/](./tracks/backend_capability_kernel_20260713/)*

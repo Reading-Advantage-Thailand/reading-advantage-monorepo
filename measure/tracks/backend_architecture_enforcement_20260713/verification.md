@@ -145,6 +145,6 @@ being hidden or used to weaken the gate.
 ## Manual confirmation
 
 The user explicitly replied `yes` on 2026-07-18 after receiving the backend
-manual-verification steps and accepted results. Create the checkpoint commits,
-attach this verification record as Git notes, record their SHAs in `plan.md`,
-set metadata/registry to complete, and proceed to Gate 2.
+manual-verification steps and accepted results. Phase 3 checkpoint `4ff2cae`
+and Phase 4 checkpoint `251f108` both carry this verification record as a Git
+note. Their SHAs are recorded in `plan.md`.

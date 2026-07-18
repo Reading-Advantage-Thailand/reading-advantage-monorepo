@@ -25,9 +25,9 @@ four-file cross-package set also passed `16` tests.
 
 ### Low: acceptance files were not committed
 
-Resolution: intentionally deferred to the Measure checkpoint, which must occur
-only after explicit user confirmation. The acceptance files are hash-bound and
-listed in `verification.md`.
+Resolution: closed after explicit user confirmation. Checkpoint `4ff2cae`
+commits the acceptance files and checkpoint `251f108` records Phase 4 closure;
+both carry the verification Git note.
 
 ## Command evidence
 
@@ -42,6 +42,5 @@ listed in `verification.md`.
 
 ## Decision
 
-No Critical or High findings remain. The two Medium findings are resolved by
-the evidence above. The Low durability item closes with the post-confirmation
-checkpoint commit.
+No Critical or High findings remain. The two Medium findings and the Low
+durability item are resolved by the evidence and checkpoints above.
