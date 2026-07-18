@@ -323,10 +323,23 @@ describe("Sales production readiness", () => {
     expect(probe).toContain("rolreplication");
     expect(grants).not.toMatch(/ALTER\s+ROLE/i);
     expect(roleProvisioning).toMatch(
-      /ALTER ROLE sales_runtime[\s\S]+NOINHERIT NOREPLICATION/,
+      /BEGIN;[\s\S]+Both Sales runtime identities must already exist[\s\S]+ALTER ROLE sales_runtime[\s\S]+ALTER ROLE sales_legacy_runtime[\s\S]+COMMIT;/,
+    );
+    expect(roleProvisioning).toContain(") <> 2 THEN");
+    expect(roleProvisioning).toMatch(
+      /ALTER ROLE sales_runtime NOCREATEDB NOCREATEROLE NOINHERIT/,
     );
     expect(roleProvisioning).toMatch(
-      /ALTER ROLE sales_legacy_runtime[\s\S]+NOINHERIT NOREPLICATION/,
+      /ALTER ROLE sales_legacy_runtime NOCREATEDB NOCREATEROLE NOINHERIT/,
+    );
+    expect(roleProvisioning).toContain(
+      "rolsuper OR rolreplication OR rolbypassrls",
+    );
+    expect(roleProvisioning).toContain(
+      "Sales runtime identities retain a forbidden sensitive attribute",
+    );
+    expect(roleProvisioning).not.toMatch(
+      /ALTER ROLE sales_(?:legacy_)?runtime[^;]*(?:NOSUPERUSER|NOREPLICATION|NOBYPASSRLS)/,
     );
     expect(roleRunbook).toContain("SALES_PRIVILEGED_ADMIN_DATABASE_URL");
     expect(roleRunbook).toContain("sales_migration");

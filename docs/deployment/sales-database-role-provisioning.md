@@ -18,10 +18,15 @@ psql "$SALES_PRIVILEGED_ADMIN_DATABASE_URL" \
   -f apps/sales-advantage/scripts/sales-runtime-role-provision.sql
 ```
 
-The provisioning script requires a PostgreSQL administrator with permission to
-alter roles. It makes both runtime roles `NOINHERIT` and `NOREPLICATION` and
-removes all other cluster-level elevation flags. Run it when either role is
-created and after any reviewed role-attribute change.
+Both `sales_runtime` and `sales_legacy_runtime` login identities must already
+exist before this script runs. The script requires a PostgreSQL administrator
+with permission to alter both roles. In one transaction, it first requires both
+identities, verifies that `SUPERUSER`, `REPLICATION`, and `BYPASSRLS` are already
+false, then enforces `NOCREATEDB`, `NOCREATEROLE`, and `NOINHERIT`. Managed
+PostgreSQL administrators cannot change the sensitive attributes even when
+setting them to false, so the script verifies those flags and fails closed
+instead of mentioning them in `ALTER ROLE`. Run the script after creating both
+identities and after any reviewed role-attribute change.
 
 Routine Cloud Build steps use `SALES_DIRECT_DATABASE_URL`, whose login must be
 `sales_migration` with `NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT
