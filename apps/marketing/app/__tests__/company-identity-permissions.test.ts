@@ -1,8 +1,14 @@
-import { readFileSync, readdirSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
+
+import {
+  assertExactRouteHandlerInventory,
+  discoverRouteHandlers,
+  type RouteHandlerKey,
+} from "./helpers/route-handler-inventory";
 
 const { createAIClientMock, introspectMock, marketingDbMock } = vi.hoisted(() => ({
   createAIClientMock: vi.fn(),
@@ -149,7 +155,7 @@ describe("Marketing protected-route permission inventory", () => {
     const { MARKETING_ROUTE_PERMISSION_INVENTORY } = await import(
       "@/lib/marketing-permissions"
     );
-    const publicHandlers = new Set([
+    const publicHandlers = new Set<RouteHandlerKey>([
       "GET /api/auth/callback",
       "GET /api/auth/company/start",
       "POST /api/auth/login",
@@ -157,36 +163,20 @@ describe("Marketing protected-route permission inventory", () => {
       "GET /api/auth/session",
       "GET /api/health/db",
     ]);
-    const protectedHandlers = new Set(
+    const protectedHandlers = new Set<RouteHandlerKey>(
       MARKETING_ROUTE_PERMISSION_INVENTORY.map(
-        (entry) => `${entry.method} ${entry.path}`,
+        (entry): RouteHandlerKey => `${entry.method} ${entry.path}`,
       ),
     );
-    const routeFiles: string[] = [];
-    const collectRoutes = (directory: string) => {
-      for (const entry of readdirSync(directory, { withFileTypes: true })) {
-        const absolute = resolve(directory, entry.name);
-        if (entry.isDirectory()) collectRoutes(absolute);
-        if (entry.isFile() && entry.name === "route.ts") routeFiles.push(absolute);
-      }
-    };
-    collectRoutes(resolve(marketingAppRoot, "api"));
+    const discoveredHandlers = discoverRouteHandlers(marketingAppRoot);
+    const reviewedHandlers = new Set<RouteHandlerKey>([
+      ...publicHandlers,
+      ...protectedHandlers,
+    ]);
 
-    const discoveredHandlers = new Set<string>();
-    for (const absoluteFile of routeFiles) {
-      const file = absoluteFile.slice(marketingAppRoot.length + 1);
-      const source = readFileSync(absoluteFile, "utf8");
-      const path = `/${file.replace(/\/route\.ts$/, "")}`;
-      for (const match of source.matchAll(
-        /export async function (GET|POST|PATCH|PUT|DELETE)\b/g,
-      )) {
-        discoveredHandlers.add(`${match[1]} ${path}`);
-      }
-    }
-
-    expect(discoveredHandlers).toEqual(
-      new Set([...publicHandlers, ...protectedHandlers]),
-    );
+    expect(() =>
+      assertExactRouteHandlerInventory(discoveredHandlers, reviewedHandlers),
+    ).not.toThrow();
     for (const entry of MARKETING_ROUTE_PERMISSION_INVENTORY) {
       const source = readFileSync(resolve(marketingAppRoot, entry.file), "utf8");
       const escapedPermission = entry.permission.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");

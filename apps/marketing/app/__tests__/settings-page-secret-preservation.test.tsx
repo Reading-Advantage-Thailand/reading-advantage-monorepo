@@ -4,6 +4,15 @@ import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/re
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import SettingsPage from "@/settings/page";
 
+vi.mock("@reading-advantage/auth-client", () => ({
+  useAuth: () => ({
+    user: { role: "ADMIN" },
+    isAuthenticated: true,
+    isForbidden: false,
+    isLoading: false,
+  }),
+}));
+
 function jsonResponse(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), {
     status,

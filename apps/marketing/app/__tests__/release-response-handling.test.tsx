@@ -7,6 +7,15 @@ import CampaignDetailPage from "@/campaigns/[id]/page";
 import VideoProductionPage from "@/campaigns/[id]/video/page";
 import SettingsPage from "@/settings/page";
 
+vi.mock("@reading-advantage/auth-client", () => ({
+  useAuth: () => ({
+    user: { role: "ADMIN" },
+    isAuthenticated: true,
+    isForbidden: false,
+    isLoading: false,
+  }),
+}));
+
 const campaignId = "11111111-1111-4111-8111-111111111111";
 
 vi.mock("next/navigation", () => ({

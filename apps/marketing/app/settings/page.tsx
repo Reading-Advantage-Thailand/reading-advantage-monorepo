@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useAuth } from "@reading-advantage/auth-client";
 import {
   MARKETING_MASKED_SECRET,
   prepareMarketingSettingsUpdate,
@@ -12,6 +13,8 @@ import {
  * @returns The settings form and connection status controls.
  */
 export default function SettingsPage() {
+  const { user, isAuthenticated, isLoading: isAuthLoading } = useAuth();
+  const role = user?.role ?? null;
   const [provider, setProvider] = useState("google");
   const [modelName, setModelName] = useState("");
   const [apiKey, setApiKey] = useState("");
@@ -28,6 +31,13 @@ export default function SettingsPage() {
    * without leaking plaintext. Non-secret keys are returned as-is.
    */
   useEffect(() => {
+    if (isAuthLoading) return;
+    if (!isAuthenticated) {
+      window.location.href = "/login";
+      return;
+    }
+    if (role !== "ADMIN") return;
+
     async function loadSettings() {
       try {
         const res = await fetch("/api/settings");
@@ -60,7 +70,7 @@ export default function SettingsPage() {
       }
     }
     loadSettings();
-  }, []);
+  }, [isAuthenticated, isAuthLoading, role]);
 
   const requiresExplicitApiKey = preservesExistingMarketingSecret(
     "llm.apiKey",
@@ -132,6 +142,45 @@ export default function SettingsPage() {
       setPageError("Failed to save Marketing settings. Please try again.");
     }
   };
+
+  if (isAuthLoading) {
+    return (
+      <main style={{ padding: "24px", textAlign: "center" }}>
+        <p role="status" aria-live="polite">Checking administrator access...</p>
+      </main>
+    );
+  }
+
+  if (!isAuthenticated || !user) {
+    return (
+      <main style={{ padding: "24px", textAlign: "center" }}>
+        <p role="status" aria-live="polite">Redirecting to sign in...</p>
+      </main>
+    );
+  }
+
+  if (role !== "ADMIN") {
+    return (
+      <main style={{ padding: "24px", maxWidth: "720px", margin: "0 auto" }}>
+        <section
+          role="alert"
+          aria-labelledby="marketing-settings-access-heading"
+          style={{
+            backgroundColor: "#fff7ed",
+            border: "1px solid #fb923c",
+            borderRadius: "8px",
+            padding: "24px",
+          }}
+        >
+          <h1 id="marketing-settings-access-heading">Settings access required</h1>
+          <p>
+            Administrator access is required to view or change Marketing
+            settings.
+          </p>
+        </section>
+      </main>
+    );
+  }
 
   if (loading) {
     return (

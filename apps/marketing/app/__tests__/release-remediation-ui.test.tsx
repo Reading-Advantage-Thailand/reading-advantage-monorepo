@@ -18,10 +18,12 @@ vi.mock("next/link", () => ({
 
 import { MarketingAppShell } from "@/marketing-app-shell";
 import MarketingHomePage from "@/page";
+import SettingsPage from "@/settings/page";
 
 afterEach(() => {
   cleanup();
   vi.clearAllMocks();
+  vi.unstubAllGlobals();
 });
 
 describe("Marketing application authorization surface", () => {
@@ -82,5 +84,31 @@ describe("Marketing application authorization surface", () => {
       </MarketingAppShell>,
     );
     expect(screen.getByRole("link", { name: "Settings" })).toBeInTheDocument();
+  });
+
+  it("renders only an accessible denial surface for a member opening Settings directly", () => {
+    useAuthMock.mockReturnValue({
+      user: { role: "MEMBER" },
+      isAuthenticated: true,
+      isForbidden: false,
+      isLoading: false,
+    });
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+
+    const { container } = render(<SettingsPage />);
+
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      /administrator access is required/i,
+    );
+    expect(screen.queryByRole("combobox")).not.toBeInTheDocument();
+    expect(container.querySelector('input[type="password"]')).toBeNull();
+    expect(
+      screen.queryByRole("button", { name: "Test Connection" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Save Settings" }),
+    ).not.toBeInTheDocument();
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 });
