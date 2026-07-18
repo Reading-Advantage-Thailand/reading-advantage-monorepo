@@ -12,6 +12,7 @@ from typing import Any
 
 from measure.evidence_integrity_gates.apk_inventory_live import (
     APKInventoryLiveError,
+    EXPECTED_SCHEMAS,
     PHASE_ARTIFACT_PATHS,
     TRACK_DIRECTORY,
     canonical_task_prompt,
@@ -46,6 +47,45 @@ _COMMIT_SHA = re.compile(r"[0-9a-f]{40}\Z")
 _SHA256 = re.compile(r"[0-9a-f]{64}\Z")
 _BLOCKING_SEVERITIES = ("critical", "high", "medium")
 _ROLE_RECEIPT_SCHEMA = "apk-role-receipt.v1"
+_TRACK_ID = PurePosixPath(TRACK_DIRECTORY).name
+_PHASE0_3_TEST_MODULES = tuple(
+    (phase, f"measure.tests.test_apk_source_denominator_inventory_phase{phase}")
+    for phase in range(4)
+)
+_PRODUCTION_ARTIFACT_SCHEMAS = {
+    **{
+        f"{TRACK_DIRECTORY}/{name}": schema
+        for name, schema in EXPECTED_SCHEMAS.items()
+    },
+    f"{TRACK_DIRECTORY}/denominator-method.md": "apk-denominator-method.v1",
+    f"{TRACK_DIRECTORY}/denominator-contract-test-report.json": (
+        "apk-denominator-contract-test-report.v1"
+    ),
+    f"{TRACK_DIRECTORY}/role-receipts/": _ROLE_RECEIPT_SCHEMA,
+    f"{TRACK_DIRECTORY}/independent-review.json": (
+        "apk-denominator-independent-review.v1"
+    ),
+    f"{TRACK_DIRECTORY}/candidate-denominator-manifest.json": (
+        "apk-denominator-candidate-manifest.v1"
+    ),
+    f"{TRACK_DIRECTORY}/candidate-partition-manifest.json": (
+        "apk-denominator-candidate-partition.v1"
+    ),
+    f"{TRACK_DIRECTORY}/product-owner-acceptance.json": (
+        "apk-denominator-owner-acceptance.v1"
+    ),
+    f"{TRACK_DIRECTORY}/accepted-denominator-manifest.json": (
+        "apk-denominator-accepted-manifest.v1"
+    ),
+    f"{TRACK_DIRECTORY}/accepted-partition-manifest.json": (
+        "apk-denominator-accepted-partition.v1"
+    ),
+}
+_REVIEW_INPUT_PATHS = {
+    f"{TRACK_DIRECTORY}/{name}"
+    for names in PHASE_ARTIFACT_PATHS.values()
+    for name in names
+}
 _EVIDENCE_LINEAGE_FIELDS = (
     "schema_version",
     "track_id",
@@ -142,30 +182,96 @@ def _has_production_artifact_contract(freeze: Mapping[str, Any]) -> bool:
     expected = freeze.get("expected_artifacts")
     if not isinstance(expected, list):
         return False
-    declared_values = [
-        item.get("path")
-        for item in expected
-        if isinstance(item, Mapping) and set(item) == {"path"} and isinstance(item.get("path"), str)
-    ]
-    declared = set(declared_values)
-    required = {
-        f"{TRACK_DIRECTORY}/{name}"
-        for names in PHASE_ARTIFACT_PATHS.values()
-        for name in names
+    declared: dict[str, str] = {}
+    for item in expected:
+        if (
+            not isinstance(item, Mapping)
+            or set(item) != {"path", "schema_version"}
+            or not isinstance(item.get("path"), str)
+            or not isinstance(item.get("schema_version"), str)
+            or item["path"] in declared
+        ):
+            return False
+        declared[item["path"]] = item["schema_version"]
+    return declared == _PRODUCTION_ARTIFACT_SCHEMAS
+
+
+def _valid_phase0_3_admission(contract_report: Mapping[str, Any]) -> bool:
+    """Validates exact Phase 0-3 test rows and their dynamically derived summary."""
+    inventory = contract_report.get("test_inventory")
+    admission = contract_report.get("phase0_3_admission_result")
+    if (
+        not isinstance(inventory, list)
+        or len(inventory) != len(_PHASE0_3_TEST_MODULES)
+        or not isinstance(admission, Mapping)
+        or set(admission) != {"total_tests", "passed", "failed", "exit_code", "status"}
+    ):
+        return False
+    total = 0
+    for row, (phase, module) in zip(inventory, _PHASE0_3_TEST_MODULES, strict=True):
+        if (
+            not isinstance(row, Mapping)
+            or set(row) != {"phase", "module", "tests", "passed", "failed", "exit_code"}
+            or row.get("phase") != phase
+            or row.get("module") != module
+        ):
+            return False
+        tests = row.get("tests")
+        if (
+            not isinstance(tests, int)
+            or isinstance(tests, bool)
+            or tests < 1
+            or row.get("passed") != tests
+            or row.get("failed") != 0
+            or row.get("exit_code") != 0
+        ):
+            return False
+        total += tests
+    return admission == {
+        "total_tests": total,
+        "passed": total,
+        "failed": 0,
+        "exit_code": 0,
+        "status": "passed",
     }
-    required.update(
-        {
-            f"{TRACK_DIRECTORY}/denominator-method.md",
-            f"{TRACK_DIRECTORY}/denominator-contract-test-report.json",
-            f"{TRACK_DIRECTORY}/independent-review.json",
-            f"{TRACK_DIRECTORY}/candidate-denominator-manifest.json",
-            f"{TRACK_DIRECTORY}/candidate-partition-manifest.json",
-            f"{TRACK_DIRECTORY}/product-owner-acceptance.json",
-            f"{TRACK_DIRECTORY}/accepted-denominator-manifest.json",
-            f"{TRACK_DIRECTORY}/accepted-partition-manifest.json",
-        }
-    )
-    return len(declared_values) == len(expected) == len(declared) and required == declared
+
+
+def _valid_reviewed_input_ledger(
+    review: Mapping[str, Any], live: Mapping[str, Any]
+) -> bool:
+    """Validates exact reviewed Phase 1-3 refs against admitted artifact hashes."""
+    ledger = review.get("reviewed_input_ledger")
+    refs = ledger.get("artifact_refs") if isinstance(ledger, Mapping) else None
+    live_hashes = live.get("artifact_sha256")
+    if (
+        not isinstance(ledger, Mapping)
+        or set(ledger) != {"artifact_refs"}
+        or not isinstance(refs, list)
+        or not isinstance(live_hashes, Mapping)
+        or len(refs) != len(_REVIEW_INPUT_PATHS)
+    ):
+        return False
+    declared: dict[str, str] = {}
+    for ref in refs:
+        if (
+            not isinstance(ref, Mapping)
+            or set(ref) != {"revision", "path", "sha256"}
+            or not isinstance(ref.get("revision"), str)
+            or _COMMIT_SHA.fullmatch(ref["revision"]) is None
+            or not isinstance(ref.get("path"), str)
+            or not _safe_relative_path(ref["path"])
+            or not isinstance(ref.get("sha256"), str)
+            or _SHA256.fullmatch(ref["sha256"]) is None
+            or ref["path"] in declared
+        ):
+            return False
+        declared[ref["path"]] = ref["sha256"]
+    expected = {
+        f"{TRACK_DIRECTORY}/{name}": digest
+        for name, digest in live_hashes.items()
+        if f"{TRACK_DIRECTORY}/{name}" in _REVIEW_INPUT_PATHS
+    }
+    return declared == expected and set(declared) == _REVIEW_INPUT_PATHS
 
 
 def _rebuild_production_role_event(
@@ -480,22 +586,16 @@ def _validate_production_phase4_semantics(
         contract_report = json.loads(report_bytes)
     except (UnicodeDecodeError, json.JSONDecodeError):
         return "CONTRACT_REPORT_INVALID", None
-    admission = contract_report.get("phase0_3_admission_result") if isinstance(contract_report, Mapping) else None
     stop_loss = contract_report.get("stop_loss_counters") if isinstance(contract_report, Mapping) else None
     unresolved = stop_loss.get("unresolved_blocking_findings") if isinstance(stop_loss, Mapping) else None
     if (
         not isinstance(contract_report, Mapping)
         or contract_report.get("schema_version") != "apk-denominator-contract-test-report.v1"
         or contract_report.get("status") != "red-contract-authored"
+        or contract_report.get("track_id") != _TRACK_ID
         or contract_report.get("role") != "truth-test-author"
         or contract_report.get("source_baseline_revision") != baseline
-        or admission != {
-            "total_tests": 54,
-            "passed": 54,
-            "failed": 0,
-            "exit_code": 0,
-            "status": "passed",
-        }
+        or not _valid_phase0_3_admission(contract_report)
         or not isinstance(stop_loss, Mapping)
         or any(
             value != 0
@@ -538,9 +638,9 @@ def _validate_production_phase4_semantics(
     accepted_partition = artifacts["accepted_partition"]
     exact_keys = {
         "review": {
-            "schema_version", "status", "source_baseline_revision", "reviewer_role",
+            "schema_version", "track_id", "status", "source_baseline_revision", "reviewer_role",
             "reviewer_isolation", "phase3_reconciliation", "full_reconciliation_rerun",
-            "blocking_findings_by_severity", "findings",
+            "blocking_findings_by_severity", "findings", "reviewed_input_ledger",
         },
         "candidate": {
             "schema_version", "status", "consumable", "accepted", "revoked",
@@ -605,6 +705,7 @@ def _validate_production_phase4_semantics(
     zero_chm = {severity: 0 for severity in sorted(_BLOCKING_SEVERITIES)}
     if (
         review.get("schema_version") != "apk-denominator-independent-review.v1"
+        or review.get("track_id") != _TRACK_ID
         or review.get("status") != "independent-review-complete"
         or review.get("source_baseline_revision") != baseline
         or review.get("reviewer_role") != "adversarial-reviewer"
@@ -620,6 +721,7 @@ def _validate_production_phase4_semantics(
         or rerun.get("reconciliation_status") != "reconciliation-complete"
         or rerun.get("coverage") != coverage
         or review.get("blocking_findings_by_severity") != zero_chm
+        or not _valid_reviewed_input_ledger(review, live)
         or not isinstance(findings, list)
         or any(
             not isinstance(finding, Mapping)

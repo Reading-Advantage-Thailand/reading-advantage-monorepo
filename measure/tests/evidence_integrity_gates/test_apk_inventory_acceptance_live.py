@@ -12,9 +12,11 @@ from measure.tests.evidence_integrity_gates import test_apk_inventory_live as li
 
 from measure.evidence_integrity_gates.apk_inventory_acceptance import (
     TrustedPhase4Authority,
+    _has_production_artifact_contract,
     validate_phase4_inventory_acceptance,
 )
 from measure.evidence_integrity_gates.apk_inventory_live import (
+    EXPECTED_SCHEMAS,
     PHASE_ARTIFACT_PATHS,
     TRACK_DIRECTORY,
     canonical_task_prompt,
@@ -22,6 +24,7 @@ from measure.evidence_integrity_gates.apk_inventory_live import (
 from measure.evidence_integrity_gates.events import MappingEventResolver
 from measure.evidence_integrity_gates.git_source import GitSourceAdapter
 from measure.evidence_integrity_gates.t2_role_receipt import _EXPECTED_RUNTIME_ENVIRONMENT
+from measure.evidence_integrity_gates.t2_role_accounting import derive_t2_actual_usage
 from measure.tests import test_apk_source_denominator_inventory_phase4 as legacy_phase4
 
 
@@ -58,6 +61,130 @@ def _trusted_runtime() -> dict[str, Any]:
     }
 
 
+TRACK_ID = "apk_source_denominator_inventory_20260712"
+PHASE0_3_TEST_INVENTORY = [
+    {
+        "phase": phase,
+        "module": f"measure.tests.test_apk_source_denominator_inventory_phase{phase}",
+        "tests": tests,
+        "passed": tests,
+        "failed": 0,
+        "exit_code": 0,
+    }
+    for phase, tests in enumerate((2, 3, 5, 7))
+]
+PHASE0_3_TEST_TOTAL = sum(row["tests"] for row in PHASE0_3_TEST_INVENTORY)
+
+
+def _production_expected_artifacts() -> list[dict[str, str]]:
+    """Returns the exact live Phase-0 path and schema-version declarations."""
+    schemas = {
+        **EXPECTED_SCHEMAS,
+        "denominator-method.md": "apk-denominator-method.v1",
+        "denominator-contract-test-report.json": "apk-denominator-contract-test-report.v1",
+        "role-receipts/": "apk-role-receipt.v1",
+        "independent-review.json": "apk-denominator-independent-review.v1",
+        "candidate-denominator-manifest.json": "apk-denominator-candidate-manifest.v1",
+        "candidate-partition-manifest.json": "apk-denominator-candidate-partition.v1",
+        "product-owner-acceptance.json": "apk-denominator-owner-acceptance.v1",
+        "accepted-denominator-manifest.json": "apk-denominator-accepted-manifest.v1",
+        "accepted-partition-manifest.json": "apk-denominator-accepted-partition.v1",
+    }
+    return [
+        {"path": f"{TRACK_DIRECTORY}/{name}", "schema_version": schema}
+        for name, schema in schemas.items()
+    ]
+
+
+def _bind_documents_to_fixture_source(
+    documents: dict[str, dict[str, Any]],
+    revision: str,
+    source_sha256: str,
+    asset_sha256: str,
+) -> None:
+    """Rebinds shared schema fixtures to real blobs in the temporary repository."""
+    def visit(value: object) -> None:
+        if isinstance(value, dict):
+            if value.get("revision") == "a" * 40:
+                value["revision"] = revision
+            if value.get("revision") == revision and value.get("path") == "source.ts":
+                value["blob_sha256"] = source_sha256
+            if value.get("canonical_path") == "public/a.png" and "sha256" in value:
+                value["revision"] = revision
+                value["sha256"] = asset_sha256
+                if "identical_hash_group" in value:
+                    value["identical_hash_group"] = f"sha256:{asset_sha256}"
+            if value.get("identical_hash_group") == f"sha256:{'b' * 64}":
+                value["identical_hash_group"] = f"sha256:{asset_sha256}"
+            for nested in value.values():
+                visit(nested)
+        elif isinstance(value, list):
+            for nested in value:
+                visit(nested)
+
+    for document in documents.values():
+        visit(document)
+
+    def canonical(value: object) -> str:
+        """Returns the compact JSON key used by live cross-artifact coverage."""
+        return _canonical_bytes(value).decode()
+
+    source = documents["source-denominator.json"]
+    scenes = documents["scene-state-denominator.json"]
+    history = documents["historical-source-denominator.json"]
+    discovery = documents["independent-human-discovery.json"]
+    human_history = documents["human-historical-deleted-records.json"]
+    phase3 = documents["phase3-reconciliation.json"]
+    graph_edges = source["graph_edges"]
+    surfaces = [
+        *scenes["scene_records"],
+        *scenes["state_records"],
+        *scenes["transitions"],
+        *scenes["transition_write_candidates"],
+    ]
+    discovery["mechanical_graph_edge_reviews"] = [
+        {"mechanical_graph_edge_key": canonical(row)} for row in graph_edges
+    ]
+    discovery["surface_reviews"] = [
+        {"mechanical_surface_key": canonical(row)} for row in surfaces
+    ]
+    human_history["mechanical_historical_locator_reviews"] = [
+        {"mechanical_locator_key": canonical(row["evidence"])}
+        for row in history["records"]
+    ]
+    phase3["graph_edge_reconciliation_records"] = [
+        {
+            "mechanical_graph_edge_key": canonical(row),
+            "blocking": False,
+            "resolution_status": "matched",
+        }
+        for row in graph_edges
+    ]
+    discrepancy_keys = {
+        f"mechanical:{row['observation_id']}"
+        for row in documents["denominator-discrepancies.json"]["records"]
+    }
+    discrepancy_keys.update(
+        f"human-duplicate:{row['record_id']}"
+        for row in documents["human-duplicate-drift-records.json"]["duplicate_drift_records"]
+    )
+    discrepancy_keys.update(
+        f"historical:{canonical(row['evidence'])}" for row in history["records"]
+    )
+    discrepancy_keys.update(
+        f"human-historical:{canonical(row['evidence'])}"
+        for row in human_history["historical_deleted_records"]
+    )
+    discrepancy_keys.update(
+        f"human-comparison:{row['observation_id']}"
+        for row in documents["human-discrepancy-records.json"]["mechanical_observation_records"]
+    )
+    phase3["discrepancy_reconciliation_records"] = [
+        {"discrepancy_key": key, "blocking": False, "resolution_status": "matched"}
+        for key in sorted(discrepancy_keys)
+    ]
+
+
 class APKInventoryProductionAcceptanceWiringTests(unittest.TestCase):
     """Proves the production freeze cannot fall back to authored record sets."""
 
@@ -67,12 +194,26 @@ class APKInventoryProductionAcceptanceWiringTests(unittest.TestCase):
         cls.legacy = legacy_phase4.Phase4GreenBranchCounterexamples
         cls.legacy.setUpClass()
         cls.fixture_repo = cls.legacy.fixture_repo
+        fixture_asset = cls.fixture_repo / "public" / "a.png"
+        fixture_asset.parent.mkdir(parents=True, exist_ok=True)
+        fixture_asset.write_bytes(b"fixture-asset")
+        fixture_source = cls.fixture_repo / "source.ts"
+        fixture_source.write_bytes((cls.fixture_repo / "raw" / "game.ts").read_bytes())
+        cls.legacy._git(
+            "add",
+            str(fixture_asset.relative_to(cls.fixture_repo)),
+            str(fixture_source.relative_to(cls.fixture_repo)),
+        )
+        cls.legacy._git("commit", "-q", "-m", "fixture: source asset")
+        cls.legacy.source_commit = cls.legacy._git("rev-parse", "HEAD").stdout.strip()
         cls.freeze_path = cls.legacy.freeze_path
         cls.ownership_path = cls.legacy.ownership_path
         freeze_file = cls.fixture_repo / cls.freeze_path
         ownership_file = cls.fixture_repo / cls.ownership_path
         freeze = json.loads(freeze_file.read_text(encoding="utf-8"))
         ownership = json.loads(ownership_file.read_text(encoding="utf-8"))
+        freeze["baseline_revision"] = cls.legacy.source_commit
+        freeze["source_scope"]["current_revision"] = cls.legacy.source_commit
         cls.freeze_path = f"{TRACK_DIRECTORY}/phase0-input-freeze.json"
         cls.ownership_path = f"{TRACK_DIRECTORY}/phase0-role-ownership-manifest.json"
         freeze_file = cls.fixture_repo / cls.freeze_path
@@ -113,42 +254,18 @@ class APKInventoryProductionAcceptanceWiringTests(unittest.TestCase):
                 "shell_generators": [],
             }
         ownership["trusted_runtime"] = _trusted_runtime()
-        expected_names = {
-            name for names in PHASE_ARTIFACT_PATHS.values() for name in names
-        } | {
-            "denominator-method.md",
-            "denominator-contract-test-report.json",
-            "independent-review.json",
-            "candidate-denominator-manifest.json",
-            "candidate-partition-manifest.json",
-            "product-owner-acceptance.json",
-            "accepted-denominator-manifest.json",
-            "accepted-partition-manifest.json",
-        }
-        freeze["expected_artifacts"] = [
-            {"path": f"{TRACK_DIRECTORY}/{name}"} for name in sorted(expected_names)
-        ]
-        report_path = f"{TRACK_DIRECTORY}/denominator-contract-test-report.json"
-        freeze["resource_accounting"] = {
-            "schema_version": "apk-logical-input-accounting.v1",
-            "roles": {
-                role: {
-                    "formula": "structured-committed-test-report-only",
-                    "report_path": report_path,
-                    "admission_pointer": "/phase0_3_admission_result",
-                    "inventory_pointer": "/test_inventory",
-                    "test_count_field": "tests",
-                    "passed_field": "passed",
-                    "failed_field": "failed",
-                    "exit_code_field": "exit_code",
-                }
-                for role in cls.legacy.REQUIRED_ROLES
-            },
-        }
-        freeze["frozen_resource_ceilings"] = {
-            role: {"bytes_read": 1024, "command_invocations": 20, "test_cases": 54}
-            for role in cls.legacy.REQUIRED_ROLES
-        }
+        freeze["expected_artifacts"] = _production_expected_artifacts()
+        live_freeze = json.loads(
+            (
+                Path(__file__).parents[3]
+                / TRACK_DIRECTORY
+                / "phase0-input-freeze.json"
+            ).read_text(encoding="utf-8")
+        )
+        freeze["resource_accounting"] = copy.deepcopy(live_freeze["resource_accounting"])
+        freeze["frozen_resource_ceilings"] = copy.deepcopy(
+            live_freeze["frozen_resource_ceilings"]
+        )
         freeze_bytes = cls.legacy._json_bytes(freeze)
         freeze_file.write_bytes(freeze_bytes)
         ownership["allowed_input_manifest_sha256"] = _digest(freeze_bytes)
@@ -161,6 +278,13 @@ class APKInventoryProductionAcceptanceWiringTests(unittest.TestCase):
         cls.trusted_runtime = ownership["trusted_runtime"]
         cls.tasks = {task["owner_role"]: task for task in ownership["tasks"]}
         docs = live_fixtures._documents()
+        _bind_documents_to_fixture_source(
+            docs,
+            cls.legacy.source_commit,
+            _digest(fixture_source.read_bytes()),
+            _digest(fixture_asset.read_bytes()),
+        )
+        docs["phase3-reconciliation.json"].setdefault("surface_category_coverage", [])
         for document in docs.values():
             document["source_baseline_revision"] = cls.legacy.source_commit
         track = cls.fixture_repo / TRACK_DIRECTORY
@@ -191,15 +315,13 @@ class APKInventoryProductionAcceptanceWiringTests(unittest.TestCase):
             "denominator-contract-test-report.json",
             {
                 "phase0_3_admission_result": {
-                    "total_tests": 54,
-                    "passed": 54,
+                    "total_tests": PHASE0_3_TEST_TOTAL,
+                    "passed": PHASE0_3_TEST_TOTAL,
                     "failed": 0,
                     "exit_code": 0,
                     "status": "passed",
                 },
-                "test_inventory": [
-                    {"tests": 54, "passed": 54, "failed": 0, "exit_code": 0}
-                ],
+                "test_inventory": copy.deepcopy(PHASE0_3_TEST_INVENTORY),
             },
         )
         cls.legacy._git("add", TRACK_DIRECTORY)
@@ -240,6 +362,7 @@ class APKInventoryProductionAcceptanceWiringTests(unittest.TestCase):
         docs["phase3-reconciliation.json"]["input_provenance"] = {
             "phase1": {"revision": phase1_commit, "output_hashes": phase1_hashes},
             "phase2": {
+                "implementation_revision": phase2_commit,
                 "receipt_revision": phase2_receipt_commit,
                 "consumed_output_hashes": phase2_hashes,
             },
@@ -253,18 +376,17 @@ class APKInventoryProductionAcceptanceWiringTests(unittest.TestCase):
                 {
                     "schema_version": "apk-denominator-contract-test-report.v1",
                     "status": "red-contract-authored",
+                    "track_id": TRACK_ID,
                     "role": "truth-test-author",
                     "source_baseline_revision": cls.legacy.source_commit,
                     "phase0_3_admission_result": {
-                        "total_tests": 54,
-                        "passed": 54,
+                        "total_tests": PHASE0_3_TEST_TOTAL,
+                        "passed": PHASE0_3_TEST_TOTAL,
                         "failed": 0,
                         "exit_code": 0,
                         "status": "passed",
                     },
-                    "test_inventory": [
-                        {"tests": 54, "passed": 54, "failed": 0, "exit_code": 0}
-                    ],
+                    "test_inventory": copy.deepcopy(PHASE0_3_TEST_INVENTORY),
                     "stop_loss_counters": {
                         "unsupported_factual_claims": 0,
                         "denominator_mismatches": 0,
@@ -305,6 +427,7 @@ class APKInventoryProductionAcceptanceWiringTests(unittest.TestCase):
         )
         review = {
             "schema_version": "apk-denominator-independent-review.v1",
+            "track_id": TRACK_ID,
             "status": "independent-review-complete",
             "source_baseline_revision": cls.legacy.source_commit,
             "reviewer_role": "adversarial-reviewer",
@@ -323,6 +446,20 @@ class APKInventoryProductionAcceptanceWiringTests(unittest.TestCase):
             },
             "blocking_findings_by_severity": {"critical": 0, "high": 0, "medium": 0},
             "findings": [],
+            "reviewed_input_ledger": {
+                "artifact_refs": [
+                    {
+                        "revision": phase3_commit,
+                        "path": f"{TRACK_DIRECTORY}/{name}",
+                        "sha256": _digest((track / name).read_bytes()),
+                    }
+                    for name in (
+                        *PHASE_ARTIFACT_PATHS["phase1"],
+                        *PHASE_ARTIFACT_PATHS["phase2"],
+                        *PHASE_ARTIFACT_PATHS["phase3"],
+                    )
+                ]
+            },
         }
         write_doc("independent-review.json", review)
         candidate = {
@@ -577,13 +714,28 @@ class APKInventoryProductionAcceptanceWiringTests(unittest.TestCase):
                 "raw_write_inventory": sorted(receipt["output_hashes"]),
                 "fork_turns": "none",
             })
+            commit_binding = None
+            if role == "requirements-mapper":
+                commit_binding = {
+                    "mapper_phase1_attestation_commit": cls.authority.admitted_phase_base_sha,
+                    "phase2_receipt_commit": cls.phase2_receipt_commit,
+                }
+            elif role == "evidence-collector":
+                commit_binding = {
+                    "phase1_attestation_commit": cls.phase1_commit,
+                    "phase2_attestation_commit": receipt["commit_sha"],
+                }
+            usage = derive_t2_actual_usage(
+                repository_root=cls.fixture_repo,
+                freeze=cls.freeze,
+                role=role,
+                output_commit=receipt["commit_sha"],
+                raw_export=raw,
+                commit_binding=commit_binding,
+            )
             budget = _canonical_bytes({
                 "schema_version": "apk-role-budget-declaration.v1",
-                "actual_usage": {
-                    "bytes_read": 0,
-                    "command_invocations": len(write_parts),
-                    "test_cases": 54,
-                },
+                "actual_usage": usage,
             })
             receipt["actual_usage"] = json.loads(budget)["actual_usage"]
             attestations = {
@@ -629,15 +781,9 @@ class APKInventoryProductionAcceptanceWiringTests(unittest.TestCase):
                 }
             )
             if role == "requirements-mapper":
-                receipt["commit_binding"] = {
-                    "mapper_phase1_attestation_commit": cls.authority.admitted_phase_base_sha,
-                    "phase2_receipt_commit": cls.phase2_receipt_commit,
-                }
+                receipt["commit_binding"] = commit_binding
             elif role == "evidence-collector":
-                receipt["commit_binding"] = {
-                    "phase1_attestation_commit": cls.phase1_commit,
-                    "phase2_attestation_commit": receipt["commit_sha"],
-                }
+                receipt["commit_binding"] = commit_binding
             events[end_id] = {
                 "raw_export_bytes": raw,
                 "attested_manifest_bytes": attestations,
@@ -742,6 +888,20 @@ class APKInventoryProductionAcceptanceWiringTests(unittest.TestCase):
     def test_production_expected_artifacts_activate_raw_and_live_boundaries(self) -> None:
         """Proves production authority advances beyond legacy Green to the live loader."""
         self.assertEqual(self.production_result, {"ok": True}, self.production_result)
+
+    def test_expected_artifact_schema_contract_is_exact_and_fail_closed(self) -> None:
+        """Rejects missing, forged, or schema-shadowed Phase-0 artifact declarations."""
+        self.assertTrue(_has_production_artifact_contract(self.freeze))
+        for mutation in ("missing", "forged", "extra"):
+            with self.subTest(mutation=mutation):
+                freeze = copy.deepcopy(self.freeze)
+                if mutation == "missing":
+                    freeze["expected_artifacts"][0].pop("schema_version")
+                elif mutation == "forged":
+                    freeze["expected_artifacts"][0]["schema_version"] = "forged.v1"
+                else:
+                    freeze["expected_artifacts"][0]["alias"] = "shadow"
+                self.assertFalse(_has_production_artifact_contract(freeze))
 
     def test_record_set_aliases_cannot_bypass_production_live_loading(self) -> None:
         """Rejects authored record_sets and rerun_record_sets before acceptance."""
@@ -929,6 +1089,43 @@ class APKInventoryProductionAcceptanceWiringTests(unittest.TestCase):
         bundle["artifact_sha256"][method_path] = _digest(data)
         self._assert_code(bundle, events, "INVALID_PHASE4_BUNDLE")
 
+    def test_truth_report_requires_exact_dynamic_phase0_3_module_rows(self) -> None:
+        """Accepts dynamic totals but rejects missing, duplicate, or inconsistent rows."""
+        self.assertNotEqual(PHASE0_3_TEST_TOTAL, 54)
+        for mutation in ("wrong-module", "duplicate-phase", "inconsistent-total"):
+            with self.subTest(mutation=mutation):
+                bundle, events = self._fixture()
+                report_path = f"{TRACK_DIRECTORY}/denominator-contract-test-report.json"
+                report = json.loads(bundle["artifact_bytes"][report_path])
+                if mutation == "wrong-module":
+                    report["test_inventory"][2]["module"] = "measure.tests.forged"
+                elif mutation == "duplicate-phase":
+                    report["test_inventory"][3]["phase"] = 2
+                else:
+                    report["phase0_3_admission_result"]["total_tests"] += 1
+                data = _canonical_bytes(report)
+                bundle["artifact_bytes"][report_path] = data
+                bundle["artifact_sha256"][report_path] = _digest(data)
+                self._assert_code(bundle, events, "CONTRACT_REPORT_INVALID")
+
+    def test_review_track_and_exact_input_ledger_are_required(self) -> None:
+        """Rejects a wrong track or malformed reviewed-input ledger without aliases."""
+        for mutation in ("wrong-track", "missing-ref", "extra-ledger-key"):
+            with self.subTest(mutation=mutation):
+                bundle, events = self._fixture()
+                review_path = bundle["artifact_paths"]["review"]
+                review = json.loads(bundle["artifact_bytes"][review_path])
+                if mutation == "wrong-track":
+                    review["track_id"] = "forged_track"
+                elif mutation == "missing-ref":
+                    review["reviewed_input_ledger"]["artifact_refs"].pop()
+                else:
+                    review["reviewed_input_ledger"]["alias"] = []
+                data = _canonical_bytes(review)
+                bundle["artifact_bytes"][review_path] = data
+                bundle["artifact_sha256"][review_path] = _digest(data)
+                self._assert_code(bundle, events, "REVIEW_BINDING_MISMATCH")
+
     def test_unbound_bash_and_unordered_commits_reject(self) -> None:
         """Rejects unbound mutation commands and commits outside the admitted transition."""
         bundle, events = self._fixture()
@@ -991,7 +1188,12 @@ class APKInventoryProductionAcceptanceWiringTests(unittest.TestCase):
     def test_receipt_cannot_rehash_forged_actual_usage(self) -> None:
         """Rejects coordinated receipt and provider budget counters below the ceiling."""
         bundle, events = self._fixture()
-        receipt, event = self._receipt_event(bundle, events)
+        truth_index = next(
+            index
+            for index, candidate in enumerate(bundle["role_receipts"])
+            if candidate["role"] == "truth-test-author"
+        )
+        receipt, event = self._receipt_event(bundle, events, truth_index)
         forged = dict(receipt["actual_usage"])
         forged["test_cases"] = 0
         budget = {

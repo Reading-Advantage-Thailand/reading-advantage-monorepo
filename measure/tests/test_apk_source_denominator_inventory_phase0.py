@@ -16,7 +16,6 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 TRACK = "apk_source_denominator_inventory_20260712"
 BASELINE = "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
 CODE_GATE = "f27e93b27c956baa54b3ccb4c862c09e82cc746f"
-FINAL_ROLE_VERIFIER_GATE = "59260bafa231873a2ec0aba18ed65f57e7269d1b"
 TRACK_DIR = REPO_ROOT / "measure" / "tracks" / TRACK
 FREEZE_PATH = TRACK_DIR / "phase0-input-freeze.json"
 ROLE_PATH = TRACK_DIR / "phase0-role-ownership-manifest.json"
@@ -254,6 +253,8 @@ class Phase0FreezeTests(unittest.TestCase):
         """Binds every role to exact provider tools, commands, outputs, and code blobs."""
         tasks = {task["owner_role"]: task for task in self.roles["tasks"]}
         track_prefix = f"measure/tracks/{TRACK}/"
+        final_role_verifier_gate = self.roles["authority_correction"]["red_commit"]
+        self.assertRegex(final_role_verifier_gate, r"[0-9a-f]{40}\Z")
         def immutable_generator(script: str) -> str:
             """Builds the exact semicolon-free commit-bound Python launcher."""
             path = track_prefix + script
@@ -344,15 +345,20 @@ class Phase0FreezeTests(unittest.TestCase):
             "truth-test-author": ["generator:0"],
             "adversarial-reviewer": ["generator:0"],
         }
+        final_role_dependencies = (
+            track_prefix + "verify_phase4_role_evidence.py",
+            track_prefix + "run_phase0_3_admission.py",
+            "measure/tests/test_apk_source_denominator_inventory_phase0.py",
+            "measure/tests/test_apk_source_denominator_inventory_phase1.py",
+            "measure/tests/test_apk_source_denominator_inventory_phase2.py",
+            "measure/tests/test_apk_source_denominator_inventory_phase3.py",
+        )
         expected_dependencies_by_command = {
             command: (
-                (
-                    track_prefix + "verify_phase4_role_evidence.py",
-                    track_prefix + "generate_phase3_reconciliation.py",
-                )
+                (*final_role_dependencies, track_prefix + "generate_phase3_reconciliation.py")
                 if "verify_phase4_role_evidence.py" in command
                 and "adversarial-reviewer" in command
-                else (track_prefix + "verify_phase4_role_evidence.py",)
+                else final_role_dependencies
                 if "verify_phase4_role_evidence.py" in command
                 else
                 (
@@ -411,8 +417,8 @@ class Phase0FreezeTests(unittest.TestCase):
                 )
                 for dependency in dependencies:
                     expected_gate = (
-                        FINAL_ROLE_VERIFIER_GATE
-                        if dependency["path"].endswith("verify_phase4_role_evidence.py")
+                        final_role_verifier_gate
+                        if dependency["path"] in final_role_dependencies
                         else CODE_GATE
                     )
                     self.assertEqual(dependency["revision"], expected_gate)
