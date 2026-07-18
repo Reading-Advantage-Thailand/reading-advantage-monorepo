@@ -22,14 +22,44 @@ interface IdentityIdempotencyRow {
   readonly record_expired: boolean;
 }
 
+/**
+ * Calculates a lowercase SHA-256 digest for an opaque value.
+ * @param value Opaque value to fingerprint.
+ * @returns Lowercase hexadecimal digest.
+ */
 function digest(value: string): string {
   return createHash("sha256").update(value).digest("hex");
 }
 
+/**
+ * Removes the validated algorithm prefix from a kernel fingerprint.
+ * @param fingerprint Validated SHA-256 fingerprint.
+ * @returns Lowercase hexadecimal digest accepted by identity persistence.
+ */
 function fingerprintHex(fingerprint: string): string {
   return fingerprint.slice("sha256:".length);
 }
 
+/**
+ * Maps a kernel capability ID into the canonical identity operation namespace.
+ * @param capabilityId Validated kernel capability identifier.
+ * @returns Colon-namespaced identity operation key accepted by stored-row contracts.
+ * @throws When the identity operation would exceed its persistence limit.
+ */
+function operationKey(capabilityId: string): string {
+  const operation = `capability:${capabilityId}`;
+  if (operation.length > 128) {
+    throw new Error("Company identity capability operation exceeds 128 characters.");
+  }
+  return operation;
+}
+
+/**
+ * Resolves the only idempotency scope supported by company identity capabilities.
+ * @param request Validated capability acquisition request.
+ * @returns Canonical global identity scope key.
+ * @throws When a tenant-scoped capability is supplied.
+ */
 function scopeKey(request: Readonly<IdempotencyAcquireRequest>): string {
   if (request.namespace.scope !== "global-capability") {
     throw new Error("Company identity capabilities require global idempotency scope.");
@@ -37,12 +67,19 @@ function scopeKey(request: Readonly<IdempotencyAcquireRequest>): string {
   return "global";
 }
 
+/**
+ * Acquires or replays one identity capability request under a row lock.
+ * @param sql Active PostgreSQL transaction.
+ * @param request Validated acquisition request.
+ * @param conflict Completed-result policy.
+ * @returns Ownership, replay, or a deterministic conflict.
+ */
 async function acquireInTransaction<TOutput>(
   sql: postgres.TransactionSql,
   request: Readonly<IdempotencyAcquireRequest>,
   conflict: IdempotencyConflictBehavior,
 ): Promise<IdempotencyAcquireResult<TOutput>> {
-  const operation = request.namespace.capabilityId;
+  const operation = operationKey(request.namespace.capabilityId);
   const scope = scopeKey(request);
   const keyHash = fingerprintHex(request.keyFingerprint);
   const requestHash = fingerprintHex(request.inputFingerprint);
@@ -165,7 +202,7 @@ export function createCompanyIdentityDurableIdempotencyPort(
     async fail(candidate: Readonly<IdempotencyFailureSettlement>): Promise<void> {
       const settlement = idempotencyFailureSettlementSchema.parse(candidate);
       const ownerHash = digest(settlement.ownershipToken);
-      if (settlement.disposition !== "store-terminal") {
+      if (settlement.disposition === "release") {
         const rows = await sql<readonly { id: string }[]>`
           DELETE FROM company_identity_idempotency_records
            WHERE owner_token_hash = ${ownerHash}
@@ -174,6 +211,21 @@ export function createCompanyIdentityDurableIdempotencyPort(
         `;
         if (rows.length !== 1) {
           throw new Error("Company identity idempotency release lost ownership.");
+        }
+        return;
+      }
+      if (settlement.disposition === "store-retryable") {
+        const retryOwnerHash = digest(randomBytes(32).toString("base64url"));
+        const rows = await sql<readonly { id: string }[]>`
+          UPDATE company_identity_idempotency_records
+             SET owner_token_hash = ${retryOwnerHash},
+                 lease_expires_at = now() - interval '1 second'
+           WHERE owner_token_hash = ${ownerHash}
+             AND state = 'IN_PROGRESS'
+          RETURNING id::text
+        `;
+        if (rows.length !== 1) {
+          throw new Error("Company identity retryable settlement lost ownership.");
         }
         return;
       }
