@@ -34,7 +34,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 
 COPY . .
 
-RUN pnpm --filter marketing build
+RUN pnpm turbo run build --filter=marketing
 
 # ── Runner ─────────────────────────────────────────────────────────────
 FROM node:22-alpine AS runner

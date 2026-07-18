@@ -218,7 +218,7 @@ describe("Marketing Cloud Run production contract", () => {
     expect(packageJson.scripts?.build).toBe(
       "vinext build && node scripts/verify-vinext-runtime.mjs",
     );
-    expect(dockerfile).toContain("RUN pnpm --filter marketing build");
+    expect(dockerfile).toContain("RUN pnpm turbo run build --filter=marketing");
     expect(dockerfile).toContain("ENV PORT=8080");
     expect(dockerfile).toContain("USER appuser");
     expect(dockerfile).toContain(
