@@ -305,6 +305,10 @@ export function createCompanyIdentityService(dependencies: {
             plusSeconds(operationTime, dependencies.config.ssoIdleTtlSeconds),
           );
           if (!sso) throw new CompanyIdentityError("SESSION_INVALID", "Sign-in is required.");
+          const employee = await dependencies.repository.getEmployee(sso.accountId);
+          if (!employee || employee.status !== "ACTIVE") {
+            throw new CompanyIdentityError("SESSION_INVALID", "Sign-in is required.");
+          }
           const roles = await dependencies.repository.listApplicationRoles(
             sso.membershipId,
             client.applicationId,

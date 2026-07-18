@@ -65,6 +65,8 @@ describe("company identity protocol primitives", () => {
     const token = await signer.sign({
       iss: "https://accounts.reading-advantage.com",
       sub: "2c1b8f6e-b101-4c2a-a5a7-9b47f40d8621",
+      username: "owner",
+      displayName: "Company Owner",
       aud: "sales",
       exp: 2_000_000_000,
       iat: 1_900_000_000,
@@ -79,6 +81,8 @@ describe("company identity protocol primitives", () => {
 
     await expect(signer.verify(token, "sales", "nonce")).resolves.toMatchObject({
       aud: "sales",
+      username: "owner",
+      displayName: "Company Owner",
       roles: ["SALES_REP"],
     });
     await expect(signer.verify(token, "marketing", "nonce")).rejects.toThrow(
@@ -101,6 +105,8 @@ describe("company identity protocol primitives", () => {
     });
     const base = {
       sub: "2c1b8f6e-b101-4c2a-a5a7-9b47f40d8621",
+      username: "owner",
+      displayName: "Company Owner",
       aud: "sales",
       nonce: "nonce",
       sid: "3c1b8f6e-b101-4c2a-a5a7-9b47f40d8621",

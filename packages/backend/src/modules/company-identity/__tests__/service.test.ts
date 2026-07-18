@@ -193,6 +193,7 @@ describe("company identity service", () => {
       "20000000-0000-4000-8000-000000000006",
       expect.any(Date),
     );
+    expect(repo.getEmployee).toHaveBeenCalledWith(employee.id);
   });
 
   it("returns the same non-enumerating denial for a missing employee", async () => {
