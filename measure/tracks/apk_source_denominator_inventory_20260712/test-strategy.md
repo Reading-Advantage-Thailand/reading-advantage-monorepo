@@ -27,9 +27,13 @@ The focused test is
   It exits zero only when the predecessor manifest is byte-bound at the supplied
   baseline; the failed-tree quarantine, committed-only source boundary, numeric
   budgets, stop-loss values, required isolated roles, and all expected output paths/
-  schema labels are present. Mutating a bound hash, replacing a numeric ceiling with
-  text, omitting an incompatible-role pair, or placing a quarantined path in roots is
-  a failure.
+  schema labels are present. The test literal-equals the ordered-first-match source
+  and asset classifiers, all suffixes, five roots, 29 program slugs, and the four-key
+  history classifier. It also requires the task, root-coordinator, external product-
+  owner, and receipt-directory output sets to be pairwise disjoint and exactly equal
+  to the expected artifact set. Mutating any predicate datum or bound hash, replacing
+  a numeric ceiling with text, omitting an incompatible-role pair, or placing a
+  quarantined path in roots is a failure.
 - **Phase-0 project gate:**
   `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -v -s measure/tests/evidence_integrity_gates -p 'test_*.py' && PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase0 && bash tests/orchestrator_supervisor_invariants.sh && bash tests/orchestrator_review_execution_truthfulness.sh && bash tests/orchestrator_catalog.sh && bash tests/orchestrator_marker_vocabulary.sh && bash tests/orchestrator_detector_syntax.sh && bash tests/orchestrator_role_receipt_integrity.sh && bash measure/doctor.sh`
 - **Orchestrator status:**
@@ -80,6 +84,11 @@ capability, responsive, asset-suitability, or product-disposition conclusions.
 Role receipts are required at the listed path pattern and must be tool-attested.
 The role plan is intentionally not a receipt. Missing receipts, inherited reviewer
 context, role overlap, unmeasured usage, or a breached ceiling block advancement.
+`denominator-contract-test-report.json` is a truth-test-author output. The isolated
+adversarial reviewer owns only `independent-review.json` plus its own receipt under
+`role-receipts/`. The root coordinator alone renders the candidate and accepted
+denominator/partition manifests. `product-owner-acceptance.json` is external human
+authority and cannot be authored by the coordinator or reviewer.
 
 ## Acceptance and ownership
 
@@ -90,9 +99,9 @@ batch; two failed fix/review cycles block the track; unresolved Critical, High, 
 Medium findings block later phases. Resource ceilings are numeric and role-specific in
 the input freeze; a ceiling change needs prior product-owner approval and revalidation.
 
-The product-owner verification task remains `[b] deferred:product-owner`. No candidate
-or accepted denominator manifest exists after Phase 0, and no product-owner approval is
-requested by this strategy.
+The product-owner verification task remains `[b] deferred:product-owner`. Phase 0
+freezes the later lifecycle output contracts but does not publish or authorize them,
+and no product-owner approval is requested by this strategy.
 
 ## Phase 2 independent-human-discovery contracts
 
@@ -483,6 +492,12 @@ request product-owner acceptance; and it does not advance any canonical role's
 lifecycle past its current handoff. The canonical `measure-strategy` subagent is
 the role that authors this update, which is exactly the contract role described
 above.
+
+The ownership boundary is exact on this retry: `truth-test-author` owns
+`denominator-contract-test-report.json`; `adversarial-reviewer` owns only
+`independent-review.json` and its role receipt; the root coordinator renders both
+candidate manifests after that review and both accepted manifests only after the
+external human product owner writes an exact-hash `product-owner-acceptance.json`.
 
 The next legal subagent invocation after this strategy commit is the canonical
 `measure-mid-red` (truth-test-author) or `measure-jr-green` (discovery-auditor /

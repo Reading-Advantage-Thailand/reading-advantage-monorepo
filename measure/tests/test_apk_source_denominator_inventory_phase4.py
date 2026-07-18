@@ -17,7 +17,7 @@ from measure.evidence_integrity_gates.apk_inventory_acceptance import (
     TrustedPhase4Authority,
     _frozen_role_tasks,
     _outputs_match_frozen_task,
-    validate_phase4_inventory_acceptance,
+    validate_phase4_inventory_acceptance_legacy_test_only,
 )
 from measure.evidence_integrity_gates.events import MappingEventResolver
 from measure.evidence_integrity_gates.git_source import GitSourceAdapter
@@ -778,30 +778,35 @@ class Phase4GreenBranchCounterexamples(unittest.TestCase):
                 {
                     "task_id": "discovery-auditor:fixture-owned-task",
                     "owner_role": "discovery-auditor",
+                    "reviewer_role": "adversarial-reviewer",
                     "forbidden_roles": list(cls.REQUIRED_ROLES[1:]),
                     "expected_outputs": ["evidence/raw-inventory.json"],
                 },
                 {
                     "task_id": "evidence-collector:fixture-owned-task",
                     "owner_role": "evidence-collector",
+                    "reviewer_role": "adversarial-reviewer",
                     "forbidden_roles": [role for role in cls.REQUIRED_ROLES if role != "evidence-collector"],
                     "expected_outputs": ["evidence/human-discovery.json"],
                 },
                 {
                     "task_id": "requirements-mapper:fixture-owned-task",
                     "owner_role": "requirements-mapper",
+                    "reviewer_role": "adversarial-reviewer",
                     "forbidden_roles": [role for role in cls.REQUIRED_ROLES if role != "requirements-mapper"],
                     "expected_outputs": ["evidence/reconciliation.json"],
                 },
                 {
                     "task_id": "truth-test-author:fixture-owned-task",
                     "owner_role": "truth-test-author",
+                    "reviewer_role": "adversarial-reviewer",
                     "forbidden_roles": [role for role in cls.REQUIRED_ROLES if role != "truth-test-author"],
                     "expected_outputs": ["evidence/contract-report.json"],
                 },
                 {
                     "task_id": "adversarial-reviewer:fixture-owned-task",
                     "owner_role": "adversarial-reviewer",
+                    "reviewer_role": "product-owner",
                     "forbidden_roles": list(cls.REQUIRED_ROLES[:-1]),
                     "expected_outputs": [
                         "evidence/independent-review.json",
@@ -1111,7 +1116,7 @@ class Phase4GreenBranchCounterexamples(unittest.TestCase):
             "artifact_commits": {path: cls.artifact_commit for path in artifacts},
         }
         cls.source_adapter = GitSourceAdapter(cls.fixture_repo)
-        cls.control_result = validate_phase4_inventory_acceptance(
+        cls.control_result = validate_phase4_inventory_acceptance_legacy_test_only(
             copy.deepcopy(cls.control_bundle),
             MappingEventResolver(copy.deepcopy(cls.control_events)),
             cls.source_adapter,
@@ -1207,7 +1212,7 @@ class Phase4GreenBranchCounterexamples(unittest.TestCase):
         Returns:
             Reason-coded validation result.
         """
-        return validate_phase4_inventory_acceptance(
+        return validate_phase4_inventory_acceptance_legacy_test_only(
             bundle,
             resolver or MappingEventResolver(events),
             self.source_adapter,

@@ -14,7 +14,6 @@ from typing import Any
 
 
 BASELINE = "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-PHASE1_REVISION = "03ad03c56911c762c1933775915364e725613f4b"
 ASTRAL_HISTORY_REVISION = "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
 TRACK = "apk_source_denominator_inventory_20260712"
 TRACK_DIR = Path(__file__).resolve().parent
@@ -29,6 +28,27 @@ SHARED_PACKAGE_ROOTS = (
     "packages/game-contracts/",
     "packages/game-cartridges/",
 )
+RAW_PUBLIC_GAME_ROOTS = (
+    "apps/advantage-games/public",
+    "apps/reading-advantage/public/games",
+    "apps/primary-advantage/public/games",
+)
+RAW_ASSET_ENUMERATION_ROOTS = (
+    *RAW_PUBLIC_GAME_ROOTS,
+    "apps/advantage-games/measure",
+    "packages/codecamp-knowledge/fixtures/apk-guided",
+)
+RAW_PROGRAM_SLUGS = (
+    "dragon-flight", "rpg-battle", "abyssal-well", "castle-defense", "magic-defense",
+    "wizard-vs-zombie", "village-guardian", "archers-revenge", "storm-castle-tower",
+    "paladins-twin-soul", "gryphon-patrol", "dragon-rider", "dungeon-liberator",
+    "spellweavers-run", "shadow-gate-dungeon", "labyrinth-goblin-king",
+    "griffin-riders-escape", "sorcerer-ziggurat", "enchanted-library", "rune-match",
+    "alchemists-synthesis", "potion-rush", "rune-forge-chamber", "astral-mage",
+    "griffin-sky-joust", "realm-carver", "devourer-slime", "haunted-library",
+    "babel-architect",
+)
+RAW_CONFIG_FILENAMES = {"package.json", "tsconfig.json", "tsconfig.test.json"}
 SOURCE_SUFFIXES = {".ts", ".tsx", ".js", ".jsx", ".json"}
 TEXT_SUFFIXES = SOURCE_SUFFIXES | {".md"}
 ASSET_SUFFIXES = {".png", ".jpg", ".jpeg", ".gif", ".webp", ".svg", ".ico", ".webm", ".mp3", ".wav", ".ogg", ".m4a", ".json", ".csv", ".txt", ".xml", ".yaml", ".yml"}
@@ -40,6 +60,20 @@ RAW_REQUIRED_SOURCE_PATHS = {
     "packages/game-cartridges/src/catalog.ts",
     "packages/game-cartridges/src/index.ts",
 }
+PHASE1_ARTIFACTS = (
+    "source-denominator.json",
+    "game-identity-ledger.json",
+    "scene-state-denominator.json",
+    "asset-file-denominator.json",
+    "historical-source-denominator.json",
+    "denominator-discrepancies.json",
+)
+PHASE2_ARTIFACTS = (
+    "independent-human-discovery.json",
+    "human-duplicate-drift-records.json",
+    "human-historical-deleted-records.json",
+    "human-discrepancy-records.json",
+)
 
 
 @dataclass
@@ -137,42 +171,130 @@ def _tree_entries() -> list[dict[str, Any]]:
     return sorted(entries, key=lambda row: row["path"])
 
 
-def _raw_source_path(path: str) -> bool:
-    """Selects game-bearing source paths using only frozen path structure."""
+def _raw_normalized_path(path: str) -> str:
+    """Normalizes one frozen path for bounded independent slug matching."""
+    return re.sub(r"[^a-z0-9]+", "-", path.lower()).strip("-")
+
+
+def _raw_matches_program_slug(path: str) -> bool:
+    """Reports whether a path contains one exact bounded program slug."""
+    normalized = f"-{_raw_normalized_path(path)}-"
+    return any(f"-{slug}-" in normalized for slug in RAW_PROGRAM_SLUGS)
+
+
+def _raw_source_relevance_rule(path: str) -> str | None:
+    """Returns the independent frozen rule admitting one raw source path."""
+    if path == QUARANTINED_SOURCE_PREFIX or path.startswith(f"{QUARANTINED_SOURCE_PREFIX}/"):
+        return None
+    if path in RAW_REQUIRED_SOURCE_PATHS:
+        return "active-apk-program-sources"
     if path.startswith(SHARED_PACKAGE_ROOTS):
-        return True
-    if path == CATALOG_PATH or path in RAW_REQUIRED_SOURCE_PATHS:
-        return True
+        return "apk-core-packages"
+    filename = Path(path).name
+    if filename in RAW_CONFIG_FILENAMES or filename.startswith("tsconfig."):
+        return None
     suffix = Path(path).suffix.lower()
-    if suffix not in SOURCE_SUFFIXES:
-        return False
-    if path.startswith("apps/advantage-games/src/"):
-        return True
-    return path.startswith(("apps/reading-advantage/", "apps/primary-advantage/")) and (
+    if path.startswith("apps/advantage-games/src/") and suffix in SOURCE_SUFFIXES:
+        return "advantage-games-src"
+    if path.startswith(("apps/reading-advantage/", "apps/primary-advantage/")) and suffix in SOURCE_SUFFIXES and (
         "/games/" in path or "/api/v1/games/" in path or "/lib/game" in path
-    )
+    ):
+        return "reading-primary-game-copies"
+    if path.startswith("packages/codecamp-knowledge/") and any(
+        part.startswith("apk-") for part in Path(path).parts
+    ) and suffix in SOURCE_SUFFIXES | {".md"}:
+        return "codecamp-knowledge-apk-segment"
+    if (
+        path.startswith("packages/domain/src/games/")
+        or path.startswith("packages/domain/src/__tests__/games")
+    ) and suffix in SOURCE_SUFFIXES:
+        return "domain-games-tests"
+    normalized = _raw_normalized_path(path)
+    if path.startswith("packages/db/") and (
+        "game-completion" in normalized or "codecamp-apk" in normalized
+    ):
+        return "db-game-completion-codecamp-apk"
+    if (
+        path.startswith("apps/advantage-games/measure/")
+        and suffix in {".md", ".json"}
+        and _raw_matches_program_slug(path)
+    ):
+        return "advantage-games-measure-program-match"
+    return None
+
+
+def _raw_source_path(path: str) -> bool:
+    """Reports whether an independent frozen relevance rule admits the source."""
+    return _raw_source_relevance_rule(path) is not None
+
+
+def _raw_asset_relevance_rule(path: str) -> str | None:
+    """Returns the independent five-root rule admitting one raw asset path."""
+    if path == QUARANTINED_SOURCE_PREFIX or path.startswith(f"{QUARANTINED_SOURCE_PREFIX}/"):
+        return None
+    filename = Path(path).name
+    if filename in RAW_CONFIG_FILENAMES or filename.startswith("tsconfig."):
+        return None
+    suffix = Path(path).suffix.lower()
+    if path.startswith(RAW_PUBLIC_GAME_ROOTS) and suffix in ASSET_SUFFIXES:
+        return "public-game-media-audio-data"
+    if (
+        path.startswith("apps/advantage-games/measure/")
+        and filename in {"asset-spec.md", "metadata.json"}
+        and _raw_matches_program_slug(path)
+    ):
+        return "game-measure-asset-sidecars"
+    if path == "packages/codecamp-knowledge/fixtures/apk-guided/activity-tutorial.json":
+        return "codecamp-activity-tutorial"
+    return None
 
 
 def _raw_asset_path(path: str) -> bool:
-    """Selects candidate asset paths independently from frozen tree entries."""
-    suffix = Path(path).suffix.lower()
-    public = path.startswith((
-        "apps/advantage-games/public/",
-        "apps/reading-advantage/public/games/",
-        "apps/primary-advantage/public/games/",
-    ))
-    game_source = _raw_source_path(path) and not path.startswith(SHARED_PACKAGE_ROOTS)
-    return suffix in ASSET_SUFFIXES and (public or game_source)
+    """Reports whether an independent five-root rule admits the asset."""
+    return _raw_asset_relevance_rule(path) is not None
 
 
-def _raw_store_surfaces(reader: GitObjectReader, source_paths: list[str]) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
-    """Discovers literal state domains and explicit store writes from raw source text."""
+def _enumerate_raw_transition_facts(source_texts: dict[str, str]) -> list[dict[str, Any]]:
+    """Enumerates Phase-2 raw writes through its independent compiler traversal."""
+    helper = TRACK_DIR / "transition_ast_helper.ts"
+    result = subprocess.run(
+        [str(REPO_ROOT / "node_modules" / ".bin" / "tsx"), str(helper)],
+        cwd=REPO_ROOT,
+        input=json.dumps(
+            {"mode": "phase2", "sources": source_texts}, sort_keys=True
+        ).encode(),
+        capture_output=True,
+        check=False,
+    )
+    if result.returncode:
+        raise RuntimeError(
+            "Phase-2 raw TypeScript transition traversal failed: "
+            + result.stderr.decode("utf-8", errors="replace").strip()
+        )
+    try:
+        payload = json.loads(result.stdout)
+    except json.JSONDecodeError as error:
+        raise RuntimeError("Phase-2 transition traversal returned invalid JSON") from error
+    facts = payload.get("literal_domain_writes") if isinstance(payload, dict) else None
+    if not isinstance(facts, list) or not all(isinstance(row, dict) for row in facts):
+        raise RuntimeError("Phase-2 transition traversal returned malformed facts")
+    return facts
+
+
+def _raw_store_surfaces(
+    reader: GitObjectReader, source_paths: list[str]
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
+    """Discovers literal domains and independently adjudicates raw AST writes."""
     states: list[dict[str, Any]] = []
-    transitions: list[dict[str, Any]] = []
+    source_texts = {
+        path: reader.read(BASELINE, path).decode("utf-8", errors="replace")
+        for path in source_paths
+        if Path(path).suffix.lower() in {".ts", ".tsx", ".js", ".jsx"}
+    }
     for path in source_paths:
         if Path(path).suffix.lower() not in {".ts", ".tsx", ".js", ".jsx"}:
             continue
-        text = reader.read(BASELINE, path).decode("utf-8", errors="replace")
+        text = source_texts[path]
         domains: dict[str, set[str]] = {}
         for match in re.finditer(
             r"(?:export\s+)?type\s+(\w+)\s*=\s*([\s\S]*?)(?=\n\s*(?:export\s+)?(?:type|interface|const|function|class)\b|\Z)",
@@ -238,17 +360,6 @@ def _raw_store_surfaces(reader: GitObjectReader, source_paths: list[str]) -> tup
             line = text.count("\n", 0, declaration.start()) + 1
             for literal in sorted(literals):
                 states.append({"path": path, "source_symbol": state_name, "state_id": literal, "evidence": locator(reader, BASELINE, path, line, line)})
-            setter = re.compile(rf"\b{re.escape(setter_name)}\s*\(\s*['\"]([^'\"]+)['\"]")
-            first_change = next(
-                (match for match in setter.finditer(text, declaration.end()) if match.group(1) in literals and match.group(1) != initial_value),
-                None,
-            )
-            if first_change is not None:
-                transitions.append({
-                    "path": path, "source_symbol": state_name,
-                    "from_state_id": initial_value, "to_state_id": first_change.group(1),
-                    "evidence": locator(reader, BASELINE, path, text.count("\n", 0, first_change.start()) + 1, text.count("\n", 0, first_change.end()) + 1),
-                })
         existing_state_keys = {(row["path"], row["source_symbol"], row["state_id"]) for row in states}
         for declaration in re.finditer(
             r"(?:const|let)\s*\[\s*(\w+)\s*,\s*set\w+\s*\]\s*=\s*(?:React\.)?useState\s*<([^>]+)>",
@@ -264,64 +375,113 @@ def _raw_store_surfaces(reader: GitObjectReader, source_paths: list[str]) -> tup
                 if key not in existing_state_keys:
                     states.append({"path": path, "source_symbol": state_name, "state_id": literal, "evidence": locator(reader, BASELINE, path, line, line)})
                     existing_state_keys.add(key)
-        create_start = text.find("create<")
-        if create_start < 0:
-            continue
-        for property_name, property_domains in sorted(properties.items()):
-            if property_name == "state":
-                continue
-            distinct_domains = {(symbol, frozenset(literals)) for symbol, literals in property_domains}
-            if len(distinct_domains) != 1:
-                continue
-            domain_symbol, frozen_literals = next(iter(distinct_domains))
-            literals = set(frozen_literals)
-            writes = [
-                match for match in re.finditer(rf"\b{re.escape(property_name)}\s*:\s*['\"]([^'\"]+)['\"]", text[create_start:])
-                if match.group(1) in literals
-            ]
-            ordered: list[tuple[str, int, int]] = []
-            for match in writes:
-                value = match.group(1)
-                absolute_start = create_start + match.start()
-                absolute_end = create_start + match.end()
-                if not ordered or ordered[-1][0] != value:
-                    ordered.append((value, absolute_start, absolute_end))
-            changes = [item for item in ordered[1:] if item[0] != ordered[0][0]]
-            for previous, current in ([(ordered[0], changes[0])] if changes else []):
-                transitions.append({
-                    "path": path,
-                    "source_symbol": property_name,
-                    "from_state_id": previous[0],
-                    "to_state_id": current[0],
-                    "evidence": locator(reader, BASELINE, path, text.count("\n", 0, previous[1]) + 1, text.count("\n", 0, current[2]) + 1),
-                })
-            for conditional in re.finditer(
-                rf"state\.{re.escape(property_name)}\s*===?\s*['\"]([^'\"]+)['\"][\s\S]{{0,160}}?\?\s*['\"]([^'\"]+)['\"]\s*:\s*state\.{re.escape(property_name)}",
-                text[create_start:],
-            ):
-                if conditional.group(1) in literals and conditional.group(2) in literals:
-                    start = create_start + conditional.start()
-                    end = create_start + conditional.end()
-                    transitions.append({
-                        "path": path, "source_symbol": property_name,
-                        "from_state_id": conditional.group(1), "to_state_id": conditional.group(2),
-                        "evidence": locator(reader, BASELINE, path, text.count("\n", 0, start) + 1, text.count("\n", 0, end) + 1),
-                    })
-            for guarded in re.finditer(
-                rf"if\s*\([^)]*(?:state\.)?{re.escape(property_name)}\s*!==?\s*['\"]([^'\"]+)['\"][^)]*\)\s*return(?:\s*\{{\}})?([\s\S]{{0,350}}?)\b{re.escape(property_name)}\s*:\s*['\"]([^'\"]+)['\"]",
-                text[create_start:],
-            ):
-                if guarded.group(1) in literals and guarded.group(3) in literals:
-                    start = create_start + guarded.start()
-                    end = create_start + guarded.end()
-                    transitions.append({
-                        "path": path, "source_symbol": property_name,
-                        "from_state_id": guarded.group(1), "to_state_id": guarded.group(3),
-                        "evidence": locator(reader, BASELINE, path, text.count("\n", 0, start) + 1, text.count("\n", 0, end) + 1),
-                    })
+    state_occurrences: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
+    for state in states:
+        state_occurrences[(state["source_symbol"], state["state_id"])].append(state)
+
+    def resolves_raw_state(symbol: str, state_id: str, evidence_path: str) -> bool:
+        """Checks that Phase-2 independently found one exact state occurrence."""
+        choices = state_occurrences.get((symbol, state_id), [])
+        local = [row for row in choices if row["path"] == evidence_path]
+        resolved = local if len(local) == 1 else choices
+        return len(resolved) == 1
+
+    transitions: list[dict[str, Any]] = []
+    candidates: list[dict[str, Any]] = []
+    for fact in _enumerate_raw_transition_facts(source_texts):
+        evidence = locator(
+            reader,
+            BASELINE,
+            fact["path"],
+            fact["start_line"],
+            fact["end_line"],
+        )
+        common = {
+            "path": fact["path"],
+            "source_symbol": fact["source_symbol"],
+            "to_state_id": fact["to_state_id"],
+            "evidence": evidence,
+        }
+        from_state = fact.get("proven_from_state_id")
+        if (
+            isinstance(from_state, str)
+            and resolves_raw_state(fact["source_symbol"], from_state, fact["path"])
+            and resolves_raw_state(
+                fact["source_symbol"], fact["to_state_id"], fact["path"]
+            )
+        ):
+            transitions.append(
+                {
+                    **common,
+                    "from_state_id": from_state,
+                    "transition_evidence_kind": fact["proof_kind"],
+                    "discovery_method": "independent-raw-typescript-compiler-ast",
+                }
+            )
+        else:
+            has_compiler_proof = isinstance(from_state, str)
+            candidates.append(
+                {
+                    **common,
+                    **(
+                        {
+                            "from_state_id": from_state,
+                            "transition_evidence_kind": fact["proof_kind"],
+                        }
+                        if has_compiler_proof
+                        else {}
+                    ),
+                    "record_kind": "transition_write_candidate",
+                    "resolution_status": "unresolved",
+                    "reason": (
+                        "state-domain-occurrence-ambiguous"
+                        if has_compiler_proof
+                        else "no-single-proven-from-state"
+                    ),
+                    "discovery_method": "independent-raw-typescript-compiler-ast",
+                }
+            )
     state_map = {(row["path"], row["source_symbol"], row["state_id"]): row for row in states}
-    transition_map = {(row["path"], row["source_symbol"], row["from_state_id"], row["to_state_id"]): row for row in transitions}
-    return [state_map[key] for key in sorted(state_map)], [transition_map[key] for key in sorted(transition_map)]
+    transition_map = {
+        (
+            row["path"],
+            row["source_symbol"],
+            row["from_state_id"],
+            row["to_state_id"],
+            row["evidence"]["range"]["start_line"],
+        ): row
+        for row in transitions
+    }
+    candidate_map = {
+        (row["path"], row["source_symbol"], row["to_state_id"], row["evidence"]["range"]["start_line"]): row
+        for row in candidates
+    }
+    return (
+        [state_map[key] for key in sorted(state_map)],
+        [transition_map[key] for key in sorted(transition_map)],
+        [candidate_map[key] for key in sorted(candidate_map)],
+    )
+
+
+def first_deletion_records(history_output: str) -> list[dict[str, str]]:
+    """Parses first-parent deletion output, retaining only the first row per path."""
+    records: list[dict[str, str]] = []
+    seen_paths: set[str] = set()
+    revision = ""
+    for line in history_output.splitlines():
+        if line.startswith("commit:"):
+            revision = line[7:]
+        elif line.startswith("D\t"):
+            path = line[2:]
+            if (
+                path not in seen_paths
+                and path != QUARANTINED_SOURCE_PREFIX
+                and not path.startswith(f"{QUARANTINED_SOURCE_PREFIX}/")
+                and (_raw_source_path(path) or _raw_asset_path(path))
+            ):
+                seen_paths.add(path)
+                records.append({"deletion_revision": revision, "path": path})
+    return records
 
 
 def discover_raw_frozen_sources() -> dict[str, Any]:
@@ -341,29 +501,22 @@ def discover_raw_frozen_sources() -> dict[str, Any]:
             match = re.search(r"/games/(sentence|vocabulary)/([^/]+)/page\.tsx$", path)
             if match:
                 route_records.append({"source_kind": match.group(1), "catalog_id": match.group(2), "path": path, "evidence": locator(reader, BASELINE, path)})
-        states, transitions = _raw_store_surfaces(reader, source_paths)
+        states, transitions, transition_candidates = _raw_store_surfaces(reader, source_paths)
         asset_records = [
-            {"canonical_path": row["path"], "git_object_id": row["git_object_id"], "byte_size": row["byte_size"]}
+            {
+                "canonical_path": row["path"],
+                "git_object_id": row["git_object_id"],
+                "byte_size": row["byte_size"],
+                "relevance_rule_id": _raw_asset_relevance_rule(row["path"]),
+            }
             for row in entries if _raw_asset_path(row["path"])
         ]
         history_output = subprocess.check_output(
-            ["git", "log", "--format=commit:%H", "--name-status", "--diff-filter=D", BASELINE, "--", *SOURCE_ROOTS],
+            ["git", "log", "--first-parent", "--format=commit:%H", "--name-status", "--diff-filter=D", BASELINE, "--", *SOURCE_ROOTS],
             cwd=REPO_ROOT,
             text=True,
         )
-        history_records: list[dict[str, Any]] = []
-        revision = ""
-        for line in history_output.splitlines():
-            if line.startswith("commit:"):
-                revision = line[7:]
-            elif line.startswith("D\t"):
-                path = line[2:]
-                if (
-                    path != QUARANTINED_SOURCE_PREFIX
-                    and not path.startswith(f"{QUARANTINED_SOURCE_PREFIX}/")
-                    and (_raw_source_path(path) or _raw_asset_path(path))
-                ):
-                    history_records.append({"deletion_revision": revision, "path": path})
+        history_records = first_deletion_records(history_output)
         batches = [
             {"batch_id": f"raw-identity-{index // 3 + 1:02d}", "identity_ids": [row["catalog_id"] for row in catalog_records[index:index + 3]]}
             for index in range(0, len(catalog_records), 3)
@@ -375,9 +528,17 @@ def discover_raw_frozen_sources() -> dict[str, Any]:
             "discovery_method": "independent-frozen-tree-and-raw-source-scan",
             "raw_identity_records": catalog_records,
             "raw_route_records": route_records,
-            "raw_file_records": [{**row, "canonical_path": row["path"]} for row in entries if row["path"] in set(source_paths)],
+            "raw_file_records": [
+                {
+                    **row,
+                    "canonical_path": row["path"],
+                    "relevance_rule_id": _raw_source_relevance_rule(row["path"]),
+                }
+                for row in entries if row["path"] in set(source_paths)
+            ],
             "raw_state_records": states,
             "raw_transition_records": transitions,
+            "raw_transition_write_candidates": transition_candidates,
             "raw_asset_records": asset_records,
             "raw_history_records": history_records,
             "review_batches": batches,
@@ -395,12 +556,203 @@ def symmetric_reconciliation_records(
     """Returns matched and either-side-only records over the union of keys."""
     rows = []
     for key in sorted(set(mechanical) | set(human)):
-        status = "matched" if key in mechanical and key in human else "mechanical-only" if key in mechanical else "human-only"
+        if key in mechanical and key in human:
+            status = (
+                "evidence-mismatch"
+                if category == "transition-write-candidates"
+                and canonical_key(mechanical[key]) != canonical_key(human[key])
+                else "matched"
+            )
+        else:
+            status = "mechanical-only" if key in mechanical else "human-only"
+        unresolved_candidate = category == "transition-write-candidates" and status != "matched"
         rows.append({
             "category": category, "record_key": key, "comparison_status": status,
-            "blocking": status != "matched", "mechanical_evidence": mechanical.get(key, []), "human_evidence": human.get(key, []),
+            "blocking": status != "matched" or unresolved_candidate,
+            "resolution_status": (
+                "unresolved-candidate"
+                if unresolved_candidate
+                else "retained-target-write-candidate"
+                if category == "transition-write-candidates"
+                else "compared"
+            ),
+            "mechanical_evidence": mechanical.get(key, []), "human_evidence": human.get(key, []),
         })
     return rows
+
+
+def summarize_symmetric_reconciliation(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    """Derives fail-closed Phase-2 status and counts from exact symmetric rows.
+
+    Args:
+        rows: Complete union comparison emitted by the independent and mechanical paths.
+
+    Returns:
+        Exact blocking records, per-category counts, and truthful reconciliation status.
+
+    Raises:
+        ValueError: If a row's blocking flag disagrees with its comparison status.
+    """
+    blockers: list[dict[str, Any]] = []
+    by_category: dict[str, int] = defaultdict(int)
+    seen_keys: set[tuple[str, str]] = set()
+    for row in rows:
+        status = row.get("comparison_status")
+        category = row.get("category")
+        candidate = category == "transition-write-candidates"
+        if status not in {"matched", "mechanical-only", "human-only", "evidence-mismatch"}:
+            raise ValueError("INVALID_SYMMETRIC_COMPARISON_STATUS")
+        if status == "evidence-mismatch" and not candidate:
+            raise ValueError("INVALID_SYMMETRIC_COMPARISON_STATUS")
+        expected_resolution = (
+            "retained-target-write-candidate" if candidate and status == "matched"
+            else "unresolved-candidate" if candidate else "compared"
+        )
+        expected_blocking = status != "matched"
+        if row.get("resolution_status") != expected_resolution:
+            raise ValueError("SYMMETRIC_RESOLUTION_STATUS_MISMATCH")
+        if row.get("blocking") is not expected_blocking:
+            raise ValueError("SYMMETRIC_BLOCKING_FLAG_MISMATCH")
+        record_key = row.get("record_key")
+        if not isinstance(category, str) or not category or not isinstance(record_key, str) or not record_key:
+            raise ValueError("INVALID_SYMMETRIC_RECORD_KEY")
+        unique_key = (category, record_key)
+        if unique_key in seen_keys:
+            raise ValueError("DUPLICATE_SYMMETRIC_RECORD")
+        seen_keys.add(unique_key)
+        if expected_blocking:
+            blockers.append(row)
+            by_category[category] += 1
+    blocked = bool(blockers)
+    return {
+        "status": (
+            "independent-human-reconciliation-blocked"
+            if blocked
+            else "independent-human-discovery-complete"
+        ),
+        "coverage_status": "blocked" if blocked else "complete",
+        "uncovered_count": len(blockers),
+        "uncovered_by_category": dict(sorted(by_category.items())),
+        "blocking_records": blockers,
+    }
+
+
+def unique_map(
+    records: list[dict[str, Any]],
+    key_fn: Any,
+    value_fn: Any,
+    label: str,
+) -> dict[str, list[dict[str, Any]]]:
+    """Builds a key map while rejecting duplicate projections before collapse."""
+    result: dict[str, list[dict[str, Any]]] = {}
+    for row in records:
+        key = key_fn(row)
+        if key in result:
+            raise ValueError(f"DUPLICATE_EXACT_REVIEW_KEY:{label}")
+        result[key] = value_fn(row)
+    return result
+
+
+def build_symmetric_reconciliation(
+    source: dict[str, Any],
+    ledger: dict[str, Any],
+    scenes: dict[str, Any],
+    assets: dict[str, Any],
+    historical: dict[str, Any],
+    raw: dict[str, Any],
+) -> list[dict[str, Any]]:
+    """Derives the exact seven-category mechanical/human symmetric union."""
+    maps = {
+        "identities": (
+            unique_map(ledger["identity_records"], lambda row: row["catalog_identity_id"], lambda row: [row["catalog_evidence"]], "mechanical identities"),
+            unique_map(raw["raw_identity_records"], lambda row: row["catalog_id"], lambda row: [row["evidence"]], "raw identities"),
+        ),
+        "files": (
+            unique_map([row for row in source["records"] if row["record_type"] == "file"], lambda row: row["file_path"], lambda row: [row["evidence"]], "mechanical files"),
+            unique_map(raw["raw_file_records"], lambda row: row["canonical_path"], lambda row: [row], "raw files"),
+        ),
+        "states": (
+            unique_map(scenes["state_records"], lambda row: canonical_key([row["evidence"]["path"], row["source_symbol"], row["state_id"]]), lambda row: [row["evidence"]], "mechanical states"),
+            unique_map(raw["raw_state_records"], lambda row: canonical_key([row["path"], row["source_symbol"], row["state_id"]]), lambda row: [row["evidence"]], "raw states"),
+        ),
+        "transitions": (
+            unique_map(scenes["transitions"], lambda row: canonical_key([row["evidence"]["path"], row["source_symbol"], row["from_state_id"], row["to_state_id"], row["evidence"]["range"]["start_line"]]), lambda row: [row["evidence"]], "mechanical transitions"),
+            unique_map(raw["raw_transition_records"], lambda row: canonical_key([row["path"], row["source_symbol"], row["from_state_id"], row["to_state_id"], row["evidence"]["range"]["start_line"]]), lambda row: [row["evidence"]], "raw transitions"),
+        ),
+        "transition-write-candidates": (
+            unique_map(scenes["transition_write_candidates"], transition_candidate_key, lambda row: [row["evidence"]], "mechanical transition candidates"),
+            unique_map(raw["raw_transition_write_candidates"], transition_candidate_key, lambda row: [row["evidence"]], "raw transition candidates"),
+        ),
+        "assets": (
+            unique_map(assets["candidate_files"], lambda row: row["canonical_path"], lambda row: [row], "mechanical assets"),
+            unique_map(raw["raw_asset_records"], lambda row: row["canonical_path"], lambda row: [row], "raw assets"),
+        ),
+        "history-paths": (
+            unique_map([row for row in historical["records"] if row["classification"] != "current"], lambda row: row["evidence"]["path"], lambda row: [row["evidence"]], "mechanical history"),
+            unique_map(raw["raw_history_records"], lambda row: row["path"], lambda row: [row], "raw history"),
+        ),
+    }
+    rows = [
+        row
+        for category, (mechanical, human) in maps.items()
+        for row in symmetric_reconciliation_records(category, mechanical, human)
+    ]
+    if not rows or {row["category"] for row in rows} != set(maps):
+        raise ValueError("SYMMETRIC_UNION_EMPTY_OR_INCOMPLETE")
+    return rows
+
+
+def validate_symmetric_reconciliation_document(
+    document: dict[str, Any], expected_rows: list[dict[str, Any]]
+) -> dict[str, Any]:
+    """Validates exact blocker membership, status, and accounting in a Phase-2 document.
+
+    Args:
+        document: Human discrepancy artifact containing the complete symmetric union.
+        expected_rows: Freshly derived exact seven-category union.
+
+    Returns:
+        The independently derived symmetric reconciliation summary.
+    """
+    rows = document.get("independent_symmetric_reconciliation")
+    if not isinstance(expected_rows, list) or not expected_rows:
+        raise ValueError("SYMMETRIC_UNION_EMPTY_OR_INCOMPLETE")
+    if not isinstance(rows, list):
+        raise ValueError("MISSING_SYMMETRIC_RECONCILIATION")
+    summary = summarize_symmetric_reconciliation(rows)
+    if rows != expected_rows:
+        raise ValueError("SYMMETRIC_UNION_MISMATCH")
+    if document.get("independent_symmetric_blocking_records") != summary["blocking_records"]:
+        raise ValueError("SYMMETRIC_BLOCKER_SET_MISMATCH")
+    if document.get("status") != summary["status"] or document.get("coverage_status") != summary["coverage_status"]:
+        raise ValueError("SYMMETRIC_STATUS_MISMATCH")
+    if (
+        document.get("uncovered_count") != summary["uncovered_count"]
+        or document.get("uncovered_by_category") != summary["uncovered_by_category"]
+    ):
+        raise ValueError("SYMMETRIC_ACCOUNTING_MISMATCH")
+    return summary
+
+
+def phase1_input_provenance(reader: GitObjectReader, revision: str) -> dict[str, Any]:
+    """Builds exact revision-and-hash provenance for all consumed Phase-1 artifacts.
+
+    Args:
+        reader: Committed-object reader used for the Phase-1 load.
+        revision: Validated full Phase-1 commit SHA.
+
+    Returns:
+        Exact revision and SHA-256 mapping for every consumed Phase-1 artifact.
+    """
+    return {
+        "revision": revision,
+        "artifact_sha256": {
+            f"measure/tracks/{TRACK}/{name}": hashlib.sha256(
+                reader.read(revision, f"measure/tracks/{TRACK}/{name}")
+            ).hexdigest()
+            for name in PHASE1_ARTIFACTS
+        },
+    }
 
 
 def git_json(reader: GitObjectReader, revision: str, name: str) -> dict[str, Any]:
@@ -529,13 +881,16 @@ def revalidate(reader: GitObjectReader, evidence: dict[str, Any]) -> dict[str, A
         Independently revalidated evidence.
     """
     source_range = evidence["range"]
-    return locator(
+    rebuilt = locator(
         reader,
         evidence["revision"],
         evidence["path"],
         source_range["start_line"],
         source_range["end_line"],
     )
+    if evidence != rebuilt:
+        raise ValueError("LOCATOR_MISMATCH")
+    return rebuilt
 
 
 def canonical_key(value: object) -> str:
@@ -548,6 +903,47 @@ def canonical_key(value: object) -> str:
         Canonical compact JSON.
     """
     return json.dumps(value, sort_keys=True, separators=(",", ":"))
+
+
+def transition_candidate_key(row: dict[str, Any]) -> str:
+    """Returns the exact path/symbol/target/line/optional-from candidate key."""
+    evidence = row.get("evidence", {})
+    source_range = evidence.get("range", {}) if isinstance(evidence, dict) else {}
+    path = row.get("path", evidence.get("path") if isinstance(evidence, dict) else None)
+    line = row.get("start_line", source_range.get("start_line"))
+    payload = {
+        "path": path,
+        "source_symbol": row.get("source_symbol"),
+        "to_state_id": row.get("to_state_id"),
+        "start_line": line,
+        "reason": row.get("reason"),
+    }
+    from_state = row.get("from_state_id", row.get("proven_from_state_id"))
+    if isinstance(from_state, str):
+        payload["proven_from_state_id"] = from_state
+        payload["transition_evidence_kind"] = row.get("transition_evidence_kind")
+    if (
+        not isinstance(path, str)
+        or not isinstance(payload["source_symbol"], str)
+        or not isinstance(payload["to_state_id"], str)
+        or not isinstance(line, int)
+        or not isinstance(payload["reason"], str)
+        or isinstance(from_state, str)
+        and not isinstance(payload.get("transition_evidence_kind"), str)
+    ):
+        raise ValueError("INVALID_TRANSITION_CANDIDATE_KEY")
+    return canonical_key(payload)
+
+
+def require_exact_map_cardinalities(
+    cardinalities: dict[str, tuple[int, int]],
+) -> None:
+    """Rejects any reconciliation map whose key projection collapsed source rows."""
+    collapsed = [
+        label for label, (actual, expected) in cardinalities.items() if actual != expected
+    ]
+    if collapsed:
+        raise ValueError(f"duplicate exact reconciliation keys: {', '.join(collapsed)}")
 
 
 def evidence_record(
@@ -825,8 +1221,8 @@ def program_reviews(
                 disposition = "unsupported program assumption"
                 source_fact = "No current or ancestor implementation evidence was found by the recorded exhaustive searches; the authored program name is reviewed but excluded from the current source denominator."
 
-            exact_name_command = ["git", "log", "--format=%H", "-S", display_name, BASELINE, "--", *SOURCE_ROOTS]
-            slug_command = ["git", "log", "--format=%H", "-S", catalog_id, BASELINE, "--", *SOURCE_ROOTS]
+            exact_name_command = ["git", "log", "--first-parent", "--format=%H", "-S", display_name, BASELINE, "--", *SOURCE_ROOTS]
+            slug_command = ["git", "log", "--first-parent", "--format=%H", "-S", catalog_id, BASELINE, "--", *SOURCE_ROOTS]
             current_name_command = ["git", "grep", "-l", "-F", display_name, BASELINE, "--", *SOURCE_ROOTS]
             spec_command = ["git", "grep", "-l", "-F", display_name, BASELINE, "--", "measure"]
 
@@ -848,15 +1244,15 @@ def program_reviews(
             if primary_historical_evidence is not None:
                 primary_path = primary_historical_evidence["path"]
                 deletion_command = [
-                    "git", "log", "--format=%H%x09%P%x09%s", "--diff-filter=D", BASELINE, "--", primary_path,
+                    "git", "log", "--first-parent", "--format=%H%x09%P%x09%s", "--diff-filter=D", BASELINE, "--", primary_path,
                 ]
                 deletion_lines = command_lines(deletion_command)
                 if not deletion_lines:
                     raise ValueError(f"No deletion commit found for historical identity: {label}")
                 deletion_parts = deletion_lines[0].split("\t", 2)
                 parents = deletion_parts[1].split()
-                if primary_historical_evidence["revision"] not in parents:
-                    raise ValueError(f"Historical locator is not a deletion parent for {label}")
+                if not parents or primary_historical_evidence["revision"] != parents[0]:
+                    raise ValueError(f"Historical locator is not the first deletion parent for {label}")
                 primary_deletion = {
                     "command": " ".join(deletion_command),
                     "deletion_commit": deletion_parts[0],
@@ -865,12 +1261,12 @@ def program_reviews(
                     "path": primary_path,
                 }
                 path_history_command = [
-                    "git", "log", "--format=commit:%H", "--name-status", BASELINE, "--", primary_path,
+                    "git", "log", "--first-parent", "--format=commit:%H", "--name-status", BASELINE, "--", primary_path,
                 ]
                 path_history_events = command_lines(path_history_command)
             else:
-                deletion_command = ["git", "log", "--format=%H%x09%P%x09%s", "--diff-filter=D", BASELINE, "--", f"*{catalog_id}*"]
-                path_history_command = ["git", "log", "--format=commit:%H", "--name-status", BASELINE, "--", f"*{catalog_id}*"]
+                deletion_command = ["git", "log", "--first-parent", "--format=%H%x09%P%x09%s", "--diff-filter=D", BASELINE, "--", f"*{catalog_id}*"]
+                path_history_command = ["git", "log", "--first-parent", "--format=commit:%H", "--name-status", BASELINE, "--", f"*{catalog_id}*"]
 
             history_search = {
                 "baseline_revision": BASELINE,
@@ -951,7 +1347,15 @@ def validate_evidence_record(record: dict[str, Any], location: str) -> None:
             raise AssertionError(f"{location} has an incomplete locator")
 
 
-def check_coverage(phase1_revision: str = PHASE1_REVISION) -> dict[str, int]:
+def unique_projection(records: list[dict[str, Any]], key_fn: Any, label: str) -> set[str]:
+    """Projects review keys while rejecting duplicates before set comparison."""
+    values = [key_fn(row) for row in records]
+    if len(values) != len(set(values)):
+        raise ValueError(f"DUPLICATE_EXACT_REVIEW_KEY:{label}")
+    return set(values)
+
+
+def check_coverage(phase1_revision: str) -> dict[str, int]:
     """Proves every mechanical denominator item has a human disposition.
 
     Returns:
@@ -975,42 +1379,42 @@ def check_coverage(phase1_revision: str = PHASE1_REVISION) -> dict[str, int]:
     human_discrepancies = json.loads((TRACK_DIR / "human-discrepancy-records.json").read_text())
 
     expected_source = {row["record_id"] for row in source["records"]}
-    actual_source = {row["mechanical_record_id"] for row in human["mechanical_source_record_reviews"]}
+    actual_source = unique_projection(human["mechanical_source_record_reviews"], lambda row: row["mechanical_record_id"], "source records")
     expected_graph = {canonical_key(row) for row in source["graph_edges"]}
-    actual_graph = {row["mechanical_graph_edge_key"] for row in human["mechanical_graph_edge_reviews"]}
+    actual_graph = unique_projection(human["mechanical_graph_edge_reviews"], lambda row: row["mechanical_graph_edge_key"], "graph edges")
     expected_identities = {
         row["canonical_identity_id"]
         for row in ledger["identity_records"]
         if any(state.get("source_class") == "current-page-source" for state in row.get("source_states", []))
     }
-    actual_identities = {row["canonical_identity_id"] for row in human_discrepancies["identity_comparison_records"]}
+    actual_identities = unique_projection(human_discrepancies["identity_comparison_records"], lambda row: row["canonical_identity_id"], "identities")
     expected_surfaces = {
         canonical_key(row)
-        for field in ("scene_records", "state_records", "transitions")
+        for field in ("scene_records", "state_records", "transitions", "transition_write_candidates")
         for row in scenes[field]
     }
-    actual_surfaces = {row["mechanical_surface_key"] for row in human["surface_reviews"]}
+    actual_surfaces = unique_projection(human["surface_reviews"], lambda row: row["mechanical_surface_key"], "surfaces")
     expected_assets = {row["canonical_path"] for row in assets["candidate_files"]}
-    actual_assets = {row["canonical_path"] for row in human["asset_candidate_reviews"]}
+    actual_assets = unique_projection(human["asset_candidate_reviews"], lambda row: row["canonical_path"], "assets")
     expected_groups = {row["identical_hash_group"] for row in assets["candidate_files"]}
-    actual_groups = {row["identical_hash_group"] for row in human["identical_hash_group_reviews"]}
+    actual_groups = unique_projection(human["identical_hash_group_reviews"], lambda row: row["identical_hash_group"], "asset groups")
     expected_copies = {row["record_id"] for row in source["records"] if row["record_type"] == "copy"}
-    actual_copies = {row["mechanical_copy_record_id"] for row in duplicates["mechanical_copy_record_reviews"]}
+    actual_copies = unique_projection(duplicates["mechanical_copy_record_reviews"], lambda row: row["mechanical_copy_record_id"], "copies")
     expected_duplicate_families = {f"{family}:{identity}" for identity in expected_identities for family in ("reading", "primary")}
-    actual_duplicate_families = {f"{row['source_family']}:{row['canonical_identity_id']}" for row in duplicates["duplicate_drift_records"]}
+    actual_duplicate_families = unique_projection(duplicates["duplicate_drift_records"], lambda row: f"{row['source_family']}:{row['canonical_identity_id']}", "duplicate families")
     expected_history = {canonical_key(row["evidence"]) for row in historical["records"]}
-    actual_history = {row["mechanical_locator_key"] for row in human_history["mechanical_historical_locator_reviews"]}
+    actual_history = unique_projection(human_history["mechanical_historical_locator_reviews"], lambda row: row["mechanical_locator_key"], "history")
     expected_discrepancies = {row["observation_id"] for row in mechanical_discrepancies["records"]}
-    actual_discrepancies = {row["observation_id"] for row in human_discrepancies["mechanical_observation_records"]}
+    actual_discrepancies = unique_projection(human_discrepancies["mechanical_observation_records"], lambda row: row["observation_id"], "discrepancies")
     expected_program = {label for label, _, _, _ in program_identities}
-    actual_program = {row["program_identity_label"] for row in human["replacement_program_identity_reviews"]}
+    actual_program = unique_projection(human["replacement_program_identity_reviews"], lambda row: row["program_identity_label"], "program identities")
     expected_program_history = {
         row["program_identity_label"]
         for row in human["replacement_program_identity_reviews"]
         if row["disposition"] == "historical/withdrawn"
     }
-    actual_program_history = {row["program_identity_label"] for row in human_history["program_identity_history_reviews"]}
-    actual_program_dispositions = {row["program_identity_label"] for row in human_discrepancies["program_identity_disposition_records"]}
+    actual_program_history = unique_projection(human_history["program_identity_history_reviews"], lambda row: row["program_identity_label"], "program history")
+    actual_program_dispositions = unique_projection(human_discrepancies["program_identity_disposition_records"], lambda row: row["program_identity_label"], "program dispositions")
     comparisons = {
         "source_records": (expected_source, actual_source),
         "graph_edges": (expected_graph, actual_graph),
@@ -1059,9 +1463,16 @@ def write_json(name: str, value: dict[str, Any]) -> None:
     (TRACK_DIR / name).write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
-def generate() -> None:
-    """Generates Phase-2 evidence using the frozen default Phase-1 revision."""
-    _generate_phase2(PHASE1_REVISION)
+def generate(phase1_revision: str) -> None:
+    """Generates Phase-2 evidence from one explicit admitted Phase-1 revision.
+
+    Args:
+        phase1_revision: Full reachable commit containing the Phase-1 artifacts.
+
+    Returns:
+        Nothing.
+    """
+    _generate_phase2(phase1_revision)
 
 
 def _generate_phase2(phase1_revision: str) -> None:
@@ -1088,63 +1499,12 @@ def _generate_phase2(phase1_revision: str) -> None:
             slug_batches,
             program_identities,
         )
-        raw_identity_map = {
-            row["catalog_id"]: [row["evidence"]]
-            for row in raw_frozen_source_discovery["raw_identity_records"]
-        }
-        mechanical_identity_map = {
-            row["catalog_identity_id"]: [row["catalog_evidence"]]
-            for row in ledger["identity_records"]
-        }
-        raw_file_map = {
-            row["canonical_path"]: [row]
-            for row in raw_frozen_source_discovery["raw_file_records"]
-        }
-        mechanical_file_map = {
-            row["file_path"]: [row["evidence"]]
-            for row in source["records"] if row["record_type"] == "file"
-        }
-        raw_state_map = {
-            canonical_key([row["path"], row["source_symbol"], row["state_id"]]): [row["evidence"]]
-            for row in raw_frozen_source_discovery["raw_state_records"]
-        }
-        mechanical_state_map = {
-            canonical_key([row["evidence"]["path"], row["source_symbol"], row["state_id"]]): [row["evidence"]]
-            for row in scenes["state_records"]
-        }
-        raw_transition_map = {
-            canonical_key([row["path"], row["source_symbol"], row["from_state_id"], row["to_state_id"]]): [row["evidence"]]
-            for row in raw_frozen_source_discovery["raw_transition_records"]
-        }
-        mechanical_transition_map = {
-            canonical_key([row["evidence"]["path"], row["source_symbol"], row["from_state_id"], row["to_state_id"]]): [row["evidence"]]
-            for row in scenes["transitions"]
-        }
-        raw_asset_map = {
-            row["canonical_path"]: [row]
-            for row in raw_frozen_source_discovery["raw_asset_records"]
-        }
-        mechanical_asset_map = {
-            row["canonical_path"]: [row]
-            for row in assets["candidate_files"]
-        }
-        raw_history_map = {
-            row["path"]: [row]
-            for row in raw_frozen_source_discovery["raw_history_records"]
-        }
-        mechanical_history_map = {
-            row["evidence"]["path"]: [row["evidence"]]
-            for row in historical["records"] if row["classification"] != "current"
-        }
-        symmetric_reconciliation = [
-            *symmetric_reconciliation_records("identities", mechanical_identity_map, raw_identity_map),
-            *symmetric_reconciliation_records("files", mechanical_file_map, raw_file_map),
-            *symmetric_reconciliation_records("states", mechanical_state_map, raw_state_map),
-            *symmetric_reconciliation_records("transitions", mechanical_transition_map, raw_transition_map),
-            *symmetric_reconciliation_records("assets", mechanical_asset_map, raw_asset_map),
-            *symmetric_reconciliation_records("history-paths", mechanical_history_map, raw_history_map),
-        ]
-        symmetric_blockers = [row for row in symmetric_reconciliation if row["blocking"]]
+        symmetric_reconciliation = build_symmetric_reconciliation(
+            source, ledger, scenes, assets, historical, raw_frozen_source_discovery
+        )
+        symmetric_summary = summarize_symmetric_reconciliation(symmetric_reconciliation)
+        symmetric_blockers = symmetric_summary["blocking_records"]
+        input_provenance = phase1_input_provenance(reader, phase1_revision)
 
         current_batches: list[dict[str, Any]] = []
         current_claims: list[dict[str, Any]] = []
@@ -1252,13 +1612,23 @@ def _generate_phase2(phase1_revision: str) -> None:
             ))
 
         surface_reviews: list[dict[str, Any]] = []
-        for source_kind, rows in (("scene", scenes["scene_records"]), ("state", scenes["state_records"]), ("transition", scenes["transitions"])):
+        for source_kind, rows in (
+            ("scene", scenes["scene_records"]),
+            ("state", scenes["state_records"]),
+            ("transition", scenes["transitions"]),
+            ("transition-write-candidate", scenes["transition_write_candidates"]),
+        ):
             for row in rows:
                 evidence = revalidate(reader, row["evidence"])
                 surface_reviews.append(evidence_record(
                     review_id=f"surface-review:{len(surface_reviews) + 1:03d}",
                     mechanical_surface_key=canonical_key(row), source_kind=source_kind,
                     surface_kind=row.get("transition_kind", source_kind),
+                    resolution_status=(
+                        "unresolved-candidate"
+                        if source_kind == "transition-write-candidate"
+                        else "reviewed"
+                    ),
                     review_batch_id=batch_for_path(evidence["path"], slug_batches), disposition="raw-surface-range-reviewed",
                     method="human-raw-surface-review", evidence=[evidence],
                     source_fact="The exact committed source range attached to this mechanical scene/state/surface record was independently re-read.",
@@ -1368,6 +1738,7 @@ def _generate_phase2(phase1_revision: str) -> None:
             "schema_version": "apk-denominator-independent-human-discovery.v1",
             "status": "independent-human-discovery-complete", "track_id": TRACK,
             "source_baseline_revision": BASELINE, "collector_identity": COLLECTOR_IDENTITY,
+            "input_provenance": input_provenance,
             "raw_frozen_source_discovery": raw_frozen_source_discovery,
             "review_batches": current_batches, "replacement_program_review_batches": program_batches,
             "global_review_batches": global_batches, "current_source_claims": current_claims,
@@ -1381,6 +1752,7 @@ def _generate_phase2(phase1_revision: str) -> None:
             "schema_version": "apk-denominator-human-duplicate-drift.v1",
             "status": "independent-human-discovery-complete", "track_id": TRACK,
             "source_baseline_revision": BASELINE, "collector_identity": COLLECTOR_IDENTITY,
+            "input_provenance": input_provenance,
             "duplicate_drift_records": duplicate_rows,
             "mechanical_copy_record_reviews": copy_reviews, "interpretation": {},
         })
@@ -1388,20 +1760,22 @@ def _generate_phase2(phase1_revision: str) -> None:
             "schema_version": "apk-denominator-human-historical-deleted.v1",
             "status": "independent-human-discovery-complete", "track_id": TRACK,
             "source_baseline_revision": BASELINE, "collector_identity": COLLECTOR_IDENTITY,
+            "input_provenance": input_provenance,
             "historical_deleted_records": historical_deleted,
             "mechanical_historical_locator_reviews": all_history,
             "program_identity_history_reviews": program_history_reviews, "interpretation": {},
         })
         write_json("human-discrepancy-records.json", {
             "schema_version": "apk-denominator-human-discrepancies.v1",
-            "status": "independent-human-discovery-complete", "track_id": TRACK,
+            "status": symmetric_summary["status"], "track_id": TRACK,
             "source_baseline_revision": BASELINE, "collector_identity": COLLECTOR_IDENTITY,
+            "input_provenance": input_provenance,
             "identity_comparison_records": identity_comparisons,
             "mechanical_observation_records": mechanical_observations,
             "program_identity_disposition_records": program_dispositions,
             "independent_symmetric_reconciliation": symmetric_reconciliation,
             "independent_symmetric_blocking_records": symmetric_blockers,
-            "coverage_status": "complete", "uncovered_mechanical_records": [],
+            "coverage_status": symmetric_summary["coverage_status"], "uncovered_mechanical_records": [],
             "uncovered_replacement_program_identities": [], "interpretation": {},
         })
     finally:
@@ -1410,21 +1784,64 @@ def _generate_phase2(phase1_revision: str) -> None:
     discrepancy_path = TRACK_DIR / "human-discrepancy-records.json"
     discrepancy = json.loads(discrepancy_path.read_text())
     discrepancy["exhaustive_coverage_counts"] = counts
-    discrepancy["uncovered_count"] = 0
-    discrepancy["uncovered_by_category"] = {category: 0 for category in counts}
+    discrepancy["uncovered_count"] = symmetric_summary["uncovered_count"]
+    discrepancy["uncovered_by_category"] = symmetric_summary["uncovered_by_category"]
     write_json("human-discrepancy-records.json", discrepancy)
+
+
+def check_only_result(phase1_revision: str) -> dict[str, Any]:
+    """Returns truthful coverage and blocker state for an explicit Phase-1 revision.
+
+    Args:
+        phase1_revision: Full reachable commit containing the Phase-1 artifacts.
+
+    Returns:
+        Mechanical coverage counts plus exact symmetric blocker counts.
+    """
+    phase1_revision = validate_phase1_revision(phase1_revision)
+    counts = check_coverage(phase1_revision)
+    raw_frozen_source_discovery = discover_raw_frozen_sources()
+    reader = GitObjectReader()
+    try:
+        expected_provenance = phase1_input_provenance(reader, phase1_revision)
+        source = git_json(reader, phase1_revision, "source-denominator.json")
+        ledger = git_json(reader, phase1_revision, "game-identity-ledger.json")
+        scenes = git_json(reader, phase1_revision, "scene-state-denominator.json")
+        assets = git_json(reader, phase1_revision, "asset-file-denominator.json")
+        historical = git_json(reader, phase1_revision, "historical-source-denominator.json")
+        git_json(reader, phase1_revision, "denominator-discrepancies.json")
+        expected_rows = build_symmetric_reconciliation(
+            source, ledger, scenes, assets, historical, raw_frozen_source_discovery
+        )
+    finally:
+        reader.close()
+    for name in PHASE2_ARTIFACTS:
+        document = json.loads((TRACK_DIR / name).read_text())
+        if document.get("input_provenance") != expected_provenance:
+            raise ValueError(f"PHASE1_INPUT_PROVENANCE_MISMATCH:{name}")
+    discrepancy = json.loads((TRACK_DIR / "human-discrepancy-records.json").read_text())
+    summary = validate_symmetric_reconciliation_document(discrepancy, expected_rows)
+    return {
+        "status": "blocked" if summary["uncovered_count"] else "passed",
+        "uncovered_count": summary["uncovered_count"],
+        "uncovered_by_category": summary["uncovered_by_category"],
+        "counts": counts,
+    }
 
 
 def main() -> None:
     """Generates artifacts or runs the explicit exhaustive coverage check."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--check-only", action="store_true")
-    parser.add_argument("--phase1-revision", default=PHASE1_REVISION)
+    parser.add_argument("--phase1-revision", required=True)
     args = parser.parse_args()
     if args.check_only:
-        print(json.dumps({"status": "passed", "uncovered_count": 0, "counts": check_coverage(args.phase1_revision)}, sort_keys=True))
+        result = check_only_result(args.phase1_revision)
+        print(json.dumps(result, sort_keys=True))
+        if result["status"] != "passed":
+            raise SystemExit(1)
     else:
-        _generate_phase2(args.phase1_revision)
+        generate(args.phase1_revision)
 
 
 if __name__ == "__main__":

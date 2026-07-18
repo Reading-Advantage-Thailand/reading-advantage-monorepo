@@ -13,8 +13,6 @@ from typing import Any
 
 
 BASELINE = "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
-PHASE1_REVISION = "990dd9c060ca844ad16d141b1eb4086b310369a4"
-PHASE2_IMPLEMENTATION_REVISION = "4f5dde0a04c70c57f123a72eded84836325743da"
 PHASE2_RECEIPT_REVISION = "7eef639674e927f2d56107866d385e0df812aa66"
 TRACK = "apk_source_denominator_inventory_20260712"
 TRACK_DIR = Path(__file__).resolve().parent
@@ -157,7 +155,10 @@ def revalidate(evidence: dict[str, Any]) -> dict[str, Any]:
     if revision != BASELINE and not is_ancestor(revision):
         raise ValueError(f"Unreachable historical revision: {revision}")
     source_range = evidence["range"]
-    return locator(revision, evidence["path"], source_range["start_line"], source_range["end_line"])
+    rebuilt = locator(revision, evidence["path"], source_range["start_line"], source_range["end_line"])
+    if evidence != rebuilt:
+        raise ValueError("LOCATOR_MISMATCH")
+    return rebuilt
 
 
 def revalidate_many(evidence: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -190,10 +191,44 @@ def matched_record(
     Returns:
         A resolved reconciliation record.
     """
+    validated_mechanical = revalidate_many(mechanical_evidence)
+    validated_human = revalidate_many(human_evidence)
+    exact_overlap = {
+        canonical_key(item) for item in validated_mechanical
+    } & {canonical_key(item) for item in validated_human}
+    mechanical_ids = fields.get("mechanical_identity_ids")
+    human_ids = fields.get("human_identity_ids")
+    identity_equivalence = (
+        isinstance(mechanical_ids, list)
+        and isinstance(human_ids, list)
+        and bool(mechanical_ids)
+        and mechanical_ids == human_ids
+    )
+    history_search = fields.get("history_search")
+    primary_deletion = history_search.get("primary_deletion") if isinstance(history_search, dict) else None
+    historical_equivalence = (
+        fields.get("disposition") == "historical/withdrawn"
+        and isinstance(primary_deletion, dict)
+        and any(
+            item.get("path") == primary_deletion.get("path")
+            and item.get("revision") == primary_deletion.get("parent_revision")
+            for item in validated_human
+        )
+    )
+    mechanical_record_key = fields.get("mechanical_record_key")
+    human_record_key = fields.get("human_record_key")
+    withdrawn_identity_equivalence = (
+        fields.get("disposition") == "historical/withdrawn"
+        and isinstance(mechanical_record_key, str)
+        and bool(mechanical_record_key)
+        and mechanical_record_key == human_record_key
+    )
+    if not (exact_overlap or identity_equivalence or historical_equivalence or withdrawn_identity_equivalence):
+        raise ValueError("MATCH_EVIDENCE_UNRELATED")
     return {
         **fields,
-        "mechanical_evidence": revalidate_many(mechanical_evidence),
-        "human_evidence": revalidate_many(human_evidence),
+        "mechanical_evidence": validated_mechanical,
+        "human_evidence": validated_human,
         "resolution_status": "matched",
         "blocking": False,
     }
@@ -233,6 +268,181 @@ def canonical_key(value: object) -> str:
     return json.dumps(value, sort_keys=True, separators=(",", ":"))
 
 
+def unique_review_map(
+    records: list[dict[str, Any]], key_fn: Any, label: str
+) -> dict[str, dict[str, Any]]:
+    """Maps reviewed records while rejecting duplicate projections before collapse."""
+    result: dict[str, dict[str, Any]] = {}
+    for row in records:
+        key = key_fn(row)
+        if key in result:
+            raise ValueError(f"DUPLICATE_EXACT_REVIEW_KEY:{label}")
+        result[key] = row
+    return result
+
+
+def transition_candidate_key(row: dict[str, Any]) -> str:
+    """Returns the exact path/symbol/target/line/optional-from candidate key."""
+    evidence = row.get("evidence", {})
+    source_range = evidence.get("range", {}) if isinstance(evidence, dict) else {}
+    path = row.get("path", evidence.get("path") if isinstance(evidence, dict) else None)
+    line = row.get("start_line", source_range.get("start_line"))
+    payload = {
+        "path": path,
+        "source_symbol": row.get("source_symbol"),
+        "to_state_id": row.get("to_state_id"),
+        "start_line": line,
+        "reason": row.get("reason"),
+    }
+    from_state = row.get("from_state_id", row.get("proven_from_state_id"))
+    if isinstance(from_state, str):
+        payload["proven_from_state_id"] = from_state
+        payload["transition_evidence_kind"] = row.get("transition_evidence_kind")
+    if (
+        not isinstance(path, str)
+        or not isinstance(payload["source_symbol"], str)
+        or not isinstance(payload["to_state_id"], str)
+        or not isinstance(line, int)
+        or not isinstance(payload["reason"], str)
+        or isinstance(from_state, str)
+        and not isinstance(payload.get("transition_evidence_kind"), str)
+    ):
+        raise ValueError("INVALID_TRANSITION_CANDIDATE_KEY")
+    return canonical_key(payload)
+
+
+def symmetric_blocker_id(category: str, record_key: str) -> str:
+    """Builds the stable identifier for one Phase-2 symmetric blocker.
+
+    Args:
+        category: Exact symmetric comparison category.
+        record_key: Exact canonical comparison key.
+
+    Returns:
+        Stable category-scoped blocker identifier.
+    """
+    if not category or not record_key:
+        raise ValueError("INVALID_SYMMETRIC_BLOCKER_KEY")
+    digest = hashlib.sha256(record_key.encode("utf-8")).hexdigest()
+    return f"independent-symmetric:{category}:{digest}"
+
+
+def validate_symmetric_evidence(evidence: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Validates a nonempty Phase-2 evidence side while preserving its exact records.
+
+    Args:
+        evidence: Locator, asset-inventory, or deletion-history evidence records.
+
+    Returns:
+        Evidence records in their original order and representation.
+    """
+    if not evidence:
+        raise ValueError("A symmetric evidence side must be nonempty when validated")
+    if all(all(key in item for key in ("revision", "path", "range")) for item in evidence):
+        return revalidate_many(evidence)
+    for item in evidence:
+        if not isinstance(item, dict):
+            raise ValueError("INVALID_SYMMETRIC_BLOCKER_EVIDENCE")
+        if all(key in item for key in ("revision", "canonical_path", "sha256")):
+            revision = item["revision"]
+            path = item["canonical_path"]
+            if not isinstance(revision, str) or not isinstance(path, str):
+                raise ValueError("INVALID_SYMMETRIC_ASSET_EVIDENCE")
+            if revision != BASELINE and not is_ancestor(revision):
+                raise ValueError(f"Unreachable symmetric asset revision: {revision}")
+            if hashlib.sha256(git_bytes(revision, path)).hexdigest() != item["sha256"]:
+                raise ValueError(f"SYMMETRIC_ASSET_HASH_MISMATCH:{path}")
+            continue
+        if set(item) == {"deletion_revision", "path"}:
+            revision = item["deletion_revision"]
+            path = item["path"]
+            if (
+                not isinstance(revision, str)
+                or re.fullmatch(r"[0-9a-f]{40}", revision) is None
+                or not isinstance(path, str)
+                or not path
+                or not is_ancestor(revision)
+            ):
+                raise ValueError("INVALID_SYMMETRIC_DELETION_EVIDENCE")
+            deletion = subprocess.check_output(
+                ["git", "diff-tree", "--no-commit-id", "--name-status", "-r", revision, "--", path],
+                cwd=REPO_ROOT,
+                text=True,
+            ).splitlines()
+            if not any(line == f"D\t{path}" for line in deletion):
+                raise ValueError(f"SYMMETRIC_DELETION_NOT_PROVEN:{revision}:{path}")
+            continue
+        raise ValueError("INVALID_SYMMETRIC_BLOCKER_EVIDENCE")
+    return evidence
+
+
+def propagate_symmetric_blockers(
+    rows: list[dict[str, Any]],
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Converts every Phase-2 either-side-only row into one Phase-3 blocker.
+
+    Args:
+        rows: Complete Phase-2 symmetric reconciliation rows.
+
+    Returns:
+        Blocking discrepancy records and their one-to-one unresolved-source entries.
+
+    Raises:
+        ValueError: If comparison status and blocking state disagree or keys are invalid.
+    """
+    records: list[dict[str, Any]] = []
+    unresolved: list[dict[str, Any]] = []
+    seen_ids: set[str] = set()
+    for row in rows:
+        status = row.get("comparison_status")
+        category = row.get("category")
+        candidate = category == "transition-write-candidates"
+        if status not in {"matched", "mechanical-only", "human-only", "evidence-mismatch"}:
+            raise ValueError("INVALID_SYMMETRIC_COMPARISON_STATUS")
+        if status == "evidence-mismatch" and not candidate:
+            raise ValueError("INVALID_SYMMETRIC_COMPARISON_STATUS")
+        expected_resolution = (
+            "retained-target-write-candidate" if candidate and status == "matched"
+            else "unresolved-candidate" if candidate else "compared"
+        )
+        expected_blocking = status != "matched"
+        if row.get("resolution_status") != expected_resolution:
+            raise ValueError("SYMMETRIC_RESOLUTION_STATUS_MISMATCH")
+        if row.get("blocking") is not expected_blocking:
+            raise ValueError("SYMMETRIC_BLOCKING_FLAG_MISMATCH")
+        if not expected_blocking:
+            continue
+        record_key = row.get("record_key")
+        if not isinstance(category, str) or not category or not isinstance(record_key, str) or not record_key:
+            raise ValueError("INVALID_SYMMETRIC_BLOCKER_KEY")
+        unresolved_id = symmetric_blocker_id(category, record_key)
+        if unresolved_id in seen_ids:
+            raise ValueError("DUPLICATE_SYMMETRIC_BLOCKER")
+        seen_ids.add(unresolved_id)
+        mechanical_evidence = row.get("mechanical_evidence")
+        human_evidence = row.get("human_evidence")
+        if not isinstance(mechanical_evidence, list) or not isinstance(human_evidence, list):
+            raise ValueError("INVALID_SYMMETRIC_BLOCKER_EVIDENCE")
+        record = unresolved_record(
+            discrepancy_key=unresolved_id,
+            discrepancy_type="denominator-mismatch",
+            symmetric_category=category,
+            record_key=record_key,
+            comparison_status=status,
+            mechanical_evidence=validate_symmetric_evidence(mechanical_evidence) if mechanical_evidence else [],
+            human_evidence=validate_symmetric_evidence(human_evidence) if human_evidence else [],
+            unresolved_source_id=unresolved_id,
+        )
+        records.append(record)
+        unresolved.append({
+            "unresolved_source_id": unresolved_id,
+            "symmetric_category": category,
+            "record_key": record_key,
+            "comparison_status": status,
+        })
+    return records, unresolved
+
+
 def main(output_path: Path | None = None) -> None:
     """Writes the exhaustive, non-consumable Phase-3 reconciliation artifact.
 
@@ -242,42 +452,52 @@ def main(output_path: Path | None = None) -> None:
     Returns:
         Nothing.
     """
-    source = committed_json(PHASE1_REVISION, "source-denominator.json")
-    ledger = committed_json(PHASE1_REVISION, "game-identity-ledger.json")
-    scenes = committed_json(PHASE1_REVISION, "scene-state-denominator.json")
-    assets = committed_json(PHASE1_REVISION, "asset-file-denominator.json")
-    historical = committed_json(PHASE1_REVISION, "historical-source-denominator.json")
-    mechanical_discrepancies = committed_json(PHASE1_REVISION, "denominator-discrepancies.json")
-    human_discovery = committed_json(PHASE2_IMPLEMENTATION_REVISION, "independent-human-discovery.json")
-    human_duplicates = committed_json(PHASE2_IMPLEMENTATION_REVISION, "human-duplicate-drift-records.json")
-    human_historical = committed_json(PHASE2_IMPLEMENTATION_REVISION, "human-historical-deleted-records.json")
-    human_discrepancies = committed_json(PHASE2_IMPLEMENTATION_REVISION, "human-discrepancy-records.json")
+    receipt_bytes = git_bytes(PHASE2_RECEIPT_REVISION, PHASE2_RECEIPT_PATH)
+    receipt = json.loads(receipt_bytes)
+    phase2_implementation_revision = receipt.get("commit_sha")
+    commit_binding = receipt.get("commit_binding")
+    if not isinstance(phase2_implementation_revision, str) or re.fullmatch(r"[0-9a-f]{40}", phase2_implementation_revision) is None:
+        raise ValueError("Phase-2 receipt lacks a full implementation commit")
+    if not isinstance(commit_binding, dict):
+        raise ValueError("Phase-2 receipt lacks a commit binding")
+    phase1_revision = commit_binding.get("phase1_attestation_commit")
+    if not isinstance(phase1_revision, str) or re.fullmatch(r"[0-9a-f]{40}", phase1_revision) is None:
+        raise ValueError("Phase-2 receipt lacks a full Phase-1 attestation commit")
+    if commit_binding.get("phase2_attestation_commit") != phase2_implementation_revision:
+        raise ValueError("Phase-2 receipt commit bindings disagree")
+
+    source = committed_json(phase1_revision, "source-denominator.json")
+    ledger = committed_json(phase1_revision, "game-identity-ledger.json")
+    scenes = committed_json(phase1_revision, "scene-state-denominator.json")
+    assets = committed_json(phase1_revision, "asset-file-denominator.json")
+    historical = committed_json(phase1_revision, "historical-source-denominator.json")
+    mechanical_discrepancies = committed_json(phase1_revision, "denominator-discrepancies.json")
+    human_discovery = committed_json(phase2_implementation_revision, "independent-human-discovery.json")
+    human_duplicates = committed_json(phase2_implementation_revision, "human-duplicate-drift-records.json")
+    human_historical = committed_json(phase2_implementation_revision, "human-historical-deleted-records.json")
+    human_discrepancies = committed_json(phase2_implementation_revision, "human-discrepancy-records.json")
 
     phase1_hashes = {
         f"measure/tracks/{TRACK}/{name}": hashlib.sha256(
-            git_bytes(PHASE1_REVISION, f"measure/tracks/{TRACK}/{name}")
+            git_bytes(phase1_revision, f"measure/tracks/{TRACK}/{name}")
         ).hexdigest()
         for name in PHASE1_ARTIFACTS
     }
     phase2_hashes = {
         f"measure/tracks/{TRACK}/{name}": hashlib.sha256(
-            git_bytes(PHASE2_IMPLEMENTATION_REVISION, f"measure/tracks/{TRACK}/{name}")
+            git_bytes(phase2_implementation_revision, f"measure/tracks/{TRACK}/{name}")
         ).hexdigest()
         for name in PHASE2_ARTIFACTS
     }
     receipt_owned_hashes = {
         **{
             f"measure/tracks/{TRACK}/{name}": hashlib.sha256(
-                git_bytes(PHASE1_REVISION, f"measure/tracks/{TRACK}/{name}")
+                git_bytes(phase1_revision, f"measure/tracks/{TRACK}/{name}")
             ).hexdigest()
             for name in PHASE1_COLLECTOR_ARTIFACTS
         },
         **phase2_hashes,
     }
-    receipt_bytes = git_bytes(PHASE2_RECEIPT_REVISION, PHASE2_RECEIPT_PATH)
-    receipt = json.loads(receipt_bytes)
-    if receipt.get("commit_sha") != PHASE2_IMPLEMENTATION_REVISION:
-        raise ValueError("Phase-2 receipt does not bind the required implementation commit")
     if receipt.get("output_hashes") != receipt_owned_hashes:
         raise ValueError("Phase-2 receipt hashes do not bind the exact collector-owned outputs")
     canonical_receipt_output_sha256 = hashlib.sha256(
@@ -285,20 +505,31 @@ def main(output_path: Path | None = None) -> None:
     ).hexdigest()
     if receipt.get("output_sha256") != canonical_receipt_output_sha256:
         raise ValueError("Phase-2 receipt output_sha256 does not match its canonical output-hash aggregate")
+    expected_phase1_provenance = {
+        "revision": phase1_revision,
+        "artifact_sha256": phase1_hashes,
+    }
+    for name, document in (
+        ("independent-human-discovery.json", human_discovery),
+        ("human-duplicate-drift-records.json", human_duplicates),
+        ("human-historical-deleted-records.json", human_historical),
+        ("human-discrepancy-records.json", human_discrepancies),
+    ):
+        if document.get("input_provenance") != expected_phase1_provenance:
+            raise ValueError(f"Phase-2 input provenance mismatch: {name}")
 
-    identity_reviews: dict[str, list[dict[str, Any]]] = defaultdict(list)
-    for row in human_discrepancies["identity_comparison_records"]:
-        identity_reviews[row["canonical_identity_id"]].append(row)
-    human_claim_ids = {row["canonical_identity_id"] for row in human_discovery["current_source_claims"]}
-    source_reviews = {row["mechanical_record_id"]: row for row in human_discovery["mechanical_source_record_reviews"]}
-    graph_reviews = {row["mechanical_graph_edge_key"]: row for row in human_discovery["mechanical_graph_edge_reviews"]}
-    surface_reviews = {row["mechanical_surface_key"]: row for row in human_discovery["surface_reviews"]}
-    asset_reviews = {row["canonical_path"]: row for row in human_discovery["asset_candidate_reviews"]}
-    group_reviews = {row["identical_hash_group"]: row for row in human_discovery["identical_hash_group_reviews"]}
-    copy_reviews = {row["mechanical_copy_record_id"]: row for row in human_duplicates["mechanical_copy_record_reviews"]}
-    observation_reviews = {row["observation_id"]: row for row in human_discrepancies["mechanical_observation_records"]}
-    historical_reviews = {row["mechanical_locator_key"]: row for row in human_historical["mechanical_historical_locator_reviews"]}
-    program_reviews = {row["program_identity_label"]: row for row in human_discovery["replacement_program_identity_reviews"]}
+    identity_reviews = unique_review_map(human_discrepancies["identity_comparison_records"], lambda row: row["canonical_identity_id"], "identities")
+    claim_reviews = unique_review_map(human_discovery["current_source_claims"], lambda row: row["claim_id"], "current claims")
+    human_claim_ids = {row["canonical_identity_id"] for row in claim_reviews.values()}
+    source_reviews = unique_review_map(human_discovery["mechanical_source_record_reviews"], lambda row: row["mechanical_record_id"], "source records")
+    graph_reviews = unique_review_map(human_discovery["mechanical_graph_edge_reviews"], lambda row: row["mechanical_graph_edge_key"], "graph edges")
+    surface_reviews = unique_review_map(human_discovery["surface_reviews"], lambda row: row["mechanical_surface_key"], "surfaces")
+    asset_reviews = unique_review_map(human_discovery["asset_candidate_reviews"], lambda row: row["canonical_path"], "assets")
+    group_reviews = unique_review_map(human_discovery["identical_hash_group_reviews"], lambda row: row["identical_hash_group"], "asset groups")
+    copy_reviews = unique_review_map(human_duplicates["mechanical_copy_record_reviews"], lambda row: row["mechanical_copy_record_id"], "copies")
+    observation_reviews = unique_review_map(human_discrepancies["mechanical_observation_records"], lambda row: row["observation_id"], "observations")
+    historical_reviews = unique_review_map(human_historical["mechanical_historical_locator_reviews"], lambda row: row["mechanical_locator_key"], "history")
+    program_reviews = unique_review_map(human_discovery["replacement_program_identity_reviews"], lambda row: row["program_identity_label"], "program identities")
 
     unresolved_sources: list[dict[str, Any]] = []
     ledger_by_alias: dict[str, list[dict[str, Any]]] = defaultdict(list)
@@ -317,9 +548,9 @@ def main(output_path: Path | None = None) -> None:
         is_current = any(state["source_class"] == "current-page-source" for state in row["source_states"])
         human_evidence: list[dict[str, Any]] | None = None
         if is_current:
-            matching_reviews = identity_reviews.get(identity_id, [])
-            if len(matching_reviews) == 1:
-                human_evidence = matching_reviews[0]["evidence"]
+            matching_review = identity_reviews.get(identity_id)
+            if matching_review is not None:
+                human_evidence = matching_review["evidence"]
         else:
             matching_reviews = [
                 review
@@ -344,6 +575,11 @@ def main(output_path: Path | None = None) -> None:
         else:
             identity_records.append(matched_record(
                 canonical_identity_id=identity_id,
+                disposition="historical/withdrawn" if not is_current else "current",
+                **(
+                    {"mechanical_record_key": identity_id, "human_record_key": identity_id}
+                    if not is_current else {}
+                ),
                 mechanical_evidence=[alias["evidence"] for alias in row["aliases"]],
                 human_evidence=human_evidence,
             ))
@@ -368,15 +604,57 @@ def main(output_path: Path | None = None) -> None:
         for row in source["graph_edges"]
     ]
 
+    phase2_symmetric_rows = human_discrepancies.get("independent_symmetric_reconciliation")
+    if not isinstance(phase2_symmetric_rows, list):
+        raise ValueError("Missing Phase-2 symmetric reconciliation records")
+    symmetric_rows_by_key: dict[tuple[str, str], dict[str, Any]] = {}
+    for comparison in phase2_symmetric_rows:
+        if not isinstance(comparison, dict):
+            raise ValueError("Invalid Phase-2 symmetric reconciliation record")
+        pair = (comparison.get("category"), comparison.get("record_key"))
+        if not all(isinstance(value, str) and value for value in pair) or pair in symmetric_rows_by_key:
+            raise ValueError("Invalid or duplicate Phase-2 symmetric reconciliation key")
+        symmetric_rows_by_key[pair] = comparison
+
     surface_records: list[dict[str, Any]] = []
-    for source_kind, rows in (("scene", scenes["scene_records"]), ("state", scenes["state_records"]), ("transition", scenes["transitions"])):
+    for source_kind, rows in (
+        ("scene", scenes["scene_records"]),
+        ("state", scenes["state_records"]),
+        ("transition", scenes["transitions"]),
+        ("transition-write-candidate", scenes["transition_write_candidates"]),
+    ):
         for row in rows:
-            surface_records.append(matched_record(
-                mechanical_surface=row,
-                surface_kind=row["transition_kind"] if source_kind == "transition" else source_kind,
-                mechanical_evidence=[row["evidence"]],
-                human_evidence=surface_reviews[canonical_key(row)]["evidence"],
-            ))
+            common = {
+                "mechanical_surface": row,
+                "surface_kind": row["transition_kind"] if source_kind == "transition" else source_kind,
+                "mechanical_evidence": [row["evidence"]],
+                "human_evidence": surface_reviews[canonical_key(row)]["evidence"],
+            }
+            if source_kind == "transition-write-candidate":
+                candidate_key = transition_candidate_key(row)
+                candidate_comparison = symmetric_rows_by_key.get(
+                    ("transition-write-candidates", candidate_key)
+                )
+                if (
+                    isinstance(candidate_comparison, dict)
+                    and candidate_comparison.get("comparison_status") == "matched"
+                    and candidate_comparison.get("blocking") is False
+                    and candidate_comparison.get("resolution_status")
+                    == "retained-target-write-candidate"
+                ):
+                    retained = matched_record(**common)
+                    retained["resolution_status"] = "retained-target-write-candidate"
+                    retained["edge_inferred"] = False
+                    surface_records.append(retained)
+                else:
+                    surface_records.append(unresolved_record(
+                        **common,
+                        unresolved_source_id=symmetric_blocker_id(
+                            "transition-write-candidates", candidate_key
+                        ),
+                    ))
+            else:
+                surface_records.append(matched_record(**common))
 
     program = git_bytes(BASELINE, PROGRAM_PATH)
     lines = program.splitlines(keepends=True)
@@ -524,6 +802,16 @@ def main(output_path: Path | None = None) -> None:
         )
         for row in human_discrepancies["mechanical_observation_records"]
     )
+    symmetric_rows = phase2_symmetric_rows
+    declared_symmetric_blockers = human_discrepancies.get("independent_symmetric_blocking_records")
+    if not isinstance(symmetric_rows, list) or not isinstance(declared_symmetric_blockers, list):
+        raise ValueError("Missing Phase-2 symmetric reconciliation records")
+    derived_symmetric_blockers = [row for row in symmetric_rows if row.get("blocking") is True]
+    if declared_symmetric_blockers != derived_symmetric_blockers:
+        raise ValueError("Phase-2 symmetric blocker set does not match its reconciliation rows")
+    symmetric_records, symmetric_unresolved = propagate_symmetric_blockers(symmetric_rows)
+    discrepancy_records.extend(symmetric_records)
+    unresolved_sources.extend(symmetric_unresolved)
 
     category_evidence = locator(BASELINE, PROGRAM_PATH, 107, 153)
     reconciliation_status = "reconciliation-blocked" if unresolved_sources else "reconciliation-complete"
@@ -533,11 +821,11 @@ def main(output_path: Path | None = None) -> None:
         "source_baseline_revision": BASELINE,
         "input_provenance": {
             "phase1": {
-                "revision": PHASE1_REVISION,
+                "revision": phase1_revision,
                 "output_hashes": phase1_hashes,
             },
             "phase2": {
-                "implementation_revision": PHASE2_IMPLEMENTATION_REVISION,
+                "implementation_revision": phase2_implementation_revision,
                 "receipt_revision": PHASE2_RECEIPT_REVISION,
                 "receipt_path": PHASE2_RECEIPT_PATH,
                 "receipt_sha256": hashlib.sha256(receipt_bytes).hexdigest(),
@@ -567,7 +855,16 @@ def main(output_path: Path | None = None) -> None:
         "surface_reconciliation_records": surface_records,
         "surface_category_coverage": [
             {"surface_kind": kind, "coverage_status": "reviewed", "evidence": category_evidence}
-            for kind in ("scene", "state", "phase", "overlay", "transition", "terminal", "presentation")
+            for kind in (
+                "scene",
+                "state",
+                "phase",
+                "overlay",
+                "transition",
+                "transition-write-candidate",
+                "terminal",
+                "presentation",
+            )
         ],
         "asset_candidate_reconciliation_records": asset_records,
         "identical_hash_group_reconciliation_records": group_records,

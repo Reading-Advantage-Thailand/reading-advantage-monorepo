@@ -7,11 +7,26 @@ import json
 import re
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
-from pathlib import PurePosixPath
+from pathlib import Path, PurePosixPath
 from typing import Any
 
+from measure.evidence_integrity_gates.apk_inventory_live import (
+    APKInventoryLiveError,
+    PHASE_ARTIFACT_PATHS,
+    TRACK_DIRECTORY,
+    canonical_task_prompt,
+    load_live_phase_bundle,
+    normalize_resolved_event,
+)
 from measure.evidence_integrity_gates.events import EventResolutionError, EventResolver
 from measure.evidence_integrity_gates.git_source import GitSourceAdapter, GitSourceError
+from measure.evidence_integrity_gates.opencode_provenance import (
+    ProvenanceError,
+    ReadOnlyShellBinding,
+    RoleBinding,
+    ShellGeneratorBinding,
+    build_resolved_event,
+)
 
 
 _COMMIT_SHA = re.compile(r"[0-9a-f]{40}\Z")
@@ -98,6 +113,538 @@ def _record_sets(artifact: Mapping[str, Any]) -> Mapping[str, Any] | None:
     return value if isinstance(value, Mapping) else None
 
 
+def _has_production_artifact_contract(freeze: Mapping[str, Any]) -> bool:
+    """Checks whether frozen authority declares the complete production artifact set."""
+    expected = freeze.get("expected_artifacts")
+    if not isinstance(expected, list):
+        return False
+    declared_values = [
+        item.get("path")
+        for item in expected
+        if isinstance(item, Mapping) and set(item) == {"path"} and isinstance(item.get("path"), str)
+    ]
+    declared = set(declared_values)
+    required = {
+        f"{TRACK_DIRECTORY}/{name}"
+        for names in PHASE_ARTIFACT_PATHS.values()
+        for name in names
+    }
+    required.update(
+        {
+            f"{TRACK_DIRECTORY}/denominator-method.md",
+            f"{TRACK_DIRECTORY}/denominator-contract-test-report.json",
+            f"{TRACK_DIRECTORY}/independent-review.json",
+            f"{TRACK_DIRECTORY}/candidate-denominator-manifest.json",
+            f"{TRACK_DIRECTORY}/candidate-partition-manifest.json",
+            f"{TRACK_DIRECTORY}/product-owner-acceptance.json",
+            f"{TRACK_DIRECTORY}/accepted-denominator-manifest.json",
+            f"{TRACK_DIRECTORY}/accepted-partition-manifest.json",
+        }
+    )
+    return len(declared_values) == len(expected) == len(declared) and required == declared
+
+
+def _rebuild_production_role_event(
+    receipt: Mapping[str, Any],
+    task: Mapping[str, Any],
+    event: Mapping[str, Any],
+    source_adapter: GitSourceAdapter,
+    authority: TrustedPhase4Authority,
+) -> Mapping[str, Any]:
+    """Rebuilds one production role event from exact raw provider-export bytes."""
+    try:
+        repository_root = source_adapter._root
+        raw = event.get("raw_export_bytes")
+        provider_agent = receipt.get("provider_agent")
+        raw_hash = receipt.get("raw_export_sha256")
+        commit = receipt.get("commit_sha")
+        outputs = receipt.get("output_hashes")
+        if (
+            not isinstance(repository_root, Path)
+            or not isinstance(raw, bytes)
+            or not isinstance(provider_agent, str)
+            or not provider_agent
+            or not isinstance(raw_hash, str)
+            or _SHA256.fullmatch(raw_hash) is None
+            or raw_hash != _hash(raw)
+            or not isinstance(commit, str)
+            or _COMMIT_SHA.fullmatch(commit) is None
+            or not isinstance(outputs, Mapping)
+            or not outputs
+            or not all(
+                isinstance(path, str)
+                and _safe_relative_path(path)
+                and isinstance(digest, str)
+                and _SHA256.fullmatch(digest) is not None
+                for path, digest in outputs.items()
+            )
+        ):
+            raise ValueError("production role receipt is incomplete")
+        output_paths = tuple(outputs)
+        if len(output_paths) != len(set(output_paths)):
+            raise ValueError("production role output paths collide")
+        shell_generator_values = receipt.get("shell_generators", [])
+        if not isinstance(shell_generator_values, list):
+            raise ValueError("shell generator declarations are invalid")
+        shell_generators: list[ShellGeneratorBinding] = []
+        for declaration in shell_generator_values:
+            if not isinstance(declaration, Mapping):
+                raise ValueError("shell generator declaration is invalid")
+            generator_outputs = declaration.get("owned_outputs")
+            if not isinstance(generator_outputs, list):
+                raise ValueError("shell generator outputs are invalid")
+            shell_generators.append(
+                ShellGeneratorBinding(
+                    declaration.get("command"),
+                    tuple(generator_outputs),
+                    declaration.get("command_sha256"),
+                    declaration.get("attestation_commit"),
+                )
+            )
+        read_only_values = receipt.get("read_only_shell_commands", [])
+        if not isinstance(read_only_values, list):
+            raise ValueError("read-only shell declarations are invalid")
+        read_only_shell_commands: list[ReadOnlyShellBinding] = []
+        for declaration in read_only_values:
+            if not isinstance(declaration, Mapping):
+                raise ValueError("read-only shell declaration is invalid")
+            read_only_shell_commands.append(
+                ReadOnlyShellBinding(
+                    declaration.get("command"), declaration.get("command_sha256")
+                )
+            )
+        binding = RoleBinding(
+            str(receipt.get("role")),
+            str(receipt.get("spawn_id")),
+            provider_agent,
+            output_paths,
+            output_commit=commit,
+            shell_generators=tuple(shell_generators),
+            read_only_shell_commands=tuple(read_only_shell_commands),
+        )
+        attested = event.get("attested_manifest_bytes")
+        required_attestations = {
+            "allowed_input_manifest_sha256",
+            "actual_context_manifest_sha256",
+            "budget_declaration_sha256",
+            "task_authority_sha256",
+            "stop_loss_observations_sha256",
+        }
+        if (
+            not isinstance(attested, Mapping)
+            or set(attested) != required_attestations
+            or not all(isinstance(value, bytes) for value in attested.values())
+        ):
+            raise ValueError("provider attested manifests are absent")
+        stop_loss_bytes = attested.get("stop_loss_observations_sha256")
+        stop_loss_hash = receipt.get("stop_loss_observations_sha256")
+        try:
+            stop_loss_observations = json.loads(stop_loss_bytes)
+        except (TypeError, UnicodeDecodeError, json.JSONDecodeError) as error:
+            raise APKInventoryLiveError(
+                "INVALID_STOP_LOSS_OBSERVATION", "provider stop-loss attestation is malformed"
+            ) from error
+        if (
+            not isinstance(stop_loss_bytes, bytes)
+            or not isinstance(stop_loss_hash, str)
+            or stop_loss_hash != _hash(stop_loss_bytes)
+            or stop_loss_bytes != json.dumps(
+                stop_loss_observations, sort_keys=True, separators=(",", ":")
+            ).encode()
+            or stop_loss_observations != receipt.get("stop_loss_observations")
+        ):
+            raise APKInventoryLiveError(
+                "INVALID_STOP_LOSS_OBSERVATION", "receipt stop-loss counters lack provider attestation"
+            )
+        rebuilt = build_resolved_event(raw, binding, repository_root, attested)
+        normalized = normalize_resolved_event(rebuilt, task, receipt)
+        freeze_bytes = source_adapter.resolve_blob_bytes(
+            authority.phase0_commit_sha, authority.input_freeze_path
+        )
+        if (
+            attested.get("allowed_input_manifest_sha256") != freeze_bytes
+            or attested.get("task_authority_sha256") != canonical_task_prompt(task)
+            or normalized.get("agent") != provider_agent
+            or normalized.get("output_commit") != commit
+            or normalized.get("raw_export_sha256") != raw_hash
+            or not isinstance(normalized.get("raw_write_inventory"), list)
+            or len(normalized["raw_write_inventory"]) != len(output_paths)
+            or set(normalized["raw_write_inventory"]) != set(output_paths)
+        ):
+            raise ValueError("production role event differs from its immutable bindings")
+        return normalized
+    except (ValueError, ProvenanceError) as error:
+        raise APKInventoryLiveError("PROVIDER_EVENT_INVALID", str(error)) from error
+    except GitSourceError as error:
+        raise APKInventoryLiveError("PROVIDER_EVENT_INVALID", str(error)) from error
+
+
+def _exact_artifact_reference(path: str, data: bytes) -> dict[str, str]:
+    """Builds the exact path-and-hash reference used by production manifests."""
+    return {"path": path, "sha256": _hash(data)}
+
+
+def _validate_production_phase4_semantics(
+    artifacts: Mapping[str, Mapping[str, Any]],
+    paths: Mapping[str, Any],
+    raw_by_path: Mapping[str, bytes],
+    live: Mapping[str, Any],
+    baseline: str,
+    gate_hash: object,
+    reviewer_event: Mapping[str, Any],
+    resolver: EventResolver,
+) -> tuple[str | None, str | None]:
+    """Validates real Phase-4 schemas and returns any rejection plus owner event ID."""
+    method_path = f"{TRACK_DIRECTORY}/denominator-method.md"
+    report_path = f"{TRACK_DIRECTORY}/denominator-contract-test-report.json"
+    method_bytes = raw_by_path.get(method_path)
+    report_bytes = raw_by_path.get(report_path)
+    if (
+        not isinstance(method_bytes, bytes)
+        or b"Schema version: `apk-denominator-method.v1`" not in method_bytes.splitlines()
+        or not isinstance(report_bytes, bytes)
+    ):
+        return "INVALID_PHASE4_BUNDLE", None
+    try:
+        contract_report = json.loads(report_bytes)
+    except (UnicodeDecodeError, json.JSONDecodeError):
+        return "CONTRACT_REPORT_INVALID", None
+    admission = contract_report.get("phase0_3_admission_result") if isinstance(contract_report, Mapping) else None
+    stop_loss = contract_report.get("stop_loss_counters") if isinstance(contract_report, Mapping) else None
+    unresolved = stop_loss.get("unresolved_blocking_findings") if isinstance(stop_loss, Mapping) else None
+    if (
+        not isinstance(contract_report, Mapping)
+        or contract_report.get("schema_version") != "apk-denominator-contract-test-report.v1"
+        or contract_report.get("status") != "red-contract-authored"
+        or contract_report.get("role") != "truth-test-author"
+        or contract_report.get("source_baseline_revision") != baseline
+        or admission != {
+            "total_tests": 54,
+            "passed": 54,
+            "failed": 0,
+            "exit_code": 0,
+            "status": "passed",
+        }
+        or not isinstance(stop_loss, Mapping)
+        or any(
+            value != 0
+            for key, value in stop_loss.items()
+            if key != "unresolved_blocking_findings"
+        )
+        or unresolved != {"critical": 0, "high": 0, "medium": 0}
+        or contract_report.get("unsupported_claims_count") != 0
+    ):
+        return "CONTRACT_REPORT_INVALID", None
+    expected_paths = {
+        "raw_inventory": f"{TRACK_DIRECTORY}/source-denominator.json",
+        "human_discovery": f"{TRACK_DIRECTORY}/independent-human-discovery.json",
+        "reconciliation": f"{TRACK_DIRECTORY}/phase3-reconciliation.json",
+        "review": f"{TRACK_DIRECTORY}/independent-review.json",
+        "candidate": f"{TRACK_DIRECTORY}/candidate-denominator-manifest.json",
+        "candidate_partition": f"{TRACK_DIRECTORY}/candidate-partition-manifest.json",
+        "owner_approval": f"{TRACK_DIRECTORY}/product-owner-acceptance.json",
+        "accepted": f"{TRACK_DIRECTORY}/accepted-denominator-manifest.json",
+        "accepted_partition": f"{TRACK_DIRECTORY}/accepted-partition-manifest.json",
+    }
+    if any(paths.get(name) != path for name, path in expected_paths.items()):
+        return "INVALID_PHASE4_BUNDLE", None
+    raw_paths = {
+        name: paths.get(name)
+        for name in ("reconciliation", "review", "candidate", "candidate_partition", "owner_approval")
+    }
+    if not all(isinstance(path, str) and path in raw_by_path for path in raw_paths.values()):
+        return "INVALID_PHASE4_BUNDLE", None
+    phase3_path = str(raw_paths["reconciliation"])
+    review_path = str(raw_paths["review"])
+    candidate_path = str(raw_paths["candidate"])
+    partition_path = str(raw_paths["candidate_partition"])
+    owner_path = str(raw_paths["owner_approval"])
+    review = artifacts["review"]
+    candidate = artifacts["candidate"]
+    partition = artifacts["candidate_partition"]
+    owner = artifacts["owner_approval"]
+    accepted = artifacts["accepted"]
+    accepted_partition = artifacts["accepted_partition"]
+    exact_keys = {
+        "review": {
+            "schema_version", "status", "source_baseline_revision", "reviewer_role",
+            "reviewer_isolation", "phase3_reconciliation", "full_reconciliation_rerun",
+            "blocking_findings_by_severity", "findings",
+        },
+        "candidate": {
+            "schema_version", "status", "consumable", "accepted", "revoked",
+            "source_baseline_revision", "phase3_reconciliation", "independent_review",
+            "denominator_counts",
+        },
+        "candidate_partition": {
+            "schema_version", "status", "consumable", "accepted", "revoked",
+            "candidate_denominator", "assignments",
+        },
+        "owner_approval": {
+            "schema_version", "decision", "revoked", "approved_hashes",
+            "current_owner_authorization",
+        },
+        "accepted": {
+            "schema_version", "status", "consumable", "revoked", "candidate_denominator",
+            "independent_review", "owner_acceptance", "gate_manifest_sha256",
+        },
+        "accepted_partition": {
+            "schema_version", "status", "consumable", "revoked", "candidate_denominator",
+            "candidate_partition", "independent_review", "owner_acceptance",
+            "gate_manifest_sha256", "assignments",
+        },
+    }
+    values = {
+        "review": review,
+        "candidate": candidate,
+        "candidate_partition": partition,
+        "owner_approval": owner,
+        "accepted": accepted,
+        "accepted_partition": accepted_partition,
+    }
+    if any(set(values[name]) != keys for name, keys in exact_keys.items()):
+        return "AUTHORED_DENOMINATOR_REJECTED", None
+    phase3 = live.get("phase3")
+    if not isinstance(phase3, Mapping):
+        return "INPUT_PROVENANCE_INVALID", None
+    coverage_fields = {
+        "identities": "identity_reconciliation_records",
+        "files": "file_reconciliation_records",
+        "source_records": "source_record_reconciliation_records",
+        "surfaces": "surface_reconciliation_records",
+        "asset_candidates": "asset_candidate_reconciliation_records",
+        "identical_hash_groups": "identical_hash_group_reconciliation_records",
+        "copies": "copy_reconciliation_records",
+        "history_and_discrepancies": "discrepancy_reconciliation_records",
+    }
+    coverage: dict[str, int] = {}
+    for label, field in coverage_fields.items():
+        rows = phase3.get(field)
+        if not isinstance(rows, list):
+            return "INCOMPLETE_RECORD_SET", None
+        coverage[label] = len(rows)
+    phase3_ref = _exact_artifact_reference(phase3_path, raw_by_path[phase3_path])
+    review_ref = _exact_artifact_reference(review_path, raw_by_path[review_path])
+    candidate_ref = _exact_artifact_reference(candidate_path, raw_by_path[candidate_path])
+    partition_ref = _exact_artifact_reference(partition_path, raw_by_path[partition_path])
+    owner_ref = _exact_artifact_reference(owner_path, raw_by_path[owner_path])
+    rerun = review.get("full_reconciliation_rerun")
+    isolation = review.get("reviewer_isolation")
+    findings = review.get("findings")
+    zero_chm = {severity: 0 for severity in sorted(_BLOCKING_SEVERITIES)}
+    if (
+        review.get("schema_version") != "apk-denominator-independent-review.v1"
+        or review.get("status") != "independent-review-complete"
+        or review.get("source_baseline_revision") != baseline
+        or review.get("reviewer_role") != "adversarial-reviewer"
+        or not isinstance(isolation, Mapping)
+        or isolation.get("fork_turns") != "none"
+        or isolation.get("fresh_prompt_sha256") != reviewer_event.get("prompt_sha256")
+        or review.get("phase3_reconciliation") != phase3_ref
+        or not isinstance(rerun, Mapping)
+        or rerun.get("status") != "passed"
+        or rerun.get("source_baseline_revision") != baseline
+        or rerun.get("phase3_output_sha256") != phase3_ref["sha256"]
+        or rerun.get("unresolved_source_count") != 0
+        or rerun.get("reconciliation_status") != "reconciliation-complete"
+        or rerun.get("coverage") != coverage
+        or review.get("blocking_findings_by_severity") != zero_chm
+        or not isinstance(findings, list)
+        or any(
+            not isinstance(finding, Mapping)
+            or str(finding.get("severity", "")).lower()
+            not in {*_BLOCKING_SEVERITIES, "low", "informational"}
+            or str(finding.get("severity", "")).lower() in _BLOCKING_SEVERITIES
+            for finding in findings
+        )
+    ):
+        return "REVIEW_BINDING_MISMATCH", None
+    if (
+        candidate.get("schema_version") != "apk-denominator-candidate-manifest.v1"
+        or candidate.get("status") != "candidate-non-consumable"
+        or candidate.get("consumable") is not False
+        or candidate.get("accepted") is not False
+        or candidate.get("revoked") is not False
+        or candidate.get("source_baseline_revision") != baseline
+        or candidate.get("phase3_reconciliation") != phase3_ref
+        or candidate.get("independent_review") != review_ref
+        or candidate.get("denominator_counts") != coverage
+    ):
+        return "CANDIDATE_HASH_MISMATCH", None
+    program_records = phase3.get("replacement_program_identity_records")
+    assignments = partition.get("assignments")
+    if not isinstance(program_records, list) or not isinstance(assignments, list):
+        return "INCOMPLETE_SIMULTANEOUS_CLASSIFICATION", None
+    expected_labels = [
+        row.get("program_identity_label") for row in program_records if isinstance(row, Mapping)
+    ]
+    actual_labels = [
+        row.get("canonical_identity_label") for row in assignments if isinstance(row, Mapping)
+    ]
+    if (
+        len(expected_labels) != len(program_records)
+        or len(actual_labels) != len(assignments)
+        or len(actual_labels) != len(set(actual_labels))
+        or actual_labels != expected_labels
+        or partition.get("schema_version") != "apk-denominator-candidate-partition.v1"
+        or partition.get("status") != "candidate-non-consumable"
+        or partition.get("consumable") is not False
+        or partition.get("accepted") is not False
+        or partition.get("revoked") is not False
+        or partition.get("candidate_denominator") != candidate_ref
+    ):
+        return "INCOMPLETE_SIMULTANEOUS_CLASSIFICATION", None
+    expected_hashes = {
+        "candidate": candidate_ref["sha256"],
+        "candidate_partition": partition_ref["sha256"],
+        "review": review_ref["sha256"],
+        "gate": gate_hash,
+    }
+    authorization = owner.get("current_owner_authorization")
+    if (
+        owner.get("schema_version") != "apk-denominator-owner-acceptance.v1"
+        or owner.get("decision") != "approve"
+        or owner.get("revoked") is not False
+        or owner.get("approved_hashes") != expected_hashes
+        or not isinstance(authorization, Mapping)
+        or authorization.get("actor_role") != "product-owner"
+        or authorization.get("status") != "currently-authorized"
+    ):
+        return "OWNER_APPROVAL_HASH_MISMATCH", None
+    owner_event_id = authorization.get("event_id")
+    if not isinstance(owner_event_id, str) or not owner_event_id:
+        return "FORGED_OWNER_APPROVAL", None
+    try:
+        owner_event = resolver.resolve(owner_event_id)
+    except EventResolutionError:
+        return "FORGED_OWNER_APPROVAL", None
+    reviewer_completed = reviewer_event.get("completed_ms")
+    owner_created = owner_event.get("created_ms")
+    if (
+        owner_event.get("role") != "user"
+        or owner_event.get("actor_role") != "product-owner"
+        or not isinstance(reviewer_completed, int)
+        or isinstance(reviewer_completed, bool)
+        or not isinstance(owner_created, int)
+        or isinstance(owner_created, bool)
+        or owner_created <= reviewer_completed
+    ):
+        return "OWNER_ORDERING_INVALID", None
+    owner_message = json.dumps(
+        {"decision": "approve", "approved_hashes": expected_hashes},
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode() + b"\n"
+    if (
+        owner_event.get("approved_hashes") != expected_hashes
+        or owner_event.get("message_bytes") != owner_message
+        or owner_event.get("message_sha256") != _hash(owner_message)
+        or authorization.get("approval_message_sha256") != _hash(owner_message)
+    ):
+        return "FORGED_OWNER_APPROVAL", None
+    common_accepted = (
+        accepted.get("schema_version") == "apk-denominator-accepted-manifest.v1"
+        and accepted.get("status") == "accepted"
+        and accepted.get("consumable") is True
+        and accepted.get("revoked") is False
+        and accepted.get("candidate_denominator") == candidate_ref
+        and accepted.get("independent_review") == review_ref
+        and accepted.get("owner_acceptance") == owner_ref
+        and accepted.get("gate_manifest_sha256") == gate_hash
+    )
+    partition_accepted = (
+        accepted_partition.get("schema_version") == "apk-denominator-accepted-partition-manifest.v1"
+        and accepted_partition.get("status") == "accepted"
+        and accepted_partition.get("consumable") is True
+        and accepted_partition.get("revoked") is False
+        and accepted_partition.get("candidate_denominator") == candidate_ref
+        and accepted_partition.get("candidate_partition") == partition_ref
+        and accepted_partition.get("independent_review") == review_ref
+        and accepted_partition.get("owner_acceptance") == owner_ref
+        and accepted_partition.get("gate_manifest_sha256") == gate_hash
+        and accepted_partition.get("assignments") == assignments
+    )
+    if not common_accepted or not partition_accepted:
+        return "ACCEPTED_BINDING_MISMATCH", None
+    return None, owner_event_id
+
+
+def _validate_committed_output_bindings(
+    raw_by_path: Mapping[str, bytes],
+    declared_hashes: Mapping[str, Any],
+    artifact_commits: Mapping[str, Any],
+    receipts: list[Any],
+    source_adapter: GitSourceAdapter,
+    authority: TrustedPhase4Authority,
+) -> str | None:
+    """Checks exact declared hashes, committed bytes, ancestry, and receipt ownership."""
+    closeouts = set(artifact_commits.values())
+    if (
+        len(closeouts) != 1
+        or any(not isinstance(commit, str) or _COMMIT_SHA.fullmatch(commit) is None for commit in closeouts)
+    ):
+        return "ARTIFACT_ANCESTRY_INVALID"
+    closeout = next(iter(closeouts))
+    for path, data in raw_by_path.items():
+        if declared_hashes.get(path) != _hash(data):
+            return "ARTIFACT_COMMIT_MISMATCH"
+        commit = artifact_commits.get(path)
+        if not isinstance(commit, str) or _COMMIT_SHA.fullmatch(commit) is None:
+            return "ARTIFACT_COMMIT_MISMATCH"
+        if not _is_ancestor(source_adapter, authority.admitted_phase_base_sha, commit):
+            return "ARTIFACT_ANCESTRY_INVALID"
+        try:
+            committed = source_adapter.resolve_blob_bytes(commit, path)
+        except GitSourceError:
+            return "ARTIFACT_COMMIT_MISMATCH"
+        if committed != data:
+            return "ARTIFACT_COMMIT_MISMATCH"
+    for receipt in receipts:
+        if not isinstance(receipt, Mapping):
+            return "INVALID_ROLE_RECEIPT_V1"
+        commit = receipt.get("commit_sha")
+        outputs = receipt.get("output_hashes")
+        if not isinstance(commit, str) or _COMMIT_SHA.fullmatch(commit) is None:
+            return "RECEIPT_COMMIT_UNREACHABLE"
+        if (
+            not _is_ancestor(source_adapter, authority.admitted_phase_base_sha, commit)
+            or not _is_ancestor(source_adapter, commit, closeout)
+        ):
+            return "RECEIPT_COMMIT_UNREACHABLE"
+        if not isinstance(outputs, Mapping):
+            return "RECEIPT_OUTPUT_MISMATCH"
+        for path, digest in outputs.items():
+            if (
+                not isinstance(path, str)
+                or raw_by_path.get(path) is None
+                or digest != _hash(raw_by_path[path])
+            ):
+                return "RECEIPT_OUTPUT_MISMATCH"
+            try:
+                committed = source_adapter.resolve_blob_bytes(commit, path)
+            except GitSourceError:
+                return "RECEIPT_COMMIT_UNREACHABLE"
+            if committed != raw_by_path[path]:
+                return "RECEIPT_COMMIT_UNREACHABLE"
+    author_commits = [
+        receipt.get("commit_sha")
+        for receipt in receipts
+        if isinstance(receipt, Mapping) and receipt.get("role") != "adversarial-reviewer"
+    ]
+    reviewer_commits = [
+        receipt.get("commit_sha")
+        for receipt in receipts
+        if isinstance(receipt, Mapping) and receipt.get("role") == "adversarial-reviewer"
+    ]
+    if len(reviewer_commits) != 1 or any(
+        not isinstance(commit, str)
+        or not _is_ancestor(source_adapter, commit, reviewer_commits[0])
+        for commit in author_commits
+    ):
+        return "RECEIPT_COMMIT_UNREACHABLE"
+    return None
+
+
 def _hash(data: bytes) -> str:
     """Calculates a lowercase SHA-256 digest.
 
@@ -150,6 +697,7 @@ def _frozen_role_tasks(
         task_id = task.get("task_id")
         outputs = task.get("expected_outputs")
         forbidden = task.get("forbidden_roles")
+        reviewer = task.get("reviewer_role")
         if (
             role not in role_set
             or role in by_role
@@ -164,6 +712,7 @@ def _frozen_role_tasks(
             or not all(isinstance(value, str) and value for value in forbidden)
             or len(forbidden) != len(set(forbidden))
             or set(forbidden) != role_set - {role}
+            or reviewer != ("product-owner" if role == "adversarial-reviewer" else "adversarial-reviewer")
         ):
             return None
         by_role[role] = task
@@ -443,11 +992,13 @@ def _resolve_locator(
     return resolved.cited_bytes, None
 
 
-def validate_phase4_inventory_acceptance(
+def _validate_phase4_inventory_acceptance(
     bundle: Mapping[str, Any],
     resolver: EventResolver,
     source_adapter: GitSourceAdapter,
     authority: TrustedPhase4Authority,
+    *,
+    allow_legacy_test_contract: bool,
 ) -> dict[str, Any]:
     """Validates a complete Phase-4 inventory acceptance transition.
 
@@ -472,6 +1023,9 @@ def validate_phase4_inventory_acceptance(
     if trusted is None:
         return _reject("FROZEN_AUTHORITY_INVALID")
     freeze, ownership = trusted
+    production_contract = _has_production_artifact_contract(freeze)
+    if not production_contract and not allow_legacy_test_contract:
+        return _reject("FROZEN_AUTHORITY_INVALID")
     trusted_roles = ownership.get("required_roles")
     trusted_ceilings = freeze.get("frozen_resource_ceilings")
     stop_loss = freeze.get("stop_loss")
@@ -690,6 +1244,13 @@ def validate_phase4_inventory_acceptance(
             event = resolver.resolve(event_id)
         except EventResolutionError:
             return _reject("EVENT_UNREACHABLE")
+        if production_contract:
+            try:
+                event = _rebuild_production_role_event(
+                    receipt_value, task, event, source_adapter, authority
+                )
+            except APKInventoryLiveError as error:
+                return _reject(error.code)
         if event.get("task_id") != task.get("task_id"):
             return _reject("TASK_OWNERSHIP_MISMATCH")
         expected_event_fields = {
@@ -715,6 +1276,46 @@ def validate_phase4_inventory_acceptance(
             )
         resolved_events[role] = event
 
+    if production_contract:
+        sessions = [event.get("session_id") for event in resolved_events.values()]
+        start_events = [event.get("start_event_id") for event in resolved_events.values()]
+        end_events = [event.get("end_event_id") for event in resolved_events.values()]
+        if (
+            len(sessions) != len(set(sessions))
+            or len(start_events) + len(end_events) != len(set(start_events + end_events))
+        ):
+            return _reject("ROLE_SESSION_COLLISION")
+        ancestry = [event.get("parent_ancestry_ids") for event in resolved_events.values()]
+        if (
+            not all(isinstance(value, list) and len(value) == 1 for value in ancestry)
+            or len({tuple(value) for value in ancestry}) != 1
+        ):
+            return _reject("EVENT_IDENTITY_MISMATCH")
+        owned_paths = [
+            path
+            for event in resolved_events.values()
+            for path in event.get("raw_write_inventory", [])
+        ]
+        if len(owned_paths) != len(set(owned_paths)):
+            return _reject("OUTPUT_OWNERSHIP_MISMATCH")
+        reviewer = resolved_events.get("adversarial-reviewer")
+        authors = [
+            event for role, event in resolved_events.items() if role != "adversarial-reviewer"
+        ]
+        reviewer_started = reviewer.get("started_ms") if isinstance(reviewer, Mapping) else None
+        author_completed = [event.get("completed_ms") for event in authors]
+        if (
+            not isinstance(reviewer_started, int)
+            or isinstance(reviewer_started, bool)
+            or not author_completed
+            or not all(
+                isinstance(value, int) and not isinstance(value, bool)
+                for value in author_completed
+            )
+            or reviewer_started <= max(author_completed)
+        ):
+            return _reject("INHERITED_REVIEWER_CONTEXT")
+
     reviewer_event = resolved_events.get("adversarial-reviewer")
     if reviewer_event is None:
         return _reject("MISSING_REQUIRED_ROLE")
@@ -728,6 +1329,79 @@ def validate_phase4_inventory_acceptance(
     owner = artifacts["owner_approval"]
     accepted = artifacts["accepted"]
     accepted_partition = artifacts["accepted_partition"]
+
+    if production_contract:
+        try:
+            production_live = load_live_phase_bundle(
+                source_adapter._root,
+                authority.admitted_phase_base_sha,
+                source_adapter,
+            )
+        except APKInventoryLiveError as error:
+            return _reject(error.code)
+        live_hashes = production_live.get("artifact_sha256")
+        if not isinstance(live_hashes, Mapping):
+            return _reject("INPUT_PROVENANCE_INVALID")
+        for name, digest in live_hashes.items():
+            path = f"{TRACK_DIRECTORY}/{name}"
+            data = artifact_bytes.get(path)
+            owners = [
+                receipt
+                for receipt in receipts
+                if isinstance(receipt, Mapping)
+                and isinstance(receipt.get("output_hashes"), Mapping)
+                and receipt["output_hashes"].get(path) == digest
+            ]
+            if (
+                not isinstance(name, str)
+                or not isinstance(digest, str)
+                or _SHA256.fullmatch(digest) is None
+                or not isinstance(data, bytes)
+                or _hash(data) != digest
+                or declared_hashes.get(path) != digest
+                or len(owners) != 1
+            ):
+                return _reject("RECEIPT_OUTPUT_MISMATCH")
+            commit = owners[0].get("commit_sha")
+            if not isinstance(commit, str) or _COMMIT_SHA.fullmatch(commit) is None:
+                return _reject("RECEIPT_COMMIT_UNREACHABLE")
+            try:
+                committed = source_adapter.resolve_blob_bytes(commit, path)
+            except GitSourceError:
+                return _reject("RECEIPT_COMMIT_UNREACHABLE")
+            if committed != data:
+                return _reject("RECEIPT_COMMIT_UNREACHABLE")
+        if any(
+            "record_sets" in value or "rerun_record_sets" in value
+            for artifact in (raw, human, reconciliation, review)
+            for value in _walk(artifact)
+        ):
+            return _reject("AUTHORED_DENOMINATOR_REJECTED")
+        semantic_error, owner_event_id = _validate_production_phase4_semantics(
+            artifacts,
+            paths,
+            raw_by_path,
+            production_live,
+            baseline,
+            gate_hash,
+            reviewer_event,
+            resolver,
+        )
+        if semantic_error is not None:
+            return _reject(semantic_error)
+        binding_error = _validate_committed_output_bindings(
+            raw_by_path,
+            declared_hashes,
+            artifact_commits,
+            receipts,
+            source_adapter,
+            authority,
+        )
+        if binding_error is not None:
+            return _reject(binding_error)
+        if not isinstance(owner_event_id, str) or not resolver.claim_once(owner_event_id):
+            return _reject("REPLAYED_OWNER_APPROVAL")
+        return {"ok": True}
 
     review_event_id = review.get("reviewer_event_id")
     if not isinstance(review_event_id, str):
@@ -965,4 +1639,32 @@ def validate_phase4_inventory_acceptance(
     return {"ok": True}
 
 
-__all__ = ["TrustedPhase4Authority", "validate_phase4_inventory_acceptance"]
+def validate_phase4_inventory_acceptance(
+    bundle: Mapping[str, Any],
+    resolver: EventResolver,
+    source_adapter: GitSourceAdapter,
+    authority: TrustedPhase4Authority,
+) -> dict[str, Any]:
+    """Validates only the complete production Phase-4 contract."""
+    return _validate_phase4_inventory_acceptance(
+        bundle, resolver, source_adapter, authority, allow_legacy_test_contract=False
+    )
+
+
+def validate_phase4_inventory_acceptance_legacy_test_only(
+    bundle: Mapping[str, Any],
+    resolver: EventResolver,
+    source_adapter: GitSourceAdapter,
+    authority: TrustedPhase4Authority,
+) -> dict[str, Any]:
+    """Runs the historical synthetic contract exclusively for legacy test fixtures."""
+    return _validate_phase4_inventory_acceptance(
+        bundle, resolver, source_adapter, authority, allow_legacy_test_contract=True
+    )
+
+
+__all__ = [
+    "TrustedPhase4Authority",
+    "validate_phase4_inventory_acceptance",
+    "validate_phase4_inventory_acceptance_legacy_test_only",
+]

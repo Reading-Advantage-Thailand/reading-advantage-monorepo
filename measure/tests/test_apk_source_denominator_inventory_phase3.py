@@ -3,10 +3,13 @@
 from __future__ import annotations
 
 import hashlib
+import importlib.util
 import json
 import re
 import subprocess
+import sys
 import unittest
+from unittest import mock
 from pathlib import Path
 from typing import Any
 
@@ -82,12 +85,27 @@ SURFACE_KINDS = {
     "phase",
     "overlay",
     "transition",
+    "transition-write-candidate",
     "terminal",
     "presentation",
 }
-DISCREPANCY_TYPES = {"duplicate", "stale", "missing", "withdrawn", "historical"}
-RESOLVED_STATUSES = {"matched", "resolved"}
+DISCREPANCY_TYPES = {"duplicate", "stale", "missing", "withdrawn", "historical", "denominator-mismatch"}
+RESOLVED_STATUSES = {"matched", "resolved", "retained-target-write-candidate"}
 UNRESOLVED_STATUS = "unresolved-source"
+
+
+def _load_phase3_generator_module() -> Any:
+    """Loads the Phase-3 generator for focused propagation contracts."""
+    generator_path = TRACK_DIR / "generate_phase3_reconciliation.py"
+    spec = importlib.util.spec_from_file_location("apk_phase3_generator", generator_path)
+    if spec is None or spec.loader is None:
+        raise AssertionError("Unable to load Phase-3 generator")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
 PROGRAM_DISPOSITIONS = {
     "current",
     "historical/withdrawn",
@@ -496,10 +514,22 @@ class Phase3ReconciliationContracts(unittest.TestCase):
         current_scenes = _load_json(SCENE_PATH)
         expected = {
             _key(row)
-            for field in ("scene_records", "state_records", "transitions")
+            for field in ("scene_records", "state_records", "transitions", "transition_write_candidates")
             for row in current_scenes[field]
         }
-        self.assertEqual(len(expected), 283, "the current frozen surface denominator must contain 283 rows")
+        self.assertEqual(
+            len(expected),
+            sum(
+                len(current_scenes[field])
+                for field in (
+                    "scene_records",
+                    "state_records",
+                    "transitions",
+                    "transition_write_candidates",
+                )
+            ),
+            "surface keys must remain collision-free across proven and candidate partitions",
+        )
         actual = {
             _key(row.get("mechanical_surface"))
             for row in self._records("surface_reconciliation_records")
@@ -507,7 +537,7 @@ class Phase3ReconciliationContracts(unittest.TestCase):
         self.assertEqual(
             actual,
             expected,
-            "Phase 3 must not retain the obsolete 102-surface Phase-1 snapshot",
+            "Phase 3 must retain every proven surface and unresolved transition candidate",
         )
 
     def test_reconciliation_excludes_failed_track_quarantine_strings(self) -> None:
@@ -669,7 +699,15 @@ class Phase3ReconciliationContracts(unittest.TestCase):
         self.assertIsInstance(transitions, list)
         assert isinstance(scene_records, list) and isinstance(state_records, list) and isinstance(transitions, list)
         expected: dict[str, str] = {}
-        for kind, rows in (("scene", scene_records), ("state", state_records), ("transition", transitions)):
+        transition_candidates = self.scenes.get("transition_write_candidates")
+        self.assertIsInstance(transition_candidates, list)
+        assert isinstance(transition_candidates, list)
+        for kind, rows in (
+            ("scene", scene_records),
+            ("state", state_records),
+            ("transition", transitions),
+            ("transition-write-candidate", transition_candidates),
+        ):
             for row in rows:
                 self.assertIsInstance(row, dict)
                 assert isinstance(row, dict)
@@ -680,6 +718,8 @@ class Phase3ReconciliationContracts(unittest.TestCase):
         self.assertTrue(observed_kinds.issubset(SURFACE_KINDS))
         for record in records:
             self.assertEqual(record.get("surface_kind"), expected[_key(record.get("mechanical_surface"))])
+            if record.get("surface_kind") == "transition-write-candidate":
+                self.assertFalse(record.get("edge_inferred"))
             self._assert_resolution(record)
         category_records = self._records("surface_category_coverage")
         self.assertEqual({row.get("surface_kind") for row in category_records}, SURFACE_KINDS)
@@ -734,6 +774,11 @@ class Phase3ReconciliationContracts(unittest.TestCase):
             *(f"human-historical:{_key(row['evidence'])}" for row in human_history if isinstance(row, dict)),
             *(f"human-comparison:{row['observation_id']}" for row in comparisons if isinstance(row, dict)),
         }
+        module = _load_phase3_generator_module()
+        expected.update(
+            module.symmetric_blocker_id(row["category"], row["record_key"])
+            for row in self.human_discrepancies["independent_symmetric_blocking_records"]
+        )
         records = self._records("discrepancy_reconciliation_records")
         self.assertEqual({row.get("discrepancy_key") for row in records}, expected)
         for record in records:
@@ -766,8 +811,172 @@ class Phase3ReconciliationContracts(unittest.TestCase):
         ]
         record_unresolved = {row.get("unresolved_source_id") for row in all_records if row.get("resolution_status") == UNRESOLVED_STATUS}
         self.assertEqual(record_unresolved, set(ids), "every unresolved source must be explicit and every explicit unresolved source must block a record")
-        self.assertEqual(ids, [], "all reviewed program identities must have evidence-backed dispositions")
-        self.assertEqual(self.reconciliation.get("status"), "reconciliation-complete")
+        module = _load_phase3_generator_module()
+        expected_symmetric_ids = {
+            module.symmetric_blocker_id(row["category"], row["record_key"])
+            for row in self.human_discrepancies["independent_symmetric_blocking_records"]
+        }
+        self.assertEqual(set(ids), expected_symmetric_ids)
+        self.assertEqual(
+            self.reconciliation.get("status"),
+            "reconciliation-blocked" if expected_symmetric_ids else "reconciliation-complete",
+        )
+
+    def test_symmetric_blockers_propagate_one_to_one_into_phase3(self) -> None:
+        """Requires every Phase-2 either-side-only record to remain blocking in Phase 3."""
+        phase2 = _load_json(HUMAN_DISCREPANCY_PATH)
+        module = _load_phase3_generator_module()
+        blockers = phase2.get("independent_symmetric_blocking_records")
+        self.assertIsInstance(blockers, list)
+        assert isinstance(blockers, list)
+        expected = {
+            module.symmetric_blocker_id(row["category"], row["record_key"])
+            for row in blockers
+        }
+        propagated = {
+            row.get("unresolved_source_id")
+            for row in self._records("discrepancy_reconciliation_records")
+            if row.get("discrepancy_type") == "denominator-mismatch"
+        }
+        self.assertEqual(propagated, expected)
+        if expected:
+            self.assertEqual(self.reconciliation.get("status"), "reconciliation-blocked")
+
+    def test_matched_transition_candidate_does_not_propagate_as_unresolved(self) -> None:
+        """Keeps an exact retained target write out of blocker propagation."""
+        module = _load_phase3_generator_module()
+        from measure.evidence_integrity_gates import apk_inventory_live
+
+        phase2_spec = importlib.util.spec_from_file_location(
+            "apk_phase2_key_parity",
+            TRACK_DIR / "generate_phase2_human_discovery.py",
+        )
+        assert phase2_spec is not None and phase2_spec.loader is not None
+        phase2_module = importlib.util.module_from_spec(phase2_spec)
+        sys.modules[phase2_spec.name] = phase2_module
+        phase2_spec.loader.exec_module(phase2_module)
+        evidence = self.human_discovery["surface_reviews"][0]["evidence"][0]
+        candidate = {
+            "path": "game.ts",
+            "source_symbol": "status",
+            "to_state_id": "victory",
+            "reason": "no-single-proven-from-state",
+            "evidence": {"path": "game.ts", "range": {"start_line": 10}},
+        }
+        self.assertEqual(
+            phase2_module.transition_candidate_key(candidate),
+            module.transition_candidate_key(candidate),
+        )
+        self.assertEqual(
+            module.transition_candidate_key(candidate),
+            apk_inventory_live._transition_candidate_key(candidate),
+        )
+        row = {
+            "category": "transition-write-candidates",
+            "record_key": module.transition_candidate_key(candidate),
+            "comparison_status": "matched",
+            "blocking": False,
+            "resolution_status": "retained-target-write-candidate",
+            "mechanical_evidence": [evidence],
+            "human_evidence": [evidence],
+        }
+        records, unresolved = module.propagate_symmetric_blockers([row])
+        self.assertEqual(records, [])
+        self.assertEqual(unresolved, [])
+        with self.assertRaisesRegex(ValueError, "SYMMETRIC_RESOLUTION_STATUS_MISMATCH"):
+            module.propagate_symmetric_blockers([dict(row, resolution_status="compared")])
+
+    def test_symmetric_blocker_propagation_preserves_exact_records(self) -> None:
+        """Exercises human-only and mechanical-only propagation without repository fixtures."""
+        module = _load_phase3_generator_module()
+        rows = [
+            {
+                "category": "assets",
+                "record_key": "human-only.png",
+                "comparison_status": "human-only",
+                "blocking": True,
+                "resolution_status": "compared",
+                "mechanical_evidence": [],
+                "human_evidence": [{"path": "human-only.png"}],
+            },
+            {
+                "category": "history-paths",
+                "record_key": "mechanical-only.ts",
+                "comparison_status": "mechanical-only",
+                "blocking": True,
+                "resolution_status": "compared",
+                "mechanical_evidence": [{"path": "mechanical-only.ts"}],
+                "human_evidence": [],
+            },
+        ]
+        with mock.patch.object(module, "validate_symmetric_evidence", side_effect=lambda value: value):
+            records, unresolved = module.propagate_symmetric_blockers(rows)
+        self.assertEqual(len(records), 2)
+        self.assertEqual(len(unresolved), 2)
+        self.assertEqual({row["comparison_status"] for row in records}, {"human-only", "mechanical-only"})
+        self.assertTrue(all(row["blocking"] for row in records))
+        self.assertEqual(
+            {row["unresolved_source_id"] for row in records},
+            {row["unresolved_source_id"] for row in unresolved},
+        )
+        for source, propagated in zip(rows, records, strict=True):
+            self.assertEqual(propagated["symmetric_category"], source["category"])
+            self.assertEqual(propagated["record_key"], source["record_key"])
+            self.assertEqual(propagated["comparison_status"], source["comparison_status"])
+            self.assertEqual(propagated["mechanical_evidence"], source["mechanical_evidence"])
+            self.assertEqual(propagated["human_evidence"], source["human_evidence"])
+            self.assertEqual(
+                propagated["unresolved_source_id"],
+                module.symmetric_blocker_id(source["category"], source["record_key"]),
+            )
+
+    def test_symmetric_blocker_empty_sides_survive_real_revalidation(self) -> None:
+        """Uses committed locators to prove empty evidence sides are preserved without mocking."""
+        module = _load_phase3_generator_module()
+        phase2 = _load_json(HUMAN_DISCREPANCY_PATH)
+        blockers = phase2["independent_symmetric_blocking_records"]
+        rows = [
+            {
+                **next(row for row in blockers if row["category"] == "transitions" and row["comparison_status"] == status),
+                "resolution_status": "compared",
+            }
+            for status in ("human-only", "mechanical-only")
+        ]
+
+        records, unresolved = module.propagate_symmetric_blockers(rows)
+
+        self.assertEqual(len(records), 2)
+        self.assertEqual(len(unresolved), 2)
+        by_status = {row["comparison_status"]: row for row in records}
+        self.assertEqual(by_status["human-only"]["mechanical_evidence"], [])
+        self.assertEqual(by_status["mechanical-only"]["human_evidence"], [])
+        self.assertEqual(by_status["human-only"]["human_evidence"], rows[0]["human_evidence"])
+        self.assertEqual(by_status["mechanical-only"]["mechanical_evidence"], rows[1]["mechanical_evidence"])
+
+    def test_all_committed_symmetric_blocker_evidence_is_valid_and_exact(self) -> None:
+        """Validates locator, asset hash, and deletion evidence for every current blocker."""
+        module = _load_phase3_generator_module()
+        phase2 = _load_json(HUMAN_DISCREPANCY_PATH)
+        blockers = phase2["independent_symmetric_blocking_records"]
+
+        records, unresolved = module.propagate_symmetric_blockers(blockers)
+
+        self.assertEqual(len(records), len(blockers))
+        self.assertEqual(len(unresolved), len(blockers))
+        for source, propagated in zip(blockers, records, strict=True):
+            self.assertEqual(propagated["symmetric_category"], source["category"])
+            self.assertEqual(propagated["record_key"], source["record_key"])
+            self.assertEqual(propagated["comparison_status"], source["comparison_status"])
+            self.assertEqual(propagated["mechanical_evidence"], source["mechanical_evidence"])
+            self.assertEqual(propagated["human_evidence"], source["human_evidence"])
+
+    def test_phase3_derives_predecessor_revisions_from_the_receipt(self) -> None:
+        """Prevents stale embedded Phase-1 and Phase-2 implementation revisions."""
+        source = (TRACK_DIR / "generate_phase3_reconciliation.py").read_text(encoding="utf-8")
+        self.assertNotRegex(source, r"(?m)^PHASE1_REVISION\s*=")
+        self.assertNotRegex(source, r"(?m)^PHASE2_IMPLEMENTATION_REVISION\s*=")
+        self.assertIn('commit_binding.get("phase1_attestation_commit")', source)
+        self.assertIn('receipt.get("commit_sha")', source)
 
     def test_phase3_contains_no_interpretation_or_vacuous_completion(self) -> None:
         """Rejects semantic conclusions and empty comparison collections.
@@ -789,6 +998,52 @@ class Phase3ReconciliationContracts(unittest.TestCase):
             "discrepancy_reconciliation_records",
         ):
             self._records(field)
+
+    def test_revalidate_rejects_forged_locator_hashes(self) -> None:
+        """Rejects a locator whose submitted payload differs from recomputation."""
+        module = _load_phase3_generator_module()
+        valid = {
+            "revision": module.BASELINE,
+            "path": "source.ts",
+            "blob_sha256": "a" * 64,
+            "range": {"start_line": 1, "end_line": 1, "sha256": "b" * 64},
+        }
+        with mock.patch.object(module, "locator", return_value=valid):
+            self.assertEqual(module.revalidate(valid), valid)
+            forged = dict(valid, blob_sha256="0" * 64)
+            with self.assertRaisesRegex(ValueError, "LOCATOR_MISMATCH"):
+                module.revalidate(forged)
+
+    def test_matched_record_rejects_unrelated_valid_evidence(self) -> None:
+        """Rejects two valid locators without overlap or paired key equivalence."""
+        module = _load_phase3_generator_module()
+        mechanical = {"revision": "a" * 40, "path": "a.ts", "blob_sha256": "1" * 64, "range": {"start_line": 1, "end_line": 1, "sha256": "2" * 64}}
+        human = {"revision": "a" * 40, "path": "b.ts", "blob_sha256": "3" * 64, "range": {"start_line": 1, "end_line": 1, "sha256": "4" * 64}}
+        with mock.patch.object(module, "revalidate", side_effect=lambda item: item):
+            with self.assertRaisesRegex(ValueError, "MATCH_EVIDENCE_UNRELATED"):
+                module.matched_record(
+                    canonical_identity_id="one-sided-is-insufficient",
+                    mechanical_evidence=[mechanical],
+                    human_evidence=[human],
+                )
+            matched = module.matched_record(
+                disposition="historical/withdrawn",
+                mechanical_record_key="catalog/x",
+                human_record_key="catalog/x",
+                mechanical_evidence=[mechanical],
+                human_evidence=[human],
+            )
+            self.assertEqual(matched["resolution_status"], "matched")
+
+    def test_duplicate_phase3_review_projection_rejects(self) -> None:
+        """Rejects duplicate reviewed keys before dictionary collapse."""
+        module = _load_phase3_generator_module()
+        with self.assertRaisesRegex(ValueError, "DUPLICATE_EXACT_REVIEW_KEY:source"):
+            module.unique_review_map(
+                [{"id": "same"}, {"id": "same"}], lambda row: row["id"], "source"
+            )
+        source = (TRACK_DIR / "generate_phase3_reconciliation.py").read_text(encoding="utf-8")
+        self.assertNotIn("allow_disjoint_evidence", source)
 
 
 if __name__ == "__main__":

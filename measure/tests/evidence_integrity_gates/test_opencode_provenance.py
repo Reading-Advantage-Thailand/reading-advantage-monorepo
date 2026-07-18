@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import subprocess
 import tempfile
@@ -10,6 +11,7 @@ from pathlib import Path
 
 from measure.evidence_integrity_gates.opencode_provenance import (
     ProvenanceError,
+    ReadOnlyShellBinding,
     RoleBinding,
     ShellGeneratorBinding,
     _parse_simple_commit,
@@ -103,6 +105,27 @@ class OpenCodeProvenanceTests(unittest.TestCase):
             self.assertNotIn("fork_turns", event)
             self.assertIsInstance(event["prompt_bytes"], bytes)
             self.assertIsInstance(event["final_response_bytes"], bytes)
+            evidence = build_evidence(
+                self._export(root, "ses_a1", "measure-strategy", "out.md"),
+                binding,
+                root,
+            )
+            self.assertEqual(
+                event["canonical_prompt_sha256"],
+                evidence["prompt_sha256"],
+            )
+            self.assertEqual(
+                event["canonical_final_response_sha256"],
+                evidence["final_response_sha256"],
+            )
+            self.assertNotEqual(
+                event["canonical_prompt_sha256"],
+                hashlib.sha256(event["prompt_bytes"]).hexdigest(),
+            )
+            self.assertEqual(
+                event["prompt_content_sha256"],
+                hashlib.sha256(event["prompt_bytes"]).hexdigest(),
+            )
 
     def test_resolved_event_rejects_undeclared_write_inventory(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -185,9 +208,139 @@ class OpenCodeProvenanceTests(unittest.TestCase):
                 ShellGeneratorBinding(phase2.command, phase2.owned_outputs, attestation_commit="4f5dde0a04c70c57f123a72eded84836325743da"),
             ),
         )
-        event = build_resolved_event(raw_path.read_bytes(), binding, repo_root)
-        self.assertEqual(set(event["raw_write_inventory"]), set(binding.owned_outputs))
-        self.assertEqual(set(event["output_sha256"]), set(binding.owned_outputs))
+        with self.assertRaisesRegex(ProvenanceError, "completed Bash command"):
+            build_evidence(raw_path.read_bytes(), binding, repo_root)
+
+    def test_completed_bash_requires_exact_read_only_or_generator_binding(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            raw = json.loads(self._export(root, "ses_a1", "measure-strategy", "out.md"))
+            raw["messages"][-1]["parts"].insert(0, {
+                "type": "tool", "tool": "bash",
+                "state": {
+                    "status": "completed",
+                    "input": {"command": "git status --short", "workdir": str(root)},
+                    "metadata": {"output": "", "exit": 0, "truncated": False},
+                },
+            })
+            declared = RoleBinding(
+                "strategy", "ses_a1", "measure-strategy", ("out.md",),
+                read_only_shell_commands=(ReadOnlyShellBinding("git status --short"),),
+            )
+            self.assertEqual(build_evidence(json.dumps(raw).encode(), declared, root)["session_id"], "ses_a1")
+            undeclared = RoleBinding("strategy", "ses_a1", "measure-strategy", ("out.md",))
+            with self.assertRaisesRegex(ProvenanceError, "unbound mutating Bash"):
+                build_evidence(json.dumps(raw).encode(), undeclared, root)
+            with self.assertRaises(ValueError):
+                ReadOnlyShellBinding("python3 forge.py")
+
+    def test_role_binding_rejects_path_collisions_and_nonhex_commits(self) -> None:
+        with self.assertRaises(ValueError):
+            RoleBinding("strategy", "ses_a1", "measure-strategy", ("a//b", "a/b"))
+        with self.assertRaisesRegex(ValueError, "full lowercase SHA"):
+            RoleBinding("strategy", "ses_a1", "measure-strategy", ("out.md",), output_commit="A" * 40)
+        with self.assertRaisesRegex(ValueError, "full lowercase SHA"):
+            RoleBinding("strategy", "ses_a1", "measure-strategy", ("out.md",), output_commit="0" * 39)
+        with self.assertRaisesRegex(ValueError, "session ID"):
+            RoleBinding("strategy", "session_x", "measure-strategy", ("out.md",))
+        with self.assertRaisesRegex(ValueError, "distinct"):
+            RoleBinding("strategy", "ses_a1", "measure-strategy", ())
+
+    def test_resolved_event_rejects_later_user_turn_even_if_export_is_coordinated(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "out.md").write_text("owned\n", encoding="utf-8")
+            raw = json.loads(self._export(root, "ses_a1", "measure-strategy", "out.md"))
+            raw["messages"].append(
+                {
+                    "info": {
+                        "id": "msg_user_second",
+                        "sessionID": "ses_a1",
+                        "role": "user",
+                        "time": {"created": 4},
+                        "agent": "measure-strategy",
+                    },
+                    "parts": [{"type": "text", "id": "prt_user_second", "text": "second prompt"}],
+                }
+            )
+            binding = RoleBinding("strategy", "ses_a1", "measure-strategy", ("out.md",))
+            with self.assertRaisesRegex(ProvenanceError, "exactly one canonical user prompt"):
+                build_resolved_event(json.dumps(raw).encode(), binding, root)
+
+    def test_resolved_event_rejects_relative_and_absolute_write_aliases(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            raw = json.loads(self._export(root, "ses_a1", "measure-strategy", "out.md"))
+            raw["messages"][-1]["parts"].insert(
+                1,
+                {
+                    "type": "tool",
+                    "tool": "edit",
+                    "state": {
+                        "status": "completed",
+                        "input": {"filePath": "out.md"},
+                    },
+                },
+            )
+            binding = RoleBinding("strategy", "ses_a1", "measure-strategy", ("out.md",))
+            with self.assertRaisesRegex(ProvenanceError, "normalized write path collision"):
+                build_resolved_event(json.dumps(raw).encode(), binding, root)
+
+    def test_resolved_event_rejects_assistant_self_parent(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            raw = json.loads(self._export(root, "ses_a1", "measure-strategy", "out.md"))
+            raw["messages"][1]["info"]["parentID"] = raw["messages"][1]["info"]["id"]
+            binding = RoleBinding("strategy", "ses_a1", "measure-strategy", ("out.md",))
+            with self.assertRaisesRegex(ProvenanceError, "canonical tool-loop"):
+                build_resolved_event(json.dumps(raw).encode(), binding, root)
+
+    def test_resolved_event_accepts_multi_assistant_tool_loop(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            raw = json.loads(self._export(root, "ses_a1", "measure-strategy", "out.md"))
+            final = raw["messages"].pop()
+            raw["messages"].append({
+                "info": {
+                    "id": "msg_asst_tool",
+                    "sessionID": "ses_a1",
+                    "parentID": "msg_user_ses_a1",
+                    "role": "assistant",
+                    "agent": "measure-strategy",
+                    "time": {"created": 2, "completed": 3},
+                },
+                "parts": [{
+                    "type": "tool", "tool": "write",
+                    "state": {"status": "completed", "input": {"filePath": str(root / "out.md")}},
+                }],
+            })
+            final["info"]["id"] = "msg_asst_final"
+            final["info"]["time"] = {"created": 4, "completed": 5}
+            final["parts"] = [{"type": "text", "id": "prt_final", "text": "final"}]
+            raw["messages"].append(final)
+            binding = RoleBinding("strategy", "ses_a1", "measure-strategy", ("out.md",))
+            event = build_resolved_event(json.dumps(raw).encode(), binding, root)
+            self.assertEqual(event["id"], "msg_asst_final")
+            self.assertEqual(event["raw_write_inventory"], ["out.md"])
+
+    def test_resolved_event_rejects_assistant_sibling_branch(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            raw = json.loads(self._export(root, "ses_a1", "measure-strategy", "out.md"))
+            raw["messages"].append({
+                "info": {
+                    "id": "msg_asst_branch",
+                    "sessionID": "ses_a1",
+                    "parentID": raw["messages"][1]["info"]["id"],
+                    "role": "assistant",
+                    "agent": "measure-strategy",
+                    "time": {"created": 4, "completed": 5},
+                },
+                "parts": [{"type": "text", "id": "prt_branch", "text": "branch"}],
+            })
+            binding = RoleBinding("strategy", "ses_a1", "measure-strategy", ("out.md",))
+            with self.assertRaisesRegex(ProvenanceError, "canonical tool-loop"):
+                build_resolved_event(json.dumps(raw).encode(), binding, root)
 
     def test_shell_generator_rejects_incomplete_generator(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

@@ -2,15 +2,19 @@
 
 from __future__ import annotations
 
+import copy
 import hashlib
 import importlib.util
+import inspect
 import json
 import re
 import subprocess
 import sys
+import tempfile
 import unittest
+from collections import Counter
 from unittest import mock
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any
 
 
@@ -164,6 +168,183 @@ def _locator_key(locator: dict[str, Any]) -> str:
         A JSON representation suitable for set comparison.
     """
     return json.dumps(locator, sort_keys=True, separators=(",", ":"))
+
+
+class Phase2IndependentCorpusClassifierContracts(unittest.TestCase):
+    """Pins the independent raw source and asset predicates to the frozen tree."""
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        """Loads the Phase-2 classifier and exact baseline tree without Phase-1 artifacts."""
+        cls.module = _load_generator_module()
+        cls.freeze = _load_json(FREEZE_PATH)
+        cls.baseline = cls.freeze["source_scope"]["current_revision"]
+        cls.entries = cls.module._tree_entries()
+        cls.paths = [row["path"] for row in cls.entries]
+
+    @staticmethod
+    def _normalized(path: str) -> str:
+        """Normalizes one path for exact bounded program-slug matching."""
+        return re.sub(r"[^a-z0-9]+", "-", path.lower()).strip("-")
+
+    def _expected_source_rule(self, path: str) -> str | None:
+        """Independently derives the frozen raw-source relevance rule."""
+        required = {
+            "measure/apk-asset-system-program.md",
+            "measure/apk-evidence-reconstruction-program.md",
+            "packages/game-cartridges/src/catalog.test.ts",
+            "packages/game-cartridges/src/catalog.ts",
+            "packages/game-cartridges/src/index.ts",
+        }
+        source_suffixes = {".ts", ".tsx", ".js", ".jsx", ".json"}
+        if path.startswith(f"{QUARANTINED_SOURCE_PREFIX}/"):
+            return None
+        if path in required:
+            return "active-apk-program-sources"
+        if path.startswith((
+            "packages/advantage-play-kit/",
+            "packages/game-contracts/",
+            "packages/game-cartridges/",
+        )):
+            return "apk-core-packages"
+        filename = PurePosixPath(path).name
+        if filename in {"package.json", "tsconfig.json", "tsconfig.test.json"} or filename.startswith("tsconfig."):
+            return None
+        suffix = PurePosixPath(path).suffix.lower()
+        if path.startswith("apps/advantage-games/src/") and suffix in source_suffixes:
+            return "advantage-games-src"
+        if path.startswith(("apps/reading-advantage/", "apps/primary-advantage/")) and suffix in source_suffixes and (
+            "/games/" in path or "/api/v1/games/" in path or "/lib/game" in path
+        ):
+            return "reading-primary-game-copies"
+        if path.startswith("packages/codecamp-knowledge/") and any(
+            part.startswith("apk-") for part in PurePosixPath(path).parts
+        ) and suffix in source_suffixes | {".md"}:
+            return "codecamp-knowledge-apk-segment"
+        if (
+            path.startswith("packages/domain/src/games/")
+            or path.startswith("packages/domain/src/__tests__/games")
+        ) and suffix in source_suffixes:
+            return "domain-games-tests"
+        normalized = self._normalized(path)
+        if path.startswith("packages/db/") and (
+            "game-completion" in normalized or "codecamp-apk" in normalized
+        ):
+            return "db-game-completion-codecamp-apk"
+        bounded = f"-{normalized}-"
+        program_slugs = self.freeze["relevance_rules"]["program_slugs"]
+        if path.startswith("apps/advantage-games/measure/") and suffix in {".md", ".json"} and any(
+            f"-{slug}-" in bounded for slug in program_slugs
+        ):
+            return "advantage-games-measure-program-match"
+        return None
+
+    def _expected_asset_rule(self, path: str) -> str | None:
+        """Independently derives the frozen five-root asset relevance rule."""
+        filename = PurePosixPath(path).name
+        if path.startswith(f"{QUARANTINED_SOURCE_PREFIX}/"):
+            return None
+        if filename in {"package.json", "tsconfig.json", "tsconfig.test.json"} or filename.startswith("tsconfig."):
+            return None
+        suffix = PurePosixPath(path).suffix.lower()
+        candidates = {
+            ".png", ".jpg", ".jpeg", ".gif", ".webp", ".svg", ".ico", ".webm",
+            ".mp3", ".wav", ".ogg", ".m4a", ".json", ".csv", ".txt", ".xml", ".yaml", ".yml",
+        }
+        if path.startswith((
+            "apps/advantage-games/public",
+            "apps/reading-advantage/public/games",
+            "apps/primary-advantage/public/games",
+        )) and suffix in candidates:
+            return "public-game-media-audio-data"
+        normalized = self._normalized(path)
+        bounded = f"-{normalized}-"
+        if path.startswith("apps/advantage-games/measure/") and filename in {"asset-spec.md", "metadata.json"} and any(
+            f"-{slug}-" in bounded
+            for slug in self.freeze["relevance_rules"]["program_slugs"]
+        ):
+            return "game-measure-asset-sidecars"
+        if path == "packages/codecamp-knowledge/fixtures/apk-guided/activity-tutorial.json":
+            return "codecamp-activity-tutorial"
+        return None
+
+    def test_exact_frozen_path_to_rule_maps_and_category_counts(self) -> None:
+        """Requires every current frozen path and rule, not merely equal totals."""
+        expected_sources = {
+            path: rule
+            for path in self.paths
+            if (rule := self._expected_source_rule(path)) is not None
+        }
+        actual_sources = {
+            path: rule
+            for path in self.paths
+            if (rule := self.module._raw_source_relevance_rule(path)) is not None
+        }
+        self.assertEqual(actual_sources, expected_sources)
+        self.assertEqual(len(actual_sources), 923)
+        self.assertEqual(Counter(actual_sources.values()), {
+            "advantage-games-src": 392,
+            "advantage-games-measure-program-match": 273,
+            "reading-primary-game-copies": 182,
+            "apk-core-packages": 45,
+            "codecamp-knowledge-apk-segment": 13,
+            "domain-games-tests": 10,
+            "active-apk-program-sources": 5,
+            "db-game-completion-codecamp-apk": 3,
+        })
+
+        expected_assets = {
+            path: rule
+            for path in self.paths
+            if (rule := self._expected_asset_rule(path)) is not None
+        }
+        actual_assets = {
+            path: rule
+            for path in self.paths
+            if (rule := self.module._raw_asset_relevance_rule(path)) is not None
+        }
+        self.assertEqual(actual_assets, expected_assets)
+        self.assertEqual(len(actual_assets), 426)
+        self.assertEqual(Counter(actual_assets.values()), {
+            "public-game-media-audio-data": 353,
+            "game-measure-asset-sidecars": 72,
+            "codecamp-activity-tutorial": 1,
+        })
+        self.assertEqual(len(self.module.RAW_PROGRAM_SLUGS), 29)
+        self.assertEqual(len(set(self.module.RAW_PROGRAM_SLUGS)), 29)
+        self.assertEqual(len(self.module.RAW_ASSET_ENUMERATION_ROOTS), 5)
+
+    def test_same_count_path_substitutions_do_not_satisfy_exact_maps(self) -> None:
+        """Proves equal category totals cannot hide one omitted and one forged path."""
+        expected_sources = {
+            path: rule
+            for path in self.paths
+            if (rule := self._expected_source_rule(path)) is not None
+        }
+        substituted_sources = dict(expected_sources)
+        removed_source = next(
+            path for path, rule in substituted_sources.items()
+            if rule == "advantage-games-src"
+        )
+        del substituted_sources[removed_source]
+        substituted_sources["apps/advantage-games/src/forged-same-count.ts"] = "advantage-games-src"
+        self.assertEqual(Counter(substituted_sources.values()), Counter(expected_sources.values()))
+        self.assertNotEqual(substituted_sources, expected_sources)
+
+        expected_assets = {
+            path: rule
+            for path in self.paths
+            if (rule := self._expected_asset_rule(path)) is not None
+        }
+        substituted_assets = dict(expected_assets)
+        removed_asset = next(
+            path for path, rule in substituted_assets.items()
+            if rule == "public-game-media-audio-data"
+        )
+        del substituted_assets[removed_asset]
+        substituted_assets["apps/advantage-games/public/forged-same-count.png"] = "public-game-media-audio-data"
+        self.assertEqual(Counter(substituted_assets.values()), Counter(expected_assets.values()))
+        self.assertNotEqual(substituted_assets, expected_assets)
 
 
 class Phase2IndependentHumanDiscoveryContracts(unittest.TestCase):
@@ -633,7 +814,7 @@ class Phase2IndependentHumanDiscoveryContracts(unittest.TestCase):
     def test_raw_discovery_precedes_and_survives_poisoned_phase1_loading(self) -> None:
         """Requires a raw frozen-tree result before any Phase-1 artifact can be read."""
         source = GENERATOR_PATH.read_text(encoding="utf-8")
-        generate_body = source.split("def generate()", 1)[1]
+        generate_body = source.split("def generate(", 1)[1]
         self.assertLess(
             generate_body.index("discover_raw_frozen_sources("),
             generate_body.index("git_json("),
@@ -783,6 +964,281 @@ class Phase2IndependentHumanDiscoveryContracts(unittest.TestCase):
         self.assertEqual(by_key["human-only"]["comparison_status"], "human-only")
         self.assertTrue(by_key["human-only"]["blocking"])
 
+    def test_exact_matched_transition_candidates_are_retained_without_edges(self) -> None:
+        """Retains 136 exact target writes while any missing or substituted evidence blocks."""
+        module = _load_generator_module()
+        base = {
+            "path": "game.ts",
+            "source_symbol": "status",
+            "to_state_id": "victory",
+            "reason": "no-single-proven-from-state",
+            "evidence": {"path": "game.ts", "range": {"start_line": 10}},
+        }
+        with_from = {**base, "from_state_id": "playing", "transition_evidence_kind": "guarded-write"}
+        moved = copy.deepcopy(base)
+        moved["evidence"]["range"]["start_line"] = 11
+        keys = {
+            module.transition_candidate_key(base),
+            module.transition_candidate_key(with_from),
+            module.transition_candidate_key(moved),
+        }
+        self.assertEqual(len(keys), 3, "line and optional proven-from are part of candidate identity")
+        changed_reason = {**base, "reason": "state-domain-occurrence-ambiguous"}
+        changed_proof = {**with_from, "transition_evidence_kind": "branch-guarded-write"}
+        self.assertNotEqual(module.transition_candidate_key(base), module.transition_candidate_key(changed_reason))
+        self.assertNotEqual(module.transition_candidate_key(with_from), module.transition_candidate_key(changed_proof))
+        mechanical = {f"candidate:{index}": [base["evidence"]] for index in range(136)}
+        human = copy.deepcopy(mechanical)
+        rows = module.symmetric_reconciliation_records(
+            "transition-write-candidates", mechanical, human,
+        )
+        self.assertEqual(len(rows), 136)
+        self.assertTrue(all(row["comparison_status"] == "matched" for row in rows))
+        self.assertTrue(all(row["resolution_status"] == "retained-target-write-candidate" for row in rows))
+        self.assertTrue(all(row["blocking"] is False for row in rows))
+        summary = module.summarize_symmetric_reconciliation(rows)
+        self.assertEqual(summary["uncovered_count"], 0)
+        missing = module.symmetric_reconciliation_records(
+            "transition-write-candidates", mechanical, {key: value for key, value in human.items() if key != "candidate:0"},
+        )
+        self.assertEqual(module.summarize_symmetric_reconciliation(missing)["uncovered_count"], 1)
+        substituted = copy.deepcopy(human)
+        substituted["candidate:0"][0]["range"]["end_line"] = 11
+        mismatch = module.symmetric_reconciliation_records(
+            "transition-write-candidates", mechanical, substituted,
+        )
+        self.assertEqual(mismatch[0]["comparison_status"], "evidence-mismatch")
+        self.assertTrue(mismatch[0]["blocking"])
+        forged = [dict(mismatch[0], category="files", blocking=False, resolution_status="compared")]
+        with self.assertRaisesRegex(ValueError, "INVALID_SYMMETRIC_COMPARISON_STATUS"):
+            module.summarize_symmetric_reconciliation(forged)
+
+    def test_duplicate_exact_reconciliation_keys_fail_before_set_comparison(self) -> None:
+        """Rejects same-count duplicate-key collapse before symmetric set logic runs."""
+        module = _load_generator_module()
+        module.require_exact_map_cardinalities({"raw transitions": (2, 2)})
+        with self.assertRaisesRegex(ValueError, "raw transitions"):
+            module.require_exact_map_cardinalities({"raw transitions": (1, 2)})
+
+    def test_symmetric_blocker_summary_is_exact_and_fail_closed(self) -> None:
+        """Derives Phase-2 status and uncovered counts only from exact symmetric rows."""
+        module = _load_generator_module()
+        rows = [
+            {
+                "category": "files",
+                "record_key": "matched",
+                "comparison_status": "matched",
+                "resolution_status": "compared",
+                "blocking": False,
+                "mechanical_evidence": [],
+                "human_evidence": [],
+            },
+            {
+                "category": "assets",
+                "record_key": "human-only",
+                "comparison_status": "human-only",
+                "resolution_status": "compared",
+                "blocking": True,
+                "mechanical_evidence": [],
+                "human_evidence": [{"path": "asset.png"}],
+            },
+            {
+                "category": "history-paths",
+                "record_key": "mechanical-only",
+                "comparison_status": "mechanical-only",
+                "blocking": True,
+                "resolution_status": "compared",
+                "mechanical_evidence": [{"path": "deleted.ts"}],
+                "human_evidence": [],
+            },
+        ]
+
+        summary = module.summarize_symmetric_reconciliation(rows)
+
+        self.assertEqual(summary["status"], "independent-human-reconciliation-blocked")
+        self.assertEqual(summary["coverage_status"], "blocked")
+        self.assertEqual(summary["uncovered_count"], 2)
+        self.assertEqual(summary["uncovered_by_category"], {"assets": 1, "history-paths": 1})
+        self.assertEqual(summary["blocking_records"], rows[1:])
+
+        rows[1]["blocking"] = False
+        with self.assertRaisesRegex(ValueError, "SYMMETRIC_BLOCKING_FLAG_MISMATCH"):
+            module.summarize_symmetric_reconciliation(rows)
+
+    def test_symmetric_reconciliation_mutations_fail_closed(self) -> None:
+        """Rejects duplicate, omitted, repeated, and falsely completed blocker accounting."""
+        module = _load_generator_module()
+        rows = [
+            {
+                "category": "files",
+                "record_key": "matched",
+                "comparison_status": "matched",
+                "resolution_status": "compared",
+                "blocking": False,
+                "mechanical_evidence": [],
+                "human_evidence": [],
+            },
+            {
+                "category": "assets",
+                "record_key": "human-only.png",
+                "comparison_status": "human-only",
+                "resolution_status": "compared",
+                "blocking": True,
+                "mechanical_evidence": [],
+                "human_evidence": [{"path": "human-only.png"}],
+            },
+        ]
+        summary = module.summarize_symmetric_reconciliation(rows)
+        document = {
+            "independent_symmetric_reconciliation": rows,
+            "independent_symmetric_blocking_records": summary["blocking_records"],
+            "status": summary["status"],
+            "coverage_status": summary["coverage_status"],
+            "uncovered_count": summary["uncovered_count"],
+            "uncovered_by_category": summary["uncovered_by_category"],
+        }
+        module.validate_symmetric_reconciliation_document(document, rows)
+
+        duplicated_row = copy.deepcopy(document)
+        duplicated_row["independent_symmetric_reconciliation"].append(copy.deepcopy(rows[1]))
+        with self.assertRaisesRegex(ValueError, "DUPLICATE_SYMMETRIC_RECORD"):
+            module.validate_symmetric_reconciliation_document(duplicated_row, rows)
+
+        for blockers in ([], [rows[1], copy.deepcopy(rows[1])]):
+            mutated = copy.deepcopy(document)
+            mutated["independent_symmetric_blocking_records"] = blockers
+            with self.assertRaisesRegex(ValueError, "SYMMETRIC_BLOCKER_SET_MISMATCH"):
+                module.validate_symmetric_reconciliation_document(mutated, rows)
+
+        false_complete = copy.deepcopy(document)
+        false_complete["status"] = "independent-human-discovery-complete"
+        false_complete["coverage_status"] = "complete"
+        with self.assertRaisesRegex(ValueError, "SYMMETRIC_STATUS_MISMATCH"):
+            module.validate_symmetric_reconciliation_document(false_complete, rows)
+
+        false_counts = copy.deepcopy(document)
+        false_counts["uncovered_count"] = 0
+        false_counts["uncovered_by_category"] = {}
+        with self.assertRaisesRegex(ValueError, "SYMMETRIC_ACCOUNTING_MISMATCH"):
+            module.validate_symmetric_reconciliation_document(false_counts, rows)
+
+        empty_union = copy.deepcopy(document)
+        empty_union["independent_symmetric_reconciliation"] = []
+        with self.assertRaisesRegex(ValueError, "SYMMETRIC_UNION_MISMATCH"):
+            module.validate_symmetric_reconciliation_document(empty_union, rows)
+
+    def test_phase1_provenance_hashes_every_consumed_artifact(self) -> None:
+        """Requires exact SHA-256 provenance for all six Phase-1 inputs."""
+        module = _load_generator_module()
+        revision = "a" * 40
+        test_case = self
+
+        class Reader:
+            """Provides deterministic committed bytes for provenance testing."""
+
+            def read(self, requested_revision: str, path: str) -> bytes:
+                """Returns deterministic bytes for one requested artifact."""
+                test_case.assertEqual(requested_revision, revision)
+                return f"{requested_revision}:{path}".encode()
+
+        provenance = module.phase1_input_provenance(Reader(), revision)
+        self.assertEqual(provenance["revision"], revision)
+        expected_paths = {f"measure/tracks/{TRACK}/{name}" for name in module.PHASE1_ARTIFACTS}
+        self.assertEqual(set(provenance["artifact_sha256"]), expected_paths)
+        for path in expected_paths:
+            self.assertEqual(
+                provenance["artifact_sha256"][path],
+                hashlib.sha256(f"{revision}:{path}".encode()).hexdigest(),
+            )
+
+    def test_check_only_rejects_committed_output_provenance_drift(self) -> None:
+        """Requires check-only to compare every output against requested revision hashes."""
+        module = _load_generator_module()
+        revision = "a" * 40
+
+        class Reader:
+            """Provides deterministic committed bytes without starting Git."""
+
+            def read(self, requested_revision: str, path: str) -> bytes:
+                """Returns deterministic bytes for one requested artifact."""
+                return f"{requested_revision}:{path}".encode()
+
+            def close(self) -> None:
+                """Closes the no-op reader."""
+
+        provenance = module.phase1_input_provenance(Reader(), revision)
+        rows = [{
+            "category": "files",
+            "record_key": "matched",
+            "comparison_status": "matched",
+            "resolution_status": "compared",
+            "blocking": False,
+            "mechanical_evidence": [],
+            "human_evidence": [],
+        }]
+        discrepancy = {
+            "input_provenance": provenance,
+            "independent_symmetric_reconciliation": rows,
+            "independent_symmetric_blocking_records": [],
+            "status": "independent-human-discovery-complete",
+            "coverage_status": "complete",
+            "uncovered_count": 0,
+            "uncovered_by_category": {},
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            track_dir = Path(directory)
+            for name in module.PHASE2_ARTIFACTS:
+                document = discrepancy if name == "human-discrepancy-records.json" else {"input_provenance": provenance}
+                (track_dir / name).write_text(json.dumps(document), encoding="utf-8")
+            with (
+                mock.patch.object(module, "TRACK_DIR", track_dir),
+                mock.patch.object(module, "GitObjectReader", Reader),
+                mock.patch.object(module, "validate_phase1_revision", return_value=revision),
+                mock.patch.object(module, "check_coverage", return_value={"files": 1}),
+                mock.patch.object(module, "discover_raw_frozen_sources", return_value={}) as discover,
+                mock.patch.object(module, "git_json", return_value={}),
+                mock.patch.object(module, "build_symmetric_reconciliation", return_value=rows) as build,
+            ):
+                self.assertEqual(module.check_only_result(revision)["status"], "passed")
+                discover.assert_called()
+                build.assert_called()
+                drifted_path = track_dir / "independent-human-discovery.json"
+                drifted = json.loads(drifted_path.read_text(encoding="utf-8"))
+                drifted["input_provenance"]["revision"] = "b" * 40
+                drifted_path.write_text(json.dumps(drifted), encoding="utf-8")
+                with self.assertRaisesRegex(ValueError, "PHASE1_INPUT_PROVENANCE_MISMATCH"):
+                    module.check_only_result(revision)
+
+    def test_committed_symmetric_blockers_drive_phase2_status_and_counts(self) -> None:
+        """Rejects the current hard-coded complete/zero summary when blockers exist."""
+        discrepancies = _load_json(DISCREPANCY_PATH, phase2=True)
+        module = _load_generator_module()
+        rows = discrepancies.get("independent_symmetric_reconciliation")
+        self.assertIsInstance(rows, list)
+        assert isinstance(rows, list)
+        summary = module.summarize_symmetric_reconciliation(rows)
+
+        self.assertEqual(discrepancies.get("independent_symmetric_blocking_records"), summary["blocking_records"])
+        self.assertEqual(discrepancies.get("status"), summary["status"])
+        self.assertEqual(discrepancies.get("coverage_status"), summary["coverage_status"])
+        self.assertEqual(discrepancies.get("uncovered_count"), summary["uncovered_count"])
+        self.assertEqual(discrepancies.get("uncovered_by_category"), summary["uncovered_by_category"])
+
+    def test_phase1_revision_is_mandatory_and_has_no_generator_default(self) -> None:
+        """Prevents a stale embedded Phase-1 commit from silently rewriting Phase-2."""
+        module = _load_generator_module()
+        self.assertEqual(list(inspect.signature(module.generate).parameters), ["phase1_revision"])
+        self.assertEqual(list(inspect.signature(module.check_coverage).parameters), ["phase1_revision"])
+        self.assertEqual(list(inspect.signature(module.check_only_result).parameters), ["phase1_revision"])
+        with self.assertRaises(TypeError):
+            module.generate()
+        with self.assertRaises(TypeError):
+            module.check_coverage()
+        source = GENERATOR_PATH.read_text(encoding="utf-8")
+        self.assertNotRegex(source, r"(?m)^PHASE1_REVISION\s*=")
+        self.assertIn('parser.add_argument("--phase1-revision", required=True)', source)
+        self.assertIn("PHASE1_INPUT_PROVENANCE_MISMATCH", source)
+
     def test_phase2_factual_outputs_exclude_quarantined_source_strings(self) -> None:
         """Rejects failed-track paths anywhere in Phase-2 factual outputs.
 
@@ -819,7 +1275,7 @@ class Phase2IndependentHumanDiscoveryContracts(unittest.TestCase):
         self.assertEqual({row["mechanical_graph_edge_key"] for row in graph_reviews}, expected_graph)
         expected_surfaces = {
             _locator_key(row)
-            for field in ("scene_records", "state_records", "transitions")
+            for field in ("scene_records", "state_records", "transitions", "transition_write_candidates")
             for row in self.scenes[field]
         }
         self.assertEqual({row["mechanical_surface_key"] for row in surface_reviews}, expected_surfaces)
@@ -861,7 +1317,15 @@ class Phase2IndependentHumanDiscoveryContracts(unittest.TestCase):
             "program_identity_dispositions": 29,
             "historical_program_identities": 12,
             "source_records": len(self.source["records"]),
-            "surfaces": sum(len(self.scenes[field]) for field in ("scene_records", "state_records", "transitions")),
+            "surfaces": sum(
+                len(self.scenes[field])
+                for field in (
+                    "scene_records",
+                    "state_records",
+                    "transitions",
+                    "transition_write_candidates",
+                )
+            ),
         }
         self.assertEqual(counts, expected_counts)
         self.assertEqual(discrepancies.get("coverage_status"), "complete")
@@ -979,6 +1443,46 @@ class Phase2IndependentHumanDiscoveryContracts(unittest.TestCase):
 
         for artifact in (self.human_discovery, discrepancies):
             self._assert_no_interpretation_fields(artifact)
+
+    def test_revalidate_rejects_forged_locator_payload(self) -> None:
+        """Rejects a submitted locator whose hashes differ from recomputed bytes."""
+        module = _load_generator_module()
+
+        class Reader:
+            def read(self, revision: str, path: str) -> bytes:
+                return b"source\n"
+
+        valid = module.locator(Reader(), "a" * 40, "source.ts", 1, 1)
+        self.assertEqual(module.revalidate(Reader(), valid), valid)
+        forged = copy.deepcopy(valid)
+        forged["blob_sha256"] = "0" * 64
+        with self.assertRaisesRegex(ValueError, "LOCATOR_MISMATCH"):
+            module.revalidate(Reader(), forged)
+
+    def test_duplicate_review_projection_fails_before_set_comparison(self) -> None:
+        """Rejects duplicate reviewed keys before coverage can collapse them."""
+        module = _load_generator_module()
+        rows = [{"id": "same"}, {"id": "same"}]
+        with self.assertRaisesRegex(ValueError, "DUPLICATE_EXACT_REVIEW_KEY:source"):
+            module.unique_projection(rows, lambda row: row["id"], "source")
+
+    def test_all_history_log_commands_are_first_parent_bound(self) -> None:
+        """Requires raw discovery and program history commands to stay first-parent only."""
+        module = _load_generator_module()
+        source = (TRACK_DIR / "generate_phase2_human_discovery.py").read_text(encoding="utf-8")
+        log_commands = [line for line in source.splitlines() if '"git", "log"' in line]
+        self.assertTrue(log_commands)
+        self.assertTrue(all('"--first-parent"' in line for line in log_commands), log_commands)
+        path_a = "apps/advantage-games/src/a.ts"
+        path_b = "packages/advantage-play-kit/src/b.ts"
+        history = "\n".join((f"commit:{'a' * 40}", f"D\t{path_a}", f"commit:{'b' * 40}", f"D\t{path_a}", f"commit:{'c' * 40}", f"D\t{path_b}"))
+        self.assertEqual(
+            module.first_deletion_records(history),
+            [
+                {"deletion_revision": "a" * 40, "path": path_a},
+                {"deletion_revision": "c" * 40, "path": path_b},
+            ],
+        )
 
 
 if __name__ == "__main__":

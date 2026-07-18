@@ -9,11 +9,14 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.util
 import json
 import mimetypes
+import os
 import re
 import struct
 import subprocess
+import sys
 from collections import defaultdict
 from pathlib import Path, PurePosixPath
 from typing import Any, Iterable
@@ -21,6 +24,7 @@ from typing import Any, Iterable
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 TRACK_DIR = Path(__file__).resolve().parent
+DEFAULT_OUTPUT_DIR = Path(os.environ.get("APK_DENOMINATOR_ARTIFACT_DIR", TRACK_DIR))
 BASELINE = "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
 QUARANTINE_PATH = "measure/tracks/apk_cross_game_asset_ontology_20260712"
 SOURCE_SUFFIXES = {".ts", ".tsx", ".js", ".jsx", ".json"}
@@ -31,6 +35,11 @@ PUBLIC_GAME_ROOTS = (
     "apps/advantage-games/public",
     "apps/reading-advantage/public/games",
     "apps/primary-advantage/public/games",
+)
+ASSET_ENUMERATION_ROOTS = (
+    *PUBLIC_GAME_ROOTS,
+    "apps/advantage-games/measure",
+    "packages/codecamp-knowledge/fixtures/apk-guided",
 )
 STATE_NAME = re.compile(
     r"(?:state|status|phase|mode|scene|screen|overlay|wave|floor|turn|pose|step)",
@@ -56,6 +65,17 @@ SHARED_PACKAGE_ROOTS = (
     "packages/game-contracts/",
     "packages/game-cartridges/",
 )
+PROGRAM_SLUGS = (
+    "dragon-flight", "rpg-battle", "abyssal-well", "castle-defense", "magic-defense",
+    "wizard-vs-zombie", "village-guardian", "archers-revenge", "storm-castle-tower",
+    "paladins-twin-soul", "gryphon-patrol", "dragon-rider", "dungeon-liberator",
+    "spellweavers-run", "shadow-gate-dungeon", "labyrinth-goblin-king",
+    "griffin-riders-escape", "sorcerer-ziggurat", "enchanted-library", "rune-match",
+    "alchemists-synthesis", "potion-rush", "rune-forge-chamber", "astral-mage",
+    "griffin-sky-joust", "realm-carver", "devourer-slime", "haunted-library",
+    "babel-architect",
+)
+CONFIG_FILENAMES = {"package.json", "tsconfig.json", "tsconfig.test.json"}
 ROLE_OUTPUTS = {
     "discovery-auditor": (
         "source-denominator.json",
@@ -161,32 +181,91 @@ def full_locator(path: str, revision: str = BASELINE) -> dict[str, Any]:
     return line_locator(path, 1, line_count, revision)
 
 
-def source_path(path: str) -> bool:
-    """Reports whether a committed path belongs to the mechanical game-source corpus.
+def normalized_path(path: str) -> str:
+    """Normalizes a repository path for exact frozen slug matching.
+
+    Args:
+        path: Repository-relative path.
+
+    Returns:
+        Lowercase hyphen-delimited alphanumeric path text.
+    """
+    return re.sub(r"[^a-z0-9]+", "-", path.lower()).strip("-")
+
+
+def matches_program_slug(path: str) -> bool:
+    """Reports whether a normalized path contains one exact frozen program slug.
+
+    Args:
+        path: Repository-relative path.
+
+    Returns:
+        Whether one exact 29-program slug occurs on hyphen boundaries.
+    """
+    normalized = f"-{normalized_path(path)}-"
+    return any(f"-{slug}-" in normalized for slug in PROGRAM_SLUGS)
+
+
+def source_relevance_rule(path: str) -> str | None:
+    """Returns the frozen relevance rule admitting one mechanical source path.
 
     Args:
         path: Repository-relative baseline path.
 
     Returns:
-        Whether the path is an eligible source, test, route, component, or data file.
+        Stable relevance rule ID, or None when the path is outside the corpus.
     """
     if path.startswith(f"{QUARANTINE_PATH}/"):
-        return False
+        return None
     if path in REQUIRED_SOURCE_PATHS:
-        return True
+        return "active-apk-program-sources"
     if path.startswith(SHARED_PACKAGE_ROOTS):
-        return True
+        return "apk-core-packages"
+    filename = PurePosixPath(path).name
+    if filename in CONFIG_FILENAMES or filename.startswith("tsconfig."):
+        return None
     suffix = PurePosixPath(path).suffix.lower()
-    if suffix not in SOURCE_SUFFIXES:
-        return False
-    if path.startswith("apps/advantage-games/src/"):
-        return True
+    if path.startswith("apps/advantage-games/src/") and suffix in SOURCE_SUFFIXES:
+        return "advantage-games-src"
     app_roots = ("apps/reading-advantage/", "apps/primary-advantage/")
-    return path.startswith(app_roots) and (
+    if suffix in SOURCE_SUFFIXES and path.startswith(app_roots) and (
         "/games/" in path
         or "/api/v1/games/" in path
         or "/lib/game" in path
-    )
+    ):
+        return "reading-primary-game-copies"
+    if path.startswith("packages/codecamp-knowledge/") and any(
+        part.startswith("apk-") for part in PurePosixPath(path).parts
+    ) and suffix in SOURCE_SUFFIXES | {".md"}:
+        return "codecamp-knowledge-apk-segment"
+    if path.startswith("packages/domain/src/games/") and suffix in SOURCE_SUFFIXES:
+        return "domain-games-tests"
+    if path.startswith("packages/domain/src/__tests__/games") and suffix in SOURCE_SUFFIXES:
+        return "domain-games-tests"
+    normalized = normalized_path(path)
+    if path.startswith("packages/db/") and (
+        "game-completion" in normalized or "codecamp-apk" in normalized
+    ):
+        return "db-game-completion-codecamp-apk"
+    if (
+        path.startswith("apps/advantage-games/measure/")
+        and suffix in {".md", ".json"}
+        and matches_program_slug(path)
+    ):
+        return "advantage-games-measure-program-match"
+    return None
+
+
+def source_path(path: str) -> bool:
+    """Reports whether a committed path belongs to the frozen source corpus.
+
+    Args:
+        path: Repository-relative baseline path.
+
+    Returns:
+        Whether a stable relevance rule admits the path.
+    """
+    return source_relevance_rule(path) is not None
 
 
 def page_identity(path: str) -> tuple[str, str] | None:
@@ -300,6 +379,7 @@ def build_source_denominator(paths: list[str]) -> dict[str, Any]:
             "record_id": record_id,
             "record_type": "file",
             "file_path": path,
+            "relevance_rule_id": source_relevance_rule(path),
             "discovery_method": "mechanical-filesystem",
             "evidence": full_locator(path),
         })
@@ -341,6 +421,8 @@ def build_source_denominator(paths: list[str]) -> dict[str, Any]:
 
     graph_edges: list[dict[str, Any]] = []
     for path in sources:
+        if PurePosixPath(path).suffix.lower() not in SOURCE_SUFFIXES:
+            continue
         text = blob(path).decode("utf-8", errors="replace")
         for import_number, match in enumerate(IMPORT.finditer(text), start=1):
             resolved = resolve_import(path, match.group(1), source_set)
@@ -505,11 +587,23 @@ def build_scene_state_denominator(paths: list[str]) -> dict[str, Any]:
         Scene/presentation symbols, literal states, and direct source-local transitions.
     """
     game_sources = [path for path in paths if source_path(path) and PurePosixPath(path).suffix in {".ts", ".tsx", ".js", ".jsx"}]
+    source_texts = {
+        path: blob(path).decode("utf-8", errors="replace") for path in game_sources
+    }
+    transition_spec = importlib.util.spec_from_file_location(
+        "apk_phase1_transition_ast", TRACK_DIR / "transition_ast.py"
+    )
+    if transition_spec is None or transition_spec.loader is None:
+        raise RuntimeError("Unable to load Phase-1 transition AST adjudicator")
+    transition_module = importlib.util.module_from_spec(transition_spec)
+    sys.modules[transition_spec.name] = transition_module
+    transition_spec.loader.exec_module(transition_module)
+    ast_writes = transition_module.extract_transition_writes(source_texts)
     scene_records: list[dict[str, Any]] = []
     state_records: list[dict[str, Any]] = []
     transitions: list[dict[str, Any]] = []
     for path in game_sources:
-        text = blob(path).decode("utf-8", errors="replace")
+        text = source_texts[path]
         for match in COMPONENT.finditer(text):
             scene_id = match.group(1)
             line = source_line_number(text, match.start(1))
@@ -639,147 +733,63 @@ def build_scene_state_denominator(paths: list[str]) -> dict[str, Any]:
             declarations[setter_name] = (state_name, literals, initial_value, declaration.start(), line)
             for literal in sorted(literals):
                 add_state(state_name, literal, line, "typed-useState-declaration")
-        for setter_name, (state_name, literals, initial_value, declaration_offset, declaration_line) in declarations.items():
-            guard = re.compile(
-                rf"if\s*\([^)]*\b{re.escape(state_name)}\s*===?\s*['\"]([^'\"]+)['\"][^)]*\)\s*\{{?[^{{}}]{{0,500}}?\b{re.escape(setter_name)}\s*\(\s*['\"]([^'\"]+)['\"]",
-                re.MULTILINE,
-            )
-            guarded_from_states: set[str] = set()
-            for match in guard.finditer(text):
-                from_state, to_state = match.groups()
-                if from_state not in literals or to_state not in literals:
-                    continue
-                guarded_from_states.add(from_state)
-                line = source_line_number(text, match.start())
-                transitions.append({
-                    "from_state_occurrence_id": f"{path}:{declaration_line}:{state_name}:{from_state}",
-                    "to_state_occurrence_id": f"{path}:{declaration_line}:{state_name}:{to_state}",
-                    "from_state_id": from_state,
-                    "to_state_id": to_state,
-                    "source_symbol": state_name,
-                    "transition_kind": "phase",
-                    "transition_evidence_kind": "explicit-state-guarded-setter",
-                    "discovery_method": "mechanical-syntax-traversal",
-                    "evidence": line_locator(path, line, source_line_number(text, match.end())),
-                })
-            if not guarded_from_states and initial_value is not None:
-                setter = re.compile(rf"\b{re.escape(setter_name)}\s*\(\s*['\"]([^'\"]+)['\"]")
-                for match in setter.finditer(text, declaration_offset):
-                    to_state = match.group(1)
-                    if to_state not in literals or to_state == initial_value:
-                        continue
-                    line = source_line_number(text, match.start())
-                    transitions.append({
-                        "from_state_occurrence_id": f"{path}:{declaration_line}:{state_name}:{initial_value}",
-                        "to_state_occurrence_id": f"{path}:{declaration_line}:{state_name}:{to_state}",
-                        "from_state_id": initial_value,
-                        "to_state_id": to_state,
-                        "source_symbol": state_name,
-                        "transition_kind": "phase",
-                        "transition_evidence_kind": "useState-initial-to-setter-call",
-                        "discovery_method": "mechanical-syntax-traversal",
-                        "evidence": line_locator(path, line, source_line_number(text, match.end())),
-                    })
-                    break
+    occurrences: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
+    for record in state_records:
+        occurrences[(record["source_symbol"], record["state_id"])].append(record)
 
-        create_match = re.search(r"\bcreate\s*<\s*(\w+)\s*>\s*\(\s*\([^)]*\)\s*=>\s*\(\{", text)
-        if create_match is not None:
-            store_start = create_match.end()
+    def resolve_occurrence(symbol: str, state_id: str, evidence_path: str) -> str | None:
+        """Resolves one exact state occurrence without path-global silent merging."""
+        choices = occurrences.get((symbol, state_id), [])
+        local = [row for row in choices if row["evidence"]["path"] == evidence_path]
+        resolved = local if len(local) == 1 else choices
+        return resolved[0]["state_occurrence_id"] if len(resolved) == 1 else None
 
-            def add_runtime_transition(
-                property_name: str,
-                from_state: str,
-                to_state: str,
-                start: int,
-                end: int,
-                evidence_kind: str,
-            ) -> None:
-                """Adds one exact runtime-store transition backed by a literal domain."""
-                domain = property_domains.get(property_name)
-                if domain is None:
-                    return
-                symbol, literals, declaration_line = domain
-                if not symbol:
-                    return
-                if from_state not in literals or to_state not in literals or from_state == to_state:
-                    return
-                from_occurrence = state_occurrences.get((symbol, from_state))
-                to_occurrence = state_occurrences.get((symbol, to_state))
-                if from_occurrence is None:
-                    from_occurrence = add_state(symbol, from_state, declaration_line, "literal-union-type-alias")
-                if to_occurrence is None:
-                    to_occurrence = add_state(symbol, to_state, declaration_line, "literal-union-type-alias")
-                transitions.append({
-                    "from_state_occurrence_id": from_occurrence,
-                    "to_state_occurrence_id": to_occurrence,
-                    "from_state_id": from_state,
-                    "to_state_id": to_state,
-                    "source_symbol": property_name,
-                    "transition_kind": "phase",
-                    "transition_evidence_kind": evidence_kind,
-                    "discovery_method": "mechanical-syntax-traversal",
+    transition_candidates: list[dict[str, Any]] = []
+    for record in ast_writes["proven_transitions"]:
+        from_occurrence = resolve_occurrence(
+            record["source_symbol"], record["from_state_id"], record["path"]
+        )
+        to_occurrence = resolve_occurrence(
+            record["source_symbol"], record["to_state_id"], record["path"]
+        )
+        if from_occurrence is None or to_occurrence is None:
+            transition_candidates.append(
+                {
+                    **record,
+                    "record_kind": "transition_write_candidate",
+                    "resolution_status": "unresolved",
+                    "reason": "state-domain-occurrence-ambiguous",
                     "evidence": line_locator(
-                        path,
-                        source_line_number(text, start),
-                        source_line_number(text, end),
+                        record["path"], record["start_line"], record["end_line"]
                     ),
-                })
-
-            for property_name, (_symbol, literals, _line) in property_domains.items():
-                write_pattern = re.compile(rf"\b{re.escape(property_name)}\s*:\s*['\"]([^'\"]+)['\"]")
-                writes = [match for match in write_pattern.finditer(text, store_start) if match.group(1) in literals]
-                if not writes:
-                    continue
-                initializer = writes[0]
-                first_change = next((match for match in writes[1:] if match.group(1) != initializer.group(1)), None)
-                if first_change is not None:
-                    add_runtime_transition(
-                        property_name,
-                        initializer.group(1),
-                        first_change.group(1),
-                        initializer.start(),
-                        first_change.end(),
-                        "runtime-store-initial-to-first-write",
-                    )
-
-                guarded = re.compile(
-                    rf"if\s*\([^)]*(?:state\.)?{re.escape(property_name)}\s*!==?\s*['\"]([^'\"]+)['\"][^)]*\)\s*return\s*\{{\}}([\s\S]{{0,350}}?)\b{re.escape(property_name)}\s*:\s*['\"]([^'\"]+)['\"]"
-                )
-                for match in guarded.finditer(text, store_start):
-                    add_runtime_transition(
-                        property_name,
-                        match.group(1),
-                        match.group(3),
-                        match.start(),
-                        match.end(),
-                        "runtime-store-guarded-write",
-                    )
-
-                guard_then_set = re.compile(
-                    rf"if\s*\([^)]*\b{re.escape(property_name)}\s*!==?\s*['\"]([^'\"]+)['\"][^)]*\)\s*return([\s\S]{{0,350}}?)\b{re.escape(property_name)}\s*:\s*['\"]([^'\"]+)['\"]"
-                )
-                for match in guard_then_set.finditer(text, store_start):
-                    add_runtime_transition(
-                        property_name,
-                        match.group(1),
-                        match.group(3),
-                        match.start(),
-                        match.end(),
-                        "runtime-store-guarded-write",
-                    )
-
-                ternary = re.compile(
-                    rf"state\.{re.escape(property_name)}\s*===?\s*['\"]([^'\"]+)['\"][^?\n]*\?\s*['\"]([^'\"]+)['\"]\s*:\s*state\.{re.escape(property_name)}"
-                )
-                for match in ternary.finditer(text, store_start):
-                    add_runtime_transition(
-                        property_name,
-                        match.group(1),
-                        match.group(2),
-                        match.start(),
-                        match.end(),
-                        "runtime-store-conditional-write",
-                    )
+                }
+            )
+            continue
+        transitions.append(
+            {
+                "from_state_occurrence_id": from_occurrence,
+                "to_state_occurrence_id": to_occurrence,
+                "from_state_id": record["from_state_id"],
+                "to_state_id": record["to_state_id"],
+                "source_symbol": record["source_symbol"],
+                "transition_kind": "phase",
+                "transition_evidence_kind": record["transition_evidence_kind"],
+                "discovery_method": "mechanical-typescript-compiler-ast",
+                "evidence": line_locator(
+                    record["path"], record["start_line"], record["end_line"]
+                ),
+            }
+        )
+    for record in ast_writes["transition_write_candidates"]:
+        transition_candidates.append(
+            {
+                **record,
+                "discovery_method": "mechanical-typescript-compiler-ast",
+                "evidence": line_locator(
+                    record["path"], record["start_line"], record["end_line"]
+                ),
+            }
+        )
     unique_transitions = {
         (record["from_state_occurrence_id"], record["to_state_occurrence_id"], record["evidence"]["range"]["start_line"]): record
         for record in transitions
@@ -799,6 +809,15 @@ def build_scene_state_denominator(paths: list[str]) -> dict[str, Any]:
                 record["evidence"]["range"]["start_line"],
                 record["from_state_occurrence_id"],
                 record["to_state_occurrence_id"],
+            ),
+        ),
+        "transition_write_candidates": sorted(
+            transition_candidates,
+            key=lambda record: (
+                record["evidence"]["path"],
+                record["evidence"]["range"]["start_line"],
+                record["source_symbol"],
+                record["to_state_id"],
             ),
         ),
     }
@@ -823,22 +842,44 @@ def format_metadata(path: str, value: bytes) -> dict[str, Any]:
     return result
 
 
-def candidate_asset_path(path: str) -> bool:
-    """Reports whether a path is a static candidate or game-associated data file.
+def asset_relevance_rule(path: str) -> str | None:
+    """Returns the frozen relevance rule admitting one candidate asset path.
 
     Args:
         path: Repository-relative baseline path.
 
     Returns:
-        Whether the committed path belongs in the mechanical candidate enumeration.
+        Stable asset relevance rule ID, or None when excluded.
     """
     if path.startswith(f"{QUARANTINE_PATH}/"):
-        return False
+        return None
+    filename = PurePosixPath(path).name
+    if filename in CONFIG_FILENAMES or filename.startswith("tsconfig."):
+        return None
     suffix = PurePosixPath(path).suffix.lower()
-    return (
-        (path.startswith(PUBLIC_GAME_ROOTS) and suffix in MEDIA_SUFFIXES | AUDIO_SUFFIXES | DATA_SUFFIXES)
-        or (source_path(path) and suffix in DATA_SUFFIXES)
-    )
+    if path.startswith(PUBLIC_GAME_ROOTS) and suffix in MEDIA_SUFFIXES | AUDIO_SUFFIXES | DATA_SUFFIXES:
+        return "public-game-media-audio-data"
+    if (
+        path.startswith("apps/advantage-games/measure/")
+        and filename in {"asset-spec.md", "metadata.json"}
+        and matches_program_slug(path)
+    ):
+        return "game-measure-asset-sidecars"
+    if path == "packages/codecamp-knowledge/fixtures/apk-guided/activity-tutorial.json":
+        return "codecamp-activity-tutorial"
+    return None
+
+
+def candidate_asset_path(path: str) -> bool:
+    """Reports whether a committed path belongs in the frozen asset corpus.
+
+    Args:
+        path: Repository-relative baseline path.
+
+    Returns:
+        Whether a stable asset relevance rule admits the path.
+    """
+    return asset_relevance_rule(path) is not None
 
 
 def build_asset_denominator(paths: list[str]) -> dict[str, Any]:
@@ -858,6 +899,7 @@ def build_asset_denominator(paths: list[str]) -> dict[str, Any]:
         digest = hashlib.sha256(value).hexdigest()
         candidates.append({
             "canonical_path": path,
+            "relevance_rule_id": asset_relevance_rule(path),
             "revision": BASELINE,
             "sha256": digest,
             "file_kind": file_kind,
@@ -871,7 +913,7 @@ def build_asset_denominator(paths: list[str]) -> dict[str, Any]:
         "source_baseline_revision": BASELINE,
         "enumeration": {
             "method": "mechanical-filesystem-and-hash",
-            "roots": list(PUBLIC_GAME_ROOTS),
+            "roots": list(ASSET_ENUMERATION_ROOTS),
             "candidate_count": len(candidates),
         },
         "candidate_files": candidates,
@@ -885,26 +927,25 @@ def historical_deletions() -> Iterable[tuple[str, str]]:
         Pairs of parent revision and deleted path, limited to the frozen source corpus.
     """
     output = run_git(
-        "log", "--format=%H", "--name-only", "--diff-filter=D", BASELINE, "--",
+        "log", "--first-parent", "--format=%H", "--name-only", "--diff-filter=D", BASELINE, "--",
         "apps/advantage-games", "apps/reading-advantage", "apps/primary-advantage",
+        "packages", "measure",
     ).decode("utf-8", errors="replace")
     revision: str | None = None
-    seen: set[tuple[str, str]] = set()
+    seen_paths: set[str] = set()
     for line in output.splitlines():
         if re.fullmatch(r"[0-9a-f]{40}", line):
             revision = line
             continue
-        if not revision or not line or not (source_path(line) or candidate_asset_path(line)):
+        if not revision or not line or line in seen_paths or not (source_path(line) or candidate_asset_path(line)):
             continue
         parent = run_git("rev-parse", f"{revision}^").decode().strip()
         try:
             blob(line, parent)
         except RuntimeError:
             continue
-        pair = (parent, line)
-        if pair not in seen:
-            seen.add(pair)
-            yield pair
+        seen_paths.add(line)
+        yield parent, line
 
 
 def build_historical_denominator(paths: list[str]) -> dict[str, Any]:
@@ -927,7 +968,7 @@ def build_historical_denominator(paths: list[str]) -> dict[str, Any]:
         "schema_version": "apk-historical-source-denominator.v1",
         "status": "mechanical-discovery-complete",
         "source_baseline_revision": BASELINE,
-        "history_method": "git-log deletion walk bounded by reachable baseline ancestors",
+        "history_method": "git-log first-parent deletion walk retaining the first deletion per path",
         "records": records,
     }
 
@@ -1018,17 +1059,16 @@ line-range SHA-256.
    route, byte-identical copy, and every resolvable relative or `@/` import edge.
 3. Extract declared component symbols ending in `Game`, `Screen`, or `Scene`; pure
    literal-union type aliases and inline interface properties whose names use the state
-   vocabulary; typed `useState` declarations; and explicit source-local transitions.
-   Runtime-store transitions are limited to an exact initializer-to-first-write edge,
-   guarded writes, and conditional writes whose from/to literals share a declared
-   domain. Ambiguous repeated property names are not joined. Component and state
-   occurrences remain path-scoped even when symbols/literals repeat. For a `useState`
-   declaration with no guarded setter pair, only the first source-ordered setter target
-   differing from the exact typed initializer is retained. This is syntax traversal,
-   not runtime execution.
-4. Enumerate media, audio, and data suffixes below the three public roots plus
-   game-associated data files; hash every committed byte sequence and report basic
-   encoded format metadata.
+   vocabulary; typed `useState` declarations; and executable literal-domain writes
+   through the TypeScript compiler AST. Emit a proven transition only when the AST
+   establishes one source state; retain every other executable write as an explicit
+   unresolved transition candidate. The proven and unresolved partitions exactly cover
+   the compiler-enumerated writes without source-order or union-order inference.
+4. Enumerate media, audio, and data suffixes below the five frozen roots:
+   `apps/advantage-games/public`, `apps/reading-advantage/public/games`,
+   `apps/primary-advantage/public/games`, `apps/advantage-games/measure`, and
+   `packages/codecamp-knowledge/fixtures/apk-guided`; hash every committed byte sequence
+   and report basic encoded format metadata.
 5. Walk reachable deletion commits and retain only a parent locator when the deleted
    path resolves in that parent.
 
@@ -1044,7 +1084,7 @@ product outcome.
     )
 
 
-def main(output_dir: Path = TRACK_DIR, role: str | None = None) -> None:
+def main(output_dir: Path | None = None, role: str | None = None) -> None:
     """Generates every Phase-1 denominator artifact required by the Red contract.
 
     Args:
@@ -1059,6 +1099,8 @@ def main(output_dir: Path = TRACK_DIR, role: str | None = None) -> None:
     """
     if role is not None and role not in ROLE_OUTPUTS:
         raise ValueError(f"Unsupported Phase-1 role: {role}")
+    if output_dir is None:
+        output_dir = DEFAULT_OUTPUT_DIR
     output_dir.mkdir(parents=True, exist_ok=True)
     paths = baseline_paths()
     if role is None or role == "discovery-auditor":
@@ -1075,7 +1117,7 @@ def main(output_dir: Path = TRACK_DIR, role: str | None = None) -> None:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--output-dir", type=Path, default=TRACK_DIR)
+    parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
     parser.add_argument(
         "--role",
         choices=("discovery-auditor", "evidence-collector", "requirements-mapper"),

@@ -3,10 +3,31 @@
   "status": "frozen-not-executed",
   "track_id": "apk_source_denominator_inventory_20260712",
   "allowed_input_manifest_path": "measure/tracks/apk_source_denominator_inventory_20260712/phase0-input-freeze.json",
-  "allowed_input_manifest_sha256": "f8d68f17453e87ba9fb155420e91fcaccaf7c1942b4e02ad372c66dc6ad31129",
+  "allowed_input_manifest_sha256": "8552355462861a9fe27f39e9b8d0020ad142492858bd29896a45fa6c765d0509",
+  "source_classifier_binding": {
+    "source_rule_ids": [
+      "active-apk-program-sources",
+      "apk-core-packages",
+      "advantage-games-src",
+      "reading-primary-game-copies",
+      "codecamp-knowledge-apk-segment",
+      "domain-games-tests",
+      "db-game-completion-codecamp-apk",
+      "advantage-games-measure-program-match"
+    ],
+    "ordered_rules_sha256": "903decdf45783f6ee0dd18983697b6343fa164206ba05184c50fd1b9dec41ee8",
+    "hash_serialization": "SHA-256 of UTF-8 JSON with sorted object keys and separators comma/colon over relevance_rules.source_classifier.ordered_rules."
+  },
   "root_agent": {
     "permitted_actions": ["coordinate", "apply reviewed patches", "commit", "report"],
-    "forbidden_roles": ["discovery-auditor", "evidence-collector", "requirements-mapper", "truth-test-author", "adversarial-reviewer"]
+    "forbidden_roles": ["discovery-auditor", "evidence-collector", "requirements-mapper", "truth-test-author", "adversarial-reviewer"],
+    "coordinator_lifecycle_outputs": [
+      "candidate-denominator-manifest.json",
+      "candidate-partition-manifest.json",
+      "accepted-denominator-manifest.json",
+      "accepted-partition-manifest.json"
+    ],
+    "lifecycle_boundary": "The root coordinator may publish candidate manifests only after independent review and accepted manifests only after exact-hash product-owner authorization; it may not author the review receipt or product-owner acceptance."
   },
   "required_roles": ["discovery-auditor", "evidence-collector", "requirements-mapper", "truth-test-author", "adversarial-reviewer"],
   "role_applicability": {
@@ -30,10 +51,19 @@
   ],
   "receipt_contract": {
     "path_pattern": "measure/tracks/apk_source_denominator_inventory_20260712/role-receipts/<role>.json",
+    "expected_output_directory": "role-receipts/",
     "schema_version": "apk-role-receipt.v1",
     "required_provenance": ["spawn_id", "parent_ancestry_ids", "prompt_sha256", "actual_context_manifest_sha256", "start_event_id", "end_event_id", "final_response_sha256", "output_sha256", "budget_declaration_sha256", "commit_sha"],
     "reviewer_isolation": "fork_turns=none or a retained raw export whose history starts with exactly the fresh review prompt; no inherited author narrative is allowed."
   },
+  "external_authorities": [
+    {
+      "authority_id": "product-owner",
+      "authority_type": "external-human",
+      "expected_outputs": ["product-owner-acceptance.json"],
+      "authority_boundary": "Only the product owner may authorize the exact candidate denominator and partition hashes; the root coordinator may render accepted manifests only after that authorization."
+    }
+  ],
   "authority_correction": {
     "prior_manifest_sha256": "12dd3dd5c36df0f42b73482fb4764d7ea5785e993fe7f17578eed36996418289",
     "prior_input_sha256": "e4bba6919b9b60992a388a9cf4f37c7885400b96bec7b31898f59eaa80d12a9f",

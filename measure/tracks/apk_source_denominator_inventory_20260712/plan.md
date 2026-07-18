@@ -4,8 +4,8 @@
 
 - [x] Task: Bind the accepted truth-gate manifest and quarantine all failed-track factual inputs. Evidence: `phase0-input-freeze.json`; focused falsification test; freeze commit `bb95b523`. No source discovery occurred.
 - [x] Task: Freeze the required mechanical-discovery, human-discovery, historical, asset, truth-test, and adversarial-review role ownership and isolation contract without launching a discovery session. Evidence: `phase0-role-ownership-manifest.json`; focused falsification test; freeze commit `bb95b523`.
-- [x] Task: Freeze the current revision, ancestor-only historical search rule, roots, exclusions, numeric resource ceilings, stop-loss thresholds, expected artifact schemas/paths, and exact Red/Green/project gate commands. Evidence: `phase0-input-freeze.json`; `test-strategy.md`; focused falsification test; freeze commit `bb95b523`.
-- [x] Task: Measure - Owner verification 'Phase 0' (Protocol in workflow.md). Evidence: reconciliation-integrator reran `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase0` (5 passed) against the frozen predecessor, scope, quarantine, ownership, and stop-loss gate at reconciliation commit `7b595ae2`; product-owner acceptance is not claimed.
+- [x] Task: Freeze the current revision, ordered-first-match source and asset classifiers, four-key ancestor history classifier, five roots, exact suffixes and 29 slugs, exclusions, numeric resource ceilings, stop-loss thresholds, expected artifact schemas/paths, and exact Red/Green/project gate commands. Evidence: `phase0-input-freeze.json`; `test-strategy.md`; focused falsification test; freeze commit `bb95b523`.
+- [x] Task: Measure - Owner verification 'Phase 0' (Protocol in workflow.md). Evidence: reconciliation-integrator reran `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase0` against the frozen predecessor, classifier predicates, scope, quarantine, disjoint output ownership, and stop-loss gate at reconciliation commit `7b595ae2`; product-owner acceptance is not claimed.
 
 ## Phase 1: Mechanical discovery
 
@@ -34,11 +34,11 @@
 
 ## Phase 4: Full independent acceptance
 
-- [b] Task: Spawn a `fork_turns="none"`, tool-attested reviewer to re-run full denominator reconciliation; the root/Green agent is forbidden from the adversarial-reviewer role per `phase0-role-ownership-manifest.json` (`root_agent.forbidden_roles` includes `adversarial-reviewer`); the Phase-3 file-reconciliation gap from `e14ab11e` has been repaired (phase3-reconciliation.json regenerated, Phase-3 focused contract passes), but the Admission gate still requires the committed Phase 0-3 predecessor contracts to pass together against committed inputs before the reviewer may begin (deferred:adversarial-reviewer)
+- [b] Task: Spawn a `fork_turns="none"`, tool-attested reviewer to re-run full denominator reconciliation and author only `independent-review.json` plus its own role receipt; the root/Green agent is forbidden from the adversarial-reviewer role per `phase0-role-ownership-manifest.json` (`root_agent.forbidden_roles` includes `adversarial-reviewer`); the Phase-3 file-reconciliation gap from `e14ab11e` has been repaired (phase3-reconciliation.json regenerated, Phase-3 focused contract passes), but the Admission gate still requires the committed Phase 0-3 predecessor contracts to pass together against committed inputs before the reviewer may begin (deferred:adversarial-reviewer)
 - [b] Task: Run claim hash, revision reachability, denominator, role-receipt, and stop-loss validators (deferred:adversarial-reviewer)
 - [b] Task: Remediate every Critical, High, and Medium finding (deferred:adversarial-reviewer)
-- [b] Task: Publish non-consumable candidate denominator and partition manifests plus complete review report (deferred:adversarial-reviewer)
-- [b] Task: Obtain product-owner acceptance bound to exact candidate/review hashes, then publish accepted denominator and partition manifests (deferred:product-owner)
+- [b] Task: Root coordinator publishes the non-consumable candidate denominator and partition manifests only after the independent review is complete (deferred:root-coordinator)
+- [b] Task: External human product owner authors acceptance bound to exact candidate/review hashes; only then may the root coordinator publish accepted denominator and partition manifests (deferred:product-owner)
 - [b] Task: Measure - User Manual Verification 'Phase 4' (Protocol in workflow.md) (deferred:product-owner)
 
 ### Phase-4 Red command evidence (mid-red run, role-base 9849e6a963bb2518f8306b33b205ff4f714daad5)

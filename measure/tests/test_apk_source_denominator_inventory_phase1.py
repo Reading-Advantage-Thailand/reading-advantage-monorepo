@@ -3,25 +3,31 @@
 from __future__ import annotations
 
 import hashlib
+import importlib.util
 import json
+import os
 import re
 import subprocess
+import sys
+import tempfile
 import unittest
-from pathlib import Path
+from unittest import mock
+from pathlib import Path, PurePosixPath
 from typing import Any
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 TRACK = "apk_source_denominator_inventory_20260712"
 TRACK_DIR = REPO_ROOT / "measure" / "tracks" / TRACK
+ARTIFACT_DIR = Path(os.environ.get("APK_DENOMINATOR_ARTIFACT_DIR", TRACK_DIR))
 FREEZE_PATH = TRACK_DIR / "phase0-input-freeze.json"
 REPORT_PATH = TRACK_DIR / "denominator-contract-test-report.json"
-SOURCE_PATH = TRACK_DIR / "source-denominator.json"
-IDENTITY_PATH = TRACK_DIR / "game-identity-ledger.json"
-SCENE_PATH = TRACK_DIR / "scene-state-denominator.json"
-ASSET_PATH = TRACK_DIR / "asset-file-denominator.json"
-HISTORICAL_PATH = TRACK_DIR / "historical-source-denominator.json"
-DISCREPANCY_PATH = TRACK_DIR / "denominator-discrepancies.json"
+SOURCE_PATH = ARTIFACT_DIR / "source-denominator.json"
+IDENTITY_PATH = ARTIFACT_DIR / "game-identity-ledger.json"
+SCENE_PATH = ARTIFACT_DIR / "scene-state-denominator.json"
+ASSET_PATH = ARTIFACT_DIR / "asset-file-denominator.json"
+HISTORICAL_PATH = ARTIFACT_DIR / "historical-source-denominator.json"
+DISCREPANCY_PATH = ARTIFACT_DIR / "denominator-discrepancies.json"
 SHA256 = re.compile(r"^[0-9a-f]{64}$")
 REQUIRED_SOURCE_RECORD_TYPES = {"identity", "file", "route", "copy", "graph"}
 REQUIRED_NON_GAME_SOURCES = {
@@ -52,6 +58,30 @@ FORBIDDEN_INTERPRETATION_FIELDS = {
 }
 
 
+def _load_generator_module() -> Any:
+    """Loads the Phase-1 generator for focused relevance classifier contracts."""
+    path = TRACK_DIR / "generate_phase1_denominators.py"
+    spec = importlib.util.spec_from_file_location("apk_phase1_generator_relevance", path)
+    if spec is None or spec.loader is None:
+        raise AssertionError("Unable to load Phase-1 generator")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def _load_transition_module() -> Any:
+    """Loads the compiler-AST transition adjudicator for partition checks."""
+    path = TRACK_DIR / "transition_ast.py"
+    spec = importlib.util.spec_from_file_location("apk_phase1_transition_partition", path)
+    if spec is None or spec.loader is None:
+        raise AssertionError("Unable to load transition AST adjudicator")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
 def _load_json(path: Path) -> dict[str, Any]:
     """Loads a JSON object from a required contract artifact.
 
@@ -64,11 +94,12 @@ def _load_json(path: Path) -> dict[str, Any]:
     Raises:
         AssertionError: If the artifact is absent or does not contain a JSON object.
     """
+    label = str(path.relative_to(REPO_ROOT)) if path.is_relative_to(REPO_ROOT) else str(path)
     if not path.is_file():
-        raise AssertionError(f"Missing Phase-1 denominator artifact: {path.relative_to(REPO_ROOT)}")
+        raise AssertionError(f"Missing Phase-1 denominator artifact: {label}")
     value = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(value, dict):
-        raise AssertionError(f"{path.relative_to(REPO_ROOT)} must contain a JSON object")
+        raise AssertionError(f"{label} must contain a JSON object")
     return value
 
 
@@ -323,6 +354,8 @@ class Phase1MechanicalDiscoveryContracts(unittest.TestCase):
         }
         suffixes = ("", ".ts", ".tsx", ".js", ".jsx", ".json")
         for source_path in sorted(path for path in file_paths if path.startswith("apps/")):
+            if PurePosixPath(source_path).suffix.lower() not in {".ts", ".tsx", ".js", ".jsx", ".json"}:
+                continue
             text = _git_bytes(self.source_baseline, source_path).decode("utf-8", errors="replace")
             for specifier in re.findall(r"^\s*import(?:[\s\S]*?from\s*)?['\"]([^'\"]+)['\"]", text, re.MULTILINE):
                 if not specifier.startswith("@/"):
@@ -440,23 +473,35 @@ class Phase1MechanicalDiscoveryContracts(unittest.TestCase):
             self.assertIn(transition.get("transition_kind"), {"scene", "mode", "overlay", "phase", "wave", "floor", "terminal", "presentation"})
             evidence_kind = transition.get("transition_evidence_kind")
             self.assertIn(evidence_kind, {
-                "explicit-state-guarded-setter",
-                "useState-initial-to-setter-call",
-                "runtime-store-initial-to-first-write",
-                "runtime-store-guarded-write",
-                "runtime-store-conditional-write",
+                "ast-entry-guarded-write",
+                "ast-guarded-setter-call",
+                "ast-lifecycle-reset-callback-write",
+                "ast-object-spread-state-write",
+                "ast-propagated-entry-guarded-write",
             })
+            self.assertEqual(
+                transition.get("discovery_method"),
+                "mechanical-typescript-compiler-ast",
+            )
             locator = self._assert_locator(transition.get("evidence"))
             lines = _git_bytes(locator["revision"], locator["path"]).decode("utf-8", errors="replace").splitlines()
             cited = "\n".join(lines[locator["range"]["start_line"] - 1 : locator["range"]["end_line"]])
-            if evidence_kind == "explicit-state-guarded-setter":
-                self.assertRegex(cited, rf"if\s*\([^)]*{re.escape(str(transition['from_state_id']))}[^)]*\)")
-                self.assertRegex(cited, rf"set\w+\s*\(\s*['\"]{re.escape(str(transition['to_state_id']))}['\"]")
-            elif evidence_kind == "useState-initial-to-setter-call":
-                self.assertRegex(cited, rf"set\w+\s*\(\s*['\"]{re.escape(str(transition['to_state_id']))}['\"]")
-            else:
-                self.assertIn(str(transition["from_state_id"]), cited)
-                self.assertIn(str(transition["to_state_id"]), cited)
+            self.assertRegex(
+                cited,
+                rf"['\"]{re.escape(str(transition['to_state_id']))}['\"]",
+                "AST transition evidence must cite the exact executable target literal",
+            )
+        self.assertEqual(
+            {row["transition_evidence_kind"] for row in transitions},
+            {
+                "ast-entry-guarded-write",
+                "ast-guarded-setter-call",
+                "ast-lifecycle-reset-callback-write",
+                "ast-object-spread-state-write",
+                "ast-propagated-entry-guarded-write",
+            },
+            "the frozen corpus must exercise every accepted compiler-AST proof kind",
+        )
 
         expected_scene_occurrences: set[tuple[str, int, str]] = set()
         expected_state_occurrences: set[tuple[str, int, str, str]] = set()
@@ -633,6 +678,16 @@ class Phase1MechanicalDiscoveryContracts(unittest.TestCase):
             )
             for row in scenes["transitions"]
         }
+        transition_candidate_keys = {
+            (
+                row["evidence"]["path"],
+                row.get("source_symbol"),
+                row["to_state_id"],
+            )
+            for row in scenes["transition_write_candidates"]
+            if row.get("record_kind") == "transition_write_candidate"
+            and row.get("resolution_status") == "unresolved"
+        }
 
         expected_states = {
             ("apps/advantage-games/src/store/usePotionRushStore.ts", "GameState", state)
@@ -704,73 +759,85 @@ class Phase1MechanicalDiscoveryContracts(unittest.TestCase):
             ("apps/advantage-games/src/store/useRPGBattleStore.ts", "status", "playing", "victory"),
             ("apps/advantage-games/src/store/useRPGBattleStore.ts", "status", "playing", "defeat"),
         }
-        self.assertTrue(expected_transitions.issubset(transition_keys))
+        missing_writes = {
+            edge
+            for edge in expected_transitions
+            if edge not in transition_keys
+            and (edge[0], edge[1], edge[3]) not in transition_candidate_keys
+        }
+        self.assertFalse(
+            missing_writes,
+            "every expected runtime-store write must be an exact proven edge or an explicit unresolved candidate",
+        )
         self.assertTrue(
             all(RUNTIME_STATE_NAME.search(symbol) for _, symbol, _, _ in transition_keys),
             "runtime transition symbols must use the general frozen state vocabulary",
         )
 
     def test_initial_to_setter_transitions_use_the_declared_initializer(self) -> None:
-        """Rejects transitions whose from-state is fabricated from union literal order.
+        """Requires proven transitions and candidates to partition exact AST writes.
 
         Returns:
             Nothing.
         """
         scenes = self._artifact(SCENE_PATH, "apk-scene-state-denominator.v1")
-        state_records = {
-            row["state_occurrence_id"]: row
-            for row in scenes["state_records"]
+        source_paths = [
+            row["file_path"]
+            for row in _load_json(SOURCE_PATH)["records"]
+            if row.get("record_type") == "file"
+            and str(row.get("file_path", "")).endswith((".ts", ".tsx", ".js", ".jsx"))
+        ]
+        sources = {
+            path: _git_bytes(self.source_baseline, path).decode("utf-8", errors="replace")
+            for path in source_paths
         }
-        initializer_pattern = re.compile(
-            r"(?:const|let)\s*\[\s*(\w+)\s*,\s*(set\w+)\s*\]\s*=\s*"
-            r"(?:React\.)?useState\s*<([^>]+)>\s*\(\s*(['\"])([^'\"]+)\4",
-            re.DOTALL,
+        facts = _load_transition_module().enumerate_typescript_transition_facts(
+            sources,
+            mode="phase1",
         )
-        checked = 0
-        seen_occurrences: set[str] = set()
+
+        def write_key(row: dict[str, Any]) -> tuple[str, str, str, int, int]:
+            """Keys one compiler or projected write by its exact occurrence."""
+            evidence = row.get("evidence")
+            if isinstance(evidence, dict):
+                return (
+                    evidence["path"], row["source_symbol"], row["to_state_id"],
+                    evidence["range"]["start_line"], evidence["range"]["end_line"],
+                )
+            return (
+                row["path"], row["source_symbol"], row["to_state_id"],
+                row["start_line"], row["end_line"],
+            )
+
+        fact_by_write = {write_key(row): row for row in facts}
+        self.assertEqual(len(fact_by_write), len(facts), "compiler write occurrences must be unique")
+        projected = scenes["transitions"] + scenes["transition_write_candidates"]
+        projected_keys = [write_key(row) for row in projected]
+        self.assertEqual(len(projected_keys), len(set(projected_keys)))
+        self.assertEqual(set(projected_keys), set(fact_by_write))
         for transition in scenes["transitions"]:
-            if transition.get("transition_evidence_kind") != "useState-initial-to-setter-call":
-                continue
-            from_occurrence = transition["from_state_occurrence_id"]
-            state_record = state_records[from_occurrence]
-            source_symbol = state_record["source_symbol"]
-            path = transition["evidence"]["path"]
-            text = _git_bytes(self.source_baseline, path).decode("utf-8", errors="replace")
-            initializers = {
-                match.group(1): match
-                for match in initializer_pattern.finditer(text)
-            }
-            self.assertIn(source_symbol, initializers, f"typed initializer must resolve for {from_occurrence}")
-            declaration = initializers[source_symbol]
-            initial_value = declaration.group(5)
-            self.assertEqual(
-                transition["from_state_id"],
-                initial_value,
-                f"transition from-state must match the frozen typed initializer for {from_occurrence}",
-            )
-            self.assertNotIn(
-                from_occurrence,
-                seen_occurrences,
-                f"an unguarded declaration may retain only its first initializer edge: {from_occurrence}",
-            )
-            seen_occurrences.add(from_occurrence)
-            literals = set(re.findall(r"['\"]([^'\"\n]+)['\"]", declaration.group(3)))
-            setter_pattern = re.compile(
-                rf"\b{re.escape(declaration.group(2))}\s*\(\s*['\"]([^'\"]+)['\"]"
-            )
-            first_setter = next(
-                match
-                for match in setter_pattern.finditer(text, declaration.end())
-                if match.group(1) in literals and match.group(1) != initial_value
-            )
-            self.assertEqual(transition["to_state_id"], first_setter.group(1))
-            self.assertEqual(
-                transition["evidence"]["range"]["start_line"],
-                text.count("\n", 0, first_setter.start()) + 1,
-                f"initializer edge must cite the first source-ordered setter for {from_occurrence}",
-            )
-            checked += 1
-        self.assertGreater(checked, 0, "the initializer transition contract must be non-vacuous")
+            fact = fact_by_write[write_key(transition)]
+            self.assertEqual(transition["from_state_id"], fact["proven_from_state_id"])
+            self.assertEqual(transition["transition_evidence_kind"], fact["proof_kind"])
+        for candidate in scenes["transition_write_candidates"]:
+            fact = fact_by_write[write_key(candidate)]
+            if isinstance(fact.get("proven_from_state_id"), str):
+                self.assertEqual(candidate.get("from_state_id"), fact["proven_from_state_id"])
+                self.assertEqual(candidate.get("transition_evidence_kind"), fact["proof_kind"])
+        self.assertTrue(scenes["transitions"], "the occurrence-bound proven partition must be non-empty")
+        self.assertTrue(scenes["transition_write_candidates"], "the unresolved-write partition must be non-empty")
+        self.assertTrue(
+            all(
+                row.get("record_kind") == "transition_write_candidate"
+                and row.get("resolution_status") == "unresolved"
+                and row.get("reason") in {
+                    "no-single-proven-from-state",
+                    "state-domain-occurrence-ambiguous",
+                }
+                for row in scenes["transition_write_candidates"]
+            ),
+            "unresolved occurrence-bound writes must remain explicit candidates",
+        )
 
     def test_current_page_and_catalog_withdrawn_states_remain_simultaneous(self) -> None:
         """Retains current page evidence separately from catalog withdrawal registration."""
@@ -846,6 +913,16 @@ class Phase1MechanicalDiscoveryContracts(unittest.TestCase):
         assert isinstance(enumeration, dict)
         self.assertEqual(enumeration.get("candidate_count"), len(candidates))
         self.assertIn(enumeration.get("method"), {"mechanical-filesystem", "mechanical-filesystem-and-hash"})
+        self.assertEqual(
+            enumeration.get("roots"),
+            [
+                "apps/advantage-games/public",
+                "apps/reading-advantage/public/games",
+                "apps/primary-advantage/public/games",
+                "apps/advantage-games/measure",
+                "packages/codecamp-knowledge/fixtures/apk-guided",
+            ],
+        )
 
     def test_historical_records_and_negative_quarantine_fixtures_fail_closed(self) -> None:
         """Requires reachable historical locators and explicit failed-track rejection fixtures.
@@ -892,6 +969,232 @@ class Phase1MechanicalDiscoveryContracts(unittest.TestCase):
             (HISTORICAL_PATH, "apk-historical-source-denominator.v1"),
         ):
             self._assert_no_interpretation_fields(self._artifact(path, schema))
+
+    def test_frozen_source_relevance_classifier_is_complete_and_excludes_configs(self) -> None:
+        """Exercises every frozen source rule and rejects unrelated package configuration."""
+        module = _load_generator_module()
+        cases = {
+            "apps/advantage-games/src/lib/gameCards.ts": "advantage-games-src",
+            "apps/reading-advantage/src/app/[locale]/games/vocabulary/dragon-flight/page.tsx": "reading-primary-game-copies",
+            "apps/primary-advantage/src/app/[locale]/games/vocabulary/dragon-flight/page.tsx": "reading-primary-game-copies",
+            "packages/advantage-play-kit/src/index.ts": "apk-core-packages",
+            "packages/advantage-play-kit/package.json": "apk-core-packages",
+            "packages/game-contracts/scripts/check-architecture.mjs": "apk-core-packages",
+            "packages/codecamp-knowledge/fixtures/apk-guided/src/cartridge.ts": "codecamp-knowledge-apk-segment",
+            "packages/codecamp-knowledge/src/__tests__/apk-unit.test.ts": "codecamp-knowledge-apk-segment",
+            "packages/domain/src/games/queries.ts": "domain-games-tests",
+            "packages/domain/src/__tests__/games.test.ts": "domain-games-tests",
+            "packages/db/src/__tests__/codecamp-apk-curriculum-data.test.ts": "db-game-completion-codecamp-apk",
+            "packages/db/drizzle/0026_game_completions.sql": "db-game-completion-codecamp-apk",
+            "apps/advantage-games/measure/archive/dragon-flight/plan.md": "advantage-games-measure-program-match",
+            "measure/apk-evidence-reconstruction-program.md": "active-apk-program-sources",
+        }
+        for path, rule_id in cases.items():
+            self.assertEqual(module.source_relevance_rule(path), rule_id, path)
+        for path in (
+            "packages/codecamp-knowledge/package.json",
+            "packages/codecamp-knowledge/tsconfig.json",
+            "packages/domain/src/__tests__/articles.test.ts",
+            "apps/advantage-games/measure/archive/accessibility_input_assist_20260407/plan.md",
+            "apps/advantage-games/src/app/globals.css",
+            "apps/advantage-games/src/templates/game/GameNameGame.tsx.template",
+            "apps/advantage-games/src/templates/game/README.md",
+        ):
+            self.assertIsNone(module.source_relevance_rule(path), path)
+
+    def test_asset_relevance_is_bounded_to_public_files_sidecars_and_tutorial(self) -> None:
+        """Rejects package configs while retaining the three exact asset candidate classes."""
+        module = _load_generator_module()
+        cases = {
+            "apps/advantage-games/public/games/example/sprite.png": "public-game-media-audio-data",
+            "apps/advantage-games/measure/archive/potion-rush-20260107/asset-spec.md": "game-measure-asset-sidecars",
+            "apps/advantage-games/measure/archive/potion-rush-20260107/metadata.json": "game-measure-asset-sidecars",
+            "packages/codecamp-knowledge/fixtures/apk-guided/activity-tutorial.json": "codecamp-activity-tutorial",
+        }
+        for path, rule_id in cases.items():
+            self.assertEqual(module.asset_relevance_rule(path), rule_id, path)
+        for path in (
+            "packages/advantage-play-kit/package.json",
+            "packages/codecamp-knowledge/package.json",
+            "packages/codecamp-knowledge/tsconfig.json",
+            "apps/advantage-games/measure/archive/potion-rush-20260107/plan.md",
+        ):
+            self.assertIsNone(module.asset_relevance_rule(path), path)
+
+    def test_generated_corpus_matches_frozen_exact_counts_and_relevance_provenance(self) -> None:
+        """Pins the complete corrected Phase-1 source, asset, and history denominators."""
+        source = self._artifact(SOURCE_PATH, "apk-source-denominator.v1")
+        records = source["records"]
+        by_type = {
+            record_type: [row for row in records if row["record_type"] == record_type]
+            for record_type in REQUIRED_SOURCE_RECORD_TYPES
+        }
+        self.assertEqual(len(by_type["file"]), 923)
+        self.assertEqual(len(by_type["identity"]), 17)
+        self.assertEqual(len(by_type["route"]), 25)
+        self.assertEqual(len(by_type["copy"]), 96)
+        self.assertEqual(len(by_type["graph"]), 946)
+        self.assertEqual(len(source["graph_edges"]), 946)
+        self.assertEqual(len(records), 2007)
+        self.assertTrue(all(isinstance(row.get("relevance_rule_id"), str) for row in by_type["file"]))
+        self.assertTrue(all(not row["evidence"]["path"].endswith(".md") for row in by_type["graph"]))
+        frozen_paths = subprocess.check_output(
+            [
+                "git", "ls-tree", "-r", "--name-only", self.source_baseline, "--",
+                "apps/advantage-games", "apps/reading-advantage", "apps/primary-advantage",
+                "packages", "measure",
+            ],
+            cwd=REPO_ROOT,
+            text=True,
+        ).splitlines()
+        program_slugs = self.freeze["relevance_rules"]["program_slugs"]
+
+        def normalize(path: str) -> str:
+            return re.sub(r"[^a-z0-9]+", "-", path.lower()).strip("-")
+
+        def expected_rule(path: str) -> str | None:
+            if path.startswith(f"{self.quarantine_path}/"):
+                return None
+            if path in REQUIRED_NON_GAME_SOURCES:
+                return "active-apk-program-sources"
+            if path.startswith((
+                "packages/advantage-play-kit/",
+                "packages/game-contracts/",
+                "packages/game-cartridges/",
+            )):
+                return "apk-core-packages"
+            filename = PurePosixPath(path).name
+            if filename in {"package.json", "tsconfig.json", "tsconfig.test.json"} or filename.startswith("tsconfig."):
+                return None
+            suffix = PurePosixPath(path).suffix.lower()
+            if path.startswith("apps/advantage-games/src/") and suffix in {".ts", ".tsx", ".js", ".jsx", ".json"}:
+                return "advantage-games-src"
+            if path.startswith(("apps/reading-advantage/", "apps/primary-advantage/")) and suffix in {".ts", ".tsx", ".js", ".jsx", ".json"} and (
+                "/games/" in path or "/api/v1/games/" in path or "/lib/game" in path
+            ):
+                return "reading-primary-game-copies"
+            if path.startswith("packages/codecamp-knowledge/") and any(part.startswith("apk-") for part in PurePosixPath(path).parts) and suffix in {".ts", ".tsx", ".js", ".jsx", ".json", ".md"}:
+                return "codecamp-knowledge-apk-segment"
+            if path.startswith("packages/domain/src/games/") and suffix in {".ts", ".tsx", ".js", ".jsx", ".json"}:
+                return "domain-games-tests"
+            if path.startswith("packages/domain/src/__tests__/games") and suffix in {".ts", ".tsx", ".js", ".jsx", ".json"}:
+                return "domain-games-tests"
+            normalized = normalize(path)
+            if path.startswith("packages/db/") and ("game-completion" in normalized or "codecamp-apk" in normalized):
+                return "db-game-completion-codecamp-apk"
+            bounded = f"-{normalized}-"
+            if path.startswith("apps/advantage-games/measure/") and suffix in {".md", ".json"} and any(f"-{slug}-" in bounded for slug in program_slugs):
+                return "advantage-games-measure-program-match"
+            return None
+
+        expected_files = {path: rule for path in frozen_paths if (rule := expected_rule(path)) is not None}
+        actual_files = {row["file_path"]: row["relevance_rule_id"] for row in by_type["file"]}
+        self.assertEqual(actual_files, expected_files)
+
+        assets = self._artifact(ASSET_PATH, "apk-asset-file-denominator.v1")
+        candidates = assets["candidate_files"]
+        media_suffixes = {".png", ".jpg", ".jpeg", ".gif", ".webp", ".svg", ".ico", ".webm"}
+        audio_suffixes = {".mp3", ".wav", ".ogg", ".m4a"}
+        data_suffixes = {".json", ".csv", ".txt", ".xml", ".yaml", ".yml"}
+
+        def expected_asset_rule(path: str) -> str | None:
+            """Independently applies the frozen asset corpus rules."""
+            filename = PurePosixPath(path).name
+            suffix = PurePosixPath(path).suffix.lower()
+            if path.startswith(f"{self.quarantine_path}/"):
+                return None
+            if filename in {"package.json", "tsconfig.json", "tsconfig.test.json"} or filename.startswith("tsconfig."):
+                return None
+            if path.startswith((
+                "apps/advantage-games/public/",
+                "apps/reading-advantage/public/games/",
+                "apps/primary-advantage/public/games/",
+            )) and suffix in media_suffixes | audio_suffixes | data_suffixes:
+                return "public-game-media-audio-data"
+            normalized = f"-{normalize(path)}-"
+            if path.startswith("apps/advantage-games/measure/") and filename in {"asset-spec.md", "metadata.json"} and any(
+                f"-{slug}-" in normalized for slug in program_slugs
+            ):
+                return "game-measure-asset-sidecars"
+            if path == "packages/codecamp-knowledge/fixtures/apk-guided/activity-tutorial.json":
+                return "codecamp-activity-tutorial"
+            return None
+
+        expected_assets = {
+            path: rule
+            for path in frozen_paths
+            if (rule := expected_asset_rule(path)) is not None
+        }
+        actual_assets = {
+            row["canonical_path"]: row["relevance_rule_id"]
+            for row in candidates
+        }
+        self.assertEqual(actual_assets, expected_assets)
+        swapped = dict(actual_assets)
+        valid_path = next(iter(sorted(swapped)))
+        swapped.pop(valid_path)
+        swapped["apps/advantage-games/GEMINI.md"] = "public-game-media-audio-data"
+        self.assertNotEqual(swapped, expected_assets, "same-count substitutions must fail exact path coverage")
+        grouped: dict[str, list[dict[str, Any]]] = {}
+        for candidate in candidates:
+            grouped.setdefault(candidate["sha256"], []).append(candidate)
+        multi_groups = [rows for rows in grouped.values() if len(rows) > 1]
+        self.assertEqual(len(candidates), 426)
+        self.assertEqual(len(grouped), 225)
+        self.assertEqual(len(multi_groups), 102)
+        self.assertEqual(sum(len(rows) for rows in multi_groups), 303)
+
+        history = self._artifact(HISTORICAL_PATH, "apk-historical-source-denominator.v1")
+        historical_records = history["records"]
+        self.assertEqual(len(historical_records), 245)
+        self.assertEqual(sum(row["classification"] == "current" for row in historical_records), 25)
+        deleted = [row for row in historical_records if row["classification"] == "deleted"]
+        self.assertEqual(len(deleted), 220)
+        self.assertEqual(sum(row["evidence"]["path"].startswith("packages/") for row in deleted), 81)
+
+    def test_generated_method_states_exact_five_roots_and_ast_partition(self) -> None:
+        """Rejects stale source-order transition claims and three-root asset prose."""
+        module = _load_generator_module()
+        with tempfile.TemporaryDirectory() as directory:
+            output_dir = Path(directory)
+            module.write_method(output_dir)
+            method = (output_dir / "denominator-method.md").read_text(encoding="utf-8")
+        for root in (
+            "apps/advantage-games/public",
+            "apps/reading-advantage/public/games",
+            "apps/primary-advantage/public/games",
+            "apps/advantage-games/measure",
+            "packages/codecamp-knowledge/fixtures/apk-guided",
+        ):
+            self.assertIn(f"`{root}`", method)
+        self.assertIn("TypeScript compiler AST", method)
+        self.assertRegex(method, r"explicit\s+unresolved transition candidate")
+        self.assertIn("without source-order or union-order inference", method)
+        self.assertNotIn("three public roots", method)
+        self.assertNotIn("first source-ordered setter", method)
+
+    def test_historical_deletions_use_first_parent_and_first_path_only(self) -> None:
+        """Retains only the first first-parent deletion for each admitted path."""
+        module = _load_generator_module()
+        path_a = "apps/advantage-games/src/a.ts"
+        path_b = "packages/advantage-play-kit/src/b.ts"
+        history = "\n".join(("a" * 40, path_a, "b" * 40, path_a, "c" * 40, path_b))
+
+        def fake_git(*args: str) -> bytes:
+            if args[0] == "log":
+                self.assertIn("--first-parent", args)
+                return history.encode()
+            if args[0] == "rev-parse":
+                return ({f"{'a' * 40}^": "1" * 40, f"{'c' * 40}^": "3" * 40}[args[1]] + "\n").encode()
+            raise AssertionError(args)
+
+        with mock.patch.object(module, "run_git", side_effect=fake_git), mock.patch.object(
+            module, "blob", return_value=b"source"
+        ):
+            self.assertEqual(
+                list(module.historical_deletions()),
+                [("1" * 40, path_a), ("3" * 40, path_b)],
+            )
 
 
 if __name__ == "__main__":

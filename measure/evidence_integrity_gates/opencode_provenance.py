@@ -43,6 +43,36 @@ class RoleBinding:
     reviewer: bool = False
     output_commit: str | None = None
     shell_generators: tuple[ShellGeneratorBinding, ...] = ()
+    read_only_shell_commands: tuple[ReadOnlyShellBinding, ...] = ()
+
+    def __post_init__(self) -> None:
+        """Validates and normalizes exact role, session, output, and generator ownership."""
+        if not isinstance(self.role, str) or not self.role:
+            raise ValueError("role must be nonempty")
+        if not isinstance(self.expected_agent, str) or not self.expected_agent:
+            raise ValueError("expected agent must be nonempty")
+        if not isinstance(self.session_id, str) or re.fullmatch(r"ses_[A-Za-z0-9]+", self.session_id) is None:
+            raise ValueError("session ID is invalid")
+        outputs = tuple(_normalize_owned_path(path) for path in self.owned_outputs)
+        if not outputs or len(outputs) != len(set(outputs)):
+            raise ValueError("role outputs must be distinct")
+        if self.output_commit is not None and re.fullmatch(r"[0-9a-f]{40}", self.output_commit) is None:
+            raise ValueError("output commit must be a full lowercase SHA")
+        generator_outputs: list[str] = []
+        for binding in self.shell_generators:
+            if not isinstance(binding, ShellGeneratorBinding):
+                raise ValueError("shell generator binding is invalid")
+            generator_outputs.extend(binding.owned_outputs)
+        if any(
+            not isinstance(binding, ReadOnlyShellBinding)
+            for binding in self.read_only_shell_commands
+        ):
+            raise ValueError("read-only shell binding is invalid")
+        if len(generator_outputs) != len(set(generator_outputs)):
+            raise ValueError("shell generator outputs overlap")
+        if not set(generator_outputs).issubset(outputs):
+            raise ValueError("shell generator outputs must be owned by the role")
+        object.__setattr__(self, "owned_outputs", outputs)
 
 
 @dataclass(frozen=True)
@@ -70,6 +100,25 @@ class ShellGeneratorBinding:
         object.__setattr__(self, "owned_outputs", outputs)
 
 
+@dataclass(frozen=True)
+class ReadOnlyShellBinding:
+    """Declares one exact hash-bound Bash command with a read-only structure."""
+
+    command: str
+    command_sha256: str | None = None
+
+    def __post_init__(self) -> None:
+        """Normalizes, structurally validates, and hashes the exact command."""
+        normalized = _normalize_shell_command(self.command)
+        if not _is_structurally_read_only_command(normalized):
+            raise ValueError("read-only shell command is outside the allowed command family")
+        digest = _sha256(normalized.encode())
+        if self.command_sha256 is not None and self.command_sha256 != digest:
+            raise ValueError("read-only shell command hash does not match command")
+        object.__setattr__(self, "command", normalized)
+        object.__setattr__(self, "command_sha256", digest)
+
+
 _SHELL_CONTROL = re.compile(r"(?:&&|\|\||[;|<>`$]|\n|\r)")
 _COMMIT_RESULT_LINE = re.compile(r"^\[[^]\n]+ ([0-9a-f]{7,40})\] (.+)$", re.MULTILINE)
 
@@ -95,6 +144,28 @@ def _normalize_shell_command(command: str) -> str:
     if not tokens:
         raise ValueError("shell command is empty")
     return shlex.join(tokens)
+
+
+def _is_structurally_read_only_command(command: str) -> bool:
+    """Allows only narrow inspection commands after exact hash declaration."""
+    try:
+        tokens = shlex.split(command, posix=True)
+    except ValueError:
+        return False
+    if not tokens:
+        return False
+    if tokens[0] == "git" and len(tokens) >= 2:
+        return tokens[1] in {
+            "diff", "diff-tree", "log", "ls-files", "ls-tree", "merge-base",
+            "rev-parse", "show", "status",
+        }
+    if tokens[0] in {"head", "tail", "sha256sum", "wc"}:
+        return True
+    if tokens[0] == "rg":
+        return "--replace" not in tokens
+    if tokens[0] == "sed":
+        return "-n" in tokens and not any(token == "-i" or token.startswith("-i") for token in tokens)
+    return False
 
 
 def _sha256(data: bytes) -> str:
@@ -192,6 +263,7 @@ def _tool_owned_paths(
     shell_generators: Sequence[ShellGeneratorBinding] = (),
     output_commit: str | None = None,
     session_directory: Any = None,
+    read_only_shell_commands: Sequence[ReadOnlyShellBinding] = (),
 ) -> set[str]:
     """Extracts paths attributable to direct writes and bound shell generators.
 
@@ -202,6 +274,7 @@ def _tool_owned_paths(
     @returns Paths conservatively attributable to tool calls in the session.
     """
     paths: set[str] = set()
+    raw_direct_paths: list[str] = []
     patch_header = re.compile(r"^\*\*\* (?:Add|Update|Delete) File: ([^\n]+)$", re.MULTILINE)
     for message in messages:
         for part in message.get("parts", []):
@@ -218,11 +291,111 @@ def _tool_owned_paths(
                 path = tool_input.get("filePath")
                 if isinstance(path, str):
                     paths.add(path)
+                    raw_direct_paths.append(path)
             if tool == "apply_patch":
                 patch = tool_input.get("patchText")
                 if isinstance(patch, str):
-                    paths.update(patch_header.findall(patch))
-    return paths | _shell_owned_paths(messages, repo_root, shell_generators, output_commit, session_directory)
+                    patch_paths = patch_header.findall(patch)
+                    paths.update(patch_paths)
+                    raw_direct_paths.extend(patch_paths)
+    normalized_spellings: dict[str, set[str]] = {}
+    root = repo_root.resolve()
+    for raw_path in raw_direct_paths:
+        candidate = Path(raw_path)
+        if candidate.is_absolute():
+            try:
+                normalized = candidate.resolve().relative_to(root).as_posix()
+            except ValueError:
+                normalized = candidate.resolve().as_posix()
+        else:
+            normalized = candidate.as_posix()
+        normalized_spellings.setdefault(normalized, set()).add(raw_path)
+    if any(len(spellings) > 1 for spellings in normalized_spellings.values()):
+        raise ProvenanceError("normalized write path collision")
+    shell_paths = _shell_owned_paths(
+        messages, repo_root, shell_generators, output_commit, session_directory
+    )
+    _validate_completed_bash_commands(
+        messages,
+        repo_root,
+        shell_generators,
+        output_commit,
+        session_directory,
+        read_only_shell_commands,
+    )
+    return paths | shell_paths
+
+
+def _validate_completed_bash_commands(
+    messages: Sequence[Mapping[str, Any]],
+    repo_root: Path,
+    generators: Sequence[ShellGeneratorBinding],
+    output_commit: str | None,
+    session_directory: Any,
+    read_only: Sequence[ReadOnlyShellBinding],
+) -> None:
+    """Rejects every completed Bash call not bound as read-only or generator ownership."""
+    parts: list[Mapping[str, Any]] = [
+        part
+        for message in messages
+        for part in message.get("parts", [])
+        if part.get("type") == "tool"
+    ]
+    allowed_read_only = {binding.command for binding in read_only}
+    consumed: set[int] = set()
+    for index, part in enumerate(parts):
+        state = part.get("state")
+        if part.get("tool") != "bash" or not isinstance(state, Mapping) or state.get("status") != "completed":
+            continue
+        tool_input = state.get("input")
+        metadata = state.get("metadata")
+        if not isinstance(tool_input, Mapping) or not isinstance(metadata, Mapping):
+            raise ProvenanceError("completed Bash command lacks immutable input or result metadata")
+        command = tool_input.get("command")
+        try:
+            normalized = _normalize_shell_command(command)
+        except (TypeError, ValueError) as error:
+            raise ProvenanceError("completed Bash command is not safely parseable") from error
+        if normalized in allowed_read_only:
+            if not _bash_workdir_is_repo_root(tool_input, repo_root, session_directory):
+                raise ProvenanceError("read-only Bash command has an untrusted workdir")
+            consumed.add(index)
+            continue
+        for binding in generators:
+            if normalized != binding.command or index + 1 >= len(parts):
+                continue
+            next_part = parts[index + 1]
+            next_state = next_part.get("state")
+            if (
+                next_part.get("tool") != "bash"
+                or not isinstance(next_state, Mapping)
+                or next_state.get("status") != "completed"
+                or not _bash_workdir_is_repo_root(tool_input, repo_root, session_directory)
+            ):
+                continue
+            next_input = next_state.get("input")
+            next_metadata = next_state.get("metadata")
+            if (
+                isinstance(next_input, Mapping)
+                and isinstance(next_metadata, Mapping)
+                and _bash_workdir_is_repo_root(next_input, repo_root, session_directory)
+                and _parse_simple_commit(
+                    next_input, next_metadata, binding, repo_root, output_commit
+                ) is not None
+            ):
+                consumed.update({index, index + 1})
+                break
+        if index not in consumed:
+            raise ProvenanceError("completed unbound mutating Bash command")
+    for index, part in enumerate(parts):
+        state = part.get("state")
+        if (
+            part.get("tool") == "bash"
+            and isinstance(state, Mapping)
+            and state.get("status") == "completed"
+            and index not in consumed
+        ):
+            raise ProvenanceError("completed unbound mutating Bash command")
 
 
 def _bash_workdir_is_repo_root(
@@ -567,7 +740,8 @@ def build_evidence(raw: bytes, binding: RoleBinding, repo_root: Path) -> dict[st
         raise ProvenanceError(f"{binding.role} lacks hashable prompt or final-response text")
 
     tool_paths = _tool_owned_paths(
-        messages, repo_root, binding.shell_generators, binding.output_commit, info.get("directory")
+        messages, repo_root, binding.shell_generators, binding.output_commit, info.get("directory"),
+        binding.read_only_shell_commands,
     )
     output_hashes: dict[str, str] = {}
     for relative in binding.owned_outputs:
@@ -643,10 +817,25 @@ def build_resolved_event(
     messages = _session_messages(export)
     users = [message for message in messages if message.get("info", {}).get("role") == "user"]
     assistants = [message for message in messages if message.get("info", {}).get("role") == "assistant"]
+    if len(users) != 1 or not assistants:
+        raise ProvenanceError(
+            "resolved event requires exactly one canonical user prompt and an assistant tool-loop"
+        )
+    user_message_id = users[0].get("info", {}).get("id")
+    if messages[0] is not users[0] or any(
+        message.get("info", {}).get("parentID") != user_message_id
+        for message in assistants
+    ):
+        raise ProvenanceError(
+            "resolved event assistants must form the canonical tool-loop under the sole user prompt"
+        )
+    if any(message.get("info", {}).get("role") not in {"user", "assistant"} for message in messages):
+        raise ProvenanceError("resolved event contains an unsupported message role")
     resolved_tool_paths: set[str] = set()
     root = repo_root.resolve()
     for tool_path in _tool_owned_paths(
-        messages, repo_root, binding.shell_generators, binding.output_commit, export.get("info", {}).get("directory")
+        messages, repo_root, binding.shell_generators, binding.output_commit,
+        export.get("info", {}).get("directory"), binding.read_only_shell_commands,
     ):
         candidate = Path(tool_path)
         if candidate.is_absolute():
@@ -671,9 +860,14 @@ def build_resolved_event(
         "final_response_message_id": normalized["final_response_message_id"],
         "prompt_bytes": _plain_text_bytes(users[0]),
         "final_response_bytes": _plain_text_bytes(assistants[-1]),
+        "canonical_prompt_sha256": normalized["prompt_sha256"],
+        "canonical_final_response_sha256": normalized["final_response_sha256"],
+        "prompt_content_sha256": _sha256(_plain_text_bytes(users[0])),
+        "final_response_content_sha256": _sha256(_plain_text_bytes(assistants[-1])),
         "started_ms": normalized["started_ms"],
         "completed_ms": normalized["completed_ms"],
         "output_sha256": normalized["output_sha256"],
+        "output_commit": normalized["output_commit"],
         "raw_write_inventory": sorted(resolved_tool_paths),
     }
     if normalized["fork_turns_check"] == "schema-field-absent":

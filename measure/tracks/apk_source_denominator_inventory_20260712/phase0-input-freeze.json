@@ -32,6 +32,98 @@
       "Catalog prose as a substitute for an exact source locator."
     ]
   },
+  "relevance_rules": {
+    "normalization": "Lowercase repository-relative path; replace every maximal non-alphanumeric run with one hyphen; compare exact frozen slugs as hyphen-delimited tokens.",
+    "source_suffixes": [".js", ".json", ".jsx", ".ts", ".tsx"],
+    "asset_suffixes": [".csv", ".gif", ".ico", ".jpeg", ".jpg", ".json", ".m4a", ".mp3", ".ogg", ".png", ".svg", ".txt", ".wav", ".webm", ".webp", ".xml", ".yaml", ".yml"],
+    "source_rule_ids": [
+      "active-apk-program-sources",
+      "apk-core-packages",
+      "advantage-games-src",
+      "reading-primary-game-copies",
+      "codecamp-knowledge-apk-segment",
+      "domain-games-tests",
+      "db-game-completion-codecamp-apk",
+      "advantage-games-measure-program-match"
+    ],
+    "asset_rule_ids": [
+      "public-game-media-audio-data",
+      "game-measure-asset-sidecars",
+      "codecamp-activity-tutorial"
+    ],
+    "history_roots": [
+      "apps/advantage-games",
+      "apps/reading-advantage",
+      "apps/primary-advantage",
+      "packages",
+      "measure"
+    ],
+    "source_classifier": {
+      "evaluation": "ordered-first-match",
+      "default_action": "exclude",
+      "ordered_rules": [
+        {"rule_id": "failed-track-quarantine", "action": "exclude", "prefixes": ["measure/tracks/apk_cross_game_asset_ontology_20260712/"]},
+        {"rule_id": "active-apk-program-sources", "action": "include", "exact_paths": ["measure/apk-asset-system-program.md", "measure/apk-evidence-reconstruction-program.md", "packages/game-cartridges/src/catalog.test.ts", "packages/game-cartridges/src/catalog.ts", "packages/game-cartridges/src/index.ts"]},
+        {"rule_id": "apk-core-packages", "action": "include", "prefixes": ["packages/advantage-play-kit/", "packages/game-cartridges/", "packages/game-contracts/"]},
+        {"rule_id": "non-core-package-config", "action": "exclude", "basename_exact": ["package.json", "tsconfig.json", "tsconfig.test.json"], "basename_prefix": ["tsconfig."]},
+        {"rule_id": "advantage-games-src", "action": "include", "prefixes": ["apps/advantage-games/src/"], "suffixes": [".js", ".json", ".jsx", ".ts", ".tsx"]},
+        {"rule_id": "reading-primary-game-copies", "action": "include", "prefixes": ["apps/primary-advantage/", "apps/reading-advantage/"], "path_contains": ["/api/v1/games/", "/games/", "/lib/game"], "suffixes": [".js", ".json", ".jsx", ".ts", ".tsx"]},
+        {"rule_id": "codecamp-knowledge-apk-segment", "action": "include", "prefixes": ["packages/codecamp-knowledge/"], "path_segment_prefix": ["apk-"], "suffixes": [".js", ".json", ".jsx", ".md", ".ts", ".tsx"]},
+        {"rule_id": "domain-games-tests", "action": "include", "prefixes": ["packages/domain/src/__tests__/games", "packages/domain/src/games/"], "suffixes": [".js", ".json", ".jsx", ".ts", ".tsx"]},
+        {"rule_id": "db-game-completion-codecamp-apk", "action": "include", "prefixes": ["packages/db/"], "normalized_path_contains": ["codecamp-apk", "game-completion"]},
+        {"rule_id": "advantage-games-measure-program-match", "action": "include", "prefixes": ["apps/advantage-games/measure/"], "requires_program_slug": true, "suffixes": [".json", ".md"]}
+      ]
+    },
+    "asset_classifier": {
+      "evaluation": "ordered-first-match",
+      "default_action": "exclude",
+      "enumeration_roots": ["apps/advantage-games/public", "apps/reading-advantage/public/games", "apps/primary-advantage/public/games", "apps/advantage-games/measure", "packages/codecamp-knowledge/fixtures/apk-guided"],
+      "ordered_rules": [
+        {"rule_id": "failed-track-quarantine", "action": "exclude", "prefixes": ["measure/tracks/apk_cross_game_asset_ontology_20260712/"]},
+        {"rule_id": "asset-config", "action": "exclude", "basename_exact": ["package.json", "tsconfig.json", "tsconfig.test.json"], "basename_prefix": ["tsconfig."]},
+        {"rule_id": "public-game-media-audio-data", "action": "include", "prefixes": ["apps/advantage-games/public", "apps/reading-advantage/public/games", "apps/primary-advantage/public/games"], "suffixes": [".csv", ".gif", ".ico", ".jpeg", ".jpg", ".json", ".m4a", ".mp3", ".ogg", ".png", ".svg", ".txt", ".wav", ".webm", ".webp", ".xml", ".yaml", ".yml"]},
+        {"rule_id": "game-measure-asset-sidecars", "action": "include", "prefixes": ["apps/advantage-games/measure/"], "basename_exact": ["asset-spec.md", "metadata.json"], "requires_program_slug": true},
+        {"rule_id": "codecamp-activity-tutorial", "action": "include", "exact_paths": ["packages/codecamp-knowledge/fixtures/apk-guided/activity-tutorial.json"]}
+      ]
+    },
+    "history_classifier": {
+      "current_page_admission": "Normalize each current repository path, evaluate the source classifier and asset classifier independently, and admit the path when either classifier's first matching rule has action include.",
+      "deleted_path_admission": "Normalize each deleted repository path and admit it when either the source classifier or asset classifier has action include for that path.",
+      "ancestor_deletion_walk": "For each admitted path, walk first-parent history from HEAD and retain the first revision in which that path is deleted.",
+      "ancestor_boundary": "Constrain ancestor deletion traversal to the declared history_roots and do not infer paths outside those roots."
+    },
+    "program_slugs": [
+      "dragon-flight",
+      "rpg-battle",
+      "abyssal-well",
+      "castle-defense",
+      "magic-defense",
+      "wizard-vs-zombie",
+      "village-guardian",
+      "archers-revenge",
+      "storm-castle-tower",
+      "paladins-twin-soul",
+      "gryphon-patrol",
+      "dragon-rider",
+      "dungeon-liberator",
+      "spellweavers-run",
+      "shadow-gate-dungeon",
+      "labyrinth-goblin-king",
+      "griffin-riders-escape",
+      "sorcerer-ziggurat",
+      "enchanted-library",
+      "rune-match",
+      "alchemists-synthesis",
+      "potion-rush",
+      "rune-forge-chamber",
+      "astral-mage",
+      "griffin-sky-joust",
+      "realm-carver",
+      "devourer-slime",
+      "haunted-library",
+      "babel-architect"
+    ]
+  },
   "failed_track_quarantine": {
     "track_id": "apk_cross_game_asset_ontology_20260712",
     "path": "measure/tracks/apk_cross_game_asset_ontology_20260712",
@@ -69,10 +161,13 @@
     {"path": "measure/tracks/apk_source_denominator_inventory_20260712/denominator-discrepancies.json", "schema_version": "apk-denominator-discrepancies.v1"},
     {"path": "measure/tracks/apk_source_denominator_inventory_20260712/denominator-method.md", "schema_version": "apk-denominator-method.v1"},
     {"path": "measure/tracks/apk_source_denominator_inventory_20260712/phase3-reconciliation.json", "schema_version": "apk-source-denominator-phase3-reconciliation.v1"},
+    {"path": "measure/tracks/apk_source_denominator_inventory_20260712/denominator-contract-test-report.json", "schema_version": "apk-denominator-contract-test-report.v1"},
     {"path": "measure/tracks/apk_source_denominator_inventory_20260712/role-receipts/", "schema_version": "apk-role-receipt.v1"},
     {"path": "measure/tracks/apk_source_denominator_inventory_20260712/independent-review.json", "schema_version": "apk-denominator-independent-review.v1"},
     {"path": "measure/tracks/apk_source_denominator_inventory_20260712/candidate-denominator-manifest.json", "schema_version": "apk-denominator-candidate-manifest.v1"},
+    {"path": "measure/tracks/apk_source_denominator_inventory_20260712/candidate-partition-manifest.json", "schema_version": "apk-denominator-candidate-partition.v1"},
     {"path": "measure/tracks/apk_source_denominator_inventory_20260712/product-owner-acceptance.json", "schema_version": "apk-denominator-owner-acceptance.v1"},
-    {"path": "measure/tracks/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json", "schema_version": "apk-denominator-accepted-manifest.v1"}
+    {"path": "measure/tracks/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json", "schema_version": "apk-denominator-accepted-manifest.v1"},
+    {"path": "measure/tracks/apk_source_denominator_inventory_20260712/accepted-partition-manifest.json", "schema_version": "apk-denominator-accepted-partition.v1"}
   ]
 }
