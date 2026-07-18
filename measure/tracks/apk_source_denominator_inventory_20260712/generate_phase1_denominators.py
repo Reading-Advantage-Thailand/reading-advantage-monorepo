@@ -9,7 +9,6 @@ from __future__ import annotations
 
 import argparse
 import hashlib
-import importlib.util
 import json
 import mimetypes
 import os
@@ -17,6 +16,7 @@ import re
 import struct
 import subprocess
 import sys
+import types
 from collections import defaultdict
 from pathlib import Path, PurePosixPath
 from typing import Any, Iterable
@@ -91,6 +91,9 @@ ROLE_OUTPUTS = {
         "denominator-method.md",
     ),
 }
+TRANSITION_MODULE_PATH = (
+    "measure/tracks/apk_source_denominator_inventory_20260712/transition_ast.py"
+)
 
 
 def run_git(*arguments: str) -> bytes:
@@ -577,7 +580,32 @@ def build_identity_ledger(paths: list[str]) -> dict[str, Any]:
     }
 
 
-def build_scene_state_denominator(paths: list[str]) -> dict[str, Any]:
+def _load_transition_module(code_revision: str | None) -> Any:
+    """Loads the transition adjudicator from immutable Git bytes when bound.
+
+    Args:
+        code_revision: Full commit containing the exact adjudicator source, or
+            ``None`` only for focused in-process unit tests.
+
+    Returns:
+        Executed transition adjudicator module.
+    """
+    module_path = TRACK_DIR / "transition_ast.py"
+    source = (
+        run_git("show", f"{code_revision}:{TRANSITION_MODULE_PATH}")
+        if code_revision is not None
+        else module_path.read_bytes()
+    )
+    module = types.ModuleType("apk_phase1_transition_ast")
+    module.__file__ = str(module_path)
+    sys.modules[module.__name__] = module
+    exec(compile(source, str(module_path), "exec"), module.__dict__)
+    return module
+
+
+def build_scene_state_denominator(
+    paths: list[str], *, code_revision: str | None = None
+) -> dict[str, Any]:
     """Extracts explicit state domains and source-backed transitions from source.
 
     Args:
@@ -590,15 +618,10 @@ def build_scene_state_denominator(paths: list[str]) -> dict[str, Any]:
     source_texts = {
         path: blob(path).decode("utf-8", errors="replace") for path in game_sources
     }
-    transition_spec = importlib.util.spec_from_file_location(
-        "apk_phase1_transition_ast", TRACK_DIR / "transition_ast.py"
+    transition_module = _load_transition_module(code_revision)
+    ast_writes = transition_module.extract_transition_writes(
+        source_texts, code_revision=code_revision
     )
-    if transition_spec is None or transition_spec.loader is None:
-        raise RuntimeError("Unable to load Phase-1 transition AST adjudicator")
-    transition_module = importlib.util.module_from_spec(transition_spec)
-    sys.modules[transition_spec.name] = transition_module
-    transition_spec.loader.exec_module(transition_module)
-    ast_writes = transition_module.extract_transition_writes(source_texts)
     scene_records: list[dict[str, Any]] = []
     state_records: list[dict[str, Any]] = []
     transitions: list[dict[str, Any]] = []
@@ -1084,12 +1107,18 @@ product outcome.
     )
 
 
-def main(output_dir: Path | None = None, role: str | None = None) -> None:
+def main(
+    output_dir: Path | None = None,
+    role: str | None = None,
+    *,
+    code_revision: str | None = None,
+) -> None:
     """Generates every Phase-1 denominator artifact required by the Red contract.
 
     Args:
         output_dir: Directory receiving selected artifacts.
         role: Optional role whose owned artifacts alone are written.
+        code_revision: Full commit containing immutable executable helpers.
 
     Returns:
         Nothing.
@@ -1106,7 +1135,10 @@ def main(output_dir: Path | None = None, role: str | None = None) -> None:
     if role is None or role == "discovery-auditor":
         write_json(output_dir / "source-denominator.json", build_source_denominator(paths))
         write_json(output_dir / "game-identity-ledger.json", build_identity_ledger(paths))
-        write_json(output_dir / "scene-state-denominator.json", build_scene_state_denominator(paths))
+        write_json(
+            output_dir / "scene-state-denominator.json",
+            build_scene_state_denominator(paths, code_revision=code_revision),
+        )
     if role is None or role == "evidence-collector":
         write_json(output_dir / "asset-file-denominator.json", build_asset_denominator(paths))
         write_json(output_dir / "historical-source-denominator.json", build_historical_denominator(paths))
@@ -1122,5 +1154,10 @@ if __name__ == "__main__":
         "--role",
         choices=("discovery-auditor", "evidence-collector", "requirements-mapper"),
     )
+    parser.add_argument("--code-revision", required=True)
     arguments = parser.parse_args()
-    main(output_dir=arguments.output_dir, role=arguments.role)
+    main(
+        output_dir=arguments.output_dir,
+        role=arguments.role,
+        code_revision=arguments.code_revision,
+    )

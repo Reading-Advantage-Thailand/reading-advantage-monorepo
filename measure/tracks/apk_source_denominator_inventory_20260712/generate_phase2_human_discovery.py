@@ -74,6 +74,9 @@ PHASE2_ARTIFACTS = (
     "human-historical-deleted-records.json",
     "human-discrepancy-records.json",
 )
+TRANSITION_HELPER_PATH = (
+    "measure/tracks/apk_source_denominator_inventory_20260712/transition_ast_helper.ts"
+)
 
 
 @dataclass
@@ -254,11 +257,45 @@ def _raw_asset_path(path: str) -> bool:
     return _raw_asset_relevance_rule(path) is not None
 
 
-def _enumerate_raw_transition_facts(source_texts: dict[str, str]) -> list[dict[str, Any]]:
-    """Enumerates Phase-2 raw writes through its independent compiler traversal."""
-    helper = TRACK_DIR / "transition_ast_helper.ts"
+def _transition_helper_source(code_revision: str | None) -> str:
+    """Returns commit-bound TypeScript helper source for Phase-2 traversal.
+
+    Args:
+        code_revision: Full immutable code commit, or ``None`` only for focused
+            in-process unit tests.
+
+    Returns:
+        TypeScript compiler helper source.
+
+    Raises:
+        ValueError: If a supplied revision is not a full lowercase commit SHA.
+        RuntimeError: If Git cannot resolve the helper at the supplied revision.
+    """
+    if code_revision is None:
+        return (TRACK_DIR / "transition_ast_helper.ts").read_text(encoding="utf-8")
+    if re.fullmatch(r"[0-9a-f]{40}", code_revision) is None:
+        raise ValueError("code-revision must be a full 40-character lowercase commit SHA")
     result = subprocess.run(
-        [str(REPO_ROOT / "node_modules" / ".bin" / "tsx"), str(helper)],
+        ["git", "show", f"{code_revision}:{TRANSITION_HELPER_PATH}"],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        check=False,
+    )
+    if result.returncode:
+        raise RuntimeError(
+            "Unable to load immutable Phase-2 transition helper: "
+            + result.stderr.decode("utf-8", errors="replace").strip()
+        )
+    return result.stdout.decode("utf-8")
+
+
+def _enumerate_raw_transition_facts(
+    source_texts: dict[str, str], *, code_revision: str | None = None
+) -> list[dict[str, Any]]:
+    """Enumerates Phase-2 raw writes through its independent compiler traversal."""
+    helper_source = _transition_helper_source(code_revision)
+    result = subprocess.run(
+        [str(REPO_ROOT / "node_modules" / ".bin" / "tsx"), "--eval", helper_source],
         cwd=REPO_ROOT,
         input=json.dumps(
             {"mode": "phase2", "sources": source_texts}, sort_keys=True
@@ -282,7 +319,10 @@ def _enumerate_raw_transition_facts(source_texts: dict[str, str]) -> list[dict[s
 
 
 def _raw_store_surfaces(
-    reader: GitObjectReader, source_paths: list[str]
+    reader: GitObjectReader,
+    source_paths: list[str],
+    *,
+    code_revision: str | None = None,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
     """Discovers literal domains and independently adjudicates raw AST writes."""
     states: list[dict[str, Any]] = []
@@ -388,7 +428,9 @@ def _raw_store_surfaces(
 
     transitions: list[dict[str, Any]] = []
     candidates: list[dict[str, Any]] = []
-    for fact in _enumerate_raw_transition_facts(source_texts):
+    for fact in _enumerate_raw_transition_facts(
+        source_texts, code_revision=code_revision
+    ):
         evidence = locator(
             reader,
             BASELINE,
@@ -484,7 +526,7 @@ def first_deletion_records(history_output: str) -> list[dict[str, str]]:
     return records
 
 
-def discover_raw_frozen_sources() -> dict[str, Any]:
+def discover_raw_frozen_sources(*, code_revision: str | None = None) -> dict[str, Any]:
     """Discovers identities, files, surfaces, assets, and history without Phase-1 inputs."""
     entries = _tree_entries()
     reader = GitObjectReader()
@@ -501,7 +543,9 @@ def discover_raw_frozen_sources() -> dict[str, Any]:
             match = re.search(r"/games/(sentence|vocabulary)/([^/]+)/page\.tsx$", path)
             if match:
                 route_records.append({"source_kind": match.group(1), "catalog_id": match.group(2), "path": path, "evidence": locator(reader, BASELINE, path)})
-        states, transitions, transition_candidates = _raw_store_surfaces(reader, source_paths)
+        states, transitions, transition_candidates = _raw_store_surfaces(
+            reader, source_paths, code_revision=code_revision
+        )
         asset_records = [
             {
                 "canonical_path": row["path"],
@@ -1463,22 +1507,27 @@ def write_json(name: str, value: dict[str, Any]) -> None:
     (TRACK_DIR / name).write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
-def generate(phase1_revision: str) -> None:
+def generate(phase1_revision: str, *, code_revision: str | None = None) -> None:
     """Generates Phase-2 evidence from one explicit admitted Phase-1 revision.
 
     Args:
         phase1_revision: Full reachable commit containing the Phase-1 artifacts.
+        code_revision: Full commit containing immutable executable helpers.
 
     Returns:
         Nothing.
     """
-    _generate_phase2(phase1_revision)
+    _generate_phase2(phase1_revision, code_revision=code_revision)
 
 
-def _generate_phase2(phase1_revision: str) -> None:
+def _generate_phase2(
+    phase1_revision: str, *, code_revision: str | None = None
+) -> None:
     """Generates exhaustive non-interpretive Phase-2 evidence artifacts."""
     phase1_revision = validate_phase1_revision(phase1_revision)
-    raw_frozen_source_discovery = discover_raw_frozen_sources()
+    raw_frozen_source_discovery = discover_raw_frozen_sources(
+        code_revision=code_revision
+    )
     reader = GitObjectReader()
     try:
         source = git_json(reader, phase1_revision, "source-denominator.json")
@@ -1789,18 +1838,23 @@ def _generate_phase2(phase1_revision: str) -> None:
     write_json("human-discrepancy-records.json", discrepancy)
 
 
-def check_only_result(phase1_revision: str) -> dict[str, Any]:
+def check_only_result(
+    phase1_revision: str, *, code_revision: str | None = None
+) -> dict[str, Any]:
     """Returns truthful coverage and blocker state for an explicit Phase-1 revision.
 
     Args:
         phase1_revision: Full reachable commit containing the Phase-1 artifacts.
+        code_revision: Full commit containing immutable executable helpers.
 
     Returns:
         Mechanical coverage counts plus exact symmetric blocker counts.
     """
     phase1_revision = validate_phase1_revision(phase1_revision)
     counts = check_coverage(phase1_revision)
-    raw_frozen_source_discovery = discover_raw_frozen_sources()
+    raw_frozen_source_discovery = discover_raw_frozen_sources(
+        code_revision=code_revision
+    )
     reader = GitObjectReader()
     try:
         expected_provenance = phase1_input_provenance(reader, phase1_revision)
@@ -1834,14 +1888,17 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--check-only", action="store_true")
     parser.add_argument("--phase1-revision", required=True)
+    parser.add_argument("--code-revision", required=True)
     args = parser.parse_args()
     if args.check_only:
-        result = check_only_result(args.phase1_revision)
+        result = check_only_result(
+            args.phase1_revision, code_revision=args.code_revision
+        )
         print(json.dumps(result, sort_keys=True))
         if result["status"] != "passed":
             raise SystemExit(1)
     else:
-        generate(args.phase1_revision)
+        generate(args.phase1_revision, code_revision=args.code_revision)
 
 
 if __name__ == "__main__":
