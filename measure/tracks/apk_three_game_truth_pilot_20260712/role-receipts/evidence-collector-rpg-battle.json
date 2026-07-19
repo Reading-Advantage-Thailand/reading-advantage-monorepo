@@ -141,11 +141,11 @@
     }
   },
   "acceptance": "not-claimed",
-  "commit_sha": null,
+  "commit_sha": "82a539aaeef01f25fe97155d6c63b7f30822f1be",
   "commit_binding": {
     "base_commit": "da51b4e006cdce175171077e97c86089a38dbd5b",
-    "status": "pending-commit",
-    "note": "commit_sha is bound to the deliverable commit 'chore(measure): T3 evidence collector for RPG Battle (track_id: apk_three_game_pilot_20260712)' in the immediately following binding update; the SHA is reported to the orchestrator in the final result block."
+    "status": "committed-output-binding",
+    "note": "Deliverable commit 82a539aaeef01f25fe97155d6c63b7f30822f1be introduced this receipt, the ledger, and the method doc. Commitlint subject-case hook rejected the orchestrator-specified sentence-case title; the hook-compliant form 'chore(measure): t3 evidence collector for RPG Battle (track_id: apk_three_game_pilot_20260712)' was used. This binding update is the only post-commit receipt edit."
   },
   "preserved_user_work": [
     "measure/tracks/apk_three_game_truth_pilot_20260712/plan.md (orchestrator predecessor-binding edits, left uncommitted)",
