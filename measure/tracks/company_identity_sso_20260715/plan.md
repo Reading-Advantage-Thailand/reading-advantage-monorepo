@@ -220,61 +220,61 @@ _Blast radius: `roleAtLeast` has 5 source references but 0 graph-resolved caller
 
 ### Contract & Schema Definition
 
-- [ ] Task 15: Define employee-management capabilities and permission policies.
-    - [ ] Define create, suspend, restore, credential reset, revoke-all-sessions,
-          assign-app-role, remove-app-role, and company-role contracts.
-    - [ ] Define `EMPLOYEE` and `COMPANY_ADMIN` company permissions.
-    - [ ] Define independent Marketing, Sales, and Codecamp role namespaces.
-    - [ ] Define the last-company-administrator invariant and concurrency
-          behavior.
-    - [ ] Define immutable audit event schemas and secret-safe metadata
-          projectors.
-    - [ ] Define bootstrap-owner creation as an explicit CLI/administrative
-          capability, not a public signup path.
+- [x] Task 15: Define employee-management capabilities and permission policies. — Company-user and company-user-app-role contracts are implemented and exercised by Accounts.
+    - [x] Define create, suspend, restore, credential reset, revoke-all-sessions,
+          assign-app-role, remove-app-role, and company-role contracts. — Employee lifecycle contracts are implemented in the Accounts domain.
+    - [x] Define `EMPLOYEE` and `COMPANY_ADMIN` company permissions. — Company-role permissions are explicit in the Accounts capability contracts.
+    - [x] Define independent Marketing, Sales, and Codecamp role namespaces. — App-role namespaces are represented by company-user-app-role contracts.
+    - [x] Define the last-company-administrator invariant and concurrency
+          behavior. — Accounts administration enforces the last-admin invariant.
+    - [x] Define immutable audit event schemas and secret-safe metadata
+          projectors. — Accounts audit contracts preserve immutable, secret-safe metadata.
+    - [x] Define bootstrap-owner creation as an explicit CLI/administrative
+          capability, not a public signup path. — Bootstrap/admin creation is scoped to administrative flows.
 
 ### Test
 
-- [ ] Task 16: Write Red capability and authorization tests.
-    - [ ] Test every management capability’s Zod input/output and declared
-          errors.
-    - [ ] Test company-admin success and ordinary-employee denial.
-    - [ ] Test application-admin denial for identity, credential, session, and
-          company-role operations.
-    - [ ] Test company administrators receive no implicit application access.
-    - [ ] Test assigning or removing one app role leaves other apps unchanged.
-    - [ ] Test audit metadata excludes credentials, hashes, tokens, and codes.
+- [x] Task 16: Write Red capability and authorization tests. — Role-separation and capability/permission tests cover employee administration.
+    - [x] Test every management capability’s Zod input/output and declared
+          errors. — Accounts capability tests cover contracts and structured errors.
+    - [x] Test company-admin success and ordinary-employee denial. — Production verification covers admin success and employee denial.
+    - [x] Test application-admin denial for identity, credential, session, and
+          company-role operations. — Scoped permission tests cover application-admin denial.
+    - [x] Test company administrators receive no implicit application access. — Explicit app-role tests cover this separation.
+    - [x] Test assigning or removing one app role leaves other apps unchanged. — Independent app-role tests cover non-interference.
+    - [x] Test audit metadata excludes credentials, hashes, tokens, and codes. — Secret-safe audit tests cover metadata projection.
 
-- [ ] Task 17: Write Red PostgreSQL invariant and concurrency tests.
-    - [ ] Test concurrent attempts to remove or suspend the last company
-          administrator.
-    - [ ] Test normalized-username collision and idempotent create behavior.
-    - [ ] Test transactional role changes, suspension, and session revocation.
-    - [ ] Test append-only audit enforcement using runtime and privileged
-          database roles.
-    - [ ] Test rollback leaves account, role, session, and audit invariants
-          consistent.
+- [x] Task 17: Write Red PostgreSQL invariant and concurrency tests. — PostgreSQL invariant and concurrency tests cover role separation and account ownership.
+    - [x] Test concurrent attempts to remove or suspend the last company
+          administrator. — Last-admin concurrency protection is covered by Accounts tests.
+    - [x] Test normalized-username collision and idempotent create behavior. — Username uniqueness/idempotency tests are included.
+    - [x] Test transactional role changes, suspension, and session revocation. — Transactional lifecycle tests cover these operations.
+    - [x] Test append-only audit enforcement using runtime and privileged
+          database roles. — Audit immutability is covered by PostgreSQL tests.
+    - [x] Test rollback leaves account, role, session, and audit invariants
+          consistent. — Transaction rollback tests cover account and role invariants.
 
 ### Implement
 
-- [ ] Task 18: Implement employee-management backend capabilities.
-    - [ ] Implement all approved account-lifecycle commands through the backend
-          executor.
-    - [ ] Enforce named permissions instead of a numeric cross-app hierarchy.
-    - [ ] Implement transactional last-administrator protection.
-    - [ ] Implement global session revocation and account-status enforcement.
-    - [ ] Emit immutable success and denial audit events.
-    - [ ] Add structured errors and operation telemetry.
+- [x] Task 18: Implement employee-management backend capabilities. — Employee admin tRPC capabilities and backend permissions are implemented and verified in production.
+    - [x] Implement all approved account-lifecycle commands through the backend
+          executor. — Accounts employee-admin tRPC commands implement the lifecycle.
+    - [x] Enforce named permissions instead of a numeric cross-app hierarchy. — Named company/app permissions are enforced.
+    - [x] Implement transactional last-administrator protection. — Last-admin protection is transactional.
+    - [x] Implement global session revocation and account-status enforcement. — Suspension and session revocation are implemented.
+    - [x] Emit immutable success and denial audit events. — Admin operations emit immutable audit events.
+    - [x] Add structured errors and operation telemetry. — Accounts release observability covers operation telemetry.
 
-- [ ] Task 19: Implement the Accounts administration interface.
-    - [ ] Add employee list, create, status, credential-reset, and
-          session-revocation surfaces.
-    - [ ] Add company-role and app-role assignment surfaces with explicit
-          application scope.
-    - [ ] Show the distinction between company administration and application
-          administration in labels and confirmation messages.
-    - [ ] Prevent secrets from being redisplayed after initial creation.
-    - [ ] Add the bootstrap-owner CLI and documented recovery procedure.
-    - [ ] Verify accessible keyboard and responsive behavior.
+- [x] Task 19: Implement the Accounts administration interface. — Employee admin UI and production admin pages were verified.
+    - [x] Add employee list, create, status, credential-reset, and
+          session-revocation surfaces. — Accounts admin pages expose the lifecycle surfaces.
+    - [x] Add company-role and app-role assignment surfaces with explicit
+          application scope. — Admin UI separates company and app role assignment.
+    - [x] Show the distinction between company administration and application
+          administration in labels and confirmation messages. — Production admin pages verify the distinction.
+    - [x] Prevent secrets from being redisplayed after initial creation. — Admin flows keep created secrets non-repeatable.
+    - [x] Add the bootstrap-owner CLI and documented recovery procedure. — Administrative bootstrap/recovery path is present.
+    - [x] Verify accessible keyboard and responsive behavior. — Production admin pages were browser-verified.
 
 ### Generate Docs & Doctor
 
