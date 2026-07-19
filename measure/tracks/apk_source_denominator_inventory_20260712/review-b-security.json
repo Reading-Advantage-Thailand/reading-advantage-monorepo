@@ -3,89 +3,110 @@
   "role": "measure-review-b",
   "track": "apk_source_denominator_inventory_20260712",
   "phase": "Phase 4: Full independent acceptance",
-  "baseline_sha": "fe505b34a4c6034742b26092c85d1023c7522809",
-  "audited_head_sha": "fe505b34a4c6034742b26092c85d1023c7522809",
+  "baseline_sha": "ba2239878afa73705f9adc8d3b5d5fcbbfdbac0e",
+  "audited_head_sha": "ba2239878afa73705f9adc8d3b5d5fcbbfdbac0e",
+  "previous_audited_head_sha": "fe505b34a4c6034742b26092c85d1023c7522809",
   "applicability": "applicable",
   "status": "fail",
-  "summary": "Phase 0-3 admission is green and the repaired validator now rejects numeric stop-loss, provider-output, locator, coordinated-input, and candidate/review/owner lifecycle mutations. Phase 4 still fails because production acceptance permits inherited predecessor context and ignores frozen task ownership, while committed role evidence is incomplete, stale, and not a current provider-resolved five-role set.",
+  "summary": "Phase 0-3 admission is Green (86/86 against the frozen predecessor), the production validator now rejects every admission attack, and the live wiring test bundle (test_apk_inventory_acceptance_live) passes 26/26 after the adversarial-reviewer commit_binding fixture fix (ba223987). Phase 4 still fails because the adversarial-reviewer role receipt and the candidate/owner/accepted lifecycle artifacts remain absent, and the committed predecessor receipts are still incomplete (no adversarial-reviewer receipt, no fresh provider context for any role).",
   "blocking_findings": [
     {
       "id": "RB2-001",
       "severity": "high",
-      "title": "Frozen fresh-context and task ownership are not enforced",
-      "detail": "The frozen strategy requires five pairwise-isolated fork_turns=none roles with role-owned tasks and outputs. Production checks fork_turns only for adversarial-reviewer and does not validate ownership.incompatible_roles, ownership.tasks, or receipt task_id. The committed Green fixture uses fork_turns=all for four predecessor roles. Changing every receipt task_id to forged-unowned-task still returned {\"ok\": true}.",
+      "title": "Frozen fresh-context and task ownership are not enforced [remediated at code level]",
+      "detail": "Frozen strategy requires five pairwise-isolated fork_turns=none roles with role-owned tasks and outputs. The hardened production validator (apk_inventory_acceptance.py:_frozen_role_tasks, _validated_commit_binding, _rebuild_production_role_event) now enforces task_id, expected_outputs, incompatible_roles, fork_turns=none, distinct fresh sessions, and the adversarial-reviewer commit_binding contract. The synthetic production bundle in test_apk_inventory_acceptance_live passes the hardened validator (ok=True) after ba223987 added the reviewer commit_binding. RB2-001 was previously raised against fe5085b1's incomplete enforcement and is now confirmed remediated at the validator level; the blocking surface moved to the still-absent committed receipts (RB2-002).",
       "evidence": [
         "measure/tracks/apk_source_denominator_inventory_20260712/phase0-role-ownership-manifest.json",
         "measure/tracks/apk_source_denominator_inventory_20260712/test-strategy.md",
-        "measure/evidence_integrity_gates/apk_inventory_acceptance.py:428",
-        "measure/evidence_integrity_gates/apk_inventory_acceptance.py:552",
-        "measure/tests/test_apk_source_denominator_inventory_phase4.py:1029"
+        "measure/evidence_integrity_gates/apk_inventory_acceptance.py:_frozen_role_tasks",
+        "measure/evidence_integrity_gates/apk_inventory_acceptance.py:_validated_commit_binding",
+        "measure/evidence_integrity_gates/apk_inventory_acceptance.py:_rebuild_production_role_event",
+        "measure/evidence_integrity_gates/t2_role_receipt.py:_validated_commit_binding",
+        "measure/tests/evidence_integrity_gates/test_apk_inventory_acceptance_live.py"
       ],
-      "required_remediation": "Bind receipts and provider events to frozen task_id and expected outputs; enforce distinct fresh fork_turns=none sessions for every incompatible role; add task/output substitution, shared-session, and inherited-predecessor negative controls."
+      "required_remediation": "Re-run adversarial-reviewer with provider-attested fresh fork_turns=none session; bind all five role receipts to current outputs and SHA-256 hashes.",
+      "status": "remediated",
+      "remediation_commits": [
+        "fe5085b1 (phase4 role ownership)",
+        "69371a5d (gate hardening)",
+        "107fd1a4 (T2 authority hardening)",
+        "f27e93b2 (T2 phase3 receipt lineage)",
+        "7dcbcbd3 (T2 admission blob binding)",
+        "ba223987 (live-wiring adversarial-reviewer commit_binding fixture)"
+      ]
     },
     {
       "id": "RB2-002",
       "severity": "high",
-      "title": "Committed receipts are incomplete and stale",
-      "detail": "Required roles are discovery-auditor, evidence-collector, requirements-mapper, truth-test-author, and adversarial-reviewer. Only three receipt files exist; requirements-mapper.json declares reconciliation-integrator, leaving requirements-mapper, truth-test-author, and adversarial-reviewer missing and reconciliation-integrator unexpected. Discovery lacks required event/context provenance, measured usage, numeric stop-loss, and canonical aggregate output hash; evidence-collector lacks stop-loss; mapper lacks exact role, most provenance, measured usage, and stop-loss. HEAD output mismatches are discovery 3/3, evidence 2/4, mapper 1/1. No committed provider event map binds current outputs, and all Phase-4 review/candidate/owner/accepted artifacts are absent.",
+      "title": "Committed receipts remain incomplete and stale",
+      "detail": "Frozen authority requires five distinct roles and ten provenance fields. discovery-auditor.json, evidence-collector.json, requirements-mapper.json, truth-test-author.json are present with full provenance, output_hashes, actual_usage, stop_loss_observations, and numeric ceilings, but the adversarial-reviewer receipt is still absent. Discovery-auditor lacks commit_binding (single-shot role, allowed by the validator), but requirements-mapper, evidence-collector, and truth-test-author now carry commit_binding. The 86-test admission suite does not run these committed receipts through the production validator; the validator is only exercised by the synthetic fixture in test_apk_inventory_acceptance_live. No committed provider event map binds current outputs, and all Phase-4 review/candidate/owner/accepted artifacts are still absent.",
       "evidence": [
         "measure/tracks/apk_source_denominator_inventory_20260712/role-receipts/discovery-auditor.json",
         "measure/tracks/apk_source_denominator_inventory_20260712/role-receipts/evidence-collector.json",
         "measure/tracks/apk_source_denominator_inventory_20260712/role-receipts/requirements-mapper.json",
+        "measure/tracks/apk_source_denominator_inventory_20260712/role-receipts/truth-test-author.json",
         "measure/tracks/apk_source_denominator_inventory_20260712/phase0-role-ownership-manifest.json"
       ],
-      "required_remediation": "Truthfully rerun every missing or stale predecessor role with provider-resolved fresh context, exact current-output hashes, numeric usage and stop-loss fields; then run adversarial review, publish non-consumable candidates, and request exact-hash owner approval."
+      "required_remediation": "Truthfully rerun the missing adversarial-reviewer role with provider-resolved fresh context, exact current-output hashes, numeric usage and stop-loss fields; then run adversarial review, publish non-consumable candidates, and request exact-hash owner approval."
     }
   ],
   "nonblocking_findings": [
     {
       "id": "RB2-NB-001",
       "severity": "info",
-      "title": "Earlier stop-loss and provider-output bugs are repaired",
-      "detail": "Exact numeric stop-loss keys/thresholds and provider-to-receipt output-map equality are now enforced; missing, null, boolean, negative, threshold, omitted, extra, stale, and forged controls reject."
+      "title": "Earlier stop-loss and provider-output bugs remain repaired",
+      "detail": "Exact numeric stop-loss keys/thresholds and provider-to-receipt output-map equality are still enforced; missing, null, boolean, negative, threshold, omitted, extra, stale, and forged controls reject."
     },
     {
       "id": "RB2-NB-002",
       "severity": "info",
-      "title": "Authority, locator, coordinated-input, and hash lifecycle controls are non-vacuous",
-      "detail": "Controls reject frozen authority/ceiling redefinition, malformed nested locators, quarantine/root/revision/hash violations, worktree-only bytes, stale candidate/review/owner bindings, early owner approval, and replay."
+      "title": "Authority, locator, coordinated-input, hash lifecycle, and reviewer-commit-binding controls are non-vacuous",
+      "detail": "Controls reject frozen authority/ceiling redefinition, malformed nested locators, quarantine/root/revision/hash violations, worktree-only bytes, stale candidate/review/owner bindings, early owner approval, replay, and adversarial-reviewer commit_binding omission (PROVIDER_EVENT_INVALID with reason 'reviewer commit binding must select one Phase-2 receipt and mapper admission commit' before ba223987 fixed the fixture)."
+    },
+    {
+      "id": "RB2-NB-003",
+      "severity": "info",
+      "title": "Live wiring contract is now exercised against the production validator",
+      "detail": "test_apk_inventory_acceptance_live 26/26 OK after the reviewer commit_binding fix at ba223987; 25 mutation-counterexample subtests now exercise distinct rejection codes (PROVIDER_EVENT_INVALID, BUDGET_BINDING_MISMATCH, AUTHORED_DENOMINATOR_REJECTED, REVIEW_BINDING_MISMATCH, INHERITED_REVIEWER_CONTEXT, CONTRACT_REPORT_INVALID, INVALID_ROLE_RECEIPT_V1, ROLE_SESSION_COLLISION, CONTEXT_BINDING_MISMATCH, ARTIFACT_ANCESTRY_INVALID, INVALID_STOP_LOSS_OBSERVATION, TASK_ENVELOPE_MISMATCH) instead of all collapsing on the shared control failure."
     }
   ],
   "evidence": [
-    "Audit ran in an isolated local clone at exact HEAD fe505b34a4c6034742b26092c85d1023c7522809.",
-    "Frozen input SHA-256 e4bba6919b9b60992a388a9cf4f37c7885400b96bec7b31898f59eaa80d12a9f exactly matches ownership authority.",
-    "Exact Phase 0-3 admission passed 43/43 in 466.822 seconds.",
-    "Phase-4 suite ran 41 tests: 31 Green-branch controls passed; ten live contracts failed solely at missing independent-review.json.",
-    "Historical review-b was hypotheses only; its stop-loss/provider-output findings were independently rerun and resolved.",
-    "Generic receipt guard passed only its narrow 0-legacy/1-OpenCode-manifest scope; direct exact-role/current-output checks found the blocking drift."
+    "Audit ran against current HEAD ba2239878afa73705f9adc8d3b5d5fcbbfdbac0e.",
+    "Frozen input SHA-256 5aee062774115b5925878b45309c9f615402d2c25737e82fc55429df66d9e06f exactly matches ownership authority.",
+    "Phase 0-3 admission (frozen predecessor contract): 86 tests in 341.937s, OK (Phase 0: 13, Phase 1: 18, Phase 2: 31, Phase 3: 24).",
+    "Frozen revision 996450f0 admission gate (reviewer surface): 86/86 OK per denominator-contract-test-report.json (contract-report fix at 63c7f4a2 names red_command/green_command).",
+    "Phase-4 focused suite: 46 tests; 36 pass (Green-branch counterexamples and direct contract checks); 10 fail solely at missing independent-review.json.",
+    "Live wiring suite: 26 tests in 328.031s, OK after ba223987 fix; synthetic production bundle passes hardened validator (ok=True) and 25 mutation counterexamples reject with distinct codes.",
+    "T2 gate suites: 38 tests (test_t2_role_receipt + test_t2_successor_authority) in 52.314s, OK.",
+    "Historical review-b at fe505b34 had RB2-001 and RB2-002 as blocking; RB2-001 is now remediated in code (fe5085b1 + 69371a5d + 107fd1a4 + f27e93b2 + 7dcbcbd3 + ba223987); RB2-002 still blocking because the adversarial-reviewer receipt is absent and Phase-4 lifecycle artifacts are not yet authored."
   ],
   "commands": [
-    "git rev-parse HEAD - PASS fe505b34a4c6034742b26092c85d1023c7522809",
-    "python3 -B -m py_compile measure/evidence_integrity_gates/apk_inventory_acceptance.py measure/tests/test_apk_source_denominator_inventory_phase4.py - PASS",
-    "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase0 measure.tests.test_apk_source_denominator_inventory_phase1 measure.tests.test_apk_source_denominator_inventory_phase2 measure.tests.test_apk_source_denominator_inventory_phase3 - PASS 43/43",
-    "python3 -B -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase4 - EXPECTED RED 31 controls pass, 10 missing independent-review failures",
-    "bash tests/orchestrator_role_receipt_integrity.sh - PASS with narrow scope",
-    "Direct frozen-role/current-output audit - FAIL missing exact roles, stale outputs, incomplete provenance/usage/stop-loss",
-    "Targeted all-task_id forgery with four predecessor fork_turns=all - FAIL-OPEN {\"ok\": true}"
+    "git rev-parse HEAD - PASS ba2239878afa73705f9adc8d3b5d5fcbbfdbac0e",
+    "python3 -B -m py_compile measure/evidence_integrity_gates/apk_inventory_acceptance.py measure/tests/test_apk_inventory_acceptance_live.py - PASS",
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase0 measure.tests.test_apk_source_denominator_inventory_phase1 measure.tests.test_apk_source_denominator_inventory_phase2 measure.tests.test_apk_source_denominator_inventory_phase3 - PASS 86/86",
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase4 - RED 36 pass, 10 missing independent-review failures",
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.evidence_integrity_gates.test_apk_inventory_acceptance_live - PASS 26/26 after ba223987 fix",
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.evidence_integrity_gates.test_t2_role_receipt measure.tests.evidence_integrity_gates.test_t2_successor_authority - PASS 38/38",
+    "bash tests/orchestrator_supervisor_invariants.sh - PASS with A1/A8",
+    "Direct frozen-role/current-output audit - FAIL missing adversarial-reviewer receipt; stale or absent Phase-4 lifecycle artifacts"
   ],
   "changed_files": [
-    "measure/tracks/apk_source_denominator_inventory_20260712/review-b-security.json"
+    "measure/tracks/apk_source_denominator_inventory_20260712/review-b-security.json",
+    "measure/tracks/apk_source_denominator_inventory_20260712/plan.md",
+    "measure/tracks/apk_source_denominator_inventory_20260712/review-2026-07-16.md",
+    "measure/tests/evidence_integrity_gates/test_apk_inventory_acceptance_live.py"
   ],
   "test_strategy_violations": [
-    "All five frozen roles are not required to use fork_turns=none.",
-    "Receipt task_id and output ownership are not bound to the ownership manifest.",
-    "Committed receipts are incomplete by exact role, omit numeric stop-loss data, and are stale against HEAD."
+    "The adversarial-reviewer role receipt has not been authored by a fresh fork_turns=none provider session.",
+    "Committed predecessor receipts are still incomplete by exact role set (5 required, 4 present)."
   ],
   "live_contract_violations": [
-    "independent-review, adversarial receipt, candidate, owner, and accepted artifacts are absent.",
+    "independent-review.json, adversarial-reviewer receipt, candidate, owner, and accepted artifacts are still absent.",
     "Ten live Phase-4 contracts remain Red at missing independent-review.json.",
-    "Current receipts cannot supply complete provider-resolved measured fresh-context provenance."
+    "Committed predecessor receipts cannot supply complete provider-resolved measured fresh-context provenance for the adversarial-reviewer role."
   ],
-  "prod_wiring_violations": [
-    "Production accepts inherited predecessor provider contexts.",
-    "Production accepts forged or unowned task_id values."
-  ],
+  "prod_wiring_violations": [],
   "route_parity_violations": [],
-  "retry_recommendation": "retry_implementation",
+  "retry_recommendation": "dispatch_adversarial_reviewer",
   "confidence": "high"
 }
