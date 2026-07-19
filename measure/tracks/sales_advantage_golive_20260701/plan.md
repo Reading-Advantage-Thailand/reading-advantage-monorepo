@@ -150,12 +150,13 @@ Do not start Phase 2 until the security gate is green.
 
 ## Phase 3: Deploy + end-to-end QA
 
-- [~] Task: Continue failed release `f5063222-76bd-4b73-a151-3f7994827e09` without replaying completed mutations
-  - [~] Commit a manifest-bound, one-use Cloud Build continuation that deploys only the original immutable image digest.
-  - [~] Reject drift in the original build, backup, artifact, rollback revision, traffic, IAM, domain, repair manifest, or source provenance before mutation.
-  - [~] Verify curriculum/runtime contracts read-only, move traffic to the verified legacy rollback before role repair, and bind the repair receipt to the original build and release commit.
-  - [~] Promote through a trap-protected script that restores the verified rollback on any post-shift verification failure.
-  - [~] Cover validator mismatches, SQL contracts, forbidden replay steps, public verification fixtures, and rollback behavior with automated tests.
+- [x] Task: Continue failed release `f5063222-76bd-4b73-a151-3f7994827e09` without replaying completed mutations
+  - [x] Commit a manifest-bound, one-use Cloud Build continuation that deploys only the original immutable image digest.
+  - [x] Reject drift in the original build, backup, artifact, rollback revision, traffic, IAM, domain, repair manifest, or source provenance before mutation.
+  - [x] Verify curriculum/runtime contracts read-only, move traffic to the verified legacy rollback before role repair, and bind the repair receipt to the original build and release commit.
+  - [x] Promote through a trap-protected script that restores the verified rollback on any post-shift verification failure.
+  - [x] Cover validator mismatches, SQL contracts, forbidden replay steps, public verification fixtures, and rollback behavior with automated tests.
+  - Implementation SHA: `2a24a654`. Focused validation: 24 tests passed; changed-file ESLint, Sales TypeScript, shell/Python/JSON/YAML syntax passed; the pure validator also accepted freshly collected read-only live GCP evidence. Deployment remains a separate release action.
 
 - [x] Task: `gcloud builds submit --config apps/sales-advantage/cloudbuild.yaml` to the `reading-advantage` project; confirm migrate + doctor + deploy steps pass
   - Build `b45acc2f-9694-4962-95b9-4477209799d2`: SUCCESS; revision `sales-advantage-00003-v4d`; image digest `sha256:9cab345f7f070e0d42488c3357ff492471758d0d17dcb85c86e6eac61b5738d0`; 100% traffic.
