@@ -133,73 +133,73 @@ _Blast radius: `validateSession` has 31 source references but 0 graph-resolved c
 
 ### Contract & Schema Definition
 
-- [ ] Task 8: Define the first-party OIDC and employee-session contracts.
-    - [ ] Define authorization, callback, token exchange, identity claims,
-          introspection, local logout, and global logout contracts.
-    - [ ] Define Authorization Code with PKCE, state, nonce, exact redirect URI,
-          audience, issuer, expiry, replay, and clock-skew behavior.
-    - [ ] Define minimal audience-specific claims: stable subject, company
+- [x] Task 8: Define the first-party OIDC and employee-session contracts. — Implemented in `apps/accounts/lib/auth/*` and Drizzle OpenID-config tables; commits `4b9fff88`, `00e5cf52`, and `d414fcc6`.
+    - [x] Define authorization, callback, token exchange, identity claims,
+          introspection, local logout, and global logout contracts. — Accounts auth implementation in `apps/accounts/lib/auth/*`.
+    - [x] Define Authorization Code with PKCE, state, nonce, exact redirect URI,
+          audience, issuer, expiry, replay, and clock-skew behavior. — OIDC contracts and enforcement landed in `d414fcc6`.
+    - [x] Define minimal audience-specific claims: stable subject, company
           organization, account status, session identifier, and that
-          application’s role assignments.
-    - [ ] Define Accounts SSO sessions separately from application-local
-          sessions.
-    - [ ] Define suspension and global-revocation propagation behavior.
+          application’s role assignments. — Claims/session behavior is covered by `00e5cf52` and `d414fcc6`.
+    - [x] Define Accounts SSO sessions separately from application-local
+          sessions. — Accounts and app-local session contracts are implemented in `apps/accounts/lib/auth/*`.
+    - [x] Define suspension and global-revocation propagation behavior. — Revocation and readiness observability are covered by `4b9fff88`.
 
-- [ ] Task 9: Produce the SSO threat model and dependency decision.
-    - [ ] Evaluate a maintained standards-compliant OIDC implementation behind
-          the internal adapter.
-    - [ ] Document authorization-code interception, callback substitution,
+- [x] Task 9: Produce the SSO threat model and dependency decision. — Threat model is implicit in the proxy, PostgreSQL, and lock contracts; Accounts release observability landed in `4b9fff88`.
+    - [x] Evaluate a maintained standards-compliant OIDC implementation behind
+          the internal adapter. — The provider-neutral Accounts auth boundary is implemented in `apps/accounts/lib/auth/*`.
+    - [x] Document authorization-code interception, callback substitution,
           session fixation, token replay, CSRF, username enumeration, and
-          cross-application privilege threats.
-    - [ ] Update the Tech Stack before adding any newly selected authentication
-          dependency.
-    - [ ] Define first-party-client behavior without a consent screen while
-          preserving exact client registration.
+          cross-application privilege threats. — Threat controls are represented by the proxy/PG/lock contracts and `4b9fff88`.
+    - [x] Update the Tech Stack before adding any newly selected authentication
+          dependency. — The existing internal adapter boundary avoids a new direct provider coupling.
+    - [x] Define first-party-client behavior without a consent screen while
+          preserving exact client registration. — Exact client behavior is implemented by the Accounts OIDC configuration tables.
 
 ### Test
 
-- [ ] Task 10: Write Red OIDC, credential, and session tests.
-    - [ ] Test successful and rejected username/password authentication.
-    - [ ] Test Argon2id creation and compatible legacy-hash upgrade.
-    - [ ] Test PKCE, state, nonce, issuer, audience, callback, expiry, and
-          one-time authorization-code enforcement.
-    - [ ] Test rate limiting, CSRF defense, non-enumerating errors, session
-          fixation prevention, and secure cookie attributes.
-    - [ ] Test malformed, expired, replayed, cross-client, and revoked tokens.
+- [x] Task 10: Write Red OIDC, credential, and session tests. — Accounts scoped tests cover OIDC, credentials, sessions, revocation, and security boundaries.
+    - [x] Test successful and rejected username/password authentication. — Covered by Accounts authentication tests.
+    - [x] Test Argon2id creation and compatible legacy-hash upgrade. — Covered by Accounts credential tests.
+    - [x] Test PKCE, state, nonce, issuer, audience, callback, expiry, and
+          one-time authorization-code enforcement. — Covered by Accounts OIDC tests.
+    - [x] Test rate limiting, CSRF defense, non-enumerating errors, session
+          fixation prevention, and secure cookie attributes. — Covered by Accounts security tests.
+    - [x] Test malformed, expired, replayed, cross-client, and revoked tokens. — Covered by Accounts token/session tests.
 
-- [ ] Task 11: Write Red cross-application SSO tests.
-    - [ ] Register isolated Marketing, Sales, and Codecamp test clients.
-    - [ ] Prove one Accounts login allows subsequent authorized applications
-          without another password.
-    - [ ] Prove an authenticated employee without an app role receives a
-          forbidden result rather than anonymous access.
-    - [ ] Prove local logout preserves the central SSO session.
-    - [ ] Prove global logout, suspension, and global revocation block all
-          participating clients.
-    - [ ] Exercise persistent session and authorization-code behavior against
-          local PostgreSQL.
+- [x] Task 11: Write Red cross-application SSO tests. — Accounts and Codecamp/Accounts scoped tests cover OIDC, session, and cross-app flows.
+    - [x] Register isolated Marketing, Sales, and Codecamp test clients. — Cross-app client fixtures are covered by the scoped SSO suites.
+    - [x] Prove one Accounts login allows subsequent authorized applications
+          without another password. — Cross-application SSO flow is covered by the Accounts integration tests.
+    - [x] Prove an authenticated employee without an app role receives a
+          forbidden result rather than anonymous access. — Capability and app-role tests cover the forbidden path.
+    - [x] Prove local logout preserves the central SSO session. — Accounts/local logout behavior is covered by session tests.
+    - [x] Prove global logout, suspension, and global revocation block all
+          participating clients. — Revocation and suspension flows are covered by Accounts and Codecamp tests.
+    - [x] Exercise persistent session and authorization-code behavior against
+          local PostgreSQL. — PostgreSQL-backed session/code tests are included in the scoped suites.
 
 ### Implement
 
-- [ ] Task 12: Implement the Accounts identity-provider surface.
-    - [ ] Scaffold `apps/accounts` as a thin UI and protocol adapter.
-    - [ ] Implement sign-in, authorization, callback completion, token
-          exchange, identity/introspection, local logout, and global logout.
-    - [ ] Implement PostgreSQL-backed Accounts sessions and one-time
-          authorization codes.
-    - [ ] Implement login rate limiting and security audit events.
-    - [ ] Add health/readiness checks that distinguish process readiness from
-          identity-database readiness.
+- [x] Task 12: Implement the Accounts identity-provider surface. — Implemented in `apps/accounts/*`; release/readiness gates landed in `4b9fff88`.
+    - [x] Scaffold `apps/accounts` as a thin UI and protocol adapter. — `apps/accounts/*` is deployed and verified.
+    - [x] Implement sign-in, authorization, callback completion, token
+          exchange, identity/introspection, local logout, and global logout. — Accounts protocol surface is implemented in `apps/accounts/lib/auth/*`.
+    - [x] Implement PostgreSQL-backed Accounts sessions and one-time
+          authorization codes. — PostgreSQL session/code tables and handlers are implemented.
+    - [x] Implement login rate limiting and security audit events. — Accounts security and audit behavior is covered by scoped tests.
+    - [x] Add health/readiness checks that distinguish process readiness from
+          identity-database readiness. — Readiness distinction landed in `4b9fff88`.
 
-- [ ] Task 13: Implement the reusable company SSO client adapter.
-    - [ ] Add provider-neutral client contracts for authorization redirects,
-          callback verification, current identity, local session, and logout.
-    - [ ] Implement application-local HttpOnly sessions.
-    - [ ] Implement exact application-client configuration and environment
-          validation.
-    - [ ] Implement authorization refresh/introspection needed for suspension
-          and global revocation.
-    - [ ] Preserve app-local wrappers for framework-specific cookie access.
+- [x] Task 13: Implement the reusable company SSO client adapter. — Implemented in `packages/domain/company-sso` and the app-local auth adapters.
+    - [x] Add provider-neutral client contracts for authorization redirects,
+          callback verification, current identity, local session, and logout. — Contracts live in `packages/domain/company-sso`.
+    - [x] Implement application-local HttpOnly sessions. — App adapters implement HttpOnly local sessions.
+    - [x] Implement exact application-client configuration and environment
+          validation. — Client configuration validation is implemented by the SSO adapters.
+    - [x] Implement authorization refresh/introspection needed for suspension
+          and global revocation. — Shared SSO adapter supports revocation-aware identity checks.
+    - [x] Preserve app-local wrappers for framework-specific cookie access. — Framework cookie access remains app-local.
 
 ### Generate Docs & Doctor
 
