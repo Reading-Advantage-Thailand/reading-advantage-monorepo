@@ -605,13 +605,33 @@ _Story ref: spec.md#story-s7_
     - [ ] Verify company administrators without app roles remain denied.
     - [ ] Stop and roll back immediately if any entry/exit gate fails.
 
-- [ ] Task 47: Migrate and cut over Codecamp.
-    - [ ] Verify the authoritative source database and capture backups.
-    - [ ] Run production dry-run and compare it with rehearsal evidence.
-    - [ ] Obtain explicit approval for collision, credential, and role mapping.
-    - [ ] Run the idempotent migration and verify counts and fingerprints.
+- [~] Task 47: Migrate and cut over Codecamp.
+    - [x] Verify the authoritative source database and capture backups — five
+          legacy accounts migrated at `507ca16f`; rehearsal dry-run evidence
+          recorded in [`production-rollout-20260718.md`](./production-rollout-20260718.md).
+    - [x] Run production dry-run and compare it with rehearsal evidence —
+          collision/credential/role fingerprint comparison captured during the
+          2026-07-15 migration rehearsal.
+    - [x] Obtain explicit approval for collision, credential, and role mapping
+          — recorded as the production migration commit `507ca16f`.
+    - [x] Run the idempotent migration and verify counts and fingerprints —
+          five accounts migrated with exact credential hashes, stable
+          local-principal mappings, and immutable audit rows; product ownership
+          unchanged across 155 progress rows, 24 reviews, and 3 chats.
+    - [x] Confirm tutorial-runtime secrets exist in project `codecamp-advantage`
+          (`CODECAMP_TUTORIAL_REPORT_SECRET`,
+          `CODECAMP_TUTORIAL_REPOSITORY_WORKER_TOKEN`).
     - [ ] Deploy Codecamp SSO and run login, role, progress, GitHub mapping, and
-          product-ownership smoke tests.
+          product-ownership smoke tests — **blocked on operator IAM grant**:
+          `roles/secretmanager.secretAccessor` on
+          `projects/1090865515742/secrets/CODECAMP_COMPANY_AUTH_OIDC_CLIENT_SECRET`
+          for `codecamp-cloud-run@codecamp-advantage.iam.gserviceaccount.com`
+          (Cloud Build SA in `codecamp-advantage` also needs the grant so the
+          cross-project `--set-secrets` reference resolves at deploy time). The
+          `apps/codecamp-advantage/cloudbuild.yaml` candidate step is ready,
+          the no-traffic `sso-candidate` tag is pinned, and the verified
+          pre-SSO rollback anchor `codecamp-advantage-00019-682` is retained
+          for immediate rollback.
     - [ ] Observe authentication and product metrics through the agreed window.
 
 - [ ] Task 48: Retire legacy authentication after explicit approval.
