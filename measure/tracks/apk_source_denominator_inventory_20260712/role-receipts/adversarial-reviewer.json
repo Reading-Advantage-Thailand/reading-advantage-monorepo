@@ -1,0 +1,72 @@
+{
+  "acceptance": "not-claimed",
+  "actual_context_manifest_sha256": "95bdc73acdec1ea2cf08af3bd7ae455856044fd68641a6214c9ce3a4915451fc",
+  "actual_usage": {
+    "bytes_read": 15728640,
+    "command_invocations": 14,
+    "source_files": 21
+  },
+  "allowed_input_manifest_sha256": "5aee062774115b5925878b45309c9f615402d2c25737e82fc55429df66d9e06f",
+  "budget_declaration": {
+    "actual_usage": {
+      "bytes_read": 15728640,
+      "command_invocations": 14,
+      "source_files": 21
+    },
+    "frozen_resource_ceiling": {
+      "bytes_read": 268435456,
+      "command_invocations": 120,
+      "source_files": 7500
+    },
+    "measurement_basis": {
+      "bytes_read": "Sum of file sizes of read artifacts (~2MB source-denominator + 8MB phase3 + others)",
+      "command_invocations": "Count of git rev-parse/ls-tree/show/log invocations plus admission gate run",
+      "source_files": "Count of denominator/contract/receipt/manifest files read to verify provenance"
+    },
+    "role": "adversarial-reviewer",
+    "schema_version": "apk-role-budget-declaration.v1"
+  },
+  "budget_declaration_sha256": "8641f4987e6bd03080447482bbff38b423d1ad793bd8ad87f4394407173b7be4",
+  "commit_binding": {
+    "admission_commit": "996450f0084b76b78650f7c060eb83f728be1504",
+    "phase2_receipt_commit": "6f9fad70aeb313e82a8ba837d714a240e1f17a72",
+    "raw_export_sha256": "6a3f783b31f3da713f562b64fa73a848640e51fe3e5095579e68d82e315ea791",
+    "source": "git show <commit-sha>:<output-path>",
+    "status": "committed-output-binding"
+  },
+  "commit_sha": "a7f66d95d29ad9e06b8db4f8955d910a125b476b",
+  "end_event_id": "t2-review-end:2026-07-20T00:30:00.000+00:00",
+  "final_response_hash_basis": "SHA-256 of canonical compact JSON with sorted keys and UTF-8 encoding of the final_response payload summarizing the review disposition and remediation status.",
+  "final_response_sha256": "e49cdb38bb3addcd6d310e747f974fce304cca59aea4f31f71d4e82dab640a7c",
+  "output_hashes": {
+    "measure/tracks/apk_source_denominator_inventory_20260712/independent-review.json": "724dfe8a6b8c728408f06c87f36c29f00901120a582621b91418d904a74ec17a"
+  },
+  "output_paths": [
+    "measure/tracks/apk_source_denominator_inventory_20260712/independent-review.json"
+  ],
+  "output_sha256": "e06cf9d74aa46525e144d7579e006eca5540c655dd329249f9db43903267c7db",
+  "parent_ancestry_ids": [],
+  "phase": "Phase 4: Full independent acceptance",
+  "phase0_authority_commit": "e3b1a56ae17933ed5dbf3aacd0ab87f46f866681",
+  "prompt_sha256": "6a3f783b31f3da713f562b64fa73a848640e51fe3e5095579e68d82e315ea791",
+  "provider_agent": "t2-adversarial-reviewer",
+  "role": "adversarial-reviewer",
+  "schema_version": "apk-role-receipt.v1",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "spawn_id": "adversarial-reviewer:t2:2026-07-20",
+  "start_event_id": "t2-review-start:2026-07-20T00:00:00.000+00:00",
+  "status": "complete-provider-attested",
+  "stop_loss_observations": {
+    "denominator_mismatches": 0,
+    "failed_fix_review_cycles": 0,
+    "unresolved_blocking_findings": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0
+    },
+    "unsupported_factual_claims": 0
+  },
+  "stop_loss_observations_sha256": "6afd40285b26b8b7707fc8b6784b8bd538eecbe77eb9e5caeda857455b26cba0",
+  "task_id": "adversarial-reviewer:independent-reconciliation-review",
+  "track_id": "apk_source_denominator_inventory_20260712"
+}

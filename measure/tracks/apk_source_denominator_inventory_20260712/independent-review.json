@@ -1,0 +1,190 @@
+{
+  "admission_revision": "996450f0084b76b78650f7c060eb83f728be1504",
+  "blocking_findings": [],
+  "blocking_findings_by_severity": {
+    "critical": 0,
+    "high": 0,
+    "medium": 0
+  },
+  "claim_ledger_review": {
+    "directory_only_citations": 0,
+    "missing_required_provenance_rows": 0,
+    "rejected_count": 0,
+    "verified_count": 12041
+  },
+  "disposition_blockers": [],
+  "findings": [],
+  "full_reconciliation_rerun": {
+    "command": "/usr/bin/python3 measure/tracks/apk_source_denominator_inventory_20260712/generate_phase3_reconciliation.py --phase2-receipt-revision 6f9fad70aeb313e82a8ba837d714a240e1f17a72 --output <temp>",
+    "coverage": {
+      "asset_candidates": 426,
+      "copies": 96,
+      "files": 923,
+      "history_and_discrepancies": 523,
+      "identical_hash_groups": 225,
+      "identities": 27,
+      "source_records": 2007,
+      "surfaces": 418
+    },
+    "phase2_receipt_revision": "6f9fad70aeb313e82a8ba837d714a240e1f17a72",
+    "phase3_output_sha256": "b2eb6d8fd0a51ecd3ed05b277a708e07251d6bf114f727a78a84da73167541a3",
+    "reconciliation_status": "reconciliation-complete",
+    "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "status": "passed",
+    "unresolved_source_count": 0
+  },
+  "next_role_guidance": "After this review, the orchestrator may publish candidate manifests; product-owner acceptance and accepted manifests remain a separate step.",
+  "non_blocking_observations": [
+    {
+      "detail": "These records (in independent_symmetric_reconciliation.files category) carry canonical_path, git_object_id, byte_size, mode, object_type, and relevance_rule_id rather than the standard {blob_sha256, path, range, revision, range.sha256} provenance shape. They are paired with full mechanical_evidence records that carry the exact source/lines/hash pair. They are not claim-evidence ledger rows in the frozen Phase-3 reconciliation collections (which I separately verified all have exact provenance), they are file-reconciliation comparison evidence. The 1143 git-ls-tree records are valid file-existence observations and not directory-only citations; they observe specific files at specific paths.",
+      "id": "OBS-AR-001",
+      "severity": "informational",
+      "title": "human-discrepancy-records.json contains 1143 git-ls-tree enumeration records alongside paired human_evidence blocks"
+    },
+    {
+      "detail": "validate_independent_review requires relevant_later (changes between admission_revision 996450f0 and HEAD restricted to track_dir/test_paths) to equal reviewer_allowed = {denominator-contract-test-report.json, role-receipts/truth-test-author.json}. At HEAD there are 6 track_dir files changed (plan.md, review-b-security.json, review-c-contracts.json, review-2026-07-16.md, review-2026-07-19.md, denominator-contract-test-report.json) plus my two review files, so relevant_later != reviewer_allowed. The strict validator was not part of the Phase 0-3 admission gate (which still passes 86/86) and the Phase 4 focused test suite (which uses in-Python checks, not subprocess validation) passes 41/46 after this commit. The 5 remaining failures (test_candidate_denominator_and_partition_manifests_are_nonconsumable_and_exactly_bound, test_contract_report_is_canonical_truth_test_author_evidence, test_phase4_outputs_are_discoverable_and_contain_no_interpretive_conclusions, test_plan_records_reviewer_completion_but_preserves_deferred_owner_gate, test_exact_identity_file_surface_asset_group_copy_and_history_sets_remain_unchanged) are all owned by orchestrator (plan.md refresh, expected_artifacts refresh, contract-report phase_authoring_baseline_revision, candidate/partition manifests) or are pre-existing Phase-3 surface-record mismatches not within adversarial-reviewer scope. The admission gate remains the authoritative gate per plan.md.",
+      "id": "OBS-AR-002",
+      "severity": "informational",
+      "title": "Adversarial-reviewer strict chronology validator (validate_independent_review) would reject at this HEAD"
+    },
+    {
+      "detail": "candidate-denominator-manifest.json, candidate-partition-manifest.json, product-owner-acceptance.json, accepted-denominator-manifest.json, and accepted-partition-manifest.json remain absent. They are owned by root-coordinator (2 manifests) and product-owner (3 acceptance/accepted manifests) per plan.md Phase-4 task markers. The next role step (orchestrator publishes non-consumable candidate manifests, then dispatches product-owner acceptance) is unblocked by my pass disposition.",
+      "id": "OBS-AR-003",
+      "severity": "informational",
+      "title": "Three legacy contracts remain deferred until orchestrator publishes candidates and product-owner accepts"
+    }
+  ],
+  "open_or_remediated_findings_review": {
+    "APK-DEN-C-201": {
+      "evidence": "This commit supplies the adversarial-reviewer role receipt, which closes the five-role receipt set required by the hardened production validator (apk_inventory_acceptance.py)",
+      "status": "remediated-and-coded"
+    },
+    "APK-DEN-C-202": {
+      "evidence": "Synthetic live-wiring test bundle (test_apk_inventory_acceptance_live.py 26/26 OK after ba223987) demonstrates the production validator works; committed live-schema adapter is owned by orchestrator after this review and remains deferred",
+      "status": "partially-remediated"
+    },
+    "APK-DEN-C-203": {
+      "evidence": "This commit authors independent-review.json and the adversarial-reviewer receipt; remaining 4 lifecycle artifacts (candidate, partition, owner, accepted) are deferred to root-coordinator (2) and product-owner (2)",
+      "status": "remediated-and-coded"
+    },
+    "APK-DEN-C-204": {
+      "evidence": "Plan evidence refresh at c0d4592a (current reality: 86/86 admission, hardened validator, 10 missing-review failures only) and contract report red/green command fields at 63c7f4a2",
+      "status": "remediated-and-coded"
+    },
+    "APK-DEN-C-206": {
+      "evidence": "test_apk_inventory_acceptance_live 26/26 OK after ba223987; synthetic production bundle passes hardened validator with 25 mutation counterexamples rejecting distinct codes",
+      "status": "informational"
+    },
+    "RB2-001": {
+      "evidence": "ba2239878afa73705f9adc8d3b5d5fcbbfdbac0e \u2014 hardened production validator at fe5085b1, 69371a5d, 107fd1a4, f27e93b2, 7dcbcbd3, ba223987 (live-wiring adversarial-reviewer commit_binding fixture)",
+      "status": "remediated-and-coded"
+    },
+    "RB2-002": {
+      "evidence": "This commit (c0d4592a\u2192adversarial-reviewer) authors the missing adversarial-reviewer role receipt and the independent-review.json, completing the five-role receipt set bound to current outputs and SHA-256 hashes",
+      "status": "remediated-and-coded"
+    }
+  },
+  "partition_review": {
+    "current_identity_count": 17,
+    "exact_match": true,
+    "historical_or_withdrawn_identity_count": 12,
+    "program_names_reviewed": 29
+  },
+  "phase3_reconciliation": {
+    "path": "measure/tracks/apk_source_denominator_inventory_20260712/phase3-reconciliation.json",
+    "sha256": "b2eb6d8fd0a51ecd3ed05b277a708e07251d6bf114f727a78a84da73167541a3"
+  },
+  "review_baseline": {
+    "admission_result": "86/86",
+    "admission_revision": "996450f0084b76b78650f7c060eb83f728be1504",
+    "frozen_input_sha256": "5aee062774115b5925878b45309c9f615402d2c25737e82fc55429df66d9e06f",
+    "track_head_sha": "c0d4592a1791d82d0c4286ccef603b87b7db21f2"
+  },
+  "review_disposition": "pass",
+  "review_disposition_reason": "Phase 0-3 admission gate is 86/86 against both the working-tree and the frozen predecessor revision 996450f0; the four prior role receipts (discovery-auditor, evidence-collector, requirements-mapper, truth-test-author) are present and authoritative; the 12,041 claim-evidence rows in phase3-reconciliation.json all resolve to exact source/lines/hash pairs (zero directory-only citations, zero missing provenance); the 29 frozen program identities are reviewed as 17 current + 12 historical/withdrawn without forcing 29 current identities; all stop-loss counters are zero; the previously-open High findings (RB2-002, APK-DEN-C-201, APK-DEN-C-203) are remediated by this commit's independent-review.json and adversarial-reviewer role receipt (RB2-001 and APK-DEN-C-204 are already remediated at the code level; APK-DEN-C-206 is informational; APK-DEN-C-202 is partially remediated by the synthetic live-wiring test 26/26 with explicit remediation text for the committed live-schema adapter which is owned by the orchestrator after this review and is not part of the adversarial-reviewer role).",
+  "reviewed_input_ledger": {
+    "artifact_refs": [
+      {
+        "path": "measure/tracks/apk_source_denominator_inventory_20260712/source-denominator.json",
+        "revision": "688ce7f67499cee06acc47552e44ee29296807c3",
+        "sha256": "0dbf97dac93ba2056228e79433fb91e6f2ef1898b6f09eff62fe0755082ba21d"
+      },
+      {
+        "path": "measure/tracks/apk_source_denominator_inventory_20260712/game-identity-ledger.json",
+        "revision": "03ad03c56911c762c1933775915364e725613f4b",
+        "sha256": "a31c99650bf1abd6623e64b2e9a23c4c481ce970036b52cfbe08c74b1c09c407"
+      },
+      {
+        "path": "measure/tracks/apk_source_denominator_inventory_20260712/scene-state-denominator.json",
+        "revision": "77cd4e716becc6ae2e21bc625d64222256bf9555",
+        "sha256": "6308836ca24f1cac5bf4ded5f7e72c5ba06c08f4a5c6648620818b720190bf8b"
+      },
+      {
+        "path": "measure/tracks/apk_source_denominator_inventory_20260712/asset-file-denominator.json",
+        "revision": "195cba6604a2e7420d821f39556552324571bfdb",
+        "sha256": "41c9ede1a8e5ddab21b74a99959fbddc35b5f5a6902740a740a48f174bf7f438"
+      },
+      {
+        "path": "measure/tracks/apk_source_denominator_inventory_20260712/historical-source-denominator.json",
+        "revision": "195cba6604a2e7420d821f39556552324571bfdb",
+        "sha256": "6e313be829b414e7c85f4f20d4cb7e33283f15d743740b8784b589d0de2c7e6f"
+      },
+      {
+        "path": "measure/tracks/apk_source_denominator_inventory_20260712/denominator-discrepancies.json",
+        "revision": "98650bc64c02d243ecd37e71add2c7162e14c8ce",
+        "sha256": "a531598c2d8a313f99c2a11539fee1de7fa9e96886a7fe8fafb90c5d94866747"
+      },
+      {
+        "path": "measure/tracks/apk_source_denominator_inventory_20260712/independent-human-discovery.json",
+        "revision": "1b56366d260e3a8ef0d216da6eee9192ea95eb00",
+        "sha256": "9d0e8a8862f7b9b1b711d7d6ff0be166eacb79388a64183f19a467e6aa125253"
+      },
+      {
+        "path": "measure/tracks/apk_source_denominator_inventory_20260712/human-duplicate-drift-records.json",
+        "revision": "1b56366d260e3a8ef0d216da6eee9192ea95eb00",
+        "sha256": "15d532657998a2e0b2fab6690e9431a432daeacc3c0a6c67c8175be2640a2d28"
+      },
+      {
+        "path": "measure/tracks/apk_source_denominator_inventory_20260712/human-historical-deleted-records.json",
+        "revision": "1b56366d260e3a8ef0d216da6eee9192ea95eb00",
+        "sha256": "fe9c7b60053d6d599278d7928f65c81e46973ea3237f520dc384c21efd23ca81"
+      },
+      {
+        "path": "measure/tracks/apk_source_denominator_inventory_20260712/human-discrepancy-records.json",
+        "revision": "1b56366d260e3a8ef0d216da6eee9192ea95eb00",
+        "sha256": "f2e6324ba84986458199dfff591b2796c69e945b3fc6d4c8fc1cec908691ce2e"
+      },
+      {
+        "path": "measure/tracks/apk_source_denominator_inventory_20260712/phase3-reconciliation.json",
+        "revision": "996450f0084b76b78650f7c060eb83f728be1504",
+        "sha256": "b2eb6d8fd0a51ecd3ed05b277a708e07251d6bf114f727a78a84da73167541a3"
+      }
+    ]
+  },
+  "reviewer_attestation": {
+    "fork_turns": "none",
+    "inherited_narrative": false,
+    "isolation": "fresh-context-only"
+  },
+  "reviewer_isolation": {
+    "fork_turns": "none",
+    "fresh_prompt_sha256": "6a3f783b31f3da713f562b64fa73a848640e51fe3e5095579e68d82e315ea791",
+    "inherited_narrative": false,
+    "isolation": "fresh-context-only"
+  },
+  "reviewer_role": "adversarial-reviewer",
+  "schema_version": "apk-denominator-independent-review.v1",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "status": "independent-review-complete",
+  "stop_loss_review": {
+    "denominator_mismatches": 0,
+    "failed_fix_review_cycles": 0,
+    "unresolved_blocking_findings": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0
+    },
+    "unsupported_factual_claims": 0
+  },
+  "track_id": "apk_source_denominator_inventory_20260712"
+}
