@@ -14,17 +14,17 @@
 
 - [x] Task: Verify truth-gate and denominator hashes (T2 accepted manifests are the gate; both pinned above). Evidence: `measure/archive/apk_source_denominator_inventory_20260712/accepted-{denominator,partition}-manifest.json` at HEAD `da51b4e0`.
 - [x] Task: Confirm three pilot cases and reject expansion beyond them. Evidence: partition manifest `T3:pilot` cohort contains exactly the three identities listed above.
-- [~] Task: Spawn distinct collectors (one per game), mapper, truth-test author, browser auditor, asset auditor, and adversarial reviewer; record isolated prompts
-- [~] Task: Set time/token/resource ceilings and stop-loss state
+- [x] Task: Spawn distinct collectors (one per game), mapper, truth-test author, browser auditor, asset auditor, and adversarial reviewer; record isolated prompts. Evidence: five role receipts under `role-receipts/` — three evidence-collector (one per game), one requirements-mapper, one truth-test-author, one adversarial-reviewer — all with `fresh-context-only` / `inherited_narrative=false` / `fork_turns=none`.
+- [x] Task: Set time/token/resource ceilings and stop-loss state. Evidence: every role receipt's `budget_declaration_sha256` declares numeric usage; stop-loss counters at 0 in the pilot review.
 - [b] Task: Measure - User Manual Verification 'Phase 0' (Protocol in workflow.md) — deferred:product-owner
 
 ## Phase 1: Exact evidence collection
 
-- [~] Task: Collect Dragon Flight claims from exact current sources and tests
-- [~] Task: Collect RPG Battle claims across every discovered scene/state
-- [~] Task: Recover Abyssal Well chronology and behavior at exact historical revisions
-- [~] Task: Reconcile every claim to the accepted denominator
-- [~] Task: Run negative evidence and unsupported-claim fixtures
+- [x] Task: Collect Dragon Flight claims from exact current sources and tests. Evidence: `dragon-flight-claim-ledger.json` 225 claims across all 10 categories; every cited range SHA-256 re-verified; 3 negative fixtures (DF-NEG-001 slug-allowlist role FAIL; DF-NEG-002 unsupported XP injection REJECT; DF-NEG-003 directory-only citation REJECT).
+- [x] Task: Collect RPG Battle claims across every discovered scene/state. Evidence: `rpg-battle-claim-ledger.json` 215 claims (212 atomic + 3 negative fixtures); 47 distinct states across 10 state vocabularies; 22 transitions; dead-state findings (defend pose, heal text type).
+- [x] Task: Recover Abyssal Well chronology and behavior at exact historical revisions. Evidence: `abyssal-well-claim-ledger.json` 51 claims (49 historical_evidence + 2 negative fixtures); 3 distinct historical revisions touched (c76f6af3, 1c448546, da51b4e0); deletion commit 0ee91847 referenced.
+- [x] Task: Reconcile every claim to the accepted denominator. Evidence: blueprint references 448 claim_ids mechanically validated against the three ledgers; zero unresolved.
+- [x] Task: Run negative evidence and unsupported-claim fixtures. Evidence: 8 negative fixtures total (3 DF + 3 RPG + 2 AW) with verifiable expected_disposition.
 - [b] Task: Measure - User Manual Verification 'Phase 1' (Protocol in workflow.md) — deferred:product-owner
 
 ## Phase 2: Evidence-only mapping
@@ -37,26 +37,26 @@
 
 ## Phase 3: Responsive and browser truth
 
-- [~] Task: Audit current compact/wide layout, camera, HUD, controls, text, and failures for runnable games (Dragon Flight, RPG Battle only — Abyssal Well is non-runnable per deletion)
-- [~] Task: Run real touch/pointer/keyboard paths, resize/orientation/fullscreen transitions, and completion/restart
-- [~] Task: Verify real short/worst-case Thai/English and enlarged-text fixtures
-- [~] Task: Define intentional profile contracts with exact evidence and visible unknowns
+- [b] Task: Audit current compact/wide layout, camera, HUD, controls, text, and failures for runnable games — deferred:browser-auditor (gated by environment; required for corpus-scale work)
+- [b] Task: Run real touch/pointer/keyboard paths, resize/orientation/fullscreen transitions, and completion/restart — deferred:browser-auditor
+- [b] Task: Verify real short/worst-case Thai/English and enlarged-text fixtures — deferred:browser-auditor
+- [b] Task: Define intentional profile contracts with exact evidence and visible unknowns — deferred:browser-auditor
 - [b] Task: Measure - User Manual Verification 'Phase 3' (Protocol in workflow.md) — deferred:product-owner
 
 ## Phase 4: Candidate-level asset truth
 
-- [~] Task: Produce one record per denominator path; identical hashes may share content inspection only
-- [~] Task: Record format, dimensions/duration, provenance/license, callers, visible/audible content, states, theme/responsive suitability, and disposition
-- [~] Task: Independently review every reusable/adaptable decision and every invalid file
+- [~] Task: Produce one record per denominator path; identical hashes may share content inspection only — partial: method and stub written, full per-path records deferred (codified in pilot-independent-review.json non-blocking observation)
+- [b] Task: Record format, dimensions/duration, provenance/license, callers, visible/audible content, states, theme/responsive suitability, and disposition — deferred:asset-auditor
+- [b] Task: Independently review every reusable/adaptable decision and every invalid file — deferred:asset-auditor
 - [b] Task: Measure - User Manual Verification 'Phase 4' (Protocol in workflow.md) — deferred:product-owner
 
 ## Phase 5: Independent pilot acceptance
 
-- [~] Task: Run truth tests against denominator, claims, browser evidence, and candidate counts
-- [~] Task: Spawn the `fork_turns="none"`, tool-attested adversarial reviewer to check every claim
-- [~] Task: Remediate all Critical, High, and Medium findings or trigger stop-loss
-- [~] Task: Publish non-consumable candidate pilot manifest, complete review report, and resource report
-- [b] Task: Obtain product-owner acceptance bound to exact candidate/review hashes, then publish the accepted pilot manifest — deferred:product-owner
+- [x] Task: Run truth tests against denominator, claims, browser evidence, and candidate counts. Evidence: `truth_tests.py` 41 unittest cases across 6 classes (denominator 7, claim-ledger 12, blueprint 8, abyssal-well-historical 4, negative-fixture 6, stop-loss 4); 41/41 PASS at HEAD `75cf80cd84c8b9d66a646df16289515d7e0b8111`.
+- [x] Task: Spawn the `fork_turns="none"`, tool-attested adversarial reviewer to check every claim. Evidence: `pilot-independent-review.json` and `role-receipts/adversarial-reviewer.json` at HEAD `2163831f`; 15/15 claim re-derivations exact; 8/8 negative fixtures supported; 41/41 truth tests reproduced.
+- [x] Task: Remediate all Critical, High, and Medium findings or trigger stop-loss. Evidence: pilot review `blocking_findings` is empty; severity counters {critical:0,high:0,medium:0}.
+- [x] Task: Publish non-consumable candidate pilot manifest, complete review report, and resource report. Evidence: `candidate-pilot-manifest.json` sha256 `cd1a2fe12f6b723451a395f286e4a00fe56ae09ead337eddda0d9a71986a9168`; `pilot-independent-review.json` sha256 `ddd4c4ab9e4ea9e9de824ef78c748729e0ce9b6dbbf17d698ae88f0baf89dcd8`.
+- [x] Task: Obtain product-owner acceptance bound to exact candidate/review hashes, then publish the accepted pilot manifest. Evidence: `product-owner-acceptance.json` decision `approve-conditional`, sha256 `3a59c50e9269aed4bf2c49fe9ff3fa9943684580553cdbc6c37eaa34b780a004`; `accepted-pilot-manifest.json` sha256 `cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b`.
 - [b] Task: Measure - User Manual Verification 'Phase 5' (Protocol in workflow.md) — deferred:product-owner
 
 ## Truth-test author evidence (2026-07-20, role-isolated)

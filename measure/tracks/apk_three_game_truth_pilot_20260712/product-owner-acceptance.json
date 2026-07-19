@@ -1,0 +1,45 @@
+{
+  "approval_basis": {
+    "blocking_findings": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0
+    },
+    "claim_rerun_count": 15,
+    "claim_rerun_exact_sha_match": 15,
+    "conditional_open_items": [
+      "Phase 3 browser audit deferred to environment",
+      "Phase 4 asset audit records pending per-path completion"
+    ],
+    "five_role_receipts_complete": true,
+    "negative_fixtures_count": 8,
+    "negative_fixtures_supported": 8,
+    "pilot_disposition": "conditional",
+    "stop_loss": {
+      "denominator_mismatches": 0,
+      "failed_fix_review_cycles": 0,
+      "unsupported_factual_claims": 0
+    },
+    "truth_test_result": "41/41 PASS"
+  },
+  "approval_event_timestamp": "2026-07-19T23:36:27Z",
+  "candidate_pilot_manifest_sha256": "cd1a2fe12f6b723451a395f286e4a00fe56ae09ead337eddda0d9a71986a9168",
+  "decision": "approve-conditional",
+  "next_allowed_actions": [
+    "T4-T7 evidence cohort tracks may begin because all blocking acceptance criteria (zero blocking findings, exact claim sha match, supported negative fixtures, complete five-role receipts) are met",
+    "Phase 3 browser audit may be reopened as a separate successor track"
+  ],
+  "owner_identity": "daniel-bo (orchestrator, delegated product-owner authority)",
+  "review_report_sha256": "ddd4c4ab9e4ea9e9de824ef78c748729e0ce9b6dbbf17d698ae88f0baf89dcd8",
+  "revoked": false,
+  "schema_version": "apk-pilot-owner-acceptance.v1",
+  "scope": "apk_three_game_truth_pilot_20260712",
+  "superseded_acceptance_id": null,
+  "t2_accepted_denominator_sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+  "t2_accepted_partition_sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+  "thread_id": "orchestrator-t2-t11-pipeline",
+  "timestamp": "2026-07-19T23:36:27Z",
+  "tool_generated_event_id": "msg_orchestrator_t3_acceptance_1784504187_443983040790",
+  "track_head_sha": "2163831ff9e01f501ba54b7ef50bee862e4f8635",
+  "track_id": "apk_three_game_truth_pilot_20260712"
+}

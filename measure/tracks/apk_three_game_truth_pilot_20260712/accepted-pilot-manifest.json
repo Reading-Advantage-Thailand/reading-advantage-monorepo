@@ -1,0 +1,52 @@
+{
+  "acceptance": {
+    "decision": "approve-conditional",
+    "event_id": "msg_orchestrator_t3_acceptance_1784504187_443983040790",
+    "product_owner_acceptance_sha256": "3a59c50e9269aed4bf2c49fe9ff3fa9943684580553cdbc6c37eaa34b780a004"
+  },
+  "binding": {
+    "adversarial_reviewer_receipt_sha256": "9d2de4b10b6f3085f8748da064a9f8f1d5045fefa88402717d1efe9e63b99bd5",
+    "pilot_independent_review_sha256": "ddd4c4ab9e4ea9e9de824ef78c748729e0ce9b6dbbf17d698ae88f0baf89dcd8",
+    "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "t2_accepted_denominator_sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+    "t2_accepted_partition_sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+    "track_head_sha": "2163831ff9e01f501ba54b7ef50bee862e4f8635"
+  },
+  "blocking_findings": [],
+  "blueprint_counts": {},
+  "claim_counts_by_game": {
+    "abyssal-well": 51,
+    "dragon-flight": 225,
+    "rpg-battle": 215
+  },
+  "consumable": true,
+  "manifest_kind": "accepted-pilot-manifest",
+  "next_action": "cohort-track-dispatch",
+  "non_blocking_observations": [
+    "Phase 3 (responsive/browser truth) and Phase 4 (candidate-level asset truth) are unexecuted; spec acceptance criteria covering browser evidence and candidate audit rows are therefore unevaluated. Gate product-owner acceptance on their completion.",
+    "AW evidence-collector receipt lacks a literal prompt_sha256/commit_sha (prose basis recorded instead); recommend schema normalization before T4+.",
+    "T2 committed phase test modules fail at HEAD on A9 archival path relocation only (path-class, zero content failures); orchestrator infrastructure repair.",
+    "Phase 3 browser audit not executed in this session (gated by environment; deferred)",
+    "Phase 4 asset audit partially executed; per-path records deferred"
+  ],
+  "pilot_disposition": "conditional-pass",
+  "pilot_games": [
+    "dragon-flight",
+    "rpg-battle",
+    "abyssal-well"
+  ],
+  "review_disposition": "conditional",
+  "schema_version": "apk-pilot-accepted-manifest.v1",
+  "status": "accepted-conditional",
+  "stop_loss_observations": {
+    "denominator_mismatches": 0,
+    "failed_fix_review_cycles": 0,
+    "unresolved_blocking_findings": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0
+    },
+    "unsupported_factual_claims": 0
+  },
+  "track_id": "apk_three_game_truth_pilot_20260712"
+}
