@@ -162,6 +162,7 @@ describe("Marketing protected-route permission inventory", () => {
       "POST /api/auth/logout",
       "GET /api/auth/session",
       "GET /api/health/db",
+      "GET /api/ready",
     ]);
     const protectedHandlers = new Set<RouteHandlerKey>(
       MARKETING_ROUTE_PERMISSION_INVENTORY.map(

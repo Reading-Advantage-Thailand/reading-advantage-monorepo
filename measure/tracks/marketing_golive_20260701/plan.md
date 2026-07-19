@@ -3,7 +3,7 @@
 > **Spec:** [`spec.md`](./spec.md)
 > **Track ID:** `marketing_golive_20260701`
 > **Pattern:** deploy targets Cloud Run in the appropriate GCP project, `asia-southeast1`. Cloudbuild DB-gate steps mirror `apps/codecamp-advantage/cloudbuild.yaml`, but the **Dockerfile is vinext-specific** (see spec "vinext ≠ Next.js standalone").
-> **Methodology:** per `measure/workflow.md`. Deploy/infra tasks are verification-gated (build → migrate → doctor → deploy → smoke).
+> **Methodology:** per `measure/workflow.md`. Deploy/infra tasks are verification-gated (build → migrate → doctor/runtime contract → capture current release → no-traffic candidate → candidate health/readiness → exact revision promotion → mapped-domain verification → release/rollback evidence).
 
 ---
 
@@ -58,9 +58,13 @@ Do not start Phase 2 until this is green — the app currently leaks decrypted A
 - [x] Task: Write `apps/marketing/Dockerfile` per the above; `docker build -f apps/marketing/Dockerfile .` succeeds and the container boots and serves `/`
   - Written at `apps/marketing/Dockerfile`. The exact clean release snapshot passed all 18 dependency-aware build tasks locally and Cloud Build produced image digest `sha256:e9f0e5c456b05d4d2b0586964e11d5db57b890f9ad93c27af92f0bc8e50533fc`.
 - [x] Task: Write `apps/marketing/cloudbuild.yaml`
-  - [x] build-image → push-image → migrate-db (shared journal through `0042_company_product_principal_local_unique`) → doctor-check (requires exact `0042`) → runtime-db-contract → deploy-cloudrun → allow-public-invoker
+  - [x] build-image → push-image → migrate-db (shared journal through `0042_company_product_principal_local_unique`) → doctor-check (requires exact `0042`) → runtime-db-contract
+  - [x] capture the exact revision/image serving 100% before release; deploy a collision-safe build-unique candidate with no traffic; establish public access; bind the candidate tag to the latest-created revision and exact release digest
+  - [x] verify candidate `/api/health/db` plus `/api/ready` (Marketing DB and exact Accounts service identity) before explicitly promoting that revision to 100%
+  - [x] verify the `marketing.reading-advantage.com` mapping conditions, custom-domain health/readiness and smoke checks; emit the clean source SHA, exact previous/candidate revisions and images, and an executable previous-revision rollback command
   - [x] service name `marketing`, region `asia-southeast1`, Cloud SQL attach, `--set-secrets` for the runtime database URL, OIDC client secret, LLM provider keys, and settings-encryption key
   - Written at `apps/marketing/cloudbuild.yaml`. Uses `$PROJECT_ID` for AR path (`asia-southeast1-docker.pkg.dev/$PROJECT_ID/marketing/marketing`).
+  - Staged-release correction is executable-test-backed and documented at `docs/deployment/marketing-cloud-run-release.md`; it has not been submitted from the current workspace.
 - [x] Task: Provision Cloud SQL marketing runtime DB (or schema) with the current shared migration journal applied; wire `DATABASE_URL`/`DIRECT_DATABASE_URL`
   - Production database `marketing` uses separate non-inheriting migration/runtime roles. Final build `7a6597f5-5a51-406e-98c5-5e264b8358bf` passed migrate, doctor, grants, and runtime privilege probes.
 - [x] Task: Provision Secret Manager entries for every secret referenced by cloudbuild
@@ -77,6 +81,8 @@ Do not start Phase 2 until this is green — the app currently leaks decrypted A
 
 ## Phase 3: Deploy + manual QA
 
+- [ ] Task: From an exact clean release commit, submit the staged pipeline with the exact source SHA substitution; retain the final `marketing_release_promoted` record and confirm candidate verification preceded exact revision promotion, mapped-domain verification, and custom-domain smoke
+  - Pending: production still reflects the previously accepted direct-traffic release evidence below. Do not mark this correction deployed until the staged build succeeds and its revision/image/rollback evidence is recorded.
 - [x] Task: `gcloud builds submit --config apps/marketing/cloudbuild.yaml`; confirm migrate + doctor + deploy steps pass
   - Final accepted build `2e1d5b73-4118-480f-aeea-fe8f50db14b2`: SUCCESS. Ready revision: `marketing-00005-fzp`; image digest `sha256:72f4e1cc9529b8c656d3843a77354e9ddc3ac3b38fc6d4dd1540da0217cc42b7`; service URL: `https://marketing-hxamzdhgwa-as.a.run.app`; 100% traffic.
 - [x] Task: Run the smoke script against the live Cloud Run URL; confirm `GET /api/health/db` green

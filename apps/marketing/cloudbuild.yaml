@@ -1,4 +1,11 @@
 steps:
+  - name: "bash:5.2"
+    id: "validate-release-input"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - 'set -euo pipefail && release_commit_sha="$_RELEASE_COMMIT_SHA" && [[ "$$release_commit_sha" =~ ^[0-9a-f]{40}$$ ]] || { echo "_RELEASE_COMMIT_SHA must be the exact lowercase 40-character source commit" >&2; exit 2; }'
+
   # ── Build image ──────────────────────────────────────────────────────
   - name: "gcr.io/cloud-builders/docker"
     id: "build-image"
@@ -54,9 +61,19 @@ steps:
       - "MARKETING_DIRECT_DATABASE_URL"
       - "MARKETING_DATABASE_URL"
 
-  # ── Deploy to Cloud Run ──────────────────────────────────────────────
+  # Preserve the exact serving revision and immutable image before creating a
+  # candidate so the release log contains a directly executable rollback.
   - name: "gcr.io/cloud-builders/gcloud"
-    id: "deploy-cloudrun"
+    id: "capture-current-release"
+    entrypoint: "bash"
+    args:
+      - "apps/marketing/scripts/capture-marketing-cloud-run-release.sh"
+      - "current"
+      - "/workspace/.marketing-previous"
+
+  # Create a build-unique candidate URL without changing production traffic.
+  - name: "gcr.io/cloud-builders/gcloud"
+    id: "deploy-candidate"
     args:
       - "run"
       - "deploy"
@@ -72,10 +89,9 @@ steps:
       - "--max-instances=10"
       - "--concurrency=80"
       - "--set-secrets=DATABASE_URL=MARKETING_DATABASE_URL:latest,ENCRYPTION_KEY=MARKETING_ENCRYPTION_KEY:latest,OPENAI_API_KEY=MARKETING_OPENAI_API_KEY:latest,GOOGLE_API_KEY=MARKETING_GOOGLE_API_KEY:latest,OPENROUTER_API_KEY=MARKETING_OPENROUTER_API_KEY:latest,COMPANY_AUTH_OIDC_CLIENT_SECRET=MARKETING_COMPANY_AUTH_OIDC_CLIENT_SECRET:latest"
+      - "--tag=candidate-$BUILD_ID"
+      - "--no-traffic"
 
-  # ── Allow public access ──────────────────────────────────────────────
-  # The Cloud Run service is unauthenticated (login page must load before
-  # session auth). Cloud Run IAM controls who can invoke the URL.
   - name: "gcr.io/cloud-builders/gcloud"
     id: "allow-public-invoker"
     args:
@@ -87,8 +103,56 @@ steps:
       - "--member=allUsers"
       - "--role=roles/run.invoker"
 
+  - name: "gcr.io/cloud-builders/gcloud"
+    id: "capture-candidate"
+    entrypoint: "bash"
+    args:
+      - "apps/marketing/scripts/capture-marketing-cloud-run-release.sh"
+      - "candidate"
+      - "candidate-$BUILD_ID"
+      - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/marketing/marketing:$BUILD_ID"
+      - "/workspace/.marketing-candidate"
+
+  - name: "node:22-slim"
+    id: "verify-candidate"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - 'set -euo pipefail && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export MARKETING_RELEASE_BASE_URL="$$(tr -d "\r\n" < /workspace/.marketing-candidate.url)" && pnpm --filter marketing exec tsx scripts/verify-marketing-release.ts'
+
+  - name: "gcr.io/cloud-builders/gcloud"
+    id: "promote-candidate"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - 'set -euo pipefail && candidate_revision="$$(tr -d "\r\n" < /workspace/.marketing-candidate.revision)" && gcloud run services update-traffic marketing --region=asia-southeast1 --platform=managed --to-revisions="$$candidate_revision=100"'
+
+  - name: "gcr.io/cloud-builders/gcloud"
+    id: "verify-domain-mapping"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - 'set -euo pipefail && domain=marketing.reading-advantage.com && route="$$(gcloud beta run domain-mappings describe --domain="$$domain" --region=asia-southeast1 --platform=managed --format="value(metadata.annotations.''run.googleapis.com/routeName'')")" && test "$$route" = marketing && for condition in Ready CertificateProvisioned DomainRoutable; do status="$$(gcloud beta run domain-mappings describe --domain="$$domain" --region=asia-southeast1 --platform=managed --format="value(status.conditions[?type=''$$condition''].status)")"; test "$$status" = True; done'
+
+  - name: "node:22-slim"
+    id: "verify-custom-domain"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - 'set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates >/dev/null && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export MARKETING_RELEASE_BASE_URL=https://marketing.reading-advantage.com && verified=false && for attempt in $$(seq 1 12); do if pnpm --filter marketing exec tsx scripts/verify-marketing-release.ts; then verified=true; break; fi; sleep 5; done && test "$$verified" = true && bash apps/marketing/scripts/marketing-smoke.sh "$$MARKETING_RELEASE_BASE_URL"'
+
+  - name: "gcr.io/cloud-builders/gcloud"
+    id: "record-release-evidence"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - 'set -euo pipefail && previous_revision="$$(tr -d "\r\n" < /workspace/.marketing-previous.revision)" && previous_image="$$(tr -d "\r\n" < /workspace/.marketing-previous.image)" && candidate_revision="$$(tr -d "\r\n" < /workspace/.marketing-candidate.revision)" && candidate_image="$$(tr -d "\r\n" < /workspace/.marketing-candidate.image)" && serving_revision="$$(gcloud run services describe marketing --region=asia-southeast1 --platform=managed --format="value(status.traffic[?percent=100].revisionName)")" && test "$$serving_revision" = "$$candidate_revision" && test "$$previous_revision" != "$$candidate_revision" && printf ''{"level":"info","event":"marketing_release_promoted","buildId":"%s","releaseCommitSha":"%s","previousRevision":"%s","previousImage":"%s","candidateRevision":"%s","candidateImage":"%s","rollbackCommand":"gcloud run services update-traffic marketing --region=asia-southeast1 --platform=managed --to-revisions=%s=100"}\n'' "$BUILD_ID" "$_RELEASE_COMMIT_SHA" "$$previous_revision" "$$previous_image" "$$candidate_revision" "$$candidate_image" "$$previous_revision"'
+
 images:
   - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/marketing/marketing:$BUILD_ID"
+
+substitutions:
+  _RELEASE_COMMIT_SHA: "REQUIRED_RELEASE_COMMIT_SHA"
 
 availableSecrets:
   secretManager:

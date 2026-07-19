@@ -145,7 +145,7 @@ describe("Marketing Cloud Run production contract", () => {
 
   it("parses the canonical image, service account, database, and domain", () => {
     const build = requireBuildStep(cloudbuild, "build-image");
-    const deploy = requireBuildStep(cloudbuild, "deploy-cloudrun");
+    const deploy = requireBuildStep(cloudbuild, "deploy-candidate");
 
     expect(build.args).toContain(
       "asia-southeast1-docker.pkg.dev/$PROJECT_ID/marketing/marketing:$BUILD_ID",
@@ -177,14 +177,14 @@ describe("Marketing Cloud Run production contract", () => {
     expect(runtimeSecrets).not.toContain("AUTH_SECRET=");
   });
 
-  it("orders migration, doctor, runtime privilege proof, and deployment", () => {
+  it("orders migration, doctor, runtime privilege proof, and candidate deployment", () => {
     const ids = cloudbuild.steps?.map((step) => step.id) ?? [];
     expect(ids.indexOf("migrate-db")).toBeLessThan(ids.indexOf("doctor-check"));
     expect(ids.indexOf("doctor-check")).toBeLessThan(
       ids.indexOf("runtime-db-contract"),
     );
     expect(ids.indexOf("runtime-db-contract")).toBeLessThan(
-      ids.indexOf("deploy-cloudrun"),
+      ids.indexOf("deploy-candidate"),
     );
 
     const doctor = requireBuildStep(cloudbuild, "doctor-check");

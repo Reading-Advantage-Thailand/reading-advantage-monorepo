@@ -84,11 +84,16 @@ and is called out as its own task.
 - [ ] `apps/marketing/Dockerfile` builds a production image that serves the app via
       the vinext runtime and boots locally.
 - [ ] `apps/marketing/cloudbuild.yaml` builds, runs marketing DB migrate + doctor,
-      and deploys to Cloud Run with secrets from Secret Manager.
+      captures the current rollback revision/image, deploys a build-unique
+      no-traffic candidate with secrets from Secret Manager, proves the candidate
+      runs the release image, verifies database health and exact Accounts-backed
+      readiness, and only then promotes the exact candidate revision to 100%.
 - [ ] Cloud SQL has the marketing runtime DB with migration `0021` applied.
 - [ ] `apps/marketing/.env.example` documents the full runtime surface.
 - [ ] Service is live on Cloud Run; a smoke script confirms it responds and
-      `GET /api/health/db` is green.
+      `GET /api/health/db` is green. The release also verifies the custom-domain
+      mapping/certificate, `/api/ready`, and records exact previous/candidate
+      revisions and immutable images plus an executable rollback command.
 - [ ] Manual end-to-end QA pass (Phikul): login, create campaign, research topics,
       generate Thai script, edit scenes, persist project — recorded as done.
 - [ ] `measure/deployment-status.md` updated to show marketing deployed.
