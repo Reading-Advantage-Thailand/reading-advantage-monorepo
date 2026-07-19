@@ -58,6 +58,8 @@ capture_candidate() {
   local tagged_url
   local tagged_revision
   local latest_created_revision
+  local service_status_json
+  local candidate_row
   local expected_digest
   local expected_repository
   local revision_image
@@ -66,24 +68,52 @@ capture_candidate() {
     echo "Marketing candidate tag must be c followed by eight lowercase hex characters" >&2
     exit 1
   fi
-  tagged_url="$(
+  service_status_json="$(
     gcloud run services describe "$service" \
       --region="$region" \
       --platform=managed \
-      --format="value(status.traffic[?tag='${tag}'].url)"
+      --format=json
   )"
-  tagged_revision="$(
-    gcloud run services describe "$service" \
-      --region="$region" \
-      --platform=managed \
-      --format="value(status.traffic[?tag='${tag}'].revisionName)"
+  candidate_row="$(
+    python3 -c '
+import json
+import sys
+
+tag = sys.argv[1]
+payload = json.load(sys.stdin)
+status = payload.get("status")
+if not isinstance(status, dict):
+    raise SystemExit("Marketing service status is missing")
+traffic = status.get("traffic")
+if not isinstance(traffic, list):
+    raise SystemExit("Marketing service traffic is not an array")
+matches = []
+for row in traffic:
+    if not isinstance(row, dict):
+        raise SystemExit("Marketing service traffic contains a malformed row")
+    row_tag = row.get("tag")
+    if row_tag is not None and not isinstance(row_tag, str):
+        raise SystemExit("Marketing service traffic contains a malformed tag")
+    if row_tag == tag:
+        matches.append(row)
+if len(matches) != 1:
+    raise SystemExit(f"Marketing candidate tag matched {len(matches)} traffic rows")
+match = matches[0]
+url = match.get("url")
+revision = match.get("revisionName")
+latest = status.get("latestCreatedRevisionName")
+if not isinstance(url, str) or not url.strip():
+    raise SystemExit("Tagged Marketing traffic row has no URL")
+if not isinstance(revision, str) or not revision.strip():
+    raise SystemExit("Tagged Marketing traffic row has no revision")
+if not isinstance(latest, str) or not latest.strip():
+    raise SystemExit("Marketing service has no latest-created revision")
+if any("\t" in value or "\n" in value for value in (url, revision, latest)):
+    raise SystemExit("Marketing service traffic contains an invalid field separator")
+sys.stdout.write("\t".join((url, revision, latest)))
+' "$tag" <<< "$service_status_json"
   )"
-  latest_created_revision="$(
-    gcloud run services describe "$service" \
-      --region="$region" \
-      --platform=managed \
-      --format="value(status.latestCreatedRevisionName)"
-  )"
+  IFS=$'\t' read -r tagged_url tagged_revision latest_created_revision <<< "$candidate_row"
   expected_digest="$(
     gcloud artifacts docker images describe "$expected_image" \
       --format="value(image_summary.digest)"

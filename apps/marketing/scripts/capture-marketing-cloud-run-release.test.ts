@@ -21,6 +21,19 @@ const candidateDigest = `sha256:${"c".repeat(64)}`;
 const previousDigest = `sha256:${"d".repeat(64)}`;
 const repository =
   "asia-southeast1-docker.pkg.dev/project/marketing/marketing";
+const defaultCandidateServiceJson = JSON.stringify({
+  status: {
+    latestCreatedRevisionName: "marketing-00006-new",
+    traffic: [
+      { percent: 100, revisionName: "marketing-00005-old" },
+      {
+        revisionName: "marketing-00006-new",
+        tag: "cdeadbeef",
+        url: "https://cdeadbeef---marketing.example.test",
+      },
+    ],
+  },
+});
 
 /**
  * Creates a deterministic gcloud executable for release-binding tests.
@@ -36,9 +49,13 @@ function createFakeGcloud(): string {
 set -euo pipefail
 case "$*" in
   *"csv[no-heading](status.traffic.revisionName,status.traffic.percent)"*) printf %s "\${FAKE_CURRENT_TRAFFIC-marketing-00005-old,100}" ;;
-  *"status.traffic"*".url)"*) printf %s "https://cdeadbeef---marketing.example.test" ;;
-  *"status.traffic"*".revisionName)"*) printf %s "marketing-00006-new" ;;
-  *"status.latestCreatedRevisionName)"*) printf %s "\${FAKE_LATEST_REVISION:-marketing-00006-new}" ;;
+  *"--format=json"*)
+    if [[ -n "\${FAKE_SERVICE_JSON+x}" ]]; then
+      printf %s "$FAKE_SERVICE_JSON"
+    else
+      printf %s '${defaultCandidateServiceJson}'
+    fi
+    ;;
   *"artifacts docker images describe"*) printf %s "${candidateDigest}" ;;
   *"run revisions describe marketing-00005-old"*) printf %s "${repository}@${previousDigest}" ;;
   *"run revisions describe marketing-00006-new"*) printf %s "${repository}@${candidateDigest}" ;;
@@ -131,6 +148,114 @@ describe("Marketing Cloud Run release capture", () => {
   });
 
   it.each([
+    [
+      "zero matching rows",
+      {
+        status: {
+          latestCreatedRevisionName: "marketing-00006-new",
+          traffic: [{ percent: 100, revisionName: "marketing-00005-old" }],
+        },
+      },
+    ],
+    [
+      "duplicate matching rows",
+      {
+        status: {
+          latestCreatedRevisionName: "marketing-00006-new",
+          traffic: [
+            {
+              revisionName: "marketing-00006-new",
+              tag: "cdeadbeef",
+              url: "https://cdeadbeef---marketing.example.test",
+            },
+            {
+              revisionName: "marketing-00007-other",
+              tag: "cdeadbeef",
+              url: "https://cdeadbeef---marketing-other.example.test",
+            },
+          ],
+        },
+      },
+    ],
+    [
+      "a malformed tag row",
+      {
+        status: {
+          latestCreatedRevisionName: "marketing-00006-new",
+          traffic: [
+            {
+              revisionName: "marketing-00006-new",
+              tag: 123,
+              url: "https://cdeadbeef---marketing.example.test",
+            },
+          ],
+        },
+      },
+    ],
+    [
+      "a matching row without a URL",
+      {
+        status: {
+          latestCreatedRevisionName: "marketing-00006-new",
+          traffic: [
+            { revisionName: "marketing-00006-new", tag: "cdeadbeef" },
+          ],
+        },
+      },
+    ],
+    [
+      "a matching row without a revision",
+      {
+        status: {
+          latestCreatedRevisionName: "marketing-00006-new",
+          traffic: [
+            {
+              tag: "cdeadbeef",
+              url: "https://cdeadbeef---marketing.example.test",
+            },
+          ],
+        },
+      },
+    ],
+    [
+      "a malformed traffic collection",
+      {
+        status: {
+          latestCreatedRevisionName: "marketing-00006-new",
+          traffic: { tag: "cdeadbeef" },
+        },
+      },
+    ],
+  ])("fails closed for %s", (_caseName, serviceStatus) => {
+    const directory = createFakeGcloud();
+    const outputPrefix = join(directory, "candidate");
+
+    expect(() =>
+      execFileSync(
+        "bash",
+        [
+          script,
+          "candidate",
+          "cdeadbeef",
+          `${repository}:build-id`,
+          outputPrefix,
+        ],
+        {
+          env: {
+            ...process.env,
+            PATH: `${directory}:${process.env.PATH}`,
+            FAKE_SERVICE_JSON: JSON.stringify(serviceStatus),
+          },
+          stdio: "pipe",
+        },
+      ),
+    ).toThrow();
+    expect(() => readFileSync(`${outputPrefix}.url`, "utf8")).toThrow();
+    expect(() => readFileSync(`${outputPrefix}.revision`, "utf8")).toThrow();
+    expect(() => readFileSync(`${outputPrefix}.image`, "utf8")).toThrow();
+  });
+
+  it.each([
     "candidate-build-id",
     "cDEADBEEF",
     "cdeadbee",
@@ -170,7 +295,18 @@ describe("Marketing Cloud Run release capture", () => {
           env: {
             ...process.env,
             PATH: `${directory}:${process.env.PATH}`,
-            FAKE_LATEST_REVISION: "marketing-00007-other",
+            FAKE_SERVICE_JSON: JSON.stringify({
+              status: {
+                latestCreatedRevisionName: "marketing-00007-other",
+                traffic: [
+                  {
+                    revisionName: "marketing-00006-new",
+                    tag: "cdeadbeef",
+                    url: "https://cdeadbeef---marketing.example.test",
+                  },
+                ],
+              },
+            }),
           },
           stdio: "pipe",
         },
