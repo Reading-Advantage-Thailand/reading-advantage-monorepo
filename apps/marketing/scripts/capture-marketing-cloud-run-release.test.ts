@@ -35,8 +35,8 @@ function createFakeGcloud(): string {
     `#!/usr/bin/env bash
 set -euo pipefail
 case "$*" in
+  *"csv[no-heading](status.traffic.revisionName,status.traffic.percent)"*) printf %s "\${FAKE_CURRENT_TRAFFIC-marketing-00005-old,100}" ;;
   *"status.traffic"*".url)"*) printf %s "https://candidate-build-id---marketing.example.test" ;;
-  *"status.traffic"*"percent=100"*".revisionName)"*) printf %s "marketing-00005-old" ;;
   *"status.traffic"*".revisionName)"*) printf %s "marketing-00006-new" ;;
   *"status.latestCreatedRevisionName)"*) printf %s "\${FAKE_LATEST_REVISION:-marketing-00006-new}" ;;
   *"artifacts docker images describe"*) printf %s "${candidateDigest}" ;;
@@ -71,6 +71,36 @@ describe("Marketing Cloud Run release capture", () => {
     expect(readFileSync(`${outputPrefix}.image`, "utf8")).toBe(
       `${repository}@${previousDigest}`,
     );
+  });
+
+  it.each([
+    ["blank traffic", ""],
+    [
+      "multiple traffic rows",
+      "marketing-00005-old,50\nmarketing-00004-older,50",
+    ],
+    [
+      "split traffic in one projected row",
+      "marketing-00005-old;marketing-00004-older,50;50",
+    ],
+    ["malformed traffic", "marketing-00005-old,not-a-percent"],
+    ["a non-100 percent", "marketing-00005-old,99"],
+  ])("fails closed for %s", (_caseName, traffic) => {
+    const directory = createFakeGcloud();
+    const outputPrefix = join(directory, "previous");
+
+    expect(() =>
+      execFileSync("bash", [script, "current", outputPrefix], {
+        env: {
+          ...process.env,
+          PATH: `${directory}:${process.env.PATH}`,
+          FAKE_CURRENT_TRAFFIC: traffic,
+        },
+        stdio: "pipe",
+      }),
+    ).toThrow();
+    expect(() => readFileSync(`${outputPrefix}.revision`, "utf8")).toThrow();
+    expect(() => readFileSync(`${outputPrefix}.image`, "utf8")).toThrow();
   });
 
   it("binds a collision-safe tag to the latest release image", () => {

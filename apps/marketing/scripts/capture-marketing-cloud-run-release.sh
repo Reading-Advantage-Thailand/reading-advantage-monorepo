@@ -10,17 +10,24 @@ capture_current() {
     exit 2
   fi
   local output_prefix="$1"
+  local traffic_row
   local serving_revision
+  local serving_percent
   local revision_image
 
-  serving_revision="$(
+  traffic_row="$(
     gcloud run services describe "$service" \
       --region="$region" \
       --platform=managed \
-      --format="value(status.traffic[?percent=100].revisionName)"
+      --format="csv[no-heading](status.traffic.revisionName,status.traffic.percent)"
   )"
-  if [[ -z "$serving_revision" ]]; then
-    echo "Marketing has no revision serving 100 percent of traffic" >&2
+  if [[ ! "$traffic_row" =~ ^[^,[:space:]]+,[0-9]+$ ]]; then
+    echo "Marketing traffic must contain exactly one revision and percent row" >&2
+    exit 1
+  fi
+  IFS="," read -r serving_revision serving_percent <<< "$traffic_row"
+  if [[ -z "$serving_revision" || "$serving_revision" == *";"* || ! "$serving_percent" =~ ^[0-9]+$ || "$serving_percent" != "100" ]]; then
+    echo "Marketing must have exactly one revision serving 100 percent of traffic" >&2
     exit 1
   fi
   revision_image="$(
