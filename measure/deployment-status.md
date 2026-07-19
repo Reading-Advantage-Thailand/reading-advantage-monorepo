@@ -18,7 +18,7 @@ The monorepo (`bodangren/reading-advantage-monorepo`) is **not** the deploy sour
 | **advantage-games** | none | ❌ | never | — | Not deployed. |
 | **accounts** | Dockerfile + cloudbuild, no CD | ✅ yes | `reading-advantage` / `accounts` (rev `00007-hxs`) | 2026-07-19 | **Manual monorepo `gcloud builds submit`**, build `de19ada8-775e-45b0-99ce-d3896adf8a78`, digest `sha256:7e851f0c3663c7bfafd94bc434106f875ec3222ea928a000c698400601b1bc27`; `https://accounts.reading-advantage.com` is live with managed HTTPS. |
 | **marketing** | vinext Dockerfile + cloudbuild, no CD | ✅ yes | `reading-advantage` / `marketing` (rev `00013-jil`) | 2026-07-19 | **Manual staged monorepo release**, exact-source build `08fd00a1-de86-4f8f-b65d-632832279fa2` at `a7fc3fbb6476eb30f95c4f1bd5757d2d7708ba29`, digest `sha256:df12a3aa962cf861a2332ffab766588330456fc7b1a3e4e84e67e87a69e5b2d6`; all 15 release steps passed, the exact candidate was promoted to 100%, and custom-domain, health, readiness, mapping, and rollback evidence were verified. |
-| **sales-advantage** | Next.js standalone Dockerfile + cloudbuild, no CD | ✅ yes | `reading-advantage` / `sales-advantage` (rev `00003-v4d`) | 2026-07-18 | **Manual monorepo `gcloud builds submit`**, build `b45acc2f-9694-4962-95b9-4477209799d2`; `https://sales.reading-advantage.com` is live with managed HTTPS and Accounts SSO. |
+| **sales-advantage** | Next.js standalone Dockerfile + cloudbuild, no CD | ✅ yes | `reading-advantage` / `sales-advantage` (rev `00005-yas`) | 2026-07-19 | **Manual staged monorepo release**, continuation build `342cdc52-871c-4f08-bef0-7ebf38290557` at `2c96be943b647f7f1df5cb6b452f9fcce0041056`, digest `sha256:ab7ca4d4429cad3d81a28fe9b9f85e03c78cb62f2e075142152982e0f7415ce3`; all 15 continuation steps passed, company SSO is at 100%, and verified rollback `00004-jed` is retained at 0%. |
 
 
 ## 2026-07-19 completion checkpoint
@@ -37,11 +37,13 @@ The monorepo (`bodangren/reading-advantage-monorepo`) is **not** the deploy sour
   production browser journey created and reloaded a six-scene project, and an
   ordinary Marketing member was denied administrator settings operations. The
   final revision had no ERROR/5xx log entries in the audited window.
-- Sales still serves the previously accepted revision `sales-advantage-00003-v4d`.
-  The reviewed 27-lesson curriculum reconciliation and fail-closed release
-  archive/backup gates are committed at `58166639`; deployment awaits the
-  operator-approved read-only `roles/cloudsql.viewer` grant required for
-  `cloudsql.backupRuns.get`.
+- Sales serves company-SSO revision `sales-advantage-00005-yas` at 100%.
+  Continuation build `342cdc52-871c-4f08-bef0-7ebf38290557` passed all 15
+  steps using the exact approved image, backup, repair manifest, and source
+  archive. Health, company-mode readiness, custom-domain mapping, repair
+  receipt, mapping/role state, probe cleanup, retained compatibility rollback,
+  and clean error logs were independently verified. Exact evidence is recorded
+  in the Sales go-live track.
 
 ## Deploy-source taxonomy
 
