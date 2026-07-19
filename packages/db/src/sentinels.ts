@@ -9,7 +9,7 @@
  */
 export interface SentinelProbe {
   tag: string;
-  kind: "table" | "column" | "unique_constraint";
+  kind: "table" | "column" | "unique_constraint" | "function";
   target: string;
   table?: string;
   columns?: readonly string[];
@@ -232,5 +232,10 @@ export const sentinelProbes: Record<string, SentinelProbe> = {
     target: "company_product_principals_application_local_unique",
     table: "company_product_principals",
     columns: ["application_key", "local_user_id"],
+  },
+  "0043_codecamp_company_principal_sync": {
+    tag: "0043_codecamp_company_principal_sync",
+    kind: "function",
+    target: "public.sync_codecamp_company_principal(uuid,text,uuid,text,text)",
   },
 };

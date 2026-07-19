@@ -1,78 +1,32 @@
 "use client";
 
-import { Link } from "@/i18n/navigation";
-import { useState } from "react";
 import { useAuth } from "@reading-advantage/auth-client";
-import { trpc } from "@/lib/trpc";
 import { Button } from "@reading-advantage/ui";
-import { Input } from "@reading-advantage/ui";
-import { Label } from "@reading-advantage/ui";
+import { ArrowLeft, ExternalLink, ShieldAlert, UserPlus } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { ArrowLeft, UserPlus, AlertCircle, CheckCircle2 } from "lucide-react";
 
+import { Link } from "@/i18n/navigation";
+
+/** Sends Codecamp administrators to the company-owned employee workflow. */
 export default function NewInternPage() {
   const t = useTranslations("admin");
-  const { user, isLoading: authLoading } = useAuth();
-  const [username, setUsername] = useState("");
-  const [name, setName] = useState("");
-  const [password, setPassword] = useState("");
-  const [githubUsername, setGithubUsername] = useState("");
-  const [githubUsernameTouched, setGithubUsernameTouched] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
+  const { user, isLoading } = useAuth();
 
-  const createIntern = trpc.codecamp.createIntern.useMutation({
-    onSuccess: () => {
-      setSuccess(true);
-      setUsername("");
-      setName("");
-      setPassword("");
-      setGithubUsername("");
-      setGithubUsernameTouched(false);
-      setError(null);
-    },
-    onError: (err: { message: string }) => {
-      setError(err.message);
-    },
-  });
-
-  if (authLoading) {
+  if (isLoading) {
     return (
       <div className="container mx-auto px-4 py-12">
-        <div className="h-8 w-48 animate-pulse rounded bg-muted" />
-        <div className="mt-8 h-64 animate-pulse rounded-lg bg-muted" />
+        <div className="h-64 animate-pulse rounded-lg bg-muted" />
       </div>
     );
   }
-
   if (user?.role !== "ADMIN") {
     return (
-      <div className="container mx-auto px-4 py-12">
-        <div className="flex flex-col items-center justify-center gap-4 text-center">
-          <AlertCircle className="h-12 w-12 text-destructive" />
-          <h1 className="text-2xl font-bold">{t("accessDenied")}</h1>
-          <p className="text-muted-foreground">
-            {t("noPrivileges")}
-          </p>
-          <Button asChild>
-            <Link href="/">{t("backToDashboard")}</Link>
-          </Button>
-        </div>
+      <div className="container mx-auto px-4 py-12 text-center">
+        <ShieldAlert className="mx-auto h-12 w-12 text-destructive" />
+        <h1 className="mt-4 text-2xl font-bold">{t("accessDenied")}</h1>
+        <p className="mt-2 text-muted-foreground">{t("noPrivileges")}</p>
       </div>
     );
-  }
-
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError(null);
-    setSuccess(false);
-
-    if (password.length < 8) {
-      setError(t("form.passwordMinLength"));
-      return;
-    }
-
-    createIntern.mutate({ username, name, password, githubUsername: githubUsername || username });
   }
 
   return (
@@ -83,112 +37,19 @@ export default function NewInternPage() {
           {t("backToAdmin")}
         </Link>
       </Button>
-
-      <div className="mb-8">
-        <div className="mb-2 flex items-center gap-3">
-          <UserPlus className="h-6 w-6 text-primary" />
-          <h1 className="text-2xl font-bold md:text-3xl">{t("createIntern")}</h1>
-        </div>
-        <p className="text-muted-foreground">
+      <div className="rounded-xl border bg-card p-8 shadow-sm">
+        <UserPlus className="h-9 w-9 text-primary" />
+        <h1 className="mt-4 text-2xl font-bold">{t("createIntern")}</h1>
+        <p className="mt-3 text-muted-foreground">
           {t("createInternDescription")}
         </p>
+        <Button className="mt-7" asChild>
+          <a href="https://accounts.reading-advantage.com/?application=codecamp&role=INTERN">
+            {t("openAccounts")}
+            <ExternalLink className="ml-2 h-4 w-4" />
+          </a>
+        </Button>
       </div>
-
-      {success && (
-        <div className="mb-6 flex items-center gap-3 rounded-lg border border-green-200 bg-green-50 p-4 text-green-800">
-          <CheckCircle2 className="h-5 w-5" />
-          <p>{t("toast.createSuccess")}</p>
-        </div>
-      )}
-
-      {error && (
-        <div className="mb-6 flex items-center gap-3 rounded-lg border border-destructive/20 bg-destructive/10 p-4 text-destructive">
-          <AlertCircle className="h-5 w-5" />
-          <p>{error}</p>
-        </div>
-      )}
-
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="space-y-2">
-          <Label htmlFor="username">{t("username")}</Label>
-          <Input
-            id="username"
-            value={username}
-            onChange={(e) => {
-              setUsername(e.target.value);
-              if (!githubUsernameTouched) {
-                setGithubUsername(e.target.value);
-              }
-            }}
-            placeholder="intern1"
-            required
-            minLength={3}
-            maxLength={50}
-          />
-          <p className="text-xs text-muted-foreground">
-            {t("usernameHint")}
-          </p>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="name">{t("displayName")}</Label>
-          <Input
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Intern One"
-            required
-            maxLength={100}
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="password">{t("initialPassword")}</Label>
-          <Input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="••••••••"
-            required
-            minLength={8}
-            maxLength={100}
-          />
-          <p className="text-xs text-muted-foreground">
-            {t("passwordHint")}
-          </p>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="githubUsername">{t("githubUsername")}</Label>
-          <Input
-            id="githubUsername"
-            value={githubUsername}
-            onChange={(e) => {
-              setGithubUsernameTouched(true);
-              setGithubUsername(e.target.value);
-            }}
-            placeholder="github-handle"
-            maxLength={100}
-          />
-          <p className="text-xs text-muted-foreground">
-            {t("githubUsernameHint")}
-          </p>
-        </div>
-
-        <div className="flex flex-col gap-4 sm:flex-row">
-          <Button
-            type="submit"
-            disabled={createIntern.isPending}
-            className="w-full sm:w-auto"
-          >
-            {createIntern.isPending ? t("creating") : t("createIntern")}
-          </Button>
-          <Button variant="outline" asChild>
-            <Link href="/admin">{t("cancel")}</Link>
-          </Button>
-        </div>
-      </form>
     </div>
   );
 }

@@ -29,8 +29,6 @@ import {
   listDeadReviewJobsInputSchema,
   requeueReviewJobInputSchema,
   moduleWithReposSchema,
-  internAccountInputSchema,
-  internAccountResponseSchema,
   internProgressSchema,
   internDetailSchema,
 } from "@reading-advantage/types";
@@ -494,20 +492,12 @@ export const codecampRouter = router({
   // ─── Admin ────────────────────────────────────────────────
 
   createIntern: adminProcedure
-    .input(internAccountInputSchema)
-    .output(internAccountResponseSchema)
-    .mutation(async ({ ctx, input }) => {
-      try {
-        return await codecamp.createInternAccount({
-          db: ctx.tenantDb,
-          user: ctx.auth.user,
-          tenant: ctx.auth.tenant,
-          input,
-        });
-      } catch (err) {
-        throw mapDomainError(err);
-      }
-    }),
+    .input(z.strictObject({}))
+    .output(z.strictObject({ authorizationUrl: z.string().url() }))
+    .mutation(() => ({
+      authorizationUrl:
+        "https://accounts.reading-advantage.com/?application=codecamp&role=INTERN",
+    })),
 
   updateInternGithubUsername: adminProcedure
     .input(z.object({

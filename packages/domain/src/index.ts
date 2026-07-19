@@ -26,8 +26,11 @@ export {
 } from "./db-contract.js";
 export { classifyTable, type TableClassification } from "./tenant-registry.js";
 export {
+  resolveCodecampCompanyPrincipal,
   resolveLegacySalesCompanyPrincipal,
   resolveSalesCompanyPrincipal,
+  type CodecampCompanyIdentity,
+  type ResolvedCodecampCompanyPrincipal,
   type SalesCompanyIdentity,
   type ResolvedSalesCompanyPrincipal,
 } from "./company-identity-principal.js";

@@ -3,15 +3,18 @@ import { appRouter, createContext } from "@reading-advantage/api";
 
 import {
   CODECAMP_SESSION_COOKIE,
-  codecampSessionUser,
   getCodecampOidcClient,
   readCodecampCookie,
+  resolveCodecampSessionUser,
 } from "@/lib/company-oidc";
 
 /** Serves Codecamp tRPC with a revocation-aware Accounts application principal. */
 async function handler(req: Request) {
   const token = readCodecampCookie(req, CODECAMP_SESSION_COOKIE);
   const session = token ? await getCodecampOidcClient().introspect(token) : null;
+  const principal = session
+    ? await resolveCodecampSessionUser(session.identity)
+    : null;
   return fetchRequestHandler({
     endpoint: "/api/trpc",
     req,
@@ -19,7 +22,7 @@ async function handler(req: Request) {
     createContext: () => {
       return createContext({
         mode: "verified-principal",
-        principal: session ? codecampSessionUser(session.identity) : null,
+        principal,
         productScope: session
           ? {
               kind: "company",

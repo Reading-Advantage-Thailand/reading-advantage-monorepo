@@ -710,70 +710,34 @@ describe("codecamp router", () => {
   });
 
   describe("createIntern", () => {
-    it("creates an intern account", async () => {
-      const userRow = {
-        id: "550e8400-e29b-41d4-a716-446655440030",
-        username: "intern1",
-        displayUsername: "intern1",
-        name: "Intern One",
-        role: "INTERN",
-        schoolId: null,
-        createdAt: testDate,
-        updatedAt: testDate,
-      };
-      vi.mocked(createInternAccount).mockResolvedValue(userRow as unknown as Awaited<ReturnType<typeof createInternAccount>>);
+    it("returns the centralized Accounts onboarding handoff for admins", async () => {
       const adminUser = { id: "a1", role: "ADMIN", schoolId: null };
       const caller = createCaller({ user: adminUser, tenant: testTenant });
 
-      const result = await caller.codecamp.createIntern({
+      await expect(caller.codecamp.createIntern({})).resolves.toEqual({
+        authorizationUrl:
+          "https://accounts.reading-advantage.com/?application=codecamp&role=INTERN",
+      });
+      expect(createInternAccount).not.toHaveBeenCalled();
+    });
+
+    it("denies the Accounts handoff to non-admin users", async () => {
+      const caller = createCaller({ user: testUser, tenant: testTenant });
+      await expect(caller.codecamp.createIntern({})).rejects.toMatchObject({
+        code: "FORBIDDEN",
+      });
+      expect(createInternAccount).not.toHaveBeenCalled();
+    });
+
+    it("rejects legacy credential payloads before they enter the domain", async () => {
+      const adminUser = { id: "a1", role: "ADMIN", schoolId: null };
+      const caller = createCaller({ user: adminUser, tenant: testTenant });
+      await expect(caller.codecamp.createIntern({
         username: "intern1",
         name: "Intern One",
         password: "password123",
-      });
-
-      expect(result.id).toBe("550e8400-e29b-41d4-a716-446655440030");
-      expect(result.role).toBe("INTERN");
-    });
-
-    it("maps AuthError to FORBIDDEN for non-admin", async () => {
-      vi.mocked(createInternAccount).mockRejectedValue(new AuthError("Forbidden", "FORBIDDEN"));
-      const caller = createCaller({ user: testUser, tenant: testTenant });
-
-      await expect(
-        caller.codecamp.createIntern({
-          username: "intern1",
-          name: "Intern One",
-          password: "password123",
-        })
-      ).rejects.toMatchObject({ code: "FORBIDDEN" });
-    });
-
-    it("maps 'Username already exists' to BAD_REQUEST", async () => {
-      vi.mocked(createInternAccount).mockRejectedValue(new Error("Username already exists"));
-      const adminUser = { id: "a1", role: "ADMIN", schoolId: null };
-      const caller = createCaller({ user: adminUser, tenant: testTenant });
-
-      await expect(
-        caller.codecamp.createIntern({
-          username: "intern1",
-          name: "Intern One",
-          password: "password123",
-        })
-      ).rejects.toMatchObject({ code: "BAD_REQUEST" });
-    });
-
-    it("maps password complexity error to BAD_REQUEST", async () => {
-      vi.mocked(createInternAccount).mockRejectedValue(new Error("Password must contain at least one uppercase letter, one lowercase letter, and one digit"));
-      const adminUser = { id: "a1", role: "ADMIN", schoolId: null };
-      const caller = createCaller({ user: adminUser, tenant: testTenant });
-
-      await expect(
-        caller.codecamp.createIntern({
-          username: "intern1",
-          name: "Intern One",
-          password: "weak",
-        })
-      ).rejects.toMatchObject({ code: "BAD_REQUEST" });
+      })).rejects.toMatchObject({ code: "BAD_REQUEST" });
+      expect(createInternAccount).not.toHaveBeenCalled();
     });
   });
 

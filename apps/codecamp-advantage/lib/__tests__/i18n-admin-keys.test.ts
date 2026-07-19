@@ -51,7 +51,8 @@ describe("admin translation keys", () => {
     expect(admin.passwordHint as string).toBe("Minimum 8 characters. The intern can change this after first login.");
     expect(admin.creating as string).toBe("Creating...");
     expect(admin.cancel as string).toBe("Cancel");
-    expect(admin.createInternDescription as string).toBe("Create a new intern account. The intern will be able to log in with the username and password you set.");
+    expect(admin.createInternDescription as string).toBe("Employee identities and Codecamp access are managed centrally in Accounts.");
+    expect(admin.openAccounts as string).toBe("Open Accounts");
     const empty = admin.empty as NestedMessages;
     expect(empty.createToStart as string).toBe("Create intern accounts to get started.");
   });
@@ -104,7 +105,8 @@ describe("admin translation keys", () => {
     expect(admin.passwordHint as string).toBe("อย่างน้อย 8 ตัวอักษร ผู้ฝึกงานสามารถเปลี่ยนได้หลังจากเข้าสู่ระบบครั้งแรก");
     expect(admin.creating as string).toBe("กำลังสร้าง...");
     expect(admin.cancel as string).toBe("ยกเลิก");
-    expect(admin.createInternDescription as string).toBe("สร้างบัญชีผู้ฝึกงานใหม่ ผู้ฝึกงานจะสามารถเข้าสู่ระบบด้วยชื่อผู้ใช้และรหัสผ่านที่คุณตั้ง");
+    expect(admin.createInternDescription as string).toBe("จัดการบัญชีพนักงานและสิทธิ์ Codecamp จากศูนย์กลางใน Accounts");
+    expect(admin.openAccounts as string).toBe("เปิด Accounts");
     const empty = admin.empty as NestedMessages;
     expect(empty.createToStart as string).toBe("สร้างบัญชีผู้ฝึกงานเพื่อเริ่มต้น");
   });

@@ -161,7 +161,8 @@
     "passwordHint": "Minimum 8 characters. The intern can change this after first login.",
     "creating": "Creating...",
     "cancel": "Cancel",
-    "createInternDescription": "Create a new intern account. The intern will be able to log in with the username and password you set.",
+    "createInternDescription": "Employee identities and Codecamp access are managed centrally in Accounts.",
+    "openAccounts": "Open Accounts",
     "form": {
       "usernameRequired": "Username is required",
       "passwordRequired": "Password is required",

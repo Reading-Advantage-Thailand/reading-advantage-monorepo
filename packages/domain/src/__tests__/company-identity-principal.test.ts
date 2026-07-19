@@ -8,6 +8,7 @@ import {
 } from "@reading-advantage/db";
 
 import {
+  resolveCodecampCompanyPrincipal,
   resolveLegacySalesCompanyPrincipal,
   resolveSalesCompanyPrincipal,
 } from "../company-identity-principal.js";
@@ -76,6 +77,168 @@ function legacyDatabase(rows: readonly Record<string, unknown>[]) {
     select,
   };
 }
+
+function codecampDatabase(
+  rows: readonly Record<string, unknown>[],
+  executeError?: Error,
+) {
+  const execute = vi.fn(async () => {
+    if (executeError) throw executeError;
+  });
+  const limit = vi.fn().mockResolvedValue(rows);
+  const select = vi.fn(() => ({
+    from: vi.fn(() => ({
+      innerJoin: vi.fn(() => ({
+        where: vi.fn(() => ({ limit })),
+      })),
+    })),
+  }));
+  const tx = { execute, select };
+  const transaction = vi.fn(
+    async (callback: (transaction: typeof tx) => unknown) => callback(tx),
+  );
+  return {
+    database: { transaction } as unknown as DB,
+    execute,
+    select,
+    transaction,
+  };
+}
+
+describe("resolveCodecampCompanyPrincipal", () => {
+  const identity = {
+    ...baseIdentity,
+    aud: "codecamp",
+    username: "company.intern",
+    displayName: "Company Intern",
+    roles: ["INTERN"],
+  } as const;
+  const mapped = {
+    organizationId: identity.organizationId,
+    organizationKey: identity.organizationKey,
+    mappingRole: "INTERN",
+    id: "legacy-codecamp-user",
+    userRole: "INTERN",
+    schoolId: null,
+    xp: 42,
+    level: 3,
+    cefrLevel: "N/A",
+  };
+
+  it("preserves the existing local owner while synchronizing current SSO claims", async () => {
+    const { database, execute } = codecampDatabase([mapped]);
+    await expect(
+      resolveCodecampCompanyPrincipal(database, identity),
+    ).resolves.toEqual({
+      user: {
+        id: mapped.id,
+        username: identity.username,
+        name: identity.displayName,
+        role: "INTERN",
+        schoolId: null,
+        xp: mapped.xp,
+        level: mapped.level,
+        cefrLevel: mapped.cefrLevel,
+      },
+      scope: {
+        kind: "company",
+        applicationKey: "codecamp",
+        organizationId: identity.organizationId,
+        organizationKey: identity.organizationKey,
+      },
+    });
+    expect(execute).toHaveBeenCalledTimes(1);
+  });
+
+  it("projects a newly synchronized namespaced local owner", async () => {
+    const provisioned = {
+      ...mapped,
+      id: `codecamp:${identity.sub}`,
+    };
+    const { database } = codecampDatabase([provisioned]);
+    await expect(
+      resolveCodecampCompanyPrincipal(database, identity),
+    ).resolves.toMatchObject({
+      user: {
+        id: `codecamp:${identity.sub}`,
+        role: "INTERN",
+        schoolId: null,
+      },
+    });
+  });
+
+  it.each([{ roles: [] }, { roles: ["SALES_ADMIN"] }])(
+    "durably revokes identities without a Codecamp role",
+    async (patch) => {
+      const { database, execute, select } = codecampDatabase([]);
+      await expect(
+        resolveCodecampCompanyPrincipal(database, {
+          ...identity,
+          ...patch,
+        }),
+      ).resolves.toBeNull();
+      expect(execute).toHaveBeenCalledTimes(1);
+      expect(select).not.toHaveBeenCalled();
+    },
+  );
+
+  it.each([
+    { rows: [] },
+    { rows: [mapped, { ...mapped }] },
+    { rows: [{ ...mapped, schoolId: "30000000-0000-4000-8000-000000000007" }] },
+    { rows: [{ ...mapped, mappingRole: "STUDENT" }] },
+    { rows: [{ ...mapped, userRole: "STUDENT" }] },
+  ])(
+    "fails closed for an inconsistent synchronized mapping",
+    async ({ rows }) => {
+      const { database } = codecampDatabase(rows);
+      await expect(
+        resolveCodecampCompanyPrincipal(database, identity),
+      ).rejects.toThrow("principal synchronization failed");
+    },
+  );
+
+  it("surfaces explicit mapping-manifest conflicts from PostgreSQL", async () => {
+    const error = new Error("database wrapper", {
+      cause: Object.assign(new Error("database contract"), { code: "RA002" }),
+    });
+    const { database } = codecampDatabase([], error);
+    await expect(
+      resolveCodecampCompanyPrincipal(database, identity),
+    ).rejects.toThrow("mapping manifest is required");
+  });
+
+  it("rejects the wrong audience or organization before database access", async () => {
+    const { database, transaction } = codecampDatabase([]);
+    await expect(
+      resolveCodecampCompanyPrincipal(database, {
+        ...identity,
+        aud: "sales",
+      }),
+    ).rejects.toThrow("audience is invalid");
+    await expect(
+      resolveCodecampCompanyPrincipal(database, {
+        ...identity,
+        organizationKey: "other-company",
+      }),
+    ).rejects.toThrow("organization is invalid");
+    expect(transaction).not.toHaveBeenCalled();
+  });
+
+  it.each([{ sub: "not-a-uuid" }, { organizationId: "not-a-uuid" }])(
+    "denies malformed principal identifiers before database access",
+    async (patch) => {
+      const { database, transaction } = codecampDatabase([]);
+      await expect(
+        resolveCodecampCompanyPrincipal(database, {
+          ...identity,
+          ...patch,
+        }),
+      ).resolves.toBeNull();
+      expect(transaction).not.toHaveBeenCalled();
+    },
+  );
+});
 
 describe("resolveSalesCompanyPrincipal", () => {
   it.each(["SALES_ADMIN", "SALES_REP"] as const)(

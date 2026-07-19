@@ -109,4 +109,25 @@ describe("company product principal schema", () => {
       "Sales organization change requires an explicit mapping manifest",
     );
   });
+  it("defines the constrained Codecamp principal synchronization function", () => {
+    const migration = readFileSync(
+      resolve(
+        import.meta.dirname,
+        "../../drizzle/0043_codecamp_company_principal_sync.sql",
+      ),
+      "utf8",
+    );
+    expect(migration).toContain("sync_codecamp_company_principal");
+    expect(migration).toMatch(/LANGUAGE plpgsql[\s\S]*SECURITY DEFINER/);
+    expect(migration).toContain("SET search_path = pg_catalog");
+    expect(migration).toContain("pg_advisory_xact_lock");
+    expect(migration).toContain("mapping_found := FOUND");
+    expect(migration).toContain("ERRCODE = 'RA002'");
+    expect(migration).toContain("'codecamp:' || p_company_account_id::text");
+    expect(migration).toContain("p_role_key = 'REVOKED'");
+    expect(migration).toMatch(/AS \$\$[\s\S]*\$\$;/);
+    expect(migration).toContain(
+      "REVOKE ALL ON FUNCTION public.sync_codecamp_company_principal",
+    );
+  });
 });

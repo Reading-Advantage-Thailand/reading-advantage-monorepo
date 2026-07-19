@@ -40,6 +40,152 @@ export interface SalesCompanyIdentity {
   readonly roles: readonly string[];
 }
 
+/** Codecamp principal paired with its verified company boundary. */
+export interface ResolvedCodecampCompanyPrincipal {
+  /** Existing Codecamp-local user that owns product history. */
+  readonly user: UserContext;
+  /** Complete company boundary accepted by Codecamp authorization. */
+  readonly scope: ProductAuthorizationScope & {
+    readonly kind: "company";
+    readonly applicationKey: "codecamp";
+  };
+}
+
+/** Minimal verified Accounts identity required to resolve a Codecamp principal. */
+export interface CodecampCompanyIdentity {
+  /** Stable company account identifier. */
+  readonly sub: string;
+  /** Exact product audience. */
+  readonly aud: string;
+  /** Stable verified company organization identifier. */
+  readonly organizationId: string;
+  /** Canonical verified company organization key. */
+  readonly organizationKey: string;
+  /** First-party company username shown in the product session. */
+  readonly username: string;
+  /** First-party display name shown in the product session. */
+  readonly displayName: string;
+  /** Audience-scoped Codecamp role claims. */
+  readonly roles: readonly string[];
+}
+
+function codecampRole(
+  identity: CodecampCompanyIdentity,
+): "ADMIN" | "TEACHER" | "INTERN" | "STUDENT" | null {
+  if (identity.aud !== "codecamp") {
+    throw new Error("Codecamp identity audience is invalid.");
+  }
+  if (identity.organizationKey !== "internal-company") {
+    throw new Error("Codecamp identity organization is invalid.");
+  }
+  return (
+    (["ADMIN", "TEACHER", "INTERN", "STUDENT"] as const).find((candidate) =>
+      identity.roles.includes(candidate),
+    ) ?? null
+  );
+}
+
+/**
+ * Resolves an Accounts identity through the constrained Codecamp principal sync.
+ * @param database Product database containing migrated principal mappings.
+ * @param identity Verified Accounts Codecamp identity.
+ * @returns Existing or newly provisioned principal, or null when access is revoked.
+ * @throws When identity validation or the durable mapping contract fails.
+ */
+export async function resolveCodecampCompanyPrincipal(
+  database: DB,
+  identity: CodecampCompanyIdentity,
+): Promise<ResolvedCodecampCompanyPrincipal | null> {
+  const role = codecampRole(identity);
+  if (
+    !z.string().uuid().safeParse(identity.sub).success ||
+    !z.string().uuid().safeParse(identity.organizationId).success
+  ) {
+    return null;
+  }
+
+  return database.transaction(async (tx) => {
+    try {
+      await tx.execute(sql`
+        SELECT *
+        FROM public.sync_codecamp_company_principal(
+          ${identity.organizationId}::uuid,
+          ${identity.organizationKey},
+          ${identity.sub}::uuid,
+          ${identity.displayName},
+          ${role ?? "REVOKED"}
+        )
+      `);
+    } catch (error) {
+      if (errorChainHasCode(error, "RA002")) {
+        throw new Error(
+          "Codecamp principal mapping manifest is required for an existing or organization-conflicting principal.",
+          { cause: error },
+        );
+      }
+      throw error;
+    }
+    if (!role) return null;
+
+    const mappings = await tx
+      .select({
+        organizationId: companyProductPrincipals.organizationId,
+        organizationKey: companyProductPrincipals.organizationKey,
+        mappingRole: companyProductPrincipals.roleKey,
+        id: users.id,
+        userRole: users.role,
+        schoolId: users.schoolId,
+        xp: users.xp,
+        level: users.level,
+        cefrLevel: users.cefrLevel,
+      })
+      .from(companyProductPrincipals)
+      .innerJoin(users, eq(users.id, companyProductPrincipals.localUserId))
+      .where(
+        and(
+          eq(companyProductPrincipals.applicationKey, "codecamp"),
+          eq(companyProductPrincipals.companyAccountId, identity.sub),
+          eq(companyProductPrincipals.organizationId, identity.organizationId),
+          eq(
+            companyProductPrincipals.organizationKey,
+            identity.organizationKey,
+          ),
+        ),
+      )
+      .limit(2);
+
+    if (
+      mappings.length !== 1 ||
+      mappings[0]?.schoolId !== null ||
+      mappings[0]?.mappingRole !== role ||
+      mappings[0]?.userRole !== role
+    ) {
+      throw new Error(
+        "Codecamp product-local principal synchronization failed.",
+      );
+    }
+    const mapped = mappings[0];
+    return {
+      user: {
+        id: mapped.id,
+        username: identity.username,
+        name: identity.displayName,
+        role,
+        schoolId: null,
+        xp: mapped.xp,
+        level: mapped.level,
+        cefrLevel: mapped.cefrLevel,
+      },
+      scope: {
+        kind: "company",
+        applicationKey: "codecamp",
+        organizationId: mapped.organizationId,
+        organizationKey: mapped.organizationKey,
+      },
+    };
+  });
+}
+
 /**
  * Builds the product-local compatibility user ID for a Sales account.
  * @param companyAccountId Stable Accounts subject.

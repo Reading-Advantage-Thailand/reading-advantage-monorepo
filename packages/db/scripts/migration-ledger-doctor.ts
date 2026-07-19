@@ -86,6 +86,13 @@ async function checkSentinel(
     );
     return rows.length > 0;
   }
+  if (probe.kind === "function") {
+    const rows = (await client.unsafe(
+      "SELECT to_regprocedure($1) IS NOT NULL AS present",
+      [probe.target],
+    )) as Array<{ present: boolean }>;
+    return rows.length === 1 && rows[0]?.present === true;
+  }
   if (!probe.table || !probe.columns) return false;
   const rows = (await client.unsafe(
     `

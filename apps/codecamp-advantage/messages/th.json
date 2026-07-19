@@ -161,7 +161,8 @@
     "passwordHint": "อย่างน้อย 8 ตัวอักษร ผู้ฝึกงานสามารถเปลี่ยนได้หลังจากเข้าสู่ระบบครั้งแรก",
     "creating": "กำลังสร้าง...",
     "cancel": "ยกเลิก",
-    "createInternDescription": "สร้างบัญชีผู้ฝึกงานใหม่ ผู้ฝึกงานจะสามารถเข้าสู่ระบบด้วยชื่อผู้ใช้และรหัสผ่านที่คุณตั้ง",
+    "createInternDescription": "จัดการบัญชีพนักงานและสิทธิ์ Codecamp จากศูนย์กลางใน Accounts",
+    "openAccounts": "เปิด Accounts",
     "form": {
       "usernameRequired": "กรุณากรอกชื่อผู้ใช้",
       "passwordRequired": "กรุณากรอกรหัสผ่าน",

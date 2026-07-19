@@ -302,6 +302,13 @@
       "when": 1784392115850,
       "tag": "0042_company_product_principal_local_unique",
       "breakpoints": true
+    },
+    {
+      "idx": 43,
+      "version": "7",
+      "when": 1784446059725,
+      "tag": "0043_codecamp_company_principal_sync",
+      "breakpoints": true
     }
   ]
 }

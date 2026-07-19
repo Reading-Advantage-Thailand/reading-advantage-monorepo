@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import type { CompanyOidcIdentity } from "@reading-advantage/auth/company-identity";
-import { codecampSessionUser } from "../../codecamp-advantage/lib/company-oidc";
+import { codecampSessionRole } from "../../codecamp-advantage/lib/company-oidc";
 import { marketingSessionUser } from "../../marketing/app/lib/company-oidc";
 import { salesSessionUser } from "../../sales-advantage/lib/company-oidc";
 
@@ -46,7 +46,7 @@ describe("product role projections", () => {
   it.each(rejectedRoles)(
     "rejects empty or unknown Codecamp roles: %j",
     ({ roles }) => {
-      expect(() => codecampSessionUser(identity("codecamp", roles))).toThrow(
+      expect(() => codecampSessionRole(identity("codecamp", roles))).toThrow(
         "no recognized Codecamp role",
       );
     },

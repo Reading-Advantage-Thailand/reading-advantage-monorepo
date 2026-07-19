@@ -25,7 +25,7 @@ steps:
     entrypoint: "bash"
     args:
       - "-c"
-      - "set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && corepack enable && pnpm install --frozen-lockfile && export DATABASE_URL=\"$$CODECAMP_DATABASE_URL\" && export DIRECT_DATABASE_URL=\"$$CODECAMP_DATABASE_URL\" && pnpm --filter @reading-advantage/db migrate"
+      - 'set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates postgresql-client >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && corepack enable && pnpm install --frozen-lockfile && export DATABASE_URL="$$CODECAMP_DATABASE_URL" && export DIRECT_DATABASE_URL="$$CODECAMP_DATABASE_URL" && pnpm --filter @reading-advantage/db migrate'
     secretEnv:
       - "CODECAMP_DATABASE_URL"
 
@@ -34,7 +34,7 @@ steps:
     entrypoint: "bash"
     args:
       - "-c"
-      - "set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && corepack enable && pnpm install --frozen-lockfile && export DATABASE_URL=\"$$CODECAMP_DATABASE_URL\" && export DIRECT_DATABASE_URL=\"$$CODECAMP_DATABASE_URL\" && pnpm --filter @reading-advantage/db doctor --check --required-migration 0036_codecamp_mastery_evidence"
+      - 'set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates postgresql-client >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && corepack enable && pnpm install --frozen-lockfile && export DATABASE_URL="$$CODECAMP_DATABASE_URL" && export DIRECT_DATABASE_URL="$$CODECAMP_DATABASE_URL" && pnpm --filter @reading-advantage/db doctor --check --required-migration 0043_codecamp_company_principal_sync && test "$$(psql "$$CODECAMP_DATABASE_URL" -Atc "select to_regprocedure(''public.sync_codecamp_company_principal(uuid,text,uuid,text,text)'') is not null")" = t'
     secretEnv:
       - "CODECAMP_DATABASE_URL"
 
@@ -55,6 +55,8 @@ steps:
       - "--max-instances=100"
       - "--concurrency=80"
       - "--set-secrets=DATABASE_URL=CODECAMP_DATABASE_URL:latest,AUTH_SECRET=CODECAMP_AUTH_SECRET:latest,GITHUB_APP_ID=CODECAMP_GITHUB_APP_ID:latest,GITHUB_PRIVATE_KEY=CODECAMP_GITHUB_PRIVATE_KEY:latest,GITHUB_WEBHOOK_SECRET=CODECAMP_GITHUB_WEBHOOK_SECRET:latest,GITHUB_INSTALLATION_ID=CODECAMP_GITHUB_INSTALLATION_ID:latest,OPENROUTER_API_KEY=CODECAMP_OPENROUTER_API_KEY:latest,OPENAI_API_KEY=OPENAI_API_KEY:latest,GOOGLE_AI_API_KEY=GOOGLE_AI_API_KEY:latest,TUTORIAL_REPORT_SECRET=CODECAMP_TUTORIAL_REPORT_SECRET:latest,TUTORIAL_REPOSITORY_WORKER_TOKEN=CODECAMP_TUTORIAL_REPOSITORY_WORKER_TOKEN:latest,COMPANY_AUTH_OIDC_CLIENT_SECRET=projects/reading-advantage/secrets/CODECAMP_COMPANY_AUTH_OIDC_CLIENT_SECRET:latest"
+      - "--tag=sso-candidate"
+      - "--no-traffic"
 
   - name: "gcr.io/cloud-builders/gcloud"
     id: "allow-public-invoker"
