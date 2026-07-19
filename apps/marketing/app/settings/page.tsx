@@ -8,6 +8,8 @@ import {
   preservesExistingMarketingSecret,
 } from "@/lib/settings-update";
 
+const OPENROUTER_DEFAULT_MODEL = "nvidia/nemotron-3-ultra-550b-a55b:free";
+
 /**
  * Renders the authenticated Marketing settings editor.
  * @returns The settings form and connection status controls.
@@ -59,8 +61,14 @@ export default function SettingsPage() {
           return;
         }
         const settingValues = data as Record<string, unknown>;
-        if (typeof settingValues["llm.provider"] === "string") setProvider(settingValues["llm.provider"]);
-        if (typeof settingValues["llm.model"] === "string") setModelName(settingValues["llm.model"]);
+        const storedProvider = settingValues["llm.provider"];
+        const storedModel = settingValues["llm.model"];
+        if (typeof storedProvider === "string") setProvider(storedProvider);
+        if (typeof storedModel === "string" && storedModel.trim()) {
+          setModelName(storedModel);
+        } else if (storedProvider === "openrouter") {
+          setModelName(OPENROUTER_DEFAULT_MODEL);
+        }
         if (typeof settingValues["llm.apiKey"] === "string") setApiKey(settingValues["llm.apiKey"]);
         if (typeof settingValues["tools.mmxPath"] === "string") setMmxPath(settingValues["tools.mmxPath"]);
       } catch {
@@ -225,7 +233,13 @@ export default function SettingsPage() {
           </label>
           <select
             value={provider}
-            onChange={(e) => setProvider(e.target.value)}
+            onChange={(e) => {
+              const nextProvider = e.target.value;
+              setProvider(nextProvider);
+              if (nextProvider === "openrouter") {
+                setModelName(OPENROUTER_DEFAULT_MODEL);
+              }
+            }}
             style={{
               width: "100%",
               padding: "8px",
@@ -235,6 +249,7 @@ export default function SettingsPage() {
           >
             <option value="google">Google</option>
             <option value="openai">OpenAI</option>
+            <option value="openrouter">OpenRouter</option>
           </select>
         </div>
 

@@ -243,6 +243,20 @@ describe("Marketing settings administrator boundary", () => {
 });
 
 describe("Settings connection Zod boundary", () => {
+  it("accepts the supported OpenRouter provider and explicit routing model", async () => {
+    const { settingsTestConnectionSchema } = await import(
+      "@/lib/settings-schema"
+    );
+
+    expect(
+      settingsTestConnectionSchema.safeParse({
+        provider: "openrouter",
+        modelName: "nvidia/nemotron-3-ultra-550b-a55b:free",
+        apiKey: "openrouter-test-key",
+      }).success,
+    ).toBe(true);
+  });
+
   it("bounds the settings collection, key length, and value length", async () => {
     const { settingsPostSchema } = await import("@/lib/settings-schema");
 

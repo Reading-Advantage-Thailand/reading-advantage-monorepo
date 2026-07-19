@@ -21,7 +21,7 @@ export type SettingsPostBody = z.infer<typeof settingsPostSchema>;
 
 /** Zod contract for administrator-only LLM connection test requests. */
 export const settingsTestConnectionSchema = z.strictObject({
-  provider: z.enum(["google", "openai"]),
+  provider: z.enum(["google", "openai", "openrouter"]),
   modelName: z.string().trim().min(1).max(200),
   apiKey: z.string().trim().min(1).max(2_048),
 });

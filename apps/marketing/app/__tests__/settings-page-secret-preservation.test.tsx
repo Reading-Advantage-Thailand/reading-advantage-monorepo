@@ -104,4 +104,32 @@ describe("Marketing settings secret preservation", () => {
     expect(url).toBe("/api/settings/test-connection");
     expect(body["apiKey"]).toBe("sk-test-connection-replacement");
   });
+
+  it("selects the validated OpenRouter routing model and posts the complete connection payload", async () => {
+    render(<SettingsPage />);
+
+    await screen.findByDisplayValue("••••");
+    fireEvent.change(screen.getByRole("combobox"), {
+      target: { value: "openrouter" },
+    });
+    expect(
+      screen.getByDisplayValue("nvidia/nemotron-3-ultra-550b-a55b:free"),
+    ).toBeInTheDocument();
+
+    fireEvent.change(screen.getByDisplayValue("••••"), {
+      target: { value: "openrouter-test-secret" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Test Connection" }));
+
+    await waitFor(() => {
+      expect(fetchMock).toHaveBeenCalledTimes(2);
+    });
+    const [url, request] = fetchMock.mock.calls[1] as [string, RequestInit];
+    expect(url).toBe("/api/settings/test-connection");
+    expect(JSON.parse(request.body as string)).toEqual({
+      provider: "openrouter",
+      modelName: "nvidia/nemotron-3-ultra-550b-a55b:free",
+      apiKey: "openrouter-test-secret",
+    });
+  });
 });

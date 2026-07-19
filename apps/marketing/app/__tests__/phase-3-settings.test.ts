@@ -152,13 +152,17 @@ describe("Phase 3: Settings Page — wiring invariants (tasks 1, 2, 5)", () => {
   });
 
   describe("LLM config form (Phase 3 task 2)", () => {
-    it("provider dropdown exposes Google and OpenAI options", () => {
+    it("provider dropdown exposes Google, OpenAI, and OpenRouter options", () => {
       const src = readText("app/settings/page.tsx");
-      // Look for <select> with <option value="google"> and <option value="openai">.
+      // Look for the complete set of supported Marketing providers.
       // The current implementation uses raw strings — this asserts the contract
       // is preserved through the encryption refactor.
       expect(src).toMatch(/value="google"[^>]*>\s*Google/);
       expect(src).toMatch(/value="openai"[^>]*>\s*OpenAI/);
+      expect(src).toMatch(/value="openrouter"[^>]*>\s*OpenRouter/);
+      expect(src).toContain(
+        "const OPENROUTER_DEFAULT_MODEL = \"nvidia/nemotron-3-ultra-550b-a55b:free\"",
+      );
     });
 
     it("API key input is a masked (type='password') input", () => {
@@ -536,5 +540,35 @@ describe("Phase 3: Settings Page — POST /api/settings/test-connection (task 4 
     // The error message MUST NOT echo the api key back to the client
     // (defense against log / error-body leakage of the secret).
     expect(body.message).not.toContain("sk-bad-key");
+  });
+
+  it("passes the validated OpenRouter model and credential through the shared AI adapter", async () => {
+    const { __fakeAIClient } = (await import(
+      "@reading-advantage/ai"
+    )) as unknown as {
+      __fakeAIClient: { generateText: Mock };
+    };
+    __fakeAIClient.generateText.mockResolvedValueOnce("เชื่อมต่อสำเร็จ");
+
+    const { POST } = await import("@/api/settings/test-connection/route");
+    const response = await POST(
+      authedRequest("http://localhost/api/settings/test-connection", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          provider: "openrouter",
+          modelName: "nvidia/nemotron-3-ultra-550b-a55b:free",
+          apiKey: "openrouter-test-secret",
+        }),
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    const { createAIClient } = await import("@reading-advantage/ai");
+    expect(createAIClient).toHaveBeenCalledWith({
+      provider: "openrouter",
+      model: "nvidia/nemotron-3-ultra-550b-a55b:free",
+      apiKey: "openrouter-test-secret",
+    });
   });
 });
