@@ -113,6 +113,12 @@ describe("Marketing staged Cloud Run release contract", () => {
     expect(domain.args?.join(" ")).toContain("marketing-smoke.sh");
     expect(evidence.args?.join(" ")).toContain(".marketing-previous.revision");
     expect(evidence.args?.join(" ")).toContain(".marketing-candidate.revision");
+    expect(evidence.args?.join(" ")).toContain(
+      "status.traffic.filter('percent=100').extract(revisionName).flatten(show=values)",
+    );
+    expect(evidence.args?.join(" ")).not.toContain(
+      "status.traffic[?percent=100]",
+    );
     expect(evidence.args?.join(" ")).toContain("_RELEASE_COMMIT_SHA");
   });
 });
