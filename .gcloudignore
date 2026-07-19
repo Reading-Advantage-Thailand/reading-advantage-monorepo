@@ -1,6 +1,5 @@
 .git
 .gitignore
-.gcloudignore
 apps/*
 !apps/codecamp-advantage
 !apps/codecamp-advantage/**

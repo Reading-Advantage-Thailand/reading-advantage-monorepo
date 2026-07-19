@@ -1,0 +1,828 @@
+{
+  "lessons": [
+    {
+      "id": "02f83857-3e57-564f-8949-2b1f843344c5",
+      "type": "theory",
+      "order": 1,
+      "title": "The 5 Canonical Objections (And the Real Concern Behind Each)",
+      "content": "# The 5 Canonical Objections\n\n**TL;DR:** Every Reading Advantage deal will hit one or more of these five. The stated objection is rarely the real concern.\n\n## Objection 1: \"Our teachers won't be able to use this\"\n\n**Stated**: capability concern\n**Real**: adoption-risk concern (rep has been burned by ed-tech before)\n\n**Response pattern**: Surface their past experience (Sandler reverse). Offer the Blended tier specifically to address training. Show data on adoption rates at schools with comparable teacher profiles.\n\n---\n\n## Objection 2: \"We've tried something similar and it failed\"\n\n**Stated**: skepticism of category\n**Real**: distrust of vendor accountability\n\n**Response pattern**: Ask exactly what failed. Was it adoption (Managed Service fixes this), curriculum quality (let them compare), or parent communication (show our monthly reports)? Don't defend — diagnose.\n\n---\n\n## Objection 3: \"It's cheaper to just use textbooks\"\n\n**Stated**: cost\n**Real**: doesn't see the value beyond what textbooks already do\n\n**Response pattern**: Anchor to total cost (textbook + teacher salary + parent dissatisfaction + churn). Use the \"Total Cost of English\" framing. Don't argue price — reframe to outcome.\n\n---\n\n## Objection 4: \"Where's your research? Show me the studies.\"\n\n**Stated**: needs evidence\n**Real**: usually authentic — this is a smart buyer\n\n**Response pattern**: Give them the approved citations (Aka 2019). Be honest about variance. Offer to connect them with a peer director who can speak to actual results. Sophisticated buyers respect honesty about limits.\n\n---\n\n## Objection 5: \"We already have a foreign teacher — that's enough\"\n\n**Stated**: solution sufficiency\n**Real**: doesn't see consistency / scale problem\n\n**Response pattern**: Use the Challenger reframe. \"One excellent teacher gives 30 students one excellent year. Then they leave, and the next teacher is different. The platform gives every student the same quality every year — regardless of which teacher is in front of them.\" That's not anti-teacher; it's pro-consistency.\n\n## The Underlying Pattern\n\nNotice that none of these objections respond well to a feature pitch. All five respond well to:\n\n1. **Acknowledge** (label the concern)\n2. **Reverse** (ask a question to find the real issue)\n3. **Reframe** (use the underlying buyer concern, not the surface objection)\n4. **Propose a small step** (pilot, demo, data review)\n\nMemorize the pattern, not the script.",
+      "moduleId": "86546477-c353-520d-aaca-fdddea655500",
+      "reviewStatus": "approved"
+    },
+    {
+      "id": "034aef2b-525a-5b2f-abbd-c3b5ee4697d3",
+      "type": "theory",
+      "order": 2,
+      "title": "The 15-, 45-, and 90-Minute Demo Flows",
+      "content": "# The 15-, 45-, and 90-Minute Demo Flows\n\n**TL;DR:** Every demo length has a different goal. Use the right one or you'll burn both the buyer's time and yours.\n\n## 15-Minute Discovery Call (First Meeting)\n\n**Goal**: Surface pain, confirm fit, book a longer demo.\n\nStructure:\n- 2 min: Set the agenda. \"I'll spend 5 minutes understanding your school, 5 showing you something most schools haven't seen, and 5 deciding if it's worth a longer conversation.\"\n- 5 min: SPIN discovery (mostly Situation + Problem)\n- 5 min: One Challenger Teach moment. Show ONE thing that reframes their problem.\n- 3 min: Trial close. \"Based on what we discussed, does a 45-minute deep-dive next week make sense?\"\n\n**Anti-pattern**: Trying to demo features in 15 minutes. You'll lose.\n\n## 45-Minute Virtual Demo (Second Meeting)\n\n**Goal**: Show the product in the context of THEIR pain. Move to on-site or pilot ask.\n\nStructure:\n- 5 min: Recap what you learned last time. Confirm priorities.\n- 10 min: Walk through the Big 4 — curriculum, consistency, parent visibility, adoption — in their language.\n- 15 min: Live product walkthrough. Show only what addresses their specific pain.\n- 5 min: Q&A.\n- 10 min: Next step. Propose either on-site demo, scoped pilot, or proposal.\n\n**Anti-pattern**: Comprehensive feature tour. You'll lose them at minute 25.\n\n## 90-Minute On-Site Demo (Third Meeting)\n\n**Goal**: Get buy-in from the broader team. Move to close.\n\nStructure:\n- 10 min: Stakeholder intros. WHO else is in the room?\n- 15 min: Director-focused: business case, ROI, parent visibility\n- 30 min: Teacher-focused: classroom workflow demo. Hands-on.\n- 15 min: Operations: implementation timeline, training plan, support\n- 10 min: Pricing / tier recommendation (specific to their situation)\n- 10 min: Next-step ask. Specific. Time-bound.\n\n**Anti-pattern**: Treating the on-site like a longer 45-min demo. The 90-min is multi-stakeholder. Different content for each.\n\n## The Single Rule\n\n**Always cut the demo short if you don't have buy-in by the halfway mark.** A 45-minute demo that's losing at minute 22 is a 22-minute demo. Stop, reset, ask: \"I sense I might be missing what matters most to you. What questions do you have that I haven't addressed?\"\n\nThat recovery move saves more deals than any feature in our product.",
+      "moduleId": "86546477-c353-520d-aaca-fdddea655500",
+      "reviewStatus": "approved"
+    },
+    {
+      "id": "18196c9a-a52b-53f3-b8ca-4a9a8923a8d5",
+      "type": "theory",
+      "order": 3,
+      "title": "Open Questions, Closed Questions, and When to Use Each",
+      "content": "# Open Questions, Closed Questions, and When to Use Each\n\n**TL;DR:** Open questions expand. Closed questions confirm. Use 80% open in discovery, 80% closed in the close.\n\n## Open vs. Closed\n\n**Open** (How, What, Where, Why, Who, Tell me about…):\n- \"What's your biggest challenge with teacher turnover?\"\n- \"How are parents responding to the current program?\"\n\n→ Get information. Get the buyer talking. Build understanding.\n\n**Closed** (Are, Do, Have, Will, Can — yes/no answers):\n- \"Do you have budget approved for this quarter?\"\n- \"Can we schedule the on-site demo for next Tuesday?\"\n\n→ Get commitment. Confirm. Move to next step.\n\n## The Beginner's Mistake\n\nNew reps ask closed questions in discovery. They want a yes — they want to feel like they're \"moving forward.\" But \"Yes, we're interested\" is meaningless. It tells you nothing about the buyer's actual pain.\n\n## The Expert's Move\n\nIn discovery, every question should be open. Every. Single. One. If you catch yourself asking \"do you…\", reword to \"what…\" or \"how…\".\n\n| Closed (weak) | Open (strong) |\n|---|---|\n| \"Do you have problems with teacher consistency?\" | \"How does teacher turnover affect your program?\" |\n| \"Are your parents happy with results?\" | \"What kind of feedback have you gotten from parents this year?\" |\n| \"Is budget a concern?\" | \"How does the budget for English programming usually get decided?\" |\n\n## In the Close — Flip It\n\nWhen you're closing, you want yes/no commitments. Open questions invite reconsideration. Closed questions force decision.\n\n| Open (weak close) | Closed (strong close) |\n|---|---|\n| \"What do you think?\" | \"Can we move forward with the App-Only tier for 100 students?\" |\n| \"How do you feel about the price?\" | \"Does the App-Only tier at the price we discussed work for you?\" |\n\n## One Exception: The Trial Close\n\nA \"trial close\" is a closed question used mid-conversation to test temperature without commitment.\n\n- \"If we could solve the teacher-consistency problem, would that be worth exploring further?\"\n- \"Hypothetically, if the price matched your budget, would the App-Only tier be the right fit?\"\n\nTrial closes give you signal without pressure.",
+      "moduleId": "eb0a5e74-a145-5439-9f4a-84191bc58de7",
+      "reviewStatus": "approved"
+    },
+    {
+      "id": "2452d8f8-5904-5ecc-a0bb-1adfb4475f37",
+      "type": "quiz",
+      "order": 4,
+      "title": "Universal Discovery Quiz",
+      "content": "",
+      "moduleId": "eb0a5e74-a145-5439-9f4a-84191bc58de7",
+      "reviewStatus": "approved"
+    },
+    {
+      "id": "2f452c7e-71c0-5c62-90dc-63f5c98a9596",
+      "type": "roleplay",
+      "order": 3,
+      "title": "Closing Roleplay: The Final Pricing Conversation",
+      "content": "",
+      "moduleId": "14d69c37-49de-59b4-ab1f-1c22b1bb03d2",
+      "reviewStatus": "approved"
+    },
+    {
+      "id": "307cb2c3-a160-58ea-bf70-badf800bb8f0",
+      "type": "roleplay",
+      "order": 4,
+      "title": "Value-Framing Roleplay: Parents Don't See Results",
+      "content": "",
+      "moduleId": "b3f6f0cf-1da5-585f-80f2-4dca3569cc07",
+      "reviewStatus": "approved"
+    },
+    {
+      "id": "3a356602-79ec-50ee-990c-9a3b800de598",
+      "type": "roleplay",
+      "order": 5,
+      "title": "Discovery Roleplay: First Call with a Skeptical Director",
+      "content": "",
+      "moduleId": "eb0a5e74-a145-5439-9f4a-84191bc58de7",
+      "reviewStatus": "approved"
+    },
+    {
+      "id": "41d6ecfe-1030-5a59-9164-5c84a75bf215",
+      "type": "theory",
+      "order": 1,
+      "title": "Features → Benefits → Outcomes",
+      "content": "# Features → Benefits → Outcomes\n\n**TL;DR:** Buyers don't buy features. They buy what those features do for the metric their boss cares about.\n\n## The Three-Layer Translation\n\nEvery product has features. Few reps can translate them.\n\n| Layer | Example (RA App-Only) | Who cares? |\n|---|---|---|\n| **Feature** | \"Adaptive Lexile-based reading engine\" | Engineering only |\n| **Benefit** | \"Each student gets text at their exact level\" | Teachers |\n| **Outcome** | \"Average reading level rises 1.2 years in 9 months\" | Director, Parents |\n\n**Buyers buy outcomes.** Teachers like benefits. Engineers like features. Match your language to your audience.\n\n## The Director's Scorecard\n\nA school director is measured on:\n1. **Enrollment growth** (parent satisfaction → referrals)\n2. **Teacher retention** (low turnover = less recruiting cost)\n3. **Visible outcomes** (test scores, certifications, parent-facing reports)\n4. **Operational simplicity** (less admin overhead)\n\nEvery feature you mention should ladder up to one of these four. If it doesn't, drop it.\n\n## The Outcome Pyramid Exercise\n\nFor each Reading Advantage feature, write out three layers:\n\n```\nFeature: [adaptive Lexile reading engine]\n  ↓\nBenefit: [students always read at their level]\n  ↓\nOutcome: [measurable reading-level gain → director can show parents progress reports]\n```\n\nIf you can't get to the third layer, you don't understand the feature well enough to sell it.\n\n## In Practice\n\n> ❌ \"We have an adaptive Lexile reading engine that uses NLP.\"\n>\n> ❌ \"Our adaptive engine means each student reads at their level.\"\n>\n> ✅ \"When you walk into the next parent meeting, you'll have data showing each student's reading-level gain — by name, by month. That's what makes parents recommend you.\"\n\nThe third version skipped the feature entirely. The director still bought.",
+      "moduleId": "b3f6f0cf-1da5-585f-80f2-4dca3569cc07",
+      "reviewStatus": "approved"
+    },
+    {
+      "id": "4d2582ee-ebab-5517-aac8-9ea7fd939a82",
+      "type": "theory",
+      "order": 3,
+      "title": "The Challenger Sale: Teach, Tailor, Take Control",
+      "content": "# The Challenger Sale: Teach, Tailor, Take Control\n\n**TL;DR:** Top reps don't ask \"what keeps you up at night?\" They tell the buyer something the buyer didn't know — and reframe the problem.\n\n## The Five Rep Profiles (Dixon & Adamson, 2011)\n\nCEB studied 6,000 reps across 90 companies. They found five archetypes:\n\n1. **Hard Worker** — high effort\n2. **Lone Wolf** — independent\n3. **Reactive Problem Solver** — answers fast\n4. **Relationship Builder** — loved by clients\n5. **Challenger** — teaches, tailors, takes control\n\nIn simple sales, Relationship Builders win. In **complex, high-stakes B2B** (which is what selling a school director a multi-year platform is), **Challengers win 4.5x more deals**.\n\n## The Three Cs\n\n### 1. Teach\nYou bring a **new perspective** the buyer hadn't considered.\n\n> ❌ \"What are your top priorities this year?\"\n>\n> ✅ \"Most schools we work with assume teacher turnover is a recruiting problem. It's almost always a teaching-consistency problem. Here's the data...\"\n\nYou're now the expert. The buyer is listening, not pitching back.\n\n### 2. Tailor\nYou **adapt the teach** to the buyer's specific situation — using language and metrics they use internally.\n\nIf they call parents \"Mrs. and Mr.\" not \"Khun\", match it. If their KPIs say \"retention rate\" not \"churn\", match it. Tailoring is what makes Teaching land.\n\n### 3. Take Control\nYou guide the conversation. You're polite but firm.\n\n> Buyer: \"Send me the brochure and I'll get back to you.\"\n>\n> ❌ Relationship Builder: \"Sure! When works best?\"\n>\n> ✅ Challenger: \"I could — but the brochure won't tell you whether this works for your school specifically. What if we did a 20-minute call where I show you the three schools most like yours and what their first six months looked like? That'll give you something to actually decide on.\"\n\nYou didn't refuse. You redirected to a better next step.\n\n## The Reframe\n\nThe signature Challenger move is the **reframe**: telling the buyer the problem they think they have is actually a symptom of a different, bigger problem you can solve.\n\nExample for RA:\n> Buyer: \"We need to improve our students' English scores.\"\n>\n> Reframe: \"Sure — but most schools that improve scores still lose enrollment to schools that look more *consistent* to parents. The actual competitive moat is delivering the same quality to every student, every class, every term. That's where your scores AND your retention come from.\"\n\nThe buyer just learned something. You just stopped competing on price.",
+      "moduleId": "b3f6f0cf-1da5-585f-80f2-4dca3569cc07",
+      "reviewStatus": "approved"
+    },
+    {
+      "id": "50203811-bd2d-53a4-a88c-486e6e29a3c6",
+      "type": "theory",
+      "order": 2,
+      "title": "Asking for the Order: The Direct Close",
+      "content": "# Asking for the Order: The Direct Close\n\n**TL;DR:** 80% of reps lose the deal at the moment they need to ask. The rep who asks closes — the rep who hopes doesn't.\n\n## Why Reps Don't Ask\n\nAsking creates the possibility of \"no.\" Most reps would rather stay in \"maybe\" indefinitely than risk the no.\n\nBut here's the thing: **the deal you don't ask for is already a no**. You just don't know it yet.\n\n## The Direct Close\n\nAfter the demo, after the objections, after the pricing — there comes a moment. Both of you know it. You either ask or you don't.\n\nThe direct close is one sentence:\n\n> \"Based on everything we've discussed, the Blended tier at 120,000 baht starting in April fits your school. Can we move forward?\"\n\nThat's it. Specific tier. Specific price. Specific start date. Yes-or-no question. Then **shut up**.\n\n## The Three Outcomes\n\nAfter the direct close, only three things can happen:\n\n1. **Yes.** Great. Move to implementation handoff.\n2. **No.** Now you know. Ask \"what would it take?\" — you might find a path.\n3. **Maybe / \"Let me think about it.\"** This is your real signal. Use it.\n\n## Handling the \"Let Me Think About It\"\n\nThis is almost always a hidden objection. The buyer is uncomfortable saying no.\n\n> \"Of course. Before you do, help me understand what specifically you need to think through. Is it about the price, about teacher adoption, about timing, or something else?\"\n\nYou're not pushing. You're isolating. Once you know what they actually need to resolve, you can address it.\n\nIf they truly need to think, give them a deadline:\n\n> \"Take the weekend. Can I call you Tuesday at 2pm to talk it through?\"\n\nSpecific. Time-bound. They either agree (commitment) or push back (revealing the real objection).\n\n## The Scoped-Pilot Close\n\nWhen the direct close fails on first ask, downgrade to a scoped pilot:\n\n> \"I understand the full commitment is a big step. Here's an alternative: a 30-day scoped pilot with one classroom. If by the end, the data and teacher feedback aren't worth showing parents, we walk away — no expansion, no contract. If it works, we expand. Does that feel like a fair next step?\"\n\nThis is NOT discounting. It's reducing the buyer's risk. Most \"no's\" turn into \"yes\" at the scoped-pilot level.\n\n## After the Yes\n\nDon't keep selling. Close your laptop. Confirm next steps and get out:\n\n> \"Excellent. Here's what happens next: I'll send the contract this afternoon. Once you sign, our implementation lead will reach out within 48 hours to schedule kickoff. Your start date is April 15. Sound good?\"\n\nMove them off the sales call and into the implementation calendar. The deal isn't done until the contract is signed AND the implementation is scheduled.",
+      "moduleId": "14d69c37-49de-59b4-ab1f-1c22b1bb03d2",
+      "reviewStatus": "approved"
+    },
+    {
+      "id": "6c3a4029-2f6a-55c2-b541-0a76551b669c",
+      "type": "theory",
+      "order": 1,
+      "title": "The Total-Cost-of-English Frame",
+      "content": "# The Total-Cost-of-English Frame\n\n**TL;DR:** Don't compare your price to textbooks. Compare it to the total cost of running an English program — teacher salaries, materials, recruiting, parent satisfaction, churn — and you'll win every time.\n\n## Why Single-Line Price Comparison Loses\n\nWhen a director says \"this costs more than textbooks\", they're comparing apples to oranges. Textbooks are part of the cost. Teacher salaries are 70% of the cost. Don't take the bait.\n\n## The Total Cost Math (per 100 students/year)\n\n| Line item | Annual cost |\n|---|---|\n| 2 English teachers (salary, benefits) | 720,000 baht |\n| Textbooks + materials | 60,000 baht |\n| Parent meetings + reports prep | 40,000 baht |\n| Teacher recruitment when one leaves | 30,000-80,000 baht |\n| Parent churn (1 family / 100K of revenue lost annually) | 100,000+ baht |\n| **Total realistic baseline** | **~950,000 baht** |\n\nNow position Reading Advantage:\n\n- App-Only: 50,000 baht. Reduces materials cost, increases parent visibility. Net: ~900K, but with measurable outcomes.\n- Blended: 120,000 baht. Same plus monthly teacher training. Net: ~870K with much better retention.\n- Managed Service: 400,000 baht. Replaces ONE teacher salary entirely. Net: ~630K with full consistency.\n\n**You haven't made the school spend more. You've redirected spend they were already making.**\n\n## The Anchor Sentence\n\nMemorize this opening for every pricing conversation:\n\n> \"Most schools your size spend somewhere between 800K and 1.2M baht annually on the full English program — teachers, materials, parent communications, churn. Where does your school sit on that range?\"\n\nYou've anchored to a 6-figure number. Now your 50K-400K offer feels like a portion of an existing budget, not a new line item.\n\n## The \"We Can't Afford It\" Counter\n\nWhen the director still says they can't afford it, use Implication questions:\n\n> \"Got it. Can I ask — if you do nothing for another year, what does the cost of parent churn look like?\"\n\n> \"How much did you spend on teacher recruiting in the last 12 months?\"\n\nYou're not arguing. You're making them calculate the cost of inaction themselves.",
+      "moduleId": "14d69c37-49de-59b4-ab1f-1c22b1bb03d2",
+      "reviewStatus": "approved"
+    },
+    {
+      "id": "77f3a034-ab6f-5f32-9d66-cb208213885e",
+      "type": "theory",
+      "order": 1,
+      "title": "Why Discovery Beats Pitching",
+      "content": "# Why Discovery Beats Pitching\n\n**TL;DR:** The salespeople who win consistently aren't the smoothest talkers — they're the best listeners. Discovery is the foundation of every sales methodology that's stood the test of time: SPIN, Sandler, Challenger, MEDDIC. Skip it and you're guessing.\n\n## The 80/20 Rule of Conversations\n\nTop performers talk **20% of the time**. They spend the other 80% asking questions and listening — *really* listening, not just waiting for their turn to talk.\n\nWhen you pitch before you understand, you're solving a problem you only *think* the buyer has. When you discover first, the buyer tells you exactly which features matter — and exactly why.\n\n## The SPIN Framework (Rackham, 1988)\n\nNeil Rackham analyzed 35,000+ sales calls and found four question types that predict success:\n\n1. **Situation questions** — \"How many ESL teachers do you have right now?\"\n   *Gather facts about the buyer's current state. Use sparingly — buyers find these tedious.*\n\n2. **Problem questions** — \"Where are you finding it hardest to keep teachers consistent?\"\n   *Surface dissatisfaction. The buyer must hear themselves describe a pain.*\n\n3. **Implication questions** — \"What does inconsistent teaching cost you in parent retention each year?\"\n   *Make the pain expensive. Without implications, the buyer won't budget for a solution.*\n\n4. **Need-payoff questions** — \"If your teachers could deliver the same lesson the same way every time, what would that do for your enrollment numbers?\"\n   *Have the buyer describe the value of solving the problem. Now they're selling themselves.*\n\n## The Sequence Matters\n\nYou can't jump to Need-payoff in question one. The sequence builds psychological investment. Skip Implication and the buyer will say \"interesting, send me a brochure\" and you'll never hear from them again.\n\n## Practical Exercise\n\nPick a real opportunity in your pipeline. Write out 2 questions for each of the 4 SPIN categories — 8 questions total. Lead with Situation, build pressure through Problem and Implication, then close with Need-payoff. Practice them out loud before your next call.\n\n## What Great Looks Like\n\n| Rep type | What they do |\n|---|---|\n| Beginner | Pitches features. Asks \"what are you looking for?\" |\n| Intermediate | Asks Situation + Problem questions. Pitches solution. |\n| Top performer | Goes full SPIN. Buyer pitches the solution back. |\n\nThe goal: by the end of discovery, **the buyer is selling the solution to you**.",
+      "moduleId": "eb0a5e74-a145-5439-9f4a-84191bc58de7",
+      "reviewStatus": "approved"
+    },
+    {
+      "id": "78e1c125-43c7-502a-80ab-8a0330fc75ca",
+      "type": "quiz",
+      "order": 3,
+      "title": "Universal Objection Quiz",
+      "content": "",
+      "moduleId": "e2b9dbe1-fb7c-5a52-9398-78b1fc57e928",
+      "reviewStatus": "approved"
+    },
+    {
+      "id": "81f0690e-a5a4-5846-96c0-5bbf54b6a31f",
+      "type": "theory",
+      "order": 2,
+      "title": "Negotiating Without Discounting",
+      "content": "# Negotiating Without Discounting\n\n**TL;DR:** Every time you discount, you train the buyer that your price is fake. The pros adjust scope, terms, or timing — never the per-unit price.\n\n## Why Discounting Destroys Your Pipeline\n\nWhen you give a 10% discount, three things happen:\n\n1. **This deal**: You lost 10% of revenue.\n2. **Next deal**: This buyer tells one peer \"they discount.\" Your next deal starts with a 10% expectation.\n3. **All deals**: Your reps learn discounting is acceptable. The whole sales team's margin erodes.\n\nThe math is unforgiving. A 10% discount on a 30% margin business cuts profit by 33%.\n\n## The Pro Move: Adjust Scope, Not Price\n\nThe buyer's budget is real. The full deal might not fit. **Reduce the deal**, not the rate.\n\n> Buyer: \"We just don't have 50,000 baht for this. Can you come down?\"\n>\n> ❌ Amateur: \"Let me see what I can do… how about 45,000?\"\n>\n> ✅ Pro: \"I can't move the per-student rate without changing what we're delivering. But — if we start with 50 students instead of 100, you're at 25,000 for the first year. That gives you the data to make the case for expanding next year. Would that work for the budget?\"\n\nYou held price. You found a path. The buyer got something workable.\n\n## Three Trade Levers\n\nWhen pushed, trade — don't give.\n\n| Lever | What you trade | What you ask for in return |\n|---|---|---|\n| **Scope** | Fewer students / classrooms | Same rate per unit |\n| **Timing** | 6-month pilot then renew | Locked-in 2-year rate after |\n| **Payment terms** | Annual upfront → quarterly | 3% premium on quarterly |\n\nEvery trade should be **symmetric**: if you give something, you ask for something.\n\n## The \"How am I supposed to do that?\" Question\n\nWhen the buyer pushes hard for a discount, deflect with a calibrated question (from Voss):\n\n> Buyer: \"Look, I need this for 30,000 or we can't move forward.\"\n>\n> You: \"How am I supposed to do that? Honestly — walk me through it. What would I tell my colleague back at the office about the unique factors that justified the lower price?\"\n\nYou haven't said no. You've made the buyer justify their request. 7 times out of 10, they back down or find more budget. The other 3 times, you learn something true about the deal you didn't know.\n\n## The Walk-Away Number\n\nDecide BEFORE the call: what's the minimum I'll accept? If the buyer goes below that, you must be willing to walk. If you can't walk, you have no leverage.\n\nA deal that loses money is worse than no deal. It anchors your future pipeline at unsustainable prices.",
+      "moduleId": "e2b9dbe1-fb7c-5a52-9398-78b1fc57e928",
+      "reviewStatus": "approved"
+    },
+    {
+      "id": "852cd461-2fef-51d1-af6f-82cf28cd52c1",
+      "type": "theory",
+      "order": 2,
+      "title": "Anchoring, Loss-Aversion, and Buyer Psychology",
+      "content": "# Anchoring, Loss-Aversion, and Buyer Psychology\n\n**TL;DR:** Buyers are not rational. Understanding three biases — anchoring, loss-aversion, and status-quo bias — lets you frame price and decision in ways that align with how brains actually work.\n\n## Anchoring\n\nThe first number the buyer hears becomes the reference point for everything that follows.\n\n> ❌ \"Our App-Only is 50,000 baht per year.\"\n>\n> ✅ \"Most schools your size invest 200,000-400,000 baht annually on English programming, between teacher salaries, materials, and parent communications. Our App-Only handles all three for 50,000.\"\n\nYou haven't lied. You've reframed the anchor. Now 50,000 feels like a steal, not a stretch.\n\n## Loss-Aversion\n\nPeople feel losses **2x more strongly than equivalent gains** (Kahneman & Tversky, 1979).\n\n> ❌ \"You'll gain 1.2 grade levels of reading improvement.\"\n>\n> ✅ \"Right now, every month you wait costs roughly 0.13 grade levels of student progress that you can never recover. By the time these students graduate, that's nearly a full year of reading ability lost.\"\n\nSame data. Loss framing creates urgency.\n\n## Status-Quo Bias\n\nThe biggest competitor isn't another vendor. It's **doing nothing**.\n\nMost \"no decisions\" aren't rejections — they're indefinite postponements. To beat status-quo bias:\n\n1. **Quantify the cost of inaction.** Use Implication questions from SPIN.\n2. **Make the next step trivially small.** Not \"buy our 3-year contract\" — \"do a 30-day scoped pilot with 1 classroom.\"\n3. **Use a deadline anchored in the buyer's calendar.** \"If we start by April 15, you'll have data to share at the parent meeting in June.\" Not \"this offer expires Friday.\"\n\n## Putting It Together\n\nCombined frame for a closing conversation:\n\n> \"Schools like yours typically spend 200K+ on English programs **(anchor)**.\n>\n> If you wait another semester to act, each student loses about 6 weeks of reading-level progress **(loss-aversion)**.\n>\n> Let's start with one classroom for 30 days. If by June you don't have data worth sharing with parents, we walk away **(reduce status-quo friction)**.\"\n\nThree lines. Three biases addressed. One small-step ask.",
+      "moduleId": "b3f6f0cf-1da5-585f-80f2-4dca3569cc07",
+      "reviewStatus": "approved"
+    },
+    {
+      "id": "86d6278c-a02a-53bd-8933-c68edd96909d",
+      "type": "roleplay",
+      "order": 4,
+      "title": "Objection Roleplay: 'We Tried Something Similar and It Failed'",
+      "content": "",
+      "moduleId": "e2b9dbe1-fb7c-5a52-9398-78b1fc57e928",
+      "reviewStatus": "approved"
+    },
+    {
+      "id": "87ad4c3f-8e17-5f26-aa64-4ffb212ee3c4",
+      "type": "roleplay",
+      "order": 4,
+      "title": "Roleplay: Choosing the Right Tier",
+      "content": "",
+      "moduleId": "e6ed4d77-83be-5a95-a66b-c5e4f6be51d7",
+      "reviewStatus": "approved"
+    },
+    {
+      "id": "942d7177-dc24-51d5-aafa-3cb7b82b52af",
+      "type": "roleplay",
+      "order": 4,
+      "title": "Applied Roleplay: '15-Minute Discovery Call'",
+      "content": "",
+      "moduleId": "86546477-c353-520d-aaca-fdddea655500",
+      "reviewStatus": "approved"
+    },
+    {
+      "id": "98de45a9-b511-5810-a009-aca59c0786f8",
+      "type": "quiz",
+      "order": 4,
+      "title": "Closing & Negotiation Quiz",
+      "content": "",
+      "moduleId": "14d69c37-49de-59b4-ab1f-1c22b1bb03d2",
+      "reviewStatus": "approved"
+    },
+    {
+      "id": "b1853ea9-9ca7-586b-9e5e-904ae58e0f14",
+      "type": "roleplay",
+      "order": 3,
+      "title": "Applied Objection Roleplay: Teachers Won't Adopt",
+      "content": "",
+      "moduleId": "86546477-c353-520d-aaca-fdddea655500",
+      "reviewStatus": "approved"
+    },
+    {
+      "id": "cb91caf6-395b-5ad2-b6a1-df5d178622bf",
+      "type": "quiz",
+      "order": 3,
+      "title": "Product Knowledge Quiz",
+      "content": "",
+      "moduleId": "e6ed4d77-83be-5a95-a66b-c5e4f6be51d7",
+      "reviewStatus": "approved"
+    },
+    {
+      "id": "d08a7145-3ef7-5a5e-8d1a-425febae0fd7",
+      "type": "theory",
+      "order": 2,
+      "title": "Active Listening, Mirroring, and Labeling",
+      "content": "# Active Listening, Mirroring, and Labeling\n\n**TL;DR:** Chris Voss negotiated for the FBI by *not* speaking. Three techniques — mirroring, labeling, and the calibrated question — get buyers to talk three times longer and reveal what they actually want.\n\n## Mirroring: The 3-Word Trick\n\nWhen the buyer says something important, **repeat the last 1-3 words as a question**.\n\n> Buyer: \"Honestly, the budget is just really tight this year.\"\n> You: *(slight pause)* \"Really tight?\"\n> Buyer: \"Yeah, the head office cut the discretionary fund by 30% in Q2, so we're trying to...\"\n\nThe buyer keeps talking. They reveal what was behind the original statement. You never had to ask \"why?\" — which would have felt like an interrogation.\n\n## Labeling: Name the Emotion\n\nSales is emotional. Buyers buy on emotion and justify with logic. Naming the emotion in the room defuses it.\n\nTemplates:\n- \"It sounds like…\"\n- \"It seems like…\"\n- \"It looks like…\"\n\n> Buyer: \"Look, I've tried four different platforms in the last two years and none of them stuck.\"\n> You: \"It sounds like you've been burned before and you're worried this is another expensive mistake.\"\n> Buyer: \"*Exactly*. And the teachers complained every time.\"\n\nYou just earned more trust than 30 minutes of feature-pitching would have.\n\n## The Calibrated Question\n\nA calibrated question is open-ended and forces the buyer to think. The two power phrases:\n\n- **\"How am I supposed to do that?\"** — when pushed to discount or accept impossible terms.\n- **\"What's the biggest challenge you're facing with X right now?\"** — when you want to find the real pain.\n\nCalibrated questions never start with \"are you\" or \"do you\" (closed). They start with \"how\" or \"what\".\n\n## The Silence Rule\n\nAfter you ask a hard question, **shut up**. Count to 5 in your head. The buyer will fill the silence — and what they fill it with is usually the truth.\n\n## Practice\n\nThis week, on every sales call, mirror at least 3 times. Label the emotion at least once. Count out 5 seconds of silence after your hardest question. Track what happens.",
+      "moduleId": "eb0a5e74-a145-5439-9f4a-84191bc58de7",
+      "reviewStatus": "approved"
+    },
+    {
+      "id": "da0ac6c2-eec1-545d-a7b9-4f654be1effa",
+      "type": "theory",
+      "order": 2,
+      "title": "Honest Claims, Approved Citations",
+      "content": "# Honest Claims, Approved Citations\n\n**TL;DR:** The fastest way to lose a sophisticated buyer is to over-claim. The fastest way to win them is to under-claim with rigorous evidence.\n\n## Why Honesty Wins in B2B Education\n\nSchool directors talk to each other. If you promise outcomes that don't materialize, your next 10 deals in that district are dead before they start. Education is a small world.\n\n## The Three Tiers of Claims\n\n1. **Hard claim** (cite-able, defensible) — peer-reviewed study, internal data with N>50\n2. **Soft claim** (anecdotal but specific) — \"Pim's school at PSP saw…\"\n3. **Aspirational** (forward-looking) — \"Your students could…\"\n\nUse hard claims when challenged. Use soft claims to make hard claims feel real. Use aspirational claims for vision-setting, never as a substitute for evidence.\n\n## The Approved Short-Form Citations\n\nThe only outcome claims you may make verbally:\n\n✅ \"In a peer-reviewed evaluation (Aka et al., 2019), schools using Reading Advantage saw an average reading-level gain of 1.2 years over 9 months. Results vary by implementation quality.\"\n\n✅ \"Schools that follow our recommended teacher-training protocol report 85%+ teacher adoption at 6 months. Schools that skip training see lower numbers.\"\n\n✅ \"Across our managed-service schools, average parent satisfaction (NPS) is +42. The school-by-school range is +15 to +68.\"\n\n## The Banned Phrases\n\n❌ \"Guaranteed results\"\n❌ \"Every student will improve\"\n❌ \"Better than [competitor]\" (without citation)\n❌ \"100% of our schools\"\n❌ \"Your scores will go up X%\"\n\n## Handling Pressure to Over-Claim\n\nDirectors will sometimes push you to make stronger claims. Hold the line:\n\n> Director: \"Look, just tell me — will my students' English scores go up?\"\n>\n> ❌ Weak: \"Yes, definitely!\"\n>\n> ✅ Strong: \"I can't promise that — and you shouldn't trust any vendor who does. What I CAN show you is the data from schools most like yours: their range, their average, their worst cases. That's the honest answer. Want to see it?\"\n\nThis response builds MORE trust, not less. Sophisticated buyers know nothing is guaranteed. They want a vendor who's truthful about variance.",
+      "moduleId": "e6ed4d77-83be-5a95-a66b-c5e4f6be51d7",
+      "reviewStatus": "approved"
+    },
+    {
+      "id": "df563186-25b3-5644-b2dc-be60f89334ea",
+      "type": "theory",
+      "order": 1,
+      "title": "The 9-Product Suite and 3 Service Tiers",
+      "content": "# The 9-Product Suite and 3 Service Tiers\n\n**TL;DR:** Reading Advantage isn't one product — it's nine, packaged into three tiers. Match the tier to the school's situation, not the price they hope for.\n\n## The Suite at a Glance\n\n1. **Reading Advantage** (core adaptive reading platform)\n2. **Primary Advantage** (K-3 phonics + early reading)\n3. **Science Advantage** (English-medium science curriculum)\n4. **Mastery Advantage** (math with English-medium delivery)\n5. **CodeCamp Advantage** (coding in English for grades 4+)\n6. **Speaking Advantage** (speech evaluation, pronunciation)\n7. **Listening Advantage** (audio comprehension)\n8. **Writing Advantage** (guided writing with AI feedback)\n9. **Test Advantage** (placement, progress, exit assessments)\n\n## The 3 Service Tiers\n\n| Tier | What's included | Best for |\n|---|---|---|\n| **App-Only** | All 9 products. Teacher uses on their own. | Schools with strong, English-confident teachers who just need a curriculum to follow. |\n| **Blended** | App + monthly teacher training + quarterly observation. | Schools where teachers WANT the platform but need coaching to use it well. |\n| **Managed Service** | App + on-site Reading Advantage staff delivering instruction 2-5 days/week. | Schools that can't keep qualified English teachers and need outsourcing. |\n\n## How to Choose the Tier\n\nThe discovery question that picks the tier:\n\n> \"Tell me about your current English teachers. How long has the team been together? What's their English level?\"\n\n- Teachers stable, fluent → App-Only\n- Teachers stable, not fluent → Blended (training fills the gap)\n- High turnover, hard to recruit → Managed Service (outsource the problem)\n\n**Critical**: Don't sell App-Only to a school that needs Managed Service. They'll fail and churn, and you'll lose the renewal.\n\n## The Big 4 Protocol\n\nEvery demo and discovery touches the \"Big 4\":\n\n1. **Curriculum quality** — what we teach\n2. **Teacher consistency** — same lesson, same way, every classroom\n3. **Parent visibility** — monthly reports parents can read\n4. **Adoption risk** — what we do to make sure it actually gets used\n\nSkip any of these and the deal will surface that objection later. Address all four proactively.\n\n## What NEVER to Claim (Outcome Claims Policy)\n\n- Never promise specific score gains (\"scores will go up X points\")\n- Never claim \"every student\" will improve\n- Never compare without an approved short-form citation\n- Never use the word \"guaranteed\"\n\nUse approved citations from the outcome-claims policy: \"In peer-reviewed evaluation (Aka et al., 2019), schools using Reading Advantage saw an average reading-level gain of 1.2 years over 9 months. Results vary by implementation quality.\"\n\nThe full sentence — including the variance disclaimer — is non-negotiable.",
+      "moduleId": "e6ed4d77-83be-5a95-a66b-c5e4f6be51d7",
+      "reviewStatus": "approved"
+    },
+    {
+      "id": "ea676598-70e6-513f-b827-386d5785fc3b",
+      "type": "quiz",
+      "order": 5,
+      "title": "Applied Objections Quiz",
+      "content": "",
+      "moduleId": "86546477-c353-520d-aaca-fdddea655500",
+      "reviewStatus": "approved"
+    },
+    {
+      "id": "f5a5c473-9a8d-53e1-a053-e99a277c7db6",
+      "type": "theory",
+      "order": 1,
+      "title": "The Stated Objection is Almost Never the Real One",
+      "content": "# The Stated Objection is Almost Never the Real One\n\n**TL;DR:** When a buyer says \"it's too expensive,\" they almost never mean it. Your job is to find the real objection — usually risk, fit, or authority.\n\n## The Top 4 Real Objections\n\nWhat buyers SAY:\n- \"It's too expensive.\"\n- \"We need to think about it.\"\n- \"Send me a proposal.\"\n\nWhat they actually MEAN:\n1. **Risk** — \"I don't believe you'll deliver what you say.\"\n2. **Fit** — \"I don't think this is the right solution for my specific problem.\"\n3. **Authority** — \"I'm not the one who can actually decide.\"\n4. **Urgency** — \"I don't see why I should act now vs. six months from now.\"\n\nIf you respond to the stated objection (price), you'll lose. Drop the price and the real objection (risk) is still there.\n\n## The Sandler Reverse\n\nThe Sandler reverse is the single most powerful objection-handling technique. When you hear an objection, **don't answer it** — ask a question instead.\n\n> Buyer: \"It's just too expensive for us right now.\"\n>\n> ❌ Weak: \"I could do 10% off if you sign this month.\"\n>\n> ✅ Sandler reverse: \"Help me understand — when you say 'too expensive', is it the absolute number, or is it that you don't yet see the value at that number? Because those are two different conversations.\"\n\nYou just learned which of the four real objections you're dealing with.\n\n## Feel-Felt-Found (Used Sparingly)\n\nWhen you've identified the real objection, the feel-felt-found pattern shows you've handled it before:\n\n> \"I understand how you **feel**. Director Pim at PSP school **felt** the same way — she'd been burned twice before. What she **found** was that the 30-day pilot let her see the actual data before committing. She started with one classroom; by the end of the semester she expanded to all of Grade 4.\"\n\nDon't overuse this. Once per conversation max.\n\n## The Isolation Question\n\nBefore you handle an objection, **isolate it**. Make sure it's the only one.\n\n> \"If we could solve the budget concern, is there anything else that would stop us from moving forward today?\"\n\nIf the answer is \"yes, there's also the teacher buy-in piece\" — you just saved yourself from discounting only to discover the deal was never going to close.\n\n## The Three-Question Sequence\n\nUse this every time you hear an objection:\n\n1. **Acknowledge** (label the emotion): \"It sounds like budget is a real concern.\"\n2. **Reverse** (ask a question): \"Help me understand — is it the total cost, or the per-student cost, or the timing?\"\n3. **Isolate** (confirm it's the only issue): \"If we solved the timing piece, is there anything else?\"\n\nYou haven't pitched anything. You've turned an objection into a diagnostic conversation.",
+      "moduleId": "e2b9dbe1-fb7c-5a52-9398-78b1fc57e928",
+      "reviewStatus": "approved"
+    }
+  ],
+  "modules": [
+    {
+      "id": "14d69c37-49de-59b4-ab1f-1c22b1bb03d2",
+      "slug": "pricing-closing",
+      "order": 6,
+      "phase": "Close",
+      "title": "Pricing, Negotiation & Closing",
+      "description": "Apply universal closing technique to Reading Advantage's pricing structure. Hold price under pressure, ask for the order, hand off cleanly to implementation."
+    },
+    {
+      "id": "86546477-c353-520d-aaca-fdddea655500",
+      "slug": "ra-objections-demo",
+      "order": 5,
+      "phase": "Conversations",
+      "title": "Applied: RA Objections & Demo Conversations",
+      "description": "Apply the universal objection framework to the 5 canonical Reading Advantage objections. Practice the 15-, 45-, and 90-minute demo flows."
+    },
+    {
+      "id": "b3f6f0cf-1da5-585f-80f2-4dca3569cc07",
+      "slug": "framing-value",
+      "order": 2,
+      "phase": "Foundations",
+      "title": "Framing Value in the Buyer's Language",
+      "description": "Stop selling features. Learn to translate every capability into outcomes the buyer's boss measures. Apply Challenger Teach-Tailor-Take Control and the psychology of anchoring."
+    },
+    {
+      "id": "e2b9dbe1-fb7c-5a52-9398-78b1fc57e928",
+      "slug": "objections",
+      "order": 3,
+      "phase": "Foundations",
+      "title": "Handling Resistance & Objections (Universal)",
+      "description": "Objections aren't rejections — they're requests for more information. Master the Sandler reverse, feel-felt-found, and the art of isolating the real objection before you respond."
+    },
+    {
+      "id": "e6ed4d77-83be-5a95-a66b-c5e4f6be51d7",
+      "slug": "ra-product-applied",
+      "order": 4,
+      "phase": "Conversations",
+      "title": "Reading Advantage: Product Knowledge (Applied)",
+      "description": "Now apply what you learned in Modules 1-3 to Reading Advantage's specific product suite. Learn what's true, what to claim, and what NEVER to promise."
+    },
+    {
+      "id": "eb0a5e74-a145-5439-9f4a-84191bc58de7",
+      "slug": "foundations-discovery",
+      "order": 1,
+      "phase": "Foundations",
+      "title": "Sales Foundations: Discovery & Listening",
+      "description": "Master the universal skill of buyer-centric discovery. Learn SPIN questioning, active listening, and the silence technique that great salespeople use to uncover real pain."
+    }
+  ],
+  "rubrics": [
+    {
+      "id": "0a02221a-a3f8-58c9-8272-b00e8eeebf41",
+      "name": "Closing Roleplay: The Final Pricing Conversation Rubric",
+      "criteriaJson": [
+        {
+          "weight": 0.3,
+          "criterion": "Framed price in terms of buyer's outcome, not absolute cost",
+          "sourceRef": "Value framing — anchoring buyer to outcome not price",
+          "passingScore": 70
+        },
+        {
+          "weight": 0.3,
+          "criterion": "Did NOT discount when pushed; offered scope reduction instead",
+          "sourceRef": "Negotiation — protect margin, adjust scope",
+          "passingScore": 70
+        },
+        {
+          "weight": 0.25,
+          "criterion": "Asked for the commitment with a clear yes/no question",
+          "sourceRef": "Direct close — ask for the order",
+          "passingScore": 70
+        },
+        {
+          "weight": 0.15,
+          "criterion": "Confirmed implementation next steps before ending the call",
+          "sourceRef": "Sandler Post-Sell",
+          "passingScore": 70
+        }
+      ],
+      "reviewStatus": "approved"
+    },
+    {
+      "id": "0fc8bddc-7d20-5b88-88fb-187ea0dbeba8",
+      "name": "Value-Framing Roleplay: Parents Don't See Results Rubric",
+      "criteriaJson": [
+        {
+          "weight": 0.3,
+          "criterion": "Reframed 'parents don't see results' as a visibility/reporting problem, not a curriculum problem",
+          "sourceRef": "Challenger Sale — Reframe",
+          "passingScore": 70
+        },
+        {
+          "weight": 0.25,
+          "criterion": "Translated at least one feature into a parent-visible outcome (e.g., monthly progress report)",
+          "sourceRef": "Features → Benefits → Outcomes",
+          "passingScore": 70
+        },
+        {
+          "weight": 0.2,
+          "criterion": "Used loss-aversion framing on retained families (cost of inaction)",
+          "sourceRef": "Kahneman & Tversky 1979",
+          "passingScore": 70
+        },
+        {
+          "weight": 0.25,
+          "criterion": "Ended with a small-step ask (pilot, demo, data review) — not a contract pitch",
+          "sourceRef": "Status-quo bias reduction",
+          "passingScore": 70
+        }
+      ],
+      "reviewStatus": "approved"
+    },
+    {
+      "id": "10c316bf-c4db-54d3-8582-57a361c1850f",
+      "name": "Discovery Roleplay: First Call with a Skeptical Director Rubric",
+      "criteriaJson": [
+        {
+          "weight": 0.3,
+          "criterion": "Asked at least 2 open-ended discovery questions (Situation/Problem)",
+          "sourceRef": "SPIN Selling — Rackham, 1988",
+          "passingScore": 70
+        },
+        {
+          "weight": 0.25,
+          "criterion": "Demonstrated active listening (mirrored, labeled, or used silence)",
+          "sourceRef": "Never Split the Difference — Voss, 2016",
+          "passingScore": 70
+        },
+        {
+          "weight": 0.25,
+          "criterion": "Did NOT pitch product before establishing buyer pain",
+          "sourceRef": "SPIN Selling — discovery before solution",
+          "passingScore": 80
+        },
+        {
+          "weight": 0.2,
+          "criterion": "Ended with a clear next-step ask",
+          "sourceRef": "Sandler — Up-front contract for next meeting",
+          "passingScore": 70
+        }
+      ],
+      "reviewStatus": "approved"
+    },
+    {
+      "id": "20ef5a05-b309-5be4-a01d-8729594d5358",
+      "name": "Objection Roleplay: 'We Tried Something Similar and It Failed' Rubric",
+      "criteriaJson": [
+        {
+          "weight": 0.25,
+          "criterion": "Acknowledged the objection without immediate counter-attack",
+          "sourceRef": "Feel-felt-found pattern",
+          "passingScore": 70
+        },
+        {
+          "weight": 0.3,
+          "criterion": "Asked a clarifying question to isolate the REAL objection",
+          "sourceRef": "Sandler reverse — the stated objection is rarely the real one",
+          "passingScore": 70
+        },
+        {
+          "weight": 0.25,
+          "criterion": "Reframed using the buyer's own words (not generic sales-speak)",
+          "sourceRef": "Challenger Sale — Tailor",
+          "passingScore": 70
+        },
+        {
+          "weight": 0.2,
+          "criterion": "Closed with a trial-close question, not a monologue",
+          "sourceRef": "SPIN Need-payoff questions",
+          "passingScore": 70
+        }
+      ],
+      "reviewStatus": "approved"
+    },
+    {
+      "id": "3f182394-7446-50c7-8246-224b5d46c495",
+      "name": "Applied Roleplay: '15-Minute Discovery Call' Rubric",
+      "criteriaJson": [
+        {
+          "weight": 0.3,
+          "criterion": "Asked at least 2 open-ended discovery questions (Situation/Problem)",
+          "sourceRef": "SPIN Selling — Rackham, 1988",
+          "passingScore": 70
+        },
+        {
+          "weight": 0.25,
+          "criterion": "Demonstrated active listening (mirrored, labeled, or used silence)",
+          "sourceRef": "Never Split the Difference — Voss, 2016",
+          "passingScore": 70
+        },
+        {
+          "weight": 0.25,
+          "criterion": "Did NOT pitch product before establishing buyer pain",
+          "sourceRef": "SPIN Selling — discovery before solution",
+          "passingScore": 80
+        },
+        {
+          "weight": 0.2,
+          "criterion": "Ended with a clear next-step ask",
+          "sourceRef": "Sandler — Up-front contract for next meeting",
+          "passingScore": 70
+        }
+      ],
+      "reviewStatus": "approved"
+    },
+    {
+      "id": "acc7da50-8622-5e66-9af4-ea83aa734bd6",
+      "name": "Applied Objection Roleplay: Teachers Won't Adopt Rubric",
+      "criteriaJson": [
+        {
+          "weight": 0.25,
+          "criterion": "Acknowledged the objection without immediate counter-attack",
+          "sourceRef": "Feel-felt-found pattern",
+          "passingScore": 70
+        },
+        {
+          "weight": 0.3,
+          "criterion": "Asked a clarifying question to isolate the REAL objection",
+          "sourceRef": "Sandler reverse — the stated objection is rarely the real one",
+          "passingScore": 70
+        },
+        {
+          "weight": 0.25,
+          "criterion": "Reframed using the buyer's own words (not generic sales-speak)",
+          "sourceRef": "Challenger Sale — Tailor",
+          "passingScore": 70
+        },
+        {
+          "weight": 0.2,
+          "criterion": "Closed with a trial-close question, not a monologue",
+          "sourceRef": "SPIN Need-payoff questions",
+          "passingScore": 70
+        }
+      ],
+      "reviewStatus": "approved"
+    },
+    {
+      "id": "c58f4b1b-e20e-5f75-96ce-a9d1fbfc8388",
+      "name": "Closing Roleplay: The Final Pricing Conversation Rubric",
+      "criteriaJson": [
+        {
+          "weight": 0.3,
+          "criterion": "Framed price in terms of buyer's outcome, not absolute cost",
+          "sourceRef": "Value framing — anchoring buyer to outcome not price",
+          "passingScore": 70
+        },
+        {
+          "weight": 0.3,
+          "criterion": "Did NOT discount when pushed; offered scope reduction instead",
+          "sourceRef": "Negotiation — protect margin, adjust scope",
+          "passingScore": 70
+        },
+        {
+          "weight": 0.25,
+          "criterion": "Asked for the commitment with a clear yes/no question",
+          "sourceRef": "Direct close — ask for the order",
+          "passingScore": 70
+        },
+        {
+          "weight": 0.15,
+          "criterion": "Confirmed implementation next steps before ending the call",
+          "sourceRef": "Sandler Post-Sell",
+          "passingScore": 70
+        }
+      ],
+      "reviewStatus": "approved"
+    },
+    {
+      "id": "f75dc418-5276-5c77-9f03-6fa4e466f3b2",
+      "name": "Roleplay: Choosing the Right Tier Rubric",
+      "criteriaJson": [
+        {
+          "weight": 0.3,
+          "criterion": "Asked at least 2 open-ended discovery questions (Situation/Problem)",
+          "sourceRef": "SPIN Selling — Rackham, 1988",
+          "passingScore": 70
+        },
+        {
+          "weight": 0.25,
+          "criterion": "Demonstrated active listening (mirrored, labeled, or used silence)",
+          "sourceRef": "Never Split the Difference — Voss, 2016",
+          "passingScore": 70
+        },
+        {
+          "weight": 0.25,
+          "criterion": "Did NOT pitch product before establishing buyer pain",
+          "sourceRef": "SPIN Selling — discovery before solution",
+          "passingScore": 80
+        },
+        {
+          "weight": 0.2,
+          "criterion": "Ended with a clear next-step ask",
+          "sourceRef": "Sandler — Up-front contract for next meeting",
+          "passingScore": 70
+        }
+      ],
+      "reviewStatus": "approved"
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "10e08341-34a0-58eb-8efd-2f35c980880d",
+      "order": 1,
+      "lessonId": "3a356602-79ec-50ee-990c-9a3b800de598",
+      "rubricId": "10c316bf-c4db-54d3-8582-57a361c1850f",
+      "objective": "Run a 3-minute SPIN discovery sequence. Surface the REAL pain (likely teacher buy-in, not curriculum quality). Do NOT pitch any Reading Advantage product. End by asking permission to schedule a longer demo focused specifically on her concern.",
+      "situation": "You've been booked for a 15-minute discovery call. Director Pim has tried two ed-tech platforms before and abandoned both. Her teachers complained, parents didn't see results, and she ended up wasting budget.",
+      "personaName": "Director Pim",
+      "personaRole": "Director, mid-size Bangkok primary school (400 students)",
+      "prospectContextJson": {
+        "context": "Pim is busy, polite, but skeptical. She'll give short answers unless you earn them. Has been director for 7 years."
+      }
+    },
+    {
+      "id": "1175171d-2918-5514-bd67-fbfb6828fbcc",
+      "order": 1,
+      "lessonId": "87ad4c3f-8e17-5f26-aa64-4ffb212ee3c4",
+      "rubricId": "f75dc418-5276-5c77-9f03-6fa4e466f3b2",
+      "objective": "Use discovery (SPIN) to surface that his real problem is teacher inconsistency, not product breadth. Steer him from App-Only toward Blended or Managed Service even though it's a smaller initial product scope. Demonstrate that you'll sacrifice deal size to fit the right solution.",
+      "situation": "Nakorn says: 'I want all 9 products and I have 200,000 baht to spend.' He's enthusiastic but doesn't understand the tier difference. His teachers are part-time and rotate frequently.",
+      "personaName": "Owner-Director Nakorn",
+      "personaRole": "Owner of a small 5-classroom English program",
+      "prospectContextJson": {
+        "context": "Nakorn is the sole decision-maker. Has cash. Will say yes to anything in his price range — which is the problem. He'll cancel in 6 months if the fit is wrong."
+      }
+    },
+    {
+      "id": "8369eb87-cc03-5da9-8d9a-5923979a9b2c",
+      "order": 1,
+      "lessonId": "942d7177-dc24-51d5-aafa-3cb7b82b52af",
+      "rubricId": "3f182394-7446-50c7-8246-224b5d46c495",
+      "objective": "Run the 15-minute discovery flow: agenda → SPIN discovery → one Challenger teach → trial close to a longer demo. Do NOT demo product features.",
+      "situation": "You have 15 minutes — a referral from an existing client. Apinya is busy, prestigious, and doesn't have time for vendor pitches.",
+      "personaName": "Director Apinya",
+      "personaRole": "Director, well-known Bangkok prep school",
+      "prospectContextJson": {
+        "context": "Apinya runs a 1,200-student prep school. Already has a foreign-teacher contract. Her school's English scores are good but parents complain about consistency between classes."
+      }
+    },
+    {
+      "id": "8ce913f6-fd71-5a5c-ba99-74e2df9d5316",
+      "order": 1,
+      "lessonId": "86d6278c-a02a-53bd-8933-c68edd96909d",
+      "rubricId": "20ef5a05-b309-5be4-a01d-8729594d5358",
+      "objective": "Do NOT defend Reading Advantage as a product. Use the Sandler reverse to surface the REAL underlying objection (almost certainly 'I'm worried teachers won't adopt this either'). Isolate it. Then propose a path that addresses adoption risk directly — not a feature pitch.",
+      "situation": "Pranom says: 'We tried an English learning app two years ago. The teachers refused to use it after a month, parents got nothing out of it, and we wasted 80,000 baht. Why is yours going to be different?'",
+      "personaName": "Director Pranom",
+      "personaRole": "Director, established (40-year) Bangkok primary school",
+      "prospectContextJson": {
+        "context": "Pranom has been in education 35+ years. She is the decision-maker. Her staff resists change. She trusts evidence over enthusiasm."
+      }
+    },
+    {
+      "id": "9e662042-0f08-5aa3-a6f8-7212213615e8",
+      "order": 1,
+      "lessonId": "b1853ea9-9ca7-586b-9e5e-904ae58e0f14",
+      "rubricId": "acc7da50-8622-5e66-9af4-ea83aa734bd6",
+      "objective": "Recognize this as Canonical Objection #1 (adoption risk). Don't defend the platform. Reverse to find the real concern. Steer toward Managed Service tier or Blended with extensive training — and explicitly address the teacher-buy-in concern.",
+      "situation": "Suchada is in the 45-min demo. She's nodding politely, but at minute 30 she says: 'Look, the platform looks great. But my teachers… they're 50+, they don't speak English, and they hate technology. They will never use this.'",
+      "personaName": "Director Suchada",
+      "personaRole": "Director, 600-student Phuket primary school",
+      "prospectContextJson": {
+        "context": "Suchada has 18 teachers averaging 52 years old. She's heard the teachers say 'no more new platforms' multiple times. Her budget can afford Managed Service but she's never considered it."
+      }
+    },
+    {
+      "id": "d2a4ca34-88c9-5419-8179-b8a2b6c4b9c6",
+      "order": 1,
+      "lessonId": "307cb2c3-a160-58ea-bf70-badf800bb8f0",
+      "rubricId": "0fc8bddc-7d20-5b88-88fb-187ea0dbeba8",
+      "objective": "Reframe the problem: this isn't about more English content — it's about visible, parent-facing evidence of progress. Use anchoring + loss-aversion. Do NOT discount. Move toward a scoped-pilot ask, not a full-contract pitch.",
+      "situation": "On a follow-up call, Wisanu says: 'Parents complain that they pay for English but don't see their kids actually improving. They can't tell what we're doing differently from the school down the road.'",
+      "personaName": "Director Wisanu",
+      "personaRole": "Owner-operator, bilingual K-6 school in Chiang Mai",
+      "prospectContextJson": {
+        "context": "Wisanu is the decision-maker AND the budget owner. Loses 5-8 families per year over the 'no visible progress' complaint. He measures success in renewals."
+      }
+    },
+    {
+      "id": "e3a10af0-52ef-5a4c-918f-20b76a931c94",
+      "order": 2,
+      "lessonId": "2f452c7e-71c0-5c62-90dc-63f5c98a9596",
+      "rubricId": "c58f4b1b-e20e-5f75-96ce-a9d1fbfc8388",
+      "objective": "Recognize this as a hidden objection (or stalling). Isolate the concern. Set a specific follow-up deadline. Ideally, get her to commit on the call. If she truly needs to think, lock in a specific call time.",
+      "situation": "After two months of conversations, Apinya is ready to commit. She says: 'I think we're going to do this. Let me think about it over the weekend.'",
+      "personaName": "Director Apinya",
+      "personaRole": "Director, well-known Bangkok prep school",
+      "prospectContextJson": {
+        "context": "Apinya is the sole decision-maker. She's been thorough. She has the budget. The only barrier left is commitment friction."
+      }
+    },
+    {
+      "id": "fd3968f3-b3f8-5d0a-9f23-8330c23d9ca1",
+      "order": 1,
+      "lessonId": "2f452c7e-71c0-5c62-90dc-63f5c98a9596",
+      "rubricId": "0a02221a-a3f8-58c9-8272-b00e8eeebf41",
+      "objective": "Hold price (do NOT discount the per-unit rate). Adjust scope — propose starting with fewer grade levels at the same rate, or offer a 6-month phased approach. Use 'how am I supposed to do that?' if the buyer pushes hard. Close with a specific next step.",
+      "situation": "You're on the closing call. The director is interested in the Blended tier (120,000 baht). He says: 'Look, my board approved 80,000 — that's all I have. Can you do it at 80 or no?'",
+      "personaName": "Director Wirat",
+      "personaRole": "Director, 800-student integrated K-9 school",
+      "prospectContextJson": {
+        "context": "Wirat is genuinely budget-constrained but the deal is real. He has authority. He needs a yes/no this week."
+      }
+    }
+  ],
+  "quizQuestions": [
+    {
+      "id": "130d7d30-5096-5415-99dd-c546188167d6",
+      "order": 2,
+      "lessonId": "cb91caf6-395b-5ad2-b6a1-df5d178622bf",
+      "question": "Which claim is approved per Reading Advantage's outcome-claims policy?",
+      "explanation": "The full sentence — including 'Results vary' — is the only approved short-form citation. Drop the disclaimer and you're over-claiming.",
+      "optionsJson": [
+        "Every student improves by at least one grade level.",
+        "In peer-reviewed evaluation (Aka et al., 2019), schools saw an average reading-level gain of 1.2 years over 9 months. Results vary.",
+        "Better English scores guaranteed.",
+        "100% of our schools see results."
+      ],
+      "correctAnswer": "In peer-reviewed evaluation (Aka et al., 2019), schools saw an average reading-level gain of 1.2 years over 9 months. Results vary."
+    },
+    {
+      "id": "181dd3cb-1378-5304-a2e7-b073924c0acc",
+      "order": 2,
+      "lessonId": "78e1c125-43c7-502a-80ab-8a0330fc75ca",
+      "question": "Which is the WORST way to handle a buyer pushing for a discount?",
+      "explanation": "Discounting trains the buyer that your price is fake, anchors your next deal lower, and erodes margin team-wide. Pros adjust scope, not rate.",
+      "optionsJson": [
+        "Reduce scope (e.g., fewer students) to fit their budget.",
+        "Trade payment terms for the same total price.",
+        "Drop the per-unit price by 10% to close the deal.",
+        "Use a calibrated question to make them justify the request."
+      ],
+      "correctAnswer": "Drop the per-unit price by 10% to close the deal."
+    },
+    {
+      "id": "3f1172f5-f886-53c9-9dbb-17b0eff32334",
+      "order": 3,
+      "lessonId": "2452d8f8-5904-5ecc-a0bb-1adfb4475f37",
+      "question": "You ask a hard discovery question. The buyer pauses. What do you do?",
+      "explanation": "Silence is one of the most powerful sales tools. Buyers think while they pause. Filling the silence steals their thinking time and you lose the real answer.",
+      "optionsJson": [
+        "Rephrase the question — they probably didn't understand.",
+        "Move on to a different question to avoid awkwardness.",
+        "Wait silently for at least 5 seconds.",
+        "Fill the silence by giving examples of how other customers answered."
+      ],
+      "correctAnswer": "Wait silently for at least 5 seconds."
+    },
+    {
+      "id": "4fa7fe94-8201-5731-907e-b8bf83266227",
+      "order": 2,
+      "lessonId": "ea676598-70e6-513f-b827-386d5785fc3b",
+      "question": "What's the goal of a 15-minute discovery call?",
+      "explanation": "15 minutes isn't enough to demo. It IS enough to qualify and earn time. Demo'ing features in a 15-minute call is the #1 mistake new reps make.",
+      "optionsJson": [
+        "Show the product's top features.",
+        "Surface buyer pain, deliver one Teach moment, trial close to a longer demo.",
+        "Close the deal.",
+        "Hand off to a senior rep."
+      ],
+      "correctAnswer": "Surface buyer pain, deliver one Teach moment, trial close to a longer demo."
+    },
+    {
+      "id": "6c9f2b29-a877-5b95-b407-b5119823008b",
+      "order": 1,
+      "lessonId": "ea676598-70e6-513f-b827-386d5785fc3b",
+      "question": "A director says, 'We already have a foreign teacher. We don't need a platform.' What's the best response framework?",
+      "explanation": "This is Canonical Objection #5. The director sees 'foreign teacher' and 'platform' as competing solutions. They're not — one is delivery, one is consistency. The Challenger reframe shifts the conversation.",
+      "optionsJson": [
+        "Pitch how the platform is cheaper than a foreign teacher.",
+        "Reframe: one teacher gives 30 students one excellent year; a platform gives every student consistent quality regardless of who teaches.",
+        "Offer to add the platform on top of the foreign teacher at a discount.",
+        "Move on — this director is not a fit."
+      ],
+      "correctAnswer": "Reframe: one teacher gives 30 students one excellent year; a platform gives every student consistent quality regardless of who teaches."
+    },
+    {
+      "id": "734eac3f-d923-569a-a10c-7fc77c03b114",
+      "order": 3,
+      "lessonId": "98de45a9-b511-5810-a009-aca59c0786f8",
+      "question": "What does the Total-Cost-of-English frame anchor the buyer to?",
+      "explanation": "Anchoring to total program cost (800K-1.2M) makes your 50K-400K offer feel like a portion of existing spend, not a new line item. This is anchoring psychology applied to pricing.",
+      "optionsJson": [
+        "The textbook budget line item.",
+        "The 6-figure annual cost of running an English program including teachers, materials, and churn.",
+        "The cheapest competitor's price.",
+        "A free pilot."
+      ],
+      "correctAnswer": "The 6-figure annual cost of running an English program including teachers, materials, and churn."
+    },
+    {
+      "id": "847fbf3f-cc4b-5861-9894-ee670c1efc9c",
+      "order": 3,
+      "lessonId": "78e1c125-43c7-502a-80ab-8a0330fc75ca",
+      "question": "What does it mean to 'isolate' an objection?",
+      "explanation": "Isolation prevents you from solving objection #1 only to find objection #2 — and then objection #3. Ask 'if we solved X, is there anything else?' before negotiating.",
+      "optionsJson": [
+        "Repeat the objection back to the buyer to make sure you heard it correctly.",
+        "Ask if there are any other concerns besides this one before solving it.",
+        "Get the buyer to admit the objection in writing.",
+        "Tell the buyer you'll come back to this after pitching more features."
+      ],
+      "correctAnswer": "Ask if there are any other concerns besides this one before solving it."
+    },
+    {
+      "id": "88080e90-2bfd-5327-a367-3d69919318a6",
+      "order": 1,
+      "lessonId": "2452d8f8-5904-5ecc-a0bb-1adfb4475f37",
+      "question": "A buyer says, 'We've tried three platforms and none of them stuck.' What's the best next move?",
+      "explanation": "Mirroring with the last 1-3 words invites the buyer to elaborate. You'll learn what 'didn't stick' really means — usually it's adoption, not features. Pitching too early kills the conversation.",
+      "optionsJson": [
+        "Pitch how your platform is different from the competition.",
+        "Mirror: 'None of them stuck?' and pause.",
+        "Ask 'What were the three platforms?' so you can position against them.",
+        "Offer a discount to remove price-shopping objections."
+      ],
+      "correctAnswer": "Mirror: 'None of them stuck?' and pause."
+    },
+    {
+      "id": "a93b5513-763b-51b0-a01f-a9fc52b00b3c",
+      "order": 1,
+      "lessonId": "78e1c125-43c7-502a-80ab-8a0330fc75ca",
+      "question": "A buyer says 'It's too expensive.' What's the best first move?",
+      "explanation": "The Sandler reverse — ask a question instead of answering. Price objections are almost never about price. Until you know whether it's risk, fit, authority, or actual budget, any response is a guess.",
+      "optionsJson": [
+        "Offer a 10% discount to close quickly.",
+        "Ask: 'When you say too expensive, is it the absolute number or the value at that number?'",
+        "Send the ROI calculator immediately.",
+        "Agree to think about scope reduction."
+      ],
+      "correctAnswer": "Ask: 'When you say too expensive, is it the absolute number or the value at that number?'"
+    },
+    {
+      "id": "aec4068e-8c31-53fe-b44d-84d70e036d7e",
+      "order": 2,
+      "lessonId": "98de45a9-b511-5810-a009-aca59c0786f8",
+      "question": "After your direct close, the buyer says 'Let me think about it.' What does this usually mean?",
+      "explanation": "'Let me think about it' is almost always a softened no or a hidden objection. The right move is to isolate — 'what specifically do you need to think through?' — and either resolve the concern or set a specific follow-up time.",
+      "optionsJson": [
+        "They're going to think about it and will reach out next week.",
+        "There's a hidden objection they haven't named yet.",
+        "They've decided no but don't want to say it.",
+        "Both B and C."
+      ],
+      "correctAnswer": "Both B and C."
+    },
+    {
+      "id": "bbbcb4c6-aaa4-5b30-b5e0-aad32180ebbd",
+      "order": 2,
+      "lessonId": "2452d8f8-5904-5ecc-a0bb-1adfb4475f37",
+      "question": "In SPIN, which question type makes the buyer's pain expensive enough to require a budget?",
+      "explanation": "Implication questions surface the second- and third-order costs of the problem. Without them, the buyer agrees there's a problem but won't fund a solution.",
+      "optionsJson": [
+        "Situation question",
+        "Problem question",
+        "Implication question",
+        "Need-payoff question"
+      ],
+      "correctAnswer": "Implication question"
+    },
+    {
+      "id": "e16b22b6-d601-589f-b488-c89258f498fa",
+      "order": 1,
+      "lessonId": "cb91caf6-395b-5ad2-b6a1-df5d178622bf",
+      "question": "A school has 6 turnover-prone non-native English teachers. Which tier fits?",
+      "explanation": "High turnover is the textbook signal for Managed Service. Selling App-Only here will fail at implementation. The renewal will be lost and the rep loses the LTV.",
+      "optionsJson": [
+        "App-Only — let teachers use the platform on their own.",
+        "Blended — give them monthly training.",
+        "Managed Service — Reading Advantage staff delivers instruction.",
+        "App-Only with a steep discount."
+      ],
+      "correctAnswer": "Managed Service — Reading Advantage staff delivers instruction."
+    },
+    {
+      "id": "e4d1e77e-3b1a-52e9-baca-ed4886914196",
+      "order": 1,
+      "lessonId": "98de45a9-b511-5810-a009-aca59c0786f8",
+      "question": "A director with a real budget cap pushes for a 30% discount. What's the pro move?",
+      "explanation": "Discounting trains the market. Adjusting scope holds your per-unit value and gives the buyer a path. They get a starting point; you protect your future deals.",
+      "optionsJson": [
+        "Drop the price 15% to meet in the middle.",
+        "Hold price, reduce scope (fewer students or grade levels) to fit budget.",
+        "Walk away — they're not serious.",
+        "Refer them to a competitor."
+      ],
+      "correctAnswer": "Hold price, reduce scope (fewer students or grade levels) to fit budget."
+    }
+  ]
+}

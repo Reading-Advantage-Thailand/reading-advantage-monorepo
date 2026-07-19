@@ -77,6 +77,18 @@ const reviewedSeed = readFileSync(
   resolve(appRoot, "scripts/seed-reviewed-curriculum.ts"),
   "utf8",
 );
+const releaseInputValidator = readFileSync(
+  resolve(appRoot, "scripts/verify-sales-release-inputs.mjs"),
+  "utf8",
+);
+const releaseSourceManifest = readFileSync(
+  resolve(appRoot, "scripts/release-source-manifest.mjs"),
+  "utf8",
+);
+const releaseArchive = readFileSync(
+  resolve(appRoot, "scripts/create-sales-release-archive.sh"),
+  "utf8",
+);
 const packageJson = readFileSync(resolve(appRoot, "package.json"), "utf8");
 const releaseCandidate = JSON.parse(
   readFileSync(resolve(appRoot, "curriculum/release-candidate.json"), "utf8"),
@@ -109,10 +121,14 @@ describe("Sales production readiness", () => {
   });
 
   it("verifies compatibility and company candidates before traffic cutover", () => {
-    expect(cloudbuild.match(/node:22-slim/g)).toHaveLength(9);
+    expect(cloudbuild.match(/node:22-slim/g)).toHaveLength(11);
     expect(cloudbuild.match(/cloud-sql-proxy\/v2\.15\.1/g)).toHaveLength(6);
     expect(cloudbuild.match(/pnpm@11\.8\.0/g)).toHaveLength(8);
     const ordered = [
+      "validate-release-inputs",
+      "verify-curriculum-backup",
+      "build-image",
+      "push-image",
       "migrate-db",
       "doctor-check",
       "build-curriculum-workspace-deps",
@@ -131,6 +147,8 @@ describe("Sales production readiness", () => {
     ].map((id) => cloudbuild.indexOf(`id: "${id}"`));
     expect(ordered.every((position) => position >= 0)).toBe(true);
     expect(ordered).toEqual([...ordered].sort((left, right) => left - right));
+    expect(ordered[0]).toBe(cloudbuild.indexOf('id: "validate-release-inputs"'));
+    expect(ordered[1]).toBe(cloudbuild.indexOf('id: "verify-curriculum-backup"'));
     expect(cloudbuild).toContain("SALES_DIRECT_DATABASE_URL");
     expect(cloudbuild).toContain("SALES_DATABASE_URL");
     expect(cloudbuild).toContain("SALES_LEGACY_DATABASE_URL");
@@ -276,6 +294,18 @@ describe("Sales production readiness", () => {
   });
 
   it("seeds only deterministic approved curriculum and gates exact completeness", () => {
+    const inputStep = cloudbuild.slice(
+      cloudbuild.indexOf('id: "validate-release-inputs"'),
+      cloudbuild.indexOf('id: "verify-curriculum-backup"'),
+    );
+    const backupStep = cloudbuild.slice(
+      cloudbuild.indexOf('id: "verify-curriculum-backup"'),
+      cloudbuild.indexOf('id: "build-image"'),
+    );
+    const preBuildSteps = cloudbuild.slice(
+      0,
+      cloudbuild.indexOf('id: "build-image"'),
+    );
     const seedStep = cloudbuild.slice(
       cloudbuild.indexOf('id: "seed-production-curriculum"'),
       cloudbuild.indexOf('id: "verify-production-curriculum"'),
@@ -283,6 +313,41 @@ describe("Sales production readiness", () => {
     const verifyStep = cloudbuild.slice(
       cloudbuild.indexOf('id: "verify-production-curriculum"'),
       cloudbuild.indexOf('id: "runtime-db-contract"'),
+    );
+    expect(backupStep).toContain("_CURRICULUM_BACKUP_ID");
+    expect(backupStep).toContain("_CURRICULUM_BACKUP_NOT_BEFORE");
+    expect(backupStep).toContain("verify-sales-release-inputs.mjs backup-live");
+    expect(preBuildSteps.match(/name: "node:22-slim"/g)).toHaveLength(2);
+    expect(inputStep).toContain("release-source-manifest.mjs verify");
+    expect(inputStep).toContain("_RELEASE_SOURCE_MANIFEST_SHA256");
+    expect(cloudbuild).not.toContain("$${COMMIT_SHA");
+    expect(cloudbuild).not.toContain('"$COMMIT_SHA"');
+    expect(cloudbuild).not.toContain("gcloud sql backups describe");
+    expect(releaseInputValidator).toContain("ONE_HOUR_NANOSECONDS");
+    expect(releaseInputValidator).toContain("parseRfc3339Nanoseconds");
+    expect(releaseInputValidator).toContain("metadata.google.internal");
+    expect(releaseInputValidator).toContain("endTime <= boundary");
+    expect(releaseSourceManifest).toContain("SALES_RELEASE_SOURCE_ARCHIVE_MISMATCH");
+    expect(releaseSourceManifest).toContain("expectedManifestSha256");
+    expect(releaseArchive).toContain("git archive --format=tar");
+    expect(releaseArchive).toContain(
+      "apps/sales-advantage/release-source.json",
+    );
+    expect(roleRunbook).toContain(
+      '"${release_commit_sha}:apps/sales-advantage/scripts/create-sales-release-archive.sh"',
+    );
+    expect(roleRunbook).toContain('bash -s -- "$release_commit_sha"');
+    expect(roleRunbook).not.toContain(
+      "bash apps/sales-advantage/scripts/create-sales-release-archive.sh",
+    );
+    expect(cloudbuild).toContain(
+      '_CURRICULUM_BACKUP_ID: "REQUIRED_CURRICULUM_BACKUP_ID"',
+    );
+    expect(cloudbuild).toContain(
+      '_CURRICULUM_BACKUP_NOT_BEFORE: "REQUIRED_CURRICULUM_BACKUP_NOT_BEFORE"',
+    );
+    expect(cloudbuild).toContain(
+      '_RELEASE_SOURCE_MANIFEST_SHA256: "REQUIRED_RELEASE_SOURCE_MANIFEST_SHA256"',
     );
     expect(seedStep).toContain("seed:production-curriculum");
     expect(verifyStep).toContain("verify:production-curriculum");
@@ -299,6 +364,7 @@ describe("Sales production readiness", () => {
       cloudbuild.indexOf('id: "seed-production-curriculum"'),
     );
     expect(cloudIgnore).toContain("**/dist");
+    expect(cloudIgnore.split(/\r?\n/)).not.toContain(".gcloudignore");
     expect(dependencyBuild).toContain(
       "pnpm --recursive --filter @reading-advantage/domain...",
     );
@@ -312,6 +378,18 @@ describe("Sales production readiness", () => {
     expect(staticSeed).toContain("reading-advantage-sales-curriculum-v1");
     expect(staticSeed).toContain("database.transaction");
     expect(staticSeed).toContain("already-complete");
+    expect(staticSeed).toContain("reconciled");
+    expect(staticSeed).toContain(
+      "SALES_CURRICULUM_PREDECESSOR_GRAPH_SHA256",
+    );
+    expect(staticSeed).toContain("SALES_CURRICULUM_OWNER_APPROVAL_SHA256");
+    expect(staticSeed).toContain("SALES_CURRICULUM_APPROVED_GRAPH_SHA256");
+    expect(staticSeed).toContain("IN ACCESS EXCLUSIVE MODE");
+    expect(staticSeed).toContain('isolationLevel: "serializable"');
+    expect(staticSeed).toContain("sales_curriculum_progress_snapshot");
+    expect(staticSeed).toContain("INSERT INTO sales_progress");
+    expect(staticSeed.match(/EXCEPT ALL/g)).toHaveLength(2);
+    expect(staticSeed).not.toContain("transaction.insert(salesProgress)");
     expect(staticSeed).toContain("SALES_CURRICULUM_INCOMPLETE_OR_INCONSISTENT");
     expect(staticSeed).toContain('reviewStatus: "approved"');
     expect(reviewedSeed).toContain("SALES_CURRICULUM_FORCE_RESEED_FORBIDDEN");

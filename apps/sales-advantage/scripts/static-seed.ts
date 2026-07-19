@@ -12,14 +12,32 @@
 import { createHash } from "node:crypto";
 import { pathToFileURL } from "node:url";
 
+import { sql } from "drizzle-orm";
+
 import { db, type DB } from "@reading-advantage/db/client";
 import {
+  salesChatMessages,
+  salesConversations,
   salesModules,
   salesLessons,
+  salesProgress,
+  salesRoleplayAttempts,
   salesRoleplayScenarios,
   salesRubrics,
   salesQuizQuestions,
 } from "@reading-advantage/db/schema";
+
+/** Exact reviewed-graph predecessor accepted by the one-time reconciler. */
+export const SALES_CURRICULUM_PREDECESSOR_GRAPH_SHA256 =
+  "f8b1391302650874154066d5a21189a71d3cbaf78b528f579642fc9fc696f0e7";
+
+/** Exact owner-controlled approval evidence digest required for reconciliation. */
+export const SALES_CURRICULUM_OWNER_APPROVAL_SHA256 =
+  "8b058a5b66631bbffe662a131eed5330bb0c12fa10134a096378e9a4c8bff404";
+
+/** Exact canonical digest of the approved replacement curriculum graph. */
+export const SALES_CURRICULUM_APPROVED_GRAPH_SHA256 =
+  "ccba5498f453f1e2982307ca29d9d56c8bf17aeb26e1d586de232b44416b8717";
 
 type RubricCriterion = {
   criterion: string;
@@ -1264,6 +1282,30 @@ interface CurriculumRows {
   quizQuestions: QuizRow[];
 }
 
+interface LessonRemap {
+  sourceLessonId: string;
+  targetLessonId: string;
+}
+
+interface ReconciliationActivityCounts {
+  attempts: number;
+  conversations: number;
+  chatMessages: number;
+}
+
+interface ReconciliationPlanInput {
+  currentGraphSha256: string;
+  currentModules: Array<Pick<ModuleRow, "id" | "slug">>;
+  currentLessons: Array<Pick<LessonRow, "id" | "moduleId" | "title">>;
+  progressLessonIds: string[];
+  activityCounts: ReconciliationActivityCounts;
+  approvalSha256?: string;
+}
+
+interface SeedStaticSalesCurriculumOptions {
+  approvalSha256?: string;
+}
+
 type SalesTransaction = Parameters<Parameters<DB["transaction"]>[0]>[0];
 
 /**
@@ -1364,6 +1406,109 @@ export function buildStaticSalesCurriculumRows(): CurriculumRows {
 
 const expectedRows = buildStaticSalesCurriculumRows();
 
+/** Builds the stable semantic identity used only to carry learner progress forward. */
+function lessonSemanticKey(moduleSlug: string, lessonTitle: string): string {
+  return `${moduleSlug}\0${lessonTitle}`;
+}
+
+/**
+ * Plans the sole approved predecessor-to-current curriculum reconciliation.
+ * @param input Verified predecessor identity, activity counts, and progress rows.
+ * @returns Progress rows remapped to approved lesson identifiers without changing metadata.
+ * @throws When approval, predecessor identity, activity safety, or semantic mapping fails.
+ */
+export function buildSalesCurriculumReconciliationPlan(
+  input: ReconciliationPlanInput,
+): { lessonRemaps: LessonRemap[] } {
+  if (input.approvalSha256 !== SALES_CURRICULUM_OWNER_APPROVAL_SHA256) {
+    throw new Error("SALES_CURRICULUM_RECONCILIATION_APPROVAL_MISMATCH");
+  }
+  if (input.currentGraphSha256 !== SALES_CURRICULUM_PREDECESSOR_GRAPH_SHA256) {
+    throw new Error(
+      `SALES_CURRICULUM_RECONCILIATION_PREDECESSOR_DIGEST_MISMATCH actual=${input.currentGraphSha256}`,
+    );
+  }
+  if (Object.values(input.activityCounts).some((count) => count > 0)) {
+    throw new Error(
+      `SALES_CURRICULUM_RECONCILIATION_ACTIVITY_PRESENT ${JSON.stringify(input.activityCounts)}`,
+    );
+  }
+
+  const currentModuleSlugs = new Map(
+    input.currentModules.map((module) => [module.id, module.slug]),
+  );
+  const currentLessons = new Map(input.currentLessons.map((lesson) => [
+    lesson.id,
+    lesson,
+  ]));
+  const currentSemanticKeys = new Set<string>();
+  for (const lesson of input.currentLessons) {
+    const moduleSlug = currentModuleSlugs.get(lesson.moduleId);
+    if (!moduleSlug) {
+      throw new Error(
+        `SALES_CURRICULUM_RECONCILIATION_CURRENT_MODULE_UNMAPPABLE lesson=${lesson.id}`,
+      );
+    }
+    const key = lessonSemanticKey(moduleSlug, lesson.title);
+    if (currentSemanticKeys.has(key)) {
+      throw new Error(
+        `SALES_CURRICULUM_RECONCILIATION_SEMANTIC_LESSON_AMBIGUOUS key=${JSON.stringify(key)}`,
+      );
+    }
+    currentSemanticKeys.add(key);
+  }
+
+  const expectedModuleSlugs = new Map(
+    expectedRows.modules.map((module) => [module.id, module.slug]),
+  );
+  const expectedLessons = new Map<string, LessonRow>();
+  for (const lesson of expectedRows.lessons) {
+    const moduleSlug = expectedModuleSlugs.get(lesson.moduleId);
+    if (!moduleSlug) {
+      throw new Error("SALES_CURRICULUM_RECONCILIATION_APPROVED_GRAPH_INVALID");
+    }
+    const key = lessonSemanticKey(moduleSlug, lesson.title);
+    if (expectedLessons.has(key)) {
+      throw new Error("SALES_CURRICULUM_RECONCILIATION_APPROVED_GRAPH_AMBIGUOUS");
+    }
+    expectedLessons.set(key, lesson);
+  }
+
+  const lessonRemaps = [...new Set(input.progressLessonIds)].map((lessonId) => {
+    const currentLesson = currentLessons.get(lessonId);
+    if (!currentLesson) {
+      throw new Error(
+        `SALES_CURRICULUM_RECONCILIATION_CURRENT_LESSON_UNMAPPABLE lesson=${lessonId}`,
+      );
+    }
+    const moduleSlug = currentModuleSlugs.get(currentLesson.moduleId);
+    if (!moduleSlug) {
+      throw new Error(
+        `SALES_CURRICULUM_RECONCILIATION_CURRENT_MODULE_UNMAPPABLE lesson=${lessonId}`,
+      );
+    }
+    const key = lessonSemanticKey(moduleSlug, currentLesson.title);
+    const targetLesson = expectedLessons.get(key);
+    if (!targetLesson) {
+      throw new Error(
+        `SALES_CURRICULUM_RECONCILIATION_TARGET_LESSON_MISSING key=${JSON.stringify(key)}`,
+      );
+    }
+    return { sourceLessonId: lessonId, targetLessonId: targetLesson.id };
+  });
+
+  const targetLessonIds = new Set<string>();
+  for (const remap of lessonRemaps) {
+    if (targetLessonIds.has(remap.targetLessonId)) {
+      throw new Error(
+        `SALES_CURRICULUM_RECONCILIATION_PROGRESS_COLLISION lesson=${remap.targetLessonId}`,
+      );
+    }
+    targetLessonIds.add(remap.targetLessonId);
+  }
+  return { lessonRemaps };
+}
+
 /** Exact production curriculum cardinalities used by deployment verification. */
 export const SALES_CURRICULUM_EXPECTED_COUNTS = Object.freeze({
   modules: expectedRows.modules.length,
@@ -1426,9 +1571,36 @@ async function readCurriculumRows(
   return { modules, lessons, rubrics, scenarios, quizQuestions };
 }
 
+/** Reads progress plus activity that cannot be discarded by graph replacement. */
+async function readReconciliationState(
+  transaction: SalesTransaction,
+): Promise<{
+  progressLessonIds: string[];
+  activityCounts: ReconciliationActivityCounts;
+}> {
+  const [progressRows, attempts, conversations, chatMessages] = await Promise.all([
+    transaction.select({
+      lessonId: salesProgress.lessonId,
+    }).from(salesProgress),
+    transaction.select({ id: salesRoleplayAttempts.id })
+      .from(salesRoleplayAttempts),
+    transaction.select({ id: salesConversations.id }).from(salesConversations),
+    transaction.select({ id: salesChatMessages.id }).from(salesChatMessages),
+  ]);
+  return {
+    progressLessonIds: progressRows.map((row) => row.lessonId),
+    activityCounts: {
+      attempts: attempts.length,
+      conversations: conversations.length,
+      chatMessages: chatMessages.length,
+    },
+  };
+}
+
 /** Recursively sorts JSON object keys while preserving array order. */
 function stableJsonValue(value: unknown): unknown {
   if (Array.isArray(value)) return value.map(stableJsonValue);
+  if (value instanceof Date) return value.toISOString();
   if (value && typeof value === "object") {
     return Object.fromEntries(
       Object.entries(value)
@@ -1450,6 +1622,33 @@ function canonicalRows(rows: CurriculumRows): string {
     scenarios: sort(rows.scenarios),
     quizQuestions: sort(rows.quizQuestions),
   }));
+}
+
+/**
+ * Returns the canonical SHA-256 identity of a curriculum graph.
+ * @param rows Curriculum rows whose exact identity is required.
+ * @returns Canonical SHA-256 graph digest.
+ */
+export function curriculumRowsDigest(rows: CurriculumRows): string {
+  return createHash("sha256").update(canonicalRows(rows)).digest("hex");
+}
+
+/**
+ * Verifies that rows are the exact owner-approved production graph.
+ * @param rows Curriculum rows to compare with the pinned approval digest.
+ * @returns The exact approved graph digest.
+ * @throws When the graph digest differs from the approved release candidate.
+ */
+export function assertApprovedSalesCurriculumGraph(
+  rows: CurriculumRows,
+): string {
+  const actual = curriculumRowsDigest(rows);
+  if (actual !== SALES_CURRICULUM_APPROVED_GRAPH_SHA256) {
+    throw new Error(
+      `SALES_CURRICULUM_APPROVED_GRAPH_DIGEST_MISMATCH actual=${actual}`,
+    );
+  }
+  return actual;
 }
 
 /** Fails unless the database graph exactly matches the reviewed static graph. */
@@ -1474,36 +1673,195 @@ export async function verifyStaticSalesCurriculum(
   database: DB = db,
 ): Promise<typeof SALES_CURRICULUM_EXPECTED_COUNTS> {
   return database.transaction(async (transaction) => {
-    assertCompleteCurriculum(await readCurriculumRows(transaction));
+    const rows = await readCurriculumRows(transaction);
+    assertCompleteCurriculum(rows);
+    assertApprovedSalesCurriculumGraph(rows);
     return SALES_CURRICULUM_EXPECTED_COUNTS;
   });
 }
 
+/** Inserts the exact approved curriculum rows in foreign-key order. */
+async function insertExpectedCurriculum(
+  transaction: SalesTransaction,
+): Promise<void> {
+  await transaction.insert(salesModules).values(expectedRows.modules);
+  await transaction.insert(salesLessons).values(expectedRows.lessons);
+  await transaction.insert(salesRubrics).values(expectedRows.rubrics);
+  await transaction.insert(salesRoleplayScenarios).values(expectedRows.scenarios);
+  await transaction.insert(salesQuizQuestions).values(expectedRows.quizQuestions);
+}
+
+/** Snapshots and remaps learner progress without decoding timestamps or numerics in JavaScript. */
+async function snapshotAndRemapProgress(
+  transaction: SalesTransaction,
+  lessonRemaps: LessonRemap[],
+): Promise<void> {
+  await transaction.execute(sql.raw(`
+    CREATE TEMP TABLE sales_curriculum_progress_snapshot ON COMMIT DROP AS
+    SELECT id, user_id, lesson_id, status, completed_at, score, created_at, updated_at
+    FROM sales_progress
+  `));
+  await transaction.execute(sql.raw(`
+    CREATE TEMP TABLE sales_curriculum_lesson_remap (
+      source_lesson_id uuid PRIMARY KEY,
+      target_lesson_id uuid NOT NULL UNIQUE
+    ) ON COMMIT DROP
+  `));
+  if (lessonRemaps.length > 0) {
+    await transaction.execute(sql`
+      INSERT INTO sales_curriculum_lesson_remap
+        (source_lesson_id, target_lesson_id)
+      VALUES ${sql.join(
+        lessonRemaps.map((remap) => sql`(
+          ${remap.sourceLessonId}::uuid,
+          ${remap.targetLessonId}::uuid
+        )`),
+        sql`, `,
+      )}
+    `);
+  }
+  await transaction.execute(sql.raw(`
+    DO $reconciliation$
+    BEGIN
+      IF EXISTS (
+        SELECT 1
+        FROM sales_curriculum_progress_snapshot AS snapshot
+        LEFT JOIN sales_curriculum_lesson_remap AS remap
+          ON remap.source_lesson_id = snapshot.lesson_id
+        WHERE remap.source_lesson_id IS NULL
+      ) THEN
+        RAISE EXCEPTION 'SALES_CURRICULUM_RECONCILIATION_PROGRESS_MAPPING_MISSING';
+      END IF;
+    END
+    $reconciliation$
+  `));
+  await transaction.execute(sql.raw(`
+    UPDATE sales_curriculum_progress_snapshot AS snapshot
+    SET lesson_id = remap.target_lesson_id
+    FROM sales_curriculum_lesson_remap AS remap
+    WHERE snapshot.lesson_id = remap.source_lesson_id
+  `));
+  await transaction.execute(sql.raw(`
+    DO $reconciliation$
+    BEGIN
+      IF EXISTS (
+        SELECT user_id, lesson_id
+        FROM sales_curriculum_progress_snapshot
+        GROUP BY user_id, lesson_id
+        HAVING count(*) <> 1
+      ) THEN
+        RAISE EXCEPTION 'SALES_CURRICULUM_RECONCILIATION_PROGRESS_COLLISION';
+      END IF;
+    END
+    $reconciliation$
+  `));
+}
+
+/** Restores learner progress from native PostgreSQL values and proves exact equality both ways. */
+async function restoreAndVerifyProgress(
+  transaction: SalesTransaction,
+): Promise<void> {
+  await transaction.execute(sql.raw(`
+    INSERT INTO sales_progress
+      (id, user_id, lesson_id, status, completed_at, score, created_at, updated_at)
+    SELECT id, user_id, lesson_id, status, completed_at, score, created_at, updated_at
+    FROM sales_curriculum_progress_snapshot
+  `));
+  await transaction.execute(sql.raw(`
+    DO $reconciliation$
+    BEGIN
+      IF EXISTS (
+        (SELECT id, user_id, lesson_id, status, completed_at, score, created_at, updated_at
+         FROM sales_progress
+         EXCEPT ALL
+         SELECT id, user_id, lesson_id, status, completed_at, score, created_at, updated_at
+         FROM sales_curriculum_progress_snapshot)
+        UNION ALL
+        (SELECT id, user_id, lesson_id, status, completed_at, score, created_at, updated_at
+         FROM sales_curriculum_progress_snapshot
+         EXCEPT ALL
+         SELECT id, user_id, lesson_id, status, completed_at, score, created_at, updated_at
+         FROM sales_progress)
+      ) THEN
+        RAISE EXCEPTION 'SALES_CURRICULUM_RECONCILIATION_PROGRESS_RESTORE_MISMATCH';
+      END IF;
+    END
+    $reconciliation$
+  `));
+}
+
 /**
- * Inserts the exact curriculum atomically or verifies an already-complete seed.
+ * Inserts, verifies, or reconciles the exact approved curriculum atomically.
  * @param database Migration-credential database connection.
- * @returns Whether this invocation inserted rows or verified an idempotent replay.
- * @throws When any nonempty curriculum state is incomplete or inconsistent.
+ * @param options Owner-controlled approval evidence required only for reconciliation.
+ * @returns Whether rows were inserted, reconciled, or already complete.
+ * @throws When graph identity, approval, activity safety, mapping, or restoration fails.
  */
 export async function seedStaticSalesCurriculum(
   database: DB = db,
-): Promise<"inserted" | "already-complete"> {
+  options: SeedStaticSalesCurriculumOptions = {},
+): Promise<"inserted" | "reconciled" | "already-complete"> {
   return database.transaction(async (transaction) => {
+    await transaction.execute(sql.raw(`
+      LOCK TABLE
+        sales_modules,
+        sales_lessons,
+        sales_rubrics,
+        sales_roleplay_scenarios,
+        sales_quiz_questions,
+        sales_progress,
+        sales_roleplay_attempts,
+        sales_conversations,
+        sales_chat_messages
+      IN ACCESS EXCLUSIVE MODE
+    `));
     const current = await readCurriculumRows(transaction);
     const currentCount = Object.values(current)
       .reduce((sum, values) => sum + values.length, 0);
-    if (currentCount > 0) {
+    if (currentCount === 0) {
+      await insertExpectedCurriculum(transaction);
+      const inserted = await readCurriculumRows(transaction);
+      assertCompleteCurriculum(inserted);
+      assertApprovedSalesCurriculumGraph(inserted);
+      return "inserted";
+    }
+
+    const currentGraphSha256 = curriculumRowsDigest(current);
+    if (currentGraphSha256 === SALES_CURRICULUM_APPROVED_GRAPH_SHA256) {
       assertCompleteCurriculum(current);
+      assertApprovedSalesCurriculumGraph(current);
       return "already-complete";
     }
-    await transaction.insert(salesModules).values(expectedRows.modules);
-    await transaction.insert(salesLessons).values(expectedRows.lessons);
-    await transaction.insert(salesRubrics).values(expectedRows.rubrics);
-    await transaction.insert(salesRoleplayScenarios).values(expectedRows.scenarios);
-    await transaction.insert(salesQuizQuestions).values(expectedRows.quizQuestions);
-    assertCompleteCurriculum(await readCurriculumRows(transaction));
-    return "inserted";
-  });
+    if (currentGraphSha256 !== SALES_CURRICULUM_PREDECESSOR_GRAPH_SHA256) {
+      assertCompleteCurriculum(current);
+      throw new Error("SALES_CURRICULUM_RECONCILIATION_UNREACHABLE");
+    }
+
+    const reconciliationState = await readReconciliationState(transaction);
+    const plan = buildSalesCurriculumReconciliationPlan({
+      currentGraphSha256,
+      currentModules: current.modules,
+      currentLessons: current.lessons,
+      progressLessonIds: reconciliationState.progressLessonIds,
+      activityCounts: reconciliationState.activityCounts,
+      approvalSha256: options.approvalSha256,
+    });
+
+    await snapshotAndRemapProgress(transaction, plan.lessonRemaps);
+    await transaction.delete(salesProgress);
+    await transaction.delete(salesQuizQuestions);
+    await transaction.delete(salesRoleplayScenarios);
+    await transaction.delete(salesRubrics);
+    await transaction.delete(salesLessons);
+    await transaction.delete(salesModules);
+    await insertExpectedCurriculum(transaction);
+    await restoreAndVerifyProgress(transaction);
+
+    const reconciled = await readCurriculumRows(transaction);
+    assertCompleteCurriculum(reconciled);
+    assertApprovedSalesCurriculumGraph(reconciled);
+    return "reconciled";
+  }, { isolationLevel: "serializable" });
 }
 
 /**

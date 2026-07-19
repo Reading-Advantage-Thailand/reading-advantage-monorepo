@@ -1,4 +1,18 @@
 steps:
+  - name: "node:22-slim"
+    id: "validate-release-inputs"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - 'set -euo pipefail && validation_now="$$(date -u +%Y-%m-%dT%H:%M:%SZ)" && node apps/sales-advantage/scripts/release-source-manifest.mjs verify "$_RELEASE_COMMIT_SHA" /workspace /workspace/apps/sales-advantage/release-source.json "$_RELEASE_SOURCE_MANIFEST_SHA256" && node apps/sales-advantage/scripts/verify-sales-release-inputs.mjs inputs "$_RELEASE_COMMIT_SHA" "$_CURRICULUM_BACKUP_NOT_BEFORE" "$$validation_now"'
+
+  - name: "node:22-slim"
+    id: "verify-curriculum-backup"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - 'set -euo pipefail && node apps/sales-advantage/scripts/verify-sales-release-inputs.mjs backup-live "$_RELEASE_COMMIT_SHA" "$_CURRICULUM_BACKUP_NOT_BEFORE" "$$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$PROJECT_ID" cloud-sql "$_CURRICULUM_BACKUP_ID"'
+
   - name: "gcr.io/cloud-builders/docker"
     id: "build-image"
     args:
@@ -172,6 +186,9 @@ images:
 
 substitutions:
   _RELEASE_COMMIT_SHA: "REQUIRED_RELEASE_COMMIT_SHA"
+  _CURRICULUM_BACKUP_ID: "REQUIRED_CURRICULUM_BACKUP_ID"
+  _CURRICULUM_BACKUP_NOT_BEFORE: "REQUIRED_CURRICULUM_BACKUP_NOT_BEFORE"
+  _RELEASE_SOURCE_MANIFEST_SHA256: "REQUIRED_RELEASE_SOURCE_MANIFEST_SHA256"
 
 availableSecrets:
   secretManager:

@@ -2,7 +2,7 @@ import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { client } from "@reading-advantage/db/client";
+import { client, db } from "@reading-advantage/db/client";
 
 import { assertCurriculumReleaseReady } from "./curriculum-release";
 import {
@@ -31,7 +31,9 @@ async function main(): Promise<void> {
       approvalSha256: process.env.SALES_CURRICULUM_APPROVAL_SHA256,
     },
   );
-  const result = await seedStaticSalesCurriculum();
+  const result = await seedStaticSalesCurriculum(db, {
+    approvalSha256: process.env.SALES_CURRICULUM_APPROVAL_SHA256,
+  });
   process.stdout.write(
     `Sales curriculum ${result}: ${JSON.stringify(SALES_CURRICULUM_EXPECTED_COUNTS)}\n`,
   );

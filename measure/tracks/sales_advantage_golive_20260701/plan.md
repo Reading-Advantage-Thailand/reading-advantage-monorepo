@@ -64,16 +64,16 @@ Do not start Phase 2 until the security gate is green.
 - [b] superseded:not-used — the mock/draft database path was exploratory; the chosen release architecture seeds only the immutable deterministic graph after its release gate passes.
 - [b] superseded:not-used — OpenRouter generation was not approved or run, and it is not required for the reviewed deterministic candidate.
   - [b] superseded:not-used — no AI-generated draft rows are part of the selected release path.
-- [~] Task: Human review — review the exact deterministic graph (`ccba5498f453f1e2982307ca29d9d56c8bf17aeb26e1d586de232b44416b8717`), all eight scenarios/rubrics, source traceability, pedagogy, and claims; then create the graph-bound track-local JSON approval and provision its reviewer-controlled SHA-256 trust anchor — [b] deferred:human-gated
+- [x] Task: Human review — the project owner approved the exact deterministic graph (`ccba5498f453f1e2982307ca29d9d56c8bf17aeb26e1d586de232b44416b8717`), all eight scenarios/rubrics, source traceability, pedagogy, and claims. The graph-bound record identifies `Project owner`; its external reviewer-controlled trust anchor is `8b058a5b66631bbffe662a131eed5330bb0c12fa10134a096378e9a4c8bff404`.
 - [b] superseded:not-used — the admin draft-to-approved flip is replaced by fail-closed seeding of the exact graph only after manifest evidence and the external trust anchor match.
-- [b] superseded:merged-into-human-review — production-curriculum manual verification is the exact graph review and trust-anchor step above; it remains incomplete.
+- [x] superseded:merged-into-human-review — production-curriculum manual verification is the completed exact-graph review and external trust-anchor step above.
 
 ---
 
 > **2026-07-18 production curriculum checkpoint:** the release pipeline loaded
 > and independently verified 6 modules, 27 lessons, 8 rubrics, 8 scenarios, and
 > 14 quiz questions. Deterministic graph digest:
-> `ccba5498f453f1e2982307ca29d9d56c8bf17aeb26e1d586de232b44416b8717`. The exact-graph human review and reviewer-controlled trust anchor remain open. The former AI-generation and draft-seed paths are superseded and were not used.
+> `ccba5498f453f1e2982307ca29d9d56c8bf17aeb26e1d586de232b44416b8717`. The exact-graph human review and reviewer-controlled trust anchor remained open at that checkpoint. The former AI-generation and draft-seed paths were superseded and were not used. The project owner subsequently completed the exact-graph review and provisioned the external trust anchor recorded above.
 
 > **2026-07-18 curriculum release-contract checkpoint:** the deterministic graph
 > is now labeled as a release candidate rather than local-dev seed data. Its
@@ -94,7 +94,34 @@ Do not start Phase 2 until the security gate is green.
 > `git show <commit>:<path>` bytes, so dirty working files cannot be shared or
 > mislabeled. Returned provider, requested-model, and resolved-model provenance
 > must exactly match before artifact write. Generation was not approved, was not
-> run, and is not the chosen release path. No AI or human approval is claimed.
+> run, and is not the chosen release path. No AI or human approval was claimed
+> at that checkpoint; the later owner approval is the graph-bound record and
+> external trust anchor documented above.
+
+> **2026-07-19 predecessor reconciliation checkpoint:** Cloud Build
+> `1e9da984-7cc3-4166-bc0c-2cb0f10926a1` safely stopped before deployment when
+> production graph `f8b1391302650874154066d5a21189a71d3cbaf78b528f579642fc9fc696f0e7`
+> did not equal the now owner-approved graph
+> `ccba5498f453f1e2982307ca29d9d56c8bf17aeb26e1d586de232b44416b8717`.
+> The release seed now has one narrow reconciliation path: it accepts only that
+> exact predecessor plus owner evidence
+> `8b058a5b66631bbffe662a131eed5330bb0c12fa10134a096378e9a4c8bff404`,
+> takes exclusive curriculum/activity locks in a serializable transaction,
+> remaps progress by module slug and lesson title through a PostgreSQL-native
+> temporary snapshot while preserving identifiers, enum status, numeric values,
+> and full PostgreSQL timestamp precision, refuses nonzero roleplay attempts,
+> conversations, or chat messages, and
+> verifies the exact approved digest before commit. The Cloud Build seed step is
+> additionally blocked until a successful on-demand `cloud-sql` backup is
+> supplied by `_CURRICULUM_BACKUP_ID`. Its exact description binds both the
+> release commit and fresh `_CURRICULUM_BACKUP_NOT_BEFORE` UTC boundary, and
+> its `endTime` must be later than that boundary. Production execution remains
+> pending hard review, fresh release-bound backup creation, and final submission.
+> The final release chain creates an exact `git archive` from the reviewed
+> commit, adds an exhaustive `release-source.json`, and verifies that manifest
+> SHA plus every archive file in `node:22-slim`. Backup inspection now runs
+> immediately afterward, also in `node:22-slim`, before image build or any
+> database operation.
 
 ## Phase 2: Deploy infrastructure
 
@@ -109,8 +136,8 @@ Do not start Phase 2 until the security gate is green.
   - [x] Service name: `sales-advantage`, region `asia-southeast1`, Cloud SQL instance `reading-advantage:asia-southeast1:cloud-sql`
   - [x] `--set-secrets` for `DATABASE_URL`, `AUTH_SECRET`, `AI_PROVIDER`, `OPENROUTER_API_KEY`, `GOOGLE_AI_API_KEY`, `OPENAI_API_KEY`, `SALES_AUDIO_EVAL_MODEL`, `SALES_AUDIO_EVAL_FALLBACK_STT_MODEL`, `SALES_AUDIO_EVAL_FALLBACK_EVAL_MODEL`, `SALES_CHAT_MODEL`, `STORAGE_ENDPOINT`, `STORAGE_REGION`, `STORAGE_BUCKET`, `STORAGE_ACCESS_KEY`, `STORAGE_SECRET_KEY`, `STORAGE_PUBLIC_BASE_URL`
   - [x] `--allow-unauthenticated` (login page needs to be public, same as codecamp)
-- [~] Task: Provision Cloud SQL — create the `sales_advantage` database — [b] deferred:human-gated
-- [~] Task: Provision Secret Manager entries — [b] deferred:human-gated
+- [x] Task: Verify the existing `sales_advantage` database on the shared `cloud-sql` instance — confirmed by the successful production migration and runtime probes recorded below.
+- [~] Task: Verify release identity access — existing Sales secrets resolve, but the hardened backup gate additionally requires operator-approved `roles/cloudsql.viewer` for the Cloud Build service account (`cloudsql.backupRuns.get`); deployment remains fail-closed pending that grant.
 - [x] Task: Complete `apps/sales-advantage/.env.example` — full runtime surface with comments
   - [x] All env vars documented: DB, auth, AI provider (openrouter/google/openai/mock), eval model overrides, chat model, storage (S3-compatible), Next.js
   - [x] Key name correction: storage adapter reads `STORAGE_ACCESS_KEY` / `STORAGE_SECRET_KEY` (not `_ACCESS_KEY_ID` / `_SECRET_ACCESS_KEY`)
