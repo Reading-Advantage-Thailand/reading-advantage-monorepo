@@ -184,6 +184,21 @@ describe("Phase 4 — Task 15: FR-4 codecamp deploy gate (cloudbuild.yaml)", () 
     expect(deploy?.args).toContain("--no-traffic");
   });
 
+  it("binds the Codecamp OIDC secret using the project-local Cloud Run syntax", () => {
+    const text = readFileSync(CLOUDBUILD_PATH, "utf8");
+    const steps = parseCloudBuildSteps(text);
+    const deploy = steps.find((step) => step.id === "deploy-cloudrun");
+    const secretArgument = deploy?.args.find((argument) =>
+      argument.startsWith("--set-secrets="),
+    );
+    expect(secretArgument).toContain(
+      "COMPANY_AUTH_OIDC_CLIENT_SECRET=CODECAMP_COMPANY_AUTH_OIDC_CLIENT_SECRET:latest",
+    );
+    expect(secretArgument).not.toContain(
+      "COMPANY_AUTH_OIDC_CLIENT_SECRET=projects/",
+    );
+  });
+
   it("deploys the unreleased PR-review model in explicit private shadow mode", () => {
     const text = readFileSync(CLOUDBUILD_PATH, "utf8");
     expect(
