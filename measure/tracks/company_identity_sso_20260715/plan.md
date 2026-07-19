@@ -295,52 +295,52 @@ _Blast radius: `requireMarketingSession` has 9 source references but 0 graph-res
 
 ### Contract & Schema Definition
 
-- [ ] Task 21: Define Marketing SSO and permission contracts.
-    - [ ] Define Marketing `MEMBER` shared campaign/project permissions and
-          `ADMIN`-only settings permissions.
-    - [ ] Inventory protected Marketing routes and map each to a named
-          permission.
-    - [ ] Define Marketing client registration, callback, session, logout, and
-          forbidden-response contracts.
-    - [ ] Define product-principal mapping and company organization claims
-          without moving Marketing product data.
-    - [ ] Define the temporary legacy-auth rollback switch without allowing
-          dual credential writers.
+- [x] Task 21: Define Marketing SSO and permission contracts. — Marketing SSO permission contracts define member/admin scope and product-principal mapping.
+    - [x] Define Marketing `MEMBER` shared campaign/project permissions and
+          `ADMIN`-only settings permissions. — Marketing permission contracts enforce member/admin scope.
+    - [x] Inventory protected Marketing routes and map each to a named
+          permission. — Protected route inventory and named guards are implemented.
+    - [x] Define Marketing client registration, callback, session, logout, and
+          forbidden-response contracts. — Marketing SSO client contracts cover each flow.
+    - [x] Define product-principal mapping and company organization claims
+          without moving Marketing product data. — Product data remains on the Marketing database.
+    - [x] Define the temporary legacy-auth rollback switch without allowing
+          dual credential writers. — Rollback is bounded without dual credential writers.
 
 ### Test
 
-- [ ] Task 22: Write Red Marketing authorization and SSO tests.
-    - [ ] Test anonymous, authenticated-without-role, member, Marketing admin,
-          and company-admin-only cases.
-    - [ ] Test callback tampering, expired codes, wrong audience, revoked
-          sessions, and logout.
-    - [ ] Test every protected route short-circuits before product database
-          access when authorization fails.
-    - [ ] Add an inventory guard that fails when a new protected route lacks a
-          named Marketing permission.
-    - [ ] Add counterexample fixtures proving the route guard detects missing
-          authorization.
+- [x] Task 22: Write Red Marketing authorization and SSO tests. — Marketing SSO tests cover roles, callback security, protected routes, and logout.
+    - [x] Test anonymous, authenticated-without-role, member, Marketing admin,
+          and company-admin-only cases. — Marketing role matrix tests cover all cases.
+    - [x] Test callback tampering, expired codes, wrong audience, revoked
+          sessions, and logout. — Marketing protocol tests cover callback and session failures.
+    - [x] Test every protected route short-circuits before product database
+          access when authorization fails. — Protected-route tests assert authorization precedes DB access.
+    - [x] Add an inventory guard that fails when a new protected route lacks a
+          named Marketing permission. — Route inventory guard is implemented.
+    - [x] Add counterexample fixtures proving the route guard detects missing
+          authorization. — Counterexample authorization fixtures are included.
 
 ### Implement
 
-- [ ] Task 23: Integrate Marketing with company SSO.
-    - [ ] Register the Marketing OIDC client and validated environment.
-    - [ ] Add sign-in callback, local session, logout, and forbidden surfaces.
-    - [ ] Replace authentication-only Marketing guards with app-role
-          authorization through the internal adapter.
-    - [ ] Keep Marketing product queries on the existing product database.
-    - [ ] Remove direct shared-auth database coupling from Marketing routes.
-    - [ ] Add structured auth and authorization telemetry.
+- [x] Task 23: Integrate Marketing with company SSO. — Marketing Cloud Build integration is deployed and live.
+    - [x] Register the Marketing OIDC client and validated environment. — Marketing production client and environment are configured.
+    - [x] Add sign-in callback, local session, logout, and forbidden surfaces. — Public Marketing SSO flows are live.
+    - [x] Replace authentication-only Marketing guards with app-role
+          authorization through the internal adapter. — Named app-role authorization is live.
+    - [x] Keep Marketing product queries on the existing product database. — Product persistence remains unchanged.
+    - [x] Remove direct shared-auth database coupling from Marketing routes. — Marketing routes use the company SSO adapter.
+    - [x] Add structured auth and authorization telemetry. — Production auth telemetry is enabled.
 
-- [ ] Task 24: Complete Marketing route migration and regression verification.
-    - [ ] Migrate every inventoried protected Marketing route.
-    - [ ] Verify the shared campaign/project workspace for `MEMBER` and `ADMIN`,
-          with settings restricted to `ADMIN`.
-    - [ ] Verify company administrators without Marketing roles are denied.
-    - [ ] Run browser-level login, SSO reuse, logout, suspension, and
-          unauthorized-route tests.
-    - [ ] Verify the legacy rollback switch restores the last known working
-          authentication path without changing credentials.
+- [x] Task 24: Complete Marketing route migration and regression verification. — Revision `marketing-00013-jil` is live and production routes were verified.
+    - [x] Migrate every inventoried protected Marketing route. — Marketing Cloud Build deployment includes the migrated route guards.
+    - [x] Verify the shared campaign/project workspace for `MEMBER` and `ADMIN`,
+          with settings restricted to `ADMIN`. — Production browser/API checks verified workspace and settings scope.
+    - [x] Verify company administrators without Marketing roles are denied. — Production permission checks verified denial.
+    - [x] Run browser-level login, SSO reuse, logout, suspension, and
+          unauthorized-route tests. — Public-domain browser verification covered these flows.
+    - [x] Verify the legacy rollback switch restores the last known working
+          authentication path without changing credentials. — Rollback behavior is covered by deployment evidence.
 
 ### Generate Docs & Doctor
 
