@@ -31,8 +31,10 @@ function createFakeGcloud(): string {
     `#!/usr/bin/env bash
 set -euo pipefail
 case "$*" in
-  *"status.traffic"*".url)"*) printf %s "https://candidate---sales.example.test" ;;
-  *"status.traffic"*".revisionName)"*) printf %s "sales-advantage-00010-new" ;;
+  *"status.traffic.filter("*".extract(url).flatten())"*) printf %s "https://candidate---sales.example.test" ;;
+  *"status.traffic.filter("*".extract(revisionName).flatten())"*) printf %s "sales-advantage-00010-new" ;;
+  *"status.traffic"*".url)"*) printf %s "" ;;
+  *"status.traffic"*".revisionName)"*) printf %s "" ;;
   *"status.latestCreatedRevisionName)"*) printf %s "\${FAKE_LATEST_REVISION:-sales-advantage-00010-new}" ;;
   *"artifacts docker images describe"*) printf %s "${digest}" ;;
   *"run revisions describe"*) printf %s "${repository}@${digest}" ;;

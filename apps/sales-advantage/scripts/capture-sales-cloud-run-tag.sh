@@ -16,13 +16,13 @@ tagged_url="$(
   gcloud run services describe "$service" \
     --region="$region" \
     --platform=managed \
-    --format="value(status.traffic[?tag='${tag}'].url)"
+    --format="value(status.traffic.filter(tag='${tag}').extract(url).flatten())"
 )"
 tagged_revision="$(
   gcloud run services describe "$service" \
     --region="$region" \
     --platform=managed \
-    --format="value(status.traffic[?tag='${tag}'].revisionName)"
+    --format="value(status.traffic.filter(tag='${tag}').extract(revisionName).flatten())"
 )"
 latest_created_revision="$(
   gcloud run services describe "$service" \
