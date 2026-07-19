@@ -32,20 +32,44 @@ where the entries differ.
 - Codecamp identities: five legacy accounts were migrated into Accounts with
   exact credential hashes, roles, stable local-principal mappings, and immutable
   audit rows. Existing ownership remained unchanged across 155 progress rows,
-  24 reviews, and 3 chats. The Codecamp application cutover remains pending the
-  two narrowly scoped tutorial-runtime secrets and their runtime-only bindings.
-- Sales: the reviewed 27-lesson source reconciliation and release gates are
-  committed, but production still serves `sales-advantage-00003-v4d`. The exact
-  release remains pending the read-only Cloud SQL backup-viewer grant required
-  by its fail-closed pre-deployment backup gate.
+  24 reviews, and 3 chats. `CODECAMP_TUTORIAL_REPORT_SECRET` and
+  `CODECAMP_TUTORIAL_REPOSITORY_WORKER_TOKEN` now exist in project
+  `codecamp-advantage`. The application cutover remains pending explicit
+  secret-level `roles/secretmanager.secretAccessor` approval on
+  `CODECAMP_COMPANY_AUTH_OIDC_CLIENT_SECRET` in project `reading-advantage`
+  for `codecamp-cloud-run@codecamp-advantage.iam.gserviceaccount.com`.
+- Sales: continuation build `342cdc52-871c-4f08-bef0-7ebf38290557` passed all
+  15 steps and production serves `sales-advantage-00005-yas` at 100% in company
+  mode. Exact archive, repair, rollback, domain, database, and log evidence is
+  recorded in
+  [`../sales_advantage_golive_20260701/production-continuation-20260719.md`](../sales_advantage_golive_20260701/production-continuation-20260719.md).
+
+## 2026-07-19 overnight QA checkpoint
+
+- Kimi WebBridge verified the migrated Codecamp `admin` credential against
+  Accounts using the existing Secret Manager bootstrap value without printing
+  it. The identity authenticated as `Codecamp Admin`, company role `EMPLOYEE`,
+  with Codecamp application role `ADMIN` and no implicit Marketing or Sales
+  access.
+- The seeded company-owner credential also authenticated from Secret Manager
+  without printing either username or password and reached the expected
+  `COMPANY_ADMIN` Accounts console.
+- Existing QA identity `completion-qa-mrql5cuh` retained only Marketing
+  `MEMBER` and Sales `SALES_REP`. Its restore operation returned 200. A first
+  login using an uncommitted reset correctly failed with 401. The confirmed
+  credential reset returned 200, then the identity was suspended again; the
+  final status update returned 200 and revoked active sessions.
+- The dummy-account Sales and Marketing feature journeys were intentionally not
+  started after the user requested the overnight stop. The browser tab group
+  remains open and was not closed.
 
 ## Immutable release inventory
 
 | App | Cloud Build | Image digest | Serving revision | Public domain | Traffic |
 |---|---|---|---|---|---:|
-| Accounts | `994aed87-693d-46f0-9919-39eeb7cf8c4e` | `sha256:fc81f0459f74fe8493814f7364c8519ae7750f1d616e6f9ad2df45cbf487095d` | `accounts-00005-2hg` | `https://accounts.reading-advantage.com` | 100% |
-| Marketing | `2e1d5b73-4118-480f-aeea-fe8f50db14b2` | `sha256:72f4e1cc9529b8c656d3843a77354e9ddc3ac3b38fc6d4dd1540da0217cc42b7` | `marketing-00005-fzp` | `https://marketing.reading-advantage.com` | 100% |
-| Sales | `b45acc2f-9694-4962-95b9-4477209799d2` | `sha256:9cab345f7f070e0d42488c3357ff492471758d0d17dcb85c86e6eac61b5738d0` | `sales-advantage-00003-v4d` | `https://sales.reading-advantage.com` | 100% |
+| Accounts | `de19ada8-775e-45b0-99ce-d3896adf8a78` | `sha256:7e851f0c3663c7bfafd94bc434106f875ec3222ea928a000c698400601b1bc27` | `accounts-00007-hxs` | `https://accounts.reading-advantage.com` | 100% |
+| Marketing | `08fd00a1-de86-4f8f-b65d-632832279fa2` | `sha256:df12a3aa962cf861a2332ffab766588330456fc7b1a3e4e84e67e87a69e5b2d6` | `marketing-00013-jil` | `https://marketing.reading-advantage.com` | 100% |
+| Sales | `342cdc52-871c-4f08-bef0-7ebf38290557` | `sha256:ab7ca4d4429cad3d81a28fe9b9f85e03c78cb62f2e075142152982e0f7415ce3` | `sales-advantage-00005-yas` | `https://sales.reading-advantage.com` | 100% |
 
 All three domain mappings reported `Ready=True`,
 `CertificateProvisioned=True`, and `DomainRoutable=True`, with CNAME target
@@ -60,18 +84,21 @@ All three domain mappings reported `Ready=True`,
 - Marketing final Cloud Build completed successfully after migration, database
   doctor, least-privilege runtime grant/probe, image, deployment, and invoker
   gates.
-- Sales final Cloud Build completed successfully after migration, database
-  doctor, deterministic curriculum replay, independent curriculum verification,
-  least-privilege runtime grant/probe, image, deployment, and invoker gates.
+- Sales original release build completed migration, doctor, deterministic
+  curriculum reconciliation, independent verification, and runtime probes before
+  stopping safely in evidence capture. One-use continuation build
+  `342cdc52-871c-4f08-bef0-7ebf38290557` then revalidated that exact release,
+  verified the compatibility revision, applied the receipt-bound role repair,
+  and promoted the immutable image without replaying completed mutations.
 - Accounts' production token-exchange path was also exercised directly against
   Cloud SQL and returned a successful audience token after normalizing
   PostgreSQL `bigint` auth versions. The identity idempotency adapter then passed
   a two-connection production-schema/runtime-role test covering atomic owner
   acquisition, replay/reject, input conflict, retryable and terminal settlement,
   expiry reclamation, canonical stored-row parsing, and cleanup.
-- Sales curriculum verification recorded 6 modules, 26 lessons, 8 rubrics,
-  8 scenarios, and 13 quiz questions with deterministic graph digest
-  `f8b1391302650874154066d5a21189a71d3cbaf78b528f579642fc9fc696f0e7`.
+- Sales curriculum verification recorded 6 modules, 27 lessons, 8 rubrics,
+  8 scenarios, and 14 quiz questions with deterministic graph digest
+  `ccba5498f453f1e2982307ca29d9d56c8bf17aeb26e1d586de232b44416b8717`.
 
 ## Public-domain and authorization evidence
 
@@ -109,35 +136,36 @@ All three domain mappings reported `Ready=True`,
 
 ## Rollback anchors
 
-| App | Prior ready revision | Prior image digest |
-|---|---|---|
-| Accounts | `accounts-00004-b9g` | `sha256:e9e3e12a7bd74225c6d9e6d430d633a0f2f148f621ddd1a66ced0db975ed96b1` |
-| Marketing | `marketing-00004-czf` | `sha256:10cbe3936e2f5cd0445592dfd65f8a997ddd7aba3f312c19114b477e1d53fa63` |
-| Sales | `sales-advantage-00002-7ch` | `sha256:99acd2182e1f0a6d4e8d46dd9e27a6d152555adbfad6de5b35cd3891061a8384` |
+### Current verified Sales rollback
 
-The Accounts and Marketing revisions remain valid rollback anchors for this
-recorded release. The historical Sales revision is retained as evidence only:
-it must not receive traffic after the source-role repair because it was not
-created with the split compatibility credential contract.
+- Revision: `sales-advantage-00004-jed`.
+- Image digest:
+  `sha256:ab7ca4d4429cad3d81a28fe9b9f85e03c78cb62f2e075142152982e0f7415ce3`.
+- Mode and database contract: `legacy-school` with
+  `SALES_LEGACY_DATABASE_URL`.
+- State: Ready, tagged `legacy-rollback`, 0% traffic, independently verified
+  before and after repair.
+- Restore command:
+  `gcloud run services update-traffic sales-advantage --region=asia-southeast1 --to-revisions=sales-advantage-00004-jed=100`.
 
-For the next Sales company-auth cutover, Cloud Build must first create a tagged,
-no-traffic `legacy-school` revision from the exact candidate image using
-`SALES_LEGACY_DATABASE_URL`. Only after that revision is Ready may the build
-apply the manifest-bound source-role repair and deploy the same image in
-`company` mode with `SALES_DATABASE_URL`. Any rollback after repair must target
-that newly created compatibility revision, followed by the public-domain health
-and sign-in checks. This paragraph defines a required future gate; it does not
-claim that the compatibility revision has already been deployed.
+Historical pre-split Sales revisions must not receive traffic after the
+source-role repair. The Accounts and Marketing rollback identifiers in the
+original 2026-07-18 section are historical release references, not a claim that
+they are currently tagged rollback targets; reverify a candidate before any
+future rollback action.
 
 ## Open gates
 
-- Codecamp identity migration is complete; application SSO cutover remains open
-  in Phase S6/S7 pending its two tutorial-runtime secrets.
-- Marketing company-admin-without-app-role denial returned 403; the equivalent
-  final Sales proof remains open until the reviewed Sales revision is deployed.
-- The next Sales build must create and verify its no-traffic compatibility
-  revision before source-role repair. The historical `sales-advantage-00002-7ch`
-  revision is not a post-repair rollback target.
-- The full Sales audio, AI roleplay, streaming chat, rate-limit, and manual
-  curriculum-quality journeys remain open.
-- Observation-window approval and legacy-auth retirement remain open.
+- Codecamp identity migration is complete and both tutorial-runtime secrets
+  exist. The application SSO cutover remains open pending explicit secret-level
+  cross-project access to the Accounts-owned OIDC client secret for
+  `codecamp-cloud-run@codecamp-advantage.iam.gserviceaccount.com`.
+- Codecamp candidate deployment, migrated-account product smoke tests, and
+  dummy-account Codecamp feature tests remain open.
+- The dummy-account Sales and Marketing feature journeys were not started before
+  the overnight stop. Sales ordinary-rep, audio, AI roleplay, streaming chat,
+  rate-limit, and final curriculum-quality journeys remain open.
+- Final Sales company-admin-without-app-role denial should be repeated against
+  the promoted revision.
+- Observation-window approval, legacy-auth retirement, detailed checklist
+  reconciliation, and parent-track closeout remain open.

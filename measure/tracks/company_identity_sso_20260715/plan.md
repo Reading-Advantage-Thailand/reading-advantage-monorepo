@@ -13,9 +13,9 @@ proof that deployed work is absent.
 | S2 employee SSO | Complete and deployed | Accounts serves first-party PKCE OIDC, PostgreSQL sessions/codes, HttpOnly sessions, discovery/JWKS, rate limiting, local/global logout, revocation, and app-local adapters. Production Accounts logout returned 200 on 2026-07-19. |
 | S3 employee and role administration | Complete and deployed | Production browser/API verification covered create, independent company/app roles, suspend/restore, password reset, session revocation, ordinary-employee denial, and last-admin protection. |
 | S4 Marketing | Complete and deployed | Accounts SSO, named Marketing permissions, member/admin separation, company-admin-without-app-role denial, campaign/script/project persistence, and protected settings are verified on the public domain. |
-| S5 Sales | Implementation complete; reviewed production release pending | SSO, company organization context, Accounts onboarding, Sales role separation, compatibility revision, curriculum reconciliation, and fail-closed release gates are committed. The exact release awaits the approved Cloud Build read-only backup-viewer grant. |
-| S6 Codecamp | Production identity migration complete; app cutover pending | Five legacy accounts were migrated with exact credential hashes, roles, stable local-principal mappings, immutable audit rows, and unchanged product ownership. The Codecamp candidate awaits two approved tutorial-runtime secrets. |
-| S7 production cutover | Partial | Accounts and Marketing are live; Sales remains on the previously accepted revision; Codecamp identity data is migrated but its SSO application revision is not yet deployed. Observation and legacy-auth retirement remain open. |
+| S5 Sales | Complete and deployed; full feature QA remains open | Continuation build `342cdc52-871c-4f08-bef0-7ebf38290557` passed 15/15 steps and serves company revision `sales-advantage-00005-yas` at 100%, with exact repair receipt and compatibility rollback evidence. |
+| S6 Codecamp | Production identity migration complete; app cutover pending | Five legacy accounts were migrated with exact credential hashes, roles, stable local-principal mappings, immutable audit rows, and unchanged product ownership. The two tutorial-runtime secrets now exist; deployment still requires explicit secret-level cross-project access for the Codecamp runtime identity to the Accounts-owned OIDC client secret. |
+| S7 production cutover | Partial | Accounts, Marketing, and Sales are live. Codecamp identity data is migrated but its SSO application revision is not yet deployed. Remaining browser feature QA, observation, and legacy-auth retirement remain open. |
 
 ## Dependencies and Sequencing
 
@@ -544,13 +544,13 @@ _Blast radius: `validateSession` has 31 source references and shared `requireRol
 ## Phase S7: Cut Over and Verify Production
 _Story ref: spec.md#story-s7_
 
-> **2026-07-18 release checkpoint:** Accounts, Marketing, and Sales are deployed on
+> **2026-07-19 release checkpoint:** Accounts, Marketing, and Sales are deployed on
 > Cloud Run and their public-domain SSO paths are verified. Immutable build,
 > revision, domain, browser, protected-API, and rollback evidence is recorded in
 > [`production-rollout-20260718.md`](./production-rollout-20260718.md). This is a
-> partial Phase S7 checkpoint: Codecamp migration/cutover, negative role-isolation
-> probes, the observation window, legacy-auth retirement, and final documentation
-> remain open.
+> partial Phase S7 checkpoint: the Codecamp application cutover, remaining
+> role-isolation and feature probes, the observation window, legacy-auth
+> retirement, and final documentation remain open.
 
 ### Contract & Schema Definition
 
