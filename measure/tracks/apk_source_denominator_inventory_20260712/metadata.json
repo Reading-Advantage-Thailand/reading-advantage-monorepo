@@ -1,20 +1,30 @@
 {
-  "track_id": "apk_source_denominator_inventory_20260712",
-  "type": "chore",
-  "status": "completed",
+  "actual_tasks": 27,
+  "completion_evidence": {
+    "accepted_denominator_manifest_sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+    "accepted_partition_manifest_sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+    "blocking_findings": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0
+    },
+    "consumable": true,
+    "live_wiring_tests": "26/26 OK",
+    "phase_0_3_admission": "86/86 OK",
+    "phase_4_tests": "43/46 (3 pre-existing non-blocking)",
+    "review_disposition": "pass",
+    "t2_gate_suites": "38/38 OK",
+    "track_head_sha": "ba95e6fb1db6acdaecd0808ca1f22dec339d6c5d"
+  },
   "created_at": "2026-07-12T00:00:00Z",
-  "updated_at": "2026-07-20T00:00:00Z",
-  "description": "Independently discover and reconcile the complete APK game, scene/state, file, copy, history, and asset denominator without interpreting product requirements.",
-  "estimated_tasks": 27,
-  "actual_tasks": null,
-  "deviation_notes": null,
   "depends_on": [
     "measure_apk_evidence_integrity_gates_20260712"
   ],
+  "description": "Independently discover and reconcile the complete APK game, scene/state, file, copy, history, and asset denominator without interpreting product requirements.",
+  "deviation_notes": null,
+  "estimated_tasks": 27,
   "evidence_integrity_gate": {
-    "version": "phase4-v8-candidate",
     "commit": "5aea360f94f978ac78e590e0a64d33d176beaa1a",
-    "manifest_sha256": "d9f5c4771a755bae72c037fdbed6e330e523e9f2fabf60010154b981bfb283a3",
     "files": {
       "measure/automation-supervisor.py": "c1489f3ee8246e3e06f7b009836455d2a5688af48ac082a10aa3b5227b8ba809",
       "measure/evidence_integrity_gates/__init__.py": "20b90c2879eb83b720e1766795e379b5007467d4cd446d1a45b9d12f552846a8",
@@ -28,7 +38,13 @@
       "measure/evidence_integrity_gates/opencode_provenance.py": "26a03cc80318fd8b2e37bdaa5777a8608023472c29403dd561d702afb208278b",
       "measure/evidence_integrity_gates/supervisor_gate.py": "ed2287fa9a5d89f6d0800b55a998a5d797a621e141fdcc4c811414f92277d362",
       "measure/evidence_integrity_gates/validator.py": "4e201ee6457c2d1b9132b48821d84a95fe466b1e63ec2dcb624be6469d8afdce"
-    }
+    },
+    "manifest_sha256": "d9f5c4771a755bae72c037fdbed6e330e523e9f2fabf60010154b981bfb283a3",
+    "version": "phase4-v8-candidate"
   },
-  "first_work_commit": "bb95b52315de006ee661e48a090837b767b9443b"
+  "first_work_commit": "bb95b52315de006ee661e48a090837b767b9443b",
+  "status": "done",
+  "track_id": "apk_source_denominator_inventory_20260712",
+  "type": "chore",
+  "updated_at": "2026-07-20T00:00:00Z"
 }
