@@ -714,7 +714,7 @@ class APKInventoryProductionAcceptanceWiringTests(unittest.TestCase):
                 "raw_write_inventory": sorted(receipt["output_hashes"]),
                 "fork_turns": "none",
             })
-            commit_binding = None
+            commit_binding: dict[str, str] | None = None
             if role == "requirements-mapper":
                 commit_binding = {
                     "mapper_phase1_attestation_commit": cls.authority.admitted_phase_base_sha,
@@ -724,6 +724,10 @@ class APKInventoryProductionAcceptanceWiringTests(unittest.TestCase):
                 commit_binding = {
                     "phase1_attestation_commit": cls.phase1_commit,
                     "phase2_attestation_commit": receipt["commit_sha"],
+                }
+            elif role == "adversarial-reviewer":
+                commit_binding = {
+                    "phase2_receipt_commit": cls.phase2_receipt_commit,
                 }
             usage = derive_t2_actual_usage(
                 repository_root=cls.fixture_repo,
@@ -783,6 +787,8 @@ class APKInventoryProductionAcceptanceWiringTests(unittest.TestCase):
             if role == "requirements-mapper":
                 receipt["commit_binding"] = commit_binding
             elif role == "evidence-collector":
+                receipt["commit_binding"] = commit_binding
+            elif role == "adversarial-reviewer":
                 receipt["commit_binding"] = commit_binding
             events[end_id] = {
                 "raw_export_bytes": raw,
