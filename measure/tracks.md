@@ -199,7 +199,7 @@ Two parallel programs are in flight; priority order when picking the next track:
   `sales_advantage` DB, deploys to Cloud Run, and runs end-to-end QA. Successor to
   `sales_advantage_mvp_20260622` Phase 8.
 
-- [ ] **Track: Marketing Go-Live** *Link: [./tracks/marketing_golive_20260701/](./tracks/marketing_golive_20260701/)*
+- [x] **Track: Marketing Go-Live** *Link: [./archive/marketing_golive_20260701/](./archive/marketing_golive_20260701/)*
   Take `apps/marketing` (the video-production pipeline; FR-1..FR-6 met, 151 tests green in the
   archived `video_pipeline_20260613`) from feature-complete to a deployed MVP. The deferred
   `vinext`/`vite parseSync` build blocker is **resolved** (`pnpm --filter marketing build`

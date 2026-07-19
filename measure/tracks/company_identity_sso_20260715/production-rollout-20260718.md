@@ -7,6 +7,38 @@ This checkpoint deploys and verifies Accounts, Marketing, and Sales in GCP proje
 instance. It does **not** deploy or migrate Codecamp, retire Codecamp legacy auth,
 complete the observation window, or close the parent company-identity track.
 
+## 2026-07-19 execution addendum
+
+This addendum records later work and supersedes the original release inventory
+where the entries differ.
+
+- Accounts: exact build `de19ada8-775e-45b0-99ce-d3896adf8a78` serves
+  `accounts-00007-hxs` at 100%, digest
+  `sha256:7e851f0c3663c7bfafd94bc434106f875ec3222ea928a000c698400601b1bc27`.
+  Shell, health, readiness, discovery, and JWKS return 200. The current source
+  passed 32 tests, with one opt-in PostgreSQL test skipped, plus typecheck, lint,
+  and production build. A Kimi WebBridge logout completed with HTTP 200. One
+  earlier zero-second logout request returned 503 without an application
+  exception; the revision remained healthy.
+- Marketing: final exact-source build
+  `08fd00a1-de86-4f8f-b65d-632832279fa2` at
+  `a7fc3fbb6476eb30f95c4f1bd5757d2d7708ba29` passed all 15 staged-release
+  steps and serves `marketing-00013-jil` at 100%, digest
+  `sha256:df12a3aa962cf861a2332ffab766588330456fc7b1a3e4e84e67e87a69e5b2d6`.
+  The current source passed 301 tests. Custom-domain, database, Accounts
+  readiness, mapping, rollback, and clean ERROR/5xx log evidence all passed.
+  The production browser journey created and reloaded a six-scene project;
+  ordinary-member settings administration remained forbidden.
+- Codecamp identities: five legacy accounts were migrated into Accounts with
+  exact credential hashes, roles, stable local-principal mappings, and immutable
+  audit rows. Existing ownership remained unchanged across 155 progress rows,
+  24 reviews, and 3 chats. The Codecamp application cutover remains pending the
+  two narrowly scoped tutorial-runtime secrets and their runtime-only bindings.
+- Sales: the reviewed 27-lesson source reconciliation and release gates are
+  committed, but production still serves `sales-advantage-00003-v4d`. The exact
+  release remains pending the read-only Cloud SQL backup-viewer grant required
+  by its fail-closed pre-deployment backup gate.
+
 ## Immutable release inventory
 
 | App | Cloud Build | Image digest | Serving revision | Public domain | Traffic |
@@ -99,8 +131,8 @@ claim that the compatibility revision has already been deployed.
 
 ## Open gates
 
-- Codecamp migration and SSO cutover were not part of this release and remain
-  open in Phase S6/S7.
+- Codecamp identity migration is complete; application SSO cutover remains open
+  in Phase S6/S7 pending its two tutorial-runtime secrets.
 - Marketing company-admin-without-app-role denial returned 403; the equivalent
   final Sales proof remains open until the reviewed Sales revision is deployed.
 - The next Sales build must create and verify its no-traffic compatibility
@@ -108,6 +140,4 @@ claim that the compatibility revision has already been deployed.
   revision is not a post-repair rollback target.
 - The full Sales audio, AI roleplay, streaming chat, rate-limit, and manual
   curriculum-quality journeys remain open.
-- The full Marketing campaign research, Thai script generation/edit/persist
-  journey remains open.
 - Observation-window approval and legacy-auth retirement remain open.

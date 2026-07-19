@@ -1,0 +1,11 @@
+{
+  "track_id": "marketing_golive_20260701",
+  "type": "feature",
+  "status": "complete",
+  "created_at": "2026-07-01T00:00:00Z",
+  "updated_at": "2026-07-19T10:35:42Z",
+  "description": "Take the marketing app (the video-production pipeline: topic research/dedup, Thai script generation, scene editor, campaign/project persistence) from feature-complete to a deployed MVP. FR-1..FR-6 are met and 151 tests were green in video_pipeline_20260613 (archived). The vinext/vite parseSync build blocker that was deferred to repo-owner is now RESOLVED — `pnpm --filter marketing build` completes cleanly (dist/client + dist/server). This track verifies/pins the build, hard-gates on Wave 3 marketing security (the GET /api/settings decrypted-API-key leak and unauthenticated /api/video/* routes), adds a vinext-runtime Dockerfile + cloudbuild, provisions the DB, deploys to Cloud Run, and runs manual QA.",
+  "estimated_tasks": 20,
+  "actual_tasks": 30,
+  "deviation_notes": "Successor to the deferred build+deploy remainder of the archived video_pipeline_20260613 track (no live track owned it). Marketing security remediation is owned by Wave 3 (authz/zod/adapter) + Wave 5 (schema/UX/i18n) + Wave 6 (test backfill) per medium-plus-coverage-matrix.md — this track does not duplicate it, it consumes Wave 3 as a hard deploy precondition. Build blocker found already resolved on 2026-07-01 during evaluation; Phase 0 verifies and pins rather than fixes. Staged-release evidence projections required follow-up corrections for promoted traffic and domain-mapping condition extraction; final exact-source build 08fd00a1-de86-4f8f-b65d-632832279fa2 passed all 15 release steps and independently validated revision marketing-00013-jil at 100%."
+}

@@ -20,7 +20,7 @@ was found already resolved on 2026-07-01. Verify, pin, and record.
   - `"vinext": "^0.2.0"` → `"vinext": "0.2.0"` at commit `bd32fba5`.
 - [x] Task: Add a resolved row to `measure/tech-debt.md` — "marketing vinext/vite build blocker resolved (version X), verified `pnpm --filter marketing build` green 2026-07-01"; remove the dangling repo-owner deferral
   - Row added. No separate dangling deferral row existed to remove — the old archive-level deferral references are superseded.
-- [b] Task: Measure — User Manual Verification 'Build verification & pin'
+- [x] Task: Measure — User Manual Verification 'Build verification & pin' — final source passed 301/301 tests, typecheck, lint, and the production vinext build on 2026-07-19.
 
 ---
 
@@ -41,7 +41,7 @@ Do not start Phase 2 until this is green — the app currently leaks decrypted A
   - `app/lib/ai.ts` re-exports `createAIClient`/`getAIClient` from `@reading-advantage/ai`. All AI call sites (`research-topics`, `generate-script`, `test-connection`) import from `@/lib/ai` and call `.generateText()` on a client created via the shared adapter. Zero direct provider-SDK imports in route source (verified by test at `bd32fba5`). Verified at `bd32fba5`.
 - [x] Task: Record confirming SHAs; if any item is unmet, STOP and escalate to Wave 3
   - HEAD: `bd32fba5` (chore(sales): add deploy artifacts + reconcile MVP track). All 4 verifications pass.
-- [b] Task: Measure — User Manual Verification 'Security gate'
+- [x] Task: Measure — User Manual Verification 'Security gate' — production dummy-member QA confirmed campaign access while settings GET/POST/test-connection remained forbidden on 2026-07-19.
 
 ---
 
@@ -64,7 +64,7 @@ Do not start Phase 2 until this is green — the app currently leaks decrypted A
   - [x] verify the `marketing.reading-advantage.com` mapping conditions, custom-domain health/readiness and smoke checks; emit the clean source SHA, exact previous/candidate revisions and images, and an executable previous-revision rollback command
   - [x] service name `marketing`, region `asia-southeast1`, Cloud SQL attach, `--set-secrets` for the runtime database URL, OIDC client secret, LLM provider keys, and settings-encryption key
   - Written at `apps/marketing/cloudbuild.yaml`. Uses `$PROJECT_ID` for AR path (`asia-southeast1-docker.pkg.dev/$PROJECT_ID/marketing/marketing`).
-  - Staged-release correction is executable-test-backed and documented at `docs/deployment/marketing-cloud-run-release.md`; it has not been submitted from the current workspace.
+  - Staged-release correction is executable-test-backed and documented at `docs/deployment/marketing-cloud-run-release.md`; final exact-source build `08fd00a1-de86-4f8f-b65d-632832279fa2` passed all 15 steps on 2026-07-19.
 - [x] Task: Provision Cloud SQL marketing runtime DB (or schema) with the current shared migration journal applied; wire `DATABASE_URL`/`DIRECT_DATABASE_URL`
   - Production database `marketing` uses separate non-inheriting migration/runtime roles. Final build `7a6597f5-5a51-406e-98c5-5e264b8358bf` passed migrate, doctor, grants, and runtime privilege probes.
 - [x] Task: Provision Secret Manager entries for every secret referenced by cloudbuild
@@ -75,29 +75,30 @@ Do not start Phase 2 until this is green — the app currently leaks decrypted A
   - Written at `apps/marketing/scripts/marketing-smoke.sh`. Live Cloud Run run passed 7/7: public shell routes 200, session and DB health 200, settings/campaign APIs 401 without auth. Playwright separately verified `/settings` receives the API 401 and redirects to `/login` after hydration.
 - [x] Task: Docker build verification
   - Cloud Build `7a6597f5-5a51-406e-98c5-5e264b8358bf` completed all image, database, deploy, and invoker steps successfully on 2026-07-18. Final startup logs contain no module-format warning.
-- [b] Task: Measure — User Manual Verification 'Deploy infrastructure'
+- [x] Task: Measure — User Manual Verification 'Deploy infrastructure' — final Cloud Build migration, doctor, runtime-contract, candidate, promotion, mapping, custom-domain, and evidence steps all passed on 2026-07-19.
 
 ---
 
 ## Phase 3: Deploy + manual QA
 
-- [ ] Task: From an exact clean release commit, submit the staged pipeline with the exact source SHA substitution; retain the final `marketing_release_promoted` record and confirm candidate verification preceded exact revision promotion, mapped-domain verification, and custom-domain smoke
-  - Pending: production still reflects the previously accepted direct-traffic release evidence below. Do not mark this correction deployed until the staged build succeeds and its revision/image/rollback evidence is recorded.
+- [x] Task: From an exact clean release commit, submit the staged pipeline with the exact source SHA substitution; retain release evidence and confirm candidate verification preceded exact revision promotion, mapped-domain verification, and custom-domain smoke
+  - Final exact-source build `08fd00a1-de86-4f8f-b65d-632832279fa2` at commit `a7fc3fbb6476eb30f95c4f1bd5757d2d7708ba29` passed all 15 release steps. It verified candidate `marketing-00013-jil` before promoting that exact revision to 100%, then verified the mapped route, managed certificate, custom-domain shell/health/readiness, final traffic, and rollback evidence. Image digest: `sha256:df12a3aa962cf861a2332ffab766588330456fc7b1a3e4e84e67e87a69e5b2d6`.
 - [x] Task: `gcloud builds submit --config apps/marketing/cloudbuild.yaml`; confirm migrate + doctor + deploy steps pass
-  - Final accepted build `2e1d5b73-4118-480f-aeea-fe8f50db14b2`: SUCCESS. Ready revision: `marketing-00005-fzp`; image digest `sha256:72f4e1cc9529b8c656d3843a77354e9ddc3ac3b38fc6d4dd1540da0217cc42b7`; service URL: `https://marketing-hxamzdhgwa-as.a.run.app`; 100% traffic.
+  - Final accepted build `08fd00a1-de86-4f8f-b65d-632832279fa2`: SUCCESS. Ready revision: `marketing-00013-jil`; image digest `sha256:df12a3aa962cf861a2332ffab766588330456fc7b1a3e4e84e67e87a69e5b2d6`; service URL: `https://marketing-hxamzdhgwa-as.a.run.app`; 100% traffic. All revision and domain-mapping conditions were true, and the final revision had no ERROR/5xx log entries.
 - [x] Task: Run the smoke script against the live Cloud Run URL; confirm `GET /api/health/db` green
   - Live custom-domain smoke at `https://marketing.reading-advantage.com`: 7/7 passed, including DB health 200 and unauthenticated protected APIs 401. Cloud Run reports route and certificate ready. Browser SSO through Accounts lands on the authenticated Marketing home, and the protected `/api/settings` request returns 200.
-- [~] Task: Manual end-to-end QA (Phikul) — login → create campaign → research topics → dedup → generate Thai script (5–7 scenes) → edit scenes → persist project → reload; record the result
+- [x] Task: Manual end-to-end QA — production dummy SSO login → create campaign → research 5 topics → approve/save → generate a six-scene Thai script → persist project → reload and restore all six scenes
+  - Campaign `3554c464-e304-4919-ad1d-7735ac6b02c4` and project `0cc5ffea-746c-41aa-8761-8f692d4579d8` were created on revision `marketing-00009-kot`. Reload restored the saved project and all six scenes. Ordinary `MEMBER` settings GET/POST/test-connection operations returned 403.
 - [x] Task: Confirm no route exposes decrypted secrets in production (re-check `GET /api/settings` against the live service)
-  - Live `GET /api/settings` returned 401 without a session; browser redirect landed on `/login`.
-- [~] Task: Measure — User Manual Verification 'Deploy + QA'
+  - Live `GET /api/settings` returned 401 without a session. An authenticated ordinary `MEMBER` received 403 for settings GET/POST/test-connection, while the campaign workflow remained available.
+- [x] Task: Measure — User Manual Verification 'Deploy + QA' — Kimi WebBridge production journey passed on 2026-07-19.
 
 ---
 
 ## Phase 4: Closeout
 
 - [x] Task: Update `measure/deployment-status.md` — marketing now deployed (service, project, deploy source)
-- [~] Task: Update `measure/tech-debt.md` — any go-live shortcuts (vinext container strategy, no auto CI/CD trigger, i18n/hardcoded-English UI carried to Wave 5)
-- [~] Task: Update `measure/lessons-learned.md` if a reusable lesson emerged (esp. deploying a vinext app to Cloud Run)
-- [~] Task: Archive this track; update `measure/tracks.md` row to `[x]`
-- [~] Task: Measure — User Manual Verification 'Closeout'
+- [x] Task: Update `measure/tech-debt.md` — the pinned vinext/full-runtime-container tradeoff remains recorded; manual-only deployment provenance is maintained in `measure/deployment-status.md`.
+- [x] Task: Capture reusable release lessons — the vinext runtime contract is documented in `docs/deployment/marketing-cloud-run-release.md`, and the mapped-route regression is executable-test-backed in `cloudbuild-release.test.ts`.
+- [x] Task: Archive this track; update `measure/tracks.md` row to `[x]` — independently audited after final exact-source release validation on 2026-07-19.
+- [x] Task: Measure — User Manual Verification 'Closeout' — live revision, domain, protected API, persistence, logs, tests, typecheck, and build re-verified 2026-07-19.

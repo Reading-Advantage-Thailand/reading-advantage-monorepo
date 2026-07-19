@@ -1,5 +1,22 @@
 # Implementation Plan: Company Employee Identity and SSO
 
+## Execution reconciliation — 2026-07-19
+
+The detailed Red/Green checklist below was not updated as implementation landed.
+This table is the current execution ledger until those historical task boxes are
+backfilled with commit-level evidence; unchecked boxes below must not be read as
+proof that deployed work is absent.
+
+| Phase | Current state | Verified evidence |
+|---|---|---|
+| S1 identity boundary | Complete in runtime; documentation/graph closeout remains | Separate company-identity database, migrations, runtime role, repository, capability executor, database doctor, and boundary tests are deployed. |
+| S2 employee SSO | Complete and deployed | Accounts serves first-party PKCE OIDC, PostgreSQL sessions/codes, HttpOnly sessions, discovery/JWKS, rate limiting, local/global logout, revocation, and app-local adapters. Production Accounts logout returned 200 on 2026-07-19. |
+| S3 employee and role administration | Complete and deployed | Production browser/API verification covered create, independent company/app roles, suspend/restore, password reset, session revocation, ordinary-employee denial, and last-admin protection. |
+| S4 Marketing | Complete and deployed | Accounts SSO, named Marketing permissions, member/admin separation, company-admin-without-app-role denial, campaign/script/project persistence, and protected settings are verified on the public domain. |
+| S5 Sales | Implementation complete; reviewed production release pending | SSO, company organization context, Accounts onboarding, Sales role separation, compatibility revision, curriculum reconciliation, and fail-closed release gates are committed. The exact release awaits the approved Cloud Build read-only backup-viewer grant. |
+| S6 Codecamp | Production identity migration complete; app cutover pending | Five legacy accounts were migrated with exact credential hashes, roles, stable local-principal mappings, immutable audit rows, and unchanged product ownership. The Codecamp candidate awaits two approved tutorial-runtime secrets. |
+| S7 production cutover | Partial | Accounts and Marketing are live; Sales remains on the previously accepted revision; Codecamp identity data is migrated but its SSO application revision is not yet deployed. Observation and legacy-auth retirement remain open. |
+
 ## Dependencies and Sequencing
 
 - Execute phases in story order: identity boundary, SSO, account management,
