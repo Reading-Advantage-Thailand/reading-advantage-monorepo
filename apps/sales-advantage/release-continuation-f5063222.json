@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "oneUse": true,
+  "projectId": "reading-advantage",
+  "region": "asia-southeast1",
+  "service": "sales-advantage",
+  "domain": "sales.reading-advantage.com",
+  "originalRelease": {
+    "buildId": "f5063222-76bd-4b73-a151-3f7994827e09",
+    "commitSha": "597241dedf712ea6a2350346fefa0459f3e1d23c",
+    "sourceManifestSha256": "83b763fe90fbc08dd2024dfe6d27c05c84afa5da5960f457eb84b9ef375b28ce",
+    "backupId": "1784467579292",
+    "backupNotBefore": "2026-07-19T13:25:59Z",
+    "backupEndTime": "2026-07-19T13:27:50.606Z",
+    "imageTag": "asia-southeast1-docker.pkg.dev/reading-advantage/sales-advantage/sales-advantage:f5063222-76bd-4b73-a151-3f7994827e09",
+    "imageDigest": "sha256:ab7ca4d4429cad3d81a28fe9b9f85e03c78cb62f2e075142152982e0f7415ce3",
+    "source": {
+      "bucket": "reading-advantage_cloudbuild",
+      "object": "source/1784467895.426973-a2eac72fd5c247d8bf5bcf6325aa0982.tgz",
+      "generation": "1784467921813960",
+      "sha256Base64": "9rjGQcgEv1KnMZ6kVmpoiTOTL7OnKwDB1AbQ0X2-Ca0="
+    }
+  },
+  "rollback": {
+    "previousLiveRevision": "sales-advantage-00003-v4d",
+    "previousLiveDigest": "sha256:9cab345f7f070e0d42488c3357ff492471758d0d17dcb85c86e6eac61b5738d0",
+    "revision": "sales-advantage-00004-jed",
+    "tag": "legacy-rollback",
+    "mode": "legacy-school",
+    "databaseSecret": "SALES_LEGACY_DATABASE_URL"
+  },
+  "repair": {
+    "secret": "SALES_LEGACY_SOURCE_ROLE_REPAIR_MANIFEST",
+    "secretVersion": "1",
+    "manifestSha256": "6329c846ac119a0af9fa43747879b042c211b4b79e5ad8a98822940fd29b5980"
+  },
+  "candidate": {
+    "tag": "cf5063222",
+    "mode": "company"
+  },
+  "continuation": {
+    "commitSubstitution": "_CONTINUATION_COMMIT_SHA",
+    "sourceManifestSubstitution": "_CONTINUATION_SOURCE_MANIFEST_SHA256"
+  }
+}
