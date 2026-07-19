@@ -19,8 +19,8 @@ Two parallel programs are in flight; priority order when picking the next track:
 3. **codecamp-advantage productization** (deployment, prod-QA, exercise-repos) proceeds
    independently; lower priority than securing the shared packages above.
 
-- [~] **Track: OpenCode Agent Roster Refresh** *Link: [./tracks/opencode_agent_roster_20260712/](./tracks/opencode_agent_roster_20260712/)*
-  Refresh global coding and Measure agents for the GPT-5.6 Luna/Terra/Sol family, remove unavailable Moonshot routing, and prioritize active subscription-backed providers.
+- [x] **Track: OpenCode Agent Roster Refresh** *Link: [./archive/opencode_agent_roster_20260712/](./archive/opencode_agent_roster_20260712/)*
+  Refresh global coding and Measure agents for the GPT-5.6 Luna/Terra/Sol family, remove unavailable Moonshot routing, and prioritize active subscription-backed providers. **Completed 2026-07-20** — implementation 3/3 with validation evidence; product-owner manual verification (OpenCode restart model enumeration) remains as owner follow-up.
 
 ---
 
