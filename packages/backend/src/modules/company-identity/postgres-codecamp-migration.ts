@@ -703,7 +703,7 @@ export async function runPostgresCodecampIdentityMigration(
         "Apply requires the source product database through migration 0043.",
       );
     }
-    return source.begin(async (sourceTx) => {
+    return await source.begin(async (sourceTx) => {
       await sourceTx`set transaction isolation level serializable`;
       await sourceTx`select pg_advisory_xact_lock(hashtext('codecamp_company_identity_migration'))`;
       await sourceTx.unsafe(

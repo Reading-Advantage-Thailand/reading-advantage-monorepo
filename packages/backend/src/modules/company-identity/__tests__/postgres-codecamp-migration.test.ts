@@ -82,6 +82,17 @@ describe("PostgreSQL Codecamp migration gates", () => {
     expect(String(error)).not.toContain(secret);
     expect(error.code).toBe("SOURCE_DATABASE_INVALID");
   });
+  it("awaits the apply transaction before closing either database pool", () => {
+    const source = readFileSync(
+      resolve(import.meta.dirname, "../postgres-codecamp-migration.ts"),
+      "utf8",
+    );
+    expect(source).toContain("return await source.begin(async (sourceTx) =>");
+    expect(source.indexOf("return await source.begin")).toBeLessThan(
+      source.indexOf("source.end({ timeout: 5 })"),
+    );
+  });
+
   it("pins apply readiness to the exact checked-in migration 0043", () => {
     const migration = readFileSync(
       resolve(
