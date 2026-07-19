@@ -137,7 +137,7 @@ Do not start Phase 2 until the security gate is green.
   - [x] `--set-secrets` for `DATABASE_URL`, `AUTH_SECRET`, `AI_PROVIDER`, `OPENROUTER_API_KEY`, `GOOGLE_AI_API_KEY`, `OPENAI_API_KEY`, `SALES_AUDIO_EVAL_MODEL`, `SALES_AUDIO_EVAL_FALLBACK_STT_MODEL`, `SALES_AUDIO_EVAL_FALLBACK_EVAL_MODEL`, `SALES_CHAT_MODEL`, `STORAGE_ENDPOINT`, `STORAGE_REGION`, `STORAGE_BUCKET`, `STORAGE_ACCESS_KEY`, `STORAGE_SECRET_KEY`, `STORAGE_PUBLIC_BASE_URL`
   - [x] `--allow-unauthenticated` (login page needs to be public, same as codecamp)
 - [x] Task: Verify the existing `sales_advantage` database on the shared `cloud-sql` instance — confirmed by the successful production migration and runtime probes recorded below.
-- [~] Task: Verify release identity access — existing Sales secrets resolve, but the hardened backup gate additionally requires operator-approved `roles/cloudsql.viewer` for the Cloud Build service account (`cloudsql.backupRuns.get`); deployment remains fail-closed pending that grant.
+- [x] Task: Verify release identity access - the operator-approved `roles/cloudsql.viewer` grant is present for the Cloud Build service account, and the release successfully inspected backup `1784467579292` before continuation.
 - [x] Task: Complete `apps/sales-advantage/.env.example` — full runtime surface with comments
   - [x] All env vars documented: DB, auth, AI provider (openrouter/google/openai/mock), eval model overrides, chat model, storage (S3-compatible), Next.js
   - [x] Key name correction: storage adapter reads `STORAGE_ACCESS_KEY` / `STORAGE_SECRET_KEY` (not `_ACCESS_KEY_ID` / `_SECRET_ACCESS_KEY`)
@@ -156,7 +156,7 @@ Do not start Phase 2 until the security gate is green.
   - [x] Verify curriculum/runtime contracts read-only, move traffic to the verified legacy rollback before role repair, and bind the repair receipt to the original build and release commit.
   - [x] Promote through a trap-protected script that restores the verified rollback on any post-shift verification failure.
   - [x] Cover validator mismatches, SQL contracts, forbidden replay steps, public verification fixtures, and rollback behavior with automated tests.
-  - Implementation SHA: `2a24a654`. Focused validation: 24 tests passed; changed-file ESLint, Sales TypeScript, shell/Python/JSON/YAML syntax passed; the pure validator also accepted freshly collected read-only live GCP evidence. Deployment remains a separate release action.
+  - Implementation SHA: `2a24a654`; permission-surface correction: `2c96be94`. The corrected focused release suite passed 27 tests plus changed-file ESLint, Sales TypeScript, YAML/Node syntax, and independent review. Build `342cdc52-871c-4f08-bef0-7ebf38290557` completed all 15 continuation steps and promoted `sales-advantage-00005-yas` to 100%; see [`production-continuation-20260719.md`](./production-continuation-20260719.md).
 
 - [x] Task: `gcloud builds submit --config apps/sales-advantage/cloudbuild.yaml` to the `reading-advantage` project; confirm migrate + doctor + deploy steps pass
   - Build `b45acc2f-9694-4962-95b9-4477209799d2`: SUCCESS; revision `sales-advantage-00003-v4d`; image digest `sha256:9cab345f7f070e0d42488c3357ff492471758d0d17dcb85c86e6eac61b5738d0`; 100% traffic.
