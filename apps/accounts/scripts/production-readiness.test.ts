@@ -101,6 +101,9 @@ describe("Accounts production readiness", () => {
       "projects/reading-advantage/secrets/CODECAMP_COMPANY_AUTH_OIDC_CLIENT_SECRET";
     expect(cloudbuild).toContain(`${centralSecret}/versions/latest`);
     expect(codecampCloudbuild).toContain(
+      "COMPANY_AUTH_OIDC_CLIENT_SECRET=CODECAMP_COMPANY_AUTH_OIDC_CLIENT_SECRET:latest",
+    );
+    expect(codecampCloudbuild).not.toContain(
       `COMPANY_AUTH_OIDC_CLIENT_SECRET=${centralSecret}:latest`,
     );
   });
