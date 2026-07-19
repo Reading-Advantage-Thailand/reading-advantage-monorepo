@@ -1,0 +1,80 @@
+{
+ "schema_version": "apk-role-receipt.v1",
+ "status": "complete-self-attested",
+ "track_id": "apk_three_game_truth_pilot_20260712",
+ "phase": "Phase 5 (partial): truth-test authoring for the pilot batch",
+ "role": "truth-test-author",
+ "task_id": "truth-test-author:t3-pilot",
+ "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+ "spawn_id": "truth-test-author:t3:2026-07-20",
+ "parent_ancestry_ids": [],
+ "prompt_sha256": "f5ab14d979ee4c74dc8fd323a06409660a6f4a95075400e59ecdef61e7bdac58",
+ "prompt_hash_note": "SHA-256 of the truth-test-author prompt text as received in the user turn (verbatim reconstruction hashed; no system/harness wrapper included).",
+ "actual_context_manifest_sha256": "a6ba87ca9e9c84fbc0bd5b140464968c5931f912ee4f5f4081208a2f72376c94",
+ "actual_context_manifest_note": "SHA-256 of the canonical JSON mapping of 35 input files to their SHA-256 values: program spec, track spec/plan, 3 claim ledgers, pilot-blueprint.json, mapper-final-report.json, mapper-hypotheses.md, 3 evidence-method docs, dragon-flight final report, 4 prior role receipts, daily review 2026-07-20, 13 T2 archive JSONs (accepted manifests, phase3-reconciliation, source/historical denominators, identity ledger, discrepancies, phase0 freeze/ownership, green reports, phase4 acceptance report), and the 4 committed T2 phase test modules. No prior-role narrative was used as a derivation source; tests derive from the denominator, claims, and blueprint.",
+ "start_event_id": "t3-truth-test-author-start:2026-07-20T05:30:00Z",
+ "end_event_id": "t3-truth-test-author-end:2026-07-20T06:30:00Z",
+ "timing_note": "Start/end events bound the authoring session; session activity is bounded by this receipt's commit.",
+ "final_response_sha256": "602c2dfc42847ba47b11e4a2a02ccf9d5eb4d93b316cf3de760774ba67538632",
+ "final_response_note": "SHA-256 of truth_tests.py, the role's final response artifact (the deliverable module; mirrors the evidence-collector final-report convention).",
+ "output_paths": [
+  "measure/tracks/apk_three_game_truth_pilot_20260712/truth_tests.py",
+  "measure/tracks/apk_three_game_truth_pilot_20260712/plan.md",
+  "measure/tracks/apk_three_game_truth_pilot_20260712/role-receipts/truth-test-author.json"
+ ],
+ "output_hashes": {
+  "measure/tracks/apk_three_game_truth_pilot_20260712/truth_tests.py": "602c2dfc42847ba47b11e4a2a02ccf9d5eb4d93b316cf3de760774ba67538632",
+  "measure/tracks/apk_three_game_truth_pilot_20260712/plan.md": "7c77b7d5a5d1de56357285ba5073e57bb2e67e68d24505183983114f3c43feb1"
+ },
+ "output_sha256": "602c2dfc42847ba47b11e4a2a02ccf9d5eb4d93b316cf3de760774ba67538632",
+ "budget_declaration": {
+  "schema_version": "apk-role-budget-declaration.v1",
+  "role": "truth-test-author",
+  "spawn_id": "truth-test-author:t3:2026-07-20",
+  "frozen_resource_ceiling": {
+   "test_cases": 180,
+   "command_invocations": 80,
+   "bytes_read": 67108864,
+   "source": "T2 phase0-input-freeze frozen_resource_ceilings.truth-test-author"
+  },
+  "actual_usage": {
+   "test_cases_authored": 41,
+   "command_invocations": 55,
+   "bytes_read": 11788571
+  },
+  "measurement_basis": {
+   "test_cases_authored": "41 unittest cases in truth_tests.py across 6 contract classes (35-45 band requested)",
+   "command_invocations": "authoring-session shell/python invocations (git reads, hashing probes, suite runs); internal subprocess calls of the delivered suite at runtime are artifact behavior, not role commands (T2 generator-accounting precedent)",
+   "bytes_read": "sum of the 35 context-manifest input files (11,788,571 bytes)"
+  }
+ },
+ "budget_declaration_sha256": "768883d28a2f45079a22f34ecf04ea84dedf3bfd6cea666060f9c93210988522",
+ "commit_sha": "bound-at-commit-time",
+ "commit_sha_note": "Single-commit binding per the task contract: truth_tests.py, the plan.md evidence note, and this receipt are committed together; the commit SHA is reported in the role's final response to the orchestrator rather than fabricated here.",
+ "reviewer_isolation": "fresh-context-only, inherited_narrative=false, fork_turns=none",
+ "findings": {
+  "truth_test_count": 41,
+  "truth_test_result": "41/41 PASS, exit 0 (PYTHONDONTWRITEBYTECODE=1 python3 -m unittest measure.tracks.apk_three_game_truth_pilot_20260712.truth_tests -v; ~180 s)",
+  "claims_reverified": 483,
+  "unresolvable_citations": 0,
+  "blueprint_structured_claim_refs_unresolved": 0,
+  "negative_fixtures_rederived": 8,
+  "stop_loss_counters": {
+   "unsupported_factual_claims": 0,
+   "denominator_mismatches": 0,
+   "failed_fix_review_cycles": 0,
+   "unresolved_blocking_findings": {
+    "critical": 0,
+    "high": 0,
+    "medium": 0
+   }
+  },
+  "stop_loss_observations": [
+   "SLO-TTA-1 (infrastructure, anti-pattern A9): the four committed T2 phase test modules (measure/tests/test_apk_source_denominator_inventory_phase{0,1,2,3}.py) fail at HEAD purely because the T2 track was archived from measure/tracks/ to measure/archive/ by da51b4e0. Pytest discovery still yields exactly 13/18/31/24 = 86 tests; phases 0+1 pass 31/31 at HEAD under a disclosed 3-line archival-relocation shim; every phase 2/3 failure is path-relocation class with zero content/hash failures (asserted by T3DenominatorTruthContract). Repair of the committed T2 modules is Measure-infrastructure work outside the truth-test-author boundary and was NOT performed.",
+   "SLO-TTA-2 (schema deviation from task narrative, verified harmless): the mapper's 6 NON-AUTHORITATIVE HYPOTHESIS entries live in mapper-hypotheses.md (flagged, segregated), not in a pilot-blueprint.json 'non_authoritative_hypotheses' field as the task text assumed. The blueprint references them only via mapper_boundary_declaration.cross_game_similarity_findings ('none - ... recorded only in mapper-hypotheses.md as NON-AUTHORITATIVE HYPOTHESES'); zero hypothesis ids are cited as fact. T3BlueprintTruthContract asserts both directions.",
+   "SLO-TTA-3 (carried forward, not authored here): SLO-DF-1 dragon-flight-controller.ts denominator-gap candidate, AW-HIST-076 e2e-spec denominator discrepancy, RPG-TR-020/021/022 flashTone write candidates, DF-ASSET-036/037 unresolved asset usages, AW-HIST-095/096 intra-revision inconsistency, and the 2026-07-20 daily review's phase-ordering observation (Phase 2 marked complete while Phase 1 tasks remain open). All are recorded and visible in the collector/mapper artifacts; none is severity-tagged as an unresolved Critical/High/Medium finding in machine-readable form.",
+   "SLO-TTA-4 (provenance): the six prior T3 commits carry track_id 'apk_three_game_pilot_20260712' while the track id is 'apk_three_game_truth_pilot_20260712' (daily review section 3). This role's commit follows the task-specified title, which uses the same short form."
+  ],
+  "commit_title_deviation": "Requested commit subject used start case ('T3 truth test author for pilot'); the repo commitlint subject-case hook rejects that casing (requirements-mapper precedent), so the committed subject is lower-case: 'chore(measure): t3 truth test author for pilot (track_id: apk_three_game_pilot_20260712)'."
+ }
+}

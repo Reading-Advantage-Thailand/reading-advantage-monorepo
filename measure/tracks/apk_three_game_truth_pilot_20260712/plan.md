@@ -58,3 +58,26 @@
 - [~] Task: Publish non-consumable candidate pilot manifest, complete review report, and resource report
 - [b] Task: Obtain product-owner acceptance bound to exact candidate/review hashes, then publish the accepted pilot manifest — deferred:product-owner
 - [b] Task: Measure - User Manual Verification 'Phase 5' (Protocol in workflow.md) — deferred:product-owner
+
+## Truth-test author evidence (2026-07-20, role-isolated)
+
+- Artifact: `truth_tests.py` — 41 unittest cases across 6 contract classes
+  (denominator 7, claim-ledger 12, blueprint 8, abyssal-well-historical 4,
+  negative-fixture 6, stop-loss 4), derived from the T2 denominator, the three
+  ledgers, and the blueprint only.
+- Command: `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest measure.tracks.apk_three_game_truth_pilot_20260712.truth_tests -v`
+  → **41/41 PASS, exit 0** (~180 s).
+- Negative fixtures re-derived: DF-NEG-001 FAIL (slug-allowlist contradicted by
+  cited source), DF-NEG-002/003 + RPG-NEG-001/002 REJECT-class (uncited /
+  directory-only citations), RPG-NEG-003 FAILED (no `battle-sprite` allowlist
+  exists at baseline), AW-HIST-NEG-001 MUST_FAIL (zero AW paths at HEAD),
+  AW-HIST-NEG-002 REJECTED (no streak/daily mechanic in cited logic).
+- Stop-loss observation (not a content mismatch): the four committed T2 phase
+  test modules fail at HEAD purely from the T2 archival path relocation
+  (`measure/tracks/` → `measure/archive/`, anti-pattern A9). Discovery still
+  yields exactly 13/18/31/24 = 86 tests; phases 0+1 pass 31/31 under a
+  disclosed 3-line relocation shim; all phase 2/3 failures are path-class with
+  zero content/hash failures. Repair of the committed T2 modules is
+  infrastructure work for the orchestrator, not the truth-test author.
+- Task markers left to the orchestrator per this track's role-isolation
+  convention (collector precedent).
