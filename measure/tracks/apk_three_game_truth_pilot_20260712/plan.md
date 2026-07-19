@@ -1,10 +1,20 @@
 # Implementation Plan: APK Three-Game Source-Truth Pilot
 
+## Predecessor binding
+- T2 accepted denominator manifest sha256: `d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729`
+- T2 accepted partition manifest sha256: `6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0`
+- T2 track head SHA: `ba95e6fb1db6acdaecd0808ca1f22dec339d6c5d`
+- Source baseline revision: `23bb5ad578c01fb29f9e8bb76a7d934d24a4b286`
+- Three pilot games (per program spec `measure/apk-evidence-reconstruction-program.md` lines 109-114):
+  - Dragon Flight (`vocabulary/dragon-flight`) — large current action implementation
+  - RPG Battle (`vocabulary/rpg-battle`) — multi-state turn-based implementation
+  - The Abyssal Well (`sentence/abyssal-well`) — stale/historical evidence recovery
+
 ## Phase 0: Freeze pilot and resources
 
-- [~] Task: Verify truth-gate and denominator hashes
-- [~] Task: Confirm three pilot cases and reject expansion beyond them
-- [~] Task: Spawn distinct collectors, mapper, truth-test author, browser auditor, asset auditor, and adversarial reviewer; record isolated prompts
+- [x] Task: Verify truth-gate and denominator hashes (T2 accepted manifests are the gate; both pinned above). Evidence: `measure/archive/apk_source_denominator_inventory_20260712/accepted-{denominator,partition}-manifest.json` at HEAD `da51b4e0`.
+- [x] Task: Confirm three pilot cases and reject expansion beyond them. Evidence: partition manifest `T3:pilot` cohort contains exactly the three identities listed above.
+- [~] Task: Spawn distinct collectors (one per game), mapper, truth-test author, browser auditor, asset auditor, and adversarial reviewer; record isolated prompts
 - [~] Task: Set time/token/resource ceilings and stop-loss state
 - [b] Task: Measure - User Manual Verification 'Phase 0' (Protocol in workflow.md) — deferred:product-owner
 
@@ -19,15 +29,15 @@
 
 ## Phase 2: Evidence-only mapping
 
-- [~] Task: Map complete scene/state and mechanic blueprints without adding claims
-- [~] Task: Decompose current developer effort and copied-host surfaces
-- [~] Task: Map concrete asset usages and candidate files per scene
-- [~] Task: Keep capability similarities as non-authoritative hypotheses
+- [x] Task: Map complete scene/state and mechanic blueprints without adding claims. Evidence: `pilot-blueprint.json` artifacts A+B for all three games; every entry cites ledger claim_ids (448 referenced ids validated against the three ledgers; zero unresolved).
+- [x] Task: Decompose current developer effort and copied-host surfaces. Evidence: `pilot-blueprint.json` artifact C per game, columns mirrored from the T2 phase-0 input freeze (record_type, file_path, relevance_rule_id vocabulary, host root from frozen source_scope roots); no platform-shared-infrastructure entries.
+- [x] Task: Map concrete asset usages and candidate files per scene. Evidence: `pilot-blueprint.json` artifact D per game; zero-usage scenes marked explicitly (RPG StartScreen/GameEndScreen/BattleResults/Loading/Error; all three AW scenes).
+- [x] Task: Keep capability similarities as non-authoritative hypotheses. Evidence: `mapper-hypotheses.md` — 6 entries, each tagged NON-AUTHORITATIVE HYPOTHESIS requiring evidence-collector validation.
 - [b] Task: Measure - User Manual Verification 'Phase 2' (Protocol in workflow.md) — deferred:product-owner
 
 ## Phase 3: Responsive and browser truth
 
-- [~] Task: Audit current compact/wide layout, camera, HUD, controls, text, and failures for runnable games
+- [~] Task: Audit current compact/wide layout, camera, HUD, controls, text, and failures for runnable games (Dragon Flight, RPG Battle only — Abyssal Well is non-runnable per deletion)
 - [~] Task: Run real touch/pointer/keyboard paths, resize/orientation/fullscreen transitions, and completion/restart
 - [~] Task: Verify real short/worst-case Thai/English and enlarged-text fixtures
 - [~] Task: Define intentional profile contracts with exact evidence and visible unknowns

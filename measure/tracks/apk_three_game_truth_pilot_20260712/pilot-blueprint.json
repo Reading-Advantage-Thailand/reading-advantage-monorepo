@@ -1,0 +1,3678 @@
+{
+ "schema_version": "apk-pilot-blueprint.v1",
+ "track_id": "apk_three_game_truth_pilot_20260712",
+ "phase": "Phase 2: Evidence-only mapping",
+ "mapper_role": "requirements-mapper",
+ "spawn_id": "requirements-mapper:t3:2026-07-20",
+ "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+ "inputs": {
+  "accepted_denominator_manifest_sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+  "accepted_partition_manifest_sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+  "claim_ledgers": [
+   "measure/tracks/apk_three_game_truth_pilot_20260712/dragon-flight-claim-ledger.json",
+   "measure/tracks/apk_three_game_truth_pilot_20260712/rpg-battle-claim-ledger.json",
+   "measure/tracks/apk_three_game_truth_pilot_20260712/abyssal-well-claim-ledger.json"
+  ]
+ },
+ "mapper_boundary_declaration": {
+  "novel_factual_claims_added": 0,
+  "asset_suitability_judgments": 0,
+  "capability_conclusions": 0,
+  "design_intent_judgments": 0,
+  "gameplay_interpretations": 0,
+  "standardization_claims": 0,
+  "bespoke_claims": 0,
+  "cross_game_similarity_findings": "none - similarities are recorded only in mapper-hypotheses.md as NON-AUTHORITATIVE HYPOTHESES",
+  "derivation_rule": "Every entry cites at least one ledger claim_id. Negative entries (absent controls, absent audio, zero-asset scenes) cite the corresponding absence/negative claim_ids.",
+  "visible_unknowns_carried_forward": [
+   "DF: apps/reading-advantage/server/controllers/dragon-flight-controller.ts denominator-gap candidate (collector stop-loss observation SLO-DF-1); not mapped as an effort entry because no ledger claim cites its content.",
+   "DF: apps/advantage-games/public/sounds/dragon-flight-adventure.mp3 runtime usage unresolved (DF-ASSET-037, low confidence).",
+   "DF: apps/advantage-games/public/dragon-flight.png unreferenced from dragon-flight source (DF-ASSET-036, medium confidence).",
+   "RPG: three flashTone write candidates per host page unresolved in the T2 denominator (RPG-TR-020, RPG-TR-021, RPG-TR-022).",
+   "AW: E2E spec tests/e2e/games/sentence/abyssal-well.spec.ts absent from the accepted historical-source-denominator (AW-HIST-076 discrepancy, carried as recorded).",
+   "AW: intra-revision inconsistency between UI shell and logic module at the deletion parent (AW-HIST-095, AW-HIST-096) - blueprint maps both layers as claimed without resolving the conflict."
+  ]
+ },
+ "games": {
+  "dragon-flight": {
+   "canonical_identity_id": "vocabulary/dragon-flight",
+   "catalog_identity_id": "dragon-flight",
+   "evidence_posture": "current-source",
+   "evidence_basis_claims": [
+    "DF-ID-012",
+    "DF-SCENE-001",
+    "DF-STATE-009",
+    "DF-HIST-008"
+   ],
+   "A_scene_state_blueprint": {
+    "scenes": [
+     {
+      "scene_id": "vocabulary/dragon-flight/scene=DragonFlightGame",
+      "kind": "denominator-scene (main gameplay component)",
+      "backing": [
+       {
+        "claim_id": "DF-SCENE-001",
+        "file_path": "measure/archive/apk_source_denominator_inventory_20260712/scene-state-denominator.json",
+        "line_start": 431,
+        "line_end": 431
+       },
+       {
+        "claim_id": "DF-ID-013",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+        "line_start": 437,
+        "line_end": 437
+       },
+       {
+        "claim_id": "DF-SCENE-004",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+        "line_start": 1,
+        "line_end": 1
+       },
+       {
+        "claim_id": "DF-SCENE-002",
+        "file_path": "apps/reading-advantage/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+        "line_start": 432,
+        "line_end": 432
+       }
+      ],
+      "transitions_originating": [
+       "DF-T-01",
+       "DF-T-02",
+       "DF-T-03",
+       "DF-T-04",
+       "DF-T-05",
+       "DF-T-06",
+       "DF-T-07",
+       "DF-T-08"
+      ],
+      "transitions_terminating": [
+       "DF-T-01",
+       "DF-T-02",
+       "DF-T-03",
+       "DF-T-04",
+       "DF-T-05",
+       "DF-T-06",
+       "DF-T-07",
+       "DF-T-08"
+      ],
+      "terminal_result_mapping": "Scene hosts the results surface: showResults state gates the results overlay (DF-STATE-010); results are computed when status is 'boss' (DF-MECH-033) and rendered with victory/defeat emoji, XP, accuracy, correct/total, surviving dragons, and time taken (DF-MECH-040..045)."
+     },
+     {
+      "scene_id": "vocabulary/dragon-flight/scene=DragonFlightGame/inner=DragonFlightCanvas",
+      "kind": "inner presentational component within DragonFlightGame.tsx",
+      "backing": [
+       {
+        "claim_id": "DF-SCENE-003",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+        "line_start": 1659,
+        "line_end": 1659
+       }
+      ],
+      "transitions_originating": [],
+      "transitions_terminating": [],
+      "terminal_result_mapping": null
+     }
+    ],
+    "states": [
+     {
+      "state_id": "vocabulary/dragon-flight/state=ready",
+      "kind": "component-derived pre-start surface (briefing screen)",
+      "backing": [
+       {
+        "claim_id": "DF-STATE-006",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+        "line_start": 484,
+        "line_end": 484
+       },
+       {
+        "claim_id": "DF-STATE-005",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+        "line_start": 978,
+        "line_end": 982
+       }
+      ],
+      "transitions_originating": [
+       "DF-T-01"
+      ],
+      "transitions_terminating": [
+       "DF-T-07"
+      ],
+      "terminal_result_mapping": null
+     },
+     {
+      "state_id": "vocabulary/dragon-flight/state=running",
+      "kind": "named status value of DragonFlightState",
+      "backing": [
+       {
+        "claim_id": "DF-STATE-002",
+        "file_path": "apps/advantage-games/src/lib/games/dragonFlight.ts",
+        "line_start": 14,
+        "line_end": 14
+       },
+       {
+        "claim_id": "DF-STATE-004",
+        "file_path": "apps/advantage-games/src/lib/games/dragonFlight.ts",
+        "line_start": 92,
+        "line_end": 92
+       },
+       {
+        "claim_id": "DF-STATE-001",
+        "file_path": "apps/advantage-games/src/lib/games/dragonFlight.ts",
+        "line_start": 14,
+        "line_end": 14
+       }
+      ],
+      "transitions_originating": [
+       "DF-T-02",
+       "DF-T-03"
+      ],
+      "transitions_terminating": [
+       "DF-T-01"
+      ],
+      "terminal_result_mapping": null
+     },
+     {
+      "state_id": "vocabulary/dragon-flight/state=boss",
+      "kind": "named status value of DragonFlightState",
+      "backing": [
+       {
+        "claim_id": "DF-STATE-003",
+        "file_path": "apps/advantage-games/src/lib/games/dragonFlight.ts",
+        "line_start": 14,
+        "line_end": 14
+       },
+       {
+        "claim_id": "DF-STATE-007",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+        "line_start": 486,
+        "line_end": 489
+       }
+      ],
+      "transitions_originating": [
+       "DF-T-04",
+       "DF-T-05",
+       "DF-T-06"
+      ],
+      "transitions_terminating": [
+       "DF-T-02",
+       "DF-T-03"
+      ],
+      "terminal_result_mapping": "Results are computed from state counters while status is 'boss' (DF-MECH-033); the boss state is the computation point for the terminal surface, not the surface itself."
+     },
+     {
+      "state_id": "vocabulary/dragon-flight/state=results",
+      "kind": "component-derived terminal surface (showResults boolean; statusLabel 'results')",
+      "backing": [
+       {
+        "claim_id": "DF-STATE-010",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+        "line_start": 479,
+        "line_end": 479
+       },
+       {
+        "claim_id": "DF-STATE-005",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+        "line_start": 978,
+        "line_end": 982
+       }
+      ],
+      "transitions_originating": [
+       "DF-T-07",
+       "DF-T-08"
+      ],
+      "transitions_terminating": [
+       "DF-T-06"
+      ],
+      "terminal_result_mapping": "This state IS the results surface: overlay shows victory/defeat emoji (DF-MECH-040), XP '+{results.xp}' (DF-MECH-041), accuracy percent (DF-MECH-042), correctAnswers/totalAttempts (DF-MECH-043), surviving dragons (DF-MECH-044), time taken (DF-MECH-045); results posted to /api/v1/games/dragon-flight/complete (DF-MECH-053)."
+     }
+    ],
+    "transitions": [
+     {
+      "transition_id": "DF-T-01",
+      "from_state": "vocabulary/dragon-flight/state=ready",
+      "to_state": "vocabulary/dragon-flight/state=running",
+      "backing": [
+       {
+        "claim_id": "DF-TRANS-008",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+        "line_start": 570,
+        "line_end": 1595
+       },
+       {
+        "claim_id": "DF-CTRL-014",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+        "line_start": 1592,
+        "line_end": 1597
+       }
+      ],
+      "note": "Start button calls resetGame() and setHasStarted(true)."
+     },
+     {
+      "transition_id": "DF-T-02",
+      "from_state": "vocabulary/dragon-flight/state=running",
+      "to_state": "vocabulary/dragon-flight/state=boss",
+      "backing": [
+       {
+        "claim_id": "DF-TRANS-001",
+        "file_path": "apps/advantage-games/src/lib/games/dragonFlight.ts",
+        "line_start": 129,
+        "line_end": 130
+       },
+       {
+        "claim_id": "DF-TRANS-002",
+        "file_path": "apps/advantage-games/src/lib/games/dragonFlight.ts",
+        "line_start": 127,
+        "line_end": 127
+       }
+      ],
+      "note": "advanceDragonFlightTime clamps elapsedMs to durationMs and sets status 'boss' at duration end; no-op when not running."
+     },
+     {
+      "transition_id": "DF-T-03",
+      "from_state": "vocabulary/dragon-flight/state=running",
+      "to_state": "vocabulary/dragon-flight/state=boss",
+      "backing": [
+       {
+        "claim_id": "DF-TRANS-003",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+        "line_start": 726,
+        "line_end": 732
+       }
+      ],
+      "note": "Extreme difficulty (gameOverOnMiss): an incorrect gate selection forces status 'boss' with dragonCount 0."
+     },
+     {
+      "transition_id": "DF-T-04",
+      "from_state": "vocabulary/dragon-flight/state=boss",
+      "to_state": "vocabulary/dragon-flight/state=boss",
+      "backing": [
+       {
+        "claim_id": "DF-TRANS-004",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+        "line_start": 650,
+        "line_end": 654
+       }
+      ],
+      "note": "Internal: on entering boss, boss positioned off-screen; bossHealth initialized to calculateBossPower(state.attempts)."
+     },
+     {
+      "transition_id": "DF-T-05",
+      "from_state": "vocabulary/dragon-flight/state=boss",
+      "to_state": "vocabulary/dragon-flight/state=boss",
+      "backing": [
+       {
+        "claim_id": "DF-TRANS-005",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+        "line_start": 821,
+        "line_end": 828
+       },
+       {
+        "claim_id": "DF-TRANS-006",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+        "line_start": 857,
+        "line_end": 860
+       },
+       {
+        "claim_id": "DF-MECH-032",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+        "line_start": 833,
+        "line_end": 840
+       }
+      ],
+      "note": "Internal: bossY descends per TICK_MS toward player line; bossHealth/displayDragonCount drain every 450 ms; bossSequenceDone set when boss reaches player line and health or count drained."
+     },
+     {
+      "transition_id": "DF-T-06",
+      "from_state": "vocabulary/dragon-flight/state=boss",
+      "to_state": "vocabulary/dragon-flight/state=results",
+      "backing": [
+       {
+        "claim_id": "DF-TRANS-007",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+        "line_start": 905,
+        "line_end": 907
+       },
+       {
+        "claim_id": "DF-MECH-033",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+        "line_start": 877,
+        "line_end": 886
+       }
+      ],
+      "note": "After bossSequenceDone, showResults set true following RESULTS_REVEAL_MS (900 ms); results computed via getDragonFlightResults and onComplete invoked if present (DF-MECH-034)."
+     },
+     {
+      "transition_id": "DF-T-07",
+      "from_state": "vocabulary/dragon-flight/state=results",
+      "to_state": "vocabulary/dragon-flight/state=ready",
+      "backing": [
+       {
+        "claim_id": "DF-TRANS-009",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+        "line_start": 1307,
+        "line_end": 1312
+       }
+      ],
+      "note": "Play Again button calls onRestart() or falls back to window.location.reload()."
+     },
+     {
+      "transition_id": "DF-T-08",
+      "from_state": "vocabulary/dragon-flight/state=results",
+      "to_state": "vocabulary/dragon-flight/state=running",
+      "backing": [
+       {
+        "claim_id": "DF-TRANS-010",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+        "line_start": 870,
+        "line_end": 874
+       }
+      ],
+      "note": "Housekeeping: when status is not 'boss', the results effect clears results, showResults, and bossSequenceDone."
+     }
+    ]
+   },
+   "B_mechanic_learning_blueprint": {
+    "mechanics": [
+     {
+      "mechanic_id": "DF-M-gate-round-generation",
+      "description": "Each round carries term, correctTranslation, decoyTranslation, and correctSide ('left'|'right'); createGateRound picks a correct item and a distinct decoy when vocabulary has more than one entry, returns an empty round with correctSide 'left' when empty; getGateSide assigns the correct gate randomly with rng() < 0.5.",
+      "backing_claims": [
+       "DF-MECH-002",
+       "DF-MECH-004",
+       "DF-MECH-005",
+       "DF-MECH-006"
+      ],
+      "tuning_knobs": []
+     },
+     {
+      "mechanic_id": "DF-M-gate-selection-scoring",
+      "description": "selectGate increments attempts on every selection and correctAnswers only when the chosen side matches round.correctSide; no-op when status is not 'running'.",
+      "backing_claims": [
+       "DF-MECH-007",
+       "DF-MECH-008",
+       "DF-MECH-010"
+      ],
+      "tuning_knobs": []
+     },
+     {
+      "mechanic_id": "DF-M-dragon-count-growth-penalty",
+      "description": "A correct selection adds +1 dragonCount; an incorrect selection subtracts the difficulty penalty with a floor of 1 dragon (lib reducer applies fixed -1 with floor 1 per DF-MECH-009; the UI loop applies the difficulty penalty per DF-MECH-023 - divergence recorded by the collector, not resolved here).",
+      "backing_claims": [
+       "DF-MECH-003",
+       "DF-MECH-009",
+       "DF-MECH-022",
+       "DF-MECH-023"
+      ],
+      "tuning_knobs": [
+       {
+        "name": "penalty",
+        "values": "easy 1 / normal 1 / hard 2 / extreme 0",
+        "backing_claims": [
+         "DF-MECH-017",
+         "DF-MECH-018",
+         "DF-MECH-019",
+         "DF-MECH-020"
+        ]
+       }
+      ]
+     },
+     {
+      "mechanic_id": "DF-M-run-timer",
+      "description": "DEFAULT_DURATION_MS 30000; the game loop advances core time by TICK_MS (60 ms) per interval tick; HUD renders a progressbar with remaining seconds.",
+      "backing_claims": [
+       "DF-MECH-001",
+       "DF-MECH-024",
+       "DF-MECH-035",
+       "DF-MECH-036"
+      ],
+      "tuning_knobs": [
+       {
+        "name": "durationMs",
+        "values": "easy 30000 / normal 60000 / hard 90000 / extreme 120000",
+        "backing_claims": [
+         "DF-MECH-017",
+         "DF-MECH-018",
+         "DF-MECH-019",
+         "DF-MECH-020"
+        ]
+       },
+       {
+        "name": "adaptive durationMs window",
+        "values": "min 15000, max 120000, step 5000 (advantage-games host adaptive params)",
+        "backing_claims": [
+         "DF-MECH-051"
+        ]
+       }
+      ]
+     },
+     {
+      "mechanic_id": "DF-M-difficulty-presets",
+      "description": "Four difficulty presets - easy, normal, hard, extreme - with knobs durationMs, penalty, gameOverOnMiss; component default is 'normal'.",
+      "backing_claims": [
+       "DF-MECH-016",
+       "DF-MECH-017",
+       "DF-MECH-018",
+       "DF-MECH-019",
+       "DF-MECH-020",
+       "DF-MECH-021"
+      ],
+      "tuning_knobs": [
+       {
+        "name": "gameOverOnMiss",
+        "values": "extreme true; others false",
+        "backing_claims": [
+         "DF-MECH-020",
+         "DF-TRANS-003"
+        ]
+       }
+      ]
+     },
+     {
+      "mechanic_id": "DF-M-gate-traversal-and-feedback",
+      "description": "Gates travel from -gateHeight to stageHeight+gateHeight over GATE_TRAVEL_MS (7200 ms); at most one gate pair on screen; player lerps toward target gate (PLAYER_LERP 0.22); feedback resolves only within 1.5 px of target; playSound('success'|'error') on resolution; player returns to center after 1500 ms; feedback clears after 450 ms and unlocks the pair.",
+      "backing_claims": [
+       "DF-MECH-025",
+       "DF-MECH-026",
+       "DF-MECH-027",
+       "DF-MECH-028",
+       "DF-MECH-029",
+       "DF-MECH-030",
+       "DF-MECH-031"
+      ],
+      "tuning_knobs": []
+     },
+     {
+      "mechanic_id": "DF-M-boss-encounter",
+      "description": "calculateBossPower returns Math.max(3, Math.ceil(totalAttempts * 0.6)); boss descends during 'boss'; bossHealth and displayDragonCount drain by 1 every BOSS_HEALTH_TICK_MS (450 ms); player projectiles spawn every 400-600 ms; boss projectiles spawn every 1200-1700 ms once bossY > 50; a player projectile registers a hit within 60 px vertical / 80 px horizontal; projectiles removed off-stage by 100 px or on hit; PROJECTILE_SPEED 600 px/s; boss sprite row switches by bossHealth/descent.",
+      "backing_claims": [
+       "DF-MECH-011",
+       "DF-MECH-032",
+       "DF-MECH-047",
+       "DF-MECH-048",
+       "DF-MECH-049",
+       "DF-MECH-050",
+       "DF-MECH-055",
+       "DF-MECH-056"
+      ],
+      "tuning_knobs": []
+     },
+     {
+      "mechanic_id": "DF-M-army-display-cap",
+      "description": "The on-canvas dragon army renders at most 12 sprites (Math.min(dragonCount, 12)).",
+      "backing_claims": [
+       "DF-MECH-046"
+      ],
+      "tuning_knobs": []
+     },
+     {
+      "mechanic_id": "DF-M-hud-and-feedback-copy",
+      "description": "HUD shows dragon counter (data-testid 'dragon-flight-dragon-count'), gate feedback text '+1 Dragon' / 'GAME OVER' / '-{penalty} Dragons', and the boss banner 'Skeleton King Approaches' (data-testid 'dragon-flight-boss').",
+      "backing_claims": [
+       "DF-MECH-037",
+       "DF-MECH-038",
+       "DF-MECH-039"
+      ],
+      "tuning_knobs": []
+     },
+     {
+      "mechanic_id": "DF-M-adaptive-difficulty-hooks",
+      "description": "The advantage-games host registers adaptive difficulty params (durationMs min 15000 / max 120000 / step 5000) and records adaptive responses with an approximate 1500 ms response time after each gate resolution.",
+      "backing_claims": [
+       "DF-MECH-051",
+       "DF-MECH-052"
+      ],
+      "tuning_knobs": []
+     },
+     {
+      "mechanic_id": "DF-M-vocabulary-minimum-gate",
+      "description": "The page requires at least 10 vocabulary items before rendering the game.",
+      "backing_claims": [
+       "DF-MECH-054"
+      ],
+      "tuning_knobs": [
+       {
+        "name": "minimum vocabulary items",
+        "values": "10",
+        "backing_claims": [
+         "DF-MECH-054"
+        ]
+       }
+      ]
+     }
+    ],
+    "control_surfaces": [
+     {
+      "control_id": "DF-C-keyboard-gate-select",
+      "description": "ArrowLeft/'a' selects the left gate, ArrowRight/'d' selects the right gate; listener on window keydown, removed on cleanup; ignored unless hasStarted and status 'running'.",
+      "backing_claims": [
+       "DF-CTRL-001",
+       "DF-CTRL-002",
+       "DF-CTRL-003",
+       "DF-CTRL-004"
+      ]
+     },
+     {
+      "control_id": "DF-C-pointer-arrow-buttons",
+      "description": "Left/right arrow buttons with aria-labels 'Choose left gate'/'Choose right gate' trigger handleGateSelection via onPointerDown (not onClick).",
+      "backing_claims": [
+       "DF-CTRL-005",
+       "DF-CTRL-006",
+       "DF-CTRL-007"
+      ]
+     },
+     {
+      "control_id": "DF-C-canvas-gate-pointer",
+      "description": "Canvas gate Groups call onSelectGate('left'|'right') on pointerdown only when the pair is active; selection guarded by not-started/not-running/pending/locked early-returns; pair locked on selection.",
+      "backing_claims": [
+       "DF-CTRL-008",
+       "DF-CTRL-009",
+       "DF-CTRL-010",
+       "DF-CTRL-011"
+      ]
+     },
+     {
+      "control_id": "DF-C-no-typing-input",
+      "description": "No typing, drag, or text-input control anywhere in DragonFlightGame.tsx; selection is exclusively left/right gate choice via keyboard or pointer (absence claim).",
+      "backing_claims": [
+       "DF-CTRL-016"
+      ]
+     },
+     {
+      "control_id": "DF-C-auxiliary-buttons",
+      "description": "Difficulty selector buttons (disabled while assets load), start button (disabled while loading), Trophy button opening the ranking dialog; container applies 'touch-none select-none' once started.",
+      "backing_claims": [
+       "DF-CTRL-012",
+       "DF-CTRL-013",
+       "DF-CTRL-014",
+       "DF-CTRL-015"
+      ]
+     }
+    ],
+    "learning_goals": [
+     {
+      "goal_id": "DF-L-vocabulary-recognition",
+      "description": "Vocabulary term-to-translation recognition: each gate round presents a term with a correct translation and a decoy (DF-MECH-002), and the catalog description reads 'Choose the correct gate to grow your dragon flight.' (DF-ID-003); correct/incorrect gate choices drive the scoring counters (DF-MECH-007, DF-MECH-008).",
+      "backing_claims": [
+       "DF-MECH-002",
+       "DF-ID-003",
+       "DF-MECH-007",
+       "DF-MECH-008"
+      ]
+     }
+    ],
+    "terminal_result_mechanic": {
+     "description": "getDragonFlightResults computes accuracy = correctAnswers/totalAttempts (0 when no attempts); victory decided by dragonCount >= bossPower; XP via calculateXP(0, correctAnswers, totalAttempts); timeTaken = floor(elapsedMs/1000). The page posts correctAnswers, totalAttempts, accuracy, dragonCount, timeTaken, difficulty to /api/v1/games/dragon-flight/complete.",
+     "vocabulary_scoring_association": "Terminal scoring derives from per-round vocabulary gate selections: correctAnswers increments only on a correct term/translation gate match (DF-MECH-008) and feeds accuracy, XP, and the victory comparison (DF-MECH-012, DF-MECH-013, DF-MECH-014).",
+     "backing_claims": [
+      "DF-MECH-012",
+      "DF-MECH-013",
+      "DF-MECH-014",
+      "DF-MECH-015",
+      "DF-MECH-033",
+      "DF-MECH-034",
+      "DF-MECH-053"
+     ]
+    }
+   },
+   "C_developer_effort_decomposition": {
+    "structural_columns_note": "Columns mirror the T2 phase-0 input freeze record structure (record_type, file_path, relevance_rule_id vocabulary from the frozen ordered rules, host root from the frozen source_scope roots) plus evidence claim pointers. No platform-shared-infrastructure entries are included (next role's scope).",
+    "pages_and_routes": [
+     {
+      "file_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/dragon-flight/page.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Page route, 165 lines",
+      "backing_claims": [
+       "DF-ID-008",
+       "DF-COPY-001",
+       "DF-COPY-002",
+       "DF-MECH-053",
+       "DF-MECH-054"
+      ]
+     },
+     {
+      "file_path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-flight/page.tsx",
+      "host_root": "apps/reading-advantage",
+      "record_type": "file",
+      "relevance_rule_id": "reading-primary-game-copies",
+      "effort_detail": "Page route, 162 lines",
+      "backing_claims": [
+       "DF-ID-009"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/app/api/v1/games/dragon-flight/complete/route.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Completion API route, 6 lines, createCompleteRoute() force-static",
+      "backing_claims": [
+       "DF-ID-010",
+       "DF-COPY-019"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/app/api/v1/games/dragon-flight/vocabulary/route.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Vocabulary API route, 8 lines, createVocabularyRoute(SAMPLE_VOCABULARY)",
+      "backing_claims": [
+       "DF-COPY-005"
+      ]
+     },
+     {
+      "file_path": "apps/reading-advantage/app/api/v1/games/dragon-flight/complete/route.ts",
+      "host_root": "apps/reading-advantage",
+      "record_type": "file",
+      "relevance_rule_id": "reading-primary-game-copies",
+      "effort_detail": "Completion API route, 22 lines, DragonFlightController.completeGame behind logRequest+protect",
+      "backing_claims": [
+       "DF-ID-011",
+       "DF-COPY-014",
+       "DF-COPY-016"
+      ]
+     },
+     {
+      "file_path": "apps/reading-advantage/app/api/v1/games/dragon-flight/ranking/route.ts",
+      "host_root": "apps/reading-advantage",
+      "record_type": "file",
+      "relevance_rule_id": "reading-primary-game-copies",
+      "effort_detail": "Ranking API route importing ActivityType and the controller",
+      "backing_claims": [
+       "DF-COPY-015"
+      ]
+     }
+    ],
+    "game_scene_state_components": [
+     {
+      "file_path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Main gameplay component (export line 437) plus inner DragonFlightCanvas presentational component (line 1659); Konva/react-konva rendering",
+      "backing_claims": [
+       "DF-ID-013",
+       "DF-SCENE-001",
+       "DF-SCENE-003",
+       "DF-SCENE-004",
+       "DF-COPY-020"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/RankingDialog.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Ranking dialog; default apiEndpoint '/api/v1/games/dragon-flight/ranking'; imported by CastleDefenseGame",
+      "backing_claims": [
+       "DF-COPY-004",
+       "DF-COPY-017",
+       "DF-COPY-018"
+      ]
+     },
+     {
+      "file_path": "apps/reading-advantage/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+      "host_root": "apps/reading-advantage",
+      "record_type": "file",
+      "relevance_rule_id": "reading-primary-game-copies",
+      "effort_detail": "Host copy of the gameplay component (export line 432) with recorded divergences",
+      "backing_claims": [
+       "DF-SCENE-002",
+       "DF-COPY-009",
+       "DF-COPY-010",
+       "DF-COPY-011",
+       "DF-COPY-012",
+       "DF-RESP-011",
+       "DF-RESP-012"
+      ]
+     },
+     {
+      "file_path": "apps/reading-advantage/components/games/vocabulary/dragon-flight/RankingDialog.tsx",
+      "host_root": "apps/reading-advantage",
+      "record_type": "file",
+      "relevance_rule_id": "reading-primary-game-copies",
+      "effort_detail": "Host copy of RankingDialog with recorded divergences (drops useCallback wrapping, adds 'as any' casts)",
+      "backing_claims": [
+       "DF-COPY-008"
+      ]
+     }
+    ],
+    "logic_projection_utility_modules": [
+     {
+      "file_path": "apps/advantage-games/src/lib/games/dragonFlight.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Core logic module: state type, createDragonFlightState, createGateRound, getGateSide, selectGate, advanceDragonFlightTime, calculateBossPower, getDragonFlightResults",
+      "backing_claims": [
+       "DF-STATE-001",
+       "DF-MECH-002",
+       "DF-MECH-003",
+       "DF-MECH-004",
+       "DF-MECH-006",
+       "DF-MECH-007",
+       "DF-MECH-009",
+       "DF-MECH-011",
+       "DF-MECH-012",
+       "DF-COPY-003"
+      ]
+     },
+     {
+      "file_path": "apps/reading-advantage/lib/games/dragonFlight.ts",
+      "host_root": "apps/reading-advantage",
+      "record_type": "file",
+      "relevance_rule_id": "reading-primary-game-copies",
+      "effort_detail": "Byte-identical copy of the advantage-games logic module",
+      "backing_claims": [
+       "DF-COPY-006"
+      ]
+     }
+    ],
+    "test_modules": [
+     {
+      "file_path": "apps/advantage-games/src/lib/games/dragonFlight.test.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "test_count_from_claims": 6,
+      "backing_claims": [
+       "DF-TEST-001",
+       "DF-TEST-002",
+       "DF-TEST-003",
+       "DF-TEST-004",
+       "DF-TEST-005",
+       "DF-TEST-006"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.test.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "test_count_from_claims": 3,
+      "backing_claims": [
+       "DF-TEST-007",
+       "DF-TEST-008",
+       "DF-TEST-009",
+       "DF-TEST-024",
+       "DF-TEST-025",
+       "DF-TEST-026",
+       "DF-TEST-027"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/RankingDialog.test.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "test_count_from_claims": 7,
+      "backing_claims": [
+       "DF-TEST-010",
+       "DF-TEST-011",
+       "DF-TEST-012",
+       "DF-TEST-013",
+       "DF-TEST-014",
+       "DF-TEST-015",
+       "DF-TEST-016"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/dragon-flight/page.test.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "test_count_from_claims": 2,
+      "backing_claims": [
+       "DF-TEST-017",
+       "DF-TEST-018",
+       "DF-TEST-028"
+      ]
+     },
+     {
+      "file_path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-flight/page.test.tsx",
+      "host_root": "apps/reading-advantage",
+      "record_type": "file",
+      "relevance_rule_id": "reading-primary-game-copies",
+      "test_count_from_claims": 2,
+      "backing_claims": [
+       "DF-TEST-019",
+       "DF-TEST-020",
+       "DF-TEST-029"
+      ]
+     },
+     {
+      "file_path": "apps/reading-advantage/components/games/vocabulary/dragon-flight/DragonFlightGame.test.tsx",
+      "host_root": "apps/reading-advantage",
+      "record_type": "file",
+      "relevance_rule_id": "reading-primary-game-copies",
+      "test_count_from_claims": 3,
+      "backing_claims": [
+       "DF-TEST-021",
+       "DF-TEST-022",
+       "DF-TEST-023"
+      ]
+     },
+     {
+      "file_path": "apps/reading-advantage/lib/games/dragonFlight.test.ts",
+      "host_root": "apps/reading-advantage",
+      "record_type": "file",
+      "relevance_rule_id": "reading-primary-game-copies",
+      "test_count_from_claims": "byte-identical copy of the advantage-games 6-test file",
+      "backing_claims": [
+       "DF-COPY-007"
+      ]
+     }
+    ],
+    "copy_sites_in_reading_primary_hosts": [
+     {
+      "host_root": "apps/reading-advantage",
+      "site": "lib/games/dragonFlight.ts",
+      "copy_relation": "byte-identical",
+      "backing_claims": [
+       "DF-COPY-006"
+      ]
+     },
+     {
+      "host_root": "apps/reading-advantage",
+      "site": "lib/games/dragonFlight.test.ts",
+      "copy_relation": "byte-identical",
+      "backing_claims": [
+       "DF-COPY-007"
+      ]
+     },
+     {
+      "host_root": "apps/reading-advantage",
+      "site": "components/games/vocabulary/dragon-flight/RankingDialog.tsx",
+      "copy_relation": "divergent (useCallback dropped, 'as any' casts added)",
+      "backing_claims": [
+       "DF-COPY-008"
+      ]
+     },
+     {
+      "host_root": "apps/reading-advantage",
+      "site": "components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+      "copy_relation": "divergent (Timer import added; no adaptive-difficulty hooks; useMemo difficulty settings; mount auto-reset; responsive arrow geometry; timer bar without progressbar aria)",
+      "backing_claims": [
+       "DF-COPY-009",
+       "DF-COPY-010",
+       "DF-COPY-011",
+       "DF-COPY-012",
+       "DF-RESP-011",
+       "DF-RESP-012"
+      ]
+     },
+     {
+      "host_root": "apps/reading-advantage",
+      "site": "app/api/v1/games/dragon-flight/complete/route.ts and ranking/route.ts",
+      "copy_relation": "host-specific controller-backed routes with logRequest+protect middleware",
+      "backing_claims": [
+       "DF-ID-011",
+       "DF-COPY-014",
+       "DF-COPY-015",
+       "DF-COPY-016"
+      ]
+     },
+     {
+      "host_root": "apps/primary-advantage",
+      "site": "none",
+      "copy_relation": "absence - no dragon-flight path at baseline (git ls-tree enumeration, zero matches)",
+      "backing_claims": [
+       "DF-ID-014"
+      ]
+     }
+    ]
+   },
+   "D_asset_usage_map": [
+    {
+     "scene_id": "vocabulary/dragon-flight/scene=DragonFlightGame",
+     "asset_usage_count": 11,
+     "caller_count": 15,
+     "asset_refs": [
+      {
+       "asset_ref": "ASSETS.gates = /games/vocabulary/dragon-flight/gates-3x3-sheet-facing-up.png",
+       "usage_category": "targets (gate sheets)",
+       "backing_claims": [
+        "DF-ASSET-001"
+       ]
+      },
+      {
+       "asset_ref": "ASSETS.boss = /games/vocabulary/dragon-flight/boss-3x3-sheet-facing-up.png",
+       "usage_category": "actors (boss)",
+       "backing_claims": [
+        "DF-ASSET-002",
+        "DF-MECH-055"
+       ]
+      },
+      {
+       "asset_ref": "ASSETS.player = /games/vocabulary/dragon-flight/player-3x3-sheet-facing-down.png",
+       "usage_category": "actors (player)",
+       "backing_claims": [
+        "DF-ASSET-003"
+       ]
+      },
+      {
+       "asset_ref": "ASSETS.playerCamera = /games/vocabulary/dragon-flight/player-3x3-sheet-facing-camera.png",
+       "usage_category": "variants (player facing camera); briefing screen CSS sprite with 'dragon-sprite-anim' 9-step keyframe cycle",
+       "backing_claims": [
+        "DF-ASSET-004",
+        "DF-ASSET-040",
+        "DF-ASSET-041"
+       ]
+      },
+      {
+       "asset_ref": "ASSETS.army = /games/vocabulary/dragon-flight/dragon-army-3x3-sheet-facing-up.png",
+       "usage_category": "actors (dragon army, capped at 12 sprites)",
+       "backing_claims": [
+        "DF-ASSET-005",
+        "DF-MECH-046"
+       ]
+      },
+      {
+       "asset_ref": "ASSETS.parallaxTop = /games/vocabulary/dragon-flight/parallax-top-tiling.png",
+       "usage_category": "environment (parallax layer)",
+       "backing_claims": [
+        "DF-ASSET-006"
+       ]
+      },
+      {
+       "asset_ref": "ASSETS.parallaxMiddle = /games/vocabulary/dragon-flight/parallax-middle-tiling.png",
+       "usage_category": "environment (parallax layer)",
+       "backing_claims": [
+        "DF-ASSET-007"
+       ]
+      },
+      {
+       "asset_ref": "ASSETS.parallaxBottom = /games/vocabulary/dragon-flight/parallax-bottom-tiling.png",
+       "usage_category": "environment (parallax layer)",
+       "backing_claims": [
+        "DF-ASSET-008"
+       ]
+      },
+      {
+       "asset_ref": "ASSETS.loadingBackground = /games/vocabulary/dragon-flight/loading-screen-background.png",
+       "usage_category": "UI (container backdrop CSS background)",
+       "backing_claims": [
+        "DF-ASSET-009",
+        "DF-ASSET-039"
+       ]
+      },
+      {
+       "asset_ref": "ASSETS.projectileFireball = /games/vocabulary/dragon-flight/projectile-fireball.png",
+       "usage_category": "interactions (player projectile)",
+       "backing_claims": [
+        "DF-ASSET-010",
+        "DF-MECH-047",
+        "DF-MECH-049"
+       ]
+      },
+      {
+       "asset_ref": "ASSETS.projectileBoss = /games/vocabulary/dragon-flight/projectile-boss.png",
+       "usage_category": "hazards (boss projectile)",
+       "backing_claims": [
+        "DF-ASSET-011",
+        "DF-MECH-048"
+       ]
+      }
+     ],
+     "mirror_note": "The reading-advantage copy declares the same 11-entry ASSETS map (DF-ASSET-034); denominator file metadata for both hosts' copies is recorded by DF-ASSET-012..033."
+    }
+   ],
+   "D_asset_usage_non_scene_surfaces": [
+    {
+     "surface": "catalog card",
+     "asset_ref": "/games/cover/dragon-flight-cover.png (withBasePath)",
+     "backing_claims": [
+      "DF-ID-004",
+      "DF-ASSET-035",
+      "DF-ASSET-038"
+     ]
+    },
+    {
+     "surface": "unresolved audio",
+     "asset_ref": "apps/advantage-games/public/sounds/dragon-flight-adventure.mp3",
+     "backing_claims": [
+      "DF-ASSET-037"
+     ],
+     "note": "Carries the game slug; not referenced from the dragon-flight component; runtime usage unresolved (low confidence)."
+    },
+    {
+     "surface": "unreferenced image",
+     "asset_ref": "apps/advantage-games/public/dragon-flight.png",
+     "backing_claims": [
+      "DF-ASSET-036"
+     ],
+     "note": "Unreferenced from dragon-flight source (medium confidence)."
+    },
+    {
+     "surface": "historical vocab fixture",
+     "asset_ref": "apps/advantage-games/public/vocab/dragon-flight.json (deleted; byte-identical to live dragon-rider.json)",
+     "backing_claims": [
+      "DF-ASSET-042",
+      "DF-HIST-001",
+      "DF-HIST-002"
+     ]
+    }
+   ]
+  },
+  "rpg-battle": {
+   "canonical_identity_id": "vocabulary/rpg-battle",
+   "catalog_identity_id": "rpg-battle",
+   "evidence_posture": "current-source",
+   "evidence_basis_claims": [
+    "RPG-ID-002",
+    "RPG-ID-003"
+   ],
+   "A_scene_state_blueprint": {
+    "scenes": [
+     {
+      "scene_id": "scene:StartScreen",
+      "kind": "denominator-scene (component declaration)",
+      "backing": [
+       {
+        "claim_id": "RPG-SC-002",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/StartScreen.tsx",
+        "line_start": 33,
+        "line_end": 33
+       },
+       {
+        "claim_id": "RPG-SC-004",
+        "file_path": "apps/reading-advantage/components/games/vocabulary/rpg-battle/StartScreen.tsx",
+        "line_start": 35,
+        "line_end": 35
+       },
+       {
+        "claim_id": "RPG-SC-009",
+        "file_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/rpg-battle/page.tsx",
+        "line_start": 525,
+        "line_end": 531
+       }
+      ],
+      "transitions_originating": [
+       "RPG-T-18",
+       "RPG-T-11"
+      ],
+      "transitions_terminating": [
+       "RPG-T-17",
+       "RPG-T-19"
+      ],
+      "terminal_result_mapping": null
+     },
+     {
+      "scene_id": "scene:BattleSelectionModal",
+      "kind": "modal dialog scene (role='dialog', aria-modal='true'); renders null at step 'ready'",
+      "backing": [
+       {
+        "claim_id": "RPG-SC-005",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/BattleSelectionModal.tsx",
+        "line_start": 77,
+        "line_end": 87
+       }
+      ],
+      "transitions_originating": [
+       "RPG-T-07",
+       "RPG-T-08",
+       "RPG-T-09",
+       "RPG-T-10"
+      ],
+      "transitions_terminating": [
+       "RPG-T-10",
+       "RPG-T-19"
+      ],
+      "terminal_result_mapping": null
+     },
+     {
+      "scene_id": "scene:BattleScene",
+      "kind": "denominator-scene (component declaration); rendered inside battle card when showResults false, status not terminal-handled, showStartScreen false",
+      "backing": [
+       {
+        "claim_id": "RPG-SC-001",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/BattleScene.tsx",
+        "line_start": 19,
+        "line_end": 19
+       },
+       {
+        "claim_id": "RPG-SC-003",
+        "file_path": "apps/reading-advantage/components/games/vocabulary/rpg-battle/BattleScene.tsx",
+        "line_start": 19,
+        "line_end": 19
+       },
+       {
+        "claim_id": "RPG-SC-010",
+        "file_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/rpg-battle/page.tsx",
+        "line_start": 543,
+        "line_end": 631
+       }
+      ],
+      "transitions_originating": [
+       "RPG-T-02",
+       "RPG-T-03",
+       "RPG-T-04",
+       "RPG-T-05",
+       "RPG-T-06",
+       "RPG-T-12",
+       "RPG-T-14",
+       "RPG-T-15"
+      ],
+      "transitions_terminating": [
+       "RPG-T-01",
+       "RPG-T-18"
+      ],
+      "terminal_result_mapping": null
+     },
+     {
+      "scene_id": "scene:GameEndScreen",
+      "kind": "terminal results surface (advantage-games host)",
+      "backing": [
+       {
+        "claim_id": "RPG-SC-006",
+        "file_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/rpg-battle/page.tsx",
+        "line_start": 532,
+        "line_end": 542
+       }
+      ],
+      "transitions_originating": [
+       "RPG-T-17"
+      ],
+      "transitions_terminating": [
+       "RPG-T-16"
+      ],
+      "terminal_result_mapping": "This scene IS the advantage-games results surface: rendered when showResults with props status, score=resultXp, xp, accuracy, onRestart, showLeaderboardLink, gameId 'rpg-battle', gameName 'RPG Battle' (RPG-SC-006)."
+     },
+     {
+      "scene_id": "scene:BattleResults",
+      "kind": "terminal results surface (reading-advantage host copy)",
+      "backing": [
+       {
+        "claim_id": "RPG-COPY-001",
+        "file_path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/rpg-battle/page.tsx",
+        "line_start": 30,
+        "line_end": 36
+       },
+       {
+        "claim_id": "RPG-COPY-002",
+        "file_path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/rpg-battle/page.tsx",
+        "line_start": 519,
+        "line_end": 526
+       }
+      ],
+      "transitions_originating": [
+       "RPG-T-17"
+      ],
+      "transitions_terminating": [
+       "RPG-T-16"
+      ],
+      "terminal_result_mapping": "This scene IS the reading-advantage results surface: BattleResults with props outcome=status, xp=resultXp, accuracy=resultAccuracy, onRestart=handleRestart (RPG-COPY-002)."
+     },
+     {
+      "scene_id": "scene:Loading",
+      "kind": "loading surface (Loader2 spinner with loadingVocabulary/preparingGame text)",
+      "backing": [
+       {
+        "claim_id": "RPG-SC-007",
+        "file_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/rpg-battle/page.tsx",
+        "line_start": 453,
+        "line_end": 481
+       }
+      ],
+      "transitions_originating": [],
+      "transitions_terminating": [],
+      "terminal_result_mapping": null
+     },
+     {
+      "scene_id": "scene:Error",
+      "kind": "error surface (destructive Alert with unableToStartGame title, error message, saveTip)",
+      "backing": [
+       {
+        "claim_id": "RPG-SC-008",
+        "file_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/rpg-battle/page.tsx",
+        "line_start": 483,
+        "line_end": 508
+       }
+      ],
+      "transitions_originating": [],
+      "transitions_terminating": [],
+      "terminal_result_mapping": null
+     }
+    ],
+    "states": [
+     {
+      "state_family": "BattleStatus",
+      "members": [
+       "idle",
+       "playing",
+       "victory",
+       "defeat"
+      ],
+      "backing": [
+       {
+        "claim_id": "RPG-ST-019",
+        "file_path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "line_start": 4,
+        "line_end": 4
+       }
+      ],
+      "member_claims": [
+       "RPG-ST-020",
+       "RPG-ST-021",
+       "RPG-ST-022",
+       "RPG-ST-023"
+      ],
+      "transitions_originating": [
+       "RPG-T-01",
+       "RPG-T-02",
+       "RPG-T-03",
+       "RPG-T-16"
+      ],
+      "transitions_terminating": [
+       "RPG-T-01",
+       "RPG-T-02",
+       "RPG-T-03"
+      ],
+      "terminal_result_mapping": "'victory' and 'defeat' are the terminal statuses consumed by the terminal->results page effect (RPG-TR-016)."
+     },
+     {
+      "state_family": "BattleTurn",
+      "members": [
+       "player",
+       "enemy"
+      ],
+      "backing": [
+       {
+        "claim_id": "RPG-ST-024",
+        "file_path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "line_start": 5,
+        "line_end": 5
+       }
+      ],
+      "member_claims": [
+       "RPG-ST-025",
+       "RPG-ST-026"
+      ],
+      "transitions_originating": [
+       "RPG-T-04",
+       "RPG-T-12"
+      ],
+      "transitions_terminating": [
+       "RPG-T-04",
+       "RPG-T-12"
+      ],
+      "terminal_result_mapping": null
+     },
+     {
+      "state_family": "SpritePose",
+      "members": [
+       "idle",
+       "casting",
+       "basic-attack",
+       "power-attack",
+       "hurt",
+       "miss",
+       "defend",
+       "victory",
+       "defeat"
+      ],
+      "backing": [
+       {
+        "claim_id": "RPG-ST-001",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/Sprite.tsx",
+        "line_start": 6,
+        "line_end": 6
+       }
+      ],
+      "member_claims": [
+       "RPG-ST-001",
+       "RPG-ST-002",
+       "RPG-ST-003",
+       "RPG-ST-004",
+       "RPG-ST-005",
+       "RPG-ST-006",
+       "RPG-ST-007",
+       "RPG-ST-008",
+       "RPG-ST-009"
+      ],
+      "transitions_originating": [],
+      "transitions_terminating": [],
+      "terminal_result_mapping": null
+     },
+     {
+      "state_family": "BattlePose (store-side)",
+      "members": [
+       "idle",
+       "casting",
+       "basic-attack",
+       "power-attack",
+       "hurt",
+       "miss",
+       "defend",
+       "victory",
+       "defeat"
+      ],
+      "backing": [
+       {
+        "claim_id": "RPG-ST-010",
+        "file_path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "line_start": 7,
+        "line_end": 7
+       }
+      ],
+      "member_claims": [
+       "RPG-ST-010",
+       "RPG-ST-011",
+       "RPG-ST-012",
+       "RPG-ST-013",
+       "RPG-ST-014",
+       "RPG-ST-015",
+       "RPG-ST-016",
+       "RPG-ST-017",
+       "RPG-ST-018"
+      ],
+      "transitions_originating": [],
+      "transitions_terminating": [],
+      "terminal_result_mapping": "Poses 'victory'/'defeat' are set by the terminal damage transitions (RPG-TR-002, RPG-TR-003). Note: the 'defend' pose exists but no producer sets it (RPG-MECH-021)."
+     },
+     {
+      "state_family": "BattleSelectionStep",
+      "members": [
+       "hero",
+       "location",
+       "enemy",
+       "ready"
+      ],
+      "backing": [
+       {
+        "claim_id": "RPG-ST-029",
+        "file_path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "line_start": 17,
+        "line_end": 17
+       }
+      ],
+      "member_claims": [
+       "RPG-ST-030",
+       "RPG-ST-031",
+       "RPG-ST-032",
+       "RPG-ST-033"
+      ],
+      "transitions_originating": [
+       "RPG-T-07",
+       "RPG-T-08",
+       "RPG-T-09",
+       "RPG-T-10",
+       "RPG-T-11"
+      ],
+      "transitions_terminating": [
+       "RPG-T-07",
+       "RPG-T-08",
+       "RPG-T-09",
+       "RPG-T-10"
+      ],
+      "terminal_result_mapping": null
+     },
+     {
+      "state_family": "BattleAttackPower",
+      "members": [
+       "basic",
+       "power"
+      ],
+      "backing": [
+       {
+        "claim_id": "RPG-ST-027",
+        "file_path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "line_start": 16,
+        "line_end": 16
+       }
+      ],
+      "member_claims": [
+       "RPG-ST-027"
+      ],
+      "transitions_originating": [],
+      "transitions_terminating": [],
+      "terminal_result_mapping": null
+     },
+     {
+      "state_family": "ActionPower (lib-local duplicate)",
+      "members": [
+       "basic",
+       "power"
+      ],
+      "backing": [
+       {
+        "claim_id": "RPG-ST-028",
+        "file_path": "apps/advantage-games/src/lib/games/rpgBattleWordSelection.ts",
+        "line_start": 3,
+        "line_end": 3
+       }
+      ],
+      "member_claims": [
+       "RPG-ST-028"
+      ],
+      "transitions_originating": [],
+      "transitions_terminating": [],
+      "terminal_result_mapping": null
+     },
+     {
+      "state_family": "BattleLogEntry.type",
+      "members": [
+       "player",
+       "enemy",
+       "system"
+      ],
+      "backing": [
+       {
+        "claim_id": "RPG-ST-034",
+        "file_path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "line_start": 19,
+        "line_end": 22
+       }
+      ],
+      "member_claims": [
+       "RPG-ST-034"
+      ],
+      "transitions_originating": [],
+      "transitions_terminating": [],
+      "terminal_result_mapping": null
+     },
+     {
+      "state_family": "FlashTone",
+      "members": [
+       "player",
+       "enemy"
+      ],
+      "backing": [
+       {
+        "claim_id": "RPG-ST-035",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/BattleEffects.tsx",
+        "line_start": 4,
+        "line_end": 4
+       }
+      ],
+      "member_claims": [
+       "RPG-ST-035",
+       "RPG-ST-036"
+      ],
+      "transitions_originating": [
+       "RPG-T-20"
+      ],
+      "transitions_terminating": [
+       "RPG-T-20"
+      ],
+      "terminal_result_mapping": null
+     },
+     {
+      "state_family": "FloatingTextItem.type",
+      "members": [
+       "damage-player",
+       "damage-enemy",
+       "heal",
+       "crit"
+      ],
+      "backing": [
+       {
+        "claim_id": "RPG-ST-037",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/FloatingText.tsx",
+        "line_start": 5,
+        "line_end": 11
+       }
+      ],
+      "member_claims": [
+       "RPG-ST-037"
+      ],
+      "transitions_originating": [],
+      "transitions_terminating": [],
+      "terminal_result_mapping": null
+     },
+     {
+      "state_family": "TabType (StartScreen)",
+      "members": [
+       "briefing",
+       "rankings",
+       "vocabulary"
+      ],
+      "backing": [
+       {
+        "claim_id": "RPG-ST-038",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/StartScreen.tsx",
+        "line_start": 20,
+        "line_end": 20
+       }
+      ],
+      "member_claims": [
+       "RPG-ST-039",
+       "RPG-ST-040",
+       "RPG-ST-041"
+      ],
+      "transitions_originating": [],
+      "transitions_terminating": [],
+      "terminal_result_mapping": null
+     },
+     {
+      "state_family": "page-local flags",
+      "members": [
+       "showStartScreen",
+       "showResults",
+       "isLoading",
+       "error"
+      ],
+      "backing": [
+       {
+        "claim_id": "RPG-ST-042",
+        "file_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/rpg-battle/page.tsx",
+        "line_start": 118,
+        "line_end": 118
+       }
+      ],
+      "member_claims": [
+       "RPG-ST-042",
+       "RPG-ST-043",
+       "RPG-ST-044"
+      ],
+      "transitions_originating": [
+       "RPG-T-16",
+       "RPG-T-17",
+       "RPG-T-18"
+      ],
+      "transitions_terminating": [
+       "RPG-T-16",
+       "RPG-T-17",
+       "RPG-T-18"
+      ],
+      "terminal_result_mapping": "showResults gates the GameEndScreen/BattleResults terminal surfaces (RPG-SC-006, RPG-COPY-002)."
+     },
+     {
+      "state_family": "store input/reveal",
+      "members": [
+       "inputLocked",
+       "revealedTranslation"
+      ],
+      "backing": [
+       {
+        "claim_id": "RPG-ST-045",
+        "file_path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "line_start": 70,
+        "line_end": 71
+       }
+      ],
+      "member_claims": [
+       "RPG-ST-045"
+      ],
+      "transitions_originating": [],
+      "transitions_terminating": [],
+      "terminal_result_mapping": null
+     },
+     {
+      "state_family": "store initial numerics",
+      "members": [
+       "playerHealth=100",
+       "playerMaxHealth=100",
+       "enemyHealth=100",
+       "enemyMaxHealth=100",
+       "streak=0",
+       "xpEarned=0"
+      ],
+      "backing": [
+       {
+        "claim_id": "RPG-ST-046",
+        "file_path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "line_start": 61,
+        "line_end": 69
+       }
+      ],
+      "member_claims": [
+       "RPG-ST-046"
+      ],
+      "transitions_originating": [],
+      "transitions_terminating": [],
+      "terminal_result_mapping": null
+     },
+     {
+      "state_family": "store initial selection",
+      "members": [
+       "selectedHeroId=null",
+       "selectedLocationId=null",
+       "selectedEnemyId=null"
+      ],
+      "backing": [
+       {
+        "claim_id": "RPG-ST-047",
+        "file_path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "line_start": 75,
+        "line_end": 77
+       }
+      ],
+      "member_claims": [
+       "RPG-ST-047"
+      ],
+      "transitions_originating": [],
+      "transitions_terminating": [],
+      "terminal_result_mapping": null
+     }
+    ],
+    "transitions": [
+     {
+      "transition_id": "RPG-T-01",
+      "from_state": "BattleStatus:idle",
+      "to_state": "BattleStatus:playing",
+      "backing": [
+       {
+        "claim_id": "RPG-TR-001",
+        "file_path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "line_start": 79,
+        "line_end": 97
+       }
+      ],
+      "note": "initializeBattle: status 'playing', turn 'player', health pools reset (enemy pool from options.enemyMaxHealth, default 100), battleLog seeded."
+     },
+     {
+      "transition_id": "RPG-T-02",
+      "from_state": "BattleStatus:playing",
+      "to_state": "BattleStatus:defeat",
+      "backing": [
+       {
+        "claim_id": "RPG-TR-002",
+        "file_path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "line_start": 102,
+        "line_end": 111
+       }
+      ],
+      "note": "damagePlayer clamps at 0; only when playing and health <= 0: status 'defeat', playerPose 'defeat'."
+     },
+     {
+      "transition_id": "RPG-T-03",
+      "from_state": "BattleStatus:playing",
+      "to_state": "BattleStatus:victory",
+      "backing": [
+       {
+        "claim_id": "RPG-TR-003",
+        "file_path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "line_start": 113,
+        "line_end": 123
+       }
+      ],
+      "note": "damageEnemy clamps at 0; only when playing and health <= 0: status 'victory', enemyPose 'defeat', playerPose 'victory'."
+     },
+     {
+      "transition_id": "RPG-T-04",
+      "from_state": "BattleTurn:enemy",
+      "to_state": "BattleTurn:player",
+      "backing": [
+       {
+        "claim_id": "RPG-TR-004",
+        "file_path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "line_start": 125,
+        "line_end": 131
+       }
+      ],
+      "note": "enemyAttack: no-op unless playing and turn 'enemy'; sets enemyPose 'basic-attack', turn 'player', applies damagePlayer."
+     },
+     {
+      "transition_id": "RPG-T-05",
+      "from_state": "BattleStatus:playing",
+      "to_state": "BattleStatus:playing",
+      "backing": [
+       {
+        "claim_id": "RPG-TR-005",
+        "file_path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "line_start": 133,
+        "line_end": 151
+       }
+      ],
+      "note": "submitAnswer correct (case-insensitive trimmed match): inputLocked false, revealedTranslation null, streak+1, playerPose 'power-attack'|'basic-attack'."
+     },
+     {
+      "transition_id": "RPG-T-06",
+      "from_state": "BattleStatus:playing",
+      "to_state": "BattleStatus:playing",
+      "backing": [
+       {
+        "claim_id": "RPG-TR-006",
+        "file_path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "line_start": 153,
+        "line_end": 165
+       }
+      ],
+      "note": "submitAnswer incorrect: inputLocked true, revealedTranslation=expected, streak reset 0, playerPose 'miss'; 2000 ms timeout clears lock."
+     },
+     {
+      "transition_id": "RPG-T-07",
+      "from_state": "BattleSelectionStep:hero",
+      "to_state": "BattleSelectionStep:location",
+      "backing": [
+       {
+        "claim_id": "RPG-TR-007",
+        "file_path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "line_start": 171,
+        "line_end": 178
+       }
+      ],
+      "note": "selectHero; no-op unless step is 'hero'."
+     },
+     {
+      "transition_id": "RPG-T-08",
+      "from_state": "BattleSelectionStep:location",
+      "to_state": "BattleSelectionStep:enemy",
+      "backing": [
+       {
+        "claim_id": "RPG-TR-008",
+        "file_path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "line_start": 180,
+        "line_end": 187
+       }
+      ],
+      "note": "selectLocation; no-op unless step is 'location'."
+     },
+     {
+      "transition_id": "RPG-T-09",
+      "from_state": "BattleSelectionStep:enemy",
+      "to_state": "BattleSelectionStep:ready",
+      "backing": [
+       {
+        "claim_id": "RPG-TR-009",
+        "file_path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "line_start": 189,
+        "line_end": 196
+       }
+      ],
+      "note": "selectEnemy; no-op unless step is 'enemy'."
+     },
+     {
+      "transition_id": "RPG-T-10",
+      "from_state": "BattleSelectionStep:*",
+      "to_state": "BattleSelectionStep:hero",
+      "backing": [
+       {
+        "claim_id": "RPG-TR-010",
+        "file_path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+        "line_start": 198,
+        "line_end": 203
+       }
+      ],
+      "note": "resetSelection returns step to 'hero' and clears selected ids."
+     },
+     {
+      "transition_id": "RPG-T-11",
+      "from_state": "BattleSelectionStep:ready",
+      "to_state": "BattleStatus:playing (via initializeBattle)",
+      "backing": [
+       {
+        "claim_id": "RPG-TR-011",
+        "file_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/rpg-battle/page.tsx",
+        "line_start": 191,
+        "line_end": 212
+       }
+      ],
+      "note": "Page effect resolves sprites and calls initializeBattle when step 'ready' with hero and enemy chosen."
+     },
+     {
+      "transition_id": "RPG-T-12",
+      "from_state": "BattleTurn:player",
+      "to_state": "BattleTurn:enemy",
+      "backing": [
+       {
+        "claim_id": "RPG-TR-012",
+        "file_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/rpg-battle/page.tsx",
+        "line_start": 347,
+        "line_end": 360
+       }
+      ],
+      "note": "triggerEnemyTurn rolls enemy damage via rollEnemyDamage(enemyMultiplier), sets turn 'enemy', applies enemyAttack after 600 ms."
+     },
+     {
+      "transition_id": "RPG-T-13",
+      "from_state": "handleSubmit",
+      "to_state": "guard (no transition)",
+      "backing": [
+       {
+        "claim_id": "RPG-TR-013",
+        "file_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/rpg-battle/page.tsx",
+        "line_start": 362,
+        "line_end": 363
+       }
+      ],
+      "note": "Early-return unless status 'playing', inputLocked false, turn 'player'."
+     },
+     {
+      "transition_id": "RPG-T-14",
+      "from_state": "handleSubmit",
+      "to_state": "correct-answer pipeline",
+      "backing": [
+       {
+        "claim_id": "RPG-TR-014",
+        "file_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/rpg-battle/page.tsx",
+        "line_start": 372,
+        "line_end": 411
+       }
+      ],
+      "note": "Computes damage, calls submitAnswer, plays 'success', speaks the term via speechSynthesis, updates performance, logs 'You cast {term}!'."
+     },
+     {
+      "transition_id": "RPG-T-15",
+      "from_state": "handleSubmit",
+      "to_state": "incorrect-answer pipeline",
+      "backing": [
+       {
+        "claim_id": "RPG-TR-015",
+        "file_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/rpg-battle/page.tsx",
+        "line_start": 414,
+        "line_end": 425
+       }
+      ],
+      "note": "Submits against the fallback action ('power' or first), plays 'error', records a miss, logs 'Incorrect!'."
+     },
+     {
+      "transition_id": "RPG-T-16",
+      "from_state": "BattleStatus:victory|defeat",
+      "to_state": "page:showResults (terminal results surface)",
+      "backing": [
+       {
+        "claim_id": "RPG-TR-016",
+        "file_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/rpg-battle/page.tsx",
+        "line_start": 276,
+        "line_end": 322
+       }
+      ],
+      "note": "Page effect computes accuracy, base XP via calculateRpgBattleXp, scales by enemy multiplier, and shows the results surface."
+     },
+     {
+      "transition_id": "RPG-T-17",
+      "from_state": "scene:GameEndScreen|scene:BattleResults",
+      "to_state": "scene:StartScreen (restart)",
+      "backing": [
+       {
+        "claim_id": "RPG-TR-017",
+        "file_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/rpg-battle/page.tsx",
+        "line_start": 428,
+        "line_end": 446
+       }
+      ],
+      "note": "handleRestart resets all page-local states, sets showStartScreen true, exits fullscreen."
+     },
+     {
+      "transition_id": "RPG-T-18",
+      "from_state": "scene:StartScreen",
+      "to_state": "battle card (scene:BattleScene)",
+      "backing": [
+       {
+        "claim_id": "RPG-TR-018",
+        "file_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/rpg-battle/page.tsx",
+        "line_start": 448,
+        "line_end": 451
+       }
+      ],
+      "note": "handleStartBattle sets showStartScreen false and enters fullscreen."
+     },
+     {
+      "transition_id": "RPG-T-19",
+      "from_state": "vocabulary-loaded",
+      "to_state": "BattleSelectionStep:hero + BattleStatus:idle",
+      "backing": [
+       {
+        "claim_id": "RPG-TR-019",
+        "file_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/rpg-battle/page.tsx",
+        "line_start": 183,
+        "line_end": 189
+       }
+      ],
+      "note": "Page effect calls resetSelection() and setStatus('idle') when vocabulary loads and start screen not showing."
+     },
+     {
+      "transition_id": "RPG-T-20",
+      "from_state": "FlashTone",
+      "to_state": "FlashTone (write candidates, unresolved)",
+      "backing": [
+       {
+        "claim_id": "RPG-TR-020",
+        "file_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/rpg-battle/page.tsx",
+        "line_start": 354,
+        "line_end": 354
+       },
+       {
+        "claim_id": "RPG-TR-021",
+        "file_path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/rpg-battle/page.tsx",
+        "line_start": 343,
+        "line_end": 343
+       }
+      ],
+      "note": "T2 denominator records zero proven transitions for RPG Battle and six unresolved flashTone write candidates (3 per host page) (RPG-TR-022). Recorded as unresolved; not resolved here."
+     }
+    ]
+   },
+   "B_mechanic_learning_blueprint": {
+    "mechanics": [
+     {
+      "mechanic_id": "RPG-M-battle-constants",
+      "description": "ACTION_COUNT = 3, BASIC_DAMAGE = 10, POWER_DAMAGE = 18, MAX_TURNS = 12. MAX_TURNS is referenced only at its declaration and as the maxTurns argument to calculateRpgBattleXp; no code enforces a turn limit.",
+      "backing_claims": [
+       "RPG-MECH-001",
+       "RPG-MECH-002"
+      ],
+      "tuning_knobs": [
+       {
+        "name": "BASIC_DAMAGE",
+        "values": "10",
+        "backing_claims": [
+         "RPG-MECH-001"
+        ]
+       },
+       {
+        "name": "POWER_DAMAGE",
+        "values": "18",
+        "backing_claims": [
+         "RPG-MECH-001"
+        ]
+       },
+       {
+        "name": "MAX_TURNS",
+        "values": "12 (XP input only, not enforced)",
+        "backing_claims": [
+         "RPG-MECH-001",
+         "RPG-MECH-002"
+        ]
+       }
+      ]
+     },
+     {
+      "mechanic_id": "RPG-M-damage-formula",
+      "description": "Correct-answer damage = (power === 'power' ? POWER_DAMAGE : BASIC_DAMAGE) + Math.floor(streak / 2); post-damage enemy health Math.max(0, enemyHealth - damage); enemy counterattack fires only when remaining enemy health > 0.",
+      "backing_claims": [
+       "RPG-MECH-003",
+       "RPG-MECH-004"
+      ],
+      "tuning_knobs": []
+     },
+     {
+      "mechanic_id": "RPG-M-enemy-scaling",
+      "description": "scaleEnemyHealth(multiplier, baseHealth = 100) returns Math.round(baseHealth * multiplier); enemy damage range { min: 6, max: max(6, round(10 * multiplier)) } with rollEnemyDamage rolling in range.",
+      "backing_claims": [
+       "RPG-MECH-005",
+       "RPG-MECH-006"
+      ],
+      "tuning_knobs": [
+       {
+        "name": "BASE_ENEMY_HEALTH",
+        "values": "100",
+        "backing_claims": [
+         "RPG-MECH-005"
+        ]
+       },
+       {
+        "name": "BASE_ENEMY_DAMAGE_MIN/MAX",
+        "values": "6 / 10",
+        "backing_claims": [
+         "RPG-MECH-006"
+        ]
+       }
+      ]
+     },
+     {
+      "mechanic_id": "RPG-M-enemy-roster",
+      "description": "battleEnemies defines four enemies with multipliers: slime 0.5, goblin 1, spectre 1.5, elemental 2.",
+      "backing_claims": [
+       "RPG-MECH-007"
+      ],
+      "tuning_knobs": [
+       {
+        "name": "enemy multiplier",
+        "values": "slime 0.5 / goblin 1 / spectre 1.5 / elemental 2",
+        "backing_claims": [
+         "RPG-MECH-007"
+        ]
+       }
+      ]
+     },
+     {
+      "mechanic_id": "RPG-M-hero-location-options",
+      "description": "battleHeroes defines two heroes ('male', 'female') with 3x3 pose-sheet sprites, and battleLocations defines four backgrounds (forest-clearing, ruined-road, magic-arena, throne-hall).",
+      "backing_claims": [
+       "RPG-MECH-008"
+      ],
+      "tuning_knobs": []
+     },
+     {
+      "mechanic_id": "RPG-M-xp-formula",
+      "description": "calculateRpgBattleXp computes healthRatio (weight 0.6) + turnEfficiency (weight 0.4) + streakBoost (up to 0.2), maps the clamped score to round(1 + score * 9), and clamps; final XP = scaleBattleXp(baseXp, enemyMultiplier) = Math.round(baseXp * multiplier).",
+      "backing_claims": [
+       "RPG-MECH-009",
+       "RPG-MECH-010"
+      ],
+      "tuning_knobs": [
+       {
+        "name": "xp weights",
+        "values": "healthRatio 0.6 / turnEfficiency 0.4 / streakBoost up to 0.2; clamped 1..10 scale",
+        "backing_claims": [
+         "RPG-MECH-009"
+        ]
+       }
+      ]
+     },
+     {
+      "mechanic_id": "RPG-M-word-selection-weighting",
+      "description": "selectBattleActions weights each vocabulary word by MIN_WEIGHT (0.25) + difficulty, where difficulty = clamp(1 - accuracy, 0, 1); words with difficulty >= POWER_THRESHOLD receive the 'power' action.",
+      "backing_claims": [
+       "RPG-MECH-011"
+      ],
+      "tuning_knobs": [
+       {
+        "name": "MIN_WEIGHT",
+        "values": "0.25",
+        "backing_claims": [
+         "RPG-MECH-011"
+        ]
+       },
+       {
+        "name": "POWER_THRESHOLD",
+        "values": "threshold constant per rpgBattleWordSelection.ts lines 29-87",
+        "backing_claims": [
+         "RPG-MECH-011"
+        ]
+       }
+      ]
+     },
+     {
+      "mechanic_id": "RPG-M-answer-matching",
+      "description": "Answer matching is exact after trim + lowercase normalization of both input and expected translation; the fallback for an unmatched typed answer is the action with power 'power', or actions[0] if none, and the miss is recorded against that fallback term.",
+      "backing_claims": [
+       "RPG-MECH-012",
+       "RPG-MECH-013"
+      ],
+      "tuning_knobs": []
+     },
+     {
+      "mechanic_id": "RPG-M-accuracy-and-streak",
+      "description": "Accuracy at battle end = totalCorrect / totalAttempts across the per-word performance map (0 when no attempts); longestStreak tracks the maximum streak and feeds the XP streakBoost; live streak resets to 0 on any incorrect answer; turnsTaken clamped to a minimum of 1.",
+      "backing_claims": [
+       "RPG-MECH-014",
+       "RPG-MECH-015",
+       "RPG-MECH-016"
+      ],
+      "tuning_knobs": []
+     },
+     {
+      "mechanic_id": "RPG-M-combo-indicator",
+      "description": "ComboIndicator renders a 'COMBO x{streak}' badge only when streak >= 2.",
+      "backing_claims": [
+       "RPG-MECH-017"
+      ],
+      "tuning_knobs": [
+       {
+        "name": "combo threshold",
+        "values": "streak >= 2",
+        "backing_claims": [
+         "RPG-MECH-017"
+        ]
+       }
+      ]
+     },
+     {
+      "mechanic_id": "RPG-M-cosmetic-crit-and-speech",
+      "description": "A 'CRITICAL!' floating text is scheduled with probability Math.random() > 0.8 (~20%) 200 ms after a correct hit and does not alter damage; on a correct answer the matched term is spoken via window.speechSynthesis (lang 'en-US', rate 1.0, capability-guarded).",
+      "backing_claims": [
+       "RPG-MECH-018",
+       "RPG-MECH-019"
+      ],
+      "tuning_knobs": []
+     },
+     {
+      "mechanic_id": "RPG-M-absent-systems",
+      "description": "No mana/MP system (grep-verified absence); no defend/guard action available to the player (the 'defend' pose exists but no producer sets it).",
+      "backing_claims": [
+       "RPG-MECH-020",
+       "RPG-MECH-021"
+      ],
+      "tuning_knobs": []
+     },
+     {
+      "mechanic_id": "RPG-M-completion-payload",
+      "description": "The completion POST body contains xp, accuracy, totalAttempts, totalCorrect, turnsTaken (min 1), heroId, enemyId, and outcome ('victory'|'defeat').",
+      "backing_claims": [
+       "RPG-MECH-022"
+      ],
+      "tuning_knobs": []
+     },
+     {
+      "mechanic_id": "RPG-M-mock-api-routes",
+      "description": "The advantage-games mock complete route validates with gameCompletionInputSchema and computes xpEarned via calculateGameXP; the vocabulary route returns the static SAMPLE_VOCABULARY list (25 Thai->English pairs) with 'NO_VOCABULARY' and 'INSUFFICIENT_VOCABULARY' (requiredCount 5) warnings.",
+      "backing_claims": [
+       "RPG-MECH-023",
+       "RPG-MECH-024",
+       "RPG-MECH-025"
+      ],
+      "tuning_knobs": []
+     },
+     {
+      "mechanic_id": "RPG-M-vocabulary-minimum-gate",
+      "description": "The page requires data.vocabulary.length >= 5 before accepting the fetched vocabulary, otherwise shows the notEnoughWords error; menuActions maps the 3 selected BattleActions to { id, label: term, power } for the ActionMenu display.",
+      "backing_claims": [
+       "RPG-MECH-026",
+       "RPG-MECH-027"
+      ],
+      "tuning_knobs": [
+       {
+        "name": "minimum vocabulary items",
+        "values": "5",
+        "backing_claims": [
+         "RPG-MECH-026"
+        ]
+       }
+      ]
+     }
+    ],
+    "control_surfaces": [
+     {
+      "control_id": "RPG-C-typed-answer-input",
+      "description": "Primary battle input is a text input ('Type translation...', aria-label 'Action input') inside a form; submitting (Enter key or Cast button) calls onSubmit; input disabled unless non-whitespace; page passes disabled = inputLocked || turn !== 'player' || status terminal; auto-focuses when enabled.",
+      "backing_claims": [
+       "RPG-CTL-001",
+       "RPG-CTL-002",
+       "RPG-CTL-003"
+      ]
+     },
+     {
+      "control_id": "RPG-C-selection-wizard-pointer",
+      "description": "Selection wizard choices are pointer/click buttons (SelectionOptionButton with onClick={onSelect}) for hero, location, and enemy options.",
+      "backing_claims": [
+       "RPG-CTL-004"
+      ]
+     },
+     {
+      "control_id": "RPG-C-startscreen-clicks",
+      "description": "StartScreen tab switching and the rankings enemy selector are click-driven; the rankings tab fetches '/api/v1/games/rpg-battle/ranking' only when activeTab === 'rankings'.",
+      "backing_claims": [
+       "RPG-CTL-005",
+       "RPG-CTL-009"
+      ]
+     },
+     {
+      "control_id": "RPG-C-no-keyboard-handlers",
+      "description": "No keyboard event handlers (keydown/keyup/addEventListener) exist anywhere in the rpg-battle components, page, store, or libs at the baseline (grep-verified absence).",
+      "backing_claims": [
+       "RPG-CTL-006"
+      ]
+     },
+     {
+      "control_id": "RPG-C-navigation-and-restart",
+      "description": "A 'backToGames' Link to /student/games renders in all page states; restart is triggered from GameEndScreen onRestart (AG) or the BattleResults restart Button (RA) wired to handleRestart.",
+      "backing_claims": [
+       "RPG-CTL-007",
+       "RPG-CTL-008"
+      ]
+     }
+    ],
+    "learning_goals": [
+     {
+      "goal_id": "RPG-L-vocabulary-translation-production",
+      "description": "Typed vocabulary translation production: the catalog description reads 'Duel monsters by typing the correct translations.' (RPG-ID-001); the player types translations matched exactly after normalization (RPG-MECH-013), and word selection up-weights words with low historical accuracy (RPG-MECH-011).",
+      "backing_claims": [
+       "RPG-ID-001",
+       "RPG-MECH-011",
+       "RPG-MECH-013"
+      ]
+     }
+    ],
+    "terminal_result_mechanic": {
+     "description": "When status becomes 'victory' or 'defeat', a page effect computes accuracy (totalCorrect/totalAttempts), computes base XP via calculateRpgBattleXp (healthRatio 0.6 + turnEfficiency 0.4 + streakBoost, clamped to a 1-10 scale), scales it by the enemy multiplier, and shows the results surface (GameEndScreen in advantage-games; BattleResults in reading-advantage). The completion POST carries xp, accuracy, totalAttempts, totalCorrect, turnsTaken, heroId, enemyId, outcome.",
+     "vocabulary_scoring_association": "Terminal scoring derives from per-word vocabulary performance: the accuracy input is computed across the per-word performance map built from typed translation attempts (RPG-MECH-014), and streak - incremented on correct translation matches and reset on misses (RPG-TR-005, RPG-TR-006) - feeds the XP streakBoost (RPG-MECH-016).",
+     "backing_claims": [
+      "RPG-TR-016",
+      "RPG-MECH-009",
+      "RPG-MECH-010",
+      "RPG-MECH-014",
+      "RPG-MECH-016",
+      "RPG-MECH-022",
+      "RPG-SC-006",
+      "RPG-COPY-002"
+     ]
+    }
+   },
+   "C_developer_effort_decomposition": {
+    "structural_columns_note": "Columns mirror the T2 phase-0 input freeze record structure (record_type, file_path, relevance_rule_id vocabulary from the frozen ordered rules, host root from the frozen source_scope roots) plus evidence claim pointers. No platform-shared-infrastructure entries are included (next role's scope).",
+    "pages_and_routes": [
+     {
+      "file_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/rpg-battle/page.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "RpgBattlePage default-exported client component; page-effect battle orchestration pipeline",
+      "backing_claims": [
+       "RPG-ID-004",
+       "RPG-GRAPH-001"
+      ]
+     },
+     {
+      "file_path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/rpg-battle/page.tsx",
+      "host_root": "apps/reading-advantage",
+      "record_type": "file",
+      "relevance_rule_id": "reading-primary-game-copies",
+      "effort_detail": "Host page, 628 lines",
+      "backing_claims": [
+       "RPG-ID-005",
+       "RPG-COPY-001",
+       "RPG-COPY-002",
+       "RPG-COPY-003"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/app/api/v1/games/rpg-battle/complete/route.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Completion API route, createCompleteRoute() force-static",
+      "backing_claims": [
+       "RPG-ID-006"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/app/api/v1/games/rpg-battle/vocabulary/route.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Vocabulary API route, createVocabularyRoute(SAMPLE_VOCABULARY) force-static; no ranking route exists under this directory (complete/ and vocabulary/ only)",
+      "backing_claims": [
+       "RPG-ID-007",
+       "RPG-ID-011"
+      ]
+     },
+     {
+      "file_path": "apps/reading-advantage/app/api/v1/games/rpg-battle/complete/route.ts",
+      "host_root": "apps/reading-advantage",
+      "record_type": "file",
+      "relevance_rule_id": "reading-primary-game-copies",
+      "effort_detail": "POST via logRequest+protect to RpgBattleController.completeGame",
+      "backing_claims": [
+       "RPG-ID-008"
+      ]
+     },
+     {
+      "file_path": "apps/reading-advantage/app/api/v1/games/rpg-battle/ranking/route.ts",
+      "host_root": "apps/reading-advantage",
+      "record_type": "file",
+      "relevance_rule_id": "reading-primary-game-copies",
+      "effort_detail": "GET via logRequest+protect to RpgBattleController.getRanking",
+      "backing_claims": [
+       "RPG-ID-009"
+      ]
+     },
+     {
+      "file_path": "apps/reading-advantage/app/api/v1/games/rpg-battle/vocabulary/route.ts",
+      "host_root": "apps/reading-advantage",
+      "record_type": "file",
+      "relevance_rule_id": "reading-primary-game-copies",
+      "effort_detail": "GET via logRequest+protect to RpgBattleController.getVocabulary",
+      "backing_claims": [
+       "RPG-ID-010"
+      ]
+     },
+     {
+      "file_path": "apps/reading-advantage/server/controllers/rpg-battle-controller.ts",
+      "host_root": "apps/reading-advantage",
+      "record_type": "file",
+      "relevance_rule_id": "reading-primary-game-copies",
+      "effort_detail": "Controller with completeGame (line 14), getRanking (line 159, gameRankings filtered by gameType 'RPG_BATTLE', scoped by licenseId/schoolId), getVocabulary (line 239)",
+      "backing_claims": [
+       "RPG-ID-012",
+       "RPG-ID-013"
+      ]
+     }
+    ],
+    "game_scene_state_components": [
+     {
+      "file_path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/BattleScene.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Battle stage layout component (line 19)",
+      "backing_claims": [
+       "RPG-SC-001",
+       "RPG-RESP-002"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/StartScreen.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Start screen with briefing/rankings/vocabulary tabs (line 33)",
+      "backing_claims": [
+       "RPG-SC-002",
+       "RPG-ST-038"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/BattleSelectionModal.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Hero/location/enemy selection wizard modal",
+      "backing_claims": [
+       "RPG-SC-005",
+       "RPG-GRAPH-003",
+       "RPG-CTL-004"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/Sprite.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "SpritePose union + poseMap 3x3 grid CSS renderer",
+      "backing_claims": [
+       "RPG-ST-001",
+       "RPG-ASSET-040"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/ActionMenu.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Typed answer input + action cards",
+      "backing_claims": [
+       "RPG-CTL-001",
+       "RPG-RESP-001",
+       "RPG-ST-028"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/BattleEffects.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Flash/shake effects (FlashTone union)",
+      "backing_claims": [
+       "RPG-ST-035",
+       "RPG-TEST-009"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/BattleLog.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Battle log rendering (imports BattleLogEntry type from store)",
+      "backing_claims": [
+       "RPG-GRAPH-003",
+       "RPG-TEST-010"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/BattleResults.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Results component used by the reading-advantage page",
+      "backing_claims": [
+       "RPG-CTL-008",
+       "RPG-TEST-011",
+       "RPG-COPY-001"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/ComboIndicator.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "COMBO badge at streak >= 2",
+      "backing_claims": [
+       "RPG-MECH-017"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/FloatingText.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Floating text items (damage-player/damage-enemy/heal/crit)",
+      "backing_claims": [
+       "RPG-ST-037"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/HealthBar.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Clamped percentage health bar",
+      "backing_claims": [
+       "RPG-TEST-016"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/PlayerSprite.tsx and EnemySprite.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Legacy sprite components referencing '/games/rpg-battle/...' paths",
+      "backing_claims": [
+       "RPG-ASSET-041",
+       "RPG-TEST-014",
+       "RPG-TEST-015"
+      ]
+     },
+     {
+      "file_path": "apps/reading-advantage/components/games/vocabulary/rpg-battle/*",
+      "host_root": "apps/reading-advantage",
+      "record_type": "file",
+      "relevance_rule_id": "reading-primary-game-copies",
+      "effort_detail": "Host copies: BattleScene (line 19, identical declaration hash), StartScreen (line 35, divergent: added Skull/Flame imports, downgraded text sizes); other components byte-identical per cross-host SHA list",
+      "backing_claims": [
+       "RPG-SC-003",
+       "RPG-SC-004",
+       "RPG-COPY-004",
+       "RPG-COPY-005"
+      ]
+     }
+    ],
+    "logic_projection_utility_modules": [
+     {
+      "file_path": "apps/advantage-games/src/store/useRPGBattleStore.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Zustand battle store: BattleStatus/BattleTurn/BattlePose/BattleSelectionStep unions, initializeBattle, damagePlayer, damageEnemy, enemyAttack, submitAnswer, selection actions",
+      "backing_claims": [
+       "RPG-ST-019",
+       "RPG-TR-001",
+       "RPG-TR-002",
+       "RPG-TR-003",
+       "RPG-TR-004",
+       "RPG-TR-005",
+       "RPG-TR-006",
+       "RPG-GRAPH-002",
+       "RPG-GRAPH-004"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/lib/games/rpgBattleScaling.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "scaleEnemyHealth, getEnemyDamageRange, rollEnemyDamage, scaleBattleXp",
+      "backing_claims": [
+       "RPG-MECH-005",
+       "RPG-MECH-006",
+       "RPG-MECH-010"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/lib/games/rpgBattleSelection.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "battleHeroes, battleLocations, battleEnemies with multipliers and sprite paths",
+      "backing_claims": [
+       "RPG-MECH-007",
+       "RPG-MECH-008",
+       "RPG-ASSET-042"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/lib/games/rpgBattleSprites.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Sprite picker helpers (rng-based hero/enemy selection)",
+      "backing_claims": [
+       "RPG-TEST-005",
+       "RPG-ASSET-042",
+       "RPG-GRAPH-002"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/lib/games/rpgBattleWordSelection.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "selectBattleActions difficulty-weighted word selection; ActionPower union",
+      "backing_claims": [
+       "RPG-MECH-011",
+       "RPG-ST-028"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/lib/games/rpgBattleXp.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "calculateRpgBattleXp",
+      "backing_claims": [
+       "RPG-MECH-009"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/lib/games/api/completeRoute.ts and vocabularyRoute.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Mock API route factories (gameCompletionInputSchema, calculateGameXP; SAMPLE_VOCABULARY with warnings)",
+      "backing_claims": [
+       "RPG-MECH-023",
+       "RPG-MECH-024"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/lib/games/sampleVocabulary.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "SAMPLE_VOCABULARY: 25 Thai->English term/translation pairs",
+      "backing_claims": [
+       "RPG-MECH-025"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/hooks/useSound.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Runtime-synthesized battle sounds (no audio asset files in the denominator)",
+      "backing_claims": [
+       "RPG-ASSET-038"
+      ]
+     },
+     {
+      "file_path": "apps/reading-advantage/store/useRPGBattleStore.ts",
+      "host_root": "apps/reading-advantage",
+      "record_type": "file",
+      "relevance_rule_id": "reading-primary-game-copies",
+      "effort_detail": "Byte-identical copy (listed in the cross-host same-SHA set)",
+      "backing_claims": [
+       "RPG-COPY-004"
+      ]
+     }
+    ],
+    "test_modules": [
+     {
+      "file_path": "apps/advantage-games/src/store/useRPGBattleStore.test.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "test_count_from_claims": 16,
+      "backing_claims": [
+       "RPG-TEST-001"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/rpg-battle/page.test.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "test_count_from_claims": 8,
+      "backing_claims": [
+       "RPG-TEST-002"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/lib/games/rpgBattleScaling.test.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "test_count_from_claims": 5,
+      "backing_claims": [
+       "RPG-TEST-003"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/lib/games/rpgBattleSelection.test.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "test_count_from_claims": 3,
+      "backing_claims": [
+       "RPG-TEST-004"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/lib/games/rpgBattleSprites.test.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "test_count_from_claims": 2,
+      "backing_claims": [
+       "RPG-TEST-005"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/lib/games/rpgBattleWordSelection.test.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "test_count_from_claims": 2,
+      "backing_claims": [
+       "RPG-TEST-006"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/lib/games/rpgBattleXp.test.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "test_count_from_claims": 4,
+      "backing_claims": [
+       "RPG-TEST-007"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/ActionMenu.test.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "test_count_from_claims": "suite covering rendering, disabled behavior, submit flow",
+      "backing_claims": [
+       "RPG-TEST-008"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/BattleEffects.test.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "test_count_from_claims": "suite covering shake/flash rendering",
+      "backing_claims": [
+       "RPG-TEST-009"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/BattleLog.test.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "test_count_from_claims": "suite covering entry rendering and empty state",
+      "backing_claims": [
+       "RPG-TEST-010"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/BattleResults.test.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "test_count_from_claims": "suite covering victory/defeat rendering and restart callback",
+      "backing_claims": [
+       "RPG-TEST-011"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/BattleScene.test.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "test_count_from_claims": "suite covering layout regions and background image application",
+      "backing_claims": [
+       "RPG-TEST-012"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/BattleSelectionModal.test.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "test_count_from_claims": "suite covering step rendering, option selection, ready->null branch",
+      "backing_claims": [
+       "RPG-TEST-013"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/EnemySprite.test.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "test_count_from_claims": "smoke test",
+      "backing_claims": [
+       "RPG-TEST-014"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/PlayerSprite.test.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "test_count_from_claims": "smoke test",
+      "backing_claims": [
+       "RPG-TEST-015"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/HealthBar.test.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "test_count_from_claims": "suite covering clamped percentage rendering",
+      "backing_claims": [
+       "RPG-TEST-016"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/Sprite.test.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "test_count_from_claims": "suite covering pose-to-grid background positioning",
+      "backing_claims": [
+       "RPG-TEST-017"
+      ]
+     },
+     {
+      "file_path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/rpg-battle/page.test.tsx",
+      "host_root": "apps/reading-advantage",
+      "record_type": "file",
+      "relevance_rule_id": "reading-primary-game-copies",
+      "test_count_from_claims": 4,
+      "backing_claims": [
+       "RPG-TEST-018",
+       "RPG-TEST-021"
+      ]
+     },
+     {
+      "file_path": "apps/reading-advantage/components/games/vocabulary/rpg-battle/BattleScene.test.tsx",
+      "host_root": "apps/reading-advantage",
+      "record_type": "file",
+      "relevance_rule_id": "reading-primary-game-copies",
+      "test_count_from_claims": "suite incl. background-image application test",
+      "backing_claims": [
+       "RPG-TEST-019",
+       "RPG-TEST-021"
+      ]
+     }
+    ],
+    "test_execution_evidence": [
+     {
+      "claim_id": "RPG-TEST-020",
+      "detail": "apps/advantage-games `npx jest \"rpg\" --silent` at HEAD da51b4e0: 17 suites / 65 tests, all passing."
+     },
+     {
+      "claim_id": "RPG-TEST-021",
+      "detail": "apps/reading-advantage `npx jest \"rpg-battle\"` at HEAD da51b4e0: 3 failed suites (BattleResults.test.tsx and page.test.tsx fail to parse)."
+     }
+    ],
+    "copy_sites_in_reading_primary_hosts": [
+     {
+      "host_root": "apps/reading-advantage",
+      "site": "store/useRPGBattleStore.ts, ActionMenu.tsx, BattleEffects.tsx, BattleLog.tsx, BattleResults.tsx, and others",
+      "copy_relation": "byte-identical (cross-host same-SHA-256 set)",
+      "backing_claims": [
+       "RPG-COPY-004"
+      ]
+     },
+     {
+      "host_root": "apps/reading-advantage",
+      "site": "components/games/vocabulary/rpg-battle/StartScreen.tsx",
+      "copy_relation": "divergent (unused Skull/Flame lucide imports added; text sizes systematically downgraded)",
+      "backing_claims": [
+       "RPG-COPY-005"
+      ]
+     },
+     {
+      "host_root": "apps/reading-advantage",
+      "site": "app/[locale]/(student)/student/games/vocabulary/rpg-battle/page.tsx",
+      "copy_relation": "divergent (renders BattleResults instead of GameEndScreen; vocabulary fetch without locale parameter)",
+      "backing_claims": [
+       "RPG-COPY-001",
+       "RPG-COPY-002",
+       "RPG-COPY-003"
+      ]
+     },
+     {
+      "host_root": "apps/reading-advantage",
+      "site": "app/api/v1/games/rpg-battle/{complete,ranking,vocabulary}/route.ts + server/controllers/rpg-battle-controller.ts",
+      "copy_relation": "host-specific controller-backed routes",
+      "backing_claims": [
+       "RPG-ID-008",
+       "RPG-ID-009",
+       "RPG-ID-010",
+       "RPG-ID-012"
+      ]
+     },
+     {
+      "host_root": "apps/primary-advantage",
+      "site": "none recorded",
+      "copy_relation": "no RPG Battle copy-site claims exist in the ledger for primary-advantage (absence of evidence; no absence claim was authored by the collector)",
+      "backing_claims": []
+     }
+    ]
+   },
+   "D_asset_usage_map": [
+    {
+     "scene_id": "scene:BattleScene",
+     "asset_usage_count": 10,
+     "caller_count": 6,
+     "asset_refs": [
+      {
+       "asset_ref": "background_forest_clearing.png (via battleLocations, '/games/vocabulary/rpg-battle/' prefix)",
+       "usage_category": "environment (battle background)",
+       "backing_claims": [
+        "RPG-MECH-008",
+        "RPG-ASSET-042",
+        "RPG-TEST-012",
+        "RPG-TEST-019"
+       ]
+      },
+      {
+       "asset_ref": "background_ruined_road.png",
+       "usage_category": "environment (battle background)",
+       "backing_claims": [
+        "RPG-MECH-008",
+        "RPG-ASSET-042"
+       ]
+      },
+      {
+       "asset_ref": "background_magic_arena.png",
+       "usage_category": "environment (battle background)",
+       "backing_claims": [
+        "RPG-MECH-008",
+        "RPG-ASSET-042",
+        "RPG-TEST-002"
+       ]
+      },
+      {
+       "asset_ref": "background_throne_hall.png",
+       "usage_category": "environment (battle background)",
+       "backing_claims": [
+        "RPG-MECH-008",
+        "RPG-ASSET-042"
+       ]
+      },
+      {
+       "asset_ref": "hero_male_pose_sheet_3x3.png",
+       "usage_category": "actors (hero sprite via Sprite.tsx poseMap 3x3 grid)",
+       "backing_claims": [
+        "RPG-MECH-008",
+        "RPG-ASSET-040",
+        "RPG-ASSET-042"
+       ]
+      },
+      {
+       "asset_ref": "hero_female_pose_sheet_3x3.png",
+       "usage_category": "actors (hero sprite)",
+       "backing_claims": [
+        "RPG-MECH-008",
+        "RPG-ASSET-040",
+        "RPG-ASSET-042"
+       ]
+      },
+      {
+       "asset_ref": "enemy_slime_pose_sheet_3x3.png",
+       "usage_category": "actors (enemy sprite)",
+       "backing_claims": [
+        "RPG-MECH-007",
+        "RPG-ASSET-040",
+        "RPG-ASSET-042"
+       ]
+      },
+      {
+       "asset_ref": "enemy_goblin_pose_sheet_3x3.png",
+       "usage_category": "actors (enemy sprite)",
+       "backing_claims": [
+        "RPG-MECH-007",
+        "RPG-ASSET-040",
+        "RPG-ASSET-042"
+       ]
+      },
+      {
+       "asset_ref": "enemy_spectre_pose_sheet_3x3.png",
+       "usage_category": "actors (enemy sprite)",
+       "backing_claims": [
+        "RPG-MECH-007",
+        "RPG-ASSET-040",
+        "RPG-ASSET-042"
+       ]
+      },
+      {
+       "asset_ref": "enemy_elemental_pose_sheet_3x3.png",
+       "usage_category": "actors (enemy sprite)",
+       "backing_claims": [
+        "RPG-MECH-007",
+        "RPG-ASSET-040",
+        "RPG-ASSET-042"
+       ]
+      }
+     ],
+     "pose_grid_note": "The archived asset-spec defines the 3x3 pose grid mapping ((1,1) idle, (1,2) casting, (1,3) basic attack, (2,1) power ...) per RPG-ASSET-039; Sprite.tsx renders poses via CSS background-position (RPG-ASSET-040)."
+    },
+    {
+     "scene_id": "scene:BattleSelectionModal",
+     "asset_usage_count": 10,
+     "caller_count": 3,
+     "asset_refs": [
+      {
+       "asset_ref": "hero/location/enemy option sprites and backgrounds (same 10 files as BattleScene, surfaced through the selection wizard options)",
+       "usage_category": "actors + environment (selection options)",
+       "backing_claims": [
+        "RPG-MECH-007",
+        "RPG-MECH-008",
+        "RPG-CTL-004"
+       ]
+      }
+     ],
+     "note": "The wizard renders hero, location, and enemy options backed by battleHeroes/battleLocations/battleEnemies records, which carry the sprite/background paths (RPG-MECH-007, RPG-MECH-008); the modal imports the selection types and scaling helpers (RPG-GRAPH-003)."
+    },
+    {
+     "scene_id": "scene:StartScreen",
+     "asset_usage_count": 0,
+     "caller_count": 0,
+     "asset_refs": [],
+     "note": "No ledger claim ties an asset file reference to the StartScreen scene. Explicit zero-usage marker."
+    },
+    {
+     "scene_id": "scene:GameEndScreen",
+     "asset_usage_count": 0,
+     "caller_count": 0,
+     "asset_refs": [],
+     "note": "No ledger claim ties an asset file reference to the GameEndScreen scene. Explicit zero-usage marker."
+    },
+    {
+     "scene_id": "scene:BattleResults",
+     "asset_usage_count": 0,
+     "caller_count": 0,
+     "asset_refs": [],
+     "note": "No ledger claim ties an asset file reference to the BattleResults scene. Explicit zero-usage marker."
+    },
+    {
+     "scene_id": "scene:Loading",
+     "asset_usage_count": 0,
+     "caller_count": 0,
+     "asset_refs": [],
+     "note": "No ledger claim ties an asset file reference to the Loading scene. Explicit zero-usage marker."
+    },
+    {
+     "scene_id": "scene:Error",
+     "asset_usage_count": 0,
+     "caller_count": 0,
+     "asset_refs": [],
+     "note": "No ledger claim ties an asset file reference to the Error scene. Explicit zero-usage marker."
+    }
+   ],
+   "D_asset_usage_non_scene_surfaces": [
+    {
+     "surface": "catalog card",
+     "asset_ref": "/games/cover/rpg-battle-cover.png",
+     "backing_claims": [
+      "RPG-ID-001",
+      "RPG-ASSET-004",
+      "RPG-ASSET-027"
+     ]
+    },
+    {
+     "surface": "audio",
+     "asset_ref": "none - zero audio-format candidates in the accepted asset denominator; battle sounds synthesized at runtime by useSound",
+     "backing_claims": [
+      "RPG-ASSET-038"
+     ]
+    },
+    {
+     "surface": "legacy component refs",
+     "asset_ref": "/games/rpg-battle/hero_male_pose_sheet_3x3.png and /games/rpg-battle/enemy_slime_pose_sheet_3x3.png referenced by legacy PlayerSprite.tsx/EnemySprite.tsx",
+     "backing_claims": [
+      "RPG-ASSET-041"
+     ]
+    },
+    {
+     "surface": "duplicate legacy asset directory",
+     "asset_ref": "apps/advantage-games/public/games/rpg-battle/ (8 files byte-identical to public/games/vocabulary/rpg-battle/)",
+     "backing_claims": [
+      "RPG-HIST-003",
+      "RPG-ASSET-005",
+      "RPG-ASSET-014"
+     ]
+    },
+    {
+     "surface": "menu/standalone image",
+     "asset_ref": "apps/advantage-games/public/rpg-battle.png (1083x756); no scene-usage claim in the ledger",
+     "backing_claims": [
+      "RPG-ASSET-025"
+     ]
+    },
+    {
+     "surface": "vocab data file",
+     "asset_ref": "apps/advantage-games/public/vocab/rpg-battle.json",
+     "backing_claims": [
+      "RPG-ASSET-026"
+     ]
+    },
+    {
+     "surface": "archived spec sidecars",
+     "asset_ref": "apps/advantage-games/measure/archive/rpg_battle_20260102/asset-spec.md and metadata.json; measure/tracks/rpg-battle-compliance-audit_20260426/metadata.json",
+     "backing_claims": [
+      "RPG-ASSET-001",
+      "RPG-ASSET-002",
+      "RPG-ASSET-003",
+      "RPG-COPY-006"
+     ]
+    }
+   ]
+  },
+  "abyssal-well": {
+   "canonical_identity_id": "sentence/abyssal-well",
+   "catalog_identity_id": "abyssal-well",
+   "evidence_posture": "historical - derived from historical claims only (current implementation deleted; deletion commit 0ee9184728c11188c40b27c23fa649a9b67952dc, evidence at deletion parent c76f6af3f62c03979f5073a871e775afd952a070)",
+   "historical_marker": "ALL entries in this game section are HISTORICAL. No current-source claims exist for Abyssal Well (collector recorded current_implementation_claims = 0).",
+   "evidence_basis_claims": [
+    "AW-HIST-090",
+    "AW-HIST-091",
+    "AW-HIST-001"
+   ],
+   "A_scene_state_blueprint": {
+    "historical": true,
+    "scenes": [
+     {
+      "scene_id": "sentence/abyssal-well/scene=AbyssalWellGame (historical)",
+      "kind": "React UI shell mirroring logic phases into UI phases 'start'|'playing'|'ended'",
+      "backing": [
+       {
+        "claim_id": "AW-HIST-023",
+        "file_path": "apps/advantage-games/src/components/games/sentence/abyssal-well/AbyssalWellGame.tsx",
+        "line_start": 112,
+        "line_end": 136
+       },
+       {
+        "claim_id": "AW-HIST-094",
+        "file_path": "apps/advantage-games/src/components/games/sentence/abyssal-well/AbyssalWellGame.tsx",
+        "line_start": 1,
+        "line_end": 24
+       }
+      ],
+      "transitions_originating": [
+       "AW-T-01",
+       "AW-T-04"
+      ],
+      "transitions_terminating": [
+       "AW-T-02",
+       "AW-T-03"
+      ],
+      "terminal_result_mapping": "UI phase 'ended' is the results surface: victory/defeat triggered results computation with accuracy = correctWords/totalAttempts and XP via calculateXP (AW-HIST-023)."
+     },
+     {
+      "scene_id": "sentence/abyssal-well/scene=AbyssalWellScene (historical)",
+      "kind": "Pure R3F render layer (no Canvas/logic/effects): wireframe cylinder tube with one radial segment per lane, depth-glow floor circle, icosahedron enemies",
+      "backing": [
+       {
+        "claim_id": "AW-HIST-012",
+        "file_path": "apps/advantage-games/src/components/games/sentence/abyssal-well/AbyssalWellScene.tsx",
+        "line_start": 23,
+        "line_end": 99
+       },
+       {
+        "claim_id": "AW-HIST-096",
+        "file_path": "apps/advantage-games/src/components/games/sentence/abyssal-well/AbyssalWellScene.tsx",
+        "line_start": 52,
+        "line_end": 56
+       }
+      ],
+      "transitions_originating": [],
+      "transitions_terminating": [],
+      "terminal_result_mapping": null
+     },
+     {
+      "scene_id": "sentence/abyssal-well/scene=StartScreen (historical)",
+      "kind": "Start screen surface located by the E2E helper (expectAbyssalWellStartScreen) and covered by the component test start-screen render",
+      "backing": [
+       {
+        "claim_id": "AW-HIST-061",
+        "file_path": "apps/advantage-games/tests/e2e/helpers/gameHelpers.ts",
+        "line_start": 449,
+        "line_end": 477
+       },
+       {
+        "claim_id": "AW-HIST-072",
+        "file_path": "apps/advantage-games/src/components/games/sentence/abyssal-well/AbyssalWellGame.test.tsx",
+        "line_start": 1,
+        "line_end": 161
+       }
+      ],
+      "transitions_originating": [
+       "AW-T-01"
+      ],
+      "transitions_terminating": [],
+      "terminal_result_mapping": null
+     }
+    ],
+    "states": [
+     {
+      "state_family": "GamePhase (logic, historical)",
+      "members": [
+       "start",
+       "playing",
+       "victory",
+       "defeat"
+      ],
+      "backing": [
+       {
+        "claim_id": "AW-HIST-010",
+        "file_path": "apps/advantage-games/src/lib/games/abyssalWell.ts",
+        "line_start": 8,
+        "line_end": 53
+       }
+      ],
+      "member_claims": [
+       "AW-HIST-010",
+       "AW-HIST-011"
+      ],
+      "transitions_originating": [
+       "AW-T-01",
+       "AW-T-02",
+       "AW-T-03"
+      ],
+      "transitions_terminating": [
+       "AW-T-01",
+       "AW-T-02",
+       "AW-T-03"
+      ],
+      "terminal_result_mapping": "'victory' and 'defeat' are the terminal logic phases mirrored into the UI 'ended' phase (AW-HIST-023)."
+     },
+     {
+      "state_family": "AbyssalWellState.player (logic, historical)",
+      "members": [
+       "angle",
+       "rotationDir",
+       "lives",
+       "lastFireTime"
+      ],
+      "backing": [
+       {
+        "claim_id": "AW-HIST-010",
+        "file_path": "apps/advantage-games/src/lib/games/abyssalWell.ts",
+        "line_start": 8,
+        "line_end": 53
+       }
+      ],
+      "member_claims": [
+       "AW-HIST-010",
+       "AW-HIST-011"
+      ],
+      "transitions_originating": [],
+      "transitions_terminating": [],
+      "terminal_result_mapping": null
+     },
+     {
+      "state_family": "UI phase (shell, historical)",
+      "members": [
+       "start",
+       "playing",
+       "ended"
+      ],
+      "backing": [
+       {
+        "claim_id": "AW-HIST-023",
+        "file_path": "apps/advantage-games/src/components/games/sentence/abyssal-well/AbyssalWellGame.tsx",
+        "line_start": 112,
+        "line_end": 136
+       }
+      ],
+      "member_claims": [
+       "AW-HIST-023"
+      ],
+      "transitions_originating": [
+       "AW-T-04"
+      ],
+      "transitions_terminating": [
+       "AW-T-04"
+      ],
+      "terminal_result_mapping": "'ended' is the results phase."
+     }
+    ],
+    "transitions": [
+     {
+      "transition_id": "AW-T-01",
+      "from_state": "GamePhase:start",
+      "to_state": "GamePhase:playing",
+      "backing": [
+       {
+        "claim_id": "AW-HIST-020",
+        "file_path": "apps/advantage-games/src/lib/games/abyssalWell.ts",
+        "line_start": 110,
+        "line_end": 136
+       }
+      ],
+      "note": "startGame resets the clock and spawns every word of the sentence at once at random angles with depths scattered in the lower half."
+     },
+     {
+      "transition_id": "AW-T-02",
+      "from_state": "GamePhase:playing",
+      "to_state": "GamePhase:defeat",
+      "backing": [
+       {
+        "claim_id": "AW-HIST-021",
+        "file_path": "apps/advantage-games/src/lib/games/abyssalWell.ts",
+        "line_start": 238,
+        "line_end": 283
+       }
+      ],
+      "note": "resolveHits transitions to 'defeat' when lives reach 0 (wrong-word hits decrement lives; floored at 0)."
+     },
+     {
+      "transition_id": "AW-T-03",
+      "from_state": "GamePhase:playing",
+      "to_state": "GamePhase:victory",
+      "backing": [
+       {
+        "claim_id": "AW-HIST-022",
+        "file_path": "apps/advantage-games/src/lib/games/abyssalWell.ts",
+        "line_start": 285,
+        "line_end": 291
+       }
+      ],
+      "note": "checkVictoryCondition transitions to 'victory' when targetIndex >= words.length (all words collected in order)."
+     },
+     {
+      "transition_id": "AW-T-04",
+      "from_state": "GamePhase:victory|defeat",
+      "to_state": "UI phase:ended (results surface)",
+      "backing": [
+       {
+        "claim_id": "AW-HIST-023",
+        "file_path": "apps/advantage-games/src/components/games/sentence/abyssal-well/AbyssalWellGame.tsx",
+        "line_start": 112,
+        "line_end": 136
+       }
+      ],
+      "note": "The shell mirrored logic phases into UI phases; victory/defeat triggered results computation (accuracy = correctWords/totalAttempts, XP via calculateXP)."
+     }
+    ]
+   },
+   "B_mechanic_learning_blueprint": {
+    "historical": true,
+    "mechanics": [
+     {
+      "mechanic_id": "AW-M-cycling-words-ruleset",
+      "description": "The implemented ruleset was 'cycling-words' (Story S5, r3f_rendering_tier_20260708): every word circulates in the well; the student derives order from the translation; wrong-word hits cost lives.",
+      "backing_claims": [
+       "AW-HIST-030"
+      ],
+      "tuning_knobs": []
+     },
+     {
+      "mechanic_id": "AW-M-enemy-movement-and-wrap",
+      "description": "updateEnemies moves enemies toward the rim at creatureSpeed/gameHeight per second scaled by (1 + laps*0.15); on reaching depth >= 1 the enemy wraps to the deep end and laps increments (rim breach wraps harmlessly, +15% speed per lap).",
+      "backing_claims": [
+       "AW-HIST-031"
+      ],
+      "tuning_knobs": [
+       {
+        "name": "lap speed scaling",
+        "values": "(1 + laps*0.15)",
+        "backing_claims": [
+         "AW-HIST-031"
+        ]
+       }
+      ]
+     },
+     {
+      "mechanic_id": "AW-M-xp-formula",
+      "description": "calculateXP: 0 XP if no attempts; accuracy = correctWords/totalAttempts; base XP = correctWords; +2 perfect accuracy, +1 survival (lives/initial >= 0.5), +1 speed (bound per cited range).",
+      "backing_claims": [
+       "AW-HIST-032"
+      ],
+      "tuning_knobs": [
+       {
+        "name": "bonuses",
+        "values": "+2 perfect accuracy / +1 survival (>=50% lives) / +1 speed",
+        "backing_claims": [
+         "AW-HIST-032"
+        ]
+       }
+      ]
+     },
+     {
+      "mechanic_id": "AW-M-config-knobs",
+      "description": "ABYSSAL_WELL_CONFIG: gameWidth 390, gameHeight 700, 8 lanes, rimRadius 120, wellDepth 5; player fireRate 300 ms, projectileSpeed 400, radius 18, rotationSpeed 2.4 rad/s.",
+      "backing_claims": [
+       "AW-HIST-033"
+      ],
+      "tuning_knobs": [
+       {
+        "name": "board",
+        "values": "390x700, 8 lanes, rimRadius 120, wellDepth 5",
+        "backing_claims": [
+         "AW-HIST-033"
+        ]
+       },
+       {
+        "name": "player",
+        "values": "fireRate 300ms / projectileSpeed 400 / radius 18 / rotationSpeed 2.4 rad/s",
+        "backing_claims": [
+         "AW-HIST-033"
+        ]
+       }
+      ]
+     },
+     {
+      "mechanic_id": "AW-M-difficulty-table",
+      "description": "Three difficulties - easy 'Shallow Well' (4 words), medium 'Deep Chasm' (5), hard 'Abyss' (6) - and three creature speeds - goblin-scout 50, cave-spider 70, shadow-demon (per cited range).",
+      "backing_claims": [
+       "AW-HIST-034"
+      ],
+      "tuning_knobs": [
+       {
+        "name": "difficulty word counts",
+        "values": "easy 4 / medium 5 / hard 6",
+        "backing_claims": [
+         "AW-HIST-034"
+        ]
+       },
+       {
+        "name": "creature speeds",
+        "values": "goblin-scout 50 / cave-spider 70 / shadow-demon (cited range 32-53)",
+        "backing_claims": [
+         "AW-HIST-034"
+        ]
+       }
+      ]
+     },
+     {
+      "mechanic_id": "AW-M-completion-payload",
+      "description": "On completion the page posted to /api/v1/games/abyssal-well/complete with xpEarned, accuracy, correctAnswers = floor(accuracy*10), totalAttempts = 10, userId.",
+      "backing_claims": [
+       "AW-HIST-035"
+      ],
+      "tuning_knobs": []
+     }
+    ],
+    "control_surfaces": [
+     {
+      "control_id": "AW-C-keyboard",
+      "description": "ArrowLeft/A rotate counter-clockwise, ArrowRight/D rotate clockwise, Space/Enter fire (preventDefault); input ignored unless playing.",
+      "backing_claims": [
+       "AW-HIST-040"
+      ]
+     },
+     {
+      "control_id": "AW-C-touch",
+      "description": "Tap left of center-50px rotates counter-clockwise, right of center+50px rotates clockwise, center band (+/-50px) fires.",
+      "backing_claims": [
+       "AW-HIST-041"
+      ]
+     },
+     {
+      "control_id": "AW-C-held-direction-model",
+      "description": "setRotation held-direction model: rotationDir -1|0|1 with continuous rotation at 2.4 rad/s while held; firing rate-limited to one projectile per 300 ms.",
+      "backing_claims": [
+       "AW-HIST-042"
+      ]
+     }
+    ],
+    "learning_goals": [
+     {
+      "goal_id": "AW-L-sentence-word-order",
+      "description": "Sentence word-order reconstruction: the canonical identity is sentence/abyssal-well (AW-HIST-001); every word of the sentence circulates in the well and the student derives the order from the translation (AW-HIST-030); victory requires collecting all words in order (AW-HIST-022).",
+      "backing_claims": [
+       "AW-HIST-001",
+       "AW-HIST-030",
+       "AW-HIST-022"
+      ]
+     }
+    ],
+    "terminal_result_mechanic": {
+     "description": "Victory requires targetIndex >= words.length (all words collected in order, AW-HIST-022); defeat when lives reach 0 (AW-HIST-021). The UI 'ended' phase computes accuracy = correctWords/totalAttempts and XP via calculateXP (base = correctWords; +2 perfect, +1 survival, +1 speed) and posts xpEarned, accuracy, correctAnswers=floor(accuracy*10), totalAttempts=10, userId to the completion API.",
+     "sentence_scoring_association": "Terminal scoring derives from sentence word collection: correctWords counts in-order word hits (victory condition AW-HIST-022) and wrong-word hits decrement lives toward defeat (AW-HIST-021); accuracy = correctWords/totalAttempts ties the score directly to sentence word-order performance (AW-HIST-023, AW-HIST-032).",
+     "backing_claims": [
+      "AW-HIST-021",
+      "AW-HIST-022",
+      "AW-HIST-023",
+      "AW-HIST-032",
+      "AW-HIST-035"
+     ]
+    }
+   },
+   "C_developer_effort_decomposition": {
+    "historical": true,
+    "structural_columns_note": "Columns mirror the T2 phase-0 input freeze record structure (record_type, file_path, relevance_rule_id vocabulary from the frozen ordered rules, host root from the frozen source_scope roots) plus evidence claim pointers. All entries are historical (files deleted by 0ee91847; evidence at deletion parent c76f6af3). No platform-shared-infrastructure entries are included (next role's scope).",
+    "pages_and_routes": [
+     {
+      "file_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/abyssal-well/page.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Page route, 216 lines, client component dynamically importing AbyssalWellGame with ssr:false (historical)",
+      "backing_claims": [
+       "AW-HIST-002"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/app/api/v1/games/abyssal-well/complete/route.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Completion API route, 7-line force-static createCompleteRoute() wrapper (historical)",
+      "backing_claims": [
+       "AW-HIST-003"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/app/api/v1/games/abyssal-well/sentences/route.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Sentences API route, 8-line force-static createSentencesRoute(SAMPLE_SENTENCES) wrapper (historical)",
+      "backing_claims": [
+       "AW-HIST-004"
+      ]
+     }
+    ],
+    "game_scene_state_components": [
+     {
+      "file_path": "apps/advantage-games/src/components/games/sentence/abyssal-well/AbyssalWellGame.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "React UI shell mirroring logic phases; keyboard/touch controls; DOM HUD with effective text size (historical)",
+      "backing_claims": [
+       "AW-HIST-023",
+       "AW-HIST-040",
+       "AW-HIST-041",
+       "AW-HIST-084",
+       "AW-HIST-095"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/sentence/abyssal-well/AbyssalWellScene.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Pure R3F render layer: wireframe tube, depth-glow floor, icosahedron enemies (historical)",
+      "backing_claims": [
+       "AW-HIST-012",
+       "AW-HIST-096"
+      ]
+     }
+    ],
+    "logic_projection_utility_modules": [
+     {
+      "file_path": "apps/advantage-games/src/lib/games/abyssalWell.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Logic module: GamePhase, AbyssalWellState, createAbyssalWellState, startGame, setRotation, resolveHits, checkVictoryCondition, updateEnemies, calculateXP (historical)",
+      "backing_claims": [
+       "AW-HIST-010",
+       "AW-HIST-011",
+       "AW-HIST-020",
+       "AW-HIST-021",
+       "AW-HIST-022",
+       "AW-HIST-031",
+       "AW-HIST-032",
+       "AW-HIST-042"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/lib/games/abyssalWellConfig.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Config module: ABYSSAL_WELL_CONFIG dimensions/lanes/player knobs, difficulty table, creature speeds (historical)",
+      "backing_claims": [
+       "AW-HIST-033",
+       "AW-HIST-034"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/sentence/abyssal-well/wellProjection.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Projection module mapping (lane, depth) onto the tube wall: WELL = {radius 2.2, length 24, lanes from config (8)}; rim at z=0, far end z=-24 (historical)",
+      "backing_claims": [
+       "AW-HIST-013"
+      ]
+     }
+    ],
+    "test_modules": [
+     {
+      "file_path": "apps/advantage-games/src/lib/games/__tests__/abyssalWell.test.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "test_count_from_claims": "305-line suite covering the cycling-words rules (historical)",
+      "backing_claims": [
+       "AW-HIST-070"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/lib/games/__tests__/abyssalWellConfig.test.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "test_count_from_claims": "91-line suite (config dimensions, lanes, player/enemy config, lives, speeds, difficulty table, fallback) (historical)",
+      "backing_claims": [
+       "AW-HIST-071"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/sentence/abyssal-well/AbyssalWellGame.test.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "test_count_from_claims": "161-line suite (start screen, click-to-playing, DOM HUD, fullscreen, difficulty selector) (historical)",
+      "backing_claims": [
+       "AW-HIST-072"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/sentence/abyssal-well/AbyssalWellScene.test.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "test_count_from_claims": "132-line GPU-free @react-three/test-renderer suite (historical)",
+      "backing_claims": [
+       "AW-HIST-073"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/sentence/abyssal-well/wellProjection.test.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "test_count_from_claims": "46-line suite (lane parity, rim/far-end, wall radius, wrapping) (historical)",
+      "backing_claims": [
+       "AW-HIST-074"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/tests/e2e/games/sentence/abyssal-well.spec.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "test_count_from_claims": "30-line Playwright E2E spec (historical); absent from the accepted historical-source-denominator (discrepancy AW-HIST-076 carried as recorded)",
+      "backing_claims": [
+       "AW-HIST-075",
+       "AW-HIST-076"
+      ]
+     }
+    ],
+    "e2e_support_modules": [
+     {
+      "file_path": "apps/advantage-games/tests/e2e/helpers/gameHelpers.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "E2E helper: mockAbyssalWellApis, expectAbyssalWellStartScreen, getAbyssalWellUrl (historical)",
+      "backing_claims": [
+       "AW-HIST-061"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/tests/e2e/fixtures/gameFixtures.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "E2E fixture: path '/en/student/games/sentence/abyssal-well', screenshot dir 'public/games/abyssal-well' (historical)",
+      "backing_claims": [
+       "AW-HIST-005"
+      ]
+     }
+    ],
+    "copy_sites_in_reading_primary_hosts": [
+     {
+      "host_root": "apps/reading-advantage",
+      "site": "none ever existed",
+      "copy_relation": "absence - git log --all -S 'abyssal' over the reading/primary/science trees found no copy (historical absence claim)",
+      "backing_claims": [
+       "AW-HIST-060"
+      ]
+     },
+     {
+      "host_root": "apps/primary-advantage",
+      "site": "none ever existed",
+      "copy_relation": "absence - same historical search",
+      "backing_claims": [
+       "AW-HIST-060"
+      ]
+     },
+     {
+      "host_root": "packages",
+      "site": "packages/domain/src/games/schema.ts",
+      "copy_relation": "persistence-vocabulary residue - gameTypeEnum still lists 'abyssal-well' at current HEAD (line 26) although the implementation is deleted",
+      "backing_claims": [
+       "AW-HIST-006"
+      ]
+     }
+    ]
+   },
+   "D_asset_usage_map": [
+    {
+     "scene_id": "sentence/abyssal-well/scene=AbyssalWellGame (historical)",
+     "asset_usage_count": 0,
+     "caller_count": 0,
+     "asset_refs": [],
+     "note": "No ledger claim ties an asset file reference to the UI shell scene. Explicit zero-usage marker (historical)."
+    },
+    {
+     "scene_id": "sentence/abyssal-well/scene=AbyssalWellScene (historical)",
+     "asset_usage_count": 0,
+     "caller_count": 0,
+     "asset_refs": [],
+     "note": "The R3F render layer is described by geometry claims (wireframe cylinder, floor circle, icosahedrons) per AW-HIST-012; no image/audio asset reference claims exist for this scene. Explicit zero-usage marker (historical)."
+    },
+    {
+     "scene_id": "sentence/abyssal-well/scene=StartScreen (historical)",
+     "asset_usage_count": 0,
+     "caller_count": 0,
+     "asset_refs": [],
+     "note": "No ledger claim ties an asset file reference to the start screen scene. Explicit zero-usage marker (historical)."
+    }
+   ],
+   "D_asset_usage_non_scene_surfaces": [
+    {
+     "surface": "catalog card (historical)",
+     "asset_ref": "apps/advantage-games/public/games/cover/cover-the-abyssal-well.png (existed at the deletion parent; 2,081,486-byte PNG)",
+     "backing_claims": [
+      "AW-HIST-001",
+      "AW-HIST-050"
+     ]
+    },
+    {
+     "surface": "orphan cover (current HEAD)",
+     "asset_ref": "apps/advantage-games/public/games/cover/abyssal-well-cover.png - still exists at HEAD, never deleted, never referenced",
+     "backing_claims": [
+      "AW-HIST-051"
+     ]
+    },
+    {
+     "surface": "audio and game-data files",
+     "asset_ref": "none at any reachable revision (git ls-tree -r <rev> | grep -i abyssal yields only cover PNGs and source/test/measure files)",
+     "backing_claims": [
+      "AW-HIST-052"
+     ]
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,27 @@
+{
+  "schema_version": "apk-mapper-final-report.v1",
+  "track_id": "apk_three_game_truth_pilot_20260712",
+  "phase": "Phase 2: Evidence-only mapping",
+  "role": "requirements-mapper",
+  "spawn_id": "requirements-mapper:t3:2026-07-20",
+  "pilot_blueprint": "measure/tracks/apk_three_game_truth_pilot_20260712/pilot-blueprint.json",
+  "pilot_blueprint_sha256": "358f9a0f32905a0d48cba1b976a43accae6ea51c43f648f35b4af8813d5e0cc9",
+  "per_game_counts": {
+    "dragon-flight": {"scenes": 2, "state_entries": 4, "transitions": 8, "mechanic_entries": 16, "test_modules": 7, "asset_usage_entries": 5},
+    "rpg-battle": {"scenes": 7, "state_entries": 15, "transitions": 20, "mechanic_entries": 20, "test_modules": 19, "asset_usage_entries": 14},
+    "abyssal-well": {"scenes": 3, "state_entries": 3, "transitions": 4, "mechanic_entries": 9, "test_modules": 6, "asset_usage_entries": 6}
+  },
+  "count_conventions": {
+    "state_entries": "dragon-flight/abyssal-well: named state entries; rpg-battle: union state families (members listed per family)",
+    "mechanic_entries": "mechanics + control surfaces (learning goals and terminal-result mechanic recorded separately in artifact B)",
+    "asset_usage_entries": "scene entries in D_asset_usage_map plus non-scene surface entries in D_asset_usage_non_scene_surfaces"
+  },
+  "non_authoritative_hypotheses_authored": 6,
+  "claim_reference_validation": {
+    "structured_claim_ids_referenced": 448,
+    "unresolved_references": 0,
+    "method": "mechanical walk of every claim_id/backing_claims field in pilot-blueprint.json against the three committed ledgers; blueprint-internal transition ids (DF-T-*/RPG-T-*/AW-T-*) are exempt stable record ids"
+  },
+  "mapper_boundary_violations": "none detected - zero asset_suitability, capability_conclusion, design_intent, gameplay_interpretation, standardization, bespoke, or cross-game similarity findings; novel factual claims added: 0",
+  "stop_loss_observations": "none triggered by mapping. Carried forward from collectors (not mapper findings): DF dragon-flight-controller.ts denominator-gap candidate (SLO-DF-1); DF unresolved audio/unreferenced-image usages (DF-ASSET-036/037); RPG unresolved flashTone write candidates (RPG-TR-020/021/022); AW E2E-spec denominator discrepancy (AW-HIST-076); AW intra-revision UI/logic inconsistency (AW-HIST-095/096)."
+}
