@@ -116,7 +116,7 @@ steps:
     entrypoint: "bash"
     args:
       - "-c"
-      - 'set -euo pipefail && domain=marketing.reading-advantage.com && route="$$(gcloud beta run domain-mappings describe --domain="$$domain" --region=asia-southeast1 --platform=managed --format="value(spec.routeName)")" && mapped_route="$$(gcloud beta run domain-mappings describe --domain="$$domain" --region=asia-southeast1 --platform=managed --format="value(status.mappedRouteName)")" && test "$$route" = marketing && test "$$mapped_route" = marketing && for condition in Ready CertificateProvisioned DomainRoutable; do status="$$(gcloud beta run domain-mappings describe --domain="$$domain" --region=asia-southeast1 --platform=managed --format="value(status.conditions[?type=''$$condition''].status)")"; test "$$status" = True; done'
+      - 'set -euo pipefail && domain=marketing.reading-advantage.com && route="$$(gcloud beta run domain-mappings describe --domain="$$domain" --region=asia-southeast1 --platform=managed --format="value(spec.routeName)")" && mapped_route="$$(gcloud beta run domain-mappings describe --domain="$$domain" --region=asia-southeast1 --platform=managed --format="value(status.mappedRouteName)")" && test "$$route" = marketing && test "$$mapped_route" = marketing && for condition in Ready CertificateProvisioned DomainRoutable; do status="$$(gcloud beta run domain-mappings describe --domain="$$domain" --region=asia-southeast1 --platform=managed --format="value(status.conditions.filter(''type=$$condition'').extract(status).flatten(show=values))")"; test "$$status" = True; done'
 
   - name: "node:22-slim"
     id: "verify-custom-domain"
