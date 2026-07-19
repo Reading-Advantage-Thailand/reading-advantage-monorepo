@@ -1,0 +1,88 @@
+{
+  "schema_version": "apk-pilot-independent-review.v1",
+  "track_id": "apk_three_game_truth_pilot_20260712",
+  "reviewer_role": "adversarial-reviewer",
+  "reviewer_attestation": {
+    "isolation": "fresh-context-only",
+    "inherited_narrative": false,
+    "fork_turns": "none"
+  },
+  "review_baseline": {
+    "track_head_sha": "75cf80cd84c8b9d66a646df16289515d7e0b8111",
+    "t2_accepted_denominator_sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+    "t2_accepted_partition_sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+    "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "phase4_truth_test_result": "41/41 PASS (independently reproduced by this reviewer: Ran 41 tests in 237.235s, OK, exit 0, on 2026-07-19T23:2xZ)"
+  },
+  "claim_rerun": {
+    "claims_checked_per_game": 5,
+    "total_claims_checked": 15,
+    "exact_range_sha_match": 15,
+    "exact_blob_sha_match": 15,
+    "mismatched_claim_ids": [],
+    "selection_method": "random.sample over each ledger's non-negative-fixture claims with a non-null file_path, seed 20260720 (recorded for reproducibility)",
+    "sampled_claim_ids": {
+      "dragon-flight": ["DF-TRANS-009", "DF-MECH-053", "DF-MECH-051", "DF-MECH-041", "DF-TEST-021"],
+      "rpg-battle": ["RPG-TR-006", "RPG-TEST-004", "RPG-MECH-010", "RPG-ASSET-024", "RPG-TR-012"],
+      "abyssal-well": ["AW-HIST-006", "AW-HIST-072", "AW-HIST-023", "AW-HIST-010", "AW-HIST-013"]
+    },
+    "method_note": "For each sampled claim the reviewer ran git show <revision>:<file_path>, hashed the whole blob, hashed the exact bytes of lines line_start..line_end inclusive with in-file newlines preserved, and compared both against the ledger values. Binary-whole-file citations compare whole-file hash to both fields. All 15 claims matched both hashes exactly."
+  },
+  "negative_fixtures_review": {
+    "total_fixtures": 8,
+    "citation_supported": 8,
+    "expected_disposition_supported": 8,
+    "fixtures_with_evidence": {"df": 3, "rpg": 3, "aw": 2},
+    "per_fixture_findings": [
+      "DF-NEG-001 (expected FAIL): cited range lines 121-150 of DragonFlightGame.tsx at 23bb5ad5 re-hashes exactly (range f3be10b9..., blob 907ca053...); the source shows ASSETS.boss loads boss-3x3-sheet-facing-up.png while projectile-boss.png is loaded as ASSETS.projectileBoss. No slug allowlist exists; the injected claim is contradicted by its own citation. FAIL disposition supported.",
+      "DF-NEG-002 (expected REJECT): null file_path/lines/hashes — an uncited injection. REJECT supported on citation form alone.",
+      "DF-NEG-003 (expected REJECT): directory-only citation with null line range and hashes. Directory citations are validation failures per the program claim-evidence contract. REJECT supported.",
+      "RPG-NEG-001 (expected REJECTED): uncited injection. Reviewer independently ran git grep -ni 'mana' 23bb5ad5 -- '*rpg-battle*': zero matches (exit 1). REJECTED supported.",
+      "RPG-NEG-002 (expected REJECTED): directory-only citation, no line range, no hash. REJECTED supported.",
+      "RPG-NEG-003 (expected FAILED): slug-allowlist probe. Reviewer independently ran git grep -ni 'battle-sprite' 23bb5ad5 across the whole tree: zero matches (exit 1). No allowlist exists; FAILED supported.",
+      "AW-HIST-NEG-001 (expected MUST_FAIL): cited range lines 130-155 of gameCards.ts at da51b4e0 re-hashes exactly (range 23bab507..., blob 2cc12f5e...) and contains no 'abyssal' substring; reviewer independently ran git ls-tree -r HEAD over the three abyssal-well route/component paths: zero paths. MUST_FAIL supported.",
+      "AW-HIST-NEG-002 (expected REJECTED): cited range lines 293-311 of abyssalWell.ts at c76f6af3 re-hashes exactly (range dc4d2ec5..., blob 06ad49e3...); the range is the complete calculateXP logic (accuracy/survival/speed bonuses only) with no streak or daily mechanic. REJECTED supported."
+    ]
+  },
+  "stop_loss_review": {
+    "unsupported_factual_claims": 0,
+    "denominator_mismatches": 0,
+    "failed_fix_review_cycles": 0,
+    "unresolved_blocking_findings": {"critical": 0, "high": 0, "medium": 0}
+  },
+  "cross_ledger_invariants": {
+    "claim_id_collisions_across_ledgers": 0,
+    "conflicting_blob_sha256_for_same_revision_and_path": 0,
+    "blueprint_ledger_claim_references_unresolved": 0,
+    "note": "Blueprint-internal transition IDs (DF-T-01.., RPG-T-01.., AW-T-01..) are blueprint record IDs, not ledger claim references; every ledger claim_id cited by pilot-blueprint.json resolves against the three ledgers. Hypothesis file references 25 ledger claim IDs; all 25 resolve."
+  },
+  "mapper_hypotheses_review": {
+    "H1_3x3_pose_sheets": "UNCONFIRMED as a cross-game fact. Underlying ledger claims (DF-ASSET-001..005, DF-ASSET-040/041, RPG-ASSET-039/040, RPG-MECH-008, AW-HIST-012) exist in the ledgers; the recurrence hypothesis itself remains a non-authoritative hypothesis, correctly labeled by the mapper. Not cited as fact anywhere in the blueprint.",
+    "H2_mock_route_factories": "UNCONFIRMED at corpus scale. Cited claims (DF-ID-010, DF-COPY-005, DF-COPY-019, RPG-ID-006, RPG-ID-007, AW-HIST-003, AW-HIST-004) exist; pattern remains hypothesis.",
+    "H3_completion_payload_overlap": "UNCONFIRMED; field-name drift explicitly unresolved. Cited claims (DF-MECH-053, RPG-MECH-022, AW-HIST-035) exist.",
+    "H4_ranking_surfaces": "UNCONFIRMED; shared ranking UI code not established by any claim. Cited claims exist.",
+    "H5_vocab_fixture_provenance": "UNCONFIRMED; no claim links the rpg-battle fixture to any other fixture. Cited claims (DF-HIST-002, RPG-ASSET-026) exist.",
+    "H6_difficulty_scaled_terminal_xp": "UNCONFIRMED; mechanisms differ and no claim connects them. Cited claims (DF-MECH-016..021, RPG-MECH-010, RPG-MECH-007) exist."
+  },
+  "audit_observations": {
+    "browser_audit_executed": false,
+    "asset_audit_executed": false,
+    "five_role_receipts_present": true,
+    "partition_coverage_T3_pilot": ["dragon-flight", "rpg-battle", "abyssal-well"],
+    "partition_order_note": "accepted-partition-manifest.json (sha256 6badf73b...) lists exactly 29 assignments; the Pilot cohort contains exactly Dragon Flight, RPG Battle, The Abyssal Well, in that order, matching the program spec lines 109-114 and plan.md.",
+    "non_blocking_observations": [
+      "Phase 3 browser auditor and Phase 4 asset auditor not yet executed; the spec acceptance criteria require real-input browser evidence for every route accepted as runnable and a candidate audit row count equal to the pilot asset denominator. These criteria cannot yet be evaluated; product-owner acceptance of the pilot must remain gated on Phase 3 + Phase 4 completion and review.",
+      "Receipt-format heterogeneity: role-receipts/evidence-collector-abyssal-well.json records a prose prompt_basis ('exact prompt bytes retained by orchestrator') instead of a literal prompt_sha256 field, and a commit_binding object instead of a commit_sha. The other four receipts carry literal hash fields. The disclosure is transparent and the collection artifacts themselves verified exactly in this review, so this is recorded as an observation for the orchestrator/product-owner rather than a blocking finding; recommend normalizing receipt schema before T4+.",
+      "Disclosed stop-loss observation carried from the truth-test author and independently confirmed by the passing T3DenominatorTruthContract tests: the four committed T2 phase test modules fail at HEAD purely from the A9 archival path relocation (measure/tracks/ -> measure/archive/); zero content/hash failures. Infrastructure repair belongs to the orchestrator."
+    ]
+  },
+  "blocking_findings": [],
+  "non_blocking_observations": [
+    "Phase 3 (responsive/browser truth) and Phase 4 (candidate-level asset truth) are unexecuted; spec acceptance criteria covering browser evidence and candidate audit rows are therefore unevaluated. Gate product-owner acceptance on their completion.",
+    "AW evidence-collector receipt lacks a literal prompt_sha256/commit_sha (prose basis recorded instead); recommend schema normalization before T4+.",
+    "T2 committed phase test modules fail at HEAD on A9 archival path relocation only (path-class, zero content failures); orchestrator infrastructure repair."
+  ],
+  "review_disposition": "conditional",
+  "review_disposition_reason": "Every stop-loss and fail-closed condition passes: 15/15 randomly sampled claims across the three ledgers re-derived with exact cited-range and blob SHA-256 matches against revision-pinned git blobs; all 8 negative fixtures re-verified with supported citations and expected dispositions (including independent grep/ls-tree corroboration of the uncited and history fixtures); the truth-test suite was independently reproduced at 41/41 PASS; the accepted partition manifest lists the three pilot games in the T3 pilot cohort in the required order; cross-ledger invariants hold with zero collisions, zero conflicting blob hashes, and zero unresolved blueprint claim references. The disposition is conditional rather than pass solely because the spec's own acceptance criteria require browser evidence for runnable routes and a candidate-level asset audit (Phase 3 and Phase 4), which have not been executed and therefore cannot be reviewed; product-owner acceptance must be gated on those phases.",
+  "next_role_guidance": "After this review, the orchestrator may publish candidate pilot manifest; product-owner acceptance and accepted pilot manifest remain a separate step and must stay gated on Phase 3 (responsive/browser truth) and Phase 4 (candidate-level asset truth) execution plus their own role receipts."
+}

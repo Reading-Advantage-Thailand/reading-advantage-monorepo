@@ -1,0 +1,45 @@
+{
+  "schema_version": "apk-role-receipt.v1",
+  "status": "complete-self-attested",
+  "track_id": "apk_three_game_truth_pilot_20260712",
+  "phase": "Phase 5: Independent pilot acceptance",
+  "role": "adversarial-reviewer",
+  "task_id": "adversarial-reviewer:t3:pilot",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "spawn_id": "adversarial-reviewer:t3:pilot:2026-07-20",
+  "parent_ancestry_ids": [],
+  "prompt_sha256": "31de7d43cdb6eb95230928b14dab7c0231f0ca0ab86bf4cf1485fd2d4a98d6f5",
+  "prompt_hash_note": "SHA-256 of the adversarial-reviewer prompt text as received in the user turn (verbatim reconstruction hashed; no system/harness wrapper included).",
+  "actual_context_manifest_sha256": "6fc487c177dc2183964ce74060ac654f062e6e2c142df4f73dfae795d8d63cb0",
+  "actual_context_manifest_note": "SHA-256 of the canonical JSON mapping of the 16 input files read to their SHA-256 values: program spec, track spec, track plan, T2 accepted denominator manifest, T2 accepted partition manifest, three claim ledgers, pilot-blueprint.json, mapper-hypotheses.md, truth_tests.py, and the five prior role receipts. In addition, revision-pinned git blobs were read via git show for the 15 sampled claim citations and 3 cited negative-fixture ranges; those reads are corroborated by the exact-hash re-derivations recorded in pilot-independent-review.json. No prior-role completion narrative was used as a derivation source.",
+  "start_event_id": "adversarial-reviewer:t3:pilot:start:2026-07-19T23:03:00Z",
+  "end_event_id": "adversarial-reviewer:t3:pilot:end:2026-07-19T23:25:00Z",
+  "final_response_sha256": "ddd4c4ab9e4ea9e9de824ef78c748729e0ce9b6dbbf17d698ae88f0baf89dcd8",
+  "final_response_note": "SHA-256 of pilot-independent-review.json, the role's final report payload (single deliverable; identical bytes to output_sha256).",
+  "output_paths": [
+    "measure/tracks/apk_three_game_truth_pilot_20260712/pilot-independent-review.json",
+    "measure/tracks/apk_three_game_truth_pilot_20260712/role-receipts/adversarial-reviewer.json"
+  ],
+  "output_sha256": "ddd4c4ab9e4ea9e9de824ef78c748729e0ce9b6dbbf17d698ae88f0baf89dcd8",
+  "output_hashes": {
+    "measure/tracks/apk_three_game_truth_pilot_20260712/pilot-independent-review.json": "ddd4c4ab9e4ea9e9de824ef78c748729e0ce9b6dbbf17d698ae88f0baf89dcd8"
+  },
+  "budget_declaration": {
+    "claims_rederived": 15,
+    "fixtures_reviewed": 8,
+    "stop_loss_observations": 0,
+    "files_read": 16
+  },
+  "budget_declaration_sha256": "f1f21d525b6282112af9e3c7391490deb919862e8f3075a2f0332de05dd2f8ea",
+  "findings": {
+    "review_disposition": "conditional",
+    "blocking_findings": [],
+    "claims_rerun": "15/15 exact cited-range and blob SHA-256 matches (seed 20260720, ids recorded in the review report)",
+    "negative_fixtures": "8/8 citation-supported and disposition-supported",
+    "truth_tests_reproduced": "41/41 PASS, exit 0 (Ran 41 tests in 237.235s, OK)",
+    "gating": "Product-owner acceptance gated on Phase 3 (browser truth) and Phase 4 (asset truth) execution."
+  },
+  "commit_sha": "bound-at-commit-time",
+  "commit_sha_note": "Single-commit binding per the task contract: pilot-independent-review.json and this receipt are committed together; the commit SHA is reported in the role's final MEASURE_AGENT_RESULT block to the orchestrator rather than fabricated here (follows the truth-test-author receipt precedent).",
+  "reviewer_isolation": "fresh-context-only, inherited_narrative=false, fork_turns=none"
+}
