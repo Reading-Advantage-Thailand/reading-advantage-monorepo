@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { afterEach, beforeEach, describe, it, expect, vi } from "vitest";
 
 const { requireRoleMock } = vi.hoisted(() => ({
   requireRoleMock: vi.fn(),
@@ -53,6 +53,14 @@ function createRequest(pathname: string, cookies?: Record<string, string>, heade
 }
 
 describe("proxy", () => {
+  beforeEach(() => {
+    vi.stubEnv("CODECAMP_AUTH_MODE", "legacy");
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
   it("redirects unauthenticated users from /admin to home", async () => {
     const req = createRequest("/admin");
     const res = await proxy(req);
@@ -177,5 +185,6 @@ describe("proxy", () => {
     expect(config.matcher).toBeDefined();
     expect(Array.isArray(config.matcher)).toBe(true);
     expect(config.matcher[0]).toContain("webhooks");
+    expect(config.matcher[0]).toContain("\\.");
   });
 });

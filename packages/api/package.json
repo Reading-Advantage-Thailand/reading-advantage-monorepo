@@ -24,6 +24,10 @@
       "types": "./dist/context.d.ts",
       "import": "./dist/context.js"
     },
+    "./codecamp": {
+      "types": "./dist/codecamp-root.d.ts",
+      "import": "./dist/codecamp-root.js"
+    },
     "./sales": {
       "types": "./dist/sales-root.d.ts",
       "import": "./dist/sales-root.js"

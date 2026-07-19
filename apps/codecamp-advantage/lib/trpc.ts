@@ -1,4 +1,6 @@
-import { createTRPCReact } from "@trpc/react-query";
-import type { AppRouter } from "@reading-advantage/api";
+import { createTRPCReact, type CreateTRPCReact } from "@trpc/react-query";
+import type { CodecampAppRouter } from "@reading-advantage/api/codecamp";
 
-export const trpc = createTRPCReact<AppRouter>();
+/** Provides the typed tRPC React client for Codecamp-only capabilities. */
+export const trpc: CreateTRPCReact<CodecampAppRouter, unknown> =
+  createTRPCReact<CodecampAppRouter>();

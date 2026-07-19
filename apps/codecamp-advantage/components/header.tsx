@@ -5,6 +5,7 @@ import { useAuth } from "@reading-advantage/auth-client";
 import { Button } from "@reading-advantage/ui";
 import { BookOpen, MessageCircle, LogOut, User, Shield, Languages } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { AuthEntry } from "./auth-entry";
 import { LanguageSwitcher } from "./language-switcher";
 
 /**
@@ -77,9 +78,7 @@ export function Header() {
               </Button>
             </div>
           ) : (
-            <Button variant="outline" size="sm" asChild>
-              <a href="/api/auth/company/start">{tl("login")}</a>
-            </Button>
+            <AuthEntry variant="header" />
           )}
         </div>
       </div>

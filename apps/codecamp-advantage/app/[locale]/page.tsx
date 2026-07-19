@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
-import { Button } from "@reading-advantage/ui";
+import { AuthEntry } from "@/components/auth-entry";
 import { useAuth } from "@reading-advantage/auth-client";
 import { Lock } from "lucide-react";
 import dynamic from "next/dynamic";
@@ -64,9 +64,7 @@ export default function HomePage() {
           <div className="rounded-lg border bg-card p-8 text-card-foreground">
             <Lock className="mx-auto mb-4 h-10 w-10 text-muted-foreground" />
             <h2 className="mb-2 text-xl font-semibold">{tl("loginTitle")}</h2>
-            <Button className="mt-6" asChild>
-              <a href="/api/auth/company/start">{tl("login")}</a>
-            </Button>
+            <AuthEntry variant="panel" />
           </div>
         </div>
       </div>

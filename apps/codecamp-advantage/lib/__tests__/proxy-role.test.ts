@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { afterEach, describe, it, expect, vi, beforeEach } from "vitest";
 
 const { requireRoleMock } = vi.hoisted(() => ({
   requireRoleMock: vi.fn(),
@@ -41,7 +41,12 @@ function createRequest(pathname: string, cookies?: Record<string, string>, heade
 }
 
 beforeEach(() => {
+  vi.stubEnv("CODECAMP_AUTH_MODE", "legacy");
   requireRoleMock.mockReset();
+});
+
+afterEach(() => {
+  vi.unstubAllEnvs();
 });
 
 describe("proxy admin role enforcement", () => {

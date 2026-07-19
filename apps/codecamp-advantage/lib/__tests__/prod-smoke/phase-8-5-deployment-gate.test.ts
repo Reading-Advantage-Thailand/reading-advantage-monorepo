@@ -100,9 +100,17 @@ const REQUIRED_SECRETS = [
   "OPENROUTER_API_KEY",
   "GITHUB_WEBHOOK_SECRET",
   "GITHUB_PRIVATE_KEY",
+  "OPENAI_API_KEY",
+  "GOOGLE_AI_API_KEY",
+  "TUTORIAL_REPORT_SECRET",
+  "TUTORIAL_REPOSITORY_WORKER_TOKEN",
+  "COMPANY_AUTH_OIDC_CLIENT_SECRET",
 ] as const;
 
-const REQUIRED_ENV_VARS = ["NODE_ENV=production"] as const;
+const REQUIRED_ENV_VARS = [
+  "NODE_ENV=production",
+  "CODECAMP_AUTH_MODE=company",
+] as const;
 
 // ─── Custom 404 body markers ────────────────────────────────────
 //
@@ -456,7 +464,7 @@ describe("Phase 8.5 — Cloud Build deploy artifact", () => {
     ).toEqual([]);
   });
 
-  it("sets NODE_ENV=production in --set-env-vars=", () => {
+  it("sets production and company auth mode in --set-env-vars=", () => {
     const text = readFileSync(CLOUDBUILD_YAML, "utf8");
     const env = parseCloudBuildSetEnvVars(text);
     const missing = REQUIRED_ENV_VARS.filter((e) => !env.includes(e));
@@ -845,10 +853,18 @@ describe("Phase 8.5 — helper unit tests", () => {
         "OPENROUTER_API_KEY",
         "GITHUB_WEBHOOK_SECRET",
         "GITHUB_PRIVATE_KEY",
+        "OPENAI_API_KEY",
+        "GOOGLE_AI_API_KEY",
+        "TUTORIAL_REPORT_SECRET",
+        "TUTORIAL_REPOSITORY_WORKER_TOKEN",
+        "COMPANY_AUTH_OIDC_CLIENT_SECRET",
       ]);
     });
-    it("REQUIRED_ENV_VARS includes NODE_ENV=production", () => {
-      expect(REQUIRED_ENV_VARS).toContain("NODE_ENV=production");
+    it("REQUIRED_ENV_VARS pins production company auth", () => {
+      expect(REQUIRED_ENV_VARS).toEqual([
+        "NODE_ENV=production",
+        "CODECAMP_AUTH_MODE=company",
+      ]);
     });
   });
 

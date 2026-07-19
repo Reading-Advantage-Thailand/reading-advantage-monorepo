@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { isLegacyCodecampAuthEnabled } from "@/lib/auth-mode";
 import {
   CODECAMP_SESSION_COOKIE,
   CODECAMP_TRANSACTION_COOKIE,
@@ -10,6 +11,13 @@ import {
 /** Exchanges one exact Accounts callback for a Codecamp-local opaque session. */
 export async function GET(request: Request): Promise<NextResponse> {
   const url = new URL(request.url);
+  if (isLegacyCodecampAuthEnabled()) {
+    const response = NextResponse.redirect(
+      new URL("/?error=legacy_auth_active", url.origin),
+    );
+    response.cookies.delete(CODECAMP_TRANSACTION_COOKIE);
+    return response;
+  }
   const transaction = readCodecampCookie(request, CODECAMP_TRANSACTION_COOKIE);
   const code = url.searchParams.get("code");
   const state = url.searchParams.get("state");
