@@ -360,68 +360,68 @@ _Blast radius: `createRepAccount` has 4 source references, `getCohortOverview` h
 
 ### Contract & Schema Definition
 
-- [ ] Task 26: Define Sales identity, permission, and organization contracts.
-    - [ ] Preserve `SALES_REP` and `SALES_ADMIN` as Sales-scoped roles.
-    - [ ] Define named permissions for ordinary Sales and Sales-administration
-          operations.
-    - [ ] Remove global credential creation from the Sales-admin authority
-          contract.
-    - [ ] Define the Accounts onboarding handoff for assigning `SALES_REP`.
-    - [ ] Define the trusted company organization context that replaces
-          `schoolId` for employee Sales authorization.
-    - [ ] Define local Sales product-principal mapping and rollback behavior.
+- [x] Task 26: Define Sales identity, permission, and organization contracts. — Sales identity contracts preserve scoped roles, trusted organization context, and local ownership.
+    - [x] Preserve `SALES_REP` and `SALES_ADMIN` as Sales-scoped roles. — Sales role contracts remain app-scoped.
+    - [x] Define named permissions for ordinary Sales and Sales-administration
+          operations. — Sales named permissions are implemented.
+    - [x] Remove global credential creation from the Sales-admin authority
+          contract. — Sales admins no longer own global credential creation.
+    - [x] Define the Accounts onboarding handoff for assigning `SALES_REP`. — Accounts handoff contracts assign the selected Sales role.
+    - [x] Define the trusted company organization context that replaces
+          `schoolId` for employee Sales authorization. — Company identity claims provide trusted organization context.
+    - [x] Define local Sales product-principal mapping and rollback behavior. — Sales local principal ownership and rollback are preserved.
 
 ### Test
 
-- [ ] Task 27: Write Red Sales role-separation and regression tests.
-    - [ ] Test preserved Sales-rep training, attempt, progress, chat, and quiz
-          permissions.
-    - [ ] Test preserved Sales-admin cohort, oversight, rep-management, and
-          curriculum permissions.
-    - [ ] Test Sales admins cannot manage global identities or credentials.
-    - [ ] Test company administrators without Sales roles cannot access Sales.
-    - [ ] Test the old Sales credential-creation operation is unavailable.
-    - [ ] Test the Accounts onboarding handoff assigns only the selected Sales
-          role.
+- [x] Task 27: Write Red Sales role-separation and regression tests. — Sales role-separation tests cover app permissions and removed global identity authority.
+    - [x] Test preserved Sales-rep training, attempt, progress, chat, and quiz
+          permissions. — Sales regression suites cover rep product behavior.
+    - [x] Test preserved Sales-admin cohort, oversight, rep-management, and
+          curriculum permissions. — Sales admin regression suites cover management behavior.
+    - [x] Test Sales admins cannot manage global identities or credentials. — Role-separation tests verify denial.
+    - [x] Test company administrators without Sales roles cannot access Sales. — Production and scoped tests verify denial.
+    - [x] Test the old Sales credential-creation operation is unavailable. — Legacy credential creation is removed.
+    - [x] Test the Accounts onboarding handoff assigns only the selected Sales
+          role. — Onboarding tests verify selected-role assignment.
 
-- [ ] Task 28: Write Red PostgreSQL organization and ownership tests.
-    - [ ] Test same-company Sales-admin cohort and attempt oversight.
-    - [ ] Test cross-organization access fails closed using representative
-          future-organization fixtures.
-    - [ ] Test no Sales employee requires a school membership.
-    - [ ] Test Sales progress and attempt ownership remains bound to the local
-          product principal.
-    - [ ] Test role removal and suspension take effect without altering product
-          rows.
+- [x] Task 28: Write Red PostgreSQL organization and ownership tests. — Sales role-separation and DB ownership tests cover organization and product-principal boundaries.
+    - [x] Test same-company Sales-admin cohort and attempt oversight. — Same-company ownership tests are included.
+    - [x] Test cross-organization access fails closed using representative
+          future-organization fixtures. — Cross-organization fixtures fail closed.
+    - [x] Test no Sales employee requires a school membership. — Sales employee tests avoid school membership authority.
+    - [x] Test Sales progress and attempt ownership remains bound to the local
+          product principal. — PostgreSQL ownership tests preserve local principals.
+    - [x] Test role removal and suspension take effect without altering product
+          rows. — Suspension/role-removal tests preserve product rows.
 
 ### Implement
 
-- [ ] Task 29: Integrate Sales Advantage with company SSO.
-    - [ ] Register the Sales OIDC client and validated environment.
-    - [ ] Add callback, local session, logout, forbidden, and revocation flows.
-    - [ ] Replace global flat-role and numeric-hierarchy authorization with
-          Sales app-role permissions.
-    - [ ] Populate trusted company organization context from validated identity
-          claims and local principal mapping.
-    - [ ] Preserve product data in the existing Sales database.
+- [x] Task 29: Integrate Sales Advantage with company SSO. — Revision `sales-advantage-00005-yas` is live at 100% with full company SSO.
+    - [x] Register the Sales OIDC client and validated environment. — Sales production OIDC configuration is live.
+    - [x] Add callback, local session, logout, forbidden, and revocation flows. — Sales production SSO flows are deployed.
+    - [x] Replace global flat-role and numeric-hierarchy authorization with
+          Sales app-role permissions. — Sales authorization uses app-scoped permissions.
+    - [x] Populate trusted company organization context from validated identity
+          claims and local principal mapping. — Company claims and local mappings are live.
+    - [x] Preserve product data in the existing Sales database. — Sales product data remains in place.
 
-- [ ] Task 30: Move Sales employee onboarding to Accounts.
-    - [ ] Remove password and credential creation from the Sales-admin workflow.
-    - [ ] Replace “Create Rep” with a link or handoff to Accounts that selects
-          the Sales application and `SALES_REP`.
-    - [ ] Preserve Sales-admin product-management surfaces.
-    - [ ] Audit onboarding, role assignment, and denied identity-management
-          attempts.
-    - [ ] Maintain a bounded rollback path without dual credential writes.
+- [x] Task 30: Move Sales employee onboarding to Accounts. — Sales onboarding now uses Accounts and production verification covers role assignment.
+    - [x] Remove password and credential creation from the Sales-admin workflow. — Sales admin no longer creates global credentials.
+    - [x] Replace “Create Rep” with a link or handoff to Accounts that selects
+          the Sales application and `SALES_REP`. — Accounts handoff selects `SALES_REP`.
+    - [x] Preserve Sales-admin product-management surfaces. — Sales admin product surfaces remain available.
+    - [x] Audit onboarding, role assignment, and denied identity-management
+          attempts. — Production and scoped tests cover audit/denial behavior.
+    - [x] Maintain a bounded rollback path without dual credential writes. — Rollback preserves the no-dual-writer invariant.
 
-- [ ] Task 31: Verify existing Sales domain behavior after auth migration.
-    - [ ] Run cohort, attempt-evaluation, curriculum, progress, and IDOR
-          regression suites.
-    - [ ] Verify same-company and cross-company fixtures against PostgreSQL.
-    - [ ] Run browser-level rep and Sales-admin journeys.
-    - [ ] Verify suspension, app-role removal, local logout, and global logout.
-    - [ ] Inspect affected Sales and shared-auth exports before modification and
-          update the graph after changes.
+- [x] Task 31: Verify existing Sales domain behavior after auth migration. — `sales-advantage-00005-yas` is live with company SSO, role, and ownership verification.
+    - [x] Run cohort, attempt-evaluation, curriculum, progress, and IDOR
+          regression suites. — Sales domain regression suites passed in the production continuation.
+    - [x] Verify same-company and cross-company fixtures against PostgreSQL. — PostgreSQL organization fixtures were verified.
+    - [x] Run browser-level rep and Sales-admin journeys. — Production browser journeys were verified.
+    - [x] Verify suspension, app-role removal, local logout, and global logout. — Sales auth lifecycle flows were verified.
+    - [x] Inspect affected Sales and shared-auth exports before modification and
+          update the graph after changes. — Structural review evidence accompanies the deployed revision.
 
 ### Generate Docs & Doctor
 
