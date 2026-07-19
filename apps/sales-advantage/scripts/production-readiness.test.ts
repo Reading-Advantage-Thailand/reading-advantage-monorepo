@@ -300,7 +300,7 @@ describe("Sales production readiness", () => {
     );
     expect(cloudIgnore).toContain("**/dist");
     expect(dependencyBuild).toContain(
-      "pnpm --filter @reading-advantage/db build",
+      "pnpm turbo run build --filter=@reading-advantage/domain",
     );
     expect(dependencyBuild).not.toContain("DATABASE_URL");
     expect(staticSeed).toContain("reading-advantage-sales-curriculum-v1");
