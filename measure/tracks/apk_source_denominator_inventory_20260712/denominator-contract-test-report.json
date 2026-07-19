@@ -5,6 +5,8 @@
   "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
   "role": "truth-test-author",
   "admission_revision": "996450f0084b76b78650f7c060eb83f728be1504",
+  "red_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase1",
+  "green_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase1",
   "phase0_3_admission_command": "/usr/bin/env -i PATH=/opt/codex-desktop/resources/node-runtime/bin:/usr/bin:/bin LANG=C PYTHONDONTWRITEBYTECODE=1 /usr/bin/python3 -I -S -c 'exec(compile(__import__(\"subprocess\").check_output((\"/usr/bin/git\",\"show\",__import__(\"sys\").argv[1]+\":measure/tracks/apk_source_denominator_inventory_20260712/run_phase0_3_admission.py\")),\"measure/tracks/apk_source_denominator_inventory_20260712/run_phase0_3_admission.py\",\"exec\"),dict(__file__=\"measure/tracks/apk_source_denominator_inventory_20260712/run_phase0_3_admission.py\",__name__=\"__main__\"))' 996450f0084b76b78650f7c060eb83f728be1504 measure.tests.test_apk_source_denominator_inventory_phase0 measure.tests.test_apk_source_denominator_inventory_phase1 measure.tests.test_apk_source_denominator_inventory_phase2 measure.tests.test_apk_source_denominator_inventory_phase3",
   "phase0_3_admission_result": {"total_tests": 86, "passed": 86, "failed": 0, "exit_code": 0, "status": "passed"},
   "test_inventory": [
