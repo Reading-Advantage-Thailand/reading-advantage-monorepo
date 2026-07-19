@@ -91,6 +91,12 @@ describe("PostgreSQL Codecamp migration gates", () => {
     expect(source.indexOf("return await source.begin")).toBeLessThan(
       source.indexOf("source.end({ timeout: 5 })"),
     );
+    expect(source).toContain(
+      "Promise.resolve().then(() => source.end({ timeout: 5 }))",
+    );
+    expect(source).toContain(
+      "Promise.resolve().then(() => target.end({ timeout: 5 }))",
+    );
   });
 
   it("pins apply readiness to the exact checked-in migration 0043", () => {

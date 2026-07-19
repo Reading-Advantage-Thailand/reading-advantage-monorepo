@@ -769,8 +769,8 @@ export async function runPostgresCodecampIdentityMigration(
     );
   } finally {
     await Promise.allSettled([
-      source.end({ timeout: 5 }),
-      target.end({ timeout: 5 }),
+      Promise.resolve().then(() => source.end({ timeout: 5 })),
+      Promise.resolve().then(() => target.end({ timeout: 5 })),
     ]);
   }
 }
