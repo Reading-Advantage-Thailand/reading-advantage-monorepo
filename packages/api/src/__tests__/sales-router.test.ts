@@ -178,7 +178,9 @@ describe("salesRouter", () => {
       productScope: companyScope,
     });
     const result = await caller.sales.modules();
-    expect(getModules).toHaveBeenCalled();
+    expect(getModules).toHaveBeenCalledWith(
+      expect.objectContaining({ tenant: globalTenant, scope: companyScope }),
+    );
     expect(result).toHaveLength(1);
   });
 
@@ -321,6 +323,13 @@ describe("salesRouter", () => {
       productScope: legacyScope,
     });
     await expect(allowed.sales.admin.cohortOverview()).resolves.toEqual([]);
+    expect(getCohortOverview).toHaveBeenNthCalledWith(
+      1,
+      expect.objectContaining({
+        tenant: { schoolId: legacySchoolId },
+        scope: legacyScope,
+      }),
+    );
 
     const mismatched = createCaller({
       user: legacyAdmin,

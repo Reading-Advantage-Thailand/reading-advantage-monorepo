@@ -140,7 +140,7 @@ const salesRepOrAdmin = middleware(async ({ ctx, next }) => {
   return next({
     ctx: {
       ...ctx,
-      auth: { ...ctx.auth, productScope: parsedScope.data },
+      auth: { ...ctx.auth, productScope: parsedScope },
     },
   });
 });
@@ -163,7 +163,7 @@ const salesAdminOnly = middleware(async ({ ctx, next }) => {
   return next({
     ctx: {
       ...ctx,
-      auth: { ...ctx.auth, productScope: parsedScope.data },
+      auth: { ...ctx.auth, productScope: parsedScope },
     },
   });
 });
