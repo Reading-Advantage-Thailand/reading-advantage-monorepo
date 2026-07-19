@@ -10,22 +10,56 @@ capture_current() {
     exit 2
   fi
   local output_prefix="$1"
+  local service_status_json
   local traffic_row
   local serving_revision
   local serving_percent
   local revision_image
 
-  traffic_row="$(
+  service_status_json="$(
     gcloud run services describe "$service" \
       --region="$region" \
       --platform=managed \
-      --format="csv[no-heading](status.traffic.revisionName,status.traffic.percent)"
+      --format=json
   )"
-  if [[ ! "$traffic_row" =~ ^[^,[:space:]]+,[0-9]+$ ]]; then
-    echo "Marketing traffic must contain exactly one revision and percent row" >&2
+  traffic_row="$(
+    python3 -c '
+import json
+import sys
+
+payload = json.load(sys.stdin)
+status = payload.get("status")
+if not isinstance(status, dict):
+    raise SystemExit("Marketing service status is missing")
+traffic = status.get("traffic")
+if not isinstance(traffic, list):
+    raise SystemExit("Marketing service traffic is not an array")
+serving = []
+for row in traffic:
+    if not isinstance(row, dict):
+        raise SystemExit("Marketing service traffic contains a malformed row")
+    percent = row.get("percent", 0)
+    if isinstance(percent, bool) or not isinstance(percent, int) or not 0 <= percent <= 100:
+        raise SystemExit("Marketing service traffic contains an invalid percent")
+    if percent == 100:
+        serving.append(row)
+    elif percent != 0:
+        raise SystemExit("Marketing service has split positive traffic")
+if len(serving) != 1:
+    raise SystemExit(f"Marketing service has {len(serving)} 100-percent traffic rows")
+revision = serving[0].get("revisionName")
+if not isinstance(revision, str) or not revision.strip():
+    raise SystemExit("Serving Marketing traffic row has no revision")
+if "\t" in revision or "\n" in revision:
+    raise SystemExit("Serving Marketing revision contains an invalid field separator")
+sys.stdout.write(f"{revision}\t100")
+' <<< "$service_status_json"
+  )"
+  if [[ ! "$traffic_row" =~ ^[^[:space:]]+$'\t'100$ ]]; then
+    echo "Marketing traffic must identify exactly one revision serving 100 percent" >&2
     exit 1
   fi
-  IFS="," read -r serving_revision serving_percent <<< "$traffic_row"
+  IFS=$'\t' read -r serving_revision serving_percent <<< "$traffic_row"
   if [[ -z "$serving_revision" || "$serving_revision" == *";"* || ! "$serving_percent" =~ ^[0-9]+$ || "$serving_percent" != "100" ]]; then
     echo "Marketing must have exactly one revision serving 100 percent of traffic" >&2
     exit 1
