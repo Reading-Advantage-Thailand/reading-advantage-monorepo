@@ -1,0 +1,49 @@
+{
+ "schema_version": "apk-role-receipt.v1",
+ "status": "complete-self-attested",
+ "track_id": "apk_three_game_truth_pilot_20260712",
+ "phase": "Phase 1: Exact evidence collection",
+ "role": "evidence-collector",
+ "task_id": "evidence-collector:dragon-flight",
+ "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+ "spawn_id": "evidence-collector-dragon-flight:t3:2026-07-20",
+ "parent_ancestry_ids": [],
+ "prompt_sha256": "fbce7021acfd4348caead6245b0894515a9f991a8e74f5cb772e72bd25ece6fd",
+ "actual_context_manifest_sha256": "0357ef63c57e9e3908662f064129101f7cb4715c1aad134deae8ae9702c1a87e",
+ "start_event_id": "t3-df-evidence-start:2026-07-19T21:29:28Z",
+ "end_event_id": "t3-df-evidence-end:2026-07-19T21:30:25Z",
+ "timing_note": "Harness did not capture a distinct session-start timestamp; start and end event timestamps both reflect receipt finalization time. Session activity is bounded by the outputs commit and this receipt commit.",
+ "final_response_sha256": "d93e23e20a4bcd00287b4b97f5bcfa13b947afd270f0a68790d1afbd8edfa9ba",
+ "output_paths": [
+  "measure/tracks/apk_three_game_truth_pilot_20260712/dragon-flight-claim-ledger.json",
+  "measure/tracks/apk_three_game_truth_pilot_20260712/dragon-flight-evidence-method.md",
+  "measure/tracks/apk_three_game_truth_pilot_20260712/dragon-flight-evidence-final-report.json",
+  "measure/tracks/apk_three_game_truth_pilot_20260712/role-receipts/evidence-collector-dragon-flight.json"
+ ],
+ "output_hashes": {
+  "measure/tracks/apk_three_game_truth_pilot_20260712/dragon-flight-claim-ledger.json": "84bd9335c44424142c2d9cb407a2f48d28dd400997741f1904f65cdb6ce6083e",
+  "measure/tracks/apk_three_game_truth_pilot_20260712/dragon-flight-evidence-method.md": "c326f85a3a0b5144b1ee19dfbb46959af4a466505b996ff82cc9bb580efabebf",
+  "measure/tracks/apk_three_game_truth_pilot_20260712/dragon-flight-evidence-final-report.json": "d93e23e20a4bcd00287b4b97f5bcfa13b947afd270f0a68790d1afbd8edfa9ba"
+ },
+ "output_sha256": "84bd9335c44424142c2d9cb407a2f48d28dd400997741f1904f65cdb6ce6083e",
+ "budget_declaration": {
+  "claims_authored": 225,
+  "files_read": 42,
+  "stop_loss_observations": 1
+ },
+ "budget_declaration_sha256": "9ea446871039e56a9084f4d5cd8acfa16ba5811fa9dfb6c532065012cc8bc9b8",
+ "commit_sha": "36c593709f7000e26f71d9d7d4332b3552c0082e",
+ "reviewer_isolation": "fresh-context-only, inherited_narrative=false, fork_turns=none",
+ "findings": {
+  "claims_authored": 225,
+  "negative_fixtures": 3,
+  "stop_loss_observations": [
+   {
+    "id": "SLO-DF-1",
+    "kind": "denominator-gap-candidate",
+    "detail": "apps/reading-advantage/server/controllers/dragon-flight-controller.ts exists at baseline and is imported by three in-denominator route files but has no accepted denominator record."
+   }
+  ],
+  "commit_title_deviation": "Requested commit title used sentence case ('T3 evidence collector for Dragon Flight'); repo commitlint subject-case hook rejects that casing, so the committed subject is lower-case: 'chore(measure): t3 evidence collector for dragon flight (track_id: apk_three_game_pilot_20260712)'."
+ }
+}
