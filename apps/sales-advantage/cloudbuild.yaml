@@ -38,7 +38,7 @@ steps:
     entrypoint: "bash"
     args:
       - "-c"
-      - "set -euo pipefail && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && pnpm turbo run build --filter=@reading-advantage/domain"
+      - "set -euo pipefail && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && pnpm turbo run build --filter=@reading-advantage/domain --concurrency=2"
 
   - name: "node:22-slim"
     id: "seed-production-curriculum"
@@ -187,5 +187,7 @@ availableSecrets:
       env: "SALES_LEGACY_SOURCE_ROLE_REPAIR_MANIFEST"
 
 options:
+  env:
+    - "pnpm_config_verify_deps_before_run=warn"
   logging: CLOUD_LOGGING_ONLY
   machineType: E2_HIGHCPU_8

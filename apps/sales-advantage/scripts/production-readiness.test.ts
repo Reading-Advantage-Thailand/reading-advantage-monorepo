@@ -302,6 +302,10 @@ describe("Sales production readiness", () => {
     expect(dependencyBuild).toContain(
       "pnpm turbo run build --filter=@reading-advantage/domain",
     );
+    expect(cloudbuild).toContain(
+      "pnpm_config_verify_deps_before_run=warn",
+    );
+    expect(dependencyBuild).toContain("--concurrency=2");
     expect(dependencyBuild).not.toContain("DATABASE_URL");
     expect(staticSeed).toContain("reading-advantage-sales-curriculum-v1");
     expect(staticSeed).toContain("database.transaction");
