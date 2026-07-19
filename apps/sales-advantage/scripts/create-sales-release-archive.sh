@@ -23,7 +23,7 @@ mkdir -p "$output_root"
   exit 2
 }
 
-git archive --format=tar "$release_commit_sha" -- .gcloudignore .pnpmfile.cjs package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json apps/sales-advantage packages |
+git archive --format=tar "$release_commit_sha" -- .gcloudignore .pnpmfile.cjs package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json apps/sales-advantage packages measure/tracks/sales_advantage_golive_20260701/curriculum-approval.json |
   tar -xf - -C "$output_root"
 
 node "$output_root/apps/sales-advantage/scripts/release-source-manifest.mjs" create "$release_commit_sha" "$output_root" "$output_root/apps/sales-advantage/release-source.json"
