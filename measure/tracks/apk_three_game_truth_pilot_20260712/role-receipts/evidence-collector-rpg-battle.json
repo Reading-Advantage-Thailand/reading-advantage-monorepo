@@ -1,0 +1,157 @@
+{
+  "schema_version": "apk-role-receipt.v1",
+  "status": "complete",
+  "track_id": "apk_three_game_truth_pilot_20260712",
+  "game": "rpg-battle",
+  "canonical_identity": "vocabulary/rpg-battle",
+  "phase": "Phase 1: Exact evidence collection",
+  "role": "evidence-collector",
+  "task_id": "evidence-collector:rpg-battle",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "collection_head_revision": "da51b4e006cdce175171077e97c86089a38dbd5b",
+  "role_isolation": {
+    "roles_held": [
+      "evidence-collector"
+    ],
+    "roles_not_held": [
+      "discovery-auditor",
+      "requirements-mapper",
+      "truth-test-author",
+      "adversarial-reviewer"
+    ],
+    "note": "Fresh isolated collection for RPG Battle only. Sibling receipts (evidence-collector-abyssal-well.json) were not read as inputs to any claim; the quarantined apk_cross_game_asset_ontology_20260712 blueprint was treated as negative evidence only."
+  },
+  "spawn_identity": {
+    "spawn_id": "evidence-collector-rpg-battle:t3:2026-07-20",
+    "parent_ancestry_ids": [],
+    "fork_turns": "none",
+    "prompt_sha256": "a825cb11f77d574ce80af7d951f8116bf86c629035fed0080db9b52d583db4c1",
+    "prompt_sha256_basis": "SHA-256 of the orchestrator prompt text as received by this role (verbatim bytes, UTF-8, trailing newline)."
+  },
+  "reviewer_isolation": "fresh-context-only, inherited_narrative=false, fork_turns=none",
+  "start_event_id": "rpg-collect-start:2026-07-20T00:00:00Z",
+  "end_event_id": "rpg-collect-end:2026-07-20T00:00:00Z",
+  "provider_attestation_note": "This runtime does not emit provider session/message event IDs or raw exports; event IDs above are role-scoped logical markers. Attestation is limited to file hashes, git revision evidence, and the recorded command outputs. actual_context_manifest_sha256 and final_response_sha256 are therefore null rather than fabricated.",
+  "actual_context_manifest_sha256": null,
+  "final_response_sha256": null,
+  "allowed_inputs": [
+    "measure/apk-evidence-reconstruction-program.md:d2aa36e0ce63ba70b9eb36d4ef22e99d2cb612e32ff05001402465677cbac83d",
+    "measure/tracks/apk_three_game_truth_pilot_20260712/spec.md:b7fb649154841c8dceb89203d8e7e2ed77283057dfb89bae513f5426ed42377c",
+    "measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json:d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+    "measure/archive/apk_source_denominator_inventory_20260712/accepted-partition-manifest.json:6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+    "measure/archive/apk_source_denominator_inventory_20260712/phase3-reconciliation.json:b2eb6d8fd0a51ecd3ed05b277a708e07251d6bf114f727a78a84da73167541a3",
+    "measure/archive/apk_source_denominator_inventory_20260712/source-denominator.json:0dbf97dac93ba2056228e79433fb91e6f2ef1898b6f09eff62fe0755082ba21d",
+    "measure/archive/apk_source_denominator_inventory_20260712/scene-state-denominator.json:6308836ca24f1cac5bf4ded5f7e72c5ba06c08f4a5c6648620818b720190bf8b",
+    "measure/archive/apk_source_denominator_inventory_20260712/asset-file-denominator.json:41c9ede1a8e5ddab21b74a99959fbddc35b5f5a6902740a740a48f174bf7f438",
+    "measure/archive/apk_source_denominator_inventory_20260712/historical-source-denominator.json:6e313be829b414e7c85f4f20d4cb7e33283f15d743740b8784b589d0de2c7e6f",
+    "measure/archive/apk_source_denominator_inventory_20260712/game-identity-ledger.json:a31c99650bf1abd6623e64b2e9a23c4c481ce970036b52cfbe08c74b1c09c407"
+  ],
+  "read_only_inputs_note": "No file under measure/archive/apk_source_denominator_inventory_20260712/ was modified. Git object store was read via git show/diff/log/rev-parse only.",
+  "budget_declaration": {
+    "schema_version": "apk-role-budget-declaration.v1",
+    "role": "evidence-collector",
+    "frozen_resource_ceiling": "not-supplied-by-orchestrator-prompt (flagged as visible unknown; no numeric ceilings were declared before source work)",
+    "actual_usage": {
+      "bytes_read": 26000000,
+      "command_invocations": 38,
+      "source_files": 55
+    },
+    "measurement_basis": {
+      "bytes_read": "phase3-reconciliation.json (8.4MB) + source-denominator.json (2.3MB) + scene-state/asset/historical denominators + ~45 implementation/test files read end-to-end",
+      "command_invocations": "git show/log/diff/rev-parse, sha256sum, grep, sed/ls, python3 generator+verifier, 3 jest executions",
+      "source_files": "10 frozen program inputs + 45 implementation/test/asset files"
+    }
+  },
+  "budget_declaration_sha256": "1d95c5dc307b37f615ceee5c2a9905adeea723da601b5a3de44e8a1ff1e00cf2",
+  "budget_declaration_sha256_basis": "SHA-256 of the budget_declaration object serialized as canonical compact JSON with sorted keys, UTF-8.",
+  "collection_summary": {
+    "disposition": "current — runnable implementation in two hosts (advantage-games primary, reading-advantage older variant)",
+    "total_claims": 212,
+    "negative_fixture_claims": 3,
+    "claims_by_category": {
+      "identity": 13,
+      "scene": 10,
+      "state": 47,
+      "transition": 22,
+      "mechanic": 27,
+      "control": 9,
+      "asset": 42,
+      "copy": 6,
+      "graph": 5,
+      "test": 21,
+      "responsive": 6,
+      "historical": 4
+    },
+    "multi_state": {
+      "distinct_state_claims": 47,
+      "distinct_transition_claims": 22,
+      "state_vocabularies": [
+        "BattleStatus(4)",
+        "BattleTurn(2)",
+        "BattlePose/SpritePose(9)",
+        "BattleAttackPower/ActionPower(2)",
+        "BattleSelectionStep(4)",
+        "BattleLogEntry.type(3)",
+        "FlashTone(2)",
+        "FloatingTextItem.type(4, one dead)",
+        "TabType(3)",
+        "page-local booleans"
+      ],
+      "denominator_transition_coverage": "0 proven transitions, 6 unresolved flashTone write candidates — all 6 confirmed at exact lines by this collection"
+    },
+    "denominator_verification": "Hash convention validated by reproducing accepted T2 range hashes (BattleScene.tsx:19, Sprite.tsx:6) and blob hash (page.tsx 1ec182f5) before use; 6 post-generation spot re-derivations across categories all matched.",
+    "test_execution": {
+      "advantage-games": "npx jest \"rpg\" --silent at da51b4e0: 17 suites / 65 tests, all pass",
+      "reading-advantage": "npx jest \"rpg-battle\" at da51b4e0: 3 failed suites (2 jest parse failures, 1 stale-path assertion), 19/20 tests pass in remaining suites"
+    }
+  },
+  "findings": [
+    "advantage-games has no /api/v1/games/rpg-battle/ranking route although its StartScreen rankings tab fetches it (RPG-ID-011/RPG-CTL-009).",
+    "reading-advantage RPG Battle test surface partially broken at collection HEAD: 2 suites unparseable, 1 stale-path assertion (RPG-TEST-021).",
+    "PlayerSprite/EnemySprite are unreferenced dead code; their /games/rpg-battle/ asset paths do not exist under reading-advantage/public (RPG-ASSET-041).",
+    "MAX_TURNS=12 is not enforced as a battle turn limit; it only feeds the XP formula (RPG-MECH-002).",
+    "Dead states at baseline: 'defend' pose (no producer), 'heal' floating-text type (no producer) (RPG-MECH-021, RPG-ST-037).",
+    "No mana system, no custom keyboard bindings, no resize listener, no audio asset files — all negative claims with recorded verification commands."
+  ],
+  "visible_unknowns_for_mapper": [
+    "Observed runtime behavior of the rankings tab in advantage-games (fetch to missing route) — browser audit.",
+    "Compact-width layout of the fixed grid-cols-4 rankings enemy selector (RPG-RESP-003).",
+    "Whether the RA stale-path test expectation reflects an intended legacy asset layout or simple rot — truth-test author.",
+    "Resource ceilings were not supplied in the orchestrator prompt; actual usage declared, missing ceiling flagged (stop-loss rule notes 'unmeasured blocks checkpoint')."
+  ],
+  "output_paths": [
+    "measure/tracks/apk_three_game_truth_pilot_20260712/role-receipts/evidence-collector-rpg-battle.json",
+    "measure/tracks/apk_three_game_truth_pilot_20260712/rpg-battle-claim-ledger.json",
+    "measure/tracks/apk_three_game_truth_pilot_20260712/rpg-battle-evidence-method.md"
+  ],
+  "output_hashes": {
+    "measure/tracks/apk_three_game_truth_pilot_20260712/rpg-battle-claim-ledger.json": "b57c0ee531bdc05ff1249d6182af92d9504a12c4408a8ad67b5c3b51f19063c6",
+    "measure/tracks/apk_three_game_truth_pilot_20260712/rpg-battle-evidence-method.md": "485d41ca686aa7f86f7932e6d030765b8843c71c8ea231fa85d282ee0c8f4924"
+  },
+  "output_sha256": "820f6a6d95fff4e1a08a57cc8ffa9ad1401ad96425d3b1f257c1b14381f24729",
+  "output_sha256_basis": "SHA-256 of the output_hashes object serialized as canonical compact JSON with sorted keys, UTF-8 (receipt file excluded).",
+  "stop_loss_observations": {
+    "unsupported_factual_claims": 0,
+    "denominator_mismatches": 0,
+    "failed_fix_review_cycles": 0,
+    "unresolved_blocking_findings": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0
+    }
+  },
+  "acceptance": "not-claimed",
+  "commit_sha": null,
+  "commit_binding": {
+    "base_commit": "da51b4e006cdce175171077e97c86089a38dbd5b",
+    "status": "pending-commit",
+    "note": "commit_sha is bound to the deliverable commit 'chore(measure): T3 evidence collector for RPG Battle (track_id: apk_three_game_pilot_20260712)' in the immediately following binding update; the SHA is reported to the orchestrator in the final result block."
+  },
+  "preserved_user_work": [
+    "measure/tracks/apk_three_game_truth_pilot_20260712/plan.md (orchestrator predecessor-binding edits, left uncommitted)",
+    "measure/tracks/apk_three_game_truth_pilot_20260712/role-receipts/evidence-collector-abyssal-well.json and abyssal-well-* artifacts (sibling role output, untouched)",
+    ".opencode/goals/state.json* (unrelated)",
+    "apps/sales-advantage/next-env.d.ts (unrelated)",
+    "various __pycache__ artifacts (generated/ignorable)"
+  ]
+}
