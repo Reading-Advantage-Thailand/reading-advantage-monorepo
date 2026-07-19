@@ -14,7 +14,7 @@ describe("Sales Cloud Build secret isolation", () => {
   it("maps shared runtime names to Sales-owned Secret Manager resources", () => {
     const requiredMappings = [
       "DATABASE_URL=SALES_DATABASE_URL:latest",
-      "AUTH_SECRET=SALES_AUTH_SECRET:latest",
+      "COMPANY_AUTH_OIDC_CLIENT_SECRET=SALES_COMPANY_AUTH_OIDC_CLIENT_SECRET:latest",
       "AI_PROVIDER=SALES_AI_PROVIDER:latest",
       "OPENROUTER_API_KEY=SALES_OPENROUTER_API_KEY:latest",
       "STORAGE_ENDPOINT=SALES_STORAGE_ENDPOINT:latest",
@@ -39,25 +39,39 @@ describe("Sales Cloud Build secret isolation", () => {
     );
   });
 
-  it("isolates company and compatibility revisions behind distinct credentials", () => {
+  it("isolates no-traffic compatibility and company candidates", () => {
     expect(cloudBuild).toContain(
       "projects/$PROJECT_ID/secrets/SALES_LEGACY_DATABASE_URL/versions/latest",
     );
-    const compatibilityDeploy = cloudBuild.slice(
+    const compatibilityRelease = cloudBuild.slice(
       cloudBuild.indexOf('id: "deploy-legacy-rollback"'),
-      cloudBuild.indexOf('id: "repair-source-role"'),
+      cloudBuild.indexOf('id: "deploy-company-candidate"'),
     );
-    const companyDeploy = cloudBuild.slice(
-      cloudBuild.indexOf('id: "deploy-cloudrun"'),
-      cloudBuild.indexOf('id: "allow-public-invoker"'),
+    const companyCandidate = cloudBuild.slice(
+      cloudBuild.indexOf('id: "deploy-company-candidate"'),
+      cloudBuild.indexOf('id: "capture-company-candidate"'),
     );
-    expect(compatibilityDeploy).toContain(
+    expect(compatibilityRelease).toContain(
       "DATABASE_URL=SALES_LEGACY_DATABASE_URL:latest",
     );
-    expect(compatibilityDeploy).not.toContain("SALES_DATABASE_URL:latest");
-    expect(compatibilityDeploy).toContain("--no-traffic");
-    expect(companyDeploy).toContain("DATABASE_URL=SALES_DATABASE_URL:latest");
-    expect(companyDeploy).not.toContain("SALES_LEGACY_DATABASE_URL:latest");
+    expect(compatibilityRelease).not.toContain("SALES_DATABASE_URL:latest");
+    expect(compatibilityRelease).toContain("--no-traffic");
+    expect(compatibilityRelease).toContain(
+      'id: "verify-repair-verify-legacy-rollback"',
+    );
+    expect(compatibilityRelease).toContain(
+      '      - "SALES_DIRECT_DATABASE_URL"',
+    );
+    expect(compatibilityRelease).toContain(
+      '      - "SALES_LEGACY_SOURCE_ROLE_REPAIR_MANIFEST"',
+    );
+    expect(companyCandidate).toContain(
+      "DATABASE_URL=SALES_DATABASE_URL:latest",
+    );
+    expect(companyCandidate).not.toContain("SALES_LEGACY_DATABASE_URL:latest");
+    expect(companyCandidate).not.toContain("AUTH_SECRET=");
+    expect(companyCandidate).toContain("--tag=candidate");
+    expect(companyCandidate).toContain("--no-traffic");
   });
 
   it("does not reference generic cross-service database or auth secrets", () => {

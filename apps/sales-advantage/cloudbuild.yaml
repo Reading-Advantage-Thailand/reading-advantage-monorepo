@@ -87,18 +87,27 @@ steps:
       - "--tag=legacy-rollback"
       - "--no-traffic"
 
+  - name: "gcr.io/cloud-builders/gcloud"
+    id: "capture-legacy-rollback"
+    entrypoint: "bash"
+    args:
+      - "apps/sales-advantage/scripts/capture-sales-cloud-run-tag.sh"
+      - "legacy-rollback"
+      - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/sales-advantage/sales-advantage:$BUILD_ID"
+      - "/workspace/.sales-legacy-rollback"
+
   - name: "node:22-slim"
-    id: "repair-source-role"
+    id: "verify-repair-verify-legacy-rollback"
     entrypoint: "bash"
     args:
       - "-c"
-      - 'set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates postgresql-client >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && manifest_sha256="$$(printf %s "$$SALES_LEGACY_SOURCE_ROLE_REPAIR_MANIFEST" | sha256sum | cut -d " " -f 1)" && psql "$$SALES_DIRECT_DATABASE_URL" --set=repair_manifest="$$SALES_LEGACY_SOURCE_ROLE_REPAIR_MANIFEST" --set=repair_manifest_sha256="$$manifest_sha256" --set=release_build_id="$BUILD_ID" --set=release_commit_sha="$_RELEASE_COMMIT_SHA" -f apps/sales-advantage/scripts/sales-legacy-source-role-repair.sql'
+      - 'set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates openssl postgresql-client >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export BUILD_ID="$BUILD_ID" && export SALES_LEGACY_ROLLBACK_URL="$$(tr -d "\r\n" < /workspace/.sales-legacy-rollback.url)" && bash apps/sales-advantage/scripts/verify-legacy-rollback-release.sh && manifest_sha256="$$(printf %s "$$SALES_LEGACY_SOURCE_ROLE_REPAIR_MANIFEST" | sha256sum | cut -d " " -f 1)" && psql "$$SALES_DIRECT_DATABASE_URL" --set=repair_manifest="$$SALES_LEGACY_SOURCE_ROLE_REPAIR_MANIFEST" --set=repair_manifest_sha256="$$manifest_sha256" --set=release_build_id="$BUILD_ID" --set=release_commit_sha="$_RELEASE_COMMIT_SHA" -f apps/sales-advantage/scripts/sales-legacy-source-role-repair.sql && bash apps/sales-advantage/scripts/verify-legacy-rollback-release.sh && rm -f /workspace/.sales-legacy-rollback.url /workspace/.sales-legacy-rollback.revision'
     secretEnv:
       - "SALES_DIRECT_DATABASE_URL"
       - "SALES_LEGACY_SOURCE_ROLE_REPAIR_MANIFEST"
 
   - name: "gcr.io/cloud-builders/gcloud"
-    id: "deploy-cloudrun"
+    id: "deploy-company-candidate"
     args:
       - "run"
       - "deploy"
@@ -113,7 +122,9 @@ steps:
       - "--min-instances=1"
       - "--max-instances=100"
       - "--concurrency=80"
-      - "--set-secrets=DATABASE_URL=SALES_DATABASE_URL:latest,AUTH_SECRET=SALES_AUTH_SECRET:latest,COMPANY_AUTH_OIDC_CLIENT_SECRET=SALES_COMPANY_AUTH_OIDC_CLIENT_SECRET:latest,AI_PROVIDER=SALES_AI_PROVIDER:latest,OPENROUTER_API_KEY=SALES_OPENROUTER_API_KEY:latest,SALES_AUDIO_EVAL_MODEL=SALES_AUDIO_EVAL_MODEL:latest,SALES_AUDIO_EVAL_FALLBACK_STT_MODEL=SALES_AUDIO_EVAL_FALLBACK_STT_MODEL:latest,SALES_AUDIO_EVAL_FALLBACK_EVAL_MODEL=SALES_AUDIO_EVAL_FALLBACK_EVAL_MODEL:latest,SALES_CHAT_MODEL=SALES_CHAT_MODEL:latest,STORAGE_ENDPOINT=SALES_STORAGE_ENDPOINT:latest,STORAGE_REGION=SALES_STORAGE_REGION:latest,STORAGE_BUCKET=SALES_STORAGE_BUCKET:latest,STORAGE_ACCESS_KEY=SALES_STORAGE_ACCESS_KEY:latest,STORAGE_SECRET_KEY=SALES_STORAGE_SECRET_KEY:latest,STORAGE_PUBLIC_BASE_URL=SALES_STORAGE_PUBLIC_BASE_URL:latest"
+      - "--set-secrets=DATABASE_URL=SALES_DATABASE_URL:latest,COMPANY_AUTH_OIDC_CLIENT_SECRET=SALES_COMPANY_AUTH_OIDC_CLIENT_SECRET:latest,AI_PROVIDER=SALES_AI_PROVIDER:latest,OPENROUTER_API_KEY=SALES_OPENROUTER_API_KEY:latest,SALES_AUDIO_EVAL_MODEL=SALES_AUDIO_EVAL_MODEL:latest,SALES_AUDIO_EVAL_FALLBACK_STT_MODEL=SALES_AUDIO_EVAL_FALLBACK_STT_MODEL:latest,SALES_AUDIO_EVAL_FALLBACK_EVAL_MODEL=SALES_AUDIO_EVAL_FALLBACK_EVAL_MODEL:latest,SALES_CHAT_MODEL=SALES_CHAT_MODEL:latest,STORAGE_ENDPOINT=SALES_STORAGE_ENDPOINT:latest,STORAGE_REGION=SALES_STORAGE_REGION:latest,STORAGE_BUCKET=SALES_STORAGE_BUCKET:latest,STORAGE_ACCESS_KEY=SALES_STORAGE_ACCESS_KEY:latest,STORAGE_SECRET_KEY=SALES_STORAGE_SECRET_KEY:latest,STORAGE_PUBLIC_BASE_URL=SALES_STORAGE_PUBLIC_BASE_URL:latest"
+      - "--tag=candidate"
+      - "--no-traffic"
 
   - name: "gcr.io/cloud-builders/gcloud"
     id: "allow-public-invoker"
@@ -125,6 +136,36 @@ steps:
       - "--region=asia-southeast1"
       - "--member=allUsers"
       - "--role=roles/run.invoker"
+
+  - name: "gcr.io/cloud-builders/gcloud"
+    id: "capture-company-candidate"
+    entrypoint: "bash"
+    args:
+      - "apps/sales-advantage/scripts/capture-sales-cloud-run-tag.sh"
+      - "candidate"
+      - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/sales-advantage/sales-advantage:$BUILD_ID"
+      - "/workspace/.sales-company-candidate"
+
+  - name: "node:22-slim"
+    id: "verify-company-candidate"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - 'set -euo pipefail && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export SALES_RELEASE_BASE_URL="$$(tr -d "\r\n" < /workspace/.sales-company-candidate.url)" && export SALES_RELEASE_EXPECTED_MODE=company && pnpm --filter sales-advantage exec tsx scripts/verify-sales-release.ts'
+
+  - name: "gcr.io/cloud-builders/gcloud"
+    id: "shift-company-traffic"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - 'set -euo pipefail && candidate_revision="$$(tr -d "\r\n" < /workspace/.sales-company-candidate.revision)" && gcloud run services update-traffic sales-advantage --region=asia-southeast1 --platform=managed --to-revisions="$$candidate_revision=100"'
+
+  - name: "node:22-slim"
+    id: "verify-custom-domain"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - 'set -euo pipefail && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export SALES_RELEASE_BASE_URL=https://sales.reading-advantage.com && export SALES_RELEASE_EXPECTED_MODE=company && verified=false && for attempt in $$(seq 1 12); do if pnpm --filter sales-advantage exec tsx scripts/verify-sales-release.ts; then verified=true; break; fi; sleep 5; done && test "$$verified" = true && rm -f /workspace/.sales-company-candidate.url /workspace/.sales-company-candidate.revision'
 
 images:
   - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/sales-advantage/sales-advantage:$BUILD_ID"

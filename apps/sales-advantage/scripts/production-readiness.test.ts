@@ -44,6 +44,30 @@ const sourceRoleRepair = readFileSync(
   resolve(appRoot, "scripts/sales-legacy-source-role-repair.sql"),
   "utf8",
 );
+const rollbackSessionSetup = readFileSync(
+  resolve(appRoot, "scripts/sales-legacy-rollback-session-setup.sql"),
+  "utf8",
+);
+const rollbackSessionCleanup = readFileSync(
+  resolve(appRoot, "scripts/sales-legacy-rollback-session-cleanup.sql"),
+  "utf8",
+);
+const rollbackVerifier = readFileSync(
+  resolve(appRoot, "scripts/verify-legacy-rollback.ts"),
+  "utf8",
+);
+const rollbackReleaseVerifier = readFileSync(
+  resolve(appRoot, "scripts/verify-legacy-rollback-release.sh"),
+  "utf8",
+);
+const publicReleaseVerifier = readFileSync(
+  resolve(appRoot, "scripts/verify-sales-release.ts"),
+  "utf8",
+);
+const tagCapture = readFileSync(
+  resolve(appRoot, "scripts/capture-sales-cloud-run-tag.sh"),
+  "utf8",
+);
 const smoke = readFileSync(resolve(appRoot, "scripts/sales-smoke.sh"), "utf8");
 const staticSeed = readFileSync(
   resolve(appRoot, "scripts/static-seed.ts"),
@@ -84,10 +108,10 @@ describe("Sales production readiness", () => {
     expect(oidcCallback).not.toContain("session.returnTo, url.origin");
   });
 
-  it("builds a compatibility revision before evidence-bound repair and company cutover", () => {
-    expect(cloudbuild.match(/node:22-slim/g)).toHaveLength(7);
+  it("verifies compatibility and company candidates before traffic cutover", () => {
+    expect(cloudbuild.match(/node:22-slim/g)).toHaveLength(9);
     expect(cloudbuild.match(/cloud-sql-proxy\/v2\.15\.1/g)).toHaveLength(6);
-    expect(cloudbuild.match(/pnpm@11\.8\.0/g)).toHaveLength(5);
+    expect(cloudbuild.match(/pnpm@11\.8\.0/g)).toHaveLength(8);
     const ordered = [
       "migrate-db",
       "doctor-check",
@@ -96,14 +120,17 @@ describe("Sales production readiness", () => {
       "verify-production-curriculum",
       "runtime-db-contract",
       "deploy-legacy-rollback",
-      "repair-source-role",
-      "deploy-cloudrun",
+      "capture-legacy-rollback",
+      "verify-repair-verify-legacy-rollback",
+      "deploy-company-candidate",
+      "allow-public-invoker",
+      "capture-company-candidate",
+      "verify-company-candidate",
+      "shift-company-traffic",
+      "verify-custom-domain",
     ].map((id) => cloudbuild.indexOf(`id: "${id}"`));
     expect(ordered.every((position) => position >= 0)).toBe(true);
     expect(ordered).toEqual([...ordered].sort((left, right) => left - right));
-    expect(cloudbuild.indexOf('id: "runtime-db-contract"')).toBeLessThan(
-      cloudbuild.indexOf('id: "deploy-cloudrun"'),
-    );
     expect(cloudbuild).toContain("SALES_DIRECT_DATABASE_URL");
     expect(cloudbuild).toContain("SALES_DATABASE_URL");
     expect(cloudbuild).toContain("SALES_LEGACY_DATABASE_URL");
@@ -113,7 +140,6 @@ describe("Sales production readiness", () => {
     expect(cloudbuild).toContain("sales-runtime-probe-cleanup.sql");
     expect(cloudbuild).toContain("sales-legacy-runtime-grants.sql");
     expect(cloudbuild).toContain("sales-legacy-runtime-probe.sql");
-    expect(cloudbuild).toContain("trap cleanup EXIT");
     expect(cloudbuild).toContain(
       "doctor --check --required-migration 0042_company_product_principal_local_unique",
     );
@@ -134,51 +160,82 @@ describe("Sales production readiness", () => {
     expect(migrationProof).toContain(
       "0042 Sales app-local principal split is incomplete",
     );
-    expect(cloudbuild).toContain(
-      "NEXT_PUBLIC_API_URL=https://sales.reading-advantage.com",
-    );
 
-    const legacyDeployStep = cloudbuild.slice(
+    const legacyRelease = cloudbuild.slice(
       cloudbuild.indexOf('id: "deploy-legacy-rollback"'),
-      cloudbuild.indexOf('id: "repair-source-role"'),
+      cloudbuild.indexOf('id: "deploy-company-candidate"'),
     );
-    const repairStep = cloudbuild.slice(
-      cloudbuild.indexOf('id: "repair-source-role"'),
-      cloudbuild.indexOf('id: "deploy-cloudrun"'),
+    const combinedVerification = cloudbuild.slice(
+      cloudbuild.indexOf('id: "verify-repair-verify-legacy-rollback"'),
+      cloudbuild.indexOf('id: "deploy-company-candidate"'),
     );
-    const deployStep = cloudbuild.slice(
-      cloudbuild.indexOf('id: "deploy-cloudrun"'),
-      cloudbuild.indexOf('id: "allow-public-invoker"'),
+    const companyCandidate = cloudbuild.slice(
+      cloudbuild.indexOf('id: "deploy-company-candidate"'),
+      cloudbuild.indexOf('id: "capture-company-candidate"'),
     );
-    expect(cloudbuild.indexOf('id: "migrate-db"')).toBeLessThan(
-      cloudbuild.indexOf('id: "doctor-check"'),
-    );
-    expect(legacyDeployStep).toContain("--no-traffic");
-    expect(legacyDeployStep).toContain("--tag=legacy-rollback");
-    expect(legacyDeployStep).toContain(
+    expect(legacyRelease).toContain("--no-traffic");
+    expect(legacyRelease).toContain("--tag=legacy-rollback");
+    expect(legacyRelease).toContain(
       "DATABASE_URL=SALES_LEGACY_DATABASE_URL:latest",
     );
-    expect(legacyDeployStep).not.toContain("SALES_DATABASE_URL:latest");
-    expect(repairStep).toContain("sales-legacy-source-role-repair.sql");
-    expect(repairStep).toContain(
-      '--set=repair_manifest="$$SALES_LEGACY_SOURCE_ROLE_REPAIR_MANIFEST"',
+    expect(legacyRelease).not.toContain("SALES_DATABASE_URL:latest");
+    expect(legacyRelease).toContain("capture-sales-cloud-run-tag.sh");
+    expect(
+      combinedVerification.match(/verify-legacy-rollback-release\.sh/g),
+    ).toHaveLength(2);
+    expect(
+      combinedVerification.indexOf("verify-legacy-rollback-release.sh"),
+    ).toBeLessThan(
+      combinedVerification.indexOf("sales-legacy-source-role-repair.sql"),
     );
-    expect(repairStep).toContain("repair_manifest_sha256");
-    expect(repairStep).toContain('--set=release_build_id="$BUILD_ID"');
-    expect(repairStep).toContain(
+    expect(
+      combinedVerification.indexOf("sales-legacy-source-role-repair.sql"),
+    ).toBeLessThan(
+      combinedVerification.lastIndexOf("verify-legacy-rollback-release.sh"),
+    );
+    expect(combinedVerification).toContain("repair_manifest_sha256");
+    expect(combinedVerification).toContain(
       '--set=release_commit_sha="$_RELEASE_COMMIT_SHA"',
     );
-    expect(repairStep).toContain(
-      '      - "SALES_LEGACY_SOURCE_ROLE_REPAIR_MANIFEST"',
+    expect(combinedVerification).not.toMatch(/password/i);
+
+    expect(companyCandidate).toContain("--tag=candidate");
+    expect(companyCandidate).toContain("--no-traffic");
+    expect(companyCandidate).toContain(
+      "DATABASE_URL=SALES_DATABASE_URL:latest",
     );
-    expect(deployStep).not.toContain(
-      "SALES_LEGACY_SOURCE_ROLE_REPAIR_MANIFEST",
+    expect(companyCandidate).not.toContain("SALES_LEGACY_DATABASE_URL:latest");
+    expect(companyCandidate).not.toContain("AUTH_SECRET=");
+    expect(cloudbuild.indexOf('id: "verify-company-candidate"')).toBeLessThan(
+      cloudbuild.indexOf('id: "shift-company-traffic"'),
     );
-    expect(deployStep).toContain("DATABASE_URL=SALES_DATABASE_URL:latest");
-    expect(deployStep).not.toContain("SALES_LEGACY_DATABASE_URL:latest");
+    expect(cloudbuild.indexOf('id: "shift-company-traffic"')).toBeLessThan(
+      cloudbuild.indexOf('id: "verify-custom-domain"'),
+    );
+    expect(cloudbuild).toContain('--to-revisions="$$candidate_revision=100"');
+    expect(cloudbuild).toContain(
+      "SALES_RELEASE_BASE_URL=https://sales.reading-advantage.com",
+    );
     expect(cloudbuild).toContain(
       "projects/$PROJECT_ID/secrets/SALES_LEGACY_SOURCE_ROLE_REPAIR_MANIFEST/versions/latest",
     );
+
+    expect(tagCapture).toContain("status.latestCreatedRevisionName");
+    expect(tagCapture).toContain("image_summary.digest");
+    expect(tagCapture).toContain("spec.containers[0].image");
+    expect(tagCapture).toContain(
+      '"$tagged_revision" != "$latest_created_revision"',
+    );
+    expect(tagCapture).toContain(
+      '"$revision_image" != "${expected_repository}@${expected_digest}"',
+    );
+    expect(rollbackReleaseVerifier).toContain("trap cleanup EXIT");
+    expect(rollbackReleaseVerifier).toContain(
+      "SALES_LEGACY_SOURCE_ROLE_REPAIR_MANIFEST",
+    );
+    expect(publicReleaseVerifier).toContain('new URL("/api/health", baseUrl)');
+    expect(publicReleaseVerifier).toContain('new URL("/api/ready", baseUrl)');
+
     expect(sourceRoleRepair).toContain("repair_manifest is required");
     expect(sourceRoleRepair).toContain("repair_manifest_sha256 is required");
     expect(sourceRoleRepair).toContain("release_build_id is required");
@@ -204,6 +261,18 @@ describe("Sales production readiness", () => {
     expect(sourceRoleRepair).toContain("INSERT INTO audit_events");
     expect(sourceRoleRepair).toContain("sales:legacy_source_role_repaired");
     expect(sourceRoleRepair).not.toContain("00000000-0000-4000");
+    expect(rollbackSessionSetup).toContain("INSERT INTO sessions");
+    expect(rollbackSessionSetup).toContain("observed_role = target_role");
+    expect(rollbackSessionSetup).toContain("completed_audit_count <> 1");
+    expect(rollbackSessionCleanup).toContain("DELETE FROM sessions");
+    expect(rollbackSessionCleanup).toContain(
+      "Sales rollback probe cleanup failed",
+    );
+    expect(rollbackVerifier).toContain(
+      "SALES_LEGACY_SOURCE_ROLE_REPAIR_MANIFEST",
+    );
+    expect(rollbackVerifier).toContain("expectedUserId");
+    expect(rollbackVerifier).not.toMatch(/password/i);
   });
 
   it("seeds only deterministic approved curriculum and gates exact completeness", () => {
