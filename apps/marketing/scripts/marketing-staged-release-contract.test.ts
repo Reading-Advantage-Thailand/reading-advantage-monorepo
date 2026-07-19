@@ -105,6 +105,9 @@ describe("Marketing staged Cloud Run release contract", () => {
     expect(mapping.args?.join(" ")).toContain(
       "marketing.reading-advantage.com",
     );
+    expect(mapping.args?.join(" ")).toContain("value(spec.routeName)");
+    expect(mapping.args?.join(" ")).toContain("value(status.mappedRouteName)");
+    expect(mapping.args?.join(" ")).not.toContain("metadata.annotations");
     expect(mapping.args?.join(" ")).toContain("CertificateProvisioned");
     expect(domain.args?.join(" ")).toContain("verify-marketing-release.ts");
     expect(domain.args?.join(" ")).toContain("marketing-smoke.sh");

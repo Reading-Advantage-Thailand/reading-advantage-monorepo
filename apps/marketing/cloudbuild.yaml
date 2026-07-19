@@ -33,7 +33,7 @@ steps:
     entrypoint: "bash"
     args:
       - "-c"
-      - "set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export DATABASE_URL=\"$$MARKETING_DIRECT_DATABASE_URL\" && export DIRECT_DATABASE_URL=\"$$MARKETING_DIRECT_DATABASE_URL\" && pnpm --filter @reading-advantage/db migrate"
+      - 'set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export DATABASE_URL="$$MARKETING_DIRECT_DATABASE_URL" && export DIRECT_DATABASE_URL="$$MARKETING_DIRECT_DATABASE_URL" && pnpm --filter @reading-advantage/db migrate'
     secretEnv:
       - "MARKETING_DIRECT_DATABASE_URL"
 
@@ -44,7 +44,7 @@ steps:
     entrypoint: "bash"
     args:
       - "-c"
-      - "set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export DATABASE_URL=\"$$MARKETING_DIRECT_DATABASE_URL\" && export DIRECT_DATABASE_URL=\"$$MARKETING_DIRECT_DATABASE_URL\" && pnpm --filter @reading-advantage/db doctor --check --required-migration 0042_company_product_principal_local_unique"
+      - 'set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export DATABASE_URL="$$MARKETING_DIRECT_DATABASE_URL" && export DIRECT_DATABASE_URL="$$MARKETING_DIRECT_DATABASE_URL" && pnpm --filter @reading-advantage/db doctor --check --required-migration 0042_company_product_principal_local_unique'
     secretEnv:
       - "MARKETING_DIRECT_DATABASE_URL"
 
@@ -56,7 +56,7 @@ steps:
     entrypoint: "bash"
     args:
       - "-c"
-      - "set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates postgresql-client >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && psql \"$$MARKETING_DIRECT_DATABASE_URL\" -f apps/marketing/scripts/marketing-runtime-grants.sql && psql \"$$MARKETING_DATABASE_URL\" -f apps/marketing/scripts/marketing-runtime-probe.sql"
+      - 'set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates postgresql-client >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && psql "$$MARKETING_DIRECT_DATABASE_URL" -f apps/marketing/scripts/marketing-runtime-grants.sql && psql "$$MARKETING_DATABASE_URL" -f apps/marketing/scripts/marketing-runtime-probe.sql'
     secretEnv:
       - "MARKETING_DIRECT_DATABASE_URL"
       - "MARKETING_DATABASE_URL"
@@ -116,7 +116,7 @@ steps:
     entrypoint: "bash"
     args:
       - "-c"
-      - 'set -euo pipefail && domain=marketing.reading-advantage.com && route="$$(gcloud beta run domain-mappings describe --domain="$$domain" --region=asia-southeast1 --platform=managed --format="value(metadata.annotations.''run.googleapis.com/routeName'')")" && test "$$route" = marketing && for condition in Ready CertificateProvisioned DomainRoutable; do status="$$(gcloud beta run domain-mappings describe --domain="$$domain" --region=asia-southeast1 --platform=managed --format="value(status.conditions[?type=''$$condition''].status)")"; test "$$status" = True; done'
+      - 'set -euo pipefail && domain=marketing.reading-advantage.com && route="$$(gcloud beta run domain-mappings describe --domain="$$domain" --region=asia-southeast1 --platform=managed --format="value(spec.routeName)")" && mapped_route="$$(gcloud beta run domain-mappings describe --domain="$$domain" --region=asia-southeast1 --platform=managed --format="value(status.mappedRouteName)")" && test "$$route" = marketing && test "$$mapped_route" = marketing && for condition in Ready CertificateProvisioned DomainRoutable; do status="$$(gcloud beta run domain-mappings describe --domain="$$domain" --region=asia-southeast1 --platform=managed --format="value(status.conditions[?type=''$$condition''].status)")"; test "$$status" = True; done'
 
   - name: "node:22-slim"
     id: "verify-custom-domain"
