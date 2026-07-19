@@ -109,8 +109,8 @@ Two parallel programs are in flight; priority order when picking the next track:
 - [x] **Track: APK Independent Source Denominator Inventory** *Link: [./archive/apk_source_denominator_inventory_20260712/](./archive/apk_source_denominator_inventory_20260712/)*
   Independently discover and fully reconcile the game, file, scene/state, copy, history, and asset denominator without interpreting product requirements. *Status: COMPLETE — accepted-denominator-manifest and accepted-partition-manifest published at HEAD `ba95e6fb`; 86/86 admission (Phase 0:13, Phase 1:18, Phase 2:31, Phase 3:24), 26/26 live wiring, 38/38 T2 gate suites, 43/46 Phase-4 focused contract (3 pre-existing non-blocking).*
 
-- [ ] **Track: APK Three-Game Source-Truth Pilot** *Link: [./tracks/apk_three_game_truth_pilot_20260712/](./tracks/apk_three_game_truth_pilot_20260712/)*
-  Prove the method on Dragon Flight, RPG Battle, and Abyssal Well before authorizing corpus-scale work.
+- [x] **Track: APK Three-Game Source-Truth Pilot** *Link: [./archive/apk_three_game_truth_pilot_20260712/](./archive/apk_three_game_truth_pilot_20260712/)*
+  Prove the method on Dragon Flight, RPG Battle, and Abyssal Well before authorizing corpus-scale work. *Status: COMPLETE (conditional acceptance). Five role-isolated role receipts; 491 atomic claims across Dragon Flight (225), RPG Battle (215), Abyssal Well (51); 8 negative fixtures; 41/41 truth tests pass; 15/15 claim re-derivations exact. Conditional open items: Phase 3 browser audit deferred (environment-gated); Phase 4 asset audit partial. Successor hashes: pilot manifest `cd1a2fe1…`, acceptance `3a59c50e…`, accepted `cbf04753…`.*
 
 - [ ] **Track: APK Action and Defense Evidence Cohort** *Link: [./tracks/apk_corpus_audit_action_defense_20260712/](./tracks/apk_corpus_audit_action_defense_20260712/)*
   Recover exact independently reviewed evidence packages for eight action, defense, escort, projectile, and arena games.
