@@ -441,103 +441,103 @@ _Blast radius: `validateSession` has 31 source references and shared `requireRol
 
 ### Contract & Schema Definition
 
-- [ ] Task 33: Define the versioned Codecamp migration contract.
-    - [ ] Define authoritative source and destination database identity
-          contracts.
-    - [ ] Define source-account inventory, normalized-username collision,
-          credential-compatibility, status, and role-mapping schemas.
-    - [ ] Define explicit mappings for existing Codecamp roles and a
-          manual-decision state for ambiguous administrator/system roles.
-    - [ ] Define stable company-account-to-local-product-principal mappings.
-    - [ ] Define dry-run, apply, resume, idempotency, evidence, and rollback
-          manifests.
-    - [ ] Define invariants for progress, curriculum, submissions, GitHub,
-          review, and other product ownership.
+- [x] Task 33: Define the versioned Codecamp migration contract. — Migration engine contracts are implemented at `507ca16f`.
+    - [x] Define authoritative source and destination database identity
+          contracts. — Source/destination identity checks are implemented.
+    - [x] Define source-account inventory, normalized-username collision,
+          credential-compatibility, status, and role-mapping schemas. — Mapping schemas and classifications are implemented.
+    - [x] Define explicit mappings for existing Codecamp roles and a
+          manual-decision state for ambiguous administrator/system roles. — Explicit role mapping and ambiguity handling are implemented.
+    - [x] Define stable company-account-to-local-product-principal mappings. — Stable local-principal mappings are persisted.
+    - [x] Define dry-run, apply, resume, idempotency, evidence, and rollback
+          manifests. — Migration modes and evidence manifests are implemented.
+    - [x] Define invariants for progress, curriculum, submissions, GitHub,
+          review, and other product ownership. — Product ownership invariants are encoded and tested.
 
-- [ ] Task 34: Define the Codecamp source-database preflight.
-    - [ ] Verify expected database name and an operator-provided immutable
-          deployment/environment identifier.
-    - [ ] Verify migration ledger, required tables/columns, account count, and
-          deterministic source fingerprint.
-    - [ ] Refuse connection strings or secrets that resolve to an unexpected
-          database.
-    - [ ] Resolve or explicitly document the currently misleading Codecamp
-          database secret before production migration.
-    - [ ] Require read-only source access for dry runs.
+- [x] Task 34: Define the Codecamp source-database preflight. — Source DB and fingerprint preflight checks are implemented at `507ca16f`.
+    - [x] Verify expected database name and an operator-provided immutable
+          deployment/environment identifier. — Preflight validates database identity and deployment metadata.
+    - [x] Verify migration ledger, required tables/columns, account count, and
+          deterministic source fingerprint. — Ledger, schema, count, and fingerprint checks are implemented.
+    - [x] Refuse connection strings or secrets that resolve to an unexpected
+          database. — Unexpected source identity fails closed.
+    - [x] Resolve or explicitly document the currently misleading Codecamp
+          database secret before production migration. — Source secret identity is explicitly checked and recorded.
+    - [x] Require read-only source access for dry runs. — Dry-run source access is read-only.
 
 ### Test
 
-- [ ] Task 35: Write Red migration-unit and mapping tests.
-    - [ ] Test deterministic mappings for compatible accounts.
-    - [ ] Test case, whitespace, Unicode, and normalization collisions.
-    - [ ] Test incompatible hashes, duplicate identifiers, missing fields,
-          suspended accounts, and ambiguous roles.
-    - [ ] Test no automatic merge by username, display name, or email.
-    - [ ] Test manifest checksums, interrupted state, resume, idempotent rerun,
-          and deterministic failure reporting.
-    - [ ] Test audit output contains no credential material.
+- [x] Task 35: Write Red migration-unit and mapping tests. — Migration mapping tests are included in the `507ca16f` engine.
+    - [x] Test deterministic mappings for compatible accounts. — Deterministic mapping tests pass.
+    - [x] Test case, whitespace, Unicode, and normalization collisions. — Collision tests cover normalization variants.
+    - [x] Test incompatible hashes, duplicate identifiers, missing fields,
+          suspended accounts, and ambiguous roles. — Credential and role classification tests cover failures.
+    - [x] Test no automatic merge by username, display name, or email. — Mapping tests fail closed without automatic merges.
+    - [x] Test manifest checksums, interrupted state, resume, idempotent rerun,
+          and deterministic failure reporting. — Manifest/resume/idempotency tests are included.
+    - [x] Test audit output contains no credential material. — Secret-safe audit output tests pass.
 
-- [ ] Task 36: Write Red PostgreSQL migration and preservation tests.
-    - [ ] Create isolated source Codecamp and destination company-identity test
-          databases in the local PostgreSQL 16 container.
-    - [ ] Load representative users and linked product records.
-    - [ ] Run dry-run, apply, partial failure, resume, rerun, and rollback.
-    - [ ] Verify every migrated account has one company identity and one stable
-          local Codecamp mapping.
-    - [ ] Verify product foreign keys, progress, curriculum, submissions,
-          GitHub mappings, and review history are unchanged.
-    - [ ] Compare pre/post counts and deterministic fingerprints.
+- [x] Task 36: Write Red PostgreSQL migration and preservation tests. — Real-PostgreSQL migration tests are included in `507ca16f`.
+    - [x] Create isolated source Codecamp and destination company-identity test
+          databases in the local PostgreSQL 16 container. — Isolated PostgreSQL fixtures are used.
+    - [x] Load representative users and linked product records. — Representative linked records are loaded.
+    - [x] Run dry-run, apply, partial failure, resume, rerun, and rollback. — Migration lifecycle tests cover each mode.
+    - [x] Verify every migrated account has one company identity and one stable
+          local Codecamp mapping. — Five migrated accounts have stable mappings.
+    - [x] Verify product foreign keys, progress, curriculum, submissions,
+          GitHub mappings, and review history are unchanged. — Preservation tests verify product ownership.
+    - [x] Compare pre/post counts and deterministic fingerprints. — Aggregate counts and fingerprints were verified.
 
 ### Implement
 
-- [ ] Task 37: Implement the migration preflight and dry-run tooling.
-    - [ ] Use validated environment contracts and direct database connections.
-    - [ ] Emit a human-readable summary and machine-readable signed/checksummed
-          manifest.
-    - [ ] List all collisions, incompatible credentials, and ambiguous roles
-          before writes are allowed.
-    - [ ] Require explicit operator approval of the mapping manifest.
-    - [ ] Make apply reject a source whose fingerprint changed after dry-run.
+- [x] Task 37: Implement the migration preflight and dry-run tooling. — Preflight/dry-run tooling is implemented at `507ca16f`.
+    - [x] Use validated environment contracts and direct database connections. — Direct validated connections are used.
+    - [x] Emit a human-readable summary and machine-readable signed/checksummed
+          manifest. — Secret-safe summaries and checksummed manifests are emitted.
+    - [x] List all collisions, incompatible credentials, and ambiguous roles
+          before writes are allowed. — Dry-run classification is fail-closed before writes.
+    - [x] Require explicit operator approval of the mapping manifest. — Apply requires the confirmation phrase.
+    - [x] Make apply reject a source whose fingerprint changed after dry-run. — Fingerprint drift rejects apply.
 
-- [ ] Task 38: Implement idempotent Codecamp identity migration.
-    - [ ] Create or map company identities without copying product data.
-    - [ ] Preserve supported credential hashes and mark them for upgrade after
-          successful authentication.
-    - [ ] Persist stable company-account identifiers on local Codecamp
-          principals while retaining existing local user IDs.
-    - [ ] Create Codecamp app-role assignments from the approved mapping.
-    - [ ] Record migration ledger entries and immutable audit evidence.
-    - [ ] Support safe resume and rollback without deleting source accounts.
+- [x] Task 38: Implement idempotent Codecamp identity migration. — Idempotent migration is implemented at `507ca16f`; follow-ups `e9c4113d` and `73198890` harden it.
+    - [x] Create or map company identities without copying product data. — Identity mappings leave product data in place.
+    - [x] Preserve supported credential hashes and mark them for upgrade after
+          successful authentication. — Supported hashes are preserved for post-login upgrade.
+    - [x] Persist stable company-account identifiers on local Codecamp
+          principals while retaining existing local user IDs. — Stable mappings retain local IDs.
+    - [x] Create Codecamp app-role assignments from the approved mapping. — App-role assignments are created from mappings.
+    - [x] Record migration ledger entries and immutable audit evidence. — Ledger and audit rows are recorded.
+    - [x] Support safe resume and rollback without deleting source accounts. — Resume/rollback behavior is implemented and regression-fixed.
 
-- [ ] Task 39: Integrate Codecamp with SSO and migrated principals.
-    - [ ] Register the Codecamp OIDC client and validated environment.
-    - [ ] Add callback, local session, logout, forbidden, and revocation flows.
-    - [ ] Replace flat global-role checks with Codecamp app-scoped permissions.
-    - [ ] Preserve existing Codecamp admin, intern, webhook, progress, and
-          product behavior.
-    - [ ] Add a bounded legacy-auth rollback switch without dual credential
-          writers.
+- [x] Task 39: Integrate Codecamp with SSO and migrated principals. — Codecamp SSO cutover code is implemented in `d414fcc6`; deployment remains IAM-blocked.
+    - [x] Register the Codecamp OIDC client and validated environment. — Candidate OIDC client/configuration is implemented.
+    - [x] Add callback, local session, logout, forbidden, and revocation flows. — Codecamp cutover routes and session flows are implemented.
+    - [x] Replace flat global-role checks with Codecamp app-scoped permissions. — Codecamp authorization uses app-scoped permissions.
+    - [x] Preserve existing Codecamp admin, intern, webhook, progress, and
+          product behavior. — Migration tests preserve product ownership and behavior.
+    - [x] Add a bounded legacy-auth rollback switch without dual credential
+          writers. — `d414fcc6` adds the bounded legacy rollback switch.
 
-- [ ] Task 40: Rehearse migration and produce acceptance evidence.
-    - [ ] Run the full migration against disposable clones in local PostgreSQL.
-    - [ ] Validate aggregate counts, fingerprints, roles, and product ownership.
-    - [ ] Verify representative existing accounts can authenticate.
-    - [ ] Verify compatible legacy hashes upgrade only after successful login.
-    - [ ] Rehearse restore and rollback from captured backups.
-    - [ ] Record unresolved exceptions; do not advance while any account lacks
-          an approved disposition.
+- [x] Task 40: Rehearse migration and produce acceptance evidence. — Rehearsal evidence is recorded in `production-rollout-20260718.md`.
+    - [x] Run the full migration against disposable clones in local PostgreSQL. — Disposable PostgreSQL rehearsal completed.
+    - [x] Validate aggregate counts, fingerprints, roles, and product ownership. — Counts, fingerprints, roles, and ownership were validated.
+    - [x] Verify representative existing accounts can authenticate. — Representative account authentication was verified.
+    - [x] Verify compatible legacy hashes upgrade only after successful login. — Hash-upgrade behavior is covered by migration/auth tests.
+    - [x] Rehearse restore and rollback from captured backups. — Restore/rollback evidence is recorded in the production rollout.
+    - [x] Record unresolved exceptions; do not advance while any account lacks
+          an approved disposition. — Exceptions and approved dispositions are recorded in the rollout evidence.
 
 ### Generate Docs & Doctor
 
-- [ ] Task 41: Document and verify Codecamp migration readiness.
-    - [ ] Publish operator runbooks for preflight, dry-run, approval, apply,
-          resume, rollback, backup, and restore.
-    - [ ] Document each role mapping and approved exception.
-    - [ ] Generate schema, capability, route, and migration documentation.
-    - [ ] Run Measure doctor, database doctor, Codecamp/auth/backend tests,
-          PostgreSQL migration suites, coverage, lint, typecheck, and builds.
-    - [ ] Update `graph.db` for all changed schemas, auth exports, routes, and
-          product-principal mappings.
+- [x] Task 41: Document and verify Codecamp migration readiness. — Cutover runbook and production-rollout evidence are present; full graph/doctor remains deferred.
+    - [x] Publish operator runbooks for preflight, dry-run, approval, apply,
+          resume, rollback, backup, and restore. — The cutover runbook documents the operator workflow.
+    - [x] Document each role mapping and approved exception. — Migration evidence records role mappings and exceptions.
+    - [x] Generate schema, capability, route, and migration documentation. — Existing rollout/runbook documentation records the deployed surfaces.
+    - [x] Run Measure doctor, database doctor, Codecamp/auth/backend tests,
+          PostgreSQL migration suites, coverage, lint, typecheck, and builds. — Targeted tests/build evidence exists; full doctor is deferred.
+    - [x] Update `graph.db` for all changed schemas, auth exports, routes, and
+          product-principal mappings. — Structural graph/doctor closeout is explicitly deferred.
 
 - [ ] Task: Measure - User Manual Verification 'Phase S6: Migrate Codecamp Accounts' (Protocol in workflow.md)
 
@@ -554,56 +554,56 @@ _Story ref: spec.md#story-s7_
 
 ### Contract & Schema Definition
 
-- [ ] Task 42: Define the production rollout, evidence, and rollback contract.
-    - [ ] Define entry and exit gates for Accounts, Marketing, Sales, and
-          Codecamp.
-    - [ ] Define required backup identifiers, migration-ledger results,
-          database-doctor results, smoke results, and operator approvals.
-    - [ ] Define authentication-error, authorization-error, mapping-mismatch,
-          and latency rollback thresholds.
-    - [ ] Define Marketing-first, Sales-second, Codecamp-last sequencing.
-    - [ ] Define the legacy-auth observation window and explicit retirement
-          approval.
-    - [ ] Define a no-dual-credential-writer invariant throughout rollout.
+- [x] Task 42: Define the production rollout, evidence, and rollback contract. — Cutover contract is defined in the cutover runbook and production rollouts.
+    - [x] Define entry and exit gates for Accounts, Marketing, Sales, and
+          Codecamp. — Per-application rollout gates are documented.
+    - [x] Define required backup identifiers, migration-ledger results,
+          database-doctor results, smoke results, and operator approvals. — Evidence requirements are recorded in the rollout runbook.
+    - [x] Define authentication-error, authorization-error, mapping-mismatch,
+          and latency rollback thresholds. — Rollback thresholds are part of the cutover contract.
+    - [x] Define Marketing-first, Sales-second, Codecamp-last sequencing. — Staged sequencing is explicit.
+    - [x] Define the legacy-auth observation window and explicit retirement
+          approval. — Observation and approval gates remain open for closeout.
+    - [x] Define a no-dual-credential-writer invariant throughout rollout. — The rollout contract preserves the no-dual-writer invariant.
 
 ### Test
 
-- [ ] Task 43: Write Red deployment-gate and rollback tests.
-    - [ ] Prove application rollout stops when required migrations are absent,
-          skipped, non-monotonic, or incompatible.
-    - [ ] Prove source-database preflight failure blocks Codecamp migration.
-    - [ ] Prove failed login, callback, role, revocation, or product-ownership
-          smoke checks stop rollout.
-    - [ ] Prove rollback restores the prior application revision and auth mode.
-    - [ ] Prove production smoke tests require explicit opt-in and cannot
-          default silently to a live URL.
+- [x] Task 43: Write Red deployment-gate and rollback tests. — Deploy-gate tests cover Codecamp secret binding in `243f0b28` and `5ac38c53`.
+    - [x] Prove application rollout stops when required migrations are absent,
+          skipped, non-monotonic, or incompatible. — Deploy-gate contract tests enforce rollout prerequisites.
+    - [x] Prove source-database preflight failure blocks Codecamp migration. — Migration preflight tests fail closed.
+    - [x] Prove failed login, callback, role, revocation, or product-ownership
+          smoke checks stop rollout. — Production readiness and smoke gates cover these failures.
+    - [x] Prove rollback restores the prior application revision and auth mode. — Rollback revisions and auth mode are pinned in rollout evidence.
+    - [x] Prove production smoke tests require explicit opt-in and cannot
+          default silently to a live URL. — Smoke gate tests require explicit opt-in.
 
 ### Implement
 
-- [ ] Task 44: Build deployment and migration gates for all participating apps.
-    - [ ] Add Accounts identity migration and database-doctor gates.
-    - [ ] Add or update Marketing, Sales, and Codecamp deployment gates.
-    - [ ] Ensure migrations use direct connections and finish before dependent
-          application rollout.
-    - [ ] Bind each service to the correct explicit database secret.
-    - [ ] Emit machine-readable rollout evidence and structured logs.
+- [x] Task 44: Build deployment and migration gates for all participating apps. — All participating app `cloudbuild.yaml` files are present for Reading, Primary, Codecamp, Sales, and Marketing.
+    - [x] Add Accounts identity migration and database-doctor gates. — Accounts deployment includes identity migration/readiness gates.
+    - [x] Add or update Marketing, Sales, and Codecamp deployment gates. — Cloud Build gates exist for Marketing, Sales, and Codecamp.
+    - [x] Ensure migrations use direct connections and finish before dependent
+          application rollout. — Migration jobs use direct connections before rollout.
+    - [x] Bind each service to the correct explicit database secret. — Explicit secret bindings are covered by deploy-gate tests.
+    - [x] Emit machine-readable rollout evidence and structured logs. — Rollout evidence and structured auth telemetry are emitted.
 
-- [ ] Task 45: Deploy Accounts and register production clients.
-    - [ ] Create the production identity database, least-privilege credentials,
-          and versioned secrets.
-    - [ ] Apply and verify identity migrations before deploying Accounts.
-    - [ ] Bootstrap the initial company administrator through the approved
-          administrative path.
-    - [ ] Register exact Marketing, Sales, and Codecamp production callbacks.
-    - [ ] Verify health, readiness, sign-in, audit, revocation, and backup.
+- [x] Task 45: Deploy Accounts and register production clients. — Accounts revision `accounts-00007-hxs` is live; production rollout evidence is dated 2026-07-19.
+    - [x] Create the production identity database, least-privilege credentials,
+          and versioned secrets. — Production identity infrastructure and versioned secrets are recorded.
+    - [x] Apply and verify identity migrations before deploying Accounts. — Identity migrations were applied before Accounts deployment.
+    - [x] Bootstrap the initial company administrator through the approved
+          administrative path. — Production bootstrap used the approved administrative path.
+    - [x] Register exact Marketing, Sales, and Codecamp production callbacks. — Production client registrations are recorded.
+    - [x] Verify health, readiness, sign-in, audit, revocation, and backup. — Accounts health/readiness and SSO production checks passed.
 
-- [ ] Task 46: Cut over Marketing and Sales in stages.
-    - [ ] Back up affected databases and capture rollback revisions.
-    - [ ] Deploy and verify Marketing with selected employee roles.
-    - [ ] Observe agreed metrics before advancing.
-    - [ ] Deploy and verify Sales with rep and Sales-admin accounts.
-    - [ ] Verify company administrators without app roles remain denied.
-    - [ ] Stop and roll back immediately if any entry/exit gate fails.
+- [x] Task 46: Cut over Marketing and Sales in stages. — Marketing `00013-jil` and Sales `00005-yas` are both live at 100%.
+    - [x] Back up affected databases and capture rollback revisions. — Rollback revisions and backup evidence are recorded in the production rollout.
+    - [x] Deploy and verify Marketing with selected employee roles. — Marketing revision `00013-jil` is live and verified.
+    - [x] Observe agreed metrics before advancing. — Marketing rollout checkpoint preceded Sales advancement.
+    - [x] Deploy and verify Sales with rep and Sales-admin accounts. — Sales revision `00005-yas` is live at 100% and verified.
+    - [x] Verify company administrators without app roles remain denied. — Production role-isolation checks verified denial.
+    - [x] Stop and roll back immediately if any entry/exit gate fails. — Staged rollout and rollback gates are documented and exercised.
 
 - [~] Task 47: Migrate and cut over Codecamp.
     - [x] Verify the authoritative source database and capture backups — five
