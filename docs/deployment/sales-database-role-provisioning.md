@@ -90,8 +90,10 @@ gcloud builds submit \
 
 The helper itself is read from the exact reviewed commit, so dirty working-tree
 changes cannot alter the packaging procedure. It uses `git archive` for that
-commit and includes only
-the root build contracts, `apps/sales-advantage`, and `packages`. It then writes
+commit and includes only the root build contracts, `apps/sales-advantage`,
+`packages`, and the exact graph-bound
+`measure/tracks/sales_advantage_golive_20260701/curriculum-approval.json`
+review record required by the production seed gate. It then writes
 `apps/sales-advantage/release-source.json`, which binds the commit plus the
 path, executable mode, byte length, and SHA-256 of every other archive file.
 Dirty working-tree bytes are never copied into the archive.
