@@ -197,6 +197,16 @@ describe("Phase 4 — Task 15: FR-4 codecamp deploy gate (cloudbuild.yaml)", () 
     expect(secretArgument).not.toContain(
       "COMPANY_AUTH_OIDC_CLIENT_SECRET=projects/",
     );
+    expect(secretArgument).toContain("OPENAI_API_KEY=OpenAI_API_Key:latest");
+    expect(secretArgument).toContain(
+      "GOOGLE_AI_API_KEY=Goole_Cloud_API_Key:latest",
+    );
+    expect(secretArgument).toContain(
+      "TUTORIAL_REPORT_SECRET=CODECAMP_TUTORIAL_REPORT_SECRET:latest",
+    );
+    expect(secretArgument).toContain(
+      "TUTORIAL_REPOSITORY_WORKER_TOKEN=CODECAMP_TUTORIAL_REPOSITORY_WORKER_TOKEN:latest",
+    );
   });
 
   it("deploys the unreleased PR-review model in explicit private shadow mode", () => {
