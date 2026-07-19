@@ -1,0 +1,65 @@
+{
+ "schema_version": "apk-evidence-collector-report.v1",
+ "track_id": "apk_three_game_truth_pilot_20260712",
+ "role": "evidence-collector",
+ "task_id": "evidence-collector:dragon-flight",
+ "collector_agent": "evidence-collector-dragon-flight:t3:2026-07-20",
+ "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+ "generated_at": "2026-07-19T21:29:28Z",
+ "claims_total": 225,
+ "claims_by_category": {
+  "asset": 42,
+  "control": 16,
+  "copy_graph": 20,
+  "historical": 8,
+  "identity": 14,
+  "mechanic": 56,
+  "negative_fixture": 3,
+  "responsive": 13,
+  "scene": 4,
+  "state": 10,
+  "test": 29,
+  "transition": 10
+ },
+ "negative_fixtures": [
+  {
+   "claim_id": "DF-NEG-001",
+   "covers": "asset (slug-allowlist role assignment)",
+   "expected_disposition": "FAIL"
+  },
+  {
+   "claim_id": "DF-NEG-002",
+   "covers": "mechanic (unsupported-claim injection)",
+   "expected_disposition": "REJECT"
+  },
+  {
+   "claim_id": "DF-NEG-003",
+   "covers": "asset (directory-only citation)",
+   "expected_disposition": "REJECT"
+  }
+ ],
+ "output_hashes": {
+  "dragon-flight-claim-ledger.json": "84bd9335c44424142c2d9cb407a2f48d28dd400997741f1904f65cdb6ce6083e",
+  "dragon-flight-evidence-method.md": "c326f85a3a0b5144b1ee19dfbb46959af4a466505b996ff82cc9bb580efabebf"
+ },
+ "stop_loss_observations": [
+  {
+   "id": "SLO-DF-1",
+   "kind": "denominator-gap-candidate",
+   "detail": "apps/reading-advantage/server/controllers/dragon-flight-controller.ts exists at baseline and is imported by three in-denominator route files but has no accepted denominator record. No claim cites its content; flagged for discovery auditor/orchestrator before mapping."
+  }
+ ],
+ "visible_unknowns": [
+  "dragon-flight-adventure.mp3 slug-matches the game but is unreferenced from component source (DF-ASSET-037, low)",
+  "apps/advantage-games/public/dragon-flight.png unreferenced from dragon-flight source (DF-ASSET-036, medium)",
+  "RA page test mock path differs from the page's real import path (DF-TEST-029, medium)",
+  "lib selectGate penalty (-1 fixed) diverges from component difficulty penalty (DF-MECH-009 vs DF-MECH-023)",
+  "deleted public/vocab/dragon-flight.json is byte-identical to live dragon-rider fixture (DF-HIST-002)",
+  "no explicit compact/wide responsive contract beyond Tailwind sm:/lg: and measured-stage scaling (DF-RESP-013)"
+ ],
+ "role_boundary_notes": [
+  "No file under measure/archive/apk_source_denominator_inventory_20260712/ was modified.",
+  "No other role-receipts were read for content reuse or touched (the T2 evidence-collector receipt was read once for schema shape only).",
+  "plan.md task markers are left to the orchestrator per role isolation."
+ ]
+}
