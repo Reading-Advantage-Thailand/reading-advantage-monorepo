@@ -1,4 +1,4 @@
-import { createPrivateKey, randomUUID } from "node:crypto";
+import { createPrivateKey } from "node:crypto";
 
 import {
   createPostgresCompanyIdentityRepository,
@@ -22,6 +22,8 @@ import {
   verifyPassword,
 } from "@reading-advantage/auth/company-identity";
 import { createCompanyIdentityRuntimeClient } from "@reading-advantage/db/company-identity/runtime";
+
+import { createAccountsCapabilityTelemetry } from "./telemetry";
 
 interface IdentityComposition {
   readonly service: CompanyIdentityService;
@@ -102,7 +104,8 @@ export async function getIdentityComposition(): Promise<IdentityComposition> {
     });
     const references = createCompanyIdentityCapabilityReferences();
     const registry = createCompanyIdentityCapabilityRegistry(service, references);
-    const executor = createCapabilityExecutor({
+    const telemetry = createAccountsCapabilityTelemetry();
+    const coreExecutor = createCapabilityExecutor({
       registry,
       authentication: {
         authenticate: async ({ evidence }) => {
@@ -154,11 +157,12 @@ export async function getIdentityComposition(): Promise<IdentityComposition> {
           throw new Error("No external adapter is registered for identity handlers.");
         },
       },
-      logger: { debug: () => {}, info: () => {}, warn: () => {} },
-      span: { setAttributes: () => {} },
+      logger: telemetry.logger,
+      span: telemetry.span,
       clock: { now: () => new Date() },
-      createCorrelationId: randomUUID,
+      createCorrelationId: telemetry.createCorrelationId,
     });
+    const executor = telemetry.instrument(coreExecutor);
     return {
       service,
       executor,
