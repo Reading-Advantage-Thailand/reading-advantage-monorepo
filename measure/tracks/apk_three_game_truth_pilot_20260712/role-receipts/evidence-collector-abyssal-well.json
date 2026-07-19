@@ -1,0 +1,105 @@
+{
+  "schema_version": "apk-role-receipt.v1",
+  "role": "evidence-collector",
+  "role_instance": "evidence-collector-abyssal-well:t3:2026-07-20",
+  "track_id": "apk_three_game_truth_pilot_20260712",
+  "game": "abyssal-well",
+  "canonical_identity": "sentence/abyssal-well",
+  "phase": "Phase 1: Exact evidence collection",
+  "role_isolation": {
+    "roles_held": ["evidence-collector"],
+    "roles_not_held": ["discovery-auditor", "requirements-mapper", "truth-test-author", "adversarial-reviewer"],
+    "note": "Prior T3 collector commits (92d060af, 69b01d60) exist only on branch t2-final-isolated-20260719 and were not used as inputs; this collection was performed fresh on master from raw git evidence."
+  },
+  "spawn_identity": {
+    "spawn_id": "evidence-collector-abyssal-well:t3:2026-07-20",
+    "parent_ancestry_ids": [],
+    "fork_turns": "not-applicable-collector-role",
+    "prompt_basis": "Orchestrator prompt: 'Abyssal Well evidence collector for measure track apk_three_game_truth_pilot_20260712' (interactive session; exact prompt bytes retained by orchestrator)"
+  },
+  "start_event_id": "aw-collect-start:2026-07-20T00:00:00+07:00",
+  "end_event_id": "aw-collect-end:2026-07-20T04:30:00+07:00",
+  "allowed_input_manifest_sha256": "f3df7dec3909de543d93e608821da6103da6dc7958dd8d6f837ac4063a3a41b5",
+  "allowed_inputs": [
+    "measure/apk-evidence-reconstruction-program.md:d2aa36e0ce63ba70b9eb36d4ef22e99d2cb612e32ff05001402465677cbac83d",
+    "measure/tracks/apk_three_game_truth_pilot_20260712/spec.md:b7fb649154841c8dceb89203d8e7e2ed77283057dfb89bae513f5426ed42377c",
+    "measure/tracks/apk_three_game_truth_pilot_20260712/plan.md:4a31a0ac742db28c6f9644e280089c49e2ca5a5a5678e00e28298b59fe1df62b",
+    "measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json:d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+    "measure/archive/apk_source_denominator_inventory_20260712/accepted-partition-manifest.json:6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+    "measure/archive/apk_source_denominator_inventory_20260712/phase3-reconciliation.json:b2eb6d8fd0a51ecd3ed05b277a708e07251d6bf114f727a78a84da73167541a3",
+    "measure/archive/apk_source_denominator_inventory_20260712/source-denominator.json:0dbf97dac93ba2056228e79433fb91e6f2ef1898b6f09eff62fe0755082ba21d",
+    "measure/archive/apk_source_denominator_inventory_20260712/historical-source-denominator.json:6e313be829b414e7c85f4f20d4cb7e33283f15d743740b8784b589d0de2c7e6f"
+  ],
+  "read_only_inputs_note": "No file under measure/archive/apk_source_denominator_inventory_20260712/ was modified. Git object store was read via git show/grep/ls-tree/log only.",
+  "budget_declaration": {
+    "schema_version": "apk-role-budget-declaration.v1",
+    "role": "evidence-collector",
+    "frozen_resource_ceiling": {
+      "bytes_read": 268435456,
+      "command_invocations": 120,
+      "source_files": 7500
+    },
+    "actual_usage": {
+      "bytes_read": 22000000,
+      "command_invocations": 42,
+      "source_files": 31
+    },
+    "measurement_basis": {
+      "bytes_read": "phase3-reconciliation.json (8.4MB) + source-denominator.json (2.3MB) + historical-source-denominator.json + extracted historical blobs (~3MB incl. 2 cover PNGs) + specs/plans/reports",
+      "command_invocations": "Count of git show/log/grep/ls-tree/merge-base/rev-parse, sha256sum, python3, and file-tool invocations",
+      "source_files": "8 allowed program inputs + 23 historical/current blobs extracted for citation"
+    }
+  },
+  "budget_declaration_sha256_basis": "SHA-256 of the budget_declaration object serialized as canonical compact JSON with sorted keys",
+  "collection_summary": {
+    "disposition": "historical/withdrawn — current implementation deleted",
+    "current_implementation_claims": 0,
+    "historical_evidence_claims": 49,
+    "negative_fixture_claims": 2,
+    "total_claims": 51,
+    "distinct_historical_revisions_touched": 3,
+    "revisions": [
+      "c76f6af3f62c03979f5073a871e775afd952a070",
+      "1c44854682b18a2393efd265c2271f824e228a3d",
+      "da51b4e006cdce175171077e97c86089a38dbd5b"
+    ],
+    "deletion_commit": "0ee9184728c11188c40b27c23fa649a9b67952dc",
+    "denominator_verification": "All 15 historical-source-denominator Abyssal Well blob hashes independently recomputed and matched.",
+    "categories_covered": ["identity", "scene_state", "transition", "mechanic", "control", "asset", "copy_graph", "test", "responsive", "history", "negative_fixture"]
+  },
+  "findings": [
+    "Intra-revision inconsistency at deletion parent: UI shell imports spawnEnemy/rotatePlayer/enemy.spawnInterval absent from logic/config blobs; scene layer uses pre-S5 lane model vs continuous-angle logic (AW-HIST-095/096).",
+    "Denominator discrepancy: e2e spec abyssal-well.spec.ts (blob 222a4a7e...) deleted by the retirement commit but absent from the 15 historical-denominator records; collector found 16 deleted files (AW-HIST-076).",
+    "Current-name matches: packages/domain/src/games/schema.ts line 26 still lists \"abyssal-well\"; orphan cover abyssal-well-cover.png (b495dce9...) survives at HEAD; archived design doc abyssal-well-20260320 remains in-tree.",
+    "Spec-vs-implementation conflicts recorded unresolved: design-doc XP formula and breach-damage rule differ from final cycling-words implementation (AW-HIST-031/032/097/098).",
+    "No Reading/Primary/Science copy ever existed; no audio/data assets at any reachable revision — both marked history-search-exhausted."
+  ],
+  "visible_unknowns_for_mapper": [
+    "Whether the denominator should be amended to include the e2e spec (16th deleted file) — discovery-auditor/product-owner decision.",
+    "Whether domain schema enum entry \"abyssal-well\" should be treated as a live identity surface or retirement residue.",
+    "Provenance of orphan cover abyssal-well-cover.png vs the cataloged cover-the-abyssal-well.png (asset-forensics phase).",
+    "Pre-monorepo history of the 2D Konva implementation is not reachable in this repository (exhausted, not fabricated)."
+  ],
+  "output_paths": [
+    "measure/tracks/apk_three_game_truth_pilot_20260712/abyssal-well-claim-ledger.json",
+    "measure/tracks/apk_three_game_truth_pilot_20260712/abyssal-well-evidence-method.md",
+    "measure/tracks/apk_three_game_truth_pilot_20260712/role-receipts/evidence-collector-abyssal-well.json"
+  ],
+  "output_hashes": {
+    "measure/tracks/apk_three_game_truth_pilot_20260712/abyssal-well-claim-ledger.json": "4f3042a2dba0d39a885e5b8c0f707adcfbafd5fbf72edebc6c14a6594a413566",
+    "measure/tracks/apk_three_game_truth_pilot_20260712/abyssal-well-evidence-method.md": "ae9e5321140d4c2fa9b2ea57da102907b5b1b0c703cfd54b5f44f63cf7c6c3da"
+  },
+  "commit_binding": {
+    "base_commit": "da51b4e006cdce175171077e97c86089a38dbd5b",
+    "status": "committed-output-binding",
+    "note": "The single deliverable commit introduces this receipt together with the ledger and method doc; its SHA is reported to the orchestrator in the final MEASURE_AGENT_RESULT block for admission binding."
+  },
+  "acceptance": "not-claimed",
+  "preserved_user_work": [
+    "measure/tracks/apk_three_game_truth_pilot_20260712/plan.md (orchestrator predecessor-binding edits, left uncommitted)",
+    ".opencode/goals/state.json* (unrelated)",
+    "apps/sales-advantage/next-env.d.ts (unrelated)",
+    "measure/tracks/backend_capability_kernel_20260713/review-2026-07-19.err (unrelated)",
+    "various __pycache__ artifacts (generated/ignorable)"
+  ]
+}
