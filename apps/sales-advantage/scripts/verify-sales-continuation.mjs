@@ -111,7 +111,6 @@ export function verifySalesContinuation(descriptor, evidence, continuationCommit
 
   invariant(evidence.iam?.bindings?.some((binding) => binding.role === "roles/run.invoker" && binding.members?.includes("allUsers")), "public invoker IAM drift");
   invariant(evidence.domain?.metadata?.name === descriptor.domain && isReady(evidence.domain), "custom domain readiness drift");
-  invariant(evidence.repairSecretVersion?.name?.endsWith(`/${descriptor.repair.secretVersion}`) && evidence.repairSecretVersion?.state === "ENABLED", "repair secret version drift");
 
   return {
     originalBuildId: original.buildId,
@@ -136,7 +135,6 @@ function main() {
     rollbackRevision: readJson(join(evidenceDir, "rollback-revision.json")),
     iam: readJson(join(evidenceDir, "iam.json")),
     domain: readJson(join(evidenceDir, "domain.json")),
-    repairSecretVersion: readJson(join(evidenceDir, "repair-secret-version.json")),
   };
   process.stdout.write(`${JSON.stringify({ event: "sales_continuation_original_release_verified", ...verifySalesContinuation(descriptor, evidence, continuationCommit, continuationManifest) })}\n`);
 }

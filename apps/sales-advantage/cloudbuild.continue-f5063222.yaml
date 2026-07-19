@@ -22,7 +22,6 @@ steps:
         gcloud run revisions describe sales-advantage-00004-jed --project="$PROJECT_ID" --region=asia-southeast1 --platform=managed --format=json > /workspace/.sales-continuation-evidence/rollback-revision.json
         gcloud run services get-iam-policy sales-advantage --project="$PROJECT_ID" --region=asia-southeast1 --platform=managed --format=json > /workspace/.sales-continuation-evidence/iam.json
         gcloud beta run domain-mappings describe --domain=sales.reading-advantage.com --project="$PROJECT_ID" --region=asia-southeast1 --platform=managed --format=json > /workspace/.sales-continuation-evidence/domain.json
-        gcloud secrets versions describe 1 --secret=SALES_LEGACY_SOURCE_ROLE_REPAIR_MANIFEST --project="$PROJECT_ID" --format=json > /workspace/.sales-continuation-evidence/repair-secret-version.json
 
   - name: "node:22-slim"
     id: "validate-original-release"

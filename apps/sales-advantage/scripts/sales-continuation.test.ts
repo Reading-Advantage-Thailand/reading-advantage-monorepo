@@ -83,7 +83,6 @@ function evidence(): Record<string, unknown> {
     },
     "iam.json": { bindings: [{ role: "roles/run.invoker", members: ["allUsers"] }] },
     "domain.json": { metadata: { name: "sales.reading-advantage.com" }, status: { conditions: [{ type: "Ready", status: "True" }] } },
-    "repair-secret-version.json": { name: "projects/reading-advantage/secrets/SALES_LEGACY_SOURCE_ROLE_REPAIR_MANIFEST/versions/1", state: "ENABLED" },
   };
 }
 
@@ -169,6 +168,9 @@ describe("Sales continuation pipeline contract", () => {
       expect(config).not.toContain(`id: "${forbidden}"`);
     }
     expect(config).not.toContain("add-iam-policy-binding");
+    expect(config).not.toContain("gcloud secrets versions describe");
+    expect(config).toContain("projects/$PROJECT_ID/secrets/SALES_LEGACY_SOURCE_ROLE_REPAIR_MANIFEST/versions/1");
+    expect(config).toContain('test "$$manifest_sha256" = "6329c846ac119a0af9fa43747879b042c211b4b79e5ad8a98822940fd29b5980"');
     expect(config).toContain(`--image=asia-southeast1-docker.pkg.dev/$PROJECT_ID/sales-advantage/sales-advantage@${digest}`);
     expect(config).toContain(`--set=release_build_id=${buildId}`);
     expect(config).toContain(`--set=release_commit_sha=${releaseCommit}`);
