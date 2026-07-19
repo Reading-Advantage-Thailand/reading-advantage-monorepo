@@ -112,29 +112,29 @@ Two parallel programs are in flight; priority order when picking the next track:
 - [x] **Track: APK Three-Game Source-Truth Pilot** *Link: [./archive/apk_three_game_truth_pilot_20260712/](./archive/apk_three_game_truth_pilot_20260712/)*
   Prove the method on Dragon Flight, RPG Battle, and Abyssal Well before authorizing corpus-scale work. *Status: COMPLETE (conditional acceptance). Five role-isolated role receipts; 491 atomic claims across Dragon Flight (225), RPG Battle (215), Abyssal Well (51); 8 negative fixtures; 41/41 truth tests pass; 15/15 claim re-derivations exact. Conditional open items: Phase 3 browser audit deferred (environment-gated); Phase 4 asset audit partial. Successor hashes: pilot manifest `cd1a2fe1…`, acceptance `3a59c50e…`, accepted `cbf04753…`.*
 
-- [ ] **Track: APK Action and Defense Evidence Cohort** *Link: [./tracks/apk_corpus_audit_action_defense_20260712/](./tracks/apk_corpus_audit_action_defense_20260712/)*
-  Recover exact independently reviewed evidence packages for eight action, defense, escort, projectile, and arena games.
+- [~] **Track: APK Action and Defense Evidence Cohort** *Link: [./tracks/apk_corpus_audit_action_defense_20260712/](./tracks/apk_corpus_audit_action_defense_20260712/)*
+  Recover exact independently reviewed evidence packages for eight action, defense, escort, projectile, and arena games. *Status: PRECONDITION-READY (orchestrator handoff documents in place under `_orchestrator/`); T3 pilot accepted (`cbf04753…`); T2 accepted denominator/partition manifests bound. Next session: dispatch batch-A evidence collectors for Castle Defense, Magic Defense, Wizard vs Zombie.*
 
-- [ ] **Track: APK Traversal and Exploration Evidence Cohort** *Link: [./tracks/apk_corpus_audit_traversal_exploration_20260712/](./tracks/apk_corpus_audit_traversal_exploration_20260712/)*
-  Recover exact world, camera, movement, collision, transition, responsive, and asset evidence for seven traversal/exploration games.
+- [~] **Track: APK Traversal and Exploration Evidence Cohort** *Link: [./tracks/apk_corpus_audit_traversal_exploration_20260712/](./tracks/apk_corpus_audit_traversal_exploration_20260712/)*
+  Recover exact world, camera, movement, collision, transition, responsive, and asset evidence for seven traversal/exploration games. *Status: PRECONDITION-READY (orchestrator handoff documents in place under `_orchestrator/`); pending T4 batch-A dispatch. May run in parallel with T4/T6/T7 once T3 pilot accepted.*
 
-- [ ] **Track: APK Puzzle and Crafting Evidence Cohort** *Link: [./tracks/apk_corpus_audit_puzzle_crafting_20260712/](./tracks/apk_corpus_audit_puzzle_crafting_20260712/)*
-  Recover exact board, station, matching, crafting, sequencing, content, responsive, and asset evidence for six games.
+- [~] **Track: APK Puzzle and Crafting Evidence Cohort** *Link: [./tracks/apk_corpus_audit_puzzle_crafting_20260712/](./tracks/apk_corpus_audit_puzzle_crafting_20260712/)*
+  Recover exact board, station, matching, crafting, sequencing, content, responsive, and asset evidence for six games. *Status: PRECONDITION-READY (orchestrator handoff documents in place under `_orchestrator/`); pending dispatch. May run in parallel with T4/T5/T7 once T3 pilot accepted.*
 
-- [ ] **Track: APK Special and Historical Evidence Cohort** *Link: [./tracks/apk_corpus_audit_special_historical_20260712/](./tracks/apk_corpus_audit_special_historical_20260712/)*
-  Recover exact current and historical evidence for five distinctive, changed, cancelled, or missing games.
+- [~] **Track: APK Special and Historical Evidence Cohort** *Link: [./tracks/apk_corpus_audit_special_historical_20260712/](./tracks/apk_corpus_audit_special_historical_20260712/)*
+  Recover exact current and historical evidence for five distinctive, changed, cancelled, or missing games. *Status: PRECONDITION-READY (orchestrator handoff documents in place under `_orchestrator/`); pending dispatch.*
 
-- [ ] **Track: APK Per-Candidate Asset Forensics** *Link: [./tracks/apk_existing_asset_candidate_audit_20260712/](./tracks/apk_existing_asset_candidate_audit_20260712/)*
-  Publish one forensic record per independently discovered asset path; contact-sheet summaries cannot satisfy completion.
+- [~] **Track: APK Per-Candidate Asset Forensics** *Link: [./tracks/apk_existing_asset_candidate_audit_20260712/](./tracks/apk_existing_asset_candidate_audit_20260712/)*
+  Publish one forensic record per independently discovered asset path; contact-sheet summaries cannot satisfy completion. *Status: PRECONDITION-READY (orchestrator handoff documents in place under `_orchestrator/`); begins only after T4–T7 accepted (suitability requires their concrete scene usages).*
 
-- [ ] **Track: APK Evidence-Backed Ontology Synthesis** *Link: [./tracks/apk_evidence_backed_ontology_synthesis_20260712/](./tracks/apk_evidence_backed_ontology_synthesis_20260712/)*
-  Derive mechanics, capabilities, responsive contracts, semantic assets, gaps, and cohorts from accepted evidence only, without adding factual claims.
+- [~] **Track: APK Evidence-Backed Ontology Synthesis** *Link: [./tracks/apk_evidence_backed_ontology_synthesis_20260712/](./tracks/apk_evidence_backed_ontology_synthesis_20260712/)*
+  Derive mechanics, capabilities, responsive contracts, semantic assets, gaps, and cohorts from accepted evidence only, without adding factual claims. *Status: PRECONDITION-READY (orchestrator handoff documents in place under `_orchestrator/`); requires accepted hashes from T2–T8.*
 
-- [ ] **Track: APK Independent Acceptance and Handoff** *Link: [./tracks/apk_independent_acceptance_handoff_20260712/](./tracks/apk_independent_acceptance_handoff_20260712/)*
-  Revalidate the full corpus from raw sources and exclusively publish successor hashes after independent review and product-owner approval.
+- [~] **Track: APK Independent Acceptance and Handoff** *Link: [./tracks/apk_independent_acceptance_handoff_20260712/](./tracks/apk_independent_acceptance_handoff_20260712/)*
+  Revalidate the full corpus from raw sources and exclusively publish successor hashes after independent review and product-owner approval. *Status: PRECONDITION-READY (orchestrator handoff documents in place under `_orchestrator/`); T10 alone publishes successor hashes that unlock T11.*
 
-- [ ] **Track: APK Shared Developer Kit and Authoring Workflow** *Link: [./tracks/apk_shared_developer_kit_20260712/](./tracks/apk_shared_developer_kit_20260712/)*
-  BLOCKED until the independent acceptance track publishes valid hashes. Then implement accepted shared capabilities and authoring workflow.
+- [~] **Track: APK Shared Developer Kit and Authoring Workflow** *Link: [./tracks/apk_shared_developer_kit_20260712/](./tracks/apk_shared_developer_kit_20260712/)*
+  *Status: PRECONDITION-READY (orchestrator handoff documents in place under `_orchestrator/`); BLOCKED until T10 publishes valid successor hashes. Then implement accepted shared capabilities and authoring workflow.*
 
 - [ ] **Track: APK Dual-Theme Asset Contract and Production** *Link: [./tracks/apk_dual_theme_asset_production_20260712/](./tracks/apk_dual_theme_asset_production_20260712/)*
   BLOCKED until the independent acceptance track publishes valid hashes. Then define physical contracts and mirrored theme batches.
