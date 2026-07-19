@@ -146,6 +146,7 @@ describe("Marketing Cloud Run production contract", () => {
   it("parses the canonical image, service account, database, and domain", () => {
     const build = requireBuildStep(cloudbuild, "build-image");
     const deploy = requireBuildStep(cloudbuild, "deploy-candidate");
+    const deployCommand = deploy.args?.join(" ") ?? "";
 
     expect(build.args).toContain(
       "asia-southeast1-docker.pkg.dev/$PROJECT_ID/marketing/marketing:$BUILD_ID",
@@ -153,28 +154,25 @@ describe("Marketing Cloud Run production contract", () => {
     expect(cloudbuild.images).toEqual([
       "asia-southeast1-docker.pkg.dev/$PROJECT_ID/marketing/marketing:$BUILD_ID",
     ]);
-    expect(deploy.args).toContain(
+    expect(deployCommand).toContain(
       "--add-cloudsql-instances=reading-advantage:asia-southeast1:cloud-sql",
     );
-    expect(deploy.args).toContain(
-      "--service-account=marketing-cloud-run@$PROJECT_ID.iam.gserviceaccount.com",
+    expect(deployCommand).toContain(
+      "marketing-cloud-run@$PROJECT_ID.iam.gserviceaccount.com",
     );
-    expect(deploy.args?.find((arg) => arg.startsWith("--set-env-vars="))).toContain(
+    expect(deployCommand).toContain(
       "NEXT_PUBLIC_API_URL=https://marketing.reading-advantage.com,AI_PROVIDER=openai",
     );
-    expect(deploy.args?.join(" ")).toContain(
+    expect(deployCommand).toContain(
       "COMPANY_AUTH_ISSUER_URL=https://accounts.reading-advantage.com",
     );
-    expect(deploy.args?.join(" ")).toContain(
+    expect(deployCommand).toContain(
       "COMPANY_AUTH_OIDC_CLIENT_ID=marketing-web",
     );
-    const runtimeSecrets = deploy.args?.find((argument) =>
-      argument.startsWith("--set-secrets="),
-    );
-    expect(runtimeSecrets).toContain(
+    expect(deployCommand).toContain(
       "COMPANY_AUTH_OIDC_CLIENT_SECRET=MARKETING_COMPANY_AUTH_OIDC_CLIENT_SECRET:latest",
     );
-    expect(runtimeSecrets).not.toContain("AUTH_SECRET=");
+    expect(deployCommand).not.toContain("AUTH_SECRET=");
   });
 
   it("orders migration, doctor, runtime privilege proof, and candidate deployment", () => {

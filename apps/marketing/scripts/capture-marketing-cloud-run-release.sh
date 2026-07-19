@@ -62,8 +62,8 @@ capture_candidate() {
   local expected_repository
   local revision_image
 
-  if [[ ! "$tag" =~ ^candidate-[a-z0-9-]+$ ]]; then
-    echo "Marketing candidate tag is not collision-safe" >&2
+  if [[ ! "$tag" =~ ^c[0-9a-f]{8}$ ]]; then
+    echo "Marketing candidate tag must be c followed by eight lowercase hex characters" >&2
     exit 1
   fi
   tagged_url="$(

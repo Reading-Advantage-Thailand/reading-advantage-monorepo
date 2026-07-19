@@ -36,7 +36,7 @@ function createFakeGcloud(): string {
 set -euo pipefail
 case "$*" in
   *"csv[no-heading](status.traffic.revisionName,status.traffic.percent)"*) printf %s "\${FAKE_CURRENT_TRAFFIC-marketing-00005-old,100}" ;;
-  *"status.traffic"*".url)"*) printf %s "https://candidate-build-id---marketing.example.test" ;;
+  *"status.traffic"*".url)"*) printf %s "https://cdeadbeef---marketing.example.test" ;;
   *"status.traffic"*".revisionName)"*) printf %s "marketing-00006-new" ;;
   *"status.latestCreatedRevisionName)"*) printf %s "\${FAKE_LATEST_REVISION:-marketing-00006-new}" ;;
   *"artifacts docker images describe"*) printf %s "${candidateDigest}" ;;
@@ -112,7 +112,7 @@ describe("Marketing Cloud Run release capture", () => {
       [
         script,
         "candidate",
-        "candidate-build-id",
+        "cdeadbeef",
         `${repository}:build-id`,
         outputPrefix,
       ],
@@ -120,7 +120,7 @@ describe("Marketing Cloud Run release capture", () => {
     );
 
     expect(readFileSync(`${outputPrefix}.url`, "utf8")).toBe(
-      "https://candidate-build-id---marketing.example.test",
+      "https://cdeadbeef---marketing.example.test",
     );
     expect(readFileSync(`${outputPrefix}.revision`, "utf8")).toBe(
       "marketing-00006-new",
@@ -128,6 +128,28 @@ describe("Marketing Cloud Run release capture", () => {
     expect(readFileSync(`${outputPrefix}.image`, "utf8")).toBe(
       `${repository}@${candidateDigest}`,
     );
+  });
+
+  it.each([
+    "candidate-build-id",
+    "cDEADBEEF",
+    "cdeadbee",
+    "cdeadbeef0",
+  ])("rejects invalid candidate tag %s", (tag) => {
+    const directory = createFakeGcloud();
+    const outputPrefix = join(directory, "candidate");
+
+    expect(() =>
+      execFileSync(
+        "bash",
+        [script, "candidate", tag, `${repository}:build-id`, outputPrefix],
+        {
+          env: { ...process.env, PATH: `${directory}:${process.env.PATH}` },
+          stdio: "pipe",
+        },
+      ),
+    ).toThrow();
+    expect(() => readFileSync(`${outputPrefix}.url`, "utf8")).toThrow();
   });
 
   it("fails closed when another revision wins the candidate tag race", () => {
@@ -140,7 +162,7 @@ describe("Marketing Cloud Run release capture", () => {
         [
           script,
           "candidate",
-          "candidate-build-id",
+          "cdeadbeef",
           `${repository}:build-id`,
           outputPrefix,
         ],

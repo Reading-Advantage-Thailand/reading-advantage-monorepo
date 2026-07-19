@@ -19,6 +19,9 @@ const marketingRoot = resolve(import.meta.dirname, "..");
 const cloudbuild = parse(
   readFileSync(resolve(marketingRoot, "cloudbuild.yaml"), "utf8"),
 ) as CloudBuildConfig;
+const serviceName = "marketing";
+const exampleBuildId = "579b730f-5203-419a-b428-5c336a34657a";
+const expectedCandidateTag = `c${exampleBuildId.split("-", 1)[0]}`;
 
 /**
  * Returns a required Marketing Cloud Build step.
@@ -57,12 +60,24 @@ describe("Marketing staged Cloud Run release contract", () => {
     expect(ids.indexOf("verify-candidate")).toBeLessThan(
       ids.indexOf("promote-candidate"),
     );
-    expect(deploy.args).toEqual(
-      expect.arrayContaining(["--tag=candidate-$BUILD_ID", "--no-traffic"]),
+    const deployCommand = deploy.args?.join(" ") ?? "";
+    const captureCommand = capture.args?.join(" ") ?? "";
+    const candidateTagDerivation = 'candidate_tag="c$${build_id%%-*}"';
+    for (const command of [deployCommand, captureCommand]) {
+      expect(command).toContain('build_id="$BUILD_ID"');
+      expect(command).toContain(candidateTagDerivation);
+      expect(command).toContain("^c[0-9a-f]{8}$$");
+    }
+    expect(deployCommand).toContain('--tag="$$candidate_tag" --no-traffic');
+    expect(captureCommand).toContain(
+      'capture-marketing-cloud-run-release.sh candidate "$$candidate_tag"',
     );
-    expect(capture.args?.join(" ")).toContain(
-      "capture-marketing-cloud-run-release.sh candidate candidate-$BUILD_ID",
-    );
+    expect(expectedCandidateTag).toMatch(/^c[0-9a-f]{8}$/);
+    expect(
+      serviceName.length + expectedCandidateTag.length,
+    ).toBeLessThanOrEqual(46);
+    expect(deployCommand).not.toContain("SHORT_SHA");
+    expect(captureCommand).not.toContain("SHORT_SHA");
     expect(verify.args?.join(" ")).toContain("verify-marketing-release.ts");
     expect(promote.args?.join(" ")).toContain(
       '--to-revisions="$$candidate_revision=100"',

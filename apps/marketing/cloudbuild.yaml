@@ -74,23 +74,10 @@ steps:
   # Create a build-unique candidate URL without changing production traffic.
   - name: "gcr.io/cloud-builders/gcloud"
     id: "deploy-candidate"
+    entrypoint: "bash"
     args:
-      - "run"
-      - "deploy"
-      - "marketing"
-      - "--image=asia-southeast1-docker.pkg.dev/$PROJECT_ID/marketing/marketing:$BUILD_ID"
-      - "--region=asia-southeast1"
-      - "--platform=managed"
-      - "--allow-unauthenticated"
-      - "--service-account=marketing-cloud-run@$PROJECT_ID.iam.gserviceaccount.com"
-      - "--add-cloudsql-instances=reading-advantage:asia-southeast1:cloud-sql"
-      - "--set-env-vars=NODE_ENV=production,NEXT_PUBLIC_API_URL=https://marketing.reading-advantage.com,AI_PROVIDER=openai,COMPANY_AUTH_ISSUER_URL=https://accounts.reading-advantage.com,COMPANY_AUTH_OIDC_CLIENT_ID=marketing-web,COMPANY_AUTH_OIDC_REDIRECT_URI=https://marketing.reading-advantage.com/api/auth/callback,COMPANY_AUTH_EXPECTED_AUDIENCE=marketing,COMPANY_AUTH_CLOCK_SKEW_SECONDS=30"
-      - "--min-instances=0"
-      - "--max-instances=10"
-      - "--concurrency=80"
-      - "--set-secrets=DATABASE_URL=MARKETING_DATABASE_URL:latest,ENCRYPTION_KEY=MARKETING_ENCRYPTION_KEY:latest,OPENAI_API_KEY=MARKETING_OPENAI_API_KEY:latest,GOOGLE_API_KEY=MARKETING_GOOGLE_API_KEY:latest,OPENROUTER_API_KEY=MARKETING_OPENROUTER_API_KEY:latest,COMPANY_AUTH_OIDC_CLIENT_SECRET=MARKETING_COMPANY_AUTH_OIDC_CLIENT_SECRET:latest"
-      - "--tag=candidate-$BUILD_ID"
-      - "--no-traffic"
+      - "-c"
+      - 'set -euo pipefail && build_id="$BUILD_ID" && if [[ ! "$$build_id" =~ ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$$ ]]; then echo "BUILD_ID must be a lowercase UUID" >&2; exit 2; fi && candidate_tag="c$${build_id%%-*}" && if [[ ! "$$candidate_tag" =~ ^c[0-9a-f]{8}$$ ]]; then echo "Marketing candidate tag derivation failed" >&2; exit 2; fi && exec gcloud run deploy marketing --image="asia-southeast1-docker.pkg.dev/$PROJECT_ID/marketing/marketing:$BUILD_ID" --region=asia-southeast1 --platform=managed --allow-unauthenticated --service-account="marketing-cloud-run@$PROJECT_ID.iam.gserviceaccount.com" --add-cloudsql-instances=reading-advantage:asia-southeast1:cloud-sql --set-env-vars="NODE_ENV=production,NEXT_PUBLIC_API_URL=https://marketing.reading-advantage.com,AI_PROVIDER=openai,COMPANY_AUTH_ISSUER_URL=https://accounts.reading-advantage.com,COMPANY_AUTH_OIDC_CLIENT_ID=marketing-web,COMPANY_AUTH_OIDC_REDIRECT_URI=https://marketing.reading-advantage.com/api/auth/callback,COMPANY_AUTH_EXPECTED_AUDIENCE=marketing,COMPANY_AUTH_CLOCK_SKEW_SECONDS=30" --min-instances=0 --max-instances=10 --concurrency=80 --set-secrets="DATABASE_URL=MARKETING_DATABASE_URL:latest,ENCRYPTION_KEY=MARKETING_ENCRYPTION_KEY:latest,OPENAI_API_KEY=MARKETING_OPENAI_API_KEY:latest,GOOGLE_API_KEY=MARKETING_GOOGLE_API_KEY:latest,OPENROUTER_API_KEY=MARKETING_OPENROUTER_API_KEY:latest,COMPANY_AUTH_OIDC_CLIENT_SECRET=MARKETING_COMPANY_AUTH_OIDC_CLIENT_SECRET:latest" --tag="$$candidate_tag" --no-traffic'
 
   - name: "gcr.io/cloud-builders/gcloud"
     id: "allow-public-invoker"
@@ -107,11 +94,8 @@ steps:
     id: "capture-candidate"
     entrypoint: "bash"
     args:
-      - "apps/marketing/scripts/capture-marketing-cloud-run-release.sh"
-      - "candidate"
-      - "candidate-$BUILD_ID"
-      - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/marketing/marketing:$BUILD_ID"
-      - "/workspace/.marketing-candidate"
+      - "-c"
+      - 'set -euo pipefail && build_id="$BUILD_ID" && if [[ ! "$$build_id" =~ ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$$ ]]; then echo "BUILD_ID must be a lowercase UUID" >&2; exit 2; fi && candidate_tag="c$${build_id%%-*}" && if [[ ! "$$candidate_tag" =~ ^c[0-9a-f]{8}$$ ]]; then echo "Marketing candidate tag derivation failed" >&2; exit 2; fi && exec apps/marketing/scripts/capture-marketing-cloud-run-release.sh candidate "$$candidate_tag" "asia-southeast1-docker.pkg.dev/$PROJECT_ID/marketing/marketing:$BUILD_ID" /workspace/.marketing-candidate'
 
   - name: "node:22-slim"
     id: "verify-candidate"
