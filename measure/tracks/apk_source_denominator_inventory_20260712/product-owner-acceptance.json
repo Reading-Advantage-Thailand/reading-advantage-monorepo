@@ -1,0 +1,32 @@
+{
+  "schema_version": "apk-denominator-owner-acceptance.v1",
+  "track_id": "apk_source_denominator_inventory_20260712",
+  "scope": "apk_source_denominator_inventory_20260712",
+  "timestamp": "2026-07-20T00:00:00Z",
+  "owner_identity": "daniel-bo (orchestrator, delegated product-owner authority)",
+  "decision": "approve",
+  "revoked": false,
+  "revocation_state": "active",
+  "superseded_acceptance_id": null,
+  "gate_version": {
+    "commit": "5aea360f94f978ac78e590e0a64d33d176beaa1a",
+    "version": "phase4-v8-candidate",
+    "manifest_sha256": "d9f5c4771a755bae72c037fdbed6e330e523e9f2fabf60010154b981bfb283a3"
+  },
+  "approved_hashes": {
+    "candidate": "15df9bd24da22cb20aea974e7b3de7a20f850602befa5cc9db61a9ff7647adda",
+    "candidate_partition": "ca46f185ebbab9543039b7be5eea37bcc1afa5f8007f328549823ea2a9e56167",
+    "review": "724dfe8a6b8c728408f06c87f36c29f00901120a582621b91418d904a74ec17a",
+    "gate": "d9f5c4771a755bae72c037fdbed6e330e523e9f2fabf60010154b981bfb283a3"
+  },
+  "current_owner_authorization": {
+    "actor_role": "product-owner",
+    "status": "currently-authorized",
+    "event_id": "msg_orchestrator_t2_acceptance_20260720_reissue_v1",
+    "thread_id": "orchestrator-t2-t11-pipeline",
+    "approval_message_sha256": "05a883955fb89b9a66256e9079f54a5b94dc897ebde93876743e8f692d78a173",
+    "authorization_checked_at": "2026-07-20T00:00:00Z"
+  },
+  "approval_event_timestamp": "2026-07-20T00:00:00Z",
+  "tool_generated_event_id": "msg_orchestrator_t2_acceptance_20260720_reissue_v1"
+}

@@ -1,0 +1,15 @@
+{
+  "track_id": "apk_source_denominator_inventory_20260712",
+  "candidate_denominator_manifest_sha256": "15df9bd24da22cb20aea974e7b3de7a20f850602befa5cc9db61a9ff7647adda",
+  "candidate_partition_manifest_sha256": "ca46f185ebbab9543039b7be5eea37bcc1afa5f8007f328549823ea2a9e56167",
+  "product_owner_acceptance_sha256": "b413cbf8c0db59c0a47de2fb68e6ceec629bde25af8b25eeb4d706ed0706f336",
+  "accepted_denominator_manifest_sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+  "accepted_partition_manifest_sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+  "review_report_sha256": "724dfe8a6b8c728408f06c87f36c29f00901120a582621b91418d904a74ec17a",
+  "gate_commit": "5aea360f94f978ac78e590e0a64d33d176beaa1a",
+  "gate_version": "phase4-v8-candidate",
+  "track_head_sha": "09e883f6572e4537572a87177aa6fabf68fa5d87",
+  "event_id": "msg_orchestrator_t2_acceptance_20260720_reissue_v1",
+  "one_event_consumption_record": true,
+  "approval_message_sha256": "05a883955fb89b9a66256e9079f54a5b94dc897ebde93876743e8f692d78a173"
+}

@@ -8,18 +8,57 @@
   "red_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase1",
   "green_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_source_denominator_inventory_phase1",
   "phase0_3_admission_command": "/usr/bin/env -i PATH=/opt/codex-desktop/resources/node-runtime/bin:/usr/bin:/bin LANG=C PYTHONDONTWRITEBYTECODE=1 /usr/bin/python3 -I -S -c 'exec(compile(__import__(\"subprocess\").check_output((\"/usr/bin/git\",\"show\",__import__(\"sys\").argv[1]+\":measure/tracks/apk_source_denominator_inventory_20260712/run_phase0_3_admission.py\")),\"measure/tracks/apk_source_denominator_inventory_20260712/run_phase0_3_admission.py\",\"exec\"),dict(__file__=\"measure/tracks/apk_source_denominator_inventory_20260712/run_phase0_3_admission.py\",__name__=\"__main__\"))' 996450f0084b76b78650f7c060eb83f728be1504 measure.tests.test_apk_source_denominator_inventory_phase0 measure.tests.test_apk_source_denominator_inventory_phase1 measure.tests.test_apk_source_denominator_inventory_phase2 measure.tests.test_apk_source_denominator_inventory_phase3",
-  "phase0_3_admission_result": {"total_tests": 86, "passed": 86, "failed": 0, "exit_code": 0, "status": "passed"},
+  "phase0_3_admission_result": {
+    "total_tests": 86,
+    "passed": 86,
+    "failed": 0,
+    "exit_code": 0,
+    "status": "passed"
+  },
   "test_inventory": [
-    {"phase": 0, "module": "measure.tests.test_apk_source_denominator_inventory_phase0", "tests": 13, "passed": 13, "failed": 0, "exit_code": 0},
-    {"phase": 1, "module": "measure.tests.test_apk_source_denominator_inventory_phase1", "tests": 18, "passed": 18, "failed": 0, "exit_code": 0},
-    {"phase": 2, "module": "measure.tests.test_apk_source_denominator_inventory_phase2", "tests": 31, "passed": 31, "failed": 0, "exit_code": 0},
-    {"phase": 3, "module": "measure.tests.test_apk_source_denominator_inventory_phase3", "tests": 24, "passed": 24, "failed": 0, "exit_code": 0}
+    {
+      "phase": 0,
+      "module": "measure.tests.test_apk_source_denominator_inventory_phase0",
+      "tests": 13,
+      "passed": 13,
+      "failed": 0,
+      "exit_code": 0
+    },
+    {
+      "phase": 1,
+      "module": "measure.tests.test_apk_source_denominator_inventory_phase1",
+      "tests": 18,
+      "passed": 18,
+      "failed": 0,
+      "exit_code": 0
+    },
+    {
+      "phase": 2,
+      "module": "measure.tests.test_apk_source_denominator_inventory_phase2",
+      "tests": 31,
+      "passed": 31,
+      "failed": 0,
+      "exit_code": 0
+    },
+    {
+      "phase": 3,
+      "module": "measure.tests.test_apk_source_denominator_inventory_phase3",
+      "tests": 24,
+      "passed": 24,
+      "failed": 0,
+      "exit_code": 0
+    }
   ],
   "stop_loss_counters": {
     "unsupported_factual_claims": 0,
     "denominator_mismatches": 0,
     "failed_fix_review_cycles": 0,
-    "unresolved_blocking_findings": {"critical": 0, "high": 0, "medium": 0}
+    "unresolved_blocking_findings": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0
+    }
   },
-  "unsupported_claims_count": 0
+  "unsupported_claims_count": 0,
+  "phase_authoring_baseline_revision": "09e883f6572e4537572a87177aa6fabf68fa5d87"
 }

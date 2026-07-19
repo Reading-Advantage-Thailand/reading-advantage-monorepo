@@ -106,7 +106,7 @@ Two parallel programs are in flight; priority order when picking the next track:
 - [x] **Track: APK Cross-Game Requirements and Capability Ontology — FAILED/SUPERSEDED, DO NOT CONSUME** *Link: [./archive/apk_cross_game_asset_ontology_20260712/](./archive/apk_cross_game_asset_ontology_20260712/)*
   Failed after structural tests and generated assumptions were incorrectly treated as source-grounded completion. All hashes are revoked; artifacts remain only as negative/failure evidence.
 
-- [ ] **Track: APK Independent Source Denominator Inventory** *Link: [./tracks/apk_source_denominator_inventory_20260712/](./tracks/apk_source_denominator_inventory_20260712/)*
+- [x] **Track: APK Independent Source Denominator Inventory** *Link: [./tracks/apk_source_denominator_inventory_20260712/](./tracks/apk_source_denominator_inventory_20260712/)*
   Independently discover and fully reconcile the game, file, scene/state, copy, history, and asset denominator without interpreting product requirements.
 
 - [ ] **Track: APK Three-Game Source-Truth Pilot** *Link: [./tracks/apk_three_game_truth_pilot_20260712/](./tracks/apk_three_game_truth_pilot_20260712/)*

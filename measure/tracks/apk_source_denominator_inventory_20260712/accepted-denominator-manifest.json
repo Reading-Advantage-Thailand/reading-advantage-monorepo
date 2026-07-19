@@ -1,0 +1,31 @@
+{
+  "schema_version": "apk-denominator-accepted-manifest.v1",
+  "track_id": "apk_source_denominator_inventory_20260712",
+  "status": "accepted",
+  "consumable": true,
+  "revoked": false,
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "candidate_denominator": {
+    "path": "measure/tracks/apk_source_denominator_inventory_20260712/candidate-denominator-manifest.json",
+    "sha256": "15df9bd24da22cb20aea974e7b3de7a20f850602befa5cc9db61a9ff7647adda"
+  },
+  "independent_review": {
+    "path": "measure/tracks/apk_source_denominator_inventory_20260712/independent-review.json",
+    "sha256": "724dfe8a6b8c728408f06c87f36c29f00901120a582621b91418d904a74ec17a"
+  },
+  "owner_acceptance": {
+    "path": "measure/tracks/apk_source_denominator_inventory_20260712/product-owner-acceptance.json",
+    "sha256": "b413cbf8c0db59c0a47de2fb68e6ceec629bde25af8b25eeb4d706ed0706f336"
+  },
+  "gate_manifest_sha256": "d9f5c4771a755bae72c037fdbed6e330e523e9f2fabf60010154b981bfb283a3",
+  "denominator_counts": {
+    "asset_candidates": 426,
+    "copies": 96,
+    "files": 923,
+    "history_and_discrepancies": 523,
+    "identical_hash_groups": 225,
+    "identities": 27,
+    "source_records": 2007,
+    "surfaces": 418
+  }
+}

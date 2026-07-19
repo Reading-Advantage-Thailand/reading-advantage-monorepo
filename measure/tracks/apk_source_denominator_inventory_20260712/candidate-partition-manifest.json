@@ -1,0 +1,131 @@
+{
+  "schema_version": "apk-denominator-candidate-partition.v1",
+  "track_id": "apk_source_denominator_inventory_20260712",
+  "status": "candidate-non-consumable",
+  "consumable": false,
+  "accepted": false,
+  "revoked": false,
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "candidate_denominator": {
+    "path": "measure/tracks/apk_source_denominator_inventory_20260712/candidate-denominator-manifest.json",
+    "sha256": "15df9bd24da22cb20aea974e7b3de7a20f850602befa5cc9db61a9ff7647adda"
+  },
+  "assignments": [
+    {
+      "canonical_identity_label": "Dragon Flight — large current action implementation.",
+      "cohort": "Pilot"
+    },
+    {
+      "canonical_identity_label": "RPG Battle — multi-state turn-based implementation.",
+      "cohort": "Pilot"
+    },
+    {
+      "canonical_identity_label": "The Abyssal Well — stale/historical evidence recovery.",
+      "cohort": "Pilot"
+    },
+    {
+      "canonical_identity_label": "Castle Defense",
+      "cohort": "Action and defense"
+    },
+    {
+      "canonical_identity_label": "Magic Defense",
+      "cohort": "Action and defense"
+    },
+    {
+      "canonical_identity_label": "Wizard vs Zombie",
+      "cohort": "Action and defense"
+    },
+    {
+      "canonical_identity_label": "Village Guardian",
+      "cohort": "Action and defense"
+    },
+    {
+      "canonical_identity_label": "Archer's Revenge",
+      "cohort": "Action and defense"
+    },
+    {
+      "canonical_identity_label": "Storm the Castle Tower",
+      "cohort": "Action and defense"
+    },
+    {
+      "canonical_identity_label": "Paladin's Twin-Soul",
+      "cohort": "Action and defense"
+    },
+    {
+      "canonical_identity_label": "Gryphon Patrol",
+      "cohort": "Action and defense"
+    },
+    {
+      "canonical_identity_label": "Dragon Rider",
+      "cohort": "Traversal and exploration"
+    },
+    {
+      "canonical_identity_label": "Dungeon Liberator",
+      "cohort": "Traversal and exploration"
+    },
+    {
+      "canonical_identity_label": "Spellweaver's Run",
+      "cohort": "Traversal and exploration"
+    },
+    {
+      "canonical_identity_label": "Shadow Gate Dungeon",
+      "cohort": "Traversal and exploration"
+    },
+    {
+      "canonical_identity_label": "Labyrinth of the Goblin King",
+      "cohort": "Traversal and exploration"
+    },
+    {
+      "canonical_identity_label": "Griffin Rider's Escape",
+      "cohort": "Traversal and exploration"
+    },
+    {
+      "canonical_identity_label": "The Sorcerer's Ziggurat",
+      "cohort": "Traversal and exploration"
+    },
+    {
+      "canonical_identity_label": "Enchanted Library",
+      "cohort": "Puzzle and crafting"
+    },
+    {
+      "canonical_identity_label": "Rune Match",
+      "cohort": "Puzzle and crafting"
+    },
+    {
+      "canonical_identity_label": "Alchemist's Synthesis",
+      "cohort": "Puzzle and crafting"
+    },
+    {
+      "canonical_identity_label": "Potion Rush",
+      "cohort": "Puzzle and crafting"
+    },
+    {
+      "canonical_identity_label": "Rune Forge Chamber",
+      "cohort": "Puzzle and crafting"
+    },
+    {
+      "canonical_identity_label": "Astral Mage",
+      "cohort": "Puzzle and crafting"
+    },
+    {
+      "canonical_identity_label": "Griffin Sky-Joust",
+      "cohort": "Special and historical"
+    },
+    {
+      "canonical_identity_label": "Realm Carver",
+      "cohort": "Special and historical"
+    },
+    {
+      "canonical_identity_label": "Devourer Slime",
+      "cohort": "Special and historical"
+    },
+    {
+      "canonical_identity_label": "The Haunted Library",
+      "cohort": "Special and historical"
+    },
+    {
+      "canonical_identity_label": "Babel Architect",
+      "cohort": "Special and historical"
+    }
+  ]
+}
