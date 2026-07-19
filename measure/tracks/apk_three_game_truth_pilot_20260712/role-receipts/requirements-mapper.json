@@ -1,0 +1,83 @@
+{
+ "schema_version": "apk-role-receipt.v1",
+ "status": "complete-self-attested",
+ "track_id": "apk_three_game_truth_pilot_20260712",
+ "phase": "Phase 2: Evidence-only mapping",
+ "role": "requirements-mapper",
+ "task_id": "requirements-mapper:t3-pilot",
+ "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+ "spawn_id": "requirements-mapper:t3:2026-07-20",
+ "parent_ancestry_ids": [],
+ "prompt_sha256": "ecb99a6b2bedb09142a34b32c1938174229ba579b9e8ee486936f71e70063d7a",
+ "prompt_hash_note": "SHA-256 of the requirements-mapper prompt text as received in the user turn (verbatim reconstruction hashed; no system/harness wrapper included).",
+ "actual_context_manifest_sha256": "ed137b63d1c87dfd690696efee39d1fa5e004c52508a5b1f9720a9f0bd5e73e2",
+ "actual_context_manifest_note": "SHA-256 of the canonical JSON mapping of the 11 context files to their SHA-256 values: 3 evidence-collector role receipts, 3 claim ledgers, 3 evidence methods, accepted-denominator-manifest.json, accepted-partition-manifest.json.",
+ "start_event_id": "t3-mapper-start:2026-07-19T21:40:26Z",
+ "end_event_id": "t3-mapper-end:2026-07-19T21:55:00Z",
+ "timing_note": "Start event reflects the recorded session timestamp at mapping start; end event bounds receipt finalization. Session activity is bounded by the outputs commit and this receipt-bind commit.",
+ "final_response_sha256": "b87f3da02ecf040d8c40e21b135370f4d5d56b775dec874d893da7c29b8ce8b1",
+ "final_response_note": "SHA-256 of mapper-final-report.json, the role's final response artifact (mirrors the evidence-collector final-report convention).",
+ "output_paths": [
+  "measure/tracks/apk_three_game_truth_pilot_20260712/pilot-blueprint.json",
+  "measure/tracks/apk_three_game_truth_pilot_20260712/mapper-hypotheses.md",
+  "measure/tracks/apk_three_game_truth_pilot_20260712/mapper-final-report.json",
+  "measure/tracks/apk_three_game_truth_pilot_20260712/plan.md",
+  "measure/tracks/apk_three_game_truth_pilot_20260712/role-receipts/requirements-mapper.json"
+ ],
+ "output_hashes": {
+  "measure/tracks/apk_three_game_truth_pilot_20260712/pilot-blueprint.json": "358f9a0f32905a0d48cba1b976a43accae6ea51c43f648f35b4af8813d5e0cc9",
+  "measure/tracks/apk_three_game_truth_pilot_20260712/mapper-hypotheses.md": "f848ceb32919ea92dd101790e408e42fa49c9870143a6af50c6ea5398c4a39b4",
+  "measure/tracks/apk_three_game_truth_pilot_20260712/mapper-final-report.json": "b87f3da02ecf040d8c40e21b135370f4d5d56b775dec874d893da7c29b8ce8b1"
+ },
+ "output_sha256": "358f9a0f32905a0d48cba1b976a43accae6ea51c43f648f35b4af8813d5e0cc9",
+ "budget_declaration": {
+  "schema_version": "apk-role-budget-declaration.v1",
+  "role": "requirements-mapper",
+  "spawn_id": "requirements-mapper:t3:2026-07-20",
+  "frozen_resource_ceiling": {
+   "claim_records": 12000,
+   "command_invocations": 60,
+   "bytes_read": 134217728,
+   "source": "T2 phase0-input-freeze frozen_resource_ceilings.requirements-mapper"
+  },
+  "actual_usage": {
+   "files_read": 16,
+   "claim_records_consumed": 488,
+   "claim_ids_referenced_in_outputs": 448,
+   "blueprint_entries_authored": 348,
+   "capabilities_proposed": 0,
+   "novel_claims_proposed": 0,
+   "command_invocations": 14,
+   "bytes_read": 2600000
+  },
+  "measurement_basis": {
+   "files_read": "3 claim ledgers + 3 evidence methods + 3 collector receipts + 2 accepted manifests + program spec + track spec/plan + T2 phase0-input-freeze + source-denominator schema probe",
+   "claim_records_consumed": "225 DF + 212 RPG + 51 AW = 488 ledger claims read",
+   "blueprint_entries_authored": "computed by structural walk of pilot-blueprint.json games section",
+   "command_invocations": "git status/log/diff, ls, sha256sum-equivalent python hashing, ledger analysis scripts",
+   "bytes_read": "~0.47 MB ledgers + ~0.02 MB methods/receipts/manifests + program/spec/plan/T2 freeze files (~2.1 MB incl. source-denominator probe)"
+  }
+ },
+ "budget_declaration_sha256": "ee227162bebfd1d7cc58cacca35d310bbb60056a5cea2cff75562581e63b12ba",
+ "commit_sha": "666ede2682567877e13c798bc3db16a78f28d0a8",
+ "commit_sha_note": "Outputs commit containing pilot-blueprint.json, mapper-hypotheses.md, mapper-final-report.json, and plan.md. This receipt is bound by the following receipt-bind commit, mirroring the evidence-collector bind-commit precedent (0f3c8a03, 00f2784b).",
+ "reviewer_isolation": "fresh-context-only, inherited_narrative=false, fork_turns=none",
+ "findings": {
+  "blueprint_entries_authored": 348,
+  "claim_ids_referenced": 448,
+  "unresolved_claim_references": 0,
+  "non_authoritative_hypotheses": 6,
+  "novel_claims_proposed": 0,
+  "capabilities_proposed": 0,
+  "mapper_boundary_violations": 0,
+  "stop_loss_observations": 0,
+  "carried_forward_unknowns": [
+   "SLO-DF-1 dragon-flight-controller.ts denominator-gap candidate (collector observation)",
+   "DF-ASSET-036/037 unresolved audio and unreferenced-image usages",
+   "RPG-TR-020/021/022 unresolved flashTone write candidates",
+   "AW-HIST-076 E2E-spec denominator discrepancy",
+   "AW-HIST-095/096 intra-revision UI/logic inconsistency at deletion parent"
+  ],
+  "commit_title_deviation": "Requested commit title used start case ('T3 requirements mapper pilot blueprints'); repo commitlint subject-case hook rejects that casing, so the committed subject is lower-case: 'chore(measure): t3 requirements mapper pilot blueprints (track_id: apk_three_game_pilot_20260712)'."
+ }
+}
