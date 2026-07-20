@@ -1,0 +1,65 @@
+{
+  "schema": "apk-role-receipt.v2",
+  "status": "browser audit authored; gate-blocked by browser-harness attachment failure; B4 remains blocked",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "task_id": "B2-BROWSER",
+  "role": "browser-auditor-batch-b",
+  "role_identity": "browser-auditor-batch-b",
+  "phase_base_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha": "02c7f7b4fd5c0b07531babacacde97a9dcf8d97b",
+  "prompt_sha256": null,
+  "prompt_metadata_note": "Canonical prompt bytes and provider prompt-event metadata were unavailable; no prompt hash is invented.",
+  "actual_context_manifest_sha256": null,
+  "actual_context_manifest_note": "No provider-exported context manifest, spawn ID, session ID, ancestry, or isolation export was available.",
+  "spawn_id": null,
+  "provider_session_id": null,
+  "parent_ancestry_ids": null,
+  "fork_turns": null,
+  "commit_sha": null,
+  "commit_note": "No commit was created, as instructed.",
+  "input_hashes": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/test-strategy-batch-b.md": "7b3b5f3e4c0f8ba1309c2d22b0a815771f5c26f647cc7cb883ea84f0a03d00dc",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-role-applicability.json": "71db3e7eb9ac71177d7a555ceb6e43218c9bcbd5ca0afdaa2b5574ace9a38bb4",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-discovery-audit-v2.json": "f0f27734d22b8ec376bbf8b1fe96574a75f2c293766bee2440c0484164dd1daa",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v3.py": "ef16e043b243fc5f488388a8155b895d403d32161ee2aa532f5470cf9b237692",
+    "apps/advantage-games/package.json": "8fc83e94fc9f00421bea2430d46143059b9488ce01cba9f77df475cd581c99b3",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-budget-declaration.json": "7d649b94d28ddc4538b79ba68a7e0cd71597ec2968ca7ae09874cf817a8b0f2f"
+  },
+  "unavailable_provenance": [
+    "Provider prompt hash and event metadata unavailable.",
+    "Provider context, spawn, ancestry, isolation, and final-response attestations unavailable.",
+    "Browser-harness could not attach to Chrome DevTools; no browser evidence exists."
+  ],
+  "browser_probe": {
+    "command": "browser-harness -c 'print(page_info())'",
+    "exit_code": 1,
+    "stderr": "browser-harness: click Allow on chrome://inspect (and tick the checkbox if shown)\nTraceback (most recent call last):\n  File \"/home/daniel-bo/.local/bin/browser-harness\", line 8, in <module>\n    sys.exit(main())\n  File \"/home/daniel-bo/.agents/skills/browser-harness/run.py\", line 65, in main\n    ensure_daemon()\n  File \"/home/daniel-bo/.agents/skills/browser-harness/admin.py\", line 92, in ensure_daemon\n    raise RuntimeError(msg or f\"daemon {name or NAME} didn't come up -- check /tmp/bu-{name or NAME}.log\")\nRuntimeError: fatal: Chrome's remote-debugging page is open, but DevTools is not live yet on 127.0.0.1:9222 — if Chrome opened a profile picker, choose your normal profile first, then tick the checkbox and click Allow if shown"
+  },
+  "dispositions": {
+    "village-guardian": "audit-blocked",
+    "archers-revenge": "audit-blocked",
+    "storm-castle-tower": "audit-blocked"
+  },
+  "student_data_records": 0,
+  "output_paths_and_sha256": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-browser-audit-v2.json",
+      "sha256": "e21af1e125288654ff9f7462ee6401d00e7183d6d2bee40f7cd66f656d611c7f"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/browser-auditor-batch-b-v2.json",
+      "sha256": null,
+      "sha256_note": "A receipt cannot truthfully embed its own final SHA-256 because inserting it changes its bytes."
+    }
+  ],
+  "validation": {
+    "json_command": "python3 -m json.tool measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-browser-audit-v2.json >/dev/null && python3 -m json.tool measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/browser-auditor-batch-b-v2.json >/dev/null",
+    "json_result": "exit 0",
+    "diff_check_command": "git diff --check",
+    "diff_check_result": "exit 0",
+    "targeted_v3_selector": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v3.py -k 'BatchBBrowserContract' --maxfail=1",
+    "targeted_v3_selector_result": "1 failed, 1 passed, 41 deselected; exit 1. The failure is against the immutable batch-b-browser-audit.json selector target and reports all three audit-blocked records as unreviewed dispositions; no green B4 result is claimed."
+  },
+  "role_boundary": "Only the two named additive v2 outputs were created. Existing evidence, audits, receipts, source, tests, plans, registries, and other files were not modified."
+}
