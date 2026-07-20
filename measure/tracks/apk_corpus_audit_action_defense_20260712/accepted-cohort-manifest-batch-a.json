@@ -1,0 +1,44 @@
+{
+  "schema_version": "apk-accepted-cohort-manifest.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-a",
+  "phase": "Phase 1 evidence packages",
+  "phase_base_sha": "9228c5c5",
+  "role_base_sha": "e2609256b69b2bcbcbd4749ae3a9b0fe47fb836f",
+  "candidate_manifest_sha256": "8bd3c806a9e35a4caa9d42f3a3e67e374ee957f4285b8220e9756f56046d5ac8",
+  "product_owner_acceptance_sha256": "2582c940ffccf46b6c20a27149cc2565faeecf80c814056f52fd76f768136df1",
+  "decision": "ACCEPT-WITH-DISCLOSURE",
+  "games": [
+    "magic-defense",
+    "wizard-vs-zombie"
+  ],
+  "claims_total": 187,
+  "claims_resolved": 178,
+  "fixtures_total": 9,
+  "open_disclosures": [
+    "DISC-001"
+  ],
+  "commit_lineage": {
+    "phase_base": "9228c5c5",
+    "v1_outputs_committed": [
+      "fc643d04",
+      "31dac90b"
+    ],
+    "v1_binds": [
+      "0b641aa3",
+      "5464dc6b"
+    ],
+    "cycle1_stop_loss": "32bfec71",
+    "v2_md_outputs": "17859c16",
+    "v2_md_bind": "760100fd",
+    "v2_wvz_outputs": "81c641a6",
+    "v2_wvz_bind": "fadc4f46",
+    "v2_truth_tests_outputs": "c8e6e78e",
+    "v2_truth_tests_bind": "ea87fca2",
+    "v2_mapper_outputs": "2b23abe3",
+    "v2_mapper_bind": "68769401",
+    "v2_adversarial_outputs": "fd4c289f",
+    "v2_adversarial_bind": "e2609256"
+  },
+  "binding_status": "ACCEPTED"
+}

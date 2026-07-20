@@ -1,0 +1,118 @@
+{
+  "schema_version": "apk-candidate-cohort-manifest.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-a",
+  "phase": "Phase 1 evidence packages, Cycle 2",
+  "phase_base_sha": "9228c5c5",
+  "role_base_sha": "e2609256b69b2bcbcbd4749ae3a9b0fe47fb836f",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "predecessor_binding": {
+    "t1_evidence_integrity_gate": "phase4-v8-candidate",
+    "t1_evidence_integrity_gate_commit": "5aea360f",
+    "t2_denominator_manifest_sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+    "t2_partition_manifest_sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+    "t3_pilot_manifest_sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b",
+    "t4_strategy_commit": "64293960"
+  },
+  "games": [
+    "magic-defense",
+    "wizard-vs-zombie"
+  ],
+  "artifacts": {
+    "magic-defense": {
+      "ledger": "measure/tracks/apk_corpus_audit_action_defense_20260712/magic-defense-claim-ledger-v2.json",
+      "method": "measure/tracks/apk_corpus_audit_action_defense_20260712/magic-defense-evidence-method-v2.md",
+      "final_report": "measure/tracks/apk_corpus_audit_action_defense_20260712/magic-defense-evidence-final-report-v2.json",
+      "receipt": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-magic-defense-v2.json"
+    },
+    "wizard-vs-zombie": {
+      "ledger": "measure/tracks/apk_corpus_audit_action_defense_20260712/wizard-vs-zombie-claim-ledger-v2.json",
+      "method": "measure/tracks/apk_corpus_audit_action_defense_20260712/wizard-vs-zombie-evidence-method-v2.md",
+      "final_report": "measure/tracks/apk_corpus_audit_action_defense_20260712/wizard-vs-zombie-evidence-final-report-v2.json",
+      "receipt": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-wizard-vs-zombie-v2.json",
+      "supersede_receipt": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-wizard-vs-zombie-supersede.json"
+    }
+  },
+  "artifacts_sha256": {
+    "magic-defense": {
+      "ledger": "10d974bd3e620a4aaacde171a80e5f82945f58fdbd38db57b996805b62b71e45",
+      "method": "7a83f45c1bd2869103ac7fe6aad24652fd517714e967584d15c0e521c72cb6f5",
+      "final_report": "c8bb46549ba69567be62eb8eb8a4d3391a43a6143b452dc8a259d325b258ee29",
+      "receipt": "3f55937bc078dd090cce990c581eb8c519bf235618da9869f6c65701c3cd9524"
+    },
+    "wizard-vs-zombie": {
+      "ledger": "28320b36f18645d476b6e353275d7cf3f07bc0f73bea719da1e50537e8e8b635",
+      "method": "c97700e78d38b2f824284515b7f6850eb7b85614d2cedb6dec4bc2fcc255a4a8",
+      "final_report": "13944b1b79da541448ee36ee7d99f26612b8ab7d4c36ccdfa4f8edd7ac78373e",
+      "receipt": "16350a248704904c78c34a00d285d8b198b0311f538530f40a48d6258fdbb9aa",
+      "supersede_receipt": "8b78477d0faf1b8f6f70e558e45fb846c7796588bcc4ef9d7c9e757ce9e19941"
+    }
+  },
+  "truth_tests": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-a-truth-tests-v2.py",
+    "sha256": "69c598729ca31c9f0c49aa8fae44077aa6522b2fe5e0767be491ab9ad3d68cba",
+    "tests": 47,
+    "passed": 47,
+    "failed": 0
+  },
+  "blueprint": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-a-blueprint-v2.json",
+    "sha256": "2cae07b55d027713410562738f57985534235b37ed8566eee7833539f93367f4",
+    "mode": "B (clean rewrite)",
+    "supersedes_blueprint_sha256": "5d3b0c574897bfcd2c6b438d8b6efd6ffed6cc20414284cf53858955b1865657"
+  },
+  "adversarial_review": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/adversarial-review-batch-a-v2.md",
+    "sha256": "c90a443e487006ec2fe66efcb712433ad9694308aa65087bc7893107608ae88b",
+    "claim_rederivations": 17,
+    "fixture_rederivations": 12,
+    "issues_found": 5
+  },
+  "claims_summary": {
+    "magic-defense": {
+      "total": 110,
+      "fixtures": 5,
+      "factual_resolved": 105
+    },
+    "wizard-vs-zombie": {
+      "total": 77,
+      "fixtures": 4,
+      "factual_resolved": 73
+    },
+    "total": {
+      "claims": 187,
+      "fixtures": 9,
+      "factual_resolved": 178
+    }
+  },
+  "gates_status": {
+    "G-DN": "GREEN",
+    "G-CL": "YELLOW (5 semantic-range issues, valid hashes but claim_text overstates)",
+    "G-NF": "GREEN",
+    "G-BP": "GREEN",
+    "G-SL": "GREEN",
+    "G-AS": "GREEN",
+    "G-RR": "GREEN"
+  },
+  "cycle_history": {
+    "cycle_1": "STOP-LOSS at 32bfec71 \u2014 12 fabricated/anchor-drifted claims + receipt mutation",
+    "cycle_2": "REMEDIATED \u2014 12 v1 issues corrected via Mode A (MD) and Mode B (WVZ); new 5 semantic-range issues surfaced by adversarial review, accepted with disclosure"
+  },
+  "open_items": [
+    {
+      "id": "DISC-001",
+      "severity": "low",
+      "category": "claim_text_overstatement",
+      "description": "5 valid-hash citations cite ranges that don't fully support claim_text. Hashes are correct; claim_text overstates what the range shows.",
+      "affected_claims": [
+        "MD-MECH-002",
+        "MD-MECH-006",
+        "MD-ASSET-016",
+        "MD-RESP-002",
+        "WVZ-ROUTE-007"
+      ],
+      "disposition": "ACCEPTED-WITH-DISCLOSURE; cycle 3 candidate for claim-text narrowing"
+    }
+  ],
+  "status": "candidate"
+}

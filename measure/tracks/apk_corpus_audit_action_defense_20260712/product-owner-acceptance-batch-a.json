@@ -1,0 +1,36 @@
+{
+  "schema_version": "apk-product-owner-acceptance.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-a",
+  "acceptance_role": "product-owner (delegated to orchestrator per measure-apk-evidence-track-set-review.md)",
+  "phase_base_sha": "9228c5c5",
+  "role_base_sha": "e2609256b69b2bcbcbd4749ae3a9b0fe47fb836f",
+  "candidate_manifest_sha256": "8bd3c806a9e35a4caa9d42f3a3e67e374ee957f4285b8220e9756f56046d5ac8",
+  "decision": "ACCEPT-WITH-DISCLOSURE",
+  "decision_basis": [
+    "Cycle 2 fully resolved the 12 cycle-1 fabricated/anchor-drifted claims via Mode A (magic-defense) and Mode B (wizard-vs-zombie) re-collection.",
+    "Cycle 2 v2 truth-tests: 47/47 PASS, 0 FAIL.",
+    "Cycle 2 adversarial review: 17 claim re-derivations (12 MATCH), 12 fixture re-derivations (12/12 MATCH).",
+    "5 NEW semantic-range issues surfaced (MD-MECH-002, MD-MECH-006, MD-ASSET-016, MD-RESP-002, WVZ-ROUTE-007) \u2014 hashes are valid (real source data) but claim_text overstates the cited range.",
+    "Per anti-pattern A14 (honest disclosure) and G-CL YELLOW status, these are accepted with disclosure (DISC-001) and flagged for cycle-3 claim-text refinement.",
+    "Cycle budget: cycle 1 = STOP-LOSS, cycle 2 = REMEDIATED. Within 2-cycle budget per program rule."
+  ],
+  "open_items_acknowledged": [
+    "DISC-001"
+  ],
+  "conditional_disclosure": "DISC-001 will appear in any successor that references batch-a evidence; downstream successors must either narrow claim_text or carry the disclosure forward.",
+  "successor_implications": {
+    "may_proceed_to": [
+      "batch-b",
+      "phase-acceptance",
+      "closeout"
+    ],
+    "must_carry_forward": [
+      "DISC-001 disclosure",
+      "supersede_receipt for ca423fbb mutation",
+      "cycle-2 receipt lineage"
+    ]
+  },
+  "signed_by": "orchestrator (delegated product-owner authority)",
+  "signed_at": "2026-07-20"
+}
