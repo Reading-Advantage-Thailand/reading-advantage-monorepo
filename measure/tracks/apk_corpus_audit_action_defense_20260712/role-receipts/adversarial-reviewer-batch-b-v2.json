@@ -1,0 +1,126 @@
+{
+  "schema": "apk-role-receipt.v1",
+  "status": "fresh remediation review complete; blocked; non-passing provenance; no candidate or acceptance authorized",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "task_id": "B2-REVIEW-V2",
+  "role": "adversarial-reviewer-batch-b-v2",
+  "role_identity": "adversarial-reviewer-batch-b-v2",
+  "phase_base_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha": "df105b40e1926d86e33ea1d393c60491894f172d",
+  "allowed_input_manifest_sha256": "e47a9e95fec45b4f2c03834a09d9ca56f62d18e03d6f29af56b1d3642ec71717",
+  "budget_declaration_sha256": "7d649b94d28ddc4538b79ba68a7e0cd71597ec2968ca7ae09874cf817a8b0f2f",
+  "prompt_sha256": null,
+  "prompt_metadata_note": "The user prompt is visible conversationally, but canonical raw API prompt bytes and a tool-attested prompt event/serialization were not exposed. No retrospective prompt hash is invented; this is non-passing provenance.",
+  "actual_context_manifest_sha256": null,
+  "actual_context_manifest_note": "No provider-exported canonical context manifest was available. Exact repository inputs are enumerated below, but file hashes do not substitute for provider context provenance.",
+  "provider_spawn_id": null,
+  "provider_session_id": null,
+  "parent_ancestry_ids": null,
+  "fork_turns": null,
+  "raw_isolation_export_sha256": null,
+  "isolation_metadata_note": "This role was instructed to act as a fresh adversarial-reviewer-batch-b v2 role and did not reuse prior reviewer narrative, but provider spawn/session/ancestry, fork_turns=none attestation, and a raw isolation export were unavailable. Freshness is therefore not treated as tool-attested proof.",
+  "start_event_id": null,
+  "start_event_timestamp": null,
+  "end_event_id": null,
+  "end_event_timestamp": null,
+  "event_metadata_note": "Provider start/end event IDs and timestamps were unavailable and were not synthesized. The report's completed_at is a local shell timestamp, not a provider event attestation.",
+  "final_response_sha256": null,
+  "final_response_event_id": null,
+  "final_response_metadata_note": "Canonical final-response bytes and a provider final-response event are unavailable before this response is emitted. The review-file hash is not substituted for final-response provenance.",
+  "commit_sha": null,
+  "commit_note": "The user explicitly prohibited commits. Null is truthful and non-passing under the receipt contract.",
+  "prior_role_history": [
+    {
+      "role": "adversarial-reviewer-batch-b",
+      "output_commit": "02c7f7b4fd5c0b07531babacacde97a9dcf8d97b",
+      "review_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-adversarial-review.json",
+      "review_sha256": "773731937021132f7dab8c00388244bbd3f47360122405811e6eec4df58fb58c",
+      "receipt_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-batch-b.json",
+      "receipt_sha256": "f78bf1d70ea97ba1a587612423439fe47c70ab7d503fee4c94319551c9c0532e",
+      "use": "Immutable superseded review history only; no prior reviewer narrative was reused as evidence."
+    }
+  ],
+  "input_hashes": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/test-strategy-batch-b.md": "7b3b5f3e4c0f8ba1309c2d22b0a815771f5c26f647cc7cb883ea84f0a03d00dc",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v3.py": "ef16e043b243fc5f488388a8155b895d403d32161ee2aa532f5470cf9b237692",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/truth-test-author-batch-b-v3.json": "2e488737080497618664e8f96ec09ba65665b03ee4ef5b01721a07f0dda9e638",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-discovery-audit-v2.json": "f0f27734d22b8ec376bbf8b1fe96574a75f2c293766bee2440c0484164dd1daa",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/discovery-auditor-batch-b-v2.json": "c6c94ea45b4564a5a4cbf17451d0069f3a67e27b63b0af20bbb2bb61df613dfb",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-browser-audit-v2.json": "e21af1e125288654ff9f7462ee6401d00e7183d6d2bee40f7cd66f656d611c7f",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/browser-auditor-batch-b-v2.json": "f4a3e6528007af4a8630f6cf05d6904a74f18b14617764625d35c0bb6b692ad9",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-asset-usage-audit.json": "845b36d54ec1677982c7e7f537d1282fe4caec86677302555998a834b6f8a9a8",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/asset-auditor-batch-b.json": "f7022973a9d84499aafc9312988afcb193f0569bcbf8e38b31348d1df6ac81ce",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/village-guardian-claim-ledger-batch-b.json": "596cfe8541277f8a2fd0cba2598116ae443bad3949594445dac4f6e7f4292592",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-claim-ledger-batch-b.json": "2a9f7fd06ff60f639ccb4c997561e82ba709a00af627d6c0bea9d03f3aaf16e4",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/storm-castle-tower-claim-ledger-batch-b.json": "9f9337ec9b86161337553a8b8ab92e57cc954d2a0deb42018dad0ed99394e9d9",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-adversarial-review.json": "773731937021132f7dab8c00388244bbd3f47360122405811e6eec4df58fb58c",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-batch-b.json": "f78bf1d70ea97ba1a587612423439fe47c70ab7d503fee4c94319551c9c0532e",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-budget-declaration.json": "7d649b94d28ddc4538b79ba68a7e0cd71597ec2968ca7ae09874cf817a8b0f2f",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-role-applicability.json": "71db3e7eb9ac71177d7a555ceb6e43218c9bcbd5ca0afdaa2b5574ace9a38bb4"
+  },
+  "output_paths_and_sha256": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-adversarial-review-v2.json",
+      "sha256": "b610cce1099e0c183bacdad23c6f566fd5003e466d91deb42faac19140f6d1c3"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-batch-b-v2.json",
+      "sha256": null,
+      "sha256_note": "A receipt cannot contain its own final SHA-256 without changing its bytes; no self-hash is fabricated. An external immutable event or commit binding remains unavailable."
+    }
+  ],
+  "resource_use": {
+    "ceilings": {
+      "source_bytes_read": 20971520,
+      "source_files_read": 80,
+      "command_invocations": 50,
+      "elapsed_minutes": 25,
+      "records_authored": 240
+    },
+    "actual": {
+      "source_bytes_read": 5000000,
+      "source_files_read": 43,
+      "command_invocations": 30,
+      "elapsed_minutes": 25,
+      "records_authored": 155
+    },
+    "ceiling_breaches": 0,
+    "measurement_note": "File and command counts conservatively include the bounded review inputs, failed diagnostic scripts, test runs, Git checks, deterministic sampling, fixture checks, asset re-derivation, final validation, and reporting allowance. Byte, command, and elapsed values are conservative numeric accounting because exact provider telemetry is unavailable; they are not presented as provenance proof."
+  },
+  "review_results": {
+    "b_test_001": "resolved",
+    "fresh_sampled_claims": 29,
+    "fixtures_rederived": 12,
+    "asset_records_rederived": 12,
+    "browser_bypass_detected": false,
+    "scope_exact": true,
+    "unresolved_findings": {"critical": 1, "high": 1, "medium": 1, "low": 0},
+    "stop_loss": "active-block-pending-product-owner-direction",
+    "candidate_authorized": false,
+    "acceptance_authorized": false
+  },
+  "unavailable_provenance": [
+    "Canonical prompt bytes and prompt event metadata unavailable.",
+    "Provider-exported actual-context manifest unavailable.",
+    "Provider spawn/session and ancestry identifiers unavailable.",
+    "fork_turns=none and raw isolation export proof unavailable.",
+    "Provider start/end event identifiers and timestamps unavailable.",
+    "Canonical final-response bytes and event identifier unavailable.",
+    "Commit provenance unavailable because commits were prohibited.",
+    "Self-receipt immutable binding unavailable without an external event or commit."
+  ],
+  "provenance_classification": "non-passing-unavailable-provenance; this receipt cannot authorize candidate publication or acceptance",
+  "validation": {
+    "json_command": "python3 -m json.tool measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-adversarial-review-v2.json >/dev/null && python3 -m json.tool measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-batch-b-v2.json >/dev/null",
+    "json_result": "exit 0",
+    "diff_check_command": "git diff --check",
+    "diff_check_result": "exit 0",
+    "truth_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v3.py",
+    "truth_result": "38 passed, 3 subtests passed, 6 expected blocking failures; exit 1; no pytest ERROR outcomes",
+    "scope_command": "git status --short -- measure/tracks/apk_corpus_audit_action_defense_20260712",
+    "scope_result": "The two authorized v2 reviewer files are untracked alongside the pre-existing untracked _orchestrator/batch-b-ux-pre-snapshot.json; the pre-existing snapshot and unrelated dirty files were not modified."
+  },
+  "role_boundary": "Only batch-b-adversarial-review-v2.json and this receipt were created. No existing source, test, package, audit, receipt, plan, registry, manifest, or unrelated dirty file was edited, and no commit was created."
+}

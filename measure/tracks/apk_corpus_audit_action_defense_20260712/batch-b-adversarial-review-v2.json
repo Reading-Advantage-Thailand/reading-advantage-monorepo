@@ -1,0 +1,321 @@
+{
+  "schema": "apk-batch-adversarial-review.v2",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "role": "adversarial-reviewer-batch-b-v2",
+  "phase_base_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha": "df105b40e1926d86e33ea1d393c60491894f172d",
+  "completed_at": "2026-07-20T19:34:37+07:00",
+  "status": "blocked-stop-loss-active; no candidate or acceptance authorized",
+  "scope": [
+    "village-guardian",
+    "archers-revenge",
+    "storm-castle-tower"
+  ],
+  "active_artifacts": {
+    "discovery": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-discovery-audit-v2.json",
+      "sha256": "f0f27734d22b8ec376bbf8b1fe96574a75f2c293766bee2440c0484164dd1daa"
+    },
+    "browser": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-browser-audit-v2.json",
+      "sha256": "e21af1e125288654ff9f7462ee6401d00e7183d6d2bee40f7cd66f656d611c7f"
+    },
+    "truth": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v3.py",
+      "sha256": "ef16e043b243fc5f488388a8155b895d403d32161ee2aa532f5470cf9b237692"
+    }
+  },
+  "scope_reconciliation": {
+    "discovery_scope": [
+      "village-guardian",
+      "archers-revenge",
+      "storm-castle-tower"
+    ],
+    "claim_package_scope": [
+      "village-guardian",
+      "archers-revenge",
+      "storm-castle-tower"
+    ],
+    "browser_v2_scope": [
+      "village-guardian",
+      "archers-revenge",
+      "storm-castle-tower"
+    ],
+    "exact_match": true,
+    "foreign_or_missing_games": []
+  },
+  "truth_test_runs": {
+    "full_v3": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v3.py",
+      "result": "38 passed, 3 subtests passed, 6 failed; exit 1",
+      "failed_test_ids": [
+        "BatchBReceiptContract::test_required_role_receipts_have_authentic_provenance",
+        "BatchBBrowserContract::test_browser_records_require_real_behavior_or_reviewed_failure",
+        "BatchBIndependentReviewContract::test_review_samples_every_game_and_has_zero_blockers",
+        "BatchBAcceptanceContract::test_acceptance_hashes_and_chronology_bind_exact_bytes",
+        "BatchBAcceptanceContract::test_acceptance_stays_red_without_b4_and_authentic_receipts",
+        "BatchBAcceptanceContract::test_candidate_acceptance_and_accepted_manifests_exist"
+      ],
+      "unexpected_test_errors": 0
+    },
+    "b0_through_b3": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v3.py -k 'BatchBFreezeContract or BatchBCollectorPackageContract or BatchBMapperPackageContract or BatchBClaimTruthContract or BatchBNegativeFixtureContract'",
+      "result": "30 passed, 14 deselected, 3 subtests passed; exit 0"
+    },
+    "receipt_gate": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v3.py -k BatchBReceiptContract",
+      "result": "2 passed, 1 failed, 41 deselected; exit 1; 63 provenance limitations across the eight receipts selected by v3"
+    },
+    "b4": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v3.py -k 'BatchBBrowserContract or BatchBAssetContract'",
+      "result": "4 passed, 1 failed, 39 deselected; exit 1"
+    },
+    "b5": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v3.py -k 'BatchBIndependentReviewContract or BatchBAcceptanceContract'",
+      "result": "2 passed, 4 failed, 38 deselected; exit 1"
+    }
+  },
+  "b_test_001_verification": {
+    "finding_id": "B-TEST-001",
+    "status": "resolved",
+    "required_sample_formula": "min(population, max(10, ceil(population * 0.10)))",
+    "archers_revenge_population": 8,
+    "computed_required": 8,
+    "selected": 8,
+    "partial_seven_of_eight_rejected": true,
+    "regression_test": "BatchBIndependentReviewContract::test_archers_revenge_low_population_requires_all_eight_claims",
+    "regression_result": "passed in the v3 B5 selector",
+    "conclusion": "The population-bounded correction fixes the prior impossible ten-of-eight requirement without accepting a partial low-population sample."
+  },
+  "immutability_checks": {
+    "v3_freeze_contract_result": "pass",
+    "original_truth_test_sha256": "4a1a23b7208e6b8ca5476ffa5d350d3a4b1e370b4ccdbc91fca89fba5b3e5098",
+    "truth_v2_sha256": "c7cc96ebcbdd31dad929e063e5ec055b73e0d728a97a7ad2c4ebfa82393753e8",
+    "truth_v3_sha256": "ef16e043b243fc5f488388a8155b895d403d32161ee2aa532f5470cf9b237692",
+    "original_discovery_sha256": "7c1012debd287339cb3fbb7018282b5b0cd5beb9b78f9bf5df6cb96f4e6dbc61",
+    "discovery_v2_sha256": "f0f27734d22b8ec376bbf8b1fe96574a75f2c293766bee2440c0484164dd1daa",
+    "original_browser_sha256": "00bed85a95a043c9f404af1151a289d6cf16d064741b8cb00079c2c55cec8032",
+    "browser_v2_sha256": "e21af1e125288654ff9f7462ee6401d00e7183d6d2bee40f7cd66f656d611c7f",
+    "original_review_sha256": "773731937021132f7dab8c00388244bbd3f47360122405811e6eec4df58fb58c",
+    "originals_modified_in_worktree_before_v2_review": false,
+    "conclusion": "The v1 truth/discovery bytes match their immutable commit checks, the v2/v3 bindings match current bytes, and the browser v1 hash still matches the prior review input binding. Supersessions are additive."
+  },
+  "samples": {
+    "algorithm": "For each game, seed = SHA-256(package_sha256 concatenated directly with normalized_game_id). Rank claims by SHA-256(seed + NUL + claim_id). Greedily select the ranked claim that covers the most uncovered category, revision-class, and evidence-type strata, breaking ties by rank; after every populated stratum is covered, fill by rank to the population-bounded contract minimum.",
+    "village-guardian": {
+      "population": 12,
+      "required": 10,
+      "selected_count": 10,
+      "package_sha256": "596cfe8541277f8a2fd0cba2598116ae443bad3949594445dac4f6e7f4292592",
+      "seed": "2d215948fc74df21468ef870cb6ba4c8a7f50bed0806f694425acb8756dbf2e4",
+      "selected_claim_ids": [
+        "VG-IMPL-003",
+        "VG-ASSET-002",
+        "VG-SCENE-001",
+        "VG-TEST-001",
+        "VG-ROUTE-001",
+        "VG-ID-001",
+        "VG-COPY-001",
+        "VG-IMPL-004",
+        "VG-ASSET-001",
+        "VG-ROUTE-002"
+      ],
+      "fixture_ids_rederived": ["VG-NEG-001", "VG-NEG-002", "VG-NEG-003", "VG-NEG-004"],
+      "covered_categories": ["asset", "copy", "identity", "implementation", "route", "scene-state", "test"],
+      "covered_revision_classes": ["current-baseline"],
+      "covered_evidence_types": ["binary", "text"],
+      "envelope_or_stratification_defects": [],
+      "semantic_result": "The anchors establish two distinct collision branches, two binary-presence envelopes, the requestAnimationFrame playing loop, test intent, client GET and POST wiring, catalog metadata, initial component values, and the level-transition branch. They do not establish live route responses, persistence, asset loading, production test execution, or browser behavior."
+    },
+    "archers-revenge": {
+      "population": 8,
+      "required": 8,
+      "selected_count": 8,
+      "package_sha256": "2a9f7fd06ff60f639ccb4c997561e82ba709a00af627d6c0bea9d03f3aaf16e4",
+      "seed": "c1b767773233b0b1d9363db7fa0d89553dbe0936bc1ede9e7f935b4f17405d2c",
+      "selected_claim_ids": [
+        "AR-B-HIST-STATE-001",
+        "AR-B-IDENTITY-001",
+        "AR-B-HIST-ROUTE-001",
+        "AR-B-HIST-RESPONSIVE-001",
+        "AR-B-HIST-TEST-001",
+        "AR-B-HIST-MECHANIC-001",
+        "AR-B-HIST-ROUTE-002",
+        "AR-B-HIST-MECHANIC-002"
+      ],
+      "fixture_ids_rederived": ["AR-B-FIX-001", "AR-B-FIX-002", "AR-B-FIX-003", "AR-B-FIX-004"],
+      "covered_categories": ["identity", "mechanic", "responsive", "route", "state", "test"],
+      "covered_revision_classes": ["current-baseline", "historical"],
+      "covered_evidence_types": ["text"],
+      "envelope_or_stratification_defects": [],
+      "semantic_result": "All eight claims were re-derived. They establish one current catalog identity and historical state declarations, request wiring, CSS declarations, mocked-test intent, a conditional defeat guard, and an unshielded-hit branch. They do not establish a current implementation, reachable victory from the type union, compact/wide behavior, endpoint behavior, or live play."
+    },
+    "storm-castle-tower": {
+      "population": 42,
+      "required": 10,
+      "selected_count": 11,
+      "package_sha256": "9f9337ec9b86161337553a8b8ab92e57cc954d2a0deb42018dad0ed99394e9d9",
+      "seed": "84ed643c96a7d35dcdf676a35cdb14f96713c0300f6450e83ec1ca555812848b",
+      "selected_claim_ids": [
+        "SCT-ASSET-002",
+        "SCT-ROUTE-H005",
+        "SCT-HIST-002",
+        "SCT-MECH-H005",
+        "SCT-TRANS-H003",
+        "SCT-COPY-001",
+        "SCT-SCENE-H006",
+        "SCT-ID-001",
+        "SCT-RESP-H003",
+        "SCT-ABS-001",
+        "SCT-TEST-H003"
+      ],
+      "fixture_ids_rederived": ["SCT-NEG-001", "SCT-NEG-002", "SCT-NEG-003", "SCT-NEG-004"],
+      "covered_categories": ["asset", "copy", "history", "identity", "implementation", "mechanic", "responsive", "route", "scene-state", "test", "transition"],
+      "covered_revision_classes": ["current-baseline", "historical"],
+      "covered_evidence_types": ["binary", "bounded-query", "text"],
+      "envelope_or_stratification_defects": [],
+      "semantic_result": "The anchors establish PNG bytes and dimensions, a historical route adapter, cartridge deletion chronology, a conditional incorrect-window branch, a historical correct-selection transition, catalog prose, historical initial state, withdrawal-set membership, historical stage scaling, the bounded baseline slug-path result, and historical test intent. They do not establish current runnability, current route behavior, PNG loading, live responsiveness, or test execution."
+    },
+    "selected_claims_total": 29,
+    "selected_envelope_mismatches": 0,
+    "bounded_query_mismatches": 0
+  },
+  "negative_fixtures": {
+    "method": "Every fixture was independently resolved to its cited claim, exact Git object, or bounded query. Directory fixtures were checked as trees; fabricated route/asset/mechanic assertions were checked against exact bounded source; responsive fixtures were not accepted from keywords or historical CSS alone.",
+    "village-guardian": {
+      "fixture_ids": ["VG-NEG-001", "VG-NEG-002", "VG-NEG-003", "VG-NEG-004"],
+      "rederived_dispositions": ["FAIL", "REJECT", "REJECT", "REJECT"],
+      "all_refuted": true
+    },
+    "archers-revenge": {
+      "fixture_ids": ["AR-B-FIX-001", "AR-B-FIX-002", "AR-B-FIX-003", "AR-B-FIX-004"],
+      "rederived_dispositions": ["reject", "reject", "reject", "reject"],
+      "all_refuted": true
+    },
+    "storm-castle-tower": {
+      "fixture_ids": ["SCT-NEG-001", "SCT-NEG-002", "SCT-NEG-003", "SCT-NEG-004"],
+      "rederived_dispositions": ["REJECT", "REJECT", "REJECT", "REJECT"],
+      "all_refuted": true
+    },
+    "fixtures_rederived": 12,
+    "fixtures_accepted_or_skipped": 0
+  },
+  "asset_audit": {
+    "status": "valid-source-only-audit; live corroboration unavailable",
+    "records": 12,
+    "unique_paths": 12,
+    "exact_active_discovery_v2_denominator_match": true,
+    "blob_hash_mismatches": 0,
+    "source_anchor_mismatches": 0,
+    "source_only_catalog_cover_bindings": 2,
+    "bounded_not_referenced_or_non_runtime_records": 10,
+    "browser_corroboration": "unavailable",
+    "suitability_or_licensing_decisions": 0,
+    "production_decisions": 0
+  },
+  "browser_audit": {
+    "active_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-browser-audit-v2.json",
+    "status": "blocked",
+    "browser_harness_probe_exit_code": 1,
+    "application_start_attempted": false,
+    "runnable_results": 0,
+    "non_runnable_results": 0,
+    "audit_blocked_results": 3,
+    "browser_interactions": 0,
+    "captured_artifacts": 0,
+    "live_states_or_transitions": 0,
+    "bypass_detected": false,
+    "conclusion": "The v2 retry truthfully records a browser-harness attachment failure. It does not convert source disposition, catalog status, screenshots, or zero interaction into runnable/non-runnable evidence. B4 remains blocked."
+  },
+  "receipt_provenance": {
+    "classification_rule": "A null, missing, unavailable, uncommitted, pending, non-none fork_turns value, or absent raw isolation proof is non-passing. File-hash equality does not cure provider provenance.",
+    "v3_machine_selected_receipts": 8,
+    "v3_machine_reported_limitations": 63,
+    "active_upstream_receipts_including_browser_and_asset": 10,
+    "active_upstream_limitations": 79,
+    "candidate_chain_receipts_including_this_v2_reviewer": 11,
+    "candidate_chain_limitations": 87,
+    "receipts": [
+      {"path":"role-receipts/discovery-auditor-batch-b-v2.json","issue_count":8,"unavailable":["prompt","context_manifest","spawn_or_session","start_event","end_event","final_response","commit","provider_isolation_proof"],"classification":"non-passing-unavailable-provenance"},
+      {"path":"role-receipts/evidence-collector-village-guardian-batch-b.json","issue_count":8,"unavailable":["prompt","context_manifest","spawn_or_session","start_event","end_event","final_response","commit","provider_isolation_proof"],"classification":"non-passing-unavailable-provenance"},
+      {"path":"role-receipts/evidence-collector-archers-revenge-batch-b.json","issue_count":8,"unavailable":["prompt","context_manifest","spawn_or_session","start_event","end_event","final_response","commit","provider_isolation_proof"],"classification":"non-passing-unavailable-provenance"},
+      {"path":"role-receipts/evidence-collector-storm-castle-tower-batch-b.json","issue_count":8,"unavailable":["prompt","context_manifest","spawn_or_session","start_event","end_event","final_response","commit","provider_isolation_proof"],"classification":"non-passing-unavailable-provenance"},
+      {"path":"role-receipts/requirements-mapper-village-guardian-batch-b.json","issue_count":7,"unavailable":["prompt","spawn_or_session","start_event","end_event","final_response","commit","provider_isolation_proof"],"classification":"non-passing-unavailable-provenance; locally canonicalized context hash does not attest provider isolation"},
+      {"path":"role-receipts/requirements-mapper-archers-revenge-batch-b.json","issue_count":8,"unavailable":["prompt","context_manifest","spawn_or_session","start_event","end_event","final_response","commit","provider_isolation_proof"],"classification":"non-passing-unavailable-provenance"},
+      {"path":"role-receipts/requirements-mapper-storm-castle-tower-batch-b.json","issue_count":8,"unavailable":["prompt","context_manifest","spawn_or_session","start_event","end_event","final_response","commit","provider_isolation_proof"],"classification":"non-passing-unavailable-provenance"},
+      {"path":"role-receipts/truth-test-author-batch-b-v3.json","issue_count":8,"unavailable":["prompt","context_manifest","spawn_or_session","start_event","end_event","final_response","commit","provider_isolation_proof"],"classification":"non-passing-unavailable-provenance"},
+      {"path":"role-receipts/asset-auditor-batch-b.json","issue_count":8,"unavailable":["prompt","context_manifest","spawn_or_session","start_event","end_event","final_response","commit","provider_isolation_proof"],"classification":"non-passing-unavailable-provenance"},
+      {"path":"role-receipts/browser-auditor-batch-b-v2.json","issue_count":8,"unavailable":["prompt","context_manifest","spawn_or_session","start_event","end_event","final_response","commit","provider_isolation_proof"],"classification":"non-passing-unavailable-provenance"},
+      {"path":"role-receipts/adversarial-reviewer-batch-b-v2.json","issue_count":8,"unavailable":["prompt","context_manifest","spawn_or_session","start_event","end_event","final_response","commit","provider_isolation_proof"],"classification":"non-passing-unavailable-provenance; this receipt truthfully cannot authorize acceptance"}
+    ],
+    "stale_output_bindings_found": 0,
+    "provenance_gate": "blocked"
+  },
+  "findings": [
+    {
+      "id": "B-BLOCK-001",
+      "severity": "critical",
+      "area": "receipt provenance",
+      "detail": "The candidate chain has 87 explicitly unavailable provenance fields across the ten active upstream receipts and this reviewer receipt. Prompt, context where noted, spawn/session, start/end event, final-response, commit, and provider isolation attestations remain unavailable. The v3 machine gate reports 63 of these because it selects only eight receipts. All limitations remain correctly classified as non-passing; no null was treated as proof.",
+      "blocking": true
+    },
+    {
+      "id": "B-BLOCK-002",
+      "severity": "high",
+      "area": "browser/live evidence",
+      "detail": "The active browser v2 retry failed to attach to Chrome DevTools, did not start the application, and produced zero route visits, viewports, real-input events, state transitions, console/network observations, screenshots, or runnable/non-runnable dispositions. No browser bypass occurred, but all three game dispositions remain audit-blocked.",
+      "blocking": true
+    },
+    {
+      "id": "B-TEST-002",
+      "severity": "medium",
+      "area": "active supersession selection",
+      "detail": "batch-b-truth-tests-v3.py activates discovery v2 and truth receipt v3 but inherits B4 and B5 paths that still read batch-b-browser-audit.json and batch-b-adversarial-review.json. It does not machine-select browser-audit-v2 or this additive review-v2, and CURRENT_RECEIPTS omits browser, asset, and reviewer receipts. Manual review confirms the active v2 browser remains blocked, so there is no present false green, but the active superseding bytes cannot satisfy or be fully checked by the current B4/B5/receipt gates.",
+      "blocking": true
+    }
+  ],
+  "resolved_findings": [
+    {
+      "id": "B-TEST-001",
+      "resolution": "Resolved by the v3 population-bounded sample formula and passing seven-of-eight rejection regression."
+    },
+    {
+      "id": "B-DISC-001",
+      "resolution": "Discovery v2 confines DISC-001 to carried_forward_disclosures while preserving original bytes; unavailable append-event provenance remains subsumed by B-BLOCK-001."
+    }
+  ],
+  "unresolved_findings": {
+    "critical": 1,
+    "high": 1,
+    "medium": 1,
+    "low": 0
+  },
+  "gate_status": {
+    "B0": "pass for active discovery structure, exact scope, predecessor bindings, budgets, and immutable supersession; candidate chain still blocked by provenance",
+    "B1": "pass; collector package, envelope, denominator, and fixture structure tests pass",
+    "B2": "pass; mapper references resolve within each exact game and no foreign backing is accepted",
+    "B3": "pass; all claim/fixture tests pass, fresh 29-claim sample has zero envelope/stratification defects, and all 12 fixtures are refuted",
+    "B4": "blocked; asset audit remains valid source-only evidence, but browser v2 has three audit-blocked and zero reviewed runnable/non-runnable dispositions",
+    "B5": "blocked; provenance, B4, active-supersession selection, and acceptance-chain gates fail"
+  },
+  "stop_loss": {
+    "unsupported_or_fabricated_accepted_claims": 0,
+    "denominator_mismatches": 0,
+    "unassigned_or_duplicate_asset_items": 0,
+    "budget_ceiling_breaches_found": 0,
+    "stale_or_mutated_output_bindings_found": 0,
+    "unreviewed_browser_dispositions": 3,
+    "failed_browser_remediation_cycles": 2,
+    "provenance_limitations": 87,
+    "candidate_or_acceptance_published_early": 0,
+    "state": "active-block-pending-product-owner-direction",
+    "reason": "The original agent-browser attempt and the browser-harness v2 retry are two failed browser evidence cycles. Strategy section 12 blocks after the second failed fix/review cycle; provenance and B4 independently block as well."
+  },
+  "authorization": {
+    "candidate_authorized": false,
+    "product_owner_acceptance_authorized": false,
+    "accepted_manifest_authorized": false,
+    "reason": "Critical, High, and Medium findings remain; B4 and B5 are red; stop-loss is active; and no authentic product-owner approval chain exists."
+  }
+}
