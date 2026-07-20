@@ -1,0 +1,45 @@
+{
+  "schema": "apk-requirements-blueprint.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "task_id": "B2-MAP-EACH-GAME",
+  "role": "requirements-mapper-storm-castle-tower-batch-b",
+  "game": "Storm the Castle Tower",
+  "normalized_id": "storm-castle-tower",
+  "canonical_identity": "catalog/storm-castle-tower",
+  "phase_base_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha": "a4129d1714d80dfa5c71779d2a147408d75a18a8",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "mapping_boundary": "This blueprint reorganizes collector claims without adding source facts. All propositions are historical-source-only, catalog-withdrawn, current-absence-within-bounded-domains, or current-unknown as labeled.",
+  "propositions": [
+    {"id":"SCT-BP-001","area":"identity-and-current-disposition","disposition":"catalog-withdrawn","statement":"The current catalog identity is configured through the withdrawn mapping, with the exported catalog disposition coming-soon and no href; this does not claim a current route, implementation, or runnable game.","backing_claim_ids":["SCT-ID-001","SCT-ID-002","SCT-ID-003","SCT-ABS-001"]},
+    {"id":"SCT-BP-002","area":"current-copy","disposition":"catalog-copy-only","statement":"The current catalog description is preserved as copy only and is not mapped as gameplay behavior.","backing_claim_ids":["SCT-COPY-001"]},
+    {"id":"SCT-BP-003","area":"current-routes-api-and-implementation","disposition":"current-absence-within-bounded-domains","statement":"Within the collector's bounded baseline tree, no slug-bearing current implementation, route, or test path was found; no repository-wide absence is asserted.","backing_claim_ids":["SCT-ABS-001"]},
+    {"id":"SCT-BP-004","area":"historical-routes-api","disposition":"historical-source-only","statement":"Deleted app source contains a dynamically imported page, historical sentence fetch and completion POST client wiring, and deleted GET/POST adapter sources; none is a current or observed API claim.","backing_claim_ids":["SCT-ROUTE-H001","SCT-ROUTE-H002","SCT-ROUTE-H003","SCT-ROUTE-H004","SCT-ROUTE-H005","SCT-HIST-001"]},
+    {"id":"SCT-BP-005","area":"historical-scenes-states-transitions","disposition":"historical-source-only","statement":"Deleted React/Konva source records start, playing, and ended component phases, a start-to-playing transition, terminal results handling, and restart to start; these do not amend the zero current scene/state/transition denominator.","backing_claim_ids":["SCT-SCENE-H003","SCT-TRANS-H001","SCT-TRANS-H002","SCT-SCENE-H004","SCT-HIST-001"]},
+    {"id":"SCT-BP-006","area":"historical-scenes-states-transitions","disposition":"historical-source-only","statement":"Deleted cartridge source identifies the historical sentence-input cartridge and records deterministic initial state plus incorrect-selection, correct-progression, hazard, victory, and defeat transitions.","backing_claim_ids":["SCT-ID-H004","SCT-SCENE-H006","SCT-MECH-H005","SCT-TRANS-H003","SCT-MECH-H006","SCT-MECH-H007","SCT-TRANS-H004","SCT-HIST-002"]},
+    {"id":"SCT-BP-007","area":"historical-mechanics-and-learning","disposition":"historical-source-only","statement":"Deleted sources bind keyboard and touch/pointer collection controls and implement ordered-window selection with documented incorrect penalties and correct progression; this is not current or live learning behavior.","backing_claim_ids":["SCT-MECH-H001","SCT-MECH-H002","SCT-MECH-H005","SCT-TRANS-H003","SCT-MECH-H008"]},
+    {"id":"SCT-BP-008","area":"historical-mechanics-and-learning","disposition":"historical-source-only","statement":"Deleted cartridge source implements oil-or-rock hazard spawning and collision consequences, including a hazard-to-defeat terminal condition.","backing_claim_ids":["SCT-MECH-H006","SCT-MECH-H007","SCT-TRANS-H004"]},
+    {"id":"SCT-BP-009","area":"historical-responsive-evidence","disposition":"historical-source-only","statement":"Deleted React/Konva source measures a container, computes fit scale, and applies it to a stage; current compact/wide behavior and usability are not established.","backing_claim_ids":["SCT-RESP-H001","SCT-RESP-H002","SCT-RESP-H003"]},
+    {"id":"SCT-BP-010","area":"assets","disposition":"mixed-current-presence-and-historical-source-only","statement":"A current gameplay PNG exists and a distinct catalog cover URL is configured; bounded current and historical searches found no source reference to the gameplay PNG, while historical render and cartridge-slot evidence describes procedural or semantic usage rather than that physical PNG.","backing_claim_ids":["SCT-ASSET-001","SCT-ASSET-002","SCT-ASSET-ABS-001","SCT-ASSET-ABS-002","SCT-ASSET-ABS-003","SCT-ASSET-H001","SCT-ASSET-H002"]},
+    {"id":"SCT-BP-011","area":"historical-implementation-and-effort","disposition":"historical-source-only","statement":"The historical evidence separates page/API adapters, React/Konva presentation and controls, deterministic cartridge systems, Phaser orchestration with semantic slots, and tests; it makes no reuse or standardization conclusion.","backing_claim_ids":["SCT-ROUTE-H001","SCT-ROUTE-H004","SCT-ROUTE-H005","SCT-SCENE-H003","SCT-RESP-H001","SCT-ASSET-H001","SCT-ASSET-H002","SCT-IMPL-H002","SCT-IMPL-H003","SCT-IMPL-H004","SCT-TEST-H001","SCT-TEST-H002","SCT-TEST-H003"]},
+    {"id":"SCT-BP-012","area":"historical-test-boundary","disposition":"historical-test-source-only","statement":"The three deleted test artifacts state historical test assertions only; they do not establish implementation execution, responsive behavior, route wiring, or live behavior.","backing_claim_ids":["SCT-TEST-H001","SCT-TEST-H002","SCT-TEST-H003","SCT-HIST-001","SCT-HIST-002"]}
+  ],
+  "visible_unknowns": [
+    {"id":"SCT-BP-UNK-001","disposition":"browser-unknown","statement":"No current route execution, start command, real input, viewport, console, network, or terminal observation is mapped.","backing_claim_ids":["SCT-ABS-001"]},
+    {"id":"SCT-BP-UNK-002","disposition":"current-unknown","statement":"The current gameplay PNG's loading or physical use is not mapped; the configured cover URL is a different path.","backing_claim_ids":["SCT-ASSET-001","SCT-ASSET-002","SCT-ASSET-ABS-001"]},
+    {"id":"SCT-BP-UNK-003","disposition":"current-unknown","statement":"Historical responsive implementation does not establish current compact/wide usability.","backing_claim_ids":["SCT-RESP-H001","SCT-RESP-H002","SCT-RESP-H003"]},
+    {"id":"SCT-BP-UNK-004","disposition":"historical-lineages-not-merged","statement":"The deleted React/Konva and Phaser cartridge revisions remain separate historical source lineages rather than one runtime implementation.","backing_claim_ids":["SCT-HIST-001","SCT-HIST-002"]}
+  ],
+  "category_coverage": {
+    "historical_scenes_states_transitions":{"status":"historical-source-only","backing_claim_ids":["SCT-SCENE-H003","SCT-SCENE-H004","SCT-SCENE-H006","SCT-TRANS-H001","SCT-TRANS-H002","SCT-TRANS-H003","SCT-TRANS-H004"]},
+    "mechanics_learning":{"status":"historical-source-only","backing_claim_ids":["SCT-MECH-H001","SCT-MECH-H002","SCT-MECH-H005","SCT-MECH-H006","SCT-MECH-H007","SCT-MECH-H008"]},
+    "effort":{"status":"historical-source-only-no-standardization","backing_claim_ids":["SCT-ROUTE-H001","SCT-SCENE-H003","SCT-IMPL-H002","SCT-IMPL-H003","SCT-TEST-H001"]},
+    "assets":{"status":"usage-current-unknown","backing_claim_ids":["SCT-ASSET-001","SCT-ASSET-002","SCT-ASSET-ABS-001","SCT-ASSET-H001","SCT-ASSET-H002"]},
+    "responsive":{"status":"historical-source-only-current-unknown","backing_claim_ids":["SCT-RESP-H001","SCT-RESP-H002","SCT-RESP-H003"]},
+    "routes_api":{"status":"current-absence-within-bounded-domains-and-historical-source-only","backing_claim_ids":["SCT-ABS-001","SCT-ROUTE-H001","SCT-ROUTE-H002","SCT-ROUTE-H003","SCT-ROUTE-H004","SCT-ROUTE-H005"]}
+  },
+  "claim_reference_accounting":{"referenced_claim_occurrences":102,"distinct_referenced_claim_ids":42,"unresolved_claim_ids":[],"non_storm_claim_ids":[]},
+  "carried_forward_disclosures":[{"id":"DISC-001","classification":"Batch A process-only disclosure","use":"Process metadata only; not a proposition backing ID or factual input."}],
+  "acceptance":"not-claimed"
+}

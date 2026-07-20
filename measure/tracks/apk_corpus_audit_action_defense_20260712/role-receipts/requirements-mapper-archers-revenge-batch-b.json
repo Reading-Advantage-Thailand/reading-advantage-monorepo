@@ -1,0 +1,60 @@
+{
+  "schema": "apk-role-receipt.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "role": "requirements-mapper-archers-revenge-batch-b",
+  "task_id": "B2-MAP-EACH-GAME",
+  "phase_base_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha": "a4129d1714d80dfa5c71779d2a147408d75a18a8",
+  "allowed_input_manifest_sha256": "e47a9e95fec45b4f2c03834a09d9ca56f62d18e03d6f29af56b1d3642ec71717",
+  "budget_declaration_sha256": "7d649b94d28ddc4538b79ba68a7e0cd71597ec2968ca7ae09874cf817a8b0f2f",
+  "prompt_sha256": null,
+  "actual_context_manifest_sha256": null,
+  "provider_spawn_id": null,
+  "parent_ancestry_ids": null,
+  "fork_turns": null,
+  "raw_isolation_export": null,
+  "start_event_id": null,
+  "end_event_id": null,
+  "start_timestamp": null,
+  "end_timestamp": null,
+  "final_response_sha256": null,
+  "unavailable_metadata_note": "The execution environment did not expose tool-attested prompt, ancestry, event, final-response, or raw-isolation metadata. Null values truthfully record unavailable provenance; they are not attestations and block acceptance until corroborated.",
+  "prior_role_history": [],
+  "output_paths": [
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-blueprint-batch-b.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-mapper-hypotheses-batch-b.md",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-mapper-final-report-batch-b.json"
+  ],
+  "output_sha256": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-blueprint-batch-b.json": "de46e8d49a8cd8fa2c81752e9120c9511d3491d736ba6f787b97b58af909c4b7",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-mapper-hypotheses-batch-b.md": "8f57561b11d2cbc75c0836e5b0172fe71cf9d42c6b812f1d533acf661b34412e",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-mapper-final-report-batch-b.json": "6dc1e7d84814404da7233ece8eda664f9ed91d7457b4a32709c83abb1943259e"
+  },
+  "self_hash": null,
+  "commit_sha": null,
+  "findings": [
+    {
+      "severity": "medium",
+      "id": "AR-B-MAPPER-RECEIPT-001",
+      "detail": "Tool-attested prompt, ancestry, event, final-response, raw-isolation, self, and commit metadata were unavailable in this environment; acceptance must fail closed pending corroborated provenance."
+    }
+  ],
+  "resource_use": {
+    "actual": {
+      "source_bytes_read": 3240688,
+      "source_files_read": 22,
+      "command_invocations": 12,
+      "elapsed_minutes": 12,
+      "records_authored": 30
+    },
+    "ceilings": {
+      "source_bytes_read": 15728640,
+      "source_files_read": 80,
+      "command_invocations": 50,
+      "elapsed_minutes": 25,
+      "records_authored": 240
+    }
+  },
+  "receipt_status": "non-authoritative pending provenance completion"
+}

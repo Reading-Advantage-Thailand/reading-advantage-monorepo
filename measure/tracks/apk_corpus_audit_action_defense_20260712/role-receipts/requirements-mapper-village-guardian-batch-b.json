@@ -1,0 +1,125 @@
+{
+  "schema": "apk-role-receipt.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "task_id": "B2-MAP-EACH-GAME",
+  "role": "requirements-mapper-village-guardian-batch-b",
+  "game": "Village Guardian",
+  "normalized_id": "village-guardian",
+  "phase_base_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha": "a4129d1714d80dfa5c71779d2a147408d75a18a8",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "allowed_input_manifest_sha256": "e47a9e95fec45b4f2c03834a09d9ca56f62d18e03d6f29af56b1d3642ec71717",
+  "budget_declaration_sha256": "7d649b94d28ddc4538b79ba68a7e0cd71597ec2968ca7ae09874cf817a8b0f2f",
+  "actual_context_manifest_sha256": "a6529097346ee6de6fa2d1b9c7b22e109166962a593834d216ea20019cf75d9f",
+  "actual_context_manifest_algorithm": "SHA-256 of UTF-8 canonical JSON for the path-sorted projection of actual_context containing only path and sha256, using sorted object keys and separators comma/colon.",
+  "actual_context": [
+    {"path":"measure/apk-asset-system-program.md","sha256":"c5bc12224813ecdbf5014a32acb80cbc74a868401ccf6f69b1f7b57ba2e0f849","use":"program process context only; not claim backing"},
+    {"path":"measure/apk-evidence-cohort-protocol.md","sha256":"1f97ed8fd026cb0b1b49ed5de602252c075228981d1ff26640748b56ff2a3507","use":"cohort process contract"},
+    {"path":"measure/apk-evidence-reconstruction-program.md","sha256":"d2aa36e0ce63ba70b9eb36d4ef22e99d2cb612e32ff05001402465677cbac83d","use":"evidence program contract"},
+    {"path":"measure/index.md","sha256":"0b5450ebe2299cd4ce99fd8468d4cd78a8899316b8fbf8998e047c0dead83a20","use":"AGENTS-required Measure process context only; not claim backing"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-budget-declaration.json","sha256":"7d649b94d28ddc4538b79ba68a7e0cd71597ec2968ca7ae09874cf817a8b0f2f","use":"frozen mapper budget"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-discovery-audit.json","sha256":"7c1012debd287339cb3fbb7018282b5b0cd5beb9b78f9bf5df6cb96f4e6dbc61","use":"scope and process boundary only; not proposition backing"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-role-applicability.json","sha256":"71db3e7eb9ac71177d7a555ceb6e43218c9bcbd5ca0afdaa2b5574ace9a38bb4","use":"role assignment and allowed-input binding"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-village-guardian-batch-b.json","sha256":"e5a4b464682693680086d8d9ca83b4d62c1cb1c5dc802b24d5579c8b76861b7c","use":"collector package provenance and limits"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/test-strategy-batch-b.md","sha256":"7b3b5f3e4c0f8ba1309c2d22b0a815771f5c26f647cc7cb883ea84f0a03d00dc","use":"Batch B mapper contract"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/village-guardian-claim-ledger-batch-b.json","sha256":"596cfe8541277f8a2fd0cba2598116ae443bad3949594445dac4f6e7f4292592","use":"sole factual backing for blueprint propositions"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/village-guardian-evidence-final-report-batch-b.json","sha256":"825a7c00a2e03b45f55749d1b69ee7dfc511080edcad91c116d703c7a321c1d1","use":"collector count, status, and unknown boundary"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/village-guardian-evidence-method-batch-b.md","sha256":"2c7ddcf62055f1a44162f6f88fbf4a5f2125b2742e40b45b38890796a19bd300","use":"collector method and evidence limits"},
+    {"path":"measure/workflow.md","sha256":"b73f30d7884182771cda3905b86d8a36c1d8340879d50d1871a20030b53dd517","use":"AGENTS-required Measure process context only; not claim backing"}
+  ],
+  "prior_role_history": {
+    "status": "unavailable",
+    "reason": "No collaboration-tool export or provider history attestation was available to this role."
+  },
+  "spawn_and_ancestry": {
+    "collaboration_tool_spawn_id": "unavailable",
+    "spawn_event_id": "unavailable",
+    "parent_agent_id": "unavailable",
+    "parent_ancestry_ids": "unavailable",
+    "provider_session_id": "unavailable",
+    "reason": "The execution environment exposed no collaboration-tool or provider event export."
+  },
+  "prompt_metadata": {
+    "exact_prompt_sha256": "unavailable",
+    "raw_prompt_export_sha256": "unavailable",
+    "prompt_event_id": "unavailable",
+    "prompt_timestamp": "unavailable",
+    "reason": "No raw tool-attested prompt export or prompt event metadata was available; no retrospective hash was invented."
+  },
+  "isolation_metadata": {
+    "fork_turns": "unavailable",
+    "raw_session_export_sha256": "unavailable",
+    "history_begins_with_fresh_prompt_proof": "unavailable",
+    "inherited_pre_prompt_turns_proof": "unavailable",
+    "isolation_proof": "unavailable",
+    "reason": "The role was instructed to act as a fresh mapper, but no provider attestation or raw export was available to prove isolation."
+  },
+  "event_and_timing_metadata": {
+    "start_event_id": "unavailable",
+    "end_event_id": "unavailable",
+    "start_timestamp": "unavailable",
+    "end_timestamp": "unavailable",
+    "exact_elapsed_minutes": "unavailable",
+    "reason": "No tool event timeline was exposed; budget accounting conservatively uses 25 minutes."
+  },
+  "final_response_metadata": {
+    "final_response_event_id": "unavailable",
+    "exact_final_response_sha256": "unavailable",
+    "final_response_timestamp": "unavailable",
+    "reason": "The receipt is authored before the assistant final response and no tool-attested final-response event is available."
+  },
+  "outputs": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/village-guardian-blueprint-batch-b.json",
+      "sha256": "18a9347033dcb48556a05ec1cf0f58a1039bcde6aea58e62a71cd5a418543b08"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/village-guardian-mapper-hypotheses-batch-b.md",
+      "sha256": "1c225d509f563b2b07b725aebb48cc70ace44542a660629a77f835150444b4ae"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/village-guardian-mapper-final-report-batch-b.json",
+      "sha256": "7634554a3b79d297f1e137fa499c03a6e6f4d97e4ddadc98dc5a526629e1fdc8"
+    }
+  ],
+  "receipt_self_hash": "not embedded; a file cannot truthfully contain its own final SHA-256 without a separate envelope",
+  "commit_sha": "uncommitted; user explicitly prohibited commit",
+  "findings": [
+    "All 12 blueprint propositions reference exact Village Guardian collector claim IDs.",
+    "All 12 collector factual claims are referenced once; zero collector negative fixtures are referenced.",
+    "Browser, responsive, route-runtime, asset-usage, and pre-baseline chronology statuses remain unknown.",
+    "Independent truth testing and adversarial review remain pending."
+  ],
+  "budget_actual": {
+    "bytes": 150000,
+    "files": 17,
+    "commands": 29,
+    "minutes": 25,
+    "records": 18,
+    "source_bytes_read": 121732,
+    "source_files_read": 13,
+    "command_invocations": 29,
+    "elapsed_minutes": 25,
+    "records_authored": 18,
+    "browser_interactions": 0,
+    "asset_candidates_inspected": 0
+  },
+  "budget_ceilings": {
+    "bytes": 15728640,
+    "files": 80,
+    "commands": 50,
+    "minutes": 25,
+    "records": 240
+  },
+  "budget_measurement_note": "Input bytes are exact; total bytes and elapsed minutes use conservative within-ceiling accounting because exact write-byte and event-timing telemetry was unavailable. Commands include the final validation invocation.",
+  "role_boundary": "Only the four authorized Village Guardian mapper outputs were created. No game/product source, collector, strategy, budget, applicability, discovery, plan, registry, or other-game artifact was edited.",
+  "carried_forward_disclosures": [
+    {
+      "id": "DISC-001",
+      "classification": "Batch A process-only disclosure",
+      "use": "Process metadata only; not a source or backing claim."
+    }
+  ],
+  "reviewer_disposition": "pending independent adversarial review"
+}

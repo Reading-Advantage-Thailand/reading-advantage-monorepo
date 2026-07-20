@@ -1,0 +1,33 @@
+{
+  "schema":"apk-requirements-mapper-report.v1",
+  "track_id":"apk_corpus_audit_action_defense_20260712",
+  "phase":"Phase 2: Batch B evidence packages",
+  "task_id":"B2-MAP-EACH-GAME",
+  "role":"requirements-mapper-storm-castle-tower-batch-b",
+  "game":"Storm the Castle Tower",
+  "normalized_id":"storm-castle-tower",
+  "phase_base_sha":"ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha":"a4129d1714d80dfa5c71779d2a147408d75a18a8",
+  "source_baseline_revision":"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "status":"mapping-complete-independent-review-pending",
+  "source_fact_policy":"All factual mapping fields resolve only to Storm collector ledger claim IDs. The hypothesis document is non-authoritative and supplies no factual field.",
+  "mapped_sections":[
+    {"section":"current-disposition","disposition":"catalog-withdrawn; current-unknown for runnability","backing_claim_ids":["SCT-ID-001","SCT-ID-002","SCT-ID-003","SCT-COPY-001","SCT-ABS-001"]},
+    {"section":"historical-scenes-states-transitions","disposition":"historical-source-only","backing_claim_ids":["SCT-SCENE-H003","SCT-TRANS-H001","SCT-TRANS-H002","SCT-SCENE-H004","SCT-SCENE-H006","SCT-TRANS-H003","SCT-TRANS-H004"]},
+    {"section":"mechanics-learning","disposition":"historical-source-only","backing_claim_ids":["SCT-MECH-H001","SCT-MECH-H002","SCT-MECH-H005","SCT-MECH-H006","SCT-MECH-H007","SCT-MECH-H008"]},
+    {"section":"developer-effort","disposition":"historical-source-only-no-standardization","backing_claim_ids":["SCT-ID-H004","SCT-ROUTE-H001","SCT-SCENE-H003","SCT-IMPL-H002","SCT-IMPL-H003","SCT-IMPL-H004","SCT-TEST-H001","SCT-TEST-H002","SCT-TEST-H003"]},
+    {"section":"assets","disposition":"current-binary-presence; physical-usage-current-unknown; historical-source-only procedural-or-semantic evidence","backing_claim_ids":["SCT-ASSET-001","SCT-ASSET-002","SCT-ASSET-ABS-001","SCT-ASSET-ABS-002","SCT-ASSET-ABS-003","SCT-ASSET-H001","SCT-ASSET-H002"]},
+    {"section":"responsive","disposition":"historical-source-only; browser-unknown","backing_claim_ids":["SCT-RESP-H001","SCT-RESP-H002","SCT-RESP-H003"]},
+    {"section":"routes-api","disposition":"current-absence-within-bounded-domains; historical-source-only","backing_claim_ids":["SCT-ABS-001","SCT-ROUTE-H001","SCT-ROUTE-H002","SCT-ROUTE-H003","SCT-ROUTE-H004","SCT-ROUTE-H005"]}
+  ],
+  "visible_unknowns":[
+    {"topic":"browser-and-runnability","disposition":"browser-unknown","backing_claim_ids":["SCT-ABS-001"]},
+    {"topic":"current-gameplay-png-usage","disposition":"current-unknown","backing_claim_ids":["SCT-ASSET-001","SCT-ASSET-002","SCT-ASSET-ABS-001"]},
+    {"topic":"current-responsive-usability","disposition":"current-unknown","backing_claim_ids":["SCT-RESP-H001","SCT-RESP-H002","SCT-RESP-H003"]},
+    {"topic":"historical-runtime-lineage","disposition":"historical-source-only-separate-lineages","backing_claim_ids":["SCT-HIST-001","SCT-HIST-002"]}
+  ],
+  "counts":{"blueprint_propositions":12,"visible_unknowns":4,"referenced_claim_occurrences":52,"distinct_referenced_claim_ids":42,"unresolved_claim_ids":0,"non_storm_claim_ids":0,"hypotheses_used_as_factual_input":0},
+  "input_hashes":{"claim_ledger":"9f9337ec9b86161337553a8b8ab92e57cc954d2a0deb42018dad0ed99394e9d9","collector_report":"034579508f1f57cf46c3e8456524f8ce376fdbfd1a047a3a49bde4e0d877aaa1","collector_method":"618f067ab845d365f98d0eb6416f56af8f75d00e1576389780d70324d617c8b9","collector_receipt":"1efd07acda32536ddc19d3472e3f9f010f10649f81aa4dcd173479af636d54d8"},
+  "carried_forward_disclosures":[{"id":"DISC-001","classification":"Batch A process-only disclosure","use":"Process metadata only; not factual input."}],
+  "acceptance":"not-claimed"
+}

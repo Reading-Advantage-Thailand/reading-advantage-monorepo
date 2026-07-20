@@ -1,0 +1,93 @@
+{
+  "schema": "apk-mapper-final-report.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "game": "Archer's Revenge",
+  "normalized_game_id": "archers-revenge",
+  "mapper_role": "requirements-mapper-archers-revenge-batch-b",
+  "phase_base_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha": "a4129d1714d80dfa5c71779d2a147408d75a18a8",
+  "collector_id": "evidence-collector-archers-revenge-batch-b",
+  "status": "mapper-complete; non-authoritative pending truth tests and independent review",
+  "claim_reconciliation": {
+    "collector_claim_count": 8,
+    "referenced_claim_count": 8,
+    "unique_referenced_claim_count": 8,
+    "unresolved_claim_ids": [],
+    "foreign_claim_ids": [],
+    "current_runtime_claims_authored": 0,
+    "current_route_claims_authored": 0,
+    "historical_claims_referenced": 7,
+    "identity_claims_referenced": 1
+  },
+  "category_coverage": {
+    "identity": 1,
+    "route": 2,
+    "state": 1,
+    "mechanic": 2,
+    "responsive": 1,
+    "test": 1,
+    "copy": 0,
+    "assets": 0,
+    "developer_effort": 0,
+    "transitions": 0
+  },
+  "boundary_checks": {
+    "catalog_withdrawn_boundary_preserved": true,
+    "historical_only_boundary_preserved": true,
+    "current_unknown_boundary_preserved": true,
+    "browser_or_runtime_observation_authored": false,
+    "asset_usage_claim_authored": false,
+    "batch_a_disc_001_used_as_evidence": false
+  },
+  "blocking_unknowns": [
+    "current route and implementation",
+    "runnable disposition and live behavior",
+    "live responsive behavior",
+    "asset scene/non-scene usage",
+    "developer-effort decomposition",
+    "transition reachability"
+  ],
+  "hypothesis_document": "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-mapper-hypotheses-batch-b.md",
+  "source_claim_ids": [
+    "AR-B-IDENTITY-001",
+    "AR-B-HIST-ROUTE-001",
+    "AR-B-HIST-ROUTE-002",
+    "AR-B-HIST-STATE-001",
+    "AR-B-HIST-MECHANIC-001",
+    "AR-B-HIST-MECHANIC-002",
+    "AR-B-HIST-RESPONSIVE-001",
+    "AR-B-HIST-TEST-001"
+  ],
+  "carried_forward_disclosures": [
+    {
+      "id": "DISC-001",
+      "classification": "Batch A process-only disclosure",
+      "use": "process metadata only"
+    }
+  ],
+  "resource_use": {
+    "budget_declaration_sha256": "7d649b94d28ddc4538b79ba68a7e0cd71597ec2968ca7ae09874cf817a8b0f2f",
+    "ceilings": {
+      "source_bytes_read": 15728640,
+      "source_files_read": 80,
+      "command_invocations": 50,
+      "elapsed_minutes": 25,
+      "records_authored": 240
+    },
+    "actual": {
+      "source_bytes_read": 3240688,
+      "source_files_read": 22,
+      "command_invocations": 12,
+      "elapsed_minutes": 12,
+      "records_authored": 30
+    },
+    "measurement_note": "Actual source bytes and file count are the summed sizes and count of the 22 accepted-input and Archer collector-package files read; validation and hashing operations are counted separately. No product source or collector was edited."
+  },
+  "review_disposition": "pending independent reviewer",
+  "verification": {
+    "json_validation": "pending final artifact validation",
+    "references_resolve_to_archers_ledger": true,
+    "git_diff_check": "pending final artifact validation"
+  }
+}

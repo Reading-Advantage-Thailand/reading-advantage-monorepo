@@ -1,0 +1,169 @@
+{
+  "schema_version": "apk-requirements-blueprint.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "game": "Village Guardian",
+  "normalized_id": "village-guardian",
+  "mapper_role": "requirements-mapper-village-guardian-batch-b",
+  "phase_base_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha": "a4129d1714d80dfa5c71779d2a147408d75a18a8",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "authority": {
+    "factual_source": "village-guardian-claim-ledger-batch-b.json",
+    "collector_id": "evidence-collector-village-guardian-batch-b",
+    "mapping_rule": "Only exact collector claim IDs back factual blueprint propositions. Organization does not create additional facts.",
+    "negative_fixture_rule": "Collector negative fixtures are excluded from propositions and reference totals.",
+    "test_and_catalog_rule": "Catalog and test claims retain their declared evidence boundaries and are not promoted to runtime behavior.",
+    "browser_rule": "Browser status remains unknown; this mapper makes no runnable or non-runnable disposition."
+  },
+  "propositions": [
+    {
+      "proposition_id": "VG-BP-ID-001",
+      "section_labels": ["identity", "route-metadata"],
+      "statement": "Retain the card id village-guardian with its recorded title, cover, declared href /student/games/sentence/village-guardian, and playable-status metadata.",
+      "claim_ids": ["VG-ID-001"],
+      "evidence_boundary": "Catalog identity and declared route metadata only; this is not a live route or runtime proposition."
+    },
+    {
+      "proposition_id": "VG-BP-ROUTE-001",
+      "section_labels": ["route-api", "input-data"],
+      "statement": "Represent the page's request to /api/v1/games/village-guardian/sentences?locale=${locale}, its two warning-literal branches, and its assignment of data.sentences.",
+      "claim_ids": ["VG-ROUTE-001"],
+      "evidence_boundary": "Client request wiring only; no live response, authentication, or server behavior is asserted."
+    },
+    {
+      "proposition_id": "VG-BP-ROUTE-002",
+      "section_labels": ["route-api", "completion-output"],
+      "statement": "Represent handleComplete posting xpEarned, accuracy, correctAnswers, and totalAttempts to /api/v1/games/village-guardian/complete.",
+      "claim_ids": ["VG-ROUTE-002"],
+      "evidence_boundary": "Client completion wiring only; persistence and reachability remain unknown."
+    },
+    {
+      "proposition_id": "VG-BP-IMPL-001",
+      "section_labels": ["scene-state-transition", "mechanics-learning", "developer-effort"],
+      "statement": "Model initialization rejects empty vocabulary, chooses a sentence, slices active words by difficulty, spawns one monster, and returns playing level 1 state.",
+      "claim_ids": ["VG-IMPL-001"],
+      "evidence_boundary": "Pure model initial-state behavior at the accepted source baseline."
+    },
+    {
+      "proposition_id": "VG-BP-IMPL-002",
+      "section_labels": ["scene-state-transition", "mechanics-learning", "developer-effort", "terminal-branches"],
+      "statement": "A playing tick subtracts deltaMs, returns defeat when the timer reaches zero, runs update, collision, and level functions, and sets defeat when lives reach zero.",
+      "claim_ids": ["VG-IMPL-002"],
+      "evidence_boundary": "Source-defined timer and lives terminal branches; no browser observation is asserted."
+    },
+    {
+      "proposition_id": "VG-BP-IMPL-003",
+      "section_labels": ["scene-state-transition", "mechanics-learning", "developer-effort", "attempt-outcomes"],
+      "statement": "Correct-order collision collects a villager and appends a trail segment; wrong-order collision hides the villager for 2000ms and adds the configured time penalty.",
+      "claim_ids": ["VG-IMPL-003"],
+      "evidence_boundary": "The two source branches establish distinct correct- and wrong-order outcomes only."
+    },
+    {
+      "proposition_id": "VG-BP-IMPL-004",
+      "section_labels": ["scene-state-transition", "mechanics-learning", "developer-effort", "level-progression"],
+      "statement": "Sanctuary arrival with a complete trail increments the level, selects a new sentence, respawns villagers, creates scaled monsters up to maxMonsters, and resets timer and state.",
+      "claim_ids": ["VG-IMPL-004"],
+      "evidence_boundary": "Source-defined completion-to-next-level transition only."
+    },
+    {
+      "proposition_id": "VG-BP-COPY-001",
+      "section_labels": ["scene-state-transition", "configuration", "developer-effort"],
+      "statement": "Initialize component configuration with gamePhase start, difficulty normal, and opponent bandits.",
+      "claim_ids": ["VG-COPY-001"],
+      "evidence_boundary": "Initial component state and copy configuration; no visible browser observation is asserted."
+    },
+    {
+      "proposition_id": "VG-BP-TEST-001",
+      "section_labels": ["test-evidence", "visible-copy-boundary"],
+      "statement": "Preserve as test intent that the test asserts the Village Guardian heading and expects a konva-stage test id after clicking Defend the Village.",
+      "claim_ids": ["VG-TEST-001"],
+      "evidence_boundary": "Existing test-source intent only; it is not production behavior, a test execution result, or browser proof."
+    },
+    {
+      "proposition_id": "VG-BP-ASSET-001",
+      "section_labels": ["asset-evidence", "catalog-cover"],
+      "statement": "Carry the accepted-baseline presence and whole-file SHA-256 envelope of public/games/cover/cover-village-guardian.png as a catalog-cover asset candidate.",
+      "claim_ids": ["VG-ASSET-001"],
+      "evidence_boundary": "Binary candidate presence only; no live catalog observation, runtime usage, or suitability is asserted."
+    },
+    {
+      "proposition_id": "VG-BP-ASSET-002",
+      "section_labels": ["asset-evidence", "gameplay-capture-candidate"],
+      "statement": "Carry the accepted-baseline presence and whole-file SHA-256 envelope of public/games/village-guardian/village-guardian-gameplay.png as a gameplay-capture asset candidate.",
+      "claim_ids": ["VG-ASSET-002"],
+      "evidence_boundary": "Binary candidate presence only; no runtime call site, live usage, or suitability is asserted."
+    },
+    {
+      "proposition_id": "VG-BP-SCENE-001",
+      "section_labels": ["scene-state-transition", "active-playing", "developer-effort"],
+      "statement": "In the playing phase, start a requestAnimationFrame loop, clamp delta to 50ms, tick playing state, and cancel the loop on cleanup.",
+      "claim_ids": ["VG-SCENE-001"],
+      "evidence_boundary": "Active playing scene implementation only; no live frame-loop observation is asserted."
+    }
+  ],
+  "organization": {
+    "identity": ["VG-BP-ID-001"],
+    "scene_state_transition": ["VG-BP-COPY-001", "VG-BP-IMPL-001", "VG-BP-SCENE-001", "VG-BP-IMPL-002", "VG-BP-IMPL-003", "VG-BP-IMPL-004"],
+    "mechanics_learning": ["VG-BP-IMPL-001", "VG-BP-IMPL-002", "VG-BP-IMPL-003", "VG-BP-IMPL-004"],
+    "developer_effort": ["VG-BP-ROUTE-001", "VG-BP-ROUTE-002", "VG-BP-IMPL-001", "VG-BP-IMPL-002", "VG-BP-IMPL-003", "VG-BP-IMPL-004", "VG-BP-COPY-001", "VG-BP-SCENE-001"],
+    "asset_evidence": ["VG-BP-ASSET-001", "VG-BP-ASSET-002"],
+    "route_api": ["VG-BP-ID-001", "VG-BP-ROUTE-001", "VG-BP-ROUTE-002"],
+    "test_and_visible_copy_boundaries": ["VG-BP-COPY-001", "VG-BP-TEST-001"]
+  },
+  "responsive_evidence": {
+    "status": "unknown",
+    "proposition_ids": [],
+    "boundary": "No responsive proposition is authored. Browser startup and compact/wide interaction were not observed by the collector."
+  },
+  "asset_usage_evidence": {
+    "status": "unknown",
+    "proposition_ids": ["VG-BP-ASSET-001", "VG-BP-ASSET-002"],
+    "boundary": "The mapped claims establish candidate presence only; PNG runtime usage and suitability were not established."
+  },
+  "visible_unknowns": [
+    {
+      "unknown_id": "VG-MAP-UNK-001",
+      "status": "collector-carried-unknown",
+      "detail": "Browser startup, compact/wide interaction, console, network, and terminal behavior were not observed.",
+      "related_proposition_ids": ["VG-BP-ID-001", "VG-BP-ROUTE-001", "VG-BP-ROUTE-002", "VG-BP-SCENE-001"]
+    },
+    {
+      "unknown_id": "VG-MAP-UNK-002",
+      "status": "collector-carried-unknown",
+      "detail": "PNG runtime usage and suitability were not established.",
+      "related_proposition_ids": ["VG-BP-ASSET-001", "VG-BP-ASSET-002"]
+    },
+    {
+      "unknown_id": "VG-MAP-UNK-003",
+      "status": "collector-carried-unknown",
+      "detail": "Route responses, authentication, persistence, and deployed reachability remain unknown.",
+      "related_proposition_ids": ["VG-BP-ROUTE-001", "VG-BP-ROUTE-002"]
+    },
+    {
+      "unknown_id": "VG-MAP-UNK-004",
+      "status": "collector-carried-unknown",
+      "detail": "Chronology before the frozen baseline remains unknown.",
+      "related_proposition_ids": []
+    }
+  ],
+  "claim_reference_accounting": {
+    "collector_factual_claim_count": 12,
+    "blueprint_proposition_count": 12,
+    "claim_reference_occurrence_count": 12,
+    "unique_referenced_claim_count": 12,
+    "resolved_reference_count": 12,
+    "unresolved_reference_count": 0,
+    "unreferenced_collector_factual_claim_count": 0,
+    "negative_fixture_reference_count": 0
+  },
+  "browser_status": "unknown; no runnable or non-runnable disposition",
+  "reviewer_disposition": "pending independent adversarial review",
+  "carried_forward_disclosures": [
+    {
+      "id": "DISC-001",
+      "classification": "Batch A process-only disclosure",
+      "use": "Carried only as process metadata; it is not a source or backing claim for any proposition."
+    }
+  ]
+}

@@ -1,0 +1,104 @@
+{
+  "schema_version": "apk-requirements-mapper-report.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "task_id": "B2-MAP-EACH-GAME",
+  "role": "requirements-mapper-village-guardian-batch-b",
+  "game": "Village Guardian",
+  "normalized_id": "village-guardian",
+  "phase_base_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha": "a4129d1714d80dfa5c71779d2a147408d75a18a8",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "status": "mapper package authored; pending truth tests and independent adversarial review",
+  "authority_boundary": "The collector ledger is the sole factual source for blueprint propositions. This mapper did not inspect product source, collect new source facts, or convert catalog, test, documentation, or discovery records into runtime facts.",
+  "reference_accounting": {
+    "collector_claim_array_count": 12,
+    "collector_factual_claim_count": 12,
+    "collector_negative_fixture_count": 4,
+    "blueprint_proposition_count": 12,
+    "claim_reference_occurrence_count": 12,
+    "unique_referenced_claim_count": 12,
+    "resolved_reference_count": 12,
+    "unresolved_reference_count": 0,
+    "unreferenced_collector_factual_claim_count": 0,
+    "negative_fixture_reference_count": 0,
+    "non_collector_claim_reference_count": 0
+  },
+  "mapped_section_counts": {
+    "identity_proposition_ids": 1,
+    "scene_state_transition_proposition_ids": 6,
+    "mechanics_learning_proposition_ids": 4,
+    "developer_effort_proposition_ids": 8,
+    "asset_evidence_proposition_ids": 2,
+    "route_api_proposition_ids": 3,
+    "test_and_visible_copy_boundary_proposition_ids": 2
+  },
+  "hypothesis_count": 0,
+  "hypothesis_status": "No mapper inference was advanced; the hypotheses file carries the required NON-AUTHORITATIVE HYPOTHESIS banner and states this boundary.",
+  "unknowns": {
+    "collector_carried_unknown_count": 4,
+    "browser_status": "unknown; no runnable or non-runnable disposition",
+    "responsive_status": "unknown; no compact/wide interaction was observed",
+    "asset_usage_status": "unknown; binary candidate presence was not promoted to runtime usage",
+    "route_runtime_status": "unknown; client wiring was not promoted to server response, authentication, persistence, or deployed reachability",
+    "historical_status": "chronology before the frozen baseline remains unknown"
+  },
+  "validation_intent": {
+    "json_parse": "required for blueprint, final report, and receipt",
+    "claim_reference_resolution": "required against village-guardian-claim-ledger-batch-b.json",
+    "reference_count_recomputation": "required from proposition claim_ids arrays",
+    "negative_fixture_exclusion": "required",
+    "git_diff_check": "required",
+    "browser_execution": "not performed by mapper; status must remain unknown"
+  },
+  "input_hashes": {
+    "test_strategy_batch_b": "7b3b5f3e4c0f8ba1309c2d22b0a815771f5c26f647cc7cb883ea84f0a03d00dc",
+    "batch_b_budget_declaration": "7d649b94d28ddc4538b79ba68a7e0cd71597ec2968ca7ae09874cf817a8b0f2f",
+    "batch_b_role_applicability": "71db3e7eb9ac71177d7a555ceb6e43218c9bcbd5ca0afdaa2b5574ace9a38bb4",
+    "batch_b_discovery_audit": "7c1012debd287339cb3fbb7018282b5b0cd5beb9b78f9bf5df6cb96f4e6dbc61",
+    "apk_evidence_reconstruction_program": "d2aa36e0ce63ba70b9eb36d4ef22e99d2cb612e32ff05001402465677cbac83d",
+    "apk_evidence_cohort_protocol": "1f97ed8fd026cb0b1b49ed5de602252c075228981d1ff26640748b56ff2a3507",
+    "village_guardian_claim_ledger": "596cfe8541277f8a2fd0cba2598116ae443bad3949594445dac4f6e7f4292592",
+    "village_guardian_evidence_method": "2c7ddcf62055f1a44162f6f88fbf4a5f2125b2742e40b45b38890796a19bd300",
+    "village_guardian_evidence_final_report": "825a7c00a2e03b45f55749d1b69ee7dfc511080edcad91c116d703c7a321c1d1",
+    "village_guardian_collector_receipt": "e5a4b464682693680086d8d9ca83b4d62c1cb1c5dc802b24d5579c8b76861b7c"
+  },
+  "output_hashes": {
+    "village-guardian-blueprint-batch-b.json": "18a9347033dcb48556a05ec1cf0f58a1039bcde6aea58e62a71cd5a418543b08",
+    "village-guardian-mapper-hypotheses-batch-b.md": "1c225d509f563b2b07b725aebb48cc70ace44542a660629a77f835150444b4ae",
+    "village-guardian-mapper-final-report-batch-b.json": "self-hash-not-embedded"
+  },
+  "resource_use": {
+    "budget_declaration_sha256": "7d649b94d28ddc4538b79ba68a7e0cd71597ec2968ca7ae09874cf817a8b0f2f",
+    "actual": {
+      "bytes": 150000,
+      "files": 17,
+      "commands": 29,
+      "minutes": 25,
+      "records": 18,
+      "source_bytes_read": 121732,
+      "source_files_read": 13,
+      "command_invocations": 29,
+      "elapsed_minutes": 25,
+      "records_authored": 18,
+      "browser_interactions": 0,
+      "asset_candidates_inspected": 0
+    },
+    "ceilings": {
+      "bytes": 15728640,
+      "files": 80,
+      "commands": 50,
+      "minutes": 25,
+      "records": 240
+    },
+    "measurement_note": "Input bytes are the exact sum of 13 opened files. The 150000-byte value conservatively accounts for those 121732 bytes plus final output writes. Minutes are conservatively accounted at the frozen ceiling because tool start timing is unavailable. Commands count tool invocations through the planned validation step."
+  },
+  "carried_forward_disclosures": [
+    {
+      "id": "DISC-001",
+      "classification": "Batch A process-only disclosure",
+      "use": "Process metadata only; not used as a source, backing claim, hypothesis, browser result, or asset-usage premise."
+    }
+  ],
+  "reviewer_disposition": "pending independent adversarial review"
+}
