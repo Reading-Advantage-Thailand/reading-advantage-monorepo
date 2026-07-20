@@ -1,0 +1,142 @@
+{
+  "schema_version": "apk-role-receipt.v1",
+  "status": "complete-self-attested",
+  "acceptance": "blocked",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 4: Adversarial review (Batch A cycle 2)",
+  "role": "adversarial-reviewer",
+  "task_id": "adversarial-reviewer:t4-batch-a:v2",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "phase_base_sha": "9228c5c5",
+  "role_base_sha": "68769401267d45fe1164149b85edfbeaf976ac9b",
+  "spawn_id": "adversarial-reviewer:t4-batch-a:v2:2026-07-20",
+  "parent_ancestry_ids": [],
+  "reviewer_isolation": "fresh-context-only, inherited_narrative=false, fork_turns=none",
+  "fork_turns": "none",
+  "inherited_narrative": false,
+  "prior_role_history": [],
+  "prompt_sha256": "86bad62000d5b76a78cb429f54772d76f41593741e7966d65557b0a517e7cc46",
+  "prompt_sha256_basis": "SHA-256 of the canonical role binding string apk_corpus_audit_action_defense_20260712|adversarial-reviewer|cycle-2|phase=9228c5c5|role=68769401267d45fe1164149b85edfbeaf976ac9b|claims=17|fixtures=12. Provider-retained raw prompt bytes were not exposed to this role.",
+  "allowed_input_manifest_sha256": "89f6271838b19db909a816e03583455bd85bf7f9c077209f7a0dfcc8b46132b9",
+  "actual_context_manifest_sha256": "89f6271838b19db909a816e03583455bd85bf7f9c077209f7a0dfcc8b46132b9",
+  "actual_context_manifest_note": "SHA-256 of canonical compact key-sorted JSON containing the allowed_inputs list, phase_base_sha, role_base_sha, and apk-context-manifest.v1 schema identifier. measure/index.md and measure/workflow.md were read only for mandatory repository procedure and were not factual review inputs.",
+  "allowed_inputs": [
+    "measure/apk-evidence-reconstruction-program.md",
+    "measure/apk-evidence-cohort-protocol.md",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/spec.md",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/test-strategy-batch-a.md",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/_orchestrator/LAST-BATCH-STATUS.md",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-a-truth-tests-v2.py",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-a-blueprint-v2.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/mapper-final-report-batch-a-v2.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/magic-defense-claim-ledger-v2.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/wizard-vs-zombie-claim-ledger-v2.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/magic-defense-evidence-final-report-v2.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/wizard-vs-zombie-evidence-final-report-v2.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-magic-defense-v2.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-wizard-vs-zombie-v2.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-wizard-vs-zombie-supersede.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/truth-test-author-batch-a-v2.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-batch-a-v2.json",
+    "git object store (read-only)",
+    "apps/advantage-games/src/ (read-only)",
+    "apps/reading-advantage/app/api/ (read-only)",
+    "apps/reading-advantage/server/controllers/ (read-only)"
+  ],
+  "read_only_inputs_note": "No listed input, source file, ledger, report, blueprint, truth test, predecessor receipt, plan, registry, or git object was modified. Only the adversarial review and this additive receipt were authored.",
+  "start_event_id": "t4-batch-a-adversarial-reviewer-v2-start:2026-07-20T00:00:00Z",
+  "end_event_id": "t4-batch-a-adversarial-reviewer-v2-end:2026-07-20T00:00:00Z",
+  "output_paths": [
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/adversarial-review-batch-a-v2.md",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-batch-a-v2.json"
+  ],
+  "output_hashes": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/adversarial-review-batch-a-v2.md": "c90a443e487006ec2fe66efcb712433ad9694308aa65087bc7893107608ae88b"
+  },
+  "output_hashes_note": "The receipt excludes itself to avoid a self-referential digest. The orchestrator bind commit supplies immutable byte identity.",
+  "output_sha256": "c90a443e487006ec2fe66efcb712433ad9694308aa65087bc7893107608ae88b",
+  "final_response_sha256": "c90a443e487006ec2fe66efcb712433ad9694308aa65087bc7893107608ae88b",
+  "final_response_sha256_basis": "SHA-256 of adversarial-review-batch-a-v2.md, the primary role artifact.",
+  "commit_sha": "<pending-orchestrator-bind>",
+  "budget_declaration": {
+    "schema_version": "apk-role-budget-declaration.v1",
+    "role": "adversarial-reviewer",
+    "frozen_resource_ceiling": "unmeasured",
+    "frozen_resource_ceiling_explanation": "The dispatch supplied no numeric resource ceilings before source work. This is disclosed rather than replaced with invented post-hoc limits and is reported as a G-RR blocker under the program contract.",
+    "actual_usage": {
+      "claims_independently_rederived": 17,
+      "magic_defense_claims_rederived": 9,
+      "wizard_vs_zombie_claims_rederived": 8,
+      "ledger_fixtures_rederived": 9,
+      "synthetic_fixtures_constructed": 3,
+      "truth_tests_rerun": 47,
+      "truth_subtests_rerun": 189
+    }
+  },
+  "predecessor_binding": {
+    "phase_base_sha": "9228c5c5",
+    "role_base_sha": "68769401267d45fe1164149b85edfbeaf976ac9b",
+    "magic_defense_v2_collector_receipt_bind": "760100fd",
+    "wizard_vs_zombie_v2_collector_receipt_bind": "81c641a6",
+    "truth_test_author_v2_output_commit": "c8e6e78e",
+    "requirements_mapper_v2_output_commit": "2b23abe3",
+    "requirements_mapper_v2_receipt_bind": "68769401"
+  },
+  "findings": {
+    "claim_rederivation": {
+      "total": 17,
+      "match": 12,
+      "no_match": 5,
+      "blob_sha256_match": 17,
+      "range_sha256_match": 17,
+      "anchor_mismatch_claim_ids": [
+        "MD-MECH-002",
+        "MD-MECH-006",
+        "MD-ASSET-016",
+        "MD-RESP-002",
+        "WVZ-ROUTE-007"
+      ]
+    },
+    "fixture_rederivation": {
+      "total": 12,
+      "expected_outcome_match": 12,
+      "mismatch": 0
+    },
+    "new_fabricated_hashes": 0,
+    "new_revision_or_blob_drift": 0,
+    "new_anchor_mismatches": 5,
+    "role_isolation_field_violations": 0,
+    "unresolved_blocking_findings": {
+      "critical": 0,
+      "high": 5,
+      "medium": 0
+    },
+    "gate_status": {
+      "G-DN": "GREEN",
+      "G-CL": "RED",
+      "G-NF": "GREEN",
+      "G-BP": "RED",
+      "G-SL": "RED",
+      "G-AS": "RED",
+      "G-RR": "RED"
+    },
+    "truth_test_result": "47 passed, 189 subtests passed in 2.54s (exit 0)",
+    "disposition": "BLOCK; return to remediation"
+  },
+  "role_isolation": {
+    "roles_held": [
+      "adversarial-reviewer"
+    ],
+    "roles_not_held": [
+      "discovery-auditor",
+      "evidence-collector",
+      "requirements-mapper",
+      "truth-test-author",
+      "browser-auditor",
+      "asset-auditor",
+      "orchestrator",
+      "product-owner"
+    ],
+    "note": "Fresh-context adversarial review only. No predecessor output was authored or modified, and no acceptance was claimed."
+  }
+}
