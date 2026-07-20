@@ -21,8 +21,8 @@ _Graph context: current `getChatContext` has one known consumer and supplies onl
   - [x] Remove Codecamp's direct provider SDK path and persist complete provenance — route `apps/codecamp-advantage/app/api/chat/route.ts` uses internal AI adapter; `generateTutorIntervention` persists provenance with provider response metadata.
 - [~] Task: Verify and document Phase S1
   - [x] Run AI adapter, contract, model preflight, lint, type-check, tests, coverage, build — 45 focused tests pass; 86.16% statement and 88.48% line coverage; type-check passed per `implementation-status.md` (2026-07-15). Credential-gated MiMo preflight passed in legacy revision `codecamp-advantage-00019-682`.
-  - [ ] graph update/audit, docs, doctor — pending after SSO cutover.
-  - [ ] Task: Measure - User Manual Verification 'Phase S1: Freeze the intervention contract' (Protocol in workflow.md)
+  - [ ] graph update/audit, docs, doctor — pending after Codecamp company-SSO cutover; the required `roles/secretmanager.secretAccessor` grant is open (production-rollout-20260718.md:37-40).
+  - [ ] Task: Measure - User Manual Verification 'Phase S1: Freeze the intervention contract' (Protocol in workflow.md) — pending assigned-learner access and the same SSO cutover.
 
 ## Phase S2: Ground tutoring in activity state
 _Story ref: spec.md#story-s2_
@@ -38,37 +38,37 @@ _Story ref: spec.md#story-s2_
   - [x] Keep the route thin and share context/provenance behavior with tests and future apps — `apps/codecamp-advantage/lib/tutor-intervention.ts` is a thin wrapper; domain logic lives in `packages/domain/src/codecamp/tutor.ts`.
 - [~] Task: Verify and document Phase S2
   - [x] Run security/privacy/context/load gates — authz contract tests, privacy coverage, and local route smoke (200/401) passed in `implementation-status.md`.
-  - [ ] graph caller checks, affected suites, generated docs, doctor — pending after SSO cutover.
-  - [ ] Task: Measure - User Manual Verification 'Phase S2: Ground tutoring in activity state' (Protocol in workflow.md)
+  - [ ] graph caller checks, affected suites, generated docs, doctor — pending after Codecamp company-SSO cutover; see production-rollout-20260718.md:37-40.
+  - [ ] Task: Measure - User Manual Verification 'Phase S2: Ground tutoring in activity state' (Protocol in workflow.md) — pending assigned-learner access and the same SSO cutover.
 
 ## Phase S3: Escalate support safely
 _Story ref: spec.md#story-s3_
 
-- [~] Task: Define intervention policy and resource-action contracts
-  - [ ] Encode default escalation, exceptions, independent-work boundaries, replay/seek, diagram/section, and repository-location actions
-  - [ ] Define student-visible explanation and retry behavior for every rejected action
-- [~] Task: Write policy and UI Red tests
-  - [ ] Cover premature solution reveal, repeated failure, student request for full answer, accessibility exception, wrong resource, seek/replay, and model refusal
-  - [ ] Add prompt-injection and submission-ready-answer adversarial fixtures
-- [~] Task: Implement coach UI and policy orchestration
-  - [ ] Render diagnostic questions, structured hints, resource cards, exact video ranges, and check-again actions
-  - [ ] Record intervention/resource-use events without fabricating correctness
+- [x] Task: Define intervention policy and resource-action contracts
+  - [x] Encode default escalation, exceptions, independent-work boundaries, replay/seek, diagram/section, and repository-location actions — shipped in the strict tutor contract and policy.
+  - [x] Define student-visible explanation and retry behavior for every rejected action — shipped in the tutor fallback and guided coach behavior.
+- [x] Task: Write policy and UI Red tests
+  - [x] Cover premature solution reveal, repeated failure, student request for full answer, accessibility exception, wrong resource, seek/replay, and model refusal — covered by focused tutor and coach tests reported 2026-07-15.
+  - [x] Add prompt-injection and submission-ready-answer adversarial fixtures — shipped in tutor contract/privacy fixture coverage.
+- [x] Task: Implement coach UI and policy orchestration
+  - [x] Render diagnostic questions, structured hints, resource cards, exact video ranges, and check-again actions — shipped in the guided APK tutor surface.
+  - [x] Record intervention/resource-use events without fabricating correctness — shipped through immutable support/resource events and verified joins.
 - [~] Task: Verify and document Phase S3
-  - [ ] Run browser/mobile/accessibility/policy/adversarial tests and conduct learner-like manual walkthroughs
-  - [ ] Task: Measure - User Manual Verification 'Phase S3: Escalate support safely' (Protocol in workflow.md)
+  - [ ] Run browser/mobile/accessibility/policy/adversarial tests and conduct learner-like manual walkthroughs — assigned-learner browser/mobile walkthrough remains required; access is blocked pending the SSO grant cited in production-rollout-20260718.md:37-40.
+  - [ ] Task: Measure - User Manual Verification 'Phase S3: Escalate support safely' (Protocol in workflow.md) — same assigned-learner and SSO blocker.
 
 ## Phase S4: Connect intervention to Mastery
 _Story ref: spec.md#story-s4_
 
-- [~] Task: Define intervention-evidence join contracts
-  - [ ] Specify attempt/session correlation, hint/reveal/replay counts, intervention level, misconception lifecycle, confidence/rating effects, and audit projection
-  - [ ] Encode the rule that support-only events cannot change correctness/mastery
-- [~] Task: Write Mastery and reporting tests
-  - [ ] Cover no-follow-up, verified success after help, continued failure, multiple resources, stale sessions, duplicate events, and teacher explanation
-  - [ ] Verify v3.2 rating caps and evidence provenance
-- [~] Task: Implement evidence joins and projections
-  - [ ] Attach intervention history to checkpoint/check/PR evidence and planner remediation
-  - [ ] Add student/teacher summaries and efficacy events without storing hidden reasoning
+- [x] Task: Define intervention-evidence join contracts
+  - [x] Specify attempt/session correlation, hint/reveal/replay counts, intervention level, misconception lifecycle, confidence/rating effects, and audit projection — shipped in immutable intervention/resource/verified-evidence records and the admin read model.
+  - [x] Encode the rule that support-only events cannot change correctness/mastery — shipped; only verified follow-up joins create evidence.
+- [x] Task: Write Mastery and reporting tests
+  - [x] Cover no-follow-up, verified success after help, continued failure, multiple resources, stale sessions, duplicate events, and teacher explanation — covered by focused persistence, ownership, and verified-join tests.
+  - [x] Verify v3.2 rating caps and evidence provenance — provenance and non-fabricated correctness are covered by shipped contract tests.
+- [x] Task: Implement evidence joins and projections
+  - [x] Attach intervention history to checkpoint/check/PR evidence and planner remediation — shipped through verified-evidence joins and tenant-scoped admin projections.
+  - [x] Add student/teacher summaries and efficacy events without storing hidden reasoning — teacher/admin summary shipped; hidden reasoning is excluded.
 - [~] Task: Verify and close the tutor track
-  - [ ] Run end-to-end activity/tutor/Mastery flows, model fixtures, affected/root gates, graph/generate/doctor, and product-owner review
-  - [ ] Task: Measure - User Manual Verification 'Phase S4: Connect intervention to Mastery' (Protocol in workflow.md)
+  - [ ] Run end-to-end activity/tutor/Mastery flows, model fixtures, affected/root gates, graph/generate/doctor, and product-owner review — assigned-learner walkthrough, frozen live-model fixtures, human efficacy review, graph/generate/doctor, and product-owner review remain open; the walkthrough depends on the SSO grant (production-rollout-20260718.md:37-40).
+  - [ ] Task: Measure - User Manual Verification 'Phase S4: Connect intervention to Mastery' (Protocol in workflow.md) — blocked by the same learner-access/SSO dependency and remaining efficacy review.

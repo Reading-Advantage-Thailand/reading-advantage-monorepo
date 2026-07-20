@@ -1,4 +1,8 @@
-# Implementation Status — 2026-07-15
+# Implementation Status — 2026-07-19
+
+The implementation state recorded on 2026-07-15 remains confirmed below. This
+update records closure status only; it does not promote contract-only fixtures
+or partial browser evidence into efficacy evidence.
 
 ## Implemented slice
 
@@ -50,3 +54,30 @@
   support/evidence joins.
 - Frozen live-model fixtures and human efficacy review remain open. Contract-only
   fixtures must not be represented as efficacy evidence.
+
+## Post-2026-07-15 status
+
+### Phase S3/S4 implementation tasks now complete
+
+- Phase S3 policy/resource contracts, policy and coach tests, and guided coach
+  orchestration are shipped; the plan marks these implementation tasks `[x]`.
+- Phase S4 intervention-evidence joins, support-only non-mastery semantics,
+  Mastery/reporting tests, and student/teacher projections are shipped; the plan
+  marks these implementation tasks `[x]`.
+
+### Verification still open
+
+- Assigned-learner browser/mobile/accessibility walkthrough and complete
+  activity/tutor/Mastery flow remain required; the available admin is not in the
+  new-cohort Unit 20.
+- Frozen live-model fixtures, human efficacy review, graph/generate/doctor gates,
+  and product-owner review remain open. Longitudinal efficacy reporting is also
+  not implemented and must not be inferred from support joins.
+
+### SSO cutover dependency
+
+Manual learner verification and pending graph/update closure work that use the
+Codecamp company identity remain dependent on the explicit
+`roles/secretmanager.secretAccessor` grant for
+`CODECAMP_COMPANY_AUTH_OIDC_CLIENT_SECRET` to the Codecamp Cloud Run service
+account, as recorded in `company_identity_sso_20260715/production-rollout-20260718.md:37-40`.

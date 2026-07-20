@@ -1,13 +1,13 @@
 {
   "track_id": "codecamp_intervention_tutor_20260710",
   "type": "feature",
-  "status": "new",
+  "status": "in-progress",
   "created_at": "2026-07-10T08:13:12Z",
-  "updated_at": "2026-07-10T08:13:12Z",
+  "updated_at": "2026-07-19T19:00:00Z",
   "description": "Replace Codecamp's general chatbot with a targeted MiMo-V2.5 intervention coach grounded in the current activity, objective, attempt, test failure, misconception, scaffold history, and curated remediation resources.",
   "estimated_tasks": 16,
-  "actual_tasks": null,
-  "deviation_notes": "",
+  "actual_tasks": 38,
+  "deviation_notes": "Open verification gates: S1/S2 graph, docs, doctor, and manual verification; S3 assigned-learner browser/mobile/accessibility walkthrough; S4 end-to-end gates, frozen live-model fixtures, human efficacy review, graph/generate/doctor, and product-owner review. Codecamp company-SSO cutover is blocked on roles/secretmanager.secretAccessor for CODECAMP_COMPANY_AUTH_OIDC_CLIENT_SECRET (production-rollout-20260718.md:37-40).",
   "sprint": {
     "goal": "Give students targeted, escalating help that points to trusted lesson, diagram, repository, and video-segment resources while recording scaffold usage as Mastery evidence context rather than invented correctness.",
     "stories": [
