@@ -42,7 +42,7 @@
   ],
   "output_hashes": {},
   "output_hashes_note": "The only output is this receipt; it is excluded from its own hash map to avoid a self-referential digest. The orchestrator bind commit supplies immutable byte identity.",
-  "commit_sha": "<pending-orchestrator-bind>",
+  "commit_sha": "81c641a607572853bde05f8e7d3bc90c76e3470b",
   "final_response_sha256": "a21db38692fb3d29a0eeafd5a833ae76005ad9e4b8694332dd15637f8a4f0491",
   "final_response_sha256_basis": "SHA-256 of the exact UTF-8 final response text, without a trailing newline; 864 bytes.",
   "budget_declaration": {

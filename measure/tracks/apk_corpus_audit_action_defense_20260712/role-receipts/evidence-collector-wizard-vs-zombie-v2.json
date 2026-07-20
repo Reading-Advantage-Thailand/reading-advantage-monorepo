@@ -83,7 +83,7 @@
     "measure/tracks/apk_corpus_audit_action_defense_20260712/wizard-vs-zombie-evidence-method-v2.md": "c97700e78d38b2f824284515b7f6850eb7b85614d2cedb6dec4bc2fcc255a4a8",
     "measure/tracks/apk_corpus_audit_action_defense_20260712/wizard-vs-zombie-evidence-final-report-v2.json": "13944b1b79da541448ee36ee7d99f26612b8ab7d4c36ccdfa4f8edd7ac78373e"
   },
-  "commit_sha": "<pending-orchestrator-bind>",
+  "commit_sha": "81c641a607572853bde05f8e7d3bc90c76e3470b",
   "final_response_sha256": "a21db38692fb3d29a0eeafd5a833ae76005ad9e4b8694332dd15637f8a4f0491",
   "final_response_sha256_basis": "SHA-256 of the exact UTF-8 final response text, without a trailing newline; 864 bytes.",
   "budget_declaration": {
