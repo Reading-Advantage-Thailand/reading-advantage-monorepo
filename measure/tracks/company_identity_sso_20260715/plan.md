@@ -544,13 +544,14 @@ _Blast radius: `validateSession` has 31 source references and shared `requireRol
 ## Phase S7: Cut Over and Verify Production
 _Story ref: spec.md#story-s7_
 
-> **2026-07-19 release checkpoint:** Accounts, Marketing, and Sales are deployed on
-> Cloud Run and their public-domain SSO paths are verified. Immutable build,
-> revision, domain, browser, protected-API, and rollback evidence is recorded in
-> [`production-rollout-20260718.md`](./production-rollout-20260718.md). This is a
-> partial Phase S7 checkpoint: the Codecamp application cutover, remaining
-> role-isolation and feature probes, the observation window, legacy-auth
-> retirement, and final documentation remain open.
+> **2026-07-20 release checkpoint:** Accounts, Marketing, Sales, and Codecamp are
+> deployed on Cloud Run and their public-domain SSO paths are verified. The
+> Codecamp cutoff is recorded in [`codecamp-cutover-postflight-20260720.md`](./codecamp-cutover-postflight-20260720.md),
+> with immutable build, revision, domain, browser, protected-API, and rollback
+> evidence retained in [`production-rollout-20260718.md`](./production-rollout-20260718.md).
+> The remaining **12 outstanding items** are observation-window approval,
+> legacy-auth retirement, remaining feature QA, and final documentation/quality
+> gates.
 
 ### Contract & Schema Definition
 
@@ -605,7 +606,7 @@ _Story ref: spec.md#story-s7_
     - [x] Verify company administrators without app roles remain denied. — Production role-isolation checks verified denial.
     - [x] Stop and roll back immediately if any entry/exit gate fails. — Staged rollout and rollback gates are documented and exercised.
 
-- [~] Task 47: Migrate and cut over Codecamp.
+- [x] Task 47: Migrate and cut over Codecamp.
     - [x] Verify the authoritative source database and capture backups — five
           legacy accounts migrated at `507ca16f`; rehearsal dry-run evidence
           recorded in [`production-rollout-20260718.md`](./production-rollout-20260718.md).
@@ -621,18 +622,12 @@ _Story ref: spec.md#story-s7_
     - [x] Confirm tutorial-runtime secrets exist in project `codecamp-advantage`
           (`CODECAMP_TUTORIAL_REPORT_SECRET`,
           `CODECAMP_TUTORIAL_REPOSITORY_WORKER_TOKEN`).
-    - [ ] Deploy Codecamp SSO and run login, role, progress, GitHub mapping, and
-          product-ownership smoke tests — **blocked on operator IAM grant**:
-          `roles/secretmanager.secretAccessor` on
-          `projects/1090865515742/secrets/CODECAMP_COMPANY_AUTH_OIDC_CLIENT_SECRET`
-          for `codecamp-cloud-run@codecamp-advantage.iam.gserviceaccount.com`
-          (Cloud Build SA in `codecamp-advantage` also needs the grant so the
-          cross-project `--set-secrets` reference resolves at deploy time). The
-          `apps/codecamp-advantage/cloudbuild.yaml` candidate step is ready,
-          the no-traffic `sso-candidate` tag is pinned, and the verified
-          pre-SSO rollback anchor `codecamp-advantage-00019-682` is retained
-          for immediate rollback.
-    - [ ] Observe authentication and product metrics through the agreed window.
+    - [x] Deploy Codecamp SSO and run login, role, progress, GitHub mapping, and
+          product-ownership smoke tests — Cloud Build
+          `38c3f0c0-2b04-4bca-825d-93e9f83f2cf0` deployed revision
+          `codecamp-advantage-00020-hay` at 100%; see
+          [`codecamp-cutover-postflight-20260720.md`](./codecamp-cutover-postflight-20260720.md).
+    - [~] Observe authentication and product metrics through the agreed window.
 
 - [ ] Task 48: Retire legacy authentication after explicit approval.
     - [ ] Confirm no unresolved migrated-account exceptions remain.
