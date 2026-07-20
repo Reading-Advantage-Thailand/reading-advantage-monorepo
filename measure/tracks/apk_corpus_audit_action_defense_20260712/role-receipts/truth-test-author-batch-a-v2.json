@@ -49,7 +49,7 @@
   "output_sha256": "69c598729ca31c9f0c49aa8fae44077aa6522b2fe5e0767be491ab9ad3d68cba",
   "final_response_sha256": "69c598729ca31c9f0c49aa8fae44077aa6522b2fe5e0767be491ab9ad3d68cba",
   "final_response_sha256_basis": "SHA-256 of batch-a-truth-tests-v2.py, the primary role artifact, matching the v1 truth-test-author receipt convention.",
-  "commit_sha": "<pending-orchestrator-bind>",
+  "commit_sha": "c8e6e78ef570f208eba10e31f2e3faa629fb2e7d",
   "budget_declaration": {
     "schema_version": "apk-role-budget-declaration.v1",
     "role": "truth-test-author",
