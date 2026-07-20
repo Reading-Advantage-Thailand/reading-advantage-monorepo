@@ -46,10 +46,14 @@
    "expected_disposition": "REJECT"
   }
  ],
- "output_hashes": {
-  "magic-defense-claim-ledger.json": "PENDING-COMMIT-BIND",
-  "magic-defense-evidence-method.md": "187e916b38870ff03552fcbee8cef79b3563940cd037e1b05f862839bd8ec591"
- },
+"commit_sha_outputs": "6998570bd76182e7163f8a5c1ce22b9df1d4ac08",
+  "output_hashes": {
+   "magic-defense-claim-ledger.json": "3ba47cb4710d5e0c051f5d8d9144b0f3a4d27e316d0d2b8619064c0129e8fd5a",
+   "magic-defense-evidence-method.md": "187e916b38870ff03552fcbee8cef79b3563940cd037e1b05f862839bd8ec591",
+   "magic-defense-evidence-final-report.json": "d1944621b4668d8a4b3b28920eddb1928384856f137794a9286b0656b003be5e",
+   "role-receipts/evidence-collector-magic-defense.json": "f973a3c8d07dfafaa7a0a50588bf286fdf70ce6b3c15a4ee458520c72c724b8f"
+  },
+  "final_response_sha256": "PENDING-RECEIPT-BIND",
  "stop_loss_observations": [
   {
    "id": "SLO-MD-1",
